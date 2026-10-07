@@ -1,4 +1,9 @@
-/** An ADV's or ADJ's headword where the Rules settle it, whatever Luna wrote. */
+/**
+ * The block an ADV or ADJ adds to the first request (a bare w-word's
+ * reading, comparability and degree, an ADJ's agreement) and its reading,
+ * and an ADV's or ADJ's headword where the Rules settle it, whatever Luna
+ * wrote.
+ */
 
 import {
 	authoredMembers,
@@ -6,8 +11,89 @@ import {
 } from "dumcorpus/inventories";
 import { splitHeads } from "../../../segment/de/candidates.js";
 import type { MemberOrthography } from "../member-spelling.js";
+import { fill, question } from "../prompts.js";
+import type { Answered, Questionnaire } from "../questions.js";
 import type { Target } from "../target.js";
-import { fold } from "./shape.js";
+import { agreementQuestions, readAgreement } from "./agreeing.js";
+import { fold, type Shape, type Values } from "./shape.js";
+
+/**
+ * Asks an ADV's or ADJ's block: a bare w-word's reading, comparability and
+ * degree, and whether an ADJ is attributive, with its agreement.
+ */
+export function askAdverbial(
+	questionnaire: Questionnaire,
+	target: Target,
+	shape: Shape,
+): void {
+	// A bare w-word as an ADV asks, opens a clause or stands for its irgend-
+	// word (Rule de/bare-w-word-is-shorthand).
+	const [lone] = target.members;
+	if (
+		shape.adverbial &&
+		shape.lexeme &&
+		target.members.length === 1 &&
+		lone &&
+		!lone.spelling &&
+		bareWWords.has(fold(lone.text))
+	)
+		questionnaire.choice(
+			"indefinite",
+			fill(question.indefinite, { m: lone.ref }),
+			{
+				Asks: question.indefiniteAsks,
+				Indefinite: question.indefiniteIrgend,
+			},
+			["orthography"],
+		);
+	questionnaire.choice(
+		"comparable",
+		question.comparable,
+		{ Yes: question.comparableYes, No: question.comparableNo },
+		["adjective"],
+	);
+	questionnaire.choice("degree", question.degree, {
+		Pos: "Positive, uncompared",
+		Cmp: "Comparative",
+		Sup: "Superlative, am … -sten included",
+	});
+	if (shape.adjectival) {
+		questionnaire.choice("attributive", question.attributive, {
+			Yes: "It agrees with a noun",
+			No: "Predicative or adverbial, agreeing with nothing",
+		});
+		agreementQuestions(questionnaire);
+	}
+}
+
+/**
+ * Reads an ADV's or ADJ's block: comparability, and the degree and an
+ * attributive ADJ's agreement as its inflection.
+ */
+export function readAdverbial(
+	shape: Shape,
+	answered: Answered,
+): { readonly core: Values; readonly inflection: Values | null } {
+	const comparable = answered.pick("comparable") === "Yes";
+	const core: Values = { comparable: comparable ? "Yes" : null };
+	const degree = comparable ? answered.pick("degree") : null;
+	if (shape.adverbial)
+		return { core, inflection: comparable ? { degree } : null };
+	const attributive = answered.pick("attributive") === "Yes";
+	const agreement = attributive ? readAgreement(answered) : undefined;
+	return {
+		core,
+		inflection:
+			attributive || comparable
+				? {
+						case: agreement?.case ?? null,
+						degree,
+						gender: agreement?.gender ?? null,
+						number: agreement?.number ?? null,
+					}
+				: null,
+	};
+}
 
 /**
  * The positive of each suppletive adverb's compared forms, keyed by the

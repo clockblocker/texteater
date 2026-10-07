@@ -3,8 +3,8 @@
 import type { LunaRequest } from "../../../luna.js";
 import type { Judged } from "../canonical-form.js";
 import type { MemberOrthography } from "../member-spelling.js";
-import type { Plan } from "../open-route.js";
 import type { Target } from "../target.js";
+import type { OpeningArticle } from "./nominal.js";
 import type { Values } from "./shape.js";
 
 /**
@@ -13,7 +13,13 @@ import type { Values } from "./shape.js";
  * article outside the headword, no auxiliary, no governed member, only
  * the readings code fixes, and no judged features.
  */
-export function guessedJudgment(target: Target, planned: Plan): Judged {
+export function guessedJudgment(
+	target: Target,
+	planned: {
+		readonly article: OpeningArticle | undefined;
+		readonly presetReadings: ReadonlyMap<number, string>;
+	},
+): Judged {
 	const { article } = planned;
 	return {
 		orthographies: target.members.map(

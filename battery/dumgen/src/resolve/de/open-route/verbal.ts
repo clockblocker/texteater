@@ -1,4 +1,8 @@
-/** A VERB's auxiliaries, reflexive, subject es and separable prefix, and its headword. */
+/**
+ * A VERB's satellites (auxiliaries, lexical reflexive, subject es) and
+ * separable prefix, its block of the first request and the reading of its
+ * answers, and its headword.
+ */
 
 import {
 	type AuthoredMember,
@@ -11,19 +15,22 @@ import {
 	reflexiveForms,
 } from "../../../segment/de/candidates.js";
 import { rShortenings } from "../member-spelling.js";
-import type { Plan } from "../open-route.js";
-import { auxiliaryUses } from "../prompts.js";
-import { type Answered, UnresolvedAnswer } from "../questions.js";
+import { auxiliaryUses, fill, question } from "../prompts.js";
+import {
+	type Answered,
+	type Questionnaire,
+	UnresolvedAnswer,
+} from "../questions.js";
 import type { Member, Target } from "../target.js";
 import { coordinators } from "./governed.js";
-import { fold, spellingOf, type Values } from "./shape.js";
+import { fold, numbers, type Shape, spellingOf, type Values } from "./shape.js";
 
 /** An authored AUX Reading's use, by Canonical Form and Emoji Description (`werden 🔄`). */
 export const auxiliaryUse = ({ lemma, reading }: AuthoredMember) =>
 	`${lemma.canonicalForm} ${reading.emojiDescription}`;
 
 /** The authored AUX uses a member's spelling realizes, by Canonical Form and Emoji Description. */
-export function auxiliaryUsesOf(member: Member): readonly string[] {
+function auxiliaryUsesOf(member: Member): readonly string[] {
 	const spelled = fold(member.text);
 	return [
 		...new Set(
@@ -80,7 +87,7 @@ export const reflexives: ReadonlyMap<string, "Acc" | "Dat" | undefined> =
 	);
 
 /** Whether a member spells es, a clitic 's that may stand for it included. */
-export const spellsEs = (member: Member) =>
+const spellsEs = (member: Member) =>
 	fold(spellingOf(member)) === "es" ||
 	(member.spelling?.surfaces.includes("es") ?? false);
 
@@ -104,7 +111,7 @@ const isParticle = (word: string) => prefixParticles.has(word);
  * member's word begins with. A member that is no particle, such as the
  * verb's own participle, is never offered whole.
  */
-export function prefixCandidates(target: Target, skip: ReadonlySet<number>) {
+function prefixCandidates(target: Target, skip: ReadonlySet<number>) {
 	const found = new Set<string>();
 	for (const member of target.members) {
 		if (skip.has(member.position)) continue;
@@ -129,9 +136,203 @@ export function prefixCandidates(target: Target, skip: ReadonlySet<number>) {
 	return [...found].sort((left, right) => right.length - left.length);
 }
 
+/** A VERB unit's satellite members: its auxiliaries, lexical reflexive and subject es. */
+export type VerbalSatellites = {
+	readonly auxiliaries: readonly {
+		readonly member: Member;
+		readonly uses: readonly string[];
+	}[];
+	readonly reflexive: Member | undefined;
+	/** Every member that spells es; the subject es when there is one only. */
+	readonly expletives: readonly Member[];
+	readonly expletive: Member | undefined;
+};
+
+/** What a VERB's block asked: its satellites and the separable prefixes offered. */
+export type VerbalPlan = VerbalSatellites & {
+	readonly prefixes: readonly string[];
+};
+
+/** A unit's verbal satellites, none off a VERB route. */
+export function verbalSatellites(
+	target: Target,
+	shape: Shape,
+): VerbalSatellites {
+	const expletives = shape.verbal ? target.members.filter(spellsEs) : [];
+	const auxiliaries =
+		shape.verbal && target.members.length > 1
+			? target.members.flatMap((member) => {
+					const uses = auxiliaryUsesOf(member);
+					return uses.length > 0 ? [{ member, uses }] : [];
+				})
+			: [];
+	const reflexive =
+		shape.verbal && shape.lexeme
+			? target.members.find((member) => reflexives.has(fold(member.text)))
+			: undefined;
+	return {
+		auxiliaries,
+		reflexive,
+		expletives,
+		expletive: expletives.length === 1 ? expletives[0] : undefined,
+	};
+}
+
+/**
+ * Asks a VERB's block: each auxiliary's use, a reflexive's case its form
+ * leaves open, a Locution's subject es, the separable prefix among the
+ * members no satellite `taken`, and the verb's form.
+ */
+export function askVerbal(
+	questionnaire: Questionnaire,
+	target: Target,
+	shape: Shape,
+	satellites: VerbalSatellites,
+	taken: ReadonlySet<number>,
+): VerbalPlan {
+	const { auxiliaries, reflexive, expletive } = satellites;
+	for (const { member, uses } of auxiliaries)
+		questionnaire.choice(
+			`aux_m${member.position}`,
+			fill(question.auxiliary, { m: member.ref }),
+			{
+				...Object.fromEntries(
+					uses.map((use, index) => [
+						`u${index}`,
+						auxiliaryUses[use] ?? use,
+					]),
+				),
+				Main: question.auxiliaryMain,
+			},
+			["verbal"],
+		);
+	if (reflexive && reflexives.get(fold(reflexive.text)) === undefined)
+		questionnaire.choice(
+			"reflexive",
+			fill(question.reflexive, { m: reflexive.ref }),
+			{ Acc: "Accusative", Dat: "Dative" },
+			["verbCore"],
+		);
+	if (expletive && shape.locution)
+		questionnaire.choice(
+			"expletive",
+			fill(question.expletive, { m: expletive.ref }),
+			{
+				Subject: "Yes: the subject es, referring to nothing",
+				None: "No: an object or a fixed word of the expression",
+			},
+		);
+	const prefixes = shape.lexeme ? prefixCandidates(target, taken) : [];
+	if (prefixes.length > 0)
+		questionnaire.choice(
+			"prefix",
+			question.prefix,
+			{
+				...Object.fromEntries(
+					prefixes.map((prefix, index) => [`p${index}`, prefix]),
+				),
+				None: "No separable prefix: the verb's dictionary infinitive is written without any of these",
+			},
+			["verbCore"],
+		);
+	askVerbForm(questionnaire);
+	return { ...satellites, prefixes };
+}
+
+/** Asks a VERB's form, and the mood, tense, person, number and participle it may take. */
+function askVerbForm(questionnaire: Questionnaire): void {
+	questionnaire.choice(
+		"verbForm",
+		question.verbForm,
+		{
+			Fin: "Finite: its own finite verb or auxiliary, an imperative included",
+			Inf: "An infinitive, a separate modal's finite form aside",
+			Part: "A participle, without its own finite or infinitive auxiliary",
+		},
+		["verbal"],
+	);
+	questionnaire.choice("mood", question.mood, {
+		Ind: "Indicative",
+		Sub: "Subjunctive, Konjunktiv I or II",
+		Imp: "Imperative",
+	});
+	questionnaire.choice("tense", question.tense, {
+		Pres: "Present",
+		Past: "Past",
+	});
+	questionnaire.choice("person", question.person, {
+		"1": "First person",
+		"2": "Second person",
+		"3": "Third person, formal Sie included",
+	});
+	questionnaire.choice("number", question.verbNumber, numbers);
+	questionnaire.choice("participle", question.participle, {
+		Present: "Present participle",
+		Past: "Past participle",
+	});
+}
+
+/**
+ * Reads a VERB's block: its separable prefix and lexical reflexive, its
+ * subject es, its inflection unless it is cited, and the reading a
+ * shortened particle takes from the prefix judged for it.
+ */
+export function readVerbal(
+	target: Target,
+	verbal: VerbalPlan,
+	shape: Shape,
+	answered: Answered,
+	cited: boolean,
+): {
+	readonly core: Values;
+	readonly inflection: Values | null;
+	readonly expletive: Member | undefined;
+	readonly readings: ReadonlyMap<number, string>;
+} {
+	const core: Values = {};
+	const readings = new Map<number, string>();
+	if (shape.lexeme) {
+		const prefix = verbal.prefixes.length
+			? prefixAnswer(target, verbal.prefixes, answered)
+			: "None";
+		core.hasSepPrefix =
+			prefix === "None"
+				? null
+				: (verbal.prefixes[Number(prefix.slice(1))] ?? null);
+		// A shortened particle stands for the prefix judged for it
+		// (rein is herein when the verb is hereinkommen).
+		for (const member of target.members)
+			if (
+				member.spelling?.orthography === "Shorthand" &&
+				typeof core.hasSepPrefix === "string" &&
+				member.spelling.surfaces.length > 1 &&
+				member.spelling.surfaces.includes(core.hasSepPrefix)
+			)
+				readings.set(member.segment, core.hasSepPrefix);
+		const reflexive = verbal.reflexive;
+		core.lexicallyReflexive = reflexive
+			? (reflexives.get(fold(reflexive.text)) ??
+				answered.pick("reflexive"))
+			: null;
+	}
+	const expletive =
+		verbal.expletive &&
+		(shape.lexeme || answered.pick("expletive") === "Subject")
+			? verbal.expletive
+			: undefined;
+	return {
+		core,
+		inflection: cited
+			? null
+			: verbalInflection(verbal, answered, expletive),
+		expletive,
+		readings,
+	};
+}
+
 /** A verbal Surface's features, from its form questions and its auxiliaries' uses. */
-export function verbalInflection(
-	planned: Plan,
+function verbalInflection(
+	verbal: VerbalSatellites,
 	answered: Answered,
 	expletive: Member | undefined,
 ): Values {
@@ -141,7 +342,7 @@ export function verbalInflection(
 		passive: null,
 		voice: null,
 	};
-	for (const { member, uses } of planned.auxiliaries) {
+	for (const { member, uses } of verbal.auxiliaries) {
 		const answer = answered.pick(`aux_m${member.position}`);
 		if (answer === "Main") continue;
 		const use = uses[Number(answer.slice(1))];
@@ -222,7 +423,7 @@ export function verbHeadword(form: string, core: Values): string {
  * Unresolved, the likelier of those two it weighed is read; None is never
  * one of them.
  */
-export function prefixAnswer(
+function prefixAnswer(
 	target: Target,
 	prefixes: readonly string[],
 	answered: Answered,

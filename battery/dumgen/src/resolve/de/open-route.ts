@@ -38,51 +38,56 @@ import {
 	type Written,
 } from "./canonical-form.js";
 import { guardedHeadword } from "./headword-guards.js";
-import {
-	ambiguousPieces,
-	attestedMember,
-	type MemberOrthography,
-} from "./member-spelling.js";
+import { attestedMember, type MemberOrthography } from "./member-spelling.js";
 import { numeralWord } from "./numeral.js";
 import {
+	type AdpositionPlan,
+	askAdposition,
+	readAdposition,
+} from "./open-route/adposition.js";
+import {
 	adverbHeadword,
-	bareWWords,
+	askAdverbial,
 	ordinalStem,
+	readAdverbial,
 	suppletivePositive,
 } from "./open-route/adverbial.js";
-import { agreementQuestions } from "./open-route/agreeing.js";
-import { type Governable, governableMembers } from "./open-route/governed.js";
+import { askAgreeing, readAgreeing } from "./open-route/agreeing.js";
+import {
+	askHead,
+	askTail,
+	type HeadPlan,
+	readHead,
+	readTail,
+} from "./open-route/common.js";
+import type { Governable } from "./open-route/governed.js";
 import { guessedJudgment, guessMisses } from "./open-route/luna-guess.js";
 import {
-	articleCases,
+	askNominal,
 	caseQuestion,
-	casesBeforeAgreement,
+	type NominalPlan,
+	type NounRead,
 	nounCells,
+	type OpeningArticle,
 	openingArticle,
+	readNominal,
 } from "./open-route/nominal.js";
 import {
 	type AdpCase,
-	caseNames,
-	cases,
 	fold,
-	genderOfArticle,
-	numbers,
 	routeShape,
 	type Shape,
 	spellingOf,
 	type Values,
 } from "./open-route/shape.js";
 import {
-	auxiliaryUsesOf,
-	prefixAnswer,
-	prefixCandidates,
-	reflexives,
-	spellsEs,
-	verbalInflection,
+	askVerbal,
+	readVerbal,
+	type VerbalPlan,
+	verbalSatellites,
 	verbGuessMisses,
 	verbHeadword,
 } from "./open-route/verbal.js";
-import { auxiliaryUses, fill, question } from "./prompts.js";
 import { Answered, Questionnaire, UnresolvedAnswer } from "./questions.js";
 import {
 	fixedSpelling,
@@ -104,454 +109,71 @@ export type OpenOutcome =
 	| { readonly _tag: "CatalogMiss"; readonly message: string };
 
 /** Everything the first request asks, and what code fixed before it. */
-export type Plan = {
+type Plan = HeadPlan & {
 	readonly questionnaire: Questionnaire;
 	readonly shape: Shape;
-	readonly article: ReturnType<typeof openingArticle>;
-	readonly auxiliaries: readonly {
-		readonly member: Member;
-		readonly uses: readonly string[];
-	}[];
-	readonly reflexive: Member | undefined;
-	readonly expletive: Member | undefined;
-	readonly prefixes: readonly string[];
+	readonly article: OpeningArticle | undefined;
+	readonly verbal: VerbalPlan | undefined;
+	readonly nominal: NominalPlan | undefined;
+	readonly adposition: AdpositionPlan | undefined;
 	readonly governable: readonly Governable[];
-	readonly pieces: ReturnType<typeof ambiguousPieces>;
-	/** Shortened members whose word is judged, by Segment. */
-	readonly shortened: readonly Member[];
-	/** Readings code fixes: a VERB's clitic 's is its subject es. */
-	readonly presetReadings: ReadonlyMap<number, string>;
-	/** Cases asked in the first request, before agreement is known. */
-	readonly earlyCases: readonly string[];
-	readonly adpositionCases: readonly AdpCase[] | undefined;
 };
 
+/**
+ * The first request: the common head, the block of the route's shape, and
+ * the common tail, in that order, which is part of what jev sees and of
+ * the answer cache's key. The satellites (auxiliaries, reflexive, subject
+ * es, article) are found first, so neither the prefix nor a governed
+ * preposition is looked for among them.
+ */
 function plan(target: Target): Plan {
 	const shape = routeShape(target);
 	const questionnaire = new Questionnaire();
 	const article = openingArticle(target, shape);
-	const expletives = shape.verbal ? target.members.filter(spellsEs) : [];
-	const expletive = expletives.length === 1 ? expletives[0] : undefined;
-	// A VERB holds es only as its subject es (Rule de/expletive-es-joins-its-verb).
-	const presetReadings = new Map<number, string>(
-		expletive && shape.lexeme && expletive.spelling
-			? [[expletive.segment, "es"]]
-			: [],
+	const satellites = verbalSatellites(target, shape);
+	const head = askHead(
+		questionnaire,
+		target,
+		shape,
+		article,
+		satellites.expletive,
 	);
-	const pieces = new Map(
+	const taken = new Set(
 		[
-			...ambiguousPieces(
-				target.segments,
-				target.members.map(({ segment }) => segment),
-			),
-		].filter(([segment]) => !presetReadings.has(segment)),
-	);
-	// A member the table spells, or an article read as shortened, is not judged.
-	const judgedMembers = target.members.filter(
-		(member) => !member.spelling && member !== article?.member,
-	);
-	if (judgedMembers.length > 0)
-		questionnaire.choice(
-			"orthography",
-			question.orthography,
-			{
-				None: question.orthographyNone,
-				...Object.fromEntries(
-					judgedMembers.flatMap((member) => [
-						[
-							`t${member.position}`,
-							fill(question.typoMember, { m: member.ref }),
-						],
-						[
-							`s${member.position}`,
-							fill(question.shorthandMember, { m: member.ref }),
-						],
-					]),
-				),
-			},
-			["orthography"],
-		);
-	if (!shape.foreign && judgedMembers.length > 0) {
-		questionnaire.choice(
-			"spelling",
-			question.spelling,
-			{
-				Canonical: question.spellingCanonical,
-				Licensed: "Another spelling a current standard accepts",
-				Historical: "A spelling only an earlier standard accepted",
-				Regional: "A dialect or regional spelling",
-				Expressive: "Letters stretched for effect",
-			},
-			["orthography"],
-		);
-		questionnaire.choice(
-			"archaic",
-			question.archaic,
-			{ Current: "A current form", Archaic: "An archaic form" },
-			["orthography"],
-		);
-	}
-	for (const [segment, piece] of pieces)
-		questionnaire.choice(
-			`reading_s${segment}`,
-			fill(question.reading, {
-				m: target.members[piece.member]?.ref ?? "",
-				word: piece.spelling,
-				piece: target.segments[segment]?.text ?? "",
-			}),
-			Object.fromEntries(
-				piece.surfaces.map((surface, index) => [`w${index}`, surface]),
-			),
-			["fused"],
-		);
-	// A shortened adverb the table cannot settle (raus: heraus or hinaus)
-	// is judged here; a VERB's prefix question settles its particle.
-	const shortened = shape.verbal
-		? []
-		: target.members.filter(
-				(member) =>
-					member.spelling?.orthography === "Shorthand" &&
-					member.spelling.surfaces.length > 1,
-			);
-	for (const member of shortened)
-		questionnaire.choice(
-			`short_s${member.segment}`,
-			fill(question.shortened, { m: member.ref }),
-			Object.fromEntries(
-				(member.spelling?.surfaces ?? []).map((surface, index) => [
-					`w${index}`,
-					surface,
-				]),
-			),
-			["orthography"],
-		);
-	if (shape.citable && !article)
-		questionnaire.choice(
-			"citation",
-			question.citation,
-			{
-				Used: "Used in the sentence, inflected as its role there needs",
-				Citation:
-					"Only mentioned, as a dictionary entry, a name or a title",
-			},
-			["inflection"],
-		);
-	const auxiliaries =
-		shape.verbal && target.members.length > 1
-			? target.members.flatMap((member) => {
-					const uses = auxiliaryUsesOf(member);
-					return uses.length > 0 ? [{ member, uses }] : [];
-				})
-			: [];
-	for (const { member, uses } of auxiliaries)
-		questionnaire.choice(
-			`aux_m${member.position}`,
-			fill(question.auxiliary, { m: member.ref }),
-			{
-				...Object.fromEntries(
-					uses.map((use, index) => [
-						`u${index}`,
-						auxiliaryUses[use] ?? use,
-					]),
-				),
-				Main: question.auxiliaryMain,
-			},
-			["verbal"],
-		);
-	const reflexive =
-		shape.verbal && shape.lexeme
-			? target.members.find((member) => reflexives.has(fold(member.text)))
-			: undefined;
-	if (reflexive && reflexives.get(fold(reflexive.text)) === undefined)
-		questionnaire.choice(
-			"reflexive",
-			fill(question.reflexive, { m: reflexive.ref }),
-			{ Acc: "Accusative", Dat: "Dative" },
-			["verbCore"],
-		);
-	if (expletive && shape.locution)
-		questionnaire.choice(
-			"expletive",
-			fill(question.expletive, { m: expletive.ref }),
-			{
-				Subject: "Yes: the subject es, referring to nothing",
-				None: "No: an object or a fixed word of the expression",
-			},
-		);
-	const satellites = new Set(
-		[
-			...auxiliaries.map(({ member }) => member),
-			...(reflexive ? [reflexive] : []),
-			...expletives,
+			...satellites.auxiliaries.map(({ member }) => member),
+			...(satellites.reflexive ? [satellites.reflexive] : []),
+			...satellites.expletives,
 			...(article ? [article.member] : []),
 		].map(({ position }) => position),
 	);
-	const prefixes =
-		shape.verbal && shape.lexeme
-			? prefixCandidates(target, satellites)
-			: [];
-	if (prefixes.length > 0)
-		questionnaire.choice(
-			"prefix",
-			question.prefix,
-			{
-				...Object.fromEntries(
-					prefixes.map((prefix, index) => [`p${index}`, prefix]),
-				),
-				None: "No separable prefix: the verb's dictionary infinitive is written without any of these",
-			},
-			["verbCore"],
-		);
-	if (shape.verbal) {
-		questionnaire.choice(
-			"verbForm",
-			question.verbForm,
-			{
-				Fin: "Finite: its own finite verb or auxiliary, an imperative included",
-				Inf: "An infinitive, a separate modal's finite form aside",
-				Part: "A participle, without its own finite or infinitive auxiliary",
-			},
-			["verbal"],
-		);
-		questionnaire.choice("mood", question.mood, {
-			Ind: "Indicative",
-			Sub: "Subjunctive, Konjunktiv I or II",
-			Imp: "Imperative",
-		});
-		questionnaire.choice("tense", question.tense, {
-			Pres: "Present",
-			Past: "Past",
-		});
-		questionnaire.choice("person", question.person, {
-			"1": "First person",
-			"2": "Second person",
-			"3": "Third person, formal Sie included",
-		});
-		questionnaire.choice("number", question.verbNumber, numbers);
-		questionnaire.choice("participle", question.participle, {
-			Present: "Present participle",
-			Past: "Past participle",
-		});
-	}
-	if (shape.nounLike) {
-		if (shape.proper) {
-			questionnaire.choice(
-				"article",
-				question.properArticle,
-				{
-					Definite: "Cited with its definite article",
-					Bare: "Cited bare",
-				},
-				["properNoun"],
-			);
-			questionnaire.choice(
-				"gender",
-				question.properGender,
-				{
-					der: question.properGenderMasc,
-					die: question.properGenderFem,
-					das: question.properGenderNeut,
-					None: question.properGenderNone,
-				},
-				["properNoun"],
-			);
-		} else {
-			questionnaire.choice(
-				"gender",
-				shape.locution ? question.locutionGender : question.nounGender,
-				{
-					der: question.nounGenderMasc,
-					die: question.nounGenderFem,
-					das: question.nounGenderNeut,
-					None: question.nounGenderNone,
-				},
-				["noun"],
-			);
-			if (!shape.locution)
-				questionnaire.choice(
-					"nounKind",
-					question.nounKind,
-					{
-						Ordinary: question.nounKindOrdinary,
-						PluralOnly: question.nounKindPluralOnly,
-						Adjectival: question.nounKindAdjectival,
-					},
-					["noun"],
-				);
-		}
-		questionnaire.choice("number", question.nounNumber, numbers);
-		if (!shape.locution)
-			questionnaire.choice("formGender", question.formGender, {
-				der: "Masculine, as der shows",
-				die: "Feminine, as die shows",
-				das: "Neuter, as das shows",
-			});
-	}
-	const earlyCases = !shape.nounLike
-		? []
-		: article
-			? casesBeforeAgreement(article.article)
-			: [...cases, "Unmarked"];
-	if (earlyCases.length > 0) caseQuestion(questionnaire, earlyCases);
-	// A bare w-word as an ADV asks, opens a clause or stands for its irgend-
-	// word (Rule de/bare-w-word-is-shorthand).
-	const [lone] = target.members;
-	if (
-		shape.adverbial &&
-		shape.lexeme &&
-		target.members.length === 1 &&
-		lone &&
-		!lone.spelling &&
-		bareWWords.has(fold(lone.text))
-	)
-		questionnaire.choice(
-			"indefinite",
-			fill(question.indefinite, { m: lone.ref }),
-			{
-				Asks: question.indefiniteAsks,
-				Indefinite: question.indefiniteIrgend,
-			},
-			["orthography"],
-		);
-	if (shape.adjectival || shape.adverbial) {
-		questionnaire.choice(
-			"comparable",
-			question.comparable,
-			{ Yes: question.comparableYes, No: question.comparableNo },
-			["adjective"],
-		);
-		questionnaire.choice("degree", question.degree, {
-			Pos: "Positive, uncompared",
-			Cmp: "Comparative",
-			Sup: "Superlative, am … -sten included",
-		});
-	}
-	if (shape.adjectival) {
-		questionnaire.choice("attributive", question.attributive, {
-			Yes: "It agrees with a noun",
-			No: "Predicative or adverbial, agreeing with nothing",
-		});
-		agreementQuestions(questionnaire);
-	}
-	if (shape.agreeing) {
-		questionnaire.choice(
-			"inflects",
-			question.inflects,
-			{ Yes: "It inflects here", No: "Invariant here" },
-			["inflection"],
-		);
-		agreementQuestions(questionnaire);
-	}
-	let adpositionCases: readonly AdpCase[] | undefined;
-	if (shape.adposition) {
-		const [only] = target.members;
-		const entry =
-			shape.lexeme && only && target.members.length === 1
-				? germanAdpositionEntry({
-						family: "Lexeme",
-						canonicalForm: fold(spellingOf(only)),
-					})
-				: null;
-		adpositionCases = entry
-			? germanAdpositionAllowedCases(entry)
-			: ["Acc", "Dat", "Gen"];
-		if (adpositionCases.length > 1)
-			questionnaire.choice("realizedCase", question.realizedCase, {
-				...Object.fromEntries(
-					adpositionCases.map((value) => [value, caseNames[value]]),
-				),
-				None: question.realizedCaseNone,
-			});
-	}
-	if (target.route.kind === "INTJ" && shape.lexeme)
-		questionnaire.choice(
-			"answer",
-			question.answer,
-			{ Res: "An answer word", None: "Another interjection" },
-			["interjection"],
-		);
-	if (shape.foreign)
-		questionnaire.choice(
-			"sourceLanguage",
-			question.sourceLanguage,
-			{
-				en: "English",
-				fr: "French",
-				it: "Italian",
-				es: "Spanish",
-				la: "Latin",
-				pt: "Portuguese",
-				nl: "Dutch",
-				sv: "Swedish",
-				ru: "Russian",
-				tr: "Turkish",
-				ja: "Japanese",
-			},
-			["foreign"],
-		);
-	if (shape.coverage)
-		questionnaire.choice(
-			"coverage",
-			question.coverage,
-			{
-				Full: "All of its fixed wording is realized",
-				Partial:
-					"Some fixed wording is missing or deliberately changed",
-			},
-			["coverage"],
-		);
-	const governable = shape.governs
-		? governableMembers(target, satellites)
-		: [];
-	for (const { member, cases: allowed } of governable) {
-		questionnaire.choice(
-			`governed_m${member.position}`,
-			fill(question.governed, { m: member.ref }),
-			{
-				Governed: "Yes, the head selects it",
-				Free: question.governedFree,
-			},
-			["government"],
-		);
-		if (!shape.governor) continue;
-		if (allowed.length > 1)
-			questionnaire.choice(
-				`governedCase_m${member.position}`,
-				fill(question.governedCase, { m: member.ref }),
-				Object.fromEntries(
-					allowed.map((value) => [value, caseNames[value]]),
-				),
-			);
-		questionnaire.choice(
-			`governedReferent_m${member.position}`,
-			fill(question.governedReferent, { m: member.ref }),
-			{
-				Someone: "A person or people",
-				Something: "A thing, place, event, fact or idea",
-				Either: "Either: the sentence leaves it open or it names both",
-			},
-		);
-	}
+	const verbal = shape.verbal
+		? askVerbal(questionnaire, target, shape, satellites, taken)
+		: undefined;
+	const nominal = shape.nounLike
+		? askNominal(questionnaire, shape, article)
+		: undefined;
+	if (shape.adjectival || shape.adverbial)
+		askAdverbial(questionnaire, target, shape);
+	if (shape.agreeing) askAgreeing(questionnaire);
+	const adposition = shape.adposition
+		? askAdposition(questionnaire, target, shape)
+		: undefined;
+	const governable = askTail(questionnaire, target, shape, taken);
 	questionnaire.cite("identity");
 	return {
+		...head,
 		questionnaire,
 		shape,
 		article,
-		auxiliaries,
-		reflexive,
-		expletive,
-		prefixes,
+		verbal,
+		nominal,
+		adposition,
 		governable,
-		pieces,
-		shortened,
-		presetReadings,
-		earlyCases,
-		adpositionCases,
 	};
 }
 
 /** What the first request settled, and what is still open. */
-export type FirstRead = {
+type FirstRead = {
 	readonly core: Values;
 	readonly inflection: Values | null | undefined;
 	readonly orthographies: readonly MemberOrthography[];
@@ -565,13 +187,51 @@ export type FirstRead = {
 	readonly realizedCase: AdpCase | "None" | undefined;
 	/** The cases a NOUN's Case question still has to choose among. */
 	readonly openCases: readonly string[];
-	/** A used common NOUN's number and the gender jev saw its form show, for Luna's article. */
-	readonly noun?: {
-		readonly number: string;
-		readonly shown: string | null;
-		readonly earlyCase: string | undefined;
-	};
+	readonly noun?: NounRead;
 };
+
+/** What the block of a route's shape settles: its Core Features, its inflection and any extras. */
+type ShapeRead = {
+	readonly core: Values;
+	readonly inflection: Values | null | undefined;
+	readonly readings?: ReadonlyMap<number, string>;
+	readonly expletive?: Member | undefined;
+	readonly openCases?: readonly string[];
+	readonly noun?: NounRead | undefined;
+	readonly realizedCase?: AdpCase | "None" | undefined;
+};
+
+/** Reads the block of the route's shape; a shape with none has no Core Features. */
+function readShape(
+	target: Target,
+	planned: Plan,
+	answered: Answered,
+	cited: boolean,
+): ShapeRead {
+	const { shape } = planned;
+	if (planned.verbal)
+		return readVerbal(target, planned.verbal, shape, answered, cited);
+	if (planned.nominal)
+		return readNominal(
+			shape,
+			planned.article,
+			planned.nominal,
+			planned.questionnaire,
+			answered,
+			cited,
+		);
+	if (shape.adjectival || shape.adverbial)
+		return readAdverbial(shape, answered);
+	if (shape.agreeing) return readAgreeing(answered);
+	const inflection = shape.inflects ? null : undefined;
+	if (planned.adposition)
+		return {
+			core: {},
+			inflection,
+			realizedCase: readAdposition(planned.adposition, answered),
+		};
+	return { core: {}, inflection };
+}
 
 /** Reads the first request's answers; an Unresolved deciding answer throws. */
 function readFirst(
@@ -579,312 +239,36 @@ function readFirst(
 	planned: Plan,
 	answered: Answered,
 ): FirstRead {
-	const { shape, questionnaire } = planned;
-	const irregular = questionnaire.questions.orthography
-		? answered.pick("orthography")
-		: "None";
-	const indefinite = answered.peek("indefinite") === "Indefinite";
-	const orthographies = target.members.map(
-		(member): MemberOrthography =>
-			member.spelling?.orthography ??
-			(member === planned.article?.member
-				? planned.article.orthography
-				: irregular === `t${member.position}`
-					? "Typo"
-					: irregular === `s${member.position}` || indefinite
-						? "Shorthand"
-						: "Standard"),
+	const head = readHead(
+		target,
+		planned.questionnaire,
+		planned.article,
+		planned,
+		answered,
 	);
-	const spellingAnswer = questionnaire.questions.spelling
-		? answered.pick("spelling")
-		: "Canonical";
-	const digits = target.members.every(
-		(member) => member.spelling || /^\d+$/u.test(member.text),
+	const read = readShape(target, planned, answered, head.cited);
+	const tail = readTail(
+		target,
+		planned.shape,
+		planned.governable,
+		answered,
+		read.expletive,
+		head.cited,
 	);
-	const spelling =
-		target.route.kind === "NUM" && digits
-			? { kind: "Variant", variantTags: ["Licensed"] }
-			: spellingAnswer === "Canonical"
-				? { kind: "Canonical" }
-				: { kind: "Variant", variantTags: [spellingAnswer] };
-	const surfaceFeatures =
-		questionnaire.questions.archaic &&
-		answered.pick("archaic") === "Archaic"
-			? { historicalStatus: "Archaic" }
-			: null;
-	const readings = new Map(planned.presetReadings);
-	for (const [segment, piece] of planned.pieces) {
-		const answer = answered.pick(`reading_s${segment}`);
-		const reading = piece.surfaces[Number(answer.slice(1))];
-		if (reading === undefined)
-			throw new UnresolvedAnswer(`No reading of Segment ${segment}`);
-		readings.set(segment, reading);
-	}
-	for (const member of planned.shortened) {
-		const answer = answered.pick(`short_s${member.segment}`);
-		const reading = member.spelling?.surfaces[Number(answer.slice(1))];
-		if (reading === undefined)
-			throw new UnresolvedAnswer(
-				`No reading of Segment ${member.segment}`,
-			);
-		readings.set(member.segment, reading);
-	}
-	const cited =
-		questionnaire.questions.citation !== undefined &&
-		answered.pick("citation") === "Citation";
-	const core: Values = {};
-	let inflection: Values | null | undefined = shape.inflects
-		? null
-		: undefined;
-	let expletive: Member | undefined;
-	let openCases: readonly string[] = [];
-	let noun: FirstRead["noun"];
-	if (shape.verbal) {
-		if (shape.lexeme) {
-			const prefix = planned.prefixes.length
-				? prefixAnswer(target, planned.prefixes, answered)
-				: "None";
-			core.hasSepPrefix =
-				prefix === "None"
-					? null
-					: (planned.prefixes[Number(prefix.slice(1))] ?? null);
-			// A shortened particle stands for the prefix judged for it
-			// (rein is herein when the verb is hereinkommen).
-			for (const member of target.members)
-				if (
-					member.spelling?.orthography === "Shorthand" &&
-					typeof core.hasSepPrefix === "string" &&
-					member.spelling.surfaces.length > 1 &&
-					member.spelling.surfaces.includes(core.hasSepPrefix)
-				)
-					readings.set(member.segment, core.hasSepPrefix);
-			const reflexive = planned.reflexive;
-			core.lexicallyReflexive = reflexive
-				? (reflexives.get(fold(reflexive.text)) ??
-					answered.pick("reflexive"))
-				: null;
-		}
-		expletive =
-			planned.expletive &&
-			(shape.lexeme || answered.pick("expletive") === "Subject")
-				? planned.expletive
-				: undefined;
-		inflection = cited
-			? null
-			: verbalInflection(planned, answered, expletive);
-	}
-	if (shape.nounLike) {
-		if (shape.proper)
-			core.article =
-				answered.pick("article") === "Definite" ? "Definite" : null;
-		const gender = answered.pick("gender");
-		core.gender =
-			gender === "None" ? null : (genderOfArticle[gender] ?? gender);
-		// Only a person noun made from an adjective or participle, or a noun
-		// with no singular, has no gender (Rule de/adjectival-noun-lemma);
-		// an ordinary noun shown in its plural keeps its singular's.
-		const kind = answered.peek("nounKind");
-		if (kind === "Adjectival" || kind === "PluralOnly") core.gender = null;
-		if (kind === "Ordinary" && core.gender === null) {
-			const likeliest = answered
-				.alternatives("gender")
-				.find((option) => option in genderOfArticle);
-			if (likeliest !== undefined)
-				core.gender = genderOfArticle[likeliest];
-		}
-		if (!cited) {
-			const number = answered.pick("number");
-			const shown =
-				!shape.locution && core.gender === null && number === "Sing"
-					? answered.peek("formGender")
-					: undefined;
-			let formGender =
-				shown === undefined ? null : (genderOfArticle[shown] ?? shown);
-			if (shape.lexeme && !shape.proper) {
-				const seen = answered.peek("formGender");
-				noun = {
-					number,
-					shown:
-						seen === undefined
-							? null
-							: (genderOfArticle[seen] ?? seen),
-					earlyCase:
-						planned.earlyCases.length > 0
-							? answered.peek("case")
-							: undefined,
-				};
-			}
-			// A singular head's owned article is hard evidence of its
-			// gender: when the judged one agrees with no case of the
-			// article, the likeliest other gender jev weighed that does is
-			// read instead (der Tisch is never Neut).
-			const article = planned.article?.article;
-			const judgedGender = (formGender ?? core.gender) as string | null;
-			if (
-				article &&
-				!shape.locution &&
-				number === "Sing" &&
-				articleCases(article, number, judgedGender).length === 0
-			) {
-				const id = core.gender === null ? "formGender" : "gender";
-				const agreeing = (
-					id in planned.questionnaire.questions
-						? answered.alternatives(id)
-						: []
-				)
-					.map((option) => genderOfArticle[option])
-					.find(
-						(option) =>
-							option !== undefined &&
-							articleCases(article, number, option).length > 0,
-					);
-				if (agreeing !== undefined && id === "gender")
-					core.gender = agreeing;
-				if (agreeing !== undefined && id === "formGender")
-					formGender = agreeing;
-			}
-			if (
-				!shape.locution &&
-				!shape.proper &&
-				core.gender === null &&
-				number === "Sing" &&
-				!formGender
-			)
-				throw new UnresolvedAnswer("Unresolved formGender");
-			inflection = shape.locution
-				? { case: null, number }
-				: { case: null, gender: formGender, number };
-			const agreeing = (formGender ?? core.gender) as string | null;
-			openCases = planned.article
-				? articleCases(planned.article.article, number, agreeing)
-				: [...cases, "Unmarked"];
-			// A common NOUN waits for the article Luna writes before this verdict.
-			if (openCases.length === 0 && !noun)
-				throw new UnresolvedAnswer(
-					"The article agrees with no case of its head",
-				);
-			if (openCases.length > 0 && planned.earlyCases.length > 0) {
-				const answer = answered.pick("case");
-				if (!openCases.includes(answer))
-					throw new UnresolvedAnswer(
-						"The Case answer fits no open cell",
-					);
-				openCases = [answer];
-			}
-			if (openCases.length === 1)
-				inflection.case =
-					openCases[0] === "Unmarked" ? null : openCases[0];
-		}
-	}
-	if (shape.adjectival || shape.adverbial) {
-		const comparable = answered.pick("comparable") === "Yes";
-		core.comparable = comparable ? "Yes" : null;
-		const degree = comparable ? answered.pick("degree") : null;
-		if (shape.adverbial) inflection = comparable ? { degree } : null;
-		else {
-			const attributive = answered.pick("attributive") === "Yes";
-			const number = attributive
-				? answered.pick("agreement.number")
-				: null;
-			const gender = attributive
-				? answered.pick("agreement.gender")
-				: null;
-			inflection =
-				attributive || comparable
-					? {
-							case: attributive
-								? answered.pick("agreement.case")
-								: null,
-							degree,
-							gender:
-								gender === "Unmarked" || number === "Plur"
-									? null
-									: gender,
-							number,
-						}
-					: null;
-		}
-	}
-	if (shape.agreeing) {
-		const inflects = answered.pick("inflects") === "Yes";
-		if (inflects) {
-			const number = answered.pick("agreement.number");
-			const gender = answered.pick("agreement.gender");
-			inflection = {
-				case: answered.pick("agreement.case"),
-				gender:
-					gender === "Unmarked" || number === "Plur" ? null : gender,
-				number,
-			};
-		} else inflection = null;
-	}
-	let realizedCase: AdpCase | "None" | undefined;
-	if (shape.adposition) {
-		const allowed = planned.adpositionCases ?? [];
-		realizedCase =
-			allowed.length === 1
-				? allowed[0]
-				: (answered.pick("realizedCase") as AdpCase | "None");
-	}
-	if (target.route.kind === "INTJ" && shape.lexeme)
-		core.partType = answered.pick("answer") === "Res" ? "Res" : null;
-	if (shape.foreign) core.sourceLang = answered.pick("sourceLanguage");
-	const coverage =
-		shape.coverage && answered.pick("coverage") === "Partial"
-			? "Partial"
-			: "Full";
-	// A subject es is evidence only of a used verb, in a complete
-	// realization: jev's citation or Partial against it is a clash.
-	if (expletive && cited)
-		throw new UnresolvedAnswer("The subject es clashes with a citation");
-	if (expletive && coverage === "Partial")
-		throw new UnresolvedAnswer(
-			"The subject es clashes with a partial realization",
-		);
-	const governed: Values[] = [];
-	const governedPositions: number[] = [];
-	for (const chosen of planned.governable) {
-		const position = chosen.member.position;
-		if (answered.pick(`governed_m${position}`) !== "Governed") continue;
-		governedPositions.push(position);
-		if (!shape.governor) continue;
-		const governedCase =
-			chosen.cases.length === 1
-				? chosen.cases[0]
-				: answered.pick(`governedCase_m${position}`);
-		governed.push({
-			member: position,
-			complement: {
-				kind: "Preposition",
-				preposition: {
-					unitKind: "Lemma",
-					language: "de",
-					family: "Lexeme",
-					kind: "ADP",
-					canonicalForm: chosen.preposition,
-					coreFeatures: {},
-				},
-				governedCase,
-				referent:
-					answered.peek(`governedReferent_m${position}`) ?? "Either",
-			},
-			realizedCase: governedCase,
-		});
-	}
 	return {
-		core,
-		inflection,
-		orthographies,
-		spelling,
-		surfaceFeatures,
-		coverage,
-		readings,
-		governed,
-		governedPositions,
-		expletive,
-		realizedCase,
-		openCases,
-		...(noun ? { noun } : {}),
+		core: { ...read.core, ...tail.core },
+		inflection: read.inflection,
+		orthographies: head.orthographies,
+		spelling: head.spelling,
+		surfaceFeatures: head.surfaceFeatures,
+		coverage: tail.coverage,
+		readings: new Map([...head.readings, ...(read.readings ?? [])]),
+		governed: tail.governed,
+		governedPositions: tail.governedPositions,
+		expletive: read.expletive,
+		realizedCase: read.realizedCase,
+		openCases: read.openCases ?? [],
+		...(read.noun ? { noun: read.noun } : {}),
 	};
 }
 
@@ -977,7 +361,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		},
 		outsideHeadword,
 		auxiliaries: new Set(
-			planned.auxiliaries.flatMap(({ member }) => {
+			(planned.verbal?.auxiliaries ?? []).flatMap(({ member }) => {
 				const use = new Answered(answers).peek(
 					`aux_m${member.position}`,
 				);
@@ -1021,7 +405,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 								? verbGuessMisses(
 										written.canonicalForm,
 										first.core,
-										planned.prefixes,
+										planned.verbal?.prefixes ?? [],
 									)
 								: undefined;
 						if (!missed) return written;
@@ -1051,7 +435,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			written && isGermanPluralOnlyNoun(written.canonicalForm)
 				? "none"
 				: written?.article;
-		cells = nounCells(planned, first, article) ?? cells;
+		cells = nounCells(planned.article, first, article) ?? cells;
 		if (cells.openCases.length === 0)
 			return {
 				_tag: "Unresolved",
