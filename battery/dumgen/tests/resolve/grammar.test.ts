@@ -1326,6 +1326,65 @@ test("a fused article piece is the noun's owned article and narrows its Case", a
 	]);
 });
 
+test("an opening Fused member gives the noun its article only when its piece names one word: im Wald does, war's Wetter doesn't", async () => {
+	// 's is es or das, so before the Sentence chooses, it opens no article:
+	// the case is asked over every cell and the citation question stays.
+	const clitic: Segment[] = [
+		word("Wie"),
+		space,
+		word("war"),
+		word("'s"),
+		space,
+		word("Wetter"),
+		{ kind: "Punctuation", text: "?" },
+	];
+	const ambiguous = fakeJev({
+		reading_s3: "w1",
+		gender: "das",
+		number: "Sing",
+	});
+	const wetter = await resolveOnce(
+		{ jev: ambiguous.ask, luna: writes("Wetter", ["das", "Wetter"]).ask },
+		{
+			sentence: sentenceOf("", clitic),
+			unit: unitOf([3, 5], "Lexeme", "NOUN"),
+		},
+	);
+	const fromClitic = attested(wetter.result);
+	expect(fromClitic.articleEvidence).toBeNull();
+	expect(fromClitic.members[0]).toMatchObject({
+		attested: "'s",
+		orthography: "Fused",
+		fusion: { components: [{ surface: "war" }, { surface: "das" }] },
+	});
+	expect(ambiguous.questions("grammar")).toEqual(
+		expect.arrayContaining(["reading_s3", "citation", "case"]),
+	);
+	// m of im is dem alone, so the article opens the unit and no citation
+	// question is asked.
+	const fused: Segment[] = [
+		word("Wir"),
+		space,
+		word("sind"),
+		space,
+		word("i", "in"),
+		word("m", "dem"),
+		space,
+		word("Wald"),
+		stop,
+	];
+	const plain = fakeJev({ gender: "der", number: "Sing" });
+	const wald = await resolveOnce(
+		{ jev: plain.ask, luna: writes("Wald", ["dem", "Wald"]).ask },
+		{
+			sentence: sentenceOf("", fused),
+			unit: unitOf([5, 7], "Lexeme", "NOUN"),
+		},
+	);
+	expect(attested(wald.result).articleEvidence).not.toBeNull();
+	expect(plain.questions("grammar")).not.toContain("citation");
+});
+
 test("an infinitive split at its infixed zu keeps its pieces' letters, glued in its Surface", async () => {
 	const segments: Segment[] = [
 		word("Er"),

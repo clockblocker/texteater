@@ -180,17 +180,19 @@ function openingArticle(
 		? [first.spelling.orthography]
 		: (["Standard", "Shorthand"] as const);
 	for (const orthography of tried) {
-		let article: ArticleMember;
-		try {
-			article = attestedMember(
-				target.segments,
-				first.segment,
-				orthography,
-				new Map(),
-			);
-		} catch {
+		// A fused piece that names several words ('s: es or das) is read only
+		// once the Sentence has chosen one, so it decides no opening article.
+		if (
+			orthography === "Fused" &&
+			ambiguousPieces(target.segments, [first.segment]).size > 0
+		)
 			return undefined;
-		}
+		const article: ArticleMember = attestedMember(
+			target.segments,
+			first.segment,
+			orthography,
+			new Map(),
+		);
 		if (
 			(germanArticleSpellings(article) ?? []).length > 0 &&
 			germanArticleCell(article, {
