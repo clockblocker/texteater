@@ -31,8 +31,18 @@ export function sheetsOf<S>(pane: Panes.PaneNode<S>): readonly SheetView<S>[] {
 	}));
 }
 
+/** A Pane's Ground as a Sheet: the battery's `sheetsOf` always yields it first. */
+export function groundSheetOf<S>(pane: Panes.PaneNode<S>): SheetView<S> {
+	const ground = sheetsOf(pane)[0];
+	if (!ground) throw new Error(`Pane ${pane.id} has no Ground`);
+	return ground;
+}
+
+/** A Pane's top Sheet: its last Cover, or its Ground when it has none. */
 export function topSheetOf<S>(pane: Panes.PaneNode<S>): SheetView<S> {
-	return sheetsOf(pane).at(-1) as SheetView<S>;
+	const top = sheetsOf(pane).at(-1);
+	if (!top) throw new Error(`Pane ${pane.id} has no Ground`);
+	return top;
 }
 
 export function findSheet<S>(

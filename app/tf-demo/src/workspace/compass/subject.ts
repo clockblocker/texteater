@@ -1,4 +1,4 @@
-import type { DealtCard } from "compass";
+import type { DealtCard, Place } from "compass";
 import type { ReactNode, PointerEvent as ReactPointerEvent } from "react";
 
 /**
@@ -11,11 +11,8 @@ import type { ReactNode, PointerEvent as ReactPointerEvent } from "react";
 /** A Presentation's form: a Card resting or held, or a Sheet in a Pane. */
 export type Form = "card" | "sheet";
 
-/**
- * Where a Card sits in its Deck: the open one in front, or folded above
- * or below it, which puts its Heading at its lower edge as a Card Tail.
- */
-export type Place = "above" | "open" | "below";
+/** Where a Card sits in its Deck; the battery places it (`deckSlotsIn`). */
+export type { Place };
 
 /**
  * The two parts of a Note the renderer places. `heading` is the Heading

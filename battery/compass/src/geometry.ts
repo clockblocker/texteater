@@ -11,7 +11,7 @@
  * one sits on.
  */
 
-import type { Edge } from "./model";
+import type { Edge, Presentation } from "./model";
 
 export type Box = {
 	readonly left: number;
@@ -175,6 +175,66 @@ export function deckColumnIn(
 		width,
 		height,
 	};
+}
+
+/**
+ * Where a Card sits in its Deck: the open one in front, or folded above
+ * or below it, which puts its Heading at its lower edge as a Card Tail.
+ */
+export type Place = "above" | "open" | "below";
+
+/** A resting Card's slot in its Deck: its place, its box, and its z. */
+export type DeckSlot<S> = {
+	readonly card: Presentation<S>;
+	readonly place: Place;
+	readonly box: Box;
+	readonly z: number;
+};
+
+/**
+ * Where a Deck's resting Cards sit in a Pane, in drawing order: the last
+ * in rank on top of the column, each slot one Heading row below the one
+ * before, every slot as tall as the front Card. The Card `frontId` names
+ * is open, or the first in rank when it names none of `cards`; the Cards
+ * drawn before it are folded above it and the rest below. Their z rises
+ * toward the open Card from both sides, and the open Card is over all of
+ * them. A Card in hand is the renderer's to lift over the rest.
+ */
+export function deckSlotsIn<S>(
+	pane: Box,
+	cards: readonly Presentation<S>[],
+	frontId: string | null,
+	rem: number,
+	openScale: number,
+	topRem = DECK_TOP_REM,
+): readonly DeckSlot<S>[] {
+	const count = cards.length;
+	const column = deckColumnIn(pane, rem, openScale, topRem);
+	const height = cardHeightPx(count, rem, column.height);
+	const order = [...cards].reverse();
+	const frontAt = order.findIndex((card) => card.id === frontId);
+	const openAt = frontAt === -1 ? count - 1 : frontAt;
+	return order.map((card, index) => {
+		const place: Place =
+			index < openAt ? "above" : index > openAt ? "below" : "open";
+		return {
+			card,
+			place,
+			box: {
+				left: column.left,
+				top: column.top + index * HEADER_REM * rem,
+				width: column.width,
+				height,
+			},
+			z:
+				Z.deck +
+				(place === "open"
+					? 9
+					: place === "above"
+						? index
+						: count - 1 - index),
+		};
+	});
 }
 
 /** Where a Deck is drawn: how far below its Pane's top, and on what screen. */

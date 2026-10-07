@@ -10,6 +10,7 @@ import {
 	type Drag,
 	flickOf,
 	freshDrag,
+	inHandOf,
 	type NoteHandle,
 	projected,
 	sample,
@@ -157,5 +158,32 @@ describe("keyboard destinations", () => {
 		const d = dragOf({ lifted: true, home: "close" });
 		const list = keyboardDestinations(d, reading(dealt(), true));
 		expect(list).toEqual([{ kind: "home", paneId: "pane-1" }]);
+	});
+});
+
+describe("the Card in hand drawn on its own", () => {
+	const box = { left: 1, top: 2, width: 3, height: 4 };
+	const origin = { left: 5, top: 6, width: 7, height: 8 };
+	const loose = { card: { id: "loose", subject: "los" }, box };
+	const none = new Set<string>();
+
+	test("is a loose Card not drawn yet, at its own box", () => {
+		expect(inHandOf(loose, dragOf({ lifted: true }), none)).toEqual(loose);
+	});
+
+	test("else a lifted drag's Card not drawn yet, at its origin", () => {
+		const d = dragOf({ lifted: true, origin });
+		expect(inHandOf(null, d, none)).toEqual({ card: d.card, box: origin });
+		expect(inHandOf(loose, d, new Set(["loose"]))).toEqual({
+			card: d.card,
+			box: origin,
+		});
+	});
+
+	test("is nothing once drawn, or for a Card picked off a Deck", () => {
+		const d = dragOf({ lifted: true });
+		expect(inHandOf(null, d, new Set([d.card.id]))).toBeNull();
+		expect(inHandOf(null, dragOf({ lifted: false }), none)).toBeNull();
+		expect(inHandOf(null, null, none)).toBeNull();
 	});
 });

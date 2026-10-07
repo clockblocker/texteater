@@ -8,6 +8,7 @@ import {
 	coverBoxIn,
 	DECK_TOP_REM,
 	deckColumnIn,
+	deckSlotsIn,
 	deckTopIn,
 	dropRegions,
 	edgeWidth,
@@ -24,6 +25,7 @@ import {
 	sameBoxes,
 	sideOf,
 	spawnSize,
+	Z,
 } from "./geometry";
 
 const REM = 16;
@@ -384,6 +386,82 @@ describe("the Deck", () => {
 		});
 		expect(band.left).toBe(100);
 		expect(band.width).toBe(1200);
+	});
+});
+
+describe("deckSlotsIn", () => {
+	/** Five Cards in rank, a to e. */
+	const cards = ["a", "b", "c", "d", "e"].map((id) => ({
+		id,
+		subject: id,
+	}));
+	const slotsOf = (frontId: string | null) =>
+		deckSlotsIn(PANE, cards, frontId, REM, OPEN_SCALE);
+
+	test("Cards are drawn last in rank first", () => {
+		expect(slotsOf("c").map((slot) => slot.card.id)).toEqual([
+			"e",
+			"d",
+			"c",
+			"b",
+			"a",
+		]);
+	});
+
+	test("the front Card is open, those drawn before it fold above it and the rest below", () => {
+		expect(slotsOf("c").map((slot) => slot.place)).toEqual([
+			"above",
+			"above",
+			"open",
+			"below",
+			"below",
+		]);
+		expect(slotsOf("e").map((slot) => slot.place)).toEqual([
+			"open",
+			"below",
+			"below",
+			"below",
+			"below",
+		]);
+	});
+
+	test("a front id that names no Card opens the first in rank", () => {
+		for (const frontId of [null, "gone"])
+			expect(slotsOf(frontId).map((slot) => slot.place)).toEqual([
+				"above",
+				"above",
+				"above",
+				"above",
+				"open",
+			]);
+	});
+
+	test("slots sit one Heading row apart in the Deck's column, each as tall as the front Card", () => {
+		const column = deckColumnIn(PANE, REM, OPEN_SCALE);
+		expect(slotsOf("c").map((slot) => slot.box)).toEqual(
+			cards.map((_, index) => ({
+				left: column.left,
+				top: column.top + index * HEADER_REM * REM,
+				width: column.width,
+				height: cardHeightPx(5, REM, column.height),
+			})),
+		);
+	});
+
+	test("z rises toward the open Card from both sides, and the open Card is over all", () => {
+		const z = slotsOf("c").map((slot) => slot.z);
+		expect(z).toEqual([Z.deck, Z.deck + 1, Z.deck + 9, Z.deck + 1, Z.deck]);
+		const front = slotsOf("d").map((slot) => slot.z);
+		expect(front[1]).toBe(Math.max(...front));
+	});
+
+	test("an empty Deck has no slots", () => {
+		expect(deckSlotsIn(PANE, [], null, REM, OPEN_SCALE)).toEqual([]);
+	});
+
+	test("a stage Deck's slots start at its own top", () => {
+		const [first] = deckSlotsIn(PANE, cards, null, REM, OPEN_SCALE, 1);
+		expect(first?.box.top).toBe(50 + REM);
 	});
 });
 

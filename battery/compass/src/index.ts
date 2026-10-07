@@ -1,4 +1,10 @@
-export type { Box, DropRegions, Region, WritingDirection } from "./geometry";
+export type {
+	Box,
+	DropRegions,
+	Place,
+	Region,
+	WritingDirection,
+} from "./geometry";
 export {
 	BAR_REM,
 	CARD_WIDTH_REM,
@@ -8,6 +14,7 @@ export {
 	DEAL_GAP_PX,
 	DECK_TOP_REM,
 	deckColumnIn,
+	deckSlotsIn,
 	dropRegions,
 	groundBoxIn,
 	HEADER_REM,

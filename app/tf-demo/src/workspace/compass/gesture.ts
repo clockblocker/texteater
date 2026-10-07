@@ -231,3 +231,27 @@ export function homeLabel<S>(drag: Drag<S>): string {
 			return "Back in place";
 	}
 }
+
+/* -------------------------------------------------------------- in hand */
+
+/** A Card in hand and the box it is held at. */
+export type InHand<S> = {
+	readonly card: Presentation<S>;
+	readonly box: Box;
+};
+
+/**
+ * The Card in hand that no Sheet or Deck drew, so the renderer draws it on
+ * its own: a loose Card not drawn yet, or else a lifted drag's Card not
+ * drawn yet, at its origin. `drawn` holds the ids already drawn.
+ */
+export function inHandOf<S>(
+	loose: InHand<S> | null,
+	drag: Drag<S> | null,
+	drawn: ReadonlySet<string>,
+): InHand<S> | null {
+	if (loose && !drawn.has(loose.card.id)) return loose;
+	if (drag?.lifted && !drawn.has(drag.card.id))
+		return { card: drag.card, box: drag.origin };
+	return null;
+}

@@ -1,22 +1,20 @@
 import {
 	type Box,
-	cardHeightPx,
 	coverBoxIn,
 	DECK_TOP_REM,
 	deckColumnIn,
 	deckHolding,
+	deckSlotsIn,
 	dropRegions,
 	findPane,
 	groundBoxIn,
 	groundOf,
-	HEADER_REM,
 	isRooted,
 	type LayoutNode,
 	openIds,
 	type PaneNode,
 	type Presentation,
 	panesOf,
-	type Rung,
 	restingCards,
 	returnBandIn,
 	Z,
@@ -41,6 +39,7 @@ import {
 	type Fate,
 	fateOf,
 	homeLabel,
+	inHandOf,
 	type NoteHandle,
 	type ThrowTuning,
 } from "./gesture";
@@ -60,6 +59,7 @@ import {
 	type SheetActions,
 } from "./presentation-view";
 import {
+	groundSheetOf,
 	PREVIEW_PANE,
 	previewLayout,
 	rungLabel,
@@ -68,7 +68,7 @@ import {
 	shownPanes,
 	topSheetOf,
 } from "./sheets";
-import type { MenuItem, MenuItemView, Place, SubjectRenderer } from "./subject";
+import type { MenuItem, MenuItemView, SubjectRenderer } from "./subject";
 import type { CompassWorkspace } from "./use-compass-workspace";
 import { useDismiss } from "./use-dismiss";
 import { type PagePress, useDrag } from "./use-drag";
@@ -335,11 +335,11 @@ function CompassRuntime<S>({
 		const preview = pane.id === PREVIEW_PANE;
 		const rooted = isRooted(pane);
 		const ground = groundOf(pane);
-		const groundSheet = sheetsOf(pane)[0] as SheetView<S>;
+		const groundSheet = groundSheetOf(pane);
 		const covered = pane.covers.length > 0;
 		/* the bar is a handle only while its Ground is a Sheet and uncovered */
 		const lifts = ground.kind === "Sheet" && !covered && allows("lift");
-		const below = pane.line[pane.line.length - 2] as Rung<S> | undefined;
+		const below = pane.line.at(-2);
 		const barSelector = `[data-deck-pane="${pane.id}"] [data-pane-bar]`;
 		return (
 			<section
@@ -517,44 +517,26 @@ function CompassRuntime<S>({
 	): ReactNode[] {
 		const deck = sheet.deck;
 		if (!deck) return [];
-		const cards = deck.cards.filter((card) => !open.has(card.id));
-		const count = cards.length;
-		const column = deckColumnIn(paneBox, rem, OPEN_SCALE, deckTopRem);
-		const headerPx = HEADER_REM * rem;
-		const slotHeight = cardHeightPx(count, rem, column.height);
-		const order = [...cards].reverse();
-		const front =
-			cards.find((card) => card.id === deck.frontId) ?? cards[0] ?? null;
-		const openAt = front ? order.indexOf(front) : count - 1;
+		const slots = deckSlotsIn(
+			paneBox,
+			deck.cards.filter((card) => !open.has(card.id)),
+			deck.frontId,
+			rem,
+			OPEN_SCALE,
+			deckTopRem,
+		);
 		/* a swiped Deck moves as a stack: every Card keeps its z, and every
 		   Card wears the commit line */
 		const swiping =
 			drag?.phase === "swiping" && drag.deckSheet === sheet.sheetId;
-		return order.flatMap((card, index) => {
-			const place: Place =
-				index < openAt ? "above" : index > openAt ? "below" : "open";
+		return slots.flatMap(({ card, place, box: slot, z: restingZ }) => {
 			const held =
 				drag !== null &&
 				drag.phase !== "pressed" &&
 				drag.card.id === card.id;
 			if (heldOnly && !held) return [];
-			const slot: Box = {
-				left: column.left,
-				top: column.top + index * headerPx,
-				width: column.width,
-				height: slotHeight,
-			};
-			/* z rises toward the expanded Card from both sides; a Held
-			   Card is over all of them until it is let go */
-			const z =
-				held && !returning && !swiping
-					? Z.held
-					: Z.deck +
-						(place === "open"
-							? 9
-							: place === "above"
-								? index
-								: count - 1 - index);
+			/* a Held Card is over its Deck until it is let go */
+			const z = held && !returning && !swiping ? Z.held : restingZ;
 			const name = label(card.subject);
 			return (
 				<PresentationView
@@ -620,7 +602,7 @@ function CompassRuntime<S>({
 			const paneBox = paneBoxes[pane.id];
 			if (!paneBox) continue;
 			const sheets = sheetsOf(pane);
-			const top = sheets[sheets.length - 1] as SheetView<S>;
+			const top = topSheetOf(pane);
 			sheets.forEach((sheet, index) => {
 				const card = sheet.presentation;
 				if (!card) return;
@@ -748,13 +730,7 @@ function CompassRuntime<S>({
 		}
 		/* a Card from nowhere, or a Sheet in hand whose Deck is hidden or
 		   gone: nothing above drew it, and the hand still holds it */
-		const { loose } = gesture;
-		const inHand =
-			loose && !rendered.has(loose.card.id)
-				? { card: loose.card, box: loose.box }
-				: drag?.lifted && !rendered.has(drag.card.id)
-					? { card: drag.card, box: drag.origin }
-					: null;
+		const inHand = inHandOf(gesture.loose, drag, rendered);
 		if (inHand) {
 			const held = drag?.card.id === inHand.card.id;
 			notes.push(
