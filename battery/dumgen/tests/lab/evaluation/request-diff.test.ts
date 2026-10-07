@@ -20,6 +20,12 @@ const jev = (
 	questions,
 });
 
+const outcome = (value: unknown, repetition = 0, path?: string) => ({
+	repetition,
+	...(path === undefined ? {} : { path }),
+	outcome: value,
+});
+
 const runOf = (cases: RequestRun["cases"]): RequestRun => ({
 	runId: "run",
 	experimentId: "segment-in-units/de:dev",
@@ -33,13 +39,17 @@ test("a request diff pairs a moved request with its stage and repetition and nam
 	const a = jev("candidates", 0, { q1: { text: "a" }, q2: { text: "b" } });
 	const b = jev("routes", 0, { r1: { text: "r" } });
 	const left = runOf([
-		{ id: "same", requests: [a, b], outcomes: [{ units: [] }] },
-		{ id: "moved", requests: [a, a, b], outcomes: [{ units: [1] }] },
+		{ id: "same", requests: [a, b], outcomes: [outcome({ units: [] })] },
+		{
+			id: "moved",
+			requests: [a, a, b],
+			outcomes: [outcome({ units: [1] })],
+		},
 		{ id: "gone", requests: [], outcomes: [] },
 	]);
 	const right = runOf([
 		// Order doesn't matter; the multiset does.
-		{ id: "same", requests: [b, a], outcomes: [{ units: [] }] },
+		{ id: "same", requests: [b, a], outcomes: [outcome({ units: [] })] },
 		{
 			id: "moved",
 			requests: [
@@ -47,7 +57,7 @@ test("a request diff pairs a moved request with its stage and repetition and nam
 				jev("candidates", 0, { q1: { text: "A" }, q3: { text: "c" } }),
 				jev("routes", 1, { r1: { text: "r" } }),
 			],
-			outcomes: [{ units: [2] }],
+			outcomes: [outcome({ units: [2] })],
 		},
 		{ id: "new", requests: [], outcomes: [] },
 	]);
@@ -70,6 +80,47 @@ test("a request diff pairs a moved request with its stage and repetition and nam
 			},
 		],
 	});
+});
+
+test("answer paths pair apart: a request or outcome on one path is never matched with another path's", () => {
+	const onPath = (path: string, text: string): RecordedRequest => ({
+		...jev("routes", 0, { r1: { text } }),
+		path,
+	});
+	const left = runOf([
+		{
+			id: "c",
+			requests: [onPath("stand-in", "r"), onPath("contrary", "r")],
+			outcomes: [
+				outcome({ units: [1] }, 0, "stand-in"),
+				outcome({ units: [1] }, 0, "contrary"),
+			],
+		},
+	]);
+	const right = runOf([
+		{
+			id: "c",
+			requests: [onPath("stand-in", "r"), onPath("contrary", "R")],
+			outcomes: [
+				outcome({ units: [1] }, 0, "stand-in"),
+				outcome({ units: [2] }, 0, "contrary"),
+			],
+		},
+	]);
+	expect(compareRequestRuns(left, right).changed).toEqual([
+		{
+			caseId: "c",
+			requests: [
+				{
+					request: "jev routes #0 (contrary)",
+					differs: ["r1.text"],
+				},
+			],
+			outcomes: [
+				{ repetition: 0, path: "contrary", differs: ["units.0"] },
+			],
+		},
+	]);
 });
 
 test("question order is part of a request, so a reordered request differs", () => {

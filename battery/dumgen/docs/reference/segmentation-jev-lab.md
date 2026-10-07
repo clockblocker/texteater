@@ -187,9 +187,11 @@ bun run evaluate --compare <beforeRequestRunId> <afterRequestRunId>
   whose requests or outcomes differ and exits 1 if any do. It needs no
   cached answer for the change and no repin, so it works when dumcorpus
   has moved past the round's pin and every offline replay misses.
-  segment.inUnits answers from the lab's cache and stands in for a miss as
-  the projection does (a Choice's first option, a high Noul), so with a
-  cold cache it follows only the stand-in path. `resolve-grammar/de:dev`
+  segment.inUnits answers from the lab's cache and walks each case twice,
+  answering a miss once as the projection does (a Choice's first option, a
+  high Noul) and once with the contrary (its last option, a low Noul), so
+  a cold cache still reaches the branches behind a "no" or a later option;
+  every request and outcome is tagged with its path. `resolve-grammar/de:dev`
   and `:heldout` answer jev and Luna with gold. To compare two commits, run
   it in a checkout of each.
 - **Transport is recorded apart from accuracy.** Every retry and every

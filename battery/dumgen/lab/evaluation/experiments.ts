@@ -73,6 +73,7 @@ import {
 } from "../segmentation/harness/jev-cache.js";
 import { type Spend, spendOf } from "../segmentation/harness/ledger.js";
 import {
+	contraryAnswers,
 	type PricedProjection,
 	priceProjection,
 	standInAnswers,
@@ -87,6 +88,7 @@ import {
 } from "./production-segmenter.js";
 import {
 	type CaseRequests,
+	type RecordedOutcome,
 	type RecordedRequest,
 	type RequestRun,
 	sortedRequests,
@@ -434,9 +436,20 @@ function traced<I, O>(
 }
 
 /**
- * A segment.inUnits set's requests: each case's every repetition through
- * the operation on a projecting cache of its own, which answers from the
- * lab's cache and stands in for a miss, so nothing is asked or written.
+ * The answer paths a segment.inUnits request run walks: the projection's
+ * stand-ins, and their contrary, which reaches the requests behind a "no"
+ * or a later option when the cache is cold (#1064).
+ */
+const answerPaths = [
+	{ path: "stand-in", project: standInAnswers },
+	{ path: "contrary", project: contraryAnswers },
+] as const;
+
+/**
+ * A segment.inUnits set's requests: each case's every repetition, on each
+ * answer path, through the operation on a projecting cache of its own,
+ * which answers from the lab's cache and gives a miss the path's answers,
+ * so nothing is asked or written.
  */
 async function segmentInUnitsRequests<I extends z.ZodType, O extends z.ZodType>(
 	mode: Mode<I, O>,
@@ -446,7 +459,11 @@ async function segmentInUnitsRequests<I extends z.ZodType, O extends z.ZodType>(
 	const set = await loadSet(args.setsRoot ?? trackedSetsRoot, setName);
 	const operation = mode.run(args.units ?? "production");
 	const cacheDirectory = join(args.labRoot ?? defaultLabRoot, "cache");
-	const answers = { cached: 0, otherRepetition: 0, standIn: 0 };
+	const counts = () => ({ cached: 0, otherRepetition: 0, projected: 0 });
+	const answers: Record<
+		(typeof answerPaths)[number]["path"],
+		ReturnType<typeof counts>
+	> = { "stand-in": counts(), contrary: counts() };
 	const cases = await Effect.runPromise(
 		Effect.forEach(
 			set.cases,
@@ -456,37 +473,45 @@ async function segmentInUnitsRequests<I extends z.ZodType, O extends z.ZodType>(
 						mode.caseOf(labCase).input,
 					);
 					const requests: RecordedRequest[] = [];
-					const outcomes: unknown[] = [];
-					for (
-						let repetition = 0;
-						repetition < repetitions;
-						repetition++
-					) {
-						const jev = new JevCache({
-							cacheDirectory,
-							...(args.judgmentModel
-								? { model: args.judgmentModel }
-								: {}),
-							offline: true,
-							project: standInAnswers,
-							onRequest: (request) =>
-								requests.push({ executor: "jev", ...request }),
-						});
-						outcomes.push(
-							await operation(input, {
-								jev,
+					const outcomes: RecordedOutcome[] = [];
+					for (const { path, project } of answerPaths)
+						for (
+							let repetition = 0;
+							repetition < repetitions;
+							repetition++
+						) {
+							const jev = new JevCache({
+								cacheDirectory,
+								...(args.judgmentModel
+									? { model: args.judgmentModel }
+									: {}),
+								offline: true,
+								project,
+								onRequest: (request) =>
+									requests.push({
+										executor: "jev",
+										path,
+										...request,
+									}),
+							});
+							outcomes.push({
+								path,
 								repetition,
-								calls: [],
-							}).catch((error: unknown) => ({
-								failure: messageOf(error),
-							})),
-						);
-						answers.cached += jev.projection.samples.length;
-						for (const request of jev.projection.requests)
-							if (request.inputTokens === undefined)
-								answers.standIn++;
-							else answers.otherRepetition++;
-					}
+								outcome: await operation(input, {
+									jev,
+									repetition,
+									calls: [],
+								}).catch((error: unknown) => ({
+									failure: messageOf(error),
+								})),
+							});
+							const counted = answers[path];
+							counted.cached += jev.projection.samples.length;
+							for (const request of jev.projection.requests)
+								if (request.inputTokens === undefined)
+									counted.projected++;
+								else counted.otherRepetition++;
+						}
 					return {
 						id: labCase.id,
 						requests: sortedRequests(requests),
@@ -498,7 +523,7 @@ async function segmentInUnitsRequests<I extends z.ZodType, O extends z.ZodType>(
 	);
 	return {
 		answers: {
-			source: "the lab's cache; a miss gets the projection's stand-ins",
+			source: "the lab's cache; a miss gets each answer path's projection",
 			...answers,
 		},
 		cases,

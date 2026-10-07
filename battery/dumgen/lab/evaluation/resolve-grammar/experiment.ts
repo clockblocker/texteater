@@ -410,7 +410,7 @@ async function grammarRequests(
 					return {
 						id: goldCase.id,
 						requests: sortedRequests(requests),
-						outcomes: [outcome],
+						outcomes: [{ repetition: 0, outcome }],
 					};
 				}),
 			{ concurrency: Math.max(1, concurrency) },

@@ -7,9 +7,11 @@
  * needs no cached answer for the change and no repin.
  *
  * Each experiment says where its answers come from (`experiments.ts`):
- * segment.inUnits reads the lab's cache and answers a miss with the
- * projection's stand-ins, so a pure refactor walks the paths real answers
- * took; resolve.grammar answers with its gold. A request keeps its key and
+ * segment.inUnits reads the lab's cache and answers a miss twice, once
+ * with the projection's stand-ins and once with their contrary, so a pure
+ * refactor walks the paths real answers took and, where the cache is cold,
+ * the branches behind a "no" or a later option too; resolve.grammar answers
+ * with its gold. A request keeps its key and
  * question order, which is part of what jev reads, so requests compare as
  * `JSON.stringify` writes them, not canonically.
  */
@@ -20,27 +22,39 @@ import { dirname, join } from "node:path";
 import { gunzipSync, gzipSync } from "node:zlib";
 import type { JsonValue } from "@typesafe-ai/sdk";
 
+/**
+ * Where a request or outcome sits: its repetition, and the answer path it
+ * was built on where an experiment walks more than one (#1064).
+ */
+type At = {
+	readonly repetition: number;
+	readonly path?: string;
+};
+
 /** One request a case sends, at one repetition. */
-export type RecordedRequest =
-	| {
-			readonly executor: "jev";
-			readonly stage: string;
-			readonly repetition: number;
-			readonly state: unknown;
-			readonly questions: Readonly<Record<string, unknown>>;
-	  }
-	| {
-			readonly executor: "luna";
-			readonly stage: string;
-			readonly repetition: number;
-			readonly request: unknown;
-	  };
+export type RecordedRequest = At &
+	(
+		| {
+				readonly executor: "jev";
+				readonly stage: string;
+				readonly state: unknown;
+				readonly questions: Readonly<Record<string, unknown>>;
+		  }
+		| {
+				readonly executor: "luna";
+				readonly stage: string;
+				readonly request: unknown;
+		  }
+	);
+
+/** What one repetition returned, or why it failed. */
+export type RecordedOutcome = At & { readonly outcome: unknown };
 
 /** A case's requests in a stable order, and what each repetition returned or why it failed. */
 export type CaseRequests = {
 	readonly id: string;
 	readonly requests: readonly RecordedRequest[];
-	readonly outcomes: readonly unknown[];
+	readonly outcomes: readonly RecordedOutcome[];
 };
 
 export type RequestRun = {
@@ -133,13 +147,16 @@ function lacking(
 	});
 }
 
+const atText = ({ repetition, path }: At) =>
+	`#${repetition}${path === undefined ? "" : ` (${path})`}`;
+
 const slotOf = (request: RecordedRequest) =>
-	`${request.executor} ${request.stage} #${request.repetition}`;
+	`${request.executor} ${request.stage} ${atText(request)}`;
 
 /**
  * A case's changed requests: each request only one side sends, paired by
- * executor, stage and repetition where both sides have one, with the paths
- * at which the pair differs.
+ * executor, stage, repetition and answer path where both sides have one,
+ * with the paths at which the pair differs.
  */
 function requestChanges(
 	left: readonly RecordedRequest[],
@@ -183,6 +200,30 @@ function requestChanges(
 	return changes;
 }
 
+/** A case's changed outcomes, paired by repetition and path, with the paths at which each pair differs. */
+function outcomeChanges(
+	left: readonly RecordedOutcome[],
+	right: readonly RecordedOutcome[],
+) {
+	const rightAt = new Map(right.map((entry) => [atText(entry), entry]));
+	const leftAt = new Set(left.map(atText));
+	return [
+		...left.map((before) => ({
+			at: before,
+			before,
+			after: rightAt.get(atText(before)),
+		})),
+		...right
+			.filter((after) => !leftAt.has(atText(after)))
+			.map((after) => ({ at: after, before: undefined, after })),
+	].flatMap(({ at: { repetition, path }, before, after }) => {
+		const differs = differingPaths(before?.outcome, after?.outcome);
+		return differs.length > 0
+			? [{ repetition, ...(path === undefined ? {} : { path }), differs }]
+			: [];
+	});
+}
+
 /**
  * Two request runs side by side: the cases only one has, and every shared
  * case whose requests or outcomes differ, with where they differ.
@@ -194,20 +235,7 @@ export function compareRequestRuns(left: RequestRun, right: RequestRun) {
 		const after = rightCases.get(before.id);
 		if (!after) return [];
 		const requests = requestChanges(before.requests, after.requests);
-		const repetitions = Math.max(
-			before.outcomes.length,
-			after.outcomes.length,
-		);
-		const outcomes = Array.from(
-			{ length: repetitions },
-			(_, repetition) => ({
-				repetition,
-				differs: differingPaths(
-					before.outcomes[repetition],
-					after.outcomes[repetition],
-				),
-			}),
-		).filter(({ differs }) => differs.length > 0);
+		const outcomes = outcomeChanges(before.outcomes, after.outcomes);
 		if (requests.length === 0 && outcomes.length === 0) return [];
 		return [
 			{

@@ -440,11 +440,25 @@ test("a request run asks nothing, answers from the lab's cache, and --compare na
 	const before = await requests(warm);
 	const after = await requests(warm);
 	expect(counter.calls).toBe(calls);
-	expect(before.answers).toMatchObject({ standIn: 0, otherRepetition: 0 });
-	expect(before.answers.cached).toBeGreaterThan(0);
+	// A warm cache answers both paths, so they send the same requests and reach gold.
+	for (const path of ["stand-in", "contrary"]) {
+		expect(before.answers[path]).toMatchObject({
+			projected: 0,
+			otherRepetition: 0,
+		});
+		expect(
+			(before.answers[path] as { cached: number }).cached,
+		).toBeGreaterThan(0);
+	}
 	const run = await loadRequestRun(output, before.runId);
 	expect(run.cases[0]?.outcomes).toEqual(
-		[0, 1, 2].map(() => labCase.idealOutput),
+		["stand-in", "contrary"].flatMap((path) =>
+			[0, 1, 2].map((repetition) => ({
+				path,
+				repetition,
+				outcome: labCase.idealOutput,
+			})),
+		),
 	);
 	expect(
 		run.cases[0]?.requests.every(({ executor }) => executor === "jev"),
@@ -459,7 +473,24 @@ test("a request run asks nothing, answers from the lab's cache, and --compare na
 
 	// Stand-in answers walk other paths: the requests after the first stage move, and the units.
 	const stoodIn = await requests(cold);
-	expect(stoodIn.answers.cached).toBe(0);
+	expect(stoodIn.answers).toMatchObject({
+		"stand-in": { cached: 0 },
+		contrary: { cached: 0 },
+	});
+	// The contrary path builds requests the stand-ins never reach (#1064).
+	const coldRequests = (await loadRequestRun(output, stoodIn.runId)).cases[0]
+		?.requests;
+	const onPath = (path: string) =>
+		new Set(
+			coldRequests
+				?.filter((request) => request.path === path)
+				.map(({ path: _, ...request }) => JSON.stringify(request)),
+		);
+	const standIn = onPath("stand-in");
+	expect(
+		[...onPath("contrary")].filter((request) => !standIn.has(request))
+			.length,
+	).toBeGreaterThan(0);
 	const report = (await cli(["--compare", before.runId, stoodIn.runId])) as {
 		changed: {
 			caseId: string;
@@ -471,7 +502,7 @@ test("a request run asks nothing, answers from the lab's cache, and --compare na
 	process.exitCode = 0;
 	expect(report.changed.map(({ caseId }) => caseId)).toEqual([labCase.id]);
 	expect(report.changed[0]?.requests?.length).toBeGreaterThan(0);
-	expect(report.changed[0]?.outcomes).toHaveLength(3);
+	expect(report.changed[0]?.outcomes).toHaveLength(6);
 	await expect(
 		cli([
 			"--experiment",

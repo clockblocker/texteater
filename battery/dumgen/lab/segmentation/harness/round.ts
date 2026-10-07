@@ -267,34 +267,56 @@ export function repinned(
 	};
 }
 
+/** A projector that picks one end of every Choice and answers every Noul with `noul`. */
+const projectorPicking =
+	(end: "first" | "last", noul: number): Projector =>
+	({ questions }) =>
+		Object.fromEntries(
+			Object.entries(questions).map(
+				([id, question]): [string, Answer] => {
+					if (question.type === "noul")
+						return [id, { type: "noul", noul }];
+					if (question.type === "choice") {
+						const options = Object.keys(question.criteria);
+						const choice =
+							(end === "first" ? options[0] : options.at(-1)) ??
+							"";
+						return [
+							id,
+							{
+								type: "choice",
+								choice,
+								confidence: 1,
+								probabilities: { [choice]: 1 },
+							},
+						];
+					}
+					return [
+						id,
+						{
+							type: "score",
+							score: 0.5,
+							confidence: 1,
+							probabilities: {},
+						},
+					];
+				},
+			),
+		) satisfies Answers;
+
 /**
  * Stand-in answers for a projection pass: the first option of a Choice,
  * which for a Segment-stage question is the authored plan, and a high Noul,
  * so the requests that follow a "yes" are priced too.
  */
-export const standInAnswers: Projector = ({ questions }) =>
-	Object.fromEntries(
-		Object.entries(questions).map(([id, question]): [string, Answer] => {
-			if (question.type === "noul")
-				return [id, { type: "noul", noul: 0.9 }];
-			if (question.type === "choice") {
-				const [first = ""] = Object.keys(question.criteria);
-				return [
-					id,
-					{
-						type: "choice",
-						choice: first,
-						confidence: 1,
-						probabilities: { [first]: 1 },
-					},
-				];
-			}
-			return [
-				id,
-				{ type: "score", score: 0.5, confidence: 1, probabilities: {} },
-			];
-		}),
-	) satisfies Answers;
+export const standInAnswers = projectorPicking("first", 0.9);
+
+/**
+ * The stand-ins' opposite: the last option of a Choice and a low Noul, so
+ * a request diff also builds the requests behind a "no" or a later option
+ * (#1064).
+ */
+export const contraryAnswers = projectorPicking("last", 0.1);
 
 /** Least squares of tokens on characters; undefined without two sizes. */
 function fit(samples: readonly { chars: number; inputTokens: number }[]) {
