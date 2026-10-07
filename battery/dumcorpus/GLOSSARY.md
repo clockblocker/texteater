@@ -48,8 +48,8 @@ _Avoid_: completeness
 
 **Knowledge Coverage**:
 Which Reading Knowledge aspects of a target a person has reviewed, each
-Authored or reviewed and empty. Decided on
-[#884](https://github.com/clockblocker/texteater/issues/884).
+Authored or reviewed and empty; an aspect left out is unreviewed. See
+[Dumcorpus ADR 0002].
 _Avoid_: Coverage (a Segmentation's), completeness
 
 **No Target**:
@@ -171,5 +171,6 @@ _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
 [Dumcorpus ADR 0001]: ./docs/adr/0001-assess-grundform-with-language-owned-rules.md
+[Dumcorpus ADR 0002]: ./docs/adr/0002-count-a-knowledge-aspect-left-out-of-coverage-as-unreviewed.md
 [Dumgen ADR 0007]: ../dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md
 [Emoji Description conventions]: ./docs/reference/emoji-description-conventions.md
