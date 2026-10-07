@@ -1,10 +1,6 @@
 import type * as Dumling from "dumling/types";
 
-import {
-	hebrewKatvuAttestedInflectionSurface,
-	hebrewShanaCitationSurface,
-	hebrewUsAbbreviationCitationSurface,
-} from "./surfaces";
+import { hebrewKatvuAttestedInflectionSurface } from "./surfaces";
 
 // Attestation: "הם [כתבו] מכתב."
 export const hebrewKatvuStandardFullAttestation = {
@@ -12,35 +8,4 @@ export const hebrewKatvuStandardFullAttestation = {
 	members: [{ attested: "כתבו", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: hebrewKatvuAttestedInflectionSurface,
-} satisfies Dumling.Attestation<"he", "Lexeme", "VERB">;
-
-// Attestation: "עוד [שנה] עברה."
-export const hebrewShanaCitationAttestation = {
-	unitKind: "Attestation" as const,
-	members: [{ attested: "שנה", orthography: "Standard" }],
-	realizationCoverage: "Full",
-	articleEvidence: null,
-	surface: hebrewShanaCitationSurface,
-} satisfies Dumling.Attestation<"he", "Lexeme", "NOUN">;
-
-// Attestation: "[ארה״ב] הודיעה על צעד חדש."
-export const hebrewUsAbbreviationAttestation = {
-	unitKind: "Attestation" as const,
-	members: [{ attested: "ארה״ב", orthography: "Standard" }],
-	realizationCoverage: "Full",
-	articleEvidence: null,
-	surface: hebrewUsAbbreviationCitationSurface,
-} satisfies Dumling.Attestation<"he", "Lexeme", "PROPN">;
-
-// Attestation: "הם [כָּתְבוּ] מכתב."
-export const hebrewKatvuPointedVariantAttestation = {
-	unitKind: "Attestation" as const,
-	members: [{ attested: "כָּתְבוּ", orthography: "Standard" }],
-	realizationCoverage: "Full",
-	surface: {
-		...hebrewKatvuAttestedInflectionSurface,
-		normalizedSurface: "כָּתְבוּ",
-		// Pointed spelling is accepted by the current standard (ADR 0041).
-		spelling: { kind: "Variant", variantTags: ["Licensed"] },
-	},
 } satisfies Dumling.Attestation<"he", "Lexeme", "VERB">;

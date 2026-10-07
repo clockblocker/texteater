@@ -1,11 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { readingIdentityKey } from "dumling";
 import type * as Dumrel from "dumrel/types";
-
-import type {
-	DumdictPendingSemanticRelation,
-	PendingSemanticRelationRecord,
-} from "../../src/domain-types";
 import {
 	assertPendingSemanticRelationRecordIdentity,
 	createPendingSemanticRelationRecord,
@@ -14,7 +9,11 @@ import {
 	derivePendingSemanticRelationLocator,
 	pendingSemanticRelationLocatorKey,
 	samePendingSemanticRelationLocator,
-} from "../../src/pending";
+} from "../../src/core/pending";
+import type {
+	DumdictPendingSemanticRelation,
+	PendingSemanticRelationRecord,
+} from "../../src/domain-types";
 import { englishRunReading, englishWalkReading } from "../fixtures/en-notes";
 
 const pending = (

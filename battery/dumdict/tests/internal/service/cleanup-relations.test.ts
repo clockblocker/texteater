@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import { projectSemanticRelations } from "dumrel";
-import type { SerializedDictionaryNote } from "../../../src";
+import type { SerializedDictionaryNote } from "../../../src/dto/serialized-note";
 import {
 	emojiOf,
 	englishSwimDraft,

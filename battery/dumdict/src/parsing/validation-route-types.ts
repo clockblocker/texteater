@@ -31,7 +31,7 @@ export type DumdictValidationRouteKey =
 	| `${LanguageParserName}:${Dumling.Language}`
 	| "parseAsCommitChangesResult";
 
-export type InternalDumdictOwnedValidationRouteKey =
+type InternalDumdictOwnedValidationRouteKey =
 	| "internal:knowledge-change"
 	| `internal:knowledge-change:bucket:${
 			| "definition"
@@ -53,7 +53,7 @@ export type InternalDumdictOwnedValidationRouteKey =
 export type InternalDumdictValidationRouteKey =
 	InternalDumdictOwnedValidationRouteKey;
 
-export type InternalDumdictValidationRouteOutputMap = {
+type InternalDumdictValidationRouteOutputMap = {
 	"internal:knowledge-change": Dumrel.KnowledgeChange;
 	"internal:knowledge-change:bucket:definition": Extract<
 		Dumrel.KnowledgeChange,

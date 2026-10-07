@@ -26,7 +26,7 @@ export const englishWalkStandardFullAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
-export const englishWalkCitationAttestation = {
+const englishWalkCitationAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "walk", orthography: "Standard" }],
 	realizationCoverage: "Full",
@@ -45,7 +45,7 @@ export const englishGiveUpTypoFullAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "VERB">;
 
 // Attestation: "She opened a [bank] account."
-export const englishBankFinancialAttestation = {
+const englishBankFinancialAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "bank", orthography: "Standard" }],
 	realizationCoverage: "Full",
@@ -54,7 +54,7 @@ export const englishBankFinancialAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The canoe scraped the river [bank]."
-export const englishBankRiverAttestation = {
+const englishBankRiverAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "bank", orthography: "Standard" }],
 	realizationCoverage: "Full",
@@ -63,7 +63,7 @@ export const englishBankRiverAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The [plant] needs more light."
-export const englishPlantOrganismAttestation = {
+const englishPlantOrganismAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "plant", orthography: "Standard" }],
 	realizationCoverage: "Full",
@@ -72,7 +72,7 @@ export const englishPlantOrganismAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The auto [plant] added a night shift."
-export const englishPlantFactoryAttestation = {
+const englishPlantFactoryAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "plant", orthography: "Standard" }],
 	realizationCoverage: "Full",
@@ -81,7 +81,7 @@ export const englishPlantFactoryAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The morning [light] filled the room."
-export const englishLightIlluminationAttestation = {
+const englishLightIlluminationAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "light", orthography: "Standard" }],
 	realizationCoverage: "Full",
@@ -90,7 +90,7 @@ export const englishLightIlluminationAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "Pack a [light] jacket."
-export const englishLightWeightAttestation = {
+const englishLightWeightAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "light", orthography: "Standard" }],
 	realizationCoverage: "Full",
@@ -99,7 +99,7 @@ export const englishLightWeightAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "ADJ">;
 
 // Attestation: "Birds returned in [spring]."
-export const englishSpringSeasonAttestation = {
+const englishSpringSeasonAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "spring", orthography: "Standard" }],
 	realizationCoverage: "Full",
@@ -108,7 +108,7 @@ export const englishSpringSeasonAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The [spring] snapped inside the latch."
-export const englishSpringCoilAttestation = {
+const englishSpringCoilAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "spring", orthography: "Standard" }],
 	realizationCoverage: "Full",
@@ -117,7 +117,7 @@ export const englishSpringCoilAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "Use the [rake] after mowing."
-export const englishRakeToolAttestation = {
+const englishRakeToolAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "rake", orthography: "Standard" }],
 	realizationCoverage: "Full",
@@ -126,7 +126,7 @@ export const englishRakeToolAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "They [look] [up] every unknown word."
-export const englishLookUpAttestation = {
+const englishLookUpAttestation = {
 	unitKind: "Attestation" as const,
 	members: [
 		{ attested: "look", orthography: "Standard" },
@@ -137,7 +137,7 @@ export const englishLookUpAttestation = {
 } satisfies Dumling.Attestation<"en", "Lexeme", "VERB">;
 
 // Attestation: "Please [look] at the map."
-export const englishLookAttestation = {
+const englishLookAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "look", orthography: "Standard" }],
 	realizationCoverage: "Full",

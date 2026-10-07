@@ -3,7 +3,7 @@ import { applyKnowledgeChange } from "dumrel";
 import { readingKnowledgeSchema } from "dumrel/schema";
 import type * as Dumrel from "dumrel/types";
 
-import { applyDumdictKnowledgeChange } from "../../src";
+import { applyDumdictKnowledgeChange } from "../../src/core/apply-reading-knowledge-change";
 import {
 	englishRunLemma,
 	englishRunReading,

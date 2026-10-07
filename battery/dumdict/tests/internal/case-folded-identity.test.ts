@@ -1,8 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import { makeSurfaceId, type SerializedDictionaryNote } from "../../src";
+import { makeSurfaceId } from "../../src";
 import { derivePendingEntryId } from "../../src/core/pending";
+import type { SerializedDictionaryNote } from "../../src/dto/serialized-note";
 import { getBootedUpDumdict } from "../support/planned-dictionary";
 
 const interjection = (canonicalForm: string) =>

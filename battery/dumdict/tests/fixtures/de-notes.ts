@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { SerializedDictionaryNote } from "../../src";
+import type { SerializedDictionaryNote } from "../../src/dto/serialized-note";
 
 export const germanGehenLemma = {
 	unitKind: "Lemma" as const,

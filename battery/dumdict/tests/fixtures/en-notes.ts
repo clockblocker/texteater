@@ -1,7 +1,7 @@
 import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
-import type { SerializedDictionaryNote } from "../../src";
 import { derivePendingEntryId } from "../../src/core/pending";
+import type { SerializedDictionaryNote } from "../../src/dto/serialized-note";
 
 const englishVerbFeatures = {
 	phrasal: null,
@@ -98,7 +98,7 @@ export const enSerializedNotes = [
 	},
 ] satisfies SerializedDictionaryNote<"en">[];
 
-export const pendingSwimEntryId = derivePendingEntryId({
+const pendingSwimEntryId = derivePendingEntryId({
 	language: "en",
 	canonicalForm: "swim",
 	family: "Lexeme",

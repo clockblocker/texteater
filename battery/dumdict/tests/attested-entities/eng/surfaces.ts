@@ -17,25 +17,6 @@ import {
 } from "./lemmas";
 
 // Attestation: "They [walk] home together."
-export const englishWalkPresentFiniteInflectionSurface = {
-	unitKind: "Surface" as const,
-	inflectionalFeatures: {
-		tense: "Pres",
-		verbForm: "Fin",
-		voice: null,
-		person: null,
-		number: null,
-		mood: null,
-	},
-	language: "en",
-	normalizedSurface: "walk",
-
-	lemma: englishWalkLemma,
-	surfaceFeatures: null,
-	spelling: { kind: "Canonical" },
-} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
-
-// Attestation: "They [walk] home together."
 export const englishWalkAttestedInflectionSurface = {
 	unitKind: "Surface" as const,
 	inflectionalFeatures: {
@@ -56,18 +37,6 @@ export const englishWalkAttestedInflectionSurface = {
 
 // Attestation: "They [walk] home together."
 export const englishWalkCitationSurface = {
-	unitKind: "Surface" as const,
-	inflectionalFeatures: null,
-	language: "en",
-	normalizedSurface: "walk",
-
-	lemma: englishWalkLemma,
-	surfaceFeatures: null,
-	spelling: { kind: "Canonical" },
-} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
-
-// Attestation: "They [walk] home together."
-export const englishWalkCanonicalCitationSurface = {
 	unitKind: "Surface" as const,
 	inflectionalFeatures: null,
 	language: "en",

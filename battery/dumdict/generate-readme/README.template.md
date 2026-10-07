@@ -100,15 +100,15 @@ npm install dumdict dumling dumrel
 
 The root export is intentionally focused:
 
-- DTO types such as `ReadingEntry`, `SurfaceEntry`, and `DumdictReadingDraft`
-- `applyDumdictKnowledgeChange`: validates an exact Reading identity and applies
-  one Dumrel Knowledge Change
+- record and plan types such as `ReadingEntry`, `SurfaceEntry`, and `DumdictPlan`
 - the lightweight `parseAs*` parsers for stored records and plans
-- request and storage slice types for host adapters
 - `makeSurfaceId`: the stable ID of an owned Surface
 
 The planner lives in `dumdict/planning`, so a transaction loads none of the
-root's parsers it does not use. Hosts outside this repository, such as an
+root's parsers it does not use. That entry also carries the request and
+storage slice types host adapters need, and `applyDumdictKnowledgeChange`,
+which validates an exact Reading identity and applies one Dumrel Knowledge
+Change. Hosts outside this repository, such as an
 Obsidian plugin over markdown files, a Node server over SQLite, or an Electron
 app with a local cache, are future work; each would implement the slice reads
 and atomic commit the conformance suite checks.

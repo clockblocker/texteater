@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { readingIdentityKey } from "dumling";
-import type { DumdictReadingDraft } from "../../../src";
 import { validateReadingEntryContext } from "../../../src/core/validate-slice";
+import type { DumdictReadingDraft } from "../../../src/dto/drafts";
 import { ParsingError } from "../../../src/parsing/lightweight-parsers";
 import type {
 	AddNewNoteContext,

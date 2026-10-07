@@ -2,11 +2,12 @@ import type { Equal, Expect } from "common-utils";
 import type * as Dumling from "dumling/types";
 import type { z } from "zod/v4";
 import type * as Dumdict from "../../src";
+import type { SerializedDictionaryNote } from "../../src/dto/serialized-note";
 import type * as DumdictSchema from "../../src/public-schema";
 
 // @ts-expect-error Linguistic units are imported from Dumling.
-export type Reading = Dumdict.Reading;
-declare const serializedNote: Dumdict.SerializedDictionaryNote<"en">;
+type _Reading = Dumdict.Reading;
+declare const serializedNote: SerializedDictionaryNote<"en">;
 const schemaVersion: 1 = serializedNote.schemaVersion;
 void schemaVersion;
 
@@ -60,7 +61,7 @@ type _PendingRecordComesFromSchema = Expect<
 >;
 type _PendingValueComesFromSchema = Expect<
 	Equal<
-		Dumdict.DumdictPendingSemanticRelation<"de">,
+		DumdictSchema.DumdictPendingSemanticRelation<"de">,
 		SchemaOutput<"pendingSemanticRelationRecordSchema">["pending"]
 	>
 >;
@@ -99,7 +100,7 @@ type _PlanComesFromSchema = Expect<
 >;
 type _ConflictCodeComesFromSchema = Expect<
 	Equal<
-		Dumdict.CommitConflictCode,
+		DumdictSchema.CommitConflictCode,
 		z.output<typeof DumdictSchema.commitConflictCodeSchema>
 	>
 >;

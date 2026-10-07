@@ -12,32 +12,3 @@ export const hebrewKatavLemma = {
 	family: "Lexeme",
 	kind: "VERB",
 } satisfies Dumling.Lemma<"he", "Lexeme", "VERB">;
-
-// Attestation: "עוד [שנה] עברה."
-export const hebrewShanaLemma = {
-	unitKind: "Lemma" as const,
-	canonicalForm: "שנה",
-	coreFeatures: {
-		gender: "Fem",
-		abbr: null,
-	},
-	language: "he",
-	family: "Lexeme",
-	kind: "NOUN",
-} satisfies Dumling.Lemma<"he", "Lexeme", "NOUN">;
-
-// Attestation: "[ארה״ב] הודיעה על צעד חדש."
-// UD-style: multi-word abbreviations keep the abbreviated form as canonicalForm and mark Abbr=Yes.
-// See https://universaldependencies.org/u/overview/morphology.html
-export const hebrewUsAbbreviationLemma = {
-	unitKind: "Lemma" as const,
-	canonicalForm: "ארה״ב",
-	coreFeatures: {
-		abbr: "Yes",
-		article: null,
-		gender: null,
-	},
-	language: "he",
-	family: "Lexeme",
-	kind: "PROPN",
-} satisfies Dumling.Lemma<"he", "Lexeme", "PROPN">;

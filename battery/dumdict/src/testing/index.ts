@@ -5,5 +5,4 @@
 export {
 	type ConformanceStorage,
 	describeStorageConformance,
-	type StorageConformanceOptions,
 } from "./storage-conformance/suite";

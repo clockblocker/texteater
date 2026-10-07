@@ -12,15 +12,10 @@ export { applyDumdictKnowledgeChange } from "./core/apply-reading-knowledge-chan
 export { impliedChangePreconditions } from "./core/implied-preconditions";
 export type {
 	ChangePrecondition,
-	CommitChangesRequest,
-	CommitChangesResult,
 	DumdictPlan,
-	LemmaRecord,
 	PlannedChangeOp,
 	ReadingEntry,
 	ReadingKnowledgeChange,
-	ReadingPatchOp,
-	SurfaceEntry,
 } from "./domain-types";
 export { makeSurfaceId } from "./dumling-id";
 export {
@@ -33,10 +28,7 @@ export type { ReadingEntryContextLoad } from "./planner/context-request";
 export {
 	createDumdictPlanner,
 	type DumdictPlanConflict,
-	type DumdictPlanned,
-	type DumdictPlanner,
 	type DumdictPlanOutcome,
-	type DumdictPlanRejected,
 } from "./planner/planner";
 export type {
 	AddNewNoteRequest,
@@ -47,11 +39,7 @@ export type {
 	MutationRejectedCode,
 } from "./public";
 export type {
-	AddNewNoteContext,
-	ApplyGeneratedKnowledgeContext,
 	CleanupRelationsSlice,
-	EnsureOwnedSurfaceContext,
-	EnsureReadingEntryContext,
 	LoadReadingEntryContextRequest,
 	ReadingEntryContext,
 } from "./storage/slices";

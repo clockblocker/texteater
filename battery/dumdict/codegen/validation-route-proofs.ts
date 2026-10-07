@@ -10,13 +10,13 @@ import type { z } from "zod";
 type KnowledgeShape = z.output<typeof readingKnowledgeSchema>;
 type ChangeShape = z.output<typeof knowledgeChangeSchema>;
 type PendingShape = z.output<typeof pendingSemanticRelationSchema>;
-export type CanonicalKnowledge = Expect<
+type _CanonicalKnowledge = Expect<
 	KnowledgeShape extends Dumrel.ReadingKnowledge ? true : false
 >;
-export type CanonicalChange = Expect<
+type _CanonicalChange = Expect<
 	ChangeShape extends Dumrel.KnowledgeChange ? true : false
 >;
-export type CanonicalPending = Expect<
+type _CanonicalPending = Expect<
 	PendingShape extends Dumrel.PendingSemanticRelation ? true : false
 >;
 

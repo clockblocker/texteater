@@ -1,7 +1,8 @@
 import { afterAll, describe, expect, it } from "bun:test";
 import { closeTestingSessions, inferredType } from "prinfer/testing";
 
-import type { DumdictReadingDraft, ReadingEntry } from "../../src";
+import type { ReadingEntry } from "../../src";
+import type { DumdictReadingDraft } from "../../src/dto/drafts";
 
 afterAll(closeTestingSessions);
 
@@ -9,12 +10,12 @@ type GermanVerb = {
 	lemma: { language: "de"; family: "Lexeme"; kind: "VERB" };
 };
 
-export type GermanVerbDraftReading = Extract<
+type _GermanVerbDraftReading = Extract<
 	DumdictReadingDraft<"de">["reading"],
 	GermanVerb
 >;
 
-export type GermanVerbStoredReading = Extract<
+type _GermanVerbStoredReading = Extract<
 	ReadingEntry<"de">["reading"],
 	GermanVerb
 >;
@@ -25,18 +26,18 @@ describe("Dumdict Reading inference", () => {
 	it("preserves the selected branch at the draft ingress", async () => {
 		expect(
 			await inferredType(import.meta.url, {
-				name: "GermanVerbDraftReading",
+				name: "_GermanVerbDraftReading",
 				backend: "typescript7",
 			}),
-		).toBe(`type GermanVerbDraftReading = ${germanVerbReading}`);
+		).toBe(`type _GermanVerbDraftReading = ${germanVerbReading}`);
 	}, 30_000);
 
 	it("preserves the selected branch in stored entries", async () => {
 		expect(
 			await inferredType(import.meta.url, {
-				name: "GermanVerbStoredReading",
+				name: "_GermanVerbStoredReading",
 				backend: "typescript7",
 			}),
-		).toBe(`type GermanVerbStoredReading = ${germanVerbReading}`);
+		).toBe(`type _GermanVerbStoredReading = ${germanVerbReading}`);
 	}, 30_000);
 });

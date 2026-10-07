@@ -17,7 +17,6 @@ import {
 	englishWalkReading,
 	enSerializedNotes,
 	enSerializedNotesWithPendingSwimRelation,
-	pendingSwimEntryId,
 } from "../../fixtures/en-notes";
 import {
 	createPlannedDictionary,
@@ -44,7 +43,6 @@ export {
 	germanGehenReading,
 	getBootedUpDumdict,
 	makeSurfaceId,
-	pendingSwimEntryId,
 	plannedOf,
 };
 

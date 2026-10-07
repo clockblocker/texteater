@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import type { SerializedDictionaryNote } from "../../../src";
+import type { SerializedDictionaryNote } from "../../../src/dto/serialized-note";
 import {
 	deSerializedNotes,
 	germanGehenLemma,

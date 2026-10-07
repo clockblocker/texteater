@@ -2,7 +2,7 @@
 import type * as Dumling from "dumling/types";
 
 import {type LemmaRecord,makeSurfaceId,type ReadingEntry,type SurfaceEntry} from "../../src";
-import {type AddNewNoteContext,createDumdictPlanner} from "../../src/planning";
+import {createDumdictPlanner,type ReadingEntryContext} from "../../src/planning";
 
 const walkLemma = {unitKind: "Lemma" as const,
 	canonicalForm: "walk",
@@ -103,7 +103,7 @@ const runContext = {
 	pendingRelationsMatchingProposedLemma: [],
 	relationLemmas: [walkLemmaRecord],
 	relationReadings: [walkReadingEntry],
-} satisfies AddNewNoteContext<"en">;
+} satisfies ReadingEntryContext<"en">;
 // README_BLOCK:planner-context:end
 
 // README_BLOCK:quickstart-run:start

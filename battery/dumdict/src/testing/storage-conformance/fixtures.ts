@@ -43,7 +43,6 @@ export const laufen = verbLemma("laufen");
 export const springen = verbLemma("springen");
 export const gehenReading = readingOf(gehen, "🚶");
 export const laufenReading = readingOf(laufen, "🏃");
-export const springenReading = readingOf(springen, "🦘");
 
 export function readingEntry(
 	reading: Dumling.Reading<"de">,

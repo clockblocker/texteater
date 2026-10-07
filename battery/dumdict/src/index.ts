@@ -1,7 +1,18 @@
-export { applyDumdictKnowledgeChange } from "./core/apply-reading-knowledge-change";
-export type * from "./domain-types";
-export * from "./dto";
-export * from "./dumling-id";
+export type {
+	ChangePrecondition,
+	CommitChangesRequest,
+	CommitChangesResult,
+	DumdictPlan,
+	LemmaRecord,
+	PendingSemanticRelationLocator,
+	PendingSemanticRelationRecord,
+	PlannedChangeOp,
+	ReadingEntry,
+	ReadingPatchOp,
+	StoreRevision,
+	SurfaceEntry,
+} from "./domain-types";
+export { makeSurfaceId } from "./dumling-id";
 export {
 	ParsingError,
 	parseAsChangePrecondition,
@@ -16,5 +27,3 @@ export {
 	parseAsReadingPatchOp,
 	parseAsSurfaceEntry,
 } from "./parsing/lightweight-parsers";
-export * from "./public";
-export type * from "./storage";

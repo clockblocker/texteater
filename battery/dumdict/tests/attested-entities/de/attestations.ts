@@ -1,6 +1,6 @@
 import type * as Dumling from "dumling/types";
 
-import { germanAufJedenFallLemma, germanBVGLemma } from "./lemmas";
+import { germanAufJedenFallLemma } from "./lemmas";
 
 const aufJedenFallSurface = {
 	unitKind: "Surface" as const,
@@ -24,21 +24,3 @@ export const germanAufJedenFallFullAttestation = {
 	realizationCoverage: "Full",
 	surface: aufJedenFallSurface,
 } satisfies Dumling.Attestation<"de", "Locution", "ADV">;
-
-// Attestation: "In Berlin ... betreibt die [BVG] die U-Bahn Berlin ..."
-export const germanBVGAbbreviationAttestation = {
-	unitKind: "Attestation" as const,
-	members: [{ attested: "BVG", orthography: "Standard" }],
-	realizationCoverage: "Full",
-	articleEvidence: null,
-	surface: {
-		unitKind: "Surface" as const,
-		inflectionalFeatures: null,
-		language: "de",
-		normalizedSurface: "BVG",
-		spelling: { kind: "Canonical" },
-
-		lemma: germanBVGLemma,
-		surfaceFeatures: null,
-	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "PROPN">;
