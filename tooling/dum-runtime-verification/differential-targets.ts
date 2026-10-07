@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import {
 	parseCompiledValidation,
 	type ValidationOperations,
@@ -26,7 +27,7 @@ function mutations(value: unknown): unknown[] {
 		{},
 		{ unexpected: true },
 	];
-	if (value !== null && typeof value === "object" && !Array.isArray(value))
+	if (isRecord(value))
 		for (const key of Object.keys(value))
 			for (const replacement of [undefined, null, "INVALID"])
 				invalid.push({ ...value, [key]: replacement });

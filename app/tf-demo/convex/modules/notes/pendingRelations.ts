@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import { v } from "convex/values";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
@@ -101,9 +102,7 @@ function isSemanticRelation(value: unknown): value is Dumrel.SemanticRelation {
 }
 
 function optionalRecord(value: unknown): UnknownRecord | null {
-	return value !== null && typeof value === "object" && !Array.isArray(value)
-		? (value as UnknownRecord)
-		: null;
+	return isRecord(value) ? value : null;
 }
 
 function optionalNonEmptyString(value: unknown): string | null {

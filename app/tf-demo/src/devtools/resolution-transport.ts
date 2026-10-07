@@ -1,3 +1,5 @@
+import { isRecord } from "common-utils";
+
 type TransportPhase = {
 	name: string;
 	offsetMs: number;
@@ -7,9 +9,7 @@ type TransportPhase = {
 type Measurement = { name: string; durationMs: number };
 
 function record(value: unknown): Record<string, unknown> {
-	return value !== null && typeof value === "object" && !Array.isArray(value)
-		? (value as Record<string, unknown>)
-		: {};
+	return isRecord(value) ? value : {};
 }
 
 function milliseconds(value: unknown): number | undefined {

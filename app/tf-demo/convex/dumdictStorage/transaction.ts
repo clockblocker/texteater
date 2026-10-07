@@ -1,4 +1,4 @@
-import { canonicalJson } from "common-utils";
+import { canonicalJson, isRecord } from "common-utils";
 import {
 	authoredReading,
 	deriveGrammaticalComponent,
@@ -725,9 +725,7 @@ export async function completeAuthoredComponentKnowledge(
 }
 
 function optionalRecord(value: unknown): AnyRecord | null {
-	return value !== null && typeof value === "object" && !Array.isArray(value)
-		? (value as AnyRecord)
-		: null;
+	return isRecord(value) ? value : null;
 }
 
 /** A reviewed article's Reading Entry starts with its authored Knowledge. */

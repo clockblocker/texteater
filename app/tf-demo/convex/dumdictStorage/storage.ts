@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import type { PendingSemanticRelationRecord } from "dumdict/pending";
 import type { ReadingEntry } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
@@ -415,9 +416,7 @@ export async function loadRelationNeighbourhood(
 }
 
 function optionalRecord(value: unknown): AnyRecord | undefined {
-	return value !== null && typeof value === "object" && !Array.isArray(value)
-		? (value as AnyRecord)
-		: undefined;
+	return isRecord(value) ? value : undefined;
 }
 
 export async function findCanonicalSurface(ctx: ServerCtx, surfaceKey: string) {
