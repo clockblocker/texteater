@@ -24,6 +24,7 @@ import {
 	regionAt,
 	returnBandIn,
 	sameBoxes,
+	sheetZ,
 	sideOf,
 	spawnSize,
 	Z,
@@ -286,6 +287,40 @@ describe("Sheet boxes", () => {
 		expect(groundBoxIn(boxAt(PANE, 1.25), 20)).toEqual(
 			boxAt(groundBoxIn(PANE, REM), 1.25),
 		);
+	});
+});
+
+describe("sheetZ", () => {
+	/** A Pane's Sheets: its Ground and then twelve Covers, bottom first. */
+	const z = Array.from({ length: 13 }, (_, index) => sheetZ(index));
+
+	test("a Ground rests at Z.sheet and each Cover one higher, up to the cap", () => {
+		expect(z.slice(0, 9)).toEqual(
+			Array.from({ length: 9 }, (_, index) => Z.sheet + index),
+		);
+	});
+
+	test("in a Pane of twelve Covers every Sheet stays below the Deck", () => {
+		for (const sheet of z) expect(sheet).toBeLessThan(Z.deck);
+		const slots = deckSlotsIn(
+			PANE,
+			Array.from({ length: 25 }, (_, index) => ({
+				id: `card-${index.toString()}`,
+				subject: index.toString(),
+			})),
+			null,
+			REM,
+			OPEN_SCALE,
+		);
+		const lowestCard = Math.min(...slots.map((slot) => slot.z));
+		expect(Math.max(...z)).toBeLessThan(lowestCard);
+	});
+
+	test("no Cover sinks under the Sheet below it", () => {
+		z.forEach((sheet, index) => {
+			if (index > 0)
+				expect(sheet).toBeGreaterThanOrEqual(z[index - 1] ?? 0);
+		});
 	});
 });
 

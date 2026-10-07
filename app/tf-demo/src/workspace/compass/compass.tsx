@@ -17,6 +17,7 @@ import {
 	panesOf,
 	restingCards,
 	returnBandIn,
+	sheetZ,
 	Z,
 } from "compass";
 import {
@@ -629,7 +630,7 @@ function CompassRuntime<S>({
 								? groundBoxIn(paneBox, rem, fold.barRemOf(pane))
 								: coverBoxIn(paneBox, rem, narrow)
 						}
-						z={Z.sheet + index}
+						z={sheetZ(index)}
 						held={false}
 						fate={null}
 						pastCommit={false}

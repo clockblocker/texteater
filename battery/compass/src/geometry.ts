@@ -80,7 +80,7 @@ export const DEAL_GAP_PX = 8;
 
 /** The stacking bands over the Panes, lowest first. */
 export const Z = {
-	/** A Ground; each Cover above it is one higher. */
+	/** A Ground; each Cover above it is one higher, up to `sheetZ`'s cap. */
 	sheet: 1,
 	/** The Deck's Cards, rising toward the front one. */
 	deck: 10,
@@ -315,6 +315,18 @@ export function coverBoxIn(pane: Box, rem: number, narrow = false): Box {
 		width: Math.max(0, pane.width - 2 * insetX),
 		height: Math.max(0, pane.height - insetY),
 	};
+}
+
+/**
+ * The z of a Pane's Sheet `index` places up its stack, its Ground at 0:
+ * one step over the Sheet below it, capped just under `Z.deck` so a Pane
+ * of any number of Covers stays under the top Sheet's Deck. The capped
+ * Sheets tie, which is safe: a renderer draws a Pane's Sheets bottom
+ * first, so of two tied Covers the higher one still comes later in
+ * document order and draws over the other.
+ */
+export function sheetZ(index: number): number {
+	return Math.min(Z.sheet + index, Z.deck - 1);
 }
 
 /** Where a Ground sits: the whole Pane under its bar. */

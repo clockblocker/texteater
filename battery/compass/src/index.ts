@@ -26,6 +26,7 @@ export {
 	regionAt,
 	returnBandIn,
 	sameBoxes,
+	sheetZ,
 	sideOf,
 	spawnSize,
 	Z,
