@@ -11,7 +11,6 @@ import {
 	adpositionLemmaSchemas,
 	knowledgeRouteSchema,
 	lemmaSchema,
-	lexemeUnitShadowSchema,
 	lexicalUnitShadowSchema,
 	morphemeReadingSchema,
 	readingSchema,
@@ -47,7 +46,7 @@ export const directSemanticRelationSchema = z.enum(
 );
 export const translationLanguageSchema = z.enum(translationLanguageValues);
 
-export { lexemeUnitShadowSchema, unitShadowSchema };
+export { unitShadowSchema };
 
 export const governedCaseSchema = z.enum(governedCaseValues);
 export const valencySlotStatusSchema = z.enum(valencySlotStatusValues);
@@ -513,10 +512,6 @@ export const governmentProjectionSchema = z.strictObject({
 	provenance: z.enum(["direct", "inferred"]),
 });
 
-export const participleRelationSchema = z.enum([
-	"participleSource",
-	"participialAdjective",
-]);
 /**
  * One edge of a Participle Source. `participleSource` runs from the ADJ
  * Reading to the VERB Lemma it stores, with its Participle Meaning;

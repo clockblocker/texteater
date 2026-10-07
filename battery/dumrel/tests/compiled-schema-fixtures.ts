@@ -159,7 +159,6 @@ export const samples: Record<string, unknown[]> = {
 	formulaRole: ["Greeting", "Sympathy", "Transition"],
 	participleMeaning: ["Verbal", "Drifted"],
 	participleSource: [{ verb: wartenReading.lemma, meaning: "Verbal" }],
-	participleRelation: ["participleSource", "participialAdjective"],
 	participleProjection: [
 		{
 			source: houseReading,
@@ -284,7 +283,6 @@ export const samples: Record<string, unknown[]> = {
 	],
 	pendingSemanticRelation: [{ relation: "nearSynonym", target: shadow }],
 	unitShadow: [shadow],
-	lexemeUnitShadow: [shadow],
 	morphologicalTreeNode: [{ nodeKind: "unitShadow", unitShadow: shadow }],
 	morphologicalTree: [
 		{
