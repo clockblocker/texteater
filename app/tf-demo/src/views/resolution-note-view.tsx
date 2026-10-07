@@ -5,7 +5,10 @@ import { Button } from "lego";
 import { useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { NotFoundView } from "@/views/not-found-view";
-import { resolutionDeckCards } from "@/views/resolution-deck";
+import {
+	type ResolutionNote,
+	resolutionDeckCards,
+} from "@/views/resolution-deck";
 import { ResolvingReadingNote } from "@/views/resolving-reading-note";
 import {
 	PlacedNoteSkeleton,
@@ -15,7 +18,6 @@ import {
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import type { ResolutionStepTarget } from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
-import type { ResolutionNote } from "../../convex/model/resolutionSessions";
 import type { ResolutionTarget } from "../../shared/navigation";
 
 type Presentation = "Card" | "Sheet";

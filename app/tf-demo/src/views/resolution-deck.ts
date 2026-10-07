@@ -1,14 +1,17 @@
+import type { FunctionReturnType } from "convex/server";
+import type { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
-import type {
-	ResolutionNote,
-	ResolutionNoteLifecycle,
-} from "../../convex/model/resolutionSessions";
 import type { WorkspaceCardTarget } from "../workspace/workspace-controller";
 import type {
 	ReadingNotePresentationContext,
 	ResolutionStepKind,
 	WorkspaceTarget,
 } from "../workspace/workspace-subject";
+
+export type ResolutionNote = NonNullable<
+	FunctionReturnType<typeof api.resolutionSessions.getResolutionNote>
+>;
+export type ResolutionNoteLifecycle = ResolutionNote["lifecycle"];
 
 export type CanonicalResolution = {
 	readonly readingId: Id<"readings">;

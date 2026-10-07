@@ -3,11 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { renderNote } from "@/notes";
+import type { ResolutionNote } from "@/views/resolution-deck";
 import { PlacedNote } from "@/workspace/note-part";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id, TableNames } from "../../convex/_generated/dataModel";
-import type { ResolutionNote } from "../../convex/model/resolutionSessions";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../../shared/knowledge-preferences";
 
 type Presentation = "Card" | "Sheet";
