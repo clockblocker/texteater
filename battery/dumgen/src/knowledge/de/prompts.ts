@@ -47,7 +47,7 @@ const rules = {
 	measurePlural: ["de/measure-noun-plural-is-regular", "ef9b7f1e15f48290"],
 	pluralOnly: ["de/plural-only-noun-has-no-gender", "92946b73a6244500"],
 	conjugation: ["de/conjugation-class-from-praeteritum", "c9973355dfb7314c"],
-	relations: ["de/relations-need-a-dictionary", "491dce101dc83195"],
+	relations: ["de/relations-need-a-dictionary", "a45d1c0592489d6d"],
 	participle: ["de/participle-source-verb-and-meaning", "a97545caefc4a184"],
 	participial: ["de/participial-adjective", "5d4481bf31cb7267"],
 	formulaRole: ["de/formula-role-is-narrow", "68e794801a922563"],
@@ -516,7 +516,7 @@ export const relationDefinitions = {
 	),
 	nearSynonym: paragraph(
 		"relations.nearSynonym",
-		"nearSynonym: means nearly the same, with a real difference of meaning, scope or perspective; a register or regional difference alone is none.",
+		"nearSynonym: means nearly the same, with a real difference of meaning, scope or perspective; a register or regional difference alone is none, but an abwertend or pejorativ label demotes a synonym to a near synonym (Kind, Balg).",
 		rules.relations,
 	),
 	antonym: paragraph(

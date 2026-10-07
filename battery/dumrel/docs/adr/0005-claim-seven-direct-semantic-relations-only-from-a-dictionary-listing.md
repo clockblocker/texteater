@@ -12,8 +12,11 @@ reviewers can check. Their own sense of relatedness drifts.
 
 - **Synonym**: means the same as the Reading in this meaning and can replace
   it. A register or regional difference neither demotes nor blocks a
-  Synonym (`Mama`: `Mutter`, `Semmel`: `Brötchen`). A dictionary's gloss is
-  no synonym listing.
+  Synonym (`Mama`: `Mutter`, `Semmel`: `Brötchen`). An evaluative label
+  (abwertend, pejorativ) does demote it to a Near Synonym, since the
+  evaluation is part of the meaning (`Kind`: `Balg`); every other usage
+  label, from gehoben to derb, scherzhaft or verhüllend, counts as
+  register. A dictionary's gloss is no synonym listing.
 - **Near Synonym**: means nearly the same, with a real difference of
   meaning, scope or perspective (`Pfote`: `Tatze`, which only larger
   predators have).
@@ -46,6 +49,9 @@ Register and region stay out of the relation because Synonym closure needs
 exact synonyms, and dictionaries tag register and region inconsistently. A
 learner therefore gets no near-synonym warning about either
 ([#884](https://github.com/clockblocker/texteater/issues/884), ruling G1).
+Evaluation stays in: closure would spread `Balg`'s evaluation to the
+neutral `Kind`, and the evaluative labels form one closed list a reviewer
+can check ([#1017](https://github.com/clockblocker/texteater/issues/1017)).
 
 The German evidence, which is Duden, DWDS or OpenThesaurus with at most
 three claims per relation, is the dumcorpus Rule
