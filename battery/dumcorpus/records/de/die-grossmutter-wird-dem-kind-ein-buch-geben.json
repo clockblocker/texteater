@@ -59,11 +59,11 @@
 				"idealOutput": {
 					"semanticRelations": {
 						"nearAntonym": [
-							{ "canonicalForm": "bekommen", "kind": "VERB" }
+							{ "canonicalForm": "nehmen", "kind": "VERB" }
 						]
 					}
 				},
-				"explanation": "Geben and bekommen conventionally profile the same transfer from giver and recipient perspectives.",
+				"explanation": "OpenThesaurus lists nehmen as Gegenteil of geben in its handing-over sense, so nehmen is the Near Antonym. Bekommen is the converse, the same transfer from the recipient's side, but no dictionary lists it as Gegenteil, so it gets no relation (Dumrel ADR 0005).",
 				"sources": [
 					{
 						"title": "Duden: geben",
@@ -73,7 +73,7 @@
 					{
 						"title": "Duden: bekommen",
 						"url": "https://www.duden.de/rechtschreibung/bekommen",
-						"supports": "Defines bekommen from the recipient perspective."
+						"supports": "Defines bekommen from the recipient perspective, the converse of geben."
 					},
 					{
 						"title": "IDS Grammis: konvers",
@@ -83,7 +83,17 @@
 					{
 						"title": "Dumrel settled Semantic Relation policy",
 						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
-						"supports": "Supplies Near Antonym for the human-accepted converse mapping."
+						"supports": "A converse is a Near Antonym only when a dictionary lists it as Gegenteil, and one no dictionary lists gets no relation."
+					},
+					{
+						"title": "OpenThesaurus: geben",
+						"url": "https://www.openthesaurus.de/synonyme/geben",
+						"supports": "Lists nehmen as Gegenteil of the synset (jemandem etwas) geben, aushändigen, übergeben, überreichen; no synset of geben has bekommen as Gegenteil."
+					},
+					{
+						"title": "DWDS: geben",
+						"url": "https://www.dwds.de/wb/geben",
+						"supports": "Shows Antonyme nehmen for the handing-over synset of geben."
 					}
 				],
 				"contaminationKeys": [

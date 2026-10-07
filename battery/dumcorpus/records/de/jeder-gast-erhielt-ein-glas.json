@@ -67,12 +67,32 @@
 						"synonym": null,
 						"nearSynonym": null,
 						"antonym": null,
-						"nearAntonym": [
-							{ "canonicalForm": "kein", "kind": "DET" }
-						]
+						"nearAntonym": null
 					}
 				},
-				"explanation": "Jeder and kein conventionally contrast universal and zero quantity but are not logical complements because intermediate quantities exist.",
+				"explanation": "Jeder and kein contrast universal and zero quantity, but neither Duden, DWDS nor OpenThesaurus lists kein as Gegenteil of jeder, so it gets no relation (Dumrel ADR 0005).",
+				"sources": [
+					{
+						"title": "OpenThesaurus: jeder",
+						"url": "https://www.openthesaurus.de/synonyme/jeder",
+						"supports": "Lists no Gegenteil for any synset of jeder."
+					},
+					{
+						"title": "OpenThesaurus: kein",
+						"url": "https://www.openthesaurus.de/synonyme/kein",
+						"supports": "Lists ein(e) as Gegenteil of kein, not jeder."
+					},
+					{
+						"title": "DWDS: jeder",
+						"url": "https://www.dwds.de/wb/jeder",
+						"supports": "Lists no Antonyme for jeder."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
+						"supports": "A relation needs a dictionary listing for this sense."
+					}
+				],
 				"contaminationKeys": ["relation-de-jeder-every"]
 			}
 		}

@@ -63,15 +63,13 @@
 						"synonym": null,
 						"nearSynonym": null,
 						"antonym": null,
-						"nearAntonym": [
-							{ "canonicalForm": "verkaufen", "kind": "VERB" }
-						],
+						"nearAntonym": null,
 						"hypernym": [
 							{ "canonicalForm": "erwerben", "kind": "VERB" }
 						]
 					}
 				},
-				"explanation": "Primary definitions support reversed transaction viewpoints; Near Antonym is the project mapping, and erwerben is the broader acquisition action.",
+				"explanation": "Verkaufen is the converse of kaufen, the same sale from the seller's side, but neither Duden, DWDS nor OpenThesaurus lists it as Gegenteil, so it gets no relation (Dumrel ADR 0005). Erwerben is the broader acquisition action.",
 				"sources": [
 					{
 						"title": "Duden: kaufen",
@@ -91,7 +89,17 @@
 					{
 						"title": "Dumrel settled Semantic Relation policy",
 						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
-						"supports": "Supplies the human-accepted Near Antonym category for that converse structure."
+						"supports": "A converse is a Near Antonym only when a dictionary lists it as Gegenteil, and one no dictionary lists gets no relation."
+					},
+					{
+						"title": "OpenThesaurus: kaufen",
+						"url": "https://www.openthesaurus.de/synonyme/kaufen",
+						"supports": "Lists no Gegenteil for any synset of kaufen."
+					},
+					{
+						"title": "DWDS: kaufen",
+						"url": "https://www.dwds.de/wb/kaufen",
+						"supports": "Lists no Antonyme for kaufen."
 					}
 				],
 				"contaminationKeys": ["relation-de-kaufen-buy"]

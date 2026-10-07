@@ -47,7 +47,7 @@ const rules = {
 	measurePlural: ["de/measure-noun-plural-is-regular", "ef9b7f1e15f48290"],
 	pluralOnly: ["de/plural-only-noun-has-no-gender", "92946b73a6244500"],
 	conjugation: ["de/conjugation-class-from-praeteritum", "c9973355dfb7314c"],
-	relations: ["de/relations-need-a-dictionary", "aa537ef9422c3864"],
+	relations: ["de/relations-need-a-dictionary", "491dce101dc83195"],
 	participle: ["de/participle-source-verb-and-meaning", "a97545caefc4a184"],
 	participial: ["de/participial-adjective", "5d4481bf31cb7267"],
 	formulaRole: ["de/formula-role-is-narrow", "68e794801a922563"],
@@ -526,7 +526,7 @@ export const relationDefinitions = {
 	),
 	nearAntonym: paragraph(
 		"relations.nearAntonym",
-		"nearAntonym: a conventional contrast short of a direct opposite, never just another member of the same set.",
+		"nearAntonym: a conventional contrast short of a direct opposite, never just another member of the same set, including a converse (kaufen: verkaufen) only when a dictionary lists it as Gegenteil.",
 		rules.relations,
 	),
 	hypernym: paragraph(

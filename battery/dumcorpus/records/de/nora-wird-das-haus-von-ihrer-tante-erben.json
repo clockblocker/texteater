@@ -58,12 +58,10 @@
 				},
 				"idealOutput": {
 					"semanticRelations": {
-						"nearAntonym": [
-							{ "canonicalForm": "vererben", "kind": "VERB" }
-						]
+						"nearAntonym": null
 					}
 				},
-				"explanation": "Erben and vererben profile the same inheritance event from exchanged participant perspectives.",
+				"explanation": "Erben and vererben profile the same inheritance event from exchanged participant perspectives, but neither Duden, DWDS nor OpenThesaurus lists vererben as Gegenteil of erben, so the converse gets no relation (Dumrel ADR 0005).",
 				"sources": [
 					{
 						"title": "Duden: erben",
@@ -83,7 +81,17 @@
 					{
 						"title": "Dumrel settled Semantic Relation policy",
 						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
-						"supports": "Supplies Near Antonym for the human-accepted converse mapping."
+						"supports": "A converse is a Near Antonym only when a dictionary lists it as Gegenteil, and one no dictionary lists gets no relation."
+					},
+					{
+						"title": "OpenThesaurus: erben",
+						"url": "https://www.openthesaurus.de/synonyme/erben",
+						"supports": "Lists vererben only as an association of erben, with no Gegenteil."
+					},
+					{
+						"title": "DWDS: erben",
+						"url": "https://www.dwds.de/wb/erben",
+						"supports": "Lists no Antonyme for erben."
 					}
 				],
 				"contaminationKeys": [

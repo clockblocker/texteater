@@ -57,7 +57,24 @@
 						]
 					}
 				},
-				"explanation": "Und and oder are conventionally paired coordination choices but not strict logical complements in ordinary German; CCONJ does not request Near Synonym.",
+				"explanation": "OpenThesaurus lists oder as Gegenteil of additive und, so the pair is a listed contrast, not just two members of the coordinator set; they are not strict logical complements, so oder is a Near Antonym (Dumrel ADR 0005). CCONJ does not request Near Synonym.",
+				"sources": [
+					{
+						"title": "OpenThesaurus: und",
+						"url": "https://www.openthesaurus.de/synonyme/und",
+						"supports": "Lists weder ... noch and oder as Gegenteil of the synset und, sowie, sowohl ... als auch."
+					},
+					{
+						"title": "OpenThesaurus: oder",
+						"url": "https://www.openthesaurus.de/synonyme/oder",
+						"supports": "Lists und as Gegenteil of the synset oder, beziehungsweise, andernfalls."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
+						"supports": "A Near Antonym is a conventional contrast short of a direct opposite, never just another member of the same set."
+					}
+				],
 				"contaminationKeys": ["relation-de-und-coordination"]
 			}
 		}

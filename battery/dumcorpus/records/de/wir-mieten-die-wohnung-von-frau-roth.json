@@ -65,13 +65,11 @@
 						"synonym": null,
 						"nearSynonym": null,
 						"antonym": null,
-						"nearAntonym": [
-							{ "canonicalForm": "vermieten", "kind": "VERB" }
-						],
+						"nearAntonym": null,
 						"hypernym": null
 					}
 				},
-				"explanation": "Mieten and vermieten describe one transaction from exchanged participant viewpoints, so the project maps the supported converse analysis to Near Antonym rather than strict Antonym.",
+				"explanation": "Vermieten is the converse of mieten, the same rental from the landlord's side, but neither Duden, DWDS nor OpenThesaurus lists it as Gegenteil, so it gets no relation (Dumrel ADR 0005).",
 				"sources": [
 					{
 						"title": "IDS Grammis: konvers",
@@ -81,7 +79,17 @@
 					{
 						"title": "Dumrel settled Semantic Relation policy",
 						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
-						"supports": "Defines Near Antonym as the project category for conventional lexical contrast that is not strict opposition."
+						"supports": "A converse is a Near Antonym only when a dictionary lists it as Gegenteil, and one no dictionary lists gets no relation."
+					},
+					{
+						"title": "OpenThesaurus: mieten",
+						"url": "https://www.openthesaurus.de/synonyme/mieten",
+						"supports": "Lists no Gegenteil for any synset of mieten."
+					},
+					{
+						"title": "DWDS: mieten",
+						"url": "https://www.dwds.de/wb/mieten",
+						"supports": "Lists no Antonyme for mieten."
 					}
 				],
 				"contaminationKeys": ["relation-de-mieten-rent"]
