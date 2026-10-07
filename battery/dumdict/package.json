@@ -65,7 +65,7 @@
 		"generate:validation:check": "bun codegen/generate-validation-artifacts.ts --check",
 		"generate:readme": "bun run generate-readme/generate-readme.ts",
 		"knip": "bun ../../tooling/knip.ts",
-		"lint": "bun run --silent biome check .",
+		"lint": "bun run --silent biome check --error-on-warnings .",
 		"prepack": "bun run generate:readme && bun run build",
 		"test": "bun ../../tooling/run-package-tests.ts",
 		"test:internal": "bun ../../tooling/run-package-tests.ts tests/internal",

@@ -93,7 +93,7 @@
 		"generate:validation": "bun codegen/generate.ts",
 		"generate:validation:check": "bun codegen/generate.ts --check",
 		"knip": "bun ../../tooling/knip.ts",
-		"lint": "bun run --silent biome check .",
+		"lint": "bun run --silent biome check --error-on-warnings .",
 		"prepack": "bun run generate:readme && bun run build",
 		"test": "bun ../../tooling/run-package-tests.ts ./tests",
 		"test:package": "bun ../../tooling/run-package-tests.ts ./tests/package.test.ts",

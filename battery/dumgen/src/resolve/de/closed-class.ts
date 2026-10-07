@@ -250,8 +250,7 @@ export function syncretismOptions(
 			.syncretized;
 		return (
 			isSyncretism(member) &&
-			units !== undefined &&
-			units.every((unit) => cells.has(lemmaIdentityKey(unit)))
+			units?.every((unit) => cells.has(lemmaIdentityKey(unit))) === true
 		);
 	});
 }

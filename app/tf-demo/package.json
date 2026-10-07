@@ -16,7 +16,7 @@
 		"dev:package": "sh tooling/sync-convex-env.sh; ISOLATE_MAX_USER_HEAP_SIZE=134217728 CONVEX_AGENT_MODE=anonymous convex dev --start 'vite' || { status=$?; bun tooling/report-convex-port-owner.ts 3210; exit $status; }",
 		"dev:mouse": "VITE_TF_MOUSE_TRACE=1 bun run dev",
 		"fix": "bun run --silent biome check --write .",
-		"lint": "bun run --silent biome check .",
+		"lint": "bun run --silent biome check --error-on-warnings .",
 		"preview": "vite preview",
 		"reset": "CONVEX_AGENT_MODE=anonymous convex run demoReset:resetDemoData",
 		"test": "bun ../../tooling/run-package-tests.ts",

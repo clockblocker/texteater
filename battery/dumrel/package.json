@@ -67,7 +67,7 @@
 		"generate": "bun codegen/generate-dumling-schemas.ts && bun codegen/generate.ts",
 		"generate:check": "bun codegen/generate-dumling-schemas.ts --check && bun codegen/generate.ts --check",
 		"knip": "bun ../../tooling/knip.ts",
-		"lint": "bun run --silent biome check .",
+		"lint": "bun run --silent biome check --error-on-warnings .",
 		"prepack": "bun run build",
 		"test": "bun ../../tooling/run-package-tests.ts",
 		"validate": "bun ../../tooling/validate-package.ts",

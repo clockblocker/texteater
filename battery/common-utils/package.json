@@ -51,7 +51,7 @@
 		"check": "bun ../../tooling/check-package-types.ts",
 		"fix": "bun run --silent biome check --write .",
 		"knip": "bun ../../tooling/knip.ts",
-		"lint": "bun run --silent biome check .",
+		"lint": "bun run --silent biome check --error-on-warnings .",
 		"prepack": "bun run build",
 		"test": "bun ../../tooling/run-package-tests.ts",
 		"validate": "bun ../../tooling/validate-package.ts",

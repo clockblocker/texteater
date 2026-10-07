@@ -23,7 +23,7 @@
 		"generate:check": "turbo run generate:check",
 		"knip": "bun tooling/knip.ts",
 		"lint": "turbo run lint lint:tooling --continue",
-		"lint:tooling": "biome check --config-path tooling/biome/base.json tooling",
+		"lint:tooling": "biome check --error-on-warnings --config-path tooling/biome/base.json tooling",
 		"resolution_inspector": "bun app/tf-demo/tooling/resolution-inspector.ts",
 		"test": "turbo run test test:tooling --continue",
 		"test:tooling": "bun test --timeout 20000 ./tooling",

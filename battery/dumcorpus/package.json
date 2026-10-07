@@ -67,7 +67,7 @@
 		"generate": "bun codegen/generate-record-schemas.ts && bun codegen/generate-syncretisms.ts",
 		"generate:check": "bun codegen/generate-record-schemas.ts --check && bun codegen/generate-syncretisms.ts --check",
 		"knip": "bun ../../tooling/knip.ts",
-		"lint": "bun run --silent biome check .",
+		"lint": "bun run --silent biome check --error-on-warnings .",
 		"prepack": "bun run build",
 		"stts-table": "bun scripts/stts-table.ts",
 		"test": "bun ../../tooling/run-package-tests.ts",
