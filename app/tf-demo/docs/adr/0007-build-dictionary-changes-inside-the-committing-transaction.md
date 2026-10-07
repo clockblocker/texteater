@@ -24,6 +24,15 @@ Resolution Session lifecycle adapter lives beside the session mutations and
 times each hop where the hop is made, so the inspector's waterfall shows
 transport cost instead of an unexplained gap.
 
+Relation publication fails closed. A generated Semantic Relation is requested
+or published only when a human-signed reviewed verdict, whose fingerprints
+match the current generation contracts, promotes its relation kind. No such
+verdict exists (`REVIEWED_RELATION_VERDICT` is `null` in
+[`generatedKnowledgeContainment.ts`](../../convex/model/generatedKnowledgeContainment.ts)),
+so the gate qualifies no relation kind: publication drops every generated
+relation change and pending relation, and the rest of the Knowledge still
+publishes.
+
 The decision is driven by measured cost: every query or mutation call
 evaluates its module in a fresh isolate context, so a request costs roughly
 hops × module weight. Moving the planner into the transaction removes the
