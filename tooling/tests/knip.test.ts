@@ -1,23 +1,7 @@
 import { expect, test } from "bun:test";
-import {
-	compareWithBaseline,
-	findingsOf,
-	scopeOf,
-	updatedBaseline,
-} from "../lib/knip";
+import { compareWithBaseline, findingsOf, updatedBaseline } from "../lib/knip";
 
 const workspaces = ["app/tf-demo", "battery/dumling"];
-
-test("the run covers the repository at the root and one workspace inside it", () => {
-	expect(scopeOf("/repo", "/repo", workspaces)).toBeUndefined();
-	expect(scopeOf("/repo/app/tf-demo", "/repo", workspaces)).toBe(
-		"app/tf-demo",
-	);
-	expect(scopeOf("/repo/battery/dumling/src", "/repo", workspaces)).toBe(
-		"battery/dumling",
-	);
-	expect(() => scopeOf("/repo/tooling", "/repo", workspaces)).toThrow();
-});
 
 test("findings are grouped by the workspace that owns the file", () => {
 	const findings = findingsOf(

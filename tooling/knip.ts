@@ -19,12 +19,15 @@ import {
 	compareWithBaseline,
 	type Findings,
 	findingsOf,
-	scopeOf,
 	updatedBaseline,
 } from "./lib/knip";
 import { runKnip } from "./lib/knip-run";
 import { toolPaths } from "./lib/tools";
-import { discoverWorkspaces, findRepositoryRoot } from "./lib/workspaces";
+import {
+	discoverWorkspaces,
+	findRepositoryRoot,
+	workspaceScope,
+} from "./lib/workspaces";
 
 const args = process.argv.slice(2);
 const update = args.includes("--update-baseline");
@@ -36,7 +39,11 @@ if (args.some((arg) => arg !== "--update-baseline")) {
 const repositoryRoot = await findRepositoryRoot(process.cwd());
 const workspaces = await discoverWorkspaces(repositoryRoot);
 const workspacePaths = workspaces.map((workspace) => workspace.relativePath);
-const scope = scopeOf(process.cwd(), repositoryRoot, workspacePaths);
+const scope = workspaceScope(
+	process.cwd(),
+	repositoryRoot,
+	workspaces,
+)?.relativePath;
 const baselineName = "tooling/knip-baseline.json";
 const baselinePath = join(repositoryRoot, baselineName);
 const tools = toolPaths(repositoryRoot);

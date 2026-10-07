@@ -1,5 +1,3 @@
-import { relative, sep } from "node:path";
-
 /** Findings per workspace path (`.` for the root), as sorted baseline lines. */
 export type Findings = Record<string, string[]>;
 
@@ -24,26 +22,6 @@ export interface BaselineComparison {
 /** The workspace path that owns `file`, relative to the repository root. */
 function workspaceOf(file: string, workspacePaths: string[]): string {
 	return workspacePaths.find((path) => file.startsWith(`${path}/`)) ?? ".";
-}
-
-/**
- * The workspace a run is scoped to: `undefined` at the repository root (the
- * whole repository), otherwise the workspace containing `cwd`.
- */
-export function scopeOf(
-	cwd: string,
-	repositoryRoot: string,
-	workspacePaths: string[],
-): string | undefined {
-	const path = relative(repositoryRoot, cwd).split(sep).join("/");
-	if (path === "") return undefined;
-	const workspace = workspaceOf(`${path}/`, workspacePaths);
-	if (workspace === ".") {
-		throw new Error(
-			`${cwd} is neither the repository root nor a workspace`,
-		);
-	}
-	return workspace;
 }
 
 function symbolName(symbol: unknown): string {
