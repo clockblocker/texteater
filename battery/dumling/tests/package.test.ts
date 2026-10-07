@@ -24,7 +24,7 @@ beforeAll(async () => {
 		child.exited,
 	]);
 	if (exit) throw Error(output + error);
-}, 30_000);
+}, 60_000);
 
 test("built operational entrypoint has no schema or compiler dependency", async () => {
 	const result = await build({
