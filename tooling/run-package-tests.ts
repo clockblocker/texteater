@@ -29,9 +29,13 @@ async function containsTests(dir: string): Promise<boolean> {
 	return false;
 }
 
+// Every workspace has tests (#999), so finding none means a workspace lost
+// them; that turns the gate red instead of passing silently.
 if (!(await containsTests(process.cwd()))) {
-	console.log("No test files found; nothing to run.");
-	process.exit(0);
+	console.error(
+		`No test files found under ${process.cwd()}. Every workspace's test script must run at least one *.test or *.spec file.`,
+	);
+	process.exit(1);
 }
 
 const child = Bun.spawn(
