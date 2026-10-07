@@ -505,9 +505,10 @@ export function inside(box: Box, x: number, y: number, grow = 0): boolean {
 	);
 }
 
-function sameBox(a: Box | undefined, b: Box): boolean {
+function sameBox(a: Box | undefined, b: Box | undefined): boolean {
 	return (
 		a !== undefined &&
+		b !== undefined &&
 		a.left === b.left &&
 		a.top === b.top &&
 		a.width === b.width &&
@@ -523,6 +524,6 @@ export function sameBoxes(
 	const ids = Object.keys(b);
 	return (
 		ids.length === Object.keys(a).length &&
-		ids.every((id) => sameBox(a[id], b[id] as Box))
+		ids.every((id) => sameBox(a[id], b[id]))
 	);
 }

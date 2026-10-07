@@ -336,7 +336,9 @@ export function sheetsOf<S>(pane: PaneNode<S>): readonly SheetRef<S>[] {
 }
 
 export function topSheetOf<S>(pane: PaneNode<S>): SheetRef<S> {
-	return sheetsOf(pane).at(-1) as SheetRef<S>;
+	const top = sheetsOf(pane).at(-1);
+	if (!top) throw new Error(`Pane ${pane.id} has no Ground`);
+	return top;
 }
 
 export function findSheet<S>(
