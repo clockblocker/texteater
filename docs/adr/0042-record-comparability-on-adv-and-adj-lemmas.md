@@ -46,7 +46,7 @@ dumcorpus fails a record that states `grundform` when the Grundform
 assessment returns an error, so the verdict never goes unchecked.
 
 **Why this sits in Dumling.** Dumling decides which feature values are
-well-formed ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
+well-formed ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)),
 and it can't decide Degree without knowing whether the Lemma can be compared.
 A fact about one Lemma that decides which values its own Surfaces may carry
 belongs on the Lemma, even if no click or drill-down reads it. Tables that

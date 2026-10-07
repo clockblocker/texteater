@@ -36,7 +36,7 @@ fails when any isolate module reaches it again.
 - A Dumgen entry point for the authored selectors, beside its Effect runtime,
   was rejected in [#863](https://github.com/clockblocker/texteater/issues/863):
   the selectors are pure functions over dumcorpus's data
-  ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
+  ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)),
   tf-demo's transaction and Dumgen's `resolve.grammar` share one copy of them,
   and a side entry would risk sharing a bundle chunk with the runtime.
 

@@ -260,7 +260,7 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   `Er ist stolz auf seinen Sohn` opens `stolz`, and clicking `über` in `Er
   weiß Bescheid über die Pläne` opens the Collocation `Bescheid wissen`. The
   member carries no Member Role
-  ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
+  ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)),
   and `normalizedSurface` stays Fixed-only, so `stolz auf` projects `stolz`.
   Separated cases (`Auf ihn bin ich stolz`, `der auf seinen Sohn stolze
   Vater`) work the way separable verbs do. Taking it into verbs only was
@@ -293,7 +293,7 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   open `Angst haben`, while `aus Angst vor Hunden` opens `Angst`. The
   Collocation Note reaches the governor's frame and the verb through its
   Breakdown
-  ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)).
+  ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
   The Collocation stores its own frame, not a projection of its members'
   frames, because slots like the Dat of `jemandem auf den Keks gehen` come
   from no member.
@@ -327,7 +327,7 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   alternatives included, is validated against the table: `warten` `auf` +
   Acc and `bestehen` `auf` + Dat pass, `für` + Dat fails. The table and its
   check live in dumcorpus
-  ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
+  ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)),
   since which cases a preposition takes is a fact about the language.
 - A free ADP occurrence records the case it took as `realizedCase` in its
   `valencyEvidence`, from the judgement Grammatical Resolution already makes

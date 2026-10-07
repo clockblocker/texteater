@@ -32,7 +32,7 @@ article comes from the Lemma's gender.
 nouns have no `article` feature. A noun Surface is the noun's own form:
 `books` is one Surface. The article is a member of the Attestation, and the
 Attestation's `articleEvidence` names it; no Member Role records it
-([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)).
+([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
 dumcorpus checks agreement on the Attestation: the article's spelling, read
 through its Fusion or Shorthand (`m` is `dem`, `'ne` is `eine`), must name a
 cell of its paradigm for the Head's case, number and gender. *ein Häuser* and

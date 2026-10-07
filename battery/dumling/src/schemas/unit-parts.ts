@@ -92,11 +92,11 @@ export const articleEvidenceSchema = z.union([
 	}),
 ]);
 /**
- * Why a Variant differs from the Lemma's standard spelling (ADR 0041, amended
- * 2026-09-29): accepted by a current standard (`zwo`, `auf Grund`, British
- * `colour`), valid under an earlier standard (`daß`, `Photographie`), a
- * dialect or regional form (`nit`, `nedd`), or letters stretched for effect
- * (`ohhh`, `boahhh`). The declaration order is the tags' canonical order.
+ * Why a Variant differs from the Lemma's standard spelling (ADR 0041):
+ * accepted by a current standard (`zwo`, `auf Grund`, British `colour`), valid
+ * under an earlier standard (`daß`, `Photographie`), a dialect or regional
+ * form (`nit`, `nedd`), or letters stretched for effect (`ohhh`, `boahhh`).
+ * The declaration order is the tags' canonical order.
  */
 export const VariantTagSchema = z.enum(variantTagOrder);
 /**

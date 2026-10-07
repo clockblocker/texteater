@@ -143,6 +143,6 @@ might not cover all possible things."
   in `dumcorpus`.
 - The closure facts and selectors in Dumgen, over `dumcorpus`'s inventories.
   Rejected: they are pure functions over `dumcorpus`'s data
-  ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
+  ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)),
   and tf-demo's dictionary transaction reads them in an isolate that must not
   load Dumgen.

@@ -6,7 +6,7 @@ status: accepted
 
 Segmentation serves two tasks: route a click or hover to the biggest semantic
 unit that contains the clicked piece, and let a multiword Lemma's Note drill
-down to its Lexemes ([ADR 0041](../../../../docs/adr/0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)).
+down to its Lexemes ([ADR 0041](../../../../docs/adr/0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
 Each language implements one segmenter per task: `segment.inUnits` and
 `segment.inLexemes`. The set's third member, `segment.inMorphemes`, is named
 but out of scope. Splitting a text into paragraphs and Sentences happens

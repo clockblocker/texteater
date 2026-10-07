@@ -176,7 +176,7 @@ _Avoid_: argument, valent, complement slot, Ergänzung
 [ADR 0035]: ../../docs/adr/0035-attest-articles-and-fused-words-segment-by-segment.md
 [ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
 [ADR 0040]: ../../docs/adr/0040-make-the-article-a-satellite-of-its-phrase-head.md
-[ADR 0041]: ../../docs/adr/0041-record-in-dumling-only-what-routing-and-drill-down-consume.md
+[ADR 0041]: ../../docs/adr/0041-judge-dumling-fields-by-the-learner-and-by-classification.md
 [ADR 0042]: ../../docs/adr/0042-record-comparability-on-adv-and-adj-lemmas.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md

@@ -166,7 +166,7 @@ _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
 [ADR 0037]: ../../docs/adr/0037-make-dumcorpus-own-the-golden-corpus-and-classification-rules.md
 [ADR 0038]: ../../docs/adr/0038-store-german-inflection-classes-as-reading-knowledge.md
-[ADR 0041]: ../../docs/adr/0041-record-in-dumling-only-what-routing-and-drill-down-consume.md
+[ADR 0041]: ../../docs/adr/0041-judge-dumling-fields-by-the-learner-and-by-classification.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md

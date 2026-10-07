@@ -31,4 +31,4 @@ suspended-compound fragment completed by its coordinated compound is Full:
 Until ADR 0035, a fused article such as the `m` of `im` stayed outside its
 noun as article evidence with Partial coverage. It is now an owned `Fused`
 member, and `articleEvidence` names every article of a Head: Owned, Shared or
-Hidden ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)).
+Hidden ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).

@@ -42,7 +42,7 @@ Head is the noun or, when the noun is elided, the word standing in for it
 `article` feature. Hebrew records the article through its existing `definite`
 feature. Agreement between the article and its Head is checked on the
 Attestation, in dumcorpus
-([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)).
+([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
 `normalizedSurface` is the noun's own letters in every language, and
 Grundform ignores the article.
 [ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md) decides

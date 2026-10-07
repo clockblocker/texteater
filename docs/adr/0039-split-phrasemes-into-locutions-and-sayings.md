@@ -29,7 +29,7 @@ proper name is one Lexeme whatever its length (`Angela Merkel`, `New York`,
 `Deutsche Bank`): its words are parts of the name, which UD attaches as
 `flat`, not Heads. Head and satellite describe this Family Rule, which
 dumcorpus applies. The Attestation records the Family, but no Head and no
-Member Role ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)).
+Member Role ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
 
 At text time a Locution is one unit over its Segments. Its words come out only
 in the Note's drill-down: a Locution or Saying has a Breakdown, its wording

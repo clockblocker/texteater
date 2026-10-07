@@ -71,7 +71,7 @@ marks the reflexive use, which the sentence shows. A reciprocal use
 plural context makes the clause reciprocal, and no `sich` has `pronType` Rcp.
 The `sich` with no case in Core is the reflexivity unit a lexical reflexive
 drills down to
-([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
+([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)),
 and no spelling realizes it.
 
 **The referent chooses between cells, and a Syncretism stands in when it
