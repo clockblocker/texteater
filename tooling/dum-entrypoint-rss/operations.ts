@@ -141,16 +141,23 @@ export async function runRepresentativeOperation(
 			assert.deepEqual(result, { lemma });
 			break;
 		}
-		case "dumdict.pending-identity":
-			assert.deepEqual(
+		case "dumdict.pending-identity": {
+			const { language, family, kind, canonicalForm } = reading.lemma;
+			assert.equal(
 				published<typeof import("dumdict/pending")>(
 					module,
 					"createPendingSemanticRelationRecord",
-					"deduplicatePendingSemanticRelationRecords",
-				).deduplicatePendingSemanticRelationRecords([]),
-				[],
+					"derivePendingEntryId",
+				).derivePendingEntryId({
+					language,
+					family,
+					kind,
+					canonicalForm,
+				}),
+				"pending-entry:v2:de:Lexeme:NOUN:bank",
 			);
 			break;
+		}
 		case "dumdict.plan-reading-entry": {
 			const planner = published<typeof import("dumdict/planning")>(
 				module,

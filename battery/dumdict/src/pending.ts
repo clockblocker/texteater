@@ -1,7 +1,6 @@
 export {
 	assertPendingSemanticRelationRecordIdentity,
 	createPendingSemanticRelationRecord,
-	deduplicatePendingSemanticRelationRecords,
 	derivePendingEntryId,
 	derivePendingSemanticRelationLocator,
 } from "./core/pending";
