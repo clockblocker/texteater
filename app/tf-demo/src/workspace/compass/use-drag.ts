@@ -1,10 +1,10 @@
 import {
 	type Box,
 	cardHeightPx,
-	cardWidthIn,
 	deckHolding,
 	findPane,
 	type HeldHome,
+	handBoxIn,
 	heldHome,
 	isRooted,
 	LOOSE_CARD_REM,
@@ -32,7 +32,8 @@ import {
 	KEYBOARD_POINTER,
 	type Lift,
 	type NoteHandle,
-	projected,
+	pastCommit,
+	releaseOf,
 	sameDestination,
 	sample,
 	type ThrowTuning,
@@ -45,6 +46,7 @@ import { useBarHold } from "./use-bar-hold";
 import type { CompassWorkspace } from "./use-compass-workspace";
 import { useDeckSwipe } from "./use-deck-swipe";
 import type { GestureState } from "./use-gesture-state";
+import { useRelease } from "./use-release";
 import type { WorkspaceCommands } from "./use-workspace-commands";
 
 /** A press on the page that has not yet decided whether it is a click. */
@@ -131,6 +133,14 @@ export function useDrag<S>({
 		event: ReactPointerEvent<HTMLElement>;
 	} | null>(null);
 	const barHold = useBarHold();
+	const release = useRelease({
+		workspace,
+		gesture,
+		moves,
+		commands,
+		handles,
+		direction,
+	});
 	const swipe = useDeckSwipe({
 		moves,
 		direction,
@@ -187,23 +197,15 @@ export function useDrag<S>({
 	function handBox(lift: Lift, paneId: string, height: number): Box {
 		const frameBox = root.current?.getBoundingClientRect();
 		if (!frameBox) return { left: 0, top: 0, width: 0, height };
-		const width = cardWidthIn(
+		return handBoxIn(
+			frameBox,
 			paneBoxes[paneId]?.width ?? frameBox.width,
+			lift.x,
+			lift.y,
+			height,
 			remPx(),
 			OPEN_SCALE,
 		);
-		return {
-			left: Math.max(
-				0,
-				Math.min(
-					frameBox.width - width,
-					lift.x - frameBox.left - width / 2,
-				),
-			),
-			top: lift.y - frameBox.top - 24,
-			width,
-			height,
-		};
 	}
 
 	function startLift(
@@ -398,8 +400,7 @@ export function useDrag<S>({
 	function reassess(d: Drag<S>, px: number, py: number, now: number) {
 		window.clearTimeout(staleTimer.current);
 		gesture.setPastCommit(
-			d.phase === "swiping" &&
-				sign * projected(d, now, tuning).dx < -COMMIT,
+			d.phase === "swiping" && pastCommit(d, now, tuning, COMMIT, sign),
 		);
 		const next = d.phase === "held" ? destinationAt$(px, py, d, now) : null;
 		gesture.setDestination((was) =>
@@ -490,145 +491,75 @@ export function useDrag<S>({
 
 	/* --- letting go --- */
 
-	/** A loose Card let go with nothing under it: it fades where it is. */
-	function vanish(d: Drag<S>) {
-		dispatch({ type: "Release" });
-		gesture.settle(
-			() => moves.fade(d.h),
-			() => {},
-		);
-	}
-	/** A lifted Sheet let go with nowhere to be: it is the Sheet again. */
-	function restore(d: Drag<S>) {
-		moves.resetTransforms(d.h);
-		dispatch({ type: "CancelGesture" });
-		gesture.tearDown();
-	}
-	/** A lifted Cover with no Deck to go back to: it closes, as ← would. */
-	function close(d: Drag<S>) {
-		dispatch({ type: "Release" });
-		gesture.settle(
-			() => moves.fade(d.h),
-			() => {},
-		);
-	}
-	/** A release with nothing under it, or in the Card's own Pane. */
-	function goHome(d: Drag<S>) {
-		if (d.home === "slot") {
-			dispatch({ type: "Release" });
-			gesture.snapBack(d.h);
-		} else if (d.home === "restore") restore(d);
-		else if (d.home === "close") close(d);
-		else vanish(d);
-	}
-	/** Whole-Deck swipe: the held Card and its Deck fly together. */
-	function sweepByDrag(d: Drag<S>) {
-		if (d.deckSheet === null) return;
-		const layout = current().layout;
-		const sheet = findSheet(layout, d.deckSheet);
-		if (!sheet?.deck) return;
-		const fly = restingCards(layout, sheet.deck).flatMap((card) => {
-			const h = handles.current.get(card.id);
-			return h ? [moves.flight(h, direction)] : [];
-		});
-		commands.sweep(d.deckSheet, () => Promise.all(fly));
-	}
 	/**
-	 * The Note stays exactly where the hand left it and grows from there:
-	 * its drag offset is folded into its box, and the state change gives it
-	 * a new target box to animate to.
+	 * The pointer `pointerId` (any, if none is given) lets go: whatever
+	 * was pending under it is off, and the drag it held, if any, is out of
+	 * the hand and returned.
 	 */
-	function growFromHand(d: Drag<S>, commit: () => void) {
-		moves.foldOffset(d.h);
-		dragRef.current = null;
-		gesture.setDrag(null);
-		gesture.setDestination(null);
-		gesture.setPastCommit(false);
-		commit();
-		/* a loose Card is a Sheet now; its Presentation lives in the layout */
-		gesture.setLoose(null);
-	}
-	/** Let go over `target`: do what the preview showed. */
-	function commitAt(d: Drag<S>, target: Destination | null) {
-		if (!target || target.kind === "return" || target.kind === "home") {
-			goHome(d);
-			return;
-		}
-		if (target.kind === "sheet")
-			growFromHand(d, () => commands.openCover(target.paneId));
-		else
-			growFromHand(d, () =>
-				commands.splitPane(target.paneId, target.edge, target.size),
-			);
-	}
-	/**
-	 * Let go of a Sheet that never left its bar's slop: a tap on a bar is
-	 * not a close, so a Sheet that would close stays a Sheet.
-	 */
-	function releaseInPlace(d: Drag<S>) {
-		if (d.home === "close") restore(d);
-		else goHome(d);
-	}
-
-	function frameUp(event: ReactPointerEvent<HTMLElement>) {
+	function letGo(pointerId?: number): Drag<S> | null {
 		pendingLift.current = null;
 		pendingHeading.current = null;
 		barHold.stop();
 		const d = dragRef.current;
-		if (!d || d.pointerId !== event.pointerId) return;
+		if (!d || (pointerId !== undefined && d.pointerId !== pointerId))
+			return null;
 		dragRef.current = null;
 		/* the release takes the Card from where it is, gap and all */
 		d.gap?.stop();
 		window.clearTimeout(staleTimer.current);
-		const { h } = d;
+		return d;
+	}
 
-		if (d.lifted && Math.hypot(h.x.get(), h.y.get()) < CLICK_SLOP + 2) {
-			releaseInPlace(d);
-			return;
-		}
-		if (d.phase === "pressed") {
-			/* never past the slop, so a tap: the few px it gave go back */
-			for (const value of [h.x, h.y]) moves.toRest(value);
-			gesture.setDrag(null);
-			const layout = current().layout;
-			const sheet =
-				d.deckSheet === null ? null : findSheet(layout, d.deckSheet);
-			if (!sheet?.deck) return;
-			const cards = restingCards(layout, sheet.deck);
-			const front =
-				cards.find((card) => card.id === sheet.deck?.frontId) ??
-				cards[0];
-			if (front?.id !== d.card.id)
-				commands.bringToFront(sheet.sheetId, d.card);
-			return;
-		}
-		/* the release reads what the preview read: `projected` and
+	function frameUp(event: ReactPointerEvent<HTMLElement>) {
+		const d = letGo(event.pointerId);
+		if (!d) return;
+		const { h } = d;
+		/* the release reads what the preview read: the commit line and
 		   `destinationAt` at this moment, so it does what was shown */
-		if (d.phase === "swiping") {
-			if (sign * projected(d, event.timeStamp, tuning).dx < -COMMIT)
-				sweepByDrag(d);
-			else swipe.snapDeck(d);
-			return;
-		}
-		commitAt(
+		const what = releaseOf(
 			d,
-			destinationAt$(event.clientX, event.clientY, d, event.timeStamp),
+			{ x: h.x.get(), y: h.y.get() },
+			event.timeStamp,
+			current().layout,
+			{ tuning, commit: COMMIT, clickSlop: CLICK_SLOP, sign },
 		);
+		switch (what.kind) {
+			case "in-place":
+				release.releaseInPlace(d);
+				return;
+			case "tap":
+				/* never past the slop, so a tap: the few px it gave go back */
+				for (const value of [h.x, h.y]) moves.toRest(value);
+				gesture.setDrag(null);
+				if (what.toFront !== null)
+					commands.bringToFront(what.toFront, d.card);
+				return;
+			case "sweep":
+				release.sweepByDrag(d);
+				return;
+			case "snap":
+				swipe.snapDeck(d);
+				return;
+			case "commit":
+				release.commitAt(
+					d,
+					destinationAt$(
+						event.clientX,
+						event.clientY,
+						d,
+						event.timeStamp,
+					),
+				);
+		}
 	}
 
 	function cancelDrag(event?: ReactPointerEvent<HTMLElement>) {
-		pendingLift.current = null;
-		pendingHeading.current = null;
-		barHold.stop();
-		const d = dragRef.current;
-		if (!d || (event && event.pointerId !== d.pointerId)) return;
-		dragRef.current = null;
-		d.gap?.stop();
-		window.clearTimeout(staleTimer.current);
+		const d = letGo(event?.pointerId);
+		if (!d) return;
 		if (root.current?.hasPointerCapture(d.pointerId))
 			root.current.releasePointerCapture(d.pointerId);
 		if (d.lifted && d.home !== "slot") {
-			restore(d);
+			release.restore(d);
 			return;
 		}
 		const lifted = current().held !== null;
@@ -665,8 +596,8 @@ export function useDrag<S>({
 		liftSheet,
 		liftGround,
 		takeInHand,
-		commitAt,
-		releaseInPlace,
+		commitAt: release.commitAt,
+		releaseInPlace: release.releaseInPlace,
 		/** A Card on the Deck goes under the pointer; nothing moves until it does. */
 		cardDown(
 			event: ReactPointerEvent<HTMLElement>,

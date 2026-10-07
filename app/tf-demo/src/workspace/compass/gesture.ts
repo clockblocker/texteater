@@ -1,9 +1,12 @@
-import type {
-	Box,
-	Edge,
-	HeldHome,
-	Presentation,
-	WritingDirection,
+import {
+	type Box,
+	type Edge,
+	findSheet,
+	type HeldHome,
+	type LayoutNode,
+	type Presentation,
+	restingCards,
+	type WritingDirection,
 } from "compass";
 import type { MotionValue } from "motion/react";
 
@@ -204,6 +207,85 @@ export function flickOf<S>(
 	if (Math.abs(vx) < tuning.flickSpeed || Math.abs(vx) < Math.abs(vy))
 		return null;
 	return vx * inlineSign(direction) < 0 ? "start" : "end";
+}
+
+/**
+ * Whether a swipe let go now would sweep its Deck: where the hand is
+ * headed lies more than `commit` px toward inline-start. `sign` is
+ * `inlineSign` of the writing direction. The swipe's preview and its
+ * release both read this.
+ */
+export function pastCommit<S>(
+	d: Drag<S>,
+	now: number,
+	tuning: ThrowTuning,
+	commit: number,
+	sign: 1 | -1,
+): boolean {
+	return sign * projected(d, now, tuning).dx < -commit;
+}
+
+/* -------------------------------------------------------------- release */
+
+/** What a release does, decided before any of it is done. */
+export type Release =
+	/** A lifted Note that never left its slop: it stays what it was. */
+	| { readonly kind: "in-place" }
+	/**
+	 * A press that never passed the slop. `toFront` is the Deck Sheet the
+	 * tapped Card comes to the front of, or `null` when it is already
+	 * there or rests on no Deck.
+	 */
+	| { readonly kind: "tap"; readonly toFront: string | null }
+	/** A swipe past the commit line: the whole Deck goes. */
+	| { readonly kind: "sweep" }
+	/** A swipe short of the commit line: the Deck springs back together. */
+	| { readonly kind: "snap" }
+	/** A Card in hand: it goes where the destination under it says. */
+	| { readonly kind: "commit" };
+
+/** The thresholds a release is read against; see `useDeckMotion`. */
+export type ReleaseLimits = {
+	readonly tuning: ThrowTuning;
+	/** How far toward inline-start a swipe must head to sweep, in px. */
+	readonly commit: number;
+	/** How far a press may move and still be a click, in px. */
+	readonly clickSlop: number;
+	/** `inlineSign` of the writing direction. */
+	readonly sign: 1 | -1;
+};
+
+/**
+ * What letting go of `d` at `now` does. `offset` is the drag offset the
+ * Note is at, and `layout` the layout the release reads the tapped Card's
+ * Deck from.
+ */
+export function releaseOf<S>(
+	d: Drag<S>,
+	offset: { readonly x: number; readonly y: number },
+	now: number,
+	layout: LayoutNode<S>,
+	{ tuning, commit, clickSlop, sign }: ReleaseLimits,
+): Release {
+	if (d.lifted && Math.hypot(offset.x, offset.y) < clickSlop + 2)
+		return { kind: "in-place" };
+	if (d.phase === "pressed")
+		return { kind: "tap", toFront: toFrontOf(d, layout) };
+	if (d.phase === "swiping")
+		return pastCommit(d, now, tuning, commit, sign)
+			? { kind: "sweep" }
+			: { kind: "snap" };
+	return { kind: "commit" };
+}
+
+/** The Deck Sheet a tap on `d`'s Card brings it to the front of, if any. */
+function toFrontOf<S>(d: Drag<S>, layout: LayoutNode<S>): string | null {
+	if (d.deckSheet === null) return null;
+	const deck = findSheet(layout, d.deckSheet)?.deck;
+	if (!deck) return null;
+	const cards = restingCards(layout, deck);
+	const front = cards.find((card) => card.id === deck.frontId) ?? cards[0];
+	return front?.id === d.card.id ? null : d.deckSheet;
 }
 
 /* ----------------------------------------------------------------- fate */

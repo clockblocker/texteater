@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import {
 	createWorkspace,
+	findSheet,
+	restingCards,
 	type WorkspaceState,
 	workspaceReducer,
 } from "compass";
@@ -12,7 +14,10 @@ import {
 	freshDrag,
 	inHandOf,
 	type NoteHandle,
+	pastCommit,
 	projected,
+	type ReleaseLimits,
+	releaseOf,
 	sample,
 	type ThrowTuning,
 } from "./gesture";
@@ -54,6 +59,33 @@ function dragOf(
 	});
 }
 
+/** A Text open in pane-1 with two Cards dealt onto its Deck. */
+function dealt(): WorkspaceState<string> {
+	const at = [
+		{
+			type: "StepUp",
+			paneId: "pane-1",
+			to: { kind: "MenuItem", item: "library" },
+		},
+		{
+			type: "StepUp",
+			paneId: "pane-1",
+			to: { kind: "Sheet", subject: "text" },
+		},
+	] as const;
+	const state = at.reduce(
+		workspaceReducer<string>,
+		createWorkspace<string>(),
+	);
+	const ground = state.layout.kind === "Pane" ? state.layout.line[2] : null;
+	return workspaceReducer(state, {
+		type: "Deal",
+		sheetId: ground?.id ?? "",
+		selection: "noch",
+		cards: [{ subject: "a" }, { subject: "b" }],
+	});
+}
+
 /** A hand moving `dx` px along x every 16 ms, `steps` times. */
 function moveAlong(d: Drag<string>, dx: number, steps: number) {
 	for (let step = 1; step <= steps; step++)
@@ -91,33 +123,135 @@ describe("a throw", () => {
 	});
 });
 
-describe("keyboard destinations", () => {
-	function dealt(): WorkspaceState<string> {
-		const at = [
-			{
-				type: "StepUp",
-				paneId: "pane-1",
-				to: { kind: "MenuItem", item: "library" },
-			},
-			{
-				type: "StepUp",
-				paneId: "pane-1",
-				to: { kind: "Sheet", subject: "text" },
-			},
-		] as const;
-		const state = at.reduce(
-			workspaceReducer<string>,
-			createWorkspace<string>(),
-		);
+describe("a release", () => {
+	const limits: ReleaseLimits = {
+		tuning: TUNING,
+		commit: 60,
+		clickSlop: 4,
+		sign: 1,
+	};
+	const still = { x: 0, y: 0 };
+	const { layout } = createWorkspace<string>();
+
+	test("of a lifted Note that never left its slop is in place, whatever its phase", () => {
+		for (const phase of ["pressed", "swiping", "held"] as const)
+			expect(
+				releaseOf(
+					dragOf({ lifted: true, phase }),
+					{ x: 3, y: 3 },
+					0,
+					layout,
+					limits,
+				),
+			).toEqual({ kind: "in-place" });
+	});
+
+	test("of a lifted Note past its slop is no longer in place", () => {
+		expect(
+			releaseOf(
+				dragOf({ lifted: true }),
+				{ x: 6, y: 0 },
+				0,
+				layout,
+				limits,
+			),
+		).toEqual({ kind: "commit" });
+	});
+
+	describe("of a press that never passed the slop is a tap", () => {
+		const state = dealt();
 		const ground =
-			state.layout.kind === "Pane" ? state.layout.line[2] : null;
-		return workspaceReducer(state, {
-			type: "Deal",
-			sheetId: ground?.id ?? "",
-			selection: "noch",
-			cards: [{ subject: "a" }, { subject: "b" }],
+			state.layout.kind === "Pane"
+				? (state.layout.line[2]?.id ?? "")
+				: "";
+		const deck = findSheet(state.layout, ground)?.deck;
+		const cards = deck ? restingCards(state.layout, deck) : [];
+		const front =
+			cards.find((card) => card.id === deck?.frontId) ?? cards[0];
+		const behind = cards.find((card) => card.id !== front?.id);
+
+		test("that brings a Card behind the front to the front of its Deck", () => {
+			expect(behind).toBeDefined();
+			if (!behind) return;
+			expect(
+				releaseOf(
+					dragOf({
+						card: behind,
+						deckSheet: ground,
+						phase: "pressed",
+					}),
+					still,
+					0,
+					state.layout,
+					limits,
+				),
+			).toEqual({ kind: "tap", toFront: ground });
 		});
-	}
+
+		test("that leaves the front Card, and a Card on no Deck, as they are", () => {
+			expect(front).toBeDefined();
+			if (!front) return;
+			expect(
+				releaseOf(
+					dragOf({
+						card: front,
+						deckSheet: ground,
+						phase: "pressed",
+					}),
+					still,
+					0,
+					state.layout,
+					limits,
+				),
+			).toEqual({ kind: "tap", toFront: null });
+			expect(
+				releaseOf(
+					dragOf({ phase: "pressed" }),
+					still,
+					0,
+					state.layout,
+					limits,
+				),
+			).toEqual({ kind: "tap", toFront: null });
+		});
+	});
+
+	test("of a swipe headed past the commit line toward inline-start sweeps", () => {
+		const d = dragOf({ phase: "swiping" });
+		moveAlong(d, -16, 5);
+		expect(pastCommit(d, 80, TUNING, 60, 1)).toBe(true);
+		expect(releaseOf(d, still, 80, layout, limits)).toEqual({
+			kind: "sweep",
+		});
+		/* in right-to-left text inline-start is to the right */
+		expect(
+			releaseOf(d, still, 80, layout, { ...limits, sign: -1 }),
+		).toEqual({ kind: "snap" });
+	});
+
+	test("of a swipe short of the line, or gone still, snaps back", () => {
+		const short = dragOf({ phase: "swiping" });
+		moveAlong(short, -2, 5);
+		expect(releaseOf(short, still, 80, layout, limits)).toEqual({
+			kind: "snap",
+		});
+		const slow = dragOf({ phase: "swiping" });
+		moveAlong(slow, -8, 5);
+		/* 40 px travelled; the throw that carried it past 60 has gone stale */
+		expect(pastCommit(slow, 80, TUNING, 60, 1)).toBe(true);
+		expect(releaseOf(slow, still, 400, layout, limits)).toEqual({
+			kind: "snap",
+		});
+	});
+
+	test("of a Card in hand commits at its destination", () => {
+		expect(
+			releaseOf(dragOf({ phase: "held" }), still, 0, layout, limits),
+		).toEqual({ kind: "commit" });
+	});
+});
+
+describe("keyboard destinations", () => {
 	const reading = (state: WorkspaceState<string>, narrow: boolean) => ({
 		layout: state.layout,
 		shown: state.layout.kind === "Pane" ? [state.layout] : [],

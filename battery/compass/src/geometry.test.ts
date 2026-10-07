@@ -15,6 +15,7 @@ import {
 	groundBoxIn,
 	HEADER_REM,
 	HYSTERESIS_PX,
+	handBoxIn,
 	inside,
 	isNarrow,
 	NARROW_BELOW_REM,
@@ -310,6 +311,40 @@ describe("the Deck", () => {
 	test("a Card narrows in a narrow Pane, leaving room for its resting scale", () => {
 		expect(cardWidthIn(300, REM, OPEN_SCALE)).toBeCloseTo(268 / 1.05);
 		expect(cardWidthIn(10, REM, OPEN_SCALE)).toBe(0);
+	});
+
+	describe("a Note in hand", () => {
+		/* the frame's client box: offset, so client and frame coordinates differ */
+		const frame: Box = { left: 40, top: 30, width: 1000, height: 800 };
+		const width = cardWidthIn(PANE.width, REM, OPEN_SCALE);
+
+		test("is Card-wide for its Pane, centred on the hand and held below its top", () => {
+			expect(
+				handBoxIn(frame, PANE.width, 540, 230, 288, REM, OPEN_SCALE),
+			).toEqual({
+				left: 500 - width / 2,
+				top: 200 - 24,
+				width,
+				height: 288,
+			});
+		});
+
+		test("never leaves the frame across", () => {
+			expect(
+				handBoxIn(frame, PANE.width, 45, 230, 288, REM, OPEN_SCALE)
+					.left,
+			).toBe(0);
+			expect(
+				handBoxIn(frame, PANE.width, 1030, 230, 288, REM, OPEN_SCALE)
+					.left,
+			).toBe(1000 - width);
+		});
+
+		test("narrows with a narrow Pane", () => {
+			expect(
+				handBoxIn(frame, 300, 540, 230, 288, REM, OPEN_SCALE).width,
+			).toBeCloseTo(268 / 1.05);
+		});
 	});
 
 	test("the front Card gives up one Heading row to each Card folded behind it", () => {

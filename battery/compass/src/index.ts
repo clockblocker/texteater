@@ -19,6 +19,7 @@ export {
 	groundBoxIn,
 	HEADER_REM,
 	HYSTERESIS_PX,
+	handBoxIn,
 	inside,
 	isNarrow,
 	LOOSE_CARD_REM,

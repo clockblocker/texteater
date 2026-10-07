@@ -116,6 +116,37 @@ export function cardWidthIn(
 	);
 }
 
+/** How far below a Note's top edge the hand holds it, in px. */
+const HAND_GRIP_PX = 24;
+
+/**
+ * The box a Note is held at when it is lifted out of a Sheet or from
+ * nowhere, `height` px tall: Card-wide for a Pane `paneWidth` wide,
+ * centred on the hand at client (`x`, `y`) and held `HAND_GRIP_PX` below
+ * its top. It never leaves the frame across. `frame` is the frame's
+ * client box; the box comes out in frame coordinates.
+ */
+export function handBoxIn(
+	frame: Box,
+	paneWidth: number,
+	x: number,
+	y: number,
+	height: number,
+	rem: number,
+	openScale: number,
+): Box {
+	const width = cardWidthIn(paneWidth, rem, openScale);
+	return {
+		left: Math.max(
+			0,
+			Math.min(frame.width - width, x - frame.left - width / 2),
+		),
+		top: y - frame.top - HAND_GRIP_PX,
+		width,
+		height,
+	};
+}
+
 /**
  * The front Card's height, in px, in a Deck of `count` Cards whose column
  * is `pileHeight` px tall: what is left of it under one Heading row per
