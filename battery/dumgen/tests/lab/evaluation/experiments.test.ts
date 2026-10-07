@@ -10,6 +10,7 @@ import {
 	parityWith,
 	productionPolicy,
 } from "../../../lab/evaluation/experiments.js";
+import { loadRequestRun } from "../../../lab/evaluation/request-diff.js";
 import type { SegmentInUnitsInput } from "../../../lab/evaluation/spec-corpus/segment-in-units.js";
 import {
 	type LabCase,
@@ -404,4 +405,80 @@ test("evaluate writes a ledger line for its round, refuses a run past the stop l
 	const repinned = roundOf(await readRounds(roundsPath(stale)));
 	expect(repinned.pin.hash).toBe(pin.hash);
 	expect(repinned.repins).toMatchObject([{ reason: "peer edit" }]);
+});
+
+test("a request run asks nothing, answers from the lab's cache, and --compare names each case whose requests or outcomes moved", async () => {
+	const warm = await labWithSet("requests-warm");
+	const cold = await labWithSet("requests-cold");
+	const { jev, counter } = goldJudge();
+	await evaluateExperiment({
+		experimentId: "segment-in-units/de:dev",
+		jev,
+		sourceRevision: "test",
+		...warm,
+	});
+	const calls = counter.calls;
+	const output = join(directory, "request-runs");
+	const written: unknown[] = [];
+	const cli = (argv: string[], lab = warm) =>
+		runEvaluationCli(["--output", output, ...argv], {
+			...lab,
+			write: (value) => written.push(value),
+		});
+	const requests = (lab: typeof warm) =>
+		cli(
+			[
+				"--experiment",
+				"segment-in-units/de:dev",
+				"--revision",
+				"test",
+				"--requests",
+			],
+			lab,
+		) as Promise<{ runId: string; answers: Record<string, unknown> }>;
+
+	const before = await requests(warm);
+	const after = await requests(warm);
+	expect(counter.calls).toBe(calls);
+	expect(before.answers).toMatchObject({ standIn: 0, otherRepetition: 0 });
+	expect(before.answers.cached).toBeGreaterThan(0);
+	const run = await loadRequestRun(output, before.runId);
+	expect(run.cases[0]?.outcomes).toEqual(
+		[0, 1, 2].map(() => labCase.idealOutput),
+	);
+	expect(
+		run.cases[0]?.requests.every(({ executor }) => executor === "jev"),
+	).toBe(true);
+	expect(await cli(["--compare", before.runId, after.runId])).toMatchObject({
+		unchanged: 1,
+		changed: [],
+		onlyLeft: [],
+		onlyRight: [],
+	});
+	expect(process.exitCode).toBeFalsy();
+
+	// Stand-in answers walk other paths: the requests after the first stage move, and the units.
+	const stoodIn = await requests(cold);
+	expect(stoodIn.answers.cached).toBe(0);
+	const report = (await cli(["--compare", before.runId, stoodIn.runId])) as {
+		changed: {
+			caseId: string;
+			requests?: unknown[];
+			outcomes?: unknown[];
+		}[];
+	};
+	expect(process.exitCode).toBe(1);
+	process.exitCode = 0;
+	expect(report.changed.map(({ caseId }) => caseId)).toEqual([labCase.id]);
+	expect(report.changed[0]?.requests?.length).toBeGreaterThan(0);
+	expect(report.changed[0]?.outcomes).toHaveLength(3);
+	await expect(
+		cli([
+			"--experiment",
+			"split-text/de:ud-drafts",
+			"--revision",
+			"test",
+			"--requests",
+		]),
+	).rejects.toThrow("has no request diff");
 });

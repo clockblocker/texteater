@@ -38,7 +38,7 @@
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { JsonValue } from "@typesafe-ai/sdk";
-import { canonicalJson } from "common-utils";
+import { canonicalJson, messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
 import {
 	defineGoldenCaseCollection,
@@ -85,6 +85,12 @@ import {
 	type ProductionJev,
 	segmentSentence,
 } from "./production-segmenter.js";
+import {
+	type CaseRequests,
+	type RecordedRequest,
+	type RequestRun,
+	sortedRequests,
+} from "./request-diff.js";
 import {
 	type GrammarEvaluated,
 	type GrammarPrice,
@@ -255,11 +261,16 @@ type Evaluated = {
 	readonly grammarSpend?: GrammarEvaluated["spend"];
 };
 
+/** What a request run of an experiment holds, before it is named (`request-diff.ts`). */
+export type BuiltRequests = Pick<RequestRun, "answers" | "cases">;
+
 type Experiment = {
 	readonly id: string;
 	readonly caseCount: () => number;
 	readonly evaluate: (args: EvaluateArgs) => Promise<Evaluated>;
 	readonly metrics: (run: OperationEvaluationRun) => unknown;
+	/** Every case's requests, built offline; absent when the experiment has no request diff. */
+	readonly requests?: (args: EvaluateArgs) => Promise<BuiltRequests>;
 };
 
 /** One mode of a segment.inUnits experiment: its cases, operation and scoring. */
@@ -422,6 +433,78 @@ function traced<I, O>(
 	};
 }
 
+/**
+ * A segment.inUnits set's requests: each case's every repetition through
+ * the operation on a projecting cache of its own, which answers from the
+ * lab's cache and stands in for a miss, so nothing is asked or written.
+ */
+async function segmentInUnitsRequests<I extends z.ZodType, O extends z.ZodType>(
+	mode: Mode<I, O>,
+	setName: SetName,
+	args: EvaluateArgs,
+): Promise<BuiltRequests> {
+	const set = await loadSet(args.setsRoot ?? trackedSetsRoot, setName);
+	const operation = mode.run(args.units ?? "production");
+	const cacheDirectory = join(args.labRoot ?? defaultLabRoot, "cache");
+	const answers = { cached: 0, otherRepetition: 0, standIn: 0 };
+	const cases = await Effect.runPromise(
+		Effect.forEach(
+			set.cases,
+			(labCase) =>
+				Effect.promise(async (): Promise<CaseRequests> => {
+					const input = mode.inputSchema.parse(
+						mode.caseOf(labCase).input,
+					);
+					const requests: RecordedRequest[] = [];
+					const outcomes: unknown[] = [];
+					for (
+						let repetition = 0;
+						repetition < repetitions;
+						repetition++
+					) {
+						const jev = new JevCache({
+							cacheDirectory,
+							...(args.judgmentModel
+								? { model: args.judgmentModel }
+								: {}),
+							offline: true,
+							project: standInAnswers,
+							onRequest: (request) =>
+								requests.push({ executor: "jev", ...request }),
+						});
+						outcomes.push(
+							await operation(input, {
+								jev,
+								repetition,
+								calls: [],
+							}).catch((error: unknown) => ({
+								failure: messageOf(error),
+							})),
+						);
+						answers.cached += jev.projection.samples.length;
+						for (const request of jev.projection.requests)
+							if (request.inputTokens === undefined)
+								answers.standIn++;
+							else answers.otherRepetition++;
+					}
+					return {
+						id: labCase.id,
+						requests: sortedRequests(requests),
+						outcomes,
+					};
+				}),
+			{ concurrency: Math.max(1, args.concurrency ?? 12) },
+		),
+	);
+	return {
+		answers: {
+			source: "the lab's cache; a miss gets the projection's stand-ins",
+			...answers,
+		},
+		cases,
+	};
+}
+
 function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 	mode: Mode<I, O>,
 	setName: SetName,
@@ -431,6 +514,7 @@ function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 		id,
 		caseCount: () => currentSetSize(trackedSetsRoot, setName),
 		metrics: mode.metrics,
+		requests: (args) => segmentInUnitsRequests(mode, setName, args),
 		async evaluate(args) {
 			const labRoot = args.labRoot ?? defaultLabRoot;
 			const set = await loadSet(
@@ -643,10 +727,24 @@ const splitTextExperiment: Experiment = {
 /** A resolve.grammar entry, its arguments taken from the table's. */
 function resolveGrammarEntry(set: "dev" | "heldout", e2e: boolean): Experiment {
 	const experiment = grammarExperiment(set, e2e);
+	const { requests } = experiment;
 	return {
 		id: experiment.id,
 		caseCount: experiment.caseCount,
 		metrics: experiment.metrics,
+		...(requests
+			? {
+					requests: (args: EvaluateArgs) =>
+						requests({
+							...(args.grammarSetsRoot
+								? { setsRoot: args.grammarSetsRoot }
+								: {}),
+							...(args.concurrency
+								? { concurrency: args.concurrency }
+								: {}),
+						}),
+				}
+			: {}),
 		async evaluate(args) {
 			const evaluated = await experiment.evaluate({
 				experimentId: args.experimentId,
@@ -835,6 +933,18 @@ export const productionPolicy = "step0+saying+maxim@0.7+closed";
 
 export const evaluateExperiment = (args: EvaluateArgs) =>
 	experimentOf(args.experimentId).evaluate(args);
+
+/** Every case's requests to jev and Luna, built offline (`request-diff.ts`). */
+export async function experimentRequests(
+	args: EvaluateArgs,
+): Promise<BuiltRequests> {
+	const { requests } = experimentOf(args.experimentId);
+	if (!requests)
+		throw Error(
+			`${args.experimentId} has no request diff; segment-in-units and resolve-grammar's dev and heldout do`,
+		);
+	return requests(args);
+}
 
 /** The rates of a run, read the way its experiment scores. */
 export const evaluationMetrics = (run: OperationEvaluationRun) =>

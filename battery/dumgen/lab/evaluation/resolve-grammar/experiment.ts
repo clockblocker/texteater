@@ -19,7 +19,7 @@
  */
 import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { canonicalJson } from "common-utils";
+import { canonicalJson, messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
 import {
 	defineGoldenCaseCollection,
@@ -43,6 +43,12 @@ import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
 import { groupSegments } from "../production-segmenter.js";
 import {
+	type CaseRequests,
+	type RecordedRequest,
+	type RequestRun,
+	sortedRequests,
+} from "../request-diff.js";
+import {
 	type GrammarCase,
 	type GrammarSetName,
 	loadGrammarSet,
@@ -56,6 +62,7 @@ import {
 	type ModelsSpend,
 	readLedgerSizes,
 } from "./models.js";
+import { goldAnswers, goldWritten } from "./oracle.js";
 import {
 	evaluateGrammar,
 	type GrammarOutput,
@@ -158,7 +165,7 @@ type UnitSource = (
 async function attempt(
 	goldCase: GrammarCase,
 	repetition: number,
-	models: GrammarModels,
+	models: Pick<GrammarModels, "jev" | "luna">,
 	units?: UnitSource,
 ): Promise<GrammarOutput> {
 	let unit = goldCase.unit;
@@ -341,6 +348,77 @@ export function grammarMetrics(run: OperationEvaluationRun) {
 	};
 }
 
+/**
+ * A frozen set's requests to jev and Luna (`request-diff.ts`): each case
+ * once, every question answered as gold answers it and every Canonical
+ * Form call as gold writes it, so the requests and outcome are fixed.
+ */
+async function grammarRequests(
+	setsRoot: string,
+	setName: GrammarSetName,
+	concurrency: number,
+): Promise<Pick<RequestRun, "answers" | "cases">> {
+	const set = await loadGrammarSet(setsRoot, setName);
+	const cases = await Effect.runPromise(
+		Effect.forEach(
+			set.cases,
+			(goldCase) =>
+				Effect.promise(async (): Promise<CaseRequests> => {
+					const requests: RecordedRequest[] = [];
+					const outcome = await attempt(goldCase, 0, {
+						jev:
+							() =>
+							async (request, { stage }) => {
+								requests.push({
+									executor: "jev",
+									stage,
+									repetition: 0,
+									state: request.state,
+									questions: request.questions,
+								});
+								return {
+									model: request.model,
+									answers: goldAnswers(
+										goldCase,
+										request.questions,
+									),
+									usage: {
+										input_tokens: 0,
+										output_tokens: 0,
+									},
+								};
+							},
+						luna:
+							() =>
+							async (request, { stage }) => {
+								requests.push({
+									executor: "luna",
+									stage,
+									repetition: 0,
+									request,
+								});
+								return {
+									output: goldWritten(
+										goldCase,
+										request.input,
+									),
+								};
+							},
+					}).catch((error: unknown) => ({
+						failure: messageOf(error),
+					}));
+					return {
+						id: goldCase.id,
+						requests: sortedRequests(requests),
+						outcomes: [outcome],
+					};
+				}),
+			{ concurrency: Math.max(1, concurrency) },
+		),
+	);
+	return { answers: { source: "gold" }, cases };
+}
+
 /** The table's entry for one set and input. */
 export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 	const id = `${grammarRoute}:${setName}${e2e ? ":e2e" : ""}`;
@@ -348,6 +426,20 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 		id,
 		caseCount: () => frozenSetSize(trackedGrammarSetsRoot, setName),
 		metrics: grammarMetrics,
+		// e2e's units come from the segment lab's cache, which a request diff doesn't read.
+		...(e2e
+			? {}
+			: {
+					requests: (args: {
+						readonly setsRoot?: string;
+						readonly concurrency?: number;
+					}) =>
+						grammarRequests(
+							args.setsRoot ?? trackedGrammarSetsRoot,
+							setName,
+							args.concurrency ?? 12,
+						),
+				}),
 		async evaluate(args: GrammarEvaluateArgs): Promise<GrammarEvaluated> {
 			const root = args.root ?? defaultGrammarRoot;
 			const setsRoot = args.setsRoot ?? trackedGrammarSetsRoot;

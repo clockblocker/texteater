@@ -210,6 +210,19 @@ export type JevCacheOptions = {
 	readonly onSpend?: (inputTokens: number) => void;
 	/** Project instead of asking: a miss is answered as `Projector` says and kept in `projection`. */
 	readonly project?: Projector;
+	/**
+	 * Receives every request as the stages put it, before the cache looks
+	 * it up: what a request diff compares (`request-diff.ts`).
+	 */
+	readonly onRequest?: (request: AskedRequest) => void;
+};
+
+/** One request at one repetition: as production chunked it through `ask`, whole through `port`. */
+type AskedRequest = {
+	readonly stage: string;
+	readonly repetition: number;
+	readonly state: EntryType;
+	readonly questions: Questions;
 };
 
 /** Where a request goes in the cache, beside its body. */
@@ -325,7 +338,13 @@ export class JevCache {
 		);
 	}
 
-	#recordPrompt(stage: string, state: EntryType, questions: Questions) {
+	#recordPrompt(
+		stage: string,
+		repetition: number,
+		state: EntryType,
+		questions: Questions,
+	) {
+		this.#options.onRequest?.({ stage, repetition, state, questions });
 		const hashes = this.#requests.get(stage) ?? new Set();
 		this.#requests.set(stage, hashes);
 		hashes.add(hashOf({ state, questions }));
@@ -337,7 +356,12 @@ export class JevCache {
 	 */
 	ask(repetition: number, calls: CallRecord[] = []): JevAsk {
 		return (request, { stage, signal }) => {
-			this.#recordPrompt(stage, request.state, request.questions);
+			this.#recordPrompt(
+				stage,
+				repetition,
+				request.state,
+				request.questions,
+			);
 			return this.#answer(request, {
 				stage,
 				signal,
@@ -366,7 +390,7 @@ export class JevCache {
 			Effect.promise(async () => {
 				const entries = Object.entries(questions);
 				if (entries.length === 0) return {};
-				this.#recordPrompt(stage, state, questions);
+				this.#recordPrompt(stage, repetition, state, questions);
 				const chunks: (typeof entries)[] = [];
 				for (let at = 0; at < entries.length; at += size)
 					chunks.push(entries.slice(at, at + size));

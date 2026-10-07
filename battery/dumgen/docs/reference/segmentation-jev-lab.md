@@ -138,6 +138,8 @@ bun run evaluate --experiment segment-in-units/de:dev --revision <rev> --offline
 bun run evaluate --experiment segment-in-units/de:heldout:raw --revision <rev>
 bun run evaluate --experiment segment-in-units/de:dev:raw --estimate
 bun run evaluate --experiment split-text/de:ud-drafts --revision <rev>
+bun run evaluate --experiment segment-in-units/de:dev --revision <rev> --requests
+bun run evaluate --compare <beforeRequestRunId> <afterRequestRunId>
 ```
 
 - **Gold mode** (`segment-in-units/de:dev`, `:heldout`): a case's gold
@@ -178,6 +180,18 @@ bun run evaluate --experiment split-text/de:ud-drafts --revision <rev>
   and gold mode runs the unit stage under the same operation and call
   adapter (`lab/evaluation/production-segmenter.ts`), since `createDumgen`
   takes no Segments. `--units reference` keeps the lab's port.
+- **The request diff** (`--requests`, `lab/evaluation/request-diff.ts`) is
+  the free no-change check for a refactor. It builds every case's requests
+  and each repetition's outcome offline and saves them under
+  `.runs/dumgen/requests/`; `--compare` on two such runs lists the cases
+  whose requests or outcomes differ and exits 1 if any do. It needs no
+  cached answer for the change and no repin, so it works when dumcorpus
+  has moved past the round's pin and every offline replay misses.
+  segment.inUnits answers from the lab's cache and stands in for a miss as
+  the projection does (a Choice's first option, a high Noul), so with a
+  cold cache it follows only the stand-in path. `resolve-grammar/de:dev`
+  and `:heldout` answer jev and Luna with gold. To compare two commits, run
+  it in a checkout of each.
 - **Transport is recorded apart from accuracy.** Every retry and every
   request that still failed is counted by cause (an HTTP status, `no
   status`, `invalid answer`), and requests abandoned with their operation

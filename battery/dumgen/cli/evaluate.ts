@@ -25,6 +25,9 @@
  *       --budget <jev input tokens> --luna-budget <Luna input tokens>
  *       --luna-output-budget <Luna output tokens> [--luna-batch]
  *       [--usd-budget <dollars>] [--limit N] [--repetitions 1]
+ *   bun run evaluate --experiment segment-in-units/de:dev --revision <rev>
+ *       --requests [--units production|reference]
+ *   bun run evaluate --experiment resolve-grammar/de:dev --revision <rev> --requests
  *   bun run evaluate --open <runId>
  *   bun run evaluate --compare <leftRunId> <rightRunId>
  *
@@ -32,6 +35,15 @@
  * promptsmith's `compareRuns`, each side's verdict counts, the cases only one
  * side has, and every case whose status, verdict or output changed with its
  * field-level output diff. It asks no model.
+ *
+ * `--requests` is the free no-change check (#1035, `request-diff.ts`): it
+ * builds every case's requests to jev and Luna offline, with each
+ * repetition's outcome, and saves them as a request run under
+ * `<output>/requests/`. It asks nothing, writes no ledger line and needs no
+ * pin. Run it before and after a change and `--compare` the two request
+ * runs: the report lists every case whose requests or outcomes differ, and
+ * the command exits 1 when any does. To compare two commits, run it in a
+ * checkout of each.
  *
  * A segment.inUnits run counts against the lab's current round: it writes a
  * line to the lab ledger, refuses to go live when dumcorpus's prompt inputs
@@ -69,6 +81,7 @@ import {
 	defaultLabRoot,
 	evaluateExperiment,
 	evaluationMetrics,
+	experimentRequests,
 	listExperiments,
 	parityWith,
 	productionPolicy,
@@ -77,6 +90,14 @@ import {
 	unitConfigs,
 } from "../lab/evaluation/experiments.js";
 import { createOpenAILunaBatch } from "../lab/evaluation/luna-batch.js";
+import {
+	compareRequestRuns,
+	isRequestRun,
+	loadRequestRun,
+	newRequestRunId,
+	type RequestRun,
+	saveRequestRun,
+} from "../lab/evaluation/request-diff.js";
 import type {
 	GrammarCaps,
 	GrammarPrice,
@@ -155,6 +176,7 @@ export async function runEvaluationCli(
 			"usd-budget": { type: "string" },
 			"whole-round": { type: "boolean" },
 			"gold-only": { type: "boolean" },
+			requests: { type: "boolean" },
 		},
 	});
 	const write =
@@ -181,6 +203,27 @@ export async function runEvaluationCli(
 		const [right, ...rest] = positionals;
 		if (!right || rest.length > 0)
 			throw Error("--compare takes two run ids: --compare LEFT RIGHT");
+		const requestRuns = [values.compare, right].filter((runId) =>
+			isRequestRun(outputDirectory, runId),
+		).length;
+		if (requestRuns === 1)
+			throw Error(
+				"--compare takes two request runs or two evaluation runs, not one of each",
+			);
+		if (requestRuns === 2) {
+			const report = compareRequestRuns(
+				await loadRequestRun(outputDirectory, values.compare),
+				await loadRequestRun(outputDirectory, right),
+			);
+			write(report);
+			if (
+				report.changed.length > 0 ||
+				report.onlyLeft.length > 0 ||
+				report.onlyRight.length > 0
+			)
+				process.exitCode = 1;
+			return report;
+		}
 		const report = runComparison(
 			await loadRun(outputDirectory, values.compare),
 			await loadRun(outputDirectory, right),
@@ -197,6 +240,44 @@ export async function runEvaluationCli(
 	const units = (values.units ?? "production") as UnitConfig;
 	if (!unitConfigs.includes(units))
 		throw Error(`--units must be one of ${unitConfigs.join(", ")}`);
+	if (values.requests) {
+		const built = await experimentRequests({
+			experimentId: values.experiment,
+			sourceRevision: values.revision ?? "",
+			units,
+			...(dependencies.labRoot ? { labRoot: dependencies.labRoot } : {}),
+			...(dependencies.setsRoot
+				? { setsRoot: dependencies.setsRoot }
+				: {}),
+			...(values["judgment-model"]
+				? { judgmentModel: values["judgment-model"] }
+				: {}),
+			...(values.concurrency
+				? { concurrency: Number(values.concurrency) }
+				: {}),
+		});
+		const run: RequestRun = {
+			runId: newRequestRunId(),
+			experimentId: values.experiment,
+			sourceRevision: values.revision ?? "",
+			createdAt: new Date().toISOString(),
+			...built,
+		};
+		const path = await saveRequestRun(outputDirectory, run);
+		const summary = {
+			runId: run.runId,
+			experimentId: run.experimentId,
+			path,
+			cases: run.cases.length,
+			requests: run.cases.reduce(
+				(total, entry) => total + entry.requests.length,
+				0,
+			),
+			answers: run.answers,
+		};
+		write(summary);
+		return summary;
+	}
 	const labRoot = dependencies.labRoot ?? defaultLabRoot;
 	const evidenceRoot =
 		dependencies.evidenceRoot ??
