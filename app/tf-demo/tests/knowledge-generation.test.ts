@@ -1,5 +1,10 @@
 import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
-import type { FunctionArgs } from "convex/server";
+import {
+	type DefaultFunctionArgs,
+	type FunctionArgs,
+	type FunctionReference,
+	getFunctionName,
+} from "convex/server";
 import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
@@ -659,13 +664,180 @@ function generateWith(
 	t: TestConvexDb,
 	attemptKey: string,
 	produce: KnowledgeProducer,
+	ctx: object = actionContext(t),
 ) {
 	return generateKnowledge(
-		actionContext(t) as unknown as ActionCtx,
+		ctx as unknown as ActionCtx,
 		{ attemptKey },
 		produce,
 	);
 }
+
+/** An action context whose `knowledgeGeneration.publish` calls go to `publish`. */
+function interceptPublish(
+	t: TestConvexDb,
+	publish: (args: PublishArgs, commit: () => Promise<unknown>) => unknown,
+) {
+	const context = actionContext(t);
+	return {
+		...context,
+		runMutation: (
+			reference: FunctionReference<"mutation", "internal">,
+			args: DefaultFunctionArgs,
+		) =>
+			getFunctionName(reference) ===
+			getFunctionName(internal.knowledgeGeneration.publish)
+				? publish(args as PublishArgs, () =>
+						context.runMutation(reference, args),
+					)
+				: context.runMutation(reference, args),
+	};
+}
+
+/** The event of a structured log line, if `message` is one. */
+function logEvent(message: unknown): { readonly event?: unknown } | undefined {
+	if (typeof message !== "string" || !message.startsWith("{")) return;
+	return JSON.parse(message);
+}
+
+test("a publication rejected after production keeps the run's aspect failures in its failure evidence", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	await insertAttempt(t, occurrence, "rejected", { state: "Scheduled" });
+	const logged: unknown[] = [];
+	const errors = spyOn(console, "error").mockImplementation((message) => {
+		logged.push(logEvent(message));
+	});
+	const failures: KnowledgeProduction["failures"] = [
+		{
+			aspect: "translations",
+			leaf: "ru",
+			code: "ProviderFailure",
+			message: "offline",
+		},
+	];
+	try {
+		await generateWith(
+			t,
+			"rejected",
+			() =>
+				Effect.succeed({
+					failures,
+					changes: [
+						{
+							kind: "Contribute",
+							aspect: "definition",
+							value: "Ein Geldinstitut.",
+						},
+					],
+					pendingRelations: [],
+				}),
+			interceptPublish(t, async () => ({
+				status: "Rejected",
+				message: "Generated Knowledge could not be planned.",
+			})),
+		);
+	} finally {
+		errors.mockRestore();
+	}
+	expect((await attempts(t))[0]).toMatchObject({
+		state: "Failed",
+		failureCode: "generationFailed",
+	});
+	expect((await rows(t, "knowledgeProductionRuns"))[0]).toMatchObject({
+		outcome: "Failure",
+		evidence: { failures },
+	});
+	expect(logged).toEqual([
+		expect.objectContaining({
+			event: "KnowledgeGenerationFailed",
+			attemptKey: "rejected",
+			runNumber: 1,
+			phase: "Publish",
+			errorName: "Error",
+		}),
+	]);
+});
+
+test("an interrupted run records no failure and leaves the run to the stale-run watchdog", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	await insertAttempt(t, occurrence, "interrupted", { state: "Scheduled" });
+	const errors = spyOn(console, "error").mockImplementation(() => {});
+	try {
+		await expect(
+			generateWith(t, "interrupted", () => Effect.interrupt),
+		).rejects.toBeDefined();
+		expect(errors).not.toHaveBeenCalled();
+	} finally {
+		errors.mockRestore();
+	}
+	expect((await attempts(t))[0]).toMatchObject({
+		state: "Running",
+		runNumber: 1,
+	});
+	expect(await rows(t, "knowledgeProductionRuns")).toEqual([]);
+});
+
+test("contributions that finish while a commit is in flight are published together in the next one", async () => {
+	jest.useRealTimers();
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	await insertAttempt(t, occurrence, "coalesced", { state: "Scheduled" });
+	const firstCommitStarted = Promise.withResolvers<void>();
+	const releaseFirstCommit = Promise.withResolvers<void>();
+	const incremental: PublishArgs["changes"][] = [];
+	const definition: KnowledgeChange = {
+		kind: "Contribute",
+		aspect: "definition",
+		value: "Ein Geldinstitut.",
+	};
+	const russian: KnowledgeChange = {
+		kind: "Contribute",
+		aspect: "translations",
+		language: "ru",
+		value: ["банк"],
+	};
+	const english: KnowledgeChange = {
+		kind: "Contribute",
+		aspect: "translations",
+		language: "en",
+		value: ["bank"],
+	};
+	await generateWith(
+		t,
+		"coalesced",
+		(_input, { onContribution }) =>
+			Effect.promise(async () => {
+				const first = Effect.runPromise(onContribution([definition]));
+				await firstCommitStarted.promise;
+				const rest = [russian, english].map((change) =>
+					Effect.runPromise(onContribution([change])),
+				);
+				// Both siblings are queued behind the commit in flight.
+				await Bun.sleep(5);
+				releaseFirstCommit.resolve();
+				await Promise.all([first, ...rest]);
+				return {
+					failures: [],
+					changes: [definition, russian, english],
+					pendingRelations: [],
+				};
+			}),
+		interceptPublish(t, async (args, commit) => {
+			if (!args.final) {
+				incremental.push(args.changes);
+				if (incremental.length === 1) {
+					firstCommitStarted.resolve();
+					await releaseFirstCommit.promise;
+				}
+			}
+			return commit();
+		}),
+	);
+	expect(incremental).toEqual([[definition], [russian, english]]);
+	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
+});
 
 /**
  * Stubs the model provider and restores it with the fixture API key. A
@@ -1841,7 +2013,10 @@ test.each([false, true])(
 		const firstPublication = Promise.withResolvers<void>();
 		const errors = spyOn(console, "error").mockImplementation(
 			(message: unknown) => {
-				if (message === "Incremental Knowledge publication failed")
+				if (
+					logEvent(message)?.event ===
+					"KnowledgeContributionPublicationFailed"
+				)
 					firstPublication.resolve();
 			},
 		);

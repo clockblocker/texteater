@@ -104,7 +104,7 @@ function safeGenerationFailure(failure: GenerationFailure): GenerationFailure {
 	}) as GenerationFailure;
 }
 
-function internalErrorDescriptor(error: unknown): {
+export function internalErrorDescriptor(error: unknown): {
 	readonly errorName: string;
 	readonly errorFingerprint: string;
 } {
