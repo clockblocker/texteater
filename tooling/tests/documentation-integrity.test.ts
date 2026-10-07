@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { mkdir, rm } from "node:fs/promises";
 
 import {
+	adrLogbookIssues,
 	adrStructureIssues,
 	auditAdrs,
 	auditAllowedPaths,
@@ -245,6 +246,55 @@ test("enforces the minimal ADR structure and the accepted-only status", () => {
 			{ kind: "adr-structure", line: 1, severity: "error" },
 		]);
 	}
+});
+
+test("rejects every form of ADR amendment logbook with its line", () => {
+	const forms = [
+		"Amended on 2026-10-01: the test was grammar alone.",
+		"Amended 2026-10-02 (#701): segmentation moved.",
+		"Also amended on 2026-10-03: the gate was dropped.",
+		"Amended again on 2026-10-04: the gate came back.",
+		"The UD `foreign` feature is retired (amended 2026-10-01).",
+		"Amended by [ADR 0045](./0045-foreign.md): Foreign Lemmas differ.",
+		"Since the 2026-10-02 amendment, `so` is one Reading.",
+	];
+	const text = `---\nstatus: accepted\n---\n\n# Use events\n\n${forms.join("\n\n")}\n`;
+	expect(adrLogbookIssues("docs/adr/0001-use-events.md", text)).toMatchObject(
+		forms.map((_, index) => ({
+			file: "docs/adr/0001-use-events.md",
+			kind: "adr-logbook",
+			line: 7 + 2 * index,
+			severity: "error",
+		})),
+	);
+});
+
+test("allows present-tense Amends, fenced examples and non-ADR documents", async () => {
+	expect(
+		adrLogbookIssues(
+			"docs/adr/0042-scope.md",
+			"---\nstatus: accepted\n---\n\n# Scope\n\nReason.\n\n## Consequences\n\n- Amends ADR 0041: a per-Lemma fact.\n- ADR 0004 amends the boundary.\n\n```md\nAmended on 2026-10-01: an example.\n```\n",
+		),
+	).toEqual([]);
+	const root = await temporaryRepository();
+	await writeSource(
+		root,
+		"docs/reference/history.md",
+		"# History\n\nThe contract was amended on 2026-10-01.\n",
+	);
+	await writeSource(
+		root,
+		"docs/adr/0001-use-events.md",
+		"---\nstatus: accepted\n---\n\n# Use events\n\nReason.\n\nAmended on 2026-10-01: an old note.\n",
+	);
+	expect(
+		await auditAdrs(root, [
+			"docs/reference/history.md",
+			"docs/adr/0001-use-events.md",
+		]),
+	).toMatchObject([
+		{ file: "docs/adr/0001-use-events.md", kind: "adr-logbook", line: 9 },
+	]);
 });
 
 test("allows ADR number gaps left by deleted decisions", async () => {

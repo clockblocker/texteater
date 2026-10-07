@@ -12,9 +12,9 @@ Several decided steps make guesses that become identity:
 - the judge decides Reuse or NoMatch on Emoji Descriptions
   ([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md)).
 
-ADR 0031 records that a wrong Reuse stores two senses under one Reading, a
-wrong NoMatch stores one sense twice, and nothing can undo either. Each of
-these errors is one occurrence pointing at the wrong unit.
+A wrong guess misplaces occurrences: a wrong Reuse stores two senses under one
+Reading, and a wrong NoMatch stores one sense twice. Each of these errors is
+one occurrence pointing at the wrong unit.
 
 **Correct moves an occurrence.** An Attestation can be moved to another Lemma
 or Reading, an existing one or a new one. Moving one occurrence of a Reading
@@ -38,7 +38,6 @@ No operation edits a Reading's Emoji Description or merges Knowledge, so ADR
 
 ## Consequences
 
-- Amends ADR 0031's consequence that judge errors persist.
 - Dumdict and tf-demo implement the move and the removal of empty units. They
   are rebuilt after the segmentation rewrite
   ([#701](https://github.com/clockblocker/texteater/issues/701)), so the

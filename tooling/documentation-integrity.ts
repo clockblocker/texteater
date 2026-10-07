@@ -4,6 +4,7 @@ import { basename, dirname, extname, join, relative, resolve } from "node:path";
 import { findRepositoryRoot } from "./lib/workspaces";
 
 export type DocumentationRule =
+	| "adr-logbook"
 	| "adr-structure"
 	| "allowed-path"
 	| "broken-anchor"
@@ -206,15 +207,12 @@ function isAgentInstructionPath(candidate: string): boolean {
 	);
 }
 
-export function markdownLinks(text: string): MarkdownLink[] {
-	const links: MarkdownLink[] = [];
+/** Each Markdown line outside fenced code blocks, with its 1-based number. */
+function linesOutsideFences(text: string): { line: number; text: string }[] {
+	const lines: { line: number; text: string }[] = [];
 	let fence: "`" | "~" | undefined;
-	const inlineLink =
-		/!?\[[^\]]*\]\(\s*(<[^>]+>|[^)\s]+)(?:\s+["'][^)]*["'])?\s*\)/gu;
-	const referenceDefinition = /^\s{0,3}\[[^\]]+\]:\s*(<[^>]+>|\S+)/u;
-
-	for (const [index, originalLine] of text.split("\n").entries()) {
-		const fenceMatch = originalLine.match(/^\s*(`{3,}|~{3,})/u);
+	for (const [index, line] of text.split("\n").entries()) {
+		const fenceMatch = line.match(/^\s*(`{3,}|~{3,})/u);
 		if (fenceMatch !== null) {
 			const marker = fenceMatch[1]?.[0];
 			if (marker === "`" || marker === "~") {
@@ -227,16 +225,28 @@ export function markdownLinks(text: string): MarkdownLink[] {
 			}
 			continue;
 		}
-		if (fence !== undefined) continue;
+		if (fence === undefined) lines.push({ line: index + 1, text: line });
+	}
+	return lines;
+}
 
+export function markdownLinks(text: string): MarkdownLink[] {
+	const links: MarkdownLink[] = [];
+	const inlineLink =
+		/!?\[[^\]]*\]\(\s*(<[^>]+>|[^)\s]+)(?:\s+["'][^)]*["'])?\s*\)/gu;
+	const referenceDefinition = /^\s{0,3}\[[^\]]+\]:\s*(<[^>]+>|\S+)/u;
+
+	for (const { line: number, text: originalLine } of linesOutsideFences(
+		text,
+	)) {
 		const line = originalLine.replaceAll(/`[^`]*`/gu, "");
 		for (const match of line.matchAll(inlineLink)) {
 			const target = match[1];
-			if (target !== undefined) links.push({ line: index + 1, target });
+			if (target !== undefined) links.push({ line: number, target });
 		}
 		const definition = line.match(referenceDefinition)?.[1];
 		if (definition !== undefined) {
-			links.push({ line: index + 1, target: definition });
+			links.push({ line: number, target: definition });
 		}
 	}
 
@@ -280,24 +290,8 @@ function githubHeadingSlug(heading: string): string {
 function markdownAnchors(text: string): Set<string> {
 	const anchors = new Set<string>();
 	const counts = new Map<string, number>();
-	let fence: "`" | "~" | undefined;
 
-	for (const line of text.split("\n")) {
-		const fenceMatch = line.match(/^\s*(`{3,}|~{3,})/u);
-		if (fenceMatch !== null) {
-			const marker = fenceMatch[1]?.[0];
-			if (marker === "`" || marker === "~") {
-				fence =
-					fence === undefined
-						? marker
-						: fence === marker
-							? undefined
-							: fence;
-			}
-			continue;
-		}
-		if (fence !== undefined) continue;
-
+	for (const { text: line } of linesOutsideFences(text)) {
 		const heading = line.match(/^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$/u)?.[1];
 		const explicitId = heading?.match(/\{:?\s*#([\w-]+)\s*\}$/u)?.[1];
 		if (explicitId !== undefined) {
@@ -722,6 +716,26 @@ export function adrStructureIssues(
 	return issues;
 }
 
+/**
+ * Dated amendment paragraphs, "Amended by" back-pointers and "the <date>
+ * amendment" mentions turn an ADR into a logbook. The present-tense "Amends
+ * ADR NNNN" that scopes a newer decision stays allowed.
+ */
+export function adrLogbookIssues(
+	file: string,
+	text: string,
+): DocumentationIssue[] {
+	return linesOutsideFences(text)
+		.filter(({ text: line }) => /\bamend(?:ed|ments?)\b/iu.test(line))
+		.map(({ line }) => ({
+			detail: "An ADR states the current decision: fold the change into the text and leave its history to the issue and git (docs/reference/developer-documentation.md)",
+			file,
+			kind: "adr-logbook" as const,
+			line,
+			severity: "error" as const,
+		}));
+}
+
 export async function auditAdrs(
 	repositoryRoot: string,
 	files: readonly string[],
@@ -731,11 +745,10 @@ export async function auditAdrs(
 		(path) => path.includes("/docs/adr/") || path.startsWith("docs/adr/"),
 	);
 	for (const file of adrFiles) {
+		const text = await readFile(join(repositoryRoot, file), "utf8");
 		issues.push(
-			...adrStructureIssues(
-				file,
-				await readFile(join(repositoryRoot, file), "utf8"),
-			),
+			...adrStructureIssues(file, text),
+			...adrLogbookIssues(file, text),
 		);
 	}
 	return issues;
