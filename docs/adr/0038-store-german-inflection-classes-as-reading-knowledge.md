@@ -12,7 +12,6 @@ Readings tell them apart, as the Emoji Description splits any two senses
 Each Reading stores its own inflection class as Knowledge, the way it stores
 its Valency Frame
 ([ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)).
-Decided in [#597](https://github.com/clockblocker/texteater/issues/597).
 
 Two alternatives were rejected. A Core plural or conjugation class would make
 resolution choose the class from one sentence, though a singular or present
@@ -20,10 +19,13 @@ occurrence (`Meine Mutter kocht`) shows none, and `Pizza` with `Pizzen` and
 `Pizzas` would become two Lemmas of one word. Homonym indexes (`Mutter¹`,
 `Mutter²`) would split the Lemma with no grammar a learner can use.
 
-**A noun's plural.** A German NOUN Reading's `pluralPattern` is a set of Plural
-Patterns or one marker:
+**A noun's plural.** A German NOUN Reading's `plural` aspect stores the
+nominative plural forms of its sense, each listed once (`Pizza`: `Pizzen`,
+`Pizzas`), or one marker: `NoPlural` (`Milch`) or `PluralOnly` (`Leute`).
+Code derives each form's Plural Pattern from the Canonical Form with
+`germanPluralPattern`:
 
-| Value | Example |
+| Pattern | Example |
 | --- | --- |
 | `NoEnding` | `Lehrer` → `Lehrer` |
 | `UmlautOnly` | `Mutter` → `Mütter` |
@@ -34,28 +36,27 @@ Patterns or one marker:
 | `En` | `Mutter` → `Muttern`, `Frau` → `Frauen`, `Pizza` → `Pizzen` |
 | `S` | `Pizza` → `Pizzas` |
 | `Other` | `Visum` → `Visa` |
-| `NoPlural` | `Milch` |
-| `PluralOnly` | `Leute` |
 
 `-n` and `-en` are one pattern, as in learner dictionaries, and so are a
 doubled final consonant (`Lehrerinnen`) and a foreign ending replaced by `-en`
 (`Museum` → `Museen`).
 
-The Knowledge call that creates a Reading names the plural forms of its sense,
-and code derives each pattern from the Canonical Form. The model never names a
-pattern, because code can check a form but not a label.
+The form is the one source of truth, because a pattern can't give its form
+back: `En` covers `Muttern`, `Frauen`, `Lehrerinnen` and `Pizzen`, an umlaut
+pattern doesn't say which vowel changes, and `Other` (`Visa`) has no form at
+all. Forms are never rebuilt from pattern labels, and never pooled across a
+Lemma's Readings: `Mutter` 👩 stores `Mütter` and 🔩 stores `Muttern`.
 
-Every occurrence whose Surface is a nominative, accusative or genitive plural
-Contributes the pattern it attests, with no model call. Variants accumulate
-this way: `Die Pizza heute war lecker` stores `[En]`, and `Ich mag Pizzas`
-adds `S` to the same Reading. A dative plural is skipped, because its `-n`
-(`Kindern`) marks case, not plural. An attested plural never Contributes to a
-NoPlural or PluralOnly Reading. A plural-only noun attests only its own
-Canonical Form, and replacing a marker takes Correct.
+The Knowledge call that creates a Reading names the plural forms of its
+sense, and code derives the patterns. The model never names a pattern,
+because code can check a form but not a label. A later occurrence never
+changes the stored plural; a wrong plural or marker is fixed through Correct.
+The user ruled this for every stored aspect in
+[#883](https://github.com/clockblocker/texteater/issues/883) (point 5).
 
-Routing ignores the aspect. The emoji judge alone picks the Reading, and the
-occurrence Contributes to the Reading it picked. In `Zieh die Muttern fest` the
-judge rejects 👩, and the new 🔩 Reading of the same Lemma stores `[En]`.
+Routing ignores the aspect. The emoji judge alone picks the Reading. In `Zieh
+die Muttern fest` the judge rejects 👩, and the new 🔩 Reading of the same
+Lemma stores `Muttern`.
 
 **A verb's conjugation class.** A German VERB Reading stores its conjugation
 class as a set of Strong, Weak and Mixed, judged on the Präteritum stem (a
@@ -68,21 +69,3 @@ class, as for plurals.
 - A Surface still attaches to its Lemma, so `Muttern` is a Surface of the
   Lemma `Mutter`. The Reading it attests is the emoji judge's decision.
 - Neither aspect enters NOUN or VERB Core Features, and no Lemma is split.
-- The plural shipped first. Dumrel's `conjugationClass` aspect and
-  `germanConjugationClass` followed in
-  [#656](https://github.com/clockblocker/texteater/issues/656); producing and
-  attesting the class waits for the Dumgen rewrite.
-
-Amended on 2026-09-30 ([#657](https://github.com/clockblocker/texteater/issues/657)):
-a German NOUN Reading stores the plural forms of its sense, not their patterns.
-The aspect is `plural`: its nominative plural forms, each listed once
-(`Pizza`: `Pizzen`, `Pizzas`), or the explicit NoPlural or PluralOnly marker.
-Code derives each form's Plural Pattern from the Canonical Form with
-`germanPluralPattern`, so the form is the one source of truth. A pattern
-can't give its form back: `En` covers `Muttern`, `Frauen`, `Lehrerinnen` and
-`Pizzen`, an umlaut pattern doesn't say which vowel changes, and `Other`
-(`Visa`) has no form at all. An attested plural Contributes its form instead
-of its pattern, under the same case and marker rules. Forms are never
-rebuilt from pattern labels, and never pooled across a Lemma's Readings:
-`Mutter` 👩 stores `Mütter` and 🔩 stores `Muttern`. How the Note shows the
-plural is [#726](https://github.com/clockblocker/texteater/issues/726).

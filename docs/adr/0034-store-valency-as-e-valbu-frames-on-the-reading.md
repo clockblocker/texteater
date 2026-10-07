@@ -26,7 +26,9 @@ Preposition complement appears at most once in a frame, since its referent
 tells it apart (`jemanden etwas lehren` has an Acc Someone and an Acc
 Something). An Adverbial, Predicative or Clause appears at most once in a
 Slot but may recur in another: `Dass er kommt, bedeutet, dass sie geht` has
-a Clause Dass in the Nom Slot and in the Acc Slot of `bedeuten`.
+a Clause Dass in the Nom Slot and in the Acc Slot of `bedeuten`. A Slot that
+is either one complement or a list of alternatives was rejected as two shapes
+for one thing.
 
 The status describes the Reading's valency, not one occurrence. A sentence in
 this sense realizes one complement of each Required Slot and at most one of
@@ -83,7 +85,8 @@ vocabulary. German follows E-VALBU:
   `hängen` *irgendwohin*; `sich benehmen` *irgendwie*; `dauern` *irgendwie
   lange*; `kosten` *irgendwie viel*. Other stand-ins wait until a word
   requires one. It has no referent, and the preposition inside it is free
-  (see "An occurrence").
+  (see "An occurrence"). Its field is not named `meaning`, since meaning
+  belongs to the Reading and its Emoji Description.
 - **Predicative** is E-VALBU's Kprd: `aussehen` takes one of its subject with
   no marker, and `jN für dumm halten` one of its object marked `für`. It has
   no case and no referent. Its marker `als` or `für` is a free word, and it
@@ -103,10 +106,12 @@ vocabulary. German follows E-VALBU:
   word that anticipates it: `es` in a Nom or Acc Slot, and `da(r)-` with the
   Slot's preposition in a Preposition Slot. `sich freuen auf` has the Slot
   `auf` + Acc | Clause Dass with a Required correlate (*darauf*), and `sich
-  freuen über` the same with an Optional one. Since the correlate takes its preposition
-  from the Slot, a Clause with a correlate in a Preposition Slot shares it
-  with exactly one Preposition. A correlate is a unit of its own, never a
-  member: `es` stays a PRON and `darauf` an ADV.
+  freuen über` the same with an Optional one. Since the correlate takes its
+  preposition from the Slot, a Clause with a correlate in a Preposition Slot
+  shares it with exactly one Preposition. A correlate is a unit of its own,
+  never a member: `es` stays a PRON and `darauf` an ADV. Recording a clause
+  form as a field on the Acc or Preposition complement was rejected in favour
+  of Clause alternatives.
 
 Hebrew marks function and preposition, with no case: Subject, DirectObject
 and Preposition. English marks position and preposition, with no case:
@@ -130,7 +135,7 @@ rendered. A subject clause is an alternative in it: the Nom Slot of `freuen`
 du kommst`). A verb with no subject has no Nom slot, and its experiencer is a
 Dat or Acc slot: `mir graut vor` is Required Dat, Optional `vor` + Dat. An
 expletive `es` is never a slot ([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)).
-Collocations and Idioms have frames on their Readings like Lexemes.
+Locutions have frames on their Readings like Lexemes.
 A Required slot is how an expression states the valency it demands:
 `jemandem auf den Keks gehen` has a Required Dat slot, which is exactly what
 the learner error *Du gehst mich auf den Keks* gets wrong.
@@ -156,8 +161,7 @@ may be an alternative the proposal missed (`über` + Acc | `von` + Dat on
 and *Sie glaubt an Gott* under one 🙏) or a Slot the proposal left out, and
 one sentence can't tell these apart. Appending would get the third right and
 write a false frame for the first two: `glauben (jM) (etw) (an jN/etw)`.
-Free prepositions are never compared with the frame. Decided on
-[#677](https://github.com/clockblocker/texteater/issues/677).
+Free prepositions are never compared with the frame.
 
 Statuses taken only from attestations were rejected. An imperative, a passive
 or an object dropped by context looks the same as an Optional slot, and the
@@ -186,23 +190,24 @@ neither where a click routes nor what drill-down offers. So was keeping an
 intake analysis beside the grammar one, since the two can disagree on one
 occurrence. Intake may be tested proposing a valency hint, which is adopted
 only if it is accurate and does not hurt grouping accuracy, cost or latency.
-Decided on [#616](https://github.com/clockblocker/texteater/issues/616).
 
 A governed preposition stays an Attestation member, so clicking it still
-routes to the governor. `normalizedSurface` projects only Fixed members:
-`wartet`, not `wartet auf`; `pass auf`, not `pass auf auf`. The preposition
-inside an Adverbial is not a member: in `legt das Buch auf den Tisch` and
-`wohnt in Bonn`, the verb requires a direction or a place, not `auf` or `in`.
-Neither is the `als` or `für` that marks a Predicative.
+routes to the governor: `aus Angst vor Hunden` gives `[Angst, vor]` NOUN.
+`normalizedSurface` projects only Fixed members: `wartet`, not `wartet auf`;
+`pass auf`, not `pass auf auf`. The preposition inside an Adverbial is not a
+member: in `legt das Buch auf den Tisch` and `wohnt in Bonn`, the verb
+requires a direction or a place, not `auf` or `in`. Neither is the `als` or
+`für` that marks a Predicative, nor a preposition heading a free adjunct: the
+`im` of `wartet im Keller` is no member of `warten`.
 
 A governor's evidence lists only the governed prepositions its sentence
-realizes, for every governor Kind. Case slots (bare Nom, Acc, Dat or Gen noun
+realizes, for every governor Kind but INTJ, which records no
+`valencyEvidence`. Case slots (bare Nom, Acc, Dat or Gen noun
 phrases) come only from the Knowledge call's frame, and so do Adverbial,
 Predicative and Clause complements. The frame is already complete without
 them, and Source Contexts already show the sentence. A free dative would pass
 for a slot (`Ich backe dir einen Kuchen` → Dat on `backen`). Each bare noun
-phrase would also cost one more question. Decided in
-[#605](https://github.com/clockblocker/texteater/issues/605).
+phrase would also cost one more question.
 
 A governed preposition keeps its case under passive (`um Geduld` stays `um` +
 Acc), so recording it converts no passive. Recording bare Dat and Gen objects
@@ -240,35 +245,40 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
 
 ## Consequences
 
-- This replaces the Reading's `governedPrepositions` aspect, the rule that
-  no valency comes from the sense alone, and the Attestation's
-  `governedPrepositionEvidence` from
-  [ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md).
-  ADR 0029 still keeps government out of Lemma identity and pronominal
-  adverbs as ADV Lexemes.
-- The `governedPrepositions` design rejected a per-Reading call that guessed
-  valency from the sense, because that call ran in every sentence. The frame is proposed once, by the
+- [ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)
+  keeps government out of Lemma identity and pronominal adverbs as ADV
+  Lexemes. This ADR decides where government is stored instead: the frame on
+  the Reading and `valencyEvidence` on the Attestation.
+- Valency may come from the sense alone. The frame is proposed once, by the
   Knowledge call that creates the Reading, so a guess can be wrong and is
-  fixed through Correct.
+  fixed through Correct. Guessing valency from the sense in every sentence
+  was rejected.
 - The `governedBy` view of a preposition is projected from every Preposition
   complement of a frame, alternatives included: `von` lists `reden`.
-- A verb's `normalizedSurface` no longer contains its governed preposition,
-  so docs examples such as `Er [wartet] auf den Nachtbus` change.
-- ADR 0022's expletive `es` is unchanged.
 - Every governor Kind takes in its governed preposition as an Attestation
-  member: VERB, ADJ, NOUN and Locutions. Clicking `auf` in `Er ist stolz auf
-  seinen Sohn` opens `stolz`, and clicking `über` in `Er weiß Bescheid über
-  die Pläne` opens the Collocation `Bescheid wissen`. ADJ and NOUN get the
-  `GovernedPreposition` member role verbs already have in the legacy intake,
-  where a Phraseme Target gets a governed-preposition member whose role does
-  not count toward fixedness. `normalizedSurface` stays Fixed-only, so `stolz auf` projects
-  `stolz`. Separated cases (`Auf ihn bin ich stolz`, `der auf seinen Sohn
-  stolze Vater`) work the way separable verbs already do. This supersedes
-  ADR 0029's rule that only verbs absorb a governed preposition, under which
-  one relation behaved three ways. Taking it into no governor was rejected
-  too: it is consistent, but a learner who clicks a verb's preposition would
-  land on a preposition Note that only lists governors. Decided in
-  [#603](https://github.com/clockblocker/texteater/issues/603).
+  member: VERB, ADJ, NOUN, Locutions and routine formulas. Clicking `auf` in
+  `Er ist stolz auf seinen Sohn` opens `stolz`, and clicking `über` in `Er
+  weiß Bescheid über die Pläne` opens the Collocation `Bescheid wissen`. The
+  member carries no Member Role
+  ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
+  and `normalizedSurface` stays Fixed-only, so `stolz auf` projects `stolz`.
+  Separated cases (`Auf ihn bin ich stolz`, `der auf seinen Sohn stolze
+  Vater`) work the way separable verbs do. Taking it into verbs only was
+  rejected, because one relation would behave three ways. Taking it into no
+  governor was rejected too: it is consistent, but a learner who clicks a
+  verb's preposition would land on a preposition Note that only lists
+  governors.
+- A routine formula
+  ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)) governs
+  through its head word, so the Lexeme INTJ is a governor. It takes in the
+  preposition its head word governs, as `Angst haben` takes in `vor`:
+  `Vielen Dank für Ihre Hilfe` gives `[Vielen, Dank, für]` INTJ `vielen
+  Dank`, and `danke für die Hilfe` gives `[danke, für]` INTJ `danke`, which
+  governs what its Grundform `danken` does. A locative or adjunct preposition
+  stays free: the `in` of `willkommen in Leipzig` is no member. An INTJ
+  records no `valencyEvidence`, so the member carries no evidence, and
+  `normalizedSurface` stays Fixed-only. The user ruled this on
+  [#701](https://github.com/clockblocker/texteater/issues/701).
 - A governed preposition belongs to the smallest unit its government
   survives with in the same sense: `stolz auf` to ADJ `stolz`, `Angst vor`
   to NOUN `Angst`, but `Bescheid wissen über` to the Collocation, because
@@ -282,40 +292,43 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   resolves the click to it: `Sie hat Angst vor Hunden` and `Hast du Angst?`
   open `Angst haben`, while `aus Angst vor Hunden` opens `Angst`. The
   Collocation Note reaches the governor's frame and the verb through its
-  Breakdown ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)). The Collocation stores its own frame, not a projection
-  of its members' frames, because slots like the Dat of `jemandem auf den
-  Keks gehen` come from no member.
-- A copula (`sein`, `werden`, `bleiben`, `scheinen`, `wirken`, `sich zeigen`)
-  never forms a Collocation with a predicative adjective, so an adjective
-  and its governed preposition resolve to the ADJ even beside a copula. A
-  Collocation needs a verb the noun or adjective lexically selects: `Angst
-  haben`, `Lust haben auf`, `Rücksicht nehmen auf`. `Angst haben` qualifies
-  by restricted lexical choice (`Angst haben/bekommen`, not `*Angst
-  besitzen`), though it fails grammis's Funktionsverbgefüge tests.
-  `stolz auf jN sein` was
-  rejected as a Collocation: it fails the restricted-choice test, it would
-  make one Collocation per copula and adjective, and UD attaches `sein` as
-  the adjective's `cop`.
-- `governedCase` leaves German ADP Core. Identity does not change, since no
-  two German ADPs differ by case alone. An authored, closed table per
-  language, the ADP Case Table, lists each adposition with the positions it
-  takes, before (Prep) or after (Post) its complement, and for each position
-  its allowed cases, a preferred case where there is a norm, and whether it
-  is two-way: `für` Prep {Acc}, `mit` Prep {Dat}, `auf` and `in` Prep
-  {Acc, Dat} two-way, `trotz` Prep {Gen, Dat} preferring Gen, `wegen` Prep
-  {Gen, Dat} preferring Gen and Post {Gen}, `entlang` Post {Acc, Dat}
-  preferring Acc and Prep {Gen, Dat}. A position it doesn't list isn't
-  allowed. A circumposition or other Locution ADP has one case set and no
-  position, since its words are its Canonical Form. Neither the Lemma nor
-  the Attestation records the position
+  Breakdown
+  ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)).
+  The Collocation stores its own frame, not a projection of its members'
+  frames, because slots like the Dat of `jemandem auf den Keks gehen` come
+  from no member.
+- [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md) defines
+  the Collocation: a Locution whose verb only supports its noun or adjective
+  predicate, as in `Angst haben`, `Lust haben auf` and `Rücksicht nehmen
+  auf`. A copula (`sein`, `werden`, `bleiben`, `scheinen`, `wirken`, `sich
+  zeigen`) never forms a Collocation with a predicative adjective, so an
+  adjective and its governed preposition resolve to the ADJ even beside a
+  copula. `Angst haben` shows restricted lexical choice (`Angst
+  haben/bekommen`, not `*Angst besitzen`), though it fails grammis's
+  Funktionsverbgefüge tests. `stolz auf jN sein` was rejected as a
+  Collocation: it fails the restricted-choice test, it would make one
+  Collocation per copula and adjective, and UD attaches `sein` as the
+  adjective's `cop`.
+- German ADP Core has no `governedCase`, since no two German ADPs differ by
+  case alone. An authored, closed table per language, the ADP Case Table,
+  lists each adposition with the positions it takes, before (Prep) or after
+  (Post) its complement, and for each position its allowed cases, a
+  preferred case where there is a norm, and whether it is two-way: `für`
+  Prep {Acc}, `mit` Prep {Dat}, `auf` and `in` Prep {Acc, Dat} two-way,
+  `trotz` Prep {Gen, Dat} preferring Gen, `wegen` Prep {Gen, Dat} preferring
+  Gen and Post {Gen}, `entlang` Post {Acc, Dat} preferring Acc and Prep
+  {Gen, Dat}. A position it doesn't list isn't allowed. A circumposition or
+  other Locution ADP has one case set and no position, since its words are
+  its Canonical Form. Neither the Lemma nor the Attestation records the
+  position
   ([ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)):
   the sentence shows it, and the table states what German allows and what a
-  Note can show. It replaces Dumgen's `governablePrepositions`, and every
-  Preposition complement of a governor's frame, alternatives included, is
-  validated against it: `warten` `auf` + Acc and `bestehen` `auf` + Dat
-  pass, `für` + Dat fails. ADR 0041 moved the
-  table and its check from Dumling to dumcorpus, since which cases a
-  preposition takes is a fact about the language.
+  Note can show. Every Preposition complement of a governor's frame,
+  alternatives included, is validated against the table: `warten` `auf` +
+  Acc and `bestehen` `auf` + Dat pass, `für` + Dat fails. The table and its
+  check live in dumcorpus
+  ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
+  since which cases a preposition takes is a fact about the language.
 - A free ADP occurrence records the case it took as `realizedCase` in its
   `valencyEvidence`, from the judgement Grammatical Resolution already makes
   for the case. `[Wegen] dem Regen` records Dat against the preferred Gen. A
@@ -333,56 +346,4 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   no preferred case and no per-sentence case. So was a generated frame per
   ADP Reading: two-way would depend on the emoji judge splitting location
   from direction, and a one-case slot cannot hold both cases when the judge
-  merges them. Decided in
-  [#604](https://github.com/clockblocker/texteater/issues/604).
-
-Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): Idiom and Collocation governors are Locutions, and a Collocation's predicate may be a noun or an adjective, which widens the Collocation test above.
-
-Amended on 2026-10-01: the ADP Case Table was keyed by the Lemma's
-`adpType` only where position changed the case, Post `entlang` took {Acc}
-alone, an adposition the table didn't list took any oblique case, and a
-Locution ADP recorded no case. Now every entry lists its positions, the
-any-case fallback is gone, and a Locution ADP records its case. Decided on
-[#652](https://github.com/clockblocker/texteater/issues/652) and
-[#733](https://github.com/clockblocker/texteater/issues/733).
-
-Also amended on 2026-10-01: a complement whose marker is free (`wohnen in`,
-`bei`, `auf`) was not recorded, a Slot held exactly one complement, German
-complements were Case and Preposition only with their case in `case`, and the
-German subject was always Nom. Now a required complement is recorded whatever
-marks it, a Slot holds alternatives, German adds Adverbial, Predicative and
-Clause, the field is `governedCase`, and a subject clause shares the Nom
-Slot. Rejected on the way: a Slot that is either one complement or a list of
-alternatives, two shapes for one thing; naming the Adverbial's field
-`meaning`, since meaning belongs to the Reading and its Emoji Description;
-and clause forms recorded as a field on the Acc or Preposition complement,
-which [#672](https://github.com/clockblocker/texteater/issues/672) replaced
-with Clause alternatives. Decided on
-[#673](https://github.com/clockblocker/texteater/issues/673) and #672, and
-implemented on [#674](https://github.com/clockblocker/texteater/issues/674).
-
-Also amended on 2026-10-01: every complement appeared at most once in a
-frame, so `bedeuten` could not take a dass-clause as both its subject and its
-object. Now only Case and Preposition complements do, and an Adverbial,
-Predicative or Clause is unique within its Slot. Decided by the user on #674.
-
-Also amended on 2026-10-01: dumcorpus's
-`de/governed-preposition-joins-its-governor` keeps one example, *Auf ihn bin
-ich stolz*, and this ADR holds the ones it dropped: `aus Angst vor Hunden`
-gives `[Angst, vor]` NOUN, and `legt das Buch auf den Tisch` and `wohnt in
-Bonn` keep the preposition inside their Adverbial free. The `im` of `wartet
-im Keller` heads a free adjunct, so it is no member of `warten` either.
-Decided on [#743](https://github.com/clockblocker/texteater/issues/743).
-
-Amended on 2026-10-02: a routine formula
-([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)) is a
-governor too, through its head word, so the Lexeme INTJ joins VERB, ADJ, NOUN
-and Locutions above. It takes in the preposition its head word governs, as
-`Angst haben` takes in `vor`: `Vielen Dank für Ihre Hilfe` gives `[Vielen,
-Dank, für]` INTJ `vielen Dank`, and `danke für die Hilfe` gives `[danke,
-für]` INTJ `danke`, which governs what its Grundform `danken` does. A
-locative or adjunct preposition stays free: the `in` of `willkommen in
-Leipzig` is no member. An INTJ records no `valencyEvidence`, so the member
-carries no evidence, and `normalizedSurface` stays Fixed-only. Decided by the
-user on [#701](https://github.com/clockblocker/texteater/issues/701)
-(grouping audit Q1).
+  merges them.
