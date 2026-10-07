@@ -3,6 +3,17 @@ import { defineConfig, devices } from "@playwright/test";
 const port = Number(process.env.TF_DEMO_E2E_PORT ?? 4175);
 const playgroundUrl = `http://127.0.0.1:${port}`;
 
+/* Specs that open only `/playground/...` and read no Convex data. CI runs
+   them as its `e2e` gate (`bun run test:e2e:playground`); every other spec
+   opens `/` against a seeded local Convex backend and stays local (#901).
+   `app-provider.tsx` throws without `VITE_CONVEX_URL` on every route, so
+   that script sets a placeholder (process env wins over `.env.local`). */
+const playgroundSpecs = [
+	"compass.pw.ts",
+	"deck-motion.pw.ts",
+	"playground-isolation.pw.ts",
+];
+
 export default defineConfig({
 	testDir: "./e2e",
 	testMatch: "**/*.pw.ts",
@@ -17,7 +28,13 @@ export default defineConfig({
 	},
 	projects: [
 		{
-			name: "chromium",
+			name: "playground",
+			testMatch: playgroundSpecs,
+			use: { ...devices["Desktop Chrome"] },
+		},
+		{
+			name: "convex-backed",
+			testIgnore: playgroundSpecs,
 			use: { ...devices["Desktop Chrome"] },
 		},
 	],

@@ -1,7 +1,8 @@
 # Reports red or green on each push to main; nothing blocks a local commit.
 # `bun run ci` runs the same gates locally (tooling/lib/ci-gates.ts).
-# No secrets and no provider calls: live pipeline runs and Playwright suites
-# stay local.
+# No secrets and no provider calls: live pipeline runs and the Playwright
+# specs that need a seeded Convex backend stay local. The backend-free
+# playground specs run as the `e2e` gate.
 name: CI
 
 on:
@@ -65,3 +66,27 @@ jobs:
       - name: dum-runtime
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: bun tooling/ci.ts dum-runtime
+
+      # Chromium for the `e2e` gate, cached on the installed
+      # @playwright/test version. The OS packages install on every run.
+      - name: Playwright version
+        id: playwright
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        working-directory: app/tf-demo
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+
+      - name: Playwright browser
+        id: playwright-browser
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        working-directory: app/tf-demo
+        run: bunx playwright install --with-deps chromium
+
+      - name: e2e
+        if: ${{ !cancelled() && steps.playwright-browser.outcome == 'success' }}
+        run: bun tooling/ci.ts e2e

@@ -1,8 +1,8 @@
 /**
  * The repository gates CI runs on every push to `main`, in order.
  * `.github/workflows/ci.yml` runs each one as its own step through
- * `bun tooling/ci.ts <name>`, `bun run ci` runs them all locally, and
- * `bun run validate` runs every gate but `build`.
+ * `bun tooling/ci.ts <name>`, and `bun run ci` runs them all locally.
+ * `bun run validate` runs only `validate`, `knip` and `dum-runtime`.
  */
 export const ciGates = [
 	{
@@ -38,5 +38,11 @@ export const ciGates = [
 	{
 		name: "dum-runtime",
 		args: ["bun", "tooling/dum-runtime-verification/verify.ts"],
+	},
+	{
+		// tf-demo's backend-free Playwright specs (its `playground` project).
+		// The Convex-backed specs stay local. Slow, so `validate` skips it.
+		name: "e2e",
+		args: ["bun", "run", "--cwd", "app/tf-demo", "test:e2e:playground"],
 	},
 ] as const;

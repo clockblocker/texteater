@@ -57,7 +57,8 @@ bun run check:docs
 ```
 
 GitHub Actions runs the CI gates on every push to `main`; `bun run ci`
-runs the same gates locally.
+runs the same gates locally. They include tf-demo's backend-free Playwright
+specs; the specs that need a seeded Convex backend run only locally.
 
 Cross-workspace imports use package exports. Do not reach into a sibling with a
 relative import or an undeclared package subpath.
