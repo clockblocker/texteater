@@ -200,14 +200,6 @@ export type ResolveSegmentResult =
 			>;
 	  };
 
-/**
- * Durable boundary for the linguistic workflow.
- *
- * The implementation must make the first valid resolved occurrence atomic:
- * canonical dictionary records, exclusive Segment memberships, the occurrence
- * Attestation, and the Visitor Encounter commit together. Replays and late
- * competing results return the committed occurrence instead of duplicating it.
- */
 /** What a click's re-segmentation of a failed Sentence found (#861). */
 type ResegmentedSentence = {
 	readonly segments: readonly {
@@ -218,6 +210,14 @@ type ResegmentedSentence = {
 	readonly units: readonly StoredUnit[];
 };
 
+/**
+ * Durable boundary for the linguistic workflow.
+ *
+ * The implementation must make the first valid resolved occurrence atomic:
+ * canonical dictionary records, exclusive Segment memberships, the occurrence
+ * Attestation, and the Visitor Encounter commit together. Replays and late
+ * competing results return the committed occurrence instead of duplicating it.
+ */
 export type OrchestrationPersistence = {
 	loadResolutionContext(
 		input: ResolveSegmentInput,
