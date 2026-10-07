@@ -1,9 +1,8 @@
 import type { Box, Presentation } from "compass";
-import { animate, motion, useMotionValue, useTransform } from "motion/react";
+import { motion } from "motion/react";
 import {
 	type PointerEvent as ReactPointerEvent,
 	useEffect,
-	useLayoutEffect,
 	useRef,
 } from "react";
 import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
@@ -21,6 +20,7 @@ import { useDeckInteractions } from "./interaction-policy";
 import { sheetColumn } from "./layout";
 import { RestingControls } from "./resting-controls";
 import type { Form, Place, SubjectRenderer, SubjectView } from "./subject";
+import { useHeadingEdgeSlide, useNoteBox } from "./use-note-box";
 
 /**
  * What a Note's Segments and Links do, and how it updates its Deck. A
@@ -119,40 +119,14 @@ export function PresentationView<S>({
 	const allows = useDeckInteractions();
 	const reduce = useDeckReducedMotion();
 	const design = useHeadingDesign();
-	const left = useMotionValue(box.left);
-	const top = useMotionValue(box.top);
-	const width = useMotionValue(box.width);
-	const height = useMotionValue(box.height);
-	const x = useMotionValue(0);
-	const y = useMotionValue(0);
-	const rotate = useMotionValue(0);
-	/* A dealt Note is simply there: opaque on its first frame, never faded. */
-	const opacity = useMotionValue(1);
-	const handle = useRef<NoteHandle>({
-		left,
-		top,
-		width,
-		height,
-		x,
-		y,
-		rotate,
-		opacity,
-	});
+	const { handle, width, height, shownX, shownY, rotate, opacity } =
+		useNoteBox({ box, form, epoch, preview, reduce, MORPH });
 	/**
 	 * The open Card rests larger than the ones behind it (`OPEN_SCALE`). It
 	 * is a state, not a move: which Card is in front changes at once, with
 	 * no pulse. A held Card does not swell, so nothing else scales a Note.
 	 */
 	const restScale = form === "card" && place === "open" ? OPEN_SCALE : 1;
-	/**
-	 * The box's origin travels as a transform, not as `left`/`top`, so two
-	 * of the four properties on MORPH leave the layout path; `width` and
-	 * `height` have to stay, because a Note genuinely reflows its text
-	 * between a Card and a Sheet. The drag offset rides along in the same
-	 * translate, so the two cannot fight over it.
-	 */
-	const shownX = useTransform(() => left.get() + x.get());
-	const shownY = useTransform(() => top.get() + y.get());
 	const section = useRef<HTMLElement>(null);
 
 	useEffect(() => {
@@ -163,49 +137,6 @@ export function PresentationView<S>({
 		};
 		/* register is a fresh closure every render; the handle is not */
 	}, [card.id, preview]);
-
-	/* the box: animate to wherever the renderer puts the Note now. A
-	   preview is placed, never moved: it appears where it will be, at
-	   once. And a box that changed because the Panes were re-measured,
-	   with the form unchanged, is a resize, not a move: the Note is where
-	   its Pane put it, at once. A change of form in the same pass is still
-	   a morph. */
-	const boxPass = useRef({ form, epoch });
-	useEffect(() => {
-		const previous = boxPass.current;
-		boxPass.current = { form, epoch };
-		const resized = previous.epoch !== epoch && previous.form === form;
-		if (reduce || preview || resized) {
-			left.jump(box.left);
-			top.jump(box.top);
-			width.jump(box.width);
-			height.jump(box.height);
-			return;
-		}
-		const controls = [
-			animate(left, box.left, MORPH),
-			animate(top, box.top, MORPH),
-			animate(width, box.width, MORPH),
-			animate(height, box.height, MORPH),
-		];
-		return () => {
-			for (const control of controls) control.stop();
-		};
-	}, [
-		box.left,
-		box.top,
-		box.width,
-		box.height,
-		left,
-		top,
-		width,
-		height,
-		reduce,
-		preview,
-		epoch,
-		form,
-		MORPH,
-	]);
 
 	function down(event: ReactPointerEvent<HTMLElement>) {
 		const target = event.target as HTMLElement;
@@ -245,58 +176,15 @@ export function PresentationView<S>({
 		previousForm.current = form;
 	}, [form]);
 	const positionSpec = morphing ? MORPH : transition(HEADING_EDGE);
-	const headingOffset = useMotionValue(0);
-	const bodyOffset = useMotionValue(0);
-	const previousPositions = useRef<{
-		form: Form;
-		below: boolean;
-		heading: number;
-		body: number;
-	} | null>(null);
-	useLayoutEffect(() => {
-		const heading =
-			section.current?.querySelector<HTMLElement>("[data-heading]");
-		const body =
-			section.current?.querySelector<HTMLElement>("[data-scroller]");
-		if (!heading || !body) return;
-		const previous = previousPositions.current;
-		previousPositions.current = {
-			form,
-			below,
-			heading: heading.offsetTop,
-			body: body.offsetTop,
-		};
-		if (
-			previous?.form === form &&
-			previous.below !== below &&
-			!held &&
-			!reduce &&
-			HEADING_EDGE.ms > 0
-		) {
-			headingOffset.set(
-				headingOffset.get() + previous.heading - heading.offsetTop,
-			);
-			bodyOffset.set(bodyOffset.get() + previous.body - body.offsetTop);
-			const controls = [
-				animate(headingOffset, 0, transition(HEADING_EDGE)),
-				animate(bodyOffset, 0, transition(HEADING_EDGE)),
-			];
-			return () => {
-				for (const control of controls) control.stop();
-			};
-		}
-		headingOffset.jump(0);
-		bodyOffset.jump(0);
-	}, [
-		below,
+	const { headingOffset, bodyOffset } = useHeadingEdgeSlide({
+		section,
 		form,
+		below,
 		held,
 		reduce,
 		HEADING_EDGE,
 		transition,
-		headingOffset,
-		bodyOffset,
-	]);
+	});
 	/* the border is the Card's fate: blue where letting go opens it, red
 	   on a swiped Deck a release would sweep, and its resting colour
 	   otherwise. A Card that would leave also dims; see `LEAVING`. */

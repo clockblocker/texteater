@@ -185,9 +185,12 @@ export function ContextsBlock({
 	const { transition, CONTEXT_ITEM, contextDelayFor } = useDeckMotion();
 	const sheet = form === "sheet";
 	const [shown, setShown] = useState(CONTEXT_PAGE);
-	useEffect(() => {
+	/* a Sheet folded back to a Card forgets the pages it loaded */
+	const [wasSheet, setWasSheet] = useState(sheet);
+	if (sheet !== wasSheet) {
+		setWasSheet(sheet);
 		if (!sheet) setShown(CONTEXT_PAGE);
-	}, [sheet]);
+	}
 	const visible = note.contexts.slice(0, sheet ? shown : CARD_CONTEXTS);
 	const more = note.contexts.length - visible.length;
 	/**

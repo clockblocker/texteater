@@ -71,11 +71,15 @@ export function useFolded(
 	watching: boolean,
 ): boolean {
 	const [folded, setFolded] = useState(false);
+	/* an unwatched Cover is unfolded at once, so a re-watched one starts
+	   unfolded until its scroller says otherwise */
+	const [wasWatching, setWasWatching] = useState(watching);
+	if (watching !== wasWatching) {
+		setWasWatching(watching);
+		if (!watching) setFolded(false);
+	}
 	useEffect(() => {
-		if (!watching) {
-			setFolded(false);
-			return;
-		}
+		if (!watching) return;
 		const scroller =
 			section.current?.querySelector<HTMLElement>("[data-scroller]");
 		if (!scroller) return;
