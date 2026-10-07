@@ -53,10 +53,10 @@
 				},
 				"idealOutput": {
 					"semanticRelations": {
-						"synonym": null,
-						"nearSynonym": [
+						"synonym": [
 							{ "canonicalForm": "Kiefer", "kind": "NOUN" }
 						],
+						"nearSynonym": null,
 						"antonym": null,
 						"nearAntonym": null,
 						"hypernym": [
@@ -65,12 +65,17 @@
 						"holonym": null
 					}
 				},
-				"explanation": "Duden defines regional Föhre through the pine Reading of Kiefer; the regional restriction makes it Near Synonym, while Nadelbaum is the broader category.",
+				"explanation": "OpenThesaurus lists Föhre in the pine synset of Kiefer, so Kiefer is a Synonym; the regional label on Föhre neither demotes nor blocks it (Dumrel ADR 0005, #884 G1). Nadelbaum is the broader category.",
 				"sources": [
 					{
 						"title": "Duden: Föhre",
 						"url": "https://www.duden.de/rechtschreibung/Foehre",
 						"supports": "Defines Föhre through Kiefer and marks it regional or Austrian."
+					},
+					{
+						"title": "OpenThesaurus: Föhre",
+						"url": "https://www.openthesaurus.de/synonyme/F%C3%B6hre",
+						"supports": "Lists Föhre (ugs., österr.) in the pine synset with Kiefer as its main form, under the Oberbegriff Nadelbaum."
 					},
 					{
 						"title": "IDS Grammis: Homonymie",
@@ -81,6 +86,11 @@
 						"title": "Dumling generated docs source: Linguistics",
 						"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
 						"supports": "Keeps the pine Reading separate from the jaw Reading."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
+						"supports": "A register or regional difference neither demotes nor blocks a Synonym (#884 G1)."
 					}
 				],
 				"contaminationKeys": ["relation-de-foehre-pine"]

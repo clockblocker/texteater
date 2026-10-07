@@ -58,15 +58,15 @@
 				},
 				"idealOutput": {
 					"semanticRelations": {
-						"synonym": null,
-						"nearSynonym": [
+						"synonym": [
 							{ "canonicalForm": "bisweilen", "kind": "ADV" }
 						],
+						"nearSynonym": null,
 						"antonym": null,
 						"nearAntonym": null
 					}
 				},
-				"explanation": "Primary lexicography supports the shared occasional-frequency meaning; the elevated/literary distribution is reviewer-adjudicated as a Near-Synonym restriction.",
+				"explanation": "Duden lists bisweilen for the occasional-frequency meaning of manchmal, so it is a Synonym; its elevated register neither demotes nor blocks it (Dumrel ADR 0005, #884 G1).",
 				"sources": [
 					{
 						"title": "Duden: manchmal",
@@ -81,7 +81,7 @@
 					{
 						"title": "Dumrel settled Semantic Relation policy",
 						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
-						"supports": "Supplies Near Synonym for the human-accepted register restriction."
+						"supports": "A register or regional difference neither demotes nor blocks a Synonym (#884 G1)."
 					}
 				],
 				"contaminationKeys": ["relation-de-manchmal-sometimes"]

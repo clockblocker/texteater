@@ -56,15 +56,27 @@
 				},
 				"idealOutput": {
 					"semanticRelations": {
-						"synonym": null,
-						"nearSynonym": [
+						"synonym": [
 							{ "canonicalForm": "obgleich", "kind": "SCONJ" }
 						],
+						"nearSynonym": null,
 						"antonym": null,
 						"nearAntonym": null
 					}
 				},
-				"explanation": "Obgleich shares the concessive core but has a stable elevated register, so it is Near Synonym rather than exact Synonym.",
+				"explanation": "OpenThesaurus lists obgleich in the concessive synset of obwohl, so it is a Synonym; its elevated register neither demotes nor blocks it (Dumrel ADR 0005, #884 G1).",
+				"sources": [
+					{
+						"title": "OpenThesaurus: obwohl",
+						"url": "https://www.openthesaurus.de/synonyme/obwohl",
+						"supports": "Lists obgleich in the concessive synset of obwohl."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
+						"supports": "A register or regional difference neither demotes nor blocks a Synonym (#884 G1)."
+					}
+				],
 				"contaminationKeys": ["relation-de-obwohl-although"]
 			}
 		}

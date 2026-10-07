@@ -55,15 +55,27 @@
 				},
 				"idealOutput": {
 					"semanticRelations": {
-						"synonym": null,
-						"nearSynonym": [
+						"synonym": [
 							{ "canonicalForm": "ungeachtet", "kind": "ADP" }
 						],
+						"nearSynonym": null,
 						"antonym": null,
 						"nearAntonym": null
 					}
 				},
-				"explanation": "Ungeachtet shares the concessive relation but is systematically more formal, so only Near Synonym passes.",
+				"explanation": "OpenThesaurus lists ungeachtet in the concessive synset of trotz, so it is a Synonym; its formal register neither demotes nor blocks it (Dumrel ADR 0005, #884 G1).",
+				"sources": [
+					{
+						"title": "OpenThesaurus: trotz",
+						"url": "https://www.openthesaurus.de/synonyme/trotz",
+						"supports": "Lists ungeachtet in the concessive synset of trotz."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
+						"supports": "A register or regional difference neither demotes nor blocks a Synonym (#884 G1)."
+					}
+				],
 				"contaminationKeys": ["relation-de-trotz-despite"]
 			}
 		}

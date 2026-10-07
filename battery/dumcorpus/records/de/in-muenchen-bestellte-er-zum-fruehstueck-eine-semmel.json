@@ -88,16 +88,22 @@
 						"emojiDescription": "🥖",
 						"unitKind": "Reading"
 					},
-					"request": { "semanticRelations": { "nearSynonym": null } }
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null
+						}
+					}
 				},
 				"idealOutput": {
 					"semanticRelations": {
-						"nearSynonym": [
+						"synonym": [
 							{ "canonicalForm": "Brötchen", "kind": "NOUN" }
-						]
+						],
+						"nearSynonym": null
 					}
 				},
-				"explanation": "Semmel and Brötchen share central denotation while Semmel carries a material Austrian/Bavarian distribution restriction.",
+				"explanation": "OpenThesaurus lists Semmel in the bread-roll synset of Brötchen, so Brötchen is a Synonym; the Austrian and Bavarian label on Semmel neither demotes nor blocks it (Dumrel ADR 0005, #884 G1).",
 				"sources": [
 					{
 						"title": "Duden: Semmel",
@@ -108,6 +114,16 @@
 						"title": "Duden: Brötchen",
 						"url": "https://www.duden.de/rechtschreibung/Broetchen",
 						"supports": "Provides the unrestricted counterpart for the shared bread-roll meaning."
+					},
+					{
+						"title": "OpenThesaurus: Semmel",
+						"url": "https://www.openthesaurus.de/synonyme/Semmel",
+						"supports": "Lists Semmel (bayr., österr.) in the bread-roll synset with Brötchen as its main form."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
+						"supports": "A register or regional difference neither demotes nor blocks a Synonym (#884 G1)."
 					}
 				],
 				"contaminationKeys": [

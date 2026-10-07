@@ -11,8 +11,9 @@ neighbouring relations, and a dictionary listing is evidence that models and
 reviewers can check. Their own sense of relatedness drifts.
 
 - **Synonym**: means the same as the Reading in this meaning and can replace
-  it. A register difference neither demotes nor blocks it (`Mama`:
-  `Mutter`). A dictionary's gloss is no synonym listing.
+  it. A register or regional difference neither demotes nor blocks a
+  Synonym (`Mama`: `Mutter`, `Semmel`: `Brötchen`). A dictionary's gloss is
+  no synonym listing.
 - **Near Synonym**: means nearly the same, with a real difference of
   meaning, scope or perspective (`Pfote`: `Tatze`, which only larger
   predators have).
@@ -37,9 +38,9 @@ transitive, and the other non-near claims carry across a Synonym. Antonym is
 symmetric but not transitive. Near Synonym and Near Antonym are symmetric,
 but neither is transitive or carried across a Synonym.
 
-Register stays out of the relation because Synonym closure needs exact
-synonyms, and dictionaries tag register inconsistently. A learner therefore
-gets no near-synonym warning about register
+Register and region stay out of the relation because Synonym closure needs
+exact synonyms, and dictionaries tag register and region inconsistently. A
+learner therefore gets no near-synonym warning about either
 ([#884](https://github.com/clockblocker/texteater/issues/884), ruling G1).
 
 The German evidence, which is Duden, DWDS or OpenThesaurus with at most
@@ -47,6 +48,13 @@ three claims per relation, is the dumcorpus Rule
 `de/relations-need-a-dictionary`, together with its boundary records. Which
 relations a route requests is the Knowledge Policy ([Dumrel ADR 0001]). The
 relation space is [ADR 0020], and target modes are [ADR 0011].
+
+Amended on 2026-10-07: a regional difference, like a register one, neither
+demotes nor blocks a Synonym, stated above. Before, `Semmel`: `Brötchen` and
+`Föhre`: `Kiefer` were Near Synonyms because one word of each pair is
+regional. Two agent judges extended ruling G1 of
+[#884](https://github.com/clockblocker/texteater/issues/884) from register
+to region under the user's delegation.
 
 [ADR 0011]: ../../../../docs/adr/0011-use-reading-owned-lemma-targeted-semantic-relations.md
 [ADR 0012]: ../../../../docs/adr/0012-store-only-direct-semantic-relation-claims.md

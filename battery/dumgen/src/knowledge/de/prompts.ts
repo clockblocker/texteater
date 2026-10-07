@@ -47,7 +47,7 @@ const rules = {
 	measurePlural: ["de/measure-noun-plural-is-regular", "ef9b7f1e15f48290"],
 	pluralOnly: ["de/plural-only-noun-has-no-gender", "92946b73a6244500"],
 	conjugation: ["de/conjugation-class-from-praeteritum", "c9973355dfb7314c"],
-	relations: ["de/relations-need-a-dictionary", "b8777ac73be3fda5"],
+	relations: ["de/relations-need-a-dictionary", "aa537ef9422c3864"],
 	participle: ["de/participle-source-verb-and-meaning", "a97545caefc4a184"],
 	participial: ["de/participial-adjective", "5d4481bf31cb7267"],
 	formulaRole: ["de/formula-role-is-narrow", "68e794801a922563"],
@@ -511,12 +511,12 @@ export const relationCandidates = {
 export const relationDefinitions = {
 	synonym: paragraph(
 		"relations.synonym",
-		"synonym: means the same as the Reading in this meaning and can replace it; a register difference neither demotes nor blocks it, and a dictionary's gloss is no synonym listing.",
+		"synonym: means the same as the Reading in this meaning and can replace it; a register or regional difference neither demotes nor blocks it, and a dictionary's gloss is no synonym listing.",
 		rules.relations,
 	),
 	nearSynonym: paragraph(
 		"relations.nearSynonym",
-		"nearSynonym: means nearly the same, with a real difference of meaning, scope or perspective.",
+		"nearSynonym: means nearly the same, with a real difference of meaning, scope or perspective; a register or regional difference alone is none.",
 		rules.relations,
 	),
 	antonym: paragraph(

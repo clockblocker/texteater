@@ -69,7 +69,7 @@
 						"hypernym": null
 					}
 				},
-				"explanation": "Anfangen is adjudicated as equivalent here; starten is event-type/register restricted. Einsetzen is recorded as a bounded alternative target set.",
+				"explanation": "Anfangen is adjudicated as equivalent here; starten is event-type restricted, a difference of meaning. Einsetzen is recorded as a bounded alternative target set.",
 				"contaminationKeys": ["relation-de-beginnen-start"]
 			}
 		},
