@@ -13,4 +13,7 @@ export default defineConfig({
 		},
 		dedupe: ["react", "react-dom"],
 	},
+	/* Playwright's server holds still: an edit to the shared working tree
+	   mid-run would otherwise hot-reload the page under a test */
+	server: process.env.TF_DEMO_E2E ? { hmr: false, watch: null } : {},
 });

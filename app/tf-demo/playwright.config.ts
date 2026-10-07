@@ -23,6 +23,7 @@ export default defineConfig({
 	],
 	webServer: {
 		command: `bun run vite --host 127.0.0.1 --port ${port} --strictPort`,
+		env: { TF_DEMO_E2E: "1" },
 		url: playgroundUrl,
 		reuseExistingServer: !process.env.CI,
 		timeout: 30_000,

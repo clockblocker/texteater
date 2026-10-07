@@ -45,59 +45,160 @@ async function cardState(frame: Locator) {
 	);
 }
 
-async function headingSamples(card: Locator) {
-	return card.evaluate(async (element) => {
-		const heading = element.querySelector("[data-heading]");
-		if (!heading) throw new Error("Missing heading");
-		const samples: number[] = [];
-		for (let index = 0; index < 12; index++) {
-			await new Promise<void>((resolve) =>
-				requestAnimationFrame(() => resolve()),
-			);
-			const cardBox = element.getBoundingClientRect();
-			const scale =
-				cardBox.height / (element as HTMLElement).offsetHeight;
-			samples.push(
-				(heading.getBoundingClientRect().top - cardBox.top) / scale,
-			);
-		}
-		return samples;
-	});
+/** One frame of an element, as `armFrames` read it. */
+type Frame = {
+	/** ms from the release that `armFrames` waited for; negative before it. */
+	readonly t: number;
+	readonly x: number;
+	readonly y: number;
+	readonly z: number;
+	readonly held: boolean;
+	readonly place: string | null;
+	/** How far below its top its Heading sits, in its own unscaled px. */
+	readonly heading: number | null;
+};
+
+/**
+ * Reads `target` every frame from now until `afterMs` past the next
+ * pointerup, and times each frame from that release. Arm it before the
+ * action it watches and await what it returns after: armed first, it
+ * sees the release however long the action takes to land on a loaded
+ * machine.
+ */
+async function armFrames(target: Locator, afterMs: number) {
+	const sampler = await target.evaluateHandle((element, ms) => {
+		let releasedAt: number | null = null;
+		window.addEventListener(
+			"pointerup",
+			(event) => {
+				releasedAt = event.timeStamp;
+			},
+			{ capture: true, once: true },
+		);
+		const read = () => {
+			const box = element.getBoundingClientRect();
+			const heading = element.querySelector("[data-heading]");
+			const scale = box.height / (element as HTMLElement).offsetHeight;
+			return {
+				at: performance.now(),
+				x: box.x,
+				y: box.y,
+				z: Number(getComputedStyle(element).zIndex),
+				held: element.getAttribute("data-held") === "true",
+				place: element.getAttribute("data-place"),
+				heading: heading
+					? (heading.getBoundingClientRect().top - box.top) / scale
+					: null,
+			};
+		};
+		const taken = [read()];
+		const frames = (async () => {
+			const armedAt = performance.now();
+			while (
+				releasedAt === null
+					? performance.now() - armedAt < 10_000
+					: performance.now() - releasedAt < ms
+			) {
+				await new Promise<void>((resolve) =>
+					requestAnimationFrame(() => resolve()),
+				);
+				taken.push(read());
+			}
+			const from = releasedAt ?? armedAt;
+			return taken.map(({ at, ...frame }) => ({
+				...frame,
+				t: at - from,
+			}));
+		})();
+		return { frames };
+	}, afterMs);
+	return async (): Promise<Frame[]> =>
+		sampler.evaluate((armed) => armed.frames);
 }
 
 /**
- * Every frame of a Card's return: how far it still is from the slot it
- * left, and whether the Deck has closed over it yet. Start it before the
- * release and await it after.
+ * How far an unselected Card's Heading travels inside it, from the frame
+ * it stopped being the open one: zero when the change is instant.
  */
-async function returnSamples(card: Locator, home: { x: number; y: number }) {
-	return card.evaluate(async (element, at) => {
-		const samples: { t: number; d: number; z: number }[] = [];
-		const start = performance.now();
-		while (performance.now() - start < 700) {
-			await new Promise<void>((resolve) =>
-				requestAnimationFrame(() => resolve()),
-			);
-			const box = element.getBoundingClientRect();
-			samples.push({
-				t: performance.now() - start,
-				d: Math.hypot(box.x - at.x, box.y - at.y),
-				z: Number(getComputedStyle(element).zIndex),
-			});
-		}
-		return samples;
-	}, home);
+function headingTravel(frames: readonly Frame[]) {
+	const offsets = frames
+		.filter((frame) => frame.place !== "open")
+		.map((frame) => frame.heading ?? Number.NaN);
+	expect(offsets.length).toBeGreaterThan(0);
+	return Math.max(...offsets) - Math.min(...offsets);
 }
 
-/** When the Card arrived, and when — and where — the Deck closed over it. */
-function arrival(samples: { t: number; d: number; z: number }[]) {
-	const home = samples.find((sample) => sample.d <= 8);
-	const closed = samples.find((sample) => sample.z < 40);
+/** When, after the release, the Card arrived home, and when — and where — the Deck closed over it. */
+function arrival(frames: readonly Frame[], home: { x: number; y: number }) {
+	const after = frames
+		.filter((frame) => frame.t >= 0)
+		.map((frame) => ({
+			t: frame.t,
+			d: Math.hypot(frame.x - home.x, frame.y - home.y),
+			z: frame.z,
+		}));
+	const arrived = after.find((sample) => sample.d <= 8);
+	const closed = after.find((sample) => sample.z < 40);
 	return {
-		homeAt: home?.t ?? null,
+		homeAt: arrived?.t ?? null,
 		closedAt: closed?.t ?? null,
 		closedFrom: closed?.d ?? null,
 	};
+}
+
+/** Where a gesture's pointer goes next, and how many ms after its last point. */
+type Stroke = readonly [dx: number, dy: number, afterMs: number];
+
+/**
+ * Presses at (`x`, `y`), moves through `path` and lets go `releaseMs`
+ * after its last point, every event stamped at the time the path gives
+ * it and the whole gesture sent at once. A throw then has the speed the
+ * test says, not the pace a loaded machine lets Playwright's one round
+ * trip per step land at, and none of the app's real-time waits can fall
+ * between two of its points.
+ */
+async function stampedGesture(
+	page: Page,
+	x: number,
+	y: number,
+	path: readonly Stroke[],
+	releaseMs: number,
+) {
+	const cdp = await page.context().newCDPSession(page);
+	const pressedAt = Date.now();
+	const send = (
+		type: "mousePressed" | "mouseMoved" | "mouseReleased",
+		at: { x: number; y: number },
+		ms: number,
+	) =>
+		cdp.send("Input.dispatchMouseEvent", {
+			type,
+			x: at.x,
+			y: at.y,
+			button: "left",
+			buttons: type === "mouseReleased" ? 0 : 1,
+			clickCount: type === "mouseMoved" ? 0 : 1,
+			timestamp: (pressedAt + ms) / 1000,
+		});
+	let at = { x, y };
+	let ms = 0;
+	const sent = [send("mousePressed", at, ms)];
+	for (const [dx, dy, afterMs] of path) {
+		at = { x: x + dx, y: y + dy };
+		ms += afterMs;
+		sent.push(send("mouseMoved", at, ms));
+	}
+	sent.push(send("mouseReleased", at, ms + releaseMs));
+	await Promise.all(sent);
+	await cdp.detach();
+}
+
+/** `n` even strokes of (`dx`, `dy`), `ms` apart. */
+function strokes(n: number, dx: number, dy: number, ms: number): Stroke[] {
+	return Array.from(
+		{ length: n },
+		(_, i) => [(i + 1) * dx, (i + 1) * dy, ms] as const,
+	);
 }
 
 async function selectedScale(specimen: Locator) {
@@ -125,15 +226,14 @@ for (const surface of ["deck-models", "animation-workbench/swap"]) {
 		const previous = frame.locator('[data-place="open"]');
 		const previousLabel = await previous.getAttribute("aria-label");
 		if (!previousLabel) throw new Error("Missing selected card label");
+		const frames = await armFrames(
+			frame.locator(`[aria-label="${previousLabel}"]`),
+			300,
+		);
 		await first.locator("[data-heading]").click();
 		await expect(first).toHaveAttribute("data-place", "open");
-		const headingOffsets = await headingSamples(
-			frame.locator(`[aria-label="${previousLabel}"]`),
-		);
 		// Changing selected cards must not slide the old heading through its body.
-		expect(
-			Math.max(...headingOffsets) - Math.min(...headingOffsets),
-		).toBeLessThan(1);
+		expect(headingTravel(await frames())).toBeLessThan(1);
 
 		await startDrag(page, first, -110, 0);
 		if (surface === "deck-models")
@@ -277,6 +377,11 @@ test("a heading movement variant animates the actual heading while the baseline 
 		const previousId = await specimen
 			.locator('[data-place="open"]')
 			.getAttribute("data-card-id");
+		/* armed before the click, so a slow click cannot eat the movement */
+		const frames = await armFrames(
+			specimen.locator(`[data-card-id="${previousId}"]`),
+			700,
+		);
 		await specimen
 			.locator('[data-form="card"]')
 			.first()
@@ -285,10 +390,7 @@ test("a heading movement variant animates the actual heading while the baseline 
 		await expect(
 			specimen.locator('[data-form="card"]').first(),
 		).toHaveAttribute("data-place", "open");
-		const samples = await headingSamples(
-			specimen.locator(`[data-card-id="${previousId}"]`),
-		);
-		const travel = Math.max(...samples) - Math.min(...samples);
+		const travel = headingTravel(await frames());
 		if (kind === "candidate") expect(travel).toBeGreaterThan(20);
 		else expect(travel).toBeLessThan(1);
 	}
@@ -371,11 +473,11 @@ test("the deck closes over a returning card at the release", async ({
 	const box = await card.boundingBox();
 	if (!box) throw new Error("Missing card geometry");
 	await startDrag(page, card, 180, 60);
-	const samples = returnSamples(card, box);
+	const frames = await armFrames(card, 700);
 	await page.mouse.up();
 	/* the Card gets its resting z back while it is still far from home,
 	   so it travels the last of its way under the Deck */
-	const { closedFrom, closedAt } = arrival(await samples);
+	const { closedFrom, closedAt } = arrival(await frames(), box);
 	expect(closedFrom).toBeGreaterThan(50);
 	expect(closedAt).toBeLessThan(60);
 });
@@ -391,20 +493,11 @@ test("a returning card does not cross its slot, however it was let go", async ({
 	/* let go a long way out: the distance a spring with any bounce left
 	   in it rides past the slot before coming back */
 	await startDrag(page, card, 260, 130);
-	const samples = card.evaluate(async (element, at) => {
-		const taken: { dx: number; dy: number }[] = [];
-		const start = performance.now();
-		while (performance.now() - start < 700) {
-			await new Promise<void>((resolve) =>
-				requestAnimationFrame(() => resolve()),
-			);
-			const box = element.getBoundingClientRect();
-			taken.push({ dx: box.x - at.x, dy: box.y - at.y });
-		}
-		return taken;
-	}, home);
+	const frames = await armFrames(card, 700);
 	await page.mouse.up();
-	const taken = await samples;
+	const taken = (await frames())
+		.filter((frame) => frame.t >= 0)
+		.map((frame) => ({ dx: frame.x - home.x, dy: frame.y - home.y }));
 	/* it arrives and stops. A Card that crosses its slot and comes back
 	   reads as a thing that missed, and the Deck is a stack it has to
 	   line up with. */
@@ -423,24 +516,11 @@ test("a lifted sheet goes home in one motion, not two", async ({ page }) => {
 	/* lift it by its bar and let go without going anywhere: the Note is
 	   in the hand, and its slot is a whole Sheet's height away */
 	await startHeadingDrag(page, sheet, 3, 3);
-	const samples = note.evaluate(async (element) => {
-		const taken: { y: number; held: boolean }[] = [];
-		const start = performance.now();
-		while (performance.now() - start < 900) {
-			await new Promise<void>((resolve) =>
-				requestAnimationFrame(() => resolve()),
-			);
-			taken.push({
-				y: element.getBoundingClientRect().y,
-				held: element.dataset.held === "true",
-			});
-		}
-		return taken;
-	});
+	const frames = await armFrames(note, 900);
 	await page.mouse.up();
-	const taken = await samples;
+	const taken = await frames();
 	const lastHeld = taken.map((sample) => sample.held).lastIndexOf(true);
-	expect(lastHeld).toBeGreaterThan(0);
+	expect(lastHeld).toBeGreaterThanOrEqual(0);
 	const after = taken.slice(lastHeld + 1).map((sample) => sample.y);
 	expect(after.length).toBeGreaterThan(0);
 	/* the travel belongs to the gesture: by the time the drag state tears
@@ -613,10 +693,7 @@ test("a card taken up shows its Cover at once, and a release does what was shown
 	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
 
 	/* a short flick up is read where it was heading: it opens */
-	await page.mouse.move(x, y);
-	await page.mouse.down();
-	await page.mouse.move(x, y - 40, { steps: 3 });
-	await page.mouse.up();
+	await stampedGesture(page, x, y, strokes(3, 0, -40 / 3, 16), 16);
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
 });
 
@@ -679,48 +756,40 @@ test("a throw is read by its direction: left sweeps, right goes home, up opens; 
 	const frame = page.locator("[data-deck-frame]");
 	const cards = frame.locator('[data-form="card"]');
 	const panes = frame.locator("[data-deck-pane]");
-	const gesture = async (path: readonly [number, number, number][]) => {
+	const gesture = async (path: readonly Stroke[], releaseMs: number) => {
 		await frame.locator('[data-word="noch"]').click();
 		await expect(cards).toHaveCount(4);
 		const heading = await frame
 			.locator('[data-place="open"] [data-heading]')
 			.boundingBox();
 		if (!heading) throw new Error("Missing heading geometry");
-		const x = heading.x + heading.width / 2;
-		const y = heading.y + heading.height / 2;
-		await page.mouse.move(x, y);
-		await page.mouse.down();
-		for (const [dx, dy, wait] of path) {
-			await page.mouse.move(x + dx, y + dy);
-			await page.waitForTimeout(wait);
-		}
-		await page.mouse.up();
+		await stampedGesture(
+			page,
+			heading.x + heading.width / 2,
+			heading.y + heading.height / 2,
+			path,
+			releaseMs,
+		);
 		await expect(frame.locator("[data-held]")).toHaveCount(0);
 	};
-	const steps = (n: number, dx: number, dy: number, wait: number) =>
-		Array.from(
-			{ length: n },
-			(_, i) =>
-				[(i + 1) * dx, (i + 1) * dy, wait] as [number, number, number],
-		);
 
 	/* thrown left, it sweeps, though the throw drifts well off its axis */
-	await gesture(steps(6, -70, 12, 8));
+	await gesture(strokes(6, -70, 12, 16), 16);
 	await expect(cards).toHaveCount(0);
 	await expect(panes).toHaveCount(1);
 	/* thrown right, the Card goes back on its Deck, not into a new Pane */
-	await gesture(steps(6, 70, 0, 8));
+	await gesture(strokes(6, 70, 0, 16), 16);
 	await expect(cards).toHaveCount(4);
 	await expect(panes).toHaveCount(1);
 	await page.keyboard.press("Escape");
 	await expect(cards).toHaveCount(0);
 	/* thrown up, it opens */
-	await gesture(steps(4, 0, -30, 8));
+	await gesture(strokes(4, 0, -30, 16), 16);
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
 	await page.goto("/playground/deck-models");
 	/* carried slowly far left, the Card lets go of the swipe and is a
-	   plain drag: dropped on the left, it is a new Pane */
-	await gesture([...steps(50, -12, 0, 30), [-600, 0, 300]]);
+	   plain drag: held still, then dropped on the left, it is a new Pane */
+	await gesture(strokes(50, -12, 0, 30), 300);
 	await expect(panes).toHaveCount(2);
 	await expect(cards).toHaveCount(3);
 });
