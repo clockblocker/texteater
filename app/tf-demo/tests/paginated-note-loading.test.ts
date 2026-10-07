@@ -208,6 +208,45 @@ test("a refresh of the same subject takes the new body and keeps loaded pages", 
 	expect(hasMore).toBe(false);
 });
 
+test("a refresh whose first page changes a Source Context under the same Attestation shows the new row", async () => {
+	// A Source Context's segments gain a gender once the Visitor encounters
+	// another noun in that Sentence, so a row's body changes under its id.
+	const withSegments = (gender?: string) =>
+		fixture({
+			kind: "Reading",
+			target: { kind: "Reading", readingId: "reading-1" },
+			sourceContexts: {
+				page: [
+					{
+						attestationId: "a-1",
+						segments: [
+							{ text: "Bank", ...(gender ? { gender } : {}) },
+						],
+					},
+				],
+				continueCursor: "page-2",
+				isDone: false,
+			},
+		});
+	const loader = createPaginatedNoteLoader(
+		withSegments(),
+		async () =>
+			readingNote(["a-2"], { continueCursor: "", isDone: true })
+				.sourceContexts,
+	);
+	await loader.loadMore();
+
+	const refreshed = withSegments("Fem");
+	loader.refresh(refreshed);
+
+	expect(loader.current()).toEqual({
+		note: refreshed,
+		hasMore: true,
+		isLoading: false,
+		error: null,
+	});
+});
+
 test("a page that arrives after the Note was reseeded is dropped", async () => {
 	let resolvePage: (page: unknown) => void = () => {};
 	const first = readingNote(["a-1"], {

@@ -209,7 +209,10 @@ type Pagination<Note extends PaginatedNote> = {
 	};
 	/** Whether both Notes describe the same subject. */
 	readonly sameTarget: (current: Note, next: Note) => boolean;
-	/** Changes whenever the server reseeds the first page. */
+	/**
+	 * Changes whenever the server reseeds the first page or changes a row on
+	 * it. An unchanged key rebases, which keeps the rows already shown.
+	 */
 	readonly seedKey: (note: Note) => string;
 	/** Takes the latest body while keeping the pages already loaded. */
 	readonly rebase: (current: Note, latest: Note) => Note;
@@ -227,14 +230,9 @@ const PAGINATION: {
 		}),
 		sameTarget: (current, next) =>
 			next.target.readingId === current.target.readingId,
-		seedKey: (note) =>
-			JSON.stringify([
-				note.sourceContexts.page.map(
-					({ attestationId }) => attestationId,
-				),
-				note.sourceContexts.continueCursor,
-				note.sourceContexts.isDone,
-			]),
+		// Whole rows: a Source Context's segments gain a gender once the
+		// Visitor encounters another noun in its Sentence, under the same id.
+		seedKey: (note) => JSON.stringify(note.sourceContexts),
 		rebase: (current, latest) => ({
 			...latest,
 			sourceContexts: current.sourceContexts,
@@ -259,12 +257,7 @@ const PAGINATION: {
 		}),
 		sameTarget: (current, next) =>
 			next.target.shadowId === current.target.shadowId,
-		seedKey: (note) =>
-			JSON.stringify([
-				note.references.page,
-				note.references.continueCursor,
-				note.references.isDone,
-			]),
+		seedKey: (note) => JSON.stringify(note.references),
 		rebase: (current, latest) => ({
 			...latest,
 			references: current.references,
@@ -290,6 +283,8 @@ const PAGINATION: {
 		sameTarget: (current, next) =>
 			next.target.language === current.target.language &&
 			next.target.normalizedSurface === current.target.normalizedSurface,
+		// Ids suffice: an analysis is projected from its Surface and Lemma
+		// rows alone, and Dumdict only ever creates those, never patches them.
 		seedKey: (note) =>
 			JSON.stringify([
 				note.analyses.map(({ analysisKey }) => analysisKey),
@@ -320,12 +315,7 @@ const PAGINATION: {
 		}),
 		sameTarget: (current, next) =>
 			next.target.lemmaId === current.target.lemmaId,
-		seedKey: (note) =>
-			JSON.stringify([
-				note.connections,
-				note.connections.continueCursor,
-				note.connections.isDone,
-			]),
+		seedKey: (note) => JSON.stringify(note.connections),
 		rebase: (current, latest) => ({
 			...latest,
 			connections: current.connections,
