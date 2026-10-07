@@ -3,8 +3,13 @@
  * 0035, Rule de/fused-word-pieces): a piece of a fused word is Fused and
  * stands for the word its component names (m of im is dem), a free clitic
  * or an abbreviation is Shorthand and stands for its expansion. Pure code
- * over Dumgen's fusion table; no judge reads it.
+ * over Dumgen's fusion table and dumcorpus's adverb shorthands; no judge
+ * reads it.
  */
+import {
+	type GermanAdverbShorthandSeries,
+	germanAdverbShorthands,
+} from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
 import { germanFusionTable } from "../../segment/de/fusion-entries.js";
 import {
@@ -90,32 +95,28 @@ function fusedWordIndices(
 		: [];
 }
 
+/** dumcorpus's shorthands of one series, each with the words it may stand for. */
+const shorthandsOf = (
+	series: GermanAdverbShorthandSeries,
+): Readonly<Record<string, readonly string[]>> =>
+	Object.fromEntries(
+		Object.entries(germanAdverbShorthands).flatMap(([word, shorthand]) =>
+			shorthand.series === series ? [[word, shorthand.expansions]] : [],
+		),
+	);
+
 /**
  * The her- and hin- words a colloquial r- adverb shortens (Rule
  * de/r-adverb-is-her-or-hin-shorthand): never a Lemma of its own, always
  * the Shorthand of one of them.
  */
-export const rShortenings: Readonly<Record<string, readonly string[]>> = {
-	rein: ["herein", "hinein"],
-	raus: ["heraus", "hinaus"],
-	rüber: ["herüber", "hinüber"],
-	runter: ["herunter", "hinunter"],
-	rauf: ["herauf", "hinauf"],
-	ran: ["heran"],
-	rum: ["herum"],
-};
+export const rShortenings = shorthandsOf("herOrHin");
 
 /**
  * The da(r)- word a colloquial dr- adverb shortens (Rule
  * de/dr-adverb-is-da-shorthand), always its Shorthand.
  */
-const drShortenings: Readonly<Record<string, readonly string[]>> = {
-	dran: ["daran"],
-	drauf: ["darauf"],
-	drin: ["darin"],
-	drüber: ["darüber"],
-	drum: ["darum"],
-};
+export const drShortenings = shorthandsOf("da");
 
 /**
  * The table's spelling of the member at Segment `index`, if it settles

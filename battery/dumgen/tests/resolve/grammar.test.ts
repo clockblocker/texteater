@@ -1642,6 +1642,27 @@ test("a split da or wo adverb and a bare w-word judged Shorthand get the headwor
 	expect(attested(out.result).surface.lemma.canonicalForm).toBe("hinaus");
 });
 
+test("a dr- adverb such as drunter is the Shorthand of its da(r)- word, which is its headword", async () => {
+	const jev = fakeJev({});
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: writes("drunter").ask },
+		{
+			sentence: sentenceOf("Der Ball liegt drunter."),
+			unit: unitOf([6], "Lexeme", "ADV"),
+		},
+	);
+	// The table settles drunter, so jev is asked neither its orthography
+	// nor which word it shortens.
+	expect(jev.questions("grammar")).not.toContain("short_s6");
+	expect(jev.questions("grammar")).not.toContain("orthography");
+	const attestation = attested(result);
+	expect(attestation.surface.lemma.canonicalForm).toBe("darunter");
+	expect(attestation.surface.normalizedSurface).toBe("darunter");
+	expect(attestation.members).toEqual([
+		{ attested: "drunter", orthography: "Shorthand" },
+	]);
+});
+
 test("the comparable question offers No for a demonstrative or interrogative adverb such as so, and code reads it as no Degree", async () => {
 	const jev = fakeJev({ comparable: "No" });
 	const { result } = await resolveOnce(

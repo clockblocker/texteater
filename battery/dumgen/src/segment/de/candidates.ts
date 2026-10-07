@@ -252,7 +252,9 @@ export function slotsOf(
 	return slots.filter((slot) => slot.hosts.length > 0);
 }
 
-const splitHeads = new Set(["da", "wo", "hier"]);
+/** The first words of a split pronominal or directional adverb (Da … hin, Wo … mit). */
+export const splitHeads: ReadonlySet<string> = new Set(["da", "wo", "hier"]);
+
 /** The second words of a split pronominal or directional adverb (Da … hin, Wo … mit). */
 export const splitTails: ReadonlySet<string> = new Set([
 	"hin",

@@ -568,8 +568,9 @@ const directionalDemonstratives: readonly OneReadingAdverb[] = [
 // raus, rein, rüber, runter and rauf neutralize each pair, and ran shortens
 // heran alone (hinan is an elevated word for hinauf). An r- word is no Lemma
 // or spelling of its own but the Shorthand member of the word the direction
-// picks (Rule de/r-adverb-is-her-or-hin-shorthand), so no spelling table
-// lists it. Each has its directional Reading only.
+// picks (Rule de/r-adverb-is-her-or-hin-shorthand): no spelling table lists
+// it, and `germanAdverbShorthands` (adverb-shorthands.ts) maps it to the
+// words it may stand for. Each has its directional Reading only.
 // https://www.duden.de/rechtschreibung/heraus
 // https://www.duden.de/rechtschreibung/hinaus
 // https://www.duden.de/rechtschreibung/raus

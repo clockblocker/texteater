@@ -17,12 +17,14 @@
 
 import {
 	type ArticleMember,
+	authoredMembers,
 	authoredRealizations,
 	germanAdpositionAllowedCases,
 	germanAdpositionEntry,
 	germanArticleCell,
 	germanArticleSpellings,
 	germanParticles,
+	germanSuppletiveComparisons,
 	isGermanPluralOnlyNoun,
 } from "dumcorpus/inventories";
 import { foldCase, lemmaIdentityKey } from "dumling";
@@ -33,7 +35,11 @@ import type { OperationScope } from "../../call.js";
 import type { LunaRequest } from "../../luna.js";
 import { askLuna, type LunaSettings } from "../../luna-call.js";
 import type { Ask, AskFailure } from "../../segment/ask.js";
-import { particleForms } from "../../segment/de/candidates.js";
+import {
+	particleForms,
+	reflexiveForms,
+	splitHeads,
+} from "../../segment/de/candidates.js";
 import { draftsEmojiDescription } from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
 import {
@@ -261,15 +267,35 @@ const auxiliaryFeatures: Readonly<Record<string, Values>> = {
 	"lassen 🗣👉": { voice: "Cau" },
 };
 
-const reflexives: Readonly<Record<string, "Acc" | "Dat" | undefined>> = {
-	sich: undefined,
-	uns: undefined,
-	euch: undefined,
-	mich: "Acc",
-	dich: "Acc",
-	mir: "Dat",
-	dir: "Dat",
-};
+/**
+ * Each form a lexical reflexive takes, with the case it shows: the one case
+ * all its personal-pronoun realizations share (mich Acc, mir Dat), none when
+ * they differ (sich, uns, euch), so jev is asked.
+ */
+export const reflexives: ReadonlyMap<string, "Acc" | "Dat" | undefined> =
+	new Map(
+		[...reflexiveForms].map((form) => {
+			const shown = new Set(
+				authoredRealizations.flatMap(({ member, spelled }) => {
+					const features = member.lemma.coreFeatures as Readonly<
+						Record<string, unknown>
+					>;
+					return member.lemma.kind === "PRON" &&
+						features.pronType === "Prs" &&
+						fold(spelled) === form
+						? [features.case]
+						: [];
+				}),
+			);
+			const [only] = shown;
+			return [
+				form,
+				shown.size === 1 && (only === "Acc" || only === "Dat")
+					? only
+					: undefined,
+			];
+		}),
+	);
 
 /** Whether a member spells es, a clitic 's that may stand for it included. */
 const spellsEs = (member: Member) =>
@@ -542,9 +568,9 @@ function plan(target: Target): Plan {
 		);
 	const reflexive =
 		shape.verbal && shape.lexeme
-			? target.members.find((member) => fold(member.text) in reflexives)
+			? target.members.find((member) => reflexives.has(fold(member.text)))
 			: undefined;
-	if (reflexive && reflexives[fold(reflexive.text)] === undefined)
+	if (reflexive && reflexives.get(fold(reflexive.text)) === undefined)
 		questionnaire.choice(
 			"reflexive",
 			fill(question.reflexive, { m: reflexive.ref }),
@@ -995,7 +1021,7 @@ function readFirst(
 					readings.set(member.segment, core.hasSepPrefix);
 			const reflexive = planned.reflexive;
 			core.lexicallyReflexive = reflexive
-				? (reflexives[fold(reflexive.text)] ??
+				? (reflexives.get(fold(reflexive.text)) ??
 					answered.pick("reflexive"))
 				: null;
 		}
@@ -1422,26 +1448,36 @@ const coordinators = new Set([
 	"sowie",
 ]);
 
-/** The positive of each suppletive adverb's compared forms (gern: lieber, am liebsten). */
-const suppletivePositive: Readonly<Record<string, string>> = {
-	lieber: "gern",
-	liebsten: "gern",
-	eher: "bald",
-	ehesten: "bald",
-	besser: "gut",
-	besten: "gut",
-	mehr: "viel",
-	meisten: "viel",
-	weniger: "wenig",
-	wenigsten: "wenig",
-};
+/**
+ * The positive of each suppletive adverb's compared forms, keyed by the
+ * comparative and the superlative's last word (lieber and liebsten: gern).
+ */
+export const suppletivePositive: ReadonlyMap<string, string> = new Map(
+	germanSuppletiveComparisons.flatMap(
+		({ positive, comparative, superlative }) => [
+			[comparative, positive],
+			[superlative.split(" ").at(-1) ?? superlative, positive],
+		],
+	),
+);
 
 /** An ordinal's stem without its ending, as Luna writes it bare (erst, zweit). */
 const ordinalStem =
 	/^(erst|zweit|dritt|viert|fünft|sechst|siebt|neunt|zehnt|elft|zwölft|(drei|vier|fünf|sech|sieb|acht|neun)zehnt|(zwanzig|dreißig|vierzig|fünfzig|sechzig|siebzig|achtzig|neunzig|hundert|tausend)st)$/u;
 
-/** The irgend- words a bare w-word judged Shorthand stands for (Rule de/bare-w-word-is-shorthand). */
-const bareWWords = new Set(["wo", "wie", "wann", "woher", "wohin"]);
+/**
+ * The bare w-words that may stand for an irgend- word (Rule
+ * de/bare-w-word-is-shorthand): each authored ADV whose irgend- word is an
+ * authored ADV too (wo, wie, wann, woher, wohin).
+ */
+export const bareWWords: ReadonlySet<string> = (() => {
+	const adverbs = new Set(
+		authoredMembers.flatMap(({ lemma }) =>
+			lemma.kind === "ADV" ? [lemma.canonicalForm] : [],
+		),
+	);
+	return new Set([...adverbs].filter((word) => adverbs.has(`irgend${word}`)));
+})();
 
 /**
  * An ADV Lexeme's Canonical Form where the Rules settle it, whatever Luna
@@ -1469,7 +1505,7 @@ export function adverbHeadword(
 		target.members.length === 2 &&
 		first !== undefined &&
 		second !== undefined &&
-		["da", "wo", "hier"].includes(first) &&
+		splitHeads.has(first) &&
 		/^\p{L}+$/u.test(second) &&
 		orthographies.every((orthography) => orthography === "Standard")
 	) {
@@ -1798,7 +1834,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		(degree === "Cmp" || degree === "Sup")
 	) {
 		const last = target.members[target.members.length - 1];
-		const positive = last && suppletivePositive[fold(last.text)];
+		const positive = last && suppletivePositive.get(fold(last.text));
 		if (positive) canonicalForm = positive;
 	}
 	// An ordinal is cited in its attributive headword (erste; Rule

@@ -501,8 +501,9 @@ function reciprocalAdverb(reciprocal: Reciprocal): AuthoredMember {
 
 // Colloquial dran, drauf, draus, drin, drüber, drum and drunter shorten the
 // da(r)- forms. A dr- word is no Lemma or spelling of its own but the Shorthand
-// member of the da(r)- word it shortens (Rule de/dr-adverb-is-da-shorthand), so
-// no spelling table lists it.
+// member of the da(r)- word it shortens (Rule de/dr-adverb-is-da-shorthand):
+// no spelling table lists it, and `germanAdverbShorthands`
+// (adverb-shorthands.ts) maps it to that word.
 // https://www.dwds.de/wb/dran
 
 /**

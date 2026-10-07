@@ -8,7 +8,8 @@
  * This entry exports the authored members and their realizations, the
  * reviewed pronoun and determiner paradigms, the closed verb forms and their
  * participles, the clitic spellings of es, the separable and inseparable
- * verb prefixes, and the reflexive drill-down.
+ * verb prefixes, the colloquial r- and dr- adverb shorthands, the suppletive
+ * comparisons, and the reflexive drill-down.
  * The authored members include the pronoun
  * Syncretisms generated from the pronoun cells (system ADR 0046). It also
  * exports German lookups: the ADP Case Table, its governable prepositions and
@@ -45,6 +46,10 @@ export {
 	germanAdpositionEntry,
 	germanGovernablePrepositions,
 } from "./inventories/de/adposition-cases.js";
+export {
+	type GermanAdverbShorthandSeries,
+	germanAdverbShorthands,
+} from "./inventories/de/adverb-shorthands.js";
 export {
 	type ArticleAgreement,
 	type ArticleMember,
@@ -90,6 +95,7 @@ export type {
 	ReviewedMember,
 	SurfaceCell,
 } from "./inventories/de/stem-lemma.js";
+export { germanSuppletiveComparisons } from "./inventories/de/suppletive-comparison.js";
 export {
 	referentCanLeaveOpen,
 	type StemSyncretism,
