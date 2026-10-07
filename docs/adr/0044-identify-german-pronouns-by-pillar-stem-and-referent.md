@@ -14,7 +14,9 @@ suppletive (`ich`, `mir`, `mich`). The `der`-series demonstratives and
 relatives, with `dessen`, `deren` and `denen`, are the table other words
 borrow their endings from. Each cell of either is its own Lemma with case,
 number and gender in Core, so same-spelling forms stay apart: `uns`/Acc and
-`uns`/Dat are two Lemmas.
+`uns`/Dat are two Lemmas. Attributive and standalone `dessen` and `deren` are
+one Lemma each: the two uses mean the same to a learner and their forms are
+the same cell, so German PRON has no `extPos`.
 
 **Stems.** Every other German PRON puts another paradigm's endings on its own
 stem and is one Lemma whose Surfaces mark case, number and gender: `dieser`,
@@ -49,8 +51,8 @@ possessive marks possessor features, and historical status is Surface
 evidence. No pronoun marks reflexivity.
 
 **Formal address.** Formal `Sie`, `Ihnen` and `Ihrer`, and the possessive
-`Ihr`, are the third person plural with `polite` Form. Person 2 only restated
-what `polite` Form says, as `referenceNumber` once restated `number`. Duden,
+`Ihr`, are the third person plural with `polite` Form. Person 2 would only restate
+what `polite` Form says. Duden,
 LEO, grammis and TIGER treat the polite form as the 3rd person plural, used
 for one person or several, and the verb (*Sie sind*), free `sich` (*setzen
 Sie sich*) and `Ihr` agree with it without an exception. The pronoun cells
@@ -113,96 +115,33 @@ uninflected form, as attributive `wessen` has. Duden gives it as a genitive
 plural only.
 
 **Elsewhere `derer` spells `deren`.** In an occurrence where `deren` could
-stand alone instead, `derer` is a Licensed Variant of that `deren` cell. That covers the
-relative (*die Opfer, derer wir gedenken*) and the demonstrative pointing back
+stand alone instead, `derer` is a Licensed Variant of that `deren` cell.
+That covers the relative (*die Opfer, derer wir gedenken*) and the demonstrative pointing back
 (*Die Kartons stehen herum; wir wollen uns derer entledigen*). The test is a
 swap. If `deren` fits, the learner who clicks `derer` sees `deren`, relative
 or demonstrative, with `derer` marked as its accepted spelling. If only
 `derer` fits, they see the `derer` Lemma, *of those (who …)*. `deren` stays
 the Canonical Form, because it is the one form every pointing-back use
 accepts: before a noun or a number only `deren` stands (*deren Freundin*,
-*deren viele*). Attributive and standalone `deren` are one Lemma, so the swap
-is judged per occurrence, and an attributive occurrence has no `derer`
+*deren viele*). Since attributive and standalone `deren` are one Lemma, the
+swap is judged per occurrence, and an attributive occurrence has no `derer`
 spelling.
 
-Amended on 2026-10-01: standalone demonstrative `derer` was a second Lemma of
-the `deren` cells, accepted as the one exception to ADR 0032's rule that no
-two cell Lemmas of one Kind share all Core Features, because no UD feature
-marks the direction. The exception let navigation such as "the plural of
-`dessen`" land on two Lemmas. Decided on
-[#595](https://github.com/clockblocker/texteater/issues/595).
-
-Amended again on 2026-10-01: relative `derer` was called nonstandard and
-carried no Variant tag, and pointing-back demonstrative `derer` would have
-landed on the pointing-ahead Lemma. The "nonstandard" label rested on Duden's
-*diese Frau, deren (nicht: derer) er sich annahm*. Duden contradicts that note
-itself: its
+Current standards accept `derer` wherever `deren` could stand alone, so the
+spelling is Licensed. Duden's
 [usage guide](https://www.duden.de/sprachwissen/sprachratgeber/Demonstrativpronomen-deren-derer)
 says that "bei rückweisendem Anschluss (und allein stehend …) sind sowohl
 deren als auch derer korrekt" (*die Opfer, deren oder derer wir heute
 gedenken*), and its `deren` entries add *die Frist, innerhalb deren oder
-derer*, a feminine singular like the rejected example.
+derer*, a feminine singular.
 [LEO](https://blog.leo.org/2018/08/24/zwei-woerter-aufgrund-derenderer-manche-ins-zweifeln-geraten/)
 calls both forms correct outside the pointing-ahead use, *sich deren/derer
-entledigen* included. It adds that the 19th-century rule reserving `derer`
+entledigen* included, and notes that the 19th-century rule reserving `derer`
 for pointing ahead never took hold. [DWDS](https://www.dwds.de/wb/derer)
 gives relative and demonstrative `derer` as synonyms of `deren` with no usage
 label, and [grammis](https://grammis.ids-mannheim.de/kontrastive-grammatik/3673)
-gives `derer` as the demonstrative's Gen.Fem.Sg and Gen.Plur form. A current
-standard accepts the spelling, so it is Licensed. Neither STTS (PDS, PRELS)
-nor UD marks the direction.
-
-Amended on 2026-10-01: personal `ihm` and `seiner` and der-series `dem` and
-`dessen` were two Lemmas each, a Masc and a Neut cell, and the referent picked
-one, often from another sentence. The referent now chooses only between cells
-that differ in who is meant, and those four forms are one cell each, with
-gender null. A learner sees one word, the dative or genitive of `er` and
-`es`; two cards with the same form, sound and use looked like a duplicate, and
-the masculine cell's gloss "him" was wrong for *der Tisch*. Decided on
-[#743](https://github.com/clockblocker/texteater/issues/743).
-
-Amended on 2026-10-01: formal `Sie`, `Ihnen`, `Ihrer` and the possessive `Ihr`
-were person 2 with number Plur, a mix no grammar or treebank uses, and a
-future verb agreement check would have rejected every formal-address
-sentence. They are person 3 now. Decided on
-[#743](https://github.com/clockblocker/texteater/issues/743).
-
-Amended on 2026-10-01: pronominal `einem` and `eines` were two cells each in
-the `einer` pillar, a Masc and a Neut one. They serve both genders alike, so
-they are one cell each with gender null, as `ihm` and `dem` are. Decided by
-the user, extending
-[#743](https://github.com/clockblocker/texteater/issues/743)'s ruling 1.
-
-Amended on 2026-10-01: attributive `dessen` and `deren` were Lemmas of their
-own beside the standalone cells, kept apart by `extPos` DET. The two uses
-mean the same to a learner, and their forms are the same cell, so they are
-one Lemma each now, and `extPos` left German PRON. The `derer` licence, a
-property of the standalone Lemma, became the per-occurrence swap test above.
-Attributive `wessen` stays its own invariant Lemma, cited apart from `wer`.
-Decided on [#766](https://github.com/clockblocker/texteater/issues/766).
-
-Amended on 2026-10-01: a pronoun Surface marked its reflexive use (`reflex`
-Yes), and informal address carried `polite` Infm. Neither split a Lemma: the
-sentence shows the reflexive use, and person 2 says informal address. Infm
-was set on some cells and not others, which split `dich` by accident and left
-the possessives `dein` and `euer` inconsistent. A lexical reflexive stays a
-member of its verb. Decided on
-[#766](https://github.com/clockblocker/texteater/issues/766).
-
-Amended on 2026-10-01: free `sich` and its reciprocal use are stated here.
-Decided on
-[#237](https://github.com/clockblocker/texteater/issues/237) and
-[#238](https://github.com/clockblocker/texteater/issues/238).
-
-Amended on 2026-10-02: the cells that differ in gender alone are split
-again. On 2026-10-01 (#743) `ihm`, `seiner`, `dem`, `dessen`, `einem` and
-`eines` became one cell each with gender null, and navigation reached each
-from both genders. A sentence that names the referent could no longer record
-it, and number and politeness still needed a guess. Each is a Masc and a
-Neut cell again, the navigation exception is gone, and a referent no text
-settles attests a generated Syncretism instead of the most probable cell
-(ADR 0046). Decided by the user on
-[#829](https://github.com/clockblocker/texteater/issues/829).
+gives `derer` as the demonstrative's Gen.Fem.Sg and Gen.Plur form. Neither
+STTS (PDS, PRELS) nor UD marks the direction.
 
 UD supplies feature meanings, not this project's Lemma granularity:
 [German features](https://universaldependencies.org/de/index.html) and
@@ -212,60 +151,63 @@ UD supplies feature meanings, not this project's Lemma granularity:
 
 - One Lemma per spelling. Rejected: `uns`/Acc and `uns`/Dat, and a learner's
   `mich` and `mir`, are separate words to learn.
-- One Lemma per cell for every closed-class pronoun, the first version of
-  ADR 0032. Rejected the same day: `dieser`, `keiner` and the possessives are
-  learned once.
+- One Lemma per cell for every closed-class pronoun. Rejected: `dieser`,
+  `keiner` and the possessives are learned once.
 - Pillars for `wer`/`wen`/`wem`/`wessen` and `jemand`/`niemand`. Rejected by
-  the pillar test on 2026-09-27: their forms are borrowed endings on a stem.
+  the pillar test: their forms are borrowed endings on a stem.
 - `was` as the Neut Surface of one `wer` Lemma, and genitive `wessen` as one
-  Lemma with its gender on the Surface. Rejected on 2026-09-28: it treated
-  inherent gender as agreement, and it gave one Reading two meanings, *who*
-  and *what*, which ADR 0002 forbids.
-- A reciprocal `sich`, with `pronType` Rcp. Rejected (#237, #238): the
-  plural context makes the clause reciprocal, not the word, and Rcp had no
-  identity or selection job.
+  Lemma with its gender on the Surface. Rejected: it treats inherent gender
+  as agreement, and it gives one Reading two meanings, *who* and *what*,
+  which ADR 0002 forbids.
+- A reciprocal `sich`, with `pronType` Rcp. Rejected: the plural context
+  makes the clause reciprocal, not the word, and Rcp has no identity or
+  selection job.
 - Possessor gender in PRON Core, so that `seiner`/Masc and `seines`/Neut are
   two Lemmas. Rejected: it is the stem's own grammar, as on the possessive
   articles, not a split by referent.
-- A `referenceNumber` feature. Rejected: it repeated `number` on personal
-  pronouns, was null on formal `Sie`, and stood in for possessor number on
+- A `referenceNumber` feature. Rejected: it repeats `number` on personal
+  pronouns, is null on formal `Sie`, and stands in for possessor number on
   possessives.
 - Formal `Sie` as person 2, the addressee, with number null, as UD's German
-  guidelines have it. Rejected on 2026-10-01 (#743): `polite` Form already
-  names the addressee, and the grammars, the verb, `sich` and `Ihr` all go
-  by the 3rd person plural.
-- A Core value set such as Masc|Neut for `ihm`. Rejected (#606): navigation
+  guidelines have it. Rejected: `polite` Form already names the addressee,
+  and the grammars, the verb, `sich` and `Ihr` all go by the 3rd person
+  plural. Person 2 with number Plur is a mix no grammar or treebank uses, and
+  a verb agreement check would reject every formal-address sentence.
+- A Core value set such as Masc|Neut for `ihm`. Rejected: navigation
   compares Core values literally, so a set matches neither `er` nor `es`. A
   Syncretism covers the open referent instead (ADR 0046).
-- Two cells each for `ihm`, `seiner`, `dem` and `dessen`, with the referent
-  always picking and the most probable cell winning when no text settles it.
-  Chosen on #606, rejected on 2026-10-01 (#743) and again on 2026-10-02
-  (ADR 0046): the guess showed the learner a gloss the text did not support.
+- The most probable cell when no text settles the referent. Rejected
+  (ADR 0046): the guess shows the learner a gloss the text does not support.
 - One cell each, with gender null, for `ihm`, `seiner`, `dem`, `dessen`,
-  `einem` and `eines`, reached by navigation from both genders. Chosen on
-  2026-10-01 (#743), rejected on 2026-10-02: a sentence that names the
-  referent could not record it, and the null was the one wildcard navigation
-  allowed.
+  `einem` and `eines`, reached by navigation from both genders. Rejected: a
+  sentence that names the referent cannot record it, number and politeness
+  still need a guess, and the null is a wildcard in navigation.
 - Demonstrative `derer` as a second Lemma of the `deren` cells, kept apart by
-  direction alone. Chosen first, rejected on 2026-10-01: the two shared every
-  Core Feature, so navigation to either cell found two Lemmas.
+  direction alone. Rejected: the two share every Core Feature, against
+  ADR 0032's rule that no two cell Lemmas of one pillar do, so navigation to
+  either cell, such as "the plural of `dessen`", finds two Lemmas. No UD
+  feature marks the direction.
 - Relative `derer` as a nonstandard Variant with no tag, and pointing-back
-  demonstrative `derer` as the pointing-ahead Lemma. Rejected on 2026-10-01:
-  Duden's usage guide, LEO and DWDS accept `derer` wherever `deren` could
-  stand. The pointing-ahead Lemma would have glossed *sich derer entledigen*
-  as *of those who*, with no relative clause in sight.
+  demonstrative `derer` as the pointing-ahead Lemma. Rejected: the
+  "nonstandard" label rests on Duden's note *diese Frau, deren (nicht: derer)
+  er sich annahm*, which Duden's own usage guide contradicts, and LEO and
+  DWDS accept `derer` wherever `deren` could stand. The pointing-ahead Lemma
+  would gloss *sich derer entledigen* as *of those who*, with no relative
+  clause in sight.
+- A Surface mark for the reflexive use (`reflex` Yes), and `polite` Infm for
+  informal address. Rejected: neither splits a Lemma, since the sentence
+  shows the reflexive use and person 2 says informal address. Infm set on
+  some cells and not others splits `dich` by accident and leaves the
+  possessives `dein` and `euer` inconsistent.
 
 ## Consequences
 
-- Takes over the German pronoun parts of ADR 0032 and its amendments.
+- Decides the German PRON route, which ADR 0032 leaves to this ADR.
 - Dumling's check binds gender to person and number only on personal
   pronouns, and rejects a cell coordinate marked both in Core and on the
   Surface.
-- Decided on #420, #421, #606 and
-  [#595](https://github.com/clockblocker/texteater/issues/595) between
-  2026-09-25 and 2026-09-28; `derer` left the pillar on 2026-10-01, and no
-  pillar collision is accepted since. The same day `derer` became a Licensed
-  Variant of standalone relative and demonstrative `deren`, and the cells
-  that differed in gender alone became one each (#743). On 2026-10-02 they
-  were split again, and a Syncretism stands for a referent no text settles
-  (ADR 0046).
+- No pillar collision is accepted: `derer` is an invariant Lemma of its own
+  or a Licensed Variant of a `deren` cell, never a second Lemma of that cell.
+- Cells that differ in gender alone stay apart, and a Syncretism stands for
+  a referent no text settles, by the user's ruling on
+  [#829](https://github.com/clockblocker/texteater/issues/829) (ADR 0046).

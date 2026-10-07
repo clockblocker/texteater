@@ -8,11 +8,10 @@ Some German pronoun forms spell several Paradigm Cells that only the referent
 tells apart: `ihm` is the dative of `er` and of `es`, and accusative `sie` is
 3sg feminine, 3pl or, at a sentence's start, formal `Sie`.
 [ADR 0044](./0044-identify-german-pronouns-by-pillar-stem-and-referent.md)
-let the referent pick a cell, from the sentence or the sentences around it,
-and when they did not settle it the most probable cell won. Its #743
-amendment then merged the cells that differ in gender alone into one cell
-with gender null. A sentence that names the referent (*Ihr Bruder zieht um;
-Anna hilft ihm*) could no longer record it, and `sie` still needed a guess.
+keeps each of those cells a Lemma of its own and lets the referent pick one,
+from the sentence or the sentences around it, so a sentence that names the
+referent (*Ihr Bruder zieht um; Anna hilft ihm*) records it. When no text
+settles the referent, the occurrence needs a unit that guesses no cell.
 
 **A Syncretism is one spelling of units only the referent tells apart.** It
 is that unit with two more fields:
@@ -99,13 +98,13 @@ Notes.
 ## Considered Options
 
 - The referent always picks a cell, the most probable one when no text
-  settles it: ADR 0044 until 2026-10-01. Rejected: the learner sees a gloss
-  the text does not support, and a classifier is scored on a guess.
-- One cell with gender null for forms that differ in gender alone (#743).
-  Rejected: it erased a referent the sentence names, and it could not cover
-  number or politeness, which mean different people.
-- A Core value set such as `Masc|Neut` (#606). Rejected again: navigation
-  compares Core values literally.
+  settles it. Rejected: the learner sees a gloss the text does not support,
+  and a classifier is scored on a guess.
+- One cell with gender null for forms that differ in gender alone. Rejected:
+  it erases a referent the sentence names, and it cannot cover number or
+  politeness, which mean different people.
+- A Core value set such as `Masc|Neut`. Rejected: navigation compares Core
+  values literally.
 - The candidate cells listed on the Attestation. Rejected: the open case gets
   no Reading or Knowledge, and every occurrence repeats the list.
 - Nulls alone as the view, with no list. Rejected: `polite` is Form or null,
@@ -113,10 +112,9 @@ Notes.
   `sie` as the two-way one.
 - An identity made of the units' identities. Rejected: the view has no
   units, so an answer would need a lookup table to find its Syncretism.
-- One Syncretism per group, for all its cells. Rejected on 2026-10-02:
-  lowercase `sie` with an open referent would offer formal *you*, which its
-  spelling rules out, and *Sie gingen* would offer *she*, which its verb
-  rules out.
+- One Syncretism per group, for all its cells. Rejected: lowercase `sie`
+  with an open referent would offer formal *you*, which its spelling rules
+  out, and *Sie gingen* would offer *she*, which its verb rules out.
 - A stem's gender-only Surfaces with no Syncretism, so an open referent
   gets a guessed cell or Unresolved. Rejected: `jedem` with an open referent
   is the case of `ihm`, and either answer misleads the learner or loses the
@@ -129,17 +127,13 @@ Notes.
 - Amends [ADR 0002](./0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md):
   a Syncretism's identity includes its `syncretic` list.
 - Amends ADR 0044: `ihm`, `seiner`, `dem`, `dessen`, `einem` and `eines` are
-  a Masc and a Neut cell each again, its navigation exception is retired, and
-  a referent no text settles attests a Syncretism.
-  [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)
-  follows.
-- Gold: 24 targets move. 11 leave a gender-null cell for a Masc cell, 7 for
-  a Neut cell and 4 for the `ihm` Syncretism. Sentence-initial *Sie gingen*
-  and *Ihnen kann es keiner recht machen* attest the 3pl-or-formal
-  Syncretisms of `sie` and `ihnen`.
-- Amends ADR 0032: a stem's gender-only Surfaces have a Surface
-  Syncretism.
-- Decided by the user on 2026-10-02 on
-  [#829](https://github.com/clockblocker/texteater/issues/829); stem
-  Surface Syncretisms on 2026-10-03 on
+  a Masc and a Neut cell each, navigation reaches only cells, and a referent
+  no text settles attests a Syncretism.
+- Amends [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md):
+  a stem's gender-only Surfaces have a Surface Syncretism.
+- In gold, sentence-initial *Sie gingen* and *Ihnen kann es keiner recht
+  machen* attest the 3pl-or-formal Syncretisms of `sie` and `ihnen`.
+- The user ruled the pillar Syncretisms on
+  [#829](https://github.com/clockblocker/texteater/issues/829) and the stem
+  Surface Syncretisms on
   [#876](https://github.com/clockblocker/texteater/issues/876).
