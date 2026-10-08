@@ -6,12 +6,31 @@ import {
 } from "common-utils/validation";
 import { validationRegistry } from "./generated/linked-validation.js";
 import type { ParsedUnit } from "./generated/units.js";
-import type { UnitRoute } from "./types.js";
+import type { Unit, UnitRoute } from "./types.js";
 import { validationOperations } from "./validation/operations.js";
 
 type ParseResult<T> =
 	| { success: true; chain: T }
 	| { success: false; error: ParsingError };
+
+type RouteFields = { language: string; family: string; kind: string };
+type LemmaOf<U> = U extends { lemma: infer L extends RouteFields }
+	? L
+	: U extends { surface: { lemma: infer L extends RouteFields } }
+		? L
+		: U extends RouteFields
+			? U
+			: never;
+// Distributes over U, so the chain's discriminants still narrow value.
+type TypedChain<U extends Unit> = U extends unknown
+	? {
+			unitKind: U["unitKind"];
+			language: LemmaOf<U>["language"];
+			family: LemmaOf<U>["family"];
+			kind: LemmaOf<U>["kind"];
+			value: U;
+		}
+	: never;
 
 const registry: CompiledValidationRegistry = validationRegistry;
 function object(value: unknown): Record<string, unknown> | undefined {
@@ -28,10 +47,14 @@ function failure(
 }
 
 /**
- * Validates and normalizes a complete unit. Literal expected coordinates narrow
- * chain.value and reject mismatches. Discriminants in chain narrow its value.
- * Ordinary invalid input returns a shared ParsingError without throwing.
+ * Validates and normalizes a complete unit. A typed input keeps its type in
+ * chain.value. Literal expected coordinates narrow chain.value and reject
+ * mismatches. Discriminants in chain narrow its value. Ordinary invalid input
+ * returns a shared ParsingError without throwing.
  */
+// No const on U: normalization can change a string field, so a literal such
+// as canonicalForm "haus " must widen to string.
+export function parseUnit<U extends Unit>(input: U): ParseResult<TypedChain<U>>;
 export function parseUnit<const R extends UnitRoute>(
 	input: unknown,
 	expected: R,
