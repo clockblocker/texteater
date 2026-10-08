@@ -1,3 +1,4 @@
+import type * as Dumling from "dumling/types";
 import type {
 	SttsBecomes,
 	SttsGap,
@@ -7,11 +8,22 @@ import type {
 	SttsStatus,
 } from "./types.js";
 
-const lexeme = (kind: SttsRoute["kind"]): SttsRoute => ({
+type DeRoute<F extends Dumling.Family<"de">> = Extract<
+	SttsRoute,
+	{ family: F }
+>;
+
+/** A German Lexeme route of `kind`. */
+export const lexeme = (
+	kind: Dumling.Kind<"de", "Lexeme">,
+): DeRoute<"Lexeme"> => ({
 	family: "Lexeme",
 	kind,
 });
-const locution = (kind: SttsRoute["kind"]): SttsRoute => ({
+/** A German Locution route of `kind`. */
+export const locution = (
+	kind: Dumling.Kind<"de", "Locution">,
+): DeRoute<"Locution"> => ({
 	family: "Locution",
 	kind,
 });

@@ -65,8 +65,16 @@ export const sttsTags = [
 
 type SttsTag = (typeof sttsTags)[number];
 
-/** A Dumling route without its language: German is implied. */
-export type SttsRoute = Pick<SpecRoute, "family" | "kind">;
+type WithoutLanguage<Route> = Route extends SpecRoute
+	? Pick<Route, "family" | "kind">
+	: never;
+
+/**
+ * A German Dumling route without its language, which is implied. Each member
+ * keeps its Family and Kind together, so only a route Dumling has
+ * type-checks.
+ */
+export type SttsRoute = WithoutLanguage<Extract<SpecRoute, { language: "de" }>>;
 
 /**
  * What an STTS token becomes in a Spec Record:
