@@ -1,4 +1,5 @@
 import {
+	hasRoot,
 	ParsingError,
 	type ParsingIssue,
 	parseCompiledValidation,
@@ -36,8 +37,7 @@ export function unwrapDumdictParse<T>(parsed: DumdictParse<T>): T {
 }
 type RouteKey = DumdictValidationRouteKey | InternalDumdictValidationRouteKey;
 function parseRoute<T>(input: unknown, key: RouteKey): DumdictParse<T> {
-	const root = validationRegistry.roots[key];
-	if (!root)
+	if (!hasRoot(validationRegistry, key))
 		return new ParsingError([
 			{
 				code: "custom",
