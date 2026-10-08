@@ -31,7 +31,7 @@ import type * as Dumling from "dumling/types";
 import type { ClosedClassIdentity } from "../../segment/segmented-sentence.js";
 import type { NeighbourSentences } from "../types.js";
 import { attestedMember } from "./member-spelling.js";
-import { fill, question } from "./prompts.js";
+import { cellCoordinates, fill, question } from "./prompts.js";
 import { Questionnaire } from "./questions.js";
 import {
 	fixedSpelling,
@@ -357,31 +357,17 @@ export function openOptions(
 	return [...syncretismOptions(options), ...stemSyncretismOptions(options)];
 }
 
-const caseNames: Readonly<Record<string, string>> = {
-	Nom: "nominative",
-	Acc: "accusative",
-	Dat: "dative",
-	Gen: "genitive",
-};
-const genderNames: Readonly<Record<string, string>> = {
-	Masc: "masculine",
-	Fem: "feminine",
-	Neut: "neuter",
-};
-
 /** How an option reads to the judge: its form, its coordinates and its English glosses. */
 function describe(member: AuthoredMember, cell: Cell | undefined): string {
 	const values = { ...coreOf(member), ...cell };
 	const coordinates = [
-		values.case ? caseNames[String(values.case)] : undefined,
-		values.number === "Sing"
-			? "singular"
-			: values.number === "Plur"
-				? "plural"
-				: undefined,
-		values.gender ? genderNames[String(values.gender)] : undefined,
-		values.person ? `person ${String(values.person)}` : undefined,
-		values.polite === "Form" ? "formal address" : undefined,
+		values.case ? cellCoordinates.case[values.case] : undefined,
+		values.number ? cellCoordinates.number[values.number] : undefined,
+		values.gender ? cellCoordinates.gender[values.gender] : undefined,
+		values.person
+			? fill(cellCoordinates.person, { n: values.person })
+			: undefined,
+		values.polite === "Form" ? cellCoordinates.polite : undefined,
 	].filter(Boolean);
 	const glosses = member.knowledge.translations?.en ?? [];
 	return `${member.lemma.canonicalForm}${coordinates.length ? `: ${coordinates.join(", ")}` : ""}${glosses.length ? ` (${glosses.join(", ")})` : ""}`;

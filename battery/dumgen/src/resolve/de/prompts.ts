@@ -683,6 +683,24 @@ export const options = {
 export type CaseOption = keyof typeof options.nounCase;
 
 /**
+ * How the cell question's options name a closed-class cell's coordinates,
+ * keyed by the feature values its Core and Surface give, in the order the
+ * option lists them.
+ */
+export const cellCoordinates = {
+	case: {
+		Nom: "nominative",
+		Acc: "accusative",
+		Dat: "dative",
+		Gen: "genitive",
+	},
+	number: { Sing: "singular", Plur: "plural" },
+	gender: { Masc: "masculine", Fem: "feminine", Neut: "neuter" },
+	person: "person {n}",
+	polite: "formal address",
+} as const;
+
+/**
  * The uses an auxiliary member may have, one per authored AUX Reading,
  * keyed by its Canonical Form and Emoji Description.
  */
