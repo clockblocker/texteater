@@ -27,19 +27,44 @@ const fold = (text: string) => text.toLocaleLowerCase("de");
  * entry loads no Zod (ADR 0025): route, folded Canonical Form and the set
  * Core Features.
  */
-const identityOf = (lemma: Dumling.Lemma) =>
-	json([
+function identityOf(lemma: Dumling.Lemma): string {
+	const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
+	return json([
 		lemma.family,
 		lemma.kind,
 		fold(lemma.canonicalForm),
-		Object.entries(lemma.coreFeatures as Readonly<Record<string, unknown>>)
+		Object.entries(core)
 			.filter(([, value]) => value !== null && value !== undefined)
 			.toSorted(([left], [right]) => (left < right ? -1 : 1)),
 	]);
-const isStemPronoun = (realization: AuthoredRealization) =>
-	realization.member.lemma.family === "Lexeme" &&
-	realization.member.lemma.kind === "PRON" &&
-	realization.inflection !== undefined;
+}
+/**
+ * The cell a stem PRON realization marks, or undefined for any other
+ * realization. A stem pronoun's spelling marks a whole cell of its table.
+ */
+function stemPronounCell(
+	realization: AuthoredRealization,
+): SurfaceCell | undefined {
+	const { lemma } = realization.member;
+	if (lemma.family !== "Lexeme" || lemma.kind !== "PRON") return undefined;
+	const {
+		case: grammaticalCase,
+		number,
+		gender,
+	} = realization.inflection ?? {};
+	if (
+		grammaticalCase === undefined ||
+		number === undefined ||
+		gender === undefined
+	)
+		return undefined;
+	return { case: grammaticalCase, number, gender };
+}
+/** A stem PRON realization with the cell it marks. */
+type StemPronounRealization = {
+	readonly realization: AuthoredRealization;
+	readonly cell: SurfaceCell;
+};
 
 /** What a Surface Syncretism's units share: Lemma, spelling, case and number. */
 function groupKey(
@@ -58,32 +83,31 @@ function groupKey(
 }
 
 function generate(): Map<string, StemSyncretism> {
-	const groups = new Map<string, AuthoredRealization[]>();
+	const groups = new Map<string, StemPronounRealization[]>();
 	for (const realization of authoredRealizations) {
-		if (!isStemPronoun(realization)) continue;
+		const cell = stemPronounCell(realization);
+		if (!cell) continue;
 		const key = groupKey(
 			realization.member.lemma,
 			realization.spelled,
 			realization.spelling,
-			realization.inflection ?? {},
+			cell,
 		);
-		groups.set(key, [...(groups.get(key) ?? []), realization]);
+		groups.set(key, [...(groups.get(key) ?? []), { realization, cell }]);
 	}
 	const generated = new Map<string, StemSyncretism>();
 	for (const [key, group] of groups) {
 		const cells = [
 			...new Map(
-				group.map((realization) => {
-					const cell = realization.inflection as SurfaceCell;
-					return [cell.gender, cell] as const;
-				}),
+				group.map(({ cell }) => [cell.gender, cell] as const),
 			).values(),
 		].toSorted((left, right) =>
 			String(left.gender) < String(right.gender) ? -1 : 1,
 		);
 		const [first, second, ...rest] = cells;
-		const [realization] = group;
-		if (!first || !second || !realization) continue;
+		const [entry] = group;
+		if (!first || !second || !entry) continue;
+		const { realization } = entry;
 		generated.set(key, {
 			member: realization.member,
 			spelled: fold(realization.spelled),
@@ -137,8 +161,8 @@ export function referentCanLeaveOpen(syncretism: StemSyncretism): boolean {
 export function stemSyncretismFor(
 	surface: Dumling.Surface,
 ): StemSyncretism | undefined {
-	const bag = (surface as { inflectionalFeatures?: unknown })
-		.inflectionalFeatures as Readonly<Record<string, unknown>> | null;
+	const bag: Readonly<Record<string, unknown>> | null =
+		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
 	if (!bag) return undefined;
 	return stemSyncretisms.get(
 		groupKey(
