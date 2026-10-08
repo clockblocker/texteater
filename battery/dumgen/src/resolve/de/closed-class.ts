@@ -40,9 +40,26 @@ import {
 	type Target,
 } from "./target.js";
 
-type Core = Readonly<Record<string, unknown>>;
-/** Surface feature values: a value, a feature-value set (sein-'s Masc and Neut possessor), or none. */
-type Cell = Readonly<Record<string, string | readonly string[] | null>>;
+/** A closed route's Surface, as Dumling's generated types give it. */
+type ClosedSurface = Dumling.Surface<
+	"de",
+	"Lexeme" | "Locution",
+	"DET" | "PRON"
+>;
+/** The Surface features a closed Lexeme route inflects for. */
+type Inflection<K extends "DET" | "PRON"> = NonNullable<
+	Dumling.Surface<"de", "Lexeme", K>["inflectionalFeatures"]
+>;
+/** A DET or PRON Lexeme's Core Features; a Locution sets none. */
+type Core = Partial<
+	Dumling.Lemma<"de", "Lexeme", "DET" | "PRON">["coreFeatures"]
+>;
+/** The cell a stem's spelling marks: some of its case, number and gender, or a comparative's degree. */
+type Cell = Partial<
+	Pick<Inflection<"DET">, "case" | "degree" | "gender" | "number">
+>;
+/** The possessor features a possessive stem's Surface marks (ADR 0044). */
+type Possessor = Pick<Inflection<"PRON">, "gender[psor]" | "number[psor]">;
 
 /**
  * An authored realization a member's spelling matched. A near-miss spelling
@@ -61,7 +78,13 @@ export type ClosedOption = {
 	readonly cell: Cell | undefined;
 };
 
-const coreOf = (member: AuthoredMember): Core => member.lemma.coreFeatures;
+/** A closed member's Core Features; a Locution, or a member of another route, sets none. */
+function coreOf({ lemma }: AuthoredMember): Core {
+	return lemma.family === "Lexeme" &&
+		(lemma.kind === "DET" || lemma.kind === "PRON")
+		? lemma.coreFeatures
+		: {};
+}
 
 /** Whether an authored member has the stored identity, its Canonical Form compared without case. */
 function hasIdentity(member: AuthoredMember, identity: ClosedClassIdentity) {
@@ -219,8 +242,14 @@ const referentFeatures: ReadonlySet<string> = new Set([
 /** The values two options differ in, Core and Surface cell together. */
 function differences(left: ClosedOption, right: ClosedOption): Set<string> {
 	const differing = new Set<string>();
-	const leftValues = { ...coreOf(left.member), ...left.cell };
-	const rightValues = { ...coreOf(right.member), ...right.cell };
+	const leftValues: Readonly<Record<string, unknown>> = {
+		...coreOf(left.member),
+		...left.cell,
+	};
+	const rightValues: Readonly<Record<string, unknown>> = {
+		...coreOf(right.member),
+		...right.cell,
+	};
 	for (const key of new Set([
 		...Object.keys(leftValues),
 		...Object.keys(rightValues),
@@ -427,11 +456,14 @@ export function cellQuestion(
  * The possessor features a possessive stem's Surface marks, from its stem
  * alone (ADR 0044): sein- serves a masculine or neuter singular possessor,
  * mein- and dein- a singular one, unser- and euer- a plural one, and ihr-
- * and formal Ihr- show neither.
+ * and formal Ihr- show neither. A stem that isn't possessive marks none.
  */
-function possessorFeatures(lemma: Dumling.Lemma): Cell {
+function possessorFeatures(
+	lemma: Dumling.Lemma<"de", "Lexeme", "DET" | "PRON">,
+): Possessor {
 	const stem = lemma.canonicalForm;
 	const none = { "gender[psor]": null, "number[psor]": null };
+	if (lemma.coreFeatures.poss !== "Yes") return none;
 	if (/^sein/u.test(stem))
 		return { "gender[psor]": ["Masc", "Neut"], "number[psor]": "Sing" };
 	if (/^(?:mein|dein)/u.test(stem))
@@ -442,32 +474,103 @@ function possessorFeatures(lemma: Dumling.Lemma): Cell {
 }
 
 /**
- * A stem's Surface features: the cell its spelling marks, nulls for the
- * rest. A Lexeme also marks possessor features and a DET its degree; a
- * Locution marks its cell alone.
+ * A closed-class unit's Surface: the authored spelling of its form (the
+ * word a fused or shortened spelling stands for) and, for a stem's cell,
+ * its Surface features: the cell its spelling marks, nulls for the rest. A
+ * Lexeme also marks possessor features and a DET its degree; a Locution
+ * marks its cell alone. A pillar cell marks none.
  */
-function stemInflection(option: ClosedOption): Cell {
-	const { lemma } = option.member;
-	if (lemma.family === "Locution")
-		return { case: null, gender: null, number: null, ...option.cell };
-	const possessive = coreOf(option.member).poss === "Yes";
-	return {
-		case: null,
-		...(lemma.kind === "DET" ? { degree: null } : {}),
-		gender: null,
-		number: null,
-		...(possessive
-			? possessorFeatures(lemma)
-			: { "gender[psor]": null, "number[psor]": null }),
-		...option.cell,
+function closedSurface(
+	lemma: AuthoredMember["lemma"],
+	realization: MatchedRealization,
+	cell: Cell | undefined,
+): ClosedSurface {
+	const spelling: ClosedSurface["spelling"] = realization.spelling ?? {
+		kind: "Canonical",
 	};
+	const parts = {
+		normalizedSurface: realization.standsFor ?? realization.spelled,
+		spelling,
+		surfaceFeatures: realization.historicalStatus
+			? { historicalStatus: "Archaic" as const }
+			: null,
+	};
+	if (
+		lemma.family === "Locution" &&
+		(lemma.kind === "DET" || lemma.kind === "PRON")
+	) {
+		const inflectionalFeatures = cell
+			? { case: null, gender: null, number: null, ...cell }
+			: null;
+		// One branch per route, so TypeScript ties the Lemma to its Surface.
+		return lemma.kind === "DET"
+			? {
+					unitKind: "Surface",
+					language: "de",
+					lemma,
+					...parts,
+					inflectionalFeatures,
+				}
+			: {
+					unitKind: "Surface",
+					language: "de",
+					lemma,
+					...parts,
+					inflectionalFeatures,
+				};
+	}
+	if (lemma.family === "Lexeme" && lemma.kind === "DET")
+		return {
+			unitKind: "Surface",
+			language: "de",
+			lemma,
+			...parts,
+			inflectionalFeatures: cell
+				? {
+						case: null,
+						degree: null,
+						gender: null,
+						number: null,
+						...possessorFeatures(lemma),
+						...cell,
+					}
+				: null,
+		};
+	if (lemma.family === "Lexeme" && lemma.kind === "PRON")
+		return {
+			unitKind: "Surface",
+			language: "de",
+			lemma,
+			...parts,
+			inflectionalFeatures: cell
+				? {
+						case: null,
+						gender: null,
+						number: null,
+						...possessorFeatures(lemma),
+						...cell,
+					}
+				: null,
+		};
+	throw Error(`A closed-class unit is a DET or PRON, not a ${lemma.kind}`);
 }
+
+/** A closed-class unit's Attestation, its Surface typed on its route. */
+type ClosedAttestation = {
+	readonly unitKind: "Attestation";
+	readonly surface: ClosedSurface;
+	readonly members: readonly Dumling.Attestation<"de">["members"][number][];
+	readonly realizationCoverage: "Full";
+	readonly articleEvidence?: null;
+};
 
 /**
  * The Attestation of a closed-class unit from the authored member the
  * click landed on: its Lemma, the authored spelling of its form (the word
  * a fused or shortened spelling stands for), and each member's
- * orthography as the fusion table and the inventory spell it.
+ * orthography as the fusion table and the inventory spell it. TypeScript
+ * types its Surface on the route; `parseUnit` in grammar.ts still checks
+ * the whole against the unit's route, and one Dumling rejects is a Defect.
  */
 export function closedAttestation(
 	target: Target,
@@ -476,11 +579,19 @@ export function closedAttestation(
 ): unknown {
 	if ("syncretism" in answer)
 		return stemSyncretismAttestation(target, answer);
+	return unitAttestation(target, answer, realization);
+}
+
+/** The Attestation of one authored cell, a stem's or a pillar's, or of a Lemma Syncretism. */
+function unitAttestation(
+	target: Target,
+	answer: ClosedOption | AuthoredMember,
+	realization: MatchedRealization,
+): ClosedAttestation {
 	const option = "realization" in answer ? answer : undefined;
 	const lemma = structuredClone(
 		"realization" in answer ? answer.member.lemma : answer.lemma,
 	);
-	const pillar = option === undefined || option.cell === undefined;
 	const one = target.members.length === 1;
 	const members = target.members.map((member) => {
 		// The fusion table knows the Segment; the inventory knows the spelling.
@@ -500,18 +611,7 @@ export function closedAttestation(
 	});
 	return {
 		unitKind: "Attestation",
-		surface: {
-			unitKind: "Surface",
-			language: "de",
-			lemma,
-			normalizedSurface: realization.standsFor ?? realization.spelled,
-			spelling: realization.spelling ?? { kind: "Canonical" },
-			surfaceFeatures: realization.historicalStatus
-				? { historicalStatus: "Archaic" }
-				: null,
-			inflectionalFeatures:
-				pillar || !option ? null : stemInflection(option),
-		},
+		surface: closedSurface(lemma, realization, option?.cell),
 		members,
 		realizationCoverage: "Full",
 		...(lemma.family === "Lexeme" && lemma.kind === "PRON"
@@ -527,13 +627,9 @@ export function closedAttestation(
 function stemSyncretismAttestation(
 	target: Target,
 	answer: StemOpenOption,
-): unknown {
-	const attestations = answer.units.map(
-		(unit) =>
-			// Built untyped from feature records (lane #936); parseUnit checks the result in grammar.ts.
-			closedAttestation(target, unit, unit.realization) as {
-				readonly surface: Dumling.Surface;
-			},
+): ClosedAttestation {
+	const attestations = answer.units.map((unit) =>
+		unitAttestation(target, unit, unit.realization),
 	);
 	const [first] = attestations;
 	if (!first) throw Error("A Surface Syncretism holds two or more units");

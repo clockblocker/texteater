@@ -8,6 +8,7 @@ import {
 	canonical,
 	historical,
 	licensed,
+	type SurfaceCell,
 	type SurfaceSpelling,
 } from "./stem-lemma.js";
 
@@ -25,18 +26,22 @@ export type RealizationSpelling = {
 	readonly orthography?: "Shorthand" | "Fused";
 	readonly standsFor?: string;
 };
+/** What a spelling's Surface marks: a stem's cell, or a determiner's comparative (mehr is Cmp). */
+type RealizationInflection = Partial<SurfaceCell> & {
+	readonly degree?: "Cmp";
+};
 /** One spelling that realizes an authored DET, PRON or AUX member. */
 export type AuthoredRealization = RealizationSpelling & {
 	readonly member: AuthoredMember;
 	/** The letters a member attests. */
 	readonly spelled: string;
 	/** The cell a stem Lemma's Surface marks with this spelling (system ADR 0032). */
-	readonly inflection?: Readonly<Record<string, string | null>>;
+	readonly inflection?: RealizationInflection;
 };
 type Alias = RealizationSpelling & {
 	readonly spelled: string;
 	/** The inflection a spelling outside the stem's cells marks: mehr is Cmp. */
-	readonly inflection?: Readonly<Record<string, string | null>>;
+	readonly inflection?: RealizationInflection;
 };
 
 /** A Shorthand member of the word it shortens, whose Surface is Canonical. */

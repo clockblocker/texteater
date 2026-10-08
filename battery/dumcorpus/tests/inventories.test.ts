@@ -929,7 +929,11 @@ describe("the German authored inventory", () => {
 			...["Int", "Rel"].map((pronType) => ({
 				canonicalForm: "wer",
 				pronType,
-				inflection: { case: "Dat", number: null, gender: null },
+				inflection: {
+					case: "Dat",
+					number: null,
+					gender: null,
+				} as const,
 			})),
 			{
 				canonicalForm: "irgendwer",
