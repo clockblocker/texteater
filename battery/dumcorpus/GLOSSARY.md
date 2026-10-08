@@ -11,9 +11,10 @@ classification terms have a section of their own. The
 
 **Authored Inventory**:
 A language's closed-class units, authored instead of generated, each Reading
-with its reviewed Knowledge. They are model content, not gold. See
-[ADR 0021], [ADR 0041] and [ADR 0046].
-_Avoid_: Fixed Catalog (Dumgen's term), closed set, catalog member
+with its reviewed Knowledge. They are model content, not gold. Dumgen calls
+the members on a Closed Route its Fixed Catalog, and those on an Open Route a
+Fixed Population. See [ADR 0021], [ADR 0041] and [ADR 0046].
+_Avoid_: Authored Content, closed set, catalog member
 
 **Grammatical Navigation**:
 Selection of an Authored Inventory's reviewed members by preserving fixed
@@ -22,7 +23,8 @@ Core Features and varying explicitly named coordinates. See [ADR 0019].
 **ADP Case Table**:
 A language's closed, authored list of its adpositions with the cases each
 takes. See [ADR 0034] and [ADR 0041].
-_Avoid_: governed case, governedCase, case government feature
+_Avoid_: governed case, an ADP `governedCase` feature, case government
+feature
 
 **Grundform**:
 A Surface's realization of its Lemma's canonical grammatical form, assessed
@@ -75,11 +77,11 @@ _Avoid_: level, tier
 **Review Depth**:
 The deepest Annotation Layer a person has checked, every layer before it
 included. A record with none is a Draft. See [ADR 0037].
-_Avoid_: verified, isVerified, Review Status
+_Avoid_: verified, isVerified
 
 **Text Record**:
 One raw text as a reader supplies it, with what intake should make of it.
-See [ADR 0037].
+It is Draft or Reviewed as a whole and has no Review Depth. See [ADR 0037].
 _Avoid_: intake item, intake case
 
 **Imported Case**:

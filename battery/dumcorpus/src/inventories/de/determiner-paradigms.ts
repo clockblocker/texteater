@@ -11,7 +11,7 @@ import {
 import {
 	type AuthoredSpelling,
 	canonical,
-	citationForm,
+	canonicalFormCell,
 	type ReviewedMember,
 	type StemDescription,
 	stemMember,
@@ -33,15 +33,15 @@ const emptyCore: Core = {
 
 /**
  * A stem determiner (dieser, mein, kein, viel) is one Lemma whose Surfaces
- * mark the cell (system ADR 0032). It cites its Nom.Masc.Sg or, lacking one,
- * its Nom.Plur cell unless a citation is given; uninflected spellings (viel
- * Geld, all die Jahre) realize it without a cell.
+ * mark the cell (system ADR 0032). Its Canonical Form is its Nom.Masc.Sg or,
+ * lacking one, its Nom.Plur cell unless one is given; uninflected spellings
+ * (viel Geld, all die Jahre) realize it without a cell.
  */
 function determinerStem(
 	table: PronounTable,
 	description: DeterminerDescription,
 	options: {
-		readonly citation?: PronounForm;
+		readonly canonicalForm?: PronounForm;
 		readonly uninflected?: readonly string[];
 	} = {},
 ): ReviewedMember {
@@ -58,7 +58,7 @@ function determinerStem(
 			family: "Lexeme",
 			coreFeatures: { ...emptyCore, ...description.core },
 		},
-		citation: options.citation ?? citationForm(table),
+		canonicalForm: options.canonicalForm ?? canonicalFormCell(table),
 		description,
 		spellings,
 	});
@@ -66,8 +66,8 @@ function determinerStem(
 
 /**
  * A DET Locution (was für ein) is a stem too: one Lemma, with an empty Core,
- * whose Surfaces mark the cell (ADR 0039). It cites its Nom.Masc.Sg cell;
- * uninflected spellings realize it without a cell.
+ * whose Surfaces mark the cell (ADR 0039). Its Canonical Form is its
+ * Nom.Masc.Sg cell; uninflected spellings realize it without a cell.
  */
 function determinerLocution(
 	table: PronounTable,
@@ -78,7 +78,7 @@ function determinerLocution(
 	return stemMember({
 		kind: "DET",
 		route: { family: "Locution", locutionType },
-		citation: citationForm(table),
+		canonicalForm: canonicalFormCell(table),
 		description,
 		spellings: [
 			...tableSpellings(table),
@@ -106,10 +106,10 @@ const description = (
 ): DeterminerDescription => ({ core, emoji, definition, en, ru });
 const endings = { "": "", e: "ə", en: "ən", em: "əm", es: "əs", er: "ɐ" };
 type Ending = keyof typeof endings;
-/** Quantifiers cited in the plural (einige, alle) name their Nom.Plur cell. */
+/** Quantifiers whose Canonical Form is plural (einige, alle) name their Nom.Plur cell. */
 const plural = (table: PronounTable): PronounForm => {
 	const cited = table.Plur[0];
-	if (!cited) throw Error("A plural citation needs a Nom.Plur cell");
+	if (!cited) throw Error("A plural Canonical Form needs a Nom.Plur cell");
 	return cited;
 };
 const withVariants = (entry: PronounForm, ...variants: string[]) => ({
@@ -490,10 +490,10 @@ for (const [stem, ipa, person, polite, definition, en, ru] of [
 
 // Indefinite quantifiers. einig/etlich/etwelch/viel/wenig/sämtlich/all take
 // the adjectival -en genitive before a strong genitive noun (einigen Aufwands).
-// einige, etliche and etwelche are cited in the plural; viel and wenig by their
-// usual bare form (viel Geld), whose comparatives mehr and weniger are
+// einige, etliche and etwelche have a plural Canonical Form; viel and wenig
+// their usual bare form (viel Geld), whose comparatives mehr and weniger are
 // spellings marking Cmp (realizations.ts, de/canonical-form-is-the-headword).
-for (const [stem, ipa, definition, en, ru, emoji, citation] of [
+for (const [stem, ipa, definition, en, ru, emoji, canonicalForm] of [
 	[
 		"einig",
 		"ˈaɪ̯nɪɡ",
@@ -544,16 +544,19 @@ for (const [stem, ipa, definition, en, ru, emoji, citation] of [
 	add(
 		table,
 		description({ pronType: "Ind" }, emoji, definition, [...en], [...ru]),
-		citation === "plural"
-			? { citation: plural(table) }
+		canonicalForm === "plural"
+			? { canonicalForm: plural(table) }
 			: {
 					// Transcriptions reviewed with the uninflected headword.
-					citation: form(stem, stem === "viel" ? "fiːl" : "ˈveːnɪç"),
+					canonicalForm: form(
+						stem,
+						stem === "viel" ? "fiːl" : "ˈveːnɪç",
+					),
 					uninflected: [stem],
 				},
 	);
 }
-// mancher cites its Nom.Masc.Sg cell, and uninflected manch (manch ein
+// mancher's Canonical Form is its Nom.Masc.Sg cell, and uninflected manch (manch ein
 // Freund, manch schöner Tag) spells it without a cell, as uninflected viel
 // does (de/canonical-form-is-the-headword).
 add(
@@ -613,8 +616,8 @@ add(
 // mehr and meist are ADJ (Rule de/quantifier-by-use), so die meisten Gäste is
 // the Sup of ADJ viel.
 
-// Total quantifiers, cited in the plural. Uninflected all stands before an
-// article or pronoun (all die Jahre).
+// Total quantifiers, whose Canonical Form is plural. Uninflected all stands
+// before an article or pronoun (all die Jahre).
 for (const [stem, ipa, definition, en, ru] of [
 	[
 		"all",
@@ -636,7 +639,7 @@ for (const [stem, ipa, definition, en, ru] of [
 		table,
 		description({ pronType: "Tot" }, "🌐", definition, [...en], [...ru]),
 		{
-			citation: plural(table),
+			canonicalForm: plural(table),
 			...(stem === "all" ? { uninflected: ["all"] } : {}),
 		},
 	);

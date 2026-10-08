@@ -42,8 +42,8 @@ const add = (
 ) => reviewed.push(pronounStem(table, meaning, options));
 const plural = (table: PronounTable) => {
 	const cited = table.Plur[0];
-	if (!cited) throw Error("A plural citation needs a Nom.Plur cell");
-	return { citation: cited };
+	if (!cited) throw Error("A plural Canonical Form needs a Nom.Plur cell");
+	return { canonicalForm: cited };
 };
 
 /** A pillar cell with its Russian translation and, where it differs from its paradigm's, its English one. */
@@ -507,7 +507,7 @@ for (const pronType of ["Int", "Rel"] as const) {
 	});
 	const stems = [
 		{
-			citation: form("wer", "veːɐ̯"),
+			canonicalForm: form("wer", "veːɐ̯"),
 			gender: "Masc",
 			spellings: [
 				spelled("wer", "Nom"),
@@ -530,7 +530,7 @@ for (const pronType of ["Int", "Rel"] as const) {
 			},
 		},
 		{
-			citation: form("was", "vas"),
+			canonicalForm: form("was", "vas"),
 			gender: "Neut",
 			spellings: [
 				spelled("was", "Nom"),
@@ -558,7 +558,7 @@ for (const pronType of ["Int", "Rel"] as const) {
 			const meaning = stem[pronType];
 			reviewed.push(
 				pronounStemOf(
-					stem.citation,
+					stem.canonicalForm,
 					{
 						core: { pronType, gender: stem.gender },
 						emoji: meaning.emoji,
@@ -656,7 +656,7 @@ for (const [stem, ipa, emoji, definition, en, ru] of [
 	};
 	add(table, description("Ind", emoji, definition, [en], [ru]), {
 		// Transcriptions reviewed with the bare headword, as on the DETs.
-		citation: form(stem, stem === "viel" ? "fiːl" : "ˈveːnɪç"),
+		canonicalForm: form(stem, stem === "viel" ? "fiːl" : "ˈveːnɪç"),
 		uninflected: [stem],
 	});
 }

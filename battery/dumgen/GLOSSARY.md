@@ -81,23 +81,20 @@ which Grammatical Resolution reads to settle a pronoun's referent. See
 [ADR 0044] and [ADR 0046].
 _Avoid_: surrounding text, paragraph context
 
-**Authored Content**:
-Reviewed Lemmas, fixed Readings, Knowledge and semantic relation claims that
-resolution returns instead of generating them. See [ADR 0021].
-
 **Fixed Catalog**:
-The reviewed Authored Content that bounds a Closed Route. See [ADR 0021].
+The Authored Inventory (Dumcorpus) members that bound a Closed Route. See
+[ADR 0021].
 
 **Fixed Population**:
-Reviewed Authored Content within an Open Route. See [ADR 0021].
+The Authored Inventory (Dumcorpus) members on an Open Route. See [ADR 0021].
 
 **Closed Route**:
 A production route that resolves only within its Fixed Catalog. See
 [ADR 0021].
 
 **Catalog Miss**:
-Absence of a required authored value on a Closed Route or for an exact
-authored Reading in a Fixed Population. See [ADR 0021].
+Absence of a required authored value on a Closed Route, or for an
+Authored Inventory member matched in a Fixed Population. See [ADR 0021].
 
 **Knowledge Production**:
 Proposed Knowledge changes and Pending Semantic Relations for a

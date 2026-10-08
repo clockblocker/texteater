@@ -3,7 +3,7 @@ import type * as Dumrel from "dumrel/types";
 import {
 	type AuthoredSpelling,
 	canonical,
-	citationForm,
+	canonicalFormCell,
 	licensed,
 	type ReviewedMember,
 	type StemDescription,
@@ -249,29 +249,33 @@ export function determinerParadigm(
 
 /**
  * A stem pronoun (dieser, keiner, meiner) is one Lemma whose Surfaces mark the
- * cell. It cites its Nom.Masc.Sg or, lacking one, its Nom.Plur cell unless a
- * citation is given; uninflected spellings realize it without a cell.
+ * cell. Its Canonical Form is its Nom.Masc.Sg or, lacking one, its Nom.Plur
+ * cell unless one is given; uninflected spellings realize it without a cell.
  */
 export function pronounStem(
 	table: PronounTable,
 	description: PronounDescription,
 	options: {
-		readonly citation?: PronounForm;
+		readonly canonicalForm?: PronounForm;
 		readonly uninflected?: readonly string[];
 	} = {},
 ): ReviewedMember {
-	return pronounStemOf(options.citation ?? citationForm(table), description, [
-		...tableSpellings(table),
-		...(options.uninflected ?? []).map((spelled) => ({
-			spelled,
-			spelling: canonical,
-		})),
-	]);
+	return pronounStemOf(
+		options.canonicalForm ?? canonicalFormCell(table),
+		description,
+		[
+			...tableSpellings(table),
+			...(options.uninflected ?? []).map((spelled) => ({
+				spelled,
+				spelling: canonical,
+			})),
+		],
+	);
 }
 
 /** A stem pronoun whose spellings are listed with their cells, for a paradigm the agreement table does not fit (jemand, wer, was). */
 export function pronounStemOf(
-	citation: PronounForm,
+	canonicalForm: PronounForm,
 	description: PronounDescription,
 	spellings: readonly AuthoredSpelling[],
 ): ReviewedMember {
@@ -281,7 +285,7 @@ export function pronounStemOf(
 			family: "Lexeme",
 			coreFeatures: { ...emptyCore, ...description.core },
 		},
-		citation,
+		canonicalForm,
 		description,
 		spellings,
 	});
@@ -289,8 +293,8 @@ export function pronounStemOf(
 
 /**
  * A PRON Locution (was für einer) is a stem too: one Lemma, with an empty
- * Core, whose Surfaces mark the cell (ADR 0039). It cites its Nom.Masc.Sg
- * cell.
+ * Core, whose Surfaces mark the cell (ADR 0039). Its Canonical Form is its
+ * Nom.Masc.Sg cell.
  */
 export function pronounLocution(
 	table: PronounTable,
@@ -300,7 +304,7 @@ export function pronounLocution(
 	return stemMember({
 		kind: "PRON",
 		route: { family: "Locution", locutionType },
-		citation: citationForm(table),
+		canonicalForm: canonicalFormCell(table),
 		description,
 		spellings: tableSpellings(table),
 	});

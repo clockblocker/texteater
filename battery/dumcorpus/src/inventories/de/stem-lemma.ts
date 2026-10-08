@@ -78,8 +78,11 @@ export function tableSpellings(table: PronounTable): AuthoredSpelling[] {
 	return spellings;
 }
 
-/** A stem cites its Nom.Masc.Sg cell, or its Nom.Plur cell when it has none. */
-export function citationForm(table: PronounTable): PronounForm {
+/**
+ * A stem's Canonical Form is its Nom.Masc.Sg cell, or its Nom.Plur cell when
+ * it has none.
+ */
+export function canonicalFormCell(table: PronounTable): PronounForm {
 	const cited = table.Masc[0] ?? table.Plur[0];
 	if (!cited)
 		throw Error("A stem paradigm needs a Nom.Masc.Sg or Nom.Plur cell");
@@ -113,7 +116,7 @@ export type StemRoute<Kind extends "PRON" | "DET"> =
 export function stemMember<Kind extends "PRON" | "DET">(input: {
 	readonly kind: Kind;
 	readonly route: StemRoute<Kind>;
-	readonly citation: PronounForm;
+	readonly canonicalForm: PronounForm;
 	readonly description: StemDescription<unknown>;
 	readonly spellings: readonly AuthoredSpelling[];
 }): ReviewedMember {
@@ -123,7 +126,7 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 		language: "de",
 		family: route.family,
 		kind: input.kind,
-		canonicalForm: input.citation.text,
+		canonicalForm: input.canonicalForm.text,
 		coreFeatures: route.family === "Lexeme" ? route.coreFeatures : {},
 	} as Dumling.Lemma<"de", StemRoute<Kind>["family"]>;
 	const seen = new Set<string>();
@@ -150,7 +153,7 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 			} as Dumling.Reading<"de", StemRoute<Kind>["family"]>,
 			knowledge: {
 				definition: input.description.definition,
-				transcription: input.citation.ipa,
+				transcription: input.canonicalForm.ipa,
 				translations: {
 					en: [...input.description.en],
 					ru: [...input.description.ru],
