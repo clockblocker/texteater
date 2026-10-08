@@ -1,6 +1,7 @@
 import { ParsingError } from "common-utils/validation";
 import type * as Dumling from "dumling/types";
 import { contextualizeKnowledge, parseSource } from "./context.js";
+import type { KnowledgeParse } from "./types.js";
 import { parseKnowledgeShape } from "./validation.js";
 
 /**
@@ -11,7 +12,7 @@ import { parseKnowledgeShape } from "./validation.js";
 export function parseReadingKnowledge<const R extends Dumling.Reading>(input: {
 	source: R;
 	knowledge: unknown;
-}) {
+}): KnowledgeParse<R> {
 	const source = parseSource(input.source);
 	if (source instanceof ParsingError)
 		return { success: false, error: source } as const;

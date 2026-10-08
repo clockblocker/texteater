@@ -154,6 +154,7 @@
 	],
 	"battery/dumrel": [
 		"battery/dumrel/src/select-knowledge.ts: types KnowledgePolicyUnavailable",
+		"battery/dumrel/src/types.ts: types KnowledgeParse",
 		"battery/dumrel/src/types.ts: types KnowledgePolicyUnavailable",
 		"battery/dumrel/src/types.ts: types KnowledgeSelection"
 	]

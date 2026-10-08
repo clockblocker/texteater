@@ -122,6 +122,18 @@ export type ProjectionTargetCompatible = Projection["target"] extends
 	? true
 	: false;
 
+type _ParseIsNamed = Expect<
+	Equal<typeof parsed, Dumrel.KnowledgeParse<NounReading>>
+>;
+type _ChangeIsNamed = Expect<
+	Equal<typeof changed, Dumrel.KnowledgeParse<NounReading>>
+>;
+type _ParseReturnsNamed = Expect<
+	Equal<ReturnType<typeof parseReadingKnowledge>, Dumrel.KnowledgeParse>
+>;
+type _ChangeReturnsNamed = Expect<
+	Equal<ReturnType<typeof applyKnowledgeChange>, Dumrel.KnowledgeParse>
+>;
 type _SelectionIsNamed = Expect<
 	Equal<ReturnType<typeof selectKnowledge>, Dumrel.KnowledgeSelection>
 >;

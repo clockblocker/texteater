@@ -1,3 +1,4 @@
+import type { ParsingError } from "common-utils/validation";
 import type * as Dumling from "dumling/types";
 import type {
 	KnowledgeChange as CanonicalKnowledgeChange,
@@ -89,6 +90,14 @@ export type ReadingKnowledge<R extends Dumling.Reading = Dumling.Reading> = [
 	: Omit<CanonicalReadingKnowledge, "semanticRelations"> & {
 			semanticRelations?: SourceSemanticRelations<R>;
 		};
+
+/**
+ * What `parseReadingKnowledge` and `applyKnowledgeChange` answer: the Reading
+ * Knowledge, fresh and checked against its Reading, or why it failed.
+ */
+export type KnowledgeParse<R extends Dumling.Reading = Dumling.Reading> =
+	| { readonly success: true; readonly value: ReadingKnowledge<R> }
+	| { readonly success: false; readonly error: ParsingError };
 
 type SourceKnowledgeChange<
 	R extends Dumling.Reading,

@@ -6,6 +6,7 @@ import type { ConjugationClasses } from "./generated/types.js";
 import { parseReadingKnowledge } from "./parse-reading-knowledge.js";
 import type {
 	KnowledgeChange,
+	KnowledgeParse,
 	ReadingKnowledge,
 	SemanticRelations,
 	ValencyComplement,
@@ -34,7 +35,7 @@ export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
 	source: R;
 	knowledge: ReadingKnowledge<R>;
 	change: unknown;
-}) {
+}): KnowledgeParse<R> {
 	const source = parseSource(input.source);
 	if (source instanceof ParsingError)
 		return { success: false, error: source } as const;
