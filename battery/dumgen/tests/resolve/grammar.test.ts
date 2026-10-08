@@ -541,11 +541,13 @@ test("a stem's gender-only cells offer its Surface Syncretism, which an open ref
 	expect(
 		(
 			surface as { syncretized?: readonly Dumling.Surface[] }
-		).syncretized?.map(
-			(unit) =>
-				(unit as { inflectionalFeatures: { gender: string } })
-					.inflectionalFeatures.gender,
-		),
+		).syncretized?.map((unit) => {
+			const bag: Readonly<Record<string, unknown>> | null =
+				"inflectionalFeatures" in unit
+					? unit.inflectionalFeatures
+					: null;
+			return bag?.gender;
+		}),
 	).toEqual(["Masc", "Neut"]);
 	const cell = jev.sent[0]?.questions.cell as
 		| { criteria?: Record<string, string> }

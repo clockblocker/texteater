@@ -48,9 +48,11 @@ export function attestationSyncretismIssues(
 }
 
 type Bag = Readonly<Record<string, unknown>>;
-const bagOf = (surface: Dumling.Surface): Bag =>
-	((surface as { inflectionalFeatures?: unknown }).inflectionalFeatures ??
-		{}) as Bag;
+function bagOf(surface: Dumling.Surface): Bag {
+	const bag: Bag | null =
+		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
+	return bag ?? {};
+}
 
 /**
  * A stem's Surface Syncretism (system ADR 0046) is stored whole, and its

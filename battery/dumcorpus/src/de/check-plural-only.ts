@@ -15,17 +15,17 @@ export type PluralOnlyIssue = {
 export function attestationPluralOnlyIssues(
 	attestation: Dumling.Attestation<"de">,
 ): PluralOnlyIssue[] {
-	const { lemma } = attestation.surface;
+	const { surface } = attestation;
+	const { lemma } = surface;
 	if (
 		lemma.family !== "Lexeme" ||
 		lemma.kind !== "NOUN" ||
 		!isGermanPluralOnlyNoun(lemma.canonicalForm)
 	)
 		return [];
-	const core = lemma.coreFeatures as Readonly<Record<string, unknown>>;
-	const inflection = (
-		attestation.surface as { inflectionalFeatures?: unknown }
-	).inflectionalFeatures as Readonly<Record<string, unknown>> | null;
+	const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
+	const inflection: Readonly<Record<string, unknown>> | null =
+		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
 	const issues: PluralOnlyIssue[] = [];
 	if ((core.gender ?? null) !== null)
 		issues.push({

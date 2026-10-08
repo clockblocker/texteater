@@ -70,6 +70,13 @@ export type ReadingSet = {
 	readonly cases: readonly ReadingCase[];
 };
 
+/** A Surface's expletive feature, if its bag sets one. */
+function expletiveOf(surface: Dumling.Surface): unknown {
+	const bag: Readonly<Record<string, unknown>> | null =
+		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
+	return bag?.expletive;
+}
+
 /**
  * Existential es gibt (Sys ADR 0022): its giving Reading is offered too, and
  * neither the judge nor Luna may answer with the giving descriptions #694
@@ -85,8 +92,7 @@ const foldedCases: readonly {
 			surface.lemma.family === "Lexeme" &&
 			surface.lemma.kind === "VERB" &&
 			surface.lemma.canonicalForm === "geben" &&
-			(surface as { inflectionalFeatures?: { expletive?: unknown } })
-				.inflectionalFeatures?.expletive === "Subject",
+			expletiveOf(surface) === "Subject",
 		extra: ["🎁"],
 		rejected: ["🎁", "👉🎁"],
 	},
