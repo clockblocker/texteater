@@ -1,5 +1,6 @@
 import { isRecord } from "common-utils";
 import {
+	type CompiledValidationRegistry,
 	parseCompiledValidation,
 	type ValidationOperations,
 } from "common-utils/validation";
@@ -35,7 +36,7 @@ function mutations(value: unknown): unknown[] {
 }
 function targets(
 	packageName: string,
-	registry: import("common-utils/validation").CompiledValidationRegistry,
+	registry: CompiledValidationRegistry,
 	schemas: Record<string, z.ZodType>,
 	examples: Record<string, unknown[]>,
 	runtimeOperations: ValidationOperations = validationOperations,
