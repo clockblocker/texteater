@@ -14,7 +14,7 @@ export type JevPick =
 	| string
 	| { readonly choice: string; readonly confidence: number };
 
-export type SentJev = JevRequest & { readonly stage: string };
+type SentJev = JevRequest & { readonly stage: string };
 
 /**
  * A jev that answers each Choice by its question id from `answers`, a

@@ -55,7 +55,7 @@ export type Written = {
 };
 
 /** Whether Luna writes the unit's article beside its headword: a common NOUN Lexeme. */
-export const writesArticle = (target: Target) =>
+const writesArticle = (target: Target) =>
 	target.route.family === "Lexeme" && target.route.kind === "NOUN";
 
 const nounArticles = ["der", "die", "das", "none"] as const;
@@ -222,7 +222,7 @@ export function canonicalFormRequest(
 }
 
 /** ASCII `...` and a bare … become … with a space on each side (#705). */
-export const normalizedSlots = (form: string) =>
+const normalizedSlots = (form: string) =>
 	form
 		.replace(/\s*(?:\.\.\.|…)\s*/gu, " … ")
 		.replace(/\s+/gu, " ")

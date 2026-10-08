@@ -112,7 +112,7 @@ function keptApart(
  * possibly fixed word, between pieces of two units, neither a Saying, holding a bound piece, nor
  * one word the Rules keep apart.
  */
-export function mergeCandidates(
+function mergeCandidates(
 	nomination: Nomination,
 	membership: Pick<Membership, "partition" | "edges">,
 	bound: ReadonlySet<number>,
@@ -186,7 +186,7 @@ export function mergeCandidates(
 	);
 }
 
-export const mergeId = (candidate: MergeCandidate) =>
+const mergeId = (candidate: MergeCandidate) =>
 	`lc_${candidate.left.join("_")}_x_${candidate.right.join("_")}`;
 
 /** The pieces as written, with … where pieces outside them stand between. */
@@ -221,10 +221,7 @@ const memberCriteria = {
 };
 
 /** The pieces a merge would make one unit: both units and what they absorb. */
-export function mergedPieces(
-	nomination: Nomination,
-	merge: MergeCandidate,
-): number[] {
+function mergedPieces(nomination: Nomination, merge: MergeCandidate): number[] {
 	const members = new Set([...merge.left, ...merge.right]);
 	for (const edge of absorbedEdges(
 		nomination,
@@ -236,7 +233,7 @@ export function mergedPieces(
 }
 
 /** The `locution` request's questions: a Choice per unit of each merge. */
-export function locutionQuestions(
+function locutionQuestions(
 	nomination: Nomination,
 	merges: readonly MergeCandidate[],
 ): Questions {
@@ -282,7 +279,7 @@ export const askLocutionChoice = Effect.fnUntraced(function* (
 });
 
 /** The links the answers accept under `settings`, each joining two pieces. */
-export function acceptedMerges(
+function acceptedMerges(
 	located: LocutionAnswers,
 	settings: LocutionSettings,
 ): (readonly [number, number])[] {

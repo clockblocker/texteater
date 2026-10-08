@@ -36,7 +36,7 @@ export type KnowledgeModels = {
 };
 
 /** The Reading as every prompt names it: the sense boundary (#623). */
-export type ReadingView = {
+type ReadingView = {
 	readonly lemma: string;
 	readonly kind: string;
 	readonly family: string;

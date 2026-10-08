@@ -45,7 +45,7 @@ const formsSchema = (maxItems: number) =>
 
 // Plural (#657): Luna writes the forms while jev judges the plurality.
 
-export const pluralPrompt = [
+const pluralPrompt = [
 	shared.reading,
 	shared.evidence,
 	plural.task,
@@ -54,7 +54,7 @@ export const pluralPrompt = [
 	plural.output,
 ].join("\n");
 
-export const pluralQuestion = choice(plural.question, {
+const pluralQuestion = choice(plural.question, {
 	HasPlural: plural.hasPlural,
 	NoPlural: plural.noPlural,
 	PluralOnly: plural.pluralOnly,
@@ -125,7 +125,7 @@ function checked(
 
 // Conjugation Class (ADR 0038): Luna writes the Präteritum, code judges the stem.
 
-export const conjugationPrompt = [
+const conjugationPrompt = [
 	shared.reading,
 	shared.evidence,
 	conjugation.task,
@@ -170,7 +170,7 @@ export const produceConjugationClass = (
 
 // Participle Source (ADR 0036): Luna names the verb by form, jev checks it.
 
-export const participlePrompt = [
+const participlePrompt = [
 	shared.reading,
 	shared.evidence,
 	participle.task,
@@ -206,7 +206,7 @@ type SourceDraft = {
  * Whether the adjective is the source verb's participle: the Partizip II
  * Luna wrote, or the Partizip I, which is always the infinitive and -d.
  */
-export function isParticipleOf(
+function isParticipleOf(
 	adjective: string,
 	draft: Pick<SourceDraft, "verb" | "participle">,
 ): "PartizipI" | "PartizipII" | undefined {
@@ -253,7 +253,7 @@ function sourceDraftOf(output: unknown): SourceDraft | null | undefined {
 	};
 }
 
-export const participleQuestions = {
+const participleQuestions = {
 	form: choice(participle.formQuestion, {
 		Participle: participle.formYes,
 		NotParticiple: participle.formNo,
@@ -267,7 +267,7 @@ export const participleQuestions = {
 };
 
 /** The source verb's Lemma, with the identity Core Features grammar gives a verb. */
-export function sourceVerbLemma(
+function sourceVerbLemma(
 	draft: Pick<SourceDraft, "verb" | "reflexive" | "separablePrefix">,
 ): Dumling.Lemma<"de", "Lexeme", "VERB"> {
 	return {
@@ -358,7 +358,7 @@ export const produceParticipleSource = (
 // Locution Type, Saying Type and Formula Role (#669, #667): jev judges.
 
 /** The Locution Type options: Collocation only for a VERB (ADR 0039). */
-export const locutionTypeQuestion = (kind: string) =>
+const locutionTypeQuestion = (kind: string) =>
 	choice(locutionType.question, {
 		Idiom: locutionType.idiom,
 		...(kind === "VERB" ? { Collocation: locutionType.collocation } : {}),
@@ -383,12 +383,12 @@ export const produceLocutionType = (
 			: yield* checked(context, "locutionType", picked);
 	});
 
-export const sayingTypeQuestion = choice(sayingType.question, {
+const sayingTypeQuestion = choice(sayingType.question, {
 	Proverb: sayingType.proverb,
 	WingedWord: sayingType.wingedWord,
 });
 
-export const attributionPrompt = [
+const attributionPrompt = [
 	shared.reading,
 	sayingType.attribution,
 	sayingType.attributionOutput,
@@ -423,10 +423,7 @@ export const produceSayingType = (
 		});
 	});
 
-export const formulaRoleQuestion = choice(
-	formulaRole.question,
-	formulaRole.options,
-);
+const formulaRoleQuestion = choice(formulaRole.question, formulaRole.options);
 
 export const produceFormulaRole = (
 	context: AspectContext,

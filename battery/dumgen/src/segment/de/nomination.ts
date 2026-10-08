@@ -213,7 +213,7 @@ function matchedPairs(
 }
 
 /** Whether two fixed pieces belong to one expression, as `expressions` answered. */
-export type ExpressionLink = {
+type ExpressionLink = {
 	readonly left: number;
 	readonly right: number;
 	readonly probability: number;

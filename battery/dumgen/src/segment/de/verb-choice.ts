@@ -177,7 +177,7 @@ const participleShape =
 	/^(\p{Ll}*ge\p{Ll}{2,}(t|en|n)|(be|ver|er|ent|zer|emp|miss|über|unter|hinter|wider|voll|durch)\p{Ll}{2,}(t|en|n)|\p{Ll}+iert)$/u;
 
 /** The satellites whose slot named a host, one flag each, from the nomination alone. */
-export function flaggedVerbs(nomination: Nomination): VerbFlag[] {
+function flaggedVerbs(nomination: Nomination): VerbFlag[] {
 	lassenForms ??= auxiliaryForms("lassen");
 	bekommenForms ??= auxiliaryForms("bekommen");
 	const { pieces } = nomination.sentence;
@@ -245,7 +245,7 @@ export function flaggedVerbs(nomination: Nomination): VerbFlag[] {
 	return flags;
 }
 
-export const verbId = (flag: VerbFlag) =>
+const verbId = (flag: VerbFlag) =>
 	`v_${flag.family}_${flag.piece}_${flag.host}`;
 
 /** The perfect-auxiliary question of a `state` flag on a sein form. */
@@ -333,7 +333,7 @@ const instruction: Record<VerbFamily, (piece: string, host: string) => string> =
 	};
 
 /** The `verb` request's questions: a Choice per flag. */
-export function verbQuestions(
+function verbQuestions(
 	nomination: Nomination,
 	flags: readonly VerbFlag[],
 ): Questions {

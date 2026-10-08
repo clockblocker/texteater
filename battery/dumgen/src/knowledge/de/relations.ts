@@ -41,9 +41,9 @@ export const candidatePrompt = [
 ].join("\n");
 
 /** Candidates Luna may list per Reading. */
-export const maxCandidates = 12;
+const maxCandidates = 12;
 /** Claims a relation keeps (`de/relations-need-a-dictionary`). */
-export const maxPerRelation = 3;
+const maxPerRelation = 3;
 
 type KindName = keyof typeof kindDefinitions;
 
@@ -79,7 +79,7 @@ const kindsByFamily: Readonly<Record<string, readonly KindName[]>> = {
 };
 
 /** A candidate's Family, from the source's and its words (ADR 0039). */
-export function candidateFamily(
+function candidateFamily(
 	sourceFamily: string,
 	candidate: string,
 ): "Lexeme" | "Locution" | "Saying" {
@@ -89,7 +89,7 @@ export function candidateFamily(
 }
 
 /** The relation question of one candidate; the policy stays in the state. */
-export function relationQuestion(
+function relationQuestion(
 	candidate: string,
 	relations: readonly Dumrel.DirectSemanticRelation[],
 ): Question {
@@ -106,7 +106,7 @@ export function relationQuestion(
 }
 
 /** The Kind question of one candidate of a word or Locution Family. */
-export function kindQuestion(
+function kindQuestion(
 	candidate: string,
 	family: "Lexeme" | "Locution",
 ): Question {
@@ -122,7 +122,7 @@ export function kindQuestion(
 }
 
 /** The judge's state: the Reading, the policy and every definition, once. */
-export function judgmentState(
+function judgmentState(
 	context: AspectContext,
 	candidates: readonly string[],
 	relations: readonly Dumrel.DirectSemanticRelation[],

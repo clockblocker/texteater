@@ -6,7 +6,7 @@
  */
 
 /** One Segment of a fused word: the letters shown and the surface they stand for. */
-export type FusionComponent = {
+type FusionComponent = {
 	/** The letters of the source word this Segment displays; may be empty for a component with no letters of its own. */
 	readonly span: string;
 	/** The surface the letters stand for, or the candidate surfaces one intake Choice decides between. */
@@ -156,7 +156,7 @@ export const foldApostrophes = (text: string) =>
 	text.replaceAll(apostrophes, "'");
 
 /** Case-insensitive lookup of a fusion by its spelling; typographic apostrophes are normalized (`can’t`). */
-export function fusionEntry(
+function fusionEntry(
 	table: FusionTable,
 	form: string,
 ): FusionEntry | undefined {
@@ -169,10 +169,7 @@ export function fusionEntry(
  * the authored spans. The authored spans are NFC; a combining mark stays with
  * the letter before it, so an NFD `fu\u0308rs` still cuts after `für`.
  */
-export function fusedWordPieces(
-	entry: FusionEntry,
-	text: string,
-): readonly string[] {
+function fusedWordPieces(entry: FusionEntry, text: string): readonly string[] {
 	const characters = Array.from(text);
 	let position = 0;
 	return entry.components.map(({ span }, index) => {
@@ -400,47 +397,6 @@ export function fusedWordAt(
 	return run?.fusion && run.start === index
 		? run.spans.map((_, position) => index + position)
 		: undefined;
-}
-
-/**
- * The first ResolvableText Segment that is a whole fused word: a table fusion
- * (`im`, `won't`) or a host with its attached clitic (`geht's`, `I'll`) as one
- * Segment. Segmentation always splits one into its pieces (ADR 0035), so a
- * Sentence that still holds one did not come from Dumgen.
- */
-export function unsplitFusedWord(
-	table: FusionTable,
-	segments: readonly SegmentText[],
-): number | undefined {
-	const index = segments.findIndex(
-		(segment, position) =>
-			segment.kind === "ResolvableText" &&
-			splitFusedWord(table, segment.text) !== undefined &&
-			fusedRunAt(table, segments, position) === undefined,
-	);
-	return index === -1 ? undefined : index;
-}
-
-/**
- * A whole fused word as the Segments segmentation cuts it into: a table
- * fusion's pieces, each with the surface it stands for when the table names
- * one word (`won't` is `wo` standing for `will` and `n't` standing for
- * `not`), or a host and its attached clitic (`I'll` is `I` and `'ll`), each
- * keeping its own letters. Undefined for any other word.
- */
-export function splitFusedWord(
-	table: FusionTable,
-	text: string,
-): readonly { readonly text: string; readonly surface?: string }[] | undefined {
-	const fusion = fusedWordSegments(table, text);
-	if (fusion) return fusion;
-	const attached = splitClitic(table, text);
-	return (
-		attached && [
-			{ text: text.slice(0, attached.host.length) },
-			{ text: text.slice(attached.host.length) },
-		]
-	);
 }
 
 /**

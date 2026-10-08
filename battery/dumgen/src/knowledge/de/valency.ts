@@ -63,7 +63,7 @@ export const valencyPrompt = [
 type ComplementKind = Dumrel.GermanValencyComplement["kind"];
 
 /** A German Valency Slot: its status and its German complements. */
-export type GermanSlot = {
+type GermanSlot = {
 	readonly status: Dumrel.ValencySlotStatus;
 	readonly complements: readonly Dumrel.GermanValencyComplement[];
 };
@@ -143,7 +143,7 @@ const complementSchemas: Readonly<
 };
 
 /** The frame Luna answers under: only the route's complement kinds (#675). */
-export function frameSchema(kinds: readonly string[]) {
+function frameSchema(kinds: readonly string[]) {
 	return {
 		type: "object",
 		properties: {
@@ -181,7 +181,7 @@ export function frameSchema(kinds: readonly string[]) {
 }
 
 /** A preposition's ADP Lemma, as Grammatical Resolution writes it in `valencyEvidence`. */
-export const prepositionLemma = (
+const prepositionLemma = (
 	canonicalForm: string,
 ): Dumling.Lemma<"de", "Lexeme", "ADP"> =>
 	({
@@ -227,7 +227,7 @@ function slotProblem(slot: GermanSlot): string | undefined {
  * The Slots Dumrel accepts, checked one by one onto the ones kept before
  * them, and the ones it refused with why.
  */
-export function validFrame(
+function validFrame(
 	reading: Dumling.Reading<"de">,
 	slots: readonly unknown[],
 ): {
@@ -289,7 +289,7 @@ const coveredPrepositions = (frame: readonly GermanSlot[]) =>
  * preposition no complement covers comes in, with an Either referent: a
  * sentence shows neither whether the word needs it nor what fills it.
  */
-export function attestedSlots(
+function attestedSlots(
 	lemma: Dumling.Lemma<"de">,
 	proposed: readonly GermanSlot[],
 	evidence: readonly unknown[],

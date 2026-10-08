@@ -18,63 +18,22 @@ export {
 	type DumgenOptions,
 } from "./create-dumgen.js";
 export { InvalidModelOutput, ProviderFailure } from "./errors.js";
-export type {
-	GermanKnowledgeChange,
-	GermanPendingRelation,
-	KnowledgeAspect,
-	KnowledgeFailure,
-	KnowledgeOrigin,
-	KnowledgeProduction,
-	KnowledgeSentence,
-	ProduceKnowledgeInput,
-} from "./knowledge/types.js";
-export {
-	defaultLunaConfiguration,
-	type LunaAsk,
-	type LunaConfiguration,
-	type LunaRequest,
-	type LunaResponse,
-} from "./luna.js";
-export { createOpenAILuna, type OpenAILunaOptions } from "./openai-luna.js";
-export type {
-	BudgetWait,
-	CallFailure,
-	CallTrace,
-	OperationEvent,
-	OperationTrace,
-	ResolutionOutcome,
-	SentenceOutcome,
-} from "./operation-trace.js";
+export type { LunaAsk } from "./luna.js";
+export { createOpenAILuna } from "./openai-luna.js";
+export type { OperationTrace } from "./operation-trace.js";
 export type {
 	GrammarResolution,
-	LemmaCandidate,
-	NeighbourSentences,
 	ReadingResolution,
 	ResolveGrammarInput,
 	ResolveReadingInput,
 } from "./resolve/types.js";
-export type { Answer, Answers } from "./segment/ask.js";
-export type { GermanInventory } from "./segment/de/inventory.js";
-export type { InUnitsInput } from "./segment/in-units.js";
-export {
-	type JevAsk,
-	type JevRequest,
-	type JevResponse,
-	pinnedJevModel,
-	questionsPerRequest,
-} from "./segment/jev.js";
+export type { Answer } from "./segment/ask.js";
+export type { JevAsk, JevRequest } from "./segment/jev.js";
 export type {
-	ClosedClassIdentity,
 	Route,
-	Segment,
 	SegmentedSentence,
 	SegmentedText,
-	SegmentLanguage,
 	Unit,
 } from "./segment/segmented-sentence.js";
-export { type SplitText, splitText } from "./segment/split-text.js";
-export {
-	createTypeSafeAsk,
-	type Fetch,
-	type TypeSafeAskOptions,
-} from "./segment/typesafe-ask.js";
+export { splitText } from "./segment/split-text.js";
+export { createTypeSafeAsk } from "./segment/typesafe-ask.js";

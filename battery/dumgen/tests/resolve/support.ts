@@ -24,7 +24,7 @@ export const picked = (choice: string): Answer => ({
 	probabilities: { [choice]: 1 },
 });
 
-export type Sent = JevRequest & { readonly stage: string };
+type Sent = JevRequest & { readonly stage: string };
 
 /**
  * A jev that answers each Choice from `answers` by question id, and any

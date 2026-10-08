@@ -66,7 +66,7 @@ const rules = {
 } as const satisfies Readonly<Record<string, Cite>>;
 
 /** One registered paragraph: its name, its text or template, and what it cites. */
-export type PromptText = {
+type PromptText = {
 	readonly name: string;
 	readonly text: string;
 	readonly cites: readonly Cite[];

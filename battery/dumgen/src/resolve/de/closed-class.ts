@@ -105,7 +105,7 @@ function hasIdentity(member: AuthoredMember, identity: ClosedClassIdentity) {
  * says something (formal Sie); at the Sentence's start, or when nothing
  * matches exactly, spellings are compared without case.
  */
-export function matchingRealizations(
+function matchingRealizations(
 	identity: ClosedClassIdentity,
 	member: Member,
 	opensSentence: boolean,
@@ -193,7 +193,7 @@ function typoRealizations(
  * whose spelling is its members' words joined (ein wenig, was für ein):
  * such a unit carries no identity, and its joined spelling names it.
  */
-export function joinedRealizations(
+function joinedRealizations(
 	target: Target,
 	joined: string,
 ): readonly AuthoredRealization[] {
@@ -208,7 +208,7 @@ export function joinedRealizations(
 }
 
 /** The distinct cells the realizations leave, each with the realization it came from. */
-export function closedOptions(
+function closedOptions(
 	realizations: readonly MatchedRealization[],
 	text: string,
 ): readonly ClosedOption[] {
@@ -266,7 +266,7 @@ function differences(left: ClosedOption, right: ClosedOption): Set<string> {
  * Whether some two pronoun options differ only in what a referent decides
  * (ADR 0044). A determiner's cell is its noun's, which grammar settles.
  */
-export function referentDecides(options: readonly ClosedOption[]): boolean {
+function referentDecides(options: readonly ClosedOption[]): boolean {
 	if (options.some(({ member }) => member.lemma.kind !== "PRON"))
 		return false;
 	return options.some((left, index) =>
@@ -284,7 +284,7 @@ export function referentDecides(options: readonly ClosedOption[]): boolean {
  * The generated Syncretisms (ADR 0046) whose units are all among the
  * options' pillar cells: each is an answer that leaves the referent open.
  */
-export function syncretismOptions(
+function syncretismOptions(
 	options: readonly ClosedOption[],
 ): readonly AuthoredMember[] {
 	const cells = new Set(
@@ -302,7 +302,7 @@ export function syncretismOptions(
 }
 
 /** A stem's generated Surface Syncretism (ADR 0046) and the options that are its units. */
-export type StemOpenOption = {
+type StemOpenOption = {
 	readonly syncretism: StemSyncretism;
 	readonly units: readonly [ClosedOption, ClosedOption, ...ClosedOption[]];
 };
@@ -314,7 +314,7 @@ export type StemOpenOption = {
  * it means "everything", and an open referent never attests alle's singular
  * Syncretisms (Rule de/standalone-alles-means-everything).
  */
-export function stemSyncretismOptions(
+function stemSyncretismOptions(
 	options: readonly ClosedOption[],
 ): readonly StemOpenOption[] {
 	const open: StemOpenOption[] = [];

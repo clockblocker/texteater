@@ -206,7 +206,7 @@ function literalFlags(
 }
 
 /** The prepositions code asks about, one flag each, over a membership the code rules applied to. */
-export function flaggedPrepositions(
+function flaggedPrepositions(
 	nomination: Nomination,
 	membership: Membership,
 	rules: readonly CodeRule[],
@@ -295,7 +295,7 @@ export function flaggedPrepositions(
 	];
 }
 
-export const governmentId = (flag: GovernmentFlag) =>
+const governmentId = (flag: GovernmentFlag) =>
 	flag.family === "duel"
 		? `g_duel_${flag.host}_${(flag.rivals ?? []).join("_")}`
 		: `g_${flag.family}_${flag.piece}_${flag.host}`;
@@ -369,7 +369,7 @@ function wordingOf(nomination: Nomination, ids: readonly number[]): string {
 }
 
 /** The `government` request's questions: a Choice per flag. */
-export function governmentQuestions(
+function governmentQuestions(
 	nomination: Nomination,
 	membership: Membership,
 	flags: readonly GovernmentFlag[],
