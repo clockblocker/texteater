@@ -79,19 +79,7 @@ import { dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { messageOf } from "common-utils";
 import { compareRuns, loadRun } from "promptsmith/storage";
-import {
-	defaultLabRoot,
-	evaluateExperiment,
-	evaluationMetrics,
-	experimentRequests,
-	listExperiments,
-	parityWith,
-	productionPolicy,
-	spendsJev,
-	type UnitConfig,
-	unitConfigs,
-} from "../lab/evaluation/experiments.js";
-import { createOpenAILunaBatch } from "../lab/evaluation/luna-batch.js";
+import type { parityWith, UnitConfig } from "../lab/evaluation/experiments.js";
 import {
 	compareRequestRuns,
 	isRequestRun,
@@ -107,25 +95,8 @@ import type {
 } from "../lab/evaluation/resolve-grammar/models.js";
 import type { RoundCost } from "../lab/evaluation/resolve-grammar/pricing.js";
 import type { Splitter } from "../lab/evaluation/split-text.js";
-import { git } from "../lab/git.js";
 import { defaultRunOutputDirectory } from "../lab/run-directory.js";
-import { transportText } from "../lab/segmentation/harness/jev-cache.js";
-import {
-	appendLedger,
-	readLedger,
-} from "../lab/segmentation/harness/ledger.js";
-import {
-	enterRound,
-	guardProjectedSpend,
-	projectedSpend,
-	projectionText,
-	roundSpend,
-	stopLineOf,
-} from "../lab/segmentation/harness/round.js";
-import { loadLabRun } from "../lab/segmentation/harness/run.js";
-import { createOpenAILuna } from "../src/openai-luna.js";
 import type { JevAsk } from "../src/segment/jev.js";
-import { createTypeSafeAsk } from "../src/segment/typesafe-ask.js";
 
 const packageRoot = resolve(import.meta.dir, "..");
 
@@ -188,6 +159,9 @@ export async function runEvaluationCli(
 	if (positionals.length > 0 && !values.compare)
 		throw Error(`Unexpected argument ${positionals[0]}`);
 	if (values.list) {
+		const { listExperiments } = await import(
+			"../lab/evaluation/experiments.js"
+		);
 		const experiments = listExperiments();
 		write(experiments);
 		return experiments;
@@ -239,6 +213,18 @@ export async function runEvaluationCli(
 		);
 	if (!values.revision && !values.estimate)
 		throw Error("--revision is required to identify the evaluated source");
+	// Only a run loads the experiment table, the transports and the lab
+	// harness, and through them Dumgen's src. `--compare` and `--open` read
+	// saved runs alone, so a half-edited src file in a shared tree can't
+	// break them; `--list` loads the table but no transport (#1088).
+	const {
+		defaultLabRoot,
+		evaluateExperiment,
+		evaluationMetrics,
+		experimentRequests,
+		spendsJev,
+		unitConfigs,
+	} = await import("../lab/evaluation/experiments.js");
 	const units = (values.units ?? "production") as UnitConfig;
 	if (!unitConfigs.includes(units))
 		throw Error(`--units must be one of ${unitConfigs.join(", ")}`);
@@ -280,6 +266,28 @@ export async function runEvaluationCli(
 		write(summary);
 		return summary;
 	}
+	const { createOpenAILunaBatch } = await import(
+		"../lab/evaluation/luna-batch.js"
+	);
+	const { git } = await import("../lab/git.js");
+	const { transportText } = await import(
+		"../lab/segmentation/harness/jev-cache.js"
+	);
+	const { appendLedger, readLedger } = await import(
+		"../lab/segmentation/harness/ledger.js"
+	);
+	const {
+		enterRound,
+		guardProjectedSpend,
+		projectedSpend,
+		projectionText,
+		roundSpend,
+		stopLineOf,
+	} = await import("../lab/segmentation/harness/round.js");
+	const { createOpenAILuna } = await import("../src/openai-luna.js");
+	const { createTypeSafeAsk } = await import(
+		"../src/segment/typesafe-ask.js"
+	);
 	const labRoot = dependencies.labRoot ?? defaultLabRoot;
 	const evidenceRoot =
 		dependencies.evidenceRoot ??
@@ -679,6 +687,10 @@ async function parityOf(
 ) {
 	if (run.manifest.experimentId.endsWith(":raw"))
 		throw Error("--parity compares gold mode with a lab run");
+	const { parityWith, productionPolicy } = await import(
+		"../lab/evaluation/experiments.js"
+	);
+	const { loadLabRun } = await import("../lab/segmentation/harness/run.js");
 	const [labRunId = "", named] = value.split(":");
 	const labRun = await loadLabRun(labRoot, labRunId);
 	const policy =
