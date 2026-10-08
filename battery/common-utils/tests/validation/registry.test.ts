@@ -66,9 +66,9 @@ test("recursive rules and aliases share across owners without changing enum payl
 		},
 	);
 	const input = { tag: "ref", next: { tag: "missing" } };
-	expect(parseCompiledValidation<unknown>(consumer, "x", input)).toEqual(
-		input,
-	);
+	expect(
+		parseCompiledValidation<string, unknown>(consumer, "x", input),
+	).toEqual(input);
 	expect(Object.isFrozen(provider)).toBe(true);
 	expect(Object.isFrozen(provider.roots)).toBe(true);
 	expect("definitions" in provider).toBe(false);

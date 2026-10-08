@@ -1,6 +1,6 @@
 import { isRecord } from "common-utils";
 import {
-	type CompiledValidationRegistry,
+	hasRoot,
 	ParsingError,
 	parseCompiledValidation,
 } from "common-utils/validation";
@@ -32,7 +32,6 @@ type TypedChain<U extends Unit> = U extends unknown
 		}
 	: never;
 
-const registry: CompiledValidationRegistry = validationRegistry;
 function object(value: unknown): Record<string, unknown> | undefined {
 	return isRecord(value) ? value : undefined;
 }
@@ -84,10 +83,8 @@ export function parseUnit(
 			return failure([...lemmaPath, key], `Expected ${key}`);
 	}
 	const key = `${unitKind}/${lemma.language}/${lemma.family}/${lemma.kind}`;
-	const root = Object.hasOwn(registry.roots, key)
-		? registry.roots[key]
-		: undefined;
-	if (!root) return failure(lemmaPath, "Unsupported grammatical route");
+	if (!hasRoot(validationRegistry, key))
+		return failure(lemmaPath, "Unsupported grammatical route");
 	if (expected) {
 		if (expected.unitKind !== unitKind)
 			return failure(
@@ -102,7 +99,7 @@ export function parseUnit(
 				);
 	}
 	const value = parseCompiledValidation(
-		registry,
+		validationRegistry,
 		key,
 		input,
 		validationOperations,

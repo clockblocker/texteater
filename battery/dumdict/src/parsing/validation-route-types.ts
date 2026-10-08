@@ -33,76 +33,20 @@ export type DumdictValidationRouteKey =
 
 type InternalDumdictOwnedValidationRouteKey =
 	| "internal:knowledge-change"
-	| `internal:knowledge-change:bucket:${
-			| "definition"
-			| "morphological-tree"
-			| "semantic-relations"
-			| "transcription"
-			| "translations"}`
-	| `internal:knowledge-change:retract:${
-			| "definition"
-			| "morphological-tree"
-			| "semantic-relations"
-			| "transcription"
-			| "translations"}`
 	| "internal:pending-semantic-relation"
 	| `internal:reading:${Dumling.Language}`
-	| "internal:reading-knowledge"
-	| `internal:surface:${Dumling.Language}`;
+	| "internal:reading-knowledge";
 
 export type InternalDumdictValidationRouteKey =
 	InternalDumdictOwnedValidationRouteKey;
 
 type InternalDumdictValidationRouteOutputMap = {
 	"internal:knowledge-change": Dumrel.KnowledgeChange;
-	"internal:knowledge-change:bucket:definition": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "definition"; kind: "Contribute" | "Correct" }
-	>;
-	"internal:knowledge-change:bucket:morphological-tree": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "morphologicalTree"; kind: "Contribute" | "Correct" }
-	>;
-	"internal:knowledge-change:bucket:semantic-relations": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "semanticRelations"; kind: "Contribute" | "Correct" }
-	>;
-	"internal:knowledge-change:bucket:transcription": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "transcription"; kind: "Contribute" | "Correct" }
-	>;
-	"internal:knowledge-change:bucket:translations": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "translations"; kind: "Contribute" | "Correct" }
-	>;
-	"internal:knowledge-change:retract:definition": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "definition"; kind: "Retract" }
-	>;
-	"internal:knowledge-change:retract:morphological-tree": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "morphologicalTree"; kind: "Retract" }
-	>;
-	"internal:knowledge-change:retract:semantic-relations": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "semanticRelations"; kind: "Retract" }
-	>;
-	"internal:knowledge-change:retract:transcription": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "transcription"; kind: "Retract" }
-	>;
-	"internal:knowledge-change:retract:translations": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "translations"; kind: "Retract" }
-	>;
 	"internal:pending-semantic-relation": Dumrel.PendingSemanticRelation;
 	"internal:reading:de": ReadingEntry<"de">["reading"];
 	"internal:reading:en": ReadingEntry<"en">["reading"];
 	"internal:reading:he": ReadingEntry<"he">["reading"];
 	"internal:reading-knowledge": Dumrel.ReadingKnowledge;
-	"internal:surface:de": SurfaceEntry<"de">["surface"];
-	"internal:surface:en": SurfaceEntry<"en">["surface"];
-	"internal:surface:he": SurfaceEntry<"he">["surface"];
 };
 
 export type InternalDumdictValidationRouteOutput<

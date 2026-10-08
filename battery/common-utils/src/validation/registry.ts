@@ -58,10 +58,23 @@ export function bindValidationRegistry<Root extends string = string>(
 	return handle;
 }
 
-/** Parse with shared private rules, preserving the interpreter's exact behavior. */
-export function parseCompiledValidation<Output>(
-	registry: CompiledValidationRegistry,
-	root: string,
+/** Whether key names one of the registry's roots, narrowing it to that root. */
+export function hasRoot<Root extends string>(
+	registry: CompiledValidationRegistry<Root>,
+	key: string,
+): key is Root {
+	return Object.hasOwn(registry.roots, key);
+}
+
+/**
+ * Parse with shared private rules, preserving the interpreter's exact behavior.
+ * Root comes from the registry, so a misspelled root is a type error. Output is
+ * the caller's word for what the root validates: the validator was generated
+ * from that type, and this is the one place the two are trusted to agree.
+ */
+export function parseCompiledValidation<Root extends string, Output = unknown>(
+	registry: CompiledValidationRegistry<Root>,
+	root: NoInfer<Root>,
 	input: unknown,
 	operations: ValidationOperations = {},
 ): Output | ParsingError<Output> {

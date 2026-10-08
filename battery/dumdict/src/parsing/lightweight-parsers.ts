@@ -1,5 +1,4 @@
 import {
-	type CompiledValidationRegistry,
 	ParsingError,
 	type ParsingIssue,
 	parseCompiledValidation,
@@ -35,12 +34,9 @@ export function unwrapDumdictParse<T>(parsed: DumdictParse<T>): T {
 	if (parsed instanceof ParsingError) throw parsed;
 	return parsed;
 }
-const registry: CompiledValidationRegistry = validationRegistry;
-function parseRoute<T>(
-	input: unknown,
-	key: DumdictValidationRouteKey | InternalDumdictValidationRouteKey,
-): DumdictParse<T> {
-	const root = registry.roots[key];
+type RouteKey = DumdictValidationRouteKey | InternalDumdictValidationRouteKey;
+function parseRoute<T>(input: unknown, key: RouteKey): DumdictParse<T> {
+	const root = validationRegistry.roots[key];
 	if (!root)
 		return new ParsingError([
 			{
@@ -51,8 +47,8 @@ function parseRoute<T>(
 		]);
 	const recursiveIssue = recursiveInputIssueForRoute(input, key);
 	if (recursiveIssue) return new ParsingError([recursiveIssue]);
-	return parseCompiledValidation<T>(
-		registry,
+	return parseCompiledValidation<RouteKey, T>(
+		validationRegistry,
 		key,
 		input,
 		dumdictValidationOperations,
@@ -115,7 +111,6 @@ export function routeCanContainMorphologicalTree(
 		key.startsWith("parseAsReadingEntry:") ||
 		key.startsWith("parseAsReadingPatchOp:") ||
 		key === "internal:knowledge-change" ||
-		key === "internal:knowledge-change:bucket:morphological-tree" ||
 		key === "internal:reading-knowledge"
 	);
 }

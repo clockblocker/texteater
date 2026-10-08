@@ -1,5 +1,4 @@
 import {
-	type CompiledValidationRegistry,
 	type ParsingError,
 	parseCompiledValidation,
 	type ValidationOperations,
@@ -13,10 +12,14 @@ type Root =
 	| "knowledgeChange"
 	| "readingKnowledge"
 	| "knowledgeSelectionInput";
-const registry: CompiledValidationRegistry = validationRegistry;
 const operations: ValidationOperations = dumlingValidationOperations;
 function parse<T>(root: Root, input: unknown) {
-	return parseCompiledValidation<T>(registry, root, input, operations);
+	return parseCompiledValidation<Root, T>(
+		validationRegistry,
+		root,
+		input,
+		operations,
+	);
 }
 export const parseKnowledgeShape = (
 	input: unknown,

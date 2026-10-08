@@ -2,6 +2,7 @@ export { ParsingError, type ParsingIssue } from "./validation/parsing-error.js";
 export {
 	bindValidationRegistry,
 	type CompiledValidationRegistry,
+	hasRoot,
 	parseCompiledValidation,
 } from "./validation/registry.js";
 export {
