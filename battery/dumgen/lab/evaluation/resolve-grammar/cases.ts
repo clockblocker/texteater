@@ -17,14 +17,13 @@ import type * as Dumcorpus from "dumcorpus/types";
 import type * as Dumling from "dumling/types";
 import type {
 	ClosedClassIdentity,
-	Route,
 	SegmentedSentence,
 	Unit,
 } from "../../../src/segment/segmented-sentence.js";
 import { git } from "../../git.js";
 import { hashOf } from "../../segmentation/harness/jev-cache.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
-import { readSidecar } from "../spec-corpus/gold.js";
+import { goldRouteOf, readSidecar } from "../spec-corpus/gold.js";
 
 export type GrammarCase = {
 	/** `<record>#<target>`. */
@@ -67,9 +66,6 @@ function identityOf(lemma: Dumling.Lemma): ClosedClassIdentity | undefined {
 	};
 }
 
-const routeOf = (route: Dumcorpus.SpecRoute): Route =>
-	({ language: "de", family: route.family, kind: route.kind }) as Route;
-
 /** The cases of one record, one per target with an Attestation. */
 function casesOf(record: Dumcorpus.SpecRecord): GrammarCase[] {
 	const sentence: SegmentedSentence = {
@@ -81,7 +77,7 @@ function casesOf(record: Dumcorpus.SpecRecord): GrammarCase[] {
 		})),
 		units: record.targets.map((target) => ({
 			segments: [...target.memberSegmentIndices],
-			route: routeOf(target.route),
+			route: goldRouteOf(target.route),
 		})),
 	};
 	return record.targets.map((target, index) => {
@@ -93,7 +89,7 @@ function casesOf(record: Dumcorpus.SpecRecord): GrammarCase[] {
 			sentence,
 			unit: {
 				segments: [...target.memberSegmentIndices],
-				route: routeOf(target.route),
+				route: goldRouteOf(target.route),
 				...(identity ? { identity } : {}),
 			},
 			ideal: target.attestation as Dumling.Attestation<"de">,

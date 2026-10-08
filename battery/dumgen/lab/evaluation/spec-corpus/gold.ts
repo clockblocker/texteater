@@ -13,6 +13,10 @@ import {
 } from "dumcorpus";
 import type * as Dumcorpus from "dumcorpus/types";
 import { z } from "zod";
+import {
+	type Route,
+	segmentRouteOf,
+} from "../../../src/segment/segmented-sentence.js";
 
 const recordId = z.string().regex(/^[a-z]{2}(?:\/[a-z0-9-]+)+$/u);
 const text = z.string().trim().min(1);
@@ -71,6 +75,19 @@ export type Gold = {
 };
 
 const sidecarUrl = new URL("sidecar.json", import.meta.url);
+
+/**
+ * A gold target's route as the Route its unit is stored with. Every gold
+ * target is a German unit today, so a route no click takes throws.
+ */
+export function goldRouteOf(route: Dumcorpus.SpecRoute): Route {
+	const checked = segmentRouteOf(route);
+	if (checked === undefined)
+		throw Error(
+			`No click routes to ${route.language} ${route.family}/${route.kind}`,
+		);
+	return checked;
+}
 
 /** Reads and checks Dumgen's sidecar. */
 export function readSidecar(url: URL = sidecarUrl): Sidecar {

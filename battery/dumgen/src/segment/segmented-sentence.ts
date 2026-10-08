@@ -3,6 +3,7 @@
  * and the Segmented Sentence and Segmented Text they make up (Dumgen ADR
  * 0004, ADR 0007).
  */
+import { routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 
 /**
@@ -50,6 +51,18 @@ export type Route = {
 		};
 	}[UnitFamily<L>];
 }[SegmentLanguage];
+
+/**
+ * The Route a Dumling Lemma route names, as a fresh object, or undefined
+ * where no click routes: a language Dumgen doesn't run, or a Morpheme, which
+ * belongs to `segment.inMorphemes`.
+ */
+export function segmentRouteOf(route: Dumling.LemmaRoute): Route | undefined {
+	const fresh = routeOf(route);
+	if (fresh.language !== "de" || fresh.family === "Morpheme")
+		return undefined;
+	return fresh;
+}
 
 /**
  * The authored DET or PRON identity the route judge picked for a one-piece

@@ -15,7 +15,6 @@ import {
 import { auxiliaryUses } from "../../../src/resolve/de/prompts.js";
 import { targetOf } from "../../../src/resolve/de/target.js";
 import type { Answer, Answers } from "../../../src/segment/ask.js";
-import type { Route } from "../../../src/segment/segmented-sentence.js";
 import type { GrammarCase } from "./cases.js";
 
 type Values = Readonly<Record<string, unknown>>;
@@ -61,7 +60,7 @@ function option(question: Question, value: unknown): string {
 function cellAnswer(goldCase: GrammarCase, question: Question): string {
 	const { unit, ideal } = goldCase;
 	if (unit.route === "Unresolved") return "Unresolved";
-	const target = targetOf(goldCase.sentence, unit, unit.route as Route);
+	const target = targetOf(goldCase.sentence, unit, unit.route);
 	const { options } = authoredOptions(target, unit.identity);
 	const lemmaKey = lemmaIdentityKey(ideal.surface.lemma);
 	const bag = (

@@ -16,7 +16,7 @@ import {
 	draftsEmojiDescription,
 } from "../../src/resolve/reading.js";
 import type { JevAsk } from "../../src/segment/jev.js";
-import type { Route, Segment } from "../../src/segment/segmented-sentence.js";
+import type { Segment } from "../../src/segment/segmented-sentence.js";
 import {
 	attested,
 	fakeJev,
@@ -1848,7 +1848,8 @@ test("a Locution's or interjection's headword drops placeholders and members out
 	) => {
 		const sentence = sentenceOf(text);
 		const unit = unitOf(segments, family, kind);
-		return targetOf(sentence, unit, unit.route as Route);
+		if (unit.route === "Unresolved") throw Error("Expected a routed unit");
+		return targetOf(sentence, unit, unit.route);
 	};
 	const nose = at(
 		"Er tanzte ihr auf der Nase herum.",

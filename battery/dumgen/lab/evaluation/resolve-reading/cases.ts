@@ -24,14 +24,13 @@ import type * as Dumcorpus from "dumcorpus/types";
 import { lemmaIdentityKey, parseUnit, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import type {
-	Route,
 	SegmentedSentence,
 	Unit,
 } from "../../../src/segment/segmented-sentence.js";
 import { git } from "../../git.js";
 import { hashOf } from "../../segmentation/harness/jev-cache.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
-import { readSidecar } from "../spec-corpus/gold.js";
+import { goldRouteOf, readSidecar } from "../spec-corpus/gold.js";
 
 /** With the gold Reading among the candidates, or removed from them. */
 export type ReadingArm = "present" | "removed";
@@ -162,9 +161,6 @@ function goldOf(target: Target):
 	return { lemma, emojiDescription: parsedReading.emojiDescription };
 }
 
-const routeOf = (route: Dumcorpus.SpecRoute): Route =>
-	({ language: "de", family: route.family, kind: route.kind }) as Route;
-
 /** Every gold description of each Lemma across `records`, by its identity key. */
 function lemmaReadingsOf(
 	records: readonly Dumcorpus.SpecRecord[],
@@ -200,7 +196,7 @@ function casesOf(
 		})),
 		units: record.targets.map((target) => ({
 			segments: [...target.memberSegmentIndices],
-			route: routeOf(target.route),
+			route: goldRouteOf(target.route),
 		})),
 	};
 	return record.targets.flatMap((target, index) => {
@@ -222,7 +218,7 @@ function casesOf(
 				sentence,
 				unit: {
 					segments: [...target.memberSegmentIndices],
-					route: routeOf(target.route),
+					route: goldRouteOf(target.route),
 				},
 				attestation,
 				ideal: gold.emojiDescription,
