@@ -8,6 +8,7 @@ import type { LunaAsk } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
 import { guardedHeadword } from "../../src/resolve/de/headword-guards.js";
 import { verbHeadword } from "../../src/resolve/de/open-route/verbal.js";
+import { auxiliaryUses } from "../../src/resolve/de/prompts.js";
 import { generation } from "../../src/resolve/de/reading-prompts.js";
 import { targetOf } from "../../src/resolve/de/target.js";
 import {
@@ -1197,6 +1198,98 @@ test("perfect, future and passive come from the auxiliaries' uses; a Locution VE
 	expect(asked?.type === "choice" && asked.criteria.u0).toContain("perfect");
 	expect(jev.questions("grammar")).toContain("coverage");
 	expect(jev.questions("grammar")).not.toContain("prefix");
+});
+
+/**
+ * A jev that answers each auxiliary question `uses` names with the option
+ * of that authored AUX use (`werden 🔄`), found by its text in
+ * `auxiliaryUses`, and every other question as `fakeJev` does.
+ */
+const auxiliaryJev = (uses: Readonly<Record<string, string>>): JevAsk => {
+	return (request, context) =>
+		fakeJev(
+			Object.fromEntries(
+				Object.entries(uses).flatMap(([id, use]) => {
+					const asked = request.questions[id];
+					if (!asked) return [];
+					const option =
+						asked.type === "choice"
+							? Object.entries(asked.criteria).find(
+									([, text]) => text === auxiliaryUses[use],
+								)?.[0]
+							: undefined;
+					if (option === undefined)
+						throw Error(`${id} offers no ${use}`);
+					return [[id, option]];
+				}),
+			),
+		).ask(request, context);
+};
+
+test("auxiliary uses that set the passive or the causative differently do not compose, while the same use twice does", async () => {
+	const click = (
+		sentence: string,
+		segments: number[],
+		uses: Readonly<Record<string, string>>,
+		lemma: string,
+	) =>
+		resolveOnce(
+			{ jev: auxiliaryJev(uses), luna: writes(lemma).ask },
+			{
+				sentence: sentenceOf(sentence),
+				unit: unitOf(segments, "Lexeme", "VERB"),
+			},
+		);
+	const clash = {
+		outcome: "Unresolved",
+		reason: "The auxiliaries' uses do not compose",
+	} as const;
+	// Er0 _1 wird2 _3 singen4 _5 lassen6 .7: a process passive and a causative.
+	const causative = await click(
+		"Er wird singen lassen.",
+		[2, 4, 6],
+		{ aux_m0: "werden 🔄", aux_m2: "lassen 🗣👉" },
+		"singen",
+	);
+	expect(causative.result).toEqual({ _tag: "Unresolved" });
+	expect(causative.trace?.resolution).toEqual(clash);
+	// Er0 _1 wird2 _3 geschenkt4 _5 bekommen6 .7: a process and a recipient passive.
+	const recipient = await click(
+		"Er wird geschenkt bekommen.",
+		[2, 4, 6],
+		{ aux_m0: "werden 🔄", aux_m2: "bekommen 🎁" },
+		"schenken",
+	);
+	expect(recipient.result).toEqual({ _tag: "Unresolved" });
+	expect(recipient.trace?.resolution).toEqual(clash);
+	// Das0 _1 Haus2 _3 wird4 _5 gebaut6 _7 worden8 _9 sein10 .11
+	const composed = await click(
+		"Das Haus wird gebaut worden sein.",
+		[4, 6, 8, 10],
+		{ aux_m0: "werden 🔮", aux_m2: "werden 🔄", aux_m3: "sein 🏁" },
+		"bauen",
+	);
+	expect(
+		attested(composed.result).surface.inflectionalFeatures,
+	).toMatchObject({
+		perfect: "Yes",
+		future: "Yes",
+		voice: "Pass",
+		passive: "Process",
+	});
+	// Er0 _1 wird2 _3 gelobt4 _5 werden6 .7, each werden judged the process passive.
+	const twice = await click(
+		"Er wird gelobt werden.",
+		[2, 4, 6],
+		{ aux_m0: "werden 🔄", aux_m2: "werden 🔄" },
+		"loben",
+	);
+	expect(attested(twice.result).surface.inflectionalFeatures).toMatchObject({
+		perfect: null,
+		future: null,
+		voice: "Pass",
+		passive: "Process",
+	});
 });
 
 test("a subject es whose verb jev answers in the plural makes the click Unresolved", async () => {
