@@ -155,12 +155,11 @@ function goldOf(target: Target):
 		lemma,
 		emojiDescription: reading.emojiDescription,
 	});
-	if (!parsed.success) return undefined;
-	return {
-		lemma,
-		emojiDescription: (parsed.chain.value as { emojiDescription: string })
-			.emojiDescription,
-	};
+	if (!parsed.success || parsed.chain.unitKind !== "Reading")
+		return undefined;
+	const parsedReading = parsed.chain.value;
+	if (!("emojiDescription" in parsedReading)) return undefined;
+	return { lemma, emojiDescription: parsedReading.emojiDescription };
 }
 
 const routeOf = (route: Dumcorpus.SpecRoute): Route =>

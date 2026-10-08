@@ -1782,9 +1782,13 @@ describe("German PART (#734)", () => {
 				},
 			},
 		});
-		if (!parsed.success || parsed.chain.unitKind !== "Attestation")
+		if (
+			!parsed.success ||
+			parsed.chain.unitKind !== "Attestation" ||
+			parsed.chain.language !== "de"
+		)
 			throw Error(`Expected a PART Attestation of ${canonicalForm}`);
-		return parsed.chain.value as Dumling.Attestation<"de">;
+		return parsed.chain.value;
 	};
 
 	test("the closed-PART check passes an authored PART and fails any other", () => {
@@ -1852,9 +1856,13 @@ describe("plural-only nouns", () => {
 				},
 			},
 		});
-		if (!parsed.success || parsed.chain.unitKind !== "Attestation")
+		if (
+			!parsed.success ||
+			parsed.chain.unitKind !== "Attestation" ||
+			parsed.chain.language !== "de"
+		)
 			throw Error(`Expected a NOUN Attestation of ${canonicalForm}`);
-		return parsed.chain.value as Dumling.Attestation<"de">;
+		return parsed.chain.value;
 	};
 
 	test("each listed Pluraletantum cites its Duden page, once", () => {

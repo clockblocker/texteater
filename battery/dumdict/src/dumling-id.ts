@@ -22,7 +22,7 @@ export function makeSurfaceId<L extends Dumling.Language>(
 	if (!result.success) throw result.error;
 	if (result.chain.language !== language)
 		throw new Error("Unit language does not match the dictionary");
-	const parsed = result.chain.value as Dumling.Surface;
+	const parsed = result.chain.value;
 	return canonicalJson({
 		...parsed,
 		lemma: lemmaIdentityKey(parsed.lemma),

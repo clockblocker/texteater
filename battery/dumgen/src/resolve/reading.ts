@@ -164,9 +164,10 @@ export function parsedDescription(
 		lemma,
 		emojiDescription: value.trim(),
 	});
-	if (!parsed.success) return undefined;
-	return (parsed.chain.value as { emojiDescription: string })
-		.emojiDescription;
+	if (!parsed.success || parsed.chain.unitKind !== "Reading")
+		return undefined;
+	const reading = parsed.chain.value;
+	return "emojiDescription" in reading ? reading.emojiDescription : undefined;
 }
 
 /** One option the judge sees: an Emoji Description, and whether dumcorpus authors it. */

@@ -11,7 +11,6 @@
 
 import { closedRoute } from "dumcorpus/inventories";
 import { isSyncretism, lemmaIdentityKey, parseUnit } from "dumling";
-import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import type { OperationScope } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
@@ -211,11 +210,12 @@ export const resolveGermanGrammar = Effect.fnUntraced(function* (
 	const { chain } = parsed;
 	if (
 		chain.unitKind !== "Attestation" ||
+		chain.language !== "de" ||
 		chain.family !== route.family ||
 		chain.kind !== route.kind
 	)
 		throw Error("The Attestation left the unit's route");
-	const attestation = chain.value as Dumling.Attestation<"de">;
+	const attestation = chain.value;
 	// A draft that is no Emoji Description is dropped: should the Reading
 	// need one, `resolve.reading` asks Luna for it.
 	const drafted =

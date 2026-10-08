@@ -47,7 +47,7 @@ function parseReadingCounts(
 			);
 		if (parsed.chain.unitKind !== "Lemma")
 			return issue([...path, "lemma", "unitKind"], "Expected a Lemma");
-		const normalized = parsed.chain.value as Dumling.Lemma;
+		const normalized = parsed.chain.value;
 		const identity = key(normalized);
 		if (byLemma.has(identity))
 			return issue([...path, "lemma"], "Duplicate Lemma Reading count");

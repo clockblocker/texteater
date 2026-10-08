@@ -27,6 +27,8 @@ export function parseSource<R extends Dumling.Reading>(
 	if (!parsed.success) return parsed.error;
 	if (parsed.chain.unitKind !== "Reading")
 		return issue(["source", "unitKind"], "Expected a Dumling Reading");
+	// A generic R reaches parseUnit's typed overload only through its
+	// constraint, so the chain's value is every Reading, not this caller's R.
 	return parsed.chain.value as R;
 }
 
@@ -44,13 +46,18 @@ function parseRelatedUnit<R extends Dumling.Reading>(
 				path: [...path, ...entry.path],
 			})),
 		);
-	if (parsed.chain.unitKind !== unitKind)
-		return issue([...path, "unitKind"], `Expected a Dumling ${unitKind}`);
-	const target = parsed.chain.value as Dumling.Lemma | Dumling.Reading;
-	const lemma =
+	const { chain } = parsed;
+	const target =
 		unitKind === "Lemma"
-			? (target as Dumling.Lemma)
-			: (target as Dumling.Reading).lemma;
+			? chain.unitKind === "Lemma"
+				? chain.value
+				: undefined
+			: chain.unitKind === "Reading"
+				? chain.value
+				: undefined;
+	if (!target)
+		return issue([...path, "unitKind"], `Expected a Dumling ${unitKind}`);
+	const lemma = target.unitKind === "Lemma" ? target : target.lemma;
 	if (lemma.language !== source.lemma.language)
 		return issue(
 			[...path, "language"],
@@ -182,16 +189,17 @@ function parseValencyComplement<R extends Dumling.Reading>(
 				path: [...path, "preposition", ...entry.path],
 			})),
 		);
-	const preposition = parsed.chain.value as Dumling.Lemma;
+	const { chain } = parsed;
 	if (
-		parsed.chain.unitKind !== "Lemma" ||
-		preposition.family !== "Lexeme" ||
-		preposition.kind !== "ADP"
+		chain.unitKind !== "Lemma" ||
+		chain.family !== "Lexeme" ||
+		chain.kind !== "ADP"
 	)
 		return issue(
 			[...path, "preposition"],
 			"A governed preposition must be an ADP Lemma",
 		);
+	const preposition = chain.value;
 	if (preposition.language !== source.lemma.language)
 		return issue(
 			[...path, "preposition", "language"],
@@ -285,13 +293,14 @@ function parseParticipleSource<R extends Dumling.Reading>(
 				path: [...verbPath, ...entry.path],
 			})),
 		);
-	const verb = parsed.chain.value as Dumling.Lemma;
+	const { chain } = parsed;
 	if (
-		parsed.chain.unitKind !== "Lemma" ||
-		verb.family !== "Lexeme" ||
-		verb.kind !== "VERB"
+		chain.unitKind !== "Lemma" ||
+		chain.family !== "Lexeme" ||
+		chain.kind !== "VERB"
 	)
 		return issue(verbPath, "A Participle Source must be a VERB Lemma");
+	const verb = chain.value;
 	if (verb.language !== source.lemma.language)
 		return issue(
 			[...verbPath, "language"],

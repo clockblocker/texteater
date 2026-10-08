@@ -118,6 +118,7 @@ function parsed<K extends "Lemma" | "Reading">(
 		);
 	if (result.chain.unitKind !== unitKind)
 		throw Error(`${label}: expected a ${unitKind}`);
+	// The unitKind check cannot narrow a value typed by a conditional on K.
 	return result.chain.value as K extends "Lemma"
 		? Lemma
 		: AuthoredMember["reading"];

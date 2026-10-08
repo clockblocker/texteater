@@ -19,6 +19,7 @@ export function parseUnitAs<
 		throw new Error(
 			`Expected a Dumling ${unitKind}${language ? ` in ${language}` : ""}.`,
 		);
+	// Runtime unitKind and language checks cannot narrow the generic Unit<U, L>.
 	return parsed.chain.value as Dumling.Unit<U, L>;
 }
 

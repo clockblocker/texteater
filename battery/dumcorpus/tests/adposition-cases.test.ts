@@ -63,9 +63,13 @@ function adpAttestation(
 						},
 		},
 	});
-	if (!parsed.success || parsed.chain.unitKind !== "Attestation")
+	if (
+		!parsed.success ||
+		parsed.chain.unitKind !== "Attestation" ||
+		parsed.chain.language !== "de"
+	)
 		throw Error(`Dumling rejects ${canonicalForm} + ${realizedCase}`);
-	return parsed.chain.value as Dumling.Attestation<"de">;
+	return parsed.chain.value;
 }
 
 test("an ADP occurrence takes a case one of its positions allows", () => {
@@ -320,7 +324,7 @@ test("the table finds a circumposition, a Locution ADP, written with … or ASCI
 		});
 		if (!parsed.success || parsed.chain.unitKind !== "Lemma")
 			throw Error(`Dumling rejects ${canonicalForm}`);
-		return parsed.chain.value as Dumling.Lemma<"de", "Locution", "ADP">;
+		return parsed.chain.value;
 	};
 	const ascii = circumposition("um ... willen");
 	expect(ascii).toEqual(circumposition("um … willen"));
@@ -419,11 +423,15 @@ test("a Locution governor's preposition slot is checked like a Lexeme's", () => 
 				},
 			},
 		});
-		if (!parsed.success || parsed.chain.unitKind !== "Attestation")
+		if (
+			!parsed.success ||
+			parsed.chain.unitKind !== "Attestation" ||
+			parsed.chain.language !== "de"
+		)
 			throw Error(
 				`Dumling rejects Angst haben ${preposition} + ${grammaticalCase}`,
 			);
-		return parsed.chain.value as Dumling.Attestation<"de">;
+		return parsed.chain.value;
 	};
 	expect(attestationAdpositionCaseIssues(locution("vor", "Dat"))).toEqual([]);
 	expect(attestationAdpositionCaseIssues(locution("vor", "Gen"))).toEqual([

@@ -53,9 +53,13 @@ function attest(input: Record<string, unknown>): Dumling.Attestation<"de"> {
 		valencyEvidence: [],
 		...input,
 	});
-	if (!parsed.success || parsed.chain.unitKind !== "Attestation")
+	if (
+		!parsed.success ||
+		parsed.chain.unitKind !== "Attestation" ||
+		parsed.chain.language !== "de"
+	)
 		throw Error(`Dumling rejects ${JSON.stringify(input)}`);
-	return parsed.chain.value as Dumling.Attestation<"de">;
+	return parsed.chain.value;
 }
 const issues = (evidence: { attested: string; orthography: string }) =>
 	attestationExpletiveSpellingIssues(
