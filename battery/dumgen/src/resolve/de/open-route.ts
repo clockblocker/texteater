@@ -15,20 +15,14 @@
  * Table allows one.
  */
 
-import {
-	germanAdpositionAllowedCases,
-	germanAdpositionEntry,
-	germanParticles,
-	isGermanPluralOnlyNoun,
-} from "dumcorpus/inventories";
-import { lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import type * as Scope from "effect/Scope";
 import type { OperationScope } from "../../call.js";
+import type { LunaRequest } from "../../luna.js";
 import { askLuna, type LunaSettings } from "../../luna-call.js";
-import type { Ask, AskFailure } from "../../segment/ask.js";
+import type { Answers, Ask, AskFailure } from "../../segment/ask.js";
 import { draftsEmojiDescription } from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
 import {
@@ -39,28 +33,24 @@ import {
 	type Written,
 } from "./canonical-form.js";
 import { guardedHeadword } from "./headword-guards.js";
-import { attestedMember, type MemberOrthography } from "./member-spelling.js";
-import { numeralWord } from "./numeral.js";
+import type { MemberOrthography } from "./member-spelling.js";
 import {
 	type AdpositionPlan,
 	askAdposition,
 	readAdposition,
 } from "./open-route/adposition.js";
 import {
-	type AdverbialInflection,
 	type AdverbialPlan,
-	adverbHeadword,
+	adverbialHeadword,
 	askAdverbial,
-	ordinalStem,
 	readAdverbial,
-	suppletivePositive,
 } from "./open-route/adverbial.js";
 import {
 	type AgreeingPlan,
-	type Agreement,
 	askAgreeing,
 	readAgreeing,
 } from "./open-route/agreeing.js";
+import { type Headword, openAttestation } from "./open-route/attestation.js";
 import {
 	askHead,
 	askTail,
@@ -77,15 +67,18 @@ import {
 	askNominal,
 	caseQuestion,
 	type NominalPlan,
-	type NounInflection,
-	nounCells,
+	nominalCells,
 	type OpeningArticle,
 	openingArticle,
 	readNominal,
 } from "./open-route/nominal.js";
 import {
+	digitsHeadword,
+	numeralLocutionHeadword,
+} from "./open-route/numeral.js";
+import { authoredParticle, particlesSpelled } from "./open-route/particle.js";
+import {
 	type AdpCase,
-	fold,
 	routeShape,
 	type Shape,
 	spellingOf,
@@ -95,19 +88,13 @@ import {
 	askVerbal,
 	readVerbal,
 	type VerbalPlan,
-	type VerbInflection,
 	verbalSatellites,
 	verbGuessMisses,
 	verbHeadword,
 } from "./open-route/verbal.js";
 import type { CaseOption } from "./prompts.js";
 import { Answered, Questionnaire, UnresolvedAnswer } from "./questions.js";
-import {
-	fixedSpelling,
-	joinMembers,
-	type Target,
-	targetState,
-} from "./target.js";
+import { fixedSpelling, type Target, targetState } from "./target.js";
 
 /** What an open-route click comes to before it is checked against Dumling. */
 export type OpenOutcome =
@@ -314,80 +301,6 @@ function readFirst(
 	};
 }
 
-/** The inflection an open route's Surface may take. */
-type OpenInflection =
-	| VerbInflection
-	| NounInflection
-	| AdverbialInflection
-	| Agreement;
-
-/** An open route's Attestation, in parts typed as Dumling's generated types give them. */
-type AttestationParts = {
-	readonly canonicalForm: string;
-	readonly coreFeatures: Dumling.Lemma<"de">["coreFeatures"];
-	readonly normalizedSurface: string;
-	readonly spelling: Spelling;
-	readonly surfaceFeatures: SurfaceFeatures;
-	/** Absent on a route that does not inflect. */
-	readonly inflectionalFeatures: OpenInflection | null | undefined;
-	readonly members: readonly Dumling.Attestation<"de">["members"][number][];
-	readonly realizationCoverage: "Full" | "Partial";
-	readonly articleEvidence?: Dumling.Attestation<
-		"de",
-		"Lexeme",
-		"NOUN"
-	>["articleEvidence"];
-	readonly expletiveEvidence?: Dumling.Attestation<
-		"de",
-		"Lexeme",
-		"VERB"
-	>["expletiveEvidence"];
-	readonly valencyEvidence?: readonly ValencyEvidence[];
-};
-
-/**
- * The Attestation its parts make on the unit's route. TypeScript cannot
- * tie the parts to the route's family and kind, which arrive at runtime,
- * so the value leaves unchecked: `parseUnit` in grammar.ts checks it
- * against the route, and one Dumling rejects is a Defect (#952).
- */
-function attestationOn(
-	route: Target["route"],
-	parts: AttestationParts,
-): unknown {
-	const {
-		canonicalForm,
-		coreFeatures,
-		normalizedSurface,
-		spelling,
-		surfaceFeatures,
-		inflectionalFeatures,
-		...attested
-	} = parts;
-	return {
-		unitKind: "Attestation",
-		surface: {
-			unitKind: "Surface",
-			language: "de",
-			lemma: {
-				unitKind: "Lemma",
-				language: "de",
-				family: route.family,
-				kind: route.kind,
-				canonicalForm,
-				coreFeatures,
-			},
-			normalizedSurface,
-			spelling,
-			surfaceFeatures,
-			...(inflectionalFeatures === undefined
-				? {}
-				: { inflectionalFeatures }),
-		},
-		...attested,
-	};
-}
-
 /** Settles a synchronous reading, an Unresolved deciding answer included. */
 function settle<T>(read: () => T): T | UnresolvedAnswer {
 	try {
@@ -399,16 +312,178 @@ function settle<T>(read: () => T): T | UnresolvedAnswer {
 }
 
 /**
- * The authored PART Lemmas whose Canonical Form is `form`, compared
- * without case; a Lemma's several Readings count once.
+ * What Luna reads once jev has judged: the members' orthographies, the
+ * judged features, the members outside the headword, the auxiliaries
+ * judged as such, and the readings.
  */
-const particlesSpelled = (form: string) => [
-	...new Map(
-		germanParticles
-			.filter((member) => fold(member.lemma.canonicalForm) === fold(form))
-			.map((member) => [lemmaIdentityKey(member.lemma), member]),
-	).values(),
-];
+function judgedOf(
+	planned: Plan,
+	first: FirstRead,
+	answered: Answered,
+	outsideHeadword: ReadonlySet<number>,
+): Judged {
+	return {
+		orthographies: first.orthographies,
+		features: {
+			...first.core,
+			...first.tailCore,
+			...(first.inflection ? { inflection: first.inflection } : {}),
+		},
+		outsideHeadword,
+		auxiliaries: new Set(
+			(planned.verbal?.auxiliaries ?? []).flatMap(
+				({ member, use: asked }) => {
+					const use = answered.peek(asked);
+					return use === undefined || use === "Main"
+						? []
+						: [member.position];
+				},
+			),
+		),
+		readings: first.readings,
+	};
+}
+
+/** The first request, sent only when it asks something. */
+function grammarRequest(
+	ask: Ask,
+	state: ReturnType<typeof targetState>,
+	questionnaire: Questionnaire,
+): Effect.Effect<Answers, AskFailure> {
+	return questionnaire.empty
+		? Effect.succeed({})
+		: ask({
+				stage: "grammar",
+				state: { ...state, policy: questionnaire.policyBlock() },
+				questions: questionnaire.questions,
+			});
+}
+
+/** The Case question over the cells still open, asked only when more than one is. */
+function caseRequest(
+	ask: Ask,
+	state: ReturnType<typeof targetState>,
+	open: readonly CaseOption[],
+): Effect.Effect<CaseOption | UnresolvedAnswer | undefined, AskFailure> {
+	return open.length > 1
+		? Effect.gen(function* () {
+				const questionnaire = new Questionnaire();
+				const asked = caseQuestion(questionnaire, open);
+				const answered = yield* ask({
+					stage: "case",
+					state: {
+						...state,
+						policy: questionnaire.policyBlock(),
+					},
+					questions: questionnaire.questions,
+				});
+				return settle(() => new Answered(answered).pick(asked));
+			})
+		: Effect.succeed(undefined);
+}
+
+/**
+ * The headword: Luna's Canonical Form and members' words, over which each
+ * route shape's step writes what the Rules settle, in this order: a VERB
+ * Lexeme's prefix and sich, a PART's authored Lemma, a numeral Locution's
+ * members or a Locution's guarded headword, a NUM's digits, an ADV's or
+ * ADJ's. A PART no authored Lemma names is a Catalog Miss.
+ */
+function canonicalFormOf(
+	target: Target,
+	shape: Shape,
+	first: FirstRead,
+	cells: Dumling.Lemma<"de">["coreFeatures"],
+	written: Written | undefined,
+	judged: Judged,
+): Headword | Extract<OpenOutcome, { readonly _tag: "CatalogMiss" }> {
+	let core = cells;
+	let canonicalForm =
+		written && first.block === "verbal" && shape.lexeme
+			? verbHeadword(written.canonicalForm, first.core)
+			: written?.canonicalForm;
+	const normalized = [
+		...(written?.members ??
+			target.members.map(
+				(member) =>
+					fixedSpelling(member, first.readings) ?? member.text,
+			)),
+	];
+	if (target.route.kind === "PART") {
+		const authored = authoredParticle(target, written);
+		if ("_tag" in authored) return authored;
+		core = { ...authored.lemma.coreFeatures };
+		canonicalForm = authored.lemma.canonicalForm;
+		if (!written) normalized[0] = authored.lemma.canonicalForm;
+	}
+	const { outsideHeadword } = judged;
+	if (canonicalForm !== undefined)
+		canonicalForm =
+			numeralLocutionHeadword(
+				target,
+				canonicalForm,
+				normalized,
+				outsideHeadword,
+			) ??
+			guardedHeadword(
+				target,
+				canonicalForm,
+				new Set([...outsideHeadword, ...(judged.auxiliaries ?? [])]),
+			);
+	canonicalForm = digitsHeadword(target) ?? canonicalForm;
+	if (first.block === "adverbial") {
+		const derived = adverbialHeadword(
+			target,
+			shape,
+			first.orthographies,
+			first.inflection?.degree,
+			canonicalForm,
+			normalized,
+		);
+		canonicalForm = derived.canonicalForm;
+		for (const [position, word] of derived.members)
+			normalized[position] = word;
+	}
+	if (canonicalForm === undefined)
+		throw Error("No Canonical Form was written");
+	return { canonicalForm, core, normalized };
+}
+
+/**
+ * Luna's headword once jev has judged. The guessed answer stands when jev
+ * changed nothing Luna reads and, on a VERB Lexeme, judged away no sich or
+ * prefix the guessed headword carries; otherwise Luna writes again with
+ * jev's answers.
+ */
+function rewritten(
+	scope: OperationScope,
+	write: (judged: Judged) => Effect.Effect<Written, AskFailure>,
+	request: (judged: Judged) => Omit<LunaRequest, "configuration">,
+	guessed:
+		| {
+				readonly judged: Judged;
+				readonly fiber: Fiber.Fiber<Written, AskFailure>;
+		  }
+		| undefined,
+	judged: Judged,
+	verbMisses: ((form: string) => string | undefined) | undefined,
+): Effect.Effect<Written, AskFailure> {
+	return Effect.gen(function* () {
+		if (!guessed) return yield* write(judged);
+		let missed = guessMisses(request(guessed.judged), request(judged));
+		if (missed) yield* Fiber.interrupt(guessed.fiber);
+		else {
+			const written = yield* Fiber.join(guessed.fiber);
+			missed = verbMisses?.(written.canonicalForm);
+			if (!missed) return written;
+		}
+		scope.event({
+			name: "CanonicalRewritten",
+			data: { reason: missed },
+		});
+		return yield* write(judged);
+	});
+}
 
 /**
  * Resolves a unit on an open route: the grammar request, with Luna's call
@@ -451,301 +526,84 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	const guess = guessed
 		? yield* Effect.forkScoped(write(guessed), { startImmediately: true })
 		: undefined;
-	const answers = planned.questionnaire.empty
-		? {}
-		: yield* ask({
-				stage: "grammar",
-				state: {
-					...state,
-					policy: planned.questionnaire.policyBlock(),
-				},
-				questions: planned.questionnaire.questions,
-			});
+	const answers = yield* grammarRequest(ask, state, planned.questionnaire);
 	const first = settle(() =>
 		readFirst(target, planned, new Answered(answers)),
 	);
 	if (first instanceof UnresolvedAnswer)
 		return { _tag: "Unresolved", reason: first.reason };
 	const verbal = first.block === "verbal" ? first : undefined;
-	const nominal = first.block === "nominal" ? first : undefined;
-	const firstCore = { ...first.core, ...first.tailCore };
 	const article = planned.article;
 	const outsideHeadword = new Set<number>([
 		...(article ? [article.member.position] : []),
 		...first.governedPositions,
 	]);
-	const judged: Judged = {
-		orthographies: first.orthographies,
-		features: {
-			...firstCore,
-			...(first.inflection ? { inflection: first.inflection } : {}),
-		},
+	const judged = judgedOf(
+		planned,
+		first,
+		new Answered(answers),
 		outsideHeadword,
-		auxiliaries: new Set(
-			(planned.verbal?.auxiliaries ?? []).flatMap(
-				({ member, use: asked }) => {
-					const use = new Answered(answers).peek(asked);
-					return use === undefined || use === "Main"
-						? []
-						: [member.position];
-				},
-			),
-		),
-		readings: first.readings,
-	};
-	const caseRequestOver = (open: readonly CaseOption[]) =>
-		open.length > 1
-			? Effect.gen(function* () {
-					const questionnaire = new Questionnaire();
-					const asked = caseQuestion(questionnaire, open);
-					const answered = yield* ask({
-						stage: "case",
-						state: {
-							...state,
-							policy: questionnaire.policyBlock(),
-						},
-						questions: questionnaire.questions,
-					});
-					return settle(() => new Answered(answered).pick(asked));
-				})
-			: Effect.succeed(undefined);
-	const caseRequest = caseRequestOver(nominal?.openCases ?? []);
-	// The guessed answer stands when jev changed nothing Luna reads;
-	// otherwise Luna writes again with jev's answers.
+	);
 	const writing: Effect.Effect<Written | undefined, AskFailure> =
 		particleSpelled.length === 1 && first.orthographies[0] === "Standard"
 			? Effect.succeed(undefined)
-			: Effect.gen(function* () {
-					if (!guess || !guessed) return yield* write(judged);
-					let missed = guessMisses(request(guessed), request(judged));
-					if (missed) yield* Fiber.interrupt(guess);
-					else {
-						const written = yield* Fiber.join(guess);
-						missed =
-							verbal && shape.lexeme
-								? verbGuessMisses(
-										written.canonicalForm,
-										verbal.core,
-										planned.verbal?.prefixes ?? [],
-									)
-								: undefined;
-						if (!missed) return written;
-					}
-					scope.event({
-						name: "CanonicalRewritten",
-						data: { reason: missed },
-					});
-					return yield* write(judged);
-				});
-	// A common NOUN's gender is the article Luna writes with its headword
-	// when it fits the Sentence's article; its Case is asked over the cells
-	// that gender leaves, after Luna.
-	let cells: {
-		readonly core: Dumling.Lemma<"de">["coreFeatures"];
-		readonly inflection: OpenInflection | null | undefined;
-		readonly openCases: readonly CaseOption[];
-	} = {
-		core: firstCore,
-		inflection: first.inflection,
-		openCases: nominal?.openCases ?? [],
-	};
-	let caseAnswer: CaseOption | UnresolvedAnswer | undefined;
-	let written: Written | undefined;
-	if (nominal?.noun && nominal.inflection) {
-		written = yield* writing;
-		// A noun with no singular has gender null, whatever article Luna
-		// wrote (Rule de/plural-only-noun-has-no-gender): dumcorpus lists the
-		// Pluraletantum nouns Duden gives only in the plural.
-		const article =
-			written && isGermanPluralOnlyNoun(written.canonicalForm)
-				? "none"
-				: written?.article;
-		cells = nounCells(planned.article, nominal, article) ?? cells;
-		if (cells.openCases.length === 0)
-			return {
-				_tag: "Unresolved",
-				reason: "The article agrees with no case of its head",
-			};
-		caseAnswer = yield* caseRequestOver(cells.openCases);
-	} else
-		[caseAnswer, written] = yield* Effect.all([caseRequest, writing], {
-			concurrency: "unbounded",
-		});
-	if (caseAnswer instanceof UnresolvedAnswer)
-		return { _tag: "Unresolved", reason: caseAnswer.reason };
-	const inflection =
-		caseAnswer === undefined || !cells.inflection
-			? cells.inflection
+			: rewritten(
+					scope,
+					write,
+					request,
+					guess && guessed
+						? { judged: guessed, fiber: guess }
+						: undefined,
+					judged,
+					verbal && shape.lexeme
+						? (form) =>
+								verbGuessMisses(
+									form,
+									verbal.core,
+									planned.verbal?.prefixes ?? [],
+								)
+						: undefined,
+				);
+	const cells =
+		first.block === "nominal"
+			? yield* nominalCells(article, first, writing, (open) =>
+					caseRequest(ask, state, open),
+				)
 			: {
-					...cells.inflection,
-					case: caseAnswer === "Unmarked" ? null : caseAnswer,
+					written: yield* writing,
+					core: { ...first.core, ...first.tailCore },
+					inflection: first.inflection,
 				};
-	let core = cells.core;
-	let canonicalForm =
-		written && verbal && shape.lexeme
-			? verbHeadword(written.canonicalForm, verbal.core)
-			: written?.canonicalForm;
-	const normalized = [
-		...(written?.members ??
-			target.members.map(
-				(member) =>
-					fixedSpelling(member, first.readings) ?? member.text,
-			)),
-	];
-	if (target.route.kind === "PART") {
-		const spelled =
-			written?.canonicalForm ?? (opening && spellingOf(opening));
-		const [authored, ...others] =
-			spelled === undefined ? [] : particlesSpelled(spelled);
-		if (!authored || others.length > 0)
-			return {
-				_tag: "CatalogMiss",
-				message: authored
-					? "Several authored particles share this spelling"
-					: "No authored particle has this spelling",
-			};
-		core = { ...authored.lemma.coreFeatures };
-		canonicalForm = authored.lemma.canonicalForm;
-		if (!written) normalized[0] = authored.lemma.canonicalForm;
-	}
-	// A numeral Locution has no open slot: a … Luna writes in it (von … bis …)
-	// cites a dictionary pattern, not this unit, whose headword is its
-	// members' words, digits spelled (zehn bis zwölf; Rules
-	// de/canonical-form-is-the-headword, de/digits-spell-the-numeral).
-	if (
-		canonicalForm !== undefined &&
-		target.route.family === "Locution" &&
-		target.route.kind === "NUM" &&
-		canonicalForm.split(" ").includes("…")
-	)
-		canonicalForm = joinMembers(
-			normalized.map((word) => numeralWord(word) ?? word),
-			target.glued,
-			outsideHeadword,
-		);
-	else if (canonicalForm !== undefined)
-		canonicalForm = guardedHeadword(
-			target,
-			canonicalForm,
-			new Set([...outsideHeadword, ...(judged.auxiliaries ?? [])]),
-		);
-	// Digits spell their numeral word (Rule de/digits-spell-the-numeral).
-	const [only] = target.members;
-	const spelledNumber =
-		target.route.family === "Lexeme" &&
-		target.route.kind === "NUM" &&
-		target.members.length === 1 &&
-		only
-			? numeralWord(only.text)
-			: undefined;
-	if (spelledNumber !== undefined) canonicalForm = spelledNumber;
-	if (shape.adverbial && shape.lexeme && canonicalForm !== undefined) {
-		const derived = adverbHeadword(target, first.orthographies, normalized);
-		if (derived) {
-			canonicalForm = derived.canonicalForm;
-			for (const [position, word] of derived.members)
-				normalized[position] = word;
-		}
-	}
-	// A compared form of a suppletive adverb cites its positive (lieber is
-	// gern; Rules de/comparability-is-lexical, de/canonical-form-is-the-headword).
-	const degree =
-		first.block === "adverbial" ? first.inflection?.degree : undefined;
-	if (
-		shape.adverbial &&
-		shape.lexeme &&
-		(degree === "Cmp" || degree === "Sup")
-	) {
-		const last = target.members[target.members.length - 1];
-		const positive = last && suppletivePositive.get(fold(last.text));
-		if (positive) canonicalForm = positive;
-	}
-	// An ordinal is cited in its attributive headword (erste; Rule
-	// de/attributive-adjective-stands-alone).
-	if (
-		shape.adjectival &&
-		shape.lexeme &&
-		canonicalForm !== undefined &&
-		ordinalStem.test(canonicalForm)
-	)
-		canonicalForm = `${canonicalForm}e`;
-	if (canonicalForm === undefined)
-		throw Error("No Canonical Form was written");
-	// The subject es is the authored es, whatever its position's capital.
-	const expletive = verbal?.expletive;
-	if (expletive) normalized[expletive.position] = "es";
-	const normalizedSurface = shape.foreign
-		? canonicalForm
-		: joinMembers(normalized, target.glued, outsideHeadword);
-	// A member piece whose table names no word stands for its own word, in
-	// the spelling Luna wrote for it (geht of geht's).
-	const pieceReadings = new Map(first.readings);
-	for (const member of target.members)
-		if (
-			member.spelling?.orthography === "Fused" &&
-			member.spelling.surfaces.length === 0 &&
-			!pieceReadings.has(member.segment)
-		)
-			pieceReadings.set(
-				member.segment,
-				normalized[member.position] ?? member.text,
-			);
-	const members = target.members.map((member) =>
-		attestedMember(
-			target.segments,
-			member.segment,
-			first.orthographies[member.position] ?? "Standard",
-			pieceReadings,
-		),
+	if (cells instanceof UnresolvedAnswer)
+		return { _tag: "Unresolved", reason: cells.reason };
+	const { written } = cells;
+	const headword = canonicalFormOf(
+		target,
+		shape,
+		first,
+		cells.core,
+		written,
+		judged,
 	);
-	const expletiveEvidence = expletive ? members[expletive.position] : null;
-	if (expletiveEvidence === undefined)
-		throw Error("The subject es is no member of the unit");
-	const realizedCase =
-		first.block === "adposition" ? first.realizedCase : undefined;
-	const valencyEvidence: ValencyEvidence[] = [...first.governed];
-	if (shape.adposition && realizedCase && realizedCase !== "None") {
-		const table = shape.locution
-			? germanAdpositionEntry({ family: "Locution", canonicalForm })
-			: null;
-		const [sole, ...more] = table
-			? germanAdpositionAllowedCases(table)
-			: [];
-		const realized =
-			sole !== undefined && more.length === 0 ? sole : realizedCase;
-		valencyEvidence.push({
-			member: null,
-			complement: {
-				kind: "Case",
-				governedCase: realized,
-				referent: "Either",
-			},
-			realizedCase: realized,
-		});
-	}
-	const attestation = attestationOn(target.route, {
-		canonicalForm,
-		coreFeatures: core,
-		normalizedSurface,
-		spelling: shape.foreign ? { kind: "Canonical" } : first.spelling,
-		surfaceFeatures: shape.foreign ? null : first.surfaceFeatures,
-		inflectionalFeatures: inflection,
-		members,
-		realizationCoverage: first.coverage,
-		// A NOUN Locution's evidence is optional: it names only an owned article.
-		...(shape.articleOwner && (shape.lexeme || article)
-			? {
-					articleEvidence: article
-						? { kind: "Owned", member: article.member.position }
-						: null,
-				}
-			: {}),
-		...(shape.verbal ? { expletiveEvidence } : {}),
-		...(shape.governor || shape.adposition ? { valencyEvidence } : {}),
-	});
+	if ("_tag" in headword) return headword;
 	return {
 		_tag: "Attestation",
-		attestation,
+		attestation: openAttestation(
+			target,
+			shape,
+			article,
+			{
+				...first,
+				realizedCase:
+					first.block === "adposition"
+						? first.realizedCase
+						: undefined,
+				expletive: verbal?.expletive,
+				inflection: cells.inflection,
+			},
+			headword,
+			outsideHeadword,
+		),
 		...(written?.drafted === undefined ? {} : { drafted: written.drafted }),
 	};
 }, Effect.scoped);

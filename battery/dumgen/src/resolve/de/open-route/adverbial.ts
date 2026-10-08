@@ -150,7 +150,7 @@ export const suppletivePositive: ReadonlyMap<string, string> = new Map(
 );
 
 /** An ordinal's stem without its ending, as Luna writes it bare (erst, zweit). */
-export const ordinalStem =
+const ordinalStem =
 	/^(erst|zweit|dritt|viert|fünft|sechst|siebt|neunt|zehnt|elft|zwölft|(drei|vier|fünf|sech|sieb|acht|neun)zehnt|(zwanzig|dreißig|vierzig|fünfzig|sechzig|siebzig|achtzig|neunzig|hundert|tausend)st)$/u;
 
 /**
@@ -177,7 +177,7 @@ export const bareWWords: ReadonlySet<string> = (() => {
  * dr- adverb, an r- adverb whose her- or hin- word was judged) is the
  * headword (de/dr-adverb-is-da-shorthand, de/r-adverb-is-her-or-hin-shorthand).
  */
-export function adverbHeadword(
+function adverbHeadword(
 	target: Target,
 	orthographies: readonly MemberOrthography[],
 	spelled: readonly string[],
@@ -217,4 +217,44 @@ export function adverbHeadword(
 		/^\p{L}+$/u.test(fixed)
 		? { canonicalForm: fold(fixed), members: new Map() }
 		: undefined;
+}
+
+/**
+ * An ADV's or ADJ's Canonical Form over the one Luna wrote, and the
+ * members it respells: `adverbHeadword`'s for an ADV, the positive of a
+ * suppletive adverb's compared form (lieber is gern; Rules
+ * de/comparability-is-lexical, de/canonical-form-is-the-headword), and an
+ * ordinal's attributive headword (erste; Rule
+ * de/attributive-adjective-stands-alone). A Locution keeps Luna's.
+ */
+export function adverbialHeadword(
+	target: Target,
+	shape: Shape,
+	orthographies: readonly MemberOrthography[],
+	degree: AdverbialInflection["degree"] | undefined,
+	written: string | undefined,
+	spelled: readonly string[],
+): {
+	readonly canonicalForm: string | undefined;
+	readonly members: ReadonlyMap<number, string>;
+} {
+	let canonicalForm = written;
+	let members: ReadonlyMap<number, string> = new Map();
+	if (!shape.lexeme) return { canonicalForm, members };
+	if (shape.adverbial && canonicalForm !== undefined) {
+		const derived = adverbHeadword(target, orthographies, spelled);
+		if (derived) ({ canonicalForm, members } = derived);
+	}
+	if (shape.adverbial && (degree === "Cmp" || degree === "Sup")) {
+		const last = target.members[target.members.length - 1];
+		const positive = last && suppletivePositive.get(fold(last.text));
+		if (positive) canonicalForm = positive;
+	}
+	if (
+		shape.adjectival &&
+		canonicalForm !== undefined &&
+		ordinalStem.test(canonicalForm)
+	)
+		canonicalForm = `${canonicalForm}e`;
+	return { canonicalForm, members };
 }

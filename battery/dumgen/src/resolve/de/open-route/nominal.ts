@@ -1,16 +1,19 @@
 /**
  * A NOUN's opening article, the cases it leaves open, and its block of the
  * first request: its gender, kind and number questions, its Case question
- * when the article leaves the same cases open whatever the agreement, and
- * the reading of their answers.
+ * when the article leaves the same cases open whatever the agreement, the
+ * reading of their answers, and its cells and Case once Luna has written
+ * its headword.
  */
 
 import {
 	type ArticleMember,
 	germanArticleCell,
 	germanArticleSpellings,
+	isGermanPluralOnlyNoun,
 } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
+import * as Effect from "effect/Effect";
 import type { Written } from "../canonical-form.js";
 import {
 	ambiguousPieces,
@@ -30,7 +33,7 @@ import type { Member, Target } from "../target.js";
 import { cases, type Gender, genderOfArticle, type Shape } from "./shape.js";
 
 /** A NOUN's or PROPN's Core Features. */
-export type NounCore = Dumling.Lemma<
+type NounCore = Dumling.Lemma<
 	"de",
 	"Lexeme" | "Locution",
 	"NOUN" | "PROPN"
@@ -228,7 +231,7 @@ export function askNominal(
 }
 
 /** A used common NOUN's number and the gender jev saw its form show, for Luna's article. */
-export type NounRead = {
+type NounRead = {
 	readonly number: NonNullable<NounInflection["number"]>;
 	readonly shown: Gender | null;
 	readonly earlyCase: CaseOption | undefined;
@@ -260,6 +263,14 @@ function nounCore(nominal: NominalPlan, answered: Answered): NounCore {
 	return article === undefined ? { gender } : { article, gender };
 }
 
+/** What a NOUN's block settles in the first request, and the cases still open. */
+export type NominalRead = {
+	readonly core: NounCore;
+	readonly inflection: NounInflection | null;
+	readonly openCases: readonly CaseOption[];
+	readonly noun: NounRead | undefined;
+};
+
 /**
  * Reads a NOUN's block: its Core Features and, when it is used rather than
  * cited, its cells and the cases still open.
@@ -270,12 +281,7 @@ export function readNominal(
 	nominal: NominalPlan,
 	answered: Answered,
 	cited: boolean,
-): {
-	readonly core: NounCore;
-	readonly inflection: NounInflection | null;
-	readonly openCases: readonly CaseOption[];
-	readonly noun: NounRead | undefined;
-} {
+): NominalRead {
 	let core = nounCore(nominal, answered);
 	if (cited)
 		return { core, inflection: null, openCases: [], noun: undefined };
@@ -363,13 +369,9 @@ export function readNominal(
  * article agrees with in no case, or none for a singular form whose
  * gender jev saw no form show, or one that rules out a Case jev answered.
  */
-export function nounCells(
+function nounCells(
 	owned: OpeningArticle | undefined,
-	first: {
-		readonly core: NounCore;
-		readonly inflection: NounInflection | null;
-		readonly noun: NounRead | undefined;
-	},
+	first: NominalRead,
 	article: Written["article"],
 ):
 	| {
@@ -408,5 +410,81 @@ export function nounCells(
 					: null,
 		},
 		openCases,
+	};
+}
+
+/** A NOUN's Core Features and cells once its Case is settled, and what Luna wrote. */
+export type NominalCells = {
+	readonly written: Written | undefined;
+	readonly core: NounCore;
+	readonly inflection: NounInflection | null;
+};
+
+/**
+ * A NOUN's cells and its Case, with Luna's headword. A used common NOUN's
+ * gender is the article Luna writes with its headword when it fits the
+ * Sentence's article, so Luna is awaited first and the Case is asked over
+ * the cells that gender leaves; any other NOUN's Case is asked beside
+ * Luna. `caseOver` asks the Case question over the cells still open, and
+ * asks nothing when one or none is.
+ */
+export const nominalCells = <Failure>(
+	owned: OpeningArticle | undefined,
+	first: NominalRead,
+	writing: Effect.Effect<Written | undefined, Failure>,
+	caseOver: (
+		open: readonly CaseOption[],
+	) => Effect.Effect<CaseOption | UnresolvedAnswer | undefined, Failure>,
+): Effect.Effect<NominalCells | UnresolvedAnswer, Failure> =>
+	Effect.gen(function* () {
+		if (first.noun && first.inflection) {
+			const written = yield* writing;
+			// A noun with no singular has gender null, whatever article Luna
+			// wrote (Rule de/plural-only-noun-has-no-gender): dumcorpus lists the
+			// Pluraletantum nouns Duden gives only in the plural.
+			const article =
+				written && isGermanPluralOnlyNoun(written.canonicalForm)
+					? "none"
+					: written?.article;
+			const cells = nounCells(owned, first, article) ?? {
+				core: first.core,
+				inflection: first.inflection,
+				openCases: first.openCases,
+			};
+			if (cells.openCases.length === 0)
+				return new UnresolvedAnswer(
+					"The article agrees with no case of its head",
+				);
+			const caseAnswer = yield* caseOver(cells.openCases);
+			return withCase(cells, caseAnswer, written);
+		}
+		const [caseAnswer, written] = yield* Effect.all(
+			[caseOver(first.openCases), writing],
+			{ concurrency: "unbounded" },
+		);
+		return withCase(first, caseAnswer, written);
+	});
+
+/** A NOUN's cells with the Case answered over them, Unmarked as none. */
+function withCase(
+	cells: {
+		readonly core: NounCore;
+		readonly inflection: NounInflection | null;
+	},
+	caseAnswer: CaseOption | UnresolvedAnswer | undefined,
+	written: Written | undefined,
+): NominalCells | UnresolvedAnswer {
+	if (caseAnswer instanceof UnresolvedAnswer) return caseAnswer;
+	const { core, inflection } = cells;
+	return {
+		written,
+		core,
+		inflection:
+			caseAnswer === undefined || !inflection
+				? inflection
+				: {
+						...inflection,
+						case: caseAnswer === "Unmarked" ? null : caseAnswer,
+					},
 	};
 }
