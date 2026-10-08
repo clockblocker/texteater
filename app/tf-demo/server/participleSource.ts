@@ -1,3 +1,4 @@
+import { routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import { selectKnowledge } from "dumrel";
 
@@ -17,9 +18,6 @@ export function asksParticipleSource(
 			? Reflect.get(options.knowledge, "participleSource")
 			: undefined;
 	if (stored) return false;
-	const { language, family, kind } = reading.lemma;
-	const selected = selectKnowledge({
-		route: { language, family, kind } as never,
-	});
+	const selected = selectKnowledge({ route: routeOf(reading.lemma) });
 	return selected.success && selected.value.participleSource === null;
 }

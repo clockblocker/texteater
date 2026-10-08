@@ -52,6 +52,7 @@ test("built operational entrypoint has no schema or compiler dependency", async 
 		"normalizeForm",
 		"parseUnit",
 		"readingIdentityKey",
+		"routeOf",
 		"sameLemma",
 		"sameReading",
 		"syncretismView",

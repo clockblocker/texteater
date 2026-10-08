@@ -1,3 +1,4 @@
+import { routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
@@ -18,14 +19,8 @@ export function generationRequestFor(
 		readonly topUpOnly?: boolean;
 	} = {},
 ) {
-	const {
-		unitKind: _unitKind,
-		canonicalForm: _canonicalForm,
-		coreFeatures: _coreFeatures,
-		...route
-	} = reading.lemma;
 	const selected = selectKnowledge({
-		route,
+		route: routeOf(reading.lemma),
 		settings: {
 			translations: Object.fromEntries(
 				(["en", "ru"] as const).map((language) => [

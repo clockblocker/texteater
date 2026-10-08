@@ -17,7 +17,7 @@
  */
 
 import { authoredReading, closedRoute } from "dumcorpus/inventories";
-import { lemmaIdentityKey } from "dumling";
+import { lemmaIdentityKey, routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import { selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
@@ -249,14 +249,8 @@ export const produceGermanKnowledge = <E>(
 		const problem = badInput(input);
 		if (problem) return yield* Effect.die(Error(problem));
 		const { reading, attestation, request } = input;
-		const { language, family, kind } = reading.lemma;
-		const selected = selectKnowledge({
-			route: {
-				language,
-				family,
-				kind,
-			} as Dumrel.KnowledgeSelectionInput["route"],
-		});
+		const { family, kind } = reading.lemma;
+		const selected = selectKnowledge({ route: routeOf(reading.lemma) });
 		if (!selected.success)
 			return yield* Effect.die(
 				Error(`No German Knowledge Policy for ${family} ${kind}`),
