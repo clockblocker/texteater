@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { sameLemma } from "dumling";
+import { isSyncretism, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { createDumgen } from "../../src/create-dumgen.js";
@@ -538,10 +538,12 @@ test("a stem's gender-only cells offer its Surface Syncretism, which an open ref
 		syncretic: ["gender"],
 		inflectionalFeatures: { case: "Dat", number: "Sing", gender: null },
 	});
+	const syncretism =
+		result._tag === "Resolved" ? result.attestation.surface : undefined;
+	if (syncretism === undefined || !isSyncretism(syncretism))
+		throw Error("Expected a Surface Syncretism");
 	expect(
-		(
-			surface as { syncretized?: readonly Dumling.Surface[] }
-		).syncretized?.map((unit) => {
+		syncretism.syncretized.map((unit) => {
 			const bag: Readonly<Record<string, unknown>> | null =
 				"inflectionalFeatures" in unit
 					? unit.inflectionalFeatures
