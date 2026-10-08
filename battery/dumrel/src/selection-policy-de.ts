@@ -1,3 +1,4 @@
+import type { KnowledgePolicy } from "./knowledge-policies.js";
 import type { KnowledgeRequestMask } from "./types.js";
 
 type SemanticRelation = keyof NonNullable<
@@ -194,7 +195,7 @@ const makeDeRelMap = () =>
 			Suffix: request(select()),
 			Suffixoid: request(select()),
 		},
-	}) satisfies Record<string, Record<string, KnowledgeRequestMask>>;
+	}) satisfies KnowledgePolicy<"de">;
 
 /** Fully materialized German policy; no runtime inheritance remains. */
 export const DE_REL_MAP = makeDeRelMap();
