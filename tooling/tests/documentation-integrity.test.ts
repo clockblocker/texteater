@@ -17,7 +17,7 @@ import {
 	formatDocumentationIssue,
 	glossaryMapStructureIssues,
 	glossaryStructureIssues,
-	isAdrCitationSourcePath,
+	isAdrCitationScanPath,
 	isDeveloperDocumentationPath,
 	isEmptyScaffoldingContent,
 	isProtectedDeveloperDocument,
@@ -340,23 +340,22 @@ test("allows a bare ADR citation and the present-tense Amends", () => {
 	).toEqual([]);
 });
 
-test("scans non-Markdown files under app, battery and tooling, skipping the rule itself and binaries", async () => {
+test("scans code, tests and records under app, battery and tooling, skipping the rule itself, package READMEs and binaries", async () => {
 	expect(
-		isAdrCitationSourcePath("battery/dumcorpus/records/de/x.json"),
+		isAdrCitationScanPath("battery/dumcorpus/records/de/x.json"),
 	).toBeTrue();
-	expect(isAdrCitationSourcePath("app/tf-demo/convex/schema.ts")).toBeTrue();
-	expect(isAdrCitationSourcePath("tooling/knip.ts")).toBeTrue();
+	expect(isAdrCitationScanPath("app/tf-demo/convex/schema.ts")).toBeTrue();
+	expect(isAdrCitationScanPath("tooling/knip.ts")).toBeTrue();
 	expect(
-		isAdrCitationSourcePath("battery/dumgen/docs/adr/0004-x.md"),
+		isAdrCitationScanPath("battery/dumgen/docs/adr/0004-x.md"),
 	).toBeFalse();
-	expect(isAdrCitationSourcePath("docs/notes.ts")).toBeFalse();
+	expect(isAdrCitationScanPath("docs/notes.ts")).toBeFalse();
+	expect(isAdrCitationScanPath("battery/dumgen/README.md")).toBeFalse();
 	expect(
-		isAdrCitationSourcePath("tooling/documentation-integrity.ts"),
+		isAdrCitationScanPath("tooling/documentation-integrity.ts"),
 	).toBeFalse();
 	expect(
-		isAdrCitationSourcePath(
-			"tooling/tests/documentation-integrity.test.ts",
-		),
+		isAdrCitationScanPath("tooling/tests/documentation-integrity.test.ts"),
 	).toBeFalse();
 
 	const root = await temporaryRepository();
@@ -381,6 +380,39 @@ test("scans non-Markdown files under app, battery and tooling, skipping the rule
 			file: "battery/demo/src/index.ts",
 			kind: "adr-amendment-citation",
 			line: 2,
+		},
+	]);
+});
+
+test("scans developer documents outside the ADRs, skipping fenced examples", async () => {
+	expect(
+		isAdrCitationScanPath("battery/dumgen/docs/reference/intake.md"),
+	).toBeTrue();
+	expect(isAdrCitationScanPath("docs/runbooks/release.md")).toBeTrue();
+	expect(isAdrCitationScanPath("battery/dumgen/GLOSSARY.md")).toBeTrue();
+	expect(isAdrCitationScanPath("docs/adr/0040-x.md")).toBeFalse();
+
+	const root = await temporaryRepository();
+	await writeSource(
+		root,
+		"battery/demo/docs/reference/intake.md",
+		"# Intake\n\nRows are keyed by index (Dumgen ADR 0004, amended\n2026-10-02).\n\n```md\n(ADR 0040, amended 2026-10-02)\n```\n",
+	);
+	await writeSource(
+		root,
+		"docs/adr/0040-x.md",
+		"---\nstatus: accepted\n---\n\n# X\n\nSee (ADR 0039, amended 2026-10-02).\n",
+	);
+	expect(
+		await auditAdrAmendmentCitations(root, [
+			"battery/demo/docs/reference/intake.md",
+			"docs/adr/0040-x.md",
+		]),
+	).toMatchObject([
+		{
+			file: "battery/demo/docs/reference/intake.md",
+			kind: "adr-amendment-citation",
+			line: 3,
 		},
 	]);
 });

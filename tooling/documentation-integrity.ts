@@ -737,15 +737,16 @@ export function adrLogbookIssues(
 		}));
 }
 
+function isAdrPath(path: string): boolean {
+	return path.includes("/docs/adr/") || path.startsWith("docs/adr/");
+}
+
 export async function auditAdrs(
 	repositoryRoot: string,
 	files: readonly string[],
 ): Promise<DocumentationIssue[]> {
 	const issues: DocumentationIssue[] = [];
-	const adrFiles = files.filter(
-		(path) => path.includes("/docs/adr/") || path.startsWith("docs/adr/"),
-	);
-	for (const file of adrFiles) {
+	for (const file of files.filter(isAdrPath)) {
 		const text = await readFile(join(repositoryRoot, file), "utf8");
 		issues.push(
 			...adrStructureIssues(file, text),
@@ -764,12 +765,18 @@ const amendmentCitationRuleFiles = new Set([
 	"tooling/tests/documentation-integrity.test.ts",
 ]);
 
-/** Code, tests and records: every non-Markdown file under app/, battery/ and tooling/. */
-export function isAdrCitationSourcePath(candidate: string): boolean {
+/**
+ * Code, tests and records (every non-Markdown file under app/, battery/ and
+ * tooling/), plus the developer documents outside the ADRs, which the stricter
+ * ADR logbook rule already covers.
+ */
+export function isAdrCitationScanPath(candidate: string): boolean {
 	const path = normalizeRepositoryPath(candidate);
+	if (extname(path).toLowerCase() === ".md") {
+		return isDeveloperDocumentationPath(path) && !isAdrPath(path);
+	}
 	return (
 		/^(?:app|battery|tooling)\//u.test(path) &&
-		extname(path).toLowerCase() !== ".md" &&
 		!amendmentCitationRuleFiles.has(path)
 	);
 }
@@ -784,22 +791,29 @@ const amendmentCitationForms = [
 ];
 
 /**
- * An ADR citation in code, tests or a record names the ADR alone; an ADR
- * states its current decision, so "amended <date>" points at history that
- * the issue and git keep. The present-tense "Amends ADR NNNN" stays allowed.
+ * An ADR citation in code, tests, a record or a document names the ADR alone;
+ * an ADR states its current decision, so "amended <date>" points at history
+ * that the issue and git keep. The present-tense "Amends ADR NNNN" and, in
+ * Markdown, fenced examples stay allowed.
  */
 export function adrAmendmentCitationIssues(
 	file: string,
 	text: string,
 ): DocumentationIssue[] {
-	return text.split("\n").flatMap((line, index) =>
-		amendmentCitationForms.some((form) => form.test(line))
+	const lines =
+		extname(file).toLowerCase() === ".md"
+			? linesOutsideFences(text)
+			: text
+					.split("\n")
+					.map((line, index) => ({ line: index + 1, text: line }));
+	return lines.flatMap(({ line, text: content }) =>
+		amendmentCitationForms.some((form) => form.test(content))
 			? [
 					{
 						detail: "Cite the ADR alone, as (ADR 0040) or (ADR 0040, #618); the ADR states its current decision",
 						file,
 						kind: "adr-amendment-citation" as const,
-						line: index + 1,
+						line,
 						severity: "error" as const,
 					},
 				]
@@ -817,7 +831,7 @@ export async function auditAdrAmendmentCitations(
 	files: readonly string[],
 ): Promise<DocumentationIssue[]> {
 	const issues: DocumentationIssue[] = [];
-	for (const file of files.filter(isAdrCitationSourcePath)) {
+	for (const file of files.filter(isAdrCitationScanPath)) {
 		const bytes = await readFile(join(repositoryRoot, file));
 		if (isBinaryContent(bytes)) continue;
 		issues.push(

@@ -278,8 +278,8 @@ evidence/segment-in-units-lab/
   tolerated Kind confusions (PART/ADV, CCONJ/ADV, ADJ/ADV, NOUN/PROPN,
   PRON/DET, within Lexeme, either way), defined once in
   `lab/evaluation/spec-corpus/segment-in-units-route-tolerance.ts`. A
-  borderline unit may carry route variants instead (Dumgen ADR 0007,
-  amended 2026-09-30); its route counts for tol% when the gold route is
+  borderline unit may carry route variants instead (Dumgen ADR 0007); its
+  route counts for tol% when the gold route is
   among them, and the five pairs apply to single routes only.
   **strict%** is the exact match, kept for comparison; it reads a
   borderline unit's first route. **var%** counts the units with membership

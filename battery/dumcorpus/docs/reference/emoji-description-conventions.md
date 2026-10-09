@@ -123,7 +123,7 @@ A Lemma in the [Authored Inventory][inventory] takes one of its authored
 Readings when one fits. Look it up there before you draft one. On a Closed
 Route (German AUX, DET, PRON and PART) its authored Readings are all it has.
 On an Open Route they may miss a sense: that sense gets a Reading of its own
-beside them (ADR 0021, amended 2026-10-03, #877).
+beside them (ADR 0021, #877).
 
 One set of series markers runs through the German adverbs, pronouns and
 determiners ([ADR 0029]). The marker comes first, then the emoji of what the

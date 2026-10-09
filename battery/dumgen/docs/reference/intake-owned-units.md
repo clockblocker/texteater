@@ -33,7 +33,7 @@ two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contra
 - `segments` rows are keyed by their index in the Sentence. A fused word that
   segmentation split is stored as its pieces, each with the `surface` it
   stands for. Units and Attestation Membership name Segments by this index
-  (Dumgen ADR 0004, amended 2026-10-02).
+  (Dumgen ADR 0004).
 - Every write checks that each ResolvableText Segment belongs to exactly one
   unit and that units name only ResolvableText Segments. A Sentence whose
   segmentation failed is stored with `segmentationFailed` and no units
@@ -59,8 +59,8 @@ two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contra
   Session ends `Unresolved` at once. No Note is made and no model is asked.
   The deck settles on one Unit Card with the unit's words (a gap reads as
   `…`), its route and any variants.
-- Route variants are for the click to pick from (ADR 0007, amended
-  2026-09-30). Until resolution returns, the Unit Card only lists them.
+- Route variants are for the click to pick from (ADR 0007). Until
+  resolution returns, the Unit Card only lists them.
 
 ## Live probe
 
