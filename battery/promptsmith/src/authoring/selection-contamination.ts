@@ -4,7 +4,6 @@ import { getSelectionState } from "./golden-corpus";
 export type ContaminationEntry = {
 	readonly id: string;
 	readonly exactFingerprint: string;
-	readonly routeFingerprint?: string;
 	readonly contaminationKeys: readonly string[];
 };
 
@@ -38,13 +37,6 @@ export function assertEntriesUncontaminated(args: {
 			name: "exact parsed-input fingerprint",
 			conflict: (left, right) =>
 				left.exactFingerprint === right.exactFingerprint,
-		},
-		{
-			name: "route-specific fingerprint",
-			conflict: (left, right) =>
-				left.routeFingerprint !== undefined &&
-				right.routeFingerprint !== undefined &&
-				left.routeFingerprint === right.routeFingerprint,
 		},
 		{
 			name: "contamination key",

@@ -18,7 +18,6 @@ type ParsedCaseEntry = {
 	readonly id: string;
 	readonly value: ParsedGoldenCase<PromptInputSchema, PromptOutputSchema>;
 	readonly exactFingerprint: string;
-	readonly routeFingerprint?: string;
 	readonly contaminationKeys: readonly string[];
 };
 
@@ -122,9 +121,6 @@ export function defineGoldenCorpus<
 	readonly inputSchema: InputSchema;
 	readonly outputSchema: OutputSchema;
 	readonly collections: Collections;
-	readonly fingerprintInput?: (
-		input: import("zod").output<InputSchema>,
-	) => string;
 }): GoldenCorpus<InputSchema, OutputSchema, Collections> {
 	assertNonEmpty(args.route, "Golden Corpus route");
 	const identity = {};
@@ -176,15 +172,6 @@ export function defineGoldenCorpus<
 		}
 		exactFingerprints.set(exactFingerprint, id);
 
-		const routeFingerprint = args.fingerprintInput?.(parsedInput.data);
-		if (
-			routeFingerprint !== undefined &&
-			typeof routeFingerprint !== "string"
-		) {
-			throw new Error(
-				`${location} produced a non-string route fingerprint.`,
-			);
-		}
 		const value: ParsedGoldenCase<InputSchema, OutputSchema> = deepFreeze({
 			input: parsedInput.data,
 			idealOutput: parsedOutput.data,
@@ -197,7 +184,6 @@ export function defineGoldenCorpus<
 			id,
 			value,
 			exactFingerprint,
-			...(routeFingerprint === undefined ? {} : { routeFingerprint }),
 			contaminationKeys,
 		});
 	}
