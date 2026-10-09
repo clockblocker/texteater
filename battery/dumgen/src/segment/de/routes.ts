@@ -121,8 +121,11 @@ const routes: ReadonlyMap<RouteKey, Route> = new Map<RouteKey, Route>([
 	["Foreign/Foreign", { language: "de", family: "Foreign", kind: "Foreign" }],
 ]);
 
-/** The Route a key names; a key outside the German routes throws. */
-export function routeOf(key: RouteKey): Route | "Unresolved" {
+/**
+ * The Route a key names, the inverse of `keyOf`; a key outside the German
+ * routes throws.
+ */
+export function routeForKey(key: RouteKey): Route | "Unresolved" {
 	if (key === "Unresolved") return "Unresolved";
 	const route = routes.get(key);
 	if (!route) throw Error(`Not a German route key: ${key}`);

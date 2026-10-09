@@ -9,7 +9,7 @@ import type {
 	ResolveGrammarInput,
 } from "../../src/resolve/types.js";
 import type { Answer } from "../../src/segment/ask.js";
-import { type RouteKey, routeOf } from "../../src/segment/de/routes.js";
+import { type RouteKey, routeForKey } from "../../src/segment/de/routes.js";
 import type { JevAsk, JevRequest } from "../../src/segment/jev.js";
 import type {
 	ClosedClassIdentity,
@@ -120,7 +120,7 @@ export function unitOf(
 	key: RouteKey,
 	identity?: ClosedClassIdentity,
 ): Unit & { route: Route } {
-	const route = routeOf(key);
+	const route = routeForKey(key);
 	if (route === "Unresolved") throw Error("Expected a routed unit");
 	return { segments, route, ...(identity ? { identity } : {}) };
 }

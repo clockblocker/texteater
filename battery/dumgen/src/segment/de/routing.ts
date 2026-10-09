@@ -76,7 +76,7 @@ import {
 	allRoutes,
 	type RouteKey,
 	routeCriteria,
-	routeOf,
+	routeForKey,
 	singletonRoutes,
 } from "./routes.js";
 import {
@@ -607,7 +607,7 @@ export function routeVariants(
 }
 
 const variantRoute = (key: RouteKey): Route => {
-	const route = routeOf(key);
+	const route = routeForKey(key);
 	if (route === "Unresolved") throw Error("A route variant is a route");
 	return route;
 };

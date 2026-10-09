@@ -100,7 +100,7 @@ async function runResolveReadingCli(
 		);
 		const ids = readingSubsetCaseIds(subset);
 		const routes = (caseIds: readonly string[]) => {
-			const routeOf = new Map(
+			const routeKeyOfCase = new Map(
 				set.cases.map(({ id, attestation }) => [
 					id,
 					`${attestation.surface.lemma.family}/${attestation.surface.lemma.kind}`,
@@ -108,7 +108,7 @@ async function runResolveReadingCli(
 			);
 			const counts: Record<string, number> = {};
 			for (const id of caseIds) {
-				const route = routeOf.get(id) ?? "?";
+				const route = routeKeyOfCase.get(id) ?? "?";
 				counts[route] = (counts[route] ?? 0) + 1;
 			}
 			return counts;

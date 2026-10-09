@@ -3,7 +3,7 @@
  * into units. Every piece ends in exactly one unit.
  */
 import type { Unit } from "../segmented-sentence.js";
-import { type RouteKey, routeOf } from "./routes.js";
+import { type RouteKey, routeForKey } from "./routes.js";
 import type { Sentence } from "./sentence.js";
 
 /** Groups of piece ids, each sorted, ordered by first piece. */
@@ -58,7 +58,7 @@ export function unitsOf(
 			if (!piece) throw Error(`No piece p${id}`);
 			return piece.segment;
 		}),
-		route: routeOf(routeFor(group)),
+		route: routeForKey(routeFor(group)),
 	}));
 }
 

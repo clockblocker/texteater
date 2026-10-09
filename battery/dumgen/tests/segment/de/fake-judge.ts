@@ -6,7 +6,7 @@ import type {
 	Ask,
 	AskRequest,
 } from "../../../src/segment/ask.js";
-import { routeOf } from "../../../src/segment/de/routes.js";
+import { routeForKey } from "../../../src/segment/de/routes.js";
 
 export const picked = (
 	choice: string,
@@ -47,7 +47,7 @@ export function fakeJudge(answers: Readonly<Record<string, Answer>> = {}) {
 
 /** A German route, checked against the routes the unit stage offers. */
 export const route = (family: string, kind: string) => {
-	const checked = routeOf(`${family}/${kind}`);
+	const checked = routeForKey(`${family}/${kind}`);
 	if (checked === "Unresolved") throw Error("Not a route");
 	return checked;
 };
