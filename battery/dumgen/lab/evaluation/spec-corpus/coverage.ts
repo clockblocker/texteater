@@ -9,6 +9,7 @@
 import { isReviewed } from "dumcorpus";
 import type * as Dumling from "dumling/types";
 import type { z } from "zod";
+import { recordOf } from "../../records.js";
 import type { Gold } from "./gold.js";
 import type { ProjectedCorpus, ReviewGroup } from "./projection.js";
 
@@ -61,65 +62,53 @@ export function coverageOf<
 			.map(({ id }) => id),
 	);
 	const excludedIds = new Set(projected.excluded.ids);
-	const byStatus = Object.fromEntries(
-		statuses.map((status): [ReviewGroup, CoverageRow] => {
-			const cases = origins.filter(
-				([, origin]) => origin.status === status,
-			);
-			return [
-				status,
-				{
-					cases: cases.length,
-					fullCoverage: cases.filter(([, origin]) =>
-						full.has(origin.record),
-					).length,
-					excluded: listing(
-						[
-							...new Set(
-								cases
-									.filter(([id]) => excludedIds.has(id))
-									.map(([, origin]) => origin.record),
-							),
-						].map((record) => {
-							const issue =
-								gold.sidecar.exclusions[record]?.issue;
-							return {
-								key:
-									issue === undefined
-										? "No issue"
-										: `#${issue}`,
-								record,
-							};
-						}),
+	const byStatus = recordOf(statuses, (status): CoverageRow => {
+		const cases = origins.filter(([, origin]) => origin.status === status);
+		return {
+			cases: cases.length,
+			fullCoverage: cases.filter(([, origin]) => full.has(origin.record))
+				.length,
+			excluded: listing(
+				[
+					...new Set(
+						cases
+							.filter(([id]) => excludedIds.has(id))
+							.map(([, origin]) => origin.record),
 					),
-					skipped: listing(
-						projected.skipped
-							.filter((skip) => skip.status === status)
-							.map(({ reason, record, sameInputAs }) => ({
-								key: reason,
-								record: sameInputAs
-									? `${record} (same input as ${sameInputAs})`
-									: record,
-							})),
-					),
-					unloaded: listing(
-						gold.unloaded
-							.filter(
-								(entry) =>
-									(isReviewed(entry, projected.layer)
-										? "Reviewed"
-										: "Draft") === status &&
-									entry.record.startsWith(`${language}/`),
-							)
-							.map(({ record, checks }) => ({
-								key: `Fails ${[...checks].sort().join(" and ")}`,
-								record,
-							})),
-					),
-				},
-			];
-		}),
-	) as Record<ReviewGroup, CoverageRow>;
+				].map((record) => {
+					const issue = gold.sidecar.exclusions[record]?.issue;
+					return {
+						key: issue === undefined ? "No issue" : `#${issue}`,
+						record,
+					};
+				}),
+			),
+			skipped: listing(
+				projected.skipped
+					.filter((skip) => skip.status === status)
+					.map(({ reason, record, sameInputAs }) => ({
+						key: reason,
+						record: sameInputAs
+							? `${record} (same input as ${sameInputAs})`
+							: record,
+					})),
+			),
+			unloaded: listing(
+				gold.unloaded
+					.filter(
+						(entry) =>
+							(isReviewed(entry, projected.layer)
+								? "Reviewed"
+								: "Draft") === status &&
+							entry.record.startsWith(`${language}/`),
+					)
+					.map(({ record, checks }) => ({
+						key: `Fails ${[...checks].sort().join(" and ")}`,
+						record,
+					})),
+			),
+		};
+	});
 	return { route: projected.corpus.route, language, byStatus };
 }
 

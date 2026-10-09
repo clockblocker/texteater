@@ -1,4 +1,5 @@
 import { execFileSync } from "node:child_process";
+import { isRecord } from "common-utils";
 
 /**
  * Runs `git` in `cwd` and returns its stdout untouched. Other sessions commit
@@ -21,20 +22,19 @@ export function gitOutput(
 			stdio: ["ignore", "pipe", "pipe"],
 		});
 	} catch (error) {
-		const failure = error as {
-			readonly status?: number | null;
-			readonly signal?: string | null;
-			readonly stdout?: unknown;
-			readonly stderr?: unknown;
-		};
+		const { status, signal, stdout, stderr } = isRecord(error) ? error : {};
 		if (
-			typeof failure.status === "number" &&
-			okStatuses.includes(failure.status) &&
-			typeof failure.stdout === "string"
+			typeof status === "number" &&
+			okStatuses.includes(status) &&
+			typeof stdout === "string"
 		)
-			return failure.stdout;
+			return stdout;
 		throw Error(
-			`git ${args.join(" ")} in ${cwd} ${failureOf(failure.signal, failure.status, failure.stderr)}`,
+			`git ${args.join(" ")} in ${cwd} ${failureOf(
+				typeof signal === "string" ? signal : undefined,
+				typeof status === "number" ? status : undefined,
+				stderr,
+			)}`,
 			{ cause: error },
 		);
 	}

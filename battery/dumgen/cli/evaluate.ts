@@ -225,9 +225,10 @@ export async function runEvaluationCli(
 		spendsJev,
 		unitConfigs,
 	} = await import("../lab/evaluation/experiments.js");
-	const units = (values.units ?? "production") as UnitConfig;
-	if (!unitConfigs.includes(units))
-		throw Error(`--units must be one of ${unitConfigs.join(", ")}`);
+	const units = unitConfigs.find(
+		(config) => config === (values.units ?? "production"),
+	);
+	if (!units) throw Error(`--units must be one of ${unitConfigs.join(", ")}`);
 	if (values.requests) {
 		const built = await experimentRequests({
 			experimentId: values.experiment,

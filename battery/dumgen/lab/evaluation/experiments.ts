@@ -38,7 +38,7 @@
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { JsonValue } from "@typesafe-ai/sdk";
-import { canonicalJson, messageOf } from "common-utils";
+import { canonicalJson, isRecord, messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
 import {
 	defineGoldenCaseCollection,
@@ -997,18 +997,15 @@ export const evaluationMetrics = (run: OperationEvaluationRun) =>
  * since #864, which no lab run recorded.
  */
 const withoutIdentity = (output: unknown): unknown => {
-	const units = (output as { units?: unknown } | null)?.units;
-	return Array.isArray(units)
-		? {
-				...(output as object),
-				units: units.map((unit) => {
-					const { identity: _identity, ...rest } = unit as {
-						identity?: unknown;
-					};
-					return rest;
-				}),
-			}
-		: output;
+	if (!isRecord(output) || !Array.isArray(output.units)) return output;
+	return {
+		...output,
+		units: output.units.map((unit: unknown) => {
+			if (!isRecord(unit)) return unit;
+			const { identity: _identity, ...rest } = unit;
+			return rest;
+		}),
+	};
 };
 
 /**

@@ -21,8 +21,10 @@
  * batch never ran, comes back as a failure for its request alone.
  */
 import { messageOf } from "common-utils";
+import { z } from "zod";
 import type { LunaRequest, LunaResponse } from "../../src/luna.js";
 import { lunaResponseOf, lunaResponsesBody } from "../../src/openai-luna.js";
+import { parseStoredJson } from "../stored-json.js";
 
 /** The HTTP calls a batch makes; the runtime's `fetch` fits. */
 export type BatchFetch = (
@@ -122,6 +124,43 @@ type OutputLine = {
 	} | null;
 };
 
+const batchObjectSchema = z.object({
+	id: z.string().optional(),
+	status: z.string().optional(),
+	output_file_id: z.string().nullable().optional(),
+	error_file_id: z.string().nullable().optional(),
+	request_counts: z.unknown().optional(),
+	usage: z.unknown().optional(),
+	errors: z
+		.object({
+			data: z
+				.array(z.object({ message: z.string().optional() }))
+				.optional(),
+		})
+		.nullable()
+		.optional(),
+}) satisfies z.ZodType<BatchObject>;
+
+const outputLineSchema = z.object({
+	custom_id: z.string().optional(),
+	response: z
+		.object({
+			status_code: z.number().optional(),
+			body: z.unknown().optional(),
+		})
+		.nullable()
+		.optional(),
+	error: z
+		.object({
+			code: z.string().optional(),
+			message: z.string().optional(),
+		})
+		.nullable()
+		.optional(),
+}) satisfies z.ZodType<OutputLine>;
+
+const uploadedFileSchema = z.object({ id: z.string().optional() });
+
 /** The JSONL line one request becomes. */
 function batchLineOf(
 	{ customId, request }: BatchRequest,
@@ -199,14 +238,22 @@ export function createOpenAILunaBatch(
 		return text;
 	};
 	const batchOf = async (id: string, signal: AbortSignal) =>
-		JSON.parse(
+		parseStoredJson(
+			batchObjectSchema,
 			await call(`/batches/${id}`, { method: "GET" }, signal),
-		) as BatchObject;
+			`OpenAI's batch ${id}`,
+		);
 	const lines = async (fileId: string, signal: AbortSignal) =>
 		(await call(`/files/${fileId}/content`, { method: "GET" }, signal))
 			.split("\n")
 			.filter((line) => line.trim())
-			.map((line) => JSON.parse(line) as OutputLine);
+			.map((line, index) =>
+				parseStoredJson(
+					outputLineSchema,
+					line,
+					`Line ${index + 1} of OpenAI's file ${fileId}`,
+				),
+			);
 	return {
 		async submit(requests, signal) {
 			if (requests.length === 0) throw Error("A batch needs a request");
@@ -230,11 +277,14 @@ export function createOpenAILunaBatch(
 				new Blob([jsonl], { type: "application/jsonl" }),
 				"luna-batch.jsonl",
 			);
-			const file = JSON.parse(
+			const file = parseStoredJson(
+				uploadedFileSchema,
 				await call("/files", { method: "POST", body: form }, signal),
-			) as { id?: string };
+				"OpenAI's file upload",
+			);
 			if (!file.id) throw Error("OpenAI's file upload returned no id");
-			const batch = JSON.parse(
+			const batch = parseStoredJson(
+				batchObjectSchema,
 				await call(
 					"/batches",
 					{
@@ -251,7 +301,8 @@ export function createOpenAILunaBatch(
 					},
 					signal,
 				),
-			) as BatchObject;
+				"OpenAI's batch creation",
+			);
 			if (!batch.id)
 				throw Error("OpenAI's batch creation returned no id");
 			return { id: batch.id, inputFileId: file.id };

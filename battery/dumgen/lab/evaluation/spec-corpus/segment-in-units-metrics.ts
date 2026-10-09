@@ -3,6 +3,7 @@
  * evaluator's per-case counts: what `cli/evaluate.ts` prints beside the
  * run's summary.
  */
+import { recordOf } from "../../records.js";
 import {
 	hasMembership,
 	type SegmentInUnitsEvaluation,
@@ -102,9 +103,7 @@ export function segmentInUnitsMetrics(run: {
 	return {
 		evaluated: evaluations.length,
 		rates: {
-			...(Object.fromEntries(
-				headline.map((key) => [key, count(key) / count("scored")]),
-			) as Record<(typeof headline)[number], number>),
+			...recordOf(headline, (key) => count(key) / count("scored")),
 			contractPass: contract.filter(Boolean).length / contract.length,
 			multiMembership: {
 				rate: multi.filter(hasMembership).length / multi.length,

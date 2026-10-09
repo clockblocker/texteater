@@ -24,8 +24,10 @@ import { gunzipSync, gzipSync } from "node:zlib";
 import type { JsonValue } from "@typesafe-ai/sdk";
 import { messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
+import { z } from "zod";
 import type { LunaAsk } from "../../src/luna.js";
 import type { JevAsk } from "../../src/segment/jev.js";
+import { parseStoredJson } from "../stored-json.js";
 import type { GoldOracle } from "./resolve-grammar/models.js";
 
 /**
@@ -72,6 +74,42 @@ export type RequestRun = {
 	readonly answers: Readonly<Record<string, JsonValue>>;
 	readonly cases: readonly CaseRequests[];
 };
+
+const atShape = {
+	repetition: z.number(),
+	path: z.string().optional(),
+};
+
+const requestRunSchema = z.object({
+	runId: z.string(),
+	experimentId: z.string(),
+	sourceRevision: z.string(),
+	createdAt: z.string(),
+	answers: z.record(z.string(), z.json()),
+	cases: z.array(
+		z.object({
+			id: z.string(),
+			requests: z.array(
+				z.union([
+					z.object({
+						...atShape,
+						executor: z.literal("jev"),
+						stage: z.string(),
+						state: z.unknown(),
+						questions: z.record(z.string(), z.unknown()),
+					}),
+					z.object({
+						...atShape,
+						executor: z.literal("luna"),
+						stage: z.string(),
+						request: z.unknown(),
+					}),
+				]),
+			),
+			outcomes: z.array(z.object({ ...atShape, outcome: z.unknown() })),
+		}),
+	),
+}) satisfies z.ZodType<RequestRun>;
 
 /** The order a case's requests are kept and compared in: concurrent stages may send theirs in any order. */
 export const sortedRequests = (requests: readonly RecordedRequest[]) =>
@@ -186,11 +224,12 @@ export async function loadRequestRun(
 	outputDirectory: string,
 	runId: string,
 ): Promise<RequestRun> {
-	return JSON.parse(
-		gunzipSync(await readFile(pathOf(outputDirectory, runId))).toString(
-			"utf8",
-		),
-	) as RequestRun;
+	const path = pathOf(outputDirectory, runId);
+	return parseStoredJson(
+		requestRunSchema,
+		gunzipSync(await readFile(path)).toString("utf8"),
+		path,
+	);
 }
 
 /** How many paths of a difference are listed before the rest are counted. */
