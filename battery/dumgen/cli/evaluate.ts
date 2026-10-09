@@ -54,8 +54,13 @@
  * report (`--compare`'s output). The manifest names the list and its hash,
  * and the ledger line its hash, so a round can run only the cases a change
  * moves.
- * `--limit`, `--subset`, `--repetitions` and `--gold-only` fail a
- * segment.inUnits run, which reads none of them.
+ *
+ * Each command takes only the options it reads (`runOptions`), and any
+ * other fails before anything is priced or asked: `--requests` reads no
+ * case selection or repetitions, only knowledge.produce reads
+ * `--gold-only`, a segment.inUnits run reads none of `--limit`,
+ * `--subset`, `--repetitions` and `--gold-only`, and split-text reads
+ * none of the run options. `--output` goes with any command.
  *
  * A segment.inUnits run counts against the lab's current round: it writes a
  * line to the lab ledger, refuses to go live when dumcorpus's prompt inputs
@@ -181,6 +186,7 @@ export async function runEvaluationCli(
 	if (positionals.length > 0 && !values.compare)
 		throw Error(`Unexpected argument ${positionals[0]}`);
 	if (values.list) {
+		rejectUnread(values, ["list"], "--list");
 		const { listExperiments } = await import(
 			"../lab/evaluation/experiments.js"
 		);
@@ -193,17 +199,20 @@ export async function runEvaluationCli(
 		process.env.DUMGEN_RUN_DIRECTORY ??
 		defaultRunOutputDirectory;
 	if (values.open) {
+		rejectUnread(values, ["open"], "--open");
 		const run = await loadRun(outputDirectory, values.open);
 		write(run);
 		return run;
 	}
-	if (values.compare)
+	if (values.compare) {
+		rejectUnread(values, ["compare"], "--compare");
 		return compareCommand(
 			outputDirectory,
 			values.compare,
 			positionals,
 			write,
 		);
+	}
 	const experimentId = values.experiment;
 	if (!experimentId)
 		throw Error(
@@ -223,13 +232,10 @@ export async function runEvaluationCli(
 		throw Error(
 			`--units must be one of ${experiments.unitConfigs.join(", ")}`,
 		);
-	const segmentInUnits = experiments.spendsJev(experimentId);
-	if (segmentInUnits) rejectGrammarOnlyOptions(values);
+	// An unknown experiment throws here, before its options are checked.
+	experiments.spendsJev(experimentId);
+	rejectUnreadRunOptions(values, experimentId);
 	const caseIds = await caseIdsOf(values);
-	if (caseIds && (values.requests || !segmentInUnits))
-		throw Error(
-			"--cases and --cases-from take a segment.inUnits run, not a request run or another experiment",
-		);
 	const command: ExperimentCommand = {
 		values,
 		experimentId,
@@ -288,28 +294,162 @@ async function compareCommand(
 	return report;
 }
 
-/** The options only resolve.grammar, resolve.reading and knowledge.produce read. */
-const grammarOnlyOptions = [
+type OptionName = keyof typeof cliOptions;
+
+/**
+ * Throws, naming the options given that `subject` does not read, when
+ * any are; `takes` and `--output`, which goes with any command, are the
+ * ones it reads.
+ */
+function rejectUnread(
+	values: CliValues,
+	takes: readonly OptionName[],
+	subject: string,
+	note?: Note,
+) {
+	const reads = new Set<string>([...takes, "output"]);
+	const given = Object.keys(values).filter((name) => !reads.has(name));
+	if (given.length === 0) return;
+	const flags = (names: Iterable<string>) =>
+		[...names].map((name) => `--${name}`).join(", ");
+	const noted = note && given.some((name) => note.options.has(name));
+	throw Error(
+		`${flags(given)} ${given.length === 1 ? "does" : "do"} not apply to ${subject}, which takes ${flags(reads)}${noted ? `. ${note.text}` : ""}`,
+	);
+}
+
+/** Said when a refusal names any of `options`. */
+type Note = {
+	readonly options: ReadonlySet<string>;
+	readonly text: string;
+};
+
+/** How an `--experiment` command runs: its flag, if any, wins in this order. */
+type RunMode = "requests" | "estimate" | "offline" | "live";
+
+const runModeOf = (values: CliValues): RunMode =>
+	values.requests
+		? "requests"
+		: values.estimate
+			? "estimate"
+			: values.offline
+				? "offline"
+				: "live";
+
+const modeSubject: Record<RunMode, string> = {
+	requests: "a --requests run of",
+	estimate: "an --estimate of",
+	offline: "an --offline run of",
+	live: "a live run of",
+};
+
+/**
+ * The options one kind of experiment reads in each mode, beyond
+ * `--experiment`, `--revision`, `--output` and the mode's own flag.
+ */
+type KindOptions = {
+	readonly reads: Readonly<Record<RunMode, readonly OptionName[]>>;
+	/** Added to a refusal of a run, not of a request run. */
+	readonly note?: Note;
+};
+
+const segmentReads = ["units", "judgment-model", "concurrency"] as const;
+const segmentRunReads = [...segmentReads, "cases", "cases-from"] as const;
+const segmentNote: Note = {
+	options: new Set(["limit", "subset", "repetitions", "gold-only"]),
+	text: "A segment.inUnits run always runs its whole set (or its case list) at 3 repetitions; use --cases <ids file> or --cases-from <request compare report> to run part of a set",
+};
+
+/** segment.inUnits: `--parity` takes gold mode only. */
+const segmentOptions = (parity: readonly OptionName[]): KindOptions => ({
+	reads: {
+		requests: segmentReads,
+		estimate: [...segmentRunReads, "token-budget"],
+		offline: [...segmentRunReads, ...parity],
+		live: [
+			...segmentRunReads,
+			...parity,
+			"token-budget",
+			"repin",
+			"reason",
+		],
+	},
+	note: segmentNote,
+});
+
+const resolveRunReads = [
+	"concurrency",
 	"limit",
 	"subset",
 	"repetitions",
-	"gold-only",
+] as const;
+const resolveLiveReads = [
+	"budget",
+	"luna-budget",
+	"luna-output-budget",
+	"usd-budget",
+	"luna-batch",
+	"luna-prompt-cache",
 ] as const;
 
+/** resolve.grammar, resolve.reading and knowledge.produce, with `extra` on every run. */
+const resolveOptions = (extra: readonly OptionName[]): KindOptions => ({
+	reads: {
+		requests: ["concurrency"],
+		estimate: [...resolveRunReads, ...extra, "whole-round"],
+		offline: [...resolveRunReads, ...extra],
+		live: [...resolveRunReads, ...extra, ...resolveLiveReads],
+	},
+});
+
 /**
- * A segment.inUnits run reads none of `grammarOnlyOptions`: it always runs
- * its whole set (or its case list) at the cache's 3 repetitions, so a run
- * meant to be small would spend a whole set. Throws before anything is
- * priced or asked.
+ * The options each kind of experiment reads, by its id's route (and
+ * `:raw` for segment.inUnits's raw mode). An experiment without a request
+ * diff refuses `--requests` itself.
  */
-function rejectGrammarOnlyOptions(values: CliValues) {
-	const given = grammarOnlyOptions.filter(
-		(name) => values[name] !== undefined,
+const runOptions: Readonly<Record<string, KindOptions>> = {
+	"segment-in-units": segmentOptions(["parity"]),
+	"segment-in-units:raw": segmentOptions([]),
+	"split-text": {
+		reads: { requests: [], estimate: [], offline: [], live: [] },
+	},
+	"resolve-grammar": resolveOptions([]),
+	"resolve-reading": resolveOptions([]),
+	knowledge: resolveOptions(["gold-only"]),
+};
+
+const kindOf = (experimentId: string) => {
+	const route = experimentId.split("/")[0] ?? "";
+	return route === "segment-in-units" && experimentId.endsWith(":raw")
+		? `${route}:raw`
+		: route;
+};
+
+/**
+ * Throws before anything is priced or asked when an `--experiment`
+ * command is given an option its experiment does not read in its mode,
+ * so a run meant to be small, or a request diff meant for a subset, does
+ * not silently cover something else.
+ */
+export function rejectUnreadRunOptions(
+	values: CliValues,
+	experimentId: string,
+) {
+	const kind = runOptions[kindOf(experimentId)];
+	if (!kind) throw Error(`${experimentId} names no options it reads`);
+	const mode = runModeOf(values);
+	rejectUnread(
+		values,
+		[
+			"experiment",
+			"revision",
+			"output",
+			...(mode === "live" ? [] : [mode]),
+			...kind.reads[mode],
+		],
+		`${modeSubject[mode]} ${experimentId}`,
+		mode === "requests" ? undefined : kind.note,
 	);
-	if (given.length > 0)
-		throw Error(
-			`${given.map((name) => `--${name}`).join(", ")} ${given.length === 1 ? "does" : "do"} not apply to a segment.inUnits run, which always runs its whole set at 3 repetitions; use --cases <ids file> or --cases-from <request compare report> to run part of a set`,
-		);
 }
 
 /**

@@ -182,9 +182,11 @@ bun run evaluate --experiment segment-in-units/de:dev --revision <rev> \
   line keeps the hash as `caseList` and the count as `cases`. A round
   that measures a change runs its baseline and the change on the cases
   the request diff moved: every other case sends the same requests, so
-  its outcomes can't move. `--limit`, `--subset`, `--repetitions` and
-  `--gold-only` fail a segment.inUnits run before it prices or asks
-  anything; the case list is how to run part of a set.
+  its outcomes can't move. Each evaluate command takes only the options
+  it reads, and any other fails before it prices or asks anything: a
+  segment.inUnits run reads none of `--limit`, `--subset`, `--repetitions`
+  and `--gold-only` (the case list is how to run part of a set), and
+  `--requests` reads no case selection or repetitions.
 - A segment.inUnits run writes a ledger line (`command: "evaluate"`) and
   counts against the round like a lab run: `--estimate`, the stop line, the
   projection and the pin all apply. A live run fills the cache
