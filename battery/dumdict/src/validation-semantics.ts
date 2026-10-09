@@ -103,7 +103,8 @@ function knowledgeUsesLanguage(
 	);
 }
 
-function knowledgeChangeUsesLanguage(
+/** Whether every Lemma, Reading and Unit Shadow a Knowledge Change names uses the language. */
+export function knowledgeChangeUsesLanguage(
 	change: Dumrel.KnowledgeChange,
 	language: Dumling.Language,
 ): boolean {

@@ -42,6 +42,7 @@ import type {
 	EnsureReadingEntryContext,
 	LoadReadingEntryContextRequest,
 } from "../storage";
+import { knowledgeChangeUsesLanguage } from "../validation-semantics";
 import {
 	type ReadingEntryContextLoad,
 	storageRequestFor,
@@ -236,6 +237,14 @@ function applyGeneratedKnowledge<L extends Dumling.Language>(
 					parsePendingSemanticRelationForDumdictRuntime(pending),
 				),
 			);
+			if (
+				!changes.every((change) =>
+					knowledgeChangeUsesLanguage(change, language),
+				)
+			)
+				return invalidRequest(
+					"Knowledge Change language does not match the dictionary.",
+				);
 			if (
 				!pendingRelations.every((pending) =>
 					pendingTargetsLanguage(pending, language),

@@ -1,11 +1,14 @@
 import { describe, expect, test } from "bun:test";
 import { createDumdictPlanner } from "../../../src/planner/planner";
 import type { AddNewNoteContext } from "../../../src/storage";
+import { deSerializedNotes } from "../../fixtures/de-notes";
 import {
 	englishRunLemma,
 	englishSwimCitationSurface,
 	englishSwimDraft,
 	germanGehenLemma,
+	germanGehenReading,
+	getBootedUpDumdict,
 	type StoreRevision,
 } from "./helpers";
 
@@ -61,5 +64,42 @@ describe("language guards", () => {
 				},
 			}),
 		).toMatchObject({ status: "rejected", code: "invalidRequest" });
+	});
+
+	test("applyGeneratedKnowledge rejects a Knowledge Change that references another language", () => {
+		const { dict } = getBootedUpDumdict("de", deSerializedNotes);
+		expect(
+			dict.applyGeneratedKnowledge({
+				reading: germanGehenReading,
+				changes: [
+					{
+						kind: "Contribute",
+						aspect: "morphologicalTree",
+						value: {
+							root: {
+								nodeKind: "structure",
+								children: [
+									{
+										nodeKind: "unitShadow",
+										unitShadow: {
+											canonicalForm: "walk",
+											family: "Lexeme",
+											kind: "VERB",
+											language: "en",
+										},
+									},
+								],
+							},
+						},
+					},
+				],
+				pendingRelations: [],
+				// Deliberately invalid: the change's Unit Shadow is English.
+			} as never),
+		).toEqual({
+			status: "rejected",
+			code: "invalidRequest",
+			message: "Knowledge Change language does not match the dictionary.",
+		});
 	});
 });
