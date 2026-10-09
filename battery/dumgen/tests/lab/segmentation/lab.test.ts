@@ -14,9 +14,9 @@ import {
 import { JevCache } from "../../../lab/segmentation/harness/jev-cache.js";
 import { summarizePolicy } from "../../../lab/segmentation/harness/metrics.js";
 import { runArm } from "../../../lab/segmentation/harness/run.js";
-import type { Answer } from "../../../src/segment/ask.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
 import { segmentsOf } from "../evaluation/spec-corpus/fixtures.js";
+import { answerEach, zogSichAnGold } from "./support.js";
 
 const directory = await mkdtemp(join(tmpdir(), "segment-in-units-lab-"));
 afterAll(() => rm(directory, { recursive: true, force: true }));
@@ -60,48 +60,9 @@ const labCase: LabCase = {
 	ruleExample: false,
 };
 
-/**
- * A judge that knows the gold: sich and an take zog as host, zu, m and
- * Glück are fixed words of one expression, and each gold group gets its
- * gold route. Everything else is answered no: a Noul 0.1, a Choice its
- * last option (`none`, `Other`, …).
- */
+/** A judge that knows the gold (`zogSichAnGold`). */
 const goldJudge: JevAsk = async (request) => {
-	const known: Record<string, string> = {
-		s_reflexive_3: "p2",
-		s_particle_4: "p2",
-		r_1: "Lexeme/PRON",
-		r_2_3_4: "Lexeme/VERB",
-		r_5_6_7: "Locution/ADV",
-	};
-	const fixed = new Set(["f_5", "f_6", "f_7", "e_5_6", "e_5_7", "e_6_7"]);
-	const answers = Object.fromEntries(
-		Object.entries(request.questions).map(
-			([id, question]): [string, Answer] => {
-				if (question.type === "noul")
-					return [
-						id,
-						{ type: "noul", noul: fixed.has(id) ? 0.9 : 0.1 },
-					];
-				const keys = Object.keys(
-					question.type === "choice" ? question.criteria : {},
-				);
-				const wanted = known[id] ?? keys.at(-1);
-				if (wanted === undefined) throw Error(`${id} offers no option`);
-				return [
-					id,
-					{
-						type: "choice",
-						choice: wanted,
-						confidence: 1,
-						probabilities: Object.fromEntries(
-							keys.map((key) => [key, key === wanted ? 1 : 0]),
-						),
-					},
-				];
-			},
-		),
-	);
+	const answers = answerEach(request.questions, zogSichAnGold());
 	return {
 		model: request.model,
 		answers,

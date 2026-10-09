@@ -28,8 +28,8 @@ import {
 	writeRounds,
 } from "../../../lab/segmentation/harness/round.js";
 import type { LabRun } from "../../../lab/segmentation/harness/run.js";
-import type { Answer } from "../../../src/segment/ask.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
+import { answerEach, zogSichAnGold } from "../segmentation/support.js";
 import { segmentsOf } from "./spec-corpus/fixtures.js";
 
 const repository = resolve(import.meta.dir, "..", "..", "..", "..", "..");
@@ -78,55 +78,15 @@ const set: LabSet = {
 	cases: [labCase],
 };
 
-/**
- * A judge that knows the gold, counting its calls: zum is a Fusion, sich
- * and an take zog as host, zu, m and Glück are one fixed expression, and
- * each gold group gets its gold route. Anything else is no.
- */
+/** A judge that knows the gold (`zogSichAnGold`, and zum is a Fusion), counting its calls. */
 function goldJudge() {
 	const counter = { calls: 0, tokens: 0 };
 	const jev: JevAsk = async (request) => {
 		counter.calls++;
 		counter.tokens += 100;
-		const known: Record<string, string> = {
-			source_9: "Fusion",
-			s_reflexive_3: "p2",
-			s_particle_4: "p2",
-			r_1: "Lexeme/PRON",
-			r_2_3_4: "Lexeme/VERB",
-			r_5_6_7: "Locution/ADV",
-		};
-		const fixed = new Set(["f_5", "f_6", "f_7", "e_5_6", "e_5_7", "e_6_7"]);
-		const answers = Object.fromEntries(
-			Object.entries(request.questions).map(
-				([id, question]): [string, Answer] => {
-					if (question.type === "noul")
-						return [
-							id,
-							{ type: "noul", noul: fixed.has(id) ? 0.9 : 0.1 },
-						];
-					const keys = Object.keys(
-						question.type === "choice" ? question.criteria : {},
-					);
-					const wanted = known[id] ?? keys.at(-1);
-					if (wanted === undefined)
-						throw Error(`${id} offers no option`);
-					return [
-						id,
-						{
-							type: "choice",
-							choice: wanted,
-							confidence: 1,
-							probabilities: Object.fromEntries(
-								keys.map((key) => [
-									key,
-									key === wanted ? 1 : 0,
-								]),
-							),
-						},
-					];
-				},
-			),
+		const answers = answerEach(
+			request.questions,
+			zogSichAnGold({ source_9: "Fusion" }),
 		);
 		return {
 			model: request.model,

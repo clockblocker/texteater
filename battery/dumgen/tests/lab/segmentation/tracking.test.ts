@@ -58,9 +58,10 @@ import {
 	derivedVerdict,
 	iterationTable,
 } from "../../../lab/segmentation/harness/table.js";
-import { type Answer, noul } from "../../../src/segment/ask.js";
+import { noul } from "../../../src/segment/ask.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import { segmentsOf } from "../evaluation/spec-corpus/fixtures.js";
+import { answerEach } from "./support.js";
 
 const directory = await mkdtemp(join(tmpdir(), "segment-in-units-tracking-"));
 afterAll(() => rm(directory, { recursive: true, force: true }));
@@ -274,36 +275,13 @@ const answeringAs =
 	(model: string, counter?: { calls: number }): JevAsk =>
 	async (request) => {
 		if (counter) counter.calls++;
-		const answers = Object.fromEntries(
-			Object.entries(request.questions).map(
-				([id, question]): [string, Answer] => {
-					if (question.type === "noul")
-						return [id, { type: "noul", noul: 0.9 }];
-					const keys = Object.keys(
-						question.type === "choice" ? question.criteria : {},
-					);
-					const wanted = id.startsWith("r_")
-						? (keys.find((key) => key === "Lexeme/PRON") ?? keys[0])
-						: keys.at(-1);
-					if (wanted === undefined)
-						throw Error(`${id} offers no option`);
-					return [
-						id,
-						{
-							type: "choice",
-							choice: wanted,
-							confidence: 1,
-							probabilities: Object.fromEntries(
-								keys.map((key) => [
-									key,
-									key === wanted ? 1 : 0,
-								]),
-							),
-						},
-					];
-				},
-			),
-		);
+		const answers = answerEach(request.questions, {
+			noul: () => 0.9,
+			choice: (id, keys) =>
+				id.startsWith("r_")
+					? (keys.find((key) => key === "Lexeme/PRON") ?? keys[0])
+					: keys.at(-1),
+		});
 		return {
 			model,
 			answers,
