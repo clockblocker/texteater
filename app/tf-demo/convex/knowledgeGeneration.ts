@@ -1,6 +1,6 @@
 import { canonicalJson } from "common-utils";
 import { type Infer, v } from "convex/values";
-import type { ApplyGeneratedKnowledgeRequest } from "dumdict/planning";
+import { checkApplyGeneratedKnowledgeRequest } from "dumdict/planning";
 import { translationLanguageValues } from "dumrel";
 import { assertIdentifier } from "../server/identifiers";
 import {
@@ -390,13 +390,19 @@ export const publish = internalMutation({
 			(change) => !published.has(canonicalJson(change)),
 		);
 
-		const dictionary = await createDumdictTransaction(
-			ctx,
-		).applyGeneratedKnowledge({
+		// The changes arrive as v.any(); Dumdict parses them here, refusing
+		// another language as the planner would.
+		const request = checkApplyGeneratedKnowledgeRequest("de", {
 			reading: parseGermanReading(args.reading),
 			changes,
 			pendingRelations: publishable.pendingRelations,
-		} as ApplyGeneratedKnowledgeRequest<"de">);
+		});
+		const dictionary =
+			request.status === "ok"
+				? await createDumdictTransaction(ctx).applyGeneratedKnowledge(
+						request.request,
+					)
+				: request;
 		// Nothing above wrote, so the action may split this batch and resend.
 		if (dictionary.status === "overBudget")
 			return { status: "OverBudget" as const };

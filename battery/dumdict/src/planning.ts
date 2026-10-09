@@ -26,6 +26,7 @@ export {
 } from "./parsing/lightweight-parsers";
 export type { ReadingEntryContextLoad } from "./planner/context-request";
 export {
+	checkApplyGeneratedKnowledgeRequest,
 	createDumdictPlanner,
 	type DumdictPlanConflict,
 	type DumdictPlanOutcome,

@@ -214,6 +214,65 @@ function addNewNote<L extends Dumling.Language>(
 	};
 }
 
+/** A generated-Knowledge request whose changes and pending relations are not yet parsed. */
+export type UncheckedApplyGeneratedKnowledgeRequest<
+	L extends Dumling.Language,
+> = {
+	readonly reading: Dumling.Reading<L>;
+	readonly changes: readonly unknown[];
+	readonly pendingRelations: readonly unknown[];
+};
+
+/**
+ * Checks a generated-Knowledge request the way `applyGeneratedKnowledge`
+ * does, so a host whose changes arrive untyped can parse them once at its
+ * edge. It parses every change and pending relation, throwing `ParsingError`
+ * for a malformed one, and refuses a Reading, change or pending target in
+ * another language as `invalidRequest`.
+ */
+export function checkApplyGeneratedKnowledgeRequest<L extends Dumling.Language>(
+	language: L,
+	request: UncheckedApplyGeneratedKnowledgeRequest<L>,
+):
+	| {
+			readonly status: "ok";
+			readonly request: ApplyGeneratedKnowledgeRequest<L>;
+	  }
+	| DumdictPlanRejected {
+	if (request.reading.lemma.language !== language)
+		return invalidRequest(
+			"Reading language does not match the dictionary.",
+		);
+	const changes = request.changes.map((change) =>
+		unwrapDumdictParse(parseKnowledgeChangeForDumdictRuntime(change)),
+	);
+	const pendingRelations = request.pendingRelations.map((pending) =>
+		unwrapDumdictParse(
+			parsePendingSemanticRelationForDumdictRuntime(pending),
+		),
+	);
+	if (
+		!changes.every((change) =>
+			knowledgeChangeUsesLanguage(change, language),
+		)
+	)
+		return invalidRequest(
+			"Knowledge Change language does not match the dictionary.",
+		);
+	if (
+		!pendingRelations.every((pending) =>
+			pendingTargetsLanguage(pending, language),
+		)
+	)
+		return invalidRequest(
+			"Pending Relation target language does not match the dictionary.",
+		);
+	return {
+		status: "ok",
+		request: { reading: request.reading, changes, pendingRelations },
+	};
+}
+
 function applyGeneratedKnowledge<L extends Dumling.Language>(
 	language: L,
 ): Workflow<
@@ -222,43 +281,8 @@ function applyGeneratedKnowledge<L extends Dumling.Language>(
 	ApplyGeneratedKnowledgeContext<L>
 > {
 	return {
-		check(request) {
-			if (request.reading.lemma.language !== language)
-				return invalidRequest(
-					"Reading language does not match the dictionary.",
-				);
-			const changes = request.changes.map((change) =>
-				unwrapDumdictParse(
-					parseKnowledgeChangeForDumdictRuntime(change),
-				),
-			);
-			const pendingRelations = request.pendingRelations.map((pending) =>
-				unwrapDumdictParse(
-					parsePendingSemanticRelationForDumdictRuntime(pending),
-				),
-			);
-			if (
-				!changes.every((change) =>
-					knowledgeChangeUsesLanguage(change, language),
-				)
-			)
-				return invalidRequest(
-					"Knowledge Change language does not match the dictionary.",
-				);
-			if (
-				!pendingRelations.every((pending) =>
-					pendingTargetsLanguage(pending, language),
-				)
-			)
-				return invalidRequest(
-					"Pending Relation target language does not match the dictionary.",
-				);
-			return ok({
-				reading: request.reading,
-				changes,
-				pendingRelations,
-			});
-		},
+		check: (request) =>
+			checkApplyGeneratedKnowledgeRequest(language, request),
 		plan(context, request) {
 			validateReadingEntryContext(
 				language,

@@ -1,5 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { createDumdictPlanner } from "../../../src/planner/planner";
+import { ParsingError } from "common-utils/validation";
+import {
+	checkApplyGeneratedKnowledgeRequest,
+	createDumdictPlanner,
+} from "../../../src/planner/planner";
 import type { AddNewNoteContext } from "../../../src/storage";
 import { deSerializedNotes } from "../../fixtures/de-notes";
 import {
@@ -101,5 +105,60 @@ describe("language guards", () => {
 			code: "invalidRequest",
 			message: "Knowledge Change language does not match the dictionary.",
 		});
+	});
+
+	test("checkApplyGeneratedKnowledgeRequest parses untyped changes and refuses another language", () => {
+		const definition = {
+			kind: "Contribute",
+			aspect: "definition",
+			value: "to walk",
+		} as const;
+		const pending = {
+			relation: "synonym",
+			target: {
+				language: "de",
+				canonicalForm: "laufen",
+				family: "Lexeme",
+				kind: "VERB",
+			},
+		} as const;
+		expect(
+			checkApplyGeneratedKnowledgeRequest("de", {
+				reading: germanGehenReading,
+				changes: [definition],
+				pendingRelations: [pending],
+			}),
+		).toEqual({
+			status: "ok",
+			request: {
+				reading: germanGehenReading,
+				changes: [definition],
+				pendingRelations: [pending],
+			},
+		});
+		expect(
+			checkApplyGeneratedKnowledgeRequest("de", {
+				reading: germanGehenReading,
+				changes: [],
+				pendingRelations: [
+					{
+						...pending,
+						target: { ...pending.target, language: "en" },
+					},
+				],
+			}),
+		).toEqual({
+			status: "rejected",
+			code: "invalidRequest",
+			message:
+				"Pending Relation target language does not match the dictionary.",
+		});
+		expect(() =>
+			checkApplyGeneratedKnowledgeRequest("de", {
+				reading: germanGehenReading,
+				changes: [{ ...definition, aspect: "definitions" }],
+				pendingRelations: [],
+			}),
+		).toThrow(ParsingError);
 	});
 });
