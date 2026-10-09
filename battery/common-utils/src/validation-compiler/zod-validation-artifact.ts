@@ -502,7 +502,6 @@ function compileDefinition(
 			);
 		}
 		case "tuple": {
-			assertNoChecks(definition, schemaName, path);
 			const items = definition.items ?? [];
 			const [first] = items;
 			if (
@@ -526,18 +525,21 @@ function compileDefinition(
 					context,
 				),
 			);
-			return definition.rest === undefined
-				? ["tuple", compiledItems]
-				: [
-						"tuple",
-						compiledItems,
-						compileReference(
-							definition.rest,
-							schemaName,
-							`${path}<rest>`,
-							context,
-						),
-					];
+			return withEffects(
+				definition.rest === undefined
+					? ["tuple", compiledItems]
+					: [
+							"tuple",
+							compiledItems,
+							compileReference(
+								definition.rest,
+								schemaName,
+								`${path}<rest>`,
+								context,
+							),
+						],
+				compileChecks(definition.checks, schemaName, path, context),
+			);
 		}
 		case "union": {
 			const options = definition.options ?? [];

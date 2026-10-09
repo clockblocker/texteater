@@ -194,44 +194,25 @@ export function germanClosedClassSurfaceError(): string {
 }
 
 /**
- * A feature value as `featureValueSetSchema` stores it: one value, or a set
- * of two or more distinct values in their catalog order, so one set has one
- * spelling and Core values still compare literally (system ADR 0032):
- * `["Fem", "Masc"]`, never `["Masc", "Fem"]`, `["Fem", "Fem"]` or `["Fem"]`.
- * The schema accepts only catalogs whose values are already in code-point
- * order, so ordering by code point is ordering by catalog.
+ * A feature value set as `featureValueTupleSchema` stores it: two or more
+ * distinct values in their catalog order, so one set has one spelling and
+ * Core values still compare literally (system ADR 0032): `["Fem", "Masc"]`,
+ * never `["Masc", "Fem"]`, `["Fem", "Fem"]` or `["Fem"]`. A German noun's
+ * `mixed` gender is such a set. The schema accepts only catalogs whose values
+ * are already in code-point order, so ordering by code point is ordering by
+ * catalog.
  */
-export function isFeatureValueSet(value: unknown): boolean {
-	// Zod names a generic set's members only through the catalog's own type,
-	// so the rule reads them as strings here; its structure is checked first.
-	if (!Array.isArray(value)) return true;
-	const members = value.map(String);
+export function isFeatureValueSet(values: readonly string[]): boolean {
 	return (
-		members.length >= 2 &&
-		members.every((member, index) => {
-			const previous = members[index - 1];
-			return previous === undefined || previous < member;
+		values.length >= 2 &&
+		values.every((value, index) => {
+			const previous = values[index - 1];
+			return previous === undefined || previous < value;
 		})
 	);
 }
 export function featureValueSetError(): string {
 	return "A feature value set names two or more distinct values in catalog order; one value is written alone";
-}
-
-/**
- * A `mixed` gender names two or more distinct genders in catalog order, as
- * every feature value set does (system ADR 0032): `{ mixed: ["Masc", "Neut"] }`
- * (der or das Balg), never `["Neut", "Masc"]` or a one-member mix.
- */
-export function isMixedGender({
-	mixed,
-}: {
-	mixed: readonly string[];
-}): boolean {
-	return isFeatureValueSet(mixed);
-}
-export function mixedGenderError(): string {
-	return "A mixed gender names two or more distinct genders in catalog order";
 }
 
 /**

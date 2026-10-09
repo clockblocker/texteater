@@ -1,12 +1,9 @@
 import { z } from "zod";
 import {
-	isMixedGender,
-	mixedGenderError,
-} from "../../../../validation/semantics.js";
-import {
 	FeatureBagKind,
 	featureBagSchema,
 	featureBags,
+	featureValueTupleSchema,
 } from "../../../universal/index.js";
 import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
@@ -16,14 +13,12 @@ const gender = DE_FEATURE_SCHEMA.gender;
  * A noun's Core gender: one gender, or `mixed` when the noun takes more than
  * one in the same sense, *der oder das Balg* (system ADR 0032). The tag says
  * the genders vary freely within one sense; a gender that changes the meaning
- * (der/die See) makes separate Lemmas. The members are distinct and in
- * catalog order, as in every feature value set, so one mix has one spelling.
+ * (der/die See) makes separate Lemmas. Its members are a feature value set,
+ * distinct and in catalog order, so one mix has one spelling.
  */
 const DeNounGenderSchema = z.union([
 	gender,
-	z
-		.strictObject({ mixed: z.tuple([gender, gender], gender) })
-		.refine(isMixedGender, { error: mixedGenderError }),
+	z.strictObject({ mixed: featureValueTupleSchema(gender) }),
 ]);
 
 export const DeNounFeatureBagsSchema = featureBags({

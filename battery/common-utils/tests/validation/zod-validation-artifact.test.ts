@@ -310,6 +310,73 @@ describe("compileZodValidationArtifacts", () => {
 		).toThrow(/homogeneous tuple/u);
 	});
 
+	test("preserves registered refinements attached directly to tuples", () => {
+		function isAscending(values: readonly string[]): boolean {
+			return values.every((value, index) => {
+				const previous = values[index - 1];
+				return previous === undefined || previous < value;
+			});
+		}
+		const letter = z.enum(["a", "b", "c"]);
+		const set = z
+			.tuple([letter, letter], letter)
+			.refine(isAscending, { message: "Ascending" });
+		const canonical = z.union([letter, set]);
+		const check = set._zod.def.checks?.[0] as unknown as {
+			readonly _zod: {
+				readonly def: {
+					readonly error?: (...args: never[]) => unknown;
+				};
+			};
+		};
+		const compiled = compileZodValidationArtifacts({
+			operations: [
+				{
+					construct: "custom",
+					error: check._zod.def.error,
+					implementation: isAscending as (
+						...args: never[]
+					) => unknown,
+					name: "example.tuple-ascending",
+					version: 1,
+				},
+			],
+			schemas: { value: canonical },
+		});
+		const artifact: ValidationArtifact<z.output<typeof canonical>> = {
+			definitions: compiled.definitions,
+			root: compiled.roots.value,
+			version: 1,
+		};
+		for (const input of [
+			"a",
+			["a", "b"],
+			["a", "b", "c"],
+			["b", "a"],
+			["a", "a"],
+			["a"],
+			["a", "d"],
+			"d",
+		]) {
+			const expected = canonical.safeParse(input);
+			const actual = parseValidationArtifact(artifact, input, {
+				"example.tuple-ascending": (value) => ({
+					issues: isAscending(value as readonly string[])
+						? []
+						: [{ code: "custom", message: "Ascending", path: [] }],
+					value,
+				}),
+			});
+			if (expected.success) expect(actual).toEqual(expected.data);
+			else {
+				expect(actual).toBeInstanceOf(ParsingError);
+				if (!(actual instanceof ParsingError))
+					throw new Error("expected failure");
+				expect(actual.issues).toEqual(expected.error.issues);
+			}
+		}
+	});
+
 	test("compiles registered semantics into a package-owned artifact", () => {
 		const canonical = z.strictObject({
 			name: z.string().min(1).overwrite(normalizeNfc),

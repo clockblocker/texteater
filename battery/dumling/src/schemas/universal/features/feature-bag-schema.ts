@@ -58,22 +58,28 @@ export const featurelessBags = featureBags({
 });
 
 /**
- * One value of a feature, or a set of two or more of its values: distinct, in
- * catalog order (system ADR 0032). The catalog's values must be in code-point
- * order, which every UD catalog is, so the set rule can compare spellings.
+ * A set of two or more of a feature's values: distinct, in catalog order
+ * (system ADR 0032). The catalog's values must be in code-point order, which
+ * every UD catalog is, so the set rule can compare spellings.
  */
-export function featureValueSetSchema<
-	const Schema extends z.ZodEnum<Readonly<Record<string, string>>>,
->(schema: Schema) {
+export function featureValueTupleSchema<
+	const Catalog extends Readonly<Record<string, string>>,
+>(schema: z.ZodEnum<Catalog>) {
 	const { options } = schema;
 	if (!isFeatureValueSet(options))
 		throw new Error(
 			`A feature value set needs a catalog in code-point order: ${options.join(", ")}`,
 		);
-	// The compiler takes checks on a union, not on a tuple.
 	return z
-		.union([schema, z.tuple([schema, schema], schema)])
+		.tuple([schema, schema], schema)
 		.refine(isFeatureValueSet, { error: featureValueSetError });
+}
+
+/** One value of a feature, or a set of two or more of its values. */
+export function featureValueSetSchema<
+	const Catalog extends Readonly<Record<string, string>>,
+>(schema: z.ZodEnum<Catalog>) {
+	return z.union([schema, featureValueTupleSchema(schema)]);
 }
 
 export function nonEmptyFeatureBagSchema<
