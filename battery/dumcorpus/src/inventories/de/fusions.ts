@@ -324,10 +324,11 @@ const abbreviation = (
 /**
  * Abbreviations are one Segment whose surface is the expansion. Multi-word
  * expansions are Locutions whose Kind is the part of speech the whole acts as
- * (ADR 0039), not Collocations; the Kinds ruled on issue 498 are marked in
- * `reviewedAbbreviationKinds`, the rest are the obvious whole-unit Kind and
- * stay open to review. Candidate surfaces mark an ambiguous abbreviation the
- * sentence must decide.
+ * (ADR 0039), not Collocations. No code reads an entry's Kind: it records the
+ * issue 498 rulings (z.B., z.T., u.a., usw., o.ä., v.a., i.A., d.h., bzw. and
+ * Dipl.-Ing., plus vgl. and sog. accepted in its review), and the rest are the
+ * obvious whole-unit Kind, still open to review. Candidate surfaces mark an
+ * ambiguous abbreviation the sentence must decide.
  */
 export const germanAbbreviations: readonly GermanAbbreviation[] = [
 	abbreviation(
@@ -497,23 +498,3 @@ export const germanAbbreviations: readonly GermanAbbreviation[] = [
 		"„Mrd.“ steht für „Milliarde“ oder „Milliarden“.",
 	),
 ];
-
-/**
- * The abbreviations whose Kind a human ruled on in issue 498: the ruled
- * expansions, and vgl. and sog. accepted in its review. Only these Kinds may
- * stand for a route question.
- */
-export const reviewedAbbreviationKinds: ReadonlySet<string> = new Set([
-	"z.B.",
-	"z.T.",
-	"u.a.",
-	"usw.",
-	"o.ä.",
-	"v.a.",
-	"i.A.",
-	"d.h.",
-	"bzw.",
-	"Dipl.-Ing.",
-	"vgl.",
-	"sog.",
-]);

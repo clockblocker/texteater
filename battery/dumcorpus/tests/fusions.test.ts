@@ -1,5 +1,4 @@
 import { expect, test } from "bun:test";
-import { reviewedAbbreviationKinds } from "../src/inventories/de/fusions.js";
 import {
 	germanAbbreviations,
 	germanClitics,
@@ -55,12 +54,4 @@ test("a fusion's spans spell its form", () => {
 test("a clitic carries its apostrophe, and an abbreviation ends with a dot", () => {
 	for (const { clitic } of germanClitics) expect(clitic).toStartWith("'");
 	for (const { text } of germanAbbreviations) expect(text).toEndWith(".");
-});
-
-test("every reviewed abbreviation Kind names a listed abbreviation with a Kind", () => {
-	for (const text of reviewedAbbreviationKinds)
-		expect(
-			germanAbbreviations.find((entry) => entry.text === text)?.kind ??
-				null,
-		).not.toBeNull();
 });
