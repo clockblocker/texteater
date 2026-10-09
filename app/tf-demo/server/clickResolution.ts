@@ -1,6 +1,6 @@
 import type { InvalidModelOutput, ProviderFailure } from "dumgen";
 import type * as Dumling from "dumling/types";
-import * as Effect from "effect/Effect";
+import type * as Effect from "effect/Effect";
 import type { ClickSentence } from "./clickEncounter";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
 import type { StoredUnit } from "./storedSegments";
@@ -15,8 +15,7 @@ export type { ClickEncounter, ClickSentence } from "./clickEncounter";
  * conflicts on its side of the port.
  *
  * Production runs Dumgen's `resolve.grammar` and `resolve.reading`
- * (`dumgenClickResolution`); `selectUnitOnly` selects a click's whole unit
- * and resolves nothing, calling no model (#848).
+ * (`dumgenClickResolution`).
  */
 
 /** A stored Lemma and the Sentence texts it was found under. */
@@ -95,22 +94,3 @@ export type ClickResolution = {
 		ProviderFailure | InvalidModelOutput
 	>;
 };
-
-/**
- * The production stub while resolution is rebuilt (#848): a click selects
- * its whole stored unit, whose words, route and variants the Resolution
- * Note shows, and resolves no Attestation or Reading. It calls no model.
- */
-export const selectUnitOnly: ClickResolution = Object.freeze({
-	grammar: () =>
-		Effect.succeed({
-			decision: "Unresolved" as const,
-			language: "de" as const,
-		}),
-	reading: () =>
-		Effect.die(
-			new Error(
-				"No Reading is resolved while click resolution is rebuilt.",
-			),
-		),
-});

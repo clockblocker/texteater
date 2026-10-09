@@ -4,12 +4,11 @@ import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
 import { applyTrustedReadingKnowledgeChange } from "../convex/model/readingKnowledge";
-import {
-	type ClickEncounter,
-	type ClickGrammarInput,
-	type ClickReadingInput,
-	type ClickResolution,
-	selectUnitOnly,
+import type {
+	ClickEncounter,
+	ClickGrammarInput,
+	ClickReadingInput,
+	ClickResolution,
 } from "../server/clickResolution";
 import { emojiDescriptionOf } from "../server/linguisticIdentity";
 import {
@@ -27,7 +26,7 @@ import { startSession } from "./support/occurrences";
  * The click orchestrator behind the ClickResolution port (#848): reuse,
  * checkpoints, commits and conflicts on its side, Grammar and the Reading's
  * Emoji Description on the port's. A fake port stands in for resolution;
- * production runs `selectUnitOnly`.
+ * production runs `dumgenClickResolution`.
  */
 
 afterEach(() => {
@@ -464,16 +463,6 @@ test("a checkpointed Reading commits with the run's record and no ReadingAvailab
 	expect(run.writes[0]?.progress).toEqual({
 		succeeded: { phase: "Commit", generationEvents: [] },
 	});
-});
-
-test("the production stub selects the unit only: Unresolved, no Reading and no commit", async () => {
-	const run = setup({ resolution: selectUnitOnly });
-	expect(await run.resolve()).toMatchObject({
-		grammatical: { decision: "Unresolved" },
-		persisted: { status: "Unresolved" },
-	});
-	expect(run.unresolved).toEqual([selection]);
-	expect(run.writes).toEqual([]);
 });
 
 test("a Resolution Session run on a unit intake left Unresolved ends Unresolved with no model call, and its Note shows the clicked unit", async () => {
