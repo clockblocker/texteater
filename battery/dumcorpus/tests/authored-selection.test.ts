@@ -13,6 +13,7 @@ import {
 	selectAuthoredArticle,
 	selectGrammaticalAlternatives,
 } from "../src/inventories.js";
+import { sameValue } from "../src/same-value.js";
 
 type Core = Readonly<Record<string, unknown>>;
 type NavigableLemma = Dumling.Lemma<"de", "Lexeme", "DET" | "PRON">;
@@ -107,6 +108,52 @@ describe("authored members by Reading and Lemma", () => {
 			expect(authoredReading(structuredClone(found.reading))).toBe(found);
 			expect(authoredFor(structuredClone(found.lemma))).toContain(found);
 		}
+	});
+
+	test("the index finds what a scan of every member finds, in registry order, keys in any order", () => {
+		const reversed = (value: unknown): unknown =>
+			Array.isArray(value)
+				? value.map(reversed)
+				: typeof value === "object" && value !== null
+					? Object.fromEntries(
+							Object.entries(value)
+								.reverse()
+								.map(([key, item]) => [key, reversed(item)]),
+						)
+					: value;
+		const isArticle = ({ lemma }: AuthoredMember) =>
+			lemma.kind === "DET" &&
+			"pronType" in lemma.coreFeatures &&
+			lemma.coreFeatures.pronType === "Art";
+		const positions = (members: readonly AuthoredMember[]) =>
+			members.map((member) => authoredMembers.indexOf(member));
+		for (const found of authoredMembers) {
+			const lemma = reversed(found.lemma);
+			const reading = reversed(found.reading);
+			expect(positions(authoredFor(lemma))).toEqual(
+				positions(
+					authoredMembers.filter((other) =>
+						sameValue(other.lemma, lemma),
+					),
+				),
+			);
+			const scanned = authoredMembers.find((other) =>
+				sameValue(other.reading, reading),
+			);
+			expect(authoredReading(reading)).toBe(found);
+			expect(scanned).toBe(found);
+			expect(selectAuthoredArticle(reading)).toBe(
+				isArticle(found) ? found : null,
+			);
+		}
+	});
+
+	test("an input the index can't key, such as a cycle, is scanned and misses", () => {
+		const cyclic: { kind: string; self?: unknown } = { kind: "DET" };
+		cyclic.self = cyclic;
+		expect(authoredFor(cyclic)).toEqual([]);
+		expect(authoredReading(cyclic)).toBeUndefined();
+		expect(selectAuthoredArticle(cyclic)).toBeNull();
 	});
 
 	test("a Lemma finds each of its Readings, and nothing else finds one", () => {
