@@ -62,9 +62,10 @@ export function aspectContext(
 	attestation: Dumling.Attestation<"de">,
 	markedSentence: string,
 ): AspectContext {
-	const lemma = reading.lemma as Dumling.Lemma<"de">;
-	const emojiDescription = (reading as { emojiDescription?: string })
-		.emojiDescription;
+	const { lemma } = reading;
+	// A Foreign Reading has no Emoji Description (ADR 0045).
+	const emojiDescription =
+		"emojiDescription" in reading ? reading.emojiDescription : undefined;
 	return {
 		scope,
 		models,
@@ -150,17 +151,17 @@ export function textsOf(
 	output: unknown,
 	max: number,
 ): string[] | InvalidModelOutput {
-	if (
-		!Array.isArray(output) ||
-		output.some((value) => typeof value !== "string")
-	)
+	const strings = Array.isArray(output)
+		? output.filter((value): value is string => typeof value === "string")
+		: [];
+	if (!Array.isArray(output) || strings.length !== output.length)
 		return unusable(
 			stage,
 			`Luna answered no array of text: ${JSON.stringify(output).slice(0, 80)}`,
 		);
 	const texts = [
 		...new Set(
-			(output as string[])
+			strings
 				.map((value) => value.trim())
 				.filter((value) => value !== ""),
 		),
@@ -192,5 +193,7 @@ export function checkedChanges(
 				`Dumrel refuses the ${aspect} change: ${applied.error.message.slice(0, 200)}`,
 			);
 	}
+	// Dumrel accepted each change above, but answers the Knowledge, not the
+	// change, so nothing narrows it short of a Dumrel change parser.
 	return changes as GermanKnowledgeChange[];
 }

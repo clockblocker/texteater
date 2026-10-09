@@ -114,9 +114,7 @@ function parseResponsesPayload(value: unknown): ResponsesPayload | undefined {
 
 /** The schema's required keys, which an unwrapped answer must hold. */
 function requiredOf(request: LunaRequest): readonly string[] {
-	const required = (
-		request.outputSchema as { required?: unknown } | undefined
-	)?.required;
+	const required = request.outputSchema?.required;
 	return Array.isArray(required)
 		? required.filter((key): key is string => typeof key === "string")
 		: [];
@@ -139,7 +137,7 @@ export function lunaResponsesBody(
 		$defs,
 		$schema: _schema,
 		...schema
-	} = (request.outputSchema ?? {}) as Record<string, unknown>;
+	}: Readonly<Record<string, unknown>> = request.outputSchema ?? {};
 	return {
 		...request.configuration.settings,
 		model: request.configuration.model,

@@ -139,9 +139,7 @@ function judgmentState(
 		relations: Object.fromEntries(
 			relations.map((relation) => [
 				relation,
-				relationDefinitions[
-					relation as keyof typeof relationDefinitions
-				],
+				relationDefinitions[relation],
 			]),
 		),
 		...(kinds.length > 0
@@ -233,17 +231,15 @@ export const produceRelations = (
 				family === "Saying"
 					? "Saying"
 					: choiceOf(answers, `kind_${index}`).choice;
-			const relation = answer.choice as Dumrel.DirectSemanticRelation;
+			const relation = relations.find(
+				(requested) => requested === answer.choice,
+			);
 			const self =
 				family === source.family &&
 				kind === source.kind &&
 				foldCase(candidate, "de") ===
 					foldCase(source.canonicalForm, "de");
-			if (
-				!relations.includes(relation) ||
-				kind === "OtherFamily" ||
-				self
-			) {
+			if (relation === undefined || kind === "OtherFamily" || self) {
 				rejected.push({ candidate, relation: answer.choice, kind });
 				continue;
 			}

@@ -10,7 +10,7 @@
  */
 
 import { canonicalJson } from "common-utils";
-import { lemmaIdentityKey } from "dumling";
+import { lemmaIdentityKey, parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { z } from "zod";
 
@@ -55,7 +55,7 @@ const bagOf = (value: unknown) =>
 
 /** The cell: a pillar's coordinates in Core and the Surface's inflection. */
 function cellOf(attestation: AttestationValue): string {
-	const core = attestation.surface.lemma.coreFeatures as Values;
+	const core: Values = attestation.surface.lemma.coreFeatures;
 	return canonicalJson({
 		core: bagOf({
 			case: core.case,
@@ -79,7 +79,13 @@ export function evaluateGrammar(
 		outcome: output._tag,
 		...(output.reason === undefined ? {} : { reason: output.reason }),
 	};
-	if (output._tag !== "Resolved" || output.attestation === undefined)
+	// A run stores the Attestation unchecked; Dumling checks it here, and
+	// one it rejects scores like no Attestation.
+	const parsed =
+		output._tag === "Resolved" && output.attestation !== undefined
+			? parseUnit(output.attestation)
+			: undefined;
+	if (!parsed?.success || parsed.chain.unitKind !== "Attestation")
 		return {
 			...base,
 			lemma: false,
@@ -89,7 +95,7 @@ export function evaluateGrammar(
 			...(hasValency ? { valency: false } : {}),
 			exact: false,
 		};
-	const got = output.attestation as AttestationValue;
+	const got: AttestationValue = parsed.chain.value;
 	const surfaceSpelling = (attestation: AttestationValue) =>
 		canonicalJson({
 			normalizedSurface: attestation.surface.normalizedSurface,

@@ -42,8 +42,11 @@ export type PairCandidate = {
 	readonly name: string;
 };
 
-const pronTypeOf = ({ member }: AuthoredRealization) =>
-	(member.lemma.coreFeatures as Readonly<Record<string, unknown>>).pronType;
+function pronTypeOf({ member }: AuthoredRealization): unknown {
+	const features: Readonly<Record<string, unknown>> =
+		member.lemma.coreFeatures;
+	return features.pronType;
+}
 
 /**
  * Every spelling of der and ein: the DET `pronType: Art` realizations, the
@@ -103,7 +106,7 @@ export const particleForms: ReadonlySet<string> = new Set(
 /** The personal pronouns that are no possessive, each with its Core Features. */
 const personalPronouns = authoredRealizations.flatMap((realization) => {
 	const { lemma } = realization.member;
-	const features = lemma.coreFeatures as Readonly<Record<string, unknown>>;
+	const features: Readonly<Record<string, unknown>> = lemma.coreFeatures;
 	return lemma.kind === "PRON" &&
 		features.pronType === "Prs" &&
 		features.poss !== "Yes"

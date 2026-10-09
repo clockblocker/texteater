@@ -1,4 +1,6 @@
 import type { Question } from "@typesafe-ai/sdk";
+import { parseUnit, routeOf } from "dumling";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { createDumgen } from "../../src/create-dumgen.js";
 import type {
@@ -135,11 +137,61 @@ type LemmaShape = {
 };
 
 /**
+ * What an Attestation records on each route these tests use, beside its
+ * Surface and members: whether its Surface carries inflection, left empty,
+ * and its evidence, none. Knowledge reads only the Lemma and
+ * `valencyEvidence`.
+ */
+const routeFields: Readonly<
+	Record<
+		string,
+		{
+			readonly inflects: boolean;
+			readonly fields: Readonly<Record<string, unknown>>;
+		}
+	>
+> = {
+	"Lexeme/NOUN": {
+		inflects: true,
+		fields: { articleEvidence: null, valencyEvidence: [] },
+	},
+	"Lexeme/VERB": {
+		inflects: true,
+		fields: { expletiveEvidence: null, valencyEvidence: [] },
+	},
+	"Lexeme/ADJ": {
+		inflects: true,
+		fields: { articleEvidence: null, valencyEvidence: [] },
+	},
+	"Lexeme/PRON": { inflects: true, fields: { articleEvidence: null } },
+	"Locution/VERB": {
+		inflects: true,
+		fields: { expletiveEvidence: null, valencyEvidence: [] },
+	},
+	"Locution/ADV": { inflects: true, fields: {} },
+	"Locution/INTJ": { inflects: false, fields: {} },
+	"Saying/Saying": { inflects: false, fields: {} },
+};
+
+/** `value` as Dumling parses it on `lemma`'s route, or a thrown error. */
+function parsedOn<U extends "Reading" | "Attestation">(
+	unitKind: U,
+	lemma: Dumling.Lemma<"de">,
+	value: unknown,
+) {
+	const parsed = parseUnit(value, { unitKind, ...routeOf(lemma) });
+	if (!parsed.success) throw parsed.error;
+	return parsed.chain.value;
+}
+
+/**
  * A Knowledge input for `lemma`'s Reading `emoji` in `sentence`, the
  * target the words `target` marks, with whatever the test overrides.
+ * Dumling parses the Lemma, the Reading and the Attestation on the
+ * Lemma's route.
  */
 export function knowledgeInput<E = never>(
-	lemma: LemmaShape,
+	shape: LemmaShape,
 	emoji: string,
 	sentence: string,
 	target: readonly string[],
@@ -154,36 +206,47 @@ export function knowledgeInput<E = never>(
 		if (index < 0) throw Error(`${word} is no word of ${sentence}`);
 		return index;
 	});
-	const fullLemma = {
+	const parsedLemma = parseUnit({
 		unitKind: "Lemma",
 		language: "de",
 		coreFeatures: {},
-		...lemma,
-	};
+		...shape,
+	});
+	if (!parsedLemma.success) throw parsedLemma.error;
+	const { chain } = parsedLemma;
+	if (chain.unitKind !== "Lemma" || chain.language !== "de")
+		throw Error(`${shape.canonicalForm} is no German Lemma`);
+	const lemma = chain.value;
+	const route = routeFields[`${lemma.family}/${lemma.kind}`];
+	if (!route)
+		throw Error(`No Attestation fields for ${lemma.family}/${lemma.kind}`);
 	const { valencyEvidence, ...rest } = overrides;
 	return {
 		language: "de",
-		reading: {
+		reading: parsedOn("Reading", lemma, {
 			unitKind: "Reading",
-			lemma: fullLemma,
+			lemma,
 			emojiDescription: emoji,
-		} as never,
-		attestation: {
+		}),
+		attestation: parsedOn("Attestation", lemma, {
 			unitKind: "Attestation",
 			members: target.map((attested) => ({
 				attested,
 				orthography: "Standard",
 			})),
 			realizationCoverage: "Full",
+			...route.fields,
 			...(valencyEvidence ? { valencyEvidence } : {}),
 			surface: {
 				unitKind: "Surface",
 				language: "de",
 				normalizedSurface: target.join(" "),
 				spelling: { kind: "Canonical" },
-				lemma: fullLemma,
+				surfaceFeatures: null,
+				...(route.inflects ? { inflectionalFeatures: null } : {}),
+				lemma,
 			},
-		} as never,
+		}),
 		sentence: { segments, target: indices },
 		origin: "New",
 		request: {},

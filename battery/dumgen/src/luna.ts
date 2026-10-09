@@ -30,6 +30,16 @@ export type LunaRequest = (
 	};
 };
 
+/**
+ * A Luna request before its configuration. `Omit` on the union itself
+ * would merge the text and JSON shapes, so each is omitted from apart.
+ */
+export type LunaDraft = LunaRequest extends infer R
+	? R extends unknown
+		? Omit<R, "configuration">
+		: never
+	: never;
+
 /** What Luna answered: its output, and whatever the transport reports beside it. */
 export type LunaResponse = {
 	readonly output: unknown;

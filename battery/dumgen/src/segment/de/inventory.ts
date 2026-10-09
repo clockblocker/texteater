@@ -67,7 +67,7 @@ function identityIndex(): Map<string, IdentityCandidate[]> {
 	for (const realization of authoredRealizations) {
 		const { lemma } = realization.member;
 		if (lemma.kind !== "DET" && lemma.kind !== "PRON") continue;
-		const features = lemma.coreFeatures as Record<string, unknown>;
+		const features: Readonly<Record<string, unknown>> = lemma.coreFeatures;
 		const pronType =
 			typeof features.pronType === "string" ? features.pronType : null;
 		const poss = features.poss === "Yes";

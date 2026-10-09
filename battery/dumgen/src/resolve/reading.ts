@@ -32,7 +32,7 @@ import * as Effect from "effect/Effect";
 import type { OperationScope } from "../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../errors.js";
 import { askThrough, type JevSettings } from "../jev-call.js";
-import type { LunaRequest } from "../luna.js";
+import type { LunaDraft } from "../luna.js";
 import { askLuna, type LunaSettings } from "../luna-call.js";
 import { type Ask, choice, choiceOf } from "../segment/ask.js";
 import type { Route } from "../segment/segmented-sentence.js";
@@ -144,7 +144,7 @@ export const emojiDescriptionSchema = {
 export function emojiDescriptionRequest(input: {
 	readonly markedSentence: string;
 	readonly lemma: string;
-}): Omit<LunaRequest, "configuration"> {
+}): LunaDraft {
 	return {
 		systemPrompt: generationPrompt,
 		input,
@@ -236,7 +236,7 @@ export const resolveReading = Effect.fnUntraced(function* (
 	input: ResolveReadingInput,
 ): Effect.fn.Return<ReadingResolution, ProviderFailure | InvalidModelOutput> {
 	const { attestation, sentence, unit } = input;
-	const lemma = attestation.surface.lemma as Dumling.Lemma<"de">;
+	const { lemma } = attestation.surface;
 	const defect = (message: string) => Effect.die(Error(message));
 	if (lemma.language !== "de")
 		return yield* defect(
@@ -256,6 +256,8 @@ export const resolveReading = Effect.fnUntraced(function* (
 			"A Foreign Reading has no Emoji Description, so there is nothing to resolve (ADR 0045)",
 		);
 	targetOf(sentence, unit, route);
+	// TypeScript can't pair a Lemma union with each route's Reading; `lemma`
+	// is a non-Foreign German Lemma, so this is its Reading.
 	const keyOf = (emojiDescription: string) =>
 		readingIdentityKey({
 			unitKind: "Reading",

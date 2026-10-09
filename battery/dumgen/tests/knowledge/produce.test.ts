@@ -353,7 +353,7 @@ test("an attested preposition no governor selects stays an attributable failure 
 			verb("zittern"),
 			"🥶",
 			"Sie zitterte wegen der Kälte.",
-			["zitterte"],
+			["zitterte", "wegen"],
 			{
 				request: { valency: null },
 				valencyEvidence: [attestedPreposition("wegen", "Gen")],
@@ -514,7 +514,15 @@ test("a Closed Route or an authored Reading answers every requested aspect with 
 				family: "Lexeme",
 				kind: "PRON",
 				canonicalForm: "jemand",
-				coreFeatures: {},
+				coreFeatures: {
+					case: null,
+					number: null,
+					person: null,
+					polite: null,
+					poss: null,
+					pronType: "Ind",
+					gender: null,
+				},
 			},
 			"🧑",
 			"Da ist jemand.",
@@ -810,11 +818,15 @@ test("a Partizip I is checked by code, so jev judges only its meaning; an insepa
 	]);
 });
 
-const locution = (kind: string, canonicalForm: string) => ({
+const locution = (
+	kind: string,
+	canonicalForm: string,
+	coreFeatures: Readonly<Record<string, unknown>> = {},
+) => ({
 	family: "Locution",
 	kind,
 	canonicalForm,
-	coreFeatures: {},
+	coreFeatures,
 });
 
 test("Locution Type, Saying Type with its attribution and Formula Role are judged; Collocation is offered only to a VERB (#669)", async () => {
@@ -836,7 +848,7 @@ test("Locution Type, Saying Type with its attribution and Formula Role are judge
 	const adverb = await produceOnce(
 		{ jev: adverbJev.ask, luna: knowledgeLuna({}).ask },
 		knowledgeInput(
-			locution("ADV", "Knall auf Fall"),
+			locution("ADV", "Knall auf Fall", { comparable: null }),
 			"⚡",
 			"Er ging Knall auf Fall.",
 			["Knall", "auf", "Fall"],

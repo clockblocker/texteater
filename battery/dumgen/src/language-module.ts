@@ -80,7 +80,5 @@ export function languageModuleOf(
 	modules: LanguageModules,
 	language: string,
 ): LanguageModule | undefined {
-	return Object.hasOwn(modules, language)
-		? modules[language as SegmentLanguage]
-		: undefined;
+	return Object.entries(modules).find(([key]) => key === language)?.[1];
 }

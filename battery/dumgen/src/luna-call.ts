@@ -3,10 +3,16 @@
  * output checked before it is used, its tokens read from what the
  * transport reports (OpenAI's `usage`, as `createOpenAILuna` returns it).
  */
+import { isRecord } from "common-utils";
 import type * as Effect from "effect/Effect";
 import type { CallTokens, OperationScope } from "./call.js";
 import { InvalidModelOutput, type ProviderFailure } from "./errors.js";
-import type { LunaAsk, LunaConfiguration, LunaRequest } from "./luna.js";
+import type {
+	LunaAsk,
+	LunaConfiguration,
+	LunaDraft,
+	LunaRequest,
+} from "./luna.js";
 
 /** What an operation reaches Luna with: the host's transport and the configuration. */
 export type LunaSettings = {
@@ -27,11 +33,13 @@ export function lunaTokens(metadata: unknown): CallTokens & {
 	readonly cachedInputTokens: number;
 	readonly cacheWriteTokens: number;
 } {
-	const usage = (metadata as { usage?: Record<string, unknown> } | null)
-		?.usage;
-	const details = usage?.input_tokens_details as
-		| Record<string, unknown>
-		| undefined;
+	const usage =
+		isRecord(metadata) && isRecord(metadata.usage)
+			? metadata.usage
+			: undefined;
+	const details = isRecord(usage?.input_tokens_details)
+		? usage.input_tokens_details
+		: undefined;
 	return {
 		inputTokens: tokenCount(usage?.input_tokens),
 		outputTokens: tokenCount(usage?.output_tokens),
@@ -45,13 +53,13 @@ export function askLuna<Output>(
 	scope: OperationScope,
 	luna: LunaSettings,
 	stage: string,
-	request: Omit<LunaRequest, "configuration">,
+	request: LunaDraft,
 	check: (output: unknown) => Output | InvalidModelOutput,
 ): Effect.Effect<Output, ProviderFailure | InvalidModelOutput> {
-	const sent = {
+	const sent: LunaRequest = {
 		...request,
 		configuration: luna.configuration,
-	} as LunaRequest;
+	};
 	return scope.call({
 		stage,
 		executor: "luna",
@@ -61,9 +69,9 @@ export function askLuna<Output>(
 		check: (response) => {
 			// A transport that kept no output says why (a refusal, JSON
 			// without its value); that reason is the refusal's.
-			const problem = (
-				response.metadata as { problem?: unknown } | undefined
-			)?.problem;
+			const problem = isRecord(response.metadata)
+				? response.metadata.problem
+				: undefined;
 			return response.output === undefined && typeof problem === "string"
 				? new InvalidModelOutput({ stage, message: problem })
 				: check(response.output);

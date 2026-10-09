@@ -7,6 +7,7 @@
  * (plurality, the participle's form and meaning, the three types); code
  * derives the rest (conjugation classes from the Präteritum, ADR 0038).
  */
+import { isRecord } from "common-utils";
 import { germanInseparablePrefixes } from "dumcorpus/inventories";
 import { foldCase, normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
@@ -217,11 +218,10 @@ function isParticipleOf(
 }
 
 function sourceDraftOf(output: unknown): SourceDraft | null | undefined {
-	if (!output || typeof output !== "object") return undefined;
-	const value = output as Record<string, unknown>;
-	if (value.verb === null) return null;
-	const { verb, reflexive, separablePrefix, preterite } = value;
-	const participleForm = value.participle;
+	if (!isRecord(output)) return undefined;
+	if (output.verb === null) return null;
+	const { verb, reflexive, separablePrefix, preterite } = output;
+	const participleForm = output.participle;
 	if (
 		typeof verb !== "string" ||
 		typeof preterite !== "string" ||
@@ -281,7 +281,7 @@ function sourceVerbLemma(
 			hasSepPrefix: draft.separablePrefix,
 			lexicallyReflexive: draft.reflexive,
 		},
-	} as Dumling.Lemma<"de", "Lexeme", "VERB">;
+	};
 }
 
 /**

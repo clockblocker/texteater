@@ -62,6 +62,12 @@ export const valencyPrompt = [
 
 type ComplementKind = Dumrel.GermanValencyComplement["kind"];
 
+/** One entry of an Attestation's `valencyEvidence`, on any route that records it. */
+type ValencyEvidence = Extract<
+	Dumling.Attestation<"de">,
+	{ readonly valencyEvidence: unknown }
+>["valencyEvidence"][number];
+
 /** A German Valency Slot: its status and its German complements. */
 type GermanSlot = {
 	readonly status: Dumrel.ValencySlotStatus;
@@ -144,6 +150,10 @@ const complementSchemas: Readonly<
 
 /** The frame Luna answers under: only the route's complement kinds (#675). */
 function frameSchema(kinds: readonly string[]) {
+	// Dumrel's kinds span every language's; a German route allows German ones.
+	const schemaOf: Readonly<
+		Partial<Record<string, Readonly<Record<string, unknown>>>>
+	> = complementSchemas;
 	return {
 		type: "object",
 		properties: {
@@ -161,10 +171,7 @@ function frameSchema(kinds: readonly string[]) {
 							minItems: 1,
 							items: {
 								anyOf: kinds.flatMap((kind) => {
-									const schema =
-										complementSchemas[
-											kind as ComplementKind
-										];
+									const schema = schemaOf[kind];
 									return schema ? [schema] : [];
 								}),
 							},
@@ -183,15 +190,14 @@ function frameSchema(kinds: readonly string[]) {
 /** A preposition's ADP Lemma, as Grammatical Resolution writes it in `valencyEvidence`. */
 const prepositionLemma = (
 	canonicalForm: string,
-): Dumling.Lemma<"de", "Lexeme", "ADP"> =>
-	({
-		unitKind: "Lemma",
-		language: "de",
-		family: "Lexeme",
-		kind: "ADP",
-		canonicalForm,
-		coreFeatures: {},
-	}) as Dumling.Lemma<"de", "Lexeme", "ADP">;
+): Dumling.Lemma<"de", "Lexeme", "ADP"> => ({
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "ADP",
+	canonicalForm,
+	coreFeatures: {},
+});
 
 /** A proposed complement in Dumrel's shape: a preposition becomes its ADP Lemma. */
 function complementOf(value: unknown): unknown {
@@ -320,26 +326,21 @@ const coveredPrepositions = (frame: readonly GermanSlot[]) =>
 function attestedSlots(
 	lemma: Dumling.Lemma<"de">,
 	proposed: readonly GermanSlot[],
-	evidence: readonly unknown[],
+	evidence: readonly ValencyEvidence[],
 ): {
 	readonly slots: GermanSlot[];
 	readonly failures: KnowledgeFailure[];
 } {
 	const covered = coveredPrepositions(proposed);
-	const takesPrepositions = (
-		allowedComplementKinds(lemma) as readonly string[]
-	).includes("Preposition");
+	const takesPrepositions = allowedComplementKinds(lemma).some(
+		(kind) => kind === "Preposition",
+	);
 	const slots: GermanSlot[] = [];
 	const failures: KnowledgeFailure[] = [];
-	for (const entry of evidence) {
-		const complement = isRecord(entry) ? entry.complement : undefined;
-		if (!isRecord(complement) || complement.kind !== "Preposition")
-			continue;
-		const preposition = complement.preposition as
-			| { readonly canonicalForm?: unknown }
-			| undefined;
-		const form = String(preposition?.canonicalForm ?? "");
-		const governedCase = complement.governedCase as Dumrel.GovernedCase;
+	for (const { complement } of evidence) {
+		if (complement.kind !== "Preposition") continue;
+		const form = complement.preposition.canonicalForm;
+		const { governedCase } = complement;
 		const unusableEvidence = (message: string) =>
 			failures.push({
 				aspect: "valency",
@@ -372,7 +373,7 @@ function attestedSlots(
 					referent: "Either",
 				},
 			],
-		} as GermanSlot);
+		});
 	}
 	return { slots, failures };
 }
@@ -401,7 +402,7 @@ export const produceValency = (
 			frameSchema(kinds),
 			(output) =>
 				isRecord(output) && Array.isArray(output.valency)
-					? (output.valency as unknown[])
+					? output.valency
 					: unusable("valency", "Luna answered no valency list"),
 		);
 		const { kept, dropped } = validFrame(context.reading, proposed);
@@ -415,8 +416,9 @@ export const produceValency = (
 				? attestedSlots(
 						context.lemma,
 						kept,
-						(context.attestation as { valencyEvidence?: unknown[] })
-							.valencyEvidence ?? [],
+						"valencyEvidence" in context.attestation
+							? context.attestation.valencyEvidence
+							: [],
 					)
 				: { slots: [], failures: [] };
 		const frame = [...kept, ...attested.slots];

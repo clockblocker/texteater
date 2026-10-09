@@ -11,9 +11,10 @@
  * Emoji Description, the same call drafts it after the headword, so the
  * click needs no second Luna call.
  */
+import { isRecord } from "common-utils";
 import { foldCase } from "dumling";
 import { InvalidModelOutput } from "../../errors.js";
-import type { LunaRequest } from "../../luna.js";
+import type { LunaDraft } from "../../luna.js";
 import {
 	draftPrompt,
 	emojiDescriptionSchema,
@@ -139,7 +140,7 @@ export function canonicalFormRequest(
 	judged: Judged,
 	hints: readonly LemmaCandidate[],
 	drafts = false,
-): Omit<LunaRequest, "configuration"> {
+): LunaDraft {
 	const state = targetState(target);
 	const fixedMembers = Object.fromEntries(
 		target.members.flatMap((member) => {
@@ -283,14 +284,14 @@ export function checkWritten(
 ): Written | InvalidModelOutput {
 	const unusable = (message: string) =>
 		new InvalidModelOutput({ stage: "canonical", message });
-	const value = output as { canonicalForm?: unknown; members?: unknown };
 	if (
-		typeof value?.canonicalForm !== "string" ||
-		!Array.isArray(value.members)
+		!isRecord(output) ||
+		typeof output.canonicalForm !== "string" ||
+		!Array.isArray(output.members)
 	)
 		return unusable("Luna answered without a Canonical Form and members");
-	const form = normalizedSlots(value.canonicalForm);
-	if (!form || /\n/u.test(value.canonicalForm))
+	const form = normalizedSlots(output.canonicalForm);
+	if (!form || /\n/u.test(output.canonicalForm))
 		return unusable("Luna answered no single-line Canonical Form");
 	const keeps = (member: Target["members"][number]) => {
 		const fixed = fixedSpelling(member, judged.readings);
@@ -300,10 +301,10 @@ export function checkWritten(
 			? member.text
 			: undefined;
 	};
-	const aligned = alignedWritten(target, value.members, keeps);
+	const aligned = alignedWritten(target, output.members, keeps);
 	if (!aligned)
 		return unusable(
-			`Luna spelled ${value.members.length} members, not ${target.members.length}`,
+			`Luna spelled ${output.members.length} members, not ${target.members.length}`,
 		);
 	const members: string[] = [];
 	for (const member of target.members) {
@@ -338,18 +339,12 @@ export function checkWritten(
 			);
 		members.push(word);
 	}
-	const { article, emojiDescription } = value as {
-		article?: unknown;
-		emojiDescription?: unknown;
-	};
+	const { article: written, emojiDescription } = output;
+	const article = nounArticles.find((known) => known === written);
 	return {
 		canonicalForm: form,
 		members,
-		...(writesArticle(target) &&
-		typeof article === "string" &&
-		(nounArticles as readonly string[]).includes(article)
-			? { article: article as Written["article"] & string }
-			: {}),
+		...(writesArticle(target) && article !== undefined ? { article } : {}),
 		// A draft is checked against the Lemma once there is one.
 		...(typeof emojiDescription === "string"
 			? { drafted: emojiDescription.trim() }

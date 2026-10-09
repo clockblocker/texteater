@@ -71,12 +71,8 @@ export type Policy = {
 	readonly fixed?: number;
 };
 
-/**
- * Candidates v3's policies. Production assembles under its own floors; the
- * route requests still cover every group these build, as the lab's batches
- * did, so cached answers replay.
- */
-export const v3Policies: Readonly<Record<string, Policy>> = {
+/** Candidates v3's policies by name, `full@0.7` among them. */
+const policies = {
 	sat: {
 		satellite: 0.5,
 		idiom: null,
@@ -126,9 +122,16 @@ export const v3Policies: Readonly<Record<string, Policy>> = {
 		saying: 0.3,
 		absorb: true,
 	},
-};
+} satisfies Readonly<Record<string, Policy>>;
 
-export const full07 = v3Policies["full@0.7"] as Policy;
+/**
+ * Candidates v3's policies. Production assembles under its own floors; the
+ * route requests still cover every group these build, as the lab's batches
+ * did, so cached answers replay.
+ */
+export const v3Policies: Readonly<Record<string, Policy>> = policies;
+
+export const full07: Policy = policies["full@0.7"];
 
 /** Everything one assembly links; each edge list is already thresholded. */
 export type AssemblyInput = {

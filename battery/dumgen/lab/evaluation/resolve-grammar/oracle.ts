@@ -62,11 +62,10 @@ function cellAnswer(goldCase: GrammarCase, question: Question): string {
 	const target = targetOf(goldCase.sentence, unit, unit.route);
 	const { options } = authoredOptions(target, unit.identity);
 	const lemmaKey = lemmaIdentityKey(ideal.surface.lemma);
-	const bag = (
+	const bag: Values | null =
 		"inflectionalFeatures" in ideal.surface
 			? ideal.surface.inflectionalFeatures
-			: null
-	) as Values | null;
+			: null;
 	const index = options.findIndex(
 		(entry) =>
 			lemmaIdentityKey(entry.member.lemma) === lemmaKey &&
@@ -78,14 +77,13 @@ function cellAnswer(goldCase: GrammarCase, question: Question): string {
 	// A stem's Surface Syncretism has its units' Lemma; its units' cells
 	// tell it apart.
 	const goldUnits = (
-		(
-			ideal.surface as {
-				syncretized?: readonly {
-					inflectionalFeatures?: Values | null;
-				}[];
-			}
-		).syncretized ?? []
-	).map(({ inflectionalFeatures }) => inflectionalFeatures ?? {});
+		"syncretized" in ideal.surface ? (ideal.surface.syncretized ?? []) : []
+	).map(
+		(syncretic): Values =>
+			"inflectionalFeatures" in syncretic
+				? (syncretic.inflectionalFeatures ?? {})
+				: {},
+	);
 	const open = openOptions(options).findIndex((answer) =>
 		"syncretism" in answer
 			? lemmaIdentityKey(answer.syncretism.member.lemma) === lemmaKey &&
@@ -120,9 +118,7 @@ export function goldAnswers(
 	const bag: Values | null =
 		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
 	const members = ideal.members;
-	const valency = (
-		(ideal as { valencyEvidence?: readonly Values[] }).valencyEvidence ?? []
-	).map((slot) => slot as Values & { complement: Values });
+	const valency = "valencyEvidence" in ideal ? ideal.valencyEvidence : [];
 	const governedAt = (position: number) =>
 		valency.find(
 			(slot) =>
@@ -323,7 +319,8 @@ export function goldWritten(goldCase: GrammarCase, input: unknown): unknown {
 		return tokens[index] ?? text;
 	});
 	const { lemma } = ideal.surface;
-	const gender = (lemma.coreFeatures as Values).gender;
+	const core: Values = lemma.coreFeatures;
+	const { gender } = core;
 	return {
 		canonicalForm: lemma.canonicalForm,
 		members,

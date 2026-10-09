@@ -1,7 +1,7 @@
 /** Luna's call on a guess at jev's answers, and why the guess can miss. */
 
 import { isRecord } from "common-utils";
-import type { LunaRequest } from "../../../luna.js";
+import type { LunaDraft } from "../../../luna.js";
 import type { Judged } from "../canonical-form.js";
 import type { MemberOrthography } from "../member-spelling.js";
 import type { Target } from "../target.js";
@@ -39,8 +39,8 @@ export function guessedJudgment(
  * spelling, an auxiliary or a governed member.
  */
 export function guessMisses(
-	guessed: Omit<LunaRequest, "configuration">,
-	judged: Omit<LunaRequest, "configuration">,
+	guessed: LunaDraft,
+	judged: LunaDraft,
 ): string | undefined {
 	const read = isRecord(judged.input)
 		? Object.fromEntries(

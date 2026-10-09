@@ -18,8 +18,11 @@
 
 import { authoredReading, closedRoute } from "dumcorpus/inventories";
 import { lemmaIdentityKey, routeOf } from "dumling";
-import type * as Dumling from "dumling/types";
-import { selectKnowledge } from "dumrel";
+import {
+	directSemanticRelationValues,
+	selectKnowledge,
+	translationLanguageValues,
+} from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import * as Semaphore from "effect/Semaphore";
@@ -99,9 +102,8 @@ function jobsOf(
 ): { readonly jobs: Job[]; readonly skipped: string[] } {
 	const jobs: Job[] = [];
 	const skipped: string[] = [];
-	const applies = applicable as Readonly<Record<string, unknown>>;
 	for (const [aspect, selection] of Object.entries(request)) {
-		if (!(aspect in applies) || aspect === "morphologicalTree") {
+		if (!(aspect in applicable) || aspect === "morphologicalTree") {
 			skipped.push(aspect);
 			continue;
 		}
@@ -120,31 +122,39 @@ function jobsOf(
 				break;
 			case "translations":
 				for (const language of Object.keys(selection ?? {})) {
-					if (!(language in (applicable.translations ?? {}))) {
+					const known = translationLanguageValues.find(
+						(value) => value === language,
+					);
+					if (
+						known === undefined ||
+						!(known in (applicable.translations ?? {}))
+					) {
 						skipped.push(`${aspect}.${language}`);
 						continue;
 					}
 					jobs.push({
 						aspect,
-						leaf: language,
-						run: changesOnly(
-							produceTranslation(
-								context,
-								language as Dumrel.TranslationLanguage,
-							),
-						),
+						leaf: known,
+						run: changesOnly(produceTranslation(context, known)),
 					});
 				}
 				break;
 			case "semanticRelations": {
-				const relations = Object.keys(selection ?? {}).filter(
+				const relations = Object.keys(selection ?? {}).flatMap(
 					(relation) => {
-						const applies =
-							relation in (applicable.semanticRelations ?? {});
-						if (!applies) skipped.push(`${aspect}.${relation}`);
-						return applies;
+						const direct = directSemanticRelationValues.find(
+							(value) => value === relation,
+						);
+						if (
+							direct === undefined ||
+							!(direct in (applicable.semanticRelations ?? {}))
+						) {
+							skipped.push(`${aspect}.${relation}`);
+							return [];
+						}
+						return [direct];
 					},
-				) as Dumrel.DirectSemanticRelation[];
+				);
 				if (relations.length > 0)
 					jobs.push({
 						aspect,
@@ -214,10 +224,9 @@ const failureOf = (job: Job, error: AspectError): KnowledgeFailure => ({
 /** Why the input is bad, if it is: a Defect, raised before anything is asked. */
 function badInput<E>(input: ProduceKnowledgeInput<E>): string | undefined {
 	const { reading, attestation, sentence, request } = input;
-	const lemma = reading.lemma as Dumling.Lemma;
 	if (
-		lemmaIdentityKey(attestation.surface.lemma as Dumling.Lemma) !==
-		lemmaIdentityKey(lemma)
+		lemmaIdentityKey(attestation.surface.lemma) !==
+		lemmaIdentityKey(reading.lemma)
 	)
 		return "The Attestation is of another Lemma than the Reading";
 	if (input.origin !== "New" && input.origin !== "TopUp")

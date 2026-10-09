@@ -20,7 +20,7 @@ import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import type * as Scope from "effect/Scope";
 import type { OperationScope } from "../../call.js";
-import type { LunaRequest } from "../../luna.js";
+import type { LunaDraft } from "../../luna.js";
 import { askLuna, type LunaSettings } from "../../luna-call.js";
 import type { Answers, Ask, AskFailure } from "../../segment/ask.js";
 import { draftsEmojiDescription } from "../reading.js";
@@ -458,7 +458,7 @@ function canonicalFormOf(
 function rewritten(
 	scope: OperationScope,
 	write: (judged: Judged) => Effect.Effect<Written, AskFailure>,
-	request: (judged: Judged) => Omit<LunaRequest, "configuration">,
+	request: (judged: Judged) => LunaDraft,
 	guessed:
 		| {
 				readonly judged: Judged;
