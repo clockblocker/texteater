@@ -182,7 +182,8 @@ export type SplitRegionProps = BaseRegionAttributes & {
 	minSize?: number | string | undefined;
 
 	/**
-	 * Called when region sizes change.
+	 * Called when region sizes change. Not called while the parent Split has
+	 * no size (e.g. inside a hidden subtree), since no percentage can be given.
 	 *
 	 * @param regionSize Region size (both as a percentage of the parent Split and in pixels)
 	 * @param id Region id (if one was provided as a prop)

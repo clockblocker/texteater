@@ -335,7 +335,7 @@ describe("mountSplit's resize callback", () => {
 		]);
 	});
 
-	test("a zero-size Split stores nothing and skips the batch's later entries", () => {
+	test("a zero-size Split stores nothing, and its later Region entry reports no size it can't measure", () => {
 		const { events, resized, resize, fire } = mounted({ onResize: ["a"] });
 
 		resize({ a: 0, b: 0 });
@@ -345,15 +345,44 @@ describe("mountSplit's resize callback", () => {
 		expect(resized).toEqual([]);
 	});
 
-	test("a Split no longer in the store stores nothing and skips the batch's later entries", () => {
+	test("a Split no longer in the store stores nothing and goes on to the batch's later entries", () => {
 		const { split, events, resized, fire } = mounted({ onResize: ["a"] });
 		deleteMutableSplit(split);
 
 		fire("split", "a");
 
 		expect(events).toEqual([]);
-		expect(resized).toEqual([]);
+		expect(resized).toEqual([
+			{
+				id: "a",
+				next: { asPercentage: 50, inPixels: 100 },
+				prev: undefined,
+			},
+		]);
 		expect(stateOf(split)).toBeUndefined();
+	});
+
+	test("a lone Region entry at Split size 0 reports nothing and keeps the last measured size as prev", () => {
+		const { resized, resize, fire } = mounted({ onResize: ["a"] });
+		fire("a");
+
+		resize({ a: 0, b: 0 });
+		fire("a");
+		resize({ a: 50, b: 150 });
+		fire("a");
+
+		expect(resized).toEqual([
+			{
+				id: "a",
+				next: { asPercentage: 50, inPixels: 100 },
+				prev: undefined,
+			},
+			{
+				id: "a",
+				next: { asPercentage: 25, inPixels: 50 },
+				prev: { asPercentage: 50, inPixels: 100 },
+			},
+		]);
 	});
 
 	test("an unmounted Split's callback leaves a remounted Split with its id alone", () => {

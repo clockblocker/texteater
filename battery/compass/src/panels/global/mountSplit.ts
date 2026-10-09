@@ -31,20 +31,20 @@ const ownerDocumentReferenceCounts = new Map<Document, number>();
 /**
  * Re-derives a resized Split's constraints and layout and stores them when
  * anything changed. A Split with no size, or with no mounted state, can't be
- * measured, and its observer skips the rest of the batch.
+ * measured, so nothing is stored for it.
  */
-function syncResizedSplit(split: RegisteredSplit): "done" | "skip-batch" {
+function syncResizedSplit(split: RegisteredSplit) {
 	const splitSize = calculateAvailableSplitSize({ split });
 	if (splitSize === 0) {
 		// Can't calculate anything meaningful if the split has a width/height of 0
 		// (This could indicate that it's within a hidden subtree)
-		return "skip-batch";
+		return;
 	}
 
 	const splitState = getMountedSplitState(split.id);
 	if (!splitState) {
 		// Not mounted yet
-		return "skip-batch";
+		return;
 	}
 
 	const next = resizedSplitState(split, splitState, splitSize);
@@ -54,7 +54,6 @@ function syncResizedSplit(split: RegisteredSplit): "done" | "skip-batch" {
 	) {
 		updateMountedSplit(split, next);
 	}
-	return "done";
 }
 
 function resizedSplitState(
@@ -124,8 +123,8 @@ export function mountSplit(split: RegisteredSplit) {
 					target as HTMLElement,
 					borderBoxSize,
 				);
-			} else if (isMounted && syncResizedSplit(split) === "skip-batch") {
-				return;
+			} else if (isMounted) {
+				syncResizedSplit(split);
 			}
 		}
 	});

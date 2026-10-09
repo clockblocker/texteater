@@ -18,6 +18,11 @@ export function notifyRegionOnResize(
 	}
 
 	const splitSize = calculateAvailableSplitSize({ split });
+	if (splitSize === 0) {
+		// A Split with no size can't give the Region a percentage
+		// (it could be within a hidden subtree), so there's nothing to report.
+		return;
+	}
 
 	const regionSize =
 		split.orientation === "horizontal"
