@@ -198,7 +198,7 @@ export function germanClosedClassSurfaceError(): string {
  * 0032): its members are listed in this order, so one mix has one spelling
  * and Core values still compare literally.
  */
-export const mixedGenderOrder = ["Masc", "Fem", "Neut"] as const;
+const mixedGenderOrder = ["Masc", "Fem", "Neut"] as const;
 /**
  * A `mixed` gender names two or more distinct genders, each after the one
  * before it in canonical order: `{ mixed: ["Masc", "Neut"] }` (der or das
