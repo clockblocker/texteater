@@ -53,7 +53,7 @@ type ExtendableObjectSchemaWithField<
 function namedValidationPredicate<Value>(
 	name: keyof typeof dumdictNamedValidationPredicates,
 ): (value: Value) => unknown {
-	return dumdictNamedValidationPredicates[name] as (value: Value) => unknown;
+	return dumdictNamedValidationPredicates[name];
 }
 
 function namedValidationError(
@@ -65,6 +65,8 @@ function namedValidationError(
 function pendingEntryIdTransform<L extends Dumling.Language>(
 	language: L,
 ): (value: string) => PendingEntryId<L> {
+	// A generic L indexes the union of the per-language transforms; the key
+	// names L's own one, which mints PendingEntryId<L>.
 	return dumdictNamedValidationTransforms[
 		`dumdict.pending-entry-id.${language}`
 	] as (value: string) => PendingEntryId<L>;
@@ -102,6 +104,8 @@ export type DumdictSchemasFor<L extends Dumling.Language> = Readonly<{
 function createSchemasFor<const L extends Dumling.Language>(
 	language: L,
 ): DumdictSchemasFor<L> {
+	// A generic L indexes the union of every language's unit schemas; the key
+	// picks L's own, so these are L's Lemma and Surface schemas.
 	const lemmaSchema = unitSchemas[language].lemma as ZodType<
 		Dumling.Lemma<L>
 	>;
@@ -260,6 +264,7 @@ function createSchemasFor<const L extends Dumling.Language>(
 		}),
 	]);
 
+	// As above: Dumrel's schema, narrowed to L after its language refinement.
 	const languageReadingKnowledgeChangeValueSchema = knowledgeChangeSchema
 		.refine(
 			namedValidationPredicate<Dumrel.KnowledgeChange>(
@@ -377,17 +382,17 @@ type AggregateSchemaOutput<Key extends DumdictSchemaKey> = {
 function aggregateSchema<Key extends DumdictSchemaKey>(
 	key: Key,
 ): ZodType<AggregateSchemaOutput<Key>> {
-	const schemas = supportedLanguages.map(
-		(language) => schemasByLanguage[language][key] as ZodType,
+	const schemas: ZodType[] = supportedLanguages.map(
+		(language) => schemasByLanguage[language][key],
 	);
 	const [first, second, ...rest] = schemas;
 	if (first === undefined)
 		throw new Error("Dumling exposes no supported languages.");
-	if (second === undefined)
-		return first as ZodType<AggregateSchemaOutput<Key>>;
-	return z.union([first, second, ...rest]) as ZodType<
-		AggregateSchemaOutput<Key>
-	>;
+	const aggregate =
+		second === undefined ? first : z.union([first, second, ...rest]);
+	// TypeScript can't follow a generic Key through the per-language map; the
+	// union holds each language's schema for Key, which is the aggregate output.
+	return aggregate as ZodType<AggregateSchemaOutput<Key>>;
 }
 
 export const lemmaRecordSchema = aggregateSchema("lemmaRecordSchema");
@@ -413,6 +418,7 @@ export const commitConflictCodeSchema = z.enum([
 	"revisionConflict",
 	"semanticPreconditionFailed",
 ]);
+// Both revisions are opaque branded strings, cast as in createSchemasFor.
 export const commitChangesResultSchema = z.union([
 	z.strictObject({
 		status: z.literal("committed"),

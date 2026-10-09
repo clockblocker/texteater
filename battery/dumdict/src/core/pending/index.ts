@@ -11,6 +11,8 @@ import type {
 function normalizeUnitShadow<L extends Dumling.Language>(
 	target: Dumrel.UnitShadow & { language: L },
 ): Dumrel.UnitShadow & { language: L } {
+	// normalizeForm returns a string, but it leaves a valid Family or Kind
+	// name as it was, so the result is still the input's own Shadow.
 	return {
 		...target,
 		canonicalForm: normalizeForm(target.canonicalForm),
@@ -34,6 +36,7 @@ export function derivePendingEntryId<L extends Dumling.Language>(
 		normalized.kind,
 		canonicalFormKey(normalized.canonicalForm, normalized.language),
 	].map(encodeURIComponent);
+	// The brand is type-only, so the ID is minted here from its description.
 	return `pending-entry:v2:${description.join(":")}` as PendingEntryId<L>;
 }
 
@@ -54,10 +57,10 @@ export function createPendingSemanticRelationRecord<L extends Dumling.Language>(
 	sourceReading: Dumling.Reading<L>,
 	pending: DumdictPendingSemanticRelation<L>,
 ): PendingSemanticRelationRecord<L> {
-	const normalizedPending = {
+	const normalizedPending: DumdictPendingSemanticRelation<L> = {
 		...pending,
 		target: normalizeUnitShadow<L>(pending.target),
-	} as DumdictPendingSemanticRelation<L>;
+	};
 	return {
 		sourceReading,
 		pending: normalizedPending,

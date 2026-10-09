@@ -1,5 +1,6 @@
+import { isRecord } from "common-utils";
 import type * as Dumling from "dumling/types";
-import type { PlannedChangeOp, ReadingEntry } from "../../domain-types";
+import type { PlannedChangeOp } from "../../domain-types";
 import type { EnsureReadingEntryRequest } from "../../public";
 import type { EnsureReadingEntryContext } from "../../storage";
 import { readingLemma } from "../identity";
@@ -15,24 +16,14 @@ function sameValue(left: unknown, right: unknown): boolean {
 			left.every((member, index) => sameValue(member, right[index]))
 		);
 	}
-	if (
-		left === null ||
-		right === null ||
-		typeof left !== "object" ||
-		typeof right !== "object"
-	) {
-		return false;
-	}
-	const leftRecord = left as Record<string, unknown>;
-	const rightRecord = right as Record<string, unknown>;
-	const leftKeys = Object.keys(leftRecord).sort();
-	const rightKeys = Object.keys(rightRecord).sort();
+	if (!isRecord(left) || !isRecord(right)) return false;
+	const leftKeys = Object.keys(left).sort();
+	const rightKeys = Object.keys(right).sort();
 	return (
 		leftKeys.length === rightKeys.length &&
 		leftKeys.every(
 			(key, index) =>
-				key === rightKeys[index] &&
-				sameValue(leftRecord[key], rightRecord[key]),
+				key === rightKeys[index] && sameValue(left[key], right[key]),
 		)
 	);
 }
@@ -75,7 +66,7 @@ export function planEnsureReadingEntry<L extends Dumling.Language>(
 	}
 	changes.push({
 		type: "createReading",
-		entry: entry as ReadingEntry<L>,
+		entry,
 		preconditions: [
 			{ kind: "revisionMatches", revision: slice.revision },
 			{ kind: "lemmaExists", lemma },

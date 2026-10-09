@@ -23,6 +23,7 @@ export function makeSurfaceId<L extends Dumling.Language>(
 	if (result.chain.language !== language)
 		throw new Error("Unit language does not match the dictionary");
 	const parsed = result.chain.value;
+	// The brand is type-only, so the ID is minted here from the parsed Surface.
 	return canonicalJson({
 		...parsed,
 		lemma: lemmaIdentityKey(parsed.lemma),

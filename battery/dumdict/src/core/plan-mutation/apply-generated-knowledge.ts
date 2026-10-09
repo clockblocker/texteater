@@ -3,16 +3,13 @@ import type * as Dumling from "dumling/types";
 import type {
 	PendingSemanticRelationRecord,
 	PlannedChangeOp,
-	ReadingKnowledgeChange,
 	ReadingPatchOp,
 } from "../../domain-types";
-import {
-	parsePendingSemanticRelationForDumdictRuntime,
-	unwrapDumdictParse,
-} from "../../parsing/lightweight-parsers";
+import { parsePendingSemanticRelationInLanguage } from "../../parsing/lightweight-parsers";
 import type { ApplyGeneratedKnowledgeRequest } from "../../public";
 import type { ApplyGeneratedKnowledgeContext } from "../../storage";
 import { applyDumdictKnowledgeChange } from "../apply-reading-knowledge-change.js";
+import { lemmaLanguage, readingLemma } from "../identity";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,
@@ -29,12 +26,14 @@ import type { PlanMutationRejected, PlanMutationResult } from "./result";
 function pendingRecords<L extends Dumling.Language>(
 	request: ApplyGeneratedKnowledgeRequest<L>,
 ): PendingSemanticRelationRecord<L>[] {
-	const records = request.pendingRelations.map((value) => {
-		const pending = unwrapDumdictParse(
-			parsePendingSemanticRelationForDumdictRuntime(value),
-		) as unknown as PendingSemanticRelationRecord<L>["pending"];
-		return createPendingSemanticRelationRecord(request.reading, pending);
-	});
+	// The planner's check has already rejected other target languages.
+	const language = lemmaLanguage(readingLemma(request.reading));
+	const records = request.pendingRelations.map((value) =>
+		createPendingSemanticRelationRecord(
+			request.reading,
+			parsePendingSemanticRelationInLanguage(value, language),
+		),
+	);
 	return deduplicatePendingSemanticRelationRecords(records);
 }
 
@@ -136,7 +135,7 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 					kind: "applyKnowledgeChange",
 					envelope: {
 						reading: request.reading,
-						change: change as ReadingKnowledgeChange<L>["change"],
+						change,
 					},
 				}),
 			),

@@ -27,8 +27,6 @@ import type {
 	AddNewNoteContext,
 	ApplyGeneratedKnowledgeContext,
 	CleanupRelationsSlice,
-	EnsureOwnedSurfaceContext,
-	EnsureReadingEntryContext,
 	LoadReadingEntryContextRequest,
 	ReadingEntryContext,
 } from "../storage";
@@ -350,14 +348,14 @@ export function validateReadingEntryContext<L extends Dumling.Language>(
 	context: ReadingEntryContext<L>,
 	request: LoadReadingEntryContextRequest<L>,
 ) {
-	if (context.intent !== request.intent)
-		throw new Error(
-			"Reading Entry context intent does not match the request.",
-		);
+	if (context.intent !== request.intent) intentMismatch();
 	validateRevision(context.revision);
 	validateReading(expected, request.reading);
+	// Each case re-checks the context's intent, which narrows it to the
+	// request's; the check above has already thrown on a mismatch.
 	switch (request.intent) {
 		case "addNewNote":
+			if (context.intent !== "addNewNote") return intentMismatch();
 			for (const relation of request.relations) {
 				if (relation.target.kind === "pending")
 					unwrapDumdictParse(
@@ -371,38 +369,32 @@ export function validateReadingEntryContext<L extends Dumling.Language>(
 				)
 					throw new Error("Invalid direct Semantic Relation.");
 			}
-			validateAddNewNoteContext(
-				expected,
-				context as AddNewNoteContext<L>,
-				request,
-			);
+			validateAddNewNoteContext(expected, context, request);
 			return;
 		case "applyGeneratedKnowledge":
-			validateApplyGeneratedKnowledgeContext(
-				expected,
-				context as ApplyGeneratedKnowledgeContext<L>,
-				request,
-			);
+			if (context.intent !== "applyGeneratedKnowledge")
+				return intentMismatch();
+			validateApplyGeneratedKnowledgeContext(expected, context, request);
 			return;
 		case "ensureOwnedSurface":
-			validateExistingIdentity(
-				expected,
-				context as EnsureOwnedSurfaceContext<L>,
-				request.reading,
-			);
+			if (context.intent !== "ensureOwnedSurface")
+				return intentMismatch();
+			validateExistingIdentity(expected, context, request.reading);
 			validateRequestedSurfaces(
 				expected,
-				(context as EnsureOwnedSurfaceContext<L>).existingOwnedSurfaces,
+				context.existingOwnedSurfaces,
 				new Set([makeSurfaceId(expected, request.surface)]),
 			);
 			return;
 		case "ensureReadingEntry":
-			validateExistingIdentity(
-				expected,
-				context as EnsureReadingEntryContext<L>,
-				request.reading,
-			);
+			if (context.intent !== "ensureReadingEntry")
+				return intentMismatch();
+			validateExistingIdentity(expected, context, request.reading);
 	}
+}
+
+function intentMismatch(): never {
+	throw new Error("Reading Entry context intent does not match the request.");
 }
 
 export function validateCleanupRelationsSlice<L extends Dumling.Language>(

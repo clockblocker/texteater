@@ -5,10 +5,12 @@ import {
 	parseCompiledValidation,
 } from "common-utils/validation";
 import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import type {
 	ChangePrecondition,
 	CommitChangesRequest,
 	CommitChangesResult,
+	DumdictPendingSemanticRelation,
 	DumdictPlan,
 	LemmaRecord,
 	PendingSemanticRelationLocator,
@@ -73,6 +75,29 @@ export function parsePendingSemanticRelationForDumdictRuntime(
 	InternalDumdictValidationRouteOutput<"internal:pending-semantic-relation">
 > {
 	return parseRoute(input, "internal:pending-semantic-relation");
+}
+/** Whether a Pending Semantic Relation's target uses the dictionary's language. */
+export function pendingTargetsLanguage<L extends Dumling.Language>(
+	pending: Dumrel.PendingSemanticRelation,
+	language: L,
+): pending is DumdictPendingSemanticRelation<L> {
+	return pending.target.language === language;
+}
+/**
+ * Parses a Pending Semantic Relation whose target language its caller has
+ * already checked, so a mismatch here is a defect.
+ */
+export function parsePendingSemanticRelationInLanguage<
+	L extends Dumling.Language,
+>(input: unknown, language: L): DumdictPendingSemanticRelation<L> {
+	const pending = unwrapDumdictParse(
+		parsePendingSemanticRelationForDumdictRuntime(input),
+	);
+	if (!pendingTargetsLanguage(pending, language))
+		throw new Error(
+			"Pending Semantic Relation target language does not match the dictionary.",
+		);
+	return pending;
 }
 export function parseReadingKnowledgeForDumdictRuntime(
 	input: unknown,

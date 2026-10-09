@@ -8,6 +8,8 @@ import type { DeepReadonly, PendingEntryId } from "./domain-types.js";
 import { makeSurfaceId } from "./dumling-id.js";
 
 export function retainDumdictPlan<Value>(value: Value): DeepReadonly<Value> {
+	// A read-only view of the parsed plan; TypeScript can't relate a generic
+	// Value to its conditional DeepReadonly, and nothing is copied.
 	return value as DeepReadonly<Value>;
 }
 
@@ -20,6 +22,8 @@ export function retainCommitChangesRequest<
 		? Readonly<Value[Key]>
 		: Value[Key];
 }> {
+	// A read-only view of the parsed request; TypeScript can't relate a generic
+	// Value to this mapped type, and nothing is copied.
 	return value as Readonly<{
 		[Key in keyof Value]: Key extends "changes"
 			? Readonly<Value[Key]>
@@ -30,6 +34,7 @@ export function retainCommitChangesRequest<
 function bindPendingEntryIdFor<Language extends Dumling.Language>(
 	value: string,
 ): PendingEntryId<Language> {
+	// The brand is type-only, so the schema's transform mints it here.
 	return value as PendingEntryId<Language>;
 }
 
@@ -277,16 +282,19 @@ function forLanguage<Value>(
 	language: Dumling.Language,
 	predicate: (value: Value, language: Dumling.Language) => boolean,
 ): (value: unknown) => boolean {
+	// The registry erases each predicate to unknown, but the schema runs it in a
+	// refine whose output is Value.
 	return (value) => predicate(value as Value, language);
 }
 
 function namedPredicate<Value>(
 	predicate: (value: Value) => boolean,
 ): (value: unknown) => boolean {
+	// As in forLanguage: the refine that runs it has already parsed a Value.
 	return (value) => predicate(value as Value);
 }
 
-const predicateNames = [
+export const dumdictNamedValidationNames = [
 	"dumdict.knowledge-change.language.de",
 	"dumdict.knowledge-change.language.en",
 	"dumdict.knowledge-change.language.he",
@@ -310,33 +318,36 @@ const predicateNames = [
 	"dumdict.surface.owner-matches",
 ] as const;
 
-type PredicateName = (typeof predicateNames)[number];
+type PredicateName = (typeof dumdictNamedValidationNames)[number];
 type NamedPredicate = (value: unknown) => boolean;
 
-function lazyNamedRegistry<Value>(
-	names: readonly string[],
-	construct: (name: never) => Value,
-): Readonly<Record<string, Value>> {
+function lazyNamedRegistry<Name extends string, Value>(
+	names: readonly Name[],
+	construct: (name: Name) => Value,
+): Readonly<Record<Name, Value>> {
 	const cache: Record<string, Value> = Object.create(null);
+	// The Proxy builds each named value on first read, so every name in `names`
+	// reads as present even though the cache starts empty.
 	return new Proxy(cache, {
 		get(target, property) {
 			if (typeof property !== "string") return undefined;
 			const cached = target[property];
 			if (cached !== undefined) return cached;
-			if (!names.includes(property))
+			const name = names.find((candidate) => candidate === property);
+			if (name === undefined)
 				throw new ReferenceError(
 					`Unknown Dumdict validation name: ${property}.`,
 				);
-			const value = construct(property as never);
+			const value = construct(name);
 			target[property] = value;
 			return value;
 		},
 		getOwnPropertyDescriptor: (_target, property) =>
-			typeof property === "string" && names.includes(property)
+			names.some((name) => name === property)
 				? { configurable: true, enumerable: true }
 				: undefined,
 		ownKeys: () => [...names],
-	});
+	}) as Readonly<Record<Name, Value>>;
 }
 
 function constructNamedPredicate(name: PredicateName): NamedPredicate {
@@ -399,9 +410,9 @@ function constructNamedPredicate(name: PredicateName): NamedPredicate {
 }
 
 export const dumdictNamedValidationPredicates = lazyNamedRegistry(
-	predicateNames,
+	dumdictNamedValidationNames,
 	constructNamedPredicate,
-) as Readonly<Record<PredicateName, NamedPredicate>>;
+);
 
 const prepositionCaseError =
 	"Each Preposition complement must name a preposition the ADP Case Table lists and a case it allows.";
@@ -482,6 +493,6 @@ function constructNamedError(name: PredicateName): () => string {
 }
 
 export const dumdictNamedValidationErrors = lazyNamedRegistry(
-	predicateNames,
+	dumdictNamedValidationNames,
 	constructNamedError,
-) as Readonly<Record<PredicateName, () => string>>;
+);

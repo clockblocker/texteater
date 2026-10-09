@@ -36,5 +36,12 @@ export function shadowMatchesLemma(
 export function readingLemma<L extends Dumling.Language>(
 	reading: Dumling.Reading<L>,
 ): Dumling.Lemma<L> {
-	return reading.lemma as Dumling.Lemma<L>;
+	return reading.lemma;
+}
+export function lemmaLanguage<L extends Dumling.Language>(
+	lemma: Dumling.Lemma<L>,
+): L {
+	// A generic L's Lemma is a union TypeScript can't reduce, so its language
+	// reads as every Language; a Lemma<L> carries L.
+	return lemma.language as L;
 }

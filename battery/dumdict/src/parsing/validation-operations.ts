@@ -2,14 +2,16 @@ import type { ValidationOperations } from "common-utils/validation";
 import { validationOperations } from "dumling/validation";
 import {
 	dumdictNamedValidationErrors,
+	dumdictNamedValidationNames,
 	dumdictNamedValidationPredicates,
 } from "../validation-semantics.js";
 
 export const dumdictValidationOperations: ValidationOperations = {
 	...validationOperations,
 	...Object.fromEntries(
-		Object.entries(dumdictNamedValidationPredicates).map(
-			([name, predicate]) => [
+		dumdictNamedValidationNames.map((name) => {
+			const predicate = dumdictNamedValidationPredicates[name];
+			return [
 				name,
 				(value: unknown) => ({
 					value,
@@ -20,14 +22,12 @@ export const dumdictValidationOperations: ValidationOperations = {
 									code: "custom",
 									path: [],
 									message:
-										dumdictNamedValidationErrors[
-											name as keyof typeof dumdictNamedValidationErrors
-										](),
+										dumdictNamedValidationErrors[name](),
 								},
 							],
 				}),
-			],
-		),
+			];
+		}),
 	),
 	...Object.fromEntries(
 		[

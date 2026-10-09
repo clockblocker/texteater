@@ -16,11 +16,12 @@ import type {
 import { makeSurfaceId } from "../../dumling-id";
 import {
 	parsePendingSemanticRelationForDumdictRuntime,
+	parsePendingSemanticRelationInLanguage,
 	unwrapDumdictParse,
 } from "../../parsing/lightweight-parsers";
 import type { AddNewNoteRequest } from "../../public";
 import type { AddNewNoteContext } from "../../storage";
-import { readingLemma } from "../identity";
+import { lemmaLanguage, readingLemma } from "../identity";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,
@@ -72,11 +73,11 @@ function makePendingRecords<L extends Dumling.Language>(
 	return deduplicatePendingSemanticRelationRecords(
 		(request.draft.relations ?? []).flatMap((relation) => {
 			if (relation.target.kind !== "pending") return [];
-			const pending = unwrapDumdictParse(
-				parsePendingSemanticRelationForDumdictRuntime(
-					relation.target.pending,
-				),
-			) as unknown as PendingSemanticRelationRecord<L>["pending"];
+			// relationLanguagesMatch has already rejected other languages.
+			const pending = parsePendingSemanticRelationInLanguage(
+				relation.target.pending,
+				lemmaLanguage(readingLemma(request.draft.reading)),
+			);
 			const record = createPendingSemanticRelationRecord(
 				request.draft.reading,
 				pending,
@@ -170,7 +171,7 @@ export function planAddNewNote<L extends Dumling.Language>(
 	const ownedSurfaceEntries: SurfaceEntry<L>[] = uniqueBy(
 		(request.draft.ownedSurfaces ?? []).map(
 			({ surface, note: surfaceNote }) => ({
-				id: makeSurfaceId(lemma.language as L, surface),
+				id: makeSurfaceId(lemmaLanguage(lemma), surface),
 				surface,
 				ownerLemma: lemma,
 				...surfaceNote,

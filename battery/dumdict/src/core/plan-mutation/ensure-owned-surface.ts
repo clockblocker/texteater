@@ -3,7 +3,7 @@ import type * as Dumling from "dumling/types";
 import { makeSurfaceId } from "../../dumling-id";
 import type { EnsureOwnedSurfaceRequest } from "../../public";
 import type { EnsureOwnedSurfaceContext } from "../../storage";
-import { readingLemma } from "../identity";
+import { lemmaLanguage, readingLemma } from "../identity";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 export function planEnsureOwnedSurface<L extends Dumling.Language>(
@@ -20,7 +20,7 @@ export function planEnsureOwnedSurface<L extends Dumling.Language>(
 
 	const { surface, note } = request.ownedSurface;
 	const lemma = readingLemma(request.reading);
-	const surfaceId = makeSurfaceId(lemma.language as L, surface);
+	const surfaceId = makeSurfaceId(lemmaLanguage(lemma), surface);
 	const alreadyStored = slice.existingOwnedSurfaces.some(
 		(entry) => entry.id === surfaceId,
 	);

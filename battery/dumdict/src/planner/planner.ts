@@ -21,6 +21,7 @@ import {
 	parseAsDumdictPlan,
 	parseKnowledgeChangeForDumdictRuntime,
 	parsePendingSemanticRelationForDumdictRuntime,
+	pendingTargetsLanguage,
 	unwrapDumdictParse,
 } from "../parsing/lightweight-parsers";
 import type {
@@ -234,10 +235,10 @@ function applyGeneratedKnowledge<L extends Dumling.Language>(
 				unwrapDumdictParse(
 					parsePendingSemanticRelationForDumdictRuntime(pending),
 				),
-			) as unknown as ApplyGeneratedKnowledgeRequest<L>["pendingRelations"];
+			);
 			if (
-				pendingRelations.some(
-					(pending) => pending.target.language !== language,
+				!pendingRelations.every((pending) =>
+					pendingTargetsLanguage(pending, language),
 				)
 			)
 				return invalidRequest(
@@ -247,7 +248,7 @@ function applyGeneratedKnowledge<L extends Dumling.Language>(
 				reading: request.reading,
 				changes,
 				pendingRelations,
-			} as ApplyGeneratedKnowledgeRequest<L>);
+			});
 		},
 		plan(context, request) {
 			validateReadingEntryContext(
