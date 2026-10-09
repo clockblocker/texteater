@@ -19,9 +19,10 @@ module.exports = {
 		},
 		{
 			name: "production-does-not-import-tests",
-			comment: "Runtime source cannot depend on test code.",
+			comment:
+				"Runtime source cannot depend on test code. A test colocated under src/ may.",
 			severity: "error",
-			from: { path: "^src/" },
+			from: { path: "^src/", pathNot: "\\.(test|spec)\\.tsx?$" },
 			to: { path: "(^|/)(tests?|__tests__)/" },
 		},
 		{
