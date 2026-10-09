@@ -55,9 +55,16 @@ Attestation.
 **A shared or elided fixed word leaves the other unit Partial, with no
 evidence.** In `Sie traf die Entscheidung, er die Vorbereitungen`, `traf`
 belongs to `eine Entscheidung treffen`, and `Vorbereitungen treffen` is
-`[die, Vorbereitungen]`, Partial. Evidence pointing at `traf` would change
-neither where a click routes nor what drill-down offers. `articleEvidence`
-keeps its `Shared` variant.
+`[die, Vorbereitungen]`, Partial. Evidence pointing at `traf` would tell the
+learner nothing the unit's Note does not: its Lemma names the missing verb,
+its Surface carries the tense and person that `traf` supplies (below), and
+`traf` itself stays clickable. It would not help classification either: the
+Partial coverage already records that fixed material is missing, and the
+Lemma, Kind, Reading and features are the same with or without it. It would
+not change where a click routes or what drill-down offers. A shared article
+is different, so `articleEvidence` keeps its `Shared` variant: dumcorpus
+checks the shared article's spelling against its Head's case, number and
+gender.
 
 A shared auxiliary or a shared finite lexical verb is a shared word too, and
 it belongs to the coordinated verb nearer to it:
@@ -111,7 +118,10 @@ included, eventually names its Reading; a Reviewed target must.
 - Member Roles on every member, with Dumling checking the Head count per
   Family. Rejected: it stores a classifier's rule in the model DTO.
 - A role-neutral `sharedEvidence` field for shared articles and fixed words.
-  Rejected: it serves neither task.
+  Rejected: a shared fixed word needs no evidence, as above. For a shared
+  article, a role-neutral field would no longer say that the shared word is
+  an article, and the agreement check needs to know that before it reads the
+  spelling as a cell of `der` or `ein`.
 - Components as Unit Shadows in Reading Knowledge, modelled on Participle
   Source. Rejected: the parts are real Readings.
 - Breakdowns stored per occurrence, as an inner layer of sentence records.
