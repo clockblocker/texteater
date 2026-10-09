@@ -21,8 +21,11 @@ const inventories: {
 export function inventoryOf(
 	language: string,
 ): LanguageInventory<InventoryLanguage> | undefined {
-	return Object.hasOwn(inventories, language)
-		? inventories[language as InventoryLanguage]
+	const byLanguage: Readonly<
+		Record<string, LanguageInventory<InventoryLanguage>>
+	> = inventories;
+	return Object.hasOwn(byLanguage, language)
+		? byLanguage[language]
 		: undefined;
 }
 

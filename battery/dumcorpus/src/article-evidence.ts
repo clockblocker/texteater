@@ -27,8 +27,10 @@ export function headAgreement(surface: Dumling.Surface): ArticleAgreement {
 		"inflectionalFeatures" in surface && surface.inflectionalFeatures
 			? surface.inflectionalFeatures
 			: {};
-	const coordinate = (name: string) =>
-		(bag[name] ?? core[name] ?? null) as string | null;
+	const coordinate = (name: string) => {
+		const value = bag[name] ?? core[name];
+		return typeof value === "string" ? value : null;
+	};
 	const number = coordinate("number");
 	return {
 		case: coordinate("case"),
@@ -50,17 +52,13 @@ export function attestedArticle(attestation: Dumling.Attestation):
 	  }
 	| undefined {
 	if (!("articleEvidence" in attestation)) return undefined;
-	const evidence = attestation.articleEvidence as
-		| ArticleEvidence
-		| null
-		| undefined;
+	const evidence: ArticleEvidence | null | undefined =
+		attestation.articleEvidence;
 	if (!evidence || evidence.kind === "Hidden") return undefined;
 	const [article, path] =
 		evidence.kind === "Owned"
 			? [
-					attestation.members[evidence.member] as
-						| ArticleMember
-						| undefined,
+					attestation.members[evidence.member],
 					`members.${evidence.member}`,
 				]
 			: [evidence.article, "articleEvidence.article"];

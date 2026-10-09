@@ -31,7 +31,7 @@ function definiteArticleCell(cell: {
 	readonly gender: string | null;
 }) {
 	return authoredMembers.find(({ lemma }) => {
-		const core = lemma.coreFeatures as Readonly<Record<string, unknown>>;
+		const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
 		return (
 			lemma.kind === "DET" &&
 			core.pronType === "Art" &&
@@ -97,13 +97,11 @@ export function deriveGrammaticalComponent(
 ): GrammaticalComponent | null {
 	if (surface.language !== "de" || surface.lemma.family !== "Lexeme")
 		return null;
-	const bag = (
-		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null
-	) as Readonly<Record<string, unknown>> | null;
+	const bag: Readonly<Record<string, unknown>> | null =
+		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
 	if (surface.lemma.kind === "PROPN") {
-		const core = surface.lemma.coreFeatures as Readonly<
-			Record<string, unknown>
-		>;
+		const core: Readonly<Record<string, unknown>> =
+			surface.lemma.coreFeatures;
 		if (core.article !== "Definite" || !bag?.case) return null;
 		if (typeof bag.number !== "string")
 			throw new Error("An article needs its name's number.");
@@ -113,7 +111,9 @@ export function deriveGrammaticalComponent(
 			gender:
 				bag.number === "Plur"
 					? null
-					: ((core.gender as string | null | undefined) ?? null),
+					: typeof core.gender === "string"
+						? core.gender
+						: null,
 		});
 		if (!member) throw new Error("Missing reviewed definite article cell.");
 		return authoredComponent(member);

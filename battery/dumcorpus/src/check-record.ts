@@ -1,4 +1,4 @@
-import { parseUnit } from "dumling";
+import { parseUnit, routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
@@ -22,7 +22,7 @@ import type {
 } from "./corpus-types.js";
 import { unitRoutes } from "./generated/routes.js";
 import { checkIfGrundform } from "./grundform/check-if-grundform.js";
-import { specRecordIdPattern } from "./ids.js";
+import { idLanguage, specRecordIdPattern } from "./ids.js";
 import type { SpecCheck, SpecIssue } from "./issues.js";
 import { annotationLayers, layerRank } from "./layers.js";
 import { looseRouteSchema, recordFileSchema } from "./record-schema.js";
@@ -150,9 +150,7 @@ export function uncitedIssue(
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	const { found, issue } = issueCollector(id);
-	const language = specRecordIdPattern.exec(id)?.[1] as
-		| Dumling.Language
-		| undefined;
+	const language = idLanguage(specRecordIdPattern, id);
 	if (!language)
 		issue(
 			undefined,
@@ -340,7 +338,8 @@ export function checkTargets(
 			);
 		const segmented: SegmentationTarget = {
 			memberSegmentIndices: indices,
-			// Checked against Dumling's routes above.
+			// Checked against Dumling's routes above. unitRoutes is generated as
+			// `<Family>/<Kind>` strings, so that check can't narrow the route.
 			route: { language, family, kind } as SpecRoute,
 			...(target.notes === undefined ? {} : { notes: target.notes }),
 		};
@@ -521,9 +520,8 @@ function checkTargetLayers(
 			`${path}.reading.knowledge`,
 			"A record reviewed through Knowledge holds each target's Reading Knowledge",
 		);
-	const authoredCoverage = target.reading?.coverage as
-		| KnowledgeCoverage
-		| undefined;
+	const authoredCoverage: KnowledgeCoverage | undefined =
+		target.reading?.coverage;
 	if (
 		authoredCoverage !== undefined &&
 		target.reading?.knowledge === undefined
@@ -660,13 +658,7 @@ function checkKnowledge(
 	const knowledge: Dumrel.ReadingKnowledge = parsed.value;
 	const issues: { path: string; message: string }[] = [];
 	const { language, family, kind } = reading.lemma;
-	const policy = selectKnowledge({
-		route: {
-			language,
-			family,
-			kind,
-		} as Dumrel.KnowledgeSelectionInput["route"],
-	});
+	const policy = selectKnowledge({ route: routeOf(reading.lemma) });
 	const requested = policy.success
 		? (policy.value.semanticRelations ?? {})
 		: undefined;

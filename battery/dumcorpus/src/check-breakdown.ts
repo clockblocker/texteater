@@ -14,7 +14,7 @@ import type {
 	BreakdownRecordId,
 	SpecTarget,
 } from "./corpus-types.js";
-import { breakdownRecordIdPattern } from "./ids.js";
+import { breakdownRecordIdPattern, idLanguage } from "./ids.js";
 import { layerRank } from "./layers.js";
 import {
 	breakdownRecordFileSchema,
@@ -50,9 +50,7 @@ export function checkBreakdownRecord(
 	input: unknown,
 ): BreakdownRecordCheck {
 	const { found, issue } = issueCollector(id);
-	const language = breakdownRecordIdPattern.exec(id)?.[1] as
-		| Dumling.Language
-		| undefined;
+	const language = idLanguage(breakdownRecordIdPattern, id);
 	if (!language)
 		issue(
 			undefined,

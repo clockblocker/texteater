@@ -25,16 +25,13 @@ const coreKeys = ["partType", "polarity"] as const;
  */
 export function germanParticleMember(lemma: {
 	readonly canonicalForm: string;
-	readonly coreFeatures: unknown;
+	readonly coreFeatures: Readonly<Record<string, unknown>>;
 }): AuthoredMember | undefined {
 	const form = lemma.canonicalForm.toLocaleLowerCase("de");
-	const core = (lemma.coreFeatures ?? {}) as Readonly<
-		Record<string, unknown>
-	>;
+	const core = lemma.coreFeatures;
 	return germanParticles.find((member) => {
-		const authored = member.lemma.coreFeatures as Readonly<
-			Record<string, unknown>
-		>;
+		const authored: Readonly<Record<string, unknown>> =
+			member.lemma.coreFeatures;
 		return (
 			member.lemma.canonicalForm.toLocaleLowerCase("de") === form &&
 			coreKeys.every(

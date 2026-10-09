@@ -27,9 +27,8 @@ const attestationChecks: {
 export function languageAttestationIssues(
 	attestation: Dumling.Attestation,
 ): (LocatedIssue & { readonly check: SpecCheck })[] {
-	const checks = attestationChecks[
-		attestation.surface.language
-	] as readonly AttestationCheck<Dumling.Language>[];
+	const checks: readonly AttestationCheck<Dumling.Language>[] =
+		attestationChecks[attestation.surface.language];
 	return checks.flatMap(({ check, issues }) =>
 		issues(attestation).map((found) => ({ check, ...found })),
 	);

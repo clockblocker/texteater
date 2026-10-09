@@ -345,8 +345,8 @@ export function germanAdpositionAllows(
 	const entry = germanAdpositionEntry(lemma);
 	return (
 		entry !== null &&
-		(germanAdpositionAllowedCases(entry) as readonly string[]).includes(
-			grammaticalCase,
+		germanAdpositionAllowedCases(entry).some(
+			(allowed) => allowed === grammaticalCase,
 		)
 	);
 }

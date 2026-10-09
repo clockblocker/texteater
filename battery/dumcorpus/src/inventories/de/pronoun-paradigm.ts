@@ -129,6 +129,9 @@ function pillarMember<Kind extends PillarKind>(
 	cell: Partial<PronounCell>,
 ): ReviewedMember {
 	const coreFeatures = { ...emptyCore, ...description.core, ...cell };
+	// TypeScript can't relate Core Features merged for a generic Kind to
+	// Dumling.Lemma<…, Kind>, nor that Lemma to its Reading; the inventory
+	// tests parse every member with Dumling.
 	const lemma = {
 		unitKind: "Lemma",
 		language: "de",

@@ -3,7 +3,13 @@ import type { AuthoredMember } from "../member.js";
 import { germanSyncretisms } from "./generated/syncretisms.js";
 
 type Core = Readonly<Record<string, unknown>>;
-type SyncreticFields = { readonly syncretic?: readonly string[] };
+/** A Syncretism's `syncretic` list, the features it leaves open; undefined for any other Lemma. */
+function syncreticOf(lemma: {
+	readonly canonicalForm: string;
+	readonly syncretic?: readonly string[];
+}): readonly string[] | undefined {
+	return lemma.syncretic;
+}
 
 /** Core Features count by their set values: a missing one equals a null one. */
 function sameCore(left: Core, right: Core): boolean {
@@ -24,18 +30,19 @@ function sameCore(left: Core, right: Core): boolean {
 export function syncretismFor(
 	lemma: Dumling.Lemma,
 ): AuthoredMember | undefined {
-	const { syncretic } = lemma as SyncreticFields;
+	const syncretic = syncreticOf(lemma);
 	if (syncretic === undefined || lemma.language !== "de") return undefined;
 	const form = lemma.canonicalForm.toLocaleLowerCase("de");
 	return germanSyncretisms.find((member) => {
-		const generated = member.lemma as typeof member.lemma & SyncreticFields;
+		const generated = member.lemma;
+		const generatedSyncretic = syncreticOf(generated);
 		return (
 			generated.family === lemma.family &&
 			generated.kind === lemma.kind &&
 			generated.canonicalForm.toLocaleLowerCase("de") === form &&
-			generated.syncretic?.length === syncretic.length &&
+			generatedSyncretic?.length === syncretic.length &&
 			syncretic.every(
-				(name, index) => generated.syncretic?.[index] === name,
+				(name, index) => generatedSyncretic?.[index] === name,
 			) &&
 			sameCore(generated.coreFeatures, lemma.coreFeatures)
 		);

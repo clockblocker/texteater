@@ -22,7 +22,7 @@ export function attestationExpletiveSpellingIssues(
 	attestation: Dumling.Attestation<"de">,
 ): ExpletiveSpellingIssue[] {
 	if (!("expletiveEvidence" in attestation)) return [];
-	const evidence = attestation.expletiveEvidence as ExpletiveMember | null;
+	const evidence: ExpletiveMember | null = attestation.expletiveEvidence;
 	if (!evidence || spellsExpletiveEs(evidence)) return [];
 	return [
 		{

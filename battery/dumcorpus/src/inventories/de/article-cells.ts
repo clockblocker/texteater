@@ -80,7 +80,7 @@ export function germanArticleCell(
 ): AuthoredMember | undefined {
 	const spellings = germanArticleSpellings(member) ?? [];
 	return germanArticles.find(({ lemma }) => {
-		const core = lemma.coreFeatures as Readonly<Record<string, unknown>>;
+		const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
 		return (
 			spellings.includes(lemma.canonicalForm) &&
 			(head.case === null || core.case === head.case) &&

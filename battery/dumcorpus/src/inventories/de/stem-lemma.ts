@@ -121,6 +121,9 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 	readonly spellings: readonly AuthoredSpelling[];
 }): ReviewedMember {
 	const { route } = input;
+	// TypeScript can't relate a generic Kind's route to Dumling.Lemma<…>, nor
+	// that Lemma to its Reading; the inventory tests parse every member with
+	// Dumling.
 	const lemma = {
 		unitKind: "Lemma",
 		language: "de",

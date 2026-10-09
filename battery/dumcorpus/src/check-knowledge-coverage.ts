@@ -1,3 +1,4 @@
+import { routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import { selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
@@ -34,7 +35,9 @@ export type KnowledgeCoverageIssue = {
 type Entries = Readonly<Record<string, unknown>>;
 
 const entriesOf = (value: unknown): Entries =>
-	value !== null && typeof value === "object" ? (value as Entries) : {};
+	value !== null && typeof value === "object"
+		? Object.fromEntries(Object.entries(value))
+		: {};
 
 /** A relation counts as held only with a claim; other aspects when present. */
 function holds(aspect: string, value: unknown): boolean {
@@ -61,17 +64,9 @@ export function knowledgeCoverageIssues(
 	coverage: KnowledgeCoverage | undefined,
 ): { issues: KnowledgeCoverageIssue[]; uncovered: string[] } {
 	const { language, family, kind } = reading.lemma;
-	const policy = selectKnowledge({
-		route: {
-			language,
-			family,
-			kind,
-		} as Dumrel.KnowledgeSelectionInput["route"],
-	});
-	const mask: Entries | undefined = policy.success
-		? (policy.value as Entries)
-		: undefined;
-	const stored = knowledge as Entries;
+	const policy = selectKnowledge({ route: routeOf(reading.lemma) });
+	const mask: Entries | undefined = policy.success ? policy.value : undefined;
+	const stored: Entries = knowledge;
 	const covered = entriesOf(coverage);
 	const issues: KnowledgeCoverageIssue[] = [];
 	const issue = (at: readonly string[], message: string) =>

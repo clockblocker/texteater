@@ -50,8 +50,8 @@ function caseIssue(
 		];
 	if (
 		grammaticalCase === undefined ||
-		(germanAdpositionAllowedCases(entry) as readonly string[]).includes(
-			grammaticalCase,
+		germanAdpositionAllowedCases(entry).some(
+			(allowed) => allowed === grammaticalCase,
 		)
 	)
 		return [];
@@ -93,12 +93,10 @@ export function attestationAdpositionCaseIssues(
 	const adposition =
 		lemma.kind === "ADP" &&
 		(lemma.family === "Lexeme" || lemma.family === "Locution");
-	const slots = (
-		"valencyEvidence" in attestation ? attestation.valencyEvidence : []
-	) as readonly {
+	const slots: readonly {
 		readonly complement: Complement;
 		readonly realizedCase: string;
-	}[];
+	}[] = "valencyEvidence" in attestation ? attestation.valencyEvidence : [];
 	if (adposition) {
 		const unlisted = caseIssue(lemma, undefined, {
 			lemma: "surface.lemma",
@@ -129,10 +127,7 @@ export function frameAdpositionCaseIssues(
 ): AdpositionCaseIssue[] {
 	return frame.flatMap((slot, index) =>
 		slot.complements.flatMap((complement, alternative) =>
-			prepositionIssue(
-				complement as Complement,
-				`${index}.complements.${alternative}`,
-			),
+			prepositionIssue(complement, `${index}.complements.${alternative}`),
 		),
 	);
 }

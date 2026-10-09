@@ -1,11 +1,11 @@
 import { canonicalFormKey } from "dumling";
-import type * as Dumling from "dumling/types";
 import type {
 	AdrId,
 	AnnotationLayer,
 	RuleId,
 	SpecRecordId,
 } from "../corpus-types.js";
+import { isLanguage } from "../ids.js";
 import type { LemmaInFile, RecordFile } from "./record-files.js";
 
 /**
@@ -123,10 +123,11 @@ export function identitySplits(files: readonly RecordFile[]): IdentitySplit[] {
 		for (const lemma of file.lemmas) {
 			const identity = lemmaIdentity(lemma);
 			const key = formatIdentity(identity);
-			const form = canonicalFormKey(
-				lemma.canonicalForm,
-				lemma.language as Dumling.Language,
-			);
+			// A record file is read unchecked; a Lemma whose Language Dumling
+			// lacks keeps its Canonical Form as written.
+			const form = isLanguage(lemma.language)
+				? canonicalFormKey(lemma.canonicalForm, lemma.language)
+				: lemma.canonicalForm;
 			const group = byForm.get(form) ?? {
 				spellings: new Set<string>(),
 				identities: new Map(),

@@ -36,11 +36,20 @@ interface JsonSchemaNode {
 	const?: unknown;
 	enum?: readonly unknown[];
 	anyOf?: readonly JsonSchemaNode[];
-	properties?: Readonly<Record<string, JsonSchemaNode>>;
+	/** A property's schema; `true` or `false` allows any value or none. */
+	properties?: Readonly<Record<string, JsonSchemaNode | boolean>>;
+}
+
+/** A property's schema as a node, or undefined for a boolean schema. */
+function nodeOf(
+	schema: JsonSchemaNode | boolean | undefined,
+): JsonSchemaNode | undefined {
+	return typeof schema === "object" ? schema : undefined;
 }
 
 /** The string values a feature's schema allows; none for a free string. */
-function allowedValues(node: JsonSchemaNode | undefined): string[] {
+function allowedValues(schema: JsonSchemaNode | boolean | undefined): string[] {
+	const node = nodeOf(schema);
 	if (!node) return [];
 	return [
 		...(typeof node.const === "string" ? [node.const] : []),
@@ -76,10 +85,13 @@ export function routeSchemaValues(
 	route: string,
 	surfaceSchema: JsonSchemaNode,
 ): SchemaValue[] {
-	const lemma = surfaceSchema.properties?.lemma;
+	const lemma = nodeOf(surfaceSchema.properties?.lemma);
 	const bags: [FeatureBag, JsonSchemaNode | undefined][] = [
-		["Core", lemma?.properties?.coreFeatures],
-		["Inflectional", surfaceSchema.properties?.inflectionalFeatures],
+		["Core", nodeOf(lemma?.properties?.coreFeatures)],
+		[
+			"Inflectional",
+			nodeOf(surfaceSchema.properties?.inflectionalFeatures),
+		],
 	];
 	return bags.flatMap(([bag, node]) =>
 		[...bagValues(node)].flatMap(([feature, values]) =>
@@ -100,15 +112,25 @@ export async function loadSchemaValues(
 		dumlingRoutes
 			.filter((route) => route.language === language)
 			.map(async ({ family, kind, schemaPath }) => {
-				const { surfaceSchema } = (await import(
+				const loaded: unknown = await import(
 					`dumling/schema/${schemaPath}`
-				)) as { surfaceSchema: z.ZodType };
+				);
+				const surfaceSchema =
+					typeof loaded === "object" &&
+					loaded !== null &&
+					"surfaceSchema" in loaded
+						? loaded.surfaceSchema
+						: undefined;
+				if (!(surfaceSchema instanceof z.ZodType))
+					throw new Error(
+						`dumling/schema/${schemaPath} has no surfaceSchema`,
+					);
 				return routeSchemaValues(
 					`${family}/${kind}`,
 					z.toJSONSchema(surfaceSchema, {
 						io: "input",
 						unrepresentable: "any",
-					}) as JsonSchemaNode,
+					}),
 				);
 			}),
 	);

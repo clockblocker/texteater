@@ -80,28 +80,22 @@ export function selectGrammaticalAlternatives(input: {
 		return [];
 	const varied = new Set<string>(input.vary);
 	return authoredMembers
-		.filter(
-			(member) =>
+		.filter((member) => {
+			const core: Readonly<Record<string, unknown>> =
+				member.lemma.coreFeatures;
+			return (
 				member.lemma.kind === input.source.kind &&
 				isParadigmCell(member.lemma) &&
 				!sameValue(member.lemma, input.source) &&
-				input.vary.every((key) =>
-					marks(member.lemma.coreFeatures, key),
-				) &&
+				input.vary.every((key) => marks(core, key)) &&
 				Object.entries(sourceCore).every(
 					([key, value]) =>
 						varied.has(key) ||
-						sameValue(
-							value,
-							(
-								member.lemma.coreFeatures as Readonly<
-									Record<string, unknown>
-								>
-							)[key],
-						) ||
+						sameValue(value, core[key]) ||
 						(key === "gender" &&
 							servesGender(sourceCore, member.lemma)),
-				),
-		)
+				)
+			);
+		})
 		.map((member) => member.reading);
 }

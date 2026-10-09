@@ -116,6 +116,12 @@ const withVariants = (entry: PronounForm, ...variants: string[]) => ({
 	...entry,
 	variants: [...(entry.variants ?? []), ...variants],
 });
+type PronounRow = PronounTable["Masc"];
+/** A table row with each of its four cells passed through `cell`. */
+const mapRow = (
+	row: PronounRow,
+	cell: (entry: PronounForm | null) => PronounForm | null,
+): PronounRow => [cell(row[0]), cell(row[1]), cell(row[2]), cell(row[3])];
 /** ein-words: bare stem in Masc Nom and Neut Nom/Acc, strong endings elsewhere. */
 function einWord(stem: string, ipa: string, plural: boolean): PronounTable {
 	const f = (ending: Ending) => form(stem + ending, ipa + endings[ending]);
@@ -425,7 +431,7 @@ for (const [stem, ipa, person, polite, definition, en, ru] of [
 	// e-deletion (unsre, unserm, euern) is licensed variation, not Typo.
 	const table =
 		stem === "euer"
-			? (() => {
+			? ((): PronounTable => {
 					const t = einWord("eur", "ˈɔɪ̯ʁ", true);
 					const full = (entry: PronounForm | null) => {
 						if (!entry) return entry;
@@ -447,12 +453,12 @@ for (const [stem, ipa, person, polite, definition, en, ru] of [
 							full(t.Masc[3]),
 						],
 						Neut: [bare, bare, full(t.Neut[2]), full(t.Neut[3])],
-						Fem: t.Fem.map(full),
-						Plur: t.Plur.map(full),
-					} as unknown as PronounTable;
+						Fem: mapRow(t.Fem, full),
+						Plur: mapRow(t.Plur, full),
+					};
 				})()
 			: stem === "unser"
-				? (() => {
+				? ((): PronounTable => {
 						const t = einWord(stem, ipa, true);
 						const short = (entry: PronounForm | null) => {
 							if (!entry || entry.text === stem) return entry;
@@ -469,11 +475,11 @@ for (const [stem, ipa, person, polite, definition, en, ru] of [
 							);
 						};
 						return {
-							Masc: t.Masc.map(short),
-							Neut: t.Neut.map(short),
-							Fem: t.Fem.map(short),
-							Plur: t.Plur.map(short),
-						} as unknown as PronounTable;
+							Masc: mapRow(t.Masc, short),
+							Neut: mapRow(t.Neut, short),
+							Fem: mapRow(t.Fem, short),
+							Plur: mapRow(t.Plur, short),
+						};
 					})()
 				: einWord(stem, ipa, true);
 	add(

@@ -15,16 +15,13 @@ export function sameValue(left: unknown, right: unknown): boolean {
 		Array.isArray(right)
 	)
 		return false;
-	const leftKeys = Object.keys(left);
+	const leftEntries: [string, unknown][] = Object.entries(left);
+	const rightValues = new Map<string, unknown>(Object.entries(right));
 	return (
-		leftKeys.length === Object.keys(right).length &&
-		leftKeys.every(
-			(key) =>
-				Object.hasOwn(right, key) &&
-				sameValue(
-					(left as Record<string, unknown>)[key],
-					(right as Record<string, unknown>)[key],
-				),
+		leftEntries.length === rightValues.size &&
+		leftEntries.every(
+			([key, value]) =>
+				rightValues.has(key) && sameValue(value, rightValues.get(key)),
 		)
 	);
 }

@@ -22,10 +22,11 @@ export function ruleFor(surface: Dumling.Surface): GrundformRule {
 	if (!("inflectionalFeatures" in surface)) return { features: {} };
 	const { language, family, kind } = surface.lemma;
 	const key = `${language}/${family}/${kind}`;
-	if (!Object.hasOwn(rules, key))
+	const byRoute: Readonly<Record<string, Rule>> = rules;
+	const rule = Object.hasOwn(byRoute, key) ? byRoute[key] : undefined;
+	if (!rule)
 		throw new Error(
 			`Missing Grundform rule for represented inflection: ${key}`,
 		);
-	const rule: Rule = rules[key as InflectableRoute];
 	return typeof rule === "function" ? rule(surface) : rule;
 }

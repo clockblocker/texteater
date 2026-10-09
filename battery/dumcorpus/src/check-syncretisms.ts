@@ -83,7 +83,7 @@ function surfaceSyncretismIssues(surface: Dumling.Surface): SyncretismIssue[] {
 			bag.number ?? null,
 			bag.gender ?? null,
 		]);
-	const units = (surface.syncretized as readonly Dumling.Surface[])
+	const units = surface.syncretized
 		.map((unit) => cellOf(bagOf(unit)))
 		.toSorted();
 	const cells = generated.cells.map((cell) => cellOf(cell)).toSorted();

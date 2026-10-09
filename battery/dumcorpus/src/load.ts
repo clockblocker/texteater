@@ -53,7 +53,7 @@ function readJsonFiles(directory: string, issues: SpecIssue[]) {
 				record: id,
 				check: "Shape",
 				path: "",
-				message: `Invalid JSON: ${(error as Error).message}`,
+				message: `Invalid JSON: ${error instanceof Error ? error.message : String(error)}`,
 			});
 		}
 	return files;
