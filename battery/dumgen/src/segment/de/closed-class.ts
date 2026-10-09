@@ -271,9 +271,9 @@ export const hasFixedRoute = (piece: Piece) =>
 export function closedClassRouteShares(
 	piece: Piece,
 	probabilities: Readonly<Record<string, number>>,
-): Record<RouteKey, number> {
+): Partial<Record<RouteKey, number>> {
 	const options = uses[spelling(piece)] ?? {};
-	const shares: Record<RouteKey, number> = {};
+	const shares: Partial<Record<RouteKey, number>> = {};
 	for (const [use, share] of Object.entries(probabilities)) {
 		const route = options[use]?.route;
 		if (route) shares[route] = (shares[route] ?? 0) + share;

@@ -74,10 +74,12 @@ import {
 } from "./partition.js";
 import {
 	allRoutes,
+	checkedRouteKey,
 	type RouteKey,
 	routeCriteria,
 	routeForKey,
 	singletonRoutes,
+	type UnitRouteKey,
 } from "./routes.js";
 import {
 	joinRefs,
@@ -194,7 +196,7 @@ export type Routes = {
  */
 export function storedIdentity(
 	pick: IdentityPick | undefined,
-	route: RouteKey,
+	route: UnitRouteKey,
 	fixed = false,
 ): ClosedClassIdentity | undefined {
 	if (!pick || (pick.choice === "Other" && !fixed)) return undefined;
@@ -246,7 +248,7 @@ function readRoutes(
 		const top = argmax(answer.probabilities);
 		const judged: RouteJudgment = {
 			group,
-			choice: answer.choice,
+			choice: checkedRouteKey(answer.choice),
 			confidence: answer.confidence,
 			share: top.share,
 			source: "open",
@@ -467,10 +469,10 @@ export const askUnaskedRoutes = Effect.fnUntraced(function* (
 export const structuralRoute =
 	(
 		distributions: ReadonlyMap<string, Readonly<Record<string, number>>>,
-		jevRoute: (group: readonly number[]) => RouteKey,
+		jevRoute: (group: readonly number[]) => UnitRouteKey,
 		familyOf: (group: readonly number[]) => Family,
 	) =>
-	(group: readonly number[]): RouteKey => {
+	(group: readonly number[]): UnitRouteKey => {
 		if (group.length === 1) return jevRoute(group);
 		const family = familyOf(group);
 		if (family === "Saying") return "Saying/Saying";
@@ -482,7 +484,7 @@ export const structuralRoute =
 				),
 			),
 		);
-		return best.key || jevRoute(group);
+		return best.key ? checkedRouteKey(best.key) : jevRoute(group);
 	};
 
 /** Two adjacent pieces that stay apart although both are interjections. */
@@ -499,7 +501,7 @@ export type FixedRoute = (group: readonly number[]) => RouteKey | undefined;
 function mergeInterjections(
 	sentence: Sentence,
 	partition: Partition,
-	route: (group: readonly number[]) => RouteKey,
+	route: (group: readonly number[]) => UnitRouteKey,
 	apart: KeepApart | undefined,
 ): {
 	readonly partition: Partition;
@@ -581,7 +583,7 @@ const variantPair = (left: RouteKey, right: RouteKey) => {
  * route alone (#827).
  */
 export function routeVariants(
-	route: RouteKey,
+	route: UnitRouteKey,
 	shares: Readonly<Record<string, number>> | undefined,
 	margin: number,
 	most = 3,
@@ -594,7 +596,7 @@ export function routeVariants(
 	if (!top || !second || top[1] - second[1] > margin) return undefined;
 	const near = ranked
 		.filter(([, share]) => share >= top[1] - margin)
-		.map(([key]) => key);
+		.map(([key]) => checkedRouteKey(key));
 	const routes = [route, ...near.filter((key) => key !== route)];
 	if (
 		routes.some((left, index) =>
@@ -619,9 +621,9 @@ export type RoutedMembership = {
 	/** The interjection merges, two pieces each. */
 	readonly merges: readonly (readonly [number, number])[];
 	/** A group's route before closed-class identity overrides it. */
-	readonly openRoute: (group: readonly number[]) => RouteKey;
+	readonly openRoute: (group: readonly number[]) => UnitRouteKey;
 	/** A group's route. */
-	readonly route: (group: readonly number[]) => RouteKey;
+	readonly route: (group: readonly number[]) => UnitRouteKey;
 	/**
 	 * The units; a borderline one carries variants when `variantMargin` is
 	 * given, and a one-piece DET or PRON unit its closed-class identity when
@@ -664,11 +666,12 @@ export function routeMembership(
 		...(extra?.distributions ?? []),
 	]);
 	const picks = new Map([...answers.routes.picks, ...(extra?.picks ?? [])]);
-	const jevRoute = (group: readonly number[]): RouteKey => {
+	const jevRoute = (group: readonly number[]): UnitRouteKey => {
 		const [only] = group;
 		if (group.length === 1 && only !== undefined) {
 			const abbreviation = route2[abbreviationId(only)];
-			if (abbreviation?.type === "choice") return abbreviation.choice;
+			if (abbreviation?.type === "choice")
+				return checkedRouteKey(abbreviation.choice);
 		}
 		return judged.get(groupKey(group))?.choice ?? "Unresolved";
 	};
@@ -694,11 +697,11 @@ export function routeMembership(
 			? closedClassRoute(piece, answer.choice)
 			: undefined;
 	};
-	const openRoute = (group: readonly number[]): RouteKey =>
+	const openRoute = (group: readonly number[]): UnitRouteKey =>
 		merged.merged.has(groupKey(group))
 			? "Locution/INTJ"
 			: structural(group);
-	const route = (group: readonly number[]): RouteKey =>
+	const route = (group: readonly number[]): UnitRouteKey =>
 		closedRoute(group) ?? fixedRoute?.(group) ?? openRoute(group);
 	const decidingShares = (
 		group: readonly number[],

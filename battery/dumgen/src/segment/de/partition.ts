@@ -3,7 +3,7 @@
  * into units. Every piece ends in exactly one unit.
  */
 import type { Unit } from "../segmented-sentence.js";
-import { type RouteKey, routeForKey } from "./routes.js";
+import { routeForKey, type UnitRouteKey } from "./routes.js";
 import type { Sentence } from "./sentence.js";
 
 /** Groups of piece ids, each sorted, ordered by first piece. */
@@ -50,7 +50,7 @@ export const groupKey = (group: readonly number[]) => group.join(",");
 export function unitsOf(
 	sentence: Sentence,
 	partition: Partition,
-	routeFor: (group: readonly number[]) => RouteKey,
+	routeFor: (group: readonly number[]) => UnitRouteKey,
 ): Unit[] {
 	return partition.map((group) => ({
 		segments: group.map((id) => {

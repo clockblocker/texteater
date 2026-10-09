@@ -15,6 +15,7 @@ import {
 	draftPrompt,
 	draftsEmojiDescription,
 } from "../../src/resolve/reading.js";
+import type { RouteKey } from "../../src/segment/de/routes.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 import type { Segment } from "../../src/segment/segmented-sentence.js";
 import {
@@ -1870,7 +1871,7 @@ test("the comparable question offers No for a demonstrative or interrogative adv
 });
 
 test("a Locution's or interjection's headword drops placeholders and members outside it, and an adpositional or conjunctional Locution has … exactly at its gaps", () => {
-	const at = (text: string, segments: number[], key: string) => {
+	const at = (text: string, segments: number[], key: RouteKey) => {
 		const unit = unitOf(segments, key);
 		return targetOf(sentenceOf(text), unit, unit.route);
 	};

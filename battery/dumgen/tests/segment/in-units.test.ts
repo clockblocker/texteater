@@ -6,7 +6,11 @@ import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
 import type { LunaAsk } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
 import type { Answer } from "../../src/segment/ask.js";
-import { keyOf, routeForKey } from "../../src/segment/de/routes.js";
+import {
+	checkedRouteKey,
+	keyOf,
+	routeForKey,
+} from "../../src/segment/de/routes.js";
 import {
 	type JevAsk,
 	type JevRequest,
@@ -63,7 +67,9 @@ const recorded = z
 						// A recorded route is a German one: its key names it.
 						route: z
 							.object({ family: z.string(), kind: z.string() })
-							.transform((route) => routeForKey(keyOf(route))),
+							.transform((route) =>
+								routeForKey(checkedRouteKey(keyOf(route))),
+							),
 					}),
 				),
 			}),

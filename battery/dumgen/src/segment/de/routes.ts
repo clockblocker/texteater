@@ -39,7 +39,18 @@ const locutionKinds = [
 	"VERB",
 ] as const satisfies readonly Dumling.Kind<"de", "Locution">[];
 
-export type RouteKey = string;
+type LexemeKind = (typeof lexemeKinds)[number];
+type LocutionKind = (typeof locutionKinds)[number];
+
+/** A German route's option key: its Family and Kind (`Lexeme/VERB`). */
+export type RouteKey =
+	| `Lexeme/${LexemeKind}`
+	| `Locution/${LocutionKind}`
+	| "Saying/Saying"
+	| "Foreign/Foreign";
+
+/** A unit's route key, or `Unresolved` for a unit no route took. */
+export type UnitRouteKey = RouteKey | "Unresolved";
 
 const routeDescriptions: Readonly<Record<RouteKey, string>> = {
 	"Lexeme/ADJ":
@@ -90,30 +101,48 @@ const routeDescriptions: Readonly<Record<RouteKey, string>> = {
 		"A word or fixed phrase of another language that shows no German grammar here (very good, by the way)",
 };
 
+const lexemeKey = (kind: LexemeKind): RouteKey => `Lexeme/${kind}`;
+const locutionKey = (kind: LocutionKind): RouteKey => `Locution/${kind}`;
+
 export const singletonRoutes: readonly RouteKey[] = [
-	...lexemeKinds.map((kind) => `Lexeme/${kind}`),
+	...lexemeKinds.map(lexemeKey),
 	"Foreign/Foreign",
 ];
 
 export const allRoutes: readonly RouteKey[] = [
-	...lexemeKinds.map((kind) => `Lexeme/${kind}`),
-	...locutionKinds.map((kind) => `Locution/${kind}`),
+	...lexemeKinds.map(lexemeKey),
+	...locutionKinds.map(locutionKey),
 	"Saying/Saying",
 	"Foreign/Foreign",
 ];
+
+const routeKeys: ReadonlySet<string> = new Set(allRoutes);
+
+/** Whether `key` names one of the German routes. */
+const isRouteKey = (key: string): key is RouteKey => routeKeys.has(key);
+
+/**
+ * `key` as a route key. A key that arrives as a string, such as jev's route
+ * Choice or a gold route's `keyOf`, is checked once here, and one that names
+ * no German route throws, as in `routeForKey`.
+ */
+export function checkedRouteKey(key: string): RouteKey {
+	if (!isRouteKey(key)) throw Error(`Not a German route key: ${key}`);
+	return key;
+}
 
 const routes: ReadonlyMap<RouteKey, Route> = new Map<RouteKey, Route>([
 	...lexemeKinds.map(
 		(kind) =>
 			[
-				`Lexeme/${kind}`,
+				lexemeKey(kind),
 				{ language: "de", family: "Lexeme", kind },
 			] as const,
 	),
 	...locutionKinds.map(
 		(kind) =>
 			[
-				`Locution/${kind}`,
+				locutionKey(kind),
 				{ language: "de", family: "Locution", kind },
 			] as const,
 	),
@@ -125,17 +154,20 @@ const routes: ReadonlyMap<RouteKey, Route> = new Map<RouteKey, Route>([
  * The Route a key names, the inverse of `keyOf`; a key outside the German
  * routes throws.
  */
-export function routeForKey(key: RouteKey): Route | "Unresolved" {
+export function routeForKey(key: UnitRouteKey): Route | "Unresolved" {
 	if (key === "Unresolved") return "Unresolved";
 	const route = routes.get(key);
 	if (!route) throw Error(`Not a German route key: ${key}`);
 	return { ...route };
 }
 
-/** The key of a route, a gold one with untyped Kinds included. */
+/**
+ * The key of a route, a gold one with untyped Kinds included, so it may name
+ * no German route; `checkedRouteKey` checks it.
+ */
 export function keyOf(
 	route: { readonly family: string; readonly kind: string } | "Unresolved",
-): RouteKey {
+): string {
 	return route === "Unresolved" ? route : `${route.family}/${route.kind}`;
 }
 
@@ -145,9 +177,6 @@ export function routeCriteria(
 	described: boolean,
 ): Record<string, string | null> {
 	return Object.fromEntries(
-		keys.map((key) => [
-			key,
-			described ? (routeDescriptions[key] ?? null) : null,
-		]),
+		keys.map((key) => [key, described ? routeDescriptions[key] : null]),
 	);
 }

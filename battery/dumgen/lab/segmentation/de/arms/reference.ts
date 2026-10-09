@@ -55,7 +55,11 @@ import {
 	slotId,
 } from "../../../../src/segment/de/nomination.js";
 import type { Partition } from "../../../../src/segment/de/partition.js";
-import { routeCriteria } from "../../../../src/segment/de/routes.js";
+import {
+	checkedRouteKey,
+	keyOf,
+	routeCriteria,
+} from "../../../../src/segment/de/routes.js";
 import {
 	askRouteBatches,
 	askUnaskedRoutes,
@@ -573,9 +577,7 @@ export function pickQuestions(
 				? `In \`sentence\`, the word ${refs} is a unit on its own. Which of these routes does it take here?`
 				: `In \`sentence\`, the pieces ${refs} together form one unit. Which of these routes does that whole unit take here?`,
 			routeCriteria(
-				unit.variants.map(
-					(variant) => `${variant.family}/${variant.kind}`,
-				),
+				unit.variants.map((variant) => checkedRouteKey(keyOf(variant))),
 				true,
 			),
 		);
