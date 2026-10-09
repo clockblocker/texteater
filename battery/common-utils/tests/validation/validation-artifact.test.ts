@@ -919,6 +919,85 @@ describe("parser path and issue-retention contract", () => {
 		expect(actual.issues).toEqual(expected.error.issues);
 	});
 
+	test("matches Zod when union options are ruled out by referenced literal and enum fields", () => {
+		const canonical = z.union([
+			z.strictObject({
+				kind: z.literal("text"),
+				tone: z.enum(["calm", "loud"]),
+				value: z.string(),
+			}),
+			z.number().min(3),
+			z.object({ kind: z.literal("count"), value: z.number() }),
+			z.strictObject({
+				kind: z.literal("list"),
+				items: z.array(z.string()).min(1),
+			}),
+		]);
+		const artifact: ValidationArtifact<z.output<typeof canonical>> = {
+			root: [
+				"union",
+				[
+					["ref", "text"],
+					["number", [["min", 3, true]]],
+					[
+						"object",
+						{ kind: ["literal", "count"], value: ["number"] },
+						"strip",
+					],
+					[
+						"object",
+						{
+							kind: ["ref", "list-kind"],
+							items: ["array", ["string"], [["min", 1]]],
+						},
+						"strict",
+					],
+				],
+			],
+			definitions: {
+				"list-kind": ["ref", "list-literal"],
+				"list-literal": ["literal", "list"],
+				text: [
+					"object",
+					{
+						kind: ["literal", "text"],
+						tone: ["ref", "tone"],
+						value: ["string"],
+					},
+					"strict",
+				],
+				tone: ["enum", ["calm", "loud"]],
+			},
+			version: 1,
+		};
+		const inputs: unknown[] = [
+			{ kind: "list", items: ["a"] },
+			{ kind: "count", value: 2, extra: true },
+			{ kind: "text", tone: "loud", value: "x" },
+			5,
+			{ kind: "list", items: [] },
+			{ kind: "text", tone: "quiet", value: "x" },
+			{ kind: "count", value: "2" },
+			{ kind: "unknown" },
+			{},
+			1,
+			null,
+			[],
+			"text",
+		];
+		for (const input of inputs) {
+			const expected = canonical.safeParse(input);
+			const actual = parseValidationArtifact(artifact, input);
+			if (expected.success) expect(actual).toEqual(expected.data);
+			else if (actual instanceof ParsingError)
+				expect(actual.issues).toEqual(expected.error.issues);
+			else
+				throw new Error(
+					`expected a failure for ${JSON.stringify(input)}`,
+				);
+		}
+	});
+
 	test("orders object-record-array sibling and bound paths like Zod", () => {
 		const canonical = z.object({
 			buckets: z.record(

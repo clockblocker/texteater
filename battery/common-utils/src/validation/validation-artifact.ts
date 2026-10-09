@@ -659,6 +659,10 @@ function numberCheckIssues(
 	return issues;
 }
 
+// An option that `rulesOut` rejects can only fail with an aborted result, so
+// it can't be the union's match and never counts among the non-aborted
+// failures. It is skipped, and parsed in full only when its issues go into an
+// `invalid_union`.
 function parseUnion(
 	options: readonly Constraint[],
 	input: unknown,
@@ -667,15 +671,15 @@ function parseUnion(
 	operations: ValidationOperations,
 ): ParseResult {
 	const nonAborted: ParseFailure[] = [];
-	const errors: ParsingIssue[][] = [];
+	const errors: (ParsingIssue[] | undefined)[] = [];
+	const parseOption = (option: Constraint) =>
+		parseConstraint(option, input, [], definitions, operations);
 	for (const option of options) {
-		const result = parseConstraint(
-			option,
-			input,
-			[],
-			definitions,
-			operations,
-		);
+		if (rulesOut(option, input, definitions)) {
+			errors.push(undefined);
+			continue;
+		}
+		const result = parseOption(option);
 		if (result.ok) return result;
 		if (!result.aborted) nonAborted.push(result);
 		errors.push(result.issues);
@@ -688,13 +692,85 @@ function parseUnion(
 		[
 			{
 				code: "invalid_union",
-				errors,
+				errors: options.map(
+					(option, index) =>
+						errors[index] ?? issuesOf(parseOption(option)),
+				),
 				path,
 				message: "Invalid input",
 			},
 		],
 		true,
 	);
+}
+
+/** A field an object option fixes to a literal or an enum of primitives. */
+type Discriminant = readonly [
+	key: string,
+	values: readonly ArtifactPrimitive[],
+];
+
+const discriminantCache = new WeakMap<
+	Readonly<Record<string, Constraint>>,
+	WeakMap<Constraint, readonly Discriminant[]>
+>();
+
+/**
+ * Whether parsing `option` must fail with an aborted result: the option is an
+ * object, through references, and the input isn't a record or misses one of
+ * its literal or enum fields. `parseObject` aborts on either.
+ */
+function rulesOut(
+	option: Constraint,
+	input: unknown,
+	definitions: Readonly<Record<string, Constraint>>,
+): boolean {
+	const discriminants = discriminantsOf(option, definitions);
+	if (discriminants === undefined) return false;
+	if (!isRecord(input)) return true;
+	return discriminants.some(
+		([key, values]) =>
+			!values.some((value) => Object.is(value, input[key])),
+	);
+}
+
+function discriminantsOf(
+	option: Constraint,
+	definitions: Readonly<Record<string, Constraint>>,
+): readonly Discriminant[] | undefined {
+	const object = resolveReference(option, definitions);
+	if (object?.[0] !== "object") return undefined;
+	let cache = discriminantCache.get(definitions);
+	if (cache === undefined) {
+		cache = new WeakMap();
+		discriminantCache.set(definitions, cache);
+	}
+	const cached = cache.get(object);
+	if (cached !== undefined) return cached;
+	const discriminants: Discriminant[] = [];
+	for (const [key, field] of Object.entries(object[1])) {
+		const resolved = resolveReference(field, definitions);
+		// Parsing an unknown reference throws, so the option is parsed to throw.
+		if (resolved === undefined) return undefined;
+		if (resolved[0] === "literal") discriminants.push([key, [resolved[1]]]);
+		else if (resolved[0] === "enum") discriminants.push([key, resolved[1]]);
+	}
+	cache.set(object, discriminants);
+	return discriminants;
+}
+
+function issuesOf(result: ParseResult): ParsingIssue[] {
+	return result.ok ? [] : result.issues;
+}
+
+/** The constraint a chain of references names, or undefined if one is unknown. */
+function resolveReference(
+	constraint: Constraint,
+	definitions: Readonly<Record<string, Constraint>>,
+): Constraint | undefined {
+	let resolved: Constraint | undefined = constraint;
+	while (resolved?.[0] === "ref") resolved = definitions[resolved[1]];
+	return resolved;
 }
 
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
