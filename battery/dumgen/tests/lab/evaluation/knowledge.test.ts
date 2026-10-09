@@ -32,7 +32,6 @@ import {
 	saveKnowledgeSubset,
 	selectKnowledgeSubset,
 } from "../../../lab/evaluation/knowledge/subset.js";
-import type { Line } from "../../../lab/evaluation/resolve-grammar/scoring.js";
 import type { LunaAsk } from "../../../src/luna.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
 
@@ -422,14 +421,13 @@ test("the harness prices a round from the oracle without a call, runs live once 
 	const metrics = knowledgeMetrics(run);
 	if (!("lines" in metrics)) throw Error("Expected a Knowledge report");
 	// Each exact aspect's line is keyed by its name.
-	const lines: Readonly<Record<string, Line | undefined>> = metrics.lines;
-	expect(lines.conjugationClass).toMatchObject({
+	expect(metrics.lines.conjugationClass).toMatchObject({
 		correct: 1,
 		count: 1,
 	});
-	expect(lines.sayingType).toMatchObject({ correct: 1, count: 1 });
-	expect(lines.participleSource?.count).toBe(1);
-	expect(lines.relationRecall?.correct).toBeGreaterThan(0);
+	expect(metrics.lines.sayingType).toMatchObject({ correct: 1, count: 1 });
+	expect(metrics.lines.participleSource.count).toBe(1);
+	expect(metrics.lines.relationRecall.correct).toBeGreaterThan(0);
 	expect(metrics.flips).toEqual([]);
 
 	// A re-score replays the cache: no call at all.

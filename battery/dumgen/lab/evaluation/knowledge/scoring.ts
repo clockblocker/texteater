@@ -26,6 +26,7 @@ import type * as Dumling from "dumling/types";
 import { applyKnowledgeChange } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { z } from "zod";
+import { recordOf } from "../../records.js";
 import { type Line, lineOf, wilson } from "../resolve-grammar/scoring.js";
 import type { KnowledgeCase, TranslationSlip } from "./cases.js";
 
@@ -502,6 +503,20 @@ function extraClaimsSample(attempts: readonly ScoredKnowledge[]) {
 		.slice(0, extraClaimSampleSize);
 }
 
+/**
+ * A Knowledge report's lines: one per exact aspect, the overall and
+ * per-relation `<relation>Recall` lines, and the frame's and participle's.
+ */
+type KnowledgeLines = Readonly<
+	Record<ExactAspect, Line> &
+		Partial<Record<`${string}Recall`, Line>> & {
+			relationRecall: Line;
+			valencyComplementRecall: Line;
+			valencyComplementPrecision: Line;
+			participleDetected: Line;
+		}
+>;
+
 const byAspect = (entries: readonly Entry[]) => {
 	const groups = new Map<string, Entry[]>();
 	for (const entry of entries) {
@@ -540,42 +555,38 @@ export function knowledgeReport(attempts: readonly ScoredKnowledge[]) {
 				total + (verdict.complements ? pick(verdict.complements) : 0),
 			0,
 		);
+	const lines: KnowledgeLines = {
+		...recordOf(exactAspects, (aspect) =>
+			lineOf(
+				scored(aspect).map(({ verdict }) => verdict.correct === true),
+			),
+		),
+		/** Gold relation claims the run found under the same relation. */
+		relationRecall: recallLine(relations),
+		...Object.fromEntries(
+			byAspect(relations).map(([aspect, group]) => [
+				`${aspect.replace("semanticRelations.", "")}Recall`,
+				recallLine(group),
+			]),
+		),
+		/** Gold complements the run's frame holds, and its complements gold holds. */
+		valencyComplementRecall: countLine(
+			sum(({ matched }) => matched),
+			sum(({ gold }) => gold),
+		),
+		valencyComplementPrecision: countLine(
+			sum(({ matched }) => matched),
+			sum(({ produced }) => produced),
+		),
+		/** Whether a participle source exists at all. */
+		participleDetected: lineOf(
+			participle.map(({ verdict }) => verdict.sourceAgrees === true),
+		),
+	};
 	return {
 		attempts: attempts.length,
 		cases: new Set(attempts.map(({ caseId }) => caseId)).size,
-		lines: {
-			...Object.fromEntries(
-				exactAspects.map((aspect) => [
-					aspect,
-					lineOf(
-						scored(aspect).map(
-							({ verdict }) => verdict.correct === true,
-						),
-					),
-				]),
-			),
-			/** Gold relation claims the run found under the same relation. */
-			relationRecall: recallLine(relations),
-			...Object.fromEntries(
-				byAspect(relations).map(([aspect, group]) => [
-					`${aspect.replace("semanticRelations.", "")}Recall`,
-					recallLine(group),
-				]),
-			),
-			/** Gold complements the run's frame holds, and its complements gold holds. */
-			valencyComplementRecall: countLine(
-				sum(({ matched }) => matched),
-				sum(({ gold }) => gold),
-			),
-			valencyComplementPrecision: countLine(
-				sum(({ matched }) => matched),
-				sum(({ produced }) => produced),
-			),
-			/** Whether a participle source exists at all. */
-			participleDetected: lineOf(
-				participle.map(({ verdict }) => verdict.sourceAgrees === true),
-			),
-		},
+		lines,
 		/** Per requested aspect: how often it failed, and how often it produced a value. */
 		aspects: Object.fromEntries(
 			byAspect(entries).map(([aspect, group]) => [
