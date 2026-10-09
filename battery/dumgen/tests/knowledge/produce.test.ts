@@ -230,6 +230,55 @@ test("onContribution receives each aspect's changes as it finishes, one at a tim
 	expect(result.changes).toHaveLength(3);
 });
 
+test("the result reads in job order, however the jobs finish (#1122)", async () => {
+	const jev = knowledgeJev({ plurality: "HasPlural" });
+	const luna = knowledgeLuna(
+		{
+			transcription: new Error("Luna is down"),
+			definition: "Gebundene Blumen.",
+			translations: ["bouquet"],
+			plural: ["Sträuße", "zwei Wörter"],
+		},
+		{
+			delayMs: (aspect) =>
+				aspect === "transcription"
+					? 40
+					: aspect === "definition"
+						? 20
+						: 1,
+		},
+	);
+	const finished: string[] = [];
+	const { result } = await produceOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		knowledgeInput(noun, "💐", "Sie bekam einen Strauß.", ["Strauß"], {
+			request: {
+				transcription: null,
+				definition: null,
+				translations: { en: null },
+				plural: null,
+			},
+			onContribution: (changes) =>
+				Effect.sync(() => {
+					finished.push(...changes.map(({ aspect }) => aspect));
+				}),
+		}),
+	);
+	// The later job finished first ...
+	expect(finished).toEqual(["translations", "definition"]);
+	// ... and the result still reads in the request's order.
+	expect(result.changes.map(({ aspect }) => aspect)).toEqual([
+		"definition",
+		"translations",
+	]);
+	expect(
+		result.failures.map(({ aspect, code }) => ({ aspect, code })),
+	).toEqual([
+		{ aspect: "transcription", code: "ProviderFailure" },
+		{ aspect: "plural", code: "InvalidModelOutput" },
+	]);
+});
+
 class PublicationFailed extends Data.TaggedError("PublicationFailed")<{
 	readonly reason: string;
 }> {}

@@ -13,6 +13,8 @@
  * - Each aspect's changes go to `onContribution` as it finishes, one
  *   contribution at a time; its failure is the run's only error and
  *   interrupts the aspects still running.
+ * - The returned changes, pending relations and failures read in job order
+ *   (the request's order), not the order the aspects finish in (#1122).
  * - Bad input is a Defect, raised before anything is asked.
  */
 
@@ -279,20 +281,18 @@ export const produceGermanKnowledge = <E>(
 		);
 		if (skipped.length > 0)
 			scope.event({ name: "SkippedAspects", data: { skipped } });
-		const changes: GermanKnowledgeChange[] = [];
-		const pendingRelations: GermanPendingRelation[] = [];
-		const failures: KnowledgeFailure[] = [];
 		// Authored Knowledge is tf-demo's to attach (ADR 0021).
-		if (closedRoute(reading.lemma) || authoredReading(reading)) {
-			for (const job of jobs)
-				failures.push({
+		if (closedRoute(reading.lemma) || authoredReading(reading))
+			return {
+				changes: [],
+				pendingRelations: [],
+				failures: jobs.map((job) => ({
 					aspect: job.aspect,
 					...(job.leaf === undefined ? {} : { leaf: job.leaf }),
 					code: "CatalogMiss",
 					message: `The authored ${family} ${kind} ${reading.lemma.canonicalForm} has no reviewed ${job.aspect}`,
-				});
-			return { changes, pendingRelations, failures };
-		}
+				})),
+			};
 		const publication = Semaphore.makeUnsafe(1);
 		const publish = (contribution: readonly GermanKnowledgeChange[]) =>
 			input.onContribution === undefined || contribution.length === 0
@@ -300,7 +300,9 @@ export const produceGermanKnowledge = <E>(
 				: publication.withPermits(1)(
 						input.onContribution(contribution),
 					);
-		yield* Effect.forEach(
+		// Effect.forEach keeps the input order, so the result reads in job
+		// order however the jobs finish (#1122).
+		const outputs = yield* Effect.forEach(
 			jobs,
 			(job) =>
 				job.run.pipe(
@@ -310,16 +312,15 @@ export const produceGermanKnowledge = <E>(
 							failures: [failureOf(job, error)],
 						}),
 					),
-					Effect.flatMap((output) => {
-						changes.push(...output.changes);
-						pendingRelations.push(
-							...(output.pendingRelations ?? []),
-						);
-						failures.push(...(output.failures ?? []));
-						return publish(output.changes);
-					}),
+					Effect.tap((output) => publish(output.changes)),
 				),
-			{ concurrency: "unbounded", discard: true },
+			{ concurrency: "unbounded" },
 		);
-		return { changes, pendingRelations, failures };
+		return {
+			changes: outputs.flatMap((output) => output.changes),
+			pendingRelations: outputs.flatMap(
+				(output) => output.pendingRelations ?? [],
+			),
+			failures: outputs.flatMap((output) => output.failures ?? []),
+		};
 	});
