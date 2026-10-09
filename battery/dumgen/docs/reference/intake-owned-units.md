@@ -54,11 +54,17 @@ two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contra
   that belongs to an Occurrence Attestation groups with the occurrence's
   members instead. A Sentence whose segmentation failed shows as not
   segmented: hover previews no word.
-- While click resolution is rebuilt (#848), tf-demo's `ClickResolution` port
-  runs `selectUnitOnly`: a click selects the whole unit, and its Resolution
-  Session ends `Unresolved` at once. No Note is made and no model is asked.
-  The deck settles on one Unit Card with the unit's words (a gap reads as
-  `…`), its route and any variants.
+- A click on a Segment whose occurrence is already committed reuses it, with
+  no model call. Otherwise tf-demo's `ClickResolution` port runs
+  `dumgenClickResolution`: Dumgen's `resolve.grammar` takes the stored unit
+  under the click, with its Sentence, the neighbouring Sentences and the
+  stored Lemmas found under its words, and names the Attestation.
+  `resolve.reading` then reuses an Emoji Description of the Lemma's stored
+  Readings or makes a new one, and the occurrence commits. A unit intake
+  left `Unresolved`, or a Segment with no unit, ends the Resolution Session
+  `Unresolved` with no call. The deck shows one Unit Card with the unit's
+  words (a gap reads as `…`), its route and any variants until Grammar
+  arrives, and settles on it when the click ends `Unresolved`.
 - Route variants span one known clash set, and a click is to settle them
   with that clash set's focused prompt (Dumgen ADR 0007). Those prompts are
   not built yet (#869): production `segment.inUnits` emits no variants, and

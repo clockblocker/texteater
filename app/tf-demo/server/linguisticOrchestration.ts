@@ -287,7 +287,7 @@ export type ResolutionCheckpoints = {
 };
 
 type TfDemoOrchestratorOptions = {
-	/** Grammar, then the Reading's Emoji Description; production runs `selectUnitOnly`. */
+	/** Grammar, then the Reading's Emoji Description; production runs `dumgenClickResolution`. */
 	readonly resolution: ClickResolution;
 	/** The Readings the Shared Demo Dictionary already stores for a Lemma. */
 	readonly findStoredReadings: (
