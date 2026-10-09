@@ -1,18 +1,20 @@
 # Promptsmith
 
-Schema-independent prompt authoring, corpus selection, assembly and evaluation.
+Schema-independent corpus selection and evaluation of production operations.
 Linguistic schemas and evaluators belong to the consumer.
 
 A corpus stores cases without assigning a role. Select demonstrations explicitly;
 use `union`, `intersection` and `difference` to compose demonstration and test
 selections. `defineExperiment` rejects overlap and shared contamination keys
-before execution. Assembly includes only the selected demonstrations.
+before execution.
 
-`promptsmith/evaluation` runs an experiment with an injected executor and records
-its effective configuration, fingerprints, outputs, evaluator results, timing
-and failures. Execution status is separate from the evaluator's score.
-`promptsmith/storage` saves, validates, reopens and compares these records.
-Promptsmith ships no model transport; the consumer injects its executor.
+`promptsmith/evaluation` runs the consumer's operation on each selected case
+and records its effective configurations, corpus fingerprint, outputs, call
+traces, token usage, evaluator results, timing and failures. Execution status
+is separate from the evaluator's score. `promptsmith/storage` saves,
+validates, reopens and compares these operation runs (manifest version 2).
+Promptsmith ships no model transport; the consumer's operation makes its own
+calls.
 
 ## Repeated runs
 
@@ -24,7 +26,7 @@ With two or more repetitions:
 
 - `manifest.repetitions` stores the count.
 - Each case keeps every attempt in `repetitions`, including its output,
-  evaluator result, timing, failure and, for operations, traces and usage.
+  evaluator result, timing, failure, traces and usage.
 - The case's top-level attempt fields mirror one representative repetition:
   the first that did not execute cleanly, or otherwise the first. `status`,
   `summary.succeeded`, `summary.failed` and `summary.interrupted` therefore

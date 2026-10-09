@@ -21,6 +21,7 @@
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { messageOf } from "common-utils";
+import { loadRun } from "promptsmith/storage";
 import {
 	freezeKnowledgeSets,
 	loadKnowledgeSet,
@@ -38,7 +39,6 @@ import {
 	defaultRunOutputDirectory,
 	judgmentSettings,
 	judgmentSettingsSchema,
-	loadOperationRun,
 } from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
@@ -61,8 +61,7 @@ async function runKnowledgeCli(
 	});
 	const [command, first, second] = positionals;
 	const runDirectory = options.runDirectory ?? defaultRunOutputDirectory;
-	const operationRun = (runId: string) =>
-		loadOperationRun(runDirectory, runId);
+	const operationRun = (runId: string) => loadRun(runDirectory, runId);
 	if (command === "subset") {
 		if (!first || !values.out)
 			throw Error(

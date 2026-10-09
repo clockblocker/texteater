@@ -1,9 +1,12 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { diffJson, type JsonChange } from "./json-diff.js";
-import type { StoredRun } from "./operation-evaluation.js";
+import type { OperationEvaluationRun } from "./operation-evaluation.js";
 import { summarizeQuality } from "./quality.js";
-import { runManifestSchema, storedRunSchema } from "./schemas.js";
+import {
+	operationEvaluationRunSchema,
+	operationManifestSchema,
+} from "./schemas.js";
 import {
 	type ComparedVerdict,
 	comparedVerdict,
@@ -14,9 +17,9 @@ import {
 /** Creates a new run directory; existing evidence is never overwritten. */
 export async function saveRun(
 	outputDirectory: string,
-	run: StoredRun,
+	run: OperationEvaluationRun,
 ): Promise<string> {
-	const parsed = storedRunSchema.parse(run);
+	const parsed = operationEvaluationRunSchema.parse(run);
 	await mkdir(outputDirectory, { recursive: true });
 	const directory = join(outputDirectory, parsed.manifest.runId);
 	await mkdir(directory);
@@ -37,15 +40,15 @@ export async function saveRun(
 export async function loadRun(
 	outputDirectory: string,
 	runId: string,
-): Promise<StoredRun> {
-	runManifestSchema.shape.runId.parse(runId);
+): Promise<OperationEvaluationRun> {
+	operationManifestSchema.shape.runId.parse(runId);
 	const directory = join(outputDirectory, runId);
 	const [manifest, cases, summary] = await Promise.all([
 		readFile(join(directory, "manifest.json"), "utf8"),
 		readFile(join(directory, "cases.jsonl"), "utf8"),
 		readFile(join(directory, "summary.json"), "utf8"),
 	]);
-	const parsed = storedRunSchema.parse({
+	const parsed = operationEvaluationRunSchema.parse({
 		manifest: JSON.parse(manifest),
 		cases: cases
 			.trim()
@@ -87,7 +90,7 @@ export async function loadRun(
 	return parsed;
 }
 
-type StoredCaseRecord = StoredRun["cases"][number];
+type StoredCaseRecord = OperationEvaluationRun["cases"][number];
 type CaseComparison = {
 	readonly caseId: string;
 	readonly left: StoredCaseRecord | null;
@@ -106,9 +109,12 @@ type CaseComparison = {
  * Pairs cases by caseId. Outputs compare as JSON; a repeated case contributes
  * its most frequent output, and its verdict is Mixed when repetitions disagree.
  */
-export function compareRuns(left: StoredRun, right: StoredRun) {
-	const a = storedRunSchema.parse(left),
-		b = storedRunSchema.parse(right);
+export function compareRuns(
+	left: OperationEvaluationRun,
+	right: OperationEvaluationRun,
+) {
+	const a = operationEvaluationRunSchema.parse(left),
+		b = operationEvaluationRunSchema.parse(right);
 	const aCases = new Map<string, StoredCaseRecord>(
 		a.cases.map((record) => [record.caseId, record]),
 	);

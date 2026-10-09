@@ -6,7 +6,6 @@ import {
 	definePromptSource,
 } from "promptsmith";
 import { z } from "zod";
-import { assembleSystemPrompt } from "../src/authoring/assemble-system-prompt.js";
 
 const inputSchema = z.strictObject({ stimulus: z.string() });
 const outputSchema = z.strictObject({ answer: z.string() });
@@ -47,9 +46,6 @@ test("set operations split one corpus into explicit demonstrations and held-out 
 		goldenCorpus: corpus,
 		demonstrations: toUse,
 	});
-	const assembled = assembleSystemPrompt(source);
-	expect(assembled).toContain("answer-a");
-	expect(assembled).not.toContain("answer-c");
 	expect(
 		defineExperiment({
 			promptSource: source,

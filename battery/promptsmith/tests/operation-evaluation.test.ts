@@ -106,6 +106,27 @@ test("operation evidence preserves all calls, domain outcomes, missing usage and
 		await saveRun(directory, run);
 		expect(await loadRun(directory, run.manifest.runId)).toEqual(run);
 		await expect(saveRun(directory, run)).rejects.toThrow();
+		await expect(loadRun(directory, "../escape")).rejects.toThrow();
+		const { quality, ...summaryWithoutQuality } = run.summary;
+		const withoutQuality = {
+			...run,
+			manifest: { ...run.manifest, runId: crypto.randomUUID() },
+			summary: summaryWithoutQuality,
+		};
+		await saveRun(directory, withoutQuality);
+		expect(await loadRun(directory, withoutQuality.manifest.runId)).toEqual(
+			withoutQuality,
+		);
+		const inconsistentId = crypto.randomUUID();
+		await saveRun(directory, {
+			...run,
+			manifest: { ...run.manifest, runId: inconsistentId },
+			summary: {
+				...run.summary,
+				quality: { passed: 2, failed: 0, needsReview: 0, unscored: 0 },
+			},
+		});
+		await expect(loadRun(directory, inconsistentId)).rejects.toThrow();
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}

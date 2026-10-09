@@ -18,7 +18,6 @@ import {
 	operationCaseRepetitionSchema,
 	operationEvaluationRunSchema,
 	operationManifestSchema,
-	type storedRunSchema,
 } from "./schemas.js";
 import {
 	repeatedCaseRecord,
@@ -31,7 +30,6 @@ type ModelConfiguration = z.infer<typeof configurationSchema>;
 export type OperationEvaluationRun = z.infer<
 	typeof operationEvaluationRunSchema
 >;
-export type StoredRun = z.infer<typeof storedRunSchema>;
 type OperationCaseRecord = z.infer<typeof operationCaseRecordSchema>;
 type OperationCaseRepetition = z.infer<typeof operationCaseRepetitionSchema>;
 export type OperationEvidence = {

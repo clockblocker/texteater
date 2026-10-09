@@ -20,6 +20,7 @@
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { messageOf } from "common-utils";
+import { loadRun } from "promptsmith/storage";
 import {
 	freezeGrammarSets,
 	loadGrammarSet,
@@ -36,7 +37,6 @@ import {
 	defaultRunOutputDirectory,
 	judgmentSettings,
 	judgmentSettingsSchema,
-	loadOperationRun,
 } from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
@@ -67,10 +67,7 @@ async function runResolveGrammarCli(
 				"Use `bun cli/resolve-grammar.ts subset <baselineRunId>`",
 			);
 		const operationRun = (id: string) =>
-			loadOperationRun(
-				options.runDirectory ?? defaultRunOutputDirectory,
-				id,
-			);
+			loadRun(options.runDirectory ?? defaultRunOutputDirectory, id);
 		const run = await operationRun(runId);
 		const settings = judgmentSettings(run, judgmentSettingsSchema);
 		// The guard comes from a whole-set run: this one, or --guard-from.

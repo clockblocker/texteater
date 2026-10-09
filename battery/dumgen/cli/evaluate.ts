@@ -710,10 +710,7 @@ export function runComparison(left: StoredRun, right: StoredRun) {
 		runId: run.manifest.runId,
 		experimentId: run.manifest.experimentId,
 		sourceRevision: run.manifest.sourceRevision,
-		model:
-			"configurations" in run.manifest
-				? run.manifest.configurations.judgment.model
-				: run.manifest.configuration.model,
+		model: run.manifest.configurations.judgment.model,
 		cases: run.cases.length,
 		verdicts: Object.fromEntries(
 			verdicts.map((verdict) => [

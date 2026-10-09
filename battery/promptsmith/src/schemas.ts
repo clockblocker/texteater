@@ -4,25 +4,25 @@ export const configurationSchema = z.strictObject({
 	model: z.string().min(1),
 	settings: z.record(z.string(), z.json()),
 });
-export const runManifestSchema = z.strictObject({
-	version: z.literal(1),
+/** Manifest version 2: an operation run, the only run format Promptsmith stores. */
+export const operationManifestSchema = z.strictObject({
+	version: z.literal(2),
 	runId: z.string().regex(/^[a-zA-Z0-9_-]+$/),
 	experimentId: z.string().min(1),
 	evaluatorVersion: z.string().min(1),
 	sourceRevision: z.string().min(1),
 	startedAt: z.string().datetime(),
-	prompt: z.strictObject({
-		route: z.string(),
-		fingerprint: z.string(),
-		schemaFingerprint: z.string(),
-	}),
 	corpus: z.strictObject({
 		fingerprint: z.string(),
 		caseIds: z.array(z.string()),
 	}),
-	configuration: configurationSchema,
 	/** How many times each case ran. Absent means once, as in every earlier run. */
 	repetitions: z.number().int().min(2).optional(),
+	operationVersion: z.string().min(1),
+	configurations: z.strictObject({
+		generation: configurationSchema,
+		judgment: configurationSchema,
+	}),
 });
 const qualitySchema = z.strictObject({
 	passed: z.number().int().nonnegative(),
@@ -49,27 +49,6 @@ const caseIdentityShape = {
 	input: z.json(),
 	idealOutput: z.json(),
 };
-export const caseRepetitionSchema = z.strictObject({
-	status: z.enum([
-		"Success",
-		"InvalidOutput",
-		"ProviderFailure",
-		"EvaluationFailure",
-		"Interrupted",
-	]),
-	output: z.json().optional(),
-	evaluation: z.json().optional(),
-	error: z.string().optional(),
-	durationMs: z.number().nonnegative(),
-	metadata: z.json().optional(),
-});
-/** Top-level attempt fields mirror the case's representative repetition. */
-export const caseRecordSchema = z.strictObject({
-	...caseIdentityShape,
-	...caseRepetitionSchema.shape,
-	repetitions: z.array(caseRepetitionSchema).min(2).optional(),
-	stability: caseStabilitySchema.optional(),
-});
 const runSummarySchema = z.strictObject({
 	quality: qualitySchema.optional(),
 	status: z.enum(["Completed", "Failed", "Interrupted"]),
@@ -80,23 +59,7 @@ const runSummarySchema = z.strictObject({
 	interrupted: z.number().int().nonnegative(),
 	stability: runStabilitySchema.optional(),
 });
-export const evaluationRunSchema = z.strictObject({
-	manifest: runManifestSchema,
-	cases: z.array(caseRecordSchema),
-	summary: runSummarySchema,
-});
-
-export const operationManifestSchema = runManifestSchema
-	.omit({ prompt: true, configuration: true })
-	.extend({
-		version: z.literal(2),
-		operationVersion: z.string().min(1),
-		configurations: z.strictObject({
-			generation: configurationSchema,
-			judgment: configurationSchema,
-		}),
-	});
-export const operationCaseRepetitionSchema = caseRepetitionSchema.extend({
+export const operationCaseRepetitionSchema = z.strictObject({
 	status: z.enum([
 		"Success",
 		"Partial",
@@ -109,6 +72,11 @@ export const operationCaseRepetitionSchema = caseRepetitionSchema.extend({
 		"InvalidInput",
 		"NotImplemented",
 	]),
+	output: z.json().optional(),
+	evaluation: z.json().optional(),
+	error: z.string().optional(),
+	durationMs: z.number().nonnegative(),
+	metadata: z.json().optional(),
 	traces: z.array(z.json()),
 	calls: z.number().int().nonnegative(),
 	usage: z.strictObject({
@@ -127,7 +95,3 @@ export const operationEvaluationRunSchema = z.strictObject({
 	cases: z.array(operationCaseRecordSchema),
 	summary: runSummarySchema,
 });
-export const storedRunSchema = z.union([
-	evaluationRunSchema,
-	operationEvaluationRunSchema,
-]);

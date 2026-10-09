@@ -19,6 +19,7 @@
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { messageOf } from "common-utils";
+import { loadRun } from "promptsmith/storage";
 import {
 	freezeReadingSets,
 	loadReadingSet,
@@ -34,7 +35,6 @@ import {
 	defaultRunOutputDirectory,
 	judgmentSettings,
 	judgmentSettingsSchema,
-	loadOperationRun,
 } from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
@@ -67,7 +67,7 @@ async function runResolveReadingCli(
 			throw Error(
 				"Use `bun cli/resolve-reading.ts subset <baselineRunId>`",
 			);
-		const run = await loadOperationRun(
+		const run = await loadRun(
 			options.runDirectory ?? defaultRunOutputDirectory,
 			runId,
 		);

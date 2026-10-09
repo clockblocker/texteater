@@ -2,16 +2,10 @@ import { expect, test } from "bun:test";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import {
-	defineExperiment,
-	defineGoldenCaseCollection,
-	defineGoldenCorpus,
-	definePromptSource,
-} from "promptsmith";
+import { defineGoldenCaseCollection, defineGoldenCorpus } from "promptsmith";
 import { runOperationExperiment } from "promptsmith/evaluation";
 import { compareRuns, loadRun, saveRun } from "promptsmith/storage";
 import { z } from "zod";
-import { runExperiment } from "../src/run-experiment.js";
 
 const schema = z.strictObject({ value: z.number() });
 const corpus = defineGoldenCorpus({
@@ -204,61 +198,6 @@ test("a failed repetition represents its case and interrupted repetitions never 
 		interrupted: 1,
 		stability: { flipped: 1 },
 	});
-});
-
-test("prompt experiments repeat through the same executor", async () => {
-	const promptSource = definePromptSource({
-		route: "repeated",
-		inputSchema: schema,
-		outputSchema: schema,
-		body: "Echo the value",
-		goldenCorpus: corpus,
-		demonstrations: corpus.select(["demo"]),
-	});
-	let calls = 0;
-	const run = await runExperiment({
-		experimentId: "repeated-prompt",
-		evaluatorVersion: "1",
-		sourceRevision: "test",
-		configuration: { model: "fixture", settings: {} },
-		experiment: defineExperiment({
-			promptSource,
-			evaluation: corpus.select(["steady", "flaky"]),
-			evaluator,
-		}),
-		execute: async ({ input }) => {
-			calls++;
-			const { value } = schema.parse(input);
-			if (value === 2 && calls === 4) throw Error("provider unavailable");
-			return { output: { value }, metadata: { call: calls } };
-		},
-		repetitions: 2,
-	});
-	expect(calls).toBe(4);
-	expect(run.manifest.repetitions).toBe(2);
-	expect(
-		run.cases.map((record) => [
-			record.caseId,
-			record.status,
-			record.repetitions?.map((repetition) => repetition.metadata),
-		]),
-	).toEqual([
-		["steady", "Success", [{ call: 1 }, { call: 2 }]],
-		["flaky", "ProviderFailure", [{ call: 3 }, undefined]],
-	]);
-	expect(run.summary.stability).toEqual({
-		repetitions: 2,
-		flipped: 1,
-		varyingOutputs: 0,
-		quality: { passed: 3, failed: 0, needsReview: 0, unscored: 1 },
-	});
-	const directory = await mkdtemp(join(tmpdir(), "repeated-prompt-"));
-	try {
-		await saveRun(directory, run);
-		expect(await loadRun(directory, run.manifest.runId)).toEqual(run);
-	} finally {
-		await rm(directory, { recursive: true, force: true });
-	}
 });
 
 test("records written before repetitions existed still load and compare", async () => {

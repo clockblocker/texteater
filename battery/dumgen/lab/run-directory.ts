@@ -1,6 +1,5 @@
 import { fileURLToPath } from "node:url";
 import type { OperationEvaluationRun } from "promptsmith/evaluation";
-import { loadRun } from "promptsmith/storage";
 import { z } from "zod";
 import { storedAs } from "./stored-json.js";
 
@@ -12,24 +11,6 @@ import { storedAs } from "./stored-json.js";
 export const defaultRunOutputDirectory = fileURLToPath(
 	new URL("../../../.runs/dumgen/", import.meta.url),
 );
-
-type StoredRun = Awaited<ReturnType<typeof loadRun>>;
-
-const isOperationRun = (run: StoredRun): run is OperationEvaluationRun =>
-	run.manifest.version === 2;
-
-/** The operation run `runId` (manifest version 2) saved under `directory`. */
-export async function loadOperationRun(
-	directory: string,
-	runId: string,
-): Promise<OperationEvaluationRun> {
-	const run = await loadRun(directory, runId);
-	if (!isOperationRun(run))
-		throw Error(
-			`Run ${runId} is not an operation run (manifest version 2)`,
-		);
-	return run;
-}
 
 /** The subset a resolve run took, as its manifest records it. */
 export type CaseFilter = {
