@@ -8,11 +8,12 @@ import {
 } from "lego";
 import { type ReactNode, useId } from "react";
 import type { Id } from "../../../../../../../convex/_generated/dataModel";
+import { featureValueText } from "../../../../../../../shared/feature-values";
 import { coreGender } from "../../../../../../../shared/grammatical-gender";
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
 import type { ReadingNotePending } from "../../../../note/data";
 import type { ReadingDefaultRenderer } from "../../../renderer";
-import { featureValueText, genderTone } from "../../common/feature-values";
+import { genderTone } from "../../common/feature-values";
 
 export const DefaultReadingHeadingRenderer = (({
 	noteData,

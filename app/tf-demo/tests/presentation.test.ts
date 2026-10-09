@@ -199,6 +199,18 @@ test("projects Dumling feature values for learner inspection", () => {
 	]);
 });
 
+test("projects a value set and a mixed gender as Notes print them, not as JSON", () => {
+	expect(
+		projectFeatures({
+			case: ["Acc", "Dat"],
+			gender: { mixed: ["Masc", "Neut"] },
+		}),
+	).toEqual([
+		{ name: "case", value: "Acc/Dat" },
+		{ name: "gender", value: "Masc/Neut" },
+	]);
+});
+
 test("projects foundational Reading and unfiltered Knowledge without display sentinels", () => {
 	const reading = projectReadingValue(
 		{ emojiDescription: "🏃" },

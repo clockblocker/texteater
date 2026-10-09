@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { featureValueText } from "../../../shared/feature-values";
 
 export const featureProjectionValidator = v.object({
 	name: v.string(),
@@ -19,17 +20,9 @@ export function projectFeaturesForPresentation(
 	}
 	return Object.entries(value)
 		.sort(([left], [right]) => left.localeCompare(right))
-		.map(([name, member]) => ({ name, value: formatFeatureValue(member) }));
-}
-
-function formatFeatureValue(value: unknown): string {
-	if (value === null) return "—";
-	if (
-		typeof value === "string" ||
-		typeof value === "number" ||
-		typeof value === "boolean"
-	) {
-		return String(value);
-	}
-	return JSON.stringify(value);
+		.map(([name, member]) => ({
+			name,
+			// Printed as Notes print it (`Masc/Neut`); `—` for no value.
+			value: featureValueText(member) ?? "—",
+		}));
 }
