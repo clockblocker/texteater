@@ -1636,7 +1636,20 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "NOUN";
 			canonicalForm: string;
-			coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
+			coreFeatures: {
+				gender:
+					| (
+							| ("Fem" | "Masc" | "Neut")
+							| {
+									mixed: [
+										"Fem" | "Masc" | "Neut",
+										"Fem" | "Masc" | "Neut",
+										...Array<"Fem" | "Masc" | "Neut">,
+									];
+							  }
+					  )
+					| null;
+			};
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -1647,7 +1660,20 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "NOUN";
 				canonicalForm: string;
-				coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
+				coreFeatures: {
+					gender:
+						| (
+								| ("Fem" | "Masc" | "Neut")
+								| {
+										mixed: [
+											"Fem" | "Masc" | "Neut",
+											"Fem" | "Masc" | "Neut",
+											...Array<"Fem" | "Masc" | "Neut">,
+										];
+								  }
+						  )
+						| null;
+				};
 			};
 			normalizedSurface: string;
 			spelling:
@@ -1684,7 +1710,20 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "NOUN";
 				canonicalForm: string;
-				coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
+				coreFeatures: {
+					gender:
+						| (
+								| ("Fem" | "Masc" | "Neut")
+								| {
+										mixed: [
+											"Fem" | "Masc" | "Neut",
+											"Fem" | "Masc" | "Neut",
+											...Array<"Fem" | "Masc" | "Neut">,
+										];
+								  }
+						  )
+						| null;
+				};
 			};
 			emojiDescription: string;
 		};
@@ -1699,7 +1738,22 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "NOUN";
 					canonicalForm: string;
-					coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
+					coreFeatures: {
+						gender:
+							| (
+									| ("Fem" | "Masc" | "Neut")
+									| {
+											mixed: [
+												"Fem" | "Masc" | "Neut",
+												"Fem" | "Masc" | "Neut",
+												...Array<
+													"Fem" | "Masc" | "Neut"
+												>,
+											];
+									  }
+							  )
+							| null;
+					};
 				};
 				normalizedSurface: string;
 				spelling:

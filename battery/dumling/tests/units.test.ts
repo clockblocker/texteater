@@ -459,6 +459,50 @@ describe("compiled unit interface", () => {
 			).toBe(false);
 		}
 	});
+	test("a German noun in free gender variation names its genders as one canonical mixed value", () => {
+		const balg = (gender: unknown) => ({
+			...noun.Lemma,
+			canonicalForm: "Balg",
+			coreFeatures: { gender },
+		});
+		const accepts = (gender: unknown) => {
+			const compiled = parseUnit(balg(gender)).success;
+			expect(
+				nounRoute.schemas.Lemma.safeParse(balg(gender)).success,
+			).toBe(compiled);
+			return compiled;
+		};
+		for (const gender of [
+			"Masc",
+			{ mixed: ["Masc", "Neut"] },
+			{ mixed: ["Fem", "Neut"] },
+			{ mixed: ["Masc", "Fem", "Neut"] },
+		])
+			expect(accepts(gender)).toBe(true);
+		for (const gender of [
+			// One mix has one spelling: canonical order Masc, Fem, Neut.
+			{ mixed: ["Neut", "Masc"] },
+			{ mixed: ["Masc", "Masc"] },
+			// A one-member mix is a plain gender.
+			{ mixed: ["Masc"] },
+			{ mixed: [] },
+			// A bare set is rejected: der/die See are two Lemmas, not a set.
+			["Masc", "Neut"],
+			{ mixed: ["Masc", "Com"] },
+			{ mixed: ["Masc", "Neut"], extra: true },
+		])
+			expect(accepts(gender)).toBe(false);
+		// A mixed Lemma has a gender of its own, so its singular Surface
+		// marks none.
+		const surface = (gender: string | null) => ({
+			...noun.Surface,
+			lemma: balg({ mixed: ["Masc", "Neut"] }),
+			normalizedSurface: "Balg",
+			inflectionalFeatures: { case: "Nom", gender, number: "Sing" },
+		});
+		expect(parseUnit(surface(null)).success).toBe(true);
+		expect(parseUnit(surface("Neut")).success).toBe(false);
+	});
 	test("compilation rejects unregistered custom behavior", () => {
 		expect(() =>
 			compileZodValidationArtifacts({

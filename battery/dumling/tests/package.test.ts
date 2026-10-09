@@ -73,7 +73,8 @@ declare const prefix:Unit<"Surface","de","Morpheme","Prefix">;
 // @ts-expect-error This route has no inflectional features.
 prefix.inflectionalFeatures;
 declare const noun:Noun;
-const gender:"Fem"|"Masc"|"Neut"|null=noun.coreFeatures.gender;
+type NounGender="Fem"|"Masc"|"Neut";
+const gender:NounGender|{mixed:[NounGender,NounGender,...NounGender[]]}|null=noun.coreFeatures.gender;
 // @ts-expect-error Invalid grammatical coordinates.
 type Invalid=Unit<"Lemma","de","Morpheme","NOUN">;
 // @ts-expect-error Invalid feature type.

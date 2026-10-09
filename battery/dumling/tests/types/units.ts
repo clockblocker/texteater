@@ -10,7 +10,11 @@ import type {
 
 type Noun = Unit<"Lemma", "de", "Lexeme", "NOUN">;
 declare const noun: Noun;
-const _gender: "Fem" | "Masc" | "Neut" | null = noun.coreFeatures.gender;
+type NounGender = "Fem" | "Masc" | "Neut";
+const _gender:
+	| NounGender
+	| { mixed: [NounGender, NounGender, ...NounGender[]] }
+	| null = noun.coreFeatures.gender;
 const _tag: UnitKind = noun.unitKind;
 // @ts-expect-error A Morpheme cannot be a NOUN.
 type _WrongFamily = Lemma<"de", "Morpheme", "NOUN">;

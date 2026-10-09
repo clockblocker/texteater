@@ -94,6 +94,23 @@ describe("Lemma identity (system ADR 0002)", () => {
 		expect(sameLemma(noun, adverb)).toBe(false);
 	});
 
+	test("keeps words apart by Core gender as written: Balg (child) mixed and der Balg (skin)", () => {
+		const balg = (
+			gender: Lemma<"de", "Lexeme", "NOUN">["coreFeatures"]["gender"],
+		) =>
+			({
+				unitKind: "Lemma",
+				language: "de",
+				family: "Lexeme",
+				kind: "NOUN",
+				canonicalForm: "Balg",
+				coreFeatures: { gender },
+			}) satisfies Lemma<"de", "Lexeme", "NOUN">;
+		const child = balg({ mixed: ["Masc", "Neut"] });
+		expect(sameLemma(child, balg("Masc"))).toBe(false);
+		expect(sameLemma(child, balg({ mixed: ["Masc", "Neut"] }))).toBe(true);
+	});
+
 	test("keeps words apart by Core: formal Sie and third-person sie", () => {
 		expect(sameLemma(personal("Sie", "Form"), personal("sie", null))).toBe(
 			false,

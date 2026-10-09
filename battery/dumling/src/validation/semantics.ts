@@ -194,6 +194,33 @@ export function germanClosedClassSurfaceError(): string {
 }
 
 /**
+ * The canonical order of a German noun's `mixed` Core gender (system ADR
+ * 0032): its members are listed in this order, so one mix has one spelling
+ * and Core values still compare literally.
+ */
+export const mixedGenderOrder = ["Masc", "Fem", "Neut"] as const;
+/**
+ * A `mixed` gender names two or more distinct genders, each after the one
+ * before it in canonical order: `{ mixed: ["Masc", "Neut"] }` (der or das
+ * Balg), never `["Neut", "Masc"]` or a one-member mix.
+ */
+export function isMixedGender({
+	mixed,
+}: {
+	mixed: readonly string[];
+}): boolean {
+	const order: readonly string[] = mixedGenderOrder;
+	const ranks = mixed.map((gender) => order.indexOf(gender));
+	return (
+		ranks.length >= 2 &&
+		ranks.every((rank, index) => rank > (ranks[index - 1] ?? -1))
+	);
+}
+export function mixedGenderError(): string {
+	return "A mixed gender names two or more distinct genders in the order Masc, Fem, Neut";
+}
+
+/**
  * A German common noun Surface is the noun's own form and says nothing about
  * its article (ADR 0040). A noun whose Lemma has no gender, such as an
  * adjectival noun for a person, marks on a singular Surface the gender its
@@ -205,7 +232,7 @@ export function isGermanNounSurface(value: {
 		gender: string | null;
 		number: string | null;
 	} | null;
-	lemma: { coreFeatures: { gender: string | null } };
+	lemma: { coreFeatures: { gender: unknown } };
 }): boolean {
 	const bag = value.inflectionalFeatures;
 	if (!bag) return true;
