@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import { routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import { selectKnowledge } from "dumrel";
@@ -13,10 +14,9 @@ export function asksParticipleSource(
 	options: { readonly topUpOnly: boolean; readonly knowledge: unknown },
 ): boolean {
 	if (options.topUpOnly) return false;
-	const stored =
-		options.knowledge && typeof options.knowledge === "object"
-			? Reflect.get(options.knowledge, "participleSource")
-			: undefined;
+	const stored = isRecord(options.knowledge)
+		? options.knowledge.participleSource
+		: undefined;
 	if (stored) return false;
 	const selected = selectKnowledge({ route: routeOf(reading.lemma) });
 	return selected.success && selected.value.participleSource === null;

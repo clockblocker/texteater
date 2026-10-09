@@ -1,7 +1,8 @@
+import { isRecord } from "common-utils";
 import { type Infer, v } from "convex/values";
 import { selectGrammaticalAlternatives } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
-import { projectParticipleSources } from "dumrel";
+import { parseReadingKnowledge, projectParticipleSources } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import {
 	lemmaIdentityKey,
@@ -13,6 +14,7 @@ import {
 	MAX_STRUCTURAL_REFERENCES_PER_READING,
 	shadowIsCompatible,
 	structuralShadowLocatorKey,
+	warnMalformedStoredRow,
 } from "../../model/shadows";
 import { semanticRelationValidator } from "../../model/validators";
 import { projectReadingValue } from "./projections";
@@ -314,16 +316,25 @@ export async function loadParticipialAdjectives(
 			.unique();
 		const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
 		if (!reading || !lemma) continue;
-		readings.set(reading.readingKey, reading);
-		entries.push({
-			reading: projectReadingValue(reading, lemma),
-			knowledge: {
-				participleSource: Reflect.get(
-					row.knowledge ?? {},
-					"participleSource",
-				),
-			},
+		const value = projectReadingValue(reading, lemma);
+		const participleSource = isRecord(row.knowledge)
+			? row.knowledge.participleSource
+			: undefined;
+		const knowledge = parseReadingKnowledge({
+			source: value,
+			knowledge:
+				participleSource === undefined ? {} : { participleSource },
 		});
+		if (!knowledge.success) {
+			warnMalformedStoredRow(
+				"accumulatedKnowledge",
+				row._id,
+				knowledge.error.message,
+			);
+			continue;
+		}
+		readings.set(reading.readingKey, reading);
+		entries.push({ reading: value, knowledge: knowledge.value });
 	}
 	const projected = projectParticipleSources(entries);
 	if (!projected.success) throw projected.error;

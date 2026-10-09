@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import type { FunctionReference } from "convex/server";
 import { makeFunctionReference } from "convex/server";
 import { normalizeForm } from "dumling";
@@ -48,14 +49,8 @@ export const DEFINITION_FAILED_MESSAGE = "Definition segmentation failed.";
 
 /** The definition aspect of stored Reading Knowledge, or null when absent. */
 export function definitionOf(knowledge: unknown): string | null {
-	if (
-		!knowledge ||
-		typeof knowledge !== "object" ||
-		Array.isArray(knowledge)
-	) {
-		return null;
-	}
-	const value = Reflect.get(knowledge, "definition");
+	if (!isRecord(knowledge)) return null;
+	const value = knowledge.definition;
 	if (typeof value !== "string") return null;
 	const normalized = normalizeForm(value);
 	return normalized.length > 0 ? normalized : null;

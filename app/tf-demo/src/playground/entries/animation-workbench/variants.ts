@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import type { DeckMotionOverrides } from "@/workspace/motion/runtime-config";
 
 export type Variant = {
@@ -177,7 +178,9 @@ export function readVariants(): Variant[] {
 				return [];
 			const motion: DeckMotionOverrides = {};
 			for (const parameter of PARAMETERS) {
-				const next: unknown = Reflect.get(value.motion, parameter.key);
+				const next = isRecord(value.motion)
+					? value.motion[parameter.key]
+					: undefined;
 				if (
 					typeof next === "number" &&
 					Number.isFinite(next) &&

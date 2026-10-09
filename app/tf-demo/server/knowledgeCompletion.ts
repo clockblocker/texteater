@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import type * as Dumrel from "dumrel/types";
 import type { KnowledgeFailure, KnowledgeRequest } from "./knowledgeProduction";
 
@@ -63,7 +64,7 @@ export function knowledgeRequestComplete(
 	)
 		return false;
 	for (const [aspect, selection] of Object.entries(request)) {
-		const value = Reflect.get(knowledge, aspect);
+		const value = isRecord(knowledge) ? knowledge[aspect] : undefined;
 		if (selection === null) {
 			if (value === undefined) return false;
 			continue;
@@ -72,23 +73,17 @@ export function knowledgeRequestComplete(
 			for (const leaf of Object.keys(selection)) {
 				if (
 					!checkedRelationKinds.has(leaf) &&
-					!(
-						value &&
-						typeof value === "object" &&
-						Array.isArray(Reflect.get(value, leaf))
-					)
+					!(isRecord(value) && Array.isArray(value[leaf]))
 				)
 					return false;
 			}
 			continue;
 		}
 		if (!value || typeof value !== "object") return false;
+		if (aspect !== "translations") continue;
 		for (const leaf of Object.keys(selection)) {
-			const contribution = Reflect.get(value, leaf);
-			if (
-				aspect === "translations" &&
-				(!Array.isArray(contribution) || !contribution.length)
-			)
+			const contribution = isRecord(value) ? value[leaf] : undefined;
+			if (!Array.isArray(contribution) || !contribution.length)
 				return false;
 		}
 	}

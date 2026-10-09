@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import { translationLanguageValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import {
@@ -43,12 +44,11 @@ export function findAccumulatedKnowledge(
 function coveredTranslationLanguages(
 	knowledge: unknown,
 ): Dumrel.TranslationLanguage[] {
-	if (!knowledge || typeof knowledge !== "object" || Array.isArray(knowledge))
-		return [];
-	const translations = Reflect.get(knowledge, "translations");
-	if (!translations || typeof translations !== "object") return [];
+	if (!isRecord(knowledge)) return [];
+	const translations = knowledge.translations;
+	if (!isRecord(translations)) return [];
 	return translationLanguageValues.filter((language) => {
-		const values = Reflect.get(translations, language);
+		const values = translations[language];
 		return Array.isArray(values) && values.length > 0;
 	});
 }

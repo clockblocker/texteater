@@ -1,3 +1,5 @@
+import { isRecord } from "common-utils";
+
 const VISITOR_STORAGE_KEY = "tf-demo:anonymous-visitor:v1";
 const VISITOR_ID_MAX_LENGTH = 200;
 
@@ -33,10 +35,8 @@ function loadOrCreateVisitorId(): string {
 }
 
 function isStoredVisitor(value: unknown): value is StoredVisitor {
-	if (value === null || typeof value !== "object" || Array.isArray(value)) {
-		return false;
-	}
-	const id = Reflect.get(value, "id");
+	if (!isRecord(value)) return false;
+	const { id } = value;
 	return (
 		typeof id === "string" &&
 		id.trim().length > 0 &&

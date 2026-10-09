@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import type * as Dumrel from "dumrel/types";
 
 /**
@@ -9,12 +10,6 @@ export type GovernedPrepositionDraft = {
 	readonly case: Dumrel.GovernedCase;
 };
 
-type StoredComplement = {
-	readonly kind?: string;
-	readonly preposition?: { readonly canonicalForm?: string };
-	readonly governedCase?: string;
-};
-
 /**
  * The attested government a Reading's Valency Frame lacks: a preposition and
  * case no Preposition complement holds yet, alternatives included.
@@ -23,23 +18,24 @@ export function uncoveredGovernment(
 	attested: readonly GovernedPrepositionDraft[],
 	knowledge: unknown,
 ): GovernedPrepositionDraft[] {
-	const frame =
-		knowledge && typeof knowledge === "object"
-			? Reflect.get(knowledge, "valency")
-			: undefined;
+	const frame = isRecord(knowledge) ? knowledge.valency : undefined;
 	const covered = new Set(
-		(Array.isArray(frame) ? frame : []).flatMap(
-			(slot: { readonly complements?: readonly StoredComplement[] }) =>
-				(slot.complements ?? []).flatMap((complement) =>
-					complement.kind === "Preposition"
-						? [
-								`${complement.preposition?.canonicalForm}/${complement.governedCase}`,
-							]
-						: [],
-				),
-		),
+		(Array.isArray(frame) ? frame : []).flatMap(coveredGovernment),
 	);
 	return attested.filter(
 		(entry) => !covered.has(`${entry.preposition}/${entry.case}`),
 	);
+}
+
+/** The preposition/case keys one stored Valency slot's Preposition complements hold. */
+function coveredGovernment(slot: unknown): string[] {
+	if (!isRecord(slot) || !Array.isArray(slot.complements)) return [];
+	return slot.complements.flatMap((complement: unknown) => {
+		if (!isRecord(complement) || complement.kind !== "Preposition")
+			return [];
+		const preposition = isRecord(complement.preposition)
+			? complement.preposition.canonicalForm
+			: undefined;
+		return [`${preposition}/${complement.governedCase}`];
+	});
 }

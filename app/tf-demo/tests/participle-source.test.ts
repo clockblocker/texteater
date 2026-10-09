@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, expect, jest, test } from "bun:test";
+import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import { api, internal } from "../convex/_generated/api";
 import { RELATION_PUBLICATION_FINGERPRINTS } from "../convex/model/generatedKnowledgeContainment";
@@ -283,6 +283,52 @@ test("the link reaches the source verb once it is stored, and the verb's Lemma N
 			target: { kind: "Reading", readingId: adjectiveId },
 		},
 	]);
+});
+
+test("a stored Participle Source that no longer parses is skipped and reported, not listed under the verb", async () => {
+	const t = createTestConvex();
+	const visitorId = "visitor-1";
+	await seedAdjective(t, visitorId);
+	expect(await publishSource(t)).toEqual({ status: "Committed" });
+	const verb = await storeVerb(t, KOCHEN_READING);
+	const rowId = await t.run(async (ctx) => {
+		const row = await ctx.db
+			.query("accumulatedKnowledge")
+			.withIndex("by_participle_source_lemma_key", (q) =>
+				q.eq("participleSourceLemmaKey", lemmaIdentityKey(KOCHEN)),
+			)
+			.unique();
+		if (!row) throw new Error("Expected the adjective's Knowledge row.");
+		// The schema admits any Knowledge; only the parser rejects this meaning.
+		await ctx.db.patch(row._id, {
+			knowledge: {
+				...row.knowledge,
+				participleSource: { ...KOCHEN_SOURCE, meaning: "Bogus" },
+			},
+		});
+		return row._id;
+	});
+
+	const warn = spyOn(console, "warn").mockImplementation(() => {});
+	try {
+		const verbLemmaNote = await t.query(api.routeNotes.get, {
+			target: { kind: "Lemma", lemmaId: verb.lemmaId },
+		});
+		expect(
+			verbLemmaNote?.kind === "Lemma" &&
+				verbLemmaNote.participialAdjectives,
+		).toEqual([]);
+		const skipped = warn.mock.calls.flatMap(([line]) =>
+			typeof line === "string" && line.includes("MalformedStoredRow")
+				? [JSON.parse(line)]
+				: [],
+		);
+		expect(skipped).toMatchObject([
+			{ table: "accumulatedKnowledge", id: rowId },
+		]);
+	} finally {
+		warn.mockRestore();
+	}
 });
 
 test("a stored verb with other Core Features is not the source", async () => {

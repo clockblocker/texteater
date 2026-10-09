@@ -56,11 +56,7 @@ export function withoutSemanticRelationTargets(value: unknown): unknown {
 	if (!knowledge) return undefined;
 	const result = withoutKeys(knowledge, ["semanticRelations"]);
 	const relations = knowledge.semanticRelations;
-	if (
-		relations &&
-		typeof relations === "object" &&
-		Reflect.get(relations, "targetKind") === "reading"
-	)
+	if (isRecord(relations) && relations.targetKind === "reading")
 		result.semanticRelations = { targetKind: "reading" };
 	return Object.keys(result).length === 0 ? undefined : result;
 }
@@ -238,13 +234,13 @@ async function loadCanonicalReadingKnowledge(
 			"One Reading Knowledge value cannot mix Lemma- and Reading-targeted Semantic Relations.",
 		);
 	const preserved = withoutSemanticRelationTargets(storedKnowledge);
-	const previousRelations =
-		preserved && typeof preserved === "object"
-			? Reflect.get(preserved, "semanticRelations")
-			: undefined;
+	const previousRelations = isRecord(preserved)
+		? preserved.semanticRelations
+		: undefined;
 	const targetKind =
 		targetKinds.has("reading") ||
-		previousRelations?.targetKind === "reading"
+		(isRecord(previousRelations) &&
+			previousRelations.targetKind === "reading")
 			? "reading"
 			: "lemma";
 	const semanticRelations: AnyRecord = {};
