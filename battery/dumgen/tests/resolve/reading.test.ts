@@ -10,7 +10,6 @@ import type {
 	ReadingResolution,
 	ResolveReadingInput,
 } from "../../src/resolve/types.js";
-import type { Unit } from "../../src/segment/segmented-sentence.js";
 import { fakeJev, fakeLuna, sentenceOf, unitOf } from "./support.js";
 
 const lemmaOf = (
@@ -39,7 +38,7 @@ const attestationOf = (lemma: Dumling.Lemma<"de">) =>
 
 const schloss = lemmaOf("Schloss", "Lexeme", "NOUN", { gender: "Neut" });
 const sentence = sentenceOf("Das Schloss klemmt.");
-const nounUnit = unitOf([2], "Lexeme", "NOUN");
+const nounUnit = unitOf([2], "Lexeme/NOUN");
 
 /** Luna writing `emojiDescription`, keeping what it was sent. */
 const writes = (emojiDescription: unknown) => fakeLuna(() => emojiDescription);
@@ -172,7 +171,7 @@ test("an authored Lemma with one Reading takes it with no call: New until it is 
 	const input = {
 		attestation: attestationOf(lemma),
 		sentence: sentenceOf("Er kommt nicht."),
-		unit: unitOf([4], "Lexeme", "PART"),
+		unit: unitOf([4], "Lexeme/PART"),
 	};
 	const jev = fakeJev();
 	const luna = writes("🔐");
@@ -199,7 +198,7 @@ test("a Closed Route's Lemma with several authored Readings has jev pick among t
 	const { result, trace } = await readOnce(jev, luna, {
 		attestation: attestationOf(lemma),
 		sentence: sentenceOf("Welcher Zug kommt?"),
-		unit: unitOf([0], "Lexeme", "DET"),
+		unit: unitOf([0], "Lexeme/DET"),
 		candidates: [],
 	});
 	expect(result).toEqual({
@@ -226,7 +225,7 @@ test("an Open Route's authored Readings go to the judge beside the stored ones, 
 	const { result, trace } = await readOnce(jev, luna, {
 		attestation: attestationOf(lemma),
 		sentence: sentenceOf("Darum kommt er."),
-		unit: unitOf([0], "Lexeme", "ADV"),
+		unit: unitOf([0], "Lexeme/ADV"),
 		candidates: [causal, "🧭"],
 	});
 	expect(result).toEqual({
@@ -256,7 +255,7 @@ test("an Open Route's Lemma whose authored Readings miss the sense gets a New on
 	const { result, trace } = await readOnce(jev, luna, {
 		attestation: attestationOf(lemma),
 		sentence: sentenceOf("Darum geht es."),
-		unit: unitOf([0], "Lexeme", "ADV"),
+		unit: unitOf([0], "Lexeme/ADV"),
 		candidates: [],
 	});
 	expect(result).toEqual({ _tag: "New", emojiDescription: "🎯" });
@@ -273,7 +272,7 @@ test("an Open Route's Lemma whose authored Readings miss the sense gets a New on
 		{
 			attestation: attestationOf(lemma),
 			sentence: sentenceOf("Darum geht es."),
-			unit: unitOf([0], "Lexeme", "ADV"),
+			unit: unitOf([0], "Lexeme/ADV"),
 			candidates: [],
 		},
 	);
@@ -301,7 +300,7 @@ test("a Closed Route's Lemma with no authored Reading is a Catalog Miss, with no
 			lemmaOf("blarg", "Lexeme", "PRON", { pronType: "Prs" }),
 		),
 		sentence: sentenceOf("Blarg kommt."),
-		unit: unitOf([0], "Lexeme", "PRON"),
+		unit: unitOf([0], "Lexeme/PRON"),
 		candidates: [],
 	});
 	expect(result).toMatchObject({
@@ -464,15 +463,12 @@ test("a Foreign Attestation, a unit off its route, a failed Sentence or a candid
 		[
 			{
 				attestation: attestationOf(foreign),
-				unit: unitOf([2], "Foreign", "Foreign"),
+				unit: unitOf([2], "Foreign/Foreign"),
 			},
 			"ADR 0045",
 		],
-		[{ unit: unitOf([2], "Lexeme", "VERB") }, "off the unit's route"],
-		[
-			{ unit: { segments: [2], route: "Unresolved" } as Unit },
-			"Unresolved",
-		],
+		[{ unit: unitOf([2], "Lexeme/VERB") }, "off the unit's route"],
+		[{ unit: { segments: [2], route: "Unresolved" } }, "Unresolved"],
 		[{ sentence: { ...sentence, failed: true } }, "segment it again"],
 		[{ candidates: ["castle"] }, "no Emoji Description"],
 		[{ drafted: "castle" }, "The drafted"],

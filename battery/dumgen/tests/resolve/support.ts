@@ -1,4 +1,5 @@
 import type { Question } from "@typesafe-ai/sdk";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
 import type { LunaAsk, LunaRequest } from "../../src/luna.js";
@@ -8,9 +9,11 @@ import type {
 	ResolveGrammarInput,
 } from "../../src/resolve/types.js";
 import type { Answer } from "../../src/segment/ask.js";
+import { type RouteKey, routeOf } from "../../src/segment/de/routes.js";
 import type { JevAsk, JevRequest } from "../../src/segment/jev.js";
 import type {
 	ClosedClassIdentity,
+	Route,
 	Segment,
 	SegmentedSentence,
 	Unit,
@@ -111,17 +114,15 @@ export function sentenceOf(
 	};
 }
 
+/** A unit over `segments` on the German route `key` names (`Lexeme/VERB`). */
 export function unitOf(
 	segments: number[],
-	family: string,
-	kind: string,
+	key: RouteKey,
 	identity?: ClosedClassIdentity,
-): Unit {
-	return {
-		segments,
-		route: { language: "de", family, kind } as Unit["route"] & object,
-		...(identity ? { identity } : {}),
-	};
+): Unit & { route: Route } {
+	const route = routeOf(key);
+	if (route === "Unresolved") throw Error("Expected a routed unit");
+	return { segments, route, ...(identity ? { identity } : {}) };
 }
 
 /** Resolves one click and keeps the trace it reported. */
@@ -149,28 +150,8 @@ export async function resolveOnce(
 }
 
 /** The Attestation of a Resolved click; anything else fails the test. */
-export function attested(result: GrammarResolution) {
+export function attested(result: GrammarResolution): Dumling.Attestation<"de"> {
 	if (result._tag !== "Resolved")
 		throw Error(`Expected a Resolved click, got ${result._tag}`);
-	return result.attestation as unknown as {
-		readonly surface: {
-			readonly normalizedSurface: string;
-			readonly lemma: {
-				readonly canonicalForm: string;
-				readonly kind: string;
-				readonly family: string;
-				readonly coreFeatures: Readonly<Record<string, unknown>>;
-				readonly syncretic?: readonly string[];
-			};
-			readonly inflectionalFeatures?: Readonly<
-				Record<string, unknown>
-			> | null;
-			readonly spelling: unknown;
-		};
-		readonly members: readonly Readonly<Record<string, unknown>>[];
-		readonly realizationCoverage: string;
-		readonly articleEvidence?: unknown;
-		readonly valencyEvidence?: readonly Readonly<Record<string, unknown>>[];
-		readonly expletiveEvidence?: unknown;
-	};
+	return result.attestation;
 }

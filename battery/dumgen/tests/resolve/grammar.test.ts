@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { isSyncretism, sameLemma } from "dumling";
+import { isSyncreticUnit, isSyncretism, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { createDumgen } from "../../src/create-dumgen.js";
@@ -108,7 +108,7 @@ test("another language, a failed Sentence or a unit outside its Sentence is a De
 	const input = {
 		language: "de" as const,
 		sentence,
-		unit: unitOf([2], "Lexeme", "VERB"),
+		unit: unitOf([2], "Lexeme/VERB"),
 		neighbours: {},
 		lemmaCandidates: [],
 	};
@@ -129,7 +129,7 @@ test("another language, a failed Sentence or a unit outside its Sentence is a De
 		Effect.runPromise(
 			dumgen.resolve.grammar({
 				...input,
-				unit: unitOf([1], "Lexeme", "VERB"),
+				unit: unitOf([1], "Lexeme/VERB"),
 			}),
 		),
 	).rejects.toThrow("ResolvableText");
@@ -140,7 +140,7 @@ test("another language, a failed Sentence or a unit outside its Sentence is a De
 
 test("a transport failure is a ProviderFailure and an unusable answer an InvalidModelOutput; nothing is retried", async () => {
 	const sentence = sentenceOf("Er kommt.");
-	const unit = unitOf([2], "Lexeme", "VERB");
+	const unit = unitOf([2], "Lexeme/VERB");
 	const down = fakeJev({}, { fail: () => true });
 	const failure = await Effect.runPromise(
 		Effect.flip(
@@ -190,7 +190,7 @@ test("a click is all-or-nothing: a failed Case question interrupts Luna's call i
 			createDumgen({ jev: jev.ask, luna: luna.ask }).resolve.grammar({
 				language: "de",
 				sentence: sentenceOf("Er hilft der Anna."),
-				unit: unitOf([4, 6], "Lexeme", "PROPN"),
+				unit: unitOf([4, 6], "Lexeme/PROPN"),
 				neighbours: {},
 				lemmaCandidates: [],
 			}),
@@ -212,14 +212,16 @@ test("a common NOUN's gender is the article Luna writes with its headword, and i
 		{ jev: jev.ask, luna: luna.ask },
 		{
 			sentence: sentenceOf("Sie sieht den Kran."),
-			unit: unitOf([4, 6], "Lexeme", "NOUN"),
+			unit: unitOf([4, 6], "Lexeme/NOUN"),
 		},
 	);
 	const attestation = attested(result);
 	expect(attestation.surface.lemma.coreFeatures).toEqual({ gender: "Masc" });
-	expect(attestation.surface.inflectionalFeatures).toMatchObject({
-		case: "Acc",
-		number: "Sing",
+	expect(attestation.surface).toMatchObject({
+		inflectionalFeatures: {
+			case: "Acc",
+			number: "Sing",
+		},
 	});
 	expect(luna.sent[0]?.outputSchema).toMatchObject({
 		properties: { article: { enum: ["der", "die", "das", "none"] } },
@@ -238,7 +240,7 @@ test("a common NOUN's gender is the article Luna writes with its headword, and i
 		},
 		{
 			sentence: sentenceOf("Der Tisch wackelt."),
-			unit: unitOf([0, 2], "Lexeme", "NOUN"),
+			unit: unitOf([0, 2], "Lexeme/NOUN"),
 		},
 	);
 	expect(attested(table.result).surface.lemma.coreFeatures).toEqual({
@@ -257,7 +259,7 @@ test("a common NOUN's gender is the article Luna writes with its headword, and i
 		},
 		{
 			sentence: sentenceOf("Leute warten."),
-			unit: unitOf([0], "Lexeme", "NOUN"),
+			unit: unitOf([0], "Lexeme/NOUN"),
 		},
 	);
 	expect(attested(plural.result).surface.lemma.coreFeatures).toEqual({
@@ -277,14 +279,16 @@ test("a common NOUN's gender is the article Luna writes with its headword, and i
 		},
 		{
 			sentence: sentenceOf("Die Kosten steigen."),
-			unit: unitOf([0, 2], "Lexeme", "NOUN"),
+			unit: unitOf([0, 2], "Lexeme/NOUN"),
 		},
 	);
 	const tantum = attested(pluraleTantum.result).surface;
 	expect(tantum.lemma.coreFeatures).toEqual({ gender: null });
-	expect(tantum.inflectionalFeatures).toMatchObject({
-		gender: null,
-		number: "Plur",
+	expect(tantum).toMatchObject({
+		inflectionalFeatures: {
+			gender: null,
+			number: "Plur",
+		},
 	});
 });
 
@@ -298,7 +302,7 @@ test("an article and the noun's form that leave one cell settle Case with no que
 		{ jev: jev.ask, luna: luna.ask },
 		{
 			sentence: sentenceOf("Wir helfen den Kindern."),
-			unit: unitOf([4, 6], "Lexeme", "NOUN"),
+			unit: unitOf([4, 6], "Lexeme/NOUN"),
 		},
 	);
 	const attestation = attested(result);
@@ -306,12 +310,15 @@ test("an article and the noun's form that leave one cell settle Case with no que
 		canonicalForm: "Kind",
 		coreFeatures: { gender: "Neut" },
 	});
-	expect(attestation.surface.inflectionalFeatures).toEqual({
+	expect(attestation.surface).toHaveProperty("inflectionalFeatures", {
 		case: "Dat",
 		gender: null,
 		number: "Plur",
 	});
-	expect(attestation.articleEvidence).toEqual({ kind: "Owned", member: 0 });
+	expect(attestation).toHaveProperty("articleEvidence", {
+		kind: "Owned",
+		member: 0,
+	});
 	expect(attestation.surface.normalizedSurface).toBe("Kindern");
 	expect(jev.stages()).toEqual(["grammar"]);
 	// No article question, and no Case question.
@@ -326,11 +333,13 @@ test("an article whose cells agreement cannot narrow asks Case once, in the firs
 		{ jev: jev.ask, luna: writes("Frau", ["die", "Frau"]).ask },
 		{
 			sentence: sentenceOf("Die Frau lacht."),
-			unit: unitOf([0, 2], "Lexeme", "NOUN"),
+			unit: unitOf([0, 2], "Lexeme/NOUN"),
 		},
 	);
-	expect(attested(result).surface.inflectionalFeatures).toMatchObject({
-		case: "Nom",
+	expect(attested(result).surface).toMatchObject({
+		inflectionalFeatures: {
+			case: "Nom",
+		},
 	});
 	expect(jev.stages()).toEqual(["grammar"]);
 	const asked = jev.sent[0]?.questions.case;
@@ -344,14 +353,16 @@ test("an article whose cells agreement cannot narrow asks Case once, in the firs
 test("cells agreement leaves open get one Case question over those cells, and its Unresolved makes the click Unresolved", async () => {
 	// Er0 _1 gibt2 _3 der4 _5 Frau6 _7 ein8 _9 Buch10 .11
 	const sentence = sentenceOf("Er gibt der Frau ein Buch.");
-	const unit = unitOf([4, 6], "Lexeme", "NOUN");
+	const unit = unitOf([4, 6], "Lexeme/NOUN");
 	const jev = fakeJev({ gender: "die", number: "Sing", case: "Dat" });
 	const { result } = await resolveOnce(
 		{ jev: jev.ask, luna: writes("Frau", ["der", "Frau"]).ask },
 		{ sentence, unit },
 	);
-	expect(attested(result).surface.inflectionalFeatures).toMatchObject({
-		case: "Dat",
+	expect(attested(result).surface).toMatchObject({
+		inflectionalFeatures: {
+			case: "Dat",
+		},
 	});
 	expect(jev.stages()).toEqual(["grammar", "case"]);
 	const asked = jev.sent[1]?.questions.case;
@@ -381,10 +392,10 @@ test("a bare noun asks Case over every case and the empty case of direct address
 		{ jev: jev.ask, luna: writes("Leute").ask },
 		{
 			sentence: sentenceOf("Hallo Leute!"),
-			unit: unitOf([2], "Lexeme", "NOUN"),
+			unit: unitOf([2], "Lexeme/NOUN"),
 		},
 	);
-	expect(attested(result).surface.inflectionalFeatures).toEqual({
+	expect(attested(result).surface).toHaveProperty("inflectionalFeatures", {
 		case: null,
 		gender: null,
 		number: "Plur",
@@ -410,7 +421,7 @@ test("a closed-class unit builds its Lemma from the stored identity, with no ide
 		{ jev: jev.ask, luna: luna.ask },
 		{
 			sentence: sentenceOf("Dieses Haus ist alt."),
-			unit: unitOf([0], "Lexeme", "DET", {
+			unit: unitOf([0], "Lexeme/DET", {
 				kind: "DET",
 				canonicalForm: "dieser",
 				pronType: "Dem",
@@ -434,7 +445,7 @@ test("an identity whose spelling names one cell asks nothing", async () => {
 		{ jev: jev.ask, luna: fakeLuna().ask },
 		{
 			sentence: sentenceOf("Ich komme."),
-			unit: unitOf([0], "Lexeme", "PRON", {
+			unit: unitOf([0], "Lexeme/PRON", {
 				kind: "PRON",
 				canonicalForm: "ich",
 				pronType: "Prs",
@@ -454,7 +465,7 @@ test("a DET or PRON unit without an identity, or one the inventory lacks, is a C
 		{ jev: jev.ask, luna: fakeLuna().ask },
 		{
 			sentence: sentenceOf("Blubb kommt."),
-			unit: unitOf([0], "Lexeme", "PRON"),
+			unit: unitOf([0], "Lexeme/PRON"),
 		},
 	);
 	expect(none.result).toMatchObject({
@@ -465,7 +476,7 @@ test("a DET or PRON unit without an identity, or one the inventory lacks, is a C
 		{ jev: jev.ask, luna: fakeLuna().ask },
 		{
 			sentence: sentenceOf("Ihm hilft keiner."),
-			unit: unitOf([0], "Lexeme", "PRON", {
+			unit: unitOf([0], "Lexeme/PRON", {
 				kind: "PRON",
 				canonicalForm: "er",
 				pronType: "Prs",
@@ -481,7 +492,7 @@ test("a DET or PRON unit without an identity, or one the inventory lacks, is a C
 
 const ihm = {
 	sentence: sentenceOf("Ich gebe ihm das Buch."),
-	unit: unitOf([4], "Lexeme", "PRON", {
+	unit: unitOf([4], "Lexeme/PRON", {
 		kind: "PRON",
 		canonicalForm: "ihm",
 		pronType: "Prs",
@@ -495,7 +506,7 @@ test("a referent no text settles attests the form's Syncretism, never a guessed 
 		{ ...ihm, neighbours: { before: "Das Kind weint." } },
 	);
 	const lemma = attested(result).surface.lemma;
-	expect(lemma.syncretic).toEqual(["gender"]);
+	expect(isSyncreticUnit(lemma) && lemma.syncretic).toEqual(["gender"]);
 	expect(lemma.coreFeatures).toMatchObject({ case: "Dat", gender: null });
 	// The neighbours go only to the question the referent decides.
 	expect(jev.sent[0]?.state.neighbours).toEqual({
@@ -511,13 +522,16 @@ test("a referent the neighbours settle attests its cell", async () => {
 		{ ...ihm, neighbours: { before: "Mein Bruder kommt." } },
 	);
 	const lemma = attested(result).surface.lemma;
-	expect(lemma.syncretic).toBeUndefined();
-	expect(["Masc", "Neut"]).toContain(String(lemma.coreFeatures.gender));
+	expect(isSyncreticUnit(lemma)).toBe(false);
+	expect(lemma.coreFeatures).toHaveProperty(
+		"gender",
+		expect.stringMatching(/^(Masc|Neut)$/),
+	);
 });
 
 const jedem = {
 	sentence: sentenceOf("Ich helfe jedem."),
-	unit: unitOf([4], "Lexeme", "PRON", {
+	unit: unitOf([4], "Lexeme/PRON", {
 		kind: "PRON",
 		canonicalForm: "jeder",
 		pronType: "Tot",
@@ -571,7 +585,7 @@ test("a stem whose referent the sentence settles attests the settled Surface", a
 		{ jev: jev.ask, luna: fakeLuna().ask },
 		{
 			sentence: sentenceOf("Von den Kindern helfe ich jedem."),
-			unit: unitOf([10], "Lexeme", "PRON", {
+			unit: unitOf([10], "Lexeme/PRON", {
 				kind: "PRON",
 				canonicalForm: "jeder",
 				pronType: "Tot",
@@ -591,7 +605,7 @@ test("standalone allem means 'everything': its cell question offers no Syncretis
 		{ jev: jev.ask, luna: fakeLuna().ask },
 		{
 			sentence: sentenceOf("Mit allem bin ich einverstanden."),
-			unit: unitOf([2], "Lexeme", "PRON", {
+			unit: unitOf([2], "Lexeme/PRON", {
 				kind: "PRON",
 				canonicalForm: "alle",
 				pronType: "Tot",
@@ -634,7 +648,7 @@ test("Luna writes the Canonical Form in lexical casing with the unit's stored Le
 		{ jev: fakeJev().ask, luna: luna.ask },
 		{
 			sentence: sentenceOf("Mangels Beweisen kam er frei."),
-			unit: unitOf([0], "Lexeme", "ADP"),
+			unit: unitOf([0], "Lexeme/ADP"),
 			lemmaCandidates: [
 				{ lemma: stored, foundUnder: ["Mangels"] },
 				{ lemma: elsewhere, foundUnder: ["mit"] },
@@ -660,7 +674,7 @@ test("Luna writes the Canonical Form in lexical casing with the unit's stored Le
 		{ jev: fakeJev().ask, luna: writes("mangels", ["Mangels"]).ask },
 		{
 			sentence: sentenceOf("Mangels Beweisen kam er frei."),
-			unit: unitOf([0], "Lexeme", "ADP"),
+			unit: unitOf([0], "Lexeme/ADP"),
 		},
 	);
 	expect(attested(capital.result).surface.normalizedSurface).toBe("Mangels");
@@ -687,7 +701,7 @@ test("Luna drafts the Emoji Description after the headword in the same call, fro
 		{ jev: fakeJev().ask, luna: luna.ask },
 		{
 			sentence: sentenceOf("Das Schloss klemmt."),
-			unit: unitOf([2], "Lexeme", "NOUN"),
+			unit: unitOf([2], "Lexeme/NOUN"),
 			lemmaCandidates: [{ lemma: stored, foundUnder: ["Schloss"] }],
 		},
 	);
@@ -742,7 +756,7 @@ test("a draft that is no Emoji Description is dropped and the headword kept, and
 		{ jev: fakeJev().ask, luna: castle.ask },
 		{
 			sentence: sentenceOf("Das Schloss klemmt."),
-			unit: unitOf([2], "Lexeme", "NOUN"),
+			unit: unitOf([2], "Lexeme/NOUN"),
 		},
 	);
 	expect(attested(dropped.result).surface.lemma.canonicalForm).toBe(
@@ -758,7 +772,7 @@ test("a draft that is no Emoji Description is dropped and the headword kept, and
 		{ jev: fakeJev().ask, luna: foreign.ask },
 		{
 			sentence: sentenceOf("Er sagte cool."),
-			unit: unitOf([4], "Foreign", "Foreign"),
+			unit: unitOf([4], "Foreign/Foreign"),
 		},
 	);
 	expect(cool.result).not.toHaveProperty("drafted");
@@ -804,7 +818,7 @@ test("Luna writes while jev judges, with no judged features, and its answer stan
 		{ jev: held, luna: luna.ask },
 		{
 			sentence: sentenceOf("Eine merkwürdige Geschichte."),
-			unit: unitOf([2], "Lexeme", "ADJ"),
+			unit: unitOf([2], "Lexeme/ADJ"),
 		},
 	);
 	await Bun.sleep(10);
@@ -841,7 +855,7 @@ test("a Typo jev finds makes Luna write again with jev's answers, and the guesse
 		{ jev: fakeJev({ orthography: "t0" }).ask, luna: slowLuna.ask },
 		{
 			sentence: sentenceOf("Er kommmt."),
-			unit: unitOf([2], "Lexeme", "VERB"),
+			unit: unitOf([2], "Lexeme/VERB"),
 		},
 	);
 	expect(attested(result).surface.lemma.canonicalForm).toBe("kommen");
@@ -874,7 +888,7 @@ test("a verb headword written on the guess with a sich or a prefix jev judged aw
 		{ jev: fakeJev().ask, luna: washes.ask },
 		{
 			sentence: sentenceOf("Er wäscht sich."),
-			unit: unitOf([2], "Lexeme", "VERB"),
+			unit: unitOf([2], "Lexeme/VERB"),
 		},
 	);
 	expect(attested(wash.result).surface.lemma.canonicalForm).toBe("waschen");
@@ -897,7 +911,7 @@ test("a verb headword written on the guess with a sich or a prefix jev judged aw
 		},
 		{
 			sentence: sentenceOf("Sie zankt sich mit ihm."),
-			unit: unitOf([2, 4, 6], "Lexeme", "VERB"),
+			unit: unitOf([2, 4, 6], "Lexeme/VERB"),
 		},
 	);
 	expect(attested(quarrel.result).surface.lemma.canonicalForm).toBe(
@@ -922,7 +936,7 @@ test("a verb headword written on the guess with a sich or a prefix jev judged aw
 		},
 		{
 			sentence: sentenceOf("Sie zankt sich mit ihm."),
-			unit: unitOf([2, 4, 6], "Lexeme", "VERB"),
+			unit: unitOf([2, 4, 6], "Lexeme/VERB"),
 		},
 	);
 	expect(fits.sent).toHaveLength(1);
@@ -942,7 +956,7 @@ test("a failed or Unresolved grammar request ends the guessed call before the tr
 				neighbours: {},
 				lemmaCandidates: [],
 				sentence: sentenceOf("Er kommt."),
-				unit: unitOf([2], "Lexeme", "VERB"),
+				unit: unitOf([2], "Lexeme/VERB"),
 			}),
 		),
 	);
@@ -959,7 +973,7 @@ test("a failed or Unresolved grammar request ends the guessed call before the tr
 		{ jev: fakeJev({ orthography: "Unresolved" }).ask, luna: slow.ask },
 		{
 			sentence: sentenceOf("Er kommt."),
-			unit: unitOf([2], "Lexeme", "VERB"),
+			unit: unitOf([2], "Lexeme/VERB"),
 		},
 	);
 	expect(result).toEqual({ _tag: "Unresolved" });
@@ -974,7 +988,7 @@ test("a failed or Unresolved grammar request ends the guessed call before the tr
 
 test("Luna may correct a Typo, while a Standard member keeps its letters in Luna's casing", async () => {
 	const sentence = sentenceOf("Er kommt.");
-	const unit = unitOf([2], "Lexeme", "VERB");
+	const unit = unitOf([2], "Lexeme/VERB");
 	// Luna writing the headword form of a Standard member changes nothing.
 	const changed = await resolveOnce(
 		{ jev: fakeJev().ask, luna: writes("kommen", ["kam"]).ask },
@@ -1003,7 +1017,7 @@ test("Luna may correct a Typo, while a Standard member keeps its letters in Luna
 		},
 		{
 			sentence: sentenceOf("Komm doch herrein."),
-			unit: unitOf([0, 2, 4], "Lexeme", "VERB"),
+			unit: unitOf([0, 2, 4], "Lexeme/VERB"),
 		},
 	);
 	expect(attested(dropped.result).surface.normalizedSurface).toBe(
@@ -1018,7 +1032,7 @@ test("Luna may correct a Typo, while a Standard member keeps its letters in Luna
 			}).resolve.grammar({
 				language: "de",
 				sentence: sentenceOf("Komm doch herrein."),
-				unit: unitOf([0, 2, 4], "Lexeme", "VERB"),
+				unit: unitOf([0, 2, 4], "Lexeme/VERB"),
 				neighbours: {},
 				lemmaCandidates: [],
 			}),
@@ -1046,14 +1060,14 @@ test("INTJ LOL and lol resolve to one Lemma, while NOUN Morgen and ADV morgen st
 					},
 					{
 						sentence: sentenceOf(`Er schrieb ${text}.`),
-						unit: unitOf([4], "Lexeme", "INTJ"),
+						unit: unitOf([4], "Lexeme/INTJ"),
 						lemmaCandidates: [
 							{ lemma: stored, foundUnder: [text] },
 						],
 					},
 				)
 			).result,
-		).surface.lemma as unknown as Dumling.Lemma;
+		).surface.lemma;
 	const upper = await lol("LOL", "LOL");
 	const lower = await lol("lol", "lol");
 	expect(sameLemma(upper, lower)).toBe(true);
@@ -1071,11 +1085,11 @@ test("INTJ LOL and lol resolve to one Lemma, while NOUN Morgen and ADV morgen st
 				},
 				{
 					sentence: sentenceOf("Der Morgen kam."),
-					unit: unitOf([0, 2], "Lexeme", "NOUN"),
+					unit: unitOf([0, 2], "Lexeme/NOUN"),
 				},
 			)
 		).result,
-	).surface.lemma as unknown as Dumling.Lemma;
+	).surface.lemma;
 	const adverb = attested(
 		(
 			await resolveOnce(
@@ -1085,11 +1099,11 @@ test("INTJ LOL and lol resolve to one Lemma, while NOUN Morgen and ADV morgen st
 				},
 				{
 					sentence: sentenceOf("Wir kommen morgen."),
-					unit: unitOf([4], "Lexeme", "ADV"),
+					unit: unitOf([4], "Lexeme/ADV"),
 				},
 			)
 		).result,
-	).surface.lemma as unknown as Dumling.Lemma;
+	).surface.lemma;
 	expect(sameLemma(noun, adverb)).toBe(false);
 });
 
@@ -1113,11 +1127,11 @@ test("a governed preposition is the verb's valencyEvidence and stays out of its 
 		{ jev: jev.ask, luna: luna.ask },
 		{
 			sentence: sentenceOf("Sie wartet auf den Bus."),
-			unit: unitOf([2, 4], "Lexeme", "VERB"),
+			unit: unitOf([2, 4], "Lexeme/VERB"),
 		},
 	);
 	const attestation = attested(result);
-	expect(attestation.valencyEvidence).toEqual([
+	expect(attestation).toHaveProperty("valencyEvidence", [
 		{
 			member: 1,
 			complement: {
@@ -1152,10 +1166,10 @@ test("an adposition records the case its complement took, asked only where the A
 		{ jev: twoWay.ask, luna: writes("auf").ask },
 		{
 			sentence: sentenceOf("Wir sitzen auf dem Sofa."),
-			unit: unitOf([4], "Lexeme", "ADP"),
+			unit: unitOf([4], "Lexeme/ADP"),
 		},
 	);
-	expect(attested(result).valencyEvidence).toEqual([
+	expect(attested(result)).toHaveProperty("valencyEvidence", [
 		{
 			member: null,
 			complement: {
@@ -1171,10 +1185,13 @@ test("an adposition records the case its complement took, asked only where the A
 		{ jev: oneCase.ask, luna: writes("mit").ask },
 		{
 			sentence: sentenceOf("Er kam mit dem Rad."),
-			unit: unitOf([4], "Lexeme", "ADP"),
+			unit: unitOf([4], "Lexeme/ADP"),
 		},
 	);
-	expect(attested(mit.result).valencyEvidence?.[0]).toMatchObject({
+	const withMit = attested(mit.result);
+	expect(
+		"valencyEvidence" in withMit && withMit.valencyEvidence?.[0],
+	).toMatchObject({
 		realizedCase: "Dat",
 	});
 	expect(oneCase.questions("grammar")).not.toContain("realizedCase");
@@ -1187,16 +1204,18 @@ test("perfect, future and passive come from the auxiliaries' uses; a Locution VE
 		{ jev: jev.ask, luna: writes("den Faden verlieren").ask },
 		{
 			sentence: sentenceOf("Er hat den Faden verloren."),
-			unit: unitOf([2, 4, 6, 8], "Locution", "VERB"),
+			unit: unitOf([2, 4, 6, 8], "Locution/VERB"),
 		},
 	);
 	const attestation = attested(result);
 	expect(attestation.surface.lemma.coreFeatures).toEqual({});
-	expect(attestation.surface.inflectionalFeatures).toMatchObject({
-		perfect: "Yes",
-		future: null,
-		passive: null,
-		voice: null,
+	expect(attestation.surface).toMatchObject({
+		inflectionalFeatures: {
+			perfect: "Yes",
+			future: null,
+			passive: null,
+			voice: null,
+		},
 	});
 	const asked = jev.sent[0]?.questions.aux_m0;
 	expect(asked?.type === "choice" && asked.criteria.u0).toContain("perfect");
@@ -1241,7 +1260,7 @@ test("auxiliary uses that set the passive or the causative differently do not co
 			{ jev: auxiliaryJev(uses), luna: writes(lemma).ask },
 			{
 				sentence: sentenceOf(sentence),
-				unit: unitOf(segments, "Lexeme", "VERB"),
+				unit: unitOf(segments, "Lexeme/VERB"),
 			},
 		);
 	const clash = {
@@ -1273,13 +1292,13 @@ test("auxiliary uses that set the passive or the causative differently do not co
 		{ aux_m0: "werden 🔮", aux_m2: "werden 🔄", aux_m3: "sein 🏁" },
 		"bauen",
 	);
-	expect(
-		attested(composed.result).surface.inflectionalFeatures,
-	).toMatchObject({
-		perfect: "Yes",
-		future: "Yes",
-		voice: "Pass",
-		passive: "Process",
+	expect(attested(composed.result).surface).toMatchObject({
+		inflectionalFeatures: {
+			perfect: "Yes",
+			future: "Yes",
+			voice: "Pass",
+			passive: "Process",
+		},
 	});
 	// Er0 _1 wird2 _3 gelobt4 _5 werden6 .7, each werden judged the process passive.
 	const twice = await click(
@@ -1288,11 +1307,13 @@ test("auxiliary uses that set the passive or the causative differently do not co
 		{ aux_m0: "werden 🔄", aux_m2: "werden 🔄" },
 		"loben",
 	);
-	expect(attested(twice.result).surface.inflectionalFeatures).toMatchObject({
-		perfect: null,
-		future: null,
-		voice: "Pass",
-		passive: "Process",
+	expect(attested(twice.result).surface).toMatchObject({
+		inflectionalFeatures: {
+			perfect: null,
+			future: null,
+			voice: "Pass",
+			passive: "Process",
+		},
 	});
 });
 
@@ -1312,13 +1333,13 @@ test("a subject es whose verb jev answers in the plural makes the click Unresolv
 			},
 			{
 				sentence: sentenceOf("Es regnet."),
-				unit: unitOf([0, 2], "Lexeme", "VERB"),
+				unit: unitOf([0, 2], "Lexeme/VERB"),
 			},
 		);
 	const singular = await click("Sing");
-	expect(
-		attested(singular.result).surface.inflectionalFeatures,
-	).toMatchObject({ expletive: "Subject", number: "Sing" });
+	expect(attested(singular.result).surface).toMatchObject({
+		inflectionalFeatures: { expletive: "Subject", number: "Sing" },
+	});
 	const plural = await click("Plur");
 	expect(plural.result).toEqual({ _tag: "Unresolved" });
 	expect(plural.trace?.resolution).toEqual({
@@ -1349,7 +1370,7 @@ test("a Saying resolves with its coverage and fused pieces spelled as written", 
 		{ jev: jev.ask, luna: luna.ask },
 		{
 			sentence: sentenceOf("", segments),
-			unit: unitOf([0, 2, 4, 6, 7, 9], "Saying", "Saying"),
+			unit: unitOf([0, 2, 4, 6, 7, 9], "Saying/Saying"),
 		},
 	);
 	const attestation = attested(result);
@@ -1394,7 +1415,7 @@ test("a fused article piece is the noun's owned article and narrows its Case", a
 		{ jev: jev.ask, luna: writes("Wald", ["dem", "Wald"]).ask },
 		{
 			sentence: sentenceOf("", segments),
-			unit: unitOf([5, 7], "Lexeme", "NOUN"),
+			unit: unitOf([5, 7], "Lexeme/NOUN"),
 		},
 	);
 	const attestation = attested(result);
@@ -1409,8 +1430,10 @@ test("a fused article piece is the noun's owned article and narrows its Case", a
 			],
 		},
 	});
-	expect(attestation.surface.inflectionalFeatures).toMatchObject({
-		case: "Dat",
+	expect(attestation.surface).toMatchObject({
+		inflectionalFeatures: {
+			case: "Dat",
+		},
 	});
 	expect(attestation.surface.normalizedSurface).toBe("Wald");
 	// The table spells m; only Wald's spelling is judged.
@@ -1444,11 +1467,11 @@ test("an opening Fused member gives the noun its article only when its piece nam
 		{ jev: ambiguous.ask, luna: writes("Wetter", ["das", "Wetter"]).ask },
 		{
 			sentence: sentenceOf("", clitic),
-			unit: unitOf([3, 5], "Lexeme", "NOUN"),
+			unit: unitOf([3, 5], "Lexeme/NOUN"),
 		},
 	);
 	const fromClitic = attested(wetter.result);
-	expect(fromClitic.articleEvidence).toBeNull();
+	expect(fromClitic).toHaveProperty("articleEvidence", null);
 	expect(fromClitic.members[0]).toMatchObject({
 		attested: "'s",
 		orthography: "Fused",
@@ -1475,10 +1498,12 @@ test("an opening Fused member gives the noun its article only when its piece nam
 		{ jev: plain.ask, luna: writes("Wald", ["dem", "Wald"]).ask },
 		{
 			sentence: sentenceOf("", fused),
-			unit: unitOf([5, 7], "Lexeme", "NOUN"),
+			unit: unitOf([5, 7], "Lexeme/NOUN"),
 		},
 	);
-	expect(attested(wald.result).articleEvidence).not.toBeNull();
+	expect(attested(wald.result)).toMatchObject({
+		articleEvidence: expect.anything(),
+	});
 	expect(plain.questions("grammar")).not.toContain("citation");
 });
 
@@ -1498,7 +1523,7 @@ test("an infinitive split at its infixed zu keeps its pieces' letters, glued in 
 		{ jev: jev.ask, luna: writes("hinauslaufen").ask },
 		{
 			sentence: sentenceOf("", segments),
-			unit: unitOf([4, 6], "Lexeme", "VERB"),
+			unit: unitOf([4, 6], "Lexeme/VERB"),
 		},
 	);
 	const attestation = attested(result);
@@ -1520,7 +1545,7 @@ test("the trace names the operation, its calls by executor and how the click cam
 		{ jev: fakeJev().ask, luna: writes("kommen").ask },
 		{
 			sentence: sentenceOf("Er kommt."),
-			unit: unitOf([2], "Lexeme", "VERB"),
+			unit: unitOf([2], "Lexeme/VERB"),
 		},
 	);
 	expect(trace?.operation).toBe("resolve.grammar");
@@ -1544,7 +1569,7 @@ test("PART is closed: an authored particle resolves with no Luna call, and a spe
 		{ jev: fakeJev().ask, luna: luna.ask },
 		{
 			sentence: sentenceOf("Er kommt nicht."),
-			unit: unitOf([4], "Lexeme", "PART"),
+			unit: unitOf([4], "Lexeme/PART"),
 		},
 	);
 	expect(attested(nicht.result).surface.lemma).toMatchObject({
@@ -1556,7 +1581,7 @@ test("PART is closed: an authored particle resolves with no Luna call, and a spe
 		{ jev: fakeJev().ask, luna: writes("blubb").ask },
 		{
 			sentence: sentenceOf("Er kommt blubb."),
-			unit: unitOf([4], "Lexeme", "PART"),
+			unit: unitOf([4], "Lexeme/PART"),
 		},
 	);
 	expect(unknown.result).toMatchObject({ _tag: "CatalogMiss" });
@@ -1606,14 +1631,16 @@ test("a judged gender the owned article rules out gives way to the likeliest gen
 		{ jev, luna: writes("Tisch").ask },
 		{
 			sentence: sentenceOf("Der Tisch wackelt."),
-			unit: unitOf([0, 2], "Lexeme", "NOUN"),
+			unit: unitOf([0, 2], "Lexeme/NOUN"),
 		},
 	);
 	const attestation = attested(result);
 	expect(attestation.surface.lemma.coreFeatures).toEqual({ gender: "Masc" });
-	expect(attestation.surface.inflectionalFeatures).toMatchObject({
-		case: "Nom",
-		number: "Sing",
+	expect(attestation.surface).toMatchObject({
+		inflectionalFeatures: {
+			case: "Nom",
+			number: "Sing",
+		},
 	});
 });
 
@@ -1624,7 +1651,7 @@ test("an r- adverb is Shorthand without a judge: its her- or hin- words are the 
 		{ jev: jev.ask, luna: luna.ask },
 		{
 			sentence: sentenceOf("Komm doch rein!"),
-			unit: unitOf([0, 4], "Lexeme", "VERB"),
+			unit: unitOf([0, 4], "Lexeme/VERB"),
 		},
 	);
 	const prefix = jev.sent[0]?.questions.prefix;
@@ -1665,7 +1692,7 @@ test("a VERB's prefix options never offer a member that is no particle, such as 
 		{ jev: jev.ask, luna: writes("zerreiben").ask },
 		{
 			sentence: sentenceOf("Er hat es zerrieben."),
-			unit: unitOf([2, 6], "Lexeme", "VERB"),
+			unit: unitOf([2, 6], "Lexeme/VERB"),
 		},
 	);
 	const prefix = jev.sent[0]?.questions.prefix;
@@ -1682,7 +1709,7 @@ test("Luna is told which members are auxiliaries, which stay out of the headword
 		{ jev: fakeJev({ aux_m0: "u0" }).ask, luna: luna.ask },
 		{
 			sentence: sentenceOf("Sie wird schwimmen."),
-			unit: unitOf([2, 4], "Lexeme", "VERB"),
+			unit: unitOf([2, 4], "Lexeme/VERB"),
 		},
 	);
 	expect(luna.sent).toHaveLength(2);
@@ -1703,7 +1730,7 @@ test("a Luna answer the transport kept no output for is refused with the transpo
 			createDumgen({ jev: fakeJev().ask, luna }).resolve.grammar({
 				language: "de",
 				sentence: sentenceOf("Er kommt."),
-				unit: unitOf([2], "Lexeme", "VERB"),
+				unit: unitOf([2], "Lexeme/VERB"),
 				neighbours: {},
 				lemmaCandidates: [],
 			}),
@@ -1745,7 +1772,7 @@ test("an ordinary noun shown in its plural keeps its singular's gender, while a 
 		{ jev: leaning("Ordinary"), luna: writes("Hand").ask },
 		{
 			sentence: sentenceOf("Hände klatschen."),
-			unit: unitOf([0], "Lexeme", "NOUN"),
+			unit: unitOf([0], "Lexeme/NOUN"),
 		},
 	);
 	expect(attested(hands.result).surface.lemma.coreFeatures).toEqual({
@@ -1755,7 +1782,7 @@ test("an ordinary noun shown in its plural keeps its singular's gender, while a 
 		{ jev: leaning("PluralOnly"), luna: writes("Leute").ask },
 		{
 			sentence: sentenceOf("Leute klatschen."),
-			unit: unitOf([0], "Lexeme", "NOUN"),
+			unit: unitOf([0], "Lexeme/NOUN"),
 		},
 	);
 	expect(attested(people.result).surface.lemma.coreFeatures).toEqual({
@@ -1768,7 +1795,7 @@ test("a split da or wo adverb and a bare w-word judged Shorthand get the headwor
 		{ jev: fakeJev().ask, luna: writes("da").ask },
 		{
 			sentence: sentenceOf("Da weiß ich nichts an."),
-			unit: unitOf([0, 8], "Lexeme", "ADV"),
+			unit: unitOf([0, 8], "Lexeme/ADV"),
 		},
 	);
 	expect(attested(split.result).surface.lemma.canonicalForm).toBe("daran");
@@ -1779,7 +1806,7 @@ test("a split da or wo adverb and a bare w-word judged Shorthand get the headwor
 		},
 		{
 			sentence: sentenceOf("Es liegt wo."),
-			unit: unitOf([4], "Lexeme", "ADV"),
+			unit: unitOf([4], "Lexeme/ADV"),
 		},
 	);
 	const attestation = attested(shorthand.result);
@@ -1791,7 +1818,7 @@ test("a split da or wo adverb and a bare w-word judged Shorthand get the headwor
 		{ jev: jev.ask, luna: writes("raus").ask },
 		{
 			sentence: sentenceOf("Der Zahn muss raus."),
-			unit: unitOf([6], "Lexeme", "ADV"),
+			unit: unitOf([6], "Lexeme/ADV"),
 		},
 	);
 	expect(jev.questions("grammar")).toContain("short_s6");
@@ -1804,7 +1831,7 @@ test("a dr- adverb such as drunter is the Shorthand of its da(r)- word, which is
 		{ jev: jev.ask, luna: writes("drunter").ask },
 		{
 			sentence: sentenceOf("Der Ball liegt drunter."),
-			unit: unitOf([6], "Lexeme", "ADV"),
+			unit: unitOf([6], "Lexeme/ADV"),
 		},
 	);
 	// The table settles drunter, so jev is asked neither its orthography
@@ -1825,7 +1852,7 @@ test("the comparable question offers No for a demonstrative or interrogative adv
 		{ jev: jev.ask, luna: writes("so").ask },
 		{
 			sentence: sentenceOf("Es war so laut."),
-			unit: unitOf([4], "Lexeme", "ADV"),
+			unit: unitOf([4], "Lexeme/ADV"),
 		},
 	);
 	const asked = jev.sent[0]?.questions.comparable;
@@ -1836,59 +1863,43 @@ test("the comparable question offers No for a demonstrative or interrogative adv
 	expect(attestation.surface.lemma.coreFeatures).toEqual({
 		comparable: null,
 	});
-	expect(attestation.surface.inflectionalFeatures ?? null).toBeNull();
+	expect(attestation.surface).not.toHaveProperty(
+		"inflectionalFeatures",
+		expect.anything(),
+	);
 });
 
 test("a Locution's or interjection's headword drops placeholders and members outside it, and an adpositional or conjunctional Locution has … exactly at its gaps", () => {
-	const at = (
-		text: string,
-		segments: number[],
-		family: string,
-		kind: string,
-	) => {
-		const sentence = sentenceOf(text);
-		const unit = unitOf(segments, family, kind);
-		if (unit.route === "Unresolved") throw Error("Expected a routed unit");
-		return targetOf(sentence, unit, unit.route);
+	const at = (text: string, segments: number[], key: string) => {
+		const unit = unitOf(segments, key);
+		return targetOf(sentenceOf(text), unit, unit.route);
 	};
 	const nose = at(
 		"Er tanzte ihr auf der Nase herum.",
 		[2, 6, 8, 10, 12],
-		"Locution",
-		"VERB",
+		"Locution/VERB",
 	);
 	expect(
 		guardedHeadword(nose, "jemandem auf der Nase herumtanzen", new Set()),
 	).toBe("auf der Nase herumtanzen");
-	const thanks = at("Vielen Dank für alles.", [0, 2, 4], "Locution", "INTJ");
+	const thanks = at("Vielen Dank für alles.", [0, 2, 4], "Locution/INTJ");
 	expect(guardedHeadword(thanks, "vielen Dank für …", new Set([2]))).toBe(
 		"vielen Dank",
 	);
-	const care = at(
-		"Sie nahm Rücksicht auf ihn.",
-		[2, 4, 6],
-		"Locution",
-		"VERB",
-	);
+	const care = at("Sie nahm Rücksicht auf ihn.", [2, 4, 6], "Locution/VERB");
 	expect(guardedHeadword(care, "Rücksicht auf … nehmen", new Set([2]))).toBe(
 		"Rücksicht nehmen",
 	);
-	const similar = at(
-		"Sie mag Äpfel oder Ähnliches.",
-		[6, 8],
-		"Locution",
-		"ADV",
-	);
+	const similar = at("Sie mag Äpfel oder Ähnliches.", [6, 8], "Locution/ADV");
 	expect(guardedHeadword(similar, "oder … Ähnliches", new Set())).toBe(
 		"oder Ähnliches",
 	);
-	const without = at("Er ging ohne zu grüßen.", [4, 6], "Locution", "SCONJ");
+	const without = at("Er ging ohne zu grüßen.", [4, 6], "Locution/SCONJ");
 	expect(guardedHeadword(without, "ohne zu", new Set())).toBe("ohne … zu");
 	const so = at(
 		"Er sprach so leise, dass keiner es hörte.",
 		[4, 9],
-		"Locution",
-		"SCONJ",
+		"Locution/SCONJ",
 	);
 	expect(guardedHeadword(so, "so dass", new Set())).toBe("so … dass");
 });
@@ -1921,7 +1932,7 @@ test("an r- word's prefix jev leaves Unresolved is the likelier of its her- and 
 		{ jev, luna: writes("reinkommen").ask },
 		{
 			sentence: sentenceOf("Komm doch rein!"),
-			unit: unitOf([0, 4], "Lexeme", "VERB"),
+			unit: unitOf([0, 4], "Lexeme/VERB"),
 		},
 	);
 	expect(attested(result).surface.lemma).toMatchObject({
@@ -1936,7 +1947,7 @@ test("a closed-class member one edit from exactly one spelling of its stored ide
 		{
 			sentence: sentenceOf("Morgen fahre ihc los."),
 			unit: {
-				...unitOf([4], "Lexeme", "PRON"),
+				...unitOf([4], "Lexeme/PRON"),
 				identity: {
 					kind: "PRON",
 					canonicalForm: "ich",
@@ -1962,7 +1973,7 @@ test("bare was and wem resolve to etwas and irgendwem as Shorthand", async () =>
 				{
 					sentence: sentenceOf("Sag doch was!"),
 					unit: {
-						...unitOf([4], "Lexeme", "PRON"),
+						...unitOf([4], "Lexeme/PRON"),
 						identity: {
 							kind: "PRON",
 							canonicalForm: "etwas",
@@ -1985,7 +1996,7 @@ test("bare was and wem resolve to etwas and irgendwem as Shorthand", async () =>
 				{
 					sentence: sentenceOf("Hast du das wem erzählt?"),
 					unit: {
-						...unitOf([6], "Lexeme", "PRON"),
+						...unitOf([6], "Lexeme/PRON"),
 						identity: {
 							kind: "PRON",
 							canonicalForm: "irgendwer",
@@ -1997,7 +2008,9 @@ test("bare was and wem resolve to etwas and irgendwem as Shorthand", async () =>
 		).result,
 	);
 	expect(wem.surface.normalizedSurface).toBe("irgendwem");
-	expect(wem.surface.inflectionalFeatures).toMatchObject({ case: "Dat" });
+	expect(wem.surface).toMatchObject({
+		inflectionalFeatures: { case: "Dat" },
+	});
 });
 
 test("a particle standing apart in the VERB unit is its prefix when jev says None, but never a preposition the verb governs", async () => {
@@ -2005,7 +2018,7 @@ test("a particle standing apart in the VERB unit is its prefix when jev says Non
 		{ jev: fakeJev({ prefix: "None" }).ask, luna: writes("tun").ask },
 		{
 			sentence: sentenceOf("Das tut mir leid."),
-			unit: unitOf([2, 6], "Lexeme", "VERB"),
+			unit: unitOf([2, 6], "Lexeme/VERB"),
 		},
 	);
 	expect(attested(sorry.result).surface.lemma).toMatchObject({
@@ -2019,7 +2032,7 @@ test("a particle standing apart in the VERB unit is its prefix when jev says Non
 		},
 		{
 			sentence: sentenceOf("Sie warten auf ihn."),
-			unit: unitOf([2, 4], "Lexeme", "VERB"),
+			unit: unitOf([2, 4], "Lexeme/VERB"),
 		},
 	);
 	expect(attested(wait.result).surface.lemma.coreFeatures).toMatchObject({
@@ -2035,7 +2048,7 @@ test("a compared suppletive adverb cites its positive, and an ordinal its attrib
 		},
 		{
 			sentence: sentenceOf("Ich trinke lieber Tee."),
-			unit: unitOf([4], "Lexeme", "ADV"),
+			unit: unitOf([4], "Lexeme/ADV"),
 		},
 	);
 	expect(attested(rather.result).surface.lemma.canonicalForm).toBe("gern");
@@ -2052,7 +2065,7 @@ test("a compared suppletive adverb cites its positive, and an ordinal its attrib
 		},
 		{
 			sentence: sentenceOf("Die zweite Runde beginnt."),
-			unit: unitOf([2], "Lexeme", "ADJ"),
+			unit: unitOf([2], "Lexeme/ADJ"),
 		},
 	);
 	expect(attested(second.result).surface.lemma.canonicalForm).toBe("zweite");
@@ -2066,7 +2079,7 @@ test("a preposition with its own complement is never taken as the prefix when je
 		},
 		{
 			sentence: sentenceOf("Sie zankt sich mit ihm."),
-			unit: unitOf([2, 4, 6], "Lexeme", "VERB"),
+			unit: unitOf([2, 4, 6], "Lexeme/VERB"),
 		},
 	);
 	expect(attested(quarrel.result).surface.lemma.coreFeatures).toMatchObject({
@@ -2086,7 +2099,7 @@ test("a numeral Locution Luna cites as a slotted pattern takes its members' word
 		},
 		{
 			sentence: sentenceOf("Es dauert acht bis 9 Tage."),
-			unit: unitOf([4, 6, 8], "Locution", "NUM"),
+			unit: unitOf([4, 6, 8], "Locution/NUM"),
 		},
 	);
 	expect(attested(range.result).surface.lemma.canonicalForm).toBe(
