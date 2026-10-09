@@ -275,6 +275,7 @@ export type NominalRead = {
  * Reads a NOUN's block: its Core Features and, when it is used rather than
  * cited, its cells and the cases still open.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function readNominal(
 	shape: Shape,
 	owned: OpeningArticle | undefined,

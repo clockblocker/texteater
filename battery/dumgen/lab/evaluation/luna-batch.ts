@@ -307,6 +307,7 @@ export function createOpenAILunaBatch(
 				throw Error("OpenAI's batch creation returned no id");
 			return { id: batch.id, inputFileId: file.id };
 		},
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		async settle(id, requests, signal) {
 			let batch = await batchOf(id, signal);
 			while (!finalStatuses.has(batch.status ?? "")) {

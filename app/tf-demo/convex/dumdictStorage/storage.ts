@@ -330,6 +330,7 @@ async function dictionaryLemmasWithCanonicalForm(
  * resolve to, and each loaded Reading's Lemma and own relation targets. A plan
  * that names no target reads nothing.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export async function loadRelationNeighbourhood(
 	ctx: ServerCtx,
 	seeds: {

@@ -224,6 +224,7 @@ function compileReference(
 	return ["ref", id];
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function compileDefinition(
 	definition: ZodDefinition,
 	schemaIdentity: object,
@@ -704,6 +705,7 @@ function isPartialRecordKey(keyType: unknown): boolean {
 	);
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function compileChecks(
 	checks: readonly unknown[] | undefined,
 	schemaName: string,

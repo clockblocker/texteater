@@ -171,6 +171,7 @@ function hostShares(answer: Extract<Answer, { type: "choice" }>) {
  * Every connection the nomination requests judged, with the floors
  * deciding `supported`, and code's rule connections.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function referenceConnections(
 	nomination: Nomination,
 	floors: ReferenceFloors = referenceFloors,

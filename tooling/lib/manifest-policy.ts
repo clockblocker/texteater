@@ -358,6 +358,7 @@ function allDependencyVersions(
 	return versions;
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export async function validateManifestPolicy(options: {
 	cwd: string;
 	mode: PolicyMode;

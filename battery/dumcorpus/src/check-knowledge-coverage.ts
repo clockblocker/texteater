@@ -54,6 +54,7 @@ function holds(aspect: string, value: unknown): boolean {
  * left uncovered. A Reading the Authored Inventory holds has its Knowledge
  * reviewed there (ADR 0021), so it leaves none uncovered.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function knowledgeCoverageIssues(
 	reading: Dumling.Reading,
 	knowledge: Dumrel.ReadingKnowledge,

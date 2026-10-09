@@ -370,6 +370,7 @@ export function contour(
 }
 
 /** Closed edge loops of `field` as point lists (see `contour`). */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function loops(
 	field: Field,
 	{ step = 1, margin = 4 }: { step?: number; margin?: number } = {},
@@ -604,6 +605,7 @@ function curvePath(loop: Point[], corner: number, digits: number): string {
  * `union`, `subtract` and `grow`. `ellipse`, the smooth combinators and
  * `wobble` only approximate distance, so bites can graze such a target.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function biteOut(
 	target: Field,
 	{
@@ -756,6 +758,7 @@ function valueNoise(x: number, y: number, seed: number): number {
 }
 
 /** Flattens SVG path data into one closed point list per subpath. */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function pathPoints(d: string, tolerance = 0.25): Point[][] {
 	const tokens =
 		d.match(/[a-zA-Z]|[-+]?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?/g) ?? [];

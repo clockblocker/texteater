@@ -448,6 +448,7 @@ describe("parseValidationArtifact", () => {
 			],
 			version: 1,
 		};
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		function discriminatorOperation(value: unknown) {
 			if (
 				value === null ||

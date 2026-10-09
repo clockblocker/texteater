@@ -84,6 +84,7 @@ export function linkRegistries(
 			operations.set(name, encoded);
 		}
 		const memo = new Map<string, number>();
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		function graph(c: Constraint): Constraint {
 			if (c[0] === "ref") {
 				let id = c[1];

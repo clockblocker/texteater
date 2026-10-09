@@ -47,6 +47,7 @@ export function inertActions<S>(): SheetActions<S> {
  * them in and grow from there. The Subject's parts read `form` and
  * `place` and adapt.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function PresentationView<S>({
 	renderer,
 	card,

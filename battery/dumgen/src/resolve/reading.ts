@@ -230,6 +230,7 @@ const pick = Effect.fnUntraced(function* (
  * 0045), and a candidate that is no Emoji Description are bad input, a
  * Defect raised before anything is asked.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export const resolveReading = Effect.fnUntraced(function* (
 	scope: OperationScope,
 	models: ReadingModels,

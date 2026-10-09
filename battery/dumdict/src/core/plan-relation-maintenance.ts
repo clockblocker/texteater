@@ -105,6 +105,7 @@ function existingEdges<L extends Dumling.Language>(
 }
 
 /** Plans dictionary-owned direct relation maintenance without inference. */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function planRelationMaintenance<L extends Dumling.Language>(input: {
 	lemmas: readonly LemmaRecord<L>[];
 	readings: readonly ReadingEntry<L>[];

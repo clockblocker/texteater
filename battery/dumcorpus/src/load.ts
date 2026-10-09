@@ -70,6 +70,7 @@ function readJsonFiles(directory: string, issues: SpecIssue[]) {
  * checked for shape and a Reviewed one's Rule citation, and join the worklist
  * while they hold imported cases.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function readRecords(directory: string): {
 	segmentations: SpecSegmentation[];
 	records: SpecRecord[];

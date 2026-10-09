@@ -135,6 +135,7 @@ export function startMouseTrace() {
 		frame = requestAnimationFrame(sample);
 	}
 
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	function onEvent(event: Event) {
 		if (paused || event.composedPath().includes(panel)) return;
 		const data: Record<string, unknown> = {

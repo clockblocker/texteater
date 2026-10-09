@@ -334,6 +334,7 @@ export function readingExperiment(setName: ReadingSetName) {
 				setName,
 				args.concurrency ?? 12,
 			),
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		async evaluate(args: ReadingEvaluateArgs): Promise<ReadingEvaluated> {
 			const root = args.root ?? defaultReadingRoot;
 			const setsRoot = args.setsRoot ?? trackedReadingSetsRoot;

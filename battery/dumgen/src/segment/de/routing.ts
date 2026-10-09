@@ -109,6 +109,7 @@ const closedId = (id: number) => `cc_${id}`;
  * group), the Rule tests, and an identity Choice for each one-piece group
  * whose spelling realizes authored DET or PRON members.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function routeQuestions(
 	sentence: Sentence,
 	groups: Partition,
@@ -234,6 +235,7 @@ export function storedIdentity(
  * candidate's Kind instead, then the Rule tests between ADV and ADJ and
  * between DET and PRON.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function readRoutes(
 	sentence: Sentence,
 	groups: Partition,

@@ -424,6 +424,7 @@ export function useDrag<S>({
 			}, tuning.staleMs + 1);
 	}
 
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	function frameMove(event: ReactPointerEvent<HTMLElement>) {
 		const fromLink = pendingHeading.current;
 		if (fromLink && fromLink.pointerId === event.pointerId) {

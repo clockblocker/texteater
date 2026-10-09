@@ -54,6 +54,7 @@ export type DropReading<S> = {
  * a Card taken up off its Deck, which opens over it; then the band, then
  * the sides; the rest of a Pane opens a Cover.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function destinationAt<S>(
 	x: number,
 	y: number,

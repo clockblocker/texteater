@@ -132,6 +132,7 @@ export function sttsGold(
  * reason for each mapping no record shows and each status short of `Yes`;
  * and no gold status beyond what reviewed records show.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function checkSttsCrosswalk(
 	rows: readonly SttsRow[],
 	context: CrosswalkContext,

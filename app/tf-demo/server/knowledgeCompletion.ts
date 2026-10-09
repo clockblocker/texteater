@@ -47,6 +47,7 @@ export function missingKnowledgeRequest(
 }
 
 /** Only validated content or answered relation kinds cover a request; discovery and omitted leaves do not. */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function knowledgeRequestComplete(
 	coverage: KnowledgeCoverage,
 	request: KnowledgeRequest,

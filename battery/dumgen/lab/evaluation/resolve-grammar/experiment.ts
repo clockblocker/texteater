@@ -384,6 +384,7 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 							args.concurrency ?? 12,
 						),
 				}),
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		async evaluate(args: GrammarEvaluateArgs): Promise<GrammarEvaluated> {
 			const root = args.root ?? defaultGrammarRoot;
 			const setsRoot = args.setsRoot ?? trackedGrammarSetsRoot;

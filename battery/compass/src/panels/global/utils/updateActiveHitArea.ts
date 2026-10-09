@@ -44,6 +44,7 @@ export function updateActiveHitAreas({
 
 	// Note that HitAreas are frozen once a drag has started
 	// Modify the Split layouts for all matching HitAreas though
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	hitAreas.forEach((current) => {
 		const { rightToLeft, split, splitSize } = current;
 		const { orientation, regions } = split;

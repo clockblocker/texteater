@@ -87,6 +87,7 @@ export function useKeyboardLift<S>({
 	}
 
 	useEffect(() => {
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		const onKey = (event: KeyboardEvent) => {
 			const d = dragRef.current;
 			if (!d?.keyboard) return;

@@ -4,6 +4,7 @@ import { getMountedSplitState } from "../mutable-state/splits";
 import { adjustLayoutForHandle } from "../utils/adjustLayoutForHandle";
 import { findHandleSplit } from "../utils/findHandleSplit";
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function onDocumentKeyDown(event: KeyboardEvent) {
 	if (event.defaultPrevented) {
 		return;

@@ -250,6 +250,7 @@ export const storeResegmentedSentence = internalMutation({
 		units: v.array(storedUnitValidator),
 	},
 	returns: v.object({ clickedSegmentIndex: v.number() }),
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	handler: async (ctx, args) => {
 		const session = await requireCommittingSession(
 			ctx,

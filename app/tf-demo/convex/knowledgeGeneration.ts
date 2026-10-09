@@ -311,6 +311,7 @@ export const publish = internalMutation({
 		v.object({ status: v.literal("OverBudget") }),
 		v.object({ status: v.literal("Rejected"), message: v.string() }),
 	),
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	handler: async (ctx, args) => {
 		const attempt = await findKnowledgeAttempt(ctx, args.attemptKey);
 		if (!attempt)

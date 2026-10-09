@@ -57,6 +57,7 @@ const files = readdirSync(src, { recursive: true, withFileTypes: true })
 const production = new Set(files);
 const importPattern = /^(import|export)(\s+type)?[^;]*?from\s+"([^"]+)"/gmu;
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 test("the production code imports nothing that needs a file system", () => {
 	expect(files.length).toBeGreaterThan(1);
 	const problems: string[] = [];

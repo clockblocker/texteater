@@ -326,6 +326,7 @@ function splitTarget(target: string): { fragment?: string; path: string } {
 	};
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export async function auditMarkdownLinks(
 	repositoryRoot: string,
 	files?: readonly string[],

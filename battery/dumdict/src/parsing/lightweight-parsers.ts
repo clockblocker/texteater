@@ -115,6 +115,7 @@ export function routeCanContainMorphologicalTree(
 	);
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function morphologicalTreeRoots(
 	input: unknown,
 ): Array<{ path: ParsingIssue["path"]; value: unknown }> {

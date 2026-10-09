@@ -332,6 +332,7 @@ function CompassRuntime<S>({
 		});
 	}
 
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	function renderPane(pane: PaneNode<S>): ReactNode {
 		const preview = pane.id === PREVIEW_PANE;
 		const rooted = isRooted(pane);
@@ -596,6 +597,7 @@ function CompassRuntime<S>({
 	 * a ghost Cover is hidden the way it would be. The Card in hand stays
 	 * in hand: a ghost of it is a second element of the same Subject.
 	 */
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	function renderNotes(): ReactNode {
 		const notes: ReactNode[] = [];
 		const rendered = new Set<string>();
@@ -604,6 +606,7 @@ function CompassRuntime<S>({
 			if (!paneBox) continue;
 			const sheets = sheetsOf(pane);
 			const top = topSheetOf(pane);
+			// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 			sheets.forEach((sheet, index) => {
 				const card = sheet.presentation;
 				if (!card) return;

@@ -98,6 +98,7 @@ function parseReadingCounts(
  * model calls or persistence.
  * @see {@link https://github.com/clockblocker/texteater/issues/176 | Smart Shadow Pickup}
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function projectSemanticRelations(
 	entries: readonly ReadingWithKnowledge[],
 	options: {

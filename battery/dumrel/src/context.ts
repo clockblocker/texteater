@@ -344,6 +344,7 @@ function parseConjugationClasses<R extends Dumling.Reading>(
 	return value;
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function contextualizeKnowledge<R extends Dumling.Reading>(
 	source: R,
 	knowledge: ReadingKnowledge,
@@ -423,6 +424,7 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 	return result as ReadingKnowledge<R>;
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function contextualizeChange<R extends Dumling.Reading>(
 	source: R,
 	change: KnowledgeChange,

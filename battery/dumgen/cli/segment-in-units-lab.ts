@@ -619,6 +619,7 @@ async function replayRun() {
 		Effect.forEach(
 			original.cases,
 			(caseRun) =>
+				// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 				Effect.promise(async () => {
 					const labCase = byId.get(caseRun.id);
 					if (!labCase)
@@ -786,6 +787,7 @@ const iterationSummarySchema = z.object({
 	cost: z.object({ jevInputTokensPerSentence: z.number() }),
 });
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 async function report(runId: string) {
 	const labRun = await loadLabRun(labRoot, runId);
 	const set = await loadSet(setsRoot, setNameOf(labRun.set), labRun.setHash);
@@ -1152,6 +1154,7 @@ function printFocusComparison(comparison: FocusComparison) {
 		}
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 async function compare() {
 	const [leftId = "", leftPolicy] = (values.left ?? "").split(":");
 	const [rightId = "", rightPolicy] = (values.right ?? "").split(":");

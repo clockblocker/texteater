@@ -9,6 +9,7 @@ import {
 import type { InteractionState } from "../mutable-state/types";
 import { supportsAdvancedCursorStyles } from "./supportsAdvancedCursorStyles";
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function getCursorStyle({
 	cursorFlags,
 	splits,

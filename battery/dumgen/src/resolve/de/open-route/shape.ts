@@ -34,6 +34,7 @@ export const genderOfArticle: ReadonlyMap<string, Gender> = new Map([
 ]);
 
 /** The route's shape, as the questions and the Attestation need it. */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function routeShape(target: Target) {
 	const { family, kind } = target.route;
 	const lexeme = family === "Lexeme";

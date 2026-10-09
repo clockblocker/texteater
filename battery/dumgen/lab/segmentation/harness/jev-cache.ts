@@ -693,6 +693,7 @@ export class JevCache {
 	}
 
 	/** One fresh request, retried on a retryable failure; checked before it is kept. */
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	async #send(
 		request: JevRequest,
 		context: AskContext,

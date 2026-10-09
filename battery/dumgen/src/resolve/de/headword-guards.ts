@@ -37,6 +37,7 @@ function gapAfter(target: Target, position: number): boolean {
 		.some((segment) => segment.kind === "ResolvableText");
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function guardedHeadword(
 	target: Target,
 	form: string,

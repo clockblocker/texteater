@@ -45,6 +45,7 @@ const writes = (canonicalForm: string, members?: readonly string[]) =>
 	fakeLuna(({ members: sent }) => {
 		const spelled = members ?? sent.map(({ text }) => text);
 		const used = new Set<number>();
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		const words = canonicalForm.split(" ").flatMap((word) => {
 			for (let start = 0; start < spelled.length; start++) {
 				let joined = "";

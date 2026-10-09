@@ -201,6 +201,7 @@ function sheetHtml(
 	return `<div style="display:inline-grid;grid-template-columns:repeat(${SHEET_COLUMNS},${SHEET_TILE}px);gap:20px;padding:20px;background:#111">${tiles}</div>`;
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 async function main(): Promise<void> {
 	const args = process.argv.slice(2);
 	const sheetName =

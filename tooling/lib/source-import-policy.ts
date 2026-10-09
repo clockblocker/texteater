@@ -699,6 +699,7 @@ async function validateToolingImports(options: {
  * from other workspaces or tooling, and cross-workspace cycles through it.
  * Every workspace is still read, since edges into the scope start elsewhere.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export async function validateSourceImports(options: {
 	repositoryRoot: string;
 	scope?: string;

@@ -179,6 +179,7 @@ function call<Response, Output>(
 		const queuedAt = performance.now();
 		budget.demand++;
 		const holding = Effect.uninterruptibleMask((restore) =>
+			// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 			Effect.gen(function* () {
 				const startedAt = Date.now();
 				const start = performance.now();

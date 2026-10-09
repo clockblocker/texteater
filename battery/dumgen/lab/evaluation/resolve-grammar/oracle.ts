@@ -110,6 +110,7 @@ function cellAnswer(goldCase: GrammarCase, question: Question): string {
  * Gold's answers to one jev request of a case. A question gold says
  * nothing about answers Unresolved; a speculative one is then not read.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function goldAnswers(
 	goldCase: GrammarCase,
 	questions: Questions,

@@ -81,6 +81,7 @@ async function ensureInflectionalFeatures(
 	}
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 	let lemma = await ctx.db
 		.query("lemmas")

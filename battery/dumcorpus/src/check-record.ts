@@ -147,6 +147,7 @@ export function uncitedIssue(
  * structural aspect its route requests. A reviewed layer must pass; a Draft
  * layer may fail or be missing.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	const { found, issue } = issueCollector(id);
 	const language = specRecordIdPattern.exec(id)?.[1] as
@@ -365,6 +366,7 @@ export function checkTargets(
  * coverage when they pass, and whether its Knowledge is valid and covers
  * every structural aspect its route requests.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function checkTargetLayers(
 	target: TargetFile,
 	segmented: SegmentationTarget,

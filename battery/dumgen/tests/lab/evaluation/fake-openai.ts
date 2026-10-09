@@ -103,6 +103,7 @@ export function fakeOpenAI(
 		}
 		batch.status = dropped ? "expired" : "completed";
 	};
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	const batchFetch: BatchFetch = async (url, init) => {
 		if (init.signal.aborted) throw Error("aborted");
 		const path = new URL(url).pathname.replace(/^\/v1/u, "");

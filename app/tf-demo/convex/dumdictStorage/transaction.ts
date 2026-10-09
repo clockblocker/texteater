@@ -416,6 +416,7 @@ function readingEntryRecord(entry: GermanReadingEntry): AnyRecord {
 	return base === undefined ? content : { ...content, knowledge: base };
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 async function applyChange(
 	ctx: MutationCtx,
 	change: PlannedChange,

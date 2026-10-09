@@ -344,6 +344,7 @@ const nameConnectors = new Set([
 	"vom",
 ]);
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function pairCandidatesOf(
 	sentence: Sentence,
 	inventory: GermanInventory,

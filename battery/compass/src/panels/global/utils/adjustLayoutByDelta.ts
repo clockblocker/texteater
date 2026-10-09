@@ -7,6 +7,7 @@ import { layoutNumbersEqual } from "../utils/layoutNumbersEqual";
 import { validateRegionSize } from "../utils/validateRegionSize";
 
 // All units must be in percentages; pixel values should be pre-converted
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function adjustLayoutByDelta({
 	delta,
 	initialLayout: initialLayoutProp,

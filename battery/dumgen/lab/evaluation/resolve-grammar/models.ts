@@ -641,6 +641,7 @@ export class CachedModels<Case> {
 
 	/** jev for one attempt at `goldCase`, at `repetition`. */
 	jev(goldCase: Case, repetition: number): JevAsk {
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		return async (request: JevRequest, context) => {
 			const body = {
 				model: request.model,
@@ -742,6 +743,7 @@ export class CachedModels<Case> {
 
 	/** Luna for one attempt at `goldCase`, at `repetition`. */
 	luna(goldCase: Case, repetition: number): LunaAsk {
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		return async (request: LunaRequest, context) => {
 			const keyOf = (at: number) =>
 				sha256({ ...request, repetition: at });

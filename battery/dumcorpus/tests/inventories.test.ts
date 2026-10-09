@@ -155,6 +155,7 @@ const optionalAspects = new Set(["locutionType"]);
  * an optional one may be ReviewedEmpty instead, and each semantic relation
  * is Authored with claims or ReviewedEmpty.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function incompleteKnowledge(member: AuthoredMember): string[] {
 	const { language, family, kind } = member.lemma;
 	const selected = selectKnowledge({

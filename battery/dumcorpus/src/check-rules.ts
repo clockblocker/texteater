@@ -19,6 +19,7 @@ export interface RuleIssue {
  * routes in that language, and ADRs and showing records that exist.
  * A `longStatement` reason must be given and must be needed.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function checkRules(
 	rules: readonly Rule[],
 	context: { adrs: AdrIds; recordIds: readonly SpecRecordId[] },

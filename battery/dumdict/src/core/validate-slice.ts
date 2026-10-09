@@ -126,6 +126,7 @@ function validatePendingRecord<L extends Dumling.Language>(
 	assertPendingSemanticRelationRecordIdentity(parsedRecord);
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function validateRelationInventory<L extends Dumling.Language>(
 	expected: L,
 	lemmas: LemmaRecord<L>[],

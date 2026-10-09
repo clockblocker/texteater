@@ -1158,6 +1158,7 @@ describe("compileZodValidationArtifacts", () => {
 				?.discriminator;
 		if (discriminatorSignature === undefined)
 			throw new Error("missing discriminator signature");
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		const discriminatorOperation = (value: unknown) => {
 			if (
 				value === null ||

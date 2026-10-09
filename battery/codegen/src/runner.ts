@@ -186,6 +186,7 @@ export async function runCodegen<I extends Inputs, O extends Outputs, Metadata>(
 	return runCodegenWithFileSystem(recipe, options, nodeFileSystem);
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export async function runCodegenWithFileSystem<
 	I extends Inputs,
 	O extends Outputs,
@@ -621,6 +622,7 @@ function validateArtifactManifestCollisions(
 	}
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 async function inspectFileSystem<Metadata>(
 	artifacts: readonly PlannedArtifact<string, Metadata>[],
 	outputs: ReadonlyMap<string, OutputContext>,

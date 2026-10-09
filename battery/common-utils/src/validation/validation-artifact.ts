@@ -683,6 +683,7 @@ function parseUnion(
 	);
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function parsePipe(
 	constraint: Extract<Constraint, readonly ["pipe", unknown, unknown]>,
 	input: unknown,

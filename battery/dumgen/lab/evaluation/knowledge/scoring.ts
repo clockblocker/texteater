@@ -276,6 +276,7 @@ const textOf = (value: unknown): string | undefined =>
 			: undefined;
 
 /** Scores one attempt against its case's gold Knowledge, aspect by aspect. */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function evaluateKnowledge(
 	goldCase: KnowledgeCase,
 	request: Dumrel.KnowledgeRequestMask,

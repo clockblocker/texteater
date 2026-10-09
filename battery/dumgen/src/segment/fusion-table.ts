@@ -101,6 +101,7 @@ function surfaces(surface: string | readonly string[]): readonly string[] {
 }
 
 /** Every table invariant a reviewer would otherwise check by eye. */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function validateFusionTable(table: FusionTable): void {
 	const seen = new Set<string>();
 	for (const entry of table.fusions) {

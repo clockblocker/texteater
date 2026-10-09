@@ -384,6 +384,7 @@ export function knowledgeExperiment(setName: KnowledgeSetName) {
 				setName,
 				args.concurrency ?? 12,
 			),
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		async evaluate(
 			args: KnowledgeEvaluateArgs,
 		): Promise<KnowledgeEvaluated> {

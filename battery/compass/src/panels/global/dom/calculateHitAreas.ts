@@ -31,6 +31,7 @@ export type HitArea = {
  *
  * This method determines bounding rects of all regions for the particular split.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function calculateHitAreas(split: RegisteredSplit) {
 	const { element: splitElement, orientation, regions, handles } = split;
 	const rightToLeft =

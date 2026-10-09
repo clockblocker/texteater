@@ -36,6 +36,7 @@ export type ValidationIssue =
  * text the Segments must spell exactly, whitespace and punctuation
  * included.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function validateUnits(
 	input: SegmentInUnitsInput,
 	output: SegmentInUnitsOutput,

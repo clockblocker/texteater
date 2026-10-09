@@ -186,6 +186,7 @@ function structuralEmitter(
 		outermost = Math.min(enclosing, outermost);
 		return text;
 	};
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	const emit = (node: Constraint): string => {
 		switch (node[0]) {
 			case "ref":

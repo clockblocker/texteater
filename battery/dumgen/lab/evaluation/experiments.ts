@@ -770,6 +770,7 @@ function resolveGrammarEntry(set: "dev" | "heldout", e2e: boolean): Experiment {
 						}),
 				}
 			: {}),
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		async evaluate(args) {
 			const evaluated = await experiment.evaluate({
 				experimentId: args.experimentId,
@@ -828,6 +829,7 @@ function resolveReadingEntry(set: "dev" | "heldout"): Experiment {
 					: {}),
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
 			}),
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		async evaluate(args) {
 			const evaluated = await experiment.evaluate({
 				experimentId: args.experimentId,
@@ -884,6 +886,7 @@ function knowledgeEntry(set: "dev" | "heldout" | "spot-check"): Experiment {
 					: {}),
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
 			}),
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		async evaluate(args) {
 			const evaluated = await experiment.evaluate({
 				experimentId: args.experimentId,

@@ -208,6 +208,7 @@ function membershipMiss(
 	return "crossed";
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function add(tally: Tally, labCase: LabCase, score: CaseScore): void {
 	const { evaluation } = score;
 	if (!evaluation) {
@@ -515,6 +516,7 @@ export function primaryOf(run: LabRun): string {
 	return policiesOf(run)[0] ?? "";
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function summarizePolicy(
 	run: LabRun,
 	cases: ReadonlyMap<string, LabCase>,
@@ -795,6 +797,7 @@ export function breakdown(
 		if (!labCase) continue;
 		for (const repetition of caseRun.repetitions) {
 			const { evaluation } = scoreCase(labCase, repetition, policy);
+			// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 			labCase.idealOutput.units.forEach((unit, index) => {
 				const check = evaluation?.units[index];
 				if (evaluation && check?.verdict === "Stub") return;
@@ -896,6 +899,7 @@ function calibrate(
  * calibration: each link whose truth the gold decides (both pieces in one
  * gold unit, or one piece in a gold unit and the other outside it).
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function calibration(
 	run: LabRun,
 	cases: ReadonlyMap<string, LabCase>,
@@ -988,6 +992,7 @@ export type Confusion = {
  * returned (a borderline unit's variants joined by `|`), each marked with
  * what makes it acceptable.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function confusions(
 	run: LabRun,
 	cases: ReadonlyMap<string, LabCase>,
@@ -1047,6 +1052,7 @@ const lassenForms = new Set([
  * Phenomenon tags of a gold unit, from its route and its pieces' spellings:
  * what kind of grouping or routing it asks for.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export const byPhenomenon = (labCase: LabCase, unit: Unit): string[] => {
 	const route = keyOf(unit.route);
 	const texts = unit.segments.map(

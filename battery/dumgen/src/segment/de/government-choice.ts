@@ -206,6 +206,7 @@ function literalFlags(
 }
 
 /** The prepositions code asks about, one flag each, over a membership the code rules applied to. */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function flaggedPrepositions(
 	nomination: Nomination,
 	membership: Membership,
@@ -518,6 +519,7 @@ const pairKey = (a: number, b: number) => `${Math.min(a, b)},${Math.max(a, b)}`;
  * pieces they absorbed. A unit no expression link holds any longer is a
  * Lexeme.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function withGovernmentChoice(
 	nomination: Nomination,
 	membership: Membership,

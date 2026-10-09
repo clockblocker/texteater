@@ -140,6 +140,7 @@ function importedSpecifiers(source: string): string[] {
 		tsx: false,
 	});
 	const specifiers = new Set<string>();
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	const visit = (value: unknown): void => {
 		if (value === null || typeof value !== "object") return;
 		if (Array.isArray(value)) {
@@ -219,6 +220,7 @@ function importedSpecifiers(source: string): string[] {
 	return [...specifiers].sort();
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export async function auditDumDeclarationReachability(
 	options: DumDeclarationReachabilityOptions,
 ): Promise<DumDeclarationReachabilityIssue[]> {

@@ -62,6 +62,7 @@ const pronounUses: Readonly<Record<string, string>> = {
 		"the quantity word 'a bit, a little' in every use: before a noun (ein bisschen Brot, kein bisschen Zeit), alone (Iss noch ein bisschen) or grading a word (ein bisschen kalt, wartet bisschen länger)",
 };
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function identityIndex(): Map<string, IdentityCandidate[]> {
 	const map = new Map<string, Map<string, IdentityCandidate>>();
 	for (const realization of authoredRealizations) {

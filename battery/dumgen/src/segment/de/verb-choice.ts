@@ -177,6 +177,7 @@ const participleShape =
 	/^(\p{Ll}*ge\p{Ll}{2,}(t|en|n)|(be|ver|er|ent|zer|emp|miss|über|unter|hinter|wider|voll|durch)\p{Ll}{2,}(t|en|n)|\p{Ll}+iert)$/u;
 
 /** The satellites whose slot named a host, one flag each, from the nomination alone. */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function flaggedVerbs(nomination: Nomination): VerbFlag[] {
 	lassenForms ??= auxiliaryForms("lassen");
 	bekommenForms ??= auxiliaryForms("bekommen");
@@ -396,6 +397,7 @@ function clauseSich(nomination: Nomination, id: number): number | undefined {
 }
 
 /** What one answered flag does under the floor. */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function actionOf(
 	nomination: Nomination,
 	flag: VerbFlag,

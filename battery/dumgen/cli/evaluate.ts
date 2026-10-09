@@ -100,6 +100,7 @@ import type { JevAsk } from "../src/segment/jev.js";
 
 const packageRoot = resolve(import.meta.dir, "..");
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export async function runEvaluationCli(
 	argv: string[],
 	dependencies: {

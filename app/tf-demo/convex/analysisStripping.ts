@@ -243,6 +243,7 @@ export const clearReadingDataBatch = internalMutation({
 		hasMore: v.boolean(),
 		nextCursor: v.union(v.null(), readingCleanupCursorValidator),
 	}),
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	handler: async (ctx, { readingKeys, cursor: cursorValue }) => {
 		let cursor: ReadingCleanupCursor =
 			cursorValue ?? cleanupStart(READING_CLEANUP_PHASES);
@@ -366,6 +367,7 @@ export const clearLemmaDataBatch = internalMutation({
 		hasMore: v.boolean(),
 		nextCursor: v.union(v.null(), lemmaCleanupCursorValidator),
 	}),
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	handler: async (ctx, { lemmaIds, cursor: cursorValue }) => {
 		let cursor: LemmaCleanupCursor =
 			cursorValue ?? cleanupStart(LEMMA_CLEANUP_PHASES);

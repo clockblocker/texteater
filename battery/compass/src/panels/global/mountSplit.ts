@@ -43,6 +43,7 @@ export function mountSplit(split: RegisteredSplit) {
 
 	// Add Regions with onResize callbacks to ResizeObserver
 	// Add Split to ResizeObserver also in order to sync % based constraints
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	const resizeObserver = new ResizeObserver((entries) => {
 		for (const entry of entries) {
 			const { borderBoxSize, target } = entry;

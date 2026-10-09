@@ -112,6 +112,7 @@ function keptApart(
  * possibly fixed word, between pieces of two units, neither a Saying, holding a bound piece, nor
  * one word the Rules keep apart.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function mergeCandidates(
 	nomination: Nomination,
 	membership: Pick<Membership, "partition" | "edges">,
