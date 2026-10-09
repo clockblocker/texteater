@@ -121,7 +121,7 @@ export const operationTable = [
 		implementation: isMixedGender,
 		error: mixedGenderError,
 		name: "dumling.de-noun.mixed-gender",
-		version: 1,
+		version: 2,
 	},
 	{
 		construct: "custom",

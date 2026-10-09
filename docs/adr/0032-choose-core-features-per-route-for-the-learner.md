@@ -138,8 +138,8 @@ tell them apart.
   marks the gender its singular Surface shows
   ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)).
   A noun that takes more than one gender in the same sense names them as a
-  `mixed` value, two or more distinct genders in the order `Masc`, `Fem`,
-  `Neut`: *Balg* in the child sense, which Duden gives as "der oder das", is
+  `mixed` value, two or more distinct genders in catalog order (`Fem`,
+  `Masc`, `Neut`), as in every value set: *Balg* in the child sense, which Duden gives as "der oder das", is
   `{ mixed: ["Masc", "Neut"] }`, and *Cola* is `{ mixed: ["Fem", "Neut"] }`.
   The tag says the genders vary freely within one sense, and the learner
   sees both articles. A gender that changes the meaning makes separate
@@ -189,8 +189,8 @@ is reached only when both ends mark every varied feature, and a plural cell's
 unmarked gender counts as marked. Navigation compares Core values literally,
 so every Core value is spelled one way. A value set, as in a Hebrew noun's
 gender, lists two or more distinct values in catalog order, and a German noun
-in free gender variation names its genders as one `mixed` value in the order
-Masc, Fem, Neut. Navigation never reaches a Syncretism (ADR 0046).
+in free gender variation names its genders as one `mixed` value in the same
+order. Navigation never reaches a Syncretism (ADR 0046).
 
 ## Considered Options
 

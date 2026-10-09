@@ -586,7 +586,7 @@ const nouns: Rule[] = [
 	{
 		id: "de/noun-gender-in-free-variation",
 		statement:
-			"A noun the dictionary gives more than one gender in the same sense has a mixed Core gender naming them in the order Masc, Fem, Neut: Balg in the child sense, Duden der oder das, is mixed Masc and Neut, and Cola, das oder die, mixed Fem and Neut. Its article agrees with any of them, so das Balg and der Balg both attest it and die Balg fails. A gender that changes the meaning makes separate Lemmas, each with one gender: der See (lake) and die See (sea), der and das Band. Where the dictionary gives the senses apart, each sense takes its own: der Balg (skin) is Masc.",
+			"A noun the dictionary gives more than one gender in the same sense has a mixed Core gender naming them in catalog order, Fem, Masc, Neut: Balg in the child sense, Duden der oder das, is mixed Masc and Neut, and Cola, das oder die, mixed Fem and Neut. Its article agrees with any of them, so das Balg and der Balg both attest it and die Balg fails. A gender that changes the meaning makes separate Lemmas, each with one gender: der See (lake) and die See (sea), der and das Band. Where the dictionary gives the senses apart, each sense takes its own: der Balg (skin) is Masc.",
 		adrs: ["ADR-0002", "ADR-0032", "ADR-0040"],
 		routes: lexeme("NOUN"),
 		records: [

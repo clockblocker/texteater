@@ -219,30 +219,19 @@ export function featureValueSetError(): string {
 }
 
 /**
- * The canonical order of a German noun's `mixed` Core gender (system ADR
- * 0032): its members are listed in this order, so one mix has one spelling
- * and Core values still compare literally.
- */
-const mixedGenderOrder = ["Masc", "Fem", "Neut"] as const;
-/**
- * A `mixed` gender names two or more distinct genders, each after the one
- * before it in canonical order: `{ mixed: ["Masc", "Neut"] }` (der or das
- * Balg), never `["Neut", "Masc"]` or a one-member mix.
+ * A `mixed` gender names two or more distinct genders in catalog order, as
+ * every feature value set does (system ADR 0032): `{ mixed: ["Masc", "Neut"] }`
+ * (der or das Balg), never `["Neut", "Masc"]` or a one-member mix.
  */
 export function isMixedGender({
 	mixed,
 }: {
 	mixed: readonly string[];
 }): boolean {
-	const order: readonly string[] = mixedGenderOrder;
-	const ranks = mixed.map((gender) => order.indexOf(gender));
-	return (
-		ranks.length >= 2 &&
-		ranks.every((rank, index) => rank > (ranks[index - 1] ?? -1))
-	);
+	return isFeatureValueSet(mixed);
 }
 export function mixedGenderError(): string {
-	return "A mixed gender names two or more distinct genders in the order Masc, Fem, Neut";
+	return "A mixed gender names two or more distinct genders in catalog order";
 }
 
 /**

@@ -11,7 +11,7 @@ const isGender = (value: unknown): value is GrammaticalGender =>
 
 /**
  * The genders a noun's or pronoun's Core names: one, each member of a
- * `mixed` gender in its canonical order (der oder das Balg is Masc, Neut),
+ * `mixed` gender in its catalog order (der oder das Balg is Masc, Neut),
  * or none. Agreement supplies none.
  */
 export function coreGenders(

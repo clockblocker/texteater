@@ -476,12 +476,13 @@ describe("compiled unit interface", () => {
 			"Masc",
 			{ mixed: ["Masc", "Neut"] },
 			{ mixed: ["Fem", "Neut"] },
-			{ mixed: ["Masc", "Fem", "Neut"] },
+			{ mixed: ["Fem", "Masc", "Neut"] },
 		])
 			expect(accepts(gender)).toBe(true);
 		for (const gender of [
-			// One mix has one spelling: canonical order Masc, Fem, Neut.
+			// One mix has one spelling: catalog order, as in a value set.
 			{ mixed: ["Neut", "Masc"] },
+			{ mixed: ["Masc", "Fem", "Neut"] },
 			{ mixed: ["Masc", "Masc"] },
 			// A one-member mix is a plain gender.
 			{ mixed: ["Masc"] },

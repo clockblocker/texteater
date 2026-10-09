@@ -17,7 +17,7 @@ const gender = DE_FEATURE_SCHEMA.gender;
  * one in the same sense, *der oder das Balg* (system ADR 0032). The tag says
  * the genders vary freely within one sense; a gender that changes the meaning
  * (der/die See) makes separate Lemmas. The members are distinct and in
- * canonical order, so one mix has one spelling.
+ * catalog order, as in every feature value set, so one mix has one spelling.
  */
 const DeNounGenderSchema = z.union([
 	gender,
