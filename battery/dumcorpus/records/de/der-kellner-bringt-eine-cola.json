@@ -21,13 +21,17 @@
 			{
 				"rule": "de/funktionsverbgefuege-are-collocations",
 				"hash": "57f04b272a0e9aeb"
+			},
+			{
+				"rule": "de/noun-gender-in-free-variation",
+				"hash": "84b4f9bdbf775c87"
 			}
 		],
 		"references": [
 			{
 				"title": "Duden: Cola",
 				"url": "https://www.duden.de/rechtschreibung/Cola",
-				"supports": "Target 1 Knowledge: Plural die Colas ⟨aber: 5 Cola⟩ (measure construction, not a plural)"
+				"supports": "Target 1 Attestation: Cola, das oder die, so its gender is mixed Fem and Neut. Target 1 Knowledge: Plural die Colas ⟨aber: 5 Cola⟩ (measure construction, not a plural)"
 			},
 			{
 				"title": "DWDS: Cola",
@@ -42,7 +46,7 @@
 			{
 				"title": "Duden: Coca-Cola",
 				"url": "https://www.duden.de/rechtschreibung/Coca_Cola",
-				"supports": "Target 1 Knowledge: brand noun 'koffeinhaltiges Erfrischungsgetränk', das oder die"
+				"supports": "Target 1 Knowledge: brand noun 'koffeinhaltiges Erfrischungsgetränk', das oder die, so the nearSynonym Coca-Cola's gender is mixed Fem and Neut"
 			}
 		]
 	},
@@ -110,7 +114,7 @@
 								"kind": "NOUN",
 								"canonicalForm": "Coca-Cola",
 								"coreFeatures": {
-									"gender": "Fem"
+									"gender": { "mixed": ["Fem", "Neut"] }
 								}
 							}
 						],
@@ -142,7 +146,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Cola is the free object, a NOUN that owns its article eine."
+				"rationale": "Cola is the free object, a NOUN that owns its article eine. Duden gives Cola das oder die in one sense, so its gender is mixed Fem and Neut, and eine agrees with Fem (de/noun-gender-in-free-variation, #1036)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -155,7 +159,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Cola",
-						"coreFeatures": { "gender": "Fem" }
+						"coreFeatures": {
+							"gender": { "mixed": ["Fem", "Neut"] }
+						}
 					},
 					"normalizedSurface": "Cola",
 					"spelling": { "kind": "Canonical" },

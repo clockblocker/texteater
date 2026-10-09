@@ -28,7 +28,7 @@ const standard = (attested: string): Member => ({
 const germanNoun = (
 	canonicalForm: string,
 	normalizedSurface: string,
-	gender: string | null,
+	gender: unknown,
 	inflectionalFeatures: Record<string, unknown>,
 ) => ({
 	unitKind: "Surface",
@@ -161,6 +161,44 @@ test("a genderless noun's article agrees with the gender its Surface shows", () 
 	expect(
 		issues(owning(verletzter, [standard("Ein"), standard("Verletzter")])),
 	).toEqual([]);
+});
+
+test("a noun in free gender variation agrees with an article of any of its genders", () => {
+	// Balg in the child sense is der oder das (Rule
+	// de/noun-gender-in-free-variation).
+	const balg = germanNoun(
+		"Balg",
+		"Balg",
+		{ mixed: ["Masc", "Neut"] },
+		{ case: "Nom", number: "Sing" },
+	);
+	for (const article of ["das", "der", "ein"])
+		expect(
+			issues(owning(balg, [standard(article), standard("Balg")])),
+		).toEqual([]);
+	expect(issues(owning(balg, [standard("die"), standard("Balg")]))).toEqual([
+		"die names no cell of der or ein for Nom.Masc|Neut.Sing",
+	]);
+	// Its article derives to the cell of the gender it shows.
+	expect(
+		germanArticleCell(standard("das"), {
+			case: "Nom",
+			number: "Sing",
+			gender: ["Masc", "Neut"],
+		})?.lemma.coreFeatures,
+	).toMatchObject({ case: "Nom", gender: "Neut", number: "Sing" });
+	const cola = germanNoun(
+		"Cola",
+		"Cola",
+		{ mixed: ["Fem", "Neut"] },
+		{ case: "Acc", number: "Sing" },
+	);
+	expect(issues(owning(cola, [standard("eine"), standard("Cola")]))).toEqual(
+		[],
+	);
+	expect(issues(owning(cola, [standard("einen"), standard("Cola")]))).toEqual(
+		["einen names no cell of der or ein for Acc.Fem|Neut.Sing"],
+	);
 });
 
 test("any Head that stands in for an elided noun owns its article", () => {

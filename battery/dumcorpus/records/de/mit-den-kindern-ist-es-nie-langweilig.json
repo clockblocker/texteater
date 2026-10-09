@@ -34,6 +34,10 @@
 			{
 				"rule": "de/relations-need-a-dictionary",
 				"hash": "a45d1c0592489d6d"
+			},
+			{
+				"rule": "de/noun-gender-in-free-variation",
+				"hash": "84b4f9bdbf775c87"
 			}
 		],
 		"references": [
@@ -46,6 +50,16 @@
 				"title": "Duden Synonyme: Kind",
 				"url": "https://www.duden.de/synonyme/Kind",
 				"supports": "Target 0 Knowledge: the child group Kleiner, Kleine, Knirps, Knopf, Bengel, Fratz, Blag, Balg, … Göre, apart from the baby and offspring groups"
+			},
+			{
+				"title": "Duden: Balg (Kind)",
+				"url": "https://www.duden.de/rechtschreibung/Balg_Kind",
+				"supports": "Target 0 Knowledge: the nearSynonym Balg's gender: Balg, der oder das; umgangssprachlich, meist abwertend"
+			},
+			{
+				"title": "DWDS: Balg",
+				"url": "https://www.dwds.de/wb/Balg",
+				"supports": "Target 0 Knowledge: Balg, der, das (plural Bälger, salopp, abwertend) is the child sense, an entry apart from Balg, der (plural Bälge), the animal skin and bellows"
 			},
 			{
 				"title": "OpenThesaurus: Kind",
@@ -83,7 +97,7 @@
 								"kind": "NOUN",
 								"canonicalForm": "Balg",
 								"coreFeatures": {
-									"gender": "Masc"
+									"gender": { "mixed": ["Masc", "Neut"] }
 								}
 							}
 						]
@@ -103,7 +117,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Kindern is a dative plural noun with plural -n; the surface features carry both case and number. Knowledge (#884): the Reading is a child by age; Knirps stays off as an OpenThesaurus Unterbegriff, Sprössling as the offspring sense, Erwachsene as only a definition's negation; decided by agents under the user's delegation. Göre stays off too: like Knirps it sits in an OpenThesaurus Unterbegriff group (user ruling on #884, 2026-10-03)."
+				"rationale": "Kindern is a dative plural noun with plural -n; the surface features carry both case and number. Knowledge (#884): the Reading is a child by age; Knirps stays off as an OpenThesaurus Unterbegriff, Sprössling as the offspring sense, Erwachsene as only a definition's negation; decided by agents under the user's delegation. Göre stays off too: like Knirps it sits in an OpenThesaurus Unterbegriff group (user ruling on #884, 2026-10-03). The nearSynonym Balg is the child sense, which Duden gives as der oder das and DWDS as Balg, der, das, so its gender is mixed Masc and Neut (de/noun-gender-in-free-variation, #1036); der Balg, the skin, is another Lemma."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

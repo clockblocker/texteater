@@ -17,12 +17,14 @@ export type ArticleMember = {
 
 /**
  * The Head's coordinates its article agrees with. A null coordinate is one
- * the Head does not mark, and any cell matches it.
+ * the Head does not mark, and any cell matches it. A noun in free gender
+ * variation lists its genders, and a cell of any of them agrees: `das` and
+ * `der` both agree with *Balg*, Masc and Neut, and `die` does not.
  */
 export type ArticleAgreement = {
 	readonly case: string | null;
 	readonly number: string | null;
-	readonly gender: string | null;
+	readonly gender: string | readonly string[] | null;
 };
 
 /**
@@ -87,7 +89,9 @@ export function germanArticleCell(
 			(head.number === null || core.number === head.number) &&
 			(head.gender === null ||
 				core.number === "Plur" ||
-				core.gender === head.gender)
+				(typeof head.gender === "string"
+					? core.gender === head.gender
+					: head.gender.some((gender) => core.gender === gender)))
 		);
 	});
 }

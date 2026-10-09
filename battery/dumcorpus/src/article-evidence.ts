@@ -19,7 +19,8 @@ type ArticleEvidence =
  * The case, number and gender a Head shows, whether its Surface or its Core
  * marks them: a noun's or name's gender is its Lemma's, or its singular
  * Surface's when the Lemma has none (`der Reisende`, `der junge
- * Schwarzkopf`). Plural agreement has no gender.
+ * Schwarzkopf`). A noun in free gender variation shows each gender of its
+ * `mixed` value (der or das Balg). Plural agreement has no gender.
  */
 export function headAgreement(surface: Dumling.Surface): ArticleAgreement {
 	const core: Readonly<Record<string, unknown>> = surface.lemma.coreFeatures;
@@ -35,8 +36,20 @@ export function headAgreement(surface: Dumling.Surface): ArticleAgreement {
 	return {
 		case: coordinate("case"),
 		number,
-		gender: number === "Plur" ? null : coordinate("gender"),
+		gender:
+			number === "Plur" ? null : genderShown(bag.gender ?? core.gender),
 	};
+}
+
+function genderShown(value: unknown): string | readonly string[] | null {
+	if (typeof value === "string") return value;
+	if (typeof value !== "object" || value === null || !("mixed" in value))
+		return null;
+	const { mixed } = value;
+	return Array.isArray(mixed) &&
+		mixed.every((gender) => typeof gender === "string")
+		? mixed
+		: null;
 }
 
 /**
