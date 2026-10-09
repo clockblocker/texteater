@@ -62,12 +62,14 @@ import { referenceArm } from "../segmentation/de/arms/reference.js";
 import {
 	currentSetSize,
 	type LabCase,
+	type LabSet,
 	loadSet,
 	type SetName,
 	trackedSetsRoot,
 } from "../segmentation/harness/corpus.js";
 import {
 	type CallRecord,
+	hashOf,
 	JevCache,
 	type TransportRecord,
 } from "../segmentation/harness/jev-cache.js";
@@ -224,6 +226,11 @@ export type EvaluateArgs = {
 	readonly grammarCaps?: GrammarCaps;
 	/** resolve.grammar: only the first this many cases, for a smoke run. */
 	readonly limit?: number;
+	/**
+	 * segment.inUnits: only these cases of the set run (`--cases`), such as
+	 * those a request diff moved; the manifest names the list (`CaseList`).
+	 */
+	readonly caseIds?: readonly string[];
 	/** resolve.grammar, resolve.reading and knowledge.produce: a frozen subset's file; only its cases run. */
 	readonly grammarSubset?: string;
 	/** knowledge.produce: only the cases with gold Knowledge. */
@@ -257,6 +264,8 @@ type Evaluated = {
 	 */
 	readonly transport?: TransportRecord;
 	readonly set?: { readonly name: string; readonly hash: string };
+	/** segment.inUnits: the case list the run took, when it took one. */
+	readonly caseList?: CaseList;
 	/** resolve.grammar's projected spend. */
 	readonly price?: GrammarPrice;
 	/** resolve.grammar's spend, jev and Luna. */
@@ -359,6 +368,44 @@ const rawMode: Mode<typeof rawInputSchema, typeof rawOutputSchema> = {
 
 const idOf = (set: SetName, suffix: string) =>
 	`${segmentInUnitsRoute}:${set}${suffix}`;
+
+/** A run's case list: its ids in the set's order and the hash of the sorted ids. */
+type CaseList = { readonly hash: string; readonly ids: string[] };
+
+/**
+ * The cases a segment.inUnits run takes: the whole set, or the cases
+ * `caseIds` names, with `named`, their `CaseList` as the manifest's settings
+ * and the run's result keep it. An empty list, a repeated id or an id the
+ * set lacks throws.
+ */
+function selectCases(
+	set: LabSet,
+	caseIds: readonly string[] | undefined,
+): {
+	readonly cases: readonly LabCase[];
+	readonly named: { readonly caseList?: CaseList };
+} {
+	if (!caseIds) return { cases: set.cases, named: {} };
+	const wanted = new Set(caseIds);
+	if (wanted.size === 0) throw Error("The case list names no case");
+	if (wanted.size !== caseIds.length)
+		throw Error("The case list names a case twice");
+	const cases = set.cases.filter(({ id }) => wanted.has(id));
+	if (cases.length !== wanted.size) {
+		const present = new Set(cases.map(({ id }) => id));
+		const missing = caseIds.filter((id) => !present.has(id));
+		throw Error(
+			`The case list names cases set ${set.name}@${set.hash} lacks: ${missing.join(", ")}`,
+		);
+	}
+	const ids = cases.map(({ id }) => id);
+	return {
+		cases,
+		named: {
+			caseList: { hash: hashOf([...ids].sort()).slice(0, 16), ids },
+		},
+	};
+}
 
 /** Every case's every repetition through `operation`, `concurrency` at a time; failures are left for the run. */
 async function pass<I>(
@@ -548,7 +595,8 @@ function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 			);
 			const units = args.units ?? "production";
 			const operation = mode.run(units);
-			const cases = set.cases.map((labCase) => ({
+			const chosen = selectCases(set, args.caseIds);
+			const cases = chosen.cases.map((labCase) => ({
 				labCase,
 				...mode.caseOf(labCase),
 			}));
@@ -589,7 +637,8 @@ function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 				});
 				await pass(inputs, operation, projecting, concurrency, []);
 				projection = priceProjection(projecting.projection);
-				if (args.estimate) return { projection, set: identity };
+				if (args.estimate)
+					return { projection, set: identity, ...chosen.named };
 				await args.beforeLive?.(projection);
 			}
 			const jev = jevOf({ offline: args.offline ?? false });
@@ -629,6 +678,7 @@ function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 					units,
 					set: set.name,
 					setHash: set.hash,
+					...chosen.named,
 					offline: args.offline ?? false,
 					...args.settings,
 				},
@@ -636,12 +686,12 @@ function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 			const run = await runOperationExperiment({
 				experiment: {
 					corpus,
-					evaluation: corpus.select(set.cases.map(({ id }) => id)),
+					evaluation: corpus.select(chosen.cases.map(({ id }) => id)),
 					demonstrations: corpus.select([]),
 					run: traced(operation, jev, calls),
 					evaluator: mode.evaluator(
 						Object.fromEntries(
-							set.cases.map((labCase) => [
+							chosen.cases.map((labCase) => [
 								labCase.id,
 								labCase.facts,
 							]),
@@ -678,6 +728,7 @@ function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 				},
 				transport: jev.transport,
 				set: identity,
+				...chosen.named,
 			};
 		},
 	};

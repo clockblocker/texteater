@@ -278,11 +278,14 @@ test("a projecting client asks nothing and writes nothing, answering a miss from
 	).rejects.toThrow("cache miss");
 });
 
-test("the current round is 2026-10-02-5usd: 119,047,619 tokens, stopping at 104M, opened by fa59d50e's fill", async () => {
+test("the round book names a current round it holds, and 2026-10-02-5usd stays 119,047,619 tokens, stopping at 104M, opened by fa59d50e's fill", async () => {
 	const book = await readRounds(roundsPath(evidenceRoot));
+	// Opening a round moves `current`; only its shape is pinned.
 	const current = roundOf(book);
-	expect(current).toMatchObject({
-		id: "2026-10-02-5usd",
+	expect(current.stopLineTokens).toBeLessThanOrEqual(current.capTokens);
+	expect(current.pin.hash).toMatch(/^[0-9a-f]{64}$/u);
+	const first = roundOf(book, "2026-10-02-5usd");
+	expect(first).toMatchObject({
 		capTokens: 119_047_619,
 		stopLineTokens: 104_000_000,
 	});
@@ -299,9 +302,8 @@ test("the current round is 2026-10-02-5usd: 119,047,619 tokens, stopping at 104M
 			entries.filter(
 				(entry) => "runId" in entry && fill.includes(entry.runId),
 			),
-			current.id,
+			first.id,
 		).jevFreshInputTokens,
 	).toBe(6_890_292);
-	expect(current.pin.hash).toMatch(/^[0-9a-f]{64}$/u);
 	expect((await currentPin(repository)).inputs).toHaveProperty("inventories");
 });

@@ -140,6 +140,8 @@ bun run evaluate --experiment segment-in-units/de:dev:raw --estimate
 bun run evaluate --experiment split-text/de:ud-drafts --revision <rev>
 bun run evaluate --experiment segment-in-units/de:dev --revision <rev> --requests
 bun run evaluate --compare <beforeRequestRunId> <afterRequestRunId>
+bun run evaluate --experiment segment-in-units/de:dev --revision <rev> \
+  --cases <idsFile> | --cases-from <requestCompareJson>
 ```
 
 - **Gold mode** (`segment-in-units/de:dev`, `:heldout`): a case's gold
@@ -171,6 +173,16 @@ bun run evaluate --compare <beforeRequestRunId> <afterRequestRunId>
 - Every mode reports membership, multi-piece membership and hover B-cubed
   as the lab does, over the repetitions that ran. Each case runs three
   times, answered from the lab's cache by repetition.
+- **A case list** (`--cases <file>`, one case id per line, or
+  `--cases-from <file>`, the `--compare` report of two request runs saved
+  as JSON, whose `changed` cases it takes) runs a segment.inUnits
+  experiment, gold or raw, on those cases of the current set alone. A
+  case the set lacks fails the run. The manifest's settings keep the list
+  as `caseList` (its ids and the hash of the sorted ids), and the ledger
+  line keeps the hash as `caseList` and the count as `cases`. A round
+  that measures a change runs its baseline and the change on the cases
+  the request diff moved: every other case sends the same requests, so
+  its outcomes can't move.
 - A segment.inUnits run writes a ledger line (`command: "evaluate"`) and
   counts against the round like a lab run: `--estimate`, the stop line, the
   projection and the pin all apply. A live run fills the cache
@@ -209,6 +221,9 @@ The main session grants jev spend per experiment round, in fresh input
 tokens. `evidence/segment-in-units-lab/rounds.json` holds the rounds and
 names the current one; `round` prints what it has spent and has left.
 
+- `round --open` takes the grant in tokens. Its `--note` states tokens
+  too, never dollars: the lab tracks tokens only, and a test rejects a
+  dollar amount in committed evidence.
 - Every ledger line names its `round`. A round's spend sums its own lines
   only, never the whole ledger. Lines written before rounds have none; the
   fill of fa59d50e was tagged with `2026-10-02-5usd`, which it opened.

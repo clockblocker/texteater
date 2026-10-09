@@ -1,5 +1,5 @@
 import { afterAll, expect, test } from "bun:test";
-import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { isRecord } from "common-utils";
@@ -481,4 +481,87 @@ test("a request run asks nothing, answers from the lab's cache, and --compare na
 			"--requests",
 		]),
 	).rejects.toThrow("has no request diff");
+});
+
+test("--cases runs gold mode on a case list, and the manifest and ledger line name the list", async () => {
+	const pin = await currentPin(repository);
+	const labRoot = join(directory, "cases");
+	const setsRoot = join(labRoot, "sets");
+	// Three cases, told apart by their last mark.
+	const marks = { "de/a": ".", "de/b": "!", "de/c": "?" };
+	await storeSet(setsRoot, {
+		...set,
+		cases: Object.entries(marks).map(([id, mark]) => ({
+			...labCase,
+			id,
+			record: id,
+			input: {
+				...input,
+				segments: [...input.segments.slice(0, -1), ...segmentsOf(mark)],
+			},
+		})),
+	});
+	const evidenceRoot = await evidenceWith("cases-evidence", roundOn(pin));
+	const { jev } = goldJudge();
+	const cli = (argv: string[]) =>
+		runEvaluationCli(
+			[
+				"--experiment",
+				"segment-in-units/de:dev",
+				"--revision",
+				"test",
+				"--output",
+				join(directory, "runs"),
+				...argv,
+			],
+			{
+				jev,
+				labRoot,
+				setsRoot,
+				evidenceRoot,
+				repository,
+				write: () => {},
+				warn: () => {},
+			},
+		);
+	const listed = join(directory, "cases.txt");
+	await writeFile(listed, "de/c\n\nde/a\n");
+
+	const run = await cli(["--cases", listed]);
+	if (!("manifest" in run)) throw Error("Expected an evaluation run");
+	expect(run.cases.map(({ caseId }) => caseId)).toEqual(["de/a", "de/c"]);
+	const { caseList } = run.manifest.configurations.judgment.settings ?? {};
+	expect(caseList).toEqual({
+		hash: expect.stringMatching(/^[0-9a-f]{16}$/u),
+		ids: ["de/a", "de/c"],
+	});
+	const hash = isRecord(caseList) ? caseList.hash : undefined;
+	const [line] = await readLedger(join(evidenceRoot, "ledger.jsonl"));
+	expect(line).toMatchObject({ caseList: hash, cases: 2 });
+
+	// A saved request diff report names the same list by its changed cases.
+	const report = join(directory, "compare.json");
+	await writeFile(
+		report,
+		JSON.stringify({ changed: [{ caseId: "de/a" }, { caseId: "de/c" }] }),
+	);
+	const fromReport = await cli(["--cases-from", report, "--offline"]);
+	if (!("manifest" in fromReport)) throw Error("Expected an evaluation run");
+	expect(fromReport.manifest.configurations.judgment.settings).toMatchObject({
+		caseList: { hash },
+	});
+
+	await writeFile(listed, "de/a\nde/missing\n");
+	await expect(cli(["--cases", listed, "--offline"])).rejects.toThrow(
+		"lacks: de/missing",
+	);
+	await expect(
+		runEvaluationCli([
+			"--experiment",
+			"resolve-grammar/de:dev",
+			"--estimate",
+			"--cases",
+			report,
+		]),
+	).rejects.toThrow("take a segment.inUnits run");
 });

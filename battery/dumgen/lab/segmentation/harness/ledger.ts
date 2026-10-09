@@ -57,6 +57,8 @@ export type SpendEntry = Spend & {
 	readonly set?: string;
 	readonly setHash?: string;
 	readonly subset?: string;
+	/** `evaluate --cases`: the hash of the case list the run took (`CaseList`). */
+	readonly caseList?: string;
 	readonly cases?: number;
 	readonly repetitions?: number;
 	readonly gitHead: string;
@@ -123,6 +125,7 @@ const spendEntrySchema = z.object({
 	set: z.string().optional(),
 	setHash: z.string().optional(),
 	subset: z.string().optional(),
+	caseList: z.string().optional(),
 	cases: z.number().optional(),
 	repetitions: z.number().optional(),
 	gitHead: z.string(),

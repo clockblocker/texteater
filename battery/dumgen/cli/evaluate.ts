@@ -7,6 +7,8 @@
  *       [--offline] [--units production|reference] [--parity <labRunId>[:policy]]
  *   bun run evaluate --experiment segment-in-units/de:heldout:raw --revision <rev>
  *   bun run evaluate --experiment segment-in-units/de:dev:raw --estimate
+ *   bun run evaluate --experiment segment-in-units/de:dev --revision <rev>
+ *       --cases <ids file> | --cases-from <request compare report>
  *   bun run evaluate --experiment split-text/de:ud-drafts --revision <rev>
  *   bun run evaluate --experiment resolve-grammar/de:dev --estimate
  *   bun run evaluate --experiment resolve-grammar/de:dev --revision <rev>
@@ -47,6 +49,12 @@
  * the command exits 1 when any does. To compare two commits, run it in a
  * checkout of each.
  *
+ * `--cases` runs a segment.inUnits experiment on the cases a file names, one
+ * id per line; `--cases-from` on the `changed` cases of a saved request diff
+ * report (`--compare`'s output). The manifest names the list and its hash,
+ * and the ledger line its hash, so a round can run only the cases a change
+ * moves.
+ *
  * A segment.inUnits run counts against the lab's current round: it writes a
  * line to the lab ledger, refuses to go live when dumcorpus's prompt inputs
  * moved since the round was pinned (unless `--repin`) or when its projected
@@ -74,7 +82,7 @@
  * `--luna-prompt-cache` asks Luna for explicit prompt caching. Production
  * clicks stay synchronous.
  */
-import { appendFile, mkdir } from "node:fs/promises";
+import { appendFile, mkdir, readFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { type ParseArgsOptionsConfig, parseArgs } from "node:util";
 import { messageOf } from "common-utils";
@@ -125,6 +133,8 @@ const cliOptions = {
 	"luna-budget": { type: "string" },
 	"luna-output-budget": { type: "string" },
 	limit: { type: "string" },
+	cases: { type: "string" },
+	"cases-from": { type: "string" },
 	subset: { type: "string" },
 	repetitions: { type: "string" },
 	"luna-batch": { type: "boolean" },
@@ -211,9 +221,15 @@ export async function runEvaluationCli(
 		throw Error(
 			`--units must be one of ${experiments.unitConfigs.join(", ")}`,
 		);
+	const caseIds = await caseIdsOf(values);
+	if (caseIds && (values.requests || !experiments.spendsJev(experimentId)))
+		throw Error(
+			"--cases and --cases-from take a segment.inUnits run, not a request run or another experiment",
+		);
 	const command: ExperimentCommand = {
 		values,
 		experimentId,
+		caseIds,
 		units,
 		outputDirectory,
 		dependencies,
@@ -268,10 +284,37 @@ async function compareCommand(
 	return report;
 }
 
+/**
+ * The case ids `--cases` lists, one per line, or the cases a request diff
+ * report saved from `--compare` names as `changed` (`--cases-from`); none
+ * without either.
+ */
+async function caseIdsOf(
+	values: CliValues,
+): Promise<readonly string[] | undefined> {
+	if (values.cases && values["cases-from"])
+		throw Error("Use --cases or --cases-from, not both");
+	if (values.cases)
+		return (await readFile(resolve(values.cases), "utf8"))
+			.split("\n")
+			.map((line) => line.trim())
+			.filter((line) => line.length > 0);
+	if (!values["cases-from"]) return undefined;
+	const { z } = await import("zod");
+	const { readStoredJson } = await import("../lab/stored-json.js");
+	const report = await readStoredJson(
+		z.object({ changed: z.array(z.object({ caseId: z.string() })) }),
+		resolve(values["cases-from"]),
+	);
+	return report.changed.map(({ caseId }) => caseId);
+}
+
 /** An `--experiment` command, once its arguments and the table are loaded. */
 type ExperimentCommand = {
 	readonly values: CliValues;
 	readonly experimentId: string;
+	/** `--cases` or `--cases-from`: only these cases run. */
+	readonly caseIds: readonly string[] | undefined;
 	readonly units: UnitConfig;
 	readonly outputDirectory: string;
 	readonly dependencies: EvaluationCliDependencies;
@@ -504,10 +547,11 @@ function roundOptions(
 
 /** The options a run takes from its arguments alone. */
 const argumentOptions = (
-	values: CliValues,
+	{ values, caseIds }: ExperimentCommand,
 	dependencies: EvaluationCliDependencies,
 ) => ({
 	...(dependencies.setsRoot ? { setsRoot: dependencies.setsRoot } : {}),
+	...(caseIds ? { caseIds } : {}),
 	...(values.concurrency ? { concurrency: Number(values.concurrency) } : {}),
 	...(dependencies.split ? { split: dependencies.split } : {}),
 	...(values.limit ? { limit: Number(values.limit) } : {}),
@@ -569,7 +613,7 @@ async function experimentCommand(command: ExperimentCommand) {
 			signal: controller.signal,
 			units,
 			labRoot: place.labRoot,
-			...argumentOptions(values, dependencies),
+			...argumentOptions(command, dependencies),
 			...(grammar && place.live
 				? grammarLiveOptions(command, modules)
 				: {}),
@@ -611,6 +655,12 @@ function writeEstimate(
 		experiment: experimentId,
 		units,
 		set: evaluated.set,
+		...(evaluated.caseList
+			? {
+					caseList: evaluated.caseList.hash,
+					cases: evaluated.caseList.ids.length,
+				}
+			: {}),
 		projection: evaluated.projection,
 		projectedTokens: projected,
 		...(round
@@ -653,6 +703,9 @@ async function finishRun(
 			options: { units },
 			set: evaluated.set.name,
 			setHash: evaluated.set.hash,
+			...(evaluated.caseList
+				? { caseList: evaluated.caseList.hash }
+				: {}),
 			cases: run.cases.length,
 			repetitions: run.manifest.repetitions ?? 1,
 			gitHead: modules.git(["rev-parse", "HEAD"], place.repository),
