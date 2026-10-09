@@ -130,9 +130,8 @@ function mounted({
 		fire(...targets: ("split" | "a" | "b")[]) {
 			const entries = targets.map((target) => ({
 				target: target === "split" ? split.element : elementOf(target),
-				borderBoxSize: [{ inlineSize: 0, blockSize: 0 }],
 			}));
-			// A stand-in: the callback reads only `target` and `borderBoxSize`.
+			// A stand-in: the callback reads only `target`.
 			observer.callback(
 				entries as unknown as ResizeObserverEntry[],
 				observer as unknown as ResizeObserver,

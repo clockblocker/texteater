@@ -116,13 +116,9 @@ export function mountSplit(split: RegisteredSplit) {
 	// Add Regions with onResize callbacks to ResizeObserver
 	// Add Split to ResizeObserver also in order to sync % based constraints
 	const resizeObserver = new ResizeObserver((entries) => {
-		for (const { borderBoxSize, target } of entries) {
+		for (const { target } of entries) {
 			if (target !== split.element) {
-				notifyRegionOnResize(
-					split,
-					target as HTMLElement,
-					borderBoxSize,
-				);
+				notifyRegionOnResize(split, target);
 			} else if (isMounted) {
 				syncResizedSplit(split);
 			}

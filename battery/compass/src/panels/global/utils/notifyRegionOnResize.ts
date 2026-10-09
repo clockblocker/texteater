@@ -2,16 +2,7 @@ import type { RegisteredSplit } from "../../components/split/types";
 import { calculateAvailableSplitSize } from "../dom/calculateAvailableSplitSize";
 import { formatLayoutNumber } from "./formatLayoutNumber";
 
-export function notifyRegionOnResize(
-	split: RegisteredSplit,
-	element: HTMLElement,
-	borderBoxSize: readonly ResizeObserverSize[],
-) {
-	const resizeObserverSize = borderBoxSize[0];
-	if (!resizeObserverSize) {
-		return;
-	}
-
+export function notifyRegionOnResize(split: RegisteredSplit, element: Element) {
 	const region = split.regions.find((current) => current.element === element);
 	if (!region?.onResize) {
 		return;
