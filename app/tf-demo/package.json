@@ -19,7 +19,7 @@
 		"lint": "bun run --silent biome check --error-on-warnings .",
 		"preview": "vite preview",
 		"reset": "CONVEX_AGENT_MODE=anonymous convex run demoReset:resetDemoData",
-		"test": "bun ../../tooling/run-package-tests.ts --isolate",
+		"test": "bun ../../tooling/run-package-tests.ts",
 		"test:e2e": "playwright test",
 		"test:e2e:playground": "VITE_CONVEX_URL=http://127.0.0.1:9 playwright test --project playground",
 		"test:pipeline:live": "bun tooling/run-live-pipeline.ts",
