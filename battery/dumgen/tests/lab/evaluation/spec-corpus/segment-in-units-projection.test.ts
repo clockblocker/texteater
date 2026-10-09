@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { defineExperiment, definePromptSource } from "promptsmith";
+import { runOperationExperiment } from "promptsmith/evaluation";
 import {
 	goldOf,
 	type Sidecar,
@@ -201,7 +201,7 @@ describe("the segment.inUnits projection", () => {
 		]);
 	});
 
-	test("tests on Reviewed − demonstrations − excluded, which defineExperiment accepts", () => {
+	test("tests on Reviewed − demonstrations − excluded, which runOperationExperiment accepts", async () => {
 		const projected = project();
 		const demonstrations = projected.corpus.select([nora.id, draft.id]);
 		const tests = projected.testSet(demonstrations);
@@ -211,28 +211,36 @@ describe("the segment.inUnits projection", () => {
 			nora.id,
 			draft.id,
 		]);
-		const promptSource = definePromptSource({
-			route: projected.corpus.route,
-			inputSchema: projected.corpus.inputSchema,
-			outputSchema: projected.corpus.outputSchema,
-			body: "Segment the text.",
-			goldenCorpus: projected.corpus,
-			demonstrations,
-		});
-		expect(
-			defineExperiment({
-				promptSource,
-				evaluation: tests,
-				evaluator: () => ({}),
-			}).evaluation.ids,
-		).toEqual([other.id]);
-		expect(() =>
-			defineExperiment({
-				promptSource,
-				evaluation: projected.reviewed,
-				evaluator: () => ({}),
-			}),
-		).toThrow(/contamination/u);
+		let calls = 0;
+		const evaluate = (evaluation: typeof tests) =>
+			runOperationExperiment({
+				experiment: {
+					corpus: projected.corpus,
+					evaluation,
+					demonstrations,
+					run: () => {
+						calls++;
+						throw Error("No segmenter in this test");
+					},
+					evaluator: () => ({}),
+				},
+				experimentId: "segment-in-units-de",
+				operationVersion: "none",
+				evaluatorVersion: "1",
+				sourceRevision: "test",
+				configurations: {
+					generation: { model: "none", settings: {} },
+					judgment: { model: "none", settings: {} },
+				},
+			});
+		await expect(evaluate(projected.reviewed)).rejects.toThrow(
+			/contamination/u,
+		);
+		expect(calls).toBe(0);
+		expect((await evaluate(tests)).manifest.corpus.caseIds).toEqual([
+			other.id,
+		]);
+		expect(calls).toBe(1);
 	});
 
 	test("rejects a sidecar that explains a case the corpus lacks", () => {

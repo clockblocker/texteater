@@ -1,8 +1,5 @@
 import type { input, output, ZodType } from "zod";
 
-export type PromptInputSchema = ZodType;
-export type PromptOutputSchema = ZodType;
-
 /** One cited source and the exact claim it supports for a Golden Case. */
 type GoldenCaseSourceBase = {
 	readonly title: string;
@@ -30,8 +27,8 @@ export type GoldenCase<Input, Output> = {
 };
 
 export type GoldenCaseRegistry<
-	InputSchema extends PromptInputSchema,
-	OutputSchema extends PromptOutputSchema,
+	InputSchema extends ZodType,
+	OutputSchema extends ZodType,
 > = Readonly<
 	Record<string, GoldenCase<input<InputSchema>, input<OutputSchema>>>
 >;
@@ -69,13 +66,13 @@ export type GoldenCaseCollectionRegistry = Readonly<
 >;
 
 export type ParsedGoldenCase<
-	InputSchema extends PromptInputSchema,
-	OutputSchema extends PromptOutputSchema,
+	InputSchema extends ZodType,
+	OutputSchema extends ZodType,
 > = GoldenCase<output<InputSchema>, output<OutputSchema>>;
 
 type ResolvedGoldenGroups<
-	InputSchema extends PromptInputSchema,
-	OutputSchema extends PromptOutputSchema,
+	InputSchema extends ZodType,
+	OutputSchema extends ZodType,
 	Collections extends GoldenCaseCollectionRegistry,
 > = {
 	readonly [CollectionName in keyof Collections]: Collections[CollectionName] extends GoldenCaseCollection<
@@ -92,8 +89,8 @@ type ResolvedGoldenGroups<
 };
 
 type ResolvedGoldenCollections<
-	InputSchema extends PromptInputSchema,
-	OutputSchema extends PromptOutputSchema,
+	InputSchema extends ZodType,
+	OutputSchema extends ZodType,
 	Collections extends GoldenCaseCollectionRegistry,
 > = {
 	readonly [CollectionName in keyof Collections]: CaseSelection<
@@ -107,8 +104,8 @@ type ResolvedGoldenCollections<
  * corpus identity and deterministic order.
  */
 export interface CaseSelection<
-	InputSchema extends PromptInputSchema = PromptInputSchema,
-	OutputSchema extends PromptOutputSchema = PromptOutputSchema,
+	InputSchema extends ZodType = ZodType,
+	OutputSchema extends ZodType = ZodType,
 > {
 	readonly ids: readonly string[];
 	readonly cases: readonly ParsedGoldenCase<InputSchema, OutputSchema>[];
@@ -131,8 +128,8 @@ export interface CaseSelection<
  * Collections and groups describe semantics; selections assign consumer roles.
  */
 export interface GoldenCorpus<
-	InputSchema extends PromptInputSchema = PromptInputSchema,
-	OutputSchema extends PromptOutputSchema = PromptOutputSchema,
+	InputSchema extends ZodType = ZodType,
+	OutputSchema extends ZodType = ZodType,
 	Collections extends
 		GoldenCaseCollectionRegistry = GoldenCaseCollectionRegistry,
 > {
@@ -156,27 +153,9 @@ export interface GoldenCorpus<
 	all(): CaseSelection<InputSchema, OutputSchema>;
 }
 
-/**
- * The complete human-authored definition of one executable prompt route.
- * Schemas, body, corpus, and demonstrations share one route-local contract;
- * Prompt Assembly owns rendering.
- */
-export interface PromptSource<
-	InputSchema extends PromptInputSchema = PromptInputSchema,
-	OutputSchema extends PromptOutputSchema = PromptOutputSchema,
-> {
-	readonly outputFormat?: "text" | "json";
-	readonly route: string;
-	readonly inputSchema: InputSchema;
-	readonly outputSchema: OutputSchema;
-	readonly body: string;
-	readonly goldenCorpus?: GoldenCorpus<InputSchema, OutputSchema>;
-	readonly demonstrations?: CaseSelection<InputSchema, OutputSchema>;
-}
-
 export type ExperimentEvaluation<
-	InputSchema extends PromptInputSchema,
-	OutputSchema extends PromptOutputSchema,
+	InputSchema extends ZodType,
+	OutputSchema extends ZodType,
 	Result,
 > = (args: {
 	readonly caseId: string;
@@ -184,14 +163,3 @@ export type ExperimentEvaluation<
 	readonly idealOutput: output<OutputSchema>;
 	readonly output: output<OutputSchema>;
 }) => Result;
-
-/** A Prompt Source, independent evaluation selection, and pure evaluator. */
-export interface Experiment<
-	InputSchema extends PromptInputSchema,
-	OutputSchema extends PromptOutputSchema,
-	Result,
-> {
-	readonly promptSource: PromptSource<InputSchema, OutputSchema>;
-	readonly evaluation: CaseSelection<InputSchema, OutputSchema>;
-	readonly evaluator: ExperimentEvaluation<InputSchema, OutputSchema, Result>;
-}

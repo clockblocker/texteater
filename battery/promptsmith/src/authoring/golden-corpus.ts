@@ -1,4 +1,5 @@
 import { canonicalJson } from "common-utils";
+import type { ZodType } from "zod";
 import type {
 	CaseSelection,
 	GoldenCase,
@@ -10,22 +11,19 @@ import type {
 	GoldenCaseSource,
 	GoldenCorpus,
 	ParsedGoldenCase,
-	PromptInputSchema,
-	PromptOutputSchema,
 } from "./contracts";
 
 type ParsedCaseEntry = {
 	readonly id: string;
-	readonly value: ParsedGoldenCase<PromptInputSchema, PromptOutputSchema>;
-	readonly exactFingerprint: string;
+	readonly value: ParsedGoldenCase<ZodType, ZodType>;
 	readonly contaminationKeys: readonly string[];
 };
 
 type CorpusState = {
 	readonly identity: object;
 	readonly route: string;
-	readonly inputSchema: PromptInputSchema;
-	readonly outputSchema: PromptOutputSchema;
+	readonly inputSchema: ZodType;
+	readonly outputSchema: ZodType;
 	readonly entries: ReadonlyMap<string, ParsedCaseEntry>;
 };
 
@@ -43,8 +41,8 @@ type GoldenCaseCollectionState = {
 };
 
 type SchemaGoldenCaseCollection<
-	InputSchema extends PromptInputSchema,
-	OutputSchema extends PromptOutputSchema,
+	InputSchema extends ZodType,
+	OutputSchema extends ZodType,
 > = GoldenCaseCollection<
 	Readonly<
 		Record<
@@ -111,8 +109,8 @@ export function defineGoldenCaseCollection<
  * rejects duplicate exact inputs, resolves groups, and preserves explicit IDs.
  */
 export function defineGoldenCorpus<
-	InputSchema extends PromptInputSchema,
-	OutputSchema extends PromptOutputSchema,
+	InputSchema extends ZodType,
+	OutputSchema extends ZodType,
 	const Collections extends Readonly<
 		Record<string, SchemaGoldenCaseCollection<InputSchema, OutputSchema>>
 	>,
@@ -183,7 +181,6 @@ export function defineGoldenCorpus<
 		parsedEntries.set(id, {
 			id,
 			value,
-			exactFingerprint,
 			contaminationKeys,
 		});
 	}
@@ -235,12 +232,6 @@ export function getSelectionState(selection: CaseSelection): SelectionState {
 		throw new Error("CaseSelection was not created by a Golden Corpus.");
 	}
 	return state;
-}
-
-export function tryGetSelectionState(
-	selection: object,
-): SelectionState | undefined {
-	return selectionStates.get(selection);
 }
 
 function createSelection(

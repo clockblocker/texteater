@@ -5,8 +5,8 @@ Linguistic schemas and evaluators belong to the consumer.
 
 A corpus stores cases without assigning a role. Select demonstrations explicitly;
 use `union`, `intersection` and `difference` to compose demonstration and test
-selections. `defineExperiment` rejects overlap and shared contamination keys
-before execution.
+selections. `runOperationExperiment` rejects demonstrations and tests that
+share a case or a contamination key before it runs any case.
 
 `promptsmith/evaluation` runs the consumer's operation on each selected case
 and records its effective configurations, corpus fingerprint, outputs, call
