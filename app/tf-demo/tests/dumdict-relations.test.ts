@@ -1,4 +1,8 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
+import {
+	authoredReading,
+	deriveGrammaticalComponent,
+} from "dumcorpus/inventories";
 import { type DumdictPlan, makeSurfaceId, type StoreRevision } from "dumdict";
 import type { ReadingKnowledgeChange } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
@@ -1275,6 +1279,87 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(await readingKnowledge(t, laufenReading)).toEqual({
 			definition: "run",
 			translations: { en: ["run"] },
+		});
+	});
+
+	test("applies a Reading patch again when an earlier change rewrote the entry the preflight patched", async () => {
+		const { t } = await seededDictionary();
+		const gebenLemma = { ...gehenLemma, canonicalForm: "geben" } as const;
+		const gibt = {
+			...surface("es gibt"),
+			lemma: gebenLemma,
+			inflectionalFeatures: {
+				verbForm: "Fin",
+				tense: "Pres",
+				mood: "Ind",
+				person: "3",
+				number: "Sing",
+				expletive: "Subject",
+				perfect: null,
+				future: null,
+				passive: null,
+				voice: null,
+			},
+		} as const;
+		const component = deriveGrammaticalComponent(gibt);
+		const authored = component && authoredReading(component.reading);
+		if (!component || !authored?.knowledge)
+			throw new Error("Expected subject es with authored Knowledge.");
+		const es = component.reading;
+		await insertDictionaryLemma(t, gebenLemma);
+		// The es entry is stored without its authored Knowledge, which the
+		// Surface's creation completes before the patch writes.
+		await insertReading(t, await insertDictionaryLemma(t, es.lemma), es);
+		const revision = "convex-0" as StoreRevision;
+		const id = makeSurfaceId("de", gibt);
+		const plan: DumdictPlan<"de"> = {
+			baseRevision: revision,
+			changes: [
+				{
+					type: "createOwnedSurface",
+					entry: {
+						id,
+						ownerLemma: gebenLemma,
+						surface: gibt,
+						...note,
+					},
+					preconditions: [
+						{ kind: "revisionMatches", revision },
+						{ kind: "surfaceMissing", surfaceId: id },
+					],
+				},
+				{
+					type: "patchReading",
+					reading: es,
+					ops: [
+						{
+							kind: "applyKnowledgeChange",
+							envelope: {
+								reading: es,
+								change: {
+									kind: "Correct",
+									aspect: "translations",
+									language: "en",
+									value: ["it"],
+								},
+							},
+						},
+					],
+					preconditions: [
+						{ kind: "revisionMatches", revision },
+						{ kind: "readingExists", reading: es },
+					],
+				},
+			],
+		};
+		expect(await commitInTransaction(t, plan)).toMatchObject({
+			status: "committed",
+		});
+		// Authored es has no Semantic Relations, which readingKnowledge reads from edges.
+		const { semanticRelations: _, ...knowledge } = authored.knowledge;
+		expect(await readingKnowledge(t, es)).toEqual({
+			...knowledge,
+			translations: { ...knowledge.translations, en: ["it"] },
 		});
 	});
 
