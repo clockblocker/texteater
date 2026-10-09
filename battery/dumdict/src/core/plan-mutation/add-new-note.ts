@@ -15,8 +15,7 @@ import type {
 } from "../../domain-types";
 import { makeSurfaceId } from "../../dumling-id";
 import {
-	parsePendingSemanticRelationForDumdictRuntime,
-	parsePendingSemanticRelationInLanguage,
+	parseAsReadingEntry,
 	unwrapDumdictParse,
 } from "../../parsing/lightweight-parsers";
 import type { AddNewNoteRequest } from "../../public";
@@ -73,14 +72,9 @@ function makePendingRecords<L extends Dumling.Language>(
 	return deduplicatePendingSemanticRelationRecords(
 		(request.draft.relations ?? []).flatMap((relation) => {
 			if (relation.target.kind !== "pending") return [];
-			// relationLanguagesMatch has already rejected other languages.
-			const pending = parsePendingSemanticRelationInLanguage(
-				relation.target.pending,
-				lemmaLanguage(readingLemma(request.draft.reading)),
-			);
 			const record = createPendingSemanticRelationRecord(
 				request.draft.reading,
-				pending,
+				relation.target.pending,
 			);
 			return existing.has(
 				pendingSemanticRelationLocatorKey(record.locator),
@@ -88,21 +82,6 @@ function makePendingRecords<L extends Dumling.Language>(
 				? []
 				: [record];
 		}),
-	);
-}
-
-function relationLanguagesMatch<L extends Dumling.Language>(
-	request: AddNewNoteRequest<L>,
-) {
-	const language = request.draft.reading.lemma.language;
-	return (request.draft.relations ?? []).every((relation) =>
-		relation.target.kind === "existing"
-			? relation.target.lemma.language === language
-			: unwrapDumdictParse(
-					parsePendingSemanticRelationForDumdictRuntime(
-						relation.target.pending,
-					),
-				).target.language === language,
 	);
 }
 
@@ -122,19 +101,16 @@ function explicitTargetsArePresent<L extends Dumling.Language>(
 	);
 }
 
+/**
+ * Plans a parsed draft, whose relation targets all use its Reading's
+ * language (the planner's request check refuses others).
+ */
 export function planAddNewNote<L extends Dumling.Language>(
 	slice: AddNewNoteContext<L>,
 	request: AddNewNoteRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
 	const { reading, note } = request.draft;
 	const lemma = readingLemma(reading);
-	if (!relationLanguagesMatch(request))
-		return {
-			status: "rejected",
-			code: "invalidDraft",
-			message:
-				"Semantic Relation endpoints must use the source Reading language.",
-		};
 	if (
 		(request.draft.relations ?? []).some(
 			(relation) =>
@@ -227,10 +203,17 @@ export function planAddNewNote<L extends Dumling.Language>(
 		)
 			appendRelation(knowledge, addition.relation, addition.targetLemma);
 	}
-	const storedReading: ReadingEntry<L> = {
-		...baseReading,
-		...(Object.keys(knowledge).length === 0 ? {} : { knowledge }),
-	};
+	// Relation targets become the new entry's Knowledge, and only the whole
+	// entry checks them against its Reading (a target shares its family).
+	const storedReading: ReadingEntry<L> =
+		Object.keys(knowledge).length === 0
+			? baseReading
+			: unwrapDumdictParse(
+					parseAsReadingEntry(
+						{ ...baseReading, knowledge },
+						lemmaLanguage(lemma),
+					),
+				);
 	const patches = [
 		...relationRemovalsToPatches(
 			relationPlan.removals,

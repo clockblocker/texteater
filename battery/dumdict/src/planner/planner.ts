@@ -18,7 +18,6 @@ import {
 } from "../core/validate-slice";
 import type { DumdictPlan } from "../domain-types";
 import {
-	parseAsDumdictPlan,
 	parseKnowledgeChangeForDumdictRuntime,
 	parsePendingSemanticRelationForDumdictRuntime,
 	pendingTargetsLanguage,
@@ -50,6 +49,11 @@ import {
 	type ReadingEntryContextLoad,
 	storageRequestFor,
 } from "./context-request";
+import {
+	parseAddNewNoteRequest,
+	parseEnsureOwnedSurfaceRequest,
+	parseEnsureReadingEntryRequest,
+} from "./request-parsing";
 
 export type DumdictPlanned<L extends Dumling.Language> = Readonly<{
 	status: "planned";
@@ -155,48 +159,19 @@ function invalidRequest(message: string): DumdictPlanRejected {
 }
 
 /**
- * The outcome of a workflow whose typed request the planner does not parse
- * whole on the way in (addNewNote's draft, a requested Surface). Parsing the
- * plan is then Dumdict's check of that input.
+ * A workflow's outcome. Every workflow parses its request on the way in, and
+ * its slice validation parses every stored value it reads, so a plan holds
+ * only checked values and isn't parsed again: the host parses each change at
+ * its write boundary (`parseAsPlannedChangeOp`).
  */
 function planned<L extends Dumling.Language>(
-	language: L,
 	plan: PlanMutationResult<L> | PlanMutationRejected,
 ): DumdictPlanOutcome<L> {
 	if (plan.status === "rejected") return rejected(plan.code, plan.message);
-	return outcome(
-		plan,
-		unwrapDumdictParse(
-			parseAsDumdictPlan(
-				{ baseRevision: plan.baseRevision, changes: plan.changes },
-				language,
-			),
-		),
-	);
-}
-
-/**
- * The outcome of a workflow whose request and slice are parsed on the way in,
- * so every value in its plan is already checked. The plan isn't parsed again:
- * the host parses each change at its write boundary (`parseAsPlannedChangeOp`).
- */
-function plannedFromParsedInput<L extends Dumling.Language>(
-	plan: PlanMutationResult<L> | PlanMutationRejected,
-): DumdictPlanOutcome<L> {
-	if (plan.status === "rejected") return rejected(plan.code, plan.message);
-	return outcome(
-		plan,
-		retainDumdictPlan({
-			baseRevision: plan.baseRevision,
-			changes: plan.changes,
-		}),
-	);
-}
-
-function outcome<L extends Dumling.Language>(
-	plan: PlanMutationResult<L>,
-	checked: DumdictPlan<L>,
-): DumdictPlanOutcome<L> {
+	const checked: DumdictPlan<L> = retainDumdictPlan({
+		baseRevision: plan.baseRevision,
+		changes: plan.changes,
+	});
 	return {
 		status: "planned",
 		...structuredClone({
@@ -236,7 +211,13 @@ function addNewNote<L extends Dumling.Language>(
 						"Owned Surfaces must belong to the draft Reading's Lemma and dictionary language.",
 					);
 			}
-			return ok(request);
+			const parsed = parseAddNewNoteRequest(language, request);
+			if (!parsed)
+				return rejected(
+					"invalidDraft",
+					"Semantic Relation endpoints must use the source Reading language.",
+				);
+			return ok(parsed);
 		},
 		plan(context, request) {
 			validateReadingEntryContext(
@@ -244,7 +225,7 @@ function addNewNote<L extends Dumling.Language>(
 				context,
 				storageRequestFor({ intent: "addNewNote", request }),
 			);
-			return planned(language, planAddNewNote(context, request));
+			return planned(planAddNewNote(context, request));
 		},
 	};
 }
@@ -329,9 +310,7 @@ function applyGeneratedKnowledge<L extends Dumling.Language>(
 			);
 			// Its check parsed the changes and pending relations, and the slice
 			// validation parsed the Reading and every stored entry.
-			return plannedFromParsedInput(
-				planApplyGeneratedKnowledge(context, request),
-			);
+			return planned(planApplyGeneratedKnowledge(context, request));
 		},
 	};
 }
@@ -358,7 +337,7 @@ function ensureOwnedSurface<L extends Dumling.Language>(
 					"invalidDraft",
 					"The owned Surface must realize the Reading's Lemma.",
 				);
-			return ok(request);
+			return ok(parseEnsureOwnedSurfaceRequest(language, request));
 		},
 		plan(context, request) {
 			validateReadingEntryContext(
@@ -366,7 +345,7 @@ function ensureOwnedSurface<L extends Dumling.Language>(
 				context,
 				storageRequestFor({ intent: "ensureOwnedSurface", request }),
 			);
-			return planned(language, planEnsureOwnedSurface(context, request));
+			return planned(planEnsureOwnedSurface(context, request));
 		},
 	};
 }
@@ -384,7 +363,7 @@ function ensureReadingEntry<L extends Dumling.Language>(
 				return invalidRequest(
 					"ensureReadingEntry does not accept Semantic Relations; use a relation-aware Dumdict workflow.",
 				);
-			return ok(request);
+			return ok(parseEnsureReadingEntryRequest(language, request));
 		},
 		plan(context, request) {
 			validateReadingEntryContext(
@@ -392,7 +371,7 @@ function ensureReadingEntry<L extends Dumling.Language>(
 				context,
 				storageRequestFor({ intent: "ensureReadingEntry", request }),
 			);
-			return planned(language, planEnsureReadingEntry(context, request));
+			return planned(planEnsureReadingEntry(context, request));
 		},
 	};
 }
@@ -445,7 +424,9 @@ function cleanupRelations<L extends Dumling.Language>(
 					code: "semanticPreconditionFailed",
 					message: "Cleanup pending relation no longer exists.",
 				};
-			return planned(language, planCleanupRelations(slice, request));
+			// The plan holds only slice values the validation parsed: a
+			// resolution's locator only selects a stored pending record.
+			return planned(planCleanupRelations(slice, request));
 		},
 	};
 }

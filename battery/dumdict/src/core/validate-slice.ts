@@ -49,20 +49,30 @@ function validateLemmaRecord<L extends Dumling.Language>(
 	unwrapDumdictParse(parseAsLemmaRecord(record, expected));
 }
 
-function validateReading<L extends Dumling.Language>(
-	expected: L,
-	reading: Dumling.Reading<L>,
+/**
+ * Throws unless parsing kept a Reading's Emoji Description: Dumdict takes it
+ * already normalized. A Foreign Reading has none (ADR 0045).
+ */
+export function assertEmojiDescriptionNormalized(
+	reading: Dumling.Reading,
+	parsed: Dumling.Reading,
 ) {
-	const parsed = unwrapDumdictParse(
-		parseReadingForDumdictRuntime(reading, expected),
-	);
-	// A Foreign Reading has no Emoji Description to normalize (ADR 0045).
 	if (
 		"emojiDescription" in parsed &&
 		"emojiDescription" in reading &&
 		parsed.emojiDescription !== reading.emojiDescription
 	)
 		throw new Error("Reading emoji description must be normalized.");
+}
+
+function validateReading<L extends Dumling.Language>(
+	expected: L,
+	reading: Dumling.Reading<L>,
+) {
+	assertEmojiDescriptionNormalized(
+		reading,
+		unwrapDumdictParse(parseReadingForDumdictRuntime(reading, expected)),
+	);
 }
 
 function validateReadingEntry<L extends Dumling.Language>(
