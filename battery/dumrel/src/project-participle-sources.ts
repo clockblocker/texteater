@@ -40,7 +40,7 @@ export function projectParticipleSources(
 			target: source.verb,
 			meaning: source.meaning,
 			provenance: "direct",
-		} as ParticipleProjection);
+		});
 		// A drifted meaning is no participial adjective of the verb:
 		// `gelassen` 😌 is not listed under `lassen`.
 		if (source.meaning === "Verbal")
@@ -49,7 +49,7 @@ export function projectParticipleSources(
 				relation: "participialAdjective",
 				target: reading,
 				provenance: "inferred",
-			} as ParticipleProjection);
+			});
 	}
 	return {
 		success: true,

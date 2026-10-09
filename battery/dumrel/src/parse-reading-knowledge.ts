@@ -1,7 +1,7 @@
 import { ParsingError } from "common-utils/validation";
 import type * as Dumling from "dumling/types";
 import { contextualizeKnowledge, parseSource } from "./context.js";
-import type { KnowledgeParse } from "./types.js";
+import type { KnowledgeParse, ReadingKnowledge } from "./types.js";
 import { parseKnowledgeShape } from "./validation.js";
 
 /**
@@ -20,7 +20,10 @@ export function parseReadingKnowledge<const R extends Dumling.Reading>(input: {
 	if (knowledge instanceof ParsingError)
 		return { success: false, error: knowledge } as const;
 	const contextual = contextualizeKnowledge(source, knowledge);
-	return contextual instanceof ParsingError
-		? ({ success: false, error: contextual } as const)
-		: ({ success: true, value: contextual } as const);
+	if (contextual instanceof ParsingError)
+		return { success: false, error: contextual } as const;
+	// contextualizeKnowledge checked each target against this source's Language
+	// and relation space, which ReadingKnowledge<R> encodes; a generic R hides
+	// that from TypeScript.
+	return { success: true, value: contextual as ReadingKnowledge<R> } as const;
 }

@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import { ParsingError } from "common-utils/validation";
 import { knowledgePolicyMask } from "./knowledge-policies.js";
 import type { KnowledgeRequestMask, KnowledgeSelectionInput } from "./types.js";
@@ -39,24 +40,22 @@ export function selectKnowledge(
 			success: false,
 			error: new KnowledgePolicyUnavailable(route),
 		} as const;
-	const selected: Record<string, unknown> = {};
-	for (const [aspect, value] of Object.entries(mask)) {
-		const setting = settings[aspect as keyof typeof settings];
+	// Start from the route's mask and drop what the settings disable, so the
+	// selection stays a KnowledgeRequestMask; the mask is shared, so clone it.
+	const selected: KnowledgeRequestMask = structuredClone(mask);
+	const aspects: Readonly<Record<string, unknown>> = selected;
+	const aspectSettings: Readonly<Record<string, unknown>> = settings;
+	for (const [aspect, value] of Object.entries(aspects)) {
+		const setting = aspectSettings[aspect];
 		if (value === null) {
-			if (setting !== false) selected[aspect] = null;
-		} else if (value && typeof value === "object") {
-			const leaves = Object.fromEntries(
-				Object.keys(value)
-					.filter(
-						(key) =>
-							!setting ||
-							typeof setting !== "object" ||
-							setting[key as keyof typeof setting] !== false,
-					)
-					.map((key) => [key, null]),
-			);
-			if (Object.keys(leaves).length) selected[aspect] = leaves;
-		}
+			if (setting === false) Reflect.deleteProperty(selected, aspect);
+		} else if (isRecord(value)) {
+			for (const key of Object.keys(value))
+				if (isRecord(setting) && setting[key] === false)
+					Reflect.deleteProperty(value, key);
+			if (Object.keys(value).length === 0)
+				Reflect.deleteProperty(selected, aspect);
+		} else Reflect.deleteProperty(selected, aspect);
 	}
-	return { success: true, value: selected as KnowledgeRequestMask } as const;
+	return { success: true, value: selected } as const;
 }

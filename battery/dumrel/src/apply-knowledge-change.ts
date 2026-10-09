@@ -2,7 +2,6 @@ import { ParsingError } from "common-utils/validation";
 import type * as Dumling from "dumling/types";
 import { contextualizeChange, issue, parseSource } from "./context.js";
 import { structuralKeys } from "./fingerprint.js";
-import type { ConjugationClasses } from "./generated/types.js";
 import { parseReadingKnowledge } from "./parse-reading-knowledge.js";
 import type {
 	KnowledgeChange,
@@ -10,7 +9,6 @@ import type {
 	ReadingKnowledge,
 	SemanticRelations,
 	ValencyComplement,
-	ValencyFrame,
 	ValencySlot,
 } from "./types.js";
 import { parseChangeShape } from "./validation.js";
@@ -47,7 +45,9 @@ export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
 	const contextual = checkChange(source, input.change);
 	if (contextual instanceof ParsingError)
 		return { success: false, error: contextual } as const;
-	const next = structuredClone(current.value) as ReadingKnowledge<R>;
+	// Applied as plain Reading Knowledge; parsing the result checks it against
+	// the source again.
+	const next: ReadingKnowledge = structuredClone(current.value);
 	const failure = apply(next, contextual);
 	if (failure) return { success: false, error: failure } as const;
 	return parseReadingKnowledge({ source, knowledge: next });
@@ -82,27 +82,32 @@ function checkChange<R extends Dumling.Reading>(
 ): KnowledgeChange<R> | ParsingError {
 	const shape = parseChangeShape(change);
 	if (shape instanceof ParsingError) return shape;
-	return contextualizeChange(source, shape);
+	const contextual = contextualizeChange(source, shape);
+	// contextualizeChange checked each target against this source's Language and
+	// relation space, which KnowledgeChange<R> encodes; a generic R hides that
+	// from TypeScript.
+	return contextual instanceof ParsingError
+		? contextual
+		: (contextual as KnowledgeChange<R>);
 }
 
-function apply<R extends Dumling.Reading>(
-	knowledge: ReadingKnowledge<R>,
-	change: KnowledgeChange<R>,
+function apply(
+	knowledge: ReadingKnowledge,
+	change: KnowledgeChange,
 ): ParsingError | undefined {
-	const canonical = change as KnowledgeChange;
-	switch (canonical.aspect) {
+	switch (change.aspect) {
 		case "translations":
-			applyTranslation(knowledge, canonical);
+			applyTranslation(knowledge, change);
 			return;
 		case "semanticRelations":
-			return applyRelation(knowledge, canonical);
+			return applyRelation(knowledge, change);
 		case "valency":
-			applyValency(knowledge, canonical);
+			applyValency(knowledge, change);
 			return;
 		case "plural":
-			return applyPlural(knowledge, canonical);
+			return applyPlural(knowledge, change);
 		case "conjugationClass":
-			applyConjugation(knowledge, canonical);
+			applyConjugation(knowledge, change);
 			return;
 		case "transcription":
 		case "definition":
@@ -111,12 +116,12 @@ function apply<R extends Dumling.Reading>(
 		case "locutionType":
 		case "sayingType":
 		case "formulaRole":
-			return applyAtomic(knowledge, canonical);
+			return applyAtomic(knowledge, change);
 	}
 }
 
-function applyTranslation<R extends Dumling.Reading>(
-	knowledge: ReadingKnowledge<R>,
+function applyTranslation(
+	knowledge: ReadingKnowledge,
 	change: Extract<KnowledgeChange, { aspect: "translations" }>,
 ): void {
 	const translations = { ...knowledge.translations };
@@ -139,8 +144,8 @@ function applyTranslation<R extends Dumling.Reading>(
  * contributing `von` + Dat to `reden` Optional `über` + Acc | `von` + Dat
  * changes nothing.
  */
-function applyValency<R extends Dumling.Reading>(
-	knowledge: ReadingKnowledge<R>,
+function applyValency(
+	knowledge: ReadingKnowledge,
 	change: Extract<KnowledgeChange, { aspect: "valency" }>,
 ): void {
 	const frame = knowledge.valency ?? [];
@@ -155,7 +160,7 @@ function applyValency<R extends Dumling.Reading>(
 					);
 					return complements.length === 0
 						? []
-						: [{ ...slot, complements } as ValencySlot];
+						: [{ ...slot, complements }];
 				})
 			: [];
 	} else if (change.kind === "Correct") next = structuredClone(change.value);
@@ -174,7 +179,7 @@ function applyValency<R extends Dumling.Reading>(
 				next.push(structuredClone(slot));
 	}
 	if (next.length === 0) delete knowledge.valency;
-	else knowledge.valency = next as ValencyFrame;
+	else knowledge.valency = next;
 }
 
 /**
@@ -182,8 +187,8 @@ function applyValency<R extends Dumling.Reading>(
  * store both. A marker never merges with forms; replacing one with the other
  * takes Correct.
  */
-function applyPlural<R extends Dumling.Reading>(
-	knowledge: ReadingKnowledge<R>,
+function applyPlural(
+	knowledge: ReadingKnowledge,
 	change: Extract<KnowledgeChange, { aspect: "plural" }>,
 ): ParsingError | undefined {
 	if (change.kind === "Retract") {
@@ -215,8 +220,8 @@ function applyPlural<R extends Dumling.Reading>(
  * order: `sandte` then `sendete` store `Weak`, `Mixed`. Correct replaces the
  * set.
  */
-function applyConjugation<R extends Dumling.Reading>(
-	knowledge: ReadingKnowledge<R>,
+function applyConjugation(
+	knowledge: ReadingKnowledge,
 	change: Extract<KnowledgeChange, { aspect: "conjugationClass" }>,
 ): void {
 	if (change.kind === "Retract") {
@@ -231,7 +236,7 @@ function applyConjugation<R extends Dumling.Reading>(
 	]);
 	knowledge.conjugationClass = conjugationClassValues.filter((value) =>
 		classes.has(value),
-	) as ConjugationClasses;
+	);
 }
 
 /**
@@ -263,8 +268,10 @@ function splitReferent(
 	return [referent, rest];
 }
 
-function applyRelation<R extends Dumling.Reading>(
-	knowledge: ReadingKnowledge<R>,
+type ReadingRelations = Extract<SemanticRelations, { targetKind: "reading" }>;
+type LemmaRelations = Exclude<SemanticRelations, { targetKind: "reading" }>;
+function applyRelation(
+	knowledge: ReadingKnowledge,
 	change: Extract<KnowledgeChange, { aspect: "semanticRelations" }>,
 ): ParsingError | undefined {
 	const requested = change.targetKind === "reading" ? "reading" : "lemma";
@@ -275,23 +282,33 @@ function applyRelation<R extends Dumling.Reading>(
 			["change", "targetKind"],
 			"One Reading Knowledge value cannot mix Lemma and Reading Semantic Relation targets",
 		);
-	const relations: Record<string, unknown> = {
-		...existing,
-		...(requested === "reading" ? { targetKind: "reading" } : {}),
-	};
+	if (change.targetKind === "reading") {
+		const relations: ReadingRelations =
+			existing?.targetKind === "reading"
+				? { ...existing }
+				: { targetKind: "reading" };
+		if (change.kind === "Retract") delete relations.synonym;
+		else
+			relations.synonym =
+				change.kind === "Correct"
+					? unique(change.value)
+					: unique([...(relations.synonym ?? []), ...change.value]);
+		knowledge.semanticRelations = relations;
+		return;
+	}
+	const relations: LemmaRelations =
+		existing?.targetKind === "reading" ? {} : { ...existing };
 	if (change.kind === "Retract") delete relations[change.relation];
-	else {
-		const previous = Array.isArray(relations[change.relation])
-			? (relations[change.relation] as unknown[])
-			: [];
+	else
 		relations[change.relation] =
 			change.kind === "Correct"
-				? unique(change.value as readonly unknown[])
-				: unique([...previous, ...change.value]);
-	}
-	if (requested === "lemma" && Object.keys(relations).length === 0)
-		delete knowledge.semanticRelations;
-	else knowledge.semanticRelations = relations as SemanticRelations<R>;
+				? unique(change.value)
+				: unique([
+						...(relations[change.relation] ?? []),
+						...change.value,
+					]);
+	if (Object.keys(relations).length === 0) delete knowledge.semanticRelations;
+	else knowledge.semanticRelations = relations;
 }
 
 type AtomicChange = Extract<
@@ -307,8 +324,8 @@ type AtomicChange = Extract<
 			| "formulaRole";
 	}
 >;
-function applyAtomic<R extends Dumling.Reading>(
-	knowledge: ReadingKnowledge<R>,
+function applyAtomic(
+	knowledge: ReadingKnowledge,
 	change: AtomicChange,
 ): ParsingError | undefined {
 	if (change.kind === "Retract") {
@@ -329,7 +346,7 @@ function applyAtomic<R extends Dumling.Reading>(
 	Reflect.set(knowledge, change.aspect, structuredClone(change.value));
 }
 
-function unique<T>(values: readonly T[]): [T, ...T[]] {
+function unique<T>(values: readonly T[]): T[] {
 	const key = structuralKeys();
 	const result: T[] = [];
 	const seen = new Set<string>();
@@ -339,5 +356,5 @@ function unique<T>(values: readonly T[]): [T, ...T[]] {
 		seen.add(identity);
 		result.push(structuredClone(value));
 	}
-	return result as [T, ...T[]];
+	return result;
 }

@@ -56,7 +56,7 @@ export function projectPrepositionalGovernment(
 				target: governed.preposition,
 				governedCase,
 				provenance: "direct",
-			} as GovernmentProjection);
+			});
 			for (const preposition of byLemma.get(key(governed.preposition)) ??
 				[])
 				add({
@@ -65,7 +65,7 @@ export function projectPrepositionalGovernment(
 					target: reading,
 					governedCase,
 					provenance: "inferred",
-				} as GovernmentProjection);
+				});
 		}
 	return {
 		success: true,

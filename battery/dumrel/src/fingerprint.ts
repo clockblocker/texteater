@@ -44,17 +44,18 @@ export function compare(left: string, right: string): number {
  * `canonicalFormKey` (system ADR 0002). Any other object is returned as it is.
  */
 function foldCanonicalForm(value: object): object {
-	const { canonicalForm, language } = value as {
-		canonicalForm?: unknown;
-		language?: unknown;
-	};
-	return typeof canonicalForm === "string" && typeof language === "string"
-		? {
-				...value,
-				canonicalForm: canonicalFormKey(
-					canonicalForm,
-					language as Dumling.Language,
-				),
-			}
+	if (!("canonicalForm" in value) || !("language" in value)) return value;
+	const { canonicalForm, language } = value;
+	return typeof canonicalForm === "string" && isLanguage(language)
+		? { ...value, canonicalForm: canonicalFormKey(canonicalForm, language) }
 		: value;
+}
+
+const languages: Readonly<Record<Dumling.Language, true>> = {
+	de: true,
+	en: true,
+	he: true,
+};
+function isLanguage(value: unknown): value is Dumling.Language {
+	return typeof value === "string" && Object.hasOwn(languages, value);
 }

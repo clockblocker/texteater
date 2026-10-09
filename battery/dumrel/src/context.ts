@@ -71,6 +71,37 @@ function parseRelatedUnit<R extends Dumling.Reading>(
 	return target;
 }
 
+/** Each target parsed by {@link parseRelatedUnit}, or the first failure. */
+function parseRelatedUnits<R extends Dumling.Reading>(
+	source: R,
+	targets: readonly unknown[],
+	unitKind: "Lemma",
+	path: Path,
+): Dumling.Lemma[] | ParsingError;
+function parseRelatedUnits<R extends Dumling.Reading>(
+	source: R,
+	targets: readonly unknown[],
+	unitKind: "Reading",
+	path: Path,
+): Dumling.Reading[] | ParsingError;
+function parseRelatedUnits<R extends Dumling.Reading>(
+	source: R,
+	targets: readonly unknown[],
+	unitKind: "Lemma" | "Reading",
+	path: Path,
+): (Dumling.Lemma | Dumling.Reading)[] | ParsingError {
+	const values: (Dumling.Lemma | Dumling.Reading)[] = [];
+	for (const [index, target] of targets.entries()) {
+		const parsed = parseRelatedUnit(source, target, unitKind, [
+			...path,
+			index,
+		]);
+		if (parsed instanceof ParsingError) return parsed;
+		values.push(parsed);
+	}
+	return values;
+}
+
 /**
  * Lexeme and Locution share one relation space (`ins Gras beißen` ↔
  * `sterben`); every other Family relates only within itself (ADR 0039).
@@ -205,6 +236,8 @@ function parseValencyComplement<R extends Dumling.Reading>(
 			[...path, "preposition", "language"],
 			"A governed preposition must use the source Language",
 		);
+	// parseUnit keeps the input's Language, so the parsed ADP Lemma fits the
+	// variant complement came from; TypeScript can't correlate the two unions.
 	return { ...complement, preposition } as ValencyComplement;
 }
 
@@ -268,9 +301,9 @@ function parseValencyFrame<R extends Dumling.Reading>(
 				[...path, index, "complements", correlated, "correlate"],
 				"A Clause with a correlate in a Preposition Slot needs exactly one Preposition alternative there",
 			);
-		slots.push({ status: slot.status, complements } as ValencySlot);
+		slots.push({ status: slot.status, complements });
 	}
-	return slots as ValencyFrame;
+	return slots;
 }
 
 /**
@@ -306,7 +339,7 @@ function parseParticipleSource<R extends Dumling.Reading>(
 			[...verbPath, "language"],
 			"A Participle Source must use the source Language",
 		);
-	return { ...value, verb } as ParticipleSource;
+	return { ...value, verb };
 }
 
 /**
@@ -348,10 +381,10 @@ function parseConjugationClasses<R extends Dumling.Reading>(
 export function contextualizeKnowledge<R extends Dumling.Reading>(
 	source: R,
 	knowledge: ReadingKnowledge,
-): ReadingKnowledge<R> | ParsingError {
-	const result = structuredClone(knowledge) as ReadingKnowledge;
-	for (const aspect of Object.keys(routeAspects) as RouteAspect[])
-		if (result[aspect] !== undefined) {
+): ReadingKnowledge | ParsingError {
+	const result = structuredClone(knowledge);
+	for (const aspect of Object.keys(routeAspects))
+		if (isRouteAspect(aspect) && result[aspect] !== undefined) {
 			const failure = routeAspectIssue(source, aspect, [
 				"knowledge",
 				aspect,
@@ -398,7 +431,7 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 		result.valency = frame;
 	}
 	const relations = result.semanticRelations;
-	if (!relations) return result as ReadingKnowledge<R>;
+	if (!relations) return result;
 	const targetKind = relations.targetKind === "reading" ? "Reading" : "Lemma";
 	for (const [relation, targets] of Object.entries(relations)) {
 		if (relation === "targetKind" || !Array.isArray(targets)) continue;
@@ -421,14 +454,14 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 		});
 		if (failure) return failure;
 	}
-	return result as ReadingKnowledge<R>;
+	return result;
 }
 
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function contextualizeChange<R extends Dumling.Reading>(
 	source: R,
 	change: KnowledgeChange,
-): KnowledgeChange<R> | ParsingError {
+): KnowledgeChange | ParsingError {
 	if (isRouteAspect(change.aspect) && change.kind !== "Retract") {
 		const failure = routeAspectIssue(source, change.aspect, [
 			"change",
@@ -463,7 +496,7 @@ export function contextualizeChange<R extends Dumling.Reading>(
 			"value",
 		]);
 		if (participle instanceof ParsingError) return participle;
-		return { ...change, value: participle } as KnowledgeChange<R>;
+		return { ...change, value: participle };
 	}
 	if (change.aspect === "valency") {
 		if (change.kind !== "Retract") {
@@ -472,29 +505,32 @@ export function contextualizeChange<R extends Dumling.Reading>(
 				"value",
 			]);
 			if (frame instanceof ParsingError) return frame;
-			return { ...change, value: frame } as KnowledgeChange<R>;
+			return { ...change, value: frame };
 		}
-		if (!change.complement) return change as KnowledgeChange<R>;
+		if (!change.complement) return change;
 		const complement = parseValencyComplement(source, change.complement, [
 			"change",
 			"complement",
 		]);
 		if (complement instanceof ParsingError) return complement;
-		return { ...change, complement } as KnowledgeChange<R>;
+		return { ...change, complement };
 	}
 	if (change.aspect !== "semanticRelations" || change.kind === "Retract")
-		return change as KnowledgeChange<R>;
-	const targetKind = change.targetKind === "reading" ? "Reading" : "Lemma";
-	const values: Array<Dumling.Lemma | Dumling.Reading> = [];
-	for (const [index, target] of change.value.entries()) {
-		const parsed = parseRelatedUnit(source, target, targetKind, [
-			"change",
-			"value",
-			index,
-		]);
-		if (parsed instanceof ParsingError) return parsed;
-		values.push(parsed);
+		return change;
+	const path = ["change", "value"];
+	if (change.targetKind === "reading") {
+		const readings = parseRelatedUnits(
+			source,
+			change.value,
+			"Reading",
+			path,
+		);
+		return readings instanceof ParsingError
+			? readings
+			: { ...change, value: readings };
 	}
+	const values = parseRelatedUnits(source, change.value, "Lemma", path);
+	if (values instanceof ParsingError) return values;
 	if (change.relation === "endonym") {
 		const failure = endonymIssue(source, values, {
 			source: ["change", "relation"],
@@ -502,5 +538,5 @@ export function contextualizeChange<R extends Dumling.Reading>(
 		});
 		if (failure) return failure;
 	}
-	return { ...change, value: values } as KnowledgeChange<R>;
+	return { ...change, value: values };
 }
