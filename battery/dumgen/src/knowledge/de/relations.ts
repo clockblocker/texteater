@@ -48,35 +48,58 @@ const maxPerRelation = 3;
 type KindName = keyof typeof kindDefinitions;
 
 /** The Kinds a candidate of each Family may take; no AUX, PUNCT or SYM (#669). */
+const lexemeKinds = [
+	"NOUN",
+	"PROPN",
+	"VERB",
+	"ADJ",
+	"ADV",
+	"ADP",
+	"CCONJ",
+	"SCONJ",
+	"INTJ",
+	"NUM",
+	"PRON",
+	"DET",
+] as const satisfies readonly KindName[];
+const locutionKinds = [
+	"NOUN",
+	"VERB",
+	"ADJ",
+	"ADV",
+	"ADP",
+	"CCONJ",
+	"SCONJ",
+	"INTJ",
+	"NUM",
+	"PRON",
+	"DET",
+] as const satisfies readonly KindName[];
 const kindsByFamily: Readonly<Record<string, readonly KindName[]>> = {
-	Lexeme: [
-		"NOUN",
-		"PROPN",
-		"VERB",
-		"ADJ",
-		"ADV",
-		"ADP",
-		"CCONJ",
-		"SCONJ",
-		"INTJ",
-		"NUM",
-		"PRON",
-		"DET",
-	],
-	Locution: [
-		"NOUN",
-		"VERB",
-		"ADJ",
-		"ADV",
-		"ADP",
-		"CCONJ",
-		"SCONJ",
-		"INTJ",
-		"NUM",
-		"PRON",
-		"DET",
-	],
+	Lexeme: lexemeKinds,
+	Locution: locutionKinds,
 };
+
+/**
+ * The Unit Shadow a judged candidate names: its Family with the Kind jev
+ * chose, when that Family offers it.
+ */
+function shadowOf(
+	family: "Lexeme" | "Locution" | "Saying",
+	kind: string,
+	canonicalForm: string,
+): GermanPendingRelation["target"] | undefined {
+	if (family === "Saying")
+		return kind === "Saying"
+			? { language: "de", family, kind, canonicalForm }
+			: undefined;
+	if (family === "Lexeme") {
+		const known = lexemeKinds.find((entry) => entry === kind);
+		return known && { language: "de", family, kind: known, canonicalForm };
+	}
+	const known = locutionKinds.find((entry) => entry === kind);
+	return known && { language: "de", family, kind: known, canonicalForm };
+}
 
 /** A candidate's Family, from the source's and its words (ADR 0039). */
 function candidateFamily(
@@ -239,20 +262,13 @@ export const produceRelations = (
 				kind === source.kind &&
 				foldCase(candidate, "de") ===
 					foldCase(source.canonicalForm, "de");
-			if (relation === undefined || kind === "OtherFamily" || self) {
+			// `OtherFamily`, the one choice no Family offers, names no Shadow.
+			const target = shadowOf(family, kind, candidate);
+			if (relation === undefined || target === undefined || self) {
 				rejected.push({ candidate, relation: answer.choice, kind });
 				continue;
 			}
-			claims.push({
-				relation,
-				target: {
-					language: "de",
-					family,
-					kind,
-					canonicalForm: candidate,
-				} as GermanPendingRelation["target"],
-				confidence: answer.confidence,
-			});
+			claims.push({ relation, target, confidence: answer.confidence });
 		}
 		if (rejected.length > 0)
 			context.scope.event({

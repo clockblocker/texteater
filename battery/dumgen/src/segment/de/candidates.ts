@@ -363,13 +363,12 @@ export function pairCandidatesOf(
 				});
 		// Names: capitalized pieces, possibly joined by von, van, de.
 		if (nounLike(left) && left.clause === right.clause) {
+			const connects = (at: number) => {
+				const piece = pieces[at];
+				return piece !== undefined && nameConnectors.has(lower(piece));
+			};
 			let next = index + 1;
-			while (
-				pieces[next] &&
-				nameConnectors.has(lower(pieces[next] as Piece)) &&
-				next - index < 3
-			)
-				next++;
+			while (connects(next) && next - index < 3) next++;
 			const partner = pieces[next];
 			if (partner && nounLike(partner) && partner.clause === left.clause)
 				pairs.push({
