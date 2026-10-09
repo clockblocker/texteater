@@ -343,7 +343,44 @@ function applyAtomic(
 			["change", "value"],
 			`Contribute conflicts with existing ${change.aspect}; use Correct to replace it`,
 		);
-	Reflect.set(knowledge, change.aspect, structuredClone(change.value));
+	storeAtomic(knowledge, change);
+}
+
+/**
+ * Stores an atomic aspect's value, one case per aspect so each value is
+ * checked against its own field: `knowledge[change.aspect] = change.value`
+ * would lose which value goes with which aspect.
+ */
+function storeAtomic(
+	knowledge: ReadingKnowledge,
+	change: Exclude<AtomicChange, { kind: "Retract" }>,
+): void {
+	switch (change.aspect) {
+		case "transcription":
+			knowledge.transcription = structuredClone(change.value);
+			return;
+		case "definition":
+			knowledge.definition = structuredClone(change.value);
+			return;
+		case "morphologicalTree":
+			knowledge.morphologicalTree = structuredClone(change.value);
+			return;
+		case "participleSource":
+			knowledge.participleSource = structuredClone(change.value);
+			return;
+		case "locutionType":
+			knowledge.locutionType = structuredClone(change.value);
+			return;
+		case "sayingType":
+			knowledge.sayingType = structuredClone(change.value);
+			return;
+		case "formulaRole":
+			knowledge.formulaRole = structuredClone(change.value);
+			return;
+		default:
+			// A new atomic aspect fails to type-check here until it has a case.
+			change satisfies never;
+	}
 }
 
 function unique<T>(values: readonly T[]): T[] {
