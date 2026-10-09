@@ -37,6 +37,7 @@ type EnabledRegions = {
 /** What the walk along a Split's children has seen since the last Region. */
 type Walk = {
 	regionIndex: number;
+	/** An aria-disabled Handle sits between the previous Region and the next. */
 	disabledHandle: boolean;
 	hasInterleavedStaticContent: boolean;
 	prevRegion: RegisteredRegion | undefined;
@@ -161,7 +162,9 @@ function visitRegion({
 	if (prevRegion) {
 		const prevRect = prevRegion.element.getBoundingClientRect();
 		const rect = childElement.getBoundingClientRect();
+		// A disabled Handle locks the pair: none of its areas are live.
 		const skip =
+			walk.disabledHandle ||
 			walk.regionIndex <= enabled.first ||
 			walk.regionIndex > enabled.last;
 
@@ -174,7 +177,7 @@ function visitRegion({
 		)) {
 			const hitRect = hitTargetRect(split, rectOrHandle);
 
-			if (!walk.disabledHandle && !skip) {
+			if (!skip) {
 				hitAreas.push({
 					split,
 					splitSize: calculateAvailableSplitSize({
@@ -186,11 +189,10 @@ function visitRegion({
 					rect: hitRect,
 				});
 			}
-
-			walk.disabledHandle = false;
 		}
 	}
 
+	walk.disabledHandle = false;
 	walk.hasInterleavedStaticContent = false;
 	walk.prevRegion = regionData;
 	walk.pendingHandles = [];
@@ -215,6 +217,7 @@ function visitHandle(
 	} else {
 		walk.prevRegion = undefined;
 		walk.pendingHandles = [];
+		walk.disabledHandle = false;
 	}
 }
 

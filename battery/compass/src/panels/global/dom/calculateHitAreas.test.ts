@@ -446,7 +446,7 @@ describe("calculateHitAreas", () => {
 			]);
 		});
 
-		test("suppresses only the next area, so the far edge past static content stays", () => {
+		test("suppresses the Region edge past static content too", () => {
 			const split = fakeSplit({
 				children: [
 					region("a", across(0, 100)),
@@ -456,16 +456,10 @@ describe("calculateHitAreas", () => {
 				],
 			});
 
-			expect(areasOf(split)).toEqual([
-				{
-					regions: ["a", "b"],
-					handle: undefined,
-					rect: { x: 95, y: 0, width: 10, height: 100 },
-				},
-			]);
+			expect(areasOf(split)).toEqual([]);
 		});
 
-		test("suppresses the first of several Handles, whichever one is disabled", () => {
+		test("suppresses every Handle between its two Regions", () => {
 			const split = fakeSplit({
 				children: [
 					region("a", across(0, 100)),
@@ -475,16 +469,36 @@ describe("calculateHitAreas", () => {
 				],
 			});
 
+			expect(areasOf(split)).toEqual([]);
+		});
+
+		test("locks only its own pair when the next pair has several Handles", () => {
+			const split = fakeSplit({
+				children: [
+					region("a", across(0, 100)),
+					handle("h1", across(100, 4), { ariaDisabled: true }),
+					region("b", across(104, 100)),
+					handle("h2", across(204, 4)),
+					handle("h3", across(208, 4)),
+					region("c", across(212, 100)),
+				],
+			});
+
 			expect(areasOf(split)).toEqual([
 				{
-					regions: ["a", "b"],
+					regions: ["b", "c"],
 					handle: "h2",
-					rect: { x: 101, y: 0, width: 10, height: 100 },
+					rect: { x: 201, y: 0, width: 10, height: 100 },
+				},
+				{
+					regions: ["b", "c"],
+					handle: "h3",
+					rect: { x: 205, y: 0, width: 10, height: 100 },
 				},
 			]);
 		});
 
-		test("still suppresses the next area after an unregistered Handle resets the walk", () => {
+		test("is forgotten when an unregistered Handle resets the walk", () => {
 			const split = fakeSplit({
 				children: [
 					region("a", across(0, 100)),
@@ -497,7 +511,31 @@ describe("calculateHitAreas", () => {
 				],
 			});
 
-			expect(areasOf(split)).toEqual([]);
+			expect(areasOf(split)).toEqual([
+				{
+					regions: ["b", "c"],
+					handle: undefined,
+					rect: { x: 204, y: 0, width: 16, height: 100 },
+				},
+			]);
+		});
+
+		test("before the first Region locks nothing", () => {
+			const split = fakeSplit({
+				children: [
+					handle("h0", across(0, 4), { ariaDisabled: true }),
+					region("a", across(4, 100)),
+					region("b", across(124, 100)),
+				],
+			});
+
+			expect(areasOf(split)).toEqual([
+				{
+					regions: ["a", "b"],
+					handle: undefined,
+					rect: { x: 104, y: 0, width: 20, height: 100 },
+				},
+			]);
 		});
 	});
 
