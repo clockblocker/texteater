@@ -10,8 +10,7 @@
  * filled per click; the registered text is the template.
  */
 import type { CitingPrompt } from "dumcorpus/types";
-
-type Cite = readonly [rule: string, hash: string];
+import { type Cite, paragraphRegistry } from "../../prompt-paragraphs.js";
 
 /** The Rules the prompts cite, at the statement hashes they were checked against. */
 const rules = {
@@ -65,21 +64,8 @@ const rules = {
 	pronominalAdverb: ["de/pronominal-adverb-stands-alone", "1b11d9ee80ce12bd"],
 } as const satisfies Readonly<Record<string, Cite>>;
 
-/** One registered paragraph: its name, its text or template, and what it cites. */
-type PromptText = {
-	readonly name: string;
-	readonly text: string;
-	readonly cites: readonly Cite[];
-};
-
-const registry: PromptText[] = [];
-
-/** Registers one paragraph and returns its text. */
-function paragraph(name: string, text: string, ...cites: Cite[]): string {
-	if (text.includes("\n")) throw Error(`${name} is more than one paragraph`);
-	registry.push({ name, text, cites });
-	return text;
-}
+const registry = paragraphRegistry("de/resolve-grammar");
+const { paragraph } = registry;
 
 /** Fills a template's `{slot}`s. */
 export const fill = (
@@ -912,21 +898,10 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 
 /** Every registered paragraph, as dumcorpus's citation check reads it. */
 export function grammarPromptTexts(): readonly CitingPrompt[] {
-	return registry.map(({ name, text, cites }) => ({
-		name: `de/resolve-grammar/${name}`,
-		text,
-		paragraphs: [
-			{
-				opens: text.slice(0, 32),
-				implements: cites.map(([rule, hash]) => ({ rule, hash })),
-			},
-		],
-	}));
+	return registry.texts();
 }
 
 /** The German examples the prompts quote, «…» stripped, each as written. */
 export function promptExamples(): readonly string[] {
-	return registry.flatMap(({ text }) =>
-		[...text.matchAll(/«([^»]+)»/gu)].map(([, example]) => example ?? ""),
-	);
+	return registry.examples();
 }

@@ -13,8 +13,7 @@
  * disjointness test reads `readingDemonstrations` and `readingExamples`.
  */
 import type { CitingPrompt } from "dumcorpus/types";
-
-type Cite = readonly [rule: string, hash: string];
+import { type Cite, paragraphRegistry } from "../../prompt-paragraphs.js";
 
 /** The Rules the Reading prompts cite, at the statement hashes they were checked against. */
 const rules = {
@@ -39,21 +38,8 @@ const rules = {
 	expletive: ["de/expletive-es-joins-its-verb", "99bff23563b49716"],
 } as const satisfies Readonly<Record<string, Cite>>;
 
-/** One registered paragraph: its name, its text and what it cites. */
-type PromptText = {
-	readonly name: string;
-	readonly text: string;
-	readonly cites: readonly Cite[];
-};
-
-const registry: PromptText[] = [];
-
-/** Registers one paragraph and returns its text. */
-function paragraph(name: string, text: string, ...cites: Cite[]): string {
-	if (text.includes("\n")) throw Error(`${name} is more than one paragraph`);
-	registry.push({ name, text, cites });
-	return text;
-}
+const registry = paragraphRegistry("de/resolve-reading");
+const { paragraph } = registry;
 
 // The judge (jev): the policy block it reads beside the candidates.
 
@@ -332,25 +318,12 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 
 /** Every registered paragraph, as dumcorpus's citation check reads it. */
 export function readingPromptTexts(): readonly CitingPrompt[] {
-	return registry.map(({ name, text, cites }) => ({
-		name: `de/resolve-reading/${name}`,
-		text,
-		paragraphs: [
-			{
-				opens: text.slice(0, 32),
-				implements: cites.map(([rule, hash]) => ({ rule, hash })),
-			},
-		],
-	}));
+	return registry.texts();
 }
 
 /** The German words the policy and question paragraphs quote, as written; the demonstrations aside. */
 export function readingExamples(): readonly string[] {
-	return registry
-		.filter(({ name }) => !name.startsWith("generation.demonstration."))
-		.flatMap(({ text }) =>
-			[...text.matchAll(/«([^»]+)»/gu)].map(
-				([, example]) => example ?? "",
-			),
-		);
+	return registry.examples(
+		(name) => !name.startsWith("generation.demonstration."),
+	);
 }

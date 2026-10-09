@@ -18,8 +18,7 @@
  * none is a Lemma of the Knowledge gold or the spot-check samples (#693).
  */
 import type { CitingPrompt } from "dumcorpus/types";
-
-type Cite = readonly [rule: string, hash: string];
+import { type Cite, paragraphRegistry } from "../../prompt-paragraphs.js";
 
 /** The Rules the Knowledge prompts cite, at the statement hashes they were checked against. */
 const rules = {
@@ -55,23 +54,8 @@ const rules = {
 	saying: ["de/saying-needs-uptake", "b191e72860fbbf9c"],
 } as const satisfies Readonly<Record<string, Cite>>;
 
-/** One registered paragraph: its name, its text and what it cites. */
-type PromptText = {
-	readonly name: string;
-	readonly text: string;
-	readonly cites: readonly Cite[];
-};
-
-const registry: PromptText[] = [];
-
-/** Registers one paragraph and returns its text. */
-function paragraph(name: string, text: string, ...cites: Cite[]): string {
-	if (text.includes("\n")) throw Error(`${name} is more than one paragraph`);
-	if (registry.some((entry) => entry.name === name))
-		throw Error(`${name} is registered twice`);
-	registry.push({ name, text, cites });
-	return text;
-}
+const registry = paragraphRegistry("de/knowledge");
+const { paragraph } = registry;
 
 // What every prompt says first: the Reading, and the Sentence as evidence.
 
@@ -625,26 +609,15 @@ export const kindDefinitions = {
 
 /** Every registered paragraph, as dumcorpus's citation check reads it. */
 export function knowledgePromptTexts(): readonly CitingPrompt[] {
-	return registry.map(({ name, text, cites }) => ({
-		name: `de/knowledge/${name}`,
-		text,
-		paragraphs: [
-			{
-				opens: text.slice(0, 32),
-				implements: cites.map(([rule, hash]) => ({ rule, hash })),
-			},
-		],
-	}));
+	return registry.texts();
 }
 
 /** Every registered paragraph's text, for the tests. */
 export function knowledgeParagraphs(): readonly string[] {
-	return registry.map(({ text }) => text);
+	return registry.paragraphs();
 }
 
 /** The German words the prompts quote «…», as written. */
 export function knowledgeExamples(): readonly string[] {
-	return registry.flatMap(({ text }) =>
-		[...text.matchAll(/«([^»]+)»/gu)].map(([, example]) => example ?? ""),
-	);
+	return registry.examples();
 }
