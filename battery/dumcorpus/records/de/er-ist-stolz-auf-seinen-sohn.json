@@ -163,7 +163,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "stolz governs auf in the same sense on its own, so auf is a member of the ADJ (de/governed-preposition-joins-its-governor), never of the copula. auf is an occurrence member, so a click on it opens stolz, but not a Fixed member: valencyEvidence names it by index with auf + Acc, and the normalized Surface is stolz. Knowledge (#884): neither über nor a zu-infinitive joins the frame; decided by agents under the user's delegation."
+				"rationale": "stolz governs auf in the same sense on its own, so auf is a member of the ADJ (de/governed-preposition-joins-its-governor), never of the copula. auf is an occurrence member, so a click on it opens stolz; valencyEvidence names it by index with auf + Acc, and the normalized Surface leaves it out: stolz. Knowledge (#884): neither über nor a zu-infinitive joins the frame; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

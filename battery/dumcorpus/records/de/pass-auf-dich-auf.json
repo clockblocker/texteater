@@ -27,7 +27,7 @@
 				"rationale": "Pass, the governed auf and the detached prefix auf are one aufpassen occurrence. valencyEvidence names the first auf by index, which tells it apart from the prefix; the normalized Surface pass auf leaves the governed preposition out.",
 				"knownMistakes": [
 					"Treating the first auf as the separable prefix and the last as a preposition.",
-					"Making the governed auf a Fixed member, so the Surface reads pass auf auf."
+					"Leaving the governed auf in the normalized Surface, so it reads pass auf auf."
 				]
 			},
 			"attestation": {

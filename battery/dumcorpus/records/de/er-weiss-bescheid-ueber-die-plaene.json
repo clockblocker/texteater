@@ -109,7 +109,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation that is not one of its fixed members (ADR 0034). The Surface projects only the Fixed members: weiß Bescheid. Knowledge (#887, dev draft): Judges split (#887 dev round): im Bilde sein (DWDS, OT) is left out: de/copula-stays-apart splits off sein and no Rule sets the Kind of im Bilde (system); the learner would point it at a Locution ADJ im Bilde."
+				"rationale": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation that is not one of its fixed members (ADR 0034). valencyEvidence names über and the normalized Surface leaves it out: weiß Bescheid. Knowledge (#887, dev draft): Judges split (#887 dev round): im Bilde sein (DWDS, OT) is left out: de/copula-stays-apart splits off sein and no Rule sets the Kind of im Bilde (system); the learner would point it at a Locution ADJ im Bilde."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
