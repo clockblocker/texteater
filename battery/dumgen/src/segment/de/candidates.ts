@@ -67,30 +67,30 @@ export const articleForms: ReadonlySet<string> = new Set(
 );
 
 /**
- * Separable prefixes that open no particle slot: the slot's recall was tuned
- * on the lab without them. Opening a slot on one changes the judge's
- * requests, so each waits for a lab round (#1057). Resolution still offers
- * da and leid as a VERB's prefix (daliegen, leidtun; `prefixParticles`).
+ * Separable prefixes that open no particle slot. Standing apart, each is
+ * mostly something else: an adjective or adverb (gut, offen, leer, voll,
+ * groß, flach), the adverb or conjunction da, the pronominal adverb dagegen,
+ * stand of stehen, irre of irren, and spazieren, an infinitive of its own
+ * (spazieren gehen is two VERBs). #1057's lab round found no dev case a slot
+ * on one of them fixes, and one on spazieren joined [ging, spazieren].
+ * The judges split on bekannt and sicher, so both stay out (#1057).
+ * Resolution still offers most of them as a VERB's prefix
+ * (`prefixParticles`).
  */
 const noSlotParticles: ReadonlySet<string> = new Set([
 	"bekannt",
 	"da",
 	"dagegen",
-	"daneben",
-	"dazwischen",
+	"flach",
+	"groß",
 	"gut",
 	"irre",
-	"kund",
 	"leer",
-	"leid",
-	"nahe",
 	"offen",
 	"sicher",
 	"spazieren",
 	"stand",
 	"voll",
-	"wahr",
-	"wider",
 ]);
 
 /**

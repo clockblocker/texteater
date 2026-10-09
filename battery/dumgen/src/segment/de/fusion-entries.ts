@@ -19,34 +19,13 @@ export const germanFusionTable: FusionTable = {
 };
 
 /**
- * Separable prefixes whose infixed zu is not split off here. `da` and `hin`:
- * dazugehören and hinzufügen are particle verbs on dazu and hinzu whose zu
- * is no infix, and their own infixed forms (dazuzulernen, hinzuzufügen) are
- * found through dazu and hinzu. The r- shorthands, über and the rest were
- * left out when the list was shaped; splitting one changes segmentation, so
- * each waits for a lab round (#1057).
+ * Separable prefixes whose infixed zu is not split off here: dazugehören
+ * and hinzufügen are particle verbs on dazu and hinzu whose zu is no infix,
+ * and their own infixed forms (dazuzulernen, hinzuzufügen) are found
+ * through dazu and hinzu. The cost is that dazustehen and hinzuweisen stay
+ * whole (#1057).
  */
-const noInfixParticles: ReadonlySet<string> = new Set([
-	"bloß",
-	"da",
-	"entzwei",
-	"hin",
-	"hinterher",
-	"kaputt",
-	"leid",
-	"ran",
-	"rauf",
-	"raus",
-	"rein",
-	"rückwärts",
-	"runter",
-	"rüber",
-	"über",
-	"übrig",
-	"umher",
-	"vorwärts",
-	"vorweg",
-]);
+const noInfixParticles: ReadonlySet<string> = new Set(["da", "hin"]);
 
 /**
  * Separable prefixes that take an infinitive's infixed zu, which is a piece

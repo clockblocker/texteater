@@ -9,37 +9,34 @@ import { strandedTails } from "../../../src/segment/de/code-rules.js";
 import { germanInfixParticles } from "../../../src/segment/de/fusion-entries.js";
 
 // Each selection is a named filter over dumcorpus's separable prefixes
-// (#977), pinned to the hand-typed list it replaced. Taking a word in or
-// out changes requests or segmentation (#1057).
+// (#977). #1057 decided which words each filter holds out; taking a word
+// in or out changes requests or segmentation.
 const sorted = (set: Iterable<string>) => [...set].sort();
 
-/** The hand-typed `particleForms` and `moreParticleForms` together. */
-const slotParticles = [
-	..."ab an auf aus bei dabei dar durch ein empor entgegen entlang fehl fern fest fort frei gegenüber heim her herab heran herauf heraus herbei herein herüber herum herunter hervor hin hinab hinauf hinaus hinein hinüber hinunter hinweg hinzu hoch los mit nach nieder raus rein rüber runter rauf ran statt teil um vor voran voraus vorbei vorüber vorweg weg weiter wieder zu zurecht zurück zusammen zuvor über unter kennen preis bloß kaputt klar".split(
-		" ",
-	),
-	..."umher übrig fertig auseinander beiseite hinterher davon dazu dahin daher vorwärts rückwärts entzwei bereit".split(
-		" ",
-	),
-];
+const without = (held: string) => {
+	const out = new Set(held.split(" "));
+	return [...germanSeparablePrefixes].filter((word) => !out.has(word));
+};
 
-test("the particle slot opens on the hand-typed particles", () => {
-	expect(sorted(particleForms)).toEqual(sorted(slotParticles));
+/** The words that open no particle slot (#1057). */
+const noSlot =
+	"bekannt da dagegen flach groß gut irre leer offen sicher spazieren stand voll";
+
+test("the particle slot opens on every separable prefix but the held-out words", () => {
+	expect(sorted(particleForms)).toEqual(sorted(without(noSlot)));
+	for (const word of "leid wahr nahe kund wider daneben dazwischen durcheinander darnieder".split(
+		" ",
+	))
+		expect(particleForms.has(word)).toBe(true);
 });
 
-test("the infixed zu follows the hand-typed infix particles", () => {
-	expect(sorted(germanInfixParticles)).toEqual(
-		sorted(
-			"ab an auf aus auseinander bei beiseite bekannt bereit dabei dagegen daher dahin daneben dar davon dazu dazwischen durch ein empor entgegen entlang fehl fertig fest fort fern frei gegenüber gut heim her herab heran herauf heraus herbei herein herüber herum herunter hervor hinab hinauf hinaus hinein hinüber hinunter hinweg hinzu hoch irre kennen klar kund leer los mit nach nahe nieder offen preis sicher spazieren statt stand teil um unter vor voran voraus vorbei vorüber voll wahr weg weiter wider wieder zu zurecht zurück zusammen zuvor".split(
-				" ",
-			),
-		),
-	);
+test("the infixed zu takes every separable prefix but da and hin", () => {
+	expect(sorted(germanInfixParticles)).toEqual(sorted(without("da hin")));
 });
 
-test("resolution offers the slot particles and da and leid as a VERB's prefix", () => {
+test("resolution offers the slot particles and the held-out words but irre, spazieren and stand", () => {
 	expect(sorted(prefixParticles)).toEqual(
-		sorted([...slotParticles, "da", "leid"]),
+		sorted(without("irre spazieren stand")),
 	);
 });
 

@@ -9,9 +9,11 @@
  * infixed zu (abzuspannen is ab, zu and spannen). The her- and hin-
  * adverbs' r- shorthands are among them (raus, rein; Rule
  * de/r-adverb-is-her-or-hin-shorthand). The list holds the prefixes Dumgen
- * has needed so far, not every German one. Some also form inseparable verbs
- * (durch, über, um, unter, voll, wider: übersetzen 'translate'); they are
- * here, not among the inseparable prefixes below.
+ * has needed so far and every hasSepPrefix the gold names (darnieder,
+ * durcheinander, flach and groß joined from it, #1057), not every German
+ * one. Some also form inseparable verbs (durch, über, um, unter, voll,
+ * wider: übersetzen 'translate'); they are here, not among the inseparable
+ * prefixes below.
  */
 export const germanSeparablePrefixes: ReadonlySet<string> = new Set([
 	"ab",
@@ -31,10 +33,12 @@ export const germanSeparablePrefixes: ReadonlySet<string> = new Set([
 	"dahin",
 	"daneben",
 	"dar",
+	"darnieder",
 	"davon",
 	"dazu",
 	"dazwischen",
 	"durch",
+	"durcheinander",
 	"ein",
 	"empor",
 	"entgegen",
@@ -44,9 +48,11 @@ export const germanSeparablePrefixes: ReadonlySet<string> = new Set([
 	"fern",
 	"fertig",
 	"fest",
+	"flach",
 	"fort",
 	"frei",
 	"gegenüber",
+	"groß",
 	"gut",
 	"heim",
 	"her",

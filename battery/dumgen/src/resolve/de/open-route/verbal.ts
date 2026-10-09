@@ -117,13 +117,23 @@ const spellsEs = (member: Member) =>
 
 /**
  * The separable prefixes a VERB unit may carry: those that open a particle
- * slot, and da and leid (daliegen, leidtun), which open none. The other
- * prefixes that open no slot (bekannt, gut, …) are not offered (#1057).
+ * slot, and those that open none but stand for a particle verb's first part
+ * often enough (daliegen, gutheißen, offenlegen, sicherstellen, volltanken,
+ * großziehen). irre (irren), spazieren (an infinitive of its own) and stand
+ * (standen) are not offered (#1057).
  */
 export const prefixParticles: ReadonlySet<string> = new Set([
 	...particleForms,
+	"bekannt",
 	"da",
-	"leid",
+	"dagegen",
+	"flach",
+	"groß",
+	"gut",
+	"leer",
+	"offen",
+	"sicher",
+	"voll",
 ]);
 const isParticle = (word: string) => prefixParticles.has(word);
 
