@@ -1,4 +1,4 @@
-import { messageOf } from "common-utils";
+import { isRecord, messageOf } from "common-utils";
 import type { z } from "zod";
 import type {
 	CaseSelection,
@@ -71,9 +71,8 @@ function usage(traces: readonly OperationEvidence[]) {
 			)
 				return null;
 			const reported = evidence.usage;
-			if (!reported || typeof reported !== "object" || !(key in reported))
-				return null;
-			const count = (reported as Record<string, unknown>)[key];
+			if (!isRecord(reported) || !(key in reported)) return null;
+			const count = reported[key];
 			if (
 				typeof count !== "number" ||
 				!Number.isFinite(count) ||

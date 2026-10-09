@@ -94,6 +94,9 @@ export function summarizeRunStability(
 export function repetitionsMismatch(run: {
 	readonly manifest: { readonly repetitions?: number };
 	readonly cases: readonly (RepeatedRecord & {
+		readonly caseId?: unknown;
+		readonly input?: unknown;
+		readonly idealOutput?: unknown;
 		readonly stability?: unknown;
 	})[];
 	readonly summary: { readonly stability?: unknown };
@@ -119,7 +122,7 @@ export function repetitionsMismatch(run: {
 				repetitions,
 				stability,
 				...attempt
-			} = record as typeof record & Record<string, unknown>;
+			} = record;
 			if (repetitions?.length !== expected) return true;
 			return (
 				canonicalJson(stability ?? null) !==

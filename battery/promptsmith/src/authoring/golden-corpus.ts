@@ -28,16 +28,19 @@ type CorpusState = {
 	readonly inputSchema: PromptInputSchema;
 	readonly outputSchema: PromptOutputSchema;
 	readonly entries: ReadonlyMap<string, ParsedCaseEntry>;
-	readonly fingerprintInput?: (input: unknown) => string;
 };
 
+type AuthoredGoldenCases = Readonly<
+	Record<string, GoldenCase<unknown, unknown>>
+>;
+
 type GoldenCaseGroupState = {
-	readonly cases: Readonly<Record<string, object>>;
+	readonly cases: AuthoredGoldenCases;
 };
 
 type GoldenCaseCollectionState = {
 	readonly groups: Readonly<Record<string, GoldenCaseGroupState>>;
-	readonly cases: Readonly<Record<string, object>>;
+	readonly cases: AuthoredGoldenCases;
 };
 
 type SchemaGoldenCaseCollection<
@@ -67,9 +70,10 @@ const corpusStates = new WeakMap<object, CorpusState>();
 const selectionStates = new WeakMap<object, SelectionState>();
 
 /** Defines a named composition group without assigning a consumer role. */
-export function defineGoldenCaseGroup<
-	const Cases extends Readonly<Record<string, object>>,
->(cases: Cases): GoldenCaseGroup<Cases> {
+export function defineGoldenCaseGroup<const Cases extends AuthoredGoldenCases>(
+	cases: Cases,
+): GoldenCaseGroup<Cases> {
+	// An opaque handle: its key is type-only, and the cases live in the WeakMap.
 	const group = Object.freeze({}) as GoldenCaseGroup<Cases>;
 	goldenCaseGroupStates.set(group, { cases });
 	return group;
@@ -78,7 +82,7 @@ export function defineGoldenCaseGroup<
 /** Defines one semantic case collection from its groups and cases. */
 export function defineGoldenCaseCollection<
 	const Groups extends GoldenCaseGroupRegistry = Record<never, never>,
-	const Cases extends Readonly<Record<string, object>> = Record<never, never>,
+	const Cases extends AuthoredGoldenCases = Record<never, never>,
 >(definition: {
 	readonly groups?: Groups;
 	readonly cases: Cases;
@@ -94,6 +98,7 @@ export function defineGoldenCaseCollection<
 		groups[name] = state;
 	}
 
+	// An opaque handle: its key is type-only, and the cases live in the WeakMap.
 	const collection = Object.freeze({}) as GoldenCaseCollection<Groups, Cases>;
 	goldenCaseCollectionStates.set(collection, {
 		groups: Object.freeze(groups),
@@ -124,6 +129,10 @@ export function defineGoldenCorpus<
 	assertNonEmpty(args.route, "Golden Corpus route");
 	const identity = {};
 	const parsedEntries = new Map<string, ParsedCaseEntry>();
+	const cases: Record<
+		string,
+		ParsedGoldenCase<InputSchema, OutputSchema>
+	> = {};
 	const exactFingerprints = new Map<string, string>();
 	const {
 		cases: flattenedCases,
@@ -176,13 +185,14 @@ export function defineGoldenCorpus<
 				`${location} produced a non-string route fingerprint.`,
 			);
 		}
-		const value = deepFreeze({
+		const value: ParsedGoldenCase<InputSchema, OutputSchema> = deepFreeze({
 			input: parsedInput.data,
 			idealOutput: parsedOutput.data,
 			...(explanation === undefined ? {} : { explanation }),
 			...(sources.length === 0 ? {} : { sources }),
 			...(contaminationKeys.length === 0 ? {} : { contaminationKeys }),
-		}) as ParsedGoldenCase<InputSchema, OutputSchema>;
+		});
+		cases[id] = value;
 		parsedEntries.set(id, {
 			id,
 			value,
@@ -198,20 +208,8 @@ export function defineGoldenCorpus<
 		inputSchema: args.inputSchema,
 		outputSchema: args.outputSchema,
 		entries: parsedEntries,
-		...(args.fingerprintInput === undefined
-			? {}
-			: {
-					fingerprintInput: args.fingerprintInput as (
-						input: unknown,
-					) => string,
-				}),
 	};
 	const select = (ids: readonly string[]) => createSelection(state, ids);
-	const cases = Object.freeze(
-		Object.fromEntries(
-			[...parsedEntries].map(([id, entry]) => [id, entry.value]),
-		),
-	) as Readonly<Record<string, ParsedGoldenCase<InputSchema, OutputSchema>>>;
 	const groups = resolveGroups(groupIds, select, args.route);
 	const resolvedCollections = resolveCollections(
 		collectionIds,
@@ -219,11 +217,15 @@ export function defineGoldenCorpus<
 		args.route,
 	);
 
+	// The corpus state is schema-erased, so its selections and the collection
+	// and group records built from Object.entries carry no schema types. Every
+	// case was parsed by these schemas above, and the records hold one
+	// selection per collection and group name, which is what the type promises.
 	const corpus = Object.freeze({
 		route: args.route,
 		inputSchema: args.inputSchema,
 		outputSchema: args.outputSchema,
-		cases,
+		cases: Object.freeze(cases),
 		collections: resolvedCollections,
 		groups,
 		select,
@@ -348,7 +350,7 @@ function flattenCollections(
 	>;
 	readonly collections: Readonly<Record<string, readonly string[]>>;
 } {
-	const cases: {
+	const flattened: {
 		id: string;
 		goldenCase: GoldenCase<unknown, unknown>;
 	}[] = [];
@@ -391,14 +393,14 @@ function flattenCollections(
 	}
 
 	return {
-		cases: Object.freeze(cases),
+		cases: Object.freeze(flattened),
 		collections: Object.freeze(collectionIds),
 		groups: Object.freeze(groups),
 	};
 
 	function addFlattenedCase(
 		id: string,
-		goldenCase: object,
+		goldenCase: GoldenCase<unknown, unknown>,
 		location: string,
 	): void {
 		assertNonEmpty(id, "Golden Case ID");
@@ -409,10 +411,7 @@ function flattenCollections(
 			);
 		}
 		caseLocations.set(id, location);
-		cases.push({
-			id,
-			goldenCase: goldenCase as GoldenCase<unknown, unknown>,
-		});
+		flattened.push({ id, goldenCase });
 	}
 }
 
@@ -502,13 +501,13 @@ function normalizeSources(
 				);
 			}
 		}
-		return url === undefined
-			? ({
-					title,
-					path: path as string,
-					supports,
-				} satisfies GoldenCaseSource)
-			: ({ title, url, supports } satisfies GoldenCaseSource);
+		if (url !== undefined)
+			return { title, url, supports } satisfies GoldenCaseSource;
+		if (path !== undefined)
+			return { title, path, supports } satisfies GoldenCaseSource;
+		throw new Error(
+			`${location} has incomplete source metadata at index ${index}.`,
+		);
 	});
 	const seen = new Set<string>();
 	for (const source of normalized) {
