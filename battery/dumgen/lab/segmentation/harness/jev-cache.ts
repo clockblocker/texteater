@@ -163,7 +163,75 @@ export type Projection = {
 };
 
 export function hashOf(value: unknown): string {
-	return createHash("sha256").update(canonicalJson(value)).digest("hex");
+	return hashOfText(canonicalJson(value));
+}
+
+const hashOfText = (text: string) =>
+	createHash("sha256").update(text).digest("hex");
+
+/**
+ * The canonical JSON of an object whose members are spelled already:
+ * `canonicalJson`'s object rule, keys in UTF-16 code-unit order. A key is
+ * the hash of such an object, so it equals `hashOf` of the object itself.
+ */
+function canonicalObject(
+	members: readonly (readonly [key: string, text: string])[],
+): string {
+	return `{${[...members]
+		.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+		.map(([key, text]) => `${JSON.stringify(key)}:${text}`)
+		.join(",")}}`;
+}
+
+/**
+ * A request's state and each of its questions as canonical JSON, and each
+ * question's key in its bucket (`hashOf({ id, question })`), spelled once
+ * on the way in: its bucket, prompt hash, lookups and size are all taken
+ * from these, however many chunks and repetitions it is looked up in.
+ */
+type Spelling = {
+	readonly state: string;
+	readonly questions: ReadonlyMap<string, string>;
+	readonly keys: ReadonlyMap<string, string>;
+};
+
+function spell(state: EntryType, questions: Questions): Spelling {
+	const texts = new Map(
+		Object.entries(questions).map(([id, question]) => [
+			id,
+			canonicalJson(question),
+		]),
+	);
+	const keys = new Map(
+		[...texts].map(([id, question]) => [
+			id,
+			hashOfText(
+				canonicalObject([
+					["id", JSON.stringify(id)],
+					["question", question],
+				]),
+			),
+		]),
+	);
+	return { state: canonicalJson(state), questions: texts, keys };
+}
+
+/** What a spelling's map holds for question `id`; one it lacks throws. */
+function spelledAt(texts: ReadonlyMap<string, string>, id: string): string {
+	const text = texts.get(id);
+	if (text === undefined) throw Error(`Question ${id} was not spelled`);
+	return text;
+}
+
+/** The text `canonicalJson({ state, questions })` spells for `asked`, some of the spelled questions. */
+function requestText(spelling: Spelling, asked: Questions): string {
+	const questions = Object.keys(asked).map(
+		(id) => [id, spelledAt(spelling.questions, id)] as const,
+	);
+	return canonicalObject([
+		["questions", canonicalObject(questions)],
+		["state", spelling.state],
+	]);
 }
 
 /**
@@ -234,10 +302,6 @@ const bucketSchema = z.object({
 }) satisfies z.ZodType<Bucket>;
 
 const emptyBucket: Bucket = { requests: [], answers: {} };
-
-/** A question's key in its bucket: its id and its content. */
-const questionKey = (id: string, question: Question) =>
-	hashOf({ id, question });
 
 /** What the cache found for a request's questions. */
 type Lookup = {
@@ -404,11 +468,12 @@ export class JevCache {
 		repetition: number,
 		state: EntryType,
 		questions: Questions,
+		spelling: Spelling,
 	) {
 		this.#options.onRequest?.({ stage, repetition, state, questions });
 		const hashes = this.#requests.get(stage) ?? new Set();
 		this.#requests.set(stage, hashes);
-		hashes.add(hashOf({ state, questions }));
+		hashes.add(hashOfText(requestText(spelling, questions)));
 	}
 
 	/**
@@ -417,18 +482,19 @@ export class JevCache {
 	 */
 	ask(repetition: number, calls: CallRecord[] = []): JevAsk {
 		return (request, { stage, signal }) => {
+			const spelling = spell(request.state, request.questions);
 			this.#recordPrompt(
 				stage,
 				repetition,
 				request.state,
 				request.questions,
+				spelling,
 			);
-			return this.#answer(request, {
-				stage,
-				signal,
-				repetition,
-				calls,
-			});
+			return this.#answer(
+				request,
+				{ stage, signal, repetition, calls },
+				spelling,
+			);
 		};
 	}
 
@@ -451,7 +517,14 @@ export class JevCache {
 			Effect.promise(async () => {
 				const entries = Object.entries(questions);
 				if (entries.length === 0) return {};
-				this.#recordPrompt(stage, repetition, state, questions);
+				const spelling = spell(state, questions);
+				this.#recordPrompt(
+					stage,
+					repetition,
+					state,
+					questions,
+					spelling,
+				);
 				const chunks: (typeof entries)[] = [];
 				for (let at = 0; at < entries.length; at += size)
 					chunks.push(entries.slice(at, at + size));
@@ -472,6 +545,7 @@ export class JevCache {
 									? {}
 									: { salt: options.salt }),
 							},
+							spelling,
 						);
 						const checked = checkedAnswers(
 							stage,
@@ -492,17 +566,22 @@ export class JevCache {
 			});
 	}
 
+	/** The bucket of the spelled `state` at `repetition`: `hashOf({ model, state, repetition, salt })`. */
 	#bucketPath(
-		state: EntryType,
+		state: string,
 		repetition: number,
 		salt: string | undefined,
 	): string {
-		const key = hashOf({
-			model: this.model,
-			state,
-			repetition,
-			...(salt === undefined ? {} : { salt }),
-		});
+		const key = hashOfText(
+			canonicalObject([
+				["model", JSON.stringify(this.model)],
+				["state", state],
+				["repetition", canonicalJson(repetition)],
+				...(salt === undefined
+					? []
+					: [["salt", JSON.stringify(salt)] as const]),
+			]),
+		);
 		return join(
 			this.#options.cacheDirectory,
 			"jev-questions",
@@ -511,13 +590,17 @@ export class JevCache {
 		);
 	}
 
-	/** The bucket's answers to `questions`, and the questions it lacks. */
-	#lookup(bucket: Bucket, questions: Questions): Lookup {
+	/** The bucket's answers to `questions`, and the questions it lacks; `keys` holds each question's key. */
+	#lookup(
+		bucket: Bucket,
+		questions: Questions,
+		keys: ReadonlyMap<string, string>,
+	): Lookup {
 		const found: Record<string, Answer> = {};
 		const missing: Record<string, Question> = {};
 		const byRequest = new Map<number, number>();
 		for (const [id, question] of Object.entries(questions)) {
-			const cached = bucket.answers[questionKey(id, question)];
+			const cached = bucket.answers[spelledAt(keys, id)];
 			if (!cached) {
 				missing[id] = question;
 				continue;
@@ -576,6 +659,7 @@ export class JevCache {
 	#store(
 		path: string,
 		questions: Questions,
+		keys: ReadonlyMap<string, string>,
 		answered: {
 			readonly model: string;
 			readonly answers: Answers;
@@ -584,18 +668,17 @@ export class JevCache {
 		},
 	) {
 		return this.#update(path, (bucket) => {
-			const fresh = Object.entries(questions).filter(
-				([id, question]) =>
-					!(questionKey(id, question) in bucket.answers) &&
+			const fresh = Object.keys(questions).filter(
+				(id) =>
+					!(spelledAt(keys, id) in bucket.answers) &&
 					answered.answers[id] !== undefined,
 			);
 			if (fresh.length === 0) return undefined;
 			const request = bucket.requests.length;
 			const answers = { ...bucket.answers };
-			for (const [id, question] of fresh) {
+			for (const id of fresh) {
 				const answer = answered.answers[id];
-				if (answer)
-					answers[questionKey(id, question)] = { answer, request };
+				if (answer) answers[spelledAt(keys, id)] = { answer, request };
 			}
 			return {
 				requests: [
@@ -612,16 +695,17 @@ export class JevCache {
 		});
 	}
 
+	/** `request`, whose state and questions `spelling` holds, from the cache or else from jev. */
 	async #answer(
 		request: JevRequest,
 		context: AskContext,
+		spelling: Spelling,
 	): Promise<JevResponse> {
 		const { stage, repetition, calls } = context;
 		const { state, questions } = request;
 		const count = Object.keys(questions).length;
 		const project = this.#options.project;
-		const chars = (asked: Questions) =>
-			canonicalJson({ state, questions: asked }).length;
+		const chars = (asked: Questions) => requestText(spelling, asked).length;
 		const cached = (
 			model: string,
 			answers: Answers,
@@ -651,9 +735,14 @@ export class JevCache {
 				answers: {},
 				usage: { input_tokens: 0, output_tokens: 0 },
 			};
-		const bucketPath = this.#bucketPath(state, repetition, context.salt);
+		const bucketPath = this.#bucketPath(
+			spelling.state,
+			repetition,
+			context.salt,
+		);
+		const { keys } = spelling;
 		const bucket = (await readBucket(bucketPath)) ?? emptyBucket;
-		const lookup = this.#lookup(bucket, questions);
+		const lookup = this.#lookup(bucket, questions, keys);
 		for (const model of lookup.models) this.resolvedModels.add(model);
 		const missingCount = Object.keys(lookup.missing).length;
 		if (missingCount === 0)
@@ -666,7 +755,8 @@ export class JevCache {
 		if (project) {
 			const answers = await this.#projectMiss(
 				context,
-				state,
+				spelling.state,
+				keys,
 				lookup.missing,
 				chars(lookup.missing),
 				project,
@@ -684,7 +774,7 @@ export class JevCache {
 			context,
 			missingCount,
 		);
-		await this.#store(bucketPath, lookup.missing, fresh);
+		await this.#store(bucketPath, lookup.missing, keys, fresh);
 		return {
 			model: fresh.model,
 			answers: { ...lookup.found, ...fresh.answers },
@@ -808,7 +898,8 @@ export class JevCache {
 	 */
 	async #projectMiss(
 		context: AskContext,
-		state: EntryType,
+		state: string,
+		keys: ReadonlyMap<string, string>,
 		missing: Questions,
 		chars: number,
 		project: Projector,
@@ -825,7 +916,7 @@ export class JevCache {
 				this.#bucketPath(state, other, salt),
 			);
 			if (!bucket) continue;
-			const lookup = this.#lookup(bucket, missing);
+			const lookup = this.#lookup(bucket, missing, keys);
 			if (Object.keys(lookup.missing).length > 0) continue;
 			this.projection.requests.push({
 				...projected,

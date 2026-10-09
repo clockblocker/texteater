@@ -1,10 +1,13 @@
 import { afterAll, expect, test } from "bun:test";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { Questions } from "@typesafe-ai/sdk";
+import { canonicalJson } from "common-utils";
+import * as Effect from "effect/Effect";
 import {
 	type CallRecord,
+	hashOf,
 	JevCache,
 	transportText,
 } from "../../../lab/segmentation/harness/jev-cache.js";
@@ -172,6 +175,72 @@ test("answers are cached per question, so another chunking hits and a partial hi
 		context,
 	);
 	expect(sent).toEqual([["c"]]);
+});
+
+test("buckets, question keys, prompt hashes and request sizes are taken over each value's canonical JSON, so the lab's cache stays readable", async () => {
+	const root = cacheDirectory();
+	// Keys out of order, nested, and an id that needs escaping.
+	const state = { units: [{ to: 2, from: 0 }], sentence: "Er zog sich an." };
+	const asked = { ...questions, 'say "x"': noul("Is ä so?") };
+	const bucketOf = async (key: string) =>
+		JSON.parse(
+			await readFile(
+				join(root, "jev-questions", key.slice(0, 2), `${key}.json`),
+				"utf8",
+			),
+		);
+	const keys = Object.entries(asked)
+		.map(([id, question]) => hashOf({ id, question }))
+		.sort();
+	const jev = new JevCache({ cacheDirectory: root, transport: answering() });
+	await jev.ask(1)(
+		{ model: pinnedJevModel, state, questions: asked },
+		context,
+	);
+	const bucket = await bucketOf(
+		hashOf({ model: pinnedJevModel, state, repetition: 1 }),
+	);
+	expect(Object.keys(bucket.answers).sort()).toEqual(keys);
+	expect(jev.promptHashes()).toEqual({
+		test: hashOf([hashOf({ state, questions: asked })]),
+	});
+	await Effect.runPromise(
+		jev.port(0, [], { salt: "limit", questionsPerRequest: 2 })({
+			stage: "test",
+			state,
+			questions: asked,
+		}),
+	);
+	const salted = await bucketOf(
+		hashOf({ model: pinnedJevModel, state, repetition: 0, salt: "limit" }),
+	);
+	expect(Object.keys(salted.answers).sort()).toEqual(keys);
+	const projecting = new JevCache({
+		cacheDirectory: root,
+		offline: true,
+		project: ({ questions: missing }) =>
+			Object.fromEntries(
+				Object.keys(missing).map((id) => [
+					id,
+					{ type: "noul", noul: 0.5 },
+				]),
+			),
+	});
+	const extra = { c: noul("Is c so?") };
+	await projecting.ask(1)(
+		{ model: pinnedJevModel, state, questions: asked },
+		context,
+	);
+	await projecting.ask(1)(
+		{ model: pinnedJevModel, state, questions: { ...asked, ...extra } },
+		context,
+	);
+	expect(projecting.projection.samples.map(({ chars }) => chars)).toEqual([
+		canonicalJson({ state, questions: asked }).length,
+	]);
+	expect(projecting.projection.requests.map(({ chars }) => chars)).toEqual([
+		canonicalJson({ state, questions: extra }).length,
+	]);
 });
 
 test("an answer from another jev version fails its request and is not cached", async () => {
