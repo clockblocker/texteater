@@ -978,7 +978,7 @@ export function runComparison(left: StoredRun, right: StoredRun) {
 }
 
 /**
- * The caps a live resolve.grammar run was granted, refusing a run with no
+ * The caps a live resolve.grammar, resolve.reading and knowledge.produce run was granted, refusing a run with no
  * granted budget or whose price exceeds it: fresh jev input tokens against
  * `--budget`, Luna's input against `--luna-budget` and its output against
  * `--luna-output-budget`, and, when `--usd-budget` is given, the price in
@@ -1020,7 +1020,7 @@ export function guardGrammarBudget(
 		!Object.values(caps).every(Number.isFinite)
 	)
 		throw Error(
-			"A live resolve.grammar or resolve.reading run needs --budget (jev input tokens), --luna-budget (Luna input tokens) and --luna-output-budget (Luna output tokens); price it with --estimate first. Nothing was asked.",
+			"A live resolve.grammar, resolve.reading and knowledge.produce run needs --budget (jev input tokens), --luna-budget (Luna input tokens) and --luna-output-budget (Luna output tokens); price it with --estimate first. Nothing was asked.",
 		);
 	if (
 		price &&

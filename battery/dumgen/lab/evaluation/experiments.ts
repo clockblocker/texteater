@@ -196,7 +196,7 @@ export type EvaluateArgs = {
 	readonly setsRoot?: string;
 	/** Price the run and stop: nothing is asked and no run is saved. */
 	readonly estimate?: boolean;
-	/** resolve.grammar and resolve.reading: price every request, cached ones included. */
+	/** resolve.grammar, resolve.reading and knowledge.produce, with `estimate` only: price every request, cached ones included. */
 	readonly wholeRound?: boolean;
 	/** Receives a live run's price before anything is asked; throw to refuse. */
 	readonly beforeLive?: (priced: PricedProjection) => void | Promise<void>;
@@ -216,15 +216,15 @@ export type EvaluateArgs = {
 	 */
 	readonly jev?: JevAsk;
 	readonly luna?: LunaAsk;
-	/** resolve.grammar and resolve.reading: Luna's misses through the Batch API instead (#891). */
+	/** resolve.grammar, resolve.reading and knowledge.produce: Luna's misses through the Batch API instead (#891). */
 	readonly lunaBatch?: LunaBatch;
 	/** Receives each Luna batch as it is sent and settled, for the port's ledger. */
 	readonly onLunaBatch?: (event: LunaBatchEvent) => void | Promise<void>;
-	/** Receives a live resolve.grammar run's price before anything is asked; throw to refuse. */
+	/** Receives a live resolve.grammar, resolve.reading and knowledge.produce run's price before anything is asked; throw to refuse. */
 	readonly beforeGrammarLive?: (price: GrammarPrice) => void | Promise<void>;
-	/** resolve.grammar's hard caps on fresh tokens. */
+	/** The hard caps on fresh tokens of a live resolve.grammar, resolve.reading and knowledge.produce run. */
 	readonly grammarCaps?: GrammarCaps;
-	/** resolve.grammar: only the first this many cases, for a smoke run. */
+	/** resolve.grammar, resolve.reading and knowledge.produce: only the first this many cases, for a smoke run. */
 	readonly limit?: number;
 	/**
 	 * segment.inUnits: only these cases of the set run (`--cases`), such as
@@ -235,7 +235,7 @@ export type EvaluateArgs = {
 	readonly grammarSubset?: string;
 	/** knowledge.produce: only the cases with gold Knowledge. */
 	readonly goldOnly?: boolean;
-	/** resolve.grammar and resolve.reading: attempts per case, 1 to 3. */
+	/** resolve.grammar, resolve.reading and knowledge.produce: attempts per case, 1 to 3. */
 	readonly repetitions?: number;
 	/** resolve.grammar's answer cache. */
 	readonly grammarRoot?: string;
