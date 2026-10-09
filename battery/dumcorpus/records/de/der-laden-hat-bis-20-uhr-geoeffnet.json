@@ -158,7 +158,7 @@
 			},
 			"reading": { "emojiDescription": "🤲" },
 			"notes": {
-				"rationale": "The clause reports a state lasting until 20 Uhr, not the event of opening: the shop is open (*Der Laden öffnete bis 20 Uhr is no sentence). So hat is the VERB haben on its own, and geöffnet is not its perfect (de/sein-perfect-or-copula, ADR 0036 amended on #653). Minimal pair: de/der-laden-hat-heute-erst-um-8-geoeffnet. geöffnet carries the state, and haben keeps its 'have' Reading under ADR 0031, as in Er hat die ganze Zeit die Augen geschlossen."
+				"rationale": "The clause reports a state lasting until 20 Uhr, not the event of opening: the shop is open (*Der Laden öffnete bis 20 Uhr is no sentence). So hat is the VERB haben on its own, and geöffnet is not its perfect (de/sein-perfect-or-copula, ADR 0036, #653). Minimal pair: de/der-laden-hat-heute-erst-um-8-geoeffnet. geöffnet carries the state, and haben keeps its 'have' Reading under ADR 0031, as in Er hat die ganze Zeit die Augen geschlossen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

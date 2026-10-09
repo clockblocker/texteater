@@ -759,7 +759,7 @@ test("an English and a Hebrew proper noun own the article they are cited with", 
 	expect(parseUnit(bare).success).toBe(false);
 });
 // A NOUN Locution heads its phrase and owns its article as a Lexeme NOUN does
-// (ADR 0040, amended 2026-10-02). The evidence is optional, and the
+// (ADR 0040). The evidence is optional, and the
 // Locution's other fixed words may leave it Partial.
 test("a German or English NOUN Locution owns its article", () => {
 	const walk = {
@@ -1120,7 +1120,7 @@ test("a German ADP records its position on neither its Lemma nor its Attestation
 		expect(parseUnit({ ...wegen, adpType }).success).toBe(false);
 });
 // A Locution ADP records its complement's case as a Lexeme ADP does, and no
-// position: its words are its Canonical Form (ADR 0039, amended 2026-10-01).
+// position: its words are its Canonical Form (ADR 0039).
 test("a Locution ADP Attestation records at most one bare-case slot", () => {
 	const willen = (realizedCase: string | null) => ({
 		unitKind: "Attestation",

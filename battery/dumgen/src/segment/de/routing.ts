@@ -573,12 +573,12 @@ const variantPair = (left: RouteKey, right: RouteKey) => {
 };
 
 /**
- * The route variants of a borderline unit (Dumgen ADR 0007, amended
- * 2026-09-30). When the top two shares of the distribution that decided
- * its route lie within `margin` of each other, the routes within `margin`
- * of the top, its route first, at most `most`; undefined when one route
- * is clear. A unit whose route and near routes include two outside the
- * tolerated `variantKindPairs` takes its route alone (#827).
+ * The route variants of a borderline unit (Dumgen ADR 0007). When the top
+ * two shares of the distribution that decided its route lie within `margin`
+ * of each other, the routes within `margin` of the top, its route first, at
+ * most `most`; undefined when one route is clear. A unit whose route and
+ * near routes include two outside the tolerated `variantKindPairs` takes its
+ * route alone (#827).
  */
 export function routeVariants(
 	route: RouteKey,

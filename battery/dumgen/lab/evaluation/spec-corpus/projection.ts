@@ -141,7 +141,7 @@ export type ProjectedCorpus<
 
 /**
  * A record's review group for a prompt: Reviewed when a person has reviewed
- * it through the layer the prompt outputs (ADR 0037, amended 2026-09-29).
+ * it through the layer the prompt outputs (ADR 0037).
  */
 function groupOf(
 	record: Dumcorpus.SpecSegmentation,

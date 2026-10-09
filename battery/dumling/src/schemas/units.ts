@@ -284,7 +284,7 @@ function withChecks<S extends z.ZodObject>(
  * Composition stores grammatical features; source evidence belongs to the
  * Attestation. A Head that can open a phrase names where its article is
  * attested (ADR 0035, ADR 0040), and so may a NOUN Locution, the Head of its
- * phrase (ADR 0040, amended 2026-10-02). Comparability decides Degree on ADV
+ * phrase (ADR 0040). Comparability decides Degree on ADV
  * and ADJ where a language marks it (ADR 0042). Each language's route policy
  * adds its own checks and evidence fields.
  */

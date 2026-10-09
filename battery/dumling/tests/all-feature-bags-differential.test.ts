@@ -20,8 +20,7 @@ function setsEnglishStyle(route: string, input: unknown): boolean {
 }
 
 // No Lexeme route carries UD Foreign any more: foreign material is the
-// Foreign Family (ADR 0045, amended 2026-10-01), so a legacy sample that
-// sets it is rejected.
+// Foreign Family (ADR 0045), so a legacy sample that sets it is rejected.
 function setsForeign(input: unknown): boolean {
 	if (typeof input !== "object" || input === null) return false;
 	const core = (input as { core?: unknown }).core;
@@ -29,9 +28,9 @@ function setsForeign(input: unknown): boolean {
 }
 
 // German Core and Surface features that left their route: an ADP's
-// position is no identity and a circumposition is a Locution ADP (ADR 0032,
-// amended 2026-10-01), and the #766 sweep dropped the features that only
-// labelled a Lemma. A legacy sample that sets one is rejected.
+// position is no identity and a circumposition is a Locution ADP (ADR 0032),
+// and the #766 sweep dropped the features that only labelled a Lemma. A legacy
+// sample that sets one is rejected.
 const retiredGermanFeatures: Readonly<Record<string, readonly string[]>> = {
 	"de/lexeme/adposition.ts": ["abbr", "adpType", "extPos", "partType"],
 	"de/lexeme/coordinating-conjunction.ts": ["conjType"],

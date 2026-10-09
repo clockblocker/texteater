@@ -53,10 +53,10 @@ const closedClassIdentitySchema = z.strictObject({
  * ascending order, discontinuous ones included, and its route or
  * `Unresolved`.
  *
- * A borderline unit also carries `variants` (Dumgen ADR 0007, amended
- * 2026-09-30): two or more distinct routes a click picks one of, its
- * `route` first. Its grouping is fixed either way. A unit with one route,
- * the common case, carries none, and neither does an `Unresolved` one.
+ * A borderline unit also carries `variants` (Dumgen ADR 0007): two or more
+ * distinct routes a click picks one of, its `route` first. Its grouping is
+ * fixed either way. A unit with one route, the common case, carries none,
+ * and neither does an `Unresolved` one.
  * Variants stay in Dumgen: what a click stores has one exact route.
  */
 const unitSchema = z

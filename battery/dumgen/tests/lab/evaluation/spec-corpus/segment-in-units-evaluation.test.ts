@@ -302,7 +302,7 @@ describe("segment.inUnits route tolerance (ADR 0008)", () => {
 	});
 });
 
-describe("segment.inUnits route variants (ADR 0007, amended 2026-09-30)", () => {
+describe("segment.inUnits route variants (Dumgen ADR 0007)", () => {
 	// "So ist es." with one gold unit on "So".
 	const input = {
 		language: "de" as const,

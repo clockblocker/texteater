@@ -73,7 +73,7 @@ export type UnitSettings = {
 	/**
 	 * Borderline units carry route variants when the top two shares of the
 	 * distribution that decided their route lie within this margin (Dumgen
-	 * ADR 0007, amended 2026-09-30). None when absent.
+	 * ADR 0007). None when absent.
 	 */
 	readonly variantMargin?: number;
 	/**

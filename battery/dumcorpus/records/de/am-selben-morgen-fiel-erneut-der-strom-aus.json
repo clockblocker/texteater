@@ -169,7 +169,7 @@
 				"emojiDescription": "👉"
 			},
 			"notes": {
-				"rationale": "am selben is an demselben: the m stands for the dem- of demselben, which is part of the word, not an article (ADR 0040, amended on #618). derselbe owns both pieces with Full coverage. selber is the invariant emphatic and never declines (ticket 503).",
+				"rationale": "am selben is an demselben: the m stands for the dem- of demselben, which is part of the word, not an article (ADR 0040, #618). derselbe owns both pieces with Full coverage. selber is the invariant emphatic and never declines (ticket 503).",
 				"knownMistakes": [
 					"Giving m to Morgen as its article and attesting derselbe over [selben] with Partial coverage."
 				]

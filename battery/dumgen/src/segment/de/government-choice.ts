@@ -8,7 +8,7 @@
  * or noun, or a routine formula's head word. One heading an Adverbial
  * complement of place or direction, or a free adjunct, stays its own unit,
  * since the word requires a place or direction, not that preposition
- * (ADR 0034, amended 2026-10-01), and a preposition the expression governs
+ * (ADR 0034), and a preposition the expression governs
  * for a free complement is valency, not a fixed member
  * (de/fixed-member-test). Code flags (`flaggedPrepositions`), and the judge
  * answers one Choice per flag, worded as E-VALBU tests valency: does a

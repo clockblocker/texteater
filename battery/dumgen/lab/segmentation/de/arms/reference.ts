@@ -547,7 +547,7 @@ export function referenceStagesUnder(
 export const pickId = (group: readonly number[]) => `pk_${group.join("_")}`;
 
 /**
- * The click-time pick of Dumgen ADR 0007 (amended 2026-09-30), as a lab
+ * The click-time pick of Dumgen ADR 0007, as a lab
  * prototype: one Choice per unit carrying variants, among those variants
  * only, against the judge state the route requests read. The unit's
  * grouping is fixed; the answer is its one route.

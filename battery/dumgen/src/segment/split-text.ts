@@ -1,8 +1,8 @@
 /**
  * Splits a Text into paragraphs and Sentences before `segment.inUnits`
- * sees it. Splitting happens above the segmenters (Dumgen ADR 0007, amended
- * 2026-09-29) and is code only: no judge sees it. The heuristics are
- * German-tuned and copied from tf-demo's intake (`sentenceSplitting.ts`).
+ * sees it. Splitting happens above the segmenters (Dumgen ADR 0007) and is
+ * code only: no judge sees it. The heuristics are German-tuned and copied
+ * from tf-demo's intake (`sentenceSplitting.ts`).
  */
 
 /** A Text's non-empty paragraphs, each with its non-empty Sentences in order. */

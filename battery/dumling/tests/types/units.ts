@@ -40,7 +40,7 @@ const _locutionCore: Record<string, never> = locution.coreFeatures;
 declare const locutionNoun: Lemma<"de", "Locution", "NOUN">;
 const _locutionGender: "Fem" | "Masc" | "Neut" | null =
 	locutionNoun.coreFeatures.gender;
-// A NOUN Locution may own its article (ADR 0040, amended 2026-10-02).
+// A NOUN Locution may own its article (ADR 0040).
 declare const locutionNounOccurrence: Unit<
 	"Attestation",
 	"en",

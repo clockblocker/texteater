@@ -52,7 +52,7 @@
 			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "ADV" },
 			"notes": {
-				"rationale": "auf jeden Fall 'in any case' is a fixed adverbial: jeden cannot be swapped for an ordinary synonym (de/fixed-member-test), and the whole acts as an adverb, so it is a Locution ADV, like auf keinen Fall (ADR 0039, amended 2026-09-27). Its antonym is auf keinen Fall (Locution ADV), and its synonyms definitiv and zweifellos (Lexeme ADV) and mit Sicherheit (Locution ADV): Lexeme and Locution share one relation space (ADR 0039)."
+				"rationale": "auf jeden Fall 'in any case' is a fixed adverbial: jeden cannot be swapped for an ordinary synonym (de/fixed-member-test), and the whole acts as an adverb, so it is a Locution ADV, like auf keinen Fall (ADR 0039). Its antonym is auf keinen Fall (Locution ADV), and its synonyms definitiv and zweifellos (Lexeme ADV) and mit Sicherheit (Locution ADV): Lexeme and Locution share one relation space (ADR 0039)."
 			}
 		},
 		{

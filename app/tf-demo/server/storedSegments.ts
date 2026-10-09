@@ -13,7 +13,7 @@ import type {
  *
  * Stored rows are keyed by `index`, the Segment's index in its Sentence,
  * which is also how units and Attestation memberships name a Segment
- * (Dumgen ADR 0004, amended for #767). Reading the stored rows is the
+ * (Dumgen ADR 0004, #767). Reading the stored rows is the
  * Convex layer's `loadStoredSegments`.
  */
 

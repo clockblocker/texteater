@@ -49,7 +49,7 @@ const englishValencyEvidenceSchema = z.array(
 
 /**
  * English's route conditions. Its Heads that can open a phrase, and a NOUN
- * Locution, own their article (ADR 0040, amended 2026-10-02). A governor (a
+ * Locution, own their article (ADR 0040). A governor (a
  * Lexeme or Locution VERB, ADJ or NOUN) may name the valency slots it
  * realizes, with no case (ADR 0034).
  */

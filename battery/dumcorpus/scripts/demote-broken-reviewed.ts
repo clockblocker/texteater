@@ -1,6 +1,6 @@
 /**
  * Demotes each reviewed record whose reviewed layers fail against the current
- * model (ADR 0037, amended): its Review Depth drops to the deepest layer that
+ * model (ADR 0037): its Review Depth drops to the deepest layer that
  * still passes, or it becomes a Draft. A model change runs this instead of
  * migrating the records it breaks; they are reshaped later, in one pass, and
  * reviewed again. Prints each demotion.

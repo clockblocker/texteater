@@ -67,7 +67,7 @@ const valencyEvidenceSchema = z.array(
 
 /**
  * German's route conditions. Its Heads that can open a phrase, and a NOUN
- * Locution, own their article (ADR 0040, amended 2026-10-02). A German verbal
+ * Locution, own their article (ADR 0040). A German verbal
  * Attestation names its owned subject-expletive member as evidence (ADR
  * 0022). Every German governor (a Lexeme or Locution VERB, ADJ or NOUN, and
  * AUX) names the valency slots it realizes, such as its governed preposition
@@ -96,7 +96,7 @@ export const deRoutePolicy = routePolicy("de", {
 			"de/Lexeme/PRON",
 		],
 		// A NOUN Locution heads its phrase and owns its article as a Lexeme NOUN
-		// does (ADR 0040, amended 2026-10-02).
+		// does (ADR 0040).
 		locutionArticleOwner: ["de/Locution/NOUN"],
 		germanVerbal: ["de/Lexeme/VERB", "de/Lexeme/AUX", "de/Locution/VERB"],
 		germanAdposition: ["de/Lexeme/ADP", "de/Locution/ADP"],

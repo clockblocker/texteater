@@ -157,7 +157,7 @@
 			},
 			"reading": { "emojiDescription": "🤲" },
 			"notes": {
-				"rationale": "die ganze Zeit makes the eyes' closed state last, so the clause reports no event of closing: hat is the VERB haben on its own (de/sein-perfect-or-copula, ADR 0036 amended on #653). Minimal pair: de/er-hat-ploetzlich-die-augen-geschlossen. die Augen geschlossen haben is 'have something in a state', the 'have' Reading of Wir hätten gern mehr Zeit under ADR 0031; geschlossen carries the state."
+				"rationale": "die ganze Zeit makes the eyes' closed state last, so the clause reports no event of closing: hat is the VERB haben on its own (de/sein-perfect-or-copula, ADR 0036, #653). Minimal pair: de/er-hat-ploetzlich-die-augen-geschlossen. die Augen geschlossen haben is 'have something in a state', the 'have' Reading of Wir hätten gern mehr Zeit under ADR 0031; geschlossen carries the state."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

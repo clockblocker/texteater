@@ -82,7 +82,7 @@ export type ClosedClassIdentity = {
  * One biggest unit (Dumgen ADR 0007): the indices of its Segments in its
  * Sentence's Segments, ascending, discontinuous ones included (#767), and
  * its route or `Unresolved`. A borderline unit also carries route
- * variants, its route first (amended 2026-09-30); the evaluator reads
+ * variants, its route first; the evaluator reads
  * them and a click ignores them (#860). A one-piece DET or PRON unit
  * carries the closed-class identity it was routed by, if any (#864).
  */

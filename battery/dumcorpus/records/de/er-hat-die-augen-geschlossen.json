@@ -141,7 +141,7 @@
 			},
 			"reading": { "emojiDescription": "🔒" },
 			"notes": {
-				"rationale": "Nothing in the sentence tells the event of closing from the eyes' closed state, so de/sein-perfect-or-copula can't decide. The exception in de/unresolved-over-repair settles it: \"haben with a participle that the sentence can't settle as perfect or state … is grouped as the perfect\", so hat … geschlossen is the perfect of schließen, one VERB target, not Unresolved (#725, ADR 0036 amended). It is a segmentation default, not a claim about German. Minimal pairs: de/er-hat-ploetzlich-die-augen-geschlossen (event, perfect) and de/er-hat-die-ganze-zeit-die-augen-geschlossen (state, VERB haben + ADJ geschlossen). Closing the eyes is Duden schließen 1 'zumachen', the 🔒 Reading."
+				"rationale": "Nothing in the sentence tells the event of closing from the eyes' closed state, so de/sein-perfect-or-copula can't decide. The exception in de/unresolved-over-repair settles it: \"haben with a participle that the sentence can't settle as perfect or state … is grouped as the perfect\", so hat … geschlossen is the perfect of schließen, one VERB target, not Unresolved (#725, ADR 0036). It is a segmentation default, not a claim about German. Minimal pairs: de/er-hat-ploetzlich-die-augen-geschlossen (event, perfect) and de/er-hat-die-ganze-zeit-die-augen-geschlossen (state, VERB haben + ADJ geschlossen). Closing the eyes is Duden schließen 1 'zumachen', the 🔒 Reading."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
