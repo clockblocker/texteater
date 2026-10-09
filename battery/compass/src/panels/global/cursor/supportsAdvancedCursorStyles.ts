@@ -19,3 +19,12 @@ export function supportsAdvancedCursorStyles(): boolean {
 
 	return cached;
 }
+
+/**
+ * Forgets the cached value, so the next supportsAdvancedCursorStyles() reads
+ * the user agent again. Tests share this module, so one that stubs `window`
+ * resets the cache before and after it.
+ */
+export function resetAdvancedCursorStylesCache() {
+	cached = undefined;
+}
