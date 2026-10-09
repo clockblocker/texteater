@@ -17,7 +17,7 @@
  * the baseline's misses and a seeded guard, its seed and case ids
  * recorded in the manifest, and its report compared with the baseline's.
  */
-import { join, relative, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson } from "common-utils";
 import * as Effect from "effect/Effect";
@@ -45,10 +45,17 @@ import {
 import { loadSet, trackedSetsRoot } from "../../segmentation/harness/corpus.js";
 import { JevCache } from "../../segmentation/harness/jev-cache.js";
 import { storedAs } from "../../stored-json.js";
-import { frozenSetSize, isFrozen } from "../frozen-sets.js";
+import { frozenSetSize } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
 import { groupSegments } from "../production-segmenter.js";
 import { goldRequests } from "../request-diff.js";
+import {
+	fillLive,
+	openFrozenSet,
+	priceRound,
+	runModelsOptions,
+	selectSubset,
+} from "../round-steps.js";
 import {
 	type GrammarCase,
 	type GrammarSetName,
@@ -61,7 +68,6 @@ import {
 	type GrammarPrice,
 	type LunaBatchEvent,
 	type ModelsSpend,
-	readLedgerSizes,
 } from "./models.js";
 import { goldAnswers, goldWritten } from "./oracle.js";
 import {
@@ -384,49 +390,25 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 							args.concurrency ?? 12,
 						),
 				}),
-		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		async evaluate(args: GrammarEvaluateArgs): Promise<GrammarEvaluated> {
-			const root = args.root ?? defaultGrammarRoot;
-			const setsRoot = args.setsRoot ?? trackedGrammarSetsRoot;
-			if (!isFrozen(setsRoot, setName))
-				throw Error(
-					`The ${setName} set of ${grammarRoute} is not frozen; run \`bun cli/resolve-grammar.ts freeze\` first`,
-				);
-			const set = await loadGrammarSet(setsRoot, setName);
-			const repetitions = args.repetitions ?? grammarRepetitions;
-			if (
-				!Number.isInteger(repetitions) ||
-				repetitions < 1 ||
-				repetitions > grammarRepetitions
-			)
-				throw Error(
-					`repetitions must be 1 to ${grammarRepetitions}, not ${repetitions}`,
-				);
-			let caseFilter: CaseFilter | undefined;
-			let selected = set.cases;
-			if (args.subset) {
-				const path = resolve(packageRoot, args.subset);
-				const subset = loadSubset(path);
-				if (subset.setHash !== set.hash)
-					throw Error(
-						`The subset was read from set ${subset.setHash}, not the frozen ${set.hash}`,
-					);
-				const ids = subsetCaseIds(subset);
-				const wanted = new Set([...ids.missed, ...ids.guard]);
-				selected = set.cases.filter(({ id }) => wanted.has(id));
-				if (selected.length !== wanted.size)
-					throw Error("The subset names cases the frozen set lacks");
-				caseFilter = {
-					subset: relative(packageRoot, path),
-					baselineRunId: subset.baselineRunId,
-					seed: subset.seed,
-					missed: ids.missed,
-					guard: ids.guard,
-				};
-			}
+			const directory = join(args.root ?? defaultGrammarRoot, "cache");
+			const { set, repetitions } = await openFrozenSet({
+				setsRoot: args.setsRoot ?? trackedGrammarSetsRoot,
+				setName,
+				route: grammarRoute,
+				freezeCommand: "bun cli/resolve-grammar.ts freeze",
+				load: loadGrammarSet,
+				maximum: grammarRepetitions,
+				repetitions: args.repetitions,
+			});
+			const { cases: selected, caseFilter } = selectSubset({
+				set,
+				subset: args.subset,
+				load: loadSubset,
+				caseIds: subsetCaseIds,
+			});
 			const cases = selected.slice(0, args.limit ?? selected.length);
 			const concurrency = args.concurrency ?? 12;
-			const directory = join(root, "cache");
 			const units = e2e
 				? await cachedUnits(
 						args.segmentLabRoot ?? defaultSegmentLabRoot,
@@ -434,62 +416,23 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 					)
 				: undefined;
 			const identity = { name: set.name, hash: set.hash };
-			let price: GrammarPrice | undefined;
-			const ledgerSizes =
-				args.estimate || !args.offline
-					? await readLedgerSizes(
-							args.ledger ?? grammarLedgerPath,
-							id,
-						)
-					: undefined;
-			let stageSizes: GrammarPrice["sizes"]["stages"] | undefined;
-			if (args.estimate || !args.offline) {
-				const projecting = new GrammarModels({
-					directory,
-					mode: "project",
-					...(ledgerSizes ? { ledgerSizes } : {}),
-					...(args.estimate && args.wholeRound
-						? { wholeRound: true }
-						: {}),
-				});
-				await pass(cases, projecting, concurrency, repetitions, units);
-				price = projecting.price(
-					repetitions,
-					cases.length * repetitions,
-				);
-				stageSizes = price.sizes.stages;
-				if (args.estimate) return { price, set: identity };
-				await args.beforeLive?.(price);
-			}
-			const live = new GrammarModels({
+			const passWith = (models: GrammarModels) =>
+				pass(cases, models, concurrency, repetitions, units);
+			const priced = await priceRound(args, {
+				id,
+				ledger: grammarLedgerPath,
 				directory,
-				mode: args.offline ? "offline" : "live",
-				...(args.jev ? { jev: args.jev } : {}),
-				...(args.luna ? { luna: args.luna } : {}),
-				...(args.lunaBatch ? { lunaBatch: args.lunaBatch } : {}),
-				...(args.onLunaBatch ? { onLunaBatch: args.onLunaBatch } : {}),
-				...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
-				...(args.caps ? { caps: args.caps } : {}),
-				...(ledgerSizes ? { ledgerSizes } : {}),
-				...(stageSizes ? { stageSizes } : {}),
+				models: (options) => new GrammarModels(options),
+				pass: passWith,
+				repetitions,
+				attempts: cases.length * repetitions,
 			});
-			if (!args.offline) {
-				if (!args.jev || !(args.luna || args.lunaBatch))
-					throw Error(
-						"A live resolve.grammar run needs jev and Luna",
-					);
-				// Staged with a batch: each pass stops attempts at their Luna
-				// misses, one batch answers them, and the next pass goes on.
-				const signal = args.signal ?? new AbortController().signal;
-				await live.resumeLunaBatches(signal);
-				await pass(cases, live, concurrency, repetitions, units);
-				while (await live.sendLunaBatch(signal))
-					await pass(cases, live, concurrency, repetitions, units);
-				if (live.capHit !== undefined)
-					throw Error(
-						`The run stopped at the ${live.capHit}; spent ${JSON.stringify(live.report())}`,
-					);
-			}
+			const { price } = priced;
+			if (args.estimate) return { price, set: identity };
+			const live = new GrammarModels(
+				runModelsOptions(args, directory, priced),
+			);
+			await fillLive(args, live, "resolve.grammar", () => passWith(live));
 			const replay = new GrammarModels({ directory, mode: "offline" });
 			const byId = new Map(
 				cases.map((goldCase) => [goldCase.id, goldCase]),

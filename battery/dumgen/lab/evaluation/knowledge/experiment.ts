@@ -40,7 +40,7 @@ import {
 	judgmentSettingsSchema,
 } from "../../run-directory.js";
 import { storedAs } from "../../stored-json.js";
-import { frozenSetSize, isFrozen } from "../frozen-sets.js";
+import { frozenSetSize } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
 import { goldRequests } from "../request-diff.js";
 import {
@@ -50,11 +50,17 @@ import {
 	type GrammarPrice,
 	type LunaBatchEvent,
 	type ModelsSpend,
-	readLedgerSizes,
 } from "../resolve-grammar/models.js";
+import {
+	fillLive,
+	openFrozenSet,
+	priceRound,
+	runModelsOptions,
+} from "../round-steps.js";
 import {
 	type KnowledgeCase,
 	type KnowledgeScope,
+	type KnowledgeSet,
 	type KnowledgeSetName,
 	loadKnowledgeSet,
 	requestOf,
@@ -71,7 +77,11 @@ import {
 	type ScoredKnowledge,
 	spotCheckReport,
 } from "./scoring.js";
-import { knowledgeSubsetCaseIds, loadKnowledgeSubset } from "./subset.js";
+import {
+	type KnowledgeSubset,
+	knowledgeSubsetCaseIds,
+	loadKnowledgeSubset,
+} from "./subset.js";
 
 /** The package root a subset's path is relative to. */
 const packageRoot = fileURLToPath(new URL("../../../", import.meta.url));
@@ -367,6 +377,39 @@ async function knowledgeRequests(
 	});
 }
 
+/**
+ * The cases a run asks: the set's, except authored Readings, whose
+ * Knowledge tf-demo attaches; with `goldOnly`, only those gold covers;
+ * with `subset`, only a frozen subset's. A subset drawn from another set
+ * throws.
+ */
+function runnableCases(
+	set: KnowledgeSet,
+	setName: KnowledgeSetName,
+	args: Pick<KnowledgeEvaluateArgs, "subset" | "goldOnly">,
+): {
+	readonly runnable: readonly KnowledgeCase[];
+	readonly subset?: KnowledgeSubset;
+} {
+	const subset = args.subset
+		? loadKnowledgeSubset(resolve(packageRoot, args.subset))
+		: undefined;
+	if (subset && subset.setHash !== set.hash)
+		throw Error(
+			`The subset ${args.subset} was drawn from ${setName}@${subset.setHash}, not the frozen ${set.hash}`,
+		);
+	const subsetIds = subset
+		? new Set(Object.values(knowledgeSubsetCaseIds(subset)).flat())
+		: undefined;
+	const runnable = set.cases.filter(
+		(goldCase) =>
+			!goldCase.authored &&
+			(!args.goldOnly || goldCase.gold !== undefined) &&
+			(!subsetIds || subsetIds.has(goldCase.id)),
+	);
+	return { runnable, ...(subset ? { subset } : {}) };
+}
+
 /** The table's entry for one set. */
 export function knowledgeExperiment(setName: KnowledgeSetName) {
 	const id = `${knowledgeRoute}:${setName}`;
@@ -384,102 +427,43 @@ export function knowledgeExperiment(setName: KnowledgeSetName) {
 				setName,
 				args.concurrency ?? 12,
 			),
-		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		async evaluate(
 			args: KnowledgeEvaluateArgs,
 		): Promise<KnowledgeEvaluated> {
-			const root = args.root ?? defaultKnowledgeRoot;
-			const setsRoot = args.setsRoot ?? trackedKnowledgeSetsRoot;
-			if (!isFrozen(setsRoot, setName))
-				throw Error(
-					`The ${setName} set of ${knowledgeRoute} is not frozen; run \`bun cli/knowledge.ts freeze\` first`,
-				);
-			const set = await loadKnowledgeSet(setsRoot, setName);
-			const repetitions = args.repetitions ?? knowledgeRepetitions;
-			if (
-				!Number.isInteger(repetitions) ||
-				repetitions < 1 ||
-				repetitions > knowledgeRepetitions
-			)
-				throw Error(
-					`repetitions must be 1 to ${knowledgeRepetitions}, not ${repetitions}`,
-				);
-			const subset = args.subset
-				? loadKnowledgeSubset(resolve(packageRoot, args.subset))
-				: undefined;
-			if (subset && subset.setHash !== set.hash)
-				throw Error(
-					`The subset ${args.subset} was drawn from ${setName}@${subset.setHash}, not the frozen ${set.hash}`,
-				);
-			const subsetIds = subset
-				? new Set(Object.values(knowledgeSubsetCaseIds(subset)).flat())
-				: undefined;
-			// tf-demo attaches an authored Reading's Knowledge; nothing to ask.
-			const runnable = set.cases.filter(
-				(goldCase) =>
-					!goldCase.authored &&
-					(!args.goldOnly || goldCase.gold !== undefined) &&
-					(!subsetIds || subsetIds.has(goldCase.id)),
-			);
+			const directory = join(args.root ?? defaultKnowledgeRoot, "cache");
+			const { set, repetitions } = await openFrozenSet({
+				setsRoot: args.setsRoot ?? trackedKnowledgeSetsRoot,
+				setName,
+				route: knowledgeRoute,
+				freezeCommand: "bun cli/knowledge.ts freeze",
+				load: loadKnowledgeSet,
+				maximum: knowledgeRepetitions,
+				repetitions: args.repetitions,
+			});
+			const { runnable, subset } = runnableCases(set, setName, args);
 			const cases = runnable.slice(0, args.limit ?? runnable.length);
 			const concurrency = args.concurrency ?? 12;
-			const directory = join(root, "cache");
 			const identity = { name: set.name, hash: set.hash };
-			let price: GrammarPrice | undefined;
-			const ledgerSizes =
-				args.estimate || !args.offline
-					? await readLedgerSizes(
-							args.ledger ?? knowledgeLedgerPath,
-							id,
-						)
-					: undefined;
-			let stageSizes: GrammarPrice["sizes"]["stages"] | undefined;
-			if (args.estimate || !args.offline) {
-				const projecting = new KnowledgeModels({
-					directory,
-					mode: "project",
-					stageSizes: proxyStageSizes,
-					...(ledgerSizes ? { ledgerSizes } : {}),
-					...(args.estimate && args.wholeRound
-						? { wholeRound: true }
-						: {}),
-				});
-				await pass(cases, scope, projecting, concurrency, repetitions);
-				price = projecting.price(
-					repetitions,
-					cases.length * repetitions,
-				);
-				stageSizes = price.sizes.stages;
-				if (args.estimate) return { price, set: identity };
-				await args.beforeLive?.(price);
-			}
-			const live = new KnowledgeModels({
+			const passWith = (models: KnowledgeModels) =>
+				pass(cases, scope, models, concurrency, repetitions);
+			const priced = await priceRound(args, {
+				id,
+				ledger: knowledgeLedgerPath,
 				directory,
-				mode: args.offline ? "offline" : "live",
-				...(args.jev ? { jev: args.jev } : {}),
-				...(args.luna ? { luna: args.luna } : {}),
-				...(args.lunaBatch ? { lunaBatch: args.lunaBatch } : {}),
-				...(args.onLunaBatch ? { onLunaBatch: args.onLunaBatch } : {}),
-				...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
-				...(args.caps ? { caps: args.caps } : {}),
-				...(ledgerSizes ? { ledgerSizes } : {}),
-				...(stageSizes ? { stageSizes } : {}),
+				stageSizes: proxyStageSizes,
+				models: (options) => new KnowledgeModels(options),
+				pass: passWith,
+				repetitions,
+				attempts: cases.length * repetitions,
 			});
-			if (!args.offline) {
-				if (!args.jev || !(args.luna || args.lunaBatch))
-					throw Error(
-						"A live knowledge.produce run needs jev and Luna",
-					);
-				const signal = args.signal ?? new AbortController().signal;
-				await live.resumeLunaBatches(signal);
-				await pass(cases, scope, live, concurrency, repetitions);
-				while (await live.sendLunaBatch(signal))
-					await pass(cases, scope, live, concurrency, repetitions);
-				if (live.capHit !== undefined)
-					throw Error(
-						`The run stopped at the ${live.capHit}; spent ${JSON.stringify(live.report())}`,
-					);
-			}
+			const { price } = priced;
+			if (args.estimate) return { price, set: identity };
+			const live = new KnowledgeModels(
+				runModelsOptions(args, directory, priced),
+			);
+			await fillLive(args, live, "knowledge.produce", () =>
+				passWith(live),
+			);
 			const replay = new KnowledgeModels({ directory, mode: "offline" });
 			const byId = new Map(
 				cases.map((goldCase) => [goldCase.id, goldCase]),

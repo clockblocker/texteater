@@ -16,7 +16,7 @@
  * frozen subset's cases (`subset.ts`): its manifest records the subset, and
  * its report compares each line with the baseline on the same cases.
  */
-import { join, relative, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as Effect from "effect/Effect";
 import {
@@ -41,7 +41,7 @@ import {
 	judgmentSettingsSchema,
 } from "../../run-directory.js";
 import { storedAs } from "../../stored-json.js";
-import { frozenSetSize, isFrozen } from "../frozen-sets.js";
+import { frozenSetSize } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
 import { goldRequests } from "../request-diff.js";
 import {
@@ -51,8 +51,14 @@ import {
 	type GrammarPrice,
 	type LunaBatchEvent,
 	type ModelsSpend,
-	readLedgerSizes,
 } from "../resolve-grammar/models.js";
+import {
+	fillLive,
+	openFrozenSet,
+	priceRound,
+	runModelsOptions,
+	selectSubset,
+} from "../round-steps.js";
 import {
 	armsOf,
 	candidatesOf,
@@ -334,107 +340,47 @@ export function readingExperiment(setName: ReadingSetName) {
 				setName,
 				args.concurrency ?? 12,
 			),
-		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		async evaluate(args: ReadingEvaluateArgs): Promise<ReadingEvaluated> {
-			const root = args.root ?? defaultReadingRoot;
-			const setsRoot = args.setsRoot ?? trackedReadingSetsRoot;
-			if (!isFrozen(setsRoot, setName))
-				throw Error(
-					`The ${setName} set of ${readingRoute} is not frozen; run \`bun cli/resolve-reading.ts freeze\` first`,
-				);
-			const set = await loadReadingSet(setsRoot, setName);
-			const repetitions = args.repetitions ?? readingRepetitions;
-			if (
-				!Number.isInteger(repetitions) ||
-				repetitions < 1 ||
-				repetitions > readingRepetitions
-			)
-				throw Error(
-					`repetitions must be 1 to ${readingRepetitions}, not ${repetitions}`,
-				);
-			let caseFilter: CaseFilter | undefined;
-			let selected = set.cases;
-			if (args.subset) {
-				const path = resolve(packageRoot, args.subset);
-				const subset = loadReadingSubset(path);
-				if (subset.setHash !== set.hash)
-					throw Error(
-						`The subset was read from set ${subset.setHash}, not the frozen ${set.hash}`,
-					);
-				const ids = readingSubsetCaseIds(subset);
-				const wanted = new Set([...ids.missed, ...ids.guard]);
-				selected = set.cases.filter(({ id }) => wanted.has(id));
-				if (selected.length !== wanted.size)
-					throw Error("The subset names cases the frozen set lacks");
-				caseFilter = {
-					subset: relative(packageRoot, path),
-					baselineRunId: subset.baselineRunId,
-					seed: subset.seed,
-					missed: ids.missed,
-					guard: ids.guard,
-				};
-			}
+			const directory = join(args.root ?? defaultReadingRoot, "cache");
+			const { set, repetitions } = await openFrozenSet({
+				setsRoot: args.setsRoot ?? trackedReadingSetsRoot,
+				setName,
+				route: readingRoute,
+				freezeCommand: "bun cli/resolve-reading.ts freeze",
+				load: loadReadingSet,
+				maximum: readingRepetitions,
+				repetitions: args.repetitions,
+			});
+			const { cases: selected, caseFilter } = selectSubset({
+				set,
+				subset: args.subset,
+				load: loadReadingSubset,
+				caseIds: readingSubsetCaseIds,
+			});
 			const cases = selected.slice(0, args.limit ?? selected.length);
 			const concurrency = args.concurrency ?? 12;
-			const directory = join(root, "cache");
 			const identity = { name: set.name, hash: set.hash };
 			const attempts = cases.reduce(
 				(sum, goldCase) => sum + armsOf(goldCase).length,
 				0,
 			);
-			let price: ReadingPrice | undefined;
-			const ledgerSizes =
-				args.estimate || !args.offline
-					? await readLedgerSizes(
-							args.ledger ?? readingLedgerPath,
-							id,
-						)
-					: undefined;
-			let stageSizes: ReadingPrice["sizes"]["stages"] | undefined;
-			if (args.estimate || !args.offline) {
-				const projecting = new ReadingModels({
-					directory,
-					mode: "project",
-					...(ledgerSizes ? { ledgerSizes } : {}),
-					...(args.estimate && args.wholeRound
-						? { wholeRound: true }
-						: {}),
-				});
-				await pass(cases, projecting, concurrency, repetitions);
-				price = projecting.price(repetitions, attempts * repetitions);
-				stageSizes = price.sizes.stages;
-				if (args.estimate) return { price, set: identity };
-				await args.beforeLive?.(price);
-			}
-			const live = new ReadingModels({
+			const passWith = (models: ReadingModels) =>
+				pass(cases, models, concurrency, repetitions);
+			const priced = await priceRound(args, {
+				id,
+				ledger: readingLedgerPath,
 				directory,
-				mode: args.offline ? "offline" : "live",
-				...(args.jev ? { jev: args.jev } : {}),
-				...(args.luna ? { luna: args.luna } : {}),
-				...(args.lunaBatch ? { lunaBatch: args.lunaBatch } : {}),
-				...(args.onLunaBatch ? { onLunaBatch: args.onLunaBatch } : {}),
-				...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
-				...(args.caps ? { caps: args.caps } : {}),
-				...(ledgerSizes ? { ledgerSizes } : {}),
-				...(stageSizes ? { stageSizes } : {}),
+				models: (options) => new ReadingModels(options),
+				pass: passWith,
+				repetitions,
+				attempts: attempts * repetitions,
 			});
-			if (!args.offline) {
-				if (!args.jev || !(args.luna || args.lunaBatch))
-					throw Error(
-						"A live resolve.reading run needs jev and Luna",
-					);
-				// Staged with a batch: each pass stops attempts at their Luna
-				// misses, one batch answers them, and the next pass goes on.
-				const signal = args.signal ?? new AbortController().signal;
-				await live.resumeLunaBatches(signal);
-				await pass(cases, live, concurrency, repetitions);
-				while (await live.sendLunaBatch(signal))
-					await pass(cases, live, concurrency, repetitions);
-				if (live.capHit !== undefined)
-					throw Error(
-						`The run stopped at the ${live.capHit}; spent ${JSON.stringify(live.report())}`,
-					);
-			}
+			const { price } = priced;
+			if (args.estimate) return { price, set: identity };
+			const live = new ReadingModels(
+				runModelsOptions(args, directory, priced),
+			);
+			await fillLive(args, live, "resolve.reading", () => passWith(live));
 			const replay = new ReadingModels({ directory, mode: "offline" });
 			const byId = new Map(
 				cases.flatMap((goldCase) =>
