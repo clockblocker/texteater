@@ -54,6 +54,8 @@
  * report (`--compare`'s output). The manifest names the list and its hash,
  * and the ledger line its hash, so a round can run only the cases a change
  * moves.
+ * `--limit`, `--subset`, `--repetitions` and `--gold-only` fail a
+ * segment.inUnits run, which reads none of them.
  *
  * A segment.inUnits run counts against the lab's current round: it writes a
  * line to the lab ledger, refuses to go live when dumcorpus's prompt inputs
@@ -221,8 +223,10 @@ export async function runEvaluationCli(
 		throw Error(
 			`--units must be one of ${experiments.unitConfigs.join(", ")}`,
 		);
+	const segmentInUnits = experiments.spendsJev(experimentId);
+	if (segmentInUnits) rejectGrammarOnlyOptions(values);
 	const caseIds = await caseIdsOf(values);
-	if (caseIds && (values.requests || !experiments.spendsJev(experimentId)))
+	if (caseIds && (values.requests || !segmentInUnits))
 		throw Error(
 			"--cases and --cases-from take a segment.inUnits run, not a request run or another experiment",
 		);
@@ -282,6 +286,30 @@ async function compareCommand(
 	);
 	write(report);
 	return report;
+}
+
+/** The options only resolve.grammar, resolve.reading and knowledge.produce read. */
+const grammarOnlyOptions = [
+	"limit",
+	"subset",
+	"repetitions",
+	"gold-only",
+] as const;
+
+/**
+ * A segment.inUnits run reads none of `grammarOnlyOptions`: it always runs
+ * its whole set (or its case list) at the cache's 3 repetitions, so a run
+ * meant to be small would spend a whole set. Throws before anything is
+ * priced or asked.
+ */
+function rejectGrammarOnlyOptions(values: CliValues) {
+	const given = grammarOnlyOptions.filter(
+		(name) => values[name] !== undefined,
+	);
+	if (given.length > 0)
+		throw Error(
+			`${given.map((name) => `--${name}`).join(", ")} ${given.length === 1 ? "does" : "do"} not apply to a segment.inUnits run, which always runs its whole set at 3 repetitions; use --cases <ids file> or --cases-from <request compare report> to run part of a set`,
+		);
 }
 
 /**

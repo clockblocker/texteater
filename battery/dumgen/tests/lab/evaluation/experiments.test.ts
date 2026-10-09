@@ -565,3 +565,32 @@ test("--cases runs gold mode on a case list, and the manifest and ledger line na
 		]),
 	).rejects.toThrow("take a segment.inUnits run");
 });
+
+test("--limit, --subset, --repetitions and --gold-only fail a segment.inUnits run before it prices or asks anything", async () => {
+	const lab = await labWithSet("grammar-only-options");
+	const { jev, counter } = goldJudge();
+	const written: unknown[] = [];
+	const cli = (argv: string[]) =>
+		runEvaluationCli(
+			["--experiment", "segment-in-units/de:dev", "--estimate", ...argv],
+			{
+				jev,
+				...lab,
+				repository,
+				write: (value) => written.push(value),
+				warn: () => {},
+			},
+		);
+
+	await expect(cli(["--limit", "2"])).rejects.toThrow(
+		"--limit does not apply to a segment.inUnits run, which always runs its whole set at 3 repetitions; use --cases <ids file> or --cases-from <request compare report> to run part of a set",
+	);
+	await expect(cli(["--subset", "subset.json"])).rejects.toThrow(
+		"--subset does not apply",
+	);
+	await expect(
+		cli(["--repetitions", "1", "--gold-only", "--requests"]),
+	).rejects.toThrow("--repetitions, --gold-only do not apply");
+	expect(counter.calls).toBe(0);
+	expect(written).toEqual([]);
+});
