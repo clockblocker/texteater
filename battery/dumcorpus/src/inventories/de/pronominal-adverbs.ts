@@ -247,11 +247,15 @@ const series: readonly Series[] = [
 	},
 ];
 
+/** A pronominal adverb's form: the series prefix, a linking r before a vowel, the preposition. */
+const pronominalForm = (entry: Series, preposition: Preposition) =>
+	`${entry.prefix}${entry.linking && preposition.vowel ? "r" : ""}${preposition.text}`;
+
 function pronominalAdverb(
 	entry: Series,
 	preposition: Preposition,
 ): AuthoredMember {
-	const form = `${entry.prefix}${entry.linking && preposition.vowel ? "r" : ""}${preposition.text}`;
+	const form = pronominalForm(entry, preposition);
 	// Without the linking r a vowel-initial preposition starts with a glottal stop.
 	const onset =
 		preposition.vowel && !entry.linking
@@ -505,6 +509,30 @@ function reciprocalAdverb(reciprocal: Reciprocal): AuthoredMember {
 // no spelling table lists it, and `germanAdverbShorthands`
 // (adverb-shorthands.ts) maps it to that word.
 // https://www.dwds.de/wb/dran
+
+/** The two words of an adverb that splits around others, and the form they make. */
+export type SplitAdverbParts = {
+	readonly head: string;
+	readonly tail: string;
+	readonly form: string;
+};
+
+/**
+ * The parts of each da(r)-, hier- and wo(r)- pronominal adverb, which splits
+ * in speech with its preposition later in the clause (Da weiß ich nichts
+ * von; Rule de/split-adverb-is-one-target): head da and tail von of davon.
+ * The interrogative and relative wo series share theirs. The reciprocal
+ * adverbs (aneinander) don't split.
+ */
+export const pronominalAdverbParts: readonly SplitAdverbParts[] = [
+	...new Map(series.map((entry) => [entry.prefix, entry])).values(),
+].flatMap((entry) =>
+	prepositions.map((preposition) => ({
+		head: entry.prefix,
+		tail: preposition.text,
+		form: pronominalForm(entry, preposition),
+	})),
+);
 
 /**
  * Every German pronominal adverb: da(r)- and hier- forms are demonstrative,

@@ -7,10 +7,10 @@
  *
  * This entry exports the authored members and their realizations, the closed
  * verb forms, their participles and the modal verbs, the clitic spellings of
- * es, the separable and inseparable verb prefixes, the colloquial r- and dr-
- * adverb shorthands, the suppletive comparisons, the Surface features each
- * AUX use sets, and the reviewed fusions, apostrophe clitics and
- * abbreviations. The authored members include the pronoun Syncretisms
+ * es, the separable and inseparable verb prefixes, the parts of the adverbs
+ * that split (Da … von), the colloquial r- and dr- adverb shorthands, the
+ * suppletive comparisons, the Surface features each AUX use sets, and the
+ * reviewed fusions, apostrophe clitics and abbreviations. The authored members include the pronoun Syncretisms
  * generated from the pronoun cells (system ADR 0046). It also exports German
  * lookups: the ADP Case Table, its governable prepositions and its Valency
  * Frame check, the conjunction Locutions the Rules cite, the der or ein cell
@@ -77,6 +77,7 @@ export {
 	type AuthoredRealization,
 	authoredRealizations,
 } from "./inventories/de/realizations.js";
+export { germanSplitAdverbParts } from "./inventories/de/split-adverb-parts.js";
 export { germanSuppletiveComparisons } from "./inventories/de/suppletive-comparison.js";
 export {
 	referentCanLeaveOpen,

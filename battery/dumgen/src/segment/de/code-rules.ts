@@ -95,6 +95,7 @@ import {
 	isArticle,
 	nounLike,
 	reflexiveSubject,
+	splitAdverbForm,
 	splitTails,
 	wasFuerId,
 	wasFuerPairs,
@@ -203,7 +204,7 @@ function strandedAdverbs(nomination: Nomination): Decision {
 					other.id < tail.id &&
 					clauseOf.get(other.id) === clause &&
 					!other.fusedWord &&
-					splitAdverbHeads.has(lower(other)),
+					splitAdverbForm(lower(other), lower(tail)) !== undefined,
 			)
 			.at(-1);
 		if (head && !paired.has(head.id))
@@ -211,8 +212,6 @@ function strandedAdverbs(nomination: Nomination): Decision {
 	}
 	return { closed };
 }
-
-const splitAdverbHeads = new Set(["da", "wo", "hier"]);
 
 /** The share a satellite's host needs: production's satellite floor. */
 const satelliteFloor = 0.5;

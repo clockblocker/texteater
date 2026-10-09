@@ -10,7 +10,7 @@ import {
 	germanSuppletiveComparisons,
 } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
-import { splitHeads } from "../../../segment/de/candidates.js";
+import { splitAdverbForm } from "../../../segment/de/candidates.js";
 import type { MemberOrthography } from "../member-spelling.js";
 import { fill, options, question } from "../prompts.js";
 import type { Answered, ChoiceOf, Questionnaire } from "../questions.js";
@@ -169,8 +169,8 @@ export const bareWWords: ReadonlySet<string> = (() => {
 
 /**
  * An ADV Lexeme's Canonical Form where the Rules settle it, whatever Luna
- * wrote: a da, wo or hier split from its hin, her or preposition is the
- * one word they form, with r before a vowel (da … auf is darauf; Rules
+ * wrote: a split pair dumcorpus lists among its split-adverb parts is the
+ * one word they form (da … auf is darauf; Rules
  * de/split-adverb-is-one-target, de/pronominal-adverb-stands-alone); a
  * bare w-word judged Shorthand is its irgend- word, member and headword
  * (de/bare-w-word-is-shorthand); a member the table spells as one word (a
@@ -189,21 +189,15 @@ function adverbHeadword(
 	| undefined {
 	const words = target.members.map((member) => fold(member.text));
 	const [first, second] = words;
-	if (
+	const split =
 		target.members.length === 2 &&
 		first !== undefined &&
 		second !== undefined &&
-		splitHeads.has(first) &&
-		/^\p{L}+$/u.test(second) &&
 		orthographies.every((orthography) => orthography === "Standard")
-	) {
-		const joint =
-			first !== "hier" && /^[aeiouäöü]/u.test(second) ? "r" : "";
-		return {
-			canonicalForm: `${first}${joint}${second}`,
-			members: new Map(),
-		};
-	}
+			? splitAdverbForm(first, second)
+			: undefined;
+	if (split !== undefined)
+		return { canonicalForm: split, members: new Map() };
 	if (target.members.length !== 1 || first === undefined) return undefined;
 	const [member] = target.members;
 	if (orthographies[0] === "Shorthand" && bareWWords.has(first)) {

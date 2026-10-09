@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { closedVerbForms } from "dumcorpus/inventories";
+import { closedVerbForms, germanSplitAdverbParts } from "dumcorpus/inventories";
 import {
 	articleForms,
 	expletiveForms,
@@ -7,6 +7,8 @@ import {
 	reflexiveForms,
 	reflexiveSubject,
 	slotsOf,
+	splitAdverbForm,
+	splitTails,
 } from "../../../src/segment/de/candidates.js";
 import {
 	einForms,
@@ -162,4 +164,33 @@ test("a typographic apostrophe opens the slot its plain one does", () => {
 			.filter((slot) => slot.kind === "article")
 			.map((slot) => slot.piece.text),
 	).toEqual(["Das", "’ne"]);
+});
+
+// The split-adverb pairs come from dumcorpus's parts (#1033), pinned to the
+// hand-typed heads and tails they replaced and the name join they used.
+const handHeads = ["da", "wo", "hier"];
+const handTails =
+	"hin her an auf aus bei durch für gegen hinter in mit nach neben über um unter von vor zu zwischen".split(
+		" ",
+	);
+const handJoin = (head: string, tail: string) =>
+	`${head}${head !== "hier" && /^[aeiouäöü]/u.test(tail) ? "r" : ""}${tail}`;
+
+test("the split-adverb pairs are the hand-typed 3 heads × 21 tails, named as before", () => {
+	const pairs = germanSplitAdverbParts.map(
+		({ head, tail }) => `${head} ${tail}`,
+	);
+	expect(sorted(pairs)).toEqual(
+		sorted(
+			handHeads.flatMap((head) =>
+				handTails.map((tail) => `${head} ${tail}`),
+			),
+		),
+	);
+	for (const head of handHeads)
+		for (const tail of handTails)
+			expect(splitAdverbForm(head, tail)).toBe(handJoin(head, tail));
+	expect(sorted(splitTails)).toEqual(sorted(handTails));
+	expect(splitAdverbForm("dort", "hin")).toBeUndefined();
+	expect(splitAdverbForm("da", "drüben")).toBeUndefined();
 });

@@ -1,5 +1,6 @@
 import type * as Dumling from "dumling/types";
 import type { AuthoredMember } from "../member.js";
+import type { SplitAdverbParts } from "./pronominal-adverbs.js";
 
 type Lemma = Dumling.Lemma<"de", "Lexeme", "ADV">;
 /**
@@ -15,6 +16,11 @@ type Meaning = {
 	readonly en: readonly string[];
 	readonly ru: readonly string[];
 };
+/**
+ * The head and tail a directional adverb splits into, with words between
+ * them (Wo kommst du her? Da gehe ich hin; Rule de/split-adverb-is-one-target).
+ */
+type Split = Omit<SplitAdverbParts, "form">;
 /** A Reading of a use that has several, each with its own emoji. */
 type EmojiMeaning = Meaning & { readonly emoji: string };
 /**
@@ -29,6 +35,7 @@ type WhAdverb = {
 	readonly ipa: string;
 	readonly emoji: string;
 	readonly synonymOf?: string;
+	readonly split?: Split;
 	readonly Int: Meaning | readonly EmojiMeaning[];
 	readonly Rel: Meaning | readonly EmojiMeaning[];
 };
@@ -68,6 +75,7 @@ const adverbs: readonly WhAdverb[] = [
 	{
 		text: "wohin",
 		ipa: "voˈhɪn",
+		split: { head: "wo", tail: "hin" },
 		emoji: "🛬",
 		Int: {
 			definition: "Fragt nach dem Ziel oder der Richtung einer Bewegung.",
@@ -84,6 +92,7 @@ const adverbs: readonly WhAdverb[] = [
 	{
 		text: "woher",
 		ipa: "voˈheːɐ̯",
+		split: { head: "wo", tail: "her" },
 		emoji: "🛫",
 		Int: {
 			definition: "Fragt nach der Herkunft oder dem Ausgangspunkt.",
@@ -206,6 +215,7 @@ type OneReadingAdverb = Meaning & {
 	readonly ipa: string;
 	readonly emoji: string;
 	readonly synonymOf?: string;
+	readonly split?: Split;
 };
 
 // The irgend- adverbs are indefinite w-adverbs with one Reading each. Duden
@@ -331,7 +341,7 @@ const negativeAdverbs: readonly OneReadingAdverb[] = [
 ];
 
 /** An adverb with one Reading or several, each under its own emoji. */
-type ManyReadingAdverb = Pick<OneReadingAdverb, "text" | "ipa"> & {
+type ManyReadingAdverb = Pick<OneReadingAdverb, "text" | "ipa" | "split"> & {
 	readonly readings: readonly EmojiMeaning[];
 };
 
@@ -471,6 +481,7 @@ const demonstrativeAdverbs: readonly ManyReadingAdverb[] = [
 	{
 		text: "daher",
 		ipa: "daˈheːɐ̯",
+		split: { head: "da", tail: "her" },
 		readings: [
 			{
 				emoji: "🛫",
@@ -519,6 +530,7 @@ const directionalDemonstratives: readonly OneReadingAdverb[] = [
 	{
 		text: "dahin",
 		ipa: "daˈhɪn",
+		split: { head: "da", tail: "hin" },
 		emoji: "🛬",
 		definition:
 			"Bezeichnet als Ziel einer Bewegung einen genannten oder gezeigten Ort: Wir fahren dahin. Da gehe ich morgen hin.",
@@ -528,6 +540,7 @@ const directionalDemonstratives: readonly OneReadingAdverb[] = [
 	{
 		text: "hierhin",
 		ipa: "ˈhiːɐ̯hɪn",
+		split: { head: "hier", tail: "hin" },
 		emoji: "🛬",
 		definition:
 			"Bezeichnet als Ziel einer Bewegung den Ort, an dem der Sprecher ist oder auf den er zeigt: Stell die Kiste hierhin. Hier kommt der Schrank hin.",
@@ -537,6 +550,7 @@ const directionalDemonstratives: readonly OneReadingAdverb[] = [
 	{
 		text: "hierher",
 		ipa: "ˈhiːɐ̯heːɐ̯",
+		split: { head: "hier", tail: "her" },
 		emoji: "🛫",
 		definition:
 			"Bezeichnet eine Bewegung zum Sprecher hin, an den Ort, an dem er ist: Komm hierher. Hier kommst du her.",
@@ -822,3 +836,14 @@ export const whAdverbs: readonly AuthoredMember[] = [
 		adverb.readings.map((meaning) => whAdverb(adverb, null, meaning)),
 	),
 ];
+
+/**
+ * The parts of each directional adverb that splits (wohin, woher, daher,
+ * dahin, hierhin, hierher): Wo kommst du her? is head wo and tail her of
+ * woher. dorthin and dorther are not read split.
+ */
+export const directionalAdverbParts: readonly SplitAdverbParts[] = [
+	...adverbs,
+	...demonstrativeAdverbs,
+	...directionalDemonstratives,
+].flatMap(({ text, split }) => (split ? [{ ...split, form: text }] : []));

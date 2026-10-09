@@ -12,6 +12,7 @@ import {
 	authoredRealizations,
 	cliticEsSpellings,
 	germanSeparablePrefixes,
+	germanSplitAdverbParts,
 } from "dumcorpus/inventories";
 import { numeralWords } from "../../resolve/de/numeral.js";
 import { foldApostrophes } from "../fusion-table.js";
@@ -255,33 +256,26 @@ export function slotsOf(
 	return slots.filter((slot) => slot.hosts.length > 0);
 }
 
-/** The first words of a split pronominal or directional adverb (Da … hin, Wo … mit). */
-export const splitHeads: ReadonlySet<string> = new Set(["da", "wo", "hier"]);
+const splitAdverbForms: ReadonlyMap<string, string> = new Map(
+	germanSplitAdverbParts.map(({ head, tail, form }) => [
+		`${head} ${tail}`,
+		form,
+	]),
+);
+
+/**
+ * The adverb a split pair forms (Da … hin is dahin, Wo … mit is womit):
+ * dumcorpus's split-adverb parts, or undefined for any other pair.
+ */
+export const splitAdverbForm = (
+	head: string,
+	tail: string,
+): string | undefined => splitAdverbForms.get(`${head} ${tail}`);
 
 /** The second words of a split pronominal or directional adverb (Da … hin, Wo … mit). */
-export const splitTails: ReadonlySet<string> = new Set([
-	"hin",
-	"her",
-	"an",
-	"auf",
-	"aus",
-	"bei",
-	"durch",
-	"für",
-	"gegen",
-	"hinter",
-	"in",
-	"mit",
-	"nach",
-	"neben",
-	"über",
-	"um",
-	"unter",
-	"von",
-	"vor",
-	"zu",
-	"zwischen",
-]);
+export const splitTails: ReadonlySet<string> = new Set(
+	germanSplitAdverbParts.map(({ tail }) => tail),
+);
 
 const correlators: readonly (readonly [string, string, string])[] = [
 	["entweder", "oder", "entweder … oder"],
@@ -401,18 +395,13 @@ export function pairCandidatesOf(
 		for (const right of sentence.pieces) {
 			if (right.id <= left.id) continue;
 			const tail = lower(right);
+			const adverb = splitAdverbForm(head, tail);
 			if (
-				splitHeads.has(head) &&
-				splitTails.has(tail) &&
+				adverb !== undefined &&
 				right.clause === left.clause &&
 				right.id - left.id <= 10
 			)
-				pairs.push({
-					kind: "split-adverb",
-					left,
-					right,
-					name: `${head}${head === "wo" && /^[aeiouäöü]/u.test(tail) ? "r" : head === "da" && /^[aeiouäöü]/u.test(tail) ? "r" : ""}${tail}`,
-				});
+				pairs.push({ kind: "split-adverb", left, right, name: adverb });
 			for (const [first, second, name] of correlators)
 				if (
 					head === first &&
