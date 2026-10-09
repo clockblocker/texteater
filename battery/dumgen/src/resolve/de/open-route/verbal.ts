@@ -118,20 +118,19 @@ const spellsEs = (member: Member) =>
 /**
  * The separable prefixes a VERB unit may carry: those that open a particle
  * slot, and those that open none but stand for a particle verb's first part
- * often enough (daliegen, gutheißen, offenlegen, sicherstellen, volltanken,
- * großziehen). irre (irren) and stand (standen) are not offered (#1057).
+ * often enough (daliegen, gutheißen, offenlegen, irreführen, volltanken,
+ * großziehen). stand (standen) is not offered (#1057).
  */
 export const prefixParticles: ReadonlySet<string> = new Set([
 	...particleForms,
-	"bekannt",
 	"da",
 	"dagegen",
 	"flach",
 	"groß",
 	"gut",
+	"irre",
 	"leer",
 	"offen",
-	"sicher",
 	"voll",
 ]);
 const isParticle = (word: string) => prefixParticles.has(word);

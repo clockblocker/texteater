@@ -72,13 +72,12 @@ export const articleForms: ReadonlySet<string> = new Set(
  * mostly something else: an adjective or adverb (gut, offen, leer, voll,
  * groß, flach), the adverb or conjunction da, the pronominal adverb dagegen,
  * stand of stehen and irre of irren. #1057's lab round found no dev case a
- * slot on one of them fixes. The judges split on bekannt and sicher, so both
- * stay out (#1057).
+ * slot on one of them fixes. bekannt and sicher open one (gab … bekannt,
+ * stellen … sicher), as both judges ruled (#1057).
  * Resolution still offers most of them as a VERB's prefix
  * (`prefixParticles`).
  */
 const noSlotParticles: ReadonlySet<string> = new Set([
-	"bekannt",
 	"da",
 	"dagegen",
 	"flach",
@@ -87,7 +86,6 @@ const noSlotParticles: ReadonlySet<string> = new Set([
 	"irre",
 	"leer",
 	"offen",
-	"sicher",
 	"stand",
 	"voll",
 ]);
