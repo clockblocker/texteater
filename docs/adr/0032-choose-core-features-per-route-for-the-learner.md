@@ -187,9 +187,10 @@ stem's forms are its own Surfaces, so `diesem` never reaches `jenem`. It stays
 inside the pillar it starts from, so `dem` never reaches `einem`. A cell
 is reached only when both ends mark every varied feature, and a plural cell's
 unmarked gender counts as marked. Navigation compares Core values literally,
-and no Core value is an open set: a noun in free gender variation names its
-genders as one `mixed` value, spelled one way. Navigation never reaches a Syncretism
-(ADR 0046).
+so every Core value is spelled one way. A value set, as in a Hebrew noun's
+gender, lists two or more distinct values in catalog order, and a German noun
+in free gender variation names its genders as one `mixed` value in the order
+Masc, Fem, Neut. Navigation never reaches a Syncretism (ADR 0046).
 
 ## Considered Options
 

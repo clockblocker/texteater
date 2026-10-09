@@ -1,7 +1,9 @@
 import type { PrettifyDeep } from "common-utils";
 import { z } from "zod";
 import {
+	featureValueSetError,
 	hasMarkedFeature,
+	isFeatureValueSet,
 	nonEmptyFeatureBagError,
 } from "../../../validation/semantics.js";
 import { FeatureBagKind } from "./feature-bag-kind.js";
@@ -55,10 +57,23 @@ export const featurelessBags = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({}),
 });
 
-export function featureValueSetSchema<const Schema extends z.ZodType>(
-	schema: Schema,
-) {
-	return z.union([schema, z.tuple([schema], schema)]);
+/**
+ * One value of a feature, or a set of two or more of its values: distinct, in
+ * catalog order (system ADR 0032). The catalog's values must be in code-point
+ * order, which every UD catalog is, so the set rule can compare spellings.
+ */
+export function featureValueSetSchema<
+	const Schema extends z.ZodEnum<Readonly<Record<string, string>>>,
+>(schema: Schema) {
+	const { options } = schema;
+	if (!isFeatureValueSet(options))
+		throw new Error(
+			`A feature value set needs a catalog in code-point order: ${options.join(", ")}`,
+		);
+	// The compiler takes checks on a union, not on a tuple.
+	return z
+		.union([schema, z.tuple([schema, schema], schema)])
+		.refine(isFeatureValueSet, { error: featureValueSetError });
 }
 
 export function nonEmptyFeatureBagSchema<

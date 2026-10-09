@@ -113,12 +113,13 @@ type UniversalFeatureValue<Name extends UniversalFeatureName> =
 	UniversalFeatureAtoms[Name];
 
 /**
- * A feature value as a route may store it: one value, a set of values, or a
- * tagged `mixed` value for free variation within one sense (system ADR 0032).
+ * A feature value as a route may store it: one value, a set of two or more
+ * values, or a tagged `mixed` value for free variation within one sense
+ * (system ADR 0032).
  */
 type FeatureValueSet<Value> =
 	| Value
-	| readonly [Value, ...Value[]]
+	| readonly [Value, Value, ...Value[]]
 	| { readonly mixed: readonly [Value, Value, ...Value[]] };
 
 type IsUniversalFeatureBag<Bag> = false extends (

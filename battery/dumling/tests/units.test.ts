@@ -503,6 +503,39 @@ describe("compiled unit interface", () => {
 		expect(parseUnit(surface(null)).success).toBe(true);
 		expect(parseUnit(surface("Neut")).success).toBe(false);
 	});
+	test("a feature value set is spelled one way: two or more distinct values in catalog order", () => {
+		const lemma = (gender: unknown) => ({
+			...hebrewNoun.Lemma,
+			coreFeatures: { abbr: null, gender },
+		});
+		const accepts = (gender: unknown) => {
+			const compiled = parseUnit(lemma(gender)).success;
+			expect(
+				hebrewNounRoute.schemas.Lemma.safeParse(lemma(gender)).success,
+			).toBe(compiled);
+			return compiled;
+		};
+		for (const gender of ["Fem", "Masc", ["Fem", "Masc"]])
+			expect(accepts(gender)).toBe(true);
+		for (const gender of [
+			// Catalog order is Fem, Masc.
+			["Masc", "Fem"],
+			["Fem", "Fem"],
+			// A one-member set is the plain value.
+			["Fem"],
+			[],
+			["Fem", "Masc", "Masc"],
+		])
+			expect(accepts(gender)).toBe(false);
+		// The rule holds on Surfaces too: a Hebrew noun's number set.
+		const surface = (number: unknown) => ({
+			...hebrewNoun.Surface,
+			inflectionalFeatures: { definite: null, number },
+		});
+		expect(parseUnit(surface(["Dual", "Plur"])).success).toBe(true);
+		expect(parseUnit(surface(["Plur", "Dual"])).success).toBe(false);
+		expect(parseUnit(surface(["Plur"])).success).toBe(false);
+	});
 	test("compilation rejects unregistered custom behavior", () => {
 		expect(() =>
 			compileZodValidationArtifacts({

@@ -113,6 +113,24 @@ test("possessor features describe a possessive's Surface, not its Lemma", () => 
 		}),
 		true,
 	);
+	// A set of possessor genders is spelled one way: distinct, in catalog
+	// order (Fem, Masc, Neut), two or more.
+	for (const psor of [
+		["Neut", "Masc"],
+		["Masc", "Masc"],
+		["Masc"],
+		["Masc", "Neut", "Neut"],
+	])
+		acceptsSurface(
+			surface(seiner, {
+				case: "Nom",
+				gender: "Masc",
+				number: "Sing",
+				"gender[psor]": psor,
+				"number[psor]": "Sing",
+			}),
+			false,
+		);
 	acceptsSurface(
 		surface(lemma("mir", { ...thirdSingular, person: "1", case: "Dat" }), {
 			"number[psor]": "Sing",

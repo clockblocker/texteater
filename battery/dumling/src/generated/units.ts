@@ -1345,6 +1345,7 @@ export interface UnitMap {
 							| ("Fem" | "Masc" | "Neut")
 							| [
 									"Fem" | "Masc" | "Neut",
+									"Fem" | "Masc" | "Neut",
 									...Array<"Fem" | "Masc" | "Neut">,
 							  ]
 					  )
@@ -1445,6 +1446,7 @@ export interface UnitMap {
 						| (
 								| ("Fem" | "Masc" | "Neut")
 								| [
+										"Fem" | "Masc" | "Neut",
 										"Fem" | "Masc" | "Neut",
 										...Array<"Fem" | "Masc" | "Neut">,
 								  ]
@@ -2548,6 +2550,7 @@ export interface UnitMap {
 							| ("Fem" | "Masc" | "Neut")
 							| [
 									"Fem" | "Masc" | "Neut",
+									"Fem" | "Masc" | "Neut",
 									...Array<"Fem" | "Masc" | "Neut">,
 							  ]
 					  )
@@ -2796,6 +2799,7 @@ export interface UnitMap {
 											| ("Fem" | "Masc" | "Neut")
 											| [
 													"Fem" | "Masc" | "Neut",
+													"Fem" | "Masc" | "Neut",
 													...Array<
 														"Fem" | "Masc" | "Neut"
 													>,
@@ -3027,6 +3031,7 @@ export interface UnitMap {
 											| ("Fem" | "Masc" | "Neut")
 											| [
 													"Fem" | "Masc" | "Neut",
+													"Fem" | "Masc" | "Neut",
 													...Array<
 														"Fem" | "Masc" | "Neut"
 													>,
@@ -3257,6 +3262,7 @@ export interface UnitMap {
 									| (
 											| ("Fem" | "Masc" | "Neut")
 											| [
+													"Fem" | "Masc" | "Neut",
 													"Fem" | "Masc" | "Neut",
 													...Array<
 														"Fem" | "Masc" | "Neut"
@@ -3595,6 +3601,7 @@ export interface UnitMap {
 								| ("Fem" | "Masc" | "Neut")
 								| [
 										"Fem" | "Masc" | "Neut",
+										"Fem" | "Masc" | "Neut",
 										...Array<"Fem" | "Masc" | "Neut">,
 								  ]
 						  )
@@ -3847,6 +3854,7 @@ export interface UnitMap {
 												| ("Fem" | "Masc" | "Neut")
 												| [
 														"Fem" | "Masc" | "Neut",
+														"Fem" | "Masc" | "Neut",
 														...Array<
 															| "Fem"
 															| "Masc"
@@ -4084,6 +4092,7 @@ export interface UnitMap {
 												| ("Fem" | "Masc" | "Neut")
 												| [
 														"Fem" | "Masc" | "Neut",
+														"Fem" | "Masc" | "Neut",
 														...Array<
 															| "Fem"
 															| "Masc"
@@ -4320,6 +4329,7 @@ export interface UnitMap {
 										| (
 												| ("Fem" | "Masc" | "Neut")
 												| [
+														"Fem" | "Masc" | "Neut",
 														"Fem" | "Masc" | "Neut",
 														...Array<
 															| "Fem"
@@ -9275,6 +9285,14 @@ export interface UnitMap {
 										| "Rel"
 										| "Tot"
 									),
+									(
+										| "Dem"
+										| "Ind"
+										| "Int"
+										| "Neg"
+										| "Rel"
+										| "Tot"
+									),
 									...Array<
 										| "Dem"
 										| "Ind"
@@ -9314,6 +9332,14 @@ export interface UnitMap {
 										| "Tot"
 								  )
 								| [
+										(
+											| "Dem"
+											| "Ind"
+											| "Int"
+											| "Neg"
+											| "Rel"
+											| "Tot"
+										),
 										(
 											| "Dem"
 											| "Ind"
@@ -9393,6 +9419,14 @@ export interface UnitMap {
 											| "Rel"
 											| "Tot"
 										),
+										(
+											| "Dem"
+											| "Ind"
+											| "Int"
+											| "Neg"
+											| "Rel"
+											| "Tot"
+										),
 										...Array<
 											| "Dem"
 											| "Ind"
@@ -9436,6 +9470,14 @@ export interface UnitMap {
 											| "Tot"
 									  )
 									| [
+											(
+												| "Dem"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Rel"
+												| "Tot"
+											),
 											(
 												| "Dem"
 												| "Ind"
@@ -9842,6 +9884,16 @@ export interface UnitMap {
 										| "Rel"
 										| "Tot"
 									),
+									(
+										| "Art"
+										| "Dem"
+										| "Ind"
+										| "Int"
+										| "Neg"
+										| "Rcp"
+										| "Rel"
+										| "Tot"
+									),
 									...Array<
 										| "Art"
 										| "Dem"
@@ -9885,6 +9937,16 @@ export interface UnitMap {
 										| "Tot"
 								  )
 								| [
+										(
+											| "Art"
+											| "Dem"
+											| "Ind"
+											| "Int"
+											| "Neg"
+											| "Rcp"
+											| "Rel"
+											| "Tot"
+										),
 										(
 											| "Art"
 											| "Dem"
@@ -9970,6 +10032,16 @@ export interface UnitMap {
 											| "Rel"
 											| "Tot"
 										),
+										(
+											| "Art"
+											| "Dem"
+											| "Ind"
+											| "Int"
+											| "Neg"
+											| "Rcp"
+											| "Rel"
+											| "Tot"
+										),
 										...Array<
 											| "Art"
 											| "Dem"
@@ -10017,6 +10089,16 @@ export interface UnitMap {
 											| "Tot"
 									  )
 									| [
+											(
+												| "Art"
+												| "Dem"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Rcp"
+												| "Rel"
+												| "Tot"
+											),
 											(
 												| "Art"
 												| "Dem"
@@ -10902,6 +10984,17 @@ export interface UnitMap {
 										| "Rel"
 										| "Tot"
 									),
+									(
+										| "Dem"
+										| "Emp"
+										| "Ind"
+										| "Int"
+										| "Neg"
+										| "Prs"
+										| "Rcp"
+										| "Rel"
+										| "Tot"
+									),
 									...Array<
 										| "Dem"
 										| "Emp"
@@ -10950,6 +11043,17 @@ export interface UnitMap {
 										| "Tot"
 								  )
 								| [
+										(
+											| "Dem"
+											| "Emp"
+											| "Ind"
+											| "Int"
+											| "Neg"
+											| "Prs"
+											| "Rcp"
+											| "Rel"
+											| "Tot"
+										),
 										(
 											| "Dem"
 											| "Emp"
@@ -11041,6 +11145,17 @@ export interface UnitMap {
 											| "Rel"
 											| "Tot"
 										),
+										(
+											| "Dem"
+											| "Emp"
+											| "Ind"
+											| "Int"
+											| "Neg"
+											| "Prs"
+											| "Rcp"
+											| "Rel"
+											| "Tot"
+										),
 										...Array<
 											| "Dem"
 											| "Emp"
@@ -11093,6 +11208,17 @@ export interface UnitMap {
 											| "Tot"
 									  )
 									| [
+											(
+												| "Dem"
+												| "Emp"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Prs"
+												| "Rcp"
+												| "Rel"
+												| "Tot"
+											),
 											(
 												| "Dem"
 												| "Emp"
@@ -14425,7 +14551,11 @@ export interface UnitMap {
 				gender:
 					| (
 							| ("Fem" | "Masc")
-							| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+							| [
+									"Fem" | "Masc",
+									"Fem" | "Masc",
+									...Array<"Fem" | "Masc">,
+							  ]
 					  )
 					| null;
 				number: ("Plur" | "Sing") | null;
@@ -14482,7 +14612,11 @@ export interface UnitMap {
 					gender:
 						| (
 								| ("Fem" | "Masc")
-								| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+								| [
+										"Fem" | "Masc",
+										"Fem" | "Masc",
+										...Array<"Fem" | "Masc">,
+								  ]
 						  )
 						| null;
 					number: ("Plur" | "Sing") | null;
@@ -14940,14 +15074,22 @@ export interface UnitMap {
 				gender:
 					| (
 							| ("Fem" | "Masc")
-							| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+							| [
+									"Fem" | "Masc",
+									"Fem" | "Masc",
+									...Array<"Fem" | "Masc">,
+							  ]
 					  )
 					| null;
 				number: ("Plur" | "Sing") | null;
 				person:
 					| (
 							| ("1" | "2" | "3")
-							| ["1" | "2" | "3", ...Array<"1" | "2" | "3">]
+							| [
+									"1" | "2" | "3",
+									"1" | "2" | "3",
+									...Array<"1" | "2" | "3">,
+							  ]
 					  )
 					| null;
 				polarity: ("Neg" | "Pos") | null;
@@ -15005,14 +15147,22 @@ export interface UnitMap {
 					gender:
 						| (
 								| ("Fem" | "Masc")
-								| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+								| [
+										"Fem" | "Masc",
+										"Fem" | "Masc",
+										...Array<"Fem" | "Masc">,
+								  ]
 						  )
 						| null;
 					number: ("Plur" | "Sing") | null;
 					person:
 						| (
 								| ("1" | "2" | "3")
-								| ["1" | "2" | "3", ...Array<"1" | "2" | "3">]
+								| [
+										"1" | "2" | "3",
+										"1" | "2" | "3",
+										...Array<"1" | "2" | "3">,
+								  ]
 						  )
 						| null;
 					polarity: ("Neg" | "Pos") | null;
@@ -15241,7 +15391,11 @@ export interface UnitMap {
 				gender:
 					| (
 							| ("Fem" | "Masc")
-							| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+							| [
+									"Fem" | "Masc",
+									"Fem" | "Masc",
+									...Array<"Fem" | "Masc">,
+							  ]
 					  )
 					| null;
 				number: ("Plur" | "Sing") | null;
@@ -15298,7 +15452,11 @@ export interface UnitMap {
 					gender:
 						| (
 								| ("Fem" | "Masc")
-								| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+								| [
+										"Fem" | "Masc",
+										"Fem" | "Masc",
+										...Array<"Fem" | "Masc">,
+								  ]
 						  )
 						| null;
 					number: ("Plur" | "Sing") | null;
@@ -15491,7 +15649,11 @@ export interface UnitMap {
 				gender:
 					| (
 							| ("Fem" | "Masc")
-							| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+							| [
+									"Fem" | "Masc",
+									"Fem" | "Masc",
+									...Array<"Fem" | "Masc">,
+							  ]
 					  )
 					| null;
 			};
@@ -15510,7 +15672,11 @@ export interface UnitMap {
 					gender:
 						| (
 								| ("Fem" | "Masc")
-								| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+								| [
+										"Fem" | "Masc",
+										"Fem" | "Masc",
+										...Array<"Fem" | "Masc">,
+								  ]
 						  )
 						| null;
 				};
@@ -15543,6 +15709,7 @@ export interface UnitMap {
 							| ("Dual" | "Plur" | "Sing")
 							| [
 									"Dual" | "Plur" | "Sing",
+									"Dual" | "Plur" | "Sing",
 									...Array<"Dual" | "Plur" | "Sing">,
 							  ]
 					  )
@@ -15562,7 +15729,11 @@ export interface UnitMap {
 					gender:
 						| (
 								| ("Fem" | "Masc")
-								| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+								| [
+										"Fem" | "Masc",
+										"Fem" | "Masc",
+										...Array<"Fem" | "Masc">,
+								  ]
 						  )
 						| null;
 				};
@@ -15585,7 +15756,11 @@ export interface UnitMap {
 						gender:
 							| (
 									| ("Fem" | "Masc")
-									| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+									| [
+											"Fem" | "Masc",
+											"Fem" | "Masc",
+											...Array<"Fem" | "Masc">,
+									  ]
 							  )
 							| null;
 					};
@@ -15617,6 +15792,7 @@ export interface UnitMap {
 						| (
 								| ("Dual" | "Plur" | "Sing")
 								| [
+										"Dual" | "Plur" | "Sing",
 										"Dual" | "Plur" | "Sing",
 										...Array<"Dual" | "Plur" | "Sing">,
 								  ]
@@ -15804,13 +15980,21 @@ export interface UnitMap {
 				gender:
 					| (
 							| ("Fem" | "Masc")
-							| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+							| [
+									"Fem" | "Masc",
+									"Fem" | "Masc",
+									...Array<"Fem" | "Masc">,
+							  ]
 					  )
 					| null;
 				number:
 					| (
 							| ("Dual" | "Plur")
-							| ["Dual" | "Plur", ...Array<"Dual" | "Plur">]
+							| [
+									"Dual" | "Plur",
+									"Dual" | "Plur",
+									...Array<"Dual" | "Plur">,
+							  ]
 					  )
 					| null;
 			} | null;
@@ -15866,13 +16050,21 @@ export interface UnitMap {
 					gender:
 						| (
 								| ("Fem" | "Masc")
-								| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+								| [
+										"Fem" | "Masc",
+										"Fem" | "Masc",
+										...Array<"Fem" | "Masc">,
+								  ]
 						  )
 						| null;
 					number:
 						| (
 								| ("Dual" | "Plur")
-								| ["Dual" | "Plur", ...Array<"Dual" | "Plur">]
+								| [
+										"Dual" | "Plur",
+										"Dual" | "Plur",
+										...Array<"Dual" | "Plur">,
+								  ]
 						  )
 						| null;
 				} | null;
@@ -16105,7 +16297,11 @@ export interface UnitMap {
 				gender:
 					| (
 							| ("Fem" | "Masc")
-							| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+							| [
+									"Fem" | "Masc",
+									"Fem" | "Masc",
+									...Array<"Fem" | "Masc">,
+							  ]
 					  )
 					| null;
 				number: ("Plur" | "Sing") | null;
@@ -16170,7 +16366,11 @@ export interface UnitMap {
 					gender:
 						| (
 								| ("Fem" | "Masc")
-								| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+								| [
+										"Fem" | "Masc",
+										"Fem" | "Masc",
+										...Array<"Fem" | "Masc">,
+								  ]
 						  )
 						| null;
 					number: ("Plur" | "Sing") | null;
@@ -16233,7 +16433,11 @@ export interface UnitMap {
 				gender:
 					| (
 							| ("Fem" | "Masc")
-							| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+							| [
+									"Fem" | "Masc",
+									"Fem" | "Masc",
+									...Array<"Fem" | "Masc">,
+							  ]
 					  )
 					| null;
 			};
@@ -16253,7 +16457,11 @@ export interface UnitMap {
 					gender:
 						| (
 								| ("Fem" | "Masc")
-								| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+								| [
+										"Fem" | "Masc",
+										"Fem" | "Masc",
+										...Array<"Fem" | "Masc">,
+								  ]
 						  )
 						| null;
 				};
@@ -16295,7 +16503,11 @@ export interface UnitMap {
 					gender:
 						| (
 								| ("Fem" | "Masc")
-								| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+								| [
+										"Fem" | "Masc",
+										"Fem" | "Masc",
+										...Array<"Fem" | "Masc">,
+								  ]
 						  )
 						| null;
 				};
@@ -16319,7 +16531,11 @@ export interface UnitMap {
 						gender:
 							| (
 									| ("Fem" | "Masc")
-									| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+									| [
+											"Fem" | "Masc",
+											"Fem" | "Masc",
+											...Array<"Fem" | "Masc">,
+									  ]
 							  )
 							| null;
 					};
@@ -16913,7 +17129,11 @@ export interface UnitMap {
 				gender:
 					| (
 							| ("Fem" | "Masc")
-							| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+							| [
+									"Fem" | "Masc",
+									"Fem" | "Masc",
+									...Array<"Fem" | "Masc">,
+							  ]
 					  )
 					| null;
 				mood: "Imp" | null;
@@ -16921,7 +17141,11 @@ export interface UnitMap {
 				person:
 					| (
 							| ("1" | "2" | "3")
-							| ["1" | "2" | "3", ...Array<"1" | "2" | "3">]
+							| [
+									"1" | "2" | "3",
+									"1" | "2" | "3",
+									...Array<"1" | "2" | "3">,
+							  ]
 					  )
 					| null;
 				polarity: ("Neg" | "Pos") | null;
@@ -17007,7 +17231,11 @@ export interface UnitMap {
 					gender:
 						| (
 								| ("Fem" | "Masc")
-								| ["Fem" | "Masc", ...Array<"Fem" | "Masc">]
+								| [
+										"Fem" | "Masc",
+										"Fem" | "Masc",
+										...Array<"Fem" | "Masc">,
+								  ]
 						  )
 						| null;
 					mood: "Imp" | null;
@@ -17015,7 +17243,11 @@ export interface UnitMap {
 					person:
 						| (
 								| ("1" | "2" | "3")
-								| ["1" | "2" | "3", ...Array<"1" | "2" | "3">]
+								| [
+										"1" | "2" | "3",
+										"1" | "2" | "3",
+										...Array<"1" | "2" | "3">,
+								  ]
 						  )
 						| null;
 					polarity: ("Neg" | "Pos") | null;

@@ -194,6 +194,31 @@ export function germanClosedClassSurfaceError(): string {
 }
 
 /**
+ * A feature value as `featureValueSetSchema` stores it: one value, or a set
+ * of two or more distinct values in their catalog order, so one set has one
+ * spelling and Core values still compare literally (system ADR 0032):
+ * `["Fem", "Masc"]`, never `["Masc", "Fem"]`, `["Fem", "Fem"]` or `["Fem"]`.
+ * The schema accepts only catalogs whose values are already in code-point
+ * order, so ordering by code point is ordering by catalog.
+ */
+export function isFeatureValueSet(value: unknown): boolean {
+	// Zod names a generic set's members only through the catalog's own type,
+	// so the rule reads them as strings here; its structure is checked first.
+	if (!Array.isArray(value)) return true;
+	const members = value.map(String);
+	return (
+		members.length >= 2 &&
+		members.every((member, index) => {
+			const previous = members[index - 1];
+			return previous === undefined || previous < member;
+		})
+	);
+}
+export function featureValueSetError(): string {
+	return "A feature value set names two or more distinct values in catalog order; one value is written alone";
+}
+
+/**
  * The canonical order of a German noun's `mixed` Core gender (system ADR
  * 0032): its members are listed in this order, so one mix has one spelling
  * and Core values still compare literally.

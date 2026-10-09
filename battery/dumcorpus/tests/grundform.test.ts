@@ -429,7 +429,7 @@ describe("Grundform assessment", () => {
 		expect(
 			checkIfGrundform(
 				surface("he/Lexeme/ADJ", {
-					features: { ...features, gender: ["Masc"] },
+					features: { ...features, gender: "Masc" },
 				}),
 			),
 		).toEqual({ success: true, value: true });
@@ -550,14 +550,14 @@ describe("Grundform assessment", () => {
 		expect(
 			errorOf(
 				surface("he/Lexeme/NOUN", {
-					features: { number: ["Sing", "Plur"], definite: "Ind" },
+					features: { number: ["Plur", "Sing"], definite: "Ind" },
 				}),
 			).issues[0]?._tag,
 		).toBe("AmbiguousFeatures");
 		expect(
 			errorOf(
 				surface("he/Lexeme/NOUN", {
-					features: { number: ["Plur"], definite: "Ind" },
+					features: { number: ["Dual", "Plur"], definite: "Ind" },
 				}),
 			).issues[0]?._tag,
 		).toBe("LemmaRuleRequired");
