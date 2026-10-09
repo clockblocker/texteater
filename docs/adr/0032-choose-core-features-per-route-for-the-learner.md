@@ -137,6 +137,15 @@ tell them apart.
   for a person and a plural-only noun have Core gender null, and the first
   marks the gender its singular Surface shows
   ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)).
+  A noun that takes more than one gender in the same sense names them as a
+  `mixed` value, two or more distinct genders in the order `Masc`, `Fem`,
+  `Neut`: *Balg* in the child sense, which Duden gives as "der oder das", is
+  `{ mixed: ["Masc", "Neut"] }`, and *Cola* is `{ mixed: ["Fem", "Neut"] }`.
+  The tag says the genders vary freely within one sense, and the learner
+  sees both articles. A gender that changes the meaning makes separate
+  Lemmas, each with one gender: *der See* (lake) and *die See* (sea). Lemma
+  identity compares the value as written, so the child *Balg* and *der
+  Balg* (skin) are two Lemmas.
 - German PRON: [ADR 0044](./0044-identify-german-pronouns-by-pillar-stem-and-referent.md).
 - English PRON: case, number, gender and reflexivity are Core, so `I`, `me`,
   `my`, `mine` and `myself` are five Lemmas, and English PRON has no Surface
@@ -178,7 +187,8 @@ stem's forms are its own Surfaces, so `diesem` never reaches `jenem`. It stays
 inside the pillar it starts from, so `dem` never reaches `einem`. A cell
 is reached only when both ends mark every varied feature, and a plural cell's
 unmarked gender counts as marked. Navigation compares Core values literally,
-and no Core value is a set. Navigation never reaches a Syncretism
+and no Core value is an open set: a noun in free gender variation names its
+genders as one `mixed` value, spelled one way. Navigation never reaches a Syncretism
 (ADR 0046).
 
 ## Considered Options
@@ -187,6 +197,12 @@ and no Core value is a set. Navigation never reaches a Syncretism
   feminine `die`, neuter `das`, plural `die`, indefinite `ein`), so `der` in
   `der Frau` is a Surface of authored DET `die`. Rejected: the learner
   memorizes `der` and `dem` as words, and the headword choice hides the cell.
+- A German noun's free gender variation as a bare set of genders, as in
+  Hebrew. Rejected: it reads as an ordinary value and could be authored for
+  *der See* and *die See*, which are two Lemmas told apart by gender.
+- A bare `Mixed` gender. Rejected: it loses which genders, and the learner
+  needs "der oder das" while the article check needs to know that *das
+  Balg* is right and *die Balg* wrong.
 - One Lemma per cell for every closed-class word. Rejected: a stem word is
   learned once.
 - The pillar test by memorization alone. Rejected: the derivation test above
