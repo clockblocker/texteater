@@ -13,7 +13,8 @@
  * durcheinander, flach and groß joined from it, #1057), not every German
  * one. Some also form inseparable verbs (durch, über, um, unter, voll,
  * wider: übersetzen 'translate'); they are here, not among the inseparable
- * prefixes below.
+ * prefixes below. spazieren is none: verb and verb are written apart, so
+ * spazieren gehen is two VERBs (#1144).
  */
 export const germanSeparablePrefixes: ReadonlySet<string> = new Set([
 	"ab",
@@ -99,7 +100,6 @@ export const germanSeparablePrefixes: ReadonlySet<string> = new Set([
 	"rückwärts",
 	"runter",
 	"sicher",
-	"spazieren",
 	"stand",
 	"statt",
 	"teil",

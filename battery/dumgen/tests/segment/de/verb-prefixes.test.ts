@@ -20,7 +20,7 @@ const without = (held: string) => {
 
 /** The words that open no particle slot (#1057). */
 const noSlot =
-	"bekannt da dagegen flach groß gut irre leer offen sicher spazieren stand voll";
+	"bekannt da dagegen flach groß gut irre leer offen sicher stand voll";
 
 test("the particle slot opens on every separable prefix but the held-out words", () => {
 	expect(sorted(particleForms)).toEqual(sorted(without(noSlot)));
@@ -34,10 +34,8 @@ test("the infixed zu takes every separable prefix but da and hin", () => {
 	expect(sorted(germanInfixParticles)).toEqual(sorted(without("da hin")));
 });
 
-test("resolution offers the slot particles and the held-out words but irre, spazieren and stand", () => {
-	expect(sorted(prefixParticles)).toEqual(
-		sorted(without("irre spazieren stand")),
-	);
+test("resolution offers the slot particles and the held-out words but irre and stand", () => {
+	expect(sorted(prefixParticles)).toEqual(sorted(without("irre stand")));
 });
 
 test("the stranded tails are the hand-typed prepositions", () => {

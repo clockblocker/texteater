@@ -71,10 +71,9 @@ export const articleForms: ReadonlySet<string> = new Set(
  * Separable prefixes that open no particle slot. Standing apart, each is
  * mostly something else: an adjective or adverb (gut, offen, leer, voll,
  * groß, flach), the adverb or conjunction da, the pronominal adverb dagegen,
- * stand of stehen, irre of irren, and spazieren, an infinitive of its own
- * (spazieren gehen is two VERBs). #1057's lab round found no dev case a slot
- * on one of them fixes, and one on spazieren joined [ging, spazieren].
- * The judges split on bekannt and sicher, so both stay out (#1057).
+ * stand of stehen and irre of irren. #1057's lab round found no dev case a
+ * slot on one of them fixes. The judges split on bekannt and sicher, so both
+ * stay out (#1057).
  * Resolution still offers most of them as a VERB's prefix
  * (`prefixParticles`).
  */
@@ -89,7 +88,6 @@ const noSlotParticles: ReadonlySet<string> = new Set([
 	"leer",
 	"offen",
 	"sicher",
-	"spazieren",
 	"stand",
 	"voll",
 ]);
