@@ -1,4 +1,5 @@
 import type { Question } from "@typesafe-ai/sdk";
+import { isRecord } from "common-utils";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
@@ -73,11 +74,30 @@ export function fakeJev(
 	};
 }
 
+/** A Luna request's input as `fakeLuna` hands it to its writer. */
+type WriteInput = {
+	readonly members: readonly { readonly text: string }[];
+};
+
+const isMember = (member: unknown): member is { readonly text: string } =>
+	isRecord(member) && typeof member.text === "string";
+
+/**
+ * `input` with its members checked; a request with no members, such as
+ * a Reading's, gets none. Members of another shape throw.
+ */
+function writeInput(input: unknown): WriteInput {
+	if (!isRecord(input)) throw Error(`Not a Luna input: ${String(input)}`);
+	if (!("members" in input)) return { ...input, members: [] };
+	const { members } = input;
+	if (Array.isArray(members) && members.every(isMember))
+		return { ...input, members };
+	throw Error(`Not a Luna input's members: ${JSON.stringify(members)}`);
+}
+
 /** A Luna that writes what `write` returns for the request's input. */
 export function fakeLuna(
-	write: (input: {
-		readonly members: readonly { readonly text: string }[];
-	}) => unknown = ({ members }) => ({
+	write: (input: WriteInput) => unknown = ({ members }) => ({
 		canonicalForm: members.map(({ text }) => text).join(" "),
 		members: members.map(({ text }) => text),
 	}),
@@ -95,7 +115,7 @@ export function fakeLuna(
 			throw Error("aborted");
 		}
 		return {
-			output: write(request.input as never),
+			output: write(writeInput(request.input)),
 			metadata: { usage: { input_tokens: 50, output_tokens: 10 } },
 		};
 	};

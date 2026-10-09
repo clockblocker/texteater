@@ -1,5 +1,4 @@
 import { expect, test } from "bun:test";
-import type { Question } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
 import { z } from "zod";
 import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
@@ -105,10 +104,7 @@ function fakeJev(
 		inFlight--;
 		if (options.fail?.(stage, request)) throw Error("jev is down");
 		const answers: Record<string, Answer> = {};
-		for (const [id, question] of Object.entries(request.questions) as [
-			string,
-			Question,
-		][]) {
+		for (const [id, question] of Object.entries(request.questions)) {
 			if (options.drop?.(id)) continue;
 			const known = options.answers?.[id];
 			if (known) answers[id] = known;

@@ -4,6 +4,7 @@
  * polling and file download, all answering from one function, so a cache
  * filled either way holds the same answers. No request leaves the process.
  */
+import { isRecord } from "common-utils";
 import type { BatchFetch } from "../../../lab/evaluation/luna-batch.js";
 import type { Fetch } from "../../../src/segment/typesafe-ask.js";
 
@@ -18,6 +19,23 @@ type FakeBatch = {
 	output_file_id?: string;
 	error_file_id?: string;
 };
+
+/** One line of an uploaded batch input file, or a thrown error. */
+function inputLine(line: string) {
+	const parsed: unknown = JSON.parse(line);
+	if (
+		isRecord(parsed) &&
+		typeof parsed.custom_id === "string" &&
+		typeof parsed.url === "string" &&
+		isRecord(parsed.body)
+	)
+		return {
+			custom_id: parsed.custom_id,
+			url: parsed.url,
+			body: parsed.body,
+		};
+	throw Error(`Not a batch input line: ${line}`);
+}
 
 export function fakeOpenAI(
 	answer: (body: Record<string, unknown>) => FakeAnswer,
@@ -54,10 +72,7 @@ export function fakeOpenAI(
 		const errors: string[] = [];
 		let dropped = false;
 		for (const [index, line] of batch.lines.entries()) {
-			const { custom_id, body } = JSON.parse(line) as {
-				custom_id: string;
-				body: Record<string, unknown>;
-			};
+			const { custom_id, body } = inputLine(line);
 			bodies.push(body);
 			if (options.dropped?.(custom_id)) {
 				dropped = true;
@@ -108,19 +123,29 @@ export function fakeOpenAI(
 		if (init.signal.aborted) throw Error("aborted");
 		const path = new URL(url).pathname.replace(/^\/v1/u, "");
 		if (init.method === "POST" && path === "/files") {
-			const form = init.body as FormData;
+			const form = init.body;
+			if (!(form instanceof FormData))
+				throw Error("Expected a form upload");
 			if (form.get("purpose") !== "batch")
 				return ok({ error: "purpose" }, 400);
-			const text = await (form.get("file") as Blob).text();
+			const file = form.get("file");
+			if (!(file instanceof Blob))
+				throw Error("Expected an uploaded file");
+			const text = await file.text();
 			const id = `file-in-${++counts.uploads}`;
 			files.set(id, text);
 			return ok({ id, purpose: "batch" });
 		}
 		if (init.method === "POST" && path === "/batches") {
-			const { input_file_id, endpoint, completion_window } = JSON.parse(
-				init.body as string,
-			) as Record<string, string>;
-			const text = input_file_id && files.get(input_file_id);
+			if (typeof init.body !== "string")
+				throw Error("Expected a JSON body");
+			const parsed: unknown = JSON.parse(init.body);
+			const fields: Readonly<Record<string, unknown>> = isRecord(parsed)
+				? parsed
+				: {};
+			const { input_file_id, endpoint, completion_window } = fields;
+			const text =
+				typeof input_file_id === "string" && files.get(input_file_id);
 			if (
 				!text ||
 				endpoint !== "/v1/responses" ||
@@ -129,10 +154,7 @@ export function fakeOpenAI(
 				return ok({ error: "bad batch" }, 400);
 			const lines = text.split("\n").filter((line) => line.trim());
 			for (const line of lines) {
-				const { custom_id, url: lineUrl } = JSON.parse(line) as {
-					custom_id: string;
-					url: string;
-				};
+				const { custom_id, url: lineUrl } = inputLine(line);
 				if (lineUrl !== "/v1/responses")
 					return ok({ error: "url" }, 400);
 				sentIds.set(custom_id, (sentIds.get(custom_id) ?? 0) + 1);
@@ -177,6 +199,16 @@ export function fakeOpenAI(
 		throw Error(`No route ${init.method} ${path}`);
 	};
 	return { fetch, batchFetch, counts, sentIds, bodies };
+}
+
+/** The JSON a Responses body's user message carries, or `{}` without one. */
+export function userInputOf(body: Readonly<Record<string, unknown>>): unknown {
+	const user = Array.isArray(body.input) ? body.input[1] : undefined;
+	return JSON.parse(
+		isRecord(user) && typeof user.content === "string"
+			? user.content
+			: "{}",
+	);
 }
 
 /** A completed Responses API body whose output is `{"value": value}`. */

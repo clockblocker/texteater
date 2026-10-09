@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { isRecord } from "common-utils";
 import { checkPromptCitations, loadSpecRecords, rules } from "dumcorpus";
 import { foldCase } from "dumling";
 import {
@@ -87,23 +88,16 @@ const occursIn = (form: string, text: string) => {
 	);
 };
 
-type Lemmaish = {
-	readonly unitKind?: unknown;
-	readonly family?: unknown;
-	readonly kind?: unknown;
-	readonly canonicalForm?: unknown;
-};
-
 /** Every open-class Lemma inside a value: a Reading's, a relation target's, a source verb's. */
 function lemmasIn(value: unknown, into: Map<string, string>, of: string) {
 	if (!value || typeof value !== "object") return;
-	const lemma = value as Lemmaish;
 	if (
-		lemma.unitKind === "Lemma" &&
-		typeof lemma.canonicalForm === "string" &&
-		(lemma.family !== "Lexeme" || openKinds.has(String(lemma.kind)))
+		isRecord(value) &&
+		value.unitKind === "Lemma" &&
+		typeof value.canonicalForm === "string" &&
+		(value.family !== "Lexeme" || openKinds.has(String(value.kind)))
 	)
-		into.set(lemma.canonicalForm, of);
+		into.set(value.canonicalForm, of);
 	for (const inner of Object.values(value)) lemmasIn(inner, into, of);
 }
 

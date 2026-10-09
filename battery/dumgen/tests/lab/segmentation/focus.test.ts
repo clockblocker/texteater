@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
+import { isRecord } from "common-utils";
 import {
 	type FocusSet,
 	type FocusUnit,
@@ -18,7 +19,18 @@ import {
 import type { OutcomeRow } from "../../../lab/segmentation/harness/outcomes.js";
 import { focusIterationTable } from "../../../lab/segmentation/harness/table.js";
 
-const focus = JSON.parse(readFileSync(focusPath, "utf8")) as FocusSet;
+/** The stored focus set, read through the harness's check on the set it names. */
+function storedFocus(): FocusSet {
+	const stored: unknown = JSON.parse(readFileSync(focusPath, "utf8"));
+	const taken: Readonly<Record<string, unknown>> =
+		isRecord(stored) && isRecord(stored.set) ? stored.set : {};
+	const { name, hash } = taken;
+	if (typeof name !== "string" || typeof hash !== "string")
+		throw Error("The focus set names no frozen set");
+	return loadFocus({ name, hash });
+}
+
+const focus = storedFocus();
 
 test("the membership focus set lists each case its units name, once", () => {
 	const cases = new Set(focus.units.map((unit) => unit.caseId));

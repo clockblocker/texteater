@@ -1,12 +1,24 @@
 import type * as Dumcorpus from "dumcorpus/types";
 import type * as Dumling from "dumling/types";
 import type { Sidecar } from "../../../../lab/evaluation/spec-corpus/gold.js";
+import {
+	type RouteKey,
+	routeForKey,
+} from "../../../../src/segment/de/routes.js";
 
+/** A target's Segments and its route: a German route's key, or another language's route. */
 type TargetSpec = readonly [
 	segments: readonly number[],
-	family: string,
-	kind: string,
+	route: RouteKey | Dumcorpus.SpecRoute,
 ];
+
+/** The route a target names, a German key looked up. */
+function specRoute(route: RouteKey | Dumcorpus.SpecRoute): Dumcorpus.SpecRoute {
+	if (typeof route !== "string") return route;
+	const german = routeForKey(route);
+	if (german === "Unresolved") throw Error("Expected a routed target");
+	return german;
+}
 
 /** Word, space and punctuation Segments, the way dumcorpus records split them. */
 export function segmentsOf(sentence: string): Dumcorpus.Segment[] {
@@ -44,9 +56,9 @@ export function specRecord(args: {
 		language,
 		sentence: args.sentence,
 		segments: segmentsOf(args.sentence),
-		targets: args.targets.map(([memberSegmentIndices, family, kind]) => ({
+		targets: args.targets.map(([memberSegmentIndices, route]) => ({
 			memberSegmentIndices,
-			route: { language, family, kind } as Dumcorpus.SpecRoute,
+			route: specRoute(route),
 		})),
 		noTarget: (args.noTarget ?? []).map((memberSegmentIndices) => ({
 			memberSegmentIndices,

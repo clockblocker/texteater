@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { isRecord } from "common-utils";
 import { isSyncreticUnit, isSyncretism, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
@@ -567,10 +568,8 @@ test("a stem's gender-only cells offer its Surface Syncretism, which an open ref
 			return bag?.gender;
 		}),
 	).toEqual(["Masc", "Neut"]);
-	const cell = jev.sent[0]?.questions.cell as
-		| { criteria?: Record<string, string> }
-		| undefined;
-	expect(Object.keys(cell?.criteria ?? {})).toEqual([
+	const cell = jev.sent[0]?.questions.cell;
+	expect(Object.keys(cell?.type === "choice" ? cell.criteria : {})).toEqual([
 		"o0",
 		"o1",
 		"s0",
@@ -615,15 +614,10 @@ test("standalone allem means 'everything': its cell question offers no Syncretis
 			neighbours: { before: "Heute ist Markt." },
 		},
 	);
-	const cell = jev.sent[0]?.questions.cell as
-		| { criteria?: Record<string, string> }
-		| undefined;
-	expect(Object.keys(cell?.criteria ?? {})).toEqual([
-		"o0",
-		"o1",
-		"Unresolved",
-	]);
-	expect(cell?.criteria?.o1).toContain("neuter");
+	const cell = jev.sent[0]?.questions.cell;
+	const criteria = cell?.type === "choice" ? cell.criteria : {};
+	expect(Object.keys(criteria)).toEqual(["o0", "o1", "Unresolved"]);
+	expect(criteria.o1).toContain("neuter");
 	const { surface } = attested(result);
 	expect(surface).not.toHaveProperty("syncretic");
 	expect(surface).toMatchObject({
@@ -658,14 +652,11 @@ test("Luna writes the Canonical Form in lexical casing with the unit's stored Le
 		},
 	);
 	expect(attested(result).surface.normalizedSurface).toBe("mangels");
-	const input = luna.sent[0]?.input as {
-		lemmaCandidates?: readonly unknown[];
-		members: readonly unknown[];
-	};
-	expect(input.lemmaCandidates).toEqual([
+	const input = luna.sent[0]?.input;
+	expect(input).toHaveProperty("lemmaCandidates", [
 		{ canonicalForm: "mangels", coreFeatures: {} },
 	]);
-	expect(input.members).toEqual([
+	expect(input).toHaveProperty("members", [
 		{ member: "m0", text: "Mangels", orthography: "Standard" },
 	]);
 	expect(luna.sent[0]?.systemPrompt).toContain(
@@ -729,17 +720,12 @@ test("Luna drafts the Emoji Description after the headword in the same call, fro
 		/\p{Extended_Pictographic}/u,
 	);
 	expect(request?.systemPrompt).toContain(generation.draftScope);
-	const schema = request?.outputSchema as {
-		properties: Record<string, unknown>;
-		required: readonly string[];
-	};
+	const outputSchema = request?.outputSchema;
+	const schema = isRecord(outputSchema) ? outputSchema : {};
 	// The headword comes first, the description last.
-	expect(Object.keys(schema.properties)).toEqual([
-		"canonicalForm",
-		"members",
-		"article",
-		"emojiDescription",
-	]);
+	expect(
+		Object.keys(isRecord(schema.properties) ? schema.properties : {}),
+	).toEqual(["canonicalForm", "members", "article", "emojiDescription"]);
 	expect(schema.required).toContain("emojiDescription");
 	expect(request?.systemPrompt).toContain(draftPrompt);
 	expect(request?.systemPrompt).toContain(generation.copula);
@@ -1155,10 +1141,7 @@ test("a governed preposition is the verb's valencyEvidence and stays out of its 
 	expect(attestation.surface.normalizedSurface).toBe("wartet");
 	// The guess had no governed member, so Luna wrote again.
 	expect(luna.sent).toHaveLength(2);
-	expect(
-		(luna.sent[1]?.input as { outsideHeadword?: string[] } | undefined)
-			?.outsideHeadword,
-	).toEqual(["m1"]);
+	expect(luna.sent[1]?.input).toHaveProperty("outsideHeadword", ["m1"]);
 });
 
 test("an adposition records the case its complement took, asked only where the ADP Case Table allows several", async () => {
@@ -1385,10 +1368,10 @@ test("a Saying resolves with its coverage and fused pieces spelled as written", 
 		orthography: "Fused",
 		component: 0,
 	});
-	expect(
-		(luna.sent[0]?.input as { fixedMembers?: unknown } | undefined)
-			?.fixedMembers,
-	).toEqual({ m3: "i", m4: "m" });
+	expect(luna.sent[0]?.input).toHaveProperty("fixedMembers", {
+		m3: "i",
+		m4: "m",
+	});
 	// No Member Role anywhere on the Attestation (ADR 0041).
 	for (const member of attestation.members)
 		expect(
@@ -1592,7 +1575,7 @@ test("PART is closed: an authored particle resolves with no Luna call, and a spe
 test("a VERB's Canonical Form carries its judged separable prefix and lexical reflexive", () => {
 	const core = (
 		hasSepPrefix: string | null,
-		lexicallyReflexive = null as string | null,
+		lexicallyReflexive: string | null = null,
 	) => ({
 		hasSepPrefix,
 		lexicallyReflexive,
@@ -1672,10 +1655,9 @@ test("an r- adverb is Shorthand without a judge: its her- or hin- words are the 
 	expect(
 		orthography?.type === "choice" && Object.keys(orthography.criteria),
 	).not.toContain("t1");
-	expect(
-		(luna.sent.at(-1)?.input as { fixedMembers?: unknown } | undefined)
-			?.fixedMembers,
-	).toEqual({ m1: "herein" });
+	expect(luna.sent.at(-1)?.input).toHaveProperty("fixedMembers", {
+		m1: "herein",
+	});
 	const attestation = attested(result);
 	expect(attestation.surface.lemma).toMatchObject({
 		canonicalForm: "hereinkommen",
@@ -1715,10 +1697,7 @@ test("Luna is told which members are auxiliaries, which stay out of the headword
 		},
 	);
 	expect(luna.sent).toHaveLength(2);
-	expect(
-		(luna.sent[1]?.input as { auxiliaries?: unknown } | undefined)
-			?.auxiliaries,
-	).toEqual(["m0"]);
+	expect(luna.sent[1]?.input).toHaveProperty("auxiliaries", ["m0"]);
 	expect(luna.sent[1]?.systemPrompt).toContain("`auxiliaries`");
 });
 
@@ -1739,9 +1718,7 @@ test("a Luna answer the transport kept no output for is refused with the transpo
 		),
 	);
 	expect(failure).toBeInstanceOf(InvalidModelOutput);
-	expect(String((failure as InvalidModelOutput).message)).toContain(
-		"Luna refused: no",
-	);
+	expect(String(failure.message)).toContain("Luna refused: no");
 });
 
 test("an ordinary noun shown in its plural keeps its singular's gender, while a plural-only noun has none", async () => {

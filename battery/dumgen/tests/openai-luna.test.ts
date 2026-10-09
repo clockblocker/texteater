@@ -188,7 +188,7 @@ test("a body that is JSON but not a Responses answer throws as an unexpected bod
 		);
 		expect(failure).not.toBeInstanceOf(TypeError);
 		expect(failure).toBeInstanceOf(Error);
-		expect((failure as Error).message).toBe(
+		expect(failure instanceof Error ? failure.message : failure).toBe(
 			`OpenAI answered an unexpected body: ${body}`,
 		);
 	}

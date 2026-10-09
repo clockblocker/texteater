@@ -1,4 +1,5 @@
 import type { Question } from "@typesafe-ai/sdk";
+import { isRecord } from "common-utils";
 import { parseUnit, routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
@@ -79,15 +80,43 @@ export type KnowledgeLunaInput = {
 	readonly markedSentence?: string;
 };
 
+/** `input` as a Knowledge Luna request carries it, or a thrown error. */
+export function knowledgeLunaInput(input: unknown): KnowledgeLunaInput {
+	if (
+		isRecord(input) &&
+		typeof input.aspect === "string" &&
+		isRecord(input.reading) &&
+		typeof input.reading.lemma === "string" &&
+		typeof input.reading.kind === "string"
+	)
+		return {
+			...input,
+			aspect: input.aspect,
+			reading: {
+				...input.reading,
+				lemma: input.reading.lemma,
+				kind: input.reading.kind,
+			},
+		};
+	throw Error(`Not a Knowledge Luna input: ${JSON.stringify(input)}`);
+}
+
+/** What a fake Luna answers one aspect: a value, or a function of the input. */
+type KnowledgeAnswer =
+	| ((input: KnowledgeLunaInput) => unknown)
+	| object
+	| string
+	| number
+	| boolean
+	| null;
+
 /**
  * A Luna that answers each request by its input's `aspect` from `answers`
  * (a value, or a function of the input); a missing aspect, or one whose
  * answer is an Error, throws.
  */
 export function knowledgeLuna(
-	answers: Readonly<
-		Record<string, unknown | ((input: KnowledgeLunaInput) => unknown)>
-	>,
+	answers: Readonly<Record<string, KnowledgeAnswer>>,
 	options: {
 		readonly delayMs?: number | ((aspect: string) => number);
 	} = {},
@@ -96,7 +125,7 @@ export function knowledgeLuna(
 	const aborted: string[] = [];
 	const ask: LunaAsk = async (request, { signal }) => {
 		sent.push(request);
-		const input = request.input as KnowledgeLunaInput;
+		const input = knowledgeLunaInput(request.input);
 		const delay =
 			typeof options.delayMs === "function"
 				? options.delayMs(input.aspect)
@@ -107,10 +136,7 @@ export function knowledgeLuna(
 			throw Error("aborted");
 		}
 		const answer = answers[input.aspect];
-		const output =
-			typeof answer === "function"
-				? (answer as (input: KnowledgeLunaInput) => unknown)(input)
-				: answer;
+		const output = typeof answer === "function" ? answer(input) : answer;
 		if (output === undefined || output instanceof Error)
 			throw output instanceof Error
 				? output
@@ -125,7 +151,7 @@ export function knowledgeLuna(
 		sent,
 		aborted,
 		aspects: () =>
-			sent.map((request) => (request.input as KnowledgeLunaInput).aspect),
+			sent.map((request) => knowledgeLunaInput(request.input).aspect),
 	};
 }
 
@@ -273,7 +299,9 @@ export async function produceOnce<E = never>(
 }
 
 /** A German ADP Lemma, as `valencyEvidence` and frames name it. */
-export const adp = (canonicalForm: string) => ({
+export const adp = (
+	canonicalForm: string,
+): Dumling.Lemma<"de", "Lexeme", "ADP"> => ({
 	unitKind: "Lemma",
 	language: "de",
 	family: "Lexeme",

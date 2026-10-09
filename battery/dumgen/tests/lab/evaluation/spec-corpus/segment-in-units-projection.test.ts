@@ -19,8 +19,8 @@ const nora = specRecord({
 	id: "de/nora-hat-bereits-gegessen",
 	sentence: "Nora hat bereits gegessen.",
 	targets: [
-		[[2, 6], "Lexeme", "VERB"],
-		[[0], "Lexeme", "PROPN"],
+		[[2, 6], "Lexeme/VERB"],
+		[[0], "Lexeme/PROPN"],
 	],
 });
 // "Er sagt qzxv." → Er 0, sagt 2, qzxv 4
@@ -28,8 +28,8 @@ const qzxv = specRecord({
 	id: "de/er-sagt-qzxv",
 	sentence: "Er sagt qzxv.",
 	targets: [
-		[[0], "Lexeme", "PRON"],
-		[[2], "Lexeme", "VERB"],
+		[[0], "Lexeme/PRON"],
+		[[2], "Lexeme/VERB"],
 	],
 	noTarget: [[4]],
 	coverage: "Full",
@@ -40,32 +40,32 @@ const qzxv = specRecord({
 const blarg = specRecord({
 	id: "de/der-blarg-schlaeft",
 	sentence: "Der Blarg schläft.",
-	targets: [[[4], "Lexeme", "VERB"]],
+	targets: [[[4], "Lexeme/VERB"]],
 	noTarget: [[0, 2]],
 	coverage: "Full",
 });
 const draft = specRecord({
 	id: "de/sie-geht",
 	sentence: "Sie geht.",
-	targets: [[[2], "Lexeme", "VERB"]],
+	targets: [[[2], "Lexeme/VERB"]],
 	reviewDepth: undefined,
 });
 const excluded = specRecord({
 	id: "de/er-kommt",
 	sentence: "Er kommt.",
-	targets: [[[2], "Lexeme", "VERB"]],
+	targets: [[[2], "Lexeme/VERB"]],
 });
 // Reviewed through a deeper layer, so Reviewed for segment.inUnits too.
 const other = specRecord({
 	id: "de/wir-lachen",
 	sentence: "Wir lachen.",
-	targets: [[[2], "Lexeme", "VERB"]],
+	targets: [[[2], "Lexeme/VERB"]],
 	reviewDepth: "Reading",
 });
 const english = specRecord({
 	id: "en/she-left",
 	sentence: "She left.",
-	targets: [[[2], "Lexeme", "VERB"]],
+	targets: [[[2], { language: "en", family: "Lexeme", kind: "VERB" }]],
 	language: "en",
 });
 const empty = specRecord({

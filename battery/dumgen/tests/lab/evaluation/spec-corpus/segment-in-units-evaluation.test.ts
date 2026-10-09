@@ -20,15 +20,15 @@ import { emptySidecar, segmentsOf, specRecord } from "./fixtures.js";
 const partial = specRecord({
 	id: "de/nora-hat-bereits-gegessen",
 	sentence: "Nora hat bereits gegessen.",
-	targets: [[[2, 6], "Lexeme", "VERB"]],
+	targets: [[[2, 6], "Lexeme/VERB"]],
 });
 // "Er sagt qzxv blorp." → Er 0, sagt 2, qzxv 4, blorp 6
 const full = specRecord({
 	id: "de/er-sagt-qzxv-blorp",
 	sentence: "Er sagt qzxv blorp.",
 	targets: [
-		[[0], "Lexeme", "PRON"],
-		[[2], "Lexeme", "VERB"],
+		[[0], "Lexeme/PRON"],
+		[[2], "Lexeme/VERB"],
 	],
 	noTarget: [[4], [6]],
 	coverage: "Full",
@@ -37,14 +37,14 @@ const full = specRecord({
 const blarg = specRecord({
 	id: "de/der-blarg-schlaeft",
 	sentence: "Der Blarg schläft.",
-	targets: [[[4], "Lexeme", "VERB"]],
+	targets: [[[4], "Lexeme/VERB"]],
 	noTarget: [[0, 2]],
 	coverage: "Full",
 });
 const foreign = specRecord({
 	id: "de/das-ist-cool",
 	sentence: "Das ist cool.",
-	targets: [[[4], "Foreign", "Foreign"]],
+	targets: [[[4], "Foreign/Foreign"]],
 });
 
 const projected = projectCorpus(

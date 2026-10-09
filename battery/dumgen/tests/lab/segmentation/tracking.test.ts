@@ -58,7 +58,7 @@ import {
 	derivedVerdict,
 	iterationTable,
 } from "../../../lab/segmentation/harness/table.js";
-import { type Answers, noul } from "../../../src/segment/ask.js";
+import { type Answer, noul } from "../../../src/segment/ask.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import { segmentsOf } from "../evaluation/spec-corpus/fixtures.js";
 
@@ -275,31 +275,38 @@ const answeringAs =
 	async (request) => {
 		if (counter) counter.calls++;
 		const answers = Object.fromEntries(
-			Object.entries(request.questions).map(([id, question]) => {
-				if (question.type === "noul")
-					return [id, { type: "noul", noul: 0.9 }];
-				const keys = Object.keys(
-					question.type === "choice" ? question.criteria : {},
-				);
-				const wanted = id.startsWith("r_")
-					? (keys.find((key) => key === "Lexeme/PRON") ?? keys[0])
-					: keys[keys.length - 1];
-				return [
-					id,
-					{
-						type: "choice",
-						choice: wanted,
-						confidence: 1,
-						probabilities: Object.fromEntries(
-							keys.map((key) => [key, key === wanted ? 1 : 0]),
-						),
-					},
-				];
-			}),
+			Object.entries(request.questions).map(
+				([id, question]): [string, Answer] => {
+					if (question.type === "noul")
+						return [id, { type: "noul", noul: 0.9 }];
+					const keys = Object.keys(
+						question.type === "choice" ? question.criteria : {},
+					);
+					const wanted = id.startsWith("r_")
+						? (keys.find((key) => key === "Lexeme/PRON") ?? keys[0])
+						: keys.at(-1);
+					if (wanted === undefined)
+						throw Error(`${id} offers no option`);
+					return [
+						id,
+						{
+							type: "choice",
+							choice: wanted,
+							confidence: 1,
+							probabilities: Object.fromEntries(
+								keys.map((key) => [
+									key,
+									key === wanted ? 1 : 0,
+								]),
+							),
+						},
+					];
+				},
+			),
 		);
 		return {
 			model,
-			answers: answers as Answers,
+			answers,
 			usage: { input_tokens: 10, output_tokens: 0 },
 		};
 	};

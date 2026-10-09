@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { isRecord } from "common-utils";
 import { guardGrammarBudget } from "../../../cli/evaluate.js";
 import { createOpenAILunaBatch } from "../../../lab/evaluation/luna-batch.js";
 import {
@@ -25,7 +26,7 @@ import {
 import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
 import { createOpenAILuna } from "../../../src/openai-luna.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
-import { completedResponse, fakeOpenAI } from "./fake-openai.js";
+import { completedResponse, fakeOpenAI, userInputOf } from "./fake-openai.js";
 
 const repository = resolve(import.meta.dir, "../../../../..");
 
@@ -76,13 +77,12 @@ function goldTransports(cases: readonly GrammarCase[], wrongAt?: number) {
 	};
 	const luna: LunaAsk = async (request) => {
 		counter.luna++;
-		const input = request.input as { sentence: string };
-		const goldCase = caseOf(input.sentence);
+		const { input } = request;
+		const goldCase = caseOf(isRecord(input) ? input.sentence : undefined);
 		if (!goldCase) throw Error("No case for this request");
-		const written = goldWritten(goldCase, request.input) as {
-			canonicalForm: string;
-			members: string[];
-		};
+		const written = goldWritten(goldCase, input);
+		if (!isRecord(written) || typeof written.canonicalForm !== "string")
+			throw Error("Gold wrote no Canonical Form");
 		attempt++;
 		return {
 			output:
@@ -310,10 +310,10 @@ test("resolve.grammar's replay scores the same whether its Canonical Forms came 
 	const { root: batchRoot } = await frozenRoot();
 	const experiment = grammarExperiment("dev", false);
 	const answer = (body: Record<string, unknown>) => {
-		const [, user] = body.input as { content: string }[];
-		const input = JSON.parse(user?.content ?? "{}") as { sentence: string };
+		const input = userInputOf(body);
+		const sentence = isRecord(input) ? input.sentence : undefined;
 		const goldCase = cases.find(
-			(candidate) => candidate.sentence.text === input.sentence,
+			(candidate) => candidate.sentence.text === sentence,
 		);
 		if (!goldCase) throw Error("No case for this request");
 		return {

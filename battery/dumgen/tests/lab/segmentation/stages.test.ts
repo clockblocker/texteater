@@ -1,8 +1,12 @@
 import { expect, test } from "bun:test";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
 } from "../../../lab/evaluation/spec-corpus/segment-in-units.js";
+import type { ArmContext } from "../../../lab/segmentation/de/arm.js";
+import { JevCache } from "../../../lab/segmentation/harness/jev-cache.js";
 import {
 	assertPartition,
 	type Edge,
@@ -138,7 +142,16 @@ function stagesWith(args: {
 	};
 }
 
-const context = {} as never;
+/** A context the fake stages never read: an offline jev that is never asked. */
+const context: ArmContext = {
+	jev: new JevCache({
+		cacheDirectory: join(tmpdir(), "stages-test-unused-jev-cache"),
+		offline: true,
+	}),
+	repetition: 0,
+	calls: [],
+	options: {},
+};
 
 test("runStages traces selected connections, assembly edges and merges", async () => {
 	const { output, trace } = await runStages(

@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { canonicalJson } from "common-utils";
+import { canonicalJson, isRecord } from "common-utils";
 import { listExperiments } from "../../../lab/evaluation/experiments.js";
 import { storeFrozenSet } from "../../../lab/evaluation/frozen-sets.js";
 import {
@@ -32,6 +32,7 @@ import {
 	saveKnowledgeSubset,
 	selectKnowledgeSubset,
 } from "../../../lab/evaluation/knowledge/subset.js";
+import type { Line } from "../../../lab/evaluation/resolve-grammar/scoring.js";
 import type { LunaAsk } from "../../../src/luna.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
 
@@ -114,10 +115,8 @@ const output = (partial: Partial<KnowledgeOutput>): KnowledgeOutput => ({
 test("structural aspects are scored exactly, a reviewed-empty aspect is right only when empty, and a failure is wrong", () => {
 	const warten = caseOf("warten");
 	const request = requestOf(warten, "structural");
-	const gold = warten.gold?.knowledge as {
-		valency: unknown;
-		conjugationClass: unknown;
-	};
+	const gold = warten.gold?.knowledge;
+	if (!gold?.valency) throw Error("warten has no gold valency");
 	const right = evaluateKnowledge(
 		warten,
 		request,
@@ -287,7 +286,7 @@ test("the oracle answers as gold would, so a pricing pass finds every request", 
 	const candidates = goldKnowledgeWritten(
 		{ goldCase: warten, scope: "structural" },
 		{ aspect: "relationCandidates" },
-	) as string[];
+	);
 	expect(candidates).toContain("harren");
 	const answers = knowledgeOracle.answers(
 		{ goldCase: warten, scope: "structural" },
@@ -380,7 +379,9 @@ test("the harness prices a round from the oracle without a call, runs live once 
 	};
 	const luna: LunaAsk = async (request) => {
 		lunaCalls++;
-		const { aspect } = request.input as { aspect: string };
+		const aspect = isRecord(request.input)
+			? request.input.aspect
+			: undefined;
 		const answers: Record<string, unknown> = {
 			valency: { valency: [] },
 			conjugationClass: ["wartete"],
@@ -395,7 +396,8 @@ test("the harness prices a round from the oracle without a call, runs live once 
 			relationCandidates: ["harren"],
 		};
 		return {
-			output: answers[aspect] ?? null,
+			output:
+				typeof aspect === "string" ? (answers[aspect] ?? null) : null,
 			metadata: { usage: { input_tokens: 600, output_tokens: 20 } },
 		};
 	};
@@ -417,18 +419,17 @@ test("the harness prices a round from the oracle without a call, runs live once 
 	expect(evaluated.spend?.luna.freshCalls).toBe(lunaCalls);
 	const run = evaluated.run;
 	if (!run) throw Error("no run");
-	const metrics = knowledgeMetrics(run) as {
-		lines: Record<string, { correct: number; count: number }>;
-		aspects: Record<string, unknown>;
-		flips: string[];
-	};
-	expect(metrics.lines.conjugationClass).toMatchObject({
+	const metrics = knowledgeMetrics(run);
+	if (!("lines" in metrics)) throw Error("Expected a Knowledge report");
+	// Each exact aspect's line is keyed by its name.
+	const lines: Readonly<Record<string, Line | undefined>> = metrics.lines;
+	expect(lines.conjugationClass).toMatchObject({
 		correct: 1,
 		count: 1,
 	});
-	expect(metrics.lines.sayingType).toMatchObject({ correct: 1, count: 1 });
-	expect(metrics.lines.participleSource?.count).toBe(1);
-	expect(metrics.lines.relationRecall?.correct).toBeGreaterThan(0);
+	expect(lines.sayingType).toMatchObject({ correct: 1, count: 1 });
+	expect(lines.participleSource?.count).toBe(1);
+	expect(lines.relationRecall?.correct).toBeGreaterThan(0);
 	expect(metrics.flips).toEqual([]);
 
 	// A re-score replays the cache: no call at all.
@@ -442,7 +443,8 @@ test("the harness prices a round from the oracle without a call, runs live once 
 		repetitions: 1,
 	});
 	expect({ jev: jevCalls, luna: lunaCalls }).toEqual(calls);
-	expect(canonicalJson(knowledgeMetrics(replayed.run as never))).toBe(
+	if (!replayed.run) throw Error("no replayed run");
+	expect(canonicalJson(knowledgeMetrics(replayed.run))).toBe(
 		canonicalJson(metrics),
 	);
 });

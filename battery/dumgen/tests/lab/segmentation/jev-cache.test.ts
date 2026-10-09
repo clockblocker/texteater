@@ -21,12 +21,12 @@ afterAll(() => rm(directory, { recursive: true, force: true }));
 let fresh = 0;
 const cacheDirectory = () => join(directory, `cache-${fresh++}`);
 const context = { stage: "test", signal: new AbortController().signal };
-const questions: Questions = {
+const questions = {
 	a: noul("Is a so?"),
 	b: noul("Is b so?"),
 	r_10: noul("Is r_10 so?"),
 	r_1_2: noul("Is r_1_2 so?"),
-};
+} satisfies Questions;
 const request = (asked: Questions = questions): JevRequest => ({
 	model: pinnedJevModel,
 	state: { sentence: "Er zog sich an." },
@@ -107,7 +107,7 @@ test("a bad request fails at once, and retries stop at maxRetries; both count as
 	);
 	expect(attempts).toBe(1);
 	await expect(
-		jev.ask(0, calls)(request({ b: questions.b as never }), context),
+		jev.ask(0, calls)(request({ b: questions.b }), context),
 	).rejects.toThrow("TypeSafe answered 503");
 	expect(attempts).toBe(3);
 	expect(calls.map((call) => call.error)).toEqual([
@@ -150,7 +150,7 @@ test("answers are cached per question, so another chunking hits and a partial hi
 	const calls: CallRecord[] = [];
 	const offline = new JevCache({ cacheDirectory: root, offline: true });
 	const half = await offline.ask(0, calls)(
-		request({ r_10: questions.r_10 as never, a: questions.a as never }),
+		request({ r_10: questions.r_10, a: questions.a }),
 		context,
 	);
 	expect(Object.keys(half.answers).sort()).toEqual(["a", "r_10"]);

@@ -2,6 +2,7 @@ import { afterAll, expect, test } from "bun:test";
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { isRecord } from "common-utils";
 import { runEvaluationCli } from "../../../cli/evaluate.js";
 import {
 	evaluateExperiment,
@@ -27,7 +28,7 @@ import {
 	writeRounds,
 } from "../../../lab/segmentation/harness/round.js";
 import type { LabRun } from "../../../lab/segmentation/harness/run.js";
-import type { Answers } from "../../../src/segment/ask.js";
+import type { Answer } from "../../../src/segment/ask.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
 import { segmentsOf } from "./spec-corpus/fixtures.js";
 
@@ -97,32 +98,39 @@ function goldJudge() {
 		};
 		const fixed = new Set(["f_5", "f_6", "f_7", "e_5_6", "e_5_7", "e_6_7"]);
 		const answers = Object.fromEntries(
-			Object.entries(request.questions).map(([id, question]) => {
-				if (question.type === "noul")
+			Object.entries(request.questions).map(
+				([id, question]): [string, Answer] => {
+					if (question.type === "noul")
+						return [
+							id,
+							{ type: "noul", noul: fixed.has(id) ? 0.9 : 0.1 },
+						];
+					const keys = Object.keys(
+						question.type === "choice" ? question.criteria : {},
+					);
+					const wanted = known[id] ?? keys.at(-1);
+					if (wanted === undefined)
+						throw Error(`${id} offers no option`);
 					return [
 						id,
-						{ type: "noul", noul: fixed.has(id) ? 0.9 : 0.1 },
+						{
+							type: "choice",
+							choice: wanted,
+							confidence: 1,
+							probabilities: Object.fromEntries(
+								keys.map((key) => [
+									key,
+									key === wanted ? 1 : 0,
+								]),
+							),
+						},
 					];
-				const keys = Object.keys(
-					question.type === "choice" ? question.criteria : {},
-				);
-				const wanted = known[id] ?? keys[keys.length - 1];
-				return [
-					id,
-					{
-						type: "choice",
-						choice: wanted,
-						confidence: 1,
-						probabilities: Object.fromEntries(
-							keys.map((key) => [key, key === wanted ? 1 : 0]),
-						),
-					},
-				];
-			}),
+				},
+			),
 		);
 		return {
 			model: request.model,
-			answers: answers as Answers,
+			answers,
 			usage: { input_tokens: 100, output_tokens: 0 },
 		};
 	};
@@ -425,8 +433,8 @@ test("a request run asks nothing, answers from the lab's cache, and --compare na
 			...lab,
 			write: (value) => written.push(value),
 		});
-	const requests = (lab: typeof warm) =>
-		cli(
+	const requests = async (lab: typeof warm) => {
+		const result = await cli(
 			[
 				"--experiment",
 				"segment-in-units/de:dev",
@@ -435,7 +443,11 @@ test("a request run asks nothing, answers from the lab's cache, and --compare na
 				"--requests",
 			],
 			lab,
-		) as Promise<{ runId: string; answers: Record<string, unknown> }>;
+		);
+		if (!("runId" in result && "answers" in result))
+			throw Error("Expected a request run");
+		return result;
+	};
 
 	const before = await requests(warm);
 	const after = await requests(warm);
@@ -446,9 +458,8 @@ test("a request run asks nothing, answers from the lab's cache, and --compare na
 			projected: 0,
 			otherRepetition: 0,
 		});
-		expect(
-			(before.answers[path] as { cached: number }).cached,
-		).toBeGreaterThan(0);
+		const answer = before.answers[path];
+		expect(isRecord(answer) ? answer.cached : undefined).toBeGreaterThan(0);
 	}
 	const run = await loadRequestRun(output, before.runId);
 	expect(run.cases[0]?.outcomes).toEqual(
@@ -491,18 +502,16 @@ test("a request run asks nothing, answers from the lab's cache, and --compare na
 		[...onPath("contrary")].filter((request) => !standIn.has(request))
 			.length,
 	).toBeGreaterThan(0);
-	const report = (await cli(["--compare", before.runId, stoodIn.runId])) as {
-		changed: {
-			caseId: string;
-			requests?: unknown[];
-			outcomes?: unknown[];
-		}[];
-	};
+	const report = await cli(["--compare", before.runId, stoodIn.runId]);
+	if (!("changed" in report)) throw Error("Expected a request comparison");
 	expect(process.exitCode).toBe(1);
 	process.exitCode = 0;
 	expect(report.changed.map(({ caseId }) => caseId)).toEqual([labCase.id]);
-	expect(report.changed[0]?.requests?.length).toBeGreaterThan(0);
-	expect(report.changed[0]?.outcomes).toHaveLength(6);
+	// A request run's change, not an output run's.
+	const [changed] = report.changed;
+	const diff = changed && !("outputChanges" in changed) ? changed : undefined;
+	expect(diff?.requests?.length).toBeGreaterThan(0);
+	expect(diff?.outcomes).toHaveLength(6);
 	await expect(
 		cli([
 			"--experiment",

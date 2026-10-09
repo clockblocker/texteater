@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { isRecord } from "common-utils";
 import * as Effect from "effect/Effect";
 import type { Answers, Ask } from "../../../src/segment/ask.js";
 import { germanFusionTable } from "../../../src/segment/de/fusion-entries.js";
@@ -297,12 +298,13 @@ test("am stays one Segment before a superlative with no noun after it, and is as
 		["I am fine, sagte er.", true],
 	] as const) {
 		const prepared = prepareGermanSegments(text);
-		const written = Object.values(
-			prepared.state.written as Record<string, string>,
-		);
-		expect(written.filter((word) => /^am$/iu.test(word))).toHaveLength(
-			asked ? 1 : 0,
-		);
+		const { written } = prepared.state;
+		const words = Object.values(isRecord(written) ? written : {});
+		expect(
+			words.filter(
+				(word) => typeof word === "string" && /^am$/iu.test(word),
+			),
+		).toHaveLength(asked ? 1 : 0);
 	}
 	expect(resolvable("Wer steht am nächsten?")).toContainEqual({
 		kind: "ResolvableText",

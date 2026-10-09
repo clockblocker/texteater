@@ -14,7 +14,7 @@ import {
 import { JevCache } from "../../../lab/segmentation/harness/jev-cache.js";
 import { summarizePolicy } from "../../../lab/segmentation/harness/metrics.js";
 import { runArm } from "../../../lab/segmentation/harness/run.js";
-import type { Answers } from "../../../src/segment/ask.js";
+import type { Answer } from "../../../src/segment/ask.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
 import { segmentsOf } from "../evaluation/spec-corpus/fixtures.js";
 
@@ -76,29 +76,35 @@ const goldJudge: JevAsk = async (request) => {
 	};
 	const fixed = new Set(["f_5", "f_6", "f_7", "e_5_6", "e_5_7", "e_6_7"]);
 	const answers = Object.fromEntries(
-		Object.entries(request.questions).map(([id, question]) => {
-			if (question.type === "noul")
-				return [id, { type: "noul", noul: fixed.has(id) ? 0.9 : 0.1 }];
-			const keys = Object.keys(
-				question.type === "choice" ? question.criteria : {},
-			);
-			const wanted = known[id] ?? keys[keys.length - 1];
-			return [
-				id,
-				{
-					type: "choice",
-					choice: wanted,
-					confidence: 1,
-					probabilities: Object.fromEntries(
-						keys.map((key) => [key, key === wanted ? 1 : 0]),
-					),
-				},
-			];
-		}),
+		Object.entries(request.questions).map(
+			([id, question]): [string, Answer] => {
+				if (question.type === "noul")
+					return [
+						id,
+						{ type: "noul", noul: fixed.has(id) ? 0.9 : 0.1 },
+					];
+				const keys = Object.keys(
+					question.type === "choice" ? question.criteria : {},
+				);
+				const wanted = known[id] ?? keys.at(-1);
+				if (wanted === undefined) throw Error(`${id} offers no option`);
+				return [
+					id,
+					{
+						type: "choice",
+						choice: wanted,
+						confidence: 1,
+						probabilities: Object.fromEntries(
+							keys.map((key) => [key, key === wanted ? 1 : 0]),
+						),
+					},
+				];
+			},
+		),
 	);
 	return {
 		model: request.model,
-		answers: answers as Answers,
+		answers,
 		usage: { input_tokens: 100, output_tokens: 0 },
 	};
 };

@@ -291,9 +291,7 @@ test("an evaluation on a subset runs only its cases, at the asked repetitions, a
 			guard: [guarded.id],
 		},
 	});
-	const metrics = grammarMetrics(run) as {
-		againstBaseline?: ReturnType<typeof compareWithBaseline>;
-	};
+	const metrics = grammarMetrics(run);
 	expect(metrics.againstBaseline?.regression).toMatchObject({
 		regressed: 1,
 		count: 1,

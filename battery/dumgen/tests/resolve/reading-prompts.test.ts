@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { isRecord } from "common-utils";
 import { checkPromptCitations, rules } from "dumcorpus";
 import { foldCase } from "dumling";
 import { readingCases } from "../../lab/evaluation/resolve-reading/cases.js";
@@ -48,10 +49,9 @@ test("the demonstrations come in the input shape production sends, es gibt, a fu
 		expect(demonstration.markedSentence).toContain("<TARGET>");
 		expect(generationPrompt).toContain(demonstration.text);
 	}
-	expect(Object.keys(production.input as object).sort()).toEqual([
-		"lemma",
-		"markedSentence",
-	]);
+	expect(
+		Object.keys(isRecord(production.input) ? production.input : {}).sort(),
+	).toEqual(["lemma", "markedSentence"]);
 	const byLemma = new Map(
 		readingDemonstrations.map((demonstration) => [
 			demonstration.lemma,

@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { isRecord } from "common-utils";
 import * as Cause from "effect/Cause";
 import * as Data from "effect/Data";
 import * as Effect from "effect/Effect";
@@ -11,6 +12,7 @@ import {
 	knowledgeInput,
 	knowledgeJev,
 	knowledgeLuna,
+	knowledgeLunaInput,
 	produceOnce,
 } from "./support.js";
 
@@ -34,17 +36,10 @@ const adjective = (canonicalForm: string) => ({
 });
 
 /** The frame a run contributed, if any. */
-const frameOf = (changes: readonly GermanKnowledgeChange[]) =>
-	(
-		changes.find(({ aspect }) => aspect === "valency") as
-			| {
-					readonly value: {
-						readonly complements: unknown[];
-						readonly [key: string]: unknown;
-					}[];
-			  }
-			| undefined
-	)?.value;
+const frameOf = (changes: readonly GermanKnowledgeChange[]) => {
+	const change = changes.find((change) => change.aspect === "valency");
+	return change && "value" in change ? change.value : undefined;
+};
 
 const caseSlot = (governedCase: string, status = "Required") => ({
 	status,
@@ -123,8 +118,8 @@ test("Luna writes the text, the forms and the frame; jev judges every choice (#8
 	});
 	expect(trace?.operation).toBe("knowledge.produce");
 	// The transcription belongs to the headword; the others see the Sentence.
-	const inputs = luna.sent.map(
-		(request) => request.input as Record<string, unknown>,
+	const inputs = luna.sent.map((request) =>
+		knowledgeLunaInput(request.input),
 	);
 	expect(
 		inputs.find(({ aspect }) => aspect === "transcription"),
@@ -408,8 +403,7 @@ test("a Slot holds alternatives, and the covered set counts every one of them (#
 	expect(change?.value).toHaveLength(2);
 	expect(change.value?.[1]?.complements).toHaveLength(2);
 	// The frame request names the route's complement kinds, a verb's all five.
-	const input = luna.sent[0]?.input as { complementKinds?: string[] };
-	expect(input.complementKinds).toEqual([
+	expect(luna.sent[0]?.input).toHaveProperty("complementKinds", [
 		"Case",
 		"Preposition",
 		"Adverbial",
@@ -477,10 +471,10 @@ test("free-marker complements land, and a Place on a German noun is dropped with
 		"DroppedValencySlots",
 	]);
 	// The frame request offers a noun only its kinds.
-	const nounInput = nounLuna.sent[0]?.input as
-		| { readonly complementKinds?: string[] }
-		| undefined;
-	expect(nounInput?.complementKinds).toEqual(["Preposition", "Clause"]);
+	expect(nounLuna.sent[0]?.input).toHaveProperty("complementKinds", [
+		"Preposition",
+		"Clause",
+	]);
 });
 
 test("a preposition in a case it never governs is dropped too", async () => {
@@ -588,21 +582,19 @@ test("bad input is a Defect, raised before anything is asked (#883 point 6)", as
 		},
 	);
 	for (const input of [
+		// Deliberately invalid: Knowledge takes German input only.
 		{ ...base, language: "en" as never },
 		{
 			...base,
-			attestation: {
-				...base.attestation,
-				surface: {
-					...base.attestation.surface,
-					lemma: {
-						...base.attestation.surface.lemma,
-						canonicalForm: "Bund",
-					},
-				},
-			} as never,
+			attestation: knowledgeInput(
+				{ ...noun, canonicalForm: "Bund" },
+				"💐",
+				"Sie bekam einen Strauß.",
+				["Strauß"],
+			).attestation,
 		},
 		{ ...base, sentence: { ...base.sentence, target: [99] } },
+		// Deliberately invalid: breakdown is no Knowledge aspect.
 		{ ...base, request: { breakdown: null } as never },
 	]) {
 		const exit = await Effect.runPromiseExit(
@@ -1005,10 +997,11 @@ test("relation candidates are judged in one request that states the policy once;
 	expect(request?.state.candidates).not.toContain("Pferd");
 	// The policy and definitions are stated once, in the state.
 	expect(request?.state).toHaveProperty("policy");
-	expect(Object.keys(request?.state.relations as object)).toEqual([
-		"synonym",
-		"hypernym",
-	]);
+	expect(
+		Object.keys(
+			isRecord(request?.state.relations) ? request.state.relations : {},
+		),
+	).toEqual(["synonym", "hypernym"]);
 	const questions = Object.values(request?.questions ?? {});
 	const text = JSON.stringify(questions);
 	expect(text).not.toContain("Oberbegriff");
@@ -1022,7 +1015,9 @@ test("relation candidates are judged in one request that states the policy once;
 	);
 	for (const bare of ["AUX", "PUNCT", "SYM", "Collocation"])
 		expect(kindOptions.has(bare)).toBe(false);
-	expect(Object.keys(request?.state.kinds as object)).toContain("NOUN");
+	expect(
+		Object.keys(isRecord(request?.state.kinds) ? request.state.kinds : {}),
+	).toContain("NOUN");
 	// A multiword candidate is a Locution, a one-word one a Lexeme.
 	expect(JSON.stringify(request?.questions.kind_6?.instructions)).toContain(
 		"Locution",

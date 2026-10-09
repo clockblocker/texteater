@@ -19,21 +19,21 @@ const records = [
 	specRecord({
 		id: "de/nora-hat-bereits-gegessen",
 		sentence: "Nora hat bereits gegessen.",
-		targets: [[[2, 6], "Lexeme", "VERB"]],
+		targets: [[[2, 6], "Lexeme/VERB"]],
 	}),
 	specRecord({
 		id: "de/sie-geht",
 		sentence: "Sie geht.",
 		targets: [
-			[[0], "Lexeme", "PRON"],
-			[[2], "Lexeme", "VERB"],
+			[[0], "Lexeme/PRON"],
+			[[2], "Lexeme/VERB"],
 		],
 		coverage: "Full",
 	}),
 	specRecord({
 		id: "de/wir-lachen",
 		sentence: "Wir lachen.",
-		targets: [[[2], "Lexeme", "VERB"]],
+		targets: [[[2], "Lexeme/VERB"]],
 	}),
 ];
 const projected = projectCorpus(

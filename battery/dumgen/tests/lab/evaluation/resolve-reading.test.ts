@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { mkdtemp, readdir, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { isRecord } from "common-utils";
 import type { OperationEvaluationRun } from "promptsmith/evaluation";
 import { listExperiments } from "../../../lab/evaluation/experiments.js";
 import { createOpenAILunaBatch } from "../../../lab/evaluation/luna-batch.js";
@@ -26,7 +27,7 @@ import type { LunaAsk } from "../../../src/luna.js";
 import { createOpenAILuna } from "../../../src/openai-luna.js";
 import { markedSentence } from "../../../src/resolve/reading.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
-import { completedResponse, fakeOpenAI } from "./fake-openai.js";
+import { completedResponse, fakeOpenAI, userInputOf } from "./fake-openai.js";
 
 const repository = resolve(import.meta.dir, "../../../../..");
 const { dev, heldout } = readingCases();
@@ -97,10 +98,7 @@ async function frozenRoot(): Promise<string> {
 
 /** The case a request is about, found by its marked Sentence and Lemma. */
 const caseOf = (input: unknown) => {
-	const { markedSentence: marked, lemma } = input as {
-		markedSentence: string;
-		lemma: string;
-	};
+	const { markedSentence: marked, lemma } = isRecord(input) ? input : {};
 	const found = sample.find(
 		(goldCase) =>
 			markedSentence(
@@ -128,8 +126,9 @@ function goldTransports(wrong?: number) {
 		);
 		const right =
 			answers.reading?.type === "choice" && answers.reading.choice;
+		const question = request.questions.reading;
 		const other = Object.keys(
-			(request.questions.reading as { criteria: object }).criteria,
+			question?.type === "choice" ? question.criteria : {},
 		).find((option) => option !== right && option !== "NoMatch");
 		return {
 			model: request.model,
@@ -300,16 +299,12 @@ test("each arm has its verdict: Reuse of gold, NoMatch, a rejected answer and an
  * batch.
  */
 const fakeLunaAnswer = (body: Record<string, unknown>) => {
-	const [, user] = body.input as { content: string }[];
 	return {
 		status: 200,
-		body: completedResponse(
-			caseOf(JSON.parse(user?.content ?? "{}")).ideal,
-			{
-				input_tokens: 600,
-				output_tokens: 14,
-			},
-		),
+		body: completedResponse(caseOf(userInputOf(body)).ideal, {
+			input_tokens: 600,
+			output_tokens: 14,
+		}),
 	};
 };
 
