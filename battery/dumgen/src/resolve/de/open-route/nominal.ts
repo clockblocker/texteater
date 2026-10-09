@@ -32,12 +32,12 @@ import {
 import type { Member, Target } from "../target.js";
 import { cases, type Gender, genderOfArticle, type Shape } from "./shape.js";
 
-/** A NOUN's or PROPN's Core Features. */
+/** A NOUN's or PROPN's Core Features, with one gender or none. */
 type NounCore = Dumling.Lemma<
 	"de",
 	"Lexeme" | "Locution",
 	"NOUN" | "PROPN"
->["coreFeatures"];
+>["coreFeatures"] & { readonly gender: Gender | null };
 
 /** A nominal Surface's features; a NOUN Locution's have no gender. */
 export type NounInflection = NonNullable<

@@ -12,7 +12,7 @@ import { coreGender } from "../../../../../../../shared/grammatical-gender";
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
 import type { ReadingNotePending } from "../../../../note/data";
 import type { ReadingDefaultRenderer } from "../../../renderer";
-import { genderTone } from "../../common/feature-values";
+import { featureValueText, genderTone } from "../../common/feature-values";
 
 export const DefaultReadingHeadingRenderer = (({
 	noteData,
@@ -116,15 +116,16 @@ export function ReadingMetadata({
 			<span>{lemma.language}</span>
 			<span>{lemma.family}</span>
 			<span>{lemma.kind}</span>
-			{Object.entries(lemma.coreFeatures).flatMap(([name, value]) =>
-				value == null
+			{Object.entries(lemma.coreFeatures).flatMap(([name, feature]) => {
+				const value = featureValueText(feature);
+				return value === undefined
 					? []
 					: [
 							<span key={name}>
-								{name}: {String(value)}
+								{name}: {value}
 							</span>,
-						],
-			)}
+						];
+			})}
 		</NoteTags>
 	);
 }

@@ -8,9 +8,10 @@ import {
 } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { api } from "../convex/_generated/api";
-import { coreGender } from "../shared/grammatical-gender";
+import { coreGender, coreGenders } from "../shared/grammatical-gender";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 import { renderNote } from "../src/notes";
+import { ReadingMetadata } from "../src/notes/universal/blocks/renderers/reading/heading/default";
 import { ReaderSentence } from "../src/views/reader-sentence";
 
 type ReadingNote = Extract<
@@ -57,6 +58,32 @@ test("noun Reading heading takes its gender tone and links its Lemma", () => {
 	expect(markup).not.toContain("der ");
 	click(note, "Aufstieg, open its Lemma");
 	expect(followed).toEqual([{ kind: "Lemma", lemmaId: "lemma-1" }]);
+});
+
+test("a noun in free gender variation shows both articles in its Reading heading", () => {
+	const balg = {
+		...lemma,
+		canonicalForm: "Balg",
+		coreFeatures: { gender: { mixed: ["Masc", "Neut"] } },
+	};
+	expect(coreGenders(balg)).toEqual(["Masc", "Neut"]);
+	// Its genders have no one tone.
+	expect(coreGender(balg)).toBeUndefined();
+	const note = readingNote();
+	const balgNote = {
+		...note,
+		reading: { ...note.reading, lemma: { ...note.reading.lemma, ...balg } },
+	} as unknown as ReadingNote;
+	const markup = renderToStaticMarkup(
+		blockOf(renderReading(balgNote), "Heading"),
+	);
+	expect(markup).toContain("der/das </span>Balg");
+	expect(markup).not.toContain("--gender-");
+	expect(markup).not.toContain("data-gender");
+	expect(markup).toContain("Balg, open its Lemma");
+	expect(renderToStaticMarkup(<ReadingMetadata lemma={balg} />)).toContain(
+		"<span>gender: Masc/Neut</span>",
+	);
 });
 
 test("a Reading Note pins its Heading, then its Source Contexts", () => {

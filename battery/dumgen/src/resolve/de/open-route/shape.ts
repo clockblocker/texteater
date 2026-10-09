@@ -10,9 +10,15 @@ import { fixedSpelling, type Member, type Target } from "../target.js";
 
 export type AdpCase = "Acc" | "Dat" | "Gen";
 
-/** A grammatical gender, as a German NOUN's Core Features take it. */
-export type Gender = NonNullable<
-	Dumling.Lemma<"de", "Lexeme", "NOUN">["coreFeatures"]["gender"]
+/**
+ * One grammatical gender, as a German NOUN's Core Features take it.
+ * Resolution names one gender, never a `mixed` one.
+ */
+export type Gender = Exclude<
+	NonNullable<
+		Dumling.Lemma<"de", "Lexeme", "NOUN">["coreFeatures"]["gender"]
+	>,
+	{ mixed: unknown }
 >;
 
 /** One piece of valency evidence a governor or an ADP attests. */

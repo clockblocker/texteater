@@ -15,6 +15,7 @@ import { renderDefaultShadowHeading } from "../universal/blocks/renderers/shadow
 import { renderDefaultShadowRelations } from "../universal/blocks/renderers/shadow/relations/default";
 import { renderDefaultSurfaceHeading } from "../universal/blocks/renderers/surface/heading/default";
 import { renderDefaultSurfaceRoutes } from "../universal/blocks/renderers/surface/routes/default";
+import { renderHeadingDeLexemeNoun } from "./block-renderer-overrides/reading/heading/lexeme-noun";
 import { renderHeadingDeLexemeVerb } from "./block-renderer-overrides/reading/heading/lexeme-verb";
 import {
 	renderDeAdpositionSourceContexts,
@@ -55,7 +56,7 @@ const READING = {
 		CCONJ: READING_RELATIONAL,
 		DET: READING_RELATIONAL,
 		INTJ: READING_RELATIONAL,
-		NOUN: READING_VALENT,
+		NOUN: { ...READING_VALENT, Heading: renderHeadingDeLexemeNoun },
 		NUM: READING_RELATIONAL,
 		PART: READING_RELATIONAL,
 		PRON: READING_RELATIONAL,

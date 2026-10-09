@@ -12,10 +12,12 @@ import {
 	surfaceSpellingValidator,
 } from "./validators";
 
+/** One value, a set of values, or a noun's `mixed` gender (der oder das Balg). */
 const presentedFeatureValueValidator = v.union(
 	v.null(),
 	v.string(),
 	v.array(v.string()),
+	v.object({ mixed: v.array(v.string()) }),
 );
 
 /** Convex records support bracketed Dumling feature names; objects do not. */
