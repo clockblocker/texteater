@@ -205,22 +205,59 @@ function complementOf(value: unknown): unknown {
 	};
 }
 
+/**
+ * A Slot as Luna proposed it, each preposition made its ADP Lemma: model
+ * output, so nothing about it is known until Dumgen and Dumrel check it.
+ */
+type ProposedSlot = Readonly<Record<string, unknown>> & {
+	readonly complements: readonly unknown[];
+};
+
 /** Why Dumgen refuses a Slot before Dumrel sees it, if it does. */
-function slotProblem(slot: GermanSlot): string | undefined {
+function slotProblem(slot: ProposedSlot): string | undefined {
 	for (const complement of slot.complements) {
-		if (complement.kind !== "Preposition") continue;
-		const form = complement.preposition.canonicalForm;
-		if (!governable.has(form))
+		if (!isRecord(complement) || complement.kind !== "Preposition")
+			continue;
+		const { preposition, governedCase } = complement;
+		const form =
+			isRecord(preposition) &&
+			typeof preposition.canonicalForm === "string"
+				? preposition.canonicalForm
+				: undefined;
+		if (form === undefined || !governable.has(form))
 			return `${form} is no preposition a governor selects`;
 		if (
 			!germanAdpositionAllows(
 				{ family: "Lexeme", canonicalForm: form },
-				complement.governedCase,
+				String(governedCase),
 			)
 		)
-			return `${form} governs no ${complement.governedCase}`;
+			return `${form} governs no ${governedCase}`;
 	}
 	return undefined;
+}
+
+/**
+ * Whether Dumrel accepts `candidate` onto the Slots kept before it, which
+ * makes it a German Slot; `refused` hears why it does not.
+ */
+function acceptedSlot(
+	reading: Dumling.Reading<"de">,
+	kept: readonly GermanSlot[],
+	candidate: ProposedSlot,
+	refused: (reason: string) => void,
+): candidate is ProposedSlot & GermanSlot {
+	const applied = applyKnowledgeChange({
+		source: reading,
+		knowledge: {},
+		change: {
+			kind: "Contribute",
+			aspect: "valency",
+			value: [...kept, candidate],
+		},
+	});
+	if (!applied.success) refused(applied.error.message.slice(0, 200));
+	return applied.success;
 }
 
 /**
@@ -237,12 +274,9 @@ function validFrame(
 	const kept: GermanSlot[] = [];
 	const dropped: { slot: unknown; reason: string }[] = [];
 	for (const slot of slots) {
-		const candidate =
+		const candidate: ProposedSlot | undefined =
 			isRecord(slot) && Array.isArray(slot.complements)
-				? ({
-						...slot,
-						complements: slot.complements.map(complementOf),
-					} as unknown as GermanSlot)
+				? { ...slot, complements: slot.complements.map(complementOf) }
 				: undefined;
 		if (!candidate) {
 			dropped.push({ slot, reason: "Expected a Slot with complements" });
@@ -253,18 +287,12 @@ function validFrame(
 			dropped.push({ slot, reason: problem });
 			continue;
 		}
-		const applied = applyKnowledgeChange({
-			source: reading,
-			knowledge: {},
-			change: {
-				kind: "Contribute",
-				aspect: "valency",
-				value: [...kept, candidate],
-			},
-		});
-		if (applied.success) kept.push(candidate);
-		else
-			dropped.push({ slot, reason: applied.error.message.slice(0, 200) });
+		if (
+			acceptedSlot(reading, kept, candidate, (reason) =>
+				dropped.push({ slot, reason }),
+			)
+		)
+			kept.push(candidate);
 	}
 	return { kept, dropped };
 }

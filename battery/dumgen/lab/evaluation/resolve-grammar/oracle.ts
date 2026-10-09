@@ -7,7 +7,6 @@
 
 import type { Question, Questions } from "@typesafe-ai/sdk";
 import { foldCase, lemmaIdentityKey } from "dumling";
-import type * as Dumling from "dumling/types";
 import {
 	authoredOptions,
 	openOptions,
@@ -116,11 +115,10 @@ export function goldAnswers(
 	questions: Questions,
 ): Answers {
 	const { ideal, unit } = goldCase;
-	const surface = ideal.surface as unknown as Values & {
-		lemma: Dumling.Lemma;
-	};
-	const core = surface.lemma.coreFeatures as Values;
-	const bag = (surface.inflectionalFeatures ?? null) as Values | null;
+	const { surface } = ideal;
+	const core: Values = surface.lemma.coreFeatures;
+	const bag: Values | null =
+		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
 	const members = ideal.members;
 	const valency = (
 		(ideal as { valencyEvidence?: readonly Values[] }).valencyEvidence ?? []
@@ -151,19 +149,15 @@ export function goldAnswers(
 		} else if (id === "citation")
 			answer(bag === null ? "Citation" : "Used");
 		else if (id === "spelling") {
-			const spelling = surface.spelling as {
-				kind: string;
-				variantTags?: string[];
-			};
+			const { spelling } = surface;
 			answer(
 				spelling.kind === "Canonical"
 					? "Canonical"
-					: spelling.variantTags?.[0],
+					: spelling.variantTags[0],
 			);
 		} else if (id === "archaic")
 			answer(
-				(surface.surfaceFeatures as Values | null)?.historicalStatus ===
-					"Archaic"
+				surface.surfaceFeatures?.historicalStatus === "Archaic"
 					? "Archaic"
 					: "Current",
 			);

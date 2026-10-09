@@ -5,8 +5,8 @@ import {
 	type FocusUnit,
 	focusOf,
 	focusPath,
-	type LabSet,
 	loadFocus,
+	type SetIdentity,
 } from "../../../lab/segmentation/harness/corpus.js";
 import {
 	compareFocus,
@@ -31,12 +31,7 @@ test("the membership focus set lists each case its units name, once", () => {
 });
 
 test("the focus set refuses a set it was not taken from", () => {
-	const set = (hash: string): LabSet =>
-		({
-			name: focus.set.name,
-			hash,
-			cases: [],
-		}) as unknown as LabSet;
+	const set = (hash: string): SetIdentity => ({ name: focus.set.name, hash });
 	expect(loadFocus(set(focus.set.hash)).units.length).toBe(
 		focus.units.length,
 	);

@@ -73,7 +73,7 @@ export function evaluateGrammar(
 	ideal: Dumling.Attestation,
 	output: GrammarOutput,
 ): GrammarEvaluation {
-	const gold = ideal as unknown as AttestationValue;
+	const gold: AttestationValue = ideal;
 	const hasValency = "valencyEvidence" in gold;
 	const base = {
 		outcome: output._tag,

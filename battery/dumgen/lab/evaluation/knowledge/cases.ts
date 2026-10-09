@@ -177,7 +177,8 @@ type SyntheticSlip = {
 	readonly record: string;
 	readonly sentence: string;
 	readonly target: readonly string[];
-	readonly lemma: Dumling.Lemma<"de">;
+	/** The target's Attestation, one member per word of `target`. */
+	readonly attestation: Dumling.Attestation<"de">;
 	readonly emojiDescription: string;
 };
 
@@ -201,14 +202,43 @@ const slipSpecs: readonly (Omit<TranslationSlip, "caseId"> & {
 			record: "de/der-heisse-kakao-schmeckt-gut",
 			sentence: "Der heiße Kakao schmeckt gut.",
 			target: ["schmeckt"],
-			lemma: {
-				unitKind: "Lemma",
-				language: "de",
-				family: "Lexeme",
-				kind: "VERB",
-				canonicalForm: "schmecken",
-				coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
-			} as Dumling.Lemma<"de">,
+			attestation: {
+				unitKind: "Attestation",
+				surface: {
+					unitKind: "Surface",
+					language: "de",
+					lemma: {
+						unitKind: "Lemma",
+						language: "de",
+						family: "Lexeme",
+						kind: "VERB",
+						canonicalForm: "schmecken",
+						coreFeatures: {
+							hasSepPrefix: null,
+							lexicallyReflexive: null,
+						},
+					},
+					normalizedSurface: "schmeckt",
+					spelling: { kind: "Canonical" },
+					surfaceFeatures: null,
+					inflectionalFeatures: {
+						mood: "Ind",
+						number: "Sing",
+						person: "3",
+						tense: "Pres",
+						verbForm: "Fin",
+						expletive: null,
+						perfect: null,
+						future: null,
+						voice: null,
+						passive: null,
+					},
+				},
+				members: [{ attested: "schmeckt", orthography: "Standard" }],
+				realizationCoverage: "Full",
+				expletiveEvidence: null,
+				valencyEvidence: [],
+			} satisfies Dumling.Attestation<"de", "Lexeme", "VERB">,
 			emojiDescription: "👅",
 		},
 	},
@@ -222,14 +252,36 @@ const slipSpecs: readonly (Omit<TranslationSlip, "caseId"> & {
 			record: "de/das-paket-wird-morgen-geliefert",
 			sentence: "Das Paket wird morgen geliefert.",
 			target: ["Das", "Paket"],
-			lemma: {
-				unitKind: "Lemma",
-				language: "de",
-				family: "Lexeme",
-				kind: "NOUN",
-				canonicalForm: "Paket",
-				coreFeatures: { gender: "Neut" },
-			} as Dumling.Lemma<"de">,
+			attestation: {
+				unitKind: "Attestation",
+				surface: {
+					unitKind: "Surface",
+					language: "de",
+					lemma: {
+						unitKind: "Lemma",
+						language: "de",
+						family: "Lexeme",
+						kind: "NOUN",
+						canonicalForm: "Paket",
+						coreFeatures: { gender: "Neut" },
+					},
+					normalizedSurface: "Das Paket",
+					spelling: { kind: "Canonical" },
+					surfaceFeatures: null,
+					inflectionalFeatures: {
+						case: "Nom",
+						gender: "Neut",
+						number: "Sing",
+					},
+				},
+				members: [
+					{ attested: "Das", orthography: "Standard" },
+					{ attested: "Paket", orthography: "Standard" },
+				],
+				realizationCoverage: "Full",
+				articleEvidence: { kind: "Owned", member: 0 },
+				valencyEvidence: [],
+			} satisfies Dumling.Attestation<"de", "Lexeme", "NOUN">,
 			emojiDescription: "📦",
 		},
 	},
@@ -273,31 +325,18 @@ function syntheticCase(slip: SyntheticSlip): KnowledgeCase {
 	const target = slip.target.map((word) => words.indexOf(word));
 	if (target.some((index) => index < 0))
 		throw Error(`${slip.target.join(" ")} is not in ${slip.sentence}`);
+	const { lemma } = slip.attestation.surface;
 	const reading = {
 		unitKind: "Reading",
-		lemma: slip.lemma,
+		lemma,
 		emojiDescription: slip.emojiDescription,
 	} as Dumling.Reading<"de">;
 	return {
-		id: `slip:${slip.lemma.canonicalForm}`,
+		id: `slip:${lemma.canonicalForm}`,
 		record: slip.record,
 		target: 0,
 		reading,
-		attestation: {
-			unitKind: "Attestation",
-			members: slip.target.map((attested) => ({
-				attested,
-				orthography: "Standard",
-			})),
-			realizationCoverage: "Full",
-			surface: {
-				unitKind: "Surface",
-				language: "de",
-				normalizedSurface: slip.target.join(" "),
-				spelling: { kind: "Canonical" },
-				lemma: slip.lemma,
-			},
-		} as unknown as Dumling.Attestation<"de">,
+		attestation: slip.attestation,
 		sentence: { segments: words.map((text) => ({ text })), target },
 		text: slip.sentence,
 		authored: false,

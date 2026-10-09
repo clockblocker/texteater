@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { authoredFor, authoredMembers } from "dumcorpus/inventories";
+import { parseUnit, routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { createDumgen } from "../../src/create-dumgen.js";
@@ -12,31 +13,61 @@ import type {
 } from "../../src/resolve/types.js";
 import { fakeJev, fakeLuna, sentenceOf, unitOf } from "./support.js";
 
-const lemmaOf = (
-	canonicalForm: string,
-	family: string,
-	kind: string,
-	coreFeatures: Readonly<Record<string, unknown>> = {},
-) =>
-	({
-		unitKind: "Lemma",
-		language: "de",
-		family,
-		kind,
-		canonicalForm,
-		coreFeatures,
-	}) as unknown as Dumling.Lemma<"de">;
+/** The fields of an Attestation's route beyond its Surface's Lemma, spelling and members. */
+type RouteFields = {
+	readonly inflectionalFeatures?: null;
+	readonly articleEvidence?: null;
+	readonly valencyEvidence?: readonly [];
+};
 
-/** An Attestation as far as resolve.reading reads it: its Lemma. */
-const attestationOf = (lemma: Dumling.Lemma<"de">) =>
-	({
-		unitKind: "Attestation",
-		surface: { unitKind: "Surface", language: "de", lemma },
-		members: [],
-		realizationCoverage: "Full",
-	}) as unknown as Dumling.Attestation<"de">;
+/**
+ * A one-member, canonically spelled Attestation of `lemma`, as far as
+ * resolve.reading reads it: its Lemma. `fields` are its route's own, and
+ * Dumling checks the whole on the Lemma's route.
+ */
+function attestationOf(
+	lemma: Dumling.Lemma<"de">,
+	{ inflectionalFeatures, ...fields }: RouteFields = {},
+): Dumling.Attestation<"de"> {
+	const parsed = parseUnit(
+		{
+			unitKind: "Attestation",
+			surface: {
+				unitKind: "Surface",
+				language: "de",
+				lemma,
+				normalizedSurface: lemma.canonicalForm,
+				spelling: { kind: "Canonical" },
+				surfaceFeatures: null,
+				...(inflectionalFeatures === undefined
+					? {}
+					: { inflectionalFeatures }),
+			},
+			members: [
+				{ attested: lemma.canonicalForm, orthography: "Standard" },
+			],
+			realizationCoverage: "Full",
+			...fields,
+		},
+		{ unitKind: "Attestation", ...routeOf(lemma) },
+	);
+	if (!parsed.success) throw parsed.error;
+	return parsed.chain.value;
+}
 
-const schloss = lemmaOf("Schloss", "Lexeme", "NOUN", { gender: "Neut" });
+const schloss: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "NOUN",
+	canonicalForm: "Schloss",
+	coreFeatures: { gender: "Neut" },
+};
+const schlossAttestation = attestationOf(schloss, {
+	inflectionalFeatures: null,
+	articleEvidence: null,
+	valencyEvidence: [],
+});
 const sentence = sentenceOf("Das Schloss klemmt.");
 const nounUnit = unitOf([2], "Lexeme/NOUN");
 
@@ -57,7 +88,7 @@ async function readOnce(
 			luna: luna.ask,
 			onOperation: (trace) => traces.push(trace),
 		}).resolve.reading({
-			attestation: attestationOf(schloss),
+			attestation: schlossAttestation,
 			sentence,
 			unit: nounUnit,
 			...input,
@@ -157,7 +188,7 @@ const authoredLemma = (canonicalForm: string, kind: string) => {
 	);
 	if (!first) throw Error(`No authored ${kind} ${canonicalForm}`);
 	return {
-		lemma: first.lemma as Dumling.Lemma<"de">,
+		lemma: first.lemma,
 		readings: authoredFor(first.lemma).map(
 			({ reading }) => reading.emojiDescription,
 		),
@@ -196,7 +227,7 @@ test("a Closed Route's Lemma with several authored Readings has jev pick among t
 	const jev = fakeJev({ reading: "a1" });
 	const luna = writes("🔐");
 	const { result, trace } = await readOnce(jev, luna, {
-		attestation: attestationOf(lemma),
+		attestation: attestationOf(lemma, { inflectionalFeatures: null }),
 		sentence: sentenceOf("Welcher Zug kommt?"),
 		unit: unitOf([0], "Lexeme/DET"),
 		candidates: [],
@@ -223,7 +254,7 @@ test("an Open Route's authored Readings go to the judge beside the stored ones, 
 	const jev = fakeJev({ reading: "a1" });
 	const luna = writes("🔐");
 	const { result, trace } = await readOnce(jev, luna, {
-		attestation: attestationOf(lemma),
+		attestation: attestationOf(lemma, { inflectionalFeatures: null }),
 		sentence: sentenceOf("Darum kommt er."),
 		unit: unitOf([0], "Lexeme/ADV"),
 		candidates: [causal, "🧭"],
@@ -253,7 +284,7 @@ test("an Open Route's Lemma whose authored Readings miss the sense gets a New on
 	const jev = fakeJev({ reading: "NoMatch" });
 	const luna = writes("🎯");
 	const { result, trace } = await readOnce(jev, luna, {
-		attestation: attestationOf(lemma),
+		attestation: attestationOf(lemma, { inflectionalFeatures: null }),
 		sentence: sentenceOf("Darum geht es."),
 		unit: unitOf([0], "Lexeme/ADV"),
 		candidates: [],
@@ -270,7 +301,7 @@ test("an Open Route's Lemma whose authored Readings miss the sense gets a New on
 		fakeJev({ reading: "NoMatch" }),
 		writes(readings[1]),
 		{
-			attestation: attestationOf(lemma),
+			attestation: attestationOf(lemma, { inflectionalFeatures: null }),
 			sentence: sentenceOf("Darum geht es."),
 			unit: unitOf([0], "Lexeme/ADV"),
 			candidates: [],
@@ -297,7 +328,23 @@ test("a Closed Route's Lemma with no authored Reading is a Catalog Miss, with no
 	const luna = writes("🔐");
 	const { result, trace } = await readOnce(jev, luna, {
 		attestation: attestationOf(
-			lemmaOf("blarg", "Lexeme", "PRON", { pronType: "Prs" }),
+			{
+				unitKind: "Lemma",
+				language: "de",
+				family: "Lexeme",
+				kind: "PRON",
+				canonicalForm: "blarg",
+				coreFeatures: {
+					case: "Nom",
+					gender: null,
+					number: "Sing",
+					person: "3",
+					polite: null,
+					poss: null,
+					pronType: "Prs",
+				},
+			},
+			{ inflectionalFeatures: null, articleEvidence: null },
 		),
 		sentence: sentenceOf("Blarg kommt."),
 		unit: unitOf([0], "Lexeme/PRON"),
@@ -413,7 +460,7 @@ test("Luna's text that is no Emoji Description is an InvalidModelOutput, neither
 				jev: fakeJev().ask,
 				luna: luna.ask,
 			}).resolve.reading({
-				attestation: attestationOf(schloss),
+				attestation: schlossAttestation,
 				sentence,
 				unit: nounUnit,
 				candidates: [],
@@ -434,7 +481,7 @@ test("a jev failure is a ProviderFailure, and a pick outside the options an Inva
 					jev: jev.ask,
 					luna: writes("🔐").ask,
 				}).resolve.reading({
-					attestation: attestationOf(schloss),
+					attestation: schlossAttestation,
 					sentence,
 					unit: nounUnit,
 					candidates: ["🏰"],
@@ -453,16 +500,23 @@ test("a Foreign Attestation, a unit off its route, a failed Sentence or a candid
 	const luna = writes("🔐");
 	const dumgen = createDumgen({ jev: jev.ask, luna: luna.ask });
 	const input: ResolveReadingInput = {
-		attestation: attestationOf(schloss),
+		attestation: schlossAttestation,
 		sentence,
 		unit: nounUnit,
 		candidates: [],
 	};
-	const foreign = lemmaOf("cool", "Foreign", "Foreign", { sourceLang: "en" });
+	const foreign = attestationOf({
+		unitKind: "Lemma",
+		language: "de",
+		family: "Foreign",
+		kind: "Foreign",
+		canonicalForm: "cool",
+		coreFeatures: { sourceLang: "en" },
+	});
 	const cases: [Partial<ResolveReadingInput>, string][] = [
 		[
 			{
-				attestation: attestationOf(foreign),
+				attestation: foreign,
 				unit: unitOf([2], "Foreign/Foreign"),
 			},
 			"ADR 0045",

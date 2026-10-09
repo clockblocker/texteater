@@ -1,10 +1,12 @@
 import { expect, test } from "bun:test";
 import type { Question } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
+import { z } from "zod";
 import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
 import type { LunaAsk } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
-import type { Answer, Answers } from "../../src/segment/ask.js";
+import type { Answer } from "../../src/segment/ask.js";
+import { keyOf, routeForKey } from "../../src/segment/de/routes.js";
 import {
 	type JevAsk,
 	type JevRequest,
@@ -13,10 +15,27 @@ import {
 import type {
 	Route,
 	SegmentedText,
-	Unit,
 } from "../../src/segment/segmented-sentence.js";
 import { splitText } from "../../src/segment/split-text.js";
 import fixture from "./fixtures/in-units-lab-answers.json";
+
+const probabilities = z.record(z.string(), z.number());
+/** A jev answer as the fixture records it. */
+const answer = z.discriminatedUnion("type", [
+	z.object({ type: z.literal("noul"), noul: z.number() }),
+	z.object({
+		type: z.literal("choice"),
+		choice: z.string(),
+		confidence: z.number(),
+		probabilities,
+	}),
+	z.object({
+		type: z.literal("score"),
+		score: z.number(),
+		confidence: z.number(),
+		probabilities,
+	}),
+]) satisfies z.ZodType<Answer>;
 
 /**
  * Four dev Sentences with the cached jev answers each request got in the
@@ -26,17 +45,31 @@ import fixture from "./fixtures/in-units-lab-answers.json";
  * route-extra answer comes from the lab cache's 2026-10-02 dev fill, and so
  * does X4's government answer for in Betracht ziehen (an idiom, unchanged).
  */
-const recorded = fixture as unknown as {
-	readonly recordedFrom: { readonly model: string };
-	readonly sentences: readonly {
-		readonly text: string;
-		readonly calls: readonly {
-			readonly stage: string;
-			readonly answers: Answers;
-		}[];
-		readonly units: readonly Unit[];
-	}[];
-};
+const recorded = z
+	.object({
+		recordedFrom: z.object({ model: z.string() }),
+		sentences: z.array(
+			z.object({
+				text: z.string(),
+				calls: z.array(
+					z.object({
+						stage: z.string(),
+						answers: z.record(z.string(), answer),
+					}),
+				),
+				units: z.array(
+					z.object({
+						segments: z.array(z.number()),
+						// A recorded route is a German one: its key names it.
+						route: z
+							.object({ family: z.string(), kind: z.string() })
+							.transform((route) => routeForKey(keyOf(route))),
+					}),
+				),
+			}),
+		),
+	})
+	.parse(fixture);
 
 type Sent = JevRequest & { readonly stage: string };
 

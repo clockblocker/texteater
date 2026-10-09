@@ -50,10 +50,19 @@ function sumChanges(a: UnitChange, b: UnitChange): UnitChange {
 	};
 }
 
+/** What a sweep reads of a policy's summary: its name and its WrongSegments by shape. */
+type SweptSummary = {
+	readonly policy: string;
+	readonly tally: Pick<
+		PolicySummary["tally"],
+		"merged" | "crossed" | "split"
+	>;
+};
+
 /** Every policy of `summaries` against `baseline`, from one run's outcome rows. */
 export function sweepRows(args: {
 	readonly rows: readonly OutcomeRow[];
-	readonly summaries: readonly PolicySummary[];
+	readonly summaries: readonly SweptSummary[];
 	readonly baseline: string;
 	readonly focus: FocusSet;
 	/** Per policy, returned units routed `Unresolved`. */

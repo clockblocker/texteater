@@ -7,7 +7,6 @@ import {
 	runFloors,
 } from "../../../lab/segmentation/de/arms/reference.js";
 import type { FocusSet } from "../../../lab/segmentation/harness/corpus.js";
-import type { PolicySummary } from "../../../lab/segmentation/harness/metrics.js";
 import type { OutcomeRow } from "../../../lab/segmentation/harness/outcomes.js";
 import {
 	adoptable,
@@ -135,15 +134,10 @@ const rows = [
 	row("b", 0, { base: "MMM", fix: "MMM", merge: "MSM" }),
 ];
 
-const summary = (
-	policy: string,
-	merged: number,
-	split: number,
-): PolicySummary =>
-	({
-		policy,
-		tally: { merged, crossed: 0, split },
-	}) as unknown as PolicySummary;
+const summary = (policy: string, merged: number, split: number) => ({
+	policy,
+	tally: { merged, crossed: 0, split },
+});
 
 test("a sweep reads each setting against its baseline", () => {
 	const swept = sweepRows({
