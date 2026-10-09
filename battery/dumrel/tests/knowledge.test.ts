@@ -1,5 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { applyKnowledgeChange, parseReadingKnowledge } from "../src/index.js";
+import {
+	applyKnowledgeChange,
+	parseKnowledgeChange,
+	parseReadingKnowledge,
+} from "../src/index.js";
 import { berlinLemma, houseReading, prefixLemma } from "./fixtures.js";
 
 describe("parseReadingKnowledge", () => {
@@ -155,5 +159,49 @@ describe("applyKnowledgeChange", () => {
 		});
 		expect(result.success).toBe(false);
 		expect(knowledge).toEqual(snapshot);
+	});
+});
+
+describe("parseKnowledgeChange", () => {
+	test("answers the change it accepts, fresh and normalized", () => {
+		const change = {
+			kind: "Contribute",
+			aspect: "translations",
+			language: "en",
+			value: [" cafe\u0301 "],
+		} as const;
+		const result = parseKnowledgeChange({ source: houseReading, change });
+		expect(result).toEqual({
+			success: true,
+			value: { ...change, value: ["café"] },
+		});
+		if (result.success) expect(result.value).not.toBe(change);
+	});
+
+	test("checks the change against its source but not against Knowledge", () => {
+		expect(
+			parseKnowledgeChange({
+				source: houseReading,
+				change: {
+					kind: "Contribute",
+					aspect: "semanticRelations",
+					relation: "synonym",
+					value: [prefixLemma],
+				},
+			}).success,
+		).toBe(false);
+		expect(
+			parseKnowledgeChange({
+				source: houseReading,
+				change: {
+					kind: "Contribute",
+					aspect: "definition",
+					value: "new",
+				},
+			}),
+		).toEqual({
+			success: true,
+			value: { kind: "Contribute", aspect: "definition", value: "new" },
+		});
 	});
 });

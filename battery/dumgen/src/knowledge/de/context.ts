@@ -9,7 +9,7 @@
 
 import type { EntryType } from "@typesafe-ai/sdk";
 import type * as Dumling from "dumling/types";
-import { applyKnowledgeChange } from "dumrel";
+import { applyKnowledgeChange, parseKnowledgeChange } from "dumrel";
 import * as Data from "effect/Data";
 import type * as Effect from "effect/Effect";
 import type { OperationScope } from "../../call.js";
@@ -172,28 +172,32 @@ export function textsOf(
 }
 
 /**
- * The changes Dumrel accepts for the Reading, each checked on its own
- * against empty Knowledge; one it refuses makes the answer unusable, so
- * the aspect contributes nothing from it (Dumgen ADR 0003).
+ * The changes Dumrel accepts for the Reading, as Dumrel answers them, each
+ * checked on its own against empty Knowledge; one it refuses makes the
+ * answer unusable, so the aspect contributes nothing from it (Dumgen ADR
+ * 0003).
  */
 export function checkedChanges(
 	context: AspectContext,
 	aspect: KnowledgeAspect,
 	changes: readonly unknown[],
 ): GermanKnowledgeChange[] | InvalidModelOutput {
+	const accepted: GermanKnowledgeChange[] = [];
 	for (const change of changes) {
 		const applied = applyKnowledgeChange({
 			source: context.reading,
 			knowledge: {},
 			change,
 		});
-		if (!applied.success)
+		const parsed = applied.success
+			? parseKnowledgeChange({ source: context.reading, change })
+			: applied;
+		if (!parsed.success)
 			return unusable(
 				aspect,
-				`Dumrel refuses the ${aspect} change: ${applied.error.message.slice(0, 200)}`,
+				`Dumrel refuses the ${aspect} change: ${parsed.error.message.slice(0, 200)}`,
 			);
+		accepted.push(parsed.value);
 	}
-	// Dumrel accepted each change above, but answers the Knowledge, not the
-	// change, so nothing narrows it short of a Dumrel change parser.
-	return changes as GermanKnowledgeChange[];
+	return accepted;
 }

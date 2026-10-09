@@ -1,4 +1,7 @@
-export { applyKnowledgeChange } from "./apply-knowledge-change.js";
+export {
+	applyKnowledgeChange,
+	parseKnowledgeChange,
+} from "./apply-knowledge-change.js";
 export { germanConjugationClass } from "./german-conjugation-class.js";
 export { parseReadingKnowledge } from "./parse-reading-knowledge.js";
 export { projectParticipleSources } from "./project-participle-sources.js";

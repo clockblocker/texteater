@@ -2,6 +2,7 @@ import type { Equal, Expect } from "common-utils";
 import type * as Dumling from "dumling/types";
 import {
 	applyKnowledgeChange,
+	parseKnowledgeChange,
 	parseReadingKnowledge,
 	projectSemanticRelations,
 	type selectKnowledge,
@@ -133,6 +134,16 @@ type _ParseReturnsNamed = Expect<
 >;
 type _ChangeReturnsNamed = Expect<
 	Equal<ReturnType<typeof applyKnowledgeChange>, Dumrel.KnowledgeParse>
+>;
+const accepted = parseKnowledgeChange({
+	source,
+	change: { kind: "Retract", aspect: "definition" },
+});
+type _AcceptedIsSourceChange = Expect<
+	Equal<
+		Extract<typeof accepted, { success: true }>["value"],
+		Dumrel.KnowledgeChange<NounReading>
+	>
 >;
 type _SelectionIsNamed = Expect<
 	Equal<ReturnType<typeof selectKnowledge>, Dumrel.KnowledgeSelection>

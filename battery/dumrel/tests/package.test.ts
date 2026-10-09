@@ -27,6 +27,7 @@ test("published operational entrypoint stays independent of Zod", async () => {
 		"formulaRoleValues",
 		"germanConjugationClass",
 		"locutionTypeValues",
+		"parseKnowledgeChange",
 		"parseReadingKnowledge",
 		"projectParticipleSources",
 		"projectSemanticRelations",

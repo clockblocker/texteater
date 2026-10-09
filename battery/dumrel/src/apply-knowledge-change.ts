@@ -44,16 +44,45 @@ export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
 		knowledge: input.knowledge,
 	});
 	if (!current.success) return current;
-	const shape = parseChangeShape(input.change);
-	if (shape instanceof ParsingError)
-		return { success: false, error: shape } as const;
-	const contextual = contextualizeChange(source, shape);
+	const contextual = checkChange(source, input.change);
 	if (contextual instanceof ParsingError)
 		return { success: false, error: contextual } as const;
 	const next = structuredClone(current.value) as ReadingKnowledge<R>;
 	const failure = apply(next, contextual);
 	if (failure) return { success: false, error: failure } as const;
 	return parseReadingKnowledge({ source, knowledge: next });
+}
+
+/**
+ * Checks one change against its source Reading the way `applyKnowledgeChange`
+ * does before applying it, and answers the change Dumrel accepts: fresh, with
+ * its strings normalized and its Semantic Relation targets, governed
+ * prepositions and Participle Source verb parsed by Dumling. It checks no
+ * Knowledge, so a Contribute that conflicts with stored Knowledge still
+ * parses. Failure returns ParsingError.
+ */
+export function parseKnowledgeChange<const R extends Dumling.Reading>(input: {
+	source: R;
+	change: unknown;
+}):
+	| { readonly success: true; readonly value: KnowledgeChange<R> }
+	| { readonly success: false; readonly error: ParsingError } {
+	const source = parseSource(input.source);
+	if (source instanceof ParsingError)
+		return { success: false, error: source } as const;
+	const change = checkChange(source, input.change);
+	return change instanceof ParsingError
+		? ({ success: false, error: change } as const)
+		: ({ success: true, value: change } as const);
+}
+
+function checkChange<R extends Dumling.Reading>(
+	source: R,
+	change: unknown,
+): KnowledgeChange<R> | ParsingError {
+	const shape = parseChangeShape(change);
+	if (shape instanceof ParsingError) return shape;
+	return contextualizeChange(source, shape);
 }
 
 function apply<R extends Dumling.Reading>(
