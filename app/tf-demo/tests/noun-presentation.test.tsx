@@ -11,7 +11,6 @@ import type { api } from "../convex/_generated/api";
 import { coreGender, coreGenders } from "../shared/grammatical-gender";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 import { renderNote } from "../src/notes";
-import { ReadingMetadata } from "../src/notes/universal/blocks/renderers/reading/heading/default";
 import { ReaderSentence } from "../src/views/reader-sentence";
 
 type ReadingNote = Extract<
@@ -81,7 +80,8 @@ test("a noun in free gender variation shows both articles in its Reading heading
 	expect(markup).not.toContain("--gender-");
 	expect(markup).not.toContain("data-gender");
 	expect(markup).toContain("Balg, open its Lemma");
-	expect(renderToStaticMarkup(<ReadingMetadata lemma={balg} />)).toContain(
+	// The tag row that closes the Note names both genders.
+	expect(renderToStaticMarkup(renderReading(balgNote))).toContain(
 		"<span>gender: Masc/Neut</span>",
 	);
 });
