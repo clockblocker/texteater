@@ -14,6 +14,7 @@ import { onDocumentPointerUp } from "./event-handlers/onDocumentPointerUp";
 import {
 	deleteMutableSplit,
 	getMountedSplitState,
+	type MountedSplitState,
 	updateMountedSplit,
 } from "./mutable-state/splits";
 import type { HandleToRegionsMap } from "./mutable-state/types";
@@ -26,6 +27,78 @@ import { validateLayoutKeys } from "./utils/validateLayoutKeys";
 import { validateSplitLayout } from "./utils/validateSplitLayout";
 
 const ownerDocumentReferenceCounts = new Map<Document, number>();
+
+/**
+ * Re-derives a resized Split's constraints and layout and stores them when
+ * anything changed. A Split with no size, or with no mounted state, can't be
+ * measured, and its observer skips the rest of the batch.
+ */
+function syncResizedSplit(split: RegisteredSplit): "done" | "skip-batch" {
+	const splitSize = calculateAvailableSplitSize({ split });
+	if (splitSize === 0) {
+		// Can't calculate anything meaningful if the split has a width/height of 0
+		// (This could indicate that it's within a hidden subtree)
+		return "skip-batch";
+	}
+
+	const splitState = getMountedSplitState(split.id);
+	if (!splitState) {
+		// Not mounted yet
+		return "skip-batch";
+	}
+
+	const next = resizedSplitState(split, splitState, splitSize);
+	if (
+		splitState.defaultLayoutDeferred ||
+		!mountedStatesMatch(splitState, next)
+	) {
+		updateMountedSplit(split, next);
+	}
+	return "done";
+}
+
+function resizedSplitState(
+	split: RegisteredSplit,
+	prev: MountedSplitState,
+	splitSize: number,
+): MountedSplitState {
+	// Update non-percentage based constraints
+	const derivedRegionConstraints = calculateRegionConstraints(split);
+
+	// Revalidate layout in case constraints have changed or split size changed
+	const prevLayout = prev.defaultLayoutDeferred
+		? calculateDefaultLayout(derivedRegionConstraints)
+		: prev.layout;
+	const unsafeLayout = preserveFixedRegionSizes({
+		split,
+		nextSplitSize: splitSize,
+		prevSplitSize: prev.splitSize,
+		prevLayout,
+	});
+	const layout = validateSplitLayout({
+		layout: unsafeLayout,
+		regionConstraints: derivedRegionConstraints,
+	});
+
+	return {
+		defaultLayoutDeferred: false,
+		derivedRegionConstraints,
+		splitSize,
+		layout,
+		handleToRegions: prev.handleToRegions,
+	};
+}
+
+function mountedStatesMatch(prev: MountedSplitState, next: MountedSplitState) {
+	return (
+		layoutsEqual(prev.layout, next.layout) &&
+		regionConstraintsEqual(
+			prev.derivedRegionConstraints,
+			next.derivedRegionConstraints,
+		) &&
+		prev.splitSize === next.splitSize
+	);
+}
 
 export function mountSplit(split: RegisteredSplit) {
 	let isMounted = true;
@@ -43,70 +116,16 @@ export function mountSplit(split: RegisteredSplit) {
 
 	// Add Regions with onResize callbacks to ResizeObserver
 	// Add Split to ResizeObserver also in order to sync % based constraints
-	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 	const resizeObserver = new ResizeObserver((entries) => {
-		for (const entry of entries) {
-			const { borderBoxSize, target } = entry;
-			if (target === split.element) {
-				if (isMounted) {
-					const splitSize = calculateAvailableSplitSize({ split });
-					if (splitSize === 0) {
-						// Can't calculate anything meaningful if the split has a width/height of 0
-						// (This could indicate that it's within a hidden subtree)
-						return;
-					}
-
-					const splitState = getMountedSplitState(split.id);
-					if (!splitState) {
-						// Not mounted yet
-						return;
-					}
-
-					// Update non-percentage based constraints
-					const nextDerivedRegionConstraints =
-						calculateRegionConstraints(split);
-
-					// Revalidate layout in case constraints have changed or split size changed
-					const prevLayout = splitState.defaultLayoutDeferred
-						? calculateDefaultLayout(nextDerivedRegionConstraints)
-						: splitState.layout;
-					const unsafeLayout = preserveFixedRegionSizes({
-						split,
-						nextSplitSize: splitSize,
-						prevSplitSize: splitState.splitSize,
-						prevLayout,
-					});
-					const nextLayout = validateSplitLayout({
-						layout: unsafeLayout,
-						regionConstraints: nextDerivedRegionConstraints,
-					});
-
-					if (
-						!splitState.defaultLayoutDeferred &&
-						layoutsEqual(splitState.layout, nextLayout) &&
-						regionConstraintsEqual(
-							splitState.derivedRegionConstraints,
-							nextDerivedRegionConstraints,
-						) &&
-						splitState.splitSize === splitSize
-					) {
-						continue;
-					}
-
-					updateMountedSplit(split, {
-						defaultLayoutDeferred: false,
-						derivedRegionConstraints: nextDerivedRegionConstraints,
-						splitSize,
-						layout: nextLayout,
-						handleToRegions: splitState.handleToRegions,
-					});
-				}
-			} else {
+		for (const { borderBoxSize, target } of entries) {
+			if (target !== split.element) {
 				notifyRegionOnResize(
 					split,
 					target as HTMLElement,
 					borderBoxSize,
 				);
+			} else if (isMounted && syncResizedSplit(split) === "skip-batch") {
+				return;
 			}
 		}
 	});

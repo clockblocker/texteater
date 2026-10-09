@@ -9,7 +9,13 @@ import {
 import type { InteractionState } from "../mutable-state/types";
 import { supportsAdvancedCursorStyles } from "./supportsAdvancedCursorStyles";
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
+type Cursor = CSSProperties["cursor"];
+
+const ORIENTATION_CURSORS = {
+	advanced: { both: "move", horizontal: "ew-resize", vertical: "ns-resize" },
+	basic: { both: "grab", horizontal: "col-resize", vertical: "row-resize" },
+} as const;
+
 export function getCursorStyle({
 	cursorFlags,
 	splits,
@@ -18,91 +24,77 @@ export function getCursorStyle({
 	cursorFlags: number;
 	splits: RegisteredSplit[];
 	state: InteractionState["state"];
-}): CSSProperties["cursor"] {
-	let horizontalCount = 0;
-	let verticalCount = 0;
-
-	switch (state) {
-		case "active":
-		case "hover": {
-			splits.forEach((split) => {
-				if (split.mutableState.disableCursor) {
-					return;
-				}
-
-				switch (split.orientation) {
-					case "horizontal": {
-						horizontalCount++;
-						break;
-					}
-					case "vertical": {
-						verticalCount++;
-						break;
-					}
-				}
-			});
-		}
-	}
-
-	if (horizontalCount === 0 && verticalCount === 0) {
+}): Cursor {
+	if (state === "inactive") {
 		return undefined;
 	}
 
-	switch (state) {
-		case "active": {
-			if (cursorFlags) {
-				if (supportsAdvancedCursorStyles()) {
-					const horizontalMin =
-						(cursorFlags & CURSOR_FLAG_HORIZONTAL_MIN) !== 0;
-					const horizontalMax =
-						(cursorFlags & CURSOR_FLAG_HORIZONTAL_MAX) !== 0;
-					const verticalMin =
-						(cursorFlags & CURSOR_FLAG_VERTICAL_MIN) !== 0;
-					const verticalMax =
-						(cursorFlags & CURSOR_FLAG_VERTICAL_MAX) !== 0;
+	const cursorSplits = splits.filter(
+		(split) => !split.mutableState.disableCursor,
+	);
+	const horizontal = cursorSplits.some(
+		(split) => split.orientation === "horizontal",
+	);
+	const vertical = cursorSplits.some(
+		(split) => split.orientation === "vertical",
+	);
+	if (!horizontal && !vertical) {
+		return undefined;
+	}
 
-					if (horizontalMin) {
-						if (verticalMin) {
-							return "se-resize";
-						} else if (verticalMax) {
-							return "ne-resize";
-						} else {
-							return "e-resize";
-						}
-					} else if (horizontalMax) {
-						if (verticalMin) {
-							return "sw-resize";
-						} else if (verticalMax) {
-							return "nw-resize";
-						} else {
-							return "w-resize";
-						}
-					} else if (verticalMin) {
-						return "s-resize";
-					} else if (verticalMax) {
-						return "n-resize";
-					}
-				}
-			}
-			break;
+	const advanced = supportsAdvancedCursorStyles();
+	if (state === "active" && advanced) {
+		const cursor = limitCursor(cursorFlags);
+		if (cursor) {
+			return cursor;
 		}
 	}
 
-	if (supportsAdvancedCursorStyles()) {
-		if (horizontalCount > 0 && verticalCount > 0) {
-			return "move";
-		} else if (horizontalCount > 0) {
-			return "ew-resize";
-		} else {
-			return "ns-resize";
-		}
-	} else {
-		if (horizontalCount > 0 && verticalCount > 0) {
-			return "grab";
-		} else if (horizontalCount > 0) {
-			return "col-resize";
-		} else {
-			return "row-resize";
-		}
+	const cursors = advanced
+		? ORIENTATION_CURSORS.advanced
+		: ORIENTATION_CURSORS.basic;
+	if (horizontal && vertical) {
+		return cursors.both;
 	}
+	return horizontal ? cursors.horizontal : cursors.vertical;
+}
+
+/**
+ * The resize cursor pointing the only way a Split at a limit can still go:
+ * at the horizontal minimum it points east, at the vertical minimum south, and
+ * both together make "se-resize". A minimum flag wins over its maximum.
+ */
+function limitCursor(cursorFlags: number): Cursor {
+	const direction =
+		limitEdge(
+			cursorFlags,
+			CURSOR_FLAG_VERTICAL_MIN,
+			CURSOR_FLAG_VERTICAL_MAX,
+			"s",
+			"n",
+		) +
+		limitEdge(
+			cursorFlags,
+			CURSOR_FLAG_HORIZONTAL_MIN,
+			CURSOR_FLAG_HORIZONTAL_MAX,
+			"e",
+			"w",
+		);
+	return direction ? `${direction}-resize` : undefined;
+}
+
+function limitEdge(
+	cursorFlags: number,
+	minFlag: number,
+	maxFlag: number,
+	atMin: string,
+	atMax: string,
+): string {
+	if (cursorFlags & minFlag) {
+		return atMin;
+	}
+	if (cursorFlags & maxFlag) {
+		return atMax;
+	}
+	return "";
 }

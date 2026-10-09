@@ -3,7 +3,7 @@ import type { Layout, RegisteredSplit } from "../../components/split/types";
 import { EventEmitter } from "../../utils/EventEmitter";
 import type { HandleToRegionsMap } from "./types";
 
-type State = {
+export type MountedSplitState = {
 	defaultLayoutDeferred: boolean;
 	derivedRegionConstraints: RegionConstraints[];
 	splitSize: number;
@@ -11,7 +11,7 @@ type State = {
 	handleToRegions: HandleToRegionsMap;
 };
 
-export type MountedSplits = Map<RegisteredSplit, State>;
+export type MountedSplits = Map<RegisteredSplit, MountedSplitState>;
 
 let map: MountedSplits = new Map();
 
@@ -20,8 +20,8 @@ type SplitChangeEvent = {
 	// True if the change was triggered by a pointer or keyboard event handler
 	// False for other types of resize (constraint recompute, default-size change, imperative API, etc.).
 	isUserInteraction: boolean;
-	next: State;
-	prev: State | undefined;
+	next: MountedSplitState;
+	prev: MountedSplitState | undefined;
 };
 type SplitsChangeEvent = {
 	next: MountedSplits;
@@ -59,8 +59,13 @@ export function getRegisteredSplit(splitId: string, assert?: boolean) {
 	return undefined;
 }
 
-export function getMountedSplitState(splitId: string): State | undefined;
-export function getMountedSplitState(splitId: string, assert: true): State;
+export function getMountedSplitState(
+	splitId: string,
+): MountedSplitState | undefined;
+export function getMountedSplitState(
+	splitId: string,
+	assert: true,
+): MountedSplitState;
 export function getMountedSplitState(splitId: string, assert?: boolean) {
 	for (const [split, mountedSplit] of map) {
 		if (split.id === splitId) {
@@ -92,7 +97,7 @@ export function subscribeToMountedSplit(
 
 export function updateMountedSplit(
 	split: RegisteredSplit,
-	next: State,
+	next: MountedSplitState,
 	meta?: { isUserInteraction?: boolean },
 ) {
 	const prev = map.get(split);
