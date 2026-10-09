@@ -193,12 +193,13 @@ only if it is accurate and does not hurt grouping accuracy, cost or latency.
 
 A governed preposition stays an Attestation member, so clicking it still
 routes to the governor: `aus Angst vor Hunden` gives `[Angst, vor]` NOUN.
-`normalizedSurface` projects only Fixed members: `wartet`, not `wartet auf`;
-`pass auf`, not `pass auf auf`. The preposition inside an Adverbial is not a
-member: in `legt das Buch auf den Tisch` and `wohnt in Bonn`, the verb
-requires a direction or a place, not `auf` or `in`. Neither is the `als` or
-`für` that marks a Predicative, nor a preposition heading a free adjunct: the
-`im` of `wartet im Keller` is no member of `warten`.
+`normalizedSurface` leaves out the governed prepositions that `valencyEvidence`
+names: `wartet`, not `wartet auf`; `pass auf`, not `pass auf auf`. The
+preposition inside an Adverbial is not a member: in `legt das Buch auf den
+Tisch` and `wohnt in Bonn`, the verb requires a direction or a place, not
+`auf` or `in`. Neither is the `als` or `für` that marks a Predicative, nor a
+preposition heading a free adjunct: the `im` of `wartet im Keller` is no
+member of `warten`.
 
 A governor's evidence lists only the governed prepositions its sentence
 realizes, for every governor Kind but INTJ, which records no
@@ -260,8 +261,9 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   `Er ist stolz auf seinen Sohn` opens `stolz`, and clicking `über` in `Er
   weiß Bescheid über die Pläne` opens the Collocation `Bescheid wissen`. The
   member carries no Member Role
-  ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)),
-  and `normalizedSurface` stays Fixed-only, so `stolz auf` projects `stolz`.
+  ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
+  `valencyEvidence` names it and `normalizedSurface` leaves it out, so
+  `stolz auf` projects `stolz`.
   Separated cases (`Auf ihn bin ich stolz`, `der auf seinen Sohn stolze
   Vater`) work the way separable verbs do. Taking it into verbs only was
   rejected, because one relation would behave three ways. Taking it into no
@@ -276,8 +278,9 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   Dank`, and `danke für die Hilfe` gives `[danke, für]` INTJ `danke`, which
   governs what its Grundform `danken` does. A locative or adjunct preposition
   stays free: the `in` of `willkommen in Leipzig` is no member. An INTJ
-  records no `valencyEvidence`, so the member carries no evidence, and
-  `normalizedSurface` stays Fixed-only. The user ruled this on
+  records no `valencyEvidence`, so the member carries no evidence, but
+  `normalizedSurface` leaves it out all the same: `danke für` projects
+  `danke`. The user ruled this on
   [#701](https://github.com/clockblocker/texteater/issues/701).
 - A governed preposition belongs to the smallest unit its government
   survives with in the same sense: `stolz auf` to ADJ `stolz`, `Angst vor`
