@@ -11,8 +11,11 @@ export type RouteKey<L extends Language = Language> = Extract<
 	`${L}/${string}`
 >;
 
-/** A route's check on one unit, with the error it reports. */
-export type Check = readonly [(input: unknown) => boolean, () => string];
+/**
+ * A route's check on one unit, with the error it reports. The check names the
+ * unit fields it reads; it runs only on a unit its route's schema has parsed.
+ */
+export type Check = readonly [(input: never) => boolean, () => string];
 
 /** A check that a route of the condition it names passes. */
 type ConditionalCheck<Condition extends string> = readonly [

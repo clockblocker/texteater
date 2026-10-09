@@ -9,6 +9,8 @@ function check(
 	error: () => string,
 ): ValidationOperation {
 	return (value) =>
+		// The compiled validator runs an operation only on a value whose
+		// structure its rule has already accepted, the fields the predicate names.
 		predicate(value as never)
 			? { value }
 			: {
@@ -22,6 +24,9 @@ export const validationOperations: ValidationOperations = Object.fromEntries(
 		operation.name,
 		operation.construct === "custom"
 			? check(operation.implementation, operation.error)
-			: (value) => ({ value: operation.implementation(value as string) }),
+			: // An overwrite runs only on a value its rule has accepted as a string.
+				(value) => ({
+					value: operation.implementation(value as string),
+				}),
 	]),
 );

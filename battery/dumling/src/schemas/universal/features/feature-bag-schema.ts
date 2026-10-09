@@ -20,6 +20,7 @@ type FeatureBagSchema<Shape extends FeatureSchemaShape> =
 export function featureBagSchema<const Shape extends FeatureSchemaShape>(
 	shape: Shape,
 ): FeatureBagSchema<Shape> {
+	// `Object.fromEntries` forgets the keys it maps, so the shape is named.
 	const nullableShape = Object.fromEntries(
 		Object.entries(shape).map(([name, schema]) => [
 			name,
@@ -29,6 +30,8 @@ export function featureBagSchema<const Shape extends FeatureSchemaShape>(
 		[Name in keyof Shape]: z.ZodNullable<Shape[Name]>;
 	};
 
+	// TypeScript can't relate a strict object's output to the conditional
+	// `FeatureBagSchema` of a generic shape.
 	return z.strictObject(nullableShape) as unknown as FeatureBagSchema<Shape>;
 }
 

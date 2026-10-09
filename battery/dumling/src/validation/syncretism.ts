@@ -1,14 +1,14 @@
 import type { Syncretism, SyncretismView } from "../generated/units.js";
-import { lemmaIdentityKey } from "../identity.js";
+import {
+	identityKeyOf,
+	type LemmaIdentity,
+	lemmaIdentityKey,
+} from "../identity.js";
 import type { Language, Lemma, Surface } from "../types.js";
 import { foldCase } from "./semantics.js";
 
 type Bag = Readonly<Record<string, unknown>>;
-type LemmaFields = {
-	language: Language;
-	canonicalForm: string;
-	coreFeatures: Bag;
-	syncretic?: readonly string[];
+type LemmaFields = LemmaIdentity & {
 	syncretized?: readonly LemmaFields[];
 };
 
@@ -54,8 +54,10 @@ function syncreticFeatures(bags: readonly Bag[]): string[] {
  * each null in the Lemma's Core (system ADR 0046). A Lemma with no list
  * passes.
  */
-export function isSyncretismView(input: unknown): boolean {
-	const { syncretic, coreFeatures } = input as LemmaFields;
+export function isSyncretismView({
+	syncretic,
+	coreFeatures,
+}: LemmaFields): boolean {
 	return (
 		syncretic === undefined ||
 		(isAscending(syncretic) &&
@@ -73,8 +75,7 @@ export function syncretismViewError(): string {
  * its `syncretic` list names exactly the features they disagree on. A Lemma
  * that holds no units passes.
  */
-export function isLemmaSyncretism(input: unknown): boolean {
-	const lemma = input as LemmaFields;
+export function isLemmaSyncretism(lemma: LemmaFields): boolean {
 	const units = lemma.syncretized;
 	if (units === undefined) return true;
 	if (lemma.syncretic === undefined) return false;
@@ -83,7 +84,7 @@ export function isLemmaSyncretism(input: unknown): boolean {
 	const projection = syncretizedFeatures(cores);
 	const disagreements = syncreticFeatures(cores);
 	return (
-		isAscending(units.map((unit) => lemmaIdentityKey(unit as Lemma))) &&
+		isAscending(units.map((unit) => identityKeyOf(unit))) &&
 		units.every(
 			(unit) => foldCase(unit.canonicalForm, lemma.language) === form,
 		) &&
@@ -118,7 +119,7 @@ type SurfaceFields = {
  */
 function surfaceKey(surface: SurfaceFields): string {
 	return JSON.stringify([
-		lemmaIdentityKey(surface.lemma as Lemma),
+		identityKeyOf(surface.lemma),
 		foldCase(surface.normalizedSurface, surface.language),
 		Object.entries(surface.inflectionalFeatures ?? {})
 			.filter(([, value]) => value !== null && value !== undefined)
@@ -133,8 +134,10 @@ function surfaceKey(surface: SurfaceFields): string {
  * alphabetical order, each null on the Surface (system ADR 0046). A Surface
  * with no list passes.
  */
-export function isSurfaceSyncretismView(input: unknown): boolean {
-	const { syncretic, inflectionalFeatures } = input as SurfaceFields;
+export function isSurfaceSyncretismView({
+	syncretic,
+	inflectionalFeatures,
+}: SurfaceFields): boolean {
 	return (
 		syncretic === undefined ||
 		(isAscending(syncretic) &&
@@ -155,12 +158,11 @@ export function surfaceSyncretismViewError(): string {
  * and its `syncretic` list names exactly the features they disagree on. A
  * Surface that holds no units passes.
  */
-export function isSurfaceSyncretism(input: unknown): boolean {
-	const surface = input as SurfaceFields;
+export function isSurfaceSyncretism(surface: SurfaceFields): boolean {
 	const units = surface.syncretized;
 	if (units === undefined) return true;
 	if (surface.syncretic === undefined) return false;
-	const lemma = lemmaIdentityKey(surface.lemma as Lemma);
+	const lemma = identityKeyOf(surface.lemma);
 	const form = foldCase(surface.normalizedSurface, surface.language);
 	const bags = units.map((unit) => unit.inflectionalFeatures ?? {});
 	const projection = syncretizedFeatures(bags);
@@ -170,7 +172,7 @@ export function isSurfaceSyncretism(input: unknown): boolean {
 		isAscending(units.map(surfaceKey)) &&
 		units.every(
 			(unit) =>
-				lemmaIdentityKey(unit.lemma as Lemma) === lemma &&
+				identityKeyOf(unit.lemma) === lemma &&
 				foldCase(unit.normalizedSurface, unit.language) === form &&
 				valueKey(unit.spelling) === valueKey(surface.spelling) &&
 				valueKey(unit.surfaceFeatures) ===
@@ -210,10 +212,12 @@ export function syncretize<T extends Surface>(
 export function syncretize(
 	units: readonly (Lemma | Surface)[],
 ): Syncretism<"Lemma"> | Syncretism<"Surface"> {
-	if (units[0]?.unitKind === "Surface")
-		return syncretizeSurfaces(units as readonly Surface[]);
-	const lemmas = units as readonly Lemma[];
-	const sorted = lemmas.toSorted((left, right) => {
+	if (units.every(isSurface)) return syncretizeSurfaces(units);
+	if (!units.every(isLemma))
+		throw new TypeError(
+			"A Syncretism's units are all Lemmas or all Surfaces",
+		);
+	const sorted = units.toSorted((left, right) => {
 		const leftKey = lemmaIdentityKey(left),
 			rightKey = lemmaIdentityKey(right);
 		return leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0;
@@ -227,7 +231,9 @@ export function syncretize(
 				foldCase(unit.canonicalForm, unit.language) ===
 				unit.canonicalForm,
 		) ?? first;
-	const cores = sorted.map((unit) => unit.coreFeatures as Bag);
+	const cores: Bag[] = sorted.map((unit) => unit.coreFeatures);
+	// TypeScript can't pair the projected Core and the open features with the
+	// route of the unit spelled; `parseUnit` checks the result.
 	return {
 		...spelled,
 		coreFeatures: syncretizedFeatures(cores),
@@ -236,8 +242,15 @@ export function syncretize(
 	} as unknown as Syncretism<"Lemma">;
 }
 
+function isSurface(unit: Lemma | Surface): unit is Surface {
+	return unit.unitKind === "Surface";
+}
+function isLemma(unit: Lemma | Surface): unit is Lemma {
+	return unit.unitKind === "Lemma";
+}
+
 function syncretizeSurfaces(units: readonly Surface[]): Syncretism<"Surface"> {
-	const fields = units as unknown as readonly SurfaceFields[];
+	const fields: readonly SurfaceFields[] = units;
 	const sorted = fields.toSorted((left, right) => {
 		const leftKey = surfaceKey(left),
 			rightKey = surfaceKey(right);
@@ -253,6 +266,8 @@ function syncretizeSurfaces(units: readonly Surface[]): Syncretism<"Surface"> {
 				unit.normalizedSurface,
 		) ?? first;
 	const bags = sorted.map((unit) => unit.inflectionalFeatures ?? {});
+	// TypeScript can't pair the projected features and the open features with
+	// the route of the unit spelled; `parseUnit` checks the result.
 	return {
 		...spelled,
 		inflectionalFeatures: syncretizedFeatures(bags),
@@ -276,7 +291,7 @@ export function syncretismView<S extends { syncretized?: unknown }>(
 export function isSyncretism<T extends Lemma | Surface>(
 	unit: T,
 ): unit is T & Syncretism {
-	return (unit as { syncretized?: unknown }).syncretized !== undefined;
+	return "syncretized" in unit && unit.syncretized !== undefined;
 }
 
 /**
@@ -286,5 +301,5 @@ export function isSyncretism<T extends Lemma | Surface>(
 export function isSyncreticUnit<T extends Lemma | Surface>(
 	unit: T,
 ): unit is T & SyncretismView {
-	return (unit as { syncretic?: unknown }).syncretic !== undefined;
+	return "syncretic" in unit && unit.syncretic !== undefined;
 }

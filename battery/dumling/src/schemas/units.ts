@@ -36,7 +36,7 @@ type FeatureName<C extends z.core.$ZodType> = z.ZodEnum<{
 }>;
 /** The feature names of a feature bag schema, for a Syncretism's `syncretic` list. */
 function featureNameSchema(bag: z.core.$ZodType) {
-	const shape = (bag as { shape?: unknown }).shape;
+	const shape = "shape" in bag ? bag.shape : undefined;
 	const [first, ...rest] =
 		shape !== null && typeof shape === "object" ? Object.keys(shape) : [];
 	if (first === undefined)
@@ -76,6 +76,10 @@ function policyOf(key: string) {
 }
 /** Whether a route condition holds for the route `key` names. */
 function holds(condition: RouteCondition, key: string): boolean {
+	return holdsNamed(condition, key);
+}
+/** {@link holds} for a condition read as a key of a table. */
+function holdsNamed(condition: string, key: string): boolean {
 	const conditions: Partial<Record<string, readonly string[]>> =
 		policyOf(key).conditions;
 	return conditions[condition]?.includes(key) ?? false;
@@ -101,17 +105,19 @@ function syncretizableLemmaSchema<
 	C extends z.core.$ZodType,
 >(plainLemma: P, core: C): SyncretizableLemmaSchema<P, C> {
 	const name = featureNameSchema(core);
-	return plainLemma
-		.extend({
+	// TypeScript can't compute the extended shape of a generic Lemma schema.
+	return withChecks(
+		plainLemma.extend({
 			syncretic: z.tuple([name], name).optional(),
 			syncretized: z
 				.tuple([plainLemma, plainLemma], plainLemma)
 				.optional(),
-		})
-		.refine(isSyncretismView, { error: syncretismViewError })
-		.refine(isLemmaSyncretism, {
-			error: lemmaSyncretismError,
-		}) as SyncretizableLemmaSchema<P, C>;
+		}),
+		[
+			[isSyncretismView, syncretismViewError],
+			[isLemmaSyncretism, lemmaSyncretismError],
+		],
+	) as SyncretizableLemmaSchema<P, C>;
 }
 /**
  * A Surface of a route that allows Syncretisms (system ADR 0046), shaped as
@@ -143,17 +149,20 @@ function syncretizableSurfaceSchema<
 		);
 	const name = featureNameSchema(inflectional);
 	const unit = refine(plainSurface);
-	return refine(
-		z.strictObject({
-			...plainSurface.shape,
-			syncretic: z.tuple([name], name).optional(),
-			syncretized: z.tuple([unit, unit], unit).optional(),
-		}),
-	)
-		.refine(isSurfaceSyncretismView, { error: surfaceSyncretismViewError })
-		.refine(isSurfaceSyncretism, {
-			error: surfaceSyncretismError,
-		}) as SyncretizableSurfaceSchema<P, I>;
+	// TypeScript can't compute the extended shape of a generic Surface schema.
+	return withChecks(
+		refine(
+			z.strictObject({
+				...plainSurface.shape,
+				syncretic: z.tuple([name], name).optional(),
+				syncretized: z.tuple([unit, unit], unit).optional(),
+			}),
+		),
+		[
+			[isSurfaceSyncretismView, surfaceSyncretismViewError],
+			[isSurfaceSyncretism, surfaceSyncretismError],
+		],
+	) as SyncretizableSurfaceSchema<P, I>;
 }
 
 /** Missing inflectional schemas omit the Surface field; present schemas retain their refinements. */
@@ -183,7 +192,8 @@ function buildBaseUnitSchemas<
 		surfaceFeatures: surfaceFeaturesSchema,
 	};
 	// The conditional type preserves field presence for concrete schema callers.
-	// Runtime construction uses the same inflectional-schema condition.
+	// Runtime construction uses the same inflectional-schema condition, which
+	// TypeScript can't follow through the spread.
 	const Surface = z.strictObject({
 		...surfaceShape,
 		...(inflectional === undefined
@@ -197,7 +207,9 @@ function buildBaseUnitSchemas<
 		z.core.$strict
 	>;
 	// A Foreign Lemma has exactly one Reading, which the Lemma alone
-	// identifies, so it carries no Emoji Description (ADR 0045).
+	// identifies, so it carries no Emoji Description (ADR 0045). The type
+	// reads the `foreign` route list `holds` reads, which TypeScript can't
+	// follow through the spread.
 	const readingShape = {
 		unitKind: z.literal(UnitKindSchema.enum.Reading),
 		lemma: Lemma,
@@ -262,8 +274,10 @@ function evidenceField<
 >(key: Key, field: Field) {
 	const entry: Record<string, unknown> = attestationEvidence[field];
 	const held = Object.keys(entry).find((condition) =>
-		holds(condition as RouteCondition, key),
+		holdsNamed(condition, key),
 	);
+	// TypeScript can't evaluate the conditional `EvidenceField` for a generic
+	// key; the runtime finds the field from the same table.
 	return (
 		held === undefined ? {} : { [field]: entry[held] }
 	) as EvidenceField<Key, Field>;
@@ -275,7 +289,11 @@ function withChecks<S extends z.ZodObject>(
 	checks: readonly Check[],
 ): S {
 	return checks.reduce(
-		(refined, [check, error]) => refined.refine(check, { error }),
+		(refined, [check, error]) =>
+			// A check reads the fields of the unit `schema` parses, which hang on
+			// the route; the refinement keeps the check itself, which the
+			// validation compiler finds by identity.
+			refined.refine(check as (input: unknown) => boolean, { error }),
 		schema,
 	);
 }
@@ -307,6 +325,7 @@ export function buildUnitSchemas<
 		if (holds(condition, key)) surfaceChecks.push(check);
 	const refineSurface = <S extends z.ZodObject>(schema: S): S =>
 		withChecks(schema, surfaceChecks);
+	// The type picks the branch the runtime picks, from the same route list.
 	const Surface = (
 		holds("syncretism", key)
 			? syncretizableSurfaceSchema<typeof base.Surface, NonNullable<I>>(

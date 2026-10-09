@@ -45,13 +45,12 @@ export function sayingCanonicalFormError(): string {
  * Surface is needed. The form is compared exactly, display casing included:
  * the sentence's casing stays on the member, so the Lemma keeps one Surface.
  */
-export function isForeignSurface(input: unknown): boolean {
-	const value = input as {
-		lemma: { canonicalForm: string };
-		normalizedSurface: string;
-		spelling: { kind: string };
-		surfaceFeatures: unknown;
-	};
+export function isForeignSurface(value: {
+	lemma: { canonicalForm: string };
+	normalizedSurface: string;
+	spelling: { kind: string };
+	surfaceFeatures: unknown;
+}): boolean {
 	return (
 		value.normalizedSurface === value.lemma.canonicalForm &&
 		value.spelling.kind === "Canonical" &&
@@ -74,9 +73,8 @@ export const variantTagOrder = [
 type VariantSpelling = { variantTags: readonly string[] };
 /** Each tag follows the one before it in canonical order, so none repeats. */
 export function isVariantTagList({ variantTags }: VariantSpelling): boolean {
-	const ranks = variantTags.map((tag) =>
-		variantTagOrder.indexOf(tag as never),
-	);
+	const order: readonly string[] = variantTagOrder;
+	const ranks = variantTags.map((tag) => order.indexOf(tag));
 	return ranks.every((rank, index) => rank > (ranks[index - 1] ?? -1));
 }
 export function variantTagListError(): string {
@@ -168,11 +166,10 @@ const cellCoordinates = ["case", "number", "gender"] as const;
  * agreement (`wer` Masc, `was` Neut) marks it in Core and its case on the
  * Surface.
  */
-export function isGermanClosedClassSurface(input: unknown): boolean {
-	const value = input as {
-		lemma: { coreFeatures: Record<string, unknown> };
-		inflectionalFeatures: Record<string, unknown> | null;
-	};
+export function isGermanClosedClassSurface(value: {
+	lemma: { coreFeatures: Record<string, unknown> };
+	inflectionalFeatures: Record<string, unknown> | null;
+}): boolean {
 	const core = value.lemma.coreFeatures;
 	const bag = value.inflectionalFeatures;
 	if (!bag) return true;
@@ -203,14 +200,13 @@ export function germanClosedClassSurfaceError(): string {
  * form shows (der Reisende, ein Verletzter), so its article can agree. No
  * other Surface marks gender, and a singular with neither fails.
  */
-export function isGermanNounSurface(input: unknown): boolean {
-	const value = input as {
-		inflectionalFeatures: {
-			gender: string | null;
-			number: string | null;
-		} | null;
-		lemma: { coreFeatures: { gender: string | null } };
-	};
+export function isGermanNounSurface(value: {
+	inflectionalFeatures: {
+		gender: string | null;
+		number: string | null;
+	} | null;
+	lemma: { coreFeatures: { gender: string | null } };
+}): boolean {
 	const bag = value.inflectionalFeatures;
 	if (!bag) return true;
 	const lemmaGender = value.lemma.coreFeatures.gender;
@@ -229,14 +225,13 @@ export function germanNounSurfaceError(): string {
  * noun's, the mark is not required here; dumcorpus requires it wherever the
  * name owns an article (ADR 0040).
  */
-export function isGermanProperNounSurface(input: unknown): boolean {
-	const value = input as {
-		inflectionalFeatures: {
-			gender: string | null;
-			number: string | null;
-		} | null;
-		lemma: { coreFeatures: { gender: string | null } };
-	};
+export function isGermanProperNounSurface(value: {
+	inflectionalFeatures: {
+		gender: string | null;
+		number: string | null;
+	} | null;
+	lemma: { coreFeatures: { gender: string | null } };
+}): boolean {
 	const bag = value.inflectionalFeatures;
 	if (!bag || bag.gender === null) return true;
 	return value.lemma.coreFeatures.gender === null && bag.number === "Sing";
@@ -247,8 +242,7 @@ export function germanProperNounSurfaceError(): string {
 
 type Fusion = { spelling: string; components: { span: string }[] };
 /** The components' spans spell the fused word, in order. */
-export function isFusion(input: unknown): boolean {
-	const value = input as Fusion;
+export function isFusion(value: Fusion): boolean {
 	return (
 		value.components.map((component) => component.span).join("") ===
 		value.spelling
@@ -258,12 +252,11 @@ export function fusionError(): string {
 	return "Fusion component spans must spell the fused word in order";
 }
 /** A Fused member spells the Fusion component it realizes. */
-export function isFusedMember(input: unknown): boolean {
-	const value = input as {
-		attested: string;
-		fusion: Fusion;
-		component: number;
-	};
+export function isFusedMember(value: {
+	attested: string;
+	fusion: Fusion;
+	component: number;
+}): boolean {
 	return value.fusion.components[value.component]?.span === value.attested;
 }
 export function fusedMemberError(): string {
@@ -283,17 +276,16 @@ export function fusedMemberError(): string {
  * or hidden article ties it to Partial. Whether the article agrees with its Head is a
  * fact about the language, checked in dumcorpus (ADR 0041).
  */
-export function isArticleAttestation(input: unknown): boolean {
-	const value = input as {
-		surface: { lemma: { family: string } };
-		articleEvidence?:
-			| { kind: "Owned"; member: number }
-			| { kind: "Shared" }
-			| { kind: "Hidden"; fusion: Fusion; component: number }
-			| null;
-		realizationCoverage: string;
-		members: unknown[];
-	};
+export function isArticleAttestation(value: {
+	surface: { lemma: { family: string } };
+	articleEvidence?:
+		| { kind: "Owned"; member: number }
+		| { kind: "Shared" }
+		| { kind: "Hidden"; fusion: Fusion; component: number }
+		| null;
+	realizationCoverage: string;
+	members: unknown[];
+}): boolean {
 	const evidence = value.articleEvidence;
 	const { surface } = value;
 	// A Head whose article is its own or absent is Full; a Locution may still
@@ -320,14 +312,13 @@ export function articleAttestationError(): string {
  * prefixes, and only such a form, or a proper noun cited with its article,
  * names article evidence; a `Def` form may name none (ADR 0040).
  */
-export function isHebrewArticleAttestation(input: unknown): boolean {
-	const value = input as {
-		surface: {
-			inflectionalFeatures: { definite?: string | null } | null;
-			lemma: { kind: string; coreFeatures: { article?: string | null } };
-		};
-		articleEvidence?: unknown;
+export function isHebrewArticleAttestation(value: {
+	surface: {
+		inflectionalFeatures: { definite?: string | null } | null;
+		lemma: { kind: string; coreFeatures: { article?: string | null } };
 	};
+	articleEvidence?: unknown;
+}): boolean {
 	const { surface } = value;
 	if (!value.articleEvidence) return true;
 	return surface.lemma.kind === "PROPN"
@@ -347,21 +338,20 @@ type ExpletiveEvidence = { attested: string; orthography: string };
  * singular. Whether that member spells `es` (`es`, or a clitic `'s`) is a
  * fact about German, checked in dumcorpus (ADR 0041).
  */
-export function isGermanVerbalAttestation(input: unknown): boolean {
-	const value = input as {
-		surface: {
-			inflectionalFeatures: {
-				expletive: string | null;
-				verbForm: string;
-				person: string | null;
-				number: string | null;
-			} | null;
-		};
-		expletiveEvidence: ExpletiveEvidence | null;
-		valencyEvidence: ValencyEvidence[];
-		members: { attested: string; orthography: string }[];
-		realizationCoverage: string;
+export function isGermanVerbalAttestation(value: {
+	surface: {
+		inflectionalFeatures: {
+			expletive: string | null;
+			verbForm: string;
+			person: string | null;
+			number: string | null;
+		} | null;
 	};
+	expletiveEvidence: ExpletiveEvidence | null;
+	valencyEvidence: ValencyEvidence[];
+	members: { attested: string; orthography: string }[];
+	realizationCoverage: string;
+}): boolean {
 	if (!isOwnedValencyEvidence(value.valencyEvidence, value.members))
 		return false;
 	const bag = value.surface.inflectionalFeatures;
@@ -384,11 +374,10 @@ export function germanVerbalAttestationError(): string {
  * A German adjective or noun Attestation names the owned members realizing
  * the valency slots it attests, as a verbal one does (ADR 0034).
  */
-export function isGermanValencyAttestation(input: unknown): boolean {
-	const value = input as {
-		valencyEvidence: ValencyEvidence[];
-		members: { attested: string; orthography: string }[];
-	};
+export function isGermanValencyAttestation(value: {
+	valencyEvidence: ValencyEvidence[];
+	members: { attested: string; orthography: string }[];
+}): boolean {
 	return isOwnedValencyEvidence(value.valencyEvidence, value.members);
 }
 export function germanValencyAttestationError(): string {
@@ -467,12 +456,11 @@ function isOwnedValencyEvidence(
  * or IndirectObject slot has no marker member. The language comes from the
  * Attestation's Surface.
  */
-export function isCaselessValencyAttestation(input: unknown): boolean {
-	const value = input as {
-		surface: { language: Language };
-		valencyEvidence?: ValencySlot[];
-		members: { attested: string; orthography: string }[];
-	};
+export function isCaselessValencyAttestation(value: {
+	surface: { language: Language };
+	valencyEvidence?: ValencySlot[];
+	members: { attested: string; orthography: string }[];
+}): boolean {
 	const evidence = value.valencyEvidence ?? [];
 	return (
 		namesMarkerMembers(evidence, value.members, value.surface.language) &&
@@ -493,8 +481,9 @@ export function caselessValencyAttestationError(): string {
  * complement records none. Which cases the ADP takes is a fact about German,
  * checked in dumcorpus (ADR 0041); no table is consulted here.
  */
-export function isGermanAdpositionAttestation(input: unknown): boolean {
-	const value = input as { valencyEvidence: ValencyEvidence[] };
+export function isGermanAdpositionAttestation(value: {
+	valencyEvidence: ValencyEvidence[];
+}): boolean {
 	const [slot, ...rest] = value.valencyEvidence;
 	if (!slot) return true;
 	return (
@@ -509,17 +498,16 @@ export function germanAdpositionAttestationError(): string {
 	return "ADP valency evidence is at most one oblique bare-case slot with no member, realized in its case";
 }
 
-export function isGermanVerbalSurface(input: unknown): boolean {
-	const value = input as {
-		normalizedSurface: string;
-		inflectionalFeatures: {
-			expletive: string | null;
-			verbForm: string;
-			person: string | null;
-			number: string | null;
-			mood: string | null;
-		} | null;
-	};
+export function isGermanVerbalSurface(value: {
+	normalizedSurface: string;
+	inflectionalFeatures: {
+		expletive: string | null;
+		verbForm: string;
+		person: string | null;
+		number: string | null;
+		mood: string | null;
+	} | null;
+}): boolean {
 	const bag = value.inflectionalFeatures;
 	if (!bag?.expletive) return true;
 	return (
@@ -539,11 +527,10 @@ export function germanVerbalSurfaceError(): string {
  * non-comparable ADV no inflection and an ADJ only its attributive case,
  * gender and number (`der tote Mann`).
  */
-export function isComparabilitySurface(input: unknown): boolean {
-	const value = input as {
-		lemma: { coreFeatures: { comparable?: string | null } };
-		inflectionalFeatures: { degree?: unknown } | null;
-	};
+export function isComparabilitySurface(value: {
+	lemma: { coreFeatures: { comparable?: string | null } };
+	inflectionalFeatures: { degree?: unknown } | null;
+}): boolean {
 	const degree = value.inflectionalFeatures?.degree ?? null;
 	return value.lemma.coreFeatures.comparable === "Yes"
 		? degree !== null

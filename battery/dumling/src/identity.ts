@@ -35,9 +35,32 @@ export function canonicalFormKey(
  * shares its key.
  */
 export function lemmaIdentityKey(lemma: Lemma): string {
-	const { language, family, kind, canonicalForm } = lemma;
-	const core = lemma.coreFeatures as Readonly<Record<string, unknown>>;
-	const { syncretic } = lemma as { syncretic?: readonly string[] };
+	return identityKeyOf(lemma);
+}
+
+/**
+ * The fields a Lemma's identity reads. Every Lemma has them, and so does each
+ * unit a Syncretism's checks read before the unit is typed by its route.
+ */
+export type LemmaIdentity = {
+	language: Language;
+	family: string;
+	kind: string;
+	canonicalForm: string;
+	coreFeatures: Readonly<Record<string, unknown>>;
+	syncretic?: readonly string[];
+};
+
+/** {@link lemmaIdentityKey} over the fields it reads. */
+export function identityKeyOf(lemma: LemmaIdentity): string {
+	const {
+		language,
+		family,
+		kind,
+		canonicalForm,
+		coreFeatures: core,
+		syncretic,
+	} = lemma;
 	return JSON.stringify([
 		language,
 		family,
@@ -64,7 +87,8 @@ export function sameLemma(left: Lemma, right: Lemma): boolean {
  * no Emoji Description, so its Lemma alone identifies it (ADR 0045).
  */
 export function readingIdentityKey(reading: Reading): string {
-	const { emojiDescription } = reading as { emojiDescription?: string };
+	const emojiDescription =
+		"emojiDescription" in reading ? reading.emojiDescription : undefined;
 	return JSON.stringify([
 		lemmaIdentityKey(reading.lemma),
 		emojiDescription === undefined
