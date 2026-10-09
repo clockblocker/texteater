@@ -8,17 +8,14 @@ import type {
 	PendingSemanticRelationRecord,
 } from "../../domain-types";
 
+/**
+ * Normalizes a checked Shadow's Canonical Form. Its Family and Kind are closed
+ * names the schema already matched exactly, so they stay as they are.
+ */
 function normalizeUnitShadow<L extends Dumling.Language>(
 	target: Dumrel.UnitShadow & { language: L },
 ): Dumrel.UnitShadow & { language: L } {
-	// normalizeForm returns a string, but it leaves a valid Family or Kind
-	// name as it was, so the result is still the input's own Shadow.
-	return {
-		...target,
-		canonicalForm: normalizeForm(target.canonicalForm),
-		family: normalizeForm(target.family),
-		kind: normalizeForm(target.kind),
-	} as Dumrel.UnitShadow & { language: L };
+	return { ...target, canonicalForm: normalizeForm(target.canonicalForm) };
 }
 
 /**

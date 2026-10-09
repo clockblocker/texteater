@@ -18,6 +18,7 @@ import {
 } from "./model/generatedKnowledgeContainment";
 import {
 	directSemanticRelationValidator,
+	isLemmaRoute,
 	relationProposalOutcomeValidator,
 	relationPublicationFingerprintsValidator,
 	type relationPublicationRunValidator,
@@ -194,17 +195,29 @@ function proposalKey(
 	return JSON.stringify([attemptKey, runNumber, relation, targetKey(target)]);
 }
 
+/** A stored target whose Family and Kind name a Dumling Lemma route is a Unit Shadow. */
+function isUnitShadow(
+	target: Infer<typeof relationTargetShadowValidator>,
+): target is Dumrel.UnitShadow & { language: "de" } {
+	return isLemmaRoute(target.language, target.family, target.kind);
+}
+
 function pendingLocatorKey(
 	sourceReadingKey: string,
 	relation: Dumrel.DirectSemanticRelation,
 	target: Infer<typeof relationTargetShadowValidator>,
 ): string {
+	// The action sends a Dumrel Pending Relation's target, but the Convex
+	// validator checks its Kind only as a string, so a target that names no
+	// Lemma route here is a defect.
+	if (!isUnitShadow(target))
+		throw new Error(
+			`Relation target ${target.language}/${target.family}/${target.kind} is not a Dumling Lemma route.`,
+		);
 	return pendingLocatorIndexKey({
 		sourceReadingKey,
 		relation,
-		targetPendingId: derivePendingEntryId(
-			target as Parameters<typeof derivePendingEntryId<"de">>[0],
-		),
+		targetPendingId: derivePendingEntryId(target),
 	});
 }
 

@@ -373,6 +373,28 @@ test("rollback persistence and proposal monitoring are queryable through interna
 		rejectedOutputs: 1,
 		nulls: 0,
 	});
+	// A target naming no Lemma route never reaches a Pending Entry ID.
+	await expect(
+		t.run((ctx) =>
+			recordCommittedRelationRun(
+				ctx,
+				attempt,
+				{
+					runNumber: 4,
+					requestedKinds: ["synonym"],
+					artifactPath: reviewedArtifact.artifactPath,
+					fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
+					proposals: [
+						{
+							relation: "synonym",
+							targetShadow: { ...targetShadow, kind: " NOUN" },
+						},
+					],
+				},
+				false,
+			),
+		),
+	).rejects.toThrow("de/Lexeme/ NOUN is not a Dumling Lemma route.");
 });
 
 test("commit-time rollback keeps base Knowledge changes and drops relation changes", () => {
