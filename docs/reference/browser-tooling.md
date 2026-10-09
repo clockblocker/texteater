@@ -32,14 +32,34 @@ skip its remote and cloud ones.
 
 ## Checks with Playwright
 
-Write UI tests, regression checks and CI gates as Playwright tests. Locators act
-on elements directly, so `locator.hover()` needs no coordinates; assertions
-such as `expect(locator).toHaveCSS(...)` retry instead of sleeping; and the
-runner keeps traces and can run in CI. When a poke finds behaviour worth
-keeping, turn it into a Playwright test.
+Write browser UI tests, regression checks and CI gates as Playwright tests.
+Locators act on elements directly, so `locator.hover()` needs no coordinates;
+assertions such as `expect(locator).toHaveCSS(...)` retry instead of
+sleeping; and the runner keeps traces and can run in CI. When a poke finds
+behaviour worth keeping, turn it into a Playwright test.
 
 An app without a Playwright setup starts from
 `app/tf-demo/playwright.config.ts`.
 
 Playwright is the repository's only browser-automation library. Puppeteer
 would duplicate it while driving only Chrome and offering no test runner.
+
+## Component tests in tf-demo
+
+tf-demo tests a component one of three ways, cheapest first:
+
+- **Static markup**: `renderToStaticMarkup` from `react-dom/server`, when the
+  test only asserts what one render shows for some props or data.
+- **DOM renderer**: happy-dom with `@testing-library/react`, when the test
+  clicks, awaits a state change or re-renders with new props, and fakes what
+  sits behind the component (for example, a Convex client whose `mutation`
+  the test answers). Make `import "./support/dom";` the file's first import;
+  `tests/knowledge-settings-form.test.tsx` is the example.
+- **Playwright**: when the behaviour needs a real browser, such as layout,
+  pointer gestures, motion, focus across the page or a running Convex backend.
+
+A DOM test file gets happy-dom only through that import. `bun run test` runs
+each file with `--isolate`, so static-markup and Convex tests never see DOM
+globals. A global happy-dom preload would replace `fetch`, `setTimeout`,
+`URL`, `Request` and `Response` for every test, and libraries such as TanStack
+Query would take their browser branch inside static renders.
