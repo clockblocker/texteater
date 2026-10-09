@@ -6,6 +6,7 @@ import {
 	handle,
 	region,
 	staticContent,
+	stubCoarsePointer,
 	summarize,
 	textNode,
 	useDomStandIns,
@@ -755,6 +756,30 @@ describe("calculateHitAreas", () => {
 					rect: { x: 97, y: 38, width: 10, height: 10 },
 				},
 			]);
+		});
+
+		test("grows a gap to resizeTargetMinimumSize.coarse on a coarse pointer", () => {
+			const pointer = stubCoarsePointer(true);
+			try {
+				const split = fakeSplit({
+					fine: 24,
+					coarse: 50,
+					children: [
+						region("a", across(0, 100)),
+						region("b", across(100, 100)),
+					],
+				});
+
+				expect(areasOf(split)).toEqual([
+					{
+						regions: ["a", "b"],
+						handle: undefined,
+						rect: { x: 75, y: 0, width: 50, height: 100 },
+					},
+				]);
+			} finally {
+				pointer.restore();
+			}
 		});
 
 		test("grows nothing when the minimum is zero", () => {

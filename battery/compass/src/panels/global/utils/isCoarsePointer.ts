@@ -14,3 +14,12 @@ export function isCoarsePointer(): boolean {
 
 	return cached;
 }
+
+/**
+ * Forgets the cached value, so the next isCoarsePointer() reads matchMedia()
+ * again. Tests share this module, so one that stubs matchMedia() resets the
+ * cache before and after it.
+ */
+export function resetCoarsePointerCache() {
+	cached = undefined;
+}

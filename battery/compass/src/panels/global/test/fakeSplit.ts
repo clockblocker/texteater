@@ -6,6 +6,7 @@ import type {
 	RegisteredSplit,
 } from "../../components/split/types";
 import type { HitArea } from "../dom/calculateHitAreas";
+import { resetCoarsePointerCache } from "../utils/isCoarsePointer";
 
 /**
  * Stand-ins for the DOM a Split's hit areas are read from. Bun runs tests
@@ -75,6 +76,37 @@ export function useDomStandIns() {
 			}
 		});
 	});
+}
+
+/**
+ * Stubs `matchMedia()` so "(pointer:coarse)" matches when `coarse` is true,
+ * until `restore()` runs. Both reset isCoarsePointer's cache, which tests
+ * share. `queries` lists every query asked.
+ */
+export function stubCoarsePointer(coarse: boolean) {
+	const saved = Object.getOwnPropertyDescriptor(globalThis, "matchMedia");
+	const queries: string[] = [];
+	Object.defineProperty(globalThis, "matchMedia", {
+		configurable: true,
+		writable: true,
+		value: (query: string) => {
+			queries.push(query);
+			return { matches: coarse && query === "(pointer:coarse)" };
+		},
+	});
+	resetCoarsePointerCache();
+
+	return {
+		queries,
+		restore() {
+			if (saved) {
+				Object.defineProperty(globalThis, "matchMedia", saved);
+			} else {
+				Reflect.deleteProperty(globalThis, "matchMedia");
+			}
+			resetCoarsePointerCache();
+		},
+	};
 }
 
 type ChildSpec =
