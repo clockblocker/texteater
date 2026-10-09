@@ -4,6 +4,7 @@ import { basename, dirname, extname, join, relative, resolve } from "node:path";
 import { findRepositoryRoot } from "./lib/workspaces";
 
 export type DocumentationRule =
+	| "adr-amendment-citation"
 	| "adr-logbook"
 	| "adr-structure"
 	| "allowed-path"
@@ -754,6 +755,81 @@ export async function auditAdrs(
 	return issues;
 }
 
+/**
+ * The rule's own source and tests name the amendment forms on purpose, so the
+ * citation scan leaves them out.
+ */
+const amendmentCitationRuleFiles = new Set([
+	"tooling/documentation-integrity.ts",
+	"tooling/tests/documentation-integrity.test.ts",
+]);
+
+/** Code, tests and records: every non-Markdown file under app/, battery/ and tooling/. */
+export function isAdrCitationSourcePath(candidate: string): boolean {
+	const path = normalizeRepositoryPath(candidate);
+	return (
+		/^(?:app|battery|tooling)\//u.test(path) &&
+		extname(path).toLowerCase() !== ".md" &&
+		!amendmentCitationRuleFiles.has(path)
+	);
+}
+
+const amendmentCitationForms = [
+	// "ADR 0040, amended 2026-10-02", "ADR 0036 amended on #653", "(ADR 0037, amended)"
+	/\bADR[\s-]?\d{4},?\s+amended\b/iu,
+	// "(amended 2026-09-30)", "amended on #618", "amended for #767"
+	/\bamended\s+(?:(?:on|for|in)\s+)?(?:\d{4}-\d{2}-\d{2}|#\d+)/iu,
+	// "the 2026-10-02 amendment", "ADR 0040's amendment"
+	/(?:\b\d{4}-\d{2}-\d{2}|\bADR[\s-]?\d{4}(?:'s)?)\s+amendment\b/iu,
+];
+
+/**
+ * An ADR citation in code, tests or a record names the ADR alone; an ADR
+ * states its current decision, so "amended <date>" points at history that
+ * the issue and git keep. The present-tense "Amends ADR NNNN" stays allowed.
+ */
+export function adrAmendmentCitationIssues(
+	file: string,
+	text: string,
+): DocumentationIssue[] {
+	return text.split("\n").flatMap((line, index) =>
+		amendmentCitationForms.some((form) => form.test(line))
+			? [
+					{
+						detail: "Cite the ADR alone, as (ADR 0040) or (ADR 0040, #618); the ADR states its current decision",
+						file,
+						kind: "adr-amendment-citation" as const,
+						line: index + 1,
+						severity: "error" as const,
+					},
+				]
+			: [],
+	);
+}
+
+/** Git's own heuristic: a NUL byte in the first 8000 bytes marks a binary file. */
+function isBinaryContent(bytes: Uint8Array): boolean {
+	return bytes.subarray(0, 8000).includes(0);
+}
+
+export async function auditAdrAmendmentCitations(
+	repositoryRoot: string,
+	files: readonly string[],
+): Promise<DocumentationIssue[]> {
+	const issues: DocumentationIssue[] = [];
+	for (const file of files.filter(isAdrCitationSourcePath)) {
+		const bytes = await readFile(join(repositoryRoot, file));
+		if (isBinaryContent(bytes)) continue;
+		issues.push(
+			...adrAmendmentCitationIssues(
+				normalizeRepositoryPath(file),
+				new TextDecoder().decode(bytes),
+			),
+		);
+	}
+	return issues;
+}
+
 function contentWithoutScaffolding(text: string): string {
 	return stripFrontmatter(text)
 		.body.replaceAll(/^#{1,6}\s.*$/gmu, "")
@@ -882,7 +958,8 @@ async function changedRepositoryFiles(
 export async function auditDocumentationIntegrity(
 	repositoryRoot: string,
 ): Promise<DocumentationIssue[]> {
-	const files = await developerDocumentationFiles(repositoryRoot);
+	const visibleFiles = await gitVisibleFiles(repositoryRoot);
+	const files = visibleFiles.filter(isDeveloperDocumentationPath);
 	return [
 		...auditAllowedPaths(files),
 		...auditProtectedPlacement(files),
@@ -890,6 +967,7 @@ export async function auditDocumentationIntegrity(
 		...(await auditGlossaries(repositoryRoot, files)),
 		...(await auditGlossaryMap(repositoryRoot, files)),
 		...(await auditAdrs(repositoryRoot, files)),
+		...(await auditAdrAmendmentCitations(repositoryRoot, visibleFiles)),
 		...(await auditEmptyScaffolding(repositoryRoot, files)),
 		...(await auditMarkdownLinks(repositoryRoot, files)),
 		...auditProtectedChanges(await changedRepositoryFiles(repositoryRoot)),
