@@ -21,8 +21,6 @@
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { messageOf } from "common-utils";
-import type { OperationEvaluationRun } from "promptsmith/evaluation";
-import { loadRun } from "promptsmith/storage";
 import {
 	freezeKnowledgeSets,
 	loadKnowledgeSet,
@@ -36,7 +34,12 @@ import {
 	saveKnowledgeSubset,
 	selectKnowledgeSubset,
 } from "../lab/evaluation/knowledge/subset.js";
-import { defaultRunOutputDirectory } from "../lab/run-directory.js";
+import {
+	defaultRunOutputDirectory,
+	judgmentSettings,
+	judgmentSettingsSchema,
+	loadOperationRun,
+} from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
 
@@ -58,23 +61,15 @@ async function runKnowledgeCli(
 	});
 	const [command, first, second] = positionals;
 	const runDirectory = options.runDirectory ?? defaultRunOutputDirectory;
-	const operationRun = async (runId: string) => {
-		const loaded = await loadRun(runDirectory, runId);
-		if (loaded.manifest.version !== 2)
-			throw Error("The run is an operation run (manifest version 2)");
-		return loaded as OperationEvaluationRun;
-	};
+	const operationRun = (runId: string) =>
+		loadOperationRun(runDirectory, runId);
 	if (command === "subset") {
 		if (!first || !values.out)
 			throw Error(
 				"Use `bun cli/knowledge.ts subset <baselineRunId> --out <file>`",
 			);
 		const run = await operationRun(first);
-		const settings = run.manifest.configurations.judgment.settings as {
-			set?: string;
-			setHash?: string;
-			subset?: unknown;
-		};
+		const settings = judgmentSettings(run, judgmentSettingsSchema);
 		if (settings.set !== "dev" || !settings.setHash || settings.subset)
 			throw Error("The subset is read from a whole dev run");
 		const set = await loadKnowledgeSet(

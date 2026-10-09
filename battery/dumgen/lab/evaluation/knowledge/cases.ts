@@ -19,16 +19,27 @@
  */
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { isRecord } from "common-utils";
 import { isReviewed, loadSpecRecords } from "dumcorpus";
 import { authoredReading, closedRoute } from "dumcorpus/inventories";
 import type * as Dumcorpus from "dumcorpus/types";
 import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
-import { selectKnowledge } from "dumrel";
+import {
+	directSemanticRelationValues,
+	parseReadingKnowledge,
+	selectKnowledge,
+	translationLanguageValues,
+} from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import { z } from "zod";
 import type { KnowledgeSentence } from "../../../src/knowledge/types.js";
 import { git } from "../../git.js";
 import { hashOf } from "../../segmentation/harness/jev-cache.js";
+import {
+	germanAttestationSchema,
+	germanReadingSchema,
+} from "../../stored-json.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
 
@@ -77,6 +88,114 @@ export type KnowledgeSet = {
 	/** The spot-check set's slips (#545). */
 	readonly slips?: readonly TranslationSlip[];
 };
+
+const coverageStatusSchema = z.enum(["Authored", "ReviewedEmpty"]);
+
+const coverageSchema = z.object({
+	transcription: coverageStatusSchema.optional(),
+	definition: coverageStatusSchema.optional(),
+	morphologicalTree: coverageStatusSchema.optional(),
+	valency: coverageStatusSchema.optional(),
+	participleSource: coverageStatusSchema.optional(),
+	plural: coverageStatusSchema.optional(),
+	conjugationClass: coverageStatusSchema.optional(),
+	locutionType: coverageStatusSchema.optional(),
+	sayingType: coverageStatusSchema.optional(),
+	formulaRole: coverageStatusSchema.optional(),
+	translations: z
+		.partialRecord(z.enum(translationLanguageValues), coverageStatusSchema)
+		.optional(),
+	semanticRelations: z
+		.partialRecord(
+			z.enum(directSemanticRelationValues),
+			coverageStatusSchema,
+		)
+		.optional(),
+}) satisfies z.ZodType<Dumcorpus.KnowledgeCoverage>;
+
+/** Reading Knowledge; the case checks it against its Reading. */
+const knowledgeSchema = z.custom<Dumrel.ReadingKnowledge>(isRecord);
+
+const knowledgeCaseSchema = z
+	.object({
+		id: z.string(),
+		record: z.string(),
+		target: z.number(),
+		reading: germanReadingSchema,
+		// Checked by the set, which knows the slips frozen before #1097.
+		attestation: z.custom<Dumling.Attestation<"de">>(isRecord),
+		sentence: z.object({
+			segments: z.array(z.object({ text: z.string() })),
+			target: z.array(z.number()),
+		}),
+		text: z.string(),
+		gold: z
+			.object({ knowledge: knowledgeSchema, coverage: coverageSchema })
+			.optional(),
+		authored: z.boolean(),
+		rules: z.array(z.string()),
+	})
+	.superRefine((goldCase, context) => {
+		if (!goldCase.gold) return;
+		const parsed = parseReadingKnowledge({
+			source: goldCase.reading,
+			knowledge: goldCase.gold.knowledge,
+		});
+		if (!parsed.success)
+			context.addIssue({
+				code: "custom",
+				path: ["gold", "knowledge"],
+				message: parsed.error.message,
+			});
+	}) satisfies z.ZodType<KnowledgeCase>;
+
+/** A translation slip as a set or a run's settings store it. */
+export const translationSlipSchema = z.object({
+	caseId: z.string(),
+	lemma: z.string(),
+	language: z.enum(translationLanguageValues),
+	rejected: z.array(z.string()),
+	issue: z.string(),
+}) satisfies z.ZodType<TranslationSlip>;
+
+/**
+ * The spot-check sets frozen before #1097 authored the synthetic slips
+ * whole: their two slips' Attestations (`slip:schmecken`, `slip:Paket`)
+ * lack the Surface features and evidence Dumling requires. A set never
+ * changes once frozen, so these stay as stored, checked only as objects;
+ * every other case's Attestation is a German one Dumling accepts.
+ */
+const slipsFrozenIncomplete: ReadonlySet<string> = new Set([
+	"2c922a2ddc126b91",
+	"ed3d2aba58bbc00c",
+]);
+
+/** A frozen Knowledge set as `freezeKnowledgeSets` keeps it. */
+const knowledgeSetSchema = z
+	.object({
+		name: z.enum(["dev", "heldout", "spot-check"]),
+		createdAt: z.string(),
+		gitHead: z.string(),
+		dirtyRecordFiles: z.number(),
+		hash: z.string(),
+		cases: z.array(knowledgeCaseSchema),
+		slips: z.array(translationSlipSchema).optional(),
+	})
+	.superRefine((set, context) => {
+		for (const [index, goldCase] of set.cases.entries())
+			if (
+				!(
+					slipsFrozenIncomplete.has(set.hash) &&
+					goldCase.id.startsWith("slip:")
+				) &&
+				!germanAttestationSchema.safeParse(goldCase.attestation).success
+			)
+				context.addIssue({
+					code: "custom",
+					path: ["cases", index, "attestation"],
+					message: "Expected a German Dumling Attestation",
+				});
+	}) satisfies z.ZodType<KnowledgeSet>;
 
 type Target = Dumcorpus.SpecRecord["targets"][number];
 
@@ -388,17 +507,32 @@ export function spotCheckCases(
 /** Which aspects a run asks for: the structural ones, or the text ones. */
 export type KnowledgeScope = "structural" | "text";
 
-const structuralAspects = new Set([
-	"plural",
-	"valency",
-	"participleSource",
-	"conjugationClass",
-	"locutionType",
-	"sayingType",
-	"formulaRole",
-	"semanticRelations",
-]);
-const textAspects = new Set(["transcription", "definition", "translations"]);
+/** Every leaf of a bucket aspect, turned off. */
+const allOff = (leaves: readonly string[]): Record<string, false> =>
+	Object.fromEntries(leaves.map((leaf) => [leaf, false]));
+
+/** What each scope leaves out of its route's applicable aspects. */
+const scopeSettings: Readonly<
+	Record<KnowledgeScope, Dumrel.KnowledgeSettings>
+> = {
+	structural: {
+		transcription: false,
+		definition: false,
+		translations: allOff(translationLanguageValues),
+		morphologicalTree: false,
+	},
+	text: {
+		morphologicalTree: false,
+		plural: false,
+		valency: false,
+		participleSource: false,
+		conjugationClass: false,
+		locutionType: false,
+		sayingType: false,
+		formulaRole: false,
+		semanticRelations: allOff(directSemanticRelationValues),
+	},
+};
 
 /** The request a case's run sends: its route's applicable aspects of `scope`. */
 export function requestOf(
@@ -412,12 +546,9 @@ export function requestOf(
 			family,
 			kind,
 		} as Dumrel.KnowledgeSelectionInput["route"],
+		settings: scopeSettings[scope],
 	});
-	if (!selected.success) return {};
-	const wanted = scope === "structural" ? structuralAspects : textAspects;
-	return Object.fromEntries(
-		Object.entries(selected.value).filter(([aspect]) => wanted.has(aspect)),
-	) as Dumrel.KnowledgeRequestMask;
+	return selected.success ? selected.value : {};
 }
 
 /** The tracked frozen sets (`frozen-sets.ts`). */
@@ -471,9 +602,10 @@ export const loadKnowledgeSet = (
 	name: KnowledgeSetName,
 	hash?: string,
 ): Promise<KnowledgeSet> =>
-	loadFrozenSet<KnowledgeSet>(
+	loadFrozenSet(
 		root,
 		name,
 		hash,
 		"bun cli/knowledge.ts freeze",
+		knowledgeSetSchema,
 	);

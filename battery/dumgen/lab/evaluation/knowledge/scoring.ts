@@ -20,7 +20,7 @@
  * whose verdict flips between repetitions are named.
  */
 import { createHash } from "node:crypto";
-import { canonicalJson } from "common-utils";
+import { canonicalJson, isRecord } from "common-utils";
 import { foldCase } from "dumling";
 import type * as Dumling from "dumling/types";
 import { applyKnowledgeChange } from "dumrel";
@@ -90,6 +90,31 @@ export type KnowledgeEvaluation = {
 	readonly verdicts: readonly AspectVerdict[];
 };
 
+/** An attempt's evaluation as a run stores it. */
+export const knowledgeEvaluationSchema = z.object({
+	verdicts: z.array(
+		z.object({
+			aspect: z.string(),
+			failed: z.string().optional(),
+			produced: z.boolean(),
+			gold: z.enum(["Authored", "ReviewedEmpty"]).optional(),
+			correct: z.boolean().optional(),
+			goldClaims: z.array(z.string()).optional(),
+			found: z.array(z.string()).optional(),
+			extra: z.array(z.string()).optional(),
+			complements: z
+				.object({
+					gold: z.number(),
+					produced: z.number(),
+					matched: z.number(),
+				})
+				.optional(),
+			sourceAgrees: z.boolean().optional(),
+			text: z.string().optional(),
+		}),
+	),
+}) satisfies z.ZodType<KnowledgeEvaluation>;
+
 type Shadow = {
 	readonly family: string;
 	readonly kind: string;
@@ -100,20 +125,40 @@ type Shadow = {
 export const shadowKey = ({ family, kind, canonicalForm }: Shadow) =>
 	`${family}/${kind}/${foldCase(canonicalForm, "de")}`;
 
+/**
+ * Gold's targets of each Semantic Relation, by relation, in gold's order. A
+ * Reading target stands for its Lemma's Unit Shadow.
+ */
+export function goldRelationTargets(
+	knowledge: Dumrel.ReadingKnowledge | undefined,
+): ReadonlyMap<string, readonly Shadow[]> {
+	const targets = new Map<string, readonly Shadow[]>();
+	for (const [relation, value] of Object.entries(
+		knowledge?.semanticRelations ?? {},
+	))
+		if (Array.isArray(value))
+			targets.set(
+				relation,
+				value.map((target: Dumling.Lemma | Dumling.Reading) =>
+					target.unitKind === "Reading" ? target.lemma : target,
+				),
+			);
+	return targets;
+}
+
 /** The Knowledge an attempt's changes add up to, each change Dumrel takes applied in order. */
 function producedKnowledge(
 	reading: Dumling.Reading<"de">,
 	changes: readonly unknown[],
-): Dumrel.ReadingKnowledge {
-	let knowledge: Dumrel.ReadingKnowledge = {};
+): Dumrel.ReadingKnowledge<Dumling.Reading<"de">> {
+	let knowledge: Dumrel.ReadingKnowledge<Dumling.Reading<"de">> = {};
 	for (const change of changes) {
 		const applied = applyKnowledgeChange({
 			source: reading,
-			knowledge: knowledge as never,
+			knowledge,
 			change,
 		});
-		if (applied.success)
-			knowledge = applied.value as Dumrel.ReadingKnowledge;
+		if (applied.success) knowledge = applied.value;
 	}
 	return knowledge;
 }
@@ -159,14 +204,15 @@ const pluralKey = (value: unknown) =>
 
 const verbKey = (source: unknown) => {
 	if (!source) return null;
-	const { verb, meaning } = source as {
-		verb: { canonicalForm: string; coreFeatures: Values };
-		meaning: string;
-	};
+	// A produced source has passed Dumrel and gold's is Dumrel-checked, so
+	// both are Participle Sources; the reads only keep the unknown typed.
+	const { verb, meaning } = isRecord(source) ? source : {};
+	const lemma = isRecord(verb) ? verb : {};
+	const core = isRecord(lemma.coreFeatures) ? lemma.coreFeatures : {};
 	return canonicalJson({
-		verb: foldCase(verb.canonicalForm, "de"),
-		hasSepPrefix: verb.coreFeatures.hasSepPrefix ?? null,
-		lexicallyReflexive: verb.coreFeatures.lexicallyReflexive ?? null,
+		verb: foldCase(String(lemma.canonicalForm), "de"),
+		hasSepPrefix: core.hasSepPrefix ?? null,
+		lexicallyReflexive: core.lexicallyReflexive ?? null,
 		meaning,
 	});
 };
@@ -220,13 +266,13 @@ export function evaluateKnowledge(
 	request: Dumrel.KnowledgeRequestMask,
 	output: KnowledgeOutput,
 ): KnowledgeEvaluation {
-	const produced = producedKnowledge(
+	const produced: Readonly<Record<string, unknown>> = producedKnowledge(
 		goldCase.reading,
 		output.changes,
-	) as Readonly<Record<string, unknown>>;
-	const gold = (goldCase.gold?.knowledge ?? {}) as Readonly<
-		Record<string, unknown>
-	>;
+	);
+	const goldKnowledge: Dumrel.ReadingKnowledge =
+		goldCase.gold?.knowledge ?? {};
+	const gold: Readonly<Record<string, unknown>> = goldKnowledge;
 	const failure = (aspect: string, leaf?: string) =>
 		output.failures.find(
 			(entry) =>
@@ -238,14 +284,12 @@ export function evaluateKnowledge(
 	const verdicts: AspectVerdict[] = [];
 	for (const [aspect, selection] of Object.entries(request)) {
 		if (aspect === "semanticRelations") {
-			const goldRelations = (gold.semanticRelations ?? {}) as Readonly<
-				Record<string, readonly Shadow[] | undefined>
-			>;
+			const goldRelations = goldRelationTargets(goldKnowledge);
 			for (const relation of Object.keys(selection ?? {})) {
 				const claims = output.pendingRelations
 					.filter((pending) => pending.relation === relation)
 					.map(({ target }) => shadowKey(target));
-				const goldClaims = (goldRelations[relation] ?? []).map(
+				const goldClaims = (goldRelations.get(relation) ?? []).map(
 					shadowKey,
 				);
 				const status = coverageOf(goldCase, aspect, relation);

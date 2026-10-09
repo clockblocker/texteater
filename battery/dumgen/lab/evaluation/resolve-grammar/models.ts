@@ -33,7 +33,8 @@ import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import type { Questions } from "@typesafe-ai/sdk";
-import { canonicalJson } from "common-utils";
+import { canonicalJson, isRecord } from "common-utils";
+import { z } from "zod";
 import {
 	defaultLunaConfiguration,
 	type LunaAsk,
@@ -48,6 +49,12 @@ import type {
 	JevRequest,
 	JevResponse,
 } from "../../../src/segment/jev.js";
+import {
+	jevResponseSchema,
+	lunaRequestSchema,
+	lunaResponseSchema,
+	storedAs,
+} from "../../stored-json.js";
 import {
 	type BatchRequest,
 	batchRequestLimit,
@@ -200,12 +207,21 @@ export type ModelsSpend = {
 const sha256 = (value: unknown) =>
 	createHash("sha256").update(canonicalJson(value)).digest("hex");
 
-async function readEntry<T>(path: string): Promise<T | undefined> {
+/**
+ * The cache entry at `path`, checked by `schema`; undefined when it is
+ * missing or not JSON, a write cut short. An entry of another shape throws.
+ */
+async function readEntry<T>(
+	schema: z.ZodType<T>,
+	path: string,
+): Promise<T | undefined> {
+	let value: unknown;
 	try {
-		return JSON.parse(await readFile(path, "utf8")) as T;
+		value = JSON.parse(await readFile(path, "utf8"));
 	} catch {
 		return undefined;
 	}
+	return storedAs(schema, value, path);
 }
 
 async function writeEntry(path: string, value: unknown): Promise<void> {
@@ -293,6 +309,47 @@ type BatchJournal = {
 	readonly settled?: LunaBatchRecord;
 };
 
+const batchJournalSchema = z.object({
+	batchId: z.string(),
+	inputFileId: z.string(),
+	submittedAt: z.string(),
+	requests: z.array(
+		z.object({ customId: z.string(), request: lunaRequestSchema }),
+	),
+	settled: z
+		.object({
+			batchId: z.string(),
+			inputFileId: z.string(),
+			submittedAt: z.string(),
+			status: z.string(),
+			requests: z.number(),
+			answered: z.number(),
+			failed: z.number(),
+			inputTokens: z.number(),
+			outputTokens: z.number(),
+			cachedInputTokens: z.number(),
+			cacheWriteTokens: z.number(),
+			usd: z.number(),
+			requestCounts: z.unknown().optional(),
+			usage: z.unknown().optional(),
+			resumed: z.boolean().optional(),
+		})
+		.optional(),
+}) satisfies z.ZodType<BatchJournal>;
+
+const freshSpendSchema = z.object({
+	freshCalls: z.number().optional(),
+	freshInputTokens: z.number().optional(),
+	freshOutputTokens: z.number().optional(),
+});
+
+/** What `readLedgerSizes` reads of an evaluate line. */
+const ledgerLineSchema = z.object({
+	round: z.string().optional(),
+	jev: freshSpendSchema.optional(),
+	luna: freshSpendSchema.optional(),
+});
+
 /**
  * The tokens per fresh request of an experiment's latest round in a port's
  * ledger (`evidence/resolve-*\/ledger.jsonl`): its `evaluate` lines for
@@ -308,27 +365,30 @@ export async function readLedgerSizes(
 	} catch {
 		return undefined;
 	}
-	type Line = {
-		command?: string;
-		experiment?: string;
-		round?: string;
-		jev?: Partial<ExecutorSpend>;
-		luna?: Partial<ExecutorSpend>;
-	};
 	const lines = text
 		.split("\n")
 		.filter((line) => line.trim())
-		.flatMap((line): Line[] => {
+		.flatMap((line, index) => {
+			let value: unknown;
 			try {
-				return [JSON.parse(line) as Line];
+				value = JSON.parse(line);
 			} catch {
 				return [];
 			}
+			// Only this experiment's evaluate lines are read, so only they
+			// are checked.
+			if (
+				!isRecord(value) ||
+				value.command !== "evaluate" ||
+				value.experiment !== experimentId
+			)
+				return [];
+			return [
+				storedAs(ledgerLineSchema, value, `${path} line ${index + 1}`),
+			];
 		})
 		.filter(
 			(line) =>
-				line.command === "evaluate" &&
-				line.experiment === experimentId &&
 				typeof line.round === "string" &&
 				((line.jev?.freshCalls ?? 0) > 0 ||
 					(line.luna?.freshCalls ?? 0) > 0),
@@ -590,7 +650,7 @@ export class CachedModels<Case> {
 			const keyOf = (at: number) => sha256({ ...body, repetition: at });
 			const path = this.#path("jev", keyOf(repetition));
 			const { mode } = this.#options;
-			const hit = await readEntry<JevResponse>(path);
+			const hit = await readEntry(jevResponseSchema, path);
 			if (hit) {
 				this.spend.jev.cachedCalls++;
 				if (mode === "project") {
@@ -606,7 +666,8 @@ export class CachedModels<Case> {
 				return hit;
 			}
 			if (mode === "project") {
-				const other = await this.#otherRepetition<JevResponse>(
+				const other = await this.#otherRepetition(
+					jevResponseSchema,
 					"jev",
 					keyOf,
 					repetition,
@@ -687,7 +748,7 @@ export class CachedModels<Case> {
 			const key = keyOf(repetition);
 			const path = this.#path("luna", key);
 			const { mode } = this.#options;
-			const hit = await readEntry<LunaResponse>(path);
+			const hit = await readEntry(lunaResponseSchema, path);
 			if (hit) {
 				this.spend.luna.cachedCalls++;
 				if (mode === "project") {
@@ -707,7 +768,8 @@ export class CachedModels<Case> {
 				return hit;
 			}
 			if (mode === "project") {
-				const other = await this.#otherRepetition<LunaResponse>(
+				const other = await this.#otherRepetition(
+					lunaResponseSchema,
 					"luna",
 					keyOf,
 					repetition,
@@ -841,7 +903,8 @@ export class CachedModels<Case> {
 		for (const name of names
 			.filter((file) => file.endsWith(".json"))
 			.sort()) {
-			const journal = await readEntry<BatchJournal>(
+			const journal = await readEntry(
+				batchJournalSchema,
 				join(this.#journals, name),
 			);
 			if (journal && !journal.settled)
@@ -997,13 +1060,17 @@ export class CachedModels<Case> {
 
 	/** The same request answered at another repetition, for pricing. */
 	async #otherRepetition<T>(
+		schema: z.ZodType<T>,
 		executor: Executor,
 		keyOf: (repetition: number) => string,
 		repetition: number,
 	): Promise<T | undefined> {
 		for (const at of [0, 1, 2]) {
 			if (at === repetition) continue;
-			const other = await readEntry<T>(this.#path(executor, keyOf(at)));
+			const other = await readEntry(
+				schema,
+				this.#path(executor, keyOf(at)),
+			);
 			if (other) return other;
 		}
 		return undefined;

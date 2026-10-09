@@ -17,9 +17,10 @@
  * and baseline in the manifest. `compareKnowledgeRuns` reads a run against
  * its baseline on the same case ids.
  */
-import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
+import { z } from "zod";
+import { readStoredJsonSync } from "../../stored-json.js";
 import { drawGuard } from "../resolve-grammar/subset.js";
 import { knowledgeReport, type ScoredKnowledge } from "./scoring.js";
 
@@ -36,6 +37,16 @@ export type KnowledgeSubset = {
 	/** The guard's case ids, by route. */
 	readonly guard: Readonly<Record<string, readonly string[]>>;
 };
+
+const knowledgeSubsetSchema = z.object({
+	baselineRunId: z.string(),
+	experimentId: z.string(),
+	setHash: z.string(),
+	seed: z.number(),
+	guardSize: z.number(),
+	missed: z.record(z.string(), z.array(z.string())),
+	guard: z.record(z.string(), z.array(z.string())),
+}) satisfies z.ZodType<KnowledgeSubset>;
 
 /** The aspects an attempt missed; a failed attempt misses `attempt`. */
 function missedAspects(attempt: ScoredKnowledge): string[] {
@@ -140,7 +151,7 @@ export async function saveKnowledgeSubset(
 }
 
 export function loadKnowledgeSubset(path: string): KnowledgeSubset {
-	return JSON.parse(readFileSync(path, "utf8")) as KnowledgeSubset;
+	return readStoredJsonSync(knowledgeSubsetSchema, path);
 }
 
 /**

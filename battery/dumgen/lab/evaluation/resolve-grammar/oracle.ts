@@ -7,6 +7,7 @@
 
 import type { Question, Questions } from "@typesafe-ai/sdk";
 import { foldCase, lemmaIdentityKey } from "dumling";
+import { z } from "zod";
 import {
 	authoredOptions,
 	openOptions,
@@ -14,6 +15,7 @@ import {
 import { auxiliaryUses } from "../../../src/resolve/de/prompts.js";
 import { targetOf } from "../../../src/resolve/de/target.js";
 import type { Answer, Answers } from "../../../src/segment/ask.js";
+import { storedAs } from "../../stored-json.js";
 import type { GrammarCase } from "./cases.js";
 
 type Values = Readonly<Record<string, unknown>>;
@@ -281,6 +283,19 @@ export function goldAnswers(
 	return answers;
 }
 
+/** What the Canonical Form call sends Luna, as gold's answer reads it. */
+const canonicalFormInputSchema = z.object({
+	members: z.array(
+		z.object({
+			member: z.string(),
+			text: z.string(),
+			orthography: z.string(),
+		}),
+	),
+	fixedMembers: z.record(z.string(), z.string()).optional(),
+	outsideHeadword: z.array(z.string()).optional(),
+});
+
 /**
  * Gold's answer to the Canonical Form call: gold's headword, and each
  * member spelled as gold's Surface spells it, a member outside the
@@ -288,15 +303,11 @@ export function goldAnswers(
  */
 export function goldWritten(goldCase: GrammarCase, input: unknown): unknown {
 	const { ideal } = goldCase;
-	const request = input as {
-		members: readonly {
-			member: string;
-			text: string;
-			orthography: string;
-		}[];
-		fixedMembers?: Readonly<Record<string, string>>;
-		outsideHeadword?: readonly string[];
-	};
+	const request = storedAs(
+		canonicalFormInputSchema,
+		input,
+		"The Canonical Form request's input",
+	);
 	const outside = new Set(request.outsideHeadword ?? []);
 	const tokens = ideal.surface.normalizedSurface.split(" ");
 	let cursor = 0;

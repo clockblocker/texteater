@@ -18,10 +18,12 @@
  * subset <baselineRunId>`), and a run that uses it records its seed and
  * case ids in the manifest.
  */
-import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
-import { type Line, lineOf, wilson } from "../resolve-grammar/scoring.js";
+import { z } from "zod";
+import { recordOf } from "../../records.js";
+import { readStoredJsonSync } from "../../stored-json.js";
+import { lineOf, wilson } from "../resolve-grammar/scoring.js";
 import { drawGuard } from "../resolve-grammar/subset.js";
 import type { ReadingArm } from "./cases.js";
 import type { ReadingEvaluation, ScoredReading } from "./scoring.js";
@@ -53,6 +55,30 @@ export type ReadingSubset = {
 	/** The guard's case ids, by route. */
 	readonly guard: Readonly<Record<string, readonly string[]>>;
 };
+
+const armSchema = z.enum(["present", "removed"]);
+
+const readingSubsetSchema = z.object({
+	baselineRunId: z.string(),
+	experimentId: z.string(),
+	setHash: z.string(),
+	repetitions: z.number(),
+	seed: z.number(),
+	guardSize: z.number(),
+	missed: z.record(
+		z.string(),
+		z.object({
+			route: z.string(),
+			authored: z.boolean(),
+			candidates: z.partialRecord(armSchema, z.number()),
+			verdicts: z.partialRecord(
+				armSchema,
+				z.array(z.enum(["right", "wrong", "wrongReuse", "failed"])),
+			),
+		}),
+	),
+	guard: z.record(z.string(), z.array(z.string())),
+}) satisfies z.ZodType<ReadingSubset>;
 
 /** An attempt's verdict from its evaluation; no evaluation is a failed click. */
 function verdictOf(evaluation: ReadingEvaluation | undefined): ReadingVerdict {
@@ -189,7 +215,7 @@ export async function saveReadingSubset(
 }
 
 export function loadReadingSubset(path: string): ReadingSubset {
-	return JSON.parse(readFileSync(path, "utf8")) as ReadingSubset;
+	return readStoredJsonSync(readingSubsetSchema, path);
 }
 
 /** One attempt as the subset lines read it. */
@@ -222,6 +248,16 @@ function linesOf(attempts: readonly LineAttempt[]) {
 }
 
 type SubsetLine = keyof ReturnType<typeof linesOf>;
+
+/** The lines `linesOf` reports, in its order. */
+const subsetLines = [
+	"right",
+	"reuse",
+	"noMatch",
+	"wrongReuse",
+	"authored",
+	"failed",
+] as const satisfies readonly SubsetLine[];
 
 /** How one case and arm moved: wrong to right when its majority did. */
 type ReadingCaseMove = {
@@ -296,12 +332,10 @@ export function compareReadingWithBaseline(
 	}
 	const baselineLines = linesOf(baselineAttempts);
 	const nowLines = linesOf(nowAttempts);
-	const lines = Object.fromEntries(
-		(Object.keys(baselineLines) as SubsetLine[]).map((line) => [
-			line,
-			{ baseline: baselineLines[line], now: nowLines[line] },
-		]),
-	) as Record<SubsetLine, { baseline: Line; now: Line }>;
+	const lines = recordOf(subsetLines, (line) => ({
+		baseline: baselineLines[line],
+		now: nowLines[line],
+	}));
 	const regressed = [...now]
 		.filter(([caseId, entry]) => guardIds.has(caseId) && misses(entry))
 		.map(([caseId, entry]) => ({ caseId, verdicts: entry.verdicts }))

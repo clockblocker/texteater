@@ -20,8 +20,6 @@
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { messageOf } from "common-utils";
-import type { OperationEvaluationRun } from "promptsmith/evaluation";
-import { loadRun } from "promptsmith/storage";
 import {
 	freezeGrammarSets,
 	loadGrammarSet,
@@ -34,7 +32,12 @@ import {
 	selectSubset,
 	subsetCaseIds,
 } from "../lab/evaluation/resolve-grammar/subset.js";
-import { defaultRunOutputDirectory } from "../lab/run-directory.js";
+import {
+	defaultRunOutputDirectory,
+	judgmentSettings,
+	judgmentSettingsSchema,
+	loadOperationRun,
+} from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
 const defaultSubsetPath = resolve(
@@ -63,26 +66,21 @@ async function runResolveGrammarCli(
 			throw Error(
 				"Use `bun cli/resolve-grammar.ts subset <baselineRunId>`",
 			);
-		const operationRun = async (id: string) => {
-			const loaded = await loadRun(
+		const operationRun = (id: string) =>
+			loadOperationRun(
 				options.runDirectory ?? defaultRunOutputDirectory,
 				id,
 			);
-			if (loaded.manifest.version !== 2)
-				throw Error("The run is an operation run (manifest version 2)");
-			return loaded as OperationEvaluationRun;
-		};
 		const run = await operationRun(runId);
-		const settings = run.manifest.configurations.judgment.settings as {
-			setHash?: string;
-			caseFilter?: unknown;
-		};
+		const settings = judgmentSettings(run, judgmentSettingsSchema);
 		// The guard comes from a whole-set run: this one, or --guard-from.
 		const guardRun = values["guard-from"]
 			? await operationRun(values["guard-from"])
 			: run;
-		const guardSettings = guardRun.manifest.configurations.judgment
-			.settings as { setHash?: string; caseFilter?: unknown };
+		const guardSettings = judgmentSettings(
+			guardRun,
+			judgmentSettingsSchema,
+		);
 		if (
 			!settings.setHash ||
 			guardSettings.caseFilter ||

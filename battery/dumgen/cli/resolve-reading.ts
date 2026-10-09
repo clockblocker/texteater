@@ -19,8 +19,6 @@
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { messageOf } from "common-utils";
-import type { OperationEvaluationRun } from "promptsmith/evaluation";
-import { loadRun } from "promptsmith/storage";
 import {
 	freezeReadingSets,
 	loadReadingSet,
@@ -32,7 +30,12 @@ import {
 	saveReadingSubset,
 	selectReadingSubset,
 } from "../lab/evaluation/resolve-reading/subset.js";
-import { defaultRunOutputDirectory } from "../lab/run-directory.js";
+import {
+	defaultRunOutputDirectory,
+	judgmentSettings,
+	judgmentSettingsSchema,
+	loadOperationRun,
+} from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
 const defaultReadingSubsetPath = resolve(
@@ -64,17 +67,11 @@ async function runResolveReadingCli(
 			throw Error(
 				"Use `bun cli/resolve-reading.ts subset <baselineRunId>`",
 			);
-		const loaded = await loadRun(
+		const run = await loadOperationRun(
 			options.runDirectory ?? defaultRunOutputDirectory,
 			runId,
 		);
-		if (loaded.manifest.version !== 2)
-			throw Error("The run is an operation run (manifest version 2)");
-		const run = loaded as OperationEvaluationRun;
-		const settings = run.manifest.configurations.judgment.settings as {
-			setHash?: string;
-			caseFilter?: unknown;
-		};
+		const settings = judgmentSettings(run, judgmentSettingsSchema);
 		if (!settings.setHash || settings.caseFilter)
 			throw Error(
 				"The subset is read from a whole-set resolve.reading run",

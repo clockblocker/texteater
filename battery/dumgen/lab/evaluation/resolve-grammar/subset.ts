@@ -16,12 +16,13 @@
  * subset <baselineRunId>`), and a run that uses it records its seed and
  * case ids in the manifest.
  */
-import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
+import { z } from "zod";
+import { recordOf } from "../../records.js";
+import { readStoredJsonSync } from "../../stored-json.js";
 import {
 	type GrammarEvaluation,
-	type Line,
 	lineOf,
 	type ScoredAttempt,
 	wilson,
@@ -64,6 +65,26 @@ type MissedCase = {
 	readonly valency: boolean;
 	readonly verdicts: readonly Verdicts[];
 };
+
+const verdictsSchema = z.partialRecord(z.enum(subsetLines), z.boolean());
+
+const grammarSubsetSchema = z.object({
+	baselineRunId: z.string(),
+	experimentId: z.string(),
+	setHash: z.string(),
+	repetitions: z.number(),
+	seed: z.number(),
+	guardSize: z.number(),
+	missed: z.record(
+		z.string(),
+		z.object({
+			route: z.string(),
+			valency: z.boolean(),
+			verdicts: z.array(verdictsSchema),
+		}),
+	),
+	guard: z.record(z.string(), z.array(z.string())),
+}) satisfies z.ZodType<GrammarSubset>;
 
 /**
  * An attempt's verdicts. A failed attempt (no evaluation) misses every
@@ -329,7 +350,7 @@ export async function saveSubset(
 }
 
 export function loadSubset(path: string): GrammarSubset {
-	return JSON.parse(readFileSync(path, "utf8")) as GrammarSubset;
+	return readStoredJsonSync(grammarSubsetSchema, path);
 }
 
 /** How a case's Lemma verdict moved: wrong to right when its majority did. */
@@ -368,19 +389,15 @@ export function compareWithBaseline(
 	);
 	const lineOn = (verdicts: readonly Verdicts[], line: SubsetLine) =>
 		lineOf(
-			verdicts.flatMap((verdict) =>
-				verdict[line] === undefined ? [] : [verdict[line] as boolean],
-			),
+			verdicts.flatMap((verdict) => {
+				const value = verdict[line];
+				return value === undefined ? [] : [value];
+			}),
 		);
-	const lines = Object.fromEntries(
-		subsetLines.map((line) => [
-			line,
-			{
-				baseline: lineOn(baselineVerdicts, line),
-				now: lineOn(nowVerdicts, line),
-			},
-		]),
-	) as Record<SubsetLine, { baseline: Line; now: Line }>;
+	const lines = recordOf(subsetLines, (line) => ({
+		baseline: lineOn(baselineVerdicts, line),
+		now: lineOn(nowVerdicts, line),
+	}));
 	const nowByCase = new Map<string, boolean[]>();
 	for (const { caseId, evaluation } of onMissed)
 		nowByCase.set(caseId, [

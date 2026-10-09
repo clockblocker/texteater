@@ -23,12 +23,19 @@ import { authoredFor } from "dumcorpus/inventories";
 import type * as Dumcorpus from "dumcorpus/types";
 import { lemmaIdentityKey, parseUnit, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
+import { z } from "zod";
 import type {
 	SegmentedSentence,
 	Unit,
 } from "../../../src/segment/segmented-sentence.js";
 import { git } from "../../git.js";
 import { hashOf } from "../../segmentation/harness/jev-cache.js";
+import {
+	germanAttestation,
+	germanAttestationSchema,
+	segmentedSentenceSchema,
+	unitSchema,
+} from "../../stored-json.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { goldRouteOf, readSidecar } from "../spec-corpus/gold.js";
 
@@ -68,6 +75,31 @@ export type ReadingSet = {
 	readonly hash: string;
 	readonly cases: readonly ReadingCase[];
 };
+
+/** A frozen resolve.reading set as `freezeReadingSets` keeps it. */
+const readingSetSchema = z.object({
+	name: z.enum(["dev", "heldout"]),
+	createdAt: z.string(),
+	gitHead: z.string(),
+	dirtyRecordFiles: z.number(),
+	hash: z.string(),
+	cases: z.array(
+		z.object({
+			id: z.string(),
+			record: z.string(),
+			target: z.number(),
+			sentence: segmentedSentenceSchema,
+			unit: unitSchema,
+			attestation: germanAttestationSchema,
+			ideal: z.string(),
+			lemmaReadings: z.array(z.string()),
+			extra: z.array(z.string()),
+			rejected: z.array(z.string()),
+			authored: z.boolean(),
+			rules: z.array(z.string()),
+		}),
+	),
+}) satisfies z.ZodType<ReadingSet>;
 
 /** A Surface's expletive feature, if its bag sets one. */
 function expletiveOf(surface: Dumling.Surface): unknown {
@@ -202,7 +234,7 @@ function casesOf(
 	return record.targets.flatMap((target, index) => {
 		const gold = goldOf(target);
 		if (!gold) return [];
-		const attestation = target.attestation as Dumling.Attestation<"de">;
+		const attestation = germanAttestation(target.attestation);
 		const folded = foldedCases.filter(({ matches }) =>
 			matches(attestation),
 		);
@@ -294,9 +326,10 @@ export const loadReadingSet = (
 	name: ReadingSetName,
 	hash?: string,
 ): Promise<ReadingSet> =>
-	loadFrozenSet<ReadingSet>(
+	loadFrozenSet(
 		root,
 		name,
 		hash,
 		"bun cli/resolve-reading.ts freeze",
+		readingSetSchema,
 	);

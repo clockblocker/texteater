@@ -36,6 +36,18 @@ export const readingOutputSchema = z.object({
 export type ReadingOutput = z.infer<typeof readingOutputSchema>;
 
 /** One attempt's verdicts. */
+/** An attempt's evaluation as a run stores it. */
+export const readingEvaluationSchema = z.object({
+	outcome: readingOutputSchema.shape._tag,
+	reason: z.string().optional(),
+	answered: z.string().optional(),
+	correct: z.boolean(),
+	wrongReuse: z.boolean(),
+	judged: z.boolean(),
+	rejected: z.boolean(),
+	matchesGold: z.boolean().optional(),
+}) satisfies z.ZodType<ReadingEvaluation>;
+
 export type ReadingEvaluation = {
 	readonly outcome: ReadingOutput["_tag"];
 	readonly reason?: string;

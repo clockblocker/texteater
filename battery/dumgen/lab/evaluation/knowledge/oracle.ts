@@ -8,11 +8,13 @@
  */
 
 import type { Question, Questions } from "@typesafe-ai/sdk";
+import { isRecord } from "common-utils";
 import { foldCase } from "dumling";
 import type * as Dumrel from "dumrel/types";
 import type { Answer, Answers } from "../../../src/segment/ask.js";
 import type { GoldOracle } from "../resolve-grammar/models.js";
 import type { KnowledgeCase, KnowledgeScope } from "./cases.js";
+import { goldRelationTargets } from "./scoring.js";
 
 /** One attempt's case and scope: what the cache's oracle answers for. */
 export type KnowledgeAttempt = {
@@ -27,32 +29,17 @@ const picked = (choice: string): Answer => ({
 	probabilities: { [choice]: 1 },
 });
 
-type Shadow = {
-	readonly family: string;
-	readonly kind: string;
-	readonly canonicalForm: string;
-};
-
-const goldOf = (goldCase: KnowledgeCase) =>
-	(goldCase.gold?.knowledge ?? {}) as Dumrel.ReadingKnowledge;
+const goldOf = (goldCase: KnowledgeCase): Dumrel.ReadingKnowledge =>
+	goldCase.gold?.knowledge ?? {};
 
 /** Every gold relation target, with its relation. */
-function goldClaims(goldCase: KnowledgeCase) {
-	const relations = (goldOf(goldCase).semanticRelations ?? {}) as Readonly<
-		Record<string, readonly Shadow[] | string | undefined>
-	>;
-	return Object.entries(relations).flatMap(([relation, targets]) =>
-		Array.isArray(targets)
-			? targets.map((target: Shadow) => ({ relation, target }))
-			: [],
+const goldClaims = (goldCase: KnowledgeCase) =>
+	[...goldRelationTargets(goldOf(goldCase))].flatMap(([relation, targets]) =>
+		targets.map((target) => ({ relation, target })),
 	);
-}
 
-const candidateOf = (question: Question) =>
-	String(
-		(question.instructions as { candidate?: unknown } | null)?.candidate ??
-			"",
-	);
+const candidateOf = ({ instructions }: Question) =>
+	String((isRecord(instructions) ? instructions.candidate : "") ?? "");
 
 /** Gold's choice for one question, else a plausible option. */
 function goldChoice(
@@ -62,31 +49,29 @@ function goldChoice(
 ): string {
 	if (question.type !== "choice") return "";
 	const options = Object.keys(question.criteria ?? {});
-	const offer = (choice: string | undefined) =>
-		choice !== undefined && options.includes(choice) ? choice : options[0];
+	const offer = (choice: string | undefined): string =>
+		choice !== undefined && options.includes(choice)
+			? choice
+			: (options[0] ?? "");
 	const gold = goldOf(goldCase);
 	if (id === "plurality")
 		return offer(
 			gold.plural === "NoPlural" || gold.plural === "PluralOnly"
 				? gold.plural
 				: "HasPlural",
-		) as string;
-	if (id === "form") return offer("Participle") as string;
+		);
+	if (id === "form") return offer("Participle");
 	if (id === "meaning")
-		return offer(gold.participleSource?.meaning ?? "Verbal") as string;
-	if (id === "locutionType")
-		return offer(gold.locutionType ?? "Neither") as string;
-	if (id === "formulaRole")
-		return offer(gold.formulaRole ?? "None") as string;
-	if (id === "sayingType")
-		return offer(gold.sayingType?.type ?? "Proverb") as string;
+		return offer(gold.participleSource?.meaning ?? "Verbal");
+	if (id === "locutionType") return offer(gold.locutionType ?? "Neither");
+	if (id === "formulaRole") return offer(gold.formulaRole ?? "None");
+	if (id === "sayingType") return offer(gold.sayingType?.type ?? "Proverb");
 	const candidate = foldCase(candidateOf(question), "de");
 	const claim = goldClaims(goldCase).find(
 		({ target }) => foldCase(target.canonicalForm, "de") === candidate,
 	);
-	if (id.startsWith("relation_"))
-		return offer(claim?.relation ?? "None") as string;
-	if (id.startsWith("kind_")) return offer(claim?.target.kind) as string;
+	if (id.startsWith("relation_")) return offer(claim?.relation ?? "None");
+	if (id.startsWith("kind_")) return offer(claim?.target.kind);
 	return options[0] ?? "";
 }
 
@@ -105,16 +90,12 @@ function goldKnowledgeAnswers(
 /** Candidates the writer lists when gold holds fewer: a typical count. */
 const typicalCandidates = 8;
 
-type FrameComplement = Readonly<Record<string, unknown>> & {
-	readonly preposition?: { readonly canonicalForm?: string };
-};
-
 /** What gold writes for one Luna request, by the aspect its input names. */
 export function goldKnowledgeWritten(
 	{ goldCase }: KnowledgeAttempt,
 	input: unknown,
 ): unknown {
-	const { aspect } = (input ?? {}) as { aspect?: string };
+	const aspect = isRecord(input) ? input.aspect : undefined;
 	const gold = goldOf(goldCase);
 	const lemma = goldCase.reading.lemma.canonicalForm;
 	switch (aspect) {
@@ -142,14 +123,12 @@ export function goldKnowledgeWritten(
 			return {
 				valency: (gold.valency ?? []).map((slot) => ({
 					status: slot.status,
-					complements: (
-						slot.complements as readonly FrameComplement[]
-					).map((complement) =>
+					complements: slot.complements.map((complement) =>
 						complement.kind === "Preposition"
 							? {
 									...complement,
 									preposition:
-										complement.preposition?.canonicalForm,
+										complement.preposition.canonicalForm,
 								}
 							: complement,
 					),
@@ -158,14 +137,12 @@ export function goldKnowledgeWritten(
 		case "participleSource": {
 			const source = gold.participleSource;
 			if (!source) return { verb: null };
-			const verb = source.verb as {
-				canonicalForm: string;
-				coreFeatures: Readonly<Record<string, unknown>>;
-			};
+			const { verb } = source;
+			const core: Readonly<Record<string, unknown>> = verb.coreFeatures;
 			return {
 				verb: verb.canonicalForm.replace(/^sich\s+/u, ""),
-				reflexive: verb.coreFeatures.lexicallyReflexive ?? null,
-				separablePrefix: verb.coreFeatures.hasSepPrefix ?? null,
+				reflexive: core.lexicallyReflexive ?? null,
+				separablePrefix: core.hasSepPrefix ?? null,
 				preterite: `${verb.canonicalForm}te`,
 				participle: lemma,
 			};

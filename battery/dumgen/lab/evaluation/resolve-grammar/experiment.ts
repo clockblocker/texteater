@@ -39,6 +39,7 @@ import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import type { Unit } from "../../../src/segment/segmented-sentence.js";
 import { loadSet, trackedSetsRoot } from "../../segmentation/harness/corpus.js";
 import { JevCache } from "../../segmentation/harness/jev-cache.js";
+import { storedAs } from "../../stored-json.js";
 import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
 import { groupSegments } from "../production-segmenter.js";
@@ -61,6 +62,7 @@ import { goldAnswers, goldWritten } from "./oracle.js";
 import {
 	evaluateGrammar,
 	type GrammarOutput,
+	grammarEvaluationSchema,
 	grammarOutputSchema,
 	grammarReport,
 	lineOf,
@@ -286,7 +288,14 @@ export function grammarAttempts(run: OperationEvaluationRun): ScoredAttempt[] {
 			route: input.route,
 			record: input.record,
 			rules: input.rules,
-			evaluation: repetition.evaluation as ScoredAttempt["evaluation"],
+			evaluation:
+				repetition.evaluation === undefined
+					? undefined
+					: storedAs(
+							grammarEvaluationSchema,
+							repetition.evaluation,
+							`Run ${run.manifest.runId}'s evaluation of ${input.caseId}`,
+						),
 		}));
 	});
 }

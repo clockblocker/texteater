@@ -15,6 +15,7 @@ import { fileURLToPath } from "node:url";
 import { isReviewed, loadSpecRecords } from "dumcorpus";
 import type * as Dumcorpus from "dumcorpus/types";
 import type * as Dumling from "dumling/types";
+import { z } from "zod";
 import type {
 	ClosedClassIdentity,
 	SegmentedSentence,
@@ -22,6 +23,12 @@ import type {
 } from "../../../src/segment/segmented-sentence.js";
 import { git } from "../../git.js";
 import { hashOf } from "../../segmentation/harness/jev-cache.js";
+import {
+	germanAttestation,
+	germanAttestationSchema,
+	segmentedSentenceSchema,
+	unitSchema,
+} from "../../stored-json.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { goldRouteOf, readSidecar } from "../spec-corpus/gold.js";
 
@@ -49,6 +56,26 @@ export type GrammarSet = {
 	readonly cases: readonly GrammarCase[];
 };
 
+/** A frozen resolve.grammar set as `freezeGrammarSets` keeps it. */
+const grammarSetSchema = z.object({
+	name: z.enum(["dev", "heldout"]),
+	createdAt: z.string(),
+	gitHead: z.string(),
+	dirtyRecordFiles: z.number(),
+	hash: z.string(),
+	cases: z.array(
+		z.object({
+			id: z.string(),
+			record: z.string(),
+			target: z.number(),
+			sentence: segmentedSentenceSchema,
+			unit: unitSchema,
+			ideal: germanAttestationSchema,
+			rules: z.array(z.string()),
+		}),
+	),
+}) satisfies z.ZodType<GrammarSet>;
+
 /** The identity intake stores for a closed-class Lemma (#864), none for another. */
 function identityOf(lemma: Dumling.Lemma): ClosedClassIdentity | undefined {
 	if (
@@ -57,7 +84,7 @@ function identityOf(lemma: Dumling.Lemma): ClosedClassIdentity | undefined {
 		(lemma.kind !== "DET" && lemma.kind !== "PRON")
 	)
 		return undefined;
-	const core = lemma.coreFeatures as Readonly<Record<string, unknown>>;
+	const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
 	return {
 		kind: lemma.kind,
 		canonicalForm: lemma.canonicalForm,
@@ -92,7 +119,7 @@ function casesOf(record: Dumcorpus.SpecRecord): GrammarCase[] {
 				route: goldRouteOf(target.route),
 				...(identity ? { identity } : {}),
 			},
-			ideal: target.attestation as Dumling.Attestation<"de">,
+			ideal: germanAttestation(target.attestation),
 			rules: record.sources.rules.map(({ rule }) => rule),
 		};
 	});
@@ -169,9 +196,10 @@ export const loadGrammarSet = (
 	name: GrammarSetName,
 	hash?: string,
 ): Promise<GrammarSet> =>
-	loadFrozenSet<GrammarSet>(
+	loadFrozenSet(
 		root,
 		name,
 		hash,
 		"bun cli/resolve-grammar.ts freeze",
+		grammarSetSchema,
 	);

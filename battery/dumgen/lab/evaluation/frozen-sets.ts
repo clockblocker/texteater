@@ -12,6 +12,8 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { gunzipSync, gzipSync } from "node:zlib";
 import { canonicalJson } from "common-utils";
+import { z } from "zod";
+import { parseStoredJson, readStoredJsonSync } from "../stored-json.js";
 
 /** What every frozen set carries: its name and the hash of its cases. */
 export type FrozenSet = { readonly name: string; readonly hash: string };
@@ -24,10 +26,10 @@ const currentPath = (root: string) => join(root, "current.json");
 
 const readCurrent = (root: string): Record<string, string> =>
 	existsSync(currentPath(root))
-		? (JSON.parse(readFileSync(currentPath(root), "utf8")) as Record<
-				string,
-				string
-			>)
+		? readStoredJsonSync(
+				z.record(z.string(), z.string()),
+				currentPath(root),
+			)
 		: {};
 
 /** The hash of the current set `name`; undefined before its first freeze. */
@@ -40,8 +42,10 @@ export function isFrozen(root: string, name: string): boolean {
 	return hash !== undefined && existsSync(frozenSetPath(root, name, hash));
 }
 
-const parse = <T>(gzipped: Uint8Array) =>
-	JSON.parse(gunzipSync(gzipped).toString("utf8")) as T;
+const parse = <T>(schema: z.ZodType<T>, gzipped: Uint8Array, path: string) =>
+	parseStoredJson(schema, gunzipSync(gzipped).toString("utf8"), path);
+
+const sizedSchema = z.object({ cases: z.array(z.unknown()) });
 
 /** The number of cases in the current set `name`; 0 before its first freeze. */
 export function frozenSetSize(root: string, name: string): number {
@@ -49,8 +53,7 @@ export function frozenSetSize(root: string, name: string): number {
 	if (hash === undefined) return 0;
 	const path = frozenSetPath(root, name, hash);
 	return existsSync(path)
-		? parse<{ readonly cases: readonly unknown[] }>(readFileSync(path))
-				.cases.length
+		? parse(sizedSchema, readFileSync(path), path).cases.length
 		: 0;
 }
 
@@ -72,14 +75,16 @@ export async function storeFrozenSet(
 }
 
 /**
- * The frozen set `name`: the current one, or with `hash` the set of that
- * hash, current or replaced. `freeze` names the command that freezes it.
+ * The frozen set `name`, checked by `schema`: the current one, or with
+ * `hash` the set of that hash, current or replaced. `freeze` names the
+ * command that freezes it.
  */
 export async function loadFrozenSet<T extends FrozenSet>(
 	root: string,
 	name: string,
 	hash: string | undefined,
 	freeze: string,
+	schema: z.ZodType<T>,
 ): Promise<T> {
 	const current = currentFrozenHash(root, name);
 	const wanted = hash ?? current;
@@ -90,5 +95,5 @@ export async function loadFrozenSet<T extends FrozenSet>(
 		throw Error(
 			`${name}@${wanted} is neither the frozen ${name}@${current} nor kept at ${path}`,
 		);
-	return parse<T>(await readFile(path));
+	return parse(schema, await readFile(path), path);
 }

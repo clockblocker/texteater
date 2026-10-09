@@ -35,6 +35,11 @@ import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
 import type { OperationTrace } from "../../../src/operation-trace.js";
 import { markedSentence } from "../../../src/resolve/reading.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
+import {
+	judgmentSettings,
+	judgmentSettingsSchema,
+} from "../../run-directory.js";
+import { storedAs } from "../../stored-json.js";
 import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
 import { goldRequests } from "../request-diff.js";
@@ -50,17 +55,17 @@ import {
 import {
 	type KnowledgeCase,
 	type KnowledgeScope,
-	type KnowledgeSet,
 	type KnowledgeSetName,
 	loadKnowledgeSet,
 	requestOf,
 	trackedKnowledgeSetsRoot,
+	translationSlipSchema,
 } from "./cases.js";
 import { type KnowledgeAttempt, knowledgeOracle } from "./oracle.js";
 import {
 	evaluateKnowledge,
-	type KnowledgeEvaluation,
 	type KnowledgeOutput,
+	knowledgeEvaluationSchema,
 	knowledgeOutputSchema,
 	knowledgeReport,
 	type ScoredKnowledge,
@@ -314,20 +319,26 @@ export function knowledgeAttempts(
 			lemma: input.lemma,
 			emojiDescription: input.emojiDescription,
 			sentence: input.markedSentence,
-			evaluation: repetition.evaluation as
-				| KnowledgeEvaluation
-				| undefined,
+			evaluation:
+				repetition.evaluation === undefined
+					? undefined
+					: storedAs(
+							knowledgeEvaluationSchema,
+							repetition.evaluation,
+							`Run ${run.manifest.runId}'s evaluation of ${input.caseId}`,
+						),
 		}));
 	});
 }
 
+const metricSettingsSchema = judgmentSettingsSchema.extend({
+	slips: z.array(translationSlipSchema).optional(),
+});
+
 /** The report of a run: the structural lines, or the text spot-check. */
 export function knowledgeMetrics(run: OperationEvaluationRun) {
 	const attempts = knowledgeAttempts(run);
-	const settings = run.manifest.configurations.judgment.settings as {
-		set?: string;
-		slips?: KnowledgeSet["slips"];
-	};
+	const settings = judgmentSettings(run, metricSettingsSchema);
 	return settings.set === "spot-check"
 		? spotCheckReport(attempts, settings.slips ?? [])
 		: knowledgeReport(attempts);

@@ -5,6 +5,7 @@
  * punctuation is never scored. The Kinds are checked against Dumling's, and
  * a key becomes a Route only when it names one of these routes.
  */
+import { isRecord } from "common-utils";
 import type * as Dumling from "dumling/types";
 import type { Route } from "../segmented-sentence.js";
 
@@ -149,6 +150,25 @@ const routes: ReadonlyMap<RouteKey, Route> = new Map<RouteKey, Route>([
 	["Saying/Saying", { language: "de", family: "Saying", kind: "Saying" }],
 	["Foreign/Foreign", { language: "de", family: "Foreign", kind: "Foreign" }],
 ]);
+
+/**
+ * Whether `value` is one of the German routes, as a stored or answered
+ * route is checked before it is read as one.
+ */
+export function isRoute(value: unknown): value is Route {
+	if (
+		!isRecord(value) ||
+		typeof value.family !== "string" ||
+		typeof value.kind !== "string"
+	)
+		return false;
+	const key = keyOf({ family: value.family, kind: value.kind });
+	return (
+		isRouteKey(key) &&
+		value.language === "de" &&
+		Object.keys(value).length === 3
+	);
+}
 
 /**
  * The Route a key names, the inverse of `keyOf`; a key outside the German

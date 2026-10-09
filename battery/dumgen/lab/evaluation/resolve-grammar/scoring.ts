@@ -9,10 +9,11 @@
  * verdict flips between repetitions are named.
  */
 
-import { canonicalJson } from "common-utils";
+import { canonicalJson, isRecord } from "common-utils";
 import { lemmaIdentityKey, parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { z } from "zod";
+import { recordOf } from "../../records.js";
 
 /** What one attempt at a case returned, as a run stores it. */
 export const grammarOutputSchema = z.object({
@@ -23,6 +24,18 @@ export const grammarOutputSchema = z.object({
 	reason: z.string().optional(),
 });
 export type GrammarOutput = z.infer<typeof grammarOutputSchema>;
+
+/** An attempt's evaluation as a run stores it. */
+export const grammarEvaluationSchema = z.object({
+	outcome: grammarOutputSchema.shape._tag,
+	reason: z.string().optional(),
+	lemma: z.boolean(),
+	cell: z.boolean(),
+	members: z.boolean(),
+	spelling: z.boolean(),
+	valency: z.boolean().optional(),
+	exact: z.boolean(),
+}) satisfies z.ZodType<GrammarEvaluation>;
 
 /** The lines one attempt is scored on, true when the output matches gold there. */
 export type GrammarEvaluation = {
@@ -47,7 +60,7 @@ type AttestationValue = Values & {
 const bagOf = (value: unknown) =>
 	canonicalJson(
 		Object.fromEntries(
-			Object.entries((value ?? {}) as Values).filter(
+			Object.entries(isRecord(value) ? value : {}).filter(
 				([, feature]) => feature !== null && feature !== undefined,
 			),
 		),
@@ -177,9 +190,7 @@ function tableOf(attempts: readonly ScoredAttempt[]) {
 		evaluation?.valency === undefined ? [] : [evaluation.valency],
 	);
 	return {
-		...(Object.fromEntries(
-			lines.map((line) => [line, lineOf(verdicts(line))]),
-		) as Record<(typeof lines)[number], Line>),
+		...recordOf(lines, (line) => lineOf(verdicts(line))),
 		valencyEvidence: lineOf(valency),
 	};
 }

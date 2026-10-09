@@ -35,6 +35,7 @@ import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
 import type { OperationTrace } from "../../../src/operation-trace.js";
 import { markedSentence } from "../../../src/resolve/reading.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
+import { storedAs } from "../../stored-json.js";
 import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
 import { goldRequests } from "../request-diff.js";
@@ -60,6 +61,7 @@ import { type ReadingAttempt, readingOracle } from "./oracle.js";
 import {
 	evaluateReading,
 	type ReadingOutput,
+	readingEvaluationSchema,
 	readingOutputSchema,
 	readingReport,
 	type ScoredReading,
@@ -250,7 +252,14 @@ export function readingAttempts(run: OperationEvaluationRun): ScoredReading[] {
 		return (record.repetitions ?? [record]).map((repetition, index) => ({
 			...input,
 			repetition: index,
-			evaluation: repetition.evaluation as ScoredReading["evaluation"],
+			evaluation:
+				repetition.evaluation === undefined
+					? undefined
+					: storedAs(
+							readingEvaluationSchema,
+							repetition.evaluation,
+							`Run ${run.manifest.runId}'s evaluation of ${input.caseId}:${input.arm}`,
+						),
 		}));
 	});
 }
