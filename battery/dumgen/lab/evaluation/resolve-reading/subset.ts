@@ -58,6 +58,16 @@ export type ReadingSubset = {
 
 const armSchema = z.enum(["present", "removed"]);
 
+/** Each arm's verdicts, in the order they were recorded. */
+const armVerdicts = <Verdicts>(
+	verdicts: Readonly<Partial<Record<ReadingArm, Verdicts>>>,
+): (readonly [ReadingArm, Verdicts])[] =>
+	Object.keys(verdicts).flatMap((key) => {
+		const arm = armSchema.options.find((option) => option === key);
+		const listed = arm && verdicts[arm];
+		return arm && listed ? [[arm, listed] as const] : [];
+	});
+
 const readingSubsetSchema = z.object({
 	baselineRunId: z.string(),
 	experimentId: z.string(),
@@ -288,14 +298,13 @@ export function compareReadingWithBaseline(
 	const baselineAttempts: LineAttempt[] = Object.values(
 		subset.missed,
 	).flatMap(({ authored, candidates, verdicts }) =>
-		(Object.entries(verdicts) as [ReadingArm, ReadingVerdict[]][]).flatMap(
-			([arm, armVerdicts]) =>
-				armVerdicts.map((verdict) => ({
-					arm,
-					authored,
-					candidates: candidates[arm] ?? 0,
-					verdict,
-				})),
+		armVerdicts(verdicts).flatMap(([arm, armVerdicts]) =>
+			armVerdicts.map((verdict) => ({
+				arm,
+				authored,
+				candidates: candidates[arm] ?? 0,
+				verdict,
+			})),
 		),
 	);
 	const now = byCase(attempts);
@@ -305,10 +314,7 @@ export function compareReadingWithBaseline(
 	for (const [caseId, missed] of Object.entries(subset.missed)) {
 		const entry = now.get(caseId);
 		if (!entry) continue;
-		for (const [arm, verdicts] of Object.entries(entry.verdicts) as [
-			ReadingArm,
-			ReadingVerdict[],
-		][]) {
+		for (const [arm, verdicts] of armVerdicts(entry.verdicts)) {
 			for (const verdict of verdicts)
 				nowAttempts.push({
 					arm,

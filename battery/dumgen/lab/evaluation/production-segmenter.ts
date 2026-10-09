@@ -13,6 +13,7 @@
  *   setting. `createDumgen` offers no entry that takes Segments, since no
  *   host has them before intake.
  */
+import { isRecord } from "common-utils";
 import * as Effect from "effect/Effect";
 import { requestBudget, runOperation } from "../../src/call.js";
 import { createDumgen } from "../../src/create-dumgen.js";
@@ -48,11 +49,17 @@ const unresolvedOf = (traces: readonly OperationTrace[]) =>
 	traces
 		.flatMap((trace) => trace.events ?? [])
 		.filter((event) => event.name === "UnresolvedSegments")
-		.flatMap(
-			(event) =>
-				(event.data as { readonly segments: readonly number[] })
-					.segments,
-		);
+		.flatMap(({ data }) => {
+			const segments = isRecord(data) ? data.segments : undefined;
+			if (
+				!Array.isArray(segments) ||
+				!segments.every((index) => typeof index === "number")
+			)
+				throw Error(
+					"An UnresolvedSegments event names its Segments by index",
+				);
+			return segments;
+		});
 
 /** Raw mode: the Sentence as written, through `createDumgen`'s `segment.inUnits`. */
 export async function segmentSentence(

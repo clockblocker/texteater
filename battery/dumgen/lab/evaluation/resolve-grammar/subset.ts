@@ -241,10 +241,13 @@ export function drawGuard(
 		const pool = [...ids];
 		for (let index = 0; index < quota; index++) {
 			const pick = index + Math.floor(random() * (pool.length - index));
-			[pool[index], pool[pick]] = [
-				pool[pick] as string,
-				pool[index] as string,
-			];
+			const picked = pool[pick];
+			const current = pool[index];
+			// `random()` is below 1, so `pick` stays within the pool.
+			if (picked === undefined || current === undefined)
+				throw Error(`The guard's shuffle left the ${route} pool`);
+			pool[index] = picked;
+			pool[pick] = current;
 		}
 		guard[route] = pool.slice(0, quota).sort();
 	}

@@ -214,8 +214,8 @@ type KnowledgeInput = z.infer<typeof inputSchema>;
 const routeKey = (goldCase: KnowledgeCase) =>
 	`${goldCase.reading.lemma.family}/${goldCase.reading.lemma.kind}`;
 
-const emojiOf = (goldCase: KnowledgeCase) =>
-	(goldCase.reading as { emojiDescription?: string }).emojiDescription ?? "";
+const emojiOf = ({ reading }: KnowledgeCase) =>
+	"emojiDescription" in reading ? reading.emojiDescription : "";
 
 /** The set an experiment runs and the aspects it asks for. */
 const scopeOf = (setName: KnowledgeSetName): KnowledgeScope =>

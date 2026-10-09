@@ -31,6 +31,23 @@ export async function loadOperationRun(
 	return run;
 }
 
+/** The subset a resolve run took, as its manifest records it. */
+export type CaseFilter = {
+	readonly subset: string;
+	readonly baselineRunId: string;
+	readonly seed: number;
+	readonly missed: readonly string[];
+	readonly guard: readonly string[];
+};
+
+const caseFilterSchema = z.object({
+	subset: z.string(),
+	baselineRunId: z.string(),
+	seed: z.number(),
+	missed: z.array(z.string()),
+	guard: z.array(z.string()),
+}) satisfies z.ZodType<CaseFilter>;
+
 /**
  * What the evaluation CLIs read of a run's judgment settings: its frozen
  * set and hash, and the subset or case filter a partial run names.
@@ -39,7 +56,7 @@ export const judgmentSettingsSchema = z.object({
 	set: z.string().optional(),
 	setHash: z.string().optional(),
 	subset: z.unknown().optional(),
-	caseFilter: z.unknown().optional(),
+	caseFilter: caseFilterSchema.optional(),
 });
 
 /** A run's judgment settings, checked by `schema`. */

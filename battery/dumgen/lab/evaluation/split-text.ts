@@ -12,7 +12,7 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
-import { readStoredJsonSync } from "../stored-json.js";
+import { readStoredJsonSync, storedAs } from "../stored-json.js";
 
 /** `splitText`'s contract: a Text in, its paragraphs of Sentences out. */
 export type Splitter = (text: string) => {
@@ -115,6 +115,20 @@ export type SplitCheck = {
 	readonly predictedParagraphs: number;
 };
 
+/** A Text's evaluation, as a run stores it. */
+const splitCheckSchema = z.object({
+	contractPass: z.boolean(),
+	textPreserved: z.boolean(),
+	goldBoundaries: z.number(),
+	predictedBoundaries: z.number(),
+	matchedBoundaries: z.number(),
+	goldSentences: z.number(),
+	predictedSentences: z.number(),
+	exactSentences: z.number(),
+	goldParagraphs: z.number(),
+	predictedParagraphs: z.number(),
+}) satisfies z.ZodType<SplitCheck>;
+
 const visible = (text: string) => text.replace(/\s+/gu, "");
 
 /** Each Sentence's start and end in visible characters. */
@@ -189,7 +203,7 @@ export function splitTextMetrics(run: {
 }) {
 	const checks = run.cases.flatMap(({ evaluation }) =>
 		evaluation && typeof evaluation === "object"
-			? [evaluation as SplitCheck]
+			? [storedAs(splitCheckSchema, evaluation, "A Text's evaluation")]
 			: [],
 	);
 	const sum = (

@@ -127,6 +127,20 @@ const isGermanAttestation = (
 ): attestation is Dumling.Attestation<"de"> =>
 	attestation.surface.lemma.language === "de";
 
+/**
+ * A corpus Reading as the German one its record's language makes it; one
+ * whose Lemma is in another language throws.
+ */
+export function germanReading(reading: Dumling.Reading): Dumling.Reading<"de"> {
+	if (!isGermanReading(reading))
+		throw Error(`Expected a German Reading, not ${reading.lemma.language}`);
+	return reading;
+}
+
+const isGermanReading = (
+	reading: Dumling.Reading,
+): reading is Dumling.Reading<"de"> => reading.lemma.language === "de";
+
 /** A German route a click routes to. */
 const routeSchema = z.custom<Route>(isRoute, "Expected a German route");
 

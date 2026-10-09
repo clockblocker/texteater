@@ -172,17 +172,15 @@ function complementKey(complement: Values): string {
 		...rest,
 		...(preposition
 			? {
-					preposition: (preposition as { canonicalForm?: string })
-						.canonicalForm,
+					preposition: isRecord(preposition)
+						? preposition.canonicalForm
+						: undefined,
 				}
 			: {}),
 	});
 }
 
-type Slot = {
-	readonly status: string;
-	readonly complements: readonly Values[];
-};
+type Slot = Dumrel.ValencyFrame[number];
 
 const slotKey = (slot: Slot) =>
 	canonicalJson({
@@ -217,37 +215,54 @@ const verbKey = (source: unknown) => {
 	});
 };
 
+/** The structural aspects scored exactly. */
+const exactAspects = [
+	"plural",
+	"valency",
+	"participleSource",
+	"conjugationClass",
+	"locutionType",
+	"sayingType",
+	"formulaRole",
+] as const satisfies readonly (keyof Dumrel.ReadingKnowledge)[];
+
+type ExactAspect = (typeof exactAspects)[number];
+
 /** How each single-valued structural aspect compares. */
-const sameValue: Readonly<
-	Record<string, (gold: unknown, produced: unknown) => boolean>
-> = {
+const sameValue: {
+	readonly [Aspect in ExactAspect]: (
+		gold: Dumrel.ReadingKnowledge[Aspect],
+		produced: Dumrel.ReadingKnowledge[Aspect],
+	) => boolean;
+} = {
 	plural: (gold, produced) => pluralKey(gold) === pluralKey(produced),
 	conjugationClass: (gold, produced) =>
-		canonicalJson([...((gold as string[]) ?? [])].sort()) ===
-		canonicalJson([...((produced as string[]) ?? [])].sort()),
+		canonicalJson([...(gold ?? [])].sort()) ===
+		canonicalJson([...(produced ?? [])].sort()),
 	participleSource: (gold, produced) => verbKey(gold) === verbKey(produced),
 	locutionType: (gold, produced) => gold === produced,
 	formulaRole: (gold, produced) => gold === produced,
-	sayingType: (gold, produced) =>
-		(gold as { type?: string } | undefined)?.type ===
-		(produced as { type?: string } | undefined)?.type,
-	valency: (gold, produced) =>
-		sameFrame((gold as Slot[]) ?? [], (produced as Slot[]) ?? []),
+	sayingType: (gold, produced) => gold?.type === produced?.type,
+	valency: (gold, produced) => sameFrame(gold ?? [], produced ?? []),
 };
+
+/** Whether `produced` holds gold's value of `aspect`. */
+const sameAspect = <Aspect extends ExactAspect>(
+	aspect: Aspect,
+	gold: Dumrel.ReadingKnowledge,
+	produced: Dumrel.ReadingKnowledge,
+) => sameValue[aspect](gold[aspect], produced[aspect]);
 
 const coverageOf = (
 	goldCase: KnowledgeCase,
 	aspect: string,
 	leaf?: string,
 ): "Authored" | "ReviewedEmpty" | undefined => {
-	const coverage = goldCase.gold?.coverage as
-		| Readonly<Record<string, unknown>>
-		| undefined;
+	const coverage: Readonly<Record<string, unknown>> | undefined =
+		goldCase.gold?.coverage;
 	const value = coverage?.[aspect];
 	const status =
-		leaf === undefined
-			? value
-			: (value as Readonly<Record<string, unknown>> | undefined)?.[leaf];
+		leaf === undefined ? value : isRecord(value) ? value[leaf] : undefined;
 	return status === "Authored" || status === "ReviewedEmpty"
 		? status
 		: undefined;
@@ -266,13 +281,13 @@ export function evaluateKnowledge(
 	request: Dumrel.KnowledgeRequestMask,
 	output: KnowledgeOutput,
 ): KnowledgeEvaluation {
-	const produced: Readonly<Record<string, unknown>> = producedKnowledge(
+	const producedValues: Dumrel.ReadingKnowledge = producedKnowledge(
 		goldCase.reading,
 		output.changes,
 	);
+	const produced: Readonly<Record<string, unknown>> = producedValues;
 	const goldKnowledge: Dumrel.ReadingKnowledge =
 		goldCase.gold?.knowledge ?? {};
-	const gold: Readonly<Record<string, unknown>> = goldKnowledge;
 	const failure = (aspect: string, leaf?: string) =>
 		output.failures.find(
 			(entry) =>
@@ -316,11 +331,9 @@ export function evaluateKnowledge(
 		}
 		if (aspect === "translations") {
 			for (const language of Object.keys(selection ?? {})) {
-				const value = (
-					produced.translations as
-						| Readonly<Record<string, unknown>>
-						| undefined
-				)?.[language];
+				const translations: Readonly<Record<string, unknown>> =
+					producedValues.translations ?? {};
+				const value = translations[language];
 				const failed = failure(aspect, language);
 				const text = textOf(value);
 				verdicts.push({
@@ -335,7 +348,7 @@ export function evaluateKnowledge(
 		const value = produced[aspect];
 		const failed = failure(aspect);
 		const status = coverageOf(goldCase, aspect);
-		const compare = sameValue[aspect];
+		const exact = exactAspects.find((entry) => entry === aspect);
 		const text = textOf(value);
 		const base = {
 			aspect,
@@ -347,23 +360,30 @@ export function evaluateKnowledge(
 					: { text }
 				: {}),
 		};
-		if (!status || !compare) {
+		if (!status || !exact) {
 			verdicts.push(base);
 			continue;
 		}
-		const goldValue = status === "Authored" ? gold[aspect] : undefined;
-		const correct = failed === undefined && compare(goldValue, value);
+		const authored = status === "Authored" ? goldKnowledge : {};
+		const correct =
+			failed === undefined && sameAspect(exact, authored, producedValues);
 		verdicts.push({
 			...base,
 			gold: status,
 			correct,
 			...(aspect === "valency"
-				? { complements: complementCounts(goldValue, value) }
+				? {
+						complements: complementCounts(
+							authored.valency,
+							producedValues.valency,
+						),
+					}
 				: {}),
 			...(aspect === "participleSource" && failed === undefined
 				? {
 						sourceAgrees:
-							(goldValue === undefined) === (value === undefined),
+							(authored.participleSource === undefined) ===
+							(value === undefined),
 					}
 				: {}),
 		});
@@ -372,11 +392,12 @@ export function evaluateKnowledge(
 }
 
 /** How many complements gold's frame and the run's hold, and share. */
-function complementCounts(gold: unknown, produced: unknown) {
-	const keys = (frame: unknown) =>
-		((frame as Slot[] | undefined) ?? []).flatMap((slot) =>
-			slot.complements.map(complementKey),
-		);
+function complementCounts(
+	gold: readonly Slot[] | undefined,
+	produced: readonly Slot[] | undefined,
+) {
+	const keys = (frame: readonly Slot[] | undefined) =>
+		(frame ?? []).flatMap((slot) => slot.complements.map(complementKey));
 	const goldKeys = keys(gold);
 	const producedKeys = keys(produced);
 	const remaining = [...producedKeys];
@@ -404,17 +425,6 @@ export type ScoredKnowledge = {
 	readonly sentence: string;
 	readonly evaluation: KnowledgeEvaluation | undefined;
 };
-
-/** The structural aspects scored exactly. */
-const exactAspects = [
-	"plural",
-	"valency",
-	"participleSource",
-	"conjugationClass",
-	"locutionType",
-	"sayingType",
-	"formulaRole",
-] as const;
 
 type Entry = {
 	readonly attempt: ScoredKnowledge;

@@ -95,6 +95,17 @@ export type TransportRecord = {
 	readonly failuresBy: Readonly<Record<string, number>>;
 };
 
+/** A transport record as the cache counts it up. */
+type TransportTally = {
+	requests: number;
+	retries: number;
+	retriedRequests: number;
+	failures: number;
+	interrupted: number;
+	retriesBy: Record<string, number>;
+	failuresBy: Record<string, number>;
+};
+
 /** A transport record as a run, its manifest or the ledger keeps it. */
 export const transportRecordSchema = z.object({
 	requests: z.number(),
@@ -344,14 +355,14 @@ export class JevCache {
 	readonly #options: JevCacheOptions;
 	readonly #requests = new Map<string, Set<string>>();
 	readonly #locks = new Map<string, Promise<void>>();
-	readonly #transport = {
+	readonly #transport: TransportTally = {
 		requests: 0,
 		retries: 0,
 		retriedRequests: 0,
 		failures: 0,
 		interrupted: 0,
-		retriesBy: {} as Record<string, number>,
-		failuresBy: {} as Record<string, number>,
+		retriesBy: {},
+		failuresBy: {},
 	};
 
 	constructor(options: JevCacheOptions) {

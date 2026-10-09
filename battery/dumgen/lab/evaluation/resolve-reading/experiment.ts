@@ -35,6 +35,11 @@ import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
 import type { OperationTrace } from "../../../src/operation-trace.js";
 import { markedSentence } from "../../../src/resolve/reading.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
+import {
+	type CaseFilter,
+	judgmentSettings,
+	judgmentSettingsSchema,
+} from "../../run-directory.js";
 import { storedAs } from "../../stored-json.js";
 import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
@@ -264,21 +269,8 @@ export function readingAttempts(run: OperationEvaluationRun): ScoredReading[] {
 	});
 }
 
-/** The subset a run took, as its manifest records it. */
-type CaseFilter = {
-	readonly subset: string;
-	readonly baselineRunId: string;
-	readonly seed: number;
-	readonly missed: readonly string[];
-	readonly guard: readonly string[];
-};
-
 const caseFilterOf = (run: OperationEvaluationRun): CaseFilter | undefined =>
-	(
-		run.manifest.configurations.judgment.settings as {
-			caseFilter?: CaseFilter;
-		}
-	).caseFilter;
+	judgmentSettings(run, judgmentSettingsSchema).caseFilter;
 
 /**
  * The report of a run (`scoring.ts`). A run on a subset also reports each

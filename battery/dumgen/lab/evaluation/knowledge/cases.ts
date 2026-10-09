@@ -23,7 +23,7 @@ import { isRecord } from "common-utils";
 import { isReviewed, loadSpecRecords } from "dumcorpus";
 import { authoredReading, closedRoute } from "dumcorpus/inventories";
 import type * as Dumcorpus from "dumcorpus/types";
-import { readingIdentityKey } from "dumling";
+import { readingIdentityKey, routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
 	directSemanticRelationValues,
@@ -37,8 +37,11 @@ import type { KnowledgeSentence } from "../../../src/knowledge/types.js";
 import { git } from "../../git.js";
 import { hashOf } from "../../segmentation/harness/jev-cache.js";
 import {
+	germanAttestation,
 	germanAttestationSchema,
+	germanReading,
 	germanReadingSchema,
+	storedAs,
 } from "../../stored-json.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
@@ -197,52 +200,41 @@ const knowledgeSetSchema = z
 				});
 	}) satisfies z.ZodType<KnowledgeSet>;
 
-type Target = Dumcorpus.SpecRecord["targets"][number];
-
-/** A target's Reading, gold and Attestation as the loader gives them. */
-type LoadedTarget = Target & {
-	readonly reading?: Dumling.Reading<"de">;
-	readonly knowledge?: Dumrel.ReadingKnowledge;
-	readonly coverage?: Dumcorpus.KnowledgeCoverage;
-	readonly attestation?: Dumling.Attestation<"de">;
-};
-
 const isAuthored = (reading: Dumling.Reading<"de">) =>
 	closedRoute(reading.lemma) || authoredReading(reading) !== undefined;
 
 /** The cases of one record, one per target with a Reading. */
 function casesOf(record: Dumcorpus.SpecRecord): KnowledgeCase[] {
 	const segments = record.segments.map(({ text }) => ({ text }));
-	return (record.targets as readonly LoadedTarget[]).flatMap(
-		(target, index) => {
-			const { reading, attestation } = target;
-			if (!reading || !attestation) return [];
-			return [
-				{
-					id: `${record.id}#${index}`,
-					record: record.id,
-					target: index,
-					reading,
-					attestation,
-					sentence: {
-						segments,
-						target: [...target.memberSegmentIndices],
-					},
-					text: record.sentence,
-					...(target.coverage
-						? {
-								gold: {
-									knowledge: target.knowledge ?? {},
-									coverage: target.coverage,
-								},
-							}
-						: {}),
-					authored: isAuthored(reading),
-					rules: record.sources.rules.map(({ rule }) => rule),
+	return record.targets.flatMap((target, index) => {
+		if (!target.reading) return [];
+		const reading = germanReading(target.reading);
+		const attestation = germanAttestation(target.attestation);
+		return [
+			{
+				id: `${record.id}#${index}`,
+				record: record.id,
+				target: index,
+				reading,
+				attestation,
+				sentence: {
+					segments,
+					target: [...target.memberSegmentIndices],
 				},
-			];
-		},
-	);
+				text: record.sentence,
+				...(target.coverage
+					? {
+							gold: {
+								knowledge: target.knowledge ?? {},
+								coverage: target.coverage,
+							},
+						}
+					: {}),
+				authored: isAuthored(reading),
+				rules: record.sources.rules.map(({ rule }) => rule),
+			},
+		];
+	});
 }
 
 /** A Reading's identity: one case per Reading (#884 ruling 2). */
@@ -445,11 +437,15 @@ function syntheticCase(slip: SyntheticSlip): KnowledgeCase {
 	if (target.some((index) => index < 0))
 		throw Error(`${slip.target.join(" ")} is not in ${slip.sentence}`);
 	const { lemma } = slip.attestation.surface;
-	const reading = {
-		unitKind: "Reading",
-		lemma,
-		emojiDescription: slip.emojiDescription,
-	} as Dumling.Reading<"de">;
+	const reading = storedAs(
+		germanReadingSchema,
+		{
+			unitKind: "Reading",
+			lemma,
+			emojiDescription: slip.emojiDescription,
+		},
+		`The ${lemma.canonicalForm} slip's Reading`,
+	);
 	return {
 		id: `slip:${lemma.canonicalForm}`,
 		record: slip.record,
@@ -539,13 +535,8 @@ export function requestOf(
 	goldCase: Pick<KnowledgeCase, "reading">,
 	scope: KnowledgeScope,
 ): Dumrel.KnowledgeRequestMask {
-	const { language, family, kind } = goldCase.reading.lemma;
 	const selected = selectKnowledge({
-		route: {
-			language,
-			family,
-			kind,
-		} as Dumrel.KnowledgeSelectionInput["route"],
+		route: routeOf(goldCase.reading.lemma),
 		settings: scopeSettings[scope],
 	});
 	return selected.success ? selected.value : {};

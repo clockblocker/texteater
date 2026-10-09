@@ -63,7 +63,6 @@ import {
 } from "../../../../src/segment/de/code-rules.js";
 import {
 	askGovernmentChoice,
-	type GovernmentFamily,
 	type GovernmentSettings,
 	governmentFamilies,
 	withGovernmentChoice,
@@ -89,7 +88,6 @@ import { productionUnitSettings } from "../../../../src/segment/de/units.js";
 import {
 	askVerbChoice,
 	type VerbAnswers,
-	type VerbFamily,
 	type VerbSettings,
 	verbFamilies,
 	withVerbChoice,
@@ -194,19 +192,29 @@ type Levers = {
 	readonly government: readonly GovernmentVariant[];
 };
 
+/** Each of `names` as found in `vocabulary`; undefined when one is not in it. */
+function foundIn<Name extends string>(
+	vocabulary: readonly Name[],
+	names: readonly string[],
+): Name[] | undefined {
+	const found: Name[] = [];
+	for (const name of names) {
+		const known = vocabulary.find((entry) => entry === name);
+		if (known === undefined) return undefined;
+		found.push(known);
+	}
+	return found;
+}
+
 function verbVariantsOf(option: string | undefined): VerbVariant[] {
 	return (option ?? "")
 		.split(",")
 		.filter(Boolean)
 		.map((name) => {
-			const [floor, ...families] = name.split("-");
+			const [floor, ...listed] = name.split("-");
 			const share = Number(floor);
-			if (
-				!Number.isFinite(share) ||
-				families.some(
-					(family) => !verbFamilies.includes(family as VerbFamily),
-				)
-			)
+			const families = foundIn(verbFamilies, listed);
+			if (!Number.isFinite(share) || !families)
 				throw Error(
 					`--opt verb=${option}: a variant is a floor, then any of ${verbFamilies.join(", ")}, joined by -`,
 				);
@@ -214,10 +222,7 @@ function verbVariantsOf(option: string | undefined): VerbVariant[] {
 				name,
 				settings: {
 					floor: share,
-					families:
-						families.length > 0
-							? (families as VerbFamily[])
-							: verbFamilies,
+					families: families.length > 0 ? families : verbFamilies,
 				},
 			};
 		});
@@ -228,17 +233,10 @@ function governmentVariantsOf(option: string | undefined): GovernmentVariant[] {
 		.split(",")
 		.filter(Boolean)
 		.map((name) => {
-			const [floor, ...families] = name.split("-");
+			const [floor, ...listed] = name.split("-");
 			const share = Number(floor);
-			if (
-				!Number.isFinite(share) ||
-				families.some(
-					(family) =>
-						!governmentFamilies.includes(
-							family as GovernmentFamily,
-						),
-				)
-			)
+			const families = foundIn(governmentFamilies, listed);
+			if (!Number.isFinite(share) || !families)
 				throw Error(
 					`--opt gov=${option}: a variant is a floor, then any of ${governmentFamilies.join(", ")}, joined by -`,
 				);
@@ -247,9 +245,7 @@ function governmentVariantsOf(option: string | undefined): GovernmentVariant[] {
 				settings: {
 					floor: share,
 					families:
-						families.length > 0
-							? (families as GovernmentFamily[])
-							: governmentFamilies,
+						families.length > 0 ? families : governmentFamilies,
 				},
 			};
 		});

@@ -133,7 +133,11 @@ const foldedCases: readonly {
 export const armsOf = (goldCase: ReadingCase): readonly ReadingArm[] =>
 	goldCase.authored ? ["present"] : ["present", "removed"];
 
-/** A Reading's identity, as Dumling compares descriptions (ADR 0031). */
+/**
+ * A Reading's identity, as Dumling compares descriptions (ADR 0031).
+ * TypeScript can't pair a Lemma union with each route's Reading, so the
+ * cast stays; the key reads only the Lemma's identity and the description.
+ */
 const keyFor = (lemma: Dumling.Lemma, emojiDescription: string) =>
 	readingIdentityKey({
 		unitKind: "Reading",
@@ -174,18 +178,14 @@ function goldOf(target: Target):
 			readonly emojiDescription: string;
 	  }
 	| undefined {
-	const reading = (target as { reading?: { emojiDescription?: unknown } })
-		.reading;
-	const lemma = target.attestation?.surface.lemma as
-		| Dumling.Lemma<"de">
-		| undefined;
-	if (!lemma || typeof reading?.emojiDescription !== "string")
-		return undefined;
-	const parsed = parseUnit({
-		unitKind: "Reading",
-		lemma,
-		emojiDescription: reading.emojiDescription,
-	});
+	const { reading } = target;
+	const emojiDescription =
+		reading && "emojiDescription" in reading
+			? reading.emojiDescription
+			: undefined;
+	if (typeof emojiDescription !== "string") return undefined;
+	const lemma = germanAttestation(target.attestation).surface.lemma;
+	const parsed = parseUnit({ unitKind: "Reading", lemma, emojiDescription });
 	if (!parsed.success || parsed.chain.unitKind !== "Reading")
 		return undefined;
 	const parsedReading = parsed.chain.value;

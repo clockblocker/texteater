@@ -32,7 +32,6 @@ import {
 	type SegmentInUnitsEvaluation,
 } from "./spec-corpus/segment-in-units-evaluation.js";
 import {
-	type Counts,
 	evaluationsOf,
 	segmentInUnitsMetrics,
 	totalsOf,
@@ -241,7 +240,7 @@ export function rawSegmentInUnitsMetrics(
 	const evaluated = evaluationsOf(run).length;
 	const pieces = totalsOf(evaluationsOf(run)).pieces;
 	const count = (key: keyof PieceCheck) => {
-		const value = (pieces as Counts | undefined)?.[key];
+		const value = typeof pieces === "object" ? pieces[key] : undefined;
 		return typeof value === "number" ? value : 0;
 	};
 	return {

@@ -37,6 +37,11 @@ import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
 import type { OperationTrace } from "../../../src/operation-trace.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import type { Unit } from "../../../src/segment/segmented-sentence.js";
+import {
+	type CaseFilter,
+	judgmentSettings,
+	judgmentSettingsSchema,
+} from "../../run-directory.js";
 import { loadSet, trackedSetsRoot } from "../../segmentation/harness/corpus.js";
 import { JevCache } from "../../segmentation/harness/jev-cache.js";
 import { storedAs } from "../../stored-json.js";
@@ -300,21 +305,8 @@ export function grammarAttempts(run: OperationEvaluationRun): ScoredAttempt[] {
 	});
 }
 
-/** The subset a run took, as its manifest records it. */
-type CaseFilter = {
-	readonly subset: string;
-	readonly baselineRunId: string;
-	readonly seed: number;
-	readonly missed: readonly string[];
-	readonly guard: readonly string[];
-};
-
 const caseFilterOf = (run: OperationEvaluationRun): CaseFilter | undefined =>
-	(
-		run.manifest.configurations.judgment.settings as {
-			caseFilter?: CaseFilter;
-		}
-	).caseFilter;
+	judgmentSettings(run, judgmentSettingsSchema).caseFilter;
 
 /**
  * The headline report of a run. The end-to-end line scores only the units
