@@ -1,5 +1,10 @@
 import type { AdrIds } from "../../check-citations.js";
-import type { Rule, SpecRecord, SpecSegmentation } from "../../corpus-types.js";
+import type {
+	Rule,
+	SpecRecord,
+	SpecRoute,
+	SpecSegmentation,
+} from "../../corpus-types.js";
 import { isReviewed } from "../../layers.js";
 import {
 	type SttsMapping,
@@ -16,8 +21,8 @@ export interface CrosswalkContext {
 	records: readonly SpecRecord[];
 	rules: readonly Rule[];
 	adrs: AdrIds;
-	/** The German routes, as `<Family>/<Kind>`. */
-	routes: readonly string[];
+	/** The German routes. */
+	routes: readonly SpecRoute[];
 }
 
 /** One failed check on one row. */
@@ -142,7 +147,9 @@ export function checkSttsCrosswalk(
 	for (const tag of sttsTags)
 		if (!tags.includes(tag)) issues.push({ tag, message: "No row" });
 	const ruleIds = new Set(context.rules.map((rule) => rule.id));
-	const routes = new Set(context.routes);
+	const routes = new Set(
+		context.routes.map(({ family, kind }) => `${family}/${kind}`),
+	);
 	const seen = new Set<string>();
 	for (const row of rows) {
 		const issue = (message: string) =>

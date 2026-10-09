@@ -16,7 +16,7 @@ const context: CrosswalkContext = {
 	records: loadSpecRecords(),
 	rules,
 	adrs: readRepositoryAdrIds(),
-	routes: unitRoutes.de ?? [],
+	routes: unitRoutes.de,
 };
 const messages = (rows: readonly SttsRow[]) =>
 	checkSttsCrosswalk(rows, context).map(

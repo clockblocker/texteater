@@ -84,7 +84,7 @@ export function checkBreakdownRecord(
 	const wording = segments.flatMap((_, index) =>
 		resolvable(index) ? [index] : [],
 	);
-	for (const [t, target] of checked.segmentation.entries()) {
+	for (const [t, target] of targets.entries()) {
 		const path = `targets.${t}`;
 		if (target.route.family !== "Lexeme")
 			issue(

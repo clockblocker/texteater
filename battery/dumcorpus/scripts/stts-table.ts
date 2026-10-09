@@ -17,7 +17,7 @@ const context = {
 	records: loadSpecRecords(),
 	rules,
 	adrs: readRepositoryAdrIds(),
-	routes: unitRoutes.de ?? [],
+	routes: unitRoutes.de,
 };
 console.log(
 	renderSttsTable(germanSttsCrosswalk, (row) => sttsGold(row, context)),

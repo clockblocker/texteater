@@ -16,7 +16,6 @@ import type {
 	Sources,
 	SpecRecord,
 	SpecRecordId,
-	SpecRoute,
 	SpecSegmentation,
 	SpecTarget,
 } from "./corpus-types.js";
@@ -269,10 +268,10 @@ type TargetFile = z.infer<typeof fileSchema>["targets"][number];
  * its strict Attestation, ADP cases, articles, closed PART, plural-only
  * nouns, Syncretisms and Grundform
  * (Attestation), its Reading (Reading) and its Reading Knowledge and
- * coverage (Knowledge). Returns each target's Segmentation, each target whose
- * Attestation passes, with the Reading and Knowledge that pass, how many
- * targets claim each Segment, and whether every target holds Knowledge that
- * covers its structural aspects.
+ * coverage (Knowledge). Returns the Segmentation of each target with a
+ * Dumling route, each such target whose Attestation passes, with the Reading
+ * and Knowledge that pass, how many targets claim each Segment, and whether
+ * every target holds Knowledge that covers its structural aspects.
  */
 export function checkTargets(
 	record: {
@@ -329,21 +328,26 @@ export function checkTargets(
 				);
 		}
 		const { family, kind } = target.route;
-		if (language && !unitRoutes[language]?.includes(`${family}/${kind}`))
+		const route = language
+			? unitRoutes[language].find(
+					(known) => known.family === family && known.kind === kind,
+				)
+			: undefined;
+		if (language && !route)
 			issue(
 				"Segmentation",
 				"Route",
 				`${path}.route`,
 				`Dumling has no ${language} ${family} ${kind} route`,
 			);
-		const segmented: SegmentationTarget = {
+		// A target without a Dumling route fails Segmentation, so the record
+		// loads none of its targets; its other layers are still checked.
+		const segmented: SegmentationTarget | undefined = route && {
 			memberSegmentIndices: indices,
-			// Checked against Dumling's routes above. unitRoutes is generated as
-			// `<Family>/<Kind>` strings, so that check can't narrow the route.
-			route: { language, family, kind } as SpecRoute,
+			route,
 			...(target.notes === undefined ? {} : { notes: target.notes }),
 		};
-		segmentation.push(segmented);
+		if (segmented) segmentation.push(segmented);
 
 		const layers = checkTargetLayers(target, segmented, {
 			path,
@@ -361,14 +365,14 @@ export function checkTargets(
 
 /**
  * Checks one target's Attestation, Reading and Knowledge layers. Returns the
- * target when its Attestation passes, carrying its Reading, Knowledge and
- * coverage when they pass, and whether its Knowledge is valid and covers
- * every structural aspect its route requests.
+ * target when its route is Dumling's and its Attestation passes, carrying
+ * its Reading, Knowledge and coverage when they pass, and whether its
+ * Knowledge is valid and covers every structural aspect its route requests.
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function checkTargetLayers(
 	target: TargetFile,
-	segmented: SegmentationTarget,
+	segmented: SegmentationTarget | undefined,
 	context: {
 		path: string;
 		language: Dumling.Language | undefined;
@@ -431,13 +435,13 @@ function checkTargetLayers(
 			`A ${language} record holds ${language} Attestations`,
 		);
 	if (
-		lemma.family !== segmented.route.family ||
-		lemma.kind !== segmented.route.kind
+		lemma.family !== target.route.family ||
+		lemma.kind !== target.route.kind
 	)
 		attestationIssue(
 			"Route",
 			`${path}.attestation.surface.lemma`,
-			`The Attestation's Lemma is ${lemma.family} ${lemma.kind}, not the target's route ${segmented.route.family} ${segmented.route.kind}`,
+			`The Attestation's Lemma is ${lemma.family} ${lemma.kind}, not the target's route ${target.route.family} ${target.route.kind}`,
 		);
 	for (const { check, ...found } of languageAttestationIssues(attestation))
 		attestationIssue(
@@ -452,7 +456,7 @@ function checkTargetLayers(
 			found.message,
 		);
 
-	const indices = segmented.memberSegmentIndices;
+	const indices = target.memberSegmentIndices;
 	if (indices.length !== attestation.members.length)
 		attestationIssue(
 			"Members",
@@ -559,6 +563,7 @@ function checkTargetLayers(
 			covered.issues.length === 0 && covered.uncovered.length === 0;
 	}
 	if (failed) return { knowledge: false };
+	if (!segmented) return { knowledge: complete };
 	return {
 		target: {
 			...segmented,
