@@ -1,9 +1,11 @@
 import { describe, expect, test } from "bun:test";
 import {
 	applyKnowledgeChange,
+	applyKnowledgeChanges,
 	parseKnowledgeChange,
 	parseReadingKnowledge,
 } from "../src/index.js";
+import type { KnowledgeParse, ReadingKnowledge } from "../src/types.js";
 import { berlinLemma, houseReading, prefixLemma } from "./fixtures.js";
 
 describe("parseReadingKnowledge", () => {
@@ -159,6 +161,100 @@ describe("applyKnowledgeChange", () => {
 		});
 		expect(result.success).toBe(false);
 		expect(knowledge).toEqual(snapshot);
+	});
+});
+
+describe("applyKnowledgeChanges", () => {
+	const changes = [
+		{ kind: "Contribute", aspect: "definition", value: " Geba\u0308ude " },
+		{
+			kind: "Contribute",
+			aspect: "translations",
+			language: "en",
+			value: [" house ", "home"],
+		},
+		{
+			kind: "Contribute",
+			aspect: "semanticRelations",
+			relation: "nearSynonym",
+			value: [berlinLemma],
+		},
+		{ kind: "Contribute", aspect: "plural", value: ["Häuser"] },
+		{
+			kind: "Correct",
+			aspect: "translations",
+			language: "en",
+			value: ["building"],
+		},
+		{ kind: "Contribute", aspect: "plural", value: ["Hause", "Häuser"] },
+		{ kind: "Retract", aspect: "definition" },
+		{ kind: "Contribute", aspect: "transcription", value: "haʊ̯s" },
+	];
+
+	/** What applying each change to the last result answers. */
+	function oneByOne(
+		knowledge: ReadingKnowledge<typeof houseReading>,
+		list: readonly unknown[],
+	): KnowledgeParse<typeof houseReading> {
+		let result: KnowledgeParse<typeof houseReading> = {
+			success: true,
+			value: knowledge,
+		};
+		for (const change of list) {
+			if (!result.success) return result;
+			result = applyKnowledgeChange({
+				source: houseReading,
+				knowledge: result.value,
+				change,
+			});
+		}
+		return result;
+	}
+
+	test("answers what applying the changes one by one answers", () => {
+		const knowledge = { translations: { ru: ["дом"] } };
+		const snapshot = structuredClone(knowledge);
+		const result = applyKnowledgeChanges({
+			source: houseReading,
+			knowledge,
+			changes,
+		});
+		expect(result.success).toBe(true);
+		expect(result).toEqual(oneByOne(knowledge, changes));
+		expect(knowledge).toEqual(snapshot);
+	});
+
+	test("answers the first failure one by one would, with no partial value", () => {
+		for (const failing of [
+			{ kind: "Contribute", aspect: "transcription", value: "" },
+			{ kind: "Contribute", aspect: "definition", value: "anders" },
+			{
+				kind: "Contribute",
+				aspect: "semanticRelations",
+				relation: "synonym",
+				targetKind: "reading",
+				value: [houseReading],
+			},
+		]) {
+			const list = [...changes.slice(0, 3), failing, ...changes.slice(3)];
+			const result = applyKnowledgeChanges({
+				source: houseReading,
+				knowledge: {},
+				changes: list,
+			});
+			expect(result.success).toBe(false);
+			expect(result).toEqual(oneByOne({}, list));
+		}
+	});
+
+	test("parses the Knowledge it is given even with no changes", () => {
+		expect(
+			applyKnowledgeChanges({
+				source: houseReading,
+				knowledge: { definition: "  Haus " },
+				changes: [],
+			}),
+		).toEqual({ success: true, value: { definition: "Haus" } });
 	});
 });
 

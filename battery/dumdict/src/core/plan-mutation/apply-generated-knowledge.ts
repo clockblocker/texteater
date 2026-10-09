@@ -8,7 +8,7 @@ import type {
 import { parsePendingSemanticRelationInLanguage } from "../../parsing/lightweight-parsers";
 import type { ApplyGeneratedKnowledgeRequest } from "../../public";
 import type { ApplyGeneratedKnowledgeContext } from "../../storage";
-import { applyDumdictKnowledgeChange } from "../apply-reading-knowledge-change.js";
+import { applyDumdictKnowledgeChanges } from "../apply-reading-knowledge-change.js";
 import { lemmaLanguage, readingLemma } from "../identity";
 import {
 	createPendingSemanticRelationRecord,
@@ -37,6 +37,27 @@ function pendingRecords<L extends Dumling.Language>(
 	return deduplicatePendingSemanticRelationRecords(records);
 }
 
+function relationTargetMissing<L extends Dumling.Language>(
+	slice: ApplyGeneratedKnowledgeContext<L>,
+	change: ApplyGeneratedKnowledgeRequest<L>["changes"][number],
+): boolean {
+	if (change.aspect !== "semanticRelations" || !("value" in change))
+		return false;
+	return change.targetKind === "reading"
+		? change.value.some(
+				(target) =>
+					!slice.relationReadings.some((entry) =>
+						sameReading(entry.reading, target),
+					),
+			)
+		: change.value.some(
+				(target) =>
+					!slice.relationLemmas.some((entry) =>
+						sameLemma(entry.lemma, target),
+					),
+			);
+}
+
 export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 	slice: ApplyGeneratedKnowledgeContext<L>,
 	request: ApplyGeneratedKnowledgeRequest<L>,
@@ -49,37 +70,19 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 		};
 	}
 
-	let changed = slice.existingReading;
+	// A change naming a missing target refuses the request, after the changes
+	// before it apply as they would one by one.
+	const missingAt = request.changes.findIndex((change) =>
+		relationTargetMissing(slice, change),
+	);
+	let changed: typeof slice.existingReading;
 	try {
-		for (const change of request.changes) {
-			if (change.aspect === "semanticRelations" && "value" in change) {
-				const missing =
-					change.targetKind === "reading"
-						? change.value.some(
-								(target) =>
-									!slice.relationReadings.some((entry) =>
-										sameReading(entry.reading, target),
-									),
-							)
-						: change.value.some(
-								(target) =>
-									!slice.relationLemmas.some((entry) =>
-										sameLemma(entry.lemma, target),
-									),
-							);
-				if (missing)
-					return {
-						status: "rejected",
-						code: "invalidRequest",
-						message:
-							"Direct Semantic Relation target is missing from the dictionary",
-					};
-			}
-			changed = applyDumdictKnowledgeChange(changed, {
-				reading: request.reading,
-				change,
-			});
-		}
+		changed = applyDumdictKnowledgeChanges(
+			slice.existingReading,
+			request.changes
+				.slice(0, missingAt === -1 ? undefined : missingAt)
+				.map((change) => ({ reading: request.reading, change })),
+		);
 	} catch (error) {
 		return {
 			status: "rejected",
@@ -90,6 +93,13 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 					: "Invalid Knowledge change",
 		};
 	}
+	if (missingAt !== -1)
+		return {
+			status: "rejected",
+			code: "invalidRequest",
+			message:
+				"Direct Semantic Relation target is missing from the dictionary",
+		};
 
 	const proposed = pendingRecords(request);
 	const existingByKey = new Map(

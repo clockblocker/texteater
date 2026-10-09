@@ -106,9 +106,9 @@ The root export is intentionally focused:
 
 The planner lives in `dumdict/planning`, so a transaction loads none of the
 root's parsers it does not use. That entry also carries the request and
-storage slice types host adapters need, and `applyDumdictKnowledgeChange`,
-which validates an exact Reading identity and applies one Dumrel Knowledge
-Change. Hosts outside this repository, such as an
+storage slice types host adapters need, and `applyDumdictKnowledgeChanges`,
+which validates an exact Reading identity and applies a patch's Dumrel
+Knowledge Changes in order. Hosts outside this repository, such as an
 Obsidian plugin over markdown files, a Node server over SQLite, or an Electron
 app with a local cache, are future work; each would implement the slice reads
 and atomic commit the conformance suite checks.

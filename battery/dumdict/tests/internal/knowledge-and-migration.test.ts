@@ -3,7 +3,11 @@ import { applyKnowledgeChange } from "dumrel";
 import { readingKnowledgeSchema } from "dumrel/schema";
 import type * as Dumrel from "dumrel/types";
 
-import { applyDumdictKnowledgeChange } from "../../src/core/apply-reading-knowledge-change";
+import { applyDumdictKnowledgeChanges } from "../../src/core/apply-reading-knowledge-change";
+import type {
+	ReadingEntry,
+	ReadingKnowledgeChange,
+} from "../../src/domain-types";
 import {
 	englishRunLemma,
 	englishRunReading,
@@ -62,14 +66,14 @@ describe("Reading Knowledge Changes", () => {
 
 		for (const existing of [undefined, {}] as const) {
 			for (const change of changes) {
-				const result = applyDumdictKnowledgeChange(
+				const result = applyDumdictKnowledgeChanges(
 					{
 						...readingEntry,
 						...(existing === undefined
 							? {}
 							: { knowledge: existing }),
 					},
-					{ reading: englishWalkReading, change },
+					[{ reading: englishWalkReading, change }],
 				);
 				const knowledge = result.knowledge ?? {};
 				const expected = applyKnowledgeChange({
@@ -85,6 +89,77 @@ describe("Reading Knowledge Changes", () => {
 				).toBe(true);
 			}
 		}
+	});
+
+	test("applies a patch's envelopes as applying them one by one would", () => {
+		const readingEntry = enSerializedNotes[0]?.readingEntries[0];
+		if (!readingEntry) throw new Error("Expected Reading fixture.");
+		const envelope = (
+			change: ReadingKnowledgeChange<"en">["change"],
+		): ReadingKnowledgeChange<"en"> => ({
+			reading: englishWalkReading,
+			change,
+		});
+		const oneByOne = (
+			envelopes: readonly ReadingKnowledgeChange<"en">[],
+		) => {
+			let entry: ReadingEntry<"en"> = readingEntry;
+			for (const next of envelopes)
+				entry = applyDumdictKnowledgeChanges(entry, [next]);
+			return entry;
+		};
+		const errorOf = (run: () => unknown) => {
+			try {
+				run();
+			} catch (error) {
+				return error;
+			}
+			throw new Error("Expected a throw.");
+		};
+		const go = envelope({
+			kind: "Contribute",
+			aspect: "definition",
+			value: " go ",
+		});
+		const changes = [
+			go,
+			envelope({
+				kind: "Contribute",
+				aspect: "semanticRelations",
+				relation: "synonym",
+				value: [englishRunLemma],
+			}),
+			envelope({
+				kind: "Correct",
+				aspect: "definition",
+				value: "stroll",
+			}),
+		];
+		expect(applyDumdictKnowledgeChanges(readingEntry, changes)).toEqual(
+			oneByOne(changes),
+		);
+		expect(applyDumdictKnowledgeChanges(readingEntry, [])).toBe(
+			readingEntry,
+		);
+		const conflict = envelope({
+			kind: "Contribute",
+			aspect: "definition",
+			value: "run",
+		});
+		const sameLemma = envelope({
+			kind: "Contribute",
+			aspect: "semanticRelations",
+			relation: "synonym",
+			value: [englishWalkLemma],
+		});
+		for (const list of [
+			[...changes, sameLemma],
+			[go, conflict, sameLemma],
+			[go, sameLemma, conflict],
+		])
+			expect(
+				errorOf(() => applyDumdictKnowledgeChanges(readingEntry, list)),
+			).toEqual(errorOf(() => oneByOne(list)));
 	});
 
 	test("property: normalized scalar and bucket changes stay canonical", () => {
@@ -107,14 +182,14 @@ describe("Reading Knowledge Changes", () => {
 			] as const satisfies readonly Dumrel.KnowledgeChange[];
 			let existing: Dumrel.ReadingKnowledge | undefined;
 			for (const change of changes) {
-				const result = applyDumdictKnowledgeChange(
+				const result = applyDumdictKnowledgeChanges(
 					{
 						...readingEntry,
 						...(existing === undefined
 							? {}
 							: { knowledge: existing }),
 					},
-					{ reading: englishWalkReading, change },
+					[{ reading: englishWalkReading, change }],
 				);
 				existing = result.knowledge ?? {};
 				expect(readingKnowledgeSchema.safeParse(existing).success).toBe(
@@ -136,32 +211,36 @@ describe("Reading Knowledge Changes", () => {
 				},
 			},
 		};
-		const changed = applyDumdictKnowledgeChange(withLemmaMode, {
-			reading: englishWalkReading,
-			change: {
-				kind: "Contribute",
-				aspect: "semanticRelations",
-				relation: "nearSynonym",
-				targetKind: "lemma",
-				value: [englishRunLemma],
+		const changed = applyDumdictKnowledgeChanges(withLemmaMode, [
+			{
+				reading: englishWalkReading,
+				change: {
+					kind: "Contribute",
+					aspect: "semanticRelations",
+					relation: "nearSynonym",
+					targetKind: "lemma",
+					value: [englishRunLemma],
+				},
 			},
-		});
+		]);
 		expect(changed.knowledge?.semanticRelations).toEqual({
 			targetKind: "lemma",
 			synonym: [englishRunLemma],
 			nearSynonym: [englishRunLemma],
 		});
 		expect(() =>
-			applyDumdictKnowledgeChange(withLemmaMode, {
-				reading: englishWalkReading,
-				change: {
-					kind: "Contribute",
-					aspect: "semanticRelations",
-					relation: "synonym",
-					targetKind: "reading",
-					value: [englishRunReading],
+			applyDumdictKnowledgeChanges(withLemmaMode, [
+				{
+					reading: englishWalkReading,
+					change: {
+						kind: "Contribute",
+						aspect: "semanticRelations",
+						relation: "synonym",
+						targetKind: "reading",
+						value: [englishRunReading],
+					},
 				},
-			}),
+			]),
 		).toThrow("cannot mix");
 	});
 
@@ -176,25 +255,26 @@ describe("Reading Knowledge Changes", () => {
 				value: " a dwelling ",
 			},
 		};
-		expect(applyDumdictKnowledgeChange(readingEntry, change)).toEqual(
-			applyDumdictKnowledgeChange(
-				{ ...readingEntry, knowledge: {} },
+		expect(applyDumdictKnowledgeChanges(readingEntry, [change])).toEqual(
+			applyDumdictKnowledgeChanges({ ...readingEntry, knowledge: {} }, [
 				change,
-			),
+			]),
 		);
 		expect(() =>
-			applyDumdictKnowledgeChange(readingEntry, {
-				...change,
-				change: { ...change.change, value: "" },
-			}),
+			applyDumdictKnowledgeChanges(readingEntry, [
+				{
+					...change,
+					change: { ...change.change, value: "" },
+				},
+			]),
 		).toThrow();
 		expect(() =>
-			applyDumdictKnowledgeChange(
+			applyDumdictKnowledgeChanges(
 				{
 					...readingEntry,
 					knowledge: { definition: 42 } as never,
 				},
-				change,
+				[change],
 			),
 		).toThrow();
 	});
@@ -202,49 +282,59 @@ describe("Reading Knowledge Changes", () => {
 	test("updates only the exact Reading and omits empty Knowledge", () => {
 		const readingEntry = enSerializedNotes[0]?.readingEntries[0];
 		if (!readingEntry) throw new Error("Expected Reading fixture.");
-		const withTranscription = applyDumdictKnowledgeChange(readingEntry, {
-			reading: englishWalkReading,
-			change: {
-				kind: "Contribute",
-				aspect: "transcription",
-				value: " wɔːk ",
-			},
-		});
-		expect(withTranscription.knowledge?.transcription).toBe("wɔːk");
-		const repeated = applyDumdictKnowledgeChange(withTranscription, {
-			reading: englishWalkReading,
-			change: {
-				kind: "Contribute",
-				aspect: "transcription",
-				value: "wɔːk",
-			},
-		});
-		expect(repeated).toEqual(withTranscription);
-		const retracted = applyDumdictKnowledgeChange(withTranscription, {
-			reading: englishWalkReading,
-			change: { kind: "Retract", aspect: "transcription" },
-		});
-		expect(retracted.knowledge).toBeUndefined();
-		expect(() =>
-			applyDumdictKnowledgeChange(readingEntry, {
-				reading: englishRunReading,
-				change: {
-					kind: "Contribute",
-					aspect: "definition",
-					value: "running",
-				},
-			}),
-		).toThrow("Reading");
-		expect(() =>
-			applyDumdictKnowledgeChange(readingEntry, {
+		const withTranscription = applyDumdictKnowledgeChanges(readingEntry, [
+			{
 				reading: englishWalkReading,
 				change: {
 					kind: "Contribute",
-					aspect: "semanticRelations",
-					relation: "synonym",
-					value: [englishWalkLemma],
+					aspect: "transcription",
+					value: " wɔːk ",
 				},
-			}),
+			},
+		]);
+		expect(withTranscription.knowledge?.transcription).toBe("wɔːk");
+		const repeated = applyDumdictKnowledgeChanges(withTranscription, [
+			{
+				reading: englishWalkReading,
+				change: {
+					kind: "Contribute",
+					aspect: "transcription",
+					value: "wɔːk",
+				},
+			},
+		]);
+		expect(repeated).toEqual(withTranscription);
+		const retracted = applyDumdictKnowledgeChanges(withTranscription, [
+			{
+				reading: englishWalkReading,
+				change: { kind: "Retract", aspect: "transcription" },
+			},
+		]);
+		expect(retracted.knowledge).toBeUndefined();
+		expect(() =>
+			applyDumdictKnowledgeChanges(readingEntry, [
+				{
+					reading: englishRunReading,
+					change: {
+						kind: "Contribute",
+						aspect: "definition",
+						value: "running",
+					},
+				},
+			]),
+		).toThrow("Reading");
+		expect(() =>
+			applyDumdictKnowledgeChanges(readingEntry, [
+				{
+					reading: englishWalkReading,
+					change: {
+						kind: "Contribute",
+						aspect: "semanticRelations",
+						relation: "synonym",
+						value: [englishWalkLemma],
+					},
+				},
+			]),
 		).toThrow("same-Lemma");
 	});
 });

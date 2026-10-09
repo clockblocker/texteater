@@ -31,6 +31,9 @@ Both operations are synchronous and return an explicit success or
 `ParsingError` result. `Contribute` adds absent singular aspects or
 deduplicated bucket values, `Correct` replaces one atomic aspect or bucket,
 and `Retract` removes it. A failed operation returns no partial value.
+`applyKnowledgeChanges` applies a list of changes in order with the same
+result as applying them one by one, parsing the Knowledge once going in and
+once coming out.
 
 `valency` records a Reading's Valency Frame: its Slots in order, each
 Required or Optional and holding one complement or several alternatives.

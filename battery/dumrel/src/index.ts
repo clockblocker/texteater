@@ -1,5 +1,6 @@
 export {
 	applyKnowledgeChange,
+	applyKnowledgeChanges,
 	parseKnowledgeChange,
 } from "./apply-knowledge-change.js";
 export { germanConjugationClass } from "./german-conjugation-class.js";

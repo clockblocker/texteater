@@ -6,7 +6,7 @@ import {
 	selectAuthoredArticle,
 } from "dumcorpus/inventories";
 import {
-	applyDumdictKnowledgeChange,
+	applyDumdictKnowledgeChanges,
 	type ChangePrecondition,
 	impliedChangePreconditions,
 	makeSurfaceId,
@@ -190,6 +190,33 @@ async function preconditionFails(
 	}
 }
 
+/**
+ * Applies a Reading patch's Knowledge Changes to its entry in one Dumdict
+ * call, so the Knowledge is parsed once going in and once coming out. An
+ * Attestation op throws, after the changes before it apply as they would one
+ * by one.
+ */
+function applyPatchOps(
+	entry: GermanReadingEntry,
+	ops: Extract<PlannedChange, { type: "patchReading" }>["ops"],
+): GermanReadingEntry {
+	const attestationAt = ops.findIndex(
+		(operation) => operation.kind === "addAttestation",
+	);
+	const applied = applyDumdictKnowledgeChanges(
+		entry,
+		ops
+			.slice(0, attestationAt === -1 ? undefined : attestationAt)
+			.flatMap((operation) =>
+				operation.kind === "applyKnowledgeChange"
+					? [operation.envelope]
+					: [],
+			),
+	);
+	if (attestationAt !== -1) throw hostGraphOwnsAttestations();
+	return applied;
+}
+
 async function advancePreflightState(
 	ctx: MutationCtx,
 	change: PlannedChange,
@@ -226,20 +253,15 @@ async function advancePreflightState(
 					`A Reading patch supports at most ${MAX_PATCH_OPS} operations.`,
 				);
 			}
-			let entry = await preflightReadingEntry(
+			const entry = await preflightReadingEntry(
 				ctx,
 				change.reading,
 				shadow,
 			);
 			if (!entry) throw divergedFromPreflight();
-			for (const operation of change.ops) {
-				if (operation.kind === "addAttestation")
-					throw hostGraphOwnsAttestations();
-				entry = applyDumdictKnowledgeChange(entry, operation.envelope);
-			}
 			shadow.readingEntries.set(
 				readingIdentityKey(change.reading),
-				entry,
+				applyPatchOps(entry, change.ops),
 			);
 			return;
 		}
@@ -536,22 +558,19 @@ async function applyChange(
 			const stored = await findReading(ctx, change.reading);
 			if (!stored) throw divergedFromPreflight();
 			const source = { readingId: stored._id, lemmaId: stored.lemmaId };
-			let entry = storedReadingEntry(stored);
-			const knowledgeChanges: ReadingKnowledgeChange<"de">["change"][] =
-				[];
-			for (const operation of change.ops) {
-				if (operation.kind === "addAttestation")
-					throw hostGraphOwnsAttestations();
-				const knowledgeChange = operation.envelope.change;
-				knowledgeChanges.push(knowledgeChange);
+			const knowledgeChanges = change.ops.flatMap((operation) =>
+				operation.kind === "applyKnowledgeChange"
+					? [operation.envelope.change]
+					: [],
+			);
+			for (const knowledgeChange of knowledgeChanges)
 				if (knowledgeChange.aspect === "semanticRelations")
 					await syncRelationEdges(
 						ctx,
 						source,
 						relationEdgeEdit(knowledgeChange),
 					);
-				entry = applyDumdictKnowledgeChange(entry, operation.envelope);
-			}
+			const entry = applyPatchOps(storedReadingEntry(stored), change.ops);
 			await ctx.db.patch(stored.entryId, {
 				record: readingEntryRecord(entry),
 			});

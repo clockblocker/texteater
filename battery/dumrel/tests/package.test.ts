@@ -23,6 +23,7 @@ test("published operational entrypoint stays independent of Zod", async () => {
 	expect(Object.keys(module).sort()).toEqual([
 		"allowedComplementKinds",
 		"applyKnowledgeChange",
+		"applyKnowledgeChanges",
 		"directSemanticRelationValues",
 		"formulaRoleValues",
 		"germanConjugationClass",

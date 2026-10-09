@@ -8,7 +8,7 @@
  * change's own, and proves its store with the `dumdict/testing` storage
  * conformance suite.
  */
-export { applyDumdictKnowledgeChange } from "./core/apply-reading-knowledge-change";
+export { applyDumdictKnowledgeChanges } from "./core/apply-reading-knowledge-change";
 export { impliedChangePreconditions } from "./core/implied-preconditions";
 export type {
 	ChangePrecondition,

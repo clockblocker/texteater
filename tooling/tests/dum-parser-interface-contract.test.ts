@@ -33,6 +33,7 @@ test("replacement public operations use the settled unit and Knowledge contracts
 	expect(await rootKeys("dumrel")).toEqual([
 		"allowedComplementKinds",
 		"applyKnowledgeChange",
+		"applyKnowledgeChanges",
 		"directSemanticRelationValues",
 		"formulaRoleValues",
 		"germanConjugationClass",

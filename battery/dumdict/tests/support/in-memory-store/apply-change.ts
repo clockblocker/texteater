@@ -1,7 +1,7 @@
 import { sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 
-import { applyDumdictKnowledgeChange } from "../../../src/core/apply-reading-knowledge-change";
+import { applyDumdictKnowledgeChanges } from "../../../src/core/apply-reading-knowledge-change";
 import { readingLemma } from "../../../src/core/identity";
 import { samePendingSemanticRelationLocator } from "../../../src/core/pending";
 import type { PlannedChangeOp } from "../../../src/domain-types";
@@ -111,7 +111,7 @@ function applyReadingPatch<L extends Dumling.Language>(
 				knowledgeChange.targetKind,
 				knowledgeChange.value,
 			);
-		reading = applyDumdictKnowledgeChange(reading, op.envelope);
+		reading = applyDumdictKnowledgeChanges(reading, [op.envelope]);
 	}
 	bundle.readingEntries[index] = reading;
 	return true;

@@ -34,6 +34,27 @@ export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
 	knowledge: ReadingKnowledge<R>;
 	change: unknown;
 }): KnowledgeParse<R> {
+	return applyKnowledgeChanges({
+		source: input.source,
+		knowledge: input.knowledge,
+		changes: [input.change],
+	});
+}
+
+/**
+ * Applies changes in order, atomically, each as `applyKnowledgeChange` would,
+ * and answers what applying them one by one answers: the result, or the first
+ * failure without a partial value. The Knowledge is parsed once going in and
+ * once coming out, not around every change. Each change is checked against
+ * the source before it applies, and a checked change applied to parsed
+ * Knowledge always yields Knowledge that parses, so no state between two
+ * changes needs a parse of its own.
+ */
+export function applyKnowledgeChanges<const R extends Dumling.Reading>(input: {
+	source: R;
+	knowledge: ReadingKnowledge<R>;
+	changes: readonly unknown[];
+}): KnowledgeParse<R> {
 	const source = parseSource(input.source);
 	if (source instanceof ParsingError)
 		return { success: false, error: source } as const;
@@ -42,14 +63,16 @@ export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
 		knowledge: input.knowledge,
 	});
 	if (!current.success) return current;
-	const contextual = checkChange(source, input.change);
-	if (contextual instanceof ParsingError)
-		return { success: false, error: contextual } as const;
 	// Applied as plain Reading Knowledge; parsing the result checks it against
-	// the source again.
-	const next: ReadingKnowledge = structuredClone(current.value);
-	const failure = apply(next, contextual);
-	if (failure) return { success: false, error: failure } as const;
+	// the source again. The parse answered a fresh value, so it is ours to edit.
+	const next: ReadingKnowledge = current.value;
+	for (const change of input.changes) {
+		const contextual = checkChange(source, change);
+		if (contextual instanceof ParsingError)
+			return { success: false, error: contextual } as const;
+		const failure = apply(next, contextual);
+		if (failure) return { success: false, error: failure } as const;
+	}
 	return parseReadingKnowledge({ source, knowledge: next });
 }
 
