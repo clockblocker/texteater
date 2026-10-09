@@ -106,181 +106,272 @@ function cellAnswer(goldCase: GrammarCase, question: Question): string {
 		: "Unresolved";
 }
 
-/**
- * Gold's answers to one jev request of a case. A question gold says
- * nothing about answers Unresolved; a speculative one is then not read.
- */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-export function goldAnswers(
-	goldCase: GrammarCase,
-	questions: Questions,
-): Answers {
+/** What a case's gold answers its questions from. */
+function goldOf(goldCase: GrammarCase) {
 	const { ideal, unit } = goldCase;
 	const { surface } = ideal;
 	const core: Values = surface.lemma.coreFeatures;
 	const bag: Values | null =
 		"inflectionalFeatures" in surface ? surface.inflectionalFeatures : null;
-	const members = ideal.members;
 	const valency = "valencyEvidence" in ideal ? ideal.valencyEvidence : [];
-	const governedAt = (position: number) =>
-		valency.find(
-			(slot) =>
-				slot.complement.kind === "Preposition" &&
-				slot.member === position,
-		);
-	const caseSlot = valency.find((slot) => slot.complement.kind === "Case");
-	const answers: Record<string, Answer> = {};
-	for (const [id, question] of Object.entries(questions)) {
-		const answer = (value: unknown) => {
-			answers[id] = picked(option(question, value));
-		};
-		if (id === "orthography") {
-			const criteria =
-				question.type === "choice" ? question.criteria : {};
-			const irregular = members.flatMap((member, position) =>
-				member.orthography === "Typo"
-					? [`t${position}`]
-					: member.orthography === "Shorthand"
-						? [`s${position}`]
-						: [],
-			);
-			answer(irregular.find((key) => key in criteria) ?? "None");
-		} else if (id === "citation")
-			answer(bag === null ? "Citation" : "Used");
-		else if (id === "spelling") {
-			const { spelling } = surface;
-			answer(
-				spelling.kind === "Canonical"
-					? "Canonical"
-					: spelling.variantTags[0],
-			);
-		} else if (id === "archaic")
-			answer(
-				surface.surfaceFeatures?.historicalStatus === "Archaic"
-					? "Archaic"
-					: "Current",
-			);
-		else if (id.startsWith("reading_s")) {
-			const segment = Number(id.slice("reading_s".length));
-			let reading: string | undefined;
-			for (const [position, member] of members.entries()) {
-				if (member.orthography !== "Fused") continue;
-				const own = unit.segments[position] ?? -1;
-				reading ??=
-					member.fusion.components[member.component + segment - own]
-						?.surface;
-			}
-			const found =
-				question.type === "choice"
-					? Object.entries(question.criteria).find(
-							([, text]) => text === reading,
-						)?.[0]
-					: undefined;
-			answers[id] = picked(found ?? "Unresolved");
-		} else if (id.startsWith("aux_m")) {
-			const uses =
-				question.type === "choice"
-					? Object.entries(question.criteria).filter(([key]) =>
-							key.startsWith("u"),
-						)
-					: [];
-			const matching = uses.find(([, text]) => {
-				const features = useFeatures[useOf[String(text)] ?? ""];
-				return (
-					features !== undefined &&
-					Object.entries(features).every(
-						([feature, value]) => bag?.[feature] === value,
-					)
-				);
-			});
-			answers[id] = picked(matching?.[0] ?? "Main");
-		} else if (id === "prefix") answer(core.hasSepPrefix ?? "None");
-		else if (id === "reflexive") answer(core.lexicallyReflexive);
-		else if (id === "expletive")
-			answer(bag?.expletive === "Subject" ? "Subject" : "None");
-		else if (id === "verbForm") answer(bag?.verbForm);
-		else if (id === "mood") answer(bag?.mood);
-		else if (id === "tense") answer(bag?.tense);
-		else if (id === "person") answer(bag?.person);
-		else if (id === "number") answer(bag?.number);
-		else if (id === "participle") answer(bag?.participleForm);
-		else if (id === "article")
-			answer(core.article === "Definite" ? "Definite" : "Bare");
-		else if (id === "gender")
-			answer(articleOfGender[String(core.gender)] ?? "None");
-		else if (id === "indefinite")
-			answer(
-				members[0]?.orthography === "Shorthand" ? "Indefinite" : "Asks",
-			);
-		else if (id === "nounKind")
-			answer(
-				core.gender !== null && core.gender !== undefined
-					? "Ordinary"
-					: goldCase.rules.includes("de/adjectival-noun-lemma")
-						? "Adjectival"
-						: "PluralOnly",
-			);
-		else if (id === "formGender")
-			answer(articleOfGender[String(bag?.gender)]);
-		else if (id.startsWith("short_s")) {
-			const words = new Set(
-				[
-					surface.lemma.canonicalForm,
-					...String(surface.normalizedSurface).split(" "),
-				].map((word) => foldCase(word, "de")),
-			);
-			const found =
-				question.type === "choice"
-					? Object.entries(question.criteria).find(([, text]) =>
-							words.has(foldCase(String(text), "de")),
-						)?.[0]
-					: undefined;
-			answers[id] = picked(found ?? "Unresolved");
-		} else if (id === "case") answer(bag?.case ?? "Unmarked");
-		else if (id === "comparable")
-			answer(core.comparable === "Yes" ? "Yes" : "No");
-		else if (id === "degree") answer(bag?.degree);
-		else if (id === "attributive")
-			answer((bag?.case ?? null) !== null ? "Yes" : "No");
-		else if (id === "agreement.case") answer(bag?.case);
-		else if (id === "agreement.gender") answer(bag?.gender ?? "Unmarked");
-		else if (id === "agreement.number") answer(bag?.number);
-		else if (id === "inflects")
-			answer(
-				bag &&
-					["case", "gender", "number"].some((key) => bag[key] != null)
-					? "Yes"
-					: "No",
-			);
-		else if (id === "realizedCase")
-			answer(caseSlot ? caseSlot.realizedCase : "None");
-		else if (id === "answer")
-			answer(core.partType === "Res" ? "Res" : "None");
-		else if (id === "sourceLanguage") answer(core.sourceLang);
-		else if (id === "coverage") answer(ideal.realizationCoverage);
-		else if (id.startsWith("governed_m")) {
-			const position = Number(id.slice("governed_m".length));
-			const attested = foldCase(members[position]?.attested ?? "", "de");
-			const governs =
-				governedAt(position) !== undefined ||
-				!String(surface.normalizedSurface)
-					.split(" ")
-					.some((token) => foldCase(token, "de") === attested);
-			answer(governs ? "Governed" : "Free");
-		} else if (id.startsWith("governedCase_m"))
-			answer(
-				governedAt(Number(id.slice("governedCase_m".length)))
-					?.complement.governedCase,
-			);
-		else if (id.startsWith("governedReferent_m"))
-			answer(
-				governedAt(Number(id.slice("governedReferent_m".length)))
-					?.complement.referent ?? "Either",
-			);
-		else if (id === "cell")
-			answers[id] = picked(cellAnswer(goldCase, question));
-		else answers[id] = picked("Unresolved");
+	return {
+		goldCase,
+		ideal,
+		unit,
+		surface,
+		core,
+		bag,
+		members: ideal.members,
+		/** The Preposition slot gold governs at member `position`. */
+		governedAt: (position: number) =>
+			valency.find(
+				(slot) =>
+					slot.complement.kind === "Preposition" &&
+					slot.member === position,
+			),
+		caseSlot: valency.find((slot) => slot.complement.kind === "Case"),
+	};
+}
+
+type Gold = ReturnType<typeof goldOf>;
+
+/** Gold's answer to one question, given the rest of its id after a prefix. */
+type Answering = (gold: Gold, question: Question, suffix: string) => Answer;
+
+/** Answers the option that names the gold value `read` gives. */
+const reads =
+	(read: (gold: Gold) => unknown): Answering =>
+	(gold, question) =>
+		picked(option(question, read(gold)));
+
+/** The first irregular member the question offers, or None. */
+const orthographyAnswer: Answering = ({ members }, question) => {
+	const criteria = question.type === "choice" ? question.criteria : {};
+	const irregular = members.flatMap((member, position) =>
+		member.orthography === "Typo"
+			? [`t${position}`]
+			: member.orthography === "Shorthand"
+				? [`s${position}`]
+				: [],
+	);
+	return picked(
+		option(question, irregular.find((key) => key in criteria) ?? "None"),
+	);
+};
+
+/** The fused component that segment `suffix` reads as. */
+const readingAnswer: Answering = ({ members, unit }, question, suffix) => {
+	const segment = Number(suffix);
+	let reading: string | undefined;
+	for (const [position, member] of members.entries()) {
+		if (member.orthography !== "Fused") continue;
+		const own = unit.segments[position] ?? -1;
+		reading ??=
+			member.fusion.components[member.component + segment - own]?.surface;
 	}
+	const found =
+		question.type === "choice"
+			? Object.entries(question.criteria).find(
+					([, text]) => text === reading,
+				)?.[0]
+			: undefined;
+	return picked(found ?? "Unresolved");
+};
+
+/** The auxiliary use whose features gold's bag has, or Main. */
+const auxiliaryAnswer: Answering = ({ bag }, question) => {
+	const uses =
+		question.type === "choice"
+			? Object.entries(question.criteria).filter(([key]) =>
+					key.startsWith("u"),
+				)
+			: [];
+	const matching = uses.find(([, text]) => {
+		const features = useFeatures[useOf[String(text)] ?? ""];
+		return (
+			features !== undefined &&
+			Object.entries(features).every(
+				([feature, value]) => bag?.[feature] === value,
+			)
+		);
+	});
+	return picked(matching?.[0] ?? "Main");
+};
+
+/** The shortened word that is gold's headword or one of its words. */
+const shortAnswer: Answering = ({ surface }, question) => {
+	const words = new Set(
+		[
+			surface.lemma.canonicalForm,
+			...String(surface.normalizedSurface).split(" "),
+		].map((word) => foldCase(word, "de")),
+	);
+	const found =
+		question.type === "choice"
+			? Object.entries(question.criteria).find(([, text]) =>
+					words.has(foldCase(String(text), "de")),
+				)?.[0]
+			: undefined;
+	return picked(found ?? "Unresolved");
+};
+
+/** Whether member `suffix` is governed: a gold slot, or absent from the Surface. */
+const governedAnswer: Answering = (gold, question, suffix) => {
+	const position = Number(suffix);
+	const { members, surface } = gold;
+	const attested = foldCase(members[position]?.attested ?? "", "de");
+	const governs =
+		gold.governedAt(position) !== undefined ||
+		!String(surface.normalizedSurface)
+			.split(" ")
+			.some((token) => foldCase(token, "de") === attested);
+	return picked(option(question, governs ? "Governed" : "Free"));
+};
+
+/** The questions asked by their whole id. */
+const answeringOf: ReadonlyMap<string, Answering> = new Map<string, Answering>([
+	["orthography", orthographyAnswer],
+	["citation", reads(({ bag }) => (bag === null ? "Citation" : "Used"))],
+	[
+		"spelling",
+		reads(({ surface: { spelling } }) =>
+			spelling.kind === "Canonical"
+				? "Canonical"
+				: spelling.variantTags[0],
+		),
+	],
+	[
+		"archaic",
+		reads(({ surface }) =>
+			surface.surfaceFeatures?.historicalStatus === "Archaic"
+				? "Archaic"
+				: "Current",
+		),
+	],
+	["prefix", reads(({ core }) => core.hasSepPrefix ?? "None")],
+	["reflexive", reads(({ core }) => core.lexicallyReflexive)],
+	[
+		"expletive",
+		reads(({ bag }) => (bag?.expletive === "Subject" ? "Subject" : "None")),
+	],
+	["verbForm", reads(({ bag }) => bag?.verbForm)],
+	["mood", reads(({ bag }) => bag?.mood)],
+	["tense", reads(({ bag }) => bag?.tense)],
+	["person", reads(({ bag }) => bag?.person)],
+	["number", reads(({ bag }) => bag?.number)],
+	["participle", reads(({ bag }) => bag?.participleForm)],
+	[
+		"article",
+		reads(({ core }) =>
+			core.article === "Definite" ? "Definite" : "Bare",
+		),
+	],
+	[
+		"gender",
+		reads(({ core }) => articleOfGender[String(core.gender)] ?? "None"),
+	],
+	[
+		"indefinite",
+		reads(({ members }) =>
+			members[0]?.orthography === "Shorthand" ? "Indefinite" : "Asks",
+		),
+	],
+	[
+		"nounKind",
+		reads(({ core, goldCase }) =>
+			core.gender !== null && core.gender !== undefined
+				? "Ordinary"
+				: goldCase.rules.includes("de/adjectival-noun-lemma")
+					? "Adjectival"
+					: "PluralOnly",
+		),
+	],
+	["formGender", reads(({ bag }) => articleOfGender[String(bag?.gender)])],
+	["case", reads(({ bag }) => bag?.case ?? "Unmarked")],
+	[
+		"comparable",
+		reads(({ core }) => (core.comparable === "Yes" ? "Yes" : "No")),
+	],
+	["degree", reads(({ bag }) => bag?.degree)],
+	[
+		"attributive",
+		reads(({ bag }) => ((bag?.case ?? null) !== null ? "Yes" : "No")),
+	],
+	["agreement.case", reads(({ bag }) => bag?.case)],
+	["agreement.gender", reads(({ bag }) => bag?.gender ?? "Unmarked")],
+	["agreement.number", reads(({ bag }) => bag?.number)],
+	[
+		"inflects",
+		reads(({ bag }) =>
+			bag && ["case", "gender", "number"].some((key) => bag[key] != null)
+				? "Yes"
+				: "No",
+		),
+	],
+	[
+		"realizedCase",
+		reads(({ caseSlot }) => (caseSlot ? caseSlot.realizedCase : "None")),
+	],
+	["answer", reads(({ core }) => (core.partType === "Res" ? "Res" : "None"))],
+	["sourceLanguage", reads(({ core }) => core.sourceLang)],
+	["coverage", reads(({ ideal }) => ideal.realizationCoverage)],
+	[
+		"cell",
+		({ goldCase }, question) => picked(cellAnswer(goldCase, question)),
+	],
+]);
+
+/** The questions asked per member or segment: a prefix, then its number. */
+const answeringByPrefix: readonly (readonly [string, Answering])[] = [
+	["reading_s", readingAnswer],
+	["aux_m", auxiliaryAnswer],
+	["short_s", shortAnswer],
+	["governed_m", governedAnswer],
+	[
+		"governedCase_m",
+		(gold, question, suffix) =>
+			picked(
+				option(
+					question,
+					gold.governedAt(Number(suffix))?.complement.governedCase,
+				),
+			),
+	],
+	[
+		"governedReferent_m",
+		(gold, question, suffix) =>
+			picked(
+				option(
+					question,
+					gold.governedAt(Number(suffix))?.complement.referent ??
+						"Either",
+				),
+			),
+	],
+];
+
+/** Gold's answer to question `id`; one it says nothing about is Unresolved. */
+function goldAnswer(gold: Gold, id: string, question: Question): Answer {
+	const answering = answeringOf.get(id);
+	if (answering) return answering(gold, question, "");
+	for (const [prefix, byPrefix] of answeringByPrefix)
+		if (id.startsWith(prefix))
+			return byPrefix(gold, question, id.slice(prefix.length));
+	return picked("Unresolved");
+}
+
+/**
+ * Gold's answers to one jev request of a case. A question gold says
+ * nothing about answers Unresolved; a speculative one is then not read.
+ */
+export function goldAnswers(
+	goldCase: GrammarCase,
+	questions: Questions,
+): Answers {
+	const gold = goldOf(goldCase);
+	const answers: Record<string, Answer> = {};
+	for (const [id, question] of Object.entries(questions))
+		answers[id] = goldAnswer(gold, id, question);
 	return answers;
 }
 
