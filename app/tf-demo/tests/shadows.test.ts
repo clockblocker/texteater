@@ -201,13 +201,16 @@ describe("Shadow descriptor and storage seam", () => {
 		expect(() =>
 			normalizeShadowDescriptor({ ...nounShadow, language: " de " }),
 		).toThrow("Unsupported Unit Shadow language");
-		expect(
-			normalizeShadowDescriptor({ ...nounShadow, family: " Lexeme " })
-				.family,
-		).toBe("Lexeme");
-		expect(
-			normalizeShadowDescriptor({ ...nounShadow, kind: " NOUN " }).kind,
-		).toBe("NOUN");
+		// Family and Kind are closed names, checked exactly as Dumdict does.
+		expect(() =>
+			normalizeShadowDescriptor({ ...nounShadow, family: " Lexeme" }),
+		).toThrow("de/ Lexeme/NOUN is not a supported Dumling Lemma route");
+		expect(() =>
+			normalizeShadowDescriptor({ ...nounShadow, kind: "NOUN " }),
+		).toThrow("de/Lexeme/NOUN  is not a supported Dumling Lemma route");
+		expect(() =>
+			normalizeShadowDescriptor({ ...verbShadow, kind: " VERB" }),
+		).toThrow("de/Lexeme/ VERB is not a supported Dumling Lemma route");
 		const stored = {
 			_id: "shadow_realistic",
 			_creationTime: 1,

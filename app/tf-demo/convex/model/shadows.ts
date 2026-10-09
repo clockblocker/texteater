@@ -75,10 +75,25 @@ function parseNormalizedString(
 		: parsed(normalized);
 }
 
+type ShadowDescriptorCandidate = {
+	readonly language: TextLanguage;
+	readonly canonicalForm: string;
+	readonly family: string;
+	readonly kind: string;
+};
+
+/** A descriptor whose Family and Kind name a Dumling Lemma route is a Unit Shadow descriptor. */
+function isShadowDescriptor(
+	candidate: ShadowDescriptorCandidate,
+): candidate is ShadowDescriptor {
+	return isLemmaRoute(candidate.language, candidate.family, candidate.kind);
+}
+
 /**
- * Compact storage-side normalization. The exhaustive Dumrel route validation
- * happens in the Node action adapter before a plan reaches Convex; this repeats
- * only the stable value normalization needed to protect legacy/backfill writes.
+ * Compact storage-side check. The exhaustive Dumrel route validation happens
+ * in the Node action adapter before a plan reaches Convex; this normalizes the
+ * Canonical Form and checks the language, Family and Kind as the exact closed
+ * names Dumdict's parser accepts.
  */
 function parseShadowDescriptor(value: unknown): ParseResult<ShadowDescriptor> {
 	if (!isRecord(value)) {
@@ -93,7 +108,7 @@ function parseShadowDescriptor(value: unknown): ParseResult<ShadowDescriptor> {
 			"Unit Shadow descriptor must contain exactly language, canonicalForm, family, and kind.",
 		);
 	}
-	const { language } = value;
+	const { language, family, kind } = value;
 	if (typeof language !== "string" || language.length === 0) {
 		return parseFailure(
 			"Unit Shadow language must be a non-empty exact string.",
@@ -107,22 +122,23 @@ function parseShadowDescriptor(value: unknown): ParseResult<ShadowDescriptor> {
 		"Unit Shadow canonicalForm",
 	);
 	if (!canonicalForm.ok) return canonicalForm;
-	const family = parseNormalizedString(value.family, "Unit Shadow family");
-	if (!family.ok) return family;
-	const kind = parseNormalizedString(value.kind, "Unit Shadow kind");
-	if (!kind.ok) return kind;
-	if (!isLemmaRoute(language, family.value, kind.value)) {
-		return parseFailure(
-			`${language}/${family.value}/${kind.value} is not a supported Dumling Lemma route.`,
-		);
+	if (typeof family !== "string") {
+		return parseFailure("Unit Shadow family must be a string.");
 	}
-	// The route check above admits only Dumling Families and Kinds.
-	return parsed({
+	if (typeof kind !== "string") {
+		return parseFailure("Unit Shadow kind must be a string.");
+	}
+	const candidate: ShadowDescriptorCandidate = {
 		language,
 		canonicalForm: canonicalForm.value,
-		family: family.value,
-		kind: kind.value,
-	} as ShadowDescriptor);
+		family,
+		kind,
+	};
+	return isShadowDescriptor(candidate)
+		? parsed(candidate)
+		: parseFailure(
+				`${language}/${family}/${kind} is not a supported Dumling Lemma route.`,
+			);
 }
 
 export function normalizeShadowDescriptor(value: unknown): ShadowDescriptor {
