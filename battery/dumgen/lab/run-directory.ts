@@ -25,7 +25,9 @@ export async function loadOperationRun(
 ): Promise<OperationEvaluationRun> {
 	const run = await loadRun(directory, runId);
 	if (!isOperationRun(run))
-		throw Error("The run is an operation run (manifest version 2)");
+		throw Error(
+			`Run ${runId} is not an operation run (manifest version 2)`,
+		);
 	return run;
 }
 
