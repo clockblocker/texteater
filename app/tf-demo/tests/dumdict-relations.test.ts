@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import { type DumdictPlan, makeSurfaceId, type StoreRevision } from "dumdict";
+import type { ReadingKnowledgeChange } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
@@ -1195,6 +1196,86 @@ describe("tf-demo Dumdict relation storage", () => {
 				relationTargetReadingKeys: [],
 			}),
 		).rejects.toThrow("at most 200 Semantic Relation edges");
+	});
+
+	test("writes each Reading patch over what the plan's earlier changes stored", async () => {
+		const { t } = await seededDictionary();
+		await insertDictionaryLemma(t, laufenLemma);
+		const revision = "convex-0" as StoreRevision;
+		const patch = (
+			reading: typeof gehenReading | typeof laufenReading,
+			...changes: ReadingKnowledgeChange<"de">["change"][]
+		): DumdictPlan<"de">["changes"][number] => ({
+			type: "patchReading",
+			reading,
+			ops: changes.map((change) => ({
+				kind: "applyKnowledgeChange",
+				envelope: { reading, change },
+			})),
+			preconditions: [
+				{ kind: "revisionMatches", revision },
+				{ kind: "readingExists", reading },
+			],
+		});
+		const plan: DumdictPlan<"de"> = {
+			baseRevision: revision,
+			changes: [
+				patch(
+					gehenReading,
+					{
+						kind: "Contribute",
+						aspect: "definition",
+						value: "motion",
+					},
+					{
+						kind: "Contribute",
+						aspect: "semanticRelations",
+						relation: "synonym",
+						value: [laufenLemma],
+					},
+				),
+				patch(
+					gehenReading,
+					{ kind: "Correct", aspect: "definition", value: "walking" },
+					{
+						kind: "Contribute",
+						aspect: "translations",
+						language: "en",
+						value: ["go"],
+					},
+				),
+				{
+					type: "createReading",
+					entry: {
+						reading: laufenReading,
+						...note,
+						knowledge: { definition: "run" },
+					},
+					preconditions: [
+						{ kind: "revisionMatches", revision },
+						{ kind: "readingMissing", reading: laufenReading },
+					],
+				},
+				patch(laufenReading, {
+					kind: "Contribute",
+					aspect: "translations",
+					language: "en",
+					value: ["run"],
+				}),
+			],
+		};
+		expect(await commitInTransaction(t, plan)).toMatchObject({
+			status: "committed",
+		});
+		expect(await readingKnowledge(t, gehenReading)).toEqual({
+			definition: "walking",
+			translations: { en: ["go"] },
+			semanticRelations: { synonym: [laufenLemma] },
+		});
+		expect(await readingKnowledge(t, laufenReading)).toEqual({
+			definition: "run",
+			translations: { en: ["run"] },
+		});
 	});
 
 	test("preflights every Knowledge patch before writes and reports semantic conflicts without partial state", async () => {

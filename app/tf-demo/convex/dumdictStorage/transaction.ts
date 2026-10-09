@@ -97,6 +97,13 @@ type PreflightState = {
 	readingEntries: Map<string, GermanReadingEntry | null>;
 	surfaces: Map<string, boolean>;
 	pendingRelations: Map<string, boolean>;
+	/** Each Reading patch's entry before and after the preflight applied it. */
+	patchedEntries: Map<PlannedChange, PatchedEntry>;
+};
+
+type PatchedEntry = {
+	readonly from: GermanReadingEntry;
+	readonly to: GermanReadingEntry;
 };
 
 function createPreflightState(): PreflightState {
@@ -106,6 +113,7 @@ function createPreflightState(): PreflightState {
 		readingEntries: new Map(),
 		surfaces: new Map(),
 		pendingRelations: new Map(),
+		patchedEntries: new Map(),
 	};
 }
 
@@ -217,6 +225,23 @@ function applyPatchOps(
 	return applied;
 }
 
+/**
+ * The entry a Reading patch writes. When the stored entry is the one the
+ * preflight patched, the preflight's result is it: the same changes applied
+ * to the same entry, already parsed by Dumrel on the way out. Otherwise the
+ * patch applies again to what is stored.
+ */
+function patchedEntry(
+	stored: GermanReadingEntry,
+	change: Extract<PlannedChange, { type: "patchReading" }>,
+	preflighted: PatchedEntry | undefined,
+): GermanReadingEntry {
+	return preflighted &&
+		canonicalJson(preflighted.from) === canonicalJson(stored)
+		? preflighted.to
+		: applyPatchOps(stored, change.ops);
+}
+
 async function advancePreflightState(
 	ctx: MutationCtx,
 	change: PlannedChange,
@@ -259,9 +284,11 @@ async function advancePreflightState(
 				shadow,
 			);
 			if (!entry) throw divergedFromPreflight();
+			const patched = applyPatchOps(entry, change.ops);
+			shadow.patchedEntries.set(change, { from: entry, to: patched });
 			shadow.readingEntries.set(
 				readingIdentityKey(change.reading),
-				applyPatchOps(entry, change.ops),
+				patched,
 			);
 			return;
 		}
@@ -442,6 +469,7 @@ function readingEntryRecord(entry: GermanReadingEntry): AnyRecord {
 async function applyChange(
 	ctx: MutationCtx,
 	change: PlannedChange,
+	preflight?: PreflightState,
 ): Promise<void> {
 	switch (change.type) {
 		case "createLemma": {
@@ -570,7 +598,11 @@ async function applyChange(
 						source,
 						relationEdgeEdit(knowledgeChange),
 					);
-			const entry = applyPatchOps(storedReadingEntry(stored), change.ops);
+			const entry = patchedEntry(
+				storedReadingEntry(stored),
+				change,
+				preflight?.patchedEntries.get(change),
+			);
 			await ctx.db.patch(stored.entryId, {
 				record: readingEntryRecord(entry),
 			});
@@ -668,7 +700,7 @@ export async function applyDumdictPlanInTransaction(
 		}
 		await advancePreflightState(ctx, change, shadow);
 	}
-	for (const change of changes) await applyChange(ctx, change);
+	for (const change of changes) await applyChange(ctx, change, shadow);
 
 	return { status: "committed" as const, nextRevision: DICTIONARY_REVISION };
 }
