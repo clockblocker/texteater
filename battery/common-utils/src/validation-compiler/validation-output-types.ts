@@ -1,3 +1,4 @@
+import { required } from "../required.js";
 import type { ZodValidationArtifactRegistry } from "./zod-validation-artifact.js";
 
 type Artifact = Pick<ZodValidationArtifactRegistry, "definitions" | "roots">;
@@ -91,7 +92,7 @@ export function emitValidationOutputTypes(options: {
 		},
 	);
 	const declarations = Object.entries(options.exports).map(([name, key]) => {
-		const root = roots[key] as Constraint;
+		const root = required(roots[key], `Missing root ${key}`);
 		const body =
 			root[0] === "ref" && exportNames.get(root[1]) === name
 				? named.emitDefinition(root[1])

@@ -1,3 +1,4 @@
+import { isRecord } from "./is-record.js";
 /**
  * One JSON text per value, whatever the order its object keys were written
  * in, so equal values give equal strings for hashing, cache keys,
@@ -65,15 +66,14 @@ function writeObject(
 		}
 		text = `[${elements.join(",")}]`;
 	} else {
-		if (!isPlainObject(value))
+		if (!isRecord(value) || !isPlainObject(value))
 			throw unsupported(
 				`a ${value.constructor?.name ?? "non-plain"} object`,
 				path,
 			);
 		const members: string[] = [];
-		const record = value as Record<string, unknown>;
-		for (const key of Object.keys(record).sort(byCodeUnit)) {
-			const member = record[key];
+		for (const key of Object.keys(value).sort(byCodeUnit)) {
+			const member = value[key];
 			if (member === undefined) continue;
 			path.push(key);
 			members.push(

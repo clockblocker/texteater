@@ -1,3 +1,4 @@
+import { isRecord } from "../is-record.js";
 import {
 	ParsingError,
 	type ParsingIssue,
@@ -110,6 +111,7 @@ export function parseValidationArtifact<Output>(
 		artifact.definitions ?? {},
 		operations,
 	);
+	// A successful parse returns the artifact's output, which `Output` names.
 	return result.ok
 		? (result.value as Output)
 		: new ParsingError<Output>(result.issues);
@@ -471,6 +473,17 @@ function parseTuple(
 // run on any non-nullish value with a `length`, even after the base type check
 // failed. They compare with JavaScript's operators, so a non-numeric `length`
 // can fail, and the issue's origin names the value, not the schema.
+/** A value's `length`: a string's own, or an object's, own or inherited. */
+function lengthOf(value: unknown): unknown {
+	if (typeof value === "string") return value.length;
+	if (
+		(typeof value === "object" && value !== null) ||
+		typeof value === "function"
+	)
+		return "length" in value ? value.length : undefined;
+	return undefined;
+}
+
 function lengthCheckIssues(
 	value: unknown,
 	check: ArrayConstraintCheck | StringConstraintCheck,
@@ -479,11 +492,12 @@ function lengthCheckIssues(
 	if (value === null || value === undefined) return [];
 	let length: unknown;
 	try {
-		length = (value as { readonly length?: unknown }).length;
+		length = lengthOf(value);
 	} catch {
 		return [];
 	}
 	if (length === undefined) return [];
+	// Zod compares a non-numeric `length` with the same operators.
 	const measured = length as number;
 	const [kind, size] = check;
 	const exact = kind === "length";
@@ -786,8 +800,7 @@ function prefixIssues(
 	path: ParsingPath,
 ): ParsingIssue[] {
 	return issues.map(
-		(issue) =>
-			({ ...issue, path: [...path, ...issue.path] }) as ParsingIssue,
+		(issue): ParsingIssue => ({ ...issue, path: [...path, ...issue.path] }),
 	);
 }
 
@@ -822,10 +835,8 @@ function parseObject(
 	definitions: Readonly<Record<string, Constraint>>,
 	operations: ValidationOperations,
 ): ParseResult {
-	if (input === null || typeof input !== "object" || Array.isArray(input)) {
-		return invalidType("object", input, path);
-	}
-	const source = input as Record<string, unknown>;
+	if (!isRecord(input)) return invalidType("object", input, path);
+	const source = input;
 	const [, shape, unknownKeyPolicy] = constraint;
 	const output: Record<string, unknown> =
 		unknownKeyPolicy === "passthrough" ? { ...source } : {};

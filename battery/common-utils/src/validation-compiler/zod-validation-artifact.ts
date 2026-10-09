@@ -167,6 +167,7 @@ export function compileZodValidationArtifacts<
 		requiredOperations: Object.freeze(
 			[...context.requiredOperations].toSorted(),
 		),
+		// The roots are keyed by the schemas' names, read back as strings.
 		roots: Object.freeze(roots) as Readonly<{
 			[Key in keyof Schemas]: Constraint;
 		}>,
@@ -208,7 +209,8 @@ function compileReference(
 	context: CompilationContext,
 ): Constraint {
 	const internals = zodInternals(schema, schemaName, path);
-	const identity = schema as object;
+	// The schema itself, checked by `zodInternals`, is the node's identity.
+	const identity: object = internals;
 	const existing = context.nodeIds.get(identity);
 	if (existing !== undefined) return ["ref", existing];
 
@@ -798,17 +800,14 @@ function compileChecks(
 						"min_length without a bound",
 					);
 				}
-				effects.push([
-					constraintKind ??
-						(() => {
-							throw unsupported(
-								schemaName,
-								path,
-								"min_length on a non-string/non-array node",
-							);
-						})(),
-					["min", definition.minimum],
-				] as ValidationEffect);
+				if (constraintKind !== "array" && constraintKind !== "string") {
+					throw unsupported(
+						schemaName,
+						path,
+						"min_length on a non-string/non-array node",
+					);
+				}
+				effects.push([constraintKind, ["min", definition.minimum]]);
 				break;
 			case "max_length":
 				assertNoErrorCustomization(
@@ -897,7 +896,7 @@ function compileChecks(
 						"operation",
 						registeredRegexOperation(
 							schemaIdentity,
-							check as object,
+							internals,
 							definition,
 							regexPattern,
 							schemaName,
@@ -1104,6 +1103,8 @@ function constantErrorMessage(
 	}
 	let results: unknown[];
 	try {
+		// A registration's error may take any parameters; the probe calls it
+		// with Zod's issue contexts to show it ignores them.
 		const probe = error as (context?: unknown) => unknown;
 		results = [
 			probe(),
@@ -1244,6 +1245,7 @@ function zodInternals(
 	) {
 		throw unsupported(schemaName, path, "value without Zod internals");
 	}
+	// Zod's internals are private; the shape this compiler reads is checked above.
 	return value as ZodInternals;
 }
 

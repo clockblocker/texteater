@@ -157,10 +157,12 @@ export function linkRegistries(
 		if (rounds > nodes.length + 1)
 			throw Error("Graph partition failed to converge");
 	}
-	const owners = inputs.map(() => ({
-		definitions: {} as Record<string, Constraint>,
-		next: 0,
-	}));
+	const owners = inputs.map(
+		(): { definitions: Record<string, Constraint>; next: number } => ({
+			definitions: {},
+			next: 0,
+		}),
+	);
 	const classIds = new Map<number, string>();
 	for (const [index, node] of nodes.entries()) {
 		const color = required(colors[index], "Missing node color");
@@ -214,13 +216,12 @@ export function linkRegistries(
 			.digest("hex");
 		const requiredFingerprint = previousFingerprint;
 		previousFingerprint = fingerprint;
-		const runtime = {
-			...artifact,
-			definitions: Object.assign(
-				Object.create(inherited),
-				definitions,
-			) as Record<string, Constraint>,
-		};
+		// Each owner's definitions inherit the earlier owners' by prototype.
+		const linked: Record<string, Constraint> = Object.assign(
+			Object.create(inherited),
+			definitions,
+		);
+		const runtime = { ...artifact, definitions: linked };
 		inherited = runtime.definitions;
 		return {
 			owner,

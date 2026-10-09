@@ -29,6 +29,7 @@ export function bindValidationRegistry<Root extends string = string>(
 		readonly fingerprint: string;
 	},
 ): CompiledValidationRegistry<Root> {
+	// `encoded` is the generator's serialization of this type; its version is checked next.
 	const artifact = JSON.parse(encoded) as RegistryData;
 	if (artifact.version !== VALIDATION_PROTOCOL_VERSION)
 		throw Error(
@@ -51,6 +52,8 @@ export function bindValidationRegistry<Root extends string = string>(
 	Object.setPrototypeOf(roots, null);
 	const handle: CompiledValidationRegistry<Root> = Object.freeze({
 		version: 1,
+		// The roots are the generated rule's root names, which the generator also
+		// emits as `Root`.
 		roots: Object.freeze(roots) as Record<Root, true>,
 		fingerprint,
 	});
