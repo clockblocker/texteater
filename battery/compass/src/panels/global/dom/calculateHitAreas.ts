@@ -1,7 +1,10 @@
 import type { RegisteredHandle } from "../../components/handle/types";
 import type { RegisteredRegion } from "../../components/region/types";
 import { sortByElementOffset } from "../../components/split/sortByElementOffset";
-import type { RegisteredSplit } from "../../components/split/types";
+import type {
+	Orientation,
+	RegisteredSplit,
+} from "../../components/split/types";
 import { assert } from "../../utils/assert";
 import { isHTMLElement } from "../../utils/isHTMLElement";
 import { findClosestRect } from "../utils/findClosestRect";
@@ -24,6 +27,22 @@ export type HitArea = {
 	rightToLeft: boolean;
 };
 
+/** Which Regions, counted in Split order, are enabled. */
+type EnabledRegions = {
+	readonly count: number;
+	readonly first: number;
+	readonly last: number;
+};
+
+/** What the walk along a Split's children has seen since the last Region. */
+type Walk = {
+	regionIndex: number;
+	disabledHandle: boolean;
+	hasInterleavedStaticContent: boolean;
+	prevRegion: RegisteredRegion | undefined;
+	pendingHandles: RegisteredHandle[];
+};
+
 /**
  * Determines hit regions for a Split; a hit region is either:
  * - 1: An explicit Handle element
@@ -31,250 +50,324 @@ export type HitArea = {
  *
  * This method determines bounding rects of all regions for the particular split.
  */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function calculateHitAreas(split: RegisteredSplit) {
-	const { element: splitElement, orientation, regions, handles } = split;
+	const { element: splitElement, orientation } = split;
 	const rightToLeft =
 		orientation === "horizontal" && isRightToLeft(splitElement);
+	const sortedChildElements = sortedChildrenOf(split, rightToLeft);
+	const enabled = enabledRegionsOf(sortedChildElements);
+	const hitAreas: HitArea[] = [];
 
-	// Sort elements by offset before traversing
-	const sortedChildElements: HTMLElement[] = sortByElementOffset(
+	// If all (or all but one) of the Regions are disabled, there can be no resize interactions.
+	if (enabled.count <= 1) {
+		return hitAreas;
+	}
+
+	const walk: Walk = {
+		regionIndex: -1,
+		disabledHandle: false,
+		hasInterleavedStaticContent: false,
+		prevRegion: undefined,
+		pendingHandles: [],
+	};
+	for (const childElement of sortedChildElements) {
+		if (childElement.hasAttribute("data-split-region")) {
+			walk.regionIndex++;
+			visitRegion({
+				split,
+				rightToLeft,
+				enabled,
+				walk,
+				childElement,
+				hitAreas,
+			});
+		} else if (childElement.hasAttribute("data-split-handle")) {
+			visitHandle(split, walk, childElement);
+		} else {
+			walk.hasInterleavedStaticContent = true;
+		}
+	}
+
+	return hitAreas;
+}
+
+/** The Split's child elements, sorted by offset before traversing. */
+function sortedChildrenOf(
+	{ element: splitElement, orientation }: RegisteredSplit,
+	rightToLeft: boolean,
+): HTMLElement[] {
+	return sortByElementOffset(
 		orientation,
 		Array.from(splitElement.children)
 			.filter(isHTMLElement)
 			.map((element) => ({ element: element as HTMLElement })),
 		rightToLeft,
 	).map(({ element }) => element);
+}
 
-	const hitAreas: HitArea[] = [];
+function enabledRegionsOf(sortedChildElements: HTMLElement[]): EnabledRegions {
+	let count = 0;
+	let first = -1;
+	let last = -1;
+	let currentRegionIndex = -1;
 
-	let disabledHandle = false;
-	let hasInterleavedStaticContent = false;
-	let firstEnabledRegionIndex = -1;
-	let lastEnabledRegionIndex = -1;
-	let numEnabledRegions = 0;
-	let prevRegion: RegisteredRegion | undefined;
-	let pendingHandles: RegisteredHandle[] = [];
+	for (const childElement of sortedChildElements) {
+		if (!childElement.hasAttribute("data-split-region")) {
+			continue;
+		}
+		currentRegionIndex++;
 
-	{
-		let currentRegionIndex = -1;
+		if (!childElement.hasAttribute("data-disabled")) {
+			count++;
 
-		for (const childElement of sortedChildElements) {
-			if (childElement.hasAttribute("data-split-region")) {
-				currentRegionIndex++;
-
-				if (!childElement.hasAttribute("data-disabled")) {
-					numEnabledRegions++;
-
-					if (firstEnabledRegionIndex === -1) {
-						firstEnabledRegionIndex = currentRegionIndex;
-					}
-
-					lastEnabledRegionIndex = currentRegionIndex;
-				}
+			if (first === -1) {
+				first = currentRegionIndex;
 			}
+
+			last = currentRegionIndex;
 		}
 	}
 
-	// If all (or all but one) of the Regions are disabled, there can be no resize interactions.
-	if (numEnabledRegions > 1) {
-		let currentRegionIndex = -1;
+	return { count, first, last };
+}
 
-		for (const childElement of sortedChildElements) {
-			if (childElement.hasAttribute("data-split-region")) {
-				currentRegionIndex++;
+/**
+ * A Region: the hit areas between it and the previous Region, then a fresh
+ * walk from it.
+ */
+function visitRegion({
+	split,
+	rightToLeft,
+	enabled,
+	walk,
+	childElement,
+	hitAreas,
+}: {
+	split: RegisteredSplit;
+	rightToLeft: boolean;
+	enabled: EnabledRegions;
+	walk: Walk;
+	childElement: HTMLElement;
+	hitAreas: HitArea[];
+}) {
+	const regionData = split.regions.find(
+		(current) => current.element === childElement,
+	);
+	if (!regionData) {
+		return;
+	}
 
-				const regionData = regions.find(
-					(current) => current.element === childElement,
-				);
-				if (regionData) {
-					if (prevRegion) {
-						const prevRect =
-							prevRegion.element.getBoundingClientRect();
-						const rect = childElement.getBoundingClientRect();
+	const { prevRegion } = walk;
+	if (prevRegion) {
+		const prevRect = prevRegion.element.getBoundingClientRect();
+		const rect = childElement.getBoundingClientRect();
+		const skip =
+			walk.regionIndex <= enabled.first ||
+			walk.regionIndex > enabled.last;
 
-						let pendingRectsOrHandles: (
-							| DOMRect
-							| RegisteredHandle
-						)[];
+		for (const rectOrHandle of watchedBetween(
+			split,
+			rightToLeft,
+			walk,
+			prevRect,
+			rect,
+		)) {
+			const hitRect = hitTargetRect(split, rectOrHandle);
 
-						// If an explicit Handle has been rendered, always watch it
-						// Otherwise watch the entire space between the regions
-						// The one caveat is when there are non-interactive element(s) between regions,
-						// in which case we may need to watch individual region edges
-						if (hasInterleavedStaticContent) {
-							// The previous region's inline-end edge and this region's
-							// inline-start edge
-							const firstRegionEdgeRect =
-								orientation === "horizontal"
-									? new DOMRect(
-											rightToLeft
-												? prevRect.left
-												: prevRect.right,
-											prevRect.top,
-											0,
-											prevRect.height,
-										)
-									: new DOMRect(
-											prevRect.left,
-											prevRect.bottom,
-											prevRect.width,
-											0,
-										);
-							const secondRegionEdgeRect =
-								orientation === "horizontal"
-									? new DOMRect(
-											rightToLeft
-												? rect.right
-												: rect.left,
-											rect.top,
-											0,
-											rect.height,
-										)
-									: new DOMRect(
-											rect.left,
-											rect.top,
-											rect.width,
-											0,
-										);
-
-							switch (pendingHandles.length) {
-								case 0: {
-									pendingRectsOrHandles = [
-										firstRegionEdgeRect,
-										secondRegionEdgeRect,
-									];
-									break;
-								}
-								case 1: {
-									const handle = pendingHandles[0];
-									assert(handle, "Pending handle not found");
-									const closestRect = findClosestRect({
-										orientation,
-										rects: [prevRect, rect],
-										targetRect:
-											handle.element.getBoundingClientRect(),
-									});
-
-									pendingRectsOrHandles = [
-										handle,
-										closestRect === prevRect
-											? secondRegionEdgeRect
-											: firstRegionEdgeRect,
-									];
-									break;
-								}
-								default: {
-									pendingRectsOrHandles = pendingHandles;
-									break;
-								}
-							}
-						} else {
-							if (pendingHandles.length) {
-								pendingRectsOrHandles = pendingHandles;
-							} else {
-								pendingRectsOrHandles = [
-									orientation === "horizontal"
-										? rightToLeft
-											? new DOMRect(
-													rect.right,
-													rect.top,
-													prevRect.left - rect.right,
-													rect.height,
-												)
-											: new DOMRect(
-													prevRect.right,
-													rect.top,
-													rect.left - prevRect.right,
-													rect.height,
-												)
-										: new DOMRect(
-												rect.left,
-												prevRect.bottom,
-												rect.width,
-												rect.top - prevRect.bottom,
-											),
-								];
-							}
-						}
-
-						for (const rectOrHandle of pendingRectsOrHandles) {
-							let rect =
-								"width" in rectOrHandle
-									? rectOrHandle
-									: rectOrHandle.element.getBoundingClientRect();
-
-							const minHitTargetSize = isCoarsePointer()
-								? split.resizeTargetMinimumSize.coarse
-								: split.resizeTargetMinimumSize.fine;
-							if (rect.width < minHitTargetSize) {
-								const delta = minHitTargetSize - rect.width;
-								rect = new DOMRect(
-									rect.x - delta / 2,
-									rect.y,
-									rect.width + delta,
-									rect.height,
-								);
-							}
-							if (rect.height < minHitTargetSize) {
-								const delta = minHitTargetSize - rect.height;
-								rect = new DOMRect(
-									rect.x,
-									rect.y - delta / 2,
-									rect.width,
-									rect.height + delta,
-								);
-							}
-
-							const skip =
-								currentRegionIndex <= firstEnabledRegionIndex ||
-								currentRegionIndex > lastEnabledRegionIndex;
-
-							if (!disabledHandle && !skip) {
-								hitAreas.push({
-									split,
-									splitSize: calculateAvailableSplitSize({
-										split,
-									}),
-									regions: [prevRegion, regionData],
-									rightToLeft,
-									handle:
-										"width" in rectOrHandle
-											? undefined
-											: rectOrHandle,
-									rect,
-								});
-							}
-
-							disabledHandle = false;
-						}
-					}
-
-					hasInterleavedStaticContent = false;
-					prevRegion = regionData;
-					pendingHandles = [];
-				}
-			} else if (childElement.hasAttribute("data-split-handle")) {
-				if (childElement.ariaDisabled !== null) {
-					disabledHandle = true;
-				}
-
-				const handleData = handles.find(
-					(current) => current.element === childElement,
-				);
-				if (handleData) {
-					// Handles will be included implicitly in the area between the previous and next region
-					// It's important to track them though, to handle the scenario of non-interactive split content
-					pendingHandles.push(handleData);
-				} else {
-					prevRegion = undefined;
-					pendingHandles = [];
-				}
-			} else {
-				hasInterleavedStaticContent = true;
+			if (!walk.disabledHandle && !skip) {
+				hitAreas.push({
+					split,
+					splitSize: calculateAvailableSplitSize({
+						split,
+					}),
+					regions: [prevRegion, regionData],
+					rightToLeft,
+					handle: "width" in rectOrHandle ? undefined : rectOrHandle,
+					rect: hitRect,
+				});
 			}
+
+			walk.disabledHandle = false;
 		}
 	}
 
-	return hitAreas;
+	walk.hasInterleavedStaticContent = false;
+	walk.prevRegion = regionData;
+	walk.pendingHandles = [];
+}
+
+function visitHandle(
+	split: RegisteredSplit,
+	walk: Walk,
+	childElement: HTMLElement,
+) {
+	if (childElement.ariaDisabled !== null) {
+		walk.disabledHandle = true;
+	}
+
+	const handleData = split.handles.find(
+		(current) => current.element === childElement,
+	);
+	if (handleData) {
+		// Handles will be included implicitly in the area between the previous and next region
+		// It's important to track them though, to handle the scenario of non-interactive split content
+		walk.pendingHandles.push(handleData);
+	} else {
+		walk.prevRegion = undefined;
+		walk.pendingHandles = [];
+	}
+}
+
+/**
+ * What to watch between two Regions. If an explicit Handle has been
+ * rendered, always watch it; otherwise watch the entire space between the
+ * regions. The one caveat is when there are non-interactive element(s)
+ * between regions, in which case we may need to watch individual region
+ * edges.
+ */
+function watchedBetween(
+	{ orientation }: RegisteredSplit,
+	rightToLeft: boolean,
+	{ hasInterleavedStaticContent, pendingHandles }: Walk,
+	prevRect: DOMRect,
+	rect: DOMRect,
+): (DOMRect | RegisteredHandle)[] {
+	if (!hasInterleavedStaticContent) {
+		return pendingHandles.length
+			? pendingHandles
+			: [gapRect(orientation, rightToLeft, prevRect, rect)];
+	}
+
+	// The previous region's inline-end edge and this region's inline-start edge
+	const firstRegionEdgeRect = inlineEndEdge(
+		orientation,
+		rightToLeft,
+		prevRect,
+	);
+	const secondRegionEdgeRect = inlineStartEdge(
+		orientation,
+		rightToLeft,
+		rect,
+	);
+
+	switch (pendingHandles.length) {
+		case 0: {
+			return [firstRegionEdgeRect, secondRegionEdgeRect];
+		}
+		case 1: {
+			const handle = pendingHandles[0];
+			assert(handle, "Pending handle not found");
+			const closestRect = findClosestRect({
+				orientation,
+				rects: [prevRect, rect],
+				targetRect: handle.element.getBoundingClientRect(),
+			});
+
+			return [
+				handle,
+				closestRect === prevRect
+					? secondRegionEdgeRect
+					: firstRegionEdgeRect,
+			];
+		}
+		default: {
+			return pendingHandles;
+		}
+	}
+}
+
+/** The whole space between two adjacent Regions. */
+function gapRect(
+	orientation: Orientation,
+	rightToLeft: boolean,
+	prevRect: DOMRect,
+	rect: DOMRect,
+): DOMRect {
+	if (orientation !== "horizontal") {
+		return new DOMRect(
+			rect.left,
+			prevRect.bottom,
+			rect.width,
+			rect.top - prevRect.bottom,
+		);
+	}
+	return rightToLeft
+		? new DOMRect(
+				rect.right,
+				rect.top,
+				prevRect.left - rect.right,
+				rect.height,
+			)
+		: new DOMRect(
+				prevRect.right,
+				rect.top,
+				rect.left - prevRect.right,
+				rect.height,
+			);
+}
+
+/** A Region's zero-width inline-end (or bottom) edge. */
+function inlineEndEdge(
+	orientation: Orientation,
+	rightToLeft: boolean,
+	rect: DOMRect,
+): DOMRect {
+	return orientation === "horizontal"
+		? new DOMRect(
+				rightToLeft ? rect.left : rect.right,
+				rect.top,
+				0,
+				rect.height,
+			)
+		: new DOMRect(rect.left, rect.bottom, rect.width, 0);
+}
+
+/** A Region's zero-width inline-start (or top) edge. */
+function inlineStartEdge(
+	orientation: Orientation,
+	rightToLeft: boolean,
+	rect: DOMRect,
+): DOMRect {
+	return orientation === "horizontal"
+		? new DOMRect(
+				rightToLeft ? rect.right : rect.left,
+				rect.top,
+				0,
+				rect.height,
+			)
+		: new DOMRect(rect.left, rect.top, rect.width, 0);
+}
+
+/** A watched rect or Handle's rect, grown to the Split's minimum hit target size. */
+function hitTargetRect(
+	split: RegisteredSplit,
+	rectOrHandle: DOMRect | RegisteredHandle,
+): DOMRect {
+	let rect =
+		"width" in rectOrHandle
+			? rectOrHandle
+			: rectOrHandle.element.getBoundingClientRect();
+
+	const minHitTargetSize = isCoarsePointer()
+		? split.resizeTargetMinimumSize.coarse
+		: split.resizeTargetMinimumSize.fine;
+	if (rect.width < minHitTargetSize) {
+		const delta = minHitTargetSize - rect.width;
+		rect = new DOMRect(
+			rect.x - delta / 2,
+			rect.y,
+			rect.width + delta,
+			rect.height,
+		);
+	}
+	if (rect.height < minHitTargetSize) {
+		const delta = minHitTargetSize - rect.height;
+		rect = new DOMRect(
+			rect.x,
+			rect.y - delta / 2,
+			rect.width,
+			rect.height + delta,
+		);
+	}
+	return rect;
 }
