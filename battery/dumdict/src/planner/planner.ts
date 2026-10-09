@@ -42,7 +42,10 @@ import type {
 	EnsureReadingEntryContext,
 	LoadReadingEntryContextRequest,
 } from "../storage";
-import { knowledgeChangeUsesLanguage } from "../validation-semantics";
+import {
+	knowledgeChangeUsesLanguage,
+	retainDumdictPlan,
+} from "../validation-semantics";
 import {
 	type ReadingEntryContextLoad,
 	storageRequestFor,
@@ -151,21 +154,53 @@ function invalidRequest(message: string): DumdictPlanRejected {
 	return rejected("invalidRequest", message);
 }
 
+/**
+ * The outcome of a workflow whose typed request the planner does not parse
+ * whole on the way in (addNewNote's draft, a requested Surface). Parsing the
+ * plan is then Dumdict's check of that input.
+ */
 function planned<L extends Dumling.Language>(
 	language: L,
 	plan: PlanMutationResult<L> | PlanMutationRejected,
 ): DumdictPlanOutcome<L> {
 	if (plan.status === "rejected") return rejected(plan.code, plan.message);
-	const parsed = unwrapDumdictParse(
-		parseAsDumdictPlan(
-			{ baseRevision: plan.baseRevision, changes: plan.changes },
-			language,
+	return outcome(
+		plan,
+		unwrapDumdictParse(
+			parseAsDumdictPlan(
+				{ baseRevision: plan.baseRevision, changes: plan.changes },
+				language,
+			),
 		),
 	);
+}
+
+/**
+ * The outcome of a workflow whose request and slice are parsed on the way in,
+ * so every value in its plan is already checked. The plan isn't parsed again:
+ * the host parses each change at its write boundary (`parseAsPlannedChangeOp`).
+ */
+function plannedFromParsedInput<L extends Dumling.Language>(
+	plan: PlanMutationResult<L> | PlanMutationRejected,
+): DumdictPlanOutcome<L> {
+	if (plan.status === "rejected") return rejected(plan.code, plan.message);
+	return outcome(
+		plan,
+		retainDumdictPlan({
+			baseRevision: plan.baseRevision,
+			changes: plan.changes,
+		}),
+	);
+}
+
+function outcome<L extends Dumling.Language>(
+	plan: PlanMutationResult<L>,
+	checked: DumdictPlan<L>,
+): DumdictPlanOutcome<L> {
 	return {
 		status: "planned",
 		...structuredClone({
-			plan: parsed,
+			plan: checked,
 			affected: plan.affected,
 			summary: plan.summary,
 		}),
@@ -292,8 +327,9 @@ function applyGeneratedKnowledge<L extends Dumling.Language>(
 					request,
 				}),
 			);
-			return planned(
-				language,
+			// Its check parsed the changes and pending relations, and the slice
+			// validation parsed the Reading and every stored entry.
+			return plannedFromParsedInput(
 				planApplyGeneratedKnowledge(context, request),
 			);
 		},

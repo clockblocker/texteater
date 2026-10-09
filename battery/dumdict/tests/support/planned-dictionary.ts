@@ -96,9 +96,14 @@ export function createPlannedDictionary<L extends Dumling.Language>(
 				affected,
 				summary,
 			};
-		const result = store.commitChanges(
-			unwrapDumdictParse(parseAsCommitChangesRequest(plan, language)),
+		const request = unwrapDumdictParse(
+			parseAsCommitChangesRequest(plan, language),
 		);
+		// A planner may skip parsing a plan it built from parsed input, so the
+		// host's parse must find nothing to change in any plan.
+		if (!Bun.deepEquals(request, plan, true))
+			throw new Error("The host's parse changed a planned change.");
+		const result = store.commitChanges(request);
 		if (result.status === "committed")
 			return {
 				status: "applied",
