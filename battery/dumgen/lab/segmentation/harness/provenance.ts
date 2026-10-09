@@ -9,9 +9,19 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { authoredRealizations, rules } from "dumcorpus";
+import { z } from "zod";
 import { gitOutput } from "../../git.js";
-import { hashOf, type TransportRecord } from "./jev-cache.js";
-import type { Pin } from "./round.js";
+import {
+	hashOf,
+	type TransportRecord,
+	transportRecordSchema,
+} from "./jev-cache.js";
+import {
+	type LegacyPin,
+	legacyPinSchema,
+	type Pin,
+	pinSchema,
+} from "./round.js";
 
 /**
  * The Dumgen sources a lab run executes, relative to the package root: the
@@ -183,6 +193,83 @@ export type RunManifest = {
 	readonly transport?: TransportRecord;
 	readonly extra?: Readonly<Record<string, unknown>>;
 };
+
+/**
+ * A manifest written before #913 renamed dumspec to dumcorpus: the rename
+ * kept the lab's evidence as written, so its dumcorpus fields and pin are
+ * named after dumspec. Every manifest committed by 2026-10-04 is one.
+ */
+type LegacyRunManifest = Omit<
+	RunManifest,
+	"dumcorpusHash" | "dumcorpus" | "pin"
+> & {
+	readonly dumspecHash: string;
+	/** Before #881, the built dist's hash stood where `sourceHash` stands. */
+	readonly dumspec: Omit<RunManifest["dumcorpus"], "sourceHash"> & {
+		readonly distHash: string;
+	};
+	readonly pin?: LegacyPin;
+};
+
+/** A committed manifest: one written now, or one from before #913. */
+export type RecordedManifest = RunManifest | LegacyRunManifest;
+
+/** The hash of the dumcorpus source a manifest's run read, whichever its names. */
+export const dumcorpusHashOf = (manifest: RecordedManifest): string =>
+	"dumcorpusHash" in manifest ? manifest.dumcorpusHash : manifest.dumspecHash;
+
+const fingerprintSchema = z.object({
+	sourceHash: z.string(),
+	rulesHash: z.string(),
+	realizationsHash: z.string(),
+});
+
+/** A run's manifest as its evidence keeps it. */
+const currentManifestSchema = z.object({
+	runId: z.string(),
+	kind: z.string(),
+	createdAt: z.string(),
+	parent: z.string().nullable(),
+	hypothesis: z.string().nullable(),
+	gitHead: z.string(),
+	dirty: z.boolean(),
+	dirtyFiles: z.array(z.string()),
+	codeHash: z.string(),
+	sourceHashes: z.record(z.string(), z.string()),
+	dumcorpusHash: z.string(),
+	dumcorpus: fingerprintSchema,
+	promptHashes: z.record(z.string(), z.string()),
+	modelRequested: z.string(),
+	modelResolved: z.array(z.string()),
+	arm: z.string(),
+	options: z.record(z.string(), z.string()),
+	primary: z.string(),
+	set: z.object({ name: z.string(), hash: z.string() }),
+	subset: z.string(),
+	limit: z.number().nullable(),
+	cases: z.number(),
+	repetitions: z.number(),
+	repetitionOffset: z.number(),
+	baseline: z.string().optional(),
+	round: z.string().optional(),
+	pin: pinSchema.optional(),
+	transport: transportRecordSchema.optional(),
+	extra: z.record(z.string(), z.unknown()).optional(),
+}) satisfies z.ZodType<RunManifest>;
+
+/** A committed manifest, current or from before #913. */
+export const recordedManifestSchema = z.union([
+	currentManifestSchema,
+	currentManifestSchema
+		.omit({ dumcorpusHash: true, dumcorpus: true, pin: true })
+		.extend({
+			dumspecHash: z.string(),
+			dumspec: fingerprintSchema
+				.omit({ sourceHash: true })
+				.extend({ distHash: z.string() }),
+			pin: legacyPinSchema.optional(),
+		}),
+]) satisfies z.ZodType<RecordedManifest>;
 
 /** The provenance half of a manifest, taken before the run starts. */
 export async function provenanceOf(args: {

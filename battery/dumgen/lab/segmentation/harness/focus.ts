@@ -11,6 +11,9 @@
  * and a variant scored in memory (a floor sweep, #762) score alike. The
  * focus set is fixed: it is never re-derived from a later run.
  */
+
+import { z } from "zod";
+import { recordOf } from "../../records.js";
 import { type Cause, causes } from "./attribution.js";
 import type { FocusSet, FocusUnit } from "./corpus.js";
 import { mcnemar } from "./metrics.js";
@@ -147,9 +150,7 @@ function place(
 }
 
 function tallyOf(placed: readonly Placed[], policy: string, focus: FocusSet) {
-	const groups = Object.fromEntries(
-		focusGroups.map((group) => [group, emptyTally()]),
-	) as Record<FocusGroup, UnitTally>;
+	const groups = recordOf(focusGroups, () => emptyTally());
 	const scopes: Record<Scope, UnitTally> = {
 		focus: emptyTally(),
 		guardrail: emptyTally(),
@@ -208,6 +209,23 @@ export type FocusDelta = {
 	readonly guardrail: UnitChange;
 	readonly otherCases: UnitChange;
 };
+
+const unitChangeSchema = z.object({
+	units: z.number(),
+	fixed: z.number(),
+	broken: z.number(),
+	stabilised: z.number(),
+	destabilised: z.number(),
+	p: z.number(),
+}) satisfies z.ZodType<UnitChange>;
+
+/** A focus delta as a ledger compare line keeps it. */
+export const focusDeltaSchema = z.object({
+	focus: unitChangeSchema,
+	groups: z.record(z.enum(focusGroups), unitChangeSchema),
+	guardrail: unitChangeSchema,
+	otherCases: unitChangeSchema,
+}) satisfies z.ZodType<FocusDelta>;
 
 type ChangedUnit = {
 	readonly case: string;
@@ -323,9 +341,7 @@ export function compareFocus(
 		),
 		delta: {
 			focus: changeOf("focus"),
-			groups: Object.fromEntries(
-				focusGroups.map((group) => [group, changeOf(group)]),
-			) as Record<FocusGroup, UnitChange>,
+			groups: recordOf(focusGroups, changeOf),
 			guardrail: changeOf("guardrail"),
 			otherCases: changeOf("otherCases"),
 		},

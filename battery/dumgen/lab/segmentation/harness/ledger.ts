@@ -8,8 +8,14 @@
  */
 import { appendFile, mkdir, readFile } from "node:fs/promises";
 import { dirname } from "node:path";
-import type { FocusDelta } from "./focus.js";
-import type { CallRecord, TransportRecord } from "./jev-cache.js";
+import { z } from "zod";
+import { parseStoredJson } from "../../stored-json.js";
+import { type FocusDelta, focusDeltaSchema } from "./focus.js";
+import {
+	type CallRecord,
+	type TransportRecord,
+	transportRecordSchema,
+} from "./jev-cache.js";
 
 export type Spend = {
 	readonly jev: {
@@ -27,11 +33,19 @@ export type Spend = {
 	};
 };
 
-/** A command that could call models: `run`, `noise`, `limit-qpc` or `evaluate`. */
+/**
+ * A command that could call models: `run`, `noise`, `limit-qpc` or
+ * `evaluate`, or the retired `limit-stress`, whose lines the ledger keeps.
+ */
 export type SpendEntry = Spend & {
 	readonly runId: string;
 	readonly at: string;
-	readonly command: "run" | "noise" | "limit-qpc" | "evaluate";
+	readonly command:
+		| "run"
+		| "noise"
+		| "limit-qpc"
+		| "limit-stress"
+		| "evaluate";
 	/** The round the spend counts against; absent on lines written before rounds. */
 	readonly round?: string;
 	/** `evaluate`: the experiment id. */
@@ -85,6 +99,68 @@ export type CompareEntry = BucketDelta & {
 
 export type LedgerEntry = SpendEntry | CompareEntry;
 
+const spendEntrySchema = z.object({
+	jev: z.object({
+		calls: z.number(),
+		freshCalls: z.number(),
+		freshInputTokens: z.number(),
+		allInputTokens: z.number(),
+	}),
+	luna: z.object({
+		calls: z.number(),
+		freshCalls: z.number(),
+		freshInputTokens: z.number(),
+		freshOutputTokens: z.number(),
+	}),
+	runId: z.string(),
+	at: z.string(),
+	command: z.enum(["run", "noise", "limit-qpc", "limit-stress", "evaluate"]),
+	round: z.string().optional(),
+	experiment: z.string().optional(),
+	pin: z.string().optional(),
+	arm: z.string().optional(),
+	options: z.record(z.string(), z.string()).optional(),
+	set: z.string().optional(),
+	setHash: z.string().optional(),
+	subset: z.string().optional(),
+	cases: z.number().optional(),
+	repetitions: z.number().optional(),
+	gitHead: z.string(),
+	dirty: z.boolean().optional(),
+	codeHash: z.string().optional(),
+	model: z.string().optional(),
+	parent: z.string().nullable().optional(),
+	hypothesis: z.string().nullable().optional(),
+	transport: transportRecordSchema.optional(),
+}) satisfies z.ZodType<SpendEntry>;
+
+const bucketDeltaShape = {
+	units: z.number(),
+	gained: z.number(),
+	lost: z.number(),
+	p: z.number(),
+	floor: z.number().nullable(),
+	beyondNoise: z.boolean().nullable(),
+};
+
+const comparedSideSchema = z.object({ runId: z.string(), policy: z.string() });
+
+const compareEntrySchema = z.object({
+	...bucketDeltaShape,
+	at: z.string(),
+	command: z.literal("compare"),
+	round: z.string().optional(),
+	left: comparedSideSchema,
+	right: comparedSideSchema,
+	subset: z.string().nullable(),
+	noiseRun: z.string().nullable(),
+	verdict: z.string().nullable(),
+	buckets: z.record(z.string(), z.object(bucketDeltaShape)),
+	focus: focusDeltaSchema.optional(),
+}) satisfies z.ZodType<CompareEntry>;
+
+const ledgerEntrySchema = z.union([spendEntrySchema, compareEntrySchema]);
+
 export const isSpend = (entry: LedgerEntry): entry is SpendEntry =>
 	entry.command !== "compare";
 
@@ -113,15 +189,28 @@ export function spendOf(calls: readonly CallRecord[]): Spend {
 	};
 }
 
+/**
+ * Every line of the ledger at `path`, none when there is no ledger yet. A
+ * line that is not a ledger entry throws, so a round's spend is never
+ * summed over part of its ledger.
+ */
 export async function readLedger(path: string): Promise<LedgerEntry[]> {
+	let text: string;
 	try {
-		return (await readFile(path, "utf8"))
-			.split("\n")
-			.filter(Boolean)
-			.map((line) => JSON.parse(line) as LedgerEntry);
+		text = await readFile(path, "utf8");
 	} catch {
 		return [];
 	}
+	return text
+		.split("\n")
+		.filter(Boolean)
+		.map((line, index) =>
+			parseStoredJson(
+				ledgerEntrySchema,
+				line,
+				`${path} entry ${index + 1}`,
+			),
+		);
 }
 
 export async function appendLedger(

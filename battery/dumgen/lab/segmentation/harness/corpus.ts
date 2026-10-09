@@ -15,6 +15,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { gunzipSync, gzipSync } from "node:zlib";
 import { rules } from "dumcorpus";
+import { z } from "zod";
 import { loadGold } from "../../evaluation/spec-corpus/gold.js";
 import { projectCorpus } from "../../evaluation/spec-corpus/projection.js";
 import {
@@ -22,8 +23,11 @@ import {
 	type SegmentInUnitsInput,
 	type SegmentInUnitsOutput,
 	segmentInUnits,
+	segmentInUnitsInputSchema,
+	segmentInUnitsOutputSchema,
 } from "../../evaluation/spec-corpus/segment-in-units.js";
 import { git } from "../../git.js";
+import { parseStoredJson, readStoredJsonSync } from "../../stored-json.js";
 import { hashOf } from "./jev-cache.js";
 
 /** Records the German Rules name as their examples (the guide may quote them). */
@@ -61,6 +65,45 @@ export type LabSet = {
 	readonly cases: readonly LabCase[];
 };
 
+const setNameSchema = z.enum(["dev", "heldout"]);
+
+/** A frozen lab set as `freezeSets` keeps it. */
+const labSetSchema = z.object({
+	name: setNameSchema,
+	createdAt: z.string(),
+	gitHead: z.string(),
+	dirtyRecordFiles: z.number(),
+	withheld: z.array(z.string()).optional(),
+	hash: z.string(),
+	cases: z.array(
+		z.object({
+			id: z.string(),
+			record: z.string(),
+			input: segmentInUnitsInputSchema,
+			idealOutput: segmentInUnitsOutputSchema,
+			facts: z.object({
+				coverage: z.enum(["Full", "Partial"]),
+				sources: z.array(
+					z.union([
+						z.object({ target: z.number() }),
+						z.object({ noTarget: z.number() }),
+					]),
+				),
+			}),
+			rules: z.array(z.string()),
+			ruleExample: z.boolean(),
+		}),
+	),
+}) satisfies z.ZodType<LabSet>;
+
+/** `name`, from a CLI flag or a stored run, as a lab set's; another throws. */
+export function setNameOf(name: string): SetName {
+	const parsed = setNameSchema.safeParse(name);
+	if (!parsed.success)
+		throw Error(`The lab has no ${name} set; it has dev and heldout`);
+	return parsed.data;
+}
+
 /** The tracked frozen sets. */
 export const trackedSetsRoot = join(
 	import.meta.dir,
@@ -83,7 +126,10 @@ const currentPath = (root: string) => join(root, "current.json");
 
 const readCurrent = (root: string): CurrentSets =>
 	existsSync(currentPath(root))
-		? (JSON.parse(readFileSync(currentPath(root), "utf8")) as CurrentSets)
+		? readStoredJsonSync(
+				z.partialRecord(setNameSchema, z.string()),
+				currentPath(root),
+			)
 		: {};
 
 /** The hash of the current set `name`; undefined before its first freeze. */
@@ -157,8 +203,8 @@ export async function freezeSets(
 				{
 					id,
 					record: origin.record,
-					input: golden.input as SegmentInUnitsInput,
-					idealOutput: golden.idealOutput as SegmentInUnitsOutput,
+					input: golden.input,
+					idealOutput: golden.idealOutput,
 					facts,
 					rules:
 						record?.sources.rules.map(
@@ -209,18 +255,18 @@ export async function loadSet(
 		throw Error(
 			`${name}@${wanted} is neither the frozen ${name}@${current} nor kept at ${path}`,
 		);
-	return readSet(await readFile(path));
+	return readSet(await readFile(path), path);
 }
 
-const readSet = (gzipped: Uint8Array) =>
-	JSON.parse(gunzipSync(gzipped).toString("utf8")) as LabSet;
+const readSet = (gzipped: Uint8Array, path: string) =>
+	parseStoredJson(labSetSchema, gunzipSync(gzipped).toString("utf8"), path);
 
 /** The number of cases in the current set `name`; 0 before its first freeze. */
 export function currentSetSize(root: string, name: SetName): number {
 	const hash = currentSetHash(root, name);
 	const path = hash === undefined ? undefined : setPath(root, name, hash);
 	return path && existsSync(path)
-		? readSet(readFileSync(path)).cases.length
+		? readSet(readFileSync(path), path).cases.length
 		: 0;
 }
 
@@ -263,7 +309,27 @@ export const focusPath = join(
 /** A frozen set's identity, as a run, its manifest or the set itself records it. */
 export type SetIdentity = { readonly name: string; readonly hash: string };
 
-const readFocus = () => JSON.parse(readFileSync(focusPath, "utf8")) as FocusSet;
+const focusSetSchema = z.object({
+	name: z.string(),
+	set: z.object({ name: setNameSchema, hash: z.string() }),
+	sourceRun: z.string(),
+	policy: z.string(),
+	cases: z.array(z.string()),
+	units: z.array(
+		z.object({
+			caseId: z.string(),
+			unit: z.number(),
+			text: z.string(),
+			bucket: z.string(),
+			wrongByMajority: z.boolean(),
+			flips: z.boolean(),
+			disputedGold: z.boolean(),
+			cause: z.string().optional(),
+		}),
+	),
+}) satisfies z.ZodType<FocusSet>;
+
+const readFocus = () => readStoredJsonSync(focusSetSchema, focusPath);
 
 const takenFrom = (focus: FocusSet, set: SetIdentity) =>
 	focus.set.name === set.name && focus.set.hash === set.hash;

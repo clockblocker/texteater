@@ -117,7 +117,10 @@ export const referenceFloors: ReferenceFloors = {
 	saying: 0.4,
 };
 
-const floorNames = Object.keys(runFloors) as readonly (keyof ReferenceFloors)[];
+const isFloorName = (name: string): name is keyof ReferenceFloors =>
+	name in runFloors;
+
+const floorNames = Object.keys(runFloors).filter(isFloorName);
 
 /**
  * The floors `--opt` sets, over the reference's own, or over the run's
@@ -127,18 +130,16 @@ export function floorsOf(options: ArmOptions): ReferenceFloors {
 	const base = options.floors ?? "reference";
 	if (base !== "reference" && base !== "run")
 		throw Error(`--opt floors=${base} must be reference or run`);
-	const floors: Record<string, number> = {
-		...(base === "run" ? runFloors : referenceFloors),
-	};
+	const set: Partial<Record<keyof ReferenceFloors, number>> = {};
 	for (const name of floorNames) {
 		const value = options[name];
 		if (value === undefined) continue;
 		const number = Number(value);
 		if (!Number.isFinite(number))
 			throw Error(`--opt ${name}=${value} is not a number`);
-		floors[name] = number;
+		set[name] = number;
 	}
-	return floors as ReferenceFloors;
+	return { ...(base === "run" ? runFloors : referenceFloors), ...set };
 }
 
 /**
@@ -480,7 +481,7 @@ type ReferenceRouted = Routed & { readonly routed: RoutedMembership };
 export function referenceStagesUnder(
 	floors: ReferenceFloors,
 	unasked: "ask" | "unresolved" = "ask",
-): Stages<Nomination, Membership> {
+): Stages<Nomination, Membership, ReferenceRouted> {
 	return {
 		async nominate(input, context) {
 			const nomination = await Effect.runPromise(
@@ -655,11 +656,11 @@ export const referenceArm: Arm = {
 					return nomination;
 				},
 				route: async (nomination, membership, stageContext) => {
-					const result = (await stages.route(
+					const result = await stages.route(
 						nomination,
 						membership,
 						stageContext,
-					)) as ReferenceRouted;
+					);
 					routed = result.routed;
 					return result;
 				},

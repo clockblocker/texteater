@@ -283,12 +283,14 @@ function locutionVariantsOf(option: string | undefined): LocutionVariant[] {
 function rulesOf(option: string | undefined): CodeRule[] {
 	const listed = (option ?? "").split(",").filter(Boolean);
 	if (listed.includes("all")) return [...codeRules];
-	for (const rule of listed)
-		if (!codeRules.includes(rule as CodeRule))
+	return listed.map((rule) => {
+		const known = codeRules.find((entry) => entry === rule);
+		if (!known)
 			throw Error(
 				`--opt x3=${option} lists all, ${codeRules.join(", ")}`,
 			);
-	return listed as CodeRule[];
+		return known;
+	});
 }
 
 function leversOf(options: ArmOptions): Levers {
@@ -307,12 +309,17 @@ function leversOf(options: ArmOptions): Levers {
 		if (!known.has(key)) throw Error(`production takes no --opt ${key}`);
 	if (options.grid !== undefined && options.grid !== "x1")
 		throw Error(`--opt grid=${options.grid} must be x1`);
-	const pool = (options.pool ?? "").split(",").filter(Boolean);
-	for (const entry of pool)
-		if (!poolings.includes(entry as Pooling))
-			throw Error(
-				`--opt pool=${options.pool} lists ${poolings.join(", ")}`,
-			);
+	const pool = (options.pool ?? "")
+		.split(",")
+		.filter(Boolean)
+		.map((entry) => {
+			const known = poolings.find((pooling) => pooling === entry);
+			if (!known)
+				throw Error(
+					`--opt pool=${options.pool} lists ${poolings.join(", ")}`,
+				);
+			return known;
+		});
 	const margins = (options.variants ?? "")
 		.split(",")
 		.filter(Boolean)
@@ -329,7 +336,7 @@ function leversOf(options: ArmOptions): Levers {
 		throw Error(`--opt unasked=${unasked} must be ask or unresolved`);
 	return {
 		grid: options.grid === "x1",
-		pool: pool as Pooling[],
+		pool,
 		margins,
 		unasked,
 		rules: rulesOf(options.x3),

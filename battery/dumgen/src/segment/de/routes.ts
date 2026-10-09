@@ -120,7 +120,7 @@ export const allRoutes: readonly RouteKey[] = [
 const routeKeys: ReadonlySet<string> = new Set(allRoutes);
 
 /** Whether `key` names one of the German routes. */
-const isRouteKey = (key: string): key is RouteKey => routeKeys.has(key);
+export const isRouteKey = (key: string): key is RouteKey => routeKeys.has(key);
 
 /**
  * `key` as a route key. A key that arrives as a string, such as jev's route

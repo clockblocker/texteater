@@ -5,11 +5,13 @@
  * noise floors outlive it.
  */
 import { gunzipSync, gzipSync } from "node:zlib";
+import { z } from "zod";
 import { keyOf } from "../../../src/segment/de/routes.js";
 import {
 	hasMembership,
 	type UnitCheck,
 } from "../../evaluation/spec-corpus/segment-in-units-evaluation.js";
+import { parseStoredJson } from "../../stored-json.js";
 import type { LabCase } from "./corpus.js";
 import { bucketOf, isStub, policiesOf, scoreCase } from "./metrics.js";
 import type { LabRun } from "./run.js";
@@ -153,12 +155,31 @@ export function encodeOutcomes(rows: readonly OutcomeRow[]): Uint8Array {
 	return gzipSync(rows.map((row) => `${JSON.stringify(row)}\n`).join(""));
 }
 
+const outcomeRowSchema = z.object({
+	case: z.string(),
+	unit: z.number(),
+	bucket: z.string(),
+	gold: z.string(),
+	text: z.string(),
+	stub: z.boolean(),
+	policies: z.record(
+		z.string(),
+		z.object({
+			v: z.string(),
+			r: z.array(z.string().nullable()).optional(),
+			k: z.array(z.number()).optional(),
+		}),
+	),
+}) satisfies z.ZodType<OutcomeRow>;
+
 export function decodeOutcomes(data: Uint8Array): OutcomeRow[] {
 	return gunzipSync(data)
 		.toString("utf8")
 		.split("\n")
 		.filter(Boolean)
-		.map((line) => JSON.parse(line) as OutcomeRow);
+		.map((line, index) =>
+			parseStoredJson(outcomeRowSchema, line, `Outcome row ${index + 1}`),
+		);
 }
 
 /** The policies the rows carry, in first-seen order. */

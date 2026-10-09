@@ -7,9 +7,15 @@
 import { existsSync } from "node:fs";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { z } from "zod";
+import { readStoredJson } from "../../stored-json.js";
 import type { NoiseFloor } from "./noise.js";
 import { decodeOutcomes, encodeOutcomes, type OutcomeRow } from "./outcomes.js";
-import type { RunManifest } from "./provenance.js";
+import {
+	type RecordedManifest,
+	type RunManifest,
+	recordedManifestSchema,
+} from "./provenance.js";
 
 export const runDirectory = (evidenceRoot: string, runId: string) =>
 	join(evidenceRoot, "runs", runId);
@@ -30,19 +36,19 @@ export async function writeManifest(
 export async function readManifest(
 	evidenceRoot: string,
 	runId: string,
-): Promise<RunManifest | undefined> {
+): Promise<RecordedManifest | undefined> {
 	const path = join(runDirectory(evidenceRoot, runId), "manifest.json");
 	if (!existsSync(path)) return undefined;
-	return JSON.parse(await readFile(path, "utf8")) as RunManifest;
+	return readStoredJson(recordedManifestSchema, path);
 }
 
 /** Every run with a manifest, oldest first. */
 export async function readManifests(
 	evidenceRoot: string,
-): Promise<RunManifest[]> {
+): Promise<RecordedManifest[]> {
 	const root = join(evidenceRoot, "runs");
 	if (!existsSync(root)) return [];
-	const manifests: RunManifest[] = [];
+	const manifests: RecordedManifest[] = [];
 	for (const runId of await readdir(root)) {
 		const manifest = await readManifest(evidenceRoot, runId);
 		if (manifest) manifests.push(manifest);
@@ -79,6 +85,23 @@ export type NoiseRecord = {
 	readonly floors: Readonly<Record<string, NoiseFloor>>;
 };
 
+const noiseRecordSchema = z.object({
+	baseline: z.string(),
+	rerun: z.string(),
+	promptsMatch: z.boolean(),
+	floors: z.record(
+		z.string(),
+		z.record(
+			z.string(),
+			z.object({
+				units: z.number(),
+				flips: z.number(),
+				rate: z.number(),
+			}),
+		),
+	),
+}) satisfies z.ZodType<NoiseRecord>;
+
 export async function writeNoise(
 	evidenceRoot: string,
 	record: NoiseRecord,
@@ -95,7 +118,7 @@ export async function readNoise(
 ): Promise<NoiseRecord | undefined> {
 	const path = join(runDirectory(evidenceRoot, runId), "noise.json");
 	if (!existsSync(path)) return undefined;
-	return JSON.parse(await readFile(path, "utf8")) as NoiseRecord;
+	return readStoredJson(noiseRecordSchema, path);
 }
 
 /** The summary a report writes; `variant` names a `--subset` or `--relabel` reading. */
@@ -116,7 +139,11 @@ export async function writeSummary(
 	await writeFile(path, json(summary));
 }
 
-export async function readSummary<T>(path: string): Promise<T | undefined> {
+/** The summary at `path`, checked by `schema`; undefined when it is missing. */
+export async function readSummary<T>(
+	schema: z.ZodType<T>,
+	path: string,
+): Promise<T | undefined> {
 	if (!existsSync(path)) return undefined;
-	return JSON.parse(await readFile(path, "utf8")) as T;
+	return readStoredJson(schema, path);
 }

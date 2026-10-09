@@ -33,6 +33,7 @@ import { parseArgs } from "node:util";
 import { canonicalJson } from "common-utils";
 import * as Effect from "effect/Effect";
 import { compareRuns, loadRun } from "promptsmith/storage";
+import { z } from "zod";
 import { arms } from "../lab/segmentation/de/arms/index.js";
 import {
 	deltaBetween,
@@ -47,6 +48,7 @@ import {
 	type LabCase,
 	loadSet,
 	type SetName,
+	setNameOf,
 	subset,
 	trackedSetsRoot,
 } from "../lab/segmentation/harness/corpus.js";
@@ -93,7 +95,6 @@ import {
 	byPhenomenon,
 	byRule,
 	byShape,
-	type CostSummary,
 	calibration,
 	confusions,
 	type GroupingExample,
@@ -115,6 +116,7 @@ import {
 	variantsOf,
 } from "../lab/segmentation/harness/outcomes.js";
 import {
+	dumcorpusHashOf,
 	provenanceOf,
 	type RunManifest,
 } from "../lab/segmentation/harness/provenance.js";
@@ -122,7 +124,6 @@ import {
 	currentPin,
 	enterRound,
 	guardProjectedSpend,
-	type Pin,
 	pinDrift,
 	pinText,
 	priceProjection,
@@ -563,7 +564,7 @@ async function run() {
 		kind: "run",
 		armId: values.arm ?? "",
 		options: optionsOf(values.opt ?? []),
-		setName: values.set as SetName,
+		setName: setNameOf(values.set),
 		subsetName: values.subset ?? "smoke",
 		limit: values.limit ? Number(values.limit) : null,
 		repetitions: Number(values.reps ?? "3"),
@@ -591,7 +592,7 @@ async function replayRun() {
 		);
 	const set = await loadSet(
 		setsRoot,
-		original.set as SetName,
+		setNameOf(original.set),
 		original.setHash,
 	);
 	const byId = new Map(set.cases.map((labCase) => [labCase.id, labCase]));
@@ -599,9 +600,9 @@ async function replayRun() {
 	const { pin } = await account(false, "replay");
 	const recordedPin = (await readManifest(evidenceRoot, runId))?.pin;
 	const drift = recordedPin ? pinDrift(recordedPin, pin) : [];
-	if (drift.length > 0)
+	if (recordedPin && drift.length > 0)
 		console.warn(
-			`\n*** ${runId} read dumcorpus at ${pinText(recordedPin as Pin)}; today's ${pinText(pin)} differs in ${drift.join(", ")}, so requests built from them miss the cache\n`,
+			`\n*** ${runId} read dumcorpus at ${pinText(recordedPin)}; today's ${pinText(pin)} differs in ${drift.join(", ")}, so requests built from them miss the cache\n`,
 		);
 	const jev = jevCache({
 		model: original.model,
@@ -703,7 +704,9 @@ async function noise() {
 	if (!values.estimate) guardDirty(provenance);
 	const drift = [
 		provenance.codeHash !== baseline.codeHash ? "code" : "",
-		provenance.dumcorpusHash !== baseline.dumcorpusHash ? "dumcorpus" : "",
+		provenance.dumcorpusHash !== dumcorpusHashOf(baseline)
+			? "dumcorpus"
+			: "",
 	].filter(Boolean);
 	if (drift.length > 0 && !values["allow-drift"])
 		throw Error(
@@ -723,7 +726,7 @@ async function noise() {
 		kind: "noise",
 		armId: baseline.arm,
 		options: baseline.options,
-		setName: baseline.set.name as SetName,
+		setName: setNameOf(baseline.set.name),
 		subsetName: baseline.subset,
 		limit: baseline.limit,
 		repetitions: Number(values.reps ?? baseline.repetitions),
@@ -765,15 +768,27 @@ async function noise() {
 		);
 }
 
-type RunSummary = {
-	readonly primary: string;
-	readonly policies: readonly PolicySummary[];
-	readonly cost: CostSummary;
-};
+/** What the iteration table reads of a run's summary (`report` writes it). */
+const iterationSummarySchema = z.object({
+	primary: z.string(),
+	policies: z.array(
+		z.object({
+			policy: z.string(),
+			rates: z.object({
+				membership: z.number(),
+				tolerantUnitAccuracy: z.number(),
+				unitAccuracy: z.number(),
+			}),
+			membershipFlips: z.number(),
+			membershipFlipBase: z.number(),
+		}),
+	),
+	cost: z.object({ jevInputTokensPerSentence: z.number() }),
+});
 
 async function report(runId: string) {
 	const labRun = await loadLabRun(labRoot, runId);
-	const set = await loadSet(setsRoot, labRun.set as SetName, labRun.setHash);
+	const set = await loadSet(setsRoot, setNameOf(labRun.set), labRun.setHash);
 	const cases = casesOf(set.cases);
 	if (values.relabel === "734")
 		console.log(
@@ -1142,7 +1157,7 @@ async function compare() {
 	const [rightId = "", rightPolicy] = (values.right ?? "").split(":");
 	if (!leftId || !rightId) throw Error("--left and --right name runs");
 	const setCases = async (setName: string, setHash: string) =>
-		casesOf((await loadSet(setsRoot, setName as SetName, setHash)).cases);
+		casesOf((await loadSet(setsRoot, setNameOf(setName), setHash)).cases);
 	const side = (runId: string, policy: string | undefined) =>
 		loadSide({
 			...roots,
@@ -1163,7 +1178,7 @@ async function compare() {
 				subset(
 					await loadSet(
 						setsRoot,
-						left.setName as SetName,
+						setNameOf(left.setName),
 						left.setHash,
 					),
 					values.subset,
@@ -1327,7 +1342,7 @@ async function compareCases(
 		if (!entry.raw) return;
 		const set = await loadSet(
 			setsRoot,
-			entry.raw.set as SetName,
+			setNameOf(entry.raw.set),
 			entry.raw.setHash,
 		);
 		const cases = new Map(
@@ -1356,7 +1371,7 @@ async function compareCases(
 		`same corpus: ${comparison.sameCorpus}; changed verdicts ${verdicts.length}; changed outputs ${comparison.changedOutputs.length}`,
 	);
 	const cases = casesOf(
-		(await loadSet(setsRoot, left.setName as SetName, left.setHash)).cases,
+		(await loadSet(setsRoot, setNameOf(left.setName), left.setHash)).cases,
 	);
 	for (const entry of verdicts.slice(0, Number(values.limit ?? 40))) {
 		const labCase = cases.get(entry.caseId);
@@ -1376,7 +1391,7 @@ async function compareCases(
 async function sweep() {
 	const runId = values.run ?? "";
 	const labRun = await loadLabRun(labRoot, runId);
-	const set = await loadSet(setsRoot, labRun.set as SetName, labRun.setHash);
+	const set = await loadSet(setsRoot, setNameOf(labRun.set), labRun.setHash);
 	const focus = focusOf({ name: labRun.set, hash: labRun.setHash });
 	if (!focus)
 		throw Error(
@@ -1559,7 +1574,8 @@ async function iterationRows(
 	const rows: IterationRow[] = [];
 	for (const manifest of await readManifests(evidenceRoot)) {
 		if (manifest.kind !== "run") continue;
-		const summary = await readSummary<RunSummary>(
+		const summary = await readSummary(
+			iterationSummarySchema,
 			summaryPath(evidenceRoot, manifest.runId),
 		);
 		const primary = summary?.policies.find(

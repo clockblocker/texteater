@@ -10,10 +10,12 @@
  * loosen the schema.
  */
 import { readFileSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { z } from "zod";
 import type { LunaRequest, LunaResponse } from "../src/luna.js";
+import type { Answer } from "../src/segment/ask.js";
 import { isRoute } from "../src/segment/de/routes.js";
 import type { JevResponse } from "../src/segment/jev.js";
 import type {
@@ -29,6 +31,25 @@ const conforms = <T>(schema: z.ZodType<T>, value: unknown): value is T =>
 /** The issues a rejected value shows first. */
 const shownIssues = 5;
 
+/** A union's issues as its closest branch's: the one with the fewest. */
+function closestIssues(
+	issues: readonly z.core.$ZodIssue[],
+): z.core.$ZodIssue[] {
+	return issues.flatMap((issue) => {
+		if (issue.code !== "invalid_union" || issue.errors.length === 0)
+			return [issue];
+		const [closest = []] = [...issue.errors].sort(
+			(left, right) => left.length - right.length,
+		);
+		return closestIssues(
+			closest.map((inner) => ({
+				...inner,
+				path: [...issue.path, ...inner.path],
+			})),
+		);
+	});
+}
+
 /** `value` as `schema` checks it, unchanged; one it rejects throws, naming `what`. */
 export function storedAs<T>(
 	schema: z.ZodType<T>,
@@ -37,14 +58,14 @@ export function storedAs<T>(
 ): T {
 	if (conforms(schema, value)) return value;
 	const parsed = schema.safeParse(value);
-	const issues = parsed.success ? [] : parsed.error.issues;
+	const issues = parsed.success ? [] : closestIssues(parsed.error.issues);
 	const shown = issues
 		.slice(0, shownIssues)
 		.map(
 			(issue) => `${issue.path.join(".") || "(root)"}: ${issue.message}`,
 		);
 	if (issues.length > shownIssues) shown.push(`${issues.length} issues`);
-	throw Error(`${what} is not the stored shape: ${shown.join("; ")}`);
+	throw Error(`${what} is not of its expected shape: ${shown.join("; ")}`);
 }
 
 /** JSON `text`, checked by `schema`. */
@@ -55,6 +76,12 @@ export const parseStoredJson = <T>(
 ): T => storedAs(schema, JSON.parse(text), what);
 
 /** The JSON file at `path`, checked by `schema`. */
+export const readStoredJson = async <T>(
+	schema: z.ZodType<T>,
+	path: string,
+): Promise<T> => parseStoredJson(schema, await readFile(path, "utf8"), path);
+
+/** {@link readStoredJson}, synchronously. */
 export const readStoredJsonSync = <T>(schema: z.ZodType<T>, path: string): T =>
 	parseStoredJson(schema, readFileSync(path, "utf8"), path);
 
@@ -168,3 +195,22 @@ export const lunaRequestSchema = z.union([
 		outputSchema: z.record(z.string(), z.unknown()),
 	}),
 ]) satisfies z.ZodType<LunaRequest>;
+
+const probabilitiesSchema = z.record(z.string(), z.number());
+
+/** A jev answer to one question, as Dumgen checked and a cache keeps it. */
+export const answerSchema = z.discriminatedUnion("type", [
+	z.object({ type: z.literal("noul"), noul: z.number() }),
+	z.object({
+		type: z.literal("choice"),
+		choice: z.string(),
+		confidence: z.number(),
+		probabilities: probabilitiesSchema,
+	}),
+	z.object({
+		type: z.literal("score"),
+		score: z.number(),
+		confidence: z.number(),
+		probabilities: probabilitiesSchema,
+	}),
+]) satisfies z.ZodType<Answer>;

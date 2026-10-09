@@ -83,7 +83,7 @@ export type Routed = {
 	readonly merges: readonly Edge[];
 };
 
-export type Stages<Evidence, Detail> = {
+export type Stages<Evidence, Detail, Route extends Routed = Routed> = {
 	readonly nominate: (
 		input: SegmentInUnitsInput,
 		context: ArmContext,
@@ -93,7 +93,7 @@ export type Stages<Evidence, Detail> = {
 		nomination: Nomination<Evidence>,
 		membership: Membership<Detail>,
 		context: ArmContext,
-	) => Promise<Routed>;
+	) => Promise<Route>;
 };
 
 /** Everything one case and repetition went through. */

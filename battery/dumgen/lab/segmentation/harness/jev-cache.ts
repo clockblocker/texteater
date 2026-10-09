@@ -31,6 +31,7 @@ import { dirname, join } from "node:path";
 import type { EntryType, Question, Questions } from "@typesafe-ai/sdk";
 import { canonicalJson, messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
+import { z } from "zod";
 import { checkedAnswers } from "../../../src/jev-call.js";
 import type { Answer, Answers, Ask } from "../../../src/segment/ask.js";
 import {
@@ -41,6 +42,7 @@ import {
 	pinnedJevModel,
 	questionsPerRequest,
 } from "../../../src/segment/jev.js";
+import { answerSchema, storedAs } from "../../stored-json.js";
 
 /** One request as the ledger and the run record see it. */
 export type CallRecord = {
@@ -55,6 +57,19 @@ export type CallRecord = {
 	/** Attempts past the first a fresh request took; absent when none. */
 	readonly retries?: number;
 };
+
+/** A call as a run record keeps it. */
+export const callRecordSchema = z.object({
+	executor: z.enum(["jev", "luna"]),
+	stage: z.string(),
+	questions: z.number(),
+	inputTokens: z.number(),
+	outputTokens: z.number(),
+	latencyMs: z.number(),
+	cached: z.boolean(),
+	error: z.string().optional(),
+	retries: z.number().optional(),
+}) satisfies z.ZodType<CallRecord>;
 
 /**
  * What a run's fresh requests met on the way to jev, recorded beside its
@@ -79,6 +94,17 @@ export type TransportRecord = {
 	readonly retriesBy: Readonly<Record<string, number>>;
 	readonly failuresBy: Readonly<Record<string, number>>;
 };
+
+/** A transport record as a run, its manifest or the ledger keeps it. */
+export const transportRecordSchema = z.object({
+	requests: z.number(),
+	retries: z.number(),
+	retriedRequests: z.number(),
+	failures: z.number(),
+	interrupted: z.number(),
+	retriesBy: z.record(z.string(), z.number()),
+	failuresBy: z.record(z.string(), z.number()),
+}) satisfies z.ZodType<TransportRecord>;
 
 /** One line for a run's output: requests, retries and failures by cause. */
 export function transportText(record: TransportRecord): string {
@@ -129,12 +155,18 @@ export function hashOf(value: unknown): string {
 	return createHash("sha256").update(canonicalJson(value)).digest("hex");
 }
 
-async function readJson<T>(path: string): Promise<T | undefined> {
+/**
+ * The bucket at `path`; undefined when it is missing or not JSON. A bucket
+ * of another shape throws.
+ */
+async function readBucket(path: string): Promise<Bucket | undefined> {
+	let value: unknown;
 	try {
-		return JSON.parse(await readFile(path, "utf8")) as T;
+		value = JSON.parse(await readFile(path, "utf8"));
 	} catch {
 		return undefined;
 	}
+	return storedAs(bucketSchema, value, path);
 }
 
 /** Writes beside the target and renames, so no reader sees half a file. */
@@ -171,6 +203,24 @@ type Bucket = {
 		Record<string, { readonly answer: Answer; readonly request: number }>
 	>;
 };
+
+const bucketSchema = z.object({
+	requests: z.array(
+		z.object({
+			model: z.string(),
+			questions: z.number(),
+			usage: z.object({
+				input_tokens: z.number(),
+				output_tokens: z.number(),
+			}),
+			latencyMs: z.number(),
+		}),
+	),
+	answers: z.record(
+		z.string(),
+		z.object({ answer: answerSchema, request: z.number() }),
+	),
+}) satisfies z.ZodType<Bucket>;
 
 const emptyBucket: Bucket = { requests: [], answers: {} };
 
@@ -241,7 +291,7 @@ const defaultRetryDelay = (attempt: number) =>
 /** An HTTP status the error carries, as the TypeSafe ask and SDK attach it. */
 function statusOf(error: unknown): number | undefined {
 	if (error && typeof error === "object" && "status" in error) {
-		const { status } = error as { status: unknown };
+		const { status } = error;
 		return typeof status === "number" ? status : undefined;
 	}
 	return undefined;
@@ -425,7 +475,9 @@ export class JevCache {
 						return checked;
 					}),
 				);
-				return Object.assign({}, ...answered) as Answers;
+				return Object.fromEntries(
+					answered.flatMap((chunk) => Object.entries(chunk)),
+				);
 			});
 	}
 
@@ -501,7 +553,7 @@ export class JevCache {
 		this.#locks.set(path, queued);
 		await previous;
 		try {
-			const next = change((await readJson<Bucket>(path)) ?? emptyBucket);
+			const next = change((await readBucket(path)) ?? emptyBucket);
 			if (next) await writeJson(path, next);
 		} finally {
 			release();
@@ -589,7 +641,7 @@ export class JevCache {
 				usage: { input_tokens: 0, output_tokens: 0 },
 			};
 		const bucketPath = this.#bucketPath(state, repetition, context.salt);
-		const bucket = (await readJson<Bucket>(bucketPath)) ?? emptyBucket;
+		const bucket = (await readBucket(bucketPath)) ?? emptyBucket;
 		const lookup = this.#lookup(bucket, questions);
 		for (const model of lookup.models) this.resolvedModels.add(model);
 		const missingCount = Object.keys(lookup.missing).length;
@@ -757,7 +809,7 @@ export class JevCache {
 		};
 		for (const other of projectedRepetitions) {
 			if (other === repetition) continue;
-			const bucket = await readJson<Bucket>(
+			const bucket = await readBucket(
 				this.#bucketPath(state, other, salt),
 			);
 			if (!bucket) continue;

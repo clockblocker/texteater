@@ -18,7 +18,6 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import {
-	type SegmentInUnitsOutput,
 	segmentInUnitsInputSchema,
 	segmentInUnitsOutputSchema,
 	segmentInUnitsRoute,
@@ -112,7 +111,7 @@ export async function exportPolicy(args: {
 				const output = repetition.outputs?.[policy];
 				if (!output)
 					throw Error(repetition.error ?? `No output for ${policy}`);
-				return output as SegmentInUnitsOutput;
+				return output;
 			},
 			evaluator: evaluateSegmentInUnits(
 				Object.fromEntries(

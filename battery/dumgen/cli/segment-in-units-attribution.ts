@@ -18,9 +18,11 @@
  * `evidence/segment-in-units-attribution/`. Makes no fresh jev call: a
  * cache miss fails the replay.
  */
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
+import { udDraftsManifestSchema } from "../lab/evaluation/split-text.js";
+import { recordOf } from "../lab/records.js";
 import {
 	floorsKey,
 	floorsOf,
@@ -37,7 +39,7 @@ import {
 import {
 	type LabCase,
 	loadSet,
-	type SetName,
+	setNameOf,
 	subset,
 	trackedSetsRoot,
 } from "../lab/segmentation/harness/corpus.js";
@@ -50,6 +52,7 @@ import {
 	runStages,
 	type StageTrace,
 } from "../lab/segmentation/harness/stages.js";
+import { readStoredJson } from "../lab/stored-json.js";
 
 const packageRoot = resolve(import.meta.dir, "..");
 const labRoot = join(packageRoot, ".runs", "segment-in-units-lab");
@@ -81,9 +84,7 @@ async function disputedRecords(): Promise<Set<string>> {
 	if (values.disputed === "none") return new Set();
 	if (values.disputed !== "ud-drafts")
 		throw Error("--disputed must be ud-drafts or none");
-	const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as {
-		texts: Record<string, { paragraphs: { sentences: string[] }[] }>;
-	};
+	const manifest = await readStoredJson(udDraftsManifestSchema, manifestPath);
 	return new Set(
 		Object.values(manifest.texts).flatMap((text) =>
 			text.paragraphs.flatMap((paragraph) => paragraph.sentences),
@@ -96,7 +97,7 @@ if (!runId) throw Error("--run <runId> is required");
 const original = await loadLabRun(labRoot, runId);
 const set = await loadSet(
 	trackedSetsRoot,
-	original.set as SetName,
+	setNameOf(original.set),
 	original.setHash,
 );
 const floors = floorsOf({ floors: values.floors ?? "run" });
@@ -178,12 +179,10 @@ function rowOf(bucket: Bucket | "all", of: readonly UnitAttribution[]): Row {
 		units: of.length,
 		wrong: of.filter((unit) => unit.wrongByMajority).length,
 		flipping: of.filter((unit) => unit.flips).length,
-		causes: Object.fromEntries(
-			causes.map((cause) => [
-				cause,
-				reviewed.filter((unit) => unit.cause === cause).length,
-			]),
-		) as Record<Cause, number>,
+		causes: recordOf(
+			causes,
+			(cause) => reviewed.filter((unit) => unit.cause === cause).length,
+		),
 		disputedGold: mine.length - reviewed.length,
 		headroom: reviewed.filter(
 			(unit) => unit.nominated && unit.cause !== "not nominated",

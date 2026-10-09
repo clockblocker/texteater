@@ -9,10 +9,10 @@
  * splitter that trims a Sentence or joins a hard-wrapped line still meets
  * gold's cuts.
  */
-import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
+import { readStoredJsonSync } from "../stored-json.js";
 
 /** `splitText`'s contract: a Text in, its paragraphs of Sentences out. */
 export type Splitter = (text: string) => {
@@ -40,26 +40,23 @@ export type DraftedText = {
 	readonly idealOutput: SplitTextOutput;
 };
 
-type Manifest = {
-	readonly texts: Readonly<
-		Record<
-			string,
-			{
-				readonly sourceText: string;
-				readonly paragraphs: readonly {
-					readonly sentences: readonly string[];
-				}[];
-			}
-		>
-	>;
-};
+/** `ud-drafts/manifest.json`: each Text's source and its paragraphs' Sentences. */
+export const udDraftsManifestSchema = z.object({
+	texts: z.record(
+		z.string(),
+		z.object({
+			sourceText: z.string(),
+			paragraphs: z.array(z.object({ sentences: z.array(z.string()) })),
+		}),
+	),
+});
 
-type Paragraphs = {
-	readonly paragraphs: readonly {
-		readonly id: string;
-		readonly sentences: readonly string[];
-	}[];
-};
+/** `ud-drafts/paragraphs.json`: each Text's Sentences, in order. */
+const udDraftsParagraphsSchema = z.object({
+	paragraphs: z.array(
+		z.object({ id: z.string(), sentences: z.array(z.string()) }),
+	),
+});
 
 const udDraftsDirectory = join(
 	dirname(fileURLToPath(import.meta.url)),
@@ -71,12 +68,14 @@ const udDraftsDirectory = join(
  * Sentences fall into paragraphs, `paragraphs.json` each Sentence's text.
  */
 export function udDraftTexts(directory = udDraftsDirectory): DraftedText[] {
-	const manifest = JSON.parse(
-		readFileSync(join(directory, "manifest.json"), "utf8"),
-	) as Manifest;
-	const drafts = JSON.parse(
-		readFileSync(join(directory, "paragraphs.json"), "utf8"),
-	) as Paragraphs;
+	const manifest = readStoredJsonSync(
+		udDraftsManifestSchema,
+		join(directory, "manifest.json"),
+	);
+	const drafts = readStoredJsonSync(
+		udDraftsParagraphsSchema,
+		join(directory, "paragraphs.json"),
+	);
 	return drafts.paragraphs.map((draft) => {
 		const text = manifest.texts[draft.id];
 		if (!text) throw Error(`ud-drafts manifest has no text ${draft.id}`);

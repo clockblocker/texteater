@@ -4,11 +4,17 @@
  * stored run is re-scored by `metrics.ts` and exported to promptsmith by
  * `export.ts`; nothing here scores.
  */
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
-import type { SegmentInUnitsOutput } from "../../evaluation/spec-corpus/segment-in-units.js";
+import { z } from "zod";
+import { isRouteKey } from "../../../src/segment/de/routes.js";
+import {
+	type SegmentInUnitsOutput,
+	segmentInUnitsOutputSchema,
+} from "../../evaluation/spec-corpus/segment-in-units.js";
+import { readStoredJson } from "../../stored-json.js";
 import type {
 	Arm,
 	ArmOptions,
@@ -16,7 +22,13 @@ import type {
 	RouteJudgment,
 } from "../de/arm.js";
 import type { LabCase, LabSet } from "./corpus.js";
-import type { CallRecord, JevCache, TransportRecord } from "./jev-cache.js";
+import {
+	type CallRecord,
+	callRecordSchema,
+	type JevCache,
+	type TransportRecord,
+	transportRecordSchema,
+} from "./jev-cache.js";
 
 export type RepetitionRecord = {
 	readonly outputs?: Readonly<Record<string, SegmentInUnitsOutput>>;
@@ -59,6 +71,62 @@ export type LabRun = {
 	readonly cases: readonly CaseRun[];
 };
 
+const labRunSchema = z.object({
+	runId: z.string(),
+	arm: z.string(),
+	options: z.record(z.string(), z.string()),
+	set: z.string(),
+	setHash: z.string(),
+	setGitHead: z.string(),
+	subset: z.string(),
+	gitHead: z.string(),
+	startedAt: z.string(),
+	finishedAt: z.string(),
+	repetitions: z.number(),
+	repetitionOffset: z.number().optional(),
+	model: z.string(),
+	modelResolved: z.array(z.string()).optional(),
+	codeHash: z.string().optional(),
+	dirty: z.boolean().optional(),
+	transport: transportRecordSchema.optional(),
+	cases: z.array(
+		z.object({
+			id: z.string(),
+			repetitions: z.array(
+				z.object({
+					outputs: z
+						.record(z.string(), segmentInUnitsOutputSchema)
+						.optional(),
+					primary: z.string().optional(),
+					calls: z.array(callRecordSchema),
+					wallMs: z.number(),
+					routes: z
+						.array(
+							z.object({
+								group: z.array(z.number()),
+								choice: z.string().refine(isRouteKey),
+								confidence: z.number(),
+								share: z.number(),
+								source: z.enum(["open", "identity"]),
+							}),
+						)
+						.optional(),
+					links: z
+						.array(
+							z.object({
+								left: z.number(),
+								right: z.number(),
+								probability: z.number(),
+							}),
+						)
+						.optional(),
+					error: z.string().optional(),
+				}),
+			),
+		}),
+	),
+}) satisfies z.ZodType<LabRun>;
+
 export function runPath(root: string, runId: string): string {
 	return join(root, "runs", `${runId}.json`);
 }
@@ -69,7 +137,7 @@ export async function saveLabRun(root: string, run: LabRun): Promise<void> {
 }
 
 export async function loadLabRun(root: string, runId: string): Promise<LabRun> {
-	return JSON.parse(await readFile(runPath(root, runId), "utf8")) as LabRun;
+	return readStoredJson(labRunSchema, runPath(root, runId));
 }
 
 export async function runArm(args: {

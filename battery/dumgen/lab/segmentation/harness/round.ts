@@ -22,8 +22,10 @@ import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { rules } from "dumcorpus";
+import { z } from "zod";
 import type { Answer, Answers } from "../../../src/segment/ask.js";
 import { git } from "../../git.js";
+import { readStoredJson } from "../../stored-json.js";
 import { hashOf, type Projection, type Projector } from "./jev-cache.js";
 import { isSpend, type LedgerEntry } from "./ledger.js";
 
@@ -48,6 +50,38 @@ export type Pin = {
 	readonly at: string;
 };
 
+const pinInputsSchema = z.object({
+	inventories: z.string(),
+	rules: z.string(),
+});
+
+/** A pin as the round book and a run's manifest keep it. */
+export const pinSchema = z.object({
+	dumcorpusCommit: z.string(),
+	dumcorpusDirty: z.boolean(),
+	hash: z.string(),
+	inputs: pinInputsSchema,
+	at: z.string(),
+}) satisfies z.ZodType<Pin>;
+
+/**
+ * A pin a run's manifest recorded before #913 renamed dumspec to
+ * dumcorpus. The rename kept the lab's evidence as written, so these name
+ * the commit and its dirtiness after dumspec.
+ */
+export type LegacyPin = Omit<Pin, "dumcorpusCommit" | "dumcorpusDirty"> & {
+	readonly dumspecCommit: string;
+	readonly dumspecDirty: boolean;
+};
+
+export const legacyPinSchema = z.object({
+	dumspecCommit: z.string(),
+	dumspecDirty: z.boolean(),
+	hash: z.string(),
+	inputs: pinInputsSchema,
+	at: z.string(),
+}) satisfies z.ZodType<LegacyPin>;
+
 export type Round = {
 	readonly id: string;
 	readonly opened: string;
@@ -70,13 +104,34 @@ export type RoundBook = {
 	readonly rounds: readonly Round[];
 };
 
+const roundBookSchema = z.object({
+	current: z.string(),
+	rounds: z.array(
+		z.object({
+			id: z.string(),
+			opened: z.string(),
+			note: z.string(),
+			capTokens: z.number(),
+			stopLineTokens: z.number(),
+			pin: pinSchema,
+			repins: z.array(
+				z.object({
+					at: z.string(),
+					from: pinSchema,
+					reason: z.string(),
+				}),
+			),
+		}),
+	),
+}) satisfies z.ZodType<RoundBook>;
+
 export const roundsPath = (evidenceRoot: string) =>
 	join(evidenceRoot, "rounds.json");
 
 export async function readRounds(path: string): Promise<RoundBook> {
 	if (!existsSync(path))
 		throw Error(`No rounds at ${path}; open one before spending`);
-	return JSON.parse(await readFile(path, "utf8")) as RoundBook;
+	return readStoredJson(roundBookSchema, path);
 }
 
 export async function writeRounds(
@@ -209,16 +264,27 @@ export async function currentPin(repository: string): Promise<Pin> {
 	};
 }
 
+/** The inputs a pin hashes, in its order. */
+const pinnedInputs = [
+	"inventories",
+	"rules",
+] as const satisfies readonly (keyof Pin["inputs"])[];
+
 /** The pinned inputs that differ now; none when the hashes agree. */
-export function pinDrift(pinned: Pin, current: Pin): string[] {
+export function pinDrift(pinned: Pin | LegacyPin, current: Pin): string[] {
 	if (pinned.hash === current.hash) return [];
-	return (Object.keys(pinned.inputs) as (keyof Pin["inputs"])[]).filter(
+	return pinnedInputs.filter(
 		(input) => pinned.inputs[input] !== current.inputs[input],
 	);
 }
 
-export const pinText = (pin: Pin) =>
-	`dumcorpus ${pin.dumcorpusCommit.slice(0, 8)}${pin.dumcorpusDirty ? "+dirty" : ""} inputs ${pin.hash.slice(0, 12)}`;
+export function pinText(pin: Pin | LegacyPin): string {
+	const [commit, dirty] =
+		"dumcorpusCommit" in pin
+			? [pin.dumcorpusCommit, pin.dumcorpusDirty]
+			: [pin.dumspecCommit, pin.dumspecDirty];
+	return `dumcorpus ${commit.slice(0, 8)}${dirty ? "+dirty" : ""} inputs ${pin.hash.slice(0, 12)}`;
+}
 
 /**
  * The pin gate. A live run refuses to start when the prompt inputs moved
