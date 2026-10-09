@@ -19,9 +19,11 @@ Sentence's pieces and its units. A piece is what a reader can click, a split
 fused word included (`i` and `m` of `im`). A unit is the pieces that route to
 one biggest unit, discontinuous ones included (`[fängt, an]`,
 `[hat, den, Faden, verloren]`), with its route: language, Family and Kind. A
-unit normally carries one route. When the segmenter cannot decide between a
-few routes, such as PART or ADV for modal *eben*, the unit may carry those
-routes as variants, its route first. Its grouping stays fixed either way.
+unit normally carries one route. When the segmenter cannot decide between
+the Kinds of one known clash set, a small set of Kinds that often clash such
+as ADJ and VERB or NOUN and PROPN, the unit may carry those routes as
+variants, its route first. Variants never reach outside one clash set. Its
+grouping stays fixed either way.
 Every piece belongs to exactly one unit. A unit whose route falls below the
 language's confidence line is `Unresolved`: hover still groups its pieces,
 and a click shows only the text, with Correct available. Foreign and
@@ -37,14 +39,19 @@ observable Catalog Miss (system ADR 0021). In the intake lab the candidate
 choice beat the route vote on closed-class Kinds
 ([#487](https://github.com/clockblocker/texteater/issues/487)).
 
-**A click resolves the unit's one route.** It never regroups the pieces and
-never considers another route. Route variants serve evaluation (ADR 0008): a
-click ignores them and resolves the unit's first route, and production
-`segment.inUnits` emits none
-([#860](https://github.com/clockblocker/texteater/issues/860), user ruling).
-The click resolves the Surface features, the Canonical Form, the Reading and
-Knowledge of that one route, and propagates them. Dumling, Dumdict and
-storage only ever see one exact route.
+**A click settles a variant unit's route with its clash set's own prompt.**
+It never regroups the pieces. When the unit carries variants,
+`resolve.grammar` runs the focused jev prompt of their clash set, which
+judges the exact route by the Rules for that clash; a unit with one route
+keeps it. The click then resolves the Surface features, the Canonical Form,
+the Reading and Knowledge of that one route, and propagates them. Dumling,
+Dumdict and storage only ever see one exact route.
+
+The clash-set prompts are not built yet
+([#869](https://github.com/clockblocker/texteater/issues/869)). Until they
+are, production `segment.inUnits` emits no variants, a click resolves the
+unit's first route, and only the lab and evaluation use variants (ADR 0008,
+[#860](https://github.com/clockblocker/texteater/issues/860)).
 
 **`segment.inLexemes` breaks down Locutions and Sayings.** It runs once per
 multiword Lemma, on the Lemma's wording and the sentence that created it, and
@@ -66,10 +73,12 @@ implementation and out of the output.
   `segment.inLexemes`.
 - A route distribution handed to the click. Rejected: it puts open
   classification back on the click path.
-- A focused click-time prompt that picks one of the unit's variants.
-  Rejected: on the variant units it scored 64.6 percent acceptable, against
-  70.8 percent for taking the first route
-  ([#760](https://github.com/clockblocker/texteater/issues/760)).
+- One generic click-time prompt that picks among any unit's variants.
+  Rejected: seeing only the variants, it scored 64.6 percent acceptable on
+  the variant units, against 70.8 percent for taking the first route, and
+  won only on NOUN or PROPN and ADV or PART
+  ([#760](https://github.com/clockblocker/texteater/issues/760)). A prompt
+  per clash set judges by that clash's Rules instead.
 - One route always, the most probable. Rejected: a confidently wrong Note
   teaches something false; `Unresolved` costs one Correct.
 - One segmenter for every multi-piece unit. Rejected: prepositions, articles,

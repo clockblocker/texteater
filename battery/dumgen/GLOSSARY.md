@@ -42,7 +42,8 @@ Which Segments `segment.inUnits` puts in one unit, whatever its route. See
 
 **Route Variant**:
 One of the few routes a borderline unit carries when `segment.inUnits`
-cannot decide between them. A click picks one. See [Dumgen ADR 0007] and
+cannot decide between the Kinds of one known clash set. At click time, that
+clash set's focused prompt picks one. See [Dumgen ADR 0007] and
 [Dumgen ADR 0008].
 _Avoid_: route distribution, alternative route
 
@@ -60,13 +61,14 @@ A Segmented Sentence together with one Analysis Target supplied for
 linguistic resolution or Knowledge production.
 
 **Analysis Target**:
-The unit an Encounter resolves: its ordered Segment members and its route, as
-segmentation chose them. See [Dumgen ADR 0007].
+The unit an Encounter resolves: its ordered Segment members and its route,
+with any Route Variants, as segmentation chose them. See [Dumgen ADR 0007].
 _Avoid_: Unit, group, lattice node
 
 **Grammatical Resolution**:
-Production of a click-independent Attestation for an Analysis Target whose
-route is already chosen.
+Production of a click-independent Attestation for an Analysis Target. It
+keeps the route segmentation chose, and settles a target's Route Variants
+first. See [Dumgen ADR 0007].
 
 **`valencyEvidence`**:
 The Case and Preposition complements one occurrence realizes, recorded on its

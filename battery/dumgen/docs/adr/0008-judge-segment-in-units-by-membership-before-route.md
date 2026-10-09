@@ -40,12 +40,19 @@ acceptable miss. Other route errors still count.
 - Pipeline effort goes to membership before routing.
 - Gold work that only settles a route between these Kinds does not block
   `segment.inUnits` evaluation. Gold work that decides membership does.
-- A unit normally carries one route. In a borderline case it may carry a few
-  route variants, its route first, and a click resolves only that first route
+- A unit normally carries one route. When `segment.inUnits` cannot decide
+  between the Kinds of one known clash set, it may carry those routes as
+  variants, its route first, and at click time that clash set's focused
+  prompt judges the exact route
   ([ADR 0007](./0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md)).
   A route counts as right when gold is among the variants. Evaluation also
   reports how often units carry variants and how many, so that returning
   variants can't replace deciding. The closed-class identity rule stands.
+  The clash-set prompts are not built yet
+  ([#869](https://github.com/clockblocker/texteater/issues/869)): until they
+  are, production emits no variants, a click resolves the first route, and
+  only evaluation uses variants
+  ([#860](https://github.com/clockblocker/texteater/issues/860)).
 
 This is the user's ruling on the segmentation rewrite
 ([#701](https://github.com/clockblocker/texteater/issues/701)), map

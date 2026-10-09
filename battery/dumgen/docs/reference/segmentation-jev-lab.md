@@ -327,9 +327,9 @@ evidence/segment-in-units-lab/
 - The `reference` arm's `--opt variants=<margins>` adds a policy per
   margin whose units carry variants where the top two shares of the
   distribution that decided the route lie within it, read from the same
-  answers. `--opt pick=<margin>` asks the click-time pick for those units
-  (a fresh `pick` request) and adds a `+pick` policy; `report` scores the
-  pick on the units that carried variants.
+  answers. `--opt pick=<margin>` asks #760's generic pick prompt for those
+  units (a fresh `pick` request) and adds a `+pick` policy; `report` scores
+  the pick on the units that carried variants.
 - `compare` pairs gold units by their majority over repetitions, on
   membership first, then prints each side's consistency and the tolerant
   and strict deltas. `+a −b` means a units gained and b lost from left to

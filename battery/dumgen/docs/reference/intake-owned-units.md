@@ -59,8 +59,10 @@ two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contra
   Session ends `Unresolved` at once. No Note is made and no model is asked.
   The deck settles on one Unit Card with the unit's words (a gap reads as
   `…`), its route and any variants.
-- Route variants are for the click to pick from (ADR 0007). Until
-  resolution returns, the Unit Card only lists them.
+- Route variants span one known clash set, and a click is to settle them
+  with that clash set's focused prompt (Dumgen ADR 0007). Those prompts are
+  not built yet (#869): production `segment.inUnits` emits no variants, and
+  a click resolves the unit's first route.
 
 ## Live probe
 
