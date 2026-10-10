@@ -21,6 +21,9 @@ const sharedToolDependencies = [
 	"dependency-cruiser",
 	"knip",
 ];
+// tsconfig plugin names, which knip reads as packages. The root
+// `@effect/tsgo` install serves `@effect/language-service`.
+const tsconfigPluginNames = ["@effect/language-service"];
 
 function readJson(path: string): Record<string, unknown> {
 	return JSON.parse(readFileSync(path, "utf8")) as Record<string, unknown>;
@@ -86,6 +89,7 @@ function workspaceConfig(relativePath: string): Record<string, unknown> {
 				...((ignoreDependencies as string[] | undefined) ?? []),
 				...workspaceDependencies,
 				...sharedToolDependencies,
+				...tsconfigPluginNames,
 			]),
 		],
 	};

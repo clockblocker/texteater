@@ -1,4 +1,7 @@
 {
 	"extends": "../../tooling/typescript/battery.json",
+	"compilerOptions": {
+		"plugins": [{ "name": "@effect/language-service" }]
+	},
 	"include": ["src/**/*.ts", "lab/**/*.ts", "tests/**/*.ts", "cli/**/*.ts"]
 }
