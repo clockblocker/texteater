@@ -56,7 +56,7 @@ import {
 } from "./interaction-policy";
 import { sheetColumn } from "./layout";
 import { useNoteMoves } from "./note-moves";
-import { GROUND_LIST_WIDTH, GroundList, PaneBar } from "./pane-chrome";
+import { GROUND_COLUMN_STYLE, GroundList, PaneBar } from "./pane-chrome";
 import {
 	inertActions,
 	PresentationView,
@@ -367,15 +367,17 @@ function CompassRuntime<S>({
 					preview={preview}
 					handle={lifts ? (rooted ? "press" : "drag") : "none"}
 					holding={drags.barHolding === pane.id}
+					/* a Rooted Pane's trail sits on its Ground's column; a
+					   Floating Pane's title on its Note's */
 					columnWidth={
-						ground.kind === "Sheet"
+						!rooted && ground.kind === "Sheet"
 							? sheetColumn(
 									renderer.columnRem(
 										ground.presentation.subject,
 									),
 									true,
 								).body
-							: GROUND_LIST_WIDTH
+							: GROUND_COLUMN_STYLE.maxWidth
 					}
 					/* the Pane bar is the Ground's: ← steps its line (not
 					   while it is covered), X closes a Floating Pane with

@@ -8,15 +8,19 @@ import { COVER_GUTTER_REM } from "./layout";
 
 /** A Pane's own chrome: the Pane bar, and the lists a Ground's first rungs show. */
 
-/** The Menu's and a Menu Item's column, gutters included, as a Text's. */
-export const GROUND_LIST_WIDTH = "43rem";
+/**
+ * A Rooted Ground's column, gutters included, on every rung: the Menu, a
+ * Menu Item, and a Text, whose reading column (`--container-note`) it is.
+ */
+const GROUND_COLUMN_WIDTH = "var(--container-note)";
 
 /**
  * The Ground column's box: the Pane bar's column, whose inline padding is
- * the bar's gutter, so a Menu Item's content starts where the trail does.
+ * the bar's gutter, so whatever a Rooted Ground shows starts where the
+ * trail does, at every width and in either direction.
  */
 export const GROUND_COLUMN_STYLE = {
-	maxWidth: GROUND_LIST_WIDTH,
+	maxWidth: GROUND_COLUMN_WIDTH,
 	paddingInline: `${COVER_GUTTER_REM.toString()}rem`,
 } as const;
 

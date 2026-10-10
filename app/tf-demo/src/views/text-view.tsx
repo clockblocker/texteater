@@ -17,17 +17,19 @@ import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReaderSentence } from "@/views/reader-sentence";
+import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
 import type { TextSubjectTarget } from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
 
 /**
- * The reading column, shared with Reading Notes. The Deck sits at one place
+ * The reading column: the Ground column (`GROUND_COLUMN_STYLE`), so a
+ * Text starts where its Pane bar's trail does. The Deck sits at one place
  * in its Pane, 12rem below its top (the battery's `DECK_TOP_REM`), so the
  * column's top leaves the first two lines above it under the Pane bar, and
  * its foot lets the last Sentence scroll clear of it.
  */
 const READER_BODY_CLASS =
-	"mx-auto w-full max-w-note px-note-gutter pt-14 pb-[max(5rem,calc(100svh-12rem))] @max-md:pt-8";
+	"mx-auto w-full pt-14 pb-[max(5rem,calc(100svh-12rem))] @max-md:pt-8";
 
 const MISSING_SOURCE_CONTEXT_NOTICE =
 	"This Source Context is no longer available. The Text is still open, and no new resolution was started.";
@@ -201,7 +203,7 @@ export function TextPresentation({
 			data-slot="text-reader"
 			className="w-full min-h-full flex-auto bg-paper text-ink motion-reduce:[&_*]:transition-none"
 		>
-			<div className={READER_BODY_CLASS}>
+			<div className={READER_BODY_CLASS} style={GROUND_COLUMN_STYLE}>
 				<SentenceList
 					sentences={sentences}
 					selectedSegmentKey={selectedSegmentKey}
@@ -374,6 +376,7 @@ export function TextViewSkeleton() {
 			<div
 				aria-hidden="true"
 				className={`${READER_BODY_CLASS} space-y-7 text-lg leading-[1.52] @max-md:space-y-6 @max-md:text-base`}
+				style={GROUND_COLUMN_STYLE}
 			>
 				<NoteLinesSkeleton
 					className="leading-[inherit]"
