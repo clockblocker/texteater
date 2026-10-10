@@ -2158,6 +2158,7 @@ function readingInput(emojiDescription = "🏦", canonicalForm = "Bank") {
 function grammarProjection(canonicalForm = "Bank") {
 	return {
 		members: [{ attested: "Banken", orthography: "Standard" as const }],
+		valencyMembers: [],
 		realizationCoverage: "Full" as const,
 		normalizedSurface: "Banken",
 		spelling: { kind: "Canonical" as const },

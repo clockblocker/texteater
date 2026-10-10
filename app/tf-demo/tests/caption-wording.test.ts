@@ -5,15 +5,12 @@ import { fileURLToPath } from "node:url";
 import { presentAttestation } from "../convex/model/presentedDumling";
 import {
 	attestationCaption,
-	lemmaTitle,
-	surfaceCaption,
-} from "../src/notes/universal/caption/caption";
-import {
 	type Caption,
 	type CaptionToken,
 	captionText,
-	fillTemplate,
-} from "../src/notes/universal/caption/wording";
+	lemmaTitle,
+	surfaceCaption,
+} from "../src/notes";
 
 /**
  * The caption wording over dumcorpus gold: each record's reviewed
@@ -242,17 +239,4 @@ test("target-language runs stay apart from the relation's words", () => {
 		{ kind: "Word", text: " of " },
 		{ kind: "Next", text: "gehen" },
 	] satisfies CaptionToken[]);
-});
-
-test("a template fills its slots and keeps its own words", () => {
-	expect(
-		fillTemplate("{a} of {b}", {
-			a: [{ kind: "Word", text: "typo" }],
-			b: [{ kind: "Next", text: "muss" }],
-		}),
-	).toEqual([
-		{ kind: "Word", text: "typo of " },
-		{ kind: "Next", text: "muss" },
-	]);
-	expect(() => fillTemplate("{missing}", {})).toThrow();
 });

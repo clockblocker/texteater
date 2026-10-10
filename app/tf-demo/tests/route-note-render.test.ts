@@ -63,6 +63,7 @@ test("routes Lemma and Attestation subjects through the universal pipeline", () 
 				{ attested: "steht", orthography: "Standard" },
 				{ attested: "auf", orthography: "Standard" },
 			],
+			valencyMembers: [],
 			realizationCoverage: "Full",
 			surface: presentedSurface("steht auf", "aufstehen", "VERB"),
 			fusions: [],
@@ -138,6 +139,7 @@ test("an Attestation holding a piece of a fused word reaches its Fusion", () => 
 				{ attested: "m", orthography: "Fused", fusion, component: 1 },
 				{ attested: "Wald", orthography: "Standard" },
 			],
+			valencyMembers: [],
 			realizationCoverage: "Full",
 			surface: wald,
 			fusions: [
@@ -164,6 +166,8 @@ test("an Attestation holding a piece of a fused word reaches its Fusion", () => 
 	expect(markup.replaceAll(/<[^>]+>/g, "")).toContain("im = in + dem");
 	expect(markup).toContain('data-realized="true"');
 	expect(markup).toContain("„im“ ist „in dem“.");
+	// The Heading's caption says what the fused word stands for.
+	expect(markup.replaceAll(/<[^>]+>/g, "")).toContain("·im = in dem");
 	const bare = {
 		...attestation,
 		presented: { ...attestation.presented, fusions: [] },

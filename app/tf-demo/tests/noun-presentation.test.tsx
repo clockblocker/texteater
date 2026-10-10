@@ -116,6 +116,8 @@ test("Surface heading takes the gender tone of its active analysis", () => {
 		presented: {
 			language: "de",
 			normalizedSurface: "Aufstieg",
+			spelling: { kind: "Canonical" },
+			grundform: false,
 			inflectionalFeatures: {
 				case: "Dat",
 				gender: "Masc",
@@ -155,6 +157,13 @@ test("Surface heading takes the gender tone of its active analysis", () => {
 	const markup = renderToStaticMarkup(heading([analysis]));
 	expect(markup).toContain("[--link:var(--gender-masculine)]");
 	expect(markup).toContain(">Aufstieg</");
+	// Its caption names the case, and the Lemma with the article its tone gave.
+	expect(markup.replaceAll(/<[^>]+>/g, "")).toContain(
+		"Aufstieg·dative of der Aufstieg",
+	);
+	expect(markup).toContain(
+		'<bdi data-caption-next="" class="text-ink-faint">der Aufstieg</bdi>',
+	);
 	const ambiguous = [
 		analysis,
 		{

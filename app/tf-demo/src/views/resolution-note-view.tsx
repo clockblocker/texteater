@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import {
 	ResolvingReadingHeading,
+	resolvingAttestationCaption,
 	resolvingAttestationNoteParts,
 } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
@@ -213,6 +214,7 @@ function ResolvingAttestationNote({
 		);
 	const parts = resolvingAttestationNoteParts({
 		attested: resolvingWords(note),
+		caption: resolvingAttestationCaption(note),
 		segments: note.source.segments,
 		memberSegmentIndices: note.source.memberSegmentIndices,
 		settled: failedSession(note),

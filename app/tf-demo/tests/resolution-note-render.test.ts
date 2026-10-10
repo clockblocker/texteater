@@ -34,6 +34,7 @@ const source = {
 
 const grammar = {
 	members: [{ attested: "Banken", orthography: "Standard" as const }],
+	valencyMembers: [],
 	realizationCoverage: "Full" as const,
 	normalizedSurface: "Banken",
 	spelling: { kind: "Canonical" as const },
@@ -422,6 +423,43 @@ test("with no route known, the Reading step shows a Reading Note's bones under t
 	);
 });
 
+test("the Attestation step captions what Grammar read its words as", () => {
+	const note = {
+		kind: "ResolutionNote" as const,
+		target: resolutionTarget,
+		lifecycle: {
+			state: "Active" as const,
+			progress: "GrammarAvailable" as const,
+			activity: "Running" as const,
+		},
+		route,
+		source,
+		updatedAt: 1,
+	};
+	const words = (markup: string) => markup.replaceAll(/<[^>]+>/g, "");
+	// Before Grammar has read the words, the title stands alone.
+	expect(
+		words(renderStep({ stepKind: "Attestation", note }, "heading")),
+	).toBe("Banken");
+	const typo = renderStep(
+		{
+			stepKind: "Attestation",
+			note: {
+				...note,
+				grammar: {
+					...grammar,
+					members: [{ attested: "Bankne", orthography: "Typo" }],
+				},
+			},
+		},
+		"heading",
+	);
+	expect(words(typo)).toBe("Banken·typo of Banken");
+	expect(typo).toContain(
+		'data-caption-next="" class="text-ink-faint">Banken<',
+	);
+});
+
 test("the Attestation step titles the clicked words and quotes their sentence, its route on the way", () => {
 	const note = {
 		kind: "ResolutionNote" as const,
@@ -436,7 +474,7 @@ test("the Attestation step titles the clicked words and quotes their sentence, i
 		updatedAt: 1,
 	};
 	const heading = renderStep({ stepKind: "Attestation", note }, "heading");
-	expect(heading).toContain('data-attestation-title="">Banken<');
+	expect(heading).toContain('data-attestation-title=""><bdi>Banken</bdi><');
 	expect(heading).not.toContain('role="status"');
 	const body = renderStep({ stepKind: "Attestation", note }, "body");
 	expect(body).toContain('data-note-kind="Attestation"');

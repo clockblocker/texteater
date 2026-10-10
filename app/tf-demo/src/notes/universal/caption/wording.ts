@@ -32,6 +32,9 @@ type RelationTemplate = { readonly full: string; readonly compact: string };
 /** The languages a caption's relation words can be written in. */
 export type UiLanguage = "en";
 
+/** The UI language captions are written in, until the UI offers another. */
+export const UI_LANGUAGE: UiLanguage = "en";
+
 /**
  * The relation words one UI language uses, as templates and word lists.
  * Code fills the slots and never glues words itself, so a language with

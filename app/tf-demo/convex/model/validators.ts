@@ -650,12 +650,9 @@ export const resolutionRouteProjectionValidator = v.object({
 
 export const resolutionGrammarProjectionValidator = v.object({
 	grundform: grundformValidator,
-	members: v.array(
-		v.object({
-			attested: v.string(),
-			orthography: orthographyValidator,
-		}),
-	),
+	members: v.array(attestationMemberValidator),
+	/** Members realizing a valency marker, such as a governed preposition. */
+	valencyMembers: v.array(v.number()),
 	realizationCoverage: realizationCoverageValidator,
 	normalizedSurface: v.string(),
 	spelling: surfaceSpellingValidator,

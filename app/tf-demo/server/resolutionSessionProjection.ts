@@ -1,5 +1,6 @@
 import { checkIfGrundform } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
+import { attestationValencyMembers } from "./attestationValencyMembers";
 
 /** A Surface's spelling: Canonical, or a Variant with its tags (ADR 0041). */
 type SurfaceSpelling =
@@ -7,6 +8,26 @@ type SurfaceSpelling =
 	| {
 			kind: "Variant";
 			variantTags: [Dumling.VariantTag, ...Dumling.VariantTag[]];
+	  };
+
+/**
+ * One member as the Session shows it: a `Fused` piece keeps its Fusion and
+ * component, so the pending Attestation can say what the fused word stands
+ * for (ADR 0035).
+ */
+type ResolutionMember =
+	| {
+			attested: string;
+			orthography: "Standard" | "Typo" | "Shorthand";
+	  }
+	| {
+			attested: string;
+			orthography: "Fused";
+			fusion: {
+				spelling: string;
+				components: { span: string; surface: string }[];
+			};
+			component: number;
 	  };
 
 /**
@@ -18,7 +39,9 @@ export type ResolutionGrammarProjection<
 > = Lemma extends unknown
 	? {
 			grundform: boolean | null;
-			members: { attested: string; orthography: "Standard" | "Typo" }[];
+			members: ResolutionMember[];
+			/** Members realizing a valency marker, such as a governed preposition. */
+			valencyMembers: number[];
 			realizationCoverage: "Full" | "Partial";
 			normalizedSurface: string;
 			spelling: SurfaceSpelling;
@@ -59,10 +82,26 @@ export function projectResolutionGrammar(
 	// TypeScript cannot follow through a union value.
 	return {
 		grundform: assessment.success ? assessment.value : null,
-		members: grammatical.attestation.members.map((member) => ({
-			attested: member.attested,
-			orthography: member.orthography,
-		})),
+		members: grammatical.attestation.members.map(
+			(member): ResolutionMember =>
+				member.orthography === "Fused"
+					? {
+							attested: member.attested,
+							orthography: member.orthography,
+							fusion: {
+								spelling: member.fusion.spelling,
+								components: member.fusion.components.map(
+									({ span, surface }) => ({ span, surface }),
+								),
+							},
+							component: member.component,
+						}
+					: {
+							attested: member.attested,
+							orthography: member.orthography,
+						},
+		),
+		valencyMembers: attestationValencyMembers(grammatical.attestation),
 		realizationCoverage: grammatical.attestation.realizationCoverage,
 		normalizedSurface: surface.normalizedSurface,
 		spelling: surface.spelling,

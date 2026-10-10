@@ -4,17 +4,20 @@ import {
 	NoteSection,
 	NoteTags,
 	NoteTitle,
-	NoteTitleRow,
 } from "lego";
 import type { ReactElement } from "react";
 
 import type { SourceSegment } from "../blocks/renderers/common/link-members";
 import { RouteMark } from "../blocks/renderers/common/route-mark";
 import { SourceQuote } from "../blocks/renderers/common/source-quote";
+import { CaptionedTitleRow } from "../caption/heading-caption";
+import type { Caption } from "../caption/wording";
 
 type ResolvingAttestation = {
 	/** The clicked words, as the stored Note's Heading will spell them. */
 	readonly attested: string;
+	/** What the words are to the next Card, once Grammar has read them. */
+	readonly caption: Caption | null;
 	readonly segments: readonly SourceSegment[];
 	readonly memberSegmentIndices: readonly number[];
 	/** The Session ended without an occurrence: nothing is on its way any more. */
@@ -33,11 +36,14 @@ type ResolvingAttestation = {
 export function resolvingAttestationNoteParts(input: ResolvingAttestation) {
 	const heading = (
 		<header>
-			<NoteTitleRow>
-				<NoteTitle data-attestation-title="">
-					{input.attested}
-				</NoteTitle>
-			</NoteTitleRow>
+			<CaptionedTitleRow
+				title={
+					<NoteTitle data-attestation-title="">
+						<bdi>{input.attested}</bdi>
+					</NoteTitle>
+				}
+				caption={input.caption}
+			/>
 		</header>
 	);
 	return {

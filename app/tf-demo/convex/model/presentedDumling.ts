@@ -1,5 +1,6 @@
 import { type Infer, v } from "convex/values";
 import { checkIfGrundform, germanFusions } from "dumcorpus/inventories";
+import { attestationValencyMembers } from "../../server/attestationValencyMembers";
 import { parseUnitAs } from "../../server/operationalParsing";
 import {
 	attestationMemberValidator,
@@ -58,6 +59,8 @@ const presentedFusionValidator = v.object({
 
 export const presentedAttestationValidator = v.object({
 	members: v.array(attestationMemberValidator),
+	/** Members realizing a valency marker, such as a governed preposition. */
+	valencyMembers: v.array(v.number()),
 	realizationCoverage: realizationCoverageValidator,
 	surface: presentedSurfaceValidator,
 	fusions: v.array(presentedFusionValidator),
@@ -116,6 +119,7 @@ export function presentAttestation(
 						orthography: member.orthography,
 					},
 		),
+		valencyMembers: attestationValencyMembers(attestation),
 		realizationCoverage: attestation.realizationCoverage,
 		surface: presentSurface(attestation.surface),
 		fusions: reachedFusions(attestation),

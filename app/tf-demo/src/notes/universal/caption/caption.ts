@@ -286,6 +286,16 @@ function verbPronoun(features: Features, target: TargetWording): string | null {
 }
 
 /**
+ * The title of the Card an Attestation's caption names: the next Card in
+ * front of it, its Surface.
+ */
+export function attestationNextTitle(surface: {
+	readonly normalizedSurface: string;
+}): string {
+	return surface.normalizedSurface;
+}
+
+/**
  * How a Card names a Lemma when its title's gender tone is gone: a common
  * noun with its article (der Bahnhof, der/das Balg), a proper noun cited
  * with its article (der Rhein) too, and anything else by its canonical form.
