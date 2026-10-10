@@ -8,14 +8,14 @@
 			"capTokens": 119047619,
 			"stopLineTokens": 104000000,
 			"pin": {
-				"dumcorpusCommit": "3a6b7b89d6902388c80319e1adbd59d1a7806cb1",
+				"dumcorpusCommit": "5342026a46fcad1448c3dae9648656781fde6b72",
 				"dumcorpusDirty": false,
-				"hash": "b291801d72c97b22d9396087bdbf362614d8f960538e5dcd03db35a6325f7b71",
+				"hash": "409b66465f7e529cc0d3ed7c363678f12e975cb75592023298bd83055b38a92b",
 				"inputs": {
-					"inventories": "91b8a21fca8529aae43cdad00cbd1aef185c06d73616835906cde020b28f4fd5",
-					"rules": "7f51dabdc2b4830e3ab99ec7e8458a4135df34ae9d29d99b0e5f31f784929945"
+					"inventories": "f39c6c2a385f62b5e00639bc79d2d68f9f01f3f9bef91914e6d981bed8515786",
+					"rules": "16e0a20c79d54a41d27979036bc757bc86a83a47cf53be9dc26c8b84beaba030"
 				},
-				"at": "2026-10-03T05:30:21.061Z"
+				"at": "2026-10-10T04:27:04.091Z"
 			},
 			"repins": [
 				{
@@ -73,6 +73,20 @@
 						"at": "2026-10-03T05:06:48.350Z"
 					},
 					"reason": "#884 reworded de/valency-frame-follows-e-valbu (dumspec 3a6b7b89). Only the rules input moved; a cached replay of 20261002T122056--production--heldout--all stays 567/567 identical with 0 fresh calls"
+				},
+				{
+					"at": "2026-10-10T04:27:04.091Z",
+					"from": {
+						"dumcorpusCommit": "3a6b7b89d6902388c80319e1adbd59d1a7806cb1",
+						"dumcorpusDirty": false,
+						"hash": "b291801d72c97b22d9396087bdbf362614d8f960538e5dcd03db35a6325f7b71",
+						"inputs": {
+							"inventories": "91b8a21fca8529aae43cdad00cbd1aef185c06d73616835906cde020b28f4fd5",
+							"rules": "7f51dabdc2b4830e3ab99ec7e8458a4135df34ae9d29d99b0e5f31f784929945"
+						},
+						"at": "2026-10-03T05:30:21.061Z"
+					},
+					"reason": "#1160: scoring round for #1155's particle-verb route override (08905457c); dumcorpus inventories and rules moved since 3a6b7b89, now 5342026a"
 				}
 			]
 		}
