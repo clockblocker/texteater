@@ -1,27 +1,41 @@
-import { NoteTitle, NoteTitleRow } from "lego";
+import { NoteTitle } from "lego";
 
+import { lemmaCaption } from "../../../../caption/caption";
+import {
+	CaptionedTitleRow,
+	captionLanguages,
+} from "../../../../caption/heading-caption";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 import { genderTone } from "../../common/feature-values";
 
 /**
  * A Lemma collects Readings. It takes the gender tone of its headword but
- * no emoji: each Reading below brings its own.
+ * no emoji: its caption lists each Reading's, marking the one the Deck
+ * that dealt it leads to.
  */
-export const renderDefaultLemmaHeading = (({ noteData }) => {
+export const renderDefaultLemmaHeading = (({
+	noteData,
+	PresentationCapabilities,
+}) => {
 	const { presented } = noteData;
-	const readings = noteData.connections.readings.length;
+	const languages = captionLanguages(presented.language);
 	return (
 		<header>
-			<NoteTitleRow>
-				<NoteTitle data-lemma-title="" tone={genderTone(presented)}>
-					{presented.canonicalForm}
-				</NoteTitle>
-				{readings > 1 ? (
-					<span className="text-sm text-ink-muted">
-						{readings} readings
-					</span>
-				) : null}
-			</NoteTitleRow>
+			<CaptionedTitleRow
+				title={
+					<NoteTitle data-lemma-title="" tone={genderTone(presented)}>
+						<bdi>{presented.canonicalForm}</bdi>
+					</NoteTitle>
+				}
+				caption={
+					languages &&
+					lemmaCaption(
+						noteData.connections.readings,
+						PresentationCapabilities.activeReadingId,
+						languages,
+					)
+				}
+			/>
 		</header>
 	);
 }) satisfies GrammaticalDefaultRenderer<"Lemma">;

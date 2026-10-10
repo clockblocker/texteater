@@ -427,3 +427,48 @@ function formIsSplit(attestation: CaptionAttestation): boolean {
 			);
 	});
 }
+
+/**
+ * The caption of a Lemma's Heading: how many Readings it holds and each
+ * one's emoji, the one the Deck leads to marked: `2 readings: 🏦 🪑`. A
+ * Reading without an Emoji Description (Foreign) is counted but not shown.
+ * None for a Lemma of one Reading: it says nothing the Reading does not.
+ */
+export function lemmaCaption(
+	readings: readonly {
+		readonly readingId: string;
+		readonly emojiDescription?: string;
+	}[],
+	activeReadingId: string | undefined,
+	languages: CaptionLanguages,
+): Caption | null {
+	if (readings.length < 2) return null;
+	const ui: UiWording = uiWordings[languages.ui];
+	const emojis = joinTokens(
+		readings.flatMap(({ readingId, emojiDescription }) =>
+			emojiDescription
+				? [
+						[
+							{
+								kind: "Emoji",
+								text: emojiDescription,
+								current: readingId === activeReadingId,
+							},
+						] as const,
+					]
+				: [],
+		),
+		ui.wordSeparator,
+	);
+	const category = new Intl.PluralRules(languages.ui).select(readings.length);
+	const template =
+		ui.relations.readings[category] ?? ui.relations.readings.other;
+	const slots = {
+		count: [{ kind: "Word", text: String(readings.length) }],
+		emojis,
+	} as const;
+	return {
+		full: fillTemplate(template.full, slots),
+		compact: fillTemplate(template.compact, slots),
+	};
+}

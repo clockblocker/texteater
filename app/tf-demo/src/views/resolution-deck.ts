@@ -190,10 +190,12 @@ function canonicalResolutionDeckCards(
 		},
 		readingContext,
 	);
-	const lemma = canonicalCard(requestId, "Lemma", {
-		kind: "Lemma",
-		lemmaId: canonical.lemmaId,
-	});
+	const lemma = canonicalCard(
+		requestId,
+		"Lemma",
+		{ kind: "Lemma", lemmaId: canonical.lemmaId },
+		{ activeReadingId: canonical.readingId },
+	);
 	const surface = canonicalCard(
 		requestId,
 		"Surface",

@@ -21,12 +21,15 @@ export function RouteNoteView({
 	presentation = "Sheet",
 	activeAnalysisKey,
 	clickedSegmentIndex,
+	activeReadingId,
 }: {
 	target: RouteNoteTarget;
 	presentation?: "Card" | "Sheet";
 	activeAnalysisKey?: Id<"surfaces">;
 	/** The Segment the click that dealt an Attestation landed on. */
 	clickedSegmentIndex?: number;
+	/** The Reading the Deck that dealt a Lemma leads to. */
+	activeReadingId?: Id<"readings">;
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const visitorId = useAnonymousVisitorId();
@@ -76,6 +79,7 @@ export function RouteNoteView({
 		<PaginatedRouteNote
 			initialNote={noteQuery.data}
 			presentation={presentation}
+			activeReadingId={activeReadingId}
 		/>
 	);
 }
@@ -131,9 +135,11 @@ function PaginatedSurfaceNote({
 function PaginatedRouteNote({
 	initialNote,
 	presentation,
+	activeReadingId,
 }: {
 	initialNote: PaginatedRouteNote;
 	presentation: "Card" | "Sheet";
+	activeReadingId?: Id<"readings">;
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
@@ -159,11 +165,12 @@ function PaginatedRouteNote({
 		<PlacedNote
 			input={{
 				noteData: note,
-				capabilities: routeNoteCapabilities(
-					follow,
-					presentation,
-					pagination,
-				),
+				capabilities: {
+					...routeNoteCapabilities(follow, presentation, pagination),
+					...(activeReadingId === undefined
+						? {}
+						: { activeReadingId }),
+				},
 			}}
 		/>
 	);

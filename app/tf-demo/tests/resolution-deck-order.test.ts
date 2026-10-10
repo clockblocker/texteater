@@ -283,7 +283,18 @@ test("a fresh click whose every step says something keeps the Deck's order while
 		roles: FRONT_FIRST,
 		frontId: null,
 	});
-	// The stored Attestation keeps the clicked Segment through a reload.
+	// The stored Lemma keeps the Reading it leads to, and the Attestation
+	// the clicked Segment, through a reload.
+	expect(
+		deck(reload(state)).cards.find(({ key }) => key?.endsWith("Lemma"))
+			?.subject,
+	).toEqual({
+		kind: "Note",
+		target: { kind: "Lemma", lemmaId: "lemma-1" as Id<"lemmas"> },
+		presentationContext: {
+			activeReadingId: "reading-1" as Id<"readings">,
+		},
+	});
 	expect(
 		deck(reload(state)).cards.find(({ key }) =>
 			key?.endsWith("Attestation"),

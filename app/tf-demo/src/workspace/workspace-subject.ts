@@ -52,6 +52,11 @@ export type AttestationNotePresentationContext = {
 	readonly clickedSegmentIndex: number;
 };
 
+export type LemmaNotePresentationContext = {
+	/** The Reading the click that dealt this Lemma resolved to, which its caption marks. */
+	readonly activeReadingId: Id<"readings">;
+};
+
 export type ReadingNotePresentationContext = {
 	/**
 	 * The Resolution this Reading was just committed from. While the stored
@@ -84,6 +89,7 @@ export type ResolutionStepPresentationContext = {
 export type NotePresentationContext =
 	| SurfaceNotePresentationContext
 	| AttestationNotePresentationContext
+	| LemmaNotePresentationContext
 	| ReadingNotePresentationContext
 	| ResolutionStepPresentationContext;
 
@@ -97,6 +103,12 @@ type ContextualAttestationNoteSubject = {
 	readonly kind: "Note";
 	readonly target: AttestationNoteTarget;
 	readonly presentationContext?: AttestationNotePresentationContext;
+};
+
+type ContextualLemmaNoteSubject = {
+	readonly kind: "Note";
+	readonly target: LemmaNoteTarget;
+	readonly presentationContext?: LemmaNotePresentationContext;
 };
 
 type ContextualReadingNoteSubject = {
@@ -117,6 +129,7 @@ type ContextFreeNoteSubject = {
 		WorkspaceNoteTarget,
 		| SurfaceNoteTarget
 		| AttestationNoteTarget
+		| LemmaNoteTarget
 		| ReadingNoteTarget
 		| ResolutionStepTarget
 	>;
@@ -133,6 +146,7 @@ export type WorkspaceSubject =
 	| { readonly kind: "Text"; readonly target: TextSubjectTarget }
 	| ContextualSurfaceNoteSubject
 	| ContextualAttestationNoteSubject
+	| ContextualLemmaNoteSubject
 	| ContextualReadingNoteSubject
 	| ContextualResolutionStepSubject
 	| ContextFreeNoteSubject;
@@ -146,6 +160,10 @@ export function workspaceSubjectFor(
 	presentationContext?: AttestationNotePresentationContext,
 ): ContextualAttestationNoteSubject;
 export function workspaceSubjectFor(
+	target: LemmaNoteTarget,
+	presentationContext?: LemmaNotePresentationContext,
+): ContextualLemmaNoteSubject;
+export function workspaceSubjectFor(
 	target: ReadingNoteTarget,
 	presentationContext?: ReadingNotePresentationContext,
 ): ContextualReadingNoteSubject;
@@ -158,6 +176,7 @@ export function workspaceSubjectFor(
 		WorkspaceTarget,
 		| SurfaceNoteTarget
 		| AttestationNoteTarget
+		| LemmaNoteTarget
 		| ReadingNoteTarget
 		| ResolutionStepTarget
 	>,
@@ -165,6 +184,7 @@ export function workspaceSubjectFor(
 	WorkspaceSubject,
 	| ContextualSurfaceNoteSubject
 	| ContextualAttestationNoteSubject
+	| ContextualLemmaNoteSubject
 	| ContextualReadingNoteSubject
 	| ContextualResolutionStepSubject
 >;
@@ -187,6 +207,12 @@ export function workspaceSubjectFor(
 		target.kind === "Attestation" &&
 		presentationContext &&
 		"clickedSegmentIndex" in presentationContext
+	)
+		return { kind: "Note", target, presentationContext };
+	if (
+		target.kind === "Lemma" &&
+		presentationContext &&
+		"activeReadingId" in presentationContext
 	)
 		return { kind: "Note", target, presentationContext };
 	if (
@@ -245,7 +271,7 @@ export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 		case "Lemma":
 			return (
 				typeof target.lemmaId === "string" &&
-				value.presentationContext === undefined
+				isLemmaNotePresentationContext(value.presentationContext)
 			);
 		case "Surface":
 			return (
@@ -294,6 +320,15 @@ function isAttestationNotePresentationContext(
 	);
 }
 
+function isLemmaNotePresentationContext(
+	value: unknown,
+): value is LemmaNotePresentationContext | undefined {
+	return (
+		value === undefined ||
+		(isRecord(value) && typeof value.activeReadingId === "string")
+	);
+}
+
 function isSurfaceNotePresentationContext(
 	value: unknown,
 ): value is SurfaceNotePresentationContext | undefined {
@@ -331,6 +366,14 @@ export function clickedSegmentIndexOf(
 ): number | undefined {
 	return context && "clickedSegmentIndex" in context
 		? context.clickedSegmentIndex
+		: undefined;
+}
+
+export function activeReadingIdOf(
+	context: NotePresentationContext | undefined,
+): Id<"readings"> | undefined {
+	return context && "activeReadingId" in context
+		? context.activeReadingId
 		: undefined;
 }
 

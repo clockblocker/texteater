@@ -8,6 +8,7 @@ import {
 	type Caption,
 	type CaptionToken,
 	captionText,
+	lemmaCaption,
 	lemmaTitle,
 	surfaceCaption,
 	unitTitleParts,
@@ -295,4 +296,25 @@ test("the clicked piece is the one marked in the title", () => {
 			(part) => part.kind === "Piece" && part.clicked,
 		),
 	).toBe(false);
+});
+
+test("a Lemma counts its Readings and marks the one the Deck leads to", () => {
+	const readings = [
+		{ readingId: "bank-money", emojiDescription: "🏦" },
+		{ readingId: "bank-seat", emojiDescription: "🪑" },
+	];
+	const caption = lemmaCaption(readings, "bank-seat", languages);
+	expect(text(caption)).toEqual({
+		full: "2 readings: 🏦 🪑",
+		compact: "🏦 🪑",
+	});
+	expect(
+		caption?.full.flatMap((token) =>
+			token.kind === "Emoji" && token.current ? [token.text] : [],
+		),
+	).toEqual(["🪑"]);
+	// One Reading says nothing the Reading itself does not.
+	expect(
+		lemmaCaption(readings.slice(0, 1), "bank-money", languages),
+	).toBeNull();
 });

@@ -84,6 +84,42 @@ test("routes Lemma and Attestation subjects through the universal pipeline", () 
 		renderNote({ noteData: attestation }),
 	);
 	expect(lemmaMarkup).not.toContain('role="alert"');
+	// One Reading: the Lemma's Heading has no caption.
+	expect(lemmaMarkup).not.toContain("data-heading-caption");
+	const twoReadings = {
+		...lemma,
+		connections: {
+			...lemma.connections,
+			readings: [
+				...lemma.connections.readings,
+				{
+					readingId: "reading-2",
+					emojiDescription: "🪑",
+					target: { kind: "Reading", readingId: "reading-2" },
+				},
+			],
+		},
+	} as unknown as NoteDataFor<"Lemma">;
+	const marked = renderToStaticMarkup(
+		renderNote({
+			noteData: twoReadings,
+			capabilities: {
+				follow: () => {},
+				pagination: {
+					hasMore: false,
+					isLoading: false,
+					error: null,
+					loadMore: null,
+				},
+				activeReadingId: "reading-2" as Id<"readings">,
+			},
+		}),
+	);
+	expect(marked.replaceAll(/<[^>]+>/g, "")).toContain(
+		"Bank·2 readings: 🏦 🪑",
+	);
+	expect(marked).toMatch(/aria-current="true"[^>]*>🪑</);
+	expect(marked).not.toMatch(/aria-current="true"[^>]*>🏦</);
 	expect(attestationMarkup).not.toContain('role="alert"');
 });
 

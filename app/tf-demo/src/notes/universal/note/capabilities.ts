@@ -55,6 +55,8 @@ export type RoutePresentationCapabilities = {
 	readonly activeAnalysisKey?: Id<"surfaces">;
 	/** The Segment the click that dealt an Attestation landed on. */
 	readonly clickedSegmentIndex?: number;
+	/** The Reading the Deck that dealt a Lemma leads to. */
+	readonly activeReadingId?: Id<"readings">;
 	readonly pagination: {
 		readonly hasMore: boolean;
 		readonly isLoading: boolean;

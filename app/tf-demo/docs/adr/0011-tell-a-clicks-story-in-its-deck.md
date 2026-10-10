@@ -63,6 +63,9 @@ skipped Card leaves no gap in the story.
     gender tone.
 - **Emphasis:** the next title is drawn dimmer than the relation, so that
   Card's own title stays the strong one.
+- **A Lemma** counts its Readings and shows each one's emoji, marking the
+  one the click led to: `Bank · 2 readings: 🏦 🪑`. The click's Deck gives
+  the Lemma Card that Reading as presentation context.
 - **The Reading** ends the story and has no caption.
 - **Fit:** the title never truncates. When the full caption does not fit
   beside it, the caption drops the next title, which is visible on the Card

@@ -7,6 +7,7 @@ export {
 export { ResolvingReadingHeading } from "./universal/blocks/renderers/reading/heading/default";
 export {
 	attestationCaption,
+	lemmaCaption,
 	lemmaTitle,
 	surfaceCaption,
 } from "./universal/caption/caption";
