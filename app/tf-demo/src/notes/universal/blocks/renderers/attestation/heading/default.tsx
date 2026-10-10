@@ -5,7 +5,7 @@ import {
 	attestationNextTitle,
 } from "../../../../caption/caption";
 import {
-	CaptionedTitleRow,
+	CaptionedHeading,
 	captionLanguages,
 } from "../../../../caption/heading-caption";
 import { UnitTitle, unitTitleParts } from "../../../../caption/unit-title";
@@ -40,21 +40,19 @@ export const renderDefaultAttestationHeading = (({
 			languages,
 		);
 	return (
-		<header>
-			<CaptionedTitleRow
-				title={
-					<NoteTitle data-attestation-title="">
-						<UnitTitle
-							parts={unitTitleParts(
-								source.segments,
-								source.memberSegmentIndices,
-								PresentationCapabilities.clickedSegmentIndex,
-							)}
-						/>
-					</NoteTitle>
-				}
-				caption={caption}
-			/>
-		</header>
+		<CaptionedHeading
+			title={
+				<NoteTitle data-attestation-title="">
+					<UnitTitle
+						parts={unitTitleParts(
+							source.segments,
+							source.memberSegmentIndices,
+							PresentationCapabilities.clickedSegmentIndex,
+						)}
+					/>
+				</NoteTitle>
+			}
+			caption={caption}
+		/>
 	);
 }) satisfies GrammaticalDefaultRenderer<"Attestation">;

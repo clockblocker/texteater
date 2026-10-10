@@ -10,7 +10,7 @@ import type { ReactElement } from "react";
 import type { SourceSegment } from "../blocks/renderers/common/link-members";
 import { RouteMark } from "../blocks/renderers/common/route-mark";
 import { SourceQuote } from "../blocks/renderers/common/source-quote";
-import { CaptionedTitleRow } from "../caption/heading-caption";
+import { CaptionedHeading } from "../caption/heading-caption";
 import { UnitTitle, type UnitTitlePart } from "../caption/unit-title";
 import type { Caption } from "../caption/wording";
 
@@ -36,16 +36,14 @@ type ResolvingAttestation = {
  */
 export function resolvingAttestationNoteParts(input: ResolvingAttestation) {
 	const heading = (
-		<header>
-			<CaptionedTitleRow
-				title={
-					<NoteTitle data-attestation-title="">
-						<UnitTitle parts={input.title} />
-					</NoteTitle>
-				}
-				caption={input.caption}
-			/>
-		</header>
+		<CaptionedHeading
+			title={
+				<NoteTitle data-attestation-title="">
+					<UnitTitle parts={input.title} />
+				</NoteTitle>
+			}
+			caption={input.caption}
+		/>
 	);
 	return {
 		heading,

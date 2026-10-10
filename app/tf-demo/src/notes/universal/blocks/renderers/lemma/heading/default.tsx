@@ -2,7 +2,7 @@ import { NoteTitle } from "lego";
 
 import { lemmaCaption } from "../../../../caption/caption";
 import {
-	CaptionedTitleRow,
+	CaptionedHeading,
 	captionLanguages,
 } from "../../../../caption/heading-caption";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
@@ -20,22 +20,20 @@ export const renderDefaultLemmaHeading = (({
 	const { presented } = noteData;
 	const languages = captionLanguages(presented.language);
 	return (
-		<header>
-			<CaptionedTitleRow
-				title={
-					<NoteTitle data-lemma-title="" tone={genderTone(presented)}>
-						<bdi>{presented.canonicalForm}</bdi>
-					</NoteTitle>
-				}
-				caption={
-					languages &&
-					lemmaCaption(
-						noteData.connections.readings,
-						PresentationCapabilities.activeReadingId,
-						languages,
-					)
-				}
-			/>
-		</header>
+		<CaptionedHeading
+			title={
+				<NoteTitle data-lemma-title="" tone={genderTone(presented)}>
+					<bdi>{presented.canonicalForm}</bdi>
+				</NoteTitle>
+			}
+			caption={
+				languages &&
+				lemmaCaption(
+					noteData.connections.readings,
+					PresentationCapabilities.activeReadingId,
+					languages,
+				)
+			}
+		/>
 	);
 }) satisfies GrammaticalDefaultRenderer<"Lemma">;

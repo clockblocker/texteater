@@ -18,11 +18,13 @@ export function captionLanguages(language: string): CaptionLanguages | null {
 }
 
 /**
- * A Heading's title row with its caption, if it has one, on the same line:
- * a Card Tail shows one row. The title keeps its whole width and wraps
- * rather than truncate; the caption takes what is left.
+ * A Heading with its title and its caption, if it has one, on one line: a
+ * Card Tail shows one row. The Heading takes the whole width it is given,
+ * also where a Card lays its title out in a row, so the caption is measured
+ * against the room beside the title rather than against its own words. The
+ * title keeps the width it needs; the caption takes what is left.
  */
-export function CaptionedTitleRow({
+export function CaptionedHeading({
 	title,
 	caption,
 }: {
@@ -30,10 +32,12 @@ export function CaptionedTitleRow({
 	readonly caption: Caption | null;
 }) {
 	return (
-		<NoteTitleRow className="flex-nowrap justify-start gap-x-1.5">
-			{title}
-			{caption ? <HeadingCaption caption={caption} /> : null}
-		</NoteTitleRow>
+		<header className="min-w-0 flex-1">
+			<NoteTitleRow className="flex-nowrap justify-start gap-x-1.5">
+				{title}
+				{caption ? <HeadingCaption caption={caption} /> : null}
+			</NoteTitleRow>
+		</header>
 	);
 }
 

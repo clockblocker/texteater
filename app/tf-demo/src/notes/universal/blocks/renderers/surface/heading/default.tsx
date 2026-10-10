@@ -1,7 +1,7 @@
 import { NoteTitle } from "lego";
 import { lemmaTitle, surfaceCaption } from "../../../../caption/caption";
 import {
-	CaptionedTitleRow,
+	CaptionedHeading,
 	captionLanguages,
 } from "../../../../caption/heading-caption";
 import type { SurfaceDefaultRenderer } from "../../../renderer";
@@ -34,22 +34,18 @@ export const renderDefaultSurfaceHeading = (({
 				)
 			: null;
 	return (
-		<header>
-			<CaptionedTitleRow
-				title={
-					<NoteTitle
-						data-surface-title=""
-						tone={
-							active
-								? genderTone(active.presented.lemma)
-								: undefined
-						}
-					>
-						<bdi>{noteData.target.normalizedSurface}</bdi>
-					</NoteTitle>
-				}
-				caption={caption}
-			/>
-		</header>
+		<CaptionedHeading
+			title={
+				<NoteTitle
+					data-surface-title=""
+					tone={
+						active ? genderTone(active.presented.lemma) : undefined
+					}
+				>
+					<bdi>{noteData.target.normalizedSurface}</bdi>
+				</NoteTitle>
+			}
+			caption={caption}
+		/>
 	);
 }) satisfies SurfaceDefaultRenderer;
