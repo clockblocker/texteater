@@ -736,26 +736,43 @@ describe("ReconcileDeck", () => {
 		});
 	}
 
-	test("keys already in the Deck keep their Presentation and slot; new keys are appended in order", () => {
-		const dealt = keyed(atText(), "resolver", "lemma");
+	test("kept keys keep their Presentations and places; a new key slots in after the key given before it", () => {
+		const dealt = keyed(atText(), "reading", "attestation");
 		const deck = ground(dealt).deck ?? never();
 		const state = reconcile(
 			dealt,
 			deck.id,
-			["reading", "Reading"],
+			["reading", "reading"],
 			["lemma", "lemma"],
-			["resolver", "resolver"],
-			["surface", "Surface"],
+			["surface", "surface"],
+			["attestation", "attestation"],
 		);
 		const cards = ground(state).deck?.cards ?? [];
 		expect(cards.map((card) => card.key)).toEqual([
-			"resolver",
-			"lemma",
 			"reading",
+			"lemma",
 			"surface",
+			"attestation",
 		]);
 		expect(cards[0]).toBe(deck.cards[0]);
-		expect(cards[1]).toBe(deck.cards[1]);
+		expect(cards[3]).toBe(deck.cards[1]);
+	});
+
+	test("a new key given first goes first, and kept keys keep their order", () => {
+		const dealt = keyed(atText(), "b", "a");
+		const deck = ground(dealt).deck ?? never();
+		const state = reconcile(
+			dealt,
+			deck.id,
+			["front", "front"],
+			["a", "a"],
+			["b", "b"],
+		);
+		expect(ground(state).deck?.cards.map((card) => card.key)).toEqual([
+			"front",
+			"b",
+			"a",
+		]);
 	});
 
 	test("the Deck keeps its id, its Sheet and its front Card", () => {

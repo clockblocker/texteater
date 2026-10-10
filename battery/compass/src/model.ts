@@ -696,9 +696,11 @@ function reconcileDeck<S>(
 
 /**
  * Reconciles one Deck in a layout by key. A kept key keeps its Presentation
- * and its slot, and any Sheet showing it takes the new Subject. New keys are
- * appended in the order given, minted, or reusing `minted` so a checkpoint
- * names them as the live layout does. A key no longer given loses its slot,
+ * and its place among the kept, and any Sheet showing it takes the new
+ * Subject. A new key slots in right after the key given before it, or first
+ * when none is, so a Card dealt late takes its place in the given order. It
+ * is minted, or reuses `minted` so a checkpoint names it as the live layout
+ * does. A key no longer given loses its slot,
  * so a Sheet showing it closes on going back. Unkeyed Cards stay as dealt.
  */
 function reconcileIn<S>(
@@ -728,13 +730,19 @@ function reconcileIn<S>(
 		return [{ ...current, subject: card.subject }];
 	});
 	const held = new Set(deck.cards.map((card) => card.key));
-	const added = cards.flatMap((card) => {
-		if (held.has(card.key)) return [];
+	const next = [...kept];
+	cards.forEach((card, index) => {
+		if (held.has(card.key)) return;
 		const id = minted.get(card.key) ?? mint("presentation");
 		minted.set(card.key, id);
-		return [present(id, card)];
+		/* right after the Card given before it, or first when none is */
+		const before = cards[index - 1]?.key;
+		const at =
+			before === undefined
+				? 0
+				: next.findIndex((current) => current.key === before) + 1;
+		next.splice(at, 0, present(id, card));
 	});
-	const next = [...kept, ...added];
 	const frontId = next.some((card) => card.id === deck.frontId)
 		? deck.frontId
 		: null;
