@@ -8,11 +8,13 @@
  * article and form leave open, when more than one remains (#625), and
  * Luna's Canonical Form and spellings (#862). Luna is asked while jev
  * judges, on the guess that jev changes nothing Luna reads; when it does,
- * Luna is asked again with jev's answers. Code derives the rest: the
- * article's cell and evidence (#681), perfect, future, passive and
- * causative from the auxiliaries (#686), a lexical reflexive's case where
- * its form shows it, a VERB's subject es, an ADP's case where the ADP Case
- * Table allows one.
+ * Luna is asked again with jev's answers. A common NOUN whose headword
+ * dumcorpus lists in free gender variation takes its mixed gender, after
+ * one more request (`freeGender`) when only one of its senses does. Code
+ * derives the rest: the article's cell and evidence (#681), perfect,
+ * future, passive and causative from the auxiliaries (#686), a lexical
+ * reflexive's case where its form shows it, a VERB's subject es, an ADP's
+ * case where the ADP Case Table allows one.
  */
 
 import type * as Dumling from "dumling/types";
@@ -92,7 +94,7 @@ import {
 	verbGuessMisses,
 	verbHeadword,
 } from "./open-route/verbal.js";
-import type { CaseOption } from "./prompts.js";
+import { type CaseOption, fill, options, question } from "./prompts.js";
 import { Answered, Questionnaire, UnresolvedAnswer } from "./questions.js";
 import { fixedSpelling, type Target, targetState } from "./target.js";
 
@@ -383,6 +385,31 @@ function caseRequest(
 }
 
 /**
+ * Whether a listed noun in free gender variation has, here, the one sense
+ * that takes either gender (Rule de/noun-gender-in-free-variation).
+ */
+function senseRequest(
+	ask: Ask,
+	state: ReturnType<typeof targetState>,
+	sense: string,
+): Effect.Effect<"Yes" | "No" | UnresolvedAnswer, AskFailure> {
+	return Effect.gen(function* () {
+		const questionnaire = new Questionnaire();
+		const asked = questionnaire.choice(
+			"freeGender",
+			fill(question.nounFreeGender, { sense }),
+			options.freeGender,
+		);
+		const answered = yield* ask({
+			stage: "freeGender",
+			state: { ...state, policy: questionnaire.policyBlock() },
+			questions: questionnaire.questions,
+		});
+		return settle(() => new Answered(answered).pick(asked));
+	});
+}
+
+/**
  * The headword: Luna's Canonical Form and members' words, over which each
  * route shape's step writes what the Rules settle, in this order: a VERB
  * Lexeme's prefix and sich, a PART's authored Lemma, a numeral Locution's
@@ -566,8 +593,12 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 				);
 	const cells =
 		first.block === "nominal"
-			? yield* nominalCells(article, first, writing, (open) =>
-					caseRequest(ask, state, open),
+			? yield* nominalCells(
+					article,
+					first,
+					writing,
+					(open) => caseRequest(ask, state, open),
+					(sense) => senseRequest(ask, state, sense),
 				)
 			: {
 					written: yield* writing,

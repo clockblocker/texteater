@@ -25,6 +25,7 @@ const rules = {
 	adjectivalNoun: ["de/adjectival-noun-lemma", "bcdaf66f8862eb29"],
 	neuterNoun: ["de/neuter-adjectival-noun", "a4bd8e12a664fd8e"],
 	pluralOnly: ["de/plural-only-noun-has-no-gender", "92946b73a6244500"],
+	freeGender: ["de/noun-gender-in-free-variation", "232a2eebe2947abc"],
 	properArticle: ["de/proper-noun-article", "c3eb61394edd1818"],
 	organisation: [
 		"de/organisation-name-takes-its-article",
@@ -277,6 +278,21 @@ export const question = {
 		"question.noun.gender.Neut",
 		"Neuter: its nominative singular takes das",
 		rules.core,
+	),
+	nounFreeGender: paragraph(
+		"question.noun.freeGender",
+		"The noun takes more than one gender in one of its senses and a single gender in its others. Does it mean here {sense}?",
+		rules.freeGender,
+	),
+	nounFreeGenderYes: paragraph(
+		"question.noun.freeGender.Yes",
+		"Yes: that sense, which takes either gender",
+		rules.freeGender,
+	),
+	nounFreeGenderNo: paragraph(
+		"question.noun.freeGender.No",
+		"No: another of its senses, with one gender",
+		rules.freeGender,
 	),
 	locutionGender: paragraph(
 		"question.locution.gender",
@@ -605,6 +621,10 @@ export const options = {
 		die: question.nounGenderFem,
 		das: question.nounGenderNeut,
 		None: question.nounGenderNone,
+	},
+	freeGender: {
+		Yes: question.nounFreeGenderYes,
+		No: question.nounFreeGenderNo,
 	},
 	nounKind: {
 		Ordinary: question.nounKindOrdinary,

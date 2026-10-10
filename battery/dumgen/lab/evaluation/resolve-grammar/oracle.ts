@@ -6,6 +6,7 @@
  */
 
 import type { Question, Questions } from "@typesafe-ai/sdk";
+import { isRecord } from "common-utils";
 import { foldCase, lemmaIdentityKey } from "dumling";
 import { z } from "zod";
 import {
@@ -41,6 +42,15 @@ const articleOfGender: Readonly<Record<string, string>> = {
 	Fem: "die",
 	Neut: "das",
 };
+/**
+ * The articles gold's Core gender takes: its one gender's, or each of a
+ * mixed gender's, in catalog order (Rule de/noun-gender-in-free-variation).
+ */
+const articlesOf = (gender: unknown): readonly string[] =>
+	(isRecord(gender) && Array.isArray(gender.mixed)
+		? gender.mixed
+		: [gender]
+	).flatMap((member) => articleOfGender[String(member)] ?? []);
 const useOf = Object.fromEntries(
 	Object.entries(auxiliaryUses).map(([use, text]) => [text, use]),
 );
@@ -143,6 +153,26 @@ const reads =
 	(read: (gold: Gold) => unknown): Answering =>
 	(gold, question) =>
 		picked(option(question, read(gold)));
+
+/**
+ * The article of gold's Core gender, None for none; a mixed gender's
+ * articles share the weight, the first in catalog order chosen.
+ */
+const genderAnswer: Answering = ({ core }, question) => {
+	const articles = articlesOf(core.gender);
+	const [first] = articles;
+	if (first === undefined || articles.length === 1)
+		return picked(option(question, first ?? "None"));
+	const weight = 1 / articles.length;
+	return {
+		type: "choice",
+		choice: option(question, first),
+		confidence: weight,
+		probabilities: Object.fromEntries(
+			articles.map((article) => [option(question, article), weight]),
+		),
+	};
+};
 
 /** The first irregular member the question offers, or None. */
 const orthographyAnswer: Answering = ({ members }, question) => {
@@ -266,10 +296,8 @@ const answeringOf: ReadonlyMap<string, Answering> = new Map<string, Answering>([
 			core.article === "Definite" ? "Definite" : "Bare",
 		),
 	],
-	[
-		"gender",
-		reads(({ core }) => articleOfGender[String(core.gender)] ?? "None"),
-	],
+	["gender", genderAnswer],
+	["freeGender", reads(({ core }) => (isRecord(core.gender) ? "Yes" : "No"))],
 	[
 		"indefinite",
 		reads(({ members }) =>
@@ -428,7 +456,7 @@ export function goldWritten(goldCase: GrammarCase, input: unknown): unknown {
 		canonicalForm: lemma.canonicalForm,
 		members,
 		...(lemma.family === "Lexeme" && lemma.kind === "NOUN"
-			? { article: articleOfGender[String(gender)] ?? "none" }
+			? { article: articlesOf(gender)[0] ?? "none" }
 			: {}),
 	};
 }

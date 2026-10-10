@@ -10,6 +10,7 @@ import {
 	type ArticleMember,
 	germanArticleCell,
 	germanArticleSpellings,
+	germanFreeGenderNoun,
 	isGermanPluralOnlyNoun,
 } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
@@ -30,14 +31,27 @@ import {
 	UnresolvedAnswer,
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
-import { cases, type Gender, genderOfArticle, type Shape } from "./shape.js";
+import {
+	cases,
+	type Gender,
+	genderOfArticle,
+	type MixedGender,
+	type Shape,
+} from "./shape.js";
 
-/** A NOUN's or PROPN's Core Features, with one gender or none. */
-type NounCore = Dumling.Lemma<
+type NominalCore = Dumling.Lemma<
 	"de",
 	"Lexeme" | "Locution",
 	"NOUN" | "PROPN"
->["coreFeatures"] & { readonly gender: Gender | null };
+>["coreFeatures"];
+
+/** A NOUN's or PROPN's Core Features as jev and Luna read them, with one gender or none. */
+type NounCore = NominalCore & { readonly gender: Gender | null };
+
+/** A NOUN's or PROPN's settled Core Features: a listed noun's gender may be mixed. */
+type SettledCore = NominalCore & {
+	readonly gender: Gender | MixedGender | null;
+};
 
 /** A nominal Surface's features; a NOUN Locution's have no gender. */
 export type NounInflection = NonNullable<
@@ -265,6 +279,8 @@ function nounCore(nominal: NominalPlan, answered: Answered): NounCore {
 
 /** What a NOUN's block settles in the first request, and the cases still open. */
 export type NominalRead = {
+	/** A common NOUN Lexeme, whose gender may be a listed mixed one. */
+	readonly common: boolean;
 	readonly core: NounCore;
 	readonly inflection: NounInflection | null;
 	readonly openCases: readonly CaseOption[];
@@ -283,9 +299,16 @@ export function readNominal(
 	answered: Answered,
 	cited: boolean,
 ): NominalRead {
+	const common = shape.lexeme && !shape.proper;
 	let core = nounCore(nominal, answered);
 	if (cited)
-		return { core, inflection: null, openCases: [], noun: undefined };
+		return {
+			common,
+			core,
+			inflection: null,
+			openCases: [],
+			noun: undefined,
+		};
 	let noun: NounRead | undefined;
 	const number = answered.pick(nominal.number);
 	const peekFormGender = () =>
@@ -356,7 +379,49 @@ export function readNominal(
 	const inflection: NounInflection = shape.locution
 		? { case: settled, number }
 		: { case: settled, gender: formGender, number };
-	return { core, inflection, openCases, noun };
+	return { common, core, inflection, openCases, noun };
+}
+
+/** A NOUN's settled Core Features and cells, and the cases still open. */
+type Cells = {
+	readonly core: SettledCore;
+	readonly inflection: NounInflection;
+	readonly openCases: readonly CaseOption[];
+};
+
+/**
+ * A used common NOUN's cells over the cases its Core gender leaves open,
+ * narrowed to the Case jev answered early; undefined when none is left or
+ * the early answer fits none.
+ */
+function cellsOver(
+	noun: NounRead,
+	inflection: NounInflection,
+	core: SettledCore,
+	formGender: Gender | null,
+	open: readonly CaseOption[],
+): Cells | undefined {
+	let openCases = open;
+	if (openCases.length === 0) return undefined;
+	if (noun.earlyCase !== undefined) {
+		if (!openCases.includes(noun.earlyCase)) return undefined;
+		openCases = [noun.earlyCase];
+	}
+	const [only] = openCases;
+	return {
+		core,
+		inflection: {
+			...inflection,
+			gender: formGender,
+			case:
+				openCases.length === 1 && only !== undefined
+					? only === "Unmarked"
+						? null
+						: only
+					: null,
+		},
+		openCases,
+	};
 }
 
 /**
@@ -374,50 +439,80 @@ function nounCells(
 	owned: OpeningArticle | undefined,
 	first: NominalRead,
 	article: Written["article"],
-):
-	| {
-			readonly core: NounCore;
-			readonly inflection: NounInflection;
-			readonly openCases: readonly CaseOption[];
-	  }
-	| undefined {
-	const { noun } = first;
-	if (!noun || !article || !first.inflection) return undefined;
+): Cells | undefined {
+	const { noun, inflection } = first;
+	if (!noun || !article || !inflection) return undefined;
 	const gender = genderNamed(article);
 	if (gender === (first.core.gender ?? null)) return undefined;
 	const singular = noun.number === "Sing";
 	const formGender = gender === null && singular ? noun.shown : null;
 	if (gender === null && singular && formGender === null) return undefined;
-	const agreeing = formGender ?? gender;
-	let openCases: readonly CaseOption[] = owned
-		? articleCases(owned.article, noun.number, agreeing)
-		: [...cases, "Unmarked"];
-	if (openCases.length === 0) return undefined;
-	if (noun.earlyCase !== undefined) {
-		if (!openCases.includes(noun.earlyCase)) return undefined;
-		openCases = [noun.earlyCase];
-	}
-	const [only] = openCases;
-	return {
-		core: { ...first.core, gender },
-		inflection: {
-			...first.inflection,
-			gender: formGender,
-			case:
-				openCases.length === 1 && only !== undefined
-					? only === "Unmarked"
-						? null
-						: only
-					: null,
-		},
-		openCases,
-	};
+	return cellsOver(
+		noun,
+		inflection,
+		{ ...first.core, gender },
+		formGender,
+		owned
+			? articleCases(owned.article, noun.number, formGender ?? gender)
+			: [...cases, "Unmarked"],
+	);
 }
+
+/**
+ * A used common NOUN's cells with a mixed Core gender: its article agrees
+ * with any of the genders (Rule de/noun-gender-in-free-variation), so the
+ * cases left open are those any of them leaves, and its Surface marks no
+ * gender. Undefined when the article agrees with none of them.
+ */
+function mixedCells(
+	owned: OpeningArticle | undefined,
+	first: NominalRead,
+	gender: MixedGender,
+): Cells | undefined {
+	const { noun, inflection } = first;
+	if (!noun || !inflection) return undefined;
+	const agreeing = (grammaticalCase: CaseOption) =>
+		owned === undefined ||
+		gender.mixed.some((member) =>
+			articleCases(owned.article, noun.number, member).includes(
+				grammaticalCase,
+			),
+		);
+	return cellsOver(
+		noun,
+		inflection,
+		{ ...first.core, gender },
+		null,
+		owned ? cases.filter(agreeing) : [...cases, "Unmarked"],
+	);
+}
+
+/**
+ * Whether a listed noun in free gender variation has its mixed gender here
+ * (Rule de/noun-gender-in-free-variation): dumcorpus lists the nouns Duden
+ * gives more than one gender in one sense, and when a listed noun has other
+ * senses with one gender, jev says whether it means the listed one here.
+ * Undefined for a noun not listed or meant in another sense.
+ */
+const mixedGenderOf = <Failure>(
+	written: Written | undefined,
+	senseOver: (
+		sense: string,
+	) => Effect.Effect<"Yes" | "No" | UnresolvedAnswer, Failure>,
+): Effect.Effect<MixedGender | UnresolvedAnswer | undefined, Failure> =>
+	Effect.gen(function* () {
+		const listed = written && germanFreeGenderNoun(written.canonicalForm);
+		if (!listed) return undefined;
+		if (listed.sense === undefined) return listed.gender;
+		const answer = yield* senseOver(listed.sense);
+		if (answer instanceof UnresolvedAnswer) return answer;
+		return answer === "Yes" ? listed.gender : undefined;
+	});
 
 /** A NOUN's Core Features and cells once its Case is settled, and what Luna wrote. */
 export type NominalCells = {
 	readonly written: Written | undefined;
-	readonly core: NounCore;
+	readonly core: SettledCore;
 	readonly inflection: NounInflection | null;
 };
 
@@ -426,8 +521,11 @@ export type NominalCells = {
  * gender is the article Luna writes with its headword when it fits the
  * Sentence's article, so Luna is awaited first and the Case is asked over
  * the cells that gender leaves; any other NOUN's Case is asked beside
- * Luna. `caseOver` asks the Case question over the cells still open, and
- * asks nothing when one or none is.
+ * Luna. A common NOUN whose headword dumcorpus lists in free gender
+ * variation takes its mixed gender instead, `senseOver` asking whether it
+ * has the listed sense here when it has others. `caseOver` asks the Case
+ * question over the cells still open, and asks nothing when one or none
+ * is.
  */
 export const nominalCells = <Failure>(
 	owned: OpeningArticle | undefined,
@@ -436,10 +534,15 @@ export const nominalCells = <Failure>(
 	caseOver: (
 		open: readonly CaseOption[],
 	) => Effect.Effect<CaseOption | UnresolvedAnswer | undefined, Failure>,
+	senseOver: (
+		sense: string,
+	) => Effect.Effect<"Yes" | "No" | UnresolvedAnswer, Failure>,
 ): Effect.Effect<NominalCells | UnresolvedAnswer, Failure> =>
 	Effect.gen(function* () {
 		if (first.noun && first.inflection) {
 			const written = yield* writing;
+			const mixed = yield* mixedGenderOf(written, senseOver);
+			if (mixed instanceof UnresolvedAnswer) return mixed;
 			// A noun with no singular has gender null, whatever article Luna
 			// wrote (Rule de/plural-only-noun-has-no-gender): dumcorpus lists the
 			// Pluraletantum nouns Duden gives only in the plural.
@@ -447,11 +550,12 @@ export const nominalCells = <Failure>(
 				written && isGermanPluralOnlyNoun(written.canonicalForm)
 					? "none"
 					: written?.article;
-			const cells = nounCells(owned, first, article) ?? {
-				core: first.core,
-				inflection: first.inflection,
-				openCases: first.openCases,
-			};
+			const cells = (mixed && mixedCells(owned, first, mixed)) ??
+				nounCells(owned, first, article) ?? {
+					core: first.core,
+					inflection: first.inflection,
+					openCases: first.openCases,
+				};
 			if (cells.openCases.length === 0)
 				return new UnresolvedAnswer(
 					"The article agrees with no case of its head",
@@ -463,13 +567,24 @@ export const nominalCells = <Failure>(
 			[caseOver(first.openCases), writing],
 			{ concurrency: "unbounded" },
 		);
-		return withCase(first, caseAnswer, written);
+		// A cited common NOUN is the same Lemma as a used one.
+		const mixed = first.common
+			? yield* mixedGenderOf(written, senseOver)
+			: undefined;
+		if (mixed instanceof UnresolvedAnswer) return mixed;
+		return withCase(
+			mixed
+				? { ...first, core: { ...first.core, gender: mixed } }
+				: first,
+			caseAnswer,
+			written,
+		);
 	});
 
 /** A NOUN's cells with the Case answered over them, Unmarked as none. */
 function withCase(
 	cells: {
-		readonly core: NounCore;
+		readonly core: SettledCore;
 		readonly inflection: NounInflection | null;
 	},
 	caseAnswer: CaseOption | UnresolvedAnswer | undefined,
