@@ -1,0 +1,23 @@
+{
+	"baselineRunId": "none: #1141's hand-picked scope (#1157's 7 changed cases, Cola#1 among them, and its 19 new ones), no baseline on this set",
+	"experimentId": "resolve-grammar/de:dev",
+	"setHash": "376fa2bab34f9692",
+	"repetitions": 3,
+	"seed": 0,
+	"guardSize": 26,
+	"missed": {
+
+	},
+	"guard": {
+		"Lexeme/ADJ": ["de/aus-opportunismus-folgt-sie-immer-der-mehrheit-sie-heult-mit#1", "de/der-mann-ist-voellig-verrueckt#1", "de/je-frueher-desto-besser#1", "de/je-frueher-desto-besser#2", "de/je-laenger-der-weg-desto-mueder-die-reisenden#1"],
+		"Lexeme/ADP": ["de/am-selben-morgen-fiel-erneut-der-strom-aus#0"],
+		"Lexeme/ADV": ["de/im-workshop-schwieg-jeder-mit-einem-witz-brach-sie-endlich#1"],
+		"Lexeme/DET": ["de/am-selben-morgen-fiel-erneut-der-strom-aus#1"],
+		"Lexeme/NOUN": ["de/am-selben-morgen-fiel-erneut-der-strom-aus#2", "de/der-kellner-bringt-eine-cola#1", "de/er-bekam-ein-paar-handschuhe-geschenkt#0", "de/nach-ein-paar-sekunden-ging-die-tuer-auf#1", "de/sie-fuhr-mit-ein-paar-freunden-nach-berlin#1"],
+		"Lexeme/PRON": ["de/er-brach-das#0", "de/nach-ein-paar-sekunden-ging-die-tuer-auf#0", "de/sie-fuhr-mit-ein-paar-freunden-nach-berlin#0", "de/von-den-aepfeln-nehme-ich-ein-paar#0"],
+		"Lexeme/PROPN": ["de/freuen-wir-uns-denn-du-weisst-schon-wer-ist-endlich-fort#0"],
+		"Lexeme/VERB": ["de/der-kellner-bringt-eine-cola#0", "de/der-mann-ist-voellig-verrueckt#0", "de/er-brach-das#1", "de/er-hat-die-tuer-geschlossen#0"],
+		"Locution/SCONJ": ["de/je-frueher-desto-besser#0", "de/je-laenger-der-weg-desto-mueder-die-reisenden#0"],
+		"Locution/VERB": ["de/aus-opportunismus-folgt-sie-immer-der-mehrheit-sie-heult-mit#0", "de/im-workshop-schwieg-jeder-mit-einem-witz-brach-sie-endlich#0"]
+	}
+}
