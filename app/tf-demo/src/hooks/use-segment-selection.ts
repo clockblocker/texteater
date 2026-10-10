@@ -47,13 +47,14 @@ export function useSegmentSelection(visitorId: string) {
 			const requestId = crypto.randomUUID();
 			const startedAt = Date.now();
 			const clock = performance.now();
+			const routeNoteRequested = routeNotesEnabled || altKey;
 			const result = await selectSegment({
 				requestId,
 				visitorId,
 				sentenceId,
 				clickedSegmentIndex,
 				inspect: import.meta.env.DEV,
-				routeNoteRequested: routeNotesEnabled || altKey,
+				routeNoteRequested,
 			});
 			if (import.meta.env.DEV) {
 				void recordSelectionTiming({
@@ -67,10 +68,14 @@ export function useSegmentSelection(visitorId: string) {
 			}
 			// A repeat click joins the Visitor's running session, so a
 			// Resolving deck follows the returned requestId, not this one.
-			presentCards(segmentSelectionDeckCards(requestId, result), {
-				anchor: anchorElement,
-				selection,
-			});
+			presentCards(
+				segmentSelectionDeckCards(
+					requestId,
+					result,
+					routeNoteRequested ? "Attestation" : "Reading",
+				),
+				{ anchor: anchorElement, selection },
+			);
 		} catch (cause) {
 			setError(visitorErrorMessage(cause));
 		} finally {

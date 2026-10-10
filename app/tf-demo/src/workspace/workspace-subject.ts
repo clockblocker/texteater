@@ -5,22 +5,23 @@
  * back through.
  */
 import { isRecord } from "common-utils";
+import type { FunctionReturnType } from "convex/server";
+import type { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import type {
 	AttestationNoteTarget,
 	LemmaNoteTarget,
 	ReadingNoteTarget,
-	ResolutionTarget,
 	ShadowNoteTarget,
 	SurfaceNoteTarget,
 	TextTarget,
 } from "../../shared/navigation";
 
-export type ResolutionStepKind =
-	| "Reading"
-	| "Lemma"
-	| "Surface"
-	| "Attestation";
+/**
+ * The Cards a running Resolution deals before it commits; its Lemma and
+ * Surface are dealt at commit, as stored Notes.
+ */
+export type ResolutionStepKind = "Reading" | "Attestation";
 
 export type ResolutionStepTarget = {
 	readonly kind: "ResolutionStep";
@@ -34,7 +35,6 @@ type WorkspaceNoteTarget =
 	| SurfaceNoteTarget
 	| AttestationNoteTarget
 	| ShadowNoteTarget
-	| ResolutionTarget
 	| ResolutionStepTarget;
 
 export type WorkspaceTarget = TextTarget | WorkspaceNoteTarget;
@@ -53,9 +53,30 @@ export type ReadingNotePresentationContext = {
 	readonly resolutionRequestId: string;
 };
 
+type SegmentSelectionResult = FunctionReturnType<
+	typeof api.resolutionSessions.selectSegment
+>;
+
+/** The route intake stored for a clicked unit, when it stored one. */
+export type UnitRoute = Exclude<
+	NonNullable<
+		Extract<SegmentSelectionResult, { kind: "Resolving" }>["unitRoute"]
+	>,
+	"Unresolved"
+>;
+
+export type ResolutionStepPresentationContext = {
+	/**
+	 * The clicked unit's route, which lays the Reading step out before the
+	 * Session's first result arrives.
+	 */
+	readonly unitRoute: UnitRoute;
+};
+
 export type NotePresentationContext =
 	| SurfaceNotePresentationContext
-	| ReadingNotePresentationContext;
+	| ReadingNotePresentationContext
+	| ResolutionStepPresentationContext;
 
 type ContextualSurfaceNoteSubject = {
 	readonly kind: "Note";
@@ -69,11 +90,17 @@ type ContextualReadingNoteSubject = {
 	readonly presentationContext?: ReadingNotePresentationContext;
 };
 
+type ContextualResolutionStepSubject = {
+	readonly kind: "Note";
+	readonly target: ResolutionStepTarget;
+	readonly presentationContext?: ResolutionStepPresentationContext;
+};
+
 type ContextFreeNoteSubject = {
 	readonly kind: "Note";
 	readonly target: Exclude<
 		WorkspaceNoteTarget,
-		SurfaceNoteTarget | ReadingNoteTarget
+		SurfaceNoteTarget | ReadingNoteTarget | ResolutionStepTarget
 	>;
 	readonly presentationContext?: never;
 };
@@ -88,6 +115,7 @@ export type WorkspaceSubject =
 	| { readonly kind: "Text"; readonly target: TextSubjectTarget }
 	| ContextualSurfaceNoteSubject
 	| ContextualReadingNoteSubject
+	| ContextualResolutionStepSubject
 	| ContextFreeNoteSubject;
 
 export function workspaceSubjectFor(
@@ -99,10 +127,19 @@ export function workspaceSubjectFor(
 	presentationContext?: ReadingNotePresentationContext,
 ): ContextualReadingNoteSubject;
 export function workspaceSubjectFor(
-	target: Exclude<WorkspaceTarget, SurfaceNoteTarget | ReadingNoteTarget>,
+	target: ResolutionStepTarget,
+	presentationContext?: ResolutionStepPresentationContext,
+): ContextualResolutionStepSubject;
+export function workspaceSubjectFor(
+	target: Exclude<
+		WorkspaceTarget,
+		SurfaceNoteTarget | ReadingNoteTarget | ResolutionStepTarget
+	>,
 ): Exclude<
 	WorkspaceSubject,
-	ContextualSurfaceNoteSubject | ContextualReadingNoteSubject
+	| ContextualSurfaceNoteSubject
+	| ContextualReadingNoteSubject
+	| ContextualResolutionStepSubject
 >;
 export function workspaceSubjectFor(
 	target: WorkspaceTarget,
@@ -125,6 +162,12 @@ export function workspaceSubjectFor(
 		"resolutionRequestId" in presentationContext
 	)
 		return { kind: "Note", target, presentationContext };
+	if (
+		target.kind === "ResolutionStep" &&
+		presentationContext &&
+		"unitRoute" in presentationContext
+	)
+		return { kind: "Note", target, presentationContext };
 	return { kind: "Note", target } as WorkspaceSubject;
 }
 
@@ -143,8 +186,6 @@ export function workspaceSubjectKey(subject: WorkspaceSubject): string {
 			return `Attestation:${target.attestationId}`;
 		case "Shadow":
 			return `Shadow:${target.shadowId}`;
-		case "Resolution":
-			return `Resolution:${target.requestId}`;
 		case "ResolutionStep":
 			return `ResolutionStep:${target.requestId}:${target.stepKind}`;
 	}
@@ -189,16 +230,11 @@ export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 				typeof target.shadowId === "string" &&
 				value.presentationContext === undefined
 			);
-		case "Resolution":
-			return (
-				typeof target.requestId === "string" &&
-				value.presentationContext === undefined
-			);
 		case "ResolutionStep":
 			return (
 				typeof target.requestId === "string" &&
 				isResolutionStepKind(target.stepKind) &&
-				value.presentationContext === undefined
+				isResolutionStepPresentationContext(value.presentationContext)
 			);
 		default:
 			return false;
@@ -223,13 +259,27 @@ function isSurfaceNotePresentationContext(
 	);
 }
 
-function isResolutionStepKind(value: unknown): value is ResolutionStepKind {
+function isResolutionStepPresentationContext(
+	value: unknown,
+): value is ResolutionStepPresentationContext | undefined {
 	return (
-		value === "Reading" ||
-		value === "Lemma" ||
-		value === "Surface" ||
-		value === "Attestation"
+		value === undefined ||
+		(isRecord(value) &&
+			isRecord(value.unitRoute) &&
+			value.unitRoute.language === "de" &&
+			typeof value.unitRoute.family === "string" &&
+			typeof value.unitRoute.kind === "string")
 	);
+}
+
+function isResolutionStepKind(value: unknown): value is ResolutionStepKind {
+	return value === "Reading" || value === "Attestation";
+}
+
+export function unitRouteOf(
+	context: NotePresentationContext | undefined,
+): UnitRoute | undefined {
+	return context && "unitRoute" in context ? context.unitRoute : undefined;
 }
 
 export function activeAnalysisKeyOf(

@@ -1,4 +1,4 @@
-import { Button, IconSwap, NoteSection } from "lego";
+import { Button, IconSwap, NoteQuoteSkeleton, NoteSection } from "lego";
 import { ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -27,6 +27,18 @@ export function readingSourceContextsRenderer(
 ): ReadingDefaultRenderer {
 	return (({ noteData, PresentationCapabilities }) => {
 		const { sourceContexts } = PresentationCapabilities;
+		if (noteData.pending?.sourceContexts) {
+			return (
+				<NoteSection
+					aria-label="Source Contexts"
+					label="Source Contexts"
+					aria-busy="true"
+					className="compact:before:hidden"
+				>
+					<NoteQuoteSkeleton />
+				</NoteSection>
+			);
+		}
 		if (
 			sourceContexts.items.length === 0 &&
 			!sourceContexts.hasMore &&

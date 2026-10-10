@@ -1,5 +1,5 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { ReactElement } from "react";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
@@ -140,8 +140,8 @@ function ReadingWithConfiguredLayout({
 }) {
 	const visitorId = useAnonymousVisitorId();
 	const lemma = input.noteData.reading.lemma;
-	const layoutQuery = useQuery(
-		convexQuery(api.readingBlockLayouts.getFamilyKind, {
+	const layoutQuery = useQuery({
+		...convexQuery(api.readingBlockLayouts.getFamilyKind, {
 			visitorId,
 			route: {
 				targetLanguage: lemma.language as "de",
@@ -149,7 +149,10 @@ function ReadingWithConfiguredLayout({
 				kind: lemma.kind,
 			},
 		}),
-	);
+		// A resolving Reading laid out by its unit's route may change route
+		// once Grammar lands; it keeps its Blocks until the new layout loads.
+		placeholderData: keepPreviousData,
+	});
 	if (layoutQuery.isPending) {
 		return (
 			<NoteSkeletonFor

@@ -53,8 +53,3 @@ export type RouteNoteTarget =
 	| LemmaNoteTarget
 	| SurfaceNoteTarget
 	| AttestationNoteTarget;
-
-export type ResolutionTarget = {
-	readonly kind: "Resolution";
-	readonly requestId: string;
-};

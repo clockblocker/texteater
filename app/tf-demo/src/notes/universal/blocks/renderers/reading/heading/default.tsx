@@ -77,8 +77,19 @@ export function ReadingHeading({
 							{note.reading.emojiDescription}{" "}
 						</span>
 					)}
-					{pending ? (
-						<span data-reading-headword="">{headword}</span>
+					{pending?.headword ? (
+						<ResolvingHeadword {...pending.headword} />
+					) : pending ? (
+						<span
+							data-reading-headword=""
+							className={
+								pending.headwordArrived
+									? "note-arrival"
+									: undefined
+							}
+						>
+							{headword}
+						</span>
 					) : (
 						<NoteTitleLink
 							aria-label={`${lemma.canonicalForm}, open its Lemma`}
@@ -97,6 +108,70 @@ export function ReadingHeading({
 				note.knowledge.transcription ? (
 					<Ipa transcription={note.knowledge.transcription} />
 				) : null}
+			</NoteTitleRow>
+		</header>
+	);
+}
+
+/**
+ * The words a click selected, standing in for the headword until Grammar
+ * gives it: swept by the same band of light as the clicked word in the
+ * reader while they resolve, and a bone before they are known.
+ */
+function ResolvingHeadword({
+	words,
+	resolving,
+}: {
+	readonly words: string | null;
+	readonly resolving: boolean;
+}) {
+	if (words === null)
+		return (
+			<NoteBone
+				tone="headword"
+				aria-label="Headword on the way"
+				className="h-[0.8em] w-28"
+			/>
+		);
+	return (
+		<span
+			data-reading-headword=""
+			data-resolving={resolving || undefined}
+			className={
+				resolving
+					? "word-sheen bg-ink bg-clip-text text-transparent motion-reduce:animate-none motion-reduce:bg-none motion-reduce:text-word-resolving"
+					: undefined
+			}
+		>
+			{words}
+		</span>
+	);
+}
+
+/**
+ * The Heading of a Reading Note before a route lays it out, or once its
+ * Session failed: the clicked words, behind the emoji's bone while they
+ * resolve.
+ */
+export function ResolvingReadingHeading({
+	words,
+	resolving,
+}: {
+	readonly words: string | null;
+	readonly resolving: boolean;
+}) {
+	return (
+		<header>
+			<NoteTitleRow>
+				<NoteTitle data-reading-title="">
+					{resolving ? (
+						<NoteBone
+							aria-label="Emoji on the way"
+							className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]"
+						/>
+					) : null}
+					<ResolvingHeadword words={words} resolving={resolving} />
+				</NoteTitle>
 			</NoteTitleRow>
 		</header>
 	);

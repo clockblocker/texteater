@@ -6,7 +6,6 @@ import {
 	WorkspaceInteractionProvider,
 } from "@/workspace/workspace-controller";
 import type {
-	ResolutionStepKind,
 	WorkspaceSubject,
 	WorkspaceTarget,
 } from "@/workspace/workspace-subject";
@@ -131,13 +130,11 @@ function targetFromSegments(
 		case "text":
 			return { kind: "Text", textId: id };
 		case "resolution":
-			return step
-				? {
-						kind: "ResolutionStep",
-						requestId: id,
-						stepKind: step as ResolutionStepKind,
-					}
-				: { kind: "Resolution", requestId: id };
+			return {
+				kind: "ResolutionStep",
+				requestId: id,
+				stepKind: step === "Attestation" ? "Attestation" : "Reading",
+			};
 		default:
 			return null;
 	}
@@ -157,8 +154,6 @@ function segmentsFromTarget(target: WorkspaceTarget): readonly string[] {
 			return ["shadow", target.shadowId];
 		case "Text":
 			return ["text", target.textId];
-		case "Resolution":
-			return ["resolution", target.requestId];
 		case "ResolutionStep":
 			return ["resolution", target.requestId, target.stepKind];
 	}

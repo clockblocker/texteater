@@ -8,13 +8,10 @@ import {
 	resolutionDeckCards,
 	segmentSelectionDeckCards,
 } from "../src/views/resolution-deck";
-import {
-	ResolutionNoteFrame,
-	ResolutionStepNoteFrame,
-} from "../src/views/resolution-note-view";
+import { ResolutionStepNoteFrame } from "../src/views/resolution-note-view";
 import { resolvingReadingNoteData } from "../src/views/resolving-reading-note";
-import { subjectLabel } from "../src/views/subject-presentation";
 import { type NotePart, NotePartProvider } from "../src/workspace/note-part";
+import { WorkspaceInteractionProvider } from "../src/workspace/workspace-controller";
 
 const route = {
 	textId: "text-1" as Id<"texts">,
@@ -54,122 +51,152 @@ const reading = {
 	kind: "NOUN" as const,
 };
 
-test("active Resolution presentations use final-Note skeletons instead of WIP content", () => {
-	const markup = renderToStaticMarkup(
-		createElement(ResolutionNoteFrame, {
-			note: {
-				kind: "ResolutionNote",
-				target: { kind: "Resolution", requestId: "request-1" },
-				lifecycle: {
-					state: "Active",
-					progress: "ReadingAvailable",
-					activity: "Running",
+const unit = {
+	segments: [0, 2],
+	route: {
+		language: "de" as const,
+		family: "Lexeme" as const,
+		kind: "NOUN" as const,
+	},
+};
+
+const resolutionTarget = {
+	kind: "Resolution" as const,
+	requestId: "request-1",
+};
+
+function stepKeys(cards: ReturnType<typeof resolutionDeckCards>) {
+	return cards.map(({ key }) => key);
+}
+
+function renderResolving(
+	note: Parameters<typeof resolvingReadingNoteData>[0]["note"],
+	unitRoute?: typeof unit.route,
+) {
+	const noteData = resolvingReadingNoteData({
+		requestId: "request-1",
+		note,
+		...(unitRoute ? { unitRoute } : {}),
+	});
+	if (!noteData) throw new Error("A route is required");
+	return renderToStaticMarkup(
+		renderNote({
+			noteData,
+			capabilities: {
+				presentation: "Card",
+				knowledgeSettings: DEFAULT_KNOWLEDGE_SETTINGS,
+				sourceContexts: {
+					items: noteData.sourceContexts.page,
+					hasMore: false,
+					isLoading: false,
+					error: null,
+					loadMore: null,
 				},
-				route,
-				source,
-				grammar,
-				reading,
-				updatedAt: 1,
+				personalAnnotation: {
+					isSaving: false,
+					error: null,
+					save: null,
+				},
+				follow: () => {},
 			},
-			presentation: "Card",
 		}),
 	);
+}
 
-	expect(markup).toContain('data-slot="note-skeleton"');
-	expect(markup).toContain('aria-label="Loading Attestation Note"');
-	expect(markup).not.toContain("Die Banken.");
-	expect(markup).not.toContain("Reading Available");
-});
+/** A step's Frame, as the Compass draws the part given. */
+function renderStep(
+	props: Omit<
+		Parameters<typeof ResolutionStepNoteFrame>[0],
+		"requestId" | "presentation"
+	>,
+	part: NotePart | null = null,
+) {
+	const frame = createElement(ResolutionStepNoteFrame, {
+		...props,
+		requestId: "request-1",
+		presentation: "Card",
+	});
+	return renderToStaticMarkup(
+		createElement(WorkspaceInteractionProvider, {
+			interaction: { follow: () => {}, presentCards: () => {} },
+			children:
+				part === null
+					? frame
+					: createElement(NotePartProvider, { value: part }, frame),
+		}),
+	);
+}
 
-test("each Resolution step uses the skeleton of its eventual Note", () => {
-	const expected = {
-		Attestation: "Loading Attestation Note",
-		Surface: "Loading Surface Note",
-		Lemma: "Loading Lemma Note",
-		Reading: "Loading Reading Note",
-	} as const;
-
-	for (const [stepKind, label] of Object.entries(expected)) {
-		const markup = renderToStaticMarkup(
-			createElement(ResolutionStepNoteFrame, {
-				stepKind: stepKind as keyof typeof expected,
-				presentation: "Card",
-			}),
-		);
-
-		expect(markup).toContain('data-slot="note-skeleton"');
-		expect(markup).toContain(`aria-label="${label}"`);
-		expect(markup).not.toContain("Die Banken.");
+test("a running Resolution deals its Reading and Attestation steps under the keys they keep", () => {
+	for (const progress of [
+		"Starting",
+		"RouteAvailable",
+		"GrammarAvailable",
+		"ReadingAvailable",
+		"Committing",
+	] as const) {
+		const cards = resolutionDeckCards({
+			kind: "ResolutionNote",
+			target: resolutionTarget,
+			lifecycle: { state: "Active", progress, activity: "Running" },
+			route,
+			source,
+			unit,
+			...(progress === "Starting" || progress === "RouteAvailable"
+				? {}
+				: { grammar }),
+			updatedAt: 1,
+		});
+		expect(cards).toEqual([
+			{
+				key: "request-1:Reading",
+				target: {
+					kind: "ResolutionStep",
+					requestId: "request-1",
+					stepKind: "Reading",
+				},
+				presentationContext: { unitRoute: unit.route },
+			},
+			{
+				key: "request-1:Attestation",
+				target: {
+					kind: "ResolutionStep",
+					requestId: "request-1",
+					stepKind: "Attestation",
+				},
+			},
+		]);
 	}
 });
 
-test("projects each available Resolution step onto the front of one deck", () => {
-	const starting = resolutionDeckCards({
-		kind: "ResolutionNote",
-		target: { kind: "Resolution", requestId: "request-1" },
-		lifecycle: {
-			state: "Active",
-			progress: "Starting",
-			activity: "Running",
-		},
-		route,
-		source,
-		updatedAt: 1,
-	});
-	const routed = resolutionDeckCards({
-		kind: "ResolutionNote",
-		target: { kind: "Resolution", requestId: "request-1" },
-		lifecycle: {
-			state: "Active",
-			progress: "RouteAvailable",
-			activity: "Running",
-		},
-		route,
-		source,
-		updatedAt: 2,
-	});
-	const grammatical = resolutionDeckCards({
-		kind: "ResolutionNote",
-		target: { kind: "Resolution", requestId: "request-1" },
-		lifecycle: {
-			state: "Active",
+test("a Session that ends without an occurrence keeps both steps", () => {
+	for (const lifecycle of [
+		{
+			state: "Terminal",
 			progress: "GrammarAvailable",
-			activity: "Running",
+			outcome: "PermanentFailure",
+			failureCode: "ProviderUnavailable",
+			diagnosticId: "diagnostic-1",
+			message: "Reading is temporarily unavailable.",
 		},
-		route,
-		source,
-		grammar,
-		updatedAt: 3,
-	});
-	const readable = resolutionDeckCards({
-		kind: "ResolutionNote",
-		target: { kind: "Resolution", requestId: "request-1" },
-		lifecycle: {
-			state: "Active",
-			progress: "ReadingAvailable",
-			activity: "Running",
+		{
+			state: "Terminal",
+			progress: "RouteAvailable",
+			outcome: "Unresolved",
 		},
-		route,
-		source,
-		grammar,
-		reading,
-		updatedAt: 4,
-	});
-
-	expect(starting.map(({ target }) => target.kind)).toEqual(["Resolution"]);
-	expect(stepKinds(routed)).toEqual(["Attestation"]);
-	expect(stepKinds(grammatical)).toEqual([
-		"Reading",
-		"Lemma",
-		"Surface",
-		"Attestation",
-	]);
-	expect(stepKinds(readable)).toEqual([
-		"Reading",
-		"Lemma",
-		"Surface",
-		"Attestation",
-	]);
+	] as const)
+		expect(
+			stepKeys(
+				resolutionDeckCards({
+					kind: "ResolutionNote",
+					target: resolutionTarget,
+					lifecycle,
+					route,
+					source,
+					updatedAt: 5,
+				}),
+			),
+		).toEqual(["request-1:Reading", "request-1:Attestation"]);
 });
 
 test("a completed Resolution converges the deck to canonical Notes", () => {
@@ -226,6 +253,41 @@ test("a completed Resolution converges the deck to canonical Notes", () => {
 	]);
 });
 
+test("a converged deck hands the Resolution to the stored Reading Card", () => {
+	const cards = resolutionDeckCards({
+		kind: "ResolutionNote",
+		target: { kind: "Resolution", requestId: "request-1" },
+		lifecycle: {
+			state: "Terminal",
+			progress: "Committing",
+			outcome: "Complete",
+			attestationId: "attestation-1" as Id<"attestations">,
+			target: {
+				kind: "Reading",
+				readingId: "reading-1" as Id<"readings">,
+			},
+			canonical: {
+				readingId: "reading-1" as Id<"readings">,
+				lemmaId: "lemma-1" as Id<"lemmas">,
+				surfaceLanguage: "de",
+				normalizedSurface: "Banken",
+				surfaceId: "surface-1" as Id<"surfaces">,
+				attestationId: "attestation-1" as Id<"attestations">,
+			},
+		},
+		route,
+		source,
+		grammar,
+		reading,
+		updatedAt: 5,
+	});
+	expect(cards[0]).toEqual({
+		key: "request-1:Reading",
+		target: { kind: "Reading", readingId: "reading-1" },
+		presentationContext: { resolutionRequestId: "request-1" },
+	});
+});
+
 test("a stored Resolution opens the same four canonical Card subjects", () => {
 	// Branded Convex ids; the deck only passes them through.
 	const readingId = "reading-1" as Id<"readings">;
@@ -280,68 +342,215 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 		segmentSelectionDeckCards("request-repeat", {
 			kind: "Resolving",
 			requestId: "request-running",
-		}).map(({ target }) => target),
-	).toEqual([{ kind: "Resolution", requestId: "request-running" }]);
-});
-
-test("a terminal failure keeps Resolution foremost without discarding reached steps", () => {
-	const cards = resolutionDeckCards({
-		kind: "ResolutionNote",
-		target: { kind: "Resolution", requestId: "request-1" },
-		lifecycle: {
-			state: "Terminal",
 			progress: "GrammarAvailable",
-			outcome: "PermanentFailure",
-			failureCode: "ProviderUnavailable",
-			diagnosticId: "diagnostic-1",
-			message: "Reading is temporarily unavailable.",
+			activity: "Running",
+			deduplicated: true,
+			unitRoute: unit.route,
+		}),
+	).toEqual([
+		{
+			key: "request-running:Reading",
+			target: {
+				kind: "ResolutionStep",
+				requestId: "request-running",
+				stepKind: "Reading",
+			},
+			presentationContext: { unitRoute: unit.route },
 		},
-		route,
-		source,
-		grammar,
-		updatedAt: 5,
-	});
-
-	expect(stepKinds(cards)).toEqual([
-		"Resolution",
-		"Lemma",
-		"Surface",
-		"Attestation",
+		{
+			key: "request-running:Attestation",
+			target: {
+				kind: "ResolutionStep",
+				requestId: "request-running",
+				stepKind: "Attestation",
+			},
+		},
+	]);
+	// A Route Note puts the Attestation in front, and an Unresolved unit
+	// lays the Reading out by no route.
+	expect(
+		segmentSelectionDeckCards(
+			"request-route-note",
+			{
+				kind: "Resolving",
+				requestId: "request-route-note",
+				progress: "Starting",
+				activity: "Scheduled",
+				deduplicated: false,
+				unitRoute: "Unresolved",
+			},
+			"Attestation",
+		),
+	).toEqual([
+		expect.objectContaining({ key: "request-route-note:Attestation" }),
+		{
+			key: "request-route-note:Reading",
+			target: {
+				kind: "ResolutionStep",
+				requestId: "request-route-note",
+				stepKind: "Reading",
+			},
+		},
 	]);
 });
 
-function stepKinds(cards: ReturnType<typeof resolutionDeckCards>) {
-	return cards.map(({ target }) =>
-		target.kind === "ResolutionStep" ? target.stepKind : target.kind,
+test("before the Session's first result, the Reading step is laid out by the clicked unit's route", () => {
+	const markup = renderResolving(null, unit.route);
+	expect(markup).toContain('data-note-kind="Reading"');
+	expect(markup).toContain('aria-label="Headword on the way"');
+	expect(markup).toContain('aria-label="Emoji on the way"');
+	expect(markup).toMatch(
+		/aria-label="Source Contexts"[^>]*aria-busy="true"|aria-busy="true"[^>]*aria-label="Source Contexts"/,
 	);
-}
+	// The route is named where the stored Note names it: in its tags.
+	expect(markup).toMatch(
+		/<span>de<\/span><span>Lexeme<\/span><span>NOUN<\/span>/,
+	);
+});
 
-function renderResolving(note: Parameters<typeof resolvingReadingNoteData>[0]) {
-	const noteData = resolvingReadingNoteData(note);
-	if (!noteData) throw new Error("Grammar is required");
-	return renderToStaticMarkup(
-		renderNote({
-			noteData,
-			capabilities: {
-				presentation: "Card",
-				knowledgeSettings: DEFAULT_KNOWLEDGE_SETTINGS,
-				sourceContexts: {
-					items: noteData.sourceContexts.page,
-					hasMore: false,
-					isLoading: false,
-					error: null,
-					loadMore: null,
-				},
-				personalAnnotation: {
-					isSaving: false,
-					error: null,
-					save: null,
-				},
-				follow: () => {},
-			},
-		}),
+test("before Grammar, the Reading step is headed by the clicked words, resolving", () => {
+	const markup = renderResolving({
+		kind: "ResolutionNote",
+		target: resolutionTarget,
+		lifecycle: {
+			state: "Active",
+			progress: "RouteAvailable",
+			activity: "Running",
+		},
+		route,
+		source: { ...source, memberSegmentIndices: [0, 2] },
+		unit,
+		updatedAt: 1,
+	});
+	expect(markup).toMatch(/data-resolving="true"[^>]*>Die Banken</);
+	expect(markup).toContain("word-sheen");
+	expect(markup).toContain("<span>NOUN</span>");
+	expect(markup).not.toContain("Headword on the way");
+	expect(markup).toContain("Banken</button>");
+});
+
+test("with no route known, the Reading step shows a Reading Note's bones under the clicked words", () => {
+	const note = {
+		kind: "ResolutionNote" as const,
+		target: resolutionTarget,
+		lifecycle: {
+			state: "Active" as const,
+			progress: "RouteAvailable" as const,
+			activity: "Running" as const,
+		},
+		route,
+		source,
+		updatedAt: 1,
+	};
+	expect(renderStep({ stepKind: "Reading", note: null }, "body")).toContain(
+		'aria-label="Loading Reading Note"',
 	);
-}
+	expect(
+		renderStep({ stepKind: "Attestation", note: null }, "body"),
+	).toContain('aria-label="Loading Attestation Note"');
+	expect(renderStep({ stepKind: "Reading", note }, "heading")).toMatch(
+		/data-resolving="true"[^>]*>Banken</,
+	);
+});
+
+test("the Attestation step quotes the clicked sentence with what it reads as on the way", () => {
+	const note = {
+		kind: "ResolutionNote" as const,
+		target: resolutionTarget,
+		lifecycle: {
+			state: "Active" as const,
+			progress: "RouteAvailable" as const,
+			activity: "Running" as const,
+		},
+		route,
+		source,
+		updatedAt: 1,
+	};
+	expect(renderStep({ stepKind: "Attestation", note }, "heading")).toMatch(
+		/data-attestation-title="">Banken<[\s\S]*Reading on the way/,
+	);
+	const body = renderStep({ stepKind: "Attestation", note }, "body");
+	expect(body).toContain('data-note-kind="Attestation"');
+	expect(body).toContain("Banken</button>");
+	expect(body).toMatch(/aria-label="Route"[^>]*aria-busy="true"/);
+	expect(body).not.toContain(">Banken</h");
+
+	// A failed Session has nothing more on its way.
+	const failed = renderStep(
+		{
+			stepKind: "Attestation",
+			note: {
+				...note,
+				lifecycle: {
+					state: "Terminal",
+					progress: "RouteAvailable",
+					outcome: "Unresolved",
+				},
+			},
+		},
+		"body",
+	);
+	expect(failed).not.toContain("aria-busy");
+});
+
+test("a Session that ended without an occurrence shows why in the Reading step", () => {
+	const base = {
+		kind: "ResolutionNote" as const,
+		target: resolutionTarget,
+		route,
+		source: { ...source, memberSegmentIndices: [0, 2] },
+		updatedAt: 2,
+	};
+	const unresolved = {
+		...base,
+		unit,
+		lifecycle: {
+			state: "Terminal" as const,
+			progress: "RouteAvailable" as const,
+			outcome: "Unresolved" as const,
+		},
+	};
+	// The Heading names the unit, still, and the Body does not again.
+	const heading = renderStep(
+		{ stepKind: "Reading", note: unresolved },
+		"heading",
+	);
+	expect(heading).toContain(">Die Banken<");
+	expect(heading).not.toContain("word-sheen");
+	const body = renderStep({ stepKind: "Reading", note: unresolved }, "body");
+	expect(body).not.toContain("Die Banken");
+	expect(body).toContain("This unit could not be resolved.");
+	expect(body).not.toContain("Retry");
+	expect(body).not.toContain('data-slot="note-skeleton"');
+	expect(
+		renderStep(
+			{ stepKind: "Reading", note: { ...unresolved, unit: undefined } },
+			"body",
+		),
+	).toContain("This Segment could not be resolved.");
+
+	const failed = renderStep(
+		{
+			stepKind: "Reading",
+			note: {
+				...base,
+				lifecycle: {
+					state: "Terminal",
+					progress: "GrammarAvailable",
+					outcome: "PermanentFailure",
+					failureCode: "ProviderUnavailable",
+					diagnosticId: "diagnostic-1",
+					message: "Reading is temporarily unavailable.",
+				},
+			},
+			onRetry: async () => {},
+		},
+		"body",
+	);
+	expect(failed).toContain("Reading is temporarily unavailable.");
+	expect(failed).toContain("diagnostic-1");
+	expect(failed).toContain("Retry resolution");
+});
 
 test("the resolving Reading Note is the real Reading Note with bones for what has not arrived", () => {
 	const base = {
@@ -351,16 +560,20 @@ test("the resolving Reading Note is the real Reading Note with bones for what ha
 		source,
 		grammar,
 	};
+	// Without Grammar or a stored route, no route lays the Note out yet.
 	expect(
 		resolvingReadingNoteData({
-			...base,
-			lifecycle: {
-				state: "Active",
-				progress: "RouteAvailable",
-				activity: "Running",
+			requestId: "request-1",
+			note: {
+				...base,
+				lifecycle: {
+					state: "Active",
+					progress: "RouteAvailable",
+					activity: "Running",
+				},
+				grammar: undefined,
+				updatedAt: 1,
 			},
-			grammar: undefined,
-			updatedAt: 1,
 		}),
 	).toBeNull();
 
@@ -377,6 +590,8 @@ test("the resolving Reading Note is the real Reading Note with bones for what ha
 	expect(grammatical).toContain('data-reading-title=""');
 	expect(grammatical).toContain('data-gender="Fem"');
 	expect(grammatical).toContain(">Bank<");
+	expect(grammatical).toContain("note-arrival");
+	expect(grammatical).not.toContain("word-sheen");
 	expect(grammatical).toContain('aria-label="Emoji on the way"');
 	expect(grammatical).not.toContain("open its Lemma");
 	expect(grammatical).toContain('aria-label="Definition"');
@@ -436,175 +651,4 @@ test("the resolving Reading Note quotes the clicked occurrence of a repeated wor
 	expect(markup).toMatch(
 		/<span data-slot="reader-plain-segment"[^>]*>Banken und <\/span><button data-slot="reader-segment"[^>]*>Banken<\/button>/,
 	);
-});
-
-test("the Reading step renders the resolving Note once Grammar is known and a skeleton before", () => {
-	const before = renderToStaticMarkup(
-		createElement(ResolutionStepNoteFrame, {
-			stepKind: "Reading",
-			presentation: "Card",
-			note: {
-				kind: "ResolutionNote",
-				target: { kind: "Resolution", requestId: "request-1" },
-				lifecycle: {
-					state: "Active",
-					progress: "RouteAvailable",
-					activity: "Running",
-				},
-				route,
-				source,
-				updatedAt: 1,
-			},
-		}),
-	);
-	expect(before).toContain('aria-label="Loading Reading Note"');
-});
-
-test("a failed Session keeps its Grammar steps but drops the Reading step", () => {
-	const cards = resolutionDeckCards({
-		kind: "ResolutionNote",
-		target: { kind: "Resolution", requestId: "request-1" },
-		lifecycle: {
-			state: "Terminal",
-			progress: "GrammarAvailable",
-			outcome: "PermanentFailure",
-			failureCode: "ProviderUnavailable",
-			diagnosticId: "diagnostic-1",
-			message: "Reading is temporarily unavailable.",
-		},
-		route,
-		source,
-		grammar,
-		updatedAt: 5,
-	});
-	expect(stepKinds(cards)).not.toContain("Reading");
-});
-
-test("a converged deck hands the Resolution to the stored Reading Card", () => {
-	const cards = resolutionDeckCards({
-		kind: "ResolutionNote",
-		target: { kind: "Resolution", requestId: "request-1" },
-		lifecycle: {
-			state: "Terminal",
-			progress: "Committing",
-			outcome: "Complete",
-			attestationId: "attestation-1" as Id<"attestations">,
-			target: {
-				kind: "Reading",
-				readingId: "reading-1" as Id<"readings">,
-			},
-			canonical: {
-				readingId: "reading-1" as Id<"readings">,
-				lemmaId: "lemma-1" as Id<"lemmas">,
-				surfaceLanguage: "de",
-				normalizedSurface: "Banken",
-				surfaceId: "surface-1" as Id<"surfaces">,
-				attestationId: "attestation-1" as Id<"attestations">,
-			},
-		},
-		route,
-		source,
-		grammar,
-		reading,
-		updatedAt: 5,
-	});
-	expect(cards[0]).toEqual({
-		key: "request-1:Reading",
-		target: { kind: "Reading", readingId: "reading-1" },
-		presentationContext: { resolutionRequestId: "request-1" },
-	});
-});
-
-test("a unit selection settles on one Unit Card with no step left loading", () => {
-	const unit = {
-		segments: [0, 2],
-		route: {
-			language: "de" as const,
-			family: "Lexeme" as const,
-			kind: "NOUN" as const,
-		},
-	};
-	const base = {
-		kind: "ResolutionNote" as const,
-		target: { kind: "Resolution" as const, requestId: "request-1" },
-		route,
-		source,
-		unit,
-	};
-	const routed = {
-		...base,
-		lifecycle: {
-			state: "Active" as const,
-			progress: "RouteAvailable" as const,
-			activity: "Running" as const,
-		},
-		updatedAt: 1,
-	};
-	const unresolved = {
-		...base,
-		lifecycle: {
-			state: "Terminal" as const,
-			progress: "RouteAvailable" as const,
-			outcome: "Unresolved" as const,
-		},
-		updatedAt: 2,
-	};
-
-	// Neither the running nor the settled Session deals an Attestation step.
-	for (const note of [routed, unresolved])
-		expect(resolutionDeckCards(note)).toEqual([
-			{
-				key: "request-1:Resolver",
-				target: { kind: "Resolution", requestId: "request-1" },
-			},
-		]);
-
-	const settledPart = (part: NotePart) =>
-		renderToStaticMarkup(
-			createElement(
-				NotePartProvider,
-				{ value: part },
-				createElement(ResolutionNoteFrame, {
-					note: unresolved,
-					presentation: "Card",
-				}),
-			),
-		);
-	// The Heading names the unit, and the Body does not name it again.
-	expect(settledPart("heading")).toContain(">Die Banken<");
-	const settled = settledPart("body");
-	expect(settled).not.toContain("Die Banken");
-	expect(settled).toContain("Lexeme · NOUN");
-	expect(settled).toContain("This unit could not be resolved.");
-	expect(settled).not.toContain('data-slot="note-skeleton"');
-	const running = renderToStaticMarkup(
-		createElement(ResolutionNoteFrame, {
-			note: routed,
-			presentation: "Card",
-		}),
-	);
-	expect(running).toContain("Resolving this unit…");
-	expect(running).not.toContain("paused");
-	expect(
-		subjectLabel({
-			kind: "Note",
-			target: { kind: "Resolution", requestId: "request-1" },
-		}),
-	).toBe("Unit");
-});
-
-test("an Unresolved Session without a unit deals no step Card either", () => {
-	const cards = resolutionDeckCards({
-		kind: "ResolutionNote",
-		target: { kind: "Resolution", requestId: "request-1" },
-		lifecycle: {
-			state: "Terminal",
-			progress: "RouteAvailable",
-			outcome: "Unresolved",
-		},
-		route,
-		source,
-		updatedAt: 1,
-	});
-	expect(stepKinds(cards)).toEqual(["Resolution"]);
 });

@@ -101,7 +101,7 @@ function ResolvingReadingNoteStandIn({
 		);
 	return (
 		<ResolvingReadingNote
-			note={note}
+			resolving={{ requestId, note }}
 			presentation={presentation}
 			animateArrivals={false}
 		/>

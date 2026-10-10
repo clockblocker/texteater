@@ -161,7 +161,8 @@ function PaginatedRouteNote({
 	);
 }
 
-function routeNoteQueryArgs(
+/** The `routeNotes.get` arguments a Route Note asks with, but for the Visitor. */
+export function routeNoteQueryArgs(
 	target: RouteNoteTarget,
 	activeAnalysisKey?: Id<"surfaces">,
 ) {

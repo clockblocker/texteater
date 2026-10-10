@@ -21,6 +21,19 @@ export type ReadingNotePending = {
 	readonly emojiDescription: boolean;
 	/** The emoji arrived while this Presentation was showing its bone, so it animates in. */
 	readonly emojiArrived?: boolean;
+	/**
+	 * Grammar has not given the headword yet, so the Heading shows the
+	 * clicked words: shimmering while they resolve, still once the Session
+	 * failed, and a bone before they are known.
+	 */
+	readonly headword?: {
+		readonly words: string | null;
+		readonly resolving: boolean;
+	};
+	/** The headword replaced the clicked words while this Presentation showed them, so it animates in. */
+	readonly headwordArrived?: boolean;
+	/** The clicked sentence is not known yet, so Source Contexts holds a quote's bone. */
+	readonly sourceContexts?: boolean;
 };
 
 export type NoteData =

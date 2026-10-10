@@ -1,13 +1,11 @@
-import {
-	ResolutionNoteView,
-	ResolutionStepNoteView,
-} from "@/views/resolution-note-view";
+import { ResolutionStepNoteView } from "@/views/resolution-note-view";
 import { RouteNoteView } from "@/views/route-note-view";
 import { ShadowNoteView } from "@/views/shadow-note-view";
 import { TextView } from "@/views/text-view";
 import { UnitReadingNoteView } from "@/views/unit-reading-note-view";
 import {
 	activeAnalysisKeyOf,
+	unitRouteOf,
 	type WorkspaceSubject,
 	workspaceSubjectKey,
 } from "@/workspace/workspace-subject";
@@ -60,20 +58,17 @@ export function renderApplicationSubject(
 					presentation={presentation}
 				/>
 			);
-		case "Resolution":
-			return (
-				<ResolutionNoteView
-					key={target.requestId}
-					target={target}
-					presentation={presentation}
-				/>
-			);
 		case "ResolutionStep":
 			return (
 				<ResolutionStepNoteView
 					key={`${target.requestId}:${target.stepKind}`}
 					target={target}
 					presentation={presentation}
+					unitRoute={
+						"presentationContext" in subject
+							? unitRouteOf(subject.presentationContext)
+							: undefined
+					}
 				/>
 			);
 	}
@@ -98,10 +93,6 @@ export function subjectLabel(subject: WorkspaceSubject): string {
 			return "Attestation";
 		case "Shadow":
 			return "Shadow";
-		// While click resolution is rebuilt, a Resolution Card shows the unit
-		// its click selected, and it settles at once (#848, #850).
-		case "Resolution":
-			return "Unit";
 		case "ResolutionStep":
 			return target.stepKind;
 	}
