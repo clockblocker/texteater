@@ -44,6 +44,8 @@ export function spanHops(services: Context.Context<never>) {
 			run: () => Promise<T>,
 		): Promise<T> {
 			const exit = await Effect.runPromiseExitWith(services)(
+				// The rejection only marks the span failed, then is rethrown as is.
+				// @effect-diagnostics-next-line unknownInEffectCatch:off
 				Effect.tryPromise({ try: run, catch: (error) => error }).pipe(
 					Effect.withSpan(name, inspectionStep(owner, input)),
 				),

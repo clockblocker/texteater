@@ -20,7 +20,10 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+
+    /* Effect diagnostics, served by the root @effect/tsgo install. */
+    "plugins": [{ "name": "@effect/language-service" }]
   },
   "include": ["./**/*"],
   "exclude": ["./_generated"]

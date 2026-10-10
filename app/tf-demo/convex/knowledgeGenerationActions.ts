@@ -168,6 +168,9 @@ function failsWith(record: KnowledgeRunRecord) {
 
 /** Promise work as an inspection step under the current span. */
 function hop<T>(name: string, input: unknown, work: () => Promise<T>) {
+	// The rejection passes through untouched; failsWith folds it into a
+	// KnowledgeRunFailure.
+	// @effect-diagnostics-next-line unknownInEffectCatch:off
 	return Effect.tryPromise({ try: work, catch: (error) => error }).pipe(
 		Effect.withSpan(name, inspectionStep(OWNER, input)),
 	);
@@ -177,6 +180,8 @@ function planRun(input: ClaimedInput) {
 	return Effect.gen(function* () {
 		if (input.reading.lemma.language !== "de")
 			return yield* Effect.fail(
+				// failsWith folds this into a KnowledgeRunFailure.
+				// @effect-diagnostics-next-line globalErrorInEffectFailure:off
 				new Error("Unsupported Knowledge language."),
 			);
 		const reading = parseGermanReading(input.reading);
@@ -254,7 +259,9 @@ function publishKnowledge(
 	).pipe(
 		Effect.flatMap((result) =>
 			result.status === "Rejected"
-				? Effect.fail(new Error(result.message))
+				? // failsWith folds this into a KnowledgeRunFailure.
+					// @effect-diagnostics-next-line globalErrorInEffectFailure:off
+					Effect.fail(new Error(result.message))
 				: Effect.succeed(result.status),
 		),
 	);
@@ -416,6 +423,9 @@ function publishGenerated(
 		);
 	return Effect.gen(function* () {
 		const services = yield* Effect.context<never>();
+		// The rethrown squash passes through; failsWith folds it into a
+		// KnowledgeRunFailure.
+		// @effect-diagnostics-next-line unknownInEffectCatch:off
 		yield* Effect.tryPromise({
 			try: (signal) =>
 				publishInRelationChunks(
