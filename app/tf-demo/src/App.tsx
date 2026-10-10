@@ -34,7 +34,7 @@ function App() {
 	const workspace = (
 		<section
 			aria-label="Workspace"
-			className="h-svh min-h-0 min-w-0 flex-1 bg-canvas p-3 max-md:h-[calc(100svh-3rem)] max-md:p-0"
+			className="h-svh min-h-0 min-w-0 flex-1 bg-canvas max-md:h-[calc(100svh-3rem)]"
 		>
 			<ApplicationWorkspace />
 		</section>
