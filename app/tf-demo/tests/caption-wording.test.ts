@@ -109,18 +109,18 @@ function attestationOf(id: string, attested: string) {
 	);
 }
 
-test("a finite verb names its tense and its person by pronoun", () => {
+test("a finite verb names its tense, and its person by the one pronoun the form fixes", () => {
 	expect(surfaceOf("er-ging-nach-hause", "ging")).toEqual({
-		full: "past, er/sie/es of gehen",
-		compact: "past, er/sie/es",
+		full: "past of gehen",
+		compact: "past",
 	});
 	expect(surfaceOf("der-laster-fuhr-das-schild-um", "fuhr um")).toEqual({
-		full: "past, er/sie/es of umfahren",
-		compact: "past, er/sie/es",
+		full: "past of umfahren",
+		compact: "past",
 	});
 	expect(
 		surfaceOf("die-peitsche-hat-er-mitgebracht-2", "hat mitgebracht")?.full,
-	).toBe("perfect, er/sie/es of mitbringen");
+	).toBe("perfect of mitbringen");
 	expect(
 		surfaceOf("wir-werden-am-freitag-abreisen", "werden abreisen")?.full,
 	).toBe("future, wir of abreisen");
@@ -135,9 +135,9 @@ test("mood, voice and the polite imperative read in plain words", () => {
 			"in-suedkorea-ist-der-junge-musiker-und-schauspieler-cha-in",
 			"ist aufgefunden worden",
 		)?.full,
-	).toBe("perfect passive, er/sie/es of auffinden");
+	).toBe("perfect passive of auffinden");
 	expect(surfaceOf("das-waere-schoen-gewesen", "wäre gewesen")?.full).toBe(
-		"perfect subjunctive, er/sie/es of sein",
+		"perfect subjunctive of sein",
 	);
 });
 
@@ -188,7 +188,7 @@ test("a Variant names its tags, before its inflection", () => {
 			"als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
 			"wußte",
 		)?.full,
-	).toBe("older spelling, past, er/sie/es of wissen");
+	).toBe("older spelling, past of wissen");
 	expect(
 		surfaceOf("als-die-ueberraschung-enthuellt-wurde-sagte-er-ohhh", "ohhh")
 			?.full,
@@ -247,14 +247,25 @@ test("a governed preposition or adjacent words do not split a verb, and an artic
 	).toBe("split form of werden abreisen");
 });
 
+test("a third person names no pronoun its subject would have to choose, but an expletive es", () => {
+	// er, sie or es: the form alone does not say, so no pronoun list stands in.
+	expect(surfaceOf("er-ging-nach-hause", "ging")?.full).not.toContain("er");
+	expect(surfaceOf("es-regnet-heute", "Es regnet")?.full).toBe(
+		"present, es of regnen",
+	);
+});
+
 test("target-language runs stay apart from the relation's words", () => {
-	const { surface } = gold("er-ging-nach-hause", "ging").presented;
-	const caption = surfaceCaption(surface, "gehen", languages);
+	const { surface } = gold(
+		"wir-werden-am-freitag-abreisen",
+		"werden abreisen",
+	).presented;
+	const caption = surfaceCaption(surface, "abreisen", languages);
 	expect(caption?.full).toEqual([
-		{ kind: "Word", text: "past, " },
-		{ kind: "Target", text: "er/sie/es" },
+		{ kind: "Word", text: "future, " },
+		{ kind: "Target", text: "wir" },
 		{ kind: "Word", text: " of " },
-		{ kind: "Next", text: "gehen" },
+		{ kind: "Next", text: "abreisen" },
 	] satisfies CaptionToken[]);
 });
 

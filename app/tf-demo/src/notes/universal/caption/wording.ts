@@ -43,7 +43,7 @@ export const UI_LANGUAGE: UiLanguage = "en";
 export type UiWording = {
 	/** Between the title and its caption. */
 	readonly captionSeparator: string;
-	/** Between items of a list: `past, er/sie/es`. */
+	/** Between items of a list: `past, wir`. */
 	readonly listSeparator: string;
 	/** Between words of one phrase: `dative plural`. */
 	readonly wordSeparator: string;
@@ -164,11 +164,18 @@ type PersonNumber = `${"1" | "2" | "3"}.${"Sing" | "Plur"}`;
  * The target-language words a caption quotes: the pronoun that names a
  * finite form's person and number, and the article that names a noun's
  * gender once its title's gender tone is gone.
+ *
+ * A caption names a pronoun only where the form alone fixes it. A German
+ * third-person singular is er, sie or es by its subject, and a third-person
+ * plural sie or Sie, and no stored feature says which, so those cells have
+ * none: `ging` is `past`, never `past, er/sie/es`.
  */
 export type TargetWording = {
-	readonly pronoun: Readonly<Record<PersonNumber, string>>;
+	readonly pronoun: Readonly<Partial<Record<PersonNumber, string>>>;
 	/** An imperative addresses someone; a third-person plural one is polite. */
 	readonly imperativePronoun: Readonly<Partial<Record<PersonNumber, string>>>;
+	/** A form whose subject is an expletive (`es regnet`). */
+	readonly expletivePronoun: string;
 	readonly article: Readonly<Record<"Masc" | "Fem" | "Neut", string>>;
 	/** Between the articles of a noun in free gender variation: `der/das`. */
 	readonly articleSeparator: string;
@@ -183,12 +190,11 @@ export const targetWordings = {
 		pronoun: {
 			"1.Sing": "ich",
 			"2.Sing": "du",
-			"3.Sing": "er/sie/es",
 			"1.Plur": "wir",
 			"2.Plur": "ihr",
-			"3.Plur": "sie",
 		},
 		imperativePronoun: { "3.Plur": "Sie" },
+		expletivePronoun: "es",
 		article: { Masc: "der", Fem: "die", Neut: "das" },
 		articleSeparator: "/",
 		nounWithArticle: "{article} {noun}",

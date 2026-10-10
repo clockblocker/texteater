@@ -82,7 +82,11 @@ LLM, in plain learner words.
   rendered in a `<bdi>`.
 - **Verbs:** tense or mood in plain words (`past`, `perfect`,
   `subjunctive`, `imperative`, `participle`, plus `passive`), and person and
-  number as the target-language pronoun (`er/sie/es`, `wir`).
+  number as the one target-language pronoun the form fixes (`ich`, `wir`, an
+  expletive subject's `es`, a polite imperative's `Sie`). A third person
+  whose subject could be `er`, `sie` or `es`, or `sie` or `Sie`, names no
+  pronoun (`ging · past of gehen`): no stored feature says which, and a list
+  such as `er/sie/es` would not describe this occurrence.
 - **Nouns:** the case is named unless it is nominative, and the number only
   when it is plural (`dative`, `plural`, `dative plural`). A noun's gender
   is never named, because the article in the next title carries it.

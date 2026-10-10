@@ -18,7 +18,7 @@ import {
 /**
  * Captions for the Heading of a click's Cards. Each says, in plain learner
  * words, how its Card leads to the next Card in front of it:
- * `ging · past, er/sie/es of gehen`. They are generated from the stored
+ * `ging · past of gehen`. They are generated from the stored
  * grammatical features alone, with words from `wording.ts`.
  */
 
@@ -271,8 +271,14 @@ function verbFormKey(features: Features): VerbFormKey | null {
 	return null;
 }
 
+/**
+ * The pronoun a finite form's person and number fix, if they fix one: an
+ * expletive subject is `es`, a polite imperative `Sie`, and a third person
+ * whose subject could be er, sie or es (or sie or Sie) has none.
+ */
 function verbPronoun(features: Features, target: TargetWording): string | null {
 	const { person, number } = features;
+	if (features.expletive === "Subject") return target.expletivePronoun;
 	if (
 		(person !== "1" && person !== "2" && person !== "3") ||
 		(number !== "Sing" && number !== "Plur")
@@ -282,7 +288,9 @@ function verbPronoun(features: Features, target: TargetWording): string | null {
 	return (
 		(features.mood === "Imp"
 			? target.imperativePronoun[cell]
-			: undefined) ?? target.pronoun[cell]
+			: undefined) ??
+		target.pronoun[cell] ??
+		null
 	);
 }
 

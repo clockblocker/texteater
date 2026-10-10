@@ -33,7 +33,7 @@ The pinned first Block naming the Note's Subject. See [tf-demo ADR 0006].
 **Caption**:
 The words a Heading Block shows after its title, saying how the Note's
 Subject leads to the next Card dealt in front of it in a click's Deck:
-`ging · past, er/sie/es of gehen`. See [tf-demo ADR 0011].
+`ging · past of gehen`. See [tf-demo ADR 0011].
 _Avoid_: aside, subtitle
 
 **Source Contexts Block**:
