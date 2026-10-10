@@ -125,7 +125,9 @@ function CaptionTokenElement({ token }: { readonly token: CaptionToken }) {
 					aria-current={token.current || undefined}
 					className={cn(
 						"inline-block rounded-sm px-0.5",
-						token.current ? "bg-ink/10 text-ink" : "opacity-50",
+						token.current
+							? "bg-ink/10 ring-1 ring-ink/30"
+							: "opacity-60 grayscale",
 					)}
 				>
 					{token.text}

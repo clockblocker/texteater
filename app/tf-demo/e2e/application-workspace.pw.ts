@@ -56,15 +56,26 @@ async function openBanken(page: Page) {
 	return reader;
 }
 
-/** A click on "Banken" deals its stored route: Reading, Lemma, Surface, Attestation. */
-async function dealBanken(page: Page) {
+/**
+ * A click on "Banken" deals its stored route, front first: the Reading, the
+ * Lemma when it holds more than one stored Reading, the Surface (plural) and
+ * the Attestation (`Die Banken`). Only the Lemma depends on what the local
+ * backend has resolved, so the Deck holds three or four Cards; the count
+ * dealt is returned for the steps that follow.
+ */
+async function dealBanken(page: Page): Promise<number> {
 	const reader = rootedGround(page).locator('[data-slot="text-reader"]');
 	await word(reader, "Banken").click();
-	await expect(cards(page)).toHaveCount(4);
+	await expect(
+		frame(page).locator('[data-form="card"] [data-attestation-title]'),
+	).toHaveCount(1);
+	const dealt = await cards(page).count();
+	expect([3, 4]).toContain(dealt);
 	await expect(word(reader, "Banken")).toHaveAttribute(
 		"aria-pressed",
 		"true",
 	);
+	return dealt;
 }
 
 test("one URL: the Library is the Ground's first selection and Settings sits beside it", async ({
@@ -104,7 +115,7 @@ test("a click deals a Deck on the Text, an edge drop makes a Floating Pane, and 
 	page,
 }) => {
 	await openBanken(page);
-	await dealBanken(page);
+	const dealt = await dealBanken(page);
 
 	/* lift the open Card, carry it up and onto the inline-end edge */
 	const open = frame(page).locator('[data-form="card"][data-place="open"]');
@@ -131,12 +142,12 @@ test("a click deals a Deck on the Text, an edge drop makes a Floating Pane, and 
 	const floating = frame(page).locator('[data-pane-kind="floating"]');
 	await expect(floating).toHaveCount(1);
 	await expect(frame(page).locator("[data-held]")).toHaveCount(0);
-	await expect(cards(page)).toHaveCount(3);
+	await expect(cards(page)).toHaveCount(dealt - 1);
 
 	/* the layout, the Deck and its lit word come back after a reload */
 	await page.reload();
 	await expect(floating).toHaveCount(1);
-	await expect(cards(page)).toHaveCount(3);
+	await expect(cards(page)).toHaveCount(dealt - 1);
 	await expect(
 		word(rootedGround(page).locator('[data-slot="text-reader"]'), "Banken"),
 	).toHaveAttribute("aria-pressed", "true");
@@ -144,14 +155,14 @@ test("a click deals a Deck on the Text, an edge drop makes a Floating Pane, and 
 	/* X on the Floating Pane collapses its Ground back to its slot */
 	await floating.getByRole("button", { name: "Close pane" }).click();
 	await expect(floating).toHaveCount(0);
-	await expect(cards(page)).toHaveCount(4);
+	await expect(cards(page)).toHaveCount(dealt);
 });
 
 test("Go to source pushes the Text as a Cover at its Sentence; Back retraces the Covers and leaves the Ground", async ({
 	page,
 }) => {
 	await openBanken(page);
-	await dealBanken(page);
+	const dealt = await dealBanken(page);
 
 	/* the keyboard's Open: the Reading Card covers its Pane */
 	await frame(page)
@@ -186,7 +197,7 @@ test("Go to source pushes the Text as a Cover at its Sentence; Back retraces the
 		.getByRole("button", { name: "Collapse back to card" })
 		.click();
 	await expect(covers(page)).toHaveCount(0);
-	await expect(cards(page)).toHaveCount(4);
+	await expect(cards(page)).toHaveCount(dealt);
 	await expect(
 		rootedGround(page).locator('[data-slot="text-reader"]'),
 	).toBeVisible();
