@@ -21,6 +21,7 @@ import {
 	reflexivityUnit,
 } from "../src/inventories/de/drill-down.js";
 import { spellsExpletiveEs } from "../src/inventories/de/expletive-spellings.js";
+import { germanFreeGenderNouns } from "../src/inventories/de/free-gender-nouns.js";
 import { member as subjectExpletiveEs } from "../src/inventories/de/members/lexeme/pronoun/personal/es-subject-expletive.js";
 import { germanPluralOnlyNouns } from "../src/inventories/de/plural-only-nouns.js";
 import { syncretismDefinitions } from "../src/inventories/de/syncretism-definitions.js";
@@ -33,6 +34,7 @@ import {
 	cliticEsSpellings,
 	closedVerbForms,
 	closedVerbParticiples,
+	germanFreeGenderNoun,
 	germanParticleMember,
 	germanParticles,
 	isGermanPluralOnlyNoun,
@@ -1947,5 +1949,66 @@ describe("the German stem Surface Syncretisms (system ADR 0046)", () => {
 				({ member }) => member.lemma.canonicalForm === "er",
 			),
 		).toEqual([]);
+	});
+});
+
+describe("German nouns in free gender variation (Rule de/noun-gender-in-free-variation)", () => {
+	/** Every German NOUN Lexeme a record names whose gender is mixed, anywhere in it. */
+	const mixedNouns = () => {
+		const found = new Map<string, string>();
+		const walk = (value: unknown): void => {
+			if (Array.isArray(value)) {
+				for (const item of value) walk(item);
+				return;
+			}
+			if (typeof value !== "object" || value === null) return;
+			const record: Readonly<Record<string, unknown>> =
+				Object.fromEntries(Object.entries(value));
+			const core = record.coreFeatures;
+			const gender =
+				typeof core === "object" && core !== null && "gender" in core
+					? core.gender
+					: undefined;
+			if (
+				record.unitKind === "Lemma" &&
+				record.language === "de" &&
+				record.family === "Lexeme" &&
+				record.kind === "NOUN" &&
+				typeof gender === "object" &&
+				gender !== null
+			)
+				found.set(String(record.canonicalForm), JSON.stringify(gender));
+			for (const child of Object.values(record)) walk(child);
+		};
+		walk(loadSpecRecords());
+		return found;
+	};
+
+	test("each listed noun cites its Duden page, once, with its genders in catalog order", () => {
+		const nouns = germanFreeGenderNouns.map(({ noun }) => noun);
+		expect(new Set(nouns).size).toBe(nouns.length);
+		for (const { source, gender } of germanFreeGenderNouns) {
+			expect(source).toStartWith("https://www.duden.de/rechtschreibung/");
+			const members: readonly string[] = gender.mixed;
+			expect(members).toEqual([...new Set(members)].sort());
+			expect(members.length).toBeGreaterThan(1);
+		}
+		expect(germanFreeGenderNoun("cola")?.gender).toEqual({
+			mixed: ["Fem", "Neut"],
+		});
+		expect(germanFreeGenderNoun("See")).toBeUndefined();
+	});
+
+	test("every mixed noun in the records is listed with the same genders", () => {
+		const recorded = mixedNouns();
+		expect([...recorded.keys()].sort()).toEqual([
+			"Balg",
+			"Coca-Cola",
+			"Cola",
+		]);
+		for (const [noun, gender] of recorded)
+			expect(JSON.stringify(germanFreeGenderNoun(noun)?.gender)).toBe(
+				gender,
+			);
 	});
 });

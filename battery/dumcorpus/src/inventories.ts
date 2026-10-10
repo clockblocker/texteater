@@ -57,6 +57,7 @@ export {
 } from "./inventories/de/closed-verb-paradigms.js";
 export { germanConjunctionLocutions } from "./inventories/de/conjunction-locutions.js";
 export { cliticEsSpellings } from "./inventories/de/expletive-spellings.js";
+export { germanFreeGenderNoun } from "./inventories/de/free-gender-nouns.js";
 export {
 	germanAbbreviations,
 	germanClitics,
