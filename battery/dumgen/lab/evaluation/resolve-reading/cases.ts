@@ -9,10 +9,20 @@
  * The sidecar's exclusions leave both.
  *
  * Each case's candidate set is the gold Readings of its Lemma across the
- * whole corpus, matched by case-folded identity (#764). A case runs in two
- * arms: with its gold Reading among the candidates the judge must reuse
- * it, and with it removed the judge must answer NoMatch. An authored
- * Lemma's Reading needs no candidate, so it runs in the first arm only.
+ * whole corpus, matched by case-folded identity (#764). A case runs in up
+ * to three arms, each a state the runtime meets:
+ *
+ * - `present`: gold's Reading among the candidates; the judge must reuse it.
+ * - `removed`: gold's taken out, the Lemma's other senses stored; the judge
+ *   must answer NoMatch, and Luna must write no other sense's description.
+ * - `empty`: nothing stored, the Lemma's first click. Only a case whose
+ *   Lemma has another gold sense runs it, since for any other `removed`
+ *   already stores nothing. Luna writes at once and must not name another
+ *   sense: tf-demo's first click on «auf der Bank» minted 🏦 (#1165).
+ *
+ * With a two-sense Lemma the arms play both orders: the other sense stored
+ * first (`removed`) and this one first (`empty`). An authored Lemma's
+ * Reading needs no candidate, so it runs in the first arm only.
  *
  * Folded evaluation cases (#694): existential es gibt also offers geben's
  * giving Reading, and no answer may be one of its rejected descriptions.
@@ -39,8 +49,11 @@ import {
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { goldRouteOf, readSidecar } from "../spec-corpus/gold.js";
 
-/** With the gold Reading among the candidates, or removed from them. */
-export type ReadingArm = "present" | "removed";
+/** The arms, in the order a case runs them. */
+export const readingArms = ["present", "removed", "empty"] as const;
+
+/** Gold's Reading among the candidates, removed from them, or nothing stored. */
+export type ReadingArm = (typeof readingArms)[number];
 
 export type ReadingCase = {
 	/** `<record>#<target>`. */
@@ -131,7 +144,11 @@ const foldedCases: readonly {
 
 /** The arms a case runs in. */
 export const armsOf = (goldCase: ReadingCase): readonly ReadingArm[] =>
-	goldCase.authored ? ["present"] : ["present", "removed"];
+	goldCase.authored
+		? ["present"]
+		: otherSensesOf(goldCase).length > 0
+			? ["present", "removed", "empty"]
+			: ["present", "removed"];
 
 /**
  * A Reading's identity, as Dumling compares descriptions (ADR 0031).
@@ -151,11 +168,20 @@ export const descriptionKey = (
 	emojiDescription: string,
 ) => keyFor(goldCase.attestation.surface.lemma, emojiDescription);
 
+/** The gold descriptions of the case's Lemma other than its own: its other senses. */
+export function otherSensesOf(goldCase: ReadingCase): readonly string[] {
+	const ideal = descriptionKey(goldCase, goldCase.ideal);
+	return goldCase.lemmaReadings.filter(
+		(description) => descriptionKey(goldCase, description) !== ideal,
+	);
+}
+
 /** The stored Emoji Descriptions the case offers in `arm`, distinct. */
 export function candidatesOf(
 	goldCase: ReadingCase,
 	arm: ReadingArm,
 ): readonly string[] {
+	if (arm === "empty") return [];
 	const ideal = descriptionKey(goldCase, goldCase.ideal);
 	const seen = new Set<string>();
 	return [...goldCase.lemmaReadings, ...goldCase.extra].filter(

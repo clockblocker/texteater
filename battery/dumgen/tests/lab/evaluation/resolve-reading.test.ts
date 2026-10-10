@@ -21,7 +21,10 @@ import {
 	readingExperiment,
 	readingMetrics,
 } from "../../../lab/evaluation/resolve-reading/experiment.js";
-import { goldReadingAnswers } from "../../../lab/evaluation/resolve-reading/oracle.js";
+import {
+	goldReadingAnswers,
+	readingOracle,
+} from "../../../lab/evaluation/resolve-reading/oracle.js";
 import { evaluateReading } from "../../../lab/evaluation/resolve-reading/scoring.js";
 import type { LunaAsk } from "../../../src/luna.js";
 import { createOpenAILuna } from "../../../src/openai-luna.js";
@@ -96,27 +99,47 @@ async function frozenRoot(): Promise<string> {
 	return root;
 }
 
-/** The case a request is about, found by its marked Sentence and Lemma. */
+/**
+ * The case a request is about, found by its marked Sentence and Lemma; a
+ * Canonical Form call that drafts the description carries no Lemma, only
+ * the marked Sentence in `emojiDescriptionInput`.
+ */
 const caseOf = (input: unknown) => {
-	const { markedSentence: marked, lemma } = isRecord(input) ? input : {};
+	const fields = isRecord(input) ? input : {};
+	const draft = isRecord(fields.emojiDescriptionInput)
+		? fields.emojiDescriptionInput
+		: undefined;
+	const marked = draft ? draft.markedSentence : fields.markedSentence;
 	const found = sample.find(
 		(goldCase) =>
 			markedSentence(
 				goldCase.sentence.segments,
 				goldCase.unit.segments,
 			) === marked &&
-			goldCase.attestation.surface.lemma.canonicalForm === lemma,
+			(draft !== undefined ||
+				goldCase.attestation.surface.lemma.canonicalForm ===
+					fields.lemma),
 	);
 	if (!found) throw Error("No case for this request");
 	return found;
 };
+
+/** Gold's answer to a Luna request: the drafting Canonical Form call's, or the description alone. */
+const lunaGold = (input: unknown) =>
+	readingOracle.written({ goldCase: caseOf(input), arm: "present" }, input);
+
+/** Every attempt of the sample, three repetitions each. */
+const sampleAttempts = sample.reduce(
+	(sum, goldCase) => sum + armsOf(goldCase).length * 3,
+	0,
+);
 
 /**
  * Transports that answer as gold does, counting their calls. `wrong`
  * makes the judge's nth answer pick another stored option than gold's.
  */
 function goldTransports(wrong?: number) {
-	const counter = { jev: 0, luna: 0 };
+	const counter = { jev: 0, luna: 0, drafts: 0 };
 	const jev: JevAsk = async (request) => {
 		counter.jev++;
 		const goldCase = caseOf(request.state);
@@ -148,8 +171,10 @@ function goldTransports(wrong?: number) {
 	};
 	const luna: LunaAsk = async (request) => {
 		counter.luna++;
+		if (isRecord(request.input) && "emojiDescriptionInput" in request.input)
+			counter.drafts++;
 		return {
-			output: caseOf(request.input).ideal,
+			output: lunaGold(request.input),
 			metadata: { usage: { input_tokens: 900, output_tokens: 4 } },
 		};
 	};
@@ -168,11 +193,18 @@ test("resolve.reading's run prices itself without a call, fills its cache once, 
 		estimate: true,
 	});
 	expect(estimate.run).toBeUndefined();
-	// Three open cases in two arms and authored doch in one, three times.
-	expect(estimate.price?.attempts).toBe(7 * 3);
+	// Each case in its arms, three times: authored doch in one, the open
+	// case with one gold Reading in two, and a Lemma with another sense in
+	// three, its first click among them.
+	expect(armsOf(sample[0] as ReadingCase)).toEqual([
+		"present",
+		"removed",
+		"empty",
+	]);
+	expect(estimate.price?.attempts).toBe(sampleAttempts);
 	expect(estimate.price?.jev.inputTokens).toBeGreaterThan(0);
 	expect(estimate.price?.luna.requests).toBeGreaterThan(0);
-	expect(counter).toEqual({ jev: 0, luna: 0 });
+	expect(counter).toEqual({ jev: 0, luna: 0, drafts: 0 });
 
 	const live = await experiment.evaluate({
 		experimentId: experiment.id,
@@ -187,25 +219,30 @@ test("resolve.reading's run prices itself without a call, fills its cache once, 
 	});
 	expect(counter.jev).toBe(estimate.price?.jev.requests ?? -1);
 	expect(counter.luna).toBe(estimate.price?.luna.requests ?? -1);
+	// Luna's description comes from the Canonical Form call that drafts it,
+	// as on a click; the standalone prompt is never asked.
+	expect(counter.drafts).toBe(counter.luna);
 	const run = live.run;
 	if (!run) throw Error("no run");
 	const metrics = readingMetrics(run);
 	expect(metrics.cases).toBe(sample.length);
-	expect(metrics.attempts).toBe(21);
+	expect(metrics.attempts).toBe(sampleAttempts);
 	for (const line of [
 		"reuse",
 		"reuseAmongSeveral",
 		"noMatch",
 		"noMatchUnjudged",
+		"firstMint",
 		"authored",
 		"esGibt",
 	] as const)
 		expect(metrics.lines[line].rate).toBe(1);
 	expect(metrics.lines.wrongReuse.correct).toBe(0);
+	expect(metrics.lines.wrongSense.correct).toBe(0);
 	expect(metrics.lines.reuse.interval[1]).toBe(1);
 	expect(metrics.esGibtRejected).toBe(0);
 	expect(metrics.flips).toEqual([]);
-	// Luna wrote in the removed arm of the case with nothing else stored.
+	// Luna wrote where nothing else was stored.
 	expect(metrics.spotCheck.length).toBeGreaterThan(0);
 	expect(metrics.spotCheck[0]).toMatchObject({
 		markedSentence: expect.stringContaining("<TARGET>"),
@@ -293,6 +330,64 @@ test("each arm has its verdict: Reuse of gold, NoMatch, a rejected answer and an
 	).toMatchObject({ correct: true, judged: false });
 });
 
+test("a New naming another gold sense is wrong in every arm: a first click on «auf der Bank» that mints 🏦 fails (#1165)", () => {
+	const byId = (id: string) => {
+		const found = dev.find((goldCase) => goldCase.id === id);
+		if (!found) throw Error(`No dev case ${id}`);
+		return found;
+	};
+	const bench = byId("de/ich-sitze-im-garten-auf-der-bank#0");
+	const bank = byId("de/die-bank-genehmigte-den-kredit#0");
+	expect(bench.ideal).toBe("🪑");
+	expect(bank.ideal).toBe("🏦");
+	// Both senses stand in gold, so each case plays both orders: the other
+	// sense stored first, and this one first with nothing stored.
+	expect(armsOf(bench)).toEqual(["present", "removed", "empty"]);
+	expect(candidatesOf(bench, "removed")).toEqual(["🏦"]);
+	expect(candidatesOf(bench, "empty")).toEqual([]);
+	expect(candidatesOf(bank, "removed")).toEqual(["🪑"]);
+	// tf-demo's click: nothing stored, Luna drafted 🏦 for the bench.
+	expect(
+		evaluateReading(bench, "empty", {
+			_tag: "New",
+			emojiDescription: "🏦",
+			reason: "Drafted",
+		}),
+	).toMatchObject({ correct: false, wrongSense: true, judged: false });
+	expect(
+		evaluateReading(bench, "empty", {
+			_tag: "New",
+			emojiDescription: "🪑",
+			reason: "Drafted",
+		}),
+	).toMatchObject({ correct: true, wrongSense: false });
+	// The bank first: the judge must reject 🪑, and a Luna collision with
+	// it is a wrong Reuse.
+	expect(
+		evaluateReading(bank, "removed", {
+			_tag: "Reuse",
+			emojiDescription: "🪑",
+			reason: "Collision",
+		}),
+	).toMatchObject({ correct: false, wrongReuse: true, wrongSense: true });
+	// The other homonym pairs the gold holds play the same arms.
+	for (const lemma of [
+		"Maus",
+		"Absatz",
+		"Hahn",
+		"Schimmel",
+		"Bremse",
+		"Flügel",
+	])
+		expect(
+			dev.filter(
+				(goldCase) =>
+					goldCase.attestation.surface.lemma.canonicalForm ===
+						lemma && armsOf(goldCase).includes("empty"),
+			).length,
+		).toBeGreaterThanOrEqual(2);
+});
+
 /**
  * The fake OpenAI's Responses answer: gold's description for the request's
  * case, with Luna's measured usage; the same whether asked alone or in a
@@ -301,7 +396,7 @@ test("each arm has its verdict: Reuse of gold, NoMatch, a rejected answer and an
 const fakeLunaAnswer = (body: Record<string, unknown>) => {
 	return {
 		status: 200,
-		body: completedResponse(caseOf(userInputOf(body)).ideal, {
+		body: completedResponse(lunaGold(userInputOf(body)), {
 			input_tokens: 600,
 			output_tokens: 14,
 		}),
@@ -459,7 +554,9 @@ test("a failed or unanswered batch line is a ProviderFailure for its request alo
 				({ status }) => status === "ProviderFailure",
 			) ?? [],
 	);
-	expect(failures).toHaveLength(2);
+	// Each failed line fails every attempt that waits on its request: a
+	// case's arms share the draft when they store the same Readings.
+	expect(failures.length).toBeGreaterThanOrEqual(2);
 	expect(Object.keys(await lunaCache(root))).toHaveLength(
 		openAI.sentIds.size - 2,
 	);

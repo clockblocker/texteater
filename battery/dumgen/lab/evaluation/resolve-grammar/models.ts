@@ -444,6 +444,14 @@ export class CachedModels<Case> {
 		{ samples: number; chars: number; input: number; output: number }
 	>();
 	readonly #pending = new Map<string, PendingLuna>();
+	/**
+	 * Luna requests sent and not yet answered, by cache key: attempts that
+	 * share a request, such as a reading case's arms sharing its draft,
+	 * wait for the one sending it instead of paying for it again.
+	 */
+	readonly #sending = new Map<string, Promise<LunaResponse>>();
+	/** The Luna requests a projection has priced, by cache key. */
+	readonly #projected = new Set<string>();
 	readonly #failed = new Map<string, string>();
 	readonly #batches: LunaBatchRecord[] = [];
 
@@ -750,6 +758,20 @@ export class CachedModels<Case> {
 			const key = keyOf(repetition);
 			const path = this.#path("luna", key);
 			const { mode } = this.#options;
+			// A projection prices a request once, however many attempts
+			// share it, as the live run sends it once (`#sending`).
+			if (mode === "project") {
+				if (this.#projected.has(key))
+					return (
+						(await readEntry(lunaResponseSchema, path)) ?? {
+							output: this.#oracle.written(
+								goldCase,
+								request.input,
+							),
+						}
+					);
+				this.#projected.add(key);
+			}
 			const hit = await readEntry(lunaResponseSchema, path);
 			if (hit) {
 				this.spend.luna.cachedCalls++;
@@ -823,55 +845,68 @@ export class CachedModels<Case> {
 				throw Error(
 					`Luna cache miss in offline mode (${context.stage})`,
 				);
-			this.#options.beforeSpend?.();
-			const size = this.#size(
-				"luna",
-				context.stage,
-				lunaChars(request),
-				0,
-			);
-			const estimate = size.input;
-			const usd = lunaUsd(
-				{ inputTokens: estimate, outputTokens: lunaOutputPerRequest },
-				this.#lunaTier,
-			);
-			const { caps } = this.#options;
-			if (caps) {
-				const input =
-					this.spend.luna.freshInputTokens +
-					this.#inFlight.lunaInput +
-					estimate;
-				const output =
-					this.spend.luna.freshOutputTokens +
-					(this.#inFlight.lunaCalls + 1) * lunaOutputPerRequest;
-				if (this.capHit === undefined && input > caps.lunaInputTokens)
-					this.capHit = `Luna input cap of ${caps.lunaInputTokens} tokens`;
-				if (this.capHit === undefined && output > caps.lunaOutputTokens)
-					this.capHit = `Luna output cap of ${caps.lunaOutputTokens} tokens`;
-				if (
-					this.capHit === undefined &&
-					caps.usd !== undefined &&
-					this.#spentUsd() + this.#inFlight.usd + usd > caps.usd
-				)
-					this.capHit = `dollar cap of $${caps.usd}`;
-				if (this.capHit !== undefined)
-					throw Error(`Stopped at the ${this.capHit}`);
-			}
-			this.#inFlight.lunaInput += estimate;
-			this.#inFlight.lunaCalls++;
-			this.#inFlight.usd += usd;
-			let response: LunaResponse;
+			const sending = this.#sending.get(key);
+			if (sending) return sending;
+			const sent = this.#send(luna, request, context, path);
+			this.#sending.set(key, sent);
 			try {
-				response = await luna(request, context);
+				return await sent;
 			} finally {
-				this.#inFlight.lunaInput -= estimate;
-				this.#inFlight.lunaCalls--;
-				this.#inFlight.usd -= usd;
+				this.#sending.delete(key);
 			}
-			this.#spent(response);
-			await writeEntry(path, response);
-			return response;
 		};
+	}
+
+	/** Sends one Luna cache miss under the round's caps and caches its answer. */
+	async #send(
+		luna: LunaAsk,
+		request: LunaRequest,
+		context: Parameters<LunaAsk>[1],
+		path: string,
+	): Promise<LunaResponse> {
+		this.#options.beforeSpend?.();
+		const size = this.#size("luna", context.stage, lunaChars(request), 0);
+		const estimate = size.input;
+		const usd = lunaUsd(
+			{ inputTokens: estimate, outputTokens: lunaOutputPerRequest },
+			this.#lunaTier,
+		);
+		const { caps } = this.#options;
+		if (caps) {
+			const input =
+				this.spend.luna.freshInputTokens +
+				this.#inFlight.lunaInput +
+				estimate;
+			const output =
+				this.spend.luna.freshOutputTokens +
+				(this.#inFlight.lunaCalls + 1) * lunaOutputPerRequest;
+			if (this.capHit === undefined && input > caps.lunaInputTokens)
+				this.capHit = `Luna input cap of ${caps.lunaInputTokens} tokens`;
+			if (this.capHit === undefined && output > caps.lunaOutputTokens)
+				this.capHit = `Luna output cap of ${caps.lunaOutputTokens} tokens`;
+			if (
+				this.capHit === undefined &&
+				caps.usd !== undefined &&
+				this.#spentUsd() + this.#inFlight.usd + usd > caps.usd
+			)
+				this.capHit = `dollar cap of $${caps.usd}`;
+			if (this.capHit !== undefined)
+				throw Error(`Stopped at the ${this.capHit}`);
+		}
+		this.#inFlight.lunaInput += estimate;
+		this.#inFlight.lunaCalls++;
+		this.#inFlight.usd += usd;
+		let response: LunaResponse;
+		try {
+			response = await luna(request, context);
+		} finally {
+			this.#inFlight.lunaInput -= estimate;
+			this.#inFlight.lunaCalls--;
+			this.#inFlight.usd -= usd;
+		}
+		this.#spent(response);
+		await writeEntry(path, response);
+		return response;
 	}
 
 	/** Counts a fresh Luna answer's tokens. */

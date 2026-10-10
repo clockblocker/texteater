@@ -209,7 +209,7 @@ test("resolve.reading's request run sends jev and Luna requests at gold's answer
 	const reading = await goldRequestRun("resolve-reading/de:dev");
 	// A reading case runs once per arm, under the run's own case id.
 	expect(
-		reading.cases.every(({ id }) => /:(present|removed)$/u.test(id)),
+		reading.cases.every(({ id }) => /:(present|removed|empty)$/u.test(id)),
 	).toBe(true);
 });
 

@@ -7,7 +7,14 @@
  * - `resolve-reading/de:dev` and `:heldout`: each gold target's
  *   Attestation, Segments and route go in, with its Lemma's gold Readings
  *   across the corpus as the stored candidates, gold's own present in one
- *   arm and removed in the other.
+ *   arm and removed in the other, and none stored in a third for a Lemma
+ *   with another sense (`cases.ts`).
+ * - Luna's description comes the way a click's does: drafted in
+ *   `resolve.grammar`'s Canonical Form call, which runs first with jev
+ *   answered from gold, and passed to `resolve.reading` as `drafted`. The
+ *   call gets the Lemma as a hint only when the arm stores a Reading of
+ *   it, as the runtime's stored Lemmas would. Scoring the standalone
+ *   generation prompt instead hid the draft's homonym errors (#1165).
  *
  * Each attempt runs three times, or as many as `repetitions` asks. A live
  * run first prices itself (the cache in `project` mode, answering as gold
@@ -33,7 +40,10 @@ import { z } from "zod";
 import { createDumgen } from "../../../src/create-dumgen.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
 import type { OperationTrace } from "../../../src/operation-trace.js";
-import { markedSentence } from "../../../src/resolve/reading.js";
+import {
+	draftsEmojiDescription,
+	markedSentence,
+} from "../../../src/resolve/reading.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import {
 	type CaseFilter,
@@ -52,6 +62,7 @@ import {
 	type LunaBatchEvent,
 	type ModelsSpend,
 } from "../resolve-grammar/models.js";
+import { goldAnswers } from "../resolve-grammar/oracle.js";
 import {
 	fillLive,
 	openFrozenSet,
@@ -66,9 +77,10 @@ import {
 	type ReadingArm,
 	type ReadingCase,
 	type ReadingSetName,
+	readingArms,
 	trackedReadingSetsRoot,
 } from "./cases.js";
-import { type ReadingAttempt, readingOracle } from "./oracle.js";
+import { grammarCaseOf, type ReadingAttempt, readingOracle } from "./oracle.js";
 import {
 	evaluateReading,
 	type ReadingOutput,
@@ -106,9 +118,12 @@ const readingRepetitions = 3;
  * options are marked, and Luna's prompt and schema rule out non-emoji
  * answers and scene leaks (#877 round 2). 4: the judge tests each option
  * both ways instead of folding when in doubt; Luna labels modality, degree
- * and the copula of being 🟰 (#877 round 3).
+ * and the copula of being 🟰 (#877 round 3). 5: the description is
+ * drafted first in the Canonical Form call and the run sends it through
+ * that call, as production does; a two-sense Lemma's first click runs as
+ * its own arm (#1165).
  */
-const readingOperationVersion = `${readingRoute}@production-4`;
+const readingOperationVersion = `${readingRoute}@production-5`;
 
 /** A run's projected spend, shaped as resolve.grammar's so one budget guard reads both. */
 type ReadingPrice = GrammarPrice;
@@ -169,7 +184,7 @@ class ReadingModels extends CachedModels<ReadingAttempt> {
 /** What an attempt gives the run: its case, arm and what the metrics read. */
 const inputSchema = z.object({
 	caseId: z.string(),
-	arm: z.enum(["present", "removed"]),
+	arm: z.enum(readingArms),
 	record: z.string(),
 	route: z.string(),
 	lemma: z.string(),
@@ -185,6 +200,50 @@ const routeKey = (goldCase: ReadingCase) =>
 	`${goldCase.attestation.surface.lemma.family}/${goldCase.attestation.surface.lemma.kind}`;
 
 /** One click's Reading: the answer as a run stores it, with its trace's reason. */
+/** jev for the draft's `resolve.grammar`, answered from gold: no call, no cost. */
+const goldGrammarJev =
+	(goldCase: ReadingCase): JevAsk =>
+	async (request) => ({
+		model: request.model,
+		answers: goldAnswers(grammarCaseOf(goldCase), request.questions),
+		usage: { input_tokens: 0, output_tokens: 0 },
+	});
+
+/**
+ * The description Luna drafts for the click in `resolve.grammar`'s
+ * Canonical Form call, as the runtime sends it: the Lemma is a hint only
+ * when the arm stores a Reading of it. Undefined where the route drafts
+ * none or the call gives no usable draft; `resolve.reading` then asks
+ * Luna alone, as a click resumed without one does.
+ */
+async function draftOf(
+	goldCase: ReadingCase,
+	arm: ReadingArm,
+	repetition: number,
+	models: Pick<ReadingModels, "luna">,
+): Promise<string | undefined> {
+	const { route } = goldCase.unit;
+	if (route === "Unresolved" || !draftsEmojiDescription(route))
+		return undefined;
+	const { lemma, normalizedSurface } = goldCase.attestation.surface;
+	const grammar = await Effect.runPromise(
+		createDumgen({
+			jev: goldGrammarJev(goldCase),
+			luna: models.luna({ goldCase, arm }, repetition),
+		}).resolve.grammar({
+			language: "de",
+			sentence: goldCase.sentence,
+			unit: goldCase.unit,
+			neighbours: {},
+			lemmaCandidates:
+				candidatesOf(goldCase, arm).length > 0
+					? [{ lemma, foundUnder: [normalizedSurface] }]
+					: [],
+		}),
+	);
+	return grammar._tag === "Resolved" ? grammar.drafted : undefined;
+}
+
 async function attempt(
 	goldCase: ReadingCase,
 	arm: ReadingArm,
@@ -193,6 +252,7 @@ async function attempt(
 ): Promise<ReadingOutput> {
 	const traces: OperationTrace[] = [];
 	const at = { goldCase, arm };
+	const drafted = await draftOf(goldCase, arm, repetition, models);
 	const result = await Effect.runPromise(
 		createDumgen({
 			jev: models.jev(at, repetition),
@@ -203,6 +263,7 @@ async function attempt(
 			sentence: goldCase.sentence,
 			unit: goldCase.unit,
 			candidates: candidatesOf(goldCase, arm),
+			...(drafted === undefined ? {} : { drafted }),
 		}),
 	);
 	const reason = traces[0]?.resolution?.reason;

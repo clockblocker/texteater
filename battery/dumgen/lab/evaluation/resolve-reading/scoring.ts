@@ -1,17 +1,23 @@
 /**
- * How a `resolve.reading` run is scored (#873). Each case runs in two arms:
+ * How a `resolve.reading` run is scored (#873). Each case runs in up to
+ * three arms (`cases.ts`):
  *
  * - `present`, gold's Reading among the candidates: right when the click
  *   reuses gold's description.
  * - `removed`, gold's Reading taken out: right when the click comes back
  *   New, the judge's NoMatch. Only the removed attempts whose judge saw a
  *   candidate measure the judge; with nothing stored Luna writes at once.
+ * - `empty`, nothing stored, a two-sense Lemma's first click: right when
+ *   Luna's New names no other sense.
  *
- * A Reuse of another description than gold's gets its own line, in either
- * arm, because it is the error that merges senses. An authored Lemma's
- * attempt is right when it names gold's description. A folded es gibt case
- * (#694) is wrong whenever it answers a rejected description. Luna's New
- * text is not scored: a sample goes to a human spot-check (Sys ADR 0023).
+ * A Reuse of another description than gold's gets its own line, in any
+ * arm, because it is the error that merges senses. So does a New that
+ * names another gold sense of the Lemma (#1165): it stores this sense
+ * under the other's label, and it is wrong in every arm. An authored
+ * Lemma's attempt is right when it names gold's description. A folded es
+ * gibt case (#694) is wrong whenever it answers a rejected description.
+ * Beyond those, Luna's New text is not scored: a sample goes to a human
+ * spot-check (Sys ADR 0023).
  * Every line reports its count and a 95% Wilson interval, and the attempts
  * whose verdict flips between repetitions are named.
  */
@@ -21,6 +27,7 @@ import { lineOf } from "../resolve-grammar/scoring.js";
 import {
 	candidatesOf,
 	descriptionKey,
+	otherSensesOf,
 	type ReadingArm,
 	type ReadingCase,
 } from "./cases.js";
@@ -45,6 +52,8 @@ export const readingEvaluationSchema = z.object({
 	wrongReuse: z.boolean(),
 	judged: z.boolean(),
 	rejected: z.boolean(),
+	/** Absent in runs scored before #1165. */
+	wrongSense: z.boolean().optional(),
 	matchesGold: z.boolean().optional(),
 }) satisfies z.ZodType<ReadingEvaluation>;
 
@@ -60,6 +69,8 @@ export type ReadingEvaluation = {
 	readonly judged: boolean;
 	/** An answer among the case's rejected descriptions (#694). */
 	readonly rejected: boolean;
+	/** An answer naming another gold sense of the Lemma (#1165). */
+	readonly wrongSense?: boolean;
 	/** A removed attempt's New that is gold's description; informational. */
 	readonly matchesGold?: boolean;
 };
@@ -79,6 +90,11 @@ export function evaluateReading(
 		goldCase.rejected.some(
 			(description) => descriptionKey(goldCase, description) === key,
 		);
+	const wrongSense =
+		key !== undefined &&
+		otherSensesOf(goldCase).some(
+			(description) => descriptionKey(goldCase, description) === key,
+		);
 	const correct = goldCase.authored
 		? gold
 		: arm === "present"
@@ -88,11 +104,12 @@ export function evaluateReading(
 		outcome: output._tag,
 		...(output.reason === undefined ? {} : { reason: output.reason }),
 		...(answered === undefined ? {} : { answered }),
-		correct: correct && !rejected,
+		correct: correct && !rejected && !wrongSense,
 		wrongReuse: output._tag === "Reuse" && !gold,
 		judged: !goldCase.authored && candidatesOf(goldCase, arm).length > 0,
 		rejected,
-		...(arm === "removed" && output._tag === "New"
+		wrongSense,
+		...(arm !== "present" && output._tag === "New"
 			? { matchesGold: gold }
 			: {}),
 	};
@@ -161,7 +178,7 @@ function spotCheckOf(attempts: readonly ScoredReading[]) {
 	return attempts
 		.filter(
 			({ arm, repetition, evaluation }) =>
-				arm === "removed" &&
+				arm !== "present" &&
 				repetition === 0 &&
 				evaluation?.outcome === "New" &&
 				(evaluation.reason === "Written" ||
@@ -180,7 +197,7 @@ function spotCheckOf(attempts: readonly ScoredReading[]) {
 		}));
 }
 
-/** The arm lines of some attempts: reuse when gold is offered, NoMatch when it is not. */
+/** The arm lines of some attempts: reuse when gold is offered, NoMatch when it is not, and a first click. */
 function armLines(attempts: readonly ScoredReading[]) {
 	return {
 		reuse: verdicts(attempts.filter(({ arm }) => arm === "present")),
@@ -190,6 +207,7 @@ function armLines(attempts: readonly ScoredReading[]) {
 					arm === "removed" && evaluation?.judged,
 			),
 		),
+		firstMint: verdicts(attempts.filter(({ arm }) => arm === "empty")),
 	};
 }
 
@@ -198,6 +216,7 @@ export function readingReport(attempts: readonly ScoredReading[]) {
 	const open = attempts.filter(({ authored }) => !authored);
 	const present = open.filter(({ arm }) => arm === "present");
 	const removed = open.filter(({ arm }) => arm === "removed");
+	const empty = open.filter(({ arm }) => arm === "empty");
 	const folded = attempts.filter(({ folded }) => folded);
 	const repetitions = [
 		...new Set(attempts.map(({ repetition }) => repetition)),
@@ -220,15 +239,19 @@ export function readingReport(attempts: readonly ScoredReading[]) {
 			noMatchUnjudged: verdicts(
 				removed.filter(({ evaluation }) => !evaluation?.judged),
 			),
+			/** A two-sense Lemma's first click, nothing stored: Luna named no other sense. */
+			firstMint: verdicts(empty),
 			/** Of all open attempts, those that reused another description than gold's. */
 			wrongReuse: verdicts(open, ({ wrongReuse }) => wrongReuse),
+			/** Of all open attempts, those that answered another gold sense's description. */
+			wrongSense: verdicts(open, ({ wrongSense }) => wrongSense === true),
 			/** Authored Lemmas: gold's authored description. */
 			authored: verdicts(attempts.filter(({ authored }) => authored)),
 			/** Existential es gibt (#694): right, and never a rejected answer. */
 			esGibt: verdicts(folded),
-			/** Of the removed attempts Luna answered New, those writing gold's description; not scored. */
+			/** Of the attempts Luna answered New, those writing gold's description; not scored. */
 			lunaMatchesGold: verdicts(
-				removed.filter(
+				[...removed, ...empty].filter(
 					({ evaluation }) => evaluation?.matchesGold !== undefined,
 				),
 				({ matchesGold }) => matchesGold === true,

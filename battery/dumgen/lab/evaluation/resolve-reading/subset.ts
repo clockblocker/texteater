@@ -5,8 +5,8 @@
  *
  * - **Missed**: every case with an attempt, in either arm and any
  *   repetition, that was not right: a NoMatch with gold offered, a Reuse
- *   with gold removed, a wrong authored pick, a rejected es gibt answer, or
- *   a failed click. Their baseline verdicts are kept, so a round is
+ *   with gold removed, a New naming another gold sense, a wrong authored
+ *   pick, a rejected es gibt answer, or a failed click. Their baseline verdicts are kept, so a round is
  *   compared with the baseline on the same case ids, arms and repetitions.
  * - **Guard**: a seeded sample of the cases right in every arm and
  *   repetition, stratified by gold route in proportion to dev. A guard case
@@ -25,7 +25,7 @@ import { recordOf } from "../../records.js";
 import { readStoredJsonSync } from "../../stored-json.js";
 import { lineOf, wilson } from "../resolve-grammar/scoring.js";
 import { drawGuard } from "../resolve-grammar/subset.js";
-import type { ReadingArm } from "./cases.js";
+import { type ReadingArm, readingArms } from "./cases.js";
 import type { ReadingEvaluation, ScoredReading } from "./scoring.js";
 
 /** One attempt's verdict: right, wrong, a wrong Reuse (wrong too), or failed. */
@@ -56,7 +56,7 @@ export type ReadingSubset = {
 	readonly guard: Readonly<Record<string, readonly string[]>>;
 };
 
-const armSchema = z.enum(["present", "removed"]);
+const armSchema = z.enum(readingArms);
 
 /** Each arm's verdicts, in the order they were recorded. */
 const armVerdicts = <Verdicts>(
@@ -251,6 +251,8 @@ function linesOf(attempts: readonly LineAttempt[]) {
 			),
 		),
 		/** Of the open attempts, those that reused another description than gold's. */
+		/** A two-sense Lemma's first click, nothing stored (#1165). */
+		firstMint: right(open.filter(({ arm }) => arm === "empty")),
 		wrongReuse: lineOf(open.map(({ verdict }) => verdict === "wrongReuse")),
 		authored: right(attempts.filter(({ authored }) => authored)),
 		failed: lineOf(attempts.map(({ verdict }) => verdict === "failed")),
@@ -264,6 +266,7 @@ const subsetLines = [
 	"right",
 	"reuse",
 	"noMatch",
+	"firstMint",
 	"wrongReuse",
 	"authored",
 	"failed",
