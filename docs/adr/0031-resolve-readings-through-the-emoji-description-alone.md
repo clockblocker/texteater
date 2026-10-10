@@ -22,12 +22,17 @@ Both prompts ask the same question, which emoji describes the target's meaning
 here, so a matching output is evidence of the same Reading.
 
 **The generator drafts the description in the Canonical Form's Luna call,**
-after the headword, so a click waits on one Luna call instead of two in a row.
-That call may start before jev has judged the grammar. Most of what the call
-reads serves the Canonical Form. The description's one input is the marked
-sentence, in its own `emojiDescriptionInput` block, and the prompt tells Luna
-to rest the description on that and the Canonical Form it has just written,
-and to ignore every other input and the Canonical Form instructions. The call
+so a click waits on one Luna call instead of two in a row. That call may start
+before jev has judged the grammar. Most of what the call reads serves the
+Canonical Form. The description's one input is the marked sentence, in its own
+`emojiDescriptionInput` block, and the prompt tells Luna to rest the
+description on that and the headword, and to ignore every other input and the
+Canonical Form instructions. **The description is the answer's first field,
+and its input block comes first.** Written after the headword, the draft took
+the headword's most common sense: 🏦 for a bench «Bank» in 13 of 40 samples,
+and the castle, the rooster and the mother for a lock «Schloss», a tap «Hahn»
+and a nut «Mutter». Written first, it named the sentence's sense
+([#1165](https://github.com/clockblocker/texteater/issues/1165)). The call
 never carries stored Emoji Descriptions or Readings; its Lemma hints carry
 Canonical Form and Core Features only. The judge runs first over the stored
 descriptions and never sees the draft. Without a usable draft, as on a click

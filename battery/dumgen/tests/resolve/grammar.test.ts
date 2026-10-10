@@ -715,6 +715,11 @@ test("Luna drafts the Emoji Description after the headword in the same call, fro
 			markedSentence: "Das <TARGET>Schloss</TARGET> klemmt.",
 		},
 	});
+	// The draft's block comes first, so Luna reads the marked Sentence
+	// before anything of the Canonical Form's.
+	expect(Object.keys(isRecord(request?.input) ? request.input : {})[0]).toBe(
+		"emojiDescriptionInput",
+	);
 	// No stored Emoji Description, or any other emoji, reaches the input.
 	expect(JSON.stringify(request?.input)).not.toMatch(
 		/\p{Extended_Pictographic}/u,
@@ -722,11 +727,17 @@ test("Luna drafts the Emoji Description after the headword in the same call, fro
 	expect(request?.systemPrompt).toContain(generation.draftScope);
 	const outputSchema = request?.outputSchema;
 	const schema = isRecord(outputSchema) ? outputSchema : {};
-	// The headword comes first, the description last.
+	// The description comes first, before the headword: written after it,
+	// it took the headword's most common sense (#1165).
 	expect(
 		Object.keys(isRecord(schema.properties) ? schema.properties : {}),
-	).toEqual(["canonicalForm", "members", "article", "emojiDescription"]);
-	expect(schema.required).toContain("emojiDescription");
+	).toEqual(["emojiDescription", "canonicalForm", "members", "article"]);
+	expect(schema.required).toEqual([
+		"emojiDescription",
+		"canonicalForm",
+		"members",
+		"article",
+	]);
 	expect(request?.systemPrompt).toContain(draftPrompt);
 	expect(request?.systemPrompt).toContain(generation.copula);
 	// Dumling's parse drops the variation selector.

@@ -8,7 +8,7 @@
  * the casing Luna gave it when Luna wrote the same word, so a member Luna
  * dropped or wrote as its headword never loses the click (#876). No code
  * lowercases by position. Where `resolve.reading` may ask Luna for an
- * Emoji Description, the same call drafts it after the headword, so the
+ * Emoji Description, the same call drafts it before the headword, so the
  * click needs no second Luna call.
  */
 import { isRecord } from "common-utils";
@@ -51,7 +51,7 @@ export type Written = {
 	readonly members: readonly string[];
 	/** A NOUN's definite article in the nominative singular, or none (#876). */
 	readonly article?: "der" | "die" | "das" | "none";
-	/** The Emoji Description Luna drafted after the headword, unchecked. */
+	/** The Emoji Description Luna drafted before the headword, unchecked. */
 	readonly drafted?: string;
 };
 
@@ -130,10 +130,13 @@ export function hintsFor(
 
 /**
  * The Canonical Form request, without its configuration. With `drafts`,
- * Luna writes the Emoji Description too, after the headword, from the unit
- * marked as `resolve.reading` marks it, in `emojiDescriptionInput`, and
- * the written headword alone. No stored Reading reaches the request: the
- * hints are Lemmas, their Canonical Form and Core Features only.
+ * Luna writes the Emoji Description too, from the unit marked as
+ * `resolve.reading` marks it, in `emojiDescriptionInput`, and the headword
+ * alone. The draft's input block and its field come first, so Luna writes
+ * the description with the marked Sentence in front of it: written after
+ * the headword, it took the headword's most common sense, «Bank» 🏦 for a
+ * bench (#1165). No stored Reading reaches the request: the hints are
+ * Lemmas, their Canonical Form and Core Features only.
  */
 export function canonicalFormRequest(
 	target: Target,
@@ -151,6 +154,18 @@ export function canonicalFormRequest(
 	return {
 		systemPrompt: systemPrompt(target, drafts),
 		input: {
+			// The draft's one input, in its own block and first: the rest is
+			// the Canonical Form's, and the prompt tells Luna to ignore it there.
+			...(drafts
+				? {
+						emojiDescriptionInput: {
+							markedSentence: markedSentence(
+								target.segments,
+								target.members.map(({ segment }) => segment),
+							),
+						},
+					}
+				: {}),
 			route: state.route,
 			sentence: state.sentence,
 			marked: state.marked,
@@ -183,22 +198,11 @@ export function canonicalFormRequest(
 						})),
 					}
 				: {}),
-			// The draft's one input, in its own block: the rest is the
-			// Canonical Form's, and the prompt tells Luna to ignore it there.
-			...(drafts
-				? {
-						emojiDescriptionInput: {
-							markedSentence: markedSentence(
-								target.segments,
-								target.members.map(({ segment }) => segment),
-							),
-						},
-					}
-				: {}),
 		},
 		outputSchema: {
 			type: "object",
 			properties: {
+				...(drafts ? { emojiDescription: emojiDescriptionSchema } : {}),
 				canonicalForm: { type: "string", minLength: 1 },
 				members: {
 					type: "array",
@@ -209,13 +213,12 @@ export function canonicalFormRequest(
 				...(writesArticle(target)
 					? { article: { type: "string", enum: [...nounArticles] } }
 					: {}),
-				...(drafts ? { emojiDescription: emojiDescriptionSchema } : {}),
 			},
 			required: [
+				...(drafts ? ["emojiDescription"] : []),
 				"canonicalForm",
 				"members",
 				...(writesArticle(target) ? ["article"] : []),
-				...(drafts ? ["emojiDescription"] : []),
 			],
 			additionalProperties: false,
 		},

@@ -122,8 +122,9 @@ export const generation = {
 	),
 	meaning: paragraph(
 		"generation.meaning",
-		"The description is the label of one sense of the Lemma, the same in every sentence with that sense. Name the sense the marked words have here, a figurative use included: not another sense of the word, even one the same word has elsewhere in the sentence, and not the sentence's scene, its participants or objects, a time, place or amount other words mention, or a neighbouring word's meaning. Repeat no grammar the headword or its forms carry, such as tense, person, number or gender.",
+		"The description is the label of one sense of the Lemma, the same in every sentence with that sense. Name the sense the marked words have here, a figurative use included: not another sense of the word, even one the same word has elsewhere in the sentence, and not the sentence's scene, its participants or objects, a time, place or amount other words mention, or a neighbouring word's meaning. Those words still decide which sense the target has, the less common one included: «Birne» screwed into a lamp is the light bulb, not the pear. They only stay out of the label. Repeat no grammar the headword or its forms carry, such as tense, person, number or gender.",
 		rules.meaning,
+		rules.distinct,
 	),
 	distinct: paragraph(
 		"generation.distinct",
@@ -173,19 +174,20 @@ export const generation = {
 		"Examples, each an input and the description it takes:",
 		rules.meaning,
 	),
-	// The Canonical Form call drafts the description after its headword,
+	// The Canonical Form call drafts the description before its headword,
 	// so the click needs no second Luna call: these two stand in for `task`
-	// and `json` there.
+	// and `json` there. Written after the headword, the draft took the
+	// headword's most common sense: «Bank» 🏦 for a bench (#1165).
 	draft: paragraph(
 		"generation.draft.task",
-		"Then write the Emoji Description of the same unit in `emojiDescription`: one to four emoji naming what it means where `emojiDescriptionInput.markedSentence` marks it with <TARGET>…</TARGET>. Every marked span belongs to the one unit, its auxiliaries, its article and a subject es included. Its dictionary headword is the `canonicalForm` you wrote, which the examples give as `lemma`.",
+		"Write the unit's Emoji Description first, in `emojiDescription`, before its Canonical Form: one to four emoji naming what it means where `emojiDescriptionInput.markedSentence` marks it with <TARGET>…</TARGET>. Every marked span belongs to the one unit, its auxiliaries, its article and a subject es included. Its dictionary headword is the `canonicalForm` you write after it, which the examples give as `lemma`.",
 		rules.meaning,
 		rules.auxiliary,
 		rules.expletive,
 	),
 	draftScope: paragraph(
 		"generation.draft.scope",
-		"The description rests on `emojiDescriptionInput.markedSentence` and that `canonicalForm` alone. Ignore every other input for it: the route, `sentence`, `marked`, the members and their orthography, `fixedMembers`, `judged`, `outsideHeadword`, `auxiliaries` and `lemmaCandidates`, and the Canonical Form instructions and their examples above.",
+		"The description rests on `emojiDescriptionInput.markedSentence` and that headword alone. Ignore every other input for it: the route, `sentence`, `marked`, the members and their orthography, `fixedMembers`, `judged`, `outsideHeadword`, `auxiliaries` and `lemmaCandidates`, and the Canonical Form instructions and their examples above.",
 		rules.meaning,
 	),
 	draftJson: paragraph(
