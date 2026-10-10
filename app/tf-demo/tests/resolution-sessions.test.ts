@@ -420,6 +420,51 @@ describe("Resolution Session", () => {
 		]);
 	});
 
+	test("a Resolving selection names the route intake stored for the clicked unit", async () => {
+		const t = createTestConvex();
+		const banken = {
+			language: "de" as const,
+			family: "Lexeme" as const,
+			kind: "NOUN" as const,
+		};
+		const { sentenceIds } = await submitText(
+			t,
+			[["Die", " ", "Banken", "."]],
+			{
+				units: [
+					[
+						{ segments: [0], route: "Unresolved" },
+						{ segments: [2], route: banken },
+					],
+				],
+			},
+		);
+		const sentenceId = sentenceIds[0];
+		if (!sentenceId) throw new Error("Expected a Sentence.");
+		const select = (requestId: string, clickedSegmentIndex: number) =>
+			t.mutation(api.resolutionSessions.selectSegment, {
+				requestId,
+				visitorId: "visitor-1",
+				sentenceId,
+				clickedSegmentIndex,
+				routeNoteRequested: false,
+			});
+
+		expect(await select("request-1", 2)).toMatchObject({
+			kind: "Resolving",
+			unitRoute: banken,
+		});
+		// A repeat click joins the running session and names the route too.
+		expect(await select("request-2", 2)).toMatchObject({
+			requestId: "request-1",
+			unitRoute: banken,
+		});
+		expect(await select("request-3", 0)).toMatchObject({
+			kind: "Resolving",
+			unitRoute: "Unresolved",
+		});
+	});
+
 	test("a repeat click joins the Visitor's running session without another run", async () => {
 		const t = createTestConvex();
 		const { select, segmentId } = await bankenSource(t);

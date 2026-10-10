@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { assertIdentifier } from "../server/identifiers";
 import { inspectionJson } from "../server/inspectionPayload";
 import { RESOLUTION_RETENTION_MS } from "../server/resolutionLifecycle";
+import { unitsByMember } from "../server/storedSegments";
 import { internal } from "./_generated/api";
 import {
 	internalMutation,
@@ -35,6 +36,7 @@ import {
 	resolutionSessionGuardValidator,
 	resolvedGrammaticalValidator,
 	safeGenerationFailureValidator,
+	storedUnitValidator,
 	visitorError,
 } from "./model/validators";
 import { ensureVisitorEncounter } from "./model/visitorEncounters";
@@ -97,6 +99,11 @@ export const selectSegment = mutation({
 			progress: resolutionProgressValidator,
 			activity: resolutionActivityValidator,
 			deduplicated: v.boolean(),
+			/**
+			 * The route intake stored for the clicked Segment's unit, so the
+			 * Reading Card is laid out by it from the moment it is dealt.
+			 */
+			unitRoute: v.optional(storedUnitValidator.fields.route),
 		}),
 	),
 	handler: async (ctx, args) => {
@@ -110,6 +117,10 @@ export const selectSegment = mutation({
 				args.sentenceId,
 				args.clickedSegmentIndex,
 			);
+			const unitRoute = unitsByMember(sentence.units).get(
+				args.clickedSegmentIndex,
+			)?.route;
+			const routed = unitRoute ? { unitRoute } : {};
 
 			const existing = await ctx.db
 				.query("resolutionSessions")
@@ -154,6 +165,7 @@ export const selectSegment = mutation({
 							? lifecycle.activity
 							: ("Terminal" as const),
 					deduplicated: true,
+					...routed,
 				};
 			}
 
@@ -211,6 +223,7 @@ export const selectSegment = mutation({
 					progress: running.lifecycle.progress,
 					activity: running.lifecycle.activity,
 					deduplicated: true,
+					...routed,
 				};
 			}
 			// Only a selection that starts a paid run counts.
@@ -234,6 +247,7 @@ export const selectSegment = mutation({
 				progress: "Starting" as const,
 				activity: "Scheduled" as const,
 				deduplicated: false,
+				...routed,
 			};
 		};
 		const result = await select();
