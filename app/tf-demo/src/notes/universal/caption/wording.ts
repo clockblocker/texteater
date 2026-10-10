@@ -1,3 +1,4 @@
+import type { VerbFormKey } from "../../../../shared/click-story";
 import type { SupportedTargetLanguage } from "../../../../shared/supported-target-language";
 
 /**
@@ -18,16 +19,18 @@ export type CaptionToken =
 	  };
 
 /**
- * A caption in two lengths: `full` names the next Card's title; `compact`
- * is what is left when the full one does not fit beside the title.
+ * A caption in the two forms of its Card (tf-demo ADR 0006). As a Card in
+ * the pile it ends at the relation (`past of`), since the next Card's tail
+ * right below shows the word it leads to; as a Sheet, with no Card below,
+ * it names that word itself (`past of gehen`).
  */
 export type Caption = {
-	readonly full: readonly CaptionToken[];
-	readonly compact: readonly CaptionToken[];
+	readonly card: readonly CaptionToken[];
+	readonly sheet: readonly CaptionToken[];
 };
 
-/** A relation in both lengths; `{slot}` marks where tokens go. */
-type RelationTemplate = { readonly full: string; readonly compact: string };
+/** A relation in both forms; `{slot}` marks where tokens go. */
+type RelationTemplate = { readonly card: string; readonly sheet: string };
 
 /** The languages a caption's relation words can be written in. */
 export type UiLanguage = "en";
@@ -77,25 +80,14 @@ export type UiWording = {
 	readonly variant: Readonly<
 		Record<"Licensed" | "Historical" | "Regional" | "Expressive", string>
 	>;
-	/** A Surface whose features name nothing the learner can use. */
+	/** A Surface quoting only some of its Lemma's words. */
+	readonly part: string;
+	/**
+	 * A Surface spelled otherwise than its Lemma with nothing stored to say
+	 * how (`welch` of `welcher`): the last resort.
+	 */
 	readonly form: string;
 };
-
-export type VerbFormKey =
-	| "present"
-	| "past"
-	| "perfect"
-	| "pastPerfect"
-	| "future"
-	| "futurePerfect"
-	| "subjunctive"
-	| "perfectSubjunctive"
-	| "futureSubjunctive"
-	| "imperative"
-	| "infinitive"
-	| "perfectInfinitive"
-	| "participle"
-	| "presentParticiple";
 
 export const uiWordings = {
 	en: {
@@ -105,19 +97,19 @@ export const uiWordings = {
 		alternativeSeparator: " or ",
 		unitGap: " … ",
 		relations: {
-			form: { full: "{form} of {next}", compact: "{form}" },
-			typo: { full: "typo of {next}", compact: "typo" },
-			shorthand: { full: "short for {next}", compact: "short form" },
-			fusion: {
-				full: "{fused} = {words}",
-				compact: "{fused} = {words}",
-			},
-			split: { full: "split form of {next}", compact: "split form" },
+			form: { card: "{form} of", sheet: "{form} of {next}" },
+			typo: { card: "typo of", sheet: "typo of {next}" },
+			shorthand: { card: "short for", sheet: "short for {next}" },
+			fusion: { card: "{fused} = {words}", sheet: "{fused} = {words}" },
+			split: { card: "split form of", sheet: "split form of {next}" },
 			readings: {
-				one: { full: "{count} reading: {emojis}", compact: "{emojis}" },
+				one: {
+					card: "{count} reading: {emojis}",
+					sheet: "{count} reading: {emojis}",
+				},
 				other: {
-					full: "{count} readings: {emojis}",
-					compact: "{emojis}",
+					card: "{count} readings: {emojis}",
+					sheet: "{count} readings: {emojis}",
 				},
 			},
 		},
@@ -153,6 +145,7 @@ export const uiWordings = {
 			Regional: "regional",
 			Expressive: "stretched for effect",
 		},
+		part: "part",
 		form: "form",
 	},
 } as const satisfies Record<UiLanguage, UiWording>;

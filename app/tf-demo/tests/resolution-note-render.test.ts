@@ -472,10 +472,10 @@ test("the Attestation step captions what Grammar read its words as", () => {
 		},
 		"heading",
 	);
-	expect(words(typo)).toBe("Banken·typo of Banken");
-	expect(typo).toContain(
-		'data-caption-next="" class="text-ink-faint">Banken<',
-	);
+	// As a Card in the pile the caption ends at its relation: the next
+	// Card's tail below shows the word it leads to.
+	expect(words(typo)).toBe("Banken·typo of");
+	expect(typo).not.toContain("data-caption-next");
 });
 
 test("the Attestation step titles the clicked words and quotes their sentence, its route on the way", () => {

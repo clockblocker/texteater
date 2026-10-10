@@ -1,10 +1,9 @@
 import { cn, NoteTitleRow } from "lego";
-import { type ReactNode, useLayoutEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import type { CaptionLanguages } from "./caption";
 import {
 	type Caption,
 	type CaptionToken,
-	captionText,
 	UI_LANGUAGE,
 	uiWordings,
 } from "./wording";
@@ -20,78 +19,46 @@ export function captionLanguages(language: string): CaptionLanguages | null {
 /**
  * A Heading with its title and its caption, if it has one, on one line: a
  * Card Tail shows one row. The Heading takes the whole width it is given,
- * also where a Card lays its title out in a row, so the caption is measured
- * against the room beside the title rather than against its own words. The
- * title keeps the width it needs; the caption takes what is left.
+ * also where a Card lays its title out in a row. The title keeps the width
+ * it needs and the caption truncates in what is left. In the pile the
+ * caption ends at its relation, above the next Card's tail; as a Sheet it
+ * names that Card's title itself (tf-demo ADR 0006 lets a Heading's words
+ * vary by form).
  */
 export function CaptionedHeading({
 	title,
 	caption,
+	presentation,
 }: {
 	readonly title: ReactNode;
 	readonly caption: Caption | null;
+	readonly presentation?: "Card" | "Sheet";
 }) {
+	const tokens = caption
+		? presentation === "Card"
+			? caption.card
+			: caption.sheet
+		: null;
 	return (
 		<header className="min-w-0 flex-1">
 			<NoteTitleRow className="flex-nowrap justify-start gap-x-1.5">
 				{title}
-				{caption ? <HeadingCaption caption={caption} /> : null}
+				{tokens ? (
+					<span
+						data-heading-caption=""
+						className="min-w-0 flex-[1_1_0] truncate text-sm text-ink-muted"
+					>
+						<span
+							aria-hidden="true"
+							className="me-1.5 text-ink-faint"
+						>
+							{uiWordings[UI_LANGUAGE].captionSeparator}
+						</span>
+						<CaptionTokens tokens={tokens} />
+					</span>
+				) : null}
 			</NoteTitleRow>
 		</header>
-	);
-}
-
-/**
- * A Heading's caption, on the title's line after a `·`. It shows the full
- * caption when it fits beside the title and the compact one when it does
- * not; only then does it truncate. The title beside it never does.
- */
-function HeadingCaption({ caption }: { readonly caption: Caption }) {
-	const box = useRef<HTMLSpanElement>(null);
-	const full = useRef<HTMLSpanElement>(null);
-	const [fits, setFits] = useState(true);
-	useLayoutEffect(() => {
-		const boxElement = box.current;
-		const fullElement = full.current;
-		if (!boxElement || !fullElement) return;
-		const measure = () =>
-			setFits(fullElement.scrollWidth <= boxElement.clientWidth);
-		measure();
-		if (typeof ResizeObserver === "undefined") return;
-		const observer = new ResizeObserver(measure);
-		observer.observe(boxElement);
-		observer.observe(fullElement);
-		return () => observer.disconnect();
-	}, []);
-	const shown = fits ? caption.full : caption.compact;
-	return (
-		<span
-			ref={box}
-			data-heading-caption=""
-			data-caption-length={fits ? "full" : "compact"}
-			className="relative min-w-0 flex-[1_1_0] overflow-hidden text-sm text-ellipsis whitespace-nowrap text-ink-muted"
-		>
-			<span aria-hidden="true" className="me-1.5 text-ink-faint">
-				{uiWordings[UI_LANGUAGE].captionSeparator}
-			</span>
-			{fits ? null : (
-				<span className="sr-only">{captionText(caption.full)}</span>
-			)}
-			<span aria-hidden={fits ? undefined : true}>
-				<CaptionTokens tokens={shown} />
-			</span>
-			{/*
-			 * Measures the full caption without repeating its words in the
-			 * document: they sit in a pseudo-element, which no text or
-			 * accessibility tree reads.
-			 */}
-			<span
-				ref={full}
-				aria-hidden="true"
-				data-caption-measure={`${uiWordings[UI_LANGUAGE].captionSeparator}\u2002${captionText(caption.full)}`}
-				className="pointer-events-none invisible absolute start-0 top-0 w-max before:content-[attr(data-caption-measure)]"
-			/>
-		</span>
 	);
 }
 

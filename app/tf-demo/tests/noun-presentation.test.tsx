@@ -164,6 +164,18 @@ test("Surface heading takes the gender tone of its active analysis", () => {
 	expect(markup).toContain(
 		'<bdi data-caption-next="" class="text-ink-faint">der Aufstieg</bdi>',
 	);
+	// In the pile the next Card's tail shows that title, so a Card's caption
+	// ends at its relation.
+	const card = renderToStaticMarkup(
+		blockOf(
+			renderNote({
+				noteData: surfaceNote([analysis]),
+				capabilities: { follow, presentation: "Card" },
+			}),
+			"Heading",
+		),
+	);
+	expect(card.replaceAll(/<[^>]+>/g, "")).toBe("Aufstieg·dative of");
 	const ambiguous = [
 		analysis,
 		{

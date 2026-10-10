@@ -33,14 +33,12 @@ export const renderDefaultAttestationHeading = (({
 				segments: source.segments,
 				memberSegmentIndices: source.memberSegmentIndices,
 			},
-			attestationNextTitle({
-				...presented.surface,
-				canonicalForm: presented.surface.lemma.canonicalForm,
-			}),
+			attestationNextTitle(presented.surface),
 			languages,
 		);
 	return (
 		<CaptionedHeading
+			presentation={PresentationCapabilities.presentation}
 			title={
 				<NoteTitle data-attestation-title="">
 					<UnitTitle

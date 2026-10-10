@@ -83,8 +83,8 @@ function gold(id: string, attested: string) {
 function text(caption: Caption | null) {
 	return caption
 		? {
-				full: captionText(caption.full),
-				compact: captionText(caption.compact),
+				card: captionText(caption.card),
+				sheet: captionText(caption.sheet),
 			}
 		: null;
 }
@@ -111,32 +111,33 @@ function attestationOf(id: string, attested: string) {
 
 test("a finite verb names its tense, and its person by the one pronoun the form fixes", () => {
 	expect(surfaceOf("er-ging-nach-hause", "ging")).toEqual({
-		full: "past of gehen",
-		compact: "past",
+		card: "past of",
+		sheet: "past of gehen",
 	});
 	expect(surfaceOf("der-laster-fuhr-das-schild-um", "fuhr um")).toEqual({
-		full: "past of umfahren",
-		compact: "past",
+		card: "past of",
+		sheet: "past of umfahren",
 	});
 	expect(
-		surfaceOf("die-peitsche-hat-er-mitgebracht-2", "hat mitgebracht")?.full,
+		surfaceOf("die-peitsche-hat-er-mitgebracht-2", "hat mitgebracht")
+			?.sheet,
 	).toBe("perfect of mitbringen");
 	expect(
-		surfaceOf("wir-werden-am-freitag-abreisen", "werden abreisen")?.full,
+		surfaceOf("wir-werden-am-freitag-abreisen", "werden abreisen")?.sheet,
 	).toBe("future, wir of abreisen");
 });
 
 test("mood, voice and the polite imperative read in plain words", () => {
 	expect(
-		surfaceOf("sieh-mal-an-die-kleine-von-nebenan", "Sieh an")?.full,
+		surfaceOf("sieh-mal-an-die-kleine-von-nebenan", "Sieh an")?.sheet,
 	).toBe("imperative, du of ansehen");
 	expect(
 		surfaceOf(
 			"in-suedkorea-ist-der-junge-musiker-und-schauspieler-cha-in",
 			"ist aufgefunden worden",
-		)?.full,
+		)?.sheet,
 	).toBe("perfect passive of auffinden");
-	expect(surfaceOf("das-waere-schoen-gewesen", "wäre gewesen")?.full).toBe(
+	expect(surfaceOf("das-waere-schoen-gewesen", "wäre gewesen")?.sheet).toBe(
 		"perfect subjunctive of sein",
 	);
 });
@@ -145,14 +146,15 @@ test("a noun names its case unless nominative and its number when plural", () =>
 	expect(
 		surfaceOf("kannst-du-mich-morgen-vom-bahnhof-abholen", "m Bahnhof"),
 	).toEqual({
-		full: "dative of der Bahnhof",
-		compact: "dative",
+		card: "dative of",
+		sheet: "dative of der Bahnhof",
 	});
 	expect(
-		surfaceOf("er-hilft-den-kindern-bei-den-aufgaben", "den Kindern")?.full,
+		surfaceOf("er-hilft-den-kindern-bei-den-aufgaben", "den Kindern")
+			?.sheet,
 	).toBe("dative plural of das Kind");
 	expect(
-		surfaceOf("auf-der-karte-sind-drei-seen-eingezeichnet", "Seen")?.full,
+		surfaceOf("auf-der-karte-sind-drei-seen-eingezeichnet", "Seen")?.sheet,
 	).toBe("plural of der See");
 });
 
@@ -166,12 +168,12 @@ test("a closed-class form names its gender where it is not the Lemma's", () => {
 		surfaceOf(
 			"aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun",
 			"dieser",
-		)?.full,
+		)?.sheet,
 	).toBe("dative feminine of dieser");
 });
 
 test("an adjective or adverb names its degree", () => {
-	expect(surfaceOf("das-neue-buero-liegt-naeher", "näher")?.full).toBe(
+	expect(surfaceOf("das-neue-buero-liegt-naeher", "näher")?.sheet).toBe(
 		"comparative of nah",
 	);
 });
@@ -181,47 +183,48 @@ test("a Variant names its tags, before its inflection", () => {
 		surfaceOf(
 			"als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
 			"daß",
-		)?.full,
+		)?.sheet,
 	).toBe("older spelling of dass");
 	expect(
 		surfaceOf(
 			"als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
 			"wußte",
-		)?.full,
+		)?.sheet,
 	).toBe("older spelling, past of wissen");
 	expect(
 		surfaceOf("als-die-ueberraschung-enthuellt-wurde-sagte-er-ohhh", "ohhh")
-			?.full,
+			?.sheet,
 	).toBe("stretched for effect of oh");
 });
 
 test("an Attestation names a Typo, a Shorthand, a fused word and a split verb", () => {
 	expect(attestationOf("der-fahrer-mus-sofort-bremsen", "mus")).toEqual({
-		full: "typo of muss",
-		compact: "typo",
+		card: "typo of",
+		sheet: "typo of muss",
 	});
 	expect(
-		attestationOf("anna-kauft-obst-gemuese-brot-usw", "usw.")?.full,
+		attestationOf("anna-kauft-obst-gemuese-brot-usw", "usw.")?.sheet,
 	).toBe("short for und so weiter");
 	expect(
 		attestationOf(
 			"die-tuer-ist-offen-ich-bin-in-der-kueche-komm-doch-rein",
 			"Komm rein",
-		)?.full,
+		)?.sheet,
 	).toBe("short for komm herein");
 	expect(
 		attestationOf("kannst-du-mich-morgen-vom-bahnhof-abholen", "m Bahnhof"),
-	).toEqual({ full: "vom = von dem", compact: "vom = von dem" });
+	).toEqual({ card: "vom = von dem", sheet: "vom = von dem" });
 	expect(
-		attestationOf("am-naechsten-morgen-war-alles-anders", "m Morgen")?.full,
+		attestationOf("am-naechsten-morgen-war-alles-anders", "m Morgen")
+			?.sheet,
 	).toBe("Am = an dem");
 	expect(attestationOf("der-laster-fuhr-das-schild-um", "fuhr um")).toEqual({
-		full: "split form of fuhr um",
-		compact: "split form",
+		card: "split form of",
+		sheet: "split form of fuhr um",
 	});
 	expect(
 		attestationOf("die-peitsche-hat-er-mitgebracht-2", "hat mitgebracht")
-			?.full,
+			?.sheet,
 	).toBe("split form of hat mitgebracht");
 });
 
@@ -243,14 +246,14 @@ test("a governed preposition or adjacent words do not split a verb, and an artic
 	).toBeNull();
 	expect(
 		attestationOf("wir-werden-am-freitag-abreisen", "werden abreisen")
-			?.full,
+			?.sheet,
 	).toBe("split form of werden abreisen");
 });
 
 test("a third person names no pronoun its subject would have to choose, but an expletive es", () => {
 	// er, sie or es: the form alone does not say, so no pronoun list stands in.
-	expect(surfaceOf("er-ging-nach-hause", "ging")?.full).not.toContain("er");
-	expect(surfaceOf("es-regnet-heute", "Es regnet")?.full).toBe(
+	expect(surfaceOf("er-ging-nach-hause", "ging")?.sheet).not.toContain("er");
+	expect(surfaceOf("es-regnet-heute", "Es regnet")?.sheet).toBe(
 		"present, es of regnen",
 	);
 });
@@ -261,7 +264,7 @@ test("target-language runs stay apart from the relation's words", () => {
 		"werden abreisen",
 	).presented;
 	const caption = surfaceCaption(surface, "abreisen", languages);
-	expect(caption?.full).toEqual([
+	expect(caption?.sheet).toEqual([
 		{ kind: "Word", text: "future, " },
 		{ kind: "Target", text: "wir" },
 		{ kind: "Word", text: " of " },
@@ -316,11 +319,11 @@ test("a Lemma counts its Readings and marks the one the Deck leads to", () => {
 	];
 	const caption = lemmaCaption(readings, "bank-seat", languages);
 	expect(text(caption)).toEqual({
-		full: "2 readings: 🏦 🪑",
-		compact: "🏦 🪑",
+		card: "2 readings: 🏦 🪑",
+		sheet: "2 readings: 🏦 🪑",
 	});
 	expect(
-		caption?.full.flatMap((token) =>
+		caption?.sheet.flatMap((token) =>
 			token.kind === "Emoji" && token.current ? [token.text] : [],
 		),
 	).toEqual(["🪑"]);
@@ -328,4 +331,46 @@ test("a Lemma counts its Readings and marks the one the Deck leads to", () => {
 	expect(
 		lemmaCaption(readings.slice(0, 1), "bank-money", languages),
 	).toBeNull();
+});
+
+test("an adjective names its declension, the nominative too, and its degree", () => {
+	expect(
+		surfaceOf(
+			"sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren",
+			"großen",
+		),
+	).toEqual({
+		card: "accusative masculine of",
+		sheet: "accusative masculine of groß",
+	});
+	expect(
+		surfaceOf("die-alten-haeuser-stehen-am-marktplatz", "alten")?.sheet,
+	).toBe("nominative plural of alt");
+	expect(surfaceOf("das-war-die-beste-loesung", "beste")?.sheet).toBe(
+		"superlative, nominative feminine of gut",
+	);
+});
+
+test("a noun whose Lemma has no gender names its form's", () => {
+	expect(
+		surfaceOf("ein-verletzter-lag-am-strassenrand", "Ein Verletzter")
+			?.sheet,
+	).toBe("masculine of Verletzte");
+});
+
+test("a Surface spelled like its Lemma with nothing to name says nothing, judged or not", () => {
+	// No Grundform assessment, nothing to name.
+	expect(
+		surfaceOf("fuenf-gaeste-warten-bereits-im-foyer", "Fünf"),
+	).toBeNull();
+	expect(surfaceOf("bitte-komm-herein-lukas", "Lukas")).toBeNull();
+	// Not Grundform only for the gap a discontinuous Locution cites.
+	expect(surfaceOf("je-frueher-desto-besser", "Je desto")).toBeNull();
+	// Spelled otherwise with nothing stored to say how: the last resort.
+	expect(
+		surfaceOf(
+			"die-blosse-meldung-der-bus-kommt-spaeter-war-nur-eine",
+			"Doppelt gemoppelt hält besser",
+		)?.sheet,
+	).toBe("form of Doppelt genäht hält besser");
 });

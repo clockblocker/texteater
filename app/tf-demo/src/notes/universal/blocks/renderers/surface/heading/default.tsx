@@ -35,6 +35,7 @@ export const renderDefaultSurfaceHeading = (({
 			: null;
 	return (
 		<CaptionedHeading
+			presentation={PresentationCapabilities.presentation}
 			title={
 				<NoteTitle
 					data-surface-title=""

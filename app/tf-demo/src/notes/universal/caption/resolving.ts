@@ -28,7 +28,12 @@ export function resolvingAttestationCaption(
 			segments: note.source.segments,
 			memberSegmentIndices: note.source.memberSegmentIndices,
 		},
-		attestationNextTitle(grammar),
+		attestationNextTitle({
+			normalizedSurface: grammar.normalizedSurface,
+			grundform: grammar.grundform,
+			spelling: grammar.spelling,
+			lemma: grammar,
+		}),
 		languages,
 	);
 }

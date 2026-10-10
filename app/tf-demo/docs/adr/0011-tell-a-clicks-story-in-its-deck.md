@@ -11,7 +11,7 @@ tails tell how the clicked text led to the Reading:
 
 ```
 zum Bahnhof · zum = zu dem
-Bahnhof · dative of der Bahnhof
+Bahnhof · dative of
 🚉 Bahnhof
 ```
 
@@ -21,10 +21,14 @@ fixed order. `shared/click-story.ts` holds the rules:
 - **Attestation:** dealt when the unit is more than the single clicked word,
   or has a member that is not `Standard` (a Typo, a Shorthand or a Fused
   piece). A split unit has more than one member.
-- **Surface:** dealt unless it is its Lemma's Grundform in the Canonical
-  spelling. Grundform is the stored assessment, never a comparison of
-  strings: dative `Wald` is spelled like its Lemma and still says `dative`.
-  An assessment that could not be made counts as not Grundform.
+- **Surface:** dealt when it is a Variant spelling, or when it is not its
+  Lemma's Grundform and has something to show for it: a feature its
+  caption names, or words other than its Lemma's. Grundform is the stored
+  assessment, never a comparison of strings: dative `Wald` is spelled like
+  its Lemma and still says `dative`. A Surface the assessment could not
+  judge (`fünf`, `Hamburg`), or that differs only by a gap its Lemma cites
+  (`je desto` of `je … desto`) or by a space (`wo mit` of `womit`), says
+  nothing when it names no feature.
 - **Lemma:** dealt when it holds more than one stored Reading.
 - **Reading:** always dealt, so a plain `Hund` deals only the Reading.
 
@@ -47,9 +51,18 @@ and words of other units between the members show as `…` (`fängt … an`).
 The click's Deck gives the stored Attestation Card the clicked Segment as
 presentation context, and the title emphasises that piece.
 
-**Captions.** A Heading's caption follows its title: `<title> · <relation> <next title>`.
-The next title is the title of the next Card dealt in front of it, so a
-skipped Card leaves no gap in the story.
+**Captions.** A Heading's caption follows its title and names how it leads
+to the next Card dealt in front of it, so a skipped Card leaves no gap in
+the story. The caption has the two forms of its Card
+([tf-demo ADR 0006](./0006-render-a-note-presentation-as-one-element-of-blocks.md)
+lets a Heading's words vary by form):
+
+- **In the pile** it ends at the relation, `<title> · <relation>`
+  (`ging · past of`), because the next Card's tail right below shows the
+  word it leads to.
+- **As a Sheet**, with no Card below, it names that word itself,
+  `<title> · <relation> <next title>` (`ging · past of gehen`), drawn
+  dimmer than the relation.
 
 - **Same rules as the Deck:** each Note computes its caption from its own
   data with the rules above, so the caption also holds when the Card is
@@ -61,15 +74,12 @@ skipped Card leaves no gap in the story.
   - A Surface names its Lemma's canonical form. A noun's title carries its
     article (`der Bahnhof`), because the caption is drawn without the title's
     gender tone.
-- **Emphasis:** the next title is drawn dimmer than the relation, so that
-  Card's own title stays the strong one.
 - **A Lemma** counts its Readings and shows each one's emoji, marking the
   one the click led to: `Bank · 2 readings: 🏦 🪑`. The click's Deck gives
   the Lemma Card that Reading as presentation context.
 - **The Reading** ends the story and has no caption.
-- **Fit:** the title never truncates. When the full caption does not fit
-  beside it, the caption drops the next title, which is visible on the Card
-  in front. Only after that does it truncate.
+- **Fit:** the title keeps the width it needs and the caption truncates in
+  what is left. A Heading takes the whole row a Card gives it.
 
 **Wording.** Captions are generated deterministically from structured features, with no
 LLM, in plain learner words.
@@ -89,11 +99,23 @@ LLM, in plain learner words.
   such as `er/sie/es` would not describe this occurrence.
 - **Nouns:** the case is named unless it is nominative, and the number only
   when it is plural (`dative`, `plural`, `dative plural`). A noun's gender
-  is never named, because the article in the next title carries it.
-- **DET, PRON and NUM:** the same rule, with the gender added for a singular
-  form that is not masculine (`dative feminine of dieser`).
-- **ADJ and ADV:** `comparative` or `superlative`. Any other
-  non-Grundform Surface says `form of`.
+  is not named, because its Lemma's article carries it; a noun whose Lemma
+  has no gender (`Verletzte`) names its singular form's (`masculine`).
+- **Adjectives:** the degree when comparative or superlative, then the
+  declension as one phrase: the case, the nominative too, since an
+  adjective cites its undeclined form; the gender when singular; the number
+  when plural (`accusative plural`, `superlative, nominative feminine`).
+  Strong, weak or mixed declension is not named: no feature stores it, and
+  the case, gender and number are what a learner matches.
+- **Adverbs:** `comparative` or `superlative`.
+- **DET, PRON and NUM:** the degree (`weniger`), the case unless nominative,
+  the gender when singular and not masculine (`dative feminine of dieser`),
+  and the number when plural.
+- **A part:** a Surface quoting only some of its Lemma's words, in order,
+  says `part of` (`Wer im Glashaus sitzt`).
+- **The last resort:** a Surface spelled otherwise than its Lemma with
+  nothing stored to say how says `form of`: `welch` of `welcher`, the weak
+  `Rote Kreuz` of `Rotes Kreuz`, a reworded Saying.
 - **Variant tags:** `also correct`, `older spelling`, `regional` and
   `stretched for effect`, named before the inflection.
 - **Attestation:** the first relation that applies wins:
@@ -116,5 +138,8 @@ LLM, in plain learner words.
 - **Passing the next Card to each Card as presentation context.**
   Rejected: the caption would hold only inside the Deck that dealt it, and
   Workspace Persistence would have to keep the extra context.
+- **One caption in every form, dropping the next title only when it does
+  not fit.** Rejected: in the pile the next title repeats the word on the
+  tail right below it, and the pile reads as one story without it.
 - **Generating the wording with a model.** Rejected: the features already
   determine it, and the same click must always read the same way.
