@@ -32,6 +32,7 @@ import { type FormEvent, useState } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { usePendingAction } from "@/hooks/use-pending-action";
 import { visitorErrorMessage } from "@/lib/visitor-error";
+import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import { textTitle } from "../../shared/text-title";
@@ -97,8 +98,11 @@ export function LibraryView() {
 
 	return (
 		<div className="relative flex h-full min-h-0 flex-col bg-muted/30">
-			<div className="min-h-0 flex-1 overflow-y-auto px-4 py-8 pb-24 sm:px-6 sm:py-12 sm:pb-24">
-				<div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
+			<div className="min-h-0 flex-1 overflow-y-auto py-8 pb-24 sm:py-12 sm:pb-24">
+				<div
+					className="mx-auto flex w-full flex-col gap-6"
+					style={GROUND_COLUMN_STYLE}
+				>
 					<header>
 						<h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
 							Library
@@ -254,7 +258,7 @@ function LibraryTextGrid({
 	readonly onOpen: (text: LibraryText) => void;
 }) {
 	return (
-		<div className="grid gap-3 sm:grid-cols-2">
+		<div className="grid gap-3">
 			{texts.map((text) => (
 				<button
 					key={text.textId}
@@ -281,11 +285,7 @@ function LibraryTextGrid({
 
 function LibrarySkeleton() {
 	return (
-		<div
-			className="grid gap-3 sm:grid-cols-2"
-			role="status"
-			aria-label="Loading texts"
-		>
+		<div className="grid gap-3" role="status" aria-label="Loading texts">
 			{[0, 1, 2, 3].map((index) => (
 				<Card key={index} size="sm">
 					<CardContent className="flex flex-col gap-3">

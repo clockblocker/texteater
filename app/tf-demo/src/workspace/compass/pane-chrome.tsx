@@ -12,6 +12,15 @@ import { COVER_GUTTER_REM } from "./layout";
 export const GROUND_LIST_WIDTH = "43rem";
 
 /**
+ * The Ground column's box: the Pane bar's column, whose inline padding is
+ * the bar's gutter, so a Menu Item's content starts where the trail does.
+ */
+export const GROUND_COLUMN_STYLE = {
+	maxWidth: GROUND_LIST_WIDTH,
+	paddingInline: `${COVER_GUTTER_REM.toString()}rem`,
+} as const;
+
+/**
  * A list a Ground walks by tapping: the Menu, or what a Menu Item lists.
  * An application may draw its Menu Items' rungs with it too.
  */
@@ -31,10 +40,7 @@ export function GroundList({
 		>
 			<div
 				className="mx-auto w-full pt-10 pb-12"
-				style={{
-					maxWidth: GROUND_LIST_WIDTH,
-					paddingInline: `${COVER_GUTTER_REM.toString()}rem`,
-				}}
+				style={GROUND_COLUMN_STYLE}
 			>
 				<h2 className="mb-5 font-sans text-[0.68rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
 					{title}

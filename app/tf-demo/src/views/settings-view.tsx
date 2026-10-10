@@ -19,6 +19,7 @@ import { DataControls } from "@/components/data-controls";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { useMotionPreference } from "@/lib/motion-preference";
 import { visitorErrorMessage } from "@/lib/visitor-error";
+import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
 import { api } from "../../convex/_generated/api";
 import { KnowledgeSettingsForm } from "./unit-reading-knowledge-settings";
 
@@ -30,8 +31,11 @@ export function SettingsView() {
 	);
 
 	return (
-		<div className="flex-1 bg-muted/30 px-4 py-8 sm:px-6 sm:py-12">
-			<div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
+		<div className="flex-1 bg-muted/30 py-8 sm:py-12">
+			<div
+				className="mx-auto flex w-full flex-col gap-6"
+				style={GROUND_COLUMN_STYLE}
+			>
 				<header>
 					<h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
 						Settings
