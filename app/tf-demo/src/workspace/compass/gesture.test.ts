@@ -30,10 +30,8 @@ const TUNING: ThrowTuning = {
 };
 
 const handle = (): NoteHandle => ({
-	left: motionValue(0),
-	top: motionValue(0),
-	width: motionValue(0),
-	height: motionValue(0),
+	box: () => ({ left: 0, top: 0, width: 0, height: 0 }),
+	morphFrom: () => {},
 	x: motionValue(0),
 	y: motionValue(0),
 	rotate: motionValue(0),

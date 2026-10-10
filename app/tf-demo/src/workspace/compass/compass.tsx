@@ -1,20 +1,23 @@
 import {
 	type Box,
-	coverBoxIn,
+	boxStyle,
+	coverPlacement,
 	DECK_TOP_REM,
 	deckColumnIn,
 	deckHolding,
-	deckSlotsIn,
+	deckSlots,
 	dropRegions,
 	findPane,
-	groundBoxIn,
 	groundOf,
+	groundPlacement,
 	isRooted,
 	type LayoutNode,
 	openIds,
 	type PaneNode,
 	type Presentation,
+	paneAnchor,
 	panesOf,
+	placementStyle,
 	restingCards,
 	returnBandIn,
 	sheetZ,
@@ -166,13 +169,12 @@ function CompassRuntime<S>({
 		() => previewLayout(layout, drag ? drag.card : null, destination),
 		[layout, drag, destination],
 	);
-	const { paneBoxes, restBoxes, rem, direction, narrow, layoutEpoch } =
-		usePaneBoxes(
-			root,
-			displayLayout,
-			drag !== null && destination?.kind === "pane",
-			activePaneId,
-		);
+	const { paneBoxes, restBoxes, rem, direction, narrow } = usePaneBoxes(
+		root,
+		displayLayout,
+		drag !== null && destination?.kind === "pane",
+		activePaneId,
+	);
 	const fold = useGroundFold();
 	const moves = useNoteMoves();
 	const shown = shownPanes(layout, activePaneId, narrow);
@@ -354,6 +356,8 @@ function CompassRuntime<S>({
 						: `Floating pane ${pane.id}`
 				}
 				data-preview={preview || undefined}
+				/* the anchor its Notes are placed against */
+				style={{ anchorName: paneAnchor(pane.id) }}
 				className={`relative h-full min-h-0 overflow-hidden bg-paper ${preview ? "pointer-events-none" : ""}`}
 			>
 				<PaneBar
@@ -512,18 +516,13 @@ function CompassRuntime<S>({
 	 * ghost Cover hides the Deck, only the Card in hand is drawn, in the
 	 * place it has on the Deck it will show again.
 	 */
-	function renderDeck(
-		sheet: SheetView<S>,
-		paneBox: Box,
-		heldOnly: boolean,
-	): ReactNode[] {
+	function renderDeck(sheet: SheetView<S>, heldOnly: boolean): ReactNode[] {
 		const deck = sheet.deck;
 		if (!deck) return [];
-		const slots = deckSlotsIn(
-			paneBox,
+		const anchor = paneAnchor(sheet.paneId);
+		const slots = deckSlots(
 			deck.cards.filter((card) => !open.has(card.id)),
 			deck.frontId,
-			rem,
 			OPEN_SCALE,
 			deckTopRem,
 		);
@@ -534,7 +533,7 @@ function CompassRuntime<S>({
 		/* with no Card below it, the open Card grows from its top edge, so
 		   it never rises over the Card Tail above it */
 		const openIsLast = slots.at(-1)?.place === "open";
-		return slots.flatMap(({ card, place, box: slot, z: restingZ }) => {
+		return slots.flatMap(({ card, place, placement, z: restingZ }) => {
 			const held =
 				drag !== null &&
 				drag.phase !== "pressed" &&
@@ -551,7 +550,11 @@ function CompassRuntime<S>({
 					form="card"
 					place={place}
 					growsFromTop={place === "open" && openIsLast}
-					box={held && drag && !returning ? drag.origin : slot}
+					placement={
+						held && drag && !returning
+							? boxStyle(drag.origin, direction)
+							: placementStyle(placement, anchor)
+					}
 					z={z}
 					held={held}
 					fate={held ? fate : null}
@@ -561,7 +564,6 @@ function CompassRuntime<S>({
 					sheetId={null}
 					ground={false}
 					lit={null}
-					epoch={layoutEpoch}
 					register={register}
 					keys={[
 						{
@@ -606,8 +608,7 @@ function CompassRuntime<S>({
 		const notes: ReactNode[] = [];
 		const rendered = new Set<string>();
 		for (const pane of drawn) {
-			const paneBox = paneBoxes[pane.id];
-			if (!paneBox) continue;
+			const anchor = paneAnchor(pane.id);
 			const sheets = sheetsOf(pane);
 			const top = topSheetOf(pane);
 			// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
@@ -632,11 +633,12 @@ function CompassRuntime<S>({
 						card={card}
 						form="sheet"
 						place="open"
-						box={
+						placement={placementStyle(
 							sheet.ground
-								? groundBoxIn(paneBox, rem, fold.barRemOf(pane))
-								: coverBoxIn(paneBox, rem, narrow)
-						}
+								? groundPlacement(fold.barRemOf(pane))
+								: coverPlacement(narrow),
+							anchor,
+						)}
 						z={sheetZ(index)}
 						held={false}
 						fate={null}
@@ -647,7 +649,6 @@ function CompassRuntime<S>({
 						covered={!isTop}
 						preview={ghost}
 						lit={isTop ? (sheet.deck?.selection ?? null) : null}
-						epoch={layoutEpoch}
 						register={ghost ? ignore : register}
 						back={
 							sheet.ground
@@ -719,8 +720,9 @@ function CompassRuntime<S>({
 				for (const card of restingCards(layout, realTop.deck))
 					rendered.add(card.id);
 			else if (drag) rendered.add(drag.card.id);
-			notes.push(...renderDeck(realTop, paneBox, hidden));
-			if (showZones && drag?.deckSheet === realTop.sheetId)
+			notes.push(...renderDeck(realTop, hidden));
+			const paneBox = paneBoxes[pane.id];
+			if (showZones && paneBox && drag?.deckSheet === realTop.sheetId)
 				notes.push(
 					<ReturnZone
 						key={`return-${realTop.sheetId}`}
@@ -748,7 +750,10 @@ function CompassRuntime<S>({
 					card={inHand.card}
 					form="card"
 					place="open"
-					box={held && drag ? drag.origin : inHand.box}
+					placement={boxStyle(
+						held && drag ? drag.origin : inHand.box,
+						direction,
+					)}
 					z={Z.held}
 					held={held}
 					fate={held ? fate : null}
@@ -757,7 +762,6 @@ function CompassRuntime<S>({
 					sheetId={null}
 					ground={false}
 					lit={null}
-					epoch={layoutEpoch}
 					register={register}
 					actions={cardActionsOf(inHand.card.id)}
 					onDown={ignore}
@@ -796,10 +800,14 @@ function CompassRuntime<S>({
 				{/* every Note, in every form, placed over the Panes. No
 				    AnimatePresence: nothing here has an exit to play, and
 				    holding a swept Note for the frame it takes to find that
-				    out leaves the old deck standing over the new one. */}
+				    out leaves the old deck standing over the new one. The
+				    layer draws no box, so the frame is every Note's
+				    containing block: a Note may anchor only to an element
+				    inside its containing block, and the Panes are in the
+				    frame. */}
 				<div
 					data-deck-notes=""
-					className="pointer-events-none absolute inset-0"
+					className="pointer-events-none contents"
 				>
 					{renderNotes()}
 				</div>

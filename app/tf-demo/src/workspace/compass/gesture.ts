@@ -15,12 +15,19 @@ import type { MotionValue } from "motion/react";
  * React; the hooks feed it pointer samples and read its answers.
  */
 
-/** A Note's own motion values: its box, and the drag transforms on top. */
+/**
+ * A Note's own motion: its box, and the drag transforms on top. At rest
+ * the box is where its Pane places it; a gesture reads it and moves it
+ * in px, in frame coordinates.
+ */
 export type NoteHandle = {
-	readonly left: MotionValue<number>;
-	readonly top: MotionValue<number>;
-	readonly width: MotionValue<number>;
-	readonly height: MotionValue<number>;
+	/** The box the Note shows now, drag offset aside: measured, so in flight too. */
+	readonly box: () => Box;
+	/**
+	 * The Note shows at `box` now and morphs to its place from there; under
+	 * reduced motion it is at its place at once.
+	 */
+	readonly morphFrom: (box: Box) => void;
 	readonly x: MotionValue<number>;
 	readonly y: MotionValue<number>;
 	readonly rotate: MotionValue<number>;

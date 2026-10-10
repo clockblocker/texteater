@@ -9,13 +9,13 @@ export {
 	BAR_REM,
 	CARD_WIDTH_REM,
 	cardHeightPx,
-	coverBoxIn,
+	coverPlacement,
 	DEAL_GAP_PX,
 	DECK_TOP_REM,
 	deckColumnIn,
-	deckSlotsIn,
+	deckSlots,
 	dropRegions,
-	groundBoxIn,
+	groundPlacement,
 	HEADER_REM,
 	HYSTERESIS_PX,
 	handBoxIn,
@@ -60,3 +60,5 @@ export {
 	updatePane,
 	workspaceReducer,
 } from "./model";
+export type { PlacementStyle } from "./placement";
+export { boxStyle, paneAnchor, placementStyle } from "./placement";

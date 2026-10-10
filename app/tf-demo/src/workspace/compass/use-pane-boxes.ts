@@ -5,8 +5,10 @@ import { directionOf, remPx, viewportWidth } from "./layout";
 /**
  * Every drawn Pane's box, relative to the frame, kept fresh, with what
  * else only the page knows: the root font size, the frame's writing
- * direction, and whether the screen is narrow. Notes are placed from
- * these.
+ * direction, and whether the screen is narrow. A gesture reads these: it
+ * places the Note in hand and reads where a drop lands from them. A
+ * resting Note is not placed from them; the page places it against its
+ * Pane's element (`placementStyle`), a render behind no measurement.
  */
 export function usePaneBoxes(
 	frame: RefObject<HTMLElement | null>,
@@ -34,12 +36,6 @@ export function usePaneBoxes(
 	const [direction, setDirection] = useState<WritingDirection>("ltr");
 	/** Below `md`: one Pane, no splits, no side edges (tf-demo ADR 0008). */
 	const [narrow, setNarrow] = useState(false);
-	/**
-	 * Bumped whenever a Pane's box changes: a split, a preview, a handle
-	 * drag, the window. A Note whose box changes in the same pass is being
-	 * resized with its Pane, not moved, and jumps rather than morphs.
-	 */
-	const [layoutEpoch, setLayoutEpoch] = useState(0);
 
 	useLayoutEffect(() => {
 		const root = frame.current;
@@ -62,11 +58,9 @@ export function usePaneBoxes(
 			setRem(size);
 			setDirection(directionOf(root));
 			setNarrow(isNarrow(viewportWidth(), size));
-			setPaneBoxes((current) => {
-				const same = sameBoxes(current, next);
-				if (!same) setLayoutEpoch((epoch) => epoch + 1);
-				return same ? current : next;
-			});
+			setPaneBoxes((current) =>
+				sameBoxes(current, next) ? current : next,
+			);
 			if (!previewUpRef.current)
 				setRestBoxes((current) =>
 					sameBoxes(current, next) ? current : next,
@@ -80,5 +74,5 @@ export function usePaneBoxes(
 		return () => observer.disconnect();
 	}, [frame, displayLayout, narrow, activePaneId]);
 
-	return { paneBoxes, restBoxes, rem, direction, narrow, layoutEpoch };
+	return { paneBoxes, restBoxes, rem, direction, narrow };
 }

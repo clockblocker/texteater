@@ -48,12 +48,7 @@ export function useNoteMoves() {
 		},
 		/** Where the Note is drawn now, drag offset aside. */
 		boxOf(h: NoteHandle): Box {
-			return {
-				left: h.left.get(),
-				top: h.top.get(),
-				width: h.width.get(),
-				height: h.height.get(),
-			};
+			return h.box();
 		},
 		/**
 		 * A Card leaving for good, toward inline-start. Reduced motion keeps
@@ -91,9 +86,13 @@ export function useNoteMoves() {
 		 * is given is a morph from the hand.
 		 */
 		foldOffset(h: NoteHandle) {
+			const at = h.box();
+			h.morphFrom({
+				...at,
+				left: at.left + h.x.get(),
+				top: at.top + h.y.get(),
+			});
 			/* jump, not set: a set would hand the spring the drag's velocity */
-			h.left.jump(h.left.get() + h.x.get());
-			h.top.jump(h.top.get() + h.y.get());
 			h.x.jump(0);
 			h.y.jump(0);
 			if (reduce) h.rotate.jump(0);
@@ -101,10 +100,7 @@ export function useNoteMoves() {
 		},
 		/** The box jumps to `box`: a Sheet lifted by its bar emerges from the bar. */
 		jumpTo(h: NoteHandle, box: Box) {
-			h.left.jump(box.left);
-			h.top.jump(box.top);
-			h.width.jump(box.width);
-			h.height.jump(box.height);
+			h.morphFrom(box);
 		},
 	};
 }

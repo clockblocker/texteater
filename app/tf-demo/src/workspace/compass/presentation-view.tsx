@@ -1,4 +1,4 @@
-import type { Box, Presentation } from "compass";
+import type { PlacementStyle, Presentation } from "compass";
 import { motion } from "motion/react";
 import {
 	type PointerEvent as ReactPointerEvent,
@@ -42,9 +42,9 @@ export function inertActions<S>(): SheetActions<S> {
 
 /**
  * One Presentation, in one of its forms (tf-demo ADR 0006). Its box is
- * four motion values that animate to whatever target the renderer hands
- * it; the drag transforms sit on top of the box, so a release can fold
- * them in and grow from there. The Subject's parts read `form` and
+ * the placement the renderer hands it, as CSS; a new placement is a
+ * morph from the old one (`useNoteBox`). The drag transforms sit on top of the box,
+ * so a release can fold them in and grow from there. The Subject's parts read `form` and
  * `place` and adapt.
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
@@ -54,7 +54,7 @@ export function PresentationView<S>({
 	form,
 	place,
 	growsFromTop = false,
-	box,
+	placement,
 	z,
 	held,
 	fate,
@@ -65,7 +65,6 @@ export function PresentationView<S>({
 	ground,
 	covered = false,
 	preview = false,
-	epoch,
 	lit,
 	register,
 	back = null,
@@ -84,7 +83,11 @@ export function PresentationView<S>({
 	 * whole Heading row.
 	 */
 	growsFromTop?: boolean;
-	box: Box;
+	/**
+	 * Where the Note sits: its Pane's placement for it at rest, or a
+	 * measured box while a gesture holds it.
+	 */
+	placement: PlacementStyle;
 	z: number;
 	held: boolean;
 	/** In hand: what letting go now does to it. */
@@ -102,8 +105,6 @@ export function PresentationView<S>({
 	covered?: boolean;
 	/** A ghost: the Sheet a drop would make, where it would sit; seen, never touched. */
 	preview?: boolean;
-	/** The Panes' measurement pass; see `layoutEpoch` in `usePaneBoxes`. */
-	epoch: number;
 	/** The selection this Sheet's Deck was dealt for. */
 	lit: string | null;
 	register: (id: string, handle: NoteHandle | null) => void;
@@ -127,15 +128,30 @@ export function PresentationView<S>({
 	const allows = useDeckInteractions();
 	const reduce = useDeckReducedMotion();
 	const design = useHeadingDesign();
-	const { handle, width, height, shownX, shownY, rotate, opacity } =
-		useNoteBox({ box, form, epoch, preview, reduce, MORPH });
+	const section = useRef<HTMLElement>(null);
+	const {
+		handle,
+		insetInlineStart,
+		top,
+		width,
+		height,
+		shownX,
+		shownY,
+		rotate,
+		opacity,
+	} = useNoteBox({
+		element: section,
+		place: placement,
+		preview,
+		reduce,
+		MORPH,
+	});
 	/**
 	 * The open Card rests larger than the ones behind it (`OPEN_SCALE`). It
 	 * is a state, not a move: which Card is in front changes at once, with
 	 * no pulse. A held Card does not swell, so nothing else scales a Note.
 	 */
 	const restScale = form === "card" && place === "open" ? OPEN_SCALE : 1;
-	const section = useRef<HTMLElement>(null);
 
 	useEffect(() => {
 		if (preview) return;
@@ -239,8 +255,8 @@ export function PresentationView<S>({
 			animate={{ borderColor }}
 			transition={transition(NOTE_BORDER)}
 			style={{
-				left: 0,
-				top: 0,
+				insetInlineStart,
+				top,
 				width,
 				height,
 				x: shownX,

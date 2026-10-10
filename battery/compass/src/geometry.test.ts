@@ -5,14 +5,13 @@ import {
 	CARD_WIDTH_REM,
 	cardHeightPx,
 	cardWidthIn,
-	coverBoxIn,
+	coverPlacement,
 	DECK_TOP_REM,
 	deckColumnIn,
-	deckSlotsIn,
-	deckTopIn,
+	deckSlots,
 	dropRegions,
 	edgeWidth,
-	groundBoxIn,
+	groundPlacement,
 	HEADER_REM,
 	HYSTERESIS_PX,
 	handBoxIn,
@@ -29,12 +28,20 @@ import {
 	spawnSize,
 	Z,
 } from "./geometry";
+import { type Placement, placementBox } from "./placement";
 
 const REM = 16;
 const OPEN_SCALE = 1.05;
 const TEXT_COLUMN_REM = 42;
 /** A wide Pane, offset in its frame so nothing passes by starting at zero. */
 const PANE: Box = { left: 100, top: 50, width: 1200, height: 900 };
+
+/** Where `placement` puts a Note in `pane`, in px. */
+const coverBoxIn = (pane: Box, rem: number, narrow = false) =>
+	placementBox(coverPlacement(narrow), pane, rem);
+const groundBoxIn = (pane: Box, rem: number, barRem?: number) =>
+	placementBox(groundPlacement(barRem), pane, rem);
+const boxIn = (placement: Placement) => placementBox(placement, PANE, REM);
 
 function boxAt(box: Box, scale: number): Box {
 	return {
@@ -302,14 +309,12 @@ describe("sheetZ", () => {
 
 	test("in a Pane of twelve Covers every Sheet stays below the Deck", () => {
 		for (const sheet of z) expect(sheet).toBeLessThan(Z.deck);
-		const slots = deckSlotsIn(
-			PANE,
+		const slots = deckSlots(
 			Array.from({ length: 25 }, (_, index) => ({
 				id: `card-${index.toString()}`,
 				subject: index.toString(),
 			})),
 			null,
-			REM,
 			OPEN_SCALE,
 		);
 		const lowestCard = Math.min(...slots.map((slot) => slot.z));
@@ -326,11 +331,13 @@ describe("sheetZ", () => {
 
 describe("the Deck", () => {
 	test("its top sits DECK_TOP_REM below its Pane's top, at the root size given", () => {
-		expect(deckTopIn(16)).toBe(DECK_TOP_REM * 16);
+		expect(deckColumnIn(PANE, 16, OPEN_SCALE).top).toBe(
+			50 + DECK_TOP_REM * 16,
+		);
 		/* it was 12 * 16 px whatever the root size, so a larger root
 		   font slid the Deck up under the Text it was dealt from */
-		expect(deckTopIn(20)).toBe(240);
-		expect(deckTopIn(20, 3)).toBe(60);
+		expect(deckColumnIn(PANE, 20, OPEN_SCALE).top).toBe(50 + 240);
+		expect(deckColumnIn(PANE, 20, OPEN_SCALE, 3).top).toBe(50 + 60);
 	});
 
 	test("its column is centred in its Pane and as tall as the pile", () => {
@@ -459,14 +466,14 @@ describe("the Deck", () => {
 	});
 });
 
-describe("deckSlotsIn", () => {
+describe("deckSlots", () => {
 	/** Five Cards in rank, a to e. */
 	const cards = ["a", "b", "c", "d", "e"].map((id) => ({
 		id,
 		subject: id,
 	}));
 	const slotsOf = (frontId: string | null) =>
-		deckSlotsIn(PANE, cards, frontId, REM, OPEN_SCALE);
+		deckSlots(cards, frontId, OPEN_SCALE);
 
 	test("Cards are drawn last in rank first", () => {
 		expect(slotsOf("c").map((slot) => slot.card.id)).toEqual([
@@ -508,7 +515,7 @@ describe("deckSlotsIn", () => {
 
 	test("slots sit one Heading row apart in the Deck's column, each as tall as the front Card", () => {
 		const column = deckColumnIn(PANE, REM, OPEN_SCALE);
-		expect(slotsOf("c").map((slot) => slot.box)).toEqual(
+		expect(slotsOf("c").map((slot) => boxIn(slot.placement))).toEqual(
 			cards.map((_, index) => ({
 				left: column.left,
 				top: column.top + index * HEADER_REM * REM,
@@ -540,7 +547,7 @@ describe("deckSlotsIn", () => {
 
 		test("every folded Card stays below the open Card and the drop zones", () => {
 			for (const frontId of frontIds) {
-				const slots = deckSlotsIn(PANE, many, frontId, REM, OPEN_SCALE);
+				const slots = deckSlots(many, frontId, OPEN_SCALE);
 				const open = slots.find((slot) => slot.place === "open");
 				for (const slot of slots) {
 					expect(slot.z).toBeGreaterThanOrEqual(Z.deck);
@@ -553,13 +560,16 @@ describe("deckSlotsIn", () => {
 
 		test("of two folded Cards that overlap, the one nearer the open Card is over", () => {
 			for (const frontId of frontIds) {
-				const slots = deckSlotsIn(PANE, many, frontId, REM, OPEN_SCALE);
+				const slots = deckSlots(many, frontId, OPEN_SCALE);
 				const openAt = slots.findIndex((slot) => slot.place === "open");
 				slots.forEach((a, i) => {
 					slots.forEach((b, j) => {
+						const [boxA, boxB] = [a, b].map((slot) =>
+							boxIn(slot.placement),
+						) as [Box, Box];
 						const overlap =
-							a.box.top < b.box.top + b.box.height &&
-							b.box.top < a.box.top + a.box.height;
+							boxA.top < boxB.top + boxB.height &&
+							boxB.top < boxA.top + boxA.height;
 						if (
 							i !== j &&
 							overlap &&
@@ -573,12 +583,12 @@ describe("deckSlotsIn", () => {
 	});
 
 	test("an empty Deck has no slots", () => {
-		expect(deckSlotsIn(PANE, [], null, REM, OPEN_SCALE)).toEqual([]);
+		expect(deckSlots([], null, OPEN_SCALE)).toEqual([]);
 	});
 
 	test("a stage Deck's slots start at its own top", () => {
-		const [first] = deckSlotsIn(PANE, cards, null, REM, OPEN_SCALE, 1);
-		expect(first?.box.top).toBe(50 + REM);
+		const [first] = deckSlots(cards, null, OPEN_SCALE, 1);
+		expect(first && boxIn(first.placement).top).toBe(50 + REM);
 	});
 });
 

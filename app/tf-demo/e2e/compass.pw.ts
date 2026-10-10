@@ -217,3 +217,75 @@ test.describe("in a short Pane", () => {
 		}
 	});
 });
+
+test.describe("as the window resizes", () => {
+	test.use({ viewport: { width: 1600, height: 1100 } });
+
+	test("every resting Note moves with its Pane in the same frame", async ({
+		page,
+	}) => {
+		await page.goto("/playground/deck-models");
+		const frame = page.locator("[data-deck-frame]");
+		await deal(frame);
+		/* each frame, the Ground spans its Pane under the bar and every
+		   resting Card is centred in it; a Note placed from a measurement
+		   taken after the resize is a frame or more behind */
+		await page.evaluate(() => {
+			const record = window as unknown as {
+				stale: number;
+				frames: number;
+			};
+			record.stale = 0;
+			record.frames = 0;
+			const tick = () => {
+				record.frames += 1;
+				for (const note of document.querySelectorAll<HTMLElement>(
+					"[data-deck-notes] > article:not([data-held])",
+				)) {
+					const pane = document
+						.querySelector(
+							`[data-deck-pane="${note.dataset.pane}"]`,
+						)
+						?.getBoundingClientRect();
+					if (!pane) continue;
+					const box = note.getBoundingClientRect();
+					const off =
+						note.dataset.form === "ground"
+							? Math.max(
+									Math.abs(box.left - pane.left),
+									Math.abs(box.right - pane.right),
+									Math.abs(box.bottom - pane.bottom),
+								)
+							: Math.abs(
+									box.left -
+										pane.left -
+										(pane.right - box.right),
+								);
+					if (off > 1) {
+						record.stale += 1;
+						break;
+					}
+				}
+				requestAnimationFrame(tick);
+			};
+			requestAnimationFrame(tick);
+		});
+		for (const [width, height] of [
+			[1300, 900],
+			[1700, 1000],
+			[1450, 1100],
+		] as const) {
+			await page.setViewportSize({ width, height });
+			await page.waitForTimeout(300);
+		}
+		const { stale, frames } = await page.evaluate(() => {
+			const record = window as unknown as {
+				stale: number;
+				frames: number;
+			};
+			return { stale: record.stale, frames: record.frames };
+		});
+		expect(frames).toBeGreaterThan(20);
+		expect(stale).toBe(0);
+	});
+});

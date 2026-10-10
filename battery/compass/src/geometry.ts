@@ -9,9 +9,26 @@
  * are in the coordinates of the frame the Panes were measured in. Edges
  * are logical: the writing direction decides which physical side each
  * one sits on.
+ *
+ * A resting Note's place, a Sheet's or a Deck slot's, is a `Placement`:
+ * the renderer draws it as CSS, and a gesture reads it in px.
  */
 
 import type { Edge, Presentation } from "./model";
+import {
+	greatest,
+	inRem,
+	type Length,
+	least,
+	lengthPx,
+	minus,
+	type Placement,
+	paneHeight,
+	paneWidth,
+	placementBox,
+	plus,
+	times,
+} from "./placement";
 
 export type Box = {
 	readonly left: number;
@@ -99,21 +116,26 @@ export function isNarrow(width: number, rem: number): boolean {
 /* ----------------------------------------------------------------- Deck */
 
 /**
- * A Card's width in a Pane `paneWidth` wide. It leaves room for the front
- * Card's resting scale and the return band's outline.
+ * A Card's width in its Pane. It leaves room for the front Card's resting
+ * scale and the return band's outline.
  */
+function cardWidth(openScale: number): Length {
+	return greatest(
+		inRem(0),
+		least(
+			inRem(CARD_WIDTH_REM),
+			times(1 / Math.max(1, openScale), minus(paneWidth, inRem(2))),
+		),
+	);
+}
+
+/** A Card's width, in px, in a Pane `paneWidth` px wide; see `cardWidth`. */
 export function cardWidthIn(
 	paneWidth: number,
 	rem: number,
 	openScale: number,
 ): number {
-	return Math.max(
-		0,
-		Math.min(
-			CARD_WIDTH_REM * rem,
-			(paneWidth - 2 * rem) / Math.max(1, openScale),
-		),
-	);
+	return lengthPx(cardWidth(openScale), { width: paneWidth, height: 0 }, rem);
 }
 
 /** How far below a Note's top edge the hand holds it, in px. */
@@ -148,64 +170,68 @@ export function handBoxIn(
 }
 
 /**
- * The front Card's height, in px, in a Deck of `count` Cards whose column
- * is `pileHeight` px tall: what is left of it under one Heading row per
- * Card behind, and never less than a Heading row.
+ * The front Card's height in a Deck of `count` Cards whose column is
+ * `pileHeight` tall: what is left of it under one Heading row per Card
+ * behind, and never less than a Heading row.
  */
+function cardHeight(count: number, pileHeight: Length): Length {
+	return greatest(
+		inRem(HEADER_REM),
+		minus(pileHeight, inRem((Math.max(1, count) - 1) * HEADER_REM)),
+	);
+}
+
+/** The front Card's height, in px, at the `rem` given; see `cardHeight`. */
 export function cardHeightPx(
 	count: number,
 	rem: number,
 	pileHeight = PILE_HEIGHT_REM * rem,
 ): number {
-	return Math.max(
-		HEADER_REM * rem,
-		pileHeight - (Math.max(1, count) - 1) * HEADER_REM * rem,
+	return lengthPx(
+		cardHeight(count, inRem(pileHeight / rem)),
+		{ width: 0, height: 0 },
+		rem,
 	);
 }
 
-/** The Deck's inset from either inline edge of its Pane: the Deck is centred. */
-function deckInsetIn(paneWidth: number, cardWidth: number): number {
-	return (paneWidth - cardWidth) / 2;
-}
-
 /**
- * The Deck's top inside its Pane, in px: one place, whatever was clicked.
- * `topRem` moves it for a renderer that has nothing above the Deck.
- */
-export function deckTopIn(rem: number, topRem = DECK_TOP_REM): number {
-	return topRem * rem;
-}
-
-/**
- * The Deck's column in a Pane: where its Cards sit, in frame coordinates.
- * It fits its Pane. A Pane too short for the whole pile below `topRem`
+ * The Deck's column in its Pane: where its Cards sit. It is centred, and
+ * it fits its Pane. A Pane too short for the whole pile below `topRem`
  * shrinks it, down to `MIN_PILE_REM`; one too short for that moves the
- * Deck up, though never above the Pane bar, and shrinks it to what is left.
+ * Deck up, though never above the Pane bar, and shrinks it to what is
+ * left. `topRem` moves it for a renderer that has nothing above the Deck.
  */
+function deckColumn(openScale: number, topRem: number): Placement {
+	const width = cardWidth(openScale);
+	const room = greatest(inRem(0), minus(paneHeight, inRem(DECK_FOOT_REM)));
+	const highest = Math.min(topRem, BAR_REM);
+	const height = greatest(
+		inRem(0),
+		least(
+			inRem(PILE_HEIGHT_REM),
+			greatest(inRem(MIN_PILE_REM), minus(room, inRem(topRem))),
+			minus(room, inRem(highest)),
+		),
+	);
+	return {
+		inlineStart: times(0.5, minus(paneWidth, width)),
+		top: greatest(
+			inRem(highest),
+			least(inRem(topRem), minus(room, height)),
+		),
+		width,
+		height,
+	};
+}
+
+/** The Deck's column in a measured Pane, in frame coordinates; see `deckColumn`. */
 export function deckColumnIn(
 	pane: Box,
 	rem: number,
 	openScale: number,
 	topRem = DECK_TOP_REM,
 ): Box {
-	const width = cardWidthIn(pane.width, rem, openScale);
-	const room = Math.max(0, pane.height - DECK_FOOT_REM * rem);
-	const preferred = deckTopIn(rem, topRem);
-	const highest = Math.min(topRem, BAR_REM) * rem;
-	const height = Math.max(
-		0,
-		Math.min(
-			PILE_HEIGHT_REM * rem,
-			Math.max(MIN_PILE_REM * rem, room - preferred),
-			room - highest,
-		),
-	);
-	return {
-		left: pane.left + deckInsetIn(pane.width, width),
-		top: pane.top + Math.max(highest, Math.min(preferred, room - height)),
-		width,
-		height,
-	};
+	return placementBox(deckColumn(openScale, topRem), pane, rem);
 }
 
 /**
@@ -214,11 +240,11 @@ export function deckColumnIn(
  */
 export type Place = "above" | "open" | "below";
 
-/** A resting Card's slot in its Deck: its place, its box, and its z. */
+/** A resting Card's slot in its Deck: its place, where it sits, and its z. */
 export type DeckSlot<S> = {
 	readonly card: Presentation<S>;
 	readonly place: Place;
-	readonly box: Box;
+	readonly placement: Placement;
 	readonly z: number;
 };
 
@@ -226,28 +252,26 @@ export type DeckSlot<S> = {
 const OPEN_RISE = 9;
 
 /**
- * Where a Deck's resting Cards sit in a Pane, in drawing order: the last
- * in rank on top of the column, each slot one Heading row below the one
- * before, every slot as tall as the front Card. The Card `frontId` names
- * is open, or the first in rank when it names none of `cards`; the Cards
- * drawn before it are folded above it and the rest below. Their z rises
- * toward the open Card from both sides, one step per slot, and the open
- * Card is over all of them. Past `OPEN_RISE` slots away they all rest at
- * `Z.deck`, which is safe: a Deck that long has slots one Heading row
- * tall (`cardHeightPx`), so no two of them overlap. A Card in hand is the
- * renderer's to lift over the rest.
+ * Where a Deck's resting Cards sit in their Pane, in drawing order: the
+ * last in rank on top of the column, each slot one Heading row below the
+ * one before, every slot as tall as the front Card. The Card `frontId`
+ * names is open, or the first in rank when it names none of `cards`; the
+ * Cards drawn before it are folded above it and the rest below. Their z
+ * rises toward the open Card from both sides, one step per slot, and the
+ * open Card is over all of them. Past `OPEN_RISE` slots away they all
+ * rest at `Z.deck`, which is safe: a Deck that long has slots one Heading
+ * row tall (`cardHeight`), so no two of them overlap. A Card in hand is
+ * the renderer's to lift over the rest.
  */
-export function deckSlotsIn<S>(
-	pane: Box,
+export function deckSlots<S>(
 	cards: readonly Presentation<S>[],
 	frontId: string | null,
-	rem: number,
 	openScale: number,
 	topRem = DECK_TOP_REM,
 ): readonly DeckSlot<S>[] {
 	const count = cards.length;
-	const column = deckColumnIn(pane, rem, openScale, topRem);
-	const height = cardHeightPx(count, rem, column.height);
+	const column = deckColumn(openScale, topRem);
+	const height = cardHeight(count, column.height);
 	const order = [...cards].reverse();
 	const frontAt = order.findIndex((card) => card.id === frontId);
 	const openAt = frontAt === -1 ? count - 1 : frontAt;
@@ -257,9 +281,9 @@ export function deckSlotsIn<S>(
 		return {
 			card,
 			place,
-			box: {
-				left: column.left,
-				top: column.top + index * HEADER_REM * rem,
+			placement: {
+				inlineStart: column.inlineStart,
+				top: plus(column.top, inRem(index * HEADER_REM)),
 				width: column.width,
 				height,
 			},
@@ -270,7 +294,7 @@ export function deckSlotsIn<S>(
 
 /** Where a Deck is drawn: how far below its Pane's top, and on what screen. */
 export type DeckOptions = {
-	/** Moves the Deck for a renderer that has nothing above it; see `deckTopIn`. */
+	/** Moves the Deck for a renderer that has nothing above it; see `deckColumn`. */
 	readonly topRem?: number;
 	/** A narrow screen: its Panes have no side edges. */
 	readonly narrow?: boolean;
@@ -301,19 +325,19 @@ export function returnBandIn(
 /* --------------------------------------------------------------- Sheets */
 
 /**
- * Where a Cover sits in a Pane: from the Pane's top edge, over its bar,
+ * Where a Cover sits in its Pane: from the Pane's top edge, over its bar,
  * and inset from its sides and foot. A Cover carries its own bar. On a
  * narrow screen it fills its Pane: what would have been a Pane of its
  * own opens full-screen as a Cover.
  */
-export function coverBoxIn(pane: Box, rem: number, narrow = false): Box {
-	const insetX = narrow ? 0 : SHEET_INSET_X_REM * rem;
-	const insetY = narrow ? 0 : SHEET_INSET_Y_REM * rem;
+export function coverPlacement(narrow = false): Placement {
+	const insetX = narrow ? 0 : SHEET_INSET_X_REM;
+	const insetY = narrow ? 0 : SHEET_INSET_Y_REM;
 	return {
-		left: pane.left + insetX,
-		top: pane.top,
-		width: Math.max(0, pane.width - 2 * insetX),
-		height: Math.max(0, pane.height - insetY),
+		inlineStart: inRem(insetX),
+		top: inRem(0),
+		width: greatest(inRem(0), minus(paneWidth, inRem(2 * insetX))),
+		height: greatest(inRem(0), minus(paneHeight, inRem(insetY))),
 	};
 }
 
@@ -329,14 +353,13 @@ export function sheetZ(index: number): number {
 	return Math.min(Z.sheet + index, Z.deck - 1);
 }
 
-/** Where a Ground sits: the whole Pane under its bar. */
-export function groundBoxIn(pane: Box, rem: number, barRem = BAR_REM): Box {
-	const bar = barRem * rem;
+/** Where a Ground sits: the whole Pane under its bar, `barRem` tall. */
+export function groundPlacement(barRem = BAR_REM): Placement {
 	return {
-		left: pane.left,
-		top: pane.top + bar,
-		width: pane.width,
-		height: Math.max(0, pane.height - bar),
+		inlineStart: inRem(0),
+		top: inRem(barRem),
+		width: paneWidth,
+		height: greatest(inRem(0), minus(paneHeight, inRem(barRem))),
 	};
 }
 
