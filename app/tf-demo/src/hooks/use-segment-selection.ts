@@ -63,10 +63,14 @@ export function useSegmentSelection(visitorId: string) {
 			}
 			// A repeat click joins the Visitor's running session, so a
 			// Resolving deck follows the returned requestId, not this one.
-			presentCards(segmentSelectionDeckCards(requestId, result), {
-				anchor: anchorElement,
-				selection,
-			});
+			presentCards(
+				segmentSelectionDeckCards(
+					requestId,
+					result,
+					clickedSegmentIndex,
+				),
+				{ anchor: anchorElement, selection },
+			);
 		} catch (cause) {
 			setError(visitorErrorMessage(cause));
 		} finally {

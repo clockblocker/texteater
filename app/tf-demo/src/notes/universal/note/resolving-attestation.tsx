@@ -11,11 +11,12 @@ import type { SourceSegment } from "../blocks/renderers/common/link-members";
 import { RouteMark } from "../blocks/renderers/common/route-mark";
 import { SourceQuote } from "../blocks/renderers/common/source-quote";
 import { CaptionedTitleRow } from "../caption/heading-caption";
+import { UnitTitle, type UnitTitlePart } from "../caption/unit-title";
 import type { Caption } from "../caption/wording";
 
 type ResolvingAttestation = {
-	/** The clicked words, as the stored Note's Heading will spell them. */
-	readonly attested: string;
+	/** The clicked unit, as the stored Note's Heading will spell it. */
+	readonly title: readonly UnitTitlePart[];
 	/** What the words are to the next Card, once Grammar has read them. */
 	readonly caption: Caption | null;
 	readonly segments: readonly SourceSegment[];
@@ -39,7 +40,7 @@ export function resolvingAttestationNoteParts(input: ResolvingAttestation) {
 			<CaptionedTitleRow
 				title={
 					<NoteTitle data-attestation-title="">
-						<bdi>{input.attested}</bdi>
+						<UnitTitle parts={input.title} />
 					</NoteTitle>
 				}
 				caption={input.caption}

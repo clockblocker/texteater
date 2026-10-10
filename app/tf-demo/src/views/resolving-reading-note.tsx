@@ -2,7 +2,12 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { ResolvingReadingHeading, type renderNote } from "@/notes";
+import {
+	ResolvingReadingHeading,
+	type renderNote,
+	resolvingUnitTitle,
+	unitTitleText,
+} from "@/notes";
 import { knownUnitRoute, type ResolutionNote } from "@/views/resolution-deck";
 import {
 	PlacedNote,
@@ -121,19 +126,7 @@ export function resolvingReadingNoteData(
  * ellipsis. Grammar's members once it chose them, else the stored unit's.
  */
 export function resolvingWords(note: ResolutionNote): string {
-	const { segments, memberSegmentIndices } = note.source;
-	return memberSegmentIndices
-		.map((index, position) => {
-			const previous = memberSegmentIndices[position - 1];
-			const text = segments[index]?.text ?? "";
-			if (previous === undefined) return text;
-			const between = segments.slice(previous + 1, index);
-			if (between.length === 0) return text;
-			return between.every(({ kind }) => kind === "Whitespace")
-				? ` ${text}`
-				: ` … ${text}`;
-		})
-		.join("");
+	return unitTitleText(resolvingUnitTitle(note));
 }
 
 /**

@@ -301,10 +301,14 @@ test("a stored Resolution whose every step says something opens all four canonic
 		attestationId,
 		steps: { attestation: true, surface: true, lemma: true },
 	};
-	const cards = segmentSelectionDeckCards("request-available", {
-		kind: "Available",
-		canonical,
-	});
+	const cards = segmentSelectionDeckCards(
+		"request-available",
+		{
+			kind: "Available",
+			canonical,
+		},
+		2,
+	);
 
 	expect(cards.map(({ target }) => target)).toEqual([
 		{ kind: "Reading", readingId },
@@ -318,15 +322,19 @@ test("a stored Resolution whose every step says something opens all four canonic
 
 	// A repeat click joins the running session, whose requestId differs.
 	expect(
-		segmentSelectionDeckCards("request-repeat", {
-			kind: "Resolving",
-			requestId: "request-running",
-			progress: "GrammarAvailable",
-			activity: "Running",
-			deduplicated: true,
-			unitRoute: unit.route,
-			unitSegments: unit.segments,
-		}),
+		segmentSelectionDeckCards(
+			"request-repeat",
+			{
+				kind: "Resolving",
+				requestId: "request-running",
+				progress: "GrammarAvailable",
+				activity: "Running",
+				deduplicated: true,
+				unitRoute: unit.route,
+				unitSegments: unit.segments,
+			},
+			2,
+		),
 	).toEqual([
 		{
 			key: "request-running:Reading",
@@ -349,15 +357,19 @@ test("a stored Resolution whose every step says something opens all four canonic
 	// An Unresolved unit lays the Reading out by no route, and a unit of
 	// the clicked word alone deals no Attestation until Grammar reads it.
 	expect(
-		segmentSelectionDeckCards("request-unresolved", {
-			kind: "Resolving",
-			requestId: "request-unresolved",
-			progress: "Starting",
-			activity: "Scheduled",
-			deduplicated: false,
-			unitRoute: "Unresolved",
-			unitSegments: [2],
-		}),
+		segmentSelectionDeckCards(
+			"request-unresolved",
+			{
+				kind: "Resolving",
+				requestId: "request-unresolved",
+				progress: "Starting",
+				activity: "Scheduled",
+				deduplicated: false,
+				unitRoute: "Unresolved",
+				unitSegments: [2],
+			},
+			2,
+		),
 	).toEqual([
 		{
 			key: "request-unresolved:Reading",
@@ -480,7 +492,9 @@ test("the Attestation step titles the clicked words and quotes their sentence, i
 		updatedAt: 1,
 	};
 	const heading = renderStep({ stepKind: "Attestation", note }, "heading");
-	expect(heading).toContain('data-attestation-title=""><bdi>Banken</bdi><');
+	expect(heading).toContain(
+		'data-attestation-title=""><bdi><span data-clicked-piece="true">Banken</span></bdi><',
+	);
 	expect(heading).not.toContain('role="status"');
 	const body = renderStep({ stepKind: "Attestation", note }, "body");
 	expect(body).toContain('data-note-kind="Attestation"');

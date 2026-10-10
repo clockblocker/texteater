@@ -146,15 +146,19 @@ function complete(steps: Steps, extra: Partial<ResolutionNote> = {}) {
 /** A fresh click on a unit of `unitSegments`, dealt as the click deals it. */
 function click(unitSegments: number[]) {
 	return deal(
-		segmentSelectionDeckCards("request-1", {
-			kind: "Resolving",
-			requestId: "request-1",
-			progress: "Starting",
-			activity: "Scheduled",
-			deduplicated: false,
-			unitRoute,
-			unitSegments,
-		}),
+		segmentSelectionDeckCards(
+			"request-1",
+			{
+				kind: "Resolving",
+				requestId: "request-1",
+				progress: "Starting",
+				activity: "Scheduled",
+				deduplicated: false,
+				unitRoute,
+				unitSegments,
+			},
+			2,
+		),
 	);
 }
 
@@ -279,6 +283,19 @@ test("a fresh click whose every step says something keeps the Deck's order while
 		roles: FRONT_FIRST,
 		frontId: null,
 	});
+	// The stored Attestation keeps the clicked Segment through a reload.
+	expect(
+		deck(reload(state)).cards.find(({ key }) =>
+			key?.endsWith("Attestation"),
+		)?.subject,
+	).toEqual({
+		kind: "Note",
+		target: {
+			kind: "Attestation",
+			attestationId: "attestation-1" as Id<"attestations">,
+		},
+		presentationContext: { clickedSegmentIndex: 2 },
+	});
 });
 
 test("a plain dictionary-form word deals only its Reading, from the click to a reload", () => {
@@ -360,10 +377,14 @@ test("a click on a stored occurrence deals the Cards whose step says something, 
 		],
 	] as const) {
 		const state = deal(
-			segmentSelectionDeckCards("request-2", {
-				kind: "Available",
-				canonical: canonical(steps),
-			}),
+			segmentSelectionDeckCards(
+				"request-2",
+				{
+					kind: "Available",
+					canonical: canonical(steps),
+				},
+				2,
+			),
 		);
 		expect(order(state)).toEqual({ roles: [...expected], frontId: null });
 		expect(order(reload(state))).toEqual({

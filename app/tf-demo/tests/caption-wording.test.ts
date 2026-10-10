@@ -10,6 +10,8 @@ import {
 	captionText,
 	lemmaTitle,
 	surfaceCaption,
+	unitTitleParts,
+	unitTitleText,
 } from "../src/notes";
 
 /**
@@ -22,6 +24,20 @@ const recordsDirectory = join(
 	"records",
 	"de",
 );
+
+/** A gold record's Segments and the member indices of its target `attested`. */
+function goldUnit(id: string, attested: string) {
+	const record = JSON.parse(
+		readFileSync(join(recordsDirectory, `${id}.json`), "utf8"),
+	) as GoldRecord;
+	const target = record.targets.find(
+		({ attestation }) =>
+			attestation?.members.map((member) => member.attested).join(" ") ===
+			attested,
+	);
+	if (!target) throw new Error(`${id} has no target attesting ${attested}.`);
+	return { segments: record.segments, members: target.memberSegmentIndices };
+}
 
 type GoldRecord = {
 	readonly segments: readonly { kind: string; text: string }[];
@@ -239,4 +255,44 @@ test("target-language runs stay apart from the relation's words", () => {
 		{ kind: "Word", text: " of " },
 		{ kind: "Next", text: "gehen" },
 	] satisfies CaptionToken[]);
+});
+
+test("an Attestation's title is its whole unit as written, a gap where other words stand", () => {
+	const title = (id: string, attested: string, clicked?: number) => {
+		const { segments, members } = goldUnit(id, attested);
+		return unitTitleParts(segments, members, clicked);
+	};
+	expect(
+		unitTitleText(title("der-laster-fuhr-das-schild-um", "fuhr um")),
+	).toBe("fuhr … um");
+	// A fused piece is spelled with its whole word.
+	expect(
+		unitTitleText(
+			title("kannst-du-mich-morgen-vom-bahnhof-abholen", "m Bahnhof"),
+		),
+	).toBe("vom Bahnhof");
+	expect(
+		unitTitleText(
+			title("am-naechsten-morgen-war-alles-anders", "m Morgen"),
+		),
+	).toBe("Am … Morgen");
+	expect(
+		unitTitleText(title("kannst-du-mich-morgen-vom-bahnhof-abholen", "vo")),
+	).toBe("vom");
+});
+
+test("the clicked piece is the one marked in the title", () => {
+	const { segments, members } = goldUnit(
+		"der-laster-fuhr-das-schild-um",
+		"fuhr um",
+	);
+	const clicked = unitTitleParts(segments, members, members[1]).flatMap(
+		(part) => (part.kind === "Piece" && part.clicked ? [part.text] : []),
+	);
+	expect(clicked).toEqual(["um"]);
+	expect(
+		unitTitleParts(segments, members).some(
+			(part) => part.kind === "Piece" && part.clicked,
+		),
+	).toBe(false);
 });

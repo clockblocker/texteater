@@ -53,6 +53,8 @@ export type DefinitionCapabilities = {
 export type RoutePresentationCapabilities = {
 	readonly presentation?: "Card" | "Sheet";
 	readonly activeAnalysisKey?: Id<"surfaces">;
+	/** The Segment the click that dealt an Attestation landed on. */
+	readonly clickedSegmentIndex?: number;
 	readonly pagination: {
 		readonly hasMore: boolean;
 		readonly isLoading: boolean;

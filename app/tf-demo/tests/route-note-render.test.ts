@@ -166,8 +166,26 @@ test("an Attestation holding a piece of a fused word reaches its Fusion", () => 
 	expect(markup.replaceAll(/<[^>]+>/g, "")).toContain("im = in + dem");
 	expect(markup).toContain('data-realized="true"');
 	expect(markup).toContain("„im“ ist „in dem“.");
-	// The Heading's caption says what the fused word stands for.
-	expect(markup.replaceAll(/<[^>]+>/g, "")).toContain("·im = in dem");
+	// The Heading spells the fused word whole and says what it stands for.
+	expect(markup.replaceAll(/<[^>]+>/g, "")).toContain("im Wald·im = in dem");
+	// A click on the article piece emphasises that piece.
+	const clicked = renderToStaticMarkup(
+		renderNote({
+			noteData: attestation,
+			capabilities: {
+				follow: () => {},
+				pagination: {
+					hasMore: false,
+					isLoading: false,
+					error: null,
+					loadMore: null,
+				},
+				clickedSegmentIndex: 5,
+			},
+		}),
+	);
+	expect(clicked).toContain('data-clicked-piece="true">m</span>');
+	expect(clicked).toMatch(/text-ink-muted">i<\/span>/);
 	const bare = {
 		...attestation,
 		presented: { ...attestation.presented, fusions: [] },

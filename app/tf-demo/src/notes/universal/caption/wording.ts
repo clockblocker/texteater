@@ -49,6 +49,8 @@ export type UiWording = {
 	readonly wordSeparator: string;
 	/** Between the values of a feature that has several: `accusative or dative`. */
 	readonly alternativeSeparator: string;
+	/** Where other words stand between a unit's words: `fängt … an`. */
+	readonly unitGap: string;
 	readonly relations: {
 		/** A Surface: `{form}` is its Variant tags and inflection. */
 		readonly form: RelationTemplate;
@@ -101,6 +103,7 @@ export const uiWordings = {
 		listSeparator: ", ",
 		wordSeparator: " ",
 		alternativeSeparator: " or ",
+		unitGap: " … ",
 		relations: {
 			form: { full: "{form} of {next}", compact: "{form}" },
 			typo: { full: "typo of {next}", compact: "typo" },

@@ -5,6 +5,7 @@ import { TextView } from "@/views/text-view";
 import { UnitReadingNoteView } from "@/views/unit-reading-note-view";
 import {
 	activeAnalysisKeyOf,
+	clickedSegmentIndexOf,
 	unitRouteOf,
 	type WorkspaceSubject,
 	workspaceSubjectKey,
@@ -46,6 +47,12 @@ export function renderApplicationSubject(
 						target.kind === "Surface" &&
 						"presentationContext" in subject
 							? activeAnalysisKeyOf(subject.presentationContext)
+							: undefined
+					}
+					clickedSegmentIndex={
+						target.kind === "Attestation" &&
+						"presentationContext" in subject
+							? clickedSegmentIndexOf(subject.presentationContext)
 							: undefined
 					}
 				/>

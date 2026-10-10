@@ -10,7 +10,14 @@ export {
 	lemmaTitle,
 	surfaceCaption,
 } from "./universal/caption/caption";
-export { resolvingAttestationCaption } from "./universal/caption/resolving";
+export {
+	resolvingAttestationCaption,
+	resolvingUnitTitle,
+} from "./universal/caption/resolving";
+export {
+	unitTitleParts,
+	unitTitleText,
+} from "./universal/caption/unit-title";
 export {
 	type Caption,
 	type CaptionToken,

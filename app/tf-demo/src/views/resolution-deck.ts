@@ -136,10 +136,18 @@ function completedCards(
 			),
 			...(attestationDealt
 				? [
-						canonicalCard(requestId, "Attestation", {
-							kind: "Attestation",
-							attestationId: completion.attestationId,
-						}),
+						canonicalCard(
+							requestId,
+							"Attestation",
+							{
+								kind: "Attestation",
+								attestationId: completion.attestationId,
+							},
+							{
+								clickedSegmentIndex:
+									note.route.clickedSegmentIndex,
+							},
+						),
 					]
 				: []),
 		];
@@ -153,6 +161,7 @@ function completedCards(
 				attestation: canonical.steps.attestation || attestationDealt,
 			},
 		},
+		note.route.clickedSegmentIndex,
 		{ resolutionRequestId: requestId },
 	);
 }
@@ -166,6 +175,8 @@ function completedCards(
 function canonicalResolutionDeckCards(
 	requestId: string,
 	canonical: CanonicalResolution,
+	/** The Segment the click landed on, which the Attestation's title emphasises. */
+	clickedSegmentIndex: number,
 	/** Set when the deck converges from a live Resolution, so the stored Reading Note can load behind the resolving one. */
 	readingContext?: ReadingNotePresentationContext,
 ): readonly WorkspaceCardTarget[] {
@@ -193,10 +204,12 @@ function canonicalResolutionDeckCards(
 		},
 		{ activeAnalysisKey: canonical.surfaceId },
 	);
-	const attestation = canonicalCard(requestId, "Attestation", {
-		kind: "Attestation",
-		attestationId: canonical.attestationId,
-	});
+	const attestation = canonicalCard(
+		requestId,
+		"Attestation",
+		{ kind: "Attestation", attestationId: canonical.attestationId },
+		{ clickedSegmentIndex },
+	);
 	return [
 		reading,
 		...(steps.lemma ? [lemma] : []),
@@ -213,9 +226,14 @@ function canonicalResolutionDeckCards(
 export function segmentSelectionDeckCards(
 	requestId: string,
 	result: SegmentSelectionResult,
+	clickedSegmentIndex: number,
 ): readonly WorkspaceCardTarget[] {
 	if (result.kind === "Available")
-		return canonicalResolutionDeckCards(requestId, result.canonical);
+		return canonicalResolutionDeckCards(
+			requestId,
+			result.canonical,
+			clickedSegmentIndex,
+		);
 	const unitRoute =
 		result.unitRoute === "Unresolved" ? undefined : result.unitRoute;
 	return stepCards(

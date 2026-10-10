@@ -41,6 +41,12 @@ A Variant spelling is a fact about the Surface, not about a member, so the
 Surface Card names it (`daß · older spelling of dass`). A Variant alone does
 not deal the Attestation; if it did, two Cards would say the same thing.
 
+**The Attestation's title.** An Attestation is titled with its whole unit
+as written. A fused word is spelled whole (`zum Bahnhof`, not `m Bahnhof`),
+and words of other units between the members show as `…` (`fängt … an`).
+The click's Deck gives the stored Attestation Card the clicked Segment as
+presentation context, and the title emphasises that piece.
+
 **Captions.** A Heading's caption follows its title: `<title> · <relation> <next title>`.
 The next title is the title of the next Card dealt in front of it, so a
 skipped Card leaves no gap in the story.

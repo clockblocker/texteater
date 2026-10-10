@@ -20,10 +20,13 @@ export function RouteNoteView({
 	target,
 	presentation = "Sheet",
 	activeAnalysisKey,
+	clickedSegmentIndex,
 }: {
 	target: RouteNoteTarget;
 	presentation?: "Card" | "Sheet";
 	activeAnalysisKey?: Id<"surfaces">;
+	/** The Segment the click that dealt an Attestation landed on. */
+	clickedSegmentIndex?: number;
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const visitorId = useAnonymousVisitorId();
@@ -61,7 +64,12 @@ export function RouteNoteView({
 		<PlacedNote
 			input={{
 				noteData: noteQuery.data,
-				capabilities: routeNoteCapabilities(follow, presentation),
+				capabilities: {
+					...routeNoteCapabilities(follow, presentation),
+					...(clickedSegmentIndex === undefined
+						? {}
+						: { clickedSegmentIndex }),
+				},
 			}}
 		/>
 	) : (

@@ -44,6 +44,14 @@ type SurfaceNotePresentationContext = {
 	readonly activeAnalysisKey: Id<"surfaces">;
 };
 
+export type AttestationNotePresentationContext = {
+	/**
+	 * The Segment the click that dealt this Attestation landed on, so its
+	 * title emphasises that piece of the unit.
+	 */
+	readonly clickedSegmentIndex: number;
+};
+
 export type ReadingNotePresentationContext = {
 	/**
 	 * The Resolution this Reading was just committed from. While the stored
@@ -75,6 +83,7 @@ export type ResolutionStepPresentationContext = {
 
 export type NotePresentationContext =
 	| SurfaceNotePresentationContext
+	| AttestationNotePresentationContext
 	| ReadingNotePresentationContext
 	| ResolutionStepPresentationContext;
 
@@ -82,6 +91,12 @@ type ContextualSurfaceNoteSubject = {
 	readonly kind: "Note";
 	readonly target: SurfaceNoteTarget;
 	readonly presentationContext?: SurfaceNotePresentationContext;
+};
+
+type ContextualAttestationNoteSubject = {
+	readonly kind: "Note";
+	readonly target: AttestationNoteTarget;
+	readonly presentationContext?: AttestationNotePresentationContext;
 };
 
 type ContextualReadingNoteSubject = {
@@ -100,7 +115,10 @@ type ContextFreeNoteSubject = {
 	readonly kind: "Note";
 	readonly target: Exclude<
 		WorkspaceNoteTarget,
-		SurfaceNoteTarget | ReadingNoteTarget | ResolutionStepTarget
+		| SurfaceNoteTarget
+		| AttestationNoteTarget
+		| ReadingNoteTarget
+		| ResolutionStepTarget
 	>;
 	readonly presentationContext?: never;
 };
@@ -114,6 +132,7 @@ export type TextSubjectTarget = TextTarget;
 export type WorkspaceSubject =
 	| { readonly kind: "Text"; readonly target: TextSubjectTarget }
 	| ContextualSurfaceNoteSubject
+	| ContextualAttestationNoteSubject
 	| ContextualReadingNoteSubject
 	| ContextualResolutionStepSubject
 	| ContextFreeNoteSubject;
@@ -122,6 +141,10 @@ export function workspaceSubjectFor(
 	target: SurfaceNoteTarget,
 	presentationContext?: SurfaceNotePresentationContext,
 ): ContextualSurfaceNoteSubject;
+export function workspaceSubjectFor(
+	target: AttestationNoteTarget,
+	presentationContext?: AttestationNotePresentationContext,
+): ContextualAttestationNoteSubject;
 export function workspaceSubjectFor(
 	target: ReadingNoteTarget,
 	presentationContext?: ReadingNotePresentationContext,
@@ -133,11 +156,15 @@ export function workspaceSubjectFor(
 export function workspaceSubjectFor(
 	target: Exclude<
 		WorkspaceTarget,
-		SurfaceNoteTarget | ReadingNoteTarget | ResolutionStepTarget
+		| SurfaceNoteTarget
+		| AttestationNoteTarget
+		| ReadingNoteTarget
+		| ResolutionStepTarget
 	>,
 ): Exclude<
 	WorkspaceSubject,
 	| ContextualSurfaceNoteSubject
+	| ContextualAttestationNoteSubject
 	| ContextualReadingNoteSubject
 	| ContextualResolutionStepSubject
 >;
@@ -154,6 +181,12 @@ export function workspaceSubjectFor(
 		target.kind === "Surface" &&
 		presentationContext &&
 		"activeAnalysisKey" in presentationContext
+	)
+		return { kind: "Note", target, presentationContext };
+	if (
+		target.kind === "Attestation" &&
+		presentationContext &&
+		"clickedSegmentIndex" in presentationContext
 	)
 		return { kind: "Note", target, presentationContext };
 	if (
@@ -223,7 +256,7 @@ export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 		case "Attestation":
 			return (
 				typeof target.attestationId === "string" &&
-				value.presentationContext === undefined
+				isAttestationNotePresentationContext(value.presentationContext)
 			);
 		case "Shadow":
 			return (
@@ -247,6 +280,17 @@ function isReadingNotePresentationContext(
 	return (
 		value === undefined ||
 		(isRecord(value) && typeof value.resolutionRequestId === "string")
+	);
+}
+
+function isAttestationNotePresentationContext(
+	value: unknown,
+): value is AttestationNotePresentationContext | undefined {
+	return (
+		value === undefined ||
+		(isRecord(value) &&
+			typeof value.clickedSegmentIndex === "number" &&
+			Number.isSafeInteger(value.clickedSegmentIndex))
 	);
 }
 
@@ -280,6 +324,14 @@ export function unitRouteOf(
 	context: NotePresentationContext | undefined,
 ): UnitRoute | undefined {
 	return context && "unitRoute" in context ? context.unitRoute : undefined;
+}
+
+export function clickedSegmentIndexOf(
+	context: NotePresentationContext | undefined,
+): number | undefined {
+	return context && "clickedSegmentIndex" in context
+		? context.clickedSegmentIndex
+		: undefined;
 }
 
 export function activeAnalysisKeyOf(
