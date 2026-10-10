@@ -106,7 +106,6 @@ test("committed Attestation membership heals every stale terminal write", async 
 	expect(
 		await t.mutation(api.resolutionSessions.selectSegment, {
 			...select("request-3", "visitor-3"),
-			routeNoteRequested: false,
 		}),
 	).toMatchObject({ kind: "Available" });
 	expect(await segmentState(t, segmentId)).toBeNull();

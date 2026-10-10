@@ -67,14 +67,12 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 	async function handleSegmentSelection(
 		sentence: SentenceView,
 		clickedSegmentIndex: number,
-		altKey: boolean,
 		anchorElement: HTMLElement,
 	) {
 		setNotice(null);
 		await selection.select(
 			sentence.sentenceId,
 			clickedSegmentIndex,
-			altKey,
 			anchorElement,
 		);
 	}
@@ -189,7 +187,6 @@ export function TextPresentation({
 	readonly onSegmentClick: (
 		sentence: SentenceView,
 		clickedSegmentIndex: number,
-		altKey: boolean,
 		anchorElement: HTMLElement,
 	) => Promise<void>;
 	readonly focus?: OccurrenceFocus | null;
@@ -259,7 +256,6 @@ export function SentenceList({
 	onSegmentClick: (
 		sentence: SentenceView,
 		clickedSegmentIndex: number,
-		altKey: boolean,
 		anchorElement: HTMLElement,
 	) => Promise<void>;
 	/** The occurrence Go to source lands on: its Sentence is scrolled to once, its members lit. */

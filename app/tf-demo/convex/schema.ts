@@ -482,7 +482,6 @@ export default defineSchema({
 		sentenceId: v.id("sentences"),
 		segmentId: v.id("segments"),
 		clickedSegmentIndex: v.number(),
-		routeNoteRequested: v.optional(v.boolean()),
 		runToken: v.string(),
 		lifecycle: resolutionLifecycleValidator,
 		runNumber: v.optional(v.number()),

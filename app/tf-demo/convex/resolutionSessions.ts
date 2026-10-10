@@ -43,7 +43,6 @@ import { ensureVisitorEncounter } from "./model/visitorEncounters";
 import {
 	loadCanonicalOccurrence,
 	loadResolutionNote,
-	occurrenceNoteTarget,
 	resolutionNoteValidator,
 } from "./modules/notes/resolutionNote";
 import { consumeRateLimit } from "./rateLimits";
@@ -68,7 +67,6 @@ export const selectSegment = mutation({
 		visitorId: v.string(),
 		sentenceId: v.id("sentences"),
 		clickedSegmentIndex: v.number(),
-		routeNoteRequested: v.boolean(),
 		inspect: v.optional(v.boolean()),
 	},
 	returns: v.union(
@@ -82,16 +80,6 @@ export const selectSegment = mutation({
 				normalizedSurface: v.string(),
 				attestationId: v.id("attestations"),
 			}),
-			target: v.union(
-				v.object({
-					kind: v.literal("Reading"),
-					readingId: v.id("readings"),
-				}),
-				v.object({
-					kind: v.literal("Attestation"),
-					attestationId: v.id("attestations"),
-				}),
-			),
 		}),
 		v.object({
 			kind: v.literal("Resolving"),
@@ -133,9 +121,7 @@ export const selectSegment = mutation({
 					existing.visitorId !== args.visitorId ||
 					existing.sentenceId !== args.sentenceId ||
 					existing.clickedSegmentIndex !== args.clickedSegmentIndex ||
-					existing.segmentId !== segment._id ||
-					Boolean(existing.routeNoteRequested) !==
-						args.routeNoteRequested
+					existing.segmentId !== segment._id
 				) {
 					throw visitorError(
 						"InvalidInput",
@@ -193,15 +179,7 @@ export const selectSegment = mutation({
 					readingId: canonical.readingId,
 					attestationId,
 				});
-				return {
-					kind: "Available" as const,
-					canonical,
-					target: occurrenceNoteTarget(
-						args.routeNoteRequested,
-						canonical.readingId,
-						attestationId,
-					),
-				};
+				return { kind: "Available" as const, canonical };
 			}
 
 			await ensureVisitorEncounter(ctx, {
@@ -238,7 +216,6 @@ export const selectSegment = mutation({
 				visitorId: args.visitorId,
 				sentence,
 				segment,
-				routeNoteRequested: args.routeNoteRequested,
 				inspect,
 			});
 			return {

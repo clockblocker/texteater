@@ -208,10 +208,7 @@ test("a completed Resolution converges the deck to canonical Notes", () => {
 			progress: "Committing",
 			outcome: "Complete",
 			attestationId: "attestation-1" as Id<"attestations">,
-			target: {
-				kind: "Reading",
-				readingId: "reading-1" as Id<"readings">,
-			},
+			readingId: "reading-1" as Id<"readings">,
 			canonical: {
 				readingId: "reading-1" as Id<"readings">,
 				lemmaId: "lemma-1" as Id<"lemmas">,
@@ -262,10 +259,7 @@ test("a converged deck hands the Resolution to the stored Reading Card", () => {
 			progress: "Committing",
 			outcome: "Complete",
 			attestationId: "attestation-1" as Id<"attestations">,
-			target: {
-				kind: "Reading",
-				readingId: "reading-1" as Id<"readings">,
-			},
+			readingId: "reading-1" as Id<"readings">,
 			canonical: {
 				readingId: "reading-1" as Id<"readings">,
 				lemmaId: "lemma-1" as Id<"lemmas">,
@@ -304,7 +298,6 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 	};
 	const cards = segmentSelectionDeckCards("request-available", {
 		kind: "Available",
-		target: { kind: "Reading", readingId },
 		canonical,
 	});
 
@@ -316,25 +309,6 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 	]);
 	expect(cards[2]?.presentationContext).toEqual({
 		activeAnalysisKey: surfaceId,
-	});
-
-	const routeCards = segmentSelectionDeckCards("request-route", {
-		kind: "Available",
-		target: {
-			kind: "Attestation",
-			attestationId,
-		},
-		canonical,
-	});
-	expect(routeCards.map(({ target }) => target.kind)).toEqual([
-		"Attestation",
-		"Reading",
-		"Lemma",
-		"Surface",
-	]);
-	expect(routeCards[0]?.target).toEqual({
-		kind: "Attestation",
-		attestationId,
 	});
 
 	// A repeat click joins the running session, whose requestId differs.
@@ -366,31 +340,26 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 			},
 		},
 	]);
-	// A Route Note puts the Attestation in front, and an Unresolved unit
-	// lays the Reading out by no route.
+	// An Unresolved unit lays the Reading out by no route.
 	expect(
-		segmentSelectionDeckCards(
-			"request-route-note",
-			{
-				kind: "Resolving",
-				requestId: "request-route-note",
-				progress: "Starting",
-				activity: "Scheduled",
-				deduplicated: false,
-				unitRoute: "Unresolved",
-			},
-			"Attestation",
-		),
+		segmentSelectionDeckCards("request-unresolved", {
+			kind: "Resolving",
+			requestId: "request-unresolved",
+			progress: "Starting",
+			activity: "Scheduled",
+			deduplicated: false,
+			unitRoute: "Unresolved",
+		}),
 	).toEqual([
-		expect.objectContaining({ key: "request-route-note:Attestation" }),
 		{
-			key: "request-route-note:Reading",
+			key: "request-unresolved:Reading",
 			target: {
 				kind: "ResolutionStep",
-				requestId: "request-route-note",
+				requestId: "request-unresolved",
 				stepKind: "Reading",
 			},
 		},
+		expect.objectContaining({ key: "request-unresolved:Attestation" }),
 	]);
 });
 

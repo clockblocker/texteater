@@ -53,16 +53,7 @@ const resolutionNoteLifecycleValidator = v.union(
 		progress: v.literal("Committing"),
 		outcome: v.literal("Complete"),
 		attestationId: v.id("attestations"),
-		target: v.union(
-			v.object({
-				kind: v.literal("Reading"),
-				readingId: v.id("readings"),
-			}),
-			v.object({
-				kind: v.literal("Attestation"),
-				attestationId: v.id("attestations"),
-			}),
-		),
+		readingId: v.id("readings"),
 		canonical: v.optional(canonicalOccurrenceValidator),
 	}),
 	v.object({
@@ -227,11 +218,7 @@ async function resolutionNoteLifecycle(
 				progress: "Committing",
 				outcome: "Complete",
 				attestationId,
-				target: occurrenceNoteTarget(
-					Boolean(session.routeNoteRequested),
-					readingId,
-					attestationId,
-				),
+				readingId,
 				...(canonical ? { canonical } : {}),
 			};
 		}
@@ -285,15 +272,4 @@ export async function loadCanonicalOccurrence(
 		normalizedSurface: surface.normalizedSurface,
 		attestationId,
 	};
-}
-
-/** The Note a committed occurrence opens: its Attestation when a route Note was requested. */
-export function occurrenceNoteTarget(
-	routeNoteRequested: boolean,
-	readingId: Id<"readings">,
-	attestationId: Id<"attestations">,
-) {
-	return routeNoteRequested
-		? { kind: "Attestation" as const, attestationId }
-		: { kind: "Reading" as const, readingId };
 }

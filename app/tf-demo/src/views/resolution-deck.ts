@@ -27,10 +27,11 @@ type CanonicalResolution = {
 	readonly attestationId: Id<"attestations">;
 };
 
-/** Which Card a Deck puts in front: the Reading, or its Attestation for a Route Note. */
-type Foreground = "Reading" | "Attestation";
-
 /**
+ * A click's Deck, front first: the Reading in front, then its Lemma and
+ * Surface, and the Attestation at the back. Every path that builds the Deck
+ * keeps this one order.
+ *
  * The Deck a running Resolution keeps up to date. Its Cards are only ever
  * added, each under the key it keeps: the Reading and Attestation steps from
  * the click until commit, then the stored Notes under the same keys, with
@@ -44,7 +45,7 @@ export function resolutionDeckCards(
 	if (lifecycle.state === "Terminal" && lifecycle.outcome === "Complete") {
 		return completedCards(note, lifecycle);
 	}
-	return stepCards(note.target.requestId, "Reading", knownUnitRoute(note));
+	return stepCards(note.target.requestId, knownUnitRoute(note));
 }
 
 /** The unit's stored route, when intake gave it one. */
@@ -67,17 +68,19 @@ function resolutionDeckCardKey(
  */
 function stepCards(
 	requestId: string,
-	foreground: Foreground,
 	unitRoute: UnitRoute | undefined,
 ): readonly WorkspaceCardTarget[] {
-	const reading = readingStep(requestId, unitRoute);
-	const attestation: WorkspaceCardTarget = {
-		key: resolutionDeckCardKey(requestId, "Attestation"),
-		target: { kind: "ResolutionStep", requestId, stepKind: "Attestation" },
-	};
-	return foreground === "Reading"
-		? [reading, attestation]
-		: [attestation, reading];
+	return [
+		readingStep(requestId, unitRoute),
+		{
+			key: resolutionDeckCardKey(requestId, "Attestation"),
+			target: {
+				kind: "ResolutionStep",
+				requestId,
+				stepKind: "Attestation",
+			},
+		},
+	];
 }
 
 function readingStep(
@@ -98,39 +101,33 @@ function completedCards(
 	const requestId = note.target.requestId;
 	const { canonical } = completion;
 	if (!canonical) {
-		// Without the whole occurrence, only the Attestation and a Reading
-		// target are known; a Reading that was not the target keeps its step.
-		const attestation = canonicalCard(requestId, "Attestation", {
-			kind: "Attestation",
-			attestationId: completion.attestationId,
-		});
-		return completion.target.kind === "Reading"
-			? [
-					canonicalCard(requestId, "Reading", completion.target, {
-						resolutionRequestId: requestId,
-					}),
-					attestation,
-				]
-			: [attestation, readingStep(requestId, knownUnitRoute(note))];
+		// Without the whole occurrence, only its Reading and Attestation are
+		// known.
+		return [
+			canonicalCard(
+				requestId,
+				"Reading",
+				{ kind: "Reading", readingId: completion.readingId },
+				{ resolutionRequestId: requestId },
+			),
+			canonicalCard(requestId, "Attestation", {
+				kind: "Attestation",
+				attestationId: completion.attestationId,
+			}),
+		];
 	}
-	return canonicalResolutionDeckCards(
-		requestId,
-		completion.target,
-		canonical,
-		{ resolutionRequestId: requestId },
-	);
+	return canonicalResolutionDeckCards(requestId, canonical, {
+		resolutionRequestId: requestId,
+	});
 }
 
 /**
- * The four stored Notes of one occurrence, front first: the Reading, then
- * its Lemma and Surface, and the Attestation at the back; a Route Note's
- * Attestation comes to the front instead. A running Resolution deals the
- * Reading and Attestation at the click, and the Deck slots the Lemma and
- * Surface between them at commit.
+ * The four stored Notes of one occurrence, in the Deck's order. A running
+ * Resolution deals the Reading and Attestation at the click, and the Deck
+ * slots the Lemma and Surface between them at commit.
  */
 function canonicalResolutionDeckCards(
 	requestId: string,
-	foregroundTarget: WorkspaceTarget,
 	canonical: CanonicalResolution,
 	/** Set when the deck converges from a live Resolution, so the stored Reading Note can load behind the resolving one. */
 	readingContext?: ReadingNotePresentationContext,
@@ -162,9 +159,7 @@ function canonicalResolutionDeckCards(
 		kind: "Attestation",
 		attestationId: canonical.attestationId,
 	});
-	return foregroundTarget.kind === "Reading"
-		? [reading, lemma, surface, attestation]
-		: [attestation, reading, lemma, surface];
+	return [reading, lemma, surface, attestation];
 }
 
 /**
@@ -174,17 +169,12 @@ function canonicalResolutionDeckCards(
 export function segmentSelectionDeckCards(
 	requestId: string,
 	result: SegmentSelectionResult,
-	foreground: Foreground = "Reading",
 ): readonly WorkspaceCardTarget[] {
 	if (result.kind === "Available")
-		return canonicalResolutionDeckCards(
-			requestId,
-			result.target,
-			result.canonical,
-		);
+		return canonicalResolutionDeckCards(requestId, result.canonical);
 	const unitRoute =
 		result.unitRoute === "Unresolved" ? undefined : result.unitRoute;
-	return stepCards(result.requestId, foreground, unitRoute);
+	return stepCards(result.requestId, unitRoute);
 }
 
 function canonicalCard(

@@ -410,7 +410,6 @@ const visitorOwnedRows: Record<
 			visitorId,
 			sentenceId,
 			clickedSegmentIndex: 0,
-			routeNoteRequested: false,
 		});
 		return (await tableRows(t, "resolutionSessions"))
 			.filter((row) => row.visitorId === visitorId)
@@ -676,7 +675,6 @@ describe("tf-demo post-reset contract", () => {
 			visitorId: "visitor-1",
 			sentenceId,
 			clickedSegmentIndex: 0,
-			routeNoteRequested: false,
 		});
 		await insertReading(t, "reading-key-1");
 

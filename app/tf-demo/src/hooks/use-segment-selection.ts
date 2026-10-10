@@ -1,7 +1,6 @@
 import { useMutation } from "convex/react";
 import { useState } from "react";
 
-import { useRouteNotePreference } from "@/lib/route-note-preference";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { segmentSelectionDeckCards } from "@/views/resolution-deck";
 import {
@@ -27,7 +26,6 @@ export function useSegmentSelection(visitorId: string) {
 	);
 	const { presentCards } = useWorkspaceInteraction();
 	const dealtSelection = useDealtSelection();
-	const [routeNotesEnabled] = useRouteNotePreference();
 	const selectSegment = useMutation(api.resolutionSessions.selectSegment);
 	const [pendingSegmentKey, setPendingSegmentKey] = useState<string | null>(
 		null,
@@ -37,7 +35,6 @@ export function useSegmentSelection(visitorId: string) {
 	async function select(
 		sentenceId: Id<"sentences">,
 		clickedSegmentIndex: number,
-		altKey: boolean,
 		anchorElement: HTMLElement,
 	): Promise<void> {
 		setError(null);
@@ -47,14 +44,12 @@ export function useSegmentSelection(visitorId: string) {
 			const requestId = crypto.randomUUID();
 			const startedAt = Date.now();
 			const clock = performance.now();
-			const routeNoteRequested = routeNotesEnabled || altKey;
 			const result = await selectSegment({
 				requestId,
 				visitorId,
 				sentenceId,
 				clickedSegmentIndex,
 				inspect: import.meta.env.DEV,
-				routeNoteRequested,
 			});
 			if (import.meta.env.DEV) {
 				void recordSelectionTiming({
@@ -68,14 +63,10 @@ export function useSegmentSelection(visitorId: string) {
 			}
 			// A repeat click joins the Visitor's running session, so a
 			// Resolving deck follows the returned requestId, not this one.
-			presentCards(
-				segmentSelectionDeckCards(
-					requestId,
-					result,
-					routeNoteRequested ? "Attestation" : "Reading",
-				),
-				{ anchor: anchorElement, selection },
-			);
+			presentCards(segmentSelectionDeckCards(requestId, result), {
+				anchor: anchorElement,
+				selection,
+			});
 		} catch (cause) {
 			setError(visitorErrorMessage(cause));
 		} finally {

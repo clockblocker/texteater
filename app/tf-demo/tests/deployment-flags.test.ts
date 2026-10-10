@@ -69,7 +69,6 @@ test("without TF_INSPECTION a selection or submission asking for inspection capt
 			visitorId: "visitor-1",
 			sentenceId,
 			clickedSegmentIndex: 2,
-			routeNoteRequested: false,
 			inspect: true,
 		}),
 	).toMatchObject({ kind: "Resolving" });

@@ -281,7 +281,6 @@ export async function startResolutionSession(
 		readonly visitorId: string;
 		readonly sentence: Doc<"sentences">;
 		readonly segment: Doc<"segments">;
-		readonly routeNoteRequested: boolean;
 		readonly inspect: boolean;
 	},
 ): Promise<void> {
@@ -294,7 +293,6 @@ export async function startResolutionSession(
 		sentenceId: input.sentence._id,
 		segmentId: input.segment._id,
 		clickedSegmentIndex: input.segment.index,
-		routeNoteRequested: input.routeNoteRequested,
 		runToken,
 		lifecycle: {
 			state: "Active",

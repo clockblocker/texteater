@@ -7,11 +7,6 @@ import {
 	CardDescription,
 	CardHeader,
 	CardTitle,
-	Checkbox,
-	Field,
-	FieldContent,
-	FieldDescription,
-	FieldLabel,
 } from "lego";
 import {
 	DatabaseZapIcon,
@@ -23,22 +18,16 @@ import { useState } from "react";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { usePendingAction } from "@/hooks/use-pending-action";
-import { useRouteNotePreference } from "@/lib/route-note-preference";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { useWorkspaceController } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
 export function DataControls() {
-	const [routeNotesEnabled, setRouteNotesEnabled] = useRouteNotePreference();
 	const { canCloseAllSheets, closeAllSheets } = useWorkspaceController();
 	const demoData = useDemoDataControls();
 	const flags = useQuery(convexQuery(api.deploymentFlags.get, {}));
 	return (
 		<div className="flex flex-col gap-6">
-			<ReadingBehaviorCard
-				enabled={routeNotesEnabled}
-				onEnabledChange={setRouteNotesEnabled}
-			/>
 			<WorkspaceCard
 				canCloseAllSheets={canCloseAllSheets}
 				onCloseAllSheets={closeAllSheets}
@@ -141,41 +130,6 @@ function useDemoDataControls() {
 		handleStripTextAnalysis,
 		handleClearSharedData,
 	};
-}
-
-function ReadingBehaviorCard({
-	enabled,
-	onEnabledChange,
-}: {
-	enabled: boolean;
-	onEnabledChange(enabled: boolean): void;
-}) {
-	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Reading behavior</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<Field orientation="horizontal">
-					<Checkbox
-						id="open-route-notes"
-						checked={enabled}
-						onCheckedChange={onEnabledChange}
-					/>
-					<FieldContent>
-						<FieldLabel htmlFor="open-route-notes">
-							Open resolution Notes
-						</FieldLabel>
-						<FieldDescription>
-							Start Segment selections at the Attestation Note.
-							Hold Alt/Option for one selection without changing
-							this setting.
-						</FieldDescription>
-					</FieldContent>
-				</Field>
-			</CardContent>
-		</Card>
-	);
 }
 
 function DemoDataCard({

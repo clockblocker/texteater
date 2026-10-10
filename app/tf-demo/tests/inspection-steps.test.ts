@@ -97,7 +97,6 @@ async function bankenSource(t: TestConvexDb) {
 async function select(t: TestConvexDb, selection: Selection, inspect: boolean) {
 	await t.mutation(api.resolutionSessions.selectSegment, {
 		...selection,
-		routeNoteRequested: false,
 		inspect,
 	});
 	return sessionGuard(t, selection.requestId);

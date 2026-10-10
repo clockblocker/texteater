@@ -176,29 +176,13 @@ describe("Resolution Session", () => {
 			attestationId: committed.attestationId,
 		};
 
-		expect(
-			await t.mutation(api.resolutionSessions.selectSegment, {
-				...select("request-1"),
-				routeNoteRequested: false,
-			}),
-		).toEqual({
-			kind: "Available",
-			canonical,
-			target: { kind: "Reading", readingId: committed.readingId },
-		});
-		expect(
-			await t.mutation(api.resolutionSessions.selectSegment, {
-				...select("request-2"),
-				routeNoteRequested: true,
-			}),
-		).toEqual({
-			kind: "Available",
-			canonical,
-			target: {
-				kind: "Attestation",
-				attestationId: committed.attestationId,
-			},
-		});
+		for (const requestId of ["request-1", "request-2"])
+			expect(
+				await t.mutation(
+					api.resolutionSessions.selectSegment,
+					select(requestId),
+				),
+			).toEqual({ kind: "Available", canonical });
 
 		const encounters = (await rows(t, "visitorEncounters")).filter(
 			({ visitorId }) => visitorId === "visitor-1",
@@ -244,7 +228,6 @@ describe("Resolution Session", () => {
 		await commitBankOccurrence(t, select("request-0", "visitor-0"));
 		const args = {
 			...select("request-1"),
-			routeNoteRequested: false,
 			inspect: true,
 		};
 
@@ -377,7 +360,7 @@ describe("Resolution Session", () => {
 	test("selection starts one session on the exact Segment and schedules its run once", async () => {
 		const t = createTestConvex();
 		const { select, segmentId, textId } = await bankenSource(t);
-		const args = { ...select("request-1"), routeNoteRequested: false };
+		const args = select("request-1");
 
 		expect(
 			await t.mutation(api.resolutionSessions.selectSegment, args),
@@ -447,7 +430,6 @@ describe("Resolution Session", () => {
 				visitorId: "visitor-1",
 				sentenceId,
 				clickedSegmentIndex,
-				routeNoteRequested: false,
 			});
 
 		expect(await select("request-1", 2)).toMatchObject({
@@ -473,7 +455,6 @@ describe("Resolution Session", () => {
 		expect(
 			await t.mutation(api.resolutionSessions.selectSegment, {
 				...select("request-2"),
-				routeNoteRequested: false,
 			}),
 		).toMatchObject({
 			kind: "Resolving",
@@ -499,7 +480,6 @@ describe("Resolution Session", () => {
 		const { select } = await bankenSource(t);
 		const inspected = (requestId: string) => ({
 			...select(requestId),
-			routeNoteRequested: false,
 			inspect: true,
 		});
 		await t.mutation(
@@ -534,7 +514,6 @@ describe("Resolution Session", () => {
 		expect(
 			await t.mutation(api.resolutionSessions.selectSegment, {
 				...select("request-2", "visitor-2"),
-				routeNoteRequested: false,
 			}),
 		).toMatchObject({ kind: "Resolving", requestId: "request-2" });
 
@@ -578,7 +557,7 @@ describe("Resolution Session", () => {
 	test("same request with a different click is rejected", async () => {
 		const t = createTestConvex();
 		const { select } = await bankenSource(t);
-		const args = { ...select("request-1"), routeNoteRequested: false };
+		const args = select("request-1");
 		await t.mutation(api.resolutionSessions.selectSegment, args);
 
 		await expect(
@@ -592,15 +571,9 @@ describe("Resolution Session", () => {
 				message: expect.stringContaining("different click"),
 			},
 		});
-		await expect(
-			t.mutation(api.resolutionSessions.selectSegment, {
-				...args,
-				routeNoteRequested: true,
-			}),
-		).rejects.toThrow("different click");
 	});
 
-	test("terminal navigation preserves ordinary and one-shot Route Note intent", async () => {
+	test("a complete Session names its Reading and canonical occurrence", async () => {
 		const t = createTestConvex();
 		const { select } = await bankenSource(t);
 		const ordinary = select("request-1");
@@ -614,22 +587,6 @@ describe("Resolution Session", () => {
 		const surfaceId = (
 			await t.run((ctx) => ctx.db.get(committed.attestationId))
 		)?.surfaceId;
-		await t.run(async (ctx) => {
-			const row = await ctx.db
-				.query("resolutionSessions")
-				.withIndex("by_request_id", (q) =>
-					q.eq("requestId", "request-1"),
-				)
-				.unique();
-			if (!row) throw new Error("Expected a session.");
-			const { _id, _creationTime, ...copy } = row;
-			await ctx.db.insert("resolutionSessions", {
-				...copy,
-				requestId: "request-route",
-				routeNoteRequested: true,
-			});
-		});
-
 		expect(
 			(
 				await t.query(api.resolutionSessions.getResolutionNote, {
@@ -638,25 +595,12 @@ describe("Resolution Session", () => {
 			)?.lifecycle,
 		).toMatchObject({
 			outcome: "Complete",
-			target: { kind: "Reading", readingId: committed.readingId },
+			readingId: committed.readingId,
 			canonical: {
 				readingId: committed.readingId,
 				surfaceLanguage: "de",
 				normalizedSurface: "Banken",
 				surfaceId,
-				attestationId: committed.attestationId,
-			},
-		});
-		expect(
-			(
-				await t.query(api.resolutionSessions.getResolutionNote, {
-					requestId: "request-route",
-				})
-			)?.lifecycle,
-		).toMatchObject({
-			outcome: "Complete",
-			target: {
-				kind: "Attestation",
 				attestationId: committed.attestationId,
 			},
 		});
@@ -1020,7 +964,6 @@ describe("Resolution Session", () => {
 		const { select, segmentId, sentenceId } = await bankenSource(t);
 		await t.mutation(api.resolutionSessions.selectSegment, {
 			...select("request-1"),
-			routeNoteRequested: false,
 			inspect: true,
 		});
 		const guard = await startSessionGuard(t, "request-1");

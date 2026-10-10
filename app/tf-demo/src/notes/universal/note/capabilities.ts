@@ -46,7 +46,6 @@ export type DefinitionCapabilities = {
 	readonly selectSegment: (
 		sentenceId: Id<"sentences">,
 		clickedSegmentIndex: number,
-		altKey: boolean,
 		anchorElement: HTMLElement,
 	) => Promise<void>;
 };

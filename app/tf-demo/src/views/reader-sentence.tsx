@@ -61,7 +61,6 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 	readonly onSegmentClick: (
 		sentence: S,
 		clickedSegmentIndex: number,
-		altKey: boolean,
 		anchorElement: HTMLElement,
 	) => Promise<void> | void;
 	readonly onSentenceElement?: (element: HTMLParagraphElement | null) => void;
@@ -165,7 +164,6 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 					void onSegmentClick(
 						sentence,
 						segment.index,
-						event.altKey,
 						event.currentTarget,
 					);
 				}}

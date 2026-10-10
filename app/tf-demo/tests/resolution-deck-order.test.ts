@@ -28,7 +28,9 @@ import {
  * The order a click's Deck ends in, driven through the Compass as the
  * workspace drives it: the click's deal, the Resolution keeping its Deck up
  * to date, and a reload. Front first: the Reading in front, the Attestation
- * at the back, the Lemma and Surface between.
+ * at the back, the Lemma and Surface between. Nothing a click carries
+ * changes it; `segment-selection-deck.dom.test.tsx` clicks with Alt and
+ * with the retired Route Note setting stored.
  */
 const FRONT_FIRST = ["Reading", "Lemma", "Surface", "Attestation"];
 
@@ -212,7 +214,7 @@ test("a fresh click's Deck keeps its order while loading, at commit and after a 
 				progress: "Committing",
 				outcome: "Complete",
 				attestationId: canonical.attestationId,
-				target: { kind: "Reading", readingId: canonical.readingId },
+				readingId: canonical.readingId,
 				canonical,
 			}),
 		),
@@ -228,7 +230,6 @@ test("a click on a stored occurrence deals the same order, and keeps it after a 
 	const state = deal(
 		segmentSelectionDeckCards("request-2", {
 			kind: "Available",
-			target: { kind: "Reading", readingId: canonical.readingId },
 			canonical,
 		}),
 	);

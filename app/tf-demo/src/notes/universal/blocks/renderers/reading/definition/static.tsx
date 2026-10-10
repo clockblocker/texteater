@@ -103,11 +103,10 @@ function DefinitionSentence({
 				sentence={sentence}
 				className="text-reader__sentence"
 				selectedSegmentKey={capabilities.selectedSegmentKey}
-				onSegmentClick={(clicked, index, altKey, anchor) =>
+				onSegmentClick={(clicked, index, anchor) =>
 					capabilities.selectSegment(
 						clicked.sentenceId,
 						index,
-						altKey,
 						anchor,
 					)
 				}

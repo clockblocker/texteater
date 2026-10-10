@@ -30,7 +30,6 @@ async function startSession(t: TestConvexDb, requestId: string) {
 		visitorId: `visitor-${requestId}`,
 		sentenceId,
 		clickedSegmentIndex: 0,
-		routeNoteRequested: false,
 	});
 	const session = await t.run(async (ctx) => {
 		const row = await ctx.db

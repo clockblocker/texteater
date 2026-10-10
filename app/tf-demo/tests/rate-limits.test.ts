@@ -64,7 +64,6 @@ async function select(
 		requestId: crypto.randomUUID(),
 		visitorId,
 		...word,
-		routeNoteRequested: false,
 	});
 }
 

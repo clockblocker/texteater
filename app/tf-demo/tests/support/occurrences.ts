@@ -54,16 +54,12 @@ export type Selection = {
 export async function startSession(
 	t: TestConvexDb,
 	selection: Selection,
-	options: { readonly routeNoteRequested?: boolean } = {},
 ): Promise<SessionGuard> {
 	if (!jest.isFakeTimers())
 		throw new Error(
 			"startSession needs jest.useFakeTimers(), or its scheduled run outlives the test.",
 		);
-	await t.mutation(api.resolutionSessions.selectSegment, {
-		...selection,
-		routeNoteRequested: options.routeNoteRequested ?? false,
-	});
+	await t.mutation(api.resolutionSessions.selectSegment, selection);
 	return sessionGuard(t, selection.requestId);
 }
 
