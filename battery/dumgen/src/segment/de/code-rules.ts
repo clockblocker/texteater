@@ -73,6 +73,16 @@
  *   auf gives [Pass, auf, auf], and Er fängt an der Ecke wieder an gives
  *   [fängt, an] with the first an free. When the two particle answers
  *   don't name one verb at the satellite floor, the rule changes nothing.
+ * - `particle-verb` (de/verb-owns-its-scattered-members,
+ *   de/verb-core-features): a unit of one verb piece, that verb's
+ *   auxiliary, reflexive and expletive satellites, and exactly one
+ *   separable prefix written apart is a particle verb, so it routes Lexeme
+ *   VERB, though an expression link or the Locution Choice made it a
+ *   Locution: gab … bekannt, hat … bekannt gegeben, Es tut … leid. The
+ *   route Choice must hear the unit as a verb: Lexeme VERB's share tops
+ *   every other Lexeme Kind's. That keeps a Locution of another Kind with
+ *   one prefix word (ohne … zu, Auf Wiedersehen, vor allem) a Locution, and
+ *   asks nothing more, since routing reads the answers it already has.
  * - `saying-closed` (de/saying-needs-uptake,
  *   de/locutions-and-sayings-are-made-of-lexemes): a Saying is one unit
  *   over exactly its own words, so a link between a word inside a Saying
@@ -95,6 +105,7 @@ import {
 	isArticle,
 	nounLike,
 	reflexiveSubject,
+	type SlotKind,
 	splitAdverbForm,
 	splitTails,
 	wasFuerId,
@@ -102,7 +113,7 @@ import {
 } from "./candidates.js";
 import { type Nomination, slotId } from "./nomination.js";
 import { argmax, groupKey, partitionOf } from "./partition.js";
-import type { RouteKey } from "./routes.js";
+import type { FixedRoute } from "./routing.js";
 import type { Piece } from "./sentence.js";
 
 export const codeRules = [
@@ -119,6 +130,7 @@ export const codeRules = [
 	"answer-apart",
 	"saying-closed",
 	"bracket-particle",
+	"particle-verb",
 ] as const;
 
 export type CodeRule = (typeof codeRules)[number];
@@ -378,9 +390,7 @@ function quantifiers(nomination: Nomination): Decision {
  * PRON in every use (de/quantifier-by-use). Capitalized Bisschen may be the
  * noun 'small bite', so the judge keeps it.
  */
-export function quantifierRoutes(
-	nomination: Nomination,
-): (group: readonly number[]) => RouteKey | undefined {
+function quantifierRoutes(nomination: Nomination): FixedRoute {
 	const { pieces } = nomination.sentence;
 	const fixed = new Set([
 		...quantifierPairs(nomination).map((pair) => groupKey(pair)),
@@ -389,6 +399,102 @@ export function quantifierRoutes(
 			.map((piece) => groupKey([piece.id])),
 	]);
 	return (group) => (fixed.has(groupKey(group)) ? "Lexeme/PRON" : undefined);
+}
+
+/** The slots whose satellite belongs to a verb's own Lexeme. */
+const verbSatellites: ReadonlySet<SlotKind> = new Set([
+	"auxiliary",
+	"reflexive",
+	"expletive",
+]);
+
+/**
+ * Whether a group is one verb piece, its auxiliary, reflexive and expletive
+ * satellites (their slot answer names a host in the group), and exactly one
+ * separable prefix that is no part of a fused word: gab … bekannt, hat …
+ * bekannt gegeben, Es tut … leid. Which piece is the verb the route
+ * Choice decides (`heardAsVerb`).
+ */
+function particleVerbShape(
+	nomination: Nomination,
+	group: readonly number[],
+): boolean {
+	const { pieces } = nomination.sentence;
+	const satellites = nomination.slotAnswers.filter(
+		(link) =>
+			verbSatellites.has(link.kind) &&
+			group.includes(link.from) &&
+			group.includes(link.to),
+	);
+	const core = group.filter(
+		(id) => !satellites.some((link) => link.from === id),
+	);
+	const prefixes = core.filter((id) => {
+		const piece = pieces[id - 1];
+		return (
+			piece !== undefined &&
+			!piece.fusedWord &&
+			germanSeparablePrefixes.has(lower(piece))
+		);
+	});
+	const [prefix] = prefixes;
+	return (
+		core.length === 2 &&
+		prefixes.length === 1 &&
+		!satellites.some((link) => link.to === prefix)
+	);
+}
+
+/** Whether the route Choice hears a group as a verb: Lexeme VERB's share tops every other Lexeme Kind's. */
+function heardAsVerb(
+	shares: Readonly<Record<string, number>> | undefined,
+): boolean {
+	const verb = shares?.["Lexeme/VERB"] ?? 0;
+	return (
+		verb > 0 &&
+		Object.entries(shares ?? {}).every(
+			([key, share]) =>
+				key === "Lexeme/VERB" ||
+				!key.startsWith("Lexeme/") ||
+				share < verb,
+		)
+	);
+}
+
+/**
+ * The route of a unit the `particle-verb` rule reads as a particle verb:
+ * Lexeme VERB (de/verb-owns-its-scattered-members: zog … an gives [zog, an]
+ * VERB anziehen), and undefined for any other group.
+ */
+function particleVerbRoutes(nomination: Nomination): FixedRoute {
+	return (group, shares) =>
+		particleVerbShape(nomination, group) && heardAsVerb(shares)
+			? "Lexeme/VERB"
+			: undefined;
+}
+
+/**
+ * The routes the listed rules fix (`quantifier`, `particle-verb`), the
+ * first rule's that fixes one; undefined when no listed rule fixes routes.
+ */
+export function codeRoutes(
+	nomination: Nomination,
+	rules: readonly CodeRule[],
+): FixedRoute | undefined {
+	const routes = [
+		...(rules.includes("quantifier") ? [quantifierRoutes(nomination)] : []),
+		...(rules.includes("particle-verb")
+			? [particleVerbRoutes(nomination)]
+			: []),
+	];
+	if (routes.length === 0) return undefined;
+	return (group, shares) => {
+		for (const route of routes) {
+			const fixed = route(group, shares);
+			if (fixed) return fixed;
+		}
+		return undefined;
+	};
 }
 
 /**
@@ -683,6 +789,8 @@ function decisionsOf(
 		binomial: () => ({}),
 		// Read by routing, where interjections merge.
 		"answer-apart": () => ({}),
+		// Read by routing (`codeRoutes`).
+		"particle-verb": () => ({}),
 		"saying-closed": () => sayingsClosed(membership.edges),
 		"bracket-particle": () => bracketParticles(nomination),
 	};

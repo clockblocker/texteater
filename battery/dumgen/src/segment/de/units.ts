@@ -11,9 +11,9 @@
  * grouping measure and gained Sayings beyond noise. The floors, the Saying
  * assembly and the inventory are settings, so the reference's adopted
  * setting (#762) stays expressible for experiments. Over its membership
- * run X3's ten code rules, X5's saying-closed, D4's stranded-adverb and
- * X4's bracket-particle (#851, `code-rules.ts`), each enforcing one dumcorpus
- * Rule: on dev X3's
+ * run X3's ten code rules, X5's saying-closed, D4's stranded-adverb,
+ * X4's bracket-particle (#851, `code-rules.ts`) and #1155's particle-verb,
+ * which routing reads, each enforcing one dumcorpus Rule: on dev X3's
  * held 44 more gold units and lost none. Then X5's Locution Choice (#851, `locution-choice.ts`) asks
  * one `locution` request about the units a sub-floor link still joins and
  * merges those whose two units both pass de/fixed-member-test at 0.6: with
@@ -35,7 +35,7 @@ import { type Floors, membershipOf, type SayingAssembly } from "./assembly.js";
 import {
 	answerBeforeFormula,
 	type CodeRule,
-	quantifierRoutes,
+	codeRoutes,
 	withCodeRules,
 } from "./code-rules.js";
 import {
@@ -127,6 +127,7 @@ export const productionUnitSettings: UnitSettings = {
 		"answer-apart",
 		"saying-closed",
 		"bracket-particle",
+		"particle-verb",
 	],
 	locution: { floor: 0.6, absorb: true },
 	// Picked on dev (#851, D4) after the pre-registered 0.6 over all five
@@ -211,8 +212,6 @@ export const segmentGermanUnits = Effect.fnUntraced(function* (
 		settings.rules.includes("answer-apart")
 			? answerBeforeFormula
 			: undefined,
-		settings.rules.includes("quantifier")
-			? quantifierRoutes(nomination)
-			: undefined,
+		codeRoutes(nomination, settings.rules),
 	).units(settings.variantMargin, { identity: true });
 });

@@ -16,7 +16,8 @@
  * - A code rule may fix the route of a unit: the `quantifier` rule's ein
  *   wenig, ein paar and article + bisschen, and a one-piece lowercase
  *   bisschen, are Lexeme PRON (de/quantifier-by-use), whatever the route
- *   Choice says.
+ *   Choice says, and the `particle-verb` rule's verb with one separable
+ *   prefix is Lexeme VERB, whatever Family code named.
  * - A one-piece DET or PRON unit keeps the authored identity the identity
  *   Choice picked, re-read for the final Kind when a Rule test flipped it
  *   (#864, `storedIdentity`).
@@ -492,8 +493,15 @@ export const structuralRoute =
 /** Two adjacent pieces that stay apart although both are interjections. */
 export type KeepApart = (left: Piece, right: Piece) => boolean;
 
-/** The route a code rule fixed for a group; undefined for any other group. */
-export type FixedRoute = (group: readonly number[]) => RouteKey | undefined;
+/**
+ * The route a code rule fixed for a group, given the group's route
+ * distribution when a route request asked about it; undefined for any
+ * other group.
+ */
+export type FixedRoute = (
+	group: readonly number[],
+	shares: Readonly<Record<string, number>> | undefined,
+) => RouteKey | undefined;
 
 /**
  * Adjacent one-piece units both routed INTJ, with only whitespace between,
@@ -703,8 +711,10 @@ export function routeMembership(
 		merged.merged.has(groupKey(group))
 			? "Locution/INTJ"
 			: structural(group);
+	const fixed = (group: readonly number[]): RouteKey | undefined =>
+		fixedRoute?.(group, distributions.get(groupKey(group)));
 	const route = (group: readonly number[]): UnitRouteKey =>
-		closedRoute(group) ?? fixedRoute?.(group) ?? openRoute(group);
+		closedRoute(group) ?? fixed(group) ?? openRoute(group);
 	const decidingShares = (
 		group: readonly number[],
 	): Readonly<Record<string, number>> | undefined => {
@@ -725,10 +735,7 @@ export function routeMembership(
 				return abbreviation.probabilities;
 			return distributions.get(groupKey(group));
 		}
-		if (
-			merged.merged.has(groupKey(group)) ||
-			fixedRoute?.(group) !== undefined
-		)
+		if (merged.merged.has(groupKey(group)) || fixed(group) !== undefined)
 			return undefined;
 		const family = membership.familyOf(group);
 		if (family === "Saying") return undefined;
@@ -761,7 +768,7 @@ export function routeMembership(
 						? storedIdentity(
 								picks.get(groupKey(group)),
 								route(group),
-								fixedRoute?.(group) !== undefined,
+								fixed(group) !== undefined,
 							)
 						: undefined;
 				return {

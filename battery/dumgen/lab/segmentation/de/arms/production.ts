@@ -57,8 +57,8 @@ import {
 import {
 	answerBeforeFormula,
 	type CodeRule,
+	codeRoutes,
 	codeRules,
-	quantifierRoutes,
 	withCodeRules,
 } from "../../../../src/segment/de/code-rules.js";
 import {
@@ -461,9 +461,7 @@ async function routedUnits(
 		read.answers,
 		extra,
 		rules.includes("answer-apart") ? answerBeforeFormula : undefined,
-		rules.includes("quantifier")
-			? quantifierRoutes(read.nomination)
-			: undefined,
+		codeRoutes(read.nomination, rules),
 	);
 }
 
@@ -574,9 +572,7 @@ async function outputsOf(
 				rules.includes("answer-apart")
 					? answerBeforeFormula
 					: undefined,
-				rules.includes("quantifier")
-					? quantifierRoutes(read.nomination)
-					: undefined,
+				codeRoutes(read.nomination, rules),
 			).units(),
 		};
 	}
