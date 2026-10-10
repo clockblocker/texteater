@@ -9,6 +9,7 @@ import { Button, DensityScope } from "lego";
 import { useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import {
+	CARD_BODY_UNDER_HEADING,
 	ResolvingReadingHeading,
 	resolvingAttestationCaption,
 	resolvingAttestationNoteParts,
@@ -260,7 +261,9 @@ function ResolutionFailure({
 			data-note-presentation={presentation}
 			className="min-h-full bg-paper text-base text-ink compact:text-sm"
 		>
-			<div className="mx-auto flex w-full max-w-note flex-col gap-3 px-note-gutter pt-note-top pb-note-top compact:p-3.5">
+			<div
+				className={`mx-auto flex w-full max-w-note flex-col gap-3 px-note-gutter pt-note-top pb-note-top compact:p-3.5 ${part === null ? "" : CARD_BODY_UNDER_HEADING}`}
+			>
 				{part === null ? heading : null}
 				{lifecycle.state === "Terminal" &&
 				lifecycle.outcome === "PermanentFailure" ? (

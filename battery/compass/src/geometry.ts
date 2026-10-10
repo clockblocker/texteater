@@ -29,7 +29,7 @@ export const CARD_WIDTH_REM = 26;
 /** The whole Deck column: the front Card plus one Heading row per folded Card. */
 export const PILE_HEIGHT_REM = 30;
 /** A Card's Heading row, which is all a folded Card shows. */
-export const HEADER_REM = 2.75;
+export const HEADER_REM = 3;
 /** The Pane bar above a Ground: the trail and the ← or X control. */
 export const BAR_REM = 2.25;
 /**

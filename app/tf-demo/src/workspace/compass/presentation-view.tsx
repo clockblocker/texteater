@@ -53,6 +53,7 @@ export function PresentationView<S>({
 	card,
 	form,
 	place,
+	growsFromTop = false,
 	box,
 	z,
 	held,
@@ -77,6 +78,12 @@ export function PresentationView<S>({
 	card: Presentation<S>;
 	form: Form;
 	place: Place;
+	/**
+	 * The open Card rests scaled from its top edge rather than its centre,
+	 * when no Card lies below it, so it leaves the Card Tail above it its
+	 * whole Heading row.
+	 */
+	growsFromTop?: boolean;
 	box: Box;
 	z: number;
 	held: boolean;
@@ -240,6 +247,7 @@ export function PresentationView<S>({
 				y: shownY,
 				rotate,
 				scale: restScale,
+				originY: growsFromTop ? 0 : 0.5,
 				opacity,
 				zIndex: z,
 				...(preview ? { borderStyle: "dashed" } : {}),

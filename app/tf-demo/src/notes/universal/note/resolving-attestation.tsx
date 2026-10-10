@@ -13,6 +13,7 @@ import { SourceQuote } from "../blocks/renderers/common/source-quote";
 import { CaptionedHeading } from "../caption/heading-caption";
 import { UnitTitle, type UnitTitlePart } from "../caption/unit-title";
 import type { Caption } from "../caption/wording";
+import { CARD_BODY_UNDER_HEADING } from "./render";
 
 type ResolvingAttestation = {
 	/** The clicked unit, as the stored Note's Heading will spell it. */
@@ -37,6 +38,7 @@ type ResolvingAttestation = {
 export function resolvingAttestationNoteParts(input: ResolvingAttestation) {
 	const heading = (
 		<CaptionedHeading
+			presentation={input.presentation}
 			title={
 				<NoteTitle data-attestation-title="">
 					<UnitTitle parts={input.title} />
@@ -67,7 +69,7 @@ function ResolvingAttestationBody({
 			className="min-h-full bg-paper text-base text-ink compact:text-sm"
 		>
 			<article
-				className="mx-auto w-full max-w-note px-note-gutter pt-note-top pb-note-top compact:p-3.5"
+				className={`mx-auto w-full max-w-note px-note-gutter pt-note-top pb-note-top compact:p-3.5 ${heading ? "" : CARD_BODY_UNDER_HEADING}`}
 				aria-label="Attestation Note"
 				aria-busy={input.settled ? undefined : true}
 			>

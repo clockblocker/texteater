@@ -24,5 +24,6 @@ export {
 	type CaptionToken,
 	captionText,
 } from "./universal/caption/wording";
+export { CARD_BODY_UNDER_HEADING } from "./universal/note/render";
 export { resolvingAttestationNoteParts } from "./universal/note/resolving-attestation";
 export { NoteSkeletonFor } from "./universal/note/skeleton";

@@ -9,7 +9,9 @@ import { cn } from "../utils";
  *
  * A section after another section takes twice the air it keeps under its
  * label, so a label belongs to what follows it. The first section keeps
- * less, and stays with the title above it.
+ * less, and stays with the title above it. In a Card, a section that opens
+ * the body keeps none: the Heading row above it already leaves the title
+ * its room.
  *
  * Every block passes a `label`. Pass `""` on purpose for the rare body-only
  * block, and the section draws the separating rule itself.
@@ -32,7 +34,7 @@ export function NoteSection({
 		<section
 			data-slot="note-section"
 			className={cn(
-				"min-w-0 pt-4 compact:pt-3 [section+&]:pt-8 compact:[section+&]:pt-3",
+				"min-w-0 pt-4 compact:pt-3 compact:first:pt-0 [section+&]:pt-8 compact:[section+&]:pt-3",
 				!headless &&
 					"compact:before:mb-2 compact:before:block compact:before:border-t compact:before:border-dashed compact:before:border-line compact:before:content-['']",
 				className,

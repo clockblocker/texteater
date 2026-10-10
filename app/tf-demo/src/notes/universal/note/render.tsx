@@ -72,6 +72,13 @@ export function describeRenderableNote(
 }
 
 /**
+ * A Card's body without its Heading sits under the Heading row its host
+ * draws, which already leaves the title its room, so the body adds no top
+ * padding of its own and its first Block keeps the usual Block spacing.
+ */
+export const CARD_BODY_UNDER_HEADING = "compact:pt-0";
+
+/**
  * The Note's frame holding every Block but the Heading, closed by the tags
  * that name the Note. A host that draws no handle of its own passes the
  * Heading back as `heading`; it goes first, as the pinned Block.
@@ -122,7 +129,7 @@ export function renderUniversalNoteBody({
 				className="min-h-full bg-paper text-base text-ink compact:text-sm"
 			>
 				<article
-					className="mx-auto w-full max-w-note px-note-gutter pt-note-top pb-note-top compact:p-3.5"
+					className={`mx-auto w-full max-w-note px-note-gutter pt-note-top pb-note-top compact:p-3.5 ${heading ? "" : CARD_BODY_UNDER_HEADING}`}
 					aria-label={`${noteData.kind} Note`}
 				>
 					{heading}

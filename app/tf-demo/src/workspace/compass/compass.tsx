@@ -531,6 +531,9 @@ function CompassRuntime<S>({
 		   Card wears the commit line */
 		const swiping =
 			drag?.phase === "swiping" && drag.deckSheet === sheet.sheetId;
+		/* with no Card below it, the open Card grows from its top edge, so
+		   it never rises over the Card Tail above it */
+		const openIsLast = slots.at(-1)?.place === "open";
 		return slots.flatMap(({ card, place, box: slot, z: restingZ }) => {
 			const held =
 				drag !== null &&
@@ -547,6 +550,7 @@ function CompassRuntime<S>({
 					card={card}
 					form="card"
 					place={place}
+					growsFromTop={place === "open" && openIsLast}
 					box={held && drag && !returning ? drag.origin : slot}
 					z={z}
 					held={held}

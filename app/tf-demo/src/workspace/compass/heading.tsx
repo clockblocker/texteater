@@ -366,7 +366,7 @@ export function HeadingBlock({
 					<motion.div
 						key="card"
 						{...fade}
-						className={`absolute inset-0 flex justify-center px-4 ${atBottom ? "" : "pb-2"}`}
+						className={`absolute inset-0 flex justify-center px-4 ${atBottom ? "" : "pb-3.5"}`}
 					>
 						<div
 							className="relative flex h-full w-full min-w-0 items-end"
@@ -375,7 +375,7 @@ export function HeadingBlock({
 							{/* a Card's title reads, but its links rest until it is a Sheet (#485) */}
 							<RestingControls
 								resting
-								className={`flex min-w-0 flex-1 items-end gap-4 ${ONE_LINE_TITLE} ${atBottom ? "pb-3" : ""}`}
+								className={`flex min-w-0 flex-1 items-end gap-4 ${ONE_LINE_TITLE} ${atBottom ? "pb-3.5" : ""}`}
 							>
 								{cardTitle}
 							</RestingControls>
