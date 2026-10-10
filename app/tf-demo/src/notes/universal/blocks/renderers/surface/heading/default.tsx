@@ -10,13 +10,14 @@ export const renderDefaultSurfaceHeading = (({
 	noteData,
 	PresentationCapabilities,
 }) => {
-	const count = noteData.analyses.length;
 	const active =
 		noteData.analyses.find(
 			({ analysisKey }) =>
 				analysisKey === PresentationCapabilities.activeAnalysisKey,
 		) ??
-		(count === 1 && noteData.isDone ? noteData.analyses[0] : undefined);
+		(noteData.analyses.length === 1 && noteData.isDone
+			? noteData.analyses[0]
+			: undefined);
 	return (
 		<header>
 			<NoteTitleRow>
@@ -28,10 +29,6 @@ export const renderDefaultSurfaceHeading = (({
 				>
 					{noteData.target.normalizedSurface}
 				</NoteTitle>
-				<span className="text-sm text-ink-muted">
-					{count === 1 ? "1 reading" : `${count} readings`}
-					{noteData.isDone ? "" : "+"}
-				</span>
 			</NoteTitleRow>
 		</header>
 	);

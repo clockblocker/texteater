@@ -1,6 +1,5 @@
 import {
 	DensityScope,
-	NoteBone,
 	NoteRouteRowsSkeleton,
 	NoteSection,
 	NoteTags,
@@ -38,19 +37,6 @@ export function resolvingAttestationNoteParts(input: ResolvingAttestation) {
 				<NoteTitle data-attestation-title="">
 					{input.attested}
 				</NoteTitle>
-				{input.settled ? null : (
-					<span
-						role="status"
-						aria-label="Reading on the way"
-						className="inline-flex items-center text-sm"
-					>
-						<RouteMark
-							hop="leadsTo"
-							className="me-1.5 text-ink-faint"
-						/>
-						<NoteBone className="w-20" />
-					</span>
-				)}
 			</NoteTitleRow>
 		</header>
 	);

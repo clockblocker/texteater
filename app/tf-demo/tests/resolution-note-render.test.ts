@@ -422,7 +422,7 @@ test("with no route known, the Reading step shows a Reading Note's bones under t
 	);
 });
 
-test("the Attestation step quotes the clicked sentence with what it reads as on the way", () => {
+test("the Attestation step titles the clicked words and quotes their sentence, its route on the way", () => {
 	const note = {
 		kind: "ResolutionNote" as const,
 		target: resolutionTarget,
@@ -435,9 +435,9 @@ test("the Attestation step quotes the clicked sentence with what it reads as on 
 		source,
 		updatedAt: 1,
 	};
-	expect(renderStep({ stepKind: "Attestation", note }, "heading")).toMatch(
-		/data-attestation-title="">Banken<[\s\S]*Reading on the way/,
-	);
+	const heading = renderStep({ stepKind: "Attestation", note }, "heading");
+	expect(heading).toContain('data-attestation-title="">Banken<');
+	expect(heading).not.toContain('role="status"');
 	const body = renderStep({ stepKind: "Attestation", note }, "body");
 	expect(body).toContain('data-note-kind="Attestation"');
 	expect(body).toContain("Banken</button>");
