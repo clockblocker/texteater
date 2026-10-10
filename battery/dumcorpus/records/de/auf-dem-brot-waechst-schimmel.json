@@ -1,18 +1,16 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Die Wanderer ruhen auf einer Bank.",
+	"sentence": "Auf dem Brot wächst Schimmel.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "ResolvableText", "text": "Auf" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Wanderer" },
+		{ "kind": "ResolvableText", "text": "dem" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ruhen" },
+		{ "kind": "ResolvableText", "text": "Brot" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "ResolvableText", "text": "wächst" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "einer" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bank" },
+		{ "kind": "ResolvableText", "text": "Schimmel" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -20,11 +18,11 @@
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [8, 10],
+			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🪑" },
+			"reading": { "emojiDescription": "🦠" },
 			"notes": {
-				"rationale": "Bank owns the article einer, Dat.Fem.Sg after local auf (de/noun-owns-its-article). Hikers resting on it is Duden Bank¹ 'Sitzgelegenheit' (DWDS Bank 1), the seat, not the money institution 🏦."
+				"rationale": "Bare Schimmel, Nom.Masc.Sg as subject of wächst, a mass noun with no article. Growing on bread is Duden Schimmel¹ 'Belag aus Schimmelpilzen', the mould, not the white horse 🐎."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -36,24 +34,23 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"canonicalForm": "Bank",
-						"coreFeatures": { "gender": "Fem" }
+						"canonicalForm": "Schimmel",
+						"coreFeatures": { "gender": "Masc" }
 					},
-					"normalizedSurface": "Bank",
+					"normalizedSurface": "Schimmel",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"case": "Dat",
+						"case": "Nom",
 						"gender": null,
 						"number": "Sing"
 					}
 				},
 				"members": [
-					{ "attested": "einer", "orthography": "Standard" },
-					{ "attested": "Bank", "orthography": "Standard" }
+					{ "attested": "Schimmel", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": null,
 				"valencyEvidence": []
 			}
 		}

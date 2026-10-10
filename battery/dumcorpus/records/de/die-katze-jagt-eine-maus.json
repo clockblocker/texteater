@@ -15,66 +15,46 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
-			"caseId": "reading-de-noun-maus-animal-new",
-			"memberSegmentIndices": [8],
-			"case": {
-				"input": {
-					"markedContext": "Die Katze jagt eine <TARGET>Maus</TARGET>.",
-					"lemma": "Maus",
-					"existingEmojiDescriptions": []
-				},
-				"idealOutput": { "emojiDescription": "🐭" },
-				"explanation": "Animal. New."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
-			"caseId": "reading-de-noun-maus-animal-new",
-			"memberSegmentIndices": [8],
-			"case": {
-				"input": {
-					"encounter": {
-						"sentence": {
-							"id": "reading-de-noun-maus-animal-new",
-							"language": "de",
-							"segments": [
-								{
-									"kind": "OpaqueText",
-									"text": "Die Katze jagt eine "
-								},
-								{ "kind": "ResolvableText", "text": "Maus" },
-								{ "kind": "OpaqueText", "text": "." }
-							]
-						},
-						"target": {
-							"family": "Lexeme",
-							"kind": "NOUN",
-							"memberSegmentIndices": [1]
-						}
-					},
+			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🐭" },
+			"notes": {
+				"rationale": "Maus owns the article eine, Acc.Fem.Sg as object (de/noun-owns-its-article). A cat hunting it is Duden Maus 1, the rodent, not the computer mouse 🖱."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Maus",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": { "gender": "Fem" }
 					},
-					"candidates": []
+					"normalizedSurface": "Maus",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
-				"idealOutput": { "decision": "New", "emojiDescription": "🐭" },
-				"explanation": "Animal. New."
+				"members": [
+					{ "attested": "eine", "orthography": "Standard" },
+					{ "attested": "Maus", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

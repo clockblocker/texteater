@@ -1,18 +1,18 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Die Wanderer ruhen auf einer Bank.",
+	"sentence": "Die Prinzessin reitet auf einem Schimmel.",
 	"segments": [
 		{ "kind": "ResolvableText", "text": "Die" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Wanderer" },
+		{ "kind": "ResolvableText", "text": "Prinzessin" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ruhen" },
+		{ "kind": "ResolvableText", "text": "reitet" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "auf" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "einer" },
+		{ "kind": "ResolvableText", "text": "einem" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bank" },
+		{ "kind": "ResolvableText", "text": "Schimmel" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -22,9 +22,9 @@
 		{
 			"memberSegmentIndices": [8, 10],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🪑" },
+			"reading": { "emojiDescription": "🐎" },
 			"notes": {
-				"rationale": "Bank owns the article einer, Dat.Fem.Sg after local auf (de/noun-owns-its-article). Hikers resting on it is Duden Bank¹ 'Sitzgelegenheit' (DWDS Bank 1), the seat, not the money institution 🏦."
+				"rationale": "Schimmel owns the article einem, Dat.Masc.Sg after auf (de/noun-owns-its-article). One ridden is Duden Schimmel² 'weißes Pferd', the white horse, not the mould 🦠."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -36,10 +36,10 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"canonicalForm": "Bank",
-						"coreFeatures": { "gender": "Fem" }
+						"canonicalForm": "Schimmel",
+						"coreFeatures": { "gender": "Masc" }
 					},
-					"normalizedSurface": "Bank",
+					"normalizedSurface": "Schimmel",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -49,8 +49,8 @@
 					}
 				},
 				"members": [
-					{ "attested": "einer", "orthography": "Standard" },
-					{ "attested": "Bank", "orthography": "Standard" }
+					{ "attested": "einem", "orthography": "Standard" },
+					{ "attested": "Schimmel", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": { "kind": "Owned", "member": 0 },

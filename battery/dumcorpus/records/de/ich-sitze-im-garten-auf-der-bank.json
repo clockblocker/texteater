@@ -1,16 +1,19 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Die Wanderer ruhen auf einer Bank.",
+	"sentence": "Ich sitze im Garten auf der Bank.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "ResolvableText", "text": "Ich" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Wanderer" },
+		{ "kind": "ResolvableText", "text": "sitze" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ruhen" },
+		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Garten" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "auf" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "einer" },
+		{ "kind": "ResolvableText", "text": "der" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Bank" },
 		{ "kind": "Punctuation", "text": "." }
@@ -20,11 +23,11 @@
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [8, 10],
+			"memberSegmentIndices": [11, 13],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🪑" },
 			"notes": {
-				"rationale": "Bank owns the article einer, Dat.Fem.Sg after local auf (de/noun-owns-its-article). Hikers resting on it is Duden Bank¹ 'Sitzgelegenheit' (DWDS Bank 1), the seat, not the money institution 🏦."
+				"rationale": "Bank owns the article der, Dat.Fem.Sg after local auf (de/noun-owns-its-article). Sitting on it in a garden is Duden Bank¹ 'Sitzgelegenheit' (DWDS Bank 1), the seat, not the money institution Bank² 🏦. tf-demo's first Bank click minted 🏦 for this sentence (#1165)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -49,7 +52,7 @@
 					}
 				},
 				"members": [
-					{ "attested": "einer", "orthography": "Standard" },
+					{ "attested": "der", "orthography": "Standard" },
 					{ "attested": "Bank", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",

@@ -1,18 +1,18 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Die Wanderer ruhen auf einer Bank.",
+	"sentence": "Er trat kräftig auf die Bremse.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "ResolvableText", "text": "Er" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Wanderer" },
+		{ "kind": "ResolvableText", "text": "trat" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ruhen" },
+		{ "kind": "ResolvableText", "text": "kräftig" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "auf" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "einer" },
+		{ "kind": "ResolvableText", "text": "die" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bank" },
+		{ "kind": "ResolvableText", "text": "Bremse" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -22,9 +22,9 @@
 		{
 			"memberSegmentIndices": [8, 10],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🪑" },
+			"reading": { "emojiDescription": "🛑" },
 			"notes": {
-				"rationale": "Bank owns the article einer, Dat.Fem.Sg after local auf (de/noun-owns-its-article). Hikers resting on it is Duden Bank¹ 'Sitzgelegenheit' (DWDS Bank 1), the seat, not the money institution 🏦."
+				"rationale": "Bremse owns the article die, Acc.Fem.Sg after directional auf (de/noun-owns-its-article). One stepped on hard is Duden Bremse¹ 'Vorrichtung zum Verlangsamen', the brake, not the horsefly 🪰."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -36,21 +36,21 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"canonicalForm": "Bank",
+						"canonicalForm": "Bremse",
 						"coreFeatures": { "gender": "Fem" }
 					},
-					"normalizedSurface": "Bank",
+					"normalizedSurface": "Bremse",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"case": "Dat",
+						"case": "Acc",
 						"gender": null,
 						"number": "Sing"
 					}
 				},
 				"members": [
-					{ "attested": "einer", "orthography": "Standard" },
-					{ "attested": "Bank", "orthography": "Standard" }
+					{ "attested": "die", "orthography": "Standard" },
+					{ "attested": "Bremse", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": { "kind": "Owned", "member": 0 },

@@ -1,18 +1,16 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Die Wanderer ruhen auf einer Bank.",
+	"sentence": "Der Hahn kräht jeden Morgen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "ResolvableText", "text": "Der" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Wanderer" },
+		{ "kind": "ResolvableText", "text": "Hahn" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ruhen" },
+		{ "kind": "ResolvableText", "text": "kräht" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "ResolvableText", "text": "jeden" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "einer" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bank" },
+		{ "kind": "ResolvableText", "text": "Morgen" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -20,11 +18,11 @@
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [8, 10],
+			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🪑" },
+			"reading": { "emojiDescription": "🐓" },
 			"notes": {
-				"rationale": "Bank owns the article einer, Dat.Fem.Sg after local auf (de/noun-owns-its-article). Hikers resting on it is Duden Bank¹ 'Sitzgelegenheit' (DWDS Bank 1), the seat, not the money institution 🏦."
+				"rationale": "Hahn owns the article Der, Nom.Masc.Sg as subject (de/noun-owns-its-article). One that crows is Duden Hahn 1, the rooster, not the tap 🚰."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -36,21 +34,21 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"canonicalForm": "Bank",
-						"coreFeatures": { "gender": "Fem" }
+						"canonicalForm": "Hahn",
+						"coreFeatures": { "gender": "Masc" }
 					},
-					"normalizedSurface": "Bank",
+					"normalizedSurface": "Hahn",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"case": "Dat",
+						"case": "Nom",
 						"gender": null,
 						"number": "Sing"
 					}
 				},
 				"members": [
-					{ "attested": "einer", "orthography": "Standard" },
-					{ "attested": "Bank", "orthography": "Standard" }
+					{ "attested": "Der", "orthography": "Standard" },
+					{ "attested": "Hahn", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": { "kind": "Owned", "member": 0 },

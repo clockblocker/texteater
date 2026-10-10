@@ -1,18 +1,18 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Die Wanderer ruhen auf einer Bank.",
+	"sentence": "Sie spielt Chopin auf dem Flügel.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "ResolvableText", "text": "Sie" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Wanderer" },
+		{ "kind": "ResolvableText", "text": "spielt" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ruhen" },
+		{ "kind": "ResolvableText", "text": "Chopin" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "auf" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "einer" },
+		{ "kind": "ResolvableText", "text": "dem" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bank" },
+		{ "kind": "ResolvableText", "text": "Flügel" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -22,9 +22,9 @@
 		{
 			"memberSegmentIndices": [8, 10],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🪑" },
+			"reading": { "emojiDescription": "🎹" },
 			"notes": {
-				"rationale": "Bank owns the article einer, Dat.Fem.Sg after local auf (de/noun-owns-its-article). Hikers resting on it is Duden Bank¹ 'Sitzgelegenheit' (DWDS Bank 1), the seat, not the money institution 🏦."
+				"rationale": "Flügel owns the article dem, Dat.Masc.Sg after auf (de/noun-owns-its-article). Playing Chopin on it is Duden Flügel 4 'Konzertflügel', the grand piano, not a wing 🪽."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -36,10 +36,10 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"canonicalForm": "Bank",
-						"coreFeatures": { "gender": "Fem" }
+						"canonicalForm": "Flügel",
+						"coreFeatures": { "gender": "Masc" }
 					},
-					"normalizedSurface": "Bank",
+					"normalizedSurface": "Flügel",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -49,8 +49,8 @@
 					}
 				},
 				"members": [
-					{ "attested": "einer", "orthography": "Standard" },
-					{ "attested": "Bank", "orthography": "Standard" }
+					{ "attested": "dem", "orthography": "Standard" },
+					{ "attested": "Flügel", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": { "kind": "Owned", "member": 0 },

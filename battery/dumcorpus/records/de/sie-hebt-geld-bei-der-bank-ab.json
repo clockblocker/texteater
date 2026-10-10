@@ -66,63 +66,42 @@
 		},
 		{
 			"memberSegmentIndices": [8, 10],
-			"route": { "family": "Lexeme", "kind": "NOUN" }
-		}
-	],
-	"noTarget": [],
-	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
-			"caseId": "reading-de-bank-financial",
-			"memberSegmentIndices": [10],
-			"case": {
-				"input": {
-					"markedContext": "Sie hebt Geld bei der <TARGET>Bank</TARGET> ab.",
-					"lemma": "Bank",
-					"existingEmojiDescriptions": ["🪑"]
-				},
-				"idealOutput": { "emojiDescription": "🏦" },
-				"explanation": "Financial institution, not seating. New."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
-			"caseId": "reading-de-bank-financial",
-			"memberSegmentIndices": [10],
-			"case": {
-				"input": {
-					"encounter": {
-						"sentence": {
-							"id": "reading-de-bank-financial",
-							"language": "de",
-							"segments": [
-								{
-									"kind": "OpaqueText",
-									"text": "Sie hebt Geld bei der "
-								},
-								{ "kind": "ResolvableText", "text": "Bank" },
-								{ "kind": "OpaqueText", "text": " ab." }
-							]
-						},
-						"target": {
-							"family": "Lexeme",
-							"kind": "NOUN",
-							"memberSegmentIndices": [1]
-						}
-					},
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🏦" },
+			"notes": {
+				"rationale": "Bank owns the article der, Dat.Fem.Sg after bei (de/noun-owns-its-article). Withdrawing money there is Duden Bank² 'Geldinstitut' (DWDS Bank 2), the money institution, not the seat 🪑."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Bank",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": { "gender": "Fem" }
 					},
-					"candidates": ["🪑"]
+					"normalizedSurface": "Bank",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
-				"idealOutput": { "decision": "New", "emojiDescription": "🏦" },
-				"explanation": "Financial institution, not seating. New."
+				"members": [
+					{ "attested": "der", "orthography": "Standard" },
+					{ "attested": "Bank", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

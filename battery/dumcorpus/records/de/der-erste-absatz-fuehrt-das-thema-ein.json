@@ -19,66 +19,46 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
-			"caseId": "reading-de-noun-absatz-paragraph-new",
-			"memberSegmentIndices": [4],
-			"case": {
-				"input": {
-					"markedContext": "Der erste <TARGET>Absatz</TARGET> führt das Thema ein.",
-					"lemma": "Absatz",
-					"existingEmojiDescriptions": ["👠", "🛒"]
-				},
-				"idealOutput": { "emojiDescription": "📄" },
-				"explanation": "Text paragraph, neither a shoe heel nor sales. New."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
-			"caseId": "reading-de-noun-absatz-paragraph-new",
-			"memberSegmentIndices": [4],
-			"case": {
-				"input": {
-					"encounter": {
-						"sentence": {
-							"id": "reading-de-noun-absatz-paragraph-new",
-							"language": "de",
-							"segments": [
-								{ "kind": "OpaqueText", "text": "Der erste " },
-								{ "kind": "ResolvableText", "text": "Absatz" },
-								{
-									"kind": "OpaqueText",
-									"text": " führt das Thema ein."
-								}
-							]
-						},
-						"target": {
-							"family": "Lexeme",
-							"kind": "NOUN",
-							"memberSegmentIndices": [1]
-						}
-					},
+			"memberSegmentIndices": [0, 4],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "📄" },
+			"notes": {
+				"rationale": "Absatz owns the article Der across the adjective erste, Nom.Masc.Sg as subject (de/noun-owns-its-article). The first one introducing the topic is Duden Absatz 2 'Abschnitt eines Textes', the paragraph, not a heel 👠 or sales 🛒."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Absatz",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": { "gender": "Masc" }
 					},
-					"candidates": ["👠", "🛒"]
+					"normalizedSurface": "Absatz",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
-				"idealOutput": { "decision": "New", "emojiDescription": "📄" },
-				"explanation": "Text paragraph, neither a shoe heel nor sales. New."
+				"members": [
+					{ "attested": "Der", "orthography": "Standard" },
+					{ "attested": "Absatz", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

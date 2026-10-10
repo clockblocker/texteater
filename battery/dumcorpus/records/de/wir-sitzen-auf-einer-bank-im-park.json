@@ -20,12 +20,47 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
-	"targets": [],
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🪑" },
+			"notes": {
+				"rationale": "Bank owns the article einer, Dat.Fem.Sg after local auf (de/noun-owns-its-article). Sitting on it in the park is Duden Bank¹ 'Sitzgelegenheit' (DWDS Bank 1), the seat; the park is scenery and stays out of the label."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Bank",
+						"coreFeatures": { "gender": "Fem" }
+					},
+					"normalizedSurface": "Bank",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{ "attested": "einer", "orthography": "Standard" },
+					{ "attested": "Bank", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{
@@ -96,112 +131,6 @@
 					}
 				],
 				"contaminationKeys": ["relation-de-bank"]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
-			"caseId": "reading-de-bank-park-bench",
-			"memberSegmentIndices": [8],
-			"case": {
-				"input": {
-					"markedContext": "Wir sitzen auf einer <TARGET>Bank</TARGET> im Park.",
-					"lemma": "Bank",
-					"existingEmojiDescriptions": ["🪑"]
-				},
-				"idealOutput": { "emojiDescription": "🪑" },
-				"explanation": "Same seating object. The park is only scenery. Reuse."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
-			"caseId": "reading-generation-bank-seat",
-			"memberSegmentIndices": [8],
-			"case": {
-				"input": {
-					"encounter": {
-						"sentence": {
-							"id": "reading-generation-bank-seat",
-							"language": "de",
-							"segments": [
-								{
-									"kind": "OpaqueText",
-									"text": "Wir sitzen auf einer "
-								},
-								{ "kind": "ResolvableText", "text": "Bank" },
-								{ "kind": "OpaqueText", "text": " im Park." }
-							]
-						},
-						"target": {
-							"family": "Lexeme",
-							"kind": "NOUN",
-							"memberSegmentIndices": [1]
-						}
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "NOUN",
-						"canonicalForm": "Bank",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
-					},
-					"candidates": []
-				},
-				"idealOutput": { "decision": "New", "emojiDescription": "🪑" }
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
-			"caseId": "reading-de-bank-park-bench",
-			"memberSegmentIndices": [8],
-			"case": {
-				"input": {
-					"encounter": {
-						"sentence": {
-							"id": "reading-de-bank-park-bench",
-							"language": "de",
-							"segments": [
-								{
-									"kind": "OpaqueText",
-									"text": "Wir sitzen auf einer "
-								},
-								{ "kind": "ResolvableText", "text": "Bank" },
-								{ "kind": "OpaqueText", "text": " im Park." }
-							]
-						},
-						"target": {
-							"family": "Lexeme",
-							"kind": "NOUN",
-							"memberSegmentIndices": [1]
-						}
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "NOUN",
-						"canonicalForm": "Bank",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
-					},
-					"candidates": ["🪑"]
-				},
-				"idealOutput": {
-					"decision": "Reuse",
-					"emojiDescription": "🪑"
-				},
-				"explanation": "Same seating object. The park is only scenery. Reuse."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/source-data.json",
-			"caseId": "reading-generation-bank-seat",
-			"memberSegmentIndices": [8],
-			"case": {
-				"input": {
-					"markedContext": "Wir sitzen auf einer <TARGET>Bank</TARGET> im Park.",
-					"lemma": "Bank"
-				},
-				"idealOutput": "🪑"
 			}
 		}
 	]
