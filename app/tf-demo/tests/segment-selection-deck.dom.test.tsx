@@ -23,6 +23,7 @@ const canonical = {
 	surfaceLanguage: "de" as const,
 	normalizedSurface: "verarbeiten",
 	attestationId: "attestation-1" as Id<"attestations">,
+	steps: { attestation: true, surface: true, lemma: true },
 };
 
 const sentence = {
@@ -100,11 +101,18 @@ const resolving = {
 	activity: "Scheduled",
 	deduplicated: false,
 };
+/** A click on a unit of more than the clicked word. */
+const resolvingUnit = {
+	...resolving,
+	unitRoute: { language: "de", family: "Lexeme", kind: "VERB" },
+	unitSegments: [0, 2],
+};
 const available = { kind: "Available", canonical };
 
 test("nothing a click carries puts another Card in front of the Reading", async () => {
 	for (const [reply, roles] of [
-		[resolving, ["Reading", "Attestation"]],
+		[resolving, ["Reading"]],
+		[resolvingUnit, ["Reading", "Attestation"]],
 		[available, ["Reading", "Lemma", "Surface", "Attestation"]],
 	] as const)
 		for (const [retiredSetting, altKey] of [

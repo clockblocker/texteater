@@ -174,6 +174,8 @@ describe("Resolution Session", () => {
 			normalizedSurface: "Banken",
 			surfaceId: expect.any(String),
 			attestationId: committed.attestationId,
+			// "Banken" alone, spelled right, plural, of a Lemma with one Reading.
+			steps: { attestation: false, surface: true, lemma: false },
 		};
 
 		for (const requestId of ["request-1", "request-2"])

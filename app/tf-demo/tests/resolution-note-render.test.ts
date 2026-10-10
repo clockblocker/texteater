@@ -170,7 +170,7 @@ test("a running Resolution deals its Reading and Attestation steps under the key
 	}
 });
 
-test("a Session that ends without an occurrence keeps both steps", () => {
+test("a Session that ends without an occurrence keeps the steps it dealt", () => {
 	for (const lifecycle of [
 		{
 			state: "Terminal",
@@ -194,6 +194,7 @@ test("a Session that ends without an occurrence keeps both steps", () => {
 					lifecycle,
 					route,
 					source,
+					unit,
 					updatedAt: 5,
 				}),
 			),
@@ -217,6 +218,7 @@ test("a completed Resolution converges the deck to canonical Notes", () => {
 				normalizedSurface: "Banken",
 				surfaceId: "surface-1" as Id<"surfaces">,
 				attestationId: "attestation-1" as Id<"attestations">,
+				steps: { attestation: true, surface: true, lemma: true },
 			},
 		},
 		route,
@@ -268,6 +270,7 @@ test("a converged deck hands the Resolution to the stored Reading Card", () => {
 				normalizedSurface: "Banken",
 				surfaceId: "surface-1" as Id<"surfaces">,
 				attestationId: "attestation-1" as Id<"attestations">,
+				steps: { attestation: true, surface: true, lemma: true },
 			},
 		},
 		route,
@@ -283,7 +286,7 @@ test("a converged deck hands the Resolution to the stored Reading Card", () => {
 	});
 });
 
-test("a stored Resolution opens the same four canonical Card subjects", () => {
+test("a stored Resolution whose every step says something opens all four canonical Card subjects", () => {
 	// Branded Convex ids; the deck only passes them through.
 	const readingId = "reading-1" as Id<"readings">;
 	const lemmaId = "lemma-1" as Id<"lemmas">;
@@ -296,6 +299,7 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 		normalizedSurface: "Banken",
 		surfaceId,
 		attestationId,
+		steps: { attestation: true, surface: true, lemma: true },
 	};
 	const cards = segmentSelectionDeckCards("request-available", {
 		kind: "Available",
@@ -321,6 +325,7 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 			activity: "Running",
 			deduplicated: true,
 			unitRoute: unit.route,
+			unitSegments: unit.segments,
 		}),
 	).toEqual([
 		{
@@ -341,7 +346,8 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 			},
 		},
 	]);
-	// An Unresolved unit lays the Reading out by no route.
+	// An Unresolved unit lays the Reading out by no route, and a unit of
+	// the clicked word alone deals no Attestation until Grammar reads it.
 	expect(
 		segmentSelectionDeckCards("request-unresolved", {
 			kind: "Resolving",
@@ -350,6 +356,7 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 			activity: "Scheduled",
 			deduplicated: false,
 			unitRoute: "Unresolved",
+			unitSegments: [2],
 		}),
 	).toEqual([
 		{
@@ -360,7 +367,6 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 				stepKind: "Reading",
 			},
 		},
-		expect.objectContaining({ key: "request-unresolved:Attestation" }),
 	]);
 });
 

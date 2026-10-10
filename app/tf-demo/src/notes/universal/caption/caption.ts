@@ -1,3 +1,4 @@
+import { surfaceSaysSomething } from "../../../../shared/click-story";
 import { coreGenders } from "../../../../shared/grammatical-gender";
 import type { SupportedTargetLanguage } from "../../../../shared/supported-target-language";
 import {
@@ -286,13 +287,19 @@ function verbPronoun(features: Features, target: TargetWording): string | null {
 }
 
 /**
- * The title of the Card an Attestation's caption names: the next Card in
- * front of it, its Surface.
+ * The title of the Card an Attestation's caption names: the next Card dealt
+ * in front of it. That is its Surface when the Surface says something, and
+ * otherwise the Lemma or the Reading, both titled by the canonical form.
  */
-export function attestationNextTitle(surface: {
+export function attestationNextTitle(occurrence: {
 	readonly normalizedSurface: string;
+	readonly grundform: boolean | null;
+	readonly spelling: { readonly kind: string };
+	readonly canonicalForm: string;
 }): string {
-	return surface.normalizedSurface;
+	return surfaceSaysSomething(occurrence)
+		? occurrence.normalizedSurface
+		: occurrence.canonicalForm;
 }
 
 /**

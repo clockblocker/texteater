@@ -1,6 +1,9 @@
 import type { FunctionReturnType } from "convex/server";
 import type { api } from "../../convex/_generated/api";
-import type { Id } from "../../convex/_generated/dataModel";
+import {
+	attestationSaysSomething,
+	unitSaysSomething,
+} from "../../shared/click-story";
 import type { WorkspaceCardTarget } from "../workspace/workspace-controller";
 import type {
 	ReadingNotePresentationContext,
@@ -17,26 +20,24 @@ type SegmentSelectionResult = FunctionReturnType<
 	typeof api.resolutionSessions.selectSegment
 >;
 
-type CanonicalResolution = {
-	readonly readingId: Id<"readings">;
-	readonly lemmaId: Id<"lemmas">;
-	readonly surfaceLanguage: "de";
-	readonly normalizedSurface: string;
-	/** The analysis selected by this occurrence, not the aggregate Surface identity. */
-	readonly surfaceId: Id<"surfaces">;
-	readonly attestationId: Id<"attestations">;
-};
+type CanonicalResolution = Extract<
+	SegmentSelectionResult,
+	{ kind: "Available" }
+>["canonical"];
 
 /**
  * A click's Deck, front first: the Reading in front, then its Lemma and
  * Surface, and the Attestation at the back. Every path that builds the Deck
- * keeps this one order.
+ * keeps this one order, and deals only the Cards whose step says something
+ * about how the click led to the Reading (shared/click-story.ts).
  *
  * The Deck a running Resolution keeps up to date. Its Cards are only ever
- * added, each under the key it keeps: the Reading and Attestation steps from
- * the click until commit, then the stored Notes under the same keys, with
- * the Lemma and Surface joining them. A failed Session keeps both steps; the
- * Reading step shows the failure.
+ * added, each under the key it keeps, and once dealt a Card is never taken
+ * back: the Reading step from the click, the Attestation step as soon as
+ * the unit or Grammar shows it says something, then the stored Notes under
+ * the same keys at commit, with the Lemma and Surface joining them when
+ * they say something. A failed Session keeps its steps; the Reading step
+ * shows the failure.
  */
 export function resolutionDeckCards(
 	note: ResolutionNote,
@@ -45,7 +46,24 @@ export function resolutionDeckCards(
 	if (lifecycle.state === "Terminal" && lifecycle.outcome === "Complete") {
 		return completedCards(note, lifecycle);
 	}
-	return stepCards(note.target.requestId, knownUnitRoute(note));
+	return stepCards(
+		note.target.requestId,
+		knownUnitRoute(note),
+		attestationKnownToSay(note),
+	);
+}
+
+/**
+ * Whether what the Session knows so far makes its Attestation say
+ * something: its stored unit, or the members Grammar read. Every later
+ * stage asks this too, so a step dealt early is still dealt at commit.
+ */
+function attestationKnownToSay(note: ResolutionNote): boolean {
+	return (
+		unitSaysSomething(note.unit?.segments) ||
+		(note.grammar !== undefined &&
+			attestationSaysSomething(note.grammar.members))
+	);
 }
 
 /** The unit's stored route, when intake gave it one. */
@@ -62,24 +80,29 @@ function resolutionDeckCardKey(
 }
 
 /**
- * Both steps a click deals at once: the Reading is laid out by the unit's
- * route, and the Attestation quotes the clicked sentence as soon as the
- * Session's first result arrives.
+ * The steps a running Resolution deals: the Reading, laid out by the unit's
+ * route, and the Attestation once it says something, quoting the clicked
+ * sentence as soon as the Session's first result arrives.
  */
 function stepCards(
 	requestId: string,
 	unitRoute: UnitRoute | undefined,
+	attestation: boolean,
 ): readonly WorkspaceCardTarget[] {
 	return [
 		readingStep(requestId, unitRoute),
-		{
-			key: resolutionDeckCardKey(requestId, "Attestation"),
-			target: {
-				kind: "ResolutionStep",
-				requestId,
-				stepKind: "Attestation",
-			},
-		},
+		...(attestation
+			? [
+					{
+						key: resolutionDeckCardKey(requestId, "Attestation"),
+						target: {
+							kind: "ResolutionStep" as const,
+							requestId,
+							stepKind: "Attestation" as const,
+						},
+					},
+				]
+			: []),
 	];
 }
 
@@ -100,6 +123,7 @@ function completedCards(
 ): readonly WorkspaceCardTarget[] {
 	const requestId = note.target.requestId;
 	const { canonical } = completion;
+	const attestationDealt = attestationKnownToSay(note);
 	if (!canonical) {
 		// Without the whole occurrence, only its Reading and Attestation are
 		// known.
@@ -110,21 +134,34 @@ function completedCards(
 				{ kind: "Reading", readingId: completion.readingId },
 				{ resolutionRequestId: requestId },
 			),
-			canonicalCard(requestId, "Attestation", {
-				kind: "Attestation",
-				attestationId: completion.attestationId,
-			}),
+			...(attestationDealt
+				? [
+						canonicalCard(requestId, "Attestation", {
+							kind: "Attestation",
+							attestationId: completion.attestationId,
+						}),
+					]
+				: []),
 		];
 	}
-	return canonicalResolutionDeckCards(requestId, canonical, {
-		resolutionRequestId: requestId,
-	});
+	return canonicalResolutionDeckCards(
+		requestId,
+		{
+			...canonical,
+			steps: {
+				...canonical.steps,
+				attestation: canonical.steps.attestation || attestationDealt,
+			},
+		},
+		{ resolutionRequestId: requestId },
+	);
 }
 
 /**
- * The four stored Notes of one occurrence, in the Deck's order. A running
- * Resolution deals the Reading and Attestation at the click, and the Deck
- * slots the Lemma and Surface between them at commit.
+ * The stored Notes of one occurrence whose steps say something, in the
+ * Deck's order. A running Resolution deals the Reading, and the Attestation
+ * when it says something, before commit; the Deck slots the Lemma and
+ * Surface in at commit.
  */
 function canonicalResolutionDeckCards(
 	requestId: string,
@@ -132,6 +169,7 @@ function canonicalResolutionDeckCards(
 	/** Set when the deck converges from a live Resolution, so the stored Reading Note can load behind the resolving one. */
 	readingContext?: ReadingNotePresentationContext,
 ): readonly WorkspaceCardTarget[] {
+	const { steps } = canonical;
 	const reading = canonicalCard(
 		requestId,
 		"Reading",
@@ -159,12 +197,18 @@ function canonicalResolutionDeckCards(
 		kind: "Attestation",
 		attestationId: canonical.attestationId,
 	});
-	return [reading, lemma, surface, attestation];
+	return [
+		reading,
+		...(steps.lemma ? [lemma] : []),
+		...(steps.surface ? [surface] : []),
+		...(steps.attestation ? [attestation] : []),
+	];
 }
 
 /**
  * The Deck a Segment Selection deals: a stored route's canonical Cards, or
- * the Reading and Attestation steps of the Session it started or joined.
+ * the steps of the Session it started or joined: the Reading, and the
+ * Attestation when the clicked unit is more than the clicked word.
  */
 export function segmentSelectionDeckCards(
 	requestId: string,
@@ -174,7 +218,11 @@ export function segmentSelectionDeckCards(
 		return canonicalResolutionDeckCards(requestId, result.canonical);
 	const unitRoute =
 		result.unitRoute === "Unresolved" ? undefined : result.unitRoute;
-	return stepCards(result.requestId, unitRoute);
+	return stepCards(
+		result.requestId,
+		unitRoute,
+		unitSaysSomething(result.unitSegments),
+	);
 }
 
 function canonicalCard(

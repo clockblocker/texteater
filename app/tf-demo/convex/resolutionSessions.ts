@@ -41,6 +41,7 @@ import {
 } from "./model/validators";
 import { ensureVisitorEncounter } from "./model/visitorEncounters";
 import {
+	canonicalOccurrenceValidator,
 	loadCanonicalOccurrence,
 	loadResolutionNote,
 	resolutionNoteValidator,
@@ -72,14 +73,7 @@ export const selectSegment = mutation({
 	returns: v.union(
 		v.object({
 			kind: v.literal("Available"),
-			canonical: v.object({
-				readingId: v.id("readings"),
-				lemmaId: v.id("lemmas"),
-				surfaceId: v.id("surfaces"),
-				surfaceLanguage: v.literal("de"),
-				normalizedSurface: v.string(),
-				attestationId: v.id("attestations"),
-			}),
+			canonical: canonicalOccurrenceValidator,
 		}),
 		v.object({
 			kind: v.literal("Resolving"),
@@ -92,6 +86,12 @@ export const selectSegment = mutation({
 			 * Reading Card is laid out by it from the moment it is dealt.
 			 */
 			unitRoute: v.optional(storedUnitValidator.fields.route),
+			/**
+			 * The stored Segments of the clicked Segment's unit, so the Deck
+			 * deals the Attestation at once when the unit is more than the
+			 * clicked word.
+			 */
+			unitSegments: v.optional(storedUnitValidator.fields.segments),
 		}),
 	),
 	handler: async (ctx, args) => {
@@ -105,10 +105,12 @@ export const selectSegment = mutation({
 				args.sentenceId,
 				args.clickedSegmentIndex,
 			);
-			const unitRoute = unitsByMember(sentence.units).get(
+			const unit = unitsByMember(sentence.units).get(
 				args.clickedSegmentIndex,
-			)?.route;
-			const routed = unitRoute ? { unitRoute } : {};
+			);
+			const routed = unit
+				? { unitRoute: unit.route, unitSegments: [...unit.segments] }
+				: {};
 
 			const existing = await ctx.db
 				.query("resolutionSessions")

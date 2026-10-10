@@ -30,6 +30,12 @@ One ordered member of a Note's content. See [tf-demo ADR 0006].
 **Heading Block**:
 The pinned first Block naming the Note's Subject. See [tf-demo ADR 0006].
 
+**Caption**:
+The words a Heading Block shows after its title, saying how the Note's
+Subject leads to the next Card dealt in front of it in a click's Deck:
+`ging · past, er/sie/es of gehen`. See [tf-demo ADR 0011].
+_Avoid_: aside, subtitle
+
 **Source Contexts Block**:
 The pinned Block listing where the Subject was met. See [tf-demo ADR 0006].
 
@@ -179,4 +185,5 @@ Texts and their Sentences. See [tf-demo ADR 0001] and [tf-demo ADR 0005].
 [tf-demo ADR 0005]: ./docs/adr/0005-materialize-definitions-as-hidden-definition-texts.md
 [tf-demo ADR 0006]: ./docs/adr/0006-render-a-note-presentation-as-one-element-of-blocks.md
 [tf-demo ADR 0008]: ./docs/adr/0008-give-every-pane-a-ground-beneath-its-covers.md
+[tf-demo ADR 0011]: ./docs/adr/0011-tell-a-clicks-story-in-its-deck.md
 [Compass glossary]: ../../battery/compass/GLOSSARY.md

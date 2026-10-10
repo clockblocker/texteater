@@ -5,10 +5,19 @@ import type {
 	ResolutionReadingProjection,
 } from "../../../server/resolutionSessionProjection";
 import { type StoredUnit, unitsByMember } from "../../../server/storedSegments";
+import {
+	attestationSaysSomething,
+	lemmaSaysSomething,
+	surfaceSaysSomething,
+} from "../../../shared/click-story";
 import { textTitle } from "../../../shared/text-title";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
-import { loadCompleteOccurrenceMembers } from "../../model/occurrenceAttestations";
+import {
+	loadCompleteOccurrenceMembers,
+	surfaceValue,
+} from "../../model/occurrenceAttestations";
+import { presentSurface } from "../../model/presentedDumling";
 import { loadStoredSegments } from "../../model/storedSegments";
 import {
 	activeResolutionActivityValidator,
@@ -29,13 +38,23 @@ import {
 
 type ResolutionSession = Doc<"resolutionSessions">;
 
-const canonicalOccurrenceValidator = v.object({
+export const canonicalOccurrenceValidator = v.object({
 	readingId: v.id("readings"),
 	lemmaId: v.id("lemmas"),
 	surfaceId: v.id("surfaces"),
 	surfaceLanguage: v.literal("de"),
 	normalizedSurface: v.string(),
 	attestationId: v.id("attestations"),
+	/**
+	 * Which of the occurrence's Attestation, Surface and Lemma say something
+	 * about how the click led to its Reading, so the Deck deals them
+	 * (shared/click-story.ts).
+	 */
+	steps: v.object({
+		attestation: v.boolean(),
+		surface: v.boolean(),
+		lemma: v.boolean(),
+	}),
 });
 
 /**
@@ -243,14 +262,15 @@ async function resolutionNoteLifecycle(
 }
 
 /**
- * The canonical Reading, Lemma and Surface a committed occurrence opens, or
- * null when its rows are missing or disagree. Segment Selection's fast path
- * and the Resolution Note both read it.
+ * The canonical Reading, Lemma and Surface a committed occurrence opens, and
+ * which of its steps the Deck deals, or null when its rows are missing or
+ * disagree. Segment Selection's fast path and the Resolution Note both read
+ * it.
  */
 export async function loadCanonicalOccurrence(
 	ctx: QueryCtx,
 	attestationId: Id<"attestations">,
-) {
+): Promise<Infer<typeof canonicalOccurrenceValidator> | null> {
 	const attestation = await ctx.db.get(attestationId);
 	if (!attestation) return null;
 	const [reading, surface] = await Promise.all([
@@ -264,6 +284,20 @@ export async function loadCanonicalOccurrence(
 		surface.language !== "de"
 	)
 		return null;
+	const [lemma, members, readings] = await Promise.all([
+		ctx.db.get(reading.lemmaId),
+		ctx.db
+			.query("segments")
+			.withIndex("by_attestation_id", (q) =>
+				q.eq("attestationMembership.attestationId", attestationId),
+			)
+			.take(2),
+		ctx.db
+			.query("readings")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", reading.lemmaId))
+			.take(2),
+	]);
+	if (!lemma) return null;
 	return {
 		readingId: reading._id,
 		lemmaId: reading.lemmaId,
@@ -271,5 +305,17 @@ export async function loadCanonicalOccurrence(
 		surfaceLanguage: surface.language,
 		normalizedSurface: surface.normalizedSurface,
 		attestationId,
+		steps: {
+			attestation: attestationSaysSomething(
+				members.map(({ attestationMembership }) => ({
+					orthography:
+						attestationMembership?.orthography ?? "Standard",
+				})),
+			),
+			surface: surfaceSaysSomething(
+				presentSurface(surfaceValue(surface, lemma)),
+			),
+			lemma: lemmaSaysSomething(readings.length),
+		},
 	};
 }

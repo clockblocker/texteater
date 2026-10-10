@@ -31,7 +31,10 @@ export const renderDefaultAttestationHeading = (({ noteData }) => {
 				segments: source.segments,
 				memberSegmentIndices: source.memberSegmentIndices,
 			},
-			attestationNextTitle(presented.surface),
+			attestationNextTitle({
+				...presented.surface,
+				canonicalForm: presented.surface.lemma.canonicalForm,
+			}),
 			languages,
 		);
 	return (
