@@ -59,48 +59,48 @@ const inferred = (name: string) =>
 	inferredType(import.meta.url, { name, ...full });
 
 describe("Convex API types the client reads", () => {
-	it("a Resolution Note carries its lifecycle as one tagged union", async () => {
-		expect(await inferred("ResolutionNoteLifecycle")).toMatchInlineSnapshot(
+	it("a Resolution Note carries its lifecycle as one tagged union", () => {
+		expect(inferred("ResolutionNoteLifecycle")).toMatchInlineSnapshot(
 			`"type ResolutionNoteLifecycle = { activity: "Running" | "Scheduled"; progress: "Committing" | "GrammarAvailable" | "ReadingAvailable" | "RouteAvailable" | "Starting"; state: "Active"; } | { attestationId: Id<"attestations">; canonical?: { attestationId: Id<"attestations">; lemmaId: Id<"lemmas">; normalizedSurface: string; readingId: Id<"readings">; surfaceId: Id<"surfaces">; surfaceLanguage: "de"; } | undefined; outcome: "Complete"; progress: "Committing"; readingId: Id<"readings">; state: "Terminal"; } | { outcome: "Unresolved"; progress: "Committing" | "GrammarAvailable" | "ReadingAvailable" | "RouteAvailable" | "Starting"; state: "Terminal"; } | { diagnosticId: string; failureCode: "BudgetExhausted" | "CatalogMiss" | "DictionaryConflict" | "Internal" | "InvalidOutput" | "MembershipConflict" | "Network" | "ProviderUnavailable" | "RateLimited" | "Refusal" | "RequestRejected"; message: string; outcome: "PermanentFailure"; progress: "Committing" | "GrammarAvailable" | "ReadingAvailable" | "RouteAvailable" | "Starting"; state: "Terminal"; }"`,
 		);
 	}, 30_000);
 
-	it("a Resolution Note projects its Lemma per Kind, without any", async () => {
-		expect(await inferred("VerbResolutionGrammar")).toMatchInlineSnapshot(
+	it("a Resolution Note projects its Lemma per Kind, without any", () => {
+		expect(inferred("VerbResolutionGrammar")).toMatchInlineSnapshot(
 			`"type VerbResolutionGrammar = { grundform: boolean | null; members: { attested: string; orthography: "Standard" | "Typo"; }[]; realizationCoverage: "Full" | "Partial"; normalizedSurface: string; spelling: SurfaceSpelling; canonicalForm: string; family: "Lexeme"; kind: "VERB"; coreFeatures: { hasSepPrefix: string | null; lexicallyReflexive: "Acc" | "Dat" | null; }; }"`,
 		);
-		expect(await inferred("VerbResolutionReading")).toMatchInlineSnapshot(
+		expect(inferred("VerbResolutionReading")).toMatchInlineSnapshot(
 			`"type VerbResolutionReading = { emojiDescription: string; canonicalForm: string; family: "Lexeme"; kind: "VERB"; }"`,
 		);
 	}, 30_000);
 
-	it("a Shadow Note names its relations and types its candidates", async () => {
-		expect(await inferred("ShadowPendingRelation")).toMatchInlineSnapshot(
+	it("a Shadow Note names its relations and types its candidates", () => {
+		expect(inferred("ShadowPendingRelation")).toMatchInlineSnapshot(
 			`"type ShadowPendingRelation = { locatorKey: string; relation: SemanticRelation; }"`,
 		);
-		expect(await inferred("ShadowCandidateFamily")).toMatchInlineSnapshot(
+		expect(inferred("ShadowCandidateFamily")).toMatchInlineSnapshot(
 			`"type ShadowCandidateFamily = "Lexeme" | "Locution" | "Morpheme" | "Saying""`,
 		);
-		expect(
-			await inferred("ShadowCandidateKindIsString"),
-		).toMatchInlineSnapshot(`"type ShadowCandidateKindIsString = false"`);
-	}, 30_000);
-
-	it("a Reading Note names its Reading Knowledge", async () => {
-		expect(await inferred("ReadingNoteKnowledge")).toMatchInlineSnapshot(
-			`"type ReadingNoteKnowledge = Omit<ReadingKnowledge, "semanticRelations"> & { semanticRelations?: PresentedRelations | undefined; }"`,
+		expect(inferred("ShadowCandidateKindIsString")).toMatchInlineSnapshot(
+			`"type ShadowCandidateKindIsString = false"`,
 		);
 	}, 30_000);
 
-	it("a Lemma route note presents its Family and Kind as Dumling values", async () => {
-		expect(await inferred("PresentedLemmaFamily")).toMatchInlineSnapshot(
+	it("a Reading Note names its Reading Knowledge", () => {
+		expect(inferred("ReadingNoteKnowledge")).toMatchInlineSnapshot(
+			`"type ReadingNoteKnowledge = Omit<ReadingKnowledge, "semanticRelations"> & { semanticRelations?: PresentedRelations; }"`,
+		);
+	}, 30_000);
+
+	it("a Lemma route note presents its Family and Kind as Dumling values", () => {
+		expect(inferred("PresentedLemmaFamily")).toMatchInlineSnapshot(
 			`"type PresentedLemmaFamily = "Foreign" | "Lexeme" | "Locution" | "Morpheme" | "Saying""`,
 		);
-		expect(
-			await inferred("PresentedLemmaKindIsString"),
-		).toMatchInlineSnapshot(`"type PresentedLemmaKindIsString = false"`);
-		expect(
-			await inferred("ConnectedSurfaceKindIsString"),
-		).toMatchInlineSnapshot(`"type ConnectedSurfaceKindIsString = false"`);
+		expect(inferred("PresentedLemmaKindIsString")).toMatchInlineSnapshot(
+			`"type PresentedLemmaKindIsString = false"`,
+		);
+		expect(inferred("ConnectedSurfaceKindIsString")).toMatchInlineSnapshot(
+			`"type ConnectedSurfaceKindIsString = false"`,
+		);
 	}, 30_000);
 });

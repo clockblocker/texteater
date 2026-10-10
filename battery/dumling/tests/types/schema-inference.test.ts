@@ -9,24 +9,22 @@ import {
 afterAll(closeTestingSessions);
 const fixture = new URL("./schema-consumer.ts", import.meta.url).href;
 const lines = (await readFile(new URL(fixture), "utf8")).split("\n");
-async function completions(marker: string) {
+function completions(marker: string) {
 	const index = lines.findIndex((line) =>
 		line.endsWith(`// completions:${marker}`),
 	);
 	const line = lines[index];
 	if (!line) throw Error(`Missing completion fixture: ${marker}`);
 	const column = line.indexOf(".shape.") + ".shape.".length + 1;
-	return (
-		await inferredCompletions(fixture, {
-			line: index + 1,
-			column,
-			backend: "typescript7",
-		})
-	).sort();
+	return inferredCompletions(fixture, {
+		line: index + 1,
+		column,
+		backend: "typescript7",
+	}).sort();
 }
 
-test("concrete schema imports offer only their applicable fields", async () => {
-	expect(await completions("noun")).toEqual([
+test("concrete schema imports offer only their applicable fields", () => {
+	expect(completions("noun")).toEqual([
 		"inflectionalFeatures",
 		"language",
 		"lemma",
@@ -35,7 +33,7 @@ test("concrete schema imports offer only their applicable fields", async () => {
 		"surfaceFeatures",
 		"unitKind",
 	]);
-	expect(await completions("prefix")).toEqual([
+	expect(completions("prefix")).toEqual([
 		"language",
 		"lemma",
 		"normalizedSurface",
@@ -43,16 +41,16 @@ test("concrete schema imports offer only their applicable fields", async () => {
 		"surfaceFeatures",
 		"unitKind",
 	]);
-	expect(await completions("reading")).toEqual([
+	expect(completions("reading")).toEqual([
 		"emojiDescription",
 		"lemma",
 		"unitKind",
 	]);
 }, 30_000);
 
-test("schema output types retain route-specific features and composition", async () => {
+test("schema output types retain route-specific features and composition", () => {
 	expect(
-		await inferredType(fixture, {
+		inferredType(fixture, {
 			name: "NounFeatures",
 			full: true,
 			backend: "typescript7",
@@ -61,14 +59,14 @@ test("schema output types retain route-specific features and composition", async
 		`"type NounFeatures = { case: "Acc" | "Dat" | "Gen" | "Nom" | null; gender: "Fem" | "Masc" | "Neut" | null; number: "Plur" | "Sing" | null; } | null"`,
 	);
 	expect(
-		await inferredType(fixture, {
+		inferredType(fixture, {
 			name: "ReadingCore",
 			full: true,
 			backend: "typescript7",
 		}),
 	).toMatchInlineSnapshot(`"type ReadingCore = { abbr: "Yes" | null; }"`);
 	expect(
-		await inferredType(fixture, {
+		inferredType(fixture, {
 			name: "ModelKind",
 			full: true,
 			backend: "typescript7",

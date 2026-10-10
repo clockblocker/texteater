@@ -30,9 +30,9 @@ export type GermanVerbRendererReading = ReadingRenderContext<
 >["noteData"]["reading"];
 
 describe("Reading renderer inference", () => {
-	it("preserves the selected branch through the Reading Note API", async () => {
+	it("preserves the selected branch through the Reading Note API", () => {
 		expect(
-			await inferredType(import.meta.url, {
+			inferredType(import.meta.url, {
 				name: "GermanVerbReadingNoteIdentity",
 				full: true,
 				backend: "typescript7",
@@ -43,10 +43,11 @@ describe("Reading renderer inference", () => {
 		);
 	}, 30_000);
 
-	it("shows direct identity primitives in the editor-style hint", async () => {
+	it("shows direct identity primitives in the editor-style hint", () => {
 		expect(
-			await inferredType(import.meta.url, {
+			inferredType(import.meta.url, {
 				name: "GermanVerbRendererReading",
+				full: false,
 				backend: "typescript7",
 				project,
 			}),
@@ -55,9 +56,9 @@ describe("Reading renderer inference", () => {
 		);
 	}, 30_000);
 
-	it("exposes only the selected language, Family, and Kind branch", async () => {
+	it("exposes only the selected language, Family, and Kind branch", () => {
 		expect(
-			await inferredType(import.meta.url, {
+			inferredType(import.meta.url, {
 				name: "GermanVerbRendererReading",
 				full: true,
 				backend: "typescript7",

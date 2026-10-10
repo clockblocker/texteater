@@ -8,17 +8,17 @@ beforeAll(buildPublishedPackage, 60_000);
 afterAll(closeTestingSessions);
 const consumer = new URL("./consumer/types.ts", import.meta.url);
 
-test("published schema composition retains the structured Knowledge types", async () => {
+test("published schema composition retains the structured Knowledge types", () => {
 	const schemas = new URL("./schema-consumer/schemas.ts", import.meta.url);
 	expect(
-		await inferredType(schemas, {
+		inferredType(schemas, {
 			name: "DefinitionModel",
 			full: true,
 			backend: "typescript7",
 		}),
 	).toBe("type DefinitionModel = { definition?: string | undefined; }");
 	expect(
-		await inferredType(schemas, {
+		inferredType(schemas, {
 			name: "ReadingFamily",
 			full: true,
 			backend: "typescript7",
@@ -27,10 +27,10 @@ test("published schema composition retains the structured Knowledge types", asyn
 }, 30_000);
 
 // Lexeme and Locution share one relation space (ADR 0039).
-test("published operations infer the source's relation space without narrowing the target Kind", async () => {
+test("published operations infer the source's relation space without narrowing the target Kind", () => {
 	for (const name of ["ParsedTargetFamily", "ChangedTargetFamily"]) {
 		expect(
-			await inferredType(consumer, {
+			inferredType(consumer, {
 				name,
 				full: true,
 				backend: "typescript7",
@@ -38,7 +38,7 @@ test("published operations infer the source's relation space without narrowing t
 		).toBe(`type ${name} = "Lexeme" | "Locution"`);
 	}
 	expect(
-		await inferredType(consumer, {
+		inferredType(consumer, {
 			name: "RelatedProperNoun",
 			full: true,
 			backend: "typescript7",
@@ -48,9 +48,9 @@ test("published operations infer the source's relation space without narrowing t
 	);
 }, 30_000);
 
-test("recursive Reading leaves retain their grammatical coordinates and features", async () => {
+test("recursive Reading leaves retain their grammatical coordinates and features", () => {
 	expect(
-		await inferredType(consumer, {
+		inferredType(consumer, {
 			name: "PrefixCoordinates",
 			full: true,
 			backend: "typescript7",
@@ -59,7 +59,7 @@ test("recursive Reading leaves retain their grammatical coordinates and features
 		'type PrefixCoordinates = { language: "de"; family: "Morpheme"; kind: "Prefix"; }',
 	);
 	expect(
-		await inferredType(consumer, {
+		inferredType(consumer, {
 			name: "PrefixFeature",
 			full: true,
 			backend: "typescript7",
@@ -67,9 +67,9 @@ test("recursive Reading leaves retain their grammatical coordinates and features
 	).toBe("type PrefixFeature = string | null");
 }, 30_000);
 
-test("recursive Reading leaves can be consumed as Dumling Readings", async () => {
+test("recursive Reading leaves can be consumed as Dumling Readings", () => {
 	expect(
-		await inferredType(consumer, {
+		inferredType(consumer, {
 			name: "MorphemeReadingCompatible",
 			full: true,
 			backend: "typescript7",
@@ -77,9 +77,9 @@ test("recursive Reading leaves can be consumed as Dumling Readings", async () =>
 	).toBe("type MorphemeReadingCompatible = true");
 }, 30_000);
 
-test("source-specific retractions have no inferred value branch", async () => {
+test("source-specific retractions have no inferred value branch", () => {
 	expect(
-		await inferredType(consumer, {
+		inferredType(consumer, {
 			name: "RetractionCarriesValue",
 			full: true,
 			backend: "typescript7",
@@ -116,7 +116,7 @@ test("published operational and type imports exclude the authoring declaration g
 	).toEqual([]);
 }, 30_000);
 
-test("published projection preserves actual units, provenance, and typed failure", async () => {
+test("published projection preserves actual units, provenance, and typed failure", () => {
 	for (const [name, expected] of [
 		["ProjectionTargetKind", '"Lemma" | "Reading"'],
 		["ProjectionProvenance", '"direct" | "inferred"'],
@@ -125,7 +125,7 @@ test("published projection preserves actual units, provenance, and typed failure
 		["ProjectionTargetCompatible", "true"],
 	] as const) {
 		expect(
-			await inferredType(consumer, {
+			inferredType(consumer, {
 				name,
 				full: true,
 				backend: "typescript7",

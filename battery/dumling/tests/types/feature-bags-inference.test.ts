@@ -10,9 +10,9 @@ export type DeNounFeatureBags = z.infer<typeof DeNounFeatureBagsSchema>;
 export type UniversalFeatureBag = SourceUniversalFeatureBag;
 
 describe("Feature Bag inference", () => {
-	test("keeps German noun Feature Bags readable", async () => {
+	test("keeps German noun Feature Bags readable", () => {
 		expect(
-			await inferredType(import.meta.url, {
+			inferredType(import.meta.url, {
 				name: "DeNounFeatureBags",
 				full: true,
 				backend: "typescript7",
@@ -22,9 +22,9 @@ describe("Feature Bag inference", () => {
 		);
 	}, 30_000);
 
-	test("keeps the universal Feature Bag readable", async () => {
+	test("keeps the universal Feature Bag readable", () => {
 		expect(
-			await inferredType(import.meta.url, {
+			inferredType(import.meta.url, {
 				name: "UniversalFeatureBag",
 				full: true,
 				backend: "typescript7",
