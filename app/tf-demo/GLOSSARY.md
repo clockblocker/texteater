@@ -204,7 +204,7 @@ Attestation without matching all and only its members. See
 Removal of derived analysis for the Texts in scope while preserving those
 Texts and their Sentences. See [tf-demo ADR 0001] and [tf-demo ADR 0005].
 
-## Intake
+### Intake
 
 These terms name what Intake takes in, keeps and produces. tf-demo runs
 Intake; Dumgen's `splitText` and `segment.inUnits` are its last steps.
