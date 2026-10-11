@@ -3,6 +3,8 @@
 Small visual demos of layout concepts for the tf-demo layout redesign
 (#1166). Each demo shows one idea on shared fake data, so concepts can be
 judged by looking at them. Static fixtures only: no Convex, no backend.
+The playground shows only directions still alive: when #1166 rejects a
+direction, its demo or variant is deleted, and git keeps it.
 
 This app is separate from tf-demo's internal dev Playground sidebar and its
 `test:e2e:playground` suite. Turbo filters name it `@texteater/playground`.

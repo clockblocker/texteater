@@ -1,4 +1,3 @@
-import { cn } from "lego";
 import { motion } from "motion/react";
 import {
 	type ReactNode,
@@ -82,7 +81,6 @@ export function Surface({
 	containerWidth,
 	zIndex,
 	header,
-	className,
 	children,
 }: {
 	readonly id: string;
@@ -91,7 +89,6 @@ export function Surface({
 	readonly containerWidth: number;
 	readonly zIndex?: number;
 	readonly header: ReactNode;
-	readonly className?: string;
 	readonly children: ReactNode;
 }) {
 	const { dir } = usePlaygroundEnv();
@@ -108,10 +105,7 @@ export function Surface({
 				zIndex,
 				transformOrigin: "top",
 			}}
-			className={cn(
-				"absolute flex flex-col rounded-2xl border border-line-strong bg-canvas shadow-[0_18px_40px_-16px_oklch(0%_0_0/0.6)]",
-				className,
-			)}
+			className="absolute flex flex-col rounded-2xl border border-line-strong bg-canvas shadow-[0_18px_40px_-16px_oklch(0%_0_0/0.6)]"
 		>
 			<header className="flex min-h-10 items-center gap-1 border-b border-line px-2 py-1">
 				{header}
@@ -127,13 +121,11 @@ export function Surface({
 export function IconButton({
 	label,
 	onClick,
-	pressed,
 	disabled,
 	children,
 }: {
 	readonly label: string;
 	readonly onClick: () => void;
-	readonly pressed?: boolean;
 	readonly disabled?: boolean;
 	readonly children: ReactNode;
 }) {
@@ -142,13 +134,12 @@ export function IconButton({
 			type="button"
 			title={label}
 			aria-label={label}
-			aria-pressed={pressed}
 			disabled={disabled}
 			onClick={(event) => {
 				event.stopPropagation();
 				onClick();
 			}}
-			className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-md text-ink-soft hover:bg-paper hover:text-ink disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent aria-pressed:bg-paper aria-pressed:text-link"
+			className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-md text-ink-soft hover:bg-paper hover:text-ink disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent"
 		>
 			{children}
 		</button>
@@ -217,7 +208,7 @@ export function useAnchoredBox(
  * Scrolls the stage so the top of a surface just placed at `box` shows,
  * with room for its first Card.
  */
-export function revealBox(
+function revealBox(
 	content: HTMLElement | null,
 	box: Box,
 	reducedMotion: boolean,

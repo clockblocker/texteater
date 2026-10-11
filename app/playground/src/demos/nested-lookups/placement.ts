@@ -23,8 +23,7 @@ function clampLeft(left: number, width: number, containerWidth: number) {
 
 /**
  * Just under the anchor, its inline-start edge on the anchor's, clamped
- * into the container. Over a parent popover this covers it, as Yomitan's
- * and KOReader's child popups do.
+ * into the container.
  */
 export function placeUnder(
 	anchor: DOMRect,
@@ -38,28 +37,6 @@ export function placeUnder(
 		top: anchor.bottom + gap,
 		width,
 	};
-}
-
-/**
- * Beside the parent, past its inline-end edge (else its inline-start
- * edge), level with the anchor. Null when neither side has room.
- */
-export function placeBeside(
-	parent: Box,
-	anchor: DOMRect,
-	containerWidth: number,
-	dir: "ltr" | "rtl",
-): Box | null {
-	const width = surfaceWidth(containerWidth);
-	const after = parent.left + parent.width + gap;
-	const before = parent.left - width - gap;
-	const sides = dir === "rtl" ? [before, after] : [after, before];
-	const left = sides.find(
-		(candidate) =>
-			candidate >= margin && candidate + width <= containerWidth - margin,
-	);
-	if (left === undefined) return null;
-	return { left, top: Math.max(parent.top, anchor.top - 20), width };
 }
 
 /** `box` as logical inset styles for an absolutely placed surface. */

@@ -1,6 +1,6 @@
 /**
- * Where a floating Card stack goes, under three strategies. Everything is
- * in logical px inside the reading viewport: `start` runs from the
+ * Where the floating Deck goes so it never covers the clicked word's
+ * sentence. Everything is in logical px inside the reading viewport: `start` runs from the
  * viewport's inline-start edge, `top` from its top, so an RTL frame
  * mirrors without a second code path.
  */
@@ -11,8 +11,6 @@ export type Box = {
 	readonly width: number;
 	readonly height: number;
 };
-
-export type Strategy = "under" | "opposite" | "beside";
 
 export type Scene = {
 	readonly view: { readonly width: number; readonly height: number };
@@ -26,22 +24,17 @@ export type Scene = {
 	readonly stack: { readonly width: number; readonly height: number };
 	/** How far the text can scroll back (up) and forward (down), in px. */
 	readonly scrollRoom: { readonly back: number; readonly forward: number };
-	/**
-	 * Whether `beside` may scroll the text to fit the whole stack clear of
-	 * the sentence, rather than clamp it to the room there is.
-	 */
-	readonly makeRoom: boolean;
 };
 
 export type Placement = {
 	/** The stack's box; its height is what it shows, at most `maxHeight`. */
 	readonly box: Box;
 	readonly maxHeight: number;
-	/** Where it landed, for the status line. */
+	/** Where it landed, for the readout. */
 	readonly where: string;
 	/**
 	 * Block px the text should scroll so the stack fits clear of the
-	 * sentence; 0 when it already does. Only `beside` asks for it.
+	 * sentence; 0 when it already does.
 	 */
 	readonly scrollBy: number;
 };
@@ -79,76 +72,13 @@ function startAtWord(scene: Scene, width: number): number {
 }
 
 /**
- * (a) Today's tf-demo: right under the word, flipping above it only when
- * there's more room there. The lines after the word are fair game.
+ * KOReader-like: beside the sentence when the text column's margin has
+ * room, else below or above it. When neither side fits the whole stack, it
+ * asks the text to scroll the sentence to the top, as tf-demo's
+ * `clearSentence` scrolls it clear of a docked Deck, and clamps the stack's
+ * height only when scrolling can't make the room.
  */
-function under(scene: Scene): Placement {
-	const width = stackWidth(scene);
-	const start = startAtWord(scene, width);
-	const below = scene.view.height - margin - (bottomOf(scene.word) + gap);
-	const above = scene.word.top - gap - margin;
-	if (scene.stack.height <= below || below >= above) {
-		const maxHeight = Math.max(below, minStackHeight);
-		const height = Math.min(scene.stack.height, maxHeight);
-		return {
-			box: { start, top: bottomOf(scene.word) + gap, width, height },
-			maxHeight,
-			where: "below the word",
-			scrollBy: 0,
-		};
-	}
-	const maxHeight = Math.max(above, minStackHeight);
-	const height = Math.min(scene.stack.height, maxHeight);
-	return {
-		box: { start, top: scene.word.top - gap - height, width, height },
-		maxHeight,
-		where: "above the word (flipped)",
-		scrollBy: 0,
-	};
-}
-
-/**
- * (b) LWT and Jidoujisho: the half of the viewport the word is not in,
- * pushed to that half's far edge.
- */
-function opposite(scene: Scene): Placement {
-	const width = stackWidth(scene);
-	const start = (scene.view.width - width) / 2;
-	const half = scene.view.height / 2;
-	const wordMiddle = scene.word.top + scene.word.height / 2;
-	if (wordMiddle < half) {
-		const maxHeight = Math.max(half - margin - gap / 2, minStackHeight);
-		const height = Math.min(scene.stack.height, maxHeight);
-		return {
-			box: {
-				start,
-				top: scene.view.height - margin - height,
-				width,
-				height,
-			},
-			maxHeight,
-			where: "bottom half",
-			scrollBy: 0,
-		};
-	}
-	const maxHeight = Math.max(half - margin - gap / 2, minStackHeight);
-	const height = Math.min(scene.stack.height, maxHeight);
-	return {
-		box: { start, top: margin, width, height },
-		maxHeight,
-		where: "top half",
-		scrollBy: 0,
-	};
-}
-
-/**
- * (c) KOReader-like: beside the sentence when the text column's margin
- * has room, else below or above it, clamping the stack's height before
- * covering a line. When neither side fits the whole stack and `makeRoom`
- * is on, it asks the text to scroll the sentence to the top, as tf-demo's
- * `clearSentence` scrolls it clear of a docked Deck.
- */
-function beside(scene: Scene): Placement {
+export function placeBeside(scene: Scene): Placement {
 	const sentence = bounds(
 		scene.lines.length > 0 ? scene.lines : [scene.word],
 	);
@@ -227,13 +157,11 @@ function beside(scene: Scene): Placement {
 
 	// Neither side fits it whole: scroll the sentence up to the top margin,
 	// when that gives more room than either side has now.
-	const scrollBy = scene.makeRoom
-		? clamp(
-				sentence.top - margin,
-				-scene.scrollRoom.back,
-				scene.scrollRoom.forward,
-			)
-		: 0;
+	const scrollBy = clamp(
+		sentence.top - margin,
+		-scene.scrollRoom.back,
+		scene.scrollRoom.forward,
+	);
 	const belowAfter = below + scrollBy;
 	if (scrollBy !== 0 && belowAfter > Math.max(below, above))
 		return placeBelow(
@@ -245,10 +173,6 @@ function beside(scene: Scene): Placement {
 		? placeBelow(Math.max(below, minStackHeight))
 		: placeAbove(Math.max(above, minStackHeight));
 }
-
-export const strategies: Readonly<
-	Record<Strategy, (scene: Scene) => Placement>
-> = { under, opposite, beside };
 
 /** The parts of `boxes` the stack lies over, clipped to the viewport. */
 export function covered(

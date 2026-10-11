@@ -78,8 +78,8 @@ export function setHashParams(
 }
 
 /**
- * One URL query param a demo owns, such as the open stack in
- * `collapsed-stack`. Set it with `{ push: true }` to make browser back walk
+ * One URL query param a demo owns, such as the clicked word in
+ * `never-cover-word`. Set it with `{ push: true }` to make browser back walk
  * the change. The toolbar's names (`w`, `dir`, `theme`, `motion`) are
  * reserved.
  */

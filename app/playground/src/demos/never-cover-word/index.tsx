@@ -4,9 +4,7 @@ import {
 	ArrowDownRight,
 	ArrowUpLeft,
 	ArrowUpRight,
-	ArrowUpToLine,
 	CircleCheck,
-	Ghost,
 	TriangleAlert,
 	X,
 } from "lucide-react";
@@ -33,69 +31,45 @@ import {
 import {
 	DemoInspector,
 	InspectorCheck,
-	InspectorChoice,
 	InspectorSection,
 	InspectorTry,
 	useDemoParam,
+	useInspectorAvoid,
 	usePlaygroundEnv,
 } from "@/shell";
 import {
 	type Box,
 	covered,
 	type Placement,
+	placeBeside,
 	type Scene,
-	type Strategy,
-	strategies,
 } from "./placement";
 
 const texts = [germanText, hebrewText];
 const allWords = texts.flatMap(wordsOf);
 
-const options: readonly {
-	readonly id: Strategy;
-	readonly letter: string;
-	readonly label: string;
-}[] = [
-	{ id: "under", letter: "a", label: "Under the word" },
-	{ id: "opposite", letter: "b", label: "Opposite half" },
-	{ id: "beside", letter: "c", label: "Beside the sentence" },
-];
-
-const isStrategy = (value: string | null): value is Strategy =>
-	options.some((option) => option.id === value);
-
 /** The stack's preferred width, as tf-demo's Deck roughly has it. */
 const stackWidth = 360;
 
-type Measured = Omit<Scene, "stack" | "makeRoom">;
+type Measured = Omit<Scene, "stack">;
 type Corner = "top-start" | "top-end" | "bottom-start" | "bottom-end";
 
 /**
- * Three placements of the floating Card stack, switchable over one text:
- * (a) under the word, as tf-demo has it; (b) the half of the viewport the
- * word is not in, as LWT and Jidoujisho do; (c) beside the sentence, as
- * KOReader keeps clear of its highlight. With the marks knob on, the
- * clicked word and its sentence are tinted, and red dashes mark every
- * sentence line the stack covers.
+ * The floating Card stack beside the clicked word's sentence, as KOReader
+ * keeps clear of its highlight, with the text scrolling to make room when
+ * neither side of the sentence has it. With the marks knob on, the clicked
+ * word and its sentence are tinted, and red dashes mark every sentence line
+ * the stack covers.
  */
 export default function NeverCoverWordDemo() {
 	const env = usePlaygroundEnv();
-	const [strategyParam, setStrategyParam] = useDemoParam("strategy");
-	const strategy: Strategy = isStrategy(strategyParam)
-		? strategyParam
-		: "under";
 	const [wordId, setWordId] = useDemoParam("word");
-	const [ghostsParam, setGhostsParam] = useDemoParam("ghosts");
-	const ghosts = ghostsParam === "on";
 	const [marksParam, setMarksParam] = useDemoParam("marks");
 	const marks = marksParam === "on";
-	const [roomParam, setRoomParam] = useDemoParam("room");
-	const makeRoom = roomParam !== "off";
 	const word = allWords.find((candidate) => candidate.id === wordId) ?? null;
 
-	const [lookup, setLookup] = useState<string | null>(null);
 	const [front, setFront] = useState<number | null>(null);
-	const { cards, pending } = useFakeResolution(lookup ?? word);
+	const { cards, pending } = useFakeResolution(word);
 	const frontIndex = front ?? cards.length - 1;
 
 	const [area, setArea] = useState<HTMLDivElement | null>(null);
@@ -106,8 +80,6 @@ export default function NeverCoverWordDemo() {
 	);
 	const [measured, setMeasured] = useState<Measured | null>(null);
 	const [naturalHeight, setNaturalHeight] = useState(0);
-	/** Animate the stack's move only when the strategy switches. */
-	const [glide, setGlide] = useState(false);
 
 	const remeasure = useCallback(() => {
 		const scroller = scrollerRef.current;
@@ -132,10 +104,7 @@ export default function NeverCoverWordDemo() {
 		let frame = 0;
 		const onScroll = () => {
 			cancelAnimationFrame(frame);
-			frame = requestAnimationFrame(() => {
-				setGlide(false);
-				remeasure();
-			});
+			frame = requestAnimationFrame(remeasure);
 		};
 		const observer = new ResizeObserver(onScroll);
 		observer.observe(area);
@@ -162,39 +131,34 @@ export default function NeverCoverWordDemo() {
 			? {
 					...measured,
 					stack: { width: stackWidth, height: naturalHeight },
-					makeRoom,
 				}
 			: null;
-	const placement = scene ? strategies[strategy](scene) : null;
+	const placement = scene ? placeBeside(scene) : null;
+	useInspectorAvoid(
+		word && placement?.where.endsWith("end side")
+			? "inline-end"
+			: word && placement?.where.endsWith("start side")
+				? "inline-start"
+				: null,
+	);
 
-	// (c) may ask the text to scroll the sentence up to make room. It asks
-	// on a new word, strategy or Card, never on the reader's own scroll.
+	// The placement may ask the text to scroll the sentence up to make room.
+	// It asks on a new word or Card, never on the reader's own scroll.
 	useEffect(() => {
 		const scroller = scrollerRef.current;
-		if (!area || !scroller || !wordId || strategy !== "beside" || !makeRoom)
-			return;
+		if (!area || !scroller || !wordId) return;
 		const fresh = measure(area, scroller, wordId, env.dir);
 		if (!fresh || naturalHeight === 0) return;
-		const { scrollBy } = strategies.beside({
+		const { scrollBy } = placeBeside({
 			...fresh,
 			stack: { width: stackWidth, height: naturalHeight },
-			makeRoom,
 		});
 		if (Math.abs(scrollBy) > 2)
 			scroller.scrollTo({
 				top: scroller.scrollTop + scrollBy,
 				behavior: env.reducedMotion ? "auto" : "smooth",
 			});
-	}, [
-		area,
-		wordId,
-		strategy,
-		makeRoom,
-		cards.length,
-		naturalHeight,
-		env.dir,
-		env.reducedMotion,
-	]);
+	}, [area, wordId, cards.length, naturalHeight, env.dir, env.reducedMotion]);
 
 	// A clamped stack scrolls inside; keep its front Card in view.
 	useLayoutEffect(() => {
@@ -204,13 +168,10 @@ export default function NeverCoverWordDemo() {
 
 	const open = (id: string) => {
 		setWordId(id, { push: true });
-		setLookup(null);
 		setFront(null);
-		setGlide(false);
 	};
 	const close = () => {
 		setWordId(null, { push: true });
-		setLookup(null);
 		setFront(null);
 	};
 
@@ -250,49 +211,24 @@ export default function NeverCoverWordDemo() {
 				<InspectorSection>
 					<InspectorTry>
 						<p>
-							Where the floating Deck goes so the clicked word and
-							its sentence (the Attestation) stay readable. The
-							readout below says what the Deck covers; the marks
-							knob tints the sentence and dashes covered lines.
-							LWT · Jidoujisho · KOReader.
+							The floating Deck goes beside the clicked word's
+							sentence (the Attestation) and never covers it. When
+							neither side has room, the text scrolls the sentence
+							up to make it. The readout below says what the Deck
+							covers; the marks knob tints the sentence and dashes
+							covered lines.
 						</p>
 					</InspectorTry>
 				</InspectorSection>
 				<InspectorSection title="Try">
 					<InspectorTry>
 						<p>
-							A word in the last visible line under each strategy
-							(or the corner buttons), then the width at 390.
-							Ghosts outline the other two placements.
+							A word in the last visible line (or the corner
+							buttons), at 390 and at 1440.
 						</p>
 					</InspectorTry>
 				</InspectorSection>
 				<InspectorSection title="Knobs">
-					<InspectorChoice
-						label="Placement strategy"
-						options={options.map((option) => ({
-							value: option.id,
-							label: `${option.letter} · ${option.label}`,
-						}))}
-						value={strategy}
-						onChange={(picked) => {
-							setGlide(true);
-							setStrategyParam(picked);
-						}}
-					/>
-					{strategy === "beside" ? (
-						<InspectorCheck
-							checked={makeRoom}
-							onChange={(on) => setRoomParam(on ? null : "off")}
-							title="When neither side of the sentence fits the whole Deck, scroll the text instead of shrinking the Deck"
-						>
-							<ArrowUpToLine
-								aria-hidden="true"
-								className="size-4"
-							/>
-							Scroll for room
-						</InspectorCheck>
-					) : null}
 					<InspectorCheck
 						checked={marks}
 						onChange={(on) => setMarksParam(on ? "on" : null)}
@@ -300,14 +236,6 @@ export default function NeverCoverWordDemo() {
 					>
 						<TriangleAlert aria-hidden="true" className="size-4" />
 						Mark the sentence and covered lines
-					</InspectorCheck>
-					<InspectorCheck
-						checked={ghosts}
-						onChange={(on) => setGhostsParam(on ? "on" : null)}
-						title="Outline where the other two strategies would put the Deck"
-					>
-						<Ghost aria-hidden="true" className="size-4" />
-						Ghosts
 					</InspectorCheck>
 					<fieldset className="grid gap-1.5">
 						<legend className="mb-1.5 text-xs text-ink-muted">
@@ -383,22 +311,9 @@ export default function NeverCoverWordDemo() {
 				</div>
 
 				<div className="pointer-events-none absolute inset-0 overflow-hidden">
-					{ghosts && scene
-						? options
-								.filter((option) => option.id !== strategy)
-								.map((option) => (
-									<GhostBox
-										key={option.id}
-										letter={option.letter}
-										box={strategies[option.id](scene).box}
-									/>
-								))
-						: null}
-
 					{word ? (
 						<FloatingDeck
 							placement={placement}
-							glide={glide}
 							covering={marks && lineHits.length > 0}
 							clamped={
 								placement !== null &&
@@ -413,10 +328,6 @@ export default function NeverCoverWordDemo() {
 								cards={cards}
 								frontIndex={frontIndex}
 								onFront={setFront}
-								onLinkClick={(link) => {
-									setLookup(link.word);
-									setFront(null);
-								}}
 							/>
 							{pending[0] ? (
 								<CardSkeleton kind={pending[0]} collapsed />
@@ -442,13 +353,9 @@ export default function NeverCoverWordDemo() {
 	);
 }
 
-/**
- * The stack's floating box. It glides between placements only when the
- * strategy switches, so it tracks the word without lag while scrolling.
- */
+/** The stack's floating box, tracking the word without lag while scrolling. */
 function FloatingDeck({
 	placement,
-	glide,
 	covering,
 	clamped,
 	wordId,
@@ -458,7 +365,6 @@ function FloatingDeck({
 	children,
 }: {
 	readonly placement: Placement | null;
-	readonly glide: boolean;
 	readonly covering: boolean;
 	/** Too tall for its room: it scrolls, and its top fades out. */
 	readonly clamped: boolean;
@@ -472,8 +378,6 @@ function FloatingDeck({
 		<div
 			className={cn(
 				"pointer-events-auto absolute",
-				glide &&
-					"transition-[inset-inline-start,top,width] duration-300 ease-out",
 				!placement && "invisible",
 			)}
 			style={{
@@ -580,30 +484,6 @@ function Status({
 				{verdict}
 			</span>
 		</p>
-	);
-}
-
-function GhostBox({
-	letter,
-	box,
-}: {
-	readonly letter: string;
-	readonly box: Box;
-}) {
-	return (
-		<div
-			className="absolute rounded-xl border-2 border-dashed border-line-strong"
-			style={{
-				insetInlineStart: box.start,
-				top: box.top,
-				width: box.width,
-				height: box.height,
-			}}
-		>
-			<span className="absolute start-2 top-1 rounded bg-canvas px-1 font-mono text-xs text-ink-muted">
-				{letter}
-			</span>
-		</div>
 	);
 }
 

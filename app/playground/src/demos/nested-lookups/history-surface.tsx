@@ -20,14 +20,13 @@ type Entry = {
 	readonly via: string | null;
 };
 
-type Move = "push" | "back" | "forward";
+type Move = "push" | "back";
 
 /**
- * History inside one surface, as Readest and Yomitan keep it: a word
- * clicked inside the lookup replaces its content and pushes the trail;
- * back and forward walk it, and the breadcrumb jumps anywhere along it. A
- * click from the middle of the trail drops what lay ahead, as a browser
- * does.
+ * History inside one surface, as tf-demo's Covers stack over their Ground
+ * (tf-demo ADR 0008): a word clicked inside the lookup replaces its
+ * content and pushes the trail, back pops it, and there is no forward. The
+ * breadcrumb shows the trail; a crumb pops back to its level.
  */
 export function HistorySurface() {
 	const { dir } = usePlaygroundEnv();
@@ -35,9 +34,9 @@ export function HistorySurface() {
 	const nextKey = useRef(0);
 	const [anchorId, setAnchorId] = useState<string | null>(null);
 	const [trail, setTrail] = useState<readonly Entry[]>([]);
-	const [at, setAt] = useState(0);
 	const [move, setMove] = useState<Move>("push");
 	const { box, containerWidth } = useAnchoredBox(contentRef, anchorId);
+	const at = trail.length - 1;
 	const current = trail[at];
 
 	const entry = (word: FixtureWord | string): Entry => {
@@ -54,7 +53,6 @@ export function HistorySurface() {
 	const openFromText = (word: FixtureWord) => {
 		setAnchorId(word.id);
 		setTrail([entry(word)]);
-		setAt(0);
 		setMove("push");
 	};
 	const push = (click: CardWordClick) => {
@@ -65,22 +63,21 @@ export function HistorySurface() {
 			{ ...from, via: click.anchorId },
 			entry(click.word),
 		]);
-		setAt(at + 1);
 		setMove("push");
 	};
-	const go = (index: number) => {
-		if (index === at || index < 0 || index >= trail.length) return;
-		setMove(index < at ? "back" : "forward");
-		setAt(index);
+	/** Pops the trail down to `index`, as pressing back that many times. */
+	const pop = (index: number) => {
+		if (index < 0 || index >= at) return;
+		setMove("back");
+		setTrail(trail.slice(0, index + 1));
 	};
 	const close = () => {
 		setAnchorId(null);
 		setTrail([]);
-		setAt(0);
 	};
 	useEscape(close);
 
-	// Forward content comes in from the inline end, back from the start.
+	// Pushed content comes in from the inline end, popped from the start.
 	const inward = (dir === "rtl" ? -1 : 1) * (move === "back" ? -1 : 1);
 
 	return (
@@ -88,21 +85,9 @@ export function HistorySurface() {
 			<DemoInspector>
 				<InspectorSection title="Readout">
 					<p className="text-xs text-ink-soft">
-						{current ? (
-							<>
-								Trail of {trail.length}: back keeps{" "}
-								<b className="text-ink-soft">{at}</b>, forward
-								keeps{" "}
-								<b className="text-ink-soft">
-									{trail.length - 1 - at}
-								</b>
-								{trail.length - 1 > at
-									? ". A new click here drops the forward part."
-									: "."}
-							</>
-						) : (
-							"No lookup open"
-						)}
+						{current
+							? `Trail of ${trail.length}; back pops ${at === 0 ? "nothing" : `to ${trail[at - 1]?.lookup.label}`}.`
+							: "No lookup open"}
 					</p>
 				</InspectorSection>
 			</DemoInspector>
@@ -126,22 +111,11 @@ export function HistorySurface() {
 									<IconButton
 										label="Back"
 										disabled={at === 0}
-										onClick={() => go(at - 1)}
+										onClick={() => pop(at - 1)}
 									>
 										<ChevronLeft className="size-4 rtl:-scale-x-100" />
 									</IconButton>
-									<IconButton
-										label="Forward"
-										disabled={at === trail.length - 1}
-										onClick={() => go(at + 1)}
-									>
-										<ChevronRight className="size-4 rtl:-scale-x-100" />
-									</IconButton>
-									<Breadcrumb
-										trail={trail}
-										at={at}
-										onGo={go}
-									/>
+									<Breadcrumb trail={trail} onPop={pop} />
 									<IconButton label="Close" onClick={close}>
 										<X className="size-4" />
 									</IconButton>
@@ -175,16 +149,15 @@ export function HistorySurface() {
 	);
 }
 
-/** The whole trail; the current entry stands out, the ones ahead fade. */
+/** The trail; the current entry stands out, a crumb below pops to it. */
 function Breadcrumb({
 	trail,
-	at,
-	onGo,
+	onPop,
 }: {
 	readonly trail: readonly Entry[];
-	readonly at: number;
-	readonly onGo: (index: number) => void;
+	readonly onPop: (index: number) => void;
 }) {
+	const at = trail.length - 1;
 	const listRef = useRef<HTMLOListElement>(null);
 	// Keeps the current crumb in view when the trail outgrows the header.
 	useLayoutEffect(() => {
@@ -220,13 +193,13 @@ function Breadcrumb({
 							aria-current={index === at ? "page" : undefined}
 							onClick={(event) => {
 								event.stopPropagation();
-								onGo(index);
+								onPop(index);
 							}}
 							className={cn(
 								"cursor-pointer rounded px-1 py-0.5 hover:bg-paper",
-								index < at && "text-ink-soft",
-								index === at && "font-semibold text-ink",
-								index > at && "text-ink-faint italic",
+								index < at
+									? "text-ink-soft"
+									: "font-semibold text-ink",
 							)}
 						>
 							{item.lookup.label}

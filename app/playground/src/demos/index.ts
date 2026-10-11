@@ -36,33 +36,17 @@ export const demos: readonly Demo[] = [
 		slug: "never-cover-word",
 		title: "Never cover the word",
 		description:
-			"Lookup placement that never covers the clicked word or its sentence.",
-		inspiration: ["LWT", "KOReader"],
+			"The Deck beside the sentence, never covering it; the text scrolls to make room.",
+		inspiration: ["KOReader"],
 		Component: lazy(() => import("./never-cover-word")),
 	},
 	{
 		slug: "nested-lookups",
 		title: "Nested lookups",
 		description:
-			"Lookups inside a lookup: stacked child popovers, back/forward history, plain replacement.",
-		inspiration: ["Yomitan", "SiYuan", "Readest", "Foliate"],
+			"Lookups inside a lookup in one surface, a stack that Back and a breadcrumb pop.",
+		inspiration: ["Readest", "Yomitan"],
 		Component: lazy(() => import("./nested-lookups")),
-	},
-	{
-		slug: "collapsed-stack",
-		title: "Collapsed stack",
-		description:
-			"Stacks collapse to header lines, with the stack in the URL so browser back walks it.",
-		inspiration: ["Logseq", "Quartz"],
-		Component: lazy(() => import("./collapsed-stack")),
-	},
-	{
-		slug: "promote-peek",
-		title: "Promote a peek",
-		description:
-			"Promote a transient peek into something persistent: Deck → Pane → Sheet.",
-		inspiration: ["AFFiNE", "SiYuan"],
-		Component: lazy(() => import("./promote-peek")),
 	},
 	{
 		slug: "progressive-results",
@@ -86,13 +70,5 @@ export const demos: readonly Demo[] = [
 			"⌘-hover a link in a Card for a fleeting preview that nests, pins and expands into a Sheet with history.",
 		inspiration: ["Obsidian", "Hover Editor", "Quartz", "Path of Exile 2"],
 		Component: lazy(() => import("./hover-preview")),
-	},
-	{
-		slug: "pinned-reader-tabs",
-		title: "Pinned reader tabs",
-		description:
-			"Obsidian's tabs with the reader pinned first: links open Sheet tabs, ⌘ in the background, ⌘⌥ in a split.",
-		inspiration: ["Obsidian"],
-		Component: lazy(() => import("./pinned-reader-tabs")),
 	},
 ];

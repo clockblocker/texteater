@@ -93,29 +93,27 @@ export default function HoverPreviewDemo() {
 		if (path.length === 0) return;
 		const pushed = path.map(entry);
 		setSheet((open) => {
-			if (host.kind === "sheet" && open) {
-				const trail = [...open.trail.slice(0, open.at + 1), ...pushed];
-				return { trail, at: trail.length - 1, move: "push" };
-			}
+			if (host.kind === "sheet" && open)
+				return { trail: [...open.trail, ...pushed], move: "push" };
 			const trail =
 				host.kind === "deck"
 					? [entry(host.subject), ...pushed]
 					: pushed;
-			return { trail, at: trail.length - 1, move: "push" };
+			return { trail, move: "push" };
 		});
 	};
 	const openSheet = (subject: string) =>
-		setSheet({ trail: [entry(subject)], at: 0, move: "push" });
-	const goSheet = (index: number) =>
-		setSheet((open) =>
-			open && index >= 0 && index < open.trail.length && index !== open.at
-				? {
-						...open,
-						at: index,
-						move: index < open.at ? "back" : "forward",
-					}
-				: open,
-		);
+		setSheet({ trail: [entry(subject)], move: "push" });
+	/**
+	 * Pops the Cover stack down to `index`. Below the bottom Cover there is
+	 * no Sheet left, so the Sheet closes and its Card shows in the Deck.
+	 */
+	const popSheet = (index: number) =>
+		setSheet((open) => {
+			if (!open || index >= open.trail.length - 1) return open;
+			if (index < 0) return null;
+			return { trail: open.trail.slice(0, index + 1), move: "back" };
+		});
 
 	const [front, setFront] = useState<number | null>(null);
 	const dealt = useFakeResolution(word, dealDelaysMs);
@@ -255,7 +253,7 @@ export default function HoverPreviewDemo() {
 							Obsidian's page preview, copied rule for rule, over
 							a Deck that never changes in place. Previews nest,
 							pin and expand; deeper reading happens in a Sheet
-							with back, forward and a breadcrumb.
+							with back and a breadcrumb.
 						</p>
 					</InspectorTry>
 				</InspectorSection>
@@ -313,10 +311,11 @@ export default function HoverPreviewDemo() {
 					<InspectorTry>
 						<p>
 							<i>Plain click</i> on a link does what Obsidian's
-							does: it opens the target. Here that is a Sheet over
-							the text (Obsidian's tab), whose trail starts at the
-							Card, so the Deck is never replaced. Inside a Sheet
-							a click navigates in place.
+							does: it opens the target. Here that is a Sheet, a
+							Cover over the text, whose trail starts at the Card,
+							so the Deck is never replaced. Inside a Sheet a
+							click pushes another Cover. Back retraces the stack,
+							and there is no forward.
 						</p>
 						<p>
 							<i>Expand</i> pushes the whole hover path onto the
@@ -592,7 +591,7 @@ export default function HoverPreviewDemo() {
 						<HistorySheet
 							key="sheet"
 							history={sheet}
-							onGo={goSheet}
+							onPop={popSheet}
 							onClose={() => setSheet(null)}
 						/>
 					) : null}

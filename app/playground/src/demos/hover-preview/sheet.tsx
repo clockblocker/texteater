@@ -13,31 +13,33 @@ export type SheetEntry = {
 };
 
 export type SheetHistory = {
+	/** The Cover stack, bottom first; the last stop is the one shown. */
 	readonly trail: readonly SheetEntry[];
-	readonly at: number;
 	/** How the last move went, so content slides the matching way. */
-	readonly move: "push" | "back" | "forward";
+	readonly move: "push" | "back";
 };
 
 /**
- * A Sheet in History mode, as an Obsidian tab keeps it: following a link
- * replaces the Sheet's content and pushes the trail; back and forward walk
- * it, and the breadcrumb jumps anywhere along it. A push from the middle
- * of the trail drops what lay ahead, as a browser does. It covers the
- * reader as a Cover covers its Ground; the links in it are a preview
- * host, so Cmd-hover works here as in a Card.
+ * A Sheet in History mode, as tf-demo's Covers stack over their Ground
+ * (tf-demo ADR 0008): following a link pushes a Cover, back pops one, and
+ * there is no forward. The breadcrumb shows the stack; a crumb pops back
+ * to its level. Back on the bottom Cover closes the Sheet. It covers the
+ * reader; the links in it are a preview host, so Cmd-hover works here as
+ * in a Card.
  */
 export function HistorySheet({
 	history,
-	onGo,
+	onPop,
 	onClose,
 }: {
 	readonly history: SheetHistory;
-	readonly onGo: (index: number) => void;
+	/** Pops the stack down to `index`; -1 pops the bottom Cover too. */
+	readonly onPop: (index: number) => void;
 	readonly onClose: () => void;
 }) {
 	const { dir, reducedMotion } = usePlaygroundEnv();
-	const { trail, at, move } = history;
+	const { trail, move } = history;
+	const at = trail.length - 1;
 	const current = trail[at];
 	const bodyRef = useRef<HTMLDivElement>(null);
 	// A new stop starts at its top.
@@ -48,7 +50,7 @@ export function HistorySheet({
 	const cards = resolveEntry(current.word)
 		.cards.filter((card) => card.kind !== "Attestation" || card.quote)
 		.toReversed();
-	// Forward content comes in from the inline end, back from the start.
+	// Pushed content comes in from the inline end, popped from the start.
 	const inward = (dir === "rtl" ? -1 : 1) * (move === "back" ? -1 : 1);
 	const shift = reducedMotion ? 0 : 24 * inward;
 
@@ -63,21 +65,10 @@ export function HistorySheet({
 			className="absolute inset-0 z-20 flex flex-col bg-canvas text-ink"
 		>
 			<header className="flex min-h-11 shrink-0 items-center gap-1 border-b border-line px-2 py-1">
-				<SheetButton
-					label="Back"
-					disabled={at === 0}
-					onClick={() => onGo(at - 1)}
-				>
+				<SheetButton label="Back" onClick={() => onPop(at - 1)}>
 					<ChevronLeft className="size-4 rtl:-scale-x-100" />
 				</SheetButton>
-				<SheetButton
-					label="Forward"
-					disabled={at === trail.length - 1}
-					onClick={() => onGo(at + 1)}
-				>
-					<ChevronRight className="size-4 rtl:-scale-x-100" />
-				</SheetButton>
-				<Breadcrumb trail={trail} at={at} onGo={onGo} />
+				<Breadcrumb trail={trail} onPop={onPop} />
 				<SheetButton label="Close the Sheet" onClick={onClose}>
 					<X className="size-4" />
 				</SheetButton>
@@ -115,12 +106,10 @@ export function HistorySheet({
 function SheetButton({
 	label,
 	onClick,
-	disabled,
 	children,
 }: {
 	readonly label: string;
 	readonly onClick: () => void;
-	readonly disabled?: boolean;
 	readonly children: ReactNode;
 }) {
 	return (
@@ -128,25 +117,23 @@ function SheetButton({
 			type="button"
 			title={label}
 			aria-label={label}
-			disabled={disabled}
 			onClick={onClick}
-			className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-md text-ink-soft hover:bg-paper hover:text-ink disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent"
+			className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-md text-ink-soft hover:bg-paper hover:text-ink"
 		>
 			{children}
 		</button>
 	);
 }
 
-/** The whole trail; the current stop stands out, the ones ahead fade. */
+/** The Cover stack; the top stop stands out, a crumb below pops to it. */
 function Breadcrumb({
 	trail,
-	at,
-	onGo,
+	onPop,
 }: {
 	readonly trail: readonly SheetEntry[];
-	readonly at: number;
-	readonly onGo: (index: number) => void;
+	readonly onPop: (index: number) => void;
 }) {
+	const at = trail.length - 1;
 	const listRef = useRef<HTMLOListElement>(null);
 	// Keeps the current crumb in view when the trail outgrows the header.
 	useLayoutEffect(() => {
@@ -179,12 +166,12 @@ function Breadcrumb({
 							lang="de"
 							dir="ltr"
 							aria-current={index === at ? "page" : undefined}
-							onClick={() => onGo(index)}
+							onClick={() => onPop(index)}
 							className={cn(
 								"cursor-pointer rounded px-1 py-0.5 hover:bg-paper",
-								index < at && "text-ink-soft",
-								index === at && "font-semibold text-ink",
-								index > at && "text-ink-faint italic",
+								index < at
+									? "text-ink-soft"
+									: "font-semibold text-ink",
 							)}
 						>
 							{item.word}
