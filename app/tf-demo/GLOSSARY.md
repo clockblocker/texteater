@@ -16,6 +16,38 @@ _Avoid_: Library Sheet, Text Sheet
 The Menu Item beside the Library that holds the application's settings. See
 [tf-demo ADR 0003].
 
+**Shelf**:
+A curated collection of Texts that a person has checked. Its Texts go
+through the same Intake as learner uploads.
+
+**Price**:
+The coins a Submission costs, shown before Intake starts.
+_Avoid_: quote
+
+**Mode**:
+One way to read a Text. A Text offers the Modes its Medium allows, and the
+learner can switch between them.
+_Avoid_: View
+
+**Page Mode**:
+The Mode that shows Page Images with clickable Segments over them. It suits
+visual material: comics, picture books, worksheets.
+
+**Reflow Mode**:
+The Mode that sets a Text in tf-demo's own reader. Every Text offers it. It
+suits books, newspapers, articles and sparsely illustrated books.
+
+**Playback Mode**:
+The Mode that shows a recording's transcript while it plays, with the current
+Sentence highlighted. Tapping a Segment pauses and looks it up; tapping a
+Sentence replays it.
+_Avoid_: transcript view, transcription
+
+**Flag**:
+A learner's report that one spot in a Text is wrong. Re-running a Sentence
+replaces its Segments, so the fix strips that Sentence's Occurrence
+Attestations. See [Dumgen ADR 0004].
+
 **Link**:
 A reference inside a Note naming one Note, or a location in a Text as Go to
 source does. See [tf-demo ADR 0008].
@@ -172,11 +204,104 @@ Attestation without matching all and only its members. See
 Removal of derived analysis for the Texts in scope while preserving those
 Texts and their Sentences. See [tf-demo ADR 0001] and [tf-demo ADR 0005].
 
+## Intake
+
+These terms name what Intake takes in, keeps and produces. tf-demo runs
+Intake; Dumgen's `splitText` and `segment.inUnits` are its last steps.
+
+**Submission**:
+What a learner or curator hands in to become a Text: pasted text, a file or
+a link.
+_Avoid_: upload (as a noun), import, Text Record
+
+**Original**:
+The submitted material as Intake keeps it: the file, its Page Images or its
+recording.
+_Avoid_: source
+
+**Medium**:
+What an Original is made of: text, pages or a recording. It decides which
+Modes a Text offers.
+_Avoid_: Kind, type, format
+
+**Intake**:
+The one pipeline that turns a Submission into a Text, the same for Shelves
+and learner uploads. It works Chapter by Chapter: Extraction, then
+`splitText` and `segment.inUnits`.
+_Avoid_: ingestion, processing, import
+
+**Extraction**:
+The Intake step that reads the words and their structure out of an Original.
+It produces an Extracted Text.
+_Avoid_: transcription, OCR as the general term
+
+**Extracted Text**:
+The stored form every Extraction produces: Chapters of Headings and
+Paragraphs, with Line Breaks, Inline Styles and Original Locations, as running
+text not yet split into Sentences. Pasted text is the simplest one: one
+Chapter, no Original Locations. Intake keeps it so a Flag, a segmentation
+improvement or a curator's fix re-runs only the cheap steps.
+
+**Text**:
+The readable result of Intake, listed in the Library: Chapters of Sentences,
+each cut into Segments.
+
+**Chapter**:
+The piece of a Text that Intake processes and a learner opens as a whole. An
+article is one Chapter. Each Chapter becomes ready on its own.
+_Avoid_: Part, Section, batch
+
+**Heading**:
+A title in a Text, the Chapter's own or one inside it. A Heading Block
+belongs to a Note instead.
+
+**Paragraph**:
+A stretch of running text the Original sets apart. In a Text it holds
+Sentences.
+_Avoid_: Block
+
+**Line Break**:
+A break inside a Paragraph that Intake keeps because it carries meaning, as
+in verse, lyrics and letters.
+
+**Sentence**:
+The unit of reading and of language detection. A Segment is located by its
+Sentence and its index there. See [Dumgen ADR 0004].
+
+**Inline Style**:
+Italic, bold or quotation on a run of text, kept from the Original.
+_Avoid_: formatting, markup
+
+**Detected Language**:
+The language Intake detects for one Sentence. A foreign word inside a
+target-language Sentence stays clickable as Foreign (Dumling). See
+[Dumgen ADR 0001] and [ADR 0045].
+
+**Plain Sentence**:
+A Sentence whose Detected Language is not the target language. It is shown
+but not clickable.
+
+**Original Location**:
+Where a piece of an Extracted Text sits in its Original: an area of a Page
+Image, a time span of a recording, or a spot in the file.
+_Avoid_: anchor, offset
+
+**Page Image**:
+One page of an Original whose Medium is pages.
+_Avoid_: Page, scan
+
+**Page Region**:
+An area of a Page Image that holds text: a speech balloon, a caption box, a
+label.
+_Avoid_: bubble, Caption, Region
+
 [ADR 0019]: ../../docs/adr/0019-select-grammatical-alternatives-from-reviewed-members.md
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
 [ADR 0035]: ../../docs/adr/0035-attest-articles-and-fused-words-segment-by-segment.md
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
 [ADR 0040]: ../../docs/adr/0040-make-the-article-a-satellite-of-its-phrase-head.md
+[ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
+[Dumgen ADR 0001]: ../../battery/dumgen/docs/adr/0001-judge-each-sentence-before-conditional-stitching-and-local-segmentation.md
 [Dumgen ADR 0004]: ../../battery/dumgen/docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md
 [Dumgen ADR 0007]: ../../battery/dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md
 [tf-demo ADR 0001]: ./docs/adr/0001-persist-occurrence-attestations-by-segment-membership.md
