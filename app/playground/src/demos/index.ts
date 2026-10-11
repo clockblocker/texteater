@@ -79,4 +79,12 @@ export const demos: readonly Demo[] = [
 		inspiration: ["Lute"],
 		Component: lazy(() => import("./lemma-hop")),
 	},
+	{
+		slug: "hover-preview",
+		title: "Hover preview",
+		description:
+			"⌘-hover a link in a Card for a fleeting preview that nests, pins and expands into a Sheet with history.",
+		inspiration: ["Obsidian", "Hover Editor", "Quartz", "Path of Exile 2"],
+		Component: lazy(() => import("./hover-preview")),
+	},
 ];
