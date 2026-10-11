@@ -136,8 +136,7 @@ export function SidebarStack({
 			>
 				{keys.length === 0 ? (
 					<p className="p-3 text-sm text-ink-muted">
-						Click a word in the text. Each lookup joins this stack,
-						newest on top.
+						No lookups yet.
 					</p>
 				) : (
 					<Reorder.Group

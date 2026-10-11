@@ -41,7 +41,6 @@ export function Lookup({
 	readonly container: "dock" | "sheet";
 	readonly outlined: boolean;
 }) {
-	const dealing = state.pending.length > 0;
 	return (
 		<div
 			className={cn(
@@ -55,32 +54,19 @@ export function Lookup({
 					<bdi>&lt;Lookup /&gt;</bdi> in the {container}
 				</span>
 			) : null}
-			<div className="flex min-h-7 flex-wrap items-center gap-x-2 text-sm text-ink-muted">
-				{state.hop ? (
-					<button
-						type="button"
-						onClick={state.onBack}
-						className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 text-link hover:bg-raised"
-					>
-						<ArrowLeft
-							aria-hidden="true"
-							className="size-3.5 rtl:-scale-x-100"
-						/>
-						{state.clicked}
-					</button>
-				) : null}
-				<span>
-					{state.hop ? "lemma " : "clicked "}
-					<b className="font-semibold text-ink">
-						{state.hop ?? state.clicked}
-					</b>
-				</span>
-				<span className="ms-auto font-mono text-xs text-ink-faint">
-					{dealing
-						? `dealing ${state.cards.length}/${state.cards.length + state.pending.length}`
-						: `${state.cards.length} Cards`}
-				</span>
-			</div>
+			{state.hop ? (
+				<button
+					type="button"
+					onClick={state.onBack}
+					className="inline-flex w-fit cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 text-sm text-link hover:bg-raised"
+				>
+					<ArrowLeft
+						aria-hidden="true"
+						className="size-3.5 rtl:-scale-x-100"
+					/>
+					{state.clicked}
+				</button>
+			) : null}
 			<CardStack
 				cards={state.cards}
 				frontIndex={state.frontIndex}

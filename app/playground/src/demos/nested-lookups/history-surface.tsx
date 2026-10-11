@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
 import type { FixtureWord } from "@/fixtures";
-import { usePlaygroundEnv } from "@/shell";
+import { DemoInspector, InspectorSection, usePlaygroundEnv } from "@/shell";
 import type { CardWordClick } from "./clickable-words";
 import { type Lookup, LookupDeck } from "./lookup-deck";
 import {
@@ -85,23 +85,27 @@ export function HistorySurface() {
 
 	return (
 		<>
-			<p
-				dir="auto"
-				className="border-b border-line px-4 py-2 text-xs text-ink-muted rtl:text-end"
-			>
-				{current ? (
-					<>
-						Trail of {trail.length}: back keeps{" "}
-						<b className="text-ink-soft">{at}</b>, forward keeps{" "}
-						<b className="text-ink-soft">{trail.length - 1 - at}</b>
-						{trail.length - 1 > at
-							? ". A new click here drops the forward part."
-							: "."}
-					</>
-				) : (
-					"No lookup open"
-				)}
-			</p>
+			<DemoInspector>
+				<InspectorSection title="Readout">
+					<p className="text-xs text-ink-soft">
+						{current ? (
+							<>
+								Trail of {trail.length}: back keeps{" "}
+								<b className="text-ink-soft">{at}</b>, forward
+								keeps{" "}
+								<b className="text-ink-soft">
+									{trail.length - 1 - at}
+								</b>
+								{trail.length - 1 > at
+									? ". A new click here drops the forward part."
+									: "."}
+							</>
+						) : (
+							"No lookup open"
+						)}
+					</p>
+				</InspectorSection>
+			</DemoInspector>
 			<ReaderStage
 				contentRef={contentRef}
 				selectedWordId={current ? anchorId : null}

@@ -14,6 +14,7 @@ import {
 	type FakeCardLink,
 	type FakeResolution,
 } from "@/fixtures";
+import { DemoInspector, InspectorSection } from "@/shell";
 import { type InflectionTable, inflectionsOf } from "./inflections";
 
 /** The four ways from the clicked form to its lemma, and back. */
@@ -88,8 +89,15 @@ function HopSlide({
 	);
 }
 
+/** How the current view hops, in the inspector. */
 function Hint({ children }: { readonly children: ReactNode }) {
-	return <p className="text-xs text-ink-muted">{children}</p>;
+	return (
+		<DemoInspector>
+			<InspectorSection title="Here">
+				<p className="text-xs text-ink-soft">{children}</p>
+			</InspectorSection>
+		</DemoInspector>
+	);
 }
 
 const pill =
@@ -188,13 +196,13 @@ export function TailHop({ resolution, front, onHop }: HopProps) {
 		<div className="grid grid-cols-1 gap-2">
 			<Hint>
 				Every tail is a link: tap{" "}
-				<span className="text-ink-soft">
+				<bdi className="text-ink">
 					{cardOf(resolution, "Surface").caption}
-				</span>{" "}
+				</bdi>{" "}
 				for the form,{" "}
-				<span className="text-ink-soft">
+				<bdi className="text-ink">
 					{cardOf(resolution, "Lemma").caption}
-				</span>{" "}
+				</bdi>{" "}
 				for the lemma.
 			</Hint>
 			<CardStack

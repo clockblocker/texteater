@@ -1,4 +1,4 @@
-import { Button, cn } from "lego";
+import { Button } from "lego";
 import { RotateCw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -10,7 +10,17 @@ import {
 	WordText,
 	wordsOf,
 } from "@/fixtures";
-import { useDemoParam } from "@/shell";
+import {
+	DemoInspector,
+	InspectorCheck,
+	InspectorChoice,
+	InspectorRange,
+	InspectorSection,
+	InspectorTry,
+	useDemoParam,
+	useFrameSize,
+	useInspectorAvoid,
+} from "@/shell";
 import { HeightTrace, useShifts } from "./shift-meter";
 import {
 	AllSkeletons,
@@ -26,26 +36,21 @@ const firstGing = allWords.find((word) => word.text === "ging");
 const strategies: readonly {
 	readonly id: Strategy;
 	readonly label: string;
-	/** For a narrow frame. */
-	readonly short: string;
 	readonly hint: string;
 }[] = [
 	{
 		id: "skeletons",
 		label: "a · Skeletons up front",
-		short: "a · Skeletons",
 		hint: "Every slot appears at the click and fills in place; an empty one folds away.",
 	},
 	{
 		id: "deal",
 		label: "b · Deal as ready",
-		short: "b · Deal",
 		hint: "A Card is dealt once its heading is known, with skeleton blocks until its body lands (tf-demo today).",
 	},
 	{
 		id: "grow",
 		label: "c · One Card grows",
-		short: "c · Grow",
 		hint: "One Card per click; each stage adds a section below the last.",
 	},
 ];
@@ -54,14 +59,6 @@ const strategies: readonly {
 const speeds: readonly number[] = [0.25, 0.5, 1, 1.5, 2, 3];
 const speedName = (speed: number) =>
 	speed < 1 ? "fast" : speed === 1 ? "realistic" : "slow";
-
-const tryThis = (
-	<>
-		switch strategy and watch the meter; click <em>Bahnhof</em> (no Surface,
-		so a slot comes up empty); turn on “{failingKind} fails”; set the speed
-		to ×3; set the width to 390.
-	</>
-);
 
 const isStrategy = (value: string | null): value is Strategy =>
 	strategies.some((each) => each.id === value);
@@ -78,6 +75,9 @@ export default function ProgressiveResultsDemo() {
 	const [wordId, setWordId] = useDemoParam("word");
 	const [link, setLink] = useState<string | null>(null);
 	const [replay, setReplay] = useState(0);
+	// The lookup sits at the inline end from 760px, below the text under it.
+	const { inlineSize } = useFrameSize();
+	useInspectorAvoid(inlineSize >= 760 ? "inline-end" : "block-end");
 
 	const strategy: Strategy = isStrategy(strategyParam)
 		? strategyParam
@@ -119,93 +119,104 @@ export default function ProgressiveResultsDemo() {
 
 	return (
 		<div className="flex h-full flex-col bg-canvas text-ink">
-			<header className="grid gap-1 border-line border-b px-4 py-2.5 text-sm">
-				<p className="text-pretty">
-					<strong className="font-semibold">
-						Progressive results.
-					</strong>{" "}
-					<span className="text-ink-soft">
-						A lookup's stages land one by one, about 2.6&nbsp;s in
-						all. Readest shows a skeleton per dictionary and fills
-						each as it settles, hiding empty ones.
-					</span>
-				</p>
-				<p className="hidden text-pretty text-ink-muted @min-[640px]/frame:block">
-					Try: {tryThis}
-				</p>
-				<details className="text-ink-muted @min-[640px]/frame:hidden">
-					<summary className="cursor-pointer">What to try</summary>
-					<p className="text-pretty">{tryThis}</p>
-				</details>
-			</header>
-
-			<div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-line border-b px-4 py-2 text-sm">
-				<fieldset className="flex flex-wrap gap-1">
-					<legend className="sr-only">Strategy</legend>
-					{strategies.map((each) => (
-						<button
-							key={each.id}
-							type="button"
-							aria-pressed={each.id === strategy}
-							title={each.hint}
-							onClick={() => setStrategy(each.id)}
-							className={cn(
-								"cursor-pointer rounded-md border px-2.5 py-1",
-								each.id === strategy
-									? "border-link bg-paper text-ink"
-									: "border-line text-ink-soft hover:text-ink",
-							)}
-						>
-							<span className="@min-[640px]/frame:hidden">
-								{each.short}
-							</span>
-							<span className="hidden @min-[640px]/frame:inline">
-								{each.label}
-							</span>
-						</button>
-					))}
-				</fieldset>
-				<label className="flex items-center gap-2">
-					<span className="text-ink-soft">Speed</span>
-					<input
-						type="range"
+			<DemoInspector>
+				<InspectorSection>
+					<InspectorTry>
+						<p>
+							A lookup's stages land one by one, about 2.6&nbsp;s
+							in all. Readest shows a skeleton per dictionary and
+							fills each as it settles, hiding empty ones.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+				<InspectorSection title="Try">
+					<InspectorTry>
+						<p>
+							Switch strategy and watch the meter; click{" "}
+							<em>Bahnhof</em> (no Surface, so a slot comes up
+							empty); turn on “{failingKind} fails”; set the speed
+							to ×3; set the width to 390.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+				<InspectorSection title="Knobs">
+					<InspectorChoice
+						label="Strategy"
+						options={strategies.map((each) => ({
+							value: each.id,
+							label: each.label,
+							hint: each.hint,
+						}))}
+						value={strategy}
+						onChange={setStrategy}
+					/>
+					<InspectorRange
+						label="Speed"
 						min={0}
 						max={speeds.length - 1}
 						step={1}
 						value={speeds.indexOf(speed)}
-						onChange={(event) =>
-							setSpeed(
-								String(speeds[Number(event.target.value)] ?? 1),
-							)
+						onChange={(index) =>
+							setSpeed(String(speeds[index] ?? 1))
 						}
-						className="w-20 accent-[var(--link)] @min-[640px]/frame:w-24"
+						format={() => `×${speed} ${speedName(speed)}`}
 					/>
-					<output className="w-24 text-ink-muted tabular-nums">
-						<bdi>
-							×{speed} {speedName(speed)}
-						</bdi>
-					</output>
-				</label>
-				<label className="flex cursor-pointer items-center gap-2">
-					<input
-						type="checkbox"
+					<InspectorCheck
 						checked={fail}
-						onChange={(event) =>
-							setFail(event.target.checked ? "1" : null)
-						}
-						className="accent-[var(--link)]"
-					/>
-					<span className="text-ink-soft">{failingKind} fails</span>
-				</label>
-				<Button
-					variant="outline"
-					size="sm"
-					onClick={() => setReplay((count) => count + 1)}
-				>
-					<RotateCw aria-hidden="true" />
-					Replay
-				</Button>
-			</div>
+						onChange={(on) => setFail(on ? "1" : null)}
+					>
+						{failingKind} fails
+					</InspectorCheck>
+					<Button
+						variant="outline"
+						size="sm"
+						className="w-fit"
+						onClick={() => setReplay((count) => count + 1)}
+					>
+						<RotateCw aria-hidden="true" />
+						Replay
+					</Button>
+				</InspectorSection>
+				<InspectorSection title="Meter">
+					<div className="grid gap-1 text-xs text-ink-muted tabular-nums">
+						<p className="flex items-baseline justify-between gap-3">
+							<span className="truncate">
+								{lookup.resolution ? (
+									<>
+										<bdi className="text-ink">
+											{link ?? lookup.resolution.word}
+										</bdi>
+										{link ? " · via lemma link" : ""}
+									</>
+								) : (
+									"Click a word."
+								)}
+							</span>
+							<span className="shrink-0" aria-live="polite">
+								{settled}/4 settled ·{" "}
+								<Elapsed
+									startedAt={lookup.startedAt}
+									settledAfter={lookup.settledAfter}
+								/>
+							</span>
+						</p>
+						<p>
+							front Card moved{" "}
+							<strong className="font-semibold text-ink">
+								{shifts.frontMoves}×
+							</strong>{" "}
+							· height changed{" "}
+							<strong className="font-semibold text-ink">
+								{shifts.heightChanges}×
+							</strong>
+						</p>
+						<HeightTrace
+							trace={shifts.trace}
+							until={2600 * speed + 400}
+						/>
+					</div>
+				</InspectorSection>
+			</DemoInspector>
 
 			<div
 				ref={body}
@@ -230,50 +241,6 @@ export default function ProgressiveResultsDemo() {
 					aria-label="Lookup"
 					className="flex max-h-[58%] shrink-0 flex-col border-line border-t bg-canvas @min-[760px]/frame:max-h-none @min-[760px]/frame:border-t-0 @min-[760px]/frame:border-s"
 				>
-					<div className="grid gap-1 border-line border-b px-4 py-2 text-xs">
-						<div className="flex items-baseline justify-between gap-3">
-							<span className="truncate text-ink-soft">
-								{lookup.resolution ? (
-									<>
-										<span className="text-ink">
-											{link ?? lookup.resolution.word}
-										</span>
-										{link ? " · via lemma link" : ""}
-									</>
-								) : (
-									"Click a word."
-								)}
-							</span>
-							<span
-								className="shrink-0 text-ink-muted tabular-nums"
-								aria-live="polite"
-							>
-								<bdi>
-									{settled}/4 settled ·{" "}
-									<Elapsed
-										startedAt={lookup.startedAt}
-										settledAfter={lookup.settledAfter}
-									/>
-								</bdi>
-							</span>
-						</div>
-						<div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-ink-muted tabular-nums">
-							<bdi>
-								front Card moved{" "}
-								<strong className="font-semibold text-ink">
-									{shifts.frontMoves}×
-								</strong>{" "}
-								· height changed{" "}
-								<strong className="font-semibold text-ink">
-									{shifts.heightChanges}×
-								</strong>
-							</bdi>
-							<HeightTrace
-								trace={shifts.trace}
-								until={2600 * speed + 400}
-							/>
-						</div>
-					</div>
 					<div className="min-h-0 flex-1 overflow-auto p-4">
 						<div data-deck key={lookup.run}>
 							{strategyProps === null ? null : strategy ===

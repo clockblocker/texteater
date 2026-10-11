@@ -30,7 +30,15 @@ import {
 	WordText,
 	wordsOf,
 } from "@/fixtures";
-import { useDemoParam, usePlaygroundEnv } from "@/shell";
+import {
+	DemoInspector,
+	InspectorCheck,
+	InspectorChoice,
+	InspectorSection,
+	InspectorTry,
+	useDemoParam,
+	usePlaygroundEnv,
+} from "@/shell";
 import {
 	type Box,
 	covered,
@@ -47,16 +55,10 @@ const options: readonly {
 	readonly id: Strategy;
 	readonly letter: string;
 	readonly label: string;
-	readonly short: string;
 }[] = [
-	{ id: "under", letter: "a", label: "Under the word", short: "Under" },
-	{ id: "opposite", letter: "b", label: "Opposite half", short: "Opposite" },
-	{
-		id: "beside",
-		letter: "c",
-		label: "Beside the sentence",
-		short: "Beside",
-	},
+	{ id: "under", letter: "a", label: "Under the word" },
+	{ id: "opposite", letter: "b", label: "Opposite half" },
+	{ id: "beside", letter: "c", label: "Beside the sentence" },
 ];
 
 const isStrategy = (value: string | null): value is Strategy =>
@@ -72,8 +74,9 @@ type Corner = "top-start" | "top-end" | "bottom-start" | "bottom-end";
  * Three placements of the floating Card stack, switchable over one text:
  * (a) under the word, as tf-demo has it; (b) the half of the viewport the
  * word is not in, as LWT and Jidoujisho do; (c) beside the sentence, as
- * KOReader keeps clear of its highlight. The clicked word and its sentence
- * are tinted, and red dashes mark every sentence line the stack covers.
+ * KOReader keeps clear of its highlight. With the marks knob on, the
+ * clicked word and its sentence are tinted, and red dashes mark every
+ * sentence line the stack covers.
  */
 export default function NeverCoverWordDemo() {
 	const env = usePlaygroundEnv();
@@ -84,6 +87,8 @@ export default function NeverCoverWordDemo() {
 	const [wordId, setWordId] = useDemoParam("word");
 	const [ghostsParam, setGhostsParam] = useDemoParam("ghosts");
 	const ghosts = ghostsParam === "on";
+	const [marksParam, setMarksParam] = useDemoParam("marks");
+	const marks = marksParam === "on";
 	const [roomParam, setRoomParam] = useDemoParam("room");
 	const makeRoom = roomParam !== "off";
 	const word = allWords.find((candidate) => candidate.id === wordId) ?? null;
@@ -230,6 +235,8 @@ export default function NeverCoverWordDemo() {
 	const { lineHits, wordHit, visibleLines } = coverage(placement, scene);
 	const sentenceId = word?.sentenceId;
 
+	// The panel is left-to-right chrome; the arrows follow the frame's dir.
+	const cornerIcon = cn("size-4", env.dir === "rtl" && "-scale-x-100");
 	const pickCorner = (corner: Corner) => {
 		const scroller = scrollerRef.current;
 		if (!area || !scroller) return;
@@ -239,59 +246,108 @@ export default function NeverCoverWordDemo() {
 
 	return (
 		<div className="flex h-full flex-col bg-canvas text-ink">
-			<Caption />
-
-			<div className="flex flex-wrap items-center gap-2 border-b border-line px-4 py-2 text-sm">
-				<StrategyPicker
-					strategy={strategy}
-					onPick={(picked) => {
-						setGlide(true);
-						setStrategyParam(picked);
-					}}
-				/>
-				{strategy === "beside" ? (
-					<Toggle
-						on={makeRoom}
-						onToggle={() => setRoomParam(makeRoom ? "off" : null)}
-						title="When neither side of the sentence fits the whole Deck, scroll the text instead of shrinking the Deck"
+			<DemoInspector>
+				<InspectorSection>
+					<InspectorTry>
+						<p>
+							Where the floating Deck goes so the clicked word and
+							its sentence (the Attestation) stay readable. The
+							readout below says what the Deck covers; the marks
+							knob tints the sentence and dashes covered lines.
+							LWT · Jidoujisho · KOReader.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+				<InspectorSection title="Try">
+					<InspectorTry>
+						<p>
+							A word in the last visible line under each strategy
+							(or the corner buttons), then the width at 390.
+							Ghosts outline the other two placements.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+				<InspectorSection title="Knobs">
+					<InspectorChoice
+						label="Placement strategy"
+						options={options.map((option) => ({
+							value: option.id,
+							label: `${option.letter} · ${option.label}`,
+						}))}
+						value={strategy}
+						onChange={(picked) => {
+							setGlide(true);
+							setStrategyParam(picked);
+						}}
+					/>
+					{strategy === "beside" ? (
+						<InspectorCheck
+							checked={makeRoom}
+							onChange={(on) => setRoomParam(on ? null : "off")}
+							title="When neither side of the sentence fits the whole Deck, scroll the text instead of shrinking the Deck"
+						>
+							<ArrowUpToLine
+								aria-hidden="true"
+								className="size-4"
+							/>
+							Scroll for room
+						</InspectorCheck>
+					) : null}
+					<InspectorCheck
+						checked={marks}
+						onChange={(on) => setMarksParam(on ? "on" : null)}
+						title="Tint the Attestation and dash the sentence lines the Deck covers"
 					>
-						<ArrowUpToLine aria-hidden="true" className="size-4" />
-						Scroll for room
-					</Toggle>
-				) : null}
-				<Toggle
-					on={ghosts}
-					onToggle={() => setGhostsParam(ghosts ? null : "on")}
-					title="Outline where the other two strategies would put the Deck"
-				>
-					<Ghost aria-hidden="true" className="size-4" />
-					Ghosts
-				</Toggle>
-				<fieldset className="flex items-center gap-0.5 rounded-lg border border-line p-0.5">
-					<legend className="sr-only">
-						Click the word nearest a corner
-					</legend>
-					<CornerButton corner="top-start" onPick={pickCorner}>
-						<ArrowUpLeft className="size-4 rtl:-scale-x-100" />
-					</CornerButton>
-					<CornerButton corner="top-end" onPick={pickCorner}>
-						<ArrowUpRight className="size-4 rtl:-scale-x-100" />
-					</CornerButton>
-					<CornerButton corner="bottom-start" onPick={pickCorner}>
-						<ArrowDownLeft className="size-4 rtl:-scale-x-100" />
-					</CornerButton>
-					<CornerButton corner="bottom-end" onPick={pickCorner}>
-						<ArrowDownRight className="size-4 rtl:-scale-x-100" />
-					</CornerButton>
-				</fieldset>
-				<Status
-					open={Boolean(word)}
-					placement={placement}
-					wordHit={wordHit}
-					lineHits={lineHits.length}
-					visibleLines={visibleLines}
-				/>
-			</div>
+						<TriangleAlert aria-hidden="true" className="size-4" />
+						Mark the sentence and covered lines
+					</InspectorCheck>
+					<InspectorCheck
+						checked={ghosts}
+						onChange={(on) => setGhostsParam(on ? "on" : null)}
+						title="Outline where the other two strategies would put the Deck"
+					>
+						<Ghost aria-hidden="true" className="size-4" />
+						Ghosts
+					</InspectorCheck>
+					<fieldset className="grid gap-1.5">
+						<legend className="mb-1.5 text-xs text-ink-muted">
+							Click the word nearest a corner
+						</legend>
+						<div className="flex gap-0.5">
+							<CornerButton
+								corner="top-start"
+								onPick={pickCorner}
+							>
+								<ArrowUpLeft className={cornerIcon} />
+							</CornerButton>
+							<CornerButton corner="top-end" onPick={pickCorner}>
+								<ArrowUpRight className={cornerIcon} />
+							</CornerButton>
+							<CornerButton
+								corner="bottom-start"
+								onPick={pickCorner}
+							>
+								<ArrowDownLeft className={cornerIcon} />
+							</CornerButton>
+							<CornerButton
+								corner="bottom-end"
+								onPick={pickCorner}
+							>
+								<ArrowDownRight className={cornerIcon} />
+							</CornerButton>
+						</div>
+					</fieldset>
+				</InspectorSection>
+				<InspectorSection title="Readout">
+					<Status
+						open={Boolean(word)}
+						placement={placement}
+						wordHit={wordHit}
+						lineHits={lineHits.length}
+						visibleLines={visibleLines}
+					/>
+				</InspectorSection>
+			</DemoInspector>
 
 			<div ref={setArea} className="relative min-h-0 flex-1">
 				<div
@@ -299,7 +355,7 @@ export default function NeverCoverWordDemo() {
 					data-ncw-reader=""
 					className="absolute inset-0 overflow-y-auto"
 				>
-					{sentenceId && wordId ? (
+					{marks && sentenceId && wordId ? (
 						<style>{attestationStyle(sentenceId, wordId)}</style>
 					) : null}
 					<div
@@ -343,7 +399,7 @@ export default function NeverCoverWordDemo() {
 						<FloatingDeck
 							placement={placement}
 							glide={glide}
-							covering={lineHits.length > 0}
+							covering={marks && lineHits.length > 0}
 							clamped={
 								placement !== null &&
 								naturalHeight > placement.maxHeight + 1
@@ -368,7 +424,7 @@ export default function NeverCoverWordDemo() {
 						</FloatingDeck>
 					) : null}
 
-					{lineHits.map((hit) => (
+					{(marks ? lineHits : []).map((hit) => (
 						<div
 							key={`${hit.top}:${hit.start}`}
 							className="absolute rounded-sm border-2 border-dashed border-destructive bg-destructive/15"
@@ -383,66 +439,6 @@ export default function NeverCoverWordDemo() {
 				</div>
 			</div>
 		</div>
-	);
-}
-
-function Caption() {
-	return (
-		<header className="grid gap-1 border-b border-line bg-paper px-4 py-3 text-sm">
-			<p className="flex flex-wrap items-baseline gap-x-3">
-				<strong className="font-semibold">Never cover the word</strong>
-				<span className="text-xs text-ink-muted">
-					LWT · Jidoujisho · KOReader
-				</span>
-			</p>
-			<p className="text-ink-soft">
-				Where the floating Deck goes so the clicked word and its
-				sentence (the Attestation, tinted) stay readable. Red dashes
-				mark sentence lines the Deck covers.
-			</p>
-			<p className="text-xs text-ink-muted">
-				Try: a word in the last visible line under each strategy (or the
-				corner buttons), then the width at 390. Ghosts outline the other
-				two placements.
-			</p>
-		</header>
-	);
-}
-
-function StrategyPicker({
-	strategy,
-	onPick,
-}: {
-	readonly strategy: Strategy;
-	readonly onPick: (strategy: Strategy) => void;
-}) {
-	return (
-		<fieldset className="flex rounded-lg border border-line bg-paper p-0.5">
-			<legend className="sr-only">Placement strategy</legend>
-			{options.map((option) => (
-				<button
-					key={option.id}
-					type="button"
-					aria-pressed={option.id === strategy}
-					onClick={() => onPick(option.id)}
-					className={cn(
-						"cursor-pointer rounded-md px-2.5 py-1 text-ink-soft hover:text-ink",
-						option.id === strategy &&
-							"bg-raised text-ink shadow-sm",
-					)}
-				>
-					<span className="font-mono text-xs text-ink-faint">
-						{option.letter}
-					</span>{" "}
-					<span className="@min-[640px]/frame:hidden">
-						{option.short}
-					</span>
-					<span className="hidden @min-[640px]/frame:inline">
-						{option.label}
-					</span>
-				</button>
-			))}
-		</fieldset>
 	);
 }
 
@@ -524,33 +520,6 @@ function FloatingDeck({
 	);
 }
 
-function Toggle({
-	on,
-	onToggle,
-	title,
-	children,
-}: {
-	readonly on: boolean;
-	readonly onToggle: () => void;
-	readonly title: string;
-	readonly children: ReactNode;
-}) {
-	return (
-		<button
-			type="button"
-			aria-pressed={on}
-			title={title}
-			onClick={onToggle}
-			className={cn(
-				"flex cursor-pointer items-center gap-1.5 rounded-lg border border-line px-2.5 py-1.5 text-ink-soft hover:text-ink",
-				on && "bg-raised text-ink",
-			)}
-		>
-			{children}
-		</button>
-	);
-}
-
 function CornerButton({
 	corner,
 	onPick,
@@ -587,11 +556,7 @@ function Status({
 	readonly visibleLines: number;
 }) {
 	if (!open || !placement)
-		return (
-			<p className="text-ink-muted @min-[640px]/frame:ms-auto">
-				Click any word.
-			</p>
-		);
+		return <p className="text-xs text-ink-muted">Click any word.</p>;
 	const verdict = wordHit
 		? "covers the clicked word"
 		: lineHits > 0
@@ -601,7 +566,7 @@ function Status({
 		<p
 			role="status"
 			className={cn(
-				"flex items-center gap-1.5 @min-[640px]/frame:ms-auto",
+				"flex items-center gap-1.5 text-xs",
 				lineHits > 0 ? "text-destructive" : "text-ink-soft",
 			)}
 		>

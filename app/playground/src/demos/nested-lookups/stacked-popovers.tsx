@@ -3,7 +3,13 @@ import { Pin, X } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
 import { type FixtureWord, rectWithin } from "@/fixtures";
-import { useFrameSize, usePlaygroundEnv } from "@/shell";
+import {
+	DemoInspector,
+	InspectorChoice,
+	InspectorSection,
+	useFrameSize,
+	usePlaygroundEnv,
+} from "@/shell";
 import type { CardWordClick } from "./clickable-words";
 import { type Lookup, LookupDeck } from "./lookup-deck";
 import { type Box, placeBeside, placeUnder } from "./placement";
@@ -123,66 +129,55 @@ export function StackedPopovers() {
 
 	return (
 		<>
-			<div className="grid gap-2 border-b border-line px-4 py-2 text-xs">
-				<div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-					<fieldset className="flex items-center gap-2">
-						<legend className="float-start text-ink-muted">
-							Child opens
-						</legend>
-						<div className="flex rounded-md border border-line bg-canvas p-0.5">
-							{(["over", "beside"] as const).map((option) => (
-								<button
-									key={option}
-									type="button"
-									aria-pressed={option === placement}
-									onClick={() => setPlacement(option)}
-									className="cursor-pointer rounded px-2 py-0.5 text-ink-soft aria-pressed:bg-paper aria-pressed:text-ink aria-pressed:shadow-sm"
-								>
-									{placementLabels[option]}
-								</button>
-							))}
-						</div>
-					</fieldset>
-					<span className="ms-auto text-ink-muted">
-						depth {deepest}
-					</span>
+			<DemoInspector>
+				<InspectorSection title="Knobs">
+					<InspectorChoice
+						label="Child opens"
+						options={(["over", "beside"] as const).map(
+							(option) => ({
+								value: option,
+								label: placementLabels[option],
+							}),
+						)}
+						value={placement}
+						onChange={setPlacement}
+					/>
 					<button
 						type="button"
 						disabled={popovers.length === 0}
 						onClick={() => setPopovers([])}
-						className="cursor-pointer rounded-md border border-line px-2 py-0.5 text-ink-soft hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
+						className="w-fit cursor-pointer rounded-md border border-line px-2 py-1 text-xs text-ink-soft hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
 					>
-						Close all
+						Close all popovers
 					</button>
-				</div>
-				<ol
-					aria-label="Open popovers"
-					className="flex min-h-6 flex-wrap items-center gap-1 text-ink-soft"
-				>
-					{popovers.length === 0 ? (
-						<li className="text-ink-muted">No popovers open</li>
-					) : (
-						popovers.map((p) => (
-							<li
-								key={p.id}
-								className={cn(
-									"flex items-center gap-1 rounded-full border border-line bg-canvas py-0.5 ps-1 pe-2",
-									p.pinned && "border-link text-link",
-								)}
-							>
-								<LevelBadge level={p.level} />
-								{p.lookup.label}
-								{p.pinned ? (
-									<Pin
-										aria-label="pinned"
-										className="size-3"
-									/>
-								) : null}
-							</li>
-						))
-					)}
-				</ol>
-			</div>
+				</InspectorSection>
+				<InspectorSection title={`Open popovers · depth ${deepest}`}>
+					<ol className="flex min-h-6 flex-wrap items-center gap-1 text-xs text-ink-soft">
+						{popovers.length === 0 ? (
+							<li className="text-ink-muted">None</li>
+						) : (
+							popovers.map((p) => (
+								<li
+									key={p.id}
+									className={cn(
+										"flex items-center gap-1 rounded-full border border-line bg-canvas py-0.5 ps-1 pe-2",
+										p.pinned && "border-link text-link",
+									)}
+								>
+									<LevelBadge level={p.level} />
+									<bdi>{p.lookup.label}</bdi>
+									{p.pinned ? (
+										<Pin
+											aria-label="pinned"
+											className="size-3"
+										/>
+									) : null}
+								</li>
+							))
+						)}
+					</ol>
+				</InspectorSection>
+			</DemoInspector>
 			<ReaderStage
 				contentRef={contentRef}
 				selectedWordId={childAnchor(null)}
@@ -207,8 +202,7 @@ export function StackedPopovers() {
 								)}
 								header={
 									<>
-										<LevelBadge level={p.level} />
-										<span className="min-w-0 flex-1 truncate text-sm text-ink">
+										<span className="min-w-0 flex-1 truncate ps-2 text-sm text-ink">
 											{p.lookup.label}
 										</span>
 										<IconButton

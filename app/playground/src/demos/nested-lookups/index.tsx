@@ -1,6 +1,11 @@
-import { cn } from "lego";
 import type { ComponentType } from "react";
-import { useDemoParam } from "@/shell";
+import {
+	DemoInspector,
+	InspectorChoice,
+	InspectorSection,
+	InspectorTry,
+	useDemoParam,
+} from "@/shell";
 import { HistorySurface } from "./history-surface";
 import { PlainReplacement } from "./plain-replacement";
 import { StackedPopovers } from "./stacked-popovers";
@@ -48,7 +53,8 @@ const variants: readonly Variant[] = [
 
 /**
  * Lookups inside a lookup: every word of a Card's definition, quote and
- * lemma link looks itself up. Three tabs show three ways to nest them.
+ * lemma link looks itself up. The inspector switches between three ways
+ * to nest them.
  */
 export default function NestedLookupsDemo() {
 	const [param, setParam] = useDemoParam("variant");
@@ -58,58 +64,33 @@ export default function NestedLookupsDemo() {
 
 	return (
 		<div className="flex h-full flex-col bg-background text-ink">
-			<header className="grid gap-2 border-b border-line bg-canvas px-4 pt-3 pb-2">
-				<div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-					<h1 className="text-sm font-semibold">Nested lookups</h1>
-					<div
-						role="tablist"
-						aria-label="Variant"
-						className="flex rounded-lg border border-line bg-background p-0.5 text-xs"
-					>
-						{variants.map((v) => (
-							<button
-								key={v.id}
-								type="button"
-								role="tab"
-								aria-selected={v.id === variant.id}
-								aria-controls="nested-lookups-panel"
-								onClick={() => setParam(v.id)}
-								className={cn(
-									"cursor-pointer rounded-md px-2.5 py-1 text-ink-soft hover:text-ink",
-									v.id === variant.id &&
-										"bg-paper text-ink shadow-sm",
-								)}
-							>
-								{v.tab}
-							</button>
-						))}
-					</div>
-				</div>
-				<p
-					dir="auto"
-					className="text-xs leading-relaxed text-ink-soft rtl:text-end"
-				>
-					{variant.pattern}{" "}
-					<span className="text-ink-muted">
-						Seen in {variant.apps}.
-					</span>
-				</p>
-				<p
-					dir="auto"
-					className="text-xs leading-relaxed text-ink-muted rtl:text-end"
-				>
-					<b className="font-semibold text-ink-soft">Try:</b> click{" "}
-					{variant.tryThis} Every word in a Card is clickable.
-				</p>
-			</header>
-			<div
-				id="nested-lookups-panel"
-				role="tabpanel"
-				aria-label={variant.tab}
-				className="flex min-h-0 flex-1 flex-col"
-			>
-				<Component key={variant.id} />
-			</div>
+			<DemoInspector>
+				<InspectorSection title="Variant">
+					<InspectorChoice
+						label="How a lookup inside a lookup opens"
+						options={variants.map((v) => ({
+							value: v.id,
+							label: v.tab,
+						}))}
+						value={variant.id}
+						onChange={(id) => setParam(id)}
+					/>
+					<InspectorTry>
+						<p>
+							{variant.pattern} Seen in {variant.apps}.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+				<InspectorSection title="Try">
+					<InspectorTry>
+						<p>
+							Click {variant.tryThis} Every word in a Card is
+							clickable.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+			</DemoInspector>
+			<Component key={variant.id} />
 		</div>
 	);
 }

@@ -1,4 +1,3 @@
-import { cn } from "lego";
 import { type ComponentType, useState } from "react";
 import {
 	type CardKind,
@@ -11,7 +10,15 @@ import {
 	WordText,
 	wordsOf,
 } from "@/fixtures";
-import { useDemoParam } from "@/shell";
+import {
+	DemoInspector,
+	InspectorChoice,
+	InspectorSection,
+	InspectorTry,
+	useDemoParam,
+	useFrameSize,
+	useInspectorAvoid,
+} from "@/shell";
 import {
 	CrumbHop,
 	type HopProps,
@@ -70,6 +77,9 @@ const variants: readonly {
 export default function LemmaHopDemo() {
 	const [variantParam, setVariant] = useDemoParam("variant");
 	const [wordId, setWordId] = useDemoParam("word");
+	// The lookup sits at the inline end from 760px, below the text under it.
+	const { inlineSize } = useFrameSize();
+	useInspectorAvoid(inlineSize >= 760 ? "inline-end" : "block-end");
 	const variant =
 		variants.find((candidate) => candidate.id === variantParam) ??
 		variants[0];
@@ -81,52 +91,38 @@ export default function LemmaHopDemo() {
 
 	return (
 		<div className="flex h-full flex-col bg-canvas text-ink">
-			<header className="grid shrink-0 gap-2 border-b border-line px-4 py-3 text-sm">
-				<p>
-					<span className="font-medium">Lemma hop.</span>{" "}
-					<span className="text-ink-soft">
-						Get from the clicked form to its lemma and back. Lute v3
-						puts a clickable parent-term tag on a term&rsquo;s form;
-						LinguaCafe has an inflections tab.
-					</span>
-				</p>
-				<fieldset
-					aria-label="Hop variant"
-					className="flex flex-wrap gap-1.5"
-				>
-					{variants.map((candidate, index) => {
-						const checked = candidate.id === variant.id;
-						return (
-							<button
-								key={candidate.id}
-								type="button"
-								aria-pressed={checked}
-								onClick={() => setVariant(candidate.id)}
-								className={cn(
-									"cursor-pointer rounded-md border px-2.5 py-1 text-start transition-colors",
-									checked
-										? "border-link bg-link/15 text-ink"
-										: "border-line text-ink-soft hover:text-ink",
-								)}
-							>
-								<span className="text-ink-faint">
-									{String.fromCharCode(97 + index)}{" "}
-								</span>
-								{candidate.label}
-								<span className="hidden text-xs text-ink-muted @min-[480px]/frame:inline">
-									{" "}
-									· {candidate.from}
-								</span>
-							</button>
-						);
-					})}
-				</fieldset>
-				<p className="text-xs text-ink-muted">
-					Try: click <i>ging</i>, <i>detaillierte</i>, <i>zum</i> or{" "}
-					<i>fängt … an</i>, hop to the lemma, then back to the form.
-					Compare the variants at width 390.
-				</p>
-			</header>
+			<DemoInspector>
+				<InspectorSection>
+					<InspectorTry>
+						<p>
+							Get from the clicked form to its lemma and back.
+							Lute v3 puts a clickable parent-term tag on a
+							term&rsquo;s form; LinguaCafe has an inflections
+							tab.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+				<InspectorSection title="Try">
+					<InspectorTry>
+						<p>
+							Click <i>ging</i>, <i>detaillierte</i>, <i>zum</i>{" "}
+							or <i>fängt … an</i>, hop to the lemma, then back to
+							the form. Compare the variants at width 390.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+				<InspectorSection title="Variant">
+					<InspectorChoice
+						label="Hop variant"
+						options={variants.map((candidate, index) => ({
+							value: candidate.id,
+							label: `${String.fromCharCode(97 + index)} · ${candidate.label} · ${candidate.from}`,
+						}))}
+						value={variant.id}
+						onChange={setVariant}
+					/>
+				</InspectorSection>
+			</DemoInspector>
 			<div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)_minmax(0,1.4fr)] @min-[760px]/frame:grid-cols-[minmax(0,1fr)_minmax(20rem,26rem)] @min-[760px]/frame:grid-rows-1">
 				<main className="overflow-auto p-5 @min-[760px]/frame:p-8">
 					<div className="mx-auto grid max-w-[38rem] gap-6">

@@ -241,15 +241,6 @@ function PaneRow({
 					</Pane>
 				);
 			})}
-			{stack.entries.length === 0 ? (
-				<p
-					className="shrink-0 self-center p-6 text-sm text-ink-muted"
-					style={{ width: lookupWidth }}
-				>
-					Click a word: its lookup opens as a pane here, at the inline
-					end.
-				</p>
-			) : null}
 		</div>
 	);
 }
@@ -350,9 +341,6 @@ function SinglePage({
 						{germanText.title}
 					</span>
 				)}
-				<span className="shrink-0 px-2 text-ink-muted tabular-nums">
-					{stack.entries.length} deep
-				</span>
 			</div>
 			<div className="min-h-0 flex-1 overflow-y-auto">
 				{newest ? (

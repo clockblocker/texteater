@@ -82,7 +82,6 @@ export function Surface({
 	containerWidth,
 	zIndex,
 	header,
-	footer,
 	className,
 	children,
 }: {
@@ -92,7 +91,6 @@ export function Surface({
 	readonly containerWidth: number;
 	readonly zIndex?: number;
 	readonly header: ReactNode;
-	readonly footer?: ReactNode;
 	readonly className?: string;
 	readonly children: ReactNode;
 }) {
@@ -121,7 +119,6 @@ export function Surface({
 			<div className="max-h-[min(30rem,58cqh)] overflow-y-auto overscroll-contain p-2">
 				{children}
 			</div>
-			{footer}
 		</motion.section>
 	);
 }

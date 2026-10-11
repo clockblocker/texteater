@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
 import type { FixtureWord } from "@/fixtures";
-import { usePlaygroundEnv } from "@/shell";
+import { DemoInspector, InspectorSection, usePlaygroundEnv } from "@/shell";
 import type { CardWordClick } from "./clickable-words";
 import { type Lookup, LookupDeck } from "./lookup-deck";
 import {
@@ -56,31 +56,34 @@ export function PlainReplacement() {
 
 	return (
 		<>
-			<p
-				dir="auto"
-				className="border-b border-line px-4 py-2 text-xs text-ink-muted rtl:text-end"
-			>
-				{first ? (
-					<>
-						<span className="font-semibold text-destructive">
-							{lost.length}{" "}
-							{lost.length === 1 ? "lookup" : "lookups"} lost:
-						</span>{" "}
-						{lost.map((label, index) => (
-							<span key={`${label}-${index}`}>
-								{index > 0 ? " → " : null}
-								<s className="text-ink-soft">{label}</s>
-							</span>
-						))}
-						. To see <b className="text-ink-soft">{first}</b> again,
-						find it in the text and click it.
-					</>
-				) : current ? (
-					"Click a word inside the Card."
-				) : (
-					"No lookup open"
-				)}
-			</p>
+			<DemoInspector>
+				<InspectorSection title="Readout">
+					<p className="text-xs text-ink-soft">
+						{first ? (
+							<>
+								<span className="font-semibold text-destructive">
+									{lost.length}{" "}
+									{lost.length === 1 ? "lookup" : "lookups"}{" "}
+									lost:
+								</span>{" "}
+								{lost.map((label, index) => (
+									<span key={`${label}-${index}`}>
+										{index > 0 ? " → " : null}
+										<s className="text-ink-soft">{label}</s>
+									</span>
+								))}
+								. To see{" "}
+								<b className="text-ink-soft">{first}</b> again,
+								find it in the text and click it.
+							</>
+						) : current ? (
+							"Click a word inside the Card."
+						) : (
+							"No lookup open"
+						)}
+					</p>
+				</InspectorSection>
+			</DemoInspector>
 			<ReaderStage
 				contentRef={contentRef}
 				selectedWordId={current ? anchorId : null}
@@ -105,22 +108,6 @@ export function PlainReplacement() {
 										<X className="size-4" />
 									</IconButton>
 								</>
-							}
-							footer={
-								<AnimatePresence initial={false}>
-									{lost.length > 0 ? (
-										<motion.p
-											dir="auto"
-											key={current.key}
-											initial={{ opacity: 0 }}
-											animate={{ opacity: 1 }}
-											className="m-2 mt-0 rounded-lg border border-dashed border-destructive/60 px-2.5 py-1.5 text-xs text-destructive rtl:text-end"
-										>
-											„{lost.at(-1)}“ was replaced. There
-											is no way back.
-										</motion.p>
-									) : null}
-								</AnimatePresence>
 							}
 						>
 							<AnimatePresence mode="wait" initial={false}>

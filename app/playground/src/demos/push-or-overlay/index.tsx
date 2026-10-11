@@ -11,8 +11,16 @@ import {
 	WordText,
 	wordsOf,
 } from "@/fixtures";
-import { useDemoParam, usePlaygroundEnv } from "@/shell";
-import { PxSlider, Segmented } from "./controls";
+import {
+	DemoInspector,
+	InspectorChoice,
+	InspectorRange,
+	InspectorSection,
+	InspectorTry,
+	useDemoParam,
+	useInspectorAvoid,
+	usePlaygroundEnv,
+} from "@/shell";
 import { placeWord, useInlineSize, type WordState } from "./geometry";
 
 const words = wordsOf(germanText);
@@ -61,6 +69,7 @@ export default function PushOrOverlayDemo() {
 	const remaining = bodyWidth - paneWidth;
 	const mode = remaining >= threshold ? "push" : "overlay";
 	const pushing = open && mode === "push";
+	useInspectorAvoid("inline-end");
 
 	const scrollerRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
@@ -186,64 +195,76 @@ export default function PushOrOverlayDemo() {
 
 	return (
 		<div className="flex h-full flex-col text-sm">
-			<header className="grid gap-2 border-b border-line bg-paper px-4 py-3">
-				<div className="grid gap-0.5">
-					<p className="text-ink">
-						<strong className="font-semibold">
-							Push or overlay.
-						</strong>{" "}
-						The lookup pane pushes the text aside while enough text
-						remains beside it, and floats over the text otherwise.{" "}
-						<span className="text-ink-muted">
-							From Hypothesis; LinguaCafe pads the text by the
-							sidebar width.
-						</span>
-					</p>
-					<p className="text-ink-soft">
-						Try: click a word, drag the pane width across the
-						threshold, then switch the frame to 800 and 390.
-					</p>
-				</div>
-				<div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
-					<Segmented
+			<DemoInspector>
+				<InspectorSection>
+					<InspectorTry>
+						<p>
+							The lookup pane pushes the text aside while enough
+							text remains beside it, and floats over the text
+							otherwise. From Hypothesis; LinguaCafe pads the text
+							by the sidebar width.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+				<InspectorSection title="Try">
+					<InspectorTry>
+						<p>
+							Click a word, drag the pane width across the
+							threshold, then switch the frame to 800 and 390.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+				<InspectorSection title="Knobs">
+					<InspectorChoice
 						label="Push from"
-						options={thresholds}
+						options={thresholds.map((value) => ({
+							value,
+							label: `${value}px`,
+						}))}
 						value={threshold}
 						onChange={(value) => setThreshold(String(value))}
-						format={(value) => `${value}px`}
 					/>
-					<PxSlider
+					<InspectorRange
 						label="Pane"
 						min={paneMin}
 						max={paneMax}
 						step={20}
 						value={requestedPane}
 						onChange={(value) => setPane(String(value))}
+						format={(value) => `${value}px`}
 					/>
-					<Segmented
+					<InspectorChoice
 						label="Overlay"
-						options={overlayStyles}
+						options={overlayStyles.map((value) => ({
+							value,
+							label: value,
+						}))}
 						value={overlayStyle}
 						onChange={setOverlayStyle}
 					/>
-					<Segmented
+					<InspectorChoice
 						label="Keep word clear"
-						options={keepClearOptions}
+						options={keepClearOptions.map((value) => ({
+							value,
+							label: value,
+						}))}
 						value={keepClear}
 						onChange={setKeepClear}
 					/>
-				</div>
-				<Readout
-					open={open}
-					remaining={remaining}
-					threshold={threshold}
-					paneWidth={paneWidth}
-					clamped={paneWidth < requestedPane}
-					mode={mode}
-					wordState={wordState}
-					nudge={nudge}
-				/>
-			</header>
+				</InspectorSection>
+				<InspectorSection title="Readout">
+					<Readout
+						open={open}
+						remaining={remaining}
+						threshold={threshold}
+						paneWidth={paneWidth}
+						clamped={paneWidth < requestedPane}
+						mode={mode}
+						wordState={wordState}
+						nudge={nudge}
+					/>
+				</InspectorSection>
+			</DemoInspector>
 
 			<div
 				ref={setBody}
@@ -308,9 +329,6 @@ export default function PushOrOverlayDemo() {
 							<div className="flex items-center gap-2 border-b border-line px-4 py-2">
 								<span className="truncate font-semibold text-ink">
 									{lookup ?? word.text}
-								</span>
-								<span className="rounded-full border border-line px-2 py-px font-mono text-[0.68rem] text-ink-muted">
-									{mode === "push" ? "pushing" : "overlaying"}
 								</span>
 								<button
 									type="button"

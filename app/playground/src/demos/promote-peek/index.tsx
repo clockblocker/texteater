@@ -12,7 +12,12 @@ import {
 	useState,
 } from "react";
 import { germanText, hebrewText, type WordClick, WordText } from "@/fixtures";
-import { useDemoParam, useFrameSize, usePlaygroundEnv } from "@/shell";
+import {
+	useDemoParam,
+	useFrameSize,
+	useInspectorAvoid,
+	usePlaygroundEnv,
+} from "@/shell";
 import { Caption, type Dock, docks } from "./caption";
 import { LookupSurface } from "./lookup-surface";
 import { type PeekPlacement, placePeek } from "./placement";
@@ -40,6 +45,7 @@ export default function PromotePeekDemo() {
 	const side =
 		dock === "side" || (dock === "auto" && inlineSize >= sideFromPx);
 	const [state, dispatch] = useReducer(promote, initialState);
+	useInspectorAvoid(side ? "inline-end" : "block-end");
 	const column = useRef<HTMLDivElement>(null);
 	const peek = useRef<HTMLElement>(null);
 	const [placement, placeNow] = usePeekPlacement(

@@ -1,5 +1,3 @@
-import { cn } from "lego";
-import { PanelBottom, X } from "lucide-react";
 import { animate, motion, useMotionValue } from "motion/react";
 import {
 	type KeyboardEvent,
@@ -12,7 +10,7 @@ import { handOffVariants } from "./hand-off";
 
 export type Snap = "peek" | "half" | "full";
 
-const snaps: readonly Snap[] = ["peek", "half", "full"];
+export const snaps: readonly Snap[] = ["peek", "half", "full"];
 
 /** Each snap's height, for a sheet in an area `areaHeight` tall. */
 export function snapHeights(areaHeight: number): Record<Snap, number> {
@@ -28,7 +26,8 @@ const spring = { type: "spring", duration: 0.42, bounce: 0.12 } as const;
  * strip resizes it; on release it settles on the snap nearest to where
  * the flick was heading, and a flick below the peek dismisses it. A tap
  * on the strip steps through the snaps. The grip is a button: arrow keys
- * step up and down, Escape anywhere in the sheet closes it.
+ * step up and down, Escape anywhere in the sheet closes it. Like a real
+ * app's sheet it has no header: just the handle over the Cards.
  */
 export function Sheet({
 	snap,
@@ -154,7 +153,7 @@ export function Sheet({
 		>
 			<div
 				onPointerDown={onPointerDown}
-				className="shrink-0 cursor-grab touch-none px-3 pb-2 select-none active:cursor-grabbing"
+				className="shrink-0 cursor-grab touch-none px-3 pb-1 select-none active:cursor-grabbing"
 			>
 				<div className="flex justify-center pt-1.5">
 					<button
@@ -170,42 +169,8 @@ export function Sheet({
 						<span className="h-1.5 w-10 rounded-full bg-line-strong" />
 					</button>
 				</div>
-				<div className="flex items-center gap-2">
-					<span className="inline-flex items-center gap-1.5 font-mono text-xs text-ink-muted">
-						<PanelBottom aria-hidden="true" className="size-3.5" />
-						sheet
-					</span>
-					<div
-						data-no-drag=""
-						className="ms-auto flex rounded-lg border border-line p-0.5 text-xs"
-					>
-						{snaps.map((candidate) => (
-							<button
-								key={candidate}
-								type="button"
-								aria-pressed={candidate === snap}
-								onClick={() => onSnap(candidate)}
-								className={cn(
-									"cursor-pointer rounded-md px-2 py-0.5 text-ink-muted hover:text-ink",
-									candidate === snap && "bg-raised text-ink",
-								)}
-							>
-								{candidate}
-							</button>
-						))}
-					</div>
-					<button
-						type="button"
-						data-no-drag=""
-						aria-label="Close the lookup"
-						onClick={onClose}
-						className="cursor-pointer rounded-md p-1 text-ink-muted hover:bg-raised hover:text-ink"
-					>
-						<X aria-hidden="true" className="size-4" />
-					</button>
-				</div>
 			</div>
-			<div className="min-h-0 flex-1 overflow-auto overscroll-contain px-4 pt-5 pb-8">
+			<div className="min-h-0 flex-1 overflow-auto overscroll-contain px-4 pt-2 pb-8">
 				{children}
 			</div>
 		</motion.section>

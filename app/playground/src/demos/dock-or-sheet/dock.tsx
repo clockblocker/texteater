@@ -1,4 +1,4 @@
-import { GripVertical, PanelRight, X } from "lucide-react";
+import { GripVertical, X } from "lucide-react";
 import { motion } from "motion/react";
 import { type ReactNode, useState } from "react";
 import { handOffVariants } from "./hand-off";
@@ -54,25 +54,19 @@ export function Dock({
 			className="relative shrink-0 border-s border-line bg-canvas"
 		>
 			<div className="absolute inset-0 overflow-hidden">
-				<div style={{ width }} className="flex h-full flex-col">
-					<header className="flex shrink-0 items-center gap-2 border-b border-line px-4 py-2">
-						<span className="inline-flex items-center gap-1.5 font-mono text-xs text-ink-muted">
-							<PanelRight
-								aria-hidden="true"
-								className="size-3.5 rtl:-scale-x-100"
-							/>
-							dock · {width}px
-						</span>
-						<button
-							type="button"
-							aria-label="Close the lookup"
-							onClick={onClose}
-							className="ms-auto cursor-pointer rounded-md p-1 text-ink-muted hover:bg-raised hover:text-ink"
-						>
-							<X aria-hidden="true" className="size-4" />
-						</button>
-					</header>
-					<div className="min-h-0 flex-1 overflow-auto overscroll-contain px-4 pt-6 pb-8">
+				<div
+					style={{ width }}
+					className="relative flex h-full flex-col"
+				>
+					<button
+						type="button"
+						aria-label="Close the lookup"
+						onClick={onClose}
+						className="absolute end-2 top-2 z-10 cursor-pointer rounded-md p-1 text-ink-muted hover:bg-raised hover:text-ink"
+					>
+						<X aria-hidden="true" className="size-4" />
+					</button>
+					<div className="min-h-0 flex-1 overflow-auto overscroll-contain px-4 pt-10 pb-8">
 						{children}
 					</div>
 				</div>

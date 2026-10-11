@@ -1,7 +1,6 @@
-import { cn } from "lego";
 import { PanelBottom, PanelRight } from "lucide-react";
 import { AnimatePresence } from "motion/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
 	type FakeCardLink,
 	germanText,
@@ -11,11 +10,21 @@ import {
 	WordText,
 	wordsOf,
 } from "@/fixtures";
-import { useDemoParam, useFrameSize, usePlaygroundEnv } from "@/shell";
+import {
+	DemoInspector,
+	InspectorCheck,
+	InspectorChoice,
+	InspectorSection,
+	InspectorTry,
+	useDemoParam,
+	useFrameSize,
+	useInspectorAvoid,
+	usePlaygroundEnv,
+} from "@/shell";
 import { Dock } from "./dock";
 import { useKeepWordInView, useSize } from "./keep-word-in-view";
 import { Lookup, type LookupState } from "./lookup";
-import { Sheet, type Snap, snapHeights } from "./sheet";
+import { Sheet, type Snap, snapHeights, snaps } from "./sheet";
 
 const allWords = [...wordsOf(germanText), ...wordsOf(hebrewText)];
 
@@ -48,7 +57,7 @@ export default function DockOrSheetDemo() {
 	const word = allWords.find((candidate) => candidate.id === wordId) ?? null;
 	const [hop, setHop] = useState<string | null>(null);
 	const [front, setFront] = useState<number | null>(null);
-	const [outlined, setOutlined] = useState(true);
+	const [outlined, setOutlined] = useState(false);
 	const [dockWidth, setDockWidth] = useState<number>(dockWidths.default);
 	const [snap, setSnap] = useState<Snap>("half");
 	const [area, setArea] = useState<HTMLElement | null>(null);
@@ -74,6 +83,7 @@ export default function DockOrSheetDemo() {
 		Math.min(dockWidths.max, frame.inlineSize - minTextWidth),
 	);
 	const dock = Math.min(Math.max(dockWidth, dockWidths.min), maxDock);
+	useInspectorAvoid(mode === "sheet" ? "block-end" : "inline-end");
 
 	const keep = useKeepWordInView({
 		scroller,
@@ -96,6 +106,16 @@ export default function DockOrSheetDemo() {
 		setFront(null);
 	};
 
+	// Esc closes the lookup wherever focus is in the frame.
+	useEffect(() => {
+		if (wordId === null) return;
+		const onKey = (event: KeyboardEvent) => {
+			if (event.key === "Escape") setWordId(null);
+		};
+		window.addEventListener("keydown", onKey);
+		return () => window.removeEventListener("keydown", onKey);
+	}, [wordId, setWordId]);
+
 	const lookup: LookupState | null = word
 		? {
 				clicked: word.text,
@@ -117,77 +137,91 @@ export default function DockOrSheetDemo() {
 
 	return (
 		<div className="flex h-full flex-col">
-			<header className="grid shrink-0 gap-2 border-b border-line bg-canvas px-4 py-3 text-sm">
-				<p className="text-ink-soft">
-					<b className="font-semibold text-ink">Dock or sheet.</b>{" "}
-					Wide, the lookup docks beside the text; narrow, the same{" "}
-					<code className="font-mono text-xs text-link">
-						&lt;Lookup /&gt;
-					</code>{" "}
-					rides a bottom sheet. Lute switches at 980px, LinguaCafe at
-					960 and 768, Readest at 640.
-				</p>
-				<p className="text-xs text-ink-muted">
-					Try: click a word, then drag the frame's edge across the
-					breakpoint, or switch the width to 390 and back. Drag the
-					dock's grip or the sheet's handle.
-				</p>
-				<div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
-					<fieldset className="flex items-center gap-2">
-						<legend className="sr-only">Breakpoint</legend>
-						<span className="text-ink-muted">Dock from</span>
-						<span className="flex rounded-lg border border-line p-0.5">
-							{breakpoints.map((option) => (
-								<button
-									key={option.px}
-									type="button"
-									aria-pressed={option.px === breakpoint}
-									onClick={() =>
-										setBreakpoint(
-											option.px === defaultBreakpoint
-												? null
-												: String(option.px),
-										)
-									}
-									className={cn(
-										"cursor-pointer rounded-md px-2 py-0.5 text-ink-muted hover:text-ink",
-										option.px === breakpoint &&
-											"bg-raised text-ink",
-									)}
-								>
-									{option.px}
-									{option.who ? (
-										<span className="text-ink-faint">
-											{" "}
-											{option.who}
-										</span>
-									) : null}
-								</button>
-							))}
-						</span>
-					</fieldset>
-					<label className="flex cursor-pointer items-center gap-1.5 text-ink-muted">
-						<input
-							type="checkbox"
-							checked={outlined}
-							onChange={(event) =>
-								setOutlined(event.target.checked)
-							}
-							className="accent-[var(--link)]"
-						/>
+			<DemoInspector>
+				<InspectorSection>
+					<InspectorTry>
+						<p>
+							Wide, the lookup docks beside the text; narrow, the
+							same{" "}
+							<code className="font-mono text-link">
+								&lt;Lookup /&gt;
+							</code>{" "}
+							rides a bottom sheet. Lute switches at 980px,
+							LinguaCafe at 960 and 768, Readest at 640.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+				<InspectorSection title="Try">
+					<InspectorTry>
+						<p>
+							Click a word, then drag the frame's edge across the
+							breakpoint, or switch the width to 390 and back.
+							Drag the dock's grip or the sheet's handle.
+						</p>
+					</InspectorTry>
+				</InspectorSection>
+				<InspectorSection title="Knobs">
+					<InspectorChoice
+						label="Dock from"
+						options={breakpoints.map((option) => ({
+							value: option.px,
+							label: option.who
+								? `${option.px} · ${option.who}`
+								: String(option.px),
+						}))}
+						value={breakpoint}
+						onChange={(px) =>
+							setBreakpoint(
+								px === defaultBreakpoint ? null : String(px),
+							)
+						}
+					/>
+					<InspectorChoice
+						label="Sheet snap (or drag and tap the handle)"
+						options={snaps.map((value) => ({
+							value,
+							label: value,
+						}))}
+						value={snap}
+						onChange={setSnap}
+					/>
+					<InspectorCheck checked={outlined} onChange={setOutlined}>
 						Outline{" "}
 						<code className="font-mono text-link">
 							&lt;Lookup /&gt;
 						</code>
-					</label>
+					</InspectorCheck>
+				</InspectorSection>
+				<InspectorSection title="Readout">
 					<Readout
 						frameWidth={frame.inlineSize}
 						breakpoint={breakpoint}
 						mode={mode}
 						textWidth={textSize.inlineSize}
 					/>
-				</div>
-			</header>
+					<p className="font-mono text-xs text-ink-muted">
+						{mode === "dock"
+							? `dock ${dock}px`
+							: `sheet at ${snap}`}
+					</p>
+					{word ? (
+						<p className="text-xs text-ink-soft">
+							{hop ? "lemma " : "clicked "}
+							<bdi className="font-semibold text-ink">
+								{hop ?? word.text}
+							</bdi>{" "}
+							·{" "}
+							{pending.length > 0
+								? `dealing ${cards.length}/${cards.length + pending.length}`
+								: `${cards.length} Cards`}
+						</p>
+					) : (
+						<p className="text-xs text-ink-muted">
+							No lookup open.
+						</p>
+					)}
+				</InspectorSection>
+			</DemoInspector>
 			<div ref={setArea} className="relative flex min-h-0 flex-1">
 				<div
 					ref={setScroller}
@@ -274,21 +308,12 @@ function Readout({
 	if (mode === null) return null;
 	const Icon = mode === "dock" ? PanelRight : PanelBottom;
 	return (
-		<p
-			dir="ltr"
-			className="flex items-center gap-1.5 font-mono text-ink-muted"
-		>
+		<p className="flex flex-wrap items-center gap-1.5 font-mono text-xs text-ink-muted">
 			<span>
 				frame {frameWidth} {mode === "dock" ? "≥" : "<"} {breakpoint} →
 			</span>
 			<span className="inline-flex items-center gap-1 rounded-md bg-raised px-1.5 py-0.5 text-ink">
-				<Icon
-					aria-hidden="true"
-					className={cn(
-						"size-3.5",
-						mode === "dock" && "rtl:-scale-x-100",
-					)}
-				/>
+				<Icon aria-hidden="true" className="size-3.5" />
 				{mode}
 			</span>
 			<span>· text {textWidth}px</span>
