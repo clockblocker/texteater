@@ -17,36 +17,12 @@ type Demo = {
 
 export const demos: readonly Demo[] = [
 	{
-		slug: "dock-or-sheet",
-		title: "Dock or sheet",
-		description:
-			"A docked side pane when wide, a bottom sheet when narrow, the same content in both.",
-		inspiration: ["Lute", "LinguaCafe", "Readest"],
-		Component: lazy(() => import("./dock-or-sheet")),
-	},
-	{
-		slug: "push-or-overlay",
-		title: "Push or overlay",
-		description:
-			"The lookup pane pushes the text aside while ~480px of text remains, otherwise overlays it.",
-		inspiration: ["Hypothesis"],
-		Component: lazy(() => import("./push-or-overlay")),
-	},
-	{
 		slug: "never-cover-word",
 		title: "Never cover the word",
 		description:
 			"The Deck beside the sentence, never covering it; the text scrolls to make room.",
 		inspiration: ["KOReader"],
 		Component: lazy(() => import("./never-cover-word")),
-	},
-	{
-		slug: "nested-lookups",
-		title: "Nested lookups",
-		description:
-			"Lookups inside a lookup in one surface, a stack that Back and a breadcrumb pop.",
-		inspiration: ["Readest", "Yomitan"],
-		Component: lazy(() => import("./nested-lookups")),
 	},
 	{
 		slug: "progressive-results",

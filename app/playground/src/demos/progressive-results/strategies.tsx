@@ -6,7 +6,6 @@ import {
 	CardView,
 	cardKinds,
 	type FakeCard,
-	type FakeCardLink,
 	type FakeResolution,
 } from "@/fixtures";
 import { usePlaygroundEnv } from "@/shell";
@@ -32,7 +31,6 @@ type StrategyProps = {
 	readonly resolution: FakeResolution;
 	readonly stages: Stages;
 	readonly retry: (kind: CardKind) => void;
-	readonly onLinkClick: (link: FakeCardLink) => void;
 };
 
 /** One slot of the pile: how it looks as a tail and at the front. */
@@ -121,10 +119,7 @@ function Pile({
 	);
 }
 
-function readyItem(
-	card: FakeCard,
-	onLinkClick: (link: FakeCardLink) => void,
-): PileItem {
+function readyItem(card: FakeCard): PileItem {
 	return {
 		kind: card.kind,
 		tail: (onFront) => (
@@ -135,7 +130,7 @@ function readyItem(
 				className="pb-3"
 			/>
 		),
-		full: <CardView card={card} onLinkClick={onLinkClick} />,
+		full: <CardView card={card} />,
 	};
 }
 
@@ -157,14 +152,14 @@ function failedItem(kind: CardKind, retry: (kind: CardKind) => void): PileItem {
  * (a) Every slot is there from the click on, as a skeleton, and fills in
  * place when its stage settles. An empty stage folds its slot away.
  */
-export function AllSkeletons({ stages, retry, onLinkClick }: StrategyProps) {
+export function AllSkeletons({ stages, retry }: StrategyProps) {
 	const items = cardKinds.flatMap((kind): PileItem[] => {
 		const stage = stages[kind];
 		switch (stage.status) {
 			case "empty":
 				return [];
 			case "ready":
-				return [readyItem(stage.card, onLinkClick)];
+				return [readyItem(stage.card)];
 			case "failed":
 				return [failedItem(kind, retry)];
 			default:
@@ -186,7 +181,7 @@ export function AllSkeletons({ stages, retry, onLinkClick }: StrategyProps) {
  * (b) A Card is dealt only once it has something to show: its heading
  * first, with skeleton blocks for the body until the stage settles.
  */
-export function DealAsReady({ stages, retry, onLinkClick }: StrategyProps) {
+export function DealAsReady({ stages, retry }: StrategyProps) {
 	const items = cardKinds.flatMap((kind): PileItem[] => {
 		const stage = stages[kind];
 		switch (stage.status) {
@@ -206,7 +201,7 @@ export function DealAsReady({ stages, retry, onLinkClick }: StrategyProps) {
 					},
 				];
 			case "ready":
-				return [readyItem(stage.card, onLinkClick)];
+				return [readyItem(stage.card)];
 			case "failed":
 				return [failedItem(kind, retry)];
 			default:
@@ -220,12 +215,7 @@ export function DealAsReady({ stages, retry, onLinkClick }: StrategyProps) {
  * (c) One Card for the click, which grows a section per stage as each
  * settles, in deal order, so new content lands below what is being read.
  */
-export function SingleGrowing({
-	resolution,
-	stages,
-	retry,
-	onLinkClick,
-}: StrategyProps) {
+export function SingleGrowing({ resolution, stages, retry }: StrategyProps) {
 	const transition = useDealTransition();
 	const waiting = cardKinds.filter((kind) => {
 		const status = stages[kind].status;
@@ -254,10 +244,7 @@ export function SingleGrowing({
 							className="overflow-hidden"
 						>
 							{stage.status === "ready" ? (
-								<GrowingSection
-									card={stage.card}
-									onLinkClick={onLinkClick}
-								/>
+								<GrowingSection card={stage.card} />
 							) : (
 								<Section kind={kind}>
 									<p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-ink-soft">
@@ -287,22 +274,12 @@ export function SingleGrowing({
 	);
 }
 
-function GrowingSection({
-	card,
-	onLinkClick,
-}: {
-	readonly card: FakeCard;
-	readonly onLinkClick: (link: FakeCardLink) => void;
-}) {
+/** Its lemma links do nothing: the Deck never changes in place. */
+function GrowingSection({ card }: { readonly card: FakeCard }) {
 	const links = card.links.map((link) => (
 		<span key={link.word} className="text-ink-muted">
 			{link.relation} →{" "}
-			<NoteTitleLink
-				className="text-link"
-				onClick={() => onLinkClick(link)}
-			>
-				{link.word}
-			</NoteTitleLink>
+			<NoteTitleLink className="text-link">{link.word}</NoteTitleLink>
 		</span>
 	));
 	switch (card.kind) {

@@ -9,8 +9,7 @@ import {
  * German definitions, so a link inside a Card or a preview leads somewhere
  * worth hovering. The shared fixtures define in English and know only the
  * reading text's words; previews need a chain of German entries three or
- * more levels deep: gehen → Fuß → Beins → Körperteile → … Copied from the
- * nested-lookups demo, since demos don't import each other.
+ * more levels deep: gehen → Fuß → Beins → Körperteile → …
  */
 
 type LocalEntry = {

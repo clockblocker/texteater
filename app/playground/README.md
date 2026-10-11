@@ -94,8 +94,9 @@ together.
   has an `id`, its `text`, its `sentenceId`, the whole `sentence` and, for a
   multi-word unit such as `fängt … an`, a shared `unitId`.
 - `wordsOf(text)` lists a text's words. `textFromParagraphs(id, lang, title,
-  paragraphs)` builds a text, for example to make a definition clickable for
-  nested lookups. In its paragraph strings, `{word|unit}` marks unit members.
+  paragraphs)` builds a text, for example to make a definition's words
+  links for previews. In its paragraph strings, `{word|unit}` marks unit
+  members.
 - `<WordText text selectedWordId? onWordClick? className? />` renders a text
   as clickable words. A click reports a `WordClick`: `word`, its `element`
   and `rect`, and its sentence's `sentenceElement` and `sentenceRect`, all

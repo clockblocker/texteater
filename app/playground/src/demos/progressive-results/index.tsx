@@ -3,7 +3,6 @@ import { RotateCw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
 	cardKinds,
-	type FakeCardLink,
 	germanText,
 	hebrewText,
 	type WordClick,
@@ -73,7 +72,6 @@ export default function ProgressiveResultsDemo() {
 	const [speedParam, setSpeed] = useDemoParam("speed");
 	const [failParam, setFail] = useDemoParam("fail");
 	const [wordId, setWordId] = useDemoParam("word");
-	const [link, setLink] = useState<string | null>(null);
 	const [replay, setReplay] = useState(0);
 	// The lookup sits at the inline end from 760px, below the text under it.
 	const { inlineSize } = useFrameSize();
@@ -89,7 +87,7 @@ export default function ProgressiveResultsDemo() {
 		(wordId === null ? firstGing : undefined) ??
 		null;
 
-	const lookup = useStagedLookup(link ?? word, {
+	const lookup = useStagedLookup(word, {
 		speed,
 		fail,
 		replay: `${strategy}#${replay}`,
@@ -98,18 +96,15 @@ export default function ProgressiveResultsDemo() {
 	const shifts = useShifts(body, lookup.run, lookup.startedAt);
 
 	const onWordClick = ({ word: clicked }: WordClick) => {
-		setLink(null);
 		if (clicked.id === word?.id) setReplay((count) => count + 1);
 		else setWordId(clicked.id, { push: true });
 	};
-	const onLinkClick = ({ word: lemma }: FakeCardLink) => setLink(lemma);
 
 	const strategyProps = lookup.resolution
 		? {
 				resolution: lookup.resolution,
 				stages: lookup.stages,
 				retry: lookup.retry,
-				onLinkClick,
 			}
 		: null;
 	const settled = cardKinds.filter((kind) => {
@@ -182,12 +177,9 @@ export default function ProgressiveResultsDemo() {
 						<p className="flex items-baseline justify-between gap-3">
 							<span className="truncate">
 								{lookup.resolution ? (
-									<>
-										<bdi className="text-ink">
-											{link ?? lookup.resolution.word}
-										</bdi>
-										{link ? " · via lemma link" : ""}
-									</>
+									<bdi className="text-ink">
+										{lookup.resolution.word}
+									</bdi>
 								) : (
 									"Click a word."
 								)}
@@ -226,12 +218,12 @@ export default function ProgressiveResultsDemo() {
 					<div className="mx-auto grid max-w-[38rem] gap-6">
 						<WordText
 							text={germanText}
-							selectedWordId={link ? null : (word?.id ?? null)}
+							selectedWordId={word?.id ?? null}
 							onWordClick={onWordClick}
 						/>
 						<WordText
 							text={hebrewText}
-							selectedWordId={link ? null : (word?.id ?? null)}
+							selectedWordId={word?.id ?? null}
 							onWordClick={onWordClick}
 						/>
 					</div>
