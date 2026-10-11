@@ -42,8 +42,13 @@ frame's width:
 - Portals into `document.body` escape the frame. Portal into
   `usePlaygroundEnv().frame` instead.
 - `dir` is set on the frame. Use logical classes only (`ms-`, `ps-`,
-  `start-`, `border-s`, `text-start`). `WordText` sets its own direction from
-  the text's language, so German stays left-to-right in an RTL frame.
+  `start-`, `border-s`, `text-start`). Text in another language than the
+  frame's carries its own `lang` and `dir`: `WordText` sets them from the
+  text's language, and `CardView` on each run of a Card (English glosses,
+  the target-language title and quote, a mixed caption as a `dir="auto"`
+  `<bdi>`), so punctuation stays on the right side in an RTL frame while the
+  chrome mirrors. Do the same for text a demo renders itself, with
+  `langAttrs(lang)` and `cardLang(card)`.
 - Reduced motion sets Motion's `MotionConfig` to `reducedMotion="always"` and
   finishes CSS animations and transitions immediately inside the frame.
   `usePlaygroundEnv().reducedMotion` gives the same setting to code that
@@ -82,7 +87,9 @@ together.
   and `rect`, and its sentence's `sentenceElement` and `sentenceRect`, all
   viewport rects. `rectWithin(rect, container)` converts a rect to
   `container` coordinates. The selected word and the other members of its
-  unit are underlined.
+  unit are underlined. Each word and the punctuation touching it (`Kiosk.`,
+  `„Wann`) sit in one no-break span, so a line never starts with
+  punctuation; only the word is a button.
 - `resolveWord(word | string)` returns a `FakeResolution`: `{ word, cards }`,
   with one `FakeCard` each for Attestation, Surface, Lemma and Reading, in
   deal order. A Card has `id`, `kind`, `title`, a one-line `caption`
@@ -104,6 +111,9 @@ together.
   `{ resolution, cards, pending, done }`, where `pending` lists the kinds
   still on their way. A new word starts the reveal over.
 - `cardKinds` lists the four kinds in deal order.
+- `langAttrs(lang)` returns `{ lang, dir }` for a run in `"de"`, `"he"` or
+  `"en"`. `cardLang(card)` is the Card's target language, `"he"` when its
+  title is Hebrew and `"de"` otherwise.
 
 ## Shell (`@/shell`)
 

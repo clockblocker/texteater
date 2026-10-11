@@ -9,6 +9,7 @@ import {
 } from "lego";
 import { AnimatePresence, motion } from "motion/react";
 import type { ReactNode } from "react";
+import { cardLang, langAttrs } from "./lang";
 import type { CardKind, FakeCard, FakeCardLink } from "./resolution";
 
 const surface =
@@ -18,6 +19,11 @@ const surface =
  * One Card. Full, it shows the kind, title, IPA, translations, definition,
  * the sentence quote with the clicked words marked, and lemma links.
  * `collapsed` shrinks it to its one-line tail: emoji and caption.
+ *
+ * The Card's chrome follows the frame's direction; each run of text inside
+ * it carries its own `lang` and `dir` (English glosses and notes, the
+ * target-language title and quote), and a caption that mixes the two is a
+ * `dir="auto"` isolate, so punctuation stays on the right side under RTL.
  */
 export function CardView({
 	card,
@@ -37,7 +43,9 @@ export function CardView({
 		const tail = (
 			<>
 				<span aria-hidden="true">{card.emoji}</span>
-				<span className="truncate">{card.caption}</span>
+				<bdi dir="auto" className="truncate">
+					{card.caption}
+				</bdi>
 			</>
 		);
 		const tailClass = cn(
@@ -61,6 +69,7 @@ export function CardView({
 		);
 	}
 
+	const lang = cardLang(card);
 	return (
 		<DensityScope
 			density="compact"
@@ -73,24 +82,45 @@ export function CardView({
 					<span aria-hidden="true" className="text-xl">
 						{card.emoji}
 					</span>
-					<NoteTitle className="text-lg">{card.title}</NoteTitle>
-					<Ipa transcription={card.ipa} />
+					<NoteTitle {...langAttrs(lang)} className="text-lg">
+						{card.title}
+					</NoteTitle>
+					<Ipa
+						lang={`${lang}-fonipa`}
+						dir="ltr"
+						transcription={card.ipa}
+					/>
 				</div>
-				<p className="text-ink-muted">{card.caption}</p>
+				<p className="text-ink-muted">
+					<bdi dir="auto">{card.caption}</bdi>
+				</p>
 			</header>
-			<p className="text-ink-soft">{card.translations.join(", ")}</p>
-			<p>{card.definition}</p>
+			<p className="text-ink-soft">
+				<span {...langAttrs("en")}>{card.translations.join(", ")}</span>
+			</p>
+			<p>
+				<span {...langAttrs("en")}>{card.definition}</span>
+			</p>
 			{card.quote ? (
 				<blockquote className="border-s-[3px] border-line ps-3 text-ink-soft">
-					<MarkedQuote quote={card.quote} marks={card.quoteMarks} />
+					<span {...langAttrs(lang)}>
+						<MarkedQuote
+							quote={card.quote}
+							marks={card.quoteMarks}
+						/>
+					</span>
 				</blockquote>
 			) : null}
 			{card.links.length > 0 ? (
 				<nav className="flex flex-wrap gap-3 text-ink-muted">
 					{card.links.map((link) => (
-						<span key={`${link.relation}:${link.word}`}>
+						<span
+							key={`${link.relation}:${link.word}`}
+							{...langAttrs("en")}
+						>
 							{link.relation} →{" "}
 							<NoteTitleLink
+								{...langAttrs(lang)}
 								className="text-link"
 								onClick={() => onLinkClick?.(link)}
 							>
@@ -106,7 +136,10 @@ export function CardView({
 
 function CardKindLabel({ kind }: { readonly kind: CardKind }) {
 	return (
-		<span className="font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-faint uppercase">
+		<span
+			{...langAttrs("en")}
+			className="font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-faint uppercase"
+		>
 			{kind}
 		</span>
 	);

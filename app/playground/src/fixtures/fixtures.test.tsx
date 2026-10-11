@@ -95,6 +95,29 @@ describe("components", () => {
 		expect(html).toContain('data-sentence-id="de-p1-s1"');
 	});
 
+	test("WordText keeps punctuation on its word's line", () => {
+		const html = renderToStaticMarkup(<WordText text={germanText} />);
+		expect(html).toMatch(
+			/whitespace-nowrap">[^<]*<button[^>]*>Kiosk<\/button>\.<\/span>/,
+		);
+		expect(html).toMatch(/whitespace-nowrap">„<button[^>]*>Wann</);
+	});
+
+	test("a Card's runs carry their own language and direction", () => {
+		const surface = resolveWord(word("ging")).cards[1];
+		const hebrew = resolveWord(wordsOf(hebrewText)[1] ?? "הלך").cards[1];
+		if (!surface || !hebrew) throw new Error("no Surface Card");
+		const html = renderToStaticMarkup(<CardView card={surface} />);
+		expect(html).toContain('<span lang="de" dir="ltr">Am Morgen');
+		expect(html).toContain(
+			`<span lang="en" dir="ltr">${surface.definition}`,
+		);
+		expect(html).toContain('<bdi dir="auto">ging · past of</bdi>');
+		expect(renderToStaticMarkup(<CardView card={hebrew} />)).toContain(
+			'<span lang="he" dir="rtl">הילד',
+		);
+	});
+
 	test("a collapsed CardView is its one-line tail", () => {
 		const surface = resolveWord(word("ging")).cards[1];
 		if (!surface) throw new Error("no Surface Card");

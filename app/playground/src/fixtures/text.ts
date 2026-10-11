@@ -7,7 +7,7 @@
  * members of one discontinuous unit.
  */
 
-type FixtureLanguage = "de" | "he";
+export type FixtureLanguage = "de" | "he";
 
 export type FixtureWord = {
 	readonly kind: "word";
@@ -23,7 +23,7 @@ export type FixtureWord = {
 
 type FixtureGap = { readonly kind: "gap"; readonly text: string };
 
-type FixtureToken = FixtureWord | FixtureGap;
+export type FixtureToken = FixtureWord | FixtureGap;
 
 type FixtureSentence = {
 	readonly id: string;

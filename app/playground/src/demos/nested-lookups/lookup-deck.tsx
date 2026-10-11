@@ -4,8 +4,10 @@ import { useMemo, useState } from "react";
 import {
 	CardSkeleton,
 	CardView,
+	cardLang,
 	type FakeCard,
 	type FixtureWord,
+	langAttrs,
 	useFakeResolution,
 } from "@/fixtures";
 import { type CardWordClick, ClickableWords } from "./clickable-words";
@@ -116,6 +118,7 @@ function ClickableCard({
 	readonly onWord: (click: CardWordClick) => void;
 }) {
 	const id = `${scope}~${card.id}`;
+	const lang = cardLang(card);
 	return (
 		<DensityScope
 			density="compact"
@@ -123,19 +126,32 @@ function ClickableCard({
 			className="grid gap-3 rounded-xl border border-line bg-paper p-4 text-sm text-ink shadow-[0_8px_24px_-12px_oklch(0%_0_0/0.5)]"
 		>
 			<header className="grid gap-1">
-				<span className="font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-faint uppercase">
+				<span
+					{...langAttrs("en")}
+					className="font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-faint uppercase"
+				>
 					{card.kind}
 				</span>
 				<div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
 					<span aria-hidden="true" className="text-xl">
 						{card.emoji}
 					</span>
-					<NoteTitle className="text-lg">{card.title}</NoteTitle>
-					<Ipa transcription={card.ipa} />
+					<NoteTitle {...langAttrs(lang)} className="text-lg">
+						{card.title}
+					</NoteTitle>
+					<Ipa
+						lang={`${lang}-fonipa`}
+						dir="ltr"
+						transcription={card.ipa}
+					/>
 				</div>
-				<p className="text-ink-muted">{card.caption}</p>
+				<p className="text-ink-muted">
+					<bdi dir="auto">{card.caption}</bdi>
+				</p>
 			</header>
-			<p className="text-ink-soft">{card.translations.join(", ")}</p>
+			<p className="text-ink-soft">
+				<span {...langAttrs("en")}>{card.translations.join(", ")}</span>
+			</p>
 			{card.definition ? (
 				<p lang="de" dir="ltr" className="text-start">
 					<ClickableWords
@@ -166,9 +182,10 @@ function ClickableCard({
 					{card.links.map((link) => {
 						const anchorId = `${id}~link~${link.word}`;
 						return (
-							<span key={anchorId}>
+							<span key={anchorId} {...langAttrs("en")}>
 								{link.relation} →{" "}
 								<NoteTitleLink
+									{...langAttrs(lang)}
 									data-word-id={anchorId}
 									className={cn(
 										"text-link",

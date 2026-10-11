@@ -1,4 +1,5 @@
 export { CardSkeleton, CardStack, CardView } from "./card";
+export { cardLang, langAttrs, type RunLanguage } from "./lang";
 export {
 	type CardKind,
 	cardKinds,
@@ -8,6 +9,7 @@ export {
 	resolveWord,
 } from "./resolution";
 export {
+	type FixtureLanguage,
 	type FixtureText,
 	type FixtureWord,
 	germanText,
