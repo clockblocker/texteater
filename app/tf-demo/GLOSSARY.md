@@ -8,6 +8,11 @@ workspace terms, such as Pane, Sheet, Card and Deck.
 
 ## Language
 
+**Learner**:
+The person tf-demo serves: reads Texts, owns a Library and Submissions. A
+Learner is known only through a Visitor until accounts exist.
+_Avoid_: User, Reader, Visitor (the anonymous identity, not the person)
+
 **Library**:
 The Menu Item listing Texts. See [tf-demo ADR 0008].
 _Avoid_: Library Sheet, Text Sheet
@@ -18,7 +23,7 @@ The Menu Item beside the Library that holds the application's settings. See
 
 **Shelf**:
 A curated collection of Texts that a person has checked. Its Texts go
-through the same Intake as learner uploads.
+through the same Intake as Learner uploads.
 
 **Price**:
 The coins a Submission costs, shown before Intake starts.
@@ -26,7 +31,7 @@ _Avoid_: quote
 
 **Mode**:
 One way to read a Text. A Text offers the Modes its Medium allows, and the
-learner can switch between them.
+Learner can switch between them.
 _Avoid_: View
 
 **Page Mode**:
@@ -44,7 +49,7 @@ Sentence replays it.
 _Avoid_: transcript view, transcription
 
 **Flag**:
-A learner's report that one spot in a Text is wrong. Re-running a Sentence
+A Learner's report that one spot in a Text is wrong. Re-running a Sentence
 replaces its Segments, so the fix strips that Sentence's Occurrence
 Attestations. See [Dumgen ADR 0004].
 
@@ -175,7 +180,7 @@ turn that Shadow into a provisional Reading.
 **Visitor**:
 A stable anonymous interaction identity that owns Visitor Encounter history
 and Personal Annotations. See [tf-demo ADR 0002].
-_Avoid_: Learner, User, account
+_Avoid_: User, account
 
 **Segment Selection**:
 An ephemeral Visitor command that presents a stored route or starts one
@@ -210,7 +215,7 @@ These terms name what Intake takes in, keeps and produces. tf-demo runs
 Intake; Dumgen's `splitText` and `segment.inUnits` are its last steps.
 
 **Submission**:
-What a learner or curator hands in to become a Text: pasted text, a file or
+What a Learner or curator hands in to become a Text: pasted text, a file or
 a link.
 _Avoid_: upload (as a noun), import, Text Record
 
@@ -226,7 +231,7 @@ _Avoid_: Kind, type, format
 
 **Intake**:
 The one pipeline that turns a Submission into a Text, the same for Shelves
-and learner uploads. It works Chapter by Chapter: Extraction, then
+and Learner uploads. It works Chapter by Chapter: Extraction, then
 `splitText` and `segment.inUnits`.
 _Avoid_: ingestion, processing, import
 
@@ -247,7 +252,7 @@ The readable result of Intake, listed in the Library: Chapters of Sentences,
 each cut into Segments.
 
 **Chapter**:
-The piece of a Text that Intake processes and a learner opens as a whole. An
+The piece of a Text that Intake processes and a Learner opens as a whole. An
 article is one Chapter. Each Chapter becomes ready on its own.
 _Avoid_: Part, Section, batch
 
