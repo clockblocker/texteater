@@ -156,3 +156,98 @@ test("reads a hard-wrapped Text with a title line as its title and paragraphs", 
 		},
 	]);
 });
+
+test("splits English without breaking at titles, initials or a date's day", () => {
+	expect(
+		sentencesOf(
+			"Mr. Smith met Dr. Jones at 5 p.m. on Jan. 3. They talked for an hour. J. K. Rowling agreed, e.g. at St. Paul's. Vol. 2 is out.",
+		),
+	).toEqual([
+		"Mr. Smith met Dr. Jones at 5 p.m. on Jan. 3.",
+		"They talked for an hour.",
+		"J. K. Rowling agreed, e.g. at St. Paul's.",
+		"Vol. 2 is out.",
+	]);
+});
+
+test("splits French with titles and spaced guillemets", () => {
+	expect(
+		sentencesOf(
+			"Mme. Dupont est arrivée. M. Martin aussi. « Bonjour ! » dit-il. « Comment ça va ? » Elle sourit.",
+		),
+	).toEqual([
+		"Mme. Dupont est arrivée.",
+		"M. Martin aussi.",
+		"« Bonjour ! » dit-il.",
+		"« Comment ça va ? »",
+		"Elle sourit.",
+	]);
+});
+
+test("splits Hebrew, whose abbreviations take gershayim, and reads a Hebrew title line", () => {
+	expect(
+		splitText(
+			'פרק ראשון\nד"ר כהן הגיע לתל אביב בבוקר. הוא אמר שלום! אני גר ב-Tel Aviv.',
+		).paragraphs,
+	).toEqual([
+		{ sentences: ["פרק ראשון"] },
+		{
+			sentences: [
+				'ד"ר כהן הגיע לתל אביב בבוקר.',
+				"הוא אמר שלום!",
+				"אני גר ב-Tel Aviv.",
+			],
+		},
+	]);
+});
+
+test("keeps a lower-case dialogue tag with the quote before it", () => {
+	expect(
+		sentencesOf(
+			'"Go!" he shouted. Er rief »Hilfe!« und rannte weg. Wait... what happened?',
+		),
+	).toEqual([
+		'"Go!" he shouted.',
+		"Er rief »Hilfe!« und rannte weg.",
+		"Wait... what happened?",
+	]);
+});
+
+test("an ordinal before a Sentence-opening word closes its Sentence", () => {
+	expect(
+		sentencesOf(
+			"Ich zählte bis 10. Dann hörte ich auf. Am 1. Januar kam er, im 19. Jahrhundert. Das ist z. B. teuer.",
+		),
+	).toEqual([
+		"Ich zählte bis 10.",
+		"Dann hörte ich auf.",
+		"Am 1. Januar kam er, im 19. Jahrhundert.",
+		"Das ist z. B. teuer.",
+	]);
+});
+
+test("splits a Text mixing German, English, French and Hebrew paragraphs the same way as each alone", () => {
+	const paragraphs = [
+		"Die Lehrerin sagt: Open your books, please. Dann lesen wir Nr. 5.",
+		"Mr. Brown arrived on Jan. 3. He was late.",
+		"Mme. Leroux répond : « Pas du tout ! » Puis elle part.",
+		"« Non ! »",
+		'ד"ר לוי צחק. זה היה מצחיק!',
+	];
+	expect(splitText(paragraphs.join("\n\n"))).toEqual({
+		paragraphs: paragraphs.flatMap(
+			(paragraph) => splitText(paragraph).paragraphs,
+		),
+	});
+	expect(sentencesOf(paragraphs.join("\n\n"))).toEqual([
+		"Die Lehrerin sagt: Open your books, please.",
+		"Dann lesen wir Nr. 5.",
+		"Mr. Brown arrived on Jan. 3.",
+		"He was late.",
+		"Mme. Leroux répond : « Pas du tout ! »",
+		"Puis elle part.",
+		"« Non ! »",
+		'ד"ר לוי צחק.',
+		"זה היה מצחיק!",
+	]);
+});
