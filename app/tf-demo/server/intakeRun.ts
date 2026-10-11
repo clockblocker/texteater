@@ -18,9 +18,10 @@ export function failureTagOf(cause: Cause.Cause<unknown>): string {
 }
 
 /**
- * Collects one submission attempt's summary from the trace of its
- * `segment.inUnits`: every jev call with its tokens and time, and how each
- * Sentence's segmentation ended. It keeps no Text, prompt or answer.
+ * Collects one submission attempt's summary from the traces of its
+ * `language.detect` and `segment.inUnits`: every jev call with its tokens
+ * and time, and how each Sentence's segmentation ended, Plain for one not
+ * in the target language. It keeps no Text, prompt or answer.
  */
 export function createIntakeRunRecorder(sentenceCount: number) {
 	const jev: IntakeRun["jev"] = {
@@ -32,10 +33,23 @@ export function createIntakeRunRecorder(sentenceCount: number) {
 		maxDurationMs: 0,
 	};
 	const outcomes = new Map<number, SentenceOutcome>();
+	/** The positions `segment.inUnits` was given, in its order; all until told. */
+	let segmenting: readonly number[] | undefined;
 	return {
-		/** `createDumgen`'s `onOperation`. A Sentence's index is its position. */
+		/** Intake's `onSegmenting`: every other Sentence is Plain. */
+		segmenting(positions: readonly number[]) {
+			segmenting = positions;
+			const segmented = new Set(positions);
+			for (let position = 0; position < sentenceCount; position++)
+				if (!segmented.has(position)) outcomes.set(position, "Plain");
+		},
+		/** `createDumgen`'s `onOperation`. */
 		operation(trace: OperationTrace) {
-			if (trace.operation !== "segment.inUnits") return;
+			if (
+				trace.operation !== "language.detect" &&
+				trace.operation !== "segment.inUnits"
+			)
+				return;
 			for (const call of trace.calls) {
 				if (call.executor !== "jev") continue;
 				jev.calls++;
@@ -49,7 +63,7 @@ export function createIntakeRunRecorder(sentenceCount: number) {
 				);
 			}
 			for (const { sentence, outcome } of trace.sentences)
-				outcomes.set(sentence, outcome);
+				outcomes.set(segmenting?.[sentence] ?? sentence, outcome);
 		},
 		summary(
 			attempt: Pick<

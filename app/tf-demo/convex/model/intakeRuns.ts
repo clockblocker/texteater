@@ -17,7 +17,8 @@ export const intakeRunValidator = v.object({
 	sentenceCount: v.number(),
 	/**
 	 * How each Sentence's `segment.inUnits` ended: Segmented, or Failed when
-	 * it was stored marked as not segmented.
+	 * it was stored marked as not segmented, or Plain when it was not in the
+	 * Text's target language and never went to it.
 	 */
 	sentences: v.array(
 		v.object({
@@ -25,10 +26,14 @@ export const intakeRunValidator = v.object({
 				"Segmented",
 				"Failed",
 				"NotStarted",
+				"Plain",
 			] as const),
 		}),
 	),
-	/** The jev requests `segment.inUnits` sent, summed from its trace. */
+	/**
+	 * The jev requests `language.detect` and `segment.inUnits` sent, summed
+	 * from their traces.
+	 */
 	jev: v.object({
 		calls: v.number(),
 		failed: v.number(),

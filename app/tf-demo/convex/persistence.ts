@@ -63,6 +63,7 @@ import {
 } from "./model/visitorEncounters";
 import {
 	findAnalyzedSubmission,
+	findStoredExtractedText,
 	persistSubmittedText as persistSubmittedTextImplementation,
 } from "./modules/text/submission";
 
@@ -216,6 +217,8 @@ export const persistSubmittedText = internalMutation({
 	args: {
 		submissionKey: v.string(),
 		sourceText: v.string(),
+		/** Dumgen's `ExtractedText`, as intake read it. */
+		extractedText: v.optional(v.any()),
 		sentences: v.array(sentenceInputValidator),
 	},
 	returns: v.object({
@@ -224,6 +227,13 @@ export const persistSubmittedText = internalMutation({
 		deduplicated: v.boolean(),
 	}),
 	handler: persistSubmittedTextImplementation,
+});
+
+/** The Extracted Text a stored Text re-runs from, unchecked, if any. */
+export const storedExtractedText = internalQuery({
+	args: { submissionKey: v.string(), sourceText: v.string() },
+	returns: v.any(),
+	handler: findStoredExtractedText,
 });
 
 /** The stored Text a re-submission would only reproduce, if any. */

@@ -1,7 +1,11 @@
 /**
- * Dumgen's public entry (Dumgen ADR 0007, #701, #859). `splitText` splits a
- * Text into paragraphs and Sentences in code; `createDumgen({ jev, luna })`
- * builds the operations: `segment.inUnits`, which turns each Sentence into
+ * Dumgen's public entry (Dumgen ADR 0007, #701, #859). `extractPastedText`
+ * turns pasted text into an Extracted Text (#1176), `parseExtractedText`
+ * checks a stored one without Zod, and `splitExtractedText` splits one into
+ * paragraphs and Sentences in code with the language-neutral `splitText`.
+ * `createDumgen({ jev, luna })` builds the operations: `language.detect`,
+ * which gives each Sentence its Detected Language (Dumgen ADR 0001);
+ * `segment.inUnits`, which turns each Sentence into
  * its Segments and its biggest units, each with its route or `Unresolved`,
  * asking jev through the host's `JevAsk`; `resolve.grammar`, which
  * resolves a stored unit's Attestation with jev judging and Luna writing;
@@ -18,6 +22,16 @@ export {
 	type DumgenOptions,
 } from "./create-dumgen.js";
 export { InvalidModelOutput, ProviderFailure } from "./errors.js";
+export {
+	type ExtractedText,
+	extractPastedText,
+} from "./extracted-text/extracted-text.js";
+export { parseExtractedText } from "./extracted-text/parse.js";
+export { splitExtractedText } from "./extracted-text/split.js";
+export type {
+	DetectedLanguage,
+	LanguagedText,
+} from "./language/detect.js";
 export type { LunaAsk } from "./luna.js";
 export { createOpenAILuna } from "./openai-luna.js";
 export type { OperationTrace } from "./operation-trace.js";
@@ -35,5 +49,5 @@ export type {
 	SegmentedText,
 	Unit,
 } from "./segment/segmented-sentence.js";
-export { splitText } from "./segment/split-text.js";
+export { stitchedText } from "./segment/stitched-text.js";
 export { createTypeSafeAsk } from "./segment/typesafe-ask.js";

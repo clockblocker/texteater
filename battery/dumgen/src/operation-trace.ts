@@ -91,6 +91,7 @@ export type OperationEvent = {
 
 export type OperationTrace = {
 	readonly operation:
+		| "language.detect"
 		| "segment.inUnits"
 		| "resolve.grammar"
 		| "resolve.reading"

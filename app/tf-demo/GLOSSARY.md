@@ -212,7 +212,8 @@ Texts and their Sentences. See [tf-demo ADR 0001] and [tf-demo ADR 0005].
 ### Intake
 
 These terms name what Intake takes in, keeps and produces. tf-demo runs
-Intake; Dumgen's `splitText` and `segment.inUnits` are its last steps.
+Intake; Dumgen's `splitText`, `language.detect` and `segment.inUnits` are
+its last steps.
 
 **Submission**:
 What a Learner or curator hands in to become a Text: pasted text, a file or
@@ -232,7 +233,7 @@ _Avoid_: Kind, type, format
 **Intake**:
 The one pipeline that turns a Submission into a Text, the same for Shelves
 and Learner uploads. It works Chapter by Chapter: Extraction, then
-`splitText` and `segment.inUnits`.
+`splitText`, `language.detect` and `segment.inUnits`.
 _Avoid_: ingestion, processing, import
 
 **Extraction**:
@@ -278,13 +279,14 @@ Italic, bold or quotation on a run of text, kept from the Original.
 _Avoid_: formatting, markup
 
 **Detected Language**:
-The language Intake detects for one Sentence. A foreign word inside a
-target-language Sentence stays clickable as Foreign (Dumling). See
-[Dumgen ADR 0001] and [ADR 0045].
+The language Intake detects for one Sentence, or none when neither the
+Sentence nor its surroundings tell. A foreign word inside a target-language
+Sentence stays clickable as Foreign (Dumling). See [Dumgen ADR 0001] and
+[ADR 0045].
 
 **Plain Sentence**:
-A Sentence whose Detected Language is not the target language. It is shown
-but not clickable.
+A Sentence whose Detected Language is not the target language, or that has
+none. It is shown but not clickable.
 
 **Original Location**:
 Where a piece of an Extracted Text sits in its Original: an area of a Page

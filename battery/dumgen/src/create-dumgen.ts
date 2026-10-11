@@ -2,7 +2,7 @@
  * `createDumgen`, the one factory every host builds Dumgen with (#859). Its
  * operations are Effects whose error channel holds only `ProviderFailure`
  * and `InvalidModelOutput` (#552); a host `yield*`s them in its own
- * programs. It offers `segment.inUnits`, `resolve.grammar`,
+ * programs. It offers `language.detect`, `segment.inUnits`, `resolve.grammar`,
  * `resolve.reading` and `knowledge.produce`, whose error channel holds
  * only the host's own `onContribution` error (#883).
  */
@@ -14,6 +14,11 @@ import type {
 	KnowledgeProduction,
 	ProduceKnowledgeInput,
 } from "./knowledge/types.js";
+import {
+	type DetectLanguagesInput,
+	detectLanguages,
+	type LanguagedText,
+} from "./language/detect.js";
 import { languageModules } from "./languages.js";
 import {
 	defaultLunaConfiguration,
@@ -64,6 +69,17 @@ export type DumgenOptions = {
 };
 
 export type Dumgen = {
+	readonly language: {
+		/**
+		 * Each Sentence's Detected Language, or none when it stays
+		 * undetermined (Dumgen ADR 0001): code settles what script decides,
+		 * jev judges the rest in windows, and surroundings fill what neither
+		 * placed. A failed window fails the operation; nothing is retried.
+		 */
+		readonly detect: (
+			input: DetectLanguagesInput,
+		) => Effect.Effect<LanguagedText, ProviderFailure | InvalidModelOutput>;
+	};
 	readonly segment: {
 		/**
 		 * Segments every Sentence and groups its Segments into biggest
@@ -134,6 +150,12 @@ export function createDumgen(options: DumgenOptions): Dumgen {
 		configuration: options.lunaConfiguration ?? defaultLunaConfiguration,
 	};
 	return {
+		language: {
+			detect: (input) =>
+				runOperation("language.detect", operations, (scope) =>
+					detectLanguages(scope, jev, input),
+				),
+		},
 		segment: {
 			inUnits: (input) =>
 				runOperation("segment.inUnits", operations, (scope) =>

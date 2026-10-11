@@ -1,8 +1,11 @@
 import { expect, test } from "bun:test";
-import { createDumgen } from "dumgen";
+import { createDumgen, extractPastedText, parseExtractedText } from "dumgen";
 import * as Effect from "effect/Effect";
 import { projectSentenceView } from "../convex/modules/text/sentenceView";
-import { persistSubmittedText } from "../convex/modules/text/submission";
+import {
+	findStoredExtractedText,
+	persistSubmittedText,
+} from "../convex/modules/text/submission";
 import {
 	createIntake,
 	GERMAN_ONLY_MESSAGE,
@@ -11,7 +14,12 @@ import {
 } from "../server/intake";
 import { createIntakeRunRecorder } from "../server/intakeRun";
 import { createTestConvex } from "./support/convex";
-import { asksAbout, fakeJev, germanAnswers } from "./support/jev";
+import {
+	asksAbout,
+	fakeJev,
+	germanAnswers,
+	isLanguageRequest,
+} from "./support/jev";
 
 const SOURCE = "Er gibt auf. Er wohnt im Haus.\n\nJa!";
 
@@ -35,18 +43,19 @@ function persistable(submission: SubmittedText) {
 }
 
 /** Intake with a fake jev and a persistence port that keeps what it was handed. */
-function intakeWith(jev: ReturnType<typeof fakeJev>) {
+function intakeWith(jev: ReturnType<typeof fakeJev>, sentenceCount = 3) {
 	const stored: SubmittedText[] = [];
-	const run = createIntakeRunRecorder(3);
+	const run = createIntakeRunRecorder(sentenceCount);
 	const intake = createIntake({
-		segment: createDumgen({
+		dumgen: createDumgen({
 			jev: jev.ask,
-			// Segmentation never asks Luna.
+			// Intake never asks Luna.
 			luna: async () => {
-				throw Error("segmentation asked Luna");
+				throw Error("intake asked Luna");
 			},
 			onOperation: run.operation,
-		}).segment,
+		}),
+		onSegmenting: run.segmenting,
 		persistence: {
 			persistSubmittedText: async (input) => {
 				stored.push(input);
@@ -54,12 +63,25 @@ function intakeWith(jev: ReturnType<typeof fakeJev>) {
 			},
 		},
 	});
-	const submit = (sourceText = SOURCE, language: "de" | "en" = "de") =>
+	const submit = (
+		sourceText = SOURCE,
+		language: "de" | "en" = "de",
+		extractedText = extractPastedText(sourceText),
+	) =>
 		Effect.runPromise(
-			intake.submitText({ submissionKey: "key", sourceText, language }),
+			intake.submitText({
+				submissionKey: "key",
+				sourceText,
+				extractedText,
+				language,
+			}),
 		);
 	return { stored, run, submit };
 }
+
+/** Segmentation's requests, leaving out `language.detect`'s. */
+const segmentationRequests = (jev: ReturnType<typeof fakeJev>) =>
+	jev.sent.filter((request) => !isLanguageRequest(request));
 
 test("intake splits a Text into paragraphs and Sentences in code and hands each on with its Segments and units", async () => {
 	const jev = fakeJev({ answers: germanAnswers });
@@ -213,7 +235,8 @@ test("storage refuses units that do not cover the ResolvableText Segments exactl
 test("a Sentence whose jev request fails is stored marked as not segmented, with its written words and no units", async () => {
 	const jev = fakeJev({
 		answers: germanAnswers,
-		fail: (request) => asksAbout(request, "Ja!"),
+		fail: (request) =>
+			!isLanguageRequest(request) && asksAbout(request, "Ja!"),
 	});
 	const { stored, submit } = intakeWith(jev);
 	await submit();
@@ -289,7 +312,8 @@ test("storage refuses units on a Sentence marked as not segmented", async () => 
 test("the intake run sums jev tokens from every call and records how each Sentence ended", async () => {
 	const jev = fakeJev({
 		answers: germanAnswers,
-		fail: (request) => asksAbout(request, "Ja!"),
+		fail: (request) =>
+			!isLanguageRequest(request) && asksAbout(request, "Ja!"),
 	});
 	const { run, submit } = intakeWith(jev);
 	await submit();
@@ -303,9 +327,10 @@ test("the intake run sums jev tokens from every call and records how each Senten
 	const questions = jev.sent.map(
 		({ questions }) => Object.keys(questions).length,
 	);
-	const failed = jev.sent.filter((request) =>
+	const failed = segmentationRequests(jev).filter((request) =>
 		asksAbout(request, "Ja!"),
 	).length;
+	expect(jev.sent.filter(isLanguageRequest)).toHaveLength(1);
 	expect(summary.sentences).toEqual([
 		{ segmentation: "Segmented" },
 		{ segmentation: "Segmented" },
@@ -318,7 +343,7 @@ test("the intake run sums jev tokens from every call and records how each Senten
 		inputTokens:
 			10 * questions.reduce((sum, count) => sum + count, 0) -
 			10 *
-				jev.sent
+				segmentationRequests(jev)
 					.filter((request) => asksAbout(request, "Ja!"))
 					.reduce(
 						(sum, { questions }) =>
@@ -343,4 +368,168 @@ test("a Text in another language is turned away with a clear message before any 
 	);
 	expect(jev.sent).toEqual([]);
 	expect(stored).toEqual([]);
+});
+
+const MIXED = [
+	"Lies den Text. Read the text.",
+	'ד"ר כהן צחק. Hm.',
+	"Er gibt auf.",
+].join("\n\n");
+
+test("a mixed paste keeps its Extracted Text, segments only its German Sentences and stores the rest as Plain Sentences", async () => {
+	const jev = fakeJev({
+		answers: germanAnswers,
+		languages: { "Read the text.": "English", "Hm.": "Unknown" },
+	});
+	const { stored, run, submit } = intakeWith(jev, 5);
+	await submit(MIXED);
+	const submission = stored[0];
+	if (!submission) throw new Error("Expected a submission.");
+	expect(submission.extractedText).toEqual(extractPastedText(MIXED));
+	expect(
+		submission.sentences.map(
+			({ position, paragraph, language, stitchedText, segments }) => ({
+				position,
+				paragraph,
+				language,
+				stitchedText,
+				segmented: segments.length > 0,
+			}),
+		),
+	).toEqual([
+		{
+			position: 0,
+			paragraph: 0,
+			language: "de",
+			stitchedText: "Lies den Text.",
+			segmented: true,
+		},
+		{
+			position: 1,
+			paragraph: 0,
+			language: "en",
+			stitchedText: "Read the text.",
+			segmented: false,
+		},
+		// Hebrew script settles it in code; Hm. takes it from before.
+		{
+			position: 2,
+			paragraph: 1,
+			language: "he",
+			stitchedText: 'ד"ר כהן צחק.',
+			segmented: false,
+		},
+		{
+			position: 3,
+			paragraph: 1,
+			language: "he",
+			stitchedText: "Hm.",
+			segmented: false,
+		},
+		{
+			position: 4,
+			paragraph: 2,
+			language: "de",
+			stitchedText: "Er gibt auf.",
+			segmented: true,
+		},
+	]);
+	expect(submission.sentences[4]?.units).toEqual([
+		{ segments: [0], route: PRON },
+		{ segments: [2, 4], route: VERB },
+	]);
+	// Segmentation never read a Plain Sentence.
+	for (const plain of ["Read the text.", 'ד"ר כהן צחק.', "Hm."])
+		expect(
+			segmentationRequests(jev).some((request) =>
+				asksAbout(request, plain),
+			),
+		).toBe(false);
+	expect(
+		run
+			.summary({
+				runId: "run-1",
+				submissionKey: "key",
+				outcome: "Accepted",
+				durationMs: 1,
+				createdAt: 0,
+			})
+			.sentences.map(({ segmentation }) => segmentation),
+	).toEqual(["Segmented", "Plain", "Plain", "Plain", "Segmented"]);
+
+	// Storage keeps the Plain Sentences with no Segments, and the reader
+	// view shows them as plain text.
+	const t = createTestConvex();
+	const { sentenceIds } = await t.run((ctx) =>
+		persistSubmittedText(ctx, persistable(submission)),
+	);
+	const views = await t.run(async (ctx) =>
+		Promise.all(
+			sentenceIds.map(async (id) => {
+				const sentence = await ctx.db.get(id);
+				if (!sentence) throw new Error("Expected a Sentence.");
+				return projectSentenceView(ctx, sentence, "visitor-1");
+			}),
+		),
+	);
+	expect(
+		views.map(({ plain, language, segments }) => ({
+			plain,
+			language,
+			segments: segments.length,
+		})),
+	).toEqual([
+		{ plain: undefined, language: "de", segments: 6 },
+		{ plain: true, language: "en", segments: 0 },
+		{ plain: true, language: "he", segments: 0 },
+		{ plain: true, language: "he", segments: 0 },
+		{ plain: undefined, language: "de", segments: 6 },
+	]);
+});
+
+test("an undetermined Sentence with no surroundings is stored with no language, as a Plain Sentence", async () => {
+	const jev = fakeJev({ languages: { "Hm.": "Unknown" } });
+	const { stored, submit } = intakeWith(jev, 1);
+	await submit("Hm.");
+	expect(stored[0]?.sentences).toEqual([
+		{
+			segmentedSentenceId: "key#0",
+			position: 0,
+			paragraph: 0,
+			stitchedText: "Hm.",
+			segments: [],
+			units: [],
+		},
+	]);
+	// With no German Sentence, segmentation is never asked.
+	expect(segmentationRequests(jev)).toEqual([]);
+});
+
+test("re-running intake from the stored Extracted Text rebuilds the same Text", async () => {
+	const jev = fakeJev({
+		answers: germanAnswers,
+		languages: { "Read the text.": "English", "Hm.": "Unknown" },
+	});
+	const { stored, submit } = intakeWith(jev, 5);
+	await submit(MIXED);
+	const first = stored[0];
+	if (!first) throw new Error("Expected a submission.");
+	const t = createTestConvex();
+	const persisted = await t.run((ctx) =>
+		persistSubmittedText(ctx, persistable(first)),
+	);
+	const kept = await t.run((ctx) =>
+		findStoredExtractedText(ctx, {
+			submissionKey: "key",
+			sourceText: MIXED,
+		}),
+	);
+	await submit(MIXED, "de", parseExtractedText(kept));
+	const second = stored[1];
+	if (!second) throw new Error("Expected a second submission.");
+	expect(second).toEqual(first);
+	// Storage finds the same analysis and keeps the Text it has.
+	expect(
+		await t.run((ctx) => persistSubmittedText(ctx, persistable(second))),
+	).toEqual({ ...persisted, deduplicated: true });
 });

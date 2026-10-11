@@ -1,12 +1,13 @@
 import { v } from "convex/values";
 import { unitsByMember } from "../../../server/storedSegments";
 import { coreGender } from "../../../shared/grammatical-gender";
+import { isPlainSentence } from "../../../shared/supported-target-language";
 
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import { loadStoredSegments } from "../../model/storedSegments";
 import {
-	languageValidator,
+	detectedLanguageValidator,
 	storedSegmentValidator,
 	storedUnitValidator,
 } from "../../model/validators";
@@ -41,7 +42,10 @@ export const sentenceViewValidator = v.object({
 	sentenceId: v.id("sentences"),
 	position: v.number(),
 	paragraph: v.optional(v.number()),
-	language: languageValidator,
+	/** The Detected Language, absent when undetermined. */
+	language: v.optional(detectedLanguageValidator),
+	/** A Plain Sentence: shown, with no Segments to click. */
+	plain: v.optional(v.literal(true)),
 	stitchedText: v.string(),
 	heading: v.optional(v.string()),
 	/** Intake could not segment the Sentence: its Segments have no units. */
@@ -96,7 +100,10 @@ export async function projectSentenceView(
 		...(sentence.paragraph === undefined
 			? {}
 			: { paragraph: sentence.paragraph }),
-		language: sentence.language,
+		...(sentence.language === undefined
+			? {}
+			: { language: sentence.language }),
+		...(isPlainSentence(sentence.language) ? { plain: true as const } : {}),
 		stitchedText: sentence.stitchedText,
 		...(sentence.heading ? { heading: sentence.heading } : {}),
 		...(sentence.segmentationFailed

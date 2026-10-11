@@ -28,7 +28,13 @@ _Avoid_: stitching question, repaired text
 
 **`splitText`**:
 The code that splits a Text into paragraphs and Sentences before
-`segment.inUnits` sees it. See [Dumgen ADR 0007].
+`language.detect` and `segment.inUnits` see it. It is language-neutral,
+since it runs before any language is known. See [Dumgen ADR 0007].
+
+**`language.detect`**:
+The judge that gives each Sentence its Detected Language before
+`segment.inUnits`, so only target-language Sentences are segmented. See
+[Dumgen ADR 0001].
 
 **`segment.inUnits`**:
 The segmenter that routes clicks: it groups each Sentence's Segments into
@@ -110,6 +116,7 @@ settings, case outputs, failures and evaluation results.
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
+[Dumgen ADR 0001]: ./docs/adr/0001-judge-each-sentence-before-conditional-stitching-and-local-segmentation.md
 [Dumgen ADR 0003]: ./docs/adr/0003-split-german-knowledge-generation-by-family.md
 [Dumgen ADR 0004]: ./docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md
 [Dumgen ADR 0007]: ./docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md

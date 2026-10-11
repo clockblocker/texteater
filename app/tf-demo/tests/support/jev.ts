@@ -11,10 +11,14 @@ const picked = (choice: string): Answer => ({
 });
 
 /**
- * A jev for `segment.inUnits` with no network: it answers by question id
- * from `answers` and otherwise says no (a Noul 0.1, a Choice its last
- * option). `fail` makes a request throw. Each request costs 10 input
- * tokens per question and 1 output token, so a test can sum them.
+ * A jev for intake with no network. `language.detect`'s questions, told
+ * apart by their instructions, are answered from `languages` by the
+ * Sentence they ask about (`German`,
+ * `English`, `Hebrew`, `Other` or `Unknown`), German by default. Other
+ * questions are answered by id from `answers`, and otherwise it says no (a
+ * Noul 0.1, a Choice its last option). `fail` makes a request throw. Each
+ * request costs 10 input tokens per question and 1 output token, so a test
+ * can sum them.
  *
  * `"Er gibt auf."` with `germanAnswers` comes back as `Er` (Lexeme PRON) and
  * `gibt … auf` (Lexeme VERB); `"Er wohnt im Haus."` cuts `im` into `i` + `m`.
@@ -22,6 +26,7 @@ const picked = (choice: string): Answer => ({
 export function fakeJev(
 	options: {
 		readonly answers?: Readonly<Record<string, Answer>>;
+		readonly languages?: Readonly<Record<string, string>>;
 		readonly fail?: (request: JevRequest, stage: string) => boolean;
 	} = {},
 ) {
@@ -35,7 +40,17 @@ export function fakeJev(
 			Question,
 		][]) {
 			const known = options.answers?.[id];
-			if (known) answers[id] = known;
+			const asked = /^Which language is `sentences\[(\d+)\]`/u.exec(
+				String(question.instructions),
+			)?.[1];
+			if (asked !== undefined) {
+				const sentence = (request.state.sentences as string[])[
+					Number(asked)
+				];
+				answers[id] = picked(
+					options.languages?.[sentence ?? ""] ?? "German",
+				);
+			} else if (known) answers[id] = known;
 			else if (question.type === "noul")
 				answers[id] = { type: "noul", noul: 0.1 };
 			else
@@ -68,3 +83,9 @@ export const germanAnswers: Readonly<Record<string, Answer>> = {
 /** Whether a jev request is about the Sentence `text`. */
 export const asksAbout = (request: JevRequest, text: string) =>
 	JSON.stringify(request.state).includes(text);
+
+/** Whether a jev request is `language.detect`'s, which reads every Sentence. */
+export const isLanguageRequest = (request: JevRequest) =>
+	Object.values(request.questions).some(({ instructions }) =>
+		String(instructions).startsWith("Which language is"),
+	);

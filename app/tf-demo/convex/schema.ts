@@ -7,6 +7,7 @@ import {
 	articleEvidenceValidator,
 	catalogMissStageValidator,
 	definitionTextStateValidator,
+	detectedLanguageValidator,
 	directSemanticRelationValidator,
 	familyValidator,
 	fusionValidator,
@@ -81,6 +82,12 @@ export default defineSchema({
 		title: v.optional(v.string()),
 		submissionKey: v.string(),
 		sourceText: v.string(),
+		/**
+		 * The Submission's Extracted Text, Dumgen's `ExtractedText` (checked
+		 * with `parseExtractedText` when read): what intake re-runs from.
+		 * Absent for a Definition Text.
+		 */
+		extractedText: v.optional(v.any()),
 		/** Absent for a Visitor-submitted Text; set for a hidden Definition Text. */
 		origin: v.optional(textOriginValidator),
 	})
@@ -120,7 +127,11 @@ export default defineSchema({
 		 * Sentences stored before paragraphs were kept; each reads alone.
 		 */
 		paragraph: v.optional(v.number()),
-		language: languageValidator,
+		/**
+		 * The Detected Language, absent when undetermined. Any but the Text's
+		 * target language makes it a Plain Sentence: no Segments, no units.
+		 */
+		language: v.optional(detectedLanguageValidator),
 		/** The Sentence's normalized text; its Segments concatenate to it. */
 		stitchedText: v.string(),
 		/**

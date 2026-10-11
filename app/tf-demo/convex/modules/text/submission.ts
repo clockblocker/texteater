@@ -8,6 +8,7 @@ import {
 	assertTextSubmissionWithinLimits,
 	MAX_SOURCE_SENTENCES,
 } from "../../../server/textSubmissionLimits";
+import { isPlainSentence } from "../../../shared/supported-target-language";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../../_generated/server";
 import { assertIndex } from "../../model/resolutionLookup";
@@ -20,6 +21,11 @@ import {
 type SubmittedText = {
 	submissionKey: string;
 	sourceText: string;
+	/**
+	 * Dumgen's `ExtractedText`, stored unchecked (`v.any()`); intake always
+	 * hands one, fixtures that write a Text directly need none.
+	 */
+	extractedText?: unknown;
 	sentences: Array<Infer<typeof sentenceInputValidator>>;
 };
 
@@ -31,8 +37,9 @@ export type PersistedSubmittedText = {
 
 /**
  * The Text a re-submission would only reproduce: stored under `submissionKey`
- * with the same source text, and with every Sentence's Segments in place.
- * Null when intake still has work to do, such as after Analysis Stripping.
+ * with the same source text, and with the Segments of every Sentence but a
+ * Plain one in place. Null when intake still has work to do, such as after
+ * Analysis Stripping.
  */
 export async function findAnalyzedSubmission(
 	ctx: QueryCtx,
@@ -51,6 +58,7 @@ export async function findAnalyzedSubmission(
 		.take(MAX_SOURCE_SENTENCES);
 	if (sentences.length === 0) return null;
 	for (const sentence of sentences) {
+		if (isPlainSentence(sentence.language)) continue;
 		const segments = await loadStoredSegments(ctx, sentence._id);
 		if (
 			segments.length === 0 ||
@@ -62,12 +70,31 @@ export async function findAnalyzedSubmission(
 	return text._id;
 }
 
+/**
+ * The Extracted Text stored for `submissionKey` with the same source text,
+ * unchecked, or null when there is none to re-run from.
+ */
+export async function findStoredExtractedText(
+	ctx: QueryCtx,
+	input: { readonly submissionKey: string; readonly sourceText: string },
+): Promise<unknown> {
+	const text = await ctx.db
+		.query("texts")
+		.withIndex("by_submission_key", (q) =>
+			q.eq("submissionKey", input.submissionKey),
+		)
+		.unique();
+	return text?.sourceText === input.sourceText
+		? (text.extractedText ?? null)
+		: null;
+}
+
 type SubmittedSentence = SubmittedText["sentences"][number];
 
 /** The stored Sentence fields an exact re-submission must reproduce. */
 type StoredSentenceFields = {
 	readonly position: number;
-	readonly language: string;
+	readonly language?: string;
 	readonly stitchedText: string;
 };
 
@@ -81,9 +108,10 @@ type StoredSegmentFields = {
 
 /**
  * The submission's own consistency, checked before anything is read: unique
- * positions and Segmented Sentence IDs, 1 to MAX_SEGMENTS_PER_SENTENCE
- * non-empty Segments that reconstruct the stitched text, whitespace-only
- * Whitespace Segments, and units that cover the Sentence.
+ * positions and Segmented Sentence IDs; for a target-language Sentence, 1 to
+ * MAX_SEGMENTS_PER_SENTENCE non-empty Segments that reconstruct the
+ * stitched text, whitespace-only Whitespace Segments, and units that cover
+ * the Sentence; for a Plain Sentence, no Segments and no units.
  */
 export function assertSubmittedText(input: SubmittedText): void {
 	assertNonEmpty(input.submissionKey, "submissionKey");
@@ -106,9 +134,22 @@ export function assertSubmittedText(input: SubmittedText): void {
 		}
 		positions.add(sentence.position);
 		sentenceKeys.add(sentence.segmentedSentenceId);
+		if (isPlainSentence(sentence.language)) {
+			assertPlainSentence(sentence);
+			continue;
+		}
 		assertSubmittedSegments(sentence);
 		assertSentenceUnits(sentence);
 	}
+}
+
+function assertPlainSentence(sentence: SubmittedSentence): void {
+	if (
+		sentence.segments.length > 0 ||
+		sentence.units.length > 0 ||
+		sentence.segmentationFailed
+	)
+		throw new Error("A Plain Sentence stores no Segments and no units.");
 }
 
 function assertSubmittedSegments(sentence: SubmittedSentence): void {
@@ -186,7 +227,9 @@ async function writeSentence(
 		textId,
 		position: submitted.position,
 		paragraph: submitted.paragraph,
-		language: submitted.language,
+		...(submitted.language === undefined
+			? {}
+			: { language: submitted.language }),
 		stitchedText: submitted.stitchedText,
 		units: submitted.units,
 		...(submitted.segmentationFailed
@@ -325,6 +368,9 @@ async function insertSubmittedText(
 	const textId = await ctx.db.insert("texts", {
 		submissionKey: input.submissionKey,
 		sourceText: input.sourceText,
+		...(input.extractedText === undefined
+			? {}
+			: { extractedText: input.extractedText }),
 	});
 	const sentenceIds = await Promise.all(
 		bySentencePosition(input.sentences).map((sentence) =>

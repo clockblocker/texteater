@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
+import { extractPastedText } from "dumgen";
 import { api, internal } from "../convex/_generated/api";
 import {
 	createTestConvex,
@@ -128,9 +129,12 @@ test("an inspected submission shows its root and its code steps", async () => {
 	}
 	const requestId = await submissionRequestId(t);
 	expect(await inspection(t, requestId)).toEqual([
+		"Analyze submitted text > Detect sentence languages [Code · battery/dumgen · language.detect · Success]",
 		"Analyze submitted text > Persist submitted text [Code · app/tf-demo · Success]",
 		"Analyze submitted text > Segment sentences in units [Code · battery/dumgen · segment.inUnits · Success]",
-		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitText · Success]",
+		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitExtractedText · Success]",
+		"Analyze submitted text > language.detect > language [TypeSafe · battery/dumgen · jev · Success]",
+		"Analyze submitted text > language.detect [Code · battery/dumgen · Success]",
 		"Analyze submitted text > segment.inUnits > candidates · Sentence 0 [TypeSafe · battery/dumgen · jev · Success]",
 		"Analyze submitted text > segment.inUnits > route · Sentence 0 [TypeSafe · battery/dumgen · jev · Success]",
 		"Analyze submitted text > segment.inUnits [Code · battery/dumgen · Success]",
@@ -144,8 +148,25 @@ test("an inspected submission shows its root and its code steps", async () => {
 		output: { persisted: { textId: expect.any(String) } },
 	});
 	expect(payload("Split text into sentences")).toEqual({
-		input: { sourceText: "Die Banken." },
+		input: { extractedText: extractPastedText("Die Banken.") },
 		output: { paragraphs: [{ sentences: ["Die Banken."] }] },
+	});
+	expect(payload("Detect sentence languages")).toEqual({
+		input: { paragraphs: [{ sentences: ["Die Banken."] }] },
+		output: {
+			paragraphs: [
+				{ sentences: [{ text: "Die Banken.", language: "de" }] },
+			],
+		},
+	});
+	expect(payload("language.detect")).toMatchObject({
+		calls: 1,
+		events: [
+			{
+				name: "DetectedLanguages",
+				data: [{ sentence: 0, by: "Judge", choice: "German" }],
+			},
+		],
 	});
 	expect(payload("Segment sentences in units")).toMatchObject({
 		input: { paragraphs: [{ sentences: ["Die Banken."] }] },
@@ -193,9 +214,12 @@ test("a failed inspected submission fails its root", async () => {
 	}
 	const requestId = await submissionRequestId(t);
 	expect(await inspection(t, requestId)).toEqual([
+		"Analyze submitted text > Detect sentence languages [Code · battery/dumgen · language.detect · Success]",
 		"Analyze submitted text > Persist submitted text [Code · app/tf-demo · Failure]",
 		"Analyze submitted text > Segment sentences in units [Code · battery/dumgen · segment.inUnits · Success]",
-		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitText · Success]",
+		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitExtractedText · Success]",
+		"Analyze submitted text > language.detect > language [TypeSafe · battery/dumgen · jev · Success]",
+		"Analyze submitted text > language.detect [Code · battery/dumgen · Success]",
 		"Analyze submitted text > segment.inUnits > candidates · Sentence 0 [TypeSafe · battery/dumgen · jev · Success]",
 		"Analyze submitted text > segment.inUnits > route · Sentence 0 [TypeSafe · battery/dumgen · jev · Success]",
 		"Analyze submitted text > segment.inUnits [Code · battery/dumgen · Success]",

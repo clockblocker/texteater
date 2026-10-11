@@ -145,6 +145,15 @@ export function literalUnion<const Value extends string>(
 
 export const languageValidator = literalUnion(TEXT_LANGUAGE_VALUES);
 
+/**
+ * A Sentence's Detected Language: a Text language, or `other` for any
+ * language Intake does not name. An undetermined Sentence stores none.
+ */
+export const detectedLanguageValidator = literalUnion([
+	...TEXT_LANGUAGE_VALUES,
+	"other",
+]);
+
 const familyValues = [
 	"Lexeme",
 	"Locution",
@@ -390,7 +399,11 @@ export const sentenceInputValidator = v.object({
 	segmentedSentenceId: v.string(),
 	position: v.number(),
 	paragraph: v.number(),
-	language: languageValidator,
+	/**
+	 * The Detected Language, absent when undetermined. A Sentence in any but
+	 * the Text's target language is a Plain Sentence: no Segments, no units.
+	 */
+	language: v.optional(detectedLanguageValidator),
 	/** The Sentence's normalized text; its Segments concatenate to it. */
 	stitchedText: v.string(),
 	segments: v.array(storedSegmentInputValidator),

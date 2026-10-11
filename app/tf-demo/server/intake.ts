@@ -1,4 +1,12 @@
-import { type Dumgen, type SegmentedText, splitText } from "dumgen";
+import {
+	type DetectedLanguage,
+	type Dumgen,
+	type ExtractedText,
+	type LanguagedText,
+	type SegmentedText,
+	splitExtractedText,
+	stitchedText,
+} from "dumgen";
 import * as Effect from "effect/Effect";
 import type { TextLanguage } from "../shared/supported-target-language";
 import { assertNonEmpty } from "./identifiers";
@@ -11,10 +19,16 @@ import {
 import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
 /**
- * Intake: a submitted Text is split into paragraphs and Sentences in code
- * (`splitText`), each Sentence is cut into its Segments and biggest units by
- * Dumgen's `segment.inUnits`, and the Text is stored with them. Intake reads
- * German only for now; the language stays a parameter so Hebrew can follow.
+ * Intake (map #1175, #1178): a Submission's Extracted Text is split into
+ * paragraphs and Sentences in code (`splitExtractedText`), Dumgen's
+ * `language.detect` gives each Sentence its Detected Language, only the
+ * Sentences in the Text's target language are cut into Segments and
+ * biggest units by `segment.inUnits`, and the Text is stored with its
+ * Extracted Text, so a later run starts from it. Every other Sentence is a
+ * Plain Sentence: stored with its Detected Language, or none when it stayed
+ * undetermined, and with no Segments, so the reader shows it unclickable.
+ * German is the only target language for now; the language stays a
+ * parameter so Hebrew can follow.
  */
 
 /** What a Visitor reads when a Text in another language is turned away. */
@@ -32,9 +46,9 @@ export function unsupportedLanguageMessage(
 export const INTAKE_NOT_CONFIGURED_MESSAGE =
 	"Intake isn't configured: TYPESAFE_API_KEY is missing on the Convex deployment. Run `bun run env:sync` and restart the dev server.";
 
-/** A Text's Sentences in reading order, as `splitText` splits them. */
-export function sourceSentencesOf(text: string): string[] {
-	return splitText(text).paragraphs.flatMap(({ sentences }) => [
+/** A Text's Sentences in reading order, as intake splits its Extracted Text. */
+export function sourceSentencesOf(extracted: ExtractedText): string[] {
+	return splitExtractedText(extracted).paragraphs.flatMap(({ sentences }) => [
 		...sentences,
 	]);
 }
@@ -46,7 +60,12 @@ export type SubmittedSentence = {
 	readonly position: number;
 	/** The paragraph the Sentence reads in; Sentences sharing one run together. */
 	readonly paragraph: number;
-	readonly language: "de";
+	/**
+	 * The Sentence's Detected Language; absent when it stayed undetermined.
+	 * Any but the Text's target language makes it a Plain Sentence, with no
+	 * Segments and no units.
+	 */
+	readonly language?: DetectedLanguage;
 	/** The Sentence's normalized text; its Segments concatenate to it. */
 	readonly stitchedText: string;
 	/** A fused word arrives as its pieces when segmentation split it. */
@@ -66,6 +85,8 @@ export type SubmittedSentence = {
 export type SubmittedText = {
 	readonly submissionKey: string;
 	readonly sourceText: string;
+	/** What later runs start from: Flags, segmentation fixes, curators' edits. */
+	readonly extractedText: ExtractedText;
 	readonly sentences: readonly SubmittedSentence[];
 };
 
@@ -79,46 +100,98 @@ export type IntakePersistence = {
 export type SubmitTextInput = {
 	readonly submissionKey: string;
 	readonly sourceText: string;
+	/**
+	 * The Submission's Extracted Text: the stored one when the Text was
+	 * submitted before, else `extractPastedText(sourceText)`.
+	 */
+	readonly extractedText: ExtractedText;
+	/** The Text's target language. */
 	readonly language: TextLanguage;
 };
 
+type LanguagedParagraphs = LanguagedText["paragraphs"];
+
+/** The target-language Sentences, by paragraph, with no paragraph left empty. */
+function targetParagraphs(
+	paragraphs: LanguagedParagraphs,
+	language: TextLanguage,
+) {
+	return paragraphs
+		.map(({ sentences }) => ({
+			sentences: sentences
+				.filter((sentence) => sentence.language === language)
+				.map(({ text }) => text),
+		}))
+		.filter(({ sentences }) => sentences.length > 0);
+}
+
 /**
- * Each Segmented Sentence as tf-demo stores it, positions counted across
- * paragraphs. A Sentence's ID is its submission's key and position, so a
+ * Every Sentence as tf-demo stores it, positions counted across
+ * paragraphs: a target-language Sentence with its Segments and units in
+ * the order `segment.inUnits` returned them, any other as a Plain
+ * Sentence. A Sentence's ID is its submission's key and position, so a
  * retried submission names the same Sentences.
  */
 function submittedSentences(
 	submissionKey: string,
-	text: SegmentedText,
+	paragraphs: LanguagedParagraphs,
+	language: TextLanguage,
+	segmented: SegmentedText | undefined,
 ): SubmittedSentence[] {
+	const segmentedSentences =
+		segmented?.paragraphs.flatMap(({ sentences }) => sentences) ?? [];
 	let position = 0;
-	return text.paragraphs.flatMap(({ sentences }, paragraph) =>
+	let next = 0;
+	return paragraphs.flatMap(({ sentences }, paragraph) =>
 		sentences.map((sentence) => {
 			const at = position++;
-			return {
+			const placed = {
 				segmentedSentenceId: `${submissionKey}#${at}`,
 				position: at,
 				paragraph,
-				language: text.language,
-				stitchedText: sentence.text,
-				segments: sentence.segments.map(({ kind, text, surface }) =>
+				...(sentence.language === undefined
+					? {}
+					: { language: sentence.language }),
+			};
+			if (sentence.language !== language)
+				return {
+					...placed,
+					stitchedText: stitchedText(sentence.text),
+					segments: [],
+					units: [],
+				};
+			const cut = segmentedSentences[next++];
+			if (cut === undefined)
+				throw new Error(
+					"segment.inUnits returned fewer Sentences than it was given.",
+				);
+			return {
+				...placed,
+				stitchedText: cut.text,
+				segments: cut.segments.map(({ kind, text, surface }) =>
 					surface === undefined
 						? { kind, text }
 						: { kind, text, surface },
 				),
-				units: sentence.units.map(storedUnitOf),
-				...(sentence.failed
-					? { segmentationFailed: true as const }
-					: {}),
+				units: cut.units.map(storedUnitOf),
+				...(cut.failed ? { segmentationFailed: true as const } : {}),
 			};
 		}),
 	);
 }
 
 export function createIntake(options: {
-	/** `createDumgen({ jev }).segment` with the host's jev; a test passes a fake jev. */
-	readonly segment: Dumgen["segment"];
+	/**
+	 * `createDumgen({ jev })` with the host's jev, for `language.detect`
+	 * and `segment.inUnits`; a test passes one with a fake jev.
+	 */
+	readonly dumgen: Pick<Dumgen, "language" | "segment">;
 	readonly persistence: IntakePersistence;
+	/**
+	 * Hears which Sentences go to `segment.inUnits`, by position, in the
+	 * order it counts them; the intake run reads its trace by them.
+	 */
+	readonly onSegmenting?: (positions: readonly number[]) => void;
 }) {
 	function submitText(input: SubmitTextInput) {
 		return Effect.gen(function* () {
@@ -128,12 +201,12 @@ export function createIntake(options: {
 			if (rejection !== undefined) throw new Error(rejection);
 
 			const { paragraphs } = yield* Effect.sync(() =>
-				splitText(input.sourceText),
+				splitExtractedText(input.extractedText),
 			).pipe(
 				Effect.withSpan(
 					"Split text into sentences",
-					inspectionStep("battery/dumgen · splitText", {
-						sourceText: input.sourceText,
+					inspectionStep("battery/dumgen · splitExtractedText", {
+						extractedText: input.extractedText,
 					}),
 				),
 			);
@@ -142,22 +215,53 @@ export function createIntake(options: {
 			if (sentences.length === 0)
 				throw new Error("Text submission contains no sentences.");
 
-			// A Sentence whose calls fail comes back marked, so this step
-			// fails only on a bug or an interruption.
-			const segmented = yield* options.segment
-				.inUnits({ language: "de", paragraphs })
+			const detected = yield* options.dumgen.language
+				.detect({ paragraphs })
 				.pipe(
 					Effect.withSpan(
-						"Segment sentences in units",
-						inspectionStep("battery/dumgen · segment.inUnits", {
+						"Detect sentence languages",
+						inspectionStep("battery/dumgen · language.detect", {
 							paragraphs,
 						}),
 					),
 				);
+			const target = targetParagraphs(
+				detected.paragraphs,
+				input.language,
+			);
+			options.onSegmenting?.(
+				detected.paragraphs
+					.flatMap(({ sentences }) => sentences)
+					.flatMap(({ language }, position) =>
+						language === input.language ? [position] : [],
+					),
+			);
+			// A Sentence whose calls fail comes back marked, so this step
+			// fails only on a bug or an interruption.
+			const segmented =
+				target.length === 0
+					? undefined
+					: yield* options.dumgen.segment
+							.inUnits({ language: "de", paragraphs: target })
+							.pipe(
+								Effect.withSpan(
+									"Segment sentences in units",
+									inspectionStep(
+										"battery/dumgen · segment.inUnits",
+										{ paragraphs: target },
+									),
+								),
+							);
 			const submission: SubmittedText = {
 				submissionKey: input.submissionKey,
 				sourceText: input.sourceText,
-				sentences: submittedSentences(input.submissionKey, segmented),
+				extractedText: input.extractedText,
+				sentences: submittedSentences(
+					input.submissionKey,
+					detected.paragraphs,
+					input.language,
+					segmented,
+				),
 			};
 			const persisted = yield* Effect.tryPromise(() =>
 				options.persistence.persistSubmittedText(submission),
@@ -167,7 +271,7 @@ export function createIntake(options: {
 					inspectionStep("app/tf-demo", submission),
 				),
 			);
-			return { segmented, persisted };
+			return { submission, persisted };
 		});
 	}
 

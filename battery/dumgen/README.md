@@ -3,12 +3,16 @@
 German `segment.inUnits` ([#701](https://github.com/clockblocker/texteater/issues/701),
 [Dumgen ADR 0007](docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md)):
 a Sentence's Segments go in, and its biggest units come back, each with its
-route or `Unresolved`. This package is being rebuilt from scratch. Its
-public entry exports `splitText`, which splits a Text into paragraphs and
-Sentences in code, and `createDumgen({ jev }).segment.inUnits`, an Effect
-4 Effect that runs the German segmenter's stages under `src/segment/` on
-each Sentence: the Segment stage cuts it into Segments, and the unit stage
-groups and routes them. The stages reach jev only through the host's
+route or `Unresolved`. This package is being rebuilt from scratch.
+
+Its public entry exports `extractPastedText`, which turns pasted text into
+an Extracted Text, and `splitExtractedText`, which splits one into paragraphs
+and Sentences in code with the language-neutral `splitText`.
+`createDumgen({ jev })` gives `language.detect`, which judges each
+Sentence's Detected Language, and `segment.inUnits`, an Effect 4 Effect that
+runs the German segmenter's stages under `src/segment/` on each Sentence:
+the Segment stage cuts it into Segments, and the unit stage groups and
+routes them. The stages reach jev only through the host's
 `JevAsk` and read no files; `createTypeSafeAsk` is the production `JevAsk`,
 a `fetch` to the TypeSafe API with the host's key. Everything under `src/`
 ships. Outside it, `lab/` holds what doesn't: the `segment.inUnits` jev lab

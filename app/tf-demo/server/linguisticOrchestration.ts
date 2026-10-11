@@ -1,8 +1,8 @@
 import { makeSurfaceId } from "dumdict/planning";
+import type { DetectedLanguage } from "dumgen";
 import type * as Dumling from "dumling/types";
 import type * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
-import type { TextLanguage } from "../shared/supported-target-language";
 import type {
 	ClickEncounter,
 	ClickResolution,
@@ -40,7 +40,8 @@ export type PersistedSentence = {
 	readonly sentenceId: string;
 	readonly textId: string;
 	readonly segmentedSentenceId: string;
-	readonly language: TextLanguage;
+	/** The Detected Language; only a German Sentence is clicked. */
+	readonly language?: DetectedLanguage;
 	readonly stitchedText: string;
 	readonly segments: readonly StoredSegment[];
 	/** The biggest units intake stored with the Sentence, if it still has them. */

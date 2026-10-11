@@ -62,9 +62,12 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 		selection.error ??
 		segmentationError ??
 		(textQuery.error ? visitorErrorMessage(textQuery.error) : null);
+	// Plain Sentences never have Segments; the others lose theirs to
+	// Analysis Stripping.
+	const segmentable = sentences.filter((sentence) => !sentence.plain);
 	const needsSegmentation =
-		sentences.length > 0 &&
-		sentences.every((sentence) => sentence.segments.length === 0);
+		segmentable.length > 0 &&
+		segmentable.every((sentence) => sentence.segments.length === 0);
 
 	async function handleSegmentSelection(
 		sentence: SentenceView,

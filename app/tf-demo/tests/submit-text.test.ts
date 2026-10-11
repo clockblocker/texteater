@@ -8,7 +8,12 @@ import {
 import type { TextLanguage } from "../shared/supported-target-language";
 import { visitorErrorMessage } from "../src/lib/visitor-error";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
-import { asksAbout, fakeJev, germanAnswers } from "./support/jev";
+import {
+	asksAbout,
+	fakeJev,
+	germanAnswers,
+	isLanguageRequest,
+} from "./support/jev";
 import { fakeTypeSafe, unavailableProviders } from "./support/providers";
 
 /**
@@ -148,7 +153,8 @@ test("a Sentence jev cannot segment is stored with its written words, marked as 
 	typeSafe(
 		fakeJev({
 			answers: germanAnswers,
-			fail: (request) => asksAbout(request, "im Haus"),
+			fail: (request) =>
+				!isLanguageRequest(request) && asksAbout(request, "im Haus"),
 		}),
 	);
 	const t = createTestConvex();
@@ -180,16 +186,56 @@ test("a Sentence jev cannot segment is stored with its written words, marked as 
 	expect((await intakeRuns(t))[0]?.jev.failed).toBeGreaterThan(0);
 });
 
-test("with jev unavailable the Text is still stored, every Sentence marked as not segmented", async () => {
+test("with jev unavailable no Sentence's language is known, so the submission fails, stores nothing and records a Failed run", async () => {
 	const providers = unavailableProviders();
 	restore = providers.restore;
+	const t = createTestConvex();
+	await expect(submit(t, "Die Banken sind geschlossen.")).rejects.toThrow();
+	expect(providers.requests.length).toBeGreaterThan(0);
+	expect(await storedTexts(t)).toEqual([]);
+	expect(await intakeRuns(t)).toMatchObject([
+		{ outcome: "Failed", failureTag: "ProviderFailure" },
+	]);
+});
+
+test("with segmentation unavailable the Text is still stored, every German Sentence marked as not segmented", async () => {
+	const providers = typeSafe(
+		fakeJev({ fail: (request) => !isLanguageRequest(request) }),
+	);
 	const t = createTestConvex();
 	expect(await submit(t, "Die Banken sind geschlossen.")).toMatchObject({
 		status: "Accepted",
 	});
-	expect(providers.requests.length).toBeGreaterThan(0);
+	expect(providers.requests.length).toBeGreaterThan(1);
 	const [sentence] = await sentences(t);
 	expect(sentence).toMatchObject({ units: [], segmentationFailed: true });
+});
+
+test("a pasted text mixing German and English is accepted: the English Sentences are stored as Plain Sentences", async () => {
+	typeSafe(
+		fakeJev({
+			answers: germanAnswers,
+			languages: { "The way is the goal.": "English" },
+		}),
+	);
+	const t = createTestConvex();
+	expect(await submit(t, "Er gibt auf. The way is the goal.")).toMatchObject({
+		status: "Accepted",
+	});
+	expect(
+		(await sentences(t)).map(({ language, stitchedText, units }) => ({
+			language,
+			stitchedText,
+			units: units?.length,
+		})),
+	).toEqual([
+		{ language: "de", stitchedText: "Er gibt auf.", units: 2 },
+		{ language: "en", stitchedText: "The way is the goal.", units: 0 },
+	]);
+	expect((await intakeRuns(t))[0]?.sentences).toEqual([
+		{ segmentation: "Segmented" },
+		{ segmentation: "Plain" },
+	]);
 });
 
 test("without a TypeSafe key the submission fails with a NotConfigured error the Visitor sees, stores nothing and records a Failed run", async () => {
@@ -258,7 +304,10 @@ test("with DEV inspection on, intake's segment.inUnits renders as inspection row
 			(step) =>
 				step.parentId === operation?.id && step.kind === "TypeSafe",
 		);
-		expect(calls).toHaveLength(providers.jev.sent.length - sentBefore);
+		const segmentationSent = providers.jev.sent
+			.slice(sentBefore)
+			.filter((request) => !isLanguageRequest(request));
+		expect(calls).toHaveLength(segmentationSent.length);
 		expect(calls[0]).toMatchObject({ owner: "battery/dumgen · jev" });
 		expect(calls[0]?.name).toEndWith("· Sentence 0");
 		const payloadOf = (stepId: string) =>
@@ -275,6 +324,18 @@ test("with DEV inspection on, intake's segment.inUnits renders as inspection row
 			expect(payload.output.answers).toBeDefined();
 			expect(payload.tokens.input).toBeGreaterThan(0);
 		}
+		// language.detect is its own operation row beside it, with its call.
+		const detection = steps.find((step) => step.name === "language.detect");
+		expect(detection).toMatchObject({
+			parentId: root?.id,
+			status: "Success",
+		});
+		expect(
+			steps.filter(
+				(step) =>
+					step.parentId === detection?.id && step.kind === "TypeSafe",
+			),
+		).toHaveLength(1);
 		// The payload carries no credential.
 		expect(JSON.stringify(payloads)).not.toContain("fixture");
 	} finally {

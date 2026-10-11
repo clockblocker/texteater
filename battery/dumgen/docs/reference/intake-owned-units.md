@@ -8,21 +8,36 @@ two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contra
 
 ## Intake
 
-1. `splitText(text)` splits a Text into paragraphs and Sentences in code. No
-   model is asked.
-2. tf-demo reads German only for now. A Text submitted in another language is
-   rejected before any jev call; `language` stays a parameter so Hebrew can
-   follow.
-3. `createDumgen({ jev: createTypeSafeAsk({ apiKey }), onOperation })
-   .segment.inUnits({ language: "de", paragraphs })` is an Effect that
-   gives each Sentence its normalized text, its Segments and its biggest
-   units; tf-demo `yield*`s it inside its intake program. jev is the only
-   model; the key is the Convex deployment's `TYPESAFE_API_KEY`.
-4. A Sentence whose jev calls fail comes back marked `failed`, with its
-   Segments and no units, and the Text is stored anyway; the reason is only
-   in the operation's trace. Only a non-German language, a blank Sentence,
-   a bug or an interruption fails the whole call.
-5. Intake is not deterministic, so a stored submission is never segmented
+1. A pasted text becomes an Extracted Text (`extractPastedText`): one
+   Chapter of Paragraphs and Line Breaks. tf-demo stores it on the Text, and
+   a later run of the same submission starts from the stored one, read back
+   with `parseExtractedText` (#1178).
+2. `splitExtractedText(extractedText)` splits it into paragraphs and
+   Sentences in code with the language-neutral `splitText` (#1187). No model
+   is asked.
+3. tf-demo reads German Texts only for now. A Text submitted with another
+   target language is rejected before any jev call; `language` stays a
+   parameter so Hebrew can follow.
+4. `createDumgen({ jev: createTypeSafeAsk({ apiKey }), onOperation })` is the
+   production Dumgen. Its `language.detect({ paragraphs })` gives each
+   Sentence its Detected Language (Dumgen ADR 0001): code settles Sentences
+   with no letters or mostly Hebrew words, jev judges the rest with one
+   Choice each in windows of about 30 Sentences, and an undetermined
+   Sentence takes the language around it, or none. A failed jev request
+   fails the submission. Its `segment.inUnits({ language: "de", paragraphs
+   })` gets only the German Sentences and gives each its normalized text,
+   its Segments and its biggest units; tf-demo `yield*`s both inside its
+   intake program. jev is the only model; the key is the Convex deployment's
+   `TYPESAFE_API_KEY`.
+5. Every other Sentence is a Plain Sentence: stored with its Detected
+   Language (none when undetermined), its normalized text and no Segments,
+   and shown in the reader as plain text.
+6. A Sentence whose jev calls fail in `segment.inUnits` comes back marked
+   `failed`, with its Segments and no units, and the Text is stored anyway;
+   the reason is only in the operation's trace. Only a non-German target
+   language, a blank Sentence, a failed language judgment, a bug or an
+   interruption fails the whole submission.
+7. Intake is not deterministic, so a stored submission is never segmented
    again: resubmitting the same key and source returns the stored Text.
 
 ## What tf-demo stores
@@ -42,8 +57,9 @@ two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contra
   `segment.inUnits` in a scheduled action. Notes fixtures skip jev and store
   each word as its own `Unresolved` unit.
 - `intakeRuns` keeps one row per submission attempt, read from the
-  operation's trace: each Sentence's outcome (Segmented, Failed or
-  NotStarted), the jev calls, failures, tokens and durations. It never
+  operations' traces: each Sentence's outcome (Segmented, Failed, NotStarted
+  or Plain), the jev calls of `language.detect` and `segment.inUnits`,
+  failures, tokens and durations. It never
   keeps text, prompts or model output.
 
 ## What hover and a click read

@@ -10,7 +10,7 @@ import {
 	loadSentenceForResolution,
 } from "./model/resolutionLookup";
 import {
-	languageValidator,
+	detectedLanguageValidator,
 	lemmaValueValidator,
 	reusableAttestationValidator,
 	storedSegmentValidator,
@@ -25,7 +25,8 @@ export const resolutionContextValidator = v.object({
 			sentenceId: v.id("sentences"),
 			textId: v.id("texts"),
 			segmentedSentenceId: v.string(),
-			language: languageValidator,
+			/** The Detected Language; a click lands only on the target's. */
+			language: v.optional(detectedLanguageValidator),
 			stitchedText: v.string(),
 			segments: v.array(storedSegmentValidator),
 			/** The biggest units intake stored, absent after Analysis Stripping. */

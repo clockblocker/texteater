@@ -9,7 +9,7 @@ import { useMemo, useState } from "react";
 
 import { segmentKey } from "@/hooks/use-segment-selection";
 import type { api } from "../../convex/_generated/api";
-import type { TextLanguage } from "../../shared/supported-target-language";
+import { isPlainSentence } from "../../shared/supported-target-language";
 
 /** A stored Segment as a Visitor sees it in the reader. */
 type SentenceSegmentView = NonNullable<
@@ -30,7 +30,8 @@ type SegmentDisplayState =
 /** What one Sentence needs to read and click, wherever it is shown. */
 export type ReaderSentenceData = {
 	readonly sentenceId: string;
-	readonly language: TextLanguage;
+	/** The Detected Language; absent when it stayed undetermined. */
+	readonly language?: string;
 	readonly stitchedText: string;
 	readonly segments: readonly SentenceSegmentView[];
 	/** Intake could not segment the Sentence, so its words have no units. */
@@ -45,7 +46,9 @@ export type ReaderSentenceData = {
  * focused occurrence wear the selected rule. Selection outranks preview.
  * A Sentence intake could not segment shows as not segmented: hover and
  * focus preview no word, since none has a unit, and a click selects only
- * the word clicked.
+ * the word clicked. A Plain Sentence, in another language than the Text's
+ * target or in none detected, has no Segments: it reads as plain text in
+ * its own language and direction.
  */
 export function ReaderSentence<S extends ReaderSentenceData>({
 	sentence,
@@ -74,6 +77,7 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 		[sentence.segments],
 	);
 	const notSegmented = sentence.segmentationFailed === true;
+	const plain = isPlainSentence(sentence.language);
 	const previewIndex = notSegmented ? null : (hoveredIndex ?? focusedIndex);
 	const previewGroup =
 		previewIndex === null ? undefined : groups.get(previewIndex);
@@ -92,6 +96,13 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 			ref={onSentenceElement}
 			data-sentence={sentence.sentenceId}
 			data-segmentation={notSegmented ? "failed" : undefined}
+			data-plain={plain || undefined}
+			lang={
+				plain && sentence.language !== "other"
+					? sentence.language
+					: undefined
+			}
+			dir={plain ? "auto" : undefined}
 			title={notSegmented ? "Not segmented" : undefined}
 		>
 			{sentence.segments.length === 0 ? (
@@ -144,7 +155,7 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 				gender={segment.encountered ? segment.gender : undefined}
 				interaction={segmentInteraction(displayState)}
 				disabled={
-					sentence.language !== "de" ||
+					plain ||
 					segment.resolutionState === "Active" ||
 					segment.resolutionState === "PermanentFailure"
 				}

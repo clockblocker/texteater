@@ -5,10 +5,13 @@ import {
 	createDumgen,
 	createOpenAILuna,
 	createTypeSafeAsk,
+	type ExtractedText,
+	extractPastedText,
 	InvalidModelOutput,
 	type LunaAsk,
 	type OperationTrace,
 	ProviderFailure,
+	parseExtractedText,
 } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
@@ -228,7 +231,10 @@ export const submitText = action({
 		submissionKey: v.string(),
 		sourceText: v.string(),
 		visitorId: v.string(),
-		/** The Text's language; German when absent. Only German is read for now. */
+		/**
+		 * The Text's target language; German when absent, and only German is
+		 * read for now. Sentences in other languages become Plain Sentences.
+		 */
 		language: v.optional(languageValidator),
 		inspectionVisitorId: v.optional(v.string()),
 	},
@@ -240,7 +246,16 @@ export const submitText = action({
 		const unsupported = unsupportedLanguageMessage(language);
 		if (unsupported !== undefined)
 			return { status: "Rejected", message: unsupported };
-		const sentences = sourceSentencesOf(args.sourceText);
+		// A Text submitted before re-runs from its stored Extracted Text.
+		const stored = await ctx.runQuery(
+			internal.persistence.storedExtractedText,
+			{ submissionKey: args.submissionKey, sourceText: args.sourceText },
+		);
+		const extractedText: ExtractedText =
+			stored === null
+				? extractPastedText(args.sourceText)
+				: parseExtractedText(stored);
+		const sentences = sourceSentencesOf(extractedText);
 		const limitViolation = textSubmissionLimitViolation(
 			args.sourceText,
 			sentences,
@@ -284,9 +299,10 @@ export const submitText = action({
 		};
 		try {
 			const intake = createIntake({
-				segment: productionDumgen(
+				dumgen: productionDumgen(
 					dumgenTracing(inspection, run.operation),
-				).segment,
+				),
+				onSegmenting: run.segmenting,
 				persistence: {
 					persistSubmittedText: (input) =>
 						ctx.runMutation(
@@ -318,6 +334,7 @@ export const submitText = action({
 						.submitText({
 							submissionKey: args.submissionKey,
 							sourceText: args.sourceText,
+							extractedText,
 							language,
 						})
 						.pipe(
