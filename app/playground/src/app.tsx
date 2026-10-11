@@ -29,6 +29,7 @@ export function App() {
 			key={demo.slug}
 			title={demo.title}
 			description={demo.description}
+			inspiration={demo.inspiration}
 		>
 			<Suspense fallback={null}>
 				<demo.Component />

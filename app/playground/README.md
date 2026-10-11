@@ -58,6 +58,17 @@ frame's width:
   `text-ink`, `text-ink-soft`, `border-line`, `text-link`) and both themes
   follow.
 
+## The inspector
+
+The frame shows only the prototype being evaluated. Explanation, knobs and
+readouts go in the inspector, a panel outside the frame opened by the
+floating button in a corner of the stage, or by `i`; Esc closes it while
+focus is outside the frame. See
+[ADR 0001](docs/adr/0001-show-only-the-prototype-in-a-demo-surface.md) for
+what may stay in the frame. The panel docks beside the frame when the
+window has room and floats over the frame otherwise. Its open state is kept
+in `localStorage`.
+
 ## Add a demo
 
 Every demo is already registered in `src/demos/index.ts`, with its slug,
@@ -122,6 +133,16 @@ together.
 - `useDemoParam(name)` returns `[value, set]` for one URL hash param. Call
   `set(value, { push: true })` to add a history entry, so browser back walks
   the change. `w`, `dir`, `theme` and `motion` belong to the toolbar.
+- `<DemoInspector>` renders its children in the inspector panel through a
+  portal, so they keep the demo's state and stay live. A demo may render
+  several; they appear in mount order. The shell already shows the
+  registry's title, description and inspiration. Lay the content out with
+  `InspectorSection` (an optional uppercase title), `InspectorTry` (hint
+  text), `InspectorChoice`, `InspectorCheck` and `InspectorRange`.
+- `useInspectorAvoid(side)` tells the shell where the lookup appears now:
+  `"inline-end"` or `"inline-start"` for a pane, `"block-end"` for a bottom
+  sheet, `null` when it floats by the word. The inspector and its button
+  keep to the other side.
 
 ## Checks
 

@@ -4,6 +4,8 @@
   `docs/reference/code-conventions.md`.
 - Before driving a browser against an app or writing a UI test, read
   `docs/reference/browser-tooling.md`.
+- Before building or changing a prototype or demo surface, read
+  `app/playground/docs/adr/0001-show-only-the-prototype-in-a-demo-surface.md`.
 - For GitHub issues, PRDs, labels, or Wayfinder work, read
   `docs/reference/issue-tracker.md`.
 - Before exploring or changing domain language or decisions, read

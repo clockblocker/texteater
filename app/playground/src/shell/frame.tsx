@@ -17,11 +17,17 @@ import { type FrameSettings, minFrameWidth } from "./settings";
  */
 export function Frame({
 	settings,
+	reserve,
 	onFrame,
 	onResize,
 	children,
 }: {
 	readonly settings: FrameSettings;
+	/**
+	 * Room kept free beside the frame, in px, on the chrome's `start` or
+	 * `end` side, for the docked inspector.
+	 */
+	readonly reserve?: { readonly side: "start" | "end"; readonly px: number };
 	readonly onFrame: (frame: HTMLElement | null) => void;
 	/** A drag on the handle ended at this width. */
 	readonly onResize: (width: number) => void;
@@ -39,7 +45,16 @@ export function Frame({
 	);
 
 	return (
-		<div className="min-h-0 flex-1 overflow-auto bg-scrim p-4">
+		<div
+			className="min-h-0 min-w-0 flex-1 overflow-auto bg-scrim p-4"
+			style={
+				reserve
+					? reserve.side === "end"
+						? { paddingInlineEnd: 16 + reserve.px }
+						: { paddingInlineStart: 16 + reserve.px }
+					: undefined
+			}
+		>
 			<div
 				className="relative mx-auto h-full"
 				style={{ width: width === "fill" ? "100%" : `${width}px` }}
