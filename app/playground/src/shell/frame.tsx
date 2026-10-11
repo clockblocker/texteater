@@ -7,9 +7,10 @@ import { type FrameSettings, minFrameWidth } from "./settings";
 /**
  * The box a demo renders in. It is a size container (`@container/frame`),
  * so a demo's container queries answer to the frame's width, not the
- * window's. Its layout containment also makes it the containing block for
- * `position: fixed`, so a bottom sheet pinned with `fixed bottom-0` sits at
- * the frame's bottom. The frame clips and never scrolls: the demo owns
+ * window's. It sets layout containment (`contain-layout`) itself, which
+ * makes it the containing block for `position: fixed`, so a bottom sheet
+ * pinned with `fixed bottom-0` sits at the frame's bottom. Size containers
+ * no longer imply layout containment, so the class is load-bearing. The frame clips and never scrolls: the demo owns
  * its scrolling.
  *
  * `dir`, the theme class and `data-reduced-motion` are set on the frame,
@@ -68,7 +69,7 @@ export function Frame({
 					}
 					dir={settings.dir}
 					className={cn(
-						"@container/frame relative h-full w-full overflow-hidden bg-background text-foreground ring-1 ring-line-strong",
+						"@container/frame relative h-full contain-layout w-full overflow-hidden bg-background text-foreground ring-1 ring-line-strong",
 						settings.theme,
 					)}
 				>

@@ -34,7 +34,8 @@ frame's width:
   `vw`/`vh`, `window.innerWidth` and `matchMedia` measure the window. For
   container query units, use `cqi`. Use `useFrameSize()` when logic needs the
   frame's width.
-- The frame's layout containment makes it the containing block for
+- The frame sets layout containment (`contain-layout`; a size container
+  alone no longer implies it), which makes it the containing block for
   `position: fixed`, so `fixed inset-x-0 bottom-0` pins a sheet to the
   frame's bottom.
 - The frame clips and does not scroll. A demo owns its scrolling and usually
