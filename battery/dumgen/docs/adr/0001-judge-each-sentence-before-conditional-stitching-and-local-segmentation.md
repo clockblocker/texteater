@@ -7,6 +7,10 @@ status: accepted
 TypeSafe judges Language, intelligibility and Stitching need independently for
 each source sentence. A batch may contain German, English and Hebrew. Explicit
 rejection is terminal; acceptance remains provisional for later recognition.
+Code settles Sentences whose script alone decides their Language, such as
+Hebrew letters or no letters at all, without a judgment. A Sentence the judge
+cannot place takes its Language from the Sentences around it; with none, it
+stays undetermined and is not clickable. See #1177.
 
 Luna repairs whitespace only when an accepted sentence needs Stitching. Code
 preserves source order and identity, checks every non-whitespace character, and
