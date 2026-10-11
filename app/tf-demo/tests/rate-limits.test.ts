@@ -36,7 +36,7 @@ const GLOBAL = RATE_LIMITS.segmentSelectionGlobal.rate;
 
 type Word = { sentenceId: Id<"sentences">; clickedSegmentIndex: number };
 
-/** A Text with `count` fresh words, each its own resolvable Segment. */
+/** A Scroll with `count` fresh words, each its own resolvable Segment. */
 async function words(t: TestConvexDb, count: number): Promise<Word[]> {
 	const sentences = Array.from({ length: Math.ceil(count / 10) }, (_, row) =>
 		Array.from({ length: 10 }, (_, column) => [
@@ -167,9 +167,9 @@ test("reading at a human pace stays under both limits", async () => {
 test("a submission past the per-Visitor limit is Rejected before any model call", async () => {
 	const t = createTestConvex();
 	const drain = RATE_LIMITS.textSubmission.rate;
-	// Re-submitting an analysed Text starts no intake, so it never counts.
+	// Re-submitting an analysed Scroll starts no intake, so it never counts.
 	await submitText(t, [["Die", " ", "Banken", "."]]);
-	// Every jev request fails fast, so each new Text is stored unresolved.
+	// Every jev request fails fast, so each new Scroll is stored unresolved.
 	const providers = unavailableProviders();
 	const { requests } = providers;
 	try {

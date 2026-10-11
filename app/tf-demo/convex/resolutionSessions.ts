@@ -170,7 +170,7 @@ export const selectSegment = mutation({
 				await ensureVisitorEncounter(ctx, {
 					requestId: args.requestId,
 					visitorId: args.visitorId,
-					textId: sentence.textId,
+					scrollId: sentence.scrollId,
 					sentenceId: sentence._id,
 					segmentId: segment._id,
 					attestationId,
@@ -187,7 +187,7 @@ export const selectSegment = mutation({
 			await ensureVisitorEncounter(ctx, {
 				requestId: args.requestId,
 				visitorId: args.visitorId,
-				textId: sentence.textId,
+				scrollId: sentence.scrollId,
 				sentenceId: sentence._id,
 				segmentId: segment._id,
 			});

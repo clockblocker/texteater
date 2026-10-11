@@ -34,7 +34,7 @@ export const loadSync = internalQuery({
 			state: definitionTextStateValidator,
 			definition: v.optional(v.string()),
 			materializedDefinition: v.optional(v.string()),
-			textId: v.optional(v.id("texts")),
+			scrollId: v.optional(v.id("scrolls")),
 			language: v.union(v.null(), languageValidator),
 		}),
 	),
@@ -57,7 +57,7 @@ export const loadSync = internalQuery({
 			...(row.materializedDefinition !== undefined
 				? { materializedDefinition: row.materializedDefinition }
 				: {}),
-			...(row.textId ? { textId: row.textId } : {}),
+			...(row.scrollId ? { scrollId: row.scrollId } : {}),
 			language:
 				language === "de" || language === "en" || language === "he"
 					? language
@@ -129,19 +129,19 @@ export const recoverStaleRun = internalMutation({
 });
 
 /**
- * Removes the Definition Text's Sentence and Text rows after Analysis
+ * Removes the Definition Text's Sentence and Scroll rows after Analysis
  * Stripping emptied them, and forgets the live pointer. The state row stays
  * so a replacement definition can be written next.
  */
-export const deleteTextRows = internalMutation({
-	args: { ownerReadingKey: v.string(), textId: v.id("texts") },
+export const deleteScrollRows = internalMutation({
+	args: { ownerReadingKey: v.string(), scrollId: v.id("scrolls") },
 	returns: v.null(),
-	handler: async (ctx, { ownerReadingKey, textId }) => {
-		await deleteDefinitionTextRows(ctx, textId);
+	handler: async (ctx, { ownerReadingKey, scrollId }) => {
+		await deleteDefinitionTextRows(ctx, scrollId);
 		const row = await findDefinitionText(ctx, ownerReadingKey);
-		if (row?.textId === textId) {
+		if (row?.scrollId === scrollId) {
 			await ctx.db.patch(row._id, {
-				textId: undefined,
+				scrollId: undefined,
 				sentenceId: undefined,
 				materializedDefinition: undefined,
 				updatedAt: Date.now(),
@@ -151,14 +151,14 @@ export const deleteTextRows = internalMutation({
 	},
 });
 
-/** Deletes the state row and any Text rows it still points at. */
+/** Deletes the state row and any Scroll rows it still points at. */
 export const deleteRows = internalMutation({
 	args: { ownerReadingKey: v.string() },
 	returns: v.null(),
 	handler: async (ctx, { ownerReadingKey }) => {
 		const row = await findDefinitionText(ctx, ownerReadingKey);
 		if (!row) return null;
-		if (row.textId) await deleteDefinitionTextRows(ctx, row.textId);
+		if (row.scrollId) await deleteDefinitionTextRows(ctx, row.scrollId);
 		await ctx.db.delete(row._id);
 		return null;
 	},
@@ -185,7 +185,7 @@ export const persistSegmented = internalMutation({
 			row.definition !== args.definition
 		)
 			return "Stale";
-		if (row.textId) {
+		if (row.scrollId) {
 			throw new Error(
 				"A live Definition Text must be removed before its replacement is written.",
 			);
@@ -220,7 +220,7 @@ export const settle = internalMutation({
 	),
 	handler: async (ctx, { ownerReadingKey, runNumber, outcome }) => {
 		const row = await findDefinitionText(ctx, ownerReadingKey);
-		// A run that persisted its Text already left the row Ready.
+		// A run that persisted its Scroll already left the row Ready.
 		if (
 			!row ||
 			row.runNumber !== runNumber ||
@@ -270,10 +270,15 @@ export const settle = internalMutation({
 	},
 });
 
-async function deleteDefinitionTextRows(ctx: MutationCtx, textId: Id<"texts">) {
+async function deleteDefinitionTextRows(
+	ctx: MutationCtx,
+	scrollId: Id<"scrolls">,
+) {
 	const sentences = await ctx.db
 		.query("sentences")
-		.withIndex("by_text_id_and_position", (q) => q.eq("textId", textId))
+		.withIndex("by_scroll_id_and_position", (q) =>
+			q.eq("scrollId", scrollId),
+		)
 		.take(MAX_SENTENCES_PER_DEFINITION + 1);
 	if (sentences.length > MAX_SENTENCES_PER_DEFINITION) {
 		throw new Error("A Definition Text holds at most one Sentence.");
@@ -296,5 +301,5 @@ async function deleteDefinitionTextRows(ctx: MutationCtx, textId: Id<"texts">) {
 		);
 		await ctx.db.delete(sentence._id);
 	}
-	if (await ctx.db.get(textId)) await ctx.db.delete(textId);
+	if (await ctx.db.get(scrollId)) await ctx.db.delete(scrollId);
 }

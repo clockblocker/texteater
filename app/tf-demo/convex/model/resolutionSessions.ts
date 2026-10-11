@@ -302,7 +302,7 @@ export async function startResolutionSession(
 		runNumber: 1,
 		retryDeadlineAt: now + RECOVERY_DEADLINE_MS,
 		route: {
-			textId: input.sentence.textId,
+			scrollId: input.sentence.scrollId,
 			sentenceId: input.sentence._id,
 			stitchedText: input.sentence.stitchedText,
 			clickedSegmentIndex: input.segment.index,
@@ -635,7 +635,7 @@ export async function completeResolutionSession(
 	const { encounterId } = await ensureVisitorEncounter(ctx, {
 		requestId: session.requestId,
 		visitorId: session.visitorId,
-		textId: session.route.textId,
+		scrollId: session.route.scrollId,
 		sentenceId: session.sentenceId,
 		segmentId: session.segmentId,
 		attestationId,

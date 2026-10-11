@@ -181,7 +181,7 @@ test("a commit advances every Visitor's earlier Encounter of its members, so the
 			await ctx.db.insert("visitorEncounters", {
 				requestId: `earlier-${index}`,
 				visitorId,
-				textId: sentence.textId,
+				scrollId: sentence.scrollId,
 				sentenceId: sentence._id,
 				segmentId,
 				encounteredAt: index,

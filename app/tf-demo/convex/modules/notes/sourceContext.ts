@@ -6,8 +6,8 @@
  */
 import { type Infer, v } from "convex/values";
 
-import type { SourceTextTarget } from "../../../shared/navigation";
-import { textTitle } from "../../../shared/text-title";
+import type { SourceScrollTarget } from "../../../shared/navigation";
+import { scrollTitle } from "../../../shared/scroll-title";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import { loadStoredSegments } from "../../model/storedSegments";
@@ -15,12 +15,12 @@ import { segmentKindValidator } from "../../model/validators";
 import {
 	grammaticalGenderValidator,
 	projectSentenceView,
-} from "../text/sentenceView";
+} from "../scroll/sentenceView";
 import { unitReadingEmojiDescription } from "./unitReadingFamilies";
 
-/** Where a source Sentence lives: a Visitor-submitted Text or one Reading's Definition. */
+/** Where a source Sentence lives: a Visitor-submitted Scroll or one Reading's Definition. */
 export const sourceOriginValidator = v.union(
-	v.object({ kind: v.literal("Text") }),
+	v.object({ kind: v.literal("Scroll") }),
 	v.object({
 		kind: v.literal("Definition"),
 		readingId: v.id("readings"),
@@ -30,12 +30,12 @@ export const sourceOriginValidator = v.union(
 );
 
 /**
- * The Text that shows the occurrence in place: a Visitor-submitted Text or a
+ * The Scroll that shows the occurrence in place: a Visitor-submitted Scroll or a
  * Definition Text alike (tf-demo ADR 0005).
  */
 export const sourceTargetValidator = v.object({
-	kind: v.literal("Text"),
-	textId: v.id("texts"),
+	kind: v.literal("Scroll"),
+	scrollId: v.id("scrolls"),
 	focusAttestationId: v.id("attestations"),
 	title: v.string(),
 });
@@ -47,7 +47,7 @@ export const sourceSegmentValidator = v.object({
 });
 
 export type SourceOrigin =
-	| { readonly kind: "Text" }
+	| { readonly kind: "Scroll" }
 	| {
 			readonly kind: "Definition";
 			readonly readingId: Id<"readings">;
@@ -55,24 +55,24 @@ export type SourceOrigin =
 			readonly canonicalForm: string;
 	  };
 
-export type SourceTarget = SourceTextTarget & {
-	readonly textId: Id<"texts">;
+export type SourceTarget = SourceScrollTarget & {
+	readonly scrollId: Id<"scrolls">;
 	readonly focusAttestationId: Id<"attestations">;
 };
 
 /**
- * Names the Reading a Definition Text defines. Returns null when the Text is
+ * Names the Reading a Definition Text defines. Returns null when the Scroll is
  * a Definition Text whose Reading no longer exists, so the caller drops it.
  */
 async function projectSourceOrigin(
 	ctx: QueryCtx,
-	text: Doc<"texts">,
+	scroll: Doc<"scrolls">,
 ): Promise<SourceOrigin | null> {
-	if (!text.origin) return { kind: "Text" };
+	if (!scroll.origin) return { kind: "Scroll" };
 	const reading = await ctx.db
 		.query("readings")
 		.withIndex("by_reading_key", (q) =>
-			q.eq("readingKey", text.origin?.readingKey ?? ""),
+			q.eq("readingKey", scroll.origin?.readingKey ?? ""),
 		)
 		.unique();
 	if (!reading) return null;
@@ -87,19 +87,19 @@ async function projectSourceOrigin(
 }
 
 /**
- * The workspace destination that shows this occurrence in place: its Text,
+ * The workspace destination that shows this occurrence in place: its Scroll,
  * pushed as a Cover scrolled to the Sentence and titled as the Library
  * titles it, whether a Visitor submitted it or it holds a definition.
  */
 function sourceTargetFor(
-	text: Doc<"texts">,
+	scroll: Doc<"scrolls">,
 	attestationId: Id<"attestations">,
 ): SourceTarget {
 	return {
-		kind: "Text",
-		textId: text._id,
+		kind: "Scroll",
+		scrollId: scroll._id,
 		focusAttestationId: attestationId,
-		title: textTitle(text),
+		title: scrollTitle(scroll),
 	};
 }
 
@@ -114,14 +114,14 @@ export async function projectOccurrenceSource(
 	occurrence: {
 		readonly attestationId: Id<"attestations">;
 		readonly sentence: Doc<"sentences">;
-		readonly text: Doc<"texts">;
+		readonly scroll: Doc<"scrolls">;
 		readonly memberSegmentIndices: readonly number[];
 	},
 	visitorId?: string,
 ) {
-	const { attestationId, sentence, text } = occurrence;
+	const { attestationId, sentence, scroll } = occurrence;
 	const [origin, segments] = await Promise.all([
-		projectSourceOrigin(ctx, text),
+		projectSourceOrigin(ctx, scroll),
 		visitorId
 			? projectSentenceView(ctx, sentence, visitorId).then(
 					(view) => view.segments,
@@ -130,7 +130,7 @@ export async function projectOccurrenceSource(
 	]);
 	if (!origin) return null;
 	return {
-		textId: text._id,
+		scrollId: scroll._id,
 		sentencePosition: sentence.position,
 		sentenceSnippet: sentence.stitchedText,
 		segments: segments.map(
@@ -144,6 +144,6 @@ export async function projectOccurrenceSource(
 		),
 		memberSegmentIndices: [...occurrence.memberSegmentIndices],
 		origin,
-		target: sourceTargetFor(text, attestationId),
+		target: sourceTargetFor(scroll, attestationId),
 	};
 }

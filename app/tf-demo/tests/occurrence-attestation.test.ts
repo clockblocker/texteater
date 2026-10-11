@@ -37,7 +37,7 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 		});
 		const sentenceId = await ctx.db.insert("sentences", {
 			segmentedSentenceId: "segmented-1",
-			textId: await ctx.db.insert("texts", {
+			scrollId: await ctx.db.insert("scrolls", {
 				submissionKey: "text-1",
 				sourceText: "Macht die <Tür> & auf&",
 			}),

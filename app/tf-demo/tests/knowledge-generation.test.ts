@@ -131,7 +131,7 @@ type Occurrence = {
 	readonly readingId: Id<"readings">;
 	readonly lemmaId: Id<"lemmas">;
 	readonly attestationId: Id<"attestations">;
-	readonly textId: Id<"texts">;
+	readonly scrollId: Id<"scrolls">;
 	readonly sentenceId: Id<"sentences">;
 	readonly segmentId: Id<"segments">;
 	readonly readingKey: string;
@@ -154,7 +154,7 @@ async function seedOccurrence(
 	},
 ): Promise<Occurrence> {
 	const governed = reading.lemma.canonicalForm === "Angst";
-	const { textId, sentenceIds, segmentIds } = await submitText(t, [
+	const { scrollId, sentenceIds, segmentIds } = await submitText(t, [
 		[
 			{ kind: "ResolvableText", text: surface.normalizedSurface },
 			{
@@ -204,7 +204,7 @@ async function seedOccurrence(
 			readingId,
 			lemmaId,
 			attestationId,
-			textId,
+			scrollId,
 			sentenceId,
 			segmentId,
 			readingKey,
@@ -1224,7 +1224,7 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 		ctx.db.insert("visitorEncounters", {
 			requestId: "click-request",
 			visitorId: "visitor-1",
-			textId: retryOccurrence.textId,
+			scrollId: retryOccurrence.scrollId,
 			sentenceId: retryOccurrence.sentenceId,
 			segmentId: retryOccurrence.segmentId,
 			attestationId: retryOccurrence.attestationId,
@@ -1468,7 +1468,7 @@ test("a run whose action died fails as interrupted, starts the next demand, and 
 		ctx.db.insert("visitorEncounters", {
 			requestId: "click-request",
 			visitorId: "visitor-1",
-			textId: occurrence.textId,
+			scrollId: occurrence.scrollId,
 			sentenceId: occurrence.sentenceId,
 			segmentId: occurrence.segmentId,
 			attestationId: occurrence.attestationId,

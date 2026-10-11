@@ -3,7 +3,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import type { Id } from "../convex/_generated/dataModel";
-import { SentenceList } from "../src/views/text-view";
+import { SentenceList } from "../src/views/scroll-view";
 
 // Fixture ids stand in for Convex document ids; the renderer only compares them.
 const SENTENCE_ID = "sentence_1" as Id<"sentences">;

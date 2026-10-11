@@ -1,14 +1,14 @@
 import {
 	type DetectedLanguage,
 	type Dumgen,
-	type ExtractedText,
 	type LanguagedText,
+	type Scroll,
 	type SegmentedText,
-	splitExtractedText,
+	splitScroll,
 	stitchedText,
 } from "dumgen";
 import * as Effect from "effect/Effect";
-import type { TextLanguage } from "../shared/supported-target-language";
+import type { ScrollLanguage } from "../shared/supported-target-language";
 import { assertNonEmpty } from "./identifiers";
 import { inspectionStep } from "./inspectionCapture";
 import {
@@ -19,11 +19,11 @@ import {
 import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
 /**
- * Intake (map #1175, #1178): a Submission's Extracted Text is split into
- * paragraphs and Sentences in code (`splitExtractedText`), Dumgen's
+ * Intake (map #1175, #1178): a Scroll's Extracted Text is split into
+ * paragraphs and Sentences in code (`splitScroll`), Dumgen's
  * `language.detect` gives each Sentence its Detected Language, only the
- * Sentences in the Text's target language are cut into Segments and
- * biggest units by `segment.inUnits`, and the Text is stored with its
+ * Sentences in the Scroll's target language are cut into Segments and
+ * biggest units by `segment.inUnits`, and the Scroll is stored with its
  * Extracted Text, so a later run starts from it. Every other Sentence is a
  * Plain Sentence: stored with its Detected Language, or none when it stayed
  * undetermined, and with no Segments, so the reader shows it unclickable.
@@ -31,13 +31,13 @@ import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
  * parameter so Hebrew can follow.
  */
 
-/** What a Visitor reads when a Text in another language is turned away. */
+/** What a Visitor reads when a Scroll in another language is turned away. */
 export const GERMAN_ONLY_MESSAGE =
 	"tf-demo reads German Texts only for now. Support for other languages is planned.";
 
-/** Why intake turns a Text in `language` away, or undefined for German. */
+/** Why intake turns a Scroll in `language` away, or undefined for German. */
 export function unsupportedLanguageMessage(
-	language: TextLanguage,
+	language: ScrollLanguage,
 ): string | undefined {
 	return language === "de" ? undefined : GERMAN_ONLY_MESSAGE;
 }
@@ -46,9 +46,9 @@ export function unsupportedLanguageMessage(
 export const INTAKE_NOT_CONFIGURED_MESSAGE =
 	"Intake isn't configured: TYPESAFE_API_KEY is missing on the Convex deployment. Run `bun run env:sync` and restart the dev server.";
 
-/** A Text's Sentences in reading order, as intake splits its Extracted Text. */
-export function sourceSentencesOf(extracted: ExtractedText): string[] {
-	return splitExtractedText(extracted).paragraphs.flatMap(({ sentences }) => [
+/** A Scroll's Sentences in reading order, as intake splits its Extracted Text. */
+export function sourceSentencesOf(extracted: Scroll): string[] {
+	return splitScroll(extracted).paragraphs.flatMap(({ sentences }) => [
 		...sentences,
 	]);
 }
@@ -56,13 +56,13 @@ export function sourceSentencesOf(extracted: ExtractedText): string[] {
 /** One Sentence as intake hands it to storage. */
 export type SubmittedSentence = {
 	readonly segmentedSentenceId: string;
-	/** The Sentence's place in the Text, counted across paragraphs from 0. */
+	/** The Sentence's place in the Scroll, counted across paragraphs from 0. */
 	readonly position: number;
 	/** The paragraph the Sentence reads in; Sentences sharing one run together. */
 	readonly paragraph: number;
 	/**
 	 * The Sentence's Detected Language; absent when it stayed undetermined.
-	 * Any but the Text's target language makes it a Plain Sentence, with no
+	 * Any but the Scroll's target language makes it a Plain Sentence, with no
 	 * Segments and no units.
 	 */
 	readonly language?: DetectedLanguage;
@@ -82,31 +82,34 @@ export type SubmittedSentence = {
 	readonly segmentationFailed?: true;
 };
 
-export type SubmittedText = {
+export type SubmittedScroll = {
 	readonly submissionKey: string;
 	readonly sourceText: string;
-	/** What later runs start from: Flags, segmentation fixes, curators' edits. */
-	readonly extractedText: ExtractedText;
+	/**
+	 * The Scroll's Extracted Text, what later runs start from: Flags,
+	 * segmentation fixes, curators' edits.
+	 */
+	readonly extractedText: Scroll;
 	readonly sentences: readonly SubmittedSentence[];
 };
 
-/** Where intake stores a segmented Text; Convex supplies it, a test an in-memory one. */
+/** Where intake stores a segmented Scroll; Convex supplies it, a test an in-memory one. */
 export type IntakePersistence = {
-	persistSubmittedText(
-		input: SubmittedText,
-	): Promise<{ readonly textId: string }>;
+	persistSubmittedScroll(
+		input: SubmittedScroll,
+	): Promise<{ readonly scrollId: string }>;
 };
 
 export type SubmitTextInput = {
 	readonly submissionKey: string;
 	readonly sourceText: string;
 	/**
-	 * The Submission's Extracted Text: the stored one when the Text was
+	 * The Scroll's Extracted Text: the stored one when the Scroll was
 	 * submitted before, else `extractPastedText(sourceText)`.
 	 */
-	readonly extractedText: ExtractedText;
-	/** The Text's target language. */
-	readonly language: TextLanguage;
+	readonly extractedText: Scroll;
+	/** The Scroll's target language. */
+	readonly language: ScrollLanguage;
 };
 
 type LanguagedParagraphs = LanguagedText["paragraphs"];
@@ -114,7 +117,7 @@ type LanguagedParagraphs = LanguagedText["paragraphs"];
 /** The target-language Sentences, by paragraph, with no paragraph left empty. */
 function targetParagraphs(
 	paragraphs: LanguagedParagraphs,
-	language: TextLanguage,
+	language: ScrollLanguage,
 ) {
 	return paragraphs
 		.map(({ sentences }) => ({
@@ -135,7 +138,7 @@ function targetParagraphs(
 function submittedSentences(
 	submissionKey: string,
 	paragraphs: LanguagedParagraphs,
-	language: TextLanguage,
+	language: ScrollLanguage,
 	segmented: SegmentedText | undefined,
 ): SubmittedSentence[] {
 	const segmentedSentences =
@@ -201,11 +204,11 @@ export function createIntake(options: {
 			if (rejection !== undefined) throw new Error(rejection);
 
 			const { paragraphs } = yield* Effect.sync(() =>
-				splitExtractedText(input.extractedText),
+				splitScroll(input.extractedText),
 			).pipe(
 				Effect.withSpan(
 					"Split text into sentences",
-					inspectionStep("battery/dumgen · splitExtractedText", {
+					inspectionStep("battery/dumgen · splitScroll", {
 						extractedText: input.extractedText,
 					}),
 				),
@@ -252,7 +255,7 @@ export function createIntake(options: {
 									),
 								),
 							);
-			const submission: SubmittedText = {
+			const submission: SubmittedScroll = {
 				submissionKey: input.submissionKey,
 				sourceText: input.sourceText,
 				extractedText: input.extractedText,
@@ -264,7 +267,7 @@ export function createIntake(options: {
 				),
 			};
 			const persisted = yield* Effect.tryPromise(() =>
-				options.persistence.persistSubmittedText(submission),
+				options.persistence.persistSubmittedScroll(submission),
 			).pipe(
 				Effect.withSpan(
 					"Persist submitted text",

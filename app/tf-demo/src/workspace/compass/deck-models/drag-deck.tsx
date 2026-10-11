@@ -9,7 +9,7 @@ import { GroundList } from "@/workspace/compass/pane-chrome";
 import type { MenuItem, MenuItemView } from "@/workspace/compass/subject";
 import { useCompassWorkspace } from "@/workspace/compass/use-compass-workspace";
 import type { DeckMotionOverrides } from "@/workspace/motion/runtime-config";
-import { noteFor, TEXTS, textById } from "./dummy";
+import { noteFor, SCROLLS, scrollById } from "./dummy";
 import { initialWorkspace, LIBRARY, ROOT_PANE, type Subject } from "./model";
 import { FixtureNotesProvider } from "./real-note";
 import { RULES } from "./rules";
@@ -23,7 +23,7 @@ import { playgroundRenderer } from "./subjects";
  * the Subjects, a toolbar of switches under study, and the rules.
  */
 
-/** Where the workbench's stage, with no Text above its Deck, puts the Deck's top. */
+/** Where the workbench's stage, with no Scroll above its Deck, puts the Deck's top. */
 const STAGE_DECK_TOP_REM = 3;
 
 const SETTINGS = "settings";
@@ -91,14 +91,14 @@ function CompassStage({
 		) : (
 			<GroundList
 				title="Library"
-				items={TEXTS.map((text) => ({
-					key: text.id,
-					label: text.title,
+				items={SCROLLS.map((scroll) => ({
+					key: scroll.id,
+					label: scroll.title,
 				}))}
 				onPick={(key) =>
 					view.select({
-						kind: "Text",
-						text: textById(key),
+						kind: "Scroll",
+						scroll: scrollById(key),
 						focus: null,
 					})
 				}

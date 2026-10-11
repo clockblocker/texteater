@@ -10,7 +10,7 @@ import {
 	type StoredUnit,
 	unresolvedUnits,
 } from "../../server/storedSegments";
-import type { TextLanguage } from "../../shared/supported-target-language";
+import type { ScrollLanguage } from "../../shared/supported-target-language";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 
@@ -105,7 +105,7 @@ export async function syncDefinitionText(
 	if (
 		settled &&
 		definition === undefined &&
-		existing.textId === undefined &&
+		existing.scrollId === undefined &&
 		existing.definition === undefined
 	) {
 		return;
@@ -159,20 +159,20 @@ export function ownsDefinitionTextRun(
  * Writes one segmented definition as a hidden Definition Text, its Sentence
  * with its Segments and units as intake stores them, a failed segmentation
  * marked as intake marks it, and marks the state row Ready. Callers must
- * have removed any previous live Text first.
+ * have removed any previous live Scroll first.
  */
 export async function writeDefinitionText(
 	ctx: MutationCtx,
 	input: {
 		readonly ownerReadingKey: string;
 		readonly definition: string;
-		readonly language: TextLanguage;
+		readonly language: ScrollLanguage;
 		readonly segmentedSentenceId: string;
 		readonly segments: readonly StoredSegmentValue[];
 		readonly units: readonly StoredUnit[];
 		readonly segmentationFailed?: true;
 	},
-): Promise<{ textId: Id<"texts">; sentenceId: Id<"sentences"> }> {
+): Promise<{ scrollId: Id<"scrolls">; sentenceId: Id<"sentences"> }> {
 	const { segments, units, segmentationFailed } = input;
 	if (segments.length === 0 || segments.length > MAX_SEGMENTS_PER_SENTENCE) {
 		throw new Error(
@@ -185,14 +185,14 @@ export async function writeDefinitionText(
 		...(segmentationFailed ? { segmentationFailed } : {}),
 	});
 	const stitchedText = segments.map(({ text }) => text).join("");
-	const textId = await ctx.db.insert("texts", {
+	const scrollId = await ctx.db.insert("scrolls", {
 		submissionKey: `definition:${input.ownerReadingKey}:${input.segmentedSentenceId}`,
 		sourceText: stitchedText,
 		origin: { kind: "Definition", readingKey: input.ownerReadingKey },
 	});
 	const sentenceId = await ctx.db.insert("sentences", {
 		segmentedSentenceId: input.segmentedSentenceId,
-		textId,
+		scrollId,
 		position: 0,
 		language: input.language,
 		stitchedText,
@@ -213,27 +213,27 @@ export async function writeDefinitionText(
 		...(existing?.runNumber !== undefined
 			? { runNumber: existing.runNumber }
 			: {}),
-		textId,
+		scrollId,
 		sentenceId,
 		updatedAt: Date.now(),
 	};
 	if (existing) await ctx.db.replace(existing._id, value);
 	else await ctx.db.insert("definitionTexts", value);
-	return { textId, sentenceId };
+	return { scrollId, sentenceId };
 }
 
 /**
  * Fixture path: segments and writes a definition inside one mutation with a
  * caller-supplied segmenter, skipping the scheduled materializer. Reloading
- * the same definition is a no-op; a changed one replaces the Text in place
- * because fixture Texts carry no Visitor analysis worth stripping.
+ * the same definition is a no-op; a changed one replaces the Scroll in place
+ * because fixture Scrolls carry no Visitor analysis worth stripping.
  */
 export async function ensureInlineDefinitionText(
 	ctx: MutationCtx,
 	input: {
 		readonly ownerReadingKey: string;
 		readonly knowledge: unknown;
-		readonly language: TextLanguage;
+		readonly language: ScrollLanguage;
 		/** Code segmentation for fixtures; each ResolvableText Segment becomes its own Unresolved unit. */
 		readonly segment: (text: string) => readonly StoredSegmentValue[];
 	},
@@ -247,7 +247,7 @@ export async function ensureInlineDefinitionText(
 	) {
 		return;
 	}
-	if (existing?.textId) {
+	if (existing?.scrollId) {
 		throw new Error(
 			`Definition of ${input.ownerReadingKey} changed; strip its Definition Text before reloading fixtures.`,
 		);

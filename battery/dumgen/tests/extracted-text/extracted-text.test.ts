@@ -1,59 +1,76 @@
 import { expect, test } from "bun:test";
 import { extractPastedText } from "../../src/extracted-text/extracted-text.js";
-import { extractedTextSchema } from "../../src/extracted-text/schema.js";
+import {
+	extractedTextSchema,
+	scrollSchema,
+} from "../../src/extracted-text/schema.js";
 
-test("pasted text is one Chapter of Paragraphs, its line breaks kept, without Original Locations", () => {
+test("pasted text is one Scroll of Paragraphs, its line breaks kept, without Original Locations", () => {
 	const text = extractPastedText(
 		"  Erste Zeile\r\nZweite Zeile  \n\n \n*Kein* Markdown.\n",
 	);
 	expect(text).toEqual({
-		chapters: [
+		kind: "Scroll",
+		blocks: [
 			{
-				blocks: [
-					{
-						kind: "Paragraph",
-						inlines: [
-							{ kind: "Run", text: "Erste Zeile" },
-							{ kind: "LineBreak" },
-							{ kind: "Run", text: "Zweite Zeile" },
-						],
-					},
-					{
-						kind: "Paragraph",
-						inlines: [{ kind: "Run", text: "*Kein* Markdown." }],
-					},
+				kind: "Paragraph",
+				inlines: [
+					{ kind: "Run", text: "Erste Zeile" },
+					{ kind: "LineBreak" },
+					{ kind: "Run", text: "Zweite Zeile" },
 				],
+			},
+			{
+				kind: "Paragraph",
+				inlines: [{ kind: "Run", text: "*Kein* Markdown." }],
 			},
 		],
 	});
-	expect(extractedTextSchema.parse(text)).toEqual(text);
+	expect(scrollSchema.parse(text)).toEqual(text);
+	expect(extractedTextSchema.parse({ contents: [text] })).toEqual({
+		contents: [text],
+	});
 });
 
-test("pasted text is stored as NFC, and blank text is one empty Chapter", () => {
+test("pasted text is stored as NFC, and blank text is one empty Scroll", () => {
 	expect(extractPastedText("שָׁלוֹם".normalize("NFD"))).toEqual({
-		chapters: [
+		kind: "Scroll",
+		blocks: [
 			{
-				blocks: [
-					{
-						kind: "Paragraph",
-						inlines: [
-							{ kind: "Run", text: "שָׁלוֹם".normalize("NFC") },
-						],
-					},
-				],
+				kind: "Paragraph",
+				inlines: [{ kind: "Run", text: "שָׁלוֹם".normalize("NFC") }],
 			},
 		],
 	});
-	expect(extractPastedText(" \n\t ")).toEqual({ chapters: [{ blocks: [] }] });
+	expect(extractPastedText(" \n\t ")).toEqual({ kind: "Scroll", blocks: [] });
 });
 
 test("the schema turns away what an Extracted Text cannot hold", () => {
 	const invalid = [
-		{ chapters: [] },
-		{ chapters: [{ blocks: [{ kind: "Heading", level: 1, runs: [] }] }] },
+		{ contents: [] },
+		{ contents: [{ blocks: [] }] },
 		{
-			chapters: [
+			contents: [
 				{
+					kind: "Scroll",
+					blocks: [{ kind: "Heading", level: 1, runs: [] }],
+				},
+			],
+		},
+		{ contents: [{ kind: "Section", title: "Buch", contents: [] }] },
+		{
+			contents: [
+				{
+					kind: "Section",
+					title: " Buch",
+					contents: [{ kind: "Scroll", blocks: [] }],
+				},
+			],
+		},
+		{
+			contents: [
+				{
+					kind: "Scroll",
 					blocks: [
 						{
 							kind: "Paragraph",
@@ -64,8 +81,9 @@ test("the schema turns away what an Extracted Text cannot hold", () => {
 			],
 		},
 		{
-			chapters: [
+			contents: [
 				{
+					kind: "Scroll",
 					blocks: [
 						{
 							kind: "Paragraph",

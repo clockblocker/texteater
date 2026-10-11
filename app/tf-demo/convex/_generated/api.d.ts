@@ -44,9 +44,9 @@ import type * as model_relationPublicationChunks from "../model/relationPublicat
 import type * as model_resolutionLookup from "../model/resolutionLookup.js";
 import type * as model_resolutionSessionLifecycle from "../model/resolutionSessionLifecycle.js";
 import type * as model_resolutionSessions from "../model/resolutionSessions.js";
+import type * as model_scrollAnalysisStripping from "../model/scrollAnalysisStripping.js";
 import type * as model_shadows from "../model/shadows.js";
 import type * as model_storedSegments from "../model/storedSegments.js";
-import type * as model_textAnalysisStripping from "../model/textAnalysisStripping.js";
 import type * as model_validators from "../model/validators.js";
 import type * as model_visitorEncounters from "../model/visitorEncounters.js";
 import type * as modules_notes_featurePresentation from "../modules/notes/featurePresentation.js";
@@ -60,8 +60,8 @@ import type * as modules_notes_routeNotes from "../modules/notes/routeNotes.js";
 import type * as modules_notes_shadowNote from "../modules/notes/shadowNote.js";
 import type * as modules_notes_sourceContext from "../modules/notes/sourceContext.js";
 import type * as modules_notes_unitReadingFamilies from "../modules/notes/unitReadingFamilies.js";
-import type * as modules_text_sentenceView from "../modules/text/sentenceView.js";
-import type * as modules_text_submission from "../modules/text/submission.js";
+import type * as modules_scroll_sentenceView from "../modules/scroll/sentenceView.js";
+import type * as modules_scroll_submission from "../modules/scroll/submission.js";
 import type * as orchestration from "../orchestration.js";
 import type * as persistence from "../persistence.js";
 import type * as personalAnnotations from "../personalAnnotations.js";
@@ -74,11 +74,11 @@ import type * as resolutionInspection from "../resolutionInspection.js";
 import type * as resolutionSessions from "../resolutionSessions.js";
 import type * as reviewedNavigation from "../reviewedNavigation.js";
 import type * as routeNotes from "../routeNotes.js";
+import type * as scrollViews from "../scrollViews.js";
+import type * as scrolls from "../scrolls.js";
 import type * as shadowNotes from "../shadowNotes.js";
 import type * as shadowResolution from "../shadowResolution.js";
 import type * as shadows from "../shadows.js";
-import type * as textViews from "../textViews.js";
-import type * as texts from "../texts.js";
 import type * as visitorEncounters from "../visitorEncounters.js";
 
 import type {
@@ -124,9 +124,9 @@ declare const fullApi: ApiFromModules<{
   "model/resolutionLookup": typeof model_resolutionLookup;
   "model/resolutionSessionLifecycle": typeof model_resolutionSessionLifecycle;
   "model/resolutionSessions": typeof model_resolutionSessions;
+  "model/scrollAnalysisStripping": typeof model_scrollAnalysisStripping;
   "model/shadows": typeof model_shadows;
   "model/storedSegments": typeof model_storedSegments;
-  "model/textAnalysisStripping": typeof model_textAnalysisStripping;
   "model/validators": typeof model_validators;
   "model/visitorEncounters": typeof model_visitorEncounters;
   "modules/notes/featurePresentation": typeof modules_notes_featurePresentation;
@@ -140,8 +140,8 @@ declare const fullApi: ApiFromModules<{
   "modules/notes/shadowNote": typeof modules_notes_shadowNote;
   "modules/notes/sourceContext": typeof modules_notes_sourceContext;
   "modules/notes/unitReadingFamilies": typeof modules_notes_unitReadingFamilies;
-  "modules/text/sentenceView": typeof modules_text_sentenceView;
-  "modules/text/submission": typeof modules_text_submission;
+  "modules/scroll/sentenceView": typeof modules_scroll_sentenceView;
+  "modules/scroll/submission": typeof modules_scroll_submission;
   orchestration: typeof orchestration;
   persistence: typeof persistence;
   personalAnnotations: typeof personalAnnotations;
@@ -154,11 +154,11 @@ declare const fullApi: ApiFromModules<{
   resolutionSessions: typeof resolutionSessions;
   reviewedNavigation: typeof reviewedNavigation;
   routeNotes: typeof routeNotes;
+  scrollViews: typeof scrollViews;
+  scrolls: typeof scrolls;
   shadowNotes: typeof shadowNotes;
   shadowResolution: typeof shadowResolution;
   shadows: typeof shadows;
-  textViews: typeof textViews;
-  texts: typeof texts;
   visitorEncounters: typeof visitorEncounters;
 }>;
 

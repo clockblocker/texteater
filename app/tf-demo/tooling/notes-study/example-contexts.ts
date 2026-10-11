@@ -88,5 +88,5 @@ export function exampleContext(canonicalForm: string) {
 	return { before: context[0], after: context[1] };
 }
 
-export const EXAMPLES_TEXT_TITLE = "exmaples to text";
+export const EXAMPLES_SCROLL_TITLE = "exmaples to text";
 export const EXAMPLES_SUBMISSION_KEY = "notes-study:examples";

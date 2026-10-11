@@ -299,7 +299,7 @@ const LIVE_WORDS: readonly {
 /**
  * The reader's own rules, live: hover or focus previews a word, a click
  * selects it, a second click clears it. Colour never moves; only the rule
- * under the word does. Plain and failed words behave as in the Text view:
+ * under the word does. Plain and failed words behave as in the Scroll view:
  * a plain word previews on hover, a failed one ignores the pointer.
  */
 function LiveReader() {

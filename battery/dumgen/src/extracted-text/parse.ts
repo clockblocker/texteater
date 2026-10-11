@@ -1,19 +1,20 @@
 /**
  * A stored Extracted Text checked without Zod, for a host's database seam
  * (#1178): tf-demo keeps it as `v.any()`, and its operational modules load
- * no Zod schema. It accepts exactly what `extractedTextSchema` accepts and
- * returns the same value, unknown keys dropped; the schema's test holds
- * the two together.
+ * no Zod schema. It accepts exactly what `extractedTextSchema` (or, for one
+ * Scroll, `scrollSchema`) accepts and returns the same value, unknown keys
+ * dropped; the schema's test holds the two together.
  */
 import { isRecord } from "common-utils";
 import type {
-	Chapter,
 	ExtractedText,
 	Heading,
 	InlineStyle,
 	LineBreak,
 	Paragraph,
 	Run,
+	Scroll,
+	Section,
 } from "./extracted-text.js";
 
 type Located = { readonly locations?: Run["locations"] };
@@ -147,13 +148,15 @@ function block(value: unknown, path: string): Heading | Paragraph {
 	return fail(path, "a Heading or a Paragraph");
 }
 
-function chapter(value: unknown, path: string): Chapter {
+function scroll(value: unknown, path: string): Scroll {
 	const fields = record(value, path);
+	if (fields.kind !== "Scroll") fail(path, "a Scroll");
 	const heading =
 		fields.heading === undefined
 			? undefined
 			: record(fields.heading, `${path}.heading`);
 	return {
+		kind: "Scroll",
 		...(heading
 			? {
 					heading: {
@@ -168,12 +171,35 @@ function chapter(value: unknown, path: string): Chapter {
 	};
 }
 
+function contents(value: unknown, path: string): (Section | Scroll)[] {
+	return list(value, path, 1).map((item, index) => {
+		const at = `${path}[${index}]`;
+		return isRecord(item) && item.kind === "Section"
+			? section(item, at)
+			: scroll(item, at);
+	});
+}
+
+function section(fields: Record<string, unknown>, path: string): Section {
+	if (
+		typeof fields.title !== "string" ||
+		!/^\S(?:[^\r\n]*\S)?$/u.test(fields.title)
+	)
+		fail(`${path}.title`, "one trimmed line");
+	return {
+		kind: "Section",
+		title: fields.title,
+		contents: contents(fields.contents, `${path}.contents`),
+	};
+}
+
 /** The Extracted Text `value` holds, or an `InvalidExtractedText` thrown. */
 export function parseExtractedText(value: unknown): ExtractedText {
 	const fields = record(value, "Extracted Text");
-	return {
-		chapters: list(fields.chapters, "chapters", 1).map((item, index) =>
-			chapter(item, `chapters[${index}]`),
-		),
-	};
+	return { contents: contents(fields.contents, "contents") };
+}
+
+/** The Scroll `value` holds, or an `InvalidExtractedText` thrown. */
+export function parseScroll(value: unknown): Scroll {
+	return scroll(value, "Scroll");
 }

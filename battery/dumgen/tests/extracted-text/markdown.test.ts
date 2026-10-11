@@ -3,6 +3,7 @@ import type {
 	ExtractedText,
 	Paragraph,
 	Run,
+	Scroll,
 } from "../../src/extracted-text/extracted-text.js";
 import {
 	extractedTextFromMarkdown,
@@ -17,6 +18,17 @@ const paragraph = (...inlines: Paragraph["inlines"]): Paragraph => ({
 	kind: "Paragraph",
 	inlines,
 });
+
+const scrollsOf = (contents: ExtractedText["contents"]): Scroll[] =>
+	contents.flatMap((item) =>
+		item.kind === "Scroll" ? [item] : scrollsOf(item.contents),
+	);
+
+/** The blocks of an Extracted Text that is one loose Scroll. */
+function blocksOf(text: ExtractedText): Scroll["blocks"] | undefined {
+	const [only] = text.contents;
+	return only?.kind === "Scroll" ? only.blocks : undefined;
+}
 
 /** Canonical Markdown: what export writes, so it reads back unchanged. */
 const book = `# Erstes *Kapitel*
@@ -39,8 +51,9 @@ Kurz.
 `;
 
 const bookText: ExtractedText = {
-	chapters: [
+	contents: [
 		{
+			kind: "Scroll",
 			heading: { runs: [run("Erstes "), run("Kapitel", "Italic")] },
 			blocks: [
 				{ kind: "Heading", level: 2, runs: [run("Der Anfang")] },
@@ -71,13 +84,14 @@ const bookText: ExtractedText = {
 			],
 		},
 		{
+			kind: "Scroll",
 			heading: { runs: [run("Zweites Kapitel")] },
 			blocks: [paragraph(run("Kurz."))],
 		},
 	],
 };
 
-test("reads Chapters, Headings, Paragraphs, Line Breaks and every Inline Style", () => {
+test("reads Scrolls, Headings, Paragraphs, Line Breaks and every Inline Style", () => {
 	expect(extractedTextFromMarkdown(book)).toEqual(bookText);
 	expect(extractedTextSchema.parse(bookText)).toEqual(bookText);
 });
@@ -94,8 +108,9 @@ test("Extracted Text → Markdown → Extracted Text gives a canonical one back"
 
 test("Original Locations survive the Extracted Text but not Markdown", () => {
 	const located: ExtractedText = {
-		chapters: [
+		contents: [
 			{
+				kind: "Scroll",
 				heading: {
 					runs: [run("Seite eins")],
 					locations: [
@@ -141,8 +156,9 @@ test("Original Locations survive the Extracted Text but not Markdown", () => {
 	const markdown = extractedTextToMarkdown(located);
 	expect(markdown).toBe("# Seite eins\n\nHallo Welt\n");
 	expect(extractedTextFromMarkdown(markdown)).toEqual({
-		chapters: [
+		contents: [
 			{
+				kind: "Scroll",
 				heading: { runs: [run("Seite eins")] },
 				blocks: [paragraph(run("Hallo Welt"))],
 			},
@@ -152,8 +168,9 @@ test("Original Locations survive the Extracted Text but not Markdown", () => {
 
 test("a hard-wrapped line is a space; a backslash, two spaces or <br> is a Line Break", () => {
 	expect(
-		extractedTextFromMarkdown("eins\nzwei  \ndrei\\\nvier<br>fünf")
-			.chapters[0]?.blocks,
+		blocksOf(
+			extractedTextFromMarkdown("eins\nzwei  \ndrei\\\nvier<br>fünf"),
+		),
 	).toEqual([
 		paragraph(
 			run("eins zwei"),
@@ -169,9 +186,11 @@ test("a hard-wrapped line is a space; a backslash, two spaces or <br> is a Line 
 
 test("reads HTML style tags and underscore emphasis as Inline Styles", () => {
 	expect(
-		extractedTextFromMarkdown(
-			"<em>a</em> <strong>b</strong> _c_ __d__ <i>e</i>",
-		).chapters[0]?.blocks,
+		blocksOf(
+			extractedTextFromMarkdown(
+				"<em>a</em> <strong>b</strong> _c_ __d__ <i>e</i>",
+			),
+		),
 	).toEqual([
 		paragraph(
 			run("a", "Italic"),
@@ -189,8 +208,9 @@ test("reads HTML style tags and underscore emphasis as Inline Styles", () => {
 
 test("escapes text Markdown would read as syntax", () => {
 	const literal: ExtractedText = {
-		chapters: [
+		contents: [
 			{
+				kind: "Scroll",
 				heading: { runs: [run("Nr. 5 #")] },
 				blocks: [
 					paragraph(
@@ -215,8 +235,9 @@ test("escapes text Markdown would read as syntax", () => {
 
 test("falls back to <i> and <b> where CommonMark would misread * and **", () => {
 	const intraword: ExtractedText = {
-		chapters: [
+		contents: [
 			{
+				kind: "Scroll",
 				blocks: [
 					paragraph(run("Wort"), run("„Zitat“", "Italic"), run("!")),
 				],
@@ -230,8 +251,9 @@ test("falls back to <i> and <b> where CommonMark would misread * and **", () => 
 
 test("moves a style off the whitespace at its edges, and trims lines", () => {
 	const loose: ExtractedText = {
-		chapters: [
+		contents: [
 			{
+				kind: "Scroll",
 				blocks: [
 					paragraph(
 						run(" ein"),
@@ -245,30 +267,120 @@ test("moves a style off the whitespace at its edges, and trims lines", () => {
 	expect(extractedTextToMarkdown(loose)).toBe("ein **fettes** Wort\n");
 });
 
-test("a bare # opens a Chapter without a Heading; text before any # is a Chapter", () => {
-	const chapters: ExtractedText = {
-		chapters: [
-			{ blocks: [paragraph(run("Vorwort."))] },
-			{ blocks: [paragraph(run("Ohne Titel."))] },
-			{ heading: { runs: [run("Teil zwei")] }, blocks: [] },
+test("a bare # opens a Scroll without a Heading; text before any # is a Scroll", () => {
+	const scrolls: ExtractedText = {
+		contents: [
+			{ kind: "Scroll", blocks: [paragraph(run("Vorwort."))] },
+			{ kind: "Scroll", blocks: [paragraph(run("Ohne Titel."))] },
+			{
+				kind: "Scroll",
+				heading: { runs: [run("Teil zwei")] },
+				blocks: [],
+			},
 		],
 	};
 	const markdown = "Vorwort.\n\n#\n\nOhne Titel.\n\n# Teil zwei\n";
-	expect(extractedTextToMarkdown(chapters)).toBe(markdown);
-	expect(extractedTextFromMarkdown(markdown)).toEqual(chapters);
+	expect(extractedTextToMarkdown(scrolls)).toBe(markdown);
+	expect(extractedTextFromMarkdown(markdown)).toEqual(scrolls);
 	const emptyFirst: ExtractedText = {
-		chapters: [{ blocks: [] }, { blocks: [paragraph(run("Text."))] }],
+		contents: [
+			{ kind: "Scroll", blocks: [] },
+			{ kind: "Scroll", blocks: [paragraph(run("Text."))] },
+		],
 	};
 	expect(
 		extractedTextFromMarkdown(extractedTextToMarkdown(emptyFirst)),
 	).toEqual(emptyFirst);
 });
 
-test("an empty document is one empty Chapter", () => {
+test("an empty document is one empty Scroll", () => {
 	expect(extractedTextFromMarkdown("")).toEqual({
-		chapters: [{ blocks: [] }],
+		contents: [{ kind: "Scroll", blocks: [] }],
 	});
-	expect(extractedTextToMarkdown({ chapters: [{ blocks: [] }] })).toBe("");
+	expect(
+		extractedTextToMarkdown({ contents: [{ kind: "Scroll", blocks: [] }] }),
+	).toBe("");
+});
+
+test("<section> opens a nested Section with its title; </section> closes it", () => {
+	const nested: ExtractedText = {
+		contents: [
+			{ kind: "Scroll", blocks: [paragraph(run("Vorwort."))] },
+			{
+				kind: "Section",
+				title: 'Erster Teil: „Anfang" & mehr',
+				contents: [
+					{
+						kind: "Section",
+						title: "Buch 1",
+						contents: [
+							{
+								kind: "Scroll",
+								blocks: [paragraph(run("Ohne Titel."))],
+							},
+							{
+								kind: "Scroll",
+								heading: { runs: [run("Kapitel 2")] },
+								blocks: [],
+							},
+						],
+					},
+					{
+						kind: "Section",
+						title: "Leer",
+						contents: [{ kind: "Scroll", blocks: [] }],
+					},
+					{ kind: "Scroll", blocks: [paragraph(run("Nachwort."))] },
+				],
+			},
+			{ kind: "Scroll", blocks: [] },
+		],
+	};
+	const markdown = [
+		"Vorwort.",
+		'<section title="Erster Teil: „Anfang&quot; &amp; mehr">',
+		'<section title="Buch 1">',
+		"Ohne Titel.",
+		"# Kapitel 2",
+		"</section>",
+		'<section title="Leer">',
+		"</section>",
+		"Nachwort.",
+		"</section>",
+		"#",
+		"",
+	]
+		.join("\n\n")
+		.replace(/\n\n$/u, "\n");
+	expect(extractedTextSchema.parse(nested)).toEqual(nested);
+	expect(extractedTextToMarkdown(nested)).toBe(markdown);
+	expect(extractedTextFromMarkdown(markdown)).toEqual(nested);
+});
+
+test("a Section left open closes at the end; a stray </section> or untitled <section> is not one", () => {
+	expect(
+		extractedTextFromMarkdown(
+			'</section>\n\n<section title="">\n\n<section title="Teil">\n\n# Eins',
+		),
+	).toEqual({
+		contents: [
+			{
+				kind: "Scroll",
+				blocks: [paragraph(run('<section title="">'))],
+			},
+			{
+				kind: "Section",
+				title: "Teil",
+				contents: [
+					{
+						kind: "Scroll",
+						heading: { runs: [run("Eins")] },
+						blocks: [],
+					},
+				],
+			},
+		],
+	});
 });
 
 test("keeps the words of lists, tables, quotes, links and code; drops images, footnotes and rules", () => {
@@ -297,7 +409,7 @@ test("keeps the words of lists, tables, quotes, links and code; drops images, fo
 		"Zeile zwei",
 		"```",
 	].join("\n");
-	expect(extractedTextFromMarkdown(markdown).chapters[0]?.blocks).toEqual([
+	expect(blocksOf(extractedTextFromMarkdown(markdown))).toEqual([
 		paragraph(run("Zitiert "), run("hier", "Italic"), run(" weiter")),
 		paragraph(run("erster Punkt")),
 		paragraph(run("zweiter Punkt")),
@@ -312,15 +424,14 @@ test("keeps the words of lists, tables, quotes, links and code; drops images, fo
 
 test("reads Markdown as NFC", () => {
 	expect(
-		extractedTextFromMarkdown("Mädchen".normalize("NFD")).chapters[0]
-			?.blocks,
+		blocksOf(extractedTextFromMarkdown("Mädchen".normalize("NFD"))),
 	).toEqual([paragraph(run("Mädchen".normalize("NFC")))]);
 });
 
 /** Each line's characters, styles kept on all but whitespace. */
 function styledLines(text: ExtractedText): string[][] {
-	return text.chapters.flatMap((chapter) =>
-		chapter.blocks.flatMap((block) => {
+	return scrollsOf(text.contents).flatMap((scroll) =>
+		scroll.blocks.flatMap((block) => {
 			if (block.kind !== "Paragraph") return [];
 			const lines: string[][] = [[]];
 			for (const inline of block.inlines)
@@ -406,7 +517,7 @@ test("every character keeps its Inline Styles through Markdown (seeded fuzz)", (
 			inlines.push(styles ? run(text, ...styles) : run(text));
 		}
 		const text: ExtractedText = {
-			chapters: [{ blocks: [paragraph(...inlines)] }],
+			contents: [{ kind: "Scroll", blocks: [paragraph(...inlines)] }],
 		};
 		const markdown = extractedTextToMarkdown(text);
 		const reread = extractedTextFromMarkdown(markdown);

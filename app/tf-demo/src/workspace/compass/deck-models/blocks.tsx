@@ -13,15 +13,15 @@ import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import {
 	cleanWord,
 	type DummyNote,
-	type DummyText,
+	type DummyScroll,
 	type NoteLink,
 	noteFor,
+	type ScrollFocus,
 	type SourceContext,
-	type TextFocus,
 } from "./dummy";
 import { type Subject, subjectOfLink } from "./model";
 
-/** A Note's Blocks and a Text's Sentences, and the Segments inside them. */
+/** A Note's Blocks and a Scroll's Sentences, and the Segments inside them. */
 
 /** How many Source Contexts a Card shows. A Sheet's page is the spec's. */
 const CARD_CONTEXTS = 2;
@@ -74,9 +74,9 @@ function Segment({
 	);
 }
 
-/** A Text's Blocks: its Sentences, every word a Segment once it is a Sheet. */
-export function TextBlock({
-	text,
+/** A Scroll's Blocks: its Sentences, every word a Segment once it is a Sheet. */
+export function ScrollBlock({
+	scroll,
 	focus,
 	form,
 	shown,
@@ -84,8 +84,8 @@ export function TextBlock({
 	onSegment,
 	onSegmentDown,
 }: {
-	text: DummyText;
-	focus: TextFocus | null;
+	scroll: DummyScroll;
+	focus: ScrollFocus | null;
 	form: NoteForm;
 	shown: boolean;
 	litWord: string | null;
@@ -122,7 +122,7 @@ export function TextBlock({
 			data-block="text"
 			className={`font-serif text-ink ${sheet ? "pt-4 text-[1.15rem] leading-[1.71rem]" : "text-[0.9rem] leading-relaxed"}`}
 		>
-			{text.sentences.map((sentence, sentenceIndex) => {
+			{scroll.sentences.map((sentence, sentenceIndex) => {
 				const focused = focus?.sentence === sentenceIndex;
 				return (
 					<p
@@ -273,7 +273,7 @@ export function ContextsBlock({
 }
 
 function contextKey(context: SourceContext): string {
-	return `${context.textId ?? "filler"}:${context.sentence.toString()}:${context.words.join(" ")}`;
+	return `${context.scrollId ?? "filler"}:${context.sentence.toString()}:${context.words.join(" ")}`;
 }
 
 /** The Note's lines. The same in every form; a Card only clips them. */
@@ -317,7 +317,7 @@ export function LinksBlock({
 		>
 			{note.links.map((link) => {
 				const label =
-					link.kind === "Text"
+					link.kind === "Scroll"
 						? `↩ ${link.label} (${link.focus.word})`
 						: link.label;
 				return (

@@ -18,8 +18,8 @@ export type PlaygroundSnapshot = {
 			| FunctionReturnType<typeof api.shadowNotes.get>
 		>
 	>;
-	texts: Record<
+	scrolls: Record<
 		string,
-		NonNullable<FunctionReturnType<typeof api.textViews.get>>
+		NonNullable<FunctionReturnType<typeof api.scrollViews.get>>
 	>;
 };

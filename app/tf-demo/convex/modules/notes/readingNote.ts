@@ -26,7 +26,7 @@ import { loadPersonalAnnotation } from "../../personalAnnotations";
 import {
 	projectSentenceView,
 	sentenceViewValidator,
-} from "../text/sentenceView";
+} from "../scroll/sentenceView";
 import {
 	pendingRelationProjectionValidator,
 	projectPendingRelations,
@@ -274,7 +274,7 @@ export const sourceContextPageValidator = v.object({
 	page: v.array(
 		v.object({
 			attestationId: v.id("attestations"),
-			textId: v.id("texts"),
+			scrollId: v.id("scrolls"),
 			sentencePosition: v.number(),
 			sentenceSnippet: v.string(),
 			segments: v.array(sourceSegmentValidator),
@@ -339,7 +339,7 @@ export const readingNoteValidator = v.object({
 
 export type SourceContextProjection = {
 	readonly attestationId: Id<"attestations">;
-	readonly textId: Id<"texts">;
+	readonly scrollId: Id<"scrolls">;
 	readonly sentencePosition: number;
 	readonly sentenceSnippet: string;
 	/** Every Segment of the source Sentence, in order, so members render by index. */
@@ -717,7 +717,7 @@ async function loadStructuralReferencesForReading(
 
 /**
  * One occurrence inside its source Sentence. A Reading's own Definition
- * Text never counts as a Source Context for that Reading, so a definition
+ * Scroll never counts as a Source Context for that Reading, so a definition
  * that mentions its headword does not cite itself.
  */
 async function projectSourceContext(
@@ -730,15 +730,15 @@ async function projectSourceContext(
 	if (!members) return null;
 	const sentence = await ctx.db.get(members.sentenceId);
 	if (!sentence) return null;
-	const text = await ctx.db.get(sentence.textId);
-	if (!text) return null;
-	if (text.origin?.readingKey === ownerReadingKey) return null;
+	const scroll = await ctx.db.get(sentence.scrollId);
+	if (!scroll) return null;
+	if (scroll.origin?.readingKey === ownerReadingKey) return null;
 	const source = await projectOccurrenceSource(
 		ctx,
 		{
 			attestationId,
 			sentence,
-			text,
+			scroll,
 			memberSegmentIndices: members.memberSegmentIndices,
 		},
 		visitorId,

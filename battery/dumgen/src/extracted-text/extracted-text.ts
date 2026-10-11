@@ -1,8 +1,9 @@
 /**
  * Extracted Text: the stored form every Extraction produces and Intake
- * keeps, between Extraction and `splitText` (map #1175, #1176). It holds
- * Chapters of Headings and Paragraphs, with Line Breaks, Inline Styles and
- * Original Locations, as running text not yet split into Sentences. It
+ * keeps, between Extraction and `splitText` (map #1175, #1176, #1189). It
+ * holds Scrolls of Headings and Paragraphs, nested in Sections, with Line
+ * Breaks, Inline Styles and Original Locations, as running text not yet
+ * split into Sentences. It
  * carries no language: Intake detects one per Sentence later (Dumgen ADR
  * 0001). Text is NFC and in logical order, so Hebrew is stored as read.
  * Markdown is only an import and an export of it (`markdown.ts`).
@@ -69,7 +70,7 @@ export type Run = Located & {
 export type LineBreak = { readonly kind: "LineBreak" };
 
 /**
- * A Heading inside a Chapter. Levels count as in HTML, the Chapter's own
+ * A Heading inside a Scroll. Levels count as in HTML, the Scroll's own
  * Heading being level 1, so the ones inside run from 2 to 6.
  */
 export type Heading = Located & {
@@ -87,34 +88,50 @@ export type Paragraph = Located & {
 	readonly inlines: readonly (Run | LineBreak)[];
 };
 
-/** A Chapter's own Heading, its title. */
-type ChapterHeading = Located & { readonly runs: readonly Run[] };
+/** A Scroll's own Heading, its title. */
+type ScrollHeading = Located & { readonly runs: readonly Run[] };
 
 /**
- * The piece of a Text that Intake processes and a Learner opens as a
- * whole: its own Heading, if it has one, and its Headings and Paragraphs.
- * A Chapter may hold no block, as a part's title page does.
+ * What Intake processes and a Learner opens as a whole: its own Heading,
+ * if it has one, and its Headings and Paragraphs. A Scroll may hold no
+ * block, as a part's title page does.
  */
-export type Chapter = {
-	readonly heading?: ChapterHeading;
+export type Scroll = {
+	readonly kind: "Scroll";
+	readonly heading?: ScrollHeading;
 	readonly blocks: readonly (Heading | Paragraph)[];
 };
 
-/** The Extracted Text of one Original: its Chapters in order, at least one. */
+/**
+ * A container of Sections and Scrolls, at least one, in reading order: a
+ * book, a part of one, a season. Its title is one line without whitespace
+ * at either end, shown where the Section is listed rather than read as a
+ * Sentence.
+ */
+export type Section = {
+	readonly kind: "Section";
+	readonly title: string;
+	readonly contents: readonly (Section | Scroll)[];
+};
+
+/**
+ * The Extracted Text of one Original: its Sections and Scrolls in reading
+ * order, at least one. A Scroll here has no Section above it.
+ */
 export type ExtractedText = {
-	readonly chapters: readonly Chapter[];
+	readonly contents: readonly (Section | Scroll)[];
 };
 
 const paragraphBreak = /\n[^\S\n]*\n\s*/u;
 
 /**
- * The Extracted Text of pasted text: one Chapter without Original
- * Locations. A blank line ends a Paragraph, and every other line break is
- * kept as a Line Break, since only a later step can tell verse from a hard
- * wrap. Lines are trimmed and the text is NFC; blank text gives an empty
- * Chapter.
+ * The one Scroll that is pasted text's Extracted Text: no Heading, no
+ * Section, no Original Locations. A blank line ends a Paragraph, and every
+ * other line break is kept as a Line Break, since only a later step can
+ * tell verse from a hard wrap. Lines are trimmed and the text is NFC; blank
+ * text gives an empty Scroll.
  */
-export function extractPastedText(text: string): ExtractedText {
+export function extractPastedText(text: string): Scroll {
 	const blocks = text
 		.normalize("NFC")
 		.replace(/\r\n?/gu, "\n")
@@ -135,5 +152,5 @@ export function extractPastedText(text: string): ExtractedText {
 				]),
 			}),
 		);
-	return { chapters: [{ blocks }] };
+	return { kind: "Scroll", blocks };
 }

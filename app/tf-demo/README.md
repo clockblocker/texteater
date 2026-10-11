@@ -16,7 +16,7 @@ bun run demo
 The first run creates a local deployment and writes `VITE_CONVEX_URL` to
 `.env.local`. Later runs reuse that deployment and its data.
 
-Text intake needs `TYPESAFE_API_KEY` on the Convex deployment: Dumgen's
+Intake needs `TYPESAFE_API_KEY` on the Convex deployment: Dumgen's
 `segment.inUnits` asks jev for each Sentence's units. Convex actions read
 deployment environment variables, not your shell or an `.env.local`, so
 `bun run dev` first runs `bun run env:sync`. It pushes each key the
@@ -67,7 +67,7 @@ machinery, and presentation components come from the `lego` battery.
 ## Reset and validate
 
 The UI can clear Visitor Encounter history, clear the shared linguistic graph,
-or strip derived analysis from one Text while preserving its source Sentences.
+or strip derived analysis from one Scroll while preserving its source Sentences.
 These operations require confirmation, and the two shared ones need
 `TF_DEMO_ADMIN=1`. `bun run reset` performs the bounded full demo reset while
 keeping the local deployment selected.

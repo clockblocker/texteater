@@ -5,7 +5,7 @@ import {
 	foldedCanonicalForm,
 	lemmaIdentityKey,
 } from "../../server/linguisticIdentity";
-import type { TextLanguage } from "../../shared/supported-target-language";
+import type { ScrollLanguage } from "../../shared/supported-target-language";
 import type { Id, TableNames } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { syncDefinitionText } from "./definitionTexts";
@@ -15,7 +15,7 @@ export const MAX_STRUCTURAL_REFERENCES_PER_READING = 200;
 const descriptorKeys = ["canonicalForm", "family", "kind", "language"];
 
 export type ShadowDescriptor = {
-	readonly language: TextLanguage;
+	readonly language: ScrollLanguage;
 	readonly canonicalForm: string;
 	readonly family: Dumling.Family;
 	readonly kind: Dumling.Kind;
@@ -76,7 +76,7 @@ function parseNormalizedString(
 }
 
 type ShadowDescriptorCandidate = {
-	readonly language: TextLanguage;
+	readonly language: ScrollLanguage;
 	readonly canonicalForm: string;
 	readonly family: string;
 	readonly kind: string;

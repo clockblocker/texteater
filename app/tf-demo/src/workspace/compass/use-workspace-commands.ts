@@ -143,7 +143,7 @@ export function useWorkspaceCommands<S>({
 			if (!lifted.held) return;
 			dispatch({ type: "Expand", paneId: sheet.paneId });
 		},
-		/** A Note or a Text dropped on an edge is the new Pane's Ground: a Floating Pane. */
+		/** A Note or a Scroll dropped on an edge is the new Pane's Ground: a Floating Pane. */
 		splitPane(paneId: string, edge: Edge, size: number) {
 			dispatch({ type: "Expand", paneId, edge, size });
 		},

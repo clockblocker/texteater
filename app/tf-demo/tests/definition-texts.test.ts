@@ -11,13 +11,13 @@ import {
 	STALE_DEFINITION_TEXT_RUN_AFTER_MS,
 	syncDefinitionText,
 } from "../convex/model/definitionTexts";
-import { listLibraryTexts } from "../convex/texts";
+import { listLibraryScrolls } from "../convex/scrolls";
 import {
 	emojiDescriptionOf,
 	foldedCanonicalForm,
 } from "../server/linguisticIdentity";
 import { unresolvedUnits } from "../server/storedSegments";
-import { textTitle } from "../shared/text-title";
+import { scrollTitle } from "../shared/scroll-title";
 import { NOTE_STUDY_DATABASE } from "../tooling/notes-study/note-study-dummy-database";
 import { proseSegments } from "../tooling/playground-example-collection";
 import {
@@ -103,7 +103,7 @@ async function claimRun(t: TestConvexDb, ownerReadingKey = READING_KEY) {
 	return runNumber;
 }
 
-async function tableRows<Table extends "definitionTexts" | "texts">(
+async function tableRows<Table extends "definitionTexts" | "scrolls">(
 	t: TestConvexDb,
 	table: Table,
 ) {
@@ -175,7 +175,7 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 			...segmentedDefinition("Ein Gebäude."),
 		}),
 	).toBe("Ready");
-	const [text] = await tableRows(t, "texts");
+	const [text] = await tableRows(t, "scrolls");
 	expect(text).toMatchObject({
 		sourceText: "Ein Gebäude.",
 		origin: { kind: "Definition", readingKey: READING_KEY },
@@ -190,7 +190,7 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 	expect((await tableRows(t, "definitionTexts"))[0]).toMatchObject({
 		state: "Ready",
 		materializedDefinition: "Ein Gebäude.",
-		textId: text._id,
+		scrollId: text._id,
 	});
 	expect(
 		await t.mutation(internal.definitionTexts.settle, {
@@ -201,20 +201,20 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 	).toBe("Settled");
 
 	// The library never lists a Definition Text.
-	expect(await t.query(api.texts.list, {})).toEqual([]);
+	expect(await t.query(api.scrolls.list, {})).toEqual([]);
 
 	// Same definition again: nothing to do.
 	await sync(t, { definition: "Ein Gebäude." });
 	expect(await scheduledRuns(t)).toHaveLength(1);
 
-	// A corrected definition: the old Text goes, the new one is written.
+	// A corrected definition: the old Scroll goes, the new one is written.
 	await sync(t, { definition: "Ein Bauwerk." });
 	expect(await scheduledRuns(t)).toHaveLength(2);
-	await t.mutation(internal.definitionTexts.deleteTextRows, {
+	await t.mutation(internal.definitionTexts.deleteScrollRows, {
 		ownerReadingKey: READING_KEY,
-		textId: text._id,
+		scrollId: text._id,
 	});
-	expect(await tableRows(t, "texts")).toHaveLength(0);
+	expect(await tableRows(t, "scrolls")).toHaveLength(0);
 	expect(await sentenceAndSegmentCounts(t)).toEqual({
 		sentences: 0,
 		segments: 0,
@@ -236,17 +236,17 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 		language: "de",
 		...segmentedDefinition("Ein Bauwerk."),
 	});
-	const [replacement] = await tableRows(t, "texts");
+	const [replacement] = await tableRows(t, "scrolls");
 	expect(replacement?.sourceText).toBe("Ein Bauwerk.");
-	if (!replacement) throw new Error("Expected a replacement Text.");
+	if (!replacement) throw new Error("Expected a replacement Scroll.");
 
 	// Retracted: the pointer clears and settling removes the state row.
 	await sync(t, {});
 	expect(await scheduledRuns(t)).toHaveLength(3);
 	const retractingRun = await claimRun(t);
-	await t.mutation(internal.definitionTexts.deleteTextRows, {
+	await t.mutation(internal.definitionTexts.deleteScrollRows, {
 		ownerReadingKey: READING_KEY,
-		textId: replacement._id,
+		scrollId: replacement._id,
 	});
 	expect(
 		await t.mutation(internal.definitionTexts.settle, {
@@ -256,7 +256,7 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 		}),
 	).toBe("Settled");
 	expect(await tableRows(t, "definitionTexts")).toHaveLength(0);
-	expect(await tableRows(t, "texts")).toHaveLength(0);
+	expect(await tableRows(t, "scrolls")).toHaveLength(0);
 });
 
 test("a definition that changed mid-run is rescheduled in the settling transaction", async () => {
@@ -366,7 +366,7 @@ test("a materialization that never settles is run again by its watchdog, and its
 		materializedDefinition: "Neu.",
 	});
 	expect(
-		(await tableRows(t, "texts")).map(({ sourceText }) => sourceText),
+		(await tableRows(t, "scrolls")).map(({ sourceText }) => sourceText),
 	).toEqual(["Neu."]);
 	// A late watchdog of the settled run finds nothing to recover.
 	expect(
@@ -494,17 +494,17 @@ function recordingReader<Reader extends object>(
 	});
 }
 
-test("the library lists the newest Visitor Texts through an index range without Definition Texts", async () => {
+test("the library lists the newest Visitor Scrolls through an index range without Definition Texts", async () => {
 	const t = createTestConvex();
 	await t.run(async (ctx) => {
 		for (let index = 0; index < 200; index += 1) {
 			if (index % 70 === 0) {
-				await ctx.db.insert("texts", {
+				await ctx.db.insert("scrolls", {
 					submissionKey: `visitor:${index}`,
 					sourceText: `Visitor ${index}`,
 				});
 			}
-			await ctx.db.insert("texts", {
+			await ctx.db.insert("scrolls", {
 				submissionKey: `definition:${index}`,
 				sourceText: `Definition ${index}`,
 				origin: { kind: "Definition", readingKey: `reading:${index}` },
@@ -513,23 +513,25 @@ test("the library lists the newest Visitor Texts through an index range without 
 	});
 
 	expect(
-		(await t.query(api.texts.list, {})).map(({ sourceText }) => sourceText),
+		(await t.query(api.scrolls.list, {})).map(
+			({ sourceText }) => sourceText,
+		),
 	).toEqual(["Visitor 140", "Visitor 70", "Visitor 0"]);
 
-	// The read set is one index range over Visitor Texts, never a filtered scan.
+	// The read set is one index range over Visitor Scrolls, never a filtered scan.
 	const calls: string[] = [];
 	await t.run((ctx) =>
-		listLibraryTexts({ ...ctx, db: recordingReader(ctx.db, calls) }),
+		listLibraryScrolls({ ...ctx, db: recordingReader(ctx.db, calls) }),
 	);
 	expect(calls).toEqual([
-		"query:texts",
+		"query:scrolls",
 		"withIndex:by_origin_kind",
 		"order:desc",
 		"take",
 	]);
 	const visitorRange = await t.run((ctx) =>
 		ctx.db
-			.query("texts")
+			.query("scrolls")
 			.withIndex("by_origin_kind", (q) => q.eq("origin.kind", undefined))
 			.collect(),
 	);
@@ -574,8 +576,9 @@ test(
 				)
 				.unique();
 			const sentenceId = definitionRow?.sentenceId;
-			const textId = definitionRow?.textId;
-			if (!sentenceId || !textId) throw new Error("No Definition Text.");
+			const scrollId = definitionRow?.scrollId;
+			if (!sentenceId || !scrollId)
+				throw new Error("No Definition Text.");
 			const segments = (
 				await ctx.db
 					.query("segments")
@@ -615,7 +618,7 @@ test(
 				await ctx.db.insert("visitorEncounters", {
 					requestId: `request:${segment._id}`,
 					visitorId: "visitor-1",
-					textId,
+					scrollId,
 					sentenceId,
 					segmentId: segment._id,
 					attestationId,
@@ -638,7 +641,7 @@ test(
 			);
 			return {
 				definedReadingId: definedReading._id,
-				definitionTextId: textId,
+				definitionScrollId: scrollId,
 				citedReadingId: citedReading._id,
 				citedAttestation,
 				selfAttestation,
@@ -686,12 +689,12 @@ test(
 			emojiDescription: definedEmojiDescription,
 			canonicalForm: defined.reading.lemma.canonicalForm,
 		});
-		// Go to source pushes the Definition Text as a Cover, like any Text.
+		// Go to source pushes the Definition Text as a Cover, like any Scroll.
 		expect(context?.target).toEqual({
-			kind: "Text",
-			textId: seeded.definitionTextId,
+			kind: "Scroll",
+			scrollId: seeded.definitionScrollId,
 			focusAttestationId: seeded.citedAttestation,
-			title: textTitle({ sourceText: definition }),
+			title: scrollTitle({ sourceText: definition }),
 		});
 		expect(context?.segments.length).toBeGreaterThan(0);
 		expect(context?.memberSegmentIndices).toEqual([
@@ -795,7 +798,7 @@ test("stripping analyses keeps a surviving Reading's definition clickable and re
 	// An article entry: no Attestation, so stripping never prunes it.
 	await insertUnit(t, "reading:der");
 	await materializeDefinition(t, "reading:der", "Ein Artikel.");
-	// Bank is met only in a Visitor Text; its definition is the only source
+	// Bank is met only in a Visitor Scroll; its definition is the only source
 	// of Ufer, whose own definition must leave with it.
 	const bank = await insertUnit(t, "reading:bank");
 	const ufer = await insertUnit(t, "reading:ufer");
@@ -807,8 +810,8 @@ test("stripping analyses keeps a surviving Reading's definition clickable and re
 	expect(ein?.text).toBe("Ein");
 	await attestSegment(t, ufer, uferWord?._id);
 	await materializeDefinition(t, "reading:ufer", "Ein Rand.");
-	const visitorText = await submitText(t, [["Bank", "."]]);
-	await attestSegment(t, bank, visitorText.segmentIds[0]?.[0]);
+	const visitorScroll = await submitText(t, [["Bank", "."]]);
+	await attestSegment(t, bank, visitorScroll.segmentIds[0]?.[0]);
 
 	await stripAllAnalyses(actionContext(t) as unknown as ActionCtx);
 
@@ -821,7 +824,7 @@ test("stripping analyses keeps a surviving Reading's definition clickable and re
 		),
 	).toEqual([["reading:der", "Ready"]]);
 	expect(
-		(await tableRows(t, "texts")).map(({ origin }) => origin?.readingKey),
+		(await tableRows(t, "scrolls")).map(({ origin }) => origin?.readingKey),
 	).toEqual(["reading:der", undefined]);
 	expect(
 		await t.run(async (ctx) =>

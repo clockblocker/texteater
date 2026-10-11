@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import {
-	assertSubmittedText,
+	assertSubmittedScroll,
 	matchesStoredAnalysis,
-} from "../convex/modules/text/submission";
+} from "../convex/modules/scroll/submission";
 import { assertResolvedClickProposal } from "../convex/persistence";
 import {
 	lemmaIdentityKey,
@@ -59,10 +59,10 @@ function submission(sentences: ReturnType<typeof sentence>[]) {
 	};
 }
 
-describe("assertSubmittedText", () => {
+describe("assertSubmittedScroll", () => {
 	test("accepts a consistent submission", () => {
 		expect(() =>
-			assertSubmittedText(
+			assertSubmittedScroll(
 				submission([
 					sentence(0, ["Ich", "gehe."]),
 					sentence(1, ["Du", "auch."]),
@@ -73,7 +73,7 @@ describe("assertSubmittedText", () => {
 
 	test("rejects an empty submission key", () => {
 		expect(() =>
-			assertSubmittedText({
+			assertSubmittedScroll({
 				...submission([sentence(0, ["Hallo."])]),
 				submissionKey: " ",
 			}),
@@ -82,10 +82,10 @@ describe("assertSubmittedText", () => {
 
 	test("rejects a negative or fractional position", () => {
 		expect(() =>
-			assertSubmittedText(submission([sentence(-1, ["Hallo."])])),
+			assertSubmittedScroll(submission([sentence(-1, ["Hallo."])])),
 		).toThrow("sentence.position must be a non-negative safe integer.");
 		expect(() =>
-			assertSubmittedText(
+			assertSubmittedScroll(
 				submission([sentence(0, ["Hallo."], { paragraph: 0.5 })]),
 			),
 		).toThrow("sentence.paragraph must be a non-negative safe integer.");
@@ -93,7 +93,7 @@ describe("assertSubmittedText", () => {
 
 	test("rejects repeated positions and Segmented Sentence IDs", () => {
 		expect(() =>
-			assertSubmittedText(
+			assertSubmittedScroll(
 				submission([
 					sentence(0, ["Hallo."]),
 					sentence(0, ["Tschüss."], { segmentedSentenceId: "other" }),
@@ -101,7 +101,7 @@ describe("assertSubmittedText", () => {
 			),
 		).toThrow("Sentence positions must be unique.");
 		expect(() =>
-			assertSubmittedText(
+			assertSubmittedScroll(
 				submission([
 					sentence(0, ["Hallo."]),
 					sentence(1, ["Tschüss."], {
@@ -114,7 +114,7 @@ describe("assertSubmittedText", () => {
 
 	test("rejects a Sentence with no Segments or too many", () => {
 		expect(() =>
-			assertSubmittedText(
+			assertSubmittedScroll(
 				submission([
 					sentence(0, [], { segments: [], stitchedText: "x" }),
 				]),
@@ -127,7 +127,7 @@ describe("assertSubmittedText", () => {
 			() => ({ kind: "ResolvableText" as const, text: "a" }),
 		);
 		expect(() =>
-			assertSubmittedText(submission([sentence(0, [], { segments })])),
+			assertSubmittedScroll(submission([sentence(0, [], { segments })])),
 		).toThrow(
 			`A sentence must contain 1-${MAX_SEGMENTS_PER_SENTENCE} Segments.`,
 		);
@@ -135,7 +135,7 @@ describe("assertSubmittedText", () => {
 
 	test("rejects Segments that do not reconstruct the stitched text", () => {
 		expect(() =>
-			assertSubmittedText(
+			assertSubmittedScroll(
 				submission([
 					sentence(0, ["Hallo"], { stitchedText: "Hallo." }),
 				]),
@@ -145,7 +145,7 @@ describe("assertSubmittedText", () => {
 
 	test("rejects an empty Segment and a non-whitespace Whitespace Segment", () => {
 		expect(() =>
-			assertSubmittedText(
+			assertSubmittedScroll(
 				submission([
 					sentence(0, [], {
 						segments: [
@@ -157,7 +157,7 @@ describe("assertSubmittedText", () => {
 			),
 		).toThrow("segment.text must not be empty.");
 		expect(() =>
-			assertSubmittedText(
+			assertSubmittedScroll(
 				submission([
 					sentence(0, [], {
 						segments: [
@@ -172,7 +172,7 @@ describe("assertSubmittedText", () => {
 
 	test("rejects units that do not cover the Sentence", () => {
 		expect(() =>
-			assertSubmittedText(
+			assertSubmittedScroll(
 				submission([{ ...sentence(0, ["Ich", "gehe."]), units: [] }]),
 			),
 		).toThrow("Segment 0 belongs to no unit.");

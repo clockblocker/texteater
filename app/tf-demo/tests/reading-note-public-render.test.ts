@@ -180,7 +180,7 @@ function readingNote(): ReadingNote {
 			page: [
 				{
 					attestationId: "attestation-1",
-					textId: "text-1",
+					scrollId: "text-1",
 					sentencePosition: 0,
 					sentenceSnippet: "A source sentence.",
 					segments: [
@@ -193,10 +193,10 @@ function readingNote(): ReadingNote {
 					],
 					memberSegmentIndices: [2],
 					memberTexts: ["source"],
-					origin: { kind: "Text" },
+					origin: { kind: "Scroll" },
 					target: {
-						kind: "Text",
-						textId: "text-1",
+						kind: "Scroll",
+						scrollId: "text-1",
 						focusAttestationId: "attestation-1",
 						title: "A source sentence.",
 					},

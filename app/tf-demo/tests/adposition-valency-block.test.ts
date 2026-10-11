@@ -159,16 +159,16 @@ function readingNote(
 		sourceContexts: {
 			page: realizedCases.map((realizedCase, index) => ({
 				attestationId: `attestation-${index}`,
-				textId: "text-1",
+				scrollId: "text-1",
 				sentencePosition: index,
 				sentenceSnippet: "A source sentence.",
 				segments: [{ kind: "ResolvableText", text: canonicalForm }],
 				memberSegmentIndices: [0],
 				memberTexts: [canonicalForm],
-				origin: { kind: "Text" },
+				origin: { kind: "Scroll" },
 				target: {
-					kind: "Text",
-					textId: "text-1",
+					kind: "Scroll",
+					scrollId: "text-1",
 					focusAttestationId: `attestation-${index}`,
 					title: "A source sentence.",
 				},

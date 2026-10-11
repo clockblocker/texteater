@@ -1,21 +1,21 @@
 # Intake-owned units
 
 The contract between Dumgen's `segment.inUnits` (Dumgen ADR 0007) and its
-host, tf-demo: what intake produces for a Text, what tf-demo stores, and what
+host, tf-demo: what intake produces for a Scroll, what tf-demo stores, and what
 hover and a click read. The shapes and the API are TSDoc on `dumgen`'s
 exports (`src/index.ts`, `src/segment/segmented-sentence.ts`). The earlier
 two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contract is in this file's history before #850.
 
 ## Intake
 
-1. A pasted text becomes an Extracted Text (`extractPastedText`): one
-   Chapter of Paragraphs and Line Breaks. tf-demo stores it on the Text, and
-   a later run of the same submission starts from the stored one, read back
-   with `parseExtractedText` (#1178).
-2. `splitExtractedText(extractedText)` splits it into paragraphs and
-   Sentences in code with the language-neutral `splitText` (#1187). No model
-   is asked.
-3. tf-demo reads German Texts only for now. A Text submitted with another
+1. A pasted text becomes an Extracted Text of one Scroll
+   (`extractPastedText`): Paragraphs and Line Breaks, no Section. tf-demo
+   stores that Scroll's Extracted Text on its Scroll, and a later run of the
+   same submission starts from the stored one, read back with `parseScroll`
+   (#1178, #1189).
+2. `splitScroll(scroll)` splits it into paragraphs and Sentences in code
+   with the language-neutral `splitText` (#1187). No model is asked.
+3. tf-demo reads German Scrolls only for now. A Scroll submitted with another
    target language is rejected before any jev call; `language` stays a
    parameter so Hebrew can follow.
 4. `createDumgen({ jev: createTypeSafeAsk({ apiKey }), onOperation })` is the
@@ -33,12 +33,12 @@ two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contra
    Language (none when undetermined), its normalized text and no Segments,
    and shown in the reader as plain text.
 6. A Sentence whose jev calls fail in `segment.inUnits` comes back marked
-   `failed`, with its Segments and no units, and the Text is stored anyway;
+   `failed`, with its Segments and no units, and the Scroll is stored anyway;
    the reason is only in the operation's trace. Only a non-German target
    language, a blank Sentence, a failed language judgment, a bug or an
    interruption fails the whole submission.
 7. Intake is not deterministic, so a stored submission is never segmented
-   again: resubmitting the same key and source returns the stored Text.
+   again: resubmitting the same key and source returns the stored Scroll.
 
 ## What tf-demo stores
 
@@ -64,7 +64,7 @@ two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contra
 
 ## What hover and a click read
 
-- `textViews.get` gives every ResolvableText Segment its whole unit. The
+- `scrollViews.get` gives every ResolvableText Segment its whole unit. The
   reader builds one map per Sentence, so hover and focus light every member
   of the unit, discontinuous ones included, with no network call. A Segment
   that belongs to an Occurrence Attestation groups with the occurrence's
@@ -89,7 +89,7 @@ two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contra
 ## Live probe
 
 `bun run test:pipeline:live` in `app/tf-demo` asks for interactive
-authorization. It then submits one three-Sentence German Text through live
+authorization. It then submits one three-Sentence German Scroll through live
 jev, checks the stored units, hovers every member of every multi-Segment unit
 and clicks one. The 2026-10-02 run made 13 jev calls for its three Sentences,
 34,161 input tokens in all.

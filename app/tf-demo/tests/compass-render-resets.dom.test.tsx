@@ -66,7 +66,7 @@ const note: DummyNote = {
 	links: [],
 	tail: { form: "Reading", gloss: "house" },
 	contexts: Array.from({ length: 2 * CONTEXT_PAGE }, (_, sentence) => ({
-		textId: null,
+		scrollId: null,
 		sentence,
 		words: ["Das", "Haus", String(sentence)],
 	})),

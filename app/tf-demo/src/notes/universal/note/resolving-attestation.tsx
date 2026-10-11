@@ -25,7 +25,7 @@ type ResolvingAttestation = {
 	/** The Session ended without an occurrence: nothing is on its way any more. */
 	readonly settled: boolean;
 	readonly presentation: "Card" | "Sheet";
-	/** Opens the source Text. */
+	/** Opens the source Scroll. */
 	readonly follow: () => void;
 };
 
@@ -82,7 +82,7 @@ function ResolvingAttestationBody({
 					<SourceQuote
 						segments={input.segments}
 						memberSegmentIndices={input.memberSegmentIndices}
-						origin={{ kind: "Text" }}
+						origin={{ kind: "Scroll" }}
 						follow={input.follow}
 					/>
 				</NoteSection>

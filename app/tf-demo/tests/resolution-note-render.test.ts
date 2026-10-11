@@ -14,7 +14,7 @@ import { type NotePart, NotePartProvider } from "../src/workspace/note-part";
 import { WorkspaceInteractionProvider } from "../src/workspace/workspace-controller";
 
 const route = {
-	textId: "text-1" as Id<"texts">,
+	scrollId: "text-1" as Id<"scrolls">,
 	sentenceId: "sentence-1" as Id<"sentences">,
 	stitchedText: "Die Banken.",
 	clickedSegmentIndex: 2,
@@ -29,7 +29,7 @@ const source = {
 		{ kind: "Punctuation" as const, text: "." },
 	],
 	memberSegmentIndices: [2],
-	textTitle: "Die Banken.",
+	scrollTitle: "Die Banken.",
 };
 
 const grammar = {
@@ -670,7 +670,7 @@ test("the resolving Reading Note quotes the clicked occurrence of a repeated wor
 				{ kind: "Punctuation", text: "." },
 			],
 			memberSegmentIndices: [4],
-			textTitle: "Banken und Banken.",
+			scrollTitle: "Banken und Banken.",
 		},
 		grammar,
 		updatedAt: 1,

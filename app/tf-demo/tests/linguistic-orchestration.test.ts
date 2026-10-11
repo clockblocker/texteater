@@ -95,7 +95,7 @@ function context(
 		lemmaCandidates: [],
 		sentence: {
 			sentenceId: "sentence-1",
-			textId: "text-1",
+			scrollId: "text-1",
 			segmentedSentenceId: "sentence-1",
 			language: "de",
 			stitchedText: "Banken",

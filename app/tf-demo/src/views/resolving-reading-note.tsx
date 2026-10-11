@@ -140,7 +140,7 @@ function resolvingSourceContext(
 	const { segments, memberSegmentIndices } = note.source;
 	return {
 		attestationId,
-		textId: note.route.textId,
+		scrollId: note.route.scrollId,
 		sentencePosition: 0,
 		sentenceSnippet: note.route.stitchedText,
 		segments,
@@ -149,12 +149,12 @@ function resolvingSourceContext(
 			const segment = segments[index];
 			return segment ? [segment.text] : [];
 		}),
-		origin: { kind: "Text" },
+		origin: { kind: "Scroll" },
 		target: {
-			kind: "Text",
-			textId: note.route.textId,
+			kind: "Scroll",
+			scrollId: note.route.scrollId,
 			focusAttestationId: attestationId,
-			title: note.source.textTitle,
+			title: note.source.scrollTitle,
 		},
 	};
 }
@@ -225,12 +225,12 @@ function RenderedResolvingReading({
 						save: null,
 					},
 					// Nothing here has an identity yet; the only real destination is
-					// the source Text, reached without a focus on a placeholder occurrence.
+					// the source Scroll, reached without a focus on a placeholder occurrence.
 					follow: (target) => {
-						if (target.kind === "Text")
+						if (target.kind === "Scroll")
 							follow({
-								kind: "Text",
-								textId: target.textId,
+								kind: "Scroll",
+								scrollId: target.scrollId,
 								...(target.title
 									? { title: target.title }
 									: {}),

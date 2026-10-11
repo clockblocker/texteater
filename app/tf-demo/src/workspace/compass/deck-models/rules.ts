@@ -3,11 +3,11 @@
 export const RULES = [
 	{
 		move: "Click a word",
-		means: "Deals a Deck that belongs to the Sheet it was clicked in: the Text, or a Source Context inside a Note.",
+		means: "Deals a Deck that belongs to the Sheet it was clicked in: the Scroll, or a Source Context inside a Note.",
 	},
 	{
 		move: "Click a link",
-		means: "Pushes a Cover over this Pane. Go to source pushes the Text, scrolled to the Sentence.",
+		means: "Pushes a Cover over this Pane. Go to source pushes the Scroll, scrolled to the Sentence.",
 	},
 	{
 		move: "Drag a word or link",
@@ -27,7 +27,7 @@ export const RULES = [
 	},
 	{
 		move: "← on the Ground",
-		means: "Steps one rung down the line: Text › Library › Menu. The Text's Deck goes with it.",
+		means: "Steps one rung down the line: Scroll › Library › Menu. The Scroll's Deck goes with it.",
 	},
 	{
 		move: "X",
@@ -47,7 +47,7 @@ export const RULES = [
 	},
 	{
 		move: "Hold the Pane bar",
-		means: "About a second on a Rooted Ground's bar lifts the Text; the Pane steps down to the Library.",
+		means: "About a second on a Rooted Ground's bar lifts the Scroll; the Pane steps down to the Library.",
 	},
 	{
 		move: "Click the page, Esc",

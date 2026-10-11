@@ -86,7 +86,7 @@ function note(
 		target: { kind: "Resolution", requestId: "request-1" },
 		lifecycle,
 		route: {
-			textId: "text-1" as Id<"texts">,
+			scrollId: "text-1" as Id<"scrolls">,
 			sentenceId: "sentence-1" as Id<"sentences">,
 			stitchedText: "Wir verarbeiten Ihre Daten.",
 			clickedSegmentIndex: 2,
@@ -99,7 +99,7 @@ function note(
 				{ kind: "ResolvableText", text: "verarbeiten" },
 			],
 			memberSegmentIndices: [2],
-			textTitle: "Wir verarbeiten",
+			scrollTitle: "Wir verarbeiten",
 		},
 		unit: { segments: [2], route: unitRoute },
 		updatedAt: 1,
@@ -178,7 +178,7 @@ function dealtCards(cards: readonly WorkspaceCardTarget[]) {
 	}));
 }
 
-/** A Text on the first Pane's Ground, with the click's Cards dealt on it. */
+/** A Scroll on the first Pane's Ground, with the click's Cards dealt on it. */
 function deal(cards: readonly WorkspaceCardTarget[]) {
 	const start = run(
 		createWorkspace<WorkspaceSubject>(),
@@ -193,8 +193,8 @@ function deal(cards: readonly WorkspaceCardTarget[]) {
 			to: {
 				kind: "Sheet",
 				subject: {
-					kind: "Text",
-					target: { kind: "Text", textId: "text-1" },
+					kind: "Scroll",
+					target: { kind: "Scroll", scrollId: "text-1" },
 				},
 			},
 		},

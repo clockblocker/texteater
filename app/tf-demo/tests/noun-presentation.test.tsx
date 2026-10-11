@@ -90,14 +90,14 @@ test("a Reading Note pins its Heading, then its Source Contexts", () => {
 	const note = readingNote([
 		{
 			attestationId: "attestation-1",
-			textId: "text-1",
+			scrollId: "text-1",
 			sentencePosition: 0,
 			sentenceSnippet: "",
 			segments: [],
 			memberSegmentIndices: [],
 			memberTexts: [],
-			origin: { kind: "Text" },
-			target: { kind: "Text", textId: "text-1" },
+			origin: { kind: "Scroll" },
+			target: { kind: "Scroll", scrollId: "text-1" },
 		},
 	]);
 	const kinds: unknown[] = [];
@@ -326,7 +326,7 @@ function renderReading(
 	});
 }
 
-/** The Source Contexts Block of a Reading Note met in one Text Sentence. */
+/** The Source Contexts Block of a Reading Note met in one Scroll Sentence. */
 function sourceQuote(
 	segments: readonly unknown[],
 	memberSegmentIndices: readonly number[],
@@ -334,14 +334,14 @@ function sourceQuote(
 	const note = readingNote([
 		{
 			attestationId: "attestation-1",
-			textId: "text-1",
+			scrollId: "text-1",
 			sentencePosition: 0,
 			sentenceSnippet: "",
 			segments,
 			memberSegmentIndices,
 			memberTexts: [],
-			origin: { kind: "Text" },
-			target: { kind: "Text", textId: "text-1" },
+			origin: { kind: "Scroll" },
+			target: { kind: "Scroll", scrollId: "text-1" },
 		},
 	]);
 	return renderToStaticMarkup(blockOf(renderReading(note), "SourceContexts"));

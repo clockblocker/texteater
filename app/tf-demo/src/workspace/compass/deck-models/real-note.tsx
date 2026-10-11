@@ -84,9 +84,9 @@ function linkFor(
 	word: string,
 ): NoteLink | null {
 	switch (target.kind) {
-		case "Text":
+		case "Scroll":
 		case "Attestation":
-			return target.kind === "Text"
+			return target.kind === "Scroll"
 				? sourceOf(word)
 				: {
 						kind: "Note",

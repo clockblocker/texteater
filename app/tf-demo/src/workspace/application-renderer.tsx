@@ -8,7 +8,7 @@ import {
 } from "@/views/subject-presentation";
 import type { SubjectRenderer, SubjectView } from "@/workspace/compass/subject";
 import { api } from "../../convex/_generated/api";
-import { textTitle } from "../../shared/text-title";
+import { scrollTitle } from "../../shared/scroll-title";
 import { HeadingSkeleton, type NotePart, NotePartProvider } from "./note-part";
 import {
 	type WorkspaceCardTarget,
@@ -16,13 +16,13 @@ import {
 	WorkspaceInteractionProvider,
 } from "./workspace-controller";
 import {
-	type TextSubjectTarget,
+	type ScrollSubjectTarget,
 	type WorkspaceSubject,
 	workspaceSubjectFor,
 } from "./workspace-subject";
 
 /**
- * How tf-demo's Subjects render in the Compass: a Text through the reader, a
+ * How tf-demo's Subjects render in the Compass: a Scroll through the reader, a
  * Note through the Notes renderers (tf-demo ADR 0006), each split into the
  * Heading Block the renderer places as a handle and the Body it clips or
  * scrolls. The views keep asking the workspace through
@@ -30,15 +30,15 @@ import {
  * drawn in.
  */
 
-/** A Text reads on the Notes page's column, `--container-note`. */
-const TEXT_COLUMN_REM = 48;
+/** A Scroll reads on the Notes page's column, `--container-note`. */
+const SCROLL_COLUMN_REM = 48;
 /** A Note's Blocks lay out on a wider column (accepted for real Notes). */
 const NOTE_COLUMN_REM = 50;
 
 export const applicationRenderer: SubjectRenderer<WorkspaceSubject> = {
 	label: subjectLabel,
 	columnRem: (subject) =>
-		subject.kind === "Text" ? TEXT_COLUMN_REM : NOTE_COLUMN_REM,
+		subject.kind === "Scroll" ? SCROLL_COLUMN_REM : NOTE_COLUMN_REM,
 	render: (subject, view, part) => (
 		<PlacedSubject subject={subject} view={view} part={part} />
 	),
@@ -62,15 +62,15 @@ function PlacedSubject({
 		>
 			<NotePartProvider value={part}>
 				{part === "heading" ? (
-					subject.kind === "Text" ? (
-						<TextHeading target={subject.target} />
+					subject.kind === "Scroll" ? (
+						<ScrollHeading target={subject.target} />
 					) : (
 						renderApplicationSubject(
 							subject,
 							card ? "Card" : "Sheet",
 						)
 					)
-				) : subject.kind === "Text" ? (
+				) : subject.kind === "Scroll" ? (
 					renderApplicationSubject(subject, card ? "Card" : "Sheet")
 				) : (
 					/* a Sheet's Heading is its bar, so its first Block keeps
@@ -128,16 +128,19 @@ function dealtCard({ key, target, presentationContext }: WorkspaceCardTarget) {
 	return { key, subject: workspaceSubjectFor(target, presentationContext) };
 }
 
-/** A Text's Heading: what the Library calls it. */
-function TextHeading({ target }: { target: TextSubjectTarget }) {
+/** A Scroll's Heading: what the Library calls it. */
+function ScrollHeading({ target }: { target: ScrollSubjectTarget }) {
 	const visitorId = useAnonymousVisitorId();
-	const textQuery = useQuery({
-		...convexQuery(api.textViews.get, { textId: target.textId, visitorId }),
+	const scrollQuery = useQuery({
+		...convexQuery(api.scrollViews.get, {
+			scrollId: target.scrollId,
+			visitorId,
+		}),
 		enabled: target.title === undefined,
 	});
 	const title =
 		target.title ??
-		(textQuery.data ? textTitle(textQuery.data) : undefined);
+		(scrollQuery.data ? scrollTitle(scrollQuery.data) : undefined);
 	if (title === undefined) return <HeadingSkeleton />;
 	return <span className="min-w-0 truncate font-serif">{title}</span>;
 }

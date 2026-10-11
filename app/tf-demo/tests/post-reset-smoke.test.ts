@@ -23,7 +23,7 @@ import {
 	VISITOR_CLEANUP_EXEMPTIONS,
 	VISITOR_CLEANUP_PHASES,
 } from "../convex/model/ownedRowCleanup";
-import { stripTextAnalysisGraph } from "../convex/model/textAnalysisStripping";
+import { stripScrollAnalysisGraph } from "../convex/model/scrollAnalysisStripping";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import tfDemoSchema from "../convex/schema";
 import {
@@ -493,7 +493,7 @@ afterEach(() => {
 });
 
 describe("tf-demo post-reset contract", () => {
-	test("Strip analyses covers every Text and clears Resolution Inspector data", async () => {
+	test("Strip analyses covers every Scroll and clears Resolution Inspector data", async () => {
 		const t = createTestConvex();
 		await submitText(t, [["Eins", "."]]);
 		await submitText(t, [["Zwei", "."]]);
@@ -526,13 +526,13 @@ describe("tf-demo post-reset contract", () => {
 		const result = await t.action(api.demoReset.stripAnalyses, {});
 
 		expect(result).toEqual({
-			strippedTexts: 2,
+			strippedScrolls: 2,
 			removed: 4,
 			deletedReadings: 0,
 			deletedLemmas: 0,
 			removedInspectionRecords: 3,
 		});
-		expect(await tableRows(t, "texts")).toHaveLength(2);
+		expect(await tableRows(t, "scrolls")).toHaveLength(2);
 		expect(await tableRows(t, "sentences")).toHaveLength(2);
 		expect(await tableRows(t, "segments")).toEqual([]);
 		expect(await tableRows(t, "inspectionPayloads")).toEqual([]);
@@ -540,7 +540,7 @@ describe("tf-demo post-reset contract", () => {
 		expect(await tableRows(t, "inspectionClicks")).toEqual([]);
 	});
 
-	test("stripping a long Text removes its Segments in batches of about Segments / batch size", async () => {
+	test("stripping a long Scroll removes its Segments in batches of about Segments / batch size", async () => {
 		const t = createTestConvex({ transactionLimits: true });
 		const reading = await insertReading(t, "reading-key-1");
 		// Five Sentences of 256 Segments: 128 attested words, their spaces, and a stop.
@@ -551,7 +551,7 @@ describe("tf-demo post-reset contract", () => {
 			]).flat(),
 			".",
 		]);
-		const { textId, segmentIds } = await submitText(t, sentences);
+		const { scrollId, segmentIds } = await submitText(t, sentences);
 		const segmentCount = segmentIds.flat().length;
 		expect(segmentCount).toBe(1_280);
 		await t.run(async (ctx) => {
@@ -577,7 +577,7 @@ describe("tf-demo post-reset contract", () => {
 				await ctx.db.insert("visitorEncounters", {
 					requestId: `request:${segmentId}`,
 					visitorId: "visitor-1",
-					textId,
+					scrollId,
 					sentenceId: sentence._id,
 					segmentId,
 					attestationId,
@@ -589,7 +589,7 @@ describe("tf-demo post-reset contract", () => {
 
 		let batches = 0;
 		const context = actionContext(t);
-		const result = await stripTextAnalysisGraph(
+		const result = await stripScrollAnalysisGraph(
 			{
 				...context,
 				runMutation: (
@@ -600,7 +600,7 @@ describe("tf-demo post-reset contract", () => {
 						getFunctionName(reference) ===
 						getFunctionName(
 							internal.analysisStripping
-								.stripTextAnalysisGraphBatch,
+								.stripScrollAnalysisGraphBatch,
 						)
 					) {
 						batches += 1;
@@ -608,7 +608,7 @@ describe("tf-demo post-reset contract", () => {
 					return context.runMutation(reference, args);
 				},
 			} as unknown as ActionCtx,
-			textId,
+			scrollId,
 		);
 
 		// 1,280 Segments, 640 Encounters, and 640 Attestations.
@@ -1223,13 +1223,16 @@ test("submission retries reuse exact segmentation despite a fresh generated sent
 	const [sentence] = input.sentences;
 	if (!sentence) throw new Error("Expected a Sentence input.");
 	const first = await t.mutation(
-		internal.persistence.persistSubmittedText,
+		internal.persistence.persistSubmittedScroll,
 		input,
 	);
-	const second = await t.mutation(internal.persistence.persistSubmittedText, {
-		...input,
-		sentences: [{ ...sentence, segmentedSentenceId: "fresh" }],
-	});
+	const second = await t.mutation(
+		internal.persistence.persistSubmittedScroll,
+		{
+			...input,
+			sentences: [{ ...sentence, segmentedSentenceId: "fresh" }],
+		},
+	);
 	expect(second).toEqual({ ...first, deduplicated: true });
 	const sentences = await tableRows(t, "sentences");
 	expect(sentences).toHaveLength(1);

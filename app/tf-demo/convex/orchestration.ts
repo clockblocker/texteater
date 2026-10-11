@@ -5,13 +5,13 @@ import {
 	createDumgen,
 	createOpenAILuna,
 	createTypeSafeAsk,
-	type ExtractedText,
 	extractPastedText,
 	InvalidModelOutput,
 	type LunaAsk,
 	type OperationTrace,
 	ProviderFailure,
-	parseExtractedText,
+	parseScroll,
+	type Scroll,
 } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
@@ -81,7 +81,7 @@ import {
 const submitTextResultValidator = v.union(
 	v.object({
 		status: v.literal("Accepted"),
-		textId: v.id("texts"),
+		scrollId: v.id("scrolls"),
 	}),
 	v.object({
 		status: v.literal("Rejected"),
@@ -232,7 +232,7 @@ export const submitText = action({
 		sourceText: v.string(),
 		visitorId: v.string(),
 		/**
-		 * The Text's target language; German when absent, and only German is
+		 * The Scroll's target language; German when absent, and only German is
 		 * read for now. Sentences in other languages become Plain Sentences.
 		 */
 		language: v.optional(languageValidator),
@@ -246,15 +246,15 @@ export const submitText = action({
 		const unsupported = unsupportedLanguageMessage(language);
 		if (unsupported !== undefined)
 			return { status: "Rejected", message: unsupported };
-		// A Text submitted before re-runs from its stored Extracted Text.
+		// A Scroll submitted before re-runs from its stored Extracted Text.
 		const stored = await ctx.runQuery(
 			internal.persistence.storedExtractedText,
 			{ submissionKey: args.submissionKey, sourceText: args.sourceText },
 		);
-		const extractedText: ExtractedText =
+		const extractedText: Scroll =
 			stored === null
 				? extractPastedText(args.sourceText)
-				: parseExtractedText(stored);
+				: parseScroll(stored);
 		const sentences = sourceSentencesOf(extractedText);
 		const limitViolation = textSubmissionLimitViolation(
 			args.sourceText,
@@ -262,13 +262,13 @@ export const submitText = action({
 		);
 		if (limitViolation !== undefined)
 			return { status: "Rejected", message: limitViolation };
-		// Intake is not deterministic, so re-segmenting a stored Text would
+		// Intake is not deterministic, so re-segmenting a stored Scroll would
 		// pay for every jev call and then often disagree with it.
 		const analyzed = await ctx.runQuery(
 			internal.persistence.analyzedSubmission,
 			{ submissionKey: args.submissionKey, sourceText: args.sourceText },
 		);
-		if (analyzed) return { status: "Accepted", textId: analyzed };
+		if (analyzed) return { status: "Accepted", scrollId: analyzed };
 		const limit = await ctx.runMutation(
 			internal.rateLimits.consumeTextSubmission,
 			{ visitorId: args.visitorId },
@@ -294,7 +294,7 @@ export const submitText = action({
 		const createdAt = Date.now();
 		const start = performance.now();
 		let state: "Complete" | "PermanentFailure" = "PermanentFailure";
-		let attempt: Pick<IntakeRun, "outcome" | "failureTag" | "textId"> = {
+		let attempt: Pick<IntakeRun, "outcome" | "failureTag" | "scrollId"> = {
 			outcome: "Accepted",
 		};
 		try {
@@ -304,9 +304,9 @@ export const submitText = action({
 				),
 				onSegmenting: run.segmenting,
 				persistence: {
-					persistSubmittedText: (input) =>
+					persistSubmittedScroll: (input) =>
 						ctx.runMutation(
-							internal.persistence.persistSubmittedText,
+							internal.persistence.persistSubmittedScroll,
 							{
 								...input,
 								sentences: input.sentences.map((sentence) => ({
@@ -351,9 +351,9 @@ export const submitText = action({
 			// The catch reads every failure and defect, not just the squashed one.
 			if (Exit.isFailure(exit)) throw exit.cause;
 			state = "Complete";
-			const textId = convexId<"texts">(exit.value.persisted.textId);
-			attempt = { outcome: "Accepted", textId };
-			return { status: "Accepted", textId };
+			const scrollId = convexId<"scrolls">(exit.value.persisted.scrollId);
+			attempt = { outcome: "Accepted", scrollId };
+			return { status: "Accepted", scrollId };
 		} catch (error) {
 			const cause = Cause.isCause(error) ? error : Cause.die(error);
 			attempt = { outcome: "Failed", failureTag: failureTagOf(cause) };
@@ -465,7 +465,7 @@ function orchestratorFor(
 
 /**
  * Every Occurrence commit runs under the Resolution Session that asked for it
- * and settles that session in its own transaction (ADR-0004). Text submission
+ * and settles that session in its own transaction (ADR-0004). Scroll submission
  * has no session and makes no commit.
  */
 function sessionCommitGuard(

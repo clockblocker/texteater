@@ -132,7 +132,7 @@ test("an inspected submission shows its root and its code steps", async () => {
 		"Analyze submitted text > Detect sentence languages [Code · battery/dumgen · language.detect · Success]",
 		"Analyze submitted text > Persist submitted text [Code · app/tf-demo · Success]",
 		"Analyze submitted text > Segment sentences in units [Code · battery/dumgen · segment.inUnits · Success]",
-		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitExtractedText · Success]",
+		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitScroll · Success]",
 		"Analyze submitted text > language.detect > language [TypeSafe · battery/dumgen · jev · Success]",
 		"Analyze submitted text > language.detect [Code · battery/dumgen · Success]",
 		"Analyze submitted text > segment.inUnits > candidates · Sentence 0 [TypeSafe · battery/dumgen · jev · Success]",
@@ -145,7 +145,7 @@ test("an inspected submission shows its root and its code steps", async () => {
 		steps.find((step) => step.name === name)?.payload;
 	expect(payload("Analyze submitted text")).toMatchObject({
 		input: { sourceText: "Die Banken." },
-		output: { persisted: { textId: expect.any(String) } },
+		output: { persisted: { scrollId: expect.any(String) } },
 	});
 	expect(payload("Split text into sentences")).toEqual({
 		input: { extractedText: extractPastedText("Die Banken.") },
@@ -177,7 +177,7 @@ test("an inspected submission shows its root and its code steps", async () => {
 	});
 	expect(payload("Persist submitted text")).toMatchObject({
 		input: { submissionKey: "submission", sourceText: "Die Banken." },
-		output: { textId: expect.any(String) },
+		output: { scrollId: expect.any(String) },
 	});
 	// Dumgen's calls carry their prompts and answers under DEV inspection (#885).
 	expect(payload("route · Sentence 0")).toMatchObject({
@@ -195,7 +195,7 @@ test("an inspected submission shows its root and its code steps", async () => {
 
 test("a failed inspected submission fails its root", async () => {
 	const t = createTestConvex();
-	// The key already names another Text, so storing fails.
+	// The key already names another Scroll, so storing fails.
 	await submitText(t, [["Die", " ", "Bank", "."]], {
 		submissionKey: "taken",
 	});
@@ -217,7 +217,7 @@ test("a failed inspected submission fails its root", async () => {
 		"Analyze submitted text > Detect sentence languages [Code · battery/dumgen · language.detect · Success]",
 		"Analyze submitted text > Persist submitted text [Code · app/tf-demo · Failure]",
 		"Analyze submitted text > Segment sentences in units [Code · battery/dumgen · segment.inUnits · Success]",
-		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitExtractedText · Success]",
+		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitScroll · Success]",
 		"Analyze submitted text > language.detect > language [TypeSafe · battery/dumgen · jev · Success]",
 		"Analyze submitted text > language.detect [Code · battery/dumgen · Success]",
 		"Analyze submitted text > segment.inUnits > candidates · Sentence 0 [TypeSafe · battery/dumgen · jev · Success]",

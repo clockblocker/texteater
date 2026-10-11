@@ -12,7 +12,7 @@ import { UnitTitle, unitTitleParts } from "../../../../caption/unit-title";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 
 /**
- * An Attestation is the form exactly as it was met in a Text. Its title is
+ * An Attestation is the form exactly as it was met in a Scroll. Its title is
  * the whole unit as written, the clicked piece emphasised when a click dealt
  * it; the caption says what the written words are to the next Card in front
  * of it.

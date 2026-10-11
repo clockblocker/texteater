@@ -6,9 +6,14 @@
  *
  * The dialect is CommonMark's, narrowed to what Extracted Text holds:
  *
- * - `# Title` opens a Chapter with that Heading; a bare `#` opens one
- *   without. Text before the first `#` is a Chapter of its own.
- * - `##` to `######` are Headings inside the Chapter.
+ * - `# Title` opens a Scroll with that Heading; a bare `#` opens one
+ *   without. Text before the first `#` is a Scroll of its own.
+ * - `##` to `######` are Headings inside the Scroll.
+ * - `<section title="Title">` on a line of its own opens a Section and
+ *   `</section>` closes it; inside, `#` opens Scrolls as outside, and
+ *   Sections nest. A Section left open closes at the end, and a stray
+ *   `</section>` is dropped. In the title, `&quot;` stands for `"` and
+ *   `&amp;` for `&`.
  * - A blank line ends a Paragraph. A line ending in `\` (or, on import, in
  *   two spaces) or a `<br>` is a Line Break; any other line break is a
  *   space, so hard-wrapped Markdown reads as running text.
@@ -24,13 +29,14 @@
  * thematic breaks.
  */
 import type {
-	Chapter,
 	ExtractedText,
 	Heading,
 	InlineStyle,
 	LineBreak,
 	Paragraph,
 	Run,
+	Scroll,
+	Section,
 } from "./extracted-text.js";
 
 type Inline = Run | LineBreak;
@@ -427,16 +433,26 @@ const blockQuote = /^ {0,3}> ?/u;
 const bulletItem = /^\s*[-+*][ \t]+(.*)$/u;
 const orderedItem = /^\s*(\d{1,9})([.)])[ \t]+(.*)$/u;
 
-type ChapterDraft = {
-	heading?: Chapter["heading"];
+const sectionOpening = /^ {0,3}<section title="([^"]*)">[ \t]*$/u;
+const sectionClosing = /^ {0,3}<\/section>[ \t]*$/u;
+
+type ScrollDraft = {
+	heading?: Scroll["heading"];
 	blocks: (Heading | Paragraph)[];
+};
+
+/** The root, or an open Section with its title. */
+type ContainerDraft = {
+	readonly title?: string;
+	readonly contents: (Section | Scroll)[];
 };
 
 /** Where a pass over a Markdown document's lines stands. */
 type Reading = {
-	readonly chapters: ChapterDraft[];
-	chapter: ChapterDraft;
-	/** Whether a `#` has opened a Chapter yet. */
+	/** The root first, then each open Section, innermost last. */
+	readonly containers: [ContainerDraft, ...ContainerDraft[]];
+	scroll: ScrollDraft;
+	/** Whether a `#` has opened the Scroll being read. */
 	opened: boolean;
 	paragraph: string[];
 	/** Whether the open Paragraph is a list item. */
@@ -451,7 +467,7 @@ function flush(reading: Reading): void {
 	reading.paragraph = [];
 	reading.listItem = false;
 	if (inlines.length > 0)
-		reading.chapter.blocks.push({ kind: "Paragraph", inlines });
+		reading.scroll.blocks.push({ kind: "Paragraph", inlines });
 }
 
 function startParagraph(
@@ -489,7 +505,7 @@ function readFenced(
 		]),
 	);
 	if (inlines.length > 0)
-		reading.chapter.blocks.push({ kind: "Paragraph", inlines });
+		reading.scroll.blocks.push({ kind: "Paragraph", inlines });
 }
 
 function readHeading(reading: Reading, line: string): boolean {
@@ -500,18 +516,69 @@ function readHeading(reading: Reading, line: string): boolean {
 	const runs = headingRuns(heading[2] ?? "");
 	if (level > 1) {
 		if (runs.length > 0)
-			reading.chapter.blocks.push({
+			reading.scroll.blocks.push({
 				kind: "Heading",
 				level: level as Heading["level"],
 				runs,
 			});
 		return true;
 	}
-	if (reading.opened || reading.chapter.blocks.length > 0)
-		reading.chapters.push(reading.chapter);
-	reading.chapter =
-		runs.length > 0 ? { heading: { runs }, blocks: [] } : { blocks: [] };
+	closeScroll(reading, false);
+	if (runs.length > 0) reading.scroll.heading = { runs };
 	reading.opened = true;
+	return true;
+}
+
+const innermost = (reading: Reading): ContainerDraft =>
+	reading.containers.at(-1) ?? reading.containers[0];
+
+/**
+ * Ends the Scroll being read: kept when a `#` opened it or it holds a
+ * block, or, with `keepEmpty`, when its container would otherwise be empty.
+ */
+function closeScroll(reading: Reading, keepEmpty: boolean): void {
+	const { contents } = innermost(reading);
+	if (
+		reading.opened ||
+		reading.scroll.blocks.length > 0 ||
+		(keepEmpty && contents.length === 0)
+	)
+		contents.push({ kind: "Scroll", ...reading.scroll });
+	reading.scroll = { blocks: [] };
+	reading.opened = false;
+}
+
+/** Ends the innermost open Section, if one is open. */
+function closeSection(reading: Reading): void {
+	if (reading.containers.length === 1) return;
+	closeScroll(reading, true);
+	const { title, contents } = reading.containers.pop() as ContainerDraft;
+	const [first, ...rest] = contents;
+	if (title === undefined || first === undefined) return;
+	innermost(reading).contents.push({
+		kind: "Section",
+		title,
+		contents: [first, ...rest],
+	});
+}
+
+const decodeTitle = (title: string) =>
+	title
+		.replace(/&quot;/gu, '"')
+		.replace(/&amp;/gu, "&")
+		.trim();
+
+function readSection(reading: Reading, line: string): boolean {
+	if (sectionClosing.test(line)) {
+		flush(reading);
+		closeSection(reading);
+		return true;
+	}
+	const title = decodeTitle(sectionOpening.exec(line)?.[1] ?? "");
+	if (title.length === 0) return false;
+	flush(reading);
+	closeScroll(reading, false);
+	reading.containers.push({ title, contents: [] });
 	return true;
 }
 
@@ -527,6 +594,7 @@ const blockReaders: readonly ((reading: Reading, line: string) => boolean)[] = [
 		reading.fenced = { marker, lines: [] };
 		return true;
 	},
+	readSection,
 	readHeading,
 	(reading, line) => {
 		if (!thematicBreak.test(line) && !tableDelimiterRow.test(line))
@@ -575,12 +643,12 @@ const blockReaders: readonly ((reading: Reading, line: string) => boolean)[] = [
 /**
  * The Extracted Text a Markdown document describes, in the dialect above.
  * The input is read as NFC. A document with no Heading and no text is one
- * empty Chapter.
+ * empty Scroll, and so is a Section with nothing in it.
  */
 export function extractedTextFromMarkdown(markdown: string): ExtractedText {
 	const reading: Reading = {
-		chapters: [],
-		chapter: { blocks: [] },
+		containers: [{ contents: [] }],
+		scroll: { blocks: [] },
 		opened: false,
 		paragraph: [],
 		listItem: false,
@@ -604,10 +672,12 @@ export function extractedTextFromMarkdown(markdown: string): ExtractedText {
 			reading.paragraph.push(line.trimStart());
 	}
 	flush(reading);
-	const { chapters, chapter } = reading;
-	if (reading.opened || chapter.blocks.length > 0 || chapters.length === 0)
-		chapters.push(chapter);
-	return { chapters };
+	while (reading.containers.length > 1) closeSection(reading);
+	closeScroll(reading, true);
+	const [first, ...rest] = reading.containers[0].contents;
+	return {
+		contents: first ? [first, ...rest] : [{ kind: "Scroll", blocks: [] }],
+	};
 }
 
 // Export.
@@ -774,19 +844,36 @@ function renderBlock(block: Heading | Paragraph): string {
  * style's edges, neighbouring runs merged.
  */
 export function extractedTextToMarkdown(text: ExtractedText): string {
-	const chapters = text.chapters.map((chapter, index) => {
-		const title =
-			chapter.heading === undefined
-				? ""
-				: renderLine(chapter.heading.runs, true);
-		const bare =
-			index === 0 &&
-			(chapter.blocks.length > 0 || text.chapters.length === 1);
-		const opening = title.length > 0 ? `# ${title}` : bare ? "" : "#";
-		return [opening, ...chapter.blocks.map(renderBlock)]
-			.filter((block) => block.length > 0)
-			.join("\n\n");
-	});
-	const markdown = chapters.filter((part) => part.length > 0).join("\n\n");
+	const markdown = renderContents(text.contents)
+		.filter((part) => part.length > 0)
+		.join("\n\n");
 	return markdown.length > 0 ? `${markdown}\n` : "";
+}
+
+const encodeTitle = (title: string) =>
+	title.replace(/&/gu, "&amp;").replace(/"/gu, "&quot;");
+
+/**
+ * The blocks of Markdown for a container's Sections and Scrolls. A Scroll
+ * without a Heading needs no `#` where a Scroll begins on import anyway:
+ * first in its container or after a Section, and holding a block or alone.
+ */
+function renderContents(contents: readonly (Section | Scroll)[]): string[] {
+	return contents.flatMap((item, index) => {
+		if (item.kind === "Section")
+			return [
+				`<section title="${encodeTitle(item.title)}">`,
+				...renderContents(item.contents),
+				"</section>",
+			];
+		const title =
+			item.heading === undefined
+				? ""
+				: renderLine(item.heading.runs, true);
+		const bare =
+			contents[index - 1]?.kind !== "Scroll" &&
+			(item.blocks.length > 0 || contents.length === 1);
+		const opening = title.length > 0 ? `# ${title}` : bare ? "" : "#";
+		return [opening, ...item.blocks.map(renderBlock)];
+	});
 }

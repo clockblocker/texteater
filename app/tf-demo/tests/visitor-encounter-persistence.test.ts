@@ -211,7 +211,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 		await ctx.db.insert("ownedSurfaces", { surfaceId, record });
 		return { readingId, surfaceId };
 	});
-	const { textId, sentenceIds, segmentIds } = await submitText(t, [
+	const { scrollId, sentenceIds, segmentIds } = await submitText(t, [
 		["Banken"],
 	]);
 	const sentenceId = sentenceIds[0];
@@ -265,7 +265,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 		{
 			requestId: "request-1",
 			visitorId: "visitor-1",
-			textId,
+			scrollId,
 			sentenceId,
 			segmentId,
 			attestationId,

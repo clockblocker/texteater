@@ -3,8 +3,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { api } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import schema from "../convex/schema";
-import { TextPresentation } from "../src/views/text-view";
-import { EXAMPLES_TEXT_TITLE } from "../tooling/notes-study/example-contexts";
+import { ScrollPresentation } from "../src/views/scroll-view";
+import { EXAMPLES_SCROLL_TITLE } from "../tooling/notes-study/example-contexts";
 import {
 	NOTE_STUDY_DATABASE,
 	NOTE_STUDY_RELATED_DATABASE,
@@ -26,20 +26,22 @@ afterEach(() => {
 });
 
 test(
-	"the two-stage seed presents all cases in one titled Text, including cases beyond the old nine-Sentence limit",
+	"the two-stage seed presents all cases in one titled Scroll, including cases beyond the old nine-Sentence limit",
 	async () => {
 		const t = createPlaygroundConvex();
 		await t.mutation(playgroundFixtures.load, {});
 		await t.mutation(playgroundFixtures.consolidateExamples, {});
-		const allTexts = await t.run((ctx) => ctx.db.query("texts").collect());
-		const texts = allTexts.filter((text) => !text.origin);
-		expect(texts).toHaveLength(1);
-		expect(texts[0]?.title).toBe(EXAMPLES_TEXT_TITLE);
+		const allScrolls = await t.run((ctx) =>
+			ctx.db.query("scrolls").collect(),
+		);
+		const scrolls = allScrolls.filter((text) => !text.origin);
+		expect(scrolls).toHaveLength(1);
+		expect(scrolls[0]?.title).toBe(EXAMPLES_SCROLL_TITLE);
 		const definedUnits = [
 			...NOTE_STUDY_DATABASE,
 			...NOTE_STUDY_RELATED_DATABASE,
 		].filter((unit) => unit.knowledge.definition);
-		expect(allTexts.filter((text) => text.origin)).toHaveLength(
+		expect(allScrolls.filter((text) => text.origin)).toHaveLength(
 			definedUnits.length,
 		);
 		expect(
@@ -51,10 +53,10 @@ test(
 			...NOTE_STUDY_DATABASE,
 			...NOTE_STUDY_RELATED_DATABASE,
 		].flatMap((unit) => unit.occurrences).length;
-		const textId = texts[0]?._id;
-		if (!textId) throw new Error("Expected the examples Text.");
-		const view = await t.query(api.textViews.get, {
-			textId,
+		const scrollId = scrolls[0]?._id;
+		if (!scrollId) throw new Error("Expected the examples Scroll.");
+		const view = await t.query(api.scrollViews.get, {
+			scrollId,
 			visitorId: "test",
 		});
 		expect(view?.sentences).toHaveLength(expected);
@@ -67,19 +69,19 @@ test(
 	PLAYGROUND_FIXTURE_TIMEOUT_MS,
 );
 
-test("moving an existing one-unit example preserves target IDs and encounter history, leaving submitted texts alone", async () => {
+test("moving an existing one-unit example preserves target IDs and encounter history, leaving submitted scrolls alone", async () => {
 	const t = createPlaygroundConvex();
 	const seeded = await t.run(async (ctx) => {
-		const oldTextId = await ctx.db.insert("texts", {
+		const oldScrollId = await ctx.db.insert("scrolls", {
 			submissionKey: "notes-study:related-Deutschland:0",
 			sourceText: "Deutschland.",
 		});
-		const userTextId = await ctx.db.insert("texts", {
+		const userScrollId = await ctx.db.insert("scrolls", {
 			submissionKey: "text:user",
 			sourceText: "My own text",
 		});
 		const sentenceId = await ctx.db.insert("sentences", {
-			textId: oldTextId,
+			scrollId: oldScrollId,
 			segmentedSentenceId: "notes-study:related-Deutschland:0:sentence",
 			language: "de",
 			position: 0,
@@ -126,14 +128,14 @@ test("moving an existing one-unit example preserves target IDs and encounter his
 		const encounterId = await ctx.db.insert("visitorEncounters", {
 			visitorId: "visitor",
 			requestId: "request",
-			textId: oldTextId,
+			scrollId: oldScrollId,
 			sentenceId,
 			segmentId,
 			encounteredAt: 1,
 		});
 		return {
-			oldTextId,
-			userTextId,
+			oldScrollId,
+			userScrollId,
 			sentenceId,
 			segmentId,
 			attestationId,
@@ -144,8 +146,8 @@ test("moving an existing one-unit example preserves target IDs and encounter his
 	const result = await t.mutation(playgroundFixtures.consolidateExamples, {});
 
 	await t.run(async (ctx) => {
-		expect(await ctx.db.get(seeded.oldTextId)).toBeNull();
-		expect(await ctx.db.get(seeded.userTextId)).toMatchObject({
+		expect(await ctx.db.get(seeded.oldScrollId)).toBeNull();
+		expect(await ctx.db.get(seeded.userScrollId)).toMatchObject({
 			sourceText: "My own text",
 		});
 		expect(await ctx.db.get(seeded.segmentId)).toMatchObject({
@@ -153,7 +155,7 @@ test("moving an existing one-unit example preserves target IDs and encounter his
 			attestationMembership: { attestationId: seeded.attestationId },
 		});
 		expect(await ctx.db.get(seeded.encounterId)).toMatchObject({
-			textId: result.textId,
+			scrollId: result.scrollId,
 			sentenceId: seeded.sentenceId,
 			segmentId: seeded.segmentId,
 		});
@@ -181,7 +183,7 @@ function everyRow(t: TestConvexDb) {
 
 test("case subtitles render as headings outside selectable Segments", () => {
 	const html = renderToStaticMarkup(
-		<TextPresentation
+		<ScrollPresentation
 			sentences={[
 				{
 					sentenceId: "sentences-de" as Id<"sentences">,

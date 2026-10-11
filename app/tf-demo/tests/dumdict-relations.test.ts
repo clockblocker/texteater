@@ -1556,7 +1556,7 @@ describe("tf-demo Dumdict relation storage", () => {
 					lemmaCandidates: [],
 					sentence: {
 						sentenceId: "sentence-1",
-						textId: "text-1",
+						scrollId: "text-1",
 						segmentedSentenceId: "segmented-1",
 						language: "de",
 						stitchedText: "Wir gehen.",

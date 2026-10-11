@@ -5,7 +5,7 @@ import type { FunctionReturnType } from "convex/server";
 import { api } from "../convex/_generated/api";
 
 /*
- * One German Text through the live product flow: intake asks jev to cut each
+ * One German Scroll through the live product flow: intake asks jev to cut each
  * Sentence into Segments and biggest units and stores them, the reader shows
  * the Sentences, hovering a word lights its whole unit without a network
  * call, and a click settles on the Unit Card. While click resolution is
@@ -21,8 +21,8 @@ import { api } from "../convex/_generated/api";
 const sourceText =
 	"Der dichte Rauch gibt die Sicht nicht frei. Sie hat lange warten müssen. Zum Beispiel fängt die Schule morgen an.";
 
-type TextView = NonNullable<FunctionReturnType<typeof api.textViews.get>>;
-type SentenceView = TextView["sentences"][number];
+type ScrollView = NonNullable<FunctionReturnType<typeof api.scrollViews.get>>;
+type SentenceView = ScrollView["sentences"][number];
 
 /** A stored unit as the reader groups it: its Sentence and member Segments. */
 type StoredUnitView = {
@@ -135,11 +135,11 @@ test("intake: live segment.inUnits, then the reader, hover and a click's Unit Ca
 		visitorId,
 	});
 	if (submitted.status !== "Accepted") throw new Error(submitted.message);
-	const text = await client.query(api.textViews.get, {
-		textId: submitted.textId,
+	const text = await client.query(api.scrollViews.get, {
+		scrollId: submitted.scrollId,
 		visitorId,
 	});
-	if (!text) throw new Error("The accepted Text is not stored.");
+	if (!text) throw new Error("The accepted Scroll is not stored.");
 	const units = storedUnits(text.sentences);
 	await testInfo.attach("stored-units", {
 		body: JSON.stringify(units, null, 2),

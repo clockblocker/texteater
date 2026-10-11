@@ -36,7 +36,7 @@ const BANK_READING = {
 
 /** One saved occurrence of Bank 🏦 in the dictionary, and a Scheduled attempt for it. */
 async function seedAttempt(t: TestConvexDb, attemptKey: string) {
-	const { textId, sentenceIds, segmentIds } = await submitText(t, [
+	const { scrollId, sentenceIds, segmentIds } = await submitText(t, [
 		[
 			{ kind: "ResolvableText", text: "Bank" },
 			{ kind: "OpaqueText", text: " am Fluss" },
@@ -97,7 +97,7 @@ async function seedAttempt(t: TestConvexDb, attemptKey: string) {
 			updatedAt: 1,
 		});
 	});
-	return { textId, sentenceId };
+	return { scrollId, sentenceId };
 }
 
 function rows<Table extends TableNames>(t: TestConvexDb, table: Table) {

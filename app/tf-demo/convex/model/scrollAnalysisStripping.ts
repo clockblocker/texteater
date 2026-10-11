@@ -13,27 +13,27 @@ const MAX_BATCHES = 1_000;
 /** Readings one descriptor call may describe. */
 export const DESCRIPTOR_PAGE_SIZE = 20;
 
-export type StripTextAnalysisResult = {
+export type StripScrollAnalysisResult = {
 	removed: number;
 	deletedReadings: number;
 	deletedLemmas: number;
 };
 
-type StrippedTextAnalysis = StripTextAnalysisResult & {
+type StrippedScrollAnalysis = StripScrollAnalysisResult & {
 	/** The Readings pruned because they lost their last source. */
 	readonly prunedReadingKeys: readonly string[];
 };
 
 /**
- * Removes one Text's derived graph while preserving the Text and Sentences.
+ * Removes one Scroll's derived graph while preserving the Scroll and Sentences.
  * Shared Readings, Lemmas, and Surfaces survive when another occurrence still
  * uses them; source-owned Knowledge and relation data are pruned with orphans.
  * Protected Readings are never pruned even when they lose their last source,
  * so a Reading whose own Definition Text is being replaced keeps its Knowledge.
  */
-export async function stripTextAnalysisGraph(
+export async function stripScrollAnalysisGraph(
 	ctx: ActionCtx,
-	textId: Id<"texts">,
+	scrollId: Id<"scrolls">,
 	options: {
 		readonly protectedReadingKeys?: readonly string[];
 		/**
@@ -43,10 +43,10 @@ export async function stripTextAnalysisGraph(
 		 */
 		readonly removeDefinitionTexts?: boolean;
 	} = {},
-): Promise<StrippedTextAnalysis> {
+): Promise<StrippedScrollAnalysis> {
 	const candidates = await ctx.runQuery(
-		internal.analysisStripping.getTextAnalysisCandidates,
-		{ textId },
+		internal.analysisStripping.getScrollAnalysisCandidates,
+		{ scrollId },
 	);
 	if (!candidates) {
 		return {
@@ -60,8 +60,8 @@ export async function stripTextAnalysisGraph(
 	let fromPosition = 0;
 	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 		const result = await ctx.runMutation(
-			internal.analysisStripping.stripTextAnalysisGraphBatch,
-			{ textId, fromPosition },
+			internal.analysisStripping.stripScrollAnalysisGraphBatch,
+			{ scrollId, fromPosition },
 		);
 		removed += result.deleted;
 		fromPosition = result.nextPosition;
@@ -184,8 +184,8 @@ async function removeOneDefinitionText(
 		ownerReadingKey,
 	});
 	if (!sync) return [];
-	const stripped = sync.textId
-		? await stripTextAnalysisGraph(ctx, sync.textId, {
+	const stripped = sync.scrollId
+		? await stripScrollAnalysisGraph(ctx, sync.scrollId, {
 				protectedReadingKeys: [ownerReadingKey],
 				removeDefinitionTexts: false,
 			})

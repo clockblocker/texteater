@@ -160,7 +160,7 @@ function segmentKind(text: string) {
 }
 
 /**
- * Stores one Visitor-submitted German Text through the production mutation.
+ * Stores one Visitor-submitted German Scroll through the production mutation.
  * Plain strings become Segments whose kind follows their characters, so
  * `["Ich", " ", "gehe", "."]` is four Segments. Without `units`, each
  * ResolvableText Segment is its own Unresolved unit.
@@ -174,7 +174,7 @@ export async function submitText(
 		readonly units?: readonly (readonly StoredUnit[])[];
 	} = {},
 ): Promise<{
-	textId: Id<"texts">;
+	scrollId: Id<"scrolls">;
 	sentenceIds: Id<"sentences">[];
 	segmentIds: Id<"segments">[][];
 }> {
@@ -188,8 +188,8 @@ export async function submitText(
 	const sourceText = stored
 		.map((segments) => segments.map(({ text }) => text).join(""))
 		.join(" ");
-	const { textId, sentenceIds } = await t.mutation(
-		internal.persistence.persistSubmittedText,
+	const { scrollId, sentenceIds } = await t.mutation(
+		internal.persistence.persistSubmittedScroll,
 		{
 			submissionKey: options.submissionKey ?? sourceText,
 			sourceText,
@@ -220,5 +220,5 @@ export async function submitText(
 			),
 		),
 	);
-	return { textId, sentenceIds, segmentIds };
+	return { scrollId, sentenceIds, segmentIds };
 }

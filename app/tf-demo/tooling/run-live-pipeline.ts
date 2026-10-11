@@ -9,7 +9,7 @@ const args = process.argv.slice(2);
 if (args.includes("--help")) {
 	console.log(`Usage: bun run test:pipeline:live [--list]
 
-One German Text through live intake (jev segment.inUnits), the reader, a
+One German Scroll through live intake (jev segment.inUnits), the reader, a
 hover over each multi-Segment unit and a click's Unit Card. Requires running
 tf-demo and Convex servers with TYPESAFE_API_KEY configured in Convex.
 
@@ -17,7 +17,7 @@ TF_DEMO_LIVE_APP_URL     App URL (default ${appUrl})
 TF_DEMO_LIVE_CONVEX_URL  Matching Convex URL (default ${convexUrl})
 
 Every execution requires interactive authorization. It spends jev tokens on
-intake and adds a uniquely keyed probe Text and its units to the selected
+intake and adds a uniquely keyed probe Scroll and its units to the selected
 database. It never resets the database. Results remain for inspection. No
 retries or CI execution.
 --list lists the single test without authorization, network calls or generation.`);

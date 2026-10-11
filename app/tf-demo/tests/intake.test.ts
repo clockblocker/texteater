@@ -1,15 +1,15 @@
 import { expect, test } from "bun:test";
-import { createDumgen, extractPastedText, parseExtractedText } from "dumgen";
+import { createDumgen, extractPastedText, parseScroll } from "dumgen";
 import * as Effect from "effect/Effect";
-import { projectSentenceView } from "../convex/modules/text/sentenceView";
+import { projectSentenceView } from "../convex/modules/scroll/sentenceView";
 import {
 	findStoredExtractedText,
-	persistSubmittedText,
-} from "../convex/modules/text/submission";
+	persistSubmittedScroll,
+} from "../convex/modules/scroll/submission";
 import {
 	createIntake,
 	GERMAN_ONLY_MESSAGE,
-	type SubmittedText,
+	type SubmittedScroll,
 	unsupportedLanguageMessage,
 } from "../server/intake";
 import { createIntakeRunRecorder } from "../server/intakeRun";
@@ -27,11 +27,11 @@ const VERB = { language: "de", family: "Lexeme", kind: "VERB" } as const;
 const PRON = { language: "de", family: "Lexeme", kind: "PRON" } as const;
 
 /**
- * The submission as the `persistSubmittedText` mutation takes it: intake hands
+ * The submission as the `persistSubmittedScroll` mutation takes it: intake hands
  * readonly arrays, Convex's validator types want mutable ones, so copy them as
  * `convex/orchestration.ts` does on the way in.
  */
-function persistable(submission: SubmittedText) {
+function persistable(submission: SubmittedScroll) {
 	return {
 		...submission,
 		sentences: submission.sentences.map((sentence) => ({
@@ -44,7 +44,7 @@ function persistable(submission: SubmittedText) {
 
 /** Intake with a fake jev and a persistence port that keeps what it was handed. */
 function intakeWith(jev: ReturnType<typeof fakeJev>, sentenceCount = 3) {
-	const stored: SubmittedText[] = [];
+	const stored: SubmittedScroll[] = [];
 	const run = createIntakeRunRecorder(sentenceCount);
 	const intake = createIntake({
 		dumgen: createDumgen({
@@ -57,9 +57,9 @@ function intakeWith(jev: ReturnType<typeof fakeJev>, sentenceCount = 3) {
 		}),
 		onSegmenting: run.segmenting,
 		persistence: {
-			persistSubmittedText: async (input) => {
+			persistSubmittedScroll: async (input) => {
 				stored.push(input);
-				return { textId: "text-1" };
+				return { scrollId: "scroll-1" };
 			},
 		},
 	});
@@ -83,7 +83,7 @@ function intakeWith(jev: ReturnType<typeof fakeJev>, sentenceCount = 3) {
 const segmentationRequests = (jev: ReturnType<typeof fakeJev>) =>
 	jev.sent.filter((request) => !isLanguageRequest(request));
 
-test("intake splits a Text into paragraphs and Sentences in code and hands each on with its Segments and units", async () => {
+test("intake splits a Scroll into paragraphs and Sentences in code and hands each on with its Segments and units", async () => {
 	const jev = fakeJev({ answers: germanAnswers });
 	const { stored, submit } = intakeWith(jev);
 	await submit();
@@ -143,7 +143,7 @@ test("stored units index into their Sentence's Segments, and the reader view giv
 	const submission = persistable(handed);
 	const t = createTestConvex();
 	const { sentenceIds } = await t.run((ctx) =>
-		persistSubmittedText(ctx, submission),
+		persistSubmittedScroll(ctx, submission),
 	);
 	const firstSentenceId = sentenceIds[0];
 	if (!firstSentenceId) throw new Error("Expected a stored first Sentence.");
@@ -176,7 +176,7 @@ test("stored units index into their Sentence's Segments, and the reader view giv
 
 	// A retry finds the same Segments and keeps the first units it stored.
 	const retried = await t.run((ctx) =>
-		persistSubmittedText(ctx, {
+		persistSubmittedScroll(ctx, {
 			...submission,
 			sentences: submission.sentences.map((sentence) => ({
 				...sentence,
@@ -210,9 +210,9 @@ test("storage refuses units that do not cover the ResolvableText Segments exactl
 			{ kind: "Punctuation" as const, text: "." },
 		],
 	};
-	const persist = (units: SubmittedText["sentences"][number]["units"]) =>
+	const persist = (units: SubmittedScroll["sentences"][number]["units"]) =>
 		t.run((ctx) =>
-			persistSubmittedText(ctx, {
+			persistSubmittedScroll(ctx, {
 				submissionKey: "bad",
 				sourceText: "Er geht.",
 				sentences: [{ ...sentence, units: [...units] }],
@@ -266,7 +266,7 @@ test("a Sentence whose jev request fails is stored marked as not segmented, with
 	// Storage keeps the mark, and the reader view shows the Sentence so.
 	const t = createTestConvex();
 	const { sentenceIds } = await t.run((ctx) =>
-		persistSubmittedText(ctx, persistable(submission)),
+		persistSubmittedScroll(ctx, persistable(submission)),
 	);
 	const thirdSentenceId = sentenceIds[2];
 	if (!thirdSentenceId) throw new Error("Expected a stored third Sentence.");
@@ -286,7 +286,7 @@ test("storage refuses units on a Sentence marked as not segmented", async () => 
 	const t = createTestConvex();
 	await expect(
 		t.run((ctx) =>
-			persistSubmittedText(ctx, {
+			persistSubmittedScroll(ctx, {
 				submissionKey: "marked",
 				sourceText: "Ja!",
 				sentences: [
@@ -353,11 +353,11 @@ test("the intake run sums jev tokens from every call and records how each Senten
 		outputTokens: jev.sent.length - failed,
 	});
 	expect(failed).toBeGreaterThan(0);
-	// The summary keeps no Text, prompt or answer.
+	// The summary keeps no text, prompt or answer.
 	expect(JSON.stringify(summary)).not.toContain("gibt");
 });
 
-test("a Text in another language is turned away with a clear message before any jev call", async () => {
+test("a Scroll in another language is turned away with a clear message before any jev call", async () => {
 	expect(unsupportedLanguageMessage("de")).toBeUndefined();
 	expect(unsupportedLanguageMessage("en")).toBe(GERMAN_ONLY_MESSAGE);
 	expect(unsupportedLanguageMessage("he")).toBe(GERMAN_ONLY_MESSAGE);
@@ -461,7 +461,7 @@ test("a mixed paste keeps its Extracted Text, segments only its German Sentences
 	// view shows them as plain text.
 	const t = createTestConvex();
 	const { sentenceIds } = await t.run((ctx) =>
-		persistSubmittedText(ctx, persistable(submission)),
+		persistSubmittedScroll(ctx, persistable(submission)),
 	);
 	const views = await t.run(async (ctx) =>
 		Promise.all(
@@ -505,7 +505,7 @@ test("an undetermined Sentence with no surroundings is stored with no language, 
 	expect(segmentationRequests(jev)).toEqual([]);
 });
 
-test("re-running intake from the stored Extracted Text rebuilds the same Text", async () => {
+test("re-running intake from the stored Extracted Text rebuilds the same Scroll", async () => {
 	const jev = fakeJev({
 		answers: germanAnswers,
 		languages: { "Read the text.": "English", "Hm.": "Unknown" },
@@ -516,7 +516,7 @@ test("re-running intake from the stored Extracted Text rebuilds the same Text", 
 	if (!first) throw new Error("Expected a submission.");
 	const t = createTestConvex();
 	const persisted = await t.run((ctx) =>
-		persistSubmittedText(ctx, persistable(first)),
+		persistSubmittedScroll(ctx, persistable(first)),
 	);
 	const kept = await t.run((ctx) =>
 		findStoredExtractedText(ctx, {
@@ -524,12 +524,12 @@ test("re-running intake from the stored Extracted Text rebuilds the same Text", 
 			sourceText: MIXED,
 		}),
 	);
-	await submit(MIXED, "de", parseExtractedText(kept));
+	await submit(MIXED, "de", parseScroll(kept));
 	const second = stored[1];
 	if (!second) throw new Error("Expected a second submission.");
 	expect(second).toEqual(first);
-	// Storage finds the same analysis and keeps the Text it has.
+	// Storage finds the same analysis and keeps the Scroll it has.
 	expect(
-		await t.run((ctx) => persistSubmittedText(ctx, persistable(second))),
+		await t.run((ctx) => persistSubmittedScroll(ctx, persistable(second))),
 	).toEqual({ ...persisted, deduplicated: true });
 });

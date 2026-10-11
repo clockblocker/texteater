@@ -6,11 +6,11 @@ import { loadCompleteOccurrenceMembers } from "./model/occurrenceAttestations";
 import {
 	projectSentenceView,
 	sentenceViewValidator,
-} from "./modules/text/sentenceView";
+} from "./modules/scroll/sentenceView";
 
-const MAX_SENTENCES_PER_TEXT = 256;
+const MAX_SENTENCES_PER_SCROLL = 256;
 
-/** Where one occurrence sits in a Text, so the reader can land on it. */
+/** Where one occurrence sits in a Scroll, so the reader can land on it. */
 const occurrenceFocusValidator = v.union(
 	v.object({
 		kind: v.literal("Missing"),
@@ -24,13 +24,13 @@ const occurrenceFocusValidator = v.union(
 	}),
 );
 
-const textViewValidator = v.object({
-	kind: v.literal("Text"),
+const scrollViewValidator = v.object({
+	kind: v.literal("Scroll"),
 	target: v.object({
-		kind: v.literal("Text"),
-		textId: v.id("texts"),
+		kind: v.literal("Scroll"),
+		scrollId: v.id("scrolls"),
 	}),
-	textId: v.id("texts"),
+	scrollId: v.id("scrolls"),
 	submissionKey: v.string(),
 	sourceText: v.string(),
 	createdAt: v.number(),
@@ -39,19 +39,21 @@ const textViewValidator = v.object({
 
 export const get = query({
 	args: {
-		textId: v.string(),
+		scrollId: v.string(),
 		visitorId: v.string(),
 	},
-	returns: v.union(v.null(), textViewValidator),
-	handler: async (ctx, { textId: textIdValue, visitorId }) => {
-		const textId = ctx.db.normalizeId("texts", textIdValue);
-		if (!textId) return null;
-		const text = await ctx.db.get(textId);
-		if (!text) return null;
+	returns: v.union(v.null(), scrollViewValidator),
+	handler: async (ctx, { scrollId: scrollIdValue, visitorId }) => {
+		const scrollId = ctx.db.normalizeId("scrolls", scrollIdValue);
+		if (!scrollId) return null;
+		const scroll = await ctx.db.get(scrollId);
+		if (!scroll) return null;
 		const sentences = await ctx.db
 			.query("sentences")
-			.withIndex("by_text_id_and_position", (q) => q.eq("textId", textId))
-			.take(MAX_SENTENCES_PER_TEXT);
+			.withIndex("by_scroll_id_and_position", (q) =>
+				q.eq("scrollId", scrollId),
+			)
+			.take(MAX_SENTENCES_PER_SCROLL);
 		const sentenceViews = await Promise.all(
 			sentences.map((sentence) =>
 				projectSentenceView(ctx, sentence, visitorId),
@@ -59,43 +61,43 @@ export const get = query({
 		);
 
 		return {
-			kind: "Text" as const,
+			kind: "Scroll" as const,
 			target: {
-				kind: "Text" as const,
-				textId: text._id,
+				kind: "Scroll" as const,
+				scrollId: scroll._id,
 			},
-			textId: text._id,
-			submissionKey: text.submissionKey,
-			sourceText: text.sourceText,
-			createdAt: text._creationTime,
+			scrollId: scroll._id,
+			submissionKey: scroll.submissionKey,
+			sourceText: scroll.sourceText,
+			createdAt: scroll._creationTime,
 			sentences: sentenceViews,
 		};
 	},
 });
 
 /**
- * Locates one occurrence inside a Text for a Source Context arrival. It is
- * separate from `get` so landing on an occurrence never changes the Text
+ * Locates one occurrence inside a Scroll for a Source Context arrival. It is
+ * separate from `get` so landing on an occurrence never changes the Scroll
  * query's identity.
  */
 export const occurrenceFocus = query({
-	args: { textId: v.string(), attestationId: v.string() },
+	args: { scrollId: v.string(), attestationId: v.string() },
 	returns: occurrenceFocusValidator,
-	handler: async (ctx, { textId: textIdValue, attestationId }) => {
-		const textId = ctx.db.normalizeId("texts", textIdValue);
-		if (!textId) {
+	handler: async (ctx, { scrollId: scrollIdValue, attestationId }) => {
+		const scrollId = ctx.db.normalizeId("scrolls", scrollIdValue);
+		if (!scrollId) {
 			return {
 				kind: "Missing" as const,
 				requestedAttestationId: attestationId,
 			};
 		}
-		return loadTextFocus(ctx, textId, attestationId);
+		return loadScrollFocus(ctx, scrollId, attestationId);
 	},
 });
 
-export async function loadTextFocus(
+export async function loadScrollFocus(
 	ctx: QueryCtx,
-	textId: Id<"texts">,
+	scrollId: Id<"scrolls">,
 	requestedAttestationId: string,
 ) {
 	const attestationId = ctx.db.normalizeId(
@@ -114,7 +116,7 @@ export async function loadTextFocus(
 		return { kind: "Missing" as const, requestedAttestationId };
 	}
 	const sentence = await ctx.db.get(members.sentenceId);
-	if (!sentence || sentence.textId !== textId) {
+	if (!sentence || sentence.scrollId !== scrollId) {
 		return { kind: "Missing" as const, requestedAttestationId };
 	}
 	return {

@@ -1,8 +1,8 @@
 import type { Doc } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
 import {
+	EXAMPLES_SCROLL_TITLE,
 	EXAMPLES_SUBMISSION_KEY,
-	EXAMPLES_TEXT_TITLE,
 	exampleContext,
 } from "./notes-study/example-contexts";
 import { NOTE_STUDY_DATABASE } from "./notes-study/note-study-dummy-database";
@@ -108,27 +108,27 @@ async function contextualize(
 }
 
 /** Move only Notes Study examples; retain Sentence, target Segment and Attestation IDs. */
-export async function consolidateExampleTexts(ctx: MutationCtx) {
-	const texts = await ctx.db
-		.query("texts")
+export async function consolidateExampleScrolls(ctx: MutationCtx) {
+	const scrolls = await ctx.db
+		.query("scrolls")
 		.withIndex("by_submission_key", (q) =>
 			q
 				.gte("submissionKey", "notes-study:")
 				.lt("submissionKey", "notes-study;"),
 		)
 		.take(LIMIT + 1);
-	if (texts.length > LIMIT)
+	if (scrolls.length > LIMIT)
 		throw new Error(
-			"Too many fixture Texts to consolidate in one transaction.",
+			"Too many fixture Scrolls to consolidate in one transaction.",
 		);
-	const collection = texts.find(
+	const collection = scrolls.find(
 		(text) => text.submissionKey === EXAMPLES_SUBMISSION_KEY,
 	);
-	const textId =
+	const scrollId =
 		collection?._id ??
-		(await ctx.db.insert("texts", {
+		(await ctx.db.insert("scrolls", {
 			submissionKey: EXAMPLES_SUBMISSION_KEY,
-			title: EXAMPLES_TEXT_TITLE,
+			title: EXAMPLES_SCROLL_TITLE,
 			sourceText: "",
 		}));
 	const examples: {
@@ -136,17 +136,17 @@ export async function consolidateExampleTexts(ctx: MutationCtx) {
 		heading: string;
 		related: boolean;
 	}[] = [];
-	const sentencesByText = await Promise.all(
-		texts.map((text) =>
+	const sentencesByScroll = await Promise.all(
+		scrolls.map((text) =>
 			ctx.db
 				.query("sentences")
-				.withIndex("by_text_id_and_position", (q) =>
-					q.eq("textId", text._id),
+				.withIndex("by_scroll_id_and_position", (q) =>
+					q.eq("scrollId", text._id),
 				)
 				.take(LIMIT + 1),
 		),
 	);
-	for (const sentences of sentencesByText) {
+	for (const sentences of sentencesByScroll) {
 		if (sentences.length > LIMIT)
 			throw new Error("Too many example Sentences.");
 		for (const sentence of sentences) {
@@ -189,7 +189,7 @@ export async function consolidateExampleTexts(ctx: MutationCtx) {
 				: sentence.stitchedText;
 			const [, segments, sessions] = await Promise.all([
 				ctx.db.patch(sentence._id, {
-					textId,
+					scrollId,
 					position,
 					heading,
 					stitchedText,
@@ -228,30 +228,30 @@ export async function consolidateExampleTexts(ctx: MutationCtx) {
 			await Promise.all([
 				...encountersBySegment.flatMap((encounters) =>
 					encounters.map((encounter) =>
-						ctx.db.patch(encounter._id, { textId }),
+						ctx.db.patch(encounter._id, { scrollId }),
 					),
 				),
 				...sessions.map((session) =>
 					ctx.db.patch(session._id, {
-						route: { ...session.route, textId },
+						route: { ...session.route, scrollId },
 					}),
 				),
 			]);
 			return `${heading}\n${stitchedText}`;
 		}),
 	);
-	await ctx.db.patch(textId, {
-		title: EXAMPLES_TEXT_TITLE,
+	await ctx.db.patch(scrollId, {
+		title: EXAMPLES_SCROLL_TITLE,
 		sourceText: paragraphs.join("\n\n"),
 	});
 	await Promise.all(
-		texts.flatMap((text) =>
-			text._id === textId ? [] : [ctx.db.delete(text._id)],
+		scrolls.flatMap((text) =>
+			text._id === scrollId ? [] : [ctx.db.delete(text._id)],
 		),
 	);
 	return {
-		textId,
+		scrollId,
 		cases: examples.length,
-		movedTexts: texts.filter((text) => text._id !== textId).length,
+		movedScrolls: scrolls.filter((text) => text._id !== scrollId).length,
 	};
 }

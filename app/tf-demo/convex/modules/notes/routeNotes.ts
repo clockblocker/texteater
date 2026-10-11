@@ -55,7 +55,7 @@ const attestationRouteNoteValidator = v.object({
 	kind: v.literal("Attestation"),
 	target: attestationTargetValidator,
 	source: v.object({
-		textId: v.id("texts"),
+		scrollId: v.id("scrolls"),
 		sentencePosition: v.number(),
 		sentenceSnippet: v.string(),
 		segments: v.array(sourceSegmentValidator),
@@ -181,14 +181,14 @@ async function loadAttestationRouteNote(
 	) {
 		return null;
 	}
-	const text = await ctx.db.get(occurrence.sentence.textId);
-	if (!text) return null;
+	const scroll = await ctx.db.get(occurrence.sentence.scrollId);
+	if (!scroll) return null;
 	const source = await projectOccurrenceSource(
 		ctx,
 		{
 			attestationId: occurrence.attestation._id,
 			sentence: occurrence.sentence,
-			text,
+			scroll,
 			memberSegmentIndices: occurrence.memberSegmentIndices,
 		},
 		visitorId,

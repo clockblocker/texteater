@@ -13,7 +13,7 @@ import { isPlainSentence } from "../../shared/supported-target-language";
 
 /** A stored Segment as a Visitor sees it in the reader. */
 type SentenceSegmentView = NonNullable<
-	FunctionReturnType<typeof api.textViews.get>
+	FunctionReturnType<typeof api.scrollViews.get>
 >["sentences"][number]["segments"][number];
 
 type SegmentDisplayState =
@@ -40,13 +40,13 @@ export type ReaderSentenceData = {
 
 /**
  * One Sentence of running text whose ResolvableText Segments select like
- * words in the reader. The same paragraph serves a Text and a Definition
+ * words in the reader. The same paragraph serves a Scroll and a Definition
  * block: hover and focus preview every member of the word's group (see
  * `segmentGroups`), a click selects that group, and the members of a
  * focused occurrence wear the selected rule. Selection outranks preview.
  * A Sentence intake could not segment shows as not segmented: hover and
  * focus preview no word, since none has a unit, and a click selects only
- * the word clicked. A Plain Sentence, in another language than the Text's
+ * the word clicked. A Plain Sentence, in another language than the Scroll's
  * target or in none detected, has no Segments: it reads as plain text in
  * its own language and direction.
  */

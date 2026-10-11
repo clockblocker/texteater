@@ -8,7 +8,7 @@
  */
 import type { Assert, Equal, PrettifyDeep } from "common-utils";
 import { z } from "zod";
-import type { ExtractedText } from "./extracted-text.js";
+import type { ExtractedText, Scroll, Section } from "./extracted-text.js";
 
 const fraction = z.number().min(0).max(1);
 
@@ -89,26 +89,36 @@ const blockSchema = z.discriminatedUnion("kind", [
 		.readonly(),
 ]);
 
-/** An Extracted Text, as `extracted-text.ts` documents it. */
-export const extractedTextSchema = z
+/** A Scroll of an Extracted Text, as `extracted-text.ts` documents it. */
+export const scrollSchema = z
 	.object({
-		chapters: z
-			.array(
-				z
-					.object({
-						heading: z
-							.object({ runs, locations })
-							.readonly()
-							.optional(),
-						blocks: z.array(blockSchema).readonly(),
-					})
-					.readonly(),
-			)
-			.min(1)
-			.readonly(),
+		kind: z.literal("Scroll"),
+		heading: z.object({ runs, locations }).readonly().optional(),
+		blocks: z.array(blockSchema).readonly(),
 	})
 	.readonly();
 
+const sectionSchema: z.ZodType<Section> = z
+	.object({
+		kind: z.literal("Section"),
+		title: z.string().regex(/^\S(?:[^\r\n]*\S)?$/u),
+		get contents() {
+			return contents;
+		},
+	})
+	.readonly();
+
+const contents = z
+	.array(z.union([sectionSchema, scrollSchema]))
+	.min(1)
+	.readonly();
+
+/** An Extracted Text, as `extracted-text.ts` documents it. */
+export const extractedTextSchema = z.object({ contents }).readonly();
+
+type _ScrollSchemaIsTheType = Assert<
+	Equal<PrettifyDeep<z.output<typeof scrollSchema>>, PrettifyDeep<Scroll>>
+>;
 type _SchemaIsTheType = Assert<
 	Equal<
 		PrettifyDeep<z.output<typeof extractedTextSchema>>,

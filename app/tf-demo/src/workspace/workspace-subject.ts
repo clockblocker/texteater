@@ -1,5 +1,5 @@
 /**
- * tf-demo's workspace Subjects: a Text, with the occurrence Go to source
+ * tf-demo's workspace Subjects: a Scroll, with the occurrence Go to source
  * lands on and its title, or a Note with the Presentation context that
  * opened it. Their keys, and the guard Workspace Persistence reads them
  * back through.
@@ -12,9 +12,9 @@ import type {
 	AttestationNoteTarget,
 	LemmaNoteTarget,
 	ReadingNoteTarget,
+	ScrollTarget,
 	ShadowNoteTarget,
 	SurfaceNoteTarget,
-	TextTarget,
 } from "../../shared/navigation";
 
 /**
@@ -37,7 +37,7 @@ type WorkspaceNoteTarget =
 	| ShadowNoteTarget
 	| ResolutionStepTarget;
 
-export type WorkspaceTarget = TextTarget | WorkspaceNoteTarget;
+export type WorkspaceTarget = ScrollTarget | WorkspaceNoteTarget;
 
 type SurfaceNotePresentationContext = {
 	/** Selects one of the aggregate Surface Note's analyses for this Presentation. */
@@ -137,13 +137,13 @@ type ContextFreeNoteSubject = {
 };
 
 /**
- * A Text as a workspace Subject: which Text, what the Library called it, and
+ * A Scroll as a workspace Subject: which Scroll, what the Library called it, and
  * for a Cover pushed by Go to source, the occurrence it lands on.
  */
-export type TextSubjectTarget = TextTarget;
+export type ScrollSubjectTarget = ScrollTarget;
 
 export type WorkspaceSubject =
-	| { readonly kind: "Text"; readonly target: TextSubjectTarget }
+	| { readonly kind: "Scroll"; readonly target: ScrollSubjectTarget }
 	| ContextualSurfaceNoteSubject
 	| ContextualAttestationNoteSubject
 	| ContextualLemmaNoteSubject
@@ -196,7 +196,7 @@ export function workspaceSubjectFor(
 	target: WorkspaceTarget,
 	presentationContext?: NotePresentationContext,
 ): WorkspaceSubject {
-	if (target.kind === "Text") return { kind: "Text", target };
+	if (target.kind === "Scroll") return { kind: "Scroll", target };
 	if (
 		target.kind === "Surface" &&
 		presentationContext &&
@@ -233,8 +233,8 @@ export function workspaceSubjectFor(
 export function workspaceSubjectKey(subject: WorkspaceSubject): string {
 	const { target } = subject;
 	switch (target.kind) {
-		case "Text":
-			return `Text:${target.textId}`;
+		case "Scroll":
+			return `Scroll:${target.scrollId}`;
 		case "Reading":
 			return `Reading:${target.readingId}`;
 		case "Lemma":
@@ -253,9 +253,9 @@ export function workspaceSubjectKey(subject: WorkspaceSubject): string {
 export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 	if (!isRecord(value) || !isRecord(value.target)) return false;
 	const target = value.target;
-	if (value.kind === "Text" && target.kind === "Text") {
+	if (value.kind === "Scroll" && target.kind === "Scroll") {
 		return (
-			typeof target.textId === "string" &&
+			typeof target.scrollId === "string" &&
 			isOptionalString(target.focusAttestationId) &&
 			isOptionalString(target.title) &&
 			value.presentationContext === undefined

@@ -53,13 +53,13 @@ test("Library hover responds immediately after the recorded background click", a
 		.first()
 		.click();
 	await expect(page.locator('[data-slot="text-reader"]')).toBeVisible();
-	// Restore the trace's layout, the Library beside a Text, in two Panes.
+	// Restore the trace's layout, the Library beside a Scroll, in two Panes.
 	// Only setup uses storage; every interaction under test is browser mouse input.
 	await page.evaluate((key) => {
 		const saved = JSON.parse(localStorage.getItem(key) ?? "null");
 		const ground = saved?.layout?.line?.at(-1);
 		if (ground?.kind !== "Sheet")
-			throw new Error("Text did not persist for the hover fixture.");
+			throw new Error("Scroll did not persist for the hover fixture.");
 		localStorage.setItem(
 			key,
 			JSON.stringify({
@@ -121,7 +121,7 @@ test("Library hover responds immediately after the recorded background click", a
 		y: input.y + shift.y,
 	}));
 	// Verify the moved coordinates hit the intended surfaces before replaying.
-	// The divider lies under the Text Pane's Ground, which the Compass draws
+	// The divider lies under the Scroll Pane's Ground, which the Compass draws
 	// over the Panes; the trace crosses it by construction, and resizing
 	// finds it by position rather than by what is on top.
 	const surfaces = await page.evaluate(

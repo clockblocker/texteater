@@ -802,7 +802,7 @@ test("the ground line steps down and back up, and a link pushes a cover that clo
 	const pane = frame.locator('[data-deck-pane="root"]');
 	await expect(pane).toHaveAttribute("data-pane-kind", "rooted");
 	await expect(frame.locator('[data-form="ground"]')).toHaveCount(1);
-	/* ← on the Ground: Text › Library › Menu, and back up by tapping */
+	/* ← on the Ground: Scroll › Library › Menu, and back up by tapping */
 	await pane.getByRole("button", { name: "Back to Library" }).click();
 	await expect(frame.locator('[data-form="ground"]')).toHaveCount(0);
 	await pane.getByRole("button", { name: "Back to Menu" }).click();
@@ -813,7 +813,7 @@ test("the ground line steps down and back up, and a link pushes a cover that clo
 	await pane.locator('[data-ground-item="brief"]').click();
 	await expect(frame.locator('[data-form="ground"]')).toHaveCount(1);
 	await expect(pane.locator("nav")).toContainText("Der Brief");
-	/* a word deals a Deck that belongs to the Text; a Cover from a link
+	/* a word deals a Deck that belongs to the Scroll; a Cover from a link
 	   hides it and closes on ← because it never had a Card */
 	await frame.locator('[data-word="Ende"]').click();
 	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
@@ -836,7 +836,7 @@ test("the ground line steps down and back up, and a link pushes a cover that clo
 	await frame.getByRole("button", { name: "Collapse back to card" }).click();
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(0);
 	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
-	/* a dismissive click on the Text sweeps its Deck */
+	/* a dismissive click on the Scroll sweeps its Deck */
 	await frame
 		.locator('[data-form="ground"]')
 		.click({ position: { x: 20, y: 300 } });

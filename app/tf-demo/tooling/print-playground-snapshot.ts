@@ -20,7 +20,7 @@ async function createPlaygroundSnapshot(): Promise<PlaygroundSnapshot> {
 		surfaces: await ctx.db.query("surfaces").collect(),
 		attestations: await ctx.db.query("attestations").collect(),
 		shadows: await ctx.db.query("shadows").collect(),
-		texts: await ctx.db.query("texts").collect(),
+		scrolls: await ctx.db.query("scrolls").collect(),
 	}));
 	const notes: PlaygroundSnapshot["notes"] = {};
 	function add(
@@ -67,15 +67,15 @@ async function createPlaygroundSnapshot(): Promise<PlaygroundSnapshot> {
 			`Shadow:${row._id}`,
 			await t.query(api.shadowNotes.get, { shadowId: row._id }),
 		);
-	const texts: PlaygroundSnapshot["texts"] = {};
-	for (const row of rows.texts) {
-		const view = await t.query(api.textViews.get, {
-			textId: row._id,
+	const scrolls: PlaygroundSnapshot["scrolls"] = {};
+	for (const row of rows.scrolls) {
+		const view = await t.query(api.scrollViews.get, {
+			scrollId: row._id,
 			visitorId,
 		});
-		if (view) texts[row._id] = view;
+		if (view) scrolls[row._id] = view;
 	}
-	return { catalog, notes, texts };
+	return { catalog, notes, scrolls };
 }
 
 const payload = JSON.stringify(await createPlaygroundSnapshot());

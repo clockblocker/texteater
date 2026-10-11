@@ -1,5 +1,5 @@
 import { NoteSkeletonFor } from "@/notes";
-import { TextViewSkeleton } from "@/views/text-view";
+import { ScrollViewSkeleton } from "@/views/scroll-view";
 import { CardFrame, SheetFrame, Stage } from "./frames";
 
 const NOTE_KINDS: readonly Parameters<typeof NoteSkeletonFor>[0]["kind"][] = [
@@ -32,9 +32,9 @@ export function LoadingGallery() {
 					</Stage>
 				</section>
 			))}
-			<Stage label="Text · Sheet">
+			<Stage label="Scroll · Sheet">
 				<SheetFrame>
-					<TextViewSkeleton />
+					<ScrollViewSkeleton />
 				</SheetFrame>
 			</Stage>
 		</div>

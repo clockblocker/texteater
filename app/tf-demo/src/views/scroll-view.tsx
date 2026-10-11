@@ -18,12 +18,12 @@ import { visitorErrorMessage } from "@/lib/visitor-error";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReaderSentence } from "@/views/reader-sentence";
 import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
-import type { TextSubjectTarget } from "@/workspace/workspace-subject";
+import type { ScrollSubjectTarget } from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
 
 /**
  * The reading column: the Ground column (`GROUND_COLUMN_STYLE`), so a
- * Text starts where its Pane bar's trail does. The Deck sits at one place
+ * Scroll starts where its Pane bar's trail does. The Deck sits at one place
  * in its Pane, 12rem below its top (the battery's `DECK_TOP_REM`), so the
  * column's top leaves the first two lines above it under the Pane bar, and
  * its foot lets the last Sentence scroll clear of it.
@@ -32,13 +32,13 @@ const READER_BODY_CLASS =
 	"mx-auto w-full pt-14 pb-[max(5rem,calc(100svh-12rem))] @max-md:pt-8";
 
 const MISSING_SOURCE_CONTEXT_NOTICE =
-	"This Source Context is no longer available. The Text is still open, and no new resolution was started.";
+	"This Source Context is no longer available. The Scroll is still open, and no new resolution was started.";
 
 type SentenceView = NonNullable<
-	FunctionReturnType<typeof api.textViews.get>
+	FunctionReturnType<typeof api.scrollViews.get>
 >["sentences"][number];
 
-export function TextView({ target }: { target: TextSubjectTarget }) {
+export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 	const visitorId = useAnonymousVisitorId();
 	const [notice, setNotice] = useState<string | null>(null);
 	const [segmentationError, setSegmentationError] = useState<string | null>(
@@ -47,21 +47,24 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 	const selection = useSegmentSelection(visitorId);
 	const segmentText = usePendingAction(api.orchestration.submitText);
 	const focus = useOccurrenceFocus(
-		target.textId,
+		target.scrollId,
 		target.focusAttestationId ?? null,
 		() => setNotice(MISSING_SOURCE_CONTEXT_NOTICE),
 	);
 
-	const textQuery = useQuery(
-		convexQuery(api.textViews.get, { textId: target.textId, visitorId }),
+	const scrollQuery = useQuery(
+		convexQuery(api.scrollViews.get, {
+			scrollId: target.scrollId,
+			visitorId,
+		}),
 	);
 
-	const textDetail = textQuery.data;
-	const sentences = textDetail?.sentences ?? [];
+	const scrollDetail = scrollQuery.data;
+	const sentences = scrollDetail?.sentences ?? [];
 	const error =
 		selection.error ??
 		segmentationError ??
-		(textQuery.error ? visitorErrorMessage(textQuery.error) : null);
+		(scrollQuery.error ? visitorErrorMessage(scrollQuery.error) : null);
 	// Plain Sentences never have Segments; the others lose theirs to
 	// Analysis Stripping.
 	const segmentable = sentences.filter((sentence) => !sentence.plain);
@@ -83,7 +86,7 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 	}
 
 	async function handleSegmentText() {
-		if (!textDetail) return;
+		if (!scrollDetail) return;
 		setNotice(null);
 		setSegmentationError(null);
 		try {
@@ -92,37 +95,37 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 				inspectionVisitorId: import.meta.env.DEV
 					? visitorId
 					: undefined,
-				submissionKey: textDetail.submissionKey,
-				sourceText: textDetail.sourceText,
+				submissionKey: scrollDetail.submissionKey,
+				sourceText: scrollDetail.sourceText,
 			});
 			if (result.status === "Rejected") {
 				setSegmentationError(result.message);
 				return;
 			}
-			if (result.textId !== textDetail.textId) {
+			if (result.scrollId !== scrollDetail.scrollId) {
 				setSegmentationError(
-					"Segments were saved to a different Text.",
+					"Segments were saved to a different Scroll.",
 				);
 				return;
 			}
-			setNotice("Text split into segments.");
+			setNotice("Scroll split into segments.");
 		} catch (cause) {
 			setSegmentationError(visitorErrorMessage(cause));
 		}
 	}
 
-	if (textQuery.isPending) return <TextViewSkeleton />;
-	if (!textDetail) {
+	if (scrollQuery.isPending) return <ScrollViewSkeleton />;
+	if (!scrollDetail) {
 		return (
 			<NotFoundView
-				title="Text not found"
+				title="Scroll not found"
 				description="This text does not exist, or it was removed from the demo."
 			/>
 		);
 	}
 
 	return (
-		<TextPresentation
+		<ScrollPresentation
 			error={error}
 			notice={notice}
 			onSegmentClick={handleSegmentSelection}
@@ -136,27 +139,27 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 	);
 }
 
-/** Where Go to source lands in a Text: one occurrence's Sentence and members. */
+/** Where Go to source lands in a Scroll: one occurrence's Sentence and members. */
 type OccurrenceFocus = {
 	readonly sentenceId: string;
 	readonly memberSegmentIndices: readonly number[];
 };
 
 /**
- * The occurrence a Text Cover pushed by Go to source lands on, looked up
- * apart from the Text so the Text query keeps its identity. One that no
- * longer resolves is reported once, and the Text reads as if opened from
+ * The occurrence a Scroll Cover pushed by Go to source lands on, looked up
+ * apart from the Scroll so the Scroll query keeps its identity. One that no
+ * longer resolves is reported once, and the Scroll reads as if opened from
  * the Library.
  */
 function useOccurrenceFocus(
-	textId: string,
+	scrollId: string,
 	attestationId: string | null,
 	onMissing: () => void,
 ): OccurrenceFocus | null {
 	const focusQuery = useQuery(
 		convexQuery(
-			api.textViews.occurrenceFocus,
-			attestationId ? { textId, attestationId } : "skip",
+			api.scrollViews.occurrenceFocus,
+			attestationId ? { scrollId, attestationId } : "skip",
 		),
 	);
 	const focus = focusQuery.data;
@@ -176,7 +179,7 @@ function useOccurrenceFocus(
 		: null;
 }
 
-export function TextPresentation({
+export function ScrollPresentation({
 	sentences,
 	selectedSegmentKey,
 	onSegmentClick,
@@ -284,7 +287,7 @@ export function SentenceList({
 	return (
 		<article
 			className="space-y-7 text-lg leading-[1.52] font-[430] tracking-[-0.015em] @max-md:space-y-6 @max-md:text-base"
-			aria-label="Text"
+			aria-label="Scroll"
 		>
 			{paragraphsOf(sentences).map((paragraph) => (
 				<section key={paragraph[0].sentenceId}>
@@ -368,13 +371,13 @@ function paragraphsOf(sentences: readonly SentenceView[]): Paragraph[] {
 }
 
 /** The reading column before its sentences arrive: two passages of bones set on the passage leading. */
-export function TextViewSkeleton() {
+export function ScrollViewSkeleton() {
 	return (
 		<div
 			className="w-full min-h-full flex-auto bg-paper"
 			role="status"
 			aria-busy="true"
-			aria-label="Loading Text"
+			aria-label="Loading Scroll"
 		>
 			<div
 				aria-hidden="true"

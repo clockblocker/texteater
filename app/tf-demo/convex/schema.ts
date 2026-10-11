@@ -6,6 +6,7 @@ import { intakeRunValidator } from "./model/intakeRuns";
 import {
 	articleEvidenceValidator,
 	catalogMissStageValidator,
+	codexPlacementValidator,
 	definitionTextStateValidator,
 	detectedLanguageValidator,
 	directSemanticRelationValidator,
@@ -34,13 +35,13 @@ import {
 	resolutionRouteProjectionValidator,
 	resolutionRunStateValidator,
 	safeGenerationFailureValidator,
+	scrollOriginValidator,
 	segmentResolutionStateValidator,
 	storedGrammaticalCheckpointValidator,
 	storedSegmentValidator,
 	storedUnitValidator,
 	structuralShadowAspectValidator,
 	surfaceSpellingValidator,
-	textOriginValidator,
 	translationLanguageValidator,
 } from "./model/validators";
 
@@ -78,22 +79,35 @@ export default defineSchema({
 		.index("by_run_id", ["runId"])
 		.index("by_submission_key", ["submissionKey"]),
 
-	texts: defineTable({
+	/**
+	 * A Section: a container, at any depth, of Sections and Scrolls (#1189).
+	 * Its Codex is the Sections and Scrolls placed in it, in order. Status
+	 * lives on its Scrolls.
+	 */
+	sections: defineTable({
+		title: v.string(),
+		placement: v.optional(codexPlacementValidator),
+	}).index("by_placement", ["placement.sectionId", "placement.order"]),
+
+	scrolls: defineTable({
 		title: v.optional(v.string()),
 		submissionKey: v.string(),
 		sourceText: v.string(),
 		/**
-		 * The Submission's Extracted Text, Dumgen's `ExtractedText` (checked
-		 * with `parseExtractedText` when read): what intake re-runs from.
-		 * Absent for a Definition Text.
+		 * The Scroll's Extracted Text, Dumgen's `Scroll` (checked with
+		 * `parseScroll` when read): what intake re-runs from. Absent for a
+		 * Definition Text.
 		 */
 		extractedText: v.optional(v.any()),
-		/** Absent for a Visitor-submitted Text; set for a hidden Definition Text. */
-		origin: v.optional(textOriginValidator),
+		/** Absent for a Visitor-submitted Scroll; set for a hidden Definition Text. */
+		origin: v.optional(scrollOriginValidator),
+		/** Absent for a loose Scroll, such as a one-off paste. */
+		placement: v.optional(codexPlacementValidator),
 	})
 		.index("by_submission_key", ["submissionKey"])
-		/** Visitor Texts are the range whose `origin.kind` is absent. */
-		.index("by_origin_kind", ["origin.kind"]),
+		/** Visitor Scrolls are the range whose `origin.kind` is absent. */
+		.index("by_origin_kind", ["origin.kind"])
+		.index("by_placement", ["placement.sectionId", "placement.order"]),
 
 	/**
 	 * One row per Reading whose Knowledge definition is being turned into a
@@ -111,7 +125,7 @@ export default defineSchema({
 		runNumber: v.optional(v.number()),
 		/** Runs in a row the watchdog found dead; cleared when a run settles. */
 		interruptedRuns: v.optional(v.number()),
-		textId: v.optional(v.id("texts")),
+		scrollId: v.optional(v.id("scrolls")),
 		sentenceId: v.optional(v.id("sentences")),
 		failureMessage: v.optional(v.string()),
 		updatedAt: v.number(),
@@ -120,7 +134,7 @@ export default defineSchema({
 	sentences: defineTable({
 		heading: v.optional(v.string()),
 		segmentedSentenceId: v.string(),
-		textId: v.id("texts"),
+		scrollId: v.id("scrolls"),
 		position: v.number(),
 		/**
 		 * Sentences sharing a paragraph run together in the reader. Absent for
@@ -128,7 +142,7 @@ export default defineSchema({
 		 */
 		paragraph: v.optional(v.number()),
 		/**
-		 * The Detected Language, absent when undetermined. Any but the Text's
+		 * The Detected Language, absent when undetermined. Any but the Scroll's
 		 * target language makes it a Plain Sentence: no Segments, no units.
 		 */
 		language: v.optional(detectedLanguageValidator),
@@ -147,7 +161,7 @@ export default defineSchema({
 		segmentationFailed: v.optional(v.literal(true)),
 	})
 		.index("by_segmented_sentence_id", ["segmentedSentenceId"])
-		.index("by_text_id_and_position", ["textId", "position"]),
+		.index("by_scroll_id_and_position", ["scrollId", "position"]),
 
 	segments: defineTable({
 		sentenceId: v.id("sentences"),
@@ -462,7 +476,7 @@ export default defineSchema({
 	visitorEncounters: defineTable({
 		requestId: v.string(),
 		visitorId: v.string(),
-		textId: v.id("texts"),
+		scrollId: v.id("scrolls"),
 		sentenceId: v.id("sentences"),
 		segmentId: v.id("segments"),
 		attestationId: v.optional(v.id("attestations")),

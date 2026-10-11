@@ -5,10 +5,10 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { segmentGroups } from "../src/views/reader-sentence";
-import { SentenceList } from "../src/views/text-view";
+import { SentenceList } from "../src/views/scroll-view";
 
 type SentenceSegmentView = NonNullable<
-	FunctionReturnType<typeof api.textViews.get>
+	FunctionReturnType<typeof api.scrollViews.get>
 >["sentences"][number]["segments"][number];
 type Unit = NonNullable<SentenceSegmentView["unit"]>;
 

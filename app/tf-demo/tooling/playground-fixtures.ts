@@ -18,7 +18,7 @@ import {
 	readingNoteValidator,
 } from "../convex/modules/notes/readingNote";
 import { unitReadingEmojiDescription } from "../convex/modules/notes/unitReadingFamilies";
-import { persistSubmittedText } from "../convex/modules/text/submission";
+import { persistSubmittedScroll } from "../convex/modules/scroll/submission";
 import {
 	emojiDescriptionOf,
 	foldedCanonicalForm,
@@ -39,7 +39,7 @@ import {
 	storedRelation,
 } from "./notes-study/note-study-dummy-database";
 import {
-	consolidateExampleTexts,
+	consolidateExampleScrolls,
 	proseSegments,
 } from "./playground-example-collection";
 
@@ -313,10 +313,10 @@ async function ensureOccurrence(
 		if (existingSentence?.heading) continue;
 		const persisted = existingSentence
 			? {
-					textId: existingSentence.textId,
+					scrollId: existingSentence.scrollId,
 					sentenceIds: [existingSentence._id],
 				}
-			: await persistSubmittedText(ctx, {
+			: await persistSubmittedScroll(ctx, {
 					submissionKey: occurrence.submissionKey,
 					sourceText,
 					sentences: [
@@ -387,7 +387,7 @@ async function ensureOccurrence(
 			await ensureVisitorEncounter(ctx, {
 				requestId: `${occurrence.submissionKey}:encounter:${occurrenceIndex}`,
 				visitorId: NOTE_STUDY_VISITOR_ID,
-				textId: persisted.textId,
+				scrollId: persisted.scrollId,
 				sentenceId,
 				segmentId: clicked._id,
 				attestationId,
@@ -677,9 +677,9 @@ export const playground = query({
 export const consolidateExamples = internalMutation({
 	args: {},
 	returns: v.object({
-		textId: v.id("texts"),
+		scrollId: v.id("scrolls"),
 		cases: v.number(),
-		movedTexts: v.number(),
+		movedScrolls: v.number(),
 	}),
-	handler: (ctx) => consolidateExampleTexts(ctx),
+	handler: (ctx) => consolidateExampleScrolls(ctx),
 });

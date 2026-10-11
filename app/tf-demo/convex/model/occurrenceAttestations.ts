@@ -10,7 +10,7 @@ import {
 	encounterSentenceOf,
 	MAX_SEGMENTS_PER_SENTENCE,
 } from "../../server/storedSegments";
-import type { TextLanguage } from "../../shared/supported-target-language";
+import type { ScrollLanguage } from "../../shared/supported-target-language";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { loadStoredSegments } from "./storedSegments";
@@ -19,7 +19,7 @@ import type { StoredSurfaceSpelling } from "./validators";
 type ServerCtx = QueryCtx | MutationCtx;
 
 type LemmaRecord = {
-	language: TextLanguage;
+	language: ScrollLanguage;
 	family: string;
 	kind: string;
 	canonicalForm: string;
@@ -27,7 +27,7 @@ type LemmaRecord = {
 };
 
 type SurfaceRecord = {
-	language: TextLanguage;
+	language: ScrollLanguage;
 	normalizedSurface: string;
 	spelling: StoredSurfaceSpelling;
 	surfaceFeatures: unknown;

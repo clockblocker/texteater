@@ -64,8 +64,8 @@ import {
 import {
 	findAnalyzedSubmission,
 	findStoredExtractedText,
-	persistSubmittedText as persistSubmittedTextImplementation,
-} from "./modules/text/submission";
+	persistSubmittedScroll as persistSubmittedScrollImplementation,
+} from "./modules/scroll/submission";
 
 /** What every Occurrence commit names: the click and the session committing it. */
 const occurrenceCommitArgs = {
@@ -213,33 +213,33 @@ async function staleNewReading(
 		: undefined;
 }
 
-export const persistSubmittedText = internalMutation({
+export const persistSubmittedScroll = internalMutation({
 	args: {
 		submissionKey: v.string(),
 		sourceText: v.string(),
-		/** Dumgen's `ExtractedText`, as intake read it. */
+		/** The Scroll's Extracted Text, Dumgen's `Scroll`, as intake read it. */
 		extractedText: v.optional(v.any()),
 		sentences: v.array(sentenceInputValidator),
 	},
 	returns: v.object({
-		textId: v.id("texts"),
+		scrollId: v.id("scrolls"),
 		sentenceIds: v.array(v.id("sentences")),
 		deduplicated: v.boolean(),
 	}),
-	handler: persistSubmittedTextImplementation,
+	handler: persistSubmittedScrollImplementation,
 });
 
-/** The Extracted Text a stored Text re-runs from, unchecked, if any. */
+/** The Extracted Text a stored Scroll re-runs from, unchecked, if any. */
 export const storedExtractedText = internalQuery({
 	args: { submissionKey: v.string(), sourceText: v.string() },
 	returns: v.any(),
 	handler: findStoredExtractedText,
 });
 
-/** The stored Text a re-submission would only reproduce, if any. */
+/** The stored Scroll a re-submission would only reproduce, if any. */
 export const analyzedSubmission = internalQuery({
 	args: { submissionKey: v.string(), sourceText: v.string() },
-	returns: v.union(v.null(), v.id("texts")),
+	returns: v.union(v.null(), v.id("scrolls")),
 	handler: findAnalyzedSubmission,
 });
 
@@ -379,7 +379,7 @@ export const persistUnresolvedClick = internalMutation({
 					await ensureVisitorEncounter(ctx, {
 						requestId: args.requestId,
 						visitorId: args.visitorId,
-						textId: sentence.textId,
+						scrollId: sentence.scrollId,
 						sentenceId: sentence._id,
 						segmentId: segment._id,
 					})

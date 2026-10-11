@@ -10,7 +10,7 @@ import { COVER_GUTTER_REM } from "./layout";
 
 /**
  * A Rooted Ground's column, gutters included, on every rung: the Menu, a
- * Menu Item, and a Text, whose reading column (`--container-note`) it is.
+ * Menu Item, and a Scroll, whose reading column (`--container-note`) it is.
  */
 const GROUND_COLUMN_WIDTH = "var(--container-note)";
 

@@ -85,11 +85,11 @@ export async function loadSentenceForResolution(
 	if (!sentence) return null;
 	const [segments, text] = await Promise.all([
 		loadStoredSegments(ctx, sentenceId),
-		ctx.db.get(sentence.textId),
+		ctx.db.get(sentence.scrollId),
 	]);
 	return {
 		sentenceId,
-		textId: sentence.textId,
+		scrollId: sentence.scrollId,
 		segmentedSentenceId: sentence.segmentedSentenceId,
 		language: sentence.language,
 		stitchedText: sentence.stitchedText,
@@ -107,7 +107,7 @@ export async function loadSentenceForResolution(
 	};
 }
 
-/** The Sentences just before and after this one in its Text, as far as they exist. */
+/** The Sentences just before and after this one in its Scroll, as far as they exist. */
 export async function loadNeighbourSentences(
 	ctx: QueryCtx,
 	sentenceId: Id<"sentences">,
@@ -117,18 +117,18 @@ export async function loadNeighbourSentences(
 	const [before, after] = await Promise.all([
 		ctx.db
 			.query("sentences")
-			.withIndex("by_text_id_and_position", (q) =>
+			.withIndex("by_scroll_id_and_position", (q) =>
 				q
-					.eq("textId", sentence.textId)
+					.eq("scrollId", sentence.scrollId)
 					.lt("position", sentence.position),
 			)
 			.order("desc")
 			.first(),
 		ctx.db
 			.query("sentences")
-			.withIndex("by_text_id_and_position", (q) =>
+			.withIndex("by_scroll_id_and_position", (q) =>
 				q
-					.eq("textId", sentence.textId)
+					.eq("scrollId", sentence.scrollId)
 					.gt("position", sentence.position),
 			)
 			.first(),

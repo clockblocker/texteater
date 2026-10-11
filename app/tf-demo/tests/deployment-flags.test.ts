@@ -51,10 +51,10 @@ test("without TF_DEMO_ADMIN the global wipes reject and write nothing", async ()
 	);
 	expect(
 		await t.run(async (ctx) => ({
-			texts: (await ctx.db.query("texts").collect()).length,
+			scrolls: (await ctx.db.query("scrolls").collect()).length,
 			segments: (await ctx.db.query("segments").collect()).length,
 		})),
-	).toEqual({ texts: 1, segments: 4 });
+	).toEqual({ scrolls: 1, segments: 4 });
 });
 
 test("without TF_INSPECTION a selection or submission asking for inspection captures none", async () => {

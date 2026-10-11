@@ -1,7 +1,7 @@
 import { CARD_WIDTH_REM } from "compass";
 import { sheetColumn } from "@/workspace/compass/layout";
 import type { SubjectRenderer, SubjectView } from "@/workspace/compass/subject";
-import { BodyBlock, ContextsBlock, LinksBlock, TextBlock } from "./blocks";
+import { BodyBlock, ContextsBlock, LinksBlock, ScrollBlock } from "./blocks";
 import { cleanWord, type DummyNote, deckFor, type NoteLink } from "./dummy";
 import {
 	type Subject,
@@ -17,25 +17,25 @@ import {
 } from "./real-note";
 
 /**
- * How the playground's dummy Subjects render in the Compass: a Text's
+ * How the playground's dummy Subjects render in the Compass: a Scroll's
  * Blocks are its Sentences; a Note's are its Source Contexts, lines and
  * Links, or, for a ported Note, the real Notes renderers'.
  */
 
-/** A Text reads at prose width. */
-const TEXT_COLUMN_REM = 40;
+/** A Scroll reads at prose width. */
+const SCROLL_COLUMN_REM = 40;
 /** A ported Note lays out on the Notes page's column, `--container-note`. */
 const PORTED_COLUMN_REM = 50;
 
 export function playgroundRenderer({
 	showReader,
 }: {
-	/** A Text Ground with the reader hidden: the workbench's quiet scenes. */
+	/** A Scroll Ground with the reader hidden: the workbench's quiet scenes. */
 	showReader: boolean;
 }): SubjectRenderer<Subject> {
 	const columnRem = (subject: Subject) =>
-		subject.kind === "Text"
-			? TEXT_COLUMN_REM
+		subject.kind === "Scroll"
+			? SCROLL_COLUMN_REM
 			: subject.note.fixture
 				? PORTED_COLUMN_REM
 				: CARD_WIDTH_REM;
@@ -87,7 +87,9 @@ function DummyHeading({
 }) {
 	const gloss = subjectGloss(subject);
 	const title =
-		subject.kind === "Text" ? subject.text.title : subject.note.tail.form;
+		subject.kind === "Scroll"
+			? subject.scroll.title
+			: subject.note.tail.form;
 	if (view.form === "card")
 		return (
 			<>
@@ -144,9 +146,9 @@ function DummyBody({
 				paddingInline: `${gutterRem.toString()}rem`,
 			}}
 		>
-			{subject.kind === "Text" ? (
-				<TextBlock
-					text={subject.text}
+			{subject.kind === "Scroll" ? (
+				<ScrollBlock
+					scroll={subject.scroll}
 					focus={subject.focus}
 					form={view.form}
 					shown={showReader}

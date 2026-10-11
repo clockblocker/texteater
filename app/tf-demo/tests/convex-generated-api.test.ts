@@ -91,20 +91,20 @@ test("the drift check maps paths to codegen keys and catches both directions", (
 	const apiKeys = generatedApiKeys(`declare const fullApi: ApiFromModules<{
   analysisStripping: typeof analysisStripping;
   "modules/notes/relationNeighborhood": typeof modules_notes_relationNeighborhood;
-  texts: typeof texts;
+  scrolls: typeof scrolls;
 }>;`);
 	expect(apiKeys).toEqual([
 		"analysisStripping",
 		"modules/notes/relationNeighborhood",
-		"texts",
+		"scrolls",
 	]);
 	expect(
 		generatedApiDrift(
 			[...apiKeys, "model/x"],
-			apiKeys.filter((key) => key !== "texts"),
+			apiKeys.filter((key) => key !== "scrolls"),
 		),
-	).toEqual({ missing: ["model/x", "texts"], stale: [] });
-	expect(generatedApiDrift(["texts"], ["texts", "model/gone"])).toEqual({
+	).toEqual({ missing: ["model/x", "scrolls"], stale: [] });
+	expect(generatedApiDrift(["scrolls"], ["scrolls", "model/gone"])).toEqual({
 		missing: [],
 		stale: ["model/gone"],
 	});

@@ -127,8 +127,8 @@ function targetFromSegments(
 			return { kind: "Reading", readingId: id };
 		case "shadow":
 			return { kind: "Shadow", shadowId: id };
-		case "text":
-			return { kind: "Text", textId: id };
+		case "scroll":
+			return { kind: "Scroll", scrollId: id };
 		case "resolution":
 			return {
 				kind: "ResolutionStep",
@@ -152,16 +152,16 @@ function segmentsFromTarget(target: WorkspaceTarget): readonly string[] {
 			return ["reading", target.readingId];
 		case "Shadow":
 			return ["shadow", target.shadowId];
-		case "Text":
-			return ["text", target.textId];
+		case "Scroll":
+			return ["scroll", target.scrollId];
 		case "ResolutionStep":
 			return ["resolution", target.requestId, target.stepKind];
 	}
 }
 
 function subjectFor(target: WorkspaceTarget): WorkspaceSubject {
-	return target.kind === "Text"
-		? { kind: "Text", target }
+	return target.kind === "Scroll"
+		? { kind: "Scroll", target }
 		: ({ kind: "Note", target } as WorkspaceSubject);
 }
 

@@ -91,13 +91,13 @@ function useDemoDataControls() {
 		}
 	}
 
-	async function handleStripTextAnalysis() {
+	async function handleStripScrollAnalysis() {
 		setNotice(null);
 		setError(null);
 		try {
 			const result = await stripAnalyses.run({});
 			setNotice(
-				`Stripped ${result.removed} analysis records from ${result.strippedTexts} Texts and cleared ${result.removedInspectionRecords} Resolution Inspector records. The Texts and their Sentences were kept.`,
+				`Stripped ${result.removed} analysis records from ${result.strippedScrolls} Scrolls and cleared ${result.removedInspectionRecords} Resolution Inspector records. The Scrolls and their Sentences were kept.`,
 			);
 		} catch (cause) {
 			setError(visitorErrorMessage(cause));
@@ -109,7 +109,7 @@ function useDemoDataControls() {
 		setError(null);
 		try {
 			const result = await clearSharedData.run({});
-			// Every Text and Note the workspace held is gone with the data.
+			// Every Scroll and Note the workspace held is gone with the data.
 			closeAllSheets();
 			setNotice(
 				`Cleared ${result.deleted} shared records. Visitor-owned history was kept.`,
@@ -125,9 +125,9 @@ function useDemoDataControls() {
 		isBusy,
 		isClearingSharedData: clearSharedData.isPending,
 		isClearingVisitorData: clearVisitorData.isPending,
-		isStrippingTextAnalysis: stripAnalyses.isPending,
+		isStrippingScrollAnalysis: stripAnalyses.isPending,
 		handleClearVisitorData,
-		handleStripTextAnalysis,
+		handleStripScrollAnalysis,
 		handleClearSharedData,
 	};
 }
@@ -139,9 +139,9 @@ function DemoDataCard({
 	isBusy,
 	isClearingSharedData,
 	isClearingVisitorData,
-	isStrippingTextAnalysis,
+	isStrippingScrollAnalysis,
 	handleClearVisitorData,
-	handleStripTextAnalysis,
+	handleStripScrollAnalysis,
 	handleClearSharedData,
 }: {
 	/** Whether this deployment allows the global wipes (TF_DEMO_ADMIN). */
@@ -151,9 +151,9 @@ function DemoDataCard({
 	isBusy: boolean;
 	isClearingSharedData: boolean;
 	isClearingVisitorData: boolean;
-	isStrippingTextAnalysis: boolean;
+	isStrippingScrollAnalysis: boolean;
 	handleClearVisitorData(): Promise<void>;
-	handleStripTextAnalysis(): Promise<void>;
+	handleStripScrollAnalysis(): Promise<void>;
 	handleClearSharedData(): Promise<void>;
 }) {
 	return (
@@ -190,12 +190,12 @@ function DemoDataCard({
 							/>
 						}
 						title="Strip all analyses?"
-						description="All Texts and Sentences remain. Segments, resolutions, Encounters, orphaned Readings, and Resolution Inspector history are removed."
+						description="All Scrolls and Sentences remain. Segments, resolutions, Encounters, orphaned Readings, and Resolution Inspector history are removed."
 						confirmLabel="Strip analyses"
-						onConfirm={() => void handleStripTextAnalysis()}
+						onConfirm={() => void handleStripScrollAnalysis()}
 					>
 						<EraserIcon data-icon="inline-start" />
-						{isStrippingTextAnalysis
+						{isStrippingScrollAnalysis
 							? "Stripping analyses…"
 							: "Strip analyses"}
 					</ConfirmDialog>
@@ -210,7 +210,7 @@ function DemoDataCard({
 							/>
 						}
 						title="Clear shared data for every visitor?"
-						description="This removes all Texts, Sentences, Segments, Readings, Lemmas, relations, and Knowledge."
+						description="This removes all Scrolls, Sentences, Segments, Readings, Lemmas, relations, and Knowledge."
 						confirmLabel="Clear shared data"
 						onConfirm={() => void handleClearSharedData()}
 					>

@@ -5,7 +5,7 @@ import {
 	GERMAN_ONLY_MESSAGE,
 	INTAKE_NOT_CONFIGURED_MESSAGE,
 } from "../server/intake";
-import type { TextLanguage } from "../shared/supported-target-language";
+import type { ScrollLanguage } from "../shared/supported-target-language";
 import { visitorErrorMessage } from "../src/lib/visitor-error";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
 import {
@@ -34,9 +34,9 @@ function typeSafe(jev = fakeJev({ answers: germanAnswers })) {
 }
 
 /** Rows the submission wrote; a Rejected or failed one writes none. */
-async function storedTexts(t: TestConvexDb) {
+async function storedScrolls(t: TestConvexDb) {
 	return t.run(async (ctx) => [
-		...(await ctx.db.query("texts").collect()),
+		...(await ctx.db.query("scrolls").collect()),
 		...(await ctx.db.query("sentences").collect()),
 	]);
 }
@@ -52,7 +52,7 @@ function intakeRuns(t: TestConvexDb) {
 const submit = (
 	t: TestConvexDb,
 	sourceText: string,
-	options: { submissionKey?: string; language?: TextLanguage } = {},
+	options: { submissionKey?: string; language?: ScrollLanguage } = {},
 ) =>
 	t.action(api.orchestration.submitText, {
 		visitorId: "visitor-1",
@@ -61,7 +61,7 @@ const submit = (
 		...(options.language ? { language: options.language } : {}),
 	});
 
-test("a submitted German Text is split, segmented and stored with each Sentence's units, and its run records the jev tokens", async () => {
+test("a submitted German Scroll is split, segmented and stored with each Sentence's units, and its run records the jev tokens", async () => {
 	const providers = typeSafe();
 	const t = createTestConvex();
 	const result = await submit(t, "Er gibt auf.\n\nEr wohnt im Haus.", {
@@ -93,7 +93,7 @@ test("a submitted German Text is split, segmented and stored with each Sentence'
 	const sent = providers.jev.sent;
 	expect(run).toMatchObject({
 		outcome: "Accepted",
-		textId: result.status === "Accepted" ? result.textId : undefined,
+		scrollId: result.status === "Accepted" ? result.scrollId : undefined,
 		sentenceCount: 2,
 		sentences: [
 			{ segmentation: "Segmented" },
@@ -110,10 +110,10 @@ test("a submitted German Text is split, segmented and stored with each Sentence'
 			outputTokens: sent.length,
 		},
 	});
-	// The run keeps no Text, prompt or answer.
+	// The run keeps no text, prompt or answer.
 	expect(JSON.stringify(run)).not.toContain("gibt");
 
-	// Re-submitting a stored Text asks nothing and returns the same Text.
+	// Re-submitting a stored Scroll asks nothing and returns the same Scroll.
 	const asked = sent.length;
 	expect(
 		await submit(t, "Er gibt auf.\n\nEr wohnt im Haus.", {
@@ -123,14 +123,14 @@ test("a submitted German Text is split, segmented and stored with each Sentence'
 	expect(sent.length).toBe(asked);
 });
 
-test("a Text in another language is Rejected with the German-only message before any work", async () => {
+test("a Scroll in another language is Rejected with the German-only message before any work", async () => {
 	const providers = typeSafe();
 	const t = createTestConvex();
 	expect(await submit(t, "The way is the goal.", { language: "en" })).toEqual(
 		{ status: "Rejected", message: GERMAN_ONLY_MESSAGE },
 	);
 	expect(providers.requests).toEqual([]);
-	expect(await storedTexts(t)).toEqual([]);
+	expect(await storedScrolls(t)).toEqual([]);
 	expect(await intakeRuns(t)).toEqual([]);
 });
 
@@ -145,7 +145,7 @@ test("a text over the sentence limit is Rejected with its reason before any work
 		status: "Rejected",
 		message: "At most 25 sentences are allowed.",
 	});
-	expect(await storedTexts(t)).toEqual([]);
+	expect(await storedScrolls(t)).toEqual([]);
 	expect(providers.requests).toEqual([]);
 });
 
@@ -192,13 +192,13 @@ test("with jev unavailable no Sentence's language is known, so the submission fa
 	const t = createTestConvex();
 	await expect(submit(t, "Die Banken sind geschlossen.")).rejects.toThrow();
 	expect(providers.requests.length).toBeGreaterThan(0);
-	expect(await storedTexts(t)).toEqual([]);
+	expect(await storedScrolls(t)).toEqual([]);
 	expect(await intakeRuns(t)).toMatchObject([
 		{ outcome: "Failed", failureTag: "ProviderFailure" },
 	]);
 });
 
-test("with segmentation unavailable the Text is still stored, every German Sentence marked as not segmented", async () => {
+test("with segmentation unavailable the Scroll is still stored, every German Sentence marked as not segmented", async () => {
 	const providers = typeSafe(
 		fakeJev({ fail: (request) => !isLanguageRequest(request) }),
 	);
@@ -255,7 +255,7 @@ test("without a TypeSafe key the submission fails with a NotConfigured error the
 	});
 	expect(visitorErrorMessage(failure)).toBe(INTAKE_NOT_CONFIGURED_MESSAGE);
 	expect(providers.requests).toEqual([]);
-	expect(await storedTexts(t)).toEqual([]);
+	expect(await storedScrolls(t)).toEqual([]);
 	expect(await intakeRuns(t)).toEqual([
 		expect.objectContaining({
 			outcome: "Failed",

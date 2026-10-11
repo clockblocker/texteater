@@ -16,7 +16,7 @@ import {
 	get as getReadingNote,
 	sourceContexts as getSourceContexts,
 } from "../convex/readingNotes";
-import { get as getTextView, occurrenceFocus } from "../convex/textViews";
+import { get as getScrollView, occurrenceFocus } from "../convex/scrollViews";
 import {
 	foldedCanonicalForm,
 	lemmaIdentityKey,
@@ -160,7 +160,7 @@ function encounter(
 		return ctx.db.insert("visitorEncounters", {
 			requestId: `click:${visitorId}:${segmentId}`,
 			visitorId,
-			textId: sentence.textId,
+			scrollId: sentence.scrollId,
 			sentenceId: sentence._id,
 			segmentId,
 			...(attestation
@@ -174,19 +174,22 @@ function encounter(
 	});
 }
 
-test("a Text view preserves the stored submission identity for re-segmentation", async () => {
+test("a Scroll view preserves the stored submission identity for re-segmentation", async () => {
 	const t = createTestConvex();
-	const textId = await t.run((ctx) =>
-		ctx.db.insert("texts", {
+	const scrollId = await t.run((ctx) =>
+		ctx.db.insert("scrolls", {
 			submissionKey: "text:legacy-import",
 			sourceText: "Die Banken.",
 		}),
 	);
 
 	expect(
-		await t.query(api.textViews.get, { textId, visitorId: "visitor-1" }),
+		await t.query(api.scrollViews.get, {
+			scrollId,
+			visitorId: "visitor-1",
+		}),
 	).toMatchObject({
-		textId,
+		scrollId,
 		submissionKey: "text:legacy-import",
 		sourceText: "Die Banken.",
 	});
@@ -612,17 +615,17 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 });
 
 test("note and text queries expose target-specific interfaces", () => {
-	const textArgs = exportedArgs(getTextView);
-	const textReturns = exportedReturns(getTextView);
+	const scrollArgs = exportedArgs(getScrollView);
+	const scrollReturns = exportedReturns(getScrollView);
 	const focusArgs = exportedArgs(occurrenceFocus);
 	const focusReturns = exportedReturns(occurrenceFocus);
 	const noteArgs = exportedArgs(getReadingNote);
 	const noteReturns = exportedReturns(getReadingNote);
 
-	expect(textArgs).toContain('"textId"');
-	expect(textArgs).not.toContain('"focusAttestationId"');
-	expect(textArgs).not.toContain('"target"');
-	expect(focusArgs).toContain('"textId"');
+	expect(scrollArgs).toContain('"scrollId"');
+	expect(scrollArgs).not.toContain('"focusAttestationId"');
+	expect(scrollArgs).not.toContain('"target"');
+	expect(focusArgs).toContain('"scrollId"');
 	expect(focusArgs).toContain('"attestationId"');
 	expect(noteArgs).toContain('"readingId"');
 	// Paging travels through its own query, so the body never takes a cursor.
@@ -640,15 +643,15 @@ test("note and text queries expose target-specific interfaces", () => {
 	expect(noteReturns).toContain('"sentenceSnippet"');
 	expect(noteReturns).not.toContain("targetReadingKey");
 	expect(noteReturns).toContain('"value":"Lemma"');
-	// Landing on an occurrence never changes the Text query's shape.
-	expect(textReturns).not.toContain('"value":"Occurrence"');
+	// Landing on an occurrence never changes the Scroll query's shape.
+	expect(scrollReturns).not.toContain('"value":"Occurrence"');
 	expect(focusReturns).toContain('"value":"Missing"');
 	expect(focusReturns).toContain('"value":"Occurrence"');
 });
 
-test("Text projection shares current truth through Visitor Encounter history", async () => {
+test("Scroll projection shares current truth through Visitor Encounter history", async () => {
 	const t = createTestConvex();
-	const { textId, segmentIds } = await submitText(t, [
+	const { scrollId, segmentIds } = await submitText(t, [
 		["rufe", " ", "fehl", " ", "an", " ", "aktiv"],
 	]);
 	const [rufe, , fehl, , an, , aktiv] = segmentIds[0] ?? [];
@@ -671,8 +674,8 @@ test("Text projection shares current truth through Visitor Encounter history", a
 	await encounter(t, "visitor-1", an);
 	await encounter(t, "visitor-1", fehl);
 
-	const result = await t.query(api.textViews.get, {
-		textId,
+	const result = await t.query(api.scrollViews.get, {
+		scrollId,
 		visitorId: "visitor-1",
 	});
 	const projected = Object.fromEntries(
@@ -697,8 +700,8 @@ test("Text projection shares current truth through Visitor Encounter history", a
 	});
 });
 
-test("a maximum-length Text view reads Visitor Encounters once per Sentence, not once per Segment", async () => {
-	// A Text at the submission limits: 25 Sentences of about 400 characters,
+test("a maximum-length Scroll view reads Visitor Encounters once per Sentence, not once per Segment", async () => {
+	// A Scroll at the submission limits: 25 Sentences of about 400 characters,
 	// short words that make close to 4,000 Segments. Reading it may use 8
 	// index ranges per Sentence, far below one per Segment.
 	const t = createTestConvex({
@@ -712,7 +715,7 @@ test("a maximum-length Text view reads Visitor Encounters once per Sentence, not
 		]).flat(),
 		".",
 	]);
-	const { textId, segmentIds } = await submitText(t, sentences);
+	const { scrollId, segmentIds } = await submitText(t, sentences);
 	const sourceText = sentences.map((segments) => segments.join("")).join(" ");
 	expect(sourceText.length).toBeLessThanOrEqual(MAX_SOURCE_TEXT_CHARACTERS);
 	expect(segmentIds.flat().length).toBeGreaterThan(3_900);
@@ -727,8 +730,8 @@ test("a maximum-length Text view reads Visitor Encounters once per Sentence, not
 		await encounter(t, "visitor-1", segments[0]);
 	}
 
-	const view = await t.query(api.textViews.get, {
-		textId,
+	const view = await t.query(api.scrollViews.get, {
+		scrollId,
 		visitorId: "visitor-1",
 	});
 	expect(view?.sentences).toHaveLength(MAX_SOURCE_SENTENCES);
@@ -757,8 +760,8 @@ test("malformed routed IDs return not-found", async () => {
 		}),
 	).toBeNull();
 	expect(
-		await t.query(api.textViews.get, {
-			textId: "malformed id",
+		await t.query(api.scrollViews.get, {
+			scrollId: "malformed id",
 			visitorId: "visitor-1",
 		}),
 	).toBeNull();
@@ -771,10 +774,10 @@ test("deleted routed records return the same defined not-found result", async ()
 		lemma: bankLemma,
 		emojiDescription: "🏦",
 	});
-	const { textId } = await submitText(t, [["Banken"]]);
+	const { scrollId } = await submitText(t, [["Banken"]]);
 	await t.run(async (ctx) => {
 		await ctx.db.delete(readingId);
-		await ctx.db.delete(textId);
+		await ctx.db.delete(scrollId);
 	});
 
 	expect(
@@ -784,7 +787,10 @@ test("deleted routed records return the same defined not-found result", async ()
 		}),
 	).toBeNull();
 	expect(
-		await t.query(api.textViews.get, { textId, visitorId: "visitor-1" }),
+		await t.query(api.scrollViews.get, {
+			scrollId,
+			visitorId: "visitor-1",
+		}),
 	).toBeNull();
 });
 
@@ -795,11 +801,11 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 		lemma: bankLemma,
 		emojiDescription: "🏦",
 	});
-	const textA = await submitText(t, [
+	const scrollA = await submitText(t, [
 		["Die", " ", "Bank", "."],
 		["Eine", " ", "andere", " ", "Bank", "."],
 	]);
-	const textB = await submitText(t, [
+	const scrollB = await submitText(t, [
 		["Heute", " ", "steht", " ", "etwas", " ", "dazwischen", "."],
 	]);
 	const others = await submitText(t, [
@@ -814,8 +820,8 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 		["Bänke"],
 		["Bänke"],
 	]);
-	const [sentenceOld, sentenceA] = textA.segmentIds;
-	const [sentenceB] = textB.segmentIds;
+	const [sentenceOld, sentenceA] = scrollA.segmentIds;
+	const [sentenceB] = scrollB.segmentIds;
 
 	const oldId = await attest(t, bank, [sentenceOld?.[2]]);
 	await encounter(t, "visitor-1", sentenceOld?.[2]);
@@ -849,14 +855,14 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 		newBId,
 	]);
 	const quotedB = first.page.at(-1);
-	expect(quotedB?.textId).toBe(textB.textId);
+	expect(quotedB?.scrollId).toBe(scrollB.scrollId);
 	expect(quotedB?.memberSegmentIndices).toEqual([2, 6]);
 	expect(quotedB?.memberTexts).toEqual(["steht", "dazwischen"]);
-	expect(quotedB?.origin).toEqual({ kind: "Text" });
-	// Go to source names the Text as the Library does: its opening line.
+	expect(quotedB?.origin).toEqual({ kind: "Scroll" });
+	// Go to source names the Scroll as the Library does: its opening line.
 	expect(quotedB?.target).toEqual({
-		kind: "Text",
-		textId: textB.textId,
+		kind: "Scroll",
+		scrollId: scrollB.scrollId,
 		focusAttestationId: newBId,
 		title: "Heute steht etwas dazwischen.",
 	});
@@ -874,9 +880,9 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 	expect(continuation.page.map(({ attestationId }) => attestationId)).toEqual(
 		[newAId, oldId],
 	);
-	expect(continuation.page.map(({ textId }) => textId)).toEqual([
-		textA.textId,
-		textA.textId,
+	expect(continuation.page.map(({ scrollId }) => scrollId)).toEqual([
+		scrollA.scrollId,
+		scrollA.scrollId,
 	]);
 	expect(continuation.isDone).toBe(true);
 });
@@ -956,38 +962,38 @@ test("Source Contexts include only occurrences encountered by this Visitor", asy
 	expect(result.page[0]?.memberSegmentIndices).toEqual([2, 4]);
 });
 
-test("focused occurrence validates Text ownership and never substitutes stale coordinates", async () => {
+test("focused occurrence validates Scroll ownership and never substitutes stale coordinates", async () => {
 	const t = createTestConvex();
 	const bank = await insertReading(t, {
 		unitKind: "Reading",
 		lemma: bankLemma,
 		emojiDescription: "🏦",
 	});
-	const textA = await submitText(t, [
+	const scrollA = await submitText(t, [
 		["Die", " ", "Bank", " ", "steht", " ", "da", "."],
 	]);
-	const textB = await submitText(t, [["Eine", " ", "Bank", "."]]);
-	const [sentenceA] = textA.segmentIds;
-	const [sentenceB] = textB.segmentIds;
+	const scrollB = await submitText(t, [["Eine", " ", "Bank", "."]]);
+	const [sentenceA] = scrollA.segmentIds;
+	const [sentenceB] = scrollB.segmentIds;
 	const validId = await attest(t, bank, [sentenceA?.[6], sentenceA?.[2]]);
-	const wrongTextId = await attest(t, bank, [sentenceB?.[2]]);
+	const wrongScrollId = await attest(t, bank, [sentenceB?.[2]]);
 	const staleId = await attest(t, bank, [sentenceA?.[4]]);
 	await t.run((ctx) => ctx.db.delete(staleId));
 	const focus = (attestationId: string) =>
-		t.query(api.textViews.occurrenceFocus, {
-			textId: textA.textId,
+		t.query(api.scrollViews.occurrenceFocus, {
+			scrollId: scrollA.scrollId,
 			attestationId,
 		});
 
 	expect(await focus(validId)).toEqual({
 		kind: "Occurrence",
 		attestationId: validId,
-		sentenceId: textA.sentenceIds[0],
+		sentenceId: scrollA.sentenceIds[0],
 		memberSegmentIndices: [2, 6],
 	});
-	expect(await focus(wrongTextId)).toEqual({
+	expect(await focus(wrongScrollId)).toEqual({
 		kind: "Missing",
-		requestedAttestationId: wrongTextId,
+		requestedAttestationId: wrongScrollId,
 	});
 	expect(await focus(staleId)).toEqual({
 		kind: "Missing",

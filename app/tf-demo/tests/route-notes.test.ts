@@ -3,7 +3,7 @@ import type { FunctionArgs, FunctionReturnType } from "convex/server";
 import type * as Dumling from "dumling/types";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
-import { projectSentenceView } from "../convex/modules/text/sentenceView";
+import { projectSentenceView } from "../convex/modules/scroll/sentenceView";
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import {
 	createTestConvex,
@@ -511,7 +511,7 @@ function lemmaCoreFeatures({ canonicalForm, kind, pronType }: LemmaSeed) {
 
 test("sentence gender belongs to the visitor's encountered occurrence, including its article", async () => {
 	const t = createTestConvex();
-	const { textId, sentenceIds, segmentIds } = await submitText(t, [
+	const { scrollId, sentenceIds, segmentIds } = await submitText(t, [
 		["der", " ", "Frau"],
 	]);
 	const [sentenceId] = sentenceIds;
@@ -541,7 +541,7 @@ test("sentence gender belongs to the visitor's encountered occurrence, including
 		ctx.db.insert("visitorEncounters", {
 			requestId: "click-1",
 			visitorId: "alice",
-			textId,
+			scrollId,
 			sentenceId,
 			segmentId: article,
 			encounteredAt: 1,

@@ -19,8 +19,8 @@ const MENU_ITEMS = new Set(["library", "settings"]);
 const KEY = "tf-demo.workspace.compass.v1";
 
 const text: WorkspaceSubject = {
-	kind: "Text",
-	target: { kind: "Text", textId: "text-1", title: "Die Banken" },
+	kind: "Scroll",
+	target: { kind: "Scroll", scrollId: "text-1", title: "Die Banken" },
 };
 const reading = (requestId: string): WorkspaceSubject => ({
 	kind: "Note",
@@ -50,8 +50,8 @@ function run(
 	return commands.reduce(workspaceReducer, state);
 }
 
-/** A Text on the Ground of the first Pane with a two-Card Deck dealt on it. */
-function dealtOnText() {
+/** A Scroll on the Ground of the first Pane with a two-Card Deck dealt on it. */
+function dealtOnScroll() {
 	const start = run(
 		createWorkspace<WorkspaceSubject>(),
 		{
@@ -82,7 +82,7 @@ const fresh = () => createWorkspace<WorkspaceSubject>();
 
 describe("Workspace Persistence", () => {
 	test("a Deck, its Cards' keys and the id counter survive a reload", () => {
-		const state = dealtOnText();
+		const state = dealtOnScroll();
 		const storage = memoryStorage();
 		saveApplicationWorkspace(state, storage);
 		const loaded = loadApplicationWorkspace(fresh, MENU_ITEMS, storage);
@@ -94,7 +94,7 @@ describe("Workspace Persistence", () => {
 	});
 
 	test("a held gesture is never saved: the workspace as the Lift found it is", () => {
-		const before = dealtOnText();
+		const before = dealtOnScroll();
 		const pane = findPane(before.layout, "pane-1");
 		if (!pane) throw new Error("no Pane");
 		/* a Rooted Ground lifts and its Pane steps down while it is in hand */
@@ -131,7 +131,7 @@ describe("Workspace Persistence", () => {
 				nextId: 1,
 			}),
 			JSON.stringify({
-				...JSON.parse(JSON.stringify(dealtOnText())),
+				...JSON.parse(JSON.stringify(dealtOnScroll())),
 				nextId: "3",
 			}),
 		]) {
@@ -143,7 +143,7 @@ describe("Workspace Persistence", () => {
 	});
 
 	test("a Subject or a Menu Item the app no longer knows discards the save", () => {
-		const state = dealtOnText();
+		const state = dealtOnScroll();
 		const storage = memoryStorage();
 		saveApplicationWorkspace(state, storage);
 		const raw = storage.items.get(KEY) ?? "";
@@ -162,7 +162,7 @@ describe("Workspace Persistence", () => {
 	});
 
 	test("an Active Pane that is gone falls back to the first Pane", () => {
-		const state = dealtOnText();
+		const state = dealtOnScroll();
 		const storage = memoryStorage({
 			[KEY]: JSON.stringify({
 				layout: state.layout,

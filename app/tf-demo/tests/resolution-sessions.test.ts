@@ -47,7 +47,7 @@ afterEach(() => {
 
 /** A stored "Die Banken." whose `Banken` Segment sits at index 2. */
 async function bankenSource(t: TestConvexDb) {
-	const { textId, sentenceIds, segmentIds } = await submitText(t, [
+	const { scrollId, sentenceIds, segmentIds } = await submitText(t, [
 		["Die", " ", "Banken", "."],
 	]);
 	const sentenceId = sentenceIds[0];
@@ -59,7 +59,7 @@ async function bankenSource(t: TestConvexDb) {
 		sentenceId,
 		clickedSegmentIndex: 2,
 	});
-	return { textId, sentenceId, segmentId, select };
+	return { scrollId, sentenceId, segmentId, select };
 }
 
 function session(t: TestConvexDb, requestId: string) {
@@ -361,7 +361,7 @@ describe("Resolution Session", () => {
 
 	test("selection starts one session on the exact Segment and schedules its run once", async () => {
 		const t = createTestConvex();
-		const { select, segmentId, textId } = await bankenSource(t);
+		const { select, segmentId, scrollId } = await bankenSource(t);
 		const args = select("request-1");
 
 		expect(
@@ -383,7 +383,7 @@ describe("Resolution Session", () => {
 			expect.objectContaining({
 				segmentId,
 				route: expect.objectContaining({
-					textId,
+					scrollId,
 					selectedSegment: "Banken",
 				}),
 			}),
@@ -1489,11 +1489,12 @@ describe("Resolution Session", () => {
 	test("strip, visitor clear, and full reset invalidate sessions before source writes", async () => {
 		const stripped = createTestConvex();
 		{
-			const { select, segmentId, textId } = await bankenSource(stripped);
+			const { select, segmentId, scrollId } =
+				await bankenSource(stripped);
 			await startSession(stripped, select("request-1"));
 			const first = await stripped.mutation(
-				internal.analysisStripping.stripTextAnalysisGraphBatch,
-				{ textId },
+				internal.analysisStripping.stripScrollAnalysisGraphBatch,
+				{ scrollId },
 			);
 			expect(first).toEqual({
 				deleted: 1,
@@ -1537,13 +1538,13 @@ describe("Resolution Session", () => {
 		const t = createTestConvex();
 		// A Sentence whose stored Segments stop short of its text.
 		await t.run(async (ctx) => {
-			const textId = await ctx.db.insert("texts", {
+			const scrollId = await ctx.db.insert("scrolls", {
 				submissionKey: "submission-1",
 				sourceText: "Die Banken.",
 			});
 			const sentenceId = await ctx.db.insert("sentences", {
 				segmentedSentenceId: "submission-1:0",
-				textId,
+				scrollId,
 				position: 0,
 				language: "de",
 				stitchedText: "Die Banken.",
@@ -1556,7 +1557,7 @@ describe("Resolution Session", () => {
 			});
 		});
 		await expect(
-			t.mutation(internal.persistence.persistSubmittedText, {
+			t.mutation(internal.persistence.persistSubmittedScroll, {
 				submissionKey: "submission-1",
 				sourceText: "Die Banken.",
 				sentences: [

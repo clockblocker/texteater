@@ -1,5 +1,5 @@
 import { renderFixtureNote } from "@/notes";
-import { TextPresentation } from "@/views/text-view";
+import { ScrollPresentation } from "@/views/scroll-view";
 import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import type { PlaygroundSnapshot } from "../../../tooling/playground-snapshot";
 
@@ -25,10 +25,10 @@ export function PlaygroundNote({
 	snapshot: PlaygroundSnapshot;
 	follow: (target: WorkspaceTarget) => void;
 }) {
-	if (target.kind === "Text") {
-		const text = snapshot.texts[target.textId];
+	if (target.kind === "Scroll") {
+		const text = snapshot.scrolls[target.scrollId];
 		return text ? (
-			<TextPresentation
+			<ScrollPresentation
 				sentences={text.sentences}
 				selectedSegmentKey={null}
 				onSegmentClick={async (sentence, index) => {
@@ -40,7 +40,7 @@ export function PlaygroundNote({
 				}}
 			/>
 		) : (
-			<p>This Text is not part of the playground fixtures.</p>
+			<p>This Scroll is not part of the playground fixtures.</p>
 		);
 	}
 

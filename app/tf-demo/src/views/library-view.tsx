@@ -35,9 +35,9 @@ import { visitorErrorMessage } from "@/lib/visitor-error";
 import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
-import { textTitle } from "../../shared/text-title";
+import { scrollTitle } from "../../shared/scroll-title";
 
-type LibraryText = FunctionReturnType<typeof api.texts.list>[number];
+type LibraryScroll = FunctionReturnType<typeof api.scrolls.list>[number];
 
 const exampleText = "Die Banken sind geöffnet. Morgen bleiben sie geschlossen.";
 const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
@@ -47,12 +47,12 @@ const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
 export function LibraryView() {
 	const visitorId = useAnonymousVisitorId();
 	const { follow } = useWorkspaceInteraction();
-	const [isAddTextOpen, setIsAddTextOpen] = useState(false);
+	const [isAddScrollOpen, setIsAddScrollOpen] = useState(false);
 	const [sourceText, setSourceText] = useState(exampleText);
 	const [interactionError, setInteractionError] = useState<string | null>(
 		null,
 	);
-	const textsQuery = useQuery(convexQuery(api.texts.list, {}));
+	const scrollsQuery = useQuery(convexQuery(api.scrolls.list, {}));
 	const submitText = usePendingAction(api.orchestration.submitText);
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -75,26 +75,34 @@ export function LibraryView() {
 				return;
 			}
 			follow({
-				kind: "Text",
-				textId: result.textId,
-				title: textTitle({ sourceText: normalized }),
+				kind: "Scroll",
+				scrollId: result.scrollId,
+				title: scrollTitle({ sourceText: normalized }),
 			});
-			setIsAddTextOpen(false);
+			setIsAddScrollOpen(false);
 		} catch (cause) {
 			setInteractionError(visitorErrorMessage(cause));
 		}
 	}
 
-	const storedTexts = textsQuery.data?.filter((text) => !text.fixture);
-	const fixtureTexts = textsQuery.data?.filter((text) => text.fixture);
+	const storedScrolls = scrollsQuery.data?.filter(
+		(scroll) => !scroll.fixture,
+	);
+	const fixtureScrolls = scrollsQuery.data?.filter(
+		(scroll) => scroll.fixture,
+	);
 
-	function openText(text: LibraryText) {
-		follow({ kind: "Text", textId: text.textId, title: textTitle(text) });
+	function openScroll(scroll: LibraryScroll) {
+		follow({
+			kind: "Scroll",
+			scrollId: scroll.scrollId,
+			title: scrollTitle(scroll),
+		});
 	}
 
 	const error =
 		interactionError ??
-		(textsQuery.error ? visitorErrorMessage(textsQuery.error) : null);
+		(scrollsQuery.error ? visitorErrorMessage(scrollsQuery.error) : null);
 
 	return (
 		<div className="relative flex h-full min-h-0 flex-col bg-muted/30">
@@ -118,21 +126,21 @@ export function LibraryView() {
 								id="library-title"
 								className="text-lg font-semibold text-balance"
 							>
-								Stored texts
+								Stored scrolls
 							</h2>
-							{storedTexts ? (
+							{storedScrolls ? (
 								<Badge variant="secondary">
-									{storedTexts.length}
+									{storedScrolls.length}
 								</Badge>
 							) : null}
 						</div>
 
-						{textsQuery.isPending ? (
+						{scrollsQuery.isPending ? (
 							<LibrarySkeleton />
-						) : storedTexts && storedTexts.length > 0 ? (
-							<LibraryTextGrid
-								texts={storedTexts}
-								onOpen={openText}
+						) : storedScrolls && storedScrolls.length > 0 ? (
+							<LibraryScrollGrid
+								scrolls={storedScrolls}
+								onOpen={openScroll}
 							/>
 						) : (
 							<Card size="sm">
@@ -142,7 +150,7 @@ export function LibraryView() {
 										strokeWidth={1.5}
 									/>
 									<p className="text-pretty">
-										No stored texts yet. Add one with the
+										No stored scrolls yet. Add one with the
 										plus button.
 									</p>
 								</CardContent>
@@ -150,7 +158,7 @@ export function LibraryView() {
 						)}
 					</section>
 
-					{fixtureTexts && fixtureTexts.length > 0 ? (
+					{fixtureScrolls && fixtureScrolls.length > 0 ? (
 						<details className="group/fixtures">
 							<summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-md select-none focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
 								<span className="flex items-center gap-2">
@@ -167,13 +175,13 @@ export function LibraryView() {
 									</span>
 								</span>
 								<Badge variant="secondary">
-									{fixtureTexts.length}
+									{fixtureScrolls.length}
 								</Badge>
 							</summary>
 							<div className="pt-3">
-								<LibraryTextGrid
-									texts={fixtureTexts}
-									onOpen={openText}
+								<LibraryScrollGrid
+									scrolls={fixtureScrolls}
+									onOpen={openScroll}
 								/>
 							</div>
 						</details>
@@ -181,7 +189,7 @@ export function LibraryView() {
 				</div>
 			</div>
 
-			<Dialog open={isAddTextOpen} onOpenChange={setIsAddTextOpen}>
+			<Dialog open={isAddScrollOpen} onOpenChange={setIsAddScrollOpen}>
 				<DialogTrigger
 					render={
 						<Button
@@ -250,29 +258,29 @@ export function LibraryView() {
 	);
 }
 
-function LibraryTextGrid({
-	texts,
+function LibraryScrollGrid({
+	scrolls,
 	onOpen,
 }: {
-	readonly texts: readonly LibraryText[];
-	readonly onOpen: (text: LibraryText) => void;
+	readonly scrolls: readonly LibraryScroll[];
+	readonly onOpen: (scroll: LibraryScroll) => void;
 }) {
 	return (
 		<div className="grid gap-3">
-			{texts.map((text) => (
+			{scrolls.map((scroll) => (
 				<button
-					key={text.textId}
+					key={scroll.scrollId}
 					type="button"
-					onClick={() => onOpen(text)}
+					onClick={() => onOpen(scroll)}
 					className="group rounded-xl bg-card p-4 text-start text-card-foreground ring-1 ring-foreground/10 transition-[background-color,scale] duration-150 ease-out hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]"
 				>
 					<div className="flex items-start justify-between gap-4">
 						<div className="flex min-w-0 flex-col gap-2">
 							<p className="line-clamp-3 text-base leading-relaxed font-medium">
-								{text.title ?? text.sourceText}
+								{scroll.title ?? scroll.sourceText}
 							</p>
 							<p className="text-xs text-ink-muted tabular-nums">
-								Added {formatDate(text.createdAt)}
+								Added {formatDate(scroll.createdAt)}
 							</p>
 						</div>
 						<ArrowRightIcon className="mt-1 size-4 shrink-0 text-ink-muted transition-transform group-hover:translate-x-0.5" />
@@ -285,7 +293,7 @@ function LibraryTextGrid({
 
 function LibrarySkeleton() {
 	return (
-		<div className="grid gap-3" role="status" aria-label="Loading texts">
+		<div className="grid gap-3" role="status" aria-label="Loading scrolls">
 			{[0, 1, 2, 3].map((index) => (
 				<Card key={index} size="sm">
 					<CardContent className="flex flex-col gap-3">

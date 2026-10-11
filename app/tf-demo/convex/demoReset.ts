@@ -27,9 +27,9 @@ import {
 } from "./model/ownedRowCleanup";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
 import {
-	type StripTextAnalysisResult,
-	stripTextAnalysisGraph,
-} from "./model/textAnalysisStripping";
+	type StripScrollAnalysisResult,
+	stripScrollAnalysisGraph,
+} from "./model/scrollAnalysisStripping";
 
 const BATCH_SIZE = 400;
 /**
@@ -39,7 +39,7 @@ const BATCH_SIZE = 400;
  */
 const TABLE_BATCH_MAX_BYTES = 4 * 1024 * 1024;
 const MAX_BATCHES = 1_000;
-const TEXT_PAGE_SIZE = 20;
+const SCROLL_PAGE_SIZE = 20;
 
 const resolutionInspectionTableNames = [
 	"inspectionPayloads",
@@ -82,7 +82,8 @@ export const resetDemoTableNames = [
 	"lemmas",
 	"segments",
 	"sentences",
-	"texts",
+	"scrolls",
+	"sections",
 ] as const satisfies readonly TableNames[];
 
 const tableResetResultValidator = v.object({
@@ -248,18 +249,18 @@ export const clearVisitorDataBatch = internalMutation({
 });
 
 /**
- * Visitor Texts only. A Definition Text is stripped with its Reading when
+ * Visitor Scrolls only. A Definition Text is stripped with its Reading when
  * that Reading is pruned, so a surviving Reading keeps a clickable definition.
  */
-export const listTextIds = internalQuery({
+export const listScrollIds = internalQuery({
 	args: { paginationOpts: paginationOptsValidator },
-	returns: paginationResultValidator(v.id("texts")),
+	returns: paginationResultValidator(v.id("scrolls")),
 	handler: async (ctx, { paginationOpts }) => {
 		const result = await ctx.db
-			.query("texts")
+			.query("scrolls")
 			.withIndex("by_origin_kind", (q) => q.eq("origin.kind", undefined))
 			.paginate(paginationOpts);
-		return { ...result, page: result.page.map((text) => text._id) };
+		return { ...result, page: result.page.map((scroll) => scroll._id) };
 	},
 });
 
@@ -329,8 +330,8 @@ export const clearSharedData = action({
 	},
 });
 
-export type StripAnalysesResult = StripTextAnalysisResult & {
-	strippedTexts: number;
+export type StripAnalysesResult = StripScrollAnalysisResult & {
+	strippedScrolls: number;
 	removedInspectionRecords: number;
 };
 
@@ -338,21 +339,21 @@ export async function stripAllAnalyses(
 	ctx: ActionCtx,
 ): Promise<StripAnalysesResult> {
 	let cursor: string | null = null;
-	let strippedTexts = 0;
+	let strippedScrolls = 0;
 	let removed = 0;
 	let deletedReadings = 0;
 	let deletedLemmas = 0;
 	for (let pageIndex = 0; pageIndex < MAX_BATCHES; pageIndex += 1) {
 		const page: {
-			page: Id<"texts">[];
+			page: Id<"scrolls">[];
 			isDone: boolean;
 			continueCursor: string;
-		} = await ctx.runQuery(internal.demoReset.listTextIds, {
-			paginationOpts: { cursor, numItems: TEXT_PAGE_SIZE },
+		} = await ctx.runQuery(internal.demoReset.listScrollIds, {
+			paginationOpts: { cursor, numItems: SCROLL_PAGE_SIZE },
 		});
-		for (const textId of page.page) {
-			const result = await stripTextAnalysisGraph(ctx, textId);
-			strippedTexts += 1;
+		for (const scrollId of page.page) {
+			const result = await stripScrollAnalysisGraph(ctx, scrollId);
+			strippedScrolls += 1;
 			removed += result.removed;
 			deletedReadings += result.deletedReadings;
 			deletedLemmas += result.deletedLemmas;
@@ -360,7 +361,9 @@ export async function stripAllAnalyses(
 		if (page.isDone) break;
 		cursor = page.continueCursor;
 		if (pageIndex === MAX_BATCHES - 1) {
-			throw new Error("Analysis stripping exceeded its Text page limit.");
+			throw new Error(
+				"Analysis stripping exceeded its Scroll page limit.",
+			);
 		}
 	}
 
@@ -370,7 +373,7 @@ export async function stripAllAnalyses(
 		}),
 	);
 	return {
-		strippedTexts,
+		strippedScrolls,
 		removed,
 		deletedReadings,
 		deletedLemmas,
@@ -378,11 +381,11 @@ export async function stripAllAnalyses(
 	};
 }
 
-/** Strips every Text and clears the Resolution Inspector's retained records. */
+/** Strips every Scroll and clears the Resolution Inspector's retained records. */
 export const stripAnalyses = action({
 	args: {},
 	returns: v.object({
-		strippedTexts: v.number(),
+		strippedScrolls: v.number(),
 		removed: v.number(),
 		deletedReadings: v.number(),
 		deletedLemmas: v.number(),

@@ -10,15 +10,15 @@ export const intakeRunValidator = v.object({
 	/** The attempt's requestId. */
 	runId: v.string(),
 	submissionKey: v.string(),
-	/** Absent when the attempt failed before a Text existed. */
-	textId: v.optional(v.id("texts")),
+	/** Absent when the attempt failed before a Scroll existed. */
+	scrollId: v.optional(v.id("scrolls")),
 	outcome: literalUnion(["Accepted", "Failed"] as const),
 	failureTag: v.optional(v.string()),
 	sentenceCount: v.number(),
 	/**
 	 * How each Sentence's `segment.inUnits` ended: Segmented, or Failed when
 	 * it was stored marked as not segmented, or Plain when it was not in the
-	 * Text's target language and never went to it.
+	 * Scroll's target language and never went to it.
 	 */
 	sentences: v.array(
 		v.object({

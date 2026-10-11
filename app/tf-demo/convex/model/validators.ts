@@ -134,7 +134,7 @@ const semanticRelationValues = [
 ] as const;
 
 import { READING_BLOCK_KIND_VALUES } from "../../shared/reading-block-layout";
-import { TEXT_LANGUAGE_VALUES } from "../../shared/supported-target-language";
+import { SCROLL_LANGUAGE_VALUES } from "../../shared/supported-target-language";
 
 export function literalUnion<const Value extends string>(
 	values: readonly [Value, ...Value[]],
@@ -143,14 +143,14 @@ export function literalUnion<const Value extends string>(
 	return v.union(v.literal(first), ...rest.map((value) => v.literal(value)));
 }
 
-export const languageValidator = literalUnion(TEXT_LANGUAGE_VALUES);
+export const languageValidator = literalUnion(SCROLL_LANGUAGE_VALUES);
 
 /**
- * A Sentence's Detected Language: a Text language, or `other` for any
+ * A Sentence's Detected Language: a Scroll language, or `other` for any
  * language Intake does not name. An undetermined Sentence stores none.
  */
 export const detectedLanguageValidator = literalUnion([
-	...TEXT_LANGUAGE_VALUES,
+	...SCROLL_LANGUAGE_VALUES,
 	"other",
 ]);
 
@@ -212,8 +212,18 @@ export type StructuralShadowAspect = Infer<
 	typeof structuralShadowAspectValidator
 >;
 
-/** A hidden Text that holds one Reading's Knowledge definition as a Sentence. */
-export const textOriginValidator = v.object({
+/**
+ * Where a Section or Scroll sits in its Section's Codex: that Section, and
+ * its order among the Section's Sections and Scrolls together. Absent at
+ * the top of the Library.
+ */
+export const codexPlacementValidator = v.object({
+	sectionId: v.id("sections"),
+	order: v.number(),
+});
+
+/** A hidden Scroll that holds one Reading's Knowledge definition as a Sentence. */
+export const scrollOriginValidator = v.object({
 	kind: v.literal("Definition"),
 	readingKey: v.string(),
 });
@@ -401,7 +411,7 @@ export const sentenceInputValidator = v.object({
 	paragraph: v.number(),
 	/**
 	 * The Detected Language, absent when undetermined. A Sentence in any but
-	 * the Text's target language is a Plain Sentence: no Segments, no units.
+	 * the Scroll's target language is a Plain Sentence: no Segments, no units.
 	 */
 	language: v.optional(detectedLanguageValidator),
 	/** The Sentence's normalized text; its Segments concatenate to it. */
@@ -654,7 +664,7 @@ export const resolutionRunStateValidator = v.union(
 );
 
 export const resolutionRouteProjectionValidator = v.object({
-	textId: v.id("texts"),
+	scrollId: v.id("scrolls"),
 	sentenceId: v.id("sentences"),
 	stitchedText: v.string(),
 	clickedSegmentIndex: v.number(),

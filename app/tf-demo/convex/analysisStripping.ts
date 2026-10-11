@@ -21,8 +21,8 @@ import {
 	readingCleanupCursorValidator,
 } from "./model/ownedRowCleanup";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
+import { DESCRIPTOR_PAGE_SIZE } from "./model/scrollAnalysisStripping";
 import { loadStoredSegments } from "./model/storedSegments";
-import { DESCRIPTOR_PAGE_SIZE } from "./model/textAnalysisStripping";
 
 /** Segments one strip step deletes, each with its Encounters and emptied Attestation. */
 export const STRIP_SEGMENT_BATCH = 128;
@@ -31,9 +31,9 @@ const STRIP_DELETE_BUDGET = 1_000;
 /** Rows one Reading or Lemma cleanup step may delete. */
 const CLEANUP_DELETE_BUDGET = 399;
 const MAX_CLEANUP_PHASE_STEPS = 64;
-const MAX_SENTENCES_PER_TEXT = 256;
+const MAX_SENTENCES_PER_SCROLL = 256;
 
-const textAnalysisCandidatesValidator = v.object({
+const scrollAnalysisCandidatesValidator = v.object({
 	readingIds: v.array(v.id("readings")),
 });
 
@@ -45,18 +45,20 @@ const readingDescriptorValidator = v.object({
 	hasRemainingSource: v.boolean(),
 });
 
-export const getTextAnalysisCandidates = internalQuery({
-	args: { textId: v.id("texts") },
-	returns: v.union(v.null(), textAnalysisCandidatesValidator),
-	handler: async (ctx, { textId }) => {
-		if (!(await ctx.db.get(textId))) return null;
+export const getScrollAnalysisCandidates = internalQuery({
+	args: { scrollId: v.id("scrolls") },
+	returns: v.union(v.null(), scrollAnalysisCandidatesValidator),
+	handler: async (ctx, { scrollId }) => {
+		if (!(await ctx.db.get(scrollId))) return null;
 		const sentences = await ctx.db
 			.query("sentences")
-			.withIndex("by_text_id_and_position", (q) => q.eq("textId", textId))
-			.take(MAX_SENTENCES_PER_TEXT + 1);
-		if (sentences.length > MAX_SENTENCES_PER_TEXT) {
+			.withIndex("by_scroll_id_and_position", (q) =>
+				q.eq("scrollId", scrollId),
+			)
+			.take(MAX_SENTENCES_PER_SCROLL + 1);
+		if (sentences.length > MAX_SENTENCES_PER_SCROLL) {
 			throw new Error(
-				`Analysis stripping supports at most ${MAX_SENTENCES_PER_TEXT} Sentences per Text.`,
+				`Analysis stripping supports at most ${MAX_SENTENCES_PER_SCROLL} Sentences per Scroll.`,
 			);
 		}
 		const segmentsBySentence = await Promise.all(
@@ -86,27 +88,27 @@ export const getTextAnalysisCandidates = internalQuery({
 });
 
 /**
- * One bounded step of stripping a Text: from the first Sentence at or after
+ * One bounded step of stripping a Scroll: from the first Sentence at or after
  * `fromPosition` that still has analysis, it deletes its Resolution
  * Sessions, then clears its units and deletes up to `STRIP_SEGMENT_BATCH`
  * Segments with their Visitor Encounters and the Attestations they leave
  * memberless.
  * `nextPosition` is where the next step resumes.
  */
-export const stripTextAnalysisGraphBatch = internalMutation({
-	args: { textId: v.id("texts"), fromPosition: v.optional(v.number()) },
+export const stripScrollAnalysisGraphBatch = internalMutation({
+	args: { scrollId: v.id("scrolls"), fromPosition: v.optional(v.number()) },
 	returns: v.object({
 		deleted: v.number(),
 		hasMore: v.boolean(),
 		nextPosition: v.number(),
 	}),
-	handler: async (ctx, { textId, fromPosition = 0 }) => {
+	handler: async (ctx, { scrollId, fromPosition = 0 }) => {
 		const done = { deleted: 0, hasMore: false, nextPosition: fromPosition };
-		if (!(await ctx.db.get(textId))) return done;
+		if (!(await ctx.db.get(scrollId))) return done;
 		const sentences = ctx.db
 			.query("sentences")
-			.withIndex("by_text_id_and_position", (q) =>
-				q.eq("textId", textId).gte("position", fromPosition),
+			.withIndex("by_scroll_id_and_position", (q) =>
+				q.eq("scrollId", scrollId).gte("position", fromPosition),
 			);
 		for await (const sentence of sentences) {
 			const deleted = await stripSentenceAnalysisBatch(ctx, sentence);

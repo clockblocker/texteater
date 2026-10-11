@@ -57,7 +57,7 @@ function dragOf(
 	});
 }
 
-/** A Text open in pane-1 with two Cards dealt onto its Deck. */
+/** A Scroll open in pane-1 with two Cards dealt onto its Deck. */
 function dealt(): WorkspaceState<string> {
 	const at = [
 		{

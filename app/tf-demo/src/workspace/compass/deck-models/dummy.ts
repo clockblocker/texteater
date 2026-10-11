@@ -1,7 +1,7 @@
 /**
  * Dummy subjects for the deck-model prototypes. Nothing here touches the fake
- * db: a Library lists a few Texts, a word yields four Notes, each Note links
- * onward, and one link always leads back to a Sentence in a Text. The
+ * db: a Library lists a few Scrolls, a word yields four Notes, each Note links
+ * onward, and one link always leads back to a Sentence in a Scroll. The
  * interaction algebra is the thing under study.
  */
 
@@ -15,14 +15,14 @@ const NOTE_KINDS: readonly NoteKind[] = [
 	"Attestation",
 ];
 
-export type DummyText = {
+export type DummyScroll = {
 	readonly id: string;
 	readonly title: string;
 	readonly sentences: readonly (readonly string[])[];
 };
 
-/** A place in a Text: the Sentence, and the word lit inside it. */
-export type TextFocus = {
+/** A place in a Scroll: the Sentence, and the word lit inside it. */
+export type ScrollFocus = {
 	readonly sentence: number;
 	readonly word: string;
 };
@@ -30,16 +30,16 @@ export type TextFocus = {
 export type NoteLink =
 	| { readonly kind: "Note"; readonly noteId: string; readonly label: string }
 	| {
-			readonly kind: "Text";
-			readonly textId: string;
-			readonly focus: TextFocus;
+			readonly kind: "Scroll";
+			readonly scrollId: string;
+			readonly focus: ScrollFocus;
 			readonly label: string;
 	  };
 
 /** One Source Context: a Sentence the word was met in, tokenized so its Segments can be clicked. */
 export type SourceContext = {
-	/** The Text the Sentence belongs to; null for filler that has no source. */
-	readonly textId: string | null;
+	/** The Scroll the Sentence belongs to; null for filler that has no source. */
+	readonly scrollId: string | null;
 	readonly sentence: number;
 	readonly words: readonly string[];
 };
@@ -63,7 +63,7 @@ export type DummyNote = {
 	readonly fixture?: string;
 };
 
-export const TEXTS: readonly DummyText[] = [
+export const SCROLLS: readonly DummyScroll[] = [
 	{
 		id: "haus",
 		title: "Das Haus am Ende",
@@ -94,10 +94,10 @@ export const TEXTS: readonly DummyText[] = [
 	},
 ];
 
-export const FIRST_TEXT = TEXTS[0] as DummyText;
+export const FIRST_SCROLL = SCROLLS[0] as DummyScroll;
 
-export function textById(id: string): DummyText {
-	return TEXTS.find((text) => text.id === id) ?? FIRST_TEXT;
+export function scrollById(id: string): DummyScroll {
+	return SCROLLS.find((scroll) => scroll.id === id) ?? FIRST_SCROLL;
 }
 
 const LEMMA_OF: Readonly<Record<string, string>> = {
@@ -219,17 +219,21 @@ const CONTEXT_POOL = [
 	"Zuletzt hörte sie {w} im Radio.",
 ];
 
-/** Every Sentence in every Text that holds the word, then filler; most recent first. */
+/** Every Sentence in every Scroll that holds the word, then filler; most recent first. */
 function contextsFor(word: string): readonly SourceContext[] {
 	const clean = cleanWord(word);
 	const own: SourceContext[] = [];
-	for (const text of TEXTS)
-		text.sentences.forEach((sentence, index) => {
+	for (const scroll of SCROLLS)
+		scroll.sentences.forEach((sentence, index) => {
 			if (sentence.some((token) => cleanWord(token) === clean))
-				own.push({ textId: text.id, sentence: index, words: sentence });
+				own.push({
+					scrollId: scroll.id,
+					sentence: index,
+					words: sentence,
+				});
 		});
 	const filler = CONTEXT_POOL.map((line, index) => ({
-		textId: null,
+		scrollId: null,
 		sentence: index,
 		words: line.replace("{w}", clean).split(" "),
 	}));
@@ -247,11 +251,13 @@ function linesFor(kind: NoteKind, word: string): readonly string[] {
 
 /** The first Sentence the word appears in, for "Go to source". */
 export function sourceOf(word: string): NoteLink | null {
-	const first = contextsFor(word).find((context) => context.textId !== null);
-	if (!first?.textId) return null;
+	const first = contextsFor(word).find(
+		(context) => context.scrollId !== null,
+	);
+	if (!first?.scrollId) return null;
 	return {
-		kind: "Text",
-		textId: first.textId,
+		kind: "Scroll",
+		scrollId: first.scrollId,
 		focus: { sentence: first.sentence, word: cleanWord(word) },
 		label: "Go to source",
 	};

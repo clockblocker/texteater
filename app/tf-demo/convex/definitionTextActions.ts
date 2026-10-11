@@ -12,7 +12,7 @@ import * as Effect from "effect/Effect";
 import { storedUnitOf } from "../server/storedSegments";
 import { internal } from "./_generated/api";
 import { env, internalAction } from "./_generated/server";
-import { stripTextAnalysisGraph } from "./model/textAnalysisStripping";
+import { stripScrollAnalysisGraph } from "./model/scrollAnalysisStripping";
 
 /** Segmentation never writes, so it needs no OpenAI key; Dumgen still takes a Luna. */
 const noLuna: LunaAsk = async () => {
@@ -86,20 +86,23 @@ export const materialize = internalAction({
 			| { kind: "Failed" };
 		try {
 			const replace =
-				sync.textId !== undefined &&
+				sync.scrollId !== undefined &&
 				sync.materializedDefinition !== sync.definition;
-			if (sync.textId && replace) {
-				await stripTextAnalysisGraph(ctx, sync.textId, {
+			if (sync.scrollId && replace) {
+				await stripScrollAnalysisGraph(ctx, sync.scrollId, {
 					protectedReadingKeys: [ownerReadingKey],
 				});
-				await ctx.runMutation(internal.definitionTexts.deleteTextRows, {
-					ownerReadingKey,
-					textId: sync.textId,
-				});
+				await ctx.runMutation(
+					internal.definitionTexts.deleteScrollRows,
+					{
+						ownerReadingKey,
+						scrollId: sync.scrollId,
+					},
+				);
 			}
 			if (sync.definition === undefined) {
 				outcome = { kind: "Retracted" };
-			} else if (sync.textId && !replace) {
+			} else if (sync.scrollId && !replace) {
 				outcome = { kind: "Ready" };
 			} else if (sync.language !== "de") {
 				throw new Error(

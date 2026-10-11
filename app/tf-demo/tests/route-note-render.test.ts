@@ -37,7 +37,7 @@ test("routes Lemma and Attestation subjects through the universal pipeline", () 
 		kind: "Attestation",
 		target: { kind: "Attestation", attestationId: "attestation-1" },
 		source: {
-			textId: "text-1",
+			scrollId: "text-1",
 			sentencePosition: 0,
 			sentenceSnippet: "Er steht auf.",
 			segments: [
@@ -49,10 +49,10 @@ test("routes Lemma and Attestation subjects through the universal pipeline", () 
 				{ kind: "Punctuation", text: "." },
 			],
 			memberSegmentIndices: [2, 4],
-			origin: { kind: "Text" },
+			origin: { kind: "Scroll" },
 			target: {
-				kind: "Text",
-				textId: "text-1",
+				kind: "Scroll",
+				scrollId: "text-1",
 				focusAttestationId: "attestation-1",
 				title: "Er steht auf.",
 			},
@@ -147,7 +147,7 @@ test("an Attestation holding a piece of a fused word reaches its Fusion", () => 
 		kind: "Attestation",
 		target: { kind: "Attestation", attestationId: "attestation-1" },
 		source: {
-			textId: "text-1",
+			scrollId: "text-1",
 			sentencePosition: 0,
 			sentenceSnippet: "Ich bin im Wald.",
 			segments: [
@@ -162,10 +162,10 @@ test("an Attestation holding a piece of a fused word reaches its Fusion", () => 
 				{ kind: "Punctuation", text: "." },
 			],
 			memberSegmentIndices: [5, 7],
-			origin: { kind: "Text" },
+			origin: { kind: "Scroll" },
 			target: {
-				kind: "Text",
-				textId: "text-1",
+				kind: "Scroll",
+				scrollId: "text-1",
 				focusAttestationId: "attestation-1",
 				title: "Ich bin im Wald.",
 			},

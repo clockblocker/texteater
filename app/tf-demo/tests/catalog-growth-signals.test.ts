@@ -16,7 +16,7 @@ const miss = {
 } as const satisfies CatalogMissSignal;
 
 /**
- * Clicks the only Segment of a fresh Text, advances its session to where
+ * Clicks the only Segment of a fresh Scroll, advances its session to where
  * grammar resolution runs, and returns the session guard.
  */
 async function startSession(t: TestConvexDb, requestId: string) {

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { linkMembers, type SourceSegment } from "./link-members";
 
 type SourceOrigin =
-	| { readonly kind: "Text" }
+	| { readonly kind: "Scroll" }
 	| {
 			readonly kind: "Definition";
 			readonly emojiDescription: string;
@@ -12,7 +12,7 @@ type SourceOrigin =
 	  };
 
 /**
- * One quoted Source Context. A Text occurrence is the bare sentence with its
+ * One quoted Source Context. A Scroll occurrence is the bare sentence with its
  * members lit. A Definition occurrence is prefixed with the defined Reading
  * as "{emoji} {headword}:" so the reader knows whose definition is quoted;
  * the prefix and the members lead to the same place.
@@ -31,7 +31,7 @@ export function SourceQuote({
 	const destination =
 		origin.kind === "Definition"
 			? `the definition of ${origin.canonicalForm}`
-			: "the source Text";
+			: "the source Scroll";
 	const members = linkMembers(
 		segments,
 		memberSegmentIndices,

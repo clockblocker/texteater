@@ -1,7 +1,7 @@
 import { ResolutionStepNoteView } from "@/views/resolution-note-view";
 import { RouteNoteView } from "@/views/route-note-view";
+import { ScrollView } from "@/views/scroll-view";
 import { ShadowNoteView } from "@/views/shadow-note-view";
-import { TextView } from "@/views/text-view";
 import { UnitReadingNoteView } from "@/views/unit-reading-note-view";
 import {
 	activeAnalysisKeyOf,
@@ -19,8 +19,8 @@ export function renderApplicationSubject(
 ) {
 	const { target } = subject;
 	switch (target.kind) {
-		case "Text":
-			return <TextView key={target.textId} target={target} />;
+		case "Scroll":
+			return <ScrollView key={target.scrollId} target={target} />;
 		case "Reading":
 			return (
 				<UnitReadingNoteView
@@ -90,13 +90,13 @@ export function renderApplicationSubject(
 
 /**
  * What a Subject is called where the workspace names it: its aria-labels and
- * the Pane bar's trail. A Text goes by what the Library called it.
+ * the Pane bar's trail. A Scroll goes by what the Library called it.
  */
 export function subjectLabel(subject: WorkspaceSubject): string {
 	const { target } = subject;
 	switch (target.kind) {
-		case "Text":
-			return target.title ?? "Text";
+		case "Scroll":
+			return target.title ?? "Scroll";
 		case "Reading":
 			return "Reading";
 		case "Lemma":

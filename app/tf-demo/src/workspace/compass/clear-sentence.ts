@@ -1,7 +1,7 @@
 import { DEAL_GAP_PX } from "compass";
 
 /**
- * The Deck sits at one place in its Pane; the Text moves instead. The
+ * The Deck sits at one place in its Pane; the Scroll moves instead. The
  * Sheet's body scrolls just far enough that the Sentence the Segment was
  * clicked in sits whole above the Deck's top, `deckTop` in viewport px,
  * and not at all when it already does.

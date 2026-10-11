@@ -18,25 +18,26 @@ import {
 	visitorError,
 } from "../../model/validators";
 
-type SubmittedText = {
+type SubmittedScroll = {
 	submissionKey: string;
 	sourceText: string;
 	/**
-	 * Dumgen's `ExtractedText`, stored unchecked (`v.any()`); intake always
-	 * hands one, fixtures that write a Text directly need none.
+	 * The Scroll's Extracted Text, Dumgen's `Scroll`, stored unchecked
+	 * (`v.any()`); intake always hands one, fixtures that write a Scroll
+	 * directly need none.
 	 */
 	extractedText?: unknown;
 	sentences: Array<Infer<typeof sentenceInputValidator>>;
 };
 
-export type PersistedSubmittedText = {
-	textId: Id<"texts">;
+export type PersistedSubmittedScroll = {
+	scrollId: Id<"scrolls">;
 	sentenceIds: Array<Id<"sentences">>;
 	deduplicated: boolean;
 };
 
 /**
- * The Text a re-submission would only reproduce: stored under `submissionKey`
+ * The Scroll a re-submission would only reproduce: stored under `submissionKey`
  * with the same source text, and with the Segments of every Sentence but a
  * Plain one in place. Null when intake still has work to do, such as after
  * Analysis Stripping.
@@ -44,17 +45,19 @@ export type PersistedSubmittedText = {
 export async function findAnalyzedSubmission(
 	ctx: QueryCtx,
 	input: { readonly submissionKey: string; readonly sourceText: string },
-): Promise<Id<"texts"> | null> {
-	const text = await ctx.db
-		.query("texts")
+): Promise<Id<"scrolls"> | null> {
+	const scroll = await ctx.db
+		.query("scrolls")
 		.withIndex("by_submission_key", (q) =>
 			q.eq("submissionKey", input.submissionKey),
 		)
 		.unique();
-	if (!text || text.sourceText !== input.sourceText) return null;
+	if (!scroll || scroll.sourceText !== input.sourceText) return null;
 	const sentences = await ctx.db
 		.query("sentences")
-		.withIndex("by_text_id_and_position", (q) => q.eq("textId", text._id))
+		.withIndex("by_scroll_id_and_position", (q) =>
+			q.eq("scrollId", scroll._id),
+		)
 		.take(MAX_SOURCE_SENTENCES);
 	if (sentences.length === 0) return null;
 	for (const sentence of sentences) {
@@ -67,7 +70,7 @@ export async function findAnalyzedSubmission(
 		)
 			return null;
 	}
-	return text._id;
+	return scroll._id;
 }
 
 /**
@@ -78,18 +81,18 @@ export async function findStoredExtractedText(
 	ctx: QueryCtx,
 	input: { readonly submissionKey: string; readonly sourceText: string },
 ): Promise<unknown> {
-	const text = await ctx.db
-		.query("texts")
+	const scroll = await ctx.db
+		.query("scrolls")
 		.withIndex("by_submission_key", (q) =>
 			q.eq("submissionKey", input.submissionKey),
 		)
 		.unique();
-	return text?.sourceText === input.sourceText
-		? (text.extractedText ?? null)
+	return scroll?.sourceText === input.sourceText
+		? (scroll.extractedText ?? null)
 		: null;
 }
 
-type SubmittedSentence = SubmittedText["sentences"][number];
+type SubmittedSentence = SubmittedScroll["sentences"][number];
 
 /** The stored Sentence fields an exact re-submission must reproduce. */
 type StoredSentenceFields = {
@@ -113,7 +116,7 @@ type StoredSegmentFields = {
  * stitched text, whitespace-only Whitespace Segments, and units that cover
  * the Sentence; for a Plain Sentence, no Segments and no units.
  */
-export function assertSubmittedText(input: SubmittedText): void {
+export function assertSubmittedScroll(input: SubmittedScroll): void {
 	assertNonEmpty(input.submissionKey, "submissionKey");
 	assertTextSubmissionWithinLimits(
 		input.sourceText,
@@ -218,13 +221,13 @@ export function matchesStoredAnalysis(
  */
 async function writeSentence(
 	ctx: MutationCtx,
-	textId: Id<"texts">,
+	scrollId: Id<"scrolls">,
 	submitted: SubmittedSentence,
 	existing?: { readonly _id: Id<"sentences"> },
 ): Promise<Id<"sentences">> {
 	const sentenceValue = {
 		segmentedSentenceId: submitted.segmentedSentenceId,
-		textId,
+		scrollId,
 		position: submitted.position,
 		paragraph: submitted.paragraph,
 		...(submitted.language === undefined
@@ -265,22 +268,22 @@ function findSentenceBySegmentedId(ctx: QueryCtx, segmentedSentenceId: string) {
 }
 
 /**
- * A retry of a stored Text: an exact stored analysis is kept, and a Text
+ * A retry of a stored Scroll: an exact stored analysis is kept, and a Scroll
  * whose Segments were stripped gets the submitted Sentences written over the
  * ones at the same positions.
  */
-async function resumeSubmittedText(
+async function resumeSubmittedScroll(
 	ctx: MutationCtx,
-	existingText: Doc<"texts">,
-	input: SubmittedText,
-): Promise<PersistedSubmittedText> {
-	if (existingText.sourceText !== input.sourceText) {
+	existingScroll: Doc<"scrolls">,
+	input: SubmittedScroll,
+): Promise<PersistedSubmittedScroll> {
+	if (existingScroll.sourceText !== input.sourceText) {
 		throw new Error("submissionKey was already used for different text.");
 	}
 	const existingSentences = await ctx.db
 		.query("sentences")
-		.withIndex("by_text_id_and_position", (q) =>
-			q.eq("textId", existingText._id),
+		.withIndex("by_scroll_id_and_position", (q) =>
+			q.eq("scrollId", existingScroll._id),
 		)
 		.take(MAX_SOURCE_SENTENCES);
 	const submittedSentences = bySentencePosition(input.sentences);
@@ -290,7 +293,7 @@ async function resumeSubmittedText(
 		),
 	);
 	const kept = {
-		textId: existingText._id,
+		scrollId: existingScroll._id,
 		sentenceIds: existingSentences.map(({ _id }) => _id),
 		deduplicated: true,
 	};
@@ -304,7 +307,7 @@ async function resumeSubmittedText(
 		) {
 			throw visitorError(
 				"Conflict",
-				"Existing Text analysis is incomplete or differs from the submitted analysis; retry after stripping completes.",
+				"Existing Scroll analysis is incomplete or differs from the submitted analysis; retry after stripping completes.",
 			);
 		}
 		return kept;
@@ -341,20 +344,20 @@ async function resumeSubmittedText(
 		submittedSentences.map((submitted) =>
 			writeSentence(
 				ctx,
-				existingText._id,
+				existingScroll._id,
 				submitted,
 				existingByPosition.get(submitted.position),
 			),
 		),
 	);
-	return { textId: existingText._id, sentenceIds, deduplicated: true };
+	return { scrollId: existingScroll._id, sentenceIds, deduplicated: true };
 }
 
-/** A first submission: a new Text with every Sentence and its Segments. */
-async function insertSubmittedText(
+/** A first submission: a new Scroll with every Sentence and its Segments. */
+async function insertSubmittedScroll(
 	ctx: MutationCtx,
-	input: SubmittedText,
-): Promise<PersistedSubmittedText> {
+	input: SubmittedScroll,
+): Promise<PersistedSubmittedScroll> {
 	const collisions = await Promise.all(
 		input.sentences.map((sentence) =>
 			findSentenceBySegmentedId(ctx, sentence.segmentedSentenceId),
@@ -365,7 +368,7 @@ async function insertSubmittedText(
 			"Segmented Sentence ID already belongs to another submission.",
 		);
 	}
-	const textId = await ctx.db.insert("texts", {
+	const scrollId = await ctx.db.insert("scrolls", {
 		submissionKey: input.submissionKey,
 		sourceText: input.sourceText,
 		...(input.extractedText === undefined
@@ -374,29 +377,29 @@ async function insertSubmittedText(
 	});
 	const sentenceIds = await Promise.all(
 		bySentencePosition(input.sentences).map((sentence) =>
-			writeSentence(ctx, textId, sentence),
+			writeSentence(ctx, scrollId, sentence),
 		),
 	);
-	return { textId, sentenceIds, deduplicated: false };
+	return { scrollId, sentenceIds, deduplicated: false };
 }
 
 /**
- * Persist one segmented Text, each Sentence with its Segments and units,
+ * Persist one segmented Scroll, each Sentence with its Segments and units,
  * while making submission-key retries idempotent. The first complete write
  * wins: a retry that finds the same Segments keeps the stored units.
  */
-export async function persistSubmittedText(
+export async function persistSubmittedScroll(
 	ctx: MutationCtx,
-	input: SubmittedText,
-): Promise<PersistedSubmittedText> {
-	assertSubmittedText(input);
-	const existingText = await ctx.db
-		.query("texts")
+	input: SubmittedScroll,
+): Promise<PersistedSubmittedScroll> {
+	assertSubmittedScroll(input);
+	const existingScroll = await ctx.db
+		.query("scrolls")
 		.withIndex("by_submission_key", (q) =>
 			q.eq("submissionKey", input.submissionKey),
 		)
 		.unique();
-	return existingText
-		? resumeSubmittedText(ctx, existingText, input)
-		: insertSubmittedText(ctx, input);
+	return existingScroll
+		? resumeSubmittedScroll(ctx, existingScroll, input)
+		: insertSubmittedScroll(ctx, input);
 }

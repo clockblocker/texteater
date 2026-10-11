@@ -51,7 +51,7 @@ export async function ensureVisitorEncounter(
 	input: {
 		requestId: string;
 		visitorId: string;
-		textId: Id<"texts">;
+		scrollId: Id<"scrolls">;
 		sentenceId: Id<"sentences">;
 		segmentId: Id<"segments">;
 		attestationId?: Id<"attestations">;
@@ -80,7 +80,7 @@ export async function ensureVisitorEncounter(
 	const encounterId = await ctx.db.insert("visitorEncounters", {
 		requestId: input.requestId,
 		visitorId: input.visitorId,
-		textId: input.textId,
+		scrollId: input.scrollId,
 		sentenceId: input.sentenceId,
 		segmentId: input.segmentId,
 		...(input.attestationId

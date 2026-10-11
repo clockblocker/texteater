@@ -54,7 +54,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Deck models",
 		icon: LayersIcon,
 		description:
-			"Compass: the Pane algebra. Every Pane has a Ground line (Menu › Library › Text) with ← stepping down it; Links push Covers, Segments deal Decks, a drag lifts either; a Note dropped on an edge is a Floating Pane closed by X.",
+			"Compass: the Pane algebra. Every Pane has a Ground line (Menu › Library › Scroll) with ← stepping down it; Links push Covers, Segments deal Decks, a drag lifts either; a Note dropped on an edge is a Floating Pane closed by X.",
 		render: () => <DeckModelsGallery />,
 	},
 	{

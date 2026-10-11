@@ -6,7 +6,7 @@ import { expect, type Locator, type Page, test } from "@playwright/test";
 /*
  * Hovering or focusing one word of a unit lights up every word of that unit,
  * discontinuous ones included, from the units the reader already holds. The
- * Text is stored with its units through `convex run`, so no jev is asked. It
+ * Scroll is stored with its units through `convex run`, so no jev is asked. It
  * lands on the deployment `.env.local` selects, or on the one named by
  * TF_DEMO_E2E_CONVEX_ENV_FILE (a `convex --env-file`); point the app at the
  * same deployment with VITE_CONVEX_URL.
@@ -15,7 +15,7 @@ import { expect, type Locator, type Page, test } from "@playwright/test";
  * this runs. The hover spec reads which are and expects each previewed unit
  * to wear the look that follows. A click on an unattested unit starts a
  * resolution, which a resolvable unit pays for, so the click spec clicks a
- * second Text's unit stored as Unresolved: Dumgen answers it with no call
+ * second Scroll's unit stored as Unresolved: Dumgen answers it with no call
  * (#861), and no click can ever attest it.
  */
 
@@ -133,19 +133,26 @@ function convexRun(name: string, args: unknown): unknown {
 	return JSON.parse(output);
 }
 
-/** Stores a Text once per deployment; a rerun finds it by its submissionKey. */
-function seedText(
+/** Stores a Scroll once per deployment; a rerun finds it by its submissionKey. */
+function seedScroll(
 	key = submissionKey,
 	stored: readonly ReturnType<typeof sentence>[] = sentences,
 ): string {
-	const persisted = convexRun("persistence:persistSubmittedText", {
+	const persisted = convexRun("persistence:persistSubmittedScroll", {
 		submissionKey: key,
 		sourceText: stored.map((s) => s.stitchedText).join(" "),
 		sentences: stored,
-	}) as { textId?: string };
-	if (!persisted.textId)
-		throw new Error(`Seeding stored no Text: ${JSON.stringify(persisted)}`);
-	return persisted.textId;
+	}) as { scrollId?: string };
+	if (!persisted.scrollId)
+		throw new Error(
+			`Seeding stored no Scroll: ${JSON.stringify(persisted)}`,
+		);
+	return persisted.scrollId;
+}
+
+/** The Library shelves e2e-seeded Scrolls in a folder that starts closed. */
+async function openFixtureFolder(page: Page) {
+	await page.getByText("E2E fixtures", { exact: true }).click();
 }
 
 type PreviewState = "known-preview" | "unknown-preview";
@@ -155,9 +162,9 @@ type PreviewState = "known-preview" | "unknown-preview";
  * Visitor who has encountered nothing: known once an occurrence attests it,
  * unknown before. Read from the reader's own query, which writes nothing.
  */
-function previewStates(textId: string): Map<string, PreviewState> {
-	const view = convexRun("textViews:get", {
-		textId,
+function previewStates(scrollId: string): Map<string, PreviewState> {
+	const view = convexRun("scrollViews:get", {
+		scrollId,
 		visitorId: "e2e-unit-hover-reader",
 	}) as {
 		sentences: {
@@ -230,7 +237,7 @@ test("hovering or focusing a word highlights its whole unit with no network call
 	page,
 }, testInfo) => {
 	test.setTimeout(60_000);
-	const states = previewStates(seedText());
+	const states = previewStates(seedScroll());
 	const stateOf = (position: number, text: string) => {
 		const state = states.get(`${position.toString()}:${text}`);
 		if (!state) throw new Error(`No stored word "${text}"`);
@@ -239,6 +246,7 @@ test("hovering or focusing a word highlights its whole unit with no network call
 	const sent = recordTraffic(page);
 
 	await page.goto("/");
+	await openFixtureFolder(page);
 	await page
 		.getByRole("button", {
 			name: /^Der dichte Rauch gibt die Sicht nicht frei\./,
@@ -306,10 +314,11 @@ test("a click selects a discontinuous unit whole, and its Deck settles at once o
 	page,
 }) => {
 	test.setTimeout(60_000);
-	seedText(clickSubmissionKey, clickSentences);
+	seedScroll(clickSubmissionKey, clickSentences);
 	const sent = recordTraffic(page);
 
 	await page.goto("/");
+	await openFixtureFolder(page);
 	await page
 		.getByRole("button", { name: /^Er ruft sie morgen an\./ })
 		.first()

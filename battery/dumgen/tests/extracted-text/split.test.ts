@@ -1,9 +1,9 @@
 import { expect, test } from "bun:test";
 import { extractPastedText } from "../../src/extracted-text/extracted-text.js";
-import { splitExtractedText } from "../../src/extracted-text/split.js";
+import { splitScroll } from "../../src/extracted-text/split.js";
 import { splitText } from "../../src/segment/split-text.js";
 
-test("a pasted text splits through its Extracted Text as it splits raw", () => {
+test("a pasted text splits through its Scroll as it splits raw", () => {
 	for (const text of [
 		"Er kam spät.\nSie sagte „Endlich.“\n\nRead the text. Then answer.",
 		"Erste Zeile\nZweite Zeile\n\n  Dritte Zeile  ",
@@ -11,44 +11,31 @@ test("a pasted text splits through its Extracted Text as it splits raw", () => {
 		'פרק ראשון\nד"ר כהן הגיע. Mr. Smith met him on Jan. 3. They talked.',
 		" \n\t ",
 	])
-		expect(splitExtractedText(extractPastedText(text))).toEqual(
-			splitText(text),
-		);
+		expect(splitScroll(extractPastedText(text))).toEqual(splitText(text));
 });
 
-test("Chapter titles and Headings are paragraphs of their own, Inline Styles drop away", () => {
+test("a Scroll's title and Headings are paragraphs of their own, Inline Styles drop away", () => {
 	expect(
-		splitExtractedText({
-			chapters: [
+		splitScroll({
+			kind: "Scroll",
+			heading: { runs: [{ kind: "Run", text: "Kapitel 1" }] },
+			blocks: [
 				{
-					heading: { runs: [{ kind: "Run", text: "Kapitel 1" }] },
-					blocks: [
-						{
-							kind: "Paragraph",
-							inlines: [
-								{ kind: "Run", text: "Er sagte " },
-								{
-									kind: "Run",
-									text: "»Nein.«",
-									styles: ["Italic"],
-								},
-								{ kind: "Run", text: " Dann ging er." },
-							],
-						},
-						{
-							kind: "Heading",
-							level: 2,
-							runs: [{ kind: "Run", text: "Teil zwei" }],
-						},
+					kind: "Paragraph",
+					inlines: [
+						{ kind: "Run", text: "Er sagte " },
+						{ kind: "Run", text: "»Nein.«", styles: ["Italic"] },
+						{ kind: "Run", text: " Dann ging er." },
 					],
 				},
 				{
-					blocks: [
-						{
-							kind: "Paragraph",
-							inlines: [{ kind: "Run", text: "Ende." }],
-						},
-					],
+					kind: "Heading",
+					level: 2,
+					runs: [{ kind: "Run", text: "Teil zwei" }],
+				},
+				{
+					kind: "Paragraph",
+					inlines: [{ kind: "Run", text: "Ende." }],
 				},
 			],
 		}).paragraphs,

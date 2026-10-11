@@ -177,7 +177,7 @@ test("a definition-sourced Source Context is prefixed with the defined Reading a
 	const markup = render({ state: "Plain" }, {}, [
 		{
 			attestationId: "attestations-9",
-			textId: "texts-definition",
+			scrollId: "scrolls-definition",
 			sentencePosition: 0,
 			sentenceSnippet: "Ein Bauwerk mit Dach.",
 			segments: [
@@ -199,8 +199,8 @@ test("a definition-sourced Source Context is prefixed with the defined Reading a
 				canonicalForm: "Gebäude",
 			},
 			target: {
-				kind: "Text",
-				textId: "texts-definition",
+				kind: "Scroll",
+				scrollId: "scrolls-definition",
 				focusAttestationId: "attestations-9",
 				title: "Ein Bauwerk mit Dach.",
 			},
@@ -219,7 +219,7 @@ test("a Source Context lights the attested instance of a repeated word, by index
 	const markup = render({ state: "Plain" }, {}, [
 		{
 			attestationId: "attestations-2",
-			textId: "texts-1",
+			scrollId: "scrolls-1",
 			sentencePosition: 0,
 			sentenceSnippet: "Haus und Haus",
 			segments: [
@@ -231,8 +231,8 @@ test("a Source Context lights the attested instance of a repeated word, by index
 			],
 			memberSegmentIndices: [4],
 			memberTexts: ["Haus"],
-			origin: { kind: "Text" },
-			target: { kind: "Text", textId: "texts-1" },
+			origin: { kind: "Scroll" },
+			target: { kind: "Scroll", scrollId: "scrolls-1" },
 		} as unknown as ReadingNote["sourceContexts"]["page"][number],
 	]);
 	expect(markup.match(/data-slot="reader-segment"/g)).toHaveLength(1);

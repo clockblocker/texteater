@@ -38,7 +38,7 @@ const MAX_STALE_REJUDGES = 2;
 
 export type PersistedSentence = {
 	readonly sentenceId: string;
-	readonly textId: string;
+	readonly scrollId: string;
 	readonly segmentedSentenceId: string;
 	/** The Detected Language; only a German Sentence is clicked. */
 	readonly language?: DetectedLanguage;
@@ -275,7 +275,7 @@ export type ResolutionContext = {
 	readonly reusable: ReusableAttestation | null;
 	readonly sentence: PersistedSentence | null;
 	readonly lemmaCandidates: readonly LemmaCandidate[];
-	/** The Sentences before and after this one in its Text, as far as they exist. */
+	/** The Sentences before and after this one in its Scroll, as far as they exist. */
 	readonly neighbours?: NeighbourSentences;
 };
 

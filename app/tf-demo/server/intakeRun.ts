@@ -8,7 +8,7 @@ type SentenceOutcome = IntakeRun["sentences"][number]["segmentation"];
 
 /**
  * The tag a failed submission attempt records: the name of the error its
- * failure squashes to, never its message, which can quote the Text.
+ * failure squashes to, never its message, which can quote the text.
  */
 export function failureTagOf(cause: Cause.Cause<unknown>): string {
 	const squashed = Cause.squash(cause);
@@ -21,7 +21,7 @@ export function failureTagOf(cause: Cause.Cause<unknown>): string {
  * Collects one submission attempt's summary from the traces of its
  * `language.detect` and `segment.inUnits`: every jev call with its tokens
  * and time, and how each Sentence's segmentation ended, Plain for one not
- * in the target language. It keeps no Text, prompt or answer.
+ * in the target language. It keeps no text, prompt or answer.
  */
 export function createIntakeRunRecorder(sentenceCount: number) {
 	const jev: IntakeRun["jev"] = {
@@ -70,7 +70,7 @@ export function createIntakeRunRecorder(sentenceCount: number) {
 				IntakeRun,
 				| "runId"
 				| "submissionKey"
-				| "textId"
+				| "scrollId"
 				| "outcome"
 				| "failureTag"
 				| "durationMs"

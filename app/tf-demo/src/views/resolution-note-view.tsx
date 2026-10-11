@@ -223,9 +223,9 @@ function ResolvingAttestationNote({
 		presentation,
 		follow: () =>
 			follow({
-				kind: "Text",
-				textId: note.route.textId,
-				title: note.source.textTitle,
+				kind: "Scroll",
+				scrollId: note.route.scrollId,
+				title: note.source.scrollTitle,
 			}),
 	});
 	if (part === "heading") return parts.heading;

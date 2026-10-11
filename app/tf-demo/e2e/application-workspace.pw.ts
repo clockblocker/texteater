@@ -3,10 +3,10 @@ import { expect, type Locator, type Page, test } from "@playwright/test";
 
 /**
  * The main app on the Compass renderer (tf-demo ADR 0003, 0008): one URL,
- * a Rooted Pane whose Ground line runs Menu › Library › Text, Decks dealt
+ * a Rooted Pane whose Ground line runs Menu › Library › Scroll, Decks dealt
  * by a click, Covers pushed by Links, and Workspace Persistence.
  *
- * The Deck tests click words of a stored Text whose occurrences are already
+ * The Deck tests click words of a stored Scroll whose occurrences are already
  * attested, so a click presents the stored route and runs no resolution.
  */
 
@@ -46,7 +46,7 @@ function word(scope: Locator, text: string): Locator {
 		.filter({ hasText: new RegExp(`^${text}$`) });
 }
 
-/** The Library's stored Text, opened as the Rooted Pane's Ground. */
+/** The Library's stored Scroll, opened as the Rooted Pane's Ground. */
 async function openBanken(page: Page) {
 	await page.goto("/");
 	await page.getByRole("button", { name: BANKEN_TEXT }).click();
@@ -111,7 +111,7 @@ test("one URL: the Library is the Ground's first selection and Settings sits bes
 	).toBeVisible();
 });
 
-test("a click deals a Deck on the Text, an edge drop makes a Floating Pane, and both survive a reload", async ({
+test("a click deals a Deck on the Scroll, an edge drop makes a Floating Pane, and both survive a reload", async ({
 	page,
 }) => {
 	await openBanken(page);
@@ -158,7 +158,7 @@ test("a click deals a Deck on the Text, an edge drop makes a Floating Pane, and 
 	await expect(cards(page)).toHaveCount(dealt);
 });
 
-test("Go to source pushes the Text as a Cover at its Sentence; Back retraces the Covers and leaves the Ground", async ({
+test("Go to source pushes the Scroll as a Cover at its Sentence; Back retraces the Covers and leaves the Ground", async ({
 	page,
 }) => {
 	await openBanken(page);
@@ -173,10 +173,10 @@ test("Go to source pushes the Text as a Cover at its Sentence; Back retraces the
 	await expect(covers(page)).toHaveCount(1);
 	const reading = covers(page).first();
 
-	/* Go to source from its Source Context: a second Cover, the Text,
+	/* Go to source from its Source Context: a second Cover, the Scroll,
 	   with the occurrence lit */
 	await reading
-		.getByRole("button", { name: /open in the source Text/ })
+		.getByRole("button", { name: /open in the source Scroll/ })
 		.first()
 		.click();
 	await expect(covers(page)).toHaveCount(2);
@@ -211,7 +211,7 @@ test("Go to source pushes the Text as a Cover at its Sentence; Back retraces the
 	await expect(trail(page)).toHaveText(/Menu\s*›\s*Library/i);
 });
 
-test("the Text's Segments stay hoverable after a dismissive click sweeps the Deck", async ({
+test("the Scroll's Segments stay hoverable after a dismissive click sweeps the Deck", async ({
 	page,
 }) => {
 	const reader = await openBanken(page);

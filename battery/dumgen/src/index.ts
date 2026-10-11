@@ -1,8 +1,9 @@
 /**
  * Dumgen's public entry (Dumgen ADR 0007, #701, #859). `extractPastedText`
- * turns pasted text into an Extracted Text (#1176), `parseExtractedText`
- * checks a stored one without Zod, and `splitExtractedText` splits one into
- * paragraphs and Sentences in code with the language-neutral `splitText`.
+ * turns pasted text into the one Scroll of its Extracted Text (#1176,
+ * #1189), `parseScroll` checks a stored Scroll without Zod, and
+ * `splitScroll` splits one into paragraphs and Sentences in code with the
+ * language-neutral `splitText`.
  * `createDumgen({ jev, luna })` builds the operations: `language.detect`,
  * which gives each Sentence its Detected Language (Dumgen ADR 0001);
  * `segment.inUnits`, which turns each Sentence into
@@ -23,11 +24,11 @@ export {
 } from "./create-dumgen.js";
 export { InvalidModelOutput, ProviderFailure } from "./errors.js";
 export {
-	type ExtractedText,
 	extractPastedText,
+	type Scroll,
 } from "./extracted-text/extracted-text.js";
-export { parseExtractedText } from "./extracted-text/parse.js";
-export { splitExtractedText } from "./extracted-text/split.js";
+export { parseScroll } from "./extracted-text/parse.js";
+export { splitScroll } from "./extracted-text/split.js";
 export type {
 	DetectedLanguage,
 	LanguagedText,
