@@ -15,10 +15,14 @@ deck-models playground.
 
 **Ground line.** The Ground's content walks a line, bottom rung first. A Rooted
 Pane's line starts at the Menu, then a Menu Item, then that item's selection:
-in tf-demo, Menu › Library › Scroll, where the Menu's items are the Library and
-Settings. Going back on the Ground steps one rung down the line and ends the
-Deck of the rung it leaves. Once a selection is on the Ground, only going back
-or a lift changes it. Dropping a Held Card on a Pane's inline-start or
+in tf-demo, Menu › Library › Section › … › Scroll, with one Section rung per
+nesting level, where the Menu's items are the Library and Settings. A loose
+Scroll sits at Menu › Library › Scroll, and a Section on the Ground shows its
+Codex. Going back on the Ground steps one rung down the line and ends the
+Deck of the rung it leaves. Once a Scroll is on the Ground, only going back,
+a lift or next changes it. Next, at the Scroll's end, puts the following
+Scroll on the Ground, across Section boundaries too, with that Scroll's
+Sections as the rungs below it (#1179). Dropping a Held Card on a Pane's inline-start or
 inline-end edge makes a Floating Pane whose Ground is the dropped Note or Scroll,
 with no rung below it. Its bar shows X in place of the back control, and X
 closes the Pane with its Covers and its Deck. A Pane's kind belongs to its
@@ -55,7 +59,8 @@ Pane makes a Cover there, a drop on a Pane's inline-start or inline-end edge
 makes a Floating Pane on that side, and a drop back where the Card came from
 cancels. A Floating Ground lifts by a plain drag, and its Pane closes behind
 it. A Rooted Ground lifts by a press of about one second; its Pane stays and
-steps one rung down, so a lifted Scroll leaves the Library showing.
+steps one rung down, so a lifted Scroll leaves its Section's Codex, or the
+Library, showing.
 [tf-demo ADR 0006] decides which element is the handle in each form.
 
 **Direction.** Directions follow the text's inline direction, so German reads
@@ -102,7 +107,8 @@ Menu stays reachable without a central Pane.
   become a Floating Pane's Ground opens full-screen as a Cover instead. Decks
   and going back work as usual.
 - [tf-demo ADR 0003] keeps its single URL and Workspace Persistence. The
-  Library and Scrolls it opens sit on a Rooted Pane's Ground line.
+  Library and the Sections and Scrolls it opens sit on a Rooted Pane's Ground
+  line.
 
 [tf-demo ADR 0003]: ./0003-make-the-workspace-own-navigation.md
 [tf-demo ADR 0006]: ./0006-render-a-note-presentation-as-one-element-of-blocks.md
