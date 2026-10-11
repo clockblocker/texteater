@@ -87,4 +87,12 @@ export const demos: readonly Demo[] = [
 		inspiration: ["Obsidian", "Hover Editor", "Quartz", "Path of Exile 2"],
 		Component: lazy(() => import("./hover-preview")),
 	},
+	{
+		slug: "pinned-reader-tabs",
+		title: "Pinned reader tabs",
+		description:
+			"Obsidian's tabs with the reader pinned first: links open Sheet tabs, ⌘ in the background, ⌘⌥ in a split.",
+		inspiration: ["Obsidian"],
+		Component: lazy(() => import("./pinned-reader-tabs")),
+	},
 ];
