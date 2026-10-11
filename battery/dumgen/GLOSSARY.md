@@ -18,8 +18,8 @@ units from `segment.inUnits`.
 _Avoid_: Sentence DTO
 
 **Segmented Text**:
-A Text as `segment.inUnits` returns it: its paragraphs, each with its
-Segmented Sentences in order.
+The segmentation `segment.inUnits` returns for one text, in tf-demo one
+Scroll: its paragraphs, each with its Segmented Sentences in order.
 
 **Stitched Text**:
 One Sentence's text once code has normalized its mechanical whitespace. Its
@@ -27,7 +27,7 @@ Segments concatenated give it back. See [Dumgen ADR 0004].
 _Avoid_: stitching question, repaired text
 
 **`splitText`**:
-The code that splits a Text into paragraphs and Sentences before
+The code that splits raw text into paragraphs and Sentences before
 `language.detect` and `segment.inUnits` see it. It is language-neutral,
 since it runs before any language is known. See [Dumgen ADR 0007].
 
@@ -84,7 +84,7 @@ _Avoid_: Realized Slot, intake slots, government list, valency guess,
 governed-preposition prompt
 
 **Referent Context**:
-The Sentences just before and after an Encounter's Sentence in its Text,
+The Sentences just before and after an Encounter's Sentence in its text,
 which Grammatical Resolution reads to settle a pronoun's referent. See
 [ADR 0044] and [ADR 0046].
 _Avoid_: surrounding text, paragraph context

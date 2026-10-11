@@ -5,9 +5,9 @@
 - [tf-demo](./app/tf-demo/GLOSSARY.md): presents one shared linguistic graph and
   records occurrence-specific Attestations, Visitor Encounter history, and
   Personal Annotations.
-- [Intake](./app/tf-demo/GLOSSARY.md#intake): turns a Submission into a Text
-  through one pipeline for Shelves and learner uploads, keeping an Extracted
-  Text between Extraction and segmentation.
+- [Intake](./app/tf-demo/GLOSSARY.md#intake): turns a Submission into Scrolls,
+  nested in Sections, through one pipeline for Shelves and learner uploads,
+  keeping an Extracted Text between Extraction and segmentation.
 - [Compass](./battery/compass/GLOSSARY.md): owns workspace Presentation, Pane,
   Ground, Cover, Deck, Split, and gesture terminology.
 - [lego](./battery/lego/GLOSSARY.md): owns the shared token palette, theme

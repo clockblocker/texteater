@@ -5,7 +5,7 @@ status: accepted
 # Make the workspace own navigation
 
 tf-demo uses `/` as its single application URL. The initial Pane is a Rooted
-Pane whose Ground line runs Menu › Library › Text, Settings is a Menu Item
+Pane whose Ground line runs Menu › Library › Scroll, Settings is a Menu Item
 beside the Library, and Notes move between Card and Sheet form
 ([tf-demo ADR 0008](./0008-give-every-pane-a-ground-beneath-its-covers.md)).
 Panes form a split tree whose splits record their direction. Only

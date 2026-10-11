@@ -5,8 +5,8 @@ status: accepted
 # Materialize definitions as hidden Definition Texts
 
 A Reading's Knowledge definition becomes a Sentence the Visitor can click
-like any Sentence in a Text. tf-demo stores it as a hidden Definition Text:
-one Text row with a Definition origin, one Sentence, and its Segments and
+like any Sentence in a Scroll. tf-demo stores it as a hidden Definition Text:
+one Scroll row with a Definition origin, one Sentence, and its Segments and
 biggest units, kept at most once per Reading behind a state row. Segment
 Selection, Attestation Membership, Visitor Encounters, and Analysis Stripping
 all work on it unchanged, and the Library never lists it.
@@ -14,7 +14,7 @@ all work on it unchanged, and the Library never lists it.
 Definition segmentation trusts the generator's target language and skips
 intake. Dumgen's `segment.inUnits` takes the whole definition as one German
 Sentence, with no `splitText`, and the Definition Text stores that Sentence's
-Segments and biggest units as intake stores a Visitor Text's Sentences. A
+Segments and biggest units as intake stores any other Scroll's Sentences. A
 Reading in another language gets no Definition Text. The segmentation is
 persisted once and never recomputed, because a language's segmenter may be a
 non-deterministic model call.

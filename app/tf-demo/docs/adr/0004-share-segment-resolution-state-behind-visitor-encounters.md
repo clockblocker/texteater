@@ -7,7 +7,7 @@ status: accepted
 An unattested Segment stores one shared current Resolution State: `Active`,
 `Unresolved`, or `PermanentFailure`. Concurrent Resolution Sessions contribute
 to `Active`, while each Visitor sees this state only after selecting that exact
-Segment. Visitor Encounters retain the Text, Sentence, and Segment locator;
+Segment. Visitor Encounters retain the Scroll, Sentence, and Segment locator;
 Unit Reading Notes use the same history to include only Source Contexts the
 Visitor has encountered.
 

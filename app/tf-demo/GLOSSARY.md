@@ -9,28 +9,48 @@ workspace terms, such as Pane, Sheet, Card and Deck.
 ## Language
 
 **Learner**:
-The person tf-demo serves: reads Texts, owns a Library and Submissions. A
+The person tf-demo serves: reads Scrolls, owns a Library and Submissions. A
 Learner is known only through a Visitor until accounts exist.
 _Avoid_: User, Reader, Visitor (the anonymous identity, not the person)
 
 **Library**:
-The Menu Item listing Texts. See [tf-demo ADR 0008].
+The Menu Item listing Sections and Scrolls. See [tf-demo ADR 0008].
 _Avoid_: Library Sheet, Text Sheet
+
+**Scroll**:
+What a Learner reads and marks done, what Intake processes and what Links
+point into: a scene of a TV episode, a chapter of a novel, one article, one
+paste. It holds Headings and Paragraphs. A one-off paste is a Scroll with no
+Section above it.
+_Avoid_: Text (also any string, as in Extracted Text), Chapter (a Heading in
+the content), Page (a physical page, see Page Image), Document, Book (a
+Section)
+
+**Section**:
+A container, at any depth, of Sections and Scrolls, with a title, author,
+cover and order. A series, a season, an episode, a book and a Bible book are
+each a Section; the material decides how deep they nest. Status lives on
+Scrolls, so a Section is done when everything under it is.
+_Avoid_: Book, Part
+
+**Codex**:
+A Section's table of contents.
+_Avoid_: table of contents, TOC
 
 **Settings**:
 The Menu Item beside the Library that holds the application's settings. See
 [tf-demo ADR 0003].
 
 **Shelf**:
-A curated collection of Texts that a person has checked. Its Texts go
-through the same Intake as Learner uploads.
+A curated collection of Sections and Scrolls that a person has checked. Its
+Scrolls go through the same Intake as Learner uploads.
 
 **Price**:
 The coins a Submission costs, shown before Intake starts.
 _Avoid_: quote
 
 **Mode**:
-One way to read a Text. A Text offers the Modes its Medium allows, and the
+One way to read a Scroll. A Scroll offers the Modes its Medium allows, and the
 Learner can switch between them.
 _Avoid_: View
 
@@ -39,7 +59,7 @@ The Mode that shows Page Images with clickable Segments over them. It suits
 visual material: comics, picture books, worksheets.
 
 **Reflow Mode**:
-The Mode that sets a Text in tf-demo's own reader. Every Text offers it. It
+The Mode that sets a Scroll in tf-demo's own reader. Every Scroll offers it. It
 suits books, newspapers, articles and sparsely illustrated books.
 
 **Playback Mode**:
@@ -49,12 +69,12 @@ Sentence replays it.
 _Avoid_: transcript view, transcription
 
 **Flag**:
-A Learner's report that one spot in a Text is wrong. Re-running a Sentence
+A Learner's report that one spot in a Scroll is wrong. Re-running a Sentence
 replaces its Segments, so the fix strips that Sentence's Occurrence
 Attestations. See [Dumgen ADR 0004].
 
 **Link**:
-A reference inside a Note naming one Note, or a location in a Text as Go to
+A reference inside a Note naming one Note, or a place in a Scroll as Go to
 source does. See [tf-demo ADR 0008].
 
 **Note Presentation**:
@@ -146,9 +166,9 @@ adds no linguistic identity. See [tf-demo ADR 0004] and [tf-demo ADR 0005].
 _Avoid_: clicked context, Reading identity evidence
 
 **Definition Text**:
-The hidden Text that holds one Reading's Knowledge definition as a single
-Sentence so its Segments can be selected. See [tf-demo ADR 0005] and
-[tf-demo ADR 0008].
+The hidden Scroll that holds one Reading's Knowledge definition as a single
+Sentence so its Segments can be selected. The Library never lists it. See
+[tf-demo ADR 0005] and [tf-demo ADR 0008].
 _Avoid_: definition sentence row, synthetic text
 
 **Lemma Note**:
@@ -206,8 +226,8 @@ Attestation without matching all and only its members. See
 [tf-demo ADR 0001].
 
 **Analysis Stripping**:
-Removal of derived analysis for the Texts in scope while preserving those
-Texts and their Sentences. See [tf-demo ADR 0001] and [tf-demo ADR 0005].
+Removal of derived analysis for the Scrolls in scope while preserving those
+Scrolls and their Sentences. See [tf-demo ADR 0001] and [tf-demo ADR 0005].
 
 ### Intake
 
@@ -216,7 +236,7 @@ Intake; Dumgen's `splitText`, `language.detect` and `segment.inUnits` are
 its last steps.
 
 **Submission**:
-What a Learner or curator hands in to become a Text: pasted text, a file or
+What a Learner or curator hands in to become Scrolls: pasted text, a file or
 a link.
 _Avoid_: upload (as a noun), import, Text Record
 
@@ -227,13 +247,14 @@ _Avoid_: source
 
 **Medium**:
 What an Original is made of: text, pages or a recording. It decides which
-Modes a Text offers.
+Modes a Scroll offers.
 _Avoid_: Kind, type, format
 
 **Intake**:
-The one pipeline that turns a Submission into a Text, the same for Shelves
-and Learner uploads. It works Chapter by Chapter: Extraction, then
-`splitText`, `language.detect` and `segment.inUnits`.
+The one pipeline that turns a Submission into Scrolls, nested in Sections
+when the material has structure, the same for Shelves and Learner uploads.
+It runs Extraction, then `splitText`, `language.detect` and
+`segment.inUnits` Scroll by Scroll.
 _Avoid_: ingestion, processing, import
 
 **Extraction**:
@@ -242,28 +263,20 @@ It produces an Extracted Text.
 _Avoid_: transcription, OCR as the general term
 
 **Extracted Text**:
-The stored form every Extraction produces: Chapters of Headings and
-Paragraphs, with Line Breaks, Inline Styles and Original Locations, as running
-text not yet split into Sentences. Pasted text is the simplest one: one
-Chapter, no Original Locations. Intake keeps it so a Flag, a segmentation
-improvement or a curator's fix re-runs only the cheap steps.
-
-**Text**:
-The readable result of Intake, listed in the Library: Chapters of Sentences,
-each cut into Segments.
-
-**Chapter**:
-The piece of a Text that Intake processes and a Learner opens as a whole. An
-article is one Chapter. Each Chapter becomes ready on its own.
-_Avoid_: Part, Section, batch
+The stored form every Extraction produces: Scrolls of Headings and
+Paragraphs, nested in Sections, with Line Breaks, Inline Styles and Original
+Locations, as running text not yet split into Sentences. Pasted text is the
+simplest one: one Scroll, no Section, no Original Locations. Intake keeps it
+so a Flag, a segmentation improvement or a curator's fix re-runs only the
+cheap steps.
 
 **Heading**:
-A title in a Text, the Chapter's own or one inside it. A Heading Block
+A title in a Scroll, the Scroll's own or one inside it. A Heading Block
 belongs to a Note instead.
 
 **Paragraph**:
-A stretch of running text the Original sets apart. In a Text it holds
-Sentences.
+A stretch of running text the Original sets apart. In a Scroll it holds
+Sentences, and Links into the Scroll point back to it.
 _Avoid_: Block
 
 **Line Break**:
