@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, it } from "bun:test";
 import type { FunctionReference, FunctionReturnType } from "convex/server";
-import { closeTestingSessions, inferredType } from "prinfer/testing";
+import { closeTestingSessions, inferredType } from "typeprobe/testing";
 
 import type { api } from "../../convex/_generated/api";
 

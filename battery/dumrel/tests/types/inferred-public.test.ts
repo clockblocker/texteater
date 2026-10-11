@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import { closeTestingSessions, inferredType } from "prinfer/testing";
+import { closeTestingSessions, inferredType } from "typeprobe/testing";
 
 afterAll(closeTestingSessions);
 

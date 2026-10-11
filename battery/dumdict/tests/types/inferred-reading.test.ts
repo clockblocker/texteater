@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, it } from "bun:test";
-import { closeTestingSessions, inferredType } from "prinfer/testing";
+import { closeTestingSessions, inferredType } from "typeprobe/testing";
 
 import type { ReadingEntry } from "../../src";
 import type { DumdictReadingDraft } from "../../src/dto/drafts";

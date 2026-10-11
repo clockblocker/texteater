@@ -4,7 +4,7 @@ import {
 	closeTestingSessions,
 	inferredCompletions,
 	inferredType,
-} from "prinfer/testing";
+} from "typeprobe/testing";
 
 afterAll(closeTestingSessions);
 const fixture = new URL("./schema-consumer.ts", import.meta.url).href;

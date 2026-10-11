@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, expect, test } from "bun:test";
 import { fileURLToPath } from "node:url";
-import { closeTestingSessions, inferredType } from "prinfer/testing";
+import { closeTestingSessions, inferredType } from "typeprobe/testing";
 import { buildPublishedPackage } from "./published-build.js";
 
 // The consumers type-check against the published declarations.

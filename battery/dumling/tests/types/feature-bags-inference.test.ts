@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, test } from "bun:test";
-import { closeTestingSessions, inferredType } from "prinfer/testing";
+import { closeTestingSessions, inferredType } from "typeprobe/testing";
 import type { z } from "zod";
 import type { DeNounFeatureBagsSchema } from "../../src/schemas/concrete-language/de/lexeme/noun.js";
 import type { UniversalFeatureBag as SourceUniversalFeatureBag } from "../../src/schemas/universal/features/catalog.js";
