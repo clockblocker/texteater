@@ -23,6 +23,7 @@
 		"generate:check": "turbo run generate:check",
 		"knip": "bun tooling/knip.ts",
 		"lint": "turbo run lint lint:tooling --continue",
+		"playground": "turbo run dev:package --filter=@texteater/playground",
 		"lint:tooling": "biome check --error-on-warnings --config-path tooling/biome/base.json tooling",
 		"prepare": "effect-tsgo patch --typescript --no-oxlint",
 		"resolution_inspector": "bun app/tf-demo/tooling/resolution-inspector.ts",

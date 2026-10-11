@@ -1,0 +1,6 @@
+{
+	"ignoreIssues": {
+		"src/fixtures/index.ts": ["exports", "types"],
+		"src/shell/index.ts": ["exports", "types"]
+	}
+}

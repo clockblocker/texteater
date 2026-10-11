@@ -1,0 +1,65 @@
+@import "lego/styles.css";
+
+/* Lego has one palette, and its light theme reuses the dark one. The
+   playground adds a rough light palette, scoped to a frame with the
+   `light` class, so a layout can be judged on a light page too. It is not
+   a designed appearance. A custom property that names another resolves
+   where it is declared, so the roles built on the primitives are restated
+   here along with them. */
+.light {
+	color-scheme: light;
+	--canvas: oklch(97.5% 0.004 256);
+	--paper: oklch(100% 0 0);
+	--raised: oklch(94% 0.01 256);
+	--scrim: oklch(88% 0.008 260);
+	--ink: oklch(24% 0.015 257);
+	--ink-soft: oklch(38% 0.016 257);
+	--ink-muted: oklch(48% 0.02 256);
+	--ink-faint: oklch(60% 0.02 260);
+	--line: oklch(89% 0.01 258);
+	--line-strong: oklch(74% 0.03 257);
+
+	--gender-feminine: oklch(50% 0.14 17);
+	--gender-masculine: oklch(48% 0.14 305);
+	--gender-neuter: oklch(48% 0.12 142);
+	--word-unknown: var(--ink-soft);
+	--word-resolving: var(--ink-muted);
+	--word-known: oklch(48% 0.14 257);
+	--word-shadow: oklch(58% 0.1 257);
+	--link: var(--word-known);
+	--link-shadow: var(--word-shadow);
+	--selection: oklch(90% 0.04 257);
+	--selection-foreground: var(--ink);
+
+	--background: var(--canvas);
+	--foreground: var(--ink);
+	--card: var(--paper);
+	--card-foreground: var(--ink);
+	--popover: var(--paper);
+	--popover-foreground: var(--ink);
+	--primary: var(--link);
+	--primary-foreground: oklch(98% 0.01 256);
+	--secondary: var(--raised);
+	--secondary-foreground: var(--ink);
+	--muted: oklch(95% 0.008 258);
+	--muted-foreground: var(--ink-muted);
+	--accent: var(--raised);
+	--accent-foreground: var(--ink);
+	--border: var(--line);
+	--input: var(--line);
+	--ring: var(--primary);
+}
+
+/* The reduced-motion toggle: CSS animations and transitions inside the
+   frame finish at once, as tf-demo's reduced-motion rule does. Motion's
+   own animations follow `MotionConfig` instead. */
+[data-reduced-motion="true"] *,
+[data-reduced-motion="true"] *::before,
+[data-reduced-motion="true"] *::after {
+	animation-delay: 0s;
+	animation-duration: 0.01ms;
+	animation-iteration-count: 1;
+	scroll-behavior: auto;
+	transition-delay: 0s;
+	transition-duration: 0.01ms;
+}

@@ -7,6 +7,7 @@ reusable modules.
 The workspaces are:
 
 - `app/dumling-docs`: public Dumling documentation
+- `app/playground`: visual demos of layout concepts for tf-demo's redesign
 - `app/spec-review`: maintainer review of German Spec Records' Segmentation
 - `app/tf-demo`: end-to-end product probe
 - `battery/codegen`: deterministic, filesystem-safe code generation recipes

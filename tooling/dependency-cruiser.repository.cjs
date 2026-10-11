@@ -16,7 +16,12 @@ const layers = [
 	["dumrel"],
 	["dumcorpus"],
 	["dumdict", "dumgen"],
-	["@dumling/docs-site", "@texteater/spec-review", "@texteater/tf-demo"],
+	[
+		"@dumling/docs-site",
+		"@texteater/playground",
+		"@texteater/spec-review",
+		"@texteater/tf-demo",
+	],
 ];
 
 const directories = new Map();
