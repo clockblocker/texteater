@@ -220,6 +220,15 @@ export const persistSubmittedScroll = internalMutation({
 		/** The Scroll's Extracted Text, Dumgen's `Scroll`, as intake read it. */
 		extractedText: v.optional(v.any()),
 		sentences: v.array(sentenceInputValidator),
+		/** A new Scroll from a link: its title, page, Original and owner. */
+		link: v.optional(
+			v.object({
+				title: v.optional(v.string()),
+				url: v.string(),
+				original: v.id("_storage"),
+				owner: v.string(),
+			}),
+		),
 	},
 	returns: v.object({
 		scrollId: v.id("scrolls"),

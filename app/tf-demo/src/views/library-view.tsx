@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { usePendingAction } from "@/hooks/use-pending-action";
+import { useTextOrLinkSubmission } from "@/hooks/use-text-or-link-submission";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
@@ -47,7 +47,7 @@ export function LibraryView() {
 		null,
 	);
 	const libraryQuery = useQuery(convexQuery(api.library.list, { visitorId }));
-	const submitText = usePendingAction(api.orchestration.submitText);
+	const submitText = useTextOrLinkSubmission();
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -71,7 +71,7 @@ export function LibraryView() {
 			follow({
 				kind: "Scroll",
 				scrollId: result.scrollId,
-				title: scrollTitle({ sourceText: normalized }),
+				title: result.title ?? scrollTitle({ sourceText: normalized }),
 			});
 			setIsAddScrollOpen(false);
 		} catch (cause) {
@@ -211,7 +211,7 @@ export function LibraryView() {
 								}
 							>
 								<FieldLabel htmlFor="library-source-text">
-									German text
+									German text, or a link to an article
 								</FieldLabel>
 								<Textarea
 									id="library-source-text"

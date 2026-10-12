@@ -156,7 +156,12 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 			isSegmenting={segmentText.isPending}
 			onSegmentText={() => void handleSegmentText()}
 			readerRef={reader}
-			end={<ScrollEnd scrollId={scrollDetail.scrollId} />}
+			end={
+				<ScrollEnd
+					scrollId={scrollDetail.scrollId}
+					originalUrl={scrollDetail.originalUrl}
+				/>
+			}
 		/>
 	);
 }

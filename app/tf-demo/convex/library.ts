@@ -121,30 +121,44 @@ async function sectionsDownTo(
 }
 
 /**
+ * Loose Visitor Scrolls owned by `owner`, or shared ones when it is
+ * undefined, newest first: one index range, so Definition Texts, Scrolls
+ * in a Codex and other Visitors' private Scrolls are neither scanned nor
+ * in the read set.
+ */
+function looseScrolls(ctx: QueryCtx, owner: string | undefined) {
+	return ctx.db
+		.query("scrolls")
+		.withIndex("by_origin_kind_and_placement_and_owner", (q) =>
+			q
+				.eq("origin.kind", undefined)
+				.eq("placement.sectionId", undefined)
+				.eq("owner", owner),
+		)
+		.order("desc")
+		.take(MAX_LIBRARY_SCROLLS);
+}
+
+/**
  * The Library: top-level Sections by title, numbers in order, then loose
- * Scrolls, newest first. Hidden Definition Texts are never listed.
+ * Scrolls, shared ones and the Visitor's private ones, newest first.
+ * Hidden Definition Texts are never listed.
  */
 export async function listLibrary(ctx: QueryCtx, visitorId: string) {
 	assertIdentifier(visitorId, "visitorId");
-	const [sections, scrolls] = await Promise.all([
+	const [sections, shared, own] = await Promise.all([
 		ctx.db
 			.query("sections")
 			.withIndex("by_placement", (q) =>
 				q.eq("placement.sectionId", undefined),
 			)
 			.take(MAX_LIBRARY_SECTIONS),
-		// One index range over loose Visitor Scrolls: Definition Texts and
-		// Scrolls in a Codex are neither scanned nor in the read set.
-		ctx.db
-			.query("scrolls")
-			.withIndex("by_origin_kind_and_placement", (q) =>
-				q
-					.eq("origin.kind", undefined)
-					.eq("placement.sectionId", undefined),
-			)
-			.order("desc")
-			.take(MAX_LIBRARY_SCROLLS),
+		looseScrolls(ctx, undefined),
+		looseScrolls(ctx, visitorId),
 	]);
+	const scrolls = [...shared, ...own]
+		.sort((left, right) => right._creationTime - left._creationTime)
+		.slice(0, MAX_LIBRARY_SCROLLS);
 	const items: CodexItem[] = [
 		...sections
 			.sort((left, right) => compareTitles(left.title, right.title))
@@ -240,10 +254,19 @@ export const progress = query({
 	},
 });
 
-async function visitorScroll(ctx: QueryCtx, scrollIdValue: string) {
+/** A Visitor Scroll this Visitor may read: shared, or their own private one. */
+async function visitorScroll(
+	ctx: QueryCtx,
+	scrollIdValue: string,
+	visitorId: string,
+) {
 	const scrollId = ctx.db.normalizeId("scrolls", scrollIdValue);
 	const scroll = scrollId ? await ctx.db.get(scrollId) : null;
-	if (!scroll || scroll.origin)
+	if (
+		!scroll ||
+		scroll.origin ||
+		(scroll.owner !== undefined && scroll.owner !== visitorId)
+	)
 		throw visitorError("InvalidInput", "This text does not exist.");
 	return scroll;
 }
@@ -254,7 +277,11 @@ export const open = mutation({
 	returns: v.null(),
 	handler: async (ctx, { scrollId, visitorId }) => {
 		assertIdentifier(visitorId, "visitorId");
-		await recordOpened(ctx, visitorId, await visitorScroll(ctx, scrollId));
+		await recordOpened(
+			ctx,
+			visitorId,
+			await visitorScroll(ctx, scrollId, visitorId),
+		);
 		return null;
 	},
 });
@@ -272,7 +299,7 @@ export const setDone = mutation({
 		await recordDone(
 			ctx,
 			visitorId,
-			await visitorScroll(ctx, scrollId),
+			await visitorScroll(ctx, scrollId, visitorId),
 			done,
 		);
 		return null;
@@ -297,7 +324,7 @@ export const savePosition = mutation({
 		await recordPosition(
 			ctx,
 			visitorId,
-			await visitorScroll(ctx, scrollId),
+			await visitorScroll(ctx, scrollId, visitorId),
 			position,
 		);
 		return null;

@@ -5,7 +5,6 @@ import {
 	createDumgen,
 	createOpenAILuna,
 	createTypeSafeAsk,
-	extractPastedText,
 	InvalidModelOutput,
 	type LunaAsk,
 	type OperationTrace,
@@ -18,6 +17,7 @@ import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import type { ReadingResolution } from "../server/clickResolution";
 import { dumgenClickResolution } from "../server/dumgenClickResolution";
+import { extractPaste } from "../server/extraction";
 import {
 	dumgenTracing,
 	type InspectionCapture,
@@ -50,6 +50,11 @@ import {
 	type UnresolvedClickCommit,
 } from "../server/linguisticOrchestration";
 import {
+	fetchPage,
+	LINK_REJECTED_MESSAGE,
+	readPage,
+} from "../server/linkIntake";
+import {
 	parseGermanLemma,
 	parseGermanReading,
 } from "../server/operationalParsing";
@@ -58,6 +63,8 @@ import { executeResolutionSession } from "../server/resolutionSessionExecution";
 import { projectResolutionReading } from "../server/resolutionSessionProjection";
 import { storedUnitOf } from "../server/storedSegments";
 import { textSubmissionLimitViolation } from "../server/textSubmissionLimits";
+import { submittedLink } from "../shared/submitted-link";
+import type { ScrollLanguage } from "../shared/supported-target-language";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import {
@@ -90,6 +97,21 @@ const submitTextResultValidator = v.union(
 );
 
 type SubmitTextActionResult = Infer<typeof submitTextResultValidator>;
+
+const submitLinkResultValidator = v.union(
+	v.object({
+		status: v.literal("Accepted"),
+		scrollId: v.id("scrolls"),
+		/** What the Scroll is called: the article's title, else the link. */
+		title: v.string(),
+	}),
+	v.object({
+		status: v.literal("Rejected"),
+		message: v.string(),
+	}),
+);
+
+type SubmitLinkActionResult = Infer<typeof submitLinkResultValidator>;
 
 /**
  * The coded Visitor error behind a failed Effect. Convex sends only a
@@ -226,6 +248,161 @@ const resegmenter =
 				);
 		});
 
+/** A Scroll from a link, as `persistSubmittedScroll` stores it. */
+type LinkedScroll = {
+	readonly title?: string;
+	readonly url: string;
+	readonly original: Id<"_storage">;
+	readonly owner: string;
+};
+
+/** One Scroll's way through intake, from its Extracted Text. */
+type ScrollSubmission = {
+	readonly submissionKey: string;
+	readonly sourceText: string;
+	readonly visitorId: string;
+	readonly inspectionVisitorId?: string;
+	readonly language: ScrollLanguage;
+	/** The stored Extracted Text when it was submitted before, else Extraction's. */
+	readonly extractedText: Scroll;
+	/** A new Scroll from a link. */
+	readonly link?: LinkedScroll;
+};
+
+/**
+ * Splits, detects, segments and stores one Scroll. Only the text and rate
+ * limit violations become Rejected, checked before any model work; every
+ * other failure throws.
+ */
+async function analyzeScroll(
+	ctx: ActionCtx,
+	submission: ScrollSubmission,
+): Promise<SubmitTextActionResult> {
+	const { extractedText, language, link } = submission;
+	const sentences = sourceSentencesOf(extractedText);
+	const limitViolation = textSubmissionLimitViolation(
+		submission.sourceText,
+		sentences,
+	);
+	if (limitViolation !== undefined)
+		return { status: "Rejected", message: limitViolation };
+	// Intake is not deterministic, so re-segmenting a stored Scroll would
+	// pay for every jev call and then often disagree with it.
+	const analyzed = await ctx.runQuery(
+		internal.persistence.analyzedSubmission,
+		{
+			submissionKey: submission.submissionKey,
+			sourceText: submission.sourceText,
+		},
+	);
+	if (analyzed) return { status: "Accepted", scrollId: analyzed };
+	const limit = await ctx.runMutation(
+		internal.rateLimits.consumeTextSubmission,
+		{ visitorId: submission.visitorId },
+	);
+	if (!limit.ok) return { status: "Rejected", message: limit.message };
+	const inspectionVisitorId = inspectionEnabled()
+		? submission.inspectionVisitorId
+		: undefined;
+	const requestId = crypto.randomUUID();
+	if (inspectionVisitorId) {
+		await ctx.runMutation(internal.resolutionInspection.beginAnalysis, {
+			requestId,
+			visitorId: inspectionVisitorId,
+			sourceText: submission.sourceText,
+		});
+	}
+	const inspection = inspectionFor(
+		ctx,
+		requestId,
+		Boolean(inspectionVisitorId),
+	);
+	const run = createIntakeRunRecorder(sentences.length);
+	const createdAt = Date.now();
+	const start = performance.now();
+	let state: "Complete" | "PermanentFailure" = "PermanentFailure";
+	let attempt: Pick<IntakeRun, "outcome" | "failureTag" | "scrollId"> = {
+		outcome: "Accepted",
+	};
+	try {
+		const intake = createIntake({
+			dumgen: productionDumgen(dumgenTracing(inspection, run.operation)),
+			onSegmenting: run.segmenting,
+			persistence: {
+				persistSubmittedScroll: (input) =>
+					ctx.runMutation(
+						internal.persistence.persistSubmittedScroll,
+						{
+							...input,
+							...(link === undefined ? {} : { link }),
+							sentences: input.sentences.map((sentence) => ({
+								...sentence,
+								segments: sentence.segments.map((segment) => ({
+									...segment,
+								})),
+								units: sentence.units.map((unit) => ({
+									...unit,
+									segments: [...unit.segments],
+									...(unit.variants
+										? { variants: [...unit.variants] }
+										: {}),
+								})),
+							})),
+						},
+					),
+			},
+		});
+		const exit = await Effect.runPromiseExit(
+			inspected(
+				intake
+					.submitText({
+						submissionKey: submission.submissionKey,
+						sourceText: submission.sourceText,
+						extractedText,
+						language,
+					})
+					.pipe(
+						Effect.withSpan("Analyze submitted text", {
+							...inspectionStep("app/tf-demo · intake", {
+								sourceText: submission.sourceText,
+							}),
+							root: true,
+						}),
+					),
+				inspection,
+			),
+		);
+		// The catch reads every failure and defect, not just the squashed one.
+		if (Exit.isFailure(exit)) throw exit.cause;
+		state = "Complete";
+		const scrollId = convexId<"scrolls">(exit.value.persisted.scrollId);
+		attempt = { outcome: "Accepted", scrollId };
+		return { status: "Accepted", scrollId };
+	} catch (error) {
+		const cause = Cause.isCause(error) ? error : Cause.die(error);
+		attempt = { outcome: "Failed", failureTag: failureTagOf(cause) };
+		throw visitorErrorIn(cause) ?? Cause.squash(cause);
+	} finally {
+		await inspection?.flush();
+		if (inspectionVisitorId) {
+			await ctx.runMutation(
+				internal.resolutionInspection.finishAnalysis,
+				{ requestId, state },
+			);
+		}
+		await recordIntakeRun(
+			(record) => ctx.runMutation(internal.intakeRuns.record, record),
+			run.summary({
+				runId: requestId,
+				submissionKey: submission.submissionKey,
+				...attempt,
+				durationMs: performance.now() - start,
+				createdAt,
+			}),
+		);
+	}
+}
+
 export const submitText = action({
 	args: {
 		submissionKey: v.string(),
@@ -240,8 +417,6 @@ export const submitText = action({
 	},
 	returns: submitTextResultValidator,
 	handler: async (ctx, args): Promise<SubmitTextActionResult> => {
-		// Only the language, text and rate limit violations become Rejected,
-		// checked here before any model work; every other failure still throws.
 		const language = args.language ?? "de";
 		const unsupported = unsupportedLanguageMessage(language);
 		if (unsupported !== undefined)
@@ -251,131 +426,90 @@ export const submitText = action({
 			internal.persistence.storedExtractedText,
 			{ submissionKey: args.submissionKey, sourceText: args.sourceText },
 		);
-		const extractedText: Scroll =
-			stored === null
-				? extractPastedText(args.sourceText)
-				: parseScroll(stored);
-		const sentences = sourceSentencesOf(extractedText);
-		const limitViolation = textSubmissionLimitViolation(
-			args.sourceText,
-			sentences,
-		);
-		if (limitViolation !== undefined)
-			return { status: "Rejected", message: limitViolation };
-		// Intake is not deterministic, so re-segmenting a stored Scroll would
-		// pay for every jev call and then often disagree with it.
-		const analyzed = await ctx.runQuery(
-			internal.persistence.analyzedSubmission,
-			{ submissionKey: args.submissionKey, sourceText: args.sourceText },
-		);
-		if (analyzed) return { status: "Accepted", scrollId: analyzed };
-		const limit = await ctx.runMutation(
-			internal.rateLimits.consumeTextSubmission,
-			{ visitorId: args.visitorId },
-		);
-		if (!limit.ok) return { status: "Rejected", message: limit.message };
-		const inspectionVisitorId = inspectionEnabled()
-			? args.inspectionVisitorId
-			: undefined;
-		const requestId = crypto.randomUUID();
-		if (inspectionVisitorId) {
-			await ctx.runMutation(internal.resolutionInspection.beginAnalysis, {
-				requestId,
-				visitorId: inspectionVisitorId,
-				sourceText: args.sourceText,
-			});
-		}
-		const inspection = inspectionFor(
-			ctx,
-			requestId,
-			Boolean(inspectionVisitorId),
-		);
-		const run = createIntakeRunRecorder(sentences.length);
-		const createdAt = Date.now();
-		const start = performance.now();
-		let state: "Complete" | "PermanentFailure" = "PermanentFailure";
-		let attempt: Pick<IntakeRun, "outcome" | "failureTag" | "scrollId"> = {
-			outcome: "Accepted",
+		return analyzeScroll(ctx, {
+			...args,
+			language,
+			extractedText:
+				stored === null
+					? extractPaste(args.sourceText)
+					: parseScroll(stored),
+		});
+	},
+});
+
+/** The title a Scroll's own Heading gives it, if any. */
+function headingTitle(scroll: Scroll): string | undefined {
+	return scroll.heading?.runs.map(({ text }) => text).join("") || undefined;
+}
+
+/**
+ * A link Submission (#1196): the page is fetched and read into one Scroll,
+ * which is stored with its URL and the fetched page as its Original, and
+ * private to the Visitor who added it. A link that gives no article is
+ * Rejected before any model work. The same Visitor's same link opens the
+ * Scroll they already have, with no fetch.
+ */
+export const submitLink = action({
+	args: {
+		link: v.string(),
+		visitorId: v.string(),
+		inspectionVisitorId: v.optional(v.string()),
+	},
+	returns: submitLinkResultValidator,
+	handler: async (ctx, args): Promise<SubmitLinkActionResult> => {
+		const link = submittedLink(args.link);
+		if (link === undefined)
+			return { status: "Rejected", message: LINK_REJECTED_MESSAGE };
+		const submission = {
+			submissionKey: `link:v1:${args.visitorId}:${link}`,
+			sourceText: link,
+			visitorId: args.visitorId,
+			...(args.inspectionVisitorId === undefined
+				? {}
+				: { inspectionVisitorId: args.inspectionVisitorId }),
+			language: "de" as const,
 		};
+		const stored = await ctx.runQuery(
+			internal.persistence.storedExtractedText,
+			{ submissionKey: submission.submissionKey, sourceText: link },
+		);
+		if (stored !== null) {
+			const extractedText = parseScroll(stored);
+			const result = await analyzeScroll(ctx, {
+				...submission,
+				extractedText,
+			});
+			return result.status === "Accepted"
+				? { ...result, title: headingTitle(extractedText) ?? link }
+				: result;
+		}
+		const page = await fetchPage(link);
+		if (page === undefined)
+			return { status: "Rejected", message: LINK_REJECTED_MESSAGE };
+		const read = readPage(page);
+		if (read.status === "Rejected") return read;
+		const original = await ctx.storage.store(
+			new Blob([page.received.body], { type: page.contentType }),
+		);
 		try {
-			const intake = createIntake({
-				dumgen: productionDumgen(
-					dumgenTracing(inspection, run.operation),
-				),
-				onSegmenting: run.segmenting,
-				persistence: {
-					persistSubmittedScroll: (input) =>
-						ctx.runMutation(
-							internal.persistence.persistSubmittedScroll,
-							{
-								...input,
-								sentences: input.sentences.map((sentence) => ({
-									...sentence,
-									segments: sentence.segments.map(
-										(segment) => ({
-											...segment,
-										}),
-									),
-									units: sentence.units.map((unit) => ({
-										...unit,
-										segments: [...unit.segments],
-										...(unit.variants
-											? { variants: [...unit.variants] }
-											: {}),
-									})),
-								})),
-							},
-						),
+			const result = await analyzeScroll(ctx, {
+				...submission,
+				extractedText: read.scroll,
+				link: {
+					...(read.title === undefined ? {} : { title: read.title }),
+					url: page.received.url,
+					original,
+					owner: args.visitorId,
 				},
 			});
-			const exit = await Effect.runPromiseExit(
-				inspected(
-					intake
-						.submitText({
-							submissionKey: args.submissionKey,
-							sourceText: args.sourceText,
-							extractedText,
-							language,
-						})
-						.pipe(
-							Effect.withSpan("Analyze submitted text", {
-								...inspectionStep("app/tf-demo · intake", {
-									sourceText: args.sourceText,
-								}),
-								root: true,
-							}),
-						),
-					inspection,
-				),
-			);
-			// The catch reads every failure and defect, not just the squashed one.
-			if (Exit.isFailure(exit)) throw exit.cause;
-			state = "Complete";
-			const scrollId = convexId<"scrolls">(exit.value.persisted.scrollId);
-			attempt = { outcome: "Accepted", scrollId };
-			return { status: "Accepted", scrollId };
+			if (result.status === "Rejected")
+				await ctx.storage.delete(original);
+			return result.status === "Accepted"
+				? { ...result, title: read.title ?? link }
+				: result;
 		} catch (error) {
-			const cause = Cause.isCause(error) ? error : Cause.die(error);
-			attempt = { outcome: "Failed", failureTag: failureTagOf(cause) };
-			throw visitorErrorIn(cause) ?? Cause.squash(cause);
-		} finally {
-			await inspection?.flush();
-			if (inspectionVisitorId) {
-				await ctx.runMutation(
-					internal.resolutionInspection.finishAnalysis,
-					{ requestId, state },
-				);
-			}
-			await recordIntakeRun(
-				(record) => ctx.runMutation(internal.intakeRuns.record, record),
-				run.summary({
-					runId: requestId,
-					submissionKey: args.submissionKey,
-					...attempt,
-					durationMs: performance.now() - start,
-					createdAt,
-				}),
-			);
+			await ctx.storage.delete(original);
+			throw error;
 		}
 	},
 });

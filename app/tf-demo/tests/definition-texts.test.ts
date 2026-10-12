@@ -520,7 +520,8 @@ test("the library lists the newest loose Visitor Scrolls through an index range 
 		),
 	).toEqual(["Visitor 140", "Visitor 70", "Visitor 0"]);
 
-	// The Scrolls read are one index range over loose Visitor Scrolls, never a filtered scan.
+	// The Scrolls read are two index ranges over loose Visitor Scrolls, the
+	// shared ones and the Visitor's own, never a filtered scan.
 	const calls: string[] = [];
 	await t.run((ctx) =>
 		listLibrary(
@@ -529,17 +530,21 @@ test("the library lists the newest loose Visitor Scrolls through an index range 
 		),
 	);
 	const scrollRead = calls.indexOf("query:scrolls");
-	expect(calls.slice(scrollRead, scrollRead + 4)).toEqual([
+	const range = [
 		"query:scrolls",
-		"withIndex:by_origin_kind_and_placement",
+		"withIndex:by_origin_kind_and_placement_and_owner",
 		"order:desc",
 		"take",
+	];
+	expect(calls.slice(scrollRead, scrollRead + 8)).toEqual([
+		...range,
+		...range,
 	]);
-	expect(calls.filter((call) => call === "query:scrolls")).toHaveLength(1);
+	expect(calls.filter((call) => call === "query:scrolls")).toHaveLength(2);
 	const visitorRange = await t.run((ctx) =>
 		ctx.db
 			.query("scrolls")
-			.withIndex("by_origin_kind_and_placement", (q) =>
+			.withIndex("by_origin_kind_and_placement_and_owner", (q) =>
 				q.eq("origin.kind", undefined),
 			)
 			.collect(),

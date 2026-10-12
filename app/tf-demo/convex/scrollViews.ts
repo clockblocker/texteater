@@ -32,6 +32,8 @@ const scrollViewValidator = v.object({
 	}),
 	scrollId: v.id("scrolls"),
 	submissionKey: v.string(),
+	/** The page a Scroll from a link came from, for the way back to it. */
+	originalUrl: v.optional(v.string()),
 	sourceText: v.string(),
 	createdAt: v.number(),
 	sentences: v.array(sentenceViewValidator),
@@ -47,7 +49,12 @@ export const get = query({
 		const scrollId = ctx.db.normalizeId("scrolls", scrollIdValue);
 		if (!scrollId) return null;
 		const scroll = await ctx.db.get(scrollId);
-		if (!scroll) return null;
+		// A private Scroll, one from a link, opens only for its own Visitor.
+		if (
+			!scroll ||
+			(scroll.owner !== undefined && scroll.owner !== visitorId)
+		)
+			return null;
 		const sentences = await ctx.db
 			.query("sentences")
 			.withIndex("by_scroll_id_and_position", (q) =>
@@ -68,6 +75,7 @@ export const get = query({
 			},
 			scrollId: scroll._id,
 			submissionKey: scroll.submissionKey,
+			...(scroll.link ? { originalUrl: scroll.link.url } : {}),
 			sourceText: scroll.sourceText,
 			createdAt: scroll._creationTime,
 			sentences: sentenceViews,

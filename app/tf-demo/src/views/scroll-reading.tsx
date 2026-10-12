@@ -2,7 +2,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useConvex, useMutation } from "convex/react";
 import { Button } from "lego";
-import { ArrowRightIcon, CheckIcon } from "lucide-react";
+import { ArrowRightIcon, CheckIcon, ExternalLinkIcon } from "lucide-react";
 import { type RefObject, useEffect, useRef } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import {
@@ -153,7 +153,14 @@ function resumeAt(article: HTMLElement | null, sentenceId: string): void {
  * The foot of a Scroll on a Ground: mark it done, or go on to the next
  * Scroll in Codex order, which marks this one done.
  */
-export function ScrollEnd({ scrollId }: { readonly scrollId: string }) {
+export function ScrollEnd({
+	scrollId,
+	originalUrl,
+}: {
+	readonly scrollId: string;
+	/** The page a Scroll from a link came from (#1196), opened in a new tab. */
+	readonly originalUrl?: string;
+}) {
 	const place = useGroundPlace();
 	const visitorId = useAnonymousVisitorId();
 	const setDone = useMutation(api.library.setDone);
@@ -204,6 +211,17 @@ export function ScrollEnd({ scrollId }: { readonly scrollId: string }) {
 						className="rtl:-scale-x-100"
 					/>
 				</Button>
+			) : null}
+			{originalUrl ? (
+				<a
+					href={originalUrl}
+					target="_blank"
+					rel="noreferrer"
+					className="ms-auto inline-flex items-center gap-1.5 rounded-sm text-sm text-ink-muted underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+				>
+					Original page
+					<ExternalLinkIcon className="size-3.5" aria-hidden="true" />
+				</a>
 			) : null}
 		</nav>
 	);

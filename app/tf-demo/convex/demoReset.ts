@@ -132,6 +132,15 @@ async function deleteTableBatch(ctx: MutationCtx, tableName: TableNames) {
 		maximumBytesRead: TABLE_BATCH_MAX_BYTES,
 	});
 	await Promise.all(page.map((document) => ctx.db.delete(document._id)));
+	// A Scroll from a link keeps its fetched page as the Original (#1196).
+	if (tableName === "scrolls")
+		await Promise.all(
+			page.flatMap((document) =>
+				"link" in document && document.link
+					? [ctx.storage.delete(document.link.originalId)]
+					: [],
+			),
+		);
 	return { deleted: page.length, cleared: isDone };
 }
 
@@ -260,7 +269,7 @@ export const listScrollIds = internalQuery({
 	handler: async (ctx, { paginationOpts }) => {
 		const result = await ctx.db
 			.query("scrolls")
-			.withIndex("by_origin_kind_and_placement", (q) =>
+			.withIndex("by_origin_kind_and_placement_and_owner", (q) =>
 				q.eq("origin.kind", undefined),
 			)
 			.paginate(paginationOpts);

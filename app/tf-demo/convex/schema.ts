@@ -100,7 +100,20 @@ export default defineSchema({
 	scrolls: defineTable({
 		title: v.optional(v.string()),
 		submissionKey: v.string(),
+		/** What was submitted: the pasted text, or the link a Scroll came from. */
 		sourceText: v.string(),
+		/**
+		 * The Visitor whose private Scroll it is, listed and opened only for
+		 * them: a Scroll from a link (#1196). Absent for a shared Scroll.
+		 */
+		owner: v.optional(v.string()),
+		/**
+		 * A Scroll from a link: the page's URL after redirects, the reader's
+		 * way back to it, and the fetched page kept as its Original.
+		 */
+		link: v.optional(
+			v.object({ url: v.string(), originalId: v.id("_storage") }),
+		),
 		/**
 		 * The Scroll's Extracted Text, Dumgen's `Scroll` (checked with
 		 * `parseScroll` when read): what intake re-runs from. Absent for a
@@ -115,11 +128,13 @@ export default defineSchema({
 		.index("by_submission_key", ["submissionKey"])
 		/**
 		 * Visitor Scrolls are the range whose `origin.kind` is absent, and
-		 * loose ones, the Library's, are those with no `placement` either.
+		 * loose ones, the Library's, are those with no `placement` either;
+		 * a Visitor's Library adds their own private ones to the shared.
 		 */
-		.index("by_origin_kind_and_placement", [
+		.index("by_origin_kind_and_placement_and_owner", [
 			"origin.kind",
 			"placement.sectionId",
+			"owner",
 		])
 		.index("by_placement", ["placement.sectionId", "placement.order"]),
 

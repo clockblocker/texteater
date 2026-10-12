@@ -28,6 +28,13 @@ type SubmittedScroll = {
 	 */
 	extractedText?: unknown;
 	sentences: Array<Infer<typeof sentenceInputValidator>>;
+	/** A new Scroll from a link (#1196): private to `owner`. */
+	link?: {
+		title?: string;
+		url: string;
+		original: Id<"_storage">;
+		owner: string;
+	};
 };
 
 export type PersistedSubmittedScroll = {
@@ -374,6 +381,16 @@ async function insertSubmittedScroll(
 		...(input.extractedText === undefined
 			? {}
 			: { extractedText: input.extractedText }),
+		...(input.link === undefined
+			? {}
+			: {
+					...(input.link.title ? { title: input.link.title } : {}),
+					owner: input.link.owner,
+					link: {
+						url: input.link.url,
+						originalId: input.link.original,
+					},
+				}),
 	});
 	const sentenceIds = await Promise.all(
 		bySentencePosition(input.sentences).map((sentence) =>
