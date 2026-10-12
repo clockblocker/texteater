@@ -1,3 +1,4 @@
+import { scrollTitle, untitledScrollLabel } from "../../shared/scroll-title";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 
@@ -62,6 +63,7 @@ export async function insertSection(
 		readonly title: string;
 		readonly placement?: CodexPlacement;
 		readonly submissionKey?: string;
+		readonly originalId?: Id<"_storage">;
 	},
 ): Promise<Id<"sections">> {
 	if (section.placement && !(await ctx.db.get(section.placement.sectionId)))
@@ -154,6 +156,24 @@ async function itemAfter(
 		...(scroll ? [{ kind: "Scroll" as const, doc: scroll }] : []),
 	];
 	return items.sort(compareCodexItems)[0] ?? null;
+}
+
+/**
+ * What a Scroll is called wherever it is named: its title; for an untitled
+ * one in a Codex, "Front matter" when it opens a Section whose next entry
+ * has a title, else its number; a loose one goes by its first line.
+ */
+export async function scrollLabel(
+	ctx: QueryCtx,
+	scroll: Doc<"scrolls">,
+): Promise<string> {
+	if (scroll.title || !scroll.placement) return scrollTitle(scroll);
+	const { sectionId, order } = scroll.placement;
+	const after = order === 0 ? await itemAfter(ctx, sectionId, order) : null;
+	const frontMatter =
+		after !== null &&
+		(after.kind === "Section" || Boolean(after.doc.title));
+	return untitledScrollLabel(order, frontMatter);
 }
 
 /**

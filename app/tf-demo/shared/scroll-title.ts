@@ -15,3 +15,16 @@ export function scrollTitle(scroll: {
 		? `${line.slice(0, TITLE_LENGTH - 1).trimEnd()}…`
 		: line;
 }
+
+/**
+ * What a Codex calls a Scroll that has no title (#1191): the opening pages
+ * before a book's first chapter heading are its front matter, and any other
+ * untitled Scroll, such as a size-cut piece, goes by its number. Intake
+ * stores no title for them, so this wording stays with the UI.
+ */
+export function untitledScrollLabel(
+	order: number,
+	frontMatter: boolean,
+): string {
+	return frontMatter ? "Front matter" : `Part ${(order + 1).toString()}`;
+}

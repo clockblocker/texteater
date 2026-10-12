@@ -65,13 +65,18 @@ export async function projectSentenceView(
 	sentence: Doc<"sentences">,
 	visitorId: string,
 ) {
-	const [segments, encounteredSegmentIds] = await Promise.all([
-		loadStoredSegments(ctx, sentence._id),
-		loadEncounteredSegmentIds(ctx, {
-			visitorId,
-			sentenceId: sentence._id,
-		}),
-	]);
+	// A Plain Sentence, unprocessed ones included, has no Segments to load
+	// or encounter, so a long plain Scroll costs one read per Sentence.
+	const plain = isPlainSentence(sentence.language);
+	const [segments, encounteredSegmentIds] = plain
+		? [[], new Set<Id<"segments">>()]
+		: await Promise.all([
+				loadStoredSegments(ctx, sentence._id),
+				loadEncounteredSegmentIds(ctx, {
+					visitorId,
+					sentenceId: sentence._id,
+				}),
+			]);
 	const encounteredAttestationIds = new Set<Id<"attestations">>();
 	for (const segment of segments) {
 		const attestationId = segment.attestationMembership?.attestationId;
@@ -103,7 +108,7 @@ export async function projectSentenceView(
 		...(sentence.language === undefined
 			? {}
 			: { language: sentence.language }),
-		...(isPlainSentence(sentence.language) ? { plain: true as const } : {}),
+		...(plain ? { plain: true as const } : {}),
 		stitchedText: sentence.stitchedText,
 		...(sentence.heading ? { heading: sentence.heading } : {}),
 		...(sentence.segmentationFailed

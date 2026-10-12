@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-
+import { MAX_SENTENCES_PER_SCROLL } from "../server/textSubmissionLimits";
 import type { Id } from "./_generated/dataModel";
 import { type QueryCtx, query } from "./_generated/server";
 import { loadCompleteOccurrenceMembers } from "./model/occurrenceAttestations";
@@ -7,8 +7,6 @@ import {
 	projectSentenceView,
 	sentenceViewValidator,
 } from "./modules/scroll/sentenceView";
-
-const MAX_SENTENCES_PER_SCROLL = 256;
 
 /** Where one occurrence sits in a Scroll, so the reader can land on it. */
 const occurrenceFocusValidator = v.union(
@@ -37,6 +35,8 @@ const scrollViewValidator = v.object({
 	sourceText: v.string(),
 	createdAt: v.number(),
 	sentences: v.array(sentenceViewValidator),
+	/** The paragraphs a Scene Break stands before. */
+	sceneBreaks: v.array(v.number()),
 });
 
 export const get = query({
@@ -79,6 +79,7 @@ export const get = query({
 			sourceText: scroll.sourceText,
 			createdAt: scroll._creationTime,
 			sentences: sentenceViews,
+			sceneBreaks: scroll.sceneBreaks ?? [],
 		};
 	},
 });

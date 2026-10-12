@@ -141,6 +141,15 @@ async function deleteTableBatch(ctx: MutationCtx, tableName: TableNames) {
 					: [],
 			),
 		);
+	// A top Section keeps its Submission's file as the Original (#1191).
+	if (tableName === "sections")
+		await Promise.all(
+			page.flatMap((document) =>
+				"originalId" in document && document.originalId
+					? [ctx.storage.delete(document.originalId)]
+					: [],
+			),
+		);
 	return { deleted: page.length, cleared: isDone };
 }
 

@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { assertIdentifier } from "../server/identifiers";
-import { scrollTitle } from "../shared/scroll-title";
 import type { Doc, Id } from "./_generated/dataModel";
 import { mutation, type QueryCtx, query } from "./_generated/server";
 import {
@@ -13,6 +12,7 @@ import {
 	recordDone,
 	recordOpened,
 	recordPosition,
+	scrollLabel,
 	scrollStatus,
 	sectionStatus,
 	sectionsAbove,
@@ -57,7 +57,7 @@ const codexEntryValidator = v.union(
 		scrollId: v.id("scrolls"),
 		/** What the Scroll is called wherever it is named. */
 		title: v.string(),
-		/** Its title, or the start of its text. */
+		/** Its title or label, or a loose one's start of its text. */
 		preview: v.string(),
 		createdAt: v.number(),
 		status: readingStatusValidator,
@@ -93,11 +93,15 @@ async function projectItem(ctx: QueryCtx, visitorId: string, item: CodexItem) {
 			...fixtureFlag(item.doc.submissionKey),
 		};
 	const scroll = item.doc;
+	const title = await scrollLabel(ctx, scroll);
 	return {
 		kind: "Scroll" as const,
 		scrollId: scroll._id,
-		title: scrollTitle(scroll),
-		preview: scroll.title ?? scroll.sourceText.slice(0, PREVIEW_LENGTH),
+		title,
+		preview:
+			scroll.title || scroll.placement
+				? title
+				: scroll.sourceText.slice(0, PREVIEW_LENGTH),
 		createdAt: scroll._creationTime,
 		status: await scrollStatus(ctx, visitorId, scroll._id),
 		...fixtureFlag(scroll.submissionKey),
@@ -205,7 +209,7 @@ export const codex = query({
 			lastRead: last
 				? {
 						scrollId: last._id,
-						title: scrollTitle(last),
+						title: await scrollLabel(ctx, last),
 						sections: await sectionsDownTo(ctx, last, section._id),
 					}
 				: null,
@@ -231,7 +235,7 @@ export const next = query({
 		return following
 			? {
 					scrollId: following._id,
-					title: scrollTitle(following),
+					title: await scrollLabel(ctx, following),
 					sections: await sectionsDownTo(ctx, following, null),
 				}
 			: null;

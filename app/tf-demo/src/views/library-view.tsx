@@ -22,12 +22,14 @@ import {
 import {
 	BookOpenIcon,
 	ChevronRightIcon,
+	FileTextIcon,
 	FolderIcon,
 	LibraryIcon,
 	PlusIcon,
 } from "lucide-react";
-import { type FormEvent, useState } from "react";
+import { type ChangeEvent, type FormEvent, useRef, useState } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { useTextFileSubmission } from "@/hooks/use-text-file-submission";
 import { useTextOrLinkSubmission } from "@/hooks/use-text-or-link-submission";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
@@ -48,6 +50,9 @@ export function LibraryView() {
 	);
 	const libraryQuery = useQuery(convexQuery(api.library.list, { visitorId }));
 	const submitText = useTextOrLinkSubmission();
+	const textFile = useTextFileSubmission(visitorId);
+	const fileInput = useRef<HTMLInputElement>(null);
+	const isSubmitting = submitText.isPending || textFile.isPending;
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -72,6 +77,29 @@ export function LibraryView() {
 				kind: "Scroll",
 				scrollId: result.scrollId,
 				title: result.title ?? scrollTitle({ sourceText: normalized }),
+			});
+			setIsAddScrollOpen(false);
+		} catch (cause) {
+			setInteractionError(visitorErrorMessage(cause));
+		}
+	}
+
+	/* a .txt book opens its Codex once intake has written it */
+	async function handleFile(event: ChangeEvent<HTMLInputElement>) {
+		const file = event.target.files?.[0];
+		event.target.value = "";
+		if (!file) return;
+		setInteractionError(null);
+		try {
+			const result = await textFile.run(file);
+			if (result.status === "Rejected") {
+				setInteractionError(result.message);
+				return;
+			}
+			follow({
+				kind: "Section",
+				sectionId: result.sectionId,
+				title: result.title,
 			});
 			setIsAddScrollOpen(false);
 		} catch (cause) {
@@ -194,8 +222,10 @@ export function LibraryView() {
 					<DialogHeader>
 						<DialogTitle>Add a text</DialogTitle>
 						<DialogDescription>
-							Add German prose, lyrics, or a book excerpt. The
-							text will be split into sentences before analysis.
+							Paste German prose, lyrics, a book excerpt, or a
+							link to an article, or add a whole book as a .txt
+							file. Pasted text is split into sentences before
+							analysis.
 						</DialogDescription>
 					</DialogHeader>
 					<form
@@ -205,11 +235,7 @@ export function LibraryView() {
 						onSubmit={(event) => void handleSubmit(event)}
 					>
 						<FieldGroup>
-							<Field
-								data-disabled={
-									submitText.isPending || undefined
-								}
-							>
+							<Field data-disabled={isSubmitting || undefined}>
 								<FieldLabel htmlFor="library-source-text">
 									German text, or a link to an article
 								</FieldLabel>
@@ -221,8 +247,35 @@ export function LibraryView() {
 									onChange={(event) =>
 										setSourceText(event.target.value)
 									}
-									disabled={submitText.isPending}
+									disabled={isSubmitting}
 								/>
+							</Field>
+							<Field data-disabled={isSubmitting || undefined}>
+								<FieldLabel htmlFor="library-text-file">
+									Or a .txt file, up to 16 MB
+								</FieldLabel>
+								<input
+									ref={fileInput}
+									id="library-text-file"
+									name="file"
+									type="file"
+									accept=".txt,text/plain"
+									className="sr-only"
+									disabled={isSubmitting}
+									onChange={(event) => void handleFile(event)}
+								/>
+								<Button
+									type="button"
+									variant="outline"
+									className="self-start"
+									disabled={isSubmitting}
+									onClick={() => fileInput.current?.click()}
+								>
+									<FileTextIcon data-icon="inline-start" />
+									{textFile.isPending
+										? "Adding the file…"
+										: "Choose a file"}
+								</Button>
 							</Field>
 						</FieldGroup>
 						{error ? <FieldError>{error}</FieldError> : null}
@@ -230,7 +283,7 @@ export function LibraryView() {
 							<Button
 								type="submit"
 								disabled={
-									submitText.isPending ||
+									isSubmitting ||
 									sourceText.trim().length === 0
 								}
 							>

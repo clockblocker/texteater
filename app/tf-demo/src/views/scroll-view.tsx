@@ -152,6 +152,7 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 			focus={focus}
 			selectedSegmentKey={selection.selectedSegmentKey}
 			sentences={sentences}
+			sceneBreaks={scrollDetail.sceneBreaks}
 			showSegmentAction={needsSegmentation}
 			isSegmenting={segmentText.isPending}
 			onSegmentText={() => void handleSegmentText()}
@@ -208,6 +209,7 @@ function useOccurrenceFocus(
 
 export function ScrollPresentation({
 	sentences,
+	sceneBreaks,
 	selectedSegmentKey,
 	onSegmentClick,
 	focus = null,
@@ -220,6 +222,8 @@ export function ScrollPresentation({
 	end = null,
 }: {
 	readonly sentences: readonly SentenceView[];
+	/** The paragraphs a Scene Break stands before. */
+	readonly sceneBreaks?: readonly number[];
 	readonly selectedSegmentKey: string | null;
 	readonly onSegmentClick: (
 		sentence: SentenceView,
@@ -245,6 +249,7 @@ export function ScrollPresentation({
 			<div className={READER_BODY_CLASS} style={GROUND_COLUMN_STYLE}>
 				<SentenceList
 					sentences={sentences}
+					sceneBreaks={sceneBreaks}
 					selectedSegmentKey={selectedSegmentKey}
 					onSegmentClick={onSegmentClick}
 					focus={focus}
@@ -289,11 +294,14 @@ function ReaderStatus({ className = "", ...props }: ComponentProps<"p">) {
 
 export function SentenceList({
 	sentences,
+	sceneBreaks = [],
 	selectedSegmentKey,
 	onSegmentClick,
 	focus = null,
 }: {
 	sentences: readonly SentenceView[];
+	/** The paragraphs a Scene Break stands before. */
+	sceneBreaks?: readonly number[];
 	selectedSegmentKey: string | null;
 	onSegmentClick: (
 		sentence: SentenceView,
@@ -306,6 +314,8 @@ export function SentenceList({
 	const sentenceElements = useRef(new Map<string, HTMLParagraphElement>());
 	const focusSentenceId = focus?.sentenceId ?? null;
 	const landed = useRef<string | null>(null);
+	const breaks = new Set(sceneBreaks);
+	const drawn = new Set<number>();
 
 	useEffect(() => {
 		if (!focusSentenceId || landed.current === focusSentenceId) return;
@@ -325,6 +335,9 @@ export function SentenceList({
 		>
 			{paragraphsOf(sentences).map((paragraph) => (
 				<section key={paragraph[0].sentenceId}>
+					{sceneBreakBefore(paragraph[0], breaks, drawn) ? (
+						<SceneBreak />
+					) : null}
 					{paragraph[0].heading ? (
 						<h2 className="mb-2 text-base font-semibold tracking-normal">
 							{paragraph[0].heading}
@@ -361,6 +374,36 @@ export function SentenceList({
 				</section>
 			))}
 		</article>
+	);
+}
+
+/**
+ * Whether a Scene Break stands before this paragraph, drawn once even when
+ * the paragraph's Sentences come as several runs.
+ */
+function sceneBreakBefore(
+	first: SentenceView,
+	breaks: ReadonlySet<number>,
+	drawn: Set<number>,
+): boolean {
+	const { paragraph } = first;
+	if (
+		paragraph === undefined ||
+		!breaks.has(paragraph) ||
+		drawn.has(paragraph)
+	)
+		return false;
+	drawn.add(paragraph);
+	return true;
+}
+
+/** A Scene Break: a row of stars between two stretches of a Scroll. */
+function SceneBreak() {
+	return (
+		<hr
+			data-slot="scene-break"
+			className="mb-7 h-auto border-0 text-center text-base leading-none text-ink-muted before:ps-[0.5em] before:tracking-[0.5em] before:content-['*_*_*'] @max-md:mb-6"
+		/>
 	);
 }
 

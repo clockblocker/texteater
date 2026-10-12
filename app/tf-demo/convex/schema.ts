@@ -95,7 +95,11 @@ export default defineSchema({
 		scrollCount: v.number(),
 		/** The Submission it came from; `e2e:` marks a fixture the Library shelves apart. */
 		submissionKey: v.optional(v.string()),
-	}).index("by_placement", ["placement.sectionId", "placement.order"]),
+		/** The submitted file, kept as the Original (#1191); on a top Section only. */
+		originalId: v.optional(v.id("_storage")),
+	})
+		.index("by_placement", ["placement.sectionId", "placement.order"])
+		.index("by_submission_key", ["submissionKey"]),
 
 	scrolls: defineTable({
 		title: v.optional(v.string()),
@@ -124,6 +128,11 @@ export default defineSchema({
 		origin: v.optional(scrollOriginValidator),
 		/** Absent for a loose Scroll, such as a one-off paste. */
 		placement: v.optional(codexPlacementValidator),
+		/**
+		 * The paragraphs a Scene Break stands before, by Sentence
+		 * `paragraph`, for the reader to draw (#1191).
+		 */
+		sceneBreaks: v.optional(v.array(v.number())),
 	})
 		.index("by_submission_key", ["submissionKey"])
 		/**
