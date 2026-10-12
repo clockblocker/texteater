@@ -37,6 +37,7 @@ import {
 	LemmaLink,
 	OpenAsSheet,
 	ParentTag,
+	ReadingCard,
 } from "./cards";
 import { SteppedDeck, StoryDeck } from "./deck";
 import { inflectionsOf, markedFormOf } from "./inflections";
@@ -263,9 +264,9 @@ export default function LemmaHopDemo() {
 	/**
 	 * A Card in full, with what the variant adds; where the variant has
 	 * the table, the Lemma Card is the one that carries it. In the Deck a
-	 * lemma link
-	 * brings the Lemma Card forward where the Deck holds it, and opens it
-	 * as a Cover where it doesn't; in a Sheet it pushes a Cover.
+	 * lemma link brings the Lemma Card forward where the Deck holds it,
+	 * and opens it as a Cover where it doesn't; in a Sheet it pushes a
+	 * Cover.
 	 */
 	const renderCard = (card: FakeCard, where: "deck" | "sheet") => {
 		const link = card.links[0];
@@ -276,10 +277,13 @@ export default function LemmaHopDemo() {
 				: variant.deck === "story"
 					? () => openCover("lemma")
 					: () => setFront("Lemma");
+		// Where the variant has the table, the Lemma and Reading Cards of a
+		// lemma that has one take the quiet design.
 		const table =
-			variant.table && card.kind === "Lemma"
+			variant.table && (card.kind === "Lemma" || card.kind === "Reading")
 				? inflectionsOf(card.title)
 				: undefined;
+		const textLang = text?.lang ?? "de";
 		const action =
 			where === "deck" ? (
 				<OpenAsSheet
@@ -292,12 +296,22 @@ export default function LemmaHopDemo() {
 					}
 				/>
 			) : null;
-		if (table)
+		if (table && card.kind === "Lemma")
 			return (
 				<LemmaCard
 					card={card}
+					textLang={textLang}
 					table={table}
 					marked={marked}
+					action={action}
+				/>
+			);
+		if (table)
+			return (
+				<ReadingCard
+					card={card}
+					textLang={textLang}
+					table={table}
 					action={action}
 				/>
 			);
@@ -619,6 +633,7 @@ export default function LemmaHopDemo() {
 			{variant.previews ? (
 				<PreviewLayer
 					marked={variant.table ? marked : null}
+					textLang={text?.lang ?? "de"}
 					onExpand={onExpand}
 				/>
 			) : null}

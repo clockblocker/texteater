@@ -1,4 +1,4 @@
-import { cn, DensityScope, Ipa, NoteTitle } from "lego";
+import { cn, DensityScope, NoteTitle } from "lego";
 import { Maximize2, Pin, PinOff, X } from "lucide-react";
 import { motion } from "motion/react";
 import {
@@ -9,9 +9,9 @@ import {
 	useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { cardLang, langAttrs } from "@/fixtures";
+import { cardLang, type FixtureLanguage, langAttrs } from "@/fixtures";
 import { useFrameSize, usePlaygroundEnv } from "@/shell";
-import { Inflections, LemmaTags } from "./cards";
+import { Inflections, LemmaTags, Pronunciation } from "./cards";
 import { PreviewController } from "./controller";
 import { inflectionsOf } from "./inflections";
 import {
@@ -32,10 +32,13 @@ import { lookUp } from "./words";
  */
 export function PreviewLayer({
 	marked,
+	textLang,
 	onExpand,
 }: {
 	/** With a form, the preview shows the lemma's table with it marked. */
 	readonly marked: string | null;
+	/** The clicked text's language, for YouGlish. */
+	readonly textLang: FixtureLanguage;
 	readonly onExpand: (host: PreviewHost, path: readonly string[]) => void;
 }) {
 	const { frame, dir } = usePlaygroundEnv();
@@ -73,6 +76,7 @@ export function PreviewLayer({
 					key={preview.id}
 					preview={preview}
 					marked={marked}
+					textLang={textLang}
 					onPin={(pinned) =>
 						controller.change(preview.id, {
 							pinned,
@@ -100,6 +104,7 @@ export function PreviewLayer({
 function PreviewCard({
 	preview,
 	marked,
+	textLang,
 	onPin,
 	onDrag,
 	onClose,
@@ -107,6 +112,7 @@ function PreviewCard({
 }: {
 	readonly preview: Preview;
 	readonly marked: string | null;
+	readonly textLang: FixtureLanguage;
 	readonly onPin: (pinned: boolean) => void;
 	readonly onDrag: (to: { start: number; top: number }) => void;
 	readonly onClose: () => void;
@@ -179,7 +185,12 @@ function PreviewCard({
 						title="Drag to move (pins it)"
 						className="flex min-w-0 flex-1 cursor-grab touch-none flex-wrap items-baseline gap-x-2.5 gap-y-0.5 pt-1 select-none active:cursor-grabbing"
 						onPointerDown={(event) => {
-							if (event.button !== 0) return;
+							// A press on the YouGlish link is the link's.
+							if (
+								event.button !== 0 ||
+								(event.target as Element).closest("a")
+							)
+								return;
 							event.currentTarget.setPointerCapture(
 								event.pointerId,
 							);
@@ -221,10 +232,11 @@ function PreviewCard({
 								>
 									{lemma.title}
 								</NoteTitle>
-								<Ipa
-									lang={`${lang}-fonipa`}
-									dir="ltr"
-									transcription={lemma.ipa}
+								<Pronunciation
+									lemma={lemma.title}
+									ipa={lemma.ipa}
+									lang={lang}
+									textLang={textLang}
 								/>
 							</>
 						) : null}
@@ -256,21 +268,14 @@ function PreviewCard({
 					density="compact"
 					className="grid gap-2 px-3 pt-1 pb-3 text-sm"
 				>
-					{reading ? (
-						<>
-							<p className="text-ink-soft">
-								<span {...langAttrs("en")}>
-									{reading.translations.join(", ")}
-								</span>
-							</p>
-							<p>
-								<span {...langAttrs("en")}>
-									{reading.definition}
-								</span>
-							</p>
-						</>
+					{/* With a table it reads as the Lemma Card: no gloss, no summary. */}
+					{reading && !table ? (
+						<p>
+							<span {...langAttrs("en")}>
+								{reading.definition}
+							</span>
+						</p>
 					) : null}
-					{/* The table says what the Lemma's summary would. */}
 					{lemma && !table ? (
 						<p className="text-ink-muted">
 							<span {...langAttrs("en")}>{lemma.definition}</span>

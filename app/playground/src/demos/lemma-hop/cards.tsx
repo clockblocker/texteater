@@ -12,6 +12,7 @@ import {
 	type CardKind,
 	cardLang,
 	type FakeCard,
+	type FixtureLanguage,
 	langAttrs,
 	type RunLanguage,
 } from "@/fixtures";
@@ -23,6 +24,7 @@ import {
 	type ShownForm,
 	tableRem,
 } from "./inflections";
+import { youglishHref, youglishLabel } from "./youglish";
 
 const surface =
 	"rounded-xl border border-line bg-paper text-ink shadow-[0_8px_24px_-12px_oklch(0%_0_0/0.5)]";
@@ -207,22 +209,25 @@ export function OpenAsSheet({ onClick }: { readonly onClick: () => void }) {
 }
 
 /**
- * The Lemma Card where it carries its inflections: the headword, the
- * table, the quote, and tf-demo's quiet tag row closing it with the word
- * class and gender. The tails above already say what kind of Card it is,
- * so it needs no label, and translations stay on the Reading Card; order,
- * size and spacing set its tiers, not rules.
+ * The Lemma and Reading Cards where the lemma has a table: the header
+ * (emoji, headword, IPA linked to YouGlish), the Card's own content, the
+ * quote, and tf-demo's quiet tag row closing it. The tails above already
+ * say what kind of Card it is, so it needs no label; order, size and
+ * spacing set its tiers, not rules.
  */
-export function LemmaCard({
+function QuietCard({
 	card,
-	table,
-	marked,
+	textLang,
+	tags,
 	action,
+	children,
 }: {
 	readonly card: FakeCard;
-	readonly table: InflectionTable;
-	readonly marked: string;
+	/** The language of the text the click came from, for YouGlish. */
+	readonly textLang: FixtureLanguage;
+	readonly tags: readonly string[];
 	readonly action?: ReactNode;
+	readonly children: ReactNode;
 }) {
 	const lang = cardLang(card);
 	return (
@@ -234,22 +239,26 @@ export function LemmaCard({
 			{action ? (
 				<div className="absolute end-1.5 top-1.5">{action}</div>
 			) : null}
-			<header className={cn(action && "pe-6")}>
-				<div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-					<span aria-hidden="true" className="text-xl">
-						{card.emoji}
-					</span>
-					<NoteTitle {...langAttrs(lang)} className="text-lg">
-						{card.title}
-					</NoteTitle>
-					<Ipa
-						lang={`${lang}-fonipa`}
-						dir="ltr"
-						transcription={card.ipa}
-					/>
-				</div>
+			<header
+				className={cn(
+					"flex flex-wrap items-baseline gap-x-3 gap-y-1",
+					action && "pe-6",
+				)}
+			>
+				<span aria-hidden="true" className="text-xl">
+					{card.emoji}
+				</span>
+				<NoteTitle {...langAttrs(lang)} className="text-lg">
+					{card.title}
+				</NoteTitle>
+				<Pronunciation
+					lemma={card.title}
+					ipa={card.ipa}
+					lang={lang}
+					textLang={textLang}
+				/>
 			</header>
-			<Inflections table={table} marked={marked} />
+			{children}
 			{card.quote ? (
 				<blockquote className="border-s-[3px] border-line ps-3 text-ink-soft">
 					<span {...langAttrs(lang)}>
@@ -260,8 +269,83 @@ export function LemmaCard({
 					</span>
 				</blockquote>
 			) : null}
-			<LemmaTags tags={table.tags} />
+			<LemmaTags tags={tags} />
 		</DensityScope>
+	);
+}
+
+/** The Lemma Card with its inflections; translations stay on the Reading. */
+export function LemmaCard({
+	table,
+	marked,
+	...card
+}: Omit<Parameters<typeof QuietCard>[0], "tags" | "children"> & {
+	readonly table: InflectionTable;
+	readonly marked: string;
+}) {
+	return (
+		<QuietCard {...card} tags={table.tags}>
+			<Inflections table={table} marked={marked} />
+		</QuietCard>
+	);
+}
+
+/**
+ * The Reading Card: its gloss and definition under the same header. The
+ * fixtures keep a Reading's gloss only in its caption (`das Komma · a
+ * comma`); the caption itself stays on the tail.
+ */
+export function ReadingCard({
+	table,
+	...props
+}: Omit<Parameters<typeof QuietCard>[0], "tags" | "children"> & {
+	readonly table: InflectionTable;
+}) {
+	const gloss = props.card.caption.split(" · ").slice(1).join(" · ");
+	return (
+		<QuietCard {...props} tags={table.tags}>
+			<div className="grid gap-1.5">
+				{gloss ? (
+					<p className="text-ink-soft">
+						<span {...langAttrs("en")}>{gloss}</span>
+					</p>
+				) : null}
+				<p>
+					<span {...langAttrs("en")}>{props.card.definition}</span>
+				</p>
+			</div>
+		</QuietCard>
+	);
+}
+
+/**
+ * The IPA as a link to the lemma on YouGlish, in a new tab. Quiet as the
+ * IPA alone until hovered or focused, when it takes an underline.
+ */
+export function Pronunciation({
+	lemma,
+	ipa,
+	lang,
+	textLang,
+}: {
+	readonly lemma: string;
+	readonly ipa: string;
+	/** The headword's language, for the IPA's `lang`. */
+	readonly lang: RunLanguage;
+	readonly textLang: FixtureLanguage;
+}) {
+	const label = youglishLabel(lemma, textLang);
+	return (
+		<a
+			href={youglishHref(lemma, textLang)}
+			target="_blank"
+			rel="noopener noreferrer"
+			aria-label={label}
+			title={label}
+			className="rounded-sm text-ink-muted decoration-current/50 underline-offset-[0.18em] hover:text-ink-soft hover:underline focus-visible:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link"
+		>
+			<Ipa lang={`${lang}-fonipa`} dir="ltr" transcription={ipa} />
+		</a>
 	);
 }
 
