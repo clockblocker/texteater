@@ -5,6 +5,7 @@ import {
 	resolveWord,
 	textFromParagraphs,
 } from "@/fixtures";
+import { rarityOf } from "./inflections";
 
 /**
  * A second German text whose clicks land on a lemma with two sets of
@@ -75,8 +76,19 @@ const entries: readonly Entry[] = [
 	},
 ];
 
-/** The fixtures' four Cards for an entry, as their `cardsOf` deals them. */
+/**
+ * How the Surface caption names a rarer form, before its relation, as
+ * tf-demo names a Variant spelling's tag (`older spelling of`).
+ */
+const rarityWords = { older: "older ", also: "less common " } as const;
+
+/**
+ * The fixtures' four Cards for an entry, as their `cardsOf` deals them.
+ * The Surface caption says when the form is the rarer in its cell:
+ * `molken · older past of`.
+ */
 function cardsOf(entry: Entry, quote: string): FakeCard[] {
+	const rarity = rarityOf(entry.lemma, entry.form);
 	const base = {
 		emoji: entry.emoji,
 		translations: entry.translations,
@@ -100,7 +112,7 @@ function cardsOf(entry: Entry, quote: string): FakeCard[] {
 			id: `${entry.form}/Surface`,
 			kind: "Surface",
 			title: entry.form,
-			caption: `${entry.form} · ${entry.formOf}`,
+			caption: `${entry.form} · ${rarity ? rarityWords[rarity] : ""}${entry.formOf}`,
 			ipa: entry.formIpa,
 			definition: entry.formNote,
 			links: toLemma,

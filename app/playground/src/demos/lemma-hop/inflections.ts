@@ -5,20 +5,16 @@
  *
  * A lemma can inflect with two sets of forms in one meaning: melken's
  * current melkte beside the older molk, Komma's Kommas beside Kommata.
- * Each set is authored whole, as if the lemma had no other; `layOut`
- * shows them merged into one table, stacked as one table per set, or as
- * the usual set's table with the rest in one line under it.
+ * Each set is authored whole, as if the lemma had no other, and
+ * `mergedGrid` merges them into one table: a cell holds every set's
+ * forms, the usual one first, the rarer ones marked older or also.
  */
 
 /** What sets a rarer form apart from the usual one in its cell. */
 type Rarity = "older" | "also";
 
-export type Layout = "merged" | "stacked" | "footnote";
-
 /** One set of forms. A cell lists alternatives within it as `a · b`. */
 type FormSet = {
-	/** The stacked layout's heading; a lone set needs none. */
-	readonly heading?: string;
 	/** Row by row, one cell per column after the row heading. */
 	readonly rows: readonly (readonly string[])[];
 	/** One cell per line label. */
@@ -47,9 +43,8 @@ export type ShownForm = {
 
 type ShownCell = readonly ShownForm[];
 
-/** One table to draw: a set, or the sets merged. */
+/** The table to draw: every set merged. */
 export type Grid = {
-	readonly heading?: string;
 	readonly columns: readonly string[];
 	readonly rows: readonly {
 		readonly label: string;
@@ -59,17 +54,6 @@ export type Grid = {
 		readonly label: string;
 		readonly cell: ShownCell;
 	}[];
-};
-
-/** The footnote layout's `Also:` forms, one group per rarity. */
-type AlsoGroup = {
-	readonly rarity?: Rarity;
-	readonly forms: readonly ShownForm[];
-};
-
-export type LaidOut = {
-	readonly grids: readonly Grid[];
-	readonly also: readonly AlsoGroup[];
 };
 
 const persons = ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"];
@@ -143,7 +127,6 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 		lineLabels: ["Partizip II"],
 		sets: [
 			{
-				heading: "Current",
 				rows: byRow(
 					["melke", "melkst", "melkt", "melken", "melkt", "melken"],
 					[
@@ -158,7 +141,6 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 				lines: ["gemolken · gemelkt"],
 			},
 			{
-				heading: "Older",
 				rows: byRow(
 					["melke", "milkst", "milkt", "melken", "melkt", "melken"],
 					["molk", "molkst", "molk", "molken", "molkt", "molken"],
@@ -179,7 +161,6 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 		lineLabels: ["Partizip II"],
 		sets: [
 			{
-				heading: "Current",
 				rows: byRow(
 					[
 						"backe",
@@ -201,7 +182,6 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 				lines: ["gebacken"],
 			},
 			{
-				heading: "Older",
 				rows: byRow(
 					["backe", "bäckst", "bäckt", "backen", "backt", "backen"],
 					["buk", "bukst", "buk", "buken", "bukt", "buken"],
@@ -279,14 +259,12 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 		rowLabels: cases,
 		sets: [
 			{
-				heading: "Plural Kommas",
 				rows: byRow(
 					["das Komma", "das Komma", "dem Komma", "des Kommas"],
 					["die Kommas", "die Kommas", "den Kommas", "der Kommas"],
 				),
 			},
 			{
-				heading: "Plural Kommata",
 				rows: byRow(
 					["das Komma", "das Komma", "dem Komma", "des Kommas"],
 					[
@@ -361,6 +339,11 @@ export function markedFormOf(clicked: string): string {
 	return markedForms[clicked] ?? clicked;
 }
 
+/** Whether the clicked form is a rarer one beside its cell's usual form. */
+export function rarityOf(lemma: string, clicked: string): Rarity | undefined {
+	return tables[lemma]?.rare?.[markedFormOf(clicked)];
+}
+
 const formsIn = (cell: string | undefined) => (cell ? cell.split(" · ") : []);
 
 /**
@@ -383,21 +366,16 @@ function cellOf(
 		}));
 }
 
-function gridOf(
-	table: InflectionTable,
-	sets: readonly FormSet[],
-	marked: string,
-	heading?: string,
-): Grid {
+/** The table with every form equal to `marked` marked wherever it stands. */
+export function mergedGrid(table: InflectionTable, marked: string): Grid {
 	return {
-		heading,
 		columns: table.columns,
 		rows: table.rowLabels.map((label, row) => ({
 			label,
 			cells: table.columns.slice(1).map((_, column) =>
 				cellOf(
 					table,
-					sets.map((set) => set.rows[row]?.[column]),
+					table.sets.map((set) => set.rows[row]?.[column]),
 					marked,
 				),
 			),
@@ -406,84 +384,10 @@ function gridOf(
 			label,
 			cell: cellOf(
 				table,
-				sets.map((set) => set.lines?.[line]),
+				table.sets.map((set) => set.lines?.[line]),
 				marked,
 			),
 		})),
-	};
-}
-
-/** The grid's cells column by column, then its lines: reading order. */
-function cellsByColumn(grid: Grid): ShownCell[] {
-	return [
-		...grid.columns
-			.slice(1)
-			.flatMap((_, column) =>
-				grid.rows.map((row) => row.cells[column] ?? []),
-			),
-		...grid.lines.map((line) => line.cell),
-	];
-}
-
-/**
- * The table in `layout`, with each form equal to `marked` marked
- * wherever it stands:
- * - merged: one table; a cell holds every set's forms, usual first;
- * - stacked: one table per set, the set holding the marked form first;
- * - footnote: the usual form of each cell, and every other form in
- *   `also`, grouped by rarity.
- */
-export function layOut(
-	table: InflectionTable,
-	layout: Layout,
-	marked: string,
-): LaidOut {
-	if (layout === "stacked") {
-		const holds = (set: FormSet) =>
-			[...set.rows.flat(), ...(set.lines ?? [])]
-				.flatMap(formsIn)
-				.includes(marked);
-		const sets = [
-			...table.sets.filter(holds),
-			...table.sets.filter((set) => !holds(set)),
-		];
-		return {
-			grids: sets.map((set) =>
-				gridOf(
-					table,
-					[set],
-					marked,
-					table.sets.length > 1 ? set.heading : undefined,
-				),
-			),
-			also: [],
-		};
-	}
-	const merged = gridOf(table, table.sets, marked);
-	if (layout === "merged") return { grids: [merged], also: [] };
-
-	const usual: Grid = {
-		...merged,
-		rows: merged.rows.map((row) => ({
-			...row,
-			cells: row.cells.map((cell) => cell.slice(0, 1)),
-		})),
-		lines: merged.lines.map((line) => ({
-			...line,
-			cell: line.cell.slice(0, 1),
-		})),
-	};
-	const groups = new Map<Rarity | undefined, ShownForm[]>();
-	for (const cell of cellsByColumn(merged))
-		for (const shown of cell.slice(1)) {
-			const group = groups.get(shown.rarity) ?? [];
-			if (!group.some((other) => other.form === shown.form))
-				group.push(shown);
-			groups.set(shown.rarity, group);
-		}
-	return {
-		grids: [usual],
-		also: [...groups].map(([rarity, forms]) => ({ rarity, forms })),
 	};
 }
 

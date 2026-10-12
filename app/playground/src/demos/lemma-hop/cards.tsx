@@ -11,9 +11,8 @@ import {
 import {
 	type Grid,
 	type InflectionTable,
-	type Layout,
 	labelRem,
-	layOut,
+	mergedGrid,
 	type ShownForm,
 	tableRem,
 } from "./inflections";
@@ -230,65 +229,37 @@ const kindLabel =
 
 /**
  * The lemma's inflections, as LinguaCafe's inflections tab shows them,
- * in one of three layouts when the lemma has two sets of forms, with
- * every form equal to `marked` marked. Content, not navigation: no form
- * is a button. Where the Card is too narrow for a table, each table
- * reflows into a list, column by column, instead of scrolling sideways.
+ * with every form equal to `marked` marked. A lemma with two sets of forms
+ * shows them merged: `melkte · molk older`. Content, not navigation: no
+ * form is a button. Where the Card is too narrow for the table, it reflows
+ * into a list, column by column, instead of scrolling sideways.
  */
 export function Inflections({
 	table,
-	layout,
 	marked,
 	compact = false,
 }: {
 	readonly table: InflectionTable;
-	readonly layout: Layout;
 	readonly marked: string;
 	readonly compact?: boolean;
 }) {
-	const { grids, also } = layOut(table, layout, marked);
 	return (
 		<section className="@container/inflections grid gap-1.5 border-t border-line pt-3">
 			<span {...langAttrs("en")} className={kindLabel}>
 				Inflections
 			</span>
-			{grids.map((grid, index) => (
-				<GridView
-					key={grid.heading ?? index}
-					grid={grid}
-					lang={table.lang}
-					compact={compact}
-				/>
-			))}
-			{also.length > 0 ? (
-				<p className="text-xs text-ink-muted">
-					<span {...langAttrs("en")}>Also: </span>
-					{also.map((group, index) => (
-						<Fragment key={group.rarity ?? "usual"}>
-							{index > 0 ? " · " : null}
-							<span {...langAttrs(table.lang)}>
-								{group.forms.map((shown, formIndex) => (
-									<Fragment key={shown.form}>
-										{formIndex > 0 ? ", " : null}
-										<FormText shown={shown} tight />
-									</Fragment>
-								))}
-							</span>
-							{group.rarity === "older" ? (
-								<span {...langAttrs("en")}> (older)</span>
-							) : null}
-						</Fragment>
-					))}
-				</p>
-			) : null}
+			<GridView
+				grid={mergedGrid(table, marked)}
+				lang={table.lang}
+				compact={compact}
+			/>
 		</section>
 	);
 }
 
 /**
- * One grid: a table where it fits, a list where it doesn't. The label
- * column has the same width in both and in every grid of one lemma, so
- * stacked tables line up.
+ * The grid as a table where it fits, as a list where it doesn't, with the
+ * label column the same width in both.
  */
 function GridView({
 	grid,
@@ -316,12 +287,7 @@ function GridView({
 		</tr>
 	));
 	return (
-		<div className={cn("grid gap-1", grid.heading && "mt-1")}>
-			{grid.heading ? (
-				<h4 {...langAttrs("en")} className="text-xs text-ink-muted">
-					{grid.heading}
-				</h4>
-			) : null}
+		<div className="grid gap-1">
 			<table
 				{...langAttrs(lang)}
 				className={cn(
@@ -446,23 +412,15 @@ function Forms({ cell }: { readonly cell: readonly ShownForm[] }) {
 }
 
 /**
- * One form, set off in the link colour where it is the clicked one. In a
- * cell every form keeps the mark's padding, so marked and unmarked forms
- * line up; `tight`, in running text, only the marked one has it.
+ * One form, set off in the link colour where it is the clicked one. Every
+ * form keeps the mark's padding, so marked and unmarked forms line up.
  */
-function FormText({
-	shown,
-	tight = false,
-}: {
-	readonly shown: ShownForm;
-	readonly tight?: boolean;
-}) {
+function FormText({ shown }: { readonly shown: ShownForm }) {
 	return (
 		<span
 			aria-current={shown.marked ? "true" : undefined}
 			className={cn(
-				"rounded-md py-0.5",
-				tight && !shown.marked ? "px-0" : "px-1",
+				"rounded-md px-1 py-0.5",
 				shown.marked
 					? "bg-link/15 font-medium text-link ring-1 ring-link/60"
 					: "text-ink-soft",

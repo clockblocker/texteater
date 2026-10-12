@@ -1,24 +1,25 @@
 import { describe, expect, test } from "bun:test";
-import { type Grid, inflectionsOf, layOut, tableRem } from "./inflections";
+import { type Grid, inflectionsOf, mergedGrid, tableRem } from "./inflections";
+import { lookUp } from "./words";
 
 const melken = inflectionsOf("melken");
 if (!melken) throw new Error("no melken table");
 
-const forms = (grid: Grid | undefined, row: number, column: number) =>
-	grid?.rows[row]?.cells[column]?.map((shown) => shown.form);
-const marked = (grid: Grid | undefined) =>
-	grid?.rows.flatMap((row, rowIndex) =>
+const forms = (grid: Grid, row: number, column: number) =>
+	grid.rows[row]?.cells[column]?.map((shown) => shown.form);
+const marked = (grid: Grid) =>
+	grid.rows.flatMap((row, rowIndex) =>
 		row.cells.flatMap((cell, column) =>
 			cell.some((shown) => shown.marked) ? [[rowIndex, column]] : [],
 		),
 	);
 
-describe("layOut", () => {
-	test("merged puts the usual form first and marks every cell it fills", () => {
-		const [grid] = layOut(melken, "merged", "molken").grids;
+describe("mergedGrid", () => {
+	test("puts the usual form first and marks every cell the clicked one fills", () => {
+		const grid = mergedGrid(melken, "molken");
 		expect(forms(grid, 0, 1)).toEqual(["melkte", "molk"]);
 		expect(forms(grid, 1, 0)).toEqual(["melkst", "milkst"]);
-		expect(grid?.lines[0]?.cell.map((shown) => shown.form)).toEqual([
+		expect(grid.lines[0]?.cell.map((shown) => shown.form)).toEqual([
 			"gemolken",
 			"gemelkt",
 		]);
@@ -28,51 +29,37 @@ describe("layOut", () => {
 		]);
 	});
 
-	test("stacked puts the set holding the clicked form first", () => {
-		const { grids } = layOut(melken, "stacked", "molken");
-		expect(grids.map((grid) => grid.heading)).toEqual(["Older", "Current"]);
-		expect(layOut(melken, "stacked", "ging").grids[0]?.heading).toBe(
-			"Current",
-		);
-	});
-
-	test("footnote keeps the usual forms and groups the rest by rarity", () => {
-		const { grids, also } = layOut(melken, "footnote", "molken");
-		expect(forms(grids[0], 3, 1)).toEqual(["melkten"]);
-		expect(also.map((group) => group.rarity)).toEqual(["older", "also"]);
-		expect(also[0]?.forms.map((shown) => shown.form)).toEqual([
-			"milkst",
-			"milkt",
-			"molk",
-			"molkst",
-			"molken",
-			"molkt",
-		]);
-		expect(
-			also[0]?.forms.find((shown) => shown.form === "molken")?.marked,
-		).toBe(true);
-	});
-
-	test("a lemma with one set lays out the same three ways", () => {
+	test("a lemma with one set has one form per cell", () => {
 		const gehen = inflectionsOf("gehen");
 		if (!gehen) throw new Error("no gehen table");
-		for (const layout of ["merged", "stacked", "footnote"] as const) {
-			const { grids, also } = layOut(gehen, layout, "ging");
-			expect(grids).toHaveLength(1);
-			expect(grids[0]?.heading).toBeUndefined();
-			expect(also).toEqual([]);
-		}
+		const grid = mergedGrid(gehen, "ging");
+		expect(
+			grid.rows.every((row) =>
+				row.cells.every((cell) => cell.length === 1),
+			),
+		).toBe(true);
 	});
 });
 
 describe("tableRem", () => {
-	test("a merged cell needs more room than either set's", () => {
-		const [merged] = layOut(melken, "merged", "").grids;
-		const [single] = layOut(melken, "stacked", "").grids;
-		if (!merged || !single) throw new Error("no grids");
+	test("a merged cell needs more room than a lone form's", () => {
+		const gehen = inflectionsOf("gehen");
+		if (!gehen) throw new Error("no gehen table");
+		const merged = mergedGrid(melken, "");
 		expect(tableRem(merged, false)).toBeGreaterThan(
-			tableRem(single, false),
+			tableRem(mergedGrid(gehen, ""), false),
 		);
 		expect(tableRem(merged, true)).toBeLessThan(tableRem(merged, false));
+	});
+});
+
+describe("the Surface caption", () => {
+	const caption = (word: string) =>
+		lookUp(word).cards.find((card) => card.kind === "Surface")?.caption;
+
+	test("names a rarer form before its relation", () => {
+		expect(caption("molken")).toBe("molken · older past of");
+		expect(caption("buk")).toBe("buk · older past of");
+		expect(caption("Kommata")).toBe("Kommata · less common plural of");
 	});
 });

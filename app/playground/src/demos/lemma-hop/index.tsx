@@ -39,7 +39,7 @@ import {
 	ParentTag,
 } from "./cards";
 import { SteppedDeck, StoryDeck } from "./deck";
-import { inflectionsOf, type Layout, markedFormOf } from "./inflections";
+import { inflectionsOf, markedFormOf } from "./inflections";
 import { type Box, type Placement, placeBeside, type Scene } from "./placement";
 import { PreviewLayer } from "./preview-layer";
 import type { PreviewHost } from "./rules";
@@ -170,48 +170,6 @@ const variants: readonly Variant[] = [
 	},
 ];
 
-const layouts: readonly {
-	readonly id: Layout;
-	readonly label: string;
-	readonly about: ReactNode;
-}[] = [
-	{
-		id: "merged",
-		label: "merged",
-		about: (
-			<p>
-				One table. A cell holds both sets' forms, the usual one first:{" "}
-				<i>melkte · molk</i>, the rarer one with a quiet <i>older</i> or{" "}
-				<i>also</i>. The clicked form is marked in every cell it fills.
-			</p>
-		),
-	},
-	{
-		id: "stacked",
-		label: "stacked",
-		about: (
-			<p>
-				One full table per set of forms, each under a small heading
-				(Current, Older), the set holding the clicked form first.
-			</p>
-		),
-	},
-	{
-		id: "footnote",
-		label: "footnote",
-		about: (
-			<p>
-				The usual set as the table, and one line under it for the rest:{" "}
-				<i>
-					Also: milkst, milkt, molk, molkst, molken, molkt (older) ·
-					gemelkt
-				</i>
-				.
-			</p>
-		),
-	},
-];
-
 /** The words the case picker clicks, by the sentence they stand in. */
 const cases: readonly { readonly word: string; readonly about: string }[] = [
 	{ word: "ging", about: "one set of forms" },
@@ -237,10 +195,6 @@ export default function LemmaHopDemo() {
 	const env = usePlaygroundEnv();
 	const [variantParam, setVariantParam] = useDemoParam("variant");
 	const [wordId, setWordId] = useDemoParam("word");
-	const [layoutParam, setLayoutParam] = useDemoParam("paradigms");
-	const layout =
-		layouts.find((candidate) => candidate.id === layoutParam) ?? layouts[0];
-	if (!layout) throw new Error("lemma-hop: no layouts");
 	const variant =
 		variants.find((candidate) => candidate.id === variantParam) ??
 		variants[0];
@@ -346,13 +300,7 @@ export default function LemmaHopDemo() {
 					) : null
 				}
 				extra={
-					table ? (
-						<Inflections
-							table={table}
-							layout={layout.id}
-							marked={marked}
-						/>
-					) : null
+					table ? <Inflections table={table} marked={marked} /> : null
 				}
 				action={
 					where === "deck" ? (
@@ -539,20 +487,16 @@ export default function LemmaHopDemo() {
 				</InspectorSection>
 				{variant.table ? (
 					<InspectorSection title="Two sets of forms">
-						<InspectorChoice
-							label="Paradigm layout"
-							options={layouts.map((candidate) => ({
-								value: candidate.id,
-								label: candidate.label,
-							}))}
-							value={layout.id}
-							onChange={(id) =>
-								setLayoutParam(
-									id === layouts[0]?.id ? null : id,
-								)
-							}
-						/>
-						<InspectorTry>{layout.about}</InspectorTry>
+						<InspectorTry>
+							<p>
+								A lemma with two sets of forms in one meaning
+								shows them merged: a cell holds both, the usual
+								one first (<i>melkte · molk</i>), the rarer one
+								with a quiet <i>older</i> or <i>also</i>. The
+								clicked form is marked in every cell it fills,
+								and a rarer one's Surface caption says so.
+							</p>
+						</InspectorTry>
 						<InspectorChoice
 							label="Case: open the Lemma Card for"
 							options={caseWords.map((each) => ({
@@ -667,7 +611,7 @@ export default function LemmaHopDemo() {
 
 			{variant.previews ? (
 				<PreviewLayer
-					table={variant.table ? { layout: layout.id, marked } : null}
+					marked={variant.table ? marked : null}
 					onExpand={onExpand}
 				/>
 			) : null}

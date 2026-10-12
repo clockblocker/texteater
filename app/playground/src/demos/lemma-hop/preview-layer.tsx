@@ -13,7 +13,7 @@ import { cardLang, langAttrs } from "@/fixtures";
 import { useFrameSize, usePlaygroundEnv } from "@/shell";
 import { Inflections } from "./cards";
 import { PreviewController } from "./controller";
-import { inflectionsOf, type Layout } from "./inflections";
+import { inflectionsOf } from "./inflections";
 import {
 	obsidian,
 	type Preview,
@@ -23,9 +23,6 @@ import {
 } from "./rules";
 import { lookUp } from "./words";
 
-/** How a preview shows its lemma's inflections, when it shows them. */
-type PreviewTable = { readonly layout: Layout; readonly marked: string };
-
 /**
  * hover-preview's preview layer, copied because demos don't import each
  * other: the previews over the frame, portalled into it, with the
@@ -34,11 +31,11 @@ type PreviewTable = { readonly layout: Layout; readonly marked: string };
  * corner; ⤢ calls `onExpand` with the host and the hovered path.
  */
 export function PreviewLayer({
-	table,
+	marked,
 	onExpand,
 }: {
-	/** The preview shows the lemma's inflection table too, like this. */
-	readonly table: PreviewTable | null;
+	/** With a form, the preview shows the lemma's table with it marked. */
+	readonly marked: string | null;
 	readonly onExpand: (host: PreviewHost, path: readonly string[]) => void;
 }) {
 	const { frame, dir } = usePlaygroundEnv();
@@ -75,7 +72,7 @@ export function PreviewLayer({
 				<PreviewCard
 					key={preview.id}
 					preview={preview}
-					table={table}
+					marked={marked}
 					onPin={(pinned) =>
 						controller.change(preview.id, {
 							pinned,
@@ -102,14 +99,14 @@ export function PreviewLayer({
 /** One preview: placed by its link, or where a drag left it. */
 function PreviewCard({
 	preview,
-	table,
+	marked,
 	onPin,
 	onDrag,
 	onClose,
 	onExpand,
 }: {
 	readonly preview: Preview;
-	readonly table: PreviewTable | null;
+	readonly marked: string | null;
 	readonly onPin: (pinned: boolean) => void;
 	readonly onDrag: (to: { start: number; top: number }) => void;
 	readonly onClose: () => void;
@@ -136,7 +133,8 @@ function PreviewCard({
 	const lemma = cards.find((card) => card.kind === "Lemma");
 	const reading = cards.find((card) => card.kind === "Reading");
 	const lang = lemma ? cardLang(lemma) : "de";
-	const inflections = table && lemma ? inflectionsOf(lemma.title) : undefined;
+	const table =
+		marked !== null && lemma ? inflectionsOf(lemma.title) : undefined;
 
 	const drag = useRef<{
 		x: number;
@@ -277,13 +275,8 @@ function PreviewCard({
 							<span {...langAttrs("en")}>{lemma.definition}</span>
 						</p>
 					) : null}
-					{table && inflections ? (
-						<Inflections
-							table={inflections}
-							layout={table.layout}
-							marked={table.marked}
-							compact
-						/>
+					{table && marked !== null ? (
+						<Inflections table={table} marked={marked} compact />
 					) : null}
 				</DensityScope>
 			</div>
