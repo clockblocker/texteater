@@ -1,6 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import {
 	renderApplicationSubject,
@@ -8,9 +8,11 @@ import {
 } from "@/views/subject-presentation";
 import type { SubjectRenderer, SubjectView } from "@/workspace/compass/subject";
 import { api } from "../../convex/_generated/api";
+import type { SectionTarget } from "../../shared/navigation";
 import { scrollTitle } from "../../shared/scroll-title";
 import { HeadingSkeleton, type NotePart, NotePartProvider } from "./note-part";
 import {
+	type GroundPlace,
 	type WorkspaceCardTarget,
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
@@ -18,12 +20,13 @@ import {
 import {
 	type ScrollSubjectTarget,
 	type WorkspaceSubject,
+	type WorkspaceTarget,
 	workspaceSubjectFor,
 } from "./workspace-subject";
 
 /**
- * How tf-demo's Subjects render in the Compass: a Scroll through the reader, a
- * Note through the Notes renderers (tf-demo ADR 0006), each split into the
+ * How tf-demo's Subjects render in the Compass: a Section as its Codex, a
+ * Scroll through the reader, a Note through the Notes renderers (tf-demo ADR 0006), each split into the
  * Heading Block the renderer places as a handle and the Body it clips or
  * scrolls. The views keep asking the workspace through
  * `WorkspaceInteraction`; here it is bound to the Sheet or Card they are
@@ -38,7 +41,7 @@ const NOTE_COLUMN_REM = 50;
 export const applicationRenderer: SubjectRenderer<WorkspaceSubject> = {
 	label: subjectLabel,
 	columnRem: (subject) =>
-		subject.kind === "Scroll" ? SCROLL_COLUMN_REM : NOTE_COLUMN_REM,
+		subject.kind === "Note" ? NOTE_COLUMN_REM : SCROLL_COLUMN_REM,
 	render: (subject, view, part) => (
 		<PlacedSubject subject={subject} view={view} part={part} />
 	),
@@ -54,23 +57,27 @@ function PlacedSubject({
 	part: NotePart;
 }) {
 	const interaction = useInteractionOf(view);
+	const place = usePlaceOf(view);
 	const card = view.form === "card";
 	return (
 		<WorkspaceInteractionProvider
 			interaction={interaction}
 			dealtSelection={view.lit}
+			place={place}
 		>
 			<NotePartProvider value={part}>
 				{part === "heading" ? (
 					subject.kind === "Scroll" ? (
 						<ScrollHeading target={subject.target} />
+					) : subject.kind === "Section" ? (
+						<SectionHeading target={subject.target} />
 					) : (
 						renderApplicationSubject(
 							subject,
 							card ? "Card" : "Sheet",
 						)
 					)
-				) : subject.kind === "Scroll" ? (
+				) : subject.kind !== "Note" ? (
 					renderApplicationSubject(subject, card ? "Card" : "Sheet")
 				) : (
 					/* a Sheet's Heading is its bar, so its first Block keeps
@@ -124,8 +131,55 @@ function useInteractionOf(
 	);
 }
 
+/**
+ * Where this Presentation sits, as a view asks it: a Ground or not, and a
+ * Rooted Ground's line, which its Codex or its next walks.
+ */
+function usePlaceOf(view: SubjectView<WorkspaceSubject>): GroundPlace {
+	const latest = useRef(view);
+	useLayoutEffect(() => {
+		latest.current = view;
+	});
+	const walk = useCallback<GroundPlace["walk"]>(
+		(keep, to) =>
+			latest.current.walk(
+				keep,
+				to.map((target) => workspaceSubjectFor(target)),
+			),
+		[],
+	);
+	const ground = view.ground && view.form === "sheet";
+	const line = view.line?.map((subject) => subject.target) ?? null;
+	const lineKey = line?.map(lineRungKey).join("/") ?? null;
+	/* the line is a fresh array every render; it is compared by its rungs */
+	return useMemo(() => ({ ground, line, walk }), [ground, lineKey, walk]);
+}
+
+function lineRungKey(target: WorkspaceTarget): string {
+	return target.kind === "Section"
+		? `Section:${target.sectionId}`
+		: target.kind === "Scroll"
+			? `Scroll:${target.scrollId}`
+			: target.kind;
+}
+
 function dealtCard({ key, target, presentationContext }: WorkspaceCardTarget) {
 	return { key, subject: workspaceSubjectFor(target, presentationContext) };
+}
+
+/** A Section's Heading: what the Library or its Codex calls it. */
+function SectionHeading({ target }: { target: SectionTarget }) {
+	const visitorId = useAnonymousVisitorId();
+	const codexQuery = useQuery({
+		...convexQuery(api.library.codex, {
+			sectionId: target.sectionId,
+			visitorId,
+		}),
+		enabled: target.title === undefined,
+	});
+	const title = target.title ?? codexQuery.data?.title;
+	if (title === undefined) return <HeadingSkeleton />;
+	return <span className="min-w-0 truncate font-serif">{title}</span>;
 }
 
 /** A Scroll's Heading: what the Library calls it. */

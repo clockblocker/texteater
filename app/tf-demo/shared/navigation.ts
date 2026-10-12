@@ -14,6 +14,16 @@ export type ScrollTarget = {
 };
 
 /**
+ * A Section to open: its Codex. `title` is what the Library or a Codex
+ * called it; presentation state, no identity.
+ */
+export type SectionTarget = {
+	readonly kind: "Section";
+	readonly sectionId: string;
+	readonly title?: string;
+};
+
+/**
  * Where Go to source lands: a Scroll at one occurrence, named as the Library
  * names it, so its Cover is titled before the Scroll loads (tf-demo ADR 0008).
  */

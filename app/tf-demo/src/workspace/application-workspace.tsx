@@ -37,8 +37,8 @@ import {
 /**
  * tf-demo's workspace: the Compass over the application's Subjects, with
  * one URL (tf-demo ADR 0003). Every Pane's Ground walks its line; a Rooted
- * Pane's runs Menu › Library › Scroll, and Settings is the Menu Item beside the
- * Library (tf-demo ADR 0008). The workspace survives a reload through
+ * Pane's runs Menu › Library › Section › … › Scroll, and Settings is the Menu
+ * Item beside the Library (tf-demo ADR 0008). The workspace survives a reload through
  * Workspace Persistence.
  */
 
@@ -125,7 +125,10 @@ function MenuItemRung({ children }: { children: ReactNode }) {
 	);
 }
 
-/** The Library's selection is the Ground's: a Scroll picked or added there is its content. */
+/**
+ * The Library's selection is the Ground's: a Section or a Scroll picked
+ * there, or a Scroll added, is its content.
+ */
 function LibraryRung({ view }: { view: MenuItemView<WorkspaceSubject> }) {
 	const latest = useRef(view);
 	useLayoutEffect(() => {
@@ -134,7 +137,7 @@ function LibraryRung({ view }: { view: MenuItemView<WorkspaceSubject> }) {
 	const interaction = useMemo<WorkspaceInteraction>(
 		() => ({
 			follow: (target) => {
-				if (target.kind === "Scroll")
+				if (target.kind === "Scroll" || target.kind === "Section")
 					latest.current.select(workspaceSubjectFor(target));
 			},
 			presentCards: () => {},

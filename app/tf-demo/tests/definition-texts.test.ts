@@ -4,6 +4,7 @@ import { api, internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { ActionCtx } from "../convex/_generated/server";
 import { stripAllAnalyses } from "../convex/demoReset";
+import { listLibrary } from "../convex/library";
 import {
 	definitionOf,
 	findDefinitionText,
@@ -11,7 +12,6 @@ import {
 	STALE_DEFINITION_TEXT_RUN_AFTER_MS,
 	syncDefinitionText,
 } from "../convex/model/definitionTexts";
-import { listLibraryScrolls } from "../convex/scrolls";
 import {
 	emojiDescriptionOf,
 	foldedCanonicalForm,
@@ -201,7 +201,9 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 	).toBe("Settled");
 
 	// The library never lists a Definition Text.
-	expect(await t.query(api.scrolls.list, {})).toEqual([]);
+	expect(await t.query(api.library.list, { visitorId: "visitor-1" })).toEqual(
+		[],
+	);
 
 	// Same definition again: nothing to do.
 	await sync(t, { definition: "Ein Gebäude." });
@@ -494,7 +496,7 @@ function recordingReader<Reader extends object>(
 	});
 }
 
-test("the library lists the newest Visitor Scrolls through an index range without Definition Texts", async () => {
+test("the library lists the newest loose Visitor Scrolls through an index range without Definition Texts", async () => {
 	const t = createTestConvex();
 	await t.run(async (ctx) => {
 		for (let index = 0; index < 200; index += 1) {
@@ -513,26 +515,33 @@ test("the library lists the newest Visitor Scrolls through an index range withou
 	});
 
 	expect(
-		(await t.query(api.scrolls.list, {})).map(
-			({ sourceText }) => sourceText,
+		(await t.query(api.library.list, { visitorId: "visitor-1" })).map(
+			(entry) => (entry.kind === "Scroll" ? entry.preview : entry.title),
 		),
 	).toEqual(["Visitor 140", "Visitor 70", "Visitor 0"]);
 
-	// The read set is one index range over Visitor Scrolls, never a filtered scan.
+	// The Scrolls read are one index range over loose Visitor Scrolls, never a filtered scan.
 	const calls: string[] = [];
 	await t.run((ctx) =>
-		listLibraryScrolls({ ...ctx, db: recordingReader(ctx.db, calls) }),
+		listLibrary(
+			{ ...ctx, db: recordingReader(ctx.db, calls) },
+			"visitor-1",
+		),
 	);
-	expect(calls).toEqual([
+	const scrollRead = calls.indexOf("query:scrolls");
+	expect(calls.slice(scrollRead, scrollRead + 4)).toEqual([
 		"query:scrolls",
-		"withIndex:by_origin_kind",
+		"withIndex:by_origin_kind_and_placement",
 		"order:desc",
 		"take",
 	]);
+	expect(calls.filter((call) => call === "query:scrolls")).toHaveLength(1);
 	const visitorRange = await t.run((ctx) =>
 		ctx.db
 			.query("scrolls")
-			.withIndex("by_origin_kind", (q) => q.eq("origin.kind", undefined))
+			.withIndex("by_origin_kind_and_placement", (q) =>
+				q.eq("origin.kind", undefined),
+			)
 			.collect(),
 	);
 	expect(visitorRange.map(({ origin }) => origin)).toEqual([

@@ -1,3 +1,4 @@
+import { CodexView } from "@/views/codex-view";
 import { ResolutionStepNoteView } from "@/views/resolution-note-view";
 import { RouteNoteView } from "@/views/route-note-view";
 import { ScrollView } from "@/views/scroll-view";
@@ -19,6 +20,8 @@ export function renderApplicationSubject(
 ) {
 	const { target } = subject;
 	switch (target.kind) {
+		case "Section":
+			return <CodexView key={target.sectionId} target={target} />;
 		case "Scroll":
 			return <ScrollView key={target.scrollId} target={target} />;
 		case "Reading":
@@ -95,6 +98,8 @@ export function renderApplicationSubject(
 export function subjectLabel(subject: WorkspaceSubject): string {
 	const { target } = subject;
 	switch (target.kind) {
+		case "Section":
+			return target.title ?? "Section";
 		case "Scroll":
 			return target.title ?? "Text";
 		case "Reading":

@@ -419,6 +419,36 @@ const visitorOwnedRows: Record<
 		(await tableRows(t, "visitorEncounters"))
 			.filter((row) => row.visitorId === visitorId)
 			.map(({ _id }) => _id),
+	scrollProgress: (t, visitorId, _reading, sentenceId) =>
+		t.run(async (ctx) => {
+			const sentence = await ctx.db.get(sentenceId);
+			if (!sentence) throw new Error("The seeded Sentence is gone.");
+			return [
+				await ctx.db.insert("scrollProgress", {
+					visitorId,
+					scrollId: sentence.scrollId,
+					status: "InProgress",
+					position: 0,
+				}),
+			];
+		}),
+	sectionProgress: (t, visitorId, _reading, sentenceId) =>
+		t.run(async (ctx) => {
+			const sentence = await ctx.db.get(sentenceId);
+			if (!sentence) throw new Error("The seeded Sentence is gone.");
+			const sectionId = await ctx.db.insert("sections", {
+				title: "Book",
+				scrollCount: 1,
+			});
+			return [
+				await ctx.db.insert("sectionProgress", {
+					visitorId,
+					sectionId,
+					lastScrollId: sentence.scrollId,
+					doneScrolls: 0,
+				}),
+			];
+		}),
 	knowledgeGenerationAttempts: (t, visitorId, reading) =>
 		t.run(async (ctx) => [
 			await ctx.db.insert("knowledgeGenerationAttempts", {

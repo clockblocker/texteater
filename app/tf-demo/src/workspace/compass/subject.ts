@@ -57,6 +57,19 @@ export type SubjectView<S> = {
 	 * and neither does one with no slot in a live Deck.
 	 */
 	readonly reconcile: (cards: readonly KeyedCard<S>[]) => void;
+	/**
+	 * On a Rooted Ground, the Subjects of its line's Sheet rungs, bottom
+	 * first, this one last; `null` anywhere else, where there is no line to
+	 * walk.
+	 */
+	readonly line: readonly S[] | null;
+	/**
+	 * Walks this Ground's line (`WalkLine`): its first `keep` Sheet rungs
+	 * stay, and the line steps up through `to`. A Codex pick keeps them
+	 * all; next at a Scroll's end keeps the Sections it shares with the
+	 * following Scroll. On a Cover, a Card or a ghost it does nothing.
+	 */
+	readonly walk: (keep: number, to: readonly S[]) => void;
 };
 
 /** A dealt Card with the caller's stable key, which `reconcile` matches on. */

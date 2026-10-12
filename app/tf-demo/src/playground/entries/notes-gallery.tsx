@@ -152,6 +152,8 @@ function segmentsFromTarget(target: WorkspaceTarget): readonly string[] {
 			return ["reading", target.readingId];
 		case "Shadow":
 			return ["shadow", target.shadowId];
+		case "Section":
+			return ["section", target.sectionId];
 		case "Scroll":
 			return ["scroll", target.scrollId];
 		case "ResolutionStep":
@@ -162,7 +164,9 @@ function segmentsFromTarget(target: WorkspaceTarget): readonly string[] {
 function subjectFor(target: WorkspaceTarget): WorkspaceSubject {
 	return target.kind === "Scroll"
 		? { kind: "Scroll", target }
-		: ({ kind: "Note", target } as WorkspaceSubject);
+		: target.kind === "Section"
+			? { kind: "Section", target }
+			: ({ kind: "Note", target } as WorkspaceSubject);
 }
 
 function Catalog({

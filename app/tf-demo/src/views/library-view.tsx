@@ -1,6 +1,5 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
-import type { FunctionReturnType } from "convex/server";
 import {
 	Badge,
 	Button,
@@ -21,7 +20,6 @@ import {
 	Textarea,
 } from "lego";
 import {
-	ArrowRightIcon,
 	BookOpenIcon,
 	ChevronRightIcon,
 	FolderIcon,
@@ -36,13 +34,9 @@ import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import { scrollTitle } from "../../shared/scroll-title";
-
-type LibraryScroll = FunctionReturnType<typeof api.scrolls.list>[number];
+import { type CodexEntry, CodexEntryList, entryTarget } from "./codex-entries";
 
 const exampleText = "Die Banken sind geöffnet. Morgen bleiben sie geschlossen.";
-const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
-	dateStyle: "medium",
-});
 
 export function LibraryView() {
 	const visitorId = useAnonymousVisitorId();
@@ -52,7 +46,7 @@ export function LibraryView() {
 	const [interactionError, setInteractionError] = useState<string | null>(
 		null,
 	);
-	const scrollsQuery = useQuery(convexQuery(api.scrolls.list, {}));
+	const libraryQuery = useQuery(convexQuery(api.library.list, { visitorId }));
 	const submitText = usePendingAction(api.orchestration.submitText);
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -85,24 +79,17 @@ export function LibraryView() {
 		}
 	}
 
-	const storedScrolls = scrollsQuery.data?.filter(
-		(scroll) => !scroll.fixture,
-	);
-	const fixtureScrolls = scrollsQuery.data?.filter(
-		(scroll) => scroll.fixture,
-	);
+	const storedEntries = libraryQuery.data?.filter((entry) => !entry.fixture);
+	const fixtureEntries = libraryQuery.data?.filter((entry) => entry.fixture);
 
-	function openScroll(scroll: LibraryScroll) {
-		follow({
-			kind: "Scroll",
-			scrollId: scroll.scrollId,
-			title: scrollTitle(scroll),
-		});
+	/* a Section opens its Codex, a Scroll the reader */
+	function openEntry(entry: CodexEntry) {
+		follow(entryTarget(entry));
 	}
 
 	const error =
 		interactionError ??
-		(scrollsQuery.error ? visitorErrorMessage(scrollsQuery.error) : null);
+		(libraryQuery.error ? visitorErrorMessage(libraryQuery.error) : null);
 
 	return (
 		<div className="relative flex h-full min-h-0 flex-col bg-muted/30">
@@ -128,19 +115,20 @@ export function LibraryView() {
 							>
 								Stored texts
 							</h2>
-							{storedScrolls ? (
+							{storedEntries ? (
 								<Badge variant="secondary">
-									{storedScrolls.length}
+									{storedEntries.length}
 								</Badge>
 							) : null}
 						</div>
 
-						{scrollsQuery.isPending ? (
+						{libraryQuery.isPending ? (
 							<LibrarySkeleton />
-						) : storedScrolls && storedScrolls.length > 0 ? (
-							<LibraryScrollGrid
-								scrolls={storedScrolls}
-								onOpen={openScroll}
+						) : storedEntries && storedEntries.length > 0 ? (
+							<CodexEntryList
+								entries={storedEntries}
+								onOpen={openEntry}
+								dated
 							/>
 						) : (
 							<Card size="sm">
@@ -158,7 +146,7 @@ export function LibraryView() {
 						)}
 					</section>
 
-					{fixtureScrolls && fixtureScrolls.length > 0 ? (
+					{fixtureEntries && fixtureEntries.length > 0 ? (
 						<details className="group/fixtures">
 							<summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-md select-none focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
 								<span className="flex items-center gap-2">
@@ -175,13 +163,14 @@ export function LibraryView() {
 									</span>
 								</span>
 								<Badge variant="secondary">
-									{fixtureScrolls.length}
+									{fixtureEntries.length}
 								</Badge>
 							</summary>
 							<div className="pt-3">
-								<LibraryScrollGrid
-									scrolls={fixtureScrolls}
-									onOpen={openScroll}
+								<CodexEntryList
+									entries={fixtureEntries}
+									onOpen={openEntry}
+									dated
 								/>
 							</div>
 						</details>
@@ -258,39 +247,6 @@ export function LibraryView() {
 	);
 }
 
-function LibraryScrollGrid({
-	scrolls,
-	onOpen,
-}: {
-	readonly scrolls: readonly LibraryScroll[];
-	readonly onOpen: (scroll: LibraryScroll) => void;
-}) {
-	return (
-		<div className="grid gap-3">
-			{scrolls.map((scroll) => (
-				<button
-					key={scroll.scrollId}
-					type="button"
-					onClick={() => onOpen(scroll)}
-					className="group rounded-xl bg-card p-4 text-start text-card-foreground ring-1 ring-foreground/10 transition-[background-color,scale] duration-150 ease-out hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]"
-				>
-					<div className="flex items-start justify-between gap-4">
-						<div className="flex min-w-0 flex-col gap-2">
-							<p className="line-clamp-3 text-base leading-relaxed font-medium">
-								{scroll.title ?? scroll.sourceText}
-							</p>
-							<p className="text-xs text-ink-muted tabular-nums">
-								Added {formatDate(scroll.createdAt)}
-							</p>
-						</div>
-						<ArrowRightIcon className="mt-1 size-4 shrink-0 text-ink-muted transition-transform group-hover:translate-x-0.5" />
-					</div>
-				</button>
-			))}
-		</div>
-	);
-}
-
 function LibrarySkeleton() {
 	return (
 		<div className="grid gap-3" role="status" aria-label="Loading texts">
@@ -304,10 +260,6 @@ function LibrarySkeleton() {
 			))}
 		</div>
 	);
-}
-
-function formatDate(timestamp: number): string {
-	return shortDateFormatter.format(timestamp);
 }
 
 function submissionKeyFor(sourceText: string): string {

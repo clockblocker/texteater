@@ -35,6 +35,23 @@ export type WorkspaceInteraction = {
 	) => void;
 };
 
+/**
+ * Where the drawing Sheet sits. On a Ground, a Scroll records its reading;
+ * on a Rooted Ground, `line` holds the targets of its line's Sheet rungs,
+ * bottom first, this one last, and `walk` walks it (`SubjectView.walk`).
+ */
+export type GroundPlace = {
+	readonly ground: boolean;
+	readonly line: readonly WorkspaceTarget[] | null;
+	readonly walk: (keep: number, to: readonly WorkspaceTarget[]) => void;
+};
+
+const NOT_ON_A_GROUND: GroundPlace = {
+	ground: false,
+	line: null,
+	walk: () => {},
+};
+
 /** Workspace-wide commands for the application's settings. */
 type WorkspaceController = {
 	readonly canCloseAllSheets: boolean;
@@ -50,6 +67,7 @@ const WorkspaceInteractionContext = createContext<WorkspaceInteraction | null>(
 );
 /** The selection the drawing Sheet's Deck was dealt for; see `useDealtSelection`. */
 const DealtSelectionContext = createContext<string | null>(null);
+const GroundPlaceContext = createContext<GroundPlace>(NOT_ON_A_GROUND);
 
 export function WorkspaceControllerProvider({
 	controller,
@@ -68,19 +86,28 @@ export function WorkspaceControllerProvider({
 export function WorkspaceInteractionProvider({
 	interaction,
 	dealtSelection = null,
+	place = NOT_ON_A_GROUND,
 	children,
 }: {
 	readonly interaction: WorkspaceInteraction;
 	readonly dealtSelection?: string | null;
+	readonly place?: GroundPlace;
 	readonly children: ReactNode;
 }) {
 	return (
 		<WorkspaceInteractionContext.Provider value={interaction}>
 			<DealtSelectionContext.Provider value={dealtSelection}>
-				{children}
+				<GroundPlaceContext.Provider value={place}>
+					{children}
+				</GroundPlaceContext.Provider>
 			</DealtSelectionContext.Provider>
 		</WorkspaceInteractionContext.Provider>
 	);
+}
+
+/** Where the drawing Sheet sits; see `GroundPlace`. */
+export function useGroundPlace(): GroundPlace {
+	return useContext(GroundPlaceContext);
 }
 
 export function useWorkspaceInteraction(): WorkspaceInteraction {

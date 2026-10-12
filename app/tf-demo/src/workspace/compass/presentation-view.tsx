@@ -28,7 +28,7 @@ import { useHeadingEdgeSlide, useNoteBox } from "./use-note-box";
  */
 export type SheetActions<S> = Pick<
 	SubjectView<S>,
-	"deal" | "follow" | "liftOnDrag" | "reconcile"
+	"deal" | "follow" | "liftOnDrag" | "reconcile" | "line" | "walk"
 >;
 
 export function inertActions<S>(): SheetActions<S> {
@@ -37,6 +37,8 @@ export function inertActions<S>(): SheetActions<S> {
 		follow: () => {},
 		liftOnDrag: () => {},
 		reconcile: () => {},
+		line: null,
+		walk: () => {},
 	};
 }
 

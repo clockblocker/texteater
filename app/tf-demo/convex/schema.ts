@@ -82,11 +82,19 @@ export default defineSchema({
 	/**
 	 * A Section: a container, at any depth, of Sections and Scrolls (#1189).
 	 * Its Codex is the Sections and Scrolls placed in it, in order. Status
-	 * lives on its Scrolls.
+	 * lives on its Scrolls. Write Sections and place Scrolls through
+	 * `model/codex.ts`, which keeps `scrollCount` true.
 	 */
 	sections: defineTable({
 		title: v.string(),
 		placement: v.optional(codexPlacementValidator),
+		/**
+		 * The Scrolls anywhere under it. A Section is done for a Visitor once
+		 * that many are, so its status never walks the tree (#1192).
+		 */
+		scrollCount: v.number(),
+		/** The Submission it came from; `e2e:` marks a fixture the Library shelves apart. */
+		submissionKey: v.optional(v.string()),
 	}).index("by_placement", ["placement.sectionId", "placement.order"]),
 
 	scrolls: defineTable({
@@ -105,8 +113,14 @@ export default defineSchema({
 		placement: v.optional(codexPlacementValidator),
 	})
 		.index("by_submission_key", ["submissionKey"])
-		/** Visitor Scrolls are the range whose `origin.kind` is absent. */
-		.index("by_origin_kind", ["origin.kind"])
+		/**
+		 * Visitor Scrolls are the range whose `origin.kind` is absent, and
+		 * loose ones, the Library's, are those with no `placement` either.
+		 */
+		.index("by_origin_kind_and_placement", [
+			"origin.kind",
+			"placement.sectionId",
+		])
 		.index("by_placement", ["placement.sectionId", "placement.order"]),
 
 	/**
@@ -472,6 +486,29 @@ export default defineSchema({
 		"family",
 		"kind",
 	]),
+
+	/**
+	 * One Visitor's place in one Scroll (#1192): opened is in progress, and
+	 * done once marked or left by next. No row means not started.
+	 */
+	scrollProgress: defineTable({
+		visitorId: v.string(),
+		scrollId: v.id("scrolls"),
+		status: v.union(v.literal("InProgress"), v.literal("Done")),
+		/** The Sentence position the reader was at; reopening resumes there. */
+		position: v.number(),
+	}).index("by_visitor_id_and_scroll_id", ["visitorId", "scrollId"]),
+
+	/**
+	 * One Visitor's place in one Section, written when a Scroll under it is
+	 * opened: the last Scroll read there, and how many under it are done.
+	 */
+	sectionProgress: defineTable({
+		visitorId: v.string(),
+		sectionId: v.id("sections"),
+		lastScrollId: v.id("scrolls"),
+		doneScrolls: v.number(),
+	}).index("by_visitor_id_and_section_id", ["visitorId", "sectionId"]),
 
 	visitorEncounters: defineTable({
 		requestId: v.string(),

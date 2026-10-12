@@ -80,6 +80,8 @@ export const resetDemoTableNames = [
 	"dictionaryLemmas",
 	"surfaces",
 	"lemmas",
+	"scrollProgress",
+	"sectionProgress",
 	"segments",
 	"sentences",
 	"scrolls",
@@ -258,7 +260,9 @@ export const listScrollIds = internalQuery({
 	handler: async (ctx, { paginationOpts }) => {
 		const result = await ctx.db
 			.query("scrolls")
-			.withIndex("by_origin_kind", (q) => q.eq("origin.kind", undefined))
+			.withIndex("by_origin_kind_and_placement", (q) =>
+				q.eq("origin.kind", undefined),
+			)
 			.paginate(paginationOpts);
 		return { ...result, page: result.page.map((scroll) => scroll._id) };
 	},

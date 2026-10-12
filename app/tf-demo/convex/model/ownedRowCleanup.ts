@@ -223,6 +223,20 @@ export const VISITOR_CLEANUP_PHASES = [
 		"visitorId",
 		"by_visitor_id_and_encountered_at",
 	),
+	ownedRows(
+		"ScrollProgress",
+		"visitorId",
+		"scrollProgress",
+		"visitorId",
+		"by_visitor_id_and_scroll_id",
+	),
+	ownedRows(
+		"SectionProgress",
+		"visitorId",
+		"sectionProgress",
+		"visitorId",
+		"by_visitor_id_and_section_id",
+	),
 ] as const satisfies readonly CleanupPhase[];
 
 /** Visitor-owned tables whose rows leave with something other than the clear. */

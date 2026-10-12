@@ -6,7 +6,10 @@ import { BookOpenIcon } from "lucide-react";
 import {
 	type ComponentProps,
 	Fragment,
+	type ReactNode,
+	type Ref,
 	useEffect,
+	useMemo,
 	useRef,
 	useState,
 } from "react";
@@ -17,6 +20,7 @@ import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReaderSentence } from "@/views/reader-sentence";
+import { ScrollEnd, useScrollReading } from "@/views/scroll-reading";
 import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
 import type { ScrollSubjectTarget } from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
@@ -61,6 +65,22 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 
 	const scrollDetail = scrollQuery.data;
 	const sentences = scrollDetail?.sentences ?? [];
+	const reader = useRef<HTMLDivElement>(null);
+	const loadedSentences = scrollDetail?.sentences;
+	const positioned = useMemo(
+		() =>
+			loadedSentences?.map(({ sentenceId, position }) => ({
+				sentenceId,
+				position,
+			})) ?? null,
+		[loadedSentences],
+	);
+	useScrollReading({
+		scrollId: target.scrollId,
+		sentences: positioned,
+		article: reader,
+		focused: target.focusAttestationId !== undefined,
+	});
 	const error =
 		selection.error ??
 		segmentationError ??
@@ -135,6 +155,8 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 			showSegmentAction={needsSegmentation}
 			isSegmenting={segmentText.isPending}
 			onSegmentText={() => void handleSegmentText()}
+			readerRef={reader}
+			end={<ScrollEnd scrollId={scrollDetail.scrollId} />}
 		/>
 	);
 }
@@ -189,6 +211,8 @@ export function ScrollPresentation({
 	showSegmentAction = false,
 	isSegmenting = false,
 	onSegmentText,
+	readerRef,
+	end = null,
 }: {
 	readonly sentences: readonly SentenceView[];
 	readonly selectedSegmentKey: string | null;
@@ -203,9 +227,13 @@ export function ScrollPresentation({
 	readonly showSegmentAction?: boolean;
 	readonly isSegmenting?: boolean;
 	readonly onSegmentText?: () => void;
+	readonly readerRef?: Ref<HTMLDivElement>;
+	/** What follows the last Sentence, such as the way on to the next Scroll. */
+	readonly end?: ReactNode;
 }) {
 	return (
 		<div
+			ref={readerRef}
 			data-slot="text-reader"
 			className="w-full min-h-full flex-auto bg-paper text-ink motion-reduce:[&_*]:transition-none"
 		>
@@ -239,6 +267,7 @@ export function ScrollPresentation({
 						{error}
 					</ReaderStatus>
 				) : null}
+				{end}
 			</div>
 		</div>
 	);

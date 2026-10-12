@@ -1,7 +1,7 @@
 /**
- * tf-demo's workspace Subjects: a Scroll, with the occurrence Go to source
- * lands on and its title, or a Note with the Presentation context that
- * opened it. Their keys, and the guard Workspace Persistence reads them
+ * tf-demo's workspace Subjects: a Section showing its Codex, a Scroll, with
+ * the occurrence Go to source lands on and its title, or a Note with the
+ * Presentation context that opened it. Their keys, and the guard Workspace Persistence reads them
  * back through.
  */
 import { isRecord } from "common-utils";
@@ -13,6 +13,7 @@ import type {
 	LemmaNoteTarget,
 	ReadingNoteTarget,
 	ScrollTarget,
+	SectionTarget,
 	ShadowNoteTarget,
 	SurfaceNoteTarget,
 } from "../../shared/navigation";
@@ -37,7 +38,10 @@ type WorkspaceNoteTarget =
 	| ShadowNoteTarget
 	| ResolutionStepTarget;
 
-export type WorkspaceTarget = ScrollTarget | WorkspaceNoteTarget;
+export type WorkspaceTarget =
+	| SectionTarget
+	| ScrollTarget
+	| WorkspaceNoteTarget;
 
 type SurfaceNotePresentationContext = {
 	/** Selects one of the aggregate Surface Note's analyses for this Presentation. */
@@ -143,6 +147,7 @@ type ContextFreeNoteSubject = {
 export type ScrollSubjectTarget = ScrollTarget;
 
 export type WorkspaceSubject =
+	| { readonly kind: "Section"; readonly target: SectionTarget }
 	| { readonly kind: "Scroll"; readonly target: ScrollSubjectTarget }
 	| ContextualSurfaceNoteSubject
 	| ContextualAttestationNoteSubject
@@ -196,6 +201,7 @@ export function workspaceSubjectFor(
 	target: WorkspaceTarget,
 	presentationContext?: NotePresentationContext,
 ): WorkspaceSubject {
+	if (target.kind === "Section") return { kind: "Section", target };
 	if (target.kind === "Scroll") return { kind: "Scroll", target };
 	if (
 		target.kind === "Surface" &&
@@ -233,6 +239,8 @@ export function workspaceSubjectFor(
 export function workspaceSubjectKey(subject: WorkspaceSubject): string {
 	const { target } = subject;
 	switch (target.kind) {
+		case "Section":
+			return `Section:${target.sectionId}`;
 		case "Scroll":
 			return `Scroll:${target.scrollId}`;
 		case "Reading":
@@ -253,6 +261,13 @@ export function workspaceSubjectKey(subject: WorkspaceSubject): string {
 export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 	if (!isRecord(value) || !isRecord(value.target)) return false;
 	const target = value.target;
+	if (value.kind === "Section" && target.kind === "Section") {
+		return (
+			typeof target.sectionId === "string" &&
+			isOptionalString(target.title) &&
+			value.presentationContext === undefined
+		);
+	}
 	if (value.kind === "Scroll" && target.kind === "Scroll") {
 		return (
 			typeof target.scrollId === "string" &&

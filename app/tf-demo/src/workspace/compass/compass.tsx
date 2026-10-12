@@ -287,11 +287,15 @@ function CompassRuntime<S>({
 			reconcile: (cards) => commands.reconcile(presentationId, cards),
 		};
 	}
-	/** What a Sheet's Segments and Links do, bound to its Pane. */
+	/**
+	 * What a Sheet's Segments and Links do, bound to its Pane. `line` is a
+	 * Rooted Ground's, whose content may walk it.
+	 */
 	function actionsOf(
 		paneId: string,
 		sheetId: string,
 		presentationId: string,
+		line: readonly S[] | null = null,
 	): SheetActions<S> {
 		return {
 			deal: (selection, cards, from) =>
@@ -299,7 +303,17 @@ function CompassRuntime<S>({
 			follow: (subject) => commands.follow(paneId, subject),
 			liftOnDrag: (event, make) => drags.segmentDown(event, paneId, make),
 			reconcile: (cards) => commands.reconcile(presentationId, cards),
+			line,
+			walk: (keep, to) => commands.walk(paneId, keep, to),
 		};
+	}
+	/** A Rooted Ground's line: the Subjects of its Sheet rungs, bottom first. */
+	function lineOf(pane: PaneNode<S>): readonly S[] | null {
+		return isRooted(pane)
+			? pane.line.flatMap((rung) =>
+					rung.kind === "Sheet" ? [rung.presentation.subject] : [],
+				)
+			: null;
 	}
 	function handleIn(selector: string): HTMLElement | null {
 		return root.current?.querySelector<HTMLElement>(selector) ?? null;
@@ -701,7 +715,12 @@ function CompassRuntime<S>({
 						actions={
 							ghost
 								? inert
-								: actionsOf(pane.id, sheet.sheetId, card.id)
+								: actionsOf(
+										pane.id,
+										sheet.sheetId,
+										card.id,
+										sheet.ground ? lineOf(pane) : null,
+									)
 						}
 						onDown={
 							grabs

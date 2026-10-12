@@ -84,6 +84,13 @@ export function useWorkspaceCommands<S>({
 				to: { kind: "Sheet", subject },
 			});
 		},
+		/**
+		 * A Ground walks its line: a Codex pick is one rung more, and next
+		 * at a Scroll's end replaces the rungs it does not share.
+		 */
+		walk(paneId: string, keep: number, to: readonly S[]) {
+			dispatch({ type: "WalkLine", paneId, keep, to });
+		},
 		/** A Segment clicked in a Sheet deals a Deck that belongs to that Sheet. */
 		deal(
 			paneId: string,
