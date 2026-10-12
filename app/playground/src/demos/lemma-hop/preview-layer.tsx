@@ -9,11 +9,11 @@ import {
 	useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { cardLang, langAttrs, resolveWord } from "@/fixtures";
+import { cardLang, langAttrs } from "@/fixtures";
 import { useFrameSize, usePlaygroundEnv } from "@/shell";
 import { Inflections } from "./cards";
 import { PreviewController } from "./controller";
-import { inflectionsOf } from "./inflections";
+import { inflectionsOf, type Layout } from "./inflections";
 import {
 	obsidian,
 	type Preview,
@@ -21,6 +21,10 @@ import {
 	type PreviewHost,
 	placePreview,
 } from "./rules";
+import { lookUp } from "./words";
+
+/** How a preview shows its lemma's inflections, when it shows them. */
+type PreviewTable = { readonly layout: Layout; readonly marked: string };
 
 /**
  * hover-preview's preview layer, copied because demos don't import each
@@ -30,11 +34,11 @@ import {
  * corner; ⤢ calls `onExpand` with the host and the hovered path.
  */
 export function PreviewLayer({
-	withTable,
+	table,
 	onExpand,
 }: {
-	/** The preview shows the lemma's inflection table too. */
-	readonly withTable: boolean;
+	/** The preview shows the lemma's inflection table too, like this. */
+	readonly table: PreviewTable | null;
 	readonly onExpand: (host: PreviewHost, path: readonly string[]) => void;
 }) {
 	const { frame, dir } = usePlaygroundEnv();
@@ -71,7 +75,7 @@ export function PreviewLayer({
 				<PreviewCard
 					key={preview.id}
 					preview={preview}
-					withTable={withTable}
+					table={table}
 					onPin={(pinned) =>
 						controller.change(preview.id, {
 							pinned,
@@ -98,14 +102,14 @@ export function PreviewLayer({
 /** One preview: placed by its link, or where a drag left it. */
 function PreviewCard({
 	preview,
-	withTable,
+	table,
 	onPin,
 	onDrag,
 	onClose,
 	onExpand,
 }: {
 	readonly preview: Preview;
-	readonly withTable: boolean;
+	readonly table: PreviewTable | null;
 	readonly onPin: (pinned: boolean) => void;
 	readonly onDrag: (to: { start: number; top: number }) => void;
 	readonly onClose: () => void;
@@ -128,11 +132,11 @@ function PreviewCard({
 			: null;
 	const start = preview.dragged?.start ?? box?.start ?? 0;
 	const top = preview.dragged?.top ?? box?.top ?? 0;
-	const { cards } = resolveWord(preview.word);
+	const { cards } = lookUp(preview.word);
 	const lemma = cards.find((card) => card.kind === "Lemma");
 	const reading = cards.find((card) => card.kind === "Reading");
 	const lang = lemma ? cardLang(lemma) : "de";
-	const table = withTable && lemma ? inflectionsOf(lemma.title) : undefined;
+	const inflections = table && lemma ? inflectionsOf(lemma.title) : undefined;
 
 	const drag = useRef<{
 		x: number;
@@ -273,7 +277,14 @@ function PreviewCard({
 							<span {...langAttrs("en")}>{lemma.definition}</span>
 						</p>
 					) : null}
-					{table ? <Inflections table={table} compact /> : null}
+					{table && inflections ? (
+						<Inflections
+							table={inflections}
+							layout={table.layout}
+							marked={table.marked}
+							compact
+						/>
+					) : null}
 				</DensityScope>
 			</div>
 		</motion.section>

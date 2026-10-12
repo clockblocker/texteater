@@ -1,6 +1,6 @@
 import { cn, DensityScope, Ipa, NoteTitle, NoteTitleLink } from "lego";
 import { ArrowUp, Maximize2 } from "lucide-react";
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import {
 	type CardKind,
 	cardLang,
@@ -8,7 +8,15 @@ import {
 	langAttrs,
 	type RunLanguage,
 } from "@/fixtures";
-import type { InflectionTable } from "./inflections";
+import {
+	type Grid,
+	type InflectionTable,
+	type Layout,
+	labelRem,
+	layOut,
+	type ShownForm,
+	tableRem,
+} from "./inflections";
 
 const surface =
 	"rounded-xl border border-line bg-paper text-ink shadow-[0_8px_24px_-12px_oklch(0%_0_0/0.5)]";
@@ -197,94 +205,270 @@ export function OpenAsSheet({ onClick }: { readonly onClick: () => void }) {
 }
 
 /**
+ * The table's frame width, in rem, at which a grid's table fits; below it
+ * the grid reflows into a list. Literal classes, so Tailwind sees them.
+ */
+const reflowAt: readonly (readonly [number, string, string])[] = [
+	[14, "@min-[14rem]/inflections:table", "@min-[14rem]/inflections:hidden"],
+	[16, "@min-[16rem]/inflections:table", "@min-[16rem]/inflections:hidden"],
+	[18, "@min-[18rem]/inflections:table", "@min-[18rem]/inflections:hidden"],
+	[20, "@min-[20rem]/inflections:table", "@min-[20rem]/inflections:hidden"],
+	[22, "@min-[22rem]/inflections:table", "@min-[22rem]/inflections:hidden"],
+	[24, "@min-[24rem]/inflections:table", "@min-[24rem]/inflections:hidden"],
+	[26, "@min-[26rem]/inflections:table", "@min-[26rem]/inflections:hidden"],
+	[28, "@min-[28rem]/inflections:table", "@min-[28rem]/inflections:hidden"],
+	[30, "@min-[30rem]/inflections:table", "@min-[30rem]/inflections:hidden"],
+	[32, "@min-[32rem]/inflections:table", "@min-[32rem]/inflections:hidden"],
+	[34, "@min-[34rem]/inflections:table", "@min-[34rem]/inflections:hidden"],
+	[36, "@min-[36rem]/inflections:table", "@min-[36rem]/inflections:hidden"],
+	[40, "@min-[40rem]/inflections:table", "@min-[40rem]/inflections:hidden"],
+	[48, "@min-[48rem]/inflections:table", "@min-[48rem]/inflections:hidden"],
+];
+
+const kindLabel =
+	"font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-faint uppercase";
+
+/**
  * The lemma's inflections, as LinguaCafe's inflections tab shows them,
- * with the clicked form's cell marked. Content, not navigation: no cell is
- * a button.
+ * in one of three layouts when the lemma has two sets of forms, with
+ * every form equal to `marked` marked. Content, not navigation: no form
+ * is a button. Where the Card is too narrow for a table, each table
+ * reflows into a list, column by column, instead of scrolling sideways.
  */
 export function Inflections({
 	table,
+	layout,
+	marked,
 	compact = false,
 }: {
 	readonly table: InflectionTable;
+	readonly layout: Layout;
+	readonly marked: string;
 	readonly compact?: boolean;
 }) {
-	const [markedRow, markedCell] = table.marked;
+	const { grids, also } = layOut(table, layout, marked);
 	return (
-		<section className="grid gap-1.5 border-t border-line pt-3">
-			<span
-				{...langAttrs("en")}
-				className="font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-faint uppercase"
-			>
+		<section className="@container/inflections grid gap-1.5 border-t border-line pt-3">
+			<span {...langAttrs("en")} className={kindLabel}>
 				Inflections
 			</span>
-			<div className="overflow-x-auto">
-				<table
-					{...langAttrs(table.lang)}
-					className={cn(
-						"w-full border-collapse text-start",
-						compact ? "text-xs" : "text-sm",
-					)}
-				>
-					<thead>
-						<tr>
-							{table.columns.map((column, index) => (
-								<th
-									key={`${index}:${column}`}
-									scope="col"
-									className="px-1.5 py-1 text-start text-xs font-normal text-ink-faint"
-								>
-									{column}
-								</th>
-							))}
-						</tr>
-					</thead>
-					<tbody>
-						{table.rows.map((row, rowIndex) => (
-							<tr
-								key={row.label}
-								className="border-t border-line"
-							>
-								<th
-									scope="row"
-									className="px-1.5 py-1 text-start text-xs font-normal whitespace-nowrap text-ink-muted"
-								>
-									{row.label}
-								</th>
-								{row.cells.map((cell, cellIndex) => {
-									const marked =
-										rowIndex === markedRow &&
-										cellIndex === markedCell;
-									return (
-										<td
-											key={`${cellIndex}:${cell}`}
-											className="px-0.5 py-0.5 whitespace-nowrap"
-										>
-											<span
-												aria-current={
-													marked ? "true" : undefined
-												}
-												className={cn(
-													"rounded-md px-1 py-0.5",
-													marked
-														? "bg-link/15 font-medium text-link ring-1 ring-link/60"
-														: "text-ink-soft",
-												)}
-											>
-												{cell}
-											</span>
-										</td>
-									);
-								})}
-							</tr>
-						))}
-					</tbody>
-				</table>
-			</div>
-			{table.note ? (
-				<p {...langAttrs("en")} className="text-xs text-ink-muted">
-					{table.note}
+			{grids.map((grid, index) => (
+				<GridView
+					key={grid.heading ?? index}
+					grid={grid}
+					lang={table.lang}
+					compact={compact}
+				/>
+			))}
+			{also.length > 0 ? (
+				<p className="text-xs text-ink-muted">
+					<span {...langAttrs("en")}>Also: </span>
+					{also.map((group, index) => (
+						<Fragment key={group.rarity ?? "usual"}>
+							{index > 0 ? " · " : null}
+							<span {...langAttrs(table.lang)}>
+								{group.forms.map((shown, formIndex) => (
+									<Fragment key={shown.form}>
+										{formIndex > 0 ? ", " : null}
+										<FormText shown={shown} tight />
+									</Fragment>
+								))}
+							</span>
+							{group.rarity === "older" ? (
+								<span {...langAttrs("en")}> (older)</span>
+							) : null}
+						</Fragment>
+					))}
 				</p>
 			) : null}
 		</section>
+	);
+}
+
+/**
+ * One grid: a table where it fits, a list where it doesn't. The label
+ * column has the same width in both and in every grid of one lemma, so
+ * stacked tables line up.
+ */
+function GridView({
+	grid,
+	lang,
+	compact,
+}: {
+	readonly grid: Grid;
+	readonly lang: InflectionTable["lang"];
+	readonly compact: boolean;
+}) {
+	const needed = tableRem(grid, compact);
+	const [, showTable, hideList] =
+		reflowAt.find(([rem]) => rem >= needed) ?? reflowAt.at(-1) ?? [];
+	const text = compact ? "text-xs" : "text-sm";
+	const labels = `${labelRem(grid)}rem`;
+	const label = "px-1.5 py-1 text-start text-xs font-normal text-ink-muted";
+	const lines = grid.lines.map((line) => (
+		<tr key={line.label} className="border-t border-line">
+			<th scope="row" className={label}>
+				{line.label}
+			</th>
+			<td colSpan={grid.columns.length - 1} className="px-0.5 py-0.5">
+				<Forms cell={line.cell} />
+			</td>
+		</tr>
+	));
+	return (
+		<div className={cn("grid gap-1", grid.heading && "mt-1")}>
+			{grid.heading ? (
+				<h4 {...langAttrs("en")} className="text-xs text-ink-muted">
+					{grid.heading}
+				</h4>
+			) : null}
+			<table
+				{...langAttrs(lang)}
+				className={cn(
+					"hidden w-full table-fixed border-collapse text-start",
+					text,
+					showTable,
+				)}
+			>
+				<colgroup>
+					<col style={{ width: labels }} />
+				</colgroup>
+				<thead>
+					<tr>
+						{grid.columns.map((column, index) => (
+							<th
+								key={`${index}:${column}`}
+								scope="col"
+								className="px-1.5 py-1 text-start text-xs font-normal text-ink-faint"
+							>
+								{column}
+							</th>
+						))}
+					</tr>
+				</thead>
+				<tbody>
+					{grid.rows.map((row) => (
+						<tr key={row.label} className="border-t border-line">
+							<th scope="row" className={label}>
+								{row.label}
+							</th>
+							{row.cells.map((cell, index) => (
+								<td
+									key={`${index}:${row.label}`}
+									className="px-0.5 py-0.5"
+								>
+									<Forms cell={cell} />
+								</td>
+							))}
+						</tr>
+					))}
+					{lines}
+				</tbody>
+			</table>
+			<div
+				{...langAttrs(lang)}
+				className={cn("grid gap-2", text, hideList)}
+			>
+				{grid.columns.slice(1).map((column, index) => (
+					<ListBlock
+						key={`${index}:${column}`}
+						heading={column}
+						labels={labels}
+						rows={grid.rows.map((row) => ({
+							label: row.label,
+							cell: row.cells[index] ?? [],
+						}))}
+					/>
+				))}
+				{grid.lines.length > 0 ? (
+					<ListBlock labels={labels} rows={grid.lines} />
+				) : null}
+			</div>
+		</div>
+	);
+}
+
+/** One column of a reflowed grid: its heading, then `label → forms`. */
+function ListBlock({
+	heading,
+	labels,
+	rows,
+}: {
+	readonly heading?: string;
+	readonly labels: string;
+	readonly rows: readonly {
+		readonly label: string;
+		readonly cell: readonly ShownForm[];
+	}[];
+}) {
+	return (
+		<div className="grid gap-0.5">
+			{heading ? (
+				<span className="px-1.5 text-xs text-ink-faint">{heading}</span>
+			) : null}
+			<dl
+				className="grid items-baseline border-t border-line pt-0.5"
+				style={{ gridTemplateColumns: `${labels} 1fr` }}
+			>
+				{rows.map((row) => (
+					<Fragment key={row.label}>
+						<dt className="px-1.5 py-0.5 text-xs text-ink-muted">
+							{row.label}
+						</dt>
+						<dd className="px-0.5 py-0.5">
+							<Forms cell={row.cell} />
+						</dd>
+					</Fragment>
+				))}
+			</dl>
+		</div>
+	);
+}
+
+/** A cell's forms, usual first: `melkte · molk older`. */
+function Forms({ cell }: { readonly cell: readonly ShownForm[] }) {
+	return cell.map((shown, index) => (
+		<Fragment key={shown.form}>
+			{index > 0 ? <span className="text-ink-faint"> · </span> : null}
+			<span className="whitespace-nowrap">
+				<FormText shown={shown} />
+				{shown.rarity ? (
+					<span
+						{...langAttrs("en")}
+						className="ms-1 text-[0.65rem] text-ink-faint italic"
+					>
+						{shown.rarity}
+					</span>
+				) : null}
+			</span>
+		</Fragment>
+	));
+}
+
+/**
+ * One form, set off in the link colour where it is the clicked one. In a
+ * cell every form keeps the mark's padding, so marked and unmarked forms
+ * line up; `tight`, in running text, only the marked one has it.
+ */
+function FormText({
+	shown,
+	tight = false,
+}: {
+	readonly shown: ShownForm;
+	readonly tight?: boolean;
+}) {
+	return (
+		<span
+			aria-current={shown.marked ? "true" : undefined}
+			className={cn(
+				"rounded-md py-0.5",
+				tight && !shown.marked ? "px-0" : "px-1",
+				shown.marked
+					? "bg-link/15 font-medium text-link ring-1 ring-link/60"
+					: "text-ink-soft",
+			)}
+		>
+			{shown.form}
+		</span>
 	);
 }

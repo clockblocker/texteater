@@ -7,6 +7,7 @@ import {
 	useCallback,
 	useEffect,
 	useLayoutEffect,
+	useMemo,
 	useRef,
 	useState,
 } from "react";
@@ -38,13 +39,14 @@ import {
 	ParentTag,
 } from "./cards";
 import { SteppedDeck, StoryDeck } from "./deck";
-import { inflectionsOf } from "./inflections";
+import { inflectionsOf, type Layout, markedFormOf } from "./inflections";
 import { type Box, type Placement, placeBeside, type Scene } from "./placement";
 import { PreviewLayer } from "./preview-layer";
 import type { PreviewHost } from "./rules";
 import { type Cover, type CoverStack, Sheet } from "./sheet";
+import { lookUp, paradigmText } from "./words";
 
-const texts = [germanText, hebrewText];
+const texts = [germanText, paradigmText, hebrewText];
 const allWords = texts.flatMap(wordsOf);
 
 /** The Deck's preferred width, as tf-demo's Deck roughly has it. */
@@ -69,6 +71,22 @@ type Variant = {
 };
 
 const variants: readonly Variant[] = [
+	{
+		id: "combined",
+		label: "b+d+e · Combined",
+		deck: "tails",
+		tag: false,
+		table: true,
+		previews: true,
+		about: (
+			<p>
+				The likely final mix: tails bring Cards forward (b), the Lemma
+				Card carries its inflection table (d), and ⌘-hover on a lemma
+				link previews the Lemma, table included, with ⤢ to a Cover (e).
+				A plain click on the link brings the Lemma Card forward.
+			</p>
+		),
+	},
 	{
 		id: "tag",
 		label: "a · Parent tag → Sheet",
@@ -129,7 +147,8 @@ const variants: readonly Variant[] = [
 			<p>
 				LinguaCafe's inflections, as content: the Lemma Card carries its
 				inflection table with the clicked form marked. No cell is a
-				link. The Lemma is reached as in (b), by its tail.
+				link. The Lemma is reached as in (b), by its tail. Where the
+				Card is too narrow for the table, it reflows into a list.
 			</p>
 		),
 	},
@@ -149,23 +168,61 @@ const variants: readonly Variant[] = [
 			</p>
 		),
 	},
+];
+
+const layouts: readonly {
+	readonly id: Layout;
+	readonly label: string;
+	readonly about: ReactNode;
+}[] = [
 	{
-		id: "combined",
-		label: "b+d+e · Combined",
-		deck: "tails",
-		tag: false,
-		table: true,
-		previews: true,
+		id: "merged",
+		label: "merged",
 		about: (
 			<p>
-				The likely final mix: tails bring Cards forward (b), the Lemma
-				Card carries its inflection table (d), and ⌘-hover on a lemma
-				link previews the Lemma, table included, with ⤢ to a Cover (e).
-				A plain click on the link brings the Lemma Card forward.
+				One table. A cell holds both sets' forms, the usual one first:{" "}
+				<i>melkte · molk</i>, the rarer one with a quiet <i>older</i> or{" "}
+				<i>also</i>. The clicked form is marked in every cell it fills.
+			</p>
+		),
+	},
+	{
+		id: "stacked",
+		label: "stacked",
+		about: (
+			<p>
+				One full table per set of forms, each under a small heading
+				(Current, Older), the set holding the clicked form first.
+			</p>
+		),
+	},
+	{
+		id: "footnote",
+		label: "footnote",
+		about: (
+			<p>
+				The usual set as the table, and one line under it for the rest:{" "}
+				<i>
+					Also: milkst, milkt, molk, molkst, molken, molkt (older) ·
+					gemelkt
+				</i>
+				.
 			</p>
 		),
 	},
 ];
+
+/** The words the case picker clicks, by the sentence they stand in. */
+const cases: readonly { readonly word: string; readonly about: string }[] = [
+	{ word: "ging", about: "one set of forms" },
+	{ word: "molken", about: "melken: the clicked form is the older" },
+	{ word: "buk", about: "backen: the clicked form is the older" },
+	{ word: "Kommata", about: "Komma: the clicked plural is the rarer" },
+];
+const caseWords = cases.flatMap(({ word, about }) => {
+	const found = allWords.find((candidate) => candidate.text === word);
+	return found ? [{ id: found.id, word, about }] : [];
+});
 
 type Measured = Omit<Scene, "stack">;
 
@@ -180,6 +237,10 @@ export default function LemmaHopDemo() {
 	const env = usePlaygroundEnv();
 	const [variantParam, setVariantParam] = useDemoParam("variant");
 	const [wordId, setWordId] = useDemoParam("word");
+	const [layoutParam, setLayoutParam] = useDemoParam("paradigms");
+	const layout =
+		layouts.find((candidate) => candidate.id === layoutParam) ?? layouts[0];
+	if (!layout) throw new Error("lemma-hop: no layouts");
 	const variant =
 		variants.find((candidate) => candidate.id === variantParam) ??
 		variants[0];
@@ -193,14 +254,19 @@ export default function LemmaHopDemo() {
 	const [sheet, setSheet] = useState<CoverStack | null>(null);
 	const nextKey = useRef(0);
 
+	// The fixtures deal the timing; `lookUp` adds this demo's own Cards.
 	const dealt = useFakeResolution(word, dealDelaysMs);
+	const resolution = useMemo(() => (word ? lookUp(word) : null), [word]);
+	const allCards = resolution?.cards ?? [];
+	const marked = markedFormOf(resolution?.word ?? "");
 	const inDeck = (kind: CardKind) =>
 		variant.deck !== "story" || formKinds.includes(kind);
-	const cards = dealt.cards.filter((card) => inDeck(card.kind));
+	const cards = allCards
+		.slice(0, dealt.cards.length)
+		.filter((card) => inDeck(card.kind));
 	const pending = dealt.pending.filter(inDeck);
 	const frontKind =
 		cards.find((card) => card.kind === front)?.kind ?? cards.at(-1)?.kind;
-	const allCards = dealt.resolution?.cards ?? [];
 	const cardOf = (kind: CardKind) =>
 		allCards.find((card) => card.kind === kind);
 
@@ -279,7 +345,15 @@ export default function LemmaHopDemo() {
 						/>
 					) : null
 				}
-				extra={table ? <Inflections table={table} /> : null}
+				extra={
+					table ? (
+						<Inflections
+							table={table}
+							layout={layout.id}
+							marked={marked}
+						/>
+					) : null
+				}
 				action={
 					where === "deck" ? (
 						<OpenAsSheet
@@ -463,12 +537,48 @@ export default function LemmaHopDemo() {
 					/>
 					<InspectorTry>{variant.about}</InspectorTry>
 				</InspectorSection>
+				{variant.table ? (
+					<InspectorSection title="Two sets of forms">
+						<InspectorChoice
+							label="Paradigm layout"
+							options={layouts.map((candidate) => ({
+								value: candidate.id,
+								label: candidate.label,
+							}))}
+							value={layout.id}
+							onChange={(id) =>
+								setLayoutParam(
+									id === layouts[0]?.id ? null : id,
+								)
+							}
+						/>
+						<InspectorTry>{layout.about}</InspectorTry>
+						<InspectorChoice
+							label="Case: open the Lemma Card for"
+							options={caseWords.map((each) => ({
+								value: each.id,
+								label: each.word,
+								hint: each.about,
+							}))}
+							value={wordId ?? ""}
+							onChange={(id) => {
+								openWord(id);
+								setFront("Lemma");
+							}}
+						/>
+					</InspectorSection>
+				) : null}
 				<InspectorSection title="Try">
 					<InspectorTry>
 						<p>
 							Click <i>ging</i>, <i>detaillierte</i> or <i>zum</i>
 							, get to the lemma, then back to the form. Compare
 							at 390 and 1440.
+						</p>
+						<p>
+							In the second text, <i>molken</i>, <i>buk</i> and{" "}
+							<i>Kommata</i> are the rarer of two forms; their
+							Lemma Card shows both sets.
 						</p>
 						<p>
 							⤢ on the front Card opens it as a Sheet. Esc is Back
@@ -556,7 +666,10 @@ export default function LemmaHopDemo() {
 			</div>
 
 			{variant.previews ? (
-				<PreviewLayer withTable={variant.table} onExpand={onExpand} />
+				<PreviewLayer
+					table={variant.table ? { layout: layout.id, marked } : null}
+					onExpand={onExpand}
+				/>
 			) : null}
 		</div>
 	);
