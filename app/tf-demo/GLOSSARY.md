@@ -284,6 +284,15 @@ _Avoid_: Block
 A break inside a Paragraph that Intake keeps because it carries meaning, as
 in verse, lyrics and letters.
 
+**Folio**:
+A size-cut slice of a Scroll: a run of whole Paragraphs, about 3,000
+characters, never splitting a Paragraph. Intake processes a Scroll Folio by
+Folio ahead of the reader, the first Folio first, then the ones at the
+Learner's reading position. A size-cut Scroll from a book without chapters is
+still a Scroll, cut further into Folios. A domain term only: Learner-facing
+copy never shows the word "folio".
+_Avoid_: Page (a physical page, see Page Image), Leaf, chunk, batch
+
 **Sentence**:
 The unit of reading and of language detection. A Segment is located by its
 Sentence and its index there. See [Dumgen ADR 0004].
