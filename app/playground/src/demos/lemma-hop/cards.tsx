@@ -10,9 +10,9 @@ import {
 } from "@/fixtures";
 import {
 	type Grid,
+	gridOf,
 	type InflectionTable,
-	labelRem,
-	mergedGrid,
+	type ShownCell,
 	type ShownForm,
 	tableRem,
 } from "./inflections";
@@ -23,21 +23,18 @@ const surface =
 /**
  * One full Card, as the fixtures' `CardView` draws it, with room for what a
  * variant adds: `tag` beside the caption, `lemma` where the Card's
- * `lemma →` link goes, `extra` under its text (the inflection table) and
- * `action` in its top inline-end corner (open as Sheet).
+ * `lemma →` link goes and `action` in its top inline-end corner (open as Sheet).
  */
 export function FullCard({
 	card,
 	tag,
 	lemma,
-	extra,
 	action,
 	className,
 }: {
 	readonly card: FakeCard;
 	readonly tag?: ReactNode;
 	readonly lemma?: ReactNode;
-	readonly extra?: ReactNode;
 	readonly action?: ReactNode;
 	readonly className?: string;
 }) {
@@ -83,7 +80,6 @@ export function FullCard({
 			<p>
 				<span {...langAttrs("en")}>{card.definition}</span>
 			</p>
-			{extra}
 			{card.quote ? (
 				<blockquote className="border-s-[3px] border-line ps-3 text-ink-soft">
 					<span {...langAttrs(lang)}>
@@ -204,35 +200,106 @@ export function OpenAsSheet({ onClick }: { readonly onClick: () => void }) {
 }
 
 /**
- * The table's frame width, in rem, at which a grid's table fits; below it
+ * The Lemma Card where it carries its inflections: the headword, one
+ * quiet line with its word class, its gloss, the table and the quote.
+ * The tails above already say what kind of Card it is, so it needs no
+ * label; order, size and spacing set its tiers, not rules.
+ */
+export function LemmaCard({
+	card,
+	table,
+	marked,
+	action,
+}: {
+	readonly card: FakeCard;
+	readonly table: InflectionTable;
+	readonly marked: string;
+	readonly action?: ReactNode;
+}) {
+	const lang = cardLang(card);
+	return (
+		<DensityScope
+			density="compact"
+			data-card-id={card.id}
+			className={cn(surface, "relative grid gap-4 p-4 text-sm")}
+		>
+			{action ? (
+				<div className="absolute end-1.5 top-1.5">{action}</div>
+			) : null}
+			<header className={cn("grid gap-0.5", action && "pe-6")}>
+				<div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+					<span aria-hidden="true" className="text-xl">
+						{card.emoji}
+					</span>
+					<NoteTitle {...langAttrs(lang)} className="text-lg">
+						{card.title}
+					</NoteTitle>
+					<Ipa
+						lang={`${lang}-fonipa`}
+						dir="ltr"
+						transcription={card.ipa}
+					/>
+				</div>
+				<p className="text-xs text-ink-muted">
+					<span {...langAttrs("en")}>{table.wordClass}</span>
+				</p>
+				<p className="mt-1.5 text-ink-soft">
+					<span {...langAttrs("en")}>{table.gloss}</span>
+				</p>
+			</header>
+			<Inflections table={table} marked={marked} />
+			{card.quote ? (
+				<blockquote className="border-s-[3px] border-line ps-3 text-ink-soft">
+					<span {...langAttrs(lang)}>
+						<MarkedQuote
+							quote={card.quote}
+							marks={card.quoteMarks}
+						/>
+					</span>
+				</blockquote>
+			) : null}
+		</DensityScope>
+	);
+}
+
+/**
+ * The container width, in rem, from which a grid's table fits; below it
  * the grid reflows into a list. Literal classes, so Tailwind sees them.
  */
 const reflowAt: readonly (readonly [number, string, string])[] = [
 	[14, "@min-[14rem]/inflections:table", "@min-[14rem]/inflections:hidden"],
+	[15, "@min-[15rem]/inflections:table", "@min-[15rem]/inflections:hidden"],
 	[16, "@min-[16rem]/inflections:table", "@min-[16rem]/inflections:hidden"],
+	[17, "@min-[17rem]/inflections:table", "@min-[17rem]/inflections:hidden"],
 	[18, "@min-[18rem]/inflections:table", "@min-[18rem]/inflections:hidden"],
+	[19, "@min-[19rem]/inflections:table", "@min-[19rem]/inflections:hidden"],
 	[20, "@min-[20rem]/inflections:table", "@min-[20rem]/inflections:hidden"],
+	[21, "@min-[21rem]/inflections:table", "@min-[21rem]/inflections:hidden"],
 	[22, "@min-[22rem]/inflections:table", "@min-[22rem]/inflections:hidden"],
+	[23, "@min-[23rem]/inflections:table", "@min-[23rem]/inflections:hidden"],
 	[24, "@min-[24rem]/inflections:table", "@min-[24rem]/inflections:hidden"],
+	[25, "@min-[25rem]/inflections:table", "@min-[25rem]/inflections:hidden"],
 	[26, "@min-[26rem]/inflections:table", "@min-[26rem]/inflections:hidden"],
+	[27, "@min-[27rem]/inflections:table", "@min-[27rem]/inflections:hidden"],
 	[28, "@min-[28rem]/inflections:table", "@min-[28rem]/inflections:hidden"],
+	[29, "@min-[29rem]/inflections:table", "@min-[29rem]/inflections:hidden"],
 	[30, "@min-[30rem]/inflections:table", "@min-[30rem]/inflections:hidden"],
+	[31, "@min-[31rem]/inflections:table", "@min-[31rem]/inflections:hidden"],
 	[32, "@min-[32rem]/inflections:table", "@min-[32rem]/inflections:hidden"],
-	[34, "@min-[34rem]/inflections:table", "@min-[34rem]/inflections:hidden"],
 	[36, "@min-[36rem]/inflections:table", "@min-[36rem]/inflections:hidden"],
 	[40, "@min-[40rem]/inflections:table", "@min-[40rem]/inflections:hidden"],
 	[48, "@min-[48rem]/inflections:table", "@min-[48rem]/inflections:hidden"],
 ];
 
-const kindLabel =
-	"font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-faint uppercase";
+const small = "text-xs font-normal text-ink-muted";
 
 /**
  * The lemma's inflections, as LinguaCafe's inflections tab shows them,
- * with every form equal to `marked` marked. A lemma with two sets of forms
- * shows them merged: `melkte · molk older`. Content, not navigation: no
- * form is a button. Where the Card is too narrow for the table, it reflows
- * into a list, column by column, instead of scrolling sideways.
+ * with every form equal to `marked` marked as the reader marks the
+ * clicked word. Content, not navigation: no form is a button. No rules:
+ * a muted header row and the rows' spacing carry the grid. Where the
+ * container is too narrow for the table, it reflows into a list, column
+ * by column, instead of scrolling sideways.
  */
 export function Inflections({
 	table,
@@ -243,190 +310,214 @@ export function Inflections({
 	readonly marked: string;
 	readonly compact?: boolean;
 }) {
-	return (
-		<section className="@container/inflections grid gap-1.5 border-t border-line pt-3">
-			<span {...langAttrs("en")} className={kindLabel}>
-				Inflections
-			</span>
-			<GridView
-				grid={mergedGrid(table, marked)}
-				lang={table.lang}
-				compact={compact}
-			/>
-		</section>
-	);
-}
-
-/**
- * The grid as a table where it fits, as a list where it doesn't, with the
- * label column the same width in both.
- */
-function GridView({
-	grid,
-	lang,
-	compact,
-}: {
-	readonly grid: Grid;
-	readonly lang: InflectionTable["lang"];
-	readonly compact: boolean;
-}) {
-	const needed = tableRem(grid, compact);
+	const grid = gridOf(table, marked);
 	const [, showTable, hideList] =
-		reflowAt.find(([rem]) => rem >= needed) ?? reflowAt.at(-1) ?? [];
+		reflowAt.find(([rem]) => rem >= tableRem(grid, compact)) ??
+		reflowAt.at(-1) ??
+		[];
 	const text = compact ? "text-xs" : "text-sm";
-	const labels = `${labelRem(grid)}rem`;
-	const label = "px-1.5 py-1 text-start text-xs font-normal text-ink-muted";
-	const lines = grid.lines.map((line) => (
-		<tr key={line.label} className="border-t border-line">
-			<th scope="row" className={label}>
-				{line.label}
-			</th>
-			<td colSpan={grid.columns.length - 1} className="px-0.5 py-0.5">
-				<Forms cell={line.cell} />
-			</td>
-		</tr>
-	));
+	const cellClass = "pe-4 py-1 align-baseline last:pe-0";
 	return (
-		<div className="grid gap-1">
+		<div {...langAttrs(table.lang)} className="@container/inflections">
 			<table
-				{...langAttrs(lang)}
 				className={cn(
-					"hidden w-full table-fixed border-collapse text-start",
+					"hidden border-collapse text-start tabular-nums",
 					text,
 					showTable,
 				)}
 			>
-				<colgroup>
-					<col style={{ width: labels }} />
-				</colgroup>
 				<thead>
 					<tr>
+						<td className={cellClass} />
 						{grid.columns.map((column, index) => (
 							<th
-								key={`${index}:${column}`}
+								key={`${index}:${column.heading}`}
 								scope="col"
-								className="px-1.5 py-1 text-start text-xs font-normal text-ink-faint"
+								className={cn(
+									small,
+									cellClass,
+									"pt-0 pb-1.5 text-start",
+								)}
 							>
-								{column}
+								<Heading column={column} />
 							</th>
 						))}
 					</tr>
 				</thead>
 				<tbody>
 					{grid.rows.map((row) => (
-						<tr key={row.label} className="border-t border-line">
-							<th scope="row" className={label}>
+						<tr key={row.label}>
+							<th
+								scope="row"
+								className={cn(
+									small,
+									cellClass,
+									"text-start whitespace-nowrap",
+								)}
+							>
 								{row.label}
 							</th>
 							{row.cells.map((cell, index) => (
 								<td
 									key={`${index}:${row.label}`}
-									className="px-0.5 py-0.5"
+									className={cn(
+										cellClass,
+										grid.columns[index]?.tag &&
+											"text-ink-soft",
+									)}
 								>
-									<Forms cell={cell} />
+									<CellView cell={cell} />
 								</td>
 							))}
 						</tr>
 					))}
-					{lines}
+					{grid.footers.map((footer) => (
+						<tr key={footer.label}>
+							<th
+								scope="row"
+								className={cn(
+									small,
+									cellClass,
+									"pt-3 text-start whitespace-nowrap",
+								)}
+							>
+								{footer.label}
+							</th>
+							<td
+								colSpan={grid.columns.length}
+								className={cn(cellClass, "pt-3")}
+							>
+								<FooterForms footer={footer} />
+							</td>
+						</tr>
+					))}
 				</tbody>
 			</table>
-			<div
-				{...langAttrs(lang)}
-				className={cn("grid gap-2", text, hideList)}
-			>
-				{grid.columns.slice(1).map((column, index) => (
-					<ListBlock
-						key={`${index}:${column}`}
-						heading={column}
-						labels={labels}
-						rows={grid.rows.map((row) => ({
-							label: row.label,
-							cell: row.cells[index] ?? [],
-						}))}
-					/>
+			<div className={cn("grid gap-3", text, hideList)}>
+				{grid.columns.map((column, index) => (
+					<div
+						key={`${index}:${column.heading}`}
+						className="grid gap-1"
+					>
+						<span className={small}>
+							<Heading column={column} />
+						</span>
+						<dl className="grid grid-cols-[auto_1fr] items-baseline gap-x-4 gap-y-1">
+							{grid.rows.map((row) => (
+								<Fragment key={row.label}>
+									<dt className={small}>{row.label}</dt>
+									<dd
+										className={cn(
+											column.tag && "text-ink-soft",
+										)}
+									>
+										{row.cells[index] ? (
+											<CellView cell={row.cells[index]} />
+										) : null}
+									</dd>
+								</Fragment>
+							))}
+						</dl>
+					</div>
 				))}
-				{grid.lines.length > 0 ? (
-					<ListBlock labels={labels} rows={grid.lines} />
+				{grid.footers.length > 0 ? (
+					<dl className="grid grid-cols-[auto_1fr] items-baseline gap-x-4 gap-y-1">
+						{grid.footers.map((footer) => (
+							<Fragment key={footer.label}>
+								<dt className={small}>{footer.label}</dt>
+								<dd>
+									<FooterForms footer={footer} />
+								</dd>
+							</Fragment>
+						))}
+					</dl>
 				) : null}
 			</div>
 		</div>
 	);
 }
 
-/** One column of a reflowed grid: its heading, then `label → forms`. */
-function ListBlock({
-	heading,
-	labels,
-	rows,
-}: {
-	readonly heading?: string;
-	readonly labels: string;
-	readonly rows: readonly {
-		readonly label: string;
-		readonly cell: readonly ShownForm[];
-	}[];
-}) {
+/** A column's heading, with the rarer series' tag once: `older`. */
+function Heading({ column }: { readonly column: Grid["columns"][number] }) {
 	return (
-		<div className="grid gap-0.5">
-			{heading ? (
-				<span className="px-1.5 text-xs text-ink-faint">{heading}</span>
+		<>
+			{column.heading}
+			{column.heading && column.tag ? " · " : null}
+			{column.tag ? (
+				<span {...langAttrs("en")} className="text-ink-faint italic">
+					{column.tag}
+				</span>
 			) : null}
-			<dl
-				className="grid items-baseline border-t border-line pt-0.5"
-				style={{ gridTemplateColumns: `${labels} 1fr` }}
-			>
-				{rows.map((row) => (
-					<Fragment key={row.label}>
-						<dt className="px-1.5 py-0.5 text-xs text-ink-muted">
-							{row.label}
-						</dt>
-						<dd className="px-0.5 py-0.5">
-							<Forms cell={row.cell} />
-						</dd>
-					</Fragment>
-				))}
-			</dl>
-		</div>
+		</>
 	);
 }
 
-/** A cell's forms, usual first: `melkte · molk older`. */
-function Forms({ cell }: { readonly cell: readonly ShownForm[] }) {
-	return cell.map((shown, index) => (
-		<Fragment key={shown.form}>
-			{index > 0 ? <span className="text-ink-faint"> · </span> : null}
-			<span className="whitespace-nowrap">
-				<FormText shown={shown} />
-				{shown.rarity ? (
-					<span
-						{...langAttrs("en")}
-						className="ms-1 text-[0.65rem] text-ink-faint italic"
-					>
-						{shown.rarity}
-					</span>
-				) : null}
-			</span>
-		</Fragment>
-	));
+/** A cell's usual form, and a rarer one as a quiet line under it. */
+function CellView({ cell }: { readonly cell: ShownCell }) {
+	return (
+		<>
+			<FormText shown={cell.usual} />
+			{cell.other ? (
+				<span className="block text-xs text-ink-muted">
+					<FormText shown={cell.other} />
+					<Tag rarity={cell.other.rarity} />
+				</span>
+			) : null}
+		</>
+	);
+}
+
+/** `hat gemolken · gemelkt also`, the auxiliary dim. */
+function FooterForms({ footer }: { readonly footer: Grid["footers"][number] }) {
+	return (
+		<>
+			{footer.aux ? (
+				<span className="text-ink-faint">{footer.aux} </span>
+			) : null}
+			{footer.forms.map((shown, index) => (
+				<Fragment key={shown.form}>
+					{index > 0 ? (
+						<span className="text-ink-faint"> · </span>
+					) : null}
+					<FormText shown={shown} />
+					<Tag rarity={shown.rarity} />
+				</Fragment>
+			))}
+		</>
+	);
+}
+
+function Tag({ rarity }: { readonly rarity?: string }) {
+	return rarity ? (
+		<span
+			{...langAttrs("en")}
+			className="ms-1 text-xs text-ink-faint italic"
+		>
+			{rarity}
+		</span>
+	) : null;
 }
 
 /**
- * One form, set off in the link colour where it is the clicked one. Every
- * form keeps the mark's padding, so marked and unmarked forms line up.
+ * One form, its article dim. The clicked one wears the reader's selected
+ * word: the link colour and a solid underline, no box, so its baseline
+ * stays put.
  */
 function FormText({ shown }: { readonly shown: ShownForm }) {
 	return (
-		<span
-			aria-current={shown.marked ? "true" : undefined}
-			className={cn(
-				"rounded-md px-1 py-0.5",
-				shown.marked
-					? "bg-link/15 font-medium text-link ring-1 ring-link/60"
-					: "text-ink-soft",
-			)}
-		>
-			{shown.form}
+		<span className="whitespace-nowrap">
+			{shown.article ? (
+				<span className="text-ink-faint">{shown.article} </span>
+			) : null}
+			<span
+				aria-current={shown.marked ? "true" : undefined}
+				className={cn(
+					shown.marked &&
+						"text-link underline decoration-[0.11em] underline-offset-[0.18em]",
+				)}
+			>
+				{shown.form}
+			</span>
 		</span>
 	);
 }

@@ -33,7 +33,7 @@ import {
 } from "@/shell";
 import {
 	FullCard,
-	Inflections,
+	LemmaCard,
 	LemmaLink,
 	OpenAsSheet,
 	ParentTag,
@@ -261,7 +261,9 @@ export default function LemmaHopDemo() {
 		host === "sheet" ? pushCover("lemma") : openCover("lemma");
 
 	/**
-	 * A Card in full, with what the variant adds. In the Deck a lemma link
+	 * A Card in full, with what the variant adds; where the variant has
+	 * the table, the Lemma Card is the one that carries it. In the Deck a
+	 * lemma link
 	 * brings the Lemma Card forward where the Deck holds it, and opens it
 	 * as a Cover where it doesn't; in a Sheet it pushes a Cover.
 	 */
@@ -278,6 +280,27 @@ export default function LemmaHopDemo() {
 			variant.table && card.kind === "Lemma"
 				? inflectionsOf(card.title)
 				: undefined;
+		const action =
+			where === "deck" ? (
+				<OpenAsSheet
+					onClick={() =>
+						openCover(
+							card.kind === "Lemma" || card.kind === "Reading"
+								? "lemma"
+								: "form",
+						)
+					}
+				/>
+			) : null;
+		if (table)
+			return (
+				<LemmaCard
+					card={card}
+					table={table}
+					marked={marked}
+					action={action}
+				/>
+			);
 		return (
 			<FullCard
 				card={card}
@@ -299,23 +322,7 @@ export default function LemmaHopDemo() {
 						/>
 					) : null
 				}
-				extra={
-					table ? <Inflections table={table} marked={marked} /> : null
-				}
-				action={
-					where === "deck" ? (
-						<OpenAsSheet
-							onClick={() =>
-								openCover(
-									card.kind === "Lemma" ||
-										card.kind === "Reading"
-										? "lemma"
-										: "form",
-								)
-							}
-						/>
-					) : null
-				}
+				action={action}
 			/>
 		);
 	};

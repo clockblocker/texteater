@@ -256,6 +256,11 @@ function PreviewCard({
 					density="compact"
 					className="grid gap-2 px-3 pt-1 pb-3 text-sm"
 				>
+					{table ? (
+						<p className="text-xs text-ink-muted">
+							<span {...langAttrs("en")}>{table.wordClass}</span>
+						</p>
+					) : null}
 					{reading ? (
 						<>
 							<p className="text-ink-soft">
@@ -270,13 +275,20 @@ function PreviewCard({
 							</p>
 						</>
 					) : null}
-					{lemma ? (
+					{/* The table says what the Lemma's summary would. */}
+					{lemma && !table ? (
 						<p className="text-ink-muted">
 							<span {...langAttrs("en")}>{lemma.definition}</span>
 						</p>
 					) : null}
 					{table && marked !== null ? (
-						<Inflections table={table} marked={marked} compact />
+						<div className="pt-1">
+							<Inflections
+								table={table}
+								marked={marked}
+								compact
+							/>
+						</div>
 					) : null}
 				</DensityScope>
 			</div>

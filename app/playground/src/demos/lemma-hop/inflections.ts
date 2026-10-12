@@ -1,319 +1,350 @@
 /**
  * Inflection tables for the authored lemmas, as LinguaCafe's inflections
- * tab shows them. The fixtures carry no paradigms, so they live here,
- * keyed by the lemma's title as the Lemma Card shows it.
+ * tab shows them, with the few facts the Lemma Card's header needs. The
+ * fixtures carry no paradigms, so they live here, keyed by the lemma's
+ * title as the Lemma Card shows it.
  *
- * A lemma can inflect with two sets of forms in one meaning: melken's
- * current melkte beside the older molk, Komma's Kommas beside Kommata.
- * Each set is authored whole, as if the lemma had no other, and
- * `mergedGrid` merges them into one table: a cell holds every set's
- * forms, the usual one first, the rarer ones marked older or also.
+ * A column is one series of forms: Präsens, Singular. A lemma with two
+ * series in one meaning, such as melken's current melkte beside the older
+ * molk or Komma's Kommas beside Kommata, gets a column for the rarer
+ * series, tagged once in its heading. A rarer form in a single cell
+ * (milkst beside melkst) is not a series; it stands under the usual one.
  */
 
-/** What sets a rarer form apart from the usual one in its cell. */
+/** What sets a rarer form apart from the usual one. */
 type Rarity = "older" | "also";
 
-/** One set of forms. A cell lists alternatives within it as `a · b`. */
-type FormSet = {
-	/** Row by row, one cell per column after the row heading. */
-	readonly rows: readonly (readonly string[])[];
-	/** One cell per line label. */
-	readonly lines?: readonly string[];
+/** A cell: its form, or the usual form and a rarer one under it. */
+type Cell = string | readonly [usual: string, other: string];
+
+type Column = {
+	readonly heading: string;
+	/** Marks the whole column as the rarer series. */
+	readonly tag?: Rarity;
+	/** Its forms take the article of the column before: `die` Kommata. */
+	readonly sharesArticle?: boolean;
+	/** One per row. */
+	readonly cells: readonly Cell[];
+};
+
+/** A row under the table for a form outside the grid, as Partizip II. */
+type Footer = {
+	readonly label: string;
+	/** The Perfekt's auxiliary: `hat`, `ist`. */
+	readonly aux?: string;
+	/** The usual form first. */
+	readonly forms: readonly string[];
 };
 
 export type InflectionTable = {
 	readonly lang: "de" | "he";
-	/** Column headings; the first column holds the row headings. */
-	readonly columns: readonly string[];
+	/** The header's quiet line: `noun · neuter`, `verb`. */
+	readonly wordClass: string;
+	/** The header's gloss, in English. */
+	readonly gloss: string;
 	readonly rowLabels: readonly string[];
-	/** Lines under the table, such as Partizip II. */
-	readonly lineLabels?: readonly string[];
-	/** The current set first. */
-	readonly sets: readonly FormSet[];
-	/** The forms rarer than their cell's usual one. */
+	readonly columns: readonly Column[];
+	readonly footers?: readonly Footer[];
+	/** A cell's or footer's rarer form, by form. */
 	readonly rare?: Readonly<Record<string, Rarity>>;
 };
 
-/** A form as a cell shows it. */
+/** A form as the table shows it, its article apart so it can go dim. */
 export type ShownForm = {
+	readonly article?: string;
 	readonly form: string;
 	readonly rarity?: Rarity;
 	readonly marked: boolean;
 };
 
-type ShownCell = readonly ShownForm[];
+export type ShownCell = {
+	readonly usual: ShownForm;
+	readonly other?: ShownForm;
+};
 
-/** The table to draw: every set merged. */
 export type Grid = {
-	readonly columns: readonly string[];
+	readonly columns: readonly {
+		/** Left out where it repeats the column before's: `older` alone. */
+		readonly heading?: string;
+		readonly tag?: Rarity;
+	}[];
 	readonly rows: readonly {
 		readonly label: string;
 		readonly cells: readonly ShownCell[];
 	}[];
-	readonly lines: readonly {
+	readonly footers: readonly {
 		readonly label: string;
-		readonly cell: ShownCell;
+		readonly aux?: string;
+		readonly forms: readonly ShownForm[];
 	}[];
 };
 
 const persons = ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"];
 const cases = ["Nom.", "Akk.", "Dat.", "Gen."];
 
-/** Rows from columns: `byRow([a1, a2], [b1, b2])` is `[[a1, b1], [a2, b2]]`. */
-function byRow(...columns: readonly (readonly string[])[]): string[][] {
-	const height = Math.max(...columns.map((column) => column.length));
-	return Array.from({ length: height }, (_, row) =>
-		columns.map((column) => column[row] ?? ""),
-	);
-}
-
-const older = (...forms: readonly string[]) =>
-	Object.fromEntries(forms.map((form) => [form, "older" as const]));
-const also = (...forms: readonly string[]) =>
-	Object.fromEntries(forms.map((form) => [form, "also" as const]));
-
 const tables: Readonly<Record<string, InflectionTable>> = {
 	gehen: {
 		lang: "de",
-		columns: ["", "Präsens", "Präteritum"],
+		wordClass: "verb",
+		gloss: "to go, to walk",
 		rowLabels: persons,
-		lineLabels: ["Partizip II"],
-		sets: [
+		columns: [
 			{
-				rows: byRow(
-					["gehe", "gehst", "geht", "gehen", "geht", "gehen"],
-					["ging", "gingst", "ging", "gingen", "gingt", "gingen"],
-				),
-				lines: ["gegangen"],
+				heading: "Präsens",
+				cells: ["gehe", "gehst", "geht", "gehen", "geht", "gehen"],
+			},
+			{
+				heading: "Präteritum",
+				cells: ["ging", "gingst", "ging", "gingen", "gingt", "gingen"],
 			},
 		],
+		footers: [{ label: "Partizip II", aux: "ist", forms: ["gegangen"] }],
 	},
 	anfangen: {
 		lang: "de",
-		columns: ["", "Präsens", "Präteritum"],
+		wordClass: "verb · separable",
+		gloss: "to begin, to start",
 		rowLabels: persons,
-		lineLabels: ["Partizip II"],
-		sets: [
+		columns: [
 			{
-				rows: byRow(
-					[
-						"fange an",
-						"fängst an",
-						"fängt an",
-						"fangen an",
-						"fangt an",
-						"fangen an",
-					],
-					[
-						"fing an",
-						"fingst an",
-						"fing an",
-						"fingen an",
-						"fingt an",
-						"fingen an",
-					],
-				),
-				lines: ["angefangen"],
+				heading: "Präsens",
+				cells: [
+					"fange an",
+					"fängst an",
+					"fängt an",
+					"fangen an",
+					"fangt an",
+					"fangen an",
+				],
+			},
+			{
+				heading: "Präteritum",
+				cells: [
+					"fing an",
+					"fingst an",
+					"fing an",
+					"fingen an",
+					"fingt an",
+					"fingen an",
+				],
 			},
 		],
+		footers: [{ label: "Partizip II", aux: "hat", forms: ["angefangen"] }],
 	},
 	// Duden: melkte, veraltend molk; hat gemolken, seltener gemelkt; the
-	// strong present milkst, milkt is veraltet. The current set keeps
-	// gemelkt as its rarer participle, since gemolken is today's usual one.
+	// strong present milkst, milkt is veraltet.
 	melken: {
 		lang: "de",
-		columns: ["", "Präsens", "Präteritum"],
+		wordClass: "verb",
+		gloss: "to milk",
 		rowLabels: persons,
-		lineLabels: ["Partizip II"],
-		sets: [
+		columns: [
 			{
-				rows: byRow(
-					["melke", "melkst", "melkt", "melken", "melkt", "melken"],
-					[
-						"melkte",
-						"melktest",
-						"melkte",
-						"melkten",
-						"melktet",
-						"melkten",
-					],
-				),
-				lines: ["gemolken · gemelkt"],
+				heading: "Präsens",
+				cells: [
+					"melke",
+					["melkst", "milkst"],
+					["melkt", "milkt"],
+					"melken",
+					"melkt",
+					"melken",
+				],
 			},
 			{
-				rows: byRow(
-					["melke", "milkst", "milkt", "melken", "melkt", "melken"],
-					["molk", "molkst", "molk", "molken", "molkt", "molken"],
-				),
-				lines: ["gemolken"],
+				heading: "Präteritum",
+				cells: [
+					"melkte",
+					"melktest",
+					"melkte",
+					"melkten",
+					"melktet",
+					"melkten",
+				],
+			},
+			{
+				heading: "Präteritum",
+				tag: "older",
+				cells: ["molk", "molkst", "molk", "molken", "molkt", "molken"],
 			},
 		],
-		rare: {
-			...older("milkst", "milkt", "molk", "molkst", "molken", "molkt"),
-			...also("gemelkt"),
-		},
+		footers: [
+			{
+				label: "Partizip II",
+				aux: "hat",
+				forms: ["gemolken", "gemelkt"],
+			},
+		],
+		rare: { milkst: "older", milkt: "older", gemelkt: "also" },
 	},
 	// Duden: backt or bäckt, both current; backte, veraltend buk.
 	backen: {
 		lang: "de",
-		columns: ["", "Präsens", "Präteritum"],
+		wordClass: "verb",
+		gloss: "to bake",
 		rowLabels: persons,
-		lineLabels: ["Partizip II"],
-		sets: [
+		columns: [
 			{
-				rows: byRow(
-					[
-						"backe",
-						"backst · bäckst",
-						"backt · bäckt",
-						"backen",
-						"backt",
-						"backen",
-					],
-					[
-						"backte",
-						"backtest",
-						"backte",
-						"backten",
-						"backtet",
-						"backten",
-					],
-				),
-				lines: ["gebacken"],
+				heading: "Präsens",
+				cells: [
+					"backe",
+					["backst", "bäckst"],
+					["backt", "bäckt"],
+					"backen",
+					"backt",
+					"backen",
+				],
 			},
 			{
-				rows: byRow(
-					["backe", "bäckst", "bäckt", "backen", "backt", "backen"],
-					["buk", "bukst", "buk", "buken", "bukt", "buken"],
-				),
-				lines: ["gebacken"],
+				heading: "Präteritum",
+				cells: [
+					"backte",
+					"backtest",
+					"backte",
+					"backten",
+					"backtet",
+					"backten",
+				],
+			},
+			{
+				heading: "Präteritum",
+				tag: "older",
+				cells: ["buk", "bukst", "buk", "buken", "bukt", "buken"],
 			},
 		],
-		rare: older("buk", "bukst", "buken", "bukt"),
+		footers: [{ label: "Partizip II", aux: "hat", forms: ["gebacken"] }],
 	},
 	detailliert: {
 		lang: "de",
-		columns: ["", "masc.", "fem.", "neut.", "pl."],
+		wordClass: "adjective",
+		gloss: "detailed",
 		rowLabels: cases,
-		sets: [
+		columns: [
 			{
-				rows: [
-					[
-						"detaillierter",
-						"detaillierte",
-						"detailliertes",
-						"detaillierte",
-					],
-					[
-						"detaillierten",
-						"detaillierte",
-						"detailliertes",
-						"detaillierte",
-					],
-					[
-						"detailliertem",
-						"detaillierter",
-						"detailliertem",
-						"detaillierten",
-					],
-					[
-						"detaillierten",
-						"detaillierter",
-						"detaillierten",
-						"detaillierter",
-					],
+				heading: "Masc.",
+				cells: [
+					"detaillierter",
+					"detaillierten",
+					"detailliertem",
+					"detaillierten",
+				],
+			},
+			{
+				heading: "Fem.",
+				cells: [
+					"detaillierte",
+					"detaillierte",
+					"detaillierter",
+					"detaillierter",
+				],
+			},
+			{
+				heading: "Neut.",
+				cells: [
+					"detailliertes",
+					"detailliertes",
+					"detailliertem",
+					"detaillierten",
+				],
+			},
+			{
+				heading: "Plural",
+				cells: [
+					"detaillierte",
+					"detaillierte",
+					"detaillierten",
+					"detaillierter",
 				],
 			},
 		],
 	},
 	zu: {
 		lang: "de",
-		columns: ["", "fused", "with"],
-		rowLabels: ["masc./neut. dat.", "fem. dat."],
-		sets: [
-			{
-				rows: [
-					["zum", "zu + dem"],
-					["zur", "zu + der"],
-				],
-			},
+		wordClass: "preposition · + dative",
+		gloss: "to, towards",
+		rowLabels: ["masc./neut.", "fem."],
+		columns: [
+			{ heading: "Fused", cells: ["zum", "zur"] },
+			{ heading: "Written out", cells: ["zu dem", "zu der"] },
 		],
 	},
 	"die Bank": {
 		lang: "de",
-		columns: ["", "singular", "plural"],
+		wordClass: "noun · feminine",
+		gloss: "bench",
 		rowLabels: cases,
-		sets: [
+		columns: [
 			{
-				rows: byRow(
-					["die Bank", "die Bank", "der Bank", "der Bank"],
-					["die Bänke", "die Bänke", "den Bänken", "der Bänke"],
-				),
+				heading: "Singular",
+				cells: ["die Bank", "die Bank", "der Bank", "der Bank"],
+			},
+			{
+				heading: "Plural",
+				cells: ["die Bänke", "die Bänke", "den Bänken", "der Bänke"],
 			},
 		],
 	},
 	// Duden: Plural die Kommas und die Kommata; Kommas is the everyday one.
 	"das Komma": {
 		lang: "de",
-		columns: ["", "singular", "plural"],
+		wordClass: "noun · neuter",
+		gloss: "comma",
 		rowLabels: cases,
-		sets: [
+		columns: [
 			{
-				rows: byRow(
-					["das Komma", "das Komma", "dem Komma", "des Kommas"],
-					["die Kommas", "die Kommas", "den Kommas", "der Kommas"],
-				),
+				heading: "Singular",
+				cells: ["das Komma", "das Komma", "dem Komma", "des Kommas"],
 			},
 			{
-				rows: byRow(
-					["das Komma", "das Komma", "dem Komma", "des Kommas"],
-					[
-						"die Kommata",
-						"die Kommata",
-						"den Kommata",
-						"der Kommata",
-					],
-				),
+				heading: "Plural",
+				cells: ["die Kommas", "die Kommas", "den Kommas", "der Kommas"],
+			},
+			{
+				heading: "Plural",
+				tag: "also",
+				sharesArticle: true,
+				cells: ["Kommata", "Kommata", "Kommata", "Kommata"],
 			},
 		],
-		rare: also("die Kommata", "den Kommata", "der Kommata"),
 	},
 	"der Bahnhof": {
 		lang: "de",
-		columns: ["", "singular", "plural"],
+		wordClass: "noun · masculine",
+		gloss: "train station",
 		rowLabels: cases,
-		sets: [
+		columns: [
 			{
-				rows: byRow(
-					[
-						"der Bahnhof",
-						"den Bahnhof",
-						"dem Bahnhof",
-						"des Bahnhofs",
-					],
-					[
-						"die Bahnhöfe",
-						"die Bahnhöfe",
-						"den Bahnhöfen",
-						"der Bahnhöfe",
-					],
-				),
+				heading: "Singular",
+				cells: [
+					"der Bahnhof",
+					"den Bahnhof",
+					"dem Bahnhof",
+					"des Bahnhofs",
+				],
+			},
+			{
+				heading: "Plural",
+				cells: [
+					"die Bahnhöfe",
+					"die Bahnhöfe",
+					"den Bahnhöfen",
+					"der Bahnhöfe",
+				],
 			},
 		],
 	},
 	ללכת: {
 		lang: "he",
-		columns: ["", "עבר", "הווה"],
+		wordClass: "verb · pa'al",
+		gloss: "to walk, to go",
 		rowLabels: ["אני", "אתה", "הוא", "היא", "הם"],
-		sets: [
+		columns: [
 			{
-				rows: [
-					["הלכתי", "הולך"],
-					["הלכת", "הולך"],
-					["הלך", "הולך"],
-					["הלכה", "הולכת"],
-					["הלכו", "הולכים"],
-				],
+				heading: "עבר",
+				cells: ["הלכתי", "הלכת", "הלך", "הלכה", "הלכו"],
+			},
+			{
+				heading: "הווה",
+				cells: ["הולך", "הולך", "הולך", "הולכת", "הולכים"],
 			},
 		],
 	},
@@ -339,95 +370,133 @@ export function markedFormOf(clicked: string): string {
 	return markedForms[clicked] ?? clicked;
 }
 
-/** Whether the clicked form is a rarer one beside its cell's usual form. */
-export function rarityOf(lemma: string, clicked: string): Rarity | undefined {
-	return tables[lemma]?.rare?.[markedFormOf(clicked)];
-}
+const articles = new Set(["der", "die", "das", "den", "dem", "des"]);
 
-const formsIn = (cell: string | undefined) => (cell ? cell.split(" · ") : []);
+/** `die Kommas` as its article and its word; a form without one whole. */
+function splitArticle(written: string): {
+	readonly article?: string;
+	readonly form: string;
+} {
+	const [first, ...rest] = written.split(" ");
+	return first && articles.has(first) && rest.length > 0
+		? { article: first, form: rest.join(" ") }
+		: { form: written };
+}
 
 /**
- * One cell's forms from `sets`, the usual ones first: unrated forms
- * before rare ones, then in the sets' order.
+ * The table to draw, with every form equal to `marked` marked wherever it
+ * stands. A form that shares its article is compared with it: Kommata
+ * after `die Kommas` is `die Kommata`.
  */
-function cellOf(
-	table: InflectionTable,
-	cells: readonly (string | undefined)[],
-	marked: string,
-): ShownCell {
-	const forms = [...new Set(cells.flatMap(formsIn))];
-	const rank = (form: string) => (table.rare?.[form] ? 1 : 0);
-	return forms
-		.toSorted((a, b) => rank(a) - rank(b))
-		.map((form) => ({
-			form,
-			rarity: table.rare?.[form],
-			marked: form === marked,
-		}));
-}
-
-/** The table with every form equal to `marked` marked wherever it stands. */
-export function mergedGrid(table: InflectionTable, marked: string): Grid {
+export function gridOf(table: InflectionTable, marked: string): Grid {
+	const shown = (
+		written: string,
+		shared?: string,
+		rarity?: Rarity,
+	): ShownForm => {
+		const { article, form } = splitArticle(written);
+		const whole = shared ? `${shared} ${form}` : written;
+		return { article, form, rarity, marked: whole === marked };
+	};
 	return {
-		columns: table.columns,
+		columns: table.columns.map((column, index) => ({
+			heading:
+				column.tag &&
+				table.columns[index - 1]?.heading === column.heading
+					? undefined
+					: column.heading,
+			tag: column.tag,
+		})),
 		rows: table.rowLabels.map((label, row) => ({
 			label,
-			cells: table.columns.slice(1).map((_, column) =>
-				cellOf(
-					table,
-					table.sets.map((set) => set.rows[row]?.[column]),
-					marked,
-				),
-			),
+			cells: table.columns.map((column, index) => {
+				const cell = column.cells[row] ?? "";
+				const before = table.columns[index - 1]?.cells[row];
+				const shared = column.sharesArticle
+					? splitArticle(
+							typeof before === "string"
+								? before
+								: (before?.[0] ?? ""),
+						).article
+					: undefined;
+				if (typeof cell === "string")
+					return { usual: shown(cell, shared) };
+				const [usual, other] = cell;
+				return {
+					usual: shown(usual, shared),
+					other: shown(other, shared, table.rare?.[other]),
+				};
+			}),
 		})),
-		lines: (table.lineLabels ?? []).map((label, line) => ({
-			label,
-			cell: cellOf(
-				table,
-				table.sets.map((set) => set.lines?.[line]),
-				marked,
+		footers: (table.footers ?? []).map((footer) => ({
+			label: footer.label,
+			aux: footer.aux,
+			forms: footer.forms.map((form) =>
+				shown(form, undefined, table.rare?.[form]),
 			),
 		})),
 	};
 }
 
-/** The row headings' column, in rem: `text-xs` at about 0.5 em a letter. */
-export function labelRem(grid: Grid): number {
-	const longest = Math.max(
-		...[...grid.rows, ...grid.lines].map((row) => row.label.length),
-	);
-	return Math.ceil((longest * 0.75 * 0.5 + 1) * 4) / 4;
+/**
+ * Whether the clicked form is the rarer one: in a tagged column, under
+ * its cell's usual form, or after a footer's first.
+ */
+export function rarityOf(lemma: string, clicked: string): Rarity | undefined {
+	const table = tables[lemma];
+	if (!table) return undefined;
+	const grid = gridOf(table, markedFormOf(clicked));
+	for (const row of grid.rows)
+		for (const [index, cell] of row.cells.entries()) {
+			if (cell.usual.marked) return grid.columns[index]?.tag;
+			if (cell.other?.marked) return cell.other.rarity;
+		}
+	for (const footer of grid.footers)
+		for (const form of footer.forms) if (form.marked) return form.rarity;
+	return undefined;
 }
 
 /**
  * Roughly how wide the grid's table is, in rem, with no form wrapped: the
- * reflow switches to a list below it. The table is fixed-layout, so every
- * form column is as wide as the widest; a line spans them all. Forms run
- * about 0.5 em a letter, column headings are `text-xs`, a rarity marker
- * 0.65 rem.
+ * reflow switches to a list below it. Each column is as wide as its
+ * widest form or heading, plus its gap but the last. Forms run about
+ * 0.55 em a letter; labels, headings and a cell's quiet second line are
+ * `text-xs`, mostly lower case, at about 0.45 em.
  */
 export function tableRem(grid: Grid, compact: boolean): number {
-	const form = (compact ? 0.75 : 0.875) * 0.5;
-	const label = 0.75 * 0.5;
-	const marker = 0.65 * 0.5;
-	const cellRem = (cell: ShownCell) =>
-		cell.reduce(
-			(sum, shown, index) =>
-				sum +
-				shown.form.length * form +
-				(index > 0 ? 3 * form : 0) +
-				(shown.rarity ? shown.rarity.length * marker + 0.25 : 0),
-			0,
-		) + 0.75;
-	const labels = labelRem(grid);
-	const columns = grid.columns
-		.slice(1)
-		.map((heading, column) =>
+	const form = (compact ? 0.75 : 0.875) * 0.55;
+	const small = 0.75 * 0.45;
+	const gap = 1;
+	const written = (shown: ShownForm) =>
+		(shown.article ? shown.article.length + 1 : 0) + shown.form.length;
+	const labels =
+		Math.max(
+			...[...grid.rows, ...grid.footers].map((row) => row.label.length),
+		) *
+			small +
+		gap;
+	const columns = grid.columns.map(
+		(column, index) =>
 			Math.max(
-				heading.length * label + 0.75,
-				...grid.rows.map((row) => cellRem(row.cells[column] ?? [])),
-			),
-		);
-	const lines = grid.lines.map((line) => cellRem(line.cell));
-	return labels + Math.max(columns.length * Math.max(...columns), ...lines);
+				((column.heading?.length ?? 0) +
+					(column.tag && column.heading ? 3 : 0) +
+					(column.tag?.length ?? 0)) *
+					small,
+				...grid.rows.map((row) => {
+					const cell = row.cells[index];
+					if (!cell) return 0;
+					return Math.max(
+						written(cell.usual) * form,
+						cell.other
+							? (written(cell.other) +
+									(cell.other.rarity?.length ?? 0) +
+									1) *
+									small
+							: 0,
+					);
+				}),
+			) + gap,
+	);
+	// The last column has no gap after it.
+	return columns.reduce((sum, width) => sum + width, labels) - gap;
 }
