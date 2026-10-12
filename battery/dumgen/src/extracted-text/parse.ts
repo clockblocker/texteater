@@ -13,6 +13,7 @@ import type {
 	LineBreak,
 	Paragraph,
 	Run,
+	SceneBreak,
 	Scroll,
 	Section,
 } from "./extracted-text.js";
@@ -115,8 +116,9 @@ function runs(value: unknown, path: string): readonly Run[] {
 	);
 }
 
-function block(value: unknown, path: string): Heading | Paragraph {
+function block(value: unknown, path: string): Heading | Paragraph | SceneBreak {
 	const fields = record(value, path);
+	if (fields.kind === "SceneBreak") return { kind: "SceneBreak" };
 	if (fields.kind === "Heading") {
 		const { level } = fields;
 		if (
@@ -145,7 +147,7 @@ function block(value: unknown, path: string): Heading | Paragraph {
 			),
 			...locatedBy(fields, path),
 		};
-	return fail(path, "a Heading or a Paragraph");
+	return fail(path, "a Heading, a Paragraph or a Scene Break");
 }
 
 function scroll(value: unknown, path: string): Scroll {

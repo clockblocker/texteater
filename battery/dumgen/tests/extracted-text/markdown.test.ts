@@ -383,7 +383,7 @@ test("a Section left open closes at the end; a stray </section> or untitled <sec
 	});
 });
 
-test("keeps the words of lists, tables, quotes, links and code; drops images, footnotes and rules", () => {
+test("keeps the words of lists, tables, quotes, links and code; drops images and footnotes", () => {
 	const markdown = [
 		"> Zitiert *hier*",
 		"> weiter",
@@ -418,8 +418,24 @@ test("keeps the words of lists, tables, quotes, links and code; drops images, fo
 		paragraph(run("A | B")),
 		paragraph(run("1 | 2")),
 		paragraph(run("Ein Link mit Code und Fußnote.")),
+		{ kind: "SceneBreak" },
 		paragraph(run("Zeile eins"), lineBreak, run("Zeile zwei")),
 	]);
+});
+
+test("a thematic break is a Scene Break, written back as * * *", () => {
+	const text = extractedTextFromMarkdown("Eins.\n\n***\n\nZwei.\n___\nDrei.");
+	expect(blocksOf(text)).toEqual([
+		paragraph(run("Eins.")),
+		{ kind: "SceneBreak" },
+		paragraph(run("Zwei.")),
+		{ kind: "SceneBreak" },
+		paragraph(run("Drei.")),
+	]);
+	expect(extractedTextToMarkdown(text)).toBe(
+		"Eins.\n\n* * *\n\nZwei.\n\n* * *\n\nDrei.\n",
+	);
+	expect(extractedTextSchema.parse(text)).toEqual(text);
 });
 
 test("reads Markdown as NFC", () => {

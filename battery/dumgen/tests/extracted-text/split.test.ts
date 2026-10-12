@@ -14,7 +14,7 @@ test("a pasted text splits through its Scroll as it splits raw", () => {
 		expect(splitScroll(extractPastedText(text))).toEqual(splitText(text));
 });
 
-test("a Scroll's title and Headings are paragraphs of their own, Inline Styles drop away", () => {
+test("a Scroll's title and Headings are paragraphs of their own; Inline Styles and Scene Breaks drop away", () => {
 	expect(
 		splitScroll({
 			kind: "Scroll",
@@ -28,6 +28,7 @@ test("a Scroll's title and Headings are paragraphs of their own, Inline Styles d
 						{ kind: "Run", text: " Dann ging er." },
 					],
 				},
+				{ kind: "SceneBreak" },
 				{
 					kind: "Heading",
 					level: 2,

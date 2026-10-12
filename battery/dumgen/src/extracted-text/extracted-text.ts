@@ -1,9 +1,9 @@
 /**
  * Extracted Text: the stored form every Extraction produces and Intake
  * keeps, between Extraction and `splitText` (map #1175, #1176, #1189). It
- * holds Scrolls of Headings and Paragraphs, nested in Sections, with Line
- * Breaks, Inline Styles and Original Locations, as running text not yet
- * split into Sentences. It
+ * holds Scrolls of Headings, Paragraphs and Scene Breaks, nested in
+ * Sections, with Line Breaks, Inline Styles and Original Locations, as
+ * running text not yet split into Sentences. It
  * carries no language: Intake detects one per Sentence later (Dumgen ADR
  * 0001). Text is NFC and in logical order, so Hebrew is stored as read.
  * Markdown is only an import and an export of it (`markdown.ts`).
@@ -88,18 +88,25 @@ export type Paragraph = Located & {
 	readonly inlines: readonly (Run | LineBreak)[];
 };
 
+/**
+ * A Scene Break: a break between two stretches of a Scroll that the
+ * Original marks with a rule or a row of stars (`* * *`), not a Heading.
+ * It holds no text (#1190).
+ */
+export type SceneBreak = { readonly kind: "SceneBreak" };
+
 /** A Scroll's own Heading, its title. */
 type ScrollHeading = Located & { readonly runs: readonly Run[] };
 
 /**
  * What Intake processes and a Learner opens as a whole: its own Heading,
- * if it has one, and its Headings and Paragraphs. A Scroll may hold no
- * block, as a part's title page does.
+ * if it has one, and its Headings, Paragraphs and Scene Breaks. A Scroll
+ * may hold no block, as a part's title page does.
  */
 export type Scroll = {
 	readonly kind: "Scroll";
 	readonly heading?: ScrollHeading;
-	readonly blocks: readonly (Heading | Paragraph)[];
+	readonly blocks: readonly (Heading | Paragraph | SceneBreak)[];
 };
 
 /**

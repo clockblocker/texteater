@@ -47,6 +47,7 @@ const locatedScroll = {
 				},
 			],
 		},
+		{ kind: "SceneBreak", extra: "dropped" },
 	],
 };
 

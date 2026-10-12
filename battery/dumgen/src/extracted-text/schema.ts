@@ -87,6 +87,7 @@ const blockSchema = z.discriminatedUnion("kind", [
 			locations,
 		})
 		.readonly(),
+	z.object({ kind: z.literal("SceneBreak") }).readonly(),
 ]);
 
 /** A Scroll of an Extracted Text, as `extracted-text.ts` documents it. */

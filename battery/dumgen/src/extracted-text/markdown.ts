@@ -14,6 +14,8 @@
  *   Sections nest. A Section left open closes at the end, and a stray
  *   `</section>` is dropped. In the title, `&quot;` stands for `"` and
  *   `&amp;` for `&`.
+ * - A thematic break (`***`, `---`, `___`) is a Scene Break; export writes
+ *   `* * *`.
  * - A blank line ends a Paragraph. A line ending in `\` (or, on import, in
  *   two spaces) or a `<br>` is a Line Break; any other line break is a
  *   space, so hard-wrapped Markdown reads as running text.
@@ -25,8 +27,7 @@
  * Import keeps the words of what Extracted Text has no place for: a list
  * item, a table row or a block quote's Paragraph becomes a Paragraph (an
  * ordered item keeps its number), a link keeps its text, code keeps its
- * characters and a fenced block its lines. It drops images, footnotes and
- * thematic breaks.
+ * characters and a fenced block its lines. It drops images and footnotes.
  */
 import type {
 	ExtractedText,
@@ -35,6 +36,7 @@ import type {
 	LineBreak,
 	Paragraph,
 	Run,
+	SceneBreak,
 	Scroll,
 	Section,
 } from "./extracted-text.js";
@@ -438,7 +440,7 @@ const sectionClosing = /^ {0,3}<\/section>[ \t]*$/u;
 
 type ScrollDraft = {
 	heading?: Scroll["heading"];
-	blocks: (Heading | Paragraph)[];
+	blocks: (Heading | Paragraph | SceneBreak)[];
 };
 
 /** The root, or an open Section with its title. */
@@ -597,8 +599,13 @@ const blockReaders: readonly ((reading: Reading, line: string) => boolean)[] = [
 	readSection,
 	readHeading,
 	(reading, line) => {
-		if (!thematicBreak.test(line) && !tableDelimiterRow.test(line))
-			return false;
+		if (!thematicBreak.test(line)) return false;
+		flush(reading);
+		reading.scroll.blocks.push({ kind: "SceneBreak" });
+		return true;
+	},
+	(reading, line) => {
+		if (!tableDelimiterRow.test(line)) return false;
 		flush(reading);
 		return true;
 	},
@@ -826,7 +833,8 @@ function linesOf(inlines: readonly Inline[]): Run[][] {
 	return lines;
 }
 
-function renderBlock(block: Heading | Paragraph): string {
+function renderBlock(block: Heading | Paragraph | SceneBreak): string {
+	if (block.kind === "SceneBreak") return "* * *";
 	if (block.kind === "Heading") {
 		const text = renderLine(block.runs, true);
 		return text.length > 0 ? `${"#".repeat(block.level)} ${text}` : "";

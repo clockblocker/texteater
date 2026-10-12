@@ -20,7 +20,7 @@ _Avoid_: Library Sheet, Text Sheet
 **Scroll**:
 What a Learner reads and marks done, what Intake processes and what Links
 point into: a scene of a TV episode, a chapter of a novel, one article, one
-paste. It holds Headings and Paragraphs. A one-off paste is a Scroll with no
+paste. It holds Headings, Paragraphs and Scene Breaks. A one-off paste is a Scroll with no
 Section above it. A domain term only: Learner-facing copy never shows the
 word "scroll".
 _Avoid_: Text (also any string, as in Extracted Text), Chapter (a Heading in
@@ -264,8 +264,8 @@ It produces an Extracted Text.
 _Avoid_: transcription, OCR as the general term
 
 **Extracted Text**:
-The stored form every Extraction produces: Scrolls of Headings and
-Paragraphs, nested in Sections, with Line Breaks, Inline Styles and Original
+The stored form every Extraction produces: Scrolls of Headings,
+Paragraphs and Scene Breaks, nested in Sections, with Line Breaks, Inline Styles and Original
 Locations, as running text not yet split into Sentences. Pasted text is the
 simplest one: one Scroll, no Section, no Original Locations. Intake keeps it
 so a Flag, a segmentation improvement or a curator's fix re-runs only the
@@ -283,6 +283,11 @@ _Avoid_: Block
 **Line Break**:
 A break inside a Paragraph that Intake keeps because it carries meaning, as
 in verse, lyrics and letters.
+
+**Scene Break**:
+A break between two stretches of a Scroll that the Original marks with a
+rule or a row of stars (`* * *`) rather than a Heading. It holds no text.
+_Avoid_: separator, thematic break, horizontal rule
 
 **Folio**:
 A size-cut slice of a Scroll: a run of whole Paragraphs, about 3,000
