@@ -11,7 +11,7 @@ import {
 import { createPortal } from "react-dom";
 import { cardLang, langAttrs } from "@/fixtures";
 import { useFrameSize, usePlaygroundEnv } from "@/shell";
-import { Inflections } from "./cards";
+import { Inflections, LemmaTags } from "./cards";
 import { PreviewController } from "./controller";
 import { inflectionsOf } from "./inflections";
 import {
@@ -256,11 +256,6 @@ function PreviewCard({
 					density="compact"
 					className="grid gap-2 px-3 pt-1 pb-3 text-sm"
 				>
-					{table ? (
-						<p className="text-xs text-ink-muted">
-							<span {...langAttrs("en")}>{table.wordClass}</span>
-						</p>
-					) : null}
 					{reading ? (
 						<>
 							<p className="text-ink-soft">
@@ -282,13 +277,16 @@ function PreviewCard({
 						</p>
 					) : null}
 					{table && marked !== null ? (
-						<div className="pt-1">
-							<Inflections
-								table={table}
-								marked={marked}
-								compact
-							/>
-						</div>
+						<>
+							<div className="pt-1">
+								<Inflections
+									table={table}
+									marked={marked}
+									compact
+								/>
+							</div>
+							<LemmaTags tags={table.tags} />
+						</>
 					) : null}
 				</DensityScope>
 			</div>

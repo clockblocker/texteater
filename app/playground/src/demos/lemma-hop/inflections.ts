@@ -1,8 +1,8 @@
 /**
  * Inflection tables for the authored lemmas, as LinguaCafe's inflections
- * tab shows them, with the few facts the Lemma Card's header needs. The
- * fixtures carry no paradigms, so they live here, keyed by the lemma's
- * title as the Lemma Card shows it.
+ * tab shows them, with the tags that close the Lemma Card. The fixtures
+ * carry no paradigms, so they live here, keyed by the lemma's title as
+ * the Lemma Card shows it.
  *
  * A column is one series of forms: Präsens, Singular. A lemma with two
  * series in one meaning, such as melken's current melkte beside the older
@@ -38,10 +38,8 @@ type Footer = {
 
 export type InflectionTable = {
 	readonly lang: "de" | "he";
-	/** The header's quiet line: `noun · neuter`, `verb`. */
-	readonly wordClass: string;
-	/** The header's gloss, in English. */
-	readonly gloss: string;
+	/** The tags closing the Lemma Card: word class, then gender or kind. */
+	readonly tags: readonly string[];
 	readonly rowLabels: readonly string[];
 	readonly columns: readonly Column[];
 	readonly footers?: readonly Footer[];
@@ -85,8 +83,7 @@ const cases = ["Nom.", "Akk.", "Dat.", "Gen."];
 const tables: Readonly<Record<string, InflectionTable>> = {
 	gehen: {
 		lang: "de",
-		wordClass: "verb",
-		gloss: "to go, to walk",
+		tags: ["verb"],
 		rowLabels: persons,
 		columns: [
 			{
@@ -102,8 +99,7 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 	},
 	anfangen: {
 		lang: "de",
-		wordClass: "verb · separable",
-		gloss: "to begin, to start",
+		tags: ["verb", "separable"],
 		rowLabels: persons,
 		columns: [
 			{
@@ -135,8 +131,7 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 	// strong present milkst, milkt is veraltet.
 	melken: {
 		lang: "de",
-		wordClass: "verb",
-		gloss: "to milk",
+		tags: ["verb"],
 		rowLabels: persons,
 		columns: [
 			{
@@ -179,8 +174,7 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 	// Duden: backt or bäckt, both current; backte, veraltend buk.
 	backen: {
 		lang: "de",
-		wordClass: "verb",
-		gloss: "to bake",
+		tags: ["verb"],
 		rowLabels: persons,
 		columns: [
 			{
@@ -215,8 +209,7 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 	},
 	detailliert: {
 		lang: "de",
-		wordClass: "adjective",
-		gloss: "detailed",
+		tags: ["adjective"],
 		rowLabels: cases,
 		columns: [
 			{
@@ -259,8 +252,7 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 	},
 	zu: {
 		lang: "de",
-		wordClass: "preposition · + dative",
-		gloss: "to, towards",
+		tags: ["preposition", "+ dative"],
 		rowLabels: ["masc./neut.", "fem."],
 		columns: [
 			{ heading: "Fused", cells: ["zum", "zur"] },
@@ -269,8 +261,7 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 	},
 	"die Bank": {
 		lang: "de",
-		wordClass: "noun · feminine",
-		gloss: "bench",
+		tags: ["noun", "feminine"],
 		rowLabels: cases,
 		columns: [
 			{
@@ -286,8 +277,7 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 	// Duden: Plural die Kommas und die Kommata; Kommas is the everyday one.
 	"das Komma": {
 		lang: "de",
-		wordClass: "noun · neuter",
-		gloss: "comma",
+		tags: ["noun", "neuter"],
 		rowLabels: cases,
 		columns: [
 			{
@@ -308,8 +298,7 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 	},
 	"der Bahnhof": {
 		lang: "de",
-		wordClass: "noun · masculine",
-		gloss: "train station",
+		tags: ["noun", "masculine"],
 		rowLabels: cases,
 		columns: [
 			{
@@ -334,8 +323,7 @@ const tables: Readonly<Record<string, InflectionTable>> = {
 	},
 	ללכת: {
 		lang: "he",
-		wordClass: "verb · pa'al",
-		gloss: "to walk, to go",
+		tags: ["verb", "pa'al"],
 		rowLabels: ["אני", "אתה", "הוא", "היא", "הם"],
 		columns: [
 			{

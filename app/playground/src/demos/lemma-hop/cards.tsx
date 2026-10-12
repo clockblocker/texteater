@@ -1,4 +1,11 @@
-import { cn, DensityScope, Ipa, NoteTitle, NoteTitleLink } from "lego";
+import {
+	cn,
+	DensityScope,
+	Ipa,
+	NoteTags,
+	NoteTitle,
+	NoteTitleLink,
+} from "lego";
 import { ArrowUp, Maximize2 } from "lucide-react";
 import { Fragment, type ReactNode } from "react";
 import {
@@ -200,10 +207,11 @@ export function OpenAsSheet({ onClick }: { readonly onClick: () => void }) {
 }
 
 /**
- * The Lemma Card where it carries its inflections: the headword, one
- * quiet line with its word class, its gloss, the table and the quote.
- * The tails above already say what kind of Card it is, so it needs no
- * label; order, size and spacing set its tiers, not rules.
+ * The Lemma Card where it carries its inflections: the headword, the
+ * table, the quote, and tf-demo's quiet tag row closing it with the word
+ * class and gender. The tails above already say what kind of Card it is,
+ * so it needs no label, and translations stay on the Reading Card; order,
+ * size and spacing set its tiers, not rules.
  */
 export function LemmaCard({
 	card,
@@ -226,7 +234,7 @@ export function LemmaCard({
 			{action ? (
 				<div className="absolute end-1.5 top-1.5">{action}</div>
 			) : null}
-			<header className={cn("grid gap-0.5", action && "pe-6")}>
+			<header className={cn(action && "pe-6")}>
 				<div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
 					<span aria-hidden="true" className="text-xl">
 						{card.emoji}
@@ -240,12 +248,6 @@ export function LemmaCard({
 						transcription={card.ipa}
 					/>
 				</div>
-				<p className="text-xs text-ink-muted">
-					<span {...langAttrs("en")}>{table.wordClass}</span>
-				</p>
-				<p className="mt-1.5 text-ink-soft">
-					<span {...langAttrs("en")}>{table.gloss}</span>
-				</p>
 			</header>
 			<Inflections table={table} marked={marked} />
 			{card.quote ? (
@@ -258,7 +260,23 @@ export function LemmaCard({
 					</span>
 				</blockquote>
 			) : null}
+			<LemmaTags tags={table.tags} />
 		</DensityScope>
+	);
+}
+
+/**
+ * tf-demo's tag row closing a Note (`NoteTags`), here the lemma's word
+ * class and gender. The Card's gap already spaces it, so it drops the
+ * row's own top margin.
+ */
+export function LemmaTags({ tags }: { readonly tags: readonly string[] }) {
+	return (
+		<NoteTags {...langAttrs("en")} className="mt-0 compact:mt-0">
+			{tags.map((tag) => (
+				<span key={tag}>{tag}</span>
+			))}
+		</NoteTags>
 	);
 }
 
