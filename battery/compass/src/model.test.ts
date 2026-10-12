@@ -441,6 +441,126 @@ describe("← on a Cover", () => {
 	});
 });
 
+describe("Walk the line", () => {
+	const book = note("Book");
+	const part = note("Part I");
+	const chapter = note("Chapter 1");
+	const nextPart = note("Part II");
+	const nextChapter = note("Chapter 2");
+
+	function sheetNames(state: State, paneId = ROOT): string[] {
+		return pane(state, paneId).line.flatMap((rung) =>
+			rung.kind === "Sheet" ? [rung.presentation.subject.name] : [],
+		);
+	}
+
+	/** Menu › Library › Book › Part I › Chapter 1, picked one rung at a time. */
+	function inBook(): State {
+		return reduce(
+			createWorkspace<Subject>({ paneId: ROOT }),
+			{
+				type: "StepUp",
+				paneId: ROOT,
+				to: { kind: "MenuItem", item: "Library" },
+			},
+			{
+				type: "StepUp",
+				paneId: ROOT,
+				to: { kind: "Sheet", subject: book },
+			},
+			{ type: "WalkLine", paneId: ROOT, keep: 1, to: [part] },
+			{ type: "WalkLine", paneId: ROOT, keep: 2, to: [chapter] },
+		);
+	}
+
+	test("a pick in a Codex is one rung more, and ← steps back one rung at a time", () => {
+		const state = inBook();
+		expect(pane(state).line.map((rung) => rung.kind)).toEqual([
+			"Menu",
+			"MenuItem",
+			"Sheet",
+			"Sheet",
+			"Sheet",
+		]);
+		expect(sheetNames(state)).toEqual(["Book", "Part I", "Chapter 1"]);
+		const back = reduce(state, {
+			type: "GoBack",
+			sheetId: ground(state).sheetId,
+		});
+		expect(sheetNames(back)).toEqual(["Book", "Part I"]);
+	});
+
+	test("next across a Section boundary replaces the Scroll and the Sections below it, with their Decks", () => {
+		const dealt = dealOn(inBook(), ground(inBook()).sheetId);
+		const state = reduce(dealt, {
+			type: "WalkLine",
+			paneId: ROOT,
+			keep: 1,
+			to: [nextPart, nextChapter],
+		});
+		expect(sheetNames(state)).toEqual(["Book", "Part II", "Chapter 2"]);
+		expect(ground(state).deck).toBeNull();
+		expect(pane(state).line[2]).toBe(pane(dealt).line[2]);
+	});
+
+	test("from the Library, it walks up through several rungs at once", () => {
+		const library = reduce(createWorkspace<Subject>({ paneId: ROOT }), {
+			type: "StepUp",
+			paneId: ROOT,
+			to: { kind: "MenuItem", item: "Library" },
+		});
+		expect(
+			sheetNames(
+				reduce(library, {
+					type: "WalkLine",
+					paneId: ROOT,
+					keep: 0,
+					to: [book, part, chapter],
+				}),
+			),
+		).toEqual(["Book", "Part I", "Chapter 1"]);
+	});
+
+	test("never walks under Covers, past its own rungs, from the Menu, or with nowhere to go", () => {
+		const state = inBook();
+		const covered = reduce(state, {
+			type: "FollowLink",
+			paneId: ROOT,
+			subject: note("n"),
+		});
+		const menu = createWorkspace<Subject>({ paneId: ROOT });
+		for (const [from, keep, to] of [
+			[covered, 3, [nextChapter]],
+			[state, 4, [nextChapter]],
+			[state, -1, [nextChapter]],
+			[state, 1, []],
+			[menu, 0, [book]],
+		] as const)
+			expect(
+				reduce(from, { type: "WalkLine", paneId: ROOT, keep, to }),
+			).toBe(from);
+	});
+
+	test("a Floating Ground has no rung below it: next only replaces it", () => {
+		const floating = floatingFromCard();
+		const paneId = panesOf(floating.layout)[1]?.id ?? "";
+		const replaced = reduce(floating, {
+			type: "WalkLine",
+			paneId,
+			keep: 0,
+			to: [nextChapter],
+		});
+		expect(sheetNames(replaced, paneId)).toEqual(["Chapter 2"]);
+		for (const [keep, to] of [
+			[1, [nextChapter]],
+			[0, [nextPart, nextChapter]],
+		] as const)
+			expect(
+				reduce(floating, { type: "WalkLine", paneId, keep, to }),
+			).toBe(floating);
+	});
+});
+
 describe("← on the Ground", () => {
 	test("Steps one rung down the line: Text › Library › Menu. The Text's Deck goes with it", () => {
 		const dealt = dealOn(atText(), ground(atText()).sheetId);

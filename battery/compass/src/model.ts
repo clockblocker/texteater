@@ -131,6 +131,20 @@ export type WorkspaceCommand<S> =
 				| { readonly kind: "MenuItem"; readonly item: string }
 				| { readonly kind: "Sheet"; readonly subject: S };
 	  }
+	/**
+	 * Walk the Ground's line to `to`: its first `keep` Sheet rungs stay, the
+	 * Sheet rungs above them leave with their Decks, and the line steps up
+	 * through `to`, whose last Subject is the new Ground. Picking from a
+	 * Codex keeps every rung; next at a Scroll's end keeps the Sections it
+	 * shares with the following Scroll (tf-demo ADR 0008). A Floating
+	 * Ground has no rung below it, so there `to` only replaces the Ground.
+	 */
+	| {
+			readonly type: "WalkLine";
+			readonly paneId: string;
+			readonly keep: number;
+			readonly to: readonly S[];
+	  }
 	/** ← on the top Sheet: a Cover collapses or closes; a Rooted Ground steps one rung down. */
 	| { readonly type: "GoBack"; readonly sheetId: string }
 	/** Spawn an empty Rooted Pane, at its Menu, beside a Pane. */
@@ -258,6 +272,8 @@ export function workspaceReducer<S>(
 	switch (command.type) {
 		case "StepUp":
 			return stepUp(state, command.paneId, command.to);
+		case "WalkLine":
+			return walkLine(state, command.paneId, command.keep, command.to);
 		case "GoBack":
 			return goBack(state, command.sheetId);
 		case "SpawnRootedPane":
@@ -537,7 +553,7 @@ function stepUp<S>(
 	if (!pane || pane.covers.length) return state;
 	const ground = groundOf(pane);
 	/* the line runs Menu › Menu Item › selection; a selection, once on the
-	   Ground, changes only by going back or a lift */
+	   Ground, changes only by going back, a lift or a walk (`WalkLine`) */
 	if (ground.kind !== (to.kind === "MenuItem" ? "Menu" : "MenuItem"))
 		return state;
 	const ids = minter(state.nextId);
@@ -563,6 +579,45 @@ function stepUp<S>(
 		updatePane(state.layout, paneId, (p) => ({
 			...p,
 			line: [...p.line, rung],
+		})),
+		ids.nextId,
+	);
+}
+
+function walkLine<S>(
+	state: WorkspaceState<S>,
+	paneId: string,
+	keep: number,
+	to: readonly S[],
+): WorkspaceState<S> {
+	const pane = findPane(state.layout, paneId);
+	if (!pane || pane.covers.length || to.length === 0) return state;
+	/* the Menu and its Item stay; only Sheet rungs are walked */
+	const base = pane.line.filter((rung) => rung.kind !== "Sheet");
+	const sheets = pane.line.slice(base.length);
+	if (
+		!Number.isSafeInteger(keep) ||
+		keep < 0 ||
+		keep > sheets.length ||
+		(isRooted(pane)
+			? base.at(-1)?.kind !== "MenuItem"
+			: keep !== 0 || to.length !== 1)
+	)
+		return state;
+	const ids = minter(state.nextId);
+	const walked = to.map(
+		(subject): Rung<S> => ({
+			id: ids.mint("sheet"),
+			kind: "Sheet",
+			presentation: { id: ids.mint("presentation"), subject },
+			deck: null,
+		}),
+	);
+	return withLayout(
+		state,
+		updatePane(state.layout, paneId, (p) => ({
+			...p,
+			line: [...base, ...sheets.slice(0, keep), ...walked],
 		})),
 		ids.nextId,
 	);
