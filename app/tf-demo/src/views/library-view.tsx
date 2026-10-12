@@ -126,7 +126,7 @@ export function LibraryView() {
 								id="library-title"
 								className="text-lg font-semibold text-balance"
 							>
-								Stored scrolls
+								Stored texts
 							</h2>
 							{storedScrolls ? (
 								<Badge variant="secondary">
@@ -150,7 +150,7 @@ export function LibraryView() {
 										strokeWidth={1.5}
 									/>
 									<p className="text-pretty">
-										No stored scrolls yet. Add one with the
+										No stored texts yet. Add one with the
 										plus button.
 									</p>
 								</CardContent>
@@ -293,7 +293,7 @@ function LibraryScrollGrid({
 
 function LibrarySkeleton() {
 	return (
-		<div className="grid gap-3" role="status" aria-label="Loading scrolls">
+		<div className="grid gap-3" role="status" aria-label="Loading texts">
 			{[0, 1, 2, 3].map((index) => (
 				<Card key={index} size="sm">
 					<CardContent className="flex flex-col gap-3">

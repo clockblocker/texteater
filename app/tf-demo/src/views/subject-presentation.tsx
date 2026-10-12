@@ -96,7 +96,7 @@ export function subjectLabel(subject: WorkspaceSubject): string {
 	const { target } = subject;
 	switch (target.kind) {
 		case "Scroll":
-			return target.title ?? "Scroll";
+			return target.title ?? "Text";
 		case "Reading":
 			return "Reading";
 		case "Lemma":

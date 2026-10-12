@@ -19,7 +19,7 @@ export function linkMembers(
 	segments: readonly SourceSegment[],
 	memberSegmentIndices: readonly number[],
 	follow: () => void,
-	destination = "the source Scroll",
+	destination = "the source Text",
 ): ReactNode[] {
 	const members = new Set(memberSegmentIndices);
 	const parts: ReactNode[] = [];

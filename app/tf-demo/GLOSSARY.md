@@ -21,7 +21,8 @@ _Avoid_: Library Sheet, Text Sheet
 What a Learner reads and marks done, what Intake processes and what Links
 point into: a scene of a TV episode, a chapter of a novel, one article, one
 paste. It holds Headings and Paragraphs. A one-off paste is a Scroll with no
-Section above it.
+Section above it. A domain term only: Learner-facing copy never shows the
+word "scroll".
 _Avoid_: Text (also any string, as in Extracted Text), Chapter (a Heading in
 the content), Page (a physical page, see Page Image), Document, Book (a
 Section)

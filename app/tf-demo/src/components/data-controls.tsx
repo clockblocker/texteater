@@ -97,7 +97,7 @@ function useDemoDataControls() {
 		try {
 			const result = await stripAnalyses.run({});
 			setNotice(
-				`Stripped ${result.removed} analysis records from ${result.strippedScrolls} Scrolls and cleared ${result.removedInspectionRecords} Resolution Inspector records. The Scrolls and their Sentences were kept.`,
+				`Stripped ${result.removed} analysis records from ${result.strippedScrolls} Texts and cleared ${result.removedInspectionRecords} Resolution Inspector records. The Texts and their Sentences were kept.`,
 			);
 		} catch (cause) {
 			setError(visitorErrorMessage(cause));
@@ -190,7 +190,7 @@ function DemoDataCard({
 							/>
 						}
 						title="Strip all analyses?"
-						description="All Scrolls and Sentences remain. Segments, resolutions, Encounters, orphaned Readings, and Resolution Inspector history are removed."
+						description="All Texts and Sentences remain. Segments, resolutions, Encounters, orphaned Readings, and Resolution Inspector history are removed."
 						confirmLabel="Strip analyses"
 						onConfirm={() => void handleStripScrollAnalysis()}
 					>
@@ -210,7 +210,7 @@ function DemoDataCard({
 							/>
 						}
 						title="Clear shared data for every visitor?"
-						description="This removes all Scrolls, Sentences, Segments, Readings, Lemmas, relations, and Knowledge."
+						description="This removes all Texts, Sentences, Segments, Readings, Lemmas, relations, and Knowledge."
 						confirmLabel="Clear shared data"
 						onConfirm={() => void handleClearSharedData()}
 					>

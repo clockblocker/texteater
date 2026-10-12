@@ -31,7 +31,7 @@ export function SourceQuote({
 	const destination =
 		origin.kind === "Definition"
 			? `the definition of ${origin.canonicalForm}`
-			: "the source Scroll";
+			: "the source Text";
 	const members = linkMembers(
 		segments,
 		memberSegmentIndices,

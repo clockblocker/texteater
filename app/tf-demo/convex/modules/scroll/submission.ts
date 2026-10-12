@@ -307,7 +307,7 @@ async function resumeSubmittedScroll(
 		) {
 			throw visitorError(
 				"Conflict",
-				"Existing Scroll analysis is incomplete or differs from the submitted analysis; retry after stripping completes.",
+				"Existing Text analysis is incomplete or differs from the submitted analysis; retry after stripping completes.",
 			);
 		}
 		return kept;

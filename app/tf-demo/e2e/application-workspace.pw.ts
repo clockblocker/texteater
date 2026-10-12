@@ -176,7 +176,7 @@ test("Go to source pushes the Scroll as a Cover at its Sentence; Back retraces t
 	/* Go to source from its Source Context: a second Cover, the Scroll,
 	   with the occurrence lit */
 	await reading
-		.getByRole("button", { name: /open in the source Scroll/ })
+		.getByRole("button", { name: /open in the source Text/ })
 		.first()
 		.click();
 	await expect(covers(page)).toHaveCount(2);

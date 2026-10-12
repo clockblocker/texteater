@@ -32,7 +32,7 @@ const READER_BODY_CLASS =
 	"mx-auto w-full pt-14 pb-[max(5rem,calc(100svh-12rem))] @max-md:pt-8";
 
 const MISSING_SOURCE_CONTEXT_NOTICE =
-	"This Source Context is no longer available. The Scroll is still open, and no new resolution was started.";
+	"This Source Context is no longer available. The Text is still open, and no new resolution was started.";
 
 type SentenceView = NonNullable<
 	FunctionReturnType<typeof api.scrollViews.get>
@@ -104,11 +104,11 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 			}
 			if (result.scrollId !== scrollDetail.scrollId) {
 				setSegmentationError(
-					"Segments were saved to a different Scroll.",
+					"Segments were saved to a different Text.",
 				);
 				return;
 			}
-			setNotice("Scroll split into segments.");
+			setNotice("Text split into segments.");
 		} catch (cause) {
 			setSegmentationError(visitorErrorMessage(cause));
 		}
@@ -118,7 +118,7 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 	if (!scrollDetail) {
 		return (
 			<NotFoundView
-				title="Scroll not found"
+				title="Text not found"
 				description="This text does not exist, or it was removed from the demo."
 			/>
 		);
@@ -287,7 +287,7 @@ export function SentenceList({
 	return (
 		<article
 			className="space-y-7 text-lg leading-[1.52] font-[430] tracking-[-0.015em] @max-md:space-y-6 @max-md:text-base"
-			aria-label="Scroll"
+			aria-label="Text"
 		>
 			{paragraphsOf(sentences).map((paragraph) => (
 				<section key={paragraph[0].sentenceId}>
@@ -377,7 +377,7 @@ export function ScrollViewSkeleton() {
 			className="w-full min-h-full flex-auto bg-paper"
 			role="status"
 			aria-busy="true"
-			aria-label="Loading Scroll"
+			aria-label="Loading Text"
 		>
 			<div
 				aria-hidden="true"
