@@ -229,8 +229,7 @@ test("a noun schema imports only its noun route and the ADP route", async () => 
 			path,
 		),
 	);
-	expect(routes.map((path) => path.split("/de/")[1]).sort()).toEqual([
-		"lexeme/adposition.ts",
-		"lexeme/noun.ts",
-	]);
+	expect(
+		routes.map((path) => path.split("concrete-language/")[1]).sort(),
+	).toStrictEqual(["de/lexeme/adposition.ts", "de/lexeme/noun.ts"]);
 });

@@ -1,5 +1,6 @@
 import { readdir } from "node:fs/promises";
 import { z } from "zod";
+import { routePolicies } from "../src/schemas/concrete-language/route-policies.js";
 import { buildDiscoveredUnitSchemas } from "../src/schemas/units.js";
 import {
 	ForeignKindSchema,
@@ -93,6 +94,7 @@ export async function loadRoutes() {
 				key: `${language}/${family}/${kind}`,
 				bag,
 				schemas: buildDiscoveredUnitSchemas(
+					routePolicies[language],
 					coordinate,
 					core,
 					inflectional,

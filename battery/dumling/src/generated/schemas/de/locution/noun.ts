@@ -2,6 +2,7 @@
 import type { Assert } from "common-utils";
 import type { z } from "zod";
 import { DeNounLocutionFeatureBagsSchema as featureBags } from "../../../../schemas/concrete-language/de/locution/noun.js";
+import { deRoutePolicy as routePolicy } from "../../../../schemas/concrete-language/de/route-policy.js";
 import { buildUnitSchemas } from "../../../../schemas/units.js";
 import type { IsUniversalFeatureBags } from "../../../../schemas/universal/features/catalog.js";
 
@@ -10,6 +11,7 @@ type _InFeaturePool = Assert<
 	IsUniversalFeatureBags<z.infer<typeof featureBags>>
 >;
 const schemas = buildUnitSchemas(
+	routePolicy,
 	{ language: "de", family: "Locution", kind: "NOUN" },
 	featureBags.shape.core,
 	featureBags.shape.inflectional,

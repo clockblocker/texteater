@@ -1,6 +1,7 @@
 // Generated concrete schemas. Run bun run generate.
 import type { Assert } from "common-utils";
 import type { z } from "zod";
+import { deRoutePolicy as routePolicy } from "../../../../schemas/concrete-language/de/route-policy.js";
 import { DeSayingFeatureBagsSchema as featureBags } from "../../../../schemas/concrete-language/de/saying/saying.js";
 import { buildUnitSchemas } from "../../../../schemas/units.js";
 import type { IsUniversalFeatureBags } from "../../../../schemas/universal/features/catalog.js";
@@ -10,6 +11,7 @@ type _InFeaturePool = Assert<
 	IsUniversalFeatureBags<z.infer<typeof featureBags>>
 >;
 const schemas = buildUnitSchemas(
+	routePolicy,
 	{ language: "de", family: "Saying", kind: "Saying" },
 	featureBags.shape.core,
 	undefined,

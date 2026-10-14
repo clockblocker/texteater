@@ -17,7 +17,7 @@ import {
 	surfaceSyncretismViewError,
 	syncretismViewError,
 } from "../validation/syncretism.js";
-import { routePolicies } from "./concrete-language/route-policies.js";
+import type { routePolicies } from "./concrete-language/route-policies.js";
 import type { Check } from "./route-policy.js";
 import {
 	articleEvidenceSchema,
@@ -65,23 +65,27 @@ type RoutesOf<Condition extends RouteCondition> = {
 		? Key
 		: never;
 }[keyof Conditions];
-/** The route policy of the language `key` names. */
-function policyOf(key: string) {
-	const language = key.slice(0, key.indexOf("/"));
-	const policy = Object.values(routePolicies).find(
-		(candidate) => candidate.language === language,
-	);
-	if (policy === undefined) throw Error(`No route policy for route ${key}`);
-	return policy;
-}
-/** Whether a route condition holds for the route `key` names. */
-function holds(condition: RouteCondition, key: string): boolean {
-	return holdsNamed(condition, key);
+/**
+ * One language's route policy. A route's schema module passes its own
+ * language's, so it loads no other language's policy.
+ */
+type RoutePolicy = RoutePolicies[keyof RoutePolicies];
+/** Whether a route condition of `policy` holds for the route `key` names. */
+function holds(
+	policy: RoutePolicy,
+	condition: RouteCondition,
+	key: string,
+): boolean {
+	return holdsNamed(policy, condition, key);
 }
 /** {@link holds} for a condition read as a key of a table. */
-function holdsNamed(condition: string, key: string): boolean {
+function holdsNamed(
+	policy: RoutePolicy,
+	condition: string,
+	key: string,
+): boolean {
 	const conditions: Partial<Record<string, readonly string[]>> =
-		policyOf(key).conditions;
+		policy.conditions;
 	return conditions[condition]?.includes(key) ?? false;
 }
 /**
@@ -172,12 +176,19 @@ function buildBaseUnitSchemas<
 	K extends string,
 	C extends z.core.$ZodType,
 	I extends z.core.$ZodType | undefined,
->(route: { language: L; family: F; kind: K }, core: C, inflectional: I) {
+>(
+	policy: RoutePolicy,
+	route: { language: L; family: F; kind: K },
+	core: C,
+	inflectional: I,
+) {
 	const PlainLemma = plainLemmaSchema(route, core);
 	const key = `${route.language}/${route.family}/${route.kind}` as const;
+	if (policy.language !== route.language)
+		throw Error(`Route ${key} takes no ${policy.language} route policy`);
 	// The type picks the branch the runtime picks, from the same route list.
 	const Lemma = (
-		holds("syncretism", key)
+		holds(policy, "syncretism", key)
 			? syncretizableLemmaSchema(PlainLemma, core)
 			: PlainLemma
 	) as typeof key extends RoutesOf<"syncretism">
@@ -216,7 +227,7 @@ function buildBaseUnitSchemas<
 	};
 	const Reading = z.strictObject({
 		...readingShape,
-		...(holds("foreign", key)
+		...(holds(policy, "foreign", key)
 			? {}
 			: { emojiDescription: emojiDescriptionSchema }),
 	}) as z.ZodObject<
@@ -229,27 +240,34 @@ function buildBaseUnitSchemas<
 	return { key, Lemma, Surface, Reading };
 }
 
-const { de, en, he } = routePolicies;
+/** The article evidence field's schema on the routes of each condition that adds it. */
+const articleEvidence = {
+	lexemeArticleOwner: articleEvidenceSchema.nullable(),
+	// Optional, so Attestations recorded before a NOUN Locution owned its
+	// article stay valid.
+	locutionArticleOwner: articleEvidenceSchema.nullable().optional(),
+} satisfies { [Condition in RouteCondition]?: unknown };
+/** The schemas language `L`'s route policy gives the evidence field `Field`, by condition. */
+type Evidence<
+	L extends keyof RoutePolicies,
+	Field extends "expletiveEvidence" | "valencyEvidence",
+> = RoutePolicies[L]["attestationEvidence"] extends {
+	readonly [Name in Field]: infer Entry;
+}
+	? Entry
+	: Record<never, never>;
 /**
  * The Attestation's evidence fields, in field order, each with its schema on
  * the routes of every route condition that adds it. A language's route policy
  * adds its own; no route meets two conditions that add one field.
  */
-const attestationEvidence = {
-	articleEvidence: {
-		lexemeArticleOwner: articleEvidenceSchema.nullable(),
-		// Optional, so Attestations recorded before a NOUN Locution owned its
-		// article stay valid.
-		locutionArticleOwner: articleEvidenceSchema.nullable().optional(),
-	},
-	expletiveEvidence: { ...de.attestationEvidence.expletiveEvidence },
-	valencyEvidence: {
-		...de.attestationEvidence.valencyEvidence,
-		...he.attestationEvidence.valencyEvidence,
-		...en.attestationEvidence.valencyEvidence,
-	},
-} satisfies Record<string, { [Condition in RouteCondition]?: unknown }>;
-type AttestationEvidence = typeof attestationEvidence;
+type AttestationEvidence = {
+	articleEvidence: typeof articleEvidence;
+	expletiveEvidence: Evidence<"de", "expletiveEvidence">;
+	valencyEvidence: Evidence<"de", "valencyEvidence"> &
+		Evidence<"he", "valencyEvidence"> &
+		Evidence<"en", "valencyEvidence">;
+};
 /** The route condition under which `Entry` gives the route `Key` names a field. */
 type HeldCondition<Key extends string, Entry> = {
 	[Condition in keyof Entry & RouteCondition]: Key extends RoutesOf<Condition>
@@ -267,14 +285,20 @@ type EvidenceField<
 			[Name in Field]: AttestationEvidence[Field][Held &
 				keyof AttestationEvidence[Field]];
 		};
-/** The evidence field `Field` of the route `key` names, read from the same table as its type. */
+/**
+ * The evidence field `Field` of the route `key` names, read from its route
+ * policy, which states the conditions its type reads.
+ */
 function evidenceField<
 	Key extends string,
 	Field extends keyof AttestationEvidence,
->(key: Key, field: Field) {
-	const entry: Record<string, unknown> = attestationEvidence[field];
+>(policy: RoutePolicy, key: Key, field: Field) {
+	const evidence: Partial<Record<string, Record<string, unknown>>> =
+		policy.attestationEvidence;
+	const entry: Record<string, unknown> =
+		field === "articleEvidence" ? articleEvidence : (evidence[field] ?? {});
 	const held = Object.keys(entry).find((condition) =>
-		holdsNamed(condition, key),
+		holdsNamed(policy, condition, key),
 	);
 	// TypeScript can't evaluate the conditional `EvidenceField` for a generic
 	// key; the runtime finds the field from the same table.
@@ -312,22 +336,26 @@ export function buildUnitSchemas<
 	K extends string,
 	C extends z.core.$ZodType,
 	I extends z.core.$ZodType | undefined,
->(route: { language: L; family: F; kind: K }, core: C, inflectional: I) {
-	const base = buildBaseUnitSchemas(route, core, inflectional);
+>(
+	policy: RoutePolicy,
+	route: { language: L; family: F; kind: K },
+	core: C,
+	inflectional: I,
+) {
+	const base = buildBaseUnitSchemas(policy, route, core, inflectional);
 	const { key } = base;
-	const policy = policyOf(key);
 	const surfaceChecks: Check[] = [];
-	if (holds("foreign", key))
+	if (holds(policy, "foreign", key))
 		surfaceChecks.push([isForeignSurface, foreignSurfaceError]);
-	if (holds("comparability", key))
+	if (holds(policy, "comparability", key))
 		surfaceChecks.push([isComparabilitySurface, comparabilitySurfaceError]);
 	for (const [condition, ...check] of policy.surfaceChecks)
-		if (holds(condition, key)) surfaceChecks.push(check);
+		if (holds(policy, condition, key)) surfaceChecks.push(check);
 	const refineSurface = <S extends z.ZodObject>(schema: S): S =>
 		withChecks(schema, surfaceChecks);
 	// The type picks the branch the runtime picks, from the same route list.
 	const Surface = (
-		holds("syncretism", key)
+		holds(policy, "syncretism", key)
 			? syncretizableSurfaceSchema<typeof base.Surface, NonNullable<I>>(
 					base.Surface,
 					inflectional,
@@ -338,19 +366,22 @@ export function buildUnitSchemas<
 		? SyncretizableSurfaceSchema<typeof base.Surface, NonNullable<I>>
 		: typeof base.Surface;
 	const attestationChecks: Check[] = [];
-	if (holds("lexemeArticleOwner", key) || holds("locutionArticleOwner", key))
+	if (
+		holds(policy, "lexemeArticleOwner", key) ||
+		holds(policy, "locutionArticleOwner", key)
+	)
 		attestationChecks.push([isArticleAttestation, articleAttestationError]);
 	for (const [condition, ...check] of policy.attestationChecks)
-		if (holds(condition, key)) attestationChecks.push(check);
+		if (holds(policy, condition, key)) attestationChecks.push(check);
 	const Attestation = withChecks(
 		z.strictObject({
 			unitKind: z.literal(UnitKindSchema.enum.Attestation),
 			surface: Surface,
 			members: z.tuple([memberSchema], memberSchema),
 			realizationCoverage: z.enum(["Full", "Partial"]),
-			...evidenceField(key, "articleEvidence"),
-			...evidenceField(key, "expletiveEvidence"),
-			...evidenceField(key, "valencyEvidence"),
+			...evidenceField(policy, key, "articleEvidence"),
+			...evidenceField(policy, key, "expletiveEvidence"),
+			...evidenceField(policy, key, "valencyEvidence"),
 		}),
 		attestationChecks,
 	);
@@ -362,9 +393,10 @@ export function buildUnitSchemas<
  * coordinates are only strings, so their types cannot be exact.
  */
 export function buildDiscoveredUnitSchemas(
+	policy: RoutePolicy,
 	route: { language: string; family: string; kind: string },
 	core: z.core.$ZodType,
 	inflectional: z.core.$ZodType | undefined,
 ): Record<z.infer<typeof UnitKindSchema>, z.ZodObject> {
-	return buildUnitSchemas(route, core, inflectional);
+	return buildUnitSchemas(policy, route, core, inflectional);
 }

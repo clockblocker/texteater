@@ -2,6 +2,7 @@
 import type { Assert } from "common-utils";
 import type { z } from "zod";
 import { DeCircumfixMorphemeFeatureBagsSchema as featureBags } from "../../../../schemas/concrete-language/de/morpheme/circumfix.js";
+import { deRoutePolicy as routePolicy } from "../../../../schemas/concrete-language/de/route-policy.js";
 import { buildUnitSchemas } from "../../../../schemas/units.js";
 import type { IsUniversalFeatureBags } from "../../../../schemas/universal/features/catalog.js";
 
@@ -10,6 +11,7 @@ type _InFeaturePool = Assert<
 	IsUniversalFeatureBags<z.infer<typeof featureBags>>
 >;
 const schemas = buildUnitSchemas(
+	routePolicy,
 	{ language: "de", family: "Morpheme", kind: "Circumfix" },
 	featureBags.shape.core,
 	undefined,
