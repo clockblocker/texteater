@@ -1,0 +1,21 @@
+# Files agents don't author. `bun run check:file-tokens`, the pre-commit
+# hook, skips them, and GitHub collapses their diffs.
+
+# Lockfiles.
+*.lock linguist-generated
+skills-lock.json linguist-generated
+
+# Codegen (`bun run generate`).
+**/generated/** linguist-generated
+**/_generated/** linguist-generated
+battery/dumcorpus/schema/** linguist-generated
+battery/dumdict/README.md linguist-generated
+battery/dumling/README.md linguist-generated
+
+# Lab and eval run output. A research report is written by hand.
+battery/dumgen/evidence/** linguist-generated
+battery/dumgen/evidence/**/research-report.md -linguist-generated
+
+# Installed skills and third-party reference material.
+.agents/skills/** linguist-vendored
+battery/dumling/resources/** linguist-vendored
