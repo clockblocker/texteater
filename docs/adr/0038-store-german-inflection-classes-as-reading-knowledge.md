@@ -108,8 +108,8 @@ against the classes, for the reason it doesn't check the Präteritum.
   Lemma `Mutter`. The Reading it attests is the emoji judge's decision.
 - No aspect here enters NOUN or VERB Core Features, and no Lemma is split.
 - Gold keeps the classes and the Präteritum in agreement, a Weak verb's
-  Konjunktiv II equal to its Präteritum and a Strong verb's Partizip II in
-  -n, and dumcorpus checks it.
+  Konjunktiv II equal to its Präteritum, a Strong verb's Partizip II in -n
+  and a Mixed one's in -t, and dumcorpus checks it.
 - Records reviewed through Knowledge don't yet have to cover the principal
   parts. Records over the file-token limit can't take them until they are
   split, and the Readings they share carry one value (Dumcorpus ADR 0002).

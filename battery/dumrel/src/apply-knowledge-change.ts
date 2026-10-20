@@ -271,7 +271,8 @@ function applyConjugation(
 /**
  * A verb's forms accumulate in the order they arrive, like plural forms:
  * `sandte` then `sendete` store both, and a Präsens person gains the forms
- * it lacks. Correct replaces the aspect.
+ * it lacks; a form stored in another letter case adds nothing. Correct
+ * replaces the aspect.
  */
 function applyVerbForms(
 	knowledge: ReadingKnowledge,
@@ -295,16 +296,27 @@ function applyVerbForms(
 		const { first, second, third } = change.value;
 		const present = stored.presentSingular;
 		knowledge.presentSingular = {
-			first: unique([...(present?.first ?? []), ...first]),
-			second: unique([...(present?.second ?? []), ...second]),
-			third: unique([...(present?.third ?? []), ...third]),
+			first: uniqueForms([...(present?.first ?? []), ...first]),
+			second: uniqueForms([...(present?.second ?? []), ...second]),
+			third: uniqueForms([...(present?.third ?? []), ...third]),
 		};
 		return;
 	}
-	knowledge[change.aspect] = unique([
+	knowledge[change.aspect] = uniqueForms([
 		...(stored[change.aspect] ?? []),
 		...change.value,
 	]);
+}
+
+/** Forms once each, letter case aside: the first spelling stays. */
+function uniqueForms(forms: readonly string[]): string[] {
+	const seen = new Set<string>();
+	return forms.filter((form) => {
+		const folded = form.toLocaleLowerCase("de");
+		if (seen.has(folded)) return false;
+		seen.add(folded);
+		return true;
+	});
 }
 
 /**

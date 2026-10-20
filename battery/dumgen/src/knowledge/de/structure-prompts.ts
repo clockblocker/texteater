@@ -93,14 +93,14 @@ export const plural = {
 export const verbForms = {
 	task: paragraph(
 		"verbForms.task",
-		"Write the principal parts of the Reading's verb in this meaning, as Duden or DWDS lists them: its third person singular Präteritum (preterite), its Präsens forms for ich, du and er (presentSingular: first, second, third), its Partizip II (pastParticiple) and its third person singular Konjunktiv II (subjunctivePast). When this meaning has a strong and a weak form both in use, write both, the more usual first. Another meaning of the same verb may conjugate otherwise.",
+		"Write the principal parts of the Reading's verb in this meaning, as Duden or DWDS lists them: its third person singular Präteritum (preterite), its Präsens forms for ich, du and er (presentSingular: first, second, third), its Partizip II (pastParticiple) and its third person singular Konjunktiv II (subjunctivePast). When this meaning has two forms in use, a strong and a weak one or two spellings, write both, the more usual first. Another meaning of the same verb may conjugate otherwise.",
 		rules.conjugation,
 		rules.principalParts,
 		rules.meaning,
 	),
 	spelling: paragraph(
 		"verbForms.spelling",
-		"A separable verb's finite forms split off the particle («reiste ab», «hält an», «hielte an») and its Partizip II is one word («angehalten»); a reflexive verb's forms drop «sich». A verb with an inseparable prefix or an unstressed first syllable takes no ge- («verkauft», «posaunt», «studiert»).",
+		"A separable verb's finite forms split off the particle («hielt an», «hält an», «hielte an») and its Partizip II is one word («angehalten»); a reflexive verb's forms drop the reflexive pronoun («sich», «mich», «dich»). A verb with an inseparable prefix or an unstressed first syllable takes no ge- («verkauft», «posaunt», «studiert»). A modal's Partizip II is its own ge- form («gedurft»), never the infinitive that stands in for it after another infinitive.",
 		rules.conjugation,
 		rules.principalParts,
 	),

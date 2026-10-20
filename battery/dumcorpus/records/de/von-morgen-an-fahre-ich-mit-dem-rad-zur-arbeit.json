@@ -97,8 +97,14 @@
 	"sources": {
 		"adrs": ["ADR-0003", "ADR-0035", "ADR-0038", "ADR-0039"],
 		"rules": [
-			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
-			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
 			{
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
 				"hash": "fdaeed620ab52c64"
@@ -107,8 +113,14 @@
 				"rule": "de/bracket-particle-or-circumposition",
 				"hash": "60b1cecf8b3f74f1"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "53eb6d28dab42ddc"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			},
 			{
 				"rule": "de/conjugation-class-from-praeteritum",
 				"hash": "c9973355dfb7314c"

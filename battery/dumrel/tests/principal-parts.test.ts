@@ -165,6 +165,16 @@ test("Contribute adds the forms a Reading lacks, person by person; Correct and R
 	});
 	expect(
 		apply(
+			{ pastParticiple: ["gebacken"] },
+			{
+				kind: "Contribute",
+				aspect: "pastParticiple",
+				value: ["Gebacken"],
+			},
+		),
+	).toEqual({ success: true, value: { pastParticiple: ["gebacken"] } });
+	expect(
+		apply(
 			{ subjunctivePast: ["büke"] },
 			{ kind: "Correct", aspect: "subjunctivePast", value: ["backte"] },
 		),

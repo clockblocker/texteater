@@ -45,9 +45,18 @@ test("gold's principal parts agree with its one conjugation class (#1217)", () =
 		// verb's never is (`wäre`, `müsste`, `verbrennte`).
 		if (sameAsPreterite !== (verb.onlyClass === "Weak"))
 			slips.push(`${verb.lemma}: Konjunktiv II ${verb.subjunctivePast}`);
-		// A Strong verb's Partizip II ends in -n, a Weak or Mixed one's in -t.
-		const ending = verb.onlyClass === "Strong" ? /n$/u : /t$/u;
-		if (!verb.pastParticiple.every((form) => ending.test(finite(form))))
+		// A Strong verb's Partizip II ends in -n and a Mixed one's in -t; a
+		// Weak Präteritum may have a strong participle (`backte`, `gebacken`).
+		const ending =
+			verb.onlyClass === "Strong"
+				? /n$/u
+				: verb.onlyClass === "Mixed"
+					? /t$/u
+					: undefined;
+		if (
+			ending &&
+			!verb.pastParticiple.every((form) => ending.test(finite(form)))
+		)
 			slips.push(`${verb.lemma}: Partizip II ${verb.pastParticiple}`);
 	}
 	expect(slips).toEqual([]);

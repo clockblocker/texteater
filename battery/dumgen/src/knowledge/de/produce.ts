@@ -93,8 +93,8 @@ const verbFormAspects: readonly VerbFormAspect[] = [
 	"pastParticiple",
 	"subjunctivePast",
 ];
-const isVerbForm = (aspect: KnowledgeAspect) =>
-	new Set<string>(verbFormAspects).has(aspect);
+const verbFormNames = new Set<string>(verbFormAspects);
+const isVerbForm = (aspect: KnowledgeAspect) => verbFormNames.has(aspect);
 
 const requestAspects = new Set<string>([
 	"transcription",

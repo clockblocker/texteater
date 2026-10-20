@@ -61,8 +61,8 @@ function finiteFormsIssue(
 			return issue(
 				[...path, index],
 				particle === undefined
-					? `A ${name} form is one word, without sich`
-					: `A separable verb's ${name} form is its finite word and its particle split off, without sich: «… ${particle}»`,
+					? `A ${name} form is one word, without a reflexive pronoun`
+					: `A separable verb's ${name} form is its finite word and its particle split off, without a reflexive pronoun: «… ${particle}»`,
 			);
 		if (ending && !ending.test.test(words[0] ?? ""))
 			return issue([...path, index], ending.message);
@@ -92,7 +92,7 @@ function participleIssue(
 			return issue(
 				[...path, index],
 				particle === undefined
-					? "A Partizip II is one word ending in -t or -n, without sich"
+					? "A Partizip II is one word ending in -t or -n, without a reflexive pronoun"
 					: `A separable verb's Partizip II is one word that opens with its particle «${particle}…» and ends in -t or -n`,
 			);
 	return undefined;
