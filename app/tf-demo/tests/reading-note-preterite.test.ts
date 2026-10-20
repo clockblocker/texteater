@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
+import type * as Dumrel from "dumrel/types";
 import { api } from "../convex/_generated/api";
 import {
 	foldedCanonicalForm,
@@ -30,7 +31,10 @@ const anrufen = {
 
 test("the Reading Note carries a verb's Präteritum beside its conjugation class (#1209)", async () => {
 	const t = createTestConvex();
-	const knowledge = { conjugationClass: ["Strong"], preterite: ["rief an"] };
+	const knowledge: Dumrel.ReadingKnowledge = {
+		conjugationClass: ["Strong"],
+		preterite: ["rief an"],
+	};
 	const readingId = await t.run(async (ctx) => {
 		const { lemma } = anrufen;
 		const lemmaId = await ctx.db.insert("lemmas", {
