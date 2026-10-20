@@ -16,7 +16,9 @@ runs the German segmenter's stages under `src/segment/` on each Sentence:
 the Segment stage cuts it into Segments, and the unit stage groups and
 routes them. The stages reach jev only through the host's
 `JevAsk` and read no files; `createTypeSafeAsk` is the production `JevAsk`,
-a `fetch` to the TypeSafe API with the host's key. Everything under `src/`
+a `fetch` to the TypeSafe API with the host's key. `translate.sentence`
+translates one German Sentence into `en` or `ru` through the host's
+`LunaAsk`, reading its neighbouring Sentences as context. Everything under `src/`
 ships. Outside it, `lab/` holds what doesn't: the `segment.inUnits` jev lab
 that configures and measures the stages (`lab/segmentation/`) and the
 spec-corpus evaluator that scores them against dumcorpus

@@ -95,6 +95,7 @@ export type OperationTrace = {
 		| "segment.inUnits"
 		| "resolve.grammar"
 		| "resolve.reading"
+		| "translate.sentence"
 		| "knowledge.produce";
 	/** Epoch milliseconds; `durationMs` reads the monotonic clock. */
 	readonly startedAt: number;

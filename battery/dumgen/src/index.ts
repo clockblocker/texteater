@@ -15,8 +15,9 @@
  * asking jev through the host's `JevAsk`; `resolve.grammar`, which
  * resolves a stored unit's Attestation with jev judging and Luna writing;
  * `resolve.reading`, which picks a stored Emoji Description of the
- * Attestation's Lemma or writes a new one; and `knowledge.produce`, which
- * fills the resolved Reading's missing Knowledge aspect by aspect.
+ * Attestation's Lemma or writes a new one; `translate.sentence`, which
+ * translates one Sentence with Luna (#1210); and `knowledge.produce`,
+ * which fills the resolved Reading's missing Knowledge aspect by aspect.
  * The operations are Effect 4 Effects. `createTypeSafeAsk` and
  * `createOpenAILuna` are the production transports: `fetch` to the
  * TypeSafe and OpenAI APIs, with no `node:*` import.
