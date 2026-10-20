@@ -9,5 +9,7 @@ describeStorageConformance("The in-memory store", () => {
 			Effect.sync(() => storage.commitChanges(request)),
 		loadReadingEntryContext: (request) =>
 			Effect.sync(() => storage.loadReadingEntryContext(request)),
+		loadCleanupRelationsContext: (request) =>
+			Effect.sync(() => storage.loadCleanupRelationsContext(request)),
 	};
 });

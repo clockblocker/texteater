@@ -88,9 +88,23 @@ export const schreitenPending = {
 } as const;
 
 export const schreiten = verbLemma("schreiten");
+export const schreitenReading = readingOf(schreiten, "🦶");
+
+/**
+ * A second `schreiten` Lemma on the same route and Canonical Form, so a
+ * `schreiten` Shadow matches two Lemmas once both are stored.
+ */
+export const reflexiveSchreiten: Verb = {
+	...schreiten,
+	coreFeatures: { ...verbFeatures, lexicallyReflexive: "Acc" },
+};
 
 export const gehenPendingRecord: PendingSemanticRelationRecord<"de"> =
 	createPendingSemanticRelationRecord(gehenReading, schreitenPending);
+
+/** The same pending synonym, from `laufen`. */
+export const laufenPendingRecord: PendingSemanticRelationRecord<"de"> =
+	createPendingSemanticRelationRecord(laufenReading, schreitenPending);
 
 /** A pending relation the suite never stores. */
 export const gehenUnstoredPendingRecord: PendingSemanticRelationRecord<"de"> =

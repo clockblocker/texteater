@@ -1,18 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import type * as Dumling from "dumling/types";
-import * as Effect from "effect/Effect";
 
-import type {
-	CommitChangesRequest,
-	CommitChangesResult,
-	DumdictPendingSemanticRelation,
-	PlannedChangeOp,
-	ReadingEntry,
-} from "../../domain-types";
-import type {
-	LoadReadingEntryContextRequest,
-	ReadingEntryContext,
-} from "../../storage";
+import type { PlannedChangeOp } from "../../domain-types";
 import {
 	createLemma,
 	createOwnedSurface,
@@ -33,20 +21,21 @@ import {
 	schreitenPending,
 	springen,
 } from "./fixtures";
+import {
+	type ConformanceStorage,
+	commit,
+	exactPending,
+	knowledgeOf,
+	pendingMatchingLemma,
+	readingContext,
+	run,
+	seed,
+	semanticConflict,
+	snapshot,
+} from "./harness";
+import { describeRelationConformance } from "./relation-cases";
 
-/**
- * The storage operations the conformance suite drives: the commit, and the
- * Reading Entry context reads the planner plans from. A failing Effect fails
- * the test.
- */
-export type ConformanceStorage = {
-	commitChanges(
-		request: CommitChangesRequest<"de">,
-	): Effect.Effect<CommitChangesResult, unknown>;
-	loadReadingEntryContext(
-		request: LoadReadingEntryContextRequest<"de">,
-	): Effect.Effect<ReadingEntryContext<"de">, unknown>;
-};
+export type { ConformanceStorage } from "./harness";
 
 export type StorageConformanceOptions = {
 	/**
@@ -529,106 +518,7 @@ export function describeStorageConformance(
 				).rejects.toThrow();
 			});
 		}
+
+		describeRelationConformance(createStorage);
 	});
-}
-
-const semanticConflict = {
-	status: "conflict",
-	code: "semanticPreconditionFailed",
-} as const;
-
-function run<A, E>(effect: Effect.Effect<A, E>): Promise<A> {
-	return Effect.runPromise(effect);
-}
-
-async function commit(
-	storage: ConformanceStorage,
-	changes: PlannedChangeOp<"de">[],
-): Promise<CommitChangesResult> {
-	const { revision } = await readingContext(storage, gehenReading);
-	return run(storage.commitChanges({ baseRevision: revision, changes }));
-}
-
-async function seed(
-	storage: ConformanceStorage,
-	changes: PlannedChangeOp<"de">[],
-): Promise<void> {
-	const result = await commit(storage, changes);
-	if (result.status !== "committed")
-		throw new Error(
-			`Expected the seed commit to commit, got ${JSON.stringify(result)}.`,
-		);
-}
-
-async function readingContext(
-	storage: ConformanceStorage,
-	reading: Dumling.Reading<"de">,
-) {
-	const context = await run(
-		storage.loadReadingEntryContext({
-			intent: "ensureReadingEntry",
-			reading,
-		}),
-	);
-	if (context.intent !== "ensureReadingEntry")
-		throw new Error(`Expected an ensureReadingEntry context.`);
-	return context;
-}
-
-async function knowledgeOf(
-	storage: ConformanceStorage,
-	reading: Dumling.Reading<"de">,
-): Promise<ReadingEntry<"de">["knowledge"]> {
-	return (await readingContext(storage, reading)).existingReading?.knowledge;
-}
-
-async function exactPending(
-	storage: ConformanceStorage,
-	pendingRelations: DumdictPendingSemanticRelation<"de">[],
-) {
-	const context = await run(
-		storage.loadReadingEntryContext({
-			intent: "applyGeneratedKnowledge",
-			reading: gehenReading,
-			pendingRelations,
-			relationTargetLemmas: [],
-			relationTargetReadings: [],
-		}),
-	);
-	if (context.intent !== "applyGeneratedKnowledge")
-		throw new Error(`Expected an applyGeneratedKnowledge context.`);
-	return context.exactPendingRelations;
-}
-
-async function pendingMatchingLemma(
-	storage: ConformanceStorage,
-	lemma: Dumling.Lemma<"de", "Lexeme", "VERB">,
-) {
-	const context = await run(
-		storage.loadReadingEntryContext({
-			intent: "addNewNote",
-			reading: { unitKind: "Reading", lemma, emojiDescription: "🦶" },
-			ownedSurfaces: [],
-			relations: [],
-		}),
-	);
-	if (context.intent !== "addNewNote")
-		throw new Error(`Expected an addNewNote context.`);
-	return context.pendingRelationsMatchingProposedLemma;
-}
-
-/** Every fixture value a refused commit must leave as it was. */
-async function snapshot(storage: ConformanceStorage) {
-	const surfaces = await run(
-		storage.loadReadingEntryContext({
-			intent: "ensureOwnedSurface",
-			reading: gehenReading,
-			surface: gehenSurface,
-		}),
-	);
-	return {
-		surfaces,
-		laufen: await readingContext(storage, laufenReading),
-		pending: await exactPending(storage, [schreitenPending]),
-	};
 }

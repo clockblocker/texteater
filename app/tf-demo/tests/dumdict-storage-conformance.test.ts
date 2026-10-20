@@ -1,12 +1,17 @@
 import { afterEach, beforeEach, jest } from "bun:test";
-import type { ReadingEntryContext } from "dumdict/planning";
+import type {
+	CleanupRelationsSlice,
+	ReadingEntryContext,
+} from "dumdict/planning";
 import {
 	type ConformanceStorage,
 	describeStorageConformance,
 } from "dumdict/testing";
 import * as Effect from "effect/Effect";
+import { pendingLocatorIndexKey } from "../convex/model/dumdictPendingIndexes";
 import {
 	applyDumdictPlanInTransaction,
+	loadCleanupRelationsSlice,
 	loadReadingEntryContextSlice,
 	readingEntryContextArgs,
 } from "../convex/model/dumdictTransaction";
@@ -42,6 +47,18 @@ function convexStorage(): ConformanceStorage {
 							readingEntryContextArgs(request),
 						),
 					) as Promise<ReadingEntryContext<"de">>,
+			),
+		loadCleanupRelationsContext: ({ resolutions }) =>
+			Effect.promise(
+				() =>
+					t.run((ctx) =>
+						loadCleanupRelationsSlice(
+							ctx,
+							resolutions.map(({ locator }) =>
+								pendingLocatorIndexKey(locator),
+							),
+						),
+					) as Promise<CleanupRelationsSlice<"de">>,
 			),
 	};
 }
