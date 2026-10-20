@@ -44,6 +44,13 @@ export type StorageConformanceOptions = {
 	 * then refuse every planned change that carries or checks one.
 	 */
 	readonly readingAttestations?: boolean;
+	/**
+	 * Whether the store's revision advances with each commit, so it refuses a
+	 * commit planned at an older one. A host whose commit is guarded by its
+	 * own transaction's reads, and so reports one constant revision, sets
+	 * `false`.
+	 */
+	readonly revisions?: boolean;
 };
 
 /**
@@ -61,6 +68,7 @@ export function describeStorageConformance(
 	options: StorageConformanceOptions = {},
 ): void {
 	const readingAttestations = options.readingAttestations ?? true;
+	const revisions = options.revisions ?? true;
 
 	describe(`${name} conforms to the Dumdict storage contract`, () => {
 		test("an empty commit commits", async () => {
@@ -100,6 +108,40 @@ export function describeStorageConformance(
 				existingOwnedSurfaces: [gehenSurfaceEntry],
 			});
 		});
+
+		if (revisions)
+			test("refuses a commit planned at an older revision, writing nothing", async () => {
+				const storage = await createStorage();
+				const { revision } = await readingContext(
+					storage,
+					gehenReading,
+				);
+				await seed(storage, [createLemma(gehen)]);
+
+				expect(
+					await run(
+						storage.commitChanges({
+							baseRevision: revision,
+							changes: [createLemma(laufen)],
+						}),
+					),
+				).toMatchObject({
+					status: "conflict",
+					code: "revisionConflict",
+				});
+				expect(
+					await commit(storage, [
+						createLemma(laufen, [
+							{ kind: "revisionMatches", revision },
+							{ kind: "lemmaMissing", lemma: laufen },
+						]),
+					]),
+				).toMatchObject({ status: "conflict" });
+				expect(
+					(await readingContext(storage, laufenReading))
+						.existingLemma,
+				).toBeUndefined();
+			});
 
 		test("checks each change's preconditions against the changes before it", async () => {
 			const storage = await createStorage();
@@ -519,6 +561,6 @@ export function describeStorageConformance(
 			});
 		}
 
-		describeRelationConformance(createStorage);
+		describeRelationConformance(createStorage, revisions);
 	});
 }

@@ -8,6 +8,7 @@ import {
 	createReading,
 	deletePending,
 	gehen,
+	gehenNounPendingRecord,
 	gehenPendingRecord,
 	gehenReading,
 	gehenUnstoredPendingRecord,
@@ -31,6 +32,7 @@ import {
 	readingContext,
 	run,
 	seed,
+	semanticConflict,
 	storedInventory,
 } from "./harness";
 
@@ -102,10 +104,12 @@ async function addSchreitenNote(storage: ConformanceStorage) {
  * Registers the relation cases: the `cleanupRelations` slice, pending
  * relations resolving when their target Lemma is created, and the relation
  * inventory each relation slice carries, which a host may bound to the
- * neighbourhood a plan reads.
+ * neighbourhood a plan reads. `revisions` is the suite's
+ * `StorageConformanceOptions.revisions`.
  */
 export function describeRelationConformance(
 	createStorage: () => ConformanceStorage | Promise<ConformanceStorage>,
+	revisions: boolean,
 ): void {
 	test("cleanup loads only the requested pending relations and resolves a Shadow that names one Lemma", async () => {
 		const storage = await createStorage();
@@ -134,6 +138,39 @@ export function describeRelationConformance(
 		expect(await pendingMatchingLemma(storage, schreiten)).toEqual([
 			laufenPendingRecord,
 		]);
+	});
+
+	test("cleanup loads and resolves every requested pending relation", async () => {
+		const storage = await createStorage();
+		await seed(storage, [
+			...pendingGehen,
+			...unrelatedLaufen,
+			createPending(laufenPendingRecord),
+			createLemma(schreiten),
+		]);
+		const before = await stored(storage);
+
+		const { slice, outcome } = await cleanup(storage, [
+			gehenPendingRecord.locator,
+			laufenPendingRecord.locator,
+		]);
+		expect(slice.pendingRelations).toHaveLength(2);
+		expect(slice.pendingRelations).toEqual(
+			expect.arrayContaining([gehenPendingRecord, laufenPendingRecord]),
+		);
+		expectBoundedInventory(slice, before, {
+			lemmas: [gehen, laufen, schreiten],
+			readings: [gehenReading, laufenReading],
+		});
+		expect(await commitPlan(storage, outcome)).toMatchObject({
+			status: "committed",
+		});
+
+		for (const reading of [gehenReading, laufenReading])
+			expect(await knowledgeOf(storage, reading)).toEqual({
+				semanticRelations: { synonym: [schreiten] },
+			});
+		expect(await pendingMatchingLemma(storage, schreiten)).toEqual([]);
 	});
 
 	test("cleanup keeps a Shadow that names no Lemma, or two, pending", async () => {
@@ -183,9 +220,13 @@ export function describeRelationConformance(
 		const { outcome } = await cleanup(storage);
 		await seed(storage, [deletePending(gehenPendingRecord)]);
 
-		expect(await commitPlan(storage, outcome)).toMatchObject({
-			status: "conflict",
-		});
+		// A store whose revision advanced refuses the plan's base revision; one
+		// with a constant revision refuses its pending-relation precondition.
+		expect(await commitPlan(storage, outcome)).toMatchObject(
+			revisions
+				? { status: "conflict", code: "revisionConflict" }
+				: semanticConflict,
+		);
 		expect(await knowledgeOf(storage, gehenReading)).toBeUndefined();
 	});
 
@@ -200,6 +241,7 @@ export function describeRelationConformance(
 				}),
 			),
 			createPending(gehenPendingRecord),
+			createPending(gehenNounPendingRecord),
 			...unrelatedLaufen,
 		]);
 		const before = await stored(storage);
@@ -223,6 +265,9 @@ export function describeRelationConformance(
 			semanticRelations: { antonym: [springen], synonym: [schreiten] },
 		});
 		expect(await pendingMatchingLemma(storage, schreiten)).toEqual([]);
+		expect(
+			await exactPending(storage, [gehenNounPendingRecord.pending]),
+		).toEqual([gehenNounPendingRecord]);
 	});
 
 	test("creating a Lemma beside another the Shadow names keeps its pending relations", async () => {

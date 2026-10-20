@@ -64,6 +64,9 @@ function convexStorage(): ConformanceStorage {
 }
 
 // tf-demo keeps occurrence Attestations in its host graph (tf-demo ADR 0001).
+// Its Convex transaction's own reads guard a commit, so its revision is one
+// constant (convex/dumdictStorage/storage.ts).
 describeStorageConformance("The Convex dictionary store", convexStorage, {
 	readingAttestations: false,
+	revisions: false,
 });

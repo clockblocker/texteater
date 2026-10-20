@@ -106,6 +106,20 @@ export const gehenPendingRecord: PendingSemanticRelationRecord<"de"> =
 export const laufenPendingRecord: PendingSemanticRelationRecord<"de"> =
 	createPendingSemanticRelationRecord(laufenReading, schreitenPending);
 
+/**
+ * A pending synonym from `gehen` whose Shadow differs from the `schreiten`
+ * Lemma only by kind, so creating that Lemma must not match it.
+ */
+export const gehenNounPendingRecord: PendingSemanticRelationRecord<"de"> =
+	createPendingSemanticRelationRecord(gehenReading, {
+		relation: "synonym",
+		target: {
+			...schreitenPending.target,
+			canonicalForm: "Schreiten",
+			kind: "NOUN",
+		},
+	});
+
 /** A pending relation the suite never stores. */
 export const gehenUnstoredPendingRecord: PendingSemanticRelationRecord<"de"> =
 	createPendingSemanticRelationRecord(gehenReading, {
