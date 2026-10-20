@@ -24,7 +24,7 @@ export type SupportedTargetLanguage =
  * that names another. A Sentence detected in any other language, or in
  * none, is a Plain Sentence (map #1175).
  */
-const SCROLL_TARGET_LANGUAGE = "de" satisfies SupportedTargetLanguage;
+export const SCROLL_TARGET_LANGUAGE = "de" satisfies SupportedTargetLanguage;
 
 /** Whether a Sentence with this Detected Language is shown but not clickable. */
 export function isPlainSentence(language: string | undefined): boolean {

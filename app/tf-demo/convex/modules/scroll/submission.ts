@@ -144,16 +144,31 @@ export function assertSubmittedScroll(input: SubmittedScroll): void {
 		}
 		positions.add(sentence.position);
 		sentenceKeys.add(sentence.segmentedSentenceId);
-		if (isPlainSentence(sentence.language)) {
-			assertPlainSentence(sentence);
-			continue;
-		}
-		assertSubmittedSegments(sentence);
-		assertSentenceUnits(sentence);
+		assertAnalyzedSentence(sentence);
 	}
 }
 
-function assertPlainSentence(sentence: SubmittedSentence): void {
+/** An analyzed Sentence as storage checks it, wherever it was placed. */
+type AnalyzedSentence = Pick<
+	SubmittedSentence,
+	"language" | "stitchedText" | "segments" | "units" | "segmentationFailed"
+>;
+
+/**
+ * One analyzed Sentence's own consistency: a Plain Sentence stores no
+ * Segments and no units; any other has 1 to MAX_SEGMENTS_PER_SENTENCE
+ * Segments that reconstruct its text and units that cover it.
+ */
+export function assertAnalyzedSentence(sentence: AnalyzedSentence): void {
+	if (isPlainSentence(sentence.language)) {
+		assertPlainSentence(sentence);
+		return;
+	}
+	assertSubmittedSegments(sentence);
+	assertSentenceUnits(sentence);
+}
+
+function assertPlainSentence(sentence: AnalyzedSentence): void {
 	if (
 		sentence.segments.length > 0 ||
 		sentence.units.length > 0 ||
@@ -162,7 +177,7 @@ function assertPlainSentence(sentence: SubmittedSentence): void {
 		throw new Error("A Plain Sentence stores no Segments and no units.");
 }
 
-function assertSubmittedSegments(sentence: SubmittedSentence): void {
+function assertSubmittedSegments(sentence: AnalyzedSentence): void {
 	if (
 		sentence.segments.length === 0 ||
 		sentence.segments.length > MAX_SEGMENTS_PER_SENTENCE

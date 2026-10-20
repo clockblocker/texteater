@@ -20,6 +20,8 @@ import type * as dumdictStorage_dictionaryPlan from "../dumdictStorage/dictionar
 import type * as dumdictStorage_queries from "../dumdictStorage/queries.js";
 import type * as dumdictStorage_storage from "../dumdictStorage/storage.js";
 import type * as dumdictStorage_transaction from "../dumdictStorage/transaction.js";
+import type * as folioProcessing from "../folioProcessing.js";
+import type * as folios from "../folios.js";
 import type * as intakeRuns from "../intakeRuns.js";
 import type * as knowledgeGeneration from "../knowledgeGeneration.js";
 import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.js";
@@ -31,6 +33,7 @@ import type * as model_definitionTexts from "../model/definitionTexts.js";
 import type * as model_deploymentDumgen from "../model/deploymentDumgen.js";
 import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexes.js";
 import type * as model_dumdictTransaction from "../model/dumdictTransaction.js";
+import type * as model_folios from "../model/folios.js";
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
 import type * as model_grammarCheckpoint from "../model/grammarCheckpoint.js";
 import type * as model_inspection from "../model/inspection.js";
@@ -116,6 +119,8 @@ declare const fullApi: ApiFromModules<{
   "dumdictStorage/queries": typeof dumdictStorage_queries;
   "dumdictStorage/storage": typeof dumdictStorage_storage;
   "dumdictStorage/transaction": typeof dumdictStorage_transaction;
+  folioProcessing: typeof folioProcessing;
+  folios: typeof folios;
   intakeRuns: typeof intakeRuns;
   knowledgeGeneration: typeof knowledgeGeneration;
   knowledgeGenerationActions: typeof knowledgeGenerationActions;
@@ -127,6 +132,7 @@ declare const fullApi: ApiFromModules<{
   "model/deploymentDumgen": typeof model_deploymentDumgen;
   "model/dumdictPendingIndexes": typeof model_dumdictPendingIndexes;
   "model/dumdictTransaction": typeof model_dumdictTransaction;
+  "model/folios": typeof model_folios;
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;
   "model/grammarCheckpoint": typeof model_grammarCheckpoint;
   "model/inspection": typeof model_inspection;

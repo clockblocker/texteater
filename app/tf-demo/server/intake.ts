@@ -128,37 +128,34 @@ function targetParagraphs(
 		.filter(({ sentences }) => sentences.length > 0);
 }
 
+/** One Sentence as intake analyzed it, before storage gives it its place. */
+export type AnalyzedSentence = Omit<
+	SubmittedSentence,
+	"segmentedSentenceId" | "position" | "paragraph"
+>;
+
 /**
- * Every Sentence as tf-demo stores it, positions counted across
- * paragraphs: a target-language Sentence with its Segments and units in
- * the order `segment.inUnits` returned them, any other as a Plain
- * Sentence. A Sentence's ID is its submission's key and position, so a
- * retried submission names the same Sentences.
+ * Every Sentence as tf-demo stores it, by paragraph: a target-language
+ * Sentence with its Segments and units in the order `segment.inUnits`
+ * returned them, any other as a Plain Sentence.
  */
-function submittedSentences(
-	submissionKey: string,
+function analyzedSentences(
 	paragraphs: LanguagedParagraphs,
 	language: ScrollLanguage,
 	segmented: SegmentedText | undefined,
-): SubmittedSentence[] {
+): AnalyzedSentence[][] {
 	const segmentedSentences =
 		segmented?.paragraphs.flatMap(({ sentences }) => sentences) ?? [];
-	let position = 0;
 	let next = 0;
-	return paragraphs.flatMap(({ sentences }, paragraph) =>
-		sentences.map((sentence) => {
-			const at = position++;
-			const placed = {
-				segmentedSentenceId: `${submissionKey}#${at}`,
-				position: at,
-				paragraph,
-				...(sentence.language === undefined
+	return paragraphs.map(({ sentences }) =>
+		sentences.map((sentence): AnalyzedSentence => {
+			const detected =
+				sentence.language === undefined
 					? {}
-					: { language: sentence.language }),
-			};
+					: { language: sentence.language };
 			if (sentence.language !== language)
 				return {
-					...placed,
+					...detected,
 					stitchedText: stitchedText(sentence.text),
 					segments: [],
 					units: [],
@@ -169,7 +166,7 @@ function submittedSentences(
 					"segment.inUnits returned fewer Sentences than it was given.",
 				);
 			return {
-				...placed,
+				...detected,
 				stitchedText: cut.text,
 				segments: cut.segments.map(({ kind, text, surface }) =>
 					surface === undefined
@@ -183,12 +180,87 @@ function submittedSentences(
 	);
 }
 
+/** The Dumgen operations intake runs. */
+export type IntakeDumgen = Pick<Dumgen, "language" | "segment">;
+
+/**
+ * Intake's analysis of Sentences already split, the one path a paste and a
+ * Folio's window share: `language.detect` gives each its Detected
+ * Language, and only the target-language ones go to `segment.inUnits`.
+ * `onSegmenting` hears which go, by index across paragraphs.
+ */
+export function analyzeParagraphs(
+	dumgen: IntakeDumgen,
+	paragraphs: readonly { readonly sentences: readonly string[] }[],
+	language: ScrollLanguage,
+	onSegmenting?: (positions: readonly number[]) => void,
+) {
+	return Effect.gen(function* () {
+		const detected = yield* dumgen.language.detect({ paragraphs }).pipe(
+			Effect.withSpan(
+				"Detect sentence languages",
+				inspectionStep("battery/dumgen · language.detect", {
+					paragraphs,
+				}),
+			),
+		);
+		const target = targetParagraphs(detected.paragraphs, language);
+		onSegmenting?.(
+			detected.paragraphs
+				.flatMap(({ sentences }) => sentences)
+				.flatMap((sentence, position) =>
+					sentence.language === language ? [position] : [],
+				),
+		);
+		// A Sentence whose calls fail comes back marked, so this step
+		// fails only on a bug or an interruption.
+		const segmented =
+			target.length === 0
+				? undefined
+				: yield* dumgen.segment
+						.inUnits({ language: "de", paragraphs: target })
+						.pipe(
+							Effect.withSpan(
+								"Segment sentences in units",
+								inspectionStep(
+									"battery/dumgen · segment.inUnits",
+									{ paragraphs: target },
+								),
+							),
+						);
+		return analyzedSentences(detected.paragraphs, language, segmented);
+	});
+}
+
+/**
+ * Every analyzed Sentence placed in its Scroll, positions counted across
+ * paragraphs. A Sentence's ID is its submission's key and position, so a
+ * retried submission names the same Sentences.
+ */
+function submittedSentences(
+	submissionKey: string,
+	paragraphs: readonly (readonly AnalyzedSentence[])[],
+): SubmittedSentence[] {
+	let position = 0;
+	return paragraphs.flatMap((sentences, paragraph) =>
+		sentences.map((sentence) => {
+			const at = position++;
+			return {
+				segmentedSentenceId: `${submissionKey}#${at}`,
+				position: at,
+				paragraph,
+				...sentence,
+			};
+		}),
+	);
+}
+
 export function createIntake(options: {
 	/**
 	 * `createDumgen({ jev })` with the host's jev, for `language.detect`
 	 * and `segment.inUnits`; a test passes one with a fake jev.
 	 */
-	readonly dumgen: Pick<Dumgen, "language" | "segment">;
+	readonly dumgen: IntakeDumgen;
 	readonly persistence: IntakePersistence;
 	/**
 	 * Hears which Sentences go to `segment.inUnits`, by position, in the
@@ -218,53 +290,17 @@ export function createIntake(options: {
 			if (sentences.length === 0)
 				throw new Error("Text submission contains no sentences.");
 
-			const detected = yield* options.dumgen.language
-				.detect({ paragraphs })
-				.pipe(
-					Effect.withSpan(
-						"Detect sentence languages",
-						inspectionStep("battery/dumgen · language.detect", {
-							paragraphs,
-						}),
-					),
-				);
-			const target = targetParagraphs(
-				detected.paragraphs,
+			const analyzed = yield* analyzeParagraphs(
+				options.dumgen,
+				paragraphs,
 				input.language,
+				options.onSegmenting,
 			);
-			options.onSegmenting?.(
-				detected.paragraphs
-					.flatMap(({ sentences }) => sentences)
-					.flatMap(({ language }, position) =>
-						language === input.language ? [position] : [],
-					),
-			);
-			// A Sentence whose calls fail comes back marked, so this step
-			// fails only on a bug or an interruption.
-			const segmented =
-				target.length === 0
-					? undefined
-					: yield* options.dumgen.segment
-							.inUnits({ language: "de", paragraphs: target })
-							.pipe(
-								Effect.withSpan(
-									"Segment sentences in units",
-									inspectionStep(
-										"battery/dumgen · segment.inUnits",
-										{ paragraphs: target },
-									),
-								),
-							);
 			const submission: SubmittedScroll = {
 				submissionKey: input.submissionKey,
 				sourceText: input.sourceText,
 				extractedText: input.extractedText,
-				sentences: submittedSentences(
-					input.submissionKey,
-					detected.paragraphs,
-					input.language,
-					segmented,
-				),
+				sentences: submittedSentences(input.submissionKey, analyzed),
 			};
 			const persisted = yield* Effect.tryPromise(() =>
 				options.persistence.persistSubmittedScroll(submission),

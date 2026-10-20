@@ -9,6 +9,7 @@ import {
 	TEXT_FILE_TOO_LARGE_MESSAGE,
 } from "../shared/text-file-limits";
 import { internal } from "./_generated/api";
+import type { Id } from "./_generated/dataModel";
 import { action } from "./_generated/server";
 import { languageValidator } from "./model/validators";
 
@@ -18,7 +19,9 @@ import { languageValidator } from "./model/validators";
  * planned by `server/textFileIntake.ts`, and written through
  * `textFiles.ts`: its Sections first, so the book is in the Library at
  * once, then its Scrolls in batches, each readable as plain text when its
- * batch lands. No model runs here; processing follows the reader (#1193).
+ * batch lands. No model runs here: once the whole book is written, the
+ * first Scroll's first Folio is processed, then processing follows the
+ * reader (#1193).
  */
 
 const submitTextFileResultValidator = v.union(
@@ -124,6 +127,7 @@ export const submitTextFile = action({
 		);
 		const topId = sectionIds[0];
 		if (topId === undefined) throw new Error("A book has a top Section.");
+		let firstScrollId: Id<"scrolls"> | undefined;
 		try {
 			let index = 0;
 			for (const batch of scrollBatches(plan.scrolls)) {
@@ -147,11 +151,12 @@ export const submitTextFile = action({
 						})),
 					};
 				});
-				await withWriteRateRetries(() =>
+				const written = await withWriteRateRetries(() =>
 					ctx.runMutation(internal.textFiles.writeScrolls, {
 						scrolls,
 					}),
 				);
+				firstScrollId ??= written[0];
 			}
 		} catch (error) {
 			// No half-written book stays in the Library; the Original goes too.
@@ -166,6 +171,11 @@ export const submitTextFile = action({
 				);
 			throw error;
 		}
+		if (firstScrollId !== undefined)
+			await ctx.runMutation(internal.folios.follow, {
+				scrollId: firstScrollId,
+				position: 0,
+			});
 		return { status: "Accepted", sectionId: topId, title: plan.title };
 	},
 });

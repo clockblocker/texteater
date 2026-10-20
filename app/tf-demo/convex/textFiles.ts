@@ -3,6 +3,7 @@ import { assertIdentifier, assertNonEmpty } from "../server/identifiers";
 import type { Id } from "./_generated/dataModel";
 import { internalMutation, internalQuery, mutation } from "./_generated/server";
 import { insertSection, placeScroll } from "./model/codex";
+import { discardFolios, writeFolios } from "./model/folios";
 
 /**
  * The writes behind a `.txt` Submission (#1191). The browser uploads the
@@ -106,7 +107,8 @@ export const writeSections = internalMutation({
  * Writes a batch of a file's Scrolls, each placed in its Section's Codex
  * with its Sentences stored unprocessed: no Detected Language and no
  * Segments, so the reader shows them as plain text until processing
- * reaches them (#1193). A Sentence's ID is its Scroll's key and position.
+ * reaches their Folio (#1193). A Sentence's ID is its Scroll's key and
+ * position. Returns the Scrolls' IDs in order.
  */
 export const writeScrolls = internalMutation({
 	args: {
@@ -130,8 +132,9 @@ export const writeScrolls = internalMutation({
 			}),
 		),
 	},
-	returns: v.null(),
+	returns: v.array(v.id("scrolls")),
 	handler: async (ctx, { scrolls }) => {
+		const scrollIds: Id<"scrolls">[] = [];
 		for (const scroll of scrolls) {
 			assertNonEmpty(scroll.submissionKey, "submissionKey");
 			const scrollId = await ctx.db.insert("scrolls", {
@@ -157,8 +160,10 @@ export const writeScrolls = internalMutation({
 					stitchedText: sentence.stitchedText,
 				});
 			}
+			await writeFolios(ctx, scrollId, scroll.sentences);
+			scrollIds.push(scrollId);
 		}
-		return null;
+		return scrollIds;
 	},
 });
 
@@ -167,8 +172,8 @@ const DISCARD_SCROLLS_PER_BATCH = 4;
 
 /**
  * Deletes a batch of a half-written submission's Scrolls placed in one
- * Section, with their Sentences, and the Section itself once it holds
- * none. Returns whether any is left. Intake calls it for each Section a
+ * Section, with their Sentences and Folios, and the Section itself once it
+ * holds none. Returns whether any is left. Intake calls it for each Section a
  * failed run wrote, deepest first, so no half-written book stays in the
  * Library.
  */
@@ -190,6 +195,7 @@ export const discardSectionBatch = internalMutation({
 				)
 				.collect();
 			for (const sentence of sentences) await ctx.db.delete(sentence._id);
+			await discardFolios(ctx, scroll._id);
 			await ctx.db.delete(scroll._id);
 		}
 		if (scrolls.length === DISCARD_SCROLLS_PER_BATCH) return true;

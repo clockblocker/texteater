@@ -84,6 +84,8 @@ export const resetDemoTableNames = [
 	"sectionProgress",
 	"segments",
 	"sentences",
+	"folioRuns",
+	"folios",
 	"scrolls",
 	"sections",
 ] as const satisfies readonly TableNames[];

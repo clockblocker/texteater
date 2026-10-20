@@ -91,6 +91,37 @@ export const scrollTables = {
 		.index("by_placement", ["placement.sectionId", "placement.order"]),
 
 	/**
+	 * A Folio of a book's Scroll (#1193): the Sentences from position
+	 * `start` up to `end`, which Intake processes in `windows` windows of
+	 * `language.detect`, in order; the first `processedWindows` are stored.
+	 * Only a book's Scrolls have Folios; a paste is processed whole.
+	 */
+	folios: defineTable({
+		scrollId: v.id("scrolls"),
+		start: v.number(),
+		end: v.number(),
+		windows: v.number(),
+		processedWindows: v.number(),
+	}).index("by_scroll_id_and_start", ["scrollId", "start"]),
+
+	/**
+	 * Where Intake processes a book's Scroll (#1193): the Folio the reader
+	 * was last at, by its start, and the run following it, if any. A run
+	 * processes that Folio and `FOLIOS_AHEAD` after it, then stops.
+	 */
+	folioRuns: defineTable({
+		scrollId: v.id("scrolls"),
+		readerStart: v.number(),
+		/**
+		 * When the running action last checked in, or when its retry is due;
+		 * absent while none runs. A stale one counts as gone.
+		 */
+		heartbeat: v.optional(v.number()),
+		/** The current window's failures in a row. */
+		failures: v.number(),
+	}).index("by_scroll_id", ["scrollId"]),
+
+	/**
 	 * One row per Reading whose Knowledge definition is being turned into a
 	 * hidden Definition Text. It is the single live Definition Text pointer and
 	 * the source of the Definition block's loading state.

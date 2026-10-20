@@ -16,8 +16,11 @@
 export const MAX_SOURCE_TEXT_CHARACTERS = 10_000;
 /** Paste: bounds the Sentences a paste re-reads when it is submitted again. */
 export const MAX_SOURCE_SENTENCES = 25;
-/** Paste: bounds one Sentence's segmentation questions, which grow quadratically. */
-const MAX_SOURCE_SENTENCE_CHARACTERS = 2_000;
+/**
+ * Paste and Folio: bounds one Sentence's segmentation questions, which grow
+ * quadratically. A longer book Sentence is never segmented (#1193).
+ */
+export const MAX_SOURCE_SENTENCE_CHARACTERS = 2_000;
 
 /**
  * One Scroll's stored text, its running text and its Extracted Text
