@@ -3975,6 +3975,9 @@
 											"$ref": "#/$defs/__schema501"
 										}
 									},
+									"preterite": {
+										"$ref": "#/$defs/__schema207"
+									},
 									"locutionType": {
 										"type": "string",
 										"enum": [
@@ -4048,6 +4051,9 @@
 										"$ref": "#/$defs/__schema502"
 									},
 									"conjugationClass": {
+										"$ref": "#/$defs/__schema502"
+									},
+									"preterite": {
 										"$ref": "#/$defs/__schema502"
 									},
 									"locutionType": {

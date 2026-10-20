@@ -28,6 +28,7 @@ export type KnowledgeFailure = {
 		| "participleSource"
 		| "plural"
 		| "conjugationClass"
+		| "preterite"
 		| "locutionType"
 		| "sayingType"
 		| "formulaRole";

@@ -77,6 +77,7 @@
 				"emojiDescription": "↕⚖",
 				"knowledge": {
 					"conjugationClass": ["Weak"],
+					"preterite": ["pendelte ein"],
 					"valency": [
 						{
 							"status": "Required",
@@ -132,6 +133,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

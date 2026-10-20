@@ -8,6 +8,7 @@ export type KnowledgeSettings = {
 	participleSource?: boolean | undefined;
 	plural?: boolean | undefined;
 	conjugationClass?: boolean | undefined;
+	preterite?: boolean | undefined;
 	locutionType?: boolean | undefined;
 	sayingType?: boolean | undefined;
 	formulaRole?: boolean | undefined;
@@ -37,6 +38,7 @@ export type KnowledgeRequestMask = {
 	participleSource?: null | undefined;
 	plural?: null | undefined;
 	conjugationClass?: null | undefined;
+	preterite?: null | undefined;
 	locutionType?: null | undefined;
 	sayingType?: null | undefined;
 	formulaRole?: null | undefined;
@@ -1791,6 +1793,7 @@ export type ReadingKnowledge = {
 	participleSource?: ParticipleSource | undefined;
 	plural?: NounPlural | undefined;
 	conjugationClass?: ConjugationClasses | undefined;
+	preterite?: Array<string> | undefined;
 	locutionType?: LocutionType | undefined;
 	sayingType?: SayingType | undefined;
 	formulaRole?: FormulaRole | undefined;
@@ -2057,6 +2060,12 @@ export type KnowledgeChange =
 			value: ConjugationClasses;
 	  }
 	| { kind: "Retract"; aspect: "conjugationClass" }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "preterite";
+			value: Array<string>;
+	  }
+	| { kind: "Retract"; aspect: "preterite" }
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "locutionType";

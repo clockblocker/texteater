@@ -2802,6 +2802,9 @@
 											"$ref": "#/$defs/__schema535"
 										}
 									},
+									"preterite": {
+										"$ref": "#/$defs/__schema289"
+									},
 									"locutionType": {
 										"type": "string",
 										"enum": [
@@ -2875,6 +2878,9 @@
 										"$ref": "#/$defs/__schema536"
 									},
 									"conjugationClass": {
+										"$ref": "#/$defs/__schema536"
+									},
+									"preterite": {
 										"$ref": "#/$defs/__schema536"
 									},
 									"locutionType": {

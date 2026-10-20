@@ -100,6 +100,7 @@
 				"emojiDescription": "🟰",
 				"knowledge": {
 					"conjugationClass": ["Strong"],
+					"preterite": ["war"],
 					"valency": [
 						{
 							"status": "Required",
@@ -145,6 +146,7 @@
 				},
 				"coverage": {
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",

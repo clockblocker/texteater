@@ -3,6 +3,7 @@ import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { structuralKeys } from "./fingerprint.js";
 import type { ConjugationClasses, NounPlural } from "./generated/types.js";
+import { parsePreterite, preteriteAgreementIssue } from "./german-preterite.js";
 import { knowledgePolicyApplies } from "./knowledge-policies.js";
 import type {
 	KnowledgeChange,
@@ -413,6 +414,15 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 		);
 		if (classes instanceof ParsingError) return classes;
 	}
+	if (result.preterite) {
+		const forms = parsePreterite(source, result.preterite, [
+			"knowledge",
+			"preterite",
+		]);
+		if (forms instanceof ParsingError) return forms;
+	}
+	const disagreement = preteriteAgreementIssue(source, result);
+	if (disagreement) return disagreement;
 	if (result.participleSource) {
 		const participle = parseParticipleSource(
 			source,
@@ -489,6 +499,10 @@ export function contextualizeChange<R extends Dumling.Reading>(
 			"value",
 		]);
 		if (classes instanceof ParsingError) return classes;
+	}
+	if (change.aspect === "preterite" && change.kind !== "Retract") {
+		const forms = parsePreterite(source, change.value, ["change", "value"]);
+		if (forms instanceof ParsingError) return forms;
 	}
 	if (change.aspect === "participleSource" && change.kind !== "Retract") {
 		const participle = parseParticipleSource(source, change.value, [

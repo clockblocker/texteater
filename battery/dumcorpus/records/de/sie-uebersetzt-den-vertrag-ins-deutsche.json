@@ -82,6 +82,7 @@
 				"emojiDescription": "🌐",
 				"knowledge": {
 					"conjugationClass": ["Weak"],
+					"preterite": ["übersetzte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -171,6 +172,7 @@
 				},
 				"coverage": {
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

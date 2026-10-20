@@ -157,6 +157,7 @@
 				"emojiDescription": "🔑",
 				"knowledge": {
 					"conjugationClass": ["Strong"],
+					"preterite": ["kam an"],
 					"valency": [
 						{
 							"status": "Optional",
@@ -214,6 +215,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",

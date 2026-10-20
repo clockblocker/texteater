@@ -176,6 +176,7 @@
 				"emojiDescription": "🚌➡",
 				"knowledge": {
 					"conjugationClass": ["Strong"],
+					"preterite": ["stieg aus"],
 					"valency": [
 						{
 							"status": "Required",
@@ -233,6 +234,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -423,6 +425,7 @@
 				"emojiDescription": "➡🚌",
 				"knowledge": {
 					"conjugationClass": ["Strong"],
+					"preterite": ["stieg ein"],
 					"valency": [
 						{
 							"status": "Required",
@@ -499,6 +502,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

@@ -107,6 +107,7 @@
 				"emojiDescription": "🙏",
 				"knowledge": {
 					"conjugationClass": ["Strong"],
+					"preterite": ["bat"],
 					"valency": [
 						{
 							"status": "Required",
@@ -199,6 +200,7 @@
 				},
 				"coverage": {
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

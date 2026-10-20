@@ -89,6 +89,7 @@ export const knowledgeCoverageSchema = z
 		participleSource: coverageStatusSchema,
 		plural: coverageStatusSchema,
 		conjugationClass: coverageStatusSchema,
+		preterite: coverageStatusSchema,
 		locutionType: coverageStatusSchema,
 		sayingType: coverageStatusSchema,
 		formulaRole: coverageStatusSchema,

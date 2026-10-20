@@ -71,6 +71,7 @@
 				"emojiDescription": "🍖🦴",
 				"knowledge": {
 					"conjugationClass": ["Strong"],
+					"preterite": ["fraß auf"],
 					"valency": [
 						{
 							"status": "Required",
@@ -112,6 +113,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",

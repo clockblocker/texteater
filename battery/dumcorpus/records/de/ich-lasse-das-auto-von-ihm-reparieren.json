@@ -50,6 +50,7 @@
 				"emojiDescription": "🗣👉",
 				"knowledge": {
 					"conjugationClass": ["Strong"],
+					"preterite": ["ließ"],
 					"valency": [
 						{
 							"status": "Required",
@@ -85,6 +86,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",

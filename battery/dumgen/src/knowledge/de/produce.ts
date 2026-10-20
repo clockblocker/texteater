@@ -47,12 +47,13 @@ import {
 } from "./context.js";
 import { produceRelations } from "./relations.js";
 import {
-	produceConjugationClass,
 	produceFormulaRole,
 	produceLocutionType,
 	produceParticipleSource,
 	producePlural,
 	produceSayingType,
+	produceVerbPast,
+	type VerbPastAspect,
 } from "./structure.js";
 import {
 	produceDefinition,
@@ -68,12 +69,30 @@ type AspectOutput = {
 	readonly failures?: readonly KnowledgeFailure[];
 };
 
-/** One aspect, or one translation language, to produce. */
+/**
+ * One aspect, or one translation language, to produce. A job that fills a
+ * second aspect from the same call names it `alongside`, and fails for both.
+ */
 type Job = {
 	readonly aspect: KnowledgeAspect;
+	readonly alongside?: KnowledgeAspect;
 	readonly leaf?: string;
 	readonly run: Effect.Effect<AspectOutput, AspectError>;
 };
+
+const aspectsOf = (job: Job): readonly KnowledgeAspect[] =>
+	job.alongside === undefined ? [job.aspect] : [job.aspect, job.alongside];
+
+/**
+ * Classes first: a host that applies one change at a time takes stored
+ * forms only beside every class they attest (ADR 0038).
+ */
+const verbPastAspects: readonly VerbPastAspect[] = [
+	"conjugationClass",
+	"preterite",
+];
+const isVerbPast = (aspect: KnowledgeAspect) =>
+	aspect === "conjugationClass" || aspect === "preterite";
 
 const requestAspects = new Set<string>([
 	"transcription",
@@ -84,6 +103,7 @@ const requestAspects = new Set<string>([
 	"participleSource",
 	"plural",
 	"conjugationClass",
+	"preterite",
 	"locutionType",
 	"sayingType",
 	"formulaRole",
@@ -94,6 +114,24 @@ const changesOnly = (
 	run: Effect.Effect<readonly GermanKnowledgeChange[], AspectError>,
 ): Effect.Effect<AspectOutput, AspectError> =>
 	Effect.map(run, (changes) => ({ changes }));
+
+/** The one job for a verb's past: the requested aspects its write fills. */
+function verbPastJob(
+	context: AspectContext,
+	aspect: VerbPastAspect,
+	request: Dumrel.KnowledgeRequestMask,
+	applicable: Dumrel.KnowledgeRequestMask,
+): Job {
+	const wanted = verbPastAspects.filter(
+		(name) => name in request && name in applicable,
+	);
+	const [first = aspect, alongside] = wanted;
+	return {
+		aspect: first,
+		...(alongside === undefined ? {} : { alongside }),
+		run: produceVerbPast(context, wanted),
+	};
+}
 
 /** The jobs a request asks for that the route applies, in the request's order. */
 function jobsOf(
@@ -177,10 +215,12 @@ function jobsOf(
 				jobs.push({ aspect, run: changesOnly(producePlural(context)) });
 				break;
 			case "conjugationClass":
-				jobs.push({
-					aspect,
-					run: changesOnly(produceConjugationClass(context)),
-				});
+			case "preterite":
+				// One Präteritum write fills both aspects (#1209).
+				if (!jobs.some((job) => isVerbPast(job.aspect)))
+					jobs.push(
+						verbPastJob(context, aspect, request, applicable),
+					);
 				break;
 			case "participleSource":
 				jobs.push({
@@ -212,8 +252,12 @@ function jobsOf(
 }
 
 /** An aspect's error as its failure value. */
-const failureOf = (job: Job, error: AspectError): KnowledgeFailure => ({
-	aspect: job.aspect,
+const failureOf = (
+	job: Job,
+	aspect: KnowledgeAspect,
+	error: AspectError,
+): KnowledgeFailure => ({
+	aspect,
 	...(job.leaf !== undefined
 		? { leaf: job.leaf }
 		: error._tag === "KnowledgeUnresolved" && error.leaf !== undefined
@@ -286,12 +330,14 @@ export const produceGermanKnowledge = <E>(
 			return {
 				changes: [],
 				pendingRelations: [],
-				failures: jobs.map((job) => ({
-					aspect: job.aspect,
-					...(job.leaf === undefined ? {} : { leaf: job.leaf }),
-					code: "CatalogMiss",
-					message: `The authored ${family} ${kind} ${reading.lemma.canonicalForm} has no reviewed ${job.aspect}`,
-				})),
+				failures: jobs.flatMap((job) =>
+					aspectsOf(job).map((aspect) => ({
+						aspect,
+						...(job.leaf === undefined ? {} : { leaf: job.leaf }),
+						code: "CatalogMiss",
+						message: `The authored ${family} ${kind} ${reading.lemma.canonicalForm} has no reviewed ${aspect}`,
+					})),
+				),
 			};
 		const publication = Semaphore.makeUnsafe(1);
 		const publish = (contribution: readonly GermanKnowledgeChange[]) =>
@@ -309,7 +355,9 @@ export const produceGermanKnowledge = <E>(
 					Effect.catch((error: AspectError) =>
 						Effect.succeed<AspectOutput>({
 							changes: [],
-							failures: [failureOf(job, error)],
+							failures: aspectsOf(job).map((aspect) =>
+								failureOf(job, aspect, error),
+							),
 						}),
 					),
 					Effect.tap((output) => publish(output.changes)),

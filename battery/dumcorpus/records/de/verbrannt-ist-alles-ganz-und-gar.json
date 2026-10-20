@@ -106,6 +106,7 @@
 				"emojiDescription": "🔥",
 				"knowledge": {
 					"conjugationClass": ["Mixed"],
+					"preterite": ["verbrannte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -155,6 +156,7 @@
 				},
 				"coverage": {
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

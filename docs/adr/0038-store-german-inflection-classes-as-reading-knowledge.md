@@ -64,8 +64,26 @@ separable verb by its stem): `wiegen` 'weigh' is Strong (`wog`), and 'rock' is
 Weak (`wiegte`). The generator names the Präteritum form and code derives the
 class, as for plurals.
 
+**A verb's Präteritum.** The Reading also keeps the forms its classes are
+judged on, as its `preterite` aspect: the third person singular Präteritum
+forms of its sense, each listed once, as a dictionary cites them (`wog`;
+`stand auf` for `aufstehen`, never `aufstand`; `erinnerte` for `sich
+erinnern`). A Strong or Mixed verb's past forms can't be rebuilt from its
+class, so a host renders these forms and never guesses them
+([#1209](https://github.com/clockblocker/texteater/issues/1209)). The call that
+writes the forms gives both aspects, so keeping them costs no model call. The
+class stays stored beside the forms, so Knowledge written before the forms
+were kept stays whole. The form is still the one source of truth: a Reading
+that stores both stores every class its forms attest, and Dumrel refuses
+Knowledge where a form attests a class the Reading lacks. A class may outlive
+its form (`senden` keeps Weak when a later write keeps only `sandte`), since a
+generator that contributes classes before forms must never be refused.
+
 ## Consequences
 
 - A Surface still attaches to its Lemma, so `Muttern` is a Surface of the
   Lemma `Mutter`. The Reading it attests is the emoji judge's decision.
-- Neither aspect enters NOUN or VERB Core Features, and no Lemma is split.
+- No aspect here enters NOUN or VERB Core Features, and no Lemma is split.
+- Generators contribute the classes before the forms. A Correct that changes a
+  stored Präteritum's classes changes the classes in the same
+  `applyKnowledgeChanges` call.

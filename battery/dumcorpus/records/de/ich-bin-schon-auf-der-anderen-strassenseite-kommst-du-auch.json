@@ -71,6 +71,7 @@
 				"emojiDescription": "🌉👋",
 				"knowledge": {
 					"conjugationClass": ["Strong"],
+					"preterite": ["kam herüber"],
 					"valency": [
 						{
 							"status": "Required",
@@ -87,6 +88,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
