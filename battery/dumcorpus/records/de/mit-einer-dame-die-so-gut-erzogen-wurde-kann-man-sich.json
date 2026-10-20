@@ -533,6 +533,7 @@
 				"emojiDescription": "🧑‍🏫🧒",
 				"knowledge": {
 					"conjugationClass": ["Strong"],
+					"preterite": ["erzog"],
 					"valency": [
 						{
 							"status": "Required",
@@ -594,6 +595,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",

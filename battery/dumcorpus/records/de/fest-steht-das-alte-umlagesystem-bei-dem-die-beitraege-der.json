@@ -93,6 +93,7 @@
 				"emojiDescription": "📥📤",
 				"knowledge": {
 					"conjugationClass": ["Weak"],
+					"preterite": ["leitete weiter"],
 					"valency": [
 						{
 							"status": "Required",
@@ -165,6 +166,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

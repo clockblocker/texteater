@@ -2,7 +2,7 @@
  * How a `knowledge.produce` run is scored (#887, #873's method).
  *
  * - Structural aspects (plural, valency, participle source, conjugation
- *   class, locution, saying and formula types) are right when the produced
+ *   class, Präteritum, locution, saying and formula types) are right when the produced
  *   value equals gold's, an aspect gold reviewed empty being right only
  *   when nothing was produced. A failed aspect is wrong. Only an aspect
  *   gold covers is scored.
@@ -20,7 +20,7 @@
  * whose verdict flips between repetitions are named.
  */
 import { createHash } from "node:crypto";
-import { canonicalJson, isRecord } from "common-utils";
+import { canonicalJson } from "common-utils";
 import { foldCase } from "dumling";
 import type * as Dumling from "dumling/types";
 import { applyKnowledgeChange } from "dumrel";
@@ -29,6 +29,14 @@ import { z } from "zod";
 import { recordOf } from "../../records.js";
 import { type Line, lineOf, wilson } from "../resolve-grammar/scoring.js";
 import type { KnowledgeCase, TranslationSlip } from "./cases.js";
+import {
+	complementKey,
+	coverageOf,
+	type ExactAspect,
+	exactAspects,
+	type Slot,
+	sameAspect,
+} from "./exact-aspects.js";
 
 /** What one attempt returned, as a run stores it. */
 export const knowledgeOutputSchema = z.object({
@@ -163,111 +171,6 @@ function producedKnowledge(
 	}
 	return knowledge;
 }
-
-type Values = Readonly<Record<string, unknown>>;
-
-/** A complement's identity: everything but the preposition Lemma's features. */
-function complementKey(complement: Values): string {
-	const { preposition, ...rest } = complement;
-	return canonicalJson({
-		...rest,
-		...(preposition
-			? {
-					preposition: isRecord(preposition)
-						? preposition.canonicalForm
-						: undefined,
-				}
-			: {}),
-	});
-}
-
-type Slot = Dumrel.ValencyFrame[number];
-
-const slotKey = (slot: Slot) =>
-	canonicalJson({
-		status: slot.status,
-		complements: slot.complements.map(complementKey).sort(),
-	});
-
-/** Whether two frames hold the same Slots, in any order. */
-const sameFrame = (left: readonly Slot[], right: readonly Slot[]) =>
-	canonicalJson(left.map(slotKey).sort()) ===
-	canonicalJson(right.map(slotKey).sort());
-
-const pluralKey = (value: unknown) =>
-	Array.isArray(value)
-		? canonicalJson(
-				value.map((form) => foldCase(String(form), "de")).sort(),
-			)
-		: canonicalJson(value ?? null);
-
-const verbKey = (source: unknown) => {
-	if (!source) return null;
-	// A produced source has passed Dumrel and gold's is Dumrel-checked, so
-	// both are Participle Sources; the reads only keep the unknown typed.
-	const { verb, meaning } = isRecord(source) ? source : {};
-	const lemma = isRecord(verb) ? verb : {};
-	const core = isRecord(lemma.coreFeatures) ? lemma.coreFeatures : {};
-	return canonicalJson({
-		verb: foldCase(String(lemma.canonicalForm), "de"),
-		hasSepPrefix: core.hasSepPrefix ?? null,
-		lexicallyReflexive: core.lexicallyReflexive ?? null,
-		meaning,
-	});
-};
-
-/** The structural aspects scored exactly. */
-const exactAspects = [
-	"plural",
-	"valency",
-	"participleSource",
-	"conjugationClass",
-	"locutionType",
-	"sayingType",
-	"formulaRole",
-] as const satisfies readonly (keyof Dumrel.ReadingKnowledge)[];
-
-type ExactAspect = (typeof exactAspects)[number];
-
-/** How each single-valued structural aspect compares. */
-const sameValue: {
-	readonly [Aspect in ExactAspect]: (
-		gold: Dumrel.ReadingKnowledge[Aspect],
-		produced: Dumrel.ReadingKnowledge[Aspect],
-	) => boolean;
-} = {
-	plural: (gold, produced) => pluralKey(gold) === pluralKey(produced),
-	conjugationClass: (gold, produced) =>
-		canonicalJson([...(gold ?? [])].sort()) ===
-		canonicalJson([...(produced ?? [])].sort()),
-	participleSource: (gold, produced) => verbKey(gold) === verbKey(produced),
-	locutionType: (gold, produced) => gold === produced,
-	formulaRole: (gold, produced) => gold === produced,
-	sayingType: (gold, produced) => gold?.type === produced?.type,
-	valency: (gold, produced) => sameFrame(gold ?? [], produced ?? []),
-};
-
-/** Whether `produced` holds gold's value of `aspect`. */
-const sameAspect = <Aspect extends ExactAspect>(
-	aspect: Aspect,
-	gold: Dumrel.ReadingKnowledge,
-	produced: Dumrel.ReadingKnowledge,
-) => sameValue[aspect](gold[aspect], produced[aspect]);
-
-const coverageOf = (
-	goldCase: KnowledgeCase,
-	aspect: string,
-	leaf?: string,
-): "Authored" | "ReviewedEmpty" | undefined => {
-	const coverage: Readonly<Record<string, unknown>> | undefined =
-		goldCase.gold?.coverage;
-	const value = coverage?.[aspect];
-	const status =
-		leaf === undefined ? value : isRecord(value) ? value[leaf] : undefined;
-	return status === "Authored" || status === "ReviewedEmpty"
-		? status
-		: undefined;
-};
 
 const textOf = (value: unknown): string | undefined =>
 	typeof value === "string"

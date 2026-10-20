@@ -64,8 +64,30 @@ separable verb by its stem): `wiegen` 'weigh' is Strong (`wog`), and 'rock' is
 Weak (`wiegte`). The generator names the Präteritum form and code derives the
 class, as for plurals.
 
+**A verb's Präteritum.** The Reading also keeps the forms its classes are
+judged on, as its `preterite` aspect: the third person singular Präteritum
+forms of its sense, each listed once, as a dictionary cites them (`wog`;
+`stand auf` for `aufstehen`, never `aufstand`; `erinnerte` for `sich
+erinnern`). A Strong or Mixed verb's past forms can't be rebuilt from its
+class, so a host renders these forms and never guesses them
+([#1209](https://github.com/clockblocker/texteater/issues/1209)). The call that
+writes the forms gives both aspects, so keeping them costs no model call. The
+class stays stored beside the forms, so Knowledge written before the forms
+were kept stays whole. The generator fills both from one write, so they
+agree whenever it writes them together. Dumrel doesn't require them to agree:
+a later occurrence never changes a stored aspect
+([#883](https://github.com/clockblocker/texteater/issues/883), point 5), so
+forms kept for a Reading whose classes were stored earlier may attest a class
+it lacks. Refusing them would lose the whole run's Knowledge, and a wrong
+class is fixed through Correct.
+
 ## Consequences
 
 - A Surface still attaches to its Lemma, so `Muttern` is a Surface of the
   Lemma `Mutter`. The Reading it attests is the emoji judge's decision.
-- Neither aspect enters NOUN or VERB Core Features, and no Lemma is split.
+- No aspect here enters NOUN or VERB Core Features, and no Lemma is split.
+- Gold keeps both aspects in agreement, and dumcorpus checks it.
+- Records reviewed through Knowledge don't yet have to cover the Präteritum.
+  Records over the file-token limit can't take it until they are
+  split, and the Readings they share carry one value (Dumcorpus ADR 0002).
+  Once they hold it, it joins the structural aspects.

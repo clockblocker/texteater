@@ -1,11 +1,12 @@
 /**
  * The structural aspects that take one value each (#883 addenda): a
- * noun's plural, a verb's conjugation classes, an adjective's Participle
- * Source, and a Locution's, Saying's or formula's type. Luna writes what
- * must be written (plural forms, Präteritum forms, a source verb's parts,
- * a Winged Word's attribution) and jev judges every closed choice
- * (plurality, the participle's form and meaning, the three types); code
- * derives the rest (conjugation classes from the Präteritum, ADR 0038).
+ * noun's plural, a verb's Präteritum and conjugation classes, an
+ * adjective's Participle Source, and a Locution's, Saying's or formula's
+ * type. Luna writes what must be written (plural forms, Präteritum forms, a
+ * source verb's parts, a Winged Word's attribution) and jev judges every
+ * closed choice (plurality, the participle's form and meaning, the three
+ * types); code derives the rest (conjugation classes from the Präteritum,
+ * ADR 0038).
  */
 import { isRecord } from "common-utils";
 import { germanInseparablePrefixes } from "dumcorpus/inventories";
@@ -15,7 +16,7 @@ import { germanConjugationClass } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import { choice, choiceOf } from "../../segment/ask.js";
-import type { GermanKnowledgeChange } from "../types.js";
+import type { GermanKnowledgeChange, KnowledgeFailure } from "../types.js";
 import {
 	type AspectContext,
 	type AspectError,
@@ -109,7 +110,6 @@ function checked(
 	context: AspectContext,
 	aspect:
 		| "plural"
-		| "conjugationClass"
 		| "participleSource"
 		| "locutionType"
 		| "sayingType"
@@ -124,7 +124,8 @@ function checked(
 		: Effect.fail(changes);
 }
 
-// Conjugation Class (ADR 0038): Luna writes the Präteritum, code judges the stem.
+// Präteritum and Conjugation Class (ADR 0038): Luna writes the Präteritum,
+// code judges the stem, and both aspects come from that one write (#1209).
 
 const conjugationPrompt = [
 	shared.reading,
@@ -139,9 +140,25 @@ const classOrder: readonly Dumrel.ConjugationClass[] = [
 	"Mixed",
 ];
 
-export const produceConjugationClass = (
+/** The aspects the one Präteritum write gives a verb. */
+export type VerbPastAspect = "conjugationClass" | "preterite";
+
+/**
+ * The requested aspects of a verb's past: the Präteritum forms Luna writes
+ * and the classes code judges on them. Each aspect Dumrel refuses fails on
+ * its own, so a form spelled against the Lemma (`abreiste` for `abreisen`)
+ * still gives its class.
+ */
+export const produceVerbPast = (
 	context: AspectContext,
-): Effect.Effect<GermanKnowledgeChange[], AspectError> =>
+	aspects: readonly VerbPastAspect[],
+): Effect.Effect<
+	{
+		readonly changes: GermanKnowledgeChange[];
+		readonly failures: KnowledgeFailure[];
+	},
+	AspectError
+> =>
 	Effect.gen(function* () {
 		const forms = yield* write(
 			context,
@@ -162,11 +179,25 @@ export const produceConjugationClass = (
 				germanConjugationClass(context.lemma.canonicalForm, form),
 			),
 		);
-		return yield* checked(
-			context,
-			"conjugationClass",
-			classOrder.filter((value) => classes.has(value)),
-		);
+		const changes: GermanKnowledgeChange[] = [];
+		const failures: KnowledgeFailure[] = [];
+		for (const aspect of aspects) {
+			const value =
+				aspect === "preterite"
+					? forms
+					: classOrder.filter((name) => classes.has(name));
+			const accepted = checkedChanges(context, aspect, [
+				{ kind: "Contribute", aspect, value },
+			]);
+			if (Array.isArray(accepted)) changes.push(...accepted);
+			else
+				failures.push({
+					aspect,
+					code: accepted._tag,
+					message: accepted.message,
+				});
+		}
+		return { changes, failures };
 	});
 
 // Participle Source (ADR 0036): Luna names the verb by form, jev checks it.

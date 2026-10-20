@@ -26,8 +26,8 @@ import { conjugationClassValues } from "./vocabulary.js";
  * Locution Type, Saying Type and Formula Role are atomic like a definition.
  * A noun's plural: Contribute adds the plural forms it lacks, and a NoPlural
  * or PluralOnly marker is atomic. A verb's
- * conjugation classes: Contribute adds the classes it lacks. Failure returns
- * ParsingError without a partial value.
+ * conjugation classes and Präteritum: Contribute adds the classes or forms it
+ * lacks. Failure returns ParsingError without a partial value.
  */
 export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
 	source: R;
@@ -131,6 +131,9 @@ function apply(
 			return applyPlural(knowledge, change);
 		case "conjugationClass":
 			applyConjugation(knowledge, change);
+			return;
+		case "preterite":
+			applyPreterite(knowledge, change);
 			return;
 		case "transcription":
 		case "definition":
@@ -260,6 +263,24 @@ function applyConjugation(
 	knowledge.conjugationClass = conjugationClassValues.filter((value) =>
 		classes.has(value),
 	);
+}
+
+/**
+ * Präteritum forms accumulate in the order they arrive, like plural forms:
+ * `sandte` then `sendete` store both. Correct replaces them.
+ */
+function applyPreterite(
+	knowledge: ReadingKnowledge,
+	change: Extract<KnowledgeChange, { aspect: "preterite" }>,
+): void {
+	if (change.kind === "Retract") {
+		delete knowledge.preterite;
+		return;
+	}
+	knowledge.preterite = unique([
+		...(change.kind === "Contribute" ? (knowledge.preterite ?? []) : []),
+		...change.value,
+	]);
 }
 
 /**

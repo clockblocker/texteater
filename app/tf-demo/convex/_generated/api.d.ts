@@ -69,6 +69,7 @@ import type * as model_visitorEncounters from "../model/visitorEncounters.js";
 import type * as modules_notes_featurePresentation from "../modules/notes/featurePresentation.js";
 import type * as modules_notes_pendingRelations from "../modules/notes/pendingRelations.js";
 import type * as modules_notes_projections from "../modules/notes/projections.js";
+import type * as modules_notes_readingKnowledgeValidator from "../modules/notes/readingKnowledgeValidator.js";
 import type * as modules_notes_readingNote from "../modules/notes/readingNote.js";
 import type * as modules_notes_relationNeighborhood from "../modules/notes/relationNeighborhood.js";
 import type * as modules_notes_relations from "../modules/notes/relations.js";
@@ -168,6 +169,7 @@ declare const fullApi: ApiFromModules<{
   "modules/notes/featurePresentation": typeof modules_notes_featurePresentation;
   "modules/notes/pendingRelations": typeof modules_notes_pendingRelations;
   "modules/notes/projections": typeof modules_notes_projections;
+  "modules/notes/readingKnowledgeValidator": typeof modules_notes_readingKnowledgeValidator;
   "modules/notes/readingNote": typeof modules_notes_readingNote;
   "modules/notes/relationNeighborhood": typeof modules_notes_relationNeighborhood;
   "modules/notes/relations": typeof modules_notes_relations;

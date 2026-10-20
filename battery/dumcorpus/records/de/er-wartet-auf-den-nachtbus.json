@@ -62,6 +62,7 @@
 				"emojiDescription": "⏳",
 				"knowledge": {
 					"conjugationClass": ["Weak"],
+					"preterite": ["wartete"],
 					"valency": [
 						{
 							"status": "Required",
@@ -165,6 +166,7 @@
 				},
 				"coverage": {
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

@@ -108,15 +108,25 @@ export function goldKnowledgeWritten(
 		case "plural":
 			return Array.isArray(gold.plural) ? gold.plural : [`${lemma}en`];
 		case "conjugationClass": {
-			// Präterita the stem test reads as gold's classes (ADR 0038).
-			const stem = lemma.replace(/^sich\s+/u, "").replace(/e?n$/u, "");
+			if (gold.preterite) return gold.preterite;
+			// Präterita the stem test reads as gold's classes (ADR 0038),
+			// a separable verb's with its particle split off.
+			const core: Readonly<Record<string, unknown>> =
+				goldCase.reading.lemma.coreFeatures;
+			const particle =
+				typeof core.hasSepPrefix === "string" ? core.hasSepPrefix : "";
+			const stem = lemma
+				.replace(/^sich\s+/u, "")
+				.slice(particle.length)
+				.trim()
+				.replace(/e?n$/u, "");
 			const forms: Readonly<Record<string, string>> = {
 				Strong: "stand",
 				Weak: `${stem}te`,
 				Mixed: "qqte",
 			};
-			return (gold.conjugationClass ?? ["Weak"]).map(
-				(value) => forms[value] ?? `${stem}te`,
+			return (gold.conjugationClass ?? ["Weak"]).map((value) =>
+				[forms[value] ?? `${stem}te`, particle].join(" ").trim(),
 			);
 		}
 		case "valency":

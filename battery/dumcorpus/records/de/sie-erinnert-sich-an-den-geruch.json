@@ -105,6 +105,7 @@
 				"emojiDescription": "🧠💭",
 				"knowledge": {
 					"conjugationClass": ["Weak"],
+					"preterite": ["erinnerte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -202,6 +203,7 @@
 				},
 				"coverage": {
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

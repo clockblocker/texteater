@@ -66,6 +66,7 @@ test("a structural run asks for the route's structural aspects only, a text run 
 	expect(requestOf(caseOf("warten"), "structural")).toEqual({
 		valency: null,
 		conjugationClass: null,
+		preterite: null,
 		semanticRelations: {
 			synonym: null,
 			nearSynonym: null,

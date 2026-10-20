@@ -31,6 +31,7 @@ export type KnowledgeAspect =
 	| "participleSource"
 	| "plural"
 	| "conjugationClass"
+	| "preterite"
 	| "locutionType"
 	| "sayingType"
 	| "formulaRole";

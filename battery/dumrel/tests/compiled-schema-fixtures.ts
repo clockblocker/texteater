@@ -23,6 +23,7 @@ export const samples: Record<string, unknown[]> = {
 		{ plural: ["Bänke", "Banken"] },
 		{ plural: "NoPlural" },
 		{ conjugationClass: ["Weak", "Mixed"] },
+		{ preterite: [" sandte ", "sendete"], conjugationClass: ["Mixed"] },
 		{ locutionType: "Idiom" },
 		{ sayingType: { type: "WingedWord", attribution: "  Shakespeare " } },
 		{ sayingType: { type: "Proverb" } },
@@ -136,6 +137,9 @@ export const samples: Record<string, unknown[]> = {
 		{ kind: "Contribute", aspect: "conjugationClass", value: ["Weak"] },
 		{ kind: "Correct", aspect: "conjugationClass", value: ["Strong"] },
 		{ kind: "Retract", aspect: "conjugationClass" },
+		{ kind: "Contribute", aspect: "preterite", value: ["stand auf"] },
+		{ kind: "Correct", aspect: "preterite", value: ["wog", "wiegte"] },
+		{ kind: "Retract", aspect: "preterite" },
 		{ kind: "Contribute", aspect: "locutionType", value: "Collocation" },
 		{
 			kind: "Correct",
@@ -151,6 +155,7 @@ export const samples: Record<string, unknown[]> = {
 	nounPlural: [["Mütter"], ["Pizzen", "Pizzas"], "NoPlural", "PluralOnly"],
 	conjugationClass: ["Strong", "Weak", "Mixed"],
 	conjugationClasses: [["Strong"], ["Weak", "Mixed"]],
+	preterite: [["wog"], [" stand auf ", "sandte"]],
 	locutionType: ["Idiom", "Collocation"],
 	sayingType: [
 		{ type: "Proverb" },

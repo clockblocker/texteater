@@ -73,6 +73,7 @@
 				"emojiDescription": "😌🔋",
 				"knowledge": {
 					"conjugationClass": ["Weak"],
+					"preterite": ["erholte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -143,6 +144,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",

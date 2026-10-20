@@ -63,6 +63,13 @@ the classes it lacks, so `senden` can hold Weak and Mixed.
 form, ignoring `sich` and a separable particle (`aufstehen`, `stand auf` →
 `Strong`; `bringen`, `brachte` → `Mixed`).
 
+`preterite` records the third person singular Präteritum forms the classes
+are judged on, as a dictionary cites them: one word, or a separable verb's
+finite word and particle (`stand auf`), never with `sich`. `Contribute` adds
+the forms it lacks. The two aspects are checked apart: a later occurrence
+never changes a stored aspect, so forms kept after the classes were stored
+may attest a class the Reading lacks, and Dumrel keeps both.
+
 Three atomic aspects type a multiword or formulaic Reading without splitting
 its Lemma (ADR 0039). `locutionType` marks a Locution Reading as an `Idiom`
 or, for a VERB Locution, a `Collocation`, or is absent when it is neither

@@ -65,6 +65,7 @@
 				"emojiDescription": "🧳👋",
 				"knowledge": {
 					"conjugationClass": ["Weak"],
+					"preterite": ["reiste ab"],
 					"valency": [
 						{
 							"status": "Required",
@@ -133,6 +134,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

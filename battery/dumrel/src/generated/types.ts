@@ -8,6 +8,7 @@ export type KnowledgeSettings = {
 	participleSource?: boolean | undefined;
 	plural?: boolean | undefined;
 	conjugationClass?: boolean | undefined;
+	preterite?: boolean | undefined;
 	locutionType?: boolean | undefined;
 	sayingType?: boolean | undefined;
 	formulaRole?: boolean | undefined;
@@ -37,6 +38,7 @@ export type KnowledgeRequestMask = {
 	participleSource?: null | undefined;
 	plural?: null | undefined;
 	conjugationClass?: null | undefined;
+	preterite?: null | undefined;
 	locutionType?: null | undefined;
 	sayingType?: null | undefined;
 	formulaRole?: null | undefined;
@@ -1783,7 +1785,7 @@ export type ReadingKnowledge = {
 	transcription?: string | undefined;
 	definition?: string | undefined;
 	translations?:
-		| { en?: Array<string> | undefined; ru?: Array<string> | undefined }
+		| { en?: Preterite | undefined; ru?: Preterite | undefined }
 		| undefined;
 	morphologicalTree?: MorphologicalTree | undefined;
 	semanticRelations?: SemanticRelations | undefined;
@@ -1791,6 +1793,7 @@ export type ReadingKnowledge = {
 	participleSource?: ParticipleSource | undefined;
 	plural?: NounPlural | undefined;
 	conjugationClass?: ConjugationClasses | undefined;
+	preterite?: Preterite | undefined;
 	locutionType?: LocutionType | undefined;
 	sayingType?: SayingType | undefined;
 	formulaRole?: FormulaRole | undefined;
@@ -1806,7 +1809,7 @@ export type KnowledgeChange =
 			kind: "Contribute" | "Correct";
 			aspect: "translations";
 			language: TranslationLanguage;
-			value: Array<string>;
+			value: Preterite;
 	  }
 	| { kind: "Retract"; aspect: "translations"; language: TranslationLanguage }
 	| {
@@ -2057,6 +2060,8 @@ export type KnowledgeChange =
 			value: ConjugationClasses;
 	  }
 	| { kind: "Retract"; aspect: "conjugationClass" }
+	| { kind: "Contribute" | "Correct"; aspect: "preterite"; value: Preterite }
+	| { kind: "Retract"; aspect: "preterite" }
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "locutionType";
@@ -3225,9 +3230,10 @@ export type PluralPattern =
 	| "En"
 	| "S"
 	| "Other";
-export type NounPlural = Array<string> | ("NoPlural" | "PluralOnly");
+export type NounPlural = Preterite | ("NoPlural" | "PluralOnly");
 export type ConjugationClass = "Strong" | "Weak" | "Mixed";
 export type ConjugationClasses = Array<ConjugationClass>;
+export type Preterite = Array<string>;
 export type LocutionType = "Idiom" | "Collocation";
 type SayingType = {
 	type: "Proverb" | "WingedWord";

@@ -200,6 +200,7 @@
 				"emojiDescription": "🧼",
 				"knowledge": {
 					"conjugationClass": ["Strong"],
+					"preterite": ["wusch"],
 					"valency": [
 						{
 							"status": "Required",
@@ -241,6 +242,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",

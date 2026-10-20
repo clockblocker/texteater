@@ -76,6 +76,7 @@
 				"emojiDescription": "⛴",
 				"knowledge": {
 					"conjugationClass": ["Weak"],
+					"preterite": ["setzte über"],
 					"valency": [
 						{
 							"status": "Required",
@@ -116,6 +117,7 @@
 				},
 				"coverage": {
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",

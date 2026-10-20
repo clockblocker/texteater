@@ -202,6 +202,14 @@ export const conjugationClassSchema = z.enum(conjugationClassValues);
  * `wiegte`) share one Lemma and differ here, per Reading.
  */
 export const conjugationClassesSchema = z.array(conjugationClassSchema).min(1);
+/**
+ * A German verb Reading's Präteritum (ADR 0038): the third person singular
+ * forms of its sense, each listed once, a separable verb's with its particle
+ * split off and a reflexive verb's without `sich` (`senden`: `sandte`,
+ * `sendete`; `aufstehen`: `stand auf`). The conjugation classes are the ones
+ * these forms attest.
+ */
+export const preteriteSchema = nonEmptyStringsSchema;
 
 /** A Locution Reading's Idiom or Collocation type; never a Lemma split (ADR 0039). */
 export const locutionTypeSchema = z.enum(locutionTypeValues);
@@ -293,6 +301,7 @@ export const readingKnowledgeSchema = z.strictObject({
 	participleSource: participleSourceSchema.optional(),
 	plural: nounPluralSchema.optional(),
 	conjugationClass: conjugationClassesSchema.optional(),
+	preterite: preteriteSchema.optional(),
 	locutionType: locutionTypeSchema.optional(),
 	sayingType: sayingTypeSchema.optional(),
 	formulaRole: formulaRoleSchema.optional(),
@@ -390,6 +399,15 @@ export const knowledgeChangeSchema = z.union([
 	}),
 	z.strictObject({
 		kind: setKinds,
+		aspect: z.literal("preterite"),
+		value: preteriteSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Retract"),
+		aspect: z.literal("preterite"),
+	}),
+	z.strictObject({
+		kind: setKinds,
 		aspect: z.literal("locutionType"),
 		value: locutionTypeSchema,
 	}),
@@ -449,6 +467,7 @@ function knowledgeAspectsSchema<Leaf extends z.ZodType>(leaf: Leaf) {
 		participleSource: leaf,
 		plural: leaf,
 		conjugationClass: leaf,
+		preterite: leaf,
 		locutionType: leaf,
 		sayingType: leaf,
 		formulaRole: leaf,

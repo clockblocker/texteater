@@ -51,6 +51,7 @@
 				"emojiDescription": "🌡",
 				"knowledge": {
 					"conjugationClass": ["Strong"],
+					"preterite": ["ging"],
 					"valency": [
 						{
 							"status": "Required",
@@ -91,6 +92,7 @@
 				"coverage": {
 					"valency": "Authored",
 					"conjugationClass": "Authored",
+					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
