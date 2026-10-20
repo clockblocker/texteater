@@ -209,7 +209,7 @@ export const conjugationClassesSchema = z.array(conjugationClassSchema).min(1);
  * `sendete`; `aufstehen`: `stand auf`). The conjugation classes are the ones
  * these forms attest.
  */
-const preteriteSchema = nonEmptyStringsSchema;
+export const preteriteSchema = nonEmptyStringsSchema;
 
 /** A Locution Reading's Idiom or Collocation type; never a Lemma split (ADR 0039). */
 export const locutionTypeSchema = z.enum(locutionTypeValues);

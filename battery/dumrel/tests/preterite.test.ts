@@ -1,11 +1,9 @@
 import { expect, test } from "bun:test";
 import {
 	applyKnowledgeChange,
-	applyKnowledgeChanges,
 	parseReadingKnowledge,
 	selectKnowledge,
 } from "dumrel";
-import type * as Dumrel from "dumrel/types";
 import { houseReading, wartenReading } from "./fixtures.js";
 
 const verbReading = (
@@ -43,6 +41,11 @@ test("a German VERB Reading stores its Präteritum forms, each once and as a dic
 		[aufstehen, ["stand"]],
 		[aufstehen, ["stand ab"]],
 		[aufstehen, ["stand  auf"]],
+		[aufstehen, ["stand\u00a0auf"]],
+		[wiegen, ["wog\tab"]],
+		[wiegen, ["wog", "Wog"]],
+		[verbReading("sich erinnern"), ["sich"]],
+		[verbReading("sich einmischen", "ein"), ["sich ein"]],
 		[houseReading, ["wog"]],
 		[{ ...wiegen, lemma: { ...wiegen.lemma, language: "en" } }, ["wog"]],
 	] as const)
@@ -52,37 +55,25 @@ test("a German VERB Reading stores its Präteritum forms, each once and as a dic
 		]);
 });
 
-test("the stored conjugation classes hold every class the Präteritum attests", () => {
-	expect(
-		parse(senden, {
-			preterite: ["sandte", "sendete"],
-			conjugationClass: ["Weak", "Mixed"],
-		}).success,
-	).toBe(true);
-	expect(
-		parse(aufstehen, {
-			preterite: ["stand auf"],
-			conjugationClass: ["Strong"],
-		}).success,
-	).toBe(true);
+test("the Präteritum and the conjugation classes are checked apart (ADR 0038)", () => {
+	// Forms kept after the classes were stored may attest another class.
 	expect(
 		parse(wiegen, { preterite: ["wog"], conjugationClass: ["Weak"] }),
-	).toMatchObject({ success: false });
+	).toEqual({
+		success: true,
+		value: { preterite: ["wog"], conjugationClass: ["Weak"] },
+	});
 	expect(
-		parse(senden, {
-			preterite: ["sandte", "sendete"],
-			conjugationClass: ["Mixed"],
-		}),
-	).toMatchObject({ success: false });
-	// A class may outlive its form: `sendete` is no longer kept.
-	expect(
-		parse(senden, {
-			preterite: ["sandte"],
-			conjugationClass: ["Weak", "Mixed"],
+		applyKnowledgeChange({
+			source: senden,
+			knowledge: { conjugationClass: ["Weak"] },
+			change: {
+				kind: "Contribute",
+				aspect: "preterite",
+				value: ["sandte"],
+			},
 		}).success,
 	).toBe(true);
-	// Either aspect alone stands, as Knowledge written before #1209 does.
-	expect(parse(wiegen, { conjugationClass: ["Weak"] }).success).toBe(true);
 });
 
 test("Contribute adds the forms a Reading lacks; Correct and Retract replace and remove them", () => {
@@ -121,45 +112,6 @@ test("Contribute adds the forms a Reading lacks; Correct and Retract replace and
 			change: { kind: "Contribute", aspect: "preterite", value: ["wog"] },
 		}).success,
 	).toBe(false);
-});
-
-test("a Präteritum that changes its classes is corrected together with them", () => {
-	const knowledge: Pick<
-		Dumrel.ReadingKnowledge,
-		"preterite" | "conjugationClass"
-	> = {
-		preterite: ["wog"],
-		conjugationClass: ["Strong"],
-	};
-	const correctForms = {
-		kind: "Correct",
-		aspect: "preterite",
-		value: ["wiegte"],
-	} as const;
-	expect(
-		applyKnowledgeChange({
-			source: wiegen,
-			knowledge,
-			change: correctForms,
-		}).success,
-	).toBe(false);
-	expect(
-		applyKnowledgeChanges({
-			source: wiegen,
-			knowledge,
-			changes: [
-				correctForms,
-				{
-					kind: "Correct",
-					aspect: "conjugationClass",
-					value: ["Weak"],
-				},
-			],
-		}),
-	).toEqual({
-		success: true,
-		value: { preterite: ["wiegte"], conjugationClass: ["Weak"] },
-	});
 });
 
 test("German Lexeme verbs request their Präteritum and no other route does", () => {

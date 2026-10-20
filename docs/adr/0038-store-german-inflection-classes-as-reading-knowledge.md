@@ -73,17 +73,21 @@ class, so a host renders these forms and never guesses them
 ([#1209](https://github.com/clockblocker/texteater/issues/1209)). The call that
 writes the forms gives both aspects, so keeping them costs no model call. The
 class stays stored beside the forms, so Knowledge written before the forms
-were kept stays whole. The form is still the one source of truth: a Reading
-that stores both stores every class its forms attest, and Dumrel refuses
-Knowledge where a form attests a class the Reading lacks. A class may outlive
-its form (`senden` keeps Weak when a later write keeps only `sandte`), since a
-generator that contributes classes before forms must never be refused.
+were kept stays whole. The generator fills both from one write, so they
+agree whenever it writes them together. Dumrel doesn't require them to agree:
+a later occurrence never changes a stored aspect
+([#883](https://github.com/clockblocker/texteater/issues/883), point 5), so
+forms kept for a Reading whose classes were stored earlier may attest a class
+it lacks. Refusing them would lose the whole run's Knowledge, and a wrong
+class is fixed through Correct.
 
 ## Consequences
 
 - A Surface still attaches to its Lemma, so `Muttern` is a Surface of the
   Lemma `Mutter`. The Reading it attests is the emoji judge's decision.
 - No aspect here enters NOUN or VERB Core Features, and no Lemma is split.
-- Generators contribute the classes before the forms. A Correct that changes a
-  stored Präteritum's classes changes the classes in the same
-  `applyKnowledgeChanges` call.
+- Gold keeps both aspects in agreement, and dumcorpus checks it.
+- Records reviewed through Knowledge don't yet have to cover the Präteritum.
+  Records over the file-token limit can't take it until they are
+  split, and the Readings they share carry one value (Dumcorpus ADR 0002).
+  Once they hold it, it joins the structural aspects.

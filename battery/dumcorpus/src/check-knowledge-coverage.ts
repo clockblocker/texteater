@@ -11,8 +11,8 @@ import type { KnowledgeCoverage } from "./corpus-types.js";
  * its route's Knowledge Policy requests, every requested semantic relation
  * included. The text aspects get a spot-check instead, and the
  * morphological tree belongs to the deferred `segment.inMorphemes`. A
- * verb's `preterite` (#1209) is scored where a record covers it, but no
- * record has to yet: records over the file-token limit still lack it.
+ * verb's `preterite` is scored where a record covers it, but no record has
+ * to yet (Dumcorpus ADR 0002).
  */
 const structuralAspects = [
 	"plural",

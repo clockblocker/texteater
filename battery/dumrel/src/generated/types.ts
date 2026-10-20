@@ -1785,7 +1785,7 @@ export type ReadingKnowledge = {
 	transcription?: string | undefined;
 	definition?: string | undefined;
 	translations?:
-		| { en?: Array<string> | undefined; ru?: Array<string> | undefined }
+		| { en?: Preterite | undefined; ru?: Preterite | undefined }
 		| undefined;
 	morphologicalTree?: MorphologicalTree | undefined;
 	semanticRelations?: SemanticRelations | undefined;
@@ -1793,7 +1793,7 @@ export type ReadingKnowledge = {
 	participleSource?: ParticipleSource | undefined;
 	plural?: NounPlural | undefined;
 	conjugationClass?: ConjugationClasses | undefined;
-	preterite?: Array<string> | undefined;
+	preterite?: Preterite | undefined;
 	locutionType?: LocutionType | undefined;
 	sayingType?: SayingType | undefined;
 	formulaRole?: FormulaRole | undefined;
@@ -1809,7 +1809,7 @@ export type KnowledgeChange =
 			kind: "Contribute" | "Correct";
 			aspect: "translations";
 			language: TranslationLanguage;
-			value: Array<string>;
+			value: Preterite;
 	  }
 	| { kind: "Retract"; aspect: "translations"; language: TranslationLanguage }
 	| {
@@ -2060,11 +2060,7 @@ export type KnowledgeChange =
 			value: ConjugationClasses;
 	  }
 	| { kind: "Retract"; aspect: "conjugationClass" }
-	| {
-			kind: "Contribute" | "Correct";
-			aspect: "preterite";
-			value: Array<string>;
-	  }
+	| { kind: "Contribute" | "Correct"; aspect: "preterite"; value: Preterite }
 	| { kind: "Retract"; aspect: "preterite" }
 	| {
 			kind: "Contribute" | "Correct";
@@ -3234,9 +3230,10 @@ export type PluralPattern =
 	| "En"
 	| "S"
 	| "Other";
-export type NounPlural = Array<string> | ("NoPlural" | "PluralOnly");
+export type NounPlural = Preterite | ("NoPlural" | "PluralOnly");
 export type ConjugationClass = "Strong" | "Weak" | "Mixed";
 export type ConjugationClasses = Array<ConjugationClass>;
+export type Preterite = Array<string>;
 export type LocutionType = "Idiom" | "Collocation";
 type SayingType = {
 	type: "Proverb" | "WingedWord";

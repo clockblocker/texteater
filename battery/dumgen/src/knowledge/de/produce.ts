@@ -83,10 +83,6 @@ type Job = {
 const aspectsOf = (job: Job): readonly KnowledgeAspect[] =>
 	job.alongside === undefined ? [job.aspect] : [job.aspect, job.alongside];
 
-/**
- * Classes first: a host that applies one change at a time takes stored
- * forms only beside every class they attest (ADR 0038).
- */
 const verbPastAspects: readonly VerbPastAspect[] = [
 	"conjugationClass",
 	"preterite",

@@ -46,9 +46,9 @@ export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
  * and answers what applying them one by one answers: the result, or the first
  * failure without a partial value. The Knowledge is parsed once going in and
  * once coming out, not around every change. Each change is checked against
- * the source before it applies, and no state between two changes is parsed:
- * a Präteritum and the conjugation classes it attests may be corrected in two
- * changes, though the Knowledge between them disagrees (ADR 0038).
+ * the source before it applies, and a checked change applied to parsed
+ * Knowledge always yields Knowledge that parses, so no state between two
+ * changes needs a parse of its own.
  */
 export function applyKnowledgeChanges<const R extends Dumling.Reading>(input: {
 	source: R;

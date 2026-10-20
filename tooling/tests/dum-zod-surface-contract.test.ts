@@ -27,6 +27,7 @@ const DUM_PUBLIC_ZOD_SURFACES = {
 		"participleSourceSchema",
 		"pendingSemanticRelationSchema",
 		"pluralPatternSchema",
+		"preteriteSchema",
 		"readingKnowledgeSchema",
 		"readingWithKnowledgeSchema",
 		"sayingTypeSchema",

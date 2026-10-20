@@ -66,10 +66,9 @@ form, ignoring `sich` and a separable particle (`aufstehen`, `stand auf` →
 `preterite` records the third person singular Präteritum forms the classes
 are judged on, as a dictionary cites them: one word, or a separable verb's
 finite word and particle (`stand auf`), never with `sich`. `Contribute` adds
-the forms it lacks. A Reading that stores both aspects stores every class its
-forms attest, so contribute the classes before the forms, and send a Correct
-that changes the forms' classes through `applyKnowledgeChanges` with the
-matching `conjugationClass` change.
+the forms it lacks. The two aspects are checked apart: a later occurrence
+never changes a stored aspect, so forms kept after the classes were stored
+may attest a class the Reading lacks, and Dumrel keeps both.
 
 Three atomic aspects type a multiword or formulaic Reading without splitting
 its Lemma (ADR 0039). `locutionType` marks a Locution Reading as an `Idiom`
