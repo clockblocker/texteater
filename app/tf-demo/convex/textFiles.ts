@@ -106,9 +106,9 @@ export const writeSections = internalMutation({
 /**
  * Writes a batch of a file's Scrolls, each placed in its Section's Codex
  * with its Sentences stored unprocessed: no Detected Language and no
- * Segments, so the reader shows them as plain text until processing
- * reaches their Folio (#1193). A Sentence's ID is its Scroll's key and
- * position. Returns the Scrolls' IDs in order.
+ * Segments, so the reader shows them as plain text until the Learner
+ * asks for their Folio (#1216). A Sentence's ID is its Scroll's key and
+ * position.
  */
 export const writeScrolls = internalMutation({
 	args: {
@@ -132,9 +132,8 @@ export const writeScrolls = internalMutation({
 			}),
 		),
 	},
-	returns: v.array(v.id("scrolls")),
+	returns: v.null(),
 	handler: async (ctx, { scrolls }) => {
-		const scrollIds: Id<"scrolls">[] = [];
 		for (const scroll of scrolls) {
 			assertNonEmpty(scroll.submissionKey, "submissionKey");
 			const scrollId = await ctx.db.insert("scrolls", {
@@ -161,9 +160,8 @@ export const writeScrolls = internalMutation({
 				});
 			}
 			await writeFolios(ctx, scrollId, scroll.sentences);
-			scrollIds.push(scrollId);
 		}
-		return scrollIds;
+		return null;
 	},
 });
 

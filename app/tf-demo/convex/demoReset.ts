@@ -84,7 +84,6 @@ export const resetDemoTableNames = [
 	"sectionProgress",
 	"segments",
 	"sentences",
-	"folioRuns",
 	"folios",
 	"scrolls",
 	"sections",

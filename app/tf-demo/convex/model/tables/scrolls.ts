@@ -13,6 +13,13 @@ import {
 	storedUnitValidator,
 } from "../validators";
 
+/** A requested Folio's processing: running, done, or failed until asked again. */
+const folioStateValidator = v.union(
+	v.literal("Processing"),
+	v.literal("Processed"),
+	v.literal("Failed"),
+);
+
 /**
  * The Library and its text: intake runs, Sections, Scrolls, hidden Definition
  * Texts, Sentences and Segments.
@@ -92,34 +99,21 @@ export const scrollTables = {
 
 	/**
 	 * A Folio of a book's Scroll (#1193): the Sentences from position
-	 * `start` up to `end`, which Intake processes in `windows` windows of
-	 * `language.detect`, in order; the first `processedWindows` are stored.
-	 * Only a book's Scrolls have Folios; a paste is processed whole.
+	 * `start` up to `end`. Intake processes a Folio only when a Learner
+	 * asks for it (#1216); until then it reads as plain text. Only a
+	 * book's Scrolls have Folios; a paste is processed whole.
 	 */
 	folios: defineTable({
 		scrollId: v.id("scrolls"),
 		start: v.number(),
 		end: v.number(),
-		windows: v.number(),
-		processedWindows: v.number(),
+		/** Absent until a Learner asks for the Folio. */
+		state: v.optional(folioStateValidator),
+		/** The latest request's run; an earlier run changes nothing. */
+		run: v.optional(v.number()),
+		/** When the run last checked in, for the watchdog. */
+		updatedAt: v.optional(v.number()),
 	}).index("by_scroll_id_and_start", ["scrollId", "start"]),
-
-	/**
-	 * Where Intake processes a book's Scroll (#1193): the Folio the reader
-	 * was last at, by its start, and the run following it, if any. A run
-	 * processes that Folio and `FOLIOS_AHEAD` after it, then stops.
-	 */
-	folioRuns: defineTable({
-		scrollId: v.id("scrolls"),
-		readerStart: v.number(),
-		/**
-		 * When the running action last checked in, or when its retry is due;
-		 * absent while none runs. A stale one counts as gone.
-		 */
-		heartbeat: v.optional(v.number()),
-		/** The current window's failures in a row. */
-		failures: v.number(),
-	}).index("by_scroll_id", ["scrollId"]),
 
 	/**
 	 * One row per Reading whose Knowledge definition is being turned into a

@@ -331,6 +331,8 @@ test("submitLink stores the article as one Scroll private to its Visitor, with i
 	const view = (visitorId: string) =>
 		t.query(api.scrollViews.get, { scrollId: result.scrollId, visitorId });
 	expect((await view("visitor-1"))?.originalUrl).toBe(ARTICLE_URL);
+	// A link is processed whole, as a paste is: no Folios to ask for (#1216).
+	expect((await view("visitor-1"))?.folios).toBeUndefined();
 	expect(await view("visitor-2")).toBeNull();
 
 	// The same Visitor's same link opens the same Scroll with no fetch and

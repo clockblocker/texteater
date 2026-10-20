@@ -3,7 +3,7 @@ import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import type { ActionCtx } from "../../convex/_generated/server";
 import { folioProcessingPort } from "../../convex/model/folios";
-import { processFolios } from "../../server/folioIntake";
+import { processFolio } from "../../server/folioIntake";
 import { actionContext, type TestConvexDb } from "./convex";
 import { fakeJev } from "./jev";
 
@@ -53,9 +53,20 @@ export async function submitBook(t: TestConvexDb) {
 		.map(({ _id }) => _id);
 }
 
-/** The action's storage port, its mutations run against the test database. */
-export const portOf = (t: TestConvexDb, scrollId: Id<"scrolls">) =>
-	folioProcessingPort(actionContext(t) as unknown as ActionCtx, scrollId);
+/** A Scroll's Folios in order, as stored. */
+export const foliosOf = (t: TestConvexDb, scrollId: Id<"scrolls">) =>
+	t.run((ctx) =>
+		ctx.db
+			.query("folios")
+			.withIndex("by_scroll_id_and_start", (q) =>
+				q.eq("scrollId", scrollId),
+			)
+			.collect(),
+	);
+
+/** The action's storage port for one run, its mutations run against the test database. */
+export const portOf = (t: TestConvexDb, folioId: Id<"folios">, run: number) =>
+	folioProcessingPort(actionContext(t) as unknown as ActionCtx, folioId, run);
 
 const dumgenWith = (jev: ReturnType<typeof fakeJev>) =>
 	createDumgen({
@@ -65,16 +76,33 @@ const dumgenWith = (jev: ReturnType<typeof fakeJev>) =>
 		},
 	});
 
-/** Runs a Scroll's processing to its end with `jev`, as the action does. */
-export function runFolios(
+/**
+ * Runs a requested Folio's processing to its end with `jev`, as the
+ * action does, through `port` (the run's own by default).
+ */
+export async function runFolio(
 	t: TestConvexDb,
-	scrollId: Id<"scrolls">,
-	jev = fakeJev(),
+	folioId: Id<"folios">,
+	options: {
+		readonly jev?: ReturnType<typeof fakeJev>;
+		readonly port?: ReturnType<typeof portOf>;
+	} = {},
 ) {
-	return processFolios({
-		dumgen: dumgenWith(jev),
+	const folio = await t.run((ctx) => ctx.db.get(folioId));
+	return processFolio({
+		dumgen: dumgenWith(options.jev ?? fakeJev()),
 		language: "de",
 		hasTime: () => true,
-		port: portOf(t, scrollId),
+		port: options.port ?? portOf(t, folioId, folio?.run ?? 0),
 	});
+}
+
+/** Asks for a Folio and processes it, as the reader's control does. */
+export async function requestAndRun(
+	t: TestConvexDb,
+	folioId: Id<"folios">,
+	jev?: ReturnType<typeof fakeJev>,
+) {
+	await t.mutation(api.folios.request, { folioId, visitorId: VISITOR });
+	return runFolio(t, folioId, jev ? { jev } : {});
 }

@@ -18,6 +18,7 @@ import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { usePendingAction } from "@/hooks/use-pending-action";
 import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import { visitorErrorMessage } from "@/lib/visitor-error";
+import { FolioRequest, folioOpenings } from "@/views/folio-request";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReaderSentence } from "@/views/reader-sentence";
 import {
@@ -105,13 +106,17 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 		focused: target.focusAttestationId !== undefined,
 		startPosition,
 	});
+	const openings = useMemo(
+		() => folioOpenings(positioned ?? [], scrollDetail?.folios),
+		[positioned, scrollDetail?.folios],
+	);
 	const loadError = scrollQuery.error ?? pages?.error ?? null;
 	const error =
 		selection.error ??
 		segmentationError ??
 		(loadError ? visitorErrorMessage(loadError) : null);
 	// Plain Sentences never have Segments; the others lose theirs to
-	// Analysis Stripping. A book's are processed as it is read.
+	// Analysis Stripping. A book's are processed a Folio at a time, on request.
 	const segmentable = sentences.filter((sentence) => !sentence.plain);
 	const needsSegmentation =
 		!pages &&
@@ -184,6 +189,10 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 			isSegmenting={segmentText.isPending}
 			onSegmentText={() => void handleSegmentText()}
 			readerRef={reader}
+			leadIn={(sentence) => {
+				const folio = openings.get(sentence.sentenceId);
+				return folio ? <FolioRequest folio={folio} /> : null;
+			}}
 			end={
 				pages?.hasNext ? null : (
 					<ScrollEnd
@@ -258,6 +267,7 @@ export function ScrollPresentation({
 	isSegmenting = false,
 	onSegmentText,
 	readerRef,
+	leadIn,
 	end = null,
 }: {
 	readonly sentences: readonly SentenceView[];
@@ -276,6 +286,8 @@ export function ScrollPresentation({
 	readonly isSegmenting?: boolean;
 	readonly onSegmentText?: () => void;
 	readonly readerRef?: Ref<HTMLDivElement>;
+	/** What opens the paragraph a Sentence starts, such as a book passage's control. */
+	readonly leadIn?: (sentence: SentenceView) => ReactNode;
 	/** What follows the last Sentence, such as the way on to the next Scroll. */
 	readonly end?: ReactNode;
 }) {
@@ -292,6 +304,7 @@ export function ScrollPresentation({
 					selectedSegmentKey={selectedSegmentKey}
 					onSegmentClick={onSegmentClick}
 					focus={focus}
+					leadIn={leadIn}
 				/>
 				{showSegmentAction ? (
 					<div className="mt-8">
@@ -337,10 +350,13 @@ export function SentenceList({
 	selectedSegmentKey,
 	onSegmentClick,
 	focus = null,
+	leadIn,
 }: {
 	sentences: readonly SentenceView[];
 	/** The paragraphs a Scene Break stands before. */
 	sceneBreaks?: readonly number[];
+	/** What opens the paragraph a Sentence starts, after any Scene Break. */
+	leadIn?: (sentence: SentenceView) => ReactNode;
 	selectedSegmentKey: string | null;
 	onSegmentClick: (
 		sentence: SentenceView,
@@ -384,6 +400,7 @@ export function SentenceList({
 					{sceneBreakBefore(paragraph[0], breaks, drawn) ? (
 						<SceneBreak />
 					) : null}
+					{leadIn?.(paragraph[0])}
 					{paragraph[0].heading ? (
 						<h2 className="mb-2 text-base font-semibold tracking-normal">
 							{paragraph[0].heading}

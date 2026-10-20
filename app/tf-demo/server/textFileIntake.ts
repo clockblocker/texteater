@@ -15,8 +15,8 @@ import {
  * A `.txt` Submission's write plan (#1191): `extractTextFile` reads the file
  * into its Sections and Scrolls (#1190), and each Scroll is split into its
  * Sentences in code and stored unprocessed, so every Scroll reads as plain
- * text at once. Nothing here asks a model: processing follows the reader
- * Folio by Folio (#1193). The host writes the Sections first, then the
+ * text at once. Nothing here asks a model: a Folio is processed when the
+ * Learner asks for it (#1216). The host writes the Sections first, then the
  * Scrolls in batches (`scrollBatches`) that keep each mutation inside
  * Convex's limits.
  */

@@ -7,12 +7,12 @@ import {
 } from "./intake";
 
 /**
- * A book's Folios through intake (#1193). Each window of a Folio, its
- * stored Sentences, goes through the paste's own analysis
- * (`analyzeParagraphs`: `language.detect`, then `segment.inUnits` on the
- * target-language ones), grouped back into their paragraphs, and comes back
- * by Sentence ID, so storing it fills in the Sentences the reader already
- * shows as plain text.
+ * A book's Folio through intake, once the Learner asks for it (#1216).
+ * Each window of the Folio's unprocessed Sentences goes through the
+ * paste's own analysis (`analyzeParagraphs`: `language.detect`, then
+ * `segment.inUnits` on the target-language ones), grouped back into their
+ * paragraphs, and comes back by Sentence ID, so storing it fills in the
+ * Sentences the reader already shows as plain text.
  */
 
 /** A stored, unprocessed Sentence of a window. */
@@ -72,7 +72,6 @@ function analyzeWindow<Id extends string>(
 
 /** The next window a run processes, as storage hands it out. */
 export type FolioWindow = {
-	readonly window: number;
 	readonly sentences: readonly WindowSentence[];
 };
 
@@ -83,57 +82,53 @@ type SentenceIdOf<Window extends FolioWindow> =
 /** What a run asks of storage; the Convex action passes its mutations. */
 export type FolioProcessingPort<Window extends FolioWindow> = {
 	/**
-	 * The next window within the reader's Folios, or null once all of them
-	 * are processed, which also ends the run.
+	 * The next window of the Folio's unprocessed Sentences, or null once
+	 * none is left, which marks the Folio processed, or once the run no
+	 * longer holds the Folio.
 	 */
 	readonly nextWindow: () => Promise<Window | null>;
 	readonly storeWindow: (
-		window: Window,
 		sentences: readonly ProcessedSentence<SentenceIdOf<Window>>[],
-	) => Promise<void>;
-	/**
-	 * Records that the window failed; the run then stops, and storage says
-	 * after how long it retries, or null when it gives up for now.
-	 */
-	readonly windowFailed: (window: Window) => Promise<number | null>;
+	) => Promise<unknown>;
+	/** Marks the Folio failed, so the Learner may ask for it again. */
+	readonly failed: () => Promise<unknown>;
 };
 
-/** How a run ended: done, waiting to retry a failed window, or out of time. */
+/** How a run ended: the Folio done, failed, or the action out of time. */
 export type FolioRunEnd =
 	| { readonly kind: "Done" }
-	| { readonly kind: "Retry"; readonly afterMs: number }
-	| { readonly kind: "GaveUp" }
+	| { readonly kind: "Failed" }
 	| { readonly kind: "Continue" };
 
 /**
- * Processes windows until the reader's Folios are done, a window fails, or
- * `hasTime` says the action should hand over to a fresh one. A failed
- * window keeps everything stored before it; the retry starts at it.
+ * Processes one Folio window by window until none is left, or `hasTime`
+ * says the action should hand over to a fresh one. A window that fails,
+ * in jev or in storing, fails the Folio; what was stored before it stays,
+ * and the next request starts with what is left.
  */
-export async function processFolios<Window extends FolioWindow>(options: {
+export async function processFolio<Window extends FolioWindow>(options: {
 	readonly dumgen: IntakeDumgen;
 	readonly language: ScrollLanguage;
 	readonly port: FolioProcessingPort<Window>;
 	readonly hasTime: () => boolean;
 }): Promise<FolioRunEnd> {
 	const { port } = options;
-	while (options.hasTime()) {
-		const window = await port.nextWindow();
-		if (window === null) return { kind: "Done" };
-		const analyzed = await Effect.runPromiseExit(
-			analyzeWindow<SentenceIdOf<Window>>(
-				options.dumgen,
-				window.sentences,
-				options.language,
-			),
-		);
-		if (analyzed._tag === "Failure") {
-			const afterMs = await port.windowFailed(window);
-			return afterMs === null
-				? { kind: "GaveUp" }
-				: { kind: "Retry", afterMs };
+	try {
+		while (options.hasTime()) {
+			const window = await port.nextWindow();
+			if (window === null) return { kind: "Done" };
+			const analyzed = await Effect.runPromise(
+				analyzeWindow<SentenceIdOf<Window>>(
+					options.dumgen,
+					window.sentences,
+					options.language,
+				),
+			);
+			await port.storeWindow(analyzed);
 		}
-		await port.storeWindow(window, analyzed.value);
+	} catch {
+		await port.failed();
+		return { kind: "Failed" };
 	}
 	return { kind: "Continue" };
 }

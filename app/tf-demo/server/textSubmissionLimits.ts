@@ -3,9 +3,10 @@
  *
  * A pasted text is segmented in full by one action as it is submitted, so
  * its limits bound that action's model calls. A `.txt` file is stored
- * unprocessed and processed later (#1193), so its limits bound only
- * storage: the file (`shared/text-file-limits.ts`, which the browser checks
- * too), each Scroll's document, and what the reader reads.
+ * unprocessed, each Folio processed when the Learner asks (#1216), so its
+ * limits bound only storage: the file (`shared/text-file-limits.ts`, which
+ * the browser checks too), each Scroll's document, and what the reader
+ * reads.
  */
 
 // TODO: https://github.com/clockblocker/texteater/issues/510

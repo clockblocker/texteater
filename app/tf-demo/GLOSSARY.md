@@ -255,7 +255,8 @@ _Avoid_: Kind, type, format
 The one pipeline that turns a Submission into Scrolls, nested in Sections
 when the material has structure, the same for Shelves and Learner uploads.
 It runs Extraction, then `splitText`, `language.detect` and
-`segment.inUnits` Scroll by Scroll.
+`segment.inUnits` Scroll by Scroll, or, for a book, Folio by Folio as the
+Learner asks.
 _Avoid_: ingestion, processing, import
 
 **Extraction**:
@@ -291,11 +292,12 @@ _Avoid_: separator, thematic break, horizontal rule
 
 **Folio**:
 A size-cut slice of a Scroll: a run of whole Paragraphs, about 3,000
-characters, never splitting a Paragraph. Intake processes a Scroll Folio by
-Folio ahead of the reader, the first Folio first, then the ones at the
-Learner's reading position. A size-cut Scroll from a book without chapters is
-still a Scroll, cut further into Folios. A domain term only: Learner-facing
-copy never shows the word "folio".
+characters, never splitting a Paragraph. Intake processes a book's Scroll
+one Folio at a time, only when the Learner asks for that Folio; until then
+its Sentences are Plain Sentences. A paste or a link has no Folios and is
+processed whole. A size-cut Scroll from a book without chapters is still a
+Scroll, cut further into Folios. A domain term only: Learner-facing copy
+calls it a passage and never shows the word "folio".
 _Avoid_: Page (a physical page, see Page Image), Leaf, chunk, batch
 
 **Sentence**:

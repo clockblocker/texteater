@@ -1,11 +1,12 @@
 /**
- * Folios (#1193): Intake processes a book's Scroll Folio by Folio ahead of
- * the reader. A Folio is a run of whole Paragraphs of about
- * `FOLIO_CHARACTERS`, never splitting a Paragraph; a longer Paragraph is a
- * Folio alone. Inside a Folio, jev reads the stored Sentences in
- * `language.detect`'s windows of up to `WINDOW_SENTENCES`, and each window
- * is stored, or fails and is retried, on its own. Everything here is pure,
- * so the Convex isolate cuts Folios without loading Dumgen.
+ * Folios: a book's Scroll is cut into Folios when it is written, and a
+ * Folio is processed when the Learner asks for it (#1193, #1216). A Folio
+ * is a run of whole Paragraphs of about `FOLIO_CHARACTERS`, never
+ * splitting a Paragraph; a longer Paragraph is a Folio alone. Inside a
+ * Folio, jev reads the Sentences still unprocessed in `language.detect`'s
+ * windows of up to `WINDOW_SENTENCES`, and each window is stored in saves
+ * of at most `SAVE_SEGMENTS` Segments. Everything here is pure, so the
+ * Convex isolate cuts Folios without loading Dumgen.
  */
 
 /** About how many characters one Folio holds. */
@@ -16,17 +17,9 @@ const WINDOW_SENTENCES = 30;
 
 /**
  * At most how many characters one window holds, a lone longer Sentence
- * aside. A Segment holds at least one character, so a window's Segments
- * stay inside the 16,000 documents one mutation (`folios.storeWindow`)
- * may write.
+ * aside, so one jev round stays a modest size.
  */
 const WINDOW_CHARACTERS = 15_000;
-
-/**
- * How many Folios after the reader's own Intake processes before it stops
- * until the position moves. A tuning knob, not a decision.
- */
-export const FOLIOS_AHEAD = 2;
 
 /** A stored Sentence as the Folio cut reads it. */
 type FolioSentence = {
@@ -36,11 +29,10 @@ type FolioSentence = {
 	readonly stitchedText: string;
 };
 
-/** One Folio: the Sentence positions from `start` up to `end`, in `windows` windows. */
+/** One Folio: the Sentence positions from `start` up to `end`. */
 export type FolioCut = {
 	readonly start: number;
 	readonly end: number;
-	readonly windows: number;
 };
 
 /**
@@ -87,17 +79,15 @@ export function cutFolios(
 		return {
 			start: sentences[first]?.position ?? 0,
 			end: (last?.position ?? 0) + 1,
-			windows: windowsOf(sentences.slice(first, next)).length,
 		};
 	});
 }
 
 /**
- * A Folio's Sentences cut into consecutive windows of at most
+ * A Folio's unprocessed Sentences cut into consecutive windows of at most
  * `WINDOW_SENTENCES`, as even as they come, as `language.detect` cuts
  * them; a window over `WINDOW_CHARACTERS` is cut again where it would
- * pass them. The cut reads every stored Sentence of the Folio, so a
- * retried window holds the same Sentences.
+ * pass them.
  */
 export function windowsOf<T extends { readonly stitchedText: string }>(
 	sentences: readonly T[],
@@ -148,20 +138,68 @@ export function readerPages(
 	);
 }
 
-/** The first retry waits this long; each next one twice as long. */
-const RETRY_BASE_MS = 2_000;
-/** No retry waits longer. */
-const RETRY_MAX_MS = 120_000;
 /**
- * Failures in a row after which a run stops; the reader's next move
- * starts a fresh one, so an outage never keeps a run asking.
+ * At most how many Segments one save of a processed window writes, so a
+ * save stays well inside a Convex mutation's 1 s (#1214): a 30-Sentence
+ * window of about 750 Segments timed out in one save under load.
  */
-export const MAX_WINDOW_FAILURES = 6;
+const SAVE_SEGMENTS = 200;
 
-/** How long a window waits after its `failures`-th failure in a row. */
-export function retryDelayMs(failures: number): number {
-	return Math.min(
-		RETRY_BASE_MS * 2 ** Math.max(failures - 1, 0),
-		RETRY_MAX_MS,
-	);
+/** A processed Sentence as a save cuts it: its Segments and the rest. */
+type SavableSentence = {
+	readonly sentenceId: string;
+	readonly segments: readonly unknown[];
+};
+
+/**
+ * One Sentence's share of a save: its Segments from index `from`, and,
+ * on its last share, `analysis`, the rest of what intake found, whose
+ * storing marks the Sentence processed.
+ */
+export type SavedSentence<Sentence extends SavableSentence> = {
+	readonly sentenceId: Sentence["sentenceId"];
+	readonly from: number;
+	readonly segments: readonly Sentence["segments"][number][];
+	readonly analysis?: Omit<Sentence, "sentenceId" | "segments">;
+};
+
+/**
+ * A processed window's Sentences cut into saves of at most `size`
+ * Segments, in order. A Sentence that does not fit the save being filled
+ * starts the next, and one longer than a save is spread over several;
+ * only its last share marks it processed, so a save that fails leaves it
+ * unprocessed, to be asked again.
+ */
+export function savesOf<Sentence extends SavableSentence>(
+	sentences: readonly Sentence[],
+	size: number = SAVE_SEGMENTS,
+): SavedSentence<Sentence>[][] {
+	const saves: SavedSentence<Sentence>[][] = [];
+	let save: SavedSentence<Sentence>[] = [];
+	let room = size;
+	const close = () => {
+		if (save.length > 0) saves.push(save);
+		save = [];
+		room = size;
+	};
+	for (const { sentenceId, segments: all, ...analysis } of sentences) {
+		const segments: readonly Sentence["segments"][number][] = all;
+		if (segments.length > room) close();
+		let from = 0;
+		do {
+			const share = segments.slice(from, from + room);
+			const start = from;
+			from += share.length;
+			room -= share.length;
+			save.push({
+				sentenceId,
+				from: start,
+				segments: share,
+				...(from >= segments.length ? { analysis } : {}),
+			});
+			if (from < segments.length) close();
+		} while (from < segments.length);
+	}
+	close();
+	return saves;
 }

@@ -3,7 +3,7 @@ import { createDumgen, stitchedText } from "dumgen";
 import {
 	type FolioWindow,
 	type ProcessedSentence,
-	processFolios,
+	processFolio,
 } from "../server/folioIntake";
 import {
 	detectionSlice,
@@ -104,7 +104,6 @@ test("joinedSentence shifts the parts' units and fails with any part", () => {
 test("a Folio processes a Sentence over the bound as one German Sentence", async () => {
 	const jev = fakeJev();
 	const window = {
-		window: 0,
 		sentences: [
 			{ sentenceId: "s0", paragraph: 0, stitchedText: "Er gibt auf." },
 			{ sentenceId: "s1", paragraph: 0, stitchedText: LONG },
@@ -112,7 +111,7 @@ test("a Folio processes a Sentence over the bound as one German Sentence", async
 	} satisfies FolioWindow;
 	const windows: FolioWindow[] = [window];
 	const stored: ProcessedSentence[] = [];
-	const end = await processFolios({
+	const end = await processFolio({
 		dumgen: createDumgen({
 			jev: jev.ask,
 			luna: async () => {
@@ -123,10 +122,10 @@ test("a Folio processes a Sentence over the bound as one German Sentence", async
 		hasTime: () => true,
 		port: {
 			nextWindow: async () => windows.shift() ?? null,
-			storeWindow: async (_, sentences) => {
+			storeWindow: async (sentences) => {
 				stored.push(...sentences);
 			},
-			windowFailed: async () => null,
+			failed: async () => {},
 		},
 	});
 	expect(end).toEqual({ kind: "Done" });
@@ -164,7 +163,6 @@ test("a Sentence too long to store its Segments stays an undetermined Plain Sent
 	expect(huge.length).toBeGreaterThan(MAX_SEGMENTS_PER_SENTENCE);
 	const windows: FolioWindow[] = [
 		{
-			window: 0,
 			sentences: [
 				{
 					sentenceId: "s0",
@@ -176,7 +174,7 @@ test("a Sentence too long to store its Segments stays an undetermined Plain Sent
 		},
 	];
 	const stored: ProcessedSentence[] = [];
-	await processFolios({
+	await processFolio({
 		dumgen: createDumgen({
 			jev: jev.ask,
 			luna: async () => {
@@ -187,10 +185,10 @@ test("a Sentence too long to store its Segments stays an undetermined Plain Sent
 		hasTime: () => true,
 		port: {
 			nextWindow: async () => windows.shift() ?? null,
-			storeWindow: async (_, sentences) => {
+			storeWindow: async (sentences) => {
 				stored.push(...sentences);
 			},
-			windowFailed: async () => null,
+			failed: async () => {},
 		},
 	});
 	expect(stored.map(({ language }) => language)).toEqual(["de", undefined]);

@@ -30,6 +30,19 @@ const sentenceRangeValidator = v.object({
 	end: v.number(),
 });
 
+/** A book Scroll's Folio as the reader offers it for processing (#1216). */
+const folioViewValidator = v.object({
+	folioId: v.id("folios"),
+	start: v.number(),
+	end: v.number(),
+	state: v.union(
+		v.literal("Unprocessed"),
+		v.literal("Processing"),
+		v.literal("Processed"),
+		v.literal("Failed"),
+	),
+});
+
 const scrollViewValidator = v.object({
 	kind: v.literal("Scroll"),
 	target: v.object({
@@ -49,6 +62,8 @@ const scrollViewValidator = v.object({
 	 * Sentences a page at a time with `page`.
 	 */
 	pages: v.optional(v.array(sentenceRangeValidator)),
+	/** A book Scroll's Folios in order, each processed when asked for. */
+	folios: v.optional(v.array(folioViewValidator)),
 	/** The paragraphs a Scene Break stands before. */
 	sceneBreaks: v.array(v.number()),
 });
@@ -110,7 +125,17 @@ export const get = query({
 			sourceText: scroll.sourceText,
 			createdAt: scroll._creationTime,
 			sentences: sentenceViews,
-			...(folios.length > 0 ? { pages: readerPages(folios) } : {}),
+			...(folios.length > 0
+				? {
+						pages: readerPages(folios),
+						folios: folios.map(({ _id, start, end, state }) => ({
+							folioId: _id,
+							start,
+							end,
+							state: state ?? ("Unprocessed" as const),
+						})),
+					}
+				: {}),
 			sceneBreaks: scroll.sceneBreaks ?? [],
 		};
 	},

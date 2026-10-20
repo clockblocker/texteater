@@ -17,7 +17,6 @@ import {
 	sectionStatus,
 	sectionsAbove,
 } from "./model/codex";
-import { followReader } from "./model/folios";
 import { visitorError } from "./model/validators";
 
 /**
@@ -276,10 +275,7 @@ async function visitorScroll(
 	return scroll;
 }
 
-/**
- * The reader opened a Scroll on a Ground: it is in progress now, and a
- * book's processing moves to where the reader resumes (#1193).
- */
+/** The reader opened a Scroll on a Ground: it is in progress now. */
 export const open = mutation({
 	args: { scrollId: v.string(), visitorId: v.string() },
 	returns: v.null(),
@@ -287,8 +283,6 @@ export const open = mutation({
 		assertIdentifier(visitorId, "visitorId");
 		const scroll = await visitorScroll(ctx, scrollId, visitorId);
 		await recordOpened(ctx, visitorId, scroll);
-		const progress = await findScrollProgress(ctx, visitorId, scroll._id);
-		await followReader(ctx, scroll._id, progress?.position ?? 0);
 		return null;
 	},
 });
@@ -313,10 +307,7 @@ export const setDone = mutation({
 	},
 });
 
-/**
- * Where the reader is in a Scroll, by Sentence position; a book's
- * processing follows it (#1193).
- */
+/** Where the reader is in a Scroll, by Sentence position. */
 export const savePosition = mutation({
 	args: {
 		scrollId: v.string(),
@@ -333,7 +324,6 @@ export const savePosition = mutation({
 			);
 		const scroll = await visitorScroll(ctx, scrollId, visitorId);
 		await recordPosition(ctx, visitorId, scroll, position);
-		await followReader(ctx, scroll._id, position);
 		return null;
 	},
 });

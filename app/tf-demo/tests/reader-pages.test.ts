@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { api } from "../convex/_generated/api";
-import { FOLIOS_AHEAD, PAGE_SENTENCES, readerPages } from "../server/folios";
-import { runFolios, submitBook, VISITOR } from "./support/books";
+import { PAGE_SENTENCES, readerPages } from "../server/folios";
+import { foliosOf, requestAndRun, submitBook, VISITOR } from "./support/books";
 import { createTestConvex } from "./support/convex";
 
 /**
  * A book Scroll's reader loads it a page at a time (#1212): `get` lists
  * the pages, its Folios, and `page` reads one page's Sentences, so a long
- * chapter is never read whole. The processing run stays unrun (fake
+ * chapter is never read whole. A requested Folio's run stays unrun (fake
  * timers) until a test drives it.
  */
 
@@ -46,7 +46,7 @@ test("a book Scroll lists its pages and reads a page's Sentences, processed ones
 	});
 	const pages = view?.pages ?? [];
 	expect(view?.sentences).toEqual([]);
-	expect(pages.length).toBeGreaterThan(FOLIOS_AHEAD + 1);
+	expect(pages.length).toBeGreaterThan(2);
 	// The pages cover the Scroll in order, with no gap.
 	expect(pages[0]?.start).toBe(0);
 	for (const [index, page] of pages.entries())
@@ -64,11 +64,9 @@ test("a book Scroll lists its pages and reads a page's Sentences, processed ones
 	);
 	expect(pages.at(-1)?.end).toBe(sentenceCount);
 
-	await t.mutation(api.library.open, {
-		scrollId: chapter,
-		visitorId: VISITOR,
-	});
-	await runFolios(t, chapter);
+	const [first] = await foliosOf(t, chapter);
+	if (!first) throw new Error("A first Folio.");
+	await requestAndRun(t, first._id);
 	const read = async (index: number) => {
 		const page = pages[index];
 		if (!page) throw new Error(`No page ${index.toString()}.`);
@@ -87,7 +85,7 @@ test("a book Scroll lists its pages and reads a page's Sentences, processed ones
 	expect(
 		opened.some(({ plain, segments }) => !plain && segments.length > 0),
 	).toBe(true);
-	const beyond = await read(FOLIOS_AHEAD + 1);
+	const beyond = await read(1);
 	expect(beyond.length).toBeGreaterThan(0);
 	expect(beyond.every(({ plain }) => plain)).toBe(true);
 });
