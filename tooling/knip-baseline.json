@@ -65,6 +65,9 @@
 		"battery/dumdict/src/schema.ts: types ReadingPatchOp",
 		"battery/dumdict/src/schema.ts: types SurfaceEntry"
 	],
+	"battery/dumgen": [
+		"battery/dumgen/src/index.ts: exports extractedTextFromMarkdown"
+	],
 	"battery/dumrel": [
 		"battery/dumrel/src/select-knowledge.ts: types KnowledgePolicyUnavailable",
 		"battery/dumrel/src/types.ts: types KnowledgeParse",
