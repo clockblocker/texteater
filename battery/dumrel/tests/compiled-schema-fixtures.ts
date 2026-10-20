@@ -155,6 +155,7 @@ export const samples: Record<string, unknown[]> = {
 	nounPlural: [["Mütter"], ["Pizzen", "Pizzas"], "NoPlural", "PluralOnly"],
 	conjugationClass: ["Strong", "Weak", "Mixed"],
 	conjugationClasses: [["Strong"], ["Weak", "Mixed"]],
+	preterite: [["wog"], [" stand auf ", "sandte"]],
 	locutionType: ["Idiom", "Collocation"],
 	sayingType: [
 		{ type: "Proverb" },
