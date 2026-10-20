@@ -5,7 +5,6 @@ import {
 	analyzeParagraphs,
 	type IntakeDumgen,
 } from "./intake";
-import { MAX_SOURCE_SENTENCE_CHARACTERS } from "./textSubmissionLimits";
 
 /**
  * A book's Folios through intake (#1193). Each window of a Folio, its
@@ -46,10 +45,6 @@ function paragraphsOf(sentences: readonly WindowSentence[]) {
 	return paragraphs;
 }
 
-/** A Sentence too long to segment stays a Plain Sentence, never sent to jev. */
-const tooLong = ({ stitchedText }: WindowSentence) =>
-	[...stitchedText].length > MAX_SOURCE_SENTENCE_CHARACTERS;
-
 /**
  * Analyzes one window. It fails as `language.detect` does, when jev brings
  * no usable answer; a Sentence `segment.inUnits` could not cut comes back
@@ -60,24 +55,11 @@ function analyzeWindow<Id extends string>(
 	window: readonly (WindowSentence & { readonly sentenceId: Id })[],
 	language: ScrollLanguage,
 ) {
-	const asked = window.filter((sentence) => !tooLong(sentence));
-	const analysis =
-		asked.length === 0
-			? Effect.succeed([] as AnalyzedSentence[][])
-			: analyzeParagraphs(dumgen, paragraphsOf(asked), language);
-	return analysis.pipe(
+	return analyzeParagraphs(dumgen, paragraphsOf(window), language).pipe(
 		Effect.map((paragraphs) => {
 			const analyzed = paragraphs.flat();
-			let next = 0;
-			return window.map((sentence): ProcessedSentence<Id> => {
-				if (tooLong(sentence))
-					return {
-						sentenceId: sentence.sentenceId,
-						stitchedText: sentence.stitchedText,
-						segments: [],
-						units: [],
-					};
-				const result = analyzed[next++];
+			return window.map((sentence, index): ProcessedSentence<Id> => {
+				const result = analyzed[index];
 				if (result === undefined)
 					throw new Error(
 						"Intake analyzed fewer Sentences than asked.",

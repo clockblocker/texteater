@@ -12,6 +12,13 @@ import type { ScrollLanguage } from "../shared/supported-target-language";
 import { assertNonEmpty } from "./identifiers";
 import { inspectionStep } from "./inspectionCapture";
 import {
+	detectionSlice,
+	fitsSegments,
+	joinedSentence,
+	type SentenceParts,
+	sentenceParts,
+} from "./longSentences";
+import {
 	type StoredSegmentValue,
 	type StoredUnit,
 	storedUnitOf,
@@ -187,7 +194,9 @@ export type IntakeDumgen = Pick<Dumgen, "language" | "segment">;
  * Intake's analysis of Sentences already split, the one path a paste and a
  * Folio's window share: `language.detect` gives each its Detected
  * Language, and only the target-language ones go to `segment.inUnits`.
- * `onSegmenting` hears which go, by index across paragraphs.
+ * A Sentence over the bound is read within it (`longSentences.ts`).
+ * `onSegmenting` hears which go, by index across paragraphs, once for each
+ * part `segment.inUnits` reads.
  */
 export function analyzeParagraphs(
 	dumgen: IntakeDumgen,
@@ -196,40 +205,95 @@ export function analyzeParagraphs(
 	onSegmenting?: (positions: readonly number[]) => void,
 ) {
 	return Effect.gen(function* () {
-		const detected = yield* dumgen.language.detect({ paragraphs }).pipe(
-			Effect.withSpan(
-				"Detect sentence languages",
-				inspectionStep("battery/dumgen · language.detect", {
-					paragraphs,
+		const asked = paragraphs.map(({ sentences }) => ({
+			sentences: sentences.map((sentence) => detectionSlice(sentence)),
+		}));
+		const detection = yield* dumgen.language
+			.detect({ paragraphs: asked })
+			.pipe(
+				Effect.withSpan(
+					"Detect sentence languages",
+					inspectionStep("battery/dumgen · language.detect", {
+						paragraphs: asked,
+					}),
+				),
+			);
+		// Detection may have read a long Sentence's opening only.
+		const detected: LanguagedParagraphs = detection.paragraphs.map(
+			({ sentences }, paragraph) => ({
+				sentences: sentences.map(({ text: slice, language }, index) => {
+					const text =
+						paragraphs[paragraph]?.sentences[index] ?? slice;
+					return language === undefined || !fitsSegments(text)
+						? { text }
+						: { text, language };
 				}),
+			}),
+		);
+		const target = targetParagraphs(detected, language).map(
+			({ sentences }) =>
+				sentences.map((sentence) => sentenceParts(sentence)),
+		);
+		const targetPositions = detected
+			.flatMap(({ sentences }) => sentences)
+			.flatMap((sentence, position) =>
+				sentence.language === language ? [position] : [],
+			);
+		const targetParts = target.flat();
+		onSegmenting?.(
+			targetParts.flatMap(({ parts }, index) =>
+				parts.map(() => targetPositions[index] ?? index),
 			),
 		);
-		const target = targetParagraphs(detected.paragraphs, language);
-		onSegmenting?.(
-			detected.paragraphs
-				.flatMap(({ sentences }) => sentences)
-				.flatMap((sentence, position) =>
-					sentence.language === language ? [position] : [],
-				),
-		);
+		const segmentedParagraphs = target.map((sentences) => ({
+			sentences: sentences.flatMap(({ parts }) => parts),
+		}));
 		// A Sentence whose calls fail comes back marked, so this step
 		// fails only on a bug or an interruption.
 		const segmented =
 			target.length === 0
 				? undefined
 				: yield* dumgen.segment
-						.inUnits({ language: "de", paragraphs: target })
+						.inUnits({
+							language: "de",
+							paragraphs: segmentedParagraphs,
+						})
 						.pipe(
 							Effect.withSpan(
 								"Segment sentences in units",
 								inspectionStep(
 									"battery/dumgen · segment.inUnits",
-									{ paragraphs: target },
+									{ paragraphs: segmentedParagraphs },
 								),
 							),
 						);
-		return analyzedSentences(detected.paragraphs, language, segmented);
+		return analyzedSentences(
+			detected,
+			language,
+			segmented && joinedParts(segmented, targetParts),
+		);
 	});
+}
+
+/** Each long Sentence's parts, as `segment.inUnits` cut them, joined back into one. */
+function joinedParts(
+	segmented: SegmentedText,
+	sentences: readonly SentenceParts[],
+): SegmentedText {
+	const parts = segmented.paragraphs.flatMap(({ sentences }) => sentences);
+	let next = 0;
+	return {
+		language: segmented.language,
+		paragraphs: [
+			{
+				sentences: sentences.map((sentence) => {
+					const cut = parts.slice(next, next + sentence.parts.length);
+					next += sentence.parts.length;
+					return joinedSentence(cut, sentence);
+				}),
+			},
+		],
+	};
 }
 
 /**

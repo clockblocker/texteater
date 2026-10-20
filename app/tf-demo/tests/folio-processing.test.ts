@@ -175,19 +175,33 @@ describe("cutting Folios", () => {
 	});
 
 	test("reads a Folio in windows of at most 30 Sentences, as even as they come", () => {
-		const sentences = Array.from({ length: 31 }, (_, index) => index);
+		const sentences = Array.from({ length: 31 }, (_, position) => ({
+			position,
+			paragraph: 0,
+			stitchedText: "Ja.",
+		}));
 		expect(windowsOf(sentences).map((window) => window.length)).toEqual([
 			16, 15,
 		]);
-		expect(
-			cutFolios(
-				sentences.map((position) => ({
-					position,
-					paragraph: 0,
-					stitchedText: "Ja.",
-				})),
-			),
-		).toEqual([{ start: 0, end: 31, windows: 2 }]);
+		expect(cutFolios(sentences)).toEqual([
+			{ start: 0, end: 31, windows: 2 },
+		]);
+	});
+
+	test("cuts a window again where it would pass 15,000 characters", () => {
+		const sentences = [6_000, 6_000, 6_000, 9_000, 100].map(
+			(length, position) => ({
+				position,
+				paragraph: position,
+				stitchedText: "x".repeat(length),
+			}),
+		);
+		expect(windowsOf(sentences).map((window) => window.length)).toEqual([
+			2, 2, 1,
+		]);
+		expect(cutFolios(sentences).map(({ windows }) => windows)).toEqual([
+			1, 1, 1, 1, 1,
+		]);
 	});
 });
 

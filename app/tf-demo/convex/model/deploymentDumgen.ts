@@ -15,6 +15,7 @@ import {
 	type InspectionCapture,
 } from "../../server/inspectionCapture";
 import { INTAKE_NOT_CONFIGURED_MESSAGE } from "../../server/intake";
+import { joinedSentence, sentenceParts } from "../../server/longSentences";
 import { storedUnitOf } from "../../server/storedSegments";
 import { env } from "../_generated/server";
 import { visitorError } from "./validators";
@@ -105,15 +106,20 @@ export const resegmenter =
 					);
 				}),
 			);
+			// A long Sentence is read in parts, as intake read it.
+			const parts = sentenceParts(stitchedText);
 			return dumgen.segment
 				.inUnits({
 					language: "de",
-					paragraphs: [{ sentences: [stitchedText] }],
+					paragraphs: [{ sentences: [...parts.parts] }],
 				})
 				.pipe(
 					Effect.flatMap((text) => {
-						const sentence = text.paragraphs[0]?.sentences[0];
-						if (sentence && !sentence.failed)
+						const sentence = joinedSentence(
+							text.paragraphs[0]?.sentences ?? [],
+							parts,
+						);
+						if (!sentence.failed)
 							return Effect.succeed({
 								segments: sentence.segments.map(
 									({ kind, text, surface }) =>

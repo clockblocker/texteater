@@ -57,8 +57,12 @@ export function storedUnitOf(unit: {
 	} as StoredUnit;
 }
 
-/** Intake stores at most this many Segments in one Sentence. */
-export const MAX_SEGMENTS_PER_SENTENCE = 512;
+/**
+ * Intake stores at most this many Segments in one Sentence: it bounds one
+ * Sentence's reads, for a click or the reader. A Segment holds at least
+ * one character, so a Sentence of at most this many characters fits.
+ */
+export const MAX_SEGMENTS_PER_SENTENCE = 8_192;
 
 /**
  * The word a Segment stands for, for looking Lemmas up: a fusion component's

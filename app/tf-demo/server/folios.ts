@@ -15,6 +15,14 @@ const FOLIO_CHARACTERS = 3_000;
 const WINDOW_SENTENCES = 30;
 
 /**
+ * At most how many characters one window holds, a lone longer Sentence
+ * aside. A Segment holds at least one character, so a window's Segments
+ * stay inside the 16,000 documents one mutation (`folios.storeWindow`)
+ * may write.
+ */
+const WINDOW_CHARACTERS = 15_000;
+
+/**
  * How many Folios after the reader's own Intake processes before it stops
  * until the position moves. A tuning knob, not a decision.
  */
@@ -34,11 +42,6 @@ export type FolioCut = {
 	readonly end: number;
 	readonly windows: number;
 };
-
-/** How many windows `count` Sentences read in, as `windowsOf` cuts them. */
-function windowCount(count: number, size = WINDOW_SENTENCES): number {
-	return Math.ceil(count / size);
-}
 
 /**
  * A Scroll's Folios, in order, for its Sentences in position order. Each
@@ -84,7 +87,7 @@ export function cutFolios(
 		return {
 			start: sentences[first]?.position ?? 0,
 			end: (last?.position ?? 0) + 1,
-			windows: windowCount(next - first),
+			windows: windowsOf(sentences.slice(first, next)).length,
 		};
 	});
 }
@@ -92,18 +95,34 @@ export function cutFolios(
 /**
  * A Folio's Sentences cut into consecutive windows of at most
  * `WINDOW_SENTENCES`, as even as they come, as `language.detect` cuts
- * them. The cut reads every stored Sentence of the Folio, so a retried
- * window holds the same Sentences.
+ * them; a window over `WINDOW_CHARACTERS` is cut again where it would
+ * pass them. The cut reads every stored Sentence of the Folio, so a
+ * retried window holds the same Sentences.
  */
-export function windowsOf<T>(
+export function windowsOf<T extends { readonly stitchedText: string }>(
 	sentences: readonly T[],
 	size: number = WINDOW_SENTENCES,
+	characters: number = WINDOW_CHARACTERS,
 ): T[][] {
-	const windows = windowCount(sentences.length, size);
-	const each = Math.ceil(sentences.length / Math.max(windows, 1));
-	return Array.from({ length: windows }, (_, window) =>
-		sentences.slice(window * each, (window + 1) * each),
-	);
+	const count = Math.ceil(sentences.length / size);
+	const each = Math.ceil(sentences.length / Math.max(count, 1));
+	const windows: T[][] = [];
+	for (let start = 0; start < sentences.length; start += each) {
+		let window: T[] = [];
+		let length = 0;
+		for (const sentence of sentences.slice(start, start + each)) {
+			const added = sentence.stitchedText.length;
+			if (window.length > 0 && length + added > characters) {
+				windows.push(window);
+				window = [];
+				length = 0;
+			}
+			window.push(sentence);
+			length += added;
+		}
+		windows.push(window);
+	}
+	return windows;
 }
 
 /** The first retry waits this long; each next one twice as long. */

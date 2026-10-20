@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { assertResolvedClickProposal } from "../convex/model/resolvedClickCommit";
 import {
+	assertAnalyzedSentence,
 	assertSubmittedScroll,
 	matchesStoredAnalysis,
 } from "../convex/modules/scroll/submission";
@@ -126,8 +127,9 @@ describe("assertSubmittedScroll", () => {
 			{ length: MAX_SEGMENTS_PER_SENTENCE + 1 },
 			() => ({ kind: "ResolvableText" as const, text: "a" }),
 		);
+		// Only a book Sentence can be this long; a paste stops at 2,000 characters.
 		expect(() =>
-			assertSubmittedScroll(submission([sentence(0, [], { segments })])),
+			assertAnalyzedSentence(sentence(0, [], { segments })),
 		).toThrow(
 			`A sentence must contain 1-${MAX_SEGMENTS_PER_SENTENCE} Segments.`,
 		);

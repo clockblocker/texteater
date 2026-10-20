@@ -17,10 +17,12 @@ export const MAX_SOURCE_TEXT_CHARACTERS = 10_000;
 /** Paste: bounds the Sentences a paste re-reads when it is submitted again. */
 export const MAX_SOURCE_SENTENCES = 25;
 /**
- * Paste and Folio: bounds one Sentence's segmentation questions, which grow
- * quadratically. A longer book Sentence is never segmented (#1193).
+ * Paste: bounds one Sentence's segmentation questions, which grow with it;
+ * a longer Sentence rejects the paste. Intake reads a Sentence in parts
+ * of at most 500 characters (`longSentences.ts`), so a book's Sentences
+ * need no such bound.
  */
-export const MAX_SOURCE_SENTENCE_CHARACTERS = 2_000;
+const MAX_SOURCE_SENTENCE_CHARACTERS = 2_000;
 
 /**
  * One Scroll's stored text, its running text and its Extracted Text
