@@ -61,3 +61,4 @@ export type {
 } from "./segment/segmented-sentence.js";
 export { stitchedText } from "./segment/stitched-text.js";
 export { createTypeSafeAsk } from "./segment/typesafe-ask.js";
+export type { TranslateSentenceInput } from "./translate/types.js";

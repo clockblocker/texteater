@@ -9,7 +9,7 @@ import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
 import type { LunaAsk, LunaRequest, LunaResponse } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
 import type { JevAsk } from "../../src/segment/jev.js";
-import { sentenceTranslationPrompt } from "../../src/translate/sentence.js";
+import { sentenceTranslationPrompt } from "../../src/translate/de/prompt.js";
 import type { TranslateSentenceInput } from "../../src/translate/types.js";
 
 const jev: JevAsk = async () => {
@@ -184,14 +184,13 @@ async function failureOf(luna: ReturnType<typeof fakeLuna>) {
 
 test("a failed call is a ProviderFailure, and an unusable answer an InvalidModelOutput, neither asked again", async () => {
 	const down = fakeLuna(() => Error("socket hang up"));
-	expect(await failureOf(down)).toEqual(
-		expect.objectContaining({
-			_tag: "ProviderFailure",
-			stage: "translation",
-			message: "socket hang up",
-		}),
-	);
-	expect(await failureOf(down)).toBeInstanceOf(ProviderFailure);
+	const failure = await failureOf(down);
+	expect(failure).toBeInstanceOf(ProviderFailure);
+	expect(failure).toMatchObject({
+		stage: "translation",
+		message: "socket hang up",
+	});
+	expect(down.sent).toHaveLength(1);
 	for (const answer of ["  ", 3, null, ["The dog barks."]]) {
 		const luna = fakeLuna(() => answer);
 		const failure = await failureOf(luna);
@@ -223,7 +222,7 @@ test("another language, a blank Sentence, another translation language or a neig
 		[{ ...input, language: "en" as never }, 'German ("de") only'],
 		[{ ...input, sentence: " \n" }, "needs a Sentence"],
 		[{ ...input, into: "fr" as never }, 'en or ru, not "fr"'],
-		[{ ...input, neighbours: { before: 3 as never } }, "is text"],
+		[{ ...input, neighbours: { before: 3 as never } }, "as text"],
 	];
 	for (const [bad, message] of cases) {
 		const exit = await Effect.runPromiseExit(translate(bad));

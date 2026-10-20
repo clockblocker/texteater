@@ -11,18 +11,10 @@ import * as Effect from "effect/Effect";
 import type { OperationScope } from "../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../errors.js";
 import { askLuna, type LunaSettings } from "../luna-call.js";
+import { sentenceTranslationPrompt } from "./de/prompt.js";
 import type { TranslateSentenceInput } from "./types.js";
 
 const stage = "translation";
-
-/** The one translation prompt; the language comes in the input, as in Knowledge (#697). */
-export const sentenceTranslationPrompt = [
-	"`sentence` is one German sentence from a text a learner is reading. Translate it into `language` (en: English, ru: Russian) as a fluent translator would: one natural translation that keeps its meaning, tone and register, says nothing it does not say and leaves out nothing it says.",
-	"`before` and `after`, when present, are the sentences just before and after it in the text. Read them only to settle what the sentence leaves open, such as whom a pronoun names, its gender and number, or which sense an ambiguous word has; never translate them, and add nothing only they say.",
-	"Translate an idiom or a fixed expression by the expression of the same meaning in that language, else by a plain wording of its meaning, never word for word. A proper name keeps its own form, transliterated into Cyrillic for ru, unless the language has an established name for it. Informal, broken or transcribed speech is translated in the same register, never corrected or completed.",
-	"The sentence may mark words with inline markup: **…**, *…*, ==…==, ~~…~~, `…` or […]. Put each mark around the words of the translation that carry the marked words' meaning, rewording around them where needed to keep them together: around the equivalent of a marked idiom, not its literal words, and around whatever carries a marked separable prefix's meaning. Add no other markup.",
-	"Answer with the translation alone as the JSON string: no quotation marks around it, no note, no transliteration and no second version.",
-].join("\n");
 
 const translationSchema = { type: "string", minLength: 1 } as const;
 
@@ -60,7 +52,9 @@ export const translateSentence = Effect.fnUntraced(function* (
 	for (const neighbour of [before, after])
 		if (neighbour !== undefined && typeof neighbour !== "string")
 			return yield* Effect.die(
-				Error("A neighbouring Sentence of translate.sentence is text"),
+				Error(
+					"translate.sentence needs each neighbouring Sentence as text",
+				),
 			);
 	return yield* askLuna(
 		scope,
