@@ -4,9 +4,10 @@
  * #1189), `extractTextFile` reads a `.txt` file into Sections and Scrolls
  * (#1190), `scrollFromHtml` maps a parsed HTML tree into one Scroll
  * (#1195), `extractedTextFromMarkdown` reads a Markdown document into
- * Sections and Scrolls (#1176, #1205), `parseScroll` checks a stored Scroll
- * without Zod, and `splitScroll` splits one into paragraphs and Sentences
- * in code with the language-neutral `splitText`.
+ * Sections and Scrolls (#1176, #1205; consumed by filler-de#49, outside this
+ * repository, so knip's baseline keeps it), `parseScroll` checks a stored
+ * Scroll without Zod, and `splitScroll` splits one into paragraphs and
+ * Sentences in code with the language-neutral `splitText`.
  * `createDumgen({ jev, luna })` builds the operations: `language.detect`,
  * which gives each Sentence its Detected Language (Dumgen ADR 0001);
  * `segment.inUnits`, which turns each Sentence into

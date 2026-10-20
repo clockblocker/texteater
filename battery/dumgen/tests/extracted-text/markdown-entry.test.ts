@@ -5,7 +5,7 @@ import { extractedTextFromMarkdown, type Scroll, splitScroll } from "dumgen";
  * The Markdown reader through Dumgen's public entry (#1205): a host whose
  * Scrolls are Markdown files reads one and splits each of its Scrolls.
  */
-test("a Markdown document read through the public entry splits Scroll by Scroll", () => {
+test("a Markdown document read through the public entry splits into paragraphs and Sentences", () => {
 	const text = extractedTextFromMarkdown(
 		[
 			'<section title="Teil 1">',
