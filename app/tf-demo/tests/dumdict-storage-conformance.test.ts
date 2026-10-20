@@ -1,12 +1,17 @@
 import { afterEach, beforeEach, jest } from "bun:test";
-import type { ReadingEntryContext } from "dumdict/planning";
+import type {
+	CleanupRelationsSlice,
+	ReadingEntryContext,
+} from "dumdict/planning";
 import {
 	type ConformanceStorage,
 	describeStorageConformance,
 } from "dumdict/testing";
 import * as Effect from "effect/Effect";
+import { pendingLocatorIndexKey } from "../convex/model/dumdictPendingIndexes";
 import {
 	applyDumdictPlanInTransaction,
+	loadCleanupRelationsSlice,
 	loadReadingEntryContextSlice,
 	readingEntryContextArgs,
 } from "../convex/model/dumdictTransaction";
@@ -43,10 +48,25 @@ function convexStorage(): ConformanceStorage {
 						),
 					) as Promise<ReadingEntryContext<"de">>,
 			),
+		loadCleanupRelationsContext: ({ resolutions }) =>
+			Effect.promise(
+				() =>
+					t.run((ctx) =>
+						loadCleanupRelationsSlice(
+							ctx,
+							resolutions.map(({ locator }) =>
+								pendingLocatorIndexKey(locator),
+							),
+						),
+					) as Promise<CleanupRelationsSlice<"de">>,
+			),
 	};
 }
 
 // tf-demo keeps occurrence Attestations in its host graph (tf-demo ADR 0001).
+// Its Convex transaction's own reads guard a commit, so its revision is one
+// constant (convex/dumdictStorage/storage.ts).
 describeStorageConformance("The Convex dictionary store", convexStorage, {
 	readingAttestations: false,
+	revisions: false,
 });
