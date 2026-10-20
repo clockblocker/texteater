@@ -1,17 +1,7 @@
 "use node";
 
 import { ConvexError, type Infer, type Value, v } from "convex/values";
-import {
-	createDumgen,
-	createOpenAILuna,
-	createTypeSafeAsk,
-	InvalidModelOutput,
-	type LunaAsk,
-	type OperationTrace,
-	ProviderFailure,
-	parseScroll,
-	type Scroll,
-} from "dumgen";
+import { parseScroll, type Scroll } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
@@ -27,7 +17,6 @@ import {
 } from "../server/inspectionCapture";
 import {
 	createIntake,
-	INTAKE_NOT_CONFIGURED_MESSAGE,
 	sourceSentencesOf,
 	unsupportedLanguageMessage,
 } from "../server/intake";
@@ -67,13 +56,13 @@ import { submittedLink } from "../shared/submitted-link";
 import type { ScrollLanguage } from "../shared/supported-target-language";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
-import {
-	type ActionCtx,
-	action,
-	env,
-	internalAction,
-} from "./_generated/server";
+import { type ActionCtx, action, internalAction } from "./_generated/server";
 import { inspectionEnabled } from "./deploymentFlags";
+import {
+	clickDumgen,
+	productionDumgen,
+	resegmenter,
+} from "./model/deploymentDumgen";
 import { inspectionFor } from "./model/inspectionAction";
 import {
 	convexId,
@@ -82,7 +71,6 @@ import {
 import {
 	languageValidator,
 	resolutionSessionGuardValidator,
-	visitorError,
 } from "./model/validators";
 
 const submitTextResultValidator = v.union(
@@ -129,124 +117,6 @@ function visitorErrorIn(
 	}
 	return undefined;
 }
-
-/**
- * Luna through OpenAI with the deployment's key, at a deadline. Without a
- * key, a call that needs Luna fails as a ProviderFailure that says so;
- * intake never asks Luna.
- */
-function productionLuna(timeoutMs?: number): LunaAsk {
-	const apiKey = env.OPENAI_API_KEY;
-	if (!apiKey)
-		return async () => {
-			throw Error("OPENAI_API_KEY is not set on the Convex deployment");
-		};
-	return createOpenAILuna({
-		apiKey,
-		...(timeoutMs === undefined ? {} : { timeoutMs }),
-	});
-}
-
-/** How a Dumgen instance traces: `dumgenTracing`'s options. */
-type DumgenTracing = ReturnType<typeof dumgenTracing>;
-
-/**
- * The production Dumgen for intake: jev through TypeSafe with the
- * deployment's key. With no key, intake fails with a coded error that tells
- * the Visitor how to fix it.
- */
-function productionDumgen(tracing: DumgenTracing) {
-	const apiKey = env.TYPESAFE_API_KEY;
-	if (!apiKey)
-		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
-	return createDumgen({
-		jev: createTypeSafeAsk({ apiKey }),
-		luna: productionLuna(),
-		...tracing,
-	});
-}
-
-/**
- * Each model call's deadline on a click: `CLICK_CALL_DEADLINE_MS`, or
- * intake's 120 s until the first live click measurement sets it (#858).
- */
-export function clickCallDeadlineMs(
-	value: string | undefined = env.CLICK_CALL_DEADLINE_MS,
-): number {
-	const deadline = value === undefined ? 120_000 : Number(value);
-	if (!Number.isInteger(deadline) || deadline <= 0)
-		throw new Error("CLICK_CALL_DEADLINE_MS is a positive whole number");
-	return deadline;
-}
-
-/**
- * The click's Dumgen instance: jev and Luna at the click deadline. With no
- * TypeSafe key, a click fails with the coded intake error.
- */
-function clickDumgen(tracing: DumgenTracing) {
-	const apiKey = env.TYPESAFE_API_KEY;
-	if (!apiKey)
-		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
-	const timeoutMs = clickCallDeadlineMs();
-	return createDumgen({
-		jev: createTypeSafeAsk({ apiKey, timeoutMs }),
-		luna: productionLuna(timeoutMs),
-		...tracing,
-	});
-}
-
-/**
- * Segments one failed Sentence again for its first click (#861), at the
- * click deadline. When it fails again, the click fails with what its trace
- * says: a ProviderFailure or an InvalidModelOutput.
- */
-const resegmenter =
-	(inspection?: InspectionCapture) => (stitchedText: string) =>
-		Effect.suspend(() => {
-			let failure: OperationTrace["sentences"][number] | undefined;
-			const dumgen = clickDumgen(
-				dumgenTracing(inspection, (trace) => {
-					failure = trace.sentences.find(
-						({ outcome }) => outcome === "Failed",
-					);
-				}),
-			);
-			return dumgen.segment
-				.inUnits({
-					language: "de",
-					paragraphs: [{ sentences: [stitchedText] }],
-				})
-				.pipe(
-					Effect.flatMap((text) => {
-						const sentence = text.paragraphs[0]?.sentences[0];
-						if (sentence && !sentence.failed)
-							return Effect.succeed({
-								segments: sentence.segments.map(
-									({ kind, text, surface }) =>
-										surface === undefined
-											? { kind, text }
-											: { kind, text, surface },
-								),
-								units: sentence.units.map(storedUnitOf),
-							});
-						const reason =
-							failure?.outcome === "Failed"
-								? failure.failure
-								: undefined;
-						const fields = {
-							stage: "segment.inUnits",
-							message:
-								reason?.message ??
-								"The Sentence was not segmented",
-						};
-						return Effect.fail(
-							reason?.tag === "InvalidModelOutput"
-								? new InvalidModelOutput(fields)
-								: new ProviderFailure(fields),
-						);
-					}),
-				);
-		});
 
 /** A Scroll from a link, as `persistSubmittedScroll` stores it. */
 type LinkedScroll = {

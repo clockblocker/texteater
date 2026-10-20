@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test";
+import { assertResolvedClickProposal } from "../convex/model/resolvedClickCommit";
 import {
 	assertSubmittedScroll,
 	matchesStoredAnalysis,
 } from "../convex/modules/scroll/submission";
-import { assertResolvedClickProposal } from "../convex/persistence";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey,

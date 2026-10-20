@@ -1,0 +1,143 @@
+"use node";
+
+import {
+	createDumgen,
+	createOpenAILuna,
+	createTypeSafeAsk,
+	InvalidModelOutput,
+	type LunaAsk,
+	type OperationTrace,
+	ProviderFailure,
+} from "dumgen";
+import * as Effect from "effect/Effect";
+import {
+	dumgenTracing,
+	type InspectionCapture,
+} from "../../server/inspectionCapture";
+import { INTAKE_NOT_CONFIGURED_MESSAGE } from "../../server/intake";
+import { storedUnitOf } from "../../server/storedSegments";
+import { env } from "../_generated/server";
+import { visitorError } from "./validators";
+
+/*
+ * The deployment's Dumgen instances: intake's, and a click's, at the click
+ * deadline.
+ */
+
+/**
+ * Luna through OpenAI with the deployment's key, at a deadline. Without a
+ * key, a call that needs Luna fails as a ProviderFailure that says so;
+ * intake never asks Luna.
+ */
+function productionLuna(timeoutMs?: number): LunaAsk {
+	const apiKey = env.OPENAI_API_KEY;
+	if (!apiKey)
+		return async () => {
+			throw Error("OPENAI_API_KEY is not set on the Convex deployment");
+		};
+	return createOpenAILuna({
+		apiKey,
+		...(timeoutMs === undefined ? {} : { timeoutMs }),
+	});
+}
+
+/** How a Dumgen instance traces: `dumgenTracing`'s options. */
+export type DumgenTracing = ReturnType<typeof dumgenTracing>;
+
+/**
+ * The production Dumgen for intake: jev through TypeSafe with the
+ * deployment's key. With no key, intake fails with a coded error that tells
+ * the Visitor how to fix it.
+ */
+export function productionDumgen(tracing: DumgenTracing) {
+	const apiKey = env.TYPESAFE_API_KEY;
+	if (!apiKey)
+		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
+	return createDumgen({
+		jev: createTypeSafeAsk({ apiKey }),
+		luna: productionLuna(),
+		...tracing,
+	});
+}
+
+/**
+ * Each model call's deadline on a click: `CLICK_CALL_DEADLINE_MS`, or
+ * intake's 120 s until the first live click measurement sets it (#858).
+ */
+export function clickCallDeadlineMs(
+	value: string | undefined = env.CLICK_CALL_DEADLINE_MS,
+): number {
+	const deadline = value === undefined ? 120_000 : Number(value);
+	if (!Number.isInteger(deadline) || deadline <= 0)
+		throw new Error("CLICK_CALL_DEADLINE_MS is a positive whole number");
+	return deadline;
+}
+
+/**
+ * The click's Dumgen instance: jev and Luna at the click deadline. With no
+ * TypeSafe key, a click fails with the coded intake error.
+ */
+export function clickDumgen(tracing: DumgenTracing) {
+	const apiKey = env.TYPESAFE_API_KEY;
+	if (!apiKey)
+		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
+	const timeoutMs = clickCallDeadlineMs();
+	return createDumgen({
+		jev: createTypeSafeAsk({ apiKey, timeoutMs }),
+		luna: productionLuna(timeoutMs),
+		...tracing,
+	});
+}
+
+/**
+ * Segments one failed Sentence again for its first click (#861), at the
+ * click deadline. When it fails again, the click fails with what its trace
+ * says: a ProviderFailure or an InvalidModelOutput.
+ */
+export const resegmenter =
+	(inspection?: InspectionCapture) => (stitchedText: string) =>
+		Effect.suspend(() => {
+			let failure: OperationTrace["sentences"][number] | undefined;
+			const dumgen = clickDumgen(
+				dumgenTracing(inspection, (trace) => {
+					failure = trace.sentences.find(
+						({ outcome }) => outcome === "Failed",
+					);
+				}),
+			);
+			return dumgen.segment
+				.inUnits({
+					language: "de",
+					paragraphs: [{ sentences: [stitchedText] }],
+				})
+				.pipe(
+					Effect.flatMap((text) => {
+						const sentence = text.paragraphs[0]?.sentences[0];
+						if (sentence && !sentence.failed)
+							return Effect.succeed({
+								segments: sentence.segments.map(
+									({ kind, text, surface }) =>
+										surface === undefined
+											? { kind, text }
+											: { kind, text, surface },
+								),
+								units: sentence.units.map(storedUnitOf),
+							});
+						const reason =
+							failure?.outcome === "Failed"
+								? failure.failure
+								: undefined;
+						const fields = {
+							stage: "segment.inUnits",
+							message:
+								reason?.message ??
+								"The Sentence was not segmented",
+						};
+						return Effect.fail(
+							reason?.tag === "InvalidModelOutput"
+								? new InvalidModelOutput(fields)
+								: new ProviderFailure(fields),
+						);
+					}),
+				);
+		});

@@ -8,7 +8,7 @@ import type {
 } from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { clickCallDeadlineMs } from "../convex/orchestration";
+import { clickCallDeadlineMs } from "../convex/model/deploymentDumgen";
 import type { ClickGrammarInput } from "../server/clickResolution";
 import { dumgenClickResolution } from "../server/dumgenClickResolution";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
