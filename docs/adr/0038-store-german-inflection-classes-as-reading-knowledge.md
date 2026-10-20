@@ -81,13 +81,36 @@ forms kept for a Reading whose classes were stored earlier may attest a class
 it lacks. Refusing them would lose the whole run's Knowledge, and a wrong
 class is fixed through Correct.
 
+**A verb's other principal parts.** Three more aspects keep the forms a host
+can't rebuild from the infinitive or the class
+([#1217](https://github.com/clockblocker/texteater/issues/1217)):
+`presentSingular`, the Präsens of each singular person (`fahre`, `fährst`,
+`fährt`; `kann`, `kannst`, `kann`), `pastParticiple`, the Partizip II
+(`gefahren`; `trompetet`, with no ge-; `gebacken` beside the Präteritum
+`backte`), and `subjunctivePast`, the third person singular Konjunktiv II
+(`führe`, `brächte`, `verbrennte`). Each lists its forms once, as a
+dictionary cites them. A separable verb's finite forms split off the
+particle (`fährt ab`, `führe ab`), its Partizip II is one word
+(`abgefahren`), and no form holds `sich`. An Ersatzinfinitiv (`hat …
+lassen`) is syntax, not a Partizip II. The write that gives the Präteritum
+gives them too, so they cost no model call. Every German VERB Reading keeps
+them, Weak verbs included: a Weak verb's forms follow from its stem only
+mostly (`arbeitest`, `pendle`, `trompetet`), and a host renders stored forms
+instead of guessing. The first person is kept because `kann`, `weiß` and
+`bin` don't follow from the infinitive. Dumrel checks only the endings it
+can be sure of (a second person Präsens in -t, a Partizip II in -t or -n, a
+Konjunktiv II in -e). It checks the parts neither against each other nor
+against the classes, for the reason it doesn't check the Präteritum.
+
 ## Consequences
 
 - A Surface still attaches to its Lemma, so `Muttern` is a Surface of the
   Lemma `Mutter`. The Reading it attests is the emoji judge's decision.
 - No aspect here enters NOUN or VERB Core Features, and no Lemma is split.
-- Gold keeps both aspects in agreement, and dumcorpus checks it.
-- Records reviewed through Knowledge don't yet have to cover the Präteritum.
-  Records over the file-token limit can't take it until they are
+- Gold keeps the classes and the Präteritum in agreement, a Weak verb's
+  Konjunktiv II equal to its Präteritum, a Strong verb's Partizip II in -n
+  and a Mixed one's in -t, and dumcorpus checks it.
+- Records reviewed through Knowledge don't yet have to cover the principal
+  parts. Records over the file-token limit can't take them until they are
   split, and the Readings they share carry one value (Dumcorpus ADR 0002).
-  Once they hold it, it joins the structural aspects.
+  Once they hold them, they join the structural aspects.

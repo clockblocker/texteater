@@ -29,11 +29,18 @@ const anrufen = {
 	emojiDescription: "📞",
 } as const;
 
-test("the Reading Note carries a verb's Präteritum beside its conjugation class (#1209)", async () => {
+test("the Reading Note carries a verb's principal parts beside its conjugation class (#1209, #1217)", async () => {
 	const t = createTestConvex();
 	const knowledge: Dumrel.ReadingKnowledge = {
 		conjugationClass: ["Strong"],
 		preterite: ["rief an"],
+		presentSingular: {
+			first: ["rufe an"],
+			second: ["rufst an"],
+			third: ["ruft an"],
+		},
+		pastParticiple: ["angerufen"],
+		subjunctivePast: ["riefe an"],
 	};
 	const readingId = await t.run(async (ctx) => {
 		const { lemma } = anrufen;

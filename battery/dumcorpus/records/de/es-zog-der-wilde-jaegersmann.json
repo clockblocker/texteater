@@ -134,6 +134,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["zog an"],
+					"presentSingular": {
+						"first": ["ziehe an"],
+						"second": ["ziehst an"],
+						"third": ["zieht an"]
+					},
+					"pastParticiple": ["angezogen"],
+					"subjunctivePast": ["zöge an"],
 					"valency": [
 						{
 							"status": "Required",
@@ -222,6 +229,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

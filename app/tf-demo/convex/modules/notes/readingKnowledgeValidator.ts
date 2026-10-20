@@ -150,6 +150,15 @@ export const readingKnowledgeValidator = v.object({
 		v.array(literalUnion(["Strong", "Weak", "Mixed"])),
 	),
 	preterite: v.optional(v.array(v.string())),
+	presentSingular: v.optional(
+		v.object({
+			first: v.array(v.string()),
+			second: v.array(v.string()),
+			third: v.array(v.string()),
+		}),
+	),
+	pastParticiple: v.optional(v.array(v.string())),
+	subjunctivePast: v.optional(v.array(v.string())),
 	locutionType: v.optional(literalUnion(locutionTypeValues)),
 	sayingType: v.optional(
 		v.object({

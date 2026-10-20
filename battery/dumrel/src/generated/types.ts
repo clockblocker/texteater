@@ -9,6 +9,9 @@ export type KnowledgeSettings = {
 	plural?: boolean | undefined;
 	conjugationClass?: boolean | undefined;
 	preterite?: boolean | undefined;
+	presentSingular?: boolean | undefined;
+	pastParticiple?: boolean | undefined;
+	subjunctivePast?: boolean | undefined;
 	locutionType?: boolean | undefined;
 	sayingType?: boolean | undefined;
 	formulaRole?: boolean | undefined;
@@ -39,6 +42,9 @@ export type KnowledgeRequestMask = {
 	plural?: null | undefined;
 	conjugationClass?: null | undefined;
 	preterite?: null | undefined;
+	presentSingular?: null | undefined;
+	pastParticiple?: null | undefined;
+	subjunctivePast?: null | undefined;
 	locutionType?: null | undefined;
 	sayingType?: null | undefined;
 	formulaRole?: null | undefined;
@@ -1785,7 +1791,7 @@ export type ReadingKnowledge = {
 	transcription?: string | undefined;
 	definition?: string | undefined;
 	translations?:
-		| { en?: Preterite | undefined; ru?: Preterite | undefined }
+		| { en?: Array<string> | undefined; ru?: Array<string> | undefined }
 		| undefined;
 	morphologicalTree?: MorphologicalTree | undefined;
 	semanticRelations?: SemanticRelations | undefined;
@@ -1794,6 +1800,9 @@ export type ReadingKnowledge = {
 	plural?: NounPlural | undefined;
 	conjugationClass?: ConjugationClasses | undefined;
 	preterite?: Preterite | undefined;
+	presentSingular?: PresentSingular | undefined;
+	pastParticiple?: PastParticiple | undefined;
+	subjunctivePast?: SubjunctivePast | undefined;
 	locutionType?: LocutionType | undefined;
 	sayingType?: SayingType | undefined;
 	formulaRole?: FormulaRole | undefined;
@@ -1809,7 +1818,7 @@ export type KnowledgeChange =
 			kind: "Contribute" | "Correct";
 			aspect: "translations";
 			language: TranslationLanguage;
-			value: Preterite;
+			value: Array<string>;
 	  }
 	| { kind: "Retract"; aspect: "translations"; language: TranslationLanguage }
 	| {
@@ -2062,6 +2071,24 @@ export type KnowledgeChange =
 	| { kind: "Retract"; aspect: "conjugationClass" }
 	| { kind: "Contribute" | "Correct"; aspect: "preterite"; value: Preterite }
 	| { kind: "Retract"; aspect: "preterite" }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "presentSingular";
+			value: PresentSingular;
+	  }
+	| { kind: "Retract"; aspect: "presentSingular" }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "pastParticiple";
+			value: PastParticiple;
+	  }
+	| { kind: "Retract"; aspect: "pastParticiple" }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "subjunctivePast";
+			value: SubjunctivePast;
+	  }
+	| { kind: "Retract"; aspect: "subjunctivePast" }
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "locutionType";
@@ -3230,10 +3257,17 @@ export type PluralPattern =
 	| "En"
 	| "S"
 	| "Other";
-export type NounPlural = Preterite | ("NoPlural" | "PluralOnly");
+export type NounPlural = Array<string> | ("NoPlural" | "PluralOnly");
 export type ConjugationClass = "Strong" | "Weak" | "Mixed";
 export type ConjugationClasses = Array<ConjugationClass>;
-export type Preterite = Array<string>;
+type Preterite = Array<string>;
+type PresentSingular = {
+	first: Array<string>;
+	second: Array<string>;
+	third: Array<string>;
+};
+type PastParticiple = Array<string>;
+type SubjunctivePast = Array<string>;
 export type LocutionType = "Idiom" | "Collocation";
 type SayingType = {
 	type: "Proverb" | "WingedWord";

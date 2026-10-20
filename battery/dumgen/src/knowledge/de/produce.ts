@@ -52,8 +52,8 @@ import {
 	produceParticipleSource,
 	producePlural,
 	produceSayingType,
-	produceVerbPast,
-	type VerbPastAspect,
+	produceVerbForms,
+	type VerbFormAspect,
 } from "./structure.js";
 import {
 	produceDefinition,
@@ -70,25 +70,31 @@ type AspectOutput = {
 };
 
 /**
- * One aspect, or one translation language, to produce. A job that fills a
- * second aspect from the same call names it `alongside`, and fails for both.
+ * One aspect, or one translation language, to produce. A job that fills
+ * more aspects from the same call names them `alongside`, and fails for
+ * each of them.
  */
 type Job = {
 	readonly aspect: KnowledgeAspect;
-	readonly alongside?: KnowledgeAspect;
+	readonly alongside?: readonly KnowledgeAspect[];
 	readonly leaf?: string;
 	readonly run: Effect.Effect<AspectOutput, AspectError>;
 };
 
-const aspectsOf = (job: Job): readonly KnowledgeAspect[] =>
-	job.alongside === undefined ? [job.aspect] : [job.aspect, job.alongside];
+const aspectsOf = (job: Job): readonly KnowledgeAspect[] => [
+	job.aspect,
+	...(job.alongside ?? []),
+];
 
-const verbPastAspects: readonly VerbPastAspect[] = [
+const verbFormAspects: readonly VerbFormAspect[] = [
 	"conjugationClass",
 	"preterite",
+	"presentSingular",
+	"pastParticiple",
+	"subjunctivePast",
 ];
-const isVerbPast = (aspect: KnowledgeAspect) =>
-	aspect === "conjugationClass" || aspect === "preterite";
+const verbFormNames = new Set<string>(verbFormAspects);
+const isVerbForm = (aspect: KnowledgeAspect) => verbFormNames.has(aspect);
 
 const requestAspects = new Set<string>([
 	"transcription",
@@ -100,6 +106,9 @@ const requestAspects = new Set<string>([
 	"plural",
 	"conjugationClass",
 	"preterite",
+	"presentSingular",
+	"pastParticiple",
+	"subjunctivePast",
 	"locutionType",
 	"sayingType",
 	"formulaRole",
@@ -111,21 +120,21 @@ const changesOnly = (
 ): Effect.Effect<AspectOutput, AspectError> =>
 	Effect.map(run, (changes) => ({ changes }));
 
-/** The one job for a verb's past: the requested aspects its write fills. */
-function verbPastJob(
+/** The one job for a verb's principal parts: the requested aspects its write fills. */
+function verbFormsJob(
 	context: AspectContext,
-	aspect: VerbPastAspect,
+	aspect: VerbFormAspect,
 	request: Dumrel.KnowledgeRequestMask,
 	applicable: Dumrel.KnowledgeRequestMask,
 ): Job {
-	const wanted = verbPastAspects.filter(
+	const wanted = verbFormAspects.filter(
 		(name) => name in request && name in applicable,
 	);
-	const [first = aspect, alongside] = wanted;
+	const [first = aspect, ...alongside] = wanted;
 	return {
 		aspect: first,
-		...(alongside === undefined ? {} : { alongside }),
-		run: produceVerbPast(context, wanted),
+		...(alongside.length === 0 ? {} : { alongside }),
+		run: produceVerbForms(context, wanted),
 	};
 }
 
@@ -212,10 +221,13 @@ function jobsOf(
 				break;
 			case "conjugationClass":
 			case "preterite":
-				// One Präteritum write fills both aspects (#1209).
-				if (!jobs.some((job) => isVerbPast(job.aspect)))
+			case "presentSingular":
+			case "pastParticiple":
+			case "subjunctivePast":
+				// One write fills every principal part and the classes (#1209, #1217).
+				if (!jobs.some((job) => isVerbForm(job.aspect)))
 					jobs.push(
-						verbPastJob(context, aspect, request, applicable),
+						verbFormsJob(context, aspect, request, applicable),
 					);
 				break;
 			case "participleSource":

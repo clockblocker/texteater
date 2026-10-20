@@ -2803,7 +2803,57 @@
 										}
 									},
 									"preterite": {
-										"$ref": "#/$defs/__schema289"
+										"minItems": 1,
+										"type": "array",
+										"items": {
+											"$ref": "#/$defs/__schema288"
+										}
+									},
+									"presentSingular": {
+										"type": "object",
+										"properties": {
+											"first": {
+												"minItems": 1,
+												"type": "array",
+												"items": {
+													"$ref": "#/$defs/__schema288"
+												}
+											},
+											"second": {
+												"minItems": 1,
+												"type": "array",
+												"items": {
+													"$ref": "#/$defs/__schema288"
+												}
+											},
+											"third": {
+												"minItems": 1,
+												"type": "array",
+												"items": {
+													"$ref": "#/$defs/__schema288"
+												}
+											}
+										},
+										"required": [
+											"first",
+											"second",
+											"third"
+										],
+										"additionalProperties": false
+									},
+									"pastParticiple": {
+										"minItems": 1,
+										"type": "array",
+										"items": {
+											"$ref": "#/$defs/__schema288"
+										}
+									},
+									"subjunctivePast": {
+										"minItems": 1,
+										"type": "array",
+										"items": {
+											"$ref": "#/$defs/__schema288"
+										}
 									},
 									"locutionType": {
 										"type": "string",
@@ -2881,6 +2931,15 @@
 										"$ref": "#/$defs/__schema536"
 									},
 									"preterite": {
+										"$ref": "#/$defs/__schema536"
+									},
+									"presentSingular": {
+										"$ref": "#/$defs/__schema536"
+									},
+									"pastParticiple": {
+										"$ref": "#/$defs/__schema536"
+									},
+									"subjunctivePast": {
 										"$ref": "#/$defs/__schema536"
 									},
 									"locutionType": {

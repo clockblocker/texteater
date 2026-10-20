@@ -107,6 +107,13 @@
 				"knowledge": {
 					"conjugationClass": ["Mixed"],
 					"preterite": ["verbrannte"],
+					"presentSingular": {
+						"first": ["verbrenne"],
+						"second": ["verbrennst"],
+						"third": ["verbrennt"]
+					},
+					"pastParticiple": ["verbrannt"],
+					"subjunctivePast": ["verbrennte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -157,6 +164,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

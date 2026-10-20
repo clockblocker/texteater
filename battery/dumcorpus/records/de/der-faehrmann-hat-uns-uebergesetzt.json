@@ -77,6 +77,13 @@
 				"knowledge": {
 					"conjugationClass": ["Weak"],
 					"preterite": ["setzte über"],
+					"presentSingular": {
+						"first": ["setze über"],
+						"second": ["setzt über"],
+						"third": ["setzt über"]
+					},
+					"pastParticiple": ["übergesetzt"],
+					"subjunctivePast": ["setzte über"],
 					"valency": [
 						{
 							"status": "Required",
@@ -118,6 +125,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",

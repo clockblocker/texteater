@@ -108,6 +108,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["bat"],
+					"presentSingular": {
+						"first": ["bitte"],
+						"second": ["bittest"],
+						"third": ["bittet"]
+					},
+					"pastParticiple": ["gebeten"],
+					"subjunctivePast": ["bäte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -201,6 +208,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

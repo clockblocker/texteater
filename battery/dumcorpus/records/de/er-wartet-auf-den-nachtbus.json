@@ -63,6 +63,13 @@
 				"knowledge": {
 					"conjugationClass": ["Weak"],
 					"preterite": ["wartete"],
+					"presentSingular": {
+						"first": ["warte"],
+						"second": ["wartest"],
+						"third": ["wartet"]
+					},
+					"pastParticiple": ["gewartet"],
+					"subjunctivePast": ["wartete"],
 					"valency": [
 						{
 							"status": "Required",
@@ -167,6 +174,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

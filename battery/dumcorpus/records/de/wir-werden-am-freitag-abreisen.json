@@ -66,6 +66,13 @@
 				"knowledge": {
 					"conjugationClass": ["Weak"],
 					"preterite": ["reiste ab"],
+					"presentSingular": {
+						"first": ["reise ab"],
+						"second": ["reist ab"],
+						"third": ["reist ab"]
+					},
+					"pastParticiple": ["abgereist"],
+					"subjunctivePast": ["reiste ab"],
 					"valency": [
 						{
 							"status": "Required",
@@ -135,6 +142,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

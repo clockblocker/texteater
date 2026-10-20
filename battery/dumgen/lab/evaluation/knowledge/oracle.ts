@@ -107,10 +107,10 @@ export function goldKnowledgeWritten(
 			return ["a translation"];
 		case "plural":
 			return Array.isArray(gold.plural) ? gold.plural : [`${lemma}en`];
-		case "conjugationClass": {
-			if (gold.preterite) return gold.preterite;
-			// Präterita the stem test reads as gold's classes (ADR 0038),
-			// a separable verb's with its particle split off.
+		case "verbForms": {
+			// Forms the stem test reads as gold's classes (ADR 0038), a
+			// separable verb's with its particle split off, and Weak parts
+			// where gold holds none.
 			const core: Readonly<Record<string, unknown>> =
 				goldCase.reading.lemma.coreFeatures;
 			const particle =
@@ -120,14 +120,28 @@ export function goldKnowledgeWritten(
 				.slice(particle.length)
 				.trim()
 				.replace(/e?n$/u, "");
+			const finite = (form: string) => [form, particle].join(" ").trim();
 			const forms: Readonly<Record<string, string>> = {
 				Strong: "stand",
 				Weak: `${stem}te`,
 				Mixed: "qqte",
 			};
-			return (gold.conjugationClass ?? ["Weak"]).map((value) =>
-				[forms[value] ?? `${stem}te`, particle].join(" ").trim(),
-			);
+			return {
+				preterite:
+					gold.preterite ??
+					(gold.conjugationClass ?? ["Weak"]).map((value) =>
+						finite(forms[value] ?? `${stem}te`),
+					),
+				presentSingular: gold.presentSingular ?? {
+					first: [finite(`${stem}e`)],
+					second: [finite(`${stem}st`)],
+					third: [finite(`${stem}t`)],
+				},
+				pastParticiple: gold.pastParticiple ?? [
+					`${particle}ge${stem}t`,
+				],
+				subjunctivePast: gold.subjunctivePast ?? [finite(`${stem}te`)],
+			};
 		}
 		case "valency":
 			return {

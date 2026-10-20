@@ -177,6 +177,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["stieg aus"],
+					"presentSingular": {
+						"first": ["steige aus"],
+						"second": ["steigst aus"],
+						"third": ["steigt aus"]
+					},
+					"pastParticiple": ["ausgestiegen"],
+					"subjunctivePast": ["stiege aus"],
 					"valency": [
 						{
 							"status": "Required",
@@ -235,6 +242,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -426,6 +436,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["stieg ein"],
+					"presentSingular": {
+						"first": ["steige ein"],
+						"second": ["steigst ein"],
+						"third": ["steigt ein"]
+					},
+					"pastParticiple": ["eingestiegen"],
+					"subjunctivePast": ["stiege ein"],
 					"valency": [
 						{
 							"status": "Required",
@@ -503,6 +520,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

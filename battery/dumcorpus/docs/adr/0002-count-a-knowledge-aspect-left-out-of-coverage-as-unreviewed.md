@@ -24,9 +24,11 @@ Type, Saying Type, Formula Role, and each requested semantic relation.
 ([#883](https://github.com/clockblocker/texteater/issues/883)). Definition,
 transcription and translations get a spot-check and do not hold depth back.
 The Morphological Tree belongs to the deferred `segment.inMorphemes`. A
-verb's Präteritum is scored where a record covers it, but doesn't hold depth
-back yet: records over the file-token limit can't take it until they are split
-([#1209](https://github.com/clockblocker/texteater/issues/1209)). A
+verb's Präteritum and its other principal parts (Präsens singular, Partizip
+II, Konjunktiv II) are scored where a record covers them, but don't hold
+depth back yet: records over the file-token limit can't take them until they
+are split ([#1209](https://github.com/clockblocker/texteater/issues/1209),
+[#1217](https://github.com/clockblocker/texteater/issues/1217)). A
 record reviewed through Knowledge fails while a target leaves a structural
 aspect uncovered. An Authored Inventory reviews its Readings' Knowledge
 ([ADR 0021]), so `{}` completes a target whose Reading it holds.

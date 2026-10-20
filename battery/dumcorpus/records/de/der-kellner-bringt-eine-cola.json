@@ -16,7 +16,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/funktionsverbgefuege-are-collocations",
@@ -25,6 +25,14 @@
 			{
 				"rule": "de/noun-gender-in-free-variation",
 				"hash": "232a2eebe2947abc"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/principal-parts-as-the-dictionary-cites",
+				"hash": "3757ab1bafee87f5"
 			}
 		],
 		"references": [
@@ -47,6 +55,11 @@
 				"title": "Duden: Coca-Cola",
 				"url": "https://www.duden.de/rechtschreibung/Coca_Cola",
 				"supports": "Target 1 Knowledge: brand noun 'koffeinhaltiges Erfrischungsgetränk', das oder die, so the nearSynonym Coca-Cola's gender is mixed Fem and Neut"
+			},
+			{
+				"title": "Duden: bringen",
+				"url": "https://www.duden.de/rechtschreibung/bringen",
+				"supports": "Target 0 Knowledge: bringt, brachte, hat gebracht; Konjunktiv II brächte (unregelmäßiges Verb)"
 			}
 		]
 	},
@@ -54,7 +67,27 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "📦➡" },
+			"reading": {
+				"emojiDescription": "📦➡",
+				"knowledge": {
+					"conjugationClass": ["Mixed"],
+					"preterite": ["brachte"],
+					"presentSingular": {
+						"first": ["bringe"],
+						"second": ["bringst"],
+						"third": ["bringt"]
+					},
+					"pastParticiple": ["gebracht"],
+					"subjunctivePast": ["brächte"]
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored"
+				}
+			},
 			"notes": {
 				"rationale": "bringen here means only to bring: an ordinary verb with a free object, no support verb, so bringt is a VERB Lexeme and eine Cola no member of it. bringen 'carry to someone and hand over' (Duden bringen 1b), drawn like heraufbringen 📦⬆."
 			},

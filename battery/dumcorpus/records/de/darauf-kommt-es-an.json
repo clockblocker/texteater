@@ -158,6 +158,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["kam an"],
+					"presentSingular": {
+						"first": ["komme an"],
+						"second": ["kommst an"],
+						"third": ["kommt an"]
+					},
+					"pastParticiple": ["angekommen"],
+					"subjunctivePast": ["käme an"],
 					"valency": [
 						{
 							"status": "Optional",
@@ -216,6 +223,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",

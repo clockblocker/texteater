@@ -67,6 +67,9 @@ test("a structural run asks for the route's structural aspects only, a text run 
 		valency: null,
 		conjugationClass: null,
 		preterite: null,
+		presentSingular: null,
+		pastParticiple: null,
+		subjunctivePast: null,
 		semanticRelations: {
 			synonym: null,
 			nearSynonym: null,
@@ -384,7 +387,16 @@ test("the harness prices a round from the oracle without a call, runs live once 
 			: undefined;
 		const answers: Record<string, unknown> = {
 			valency: { valency: [] },
-			conjugationClass: ["wartete"],
+			verbForms: {
+				preterite: ["wartete"],
+				presentSingular: {
+					first: ["warte"],
+					second: ["wartest"],
+					third: ["wartet"],
+				},
+				pastParticiple: ["gewartet"],
+				subjunctivePast: ["wartete"],
+			},
 			participleSource: {
 				verb: "verheiraten",
 				reflexive: "Acc",
@@ -422,10 +434,13 @@ test("the harness prices a round from the oracle without a call, runs live once 
 	const metrics = knowledgeMetrics(run);
 	if (!("lines" in metrics)) throw Error("Expected a Knowledge report");
 	// Each exact aspect's line is keyed by its name.
-	expect(metrics.lines.conjugationClass).toMatchObject({
-		correct: 1,
-		count: 1,
-	});
+	for (const aspect of [
+		"conjugationClass",
+		"presentSingular",
+		"pastParticiple",
+		"subjunctivePast",
+	] as const)
+		expect(metrics.lines[aspect]).toMatchObject({ correct: 1, count: 1 });
 	expect(metrics.lines.sayingType).toMatchObject({ correct: 1, count: 1 });
 	expect(metrics.lines.participleSource.count).toBe(1);
 	expect(metrics.lines.relationRecall.correct).toBeGreaterThan(0);

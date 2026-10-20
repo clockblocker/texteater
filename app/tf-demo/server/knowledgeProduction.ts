@@ -29,6 +29,9 @@ export type KnowledgeFailure = {
 		| "plural"
 		| "conjugationClass"
 		| "preterite"
+		| "presentSingular"
+		| "pastParticiple"
+		| "subjunctivePast"
 		| "locutionType"
 		| "sayingType"
 		| "formulaRole";

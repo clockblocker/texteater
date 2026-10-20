@@ -106,6 +106,13 @@
 				"knowledge": {
 					"conjugationClass": ["Weak"],
 					"preterite": ["erinnerte"],
+					"presentSingular": {
+						"first": ["erinnere"],
+						"second": ["erinnerst"],
+						"third": ["erinnert"]
+					},
+					"pastParticiple": ["erinnert"],
+					"subjunctivePast": ["erinnerte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -204,6 +211,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

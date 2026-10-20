@@ -52,6 +52,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["ging"],
+					"presentSingular": {
+						"first": ["gehe"],
+						"second": ["gehst"],
+						"third": ["geht"]
+					},
+					"pastParticiple": ["gegangen"],
+					"subjunctivePast": ["ginge"],
 					"valency": [
 						{
 							"status": "Required",
@@ -93,6 +100,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",

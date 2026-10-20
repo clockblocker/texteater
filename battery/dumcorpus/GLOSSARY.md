@@ -146,6 +146,13 @@ How a German verb forms its Präteritum: Strong, Weak or Mixed. A VERB
 Reading's Knowledge stores it, and it never splits a Lemma. See [ADR 0038].
 _Avoid_: verb type, irregular verb, Verbklasse
 
+**Principal Parts**:
+The forms of a German verb a host can't rebuild from its infinitive or its
+Conjugation Class: its Präteritum, Präsens singular, Partizip II and
+Konjunktiv II. A VERB Reading's Knowledge stores them as a dictionary cites
+them, and a host renders them. See [ADR 0038].
+_Avoid_: irregular forms, conjugation table
+
 **Stand-in**:
 The adverb that names a German Adverbial complement in a Valency Frame
 (Dumling), as E-VALBU substitutes it. See [ADR 0034].

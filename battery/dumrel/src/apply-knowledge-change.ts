@@ -26,7 +26,7 @@ import { conjugationClassValues } from "./vocabulary.js";
  * Locution Type, Saying Type and Formula Role are atomic like a definition.
  * A noun's plural: Contribute adds the plural forms it lacks, and a NoPlural
  * or PluralOnly marker is atomic. A verb's
- * conjugation classes and Präteritum: Contribute adds the classes or forms it
+ * conjugation classes and forms: Contribute adds the classes or forms it
  * lacks. Failure returns ParsingError without a partial value.
  */
 export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
@@ -133,7 +133,10 @@ function apply(
 			applyConjugation(knowledge, change);
 			return;
 		case "preterite":
-			applyPreterite(knowledge, change);
+		case "presentSingular":
+		case "pastParticiple":
+		case "subjunctivePast":
+			applyVerbForms(knowledge, change);
 			return;
 		case "transcription":
 		case "definition":
@@ -266,21 +269,54 @@ function applyConjugation(
 }
 
 /**
- * Präteritum forms accumulate in the order they arrive, like plural forms:
- * `sandte` then `sendete` store both. Correct replaces them.
+ * A verb's forms accumulate in the order they arrive, like plural forms:
+ * `sandte` then `sendete` store both, and a Präsens person gains the forms
+ * it lacks; a form stored in another letter case adds nothing. Correct
+ * replaces the aspect.
  */
-function applyPreterite(
+function applyVerbForms(
 	knowledge: ReadingKnowledge,
-	change: Extract<KnowledgeChange, { aspect: "preterite" }>,
+	change: Extract<
+		KnowledgeChange,
+		{
+			aspect:
+				| "preterite"
+				| "presentSingular"
+				| "pastParticiple"
+				| "subjunctivePast";
+		}
+	>,
 ): void {
 	if (change.kind === "Retract") {
-		delete knowledge.preterite;
+		delete knowledge[change.aspect];
 		return;
 	}
-	knowledge.preterite = unique([
-		...(change.kind === "Contribute" ? (knowledge.preterite ?? []) : []),
+	const stored = change.kind === "Contribute" ? knowledge : {};
+	if (change.aspect === "presentSingular") {
+		const { first, second, third } = change.value;
+		const present = stored.presentSingular;
+		knowledge.presentSingular = {
+			first: uniqueForms([...(present?.first ?? []), ...first]),
+			second: uniqueForms([...(present?.second ?? []), ...second]),
+			third: uniqueForms([...(present?.third ?? []), ...third]),
+		};
+		return;
+	}
+	knowledge[change.aspect] = uniqueForms([
+		...(stored[change.aspect] ?? []),
 		...change.value,
 	]);
+}
+
+/** Forms once each, letter case aside: the first spelling stays. */
+function uniqueForms(forms: readonly string[]): string[] {
+	const seen = new Set<string>();
+	return forms.filter((form) => {
+		const folded = form.toLocaleLowerCase("de");
+		if (seen.has(folded)) return false;
+		seen.add(folded);
+		return true;
+	});
 }
 
 /**

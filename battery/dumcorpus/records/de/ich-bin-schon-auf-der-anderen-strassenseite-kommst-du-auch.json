@@ -72,6 +72,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["kam herüber"],
+					"presentSingular": {
+						"first": ["komme herüber"],
+						"second": ["kommst herüber"],
+						"third": ["kommt herüber"]
+					},
+					"pastParticiple": ["herübergekommen"],
+					"subjunctivePast": ["käme herüber"],
 					"valency": [
 						{
 							"status": "Required",
@@ -89,6 +96,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",

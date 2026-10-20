@@ -78,6 +78,13 @@
 				"knowledge": {
 					"conjugationClass": ["Weak"],
 					"preterite": ["pendelte ein"],
+					"presentSingular": {
+						"first": ["pendle ein", "pendele ein"],
+						"second": ["pendelst ein"],
+						"third": ["pendelt ein"]
+					},
+					"pastParticiple": ["eingependelt"],
+					"subjunctivePast": ["pendelte ein"],
 					"valency": [
 						{
 							"status": "Required",
@@ -134,6 +141,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

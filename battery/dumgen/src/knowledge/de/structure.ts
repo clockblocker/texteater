@@ -1,9 +1,9 @@
 /**
  * The structural aspects that take one value each (#883 addenda): a
- * noun's plural, a verb's Präteritum and conjugation classes, an
+ * noun's plural, a verb's principal parts and conjugation classes, an
  * adjective's Participle Source, and a Locution's, Saying's or formula's
- * type. Luna writes what must be written (plural forms, Präteritum forms, a
- * source verb's parts, a Winged Word's attribution) and jev judges every
+ * type. Luna writes what must be written (plural forms, a verb's principal
+ * parts, a source verb's parts, a Winged Word's attribution) and jev judges every
  * closed choice (plurality, the participle's form and meaning, the three
  * types); code derives the rest (conjugation classes from the Präteritum,
  * ADR 0038).
@@ -15,6 +15,7 @@ import type * as Dumling from "dumling/types";
 import { germanConjugationClass } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
+import { InvalidModelOutput } from "../../errors.js";
 import { choice, choiceOf } from "../../segment/ask.js";
 import type { GermanKnowledgeChange, KnowledgeFailure } from "../types.js";
 import {
@@ -28,15 +29,15 @@ import {
 	unusable,
 	write,
 } from "./context.js";
+import { shared } from "./prompts.js";
 import {
-	conjugation,
 	formulaRole,
 	locutionType,
 	participle,
 	plural,
 	sayingType,
-	shared,
-} from "./prompts.js";
+	verbForms,
+} from "./structure-prompts.js";
 
 const formsSchema = (maxItems: number) =>
 	({
@@ -124,15 +125,45 @@ function checked(
 		: Effect.fail(changes);
 }
 
-// Präteritum and Conjugation Class (ADR 0038): Luna writes the Präteritum,
-// code judges the stem, and both aspects come from that one write (#1209).
+// Principal Parts and Conjugation Class (ADR 0038): Luna writes the forms in
+// one call, code judges the classes on the Präteritum's stem, and every
+// aspect comes from that one write (#1209, #1217).
 
-const conjugationPrompt = [
+const verbFormsPrompt = [
 	shared.reading,
 	shared.evidence,
-	conjugation.task,
-	conjugation.output,
+	verbForms.task,
+	verbForms.spelling,
+	verbForms.subjunctive,
+	verbForms.output,
 ].join("\n");
+
+const formsField = formsSchema(2);
+const verbFormsSchema = {
+	type: "object",
+	properties: {
+		preterite: formsField,
+		presentSingular: {
+			type: "object",
+			properties: {
+				first: formsField,
+				second: formsField,
+				third: formsField,
+			},
+			required: ["first", "second", "third"],
+			additionalProperties: false,
+		},
+		pastParticiple: formsField,
+		subjunctivePast: formsField,
+	},
+	required: [
+		"preterite",
+		"presentSingular",
+		"pastParticiple",
+		"subjunctivePast",
+	],
+	additionalProperties: false,
+} as const;
 
 const classOrder: readonly Dumrel.ConjugationClass[] = [
 	"Strong",
@@ -140,18 +171,64 @@ const classOrder: readonly Dumrel.ConjugationClass[] = [
 	"Mixed",
 ];
 
-/** The aspects the one Präteritum write gives a verb. */
-export type VerbPastAspect = "conjugationClass" | "preterite";
+/** The aspects the one principal-parts write gives a verb. */
+export type VerbFormAspect =
+	| "conjugationClass"
+	| "preterite"
+	| "presentSingular"
+	| "pastParticiple"
+	| "subjunctivePast";
+
+/** What Luna wrote: the Präteritum, which every aspect needs, and the rest unread. */
+type VerbFormsDraft = {
+	readonly preterite: string[];
+	readonly written: Readonly<Record<string, unknown>>;
+};
+
+/** The forms of one field Luna wrote, or why there are none. */
+function fieldForms(
+	written: Readonly<Record<string, unknown>>,
+	field: string,
+): string[] | InvalidModelOutput {
+	if (written[field] === undefined)
+		return unusable("verbForms", `Luna wrote no ${field}`);
+	const texts = textsOf("verbForms", written[field], 2);
+	if (!Array.isArray(texts)) return texts;
+	return texts.length === 0
+		? unusable("verbForms", `Luna wrote no ${field}`)
+		: texts;
+}
+
+/** The value Luna wrote for one aspect, or why it is unusable. */
+function verbFormValue(
+	draft: VerbFormsDraft,
+	aspect: Exclude<VerbFormAspect, "conjugationClass" | "preterite">,
+	lemma: string,
+): unknown {
+	if (aspect !== "presentSingular") return fieldForms(draft.written, aspect);
+	const present = draft.written.presentSingular;
+	if (!isRecord(present))
+		return unusable("verbForms", `Luna wrote no Präsens for ${lemma}`);
+	const persons = ["first", "second", "third"] as const;
+	const value: Record<string, string[]> = {};
+	for (const person of persons) {
+		const forms = fieldForms(present, person);
+		if (!Array.isArray(forms)) return forms;
+		value[person] = forms;
+	}
+	return value;
+}
 
 /**
- * The requested aspects of a verb's past: the Präteritum forms Luna writes
- * and the classes code judges on them. Each aspect Dumrel refuses fails on
- * its own, so a form spelled against the Lemma (`abreiste` for `abreisen`)
- * still gives its class.
+ * The requested aspects of a verb's principal parts: the forms Luna writes
+ * and the classes code judges on the Präteritum. Each aspect Dumrel refuses
+ * or Luna left unusable fails on its own, so a form spelled against the
+ * Lemma (`abreiste` for `abreisen`) still gives its class; a write with no
+ * usable Präteritum fails them all.
  */
-export const produceVerbPast = (
+export const produceVerbForms = (
 	context: AspectContext,
-	aspects: readonly VerbPastAspect[],
+	aspects: readonly VerbFormAspect[],
 ): Effect.Effect<
 	{
 		readonly changes: GermanKnowledgeChange[];
@@ -160,35 +237,43 @@ export const produceVerbPast = (
 	AspectError
 > =>
 	Effect.gen(function* () {
-		const forms = yield* write(
+		const draft = yield* write(
 			context,
-			"conjugationClass",
-			conjugationPrompt,
+			"verbForms",
+			verbFormsPrompt,
 			{},
-			formsSchema(2),
-			(output) => {
-				const texts = textsOf("conjugationClass", output, 2);
-				if (!Array.isArray(texts)) return texts;
-				return texts.length === 0
-					? unusable("conjugationClass", "Luna wrote no Präteritum")
-					: texts;
+			verbFormsSchema,
+			(output): VerbFormsDraft | InvalidModelOutput => {
+				if (!isRecord(output))
+					return unusable(
+						"verbForms",
+						"Luna wrote no principal parts",
+					);
+				const preterite = fieldForms(output, "preterite");
+				return Array.isArray(preterite)
+					? { preterite, written: output }
+					: preterite;
 			},
 		);
+		const lemma = context.lemma.canonicalForm;
 		const classes = new Set(
-			forms.map((form) =>
-				germanConjugationClass(context.lemma.canonicalForm, form),
-			),
+			draft.preterite.map((form) => germanConjugationClass(lemma, form)),
 		);
 		const changes: GermanKnowledgeChange[] = [];
 		const failures: KnowledgeFailure[] = [];
 		for (const aspect of aspects) {
 			const value =
-				aspect === "preterite"
-					? forms
-					: classOrder.filter((name) => classes.has(name));
-			const accepted = checkedChanges(context, aspect, [
-				{ kind: "Contribute", aspect, value },
-			]);
+				aspect === "conjugationClass"
+					? classOrder.filter((name) => classes.has(name))
+					: aspect === "preterite"
+						? draft.preterite
+						: verbFormValue(draft, aspect, lemma);
+			const accepted =
+				value instanceof InvalidModelOutput
+					? value
+					: checkedChanges(context, aspect, [
+							{ kind: "Contribute", aspect, value },
+						]);
 			if (Array.isArray(accepted)) changes.push(...accepted);
 			else
 				failures.push({
