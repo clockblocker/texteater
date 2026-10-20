@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { PAGE_SENTENCES, readerPages } from "../server/folios";
 import { MAX_SENTENCES_PER_SCROLL } from "../server/textSubmissionLimits";
 import type { Id } from "./_generated/dataModel";
 import { type QueryCtx, query } from "./_generated/server";
@@ -18,9 +19,16 @@ const occurrenceFocusValidator = v.union(
 		kind: v.literal("Occurrence"),
 		attestationId: v.id("attestations"),
 		sentenceId: v.id("sentences"),
+		/** The Sentence's position, so a book's reader loads its page first. */
+		position: v.number(),
 		memberSegmentIndices: v.array(v.number()),
 	}),
 );
+
+const sentenceRangeValidator = v.object({
+	start: v.number(),
+	end: v.number(),
+});
 
 const scrollViewValidator = v.object({
 	kind: v.literal("Scroll"),
@@ -34,10 +42,30 @@ const scrollViewValidator = v.object({
 	originalUrl: v.optional(v.string()),
 	sourceText: v.string(),
 	createdAt: v.number(),
+	/** Every Sentence, for a Scroll with no `pages`; else none. */
 	sentences: v.array(sentenceViewValidator),
+	/**
+	 * A book Scroll's pages in order (#1212): the reader loads their
+	 * Sentences a page at a time with `page`.
+	 */
+	pages: v.optional(v.array(sentenceRangeValidator)),
 	/** The paragraphs a Scene Break stands before. */
 	sceneBreaks: v.array(v.number()),
 });
+
+/** A Scroll this Visitor may read: shared, or their own private one. */
+async function readableScroll(
+	ctx: QueryCtx,
+	scrollIdValue: string,
+	visitorId: string,
+) {
+	const scrollId = ctx.db.normalizeId("scrolls", scrollIdValue);
+	const scroll = scrollId ? await ctx.db.get(scrollId) : null;
+	// A private Scroll, one from a link, opens only for its own Visitor.
+	if (!scroll || (scroll.owner !== undefined && scroll.owner !== visitorId))
+		return null;
+	return scroll;
+}
 
 export const get = query({
 	args: {
@@ -45,22 +73,25 @@ export const get = query({
 		visitorId: v.string(),
 	},
 	returns: v.union(v.null(), scrollViewValidator),
-	handler: async (ctx, { scrollId: scrollIdValue, visitorId }) => {
-		const scrollId = ctx.db.normalizeId("scrolls", scrollIdValue);
-		if (!scrollId) return null;
-		const scroll = await ctx.db.get(scrollId);
-		// A private Scroll, one from a link, opens only for its own Visitor.
-		if (
-			!scroll ||
-			(scroll.owner !== undefined && scroll.owner !== visitorId)
-		)
-			return null;
-		const sentences = await ctx.db
-			.query("sentences")
-			.withIndex("by_scroll_id_and_position", (q) =>
-				q.eq("scrollId", scrollId),
+	handler: async (ctx, { scrollId, visitorId }) => {
+		const scroll = await readableScroll(ctx, scrollId, visitorId);
+		if (!scroll) return null;
+		// A book Scroll's reader loads it by page.
+		const folios = await ctx.db
+			.query("folios")
+			.withIndex("by_scroll_id_and_start", (q) =>
+				q.eq("scrollId", scroll._id),
 			)
 			.take(MAX_SENTENCES_PER_SCROLL);
+		const sentences =
+			folios.length > 0
+				? []
+				: await ctx.db
+						.query("sentences")
+						.withIndex("by_scroll_id_and_position", (q) =>
+							q.eq("scrollId", scroll._id),
+						)
+						.take(MAX_SENTENCES_PER_SCROLL);
 		const sentenceViews = await Promise.all(
 			sentences.map((sentence) =>
 				projectSentenceView(ctx, sentence, visitorId),
@@ -79,8 +110,51 @@ export const get = query({
 			sourceText: scroll.sourceText,
 			createdAt: scroll._creationTime,
 			sentences: sentenceViews,
+			...(folios.length > 0 ? { pages: readerPages(folios) } : {}),
 			sceneBreaks: scroll.sceneBreaks ?? [],
 		};
+	},
+});
+
+/**
+ * One page of a book Scroll, as `get` lists them: its Sentences as the
+ * Visitor sees them. Null when the Scroll cannot be read.
+ */
+export const page = query({
+	args: {
+		scrollId: v.string(),
+		visitorId: v.string(),
+		start: v.number(),
+		end: v.number(),
+	},
+	returns: v.union(v.null(), v.array(sentenceViewValidator)),
+	handler: async (ctx, { scrollId, visitorId, start, end }) => {
+		if (
+			!Number.isSafeInteger(start) ||
+			!Number.isSafeInteger(end) ||
+			start < 0 ||
+			end <= start ||
+			end - start > PAGE_SENTENCES
+		)
+			throw new Error(
+				`A page is a run of 1 to ${PAGE_SENTENCES} Sentence positions.`,
+			);
+		const scroll = await readableScroll(ctx, scrollId, visitorId);
+		if (!scroll) return null;
+		const sentences = await ctx.db
+			.query("sentences")
+			.withIndex("by_scroll_id_and_position", (q) =>
+				q
+					.eq("scrollId", scroll._id)
+					.gte("position", start)
+					.lt("position", end),
+			)
+			.take(PAGE_SENTENCES);
+		return Promise.all(
+			sentences.map((sentence) =>
+				projectSentenceView(ctx, sentence, visitorId),
+			),
+		);
 	},
 });
 
@@ -132,6 +206,7 @@ export async function loadScrollFocus(
 		kind: "Occurrence" as const,
 		attestationId,
 		sentenceId: sentence._id,
+		position: sentence.position,
 		memberSegmentIndices: members.memberSegmentIndices,
 	};
 }

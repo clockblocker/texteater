@@ -20,8 +20,14 @@ import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReaderSentence } from "@/views/reader-sentence";
+import {
+	usePagedScrolling,
+	useScrollPages,
+	useStartPosition,
+} from "@/views/scroll-pages";
 import { ScrollEnd, useScrollReading } from "@/views/scroll-reading";
 import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
+import { useGroundPlace } from "@/workspace/workspace-controller";
 import type { ScrollSubjectTarget } from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
 
@@ -64,9 +70,26 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 	);
 
 	const scrollDetail = scrollQuery.data;
-	const sentences = scrollDetail?.sentences ?? [];
+	const { ground } = useGroundPlace();
+	const startPosition = useStartPosition({
+		scrollId: target.scrollId,
+		visitorId,
+		ground,
+		focusing: target.focusAttestationId !== undefined,
+		focusPosition: focus.position,
+	});
+	const pages = useScrollPages({
+		scrollId: target.scrollId,
+		visitorId,
+		pages: scrollDetail?.pages,
+		startPosition,
+	});
 	const reader = useRef<HTMLDivElement>(null);
-	const loadedSentences = scrollDetail?.sentences;
+	usePagedScrolling(reader, pages);
+	const loadedSentences = pages
+		? pages.sentences
+		: (scrollDetail?.sentences ?? null);
+	const sentences = loadedSentences ?? [];
 	const positioned = useMemo(
 		() =>
 			loadedSentences?.map(({ sentenceId, position }) => ({
@@ -80,15 +103,18 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 		sentences: positioned,
 		article: reader,
 		focused: target.focusAttestationId !== undefined,
+		startPosition,
 	});
+	const loadError = scrollQuery.error ?? pages?.error ?? null;
 	const error =
 		selection.error ??
 		segmentationError ??
-		(scrollQuery.error ? visitorErrorMessage(scrollQuery.error) : null);
+		(loadError ? visitorErrorMessage(loadError) : null);
 	// Plain Sentences never have Segments; the others lose theirs to
-	// Analysis Stripping.
+	// Analysis Stripping. A book's are processed as it is read.
 	const segmentable = sentences.filter((sentence) => !sentence.plain);
 	const needsSegmentation =
+		!pages &&
 		segmentable.length > 0 &&
 		segmentable.every((sentence) => sentence.segments.length === 0);
 
@@ -134,7 +160,8 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 		}
 	}
 
-	if (scrollQuery.isPending) return <ScrollViewSkeleton />;
+	if (scrollQuery.isPending || (pages && !pages.sentences && !loadError))
+		return <ScrollViewSkeleton />;
 	if (!scrollDetail) {
 		return (
 			<NotFoundView
@@ -149,7 +176,7 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 			error={error}
 			notice={notice}
 			onSegmentClick={handleSegmentSelection}
-			focus={focus}
+			focus={focus.occurrence}
 			selectedSegmentKey={selection.selectedSegmentKey}
 			sentences={sentences}
 			sceneBreaks={scrollDetail.sceneBreaks}
@@ -158,10 +185,12 @@ export function ScrollView({ target }: { target: ScrollSubjectTarget }) {
 			onSegmentText={() => void handleSegmentText()}
 			readerRef={reader}
 			end={
-				<ScrollEnd
-					scrollId={scrollDetail.scrollId}
-					originalUrl={scrollDetail.originalUrl}
-				/>
+				pages?.hasNext ? null : (
+					<ScrollEnd
+						scrollId={scrollDetail.scrollId}
+						originalUrl={scrollDetail.originalUrl}
+					/>
+				)
 			}
 		/>
 	);
@@ -175,15 +204,18 @@ type OccurrenceFocus = {
 
 /**
  * The occurrence a Scroll Cover pushed by Go to source lands on, looked up
- * apart from the Scroll so the Scroll query keeps its identity. One that no
- * longer resolves is reported once, and the Scroll reads as if opened from
- * the Library.
+ * apart from the Scroll so the Scroll query keeps its identity, with its
+ * Sentence's position: undefined while it is looked up. One that no
+ * longer resolves is reported once, and the Scroll reads from its start.
  */
 function useOccurrenceFocus(
 	scrollId: string,
 	attestationId: string | null,
 	onMissing: () => void,
-): OccurrenceFocus | null {
+): {
+	readonly occurrence: OccurrenceFocus | null;
+	readonly position: number | null | undefined;
+} {
 	const focusQuery = useQuery(
 		convexQuery(
 			api.scrollViews.occurrenceFocus,
@@ -199,12 +231,19 @@ function useOccurrenceFocus(
 		reported.current = true;
 		latestOnMissing.current();
 	}, [focus]);
-	return focus?.kind === "Occurrence"
-		? {
+	if (focus?.kind === "Occurrence")
+		return {
+			occurrence: {
 				sentenceId: focus.sentenceId,
 				memberSegmentIndices: focus.memberSegmentIndices,
-			}
-		: null;
+			},
+			position: focus.position,
+		};
+	// Still looked up, unless the lookup failed: then it lands nowhere.
+	return {
+		occurrence: null,
+		position: focus === undefined && !focusQuery.error ? undefined : null,
+	};
 }
 
 export function ScrollPresentation({
@@ -244,7 +283,7 @@ export function ScrollPresentation({
 		<div
 			ref={readerRef}
 			data-slot="text-reader"
-			className="w-full min-h-full flex-auto bg-paper text-ink motion-reduce:[&_*]:transition-none"
+			className="w-full min-h-full flex-auto bg-paper text-ink [overflow-anchor:none] motion-reduce:[&_*]:transition-none"
 		>
 			<div className={READER_BODY_CLASS} style={GROUND_COLUMN_STYLE}>
 				<SentenceList
@@ -317,8 +356,15 @@ export function SentenceList({
 	const breaks = new Set(sceneBreaks);
 	const drawn = new Set<number>();
 
+	/* a book's page with the Sentence may come in after the focus */
+	const sentenceCount = sentences.length;
 	useEffect(() => {
-		if (!focusSentenceId || landed.current === focusSentenceId) return;
+		if (
+			!focusSentenceId ||
+			landed.current === focusSentenceId ||
+			sentenceCount === 0
+		)
+			return;
 		const frame = window.requestAnimationFrame(() => {
 			const sentence = sentenceElements.current.get(focusSentenceId);
 			if (!sentence) return;
@@ -326,7 +372,7 @@ export function SentenceList({
 			centerInScroller(sentence);
 		});
 		return () => window.cancelAnimationFrame(frame);
-	}, [focusSentenceId]);
+	}, [focusSentenceId, sentenceCount]);
 
 	return (
 		<article

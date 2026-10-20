@@ -164,6 +164,7 @@ test("focused occurrence validates Scroll ownership and never substitutes stale 
 		kind: "Occurrence",
 		attestationId: validId,
 		sentenceId: scrollA.sentenceIds[0],
+		position: 0,
 		memberSegmentIndices: [2, 6],
 	});
 	expect(await focus(wrongScrollId)).toEqual({

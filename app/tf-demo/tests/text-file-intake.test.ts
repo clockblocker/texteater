@@ -250,19 +250,24 @@ describe("submitTextFile", () => {
 			scrollId: chapter.scrollId,
 			visitorId: VISITOR,
 		});
-		expect(view?.sentences.map(({ stitchedText }) => stitchedText)).toEqual(
-			[
-				"Kapitel 1",
-				"Im 1. Kapitel ging Effi zum 1. Mal an den Strand.",
-				"Im 1. Kapitel ging Effi zum 2. Mal an den Strand.",
-				"Im 1. Kapitel ging Effi zum 3. Mal an den Strand.",
-				"Danach war es still im Haus.",
-			],
-		);
-		expect(view?.sentences.every((sentence) => sentence.plain)).toBe(true);
-		expect(
-			view?.sentences.every(({ segments }) => segments.length === 0),
-		).toBe(true);
+		// A book Scroll is read by page (#1212); this one is one Folio.
+		expect(view?.sentences).toEqual([]);
+		expect(view?.pages).toEqual([{ start: 0, end: 5 }]);
+		const page = await t.query(api.scrollViews.page, {
+			scrollId: chapter.scrollId,
+			visitorId: VISITOR,
+			start: 0,
+			end: 5,
+		});
+		expect(page?.map(({ stitchedText }) => stitchedText)).toEqual([
+			"Kapitel 1",
+			"Im 1. Kapitel ging Effi zum 1. Mal an den Strand.",
+			"Im 1. Kapitel ging Effi zum 2. Mal an den Strand.",
+			"Im 1. Kapitel ging Effi zum 3. Mal an den Strand.",
+			"Danach war es still im Haus.",
+		]);
+		expect(page?.every((sentence) => sentence.plain)).toBe(true);
+		expect(page?.every(({ segments }) => segments.length === 0)).toBe(true);
 		expect(view?.sceneBreaks).toEqual([2]);
 
 		// The file stays as the Original, on the top Section.

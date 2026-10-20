@@ -1,6 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
-import { useConvex, useMutation } from "convex/react";
+import { useMutation } from "convex/react";
 import { Button } from "lego";
 import { ArrowRightIcon, CheckIcon, ExternalLinkIcon } from "lucide-react";
 import { type RefObject, useEffect, useRef } from "react";
@@ -30,26 +30,28 @@ type PositionedSentence = {
 };
 
 /**
- * Records the opening, restores the saved position once the Sentences are
- * in, then saves where the reader is as it scrolls. `focused` means Go to
- * source is landing somewhere: it wins over the saved position.
+ * Records the opening, resumes at `startPosition` once its Sentence is in,
+ * then saves where the reader is as it scrolls. `focused` means Go to
+ * source is landing somewhere: the reader lands it instead.
  */
 export function useScrollReading({
 	scrollId,
 	sentences,
 	article,
 	focused,
+	startPosition,
 }: {
 	readonly scrollId: string;
 	readonly sentences: readonly PositionedSentence[] | null;
 	readonly article: RefObject<HTMLElement | null>;
 	readonly focused: boolean;
+	/** Where the reader resumes (`useStartPosition`); null until known. */
+	readonly startPosition: number | null;
 }): void {
 	const { ground } = useGroundPlace();
 	const visitorId = useAnonymousVisitorId();
 	const open = useMutation(api.library.open);
 	const savePosition = useMutation(api.library.savePosition);
-	const convex = useConvex();
 	const loaded = sentences !== null;
 
 	useEffect(() => {
@@ -59,49 +61,41 @@ export function useScrollReading({
 		});
 	}, [ground, loaded, open, scrollId, visitorId]);
 
-	/* the saved position, once, before the reader's own scrolling counts;
-	   asked of the server, since a cached answer may predate the last save */
+	/* the start position, once, before the reader's own scrolling counts */
 	const restored = useRef<string | null>(null);
 	useEffect(() => {
-		if (!ground || !sentences || restored.current === scrollId) return;
+		if (
+			!ground ||
+			!sentences ||
+			startPosition === null ||
+			restored.current === scrollId
+		)
+			return;
 		restored.current = scrollId;
-		if (focused) return;
-		let frame = 0;
-		let settled = false;
-		let cancelled = false;
-		convex
-			.query(api.library.progress, { scrollId, visitorId })
-			.then(({ position }) => {
-				if (cancelled) return;
-				settled = true;
-				const sentenceId = sentences.find(
-					(sentence) => sentence.position === position,
-				)?.sentenceId;
-				if (position === 0 || !sentenceId) return;
-				frame = window.requestAnimationFrame(() =>
-					resumeAt(article.current, sentenceId),
-				);
-			})
-			.catch(() => {
-				// Reading starts at the top when the position cannot be read.
-			});
-		return () => {
-			cancelled = true;
-			window.cancelAnimationFrame(frame);
-			/* a rerun before the answer came asks again */
-			if (!settled) restored.current = null;
-		};
-	}, [ground, sentences, scrollId, visitorId, focused, article, convex]);
+		if (focused || startPosition === 0) return;
+		const sentenceId = sentences.find(
+			(sentence) => sentence.position === startPosition,
+		)?.sentenceId;
+		// Not cancelled when the Sentences change again before it runs: it
+		// runs once, and a page going in meanwhile keeps the Sentence put.
+		if (sentenceId)
+			window.requestAnimationFrame(() =>
+				resumeAt(article.current, sentenceId),
+			);
+	}, [ground, sentences, scrollId, focused, startPosition, article]);
 
 	const lastSaved = useRef<number | null>(null);
+	/* read when saving, so Sentences changing (a page coming in, a window
+	   processed) never drops a pending save */
+	const positions = useRef(new Map<string, number>());
+	positions.current = new Map(
+		sentences?.map(({ sentenceId, position }) => [sentenceId, position]),
+	);
 	useEffect(() => {
-		if (!ground || !sentences) return;
+		if (!ground || !loaded) return;
 		const scroller =
 			article.current?.closest<HTMLElement>("[data-scroller]");
 		if (!scroller) return;
-		const positions = new Map(
-			sentences.map(({ sentenceId, position }) => [sentenceId, position]),
-		);
 		let timer: ReturnType<typeof setTimeout> | undefined;
 		const save = () => {
 			const line = scroller.getBoundingClientRect().top + READING_LINE_PX;
@@ -112,7 +106,9 @@ export function useScrollReading({
 			const reading = [...elements].find(
 				(element) => element.getBoundingClientRect().bottom > line,
 			);
-			const position = positions.get(reading?.dataset.sentence ?? "");
+			const position = positions.current.get(
+				reading?.dataset.sentence ?? "",
+			);
 			if (position === undefined || position === lastSaved.current)
 				return;
 			lastSaved.current = position;
@@ -133,7 +129,7 @@ export function useScrollReading({
 			clearTimeout(timer);
 			scroller.removeEventListener("scroll", onScroll);
 		};
-	}, [ground, sentences, article, savePosition, scrollId, visitorId]);
+	}, [ground, loaded, article, savePosition, scrollId, visitorId]);
 }
 
 /** Scrolls the reader so the Sentence sits on the reading line. */

@@ -125,6 +125,29 @@ export function windowsOf<T extends { readonly stitchedText: string }>(
 	return windows;
 }
 
+/**
+ * At most how many Sentences one reader page holds. A book's reader loads
+ * a page at a time (#1212): a Folio, or a Folio longer than this, such as
+ * a Paragraph of a whole chapter, in runs of this many.
+ */
+export const PAGE_SENTENCES = 60;
+
+/** A run of Sentence positions, from `start` up to `end`. */
+type SentenceRange = { readonly start: number; readonly end: number };
+
+/** The pages a reader loads a book Scroll in, for its Folios in order. */
+export function readerPages(
+	folios: readonly SentenceRange[],
+	size: number = PAGE_SENTENCES,
+): SentenceRange[] {
+	return folios.flatMap(({ start, end }) =>
+		Array.from({ length: Math.ceil((end - start) / size) }, (_, run) => ({
+			start: start + run * size,
+			end: Math.min(end, start + (run + 1) * size),
+		})),
+	);
+}
+
 /** The first retry waits this long; each next one twice as long. */
 const RETRY_BASE_MS = 2_000;
 /** No retry waits longer. */
