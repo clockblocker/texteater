@@ -28,6 +28,7 @@ import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.
 import type * as knowledgeSettings from "../knowledgeSettings.js";
 import type * as library from "../library.js";
 import type * as libraryFixtures from "../libraryFixtures.js";
+import type * as model_clickOrchestrator from "../model/clickOrchestrator.js";
 import type * as model_codex from "../model/codex.js";
 import type * as model_definitionTexts from "../model/definitionTexts.js";
 import type * as model_deploymentDumgen from "../model/deploymentDumgen.js";
@@ -54,6 +55,7 @@ import type * as model_resolutionSessionLifecycle from "../model/resolutionSessi
 import type * as model_resolutionSessions from "../model/resolutionSessions.js";
 import type * as model_resolvedClickCommit from "../model/resolvedClickCommit.js";
 import type * as model_resolvedClickDictionary from "../model/resolvedClickDictionary.js";
+import type * as model_scrollAnalysis from "../model/scrollAnalysis.js";
 import type * as model_scrollAnalysisStripping from "../model/scrollAnalysisStripping.js";
 import type * as model_shadows from "../model/shadows.js";
 import type * as model_storedSegments from "../model/storedSegments.js";
@@ -128,6 +130,7 @@ declare const fullApi: ApiFromModules<{
   knowledgeSettings: typeof knowledgeSettings;
   library: typeof library;
   libraryFixtures: typeof libraryFixtures;
+  "model/clickOrchestrator": typeof model_clickOrchestrator;
   "model/codex": typeof model_codex;
   "model/definitionTexts": typeof model_definitionTexts;
   "model/deploymentDumgen": typeof model_deploymentDumgen;
@@ -154,6 +157,7 @@ declare const fullApi: ApiFromModules<{
   "model/resolutionSessions": typeof model_resolutionSessions;
   "model/resolvedClickCommit": typeof model_resolvedClickCommit;
   "model/resolvedClickDictionary": typeof model_resolvedClickDictionary;
+  "model/scrollAnalysis": typeof model_scrollAnalysis;
   "model/scrollAnalysisStripping": typeof model_scrollAnalysisStripping;
   "model/shadows": typeof model_shadows;
   "model/storedSegments": typeof model_storedSegments;
