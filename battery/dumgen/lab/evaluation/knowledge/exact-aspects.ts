@@ -67,6 +67,9 @@ export const exactAspects = [
 	"participleSource",
 	"conjugationClass",
 	"preterite",
+	"presentSingular",
+	"pastParticiple",
+	"subjunctivePast",
 	"locutionType",
 	"sayingType",
 	"formulaRole",
@@ -86,6 +89,14 @@ const sameValue: {
 		canonicalJson([...(gold ?? [])].sort()) ===
 		canonicalJson([...(produced ?? [])].sort()),
 	preterite: (gold, produced) => pluralKey(gold) === pluralKey(produced),
+	presentSingular: (gold, produced) =>
+		(["first", "second", "third"] as const).every(
+			(person) =>
+				pluralKey(gold?.[person]) === pluralKey(produced?.[person]),
+		),
+	pastParticiple: (gold, produced) => pluralKey(gold) === pluralKey(produced),
+	subjunctivePast: (gold, produced) =>
+		pluralKey(gold) === pluralKey(produced),
 	participleSource: (gold, produced) => verbKey(gold) === verbKey(produced),
 	locutionType: (gold, produced) => gold === produced,
 	formulaRole: (gold, produced) => gold === produced,

@@ -57,6 +57,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["rief"],
+					"presentSingular": {
+						"first": ["rufe"],
+						"second": ["rufst"],
+						"third": ["ruft"]
+					},
+					"pastParticiple": ["gerufen"],
+					"subjunctivePast": ["riefe"],
 					"valency": [
 						{
 							"status": "Required",
@@ -99,6 +106,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",

@@ -3,7 +3,7 @@ import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { structuralKeys } from "./fingerprint.js";
 import type { ConjugationClasses, NounPlural } from "./generated/types.js";
-import { parsePreterite } from "./german-preterite.js";
+import { verbFormsIssue, verbFormsOfChange } from "./german-verb-forms.js";
 import { knowledgePolicyApplies } from "./knowledge-policies.js";
 import type {
 	KnowledgeChange,
@@ -414,13 +414,11 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 		);
 		if (classes instanceof ParsingError) return classes;
 	}
-	if (result.preterite) {
-		const forms = parsePreterite(source, result.preterite, [
-			"knowledge",
-			"preterite",
-		]);
-		if (forms instanceof ParsingError) return forms;
-	}
+	const formsFailure = verbFormsIssue(source, result, (aspect) => [
+		"knowledge",
+		aspect,
+	]);
+	if (formsFailure) return formsFailure;
 	if (result.participleSource) {
 		const participle = parseParticipleSource(
 			source,
@@ -498,9 +496,13 @@ export function contextualizeChange<R extends Dumling.Reading>(
 		]);
 		if (classes instanceof ParsingError) return classes;
 	}
-	if (change.aspect === "preterite" && change.kind !== "Retract") {
-		const forms = parsePreterite(source, change.value, ["change", "value"]);
-		if (forms instanceof ParsingError) return forms;
+	const forms = verbFormsOfChange(change);
+	if (forms) {
+		const failure = verbFormsIssue(source, forms, () => [
+			"change",
+			"value",
+		]);
+		if (failure) return failure;
 	}
 	if (change.aspect === "participleSource" && change.kind !== "Retract") {
 		const participle = parseParticipleSource(source, change.value, [

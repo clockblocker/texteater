@@ -81,6 +81,13 @@
 				"knowledge": {
 					"conjugationClass": ["Weak"],
 					"preterite": ["etablierte"],
+					"presentSingular": {
+						"first": ["etabliere"],
+						"second": ["etablierst"],
+						"third": ["etabliert"]
+					},
+					"pastParticiple": ["etabliert"],
+					"subjunctivePast": ["etablierte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -110,6 +117,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",

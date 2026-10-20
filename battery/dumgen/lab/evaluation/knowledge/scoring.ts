@@ -1,9 +1,10 @@
 /**
  * How a `knowledge.produce` run is scored (#887, #873's method).
  *
- * - Structural aspects (plural, valency, participle source, conjugation
- *   class, Präteritum, locution, saying and formula types) are right when the produced
- *   value equals gold's, an aspect gold reviewed empty being right only
+ * - Structural aspects (`exactAspects`: plural, valency, participle
+ *   source, a verb's classes and principal parts, the three types) are
+ *   right when the produced value equals gold's, an aspect gold reviewed
+ *   empty being right only
  *   when nothing was produced. A failed aspect is wrong. Only an aspect
  *   gold covers is scored.
  * - Semantic relations are scored on recall: each gold claim is found when

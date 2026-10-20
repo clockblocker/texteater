@@ -32,6 +32,9 @@ export type KnowledgeAspect =
 	| "plural"
 	| "conjugationClass"
 	| "preterite"
+	| "presentSingular"
+	| "pastParticiple"
+	| "subjunctivePast"
 	| "locutionType"
 	| "sayingType"
 	| "formulaRole";

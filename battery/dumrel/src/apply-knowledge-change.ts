@@ -26,7 +26,7 @@ import { conjugationClassValues } from "./vocabulary.js";
  * Locution Type, Saying Type and Formula Role are atomic like a definition.
  * A noun's plural: Contribute adds the plural forms it lacks, and a NoPlural
  * or PluralOnly marker is atomic. A verb's
- * conjugation classes and Präteritum: Contribute adds the classes or forms it
+ * conjugation classes and forms: Contribute adds the classes or forms it
  * lacks. Failure returns ParsingError without a partial value.
  */
 export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
@@ -133,7 +133,10 @@ function apply(
 			applyConjugation(knowledge, change);
 			return;
 		case "preterite":
-			applyPreterite(knowledge, change);
+		case "presentSingular":
+		case "pastParticiple":
+		case "subjunctivePast":
+			applyVerbForms(knowledge, change);
 			return;
 		case "transcription":
 		case "definition":
@@ -266,19 +269,40 @@ function applyConjugation(
 }
 
 /**
- * Präteritum forms accumulate in the order they arrive, like plural forms:
- * `sandte` then `sendete` store both. Correct replaces them.
+ * A verb's forms accumulate in the order they arrive, like plural forms:
+ * `sandte` then `sendete` store both, and a Präsens person gains the forms
+ * it lacks. Correct replaces the aspect.
  */
-function applyPreterite(
+function applyVerbForms(
 	knowledge: ReadingKnowledge,
-	change: Extract<KnowledgeChange, { aspect: "preterite" }>,
+	change: Extract<
+		KnowledgeChange,
+		{
+			aspect:
+				| "preterite"
+				| "presentSingular"
+				| "pastParticiple"
+				| "subjunctivePast";
+		}
+	>,
 ): void {
 	if (change.kind === "Retract") {
-		delete knowledge.preterite;
+		delete knowledge[change.aspect];
 		return;
 	}
-	knowledge.preterite = unique([
-		...(change.kind === "Contribute" ? (knowledge.preterite ?? []) : []),
+	const stored = change.kind === "Contribute" ? knowledge : {};
+	if (change.aspect === "presentSingular") {
+		const { first, second, third } = change.value;
+		const present = stored.presentSingular;
+		knowledge.presentSingular = {
+			first: unique([...(present?.first ?? []), ...first]),
+			second: unique([...(present?.second ?? []), ...second]),
+			third: unique([...(present?.third ?? []), ...third]),
+		};
+		return;
+	}
+	knowledge[change.aspect] = unique([
+		...(stored[change.aspect] ?? []),
 		...change.value,
 	]);
 }

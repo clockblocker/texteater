@@ -175,6 +175,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["lag"],
+					"presentSingular": {
+						"first": ["liege"],
+						"second": ["liegst"],
+						"third": ["liegt"]
+					},
+					"pastParticiple": ["gelegen"],
+					"subjunctivePast": ["läge"],
 					"valency": [
 						{
 							"status": "Required",
@@ -215,6 +222,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

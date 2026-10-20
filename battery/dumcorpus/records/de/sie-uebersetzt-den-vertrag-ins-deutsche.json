@@ -83,6 +83,13 @@
 				"knowledge": {
 					"conjugationClass": ["Weak"],
 					"preterite": ["übersetzte"],
+					"presentSingular": {
+						"first": ["übersetze"],
+						"second": ["übersetzt"],
+						"third": ["übersetzt"]
+					},
+					"pastParticiple": ["übersetzt"],
+					"subjunctivePast": ["übersetzte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -173,6 +180,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

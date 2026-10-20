@@ -94,6 +94,13 @@
 				"knowledge": {
 					"conjugationClass": ["Weak"],
 					"preterite": ["leitete weiter"],
+					"presentSingular": {
+						"first": ["leite weiter"],
+						"second": ["leitest weiter"],
+						"third": ["leitet weiter"]
+					},
+					"pastParticiple": ["weitergeleitet"],
+					"subjunctivePast": ["leitete weiter"],
 					"valency": [
 						{
 							"status": "Required",
@@ -167,6 +174,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

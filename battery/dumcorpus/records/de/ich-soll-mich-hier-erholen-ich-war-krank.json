@@ -247,6 +247,13 @@
 				"knowledge": {
 					"conjugationClass": ["Weak"],
 					"preterite": ["erholte"],
+					"presentSingular": {
+						"first": ["erhole"],
+						"second": ["erholst"],
+						"third": ["erholt"]
+					},
+					"pastParticiple": ["erholt"],
+					"subjunctivePast": ["erholte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -318,6 +325,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",

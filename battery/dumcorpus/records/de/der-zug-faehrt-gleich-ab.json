@@ -1,0 +1,152 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Zug fährt gleich ab.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Zug"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "fährt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gleich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ab"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0038"],
+		"rules": [
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/principal-parts-as-the-dictionary-cites",
+				"hash": "3757ab1bafee87f5"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: abfahren",
+				"url": "https://www.duden.de/rechtschreibung/abfahren",
+				"supports": "Target 0 Knowledge: fährt ab, fuhr ab, ist abgefahren; 'sich fahrend entfernen, losfahren'"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4, 8],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🚆👋",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"preterite": ["fuhr ab"],
+					"presentSingular": {
+						"first": ["fahre ab"],
+						"second": ["fährst ab"],
+						"third": ["fährt ab"]
+					},
+					"pastParticiple": ["abgefahren"],
+					"subjunctivePast": ["führe ab"]
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored"
+				}
+			},
+			"notes": {
+				"rationale": "fährt … ab is the separable verb abfahren 'depart', so its finite word and its particle are one target. Knowledge (#1217, dev draft): a separable Strong verb's principal parts, its finite forms with the particle split off and its Partizip II one word."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "fährt",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "ab",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "fährt ab",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "abfahren",
+						"coreFeatures": {
+							"hasSepPrefix": "ab",
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

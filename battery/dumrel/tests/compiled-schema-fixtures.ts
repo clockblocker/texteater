@@ -24,6 +24,15 @@ export const samples: Record<string, unknown[]> = {
 		{ plural: "NoPlural" },
 		{ conjugationClass: ["Weak", "Mixed"] },
 		{ preterite: [" sandte ", "sendete"], conjugationClass: ["Mixed"] },
+		{
+			presentSingular: {
+				first: ["fahre "],
+				second: ["fährst"],
+				third: ["fährt"],
+			},
+			pastParticiple: [" gefahren"],
+			subjunctivePast: ["führe"],
+		},
 		{ locutionType: "Idiom" },
 		{ sayingType: { type: "WingedWord", attribution: "  Shakespeare " } },
 		{ sayingType: { type: "Proverb" } },
@@ -140,6 +149,16 @@ export const samples: Record<string, unknown[]> = {
 		{ kind: "Contribute", aspect: "preterite", value: ["stand auf"] },
 		{ kind: "Correct", aspect: "preterite", value: ["wog", "wiegte"] },
 		{ kind: "Retract", aspect: "preterite" },
+		{
+			kind: "Contribute",
+			aspect: "presentSingular",
+			value: { first: ["kann"], second: ["kannst"], third: ["kann"] },
+		},
+		{ kind: "Retract", aspect: "presentSingular" },
+		{ kind: "Correct", aspect: "pastParticiple", value: ["gesandt"] },
+		{ kind: "Retract", aspect: "pastParticiple" },
+		{ kind: "Contribute", aspect: "subjunctivePast", value: ["brächte"] },
+		{ kind: "Retract", aspect: "subjunctivePast" },
 		{ kind: "Contribute", aspect: "locutionType", value: "Collocation" },
 		{
 			kind: "Correct",
@@ -156,6 +175,12 @@ export const samples: Record<string, unknown[]> = {
 	conjugationClass: ["Strong", "Weak", "Mixed"],
 	conjugationClasses: [["Strong"], ["Weak", "Mixed"]],
 	preterite: [["wog"], [" stand auf ", "sandte"]],
+	presentSingular: [
+		{ first: ["fahre"], second: ["fährst"], third: [" fährt "] },
+		{ first: ["backe"], second: ["bäckst", "backst"], third: ["bäckt"] },
+	],
+	pastParticiple: [["abgefahren"], [" gesandt", "gesendet"]],
+	subjunctivePast: [["führe ab"], ["hülfe", " hälfe"]],
 	locutionType: ["Idiom", "Collocation"],
 	sayingType: [
 		{ type: "Proverb" },

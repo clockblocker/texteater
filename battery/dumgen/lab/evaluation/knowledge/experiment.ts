@@ -113,7 +113,7 @@ const lunaOutputs: Readonly<Record<string, number>> = {
 	definition: 25,
 	translations: 8,
 	plural: 8,
-	conjugationClass: 6,
+	verbForms: 45,
 	valency: 70,
 	participleSource: 30,
 	attribution: 12,

@@ -70,6 +70,15 @@ the forms it lacks. The two aspects are checked apart: a later occurrence
 never changes a stored aspect, so forms kept after the classes were stored
 may attest a class the Reading lacks, and Dumrel keeps both.
 
+Three more aspects keep the rest of a German VERB Reading's principal parts,
+spelled the same way: `presentSingular`, the Präsens forms of each singular
+person (`fahre`, `fährst`, `fährt`; `fährt ab`), `pastParticiple`, the
+Partizip II as one word (`abgefahren`, `trompetet`), and `subjunctivePast`,
+the third person singular Konjunktiv II (`führe`, `brächte`). `Contribute`
+adds the forms an aspect, or a Präsens person, lacks. Dumrel checks only the
+endings it can be sure of: a second person Präsens ends in -t, a Partizip II
+in -t or -n and a Konjunktiv II in -e.
+
 Three atomic aspects type a multiword or formulaic Reading without splitting
 its Lemma (ADR 0039). `locutionType` marks a Locution Reading as an `Idiom`
 or, for a VERB Locution, a `Collocation`, or is absent when it is neither

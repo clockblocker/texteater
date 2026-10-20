@@ -202,6 +202,8 @@ export const conjugationClassSchema = z.enum(conjugationClassValues);
  * `wiegte`) share one Lemma and differ here, per Reading.
  */
 export const conjugationClassesSchema = z.array(conjugationClassSchema).min(1);
+/** One form or more of a verb, each a separate schema so its type keeps its name. */
+const verbFormsSchema = () => z.array(normalizedTextSchema).min(1);
 /**
  * A German verb Reading's Präteritum (ADR 0038): the third person singular
  * forms of its sense, each listed once, a separable verb's with its particle
@@ -209,7 +211,28 @@ export const conjugationClassesSchema = z.array(conjugationClassSchema).min(1);
  * `sendete`; `aufstehen`: `stand auf`). The conjugation classes are the ones
  * these forms attest.
  */
-export const preteriteSchema = nonEmptyStringsSchema;
+export const preteriteSchema = verbFormsSchema();
+/**
+ * A German verb Reading's Präsens singular (ADR 0038): each person's forms,
+ * spelled like the Präteritum (`fahren`: `fahre`, `fährst`, `fährt`;
+ * `abfahren`: `fährt ab`; `können`: `kann`, `kannst`, `kann`).
+ */
+export const presentSingularSchema = z.strictObject({
+	first: verbFormsSchema(),
+	second: verbFormsSchema(),
+	third: verbFormsSchema(),
+});
+/**
+ * A German verb Reading's Partizip II (ADR 0038): one word each, a separable
+ * verb's with its particle (`abgefahren`), a reflexive verb's without `sich`
+ * (`gefahren`, `trompetet`, `gesandt` and `gesendet`).
+ */
+export const pastParticipleSchema = verbFormsSchema();
+/**
+ * A German verb Reading's Konjunktiv II (ADR 0038): the third person singular
+ * forms, spelled like the Präteritum (`führe`, `brächte`, `führe ab`).
+ */
+export const subjunctivePastSchema = verbFormsSchema();
 
 /** A Locution Reading's Idiom or Collocation type; never a Lemma split (ADR 0039). */
 export const locutionTypeSchema = z.enum(locutionTypeValues);
@@ -302,6 +325,9 @@ export const readingKnowledgeSchema = z.strictObject({
 	plural: nounPluralSchema.optional(),
 	conjugationClass: conjugationClassesSchema.optional(),
 	preterite: preteriteSchema.optional(),
+	presentSingular: presentSingularSchema.optional(),
+	pastParticiple: pastParticipleSchema.optional(),
+	subjunctivePast: subjunctivePastSchema.optional(),
 	locutionType: locutionTypeSchema.optional(),
 	sayingType: sayingTypeSchema.optional(),
 	formulaRole: formulaRoleSchema.optional(),
@@ -323,6 +349,19 @@ const lemmaRelationSetSchema = z.strictObject({
 	targetKind: z.literal("lemma").optional(),
 	value: z.array(lemmaSchema),
 });
+
+/** Contribute or Correct one aspect of a verb's forms, and Retract it. */
+const verbFormChanges = <Aspect extends string, Value extends z.ZodType>(
+	aspect: Aspect,
+	value: Value,
+) =>
+	[
+		z.strictObject({ kind: setKinds, aspect: z.literal(aspect), value }),
+		z.strictObject({
+			kind: z.literal("Retract"),
+			aspect: z.literal(aspect),
+		}),
+	] as const;
 
 export const knowledgeChangeSchema = z.union([
 	z.strictObject({
@@ -397,15 +436,10 @@ export const knowledgeChangeSchema = z.union([
 		kind: z.literal("Retract"),
 		aspect: z.literal("conjugationClass"),
 	}),
-	z.strictObject({
-		kind: setKinds,
-		aspect: z.literal("preterite"),
-		value: preteriteSchema,
-	}),
-	z.strictObject({
-		kind: z.literal("Retract"),
-		aspect: z.literal("preterite"),
-	}),
+	...verbFormChanges("preterite", preteriteSchema),
+	...verbFormChanges("presentSingular", presentSingularSchema),
+	...verbFormChanges("pastParticiple", pastParticipleSchema),
+	...verbFormChanges("subjunctivePast", subjunctivePastSchema),
 	z.strictObject({
 		kind: setKinds,
 		aspect: z.literal("locutionType"),
@@ -468,6 +502,9 @@ function knowledgeAspectsSchema<Leaf extends z.ZodType>(leaf: Leaf) {
 		plural: leaf,
 		conjugationClass: leaf,
 		preterite: leaf,
+		presentSingular: leaf,
+		pastParticiple: leaf,
+		subjunctivePast: leaf,
 		locutionType: leaf,
 		sayingType: leaf,
 		formulaRole: leaf,

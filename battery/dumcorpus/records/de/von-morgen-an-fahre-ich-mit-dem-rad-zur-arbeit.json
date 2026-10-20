@@ -95,16 +95,10 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0035", "ADR-0039"],
+		"adrs": ["ADR-0003", "ADR-0035", "ADR-0038", "ADR-0039"],
 		"rules": [
-			{
-				"rule": "de/largest-fixed-unit",
-				"hash": "9a404db30f2b7c82"
-			},
-			{
-				"rule": "de/fixed-members-only",
-				"hash": "f0bf57e9cd925985"
-			},
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
 			{
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
 				"hash": "fdaeed620ab52c64"
@@ -113,16 +107,24 @@
 				"rule": "de/bracket-particle-or-circumposition",
 				"hash": "60b1cecf8b3f74f1"
 			},
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
-				"rule": "de/fused-word-pieces",
-				"hash": "53eb6d28dab42ddc"
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
 			},
 			{
-				"rule": "de/noun-owns-its-article",
-				"hash": "c2b1f74a61545177"
+				"rule": "de/principal-parts-as-the-dictionary-cites",
+				"hash": "3757ab1bafee87f5"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: fahren",
+				"url": "https://www.duden.de/rechtschreibung/fahren",
+				"supports": "Target 2 Knowledge: du fährst, er fährt, fuhr, ist gefahren; Konjunktiv II führe"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -211,7 +213,27 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🚗" },
+			"reading": {
+				"emojiDescription": "🚗",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"preterite": ["fuhr"],
+					"presentSingular": {
+						"first": ["fahre"],
+						"second": ["fährst"],
+						"third": ["fährt"]
+					},
+					"pastParticiple": ["gefahren"],
+					"subjunctivePast": ["führe"]
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored"
+				}
+			},
 			"notes": {
 				"rationale": "mit dem Rad fahren is Duden fahren 2a 'sich mit einem Fahrzeug fortbewegen', the Reading of im Wagen fahren."
 			},

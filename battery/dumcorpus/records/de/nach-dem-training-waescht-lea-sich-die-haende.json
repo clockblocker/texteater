@@ -201,6 +201,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["wusch"],
+					"presentSingular": {
+						"first": ["wasche"],
+						"second": ["wäschst"],
+						"third": ["wäscht"]
+					},
+					"pastParticiple": ["gewaschen"],
+					"subjunctivePast": ["wüsche"],
 					"valency": [
 						{
 							"status": "Required",
@@ -243,6 +250,9 @@
 					"valency": "Authored",
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",

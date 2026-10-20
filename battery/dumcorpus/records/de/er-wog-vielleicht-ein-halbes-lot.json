@@ -116,6 +116,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["wog"],
+					"presentSingular": {
+						"first": ["wiege"],
+						"second": ["wiegst"],
+						"third": ["wiegt"]
+					},
+					"pastParticiple": ["gewogen"],
+					"subjunctivePast": ["wöge"],
 					"valency": [
 						{
 							"status": "Required",
@@ -153,6 +160,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
@@ -269,6 +279,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["war"],
+					"presentSingular": {
+						"first": ["bin"],
+						"second": ["bist"],
+						"third": ["ist"]
+					},
+					"pastParticiple": ["gewesen"],
+					"subjunctivePast": ["wäre"],
 					"valency": [
 						{
 							"status": "Required",
@@ -315,6 +332,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",

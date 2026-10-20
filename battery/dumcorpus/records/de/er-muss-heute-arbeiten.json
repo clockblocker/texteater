@@ -67,6 +67,13 @@
 				"knowledge": {
 					"conjugationClass": ["Mixed"],
 					"preterite": ["musste"],
+					"presentSingular": {
+						"first": ["muss"],
+						"second": ["musst"],
+						"third": ["muss"]
+					},
+					"pastParticiple": ["gemusst"],
+					"subjunctivePast": ["müsste"],
 					"valency": [
 						{
 							"status": "Required",
@@ -107,6 +114,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
@@ -166,6 +176,13 @@
 				"knowledge": {
 					"conjugationClass": ["Weak"],
 					"preterite": ["arbeitete"],
+					"presentSingular": {
+						"first": ["arbeite"],
+						"second": ["arbeitest"],
+						"third": ["arbeitet"]
+					},
+					"pastParticiple": ["gearbeitet"],
+					"subjunctivePast": ["arbeitete"],
 					"valency": [
 						{
 							"status": "Required",
@@ -208,6 +225,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",

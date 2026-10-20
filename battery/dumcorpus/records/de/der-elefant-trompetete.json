@@ -1,0 +1,132 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Elefant trompetete.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Elefant"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "trompetete"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0038"],
+		"rules": [
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/principal-parts-as-the-dictionary-cites",
+				"hash": "3757ab1bafee87f5"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: trompeten",
+				"url": "https://www.duden.de/rechtschreibung/trompeten",
+				"supports": "Target 0 Knowledge: trompetet, trompetete, hat trompetet; (vom Elefanten) trompetenähnliche Laute ausstoßen"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🐘📢",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"preterite": ["trompetete"],
+					"presentSingular": {
+						"first": ["trompete"],
+						"second": ["trompetest"],
+						"third": ["trompetet"]
+					},
+					"pastParticiple": ["trompetet"],
+					"subjunctivePast": ["trompetete"]
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored"
+				}
+			},
+			"notes": {
+				"rationale": "trompetete is the Präteritum of trompeten in its sense of an elephant's call. Knowledge (#1217, dev draft): trompeten has no prefix, yet its first syllable is unstressed, so its Partizip II takes no ge-: trompetet, never getrompetet."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "trompetete",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "trompetete",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "trompeten",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

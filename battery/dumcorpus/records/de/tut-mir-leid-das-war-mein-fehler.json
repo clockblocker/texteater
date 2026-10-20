@@ -78,6 +78,13 @@
 				"knowledge": {
 					"conjugationClass": ["Strong"],
 					"preterite": ["tat leid"],
+					"presentSingular": {
+						"first": ["tue leid"],
+						"second": ["tust leid"],
+						"third": ["tut leid"]
+					},
+					"pastParticiple": ["leidgetan"],
+					"subjunctivePast": ["täte leid"],
 					"valency": [
 						{
 							"status": "Required",
@@ -129,6 +136,9 @@
 				"coverage": {
 					"conjugationClass": "Authored",
 					"preterite": "Authored",
+					"presentSingular": "Authored",
+					"pastParticiple": "Authored",
+					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
