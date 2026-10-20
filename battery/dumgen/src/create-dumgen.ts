@@ -3,8 +3,9 @@
  * operations are Effects whose error channel holds only `ProviderFailure`
  * and `InvalidModelOutput` (#552); a host `yield*`s them in its own
  * programs. It offers `language.detect`, `segment.inUnits`, `resolve.grammar`,
- * `resolve.reading` and `knowledge.produce`, whose error channel holds
- * only the host's own `onContribution` error (#883).
+ * `resolve.reading`, `translate.sentence` (#1210) and `knowledge.produce`,
+ * whose error channel holds only the host's own `onContribution` error
+ * (#883).
  */
 import type * as Effect from "effect/Effect";
 import { requestBudget, runOperation } from "./call.js";
@@ -38,6 +39,8 @@ import type { GermanInventory } from "./segment/de/inventory.js";
 import { type InUnitsInput, segmentText } from "./segment/in-units.js";
 import { isFloatingModel, type JevAsk, pinnedJevModel } from "./segment/jev.js";
 import type { SegmentedText } from "./segment/segmented-sentence.js";
+import { translateSentence } from "./translate/sentence.js";
+import type { TranslateSentenceInput } from "./translate/types.js";
 
 export type DumgenOptions = {
 	/** jev (TypeSafe System One): `createTypeSafeAsk` in production. */
@@ -46,8 +49,9 @@ export type DumgenOptions = {
 	 * Luna, for the operations that write: `resolve.grammar` writes Canonical
 	 * Forms and spelling corrections with it and drafts Emoji Descriptions
 	 * in the same call, `resolve.reading` writes those no draft supplies
-	 * (#862), and `knowledge.produce` Knowledge text, plural and
-	 * Präteritum forms, frames and relation candidates. Segmentation never
+	 * (#862), `translate.sentence` a Sentence's translation, and
+	 * `knowledge.produce` Knowledge text, plural and Präteritum forms,
+	 * frames and relation candidates. Segmentation never
 	 * receives it. `createOpenAILuna` in production.
 	 */
 	readonly luna: LunaAsk;
@@ -118,6 +122,18 @@ export type Dumgen = {
 			ProviderFailure | InvalidModelOutput
 		>;
 	};
+	readonly translate: {
+		/**
+		 * One Sentence's translation into a Dumrel translation language
+		 * (#1210), Luna's text in one call, with the neighbouring Sentences
+		 * as context only. Interrupting it aborts the call. Another language
+		 * than German, a blank Sentence or another translation language is
+		 * a Defect, raised before anything is asked.
+		 */
+		readonly sentence: (
+			input: TranslateSentenceInput,
+		) => Effect.Effect<string, ProviderFailure | InvalidModelOutput>;
+	};
 	readonly knowledge: {
 		/**
 		 * The Knowledge one occurrence asks for its resolved Reading (#883):
@@ -170,6 +186,12 @@ export function createDumgen(options: DumgenOptions): Dumgen {
 			reading: (input) =>
 				runOperation("resolve.reading", operations, (scope) =>
 					resolveReading(scope, { jev, luna }, input),
+				),
+		},
+		translate: {
+			sentence: (input) =>
+				runOperation("translate.sentence", operations, (scope) =>
+					translateSentence(scope, luna, input),
 				),
 		},
 		knowledge: {

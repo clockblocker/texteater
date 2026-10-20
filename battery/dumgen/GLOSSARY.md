@@ -108,6 +108,13 @@ Authored Inventory member matched in a Fixed Population. See [ADR 0021].
 Proposed Knowledge changes and Pending Semantic Relations for a
 caller-supplied Reading in an Encounter. See [Dumgen ADR 0003].
 
+**`translate.sentence`**:
+The writer that translates one Sentence into a Dumrel translation language,
+reading the Sentences around it as context only. It translates the whole
+Sentence and stores nothing, unlike Knowledge Production's `translations`,
+a Reading's dictionary equivalents.
+_Avoid_: Sentence Knowledge, translations aspect, for a Sentence's translation
+
 **Evaluation Run**:
 One recorded execution of a linguistic experiment, with its effective model
 settings, case outputs, failures and evaluation results.

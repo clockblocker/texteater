@@ -22,5 +22,5 @@
 - [Dumdict](./battery/dumdict/GLOSSARY.md): manages dictionary records over
   Dumling entities.
 - [Dumgen](./battery/dumgen/GLOSSARY.md): groups each Sentence's Segments into
-  clickable units, resolves a clicked unit's grammar and Reading, and produces
-  Knowledge for it.
+  clickable units, resolves a clicked unit's grammar and Reading, produces
+  Knowledge for it, and translates a Sentence.
