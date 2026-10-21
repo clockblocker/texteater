@@ -17,7 +17,8 @@
  *
  * `freeze-doublets` freezes the licence judge's set from the German
  * Doublet Rule's gold (#1230, `lab/evaluation/licence/cases.ts`) beside
- * them, for `bun run evaluate --experiment knowledge/de:doublets`.
+ * them, for `bun run evaluate --experiment knowledge/de:doublets:tuning`
+ * and `:heldout`.
  *
  * `subset` freezes a round's subset of dev from a saved gold-only baseline
  * run (`subset.ts`): its missed cases and a seeded guard. `compare` reads a

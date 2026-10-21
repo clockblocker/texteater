@@ -54,7 +54,8 @@ test("the table lists gold and raw mode per frozen set, text mode, and resolve.g
 		"knowledge/de:dev",
 		"knowledge/de:heldout",
 		"knowledge/de:spot-check",
-		"knowledge/de:doublets",
+		"knowledge/de:doublets:tuning",
+		"knowledge/de:doublets:heldout",
 	]);
 });
 

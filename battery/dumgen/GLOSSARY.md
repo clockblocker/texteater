@@ -110,9 +110,10 @@ Relations for a caller-supplied Reading in an Encounter. See
 [Dumgen ADR 0003] and [ADR 0048].
 
 **Licence Judge**:
-The jev judge Knowledge Production asks for a Lemma's later Reading: per
-Variation Dimension, the stored Paradigm Variants (Dumrel) its sense takes,
-or NoMatch, after which Luna writes that dimension's forms. It never routes
+The jev judge Knowledge Production asks for a Lemma's later Reading, after
+Luna has written its forms: for each Variation Dimension where those forms
+differ from the stored Paradigm Variants (Dumrel), which of the stored and
+new forms, shown together and unattributed, its sense takes. It never routes
 a click; the Reading judge ignores the Paradigm. See [ADR 0048] and
 [Dumgen ADR 0003].
 _Avoid_: paradigm judge, variant matcher

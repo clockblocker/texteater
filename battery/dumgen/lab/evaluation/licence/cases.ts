@@ -11,8 +11,10 @@
  *   stored under a sibling Reading, so the judge must take them all.
  *
  * The set is frozen with the git commit and a hash beside the Knowledge
- * sets, so concurrent review never moves a run's gold.
+ * sets, so concurrent review never moves a run's gold. `doubletSplitOf`
+ * splits it into a tuning half and a held-out half.
  */
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { isRecord } from "common-utils";
 import { loadSpecRecords, rules } from "dumcorpus";
@@ -35,7 +37,11 @@ import {
 	germanReadingSchema,
 	storedAs,
 } from "../../stored-json.js";
-import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
+import {
+	currentFrozenSetSync,
+	loadFrozenSet,
+	storeFrozenSet,
+} from "../frozen-sets.js";
 import type { KnowledgeCase } from "../knowledge/cases.js";
 
 /** The Rule whose records are the gold. */
@@ -251,6 +257,24 @@ export const loadLicenceSet = (
 		licenceSetSchema,
 	);
 
+/** The current frozen doublets set's cases of one half; none before its first freeze. */
+export function frozenSplitCases(
+	root: string,
+	split: DoubletSplit,
+): readonly LicenceCase[] {
+	const set = currentFrozenSetSync(root, "doublets", licenceSetSchema);
+	return set ? splitCases(set.cases, split) : [];
+}
+
+/** The cases of `cases` in one half. */
+export function splitCases(
+	cases: readonly LicenceCase[],
+	split: DoubletSplit,
+): LicenceCase[] {
+	const halves = doubletSplitOf(cases);
+	return cases.filter(({ lemma }) => halves.get(lemma) === split);
+}
+
 /**
  * The Lemma Paradigm a case's run starts from: the stored Reading's gold
  * forms, each a variant under its explicit Licence, as Knowledge
@@ -278,4 +302,64 @@ export function storedParadigmOf(
 			`${licenceCase.id}'s stored forms: ${applied.error.message}`,
 		);
 	return applied.value;
+}
+
+/** The two halves of the doublets set: prompts are tuned on one and reported on the other. */
+export type DoubletSplit = "tuning" | "heldout";
+
+/**
+ * The salt that orders each stratum: the set the split was first drawn
+ * on, kept when the set is refrozen. A refreeze that adds or drops a
+ * Lemma can still move others in its stratum.
+ */
+const splitSalt = "doublets@ac4c03db8dc8254d";
+
+/**
+ * A case's stratum, by what its Lemma's gold shows: a Free control; a
+ * noun doublet; a verb doublet where one Reading takes two forms of a
+ * dimension (`senden` 📨 `sandte`, `sendete`); or a verb doublet whose
+ * Readings share no form choice.
+ */
+function stratumOf(licenceCase: LicenceCase): string {
+	if (licenceCase.control) return "free";
+	if (licenceCase.later.reading.lemma.kind !== "VERB") return "noun";
+	return [licenceCase.later.gold.paradigm, licenceCase.stored.paradigm].some(
+		takesTwo,
+	)
+		? "verb-shared"
+		: "verb-disjoint";
+}
+
+/**
+ * Each Lemma's half (#1260). A doublet's two cases stay together, so no
+ * Lemma is seen in both halves. Within each stratum the Lemmas are sorted
+ * by the SHA-256 of `splitSalt` and the Lemma, and alternate, tuning
+ * first: each stratum splits evenly, an odd one giving tuning the extra.
+ * On `doublets@ac4c03db8dc8254d` that puts Mutter, Gesicht, Strauß,
+ * schleifen, bewegen, schaffen, wenden and the control melken in tuning,
+ * and Bank, Druck, Wort, erschrecken, hängen, wiegen, senden and the
+ * control Pizza in held-out: 15 cases each.
+ */
+export function doubletSplitOf(
+	cases: readonly LicenceCase[],
+): ReadonlyMap<string, DoubletSplit> {
+	const strata = new Map<string, Set<string>>();
+	for (const entry of cases) {
+		const stratum = stratumOf(entry);
+		strata.set(
+			stratum,
+			(strata.get(stratum) ?? new Set()).add(entry.lemma),
+		);
+	}
+	const rank = (lemma: string) =>
+		createHash("sha256").update(`${splitSalt}:${lemma}`).digest("hex");
+	const split = new Map<string, DoubletSplit>();
+	for (const lemmas of strata.values()) {
+		const ranked = [...lemmas].sort((left, right) =>
+			rank(left) < rank(right) ? -1 : 1,
+		);
+		for (const [index, lemma] of ranked.entries())
+			split.set(lemma, index % 2 === 0 ? "tuning" : "heldout");
+	}
+	return split;
 }

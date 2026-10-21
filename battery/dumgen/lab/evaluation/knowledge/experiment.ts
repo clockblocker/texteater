@@ -158,9 +158,11 @@ const knowledgeRepetitions = 3;
  * The operation a run measures. 1: the first port (#887). 2: the text
  * prompts after the first spot-check. 8: a Lemma's later Reading's
  * Paradigm goes to the licence judge (#1230); a first Reading's requests
- * are unchanged.
+ * are unchanged. 9: a later Reading's Luna writes first, and the judge
+ * chooses among the stored and written forms together (#1260); a first
+ * Reading's requests are unchanged.
  */
-const knowledgeOperationVersion = `${knowledgeRoute}@production-8`;
+const knowledgeOperationVersion = `${knowledgeRoute}@production-9`;
 
 export type KnowledgeEvaluateArgs = {
 	readonly experimentId: string;

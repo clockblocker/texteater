@@ -80,14 +80,28 @@ when it creates a Reading
 - **A Lemma's first Reading.** Luna writes the forms of its sense as ADR 0038
   describes. Code turns each form into a variant and gives the Reading an
   explicit Licence over them.
-- **A later Reading of a Lemma with variants.** A jev licence judge sees the
-  stored variants as bare options beside the marked Sentence and the new
-  Reading's Emoji Description, as the Reading judge sees Emoji Descriptions
-  ([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md)).
-  It picks, per dimension, every variant the sense takes, or answers NoMatch.
-  Only after NoMatch does Luna write that dimension's forms, without seeing
-  the stored ones. The Reading licenses what Luna writes, and what is new
-  becomes a variant.
+- **A later Reading of a Lemma with variants.** Luna first writes the
+  sense's forms of each dimension without seeing the stored variants.
+  - **Exact match.** If Luna's forms are the dimension's stored variants by
+    content id, code licenses those variants and asks no judge.
+  - **Contrastive judge.** Otherwise a jev licence judge gets one question
+    per such dimension, all in one request. It sees the stored variants and
+    Luna's new forms together, in one sorted list that doesn't say which
+    Reading holds which or which forms Luna wrote. The marked Sentence and
+    the new Reading's Emoji Description sit beside them, as the Reading
+    judge sees Emoji Descriptions
+    ([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md)).
+    Its options are every selection of those forms, so it may take one,
+    several or all.
+  - **What gets licensed.** The Reading licenses the stored variants the
+    judge picks. Each new form it picks becomes a variant. A form Luna
+    omits never conditions the Reading on its own: only the judge's choice
+    leaves a stored form out, so `melken` can stay Free when Luna writes
+    `melkte` alone.
+  - **Why Luna goes first.** Shown one form at a time, jev says yes to any
+    correct form of the word: it took `Bänke` for 🏦 at 0.91. Set beside
+    its rival, the form is judged by contrast instead
+    ([#1260](https://github.com/clockblocker/texteater/issues/1260)).
 - **A Reading whose forms were never produced**, such as an authored member
   without paradigm data or a migrated Reading that stored none, is Unstated
   and licenses all. Every produced Reading's Licence is explicit, so a later
@@ -99,9 +113,9 @@ Inventory's closed classes, and a German Doublet Rule with gold for the
 meaning-conditioned doublets (`Bank`, `Mutter`, `Wort`, `Strauß`, `Druck`,
 `Gesicht`, `schleifen`, `bewegen`, `hängen`, `senden`, `wenden`, `schaffen`,
 `erschrecken`, `wiegen`) and free controls (`melken`, `Pizza`). The licence
-judge is scored on that gold, and its prompt cites the Rule. Code decides ids
-and merging: it splits a written list into one variant per form, sets
-Licences and removes unlicensed variants. A migrated Reading brings its
+judge is tuned on one half of that gold and scored on the other, and its
+prompt cites the Rule. Code decides ids and merging: it splits a written list
+into one variant per form, sets Licences and removes unlicensed variants. A migrated Reading brings its
 stored forms as variants with provenance `Migrated` and an explicit Licence.
 A conjugation class stored without forms is not carried over, since code
 derives classes from forms only.
@@ -141,13 +155,18 @@ occurrence that wrote it left it
   embed two half tables instead of one with `sandte / sendete`.
 - Luna alone for a later Reading. Rejected: an omission (`melkte` only) would
   read as false conditioning. The judge sees every stored option.
+- A judge over the stored variants alone, before Luna, with Luna only after
+  NoMatch. Rejected: jev says yes to a correct form it sees alone. On the
+  German Doublet Rule's gold it got 72.8% of dimensions right, and it gave
+  `Bank` and `Mutter` the other meaning's plural in nearly every run.
 
 ## Consequences
 
 - The principal-part aspects leave Reading Knowledge, a hard break in Dumrel,
   and Dumdict's stored records change. tf-demo has to migrate
   ([#1232](https://github.com/clockblocker/texteater/issues/1232)).
-- A Lemma's later Reading costs one jev call, and a Luna call only after
-  NoMatch.
+- A Lemma's later Reading costs the Luna write a first Reading costs, and
+  one jev call more only when some dimension's forms differ from the stored
+  ones. A first Reading costs nothing extra.
 - A new Reading may split or join Licence Groups, so a host rewrites the
   affected tables in the commit that adds it.

@@ -1,17 +1,18 @@
 /**
- * `knowledge/de:doublets`, the licence judge's experiment (#1230), on the
- * pattern `knowledge/de:<set>` sets: a frozen set (`cases.ts`), one traced
- * run adapter, and the Knowledge port's disk cache, so a re-score costs no
- * call.
+ * `knowledge/de:doublets:tuning` and `:heldout`, the licence judge's
+ * experiments (#1230, #1260), on the pattern `knowledge/de:<set>` sets: a
+ * frozen set (`cases.ts`) split into two halves (`doubletSplitOf`), one
+ * traced run adapter, and the Knowledge port's disk cache, so a re-score
+ * costs no call. Prompts are tuned on `tuning` only; `heldout` reports.
  *
  * Each case runs `knowledge.produce` for its later Reading, `origin` New,
  * with every Variation Dimension its route names and the stored Reading's
- * gold forms as the Lemma's stored Paradigm: the judge's one request,
- * then Luna for its NoMatch dimensions. It runs three times, or as many as
- * `repetitions` asks. A live run first prices itself (the cache in
- * `project` mode, answering as gold would), hands the price to
- * `beforeLive`, which may refuse, then fills the cache under the round's
- * caps and runs from it.
+ * gold forms as the Lemma's stored Paradigm: Luna's write, then the
+ * judge's one request for the dimensions whose forms differ from the
+ * stored ones. It runs three times, or as many as `repetitions` asks. A
+ * live run first prices itself (the cache in `project` mode, answering as
+ * gold would), hands the price to `beforeLive`, which may refuse, then
+ * fills the cache under the round's caps and runs from it.
  */
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -34,7 +35,6 @@ import type { OperationTrace } from "../../../src/operation-trace.js";
 import { markedSentence } from "../../../src/resolve/reading.js";
 import { pinnedJevModel } from "../../../src/segment/jev.js";
 import { storedAs } from "../../stored-json.js";
-import { frozenSetSize } from "../frozen-sets.js";
 import type {
 	KnowledgeEvaluateArgs,
 	KnowledgeEvaluated,
@@ -51,9 +51,12 @@ import {
 	runModelsOptions,
 } from "../round-steps.js";
 import {
+	type DoubletSplit,
+	frozenSplitCases,
 	type LicenceCase,
 	licenceFreezeCommand,
 	loadLicenceSet,
+	splitCases,
 	storedParadigmOf,
 	trackedLicenceSetsRoot,
 } from "./cases.js";
@@ -72,7 +75,6 @@ const defaultRoot = fileURLToPath(
 );
 
 const route = "knowledge/de";
-const experimentId = `${route}:doublets`;
 
 /** The Knowledge port's ledger, whose latest round's sizes price a run (#891). */
 const ledgerPath = fileURLToPath(
@@ -115,12 +117,19 @@ const maximumRepetitions = 3;
  * meaning's, and the Noul's yes and no name the meaning, not the form's
  * correctness (round 2). 3: one Choice per dimension over every selection
  * of its stored variants (round 3, dropped: it scored below round 2). 4:
- * round 2's Nouls, taken at 0.6.
+ * round 2's Nouls, taken at 0.6. 5: Luna writes first; a dimension whose
+ * forms differ from the stored ones goes to one Choice over every
+ * selection of the stored and new forms together (#1260).
  */
-const operationVersion = `${route}@licence-4`;
+const operationVersion = `${route}@licence-5`;
 
-/** The evaluator. 1: the judge per dimension and variant, and the Licences runs end with (#1230). */
-const evaluatorVersion = "licence-1";
+/**
+ * The evaluator. 1: the judge per dimension and variant, and the Licences
+ * runs end with (#1230). 2: the Licence the run leaves against gold's
+ * forms, with Luna's forms, matched and judged dimensions read apart, and
+ * the judge requests per attempt (#1260).
+ */
+const evaluatorVersion = "licence-2";
 
 class LicenceModels extends CachedModels<LicenceAttempt> {
 	constructor(options: GrammarModelsOptions) {
@@ -253,11 +262,12 @@ export type LicenceEvaluated = Omit<KnowledgeEvaluated, "set"> & {
 	readonly set?: { readonly name: "doublets"; readonly hash: string };
 };
 
-/** The table's entry for the doublets set. */
-export function licenceExperiment() {
+/** The table's entry for one half of the doublets set. */
+export function licenceExperiment(split: DoubletSplit) {
+	const experimentId = `${route}:doublets:${split}`;
 	return {
 		id: experimentId,
-		caseCount: () => frozenSetSize(trackedLicenceSetsRoot, "doublets"),
+		caseCount: () => frozenSplitCases(trackedLicenceSetsRoot, split).length,
 		metrics: licenceMetrics,
 		async evaluate(args: LicenceEvaluateArgs): Promise<LicenceEvaluated> {
 			const directory = join(args.root ?? defaultRoot, "cache");
@@ -270,7 +280,8 @@ export function licenceExperiment() {
 				maximum: maximumRepetitions,
 				repetitions: args.repetitions,
 			});
-			const cases = set.cases.slice(0, args.limit ?? set.cases.length);
+			const half = splitCases(set.cases, split);
+			const cases = half.slice(0, args.limit ?? half.length);
 			const concurrency = args.concurrency ?? 12;
 			const passWith = (models: LicenceModels) =>
 				pass(cases, models, concurrency, repetitions);
@@ -382,7 +393,7 @@ export function licenceExperiment() {
 					},
 					judgment: {
 						model: pinnedJevModel,
-						settings: { set: set.name, setHash: set.hash },
+						settings: { set: set.name, setHash: set.hash, split },
 					},
 				},
 				repetitions,

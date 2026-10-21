@@ -1,13 +1,11 @@
 /**
- * Scores the licence judge on the German Doublet Rule's gold (#1230).
- * Per dimension of a case, the judge is right when it takes exactly the
- * stored variants the later Reading's gold forms hold, which is NoMatch
- * when they hold none. The Licence the run ends with is read twice:
- * against what the rule would give with a perfect judge and writer (the
- * judge's right pick, or gold's forms after NoMatch), and against gold's
- * forms themselves, which a later Reading whose stored variants are a
- * strict part of its gold misses by design until a later occurrence adds
- * the rest (#1234).
+ * Scores a later Reading's Licences on the German Doublet Rule's gold
+ * (#1260). Per dimension the stored Reading holds forms of, an attempt is
+ * right when the Licence its changes leave the later Reading is gold's
+ * forms exactly. The report also reads the steps on the way: Luna's forms
+ * against gold, which dimensions code matched and which went to the
+ * judge, and whether the judge picked what gold holds of the forms it was
+ * shown, so a miss reads as Luna's or the judge's.
  */
 import { readingIdentityKey } from "dumling";
 import { applyParadigmChanges, licensed, variantIdOf } from "dumrel";
@@ -29,20 +27,23 @@ export type LicenceOutput = z.infer<typeof licenceOutputSchema>;
 
 const eventSchema = z.object({
 	dimension: z.string(),
-	outcome: z.enum(["Licensed", "NoMatch"]),
-	variants: z.array(z.string()).optional(),
-	nouls: z.record(z.string(), z.number()),
+	outcome: z.enum(["Matched", "Judged"]),
+	written: z.array(z.string()),
+	forms: z.array(z.string()).optional(),
+	variants: z.array(z.string()),
+	probabilities: z.record(z.string(), z.number()).optional(),
 });
 
 const dimensionVerdictSchema = z.object({
 	dimension: z.string(),
 	stored: z.array(z.string()),
 	gold: z.array(z.string()),
-	/** The stored variants gold takes; none is NoMatch. */
-	expected: z.array(z.string()),
-	/** What the judge took; absent when it gave no verdict. */
-	judged: z.array(z.string()).optional(),
-	nouls: z.record(z.string(), z.number()).optional(),
+	/** What Luna wrote, by id; absent when no licence event came. */
+	written: z.array(z.string()).optional(),
+	outcome: z.enum(["Matched", "Judged"]).optional(),
+	/** The forms the judge was shown, by id. */
+	shown: z.array(z.string()).optional(),
+	probabilities: z.record(z.string(), z.number()).optional(),
 	/** The Licence the run's changes leave the later Reading. */
 	licensed: z.array(z.string()),
 	failed: z.string().optional(),
@@ -53,18 +54,6 @@ export const licenceEvaluationSchema = z.object({
 	verdicts: z.array(dimensionVerdictSchema),
 });
 export type LicenceEvaluation = z.infer<typeof licenceEvaluationSchema>;
-
-const ids = (
-	licenceCase: LicenceCase,
-	dimension: Dumrel.DimensionId,
-	values: readonly string[] | undefined,
-) => [
-	...new Set(
-		(values ?? []).map((value) =>
-			variantIdOf(licenceCase.later.reading.lemma, dimension, value),
-		),
-	),
-];
 
 const sorted = (values: readonly string[]) => [...values].sort();
 const same = (left: readonly string[], right: readonly string[]) =>
@@ -92,6 +81,7 @@ export function evaluateLicence(
 ): LicenceEvaluation {
 	const output = licenceOutputSchema.parse(raw);
 	const after = paradigmAfter(licenceCase, output.paradigmChanges);
+	const { lemma } = licenceCase.later.reading;
 	const key = readingIdentityKey(licenceCase.later.reading);
 	const events = new Map(
 		output.events.flatMap(({ name, data }) => {
@@ -104,32 +94,29 @@ export function evaluateLicence(
 	const verdicts = Object.keys(licenceCase.stored.paradigm).map(
 		(name): DimensionVerdict => {
 			const dimension = name as Dumrel.DimensionId;
-			const stored = ids(
-				licenceCase,
-				dimension,
-				licenceCase.stored.paradigm[dimension],
-			);
-			const gold = ids(
-				licenceCase,
-				dimension,
-				licenceCase.later.gold.paradigm[dimension],
-			);
+			const ids = (values: readonly string[] | undefined) => [
+				...new Set(
+					(values ?? []).map((value) =>
+						variantIdOf(lemma, dimension, value),
+					),
+				),
+			];
 			const event = events.get(dimension);
 			const failed = output.failures.find(
 				(failure) => failure.aspect === dimension,
 			)?.code;
 			return {
 				dimension,
-				stored,
-				gold,
-				expected: stored.filter((id) => gold.includes(id)),
+				stored: ids(licenceCase.stored.paradigm[dimension]),
+				gold: ids(licenceCase.later.gold.paradigm[dimension]),
 				...(event
 					? {
-							judged:
-								event.outcome === "NoMatch"
-									? []
-									: (event.variants ?? []),
-							nouls: event.nouls,
+							written: ids(event.written),
+							outcome: event.outcome,
+							...(event.forms ? { shown: ids(event.forms) } : {}),
+							...(event.probabilities
+								? { probabilities: event.probabilities }
+								: {}),
 						}
 					: {}),
 				licensed: [...licensed(after, dimension, key)],
@@ -156,14 +143,21 @@ const line = (correct: number, count: number): Line => ({
 	rate: count === 0 ? 0 : correct / count,
 });
 
-/** The Licence a perfect judge and writer would end with: its pick, or gold after NoMatch. */
-const ruleLicence = (verdict: DimensionVerdict) =>
-	verdict.expected.length > 0 ? verdict.expected : verdict.gold;
+const right = (verdict: DimensionVerdict) =>
+	same(verdict.licensed, verdict.gold);
+
+/** Whether the judge took exactly what gold holds of the forms it was shown. */
+const judgeRight = (verdict: DimensionVerdict) =>
+	same(
+		verdict.licensed,
+		(verdict.shown ?? []).filter((id) => verdict.gold.includes(id)),
+	);
 
 /**
- * The report of a run: the judge per dimension and per stored variant,
- * NoMatch's precision and recall, whole cases, the Licences runs end
- * with, the Free controls, each Lemma's line, and every miss.
+ * The report of a run: Licences per dimension and per stored variant,
+ * Luna's forms, the matched and judged dimensions, whole cases, the Free
+ * controls, the judge requests per attempt, each Lemma's line, and every
+ * miss.
  */
 export function licenceReport(attempts: readonly ScoredLicence[]) {
 	const scored = attempts.flatMap((attempt) =>
@@ -174,102 +168,93 @@ export function licenceReport(attempts: readonly ScoredLicence[]) {
 				}))
 			: [],
 	);
-	const judgedRight = ({ verdict }: (typeof scored)[number]) =>
-		verdict.judged !== undefined && same(verdict.judged, verdict.expected);
+	const verdicts = scored.map(({ verdict }) => verdict);
 	let decisions = 0;
 	let rightDecisions = 0;
 	let wrongTakes = 0;
 	let wrongDrops = 0;
-	for (const { verdict } of scored)
+	for (const verdict of verdicts)
 		for (const id of verdict.stored) {
-			if (verdict.judged === undefined) continue;
 			decisions++;
-			const took = verdict.judged.includes(id);
-			const should = verdict.expected.includes(id);
+			const took = verdict.licensed.includes(id);
+			const should = verdict.gold.includes(id);
 			if (took === should) rightDecisions++;
 			else if (took) wrongTakes++;
 			else wrongDrops++;
 		}
-	const expectedNoMatch = scored.filter(
-		({ verdict }) => verdict.expected.length === 0,
-	);
-	const judgedNoMatch = scored.filter(
-		({ verdict }) => verdict.judged?.length === 0,
-	);
-	const bothNoMatch = judgedNoMatch.filter(
-		({ verdict }) => verdict.expected.length === 0,
-	);
-	const byAttempt = new Map<ScoredLicence, (typeof scored)[number][]>();
-	for (const entry of scored)
-		byAttempt.set(entry.attempt, [
-			...(byAttempt.get(entry.attempt) ?? []),
-			entry,
-		]);
-	const wholeCases = [...byAttempt.values()];
-	const controls = wholeCases.filter(([first]) => first?.attempt.control);
+	const byAttempt = new Map<ScoredLicence, DimensionVerdict[]>();
+	for (const { attempt, verdict } of scored)
+		byAttempt.set(attempt, [...(byAttempt.get(attempt) ?? []), verdict]);
+	const wholeCases = [...byAttempt.entries()];
+	const controls = wholeCases.filter(([attempt]) => attempt.control);
+	const withOutcome = (outcome: "Matched" | "Judged") =>
+		verdicts.filter((verdict) => verdict.outcome === outcome);
 	const lemmas = [...new Set(attempts.map(({ lemma }) => lemma))].sort();
 	return {
 		attempts: attempts.length,
 		unscored: attempts.filter(({ evaluation }) => !evaluation).length,
-		dimensions: line(scored.filter(judgedRight).length, scored.length),
+		dimensions: line(verdicts.filter(right).length, verdicts.length),
 		variants: {
 			...line(rightDecisions, decisions),
 			wrongTakes,
 			wrongDrops,
 		},
-		noMatch: {
-			precision: line(bothNoMatch.length, judgedNoMatch.length),
-			recall: line(bothNoMatch.length, expectedNoMatch.length),
+		luna: line(
+			verdicts.filter(
+				(verdict) =>
+					verdict.written !== undefined &&
+					same(verdict.written, verdict.gold),
+			).length,
+			verdicts.length,
+		),
+		matched: line(
+			withOutcome("Matched").filter(right).length,
+			withOutcome("Matched").length,
+		),
+		judged: {
+			...line(
+				withOutcome("Judged").filter(right).length,
+				withOutcome("Judged").length,
+			),
+			givenForms: line(
+				withOutcome("Judged").filter(judgeRight).length,
+				withOutcome("Judged").length,
+			),
 		},
+		failed: verdicts.filter(({ failed }) => failed).length,
 		cases: line(
-			wholeCases.filter((entries) => entries.every(judgedRight)).length,
+			wholeCases.filter(([, entries]) => entries.every(right)).length,
 			wholeCases.length,
 		),
-		licences: {
-			asRuleGives: line(
-				scored.filter(({ verdict }) =>
-					same(verdict.licensed, ruleLicence(verdict)),
-				).length,
-				scored.length,
-			),
-			asGold: line(
-				scored.filter(({ verdict }) =>
-					same(verdict.licensed, verdict.gold),
-				).length,
-				scored.length,
-			),
-			failed: scored.filter(({ verdict }) => verdict.failed).length,
-		},
 		freeControls: line(
-			controls.filter((entries) =>
-				entries.every(
-					({ verdict }) =>
-						verdict.judged !== undefined &&
-						same(verdict.judged, verdict.stored),
-				),
-			).length,
+			controls.filter(([, entries]) => entries.every(right)).length,
 			controls.length,
+		),
+		judgeRequests: line(
+			wholeCases.filter(([, entries]) =>
+				entries.some(({ outcome }) => outcome === "Judged"),
+			).length,
+			wholeCases.length,
 		),
 		byLemma: Object.fromEntries(
 			lemmas.map((lemma) => {
-				const own = scored.filter(
-					({ attempt }) => attempt.lemma === lemma,
-				);
-				return [
-					lemma,
-					line(own.filter(judgedRight).length, own.length),
-				];
+				const own = scored
+					.filter(({ attempt }) => attempt.lemma === lemma)
+					.map(({ verdict }) => verdict);
+				return [lemma, line(own.filter(right).length, own.length)];
 			}),
 		),
 		misses: scored
-			.filter((entry) => !judgedRight(entry))
+			.filter(({ verdict }) => !right(verdict))
 			.map(({ attempt, verdict }) => ({
 				caseId: attempt.caseId,
 				repetition: attempt.repetition,
 				dimension: verdict.dimension,
-				expected: verdict.expected,
-				judged: verdict.judged ?? null,
-				nouls: verdict.nouls ?? null,
+				gold: verdict.gold,
+				written: verdict.written ?? null,
+				outcome: verdict.outcome ?? null,
+				licensed: verdict.licensed,
+				probabilities: verdict.probabilities ?? null,
 				...(verdict.failed ? { failed: verdict.failed } : {}),
 			})),
 	};
