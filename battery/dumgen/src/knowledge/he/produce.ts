@@ -28,6 +28,7 @@ import type {
 	KnowledgeProduction,
 	ProduceKnowledgeInput,
 } from "../types.js";
+import { knownHebrewParadigm } from "./paradigm.js";
 import { hebrewKnowledgePrompts } from "./prompts.js";
 
 export type HebrewKnowledgeModels = {
@@ -166,7 +167,31 @@ function textJob<E>(
 								}
 							: {}),
 					},
-					...(aspect === "transcription" ? {} : { markedSentence }),
+					markedSentence,
+					...(aspect === "transcription"
+						? {
+								occurrence: {
+									source: input.sentence.target
+										.map(
+											(index) =>
+												input.sentence.segments[index]
+													?.text ?? "",
+										)
+										.join(""),
+									normalizedSurface:
+										input.attestation.surface
+											.normalizedSurface,
+									...("inflectionalFeatures" in
+									input.attestation.surface
+										? {
+												inflectionalFeatures:
+													input.attestation.surface
+														.inflectionalFeatures,
+											}
+										: {}),
+								},
+							}
+						: {}),
 					...(language === undefined ? {} : { language }),
 				},
 				outputFormat: "json",
@@ -213,6 +238,14 @@ function textJob<E>(
 								.replace(/^[/[](.*)[/\]]$/u, "$1")
 								.trim()
 						: output.trim();
+				if (
+					aspect === "transcription" &&
+					/\p{Script=Hebrew}/u.test(value)
+				)
+					return invalid(
+						aspect,
+						"Expected IPA, not Hebrew-script spelling or niqqud",
+					);
 				if (
 					aspect === "transcription" &&
 					(value.match(/[aeiouəɛɔɐɑɒɜɞɪʊʌyøœɨʉɯɤ]/gu)?.length ?? 0) >
@@ -370,6 +403,23 @@ function paradigmJob<E>(
 				systemPrompt: hebrewKnowledgePrompts.hebrewParadigm,
 				input: {
 					aspect: "hebrewParadigm",
+					occurrence: {
+						source: input.sentence.target
+							.map(
+								(index) =>
+									input.sentence.segments[index]?.text ?? "",
+							)
+							.join(""),
+						normalizedSurface:
+							input.attestation.surface.normalizedSurface,
+						...("inflectionalFeatures" in input.attestation.surface
+							? {
+									inflectionalFeatures:
+										input.attestation.surface
+											.inflectionalFeatures,
+								}
+							: {}),
+					},
 					markedSentence: input.sentence.segments
 						.map(({ text }, index) =>
 							input.sentence.target.includes(index)
@@ -393,22 +443,33 @@ function paradigmJob<E>(
 				},
 				outputFormat: "json",
 				outputSchema: {
+					// Keep the object's identity visible to Luna's response reader even
+					// when a writer omits its transport-level value wrapper. JSON
+					// Schema's required applies to objects, so null remains allowed.
+					required: ["forms"],
 					anyOf: [
 						z.toJSONSchema(hebrewParadigmSchema),
 						{ type: "null" },
 					],
 				},
 			},
-			(output) =>
-				output === null
-					? null
-					: checkedChanges(input, "hebrewParadigm", [
-							{
-								kind: "Contribute",
-								aspect: "hebrewParadigm",
-								value: output,
-							},
-						]),
+			(output) => {
+				if (output === null) return null;
+				const known = knownHebrewParadigm(input.reading, output);
+				if (known instanceof InvalidModelOutput) return known;
+				if (known.omitted.length)
+					scope.event({
+						name: "OmittedHebrewParadigmCells",
+						data: { indexes: known.omitted },
+					});
+				return checkedChanges(input, "hebrewParadigm", [
+					{
+						kind: "Contribute",
+						aspect: "hebrewParadigm",
+						value: known.value,
+					},
+				]);
+			},
 		),
 	};
 }

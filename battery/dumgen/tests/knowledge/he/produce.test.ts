@@ -7,6 +7,7 @@ import { requestBudget, runOperation } from "../../../src/call.js";
 import { produceHebrewKnowledge } from "../../../src/knowledge/he/produce.js";
 import type { ProduceKnowledgeInput } from "../../../src/knowledge/types.js";
 import { defaultLunaConfiguration } from "../../../src/luna.js";
+import { lunaResponseOf } from "../../../src/openai-luna.js";
 import { pinnedJevModel } from "../../../src/segment/jev.js";
 import { knowledgeJev, knowledgeLuna, knowledgeLunaInput } from "../support.js";
 
@@ -253,6 +254,144 @@ test("Hebrew paradigms contribute labeled forms without German structural fields
 	).toBe(true);
 });
 
+test("Hebrew paradigm request preserves a top-level forms object through the real response reader", async () => {
+	const paradigm = {
+		forms: [
+			{ form: "סְפָרִים", features: { number: "Plur", definite: "Ind" } },
+		],
+	};
+	const luna = knowledgeLuna({ hebrewParadigm: null });
+	luna.ask = async (request) =>
+		lunaResponseOf(
+			JSON.stringify({
+				status: "completed",
+				output: [
+					{
+						content: [
+							{
+								type: "output_text",
+								text: JSON.stringify(paradigm),
+							},
+						],
+					},
+				],
+			}),
+			request,
+		);
+	const result = await run(
+		luna,
+		input({ request: { hebrewParadigm: null } }),
+	);
+	expect(result.failures).toEqual([]);
+	expect(result.changes as readonly unknown[]).toEqual([
+		{ kind: "Contribute", aspect: "hebrewParadigm", value: paradigm },
+	]);
+});
+
+test("Hebrew paradigm keeps valid sparse cells without repairing invalid ones", async () => {
+	const known = {
+		form: "סְפָרִים",
+		features: { number: "Plur", definite: "Ind" },
+	};
+	const result = await run(
+		knowledgeLuna({
+			hebrewParadigm: {
+				forms: [
+					known,
+					{
+						form: "סִפְרֵי",
+						features: { number: ["Plur"], definite: "Cons" },
+					},
+					{
+						form: "סֵפֶר",
+						features: { number: "Sing", gender: "Masc" },
+					},
+				],
+			},
+		}),
+		input({ request: { hebrewParadigm: null } }),
+	);
+	expect(result.failures.map(({ code }) => code)).toEqual([]);
+	expect(result.changes as readonly unknown[]).toEqual([
+		{
+			kind: "Contribute",
+			aspect: "hebrewParadigm",
+			value: { forms: [known] },
+		},
+	]);
+});
+
+test("paradigm context separates exact pointed occurrence from normalized surface and lemma", async () => {
+	const source = "סִפְרֵי";
+	const luna = knowledgeLuna({ hebrewParadigm: null });
+	await run(
+		luna,
+		input({
+			attestation: {
+				...attestation,
+				surface: {
+					...attestation.surface,
+					normalizedSurface: "ספרי",
+					inflectionalFeatures: { number: "Plur", definite: "Cons" },
+				},
+				members: [{ attested: source, orthography: "Standard" }],
+			},
+			sentence: {
+				segments: [{ text: source }, { text: " הילדים" }],
+				target: [0],
+			},
+			request: { hebrewParadigm: null },
+		}),
+	);
+	expect(luna.sent[0]?.input).toMatchObject({
+		reading: { lemma: "ספר" },
+		occurrence: {
+			source,
+			normalizedSurface: "ספרי",
+			inflectionalFeatures: { number: "Plur", definite: "Cons" },
+		},
+	});
+});
+
+test("a noun form labeled both absolute indefinite and definite omits both contradictory cells", async () => {
+	const absolute = {
+		form: "סֵפֶר",
+		features: { number: "Sing", definite: "Ind" },
+	};
+	const construct = {
+		form: "סֵפֶר",
+		features: { number: "Sing", definite: "Cons" },
+	};
+	const definite = {
+		form: "הַסֵּפֶר",
+		features: { number: "Sing", definite: "Def" },
+	};
+	const result = await run(
+		knowledgeLuna({
+			hebrewParadigm: {
+				forms: [
+					absolute,
+					{
+						form: "סֵפֶר",
+						features: { number: "Sing", definite: "Def" },
+					},
+					construct,
+					definite,
+				],
+			},
+		}),
+		input({ request: { hebrewParadigm: null } }),
+	);
+	expect(result.failures.map(({ code }) => code)).toEqual([]);
+	expect(result.changes as readonly unknown[]).toEqual([
+		{
+			kind: "Contribute",
+			aspect: "hebrewParadigm",
+			value: { forms: [construct, definite] },
+		},
+	]);
+});
+
 test("Hebrew base knowledge uses the resolved sense, validates changes and preserves pointed headwords", async () => {
 	const luna = knowledgeLuna({
 		definition: "יצירה כתובה לקריאה.",
@@ -294,7 +433,15 @@ test("Hebrew base knowledge uses the resolved sense, validates changes and prese
 		expect(value).toMatchObject({ reading: { emojiDescription: "📚" } });
 	expect(
 		sent.find((value) => value.aspect === "transcription"),
-	).not.toHaveProperty("markedSentence");
+	).toMatchObject({
+		reading: { lemma: "ספר", emojiDescription: "📚" },
+		markedSentence: "קראתי <TARGET>ספר</TARGET>.",
+		occurrence: {
+			source: "ספר",
+			normalizedSurface: "ספר",
+			inflectionalFeatures: { number: "Sing", definite: "Ind" },
+		},
+	});
 	expect(
 		sent.find((value) => value.aspect === "definition")?.markedSentence,
 	).toBe("קראתי <TARGET>ספר</TARGET>.");

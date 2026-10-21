@@ -4,6 +4,7 @@ import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { requestBudget, runOperation } from "../../../src/call.js";
 import { produceHebrewKnowledge } from "../../../src/knowledge/he/produce.js";
+import { hebrewKnowledgePrompts } from "../../../src/knowledge/he/prompts.js";
 import { defaultLunaConfiguration } from "../../../src/luna.js";
 import { pinnedJevModel } from "../../../src/segment/jev.js";
 import { knowledgeJev, knowledgeLuna } from "../support.js";
@@ -127,4 +128,13 @@ test("stressed IPA for the same real verb remains accepted", async () => {
 	expect(result.changes).toMatchObject([
 		{ aspect: "transcription", value: "kaˈtav" },
 	]);
+});
+
+test("IPA guidance distinguishes consonantal yod from romanization y", () => {
+	// Actual saved UI output yaˈkar is romanization, not IPA /jaˈkar/.
+	// This freezes question wording; a real model repeat must assess compliance.
+	expect(hebrewKnowledgePrompts.transcription).toContain("IPA /j/");
+	expect(hebrewKnowledgePrompts.transcription).toContain(
+		"not romanization y",
+	);
 });

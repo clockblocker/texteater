@@ -101,6 +101,21 @@ test("paradigm guidance separates observed homographs and absolute/construct cel
 	expect(prompt).toContain("בַּיִת is Ind; בֵּית is Cons");
 });
 
+test("paradigm guidance requires an article-bearing definite cell and independently known construct vowels", () => {
+	const prompt = hebrewKnowledgePrompts.hebrewParadigm;
+	expect(prompt).toContain("סֵפֶר is Ind, not Def");
+	expect(prompt).toContain("הַסֵּפֶר is Def");
+	expect(prompt).toContain("סִפְרֵי is Cons");
+	expect(prompt).toContain("not סְפָרֵי");
+	expect(prompt).toContain(
+		"Do not obtain construct vowels by replacing a plural ending",
+	);
+	expect(prompt).toContain("omit that cell");
+	expect(prompt).toContain("standalone inflected head");
+	expect(prompt).toContain("never a dangling or afterposed article");
+	expect(prompt).toContain("does not include its following complement");
+});
+
 test("object-marker translation guidance uses a Russian function label, not a preposition", () => {
 	const prompt = hebrewKnowledgePrompts.translations;
 	expect(prompt).toContain("normally untranslated");

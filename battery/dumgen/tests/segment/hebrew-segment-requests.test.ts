@@ -59,7 +59,7 @@ const capture = async (
 	return { requests, result };
 };
 
-test("Hebrew segment requests and results preserve the publication baseline exactly", async () => {
+test("Hebrew segment requests and results preserve the baseline apart from reviewed house guidance", async () => {
 	const snapshots = [];
 	for (const sentence of fixtures)
 		for (const policy of policies)
@@ -68,7 +68,13 @@ test("Hebrew segment requests and results preserve the publication baseline exac
 				policy,
 				...(await capture(segmentHebrewSentence, sentence, policy)),
 			});
-	expect(
-		createHash("sha256").update(JSON.stringify(snapshots)).digest("hex"),
-	).toBe("1e1edbfae5f76a5ed2e1db7f7ca97fc2338865bdf268322260472170ac6fd950");
+	// Strip only the reviewed additive wording. Keep the original digest so
+	// changes to menus, source text, batching or returned Segments still fail.
+	// The separate house-source-question test requires this wording to exist.
+	const houseGuidance =
+		" Initial letters of a lexical root stay inside its noun in every inflection. In 'הם בנו בַּיִת קטן', בַּיִת is one whole noun; in 'בֵּית האבן עומד ליד הנהר', בֵּית is the whole construct noun. Their initial ב is a root letter, not a preposition: choose AsWritten for each, preserving every vowel and dagesh. Construct state changes inflection, not syntactic-word boundaries. Contrast 'גרתי בבית קטן': בבית = ב + בית, where an additional outer ב is the preposition.";
+	const baseline = JSON.stringify(snapshots).replaceAll(houseGuidance, "");
+	expect(createHash("sha256").update(baseline).digest("hex")).toBe(
+		"1e1edbfae5f76a5ed2e1db7f7ca97fc2338865bdf268322260472170ac6fd950",
+	);
 });
