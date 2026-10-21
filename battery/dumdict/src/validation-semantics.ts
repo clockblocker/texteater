@@ -5,6 +5,11 @@ import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
 import { shadowMatchesLemma } from "./core/identity.js";
+import {
+	entryLinksAreItsOwn,
+	linkNamesOwnSurface,
+} from "./core/occurrence/links.js";
+import { paradigmFitsLemma } from "./core/occurrence/paradigm.js";
 import type { DeepReadonly, PendingEntryId } from "./domain-types.js";
 import { makeSurfaceId } from "./dumling-id.js";
 
@@ -313,17 +318,20 @@ function namedPredicate<Value>(
 }
 
 export const dumdictNamedValidationNames = [
+	"dumdict.attestation-link.surface-owner",
 	"dumdict.knowledge-change.language.de",
 	"dumdict.knowledge-change.language.en",
 	"dumdict.knowledge-change.language.he",
 	"dumdict.knowledge-change.preposition-case",
 	"dumdict.knowledge-change.reading-matches-patched",
+	"dumdict.lemma-record.paradigm",
 	"dumdict.pending.locator-matches-relation",
 	"dumdict.pending.locator-source",
 	"dumdict.pending.resolution-matches",
 	"dumdict.pending.target-language.de",
 	"dumdict.pending.target-language.en",
 	"dumdict.pending.target-language.he",
+	"dumdict.reading-entry.attestation-links",
 	"dumdict.reading-entry.no-same-lemma",
 	"dumdict.reading-entry.source-family",
 	"dumdict.reading-knowledge.language.de",
@@ -371,6 +379,12 @@ function lazyNamedRegistry<Name extends string, Value>(
 
 function constructNamedPredicate(name: PredicateName): NamedPredicate {
 	switch (name) {
+		case "dumdict.attestation-link.surface-owner":
+			return namedPredicate(linkNamesOwnSurface);
+		case "dumdict.lemma-record.paradigm":
+			return namedPredicate(paradigmFitsLemma);
+		case "dumdict.reading-entry.attestation-links":
+			return namedPredicate(entryLinksAreItsOwn);
 		case "dumdict.knowledge-change.language.de":
 			return forLanguage("de", knowledgeChangeUsesLanguage);
 		case "dumdict.knowledge-change.language.en":
@@ -444,6 +458,18 @@ function constantError(message: string): () => string {
 
 function constructNamedError(name: PredicateName): () => string {
 	switch (name) {
+		case "dumdict.attestation-link.surface-owner":
+			return constantError(
+				"An Attestation Link's Surface must be one its Reading's Lemma owns.",
+			);
+		case "dumdict.lemma-record.paradigm":
+			return constantError(
+				"A Lemma Paradigm must be one its Lemma's route takes.",
+			);
+		case "dumdict.reading-entry.attestation-links":
+			return constantError(
+				"A Reading Entry's Attestation Links must name its Reading, each ref once.",
+			);
 		case "dumdict.knowledge-change.language.de":
 			return constantError(
 				"Reading Knowledge Change references must use de.",

@@ -34,7 +34,7 @@ describe("applyGeneratedKnowledge", () => {
 			entry: {
 				reading: germanRennenReading,
 				attestedTranslations: [],
-				attestations: [],
+				attestationLinks: [],
 				notes: "",
 			},
 		});
@@ -128,13 +128,13 @@ describe("applyGeneratedKnowledge", () => {
 	test("resolves a generated Unit Shadow without persisting its inverse", async () => {
 		const notes = structuredClone(deSerializedNotes);
 		notes.push({
-			schemaVersion: 1,
+			schemaVersion: 2,
 			lemmaRecord: { lemma: germanRennenLemma },
 			readingEntries: [
 				{
 					reading: germanRennenReading,
 					attestedTranslations: [],
-					attestations: [],
+					attestationLinks: [],
 					notes: "",
 				},
 			],

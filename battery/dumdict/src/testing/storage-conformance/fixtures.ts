@@ -51,7 +51,7 @@ export function readingEntry(
 	return {
 		reading,
 		attestedTranslations: ["go"],
-		attestations: [],
+		attestationLinks: [],
 		notes: "conformance",
 		...content,
 	};

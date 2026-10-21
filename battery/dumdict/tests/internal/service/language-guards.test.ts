@@ -26,6 +26,8 @@ const emptyAddNewNoteContext: AddNewNoteContext<"en"> = {
 	pendingRelationsMatchingProposedLemma: [],
 	relationLemmas: [],
 	relationReadings: [],
+	lemmaReadings: [],
+	attestationLinksWithRefs: [],
 };
 
 describe("language guards", () => {

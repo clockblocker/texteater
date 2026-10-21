@@ -37,7 +37,7 @@ export function fixturesFor(language: Dumling.Language) {
 	const readingEntry = {
 		reading: fixture.reading,
 		attestedTranslations: [],
-		attestations: [],
+		attestationLinks: [],
 		notes: "",
 	};
 	const pending = {
@@ -63,7 +63,10 @@ export function fixturesFor(language: Dumling.Language) {
 		kind: "revisionMatches" as const,
 		revision: "revision-1",
 	};
-	const readingPatch = { kind: "addAttestation" as const, value: "text" };
+	const readingPatch = {
+		kind: "addAttestationLink" as const,
+		link: { ref: "text", surfaceId: null, reading: fixture.reading },
+	};
 	const plannedChange = {
 		type: "createLemma" as const,
 		record: lemmaRecord,

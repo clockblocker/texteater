@@ -341,7 +341,7 @@ describe("Shadow backfills and presentation", () => {
 				entry: {
 					reading: gehenReading,
 					attestedTranslations: [],
-					attestations: [],
+					attestationLinks: [],
 					notes: "",
 				},
 			}),

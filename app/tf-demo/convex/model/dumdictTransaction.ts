@@ -32,6 +32,7 @@ import { applyDumdictPlanInTransaction } from "../dumdictStorage/transaction";
 import { pendingLocatorIndexKey } from "./dumdictPendingIndexes";
 import type { dictionaryPlanValidator } from "./validators";
 
+export { completeAuthoredComponentKnowledge } from "../dumdictStorage/authoredKnowledge";
 /**
  * The transaction-local pieces a host write uses beside the workflow methods:
  * the commit budget and the revision a request carries, the Dictionary
@@ -48,8 +49,10 @@ export {
 export { dictionaryPlanResult } from "../dumdictStorage/dictionaryPlan";
 export {
 	loadCleanupRelationsSlice,
+	loadOccurrenceSlice,
 	loadReadingEntryContextSlice,
 	loadReevaluateShadowsSlice,
+	loadRekeySurfacesSlice,
 	storedReadingsOf,
 } from "../dumdictStorage/queries";
 export {
@@ -60,7 +63,6 @@ export {
 } from "../dumdictStorage/storage";
 export {
 	applyDumdictPlanInTransaction,
-	completeAuthoredComponentKnowledge,
 	materializeGrammaticalComponent,
 } from "../dumdictStorage/transaction";
 

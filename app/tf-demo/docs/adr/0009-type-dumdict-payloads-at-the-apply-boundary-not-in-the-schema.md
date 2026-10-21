@@ -29,6 +29,11 @@ cannot apply a plan differently without a test failing.
   the Knowledge it extends.
 - A change the stored state cannot take, such as creating a stored Lemma,
   is a `semanticPreconditionFailed` conflict before any write, as in every
-  Dumdict store. tf-demo keeps occurrence Attestations in its host graph
+  Dumdict store. tf-demo keeps occurrences and their cleanup in its host
+  graph
   ([tf-demo ADR 0001](./0001-persist-occurrence-attestations-by-segment-membership.md)),
-  so a change that carries or checks a Reading Attestation throws.
+  so a change that carries or checks an Attestation Link, or deletes a
+  Reading, a Surface or a Lemma, throws before any write. It stores no Lemma
+  Paradigm yet, so a Lemma Record that holds one and a `setLemmaParadigm`
+  change throw too, until
+  [#1232](https://github.com/clockblocker/texteater/issues/1232) migrates it.

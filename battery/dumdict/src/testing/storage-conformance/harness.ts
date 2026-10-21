@@ -24,8 +24,12 @@ import type {
 import type {
 	CleanupRelationsSlice,
 	LoadReadingEntryContextRequest,
+	OccurrenceSlice,
+	OccurrenceSliceRequest,
 	ReadingEntryContext,
 	ReevaluateShadowsSlice,
+	RekeySurfacesSlice,
+	RekeySurfacesSliceRequest,
 } from "../../storage";
 import {
 	gehenReading,
@@ -57,6 +61,23 @@ export type ConformanceStorage = {
 	loadReevaluateShadowsContext(
 		request: Omit<ReevaluateShadowsRequest<"de">, "baseRevision">,
 	): Effect.Effect<ReevaluateShadowsSlice<"de">, unknown>;
+	/**
+	 * The slice `removeOccurrence` and `reconcileAttestationLinks` plan
+	 * from: each stored Lemma one of whose Readings holds a link with a
+	 * requested ref, whole. A store that keeps no Attestation Links
+	 * (`attestationLinks: false`) answers no Lemma.
+	 */
+	loadOccurrenceSlice(
+		request: OccurrenceSliceRequest,
+	): Effect.Effect<OccurrenceSlice<"de">, unknown>;
+	/**
+	 * The slice `rekeySurfaces` plans from: each stored Surface Entry with a
+	 * requested id, without its Surface, and each Reading whose links name
+	 * one.
+	 */
+	loadRekeySurfacesSlice(
+		request: RekeySurfacesSliceRequest<"de">,
+	): Effect.Effect<RekeySurfacesSlice<"de">, unknown>;
 	/**
 	 * Removes a Lemma as the host does outside Dumdict's plans, such as when
 	 * the user deletes its note: the Lemma, its Readings with their pending
@@ -159,6 +180,7 @@ export async function pendingMatchingLemma(
 			reading: { unitKind: "Reading", lemma, emojiDescription: "🦶" },
 			ownedSurfaces: [],
 			relations: [],
+			attestationRefs: [],
 		}),
 	);
 	if (context.intent !== "addNewNote")

@@ -5,6 +5,7 @@ import type {
 	ApplyGeneratedKnowledgeRequest,
 	EnsureOwnedSurfaceRequest,
 	EnsureReadingEntryRequest,
+	RecordOccurrenceRequest,
 } from "../public";
 import type { LoadReadingEntryContextRequest } from "../storage";
 
@@ -21,6 +22,10 @@ export type ReadingEntryContextLoad<L extends Dumling.Language> =
 	| {
 			intent: "ensureReadingEntry";
 			request: EnsureReadingEntryRequest<L>;
+	  }
+	| {
+			intent: "recordOccurrence";
+			request: RecordOccurrenceRequest<L>;
 	  };
 
 /** Translates a workflow request into the operation-shaped storage read it needs. */
@@ -37,6 +42,9 @@ export function storageRequestFor<L extends Dumling.Language>(
 						({ surface }) => surface,
 					) ?? [],
 				relations: [...(load.request.draft.relations ?? [])],
+				attestationRefs: load.request.draft.note.attestationLinks.map(
+					({ ref }) => ref,
+				),
 			};
 		case "applyGeneratedKnowledge":
 			return {
@@ -74,6 +82,13 @@ export function storageRequestFor<L extends Dumling.Language>(
 			return {
 				intent: load.intent,
 				reading: load.request.entry.reading,
+			};
+		case "recordOccurrence":
+			return {
+				intent: load.intent,
+				reading: load.request.link.reading,
+				surface: load.request.surface,
+				ref: load.request.link.ref,
 			};
 	}
 }

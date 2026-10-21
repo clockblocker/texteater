@@ -8,7 +8,7 @@ import type * as DumdictSchema from "../../src/public-schema";
 // @ts-expect-error Linguistic units are imported from Dumling.
 type _Reading = Dumdict.Reading;
 declare const serializedNote: SerializedDictionaryNote<"en">;
-const schemaVersion: 1 = serializedNote.schemaVersion;
+const schemaVersion: 2 = serializedNote.schemaVersion;
 void schemaVersion;
 
 // @ts-expect-error The hard-break package exposes no version-0 wire contract.

@@ -221,7 +221,11 @@ describe("reevaluateShadows", () => {
 		const request: AddNewNoteRequest<"de"> = {
 			draft: {
 				reading: meerReading,
-				note: { attestedTranslations: [], attestations: [], notes: "" },
+				note: {
+					attestedTranslations: [],
+					attestationLinks: [],
+					notes: "",
+				},
 				relations: [
 					{
 						relation: "synonym",

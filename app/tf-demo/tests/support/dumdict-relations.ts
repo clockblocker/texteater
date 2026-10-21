@@ -52,7 +52,15 @@ export const springenReading = {
 	lemma: springenLemma,
 	emojiDescription: "🦘",
 } as const;
+/** An empty Reading note; tf-demo's host graph keeps its occurrences. */
 export const note = {
+	attestedTranslations: [],
+	attestationLinks: [],
+	notes: "",
+};
+
+/** An empty owned-Surface note. */
+export const surfaceNote = {
 	attestedTranslations: [],
 	attestations: [],
 	notes: "",
@@ -131,7 +139,10 @@ export async function seededDictionary(
 				lemmaId: gehenLemmaId,
 				...stored,
 			});
-			await ctx.db.insert("ownedSurfaces", { surfaceId, record: note });
+			await ctx.db.insert("ownedSurfaces", {
+				surfaceId,
+				record: surfaceNote,
+			});
 		}
 	});
 	return { t, gehenLemmaId, gehenReadingId };

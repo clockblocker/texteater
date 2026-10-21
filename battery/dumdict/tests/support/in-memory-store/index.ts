@@ -13,14 +13,20 @@ import type {
 import type {
 	CleanupRelationsSlice,
 	LoadReadingEntryContextRequest,
+	OccurrenceSlice,
+	OccurrenceSliceRequest,
 	ReadingEntryContext,
 	ReevaluateShadowsSlice,
+	RekeySurfacesSlice,
+	RekeySurfacesSliceRequest,
 } from "../../../src/storage";
 import { commitChanges } from "./commit";
 import {
 	loadCleanupRelationsContext,
+	loadOccurrenceSlice,
 	loadReadingEntryContext,
 	loadReevaluateShadowsContext,
+	loadRekeySurfacesSlice,
 	type ReadingEntryContextRead,
 } from "./load-slices";
 import { removeLemma } from "./remove-lemma";
@@ -40,6 +46,10 @@ export type InMemoryTestStorage<L extends Dumling.Language> = {
 	loadReevaluateShadowsContext(
 		request: Omit<ReevaluateShadowsRequest<L>, "baseRevision">,
 	): ReevaluateShadowsSlice<L>;
+	loadOccurrenceSlice(request: OccurrenceSliceRequest): OccurrenceSlice<L>;
+	loadRekeySurfacesSlice(
+		request: RekeySurfacesSliceRequest<L>,
+	): RekeySurfacesSlice<L>;
 	commitChanges(request: CommitChangesRequest<L>): CommitChangesResult;
 	/** Removes a Lemma as a host does outside Dumdict's plans. */
 	removeLemma(lemma: Dumling.Lemma<L>): void;
@@ -64,6 +74,9 @@ export function createInMemoryTestStorage<L extends Dumling.Language>(
 			loadCleanupRelationsContext(state, request),
 		loadReevaluateShadowsContext: (request) =>
 			loadReevaluateShadowsContext(state, request),
+		loadOccurrenceSlice: (request) => loadOccurrenceSlice(state, request),
+		loadRekeySurfacesSlice: (request) =>
+			loadRekeySurfacesSlice(state, request),
 		commitChanges: (request) => commitChanges(state, request),
 		removeLemma: (lemma) => removeLemma(state, lemma),
 		loadAll() {

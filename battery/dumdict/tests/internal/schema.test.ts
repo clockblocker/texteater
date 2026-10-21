@@ -37,7 +37,7 @@ describe("public storage-facing schemas", () => {
 		const schema = getDumdictSchemasFor("de").readingEntrySchema;
 		const note = {
 			attestedTranslations: [],
-			attestations: [],
+			attestationLinks: [],
 			notes: "",
 		};
 
@@ -54,7 +54,7 @@ describe("public storage-facing schemas", () => {
 		const note = {
 			reading: germanGehenReading,
 			attestedTranslations: [],
-			attestations: [],
+			attestationLinks: [],
 			notes: "",
 		};
 		expect(
@@ -87,7 +87,7 @@ describe("public storage-facing schemas", () => {
 		const result = getDumdictSchemasFor("de").readingEntrySchema.safeParse({
 			reading: germanGehenReading,
 			attestedTranslations: [],
-			attestations: [],
+			attestationLinks: [],
 			notes: "",
 			knowledge: {
 				semanticRelations: {
@@ -126,7 +126,7 @@ describe("public storage-facing schemas", () => {
 		const entry = (...complements: unknown[]) => ({
 			reading: germanGehenReading,
 			attestedTranslations: [],
-			attestations: [],
+			attestationLinks: [],
 			notes: "",
 			knowledge: { valency: [{ status: "Optional", complements }] },
 		});
@@ -162,7 +162,7 @@ describe("public storage-facing schemas", () => {
 		const entry = (...complements: unknown[]) => ({
 			reading: germanGehenReading,
 			attestedTranslations: [],
-			attestations: [],
+			attestationLinks: [],
 			notes: "",
 			knowledge: {
 				valency: [
@@ -210,7 +210,7 @@ describe("public storage-facing schemas", () => {
 		const entry = (complement: unknown) => ({
 			reading: hebrewKatavReading,
 			attestedTranslations: [],
-			attestations: [],
+			attestationLinks: [],
 			notes: "",
 			knowledge: {
 				valency: [{ status: "Required", complements: [complement] }],
@@ -254,7 +254,7 @@ describe("public storage-facing schemas", () => {
 		const entry = (complement: unknown) => ({
 			reading: englishRunReading,
 			attestedTranslations: [],
-			attestations: [],
+			attestationLinks: [],
 			notes: "",
 			knowledge: {
 				valency: [{ status: "Required", complements: [complement] }],

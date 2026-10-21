@@ -12,8 +12,8 @@ test("planning entrypoint plans without Effect, schema authoring, or retained pa
  const lemma={unitKind:"Lemma",language:"de",family:"Lexeme",kind:"NOUN",canonicalForm:"Bank",coreFeatures:{gender:"Fem"}};
  const reading={unitKind:"Reading",lemma,emojiDescription:"🏦"};
  const planner=createDumdictPlanner("de");
- const request={draft:{reading,note:{attestedTranslations:[],attestations:[],notes:""}}};
- const planned=planner.addNewNote({intent:"addNewNote",revision:"convex-0",existingOwnedSurfaces:[],explicitExistingLemmaTargets:[],exactPendingRelations:[],pendingRelationsMatchingProposedLemma:[],relationLemmas:[],relationReadings:[]},request);
+ const request={draft:{reading,note:{attestedTranslations:[],attestationLinks:[],notes:""}}};
+ const planned=planner.addNewNote({intent:"addNewNote",revision:"convex-0",existingOwnedSurfaces:[],explicitExistingLemmaTargets:[],exactPendingRelations:[],pendingRelationsMatchingProposedLemma:[],relationLemmas:[],relationReadings:[],lemmaReadings:[],attestationLinksWithRefs:[]},request);
  if(planned.status!=="planned" || planned.plan.changes.map(c=>c.type).join(",")!=="createLemma,createReading") throw Error("Invalid plan "+JSON.stringify(planned));
  const rejected=planner.ensureOwnedSurface({intent:"ensureOwnedSurface",revision:"convex-0",existingOwnedSurfaces:[]},{reading,ownedSurface:{surface:{unitKind:"Surface",language:"de",lemma,normalizedSurface:"Bank",spelling:{kind:"Canonical"},surfaceFeatures:null,inflectionalFeatures:{case:"Nom",gender:null,number:"Sing"}},note:{attestedTranslations:[],attestations:[],notes:""}}});
  if(rejected.status!=="rejected" || rejected.code!=="readingMissing") throw Error("Expected readingMissing "+JSON.stringify(rejected));

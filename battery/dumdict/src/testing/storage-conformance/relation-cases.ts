@@ -82,7 +82,7 @@ const schreitenNote: AddNewNoteRequest<"de"> = {
 		reading: schreitenReading,
 		note: {
 			attestedTranslations: ["stride"],
-			attestations: [],
+			attestationLinks: [],
 			notes: "conformance",
 		},
 	},

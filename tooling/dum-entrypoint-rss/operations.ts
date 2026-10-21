@@ -175,7 +175,7 @@ export async function runRepresentativeOperation(
 					entry: {
 						reading,
 						attestedTranslations: [],
-						attestations: [],
+						attestationLinks: [],
 						notes: "",
 					},
 				},

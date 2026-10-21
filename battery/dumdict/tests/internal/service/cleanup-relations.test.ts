@@ -17,13 +17,15 @@ function swimNote(
 	reading: Dumling.Reading<"en">,
 ): SerializedDictionaryNote<"en"> {
 	return {
-		schemaVersion: 1,
+		schemaVersion: 2,
 		lemmaRecord: { lemma: reading.lemma },
 		readingEntries: [
 			{
 				reading,
 				attestedTranslations: ["swim"],
-				attestations: ["They swim."],
+				attestationLinks: [
+					{ ref: "They swim.", surfaceId: null, reading },
+				],
 				notes: "Swimming.",
 			},
 		],

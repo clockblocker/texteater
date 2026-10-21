@@ -23,10 +23,20 @@ import type {
 	readingValueValidator,
 } from "./validators";
 
+/** An empty Surface note. */
 function emptyNote() {
 	return {
 		attestedTranslations: [] as string[],
 		attestations: [] as string[],
+		notes: "",
+	};
+}
+
+/** An empty Reading note: tf-demo's host graph keeps its occurrences. */
+function emptyReadingNote() {
+	return {
+		attestedTranslations: [] as string[],
+		attestationLinks: [],
 		notes: "",
 	};
 }
@@ -67,7 +77,7 @@ export async function planAndCommitDictionary(
 	const added = await dictionary.addNewNote({
 		draft: {
 			reading,
-			note: emptyNote(),
+			note: emptyReadingNote(),
 			ownedSurfaces: surfaceStored ? [] : [ownedSurface],
 		},
 	});

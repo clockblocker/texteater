@@ -63,12 +63,13 @@ pending. The source's claim moves with the record:
 
 Every plan that creates a Lemma re-evaluates the stored Shadows it matches:
 `addNewNote`, and `ensureReadingEntry` when it creates its Reading's Lemma.
-Dumdict plans no removal. A Lemma leaves the dictionary through its host:
-a user deletes its note, or it is removed once it has no Readings left
-([ADR 0043](./0043-correct-identity-by-moving-occurrences.md)), as tf-demo
-prunes one.
-The host then plans `reevaluateShadows` with the removed Lemmas, in the
-commit that removes them or right after. The removed Lemmas are never
+A Lemma leaves the dictionary in two ways. Its host removes it, as when a
+user deletes its note or tf-demo prunes one. Or Dumdict's `removeOccurrence`
+removes it with its last Reading
+([ADR 0043](./0043-correct-identity-by-moving-occurrences.md)) and lists it
+among the plan's removed Lemmas. Either way the host plans
+`reevaluateShadows` with the removed Lemmas, in the commit that removes them
+or right after. The removed Lemmas are never
 candidates, and stored claims may still name them until the plan moves them.
 Re-evaluation is deterministic and idempotent: planning it again after its
 commit plans nothing.
@@ -126,7 +127,7 @@ relation reads as exactly named and never moves.
   re-evaluation already reads the records the matching-Lemma lookup loads,
   and a new kind would need its own lookups in every host.
 - **A Dumdict Lemma-removal mutation.** Rejected: a host removes a Lemma for
-  its own reasons, often before Dumdict hears of it. Removing one would also
-  need its own decision on what happens to the Lemma's Readings, its
-  Surfaces and the exact claims on it. The re-evaluation is the same either
-  way, so the host requests it.
+  its own reasons, often before Dumdict hears of it. The one removal Dumdict
+  plans is the cascade of an occurrence's removal (ADR 0043), which decides
+  what happens to the Lemma's Readings and Surfaces. The re-evaluation is the
+  same either way, so the host requests it.

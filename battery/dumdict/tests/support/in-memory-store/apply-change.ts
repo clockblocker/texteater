@@ -1,8 +1,9 @@
-import { sameReading } from "dumling";
+import { sameLemma, sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 
 import { applyDumdictKnowledgeChanges } from "../../../src/core/apply-reading-knowledge-change";
 import { readingLemma } from "../../../src/core/identity";
+import { sameAttestationLink } from "../../../src/core/occurrence/links";
 import { samePendingSemanticRelationLocator } from "../../../src/core/pending";
 import type { PlannedChangeOp } from "../../../src/domain-types";
 import type { DraftStorageState } from "./preconditions";
@@ -18,7 +19,7 @@ export function applyChange<L extends Dumling.Language>(
 	switch (change.type) {
 		case "createLemma":
 			draft.draftNotes.push({
-				schemaVersion: 1,
+				schemaVersion: 2,
 				lemmaRecord: structuredClone(change.record),
 				readingEntries: [],
 				ownedSurfaceEntries: [],
@@ -78,6 +79,62 @@ export function applyChange<L extends Dumling.Language>(
 		}
 		case "patchReading":
 			return applyReadingPatch(draft, change);
+		case "deleteReading":
+		case "deleteOwnedSurface":
+		case "setLemmaParadigm":
+		case "deleteLemma":
+			return applyLemmaChange(draft, change);
+	}
+}
+
+/** Applies a change that deletes a record or replaces a Lemma's Paradigm. */
+function applyLemmaChange<L extends Dumling.Language>(
+	draft: DraftStorageState<L>,
+	change: Extract<
+		PlannedChangeOp<L>,
+		{
+			type:
+				| "deleteReading"
+				| "deleteOwnedSurface"
+				| "setLemmaParadigm"
+				| "deleteLemma";
+		}
+	>,
+): boolean {
+	switch (change.type) {
+		case "deleteReading": {
+			const bundle = findDraftBundleByReading(draft, change.reading);
+			if (!bundle) return false;
+			bundle.readingEntries = bundle.readingEntries.filter(
+				(entry) => !sameReading(entry.reading, change.reading),
+			);
+			return true;
+		}
+		case "deleteOwnedSurface": {
+			const bundle = findDraftBundleByLemma(draft, change.ownerLemma);
+			if (!bundle) return false;
+			bundle.ownedSurfaceEntries = bundle.ownedSurfaceEntries.filter(
+				({ id }) => id !== change.surfaceId,
+			);
+			return true;
+		}
+		case "setLemmaParadigm": {
+			const bundle = findDraftBundleByLemma(draft, change.lemma);
+			if (!bundle) return false;
+			bundle.lemmaRecord = {
+				lemma: bundle.lemmaRecord.lemma,
+				...(change.paradigm && {
+					paradigm: structuredClone(change.paradigm),
+				}),
+			};
+			return true;
+		}
+		case "deleteLemma":
+			draft.draftNotes = draft.draftNotes.filter(
+				({ lemmaRecord }) =>
+					!sameLemma(lemmaRecord.lemma, change.lemma),
+			);
+			return true;
 	}
 }
 
@@ -94,10 +151,23 @@ function applyReadingPatch<L extends Dumling.Language>(
 	let reading = bundle.readingEntries[index];
 	if (!reading) return false;
 	for (const op of change.ops) {
-		if (op.kind === "addAttestation") {
+		if (op.kind === "addAttestationLink") {
 			reading = {
 				...reading,
-				attestations: [...reading.attestations, op.value],
+				attestationLinks: [
+					...reading.attestationLinks,
+					structuredClone(op.link),
+				],
+			};
+			continue;
+		}
+		if (op.kind === "removeAttestationLink") {
+			const { link } = op;
+			reading = {
+				...reading,
+				attestationLinks: reading.attestationLinks.filter(
+					(stored) => !sameAttestationLink(stored, link),
+				),
 			};
 			continue;
 		}

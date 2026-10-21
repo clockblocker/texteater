@@ -22,7 +22,7 @@ const runRequest = {
 		reading: runReading,
 		note: {
 			attestedTranslations: ["correr", "laufen"],
-			attestations: ["They run before breakfast."],
+			attestationLinks: [],
 			notes: "Core fast-motion sense.",
 		},
 	},
@@ -43,6 +43,8 @@ const runContext = {
 	pendingRelationsMatchingProposedLemma: [],
 	relationLemmas: [walkLemmaRecord],
 	relationReadings: [walkReadingEntry],
+	lemmaReadings: [],
+	attestationLinksWithRefs: [],
 } satisfies ReadingEntryContext<"en">;
 ```
 
@@ -52,6 +54,10 @@ The planner's workflows each take that host-loaded slice and a request:
 - `applyGeneratedKnowledge`: plan generated Knowledge Changes and pending relations for an existing Reading
 - `ensureReadingEntry`: create or verify an ordinary Reading entry, re-evaluating the stored Shadows a Lemma it creates matches
 - `ensureOwnedSurface`: attach a newly encountered Surface to an existing Reading's Lemma
+- `recordOccurrence`: record one occurrence as an Attestation Link, ensuring its Surface
+- `removeOccurrence`: remove an occurrence's links and what they leave behind: an unlinked Reading, a Surface that lost its last link and holds no user text, a Lemma with no Readings
+- `reconcileAttestationLinks`: merge the links concurrent writers stored for one ref, keeping one
+- `rekeySurfaces`: rewrite Surface Entries and the links naming them after a Dumling Surface change
 - `cleanupRelations`: re-evaluate the Shadows of exact pending locators
 - `reevaluateShadows`: re-evaluate every stored Shadow that matches Lemmas the host removed, or Shadows it names
 
@@ -75,7 +81,7 @@ The surrounding application owns the workflow around those calls. In the normal
 flow, the user clicks a text segment, the UI resolves its Surface and Lemma
 through its own LLM flow, the host reads the stored Readings for that Lemma,
 and the UI asks its LLM whether one matches. If none does, the host plans
-`addNewNote`; otherwise it plans `ensureOwnedSurface` or
+`addNewNote`; otherwise it plans `recordOccurrence` or
 `applyGeneratedKnowledge` for the matched Reading.
 
 `dumdict` owns the dictionary workflow semantics behind those calls:
@@ -109,8 +115,9 @@ the dictionary relation inventory needed for deterministic inferred views.
 
 `dumdict` keeps three data concerns separate:
 
-- `LemmaRecord`: a grammatical Lemma with no Knowledge
-- `ReadingEntry`: learner-facing notes plus optional Reading Knowledge
+- `LemmaRecord`: a grammatical Lemma and its Lemma Paradigm, with no Knowledge
+- `ReadingEntry`: learner-facing notes, optional Reading Knowledge and the
+  Attestation Links of the occurrences judged to be the Reading
 - `SurfaceEntry`: an owned normalized Surface tied to a Lemma
 - `PendingSemanticRelationRecord`: a source Reading, a Unit Shadow, its exact
   storage locator, and the Lemma the Shadow resolves to, if exactly one
@@ -133,7 +140,14 @@ learner note and workflow state around that canonical value:
 const walkReadingEntry = {
 	reading: walkReading,
 	attestedTranslations: ["caminar", "gehen"],
-	attestations: ["They walk home together."],
+	// One occurrence: the host's ref, the Surface it realized, its Reading.
+	attestationLinks: [
+		{
+			ref: "walk-home-together",
+			surfaceId: makeSurfaceId("en", walkSurface),
+			reading: walkReading,
+		},
+	],
 	notes: "Core motion sense.",
 } satisfies ReadingEntry<"en">;
 ```
@@ -173,6 +187,8 @@ The root export is intentionally focused:
 - record and plan types such as `ReadingEntry`, `SurfaceEntry`, and `DumdictPlan`
 - the lightweight `parseAs*` parsers for stored records and plans
 - `makeSurfaceId`: the stable ID of an owned Surface
+- `migrateV1toV2`, and `reconcileAttestationLinks` and
+  `reconcileLemmaParadigms`, which merge concurrent writers' copies
 - `LinkTarget`, the place a host's link goes (a Spelling Crossroad, a Lemma,
   a Reading or a met Surface), with `resolveShadow`, the pure match rule for a
   link whose exact sense is unknown, and `pendingRelationTarget`, a stored
@@ -187,9 +203,12 @@ Obsidian plugin over markdown files, a Node server over SQLite, or an Electron
 app with a local cache, are future work; each would implement the slice reads
 and atomic commit the conformance suite checks.
 
-The version-1 serialized shape is a hard break. Old unversioned,
-Reading-targeted relation data must be reset or rewritten by the host; Dumdict
-does not expose a compatibility migration.
+A serialized note is version 2: one Lemma with its Paradigm, its Readings
+with their Attestation Links, its Surfaces and its pending relations.
+`migrateV1toV2` reads a version 1 note deterministically: its Readings'
+principal parts become the Lemma Paradigm, and its attestation strings
+Attestation Links. Old unversioned, Reading-targeted relation data is a hard
+break the host must reset or rewrite.
 
 ## Scope
 
