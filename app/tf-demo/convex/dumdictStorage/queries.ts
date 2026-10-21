@@ -7,6 +7,7 @@ import type {
 	RekeySurfacesSliceRequest,
 	StoredSurfaceNote,
 } from "dumdict/planning";
+import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { foldedCanonicalForm } from "../../server/linguisticIdentity";
 
@@ -27,6 +28,7 @@ import type { ReadingEntryContextArgs } from "./contextRequest";
 import {
 	assertPlanBudget,
 	DICTIONARY_REVISION,
+	findCanonicalLemma,
 	findLemmaByKey,
 	findReadingByKey,
 	findSurface,
@@ -444,7 +446,19 @@ export async function loadReevaluateShadowsSlice(
 		)
 			byLocator.set(pendingLocatorKey(record), record);
 	const pendingRelations = [...byLocator.values()];
-	const inventory = await loadShadowNeighbourhood(ctx, pendingRelations);
+	const removed = request.removedLemmas ?? [];
+	const seeds = pendingRelationSeeds(pendingRelations);
+	const inventory = await loadRelationNeighbourhood(ctx, {
+		sourceReadingKeys: [
+			...seeds.sourceReadingKeys,
+			...(await readingsClaimingRemoved(ctx, removed)),
+		],
+		// The Lemmas a removed Lemma's Shadow may now resolve to.
+		targetCanonicalForms: [
+			...seeds.targetCanonicalForms,
+			...removed.map(({ canonicalForm }) => canonicalForm),
+		],
+	});
 	return {
 		revision: DICTIONARY_REVISION,
 		pendingRelations,
@@ -454,12 +468,71 @@ export async function loadReevaluateShadowsSlice(
 }
 
 /**
+ * The keys of the Readings that claim a removed Lemma or one of its
+ * Readings. The re-evaluation moves those claims in its plan (system ADR
+ * 0011), so it loads them with what they claim.
+ */
+async function readingsClaimingRemoved(
+	ctx: ServerCtx,
+	lemmas: readonly Dumling.Lemma<"de">[],
+): Promise<string[]> {
+	const keys = new Set<string>();
+	for (const lemma of lemmas) {
+		// The planner refuses a malformed removed Lemma as an invalid request.
+		if (!parseUnit(lemma).success) continue;
+		const canonical = await findCanonicalLemma(ctx, lemma);
+		if (!canonical) continue;
+		const readings = await ctx.db
+			.query("readings")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", canonical._id))
+			.take(MAX_READING_CANDIDATES + 1);
+		const edges = (
+			await Promise.all([
+				ctx.db
+					.query("semanticRelationEdges")
+					.withIndex("by_target_lemma_id", (q) =>
+						q.eq("targetLemmaId", canonical._id),
+					)
+					.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
+				...readings.map((reading) =>
+					ctx.db
+						.query("semanticRelationEdges")
+						.withIndex("by_target_reading_id", (q) =>
+							q.eq("targetReadingId", reading._id),
+						)
+						.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
+				),
+			])
+		).flat();
+		if (
+			readings.length > MAX_READING_CANDIDATES ||
+			edges.length > MAX_PENDING_RELATIONS_PER_SLICE
+		)
+			throw new Error(
+				`A removed Lemma supports at most ${MAX_PENDING_RELATIONS_PER_SLICE} claims on it.`,
+			);
+		const sources = await Promise.all(
+			edges.map(({ sourceReadingId }) => ctx.db.get(sourceReadingId)),
+		);
+		for (const source of sources)
+			if (source && source.lemmaId !== canonical._id)
+				keys.add(source.readingKey);
+	}
+	return [...keys];
+}
+
+/**
  * The slice `removeOccurrence` and `reconcileAttestationLinks` plan from.
  * tf-demo keeps occurrences in its host graph (tf-demo ADR 0001), so no
  * stored Lemma holds an Attestation Link with any ref.
  */
 export function loadOccurrenceSlice(): OccurrenceSlice<"de"> {
-	return { revision: DICTIONARY_REVISION, lemmas: [] };
+	return {
+		revision: DICTIONARY_REVISION,
+		lemmas: [],
+		claimingReadings: [],
+		pendingRelationsMatchingLemmas: [],
+	};
 }
 
 /**

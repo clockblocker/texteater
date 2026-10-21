@@ -127,8 +127,9 @@ export type CleanupRelationsSlice<L extends Dumling.Language> = {
  * The slice `reevaluateShadows` plans from: every stored Pending Semantic
  * Relation, resolved or not, whose Pending Entry ID is one the request
  * names (`reevaluatedPendingEntryIds`), and the relation inventory their
- * re-evaluation reads: their source Readings, the Lemmas their Shadows match,
- * and what those Readings claim.
+ * re-evaluation reads: their source Readings, every stored Reading that
+ * claims a removed Lemma or one of its Readings, the Lemmas their Shadows
+ * and the removed Lemmas' Shadows match, and what those Readings claim.
  */
 export type ReevaluateShadowsSlice<L extends Dumling.Language> = {
 	revision: StoreRevision;
@@ -146,11 +147,24 @@ export type OccurrenceSliceRequest = {
  * Each stored Lemma one of whose Readings holds an Attestation Link with a
  * requested ref, once and whole (`LemmaSlice`): removing a link may remove
  * its Reading, its Surface, its Lemma and their Licences, and only the whole
- * Lemma says which.
+ * Lemma says which. The claims other Readings hold on what it removes move
+ * in the same plan (system ADR 0011), so the slice also holds those Readings
+ * and the Shadow relations their claims may become.
  */
 export type OccurrenceSlice<L extends Dumling.Language> = {
 	revision: StoreRevision;
 	lemmas: LemmaSlice<L>[];
+	/**
+	 * Every other stored Reading whose Knowledge claims one of `lemmas`
+	 * (Lemma Target Mode) or one of their Readings (Reading Target Mode),
+	 * once.
+	 */
+	claimingReadings: ReadingEntry<L>[];
+	/**
+	 * Every stored Pending Semantic Relation, resolved or not, whose Pending
+	 * Entry ID is that of one of `lemmas` (`unitShadowOf`), once.
+	 */
+	pendingRelationsMatchingLemmas: PendingSemanticRelationRecord<L>[];
 };
 
 /** The storage read `rekeySurfaces` plans from. */

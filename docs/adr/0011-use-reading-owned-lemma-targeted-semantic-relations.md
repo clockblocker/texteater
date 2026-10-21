@@ -64,27 +64,58 @@ pending. The source's claim moves with the record:
 Every plan that creates a Lemma re-evaluates the stored Shadows it matches:
 `addNewNote`, and `ensureReadingEntry` when it creates its Reading's Lemma.
 A Lemma leaves the dictionary in two ways. Its host removes it, as when a
-user deletes its note or tf-demo prunes one. Or Dumdict's `removeOccurrence`
-removes it with its last Reading
-([ADR 0043](./0043-correct-identity-by-moving-occurrences.md)) and lists it
-among the plan's removed Lemmas. Either way the host plans
+user deletes its note or tf-demo prunes one; the host then plans
 `reevaluateShadows` with the removed Lemmas, in the commit that removes them
-or right after. The removed Lemmas are never
-candidates, and stored claims may still name them until the plan moves them.
-Re-evaluation is deterministic and idempotent: planning it again after its
-commit plans nothing.
+or right after. Or Dumdict's `removeOccurrence` removes it with its last
+Reading ([ADR 0043](./0043-correct-identity-by-moving-occurrences.md)) and
+lists it among the plan's removed Lemmas; once that plan commits, the host
+plans `reevaluateShadows` with them from a slice it loads then. The removed
+Lemmas are never candidates. Re-evaluation is deterministic and idempotent:
+planning it again after its commit plans nothing.
 
-**An exactly named relation never moves.** A claim whose target was named
-exactly has no record, so nothing re-evaluates it. That covers an existing
-Lemma target in a draft, a generated Knowledge Change naming a Lemma, and any
-Reading target. When a Shadow and an exact naming meet on one claim (same
-source, relation and Lemma), the exact naming absorbs the Shadow: its record
-is deleted and the claim stays. That holds whichever came first: a Shadow
-resolving to a claim the source already holds, or a draft or Knowledge
-Change naming the Lemma a Shadow resolved to. Retracting a Shadow's claim
-retracts its relation: while its Lemma stays, the next re-evaluation deletes
-the record instead of restoring the claim, unless a proposal names the Shadow
-again. Two cases can't resolve:
+**A removal moves the claims on what it removes, in its own plan.** No
+claim outlives its target:
+
+- A Lemma-mode claim on a removed Lemma becomes that Lemma's Shadow
+  relation: the Lemma's Unit Shadow (`unitShadowOf`), with the claim's
+  source Reading and relation. From then on it is a Shadow relation like any
+  other. It resolves when exactly one Lemma matches its Shadow, as when the
+  removed Lemma comes back, and its link falls back to the Spelling
+  Crossroad while it is pending. A Shadow relation already stored under the
+  same locator takes the claim in, so the source keeps one record.
+- A Reading-mode claim on a removed Reading is retracted, whether or not
+  the Reading's Lemma stays. A Unit Shadow can't name a sense, so a claim
+  on a deleted sense has nothing sound to fall back to.
+- The claims a removed Reading holds go with it.
+
+`reevaluateShadows` makes these moves and re-evaluates each new Shadow
+relation in one plan. So the plan that sends the claims on a host-removed
+die See to its Shadow also resolves them to der See when der See is the one
+match left, and a later die See makes them pending again, as for any `See`
+Shadow. `removeOccurrence` retracts every claim on what it removes, Shadow
+relations' claims too, and leaves each Lemma-mode one pending. Its slice
+holds the Readings that claim the removed Lemmas and their Readings, but not
+the Lemmas a Shadow may match, so the host's re-evaluation resolves them.
+Claims carry no provenance beyond their source Reading and relation, and a
+converted claim keeps both.
+
+**Stored data whose target is gone is reported, not thrown.** A slice whose
+relation inventory holds a claim on a Lemma or Reading the dictionary no
+longer has, as data written before claims moved with their targets can,
+still plans. The plan carries the claim as a `danglingRelationClaim` in its
+`issues`, and the host may retract it.
+
+**An exactly named relation never moves while its target stays.** A claim
+whose target was named exactly has no record, so nothing re-evaluates it.
+That covers an existing Lemma target in a draft, a generated Knowledge
+Change naming a Lemma, and any Reading target. When a Shadow and an exact
+naming meet on one claim (same source, relation and Lemma), the exact naming
+absorbs the Shadow: its record is deleted and the claim stays. That holds
+whichever came first: a Shadow resolving to a claim the source already
+holds, or a draft or Knowledge Change naming the Lemma a Shadow resolved to.
+Retracting a Shadow's claim retracts its relation: while its Lemma stays,
+the next re-evaluation deletes the record instead of restoring the claim,
+unless a proposal names the Shadow again. Two cases can't resolve:
 
 - the match is the source Reading's own Lemma, which no relation targets;
 - the source already claims the match under another relation.
@@ -116,7 +147,7 @@ such as one whose Lemma came through `ensureReadingEntry`, which did not
 resolve Shadows before. The sweep is deterministic, and running it again
 changes nothing. A relation resolved before the change was stored as a plain
 claim without its Shadow. No migration can recover that Shadow, so such a
-relation reads as exactly named and never moves.
+relation reads as exactly named and moves only when its Lemma is removed.
 
 ## Considered Options
 
@@ -131,3 +162,15 @@ relation reads as exactly named and never moves.
   plans is the cascade of an occurrence's removal (ADR 0043), which decides
   what happens to the Lemma's Readings and Surfaces. The re-evaluation is the
   same either way, so the host requests it.
+- **Retracting every claim on a removed target.** Rejected: a learner's or
+  generator's claim on a Lemma would be lost for good when the Lemma comes
+  back, as after a mis-click is undone and the word classified again. A
+  Shadow degrades the link to the Crossroad instead and restores it on
+  return.
+- **Downgrading a Reading-mode claim to its Lemma's Shadow.** Rejected: the
+  claim named one sense, and the Shadow would restore it to any sense of any
+  matching Lemma. A Reading-mode source holds no Lemma-mode claims either,
+  so that Shadow could never resolve.
+- **Leaving claims on removed targets for a later re-evaluation.** Rejected:
+  a claim whose target is gone can wedge every plan that loads its source,
+  and `removeOccurrence` removes Lemmas in plans Dumdict makes itself.

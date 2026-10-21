@@ -531,9 +531,10 @@ export const clearLemmaDataBatch = internalMutation({
 
 /**
  * Re-evaluates every stored Shadow a pruned Lemma matches, as if it were
- * already gone (system ADR 0011), and returns the changes written. A plan
- * that can't commit leaves the Shadows as they are, to be re-evaluated by
- * the next change to a Lemma they match.
+ * already gone, and turns the exact claims on it into its Shadow relations
+ * (system ADR 0011); returns the changes written. A plan that can't commit
+ * leaves the Shadows as they are, to be re-evaluated by the next change to a
+ * Lemma they match, and the Lemma's incoming-edge phase drops the claims.
  */
 async function reevaluateShadowsWithout(
 	ctx: MutationCtx,

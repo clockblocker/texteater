@@ -13,6 +13,7 @@ import type { SurfaceId } from "../../dumling-id";
 import type { AffectedDictionaryEntities } from "../../public";
 import type { OccurrenceSlice } from "../../storage";
 import { paradigmChange, prunedParadigm } from "../occurrence/paradigm";
+import { planRemovedTargetClaims } from "./removed-claim-changes";
 import type { PlanMutationResult } from "./result";
 
 /**
@@ -52,6 +53,8 @@ type Removal<L extends Dumling.Language> = {
  * - a Lemma left with no Reading is removed, with its Paradigm and its
  *   Surfaces, unless one of them holds user text, which keeps it;
  * - a Lemma that stays drops every variant no remaining Reading licenses.
+ *
+ * `planLinkRemoval` then moves the claims other Readings hold on what goes.
  */
 function planLemmaRemoval<L extends Dumling.Language>(
 	revision: StoreRevision,
@@ -203,6 +206,27 @@ export function planLinkRemoval<L extends Dumling.Language>(
 	);
 	for (const lemma of lemmas)
 		planLemmaRemoval(slice.revision, lemma, dropped, removal);
+	const claims = planRemovedTargetClaims(slice.revision, {
+		readings: [
+			...lemmas.flatMap(({ readingEntries }) => readingEntries),
+			...slice.claimingReadings,
+		],
+		records: [
+			...lemmas.flatMap(({ pendingRelations }) => pendingRelations),
+			...slice.pendingRelationsMatchingLemmas,
+		],
+		removedLemmas: removal.removedLemmas,
+		removedReadings: removal.removedReadings,
+	});
+	// The claims go before what they name.
+	removal.changes.unshift(...claims.changes);
+	removal.readings.push(
+		...claims.readings.filter(
+			(reading) =>
+				!removal.readings.some((other) => sameReading(other, reading)),
+		),
+	);
+	removal.pendingIds.push(...claims.pendingIds);
 	const removed: NonNullable<AffectedDictionaryEntities<L>["removed"]> = {
 		lemmas: present(removal.removedLemmas),
 		readings: present(removal.removedReadings),

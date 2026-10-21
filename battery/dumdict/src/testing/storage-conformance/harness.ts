@@ -55,7 +55,8 @@ export type ConformanceStorage = {
 	}): Effect.Effect<CleanupRelationsSlice<"de">, unknown>;
 	/**
 	 * The slice `reevaluateShadows` plans from: every stored record whose
-	 * Pending Entry ID is one of `reevaluatedPendingEntryIds(request)`, and
+	 * Pending Entry ID is one of `reevaluatedPendingEntryIds(request)`, every
+	 * stored Reading claiming a removed Lemma or one of its Readings, and
 	 * their relation inventory.
 	 */
 	loadReevaluateShadowsContext(
@@ -64,8 +65,10 @@ export type ConformanceStorage = {
 	/**
 	 * The slice `removeOccurrence` and `reconcileAttestationLinks` plan
 	 * from: each stored Lemma one of whose Readings holds a link with a
-	 * requested ref, whole. A store that keeps no Attestation Links
-	 * (`attestationLinks: false`) answers no Lemma.
+	 * requested ref, whole, every other Reading claiming one of them or their
+	 * Readings, and every stored Shadow relation one of them matches. A store
+	 * that keeps no Attestation Links (`attestationLinks: false`) answers no
+	 * Lemma.
 	 */
 	loadOccurrenceSlice(
 		request: OccurrenceSliceRequest,

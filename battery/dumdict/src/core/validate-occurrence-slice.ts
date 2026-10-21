@@ -5,9 +5,13 @@ import {
 	sameReading,
 } from "dumling";
 import type * as Dumling from "dumling/types";
-import { parseLemmaParadigm } from "dumrel";
+import { directSemanticRelationValues, parseLemmaParadigm } from "dumrel";
 
-import type { AttestationLink, LemmaRecord } from "../domain-types";
+import type {
+	AttestationLink,
+	LemmaRecord,
+	ReadingEntry,
+} from "../domain-types";
 import type { LemmaSlice } from "../dto";
 import {
 	parseAsReadingEntry,
@@ -19,6 +23,11 @@ import type {
 	RekeySurfacesSlice,
 	RekeySurfacesSliceRequest,
 } from "../storage";
+import {
+	derivePendingEntryId,
+	pendingSemanticRelationLocatorKey,
+	unitShadowOf,
+} from "./pending";
 import {
 	assertNoDuplicates,
 	validateLemmaRecord,
@@ -139,7 +148,78 @@ export function validateLemmaSlice<L extends Dumling.Language>(
 	}
 }
 
-/** Each Lemma once and whole, each holding a link with a requested ref. */
+/**
+ * Each Reading outside the slice's Lemmas once, each claiming one of them or
+ * one of their Readings, and each stored Shadow relation one of them matches
+ * once.
+ */
+function validateClaimsOnSlice<L extends Dumling.Language>(
+	expected: L,
+	slice: OccurrenceSlice<L>,
+) {
+	const lemmaKeys = new Set(
+		slice.lemmas.map(({ lemmaRecord }) =>
+			lemmaIdentityKey(lemmaRecord.lemma),
+		),
+	);
+	for (const entry of slice.claimingReadings) {
+		validateReadingEntry(expected, entry);
+		if (lemmaKeys.has(lemmaIdentityKey(entry.reading.lemma)))
+			throw new Error(
+				"claiming Reading belongs to an occurrence Lemma, which holds it.",
+			);
+		if (!claimsOneOf(entry, lemmaKeys))
+			throw new Error(
+				"claiming Reading claims no occurrence Lemma or Reading.",
+			);
+	}
+	assertNoDuplicates(
+		slice.claimingReadings.map(({ reading }) =>
+			readingIdentityKey(reading),
+		),
+		"claiming Readings",
+	);
+	const pendingIds = new Set<string>(
+		slice.lemmas.map(({ lemmaRecord }) =>
+			derivePendingEntryId<L>(unitShadowOf(lemmaRecord.lemma)),
+		),
+	);
+	for (const record of slice.pendingRelationsMatchingLemmas) {
+		validatePendingRecord(expected, record);
+		if (!pendingIds.has(record.locator.targetPendingId))
+			throw new Error(
+				"pending Semantic Relation matches no occurrence Lemma.",
+			);
+	}
+	assertNoDuplicates(
+		slice.pendingRelationsMatchingLemmas.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
+		"pending Semantic Relations matching occurrence Lemmas",
+	);
+}
+
+function claimsOneOf<L extends Dumling.Language>(
+	entry: ReadingEntry<L>,
+	lemmaKeys: ReadonlySet<string>,
+): boolean {
+	const relations = entry.knowledge?.semanticRelations;
+	if (!relations) return false;
+	if (relations.targetKind === "reading")
+		return (relations.synonym ?? []).some((target) =>
+			lemmaKeys.has(lemmaIdentityKey(target.lemma)),
+		);
+	return directSemanticRelationValues.some((relation) =>
+		(relations[relation] ?? []).some((target) =>
+			lemmaKeys.has(lemmaIdentityKey(target)),
+		),
+	);
+}
+
+/**
+ * Each Lemma once and whole, each holding a link with a requested ref, and
+ * the claims on them.
+ */
 export function validateOccurrenceSlice<L extends Dumling.Language>(
 	expected: L,
 	slice: OccurrenceSlice<L>,
@@ -165,6 +245,7 @@ export function validateOccurrenceSlice<L extends Dumling.Language>(
 				"occurrence Lemma was not requested by this workflow.",
 			);
 	}
+	validateClaimsOnSlice(expected, slice);
 }
 
 function validateStringList(value: unknown, context: string) {

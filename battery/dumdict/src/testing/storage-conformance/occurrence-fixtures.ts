@@ -118,3 +118,27 @@ export const moneyBankPending: PendingSemanticRelationRecord<"de"> =
 			kind: "NOUN",
 		},
 	});
+
+function claimingNoun(
+	canonicalForm: string,
+	gender: "Fem" | "Neut",
+	emojiDescription: string,
+): Dumling.Reading<"de", "Lexeme", "NOUN"> {
+	return {
+		unitKind: "Reading",
+		lemma: {
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm,
+			coreFeatures: { gender },
+		},
+		emojiDescription,
+	};
+}
+
+/** `Sparkasse` names `Bank` as its hypernym, a Lemma-mode claim. */
+export const sparkasse = claimingNoun("Sparkasse", "Fem", "🐷");
+/** `Kreditinstitut` names a sense of `Bank` as its synonym, a Reading-mode claim. */
+export const kreditinstitut = claimingNoun("Kreditinstitut", "Neut", "💳");

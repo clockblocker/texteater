@@ -37,6 +37,7 @@ import { describeOccurrenceConformance } from "./occurrence-cases";
 import { describeParadigmConformance } from "./paradigm-cases";
 import { describeRefusalConformance } from "./refusal-cases";
 import { describeRelationConformance } from "./relation-cases";
+import { describeRemovalClaimConformance } from "./removal-claim-cases";
 import { describeShadowConformance } from "./shadow-cases";
 
 export type { ConformanceStorage } from "./harness";
@@ -506,5 +507,6 @@ export function describeStorageConformance(
 		});
 		describeRelationConformance(createStorage, revisions);
 		describeShadowConformance(createStorage);
+		describeRemovalClaimConformance(createStorage, { attestationLinks });
 	});
 }

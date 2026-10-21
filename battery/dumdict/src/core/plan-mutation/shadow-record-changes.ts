@@ -20,6 +20,7 @@ import {
 } from "../plan-relation-maintenance";
 import { relationAdditionsToPatches } from "./relation-additions-to-patches";
 import { relationRemovalsToPatches } from "./relation-removals-to-patches";
+import { removedTargetClaims } from "./removed-target-claims";
 
 /** A Shadow relation request for a pending record. */
 export function shadowRequest<L extends Dumling.Language>(
@@ -119,12 +120,18 @@ function resolvesShadow<L extends Dumling.Language>(
  * now target (system ADR 0011): a Shadow that matches exactly one resolves
  * to it, and any other goes back to pending, so its source Reading's claims
  * move with it. Re-evaluating the result again plans nothing.
+ *
+ * Each claim `readings` hold on a `removedLemmas` Lemma becomes that Lemma's
+ * Shadow relation, re-evaluated as if it had resolved to the Lemma, and each
+ * Reading-mode claim on one of their Readings is retracted
+ * (`removedTargetClaims`).
  */
 export function planShadowReevaluation<L extends Dumling.Language>(input: {
 	revision: StoreRevision;
 	records: readonly PendingSemanticRelationRecord<L>[];
 	lemmas: readonly LemmaRecord<L>[];
 	readings: readonly ReadingEntry<L>[];
+	removedLemmas?: readonly Dumling.Lemma<L>[];
 }):
 	| {
 			status: "planned";
@@ -138,10 +145,41 @@ export function planShadowReevaluation<L extends Dumling.Language>(input: {
 	  }
 	| Extract<RelationMaintenancePlan<L>, { status: "rejected" }> {
 	const records = deduplicatePendingSemanticRelationRecords(input.records);
+	const { readingClaims, lemmaClaims } = removedTargetClaims({
+		readings: input.readings,
+		records,
+		removedLemmas: input.removedLemmas ?? [],
+	});
+	const converted = new Map(
+		lemmaClaims.map(({ record }) => [
+			pendingSemanticRelationLocatorKey(record.locator),
+			record,
+		]),
+	);
+	const storedKeys = new Set(
+		records.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
+	);
+	// A converted claim's record replaces the stored one under its locator.
+	const evaluated = [
+		...records.map(
+			(record) =>
+				converted.get(
+					pendingSemanticRelationLocatorKey(record.locator),
+				) ?? record,
+		),
+		...[...converted]
+			.filter(([key]) => !storedKeys.has(key))
+			.map(([, record]) => record),
+	];
 	const plan = planRelationMaintenance({
 		lemmas: input.lemmas,
 		readings: input.readings,
-		requests: records.map((record) => shadowRequest(record, "reevaluate")),
+		requests: evaluated.map((record) =>
+			shadowRequest(record, "reevaluate"),
+		),
+		retractions: readingClaims,
 	});
 	if (plan.status === "rejected") return plan;
 	const writes = shadowRecordChanges(

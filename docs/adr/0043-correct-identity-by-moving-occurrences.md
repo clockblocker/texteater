@@ -32,7 +32,10 @@ Variant that no remaining Reading licenses is removed
 ([ADR 0048](./0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md)).
 A Surface that loses its last Attestation Link is removed unless it holds
 user text (ADR 0049). User text is never dropped, so a Lemma left with no
-Readings stays, without a Paradigm, while one of its Surfaces holds some. A Reading that receives occurrences keeps its own Knowledge and
+Readings stays, without a Paradigm, while one of its Surfaces holds some.
+The claims other Readings hold on a removed Reading or Lemma move in the
+same plan ([ADR 0011](./0011-use-reading-owned-lemma-targeted-semantic-relations.md)).
+A Reading that receives occurrences keeps its own Knowledge and
 Licences: a move never changes a Licence, and an occurrence whose form its
 new Reading doesn't license is flagged as a Licence Conflict.
 

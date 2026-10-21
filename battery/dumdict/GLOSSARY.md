@@ -65,7 +65,8 @@ from them. See [ADR 0011] and [ADR 0012].
 A Semantic Relation whose target was named as a Unit Shadow. Its record keeps
 the Shadow for as long as the relation lives, beside the one Lemma it
 resolves to, or none while it is pending. Adding or removing a Lemma the
-Shadow matches re-evaluates it. See [ADR 0011].
+Shadow matches re-evaluates it, and removing a Lemma turns each exact claim
+on it into one. See [ADR 0011].
 _Avoid_: resolved pending relation, Shadow-derived claim
 
 **Link Target**:
