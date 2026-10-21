@@ -56,6 +56,6 @@ describe("the authored German ADP Readings (system ADR 0021)", () => {
 		const [an] = authoredFor(adp("an"));
 		expect(an?.knowledge.transcription).toBe("an");
 		const [ueber] = authoredFor(adp("über"));
-		expect(ueber?.knowledge.transcription).toBe("yːbɐ");
+		expect(ueber?.knowledge.transcription).toBe("ˈyːbɐ");
 	});
 });

@@ -63,7 +63,7 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["из этого"], what: ["из чего"] },
 		adposition: {
 			definition:
-				"Bezeichnet die Bewegung von innen nach außen, die Herkunft oder den Stoff, aus dem etwas ist: Er kommt aus dem Haus. Sie stammt aus Berlin. Der Tisch ist aus Holz.",
+				"Bezeichnet die Bewegung von innen nach außen, die Herkunft oder den Stoff, aus dem etwas ist: Er kommt aus dem Haus. Der Wein ist aus Italien. Der Tisch ist aus Holz.",
 			en: ["out of", "from"],
 			ru: ["из"],
 		},
@@ -108,7 +108,7 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["за это", "для этого"], what: ["за что", "для чего"] },
 		adposition: {
 			definition:
-				"Bezeichnet, wem etwas gilt oder nützt, wozu es bestimmt ist oder wofür man etwas gibt: Das Geschenk ist für dich. Sie arbeitet für eine Bank. Danke für die Hilfe.",
+				"Bezeichnet, wem etwas gilt oder nützt, wozu es bestimmt ist oder was man im Tausch gibt: Das Geschenk ist für dich. Sie arbeitet für eine Bank. Er kauft das Rad für 50 Euro.",
 			en: ["for"],
 			ru: ["для", "за"],
 		},
@@ -164,7 +164,7 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["с этим", "этим"], what: ["с чем", "чем"] },
 		adposition: {
 			definition:
-				"Bezeichnet, dass jemand oder etwas dabei ist oder zusammen mit etwas geschieht, auch das Mittel, mit dem man etwas tut: Er kommt mit seiner Schwester. Kaffee mit Milch. Sie fährt mit dem Bus.",
+				"Bezeichnet, dass jemand oder etwas dabei ist oder dazugehört, auch das Mittel, das man benutzt: Er kommt mit seiner Schwester. Ich trinke Kaffee mit Milch. Sie fährt mit dem Bus.",
 			en: ["with"],
 			ru: ["с"],
 		},
@@ -178,7 +178,7 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["после этого", "об этом"], what: ["после чего", "о чём"] },
 		adposition: {
 			definition:
-				"Bezeichnet, dass etwas zeitlich oder in einer Reihenfolge später kommt, auch das Ziel einer Fahrt zu einem Ort ohne Artikel: Nach dem Essen gehen wir spazieren. Du bist nach mir dran. Wir fahren nach Berlin.",
+				"Bezeichnet, dass etwas zeitlich oder in einer Reihenfolge später kommt, auch die Richtung oder das Ziel, besonders bei Orten ohne Artikel: Nach dem Essen gehen wir spazieren. Du bist nach mir dran. Wir fahren nach Berlin. Er geht nach Hause.",
 			en: ["after", "to"],
 			ru: ["после", "в"],
 		},
@@ -206,7 +206,7 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["об этом", "над этим"], what: ["о чём", "над чем"] },
 		adposition: {
 			definition:
-				"Bezeichnet eine Stelle oberhalb von etwas oder eine Bewegung darüber hinweg, auch das Thema, von dem die Rede ist: Die Lampe hängt über dem Tisch. Wir gehen über die Brücke. Sie spricht über ihre Arbeit.",
+				"Bezeichnet eine Stelle oberhalb von etwas oder eine Bewegung oben von einer Seite auf die andere, auch das Thema, um das es geht: Die Lampe hängt über dem Tisch. Wir gehen über die Brücke. Wir sehen einen Film über den Krieg.",
 			en: ["over", "above", "about"],
 			ru: ["над", "через", "о"],
 		},
@@ -220,7 +220,7 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["об этом", "вокруг этого"], what: ["о чём"] },
 		adposition: {
 			definition:
-				"Bezeichnet eine Bewegung oder Lage im Kreis um etwas herum, auch eine genaue Uhrzeit: Wir sitzen um den Tisch. Er geht um das Haus. Der Zug fährt um acht Uhr.",
+				"Bezeichnet eine Bewegung oder Lage im Kreis, in dessen Mitte etwas ist, auch eine genaue Uhrzeit: Wir sitzen um den Tisch. Er geht um das Haus. Der Zug fährt um acht Uhr.",
 			en: ["around", "at"],
 			ru: ["вокруг", "в"],
 		},
@@ -248,9 +248,9 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["об этом", "от этого"], what: ["о чём", "от чего"] },
 		adposition: {
 			definition:
-				"Bezeichnet den Ausgangspunkt, die Herkunft oder den Urheber von etwas, auch einen Teil oder eine Zugehörigkeit: Er kommt von der Arbeit. Ein Brief von meiner Mutter. Einer von uns.",
+				"Bezeichnet den Ausgangspunkt, die Herkunft oder den Urheber einer Sache, auch einen Teil oder eine Zugehörigkeit: Er kommt von der Arbeit. Ein Brief von meiner Mutter. Einer von uns.",
 			en: ["from", "of", "by"],
-			ru: ["от", "из"],
+			ru: ["от", "с", "из"],
 		},
 	},
 	{
@@ -277,7 +277,7 @@ export const prepositions: readonly Preposition[] = [
 		adposition: {
 			definition:
 				"Bezeichnet das Ziel einer Bewegung, besonders eine Person oder einen Ort, auch den Zweck oder Anlass: Sie geht zu ihrer Ärztin. Wir gehen zur Schule. Zum Geburtstag bekam er ein Buch.",
-			en: ["to"],
+			en: ["to", "for"],
 			ru: ["к", "в", "на"],
 		},
 	},
@@ -290,7 +290,7 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["между ними"], what: ["между чем"] },
 		adposition: {
 			definition:
-				"Bezeichnet eine Stelle in der Mitte zwischen zwei oder mehr Dingen (wo?, mit Dativ) oder die Richtung dorthin (wohin?, mit Akkusativ), auch einen Zeitraum: Das Haus steht zwischen zwei Bäumen. Komm zwischen zwei und drei Uhr.",
+				"Bezeichnet eine Stelle in der Mitte von zwei oder mehr Dingen oder Personen (wo?, mit Dativ) oder die Richtung dorthin (wohin?, mit Akkusativ), auch eine Zeit in der Mitte von zwei Zeitpunkten: Das Haus steht zwischen zwei Bäumen. Komm zwischen zwei und drei Uhr vorbei.",
 			en: ["between"],
 			ru: ["между"],
 		},

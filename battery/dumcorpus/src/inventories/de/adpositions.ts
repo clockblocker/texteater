@@ -113,5 +113,7 @@ export const adpositions: readonly AuthoredMember[] = [
 ].map((sense) => {
 	const preposition = prepositions.find(({ text }) => text === sense.text);
 	if (!preposition) throw Error(`No preposition ${sense.text}`);
-	return adpositionMember(sense, preposition.ipa.replace(/^ʁ/u, ""));
+	const ipa = preposition.ipa.replace(/^ʁ/u, "");
+	// A two-syllable preposition is stressed on its first syllable (über: ˈyːbɐ).
+	return adpositionMember(sense, /(ɐ|n̩)$/u.test(ipa) ? `ˈ${ipa}` : ipa);
 });
