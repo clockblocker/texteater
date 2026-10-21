@@ -88,9 +88,11 @@ explicit ReviewedEmpty decision for each applicable relation. `dumcorpus`'s
 tests reject an incomplete member and a coverage claim that disagrees with
 its content, so adding an advertised aspect or translation language means
 completing the affected members before release. Resolving an exact authored
-Reading publishes its stored Knowledge with no model call. This trades
-catalog maintenance for deterministic content, and it removes encounter-time
-generation as a way to hide an incomplete member.
+Reading publishes its stored Knowledge with no Knowledge Production call.
+This trades catalog maintenance for deterministic content, and it removes
+encounter-time generation as a way to hide an incomplete member. Its
+translations still grow in its note as clicks come in
+([ADR 0047](./0047-accumulate-a-readings-translations-click-by-click.md)).
 
 **`dumcorpus` states Route Closure, and Dumgen enforces it.** A production
 route starts Open and becomes Closed only once an operational implementation

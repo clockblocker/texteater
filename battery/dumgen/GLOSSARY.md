@@ -108,6 +108,12 @@ Authored Inventory member matched in a Fixed Population. See [ADR 0021].
 Proposed Knowledge changes and Pending Semantic Relations for a
 caller-supplied Reading in an Encounter. See [Dumgen ADR 0003].
 
+**`knowledge.accumulateTranslations`**:
+The step that adds to a Reading's stored translations the ones a later
+occurrence needs: jev judges whether a stored one covers the occurrence, and
+only after NoMatch does Luna write the occurrence's equivalents. See
+[ADR 0047].
+
 **`translate.sentence`**:
 The writer that translates one Sentence into a Dumrel translation language,
 reading the Sentences around it as context only. It translates the whole
@@ -123,6 +129,7 @@ settings, case outputs, failures and evaluation results.
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
+[ADR 0047]: ../../docs/adr/0047-accumulate-a-readings-translations-click-by-click.md
 [Dumgen ADR 0001]: ./docs/adr/0001-judge-each-sentence-before-conditional-stitching-and-local-segmentation.md
 [Dumgen ADR 0003]: ./docs/adr/0003-split-german-knowledge-generation-by-family.md
 [Dumgen ADR 0004]: ./docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md

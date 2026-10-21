@@ -52,7 +52,9 @@ sense, and code derives the patterns. The model never names a pattern,
 because code can check a form but not a label. A later occurrence never
 changes the stored plural; a wrong plural or marker is fixed through Correct.
 The user ruled this for every stored aspect in
-[#883](https://github.com/clockblocker/texteater/issues/883) (point 5).
+[#883](https://github.com/clockblocker/texteater/issues/883) (point 5), except
+translations, which later occurrences add to
+([ADR 0047](./0047-accumulate-a-readings-translations-click-by-click.md)).
 
 Routing ignores the aspect. The emoji judge alone picks the Reading. In `Zieh
 die Muttern fest` the judge rejects 👩, and the new 🔩 Reading of the same

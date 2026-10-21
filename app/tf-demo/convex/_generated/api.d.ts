@@ -66,6 +66,7 @@ import type * as model_tables_relationPublication from "../model/tables/relation
 import type * as model_tables_resolution from "../model/tables/resolution.js";
 import type * as model_tables_scrolls from "../model/tables/scrolls.js";
 import type * as model_tables_visitors from "../model/tables/visitors.js";
+import type * as model_translationAccumulation from "../model/translationAccumulation.js";
 import type * as model_validators from "../model/validators.js";
 import type * as model_visitorEncounters from "../model/visitorEncounters.js";
 import type * as modules_notes_featurePresentation from "../modules/notes/featurePresentation.js";
@@ -101,6 +102,8 @@ import type * as shadowResolution from "../shadowResolution.js";
 import type * as shadows from "../shadows.js";
 import type * as textFileIntake from "../textFileIntake.js";
 import type * as textFiles from "../textFiles.js";
+import type * as translationAccumulation from "../translationAccumulation.js";
+import type * as translationAccumulationActions from "../translationAccumulationActions.js";
 import type * as visitorEncounters from "../visitorEncounters.js";
 
 import type {
@@ -168,6 +171,7 @@ declare const fullApi: ApiFromModules<{
   "model/tables/resolution": typeof model_tables_resolution;
   "model/tables/scrolls": typeof model_tables_scrolls;
   "model/tables/visitors": typeof model_tables_visitors;
+  "model/translationAccumulation": typeof model_translationAccumulation;
   "model/validators": typeof model_validators;
   "model/visitorEncounters": typeof model_visitorEncounters;
   "modules/notes/featurePresentation": typeof modules_notes_featurePresentation;
@@ -203,6 +207,8 @@ declare const fullApi: ApiFromModules<{
   shadows: typeof shadows;
   textFileIntake: typeof textFileIntake;
   textFiles: typeof textFiles;
+  translationAccumulation: typeof translationAccumulation;
+  translationAccumulationActions: typeof translationAccumulationActions;
   visitorEncounters: typeof visitorEncounters;
 }>;
 

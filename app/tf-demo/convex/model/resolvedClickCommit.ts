@@ -22,6 +22,7 @@ import {
 	planAndCommitDictionary,
 	staleNewReading,
 } from "./resolvedClickDictionary";
+import { scheduleTranslationAccumulation } from "./translationAccumulation";
 import {
 	occurrenceAttestationInputValidator,
 	readingDecisionValidator,
@@ -320,9 +321,15 @@ export async function commitResolvedClick(
 		segmentIds: members.map(({ _id }) => _id),
 		attestationId,
 	});
-	return {
-		status: "Committed" as const,
-		...(await completeResolutionSession(ctx, session, attestationId)),
-		deduplicated: false,
-	};
+	const completed = await completeResolutionSession(
+		ctx,
+		session,
+		attestationId,
+	);
+	// The new occurrence may need a translation its Reading lacks (ADR 0047).
+	await scheduleTranslationAccumulation(ctx, {
+		visitorId: session.visitorId,
+		attestationId,
+	});
+	return { status: "Committed" as const, ...completed, deduplicated: false };
 }
