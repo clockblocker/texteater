@@ -109,10 +109,14 @@ const stageSizes: GrammarPrice["sizes"]["stages"] = {
 const maximumRepetitions = 3;
 
 /**
- * The operation a run measures. 1: the licence judge's first prompt, one
- * Noul per stored variant taken at 0.5, Luna after NoMatch (#1230).
+ * The operation a run measures. 1: one Noul per stored variant, taken at
+ * 0.5 (#1230 round 1). 2: the policy says the stored forms are another
+ * meaning's, and the Noul's yes and no name the meaning, not the form's
+ * correctness (round 2). 3: one Choice per dimension over every selection
+ * of its stored variants (round 3, dropped: it scored below round 2). 4:
+ * round 2's Nouls, taken at 0.6.
  */
-const operationVersion = `${route}@licence-1`;
+const operationVersion = `${route}@licence-4`;
 
 /** The evaluator. 1: the judge per dimension and variant, and the Licences runs end with (#1230). */
 const evaluatorVersion = "licence-1";

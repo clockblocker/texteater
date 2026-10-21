@@ -18,7 +18,11 @@
  * - The returned changes, pending relations and failures read in job order
  *   (the request's order, then the dimensions'), not the order the aspects
  *   finish in (#1122).
- * - Bad input is a Defect, raised before anything is asked.
+ * - The requested Variation Dimensions go to `paradigm.ts`: written as for
+ *   a Lemma's first Reading, or, for a created Reading of a Lemma with
+ *   stored variants, put to the licence judge first (ADR 0048, #1230).
+ * - Bad input is a Defect, raised before anything is asked: a stored
+ *   Paradigm Dumrel refuses for the Lemma and its Readings among it.
  */
 
 import { authoredReading, closedRoute } from "dumcorpus/inventories";
@@ -264,8 +268,7 @@ function badInput<E>(input: ProduceKnowledgeInput<E>): string | undefined {
 	for (const dimension of input.paradigm?.dimensions ?? [])
 		if (!(dimensionIdValues as readonly string[]).includes(dimension))
 			return `The paradigm request names no Variation Dimension ${dimension}`;
-	const stored = storedParadigmOf(input);
-	return typeof stored === "string" ? stored : undefined;
+	return undefined;
 }
 
 /**
@@ -304,6 +307,8 @@ export const produceGermanKnowledge = <E>(
 	Effect.gen(function* () {
 		const problem = badInput(input);
 		if (problem) return yield* Effect.die(Error(problem));
+		const stored = storedParadigmOf(input);
+		if (typeof stored === "string") return yield* Effect.die(Error(stored));
 		const { reading, attestation, request } = input;
 		const { family, kind } = reading.lemma;
 		const selected = selectKnowledge({ route: routeOf(reading.lemma) });
@@ -311,8 +316,6 @@ export const produceGermanKnowledge = <E>(
 			return yield* Effect.die(
 				Error(`No German Knowledge Policy for ${family} ${kind}`),
 			);
-		const stored = storedParadigmOf(input);
-		if (typeof stored === "string") return yield* Effect.die(Error(stored));
 		const context = aspectContext(
 			scope,
 			models,

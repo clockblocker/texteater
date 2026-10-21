@@ -36,19 +36,19 @@ const { paragraph } = registry;
 export const licencePolicy = {
 	task: paragraph(
 		"judge.task",
-		"`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, `kind` its word class, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. The Lemma has other meanings too, and its dictionary entry already holds forms of them. Each question names one stored form, the part of the paradigm it fills (`part`) and the form (`form`).",
+		"`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, `kind` its word class, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. The Lemma has other meanings, and its dictionary entry already holds the forms one of them takes. Each question names one of those stored forms (`form`) and the part of the paradigm it fills (`part`).",
 		rules.meaning,
 		rules.doublets,
 	),
 	takes: paragraph(
 		"judge.takes",
-		"Answer yes when standard German uses the form for this meaning, as Duden or DWDS give the form for it. When the dictionary gives two forms of one part for this meaning, both used, this meaning takes both: answer yes for each, also when one is rarer or older.",
+		"Answer yes only when a dictionary such as Duden or DWDS gives this very form for this meaning. When it gives two forms of one part for this meaning, both in use, this meaning takes both: answer yes for each, also when one is rarer or older.",
 		rules.doublets,
 		rules.principalParts,
 	),
 	conditioned: paragraph(
 		"judge.conditioned",
-		"Answer no when the dictionary keeps the form to another meaning of the Lemma: meanings of one word may inflect differently («Bau»: «Bauten» for buildings, «Baue» for an animal's burrow; «quellen»: «quoll» when water wells up, «quellte» when someone soaks peas). A form this meaning never takes stays no, however close the meanings are.",
+		"Answer no when the dictionary gives this meaning another form of the part and keeps the stored one to another meaning. Meanings of one German word often inflect differently, in a noun's plural («Bau»: «Bauten» for buildings, «Baue» for an animal's burrow) or in a verb's strong and weak forms («quellen»: «quoll» when water wells up, «quellte» when someone soaks peas). That the form is a correct form of the word is not enough: first recall the form this meaning takes, then answer yes only if it is the stored one.",
 		rules.doublets,
 		rules.meaning,
 	),
@@ -62,9 +62,23 @@ export const licencePolicy = {
 /** The question every stored form is asked; the form rides beside it. */
 export const licenceQuestion = paragraph(
 	"judge.question",
-	"Does the meaning in `reading` take this `form` as its `part`?",
+	"Does a dictionary give this `form` as the `part` of the meaning in `reading`?",
 	rules.doublets,
 );
+
+/** What a yes and a no say, so neither reads as whether the form is German. */
+export const licenceCriteria = {
+	true: paragraph(
+		"judge.question.true",
+		"This meaning takes this very form",
+		rules.doublets,
+	),
+	false: paragraph(
+		"judge.question.false",
+		"This meaning takes another form; this one is another meaning's",
+		rules.doublets,
+	),
+} as const;
 
 /** Each Variation Dimension as the judge's `part` names it. */
 export const dimensionParts: Readonly<Record<Dumrel.DimensionId, string>> = {

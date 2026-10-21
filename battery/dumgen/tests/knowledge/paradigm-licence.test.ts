@@ -160,10 +160,10 @@ test("a later Reading the judge finds no stored variant for gets Luna's forms, w
 	// One judge request, then Luna, which never sees the stored Bänke.
 	expect(jev.stages()).toEqual(["paradigmLicence", "plurality"]);
 	expect(jev.sent[0]?.questions).toEqual({
-		l0_0: {
+		l0_0: expect.objectContaining({
 			type: "noul",
 			instructions: expect.objectContaining({ form: "Bänke" }),
-		},
+		}),
 	});
 	expect(JSON.stringify(luna.sent)).not.toContain("Bänke");
 	const paradigm = applied(

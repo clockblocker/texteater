@@ -38,6 +38,7 @@ import {
 } from "./context.js";
 import {
 	dimensionParts,
+	licenceCriteria,
 	licencePolicy,
 	licenceQuestion,
 	markerForms,
@@ -64,8 +65,13 @@ export type ParadigmJob = {
 /** jev's request, as the trace and a cache key it. */
 const judgeStage = "paradigmLicence";
 
-/** The noul the judge takes a variant at or above. */
-const licenceFloor = 0.5;
+/**
+ * The Noul the judge takes a variant at or above. jev leans to yes on any
+ * correct form of the word, so 0.5 let other meanings' forms in; on the
+ * German Doublet Rule's gold 0.6 to 0.75 score alike, and 0.6 drops the
+ * fewest forms a Free dimension's Reading takes (#1230).
+ */
+const licenceFloor = 0.6;
 
 /** What the judge made of one dimension: the variants it takes, none being NoMatch. */
 type LicenceVerdict = {
@@ -103,13 +109,16 @@ const judgeLicences = (
 			questions: Object.fromEntries(
 				asked.map(({ dimension, variant, id }) => [
 					id,
-					noul({
-						question: licenceQuestion,
-						part: dimensionParts[dimension],
-						form: Object.hasOwn(markerForms, variant.value)
-							? (markerForms[variant.value] ?? variant.value)
-							: variant.value,
-					}),
+					noul(
+						{
+							question: licenceQuestion,
+							part: dimensionParts[dimension],
+							form: Object.hasOwn(markerForms, variant.value)
+								? (markerForms[variant.value] ?? variant.value)
+								: variant.value,
+						},
+						{ ...licenceCriteria },
+					),
 				]),
 			),
 		});
