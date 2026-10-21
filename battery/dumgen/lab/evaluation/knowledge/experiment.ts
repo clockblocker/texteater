@@ -154,8 +154,13 @@ const proxyStageSizes: GrammarPrice["sizes"]["stages"] = {
 /** Each case runs three times; each repetition is its own cached answer. */
 const knowledgeRepetitions = 3;
 
-/** The operation a run measures. 1: the first port (#887). 2: the text prompts after the first spot-check. */
-const knowledgeOperationVersion = `${knowledgeRoute}@production-7`;
+/**
+ * The operation a run measures. 1: the first port (#887). 2: the text
+ * prompts after the first spot-check. 8: a Lemma's later Reading's
+ * Paradigm goes to the licence judge (#1230); a first Reading's requests
+ * are unchanged.
+ */
+const knowledgeOperationVersion = `${knowledgeRoute}@production-8`;
 
 export type KnowledgeEvaluateArgs = {
 	readonly experimentId: string;
