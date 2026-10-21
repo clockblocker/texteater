@@ -45,11 +45,14 @@ test("built operational entrypoint has no schema or compiler dependency", async 
 	const module = await import(join(packageRoot, "dist/index.js"));
 	expect(Object.keys(module).sort()).toEqual([
 		"canonicalFormKey",
+		"cellBundleOf",
+		"cellKeyOf",
 		"foldCase",
 		"isSyncreticUnit",
 		"isSyncretism",
 		"lemmaIdentityKey",
 		"normalizeForm",
+		"parseTableSchemaFor",
 		"parseUnit",
 		"readingIdentityKey",
 		"routeOf",

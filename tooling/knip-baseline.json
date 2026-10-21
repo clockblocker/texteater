@@ -69,6 +69,19 @@
 		"battery/dumgen/src/index.ts: exports extractedTextFromMarkdown",
 		"battery/dumgen/src/index.ts: types TranslateSentenceInput"
 	],
+	"battery/dumling": [
+		"battery/dumling/src/index.ts: exports cellBundleOf",
+		"battery/dumling/src/index.ts: exports cellKeyOf",
+		"battery/dumling/src/index.ts: exports parseTableSchemaFor",
+		"battery/dumling/src/table-schema.ts: types FeatureValue",
+		"battery/dumling/src/types.ts: types AxisEntry",
+		"battery/dumling/src/types.ts: types CellKey",
+		"battery/dumling/src/types.ts: types FeatureBundle",
+		"battery/dumling/src/types.ts: types FeatureName",
+		"battery/dumling/src/types.ts: types FeatureValue",
+		"battery/dumling/src/types.ts: types TablePanel",
+		"battery/dumling/src/types.ts: types TableSchema"
+	],
 	"battery/dumrel": [
 		"battery/dumrel/src/select-knowledge.ts: types KnowledgePolicyUnavailable",
 		"battery/dumrel/src/types.ts: types KnowledgeParse",
