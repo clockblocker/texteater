@@ -12,7 +12,13 @@ import {
 	stateOf,
 } from "./cells";
 import type { InflectionPack, ParadigmSelection } from "./pack";
-import { compare, type Placement, schemaIndex, surfaceAxes } from "./placement";
+import {
+	compare,
+	type Placement,
+	type SurfaceAxes,
+	schemaIndex,
+	surfaceAxes,
+} from "./placement";
 import type {
 	LemmaTablesSlice,
 	LemmaTablesView,
@@ -28,6 +34,7 @@ type Met<L extends Dumling.Language, F> = {
 	readonly surface: Dumling.Surface<L>;
 	readonly form: F;
 	readonly key: string;
+	readonly axes: SurfaceAxes;
 	readonly placement: Placement;
 	readonly refs: readonly string[];
 };
@@ -125,7 +132,7 @@ export function projectLemmaTables<L extends Dumling.Language, F, P = string>(
 			surfaceId: surface.id,
 			form: surface.form,
 			key: surface.key,
-			axes: surfaceAxes(schema, surface.surface),
+			axes: surface.axes,
 			inCore:
 				placement.kind === "Covers" &&
 				groups.some((group) =>
@@ -250,12 +257,14 @@ function metSurfaces<L extends Dumling.Language, F, P>(
 	for (const entry of slice.ownedSurfaceEntries) {
 		if (entries.has(entry.id)) continue;
 		const form = pack.formOfSurface(entry.surface);
+		const axes = surfaceAxes(schema, entry.surface);
 		entries.set(entry.id, {
 			id: entry.id,
 			surface: entry.surface,
 			form,
 			key: pack.codec.key(form),
-			placement: surfaceAxes(schema, entry.surface).placement,
+			axes,
+			placement: axes.placement,
 			refs: [
 				...new Set(
 					links

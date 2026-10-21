@@ -72,10 +72,12 @@ export type PanelView<L extends Dumling.Language, F> = {
 };
 
 /**
- * One Table Cell. `Absent` means the language or the licensed selection
- * gives it no form; `Unknown` that neither derivation nor a met form fills
- * it. `undescribed` flags a met Surface placed here whose form no stored
- * variant derives; it is listed, not written here.
+ * One Table Cell. `Filled` means it holds a form, derived or met, perhaps
+ * only an uncertain one; `Absent` that the language or the licensed
+ * selection gives it no form; `Unknown` that neither derivation nor a met
+ * form fills it. `undescribed` flags a met Surface that Covers the cell
+ * with a form no stored variant derives here; it is listed, not written
+ * here.
  */
 export type CellView<L extends Dumling.Language, F> = {
 	readonly key: Dumling.CellKey;
