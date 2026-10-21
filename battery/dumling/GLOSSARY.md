@@ -103,8 +103,12 @@ route that only the referent tells apart. See [ADR 0046].
 _Avoid_: clash, clashed members, merged cell, gender-null cell
 
 **Spelling Crossroad**:
-A projection with no identity that gathers every Reading whose Lemma's
-Canonical Form has one spelling in one language.
+A projection with no identity that gathers every Lemma whose Canonical Form,
+and every met Surface whose form, has one `canonicalFormKey` in one language.
+That key folds letter case by the language's own rules (`foldCase`), so
+variant spellings such as Kuss and Kuß have different keys and stay apart. A
+Crossroad holds no data and has no stored record; hosts own whatever they show
+for it.
 _Avoid_: Headword, Vocable, Page, Homograph Set
 
 **Surface**:
