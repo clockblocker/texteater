@@ -164,7 +164,13 @@ export async function runRepresentativeOperation(
 				"createDumdictPlanner",
 			).createDumdictPlanner("de");
 			const planned = planner.ensureReadingEntry(
-				{ intent: "ensureReadingEntry", revision: "rss-0" },
+				{
+					intent: "ensureReadingEntry",
+					revision: "rss-0",
+					pendingRelationsMatchingProposedLemma: [],
+					relationLemmas: [],
+					relationReadings: [],
+				},
 				{
 					entry: {
 						reading,

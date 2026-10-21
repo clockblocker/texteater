@@ -34,6 +34,7 @@ import {
 	snapshot,
 } from "./harness";
 import { describeRelationConformance } from "./relation-cases";
+import { describeShadowConformance } from "./shadow-cases";
 
 export type { ConformanceStorage } from "./harness";
 
@@ -562,5 +563,6 @@ export function describeStorageConformance(
 		}
 
 		describeRelationConformance(createStorage, revisions);
+		describeShadowConformance(createStorage);
 	});
 }

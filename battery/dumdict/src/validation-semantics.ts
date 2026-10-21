@@ -4,6 +4,7 @@ import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
+import { shadowMatchesLemma } from "./core/identity.js";
 import type { DeepReadonly, PendingEntryId } from "./domain-types.js";
 import { makeSurfaceId } from "./dumling-id.js";
 
@@ -193,8 +194,9 @@ type PendingSemanticRelationRecordLike = {
 	};
 	readonly pending: {
 		readonly relation: string;
-		readonly target: { readonly language: Dumling.Language };
+		readonly target: Dumrel.UnitShadow;
 	};
+	readonly resolvedLemma?: Dumling.Lemma;
 	readonly sourceReading: Dumling.Reading;
 };
 
@@ -264,6 +266,21 @@ function pendingLocatorMatchesRelation(
 	return record.locator.relation === record.pending.relation;
 }
 
+/**
+ * A resolved record names a Lemma its Shadow matches, other than its source
+ * Reading's own Lemma, which no relation targets (system ADR 0011).
+ */
+function pendingResolutionMatches(
+	record: PendingSemanticRelationRecordLike,
+): boolean {
+	const resolved = record.resolvedLemma;
+	return (
+		resolved === undefined ||
+		(shadowMatchesLemma(record.pending.target, resolved) &&
+			!sameLemma(resolved, record.sourceReading.lemma))
+	);
+}
+
 function knowledgeChangeReadingMatchesPatched(
 	change: PlannedChangeLike,
 ): boolean {
@@ -303,6 +320,7 @@ export const dumdictNamedValidationNames = [
 	"dumdict.knowledge-change.reading-matches-patched",
 	"dumdict.pending.locator-matches-relation",
 	"dumdict.pending.locator-source",
+	"dumdict.pending.resolution-matches",
 	"dumdict.pending.target-language.de",
 	"dumdict.pending.target-language.en",
 	"dumdict.pending.target-language.he",
@@ -367,6 +385,8 @@ function constructNamedPredicate(name: PredicateName): NamedPredicate {
 			return namedPredicate(pendingLocatorMatchesRelation);
 		case "dumdict.pending.locator-source":
 			return namedPredicate(pendingLocatorIdentifiesSource);
+		case "dumdict.pending.resolution-matches":
+			return namedPredicate(pendingResolutionMatches);
 		case "dumdict.pending.target-language.de":
 			return forLanguage(
 				"de",
@@ -449,6 +469,10 @@ function constructNamedError(name: PredicateName): () => string {
 		case "dumdict.pending.locator-source":
 			return constantError(
 				"Pending Semantic Relation locator must identify its source Reading.",
+			);
+		case "dumdict.pending.resolution-matches":
+			return constantError(
+				"A resolved Pending Semantic Relation must name a Lemma its Shadow matches, other than its source Reading's.",
 			);
 		case "dumdict.pending.target-language.de":
 			return constantError(

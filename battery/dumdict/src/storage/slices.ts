@@ -70,6 +70,14 @@ export type EnsureReadingEntryContext<L extends Dumling.Language> = {
 	revision: StoreRevision;
 	existingLemma?: LemmaRecord<L>;
 	existingReading?: ReadingEntry<L>;
+	/**
+	 * Every stored Pending Semantic Relation whose Shadow matches the
+	 * Reading's Lemma, resolved or not. Creating the Lemma re-evaluates them.
+	 */
+	pendingRelationsMatchingProposedLemma: PendingSemanticRelationRecord<L>[];
+	/** The relation inventory those records' re-evaluation reads. */
+	relationLemmas: LemmaRecord<L>[];
+	relationReadings: ReadingEntry<L>[];
 };
 
 export type ReadingEntryContext<L extends Dumling.Language> =
@@ -79,6 +87,20 @@ export type ReadingEntryContext<L extends Dumling.Language> =
 	| EnsureReadingEntryContext<L>;
 
 export type CleanupRelationsSlice<L extends Dumling.Language> = {
+	revision: StoreRevision;
+	pendingRelations: PendingSemanticRelationRecord<L>[];
+	relationLemmas: LemmaRecord<L>[];
+	relationReadings: ReadingEntry<L>[];
+};
+
+/**
+ * The slice `reevaluateShadows` plans from: every stored Pending Semantic
+ * Relation, resolved or not, whose Pending Entry ID is one the request
+ * names (`reevaluatedPendingEntryIds`), and the relation inventory their
+ * re-evaluation reads: their source Readings, the Lemmas their Shadows match,
+ * and what those Readings claim.
+ */
+export type ReevaluateShadowsSlice<L extends Dumling.Language> = {
 	revision: StoreRevision;
 	pendingRelations: PendingSemanticRelationRecord<L>[];
 	relationLemmas: LemmaRecord<L>[];

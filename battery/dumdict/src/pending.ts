@@ -3,6 +3,8 @@ export {
 	createPendingSemanticRelationRecord,
 	derivePendingEntryId,
 	derivePendingSemanticRelationLocator,
+	reevaluatedPendingEntryIds,
+	unitShadowOf,
 } from "./core/pending";
 export type {
 	PendingSemanticRelationLocator,

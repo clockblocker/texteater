@@ -8,6 +8,7 @@ import {
 	DICTIONARY_REVISION,
 } from "./model/dumdictTransaction";
 import {
+	isResolvedPendingRecord,
 	parsePendingShadowDescriptor,
 	parseStoredShadowDescriptor,
 	shadowIsCompatible,
@@ -77,6 +78,8 @@ async function loadPendingSelection(
 	if (
 		shadow === null ||
 		pending === null ||
+		// A resolved record is no pending reference (system ADR 0011).
+		isResolvedPendingRecord(pending.record) ||
 		pending.shadowId !== args.shadowId ||
 		locator === null ||
 		locatorKey(locator) !== args.locatorKey

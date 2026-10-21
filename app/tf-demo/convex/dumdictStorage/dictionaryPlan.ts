@@ -42,6 +42,13 @@ function mutablePendingRecord(
 			target: { ...input.pending.target },
 		},
 		locator: { ...input.locator },
+		...(input.resolvedLemma === undefined
+			? {}
+			: {
+					resolvedLemma: mutableReading({
+						lemma: input.resolvedLemma,
+					}).lemma,
+				}),
 	};
 }
 

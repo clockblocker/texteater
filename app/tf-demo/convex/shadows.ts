@@ -1,8 +1,14 @@
 import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
+import { derivePendingEntryId } from "dumdict/pending";
+import type * as Dumrel from "dumrel/types";
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 
 import { internalMutation, internalQuery } from "./_generated/server";
+import {
+	createDumdictTransaction,
+	DICTIONARY_REVISION,
+} from "./model/dumdictTransaction";
 import {
 	attachPendingShadowReference,
 	parsePendingShadowDescriptor,
@@ -159,6 +165,72 @@ export const backfillStructuralShadowReferencesPage = internalMutation({
 			isDone: result.isDone,
 			visited: result.page.length,
 			changed,
+			malformed,
+		};
+	},
+});
+
+const reevaluationPageValidator = v.object({
+	continueCursor: v.string(),
+	isDone: v.boolean(),
+	visited: v.number(),
+	/** Shadows whose re-evaluation moved at least one relation. */
+	changed: v.number(),
+	/** Shadows whose re-evaluation is larger than one commit. */
+	overBudget: v.number(),
+	malformed: v.number(),
+});
+
+/**
+ * Re-evaluates the Shadow of every stored Pending Semantic Relation on one
+ * page (system ADR 0011). Records written before relations kept their
+ * Shadow carry no resolution and read as pending; a store needs this sweep
+ * once so each one that now matches exactly one Lemma resolves to it. It is
+ * idempotent, so a page may run again.
+ */
+export const reevaluatePendingShadowsPage = internalMutation({
+	args: { paginationOpts: paginationOptsValidator },
+	returns: reevaluationPageValidator,
+	handler: async (ctx, { paginationOpts }) => {
+		assertBoundedPageSize(paginationOpts.numItems);
+		const result = await ctx.db
+			.query("pendingSemanticRelations")
+			.paginate(paginationOpts);
+		const shadows = new Map<
+			string,
+			Dumrel.UnitShadow & { language: "de" }
+		>();
+		let malformed = 0;
+		for (const pending of result.page) {
+			const parsed = parsePendingShadowDescriptor(pending.record);
+			if (!parsed.ok || parsed.value.language !== "de") {
+				malformed += 1;
+				continue;
+			}
+			// The planner parses each Shadow before it plans.
+			const shadow = parsed.value as Dumrel.UnitShadow & {
+				language: "de";
+			};
+			shadows.set(derivePendingEntryId(shadow), shadow);
+		}
+		let changed = 0;
+		let overBudget = 0;
+		const dictionary = createDumdictTransaction(ctx);
+		for (const shadow of shadows.values()) {
+			const outcome = await dictionary.reevaluateShadows({
+				baseRevision: DICTIONARY_REVISION,
+				shadows: [shadow],
+			});
+			if (outcome.status === "overBudget") overBudget += 1;
+			else if (outcome.status !== "committed") malformed += 1;
+			else if (outcome.plan.changes.length > 0) changed += 1;
+		}
+		return {
+			continueCursor: result.continueCursor,
+			isDone: result.isDone,
+			visited: result.page.length,
+			changed,
+			overBudget,
 			malformed,
 		};
 	},

@@ -55,8 +55,10 @@ describe("pending lifecycle", () => {
 		);
 		const notes = storage.loadAll();
 		expect(
-			notes.flatMap(({ pendingRelations }) => pendingRelations),
-		).toHaveLength(0);
+			notes
+				.flatMap(({ pendingRelations }) => pendingRelations)
+				.map(({ resolvedLemma }) => resolvedLemma),
+		).toEqual([englishSwimLemma]);
 		expect(
 			lemmaRelations(
 				notes

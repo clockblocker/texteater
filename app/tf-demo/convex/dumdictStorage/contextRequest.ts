@@ -47,6 +47,7 @@ export type ReadingEntryContextArgs =
 	| {
 			readonly intent: "ensureReadingEntry";
 			readonly lemmaKey: string;
+			readonly proposedLemma: Infer<typeof lemmaValueValidator>;
 			readonly readingKey: string;
 	  };
 
@@ -122,6 +123,7 @@ export function readingEntryContextArgs(
 			return {
 				intent: request.intent,
 				lemmaKey: lemmaIdentityKey(request.reading.lemma),
+				proposedLemma: request.reading.lemma,
 				readingKey,
 			};
 	}

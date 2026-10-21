@@ -2,19 +2,24 @@ import { afterEach, beforeEach, jest } from "bun:test";
 import type {
 	CleanupRelationsSlice,
 	ReadingEntryContext,
+	ReevaluateShadowsSlice,
 } from "dumdict/planning";
 import {
 	type ConformanceStorage,
 	describeStorageConformance,
 } from "dumdict/testing";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
+import type { MutationCtx } from "../convex/_generated/server";
 import { pendingLocatorIndexKey } from "../convex/model/dumdictPendingIndexes";
 import {
 	applyDumdictPlanInTransaction,
 	loadCleanupRelationsSlice,
 	loadReadingEntryContextSlice,
+	loadReevaluateShadowsSlice,
 	readingEntryContextArgs,
 } from "../convex/model/dumdictTransaction";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import { createTestConvex } from "./support/convex";
 
 beforeEach(() => {
@@ -60,7 +65,84 @@ function convexStorage(): ConformanceStorage {
 						),
 					) as Promise<CleanupRelationsSlice<"de">>,
 			),
+		loadReevaluateShadowsContext: (request) =>
+			Effect.promise(
+				() =>
+					t.run((ctx) =>
+						loadReevaluateShadowsSlice(ctx, request),
+					) as Promise<ReevaluateShadowsSlice<"de">>,
+			),
+		removeLemma: (lemma) =>
+			Effect.promise(() =>
+				t.run((ctx) => removeDictionaryLemma(ctx, lemma)),
+			),
 	};
+}
+
+/**
+ * Takes a Lemma out of the Shared Demo Dictionary as a host removal does:
+ * its dictionary entry, its Readings with their entries, outgoing edges and
+ * pending records, and its owned Surfaces. Its canonical row and the edges
+ * other Readings hold on it stay, as stored claims outlive the removal until
+ * a re-evaluation moves them.
+ */
+async function removeDictionaryLemma(
+	ctx: MutationCtx,
+	lemma: Dumling.Lemma<"de">,
+): Promise<void> {
+	const canonical = await ctx.db
+		.query("lemmas")
+		.withIndex("by_lemma_key", (q) =>
+			q.eq("lemmaKey", lemmaIdentityKey(lemma)),
+		)
+		.unique();
+	if (!canonical) return;
+	const membership = await ctx.db
+		.query("dictionaryLemmas")
+		.withIndex("by_lemma_id", (q) => q.eq("lemmaId", canonical._id))
+		.unique();
+	if (membership) await ctx.db.delete(membership._id);
+	const readings = await ctx.db
+		.query("readings")
+		.withIndex("by_lemma_id", (q) => q.eq("lemmaId", canonical._id))
+		.collect();
+	for (const reading of readings) {
+		const [entries, edges, pending] = await Promise.all([
+			ctx.db
+				.query("readingEntries")
+				.withIndex("by_reading_id", (q) =>
+					q.eq("readingId", reading._id),
+				)
+				.collect(),
+			ctx.db
+				.query("semanticRelationEdges")
+				.withIndex(
+					"by_source_reading_id_and_relation_and_target_lemma_id",
+					(q) => q.eq("sourceReadingId", reading._id),
+				)
+				.collect(),
+			ctx.db
+				.query("pendingSemanticRelations")
+				.withIndex("by_source_reading_key", (q) =>
+					q.eq("sourceReadingKey", reading.readingKey),
+				)
+				.collect(),
+		]);
+		for (const row of [...entries, ...edges, ...pending])
+			await ctx.db.delete(row._id);
+		await ctx.db.delete(reading._id);
+	}
+	const surfaces = await ctx.db
+		.query("surfaces")
+		.withIndex("by_lemma_id", (q) => q.eq("lemmaId", canonical._id))
+		.collect();
+	for (const surface of surfaces) {
+		const owned = await ctx.db
+			.query("ownedSurfaces")
+			.withIndex("by_surface_id", (q) => q.eq("surfaceId", surface._id))
+			.unique();
+		if (owned) await ctx.db.delete(owned._id);
+	}
 }
 
 // tf-demo keeps occurrence Attestations in its host graph (tf-demo ADR 0001).

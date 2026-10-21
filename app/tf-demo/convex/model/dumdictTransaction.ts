@@ -12,6 +12,8 @@ import {
 	type MutationRejectedCode,
 	type ReadingEntryContext,
 	type ReadingEntryContextLoad,
+	type ReevaluateShadowsRequest,
+	type ReevaluateShadowsSlice,
 } from "dumdict/planning";
 import type { MutationCtx } from "../_generated/server";
 import {
@@ -23,6 +25,7 @@ import {
 	generatedKnowledgeContextChanges,
 	loadCleanupRelationsSlice,
 	loadReadingEntryContextSlice,
+	loadReevaluateShadowsSlice,
 } from "../dumdictStorage/queries";
 import { MAX_PLANNED_CHANGES } from "../dumdictStorage/storage";
 import { applyDumdictPlanInTransaction } from "../dumdictStorage/transaction";
@@ -33,7 +36,7 @@ import type { dictionaryPlanValidator } from "./validators";
  * The transaction-local pieces a host write uses beside the workflow methods:
  * the commit budget and the revision a request carries, the Dictionary
  * lookups it branches on, the reviewed-component writes outside a planned
- * commit, and the applier for a plan built elsewhere. The two slice loaders
+ * commit, and the applier for a plan built elsewhere. The slice loaders
  * are the reads the workflow methods plan from, exported so tests can check
  * a slice and its commit budget directly, and the key builder turns a
  * Dumdict storage request into the args those loaders take.
@@ -46,6 +49,7 @@ export { dictionaryPlanResult } from "../dumdictStorage/dictionaryPlan";
 export {
 	loadCleanupRelationsSlice,
 	loadReadingEntryContextSlice,
+	loadReevaluateShadowsSlice,
 	storedReadingsOf,
 } from "../dumdictStorage/queries";
 export {
@@ -105,6 +109,13 @@ export type DumdictTransaction = {
 	readonly cleanupRelations: (
 		request: CleanupRelationsRequest<"de">,
 	) => Promise<DumdictTransactionOutcome>;
+	/**
+	 * Re-evaluates the stored Shadows a Lemma change or a migration names. A
+	 * plan larger than one commit writes nothing and reports its size.
+	 */
+	readonly reevaluateShadows: (
+		request: ReevaluateShadowsRequest<"de">,
+	) => Promise<DumdictTransactionOutcome | DumdictOverBudget>;
 };
 
 /**
@@ -210,5 +221,23 @@ export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
 					request,
 				),
 			),
+		reevaluateShadows: async (request) => {
+			const outcome = planner.reevaluateShadows(
+				(await loadReevaluateShadowsSlice(
+					ctx,
+					request,
+				)) as unknown as ReevaluateShadowsSlice<"de">,
+				request,
+			);
+			if (
+				outcome.status === "planned" &&
+				outcome.plan.changes.length > MAX_PLANNED_CHANGES
+			)
+				return {
+					status: "overBudget",
+					plannedChanges: outcome.plan.changes.length,
+				};
+			return apply(outcome);
+		},
 	};
 }

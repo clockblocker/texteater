@@ -90,9 +90,12 @@ test("a Reading's Surface and generated Knowledge reach dictionary storage and p
 		entries.find((entry) => emojiOf(entry.reading) === "💰")?.knowledge
 			?.semanticRelations,
 	).toEqual({ synonym: [institution.lemma] });
+	// The resolved Geldinstitut relation keeps its Shadow; Sparkasse stays
+	// pending.
 	expect(
 		stored
 			.flatMap((value) => value.pendingRelations)
+			.filter((value) => value.resolvedLemma === undefined)
 			.map((value) => value.pending.target),
 	).toEqual([
 		{
