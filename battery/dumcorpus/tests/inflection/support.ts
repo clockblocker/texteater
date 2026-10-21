@@ -3,9 +3,9 @@ import type * as Dumling from "dumling/types";
 import { variantIdOf } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
-import { type GermanForm, germanInflectionPack } from "../../src/inflection.js";
+import { type GermanForm, inflectionPacks } from "../../src/inflection.js";
 
-export const pack = germanInflectionPack;
+export const pack = inflectionPacks.de;
 
 type De = "de";
 
@@ -83,7 +83,7 @@ export function selectionOf(
 }
 
 /** A form as plain text: its runs joined, a Gap read as a space. */
-export function text(form: GermanForm): string {
+function text(form: GermanForm): string {
 	return pack
 		.display(form)
 		.map((run) => (run.role === "Gap" ? " " : run.text))

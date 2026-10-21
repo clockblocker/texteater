@@ -26,7 +26,7 @@ const lemmas: readonly Dumling.Lemma<"de">[] = [
 
 describe("the German Inflection Pack", () => {
 	it("is the registry's de pack, versioned", () => {
-		expect(inflectionPacks.de).toBe(pack);
+		expect(Object.keys(inflectionPacks)).toEqual(["de"]);
 		expect(pack.language).toBe("de");
 		expect(pack.version).toBe("1");
 	});

@@ -1,4 +1,10 @@
 {
+	"battery/dumcorpus": [
+		"battery/dumcorpus/src/inflection.ts: exports germanAuthoredParadigm",
+		"battery/dumcorpus/src/inflection.ts: exports germanSelectionIssues",
+		"battery/dumcorpus/src/inflection.ts: types GermanVerbForm",
+		"battery/dumcorpus/src/inflection.ts: types GermanWordForm"
+	],
 	"battery/dumdict": [
 		"battery/dumdict/src/dto/serialized-note.ts: types SerializedDictionaryNoteV1",
 		"battery/dumdict/src/index.ts: exports ParsingError",
@@ -121,7 +127,6 @@
 	],
 	"battery/dumling": [
 		"battery/dumling/src/table-schema.ts: types FeatureValue",
-		"battery/dumling/src/types.ts: types AxisEntry",
 		"battery/dumling/src/types.ts: types FeatureName",
 		"battery/dumling/src/types.ts: types FeatureValue"
 	],
@@ -129,7 +134,6 @@
 		"battery/dumrel/src/index.ts: exports germanPluralPattern",
 		"battery/dumrel/src/index.ts: exports licensed",
 		"battery/dumrel/src/select-knowledge.ts: types KnowledgePolicyUnavailable",
-		"battery/dumrel/src/types.ts: types ConjugationClass",
 		"battery/dumrel/src/types.ts: types KnowledgeParse",
 		"battery/dumrel/src/types.ts: types KnowledgePolicyUnavailable",
 		"battery/dumrel/src/types.ts: types KnowledgeSelection",

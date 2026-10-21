@@ -8,7 +8,7 @@ import type * as Dumrel from "dumrel/types";
  */
 
 /** Where a derived form comes from: an Authored Inventory, a Paradigm Variant or a rule. */
-export type Provenance = "Authored" | "Variant" | "Rule";
+type Provenance = "Authored" | "Variant" | "Rule";
 
 /** One form derived for a Table Cell, with the Paradigm Variant it comes from. */
 export type PackDerivedForm<F> = {

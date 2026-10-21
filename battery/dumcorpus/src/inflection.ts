@@ -11,14 +11,11 @@ import { germanInflectionPack } from "./inflection/de/pack.js";
 
 export { germanAuthoredParadigm } from "./inflection/de/authored-paradigm.js";
 export type {
-	GermanDisplayRun,
 	GermanForm,
 	GermanVerbForm,
 	GermanWordForm,
 } from "./inflection/de/forms.js";
-export type { GermanInflectionPack } from "./inflection/de/pack.js";
 export { germanSelectionIssues } from "./inflection/de/selection-checks.js";
-export { germanInflectionPack };
 
 /** The Inflection Packs by language. A language with no pack has no tables. */
 export const inflectionPacks = { de: germanInflectionPack } as const;
