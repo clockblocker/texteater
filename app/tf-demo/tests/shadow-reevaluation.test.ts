@@ -64,7 +64,7 @@ const created = (reading: Dumling.Reading<"de">): PlannedChangeOp<"de">[] => [
 		entry: {
 			reading,
 			attestedTranslations: [],
-			attestations: [],
+			attestationLinks: [],
 			notes: "",
 		},
 		preconditions: [],

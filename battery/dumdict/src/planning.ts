@@ -11,12 +11,14 @@
 export { applyDumdictKnowledgeChanges } from "./core/apply-reading-knowledge-change";
 export { impliedChangePreconditions } from "./core/implied-preconditions";
 export type {
+	AttestationLink,
 	ChangePrecondition,
 	DumdictPlan,
 	PlannedChangeOp,
 	ReadingEntry,
 	ReadingKnowledgeChange,
 } from "./domain-types";
+export type { LemmaSlice } from "./dto";
 export { makeSurfaceId } from "./dumling-id";
 export {
 	ParsingError,
@@ -33,16 +35,26 @@ export {
 } from "./planner/planner";
 export type {
 	AddNewNoteRequest,
+	AffectedDictionaryEntities,
 	ApplyGeneratedKnowledgeRequest,
 	CleanupRelationsRequest,
 	EnsureOwnedSurfaceRequest,
 	EnsureReadingEntryRequest,
 	MutationRejectedCode,
+	ReconcileAttestationLinksRequest,
+	RecordOccurrenceRequest,
 	ReevaluateShadowsRequest,
+	RekeySurfacesRequest,
+	RemoveOccurrenceRequest,
 } from "./public";
 export type {
 	CleanupRelationsSlice,
 	LoadReadingEntryContextRequest,
+	OccurrenceSlice,
+	OccurrenceSliceRequest,
 	ReadingEntryContext,
 	ReevaluateShadowsSlice,
+	RekeySurfacesSlice,
+	RekeySurfacesSliceRequest,
+	StoredSurfaceNote,
 } from "./storage/slices";

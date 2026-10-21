@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import type { AttestationLink } from "../domain-types";
 import type { SurfaceId } from "../dumling-id";
 
 export type AffectedDictionaryEntities<L extends Dumling.Language> = {
@@ -6,6 +7,17 @@ export type AffectedDictionaryEntities<L extends Dumling.Language> = {
 	readings?: Dumling.Reading<L>[];
 	surfaceIds?: SurfaceId<L>[];
 	pendingIds?: string[];
+	/**
+	 * What the plan deletes. A host plans `reevaluateShadows` with the
+	 * removed Lemmas, in the commit that applies the plan or right after
+	 * (system ADR 0011).
+	 */
+	removed?: {
+		lemmas?: Dumling.Lemma<L>[];
+		readings?: Dumling.Reading<L>[];
+		surfaceIds?: SurfaceId<L>[];
+		attestationLinks?: AttestationLink<L>[];
+	};
 };
 
 export type MutationSummary = {
@@ -16,6 +28,7 @@ export type MutationRejectedCode =
 	| "readingAlreadyExists"
 	| "readingEntryConflict"
 	| "ownedSurfaceAlreadyExists"
+	| "occurrenceAttestedElsewhere"
 	| "readingMissing"
 	| "invalidDraft"
 	| "invalidRequest"

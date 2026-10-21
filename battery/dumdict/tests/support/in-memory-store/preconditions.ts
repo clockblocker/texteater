@@ -1,6 +1,7 @@
 import { sameLemma, sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 
+import { sameAttestationLink } from "../../../src/core/occurrence/links";
 import { samePendingSemanticRelationLocator } from "../../../src/core/pending";
 import type {
 	ChangePrecondition,
@@ -40,6 +41,12 @@ function findDraftSurfaceById<L extends Dumling.Language>(
 		.find(({ id }) => id === surfaceId);
 }
 
+function draftLinks<L extends Dumling.Language>(draft: DraftStorageState<L>) {
+	return draft.draftNotes.flatMap(({ readingEntries }) =>
+		readingEntries.flatMap(({ attestationLinks }) => attestationLinks),
+	);
+}
+
 function hasDraftPendingRelation<L extends Dumling.Language>(
 	draft: DraftStorageState<L>,
 	record: PendingSemanticRelationRecord<L>,
@@ -76,18 +83,13 @@ export function draftPreconditionFails<L extends Dumling.Language>(
 			return !hasDraftPendingRelation(draft, precondition.record);
 		case "pendingRelationMissing":
 			return hasDraftPendingRelation(draft, precondition.record);
-		case "readingAttestationMissing": {
-			const bundle = findDraftBundleByReading(
-				draft,
-				precondition.reading,
+		case "attestationMissing":
+			return draftLinks(draft).some(
+				({ ref }) => ref === precondition.ref,
 			);
-			return Boolean(
-				bundle?.readingEntries
-					.find((entry) =>
-						sameReading(entry.reading, precondition.reading),
-					)
-					?.attestations.includes(precondition.value),
+		case "attestationLinkExists":
+			return !draftLinks(draft).some((link) =>
+				sameAttestationLink(link, precondition.link),
 			);
-		}
 	}
 }

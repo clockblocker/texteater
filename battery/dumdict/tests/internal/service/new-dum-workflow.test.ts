@@ -9,6 +9,7 @@ import {
 import { emojiOf } from "./helpers";
 
 const note = { attestedTranslations: [], attestations: [], notes: "" };
+const entryNote = { attestedTranslations: [], attestationLinks: [], notes: "" };
 const bank: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
 	unitKind: "Lemma",
 	language: "de",
@@ -37,7 +38,7 @@ test("a Reading's Surface and generated Knowledge reach dictionary storage and p
 	const { dict, storage } = getBootedUpDumdict("de");
 	expect(storage.loadAll()).toEqual([]);
 	const reading = bankReading;
-	dict.ensureReadingEntry({ entry: { reading, ...note } });
+	dict.ensureReadingEntry({ entry: { reading, ...entryNote } });
 	dict.ensureOwnedSurface({
 		reading,
 		ownedSurface: { surface: bankSurface, note },
@@ -55,7 +56,7 @@ test("a Reading's Surface and generated Knowledge reach dictionary storage and p
 		},
 		emojiDescription: "🏦",
 	};
-	dict.ensureReadingEntry({ entry: { reading: institution, ...note } });
+	dict.ensureReadingEntry({ entry: { reading: institution, ...entryNote } });
 	// Generated Knowledge names relation targets by Lemma identity only.
 	dict.applyGeneratedKnowledge({
 		reading,
@@ -126,7 +127,7 @@ test("a Reading's Surface and generated Knowledge reach dictionary storage and p
 
 test("conflicting Knowledge changes reject the whole batch and competing plans keep revision checks", async () => {
 	const { dict, storage } = getBootedUpDumdict("de");
-	dict.ensureReadingEntry({ entry: { reading: bankReading, ...note } });
+	dict.ensureReadingEntry({ entry: { reading: bankReading, ...entryNote } });
 	const before = storage.loadAll();
 	const failed = dict.applyGeneratedKnowledge({
 		reading: bankReading,
@@ -176,7 +177,7 @@ test("pending target planning observes the Knowledge mode selected in the same b
 		emojiDescription: "🏦",
 	};
 	for (const reading of [bankReading, target])
-		dict.ensureReadingEntry({ entry: { reading, ...note } });
+		dict.ensureReadingEntry({ entry: { reading, ...entryNote } });
 	const before = storage.loadAll();
 	const result = dict.plan.applyGeneratedKnowledge({
 		reading: bankReading,

@@ -83,7 +83,7 @@ async function addNote(
 	const request = {
 		draft: {
 			reading,
-			note: { attestedTranslations: [], attestations: [], notes: "" },
+			note: { attestedTranslations: [], attestationLinks: [], notes: "" },
 		},
 	};
 	const context = await run(

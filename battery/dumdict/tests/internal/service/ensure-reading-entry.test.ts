@@ -15,7 +15,7 @@ const fixedEntry = (): ReadingEntry<"en"> => ({
 		translations: { en: ["swim"] },
 	},
 	attestedTranslations: [],
-	attestations: [],
+	attestationLinks: [],
 	notes: "",
 });
 

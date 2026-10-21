@@ -15,6 +15,7 @@ import type { ApplyGeneratedKnowledgeRequest } from "../../public";
 import type { ApplyGeneratedKnowledgeContext } from "../../storage";
 import { applyDumdictKnowledgeChanges } from "../apply-reading-knowledge-change.js";
 import { lemmaLanguage, readingLemma } from "../identity";
+import { applyParadigm, paradigmChange } from "../occurrence/paradigm";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,
@@ -110,6 +111,25 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 			message:
 				"Direct Semantic Relation target is missing from the dictionary",
 		};
+	const lemma = readingLemma(request.reading);
+	const paradigm = applyParadigm({
+		lemma,
+		readings: slice.lemmaReadings,
+		paradigm: slice.existingLemma?.paradigm,
+		changes: request.paradigmChanges ?? [],
+	});
+	if (!paradigm.ok)
+		return {
+			status: "rejected",
+			code: "invalidRequest",
+			message: paradigm.message,
+		};
+	const paradigmChanges = paradigmChange(
+		slice.revision,
+		lemma,
+		slice.existingLemma?.paradigm,
+		paradigm.paradigm,
+	);
 
 	const proposed = pendingRecords(request);
 	const existingByKey = new Map(
@@ -223,6 +243,7 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 		),
 		...records.deletions,
 		...records.creations,
+		...paradigmChanges,
 	];
 
 	const affectedReadings = new Map<string, Dumling.Reading<L>>();
@@ -233,6 +254,7 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 		baseRevision: slice.revision,
 		changes,
 		affected: {
+			...(paradigmChanges.length > 0 ? { lemmas: [lemma] } : {}),
 			readings:
 				affectedReadings.size > 0
 					? [...affectedReadings.values()]

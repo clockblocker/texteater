@@ -1,6 +1,12 @@
 import { v } from "convex/values";
 import { reevaluatedPendingEntryIds, unitShadowOf } from "dumdict/pending";
-import type { ReevaluateShadowsRequest } from "dumdict/planning";
+import type {
+	OccurrenceSlice,
+	ReevaluateShadowsRequest,
+	RekeySurfacesSlice,
+	RekeySurfacesSliceRequest,
+	StoredSurfaceNote,
+} from "dumdict/planning";
 import type * as Dumling from "dumling/types";
 import { foldedCanonicalForm } from "../../server/linguisticIdentity";
 
@@ -235,20 +241,15 @@ export async function loadReadingEntryContextSlice(
 			return {
 				intent: args.intent,
 				revision: DICTIONARY_REVISION,
-				...(lemma
-					? {
-							existingLemma: {
-								lemma: lemmaValue(lemma.canonical),
-							},
-						}
-					: {}),
+				...existingLemmaOf(lemma),
 				...(reading ? { existingReading: reading.entry } : {}),
 				pendingRelationsMatchingProposedLemma,
 				relationLemmas: inventory.lemmas,
 				relationReadings: inventory.readings,
 			};
 		}
-		case "ensureOwnedSurface": {
+		case "ensureOwnedSurface":
+		case "recordOccurrence": {
 			const [lemma, reading, surface] = await Promise.all([
 				findLemmaByKey(ctx, args.lemmaKey),
 				findReadingByKey(ctx, args.readingKey),
@@ -257,15 +258,13 @@ export async function loadReadingEntryContextSlice(
 			return {
 				intent: args.intent,
 				revision: DICTIONARY_REVISION,
-				...(lemma
-					? {
-							existingLemma: {
-								lemma: lemmaValue(lemma.canonical),
-							},
-						}
-					: {}),
+				...existingLemmaOf(lemma),
 				...(reading ? { existingReading: reading.entry } : {}),
 				existingOwnedSurfaces: surface ? [surface.entry] : [],
+				// tf-demo keeps occurrences in its host graph (tf-demo ADR 0001).
+				...(args.intent === "recordOccurrence"
+					? { attestationLinksWithRefs: [] }
+					: {}),
 			};
 		}
 		case "applyGeneratedKnowledge": {
@@ -273,20 +272,25 @@ export async function loadReadingEntryContextSlice(
 				generatedKnowledgeContextChanges(args),
 				"Generated-Knowledge context",
 			);
-			const [reading, pending, inventory] = await Promise.all([
-				findReadingByKey(ctx, args.readingKey),
-				loadExactPendingRecords(ctx, args.pendingLocatorKeys),
-				loadRelationNeighbourhood(ctx, {
-					sourceReadingKeys: [args.readingKey],
-					targetReadingKeys: args.relationTargetReadingKeys,
-					targetLemmaKeys: args.relationTargetLemmaKeys,
-					targetCanonicalForms: args.pendingTargetCanonicalForms,
-				}),
-			]);
+			const [lemma, lemmaReadings, reading, pending, inventory] =
+				await Promise.all([
+					findLemmaByKey(ctx, args.lemmaKey),
+					storedReadingsOf(ctx, args.lemmaKey),
+					findReadingByKey(ctx, args.readingKey),
+					loadExactPendingRecords(ctx, args.pendingLocatorKeys),
+					loadRelationNeighbourhood(ctx, {
+						sourceReadingKeys: [args.readingKey],
+						targetReadingKeys: args.relationTargetReadingKeys,
+						targetLemmaKeys: args.relationTargetLemmaKeys,
+						targetCanonicalForms: args.pendingTargetCanonicalForms,
+					}),
+				]);
 			return {
 				intent: args.intent,
 				revision: DICTIONARY_REVISION,
+				...existingLemmaOf(lemma),
 				...(reading ? { existingReading: reading.entry } : {}),
+				lemmaReadings,
 				exactPendingRelations: pending,
 				relationLemmas: inventory.lemmas,
 				relationReadings: inventory.readings,
@@ -310,6 +314,7 @@ export async function loadReadingEntryContextSlice(
 			);
 			const [
 				lemma,
+				lemmaReadings,
 				reading,
 				surfaces,
 				explicitTargets,
@@ -317,6 +322,7 @@ export async function loadReadingEntryContextSlice(
 				pendingRelationsMatchingProposedLemma,
 			] = await Promise.all([
 				findLemmaByKey(ctx, args.lemmaKey),
+				storedReadingsOf(ctx, args.lemmaKey),
 				findReadingByKey(ctx, args.readingKey),
 				Promise.all(surfaceKeys.map((key) => findSurface(ctx, key))),
 				Promise.all(
@@ -344,13 +350,7 @@ export async function loadReadingEntryContextSlice(
 			return {
 				intent: args.intent,
 				revision: DICTIONARY_REVISION,
-				...(lemma
-					? {
-							existingLemma: {
-								lemma: lemmaValue(lemma.canonical),
-							},
-						}
-					: {}),
+				...existingLemmaOf(lemma),
 				...(reading ? { existingReading: reading.entry } : {}),
 				existingOwnedSurfaces: surfaces.flatMap((surface) =>
 					surface ? [surface.entry] : [],
@@ -363,9 +363,19 @@ export async function loadReadingEntryContextSlice(
 				pendingRelationsMatchingProposedLemma,
 				relationLemmas: inventory.lemmas,
 				relationReadings: inventory.readings,
+				lemmaReadings,
+				// tf-demo keeps occurrences in its host graph (tf-demo ADR 0001).
+				attestationLinksWithRefs: [],
 			};
 		}
 	}
+}
+
+/** A stored Lemma as its context's `existingLemma`; tf-demo stores no Paradigm. */
+function existingLemmaOf(lemma: Awaited<ReturnType<typeof findLemmaByKey>>) {
+	return lemma
+		? { existingLemma: { lemma: lemmaValue(lemma.canonical) } }
+		: {};
 }
 
 /** Loads the exact pending relations one cleanup resolves and their neighbourhood. */
@@ -440,5 +450,40 @@ export async function loadReevaluateShadowsSlice(
 		pendingRelations,
 		relationLemmas: inventory.lemmas,
 		relationReadings: inventory.readings,
+	};
+}
+
+/**
+ * The slice `removeOccurrence` and `reconcileAttestationLinks` plan from.
+ * tf-demo keeps occurrences in its host graph (tf-demo ADR 0001), so no
+ * stored Lemma holds an Attestation Link with any ref.
+ */
+export function loadOccurrenceSlice(): OccurrenceSlice<"de"> {
+	return { revision: DICTIONARY_REVISION, lemmas: [] };
+}
+
+/**
+ * The slice `rekeySurfaces` plans from: each stored owned Surface with a
+ * requested id, without its Surface. No Reading Entry holds a link.
+ */
+export async function loadRekeySurfacesSlice(
+	ctx: ServerCtx,
+	request: RekeySurfacesSliceRequest<"de">,
+): Promise<RekeySurfacesSlice<"de">> {
+	const surfaces = await Promise.all(
+		uniqueBoundedKeys(request.surfaceIds, "Re-keyed Surface loading").map(
+			(key) => findSurface(ctx, key),
+		),
+	);
+	return {
+		revision: DICTIONARY_REVISION,
+		surfaces: surfaces.flatMap((stored) => {
+			if (!stored) return [];
+			const { surface: _surface, ...note } = stored.entry;
+			// The row's record is untyped; the planner's slice validation
+			// checks it as a stored Surface note.
+			return [note as unknown as StoredSurfaceNote<"de">];
+		}),
+		readings: [],
 	};
 }

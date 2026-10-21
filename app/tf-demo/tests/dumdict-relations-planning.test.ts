@@ -27,6 +27,7 @@ import {
 	snapshot,
 	springenReading,
 	surface,
+	surfaceNote,
 } from "./support/dumdict-relations";
 
 beforeEach(() => {
@@ -172,6 +173,7 @@ describe("tf-demo Dumdict relation planning", () => {
 		await expect(
 			readingEntryContext(t, {
 				intent: "applyGeneratedKnowledge",
+				lemmaKey: lemmaIdentityKey(gehenReading.lemma),
 				readingKey: readingIdentityKey(gehenReading),
 				pendingLocatorKeys: [],
 				pendingTargetCanonicalForms: [],
@@ -194,6 +196,7 @@ describe("tf-demo Dumdict relation planning", () => {
 		await expect(
 			readingEntryContext(t, {
 				intent: "applyGeneratedKnowledge",
+				lemmaKey: lemmaIdentityKey(gehenReading.lemma),
 				readingKey: readingIdentityKey(gehenReading),
 				pendingLocatorKeys: [],
 				pendingTargetCanonicalForms: [],
@@ -322,7 +325,7 @@ describe("tf-demo Dumdict relation planning", () => {
 						id,
 						ownerLemma: gebenLemma,
 						surface: gibt,
-						...note,
+						...surfaceNote,
 					},
 					preconditions: [
 						{ kind: "revisionMatches", revision },

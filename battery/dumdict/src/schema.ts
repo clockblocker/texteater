@@ -6,6 +6,7 @@ const supportedLanguages = ["de", "en", "he"] as const;
 import {
 	directSemanticRelationSchema,
 	knowledgeChangeSchema,
+	lemmaParadigmSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
 } from "dumrel/schema";
@@ -168,17 +169,41 @@ function createSchemasFor<const L extends Dumling.Language>(
 		.min(1)
 		.transform(pendingEntryIdTransform(language));
 
-	const lemmaRecordSchema = z.strictObject({
-		lemma: lemmaSchema,
-	});
+	// As above: Dumrel's Paradigm schema, read as its readonly DTO.
+	const paradigmSchema = lemmaParadigmSchema as unknown as ZodType<
+		NonNullable<LemmaRecord<L>["paradigm"]>
+	>;
+	const lemmaRecordSchema = z
+		.strictObject({
+			lemma: lemmaSchema,
+			paradigm: paradigmSchema.optional(),
+		})
+		.refine(
+			namedValidationPredicate("dumdict.lemma-record.paradigm"),
+			namedValidationError("dumdict.lemma-record.paradigm"),
+		);
+	const attestationLinkSchema = z
+		.strictObject({
+			ref: z.string().min(1),
+			surfaceId: surfaceIdSchema.nullable(),
+			reading: languageReadingSchema,
+		})
+		.refine(
+			namedValidationPredicate("dumdict.attestation-link.surface-owner"),
+			namedValidationError("dumdict.attestation-link.surface-owner"),
+		);
 	const readingEntrySchema = z
 		.strictObject({
 			reading: languageReadingSchema,
 			knowledge: languageReadingKnowledgeSchema.optional(),
 			attestedTranslations: stringArraySchema,
-			attestations: stringArraySchema,
+			attestationLinks: z.array(attestationLinkSchema),
 			notes: z.string(),
 		})
+		.refine(
+			namedValidationPredicate("dumdict.reading-entry.attestation-links"),
+			namedValidationError("dumdict.reading-entry.attestation-links"),
+		)
 		.refine(
 			namedValidationPredicate("dumdict.reading-entry.no-same-lemma"),
 			namedValidationError("dumdict.reading-entry.no-same-lemma"),
@@ -263,9 +288,12 @@ function createSchemasFor<const L extends Dumling.Language>(
 			record: pendingSemanticRelationRecordSchema,
 		}),
 		z.strictObject({
-			kind: z.literal("readingAttestationMissing"),
-			reading: languageReadingSchema,
-			value: z.string(),
+			kind: z.literal("attestationMissing"),
+			ref: z.string().min(1),
+		}),
+		z.strictObject({
+			kind: z.literal("attestationLinkExists"),
+			link: attestationLinkSchema,
 		}),
 	]);
 
@@ -291,8 +319,12 @@ function createSchemasFor<const L extends Dumling.Language>(
 	});
 	const readingPatchOpSchema = z.union([
 		z.strictObject({
-			kind: z.literal("addAttestation"),
-			value: z.string(),
+			kind: z.literal("addAttestationLink"),
+			link: attestationLinkSchema,
+		}),
+		z.strictObject({
+			kind: z.literal("removeAttestationLink"),
+			link: attestationLinkSchema,
 		}),
 		z.strictObject({
 			kind: z.literal("applyKnowledgeChange"),
@@ -319,8 +351,35 @@ function createSchemasFor<const L extends Dumling.Language>(
 				preconditions: preconditionsSchema,
 			}),
 			z.strictObject({
+				type: z.literal("deleteReading"),
+				reading: languageReadingSchema,
+				preconditions: preconditionsSchema,
+			}),
+			z.strictObject({
 				type: z.literal("createOwnedSurface"),
 				entry: surfaceEntrySchema,
+				preconditions: preconditionsSchema,
+			}),
+			z.strictObject({
+				type: z.literal("deleteOwnedSurface"),
+				surfaceId: surfaceIdSchema,
+				ownerLemma: lemmaSchema,
+				preconditions: preconditionsSchema,
+			}),
+			z
+				.strictObject({
+					type: z.literal("setLemmaParadigm"),
+					lemma: lemmaSchema,
+					paradigm: paradigmSchema.optional(),
+					preconditions: preconditionsSchema,
+				})
+				.refine(
+					namedValidationPredicate("dumdict.lemma-record.paradigm"),
+					namedValidationError("dumdict.lemma-record.paradigm"),
+				),
+			z.strictObject({
+				type: z.literal("deleteLemma"),
+				lemma: lemmaSchema,
 				preconditions: preconditionsSchema,
 			}),
 			z.strictObject({

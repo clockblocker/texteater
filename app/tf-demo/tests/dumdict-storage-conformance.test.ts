@@ -15,8 +15,10 @@ import { pendingLocatorIndexKey } from "../convex/model/dumdictPendingIndexes";
 import {
 	applyDumdictPlanInTransaction,
 	loadCleanupRelationsSlice,
+	loadOccurrenceSlice,
 	loadReadingEntryContextSlice,
 	loadReevaluateShadowsSlice,
+	loadRekeySurfacesSlice,
 	readingEntryContextArgs,
 } from "../convex/model/dumdictTransaction";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
@@ -71,6 +73,11 @@ function convexStorage(): ConformanceStorage {
 					t.run((ctx) =>
 						loadReevaluateShadowsSlice(ctx, request),
 					) as Promise<ReevaluateShadowsSlice<"de">>,
+			),
+		loadOccurrenceSlice: () => Effect.sync(loadOccurrenceSlice),
+		loadRekeySurfacesSlice: (request) =>
+			Effect.promise(() =>
+				t.run((ctx) => loadRekeySurfacesSlice(ctx, request)),
 			),
 		removeLemma: (lemma) =>
 			Effect.promise(() =>
@@ -145,10 +152,12 @@ async function removeDictionaryLemma(
 	}
 }
 
-// tf-demo keeps occurrence Attestations in its host graph (tf-demo ADR 0001).
-// Its Convex transaction's own reads guard a commit, so its revision is one
-// constant (convex/dumdictStorage/storage.ts).
+// tf-demo keeps occurrences and their cleanup in its host graph (tf-demo ADR
+// 0001) and stores no Lemma Paradigms until texteater#1232. Its Convex
+// transaction's own reads guard a commit, so its revision is one constant
+// (convex/dumdictStorage/storage.ts).
 describeStorageConformance("The Convex dictionary store", convexStorage, {
-	readingAttestations: false,
+	attestationLinks: false,
+	paradigms: false,
 	revisions: false,
 });

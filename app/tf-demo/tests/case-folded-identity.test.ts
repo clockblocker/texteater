@@ -50,7 +50,7 @@ const morgenAdverb = {
 
 const reading = (lemma: Dumling.Lemma<"de">, emojiDescription: string) =>
 	({ unitKind: "Reading", lemma, emojiDescription }) as Dumling.Reading<"de">;
-const note = { attestedTranslations: [], attestations: [], notes: "" };
+const note = { attestedTranslations: [], attestationLinks: [], notes: "" };
 
 function inTransaction<Result>(
 	t: TestConvexDb,

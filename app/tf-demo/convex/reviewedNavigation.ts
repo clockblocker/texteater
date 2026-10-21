@@ -44,7 +44,7 @@ export const followGrammaticalAlternative = mutation({
 			entry: {
 				reading: selected.reading,
 				attestedTranslations: [],
-				attestations: [],
+				attestationLinks: [],
 				notes: "",
 			},
 		});

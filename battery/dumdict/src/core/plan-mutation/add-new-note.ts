@@ -21,6 +21,7 @@ import {
 import type { AddNewNoteRequest } from "../../public";
 import type { AddNewNoteContext } from "../../storage";
 import { lemmaLanguage, readingLemma } from "../identity";
+import { applyParadigm, paradigmChange } from "../occurrence/paradigm";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,
@@ -142,9 +143,33 @@ export function planAddNewNote<L extends Dumling.Language>(
 			code: "relationTargetMissing",
 			message: "An explicit relation target Lemma is missing.",
 		};
+	if (slice.attestationLinksWithRefs.length > 0)
+		return {
+			status: "rejected",
+			code: "occurrenceAttestedElsewhere",
+			message:
+				"An occurrence of the draft is already attested elsewhere.",
+		};
+	const paradigm = applyParadigm({
+		lemma,
+		readings: [...slice.lemmaReadings, reading],
+		paradigm: slice.existingLemma?.paradigm,
+		changes: request.draft.paradigmChanges ?? [],
+	});
+	if (!paradigm.ok)
+		return {
+			status: "rejected",
+			code: "invalidRequest",
+			message: paradigm.message,
+		};
 
 	const baseReading: ReadingEntry<L> = { reading, ...note };
-	const lemmaRecord: LemmaRecord<L> = { lemma };
+	const lemmaRecord: LemmaRecord<L> = {
+		lemma,
+		...(!slice.existingLemma && paradigm.paradigm
+			? { paradigm: paradigm.paradigm }
+			: {}),
+	};
 	const ownedSurfaceEntries: SurfaceEntry<L>[] = uniqueBy(
 		(request.draft.ownedSurfaces ?? []).map(
 			({ surface, note: surfaceNote }) => ({
@@ -247,6 +272,16 @@ export function planAddNewNote<L extends Dumling.Language>(
 				{ kind: "lemmaMissing", lemma },
 			],
 		});
+	// A link names a Surface the draft adds or one the Lemma already owns.
+	const draftSurfaceIds = new Set(ownedSurfaceEntries.map(({ id }) => id));
+	const linkedSurfaces = uniqueBy(
+		note.attestationLinks.flatMap(({ surfaceId }) =>
+			surfaceId !== null && !draftSurfaceIds.has(surfaceId)
+				? [surfaceId]
+				: [],
+		),
+		(id) => id,
+	);
 	changes.push(
 		{
 			type: "createReading",
@@ -255,8 +290,20 @@ export function planAddNewNote<L extends Dumling.Language>(
 				{ kind: "revisionMatches", revision: slice.revision },
 				{ kind: "lemmaExists", lemma },
 				{ kind: "readingMissing", reading },
+				...linkedSurfaces.map((surfaceId) => ({
+					kind: "surfaceExists" as const,
+					surfaceId,
+				})),
 			],
 		},
+		...(slice.existingLemma
+			? paradigmChange(
+					slice.revision,
+					lemma,
+					slice.existingLemma.paradigm,
+					paradigm.paradigm,
+				)
+			: []),
 		...patches,
 		...records.deletions,
 		...records.creations,

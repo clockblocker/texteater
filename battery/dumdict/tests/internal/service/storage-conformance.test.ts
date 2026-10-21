@@ -13,6 +13,10 @@ describeStorageConformance("The in-memory store", () => {
 			Effect.sync(() => storage.loadCleanupRelationsContext(request)),
 		loadReevaluateShadowsContext: (request) =>
 			Effect.sync(() => storage.loadReevaluateShadowsContext(request)),
+		loadOccurrenceSlice: (request) =>
+			Effect.sync(() => storage.loadOccurrenceSlice(request)),
+		loadRekeySurfacesSlice: (request) =>
+			Effect.sync(() => storage.loadRekeySurfacesSlice(request)),
 		removeLemma: (lemma) => Effect.sync(() => storage.removeLemma(lemma)),
 	};
 });

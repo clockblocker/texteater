@@ -6,6 +6,7 @@ import {
 	pendingSemanticRelationLocatorKey,
 	reevaluatedPendingEntryIds,
 } from "../../../src/core/pending";
+import type { SerializedDictionaryNote } from "../../../src/dto";
 import { makeSurfaceId } from "../../../src/dumling-id";
 import type {
 	CleanupRelationResolution,
@@ -14,8 +15,12 @@ import type {
 import type {
 	CleanupRelationsSlice,
 	LoadReadingEntryContextRequest,
+	OccurrenceSlice,
+	OccurrenceSliceRequest,
 	ReadingEntryContext,
 	ReevaluateShadowsSlice,
+	RekeySurfacesSlice,
+	RekeySurfacesSliceRequest,
 } from "../../../src/storage";
 import type { InMemoryStorageState } from "./state";
 
@@ -61,10 +66,13 @@ export function loadReadingEntryContext<L extends Dumling.Language>(
 		const relationReadings = state.storedNotes.flatMap(
 			({ readingEntries }) => readingEntries,
 		);
+		const bundle = state.findStoredBundleByLemma(readingLemma(reading));
 		return {
 			intent: request.intent,
 			revision: state.currentRevision(),
+			...(bundle ? { existingLemma: bundle.lemmaRecord } : {}),
 			...(existingReading ? { existingReading } : {}),
+			lemmaReadings: lemmaReadingsOf(bundle),
 			exactPendingRelations: exactPending,
 			relationLemmas,
 			relationReadings,
@@ -95,6 +103,23 @@ export function loadReadingEntryContext<L extends Dumling.Language>(
 			pendingRelationsMatchingProposedLemma: matchingPending(),
 			...relationInventory(state, recordRead),
 		};
+
+	if (request.intent === "recordOccurrence") {
+		recordRead("requestedOwnedSurfaces");
+		const existingSurface = state.findStoredSurfaceById(
+			makeSurfaceId(state.language, request.surface),
+		);
+		return {
+			intent: request.intent,
+			revision: state.currentRevision(),
+			...(existingBundle
+				? { existingLemma: existingBundle.lemmaRecord }
+				: {}),
+			...(existingReading ? { existingReading } : {}),
+			existingOwnedSurfaces: existingSurface ? [existingSurface] : [],
+			attestationLinksWithRefs: linksWithRefs(state, [request.ref]),
+		};
+	}
 
 	if (request.intent === "ensureOwnedSurface") {
 		recordRead("requestedOwnedSurfaces");
@@ -159,6 +184,67 @@ export function loadReadingEntryContext<L extends Dumling.Language>(
 		pendingRelationsMatchingProposedLemma,
 		relationLemmas,
 		relationReadings,
+		lemmaReadings: lemmaReadingsOf(existingBundle),
+		attestationLinksWithRefs: linksWithRefs(state, request.attestationRefs),
+	};
+}
+
+function lemmaReadingsOf<L extends Dumling.Language>(
+	bundle: SerializedDictionaryNote<L> | undefined,
+): Dumling.Reading<L>[] {
+	return bundle?.readingEntries.map(({ reading }) => reading) ?? [];
+}
+
+function linksWithRefs<L extends Dumling.Language>(
+	state: InMemoryStorageState<L>,
+	refs: readonly string[],
+) {
+	return state.storedNotes.flatMap(({ readingEntries }) =>
+		readingEntries.flatMap(({ attestationLinks }) =>
+			attestationLinks.filter(({ ref }) => refs.includes(ref)),
+		),
+	);
+}
+
+/** Each Lemma one of whose Readings holds a link with a requested ref, whole. */
+export function loadOccurrenceSlice<L extends Dumling.Language>(
+	state: InMemoryStorageState<L>,
+	request: OccurrenceSliceRequest,
+): OccurrenceSlice<L> {
+	return {
+		revision: state.currentRevision(),
+		lemmas: state.storedNotes
+			.filter(({ readingEntries }) =>
+				readingEntries.some(({ attestationLinks }) =>
+					attestationLinks.some(({ ref }) =>
+						request.refs.includes(ref),
+					),
+				),
+			)
+			.map(({ schemaVersion: _version, ...slice }) => slice),
+	};
+}
+
+/** Each stored Surface with a requested id, and the Readings linking one. */
+export function loadRekeySurfacesSlice<L extends Dumling.Language>(
+	state: InMemoryStorageState<L>,
+	request: RekeySurfacesSliceRequest<L>,
+): RekeySurfacesSlice<L> {
+	const ids = new Set<string>(request.surfaceIds);
+	return {
+		revision: state.currentRevision(),
+		surfaces: state.storedNotes.flatMap(({ ownedSurfaceEntries }) =>
+			ownedSurfaceEntries
+				.filter(({ id }) => ids.has(id))
+				.map(({ surface: _surface, ...note }) => note),
+		),
+		readings: state.storedNotes.flatMap(({ readingEntries }) =>
+			readingEntries.filter(({ attestationLinks }) =>
+				attestationLinks.some(
+					({ surfaceId }) => surfaceId !== null && ids.has(surfaceId),
+				),
+			),
+		),
 	};
 }
 

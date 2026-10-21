@@ -15,13 +15,7 @@ import type {
 } from "../domain-types";
 import { makeSurfaceId } from "../dumling-id";
 import {
-	parseAsLemmaRecord,
-	parseAsPendingSemanticRelationRecord,
-	parseAsReadingEntry,
-	parseAsSurfaceEntry,
 	parsePendingSemanticRelationForDumdictRuntime,
-	parseReadingForDumdictRuntime,
-	parseReadingKnowledgeForDumdictRuntime,
 	unwrapDumdictParse,
 } from "../parsing/lightweight-parsers";
 import type {
@@ -35,108 +29,23 @@ import type {
 } from "../storage";
 import { shadowMatchesLemma } from "./identity";
 import {
-	assertPendingSemanticRelationRecordIdentity,
 	derivePendingSemanticRelationLocator,
 	pendingSemanticRelationLocatorKey,
 	reevaluatedPendingEntryIds,
 } from "./pending";
-
-function assertNoDuplicates(values: string[], context: string) {
-	if (new Set(values).size !== values.length)
-		throw new Error(`${context} contains duplicates.`);
-}
-
-function validateLemmaRecord<L extends Dumling.Language>(
-	expected: L,
-	record: LemmaRecord<L>,
-) {
-	unwrapDumdictParse(parseAsLemmaRecord(record, expected));
-}
-
-/**
- * Throws unless parsing kept a Reading's Emoji Description: Dumdict takes it
- * already normalized. A Foreign Reading has none (ADR 0045).
- */
-export function assertEmojiDescriptionNormalized(
-	reading: Dumling.Reading,
-	parsed: Dumling.Reading,
-) {
-	if (
-		"emojiDescription" in parsed &&
-		"emojiDescription" in reading &&
-		parsed.emojiDescription !== reading.emojiDescription
-	)
-		throw new Error("Reading emoji description must be normalized.");
-}
-
-function validateReading<L extends Dumling.Language>(
-	expected: L,
-	reading: Dumling.Reading<L>,
-) {
-	assertEmojiDescriptionNormalized(
-		reading,
-		unwrapDumdictParse(parseReadingForDumdictRuntime(reading, expected)),
-	);
-}
-
-function validateReadingEntry<L extends Dumling.Language>(
-	expected: L,
-	entry: ReadingEntry<L>,
-) {
-	unwrapDumdictParse(parseAsReadingEntry(entry, expected));
-	validateReading(expected, entry.reading);
-	if (entry.knowledge !== undefined) {
-		unwrapDumdictParse(
-			parseReadingKnowledgeForDumdictRuntime(entry.knowledge),
-		);
-		const relations = entry.knowledge.semanticRelations;
-		if (relations?.targetKind === "reading") {
-			for (const target of relations.synonym ?? []) {
-				validateReading(expected, target);
-				if (sameReading(entry.reading, target))
-					throw new Error(
-						"Reading Knowledge contains a direct self relation.",
-					);
-			}
-		} else {
-			for (const relation of directSemanticRelationValues) {
-				for (const target of relations?.[relation] ?? []) {
-					validateLemmaRecord(expected, { lemma: target });
-					if (sameLemma(entry.reading.lemma, target))
-						throw new Error(
-							"Reading Knowledge contains a direct same-Lemma relation.",
-						);
-				}
-			}
-		}
-	}
-}
-
-function validateSurfaceEntry<L extends Dumling.Language>(
-	expected: L,
-	entry: SurfaceEntry<L>,
-) {
-	unwrapDumdictParse(parseAsSurfaceEntry(entry, expected));
-	// The parse checks id and owner on normalized forms and is discarded;
-	// these check the raw entry that planning reads.
-	if (entry.id !== makeSurfaceId(expected, entry.surface))
-		throw new Error("surface entry id does not match its derived id.");
-	if (!sameLemma(entry.ownerLemma, entry.surface.lemma))
-		throw new Error(
-			"surface owner Lemma does not match the realized Lemma.",
-		);
-}
-
-function validatePendingRecord<L extends Dumling.Language>(
-	expected: L,
-	record: PendingSemanticRelationRecord<L>,
-) {
-	const parsedRecord = unwrapDumdictParse(
-		parseAsPendingSemanticRelationRecord(record, expected),
-	);
-	validateReading(expected, parsedRecord.sourceReading);
-	assertPendingSemanticRelationRecordIdentity(parsedRecord);
-}
+import {
+	validateLemmaReadings,
+	validateLinksWithRefs,
+} from "./validate-occurrence-slice";
+import {
+	assertNoDuplicates,
+	validateLemmaRecord,
+	validatePendingRecord,
+	validateReading,
+	validateReadingEntry,
+	validateRevision,
+	validateSurfaceEntry,
+} from "./validate-records";
 
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function validateRelationInventory<L extends Dumling.Language>(
@@ -189,11 +98,6 @@ function validateRelationInventory<L extends Dumling.Language>(
 			}
 		}
 	}
-}
-
-function validateRevision(value: unknown) {
-	if (typeof value !== "string" || value.length === 0)
-		throw new Error("Reading Entry context has an invalid revision.");
 }
 
 function validateExistingIdentity<L extends Dumling.Language>(
@@ -323,6 +227,17 @@ function validateAddNewNoteContext<L extends Dumling.Language>(
 		context.relationLemmas,
 		context.relationReadings,
 	);
+	validateLemmaReadings(
+		expected,
+		request.reading.lemma,
+		context.lemmaReadings,
+		context.existingLemma,
+	);
+	validateLinksWithRefs(
+		expected,
+		context.attestationLinksWithRefs,
+		request.attestationRefs,
+	);
 }
 
 function validateMatchingPendingRecords<L extends Dumling.Language>(
@@ -365,13 +280,23 @@ function validateApplyGeneratedKnowledgeContext<L extends Dumling.Language>(
 		{ intent: "applyGeneratedKnowledge" }
 	>,
 ) {
-	if (context.existingReading) {
-		validateReadingEntry(expected, context.existingReading);
-		if (!sameReading(context.existingReading.reading, request.reading))
-			throw new Error(
-				"existing Reading does not match the requested Reading identity.",
-			);
-	}
+	validateExistingIdentity(expected, context, request.reading);
+	if (
+		context.existingReading &&
+		(!context.existingLemma ||
+			!context.lemmaReadings.some((reading) =>
+				sameReading(reading, request.reading),
+			))
+	)
+		throw new Error(
+			"existing Reading's Lemma and Readings are missing from the context.",
+		);
+	validateLemmaReadings(
+		expected,
+		request.reading.lemma,
+		context.lemmaReadings,
+		context.existingLemma,
+	);
 	validateExactPendingSelection(
 		expected,
 		context.exactPendingRelations,
@@ -444,6 +369,18 @@ export function validateReadingEntryContext<L extends Dumling.Language>(
 				context,
 				request.reading,
 			);
+			return;
+		case "recordOccurrence":
+			if (context.intent !== "recordOccurrence") return intentMismatch();
+			validateExistingIdentity(expected, context, request.reading);
+			validateRequestedSurfaces(
+				expected,
+				context.existingOwnedSurfaces,
+				new Set([makeSurfaceId(expected, request.surface)]),
+			);
+			validateLinksWithRefs(expected, context.attestationLinksWithRefs, [
+				request.ref,
+			]);
 	}
 }
 
