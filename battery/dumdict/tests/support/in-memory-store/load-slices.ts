@@ -1,11 +1,16 @@
+import { lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
+import { directSemanticRelationValues } from "dumrel";
 
 import { readingLemma, shadowMatchesLemma } from "../../../src/core/identity";
 import {
+	derivePendingEntryId,
 	derivePendingSemanticRelationLocator,
 	pendingSemanticRelationLocatorKey,
 	reevaluatedPendingEntryIds,
+	unitShadowOf,
 } from "../../../src/core/pending";
+import type { ReadingEntry } from "../../../src/domain-types";
 import type { SerializedDictionaryNote } from "../../../src/dto";
 import { makeSurfaceId } from "../../../src/dumling-id";
 import type {
@@ -206,22 +211,52 @@ function linksWithRefs<L extends Dumling.Language>(
 	);
 }
 
-/** Each Lemma one of whose Readings holds a link with a requested ref, whole. */
+/**
+ * Each Lemma one of whose Readings holds a link with a requested ref, whole,
+ * every other Reading claiming one of them or their Readings, and every
+ * Shadow relation one of them matches.
+ */
 export function loadOccurrenceSlice<L extends Dumling.Language>(
 	state: InMemoryStorageState<L>,
 	request: OccurrenceSliceRequest,
 ): OccurrenceSlice<L> {
+	const lemmas = state.storedNotes
+		.filter(({ readingEntries }) =>
+			readingEntries.some(({ attestationLinks }) =>
+				attestationLinks.some(({ ref }) => request.refs.includes(ref)),
+			),
+		)
+		.map(({ schemaVersion: _version, ...slice }) => slice);
+	const lemmaKeys = new Set(
+		lemmas.map(({ lemmaRecord }) => lemmaIdentityKey(lemmaRecord.lemma)),
+	);
+	const claims = (entry: ReadingEntry<L>) => {
+		const relations = entry.knowledge?.semanticRelations;
+		const targets =
+			relations?.targetKind === "reading"
+				? (relations.synonym ?? []).map(({ lemma }) => lemma)
+				: directSemanticRelationValues.flatMap(
+						(relation) => relations?.[relation] ?? [],
+					);
+		return targets.some((lemma) => lemmaKeys.has(lemmaIdentityKey(lemma)));
+	};
+	const ids = new Set<string>(
+		lemmas.map(({ lemmaRecord }) =>
+			derivePendingEntryId<L>(unitShadowOf(lemmaRecord.lemma)),
+		),
+	);
 	return {
 		revision: state.currentRevision(),
-		lemmas: state.storedNotes
-			.filter(({ readingEntries }) =>
-				readingEntries.some(({ attestationLinks }) =>
-					attestationLinks.some(({ ref }) =>
-						request.refs.includes(ref),
-					),
-				),
+		lemmas,
+		claimingReadings: state.storedNotes
+			.filter(
+				({ lemmaRecord }) =>
+					!lemmaKeys.has(lemmaIdentityKey(lemmaRecord.lemma)),
 			)
-			.map(({ schemaVersion: _version, ...slice }) => slice),
+			.flatMap(({ readingEntries }) => readingEntries.filter(claims)),
+		pendingRelationsMatchingLemmas: state
+			.allPendingRelations()
+			.filter(({ locator }) => ids.has(locator.targetPendingId)),
 	};
 }
 

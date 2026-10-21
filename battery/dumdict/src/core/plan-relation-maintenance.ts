@@ -128,6 +128,8 @@ export function planRelationMaintenance<L extends Dumling.Language>(input: {
 	lemmas: readonly LemmaRecord<L>[];
 	readings: readonly ReadingEntry<L>[];
 	requests: readonly RelationRequest<L>[];
+	/** Stored claims the plan retracts whatever the requests resolve to. */
+	retractions?: readonly PlannedRelationRemoval<L>[];
 }): RelationMaintenancePlan<L> {
 	const lemmas = [...input.lemmas]
 		.map(({ lemma }) => lemma)
@@ -157,8 +159,12 @@ export function planRelationMaintenance<L extends Dumling.Language>(input: {
 		),
 	);
 	const proposed: Edge<L>[] = [];
-	// Claims a Shadow held and no longer resolves to.
-	const unresolvedClaims = new Map<string, Edge<L>>();
+	// Claims a Shadow held and no longer resolves to, and claims retracted.
+	const unresolvedClaims = new Map<string, Edge<L>>(
+		(input.retractions ?? []).flatMap((edge) =>
+			existingKeys.has(edgeKey(edge)) ? [[edgeKey(edge), edge]] : [],
+		),
+	);
 	const shadowOutcomes: ShadowOutcome<L>[] = [];
 
 	for (const request of input.requests) {

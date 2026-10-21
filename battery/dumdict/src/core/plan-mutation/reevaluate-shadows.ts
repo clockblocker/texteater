@@ -8,7 +8,10 @@ import { planShadowReevaluation } from "./shadow-record-changes";
 
 /**
  * Plans the re-evaluation of every stored Shadow the slice holds against the
- * dictionary without the request's removed Lemmas (system ADR 0011).
+ * dictionary without the request's removed Lemmas (system ADR 0011). The
+ * claims the slice's Readings hold on a removed Lemma move in the same plan:
+ * a Lemma-mode claim becomes the Lemma's Shadow relation, and a Reading-mode
+ * claim on one of its Readings is retracted.
  */
 export function planReevaluateShadows<L extends Dumling.Language>(
 	slice: ReevaluateShadowsSlice<L>,
@@ -22,6 +25,7 @@ export function planReevaluateShadows<L extends Dumling.Language>(
 			({ lemma }) => !removed.some((gone) => sameLemma(gone, lemma)),
 		),
 		readings: slice.relationReadings,
+		removedLemmas: removed,
 	});
 	if (reevaluation.status === "rejected") return reevaluation;
 	const { moved } = reevaluation;

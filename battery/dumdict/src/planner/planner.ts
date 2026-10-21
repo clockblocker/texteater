@@ -95,7 +95,9 @@ export type {
  * and passes it here. Each workflow checks the request, validates the slice
  * against it, and returns a parsed plan with its preconditions, a rejection,
  * or a conflict; the planner never reads or writes storage. It throws only
- * for malformed input or a slice that breaks the storage contract.
+ * for malformed input or a slice that breaks the storage contract. A stored
+ * claim whose target is gone doesn't break it: the plan reports it in
+ * `issues` (system ADR 0011).
  */
 export type DumdictPlanner<L extends Dumling.Language> = {
 	readonly language: L;
@@ -134,9 +136,12 @@ export type DumdictPlanner<L extends Dumling.Language> = {
 	 * outside `addNewNote` and `ensureReadingEntry`, which re-evaluate the
 	 * Lemma they create: when it removes a Lemma, in the commit that removes
 	 * it or after, and once over every stored Shadow after a migration. The
-	 * host loads the stored records whose Pending Entry ID is one of
-	 * `reevaluatedPendingEntryIds(request)` (`dumdict/pending`). Planning it
-	 * again after its commit plans nothing.
+	 * same plan moves every claim on a removed Lemma: a Lemma-mode claim
+	 * becomes the Lemma's Shadow relation, and a Reading-mode claim on one of
+	 * its Readings is retracted. The host loads the stored records whose
+	 * Pending Entry ID is one of `reevaluatedPendingEntryIds(request)`
+	 * (`dumdict/pending`), and the Readings claiming a removed Lemma.
+	 * Planning it again after its commit plans nothing.
 	 */
 	reevaluateShadows(
 		slice: ReevaluateShadowsSlice<L>,
@@ -159,8 +164,10 @@ export type DumdictPlanner<L extends Dumling.Language> = {
 	 * Removes one occurrence's links and what they leave behind (system ADR
 	 * 0043, ADR 0049): an unlinked Reading, a Surface that lost its last link
 	 * and holds no user text, a Lemma with no Reading, and the variants no
-	 * remaining Reading licenses. `affected.removed` lists what goes; the
-	 * host re-evaluates Shadows with its Lemmas (system ADR 0011).
+	 * remaining Reading licenses. The same plan retracts every claim other
+	 * Readings hold on what goes, and leaves each Lemma-mode one as a pending
+	 * Shadow relation (system ADR 0011). `affected.removed` lists what goes;
+	 * once the plan commits, the host re-evaluates Shadows with its Lemmas.
 	 */
 	removeOccurrence(
 		slice: OccurrenceSlice<L>,
@@ -229,12 +236,12 @@ function addNewNote<L extends Dumling.Language>(
 			return ok(parsed);
 		},
 		plan(context, request) {
-			validateReadingEntryContext(
+			const issues = validateReadingEntryContext(
 				language,
 				context,
 				storageRequestFor({ intent: "addNewNote", request }),
 			);
-			return planned(planAddNewNote(context, request));
+			return planned(planAddNewNote(context, request), issues);
 		},
 	};
 }
@@ -317,7 +324,7 @@ function applyGeneratedKnowledge<L extends Dumling.Language>(
 		check: (request) =>
 			checkApplyGeneratedKnowledgeRequest(language, request),
 		plan(context, request) {
-			validateReadingEntryContext(
+			const issues = validateReadingEntryContext(
 				language,
 				context,
 				storageRequestFor({
@@ -327,7 +334,10 @@ function applyGeneratedKnowledge<L extends Dumling.Language>(
 			);
 			// Its check parsed the changes and pending relations, and the slice
 			// validation parsed the Reading and every stored entry.
-			return planned(planApplyGeneratedKnowledge(context, request));
+			return planned(
+				planApplyGeneratedKnowledge(context, request),
+				issues,
+			);
 		},
 	};
 }
@@ -383,12 +393,12 @@ function ensureReadingEntry<L extends Dumling.Language>(
 			return ok(parseEnsureReadingEntryRequest(language, request));
 		},
 		plan(context, request) {
-			validateReadingEntryContext(
+			const issues = validateReadingEntryContext(
 				language,
 				context,
 				storageRequestFor({ intent: "ensureReadingEntry", request }),
 			);
-			return planned(planEnsureReadingEntry(context, request));
+			return planned(planEnsureReadingEntry(context, request), issues);
 		},
 	};
 }
@@ -416,7 +426,7 @@ function cleanupRelations<L extends Dumling.Language>(
 			return ok(request);
 		},
 		plan(slice, request) {
-			validateCleanupRelationsSlice(language, slice);
+			const issues = validateCleanupRelationsSlice(language, slice);
 			if (slice.revision !== request.baseRevision)
 				return {
 					status: "conflict",
@@ -443,7 +453,7 @@ function cleanupRelations<L extends Dumling.Language>(
 				};
 			// The plan holds only slice values the validation parsed: a
 			// resolution's locator only selects a stored pending record.
-			return planned(planCleanupRelations(slice, request));
+			return planned(planCleanupRelations(slice, request), issues);
 		},
 	};
 }
@@ -479,14 +489,18 @@ function reevaluateShadows<L extends Dumling.Language>(
 			return ok(request);
 		},
 		plan(slice, request) {
-			validateReevaluateShadowsSlice(language, slice, request);
+			const issues = validateReevaluateShadowsSlice(
+				language,
+				slice,
+				request,
+			);
 			if (slice.revision !== request.baseRevision)
 				return {
 					status: "conflict",
 					code: "revisionConflict",
 					message: "Shadow re-evaluation slice is stale.",
 				};
-			return planned(planReevaluateShadows(slice, request));
+			return planned(planReevaluateShadows(slice, request), issues);
 		},
 	};
 }

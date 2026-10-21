@@ -165,9 +165,10 @@ export const LEMMA_CLEANUP_PHASES = [
 	/** Surfaces with their owned-Surface entries. */
 	{ phase: "Surfaces", tables: ["surfaces", "ownedSurfaces"] },
 	/**
-	 * Every stored Shadow the Lemma matches is re-evaluated without it, so
-	 * relations resolved to it move on before its incoming edges go (system
-	 * ADR 0011). It deletes no Lemma-owned row.
+	 * Every stored Shadow the Lemma matches is re-evaluated without it, and
+	 * every exact claim on it becomes its Shadow relation, so relations on it
+	 * move on before its incoming edges go (system ADR 0011). It deletes no
+	 * Lemma-owned row.
 	 */
 	{ phase: "ShadowReevaluation", tables: [] },
 	ownedRows(

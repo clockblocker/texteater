@@ -5,6 +5,7 @@ import type { PlanMutationRejected } from "../core/plan-mutation/result";
 import type { DumdictPlan } from "../domain-types";
 import type {
 	AffectedDictionaryEntities,
+	DumdictPlanIssue,
 	MutationRejectedCode,
 	MutationSummary,
 } from "../public";
@@ -15,6 +16,8 @@ export type DumdictPlanned<L extends Dumling.Language> = Readonly<{
 	plan: DumdictPlan<L>;
 	affected: AffectedDictionaryEntities<L>;
 	summary: MutationSummary;
+	/** Stored data the plan worked around; absent when there is none. */
+	issues?: readonly DumdictPlanIssue<L>[];
 }>;
 
 export type DumdictPlanRejected = Readonly<{
@@ -78,6 +81,7 @@ export function invalidRequest(message: string): DumdictPlanRejected {
  */
 export function planned<L extends Dumling.Language>(
 	plan: PlanMutationResult<L> | PlanMutationRejected,
+	issues: readonly DumdictPlanIssue<L>[] = [],
 ): DumdictPlanOutcome<L> {
 	if (plan.status === "rejected") return rejected(plan.code, plan.message);
 	const checked: DumdictPlan<L> = retainDumdictPlan({
@@ -90,6 +94,7 @@ export function planned<L extends Dumling.Language>(
 			plan: checked,
 			affected: plan.affected,
 			summary: plan.summary,
+			...(issues.length > 0 ? { issues } : {}),
 		}),
 	};
 }
