@@ -360,7 +360,6 @@
 			"reading": {
 				"emojiDescription": "🍳🏠",
 				"knowledge": {
-					"plural": ["Küchen"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -388,9 +387,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Küchen"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -398,7 +397,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

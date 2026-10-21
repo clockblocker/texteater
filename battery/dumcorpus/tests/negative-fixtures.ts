@@ -105,11 +105,10 @@ export function attestJedem(record: RecordJson, surface: unknown) {
 
 /**
  * Coverage of every structural aspect a German VERB Reading's policy
- * requests, for a Knowledge of a definition and a conjugation class.
+ * requests, for a Knowledge of a definition and a Paradigm of a Präteritum.
  */
 export const verbCoverage: KnowledgeCoverage = {
 	definition: "Authored",
-	conjugationClass: "Authored",
 	valency: "ReviewedEmpty",
 	semanticRelations: {
 		synonym: "ReviewedEmpty",
@@ -118,6 +117,7 @@ export const verbCoverage: KnowledgeCoverage = {
 		nearAntonym: "ReviewedEmpty",
 		hypernym: "ReviewedEmpty",
 	},
+	paradigm: { preterite: "Authored" },
 };
 
 /**
@@ -303,11 +303,9 @@ export const negativeFixtures: {
 			review(record);
 			record.reviewDepth = "Knowledge";
 			record.targets[0].reading.knowledge = {
-				conjugationClass: ["Weak"],
+				definition: "to watch out",
 			};
-			record.targets[0].reading.coverage = {
-				conjugationClass: "Authored",
-			};
+			record.targets[0].reading.coverage = { definition: "Authored" };
 			// dich is authored, so its Knowledge is reviewed in the inventory.
 			record.targets[1].reading.knowledge = {};
 		},
@@ -343,8 +341,9 @@ export const negativeFixtures: {
 		edit: (record) => {
 			record.targets[0].reading = {
 				emojiDescription: "👀",
-				knowledge: { conjugationClass: ["Weak"] },
-				coverage: { conjugationClass: "ReviewedEmpty" },
+				knowledge: {},
+				paradigm: { preterite: ["passte auf"] },
+				coverage: { paradigm: { preterite: "ReviewedEmpty" } },
 			};
 		},
 	},
@@ -355,7 +354,8 @@ export const negativeFixtures: {
 		edit: (record) => {
 			record.targets[0].reading = {
 				emojiDescription: "👀",
-				knowledge: { conjugationClass: ["Weak"] },
+				knowledge: {},
+				paradigm: { preterite: ["passte auf"] },
 				coverage: {},
 			};
 		},
@@ -368,7 +368,32 @@ export const negativeFixtures: {
 			record.targets[0].reading = {
 				emojiDescription: "👀",
 				knowledge: {},
-				coverage: { plural: "ReviewedEmpty" },
+				coverage: { participleSource: "ReviewedEmpty" },
+			};
+		},
+	},
+	{
+		name: "coverage of a Variation Dimension its route's Paradigm Policy does not name",
+		seed: "de/pass-auf-dich-auf",
+		check: "KnowledgeCoverage",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				knowledge: {},
+				coverage: { paradigm: { plural: "ReviewedEmpty" } },
+			};
+		},
+	},
+	{
+		name: "a form its Variation Dimension never takes",
+		seed: "de/pass-auf-dich-auf",
+		check: "Knowledge",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				knowledge: {},
+				paradigm: { preterite: ["aufpasste"] },
+				coverage: { paradigm: { preterite: "Authored" } },
 			};
 		},
 	},

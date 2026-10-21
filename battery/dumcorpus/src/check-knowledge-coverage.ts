@@ -1,30 +1,32 @@
 import { routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
-import { selectKnowledge } from "dumrel";
+import { paradigmDimensions, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { isAuthoredReading } from "./check-authored-readings.js";
-import type { KnowledgeCoverage } from "./corpus-types.js";
+import type { KnowledgeCoverage, ReadingParadigm } from "./corpus-types.js";
 
 /**
  * The structural aspects: the Knowledge `knowledge.produce` is scored on
  * against gold (#883). A record reviewed through Knowledge covers each one
  * its route's Knowledge Policy requests, every requested semantic relation
  * included. The text aspects get a spot-check instead, and the
- * morphological tree belongs to the deferred `segment.inMorphemes`. A
- * verb's principal parts (`preterite`, `presentSingular`, `pastParticiple`,
- * `subjunctivePast`) are scored where a record covers them, but no record
- * has to yet (Dumcorpus ADR 0002).
+ * morphological tree belongs to the deferred `segment.inMorphemes`.
  */
 const structuralAspects = [
-	"plural",
 	"valency",
 	"participleSource",
-	"conjugationClass",
 	"locutionType",
 	"sayingType",
 	"formulaRole",
 	"semanticRelations",
 ] as const;
+
+/**
+ * The structural Variation Dimensions: a German noun's `plural`. A verb's
+ * dimensions are scored where a record covers them, but no record has to yet
+ * (Dumcorpus ADR 0002).
+ */
+const structuralDimensions: readonly Dumrel.DimensionId[] = ["plural"];
 
 /** The aspects covered per translation language and per semantic relation. */
 const bucketAspects = new Set(["translations", "semanticRelations"]);
@@ -52,8 +54,10 @@ function holds(aspect: string, value: unknown): boolean {
 }
 
 /**
- * Checks a target's coverage against its Reading Knowledge and its route's
- * Knowledge Policy (#884). Each covered aspect is one the policy requests.
+ * Checks a target's coverage against its Reading Knowledge, what it licenses
+ * in its Lemma's Paradigm (undefined when those forms failed their own
+ * check), and its route's Knowledge and Paradigm Policies (#884, Dumcorpus
+ * ADR 0002). Each covered aspect is one the policy requests.
  * Authored means the Knowledge holds the aspect, a relation with at least
  * one claim; ReviewedEmpty means it holds none; and every aspect the
  * Knowledge holds is Authored. Returns the issues and the structural aspects
@@ -65,6 +69,7 @@ export function knowledgeCoverageIssues(
 	reading: Dumling.Reading,
 	knowledge: Dumrel.ReadingKnowledge,
 	coverage: KnowledgeCoverage | undefined,
+	paradigm: ReadingParadigm | undefined,
 ): { issues: KnowledgeCoverageIssue[]; uncovered: string[] } {
 	const { language, family, kind } = reading.lemma;
 	const policy = selectKnowledge({ route: routeOf(reading.lemma) });
@@ -77,6 +82,7 @@ export function knowledgeCoverageIssues(
 	const route = `${language} ${family} ${kind}`;
 
 	for (const [aspect, entry] of Object.entries(covered)) {
+		if (aspect === "paradigm") continue;
 		const leaves: [string | undefined, unknown][] = bucketAspects.has(
 			aspect,
 		)
@@ -136,7 +142,44 @@ export function knowledgeCoverageIssues(
 		}
 	}
 
+	const dimensions = paradigmDimensions(reading.lemma);
+	const coveredDimensions = entriesOf(covered.paradigm);
+	const held: Entries = paradigm ?? {};
+	for (const [dimension, status] of Object.entries(
+		paradigm === undefined ? {} : coveredDimensions,
+	)) {
+		const at = ["coverage", "paradigm", dimension];
+		if (!dimensions.some((name) => name === dimension))
+			issue(
+				at,
+				`A ${route} Lemma's Paradigm Policy names no ${dimension} dimension`,
+			);
+		if (status === "Authored" && held[dimension] === undefined)
+			issue(
+				at,
+				`paradigm.${dimension} is Authored, but the Reading licenses none`,
+			);
+		else if (status === "ReviewedEmpty" && held[dimension] !== undefined)
+			issue(
+				at,
+				`paradigm.${dimension} is ReviewedEmpty, but the Reading licenses forms; mark it Authored or remove it`,
+			);
+	}
+	for (const dimension of Object.keys(held))
+		if (coveredDimensions[dimension] === undefined)
+			issue(
+				["paradigm", dimension],
+				`Mark the stored paradigm.${dimension} Authored in reading.coverage.paradigm`,
+			);
+
 	const uncovered: string[] = [];
+	if (!isAuthoredReading(reading))
+		for (const dimension of structuralDimensions)
+			if (
+				dimensions.includes(dimension) &&
+				coveredDimensions[dimension] === undefined
+			)
+				uncovered.push(`paradigm.${dimension}`);
 	if (mask !== undefined && !isAuthoredReading(reading))
 		for (const aspect of structuralAspects) {
 			if (!Object.hasOwn(mask, aspect)) continue;

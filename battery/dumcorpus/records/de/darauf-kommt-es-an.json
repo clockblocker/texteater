@@ -156,15 +156,6 @@
 			"reading": {
 				"emojiDescription": "🔑",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
-					"preterite": ["kam an"],
-					"presentSingular": {
-						"first": ["komme an"],
-						"second": ["kommst an"],
-						"third": ["kommt an"]
-					},
-					"pastParticiple": ["angekommen"],
-					"subjunctivePast": ["käme an"],
 					"valency": [
 						{
 							"status": "Optional",
@@ -219,19 +210,30 @@
 						}
 					]
 				},
+				"paradigm": {
+					"preterite": ["kam an"],
+					"present1": ["komme an"],
+					"present2": ["kommst an"],
+					"present3": ["kommt an"],
+					"pastParticiple": ["angekommen"],
+					"subjunctivePast": ["käme an"]
+				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},

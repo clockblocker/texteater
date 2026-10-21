@@ -77,7 +77,6 @@
 			"reading": {
 				"emojiDescription": "🔍",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
 					"valency": [
 						{
 							"status": "Required",
@@ -140,7 +139,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",

@@ -43,7 +43,6 @@
 			"reading": {
 				"emojiDescription": "📧",
 				"knowledge": {
-					"plural": ["E-Mails"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -81,9 +80,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["E-Mails"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -91,7 +90,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

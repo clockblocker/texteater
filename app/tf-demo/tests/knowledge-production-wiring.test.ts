@@ -128,7 +128,6 @@ async function runProductionAction(
 		transcription: "baŋk",
 		definition: "Ein Geldinstitut.",
 		translations: ["bank"],
-		plural: ["Banken"],
 		valency: { valency: [] },
 	};
 	globalThis.fetch = (async (url: string | URL | Request, init) => {
@@ -221,11 +220,12 @@ test("the production producer runs Dumgen's knowledge.produce through the deploy
 				url === "https://api.openai.com/v1/responses",
 		),
 	).toBe(true);
-	// The base request of a NOUN: its text, its frame and its plural.
+	// The base request of a NOUN: its text and its frame. Its plural is the
+	// Lemma Paradigm's, which tf-demo doesn't request until it stores one
+	// (#1232).
 	expect(aspects.sort()).toEqual(
 		[
 			"definition",
-			"plural",
 			"transcription",
 			"translations",
 			"translations",
@@ -240,7 +240,6 @@ test("the production producer runs Dumgen's knowledge.produce through the deploy
 		definition: "Ein Geldinstitut.",
 		transcription: "baŋk",
 		translations: { en: ["bank"], ru: ["банк"] },
-		plural: ["Banken"],
 	});
 	// The empty frame stores nothing and still completes the Reading.
 	expect(accumulated?.status).toBe("Full");
@@ -283,9 +282,9 @@ test("under DEV inspection the run's Dumgen calls render as inspection rows with
 	});
 	const calls = steps.filter((step) => step.parentId === operation?.id);
 	expect(calls.length).toBeGreaterThan(0);
-	expect(new Set(calls.map((step) => step.kind))).toEqual(
-		new Set(["TypeSafe", "LLM"]),
-	);
+	// A NOUN's base request asks jev nothing since its plural left Knowledge;
+	// its judges return with the Lemma Paradigm (#1232).
+	expect(new Set(calls.map((step) => step.kind))).toEqual(new Set(["LLM"]));
 	const payloads = await t.run(async (ctx) =>
 		Promise.all(
 			calls.map(async (step) =>

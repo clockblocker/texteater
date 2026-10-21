@@ -44,7 +44,6 @@
 			"reading": {
 				"emojiDescription": "☕",
 				"knowledge": {
-					"plural": ["Kaffees"],
 					"semanticRelations": {
 						"nearSynonym": [
 							{
@@ -72,9 +71,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Kaffees"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -82,7 +81,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

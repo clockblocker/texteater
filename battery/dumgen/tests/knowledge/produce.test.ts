@@ -71,9 +71,9 @@ test("Luna writes the text, the forms and the frame; jev judges every choice (#8
 				transcription: null,
 				definition: null,
 				translations: { en: null, ru: null },
-				plural: null,
 				valency: null,
 			},
+			paradigm: { dimensions: ["plural"] },
 		}),
 	);
 	expect(result.failures).toEqual([]);
@@ -88,11 +88,21 @@ test("Luna writes the text, the forms and the frame; jev judges every choice (#8
 		language: "ru",
 		value: ["букет"],
 	});
-	expect(result.changes).toContainEqual({
-		kind: "Contribute",
-		aspect: "plural",
-		value: ["Sträuße"],
-	});
+	// The plural is no Knowledge: it licenses the Reading a Paradigm Variant (ADR 0048).
+	expect(result.paradigmChanges).toEqual([
+		{
+			kind: "Contribute",
+			dimension: "plural",
+			value: "Sträuße",
+			provenance: "Produced",
+		},
+		{
+			kind: "License",
+			dimension: "plural",
+			reading: expect.objectContaining({ emojiDescription: "💐" }),
+			variants: ["sträuße"],
+		},
+	]);
 	// An empty frame stores nothing (ADR 0034).
 	expect(result.changes.some(({ aspect }) => aspect === "valency")).toBe(
 		false,
@@ -140,8 +150,8 @@ test("each aspect is isolated: a failed one is a value, and its siblings land (#
 				transcription: null,
 				definition: null,
 				translations: { en: null, ru: null },
-				plural: null,
 			},
+			paradigm: { dimensions: ["plural"] },
 		}),
 	);
 	expect(
@@ -170,11 +180,13 @@ test("a jev failure is the aspect's ProviderFailure, never the run's error (#883
 	const { result } = await produceOnce(
 		{ jev: jev.ask, luna: luna.ask },
 		knowledgeInput(noun, "💐", "Sie bekam einen Strauß.", ["Strauß"], {
-			request: { plural: null },
+			request: {},
+			paradigm: { dimensions: ["plural"] },
 		}),
 	);
 	expect(result).toEqual({
 		changes: [],
+		paradigmChanges: [],
 		pendingRelations: [],
 		failures: [
 			{
@@ -186,7 +198,7 @@ test("a jev failure is the aspect's ProviderFailure, never the run's error (#883
 	});
 });
 
-test("onContribution receives each aspect's changes as it finishes, one at a time (#883 point 4)", async () => {
+test("onContribution receives each aspect's Knowledge changes as it finishes, one at a time (#883 point 4)", async () => {
 	const jev = knowledgeJev({ plurality: "PluralOnly" });
 	const luna = knowledgeLuna(
 		{
@@ -202,7 +214,8 @@ test("onContribution receives each aspect's changes as it finishes, one at a tim
 	const { result } = await produceOnce(
 		{ jev: jev.ask, luna: luna.ask },
 		knowledgeInput(noun, "💐", "Sie bekam einen Strauß.", ["Strauß"], {
-			request: { definition: null, transcription: null, plural: null },
+			request: { definition: null, transcription: null },
+			paradigm: { dimensions: ["plural"] },
 			onContribution: (changes) =>
 				Effect.gen(function* () {
 					inside++;
@@ -214,12 +227,17 @@ test("onContribution receives each aspect's changes as it finishes, one at a tim
 		}),
 	);
 	expect(overlapped).toBe(false);
-	expect(received).toHaveLength(3);
+	expect(received).toHaveLength(2);
 	expect(received.at(-1)).toEqual(["definition"]);
-	expect(received.flat().sort()).toEqual(
-		["definition", "plural", "transcription"].sort(),
-	);
-	expect(result.changes).toHaveLength(3);
+	expect(received.flat().sort()).toEqual(["definition", "transcription"]);
+	expect(result.changes).toHaveLength(2);
+	// Paradigm Changes come back with the result only.
+	expect(result.paradigmChanges).toContainEqual({
+		kind: "Contribute",
+		dimension: "plural",
+		value: "PluralOnly",
+		provenance: "Produced",
+	});
 });
 
 test("the result reads in job order, however the jobs finish (#1122)", async () => {
@@ -248,8 +266,8 @@ test("the result reads in job order, however the jobs finish (#1122)", async () 
 				transcription: null,
 				definition: null,
 				translations: { en: null },
-				plural: null,
 			},
+			paradigm: { dimensions: ["plural"] },
 			onContribution: (changes) =>
 				Effect.sync(() => {
 					finished.push(...changes.map(({ aspect }) => aspect));
@@ -377,7 +395,12 @@ test("on TopUp a later sentence's government yields no valency change and no mod
 			},
 		),
 	);
-	expect(result).toEqual({ changes: [], pendingRelations: [], failures: [] });
+	expect(result).toEqual({
+		changes: [],
+		paradigmChanges: [],
+		pendingRelations: [],
+		failures: [],
+	});
 	expect(trace?.calls).toEqual([]);
 });
 
@@ -589,23 +612,29 @@ test("aspects the route does not apply, and the deferred tree, are skipped (Dumg
 	const { result, trace } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: luna.ask },
 		knowledgeInput(verb("reiten"), "🏇", "Sie ritt aus.", ["ritt"], {
-			request: {
-				plural: null,
-				formulaRole: null,
-				morphologicalTree: null,
-				conjugationClass: null,
-			},
+			request: { formulaRole: null, morphologicalTree: null },
+			paradigm: { dimensions: ["plural", "preterite"] },
 		}),
 	);
 	expect(result.failures).toEqual([]);
-	expect(result.changes).toEqual([
-		{ kind: "Contribute", aspect: "conjugationClass", value: ["Strong"] },
-	]);
+	expect(result.changes).toEqual([]);
+	expect(result.paradigmChanges).toContainEqual({
+		kind: "Contribute",
+		dimension: "preterite",
+		value: "ritt",
+		provenance: "Produced",
+	});
 	expect(luna.aspects()).toEqual(["verbForms"]);
 	expect(trace?.events).toEqual([
 		{
 			name: "SkippedAspects",
-			data: { skipped: ["plural", "formulaRole", "morphologicalTree"] },
+			data: {
+				skipped: [
+					"formulaRole",
+					"morphologicalTree",
+					"paradigm.plural",
+				],
+			},
 		},
 	]);
 });
@@ -637,6 +666,11 @@ test("bad input is a Defect, raised before anything is asked (#883 point 6)", as
 		{ ...base, sentence: { ...base.sentence, target: [99] } },
 		// Deliberately invalid: breakdown is no Knowledge aspect.
 		{ ...base, request: { breakdown: null } as never },
+		// Deliberately invalid: conjugationClass is no Variation Dimension.
+		{
+			...base,
+			paradigm: { dimensions: ["conjugationClass"] as never },
+		},
 	]) {
 		const exit = await Effect.runPromiseExit(
 			dumgen.knowledge.produce(input),

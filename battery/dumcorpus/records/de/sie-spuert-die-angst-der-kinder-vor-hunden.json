@@ -49,7 +49,6 @@
 			"reading": {
 				"emojiDescription": "😨",
 				"knowledge": {
-					"plural": ["Ängste"],
 					"valency": [
 						{
 							"status": "Optional",
@@ -107,9 +106,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Ängste"] },
 				"coverage": {
 					"valency": "Authored",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -117,7 +116,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

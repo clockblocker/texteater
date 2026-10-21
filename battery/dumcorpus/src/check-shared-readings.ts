@@ -17,8 +17,9 @@ type Occurrence = {
 
 /**
  * The shared-Reading guard (#884). A Reading that appears in several records,
- * matched by Dumling's `readingIdentityKey`, carries one Knowledge value and
- * one coverage, so its gold is scored once. Returns an issue at every
+ * matched by Dumling's `readingIdentityKey`, carries one Knowledge value, one
+ * Licence per Variation Dimension and one coverage, so its gold is scored
+ * once. Returns an issue at every
  * occurrence of a Reading whose occurrences disagree. A target that holds no
  * Knowledge yet takes no part.
  */
@@ -38,6 +39,7 @@ export function sharedReadingIssues(
 					target: index,
 					value: {
 						knowledge: target.knowledge,
+						paradigm: target.paradigm ?? null,
 						coverage: target.coverage ?? null,
 					},
 				},

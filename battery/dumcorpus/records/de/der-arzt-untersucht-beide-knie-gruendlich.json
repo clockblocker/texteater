@@ -45,7 +45,6 @@
 			"reading": {
 				"emojiDescription": "🧎",
 				"knowledge": {
-					"plural": ["Knie"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -73,9 +72,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Knie"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -83,7 +82,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

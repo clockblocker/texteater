@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import type * as Dumrel from "dumrel/types";
 import {
 	knowledgeInput,
 	knowledgeJev,
@@ -19,7 +20,7 @@ const adjective = (canonicalForm: string) => ({
 	coreFeatures: { comparable: null },
 });
 
-test("the plural is the forms when jev judges a plural, else jev's marker; a plural with no form is Unresolved", async () => {
+test("the plural dimension is the forms when jev judges a plural, else jev's marker; a plural with no form is Unresolved", async () => {
 	const run = (plurality: string, forms: string[]) =>
 		produceOnce(
 			{
@@ -27,15 +28,30 @@ test("the plural is the forms when jev judges a plural, else jev's marker; a plu
 				luna: knowledgeLuna({ plural: forms }).ask,
 			},
 			knowledgeInput(noun, "💐", "Sie bekam einen Strauß.", ["Strauß"], {
-				request: { plural: null },
+				request: {},
+				paradigm: { dimensions: ["plural"] },
 			}),
 		);
-	expect((await run("PluralOnly", ["Sträuße"])).result.changes).toEqual([
-		{ kind: "Contribute", aspect: "plural", value: "PluralOnly" },
-	]);
-	expect((await run("NoPlural", [])).result.changes).toEqual([
-		{ kind: "Contribute", aspect: "plural", value: "NoPlural" },
-	]);
+	const marker = (value: string): Dumrel.ParadigmChange[] => [
+		{
+			kind: "Contribute",
+			dimension: "plural",
+			value,
+			provenance: "Produced",
+		},
+		{
+			kind: "License",
+			dimension: "plural",
+			reading: expect.objectContaining({ emojiDescription: "💐" }),
+			variants: [value],
+		},
+	];
+	expect(
+		(await run("PluralOnly", ["Sträuße"])).result.paradigmChanges,
+	).toEqual(marker("PluralOnly"));
+	expect((await run("NoPlural", [])).result.paradigmChanges).toEqual(
+		marker("NoPlural"),
+	);
 	expect((await run("HasPlural", [])).result.failures).toEqual([
 		expect.objectContaining({ aspect: "plural", code: "Unresolved" }),
 	]);
@@ -105,6 +121,7 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 	);
 	expect(refused.result).toEqual({
 		changes: [],
+		paradigmChanges: [],
 		pendingRelations: [],
 		failures: [],
 	});

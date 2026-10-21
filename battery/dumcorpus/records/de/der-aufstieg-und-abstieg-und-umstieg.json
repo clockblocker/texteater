@@ -44,7 +44,6 @@
 			"reading": {
 				"emojiDescription": "🔀",
 				"knowledge": {
-					"plural": ["Umstiege"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -60,9 +59,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Umstiege"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -70,7 +69,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {
