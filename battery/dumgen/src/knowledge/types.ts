@@ -73,8 +73,9 @@ export type KnowledgeProduction = {
 	readonly changes: readonly GermanKnowledgeChange[];
 	/**
 	 * The Paradigm Changes of the requested dimensions (ADR 0048), in
-	 * dimension order: per dimension a Contribute per variant, then a License
-	 * that gives the Reading an explicit Licence over them.
+	 * dimension order: per dimension a Contribute per variant written, then
+	 * a License that gives the Reading an explicit Licence over them, or the
+	 * License alone of the stored variants the licence judge took.
 	 */
 	readonly paradigmChanges: readonly Dumrel.ParadigmChange[];
 	readonly pendingRelations: readonly GermanPendingRelation[];
@@ -114,21 +115,38 @@ export type ProduceKnowledgeInput<E = never> = {
 	readonly request: Dumrel.KnowledgeRequestMask;
 	/**
 	 * The Variation Dimensions of the Reading's Lemma Paradigm to write
-	 * (Dumgen ADR 0003). Each is written as for a Lemma's first Reading: Luna
-	 * writes the forms of the sense, and code turns each into a variant the
-	 * Reading licenses explicitly. A dimension the route's Paradigm Policy
-	 * doesn't name is skipped. The licence judge for a Lemma's later Readings
-	 * is #1230's.
+	 * (ADR 0048, Dumgen ADR 0003), with the Lemma's stored Paradigm and its
+	 * other Readings. A dimension the route's Paradigm Policy doesn't name
+	 * is skipped.
+	 *
+	 * - A dimension with no stored variant is written as for a Lemma's
+	 *   first Reading: Luna writes the forms of the sense, and code turns
+	 *   each into a variant the Reading licenses explicitly.
+	 * - A dimension with stored variants, for a `New` Reading, goes to the
+	 *   licence judge, one jev request for every such dimension: the
+	 *   Reading licenses the stored variants it takes, and only where it
+	 *   takes none does Luna write the dimension's forms, as for a first
+	 *   Reading.
+	 * - A dimension with stored variants, for a `TopUp` Reading or one the
+	 *   stored Paradigm already licenses, is skipped: its Licence, stated or
+	 *   Unstated, stays as it is.
+	 *
+	 * Only this Reading is licensed; the Paradigm Changes apply to `stored`
+	 * with `readings` and this Reading.
 	 */
 	readonly paradigm?: {
 		readonly dimensions: readonly Dumrel.DimensionId[];
+		/**
+		 * The Lemma's stored Paradigm, as Dumdict's Lemma Record holds it;
+		 * none, or an empty one, for a Lemma's first Reading.
+		 */
+		readonly stored?: Dumrel.LemmaParadigm;
+		/**
+		 * The Lemma's other Readings, every Reading `stored`'s Licences name
+		 * among them; this Reading may be listed too.
+		 */
+		readonly readings?: readonly Dumling.Reading<"de">[];
 	};
-	/**
-	 * Receives each aspect's Knowledge changes as soon as it has them, one at a time
-	 * and in the order the aspects finish; Dumgen waits for its Effect
-	 * before it hands over the next. Its failure fails the run with `E` and
-	 * interrupts the aspects still running.
-	 */
 	readonly onContribution?: (
 		changes: readonly GermanKnowledgeChange[],
 	) => Effect.Effect<void, E>;

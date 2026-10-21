@@ -109,6 +109,14 @@ Proposed Knowledge changes, Paradigm Changes (Dumrel) and Pending Semantic
 Relations for a caller-supplied Reading in an Encounter. See
 [Dumgen ADR 0003] and [ADR 0048].
 
+**Licence Judge**:
+The jev judge Knowledge Production asks for a Lemma's later Reading: per
+Variation Dimension, the stored Paradigm Variants (Dumrel) its sense takes,
+or NoMatch, after which Luna writes that dimension's forms. It never routes
+a click; the Reading judge ignores the Paradigm. See [ADR 0048] and
+[Dumgen ADR 0003].
+_Avoid_: paradigm judge, variant matcher
+
 **`knowledge.accumulateTranslations`**:
 The step that adds to a Reading's stored translations the ones a later
 occurrence needs: jev judges whether a stored one covers the occurrence, and

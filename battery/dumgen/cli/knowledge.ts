@@ -2,6 +2,7 @@
  * knowledge.produce's evaluation sets and round subsets (#887):
  *
  *   bun cli/knowledge.ts freeze
+ *   bun cli/knowledge.ts freeze-doublets
  *   bun cli/knowledge.ts subset <baselineRunId> --out <file> [--seed N] [--guard N]
  *   bun cli/knowledge.ts compare <subsetFile> <runId>
  *
@@ -13,6 +14,10 @@
  * and their re-scores go through `bun run evaluate --experiment
  * knowledge/de:<set>`, `--gold-only` keeping the cases with gold and
  * `--subset <file>` a round's subset.
+ *
+ * `freeze-doublets` freezes the licence judge's set from the German
+ * Doublet Rule's gold (#1230, `lab/evaluation/licence/cases.ts`) beside
+ * them, for `bun run evaluate --experiment knowledge/de:doublets`.
  *
  * `subset` freezes a round's subset of dev from a saved gold-only baseline
  * run (`subset.ts`): its missed cases and a seeded guard. `compare` reads a
@@ -36,12 +41,32 @@ import {
 	selectKnowledgeSubset,
 } from "../lab/evaluation/knowledge/subset.js";
 import {
+	freezeLicenceSet,
+	trackedLicenceSetsRoot,
+} from "../lab/evaluation/licence/cases.js";
+import {
 	defaultRunOutputDirectory,
 	judgmentSettings,
 	judgmentSettingsSchema,
 } from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
+
+/** Freezes the licence judge's doublets set and prints its summary. */
+async function freezeDoublets(setsRoot: string) {
+	const set = await freezeLicenceSet(setsRoot, repository);
+	const summary = {
+		name: set.name,
+		hash: set.hash,
+		gitHead: set.gitHead,
+		dirtyRecordFiles: set.dirtyRecordFiles,
+		cases: set.cases.length,
+		controls: set.cases.filter(({ control }) => control).length,
+		lemmas: new Set(set.cases.map(({ lemma }) => lemma)).size,
+	};
+	console.log(JSON.stringify(summary, null, 2));
+	return summary;
+}
 
 async function runKnowledgeCli(
 	argv: readonly string[],
@@ -109,28 +134,37 @@ async function runKnowledgeCli(
 		console.log(JSON.stringify(summary, null, 2));
 		return summary;
 	}
-	if (command === "compare") {
-		if (!first || !second)
-			throw Error(
-				"Use `bun cli/knowledge.ts compare <subsetFile> <runId>`",
-			);
-		const subset = loadKnowledgeSubset(resolve(first));
-		const comparison = compareKnowledgeRuns(
-			subset,
-			knowledgeAttempts(await operationRun(subset.baselineRunId)),
-			knowledgeAttempts(await operationRun(second)),
-		);
-		console.log(JSON.stringify(comparison, null, 2));
-		return comparison;
-	}
+	if (command === "compare") return compare(first, second, operationRun);
+	if (command === "freeze-doublets")
+		return freezeDoublets(options.setsRoot ?? trackedLicenceSetsRoot);
 	if (command !== "freeze")
 		throw Error(
-			"Use `bun cli/knowledge.ts freeze`, `subset <baselineRunId> --out <file>` or `compare <subsetFile> <runId>`",
+			"Use `bun cli/knowledge.ts freeze`, `freeze-doublets`, `subset <baselineRunId> --out <file>` or `compare <subsetFile> <runId>`",
 		);
-	const sets = await freezeKnowledgeSets(
-		options.setsRoot ?? trackedKnowledgeSetsRoot,
-		repository,
+	return freezeAll(options.setsRoot ?? trackedKnowledgeSetsRoot);
+}
+
+/** Reads a run on a subset against its baseline on the same case ids, and prints it. */
+async function compare(
+	subsetFile: string | undefined,
+	runId: string | undefined,
+	operationRun: (runId: string) => ReturnType<typeof loadRun>,
+) {
+	if (!subsetFile || !runId)
+		throw Error("Use `bun cli/knowledge.ts compare <subsetFile> <runId>`");
+	const subset = loadKnowledgeSubset(resolve(subsetFile));
+	const comparison = compareKnowledgeRuns(
+		subset,
+		knowledgeAttempts(await operationRun(subset.baselineRunId)),
+		knowledgeAttempts(await operationRun(runId)),
 	);
+	console.log(JSON.stringify(comparison, null, 2));
+	return comparison;
+}
+
+/** Freezes dev, held-out and the spot-check set and prints their summary. */
+async function freezeAll(setsRoot: string) {
+	const sets = await freezeKnowledgeSets(setsRoot, repository);
 	const summary = sets.map(
 		({ name, hash, gitHead, dirtyRecordFiles, cases, slips }) => ({
 			name,
