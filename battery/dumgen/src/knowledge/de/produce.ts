@@ -20,7 +20,8 @@
  *   finish in (#1122).
  * - The requested Variation Dimensions go to `paradigm.ts`: written as for
  *   a Lemma's first Reading, or, for a created Reading of a Lemma with
- *   stored variants, put to the licence judge first (ADR 0048, #1230).
+ *   stored variants, written and then, where the forms differ from the
+ *   stored ones, put to the licence judge (ADR 0048, #1260).
  * - Bad input is a Defect, raised before anything is asked: a stored
  *   Paradigm Dumrel refuses for the Lemma and its Readings among it.
  */

@@ -9,6 +9,7 @@ import {
 	type KnowledgeEvaluated,
 	knowledgeExperiment,
 } from "./knowledge/experiment.js";
+import type { DoubletSplit } from "./licence/cases.js";
 import {
 	type LicenceEvaluated,
 	licenceExperiment,
@@ -212,11 +213,12 @@ export function knowledgeEntry(
 }
 
 /**
- * The licence judge's doublets entry (#1230): the Knowledge arguments,
- * the set holding no subset and every case gold.
+ * The licence judge's entry for one half of the doublets set (#1230,
+ * #1260): the Knowledge arguments, the set holding no subset and every
+ * case gold.
  */
-export function licenceEntry(): Experiment {
-	const experiment = licenceExperiment();
+export function licenceEntry(split: DoubletSplit): Experiment {
+	const experiment = licenceExperiment(split);
 	return {
 		id: experiment.id,
 		caseCount: experiment.caseCount,

@@ -1,15 +1,18 @@
 /**
- * Every text the licence judge sends (ADR 0048, #1230), each a paragraph
+ * Every text the licence judge sends (ADR 0048, #1260), each a paragraph
  * that cites the dumcorpus Rules it states at the statement hash it was
  * last checked against (ADR 0037, #695).
  *
  * - The policy mirrors the Reading judge's (ADR 0031) and the translation
- *   judge's (ADR 0047): the stored forms of the Lemma's Paradigm are bare
- *   options, never the Readings that license them, beside the new
- *   Reading's Emoji Description and the marked Sentence.
- * - Each stored form is one yes-or-no question, so the judge can take
- *   both forms of a Free dimension, one of a Conditioned one, or none,
- *   which is NoMatch.
+ *   judge's (ADR 0047): the forms are bare options, never the Readings
+ *   that license them, beside the new Reading's Emoji Description and the
+ *   marked Sentence.
+ * - A question puts the stored forms and the forms Luna wrote for the new
+ *   Reading side by side, in one order that hides which is which, so jev
+ *   chooses between a form and its rival instead of judging a correct form
+ *   alone, which it says yes to (#1230).
+ * - Each option is a selection of those forms, so the judge can take one
+ *   form of a Conditioned dimension or several of a Free one.
  * - It cites the German Doublet Rule, whose gold scores it.
  *
  * German examples are quoted «…», so the disjointness test can read them;
@@ -36,19 +39,19 @@ const { paragraph } = registry;
 export const licencePolicy = {
 	task: paragraph(
 		"judge.task",
-		"`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, `kind` its word class, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. The Lemma has other meanings, and its dictionary entry already holds the forms one of them takes. Each question names one of those stored forms (`form`) and the part of the paradigm it fills (`part`).",
+		"`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, `kind` its word class, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. Each question names one part of the paradigm (`part`) and lists, as `forms`, forms of that part a dictionary gives this word: some may be this meaning's, others another meaning's. Each option is a selection of those forms.",
 		rules.meaning,
 		rules.doublets,
 	),
 	takes: paragraph(
 		"judge.takes",
-		"Answer yes only when a dictionary such as Duden or DWDS gives this very form for this meaning. When it gives two forms of one part for this meaning, both in use, this meaning takes both: answer yes for each, also when one is rarer or older.",
+		"Pick the option that lists exactly the forms a dictionary such as Duden or DWDS gives this meaning for the part. Pick several forms only when the dictionary gives them as alternatives of this one meaning, both in use, also when one is rarer or older («backen»: «backte» and «buk»).",
 		rules.doublets,
 		rules.principalParts,
 	),
 	conditioned: paragraph(
 		"judge.conditioned",
-		"Answer no when the dictionary gives this meaning another form of the part and keeps the stored one to another meaning. Meanings of one German word often inflect differently, in a noun's plural («Bau»: «Bauten» for buildings, «Baue» for an animal's burrow) or in a verb's strong and weak forms («quellen»: «quoll» when water wells up, «quellte» when someone soaks peas). That the form is a correct form of the word is not enough: first recall the form this meaning takes, then answer yes only if it is the stored one.",
+		"Two forms of one part more often belong to two meanings than to one. Meanings of one German word often inflect differently, in a noun's plural («Bau»: «Bauten» for buildings, «Baue» for an animal's burrow) or in a verb's strong and weak forms («quellen»: «quoll» when water wells up, «quellte» when someone soaks peas). That a form is a correct form of the word is not enough: first recall the form this very meaning takes, then leave out every form the dictionary keeps to another meaning.",
 		rules.doublets,
 		rules.meaning,
 	),
@@ -59,26 +62,12 @@ export const licencePolicy = {
 	),
 } as const;
 
-/** The question every stored form is asked; the form rides beside it. */
+/** The question every judged dimension is asked; its part and forms ride beside it. */
 export const licenceQuestion = paragraph(
 	"judge.question",
-	"Does a dictionary give this `form` as the `part` of the meaning in `reading`?",
+	"Which of `forms` does a dictionary give as the `part` of the meaning in `reading`?",
 	rules.doublets,
 );
-
-/** What a yes and a no say, so neither reads as whether the form is German. */
-export const licenceCriteria = {
-	true: paragraph(
-		"judge.question.true",
-		"This meaning takes this very form",
-		rules.doublets,
-	),
-	false: paragraph(
-		"judge.question.false",
-		"This meaning takes another form; this one is another meaning's",
-		rules.doublets,
-	),
-} as const;
 
 /** Each Variation Dimension as the judge's `part` names it. */
 export const dimensionParts: Readonly<Record<Dumrel.DimensionId, string>> = {
@@ -119,7 +108,7 @@ export const dimensionParts: Readonly<Record<Dumrel.DimensionId, string>> = {
 	),
 };
 
-/** A plural marker as the judge's `form` names it: what the marker says. */
+/** A plural marker as the judge's forms name it: what the marker says. */
 export const markerForms: Readonly<Record<string, string>> = {
 	NoPlural: paragraph(
 		"form.NoPlural",

@@ -3,13 +3,17 @@ import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { canonicalJson } from "common-utils";
+import { paradigmChangesFor } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import { listExperiments } from "../../../lab/evaluation/experiments.js";
 import { storeFrozenSet } from "../../../lab/evaluation/frozen-sets.js";
 import {
+	doubletSplitOf,
 	type LicenceCase,
 	type LicenceSet,
 	licenceCases,
 	loadLicenceSet,
+	splitCases,
 	trackedLicenceSetsRoot,
 } from "../../../lab/evaluation/licence/cases.js";
 import {
@@ -54,72 +58,107 @@ test("the doublets set is each doublet's two Readings, each produced after the o
 	expect(canonicalJson(frozen.cases)).toBe(canonicalJson(cases));
 });
 
-/** A judge request over the stored forms of a case, as production sends it. */
-const question = (part: string, form: string): JevRequest["questions"] => ({
-	q: { type: "noul", instructions: { question: "?", part, form } },
-});
-
-test("the oracle takes exactly the stored forms gold gives the later Reading", () => {
-	const broadcast = caseOf("senden", "📡");
-	const nouls = (part: string, form: string) =>
-		licenceOracle.answers({ licenceCase: broadcast }, question(part, form))
-			.q;
-	expect(
-		nouls("the third person singular Präteritum (er …)", "sendete"),
-	).toEqual({
-		type: "noul",
-		noul: 1,
-	});
-	expect(
-		nouls("the third person singular Präteritum (er …)", "sandte"),
-	).toEqual({
-		type: "noul",
-		noul: 0,
-	});
-});
-
-/** The output a perfect run of the case would store: the oracle's pick, and gold's forms after NoMatch. */
-function perfect(licenceCase: LicenceCase, judged?: Record<string, string[]>) {
-	const events = Object.entries(licenceCase.stored.paradigm).map(
-		([dimension, stored]) => {
-			const gold =
-				licenceCase.later.gold.paradigm[
-					dimension as keyof typeof licenceCase.later.gold.paradigm
-				] ?? [];
-			const taken =
-				judged?.[dimension] ??
-				(stored ?? [])
-					.filter((form) => gold.includes(form))
-					.map((form) => form.toLowerCase());
-			return {
-				name: "ParadigmLicence",
-				data: {
-					dimension,
-					outcome: taken.length > 0 ? "Licensed" : "NoMatch",
-					variants: taken,
-					nouls: {},
-				},
-			};
-		},
+test("the split keeps each doublet's two cases together and halves every stratum: noun doublets, verb doublets with and without a shared form choice, and the Free controls", () => {
+	const halves = doubletSplitOf(cases);
+	const lemmasOf = (split: string) =>
+		[...halves]
+			.flatMap(([lemma, half]) => (half === split ? [lemma] : []))
+			.sort();
+	expect(lemmasOf("tuning")).toEqual(
+		[
+			"Gesicht",
+			"Mutter",
+			"Strauß",
+			"bewegen",
+			"melken",
+			"schaffen",
+			"schleifen",
+			"wenden",
+		].sort(),
 	);
-	return { paradigmChanges: [], failures: [], events };
+	expect(lemmasOf("heldout")).toEqual(
+		[
+			"Bank",
+			"Druck",
+			"Pizza",
+			"Wort",
+			"erschrecken",
+			"hängen",
+			"senden",
+			"wiegen",
+		].sort(),
+	);
+	expect(splitCases(cases, "tuning")).toHaveLength(15);
+	expect(splitCases(cases, "heldout")).toHaveLength(15);
+});
+
+/** A licence request over `forms`, as production sends it, its options every selection. */
+const question = (
+	part: string,
+	forms: readonly string[],
+	criteria: Readonly<Record<string, string>>,
+): JevRequest["questions"] => ({
+	q: {
+		type: "choice",
+		instructions: { question: "?", part, forms: [...forms] },
+		criteria,
+	},
+});
+
+test("the oracle picks the selection of the shown forms gold gives the later Reading", () => {
+	const preterite = "the third person singular Präteritum (er …)";
+	const options = { s0: "sandte", s1: "sendete", s2: "sandte and sendete" };
+	const pick = (emoji: string) =>
+		licenceOracle.answers(
+			{ licenceCase: caseOf("senden", emoji) },
+			question(preterite, ["sandte", "sendete"], options),
+		).q;
+	expect(pick("📡")).toMatchObject({ type: "choice", choice: "s1" });
+	expect(pick("📨")).toMatchObject({ type: "choice", choice: "s2" });
+});
+
+/** The output of a run whose Luna wrote `written` per dimension and whose Licence is `licensed`. */
+function output(
+	licenceCase: LicenceCase,
+	licensed: Readonly<Record<string, readonly string[]>>,
+	outcome: "Matched" | "Judged" = "Judged",
+) {
+	const { reading } = licenceCase.later;
+	const paradigmChanges = Object.entries(licensed).flatMap(
+		([dimension, values]) =>
+			paradigmChangesFor({
+				reading,
+				dimension: dimension as Dumrel.DimensionId,
+				values,
+				provenance: "Produced",
+			}),
+	);
+	const events = Object.entries(licensed).map(([dimension, values]) => ({
+		name: "ParadigmLicence",
+		data: { dimension, outcome, written: values, variants: [] },
+	}));
+	return { paradigmChanges, failures: [], events };
 }
 
-test("a dimension is right when the judge takes exactly the stored variants gold gives; NoMatch is scored for precision and recall", () => {
+test("a dimension is right when the Licence the run leaves is gold's forms; stored-variant takes and drops, Luna and the judge are read apart", () => {
 	const lender = caseOf("Bank", "🏦");
-	const right = evaluateLicence(lender, perfect(lender));
+	const right = evaluateLicence(
+		lender,
+		output(lender, { plural: ["Banken"] }),
+	);
 	expect(right.verdicts).toEqual([
 		expect.objectContaining({
 			dimension: "plural",
 			stored: ["bänke"],
 			gold: ["banken"],
-			expected: [],
-			judged: [],
+			written: ["banken"],
+			outcome: "Judged",
+			licensed: ["banken"],
 		}),
 	]);
 	const leak = evaluateLicence(
 		lender,
-		perfect(lender, { plural: ["bänke"] }),
+		output(lender, { plural: ["Bänke"] }, "Matched"),
 	);
 	const report = licenceReport([
 		{
@@ -139,10 +178,12 @@ test("a dimension is right when the judge takes exactly the stored variants gold
 	]);
 	expect(report.dimensions).toMatchObject({ correct: 1, count: 2 });
 	expect(report.variants).toMatchObject({ wrongTakes: 1, wrongDrops: 0 });
-	expect(report.noMatch.recall).toMatchObject({ correct: 1, count: 2 });
-	expect(report.noMatch.precision).toMatchObject({ correct: 1, count: 1 });
+	expect(report.luna).toMatchObject({ correct: 1, count: 2 });
+	expect(report.matched).toMatchObject({ correct: 0, count: 1 });
+	expect(report.judged).toMatchObject({ correct: 1, count: 1 });
+	expect(report.judgeRequests).toMatchObject({ correct: 1, count: 2 });
 	expect(report.misses).toEqual([
-		expect.objectContaining({ repetition: 1, judged: ["bänke"] }),
+		expect.objectContaining({ repetition: 1, licensed: ["bänke"] }),
 	]);
 });
 
@@ -162,7 +203,8 @@ test("the harness prices from the oracle, runs live once through the cache and r
 		cases: chosen,
 	};
 	await storeFrozenSet(join(root, "sets"), set);
-	const experiment = licenceExperiment();
+	// Each case is its stratum's one Lemma, so all three are in tuning.
+	const experiment = licenceExperiment("tuning");
 	const estimated = await experiment.evaluate({
 		experimentId: experiment.id,
 		sourceRevision: "test",
@@ -172,7 +214,8 @@ test("the harness prices from the oracle, runs live once through the cache and r
 		repetitions: 1,
 	});
 	expect(estimated.run).toBeUndefined();
-	expect(estimated.price?.jev.requests).toBe(4);
+	// Bank's plurality and licence, senden's licence; melken's gold matches.
+	expect(estimated.price?.jev.requests).toBe(3);
 
 	let calls = 0;
 	// A jev and Luna that answer as gold does, through the oracle.
@@ -224,10 +267,9 @@ test("the harness prices from the oracle, runs live once through the cache and r
 	expect(metrics.unscored).toBe(0);
 	expect(metrics.dimensions.rate).toBe(1);
 	expect(metrics.cases).toMatchObject({ correct: 3, count: 3 });
-	expect(metrics.licences.asRuleGives.rate).toBe(1);
 	expect(metrics.freeControls).toMatchObject({ correct: 1, count: 1 });
-	// 🏦's plural is NoMatch, so Luna writes it; 📡 and the control take stored variants only.
-	expect(metrics.noMatch.recall).toMatchObject({ correct: 1, count: 1 });
+	// Luna writes gold: melken's forms are the stored ones, so it asks no judge.
+	expect(metrics.judgeRequests).toMatchObject({ correct: 2, count: 3 });
 
 	const before = calls;
 	const replayed = await experiment.evaluate({
@@ -245,8 +287,9 @@ test("the harness prices from the oracle, runs live once through the cache and r
 	);
 });
 
-test("the evaluation table lists the doublets experiment, which takes no subset or gold filter", async () => {
-	expect(listExperiments().map(({ id }) => id)).toContain(
-		"knowledge/de:doublets",
-	);
+test("the evaluation table lists the doublets set's two halves", async () => {
+	const ids = listExperiments().map(({ id }) => id);
+	expect(ids).toContain("knowledge/de:doublets:tuning");
+	expect(ids).toContain("knowledge/de:doublets:heldout");
+	expect(licenceExperiment("heldout").caseCount()).toBe(15);
 });

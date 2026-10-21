@@ -73,9 +73,9 @@ export type KnowledgeProduction = {
 	readonly changes: readonly GermanKnowledgeChange[];
 	/**
 	 * The Paradigm Changes of the requested dimensions (ADR 0048), in
-	 * dimension order: per dimension a Contribute per variant written, then
-	 * a License that gives the Reading an explicit Licence over them, or the
-	 * License alone of the stored variants the licence judge took.
+	 * dimension order: per dimension a Contribute per new variant, then a
+	 * License that gives the Reading an explicit Licence over the variants
+	 * it takes, stored or new.
 	 */
 	readonly paradigmChanges: readonly Dumrel.ParadigmChange[];
 	readonly pendingRelations: readonly GermanPendingRelation[];
@@ -122,11 +122,12 @@ export type ProduceKnowledgeInput<E = never> = {
 	 * - A dimension with no stored variant is written as for a Lemma's
 	 *   first Reading: Luna writes the forms of the sense, and code turns
 	 *   each into a variant the Reading licenses explicitly.
-	 * - A dimension with stored variants, for a `New` Reading, goes to the
-	 *   licence judge, one jev request for every such dimension: the
-	 *   Reading licenses the stored variants it takes, and only where it
-	 *   takes none does Luna write the dimension's forms, as for a first
-	 *   Reading.
+	 * - A dimension with stored variants, for a `New` Reading: Luna writes
+	 *   its forms first, without seeing the stored ones. Forms that are the
+	 *   stored variants exactly license them. Otherwise the licence judge,
+	 *   one jev request for every such dimension, sees the stored and new
+	 *   forms together and picks the ones the sense takes; the Reading
+	 *   licenses those, and each new one becomes a variant.
 	 * - A dimension with stored variants, for a `TopUp` Reading or one the
 	 *   stored Paradigm already licenses, is skipped: its Licence, stated or
 	 *   Unstated, stays as it is.

@@ -24,10 +24,12 @@
  *   structural aspects against dumcorpus's Knowledge gold, and its text
  *   aspects on a human spot-check sample (#887, `knowledge/experiment.ts`),
  *   with the same transports, guard and caps.
- * - `knowledge/de:doublets`: `knowledge.produce`'s licence judge on the
- *   German Doublet Rule's gold, a Lemma's later Reading produced over its
- *   other Reading's stored forms (#1230, `licence/experiment.ts`), with
- *   the Knowledge port's cache, transports, guard and caps.
+ * - `knowledge/de:doublets:tuning` and `:heldout`: `knowledge.produce`'s
+ *   licence judge on the two halves of the German Doublet Rule's gold, a
+ *   Lemma's later Reading produced over its other Reading's stored forms
+ *   (#1230, #1260, `licence/experiment.ts`), with the Knowledge port's
+ *   cache, transports, guard and caps. Prompts are tuned on `tuning`
+ *   only.
  *
  * `<set>` is one of the lab's frozen sets, `dev` or `heldout`. Each case
  * runs three times, as in the lab's runs, and jev answers come through the
@@ -170,7 +172,8 @@ const experiments: readonly Experiment[] = [
 	knowledgeEntry("dev"),
 	knowledgeEntry("heldout"),
 	knowledgeEntry("spot-check"),
-	licenceEntry(),
+	licenceEntry("tuning"),
+	licenceEntry("heldout"),
 ];
 
 function experimentOf(id: string): Experiment {
