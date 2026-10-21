@@ -304,7 +304,6 @@
 			"reading": {
 				"emojiDescription": "📅",
 				"knowledge": {
-					"plural": ["Monate"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -344,9 +343,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Monate"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -354,7 +353,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {
@@ -596,7 +596,6 @@
 			"reading": {
 				"emojiDescription": "🌙",
 				"knowledge": {
-					"plural": ["Nächte"],
 					"semanticRelations": {
 						"antonym": [
 							{
@@ -624,9 +623,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Nächte"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -634,7 +633,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

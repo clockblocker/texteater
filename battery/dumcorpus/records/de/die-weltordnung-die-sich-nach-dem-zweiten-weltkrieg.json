@@ -79,15 +79,6 @@
 			"reading": {
 				"emojiDescription": "⚓",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
-					"preterite": ["etablierte"],
-					"presentSingular": {
-						"first": ["etabliere"],
-						"second": ["etablierst"],
-						"third": ["etabliert"]
-					},
-					"pastParticiple": ["etabliert"],
-					"subjunctivePast": ["etablierte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -113,19 +104,30 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["etablierte"],
+					"present1": ["etabliere"],
+					"present2": ["etablierst"],
+					"present3": ["etabliert"],
+					"pastParticiple": ["etabliert"],
+					"subjunctivePast": ["etablierte"]
+				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},

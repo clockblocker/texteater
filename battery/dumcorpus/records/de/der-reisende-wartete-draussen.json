@@ -60,7 +60,6 @@
 			"reading": {
 				"emojiDescription": "🧳",
 				"knowledge": {
-					"plural": ["Reisenden"],
 					"semanticRelations": {
 						"nearSynonym": [
 							{
@@ -96,8 +95,8 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Reisenden"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
@@ -106,7 +105,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

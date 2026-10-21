@@ -141,24 +141,8 @@ export const readingKnowledgeValidator = v.object({
 			meaning: participleMeaningValidator,
 		}),
 	),
-	// The per-Reading aspects of ADR 0038 and 0039, which Knowledge
-	// production writes (#887); Dumrel's parse has already checked them.
-	plural: v.optional(
-		v.union(v.array(v.string()), literalUnion(["NoPlural", "PluralOnly"])),
-	),
-	conjugationClass: v.optional(
-		v.array(literalUnion(["Strong", "Weak", "Mixed"])),
-	),
-	preterite: v.optional(v.array(v.string())),
-	presentSingular: v.optional(
-		v.object({
-			first: v.array(v.string()),
-			second: v.array(v.string()),
-			third: v.array(v.string()),
-		}),
-	),
-	pastParticiple: v.optional(v.array(v.string())),
-	subjunctivePast: v.optional(v.array(v.string())),
+	// The per-Reading aspects of ADR 0039, which Knowledge production writes
+	// (#887); Dumrel's parse has already checked them.
 	locutionType: v.optional(literalUnion(locutionTypeValues)),
 	sayingType: v.optional(
 		v.object({

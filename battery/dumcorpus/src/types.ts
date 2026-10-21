@@ -4,6 +4,7 @@ export type {
 	Coverage,
 	KnowledgeCoverage,
 	NoTarget,
+	ReadingParadigm,
 	Rule,
 	RuleCitation,
 	RuleId,

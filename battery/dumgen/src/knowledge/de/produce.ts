@@ -3,25 +3,30 @@
  * resolves, with no drafts (#623).
  *
  * - The Reading's route fixes what applies (Dumgen ADR 0003): an aspect
- *   or leaf its Knowledge Policy lacks, and the deferred
- *   `morphologicalTree`, are skipped. The split by Family stays here.
+ *   or leaf its Knowledge Policy lacks, a Variation Dimension its Paradigm
+ *   Policy doesn't name, and the deferred `morphologicalTree`, are skipped.
+ *   The split by Family stays here.
  * - A Closed Route, or an exact authored Reading, takes its Knowledge from
  *   dumcorpus through tf-demo, so every aspect still requested is a
  *   `CatalogMiss` and nothing is asked (ADR 0021).
  * - Every other aspect runs at once under the instance's request budget,
  *   isolated: its failure is a value, and its siblings land (#445, #446).
- * - Each aspect's changes go to `onContribution` as it finishes, one
- *   contribution at a time; its failure is the run's only error and
- *   interrupts the aspects still running.
+ * - Each aspect's Knowledge changes go to `onContribution` as it finishes,
+ *   one contribution at a time; its failure is the run's only error and
+ *   interrupts the aspects still running. Paradigm Changes come back with
+ *   the result only.
  * - The returned changes, pending relations and failures read in job order
- *   (the request's order), not the order the aspects finish in (#1122).
+ *   (the request's order, then the dimensions'), not the order the aspects
+ *   finish in (#1122).
  * - Bad input is a Defect, raised before anything is asked.
  */
 
 import { authoredReading, closedRoute } from "dumcorpus/inventories";
 import { lemmaIdentityKey, routeOf } from "dumling";
 import {
+	dimensionIdValues,
 	directSemanticRelationValues,
+	paradigmDimensions,
 	selectKnowledge,
 	translationLanguageValues,
 } from "dumrel";
@@ -53,7 +58,7 @@ import {
 	producePlural,
 	produceSayingType,
 	produceVerbForms,
-	type VerbFormAspect,
+	type VerbDimension,
 } from "./structure.js";
 import {
 	produceDefinition,
@@ -65,36 +70,30 @@ import { produceValency } from "./valency.js";
 /** What one aspect brings back once it ran. */
 type AspectOutput = {
 	readonly changes: readonly GermanKnowledgeChange[];
+	readonly paradigmChanges?: readonly Dumrel.ParadigmChange[];
 	readonly pendingRelations?: readonly GermanPendingRelation[];
 	readonly failures?: readonly KnowledgeFailure[];
 };
 
+/** A Knowledge aspect, or a Variation Dimension of the Lemma Paradigm. */
+type JobAspect = KnowledgeAspect | Dumrel.DimensionId;
+
 /**
- * One aspect, or one translation language, to produce. A job that fills
- * more aspects from the same call names them `alongside`, and fails for
- * each of them.
+ * One aspect, one translation language or one Variation Dimension to
+ * produce. A job that fills more from the same call names them `alongside`,
+ * and fails for each of them.
  */
 type Job = {
-	readonly aspect: KnowledgeAspect;
-	readonly alongside?: readonly KnowledgeAspect[];
+	readonly aspect: JobAspect;
+	readonly alongside?: readonly JobAspect[];
 	readonly leaf?: string;
 	readonly run: Effect.Effect<AspectOutput, AspectError>;
 };
 
-const aspectsOf = (job: Job): readonly KnowledgeAspect[] => [
+const aspectsOf = (job: Job): readonly JobAspect[] => [
 	job.aspect,
 	...(job.alongside ?? []),
 ];
-
-const verbFormAspects: readonly VerbFormAspect[] = [
-	"conjugationClass",
-	"preterite",
-	"presentSingular",
-	"pastParticiple",
-	"subjunctivePast",
-];
-const verbFormNames = new Set<string>(verbFormAspects);
-const isVerbForm = (aspect: KnowledgeAspect) => verbFormNames.has(aspect);
 
 const requestAspects = new Set<string>([
 	"transcription",
@@ -103,12 +102,6 @@ const requestAspects = new Set<string>([
 	"semanticRelations",
 	"valency",
 	"participleSource",
-	"plural",
-	"conjugationClass",
-	"preterite",
-	"presentSingular",
-	"pastParticiple",
-	"subjunctivePast",
 	"locutionType",
 	"sayingType",
 	"formulaRole",
@@ -120,22 +113,43 @@ const changesOnly = (
 ): Effect.Effect<AspectOutput, AspectError> =>
 	Effect.map(run, (changes) => ({ changes }));
 
-/** The one job for a verb's principal parts: the requested aspects its write fills. */
-function verbFormsJob(
+/**
+ * The jobs for the requested Variation Dimensions the route's Paradigm Policy
+ * names, in policy order: one for a noun's plural, and one write for every
+ * requested principal part of a verb (#1209, #1217).
+ */
+function paradigmJobsOf(
 	context: AspectContext,
-	aspect: VerbFormAspect,
-	request: Dumrel.KnowledgeRequestMask,
-	applicable: Dumrel.KnowledgeRequestMask,
-): Job {
-	const wanted = verbFormAspects.filter(
-		(name) => name in request && name in applicable,
+	requested: readonly Dumrel.DimensionId[],
+	skipped: string[],
+): Job[] {
+	const named = paradigmDimensions(context.lemma);
+	for (const dimension of requested)
+		if (!named.includes(dimension)) skipped.push(`paradigm.${dimension}`);
+	const wanted = named.filter((dimension) => requested.includes(dimension));
+	const verbal = wanted.filter(
+		(dimension): dimension is VerbDimension => dimension !== "plural",
 	);
-	const [first = aspect, ...alongside] = wanted;
-	return {
-		aspect: first,
-		...(alongside.length === 0 ? {} : { alongside }),
-		run: produceVerbForms(context, wanted),
-	};
+	const jobs: Job[] = [];
+	if (wanted.includes("plural"))
+		jobs.push({
+			aspect: "plural",
+			run: Effect.map(producePlural(context), (paradigmChanges) => ({
+				changes: [],
+				paradigmChanges,
+			})),
+		});
+	const [first, ...alongside] = verbal;
+	if (first !== undefined)
+		jobs.push({
+			aspect: first,
+			...(alongside.length === 0 ? {} : { alongside }),
+			run: Effect.map(produceVerbForms(context, verbal), (output) => ({
+				changes: [],
+				...output,
+			})),
+		});
+	return jobs;
 }
 
 /** The jobs a request asks for that the route applies, in the request's order. */
@@ -216,20 +230,6 @@ function jobsOf(
 			case "valency":
 				jobs.push({ aspect, run: produceValency(context, origin) });
 				break;
-			case "plural":
-				jobs.push({ aspect, run: changesOnly(producePlural(context)) });
-				break;
-			case "conjugationClass":
-			case "preterite":
-			case "presentSingular":
-			case "pastParticiple":
-			case "subjunctivePast":
-				// One write fills every principal part and the classes (#1209, #1217).
-				if (!jobs.some((job) => isVerbForm(job.aspect)))
-					jobs.push(
-						verbFormsJob(context, aspect, request, applicable),
-					);
-				break;
 			case "participleSource":
 				jobs.push({
 					aspect,
@@ -262,7 +262,7 @@ function jobsOf(
 /** An aspect's error as its failure value. */
 const failureOf = (
 	job: Job,
-	aspect: KnowledgeAspect,
+	aspect: JobAspect,
 	error: AspectError,
 ): KnowledgeFailure => ({
 	aspect,
@@ -300,6 +300,9 @@ function badInput<E>(input: ProduceKnowledgeInput<E>): string | undefined {
 	for (const aspect of Object.keys(request))
 		if (!requestAspects.has(aspect))
 			return `The request names no Knowledge aspect ${aspect}`;
+	for (const dimension of input.paradigm?.dimensions ?? [])
+		if (!(dimensionIdValues as readonly string[]).includes(dimension))
+			return `The paradigm request names no Variation Dimension ${dimension}`;
 	return undefined;
 }
 
@@ -331,12 +334,20 @@ export const produceGermanKnowledge = <E>(
 			selected.value,
 			input.origin,
 		);
+		jobs.push(
+			...paradigmJobsOf(
+				context,
+				input.paradigm?.dimensions ?? [],
+				skipped,
+			),
+		);
 		if (skipped.length > 0)
 			scope.event({ name: "SkippedAspects", data: { skipped } });
 		// Authored Knowledge is tf-demo's to attach (ADR 0021).
 		if (closedRoute(reading.lemma) || authoredReading(reading))
 			return {
 				changes: [],
+				paradigmChanges: [],
 				pendingRelations: [],
 				failures: jobs.flatMap((job) =>
 					aspectsOf(job).map((aspect) => ({
@@ -374,6 +385,9 @@ export const produceGermanKnowledge = <E>(
 		);
 		return {
 			changes: outputs.flatMap((output) => output.changes),
+			paradigmChanges: outputs.flatMap(
+				(output) => output.paradigmChanges ?? [],
+			),
 			pendingRelations: outputs.flatMap(
 				(output) => output.pendingRelations ?? [],
 			),

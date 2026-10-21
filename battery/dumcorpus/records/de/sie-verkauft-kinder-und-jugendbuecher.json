@@ -81,12 +81,10 @@
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": {
 				"emojiDescription": "🧑📖",
-				"knowledge": {
-					"plural": ["Jugendbücher"]
-				},
+				"knowledge": {},
+				"paradigm": { "plural": ["Jugendbücher"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -94,7 +92,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

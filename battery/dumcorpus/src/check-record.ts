@@ -1,16 +1,21 @@
-import { parseUnit, routeOf } from "dumling";
+import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import { parseReadingKnowledge, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { z } from "zod";
 import { languageAttestationIssues } from "./attestation-checks.js";
 import { authoredReadingIssues } from "./check-authored-readings.js";
 import { knowledgeCoverageIssues } from "./check-knowledge-coverage.js";
+import {
+	checkKnowledge,
+	checkParadigm,
+	checkReading,
+} from "./check-reading.js";
 import { attestationSyncretismIssues } from "./check-syncretisms.js";
 import type {
 	AnnotationLayer,
 	KnowledgeCoverage,
 	LegacyCase,
+	ReadingParadigm,
 	Segment,
 	SegmentationTarget,
 	Sources,
@@ -524,6 +529,18 @@ function checkTargetLayers(
 			`${path}.reading.knowledge`,
 			"A record reviewed through Knowledge holds each target's Reading Knowledge",
 		);
+	let paradigm: ReadingParadigm | undefined;
+	if (reading.value !== undefined && target.reading?.paradigm !== undefined) {
+		const checked = checkParadigm(target.reading.paradigm, reading.value);
+		for (const failure of checked.issues)
+			issue(
+				"Knowledge",
+				"Knowledge",
+				`${path}.${failure.path}`,
+				failure.message,
+			);
+		if (checked.issues.length === 0) paradigm = checked.paradigm;
+	}
 	const authoredCoverage: KnowledgeCoverage | undefined =
 		target.reading?.coverage;
 	if (
@@ -543,6 +560,10 @@ function checkTargetLayers(
 			reading.value,
 			knowledge,
 			authoredCoverage,
+			// Paradigm forms that failed their check aren't held against coverage.
+			target.reading?.paradigm !== undefined && paradigm === undefined
+				? undefined
+				: (paradigm ?? {}),
 		);
 		for (const found of covered.issues)
 			issue(
@@ -570,6 +591,7 @@ function checkTargetLayers(
 			attestation,
 			...(reading.value === undefined ? {} : { reading: reading.value }),
 			...(knowledge === undefined ? {} : { knowledge }),
+			...(paradigm === undefined ? {} : { paradigm }),
 			...(coverage === undefined ? {} : { coverage }),
 			...(target.grundform === undefined
 				? {}
@@ -577,110 +599,4 @@ function checkTargetLayers(
 		},
 		knowledge: complete,
 	};
-}
-
-/**
- * Builds the target's Reading from its Attestation's Lemma and authored Emoji
- * Description and checks it with Dumling's Reading schema. A target that
- * names none fails the Reading layer. A Foreign Reading is its Lemma alone,
- * so its target names it with no Emoji Description (ADR 0045); Dumling
- * rejects a missing one on any other route.
- */
-function checkReading(
-	authored: { emojiDescription?: string } | undefined,
-	attestation: Dumling.Attestation,
-): {
-	value?: Dumling.Reading;
-	issues: { path: string; message: string }[];
-} {
-	if (authored === undefined)
-		return {
-			issues: [
-				{ path: "reading", message: "A target names its Reading" },
-			],
-		};
-	const parsed = parseUnit({
-		unitKind: "Reading",
-		lemma: attestation.surface.lemma,
-		...(authored.emojiDescription === undefined
-			? {}
-			: { emojiDescription: authored.emojiDescription }),
-	});
-	if (!parsed.success)
-		return {
-			issues: parsed.error.issues.map((error) => ({
-				path: ["reading", ...error.path].join("."),
-				message: error.message,
-			})),
-		};
-	if (parsed.chain.unitKind !== "Reading")
-		return { issues: [{ path: "reading", message: "Expected a Reading" }] };
-	const reading = parsed.chain.value;
-	if (
-		"emojiDescription" in reading &&
-		reading.emojiDescription !== authored.emojiDescription
-	)
-		return {
-			issues: [
-				{
-					path: "reading.emojiDescription",
-					message: `Store the Emoji Description as parseUnit normalizes it: ${JSON.stringify(reading.emojiDescription)}`,
-				},
-			],
-		};
-	return { value: reading, issues: [] };
-}
-
-/**
- * Checks a target's Reading Knowledge against the Reading that owns it with
- * dumrel's `parseReadingKnowledge`, which rejects an aspect or relation the
- * Reading's route cannot hold (an `endonym` outside PROPN). Where dumrel has
- * a Knowledge Policy for the route, each stored relation must also be one the
- * route requests. The Knowledge is stored as dumrel normalizes it.
- */
-function checkKnowledge(
-	authored: unknown,
-	reading: Dumling.Reading,
-): {
-	knowledge?: Dumrel.ReadingKnowledge;
-	issues: { path: string; message: string }[];
-} {
-	const at = (path: readonly PropertyKey[]) =>
-		["reading", "knowledge", ...path.slice(path[0] === "knowledge" ? 1 : 0)]
-			.map(String)
-			.join(".");
-	const parsed = parseReadingKnowledge({
-		source: reading,
-		knowledge: authored,
-	});
-	if (!parsed.success)
-		return {
-			issues: parsed.error.issues.map((error) => ({
-				path: at(error.path),
-				message: error.message,
-			})),
-		};
-	const knowledge: Dumrel.ReadingKnowledge = parsed.value;
-	const issues: { path: string; message: string }[] = [];
-	const { language, family, kind } = reading.lemma;
-	const policy = selectKnowledge({ route: routeOf(reading.lemma) });
-	const requested = policy.success
-		? (policy.value.semanticRelations ?? {})
-		: undefined;
-	for (const relation of Object.keys(knowledge.semanticRelations ?? {}))
-		if (
-			requested &&
-			relation !== "targetKind" &&
-			!Object.hasOwn(requested, relation)
-		)
-			issues.push({
-				path: at(["semanticRelations", relation]),
-				message: `A ${language} ${family} ${kind} Reading has no ${relation} relation`,
-			});
-	if (!sameValue(knowledge, authored))
-		issues.push({
-			path: at([]),
-			message: "Store the Knowledge exactly as dumrel normalizes it",
-		});
-	return { knowledge, issues };
 }

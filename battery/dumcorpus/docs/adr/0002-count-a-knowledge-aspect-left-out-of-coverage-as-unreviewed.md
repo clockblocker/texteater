@@ -20,7 +20,17 @@ Knowledge Policy requests.
 coverage of its Lemma's Paradigm ([ADR 0048]): one status per Variation
 Dimension its route's Paradigm Policy names. A reviewed dimension covers its
 variants and the target Reading's Licence, and a dimension left out is
-unreviewed.
+unreviewed. `reading.paradigm` holds, per dimension, the forms or the
+marker the target's Reading licenses, and `reading.coverage.paradigm` their
+statuses.
+
+A record over the file-token limit can't be staged until it is split, so it
+keeps the principal parts it stored as Reading Knowledge before ADR 0048. The
+loader reads them as the other records were migrated: each part moves to
+the dimension of its name, the Präsens singular splits into `present1`,
+`present2` and `present3`, and a conjugation class is dropped, since code
+derives classes from forms. A record under the limit must hold the current
+shape, so the old one can't spread.
 
 **Knowledge depth counts the structural aspects.** A target's Knowledge layer
 is complete when its coverage names every structural aspect its route

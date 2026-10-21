@@ -1,18 +1,18 @@
 /**
- * The structural aspects that take one value each (#883 addenda): a
- * noun's plural, a verb's principal parts and conjugation classes, an
- * adjective's Participle Source, and a Locution's, Saying's or formula's
- * type. Luna writes what must be written (plural forms, a verb's principal
- * parts, a source verb's parts, a Winged Word's attribution) and jev judges every
- * closed choice (plurality, the participle's form and meaning, the three
- * types); code derives the rest (conjugation classes from the Präteritum,
- * ADR 0038).
+ * The structural aspects that take one value each (#883 addenda): an
+ * adjective's Participle Source and a Locution's, Saying's or formula's type,
+ * and the Variation Dimensions of a Lemma's Paradigm (ADR 0048): a noun's
+ * plural and a verb's principal parts. Luna writes what must be written
+ * (plural forms, a verb's principal parts, a source verb's parts, a Winged
+ * Word's attribution) and jev judges every closed choice (plurality, the
+ * participle's form and meaning, the three types). Code splits written forms
+ * into Paradigm Variants; conjugation classes are derived from the
+ * Präteritum, never stored (ADR 0038).
  */
 import { isRecord } from "common-utils";
 import { germanInseparablePrefixes } from "dumcorpus/inventories";
 import { foldCase, normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
-import { germanConjugationClass } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import { InvalidModelOutput } from "../../errors.js";
@@ -22,6 +22,7 @@ import {
 	type AspectContext,
 	type AspectError,
 	checkedChanges,
+	checkedParadigmChanges,
 	judgeState,
 	KnowledgeUnresolved,
 	textOf,
@@ -64,12 +65,13 @@ const pluralQuestion = choice(plural.question, {
 });
 
 /**
- * A noun's plural: its forms when jev says it has a plural, else the
- * marker jev picked. A plural with no form written is unresolved.
+ * A noun's `plural` dimension: its forms when jev says it has a plural, else
+ * the marker jev picked, as the Paradigm Changes that license them to the
+ * Reading. A plural with no form written is unresolved.
  */
 export const producePlural = (
 	context: AspectContext,
-): Effect.Effect<GermanKnowledgeChange[], AspectError> =>
+): Effect.Effect<Dumrel.ParadigmChange[], AspectError> =>
 	Effect.gen(function* () {
 		const [forms, answers] = yield* Effect.all(
 			[
@@ -97,24 +99,24 @@ export const producePlural = (
 			{ concurrency: "unbounded" },
 		);
 		const plurality = choiceOf(answers, "plurality").choice;
-		if (plurality === "NoPlural" || plurality === "PluralOnly")
-			return yield* checked(context, "plural", plurality);
-		if (forms.length === 0)
+		if (forms.length === 0 && plurality === "HasPlural")
 			return yield* new KnowledgeUnresolved({
 				message: "jev judged a plural, and Luna wrote no plural form",
 			});
-		return yield* checked(context, "plural", forms);
+		const changes = checkedParadigmChanges(
+			context,
+			"plural",
+			plurality === "NoPlural" || plurality === "PluralOnly"
+				? [plurality]
+				: forms,
+		);
+		return Array.isArray(changes) ? changes : yield* changes;
 	});
 
 /** One Contribute change of `aspect`, checked by Dumrel. */
 function checked(
 	context: AspectContext,
-	aspect:
-		| "plural"
-		| "participleSource"
-		| "locutionType"
-		| "sayingType"
-		| "formulaRole",
+	aspect: "participleSource" | "locutionType" | "sayingType" | "formulaRole",
 	value: unknown,
 ): Effect.Effect<GermanKnowledgeChange[], AspectError> {
 	const changes = checkedChanges(context, aspect, [
@@ -125,9 +127,8 @@ function checked(
 		: Effect.fail(changes);
 }
 
-// Principal Parts and Conjugation Class (ADR 0038): Luna writes the forms in
-// one call, code judges the classes on the Präteritum's stem, and every
-// aspect comes from that one write (#1209, #1217).
+// Principal Parts (ADR 0038): Luna writes the forms in one call, and every
+// verb dimension comes from that one write (#1209, #1217).
 
 const verbFormsPrompt = [
 	shared.reading,
@@ -165,21 +166,10 @@ const verbFormsSchema = {
 	additionalProperties: false,
 } as const;
 
-const classOrder: readonly Dumrel.ConjugationClass[] = [
-	"Strong",
-	"Weak",
-	"Mixed",
-];
+/** The dimensions the one principal-parts write gives a verb. */
+export type VerbDimension = Exclude<Dumrel.DimensionId, "plural">;
 
-/** The aspects the one principal-parts write gives a verb. */
-export type VerbFormAspect =
-	| "conjugationClass"
-	| "preterite"
-	| "presentSingular"
-	| "pastParticiple"
-	| "subjunctivePast";
-
-/** What Luna wrote: the Präteritum, which every aspect needs, and the rest unread. */
+/** What Luna wrote: the Präteritum, which every dimension needs, and the rest unread. */
 type VerbFormsDraft = {
 	readonly preterite: string[];
 	readonly written: Readonly<Record<string, unknown>>;
@@ -199,39 +189,40 @@ function fieldForms(
 		: texts;
 }
 
-/** The value Luna wrote for one aspect, or why it is unusable. */
-function verbFormValue(
+/** Luna writes the Präsens singular by person; each person is one dimension. */
+const presentPersons: Readonly<
+	Partial<Record<VerbDimension, "first" | "second" | "third">>
+> = { present1: "first", present2: "second", present3: "third" };
+
+/** The forms Luna wrote for one dimension, or why they are unusable. */
+function verbFormValues(
 	draft: VerbFormsDraft,
-	aspect: Exclude<VerbFormAspect, "conjugationClass" | "preterite">,
+	dimension: VerbDimension,
 	lemma: string,
-): unknown {
-	if (aspect !== "presentSingular") return fieldForms(draft.written, aspect);
+): string[] | InvalidModelOutput {
+	if (dimension === "preterite") return draft.preterite;
+	const person = presentPersons[dimension];
+	if (person === undefined) return fieldForms(draft.written, dimension);
 	const present = draft.written.presentSingular;
 	if (!isRecord(present))
 		return unusable("verbForms", `Luna wrote no Präsens for ${lemma}`);
-	const persons = ["first", "second", "third"] as const;
-	const value: Record<string, string[]> = {};
-	for (const person of persons) {
-		const forms = fieldForms(present, person);
-		if (!Array.isArray(forms)) return forms;
-		value[person] = forms;
-	}
-	return value;
+	return fieldForms(present, person);
 }
 
 /**
- * The requested aspects of a verb's principal parts: the forms Luna writes
- * and the classes code judges on the Präteritum. Each aspect Dumrel refuses
- * or Luna left unusable fails on its own, so a form spelled against the
- * Lemma (`abreiste` for `abreisen`) still gives its class; a write with no
- * usable Präteritum fails them all.
+ * The requested dimensions of a verb's principal parts, from the forms Luna
+ * writes in one call, each as the Paradigm Changes that license them to the
+ * Reading. Each dimension Dumrel refuses or Luna left unusable fails on its
+ * own, so a Präteritum spelled against the Lemma (`aufzog` for `aufziehen`)
+ * leaves the Präsens standing; a write with no usable Präteritum fails them
+ * all.
  */
 export const produceVerbForms = (
 	context: AspectContext,
-	aspects: readonly VerbFormAspect[],
+	dimensions: readonly VerbDimension[],
 ): Effect.Effect<
 	{
-		readonly changes: GermanKnowledgeChange[];
+		readonly paradigmChanges: Dumrel.ParadigmChange[];
 		readonly failures: KnowledgeFailure[];
 	},
 	AspectError
@@ -256,33 +247,23 @@ export const produceVerbForms = (
 			},
 		);
 		const lemma = context.lemma.canonicalForm;
-		const classes = new Set(
-			draft.preterite.map((form) => germanConjugationClass(lemma, form)),
-		);
-		const changes: GermanKnowledgeChange[] = [];
+		const paradigmChanges: Dumrel.ParadigmChange[] = [];
 		const failures: KnowledgeFailure[] = [];
-		for (const aspect of aspects) {
-			const value =
-				aspect === "conjugationClass"
-					? classOrder.filter((name) => classes.has(name))
-					: aspect === "preterite"
-						? draft.preterite
-						: verbFormValue(draft, aspect, lemma);
+		for (const dimension of dimensions) {
+			const values = verbFormValues(draft, dimension, lemma);
 			const accepted =
-				value instanceof InvalidModelOutput
-					? value
-					: checkedChanges(context, aspect, [
-							{ kind: "Contribute", aspect, value },
-						]);
-			if (Array.isArray(accepted)) changes.push(...accepted);
+				values instanceof InvalidModelOutput
+					? values
+					: checkedParadigmChanges(context, dimension, values);
+			if (Array.isArray(accepted)) paradigmChanges.push(...accepted);
 			else
 				failures.push({
-					aspect,
+					aspect: dimension,
 					code: accepted._tag,
 					message: accepted.message,
 				});
 		}
-		return { changes, failures };
+		return { paradigmChanges, failures };
 	});
 
 // Participle Source (ADR 0036): Luna names the verb by form, jev checks it.

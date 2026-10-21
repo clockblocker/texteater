@@ -46,12 +46,10 @@
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": {
 				"emojiDescription": "🔢",
-				"knowledge": {
-					"plural": ["Trillionen"]
-				},
+				"knowledge": {},
+				"paradigm": { "plural": ["Trillionen"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -59,7 +57,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

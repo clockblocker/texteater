@@ -21,7 +21,7 @@
 	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0034", "ADR-0035", "ADR-0038"],
+		"adrs": ["ADR-0031", "ADR-0034", "ADR-0035", "ADR-0038", "ADR-0048"],
 		"rules": [
 			{
 				"rule": "de/core-features-are-identity",
@@ -62,7 +62,6 @@
 			"reading": {
 				"emojiDescription": "🔩",
 				"knowledge": {
-					"plural": ["Muttern"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -90,8 +89,8 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Muttern"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
@@ -100,11 +99,12 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {
-				"rationale": "The nut use shares one feminine Mutter Lemma with the mother use; the two are Readings of that Lemma, told apart by their Emoji Descriptions (ADR 0031). Their different plurals, Muttern and Mütter, are Reading Knowledge, not identity (ADR 0038)."
+				"rationale": "The nut use shares one feminine Mutter Lemma with the mother use; the two are Readings of that Lemma, told apart by their Emoji Descriptions (ADR 0031). Their different plurals, Muttern and Mütter, are Paradigm Variants of that one Lemma, each licensed by its own Reading, not identity (ADR 0038, ADR 0048)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

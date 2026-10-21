@@ -17,6 +17,8 @@ export type KnowledgeRequest = Dumrel.KnowledgeRequestMask;
 /**
  * One aspect or leaf a run could not produce, and why (#883 point 3). An
  * uncovered authored or Closed Route Reading comes back as a `CatalogMiss`.
+ * A Variation Dimension fails only for a run that asked for the Lemma
+ * Paradigm, which tf-demo does not yet store (#1232).
  */
 export type KnowledgeFailure = {
 	readonly aspect:
@@ -26,15 +28,10 @@ export type KnowledgeFailure = {
 		| "semanticRelations"
 		| "valency"
 		| "participleSource"
-		| "plural"
-		| "conjugationClass"
-		| "preterite"
-		| "presentSingular"
-		| "pastParticiple"
-		| "subjunctivePast"
 		| "locutionType"
 		| "sayingType"
-		| "formulaRole";
+		| "formulaRole"
+		| Dumrel.DimensionId;
 	readonly leaf?: string;
 	readonly code:
 		| "ProviderFailure"

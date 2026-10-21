@@ -80,7 +80,6 @@
 			"reading": {
 				"emojiDescription": "🎀",
 				"knowledge": {
-					"plural": ["Bänder"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -118,8 +117,8 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Bänder"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
@@ -128,7 +127,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {
@@ -173,15 +173,6 @@
 			"reading": {
 				"emojiDescription": "📍",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
-					"preterite": ["lag"],
-					"presentSingular": {
-						"first": ["liege"],
-						"second": ["liegst"],
-						"third": ["liegt"]
-					},
-					"pastParticiple": ["gelegen"],
-					"subjunctivePast": ["läge"],
 					"valency": [
 						{
 							"status": "Required",
@@ -219,12 +210,15 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["lag"],
+					"present1": ["liege"],
+					"present2": ["liegst"],
+					"present3": ["liegt"],
+					"pastParticiple": ["gelegen"],
+					"subjunctivePast": ["läge"]
+				},
 				"coverage": {
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
@@ -232,6 +226,14 @@
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},

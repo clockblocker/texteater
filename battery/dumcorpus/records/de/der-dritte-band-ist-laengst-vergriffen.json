@@ -58,7 +58,6 @@
 			"reading": {
 				"emojiDescription": "📚",
 				"knowledge": {
-					"plural": ["Bände"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -74,8 +73,8 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Bände"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
@@ -84,7 +83,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

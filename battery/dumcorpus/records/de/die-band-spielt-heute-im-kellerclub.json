@@ -59,7 +59,6 @@
 			"reading": {
 				"emojiDescription": "🎸",
 				"knowledge": {
-					"plural": ["Bands"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -119,8 +118,8 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Bands"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
@@ -129,7 +128,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

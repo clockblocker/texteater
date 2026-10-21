@@ -80,6 +80,18 @@ export type KnowledgeCoverage = {
 	readonly semanticRelations?: {
 		readonly [Relation in Dumrel.DirectSemanticRelation]?: CoverageStatus;
 	};
+	/** Which Variation Dimensions of the Lemma's Paradigm a person has covered (Dumcorpus ADR 0002). */
+	readonly paradigm?: {
+		readonly [Dimension in Dumrel.DimensionId]?: CoverageStatus;
+	};
+};
+
+/**
+ * What a Reading licenses in its Lemma's Paradigm (ADR 0048): per Variation
+ * Dimension, the forms or the marker its sense takes (`plural`: `Mütter`).
+ */
+export type ReadingParadigm = {
+	readonly [Dimension in Dumrel.DimensionId]?: readonly string[];
 };
 
 /**
@@ -102,8 +114,15 @@ export interface SpecTarget extends SegmentationTarget {
 	 */
 	knowledge?: Dumrel.ReadingKnowledge;
 	/**
-	 * Which aspects of `knowledge` a person has covered, authored as
-	 * `reading.coverage`. Present with the Knowledge it describes.
+	 * What the Reading licenses in its Lemma's Paradigm, authored as
+	 * `reading.paradigm` and checked with dumrel. The Lemma's Paradigm pools
+	 * its Readings' forms across records.
+	 */
+	paradigm?: ReadingParadigm;
+	/**
+	 * Which aspects of `knowledge` and dimensions of `paradigm` a person has
+	 * covered, authored as `reading.coverage`. Present with the Knowledge it
+	 * describes.
 	 */
 	coverage?: KnowledgeCoverage;
 	/** The authored Grundform verdict, checked wherever Dumling can decide it. */

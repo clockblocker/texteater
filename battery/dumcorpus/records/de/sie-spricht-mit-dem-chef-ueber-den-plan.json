@@ -49,7 +49,6 @@
 			"reading": {
 				"emojiDescription": "🧑‍💼👑",
 				"knowledge": {
-					"plural": ["Chefs"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -75,9 +74,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Chefs"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -85,7 +84,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

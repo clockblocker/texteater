@@ -6,12 +6,6 @@ export type KnowledgeSettings = {
 	morphologicalTree?: boolean | undefined;
 	valency?: boolean | undefined;
 	participleSource?: boolean | undefined;
-	plural?: boolean | undefined;
-	conjugationClass?: boolean | undefined;
-	preterite?: boolean | undefined;
-	presentSingular?: boolean | undefined;
-	pastParticiple?: boolean | undefined;
-	subjunctivePast?: boolean | undefined;
 	locutionType?: boolean | undefined;
 	sayingType?: boolean | undefined;
 	formulaRole?: boolean | undefined;
@@ -39,12 +33,6 @@ export type KnowledgeRequestMask = {
 	morphologicalTree?: null | undefined;
 	valency?: null | undefined;
 	participleSource?: null | undefined;
-	plural?: null | undefined;
-	conjugationClass?: null | undefined;
-	preterite?: null | undefined;
-	presentSingular?: null | undefined;
-	pastParticiple?: null | undefined;
-	subjunctivePast?: null | undefined;
 	locutionType?: null | undefined;
 	sayingType?: null | undefined;
 	formulaRole?: null | undefined;
@@ -1797,12 +1785,6 @@ export type ReadingKnowledge = {
 	semanticRelations?: SemanticRelations | undefined;
 	valency?: Array<ValencySlot> | undefined;
 	participleSource?: ParticipleSource | undefined;
-	plural?: NounPlural | undefined;
-	conjugationClass?: ConjugationClasses | undefined;
-	preterite?: Preterite | undefined;
-	presentSingular?: PresentSingular | undefined;
-	pastParticiple?: PastParticiple | undefined;
-	subjunctivePast?: SubjunctivePast | undefined;
 	locutionType?: LocutionType | undefined;
 	sayingType?: SayingType | undefined;
 	formulaRole?: FormulaRole | undefined;
@@ -2061,34 +2043,6 @@ export type KnowledgeChange =
 			value: ParticipleSource;
 	  }
 	| { kind: "Retract"; aspect: "participleSource" }
-	| { kind: "Contribute" | "Correct"; aspect: "plural"; value: NounPlural }
-	| { kind: "Retract"; aspect: "plural" }
-	| {
-			kind: "Contribute" | "Correct";
-			aspect: "conjugationClass";
-			value: ConjugationClasses;
-	  }
-	| { kind: "Retract"; aspect: "conjugationClass" }
-	| { kind: "Contribute" | "Correct"; aspect: "preterite"; value: Preterite }
-	| { kind: "Retract"; aspect: "preterite" }
-	| {
-			kind: "Contribute" | "Correct";
-			aspect: "presentSingular";
-			value: PresentSingular;
-	  }
-	| { kind: "Retract"; aspect: "presentSingular" }
-	| {
-			kind: "Contribute" | "Correct";
-			aspect: "pastParticiple";
-			value: PastParticiple;
-	  }
-	| { kind: "Retract"; aspect: "pastParticiple" }
-	| {
-			kind: "Contribute" | "Correct";
-			aspect: "subjunctivePast";
-			value: SubjunctivePast;
-	  }
-	| { kind: "Retract"; aspect: "subjunctivePast" }
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "locutionType";
@@ -3257,17 +3211,138 @@ export type PluralPattern =
 	| "En"
 	| "S"
 	| "Other";
-export type NounPlural = Array<string> | ("NoPlural" | "PluralOnly");
 export type ConjugationClass = "Strong" | "Weak" | "Mixed";
-export type ConjugationClasses = Array<ConjugationClass>;
-type Preterite = Array<string>;
-type PresentSingular = {
-	first: Array<string>;
-	second: Array<string>;
-	third: Array<string>;
-};
-type PastParticiple = Array<string>;
-type SubjunctivePast = Array<string>;
+export type DimensionId =
+	| "plural"
+	| "preterite"
+	| "present1"
+	| "present2"
+	| "present3"
+	| "pastParticiple"
+	| "subjunctivePast";
+export type ParadigmProvenance =
+	| "Produced"
+	| "Authored"
+	| "Attested"
+	| "Migrated";
+export type ParadigmChange =
+	| {
+			kind: "Contribute";
+			dimension: DimensionId;
+			value: string;
+			provenance: ParadigmProvenance;
+	  }
+	| {
+			kind: "Correct";
+			dimension: DimensionId;
+			variant: string;
+			value: string;
+	  }
+	| {
+			kind: "License" | "Unlicense";
+			dimension: DimensionId;
+			reading:
+				| Dumling.Reading<"de", "Foreign", "Foreign">
+				| Dumling.Reading<"de", "Lexeme", "ADJ">
+				| Dumling.Reading<"de", "Lexeme", "ADP">
+				| Dumling.Reading<"de", "Lexeme", "ADV">
+				| Dumling.Reading<"de", "Lexeme", "AUX">
+				| Dumling.Reading<"de", "Lexeme", "CCONJ">
+				| Dumling.Reading<"de", "Lexeme", "DET">
+				| Dumling.Reading<"de", "Lexeme", "INTJ">
+				| Dumling.Reading<"de", "Lexeme", "NOUN">
+				| Dumling.Reading<"de", "Lexeme", "NUM">
+				| Dumling.Reading<"de", "Lexeme", "PART">
+				| Dumling.Reading<"de", "Lexeme", "PRON">
+				| Dumling.Reading<"de", "Lexeme", "PROPN">
+				| Dumling.Reading<"de", "Lexeme", "PUNCT">
+				| Dumling.Reading<"de", "Lexeme", "SCONJ">
+				| Dumling.Reading<"de", "Lexeme", "SYM">
+				| Dumling.Reading<"de", "Lexeme", "VERB">
+				| Dumling.Reading<"de", "Locution", "ADJ">
+				| Dumling.Reading<"de", "Locution", "ADP">
+				| Dumling.Reading<"de", "Locution", "ADV">
+				| Dumling.Reading<"de", "Locution", "CCONJ">
+				| Dumling.Reading<"de", "Locution", "DET">
+				| Dumling.Reading<"de", "Locution", "INTJ">
+				| Dumling.Reading<"de", "Locution", "NOUN">
+				| Dumling.Reading<"de", "Locution", "NUM">
+				| Dumling.Reading<"de", "Locution", "PRON">
+				| Dumling.Reading<"de", "Locution", "SCONJ">
+				| Dumling.Reading<"de", "Locution", "VERB">
+				| Dumling.Reading<"de", "Morpheme", "Circumfix">
+				| Dumling.Reading<"de", "Morpheme", "Duplifix">
+				| Dumling.Reading<"de", "Morpheme", "Infix">
+				| Dumling.Reading<"de", "Morpheme", "Interfix">
+				| Dumling.Reading<"de", "Morpheme", "Prefix">
+				| Dumling.Reading<"de", "Morpheme", "Root">
+				| Dumling.Reading<"de", "Morpheme", "Suffix">
+				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
+				| Dumling.Reading<"de", "Saying", "Saying">
+				| Dumling.Reading<"en", "Foreign", "Foreign">
+				| Dumling.Reading<"en", "Lexeme", "ADJ">
+				| Dumling.Reading<"en", "Lexeme", "ADP">
+				| Dumling.Reading<"en", "Lexeme", "ADV">
+				| Dumling.Reading<"en", "Lexeme", "AUX">
+				| Dumling.Reading<"en", "Lexeme", "CCONJ">
+				| Dumling.Reading<"en", "Lexeme", "DET">
+				| Dumling.Reading<"en", "Lexeme", "INTJ">
+				| Dumling.Reading<"en", "Lexeme", "NOUN">
+				| Dumling.Reading<"en", "Lexeme", "NUM">
+				| Dumling.Reading<"en", "Lexeme", "PART">
+				| Dumling.Reading<"en", "Lexeme", "PRON">
+				| Dumling.Reading<"en", "Lexeme", "PROPN">
+				| Dumling.Reading<"en", "Lexeme", "PUNCT">
+				| Dumling.Reading<"en", "Lexeme", "SCONJ">
+				| Dumling.Reading<"en", "Lexeme", "SYM">
+				| Dumling.Reading<"en", "Lexeme", "VERB">
+				| Dumling.Reading<"en", "Locution", "ADP">
+				| Dumling.Reading<"en", "Locution", "ADV">
+				| Dumling.Reading<"en", "Locution", "INTJ">
+				| Dumling.Reading<"en", "Locution", "NOUN">
+				| Dumling.Reading<"en", "Locution", "SCONJ">
+				| Dumling.Reading<"en", "Locution", "VERB">
+				| Dumling.Reading<"en", "Morpheme", "Circumfix">
+				| Dumling.Reading<"en", "Morpheme", "Duplifix">
+				| Dumling.Reading<"en", "Morpheme", "Infix">
+				| Dumling.Reading<"en", "Morpheme", "Interfix">
+				| Dumling.Reading<"en", "Morpheme", "Prefix">
+				| Dumling.Reading<"en", "Morpheme", "Root">
+				| Dumling.Reading<"en", "Morpheme", "Suffix">
+				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
+				| Dumling.Reading<"en", "Saying", "Saying">
+				| Dumling.Reading<"he", "Foreign", "Foreign">
+				| Dumling.Reading<"he", "Lexeme", "ADJ">
+				| Dumling.Reading<"he", "Lexeme", "ADP">
+				| Dumling.Reading<"he", "Lexeme", "ADV">
+				| Dumling.Reading<"he", "Lexeme", "AUX">
+				| Dumling.Reading<"he", "Lexeme", "CCONJ">
+				| Dumling.Reading<"he", "Lexeme", "DET">
+				| Dumling.Reading<"he", "Lexeme", "INTJ">
+				| Dumling.Reading<"he", "Lexeme", "NOUN">
+				| Dumling.Reading<"he", "Lexeme", "NUM">
+				| Dumling.Reading<"he", "Lexeme", "PART">
+				| Dumling.Reading<"he", "Lexeme", "PRON">
+				| Dumling.Reading<"he", "Lexeme", "PROPN">
+				| Dumling.Reading<"he", "Lexeme", "PUNCT">
+				| Dumling.Reading<"he", "Lexeme", "SCONJ">
+				| Dumling.Reading<"he", "Lexeme", "SYM">
+				| Dumling.Reading<"he", "Lexeme", "VERB">
+				| Dumling.Reading<"he", "Locution", "ADV">
+				| Dumling.Reading<"he", "Locution", "INTJ">
+				| Dumling.Reading<"he", "Morpheme", "Circumfix">
+				| Dumling.Reading<"he", "Morpheme", "Duplifix">
+				| Dumling.Reading<"he", "Morpheme", "Infix">
+				| Dumling.Reading<"he", "Morpheme", "Interfix">
+				| Dumling.Reading<"he", "Morpheme", "Prefix">
+				| Dumling.Reading<"he", "Morpheme", "Root">
+				| Dumling.Reading<"he", "Morpheme", "Suffix">
+				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
+				| Dumling.Reading<"he", "Morpheme", "Transfix">
+				| Dumling.Reading<"he", "Saying", "Saying">;
+			variants: Array<string>;
+	  }
+	| { kind: "Retract"; dimension: DimensionId; variant: string };
 export type LocutionType = "Idiom" | "Collocation";
 type SayingType = {
 	type: "Proverb" | "WingedWord";

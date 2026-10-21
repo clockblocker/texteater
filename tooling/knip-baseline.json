@@ -90,9 +90,26 @@
 		"battery/dumling/src/types.ts: types TableSchema"
 	],
 	"battery/dumrel": [
+		"battery/dumrel/src/index.ts: exports germanPluralPattern",
+		"battery/dumrel/src/index.ts: exports isFree",
+		"battery/dumrel/src/index.ts: exports licenceGroups",
+		"battery/dumrel/src/index.ts: exports licensed",
+		"battery/dumrel/src/index.ts: exports migratePrincipalParts",
+		"battery/dumrel/src/index.ts: exports parseLemmaParadigm",
+		"battery/dumrel/src/index.ts: exports pruneParadigm",
 		"battery/dumrel/src/select-knowledge.ts: types KnowledgePolicyUnavailable",
+		"battery/dumrel/src/types.ts: types ConjugationClass",
 		"battery/dumrel/src/types.ts: types KnowledgeParse",
 		"battery/dumrel/src/types.ts: types KnowledgePolicyUnavailable",
-		"battery/dumrel/src/types.ts: types KnowledgeSelection"
+		"battery/dumrel/src/types.ts: types KnowledgeSelection",
+		"battery/dumrel/src/types.ts: types LemmaParadigm",
+		"battery/dumrel/src/types.ts: types LicenceGroup",
+		"battery/dumrel/src/types.ts: types ParadigmDimension",
+		"battery/dumrel/src/types.ts: types ParadigmParse",
+		"battery/dumrel/src/types.ts: types ParadigmProvenance",
+		"battery/dumrel/src/types.ts: types ParadigmVariant",
+		"battery/dumrel/src/types.ts: types PluralPattern",
+		"battery/dumrel/src/types.ts: types ReadingKey",
+		"battery/dumrel/src/types.ts: types VariantId"
 	]
 }

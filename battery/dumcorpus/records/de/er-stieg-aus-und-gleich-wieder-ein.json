@@ -175,15 +175,6 @@
 			"reading": {
 				"emojiDescription": "🚌➡",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
-					"preterite": ["stieg aus"],
-					"presentSingular": {
-						"first": ["steige aus"],
-						"second": ["steigst aus"],
-						"third": ["steigt aus"]
-					},
-					"pastParticiple": ["ausgestiegen"],
-					"subjunctivePast": ["stiege aus"],
 					"valency": [
 						{
 							"status": "Required",
@@ -238,19 +229,30 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["stieg aus"],
+					"present1": ["steige aus"],
+					"present2": ["steigst aus"],
+					"present3": ["steigt aus"],
+					"pastParticiple": ["ausgestiegen"],
+					"subjunctivePast": ["stiege aus"]
+				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
 						"antonym": "Authored",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},
@@ -434,15 +436,6 @@
 			"reading": {
 				"emojiDescription": "➡🚌",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
-					"preterite": ["stieg ein"],
-					"presentSingular": {
-						"first": ["steige ein"],
-						"second": ["steigst ein"],
-						"third": ["steigt ein"]
-					},
-					"pastParticiple": ["eingestiegen"],
-					"subjunctivePast": ["stiege ein"],
 					"valency": [
 						{
 							"status": "Required",
@@ -516,19 +509,30 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["stieg ein"],
+					"present1": ["steige ein"],
+					"present2": ["steigst ein"],
+					"present3": ["steigt ein"],
+					"pastParticiple": ["eingestiegen"],
+					"subjunctivePast": ["stiege ein"]
+				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
 						"antonym": "Authored",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},

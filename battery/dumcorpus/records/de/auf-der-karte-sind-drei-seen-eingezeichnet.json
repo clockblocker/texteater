@@ -71,7 +71,6 @@
 			"reading": {
 				"emojiDescription": "🏞",
 				"knowledge": {
-					"plural": ["Seen"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -131,8 +130,8 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Seen"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
@@ -141,7 +140,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

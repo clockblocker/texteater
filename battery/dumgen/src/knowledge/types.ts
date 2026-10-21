@@ -3,8 +3,9 @@
  * Reading has resolved: the Reading, the occurrence's Attestation and its
  * Sentence come in, with `origin` saying whether this occurrence created
  * the Reading (`New`) or reused a stored one (`TopUp`), and `request`, the
- * aspects tf-demo's coverage says the stored Reading still lacks. Out come
- * Knowledge changes, Pending Semantic Relations and per-aspect failures.
+ * aspects tf-demo's coverage says the stored Reading still lacks, and
+ * `paradigm`, the Variation Dimensions to write. Out come Knowledge changes,
+ * Paradigm Changes, Pending Semantic Relations and per-aspect failures.
  *
  * Every failure is a value: a failed aspect leaves its siblings standing,
  * and the error channel carries only the `E` of the host's
@@ -30,20 +31,14 @@ export type KnowledgeAspect =
 	| "semanticRelations"
 	| "valency"
 	| "participleSource"
-	| "plural"
-	| "conjugationClass"
-	| "preterite"
-	| "presentSingular"
-	| "pastParticiple"
-	| "subjunctivePast"
 	| "locutionType"
 	| "sayingType"
 	| "formulaRole";
 
 /**
- * One aspect, or one leaf of it (a translation language, a relation), that
- * produced nothing usable (#883 point 3). A later click asks for it again;
- * nothing is retried.
+ * One aspect, or one leaf of it (a translation language, a relation), or one
+ * Variation Dimension, that produced nothing usable (#883 point 3). A later
+ * click asks for it again; nothing is retried.
  *
  * - `ProviderFailure`: a call brought no answer.
  * - `InvalidModelOutput`: an answer Dumgen or Dumrel cannot use.
@@ -53,7 +48,7 @@ export type KnowledgeAspect =
  *   reviewed value (ADR 0021); tf-demo attaches authored Knowledge itself.
  */
 export type KnowledgeFailure = {
-	readonly aspect: KnowledgeAspect;
+	readonly aspect: KnowledgeAspect | Dumrel.DimensionId;
 	readonly leaf?: string;
 	readonly code:
 		| "ProviderFailure"
@@ -76,6 +71,12 @@ export type GermanPendingRelation = Dumrel.PendingSemanticRelation & {
 /** What one run produced, the shape tf-demo's port returns. */
 export type KnowledgeProduction = {
 	readonly changes: readonly GermanKnowledgeChange[];
+	/**
+	 * The Paradigm Changes of the requested dimensions (ADR 0048), in
+	 * dimension order: per dimension a Contribute per variant, then a License
+	 * that gives the Reading an explicit Licence over them.
+	 */
+	readonly paradigmChanges: readonly Dumrel.ParadigmChange[];
 	readonly pendingRelations: readonly GermanPendingRelation[];
 	readonly failures: readonly KnowledgeFailure[];
 };
@@ -112,7 +113,18 @@ export type ProduceKnowledgeInput<E = never> = {
 	 */
 	readonly request: Dumrel.KnowledgeRequestMask;
 	/**
-	 * Receives each aspect's changes as soon as it has them, one at a time
+	 * The Variation Dimensions of the Reading's Lemma Paradigm to write
+	 * (Dumgen ADR 0003). Each is written as for a Lemma's first Reading: Luna
+	 * writes the forms of the sense, and code turns each into a variant the
+	 * Reading licenses explicitly. A dimension the route's Paradigm Policy
+	 * doesn't name is skipped. The licence judge for a Lemma's later Readings
+	 * is #1230's.
+	 */
+	readonly paradigm?: {
+		readonly dimensions: readonly Dumrel.DimensionId[];
+	};
+	/**
+	 * Receives each aspect's Knowledge changes as soon as it has them, one at a time
 	 * and in the order the aspects finish; Dumgen waits for its Effect
 	 * before it hands over the next. Its failure fails the run with `E` and
 	 * interrupts the aspects still running.

@@ -1,17 +1,23 @@
 import { expect, test } from "bun:test";
+import { germanConjugationClass } from "dumrel";
 import { loadSpecRecords } from "../src/index.js";
 
-/** Each gold verb with one conjugation class and its principal parts. */
+/**
+ * Each gold verb Reading whose licensed Präteritum forms derive one
+ * conjugation class, with its licensed principal parts.
+ */
 function goldVerbs() {
 	return loadSpecRecords().flatMap((record) =>
 		record.targets.flatMap((target) => {
-			const {
-				conjugationClass,
-				preterite,
-				pastParticiple,
-				subjunctivePast,
-			} = target.knowledge ?? {};
-			const [onlyClass, ...others] = conjugationClass ?? [];
+			const { preterite, pastParticiple, subjunctivePast } =
+				target.paradigm ?? {};
+			const lemma = target.attestation.surface.lemma.canonicalForm;
+			const classes = new Set(
+				(preterite ?? []).map((form) =>
+					germanConjugationClass(lemma, form),
+				),
+			);
+			const [onlyClass, ...others] = classes;
 			return onlyClass === undefined ||
 				others.length > 0 ||
 				!preterite ||
@@ -20,8 +26,7 @@ function goldVerbs() {
 				? []
 				: [
 						{
-							lemma: target.attestation.surface.lemma
-								.canonicalForm,
+							lemma,
 							onlyClass,
 							preterite,
 							pastParticiple,
@@ -32,9 +37,10 @@ function goldVerbs() {
 	);
 }
 
-// The forms are the source of truth (ADR 0038); these hold for every verb
-// of one class, so gold that breaks them is a slip.
-test("gold's principal parts agree with its one conjugation class (#1217)", () => {
+// The forms are the source of truth, and gold keeps each licensed selection
+// consistent (ADR 0038); these hold for every verb of one class, so gold
+// that breaks them is a slip.
+test("gold's licensed principal parts agree with the one conjugation class its Präteritum derives (#1217)", () => {
 	const slips: string[] = [];
 	const verbs = goldVerbs();
 	for (const verb of verbs) {
