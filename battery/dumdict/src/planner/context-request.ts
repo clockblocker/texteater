@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-
+import { unitShadowOf } from "../core/pending";
 import type {
 	AddNewNoteRequest,
 	ApplyGeneratedKnowledgeRequest,
@@ -42,7 +42,12 @@ export function storageRequestFor<L extends Dumling.Language>(
 			return {
 				intent: load.intent,
 				reading: load.request.reading,
-				pendingRelations: [...load.request.pendingRelations],
+				// Beside its proposals, the records a Lemma the changes name
+				// may resolve to, which that exact naming absorbs.
+				pendingRelations: [
+					...load.request.pendingRelations,
+					...namedLemmaShadows(load.request.changes),
+				],
 				relationTargetLemmas: load.request.changes.flatMap((change) =>
 					change.aspect === "semanticRelations" &&
 					"value" in change &&
@@ -71,4 +76,24 @@ export function storageRequestFor<L extends Dumling.Language>(
 				reading: load.request.entry.reading,
 			};
 	}
+}
+
+/**
+ * The pending relation, from the changed Reading, of every Lemma a Knowledge
+ * Change names as a Semantic Relation target: the Shadows whose resolved
+ * records that naming would absorb.
+ */
+function namedLemmaShadows<L extends Dumling.Language>(
+	changes: ApplyGeneratedKnowledgeRequest<L>["changes"],
+): ApplyGeneratedKnowledgeRequest<L>["pendingRelations"][number][] {
+	return changes.flatMap((change) =>
+		change.aspect === "semanticRelations" &&
+		"value" in change &&
+		change.targetKind !== "reading"
+			? change.value.map((lemma) => ({
+					relation: change.relation,
+					target: unitShadowOf(lemma),
+				}))
+			: [],
+	);
 }

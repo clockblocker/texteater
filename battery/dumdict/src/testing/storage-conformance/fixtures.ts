@@ -200,3 +200,59 @@ export const deletePending = (
 	record,
 	preconditions,
 });
+
+type Noun = Dumling.Lemma<"de", "Lexeme", "NOUN">;
+
+function nounLemma(
+	canonicalForm: string,
+	gender: "Masc" | "Fem" | "Neut",
+): Noun {
+	return {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "NOUN",
+		canonicalForm,
+		coreFeatures: { gender },
+	};
+}
+
+function nounReading(
+	lemma: Noun,
+	emojiDescription: string,
+): Dumling.Reading<"de", "Lexeme", "NOUN"> {
+	return { unitKind: "Reading", lemma, emojiDescription };
+}
+
+/** der See, the lake, and die See, the sea: one Shadow matches both. */
+export const derSee = nounLemma("See", "Masc");
+export const dieSee = nounLemma("See", "Fem");
+export const derSeeReading = nounReading(derSee, "💧");
+export const dieSeeReading = nounReading(dieSee, "🚢");
+
+/** The Shadow a generated relation names when it means some `See`. */
+export const seeShadow = {
+	language: "de",
+	canonicalForm: "See",
+	family: "Lexeme",
+	kind: "NOUN",
+} as const;
+
+export const meer = nounLemma("Meer", "Neut");
+export const ozean = nounLemma("Ozean", "Masc");
+export const teich = nounLemma("Teich", "Masc");
+export const meerReading = nounReading(meer, "🌊");
+export const ozeanReading = nounReading(ozean, "🌍");
+export const teichReading = nounReading(teich, "🦆");
+
+/** `Meer` and `Ozean` each name some `See` as a synonym. */
+export const meerSeePendingRecord: PendingSemanticRelationRecord<"de"> =
+	createPendingSemanticRelationRecord(meerReading, {
+		relation: "synonym",
+		target: seeShadow,
+	});
+export const ozeanSeePendingRecord: PendingSemanticRelationRecord<"de"> =
+	createPendingSemanticRelationRecord(ozeanReading, {
+		relation: "synonym",
+		target: seeShadow,
+	});

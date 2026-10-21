@@ -1,6 +1,7 @@
 {
 	"battery/dumdict": [
 		"battery/dumdict/src/index.ts: exports ParsingError",
+		"battery/dumdict/src/index.ts: exports linkTargetKey",
 		"battery/dumdict/src/index.ts: exports parseAsChangePrecondition",
 		"battery/dumdict/src/index.ts: exports parseAsCommitChangesRequest",
 		"battery/dumdict/src/index.ts: exports parseAsCommitChangesResult",
@@ -12,7 +13,13 @@
 		"battery/dumdict/src/index.ts: exports parseAsReadingEntry",
 		"battery/dumdict/src/index.ts: exports parseAsReadingPatchOp",
 		"battery/dumdict/src/index.ts: exports parseAsSurfaceEntry",
+		"battery/dumdict/src/index.ts: exports pendingRelationTarget",
+		"battery/dumdict/src/index.ts: exports resolveShadow",
+		"battery/dumdict/src/index.ts: exports spellingTarget",
 		"battery/dumdict/src/index.ts: types DumdictParse",
+		"battery/dumdict/src/index.ts: types LemmaLinkTarget",
+		"battery/dumdict/src/index.ts: types LinkTarget",
+		"battery/dumdict/src/index.ts: types SpellingLinkTarget",
 		"battery/dumdict/src/planning.ts: exports parseAsCommitChangesRequest",
 		"battery/dumdict/src/planning.ts: exports parseAsDumdictPlan",
 		"battery/dumdict/src/public-schema.ts: exports changePreconditionSchema",

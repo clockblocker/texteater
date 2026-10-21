@@ -1,16 +1,9 @@
-import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
-import type { PlannedChangeOp } from "../../domain-types";
 import type { CleanupRelationsRequest } from "../../public";
 import type { CleanupRelationsSlice } from "../../storage";
 import { pendingSemanticRelationLocatorKey } from "../pending";
-import {
-	planRelationMaintenance,
-	type RelationRequest,
-} from "../plan-relation-maintenance";
-import { relationAdditionsToPatches } from "./relation-additions-to-patches";
-import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
+import { planShadowReevaluation } from "./shadow-record-changes";
 
 export function planCleanupRelations<L extends Dumling.Language>(
 	slice: CleanupRelationsSlice<L>,
@@ -41,79 +34,33 @@ export function planCleanupRelations<L extends Dumling.Language>(
 		);
 		return record ? [record] : [];
 	});
-	const relationRequests: RelationRequest<L>[] = selected.map((record) => ({
-		sourceReading: record.sourceReading,
-		relation: record.pending.relation,
-		target: {
-			kind: "shadow",
-			shadow: record.pending.target,
-			pendingRecord: record,
-		},
-	}));
-	const relationPlan = planRelationMaintenance({
+	const reevaluation = planShadowReevaluation({
+		revision: slice.revision,
+		records: selected,
 		lemmas: slice.relationLemmas,
 		readings: slice.relationReadings,
-		requests: relationRequests,
 	});
-	if (relationPlan.status === "rejected") return relationPlan;
-
-	const resolvedKeys = new Set(
-		relationPlan.resolvedPending.map((record) =>
-			pendingSemanticRelationLocatorKey(record.locator),
-		),
-	);
-	const resolved = selected.filter((record) =>
-		resolvedKeys.has(pendingSemanticRelationLocatorKey(record.locator)),
-	);
-	const changes: PlannedChangeOp<L>[] = [
-		...relationRemovalsToPatches(
-			relationPlan.removals,
-			slice.relationReadings,
-			slice.revision,
-		),
-		...relationAdditionsToPatches(relationPlan.additions, slice.revision),
-		...resolved.map(
-			(record): PlannedChangeOp<L> => ({
-				type: "deletePendingSemanticRelation",
-				record,
-				preconditions: [
-					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "pendingRelationExists", record },
-				],
-			}),
-		),
-	];
-	const affectedReadings = new Map<string, Dumling.Reading<L>>();
-	for (const addition of relationPlan.additions)
-		affectedReadings.set(
-			readingIdentityKey(addition.reading),
-			addition.reading,
-		);
-	for (const removal of relationPlan.removals)
-		affectedReadings.set(
-			readingIdentityKey(removal.reading),
-			removal.reading,
-		);
-
+	if (reevaluation.status === "rejected") return reevaluation;
+	const { resolved } = reevaluation;
 	return {
 		status: "planned",
 		baseRevision: slice.revision,
-		changes,
+		changes: reevaluation.changes,
 		affected: {
 			readings:
-				affectedReadings.size > 0
-					? [...affectedReadings.values()]
+				reevaluation.readings.length > 0
+					? reevaluation.readings
 					: undefined,
 			pendingIds:
-				resolved.length > 0
-					? resolved.map(({ locator }) => locator.targetPendingId)
+				reevaluation.pendingIds.length > 0
+					? reevaluation.pendingIds
 					: undefined,
 		},
 		summary: {
 			message:
-				resolved.length === 1
+				resolved === 1
 					? "Resolved 1 relation."
-					: `Resolved ${resolved.length} relations.`,
+					: `Resolved ${resolved} relations.`,
 		},
 	};
 }

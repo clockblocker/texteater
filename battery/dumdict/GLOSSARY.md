@@ -61,6 +61,20 @@ A direct claim stored on one Reading, targeting a Lemma or an exact Reading.
 Only direct claims persist; inverse and other inferred edges are projected
 from them. See [ADR 0011] and [ADR 0012].
 
+**Shadow Relation**:
+A Semantic Relation whose target was named as a Unit Shadow. Its record keeps
+the Shadow for as long as the relation lives, beside the one Lemma it
+resolves to, or none while it is pending. Adding or removing a Lemma the
+Shadow matches re-evaluates it. See [ADR 0011].
+_Avoid_: resolved pending relation, Shadow-derived claim
+
+**Link Target**:
+Where a host's link goes: a Spelling Crossroad, a Lemma, a Reading, or one
+met Surface of a Lemma. A link whose exact sense is unknown goes to the one
+Lemma its Unit Shadow matches, or else to the Spelling Crossroad. See
+[ADR 0011].
+_Avoid_: link destination, note target
+
 [ADR 0002]: ../../docs/adr/0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md
 [ADR 0011]: ../../docs/adr/0011-use-reading-owned-lemma-targeted-semantic-relations.md
 [ADR 0012]: ../../docs/adr/0012-store-only-direct-semantic-relation-claims.md

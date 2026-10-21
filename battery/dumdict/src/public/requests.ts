@@ -44,3 +44,19 @@ export type CleanupRelationsRequest<L extends Dumling.Language> = {
 	baseRevision: StoreRevision;
 	resolutions: CleanupRelationResolution<L>[];
 };
+
+/**
+ * Re-evaluates stored Shadows after the Lemmas they may match changed
+ * outside a Dumdict workflow that already re-evaluates them (system ADR 0011).
+ *
+ * @remarks `removedLemmas` names Lemmas the host removes in the commit that
+ * applies this plan, or has already removed: they are never candidates, and
+ * stored claims may still name them. `shadows` names Shadows to re-evaluate
+ * against the dictionary as it stands, such as every stored Shadow once
+ * after a migration. Every stored record matching either is re-evaluated.
+ */
+export type ReevaluateShadowsRequest<L extends Dumling.Language> = {
+	baseRevision: StoreRevision;
+	shadows?: readonly (Dumrel.UnitShadow & { language: L })[];
+	removedLemmas?: readonly Dumling.Lemma<L>[];
+};

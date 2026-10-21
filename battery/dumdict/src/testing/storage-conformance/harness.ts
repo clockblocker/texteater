@@ -8,6 +8,7 @@ import type {
 	CommitChangesResult,
 	DumdictPendingSemanticRelation,
 	LemmaRecord,
+	PendingSemanticRelationRecord,
 	PlannedChangeOp,
 	ReadingEntry,
 } from "../../domain-types";
@@ -16,11 +17,15 @@ import {
 	unwrapDumdictParse,
 } from "../../parsing/lightweight-parsers";
 import type { DumdictPlanOutcome } from "../../planner/planner";
-import type { CleanupRelationResolution } from "../../public";
+import type {
+	CleanupRelationResolution,
+	ReevaluateShadowsRequest,
+} from "../../public";
 import type {
 	CleanupRelationsSlice,
 	LoadReadingEntryContextRequest,
 	ReadingEntryContext,
+	ReevaluateShadowsSlice,
 } from "../../storage";
 import {
 	gehenReading,
@@ -44,6 +49,21 @@ export type ConformanceStorage = {
 	loadCleanupRelationsContext(request: {
 		resolutions: CleanupRelationResolution<"de">[];
 	}): Effect.Effect<CleanupRelationsSlice<"de">, unknown>;
+	/**
+	 * The slice `reevaluateShadows` plans from: every stored record whose
+	 * Pending Entry ID is one of `reevaluatedPendingEntryIds(request)`, and
+	 * their relation inventory.
+	 */
+	loadReevaluateShadowsContext(
+		request: Omit<ReevaluateShadowsRequest<"de">, "baseRevision">,
+	): Effect.Effect<ReevaluateShadowsSlice<"de">, unknown>;
+	/**
+	 * Removes a Lemma as the host does outside Dumdict's plans, such as when
+	 * the user deletes its note: the Lemma, its Readings with their pending
+	 * records, and its owned Surfaces. Claims other Readings hold on it stay
+	 * until a re-evaluation moves them.
+	 */
+	removeLemma(lemma: Dumling.Lemma<"de">): Effect.Effect<void, unknown>;
 };
 
 export const semanticConflict = {
@@ -233,4 +253,21 @@ export function expectBoundedInventory(
 		expect(stored.relationLemmas).toContainEqual(record);
 	for (const entry of inventory.relationReadings)
 		expect(stored.relationReadings).toContainEqual(entry);
+}
+
+/** A stored pending record once its Shadow resolves to `lemma`. */
+export function resolvedTo(
+	record: PendingSemanticRelationRecord<"de">,
+	lemma: Dumling.Lemma<"de">,
+): PendingSemanticRelationRecord<"de"> {
+	return { ...record, resolvedLemma: lemma };
+}
+
+/** The same records, in any order: a store may list them in its own. */
+export function expectSameRecords(
+	actual: readonly PendingSemanticRelationRecord<"de">[],
+	expected: readonly PendingSemanticRelationRecord<"de">[],
+): void {
+	expect(actual).toHaveLength(expected.length);
+	expect(actual).toEqual(expect.arrayContaining([...expected]));
 }

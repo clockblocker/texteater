@@ -10,14 +10,18 @@ import {
 	planCleanupRelations,
 	planEnsureOwnedSurface,
 	planEnsureReadingEntry,
+	planReevaluateShadows,
 } from "../core/plan-mutation";
 import type { PlanMutationRejected } from "../core/plan-mutation/result";
 import {
 	validateCleanupRelationsSlice,
 	validateReadingEntryContext,
+	validateReevaluateShadowsSlice,
 } from "../core/validate-slice";
 import type { DumdictPlan } from "../domain-types";
 import {
+	ParsingError,
+	parseAsLemmaRecord,
 	parseKnowledgeChangeForDumdictRuntime,
 	parsePendingSemanticRelationForDumdictRuntime,
 	pendingTargetsLanguage,
@@ -32,6 +36,7 @@ import type {
 	EnsureReadingEntryRequest,
 	MutationRejectedCode,
 	MutationSummary,
+	ReevaluateShadowsRequest,
 } from "../public";
 import type {
 	AddNewNoteContext,
@@ -40,6 +45,7 @@ import type {
 	EnsureOwnedSurfaceContext,
 	EnsureReadingEntryContext,
 	LoadReadingEntryContextRequest,
+	ReevaluateShadowsSlice,
 } from "../storage";
 import {
 	knowledgeChangeUsesLanguage,
@@ -120,6 +126,20 @@ export type DumdictPlanner<L extends Dumling.Language> = {
 	cleanupRelations(
 		slice: CleanupRelationsSlice<L>,
 		request: CleanupRelationsRequest<L>,
+	): DumdictPlanOutcome<L>;
+	/**
+	 * Re-evaluates every stored Shadow that matches the request's Shadows or
+	 * removed Lemmas (system ADR 0011). A host plans it when Lemmas change
+	 * outside `addNewNote` and `ensureReadingEntry`, which re-evaluate the
+	 * Lemma they create: when it removes a Lemma, in the commit that removes
+	 * it or after, and once over every stored Shadow after a migration. The
+	 * host loads the stored records whose Pending Entry ID is one of
+	 * `reevaluatedPendingEntryIds(request)` (`dumdict/pending`). Planning it
+	 * again after its commit plans nothing.
+	 */
+	reevaluateShadows(
+		slice: ReevaluateShadowsSlice<L>,
+		request: ReevaluateShadowsRequest<L>,
 	): DumdictPlanOutcome<L>;
 };
 
@@ -431,6 +451,49 @@ function cleanupRelations<L extends Dumling.Language>(
 	};
 }
 
+function reevaluateShadows<L extends Dumling.Language>(
+	language: L,
+): Workflow<L, ReevaluateShadowsRequest<L>, ReevaluateShadowsSlice<L>> {
+	return {
+		check(request) {
+			for (const shadow of request.shadows ?? []) {
+				// A Shadow parses as a pending relation's target; the relation
+				// is only the envelope that parser reads.
+				const parsed = parsePendingSemanticRelationForDumdictRuntime({
+					relation: "synonym",
+					target: shadow,
+				});
+				if (
+					parsed instanceof ParsingError ||
+					!pendingTargetsLanguage(parsed, language)
+				)
+					return invalidRequest(
+						"A re-evaluated Shadow is malformed or in another language.",
+					);
+			}
+			for (const lemma of request.removedLemmas ?? [])
+				if (
+					parseAsLemmaRecord({ lemma }, language) instanceof
+					ParsingError
+				)
+					return invalidRequest(
+						"A removed Lemma is malformed or in another language.",
+					);
+			return ok(request);
+		},
+		plan(slice, request) {
+			validateReevaluateShadowsSlice(language, slice, request);
+			if (slice.revision !== request.baseRevision)
+				return {
+					status: "conflict",
+					code: "revisionConflict",
+					message: "Shadow re-evaluation slice is stale.",
+				};
+			return planned(planReevaluateShadows(slice, request));
+		},
+	};
+}
+
 export function createDumdictPlanner<L extends Dumling.Language>(
 	language: L,
 ): DumdictPlanner<L> {
@@ -440,6 +503,7 @@ export function createDumdictPlanner<L extends Dumling.Language>(
 		ensureOwnedSurface: ensureOwnedSurface(language),
 		ensureReadingEntry: ensureReadingEntry(language),
 		cleanupRelations: cleanupRelations(language),
+		reevaluateShadows: reevaluateShadows(language),
 	};
 	return {
 		language,
@@ -454,5 +518,7 @@ export function createDumdictPlanner<L extends Dumling.Language>(
 			run(workflows.ensureReadingEntry, context, request),
 		cleanupRelations: (slice, request) =>
 			run(workflows.cleanupRelations, slice, request),
+		reevaluateShadows: (slice, request) =>
+			run(workflows.reevaluateShadows, slice, request),
 	};
 }

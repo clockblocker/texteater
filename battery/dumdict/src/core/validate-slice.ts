@@ -6,6 +6,7 @@ import {
 } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
@@ -27,14 +28,17 @@ import type {
 	AddNewNoteContext,
 	ApplyGeneratedKnowledgeContext,
 	CleanupRelationsSlice,
+	EnsureReadingEntryContext,
 	LoadReadingEntryContextRequest,
 	ReadingEntryContext,
+	ReevaluateShadowsSlice,
 } from "../storage";
 import { shadowMatchesLemma } from "./identity";
 import {
 	assertPendingSemanticRelationRecordIdentity,
 	derivePendingSemanticRelationLocator,
 	pendingSemanticRelationLocatorKey,
+	reevaluatedPendingEntryIds,
 } from "./pending";
 
 function assertNoDuplicates(values: string[], context: string) {
@@ -139,6 +143,8 @@ function validateRelationInventory<L extends Dumling.Language>(
 	expected: L,
 	lemmas: LemmaRecord<L>[],
 	readings: ReadingEntry<L>[],
+	/** Lemmas a removal took away, which stored claims may still name. */
+	removed: readonly Dumling.Lemma<L>[] = [],
 ) {
 	for (const record of lemmas) validateLemmaRecord(expected, record);
 	for (const entry of readings) validateReadingEntry(expected, entry);
@@ -153,6 +159,10 @@ function validateRelationInventory<L extends Dumling.Language>(
 	const lemmaKeys = new Set(
 		lemmas.map(({ lemma }) => lemmaIdentityKey(lemma)),
 	);
+	const targetKeys = new Set([
+		...lemmaKeys,
+		...removed.map((lemma) => lemmaIdentityKey(lemma)),
+	]);
 	const readingKeys = new Set(
 		readings.map(({ reading }) => readingIdentityKey(reading)),
 	);
@@ -171,7 +181,7 @@ function validateRelationInventory<L extends Dumling.Language>(
 		} else {
 			for (const relation of directSemanticRelationValues) {
 				for (const target of relations?.[relation] ?? []) {
-					if (!lemmaKeys.has(lemmaIdentityKey(target)))
+					if (!targetKeys.has(lemmaIdentityKey(target)))
 						throw new Error(
 							"relation Reading inventory references an unstored target Lemma.",
 						);
@@ -303,13 +313,43 @@ function validateAddNewNoteContext<L extends Dumling.Language>(
 		context.exactPendingRelations,
 		requestedPendingKeys,
 	);
-	for (const record of context.pendingRelationsMatchingProposedLemma) {
+	validateMatchingPendingRecords(
+		expected,
+		context.pendingRelationsMatchingProposedLemma,
+		request.reading.lemma,
+	);
+	validateRelationInventory(
+		expected,
+		context.relationLemmas,
+		context.relationReadings,
+	);
+}
+
+function validateMatchingPendingRecords<L extends Dumling.Language>(
+	expected: L,
+	records: PendingSemanticRelationRecord<L>[],
+	lemma: Dumling.Lemma<L>,
+) {
+	for (const record of records) {
 		validatePendingRecord(expected, record);
-		if (!shadowMatchesLemma(record.pending.target, request.reading.lemma))
+		if (!shadowMatchesLemma(record.pending.target, lemma))
 			throw new Error(
 				"pending Semantic Relation does not match the proposed Lemma.",
 			);
 	}
+}
+
+function validateEnsureReadingEntryContext<L extends Dumling.Language>(
+	expected: L,
+	context: EnsureReadingEntryContext<L>,
+	reading: Dumling.Reading<L>,
+) {
+	validateExistingIdentity(expected, context, reading);
+	validateMatchingPendingRecords(
+		expected,
+		context.pendingRelationsMatchingProposedLemma,
+		reading.lemma,
+	);
 	validateRelationInventory(
 		expected,
 		context.relationLemmas,
@@ -399,7 +439,11 @@ export function validateReadingEntryContext<L extends Dumling.Language>(
 		case "ensureReadingEntry":
 			if (context.intent !== "ensureReadingEntry")
 				return intentMismatch();
-			validateExistingIdentity(expected, context, request.reading);
+			validateEnsureReadingEntryContext(
+				expected,
+				context,
+				request.reading,
+			);
 	}
 }
 
@@ -423,5 +467,41 @@ export function validateCleanupRelationsSlice<L extends Dumling.Language>(
 		expected,
 		slice.relationLemmas,
 		slice.relationReadings,
+	);
+}
+
+/**
+ * A `reevaluateShadows` slice holds only records the request names, each
+ * once, and a relation inventory whose claims may still name the removed
+ * Lemmas.
+ */
+export function validateReevaluateShadowsSlice<L extends Dumling.Language>(
+	expected: L,
+	slice: ReevaluateShadowsSlice<L>,
+	request: {
+		readonly shadows?: readonly (Dumrel.UnitShadow & { language: L })[];
+		readonly removedLemmas?: readonly Dumling.Lemma<L>[];
+	},
+) {
+	validateRevision(slice.revision);
+	const requested = new Set<string>(reevaluatedPendingEntryIds(request));
+	for (const record of slice.pendingRelations) {
+		validatePendingRecord(expected, record);
+		if (!requested.has(record.locator.targetPendingId))
+			throw new Error(
+				"pending Semantic Relation was not requested by this re-evaluation.",
+			);
+	}
+	assertNoDuplicates(
+		slice.pendingRelations.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
+		"pending Semantic Relations",
+	);
+	validateRelationInventory(
+		expected,
+		slice.relationLemmas,
+		slice.relationReadings,
+		request.removedLemmas,
 	);
 }

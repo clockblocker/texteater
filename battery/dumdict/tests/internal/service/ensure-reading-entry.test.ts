@@ -28,6 +28,9 @@ describe("ensureReadingEntry", () => {
 					intent: "ensureReadingEntry" as const,
 					revision: "mismatched-slice" as StoreRevision,
 					existingLemma: { lemma: englishWalkLemma },
+					pendingRelationsMatchingProposedLemma: [],
+					relationLemmas: [],
+					relationReadings: [],
 				};
 			},
 			commitChanges() {

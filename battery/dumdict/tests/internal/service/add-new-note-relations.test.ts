@@ -150,8 +150,10 @@ describe("configured service relation writes", () => {
 		).toBe("applied");
 		const notes = storage.loadAll();
 		expect(
-			notes.flatMap(({ pendingRelations }) => pendingRelations),
-		).toEqual([]);
+			notes
+				.flatMap(({ pendingRelations }) => pendingRelations)
+				.map(({ resolvedLemma }) => resolvedLemma),
+		).toEqual([englishWalkLemma]);
 		const readings = notes.flatMap(({ readingEntries }) => readingEntries);
 		expect(
 			lemmaRelations(

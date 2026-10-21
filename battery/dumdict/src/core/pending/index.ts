@@ -123,3 +123,43 @@ export function assertPendingSemanticRelationRecordIdentity<
 			"Pending Semantic Relation locator has the wrong target Pending Entry ID.",
 		);
 }
+
+/**
+ * The Unit Shadow that describes a Lemma: its language, Family, Kind and
+ * Canonical Form. Every Shadow that matches the Lemma has its Pending Entry
+ * ID.
+ */
+export function unitShadowOf<L extends Dumling.Language>(
+	lemma: Dumling.Lemma<L>,
+): Dumrel.UnitShadow & { language: L } {
+	// A Lemma's route is a Shadow's route; the union can't be narrowed field
+	// by field, so the four fields are copied as one Shadow.
+	return {
+		language: lemma.language,
+		family: lemma.family,
+		kind: lemma.kind,
+		canonicalForm: lemma.canonicalForm,
+	} as Dumrel.UnitShadow & { language: L };
+}
+
+/**
+ * The Pending Entry IDs whose stored records a `reevaluateShadows` slice
+ * holds: those of the request's Shadows and of its removed Lemmas.
+ */
+export function reevaluatedPendingEntryIds<
+	L extends Dumling.Language,
+>(request: {
+	readonly shadows?: readonly (Dumrel.UnitShadow & { language: L })[];
+	readonly removedLemmas?: readonly Dumling.Lemma<L>[];
+}): PendingEntryId<L>[] {
+	return [
+		...new Set([
+			...(request.shadows ?? []).map((shadow) =>
+				derivePendingEntryId<L>(shadow),
+			),
+			...(request.removedLemmas ?? []).map((lemma) =>
+				derivePendingEntryId<L>(unitShadowOf(lemma)),
+			),
+		]),
+	];
+}

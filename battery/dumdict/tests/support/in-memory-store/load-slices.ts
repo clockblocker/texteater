@@ -4,13 +4,18 @@ import { readingLemma, shadowMatchesLemma } from "../../../src/core/identity";
 import {
 	derivePendingSemanticRelationLocator,
 	pendingSemanticRelationLocatorKey,
+	reevaluatedPendingEntryIds,
 } from "../../../src/core/pending";
 import { makeSurfaceId } from "../../../src/dumling-id";
-import type { CleanupRelationResolution } from "../../../src/public";
+import type {
+	CleanupRelationResolution,
+	ReevaluateShadowsRequest,
+} from "../../../src/public";
 import type {
 	CleanupRelationsSlice,
 	LoadReadingEntryContextRequest,
 	ReadingEntryContext,
+	ReevaluateShadowsSlice,
 } from "../../../src/storage";
 import type { InMemoryStorageState } from "./state";
 
@@ -68,6 +73,17 @@ export function loadReadingEntryContext<L extends Dumling.Language>(
 
 	recordRead("existingLemma");
 	const existingBundle = state.findStoredBundleByLemma(readingLemma(reading));
+	const matchingPending = () => {
+		recordRead("pendingRelationsMatchingLemma");
+		return state
+			.allPendingRelations()
+			.filter((record) =>
+				shadowMatchesLemma(
+					record.pending.target,
+					readingLemma(reading),
+				),
+			);
+	};
 	if (request.intent === "ensureReadingEntry")
 		return {
 			intent: request.intent,
@@ -76,6 +92,8 @@ export function loadReadingEntryContext<L extends Dumling.Language>(
 				? { existingLemma: existingBundle.lemmaRecord }
 				: {}),
 			...(existingReading ? { existingReading } : {}),
+			pendingRelationsMatchingProposedLemma: matchingPending(),
+			...relationInventory(state, recordRead),
 		};
 
 	if (request.intent === "ensureOwnedSurface") {
@@ -125,19 +143,10 @@ export function loadReadingEntryContext<L extends Dumling.Language>(
 		.filter(({ locator }) =>
 			proposedPendingKeys.has(pendingSemanticRelationLocatorKey(locator)),
 		);
-	recordRead("pendingRelationsMatchingLemma");
-	const matchingPending = state
-		.allPendingRelations()
-		.filter((record) =>
-			shadowMatchesLemma(record.pending.target, readingLemma(reading)),
-		);
-	recordRead("relationLemmas");
-	const relationLemmas = state.storedNotes.map(
-		({ lemmaRecord }) => lemmaRecord,
-	);
-	recordRead("relationReadings");
-	const relationReadings = state.storedNotes.flatMap(
-		({ readingEntries }) => readingEntries,
+	const pendingRelationsMatchingProposedLemma = matchingPending();
+	const { relationLemmas, relationReadings } = relationInventory(
+		state,
+		recordRead,
 	);
 	return {
 		intent: request.intent,
@@ -147,9 +156,39 @@ export function loadReadingEntryContext<L extends Dumling.Language>(
 		existingOwnedSurfaces,
 		explicitExistingLemmaTargets,
 		exactPendingRelations: exactPending,
-		pendingRelationsMatchingProposedLemma: matchingPending,
+		pendingRelationsMatchingProposedLemma,
 		relationLemmas,
 		relationReadings,
+	};
+}
+
+/** The whole dictionary, as a relation inventory. */
+function relationInventory<L extends Dumling.Language>(
+	state: InMemoryStorageState<L>,
+	recordRead: (read: ReadingEntryContextRead) => void,
+) {
+	recordRead("relationLemmas");
+	const relationLemmas = state.storedNotes.map(
+		({ lemmaRecord }) => lemmaRecord,
+	);
+	recordRead("relationReadings");
+	const relationReadings = state.storedNotes.flatMap(
+		({ readingEntries }) => readingEntries,
+	);
+	return { relationLemmas, relationReadings };
+}
+
+export function loadReevaluateShadowsContext<L extends Dumling.Language>(
+	state: InMemoryStorageState<L>,
+	request: Omit<ReevaluateShadowsRequest<L>, "baseRevision">,
+): ReevaluateShadowsSlice<L> {
+	const ids = new Set<string>(reevaluatedPendingEntryIds(request));
+	return {
+		revision: state.currentRevision(),
+		pendingRelations: state
+			.allPendingRelations()
+			.filter(({ locator }) => ids.has(locator.targetPendingId)),
+		...relationInventory(state, () => {}),
 	};
 }
 

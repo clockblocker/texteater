@@ -11,5 +11,8 @@ describeStorageConformance("The in-memory store", () => {
 			Effect.sync(() => storage.loadReadingEntryContext(request)),
 		loadCleanupRelationsContext: (request) =>
 			Effect.sync(() => storage.loadCleanupRelationsContext(request)),
+		loadReevaluateShadowsContext: (request) =>
+			Effect.sync(() => storage.loadReevaluateShadowsContext(request)),
+		removeLemma: (lemma) => Effect.sync(() => storage.removeLemma(lemma)),
 	};
 });

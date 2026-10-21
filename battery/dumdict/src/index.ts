@@ -1,3 +1,12 @@
+export {
+	type LemmaLinkTarget,
+	type LinkTarget,
+	linkTargetKey,
+	pendingRelationTarget,
+	resolveShadow,
+	type SpellingLinkTarget,
+	spellingTarget,
+} from "./core/link-target";
 export type {
 	ChangePrecondition,
 	CommitChangesRequest,

@@ -38,9 +38,11 @@ export type {
 	EnsureOwnedSurfaceRequest,
 	EnsureReadingEntryRequest,
 	MutationRejectedCode,
+	ReevaluateShadowsRequest,
 } from "./public";
 export type {
 	CleanupRelationsSlice,
 	LoadReadingEntryContextRequest,
 	ReadingEntryContext,
+	ReevaluateShadowsSlice,
 } from "./storage/slices";

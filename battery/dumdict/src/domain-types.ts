@@ -63,10 +63,20 @@ export type DumdictPendingSemanticRelation<out L extends Dumling.Language> = {
 	target: Dumrel.UnitShadow & { language: L };
 };
 
+/**
+ * A Semantic Relation whose target is a Unit Shadow, kept for as long as the
+ * relation lives (system ADR 0011).
+ *
+ * @remarks Without `resolvedLemma` it is pending: its Shadow matches no
+ * Lemma, or several. With it, the Shadow matches exactly that Lemma and the
+ * source Reading's Knowledge holds the direct claim to it. Adding or removing
+ * a Lemma the Shadow matches re-evaluates the record from its Shadow alone.
+ */
 export type PendingSemanticRelationRecord<out L extends Dumling.Language> = {
 	sourceReading: Dumling.Reading<L>;
 	pending: DumdictPendingSemanticRelation<L>;
 	locator: PendingSemanticRelationLocator<L>;
+	resolvedLemma?: Dumling.Lemma<L>;
 };
 
 export type ChangePrecondition<L extends Dumling.Language> =

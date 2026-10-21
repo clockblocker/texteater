@@ -214,7 +214,12 @@ function createSchemasFor<const L extends Dumling.Language>(
 			sourceReading: languageReadingSchema,
 			pending: languagePendingSemanticRelationSchema,
 			locator: pendingSemanticRelationLocatorSchema,
+			resolvedLemma: lemmaSchema.optional(),
 		})
+		.refine(
+			namedValidationPredicate("dumdict.pending.resolution-matches"),
+			namedValidationError("dumdict.pending.resolution-matches"),
+		)
 		.refine(
 			namedValidationPredicate("dumdict.pending.locator-source"),
 			namedValidationError("dumdict.pending.locator-source"),

@@ -33,6 +33,7 @@ import {
 import { relationAdditionsToPatches } from "./relation-additions-to-patches";
 import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
+import { shadowRecordChanges, shadowRequest } from "./shadow-record-changes";
 
 function uniqueBy<T>(values: T[], keyFor: (value: T) => string): T[] {
 	const seen = new Set<string>();
@@ -156,10 +157,20 @@ export function planAddNewNote<L extends Dumling.Language>(
 		({ id }) => id,
 	);
 	const newPending = makePendingRecords(slice, request);
-	const pending = deduplicatePendingSemanticRelationRecords([
-		...newPending,
-		...slice.pendingRelationsMatchingProposedLemma,
-	]);
+	const newPendingKeys = new Set(
+		newPending.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
+	);
+	// Adding the Lemma re-evaluates every stored Shadow it matches.
+	const reevaluated = deduplicatePendingSemanticRelationRecords(
+		slice.pendingRelationsMatchingProposedLemma,
+	).filter(
+		(record) =>
+			!newPendingKeys.has(
+				pendingSemanticRelationLocatorKey(record.locator),
+			),
+	);
 	const requests: RelationRequest<L>[] = [
 		...(request.draft.relations ?? []).flatMap((relation) =>
 			relation.target.kind === "existing" && "relation" in relation
@@ -175,15 +186,8 @@ export function planAddNewNote<L extends Dumling.Language>(
 					]
 				: [],
 		),
-		...pending.map((record) => ({
-			sourceReading: record.sourceReading,
-			relation: record.pending.relation,
-			target: {
-				kind: "shadow" as const,
-				shadow: record.pending.target,
-				pendingRecord: record,
-			},
-		})),
+		...newPending.map((record) => shadowRequest(record, "propose")),
+		...reevaluated.map((record) => shadowRequest(record, "reevaluate")),
 	];
 	const relationPlan = planRelationMaintenance({
 		lemmas: [
@@ -227,19 +231,10 @@ export function planAddNewNote<L extends Dumling.Language>(
 			slice.revision,
 		),
 	];
-	const newPendingKeys = new Set(
-		newPending.map(({ locator }) =>
-			pendingSemanticRelationLocatorKey(locator),
-		),
-	);
-	const pendingToCreate = relationPlan.unresolvedPending.filter((record) =>
-		newPendingKeys.has(pendingSemanticRelationLocatorKey(record.locator)),
-	);
-	const pendingToDelete = relationPlan.resolvedPending.filter(
-		(record) =>
-			!newPendingKeys.has(
-				pendingSemanticRelationLocatorKey(record.locator),
-			),
+	const records = shadowRecordChanges(
+		relationPlan.shadowOutcomes,
+		reevaluated,
+		slice.revision,
 	);
 
 	const changes: PlannedChangeOp<L>[] = [];
@@ -263,26 +258,8 @@ export function planAddNewNote<L extends Dumling.Language>(
 			],
 		},
 		...patches,
-		...pendingToDelete.map(
-			(record): PlannedChangeOp<L> => ({
-				type: "deletePendingSemanticRelation",
-				record,
-				preconditions: [
-					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "pendingRelationExists", record },
-				],
-			}),
-		),
-		...pendingToCreate.map(
-			(record): PlannedChangeOp<L> => ({
-				type: "createPendingSemanticRelation",
-				record,
-				preconditions: [
-					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "pendingRelationMissing", record },
-				],
-			}),
-		),
+		...records.deletions,
+		...records.creations,
 		...ownedSurfaceEntries.map(
 			(entry): PlannedChangeOp<L> => ({
 				type: "createOwnedSurface",
@@ -306,12 +283,14 @@ export function planAddNewNote<L extends Dumling.Language>(
 				[
 					reading,
 					...relationPlan.additions.map(({ reading }) => reading),
+					...relationPlan.removals.map(({ reading }) => reading),
 				],
 				readingIdentityKey,
 			),
 			surfaceIds: ownedSurfaceEntries.map(({ id }) => id),
-			pendingIds: [...pendingToCreate, ...pendingToDelete].map(
-				({ locator }) => locator.targetPendingId,
+			pendingIds: uniqueBy(
+				records.touched.map(({ locator }) => locator.targetPendingId),
+				(id) => id,
 			),
 		},
 		summary: { message: "Added new learner reading." },
