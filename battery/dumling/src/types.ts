@@ -13,3 +13,12 @@ export type {
 	UnitRoute,
 	VariantTag,
 } from "./generated/units.js";
+export type {
+	AxisEntry,
+	CellKey,
+	FeatureBundle,
+	FeatureName,
+	FeatureValue,
+	TablePanel,
+	TableSchema,
+} from "./table-schema.js";

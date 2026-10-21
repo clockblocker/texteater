@@ -6,6 +6,7 @@ import {
 	emitLinkedValidationRegistry,
 } from "common-utils/validation-compiler";
 import { UnitKindSchema, VariantTagSchema } from "../src/schemas/unit-parts.js";
+import { inflectionalVocabulary } from "./inflectional-vocabulary.js";
 import { registrations } from "./operations.js";
 import { loadRoutes } from "./routes.js";
 
@@ -52,6 +53,16 @@ const outputs = {
 		{ owner: "dumling", registry: compiled },
 	]),
 	"units.ts": types,
+	"inflectional-features.ts": `// Generated from canonical Zod unit schemas. Run bun run generate.\n/**\n * Each inflecting route's inflectional bag as plain data: every feature it\n * may mark and every value it may mark it with, over all of the bag's\n * branches. A route whose Surfaces don't inflect is absent.\n */\nexport const inflectionalFeatures: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> = ${JSON.stringify(
+		Object.fromEntries(
+			routes.flatMap((route) => {
+				const bag: unknown = route.bag.shape.inflectional;
+				return bag === undefined
+					? []
+					: [[route.key, inflectionalVocabulary(bag)]];
+			}),
+		),
+	)};\n`,
 	"validation.ts": `// Generated from canonical Zod schemas. Run bun run generate.\nexport const encodedValidation: string = ${JSON.stringify(JSON.stringify(compiled))};\n`,
 	...Object.fromEntries(
 		routes.map((route) => [

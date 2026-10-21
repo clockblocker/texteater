@@ -17,11 +17,14 @@ async function rootKeys(specifier: string): Promise<string[]> {
 test("replacement public operations use the settled unit and Knowledge contracts", async () => {
 	expect(await rootKeys("dumling")).toEqual([
 		"canonicalFormKey",
+		"cellBundleOf",
+		"cellKeyOf",
 		"foldCase",
 		"isSyncreticUnit",
 		"isSyncretism",
 		"lemmaIdentityKey",
 		"normalizeForm",
+		"parseTableSchemaFor",
 		"parseUnit",
 		"readingIdentityKey",
 		"routeOf",
