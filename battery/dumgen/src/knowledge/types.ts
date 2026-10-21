@@ -121,3 +121,32 @@ export type ProduceKnowledgeInput<E = never> = {
 		changes: readonly GermanKnowledgeChange[],
 	) => Effect.Effect<void, E>;
 };
+
+/**
+ * What `knowledge.accumulateTranslations` takes (ADR 0047): a click's
+ * occurrence of a Reading that already has translations, and those
+ * translations. Only a language given a non-empty set is checked; a
+ * language with none is Knowledge Production's to fill.
+ */
+export type AccumulateTranslationsInput = {
+	readonly language: "de";
+	/** The Reading the click resolved to, stored or authored. */
+	readonly reading: Dumling.Reading<"de">;
+	/** The occurrence's Attestation, of the Reading's Lemma. */
+	readonly attestation: Dumling.Attestation<"de">;
+	readonly sentence: KnowledgeSentence;
+	/** The Reading's stored translations, by language, as the note holds them. */
+	readonly translations: Readonly<
+		Partial<Record<Dumrel.TranslationLanguage, readonly string[]>>
+	>;
+};
+
+/**
+ * What one accumulation brought: a Contribute per language that gained
+ * translations, holding only the new ones, and a failure per language
+ * whose call brought nothing usable, which adds nothing.
+ */
+export type TranslationAccumulation = {
+	readonly changes: readonly GermanKnowledgeChange[];
+	readonly failures: readonly KnowledgeFailure[];
+};

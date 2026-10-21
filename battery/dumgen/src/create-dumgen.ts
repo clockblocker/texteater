@@ -3,17 +3,21 @@
  * operations are Effects whose error channel holds only `ProviderFailure`
  * and `InvalidModelOutput` (#552); a host `yield*`s them in its own
  * programs. It offers `language.detect`, `segment.inUnits`, `resolve.grammar`,
- * `resolve.reading`, `translate.sentence` (#1210) and `knowledge.produce`,
+ * `resolve.reading`, `translate.sentence` (#1210), `knowledge.produce`,
  * whose error channel holds only the host's own `onContribution` error
- * (#883).
+ * (#883), and `knowledge.accumulateTranslations`, whose failures are all
+ * values (ADR 0047).
  */
 import type * as Effect from "effect/Effect";
 import { requestBudget, runOperation } from "./call.js";
 import type { InvalidModelOutput, ProviderFailure } from "./errors.js";
+import { accumulateTranslations } from "./knowledge/accumulate.js";
 import { produceKnowledge } from "./knowledge/produce.js";
 import type {
+	AccumulateTranslationsInput,
 	KnowledgeProduction,
 	ProduceKnowledgeInput,
+	TranslationAccumulation,
 } from "./knowledge/types.js";
 import {
 	type DetectLanguagesInput,
@@ -145,6 +149,17 @@ export type Dumgen = {
 		readonly produce: <E = never>(
 			input: ProduceKnowledgeInput<E>,
 		) => Effect.Effect<KnowledgeProduction, E>;
+		/**
+		 * The translations one occurrence adds to a Reading that already
+		 * has some (ADR 0047): per language, jev judges whether a stored
+		 * one covers the occurrence, and only after NoMatch does Luna write
+		 * the occurrence's equivalents, without seeing the stored ones.
+		 * Out comes a Contribute of those not stored yet per language, and
+		 * per-language failures, all values. Bad input is a Defect.
+		 */
+		readonly accumulateTranslations: (
+			input: AccumulateTranslationsInput,
+		) => Effect.Effect<TranslationAccumulation>;
 	};
 };
 
@@ -198,6 +213,18 @@ export function createDumgen(options: DumgenOptions): Dumgen {
 			produce: (input) =>
 				runOperation("knowledge.produce", operations, (scope) =>
 					produceKnowledge(scope, { jev, luna }, modules, input),
+				),
+			accumulateTranslations: (input) =>
+				runOperation(
+					"knowledge.accumulateTranslations",
+					operations,
+					(scope) =>
+						accumulateTranslations(
+							scope,
+							{ jev, luna },
+							modules,
+							input,
+						),
 				),
 		},
 	};

@@ -190,6 +190,7 @@ const routeFields: Readonly<
 		fields: { articleEvidence: null, valencyEvidence: [] },
 	},
 	"Lexeme/PRON": { inflects: true, fields: { articleEvidence: null } },
+	"Lexeme/ADP": { inflects: false, fields: { valencyEvidence: [] } },
 	"Locution/VERB": {
 		inflects: true,
 		fields: { expletiveEvidence: null, valencyEvidence: [] },

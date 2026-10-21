@@ -16,8 +16,10 @@
  * resolves a stored unit's Attestation with jev judging and Luna writing;
  * `resolve.reading`, which picks a stored Emoji Description of the
  * Attestation's Lemma or writes a new one; `translate.sentence`, which
- * translates one Sentence with Luna (#1210); and `knowledge.produce`,
- * which fills the resolved Reading's missing Knowledge aspect by aspect.
+ * translates one Sentence with Luna (#1210); `knowledge.produce`,
+ * which fills the resolved Reading's missing Knowledge aspect by aspect;
+ * and `knowledge.accumulateTranslations`, which adds the translations a
+ * later occurrence needs to a Reading's stored ones (ADR 0047).
  * The operations are Effect 4 Effects. `createTypeSafeAsk` and
  * `createOpenAILuna` are the production transports: `fetch` to the
  * TypeSafe and OpenAI APIs, with no `node:*` import.
@@ -38,6 +40,10 @@ export { extractedTextFromMarkdown } from "./extracted-text/markdown.js";
 export { parseScroll } from "./extracted-text/parse.js";
 export { extractTextFile } from "./extracted-text/plain-text/text-file.js";
 export { splitScroll } from "./extracted-text/split.js";
+export type {
+	AccumulateTranslationsInput,
+	TranslationAccumulation,
+} from "./knowledge/types.js";
 export type {
 	DetectedLanguage,
 	LanguagedText,

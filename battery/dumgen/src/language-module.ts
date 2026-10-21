@@ -1,17 +1,19 @@
 /**
  * The seam each language plugs into (#772): what Dumgen's operations need
- * from one language. `segment.inUnits`, `resolve.grammar` and
- * `knowledge.produce` look the module up by `input.language` and treat a
- * language with none as bad input, a Defect; the language's own code stays
- * behind the module. `languages.ts` registers the modules.
+ * from one language. `segment.inUnits`, `resolve.grammar`,
+ * `knowledge.produce` and `knowledge.accumulateTranslations` look the
+ * module up by `input.language` and treat a language with none as bad
+ * input, a Defect; the language's own code stays behind the module. `languages.ts` registers the modules.
  */
 import type * as Effect from "effect/Effect";
 import type { OperationScope } from "./call.js";
 import type { InvalidModelOutput, ProviderFailure } from "./errors.js";
 import type { JevSettings } from "./jev-call.js";
 import type {
+	AccumulateTranslationsInput,
 	KnowledgeProduction,
 	ProduceKnowledgeInput,
+	TranslationAccumulation,
 } from "./knowledge/types.js";
 import type { LunaSettings } from "./luna-call.js";
 import type {
@@ -68,6 +70,12 @@ export type LanguageModule = {
 		models: Models,
 		input: ProduceKnowledgeInput<E>,
 	) => Effect.Effect<KnowledgeProduction, E>;
+	/** The body of `knowledge.accumulateTranslations` for a Reading of the language. */
+	readonly accumulateTranslations: (
+		scope: OperationScope,
+		models: Models,
+		input: AccumulateTranslationsInput,
+	) => Effect.Effect<TranslationAccumulation>;
 };
 
 /** Each registered language's module. */

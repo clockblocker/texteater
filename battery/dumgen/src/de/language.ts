@@ -1,8 +1,10 @@
 /**
  * German's language module (#772): the Segment and unit stages with
  * production's setting (`productionUnitSettings`), the German body of
- * `resolve.grammar` and that of `knowledge.produce`.
+ * `resolve.grammar`, that of `knowledge.produce` and that of
+ * `knowledge.accumulateTranslations`.
  */
+import { accumulateGermanTranslations } from "../knowledge/de/accumulate.js";
 import { produceGermanKnowledge } from "../knowledge/de/produce.js";
 import type { LanguageModule } from "../language-module.js";
 import type { LanguageOptions } from "../languages.js";
@@ -30,5 +32,6 @@ export function germanLanguage(options: LanguageOptions): LanguageModule {
 		},
 		resolveGrammar: resolveGermanGrammar,
 		produceKnowledge: produceGermanKnowledge,
+		accumulateTranslations: accumulateGermanTranslations,
 	};
 }
