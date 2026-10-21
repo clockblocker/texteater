@@ -150,7 +150,7 @@ and `etwas`.
 | 🔧 | manner | `wie` ❓🔧, `irgendwie` ❔🔧 |
 | 🤔 | reason | `warum` ❓🤔; causal `darum` and `daher` 🤔 (being applied) |
 | 👤 and 📦 | person and thing | `wer` ❓👤, `was` ❓📦 |
-| the preposition's emoji | pronominal adverbs | `darauf` 🔝, `damit` 🔗, `wofür` ❓🎁 |
+| the preposition's emoji | pronominal adverbs, and the preposition's own generic ADP Reading | `darauf` 🔝, `damit` 🔗, `wofür` ❓🎁; ADP `auf` 🔝, `an` 📌 (temporal `an` is 📅) |
 
 Other authored units have one emoji for the whole Reading:
 

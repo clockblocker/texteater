@@ -1,4 +1,5 @@
 import type { LanguageInventory } from "../registry.js";
+import { adpositions } from "./adpositions.js";
 import { germanArticles, reviewedDeterminers } from "./determiner-paradigms.js";
 import { germanSyncretisms } from "./generated/syncretisms.js";
 import { member as bekommenRezipientenpassiv } from "./members/lexeme/auxiliary/bekommen-rezipientenpassiv.js";
@@ -33,7 +34,8 @@ import { whAdverbs } from "./wh-adverbs.js";
  * `src/inventories/de/members/`, and the paradigm, adverb and particle
  * modules beside this file define the rest. German PART is fully authored:
  * nicht, infinitive zu and the modal particles, one member per Reading
- * (`particles.ts`, #734).
+ * (`particles.ts`, #734). The prepositions that form pronominal adverbs have
+ * their ADP Readings authored on the Open ADP route (`adpositions.ts`).
  */
 export const sourceMembers = [
 	...germanArticles,
@@ -63,6 +65,7 @@ export const sourceMembers = [
 	...pronominalAdverbs,
 	...whAdverbs,
 	...germanParticles,
+	...adpositions,
 ];
 
 /**

@@ -28,7 +28,14 @@ emphatic adverbs `selbst` and `selber`, the negation particle `nicht`,
 infinitive `zu` and the modal particles (`aber`, `auch`, `bloß`, `denn`,
 `doch`, `eben`, `eigentlich`, `einfach`, `einmal`, `etwa`, `halt`, `ja`,
 `mal`, `nur`, `ruhig`, `schon`, `vielleicht`, `wohl`), which with `nicht`
-make German PART fully authored. Each member comes with every spelling that
+make German PART fully authored, and the ADP Readings of the prepositions
+that form pronominal adverbs (`an`, `auf`, `aus`, `bei`, `durch`, `für`,
+`gegen`, `hinter`, `in`, `mit`, `nach`, `neben`, `über`, `um`, `unter`,
+`von`, `vor`, `zu`, `zwischen`). Each of these has one generic Reading,
+labelled with the emoji its pronominal adverbs carry (`an` 📌 as `daran`),
+from one shared table, and a sense gold names apart has its own: temporal
+`an` 📅 and `zu` with a number 👥. They are a Fixed Population on the Open
+ADP route. Each member comes with every spelling that
 realizes it and each Reading's Knowledge and semantic relation claims.
 `dumcorpus` checks them with Dumling and Dumrel. Dumling still owns
 linguistic values and their validation, and Dumrel owns Knowledge types,
