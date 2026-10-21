@@ -33,7 +33,8 @@ type Governable = {
 
 /** A member that may be its head's preposition, and the questions asked of it. */
 export type GovernedQuestions = Governable & {
-	readonly governed: ChoiceOf<typeof options.governed>;
+	/** Whether the head governs it; none when code knows it does (`bracketTwins`). */
+	readonly governed: ChoiceOf<typeof options.governed> | undefined;
 	/** A governor's case question, when the table lets the preposition take more than one. */
 	readonly governedCase: Choice<AdpCase> | undefined;
 	/** A governor's question of what the complement refers to. */
@@ -69,6 +70,45 @@ function governableMembers(
 	});
 }
 
+/**
+ * A VERB Lexeme's twin prepositions: one preposition spelled by two or more
+ * of its members, as in Pass auf dich auf. Segmentation lets a clause hold
+ * the same preposition twice in one VERB unit only by its `bracket-particle`
+ * rule: the last one closes the verb's bracket as its separable particle,
+ * and each earlier one joined only because it heads the phrase the verb
+ * governs (de/bracket-particle-or-circumposition,
+ * de/governed-preposition-joins-its-governor). So the last twin is never
+ * asked as a governed preposition and the earlier ones are governed
+ * without asking; only their case and referent are asked. The answer is
+ * each twin's position: "Particle" for the last, "Governed" for the others.
+ */
+function bracketTwins(
+	governable: readonly Governable[],
+	shape: Shape,
+): ReadonlyMap<number, "Particle" | "Governed"> {
+	const twins = new Map<number, "Particle" | "Governed">();
+	if (!shape.verbal || !shape.lexeme) return twins;
+	const byPreposition = new Map<string, Governable[]>();
+	for (const chosen of governable)
+		byPreposition.set(chosen.preposition, [
+			...(byPreposition.get(chosen.preposition) ?? []),
+			chosen,
+		]);
+	for (const group of byPreposition.values()) {
+		if (group.length < 2) continue;
+		const ordered = [...group].sort(
+			(left, right) => left.member.segment - right.member.segment,
+		);
+		const last = ordered.at(-1);
+		for (const chosen of ordered)
+			twins.set(
+				chosen.member.position,
+				chosen === last ? "Particle" : "Governed",
+			);
+	}
+	return twins;
+}
+
 /** Coordinating conjunctions, which never open a preposition's complement. */
 export const coordinators = new Set([
 	"und",
@@ -82,7 +122,8 @@ export const coordinators = new Set([
 /**
  * Asks, of each member no satellite `taken` that may be a preposition,
  * whether the head governs it; of a governor's, also the case it governs
- * and what its complement refers to.
+ * and what its complement refers to. A VERB's twin prepositions are read
+ * by `bracketTwins` instead.
  */
 export function askGoverned(
 	questionnaire: Questionnaire,
@@ -90,15 +131,22 @@ export function askGoverned(
 	shape: Shape,
 	taken: ReadonlySet<number>,
 ): readonly GovernedQuestions[] {
-	const governable = shape.governs ? governableMembers(target, taken) : [];
+	const members = shape.governs ? governableMembers(target, taken) : [];
+	const twins = bracketTwins(members, shape);
+	const governable = members.filter(
+		({ member }) => twins.get(member.position) !== "Particle",
+	);
 	return governable.map((chosen) => {
 		const { member, cases: allowed } = chosen;
-		const governed = questionnaire.choice(
-			`governed_m${member.position}`,
-			fill(question.governed, { m: member.ref }),
-			options.governed,
-			["government"],
-		);
+		const governed =
+			twins.get(member.position) === "Governed"
+				? undefined
+				: questionnaire.choice(
+						`governed_m${member.position}`,
+						fill(question.governed, { m: member.ref }),
+						options.governed,
+						["government"],
+					);
 		if (!shape.governor)
 			return {
 				...chosen,
@@ -139,7 +187,11 @@ export function readGoverned(
 	const governedPositions: number[] = [];
 	for (const chosen of governable) {
 		const position = chosen.member.position;
-		if (answered.pick(chosen.governed) !== "Governed") continue;
+		if (
+			chosen.governed !== undefined &&
+			answered.pick(chosen.governed) !== "Governed"
+		)
+			continue;
 		governedPositions.push(position);
 		if (!shape.governor) continue;
 		const [only] = chosen.cases;
@@ -172,4 +224,43 @@ export function readGoverned(
 		});
 	}
 	return { governed, governedPositions };
+}
+
+/**
+ * Whether a VERB's prefix is a preposition it governs, and so no prefix
+ * (Rule de/verb-core-features: warten auf is warten): every member that
+ * carries the prefix, by spelling it or opening its own word with it as
+ * `prefixCandidates` offers it, is governed. A twin closing the bracket
+ * after a governed one, or the verb's own word, keeps it: Pass auf dich
+ * auf, dass er auf sie aufpasst.
+ */
+export function governedPrefix(
+	target: Target,
+	governable: readonly GovernedQuestions[],
+	answered: Answered,
+): (prefix: string) => boolean {
+	const governedAt = new Set(
+		governable.flatMap((chosen) =>
+			chosen.governed === undefined ||
+			answered.peek(chosen.governed) === "Governed"
+				? [chosen.member.position]
+				: [],
+		),
+	);
+	const carries = (member: Member, prefix: string) => {
+		const word = fold(spellingOf(member));
+		return (
+			word === prefix ||
+			(word.length >= prefix.length + 2 && word.startsWith(prefix))
+		);
+	};
+	return (prefix) => {
+		const carrying = target.members.filter((member) =>
+			carries(member, prefix),
+		);
+		return (
+			carrying.length > 0 &&
+			carrying.every((member) => governedAt.has(member.position))
+		);
+	};
 }
