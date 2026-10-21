@@ -34,10 +34,13 @@ Accumulation stays inside the Reading the click resolved to. It never makes
 a Reading, and it never removes or reorders a translation: a set reads in
 arrival order, its first translations first.
 
-**Translations are the one aspect a later occurrence adds to.** Every other
-stored aspect stays as the occurrence that wrote it left it
+**Translations are the one Knowledge aspect a later occurrence adds to.**
+Every other stored aspect stays as the occurrence that wrote it left it
 ([#883](https://github.com/clockblocker/texteater/issues/883), point 5).
 Translations only grow, and a wrong one is fixed through Correct or Retract.
+Outside Knowledge, a later occurrence may add a Paradigm Variant to its
+Lemma the same way
+([ADR 0048](./0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md)).
 
 **An authored Reading accumulates in its note.** Its stored note starts as a
 copy of its authored Knowledge
