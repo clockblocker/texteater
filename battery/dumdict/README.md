@@ -210,6 +210,34 @@ principal parts become the Lemma Paradigm, and its attestation strings
 Attestation Links. Old unversioned, Reading-targeted relation data is a hard
 break the host must reset or rewrite.
 
+## Inflection tables
+
+`dumdict/inflection` projects a Lemma's Inflection Tables (system ADR 0049).
+It is pure: no storage, no language, no labels. A language's
+`InflectionPack` from `dumcorpus/inflection` is its only language seam:
+Table Schemas with their core panels per Kind, an opaque form type, the
+derivation of a Licence Group's forms, and the display and labels the host
+applies.
+
+- `projectLemmaTables(pack, slice)` takes a `LemmaSlice` (or any slice with
+  its Lemma Record, Reading Entries and Surface Entries) and answers one
+  table per Licence Group of core panels only, every met Surface with its
+  Surface Axes, and the Licence Conflicts. Derived and met forms are merged
+  per cell by the pack's form key. A met form stands in every cell, of every
+  group, whose variants derive it or leave it Unknown; one only OneOf its
+  cells is `uncertain` there. A form no variant derives flags its cell
+  `undescribed`, and is listed, not written.
+- `placeSurface(schema, surface)` answers Covers, OneOf or Unplaced, and
+  `surfaceAxes(schema, surface)` every feature bundle the Surface fills.
+
+A host draws each group's panels as grids, captioned with the group's
+Readings, applying `pack.labels` to panels, rows and columns and
+`pack.display` to each form. Beside them it lists the Surface lines that
+are not `inCore`, each labelled with `pack.labels.bundle` per bundle of its
+axes and linked to its Surface. The view is plain data, the same for the
+same slice in any order; a host may cache it on `pack.version` and
+`schema.version`, and key a group's Block on its `selectionKey`.
+
 ## Scope
 
 - Languages: `en`, `de`, `he`

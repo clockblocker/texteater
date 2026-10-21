@@ -129,6 +129,16 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		},
 	},
 	{
+		specifier: "dumdict/inflection",
+		classification: "operational",
+		rationale:
+			"Pure Inflection Table projection a host renders from; must exclude Effect and schema authoring.",
+		operation: {
+			id: "dumdict.project-lemma-tables",
+			description: "project lemma tables",
+		},
+	},
+	{
 		specifier: "dumdict/package.json",
 		classification: "metadata",
 		rationale: "Package metadata.",

@@ -3,6 +3,7 @@
 	"entry": [
 		"src/pending.ts",
 		"src/planning.ts",
+		"src/inflection.ts",
 		"src/public-schema.ts",
 		"src/testing/index.ts",
 		"generate-readme/examples/**/*.ts",
