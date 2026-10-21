@@ -31,6 +31,7 @@ import { z } from "zod";
 import { createDumgen } from "../../../src/create-dumgen.js";
 import { defaultLunaConfiguration } from "../../../src/luna.js";
 import type { OperationTrace } from "../../../src/operation-trace.js";
+import { markedSentence } from "../../../src/resolve/reading.js";
 import { pinnedJevModel } from "../../../src/segment/jev.js";
 import { storedAs } from "../../stored-json.js";
 import { frozenSetSize } from "../frozen-sets.js";
@@ -317,8 +318,11 @@ export function licenceExperiment() {
 												stored: emojiOf(
 													entry.stored.reading,
 												),
-												markedSentence:
-													entry.later.text,
+												markedSentence: markedSentence(
+													entry.later.sentence
+														.segments,
+													entry.later.sentence.target,
+												),
 											} satisfies LicenceInput,
 											idealOutput: {
 												paradigmChanges: [],
