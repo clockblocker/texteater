@@ -1,0 +1,145 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Was bewog ihn dazu?",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Was"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "bewog"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ihn"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dazu"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "?"
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0038", "ADR-0048"],
+		"rules": [
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/meaning-conditioned-paradigm-doublets",
+				"hash": "0881d666fc1f106a"
+			},
+			{
+				"rule": "de/principal-parts-as-the-dictionary-cites",
+				"hash": "3757ab1bafee87f5"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: bewegen",
+				"url": "https://www.dwds.de/wb/bewegen",
+				"supports": "bewegen 'veranlassen': bewog, bewogen; bewegen 'die Lage verändern': bewegte, bewegt"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🫸🧠",
+				"knowledge": {},
+				"paradigm": {
+					"preterite": ["bewog"],
+					"present1": ["bewege"],
+					"present2": ["bewegst"],
+					"present3": ["bewegt"],
+					"pastParticiple": ["bewogen"],
+					"subjunctivePast": ["bewöge"]
+				},
+				"coverage": {
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
+					}
+				}
+			},
+			"notes": {
+				"rationale": "bewog is the Präteritum of bewegen in DWDS's sense 2, to induce someone to act, which conjugates strong: bewog, bewogen, Konjunktiv II bewöge. Moving something 🔃 conjugates weak (bewegte). 🫸 stands in for the push that moves a decision."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "bewog",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "bewog",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "bewegen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

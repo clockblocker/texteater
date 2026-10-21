@@ -1,0 +1,138 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er hat ein freundliches Gesicht.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "freundliches"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Gesicht"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0038", "ADR-0048"],
+		"rules": [
+			{
+				"rule": "de/meaning-conditioned-paradigm-doublets",
+				"hash": "0881d666fc1f106a"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Gesicht",
+				"url": "https://www.dwds.de/wb/Gesicht",
+				"supports": "Gesicht 'Antlitz', plural Gesichter; Gesicht 'Vision, Erscheinung', plural Gesichte"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4, 8],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"reading": {
+				"emojiDescription": "🙂",
+				"knowledge": {},
+				"paradigm": {
+					"plural": ["Gesichter"]
+				},
+				"coverage": {
+					"paradigm": {
+						"plural": "Authored"
+					}
+				}
+			},
+			"notes": {
+				"rationale": "Gesicht owns the article ein, Acc.Neut.Sg (de/noun-owns-its-article). A friendly face is DWDS Gesicht 1, the face, plural Gesichter; a vision 🔮 is Gesichte."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Gesicht",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					},
+					"normalizedSurface": "Gesicht",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "ein",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Gesicht",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -68,3 +68,37 @@ test("the inventories entry reads no files and loads no Zod", async () => {
 	// package test pins that.
 	expect([...external]).toEqual(["dumling"]);
 });
+
+test("a consumer on Node projects a German table through the inflection entry", async () => {
+	const output = await run([
+		resolve(packageRoot, "../../node_modules/node/bin/node"),
+		"--input-type=module",
+		"-e",
+		`const { inflectionPacks } = await import("dumcorpus/inflection");
+		const pack = inflectionPacks.de;
+		const lemma = { unitKind: "Lemma", language: "de", family: "Lexeme", kind: "NOUN", canonicalForm: "Tag", coreFeatures: { gender: "Masc" } };
+		const schema = pack.schemaFor(lemma);
+		const table = pack.derive({ lemma, schema, selection: { plural: [{ id: "tage", value: "Tage", provenance: "Produced" }] } });
+		console.log(JSON.stringify({ id: schema.id, dative: table["case=Dat|number=Plur"].map(({ form }) => pack.display(form).map(({ text }) => text).join("")) }));`,
+	]);
+	expect(JSON.parse(output)).toEqual({
+		id: "de/Lexeme/NOUN",
+		dative: ["den Tagen"],
+	});
+});
+
+test("the inflection entry reads no files and loads no Zod", async () => {
+	const files = ["./inflection.js"];
+	const external = new Set<string>();
+	for (const file of files) {
+		const text = await Bun.file(resolve(packageRoot, "dist", file)).text();
+		for (const [, specifier = ""] of text.matchAll(
+			/^(?:import|export)\b[^";]*?"([^"]+)"/gm,
+		))
+			if (!specifier.startsWith("./")) external.add(specifier);
+			else if (!files.includes(specifier)) files.push(specifier);
+	}
+	// Dumrel's runtime root, for the conjugation class and variant ids, is
+	// light in the same way: its entry-point audit pins that.
+	expect([...external].toSorted()).toEqual(["dumling", "dumrel"]);
+});

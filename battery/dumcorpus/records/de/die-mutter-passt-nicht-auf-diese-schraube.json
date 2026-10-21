@@ -24,6 +24,10 @@
 		"adrs": ["ADR-0031", "ADR-0034", "ADR-0035", "ADR-0038", "ADR-0048"],
 		"rules": [
 			{
+				"rule": "de/meaning-conditioned-paradigm-doublets",
+				"hash": "0881d666fc1f106a"
+			},
+			{
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"
 			},

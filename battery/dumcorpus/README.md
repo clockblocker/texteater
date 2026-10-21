@@ -110,6 +110,32 @@ Paradigm Cells (system ADR 0019), and `deriveGrammaticalComponent` gives the
 article of a name cited with one, or the subject expletive `es`, that a
 Surface brings.
 
+`dumcorpus/inflection` holds each language's Inflection Pack (system ADR
+0049), the only part of an inflection table that knows its language. Like
+`dumcorpus/inventories`, it reads no files and loads no Zod. A host hands `inflectionPacks.de` to `dumdict/inflection`'s
+`projectLemmaTables` and draws the view with the pack's `display` and
+`labels`:
+
+- `schemaFor(lemma)`: the Table Schema of a NOUN, a VERB, a closed AUX, a
+  comparable ADJ or ADV, or a declining DET or PRON stem, with its core
+  panels: the declension; Präsens, Präteritum, Konjunktiv II and Partizip II;
+  the comparison. Konjunktiv I and Imperativ are not core.
+- `derive({ lemma, selection, schema })`: one Licence Group's forms from the
+  Paradigm Variants it licenses (`Variant`), the German rules (`Rule`) and
+  the Authored Inventory's closed tables and suppletive comparisons
+  (`Authored`). A cell in doubt is left out, never guessed.
+- The forms are `GermanWordForm` (`der Tag`, the article as Context) and
+  `GermanVerbForm`, whose pronoun, finite word, reflexive, other words and
+  split-off particle stay apart: `display` shows `er fährt … ab` and `hat
+  gefahren`.
+- `labels`: `N`, `A`, `G`, `D`, `Sg`, `Pl`, `Präsens`, `Konjunktiv II`,
+  `Partizip II`, and list-line bundles such as `Dat.Pl`.
+
+`germanAuthoredParadigm` gives a closed VERB (sein, haben, werden, the
+modals) its Lemma Paradigm, read off its authored table, and
+`germanSelectionIssues` checks a Licence Group's selection against the
+conjugation class of each Präteritum variant.
+
 `checkIfGrundform` asks whether a Surface realizes its Lemma's Grundform.
 A Surface stores no Citation/Inflection discriminator, so the entry assesses
 its spelling and grammatical evidence by each language's citation

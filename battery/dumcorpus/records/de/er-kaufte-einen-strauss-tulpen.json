@@ -1,0 +1,138 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er kaufte einen Strauß Tulpen.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "kaufte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "einen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Strauß"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Tulpen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0038", "ADR-0048"],
+		"rules": [
+			{
+				"rule": "de/meaning-conditioned-paradigm-doublets",
+				"hash": "0881d666fc1f106a"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Strauß",
+				"url": "https://www.dwds.de/wb/Strauß",
+				"supports": "Strauß 'Blumenstrauß', plural Sträuße; Strauß the bird, plural Strauße"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4, 6],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"reading": {
+				"emojiDescription": "💐",
+				"knowledge": {},
+				"paradigm": {
+					"plural": ["Sträuße"]
+				},
+				"coverage": {
+					"paradigm": {
+						"plural": "Authored"
+					}
+				}
+			},
+			"notes": {
+				"rationale": "Strauß owns the article einen, Acc.Masc.Sg (de/noun-owns-its-article). A bunch of tulips is DWDS Strauß 1, the bouquet, plural Sträuße; the ostrich 🐦🏃 is Strauße."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Strauß",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					},
+					"normalizedSurface": "Strauß",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "einen",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Strauß",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -77,8 +77,12 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0022", "ADR-0039"],
+		"adrs": ["ADR-0003", "ADR-0022", "ADR-0039", "ADR-0048"],
 		"rules": [
+			{
+				"rule": "de/meaning-conditioned-paradigm-doublets",
+				"hash": "0881d666fc1f106a"
+			},
 			{
 				"rule": "de/largest-fixed-unit",
 				"hash": "9a404db30f2b7c82"
@@ -260,7 +264,12 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "💬" },
+			"reading": {
+				"emojiDescription": "💬",
+				"knowledge": {},
+				"paradigm": { "plural": ["Worte"] },
+				"coverage": { "paradigm": { "plural": "Authored" } }
+			},
 			"notes": {
 				"rationale": "ohne ein Wort zu sagen is Duden's Wort as 'Äußerung' (er hat mir kein Wort davon gesagt, plural Worte), not the lexical unit with plural Wörter."
 			},

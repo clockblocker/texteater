@@ -1,0 +1,135 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "An der Wand hängen alte Drucke.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "An"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Wand"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hängen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "alte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Drucke"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0038", "ADR-0048"],
+		"rules": [
+			{
+				"rule": "de/meaning-conditioned-paradigm-doublets",
+				"hash": "0881d666fc1f106a"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Druck",
+				"url": "https://www.dwds.de/wb/Druck",
+				"supports": "Druck as printing or a printed work, plural Drucke; Druck as a force, plural Drücke"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [10],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"reading": {
+				"emojiDescription": "🖨",
+				"knowledge": {},
+				"paradigm": {
+					"plural": ["Drucke"]
+				},
+				"coverage": {
+					"paradigm": {
+						"plural": "Authored"
+					}
+				}
+			},
+			"notes": {
+				"rationale": "Drucke, plural Nom as the subject of hängen, takes no article (alte is an ADJ). Old prints on a wall are DWDS Druck 2, a printed picture, plural Drucke; pressure 🗜 is Drücke."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Druck",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					},
+					"normalizedSurface": "Drucke",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Plur"
+					}
+				},
+				"members": [
+					{
+						"attested": "Drucke",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}
