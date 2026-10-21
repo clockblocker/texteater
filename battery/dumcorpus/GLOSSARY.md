@@ -32,6 +32,13 @@ by each language's citation conventions and never stored. See
 [Dumcorpus ADR 0001].
 _Avoid_: Surface Kind, stored Citation/Inflection discriminator
 
+**Inflection Pack**:
+A language's table knowledge in `dumcorpus/inflection`: its Table Schemas
+(Dumling) with their core panels, its form type and display, derivation and
+labels. It is the only part of a table that knows the language. See
+[ADR 0049].
+_Avoid_: locale, label table, table rules
+
 **Spec Record**:
 One sentence of the golden corpus with its Segments and annotated targets.
 See [ADR 0037].
@@ -49,9 +56,9 @@ annotate: Full or Partial. It is not an Attestation's Realization Coverage
 _Avoid_: completeness
 
 **Knowledge Coverage**:
-Which Reading Knowledge aspects of a target a person has reviewed, each
-Authored or reviewed and empty; an aspect left out is unreviewed. See
-[Dumcorpus ADR 0002].
+Which Reading Knowledge aspects of a target, and which Variation Dimensions
+of its Lemma Paradigm (Dumrel), a person has reviewed, each Authored or
+reviewed and empty; one left out is unreviewed. See [Dumcorpus ADR 0002].
 _Avoid_: Coverage (a Segmentation's), completeness
 
 **No Target**:
@@ -136,21 +143,23 @@ An ADV Lexeme whose whole form joins a preposition to `einander`. See
 _Avoid_: `preposition + einander` PRON, reciprocal PRON compound
 
 **Plural Pattern**:
-How a German noun forms its plural from its singular. It is derived from the
-plural forms a NOUN Reading's Knowledge stores and never splits a Lemma. See
-[ADR 0038].
+How a German noun forms its plural from its singular. It is derived from
+each plural form in a NOUN Lemma's Paradigm (Dumrel), never stored, and never
+splits a Lemma. See [ADR 0038].
 _Avoid_: plural class, declension class
 
 **Conjugation Class**:
-How a German verb forms its Präteritum: Strong, Weak or Mixed. A VERB
-Reading's Knowledge stores it, and it never splits a Lemma. See [ADR 0038].
+How a German verb forms its Präteritum: Strong, Weak or Mixed. It is derived
+from each Präteritum form in a VERB Lemma's Paradigm (Dumrel), never stored,
+and never splits a Lemma. See [ADR 0038].
 _Avoid_: verb type, irregular verb, Verbklasse
 
 **Principal Parts**:
 The forms of a German verb a host can't rebuild from its infinitive or its
 Conjugation Class: its Präteritum, Präsens singular, Partizip II and
-Konjunktiv II. A VERB Reading's Knowledge stores them as a dictionary cites
-them, and a host renders them. See [ADR 0038].
+Konjunktiv II. They are the Variation Dimensions (Dumrel) of a German VERB
+Lemma's Paradigm, each form cited as a dictionary cites it, and a host
+renders them. See [ADR 0038] and [ADR 0048].
 _Avoid_: irregular forms, conjugation table
 
 **Stand-in**:
@@ -174,11 +183,13 @@ _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
 [ADR 0037]: ../../docs/adr/0037-make-dumcorpus-own-the-golden-corpus-and-classification-rules.md
-[ADR 0038]: ../../docs/adr/0038-store-german-inflection-classes-as-reading-knowledge.md
+[ADR 0038]: ../../docs/adr/0038-store-german-plurals-and-principal-parts-as-forms-never-patterns.md
 [ADR 0041]: ../../docs/adr/0041-judge-dumling-fields-by-the-learner-and-by-classification.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
+[ADR 0048]: ../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md
+[ADR 0049]: ../../docs/adr/0049-tabulate-a-lemmas-forms-as-projections.md
 [Dumcorpus ADR 0001]: ./docs/adr/0001-assess-grundform-with-language-owned-rules.md
 [Dumcorpus ADR 0002]: ./docs/adr/0002-count-a-knowledge-aspect-left-out-of-coverage-as-unreviewed.md
 [Dumgen ADR 0007]: ../dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md

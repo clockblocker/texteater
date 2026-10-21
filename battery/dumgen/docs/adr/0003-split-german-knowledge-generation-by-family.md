@@ -15,6 +15,17 @@ no-relation, other-Family and uncertainty outcomes. Code supplies Language and
 Family and validates each contribution. Candidate discovery does not establish
 exhaustive absence.
 
+**Production writes the Lemma Paradigm too.** Where a route's Paradigm
+Policy names Variation Dimensions, Knowledge Production returns Paradigm
+Changes beside its Knowledge changes
+([ADR 0048](../../../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md)).
+For a Lemma's first Reading, the forms Luna writes become variants under an
+explicit Licence. For a later Reading, a jev licence judge first picks, per
+dimension, the stored variants the sense takes, or answers NoMatch, and only
+after NoMatch does Luna write that dimension's forms, without seeing the
+stored ones. Code splits written forms into variants and validates them like
+any other contribution.
+
 Independent validated contributions survive a sibling failure. Dumgen returns
 changes, pending relations and attributable failures; callers own persistence
 and completion accounting. An unparseable response contributes nothing from

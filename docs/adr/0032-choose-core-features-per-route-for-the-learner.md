@@ -28,10 +28,10 @@ UD, narrowed per language (`DE_FEATURE_SCHEMA`). The language narrows every
 feature its routes use to that language's values. A route narrows a feature
 further only where its Kind uses fewer values: German PRON has no Art and
 German DET no Rcp. Each route splits the features it uses into Core and
-inflectional. Attestation, Reading and Knowledge have vocabularies of their
-own and never carry a Feature Pool feature or its name. Their values may
-coincide with the pool's: an Attestation's `realizedCase` has its own case
-enum, and Dumrel has its own literals.
+inflectional. Attestation, Reading, Knowledge and the Lemma Paradigm have
+vocabularies of their own and never carry a Feature Pool feature or its
+name. Their values may coincide with the pool's: an Attestation's
+`realizedCase` has its own case enum, and Dumrel has its own literals.
 
 **The placement test.** Within the Feature Pool, the test chooses Core or
 inflectional by what is best for the learner. Core tells apart the entity the
@@ -40,13 +40,17 @@ Lemma. A value that is neither leaves the pool and is restated in another
 layer's own terms:
 
 - Attestation evidence, if it describes this occurrence;
+- the Lemma Paradigm, licensed per Reading, if it is an alternative the
+  Lemma's forms take;
 - Reading Knowledge, if it is a fact about a sense, a class or a type;
 - a dumcorpus Rule or table, if it says which uses the language allows;
 - or nothing, and it is dropped.
 
-Each destination holds such values already. Inflection class
-([ADR 0038](./0038-store-german-inflection-classes-as-reading-knowledge.md)),
-valency ([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md),
+Each destination holds such values already. Inflection class is derived
+from the forms in the Lemma Paradigm, licensed per Reading
+([ADR 0038](./0038-store-german-plurals-and-principal-parts-as-forms-never-patterns.md),
+[ADR 0048](./0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md)).
+Valency ([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md),
 [ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)) and the
 Locution and Saying Types ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md))
 are Reading Knowledge. Governed case is a dumcorpus table plus Attestation

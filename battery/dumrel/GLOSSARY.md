@@ -1,16 +1,18 @@
 # Dumrel
 
-Dumrel defines identityless Knowledge and pure operations over it
-([Dumrel ADR 0001]). Each entry links the ADRs that hold the term's precise
-definition, edge cases and examples. A language's classification terms whose
-values Knowledge stores, such as the German Plural Pattern and Conjugation
-Class, live in the [Dumcorpus glossary].
+Dumrel defines identityless Knowledge, the Lemma Paradigm and pure
+operations over them ([Dumrel ADR 0001]). Each entry links the ADRs that hold
+the term's precise definition, edge cases and examples. A language's
+classification terms whose values Knowledge or the Paradigm stores, such as
+the German Plural Pattern and Conjugation Class, live in the
+[Dumcorpus glossary].
 
 ## Language
 
 **Reading Knowledge**:
-Optional linguistic content owned by one exact Reading, never by a Lemma. See
-[ADR 0002].
+Optional linguistic content owned by one exact Reading, never by a Lemma. A
+Lemma's inflectional alternatives are its Lemma Paradigm, not Knowledge. See
+[ADR 0002] and [ADR 0048].
 
 **Knowledge Change**:
 A Contribute, Correct or Retract operation on one atomic aspect or bucket of
@@ -27,6 +29,53 @@ Preferences that enable or disable the aspects applicable to a source route.
 **Knowledge Request Mask**:
 The aspects requested for production: those the Knowledge Policy applies to a
 route and the Knowledge Settings leave enabled.
+
+**Lemma Paradigm**:
+A Lemma's inflectional alternatives, per Variation Dimension, and the Licence
+each of its Readings holds in each. It is grammatical, not Knowledge, and no
+part of the Lemma's identity. See [ADR 0002] and [ADR 0048].
+_Avoid_: Lemma Knowledge, inflection class, principal-part Knowledge
+
+**Paradigm Policy**:
+The mapping from a source route to the Variation Dimensions of its Lemmas'
+Paradigms. See [ADR 0048] and [Dumrel ADR 0001].
+
+**Variation Dimension**:
+One part of a route's paradigm that may take alternatives, such as a German
+noun's `plural` or a German verb's `preterite`. See [ADR 0048].
+_Avoid_: principal part, for the dimension; axis
+
+**Paradigm Variant**:
+One alternative in one Variation Dimension: one form or one marker
+(`Banken`, `NoPlural`). Its id is a content key of its value. See
+[ADR 0048].
+_Avoid_: Variant, which is a spelling (Dumling); whole-paradigm variant
+
+**Licence**:
+The Paradigm Variants of one Variation Dimension that one Reading's sense
+takes. An Unstated Licence takes every variant. See [ADR 0048].
+_Avoid_: Licensed, a Variant spelling's tag (Dumling); Reading plural
+
+**Free Dimension**:
+A Variation Dimension in which every Reading of the Lemma licenses every
+variant (`melken`: `molk`, `melkte`). It is derived, never stored. See
+[ADR 0048].
+_Avoid_: optional form, free variant
+
+**Conditioned Dimension**:
+A Variation Dimension in which some Reading licenses only some of the
+variants (`Bank`: 🪑 `Bänke`, 🏦 `Banken`). It is derived, never stored. See
+[ADR 0048].
+_Avoid_: homonym plural, sense-specific form
+
+**Licence Group**:
+The Readings of one Lemma whose Licences agree in every Variation Dimension.
+They share one Inflection Table (Dumdict). See [ADR 0048] and [ADR 0049].
+_Avoid_: Reading group, sense cluster
+
+**Paradigm Change**:
+A Contribute, Correct, License, Unlicense or Retract operation on one
+Paradigm Variant or Licence. See [ADR 0048].
 
 **Unit Shadow**:
 A target described by language, Family, Kind and Canonical Form, without
@@ -96,6 +145,8 @@ _Avoid_: discourseFormulaRole, DiscourseFormula
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
 [ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
+[ADR 0048]: ../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md
+[ADR 0049]: ../../docs/adr/0049-tabulate-a-lemmas-forms-as-projections.md
 [Dumrel ADR 0001]: ./docs/adr/0001-keep-dumrel-ownerless-and-pure.md
 [Dumrel ADR 0005]: ./docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md
 [Dumcorpus glossary]: ../dumcorpus/GLOSSARY.md
