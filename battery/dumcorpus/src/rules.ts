@@ -1,12 +1,13 @@
 import { createHash } from "node:crypto";
 import type * as Dumling from "dumling/types";
 import type { Rule } from "./corpus-types.js";
+import { doubletRules } from "./de/doublet-rules.js";
 import { principalPartsRules } from "./de/principal-parts-rules.js";
 import { germanRules } from "./de/rules.js";
 
 /** Each language's classification Rules (ADR 0037). A language missing here has none yet. */
 const rulesByLanguage: { readonly [L in Dumling.Language]?: readonly Rule[] } =
-	{ de: [...germanRules, ...principalPartsRules] };
+	{ de: [...germanRules, ...principalPartsRules, ...doubletRules] };
 
 /** The classification Rules of every language (ADR 0037). */
 export const rules: readonly Rule[] = Object.values(rulesByLanguage).flatMap(

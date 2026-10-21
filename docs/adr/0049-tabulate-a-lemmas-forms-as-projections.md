@@ -40,9 +40,11 @@ migration, and a host may cache a view keyed on those versions.
 
 **One table per Licence Group, of core panels only.** Each Licence Group
 (ADR 0048) gets one table, captioned with its Readings. A table draws only
-the panels its pack declares core for the Kind. German: the NOUN declension;
-the VERB Präsens, Präteritum, Konjunktiv II, Partizip II and Imperativ; ADJ
-comparison. A cell holds the forms derived from the group's licensed
+the panels its pack declares core for the Kind. German: the NOUN
+declension; the VERB Präsens and Präteritum by person, Konjunktiv II and
+Partizip II; ADJ and ADV comparison; a closed DET or PRON stem's
+declension. The German Imperativ and Konjunktiv I are not core. A cell
+holds the forms derived from the group's licensed
 variants, several where a dimension is Free (`molk / melkte`), and the met
 forms placed in it, merged by the pack's form key. A met form fills a cell
 derivation leaves Unknown, as the weak noun `Menschen` does. A doubtful cell
