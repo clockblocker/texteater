@@ -1,5 +1,6 @@
 import type * as Dumling from "dumling/types";
 import { DE_REL_MAP } from "./selection-policy-de.js";
+import { HE_REL_MAP } from "./selection-policy-he.js";
 import type { KnowledgeRequestMask } from "./types.js";
 
 /**
@@ -24,7 +25,7 @@ type RouteLookup = Readonly<
  */
 const knowledgePolicies: {
 	readonly [L in Dumling.Language]?: KnowledgePolicy<L>;
-} = { de: DE_REL_MAP };
+} = { de: DE_REL_MAP, he: HE_REL_MAP };
 
 /** The aspects the Knowledge Policy applies to a source route, or undefined where no policy covers it. */
 export function knowledgePolicyMask(

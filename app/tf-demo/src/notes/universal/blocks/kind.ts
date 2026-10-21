@@ -6,6 +6,7 @@ import { z } from "zod";
  */
 export const noteLayoutBlockKindSchema = z.enum([
 	"Valency",
+	"Paradigm",
 	"Definition",
 	"Translations",
 	"PersonalAnnotation",

@@ -1,6 +1,7 @@
 import type { Dumgen, DumgenOptions } from "dumgen";
 import * as Effect from "effect/Effect";
 import type { KnowledgeProducer } from "./knowledgeProduction";
+import { parseAttestation, parseReading } from "./operationalParsing";
 
 /**
  * The KnowledgeProducer whose model work is Dumgen's `knowledge.produce`
@@ -24,9 +25,15 @@ export function dumgenKnowledgeProducer(
 					: {}),
 				tracePayloads: options.tracePayloads ?? false,
 			}).knowledge.produce({
-				language: "de",
-				reading: input.reading,
-				attestation: input.attestation,
+				language: input.encounter.sentence.language,
+				reading: parseReading(
+					input.reading,
+					input.encounter.sentence.language,
+				),
+				attestation: parseAttestation(
+					input.attestation,
+					input.encounter.sentence.language,
+				),
 				sentence: {
 					segments: input.encounter.sentence.segments.map(
 						({ kind, text }) => ({ kind, text }),

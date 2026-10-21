@@ -2996,6 +2996,23 @@
 											"Initiation",
 											"Transition"
 										]
+									},
+									"hebrewParadigm": {
+										"type": "object",
+										"properties": {
+											"forms": {
+												"minItems": 1,
+												"maxItems": 100,
+												"type": "array",
+												"items": {
+													"$ref": "#/$defs/__schema476"
+												}
+											}
+										},
+										"required": [
+											"forms"
+										],
+										"additionalProperties": false
 									}
 								},
 								"additionalProperties": false
@@ -3004,52 +3021,52 @@
 								"type": "object",
 								"properties": {
 									"transcription": {
-										"$ref": "#/$defs/__schema476"
-									},
-									"definition": {
-										"$ref": "#/$defs/__schema476"
-									},
-									"translations": {
 										"$ref": "#/$defs/__schema477"
 									},
-									"morphologicalTree": {
-										"$ref": "#/$defs/__schema476"
+									"definition": {
+										"$ref": "#/$defs/__schema477"
 									},
-									"semanticRelations": {
+									"translations": {
 										"$ref": "#/$defs/__schema478"
 									},
+									"morphologicalTree": {
+										"$ref": "#/$defs/__schema477"
+									},
+									"semanticRelations": {
+										"$ref": "#/$defs/__schema479"
+									},
 									"valency": {
-										"$ref": "#/$defs/__schema476"
+										"$ref": "#/$defs/__schema477"
 									},
 									"participleSource": {
-										"$ref": "#/$defs/__schema476"
+										"$ref": "#/$defs/__schema477"
 									},
 									"plural": {
-										"$ref": "#/$defs/__schema476"
+										"$ref": "#/$defs/__schema477"
 									},
 									"conjugationClass": {
-										"$ref": "#/$defs/__schema476"
+										"$ref": "#/$defs/__schema477"
 									},
 									"preterite": {
-										"$ref": "#/$defs/__schema476"
+										"$ref": "#/$defs/__schema477"
 									},
 									"presentSingular": {
-										"$ref": "#/$defs/__schema476"
+										"$ref": "#/$defs/__schema477"
 									},
 									"pastParticiple": {
-										"$ref": "#/$defs/__schema476"
+										"$ref": "#/$defs/__schema477"
 									},
 									"subjunctivePast": {
-										"$ref": "#/$defs/__schema476"
+										"$ref": "#/$defs/__schema477"
 									},
 									"locutionType": {
-										"$ref": "#/$defs/__schema476"
+										"$ref": "#/$defs/__schema477"
 									},
 									"sayingType": {
-										"$ref": "#/$defs/__schema476"
+										"$ref": "#/$defs/__schema477"
 									},
 									"formulaRole": {
-										"$ref": "#/$defs/__schema476"
+										"$ref": "#/$defs/__schema477"
 									}
 								},
 								"additionalProperties": false,
@@ -13703,6 +13720,90 @@
 			]
 		},
 		"__schema476": {
+			"type": "object",
+			"properties": {
+				"form": {
+					"type": "string",
+					"minLength": 1
+				},
+				"features": {
+					"type": "object",
+					"properties": {
+						"gender": {
+							"type": "string",
+							"enum": [
+								"Masc",
+								"Fem"
+							]
+						},
+						"number": {
+							"type": "string",
+							"enum": [
+								"Sing",
+								"Plur",
+								"Dual"
+							]
+						},
+						"person": {
+							"type": "string",
+							"enum": [
+								"1",
+								"2",
+								"3"
+							]
+						},
+						"tense": {
+							"type": "string",
+							"enum": [
+								"Past",
+								"Fut"
+							]
+						},
+						"verbForm": {
+							"type": "string",
+							"enum": [
+								"Inf",
+								"Part"
+							]
+						},
+						"mood": {
+							"type": "string",
+							"const": "Imp"
+						},
+						"definite": {
+							"type": "string",
+							"enum": [
+								"Ind",
+								"Def",
+								"Cons"
+							]
+						},
+						"voice": {
+							"type": "string",
+							"enum": [
+								"Act",
+								"Mid",
+								"Pass"
+							]
+						},
+						"polarity": {
+							"type": "string",
+							"enum": [
+								"Pos",
+								"Neg"
+							]
+						}
+					},
+					"additionalProperties": false
+				}
+			},
+			"required": [
+				"form",
+				"features"
+			],
+			"additionalProperties": false
+		},
+		"__schema477": {
 			"type": "string",
 			"enum": [
 				"Authored",
@@ -13710,41 +13811,41 @@
 			],
 			"description": "Authored: the Knowledge holds this aspect. ReviewedEmpty: a person reviewed it and it has none."
 		},
-		"__schema477": {
+		"__schema478": {
 			"type": "object",
 			"properties": {
 				"en": {
-					"$ref": "#/$defs/__schema476"
+					"$ref": "#/$defs/__schema477"
 				},
 				"ru": {
-					"$ref": "#/$defs/__schema476"
+					"$ref": "#/$defs/__schema477"
 				}
 			},
 			"additionalProperties": false
 		},
-		"__schema478": {
+		"__schema479": {
 			"type": "object",
 			"properties": {
 				"synonym": {
-					"$ref": "#/$defs/__schema476"
+					"$ref": "#/$defs/__schema477"
 				},
 				"nearSynonym": {
-					"$ref": "#/$defs/__schema476"
+					"$ref": "#/$defs/__schema477"
 				},
 				"antonym": {
-					"$ref": "#/$defs/__schema476"
+					"$ref": "#/$defs/__schema477"
 				},
 				"nearAntonym": {
-					"$ref": "#/$defs/__schema476"
+					"$ref": "#/$defs/__schema477"
 				},
 				"hypernym": {
-					"$ref": "#/$defs/__schema476"
+					"$ref": "#/$defs/__schema477"
 				},
 				"holonym": {
-					"$ref": "#/$defs/__schema476"
+					"$ref": "#/$defs/__schema477"
 				},
 				"endonym": {
-					"$ref": "#/$defs/__schema476"
+					"$ref": "#/$defs/__schema477"
 				}
 			},
 			"additionalProperties": false

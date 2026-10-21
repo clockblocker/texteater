@@ -112,17 +112,28 @@ async function runProductionAction(
 	t: TestConvexDb,
 	attemptKey: string,
 	inspect?: boolean,
+	bridge = false,
 ) {
 	const previous = {
 		fetch: globalThis.fetch,
 		flag: process.env.TF_KNOWLEDGE_PRODUCTION,
 		typesafe: process.env.TYPESAFE_API_KEY,
 		openai: process.env.OPENAI_API_KEY,
+		baseUrl: process.env.OPENAI_BASE_URL,
+		model: process.env.LUNA_MODEL,
 	};
 	process.env.TF_KNOWLEDGE_PRODUCTION = "1";
 	process.env.TYPESAFE_API_KEY = "fixture";
 	process.env.OPENAI_API_KEY = "fixture";
+	if (bridge) {
+		process.env.OPENAI_BASE_URL = "http://127.0.0.1:3250/v1";
+		process.env.LUNA_MODEL = "gpt-6.1-sol";
+	} else {
+		delete process.env.OPENAI_BASE_URL;
+		delete process.env.LUNA_MODEL;
+	}
 	const urls: string[] = [];
+	const lunaBodies: Record<string, unknown>[] = [];
 	const aspects: string[] = [];
 	const lunaAnswers: Record<string, unknown> = {
 		transcription: "baŋk",
@@ -150,6 +161,7 @@ async function runProductionAction(
 				),
 				usage: { input_tokens: 10, output_tokens: 1 },
 			});
+		lunaBodies.push(body);
 		const input = JSON.parse(body.input[1].content) as {
 			aspect: string;
 			language?: string;
@@ -194,11 +206,13 @@ async function runProductionAction(
 			["TF_KNOWLEDGE_PRODUCTION", previous.flag],
 			["TYPESAFE_API_KEY", previous.typesafe],
 			["OPENAI_API_KEY", previous.openai],
+			["OPENAI_BASE_URL", previous.baseUrl],
+			["LUNA_MODEL", previous.model],
 		] as const)
 			if (value === undefined) delete process.env[name];
 			else process.env[name] = value;
 	}
-	return { urls, aspects };
+	return { urls, aspects, lunaBodies };
 }
 
 /** The run's evidence: one serialized Dumgen trace per operation. */
@@ -254,6 +268,28 @@ test("the production producer runs Dumgen's knowledge.produce through the deploy
 	).toBe(true);
 	expect(traces.some((trace) => trace.includes('"payload"'))).toBe(false);
 	expect(await rows(t, "inspectionSteps")).toEqual([]);
+});
+
+test("every production Knowledge Luna call uses the opt-in bridge model without legacy settings", async () => {
+	const t = createTestConvex();
+	await seedAttempt(t, "bridge");
+	const { urls, lunaBodies } = await runProductionAction(
+		t,
+		"bridge",
+		false,
+		true,
+	);
+	expect(lunaBodies.length).toBeGreaterThan(0);
+	expect(urls).toContain("http://127.0.0.1:3250/v1/responses");
+	expect(urls).not.toContain("https://api.openai.com/v1/responses");
+	for (const body of lunaBodies) {
+		expect(body.model).toBe("gpt-6.1-sol");
+		expect(body).not.toHaveProperty("reasoning");
+		expect(body).not.toHaveProperty("service_tier");
+	}
+	expect((await rows(t, "knowledgeGenerationAttempts"))[0]).toMatchObject({
+		state: "Committed",
+	});
 });
 
 test("under DEV inspection the run's Dumgen calls render as inspection rows with their prompts and answers, and the evidence still keeps none (#885)", async () => {

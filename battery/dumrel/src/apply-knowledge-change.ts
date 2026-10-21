@@ -138,6 +138,7 @@ function apply(
 		case "subjunctivePast":
 			applyVerbForms(knowledge, change);
 			return;
+		case "hebrewParadigm":
 		case "transcription":
 		case "definition":
 		case "morphologicalTree":
@@ -395,6 +396,7 @@ type AtomicChange = Extract<
 	KnowledgeChange,
 	{
 		aspect:
+			| "hebrewParadigm"
 			| "transcription"
 			| "definition"
 			| "morphologicalTree"
@@ -436,6 +438,9 @@ function storeAtomic(
 	change: Exclude<AtomicChange, { kind: "Retract" }>,
 ): void {
 	switch (change.aspect) {
+		case "hebrewParadigm":
+			knowledge.hebrewParadigm = structuredClone(change.value);
+			return;
 		case "transcription":
 			knowledge.transcription = structuredClone(change.value);
 			return;

@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import { spellingOf } from "../server/storedSegments";
+import { isSupportedTargetLanguage } from "../shared/supported-target-language";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internalQuery, type QueryCtx } from "./_generated/server";
 import { lemmaValue } from "./model/occurrenceAttestations";
@@ -72,13 +73,14 @@ export async function loadResolutionContext(
 		};
 	// A resumed Grammar still needs the Sentence to commit stored membership.
 	const sentence = await loadSentenceForResolution(ctx, input);
-	if (!loadGrammar || sentence?.language !== "de")
+	if (!loadGrammar || !isSupportedTargetLanguage(sentence?.language))
 		return {
 			reusable: null,
 			sentence,
 			lemmaCandidates: [],
 			neighbours: {},
 		};
+	const language = sentence.language;
 	const neighbours = await loadNeighbourSentences(ctx, input.sentenceId);
 	const words = sentence.segments.filter(
 		(segment) => segment.kind === "ResolvableText",
@@ -110,8 +112,8 @@ export async function loadResolutionContext(
 	].filter(Boolean))
 		for (const spelling of [
 			text,
-			text.slice(0, 1).toLocaleLowerCase("de") + text.slice(1),
-			text.slice(0, 1).toLocaleUpperCase("de") + text.slice(1),
+			text.slice(0, 1).toLocaleLowerCase(language) + text.slice(1),
+			text.slice(0, 1).toLocaleUpperCase(language) + text.slice(1),
 		])
 			foundUnder.set(
 				spelling,
@@ -124,10 +126,10 @@ export async function loadResolutionContext(
 				ctx.db
 					.query("lemmas")
 					.withIndex("by_shadow_descriptor", (q) =>
-						q.eq("language", "de").eq(
+						q.eq("language", language).eq(
 							"foldedCanonicalForm",
 							foldedCanonicalForm({
-								language: "de",
+								language,
 								canonicalForm: spelling,
 							}),
 						),
@@ -137,7 +139,7 @@ export async function loadResolutionContext(
 					.query("surfaces")
 					.withIndex("by_language_and_normalized_surface", (q) =>
 						q
-							.eq("language", "de")
+							.eq("language", language)
 							.eq("normalizedSurface", spelling),
 					)
 					.take(9),
@@ -153,7 +155,7 @@ export async function loadResolutionContext(
 			return [
 				...lemmas,
 				...owners.flatMap((lemma) =>
-					lemma?.language === "de" ? [lemma] : [],
+					lemma?.language === language ? [lemma] : [],
 				),
 			].map((lemma) => ({ lemma, texts }));
 		}),

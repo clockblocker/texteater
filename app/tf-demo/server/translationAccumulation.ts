@@ -16,11 +16,11 @@ import type { ClickEncounter } from "./clickResolution";
  */
 export type TranslationAccumulator = (input: {
 	readonly encounter: ClickEncounter;
-	readonly reading: Dumling.Reading<"de">;
-	readonly attestation: Dumling.Attestation<"de">;
+	readonly reading: Dumling.Reading<Dumling.Language>;
+	readonly attestation: Dumling.Attestation<Dumling.Language>;
 	/** The Reading's stored translations, by language, as the note holds them. */
-	readonly translations: AccumulateTranslationsInput["translations"];
-}) => Effect.Effect<TranslationAccumulation>;
+	readonly translations: AccumulateTranslationsInput<Dumling.Language>["translations"];
+}) => Effect.Effect<TranslationAccumulation<Dumling.Language>>;
 
 /**
  * The TranslationAccumulator whose model work is Dumgen's: the Encounter's
@@ -39,7 +39,7 @@ export function dumgenTranslationAccumulator(
 			dumgen(
 				onOperation ? { onOperation } : {},
 			).knowledge.accumulateTranslations({
-				language: "de",
+				language: input.encounter.sentence.language,
 				reading: input.reading,
 				attestation: input.attestation,
 				sentence: {

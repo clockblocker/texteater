@@ -126,6 +126,30 @@ const valencySlotValidator = v.object({
  */
 export const readingKnowledgeValidator = v.object({
 	transcription: v.optional(v.string()),
+	hebrewParadigm: v.optional(
+		v.object({
+			forms: v.array(
+				v.object({
+					form: v.string(),
+					features: v.object({
+						gender: v.optional(literalUnion(["Masc", "Fem"])),
+						number: v.optional(
+							literalUnion(["Sing", "Plur", "Dual"]),
+						),
+						person: v.optional(literalUnion(["1", "2", "3"])),
+						tense: v.optional(literalUnion(["Past", "Fut"])),
+						verbForm: v.optional(literalUnion(["Inf", "Part"])),
+						mood: v.optional(v.literal("Imp")),
+						definite: v.optional(
+							literalUnion(["Ind", "Def", "Cons"]),
+						),
+						voice: v.optional(literalUnion(["Act", "Mid", "Pass"])),
+						polarity: v.optional(literalUnion(["Pos", "Neg"])),
+					}),
+				}),
+			),
+		}),
+	),
 	definition: v.optional(v.string()),
 	translations: v.optional(
 		v.object({

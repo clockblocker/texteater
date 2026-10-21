@@ -18,10 +18,7 @@ import {
 	type ReusedResolvedClickCommit,
 	type UnresolvedClickCommit,
 } from "../../server/linguisticOrchestration";
-import {
-	parseGermanLemma,
-	parseGermanReading,
-} from "../../server/operationalParsing";
+import { parseLemma, parseReading } from "../../server/operationalParsing";
 import type { ResolutionSessionGuard } from "../../server/resolutionLifecycle";
 import { projectResolutionReading } from "../../server/resolutionSessionProjection";
 import { storedUnitOf } from "../../server/storedSegments";
@@ -55,7 +52,7 @@ export function orchestratorFor(
 					internal.dumdictStorage.queries.findStoredReadings,
 					{ lemmaKey: lemmaIdentityKey(lemma) },
 				)
-			).map(parseGermanReading),
+			).map((reading) => parseReading(reading, lemma.language)),
 		persistence: createConvexPersistence(ctx, sessionGuard),
 		...(observer ? { observer } : {}),
 	});
@@ -92,7 +89,7 @@ function createConvexPersistence(
 				...context,
 				lemmaCandidates: context.lemmaCandidates.map(
 					({ lemma, foundUnder }) => ({
-						lemma: parseGermanLemma(lemma),
+						lemma: parseLemma(lemma),
 						foundUnder,
 					}),
 				),

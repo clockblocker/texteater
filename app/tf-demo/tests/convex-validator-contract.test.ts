@@ -9,7 +9,7 @@ const semanticRelationValues = [
 	"exonym",
 ];
 const enabledSegmentationLanguageValues = ["de", "en", "he"];
-const grammaticalResolutionLanguageValues = ["de"];
+const grammaticalResolutionLanguageValues = ["de", "he"];
 const segmentKindValues = [
 	"ResolvableText",
 	"OpaqueText",

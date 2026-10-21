@@ -1,6 +1,7 @@
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
 import {
+	grammaticalLanguageValidator,
 	knowledgeSettingsValidator,
 	readingBlockKindValidator,
 } from "../validators";
@@ -26,7 +27,7 @@ export const visitorTables = {
 
 	readingLanguageLayouts: defineTable({
 		visitorId: v.string(),
-		targetLanguage: v.literal("de"),
+		targetLanguage: grammaticalLanguageValidator,
 		order: v.array(readingBlockKindValidator),
 		hidden: v.array(readingBlockKindValidator),
 		updatedAt: v.number(),
@@ -37,7 +38,7 @@ export const visitorTables = {
 
 	readingFamilyKindLayouts: defineTable({
 		visitorId: v.string(),
-		targetLanguage: v.literal("de"),
+		targetLanguage: grammaticalLanguageValidator,
 		family: v.string(),
 		kind: v.string(),
 		order: v.array(readingBlockKindValidator),

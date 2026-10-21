@@ -144,7 +144,7 @@ function ReadingWithConfiguredLayout({
 		...convexQuery(api.readingBlockLayouts.getFamilyKind, {
 			visitorId,
 			route: {
-				targetLanguage: lemma.language as "de",
+				targetLanguage: lemma.language,
 				family: lemma.family,
 				kind: lemma.kind,
 			},

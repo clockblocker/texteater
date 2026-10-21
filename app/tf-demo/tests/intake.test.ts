@@ -360,7 +360,7 @@ test("the intake run sums jev tokens from every call and records how each Senten
 test("a Scroll in another language is turned away with a clear message before any jev call", async () => {
 	expect(unsupportedLanguageMessage("de")).toBeUndefined();
 	expect(unsupportedLanguageMessage("en")).toBe(GERMAN_ONLY_MESSAGE);
-	expect(unsupportedLanguageMessage("he")).toBe(GERMAN_ONLY_MESSAGE);
+	expect(unsupportedLanguageMessage("he")).toBeUndefined();
 	const jev = fakeJev();
 	const { stored, submit } = intakeWith(jev);
 	await expect(submit("The way is the goal.", "en")).rejects.toThrow(

@@ -9,6 +9,7 @@ import { produceGermanKnowledge } from "../knowledge/de/produce.js";
 import type { LanguageModule } from "../language-module.js";
 import type { LanguageOptions } from "../languages.js";
 import { resolveGermanGrammar } from "../resolve/de/grammar.js";
+import { resolveGermanReading } from "../resolve/de/reading.js";
 import {
 	segmentGermanSentence,
 	writtenGermanSegments,
@@ -31,6 +32,7 @@ export function germanLanguage(options: LanguageOptions): LanguageModule {
 				segmentGermanUnits(segmentation, ask, settings),
 		},
 		resolveGrammar: resolveGermanGrammar,
+		resolveReading: resolveGermanReading,
 		produceKnowledge: produceGermanKnowledge,
 		accumulateTranslations: accumulateGermanTranslations,
 	};

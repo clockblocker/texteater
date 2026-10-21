@@ -67,8 +67,8 @@ export async function projectSentenceView(
 ) {
 	// A Plain Sentence, unprocessed ones included, has no Segments to load
 	// or encounter, so a long plain Scroll costs one read per Sentence.
-	const plain = isPlainSentence(sentence.language);
-	const [segments, encounteredSegmentIds] = plain
+	const unsupported = isPlainSentence(sentence.language);
+	const [segments, encounteredSegmentIds] = unsupported
 		? [[], new Set<Id<"segments">>()]
 		: await Promise.all([
 				loadStoredSegments(ctx, sentence._id),
@@ -77,6 +77,10 @@ export async function projectSentenceView(
 					sentenceId: sentence._id,
 				}),
 			]);
+	// Intake validates that a target-language Sentence has Segments. A
+	// supported foreign-language Sentence is nevertheless Plain in this Scroll.
+	const plain =
+		unsupported || (segments.length === 0 && !sentence.segmentationFailed);
 	const encounteredAttestationIds = new Set<Id<"attestations">>();
 	for (const segment of segments) {
 		const attestationId = segment.attestationMembership?.attestationId;

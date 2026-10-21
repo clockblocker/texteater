@@ -147,7 +147,12 @@ const noLuna: LunaAsk = async () => {
 /** Runs `segment.inUnits` once and keeps the traces it reported. */
 async function inUnits(
 	options: Omit<DumgenOptions, "luna">,
-	input: Parameters<ReturnType<typeof createDumgen>["segment"]["inUnits"]>[0],
+	input: {
+		readonly language: "de";
+		readonly paragraphs: readonly {
+			readonly sentences: readonly string[];
+		}[];
+	},
 ): Promise<{ text: SegmentedText; traces: OperationTrace[] }> {
 	const traces: OperationTrace[] = [];
 	const text = await Effect.runPromise(
@@ -463,7 +468,7 @@ test("another language or a blank Sentence is a Defect before anything is asked,
 				paragraphs: [{ sentences: ["Hello."] }],
 			}),
 		),
-	).rejects.toThrow('German ("de") only, not "en"');
+	).rejects.toThrow('No segmenter registered for "en"');
 	await expect(
 		Effect.runPromise(
 			dumgen.segment.inUnits({

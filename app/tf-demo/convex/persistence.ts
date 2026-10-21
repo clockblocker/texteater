@@ -16,6 +16,7 @@ import {
 	resolvedClickCommitArgs,
 } from "./model/resolvedClickCommit";
 import {
+	languageValidator,
 	readingCheckpointValidator,
 	resolutionGenerationEventValidator,
 	resolutionPhaseValidator,
@@ -37,6 +38,7 @@ import {
 
 export const persistSubmittedScroll = internalMutation({
 	args: {
+		targetLanguage: v.optional(languageValidator),
 		submissionKey: v.string(),
 		sourceText: v.string(),
 		/** The Scroll's Extracted Text, Dumgen's `Scroll`, as intake read it. */
@@ -69,7 +71,11 @@ export const storedExtractedText = internalQuery({
 
 /** The stored Scroll a re-submission would only reproduce, if any. */
 export const analyzedSubmission = internalQuery({
-	args: { submissionKey: v.string(), sourceText: v.string() },
+	args: {
+		submissionKey: v.string(),
+		sourceText: v.string(),
+		targetLanguage: v.optional(languageValidator),
+	},
 	returns: v.union(v.null(), v.id("scrolls")),
 	handler: findAnalyzedSubmission,
 });

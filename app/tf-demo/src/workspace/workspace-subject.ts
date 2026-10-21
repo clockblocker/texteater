@@ -17,6 +17,7 @@ import type {
 	ShadowNoteTarget,
 	SurfaceNoteTarget,
 } from "../../shared/navigation";
+import { isSupportedTargetLanguage } from "../../shared/supported-target-language";
 
 /**
  * The Cards a running Resolution deals before it commits; its Lemma and
@@ -290,7 +291,7 @@ export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 			);
 		case "Surface":
 			return (
-				target.language === "de" &&
+				isSupportedTargetLanguage(target.language) &&
 				typeof target.normalizedSurface === "string" &&
 				isSurfaceNotePresentationContext(value.presentationContext)
 			);
@@ -360,7 +361,7 @@ function isResolutionStepPresentationContext(
 		value === undefined ||
 		(isRecord(value) &&
 			isRecord(value.unitRoute) &&
-			value.unitRoute.language === "de" &&
+			isSupportedTargetLanguage(value.unitRoute.language) &&
 			typeof value.unitRoute.family === "string" &&
 			typeof value.unitRoute.kind === "string")
 	);

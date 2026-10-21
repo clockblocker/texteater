@@ -393,7 +393,7 @@ export async function loadSourceContextPage(
 }
 
 type GermanUnitReading = Extract<
-	Dumling.Reading<"de">,
+	Dumling.Reading<Dumling.Language>,
 	{ lemma: { family: UnitReadingFamily } }
 >;
 

@@ -12,9 +12,19 @@ export const SCROLL_LANGUAGE_VALUES = [
 
 export type ScrollLanguage = (typeof SCROLL_LANGUAGE_VALUES)[number];
 
-const SUPPORTED_TARGET_LANGUAGE_VALUES = [
+export const SUPPORTED_TARGET_LANGUAGE_VALUES = [
 	"de",
+	"he",
 ] as const satisfies readonly ScrollLanguage[];
+
+/** Registered languages whose complete Card lifecycle is available. */
+export function isSupportedTargetLanguage(
+	value: unknown,
+): value is SupportedTargetLanguage {
+	return SUPPORTED_TARGET_LANGUAGE_VALUES.some(
+		(language) => language === value,
+	);
+}
 
 export type SupportedTargetLanguage =
 	(typeof SUPPORTED_TARGET_LANGUAGE_VALUES)[number];
@@ -28,5 +38,5 @@ export const SCROLL_TARGET_LANGUAGE = "de" satisfies SupportedTargetLanguage;
 
 /** Whether a Sentence with this Detected Language is shown but not clickable. */
 export function isPlainSentence(language: string | undefined): boolean {
-	return language !== SCROLL_TARGET_LANGUAGE;
+	return !isSupportedTargetLanguage(language);
 }

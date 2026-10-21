@@ -5,6 +5,8 @@
  * module up by `input.language` and treat a language with none as bad
  * input, a Defect; the language's own code stays behind the module. `languages.ts` registers the modules.
  */
+
+import type * as Dumling from "dumling/types";
 import type * as Effect from "effect/Effect";
 import type { OperationScope } from "./call.js";
 import type { InvalidModelOutput, ProviderFailure } from "./errors.js";
@@ -18,7 +20,9 @@ import type {
 import type { LunaSettings } from "./luna-call.js";
 import type {
 	GrammarResolution,
+	ReadingResolution,
 	ResolveGrammarInput,
+	ResolveReadingInput,
 } from "./resolve/types.js";
 import type { Ask, AskFailure } from "./segment/ask.js";
 import type {
@@ -43,7 +47,7 @@ export type SentenceSegmentation = {
 	readonly unresolved: readonly number[];
 };
 
-export type LanguageModule = {
+export type LanguageModule<L extends Dumling.Language = "de"> = {
 	readonly segment: {
 		/** The Segment stage: one Sentence's Segments, cut with jev. */
 		readonly segments: (
@@ -56,37 +60,52 @@ export type LanguageModule = {
 		readonly units: (
 			segmentation: SentenceSegmentation,
 			ask: Ask,
-		) => Effect.Effect<readonly Unit[], AskFailure>;
+		) => Effect.Effect<readonly Unit<L>[], AskFailure>;
 	};
 	/** The body of `resolve.grammar` for a click on a Sentence that segmented. */
 	readonly resolveGrammar: (
 		scope: OperationScope,
 		models: Models,
-		input: ResolveGrammarInput,
-	) => Effect.Effect<GrammarResolution, ProviderFailure | InvalidModelOutput>;
+		input: ResolveGrammarInput<L>,
+	) => Effect.Effect<
+		GrammarResolution<L>,
+		ProviderFailure | InvalidModelOutput
+	>;
+	/** The body of `resolve.reading` for an Attestation of the language. */
+	readonly resolveReading: (
+		scope: OperationScope,
+		models: Models,
+		input: ResolveReadingInput<L>,
+	) => Effect.Effect<
+		ReadingResolution<L>,
+		ProviderFailure | InvalidModelOutput
+	>;
 	/** The body of `knowledge.produce` for a Reading of the language. */
 	readonly produceKnowledge: <E>(
 		scope: OperationScope,
 		models: Models,
-		input: ProduceKnowledgeInput<E>,
-	) => Effect.Effect<KnowledgeProduction, E>;
+		input: ProduceKnowledgeInput<E, L>,
+	) => Effect.Effect<KnowledgeProduction<L>, E>;
 	/** The body of `knowledge.accumulateTranslations` for a Reading of the language. */
 	readonly accumulateTranslations: (
 		scope: OperationScope,
 		models: Models,
-		input: AccumulateTranslationsInput,
-	) => Effect.Effect<TranslationAccumulation>;
+		input: AccumulateTranslationsInput<L>,
+	) => Effect.Effect<TranslationAccumulation<L>>;
 };
 
 /** Each registered language's module. */
 export type LanguageModules = {
-	readonly [L in SegmentLanguage]: LanguageModule;
+	readonly [L in SegmentLanguage]?: LanguageModule<L>;
 };
 
 /** The module of `language`, or undefined where none is registered. */
-export function languageModuleOf(
+export function languageModuleOf<L extends SegmentLanguage>(
 	modules: LanguageModules,
-	language: string,
-): LanguageModule | undefined {
-	return Object.entries(modules).find(([key]) => key === language)?.[1];
+	language: L,
+): LanguageModule<L> | undefined {
+	// The registry is a mapped type: the value at L has handlers for exactly L.
+	// TypeScript does not retain that indexed correlation through optional keys.
+	if (!Object.hasOwn(modules, language)) return undefined;
+	return modules[language] as LanguageModule<L> | undefined;
 }

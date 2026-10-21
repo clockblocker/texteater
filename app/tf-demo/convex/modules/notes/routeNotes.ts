@@ -1,4 +1,9 @@
 import { v } from "convex/values";
+import { parseLemma, parseSurface } from "../../../server/operationalParsing";
+import {
+	isSupportedTargetLanguage,
+	type SupportedTargetLanguage,
+} from "../../../shared/supported-target-language";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import {
@@ -14,7 +19,11 @@ import {
 	presentLemma,
 	presentSurface,
 } from "../../model/presentedDumling";
-import { familyValidator, kindValidator } from "../../model/validators";
+import {
+	familyValidator,
+	grammaticalLanguageValidator,
+	kindValidator,
+} from "../../model/validators";
 import {
 	loadParticipialAdjectives,
 	participialAdjectiveValidator,
@@ -42,7 +51,7 @@ const lemmaTargetValidator = v.object({
 
 const surfaceTargetValidator = v.object({
 	kind: v.literal("Surface"),
-	language: v.literal("de"),
+	language: grammaticalLanguageValidator,
 	normalizedSurface: v.string(),
 });
 
@@ -140,7 +149,7 @@ type RouteNoteTarget =
 	  }
 	| {
 			readonly kind: "Surface";
-			readonly language: "de";
+			readonly language: SupportedTargetLanguage;
 			readonly normalizedSurface: string;
 			readonly activeAnalysisKey?: Id<"surfaces">;
 	  }
@@ -175,7 +184,7 @@ async function loadAttestationRouteNote(
 	const occurrence = await loadOccurrenceAttestation(ctx, attestationId);
 	if (!occurrence) return null;
 	if (
-		occurrence.surface.language !== "de" ||
+		!isSupportedTargetLanguage(occurrence.surface.language) ||
 		occurrence.surface.language !== occurrence.lemma.language ||
 		!isUnitReadingFamily(occurrence.lemma.family)
 	) {
@@ -204,7 +213,7 @@ async function loadAttestationRouteNote(
 		presented: presentAttestation(occurrence.publicAttestation),
 		surfaceTarget: {
 			kind: "Surface" as const,
-			language: "de" as const,
+			language: occurrence.surface.language,
 			normalizedSurface: occurrence.surface.normalizedSurface,
 		},
 		reading: {
@@ -219,7 +228,7 @@ async function loadAttestationRouteNote(
 
 async function loadSurfaceRouteNote(
 	ctx: QueryCtx,
-	language: "de",
+	language: SupportedTargetLanguage,
 	normalizedSurface: string,
 	contextCursor?: string,
 	activeAnalysisKey?: Id<"surfaces">,
@@ -266,7 +275,9 @@ async function loadSurfaceRouteNote(
 				analysisKey: surface._id,
 				surfaceId: surface._id,
 				lemmaId: lemma._id,
-				presented: presentSurface(surfaceValue(surface, lemma)),
+				presented: presentSurface(
+					parseSurface(surfaceValue(surface, lemma), language),
+				),
 				lemmaTarget: { kind: "Lemma" as const, lemmaId: lemma._id },
 			},
 		];
@@ -292,7 +303,12 @@ async function loadLemmaRouteNote(
 	contextCursor?: string,
 ) {
 	const lemma = await ctx.db.get(lemmaId);
-	if (!lemma || !isUnitReadingFamily(lemma.family)) return null;
+	if (
+		!lemma ||
+		!isSupportedTargetLanguage(lemma.language) ||
+		!isUnitReadingFamily(lemma.family)
+	)
+		return null;
 
 	const [firstSurfaces, firstReadings] = await Promise.all([
 		ctx.db
@@ -388,14 +404,15 @@ async function loadLemmaRouteNote(
 			kind: "Lemma" as const,
 			lemmaId: lemma._id,
 		},
-		presented: presentLemma(lemmaValue(lemma)),
+		presented: presentLemma(parseLemma(lemmaValue(lemma), lemma.language)),
 		participialAdjectives:
 			contextCursor === undefined
 				? await loadParticipialAdjectives(ctx, lemma)
 				: [],
 		connections: {
 			surfaces: surfaces.flatMap((surface) =>
-				surface.language === "de" && lemma.language === "de"
+				isSupportedTargetLanguage(surface.language) &&
+				surface.language === lemma.language
 					? [
 							{
 								surfaceId: surface._id,
@@ -405,7 +422,7 @@ async function loadLemmaRouteNote(
 								kind: lemma.kind,
 								target: {
 									kind: "Surface" as const,
-									language: "de" as const,
+									language: surface.language,
 									normalizedSurface:
 										surface.normalizedSurface,
 								},

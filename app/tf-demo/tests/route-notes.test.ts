@@ -3,6 +3,7 @@ import type { FunctionArgs, FunctionReturnType } from "convex/server";
 import type * as Dumling from "dumling/types";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
+import { loadCanonicalOccurrence } from "../convex/modules/notes/resolutionNote";
 import { projectSentenceView } from "../convex/modules/scroll/sentenceView";
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import {
@@ -458,6 +459,88 @@ test("homographic demonstrative and relative Lemma navigation keeps exact Readin
 				.map(({ readingId }) => readingId),
 		).toEqual([readingId]);
 	}
+});
+
+test("Hebrew Attestation, Surface and Lemma routes retain their stored language", async () => {
+	const t = createTestConvex();
+	const { sentenceIds, segmentIds } = await submitText(t, [["בַּיִת"]]);
+	await t.run(async (ctx) => {
+		for (const sentenceId of sentenceIds)
+			await ctx.db.patch(sentenceId, { language: "he" });
+	});
+	const lemmaId = await t.run((ctx) =>
+		ctx.db.insert("lemmas", {
+			lemmaKey: nextKey("he-lemma"),
+			language: "he",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: "בַּיִת",
+			foldedCanonicalForm: "בַּיִת",
+			coreFeatures: { abbr: null, gender: "Masc" },
+		}),
+	);
+	const surfaceId = await insertSurface(t, lemmaId, "בַּיִת", "he");
+	const readingId = await insertReading(t, lemmaId, "🏠");
+	const attestationId = await attest(t, { surfaceId, readingId }, [
+		segmentIds[0]?.[0],
+	]);
+	await t.run((ctx) =>
+		ctx.db.patch(attestationId, { articleEvidence: null }),
+	);
+	const target = {
+		kind: "Surface",
+		language: "he",
+		normalizedSurface: "בַּיִת",
+	} as const;
+	const attestation = noteOfKind(
+		await routeNote(t, { kind: "Attestation", attestationId }),
+		"Attestation",
+	);
+	expect(attestation.surfaceTarget).toEqual(target);
+	expect(attestation.presented.surface.language).toBe("he");
+	const surface = noteOfKind(await routeNote(t, target), "Surface");
+	expect(surface.target).toEqual(target);
+	expect(surface.analyses[0]?.presented.lemma.language).toBe("he");
+	const pages = await exhaustRoutePages(t, { kind: "Lemma", lemmaId });
+	expect(
+		pages
+			.flatMap((page) => page.connections.surfaces)
+			.map((connection) => connection.target),
+	).toEqual([target]);
+	expect(pages[0]?.presented.language).toBe("he");
+	expect(
+		await t.run((ctx) => loadCanonicalOccurrence(ctx, attestationId)),
+	).toEqual({
+		readingId,
+		lemmaId,
+		surfaceId,
+		surfaceLanguage: "he",
+		normalizedSurface: "בַּיִת",
+		attestationId,
+		steps: { attestation: false, surface: false, lemma: false },
+	});
+});
+
+test("Hebrew routes reject invalid stored linguistic features instead of casting them", async () => {
+	const t = createTestConvex();
+	const lemmaId = await insertLemma(t, {
+		language: "he",
+		canonicalForm: "בית",
+		family: "Lexeme",
+		kind: "NOUN",
+	});
+	await t.run((ctx) =>
+		ctx.db.patch(lemmaId, { coreFeatures: { gender: "not-a-gender" } }),
+	);
+	await insertSurface(t, lemmaId, "בית", "he");
+	await expect(routeNote(t, { kind: "Lemma", lemmaId })).rejects.toThrow();
+	await expect(
+		routeNote(t, {
+			kind: "Surface",
+			language: "he",
+			normalizedSurface: "בית",
+		}),
+	).rejects.toThrow();
 });
 
 async function exhaustRoutePages(

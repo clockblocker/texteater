@@ -4,6 +4,10 @@ import type {
 	storedSegmentValidator,
 	storedUnitValidator,
 } from "../convex/model/validators";
+import {
+	isSupportedTargetLanguage,
+	type SupportedTargetLanguage,
+} from "../shared/supported-target-language";
 
 /**
  * The stored Segment module. It owns what tf-demo stores for a Sentence:
@@ -210,15 +214,19 @@ export function unitsByMember(
  */
 export function encounterSentenceOf(stored: {
 	readonly segmentedSentenceId: string;
+	readonly language?: string;
 	readonly segments: readonly StoredSegment[];
 }): {
 	readonly id: string;
-	readonly language: "de";
+	readonly language: SupportedTargetLanguage;
 	readonly segments: readonly Pick<StoredSegment, "kind" | "text">[];
 } {
+	const language = stored.language;
+	if (!isSupportedTargetLanguage(language))
+		throw new Error("Sentence has no supported target language.");
 	return Object.freeze({
 		id: stored.segmentedSentenceId,
-		language: "de",
+		language,
 		segments: Object.freeze(
 			[...stored.segments]
 				.sort((left, right) => left.index - right.index)

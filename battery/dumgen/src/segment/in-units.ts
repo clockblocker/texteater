@@ -35,8 +35,8 @@ import type {
 } from "./segmented-sentence.js";
 import { stitchedText } from "./stitched-text.js";
 
-export type InUnitsInput = {
-	readonly language: SegmentLanguage;
+export type InUnitsInput<L extends SegmentLanguage = "de"> = {
+	readonly language: L;
 	/** As `splitText` gives them: non-blank Sentences, paragraph by paragraph. */
 	readonly paragraphs: readonly { readonly sentences: readonly string[] }[];
 };
@@ -45,12 +45,12 @@ export type InUnitsInput = {
 export type InUnitsJev = JevSettings;
 
 /** A Sentence whose segmentation failed, marked so, with its reason in the trace. */
-function failedSentence(
+function failedSentence<L extends SegmentLanguage>(
 	scope: OperationScope,
 	sentence: number,
 	failure: AskFailure,
 	segmentation: SentenceSegmentation,
-): SegmentedSentence {
+): SegmentedSentence<L> {
 	scope.sentence({
 		sentence,
 		outcome: "Failed",
@@ -64,77 +64,86 @@ function failedSentence(
 	};
 }
 
-const segmentSentence = Effect.fnUntraced(function* (
+const segmentSentence = <L extends SegmentLanguage>(
 	scope: OperationScope,
 	jev: InUnitsJev,
-	module: LanguageModule,
+	module: LanguageModule<L>,
 	text: string,
 	sentence: number,
-) {
-	const ask = askThrough(scope, jev, sentence);
-	const cut = yield* Effect.result(module.segment.segments(text, ask));
-	if (Result.isFailure(cut))
-		return failedSentence(
-			scope,
-			sentence,
-			cut.failure,
-			module.segment.writtenSegments(text),
+): Effect.Effect<SegmentedSentence<L>> =>
+	Effect.gen(function* () {
+		const ask = askThrough(scope, jev, sentence);
+		const cut = yield* Effect.result(module.segment.segments(text, ask));
+		if (Result.isFailure(cut))
+			return failedSentence<L>(
+				scope,
+				sentence,
+				cut.failure,
+				module.segment.writtenSegments(text),
+			);
+		if (cut.success.unresolved.length > 0)
+			scope.event({
+				name: "UnresolvedSegments",
+				data: { sentence, segments: [...cut.success.unresolved] },
+			});
+		const units = yield* Effect.result(
+			module.segment.units(cut.success, ask),
 		);
-	if (cut.success.unresolved.length > 0)
-		scope.event({
-			name: "UnresolvedSegments",
-			data: { sentence, segments: [...cut.success.unresolved] },
-		});
-	const units = yield* Effect.result(module.segment.units(cut.success, ask));
-	if (Result.isFailure(units))
-		return failedSentence(scope, sentence, units.failure, cut.success);
-	scope.sentence({ sentence, outcome: "Segmented" });
-	return {
-		text: cut.success.text,
-		segments: cut.success.segments,
-		units: units.success,
-	} satisfies SegmentedSentence;
-});
+		if (Result.isFailure(units))
+			return failedSentence<L>(
+				scope,
+				sentence,
+				units.failure,
+				cut.success,
+			);
+		scope.sentence({ sentence, outcome: "Segmented" });
+		return {
+			text: cut.success.text,
+			segments: cut.success.segments,
+			units: units.success,
+		} satisfies SegmentedSentence<L>;
+	});
 
 /**
  * The body of `segment.inUnits`. A language with no module, or a blank
  * Sentence, is a Defect raised before anything is asked.
  */
-export const segmentText = Effect.fnUntraced(function* (
+export const segmentText = <L extends SegmentLanguage = "de">(
 	scope: OperationScope,
 	jev: InUnitsJev,
 	modules: LanguageModules,
-	input: InUnitsInput,
-): Effect.fn.Return<SegmentedText> {
-	const module = languageModuleOf(modules, input.language);
-	if (module === undefined)
-		return yield* Effect.die(
-			Error(
-				`segment.inUnits segments German ("de") only, not ${JSON.stringify(input.language)}`,
-			),
+	input: InUnitsInput<L>,
+): Effect.Effect<SegmentedText<L>> =>
+	Effect.gen(function* () {
+		const module = languageModuleOf(modules, input.language);
+		if (module === undefined)
+			return yield* Effect.die(
+				Error(
+					`No segmenter registered for ${JSON.stringify(input.language)}`,
+				),
+			);
+		for (const [paragraph, { sentences }] of input.paragraphs.entries())
+			for (const [index, sentence] of sentences.entries())
+				if (stitchedText(sentence).length === 0)
+					return yield* Effect.die(
+						Error(
+							`Sentence ${index} of paragraph ${paragraph} is blank`,
+						),
+					);
+		let position = 0;
+		const placed = input.paragraphs.map(({ sentences }) =>
+			sentences.map((text) => ({ text, sentence: position++ })),
 		);
-	for (const [paragraph, { sentences }] of input.paragraphs.entries())
-		for (const [index, sentence] of sentences.entries())
-			if (stitchedText(sentence).length === 0)
-				return yield* Effect.die(
-					Error(
-						`Sentence ${index} of paragraph ${paragraph} is blank`,
-					),
-				);
-	let position = 0;
-	const placed = input.paragraphs.map(({ sentences }) =>
-		sentences.map((text) => ({ text, sentence: position++ })),
-	);
-	const segmented = yield* Effect.forEach(
-		placed.flat(),
-		({ text, sentence }) =>
-			segmentSentence(scope, jev, module, text, sentence),
-		{ concurrency: "unbounded" },
-	);
-	return {
-		language: input.language,
-		paragraphs: placed.map((sentences) => ({
-			sentences: segmented.splice(0, sentences.length),
-		})),
-	};
-});
+		const segmented = yield* Effect.forEach(
+			placed.flat(),
+			({ text, sentence }) =>
+				segmentSentence(scope, jev, module, text, sentence),
+			{ concurrency: "unbounded" },
+		);
+		return {
+			language: input.language,
+			paragraphs: placed.map((sentences) => ({
+				sentences: segmented.splice(0, sentences.length),
+			})),
+		};
+	});

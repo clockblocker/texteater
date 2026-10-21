@@ -12,7 +12,8 @@ import type {
 	KnowledgeFailure,
 	KnowledgeRequest,
 } from "../server/knowledgeProduction";
-import { parseGermanReading } from "../server/operationalParsing";
+import { readingIdentityKey } from "../server/linguisticIdentity";
+import { parseReading } from "../server/operationalParsing";
 import { internalMutation, mutation } from "./_generated/server";
 import { loadKnowledgeSettings } from "./knowledgeSettings";
 import { createDumdictTransaction } from "./model/dumdictTransaction";
@@ -392,16 +393,25 @@ export const publish = internalMutation({
 
 		// The changes arrive as v.any(); Dumdict parses them here, refusing
 		// another language as the planner would.
-		const request = checkApplyGeneratedKnowledgeRequest("de", {
-			reading: parseGermanReading(args.reading),
-			changes,
-			pendingRelations: publishable.pendingRelations,
-		});
+		const proposedReading = parseReading(args.reading);
+		if (readingIdentityKey(proposedReading) !== attempt.ownerReadingKey)
+			throw new Error(
+				"Generated Knowledge must target the attempt's Reading.",
+			);
+		const request = checkApplyGeneratedKnowledgeRequest(
+			proposedReading.lemma.language,
+			{
+				reading: proposedReading,
+				changes,
+				pendingRelations: publishable.pendingRelations,
+			},
+		);
 		const dictionary =
 			request.status === "ok"
-				? await createDumdictTransaction(ctx).applyGeneratedKnowledge(
-						request.request,
-					)
+				? await createDumdictTransaction(
+						ctx,
+						proposedReading.lemma.language,
+					).applyGeneratedKnowledge(request.request)
 				: request;
 		// Nothing above wrote, so the action may split this batch and resend.
 		if (dictionary.status === "overBudget")

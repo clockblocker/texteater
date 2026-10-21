@@ -2,6 +2,7 @@ import type { NoteLayoutBlockKind } from "../../blocks/kind";
 
 export const WEIGHT_FOR_NOTE_LAYOUT_BLOCK_KIND = {
 	Valency: 1,
+	Paradigm: 1.5,
 	Relations: 2,
 	Translations: 3,
 	Definition: 4,

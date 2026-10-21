@@ -1,14 +1,11 @@
 import { makeSurfaceId } from "dumdict/planning";
-import type { DetectedLanguage } from "dumgen";
 import type * as Dumling from "dumling/types";
 import type * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
+import { isSupportedTargetLanguage } from "../shared/supported-target-language";
 import type {
 	ClickEncounter,
-	ClickResolution,
 	ClickSentence,
-	LemmaCandidate,
-	NeighbourSentences,
 	ReadingResolution,
 } from "./clickResolution";
 import { assertNonEmpty } from "./identifiers";
@@ -18,296 +15,43 @@ import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "./linguisticIdentity";
-import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
-import type {
-	GenerationEvent,
-	ResolutionGenerationEvent,
-} from "./resolutionFailure";
-import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
-import type { ResolutionPhase } from "./resolutionLifecycle";
+import { parseLemma, parseReading } from "./operationalParsing";
 import {
 	assertStoredSentence,
 	encounterSentenceOf,
-	type StoredSegment,
-	type StoredUnit,
 	unitsByMember,
 } from "./storedSegments";
 
 /** How often a click judges its Reading again after its New was refused as stale. */
 const MAX_STALE_REJUDGES = 2;
 
-export type PersistedSentence = {
-	readonly sentenceId: string;
-	readonly scrollId: string;
-	readonly segmentedSentenceId: string;
-	/** The Detected Language; only a German Sentence is clicked. */
-	readonly language?: DetectedLanguage;
-	readonly stitchedText: string;
-	readonly segments: readonly StoredSegment[];
-	/** The biggest units intake stored with the Sentence, if it still has them. */
-	readonly units?: readonly StoredUnit[];
-	/** Present when intake's segmentation failed: a click segments it again (#861). */
-	readonly segmentationFailed?: true;
-	/** Whether the Sentence belongs to a hidden Definition Text; absent reads as false. */
-	readonly definitionText?: boolean;
-};
+import type {
+	NonResolvedGrammatical,
+	PersistedSentence,
+	ResolutionCheckpoints,
+	ResolutionContext,
+	ResolvedClickPersistence,
+	ResolvedGrammatical,
+	ResolveSegmentInput,
+	ReusableAttestation,
+	TfDemoOrchestratorOptions,
+} from "./linguisticOrchestrationTypes";
 
-export type ResolvedClickPersistence = {
-	readonly requestId: string;
-	readonly visitorId: string;
-	readonly sentenceId: string;
-	readonly clickedSegmentIndex: number;
-	readonly occurrence: {
-		/** Stored Segment indices, not the Encounter's. */
-		readonly memberSegmentIndices: readonly number[];
-		readonly attestation: ResolvedGrammar["attestation"];
-		readonly surfaceKey: string;
-		readonly lemmaKey: string;
-	};
-	readonly reading: Dumling.Reading<"de">;
-	readonly readingKey: string;
-	/** The dictionary plan is built where it commits: inside the host transaction. */
-	readonly readingDecision: ReadingResolution["decision"];
-	/**
-	 * For a New its judge decided: the stored Emoji Descriptions it saw. The
-	 * commit refuses the New once the Lemma has gained a Reading outside
-	 * them (ADR 0031).
-	 */
-	readonly readingCandidates?: readonly string[];
-	/** What the commit writes besides the occurrence, in the same transaction. */
-	readonly progress?: CommitProgress;
-};
-
-/**
- * What the commit of a resolved click writes besides the occurrence, so one
- * mutation replaces three: the ReadingAvailable progress, absent when a
- * checkpoint already holds the Reading, and the run's success record. A
- * commit refused as stale writes the progress and keeps the record for the
- * commit that follows.
- */
-type CommitProgress = {
-	readonly readingAvailable?: {
-		readonly reading: Dumling.Reading<"de">;
-		readonly readingResolution: ReadingResolution;
-	};
-	readonly succeeded?: {
-		readonly phase: ResolutionPhase;
-		readonly generationEvents: readonly ResolutionGenerationEvent[];
-	};
-};
-
-export type ReusableAttestation = {
-	readonly attestationId: string;
-	readonly grammatical: ResolvedGrammar;
-	readonly reading: Dumling.Reading<"de">;
-};
-
-export type UnresolvedClickCommit = {
-	readonly status: "Unresolved";
-	readonly encounterId: string;
-	readonly deduplicated: boolean;
-};
-
-export type ReusedResolvedClickCommit = {
-	readonly status: "Reused";
-	readonly encounterId: string;
-	readonly attestationId: string;
-	readonly readingId: string;
-	readonly deduplicated: boolean;
-};
-
-export type LateResolvedClickCommit = {
-	readonly status: "Reused";
-	readonly encounterId: string;
-	readonly attestationId: string;
-	readonly readingId: string;
-	readonly deduplicated: boolean;
-	readonly occurrence: ReusableAttestation;
-};
-
-export type ResolvedClickCommit =
-	| {
-			readonly status: "Committed" | "Reused";
-			readonly encounterId: string;
-			readonly attestationId: string;
-			readonly readingId: string;
-			readonly deduplicated: boolean;
-			readonly occurrence: ReusableAttestation;
-	  }
-	| {
-			readonly status: "MembershipConflict";
-			readonly code: "partialOverlap";
-			readonly message: string;
-			readonly conflictingAttestationIds: readonly string[];
-	  }
-	| {
-			readonly status: "DictionaryConflict";
-			readonly code: "semanticPreconditionFailed";
-			readonly message: string;
-	  }
-	| {
-			/**
-			 * A New refused because the Lemma gained a Reading its judge never
-			 * saw; nothing was written, and the click judges again over
-			 * `candidates`, the Lemma's stored Emoji Descriptions now (ADR 0031).
-			 */
-			readonly status: "StaleReading";
-			readonly candidates: readonly string[];
-	  };
-
-type ResolvedGrammatical = ResolvedGrammar;
-
-type NonResolvedGrammatical = {
-	readonly decision: "Unresolved";
-	readonly language: "de";
-};
-
-export type ResolveSegmentResult =
-	| {
-			readonly catalogMiss: CatalogMissSignal;
-	  }
-	| {
-			readonly grammatical: ResolvedGrammatical;
-			readonly reading: Dumling.Reading<"de">;
-			readonly reused: true;
-			readonly persisted: ReusedResolvedClickCommit;
-	  }
-	| {
-			readonly grammatical: ResolvedGrammatical;
-			readonly reading: Dumling.Reading<"de">;
-			readonly reused: true;
-			readonly persisted: LateResolvedClickCommit;
-	  }
-	| {
-			readonly grammatical: NonResolvedGrammatical;
-			readonly persisted: UnresolvedClickCommit;
-	  }
-	| {
-			readonly grammatical: ResolvedGrammatical;
-			readonly readingResolution: ReadingResolution;
-			readonly reading: Dumling.Reading<"de">;
-			readonly persisted: Extract<
-				ResolvedClickCommit,
-				{ status: "MembershipConflict" | "DictionaryConflict" }
-			>;
-	  }
-	| {
-			readonly grammatical: ResolvedGrammatical;
-			readonly readingResolution: ReadingResolution;
-			readonly reading: Dumling.Reading<"de">;
-			readonly reused: boolean;
-			readonly persisted: Extract<
-				ResolvedClickCommit,
-				{ status: "Committed" | "Reused" }
-			>;
-	  };
-
-/** What a click's re-segmentation of a failed Sentence found (#861). */
-type ResegmentedSentence = {
-	readonly segments: readonly {
-		readonly kind: StoredSegment["kind"];
-		readonly text: string;
-		readonly surface?: string;
-	}[];
-	readonly units: readonly StoredUnit[];
-};
-
-/**
- * Durable boundary for the linguistic workflow.
- *
- * The implementation must make the first valid resolved occurrence atomic:
- * canonical dictionary records, exclusive Segment memberships, the occurrence
- * Attestation, and the Visitor Encounter commit together. Replays and late
- * competing results return the committed occurrence instead of duplicating it.
- */
-export type OrchestrationPersistence = {
-	loadResolutionContext(
-		input: ResolveSegmentInput,
-	): Promise<ResolutionContext>;
-	persistResolvedClick(
-		input: ResolvedClickPersistence,
-	): Promise<ResolvedClickCommit>;
-	persistReusedResolvedClick(
-		input: ResolveSegmentInput & {
-			readonly attestationId: string;
-		},
-	): Promise<ReusedResolvedClickCommit>;
-	/**
-	 * Stores a failed Sentence's re-segmentation for the click that ran it,
-	 * and returns the clicked Segment's index among the new Segments: the
-	 * Segment at the same place, should the Segments have come out
-	 * differently.
-	 */
-	storeResegmentedSentence?(
-		input: ResolveSegmentInput & ResegmentedSentence,
-	): Promise<{ readonly clickedSegmentIndex: number }>;
-	persistUnresolvedClick(input: {
-		readonly requestId: string;
-		readonly visitorId: string;
-		readonly sentenceId: string;
-		readonly clickedSegmentIndex: number;
-	}): Promise<UnresolvedClickCommit | LateResolvedClickCommit>;
-};
-
-export type ResolveSegmentInput = {
-	readonly requestId: string;
-	readonly visitorId: string;
-	readonly sentenceId: string;
-	readonly clickedSegmentIndex: number;
-};
-
-export type ResolutionProgressObserver = {
-	generationEvent?(event: GenerationEvent): void;
-	grammarAvailable(input: {
-		readonly grammatical: ResolvedGrammatical;
-	}): Promise<void>;
-	/**
-	 * A resolved click is about to commit, with the Reading it resolved
-	 * unless a checkpoint already holds it: what that commit writes in its
-	 * own transaction besides the occurrence. Called before every commit.
-	 */
-	committing(input: {
-		readonly readingAvailable?: CommitProgress["readingAvailable"];
-	}): CommitProgress;
-};
-
-export type ResolutionContext = {
-	readonly reusable: ReusableAttestation | null;
-	readonly sentence: PersistedSentence | null;
-	readonly lemmaCandidates: readonly LemmaCandidate[];
-	/** The Sentences before and after this one in its Scroll, as far as they exist. */
-	readonly neighbours?: NeighbourSentences;
-};
-
-export type ResolutionCheckpoints = {
-	readonly grammatical?: ResolvedGrammatical;
-	readonly reading?: {
-		readonly resolution: ReadingResolution;
-		readonly reading: Dumling.Reading<"de">;
-	};
-};
-
-type TfDemoOrchestratorOptions = {
-	/** Grammar, then the Reading's Emoji Description; production runs `dumgenClickResolution`. */
-	readonly resolution: ClickResolution;
-	/** The Readings the Shared Demo Dictionary already stores for a Lemma. */
-	readonly findStoredReadings: (
-		lemma: Dumling.Lemma<"de">,
-	) =>
-		| Effect.Effect<readonly Dumling.Reading<"de">[], unknown>
-		| Promise<readonly Dumling.Reading<"de">[]>;
-	readonly persistence: OrchestrationPersistence;
-	readonly observer?: ResolutionProgressObserver;
-	/**
-	 * Segments a Sentence whose intake segmentation failed again, on the
-	 * first click on it (#861): Dumgen's `segment.inUnits` for that one
-	 * Sentence. A segmentation that fails again fails the click; the next
-	 * click is a fresh attempt.
-	 */
-	readonly resegment?: (
-		stitchedText: string,
-	) => Effect.Effect<ResegmentedSentence, unknown>;
-};
+export type {
+	LateResolvedClickCommit,
+	OrchestrationPersistence,
+	PersistedSentence,
+	ResolutionCheckpoints,
+	ResolutionContext,
+	ResolutionProgressObserver,
+	ResolvedClickCommit,
+	ResolvedClickPersistence,
+	ResolveSegmentInput,
+	ResolveSegmentResult,
+	ReusableAttestation,
+	ReusedResolvedClickCommit,
+	UnresolvedClickCommit,
+} from "./linguisticOrchestrationTypes";
 
 /**
  * Composes click resolution behind the ClickResolution port and one
@@ -523,7 +267,7 @@ function resolveAndCommitReading(
 	grammatical: ResolvedGrammatical,
 ) {
 	return Effect.gen(function* () {
-		const lemma = parseGermanLemma(grammatical.attestation.surface.lemma);
+		const lemma = parseLemma(grammatical.attestation.surface.lemma);
 		const storedReadings = yield* saveGrammarAndLoadReadings(
 			options,
 			checkpoints,
@@ -627,7 +371,7 @@ function saveGrammarAndLoadReadings(
 	options: TfDemoOrchestratorOptions,
 	checkpoints: ResolutionCheckpoints,
 	grammatical: ResolvedGrammatical,
-	lemma: Dumling.Lemma<"de">,
+	lemma: Dumling.Lemma<Dumling.Language>,
 ) {
 	return Effect.gen(function* () {
 		const [grammarSaved, readingsLoaded] = yield* Effect.all(
@@ -669,8 +413,8 @@ function firstReading(
 	options: TfDemoOrchestratorOptions,
 	checkpoints: ResolutionCheckpoints,
 	grammatical: ResolvedGrammatical,
-	lemma: Dumling.Lemma<"de">,
-	storedReadings: readonly Dumling.Reading<"de">[] | null,
+	lemma: Dumling.Lemma<Dumling.Language>,
+	storedReadings: readonly Dumling.Reading<Dumling.Language>[] | null,
 ) {
 	if (checkpoints.reading) {
 		return Effect.succeed(checkpoints.reading.resolution);
@@ -688,11 +432,11 @@ function firstReading(
 
 /** The checkpointed Reading, which must name the Reading Grammar resolved. */
 function checkpointedReading(
-	checkpoint: Dumling.Reading<"de">,
+	checkpoint: Dumling.Reading<Dumling.Language>,
 	lemmaKey: string,
-	resolved: Dumling.Reading<"de">,
-): Dumling.Reading<"de"> {
-	const checkpointed = parseGermanReading(checkpoint);
+	resolved: Dumling.Reading<Dumling.Language>,
+): Dumling.Reading<Dumling.Language> {
+	const checkpointed = parseReading(checkpoint);
 	if (
 		lemmaIdentityKey(checkpointed.lemma) !== lemmaKey ||
 		emojiDescriptionOf(checkpointed) !== emojiDescriptionOf(resolved)
@@ -714,7 +458,7 @@ type ClickCommitScope = {
 /** The commit of a resolved click with `reading`, before its progress. */
 export function resolvedClickCommit(
 	scope: ClickCommitScope,
-	reading: Dumling.Reading<"de">,
+	reading: Dumling.Reading<Dumling.Language>,
 	resolution: ReadingResolution,
 ): ResolvedClickPersistence {
 	return {
@@ -741,7 +485,7 @@ export function resolvedClickCommit(
 function commitResolvedClick(
 	options: TfDemoOrchestratorOptions,
 	scope: ClickCommitScope,
-	reading: Dumling.Reading<"de">,
+	reading: Dumling.Reading<Dumling.Language>,
 	resolution: ReadingResolution,
 	announce: boolean,
 ) {
@@ -780,7 +524,7 @@ function commitResolvedClick(
 function resolveReading(
 	options: TfDemoOrchestratorOptions,
 	resolved: ResolvedGrammatical,
-	lemma: Dumling.Lemma<"de">,
+	lemma: Dumling.Lemma<Dumling.Language>,
 	candidates: readonly string[],
 	written?: string,
 ) {
@@ -792,7 +536,7 @@ function resolveReading(
 	return options.resolution
 		.reading({
 			grammar: resolved,
-			lemma,
+			lemma: parseLemma(lemma, resolved.encounter.sentence.language),
 			candidates,
 			...(written === undefined ? {} : { written }),
 			...(written === undefined && resolved.drafted !== undefined
@@ -811,8 +555,11 @@ function resolveReading(
 }
 
 /** The Reading a resolution names; both sides compare as Dumling parses them (ADR 0031). */
-function readingOf(lemma: Dumling.Lemma<"de">, resolution: ReadingResolution) {
-	return parseGermanReading({
+function readingOf(
+	lemma: Dumling.Lemma<Dumling.Language>,
+	resolution: ReadingResolution,
+) {
+	return parseReading({
 		unitKind: "Reading",
 		lemma,
 		...(resolution.emojiDescription === undefined
@@ -823,7 +570,7 @@ function readingOf(lemma: Dumling.Lemma<"de">, resolution: ReadingResolution) {
 
 /** A Foreign Lemma's one Reading, which has no Emoji Description (ADR 0045). */
 function foreignReading(
-	storedReadings: readonly Dumling.Reading<"de">[] | null,
+	storedReadings: readonly Dumling.Reading<Dumling.Language>[] | null,
 ): ReadingResolution {
 	return {
 		decision: loadedReadings(storedReadings).length > 0 ? "Reuse" : "New",
@@ -832,7 +579,7 @@ function foreignReading(
 
 /** The Emoji Descriptions of the Lemma's stored Readings. */
 function storedCandidates(
-	storedReadings: readonly Dumling.Reading<"de">[] | null,
+	storedReadings: readonly Dumling.Reading<Dumling.Language>[] | null,
 ): string[] {
 	return loadedReadings(storedReadings).flatMap(
 		(stored) => emojiDescriptionOf(stored) ?? [],
@@ -840,8 +587,8 @@ function storedCandidates(
 }
 
 function loadedReadings(
-	storedReadings: readonly Dumling.Reading<"de">[] | null,
-): readonly Dumling.Reading<"de">[] {
+	storedReadings: readonly Dumling.Reading<Dumling.Language>[] | null,
+): readonly Dumling.Reading<Dumling.Language>[] {
 	if (!storedReadings) throw new Error("Reading candidates were not loaded.");
 	return storedReadings;
 }
@@ -853,13 +600,17 @@ function effectFrom<Value, Error>(
 	return Effect.isEffect(value) ? value : Effect.tryPromise(() => value);
 }
 
-function surfaceIdentityKey(surface: Dumling.Surface<"de">): string {
-	return makeSurfaceId("de", surface);
+function surfaceIdentityKey(
+	surface: Dumling.Surface<Dumling.Language>,
+): string {
+	return makeSurfaceId(surface.language, surface);
 }
 
 function clickSentenceOf(stored: PersistedSentence): ClickSentence {
-	if (stored.language !== "de") {
-		throw new Error("Only German click resolution is enabled in tf-demo.");
+	if (!isSupportedTargetLanguage(stored.language)) {
+		throw new Error(
+			"Click resolution requires a supported target language.",
+		);
 	}
 	assertStoredSentence(stored);
 	return encounterSentenceOf(stored);

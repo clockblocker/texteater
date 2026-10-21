@@ -3,14 +3,17 @@ import {
 	germanVerbalKinds,
 } from "../../server/germanEvidenceKinds";
 import {
-	parseGermanAttestation,
-	parseGermanReading,
+	parseAttestation,
+	parseReading,
 } from "../../server/operationalParsing";
 import {
 	encounterSentenceOf,
 	MAX_SEGMENTS_PER_SENTENCE,
 } from "../../server/storedSegments";
-import type { ScrollLanguage } from "../../shared/supported-target-language";
+import {
+	isSupportedTargetLanguage,
+	type ScrollLanguage,
+} from "../../shared/supported-target-language";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { loadStoredSegments } from "./storedSegments";
@@ -173,8 +176,13 @@ export async function loadOccurrenceAttestation(
 	}
 	const sentence = await ctx.db.get(sentenceId);
 	if (!sentence) return null;
-	if (sentence.language !== "de")
-		throw new Error("Only German occurrences are supported.");
+	if (
+		!isSupportedTargetLanguage(sentence.language) ||
+		sentence.language !== lemma.language
+	)
+		throw new Error(
+			"Occurrence and source Sentence must share a supported language.",
+		);
 	const sentenceSegments = await loadStoredSegments(ctx, sentenceId);
 	const orderedSentenceSegments = [...sentenceSegments].sort(
 		(left, right) => left.index - right.index,
@@ -182,6 +190,7 @@ export async function loadOccurrenceAttestation(
 	const memberSegmentIndices = orderedMembers.map(({ index }) => index);
 	const sentenceValue = encounterSentenceOf({
 		segmentedSentenceId: sentence.segmentedSentenceId,
+		language: sentence.language,
 		segments: orderedSentenceSegments,
 	});
 	const encounter = {
@@ -202,6 +211,12 @@ export async function loadOccurrenceAttestation(
 		unitKind: "Attestation" as const,
 		members: orderedMembers.map(attestationMemberOf),
 		realizationCoverage: attestation.realizationCoverage,
+		...(attestation.valencyEvidence === undefined
+			? {}
+			: { valencyEvidence: attestation.valencyEvidence }),
+		...(attestation.expletiveEvidence === undefined
+			? {}
+			: { expletiveEvidence: attestation.expletiveEvidence }),
 		...(lemma.language === "de" && germanVerbalKinds.includes(lemma.kind)
 			? { expletiveEvidence: attestation.expletiveEvidence ?? null }
 			: {}),
@@ -227,8 +242,8 @@ export async function loadOccurrenceAttestation(
 		segments: orderedSentenceSegments,
 		memberSegmentIndices,
 		encounter,
-		publicAttestation: parseGermanAttestation(publicAttestation),
-		publicReading: parseGermanReading(readingValue(reading, lemma)),
+		publicAttestation: parseAttestation(publicAttestation),
+		publicReading: parseReading(readingValue(reading, lemma)),
 	};
 }
 

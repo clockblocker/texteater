@@ -31,7 +31,9 @@ type Env = {
   readonly CONVEX_CLOUD_URL: string;
   readonly CONVEX_SITE_URL: string;
   readonly CLICK_CALL_DEADLINE_MS: string | undefined;
+  readonly LUNA_MODEL: string | undefined;
   readonly OPENAI_API_KEY: string | undefined;
+  readonly OPENAI_BASE_URL: string | undefined;
   readonly TF_DEMO_ADMIN: string | undefined;
   readonly TF_INSPECTION: string | undefined;
   readonly TF_KNOWLEDGE_PRODUCTION: string | undefined;

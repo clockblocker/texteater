@@ -2,14 +2,13 @@
 
 import {
 	createDumgen,
-	createOpenAILuna,
 	createTypeSafeAsk,
 	InvalidModelOutput,
-	type LunaAsk,
 	type OperationTrace,
 	ProviderFailure,
 } from "dumgen";
 import * as Effect from "effect/Effect";
+import { deploymentLuna } from "../../server/deployment-luna";
 import {
 	dumgenTracing,
 	type InspectionCapture,
@@ -25,23 +24,6 @@ import { visitorError } from "./validators";
  * deadline.
  */
 
-/**
- * Luna through OpenAI with the deployment's key, at a deadline. Without a
- * key, a call that needs Luna fails as a ProviderFailure that says so;
- * intake never asks Luna.
- */
-function productionLuna(timeoutMs?: number): LunaAsk {
-	const apiKey = env.OPENAI_API_KEY;
-	if (!apiKey)
-		return async () => {
-			throw Error("OPENAI_API_KEY is not set on the Convex deployment");
-		};
-	return createOpenAILuna({
-		apiKey,
-		...(timeoutMs === undefined ? {} : { timeoutMs }),
-	});
-}
-
 /** How a Dumgen instance traces: `dumgenTracing`'s options. */
 export type DumgenTracing = ReturnType<typeof dumgenTracing>;
 
@@ -56,7 +38,7 @@ export function productionDumgen(tracing: DumgenTracing) {
 		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
 	return createDumgen({
 		jev: createTypeSafeAsk({ apiKey }),
-		luna: productionLuna(),
+		...deploymentLuna(env),
 		...tracing,
 	});
 }
@@ -85,7 +67,7 @@ export function clickDumgen(tracing: DumgenTracing) {
 	const timeoutMs = clickCallDeadlineMs();
 	return createDumgen({
 		jev: createTypeSafeAsk({ apiKey, timeoutMs }),
-		luna: productionLuna(timeoutMs),
+		...deploymentLuna(env, timeoutMs),
 		...tracing,
 	});
 }

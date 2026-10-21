@@ -5,7 +5,7 @@ import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../../server/linguisticIdentity";
-import { parseGermanReading } from "../../server/operationalParsing";
+import { parseReading } from "../../server/operationalParsing";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import {
@@ -297,7 +297,7 @@ export async function commitResolvedClick(
 	}
 	if (
 		reading.emojiDescription !==
-		emojiDescriptionOf(parseGermanReading(args.reading))
+		emojiDescriptionOf(parseReading(args.reading))
 	) {
 		throw new Error(
 			"Stored Reading does not match the selected Reading value.",

@@ -13,6 +13,7 @@ import type { SupportedTargetLanguage } from "../shared/supported-target-languag
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
 import {
+	grammaticalLanguageValidator,
 	readingBlockKindValidator,
 	readingBlockLayoutValidator,
 	readingBlockRouteValidator,
@@ -22,9 +23,11 @@ type LayoutCtx = QueryCtx | MutationCtx;
 const MAX_FAMILY_KIND_LAYOUTS_PER_LANGUAGE = 128;
 
 function availableLanguageBlocks(
-	_targetLanguage: SupportedTargetLanguage,
+	targetLanguage: SupportedTargetLanguage,
 ): readonly ReadingBlockKind[] {
-	return DEFAULT_DE_READING_LANGUAGE_LAYOUT.order;
+	return targetLanguage === "he"
+		? [...DEFAULT_DE_READING_LANGUAGE_LAYOUT.order, "Paradigm"]
+		: DEFAULT_DE_READING_LANGUAGE_LAYOUT.order;
 }
 
 function cloneLayout(layout: SerializedReadingBlockLayout): {
@@ -177,7 +180,10 @@ async function storeFamilyKindLayout(
 }
 
 export const getLanguage = query({
-	args: { visitorId: v.string(), targetLanguage: v.literal("de") },
+	args: {
+		visitorId: v.string(),
+		targetLanguage: grammaticalLanguageValidator,
+	},
 	returns: readingBlockLayoutValidator,
 	handler: async (ctx, { visitorId, targetLanguage }) => {
 		assertIdentifier(visitorId, "visitorId");
@@ -200,7 +206,7 @@ export const getFamilyKind = query({
 export const setLanguageBlockOrder = mutation({
 	args: {
 		visitorId: v.string(),
-		targetLanguage: v.literal("de"),
+		targetLanguage: grammaticalLanguageValidator,
 		order: v.array(readingBlockKindValidator),
 	},
 	returns: readingBlockLayoutValidator,
@@ -244,7 +250,7 @@ export const setLanguageBlockOrder = mutation({
 export const setLanguageBlockVisibility = mutation({
 	args: {
 		visitorId: v.string(),
-		targetLanguage: v.literal("de"),
+		targetLanguage: grammaticalLanguageValidator,
 		blockKind: readingBlockKindValidator,
 		visible: v.boolean(),
 	},

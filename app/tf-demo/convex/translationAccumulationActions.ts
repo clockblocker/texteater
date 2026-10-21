@@ -1,11 +1,12 @@
 "use node";
 
 import { v } from "convex/values";
-import { createDumgen, createOpenAILuna, createTypeSafeAsk } from "dumgen";
+import { createDumgen, createTypeSafeAsk } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
-import { parseGermanReading } from "../server/operationalParsing";
+import { deploymentLuna } from "../server/deployment-luna";
+import { parseReading } from "../server/operationalParsing";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import {
@@ -20,7 +21,7 @@ import { translationLanguageValidator } from "./model/validators";
 /**
  * The production TranslationAccumulator: Dumgen's
  * `knowledge.accumulateTranslations`, jev through TypeSafe and Luna
- * through OpenAI with the deployment's keys. Like Knowledge production, it
+ * through the deployment's configured Luna transport and model. Like Knowledge production, it
  * runs only where `TF_KNOWLEDGE_PRODUCTION=1` and both keys are set;
  * elsewhere it is undefined and the run calls no model.
  */
@@ -34,7 +35,7 @@ function productionTranslationAccumulator():
 	return dumgenTranslationAccumulator((tracing) =>
 		createDumgen({
 			jev: createTypeSafeAsk({ apiKey: jevKey }),
-			luna: createOpenAILuna({ apiKey: lunaKey }),
+			...deploymentLuna(env),
 			...tracing,
 		}),
 	);
@@ -72,11 +73,14 @@ export async function accumulateTranslations(
 		{ attestationId: args.attestationId, languages: [...args.languages] },
 	);
 	if (!occurrence) return;
-	const reading = parseGermanReading(occurrence.reading);
 	const { encounter, attestation } = parseResolvedGrammar({
 		encounter: occurrence.encounter,
 		attestation: occurrence.attestation,
 	});
+	const reading = parseReading(
+		occurrence.reading,
+		encounter.sentence.language,
+	);
 	const exit = await Effect.runPromiseExit(
 		accumulate({
 			encounter,

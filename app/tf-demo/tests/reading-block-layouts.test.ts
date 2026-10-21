@@ -66,6 +66,54 @@ const LOCAL_VERB_ORDER: ReadingBlockKind[] = [
 ];
 
 describe("Reading Block layout persistence", () => {
+	test("Hebrew language layout saves Paradigm order and visibility independently", async () => {
+		const t = createTestConvex();
+		const args = { visitorId: VISITOR_ID, targetLanguage: "he" } as const;
+		await t.mutation(setLanguageBlockOrder, {
+			...args,
+			order: ["Paradigm", ...LANGUAGE_ORDER],
+		});
+		await t.mutation(setLanguageBlockVisibility, {
+			...args,
+			blockKind: "Paradigm",
+			visible: false,
+		});
+		expect(await t.query(getLanguage, args)).toEqual({
+			order: ["Paradigm", ...LANGUAGE_ORDER],
+			hidden: ["Paradigm"],
+		});
+		expect(
+			await t.query(getLanguage, { ...args, targetLanguage: "de" }),
+		).toEqual(DEFAULT_DE_READING_LANGUAGE_LAYOUT);
+	});
+	test("Hebrew route layout persists and stays separate from German", async () => {
+		const t = createTestConvex();
+		const route = { ...VERB_ROUTE, targetLanguage: "he" } as const;
+		await t.mutation(setFamilyKindBlockOrder, {
+			visitorId: VISITOR_ID,
+			route,
+			order: LOCAL_VERB_ORDER,
+		});
+		expect(
+			await t.query(getFamilyKind, { visitorId: VISITOR_ID, route }),
+		).toEqual({
+			order: LOCAL_VERB_ORDER,
+			hidden: [],
+		});
+		expect(
+			await t.query(getFamilyKind, {
+				visitorId: VISITOR_ID,
+				route: VERB_ROUTE,
+			}),
+		).toEqual(DEFAULT_DE_READING_LANGUAGE_LAYOUT);
+		expect(await layoutRows(t, "readingFamilyKindLayouts")).toEqual([
+			expect.objectContaining({
+				targetLanguage: "he",
+				order: LOCAL_VERB_ORDER,
+			}),
+		]);
+	});
+
 	test("returns safe catalog defaults without materializing visitor state", async () => {
 		const t = createTestConvex();
 

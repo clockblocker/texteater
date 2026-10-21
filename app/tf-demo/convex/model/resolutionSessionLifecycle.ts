@@ -1,15 +1,13 @@
 import type { SpanHops } from "../../server/inspectionCapture";
 import type { ResolutionContext } from "../../server/linguisticOrchestration";
-import {
-	parseGermanLemma,
-	parseGermanReading,
-} from "../../server/operationalParsing";
+import { parseLemma, parseReading } from "../../server/operationalParsing";
 import type { ResolutionSessionGuard } from "../../server/resolutionLifecycle";
 import type {
 	ResolutionSessionLifecyclePort,
 	ResolutionSessionRunInput,
 } from "../../server/resolutionSessionExecution";
 import { projectResolutionGrammar } from "../../server/resolutionSessionProjection";
+import { isSupportedTargetLanguage } from "../../shared/supported-target-language";
 import { internal } from "../_generated/api";
 import type { Id, TableNames } from "../_generated/dataModel";
 import type { ActionCtx } from "../_generated/server";
@@ -57,6 +55,14 @@ export function createResolutionSessionLifecycle(
 				);
 				if (!input) return null;
 				const { reusable, sentence, neighbours } = input.context;
+				if (
+					!reusable &&
+					(!sentence || !isSupportedTargetLanguage(sentence.language))
+				)
+					throw new Error(
+						"Resolution requires a supported target-language Sentence.",
+					);
+				const language = sentence?.language;
 				const restored: ResolutionSessionRunInput = {
 					selection: input.selection,
 					context: {
@@ -66,7 +72,7 @@ export function createResolutionSessionLifecycle(
 						sentence,
 						lemmaCandidates: input.context.lemmaCandidates.map(
 							({ lemma, foundUnder }) => ({
-								lemma: parseGermanLemma(lemma),
+								lemma: parseLemma(lemma, language),
 								foundUnder,
 							}),
 						),
@@ -86,7 +92,7 @@ export function createResolutionSessionLifecycle(
 										resolution:
 											input.checkpoints.reading
 												.resolution,
-										reading: parseGermanReading(
+										reading: parseReading(
 											input.checkpoints.reading.reading,
 										),
 									},

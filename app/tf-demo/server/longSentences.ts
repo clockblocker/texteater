@@ -1,4 +1,5 @@
 import { type SegmentedSentence, stitchedText } from "dumgen";
+import type { SupportedTargetLanguage } from "../shared/supported-target-language";
 import { MAX_SEGMENTS_PER_SENTENCE } from "./storedSegments";
 
 /**
@@ -110,18 +111,18 @@ export function detectionSlice(
  * units with Segment indices shifted to match. When any part failed, the
  * Sentence failed, with no units.
  */
-export function joinedSentence(
-	segmented: readonly SegmentedSentence[],
+export function joinedSentence<L extends SupportedTargetLanguage>(
+	segmented: readonly SegmentedSentence<L>[],
 	{ separators }: Pick<SentenceParts, "separators">,
-): SegmentedSentence {
+): SegmentedSentence<L> {
 	if (segmented.length !== separators.length + 1)
 		throw new Error(
 			"segment.inUnits returned other parts than it was given.",
 		);
 	const [only] = segmented;
 	if (segmented.length === 1 && only) return only;
-	const segments: SegmentedSentence["segments"][number][] = [];
-	const units: SegmentedSentence["units"][number][] = [];
+	const segments: SegmentedSentence<L>["segments"][number][] = [];
+	const units: SegmentedSentence<L>["units"][number][] = [];
 	for (const [index, part] of segmented.entries()) {
 		const offset = segments.length;
 		segments.push(...part.segments);

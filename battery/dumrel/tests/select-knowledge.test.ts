@@ -48,7 +48,7 @@ test("invalid and unavailable routes are distinct, compiled selection agrees wit
 		).toBe(false);
 	}
 	const unavailable = selectKnowledge({
-		route: { ...route, language: "he" },
+		route: { ...route, language: "en" },
 	});
 	expect(unavailable.success).toBe(false);
 	if (!unavailable.success)

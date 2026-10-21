@@ -36,6 +36,7 @@ import { GROUND_COLUMN_STYLE } from "@/workspace/compass/pane-chrome";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import { scrollTitle } from "../../shared/scroll-title";
+import type { SupportedTargetLanguage } from "../../shared/supported-target-language";
 import { type CodexEntry, CodexEntryList, entryTarget } from "./codex-entries";
 
 const exampleText = "Die Banken sind geöffnet. Morgen bleiben sie geschlossen.";
@@ -45,6 +46,7 @@ export function LibraryView() {
 	const { follow } = useWorkspaceInteraction();
 	const [isAddScrollOpen, setIsAddScrollOpen] = useState(false);
 	const [sourceText, setSourceText] = useState(exampleText);
+	const [language, setLanguage] = useState<SupportedTargetLanguage>("de");
 	const [interactionError, setInteractionError] = useState<string | null>(
 		null,
 	);
@@ -66,8 +68,9 @@ export function LibraryView() {
 				inspectionVisitorId: import.meta.env.DEV
 					? visitorId
 					: undefined,
-				submissionKey: submissionKeyFor(normalized),
+				submissionKey: submissionKeyFor(normalized, language),
 				sourceText: normalized,
+				language,
 			});
 			if (result.status === "Rejected") {
 				setInteractionError(result.message);
@@ -222,10 +225,10 @@ export function LibraryView() {
 					<DialogHeader>
 						<DialogTitle>Add a text</DialogTitle>
 						<DialogDescription>
-							Paste German prose, lyrics, a book excerpt, or a
-							link to an article, or add a whole book as a .txt
-							file. Pasted text is split into sentences before
-							analysis.
+							Paste German or Hebrew prose, lyrics, a book
+							excerpt, or a link to an article, or add a whole
+							book as a .txt file. Pasted text is split into
+							sentences before analysis.
 						</DialogDescription>
 					</DialogHeader>
 					<form
@@ -236,14 +239,40 @@ export function LibraryView() {
 					>
 						<FieldGroup>
 							<Field data-disabled={isSubmitting || undefined}>
+								<FieldLabel htmlFor="library-text-language">
+									Text language
+								</FieldLabel>
+								<select
+									id="library-text-language"
+									name="language"
+									value={language}
+									disabled={isSubmitting}
+									onChange={(event) => {
+										if (
+											event.target.value === "de" ||
+											event.target.value === "he"
+										) {
+											setLanguage(event.target.value);
+										}
+									}}
+								>
+									<option value="de">German</option>
+									<option value="he">Hebrew</option>
+								</select>
+							</Field>
+							<Field data-disabled={isSubmitting || undefined}>
 								<FieldLabel htmlFor="library-source-text">
-									German text, or a link to an article
+									{language === "he"
+										? "Hebrew text"
+										: "German text, or a link to an article"}
 								</FieldLabel>
 								<Textarea
 									id="library-source-text"
 									name="text"
 									className="min-h-36 resize-y"
 									value={sourceText}
+									lang={language}
+									dir={language === "he" ? "rtl" : "ltr"}
 									onChange={(event) =>
 										setSourceText(event.target.value)
 									}
@@ -315,6 +344,12 @@ function LibrarySkeleton() {
 	);
 }
 
-function submissionKeyFor(sourceText: string): string {
-	return `text:v1:${sourceText.trim().normalize("NFC")}`;
+function submissionKeyFor(
+	sourceText: string,
+	language: SupportedTargetLanguage,
+): string {
+	const normalized = sourceText.trim().normalize("NFC");
+	return language === "de"
+		? `text:v1:${normalized}`
+		: `text:v1:${language}:${normalized}`;
 }

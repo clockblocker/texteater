@@ -2,7 +2,7 @@ import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
-import { parseGermanReading } from "../../../server/operationalParsing";
+import { parseReading } from "../../../server/operationalParsing";
 
 export { isUnitReadingFamily } from "./unitReadingFamilies";
 
@@ -16,8 +16,8 @@ export function projectReadingValue(
 		readonly canonicalForm: string;
 		readonly coreFeatures: unknown;
 	},
-): Dumling.Reading<"de"> {
-	return parseGermanReading({
+): Dumling.Reading<Dumling.Language> {
+	return parseReading({
 		unitKind: "Reading",
 		lemma: {
 			unitKind: "Lemma",
@@ -35,9 +35,9 @@ export function projectReadingValue(
 
 /** Validates stored identityless Knowledge without applying presentation policy. */
 export function projectReadingKnowledge(
-	source: Dumling.Reading<"de">,
+	source: Dumling.Reading<Dumling.Language>,
 	value: unknown,
-): Dumrel.ReadingKnowledge<Dumling.Reading<"de">> {
+): Dumrel.ReadingKnowledge<Dumling.Reading<Dumling.Language>> {
 	const parsed = parseReadingKnowledge({ source, knowledge: value ?? {} });
 	if (!parsed.success) throw parsed.error;
 	return parsed.value;

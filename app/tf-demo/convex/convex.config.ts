@@ -12,6 +12,10 @@ const app = defineApp({
 		TYPESAFE_API_KEY: v.optional(v.string()),
 		/** The OpenAI key that Dumgen's `resolve.grammar`, `resolve.reading` and `knowledge.produce` write with through Luna. */
 		OPENAI_API_KEY: v.optional(v.string()),
+		/** Local Luna bridge API root; set together with LUNA_MODEL. */
+		OPENAI_BASE_URL: v.optional(v.string()),
+		/** Bridge model; opts out of default Luna reasoning and service-tier settings. */
+		LUNA_MODEL: v.optional(v.string()),
 		/**
 		 * "1" runs Knowledge production with Dumgen's `knowledge.produce`
 		 * (#887); unset, a Knowledge run fails and calls no model. The user

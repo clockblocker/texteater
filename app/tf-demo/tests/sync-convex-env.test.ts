@@ -66,9 +66,14 @@ async function variablesTheDeploymentReads(): Promise<string[]> {
 
 test("the env sync pushes exactly the variables the deployment reads", async () => {
 	const script = await readFile(scriptPath, "utf8");
+	expect(scriptList(script, "optional_keys").sort()).toEqual([
+		"LUNA_MODEL",
+		"OPENAI_BASE_URL",
+	]);
 	expect(await variablesTheDeploymentReads()).toEqual(
 		[
 			...scriptList(script, "provider_keys"),
+			...scriptList(script, "optional_keys"),
 			...scriptList(script, "local_flags"),
 		].sort(),
 	);
@@ -95,21 +100,27 @@ afterEach(async () => {
  * zsh login shell whose startup files also print noise. Returns its output
  * and what the stubbed `npx` received for the key.
  */
-async function runSync(sources: readonly Source[]) {
+async function runSync(sources: readonly Source[], optional = false) {
 	scratch = await mkdtemp(join(tmpdir(), "tf-demo-env-sync-"));
 	const app = join(scratch, "app", "demo");
 	const bin = join(scratch, "bin");
 	const home = join(scratch, "home");
 	const received = join(scratch, "received");
+	const receivedArguments = join(scratch, "received-arguments");
 	await Promise.all([
 		mkdir(join(app, "tooling"), { recursive: true }),
 		mkdir(bin),
 		mkdir(home),
 	]);
-	const script = (await readFile(scriptPath, "utf8")).replace(
-		/^provider_keys=".*"$/mu,
-		`provider_keys="${FAKE_KEY}"`,
-	);
+	const script = (await readFile(scriptPath, "utf8"))
+		.replace(
+			/^provider_keys=".*"$/mu,
+			`provider_keys="${optional ? "" : FAKE_KEY}"`,
+		)
+		.replace(
+			/^optional_keys=".*"$/mu,
+			`optional_keys="${optional ? FAKE_KEY : ""}"`,
+		);
 	const appScript = join(app, "tooling", "sync-convex-env.sh");
 	const npx = join(bin, "npx");
 	await Promise.all([
@@ -117,7 +128,7 @@ async function runSync(sources: readonly Source[]) {
 		// `npx convex env set NAME [VALUE] [flags]`; the key's value comes on stdin.
 		writeFile(
 			npx,
-			`#!/bin/sh\nif [ "$4" = "${FAKE_KEY}" ]; then cat > "${received}"; fi\nexit 0\n`,
+			`#!/bin/sh\nif [ "$4" = "${FAKE_KEY}" ]; then printf '%s\\n' "$@" > "${receivedArguments}"; cat > "${received}"; fi\nexit 0\n`,
 		),
 		writeFile(
 			join(app, ".env.local"),
@@ -163,7 +174,10 @@ async function runSync(sources: readonly Source[]) {
 		child.exited,
 	]);
 	const pushed = await readFile(received, "utf8").catch(() => undefined);
-	return { stdout, stderr, exitCode, pushed };
+	const args = await readFile(receivedArguments, "utf8").catch(
+		() => undefined,
+	);
+	return { stdout, stderr, exitCode, pushed, args };
 }
 
 function expectNoValuePrinted(output: { stdout: string; stderr: string }) {
@@ -172,6 +186,33 @@ function expectNoValuePrinted(output: { stdout: string; stderr: string }) {
 		expect(output.stderr).not.toContain(value);
 	}
 }
+
+test.each([
+	{ sources: ["shell", "appFile", "rootFile", "zsh"], winner: "shell" },
+	{ sources: ["appFile", "rootFile", "zsh"], winner: "appFile" },
+	{ sources: ["rootFile", "zsh"], winner: "rootFile" },
+] as const)(
+	"an optional key set in $winner and below is pushed through stdin from $winner",
+	async ({ sources, winner }) => {
+		const output = await runSync(sources, true);
+		expect(output.exitCode).toBe(0);
+		expect(output.pushed).toBe(VALUES[winner]);
+		expect(output.args).toBe(`convex\nenv\nset\n${FAKE_KEY}\n`);
+		expect(output.stderr).toBe("");
+		expectNoValuePrinted(output);
+	},
+);
+
+test("an optional key set nowhere is skipped without a warning or failure", async () => {
+	const output = await runSync([], true);
+	expect(output.exitCode).toBe(0);
+	expect(output.pushed).toBeUndefined();
+	expect(output.args).toBeUndefined();
+	expect(output.stderr).toBe("");
+	expect(output.stdout).not.toContain(FAKE_KEY);
+	expect(output.stdout).toContain("setting TF_DEMO_ADMIN");
+	expect(output.stdout).toContain("setting TF_INSPECTION");
+});
 
 const zshInstalled = Bun.which("zsh") !== null;
 

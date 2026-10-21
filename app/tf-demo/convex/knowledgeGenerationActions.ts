@@ -1,11 +1,12 @@
 "use node";
 
 import { v } from "convex/values";
-import { createDumgen, createOpenAILuna, createTypeSafeAsk } from "dumgen";
+import { createDumgen, createTypeSafeAsk } from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
+import { deploymentLuna } from "../server/deployment-luna";
 import { dumgenKnowledgeProducer } from "../server/dumgenKnowledgeProducer";
 import type { generationRequestFor } from "../server/generatedKnowledgeRequest";
 import {
@@ -21,10 +22,11 @@ import type {
 	KnowledgeProducer,
 	KnowledgeProduction,
 } from "../server/knowledgeProduction";
-import { parseGermanReading } from "../server/operationalParsing";
+import { parseReading } from "../server/operationalParsing";
 import { asksParticipleSource } from "../server/participleSource";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
+import { isSupportedTargetLanguage } from "../shared/supported-target-language";
 import { internal } from "./_generated/api";
 import { type ActionCtx, env, internalAction } from "./_generated/server";
 import type { GenerationInput } from "./knowledgeGeneration";
@@ -70,7 +72,7 @@ export function productionKnowledgeProducer(): KnowledgeProducer {
 			);
 		return createDumgen({
 			jev: createTypeSafeAsk({ apiKey: env.TYPESAFE_API_KEY }),
-			luna: createOpenAILuna({ apiKey: env.OPENAI_API_KEY }),
+			...deploymentLuna(env),
 			...tracing,
 		});
 	});
@@ -109,7 +111,7 @@ type KnowledgeRun = {
 /** What a claimed run asks for, built from its input before any model call. */
 type KnowledgePlan = {
 	readonly input: ClaimedInput;
-	readonly reading: Dumling.Reading<"de">;
+	readonly reading: Dumling.Reading<Dumling.Language>;
 	readonly qualifiedKinds: ClaimedInput["authorization"]["qualifiedKinds"];
 	readonly request: ReturnType<typeof generationRequestFor>;
 	readonly requestedKinds: RequestedKinds;
@@ -178,13 +180,16 @@ function hop<T>(name: string, input: unknown, work: () => Promise<T>) {
 
 function planRun(input: ClaimedInput) {
 	return Effect.gen(function* () {
-		if (input.reading.lemma.language !== "de")
+		if (!isSupportedTargetLanguage(input.reading.lemma.language))
 			return yield* Effect.fail(
 				// failsWith folds this into a KnowledgeRunFailure.
 				// @effect-diagnostics-next-line globalErrorInEffectFailure:off
 				new Error("Unsupported Knowledge language."),
 			);
-		const reading = parseGermanReading(input.reading);
+		const reading = parseReading(
+			input.reading,
+			input.reading.lemma.language,
+		);
 		const { authorization } = input;
 		const qualifiedKinds = authorization.rollbackStopped
 			? []
@@ -384,7 +389,7 @@ function recordCatalogMiss(
 	const miss = {
 		decision: "CatalogMiss" as const,
 		stage: "knowledge.produce",
-		route: `de/${family}/${kind}`,
+		route: `${reading.lemma.language}/${family}/${kind}`,
 		message,
 	};
 	return hop("Record catalog miss", miss, () =>

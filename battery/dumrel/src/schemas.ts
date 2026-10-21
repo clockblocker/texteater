@@ -7,6 +7,10 @@
  */
 import { normalizeForm } from "dumling";
 import { z } from "zod";
+import { hebrewParadigmSchema } from "./hebrew-paradigm-schema.js";
+
+export { hebrewParadigmSchema };
+
 import {
 	adpositionLemmaSchemas,
 	knowledgeRouteSchema,
@@ -331,6 +335,7 @@ export const readingKnowledgeSchema = z.strictObject({
 	locutionType: locutionTypeSchema.optional(),
 	sayingType: sayingTypeSchema.optional(),
 	formulaRole: formulaRoleSchema.optional(),
+	hebrewParadigm: hebrewParadigmSchema.optional(),
 });
 
 const setKinds = z.enum(["Contribute", "Correct"]);
@@ -364,6 +369,7 @@ const verbFormChanges = <Aspect extends string, Value extends z.ZodType>(
 	] as const;
 
 export const knowledgeChangeSchema = z.union([
+	...verbFormChanges("hebrewParadigm", hebrewParadigmSchema),
 	z.strictObject({
 		kind: setKinds,
 		aspect: atomicAspectSchema,
@@ -508,6 +514,7 @@ function knowledgeAspectsSchema<Leaf extends z.ZodType>(leaf: Leaf) {
 		locutionType: leaf,
 		sayingType: leaf,
 		formulaRole: leaf,
+		hebrewParadigm: leaf,
 		translations: z.strictObject({ en: leaf, ru: leaf }).optional(),
 		semanticRelations: z
 			.strictObject({

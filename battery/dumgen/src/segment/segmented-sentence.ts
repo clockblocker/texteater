@@ -5,12 +5,12 @@
  */
 import { routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
+import { isSegmentLanguage, type languageFactories } from "../languages.js";
 
 /**
- * The languages Dumgen runs, each with a module in `languages.ts`: German
- * only for now.
+ * The languages Dumgen runs, derived from its registered language factories.
  */
-export type SegmentLanguage = "de";
+export type SegmentLanguage = keyof typeof languageFactories;
 
 /**
  * The one clickable piece of a Segmented Sentence, or the whitespace,
@@ -32,7 +32,7 @@ export type Segment = {
  * The Families a biggest unit routes to: every Dumling Family but Morpheme,
  * which belongs to `segment.inMorphemes`.
  */
-type UnitFamily<L extends SegmentLanguage> = Exclude<
+type UnitFamily<L extends Dumling.Language> = Exclude<
 	Dumling.Family<L>,
 	"Morpheme"
 >;
@@ -42,26 +42,33 @@ type UnitFamily<L extends SegmentLanguage> = Exclude<
  * Family, as Dumling names them (`{ language: "de", family: "Locution",
  * kind: "ADV" }`).
  */
-export type Route = {
-	[L in SegmentLanguage]: {
-		[F in UnitFamily<L>]: {
-			readonly language: L;
+export type Route<L extends Dumling.Language = "de"> = {
+	[Language in L]: {
+		[F in UnitFamily<Language>]: {
+			readonly language: Language;
 			readonly family: F;
-			readonly kind: Dumling.Kind<L, F>;
+			readonly kind: Dumling.Kind<Language, F>;
 		};
-	}[UnitFamily<L>];
-}[SegmentLanguage];
+	}[UnitFamily<Language>];
+}[L];
 
 /**
  * The Route a Dumling Lemma route names, as a fresh object, or undefined
  * where no click routes: a language Dumgen doesn't run, or a Morpheme, which
  * belongs to `segment.inMorphemes`.
  */
-export function segmentRouteOf(route: Dumling.LemmaRoute): Route | undefined {
+export function segmentRouteOf<R extends Dumling.LemmaRoute>(
+	route: R,
+): Route<Extract<R["language"], SegmentLanguage>> | undefined;
+export function segmentRouteOf(
+	route: Dumling.LemmaRoute,
+): Route<SegmentLanguage> | undefined {
 	const fresh = routeOf(route);
-	if (fresh.language !== "de" || fresh.family === "Morpheme")
+	if (!isSegmentLanguage(fresh.language) || fresh.family === "Morpheme")
 		return undefined;
-	return fresh;
+	// The registry guard narrows language, not the containing discriminated
+	// union in TypeScript; Morpheme has also been excluded above.
+	return fresh as Route<SegmentLanguage>;
 }
 
 /**
@@ -86,10 +93,10 @@ export type ClosedClassIdentity = {
  * them and a click ignores them (#860). A one-piece DET or PRON unit
  * carries the closed-class identity it was routed by, if any (#864).
  */
-export type Unit = {
+export type Unit<L extends Dumling.Language = "de"> = {
 	segments: number[];
-	route: Route | "Unresolved";
-	variants?: Route[];
+	route: Route<L> | "Unresolved";
+	variants?: Route<L>[];
 	identity?: ClosedClassIdentity;
 };
 
@@ -98,10 +105,10 @@ export type Unit = {
  * concatenated give the text back, and its units. Every ResolvableText
  * Segment belongs to exactly one unit, unless the Sentence `failed`.
  */
-export type SegmentedSentence = {
+export type SegmentedSentence<L extends Dumling.Language = "de"> = {
 	readonly text: string;
 	readonly segments: readonly Segment[];
-	readonly units: readonly Unit[];
+	readonly units: readonly Unit<L>[];
 	/**
 	 * Present only when the Sentence's segmentation failed (#861): it has no
 	 * units, and its Segments are the Segment stage's, or code's alone when
@@ -112,9 +119,9 @@ export type SegmentedSentence = {
 };
 
 /** A text's paragraphs, each with its Segmented Sentences in order. */
-export type SegmentedText = {
-	readonly language: SegmentLanguage;
+export type SegmentedText<L extends Dumling.Language = "de"> = {
+	readonly language: L;
 	readonly paragraphs: readonly {
-		readonly sentences: readonly SegmentedSentence[];
+		readonly sentences: readonly SegmentedSentence<L>[];
 	}[];
 };

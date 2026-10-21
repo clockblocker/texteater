@@ -15,6 +15,7 @@ export type KnowledgeSettings = {
 	locutionType?: boolean | undefined;
 	sayingType?: boolean | undefined;
 	formulaRole?: boolean | undefined;
+	hebrewParadigm?: boolean | undefined;
 	translations?:
 		| { en?: boolean | undefined; ru?: boolean | undefined }
 		| undefined;
@@ -48,6 +49,7 @@ export type KnowledgeRequestMask = {
 	locutionType?: null | undefined;
 	sayingType?: null | undefined;
 	formulaRole?: null | undefined;
+	hebrewParadigm?: null | undefined;
 	translations?: { en?: null | undefined; ru?: null | undefined } | undefined;
 	semanticRelations?:
 		| {
@@ -1806,8 +1808,47 @@ export type ReadingKnowledge = {
 	locutionType?: LocutionType | undefined;
 	sayingType?: SayingType | undefined;
 	formulaRole?: FormulaRole | undefined;
+	hebrewParadigm?:
+		| {
+				forms: Array<{
+					form: string;
+					features: {
+						gender?: ("Masc" | "Fem") | undefined;
+						number?: ("Sing" | "Plur" | "Dual") | undefined;
+						person?: ("1" | "2" | "3") | undefined;
+						tense?: ("Past" | "Fut") | undefined;
+						verbForm?: ("Inf" | "Part") | undefined;
+						mood?: "Imp" | undefined;
+						definite?: ("Ind" | "Def" | "Cons") | undefined;
+						voice?: ("Act" | "Mid" | "Pass") | undefined;
+						polarity?: ("Pos" | "Neg") | undefined;
+					};
+				}>;
+		  }
+		| undefined;
 };
 export type KnowledgeChange =
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "hebrewParadigm";
+			value: {
+				forms: Array<{
+					form: string;
+					features: {
+						gender?: ("Masc" | "Fem") | undefined;
+						number?: ("Sing" | "Plur" | "Dual") | undefined;
+						person?: ("1" | "2" | "3") | undefined;
+						tense?: ("Past" | "Fut") | undefined;
+						verbForm?: ("Inf" | "Part") | undefined;
+						mood?: "Imp" | undefined;
+						definite?: ("Ind" | "Def" | "Cons") | undefined;
+						voice?: ("Act" | "Mid" | "Pass") | undefined;
+						polarity?: ("Pos" | "Neg") | undefined;
+					};
+				}>;
+			};
+	  }
+	| { kind: "Retract"; aspect: "hebrewParadigm" }
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "transcription" | "definition";

@@ -10,7 +10,7 @@ import { selectKnowledge } from "dumrel";
  * contribution and must still reach Full.
  */
 export function asksParticipleSource(
-	reading: { readonly lemma: Dumling.Lemma<"de"> },
+	reading: { readonly lemma: Dumling.Lemma<Dumling.Language> },
 	options: { readonly topUpOnly: boolean; readonly knowledge: unknown },
 ): boolean {
 	if (options.topUpOnly) return false;

@@ -14,9 +14,11 @@ set -eu
 
 # The keys the deployment reads (declared in convex/convex.config.ts), the
 # click deadline and the Knowledge switch among them; one set nowhere is not
-# pushed. tests/sync-convex-env.test.ts fails when this
-# list and the code drift apart.
+# pushed. tests/sync-convex-env.test.ts fails when these
+# lists and the code drift apart.
 provider_keys="TYPESAFE_API_KEY OPENAI_API_KEY CLICK_CALL_DEADLINE_MS TF_KNOWLEDGE_PRODUCTION"
+# Optional overrides; absent values leave the deployment's defaults unchanged.
+optional_keys="OPENAI_BASE_URL LUNA_MODEL"
 # Flags set to "1" on a local deployment only.
 local_flags="TF_DEMO_ADMIN TF_INSPECTION"
 
@@ -49,7 +51,7 @@ zsh_exports() {
 zsh_output=""
 zsh_read=false
 missing=""
-for name in $provider_keys; do
+for name in $provider_keys $optional_keys; do
 	eval "value=\${$name:-}"
 	origin="the shell"
 	if [ -z "$value" ]; then
@@ -63,7 +65,7 @@ for name in $provider_keys; do
 	if [ -z "$value" ]; then
 		if [ "$zsh_read" = false ]; then
 			# shellcheck disable=SC2086
-			zsh_output=$(zsh_exports $provider_keys)
+			zsh_output=$(zsh_exports $provider_keys $optional_keys)
 			zsh_read=true
 		fi
 		value=$(printf '%s\n' "$zsh_output" |
@@ -71,7 +73,10 @@ for name in $provider_keys; do
 		origin="a zsh login shell"
 	fi
 	if [ -z "$value" ]; then
-		missing="$missing $name"
+		case " $optional_keys " in
+		*" $name "*) ;;
+		*) missing="$missing $name" ;;
+		esac
 		continue
 	fi
 	echo "setting $name from $origin"

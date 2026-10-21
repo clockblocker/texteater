@@ -50,7 +50,7 @@ export async function reconstructReusableAttestation(
 			attestationId,
 			grammatical: {
 				decision: "Resolved" as const,
-				language: "de" as const,
+				language: occurrence.encounter.sentence.language,
 				encounter: occurrence.encounter,
 				attestation: occurrence.publicAttestation,
 			},

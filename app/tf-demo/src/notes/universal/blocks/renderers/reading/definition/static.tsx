@@ -82,7 +82,13 @@ export const renderReadingDefinition = (({
 
 	return (
 		<NoteSection aria-label="Definition" label="Definition">
-			<p className="py-1 leading-relaxed text-ink text-pretty">{text}</p>
+			<p
+				className="py-1 leading-relaxed text-ink text-pretty"
+				lang={noteData.reading.lemma.language}
+				dir="auto"
+			>
+				{text}
+			</p>
 		</NoteSection>
 	);
 }) satisfies ReadingDefaultRenderer;

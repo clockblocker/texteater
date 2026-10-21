@@ -4,6 +4,7 @@ import type * as Dumling from "dumling/types";
 import { structuralKeys } from "./fingerprint.js";
 import type { ConjugationClasses, NounPlural } from "./generated/types.js";
 import { verbFormsIssue, verbFormsOfChange } from "./german-verb-forms.js";
+import { hebrewParadigmIssue } from "./hebrew-paradigm.js";
 import { knowledgePolicyApplies } from "./knowledge-policies.js";
 import type {
 	KnowledgeChange,
@@ -384,6 +385,10 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 	knowledge: ReadingKnowledge,
 ): ReadingKnowledge | ParsingError {
 	const result = structuredClone(knowledge);
+	if (result.hebrewParadigm) {
+		const failure = hebrewParadigmIssue(source, result.hebrewParadigm);
+		if (failure) return issue(["knowledge", "hebrewParadigm"], failure);
+	}
 	for (const aspect of Object.keys(routeAspects))
 		if (isRouteAspect(aspect) && result[aspect] !== undefined) {
 			const failure = routeAspectIssue(source, aspect, [
@@ -468,6 +473,10 @@ export function contextualizeChange<R extends Dumling.Reading>(
 	source: R,
 	change: KnowledgeChange,
 ): KnowledgeChange | ParsingError {
+	if (change.aspect === "hebrewParadigm" && change.kind !== "Retract") {
+		const failure = hebrewParadigmIssue(source, change.value);
+		if (failure) return issue(["change", "value"], failure);
+	}
 	if (isRouteAspect(change.aspect) && change.kind !== "Retract") {
 		const failure = routeAspectIssue(source, change.aspect, [
 			"change",

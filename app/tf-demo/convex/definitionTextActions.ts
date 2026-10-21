@@ -10,6 +10,10 @@ import {
 } from "dumgen";
 import * as Effect from "effect/Effect";
 import { storedUnitOf } from "../server/storedSegments";
+import {
+	isSupportedTargetLanguage,
+	type SupportedTargetLanguage,
+} from "../shared/supported-target-language";
 import { internal } from "./_generated/api";
 import { env, internalAction } from "./_generated/server";
 import { stripScrollAnalysisGraph } from "./model/scrollAnalysisStripping";
@@ -29,13 +33,16 @@ function logFailedSentence(trace: OperationTrace) {
 }
 
 /**
- * Cuts a German definition into one Sentence's Segments and biggest units
+ * Cuts a supported-language definition into one Sentence's Segments and biggest units
  * with Dumgen's `segment.inUnits`, the definition taken whole as that
  * Sentence: no `splitText`, since a Definition Text holds one Sentence. A
  * Sentence whose segmentation failed comes back marked `failed`, with no
  * units, and is stored so.
  */
-async function segmentDefinition(definition: string) {
+async function segmentDefinition(
+	definition: string,
+	language: SupportedTargetLanguage,
+) {
 	const apiKey = env.TYPESAFE_API_KEY;
 	if (!apiKey)
 		throw new Error(
@@ -49,7 +56,7 @@ async function segmentDefinition(definition: string) {
 				: noLuna,
 			onOperation: logFailedSentence,
 		}).segment.inUnits({
-			language: "de",
+			language,
 			paragraphs: [{ sentences: [definition] }],
 		}),
 	);
@@ -63,7 +70,7 @@ async function segmentDefinition(definition: string) {
  * removes the previous Definition Text when the definition changed or was
  * retracted, then segments and persists the requested one. Segmentation
  * skips text submission, so the defined Reading's language is taken as
- * given; only German is segmented. A definition that changed while this
+ * given; only supported target languages are segmented. A definition that changed while this
  * ran is picked up by the run `settle` schedules, and a run that dies
  * before settling by the watchdog its scheduling set.
  */
@@ -104,19 +111,22 @@ export const materialize = internalAction({
 				outcome = { kind: "Retracted" };
 			} else if (sync.scrollId && !replace) {
 				outcome = { kind: "Ready" };
-			} else if (sync.language !== "de") {
+			} else if (!isSupportedTargetLanguage(sync.language)) {
 				throw new Error(
-					"Only a German Reading's definition is segmented.",
+					"Only a supported target language Reading's definition is segmented.",
 				);
 			} else {
-				const sentence = await segmentDefinition(sync.definition);
+				const sentence = await segmentDefinition(
+					sync.definition,
+					sync.language,
+				);
 				await ctx.runMutation(
 					internal.definitionTexts.persistSegmented,
 					{
 						ownerReadingKey,
 						runNumber,
 						definition: sync.definition,
-						language: "de",
+						language: sync.language,
 						stitchedText: sentence.text,
 						segments: sentence.segments.map(
 							({ kind, text, surface }) =>

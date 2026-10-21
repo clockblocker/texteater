@@ -97,12 +97,8 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 			data-sentence={sentence.sentenceId}
 			data-segmentation={notSegmented ? "failed" : undefined}
 			data-plain={plain || undefined}
-			lang={
-				plain && sentence.language !== "other"
-					? sentence.language
-					: undefined
-			}
-			dir={plain ? "auto" : undefined}
+			lang={sentence.language !== "other" ? sentence.language : undefined}
+			dir="auto"
 			title={notSegmented ? "Not segmented" : undefined}
 		>
 			{sentence.segments.length === 0 ? (

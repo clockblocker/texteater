@@ -42,7 +42,10 @@ import type {
 import type { GermanInventory } from "./segment/de/inventory.js";
 import { type InUnitsInput, segmentText } from "./segment/in-units.js";
 import { isFloatingModel, type JevAsk, pinnedJevModel } from "./segment/jev.js";
-import type { SegmentedText } from "./segment/segmented-sentence.js";
+import type {
+	SegmentedText,
+	SegmentLanguage,
+} from "./segment/segmented-sentence.js";
 import { translateSentence } from "./translate/sentence.js";
 import type { TranslateSentenceInput } from "./translate/types.js";
 
@@ -95,7 +98,9 @@ export type Dumgen = {
 		 * `failed`, and the others are kept. Another language than German
 		 * or a blank Sentence is a Defect, raised before anything is asked.
 		 */
-		readonly inUnits: (input: InUnitsInput) => Effect.Effect<SegmentedText>;
+		readonly inUnits: <L extends SegmentLanguage = "de">(
+			input: InUnitsInput<L>,
+		) => Effect.Effect<SegmentedText<L>>;
 	};
 	readonly resolve: {
 		/**
@@ -105,10 +110,10 @@ export type Dumgen = {
 		 * its other calls. Another language than German, a failed Sentence
 		 * or a unit that is no unit of its Sentence is a Defect.
 		 */
-		readonly grammar: (
-			input: ResolveGrammarInput,
+		readonly grammar: <L extends SegmentLanguage = "de">(
+			input: ResolveGrammarInput<L>,
 		) => Effect.Effect<
-			GrammarResolution,
+			GrammarResolution<L>,
 			ProviderFailure | InvalidModelOutput
 		>;
 		/**
@@ -119,10 +124,10 @@ export type Dumgen = {
 		 * their authored Reading. A click is all-or-nothing, as in grammar.
 		 * Bad input, a Foreign Attestation among it, is a Defect.
 		 */
-		readonly reading: (
-			input: ResolveReadingInput,
+		readonly reading: <L extends SegmentLanguage = "de">(
+			input: ResolveReadingInput<L>,
 		) => Effect.Effect<
-			ReadingResolution,
+			ReadingResolution<L>,
 			ProviderFailure | InvalidModelOutput
 		>;
 	};
@@ -146,9 +151,9 @@ export type Dumgen = {
 		 * has them; its failure is the only error, and it interrupts the
 		 * rest. Bad input is a Defect.
 		 */
-		readonly produce: <E = never>(
-			input: ProduceKnowledgeInput<E>,
-		) => Effect.Effect<KnowledgeProduction, E>;
+		readonly produce: <E = never, L extends SegmentLanguage = "de">(
+			input: ProduceKnowledgeInput<E, L>,
+		) => Effect.Effect<KnowledgeProduction<L>, E>;
 		/**
 		 * The translations one occurrence adds to a Reading that already
 		 * has some (ADR 0047): per language, jev judges whether a stored
@@ -157,9 +162,9 @@ export type Dumgen = {
 		 * Out comes a Contribute of those not stored yet per language, and
 		 * per-language failures, all values. Bad input is a Defect.
 		 */
-		readonly accumulateTranslations: (
-			input: AccumulateTranslationsInput,
-		) => Effect.Effect<TranslationAccumulation>;
+		readonly accumulateTranslations: <L extends SegmentLanguage = "de">(
+			input: AccumulateTranslationsInput<L>,
+		) => Effect.Effect<TranslationAccumulation<L>>;
 	};
 };
 
@@ -200,7 +205,7 @@ export function createDumgen(options: DumgenOptions): Dumgen {
 				),
 			reading: (input) =>
 				runOperation("resolve.reading", operations, (scope) =>
-					resolveReading(scope, { jev, luna }, input),
+					resolveReading(scope, { jev, luna }, modules, input),
 				),
 		},
 		translate: {

@@ -6,8 +6,8 @@ import {
 	readingIdentityKey,
 } from "../../server/linguisticIdentity";
 import {
-	parseGermanAttestation,
-	parseGermanReading,
+	parseAttestation,
+	parseReading,
 } from "../../server/operationalParsing";
 import type { MutationCtx } from "../_generated/server";
 import {
@@ -50,10 +50,10 @@ export async function planAndCommitDictionary(
 		readonly occurrence: Infer<typeof occurrenceAttestationInputValidator>;
 	},
 ): Promise<DumdictTransactionOutcome> {
-	const dictionary = createDumdictTransaction(ctx);
-	const reading = parseGermanReading(args.reading);
+	const reading = parseReading(args.reading);
+	const dictionary = createDumdictTransaction(ctx, reading.lemma.language);
 	const ownedSurface = {
-		surface: parseGermanAttestation(args.occurrence.attestation).surface,
+		surface: parseAttestation(args.occurrence.attestation).surface,
 		note: emptyNote(),
 	};
 	if (
@@ -62,8 +62,10 @@ export async function planAndCommitDictionary(
 	)
 		return dictionary.ensureOwnedSurface({ reading, ownedSurface });
 	const surfaceStored =
-		(await findSurface(ctx, makeSurfaceId("de", ownedSurface.surface))) !==
-		null;
+		(await findSurface(
+			ctx,
+			makeSurfaceId(ownedSurface.surface.language, ownedSurface.surface),
+		)) !== null;
 	const added = await dictionary.addNewNote({
 		draft: {
 			reading,
@@ -97,15 +99,14 @@ export async function staleNewReading(
 	if (args.readingDecision !== "New" || seen === undefined) return undefined;
 	if (authoredReading(args.reading)) return undefined;
 	if (await findReadingByKey(ctx, args.readingKey)) return undefined;
-	const { lemma } = parseGermanReading(args.reading);
+	const { lemma } = parseReading(args.reading);
 	const keyOf = (emojiDescription: string) =>
 		readingIdentityKey({ unitKind: "Reading", lemma, emojiDescription });
 	const judged = new Set(seen.map(keyOf));
 	const stored = await storedReadingsOf(ctx, args.occurrence.lemmaKey);
 	return stored.some((reading) => !judged.has(readingIdentityKey(reading)))
 		? stored.flatMap(
-				(reading) =>
-					emojiDescriptionOf(parseGermanReading(reading)) ?? [],
+				(reading) => emojiDescriptionOf(parseReading(reading)) ?? [],
 			)
 		: undefined;
 }

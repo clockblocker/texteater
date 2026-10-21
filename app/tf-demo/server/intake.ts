@@ -8,7 +8,11 @@ import {
 	stitchedText,
 } from "dumgen";
 import * as Effect from "effect/Effect";
-import type { ScrollLanguage } from "../shared/supported-target-language";
+import {
+	isSupportedTargetLanguage,
+	type ScrollLanguage,
+	type SupportedTargetLanguage,
+} from "../shared/supported-target-language";
 import { assertNonEmpty } from "./identifiers";
 import { inspectionStep } from "./inspectionCapture";
 import {
@@ -46,7 +50,9 @@ export const GERMAN_ONLY_MESSAGE =
 export function unsupportedLanguageMessage(
 	language: ScrollLanguage,
 ): string | undefined {
-	return language === "de" ? undefined : GERMAN_ONLY_MESSAGE;
+	return isSupportedTargetLanguage(language)
+		? undefined
+		: GERMAN_ONLY_MESSAGE;
 }
 
 /** What a Visitor reads when the deployment has no TypeSafe key for intake. */
@@ -90,6 +96,8 @@ export type SubmittedSentence = {
 };
 
 export type SubmittedScroll = {
+	/** The trusted intake target used to distinguish Plain Sentences at storage. */
+	readonly targetLanguage?: ScrollLanguage;
 	readonly submissionKey: string;
 	readonly sourceText: string;
 	/**
@@ -149,7 +157,7 @@ export type AnalyzedSentence = Omit<
 function analyzedSentences(
 	paragraphs: LanguagedParagraphs,
 	language: ScrollLanguage,
-	segmented: SegmentedText | undefined,
+	segmented: SegmentedText<SupportedTargetLanguage> | undefined,
 ): AnalyzedSentence[][] {
 	const segmentedSentences =
 		segmented?.paragraphs.flatMap(({ sentences }) => sentences) ?? [];
@@ -205,6 +213,8 @@ export function analyzeParagraphs(
 	onSegmenting?: (positions: readonly number[]) => void,
 ) {
 	return Effect.gen(function* () {
+		if (!isSupportedTargetLanguage(language))
+			throw new Error(GERMAN_ONLY_MESSAGE);
 		const asked = paragraphs.map(({ sentences }) => ({
 			sentences: sentences.map((sentence) => detectionSlice(sentence)),
 		}));
@@ -255,7 +265,7 @@ export function analyzeParagraphs(
 				? undefined
 				: yield* dumgen.segment
 						.inUnits({
-							language: "de",
+							language,
 							paragraphs: segmentedParagraphs,
 						})
 						.pipe(
@@ -277,9 +287,9 @@ export function analyzeParagraphs(
 
 /** Each long Sentence's parts, as `segment.inUnits` cut them, joined back into one. */
 function joinedParts(
-	segmented: SegmentedText,
+	segmented: SegmentedText<SupportedTargetLanguage>,
 	sentences: readonly SentenceParts[],
-): SegmentedText {
+): SegmentedText<SupportedTargetLanguage> {
 	const parts = segmented.paragraphs.flatMap(({ sentences }) => sentences);
 	let next = 0;
 	return {
@@ -361,6 +371,7 @@ export function createIntake(options: {
 				options.onSegmenting,
 			);
 			const submission: SubmittedScroll = {
+				targetLanguage: input.language,
 				submissionKey: input.submissionKey,
 				sourceText: input.sourceText,
 				extractedText: input.extractedText,

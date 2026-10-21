@@ -54,6 +54,7 @@ export function SourceQuote({
 					? "neuter"
 					: "default";
 	const quote = {
+		dir: "auto" as const,
 		tone,
 		onFollow: follow,
 		followLabel: `Open in ${destination}`,

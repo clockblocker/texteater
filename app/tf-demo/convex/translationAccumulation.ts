@@ -2,7 +2,7 @@ import { isRecord } from "common-utils";
 import { v } from "convex/values";
 import { checkApplyGeneratedKnowledgeRequest } from "dumdict/planning";
 import { readingIdentityKey } from "../server/linguisticIdentity";
-import { parseGermanReading } from "../server/operationalParsing";
+import { parseReading } from "../server/operationalParsing";
 import { internalMutation, internalQuery } from "./_generated/server";
 import { createDumdictTransaction } from "./model/dumdictTransaction";
 import {
@@ -120,20 +120,24 @@ export const publish = internalMutation({
 		const stored = await ctx.db.get(args.readingId);
 		if (!stored)
 			return { status: "Rejected" as const, message: "No such Reading." };
-		const reading = parseGermanReading(args.reading);
+		const reading = parseReading(args.reading);
 		if (readingIdentityKey(reading) !== stored.readingKey)
 			throw new Error("The Reading does not match its stored identity.");
 		// The changes arrive as v.any(); Dumdict parses them here.
-		const request = checkApplyGeneratedKnowledgeRequest("de", {
-			reading,
-			changes: args.changes,
-			pendingRelations: [],
-		});
+		const request = checkApplyGeneratedKnowledgeRequest(
+			reading.lemma.language,
+			{
+				reading,
+				changes: args.changes,
+				pendingRelations: [],
+			},
+		);
 		const dictionary =
 			request.status === "ok"
-				? await createDumdictTransaction(ctx).applyGeneratedKnowledge(
-						request.request,
-					)
+				? await createDumdictTransaction(
+						ctx,
+						reading.lemma.language,
+					).applyGeneratedKnowledge(request.request)
 				: request;
 		if (dictionary.status !== "committed")
 			return {

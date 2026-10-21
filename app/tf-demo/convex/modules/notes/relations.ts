@@ -21,7 +21,7 @@ import { projectReadingValue } from "./projections";
 import {
 	loadTargetedRelationProjections,
 	MAX_RELATIONS_PER_NOTE,
-	parseStoredGermanLemma,
+	parseStoredLemma,
 } from "./relationNeighborhood";
 import { unitReadingEmojiDescription } from "./unitReadingFamilies";
 
@@ -152,7 +152,7 @@ export async function loadRelationProjections(
 		}
 		if (!("lemmaKey" in targetDoc) || knowledge.targetKind === "reading")
 			continue;
-		const target = parseStoredGermanLemma(targetDoc);
+		const target = parseStoredLemma(targetDoc);
 		resolved.push({
 			relation: projection.relation,
 			targetCanonicalForm: targetDoc.canonicalForm,
@@ -369,7 +369,7 @@ export async function loadGrammaticalAlternatives(
 	if (!source) return [];
 	const lemmaDoc = await ctx.db.get(source.lemmaId);
 	if (!lemmaDoc) return [];
-	return reviewedAlternatives(parseStoredGermanLemma(lemmaDoc)).map(
+	return reviewedAlternatives(parseStoredLemma(lemmaDoc)).map(
 		({ feature, reading }) => ({
 			feature,
 			readingKey: readingIdentityKey(reading),
@@ -382,8 +382,8 @@ export async function loadGrammaticalAlternatives(
  * article. A stem Lemma (dieser, mein) has none: all its forms are Surfaces
  * of this one Reading, so navigation never leaves it.
  */
-export function reviewedAlternatives(lemma: Dumling.Lemma<"de">) {
-	if (lemma.family !== "Lexeme") return [];
+export function reviewedAlternatives(lemma: Dumling.Lemma<Dumling.Language>) {
+	if (lemma.language !== "de" || lemma.family !== "Lexeme") return [];
 	if (lemma.kind === "PRON")
 		return (["case", "person", "number"] as const).flatMap((feature) =>
 			selectGrammaticalAlternatives({
@@ -408,7 +408,7 @@ export function reviewedAlternatives(lemma: Dumling.Lemma<"de">) {
 		);
 	return [];
 }
-function readingNumber(reading: Dumling.Reading<"de">) {
+function readingNumber(reading: Dumling.Reading<Dumling.Language>) {
 	return (reading.lemma.coreFeatures as { number?: string | null }).number;
 }
 

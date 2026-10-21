@@ -68,7 +68,7 @@ export function resolvingReadingNoteData(
 		ownerKind: "Lemma" as const,
 		ownerKey: `resolving:${requestId}:Lemma`,
 		lemmaId: placeholder("lemmas"),
-		language: "de",
+		language: route.language,
 		family: route.family,
 		kind: route.kind,
 		canonicalForm: grammar?.canonicalForm ?? "",

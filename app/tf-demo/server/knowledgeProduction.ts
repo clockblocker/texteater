@@ -2,6 +2,7 @@ import type { OperationTrace } from "dumgen";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type * as Effect from "effect/Effect";
+import type { SupportedTargetLanguage } from "../shared/supported-target-language";
 import type { ClickEncounter } from "./clickResolution";
 
 /**
@@ -34,7 +35,8 @@ export type KnowledgeFailure = {
 		| "subjunctivePast"
 		| "locutionType"
 		| "sayingType"
-		| "formulaRole";
+		| "formulaRole"
+		| Exclude<keyof Dumrel.KnowledgeRequestMask, "morphologicalTree">;
 	readonly leaf?: string;
 	readonly code:
 		| "ProviderFailure"
@@ -47,9 +49,11 @@ export type KnowledgeFailure = {
 /** What one run produced: Knowledge changes, pending relations and failures. */
 export type KnowledgeProduction = {
 	readonly failures: readonly KnowledgeFailure[];
-	readonly changes: readonly Dumrel.KnowledgeChange<Dumling.Reading<"de">>[];
+	readonly changes: readonly Dumrel.KnowledgeChange<
+		Dumling.Reading<Dumling.Language>
+	>[];
 	readonly pendingRelations: readonly (Dumrel.PendingSemanticRelation & {
-		readonly target: { readonly language: "de" };
+		readonly target: { readonly language: SupportedTargetLanguage };
 	})[];
 };
 
@@ -61,8 +65,8 @@ export type KnowledgeProduction = {
  */
 export type KnowledgeInput = {
 	readonly encounter: ClickEncounter;
-	readonly reading: Dumling.Reading<"de">;
-	readonly attestation: Dumling.Attestation<"de">;
+	readonly reading: Dumling.Reading<Dumling.Language>;
+	readonly attestation: Dumling.Attestation<Dumling.Language>;
 	readonly origin: "New" | "TopUp";
 	readonly request: KnowledgeRequest;
 };

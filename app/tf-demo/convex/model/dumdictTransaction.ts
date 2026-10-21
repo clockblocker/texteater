@@ -13,6 +13,7 @@ import {
 	type ReadingEntryContext,
 	type ReadingEntryContextLoad,
 } from "dumdict/planning";
+import type * as Dumling from "dumling/types";
 import type { MutationCtx } from "../_generated/server";
 import {
 	type ReadingEntryContextArgs,
@@ -90,20 +91,20 @@ type DumdictOverBudget = {
 export type DumdictTransaction = {
 	/** Plan a new Reading Note against the transaction's own state and apply it. */
 	readonly addNewNote: (
-		request: AddNewNoteRequest<"de">,
+		request: AddNewNoteRequest<Dumling.Language>,
 	) => Promise<DumdictTransactionOutcome>;
 	readonly ensureOwnedSurface: (
-		request: EnsureOwnedSurfaceRequest<"de">,
+		request: EnsureOwnedSurfaceRequest<Dumling.Language>,
 	) => Promise<DumdictTransactionOutcome>;
 	readonly ensureReadingEntry: (
-		request: EnsureReadingEntryRequest<"de">,
+		request: EnsureReadingEntryRequest<Dumling.Language>,
 	) => Promise<DumdictTransactionOutcome>;
 	/** The one workflow a caller can split, so it reports an over-budget plan. */
 	readonly applyGeneratedKnowledge: (
-		request: ApplyGeneratedKnowledgeRequest<"de">,
+		request: ApplyGeneratedKnowledgeRequest<Dumling.Language>,
 	) => Promise<DumdictTransactionOutcome | DumdictOverBudget>;
 	readonly cleanupRelations: (
-		request: CleanupRelationsRequest<"de">,
+		request: CleanupRelationsRequest<Dumling.Language>,
 	) => Promise<DumdictTransactionOutcome>;
 };
 
@@ -118,23 +119,25 @@ export type DumdictTransaction = {
  * it was built from, so Convex's optimistic concurrency, not a revision check
  * or a retry loop, resolves concurrent writers.
  */
-export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
-	const planner = createDumdictPlanner("de");
-	function contextArgs(load: ReadingEntryContextLoad<"de">) {
+export function createDumdictTransaction(
+	ctx: MutationCtx,
+	language: Dumling.Language = "de",
+): DumdictTransaction {
+	const planner = createDumdictPlanner(language);
+	function contextArgs(load: ReadingEntryContextLoad<Dumling.Language>) {
 		return readingEntryContextArgs(planner.contextRequest(load));
 	}
-	async function loadContext<Load extends ReadingEntryContextLoad<"de">>(
-		load: Load,
-		args: ReadingEntryContextArgs = contextArgs(load),
-	) {
+	async function loadContext<
+		Load extends ReadingEntryContextLoad<Dumling.Language>,
+	>(load: Load, args: ReadingEntryContextArgs = contextArgs(load)) {
 		const slice = await loadReadingEntryContextSlice(ctx, args);
 		return slice as unknown as Extract<
-			ReadingEntryContext<"de">,
+			ReadingEntryContext<Dumling.Language>,
 			{ intent: Load["intent"] }
 		>;
 	}
 	async function apply(
-		outcome: DumdictPlanOutcome<"de">,
+		outcome: DumdictPlanOutcome<Dumling.Language>,
 	): Promise<DumdictTransactionOutcome> {
 		if (outcome.status !== "planned") return outcome;
 		const plan = dictionaryPlanResult(outcome.plan);
@@ -206,7 +209,7 @@ export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
 						request.resolutions.map(({ locator }) =>
 							pendingLocatorIndexKey(locator),
 						),
-					)) as unknown as CleanupRelationsSlice<"de">,
+					)) as unknown as CleanupRelationsSlice<Dumling.Language>,
 					request,
 				),
 			),

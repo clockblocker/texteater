@@ -9,6 +9,7 @@ import type { InvalidModelOutput, ProviderFailure } from "../errors.js";
 import type { JevSettings } from "../jev-call.js";
 import { type LanguageModules, languageModuleOf } from "../language-module.js";
 import type { LunaSettings } from "../luna-call.js";
+import type { SegmentLanguage } from "../segment/segmented-sentence.js";
 import type { GrammarResolution, ResolveGrammarInput } from "./types.js";
 
 /**
@@ -16,24 +17,25 @@ import type { GrammarResolution, ResolveGrammarInput } from "./types.js";
  * segmentation failed, or a unit that is no unit of its Sentence is bad
  * input, a Defect raised before anything is asked.
  */
-export const resolveGrammar = Effect.fnUntraced(function* (
+export const resolveGrammar = <L extends SegmentLanguage = "de">(
 	scope: OperationScope,
 	models: { readonly jev: JevSettings; readonly luna: LunaSettings },
 	modules: LanguageModules,
-	input: ResolveGrammarInput,
-): Effect.fn.Return<GrammarResolution, ProviderFailure | InvalidModelOutput> {
-	const module = languageModuleOf(modules, input.language);
-	if (module === undefined)
-		return yield* Effect.die(
-			Error(
-				`resolve.grammar resolves German ("de") only, not ${JSON.stringify(input.language)}`,
-			),
-		);
-	if (input.sentence.failed)
-		return yield* Effect.die(
-			Error(
-				"The Sentence's segmentation failed; segment it again before resolving a click on it",
-			),
-		);
-	return yield* module.resolveGrammar(scope, models, input);
-});
+	input: ResolveGrammarInput<L>,
+): Effect.Effect<GrammarResolution<L>, ProviderFailure | InvalidModelOutput> =>
+	Effect.gen(function* () {
+		const module = languageModuleOf(modules, input.language);
+		if (module === undefined)
+			return yield* Effect.die(
+				Error(
+					`No grammar resolver registered for ${JSON.stringify(input.language)}`,
+				),
+			);
+		if (input.sentence.failed)
+			return yield* Effect.die(
+				Error(
+					"The Sentence's segmentation failed; segment it again before resolving a click on it",
+				),
+			);
+		return yield* module.resolveGrammar(scope, models, input);
+	});

@@ -1,6 +1,7 @@
 import type { InvalidModelOutput, ProviderFailure } from "dumgen";
 import type * as Dumling from "dumling/types";
 import type * as Effect from "effect/Effect";
+import type { SupportedTargetLanguage } from "../shared/supported-target-language";
 import type { ClickSentence } from "./clickEncounter";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
 import type { StoredUnit } from "./storedSegments";
@@ -20,7 +21,7 @@ export type { ClickEncounter, ClickSentence } from "./clickEncounter";
 
 /** A stored Lemma and the Sentence texts it was found under. */
 export type LemmaCandidate = {
-	readonly lemma: Dumling.Lemma<"de">;
+	readonly lemma: Dumling.Lemma<SupportedTargetLanguage>;
 	readonly foundUnder: readonly string[];
 };
 
@@ -41,7 +42,7 @@ export type ClickGrammarInput = {
 
 type UnresolvedGrammar = {
 	readonly decision: "Unresolved";
-	readonly language: "de";
+	readonly language: ClickSentence["language"];
 };
 
 type ClickGrammar = ResolvedGrammar | UnresolvedGrammar | CatalogMissSignal;
@@ -63,7 +64,7 @@ export type ReadingResolution = {
 
 export type ClickReadingInput = {
 	readonly grammar: ResolvedGrammar;
-	readonly lemma: Dumling.Lemma<"de">;
+	readonly lemma: Dumling.Lemma<SupportedTargetLanguage>;
 	/** The Emoji Descriptions of the Lemma's stored Readings. */
 	readonly candidates: readonly string[];
 	/**

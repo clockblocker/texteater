@@ -2,6 +2,7 @@ import { routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import type { SupportedTargetLanguage } from "../shared/supported-target-language";
 
 /**
  * The Knowledge one occurrence asks for. The base request of a route with a
@@ -12,7 +13,7 @@ import type * as Dumrel from "dumrel/types";
  * beside the request, never in it.
  */
 export function generationRequestFor(
-	reading: { readonly lemma: Dumling.Lemma<"de"> },
+	reading: { readonly lemma: Dumling.Lemma<SupportedTargetLanguage> },
 	qualifiedKinds: readonly Dumrel.DirectSemanticRelation[],
 	options: {
 		readonly translationLanguages?: readonly Dumrel.TranslationLanguage[];

@@ -8,7 +8,10 @@ import {
 	assertTextSubmissionWithinLimits,
 	MAX_SOURCE_SENTENCES,
 } from "../../../server/textSubmissionLimits";
-import { isPlainSentence } from "../../../shared/supported-target-language";
+import {
+	SCROLL_TARGET_LANGUAGE,
+	type ScrollLanguage,
+} from "../../../shared/supported-target-language";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../../_generated/server";
 import { assertIndex } from "../../model/resolutionLookup";
@@ -19,6 +22,8 @@ import {
 } from "../../model/validators";
 
 type SubmittedScroll = {
+	/** Trusted intake target; legacy fixtures use the default German target. */
+	targetLanguage?: ScrollLanguage;
 	submissionKey: string;
 	sourceText: string;
 	/**
@@ -51,7 +56,11 @@ export type PersistedSubmittedScroll = {
  */
 export async function findAnalyzedSubmission(
 	ctx: QueryCtx,
-	input: { readonly submissionKey: string; readonly sourceText: string },
+	input: {
+		readonly submissionKey: string;
+		readonly sourceText: string;
+		readonly targetLanguage?: ScrollLanguage;
+	},
 ): Promise<Id<"scrolls"> | null> {
 	const scroll = await ctx.db
 		.query("scrolls")
@@ -68,7 +77,11 @@ export async function findAnalyzedSubmission(
 		.take(MAX_SOURCE_SENTENCES);
 	if (sentences.length === 0) return null;
 	for (const sentence of sentences) {
-		if (isPlainSentence(sentence.language)) continue;
+		if (
+			sentence.language !==
+			(input.targetLanguage ?? SCROLL_TARGET_LANGUAGE)
+		)
+			continue;
 		const segments = await loadStoredSegments(ctx, sentence._id);
 		if (
 			segments.length === 0 ||
@@ -144,7 +157,7 @@ export function assertSubmittedScroll(input: SubmittedScroll): void {
 		}
 		positions.add(sentence.position);
 		sentenceKeys.add(sentence.segmentedSentenceId);
-		assertAnalyzedSentence(sentence);
+		assertAnalyzedSentence(sentence, input.targetLanguage);
 	}
 }
 
@@ -155,12 +168,16 @@ type AnalyzedSentence = Pick<
 >;
 
 /**
- * One analyzed Sentence's own consistency: a Plain Sentence stores no
- * Segments and no units; any other has 1 to MAX_SEGMENTS_PER_SENTENCE
+ * One analyzed Sentence's own consistency relative to intake's target: a
+ * Sentence in any other language (or none) is Plain and stores no Segments
+ * and no units. A target-language Sentence has 1 to MAX_SEGMENTS_PER_SENTENCE
  * Segments that reconstruct its text and units that cover it.
  */
-export function assertAnalyzedSentence(sentence: AnalyzedSentence): void {
-	if (isPlainSentence(sentence.language)) {
+export function assertAnalyzedSentence(
+	sentence: AnalyzedSentence,
+	targetLanguage: ScrollLanguage = SCROLL_TARGET_LANGUAGE,
+): void {
+	if (sentence.language !== targetLanguage) {
 		assertPlainSentence(sentence);
 		return;
 	}
