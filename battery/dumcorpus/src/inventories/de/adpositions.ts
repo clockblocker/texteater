@@ -57,9 +57,17 @@ const extraSenses: readonly Sense[] = [
 	},
 ];
 
-/** mit and ohne are opposites: with and without something. */
+/**
+ * The antonyms DWDS lists that fit these Readings' senses: with and
+ * without, above and below, earlier and later, behind and in front.
+ */
 const antonyms: Readonly<Record<string, readonly string[]>> = {
 	mit: ["ohne"],
+	über: ["unter"],
+	unter: ["über"],
+	vor: ["nach"],
+	nach: ["vor"],
+	hinter: ["vor"],
 };
 
 function adpositionMember(sense: Sense, ipa: string): AuthoredMember {

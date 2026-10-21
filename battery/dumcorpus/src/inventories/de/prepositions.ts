@@ -36,8 +36,8 @@ export const prepositions: readonly Preposition[] = [
 		adposition: {
 			definition:
 				"Bezeichnet eine Stelle in unmittelbarer Nähe oder Berührung von etwas (wo?, mit Dativ) oder die Richtung dorthin (wohin?, mit Akkusativ): Das Bild hängt an der Wand. Wir sitzen am Fenster. Er setzt sich an den Tisch.",
-			en: ["at", "on"],
-			ru: ["у", "на"],
+			en: ["at", "on", "to"],
+			ru: ["у", "на", "к"],
 		},
 	},
 	{
@@ -49,7 +49,7 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["на это", "на этом"], what: ["на что"] },
 		adposition: {
 			definition:
-				"Bezeichnet eine Stelle oben auf der Fläche von etwas (wo?, mit Dativ) oder die Richtung dorthin (wohin?, mit Akkusativ): Das Buch liegt auf dem Tisch. Sie legt das Handy auf den Tisch.",
+				"Bezeichnet eine Stelle, an der etwas eine Fläche von oben berührt (wo?, mit Dativ), oder die Richtung dorthin (wohin?, mit Akkusativ): Das Buch liegt auf dem Tisch. Sie legt das Handy auf den Tisch.",
 			en: ["on", "onto"],
 			ru: ["на"],
 		},
@@ -63,7 +63,7 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["из этого"], what: ["из чего"] },
 		adposition: {
 			definition:
-				"Bezeichnet die Bewegung von innen nach außen, die Herkunft oder den Stoff, aus dem etwas ist: Er kommt aus dem Haus. Der Wein ist aus Italien. Der Tisch ist aus Holz.",
+				"Bezeichnet die Bewegung von innen nach außen oder die Herkunft von etwas: Er kommt aus dem Haus. Sie nimmt das Geld aus der Tasche. Der Wein ist aus Italien.",
 			en: ["out of", "from"],
 			ru: ["из"],
 		},
@@ -77,9 +77,9 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["при этом"], what: ["при чём"] },
 		adposition: {
 			definition:
-				"Bezeichnet die Nähe zu einem Ort, den Ort, an dem jemand wohnt oder arbeitet, oder die Umstände, unter denen etwas geschieht: Potsdam liegt bei Berlin. Er wohnt bei seinen Eltern. Beim Essen sprechen wir nicht.",
-			en: ["near", "at", "with"],
-			ru: ["у", "при"],
+				"Bezeichnet, dass man mit einer Person zusammenkommt oder mit ihr zu tun hat, etwa bei einem Treffen oder Termin: Er ist gerade bei einem Kunden.",
+			en: ["with", "at"],
+			ru: ["у"],
 		},
 	},
 	{
@@ -94,9 +94,9 @@ export const prepositions: readonly Preposition[] = [
 		},
 		adposition: {
 			definition:
-				"Bezeichnet eine Bewegung, die auf der einen Seite in etwas hinein- und auf der anderen wieder hinausführt, auch das Mittel oder die Ursache: Sie geht durch die Tür. Wir fahren durch die Stadt. Durch den Regen wurde es kalt.",
+				"Bezeichnet eine Bewegung, die auf der einen Seite in etwas hinein- und auf der anderen wieder hinausführt, auch die Ursache: Sie geht durch die Tür. Wir fahren durch die Stadt. Durch den Regen wurde es kalt.",
 			en: ["through"],
-			ru: ["через", "сквозь"],
+			ru: ["через", "сквозь", "из-за"],
 		},
 	},
 	{
@@ -108,7 +108,7 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["за это", "для этого"], what: ["за что", "для чего"] },
 		adposition: {
 			definition:
-				"Bezeichnet, wem etwas gilt oder nützt, wozu es bestimmt ist oder was man im Tausch gibt: Das Geschenk ist für dich. Sie arbeitet für eine Bank. Er kauft das Rad für 50 Euro.",
+				"Bezeichnet, wem etwas gilt oder nützt, wozu es bestimmt ist oder was man im Tausch gibt: Das Geschenk ist für dich. Ich kaufe Blumen für meine Mutter. Er kauft das Rad für 50 Euro.",
 			en: ["for"],
 			ru: ["для", "за"],
 		},
@@ -206,9 +206,9 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["об этом", "над этим"], what: ["о чём", "над чем"] },
 		adposition: {
 			definition:
-				"Bezeichnet eine Stelle oberhalb von etwas oder eine Bewegung oben von einer Seite auf die andere, auch das Thema, um das es geht: Die Lampe hängt über dem Tisch. Wir gehen über die Brücke. Wir sehen einen Film über den Krieg.",
-			en: ["over", "above", "about"],
-			ru: ["над", "через", "о"],
+				"Bezeichnet das Thema, um das es geht, auch eine Stelle oberhalb von etwas: Wir sehen einen Film über den Krieg. Die Lampe hängt über dem Tisch.",
+			en: ["about", "over", "above"],
+			ru: ["о", "над"],
 		},
 	},
 	{
@@ -220,9 +220,9 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["об этом", "вокруг этого"], what: ["о чём"] },
 		adposition: {
 			definition:
-				"Bezeichnet eine Bewegung oder Lage im Kreis, in dessen Mitte etwas ist, auch eine genaue Uhrzeit: Wir sitzen um den Tisch. Er geht um das Haus. Der Zug fährt um acht Uhr.",
-			en: ["around", "at"],
-			ru: ["вокруг", "в"],
+				"Bezeichnet eine Bewegung oder Lage im Kreis, in dessen Mitte etwas ist: Wir sitzen um den Tisch. Er geht um das Haus.",
+			en: ["around"],
+			ru: ["вокруг"],
 		},
 	},
 	{
@@ -248,9 +248,9 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["об этом", "от этого"], what: ["о чём", "от чего"] },
 		adposition: {
 			definition:
-				"Bezeichnet den Ausgangspunkt, die Herkunft oder den Urheber einer Sache, auch einen Teil oder eine Zugehörigkeit: Er kommt von der Arbeit. Ein Brief von meiner Mutter. Einer von uns.",
-			en: ["from", "of", "by"],
-			ru: ["от", "с", "из"],
+				"Bezeichnet, wer etwas schickt, gibt oder macht: Das Geschenk ist von meiner Oma. Ich habe eine Nachricht von ihm bekommen. Das Buch ist von Goethe.",
+			en: ["from", "by"],
+			ru: ["от"],
 		},
 	},
 	{
@@ -262,9 +262,9 @@ export const prepositions: readonly Preposition[] = [
 		ru: { it: ["перед этим", "этого"], what: ["перед чем", "чего"] },
 		adposition: {
 			definition:
-				"Bezeichnet eine Stelle auf der Vorderseite von etwas (wo?, mit Dativ) oder die Richtung dorthin (wohin?, mit Akkusativ), auch eine frühere Zeit: Das Auto steht vor dem Haus. Er stellt sich vor die Tür. Vor einer Woche war ich krank.",
-			en: ["in front of", "before", "ago"],
-			ru: ["перед", "до", "назад"],
+				"Bezeichnet eine Zeit, die früher liegt als ein anderer Zeitpunkt oder als jetzt: Vor einer Woche war ich krank. Vor dem Essen wasche ich mir die Hände.",
+			en: ["before", "ago"],
+			ru: ["до", "перед", "назад"],
 		},
 	},
 	{
