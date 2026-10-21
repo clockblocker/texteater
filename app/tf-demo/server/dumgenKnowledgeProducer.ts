@@ -29,9 +29,7 @@ export function dumgenKnowledgeProducer(
 				attestation: input.attestation,
 				sentence: {
 					segments: input.encounter.sentence.segments.map(
-						({ text }) => ({
-							text,
-						}),
+						({ kind, text }) => ({ kind, text }),
 					),
 					target: [...input.encounter.target.memberSegmentIndices],
 				},

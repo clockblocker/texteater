@@ -535,16 +535,31 @@ test("a Foreign Attestation, a unit off its route, a failed Sentence or a candid
 	expect(luna.sent).toEqual([]);
 });
 
+/** A ResolvableText Segment, as a piece of a fused word is one. */
+const piece = (text: string) => ({ kind: "ResolvableText", text }) as const;
+
 test("the target is marked run by run, as production sends a split unit: each word of es gibt apart, a fused word's pieces together", () => {
 	const esGibt = sentenceOf("Es gibt Brot.");
 	expect(markedSentence(esGibt.segments, [0, 2])).toBe(
 		"<TARGET>Es</TARGET> <TARGET>gibt</TARGET> Brot.",
 	);
-	const fused = [
-		{ text: "Er" },
-		{ text: " " },
-		{ text: "zu" },
-		{ text: "r" },
+	const zur = [...sentenceOf("Er ").segments, piece("zu"), piece("r")];
+	expect(markedSentence(zur, [2, 3])).toBe("Er <TARGET>zur</TARGET>");
+});
+
+test("a fused word the unit holds one piece of is written out, so the bare a of am is no target and the noun beside it no label", () => {
+	const am = [
+		...sentenceOf("Die Fischer saßen ").segments,
+		piece("a"),
+		piece("m"),
+		...sentenceOf(" Feuer.").segments,
 	];
-	expect(markedSentence(fused, [2, 3])).toBe("Er <TARGET>zur</TARGET>");
+	expect(markedSentence(am, [6])).toBe(
+		"Die Fischer saßen <TARGET>an</TARGET> dem Feuer.",
+	);
+	expect(markedSentence(am, [7, 9])).toBe(
+		"Die Fischer saßen an <TARGET>dem</TARGET> <TARGET>Feuer</TARGET>.",
+	);
+	const opening = [piece("A"), piece("m"), ...sentenceOf(" Ende.").segments];
+	expect(markedSentence(opening, [0])).toBe("<TARGET>An</TARGET> dem Ende.");
 });

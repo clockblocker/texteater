@@ -13,6 +13,7 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type * as Effect from "effect/Effect";
+import type { Segment } from "../segment/segmented-sentence.js";
 
 /**
  * Whether the occurrence created the Reading (`New`) or reused a stored
@@ -82,10 +83,15 @@ export type KnowledgeProduction = {
 /**
  * The occurrence's Sentence: its Segments as intake stored them, and the
  * Segments its Attestation's target covers, in order. Prompts mark the
- * target; the Sentence is evidence only (#623).
+ * target; the Sentence is evidence only (#623). With their kinds, a fused
+ * word the target holds one piece of is marked written out (`an dem` for
+ * `am`); Knowledge sets frozen without them keep the written word.
  */
 export type KnowledgeSentence = {
-	readonly segments: readonly { readonly text: string }[];
+	readonly segments: readonly {
+		readonly kind?: Segment["kind"];
+		readonly text: string;
+	}[];
 	readonly target: readonly number[];
 };
 

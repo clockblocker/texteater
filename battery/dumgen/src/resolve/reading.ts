@@ -35,7 +35,9 @@ import { askThrough, type JevSettings } from "../jev-call.js";
 import type { LunaDraft } from "../luna.js";
 import { askLuna, type LunaSettings } from "../luna-call.js";
 import { type Ask, choice, choiceOf } from "../segment/ask.js";
-import type { Route } from "../segment/segmented-sentence.js";
+import { germanFusionTable } from "../segment/de/fusion-entries.js";
+import { fusedPieceAt, fusedWordAt } from "../segment/fusion-table.js";
+import type { Route, Segment } from "../segment/segmented-sentence.js";
 import {
 	generation,
 	judgePolicy,
@@ -51,18 +53,71 @@ export type ReadingModels = {
 	readonly luna: LunaSettings;
 };
 
-/** The Sentence with each run of the unit's Segments marked `<TARGET>…</TARGET>`. */
+/**
+ * The word a Segment stands for when it is a piece of a table fusion the
+ * unit holds only part of, in the casing its letters show: `a` of `am` is
+ * `an`, `A` of `Am` is `An`. Undefined for any other Segment.
+ */
+function spelledOutPiece(
+	segments: readonly Segment[],
+	marked: ReadonlySet<number>,
+	index: number,
+): string | undefined {
+	const piece = fusedPieceAt(germanFusionTable, segments, index);
+	if (!piece) return undefined;
+	const word = fusedWordAt(
+		germanFusionTable,
+		segments,
+		index - piece.component,
+	);
+	const held = word?.filter((position) => marked.has(position)).length ?? 0;
+	if (!word || held === 0 || held === word.length) return undefined;
+	const surfaces = piece.pieces[piece.component]?.surfaces ?? [];
+	const [surface] = surfaces;
+	const span = segments[index]?.text ?? "";
+	if (surface === undefined || surfaces.length !== 1) return undefined;
+	const capital = span !== span.toLocaleLowerCase("de");
+	return capital
+		? surface.charAt(0).toLocaleUpperCase("de") + surface.slice(1)
+		: surface;
+}
+
+/**
+ * The Sentence with each run of the unit's Segments marked
+ * `<TARGET>…</TARGET>`. A preposition-article fusion the unit holds only
+ * part of is written out as its words, `<TARGET>an</TARGET> dem Feuer` for
+ * the `a` of `am Feuer`: a bare piece names nothing, so the models labelled
+ * the noun beside it instead (🔥 for `an`). Segments without kinds, as the
+ * frozen Knowledge evaluation sets hold them, are marked as written.
+ */
 export function markedSentence(
-	segments: readonly { readonly text: string }[],
+	segments: readonly {
+		readonly kind?: Segment["kind"];
+		readonly text: string;
+	}[],
 	unitSegments: readonly number[],
 ): string {
 	const marked = new Set(unitSegments);
+	const kinded = segments.flatMap(({ kind, text }) =>
+		kind === undefined ? [] : [{ kind, text }],
+	);
+	const words = segments.map((_, index) =>
+		kinded.length === segments.length
+			? spelledOutPiece(kinded, marked, index)
+			: undefined,
+	);
 	return segments
 		.map(({ text }, index) => {
-			if (!marked.has(index)) return text;
+			const word = words[index];
+			// A written-out piece after the first follows a space. The unit
+			// holds one piece of such a word, so no run of marks spans two.
+			const space =
+				word !== undefined && words[index - 1] !== undefined ? " " : "";
+			const shown = word ?? text;
+			if (!marked.has(index)) return `${space}${shown}`;
 			const opens = marked.has(index - 1) ? "" : "<TARGET>";
 			const closes = marked.has(index + 1) ? "" : "</TARGET>";
-			return `${opens}${text}${closes}`;
+			return `${space}${opens}${shown}${closes}`;
 		})
 		.join("");
 }
