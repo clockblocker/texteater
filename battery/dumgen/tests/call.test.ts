@@ -1,9 +1,11 @@
 import { expect, test } from "bun:test";
+import * as Clock from "effect/Clock";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
 import * as Option from "effect/Option";
 import * as Tracer from "effect/Tracer";
+import { TestClock } from "effect/testing";
 import {
 	type Exchange,
 	type OperationOptions,
@@ -127,6 +129,53 @@ test("one budget serves jev and Luna together, and a call that queued records it
 	]);
 	expect(trace?.waits).toEqual([{ call: 1, waitMs: expect.any(Number) }]);
 	expect(trace?.waits[0]?.waitMs).toBeGreaterThan(5);
+});
+
+/** A transport whose answer takes `ms` of the test clock's time to arrive. */
+const answersAfter =
+	(clock: TestClock.TestClock, ms: number) => async (): Promise<string> => {
+		await Effect.runPromise(clock.adjust(ms));
+		return "answer";
+	};
+
+test("an operation's trace reads its times from Effect's Clock", async () => {
+	const { options, traces } = operationOptions(1);
+	const at = Date.UTC(2026, 9, 22, 12);
+	await Effect.runPromise(
+		Effect.scoped(
+			Effect.gen(function* () {
+				const clock = yield* TestClock.make();
+				yield* clock.setTime(at);
+				yield* runOperation("segment.inUnits", options, (scope) =>
+					Effect.all(
+						[
+							scope.call(
+								exchange("judge", answersAfter(clock, 40)),
+							),
+							scope.call(
+								exchange("route", answersAfter(clock, 25)),
+							),
+						],
+						{ concurrency: "unbounded" },
+					),
+				).pipe(Effect.provideService(Clock.Clock, clock));
+			}),
+		),
+	);
+	expect(traces).toEqual([
+		expect.objectContaining({ startedAt: at, durationMs: 65 }),
+	]);
+	expect(
+		traces[0]?.calls.map(({ startedAt, durationMs }) => ({
+			startedAt,
+			durationMs,
+		})),
+	).toEqual([
+		{ startedAt: at, durationMs: 40 },
+		{ startedAt: at + 40, durationMs: 25 },
+	]);
+	// The second call queued behind the first for the whole of its answer.
+	expect(traces[0]?.waits).toEqual([{ call: 1, waitMs: 40 }]);
 });
 
 test("anything a transport throws is one ProviderFailure, sent once; a refused check is an InvalidModelOutput", async () => {

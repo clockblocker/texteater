@@ -16,6 +16,7 @@
  */
 import { messageOf } from "common-utils";
 import * as Cause from "effect/Cause";
+import * as Clock from "effect/Clock";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Semaphore from "effect/Semaphore";
@@ -105,19 +106,24 @@ function failureOf(
 	return undefined;
 }
 
+/** The milliseconds between two readings of `Clock.monotonicTimeNanos`. */
+const millisBetween = (from: bigint, to: bigint) =>
+	Number(to - from) / 1_000_000;
+
 /**
  * Runs `body` as one operation under a `dumgen.operation` span and hands
  * `onOperation` its trace once it exits, however it exits. An exception
- * from `onOperation` is the host's and becomes a Defect.
+ * from `onOperation` is the host's and becomes a Defect. Its times, and its
+ * calls', come from Effect's `Clock`.
  */
 export function runOperation<A, E>(
 	name: OperationTrace["operation"],
 	options: OperationOptions,
 	body: (scope: OperationScope) => Effect.Effect<A, E>,
 ): Effect.Effect<A, E> {
-	return Effect.suspend(() => {
-		const startedAt = Date.now();
-		const start = performance.now();
+	return Effect.gen(function* () {
+		const startedAt = yield* Clock.currentTimeMillis;
+		const start = yield* Clock.monotonicTimeNanos;
 		const record: CallRecord = { calls: [], waits: [], sent: 0 };
 		const sentences: SentenceOutcome[] = [];
 		const events: OperationEvent[] = [];
@@ -134,25 +140,29 @@ export function runOperation<A, E>(
 				events.push(event);
 			},
 		};
-		return body(scope).pipe(
+		return yield* body(scope).pipe(
 			Effect.withSpan("dumgen.operation", {
 				attributes: { "dumgen.operation": name },
 			}),
 			Effect.onExit(() =>
-				Effect.sync(() =>
-					options.onOperation?.({
-						operation: name,
-						startedAt,
-						durationMs: performance.now() - start,
-						// A slot stays empty only when a check threw (a Defect).
-						calls: record.calls.filter(
-							(trace) => trace !== undefined,
-						),
-						waits: [...record.waits],
-						sentences: [...sentences],
-						...(resolution ? { resolution } : {}),
-						...(events.length > 0 ? { events: [...events] } : {}),
-					}),
+				Effect.flatMap(Clock.monotonicTimeNanos, (end) =>
+					Effect.sync(() =>
+						options.onOperation?.({
+							operation: name,
+							startedAt,
+							durationMs: millisBetween(start, end),
+							// A slot stays empty only when a check threw (a Defect).
+							calls: record.calls.filter(
+								(trace) => trace !== undefined,
+							),
+							waits: [...record.waits],
+							sentences: [...sentences],
+							...(resolution ? { resolution } : {}),
+							...(events.length > 0
+								? { events: [...events] }
+								: {}),
+						}),
+					),
 				),
 			),
 		);
@@ -174,15 +184,14 @@ function call<Response, Output>(
 ): Effect.Effect<Output, ProviderFailure | InvalidModelOutput> {
 	const { budget } = options;
 	const { stage, sentence, executor } = exchange;
-	return Effect.suspend(() => {
+	return Effect.flatMap(Clock.monotonicTimeNanos, (queuedAt) => {
 		const queued = budget.demand >= budget.permits;
-		const queuedAt = performance.now();
 		budget.demand++;
 		const holding = Effect.uninterruptibleMask((restore) =>
 			// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 			Effect.gen(function* () {
-				const startedAt = Date.now();
-				const start = performance.now();
+				const startedAt = yield* Clock.currentTimeMillis;
+				const start = yield* Clock.monotonicTimeNanos;
 				let index: number | undefined;
 				let settled:
 					| { readonly ok: true; readonly response: Response }
@@ -198,7 +207,7 @@ function call<Response, Output>(
 							if (queued)
 								record.waits.push({
 									call: index,
-									waitMs: start - queuedAt,
+									waitMs: millisBetween(queuedAt, start),
 								});
 							try {
 								const response = await exchange.send(signal);
@@ -243,6 +252,7 @@ function call<Response, Output>(
 					),
 				);
 				if (index === undefined) return yield* exit;
+				const end = yield* Clock.monotonicTimeNanos;
 				const failure = failureOf(
 					exit,
 					settled?.ok === false ? settled.error : undefined,
@@ -255,7 +265,7 @@ function call<Response, Output>(
 						? exchange.tokens(settled.response)
 						: { inputTokens: 0, outputTokens: 0 }),
 					startedAt,
-					durationMs: performance.now() - start,
+					durationMs: millisBetween(start, end),
 					...(failure ? { failure } : {}),
 					...(options.payloads
 						? {

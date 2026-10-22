@@ -10,7 +10,8 @@ import { dirname, join, relative, resolve } from "node:path";
  * the list here. Only the TypeSafe ask and the OpenAI Luna touch the
  * network; the stages reach jev and Luna through their ports, and
  * segmentation never Luna. Only the Extracted Text schema imports Zod,
- * and no other production file imports it.
+ * and no other production file imports it. Time comes from Effect's
+ * `Clock`, so a `TestClock` pins every trace.
  */
 const src = resolve(import.meta.dir, "../../src");
 const lab = resolve(import.meta.dir, "../../lab");
@@ -28,6 +29,7 @@ const allowedPackages = new Set([
 	"dumrel",
 	"dumrel/types",
 	"effect/Cause",
+	"effect/Clock",
 	"effect/Data",
 	"effect/Effect",
 	"effect/Exit",
@@ -48,6 +50,8 @@ const forbidden = [
 	/\bprocess\./u,
 	/\bimport\.meta\b/u,
 	/\breadFile(?:Sync)?\b/u,
+	/\bDate\.now\b/u,
+	/\bperformance\.now\b/u,
 ];
 const zodFiles = new Set(["extracted-text/schema.ts"]);
 const network = /\bfetch\(/u;
