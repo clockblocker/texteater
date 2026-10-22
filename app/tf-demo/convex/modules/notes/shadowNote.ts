@@ -390,7 +390,7 @@ async function loadShadowReferenceOwners(
 	const [lemmas, accumulated] = await Promise.all([
 		Promise.all(
 			readings.map((reading) =>
-				reading ? ctx.db.get(reading.lemmaId) : null,
+				reading ? ctx.db.get(reading.lemmaId) : Promise.resolve(null),
 			),
 		),
 		Promise.all(
