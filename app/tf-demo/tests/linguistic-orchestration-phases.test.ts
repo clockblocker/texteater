@@ -5,10 +5,8 @@ import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
-import {
-	type PersistedSentence,
-	resolvedClickCommit,
-} from "../server/linguisticOrchestration";
+import { resolvedClickCommit } from "../server/linguisticOrchestration";
+import type { PersistedSentence } from "../server/orchestrationPorts";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
 
 /*

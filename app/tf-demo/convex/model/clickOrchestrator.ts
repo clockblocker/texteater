@@ -7,21 +7,21 @@ import {
 	type InspectionCapture,
 } from "../../server/inspectionCapture";
 import { lemmaIdentityKey } from "../../server/linguisticIdentity";
-import {
-	createTfDemoOrchestrator,
-	type LateResolvedClickCommit,
-	type OrchestrationPersistence,
-	type ResolutionContext,
-	type ResolutionProgressObserver,
-	type ResolvedClickCommit,
-	type ResolveSegmentInput,
-	type ReusedResolvedClickCommit,
-	type UnresolvedClickCommit,
-} from "../../server/linguisticOrchestration";
+import { createTfDemoOrchestrator } from "../../server/linguisticOrchestration";
 import {
 	parseGermanLemma,
 	parseGermanReading,
 } from "../../server/operationalParsing";
+import type {
+	LateResolvedClickCommit,
+	OrchestrationPersistence,
+	ResolutionContext,
+	ResolutionProgressObserver,
+	ResolvedClickCommit,
+	ResolveSegmentInput,
+	ReusedResolvedClickCommit,
+	UnresolvedClickCommit,
+} from "../../server/orchestrationPorts";
 import type { ResolutionSessionGuard } from "../../server/resolutionLifecycle";
 import { projectResolutionReading } from "../../server/resolutionSessionProjection";
 import { storedUnitOf } from "../../server/storedSegments";

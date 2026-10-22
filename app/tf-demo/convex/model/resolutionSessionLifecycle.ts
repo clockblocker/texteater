@@ -1,9 +1,9 @@
 import type { SpanHops } from "../../server/inspectionCapture";
-import type { ResolutionContext } from "../../server/linguisticOrchestration";
 import {
 	parseGermanLemma,
 	parseGermanReading,
 } from "../../server/operationalParsing";
+import type { ResolutionContext } from "../../server/orchestrationPorts";
 import type { ResolutionSessionGuard } from "../../server/resolutionLifecycle";
 import type {
 	ResolutionSessionLifecyclePort,

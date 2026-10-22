@@ -6,7 +6,7 @@ import type {
 	ResolutionProgressObserver,
 	ResolveSegmentInput,
 	ResolveSegmentResult,
-} from "./linguisticOrchestration";
+} from "./orchestrationPorts";
 import type { GenerationEvent, GenerationFailure } from "./resolutionFailure";
 import {
 	classifyResolutionFailure,
