@@ -235,7 +235,7 @@ export function pastForms(finite: string): Record<Person, string> {
 export function imperativeSingular(stem: Stem): string {
 	if (stem.kind === "el") return `${stem.stem.slice(0, -2)}le`;
 	if (stem.kind === "er") return `${stem.stem}e`;
-	return stem.needsE || /ig$/u.test(lower(stem.stem))
+	return stem.needsE || lower(stem.stem).endsWith("ig")
 		? `${stem.stem}e`
 		: stem.stem;
 }

@@ -64,9 +64,9 @@ function goldLicenceAnswers(
 			)
 				return [id, answers[id]];
 			const shown = instructions.forms.map(String);
-			const wanted = selectionText(
-				goldTaken(licenceCase, String(instructions.part), shown),
-			);
+			const part =
+				typeof instructions.part === "string" ? instructions.part : "";
+			const wanted = selectionText(goldTaken(licenceCase, part, shown));
 			const options = Object.entries(question.criteria ?? {});
 			const choice =
 				options.find(([, text]) => text === wanted)?.[0] ??

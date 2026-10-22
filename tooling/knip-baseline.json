@@ -132,7 +132,6 @@
 	],
 	"battery/dumrel": [
 		"battery/dumrel/src/index.ts: exports germanPluralPattern",
-		"battery/dumrel/src/index.ts: exports licensed",
 		"battery/dumrel/src/select-knowledge.ts: types KnowledgePolicyUnavailable",
 		"battery/dumrel/src/types.ts: types KnowledgeParse",
 		"battery/dumrel/src/types.ts: types KnowledgePolicyUnavailable",
