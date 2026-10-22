@@ -5,6 +5,7 @@
  */
 import { join } from "node:path";
 import { compareRuns, loadRun } from "promptsmith/storage";
+import { verdictCounts } from "../../lab/evaluation/verdict-counts.js";
 import {
 	deltaBetween,
 	focusBetween,
@@ -346,12 +347,11 @@ async function compareCases(
 	if (!leftRun || !rightRun) return;
 	const comparison = compareRuns(leftRun, rightRun);
 	const verdicts = comparison.cases.filter((entry) => entry.verdictChanged);
-	const count = (side: "left" | "right", verdict: string) =>
-		comparison.cases.filter((entry) => entry.verdict[side] === verdict)
-			.length;
 	for (const side of ["left", "right"] as const)
 		console.log(
-			`${side}: Passed ${count(side, "Passed")} Failed ${count(side, "Failed")} Mixed ${count(side, "Mixed")} Unscored ${count(side, "Unscored")}`,
+			`${side}: ${Object.entries(verdictCounts(comparison, side))
+				.map(([verdict, count]) => `${verdict} ${count}`)
+				.join(" ")}`,
 		);
 	console.log(
 		`same corpus: ${comparison.sameCorpus}; changed verdicts ${verdicts.length}; changed outputs ${comparison.changedOutputs.length}`,
