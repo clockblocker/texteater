@@ -309,7 +309,7 @@ function CompassRuntime<S>({
 	}
 
 	function renderZones(): ReactNode[] {
-		if (!showZones || !drag) return [];
+		if (!showZones) return [];
 		return shown.flatMap((pane) => {
 			const box = restBoxes[pane.id];
 			return box
@@ -377,7 +377,7 @@ function CompassRuntime<S>({
 					place={place}
 					growsFromTop={place === "open" && openIsLast}
 					placement={
-						held && drag && !returning
+						held && !returning
 							? boxStyle(drag.origin, direction)
 							: placementStyle(placement, anchor)
 					}
@@ -582,7 +582,7 @@ function CompassRuntime<S>({
 					form="card"
 					place="open"
 					placement={boxStyle(
-						held && drag ? drag.origin : inHand.box,
+						held ? drag.origin : inHand.box,
 						direction,
 					)}
 					z={Z.held}
