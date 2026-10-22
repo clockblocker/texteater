@@ -24,6 +24,7 @@ import {
 	sayingChoiceId,
 	slotId,
 } from "../../../../src/segment/de/nomination.js";
+import { argmaxBesideNone } from "../../../../src/segment/de/partition.js";
 import type { Connection, Edge } from "../../harness/stages.js";
 import type { ReferenceFloors } from "./reference.js";
 
@@ -35,10 +36,11 @@ function hostShares(answer: Extract<Answer, { type: "choice" }>) {
 	const hosts = Object.entries(answer.probabilities).filter(
 		([key]) => key !== "none",
 	);
-	let top = { key: "", share: -1 };
-	for (const [key, share] of hosts)
-		if (share > top.share) top = { key, share };
-	return { hosts, top, none: answer.probabilities.none ?? 0 };
+	return {
+		hosts,
+		top: argmaxBesideNone(answer.probabilities),
+		none: answer.probabilities.none ?? 0,
+	};
 }
 
 /**
@@ -76,7 +78,7 @@ export function referenceConnections(
 				question,
 				probability: share,
 				supported:
-					key === top.key && share > none + margin && share >= floor,
+					key === top?.key && share > none + margin && share >= floor,
 			});
 		}
 	};

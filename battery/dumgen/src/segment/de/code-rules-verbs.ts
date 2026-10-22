@@ -12,7 +12,7 @@ import type { AssembledEdge } from "./assembly.js";
 import { fusedSiblings, type SlotKind } from "./candidates.js";
 import type { Decision } from "./code-rules.js";
 import { type Nomination, slotId } from "./nomination.js";
-import { argmax } from "./partition.js";
+import { argmaxBesideNone } from "./partition.js";
 import type { FixedRoute } from "./routing.js";
 import type { Piece } from "./sentence.js";
 
@@ -33,14 +33,8 @@ function slotHostOf(
 	);
 	const answer = slot ? nomination.first[slotId(slot)] : undefined;
 	if (answer?.type !== "choice") return undefined;
-	const top = argmax(
-		Object.fromEntries(
-			Object.entries(answer.probabilities).filter(
-				([key]) => key !== "none",
-			),
-		),
-	);
-	return top.key &&
+	const top = argmaxBesideNone(answer.probabilities);
+	return top &&
 		top.share >= satelliteFloor &&
 		top.share > (answer.probabilities.none ?? 0)
 		? Number(top.key.slice(1))

@@ -60,7 +60,7 @@ import {
 	governmentFamilies,
 } from "./government-flags.js";
 import type { Nomination } from "./nomination.js";
-import { argmax, partitionOf } from "./partition.js";
+import { argmaxBesideNone, partitionOf } from "./partition.js";
 import type { Piece } from "./sentence.js";
 
 export {
@@ -288,12 +288,8 @@ function actionOf(
 				? { literal: flag }
 				: undefined;
 		case "duel": {
-			const top = argmax(
-				Object.fromEntries(
-					Object.entries(shares).filter(([key]) => key !== "none"),
-				),
-			);
-			return top.key && top.share >= floor
+			const top = argmaxBesideNone(shares);
+			return top && top.share >= floor
 				? { duel: flag, winner: Number(top.key.slice(1)) }
 				: undefined;
 		}

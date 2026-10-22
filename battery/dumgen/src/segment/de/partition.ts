@@ -62,13 +62,27 @@ export function unitsOf(
 	}));
 }
 
-/** The argmax key of a distribution, ties to the first key. */
-export function argmax(distribution: Readonly<Record<string, number>>): {
-	readonly key: string;
-	readonly share: number;
-} {
-	let best = { key: "", share: -1 };
+type Top = { readonly key: string; readonly share: number };
+
+/**
+ * The argmax key of a distribution, ties to the first key; undefined when
+ * no key has a share above -1, as in an empty distribution.
+ */
+export function argmax(
+	distribution: Readonly<Record<string, number>>,
+): Top | undefined {
+	let best: Top | undefined;
 	for (const [key, share] of Object.entries(distribution))
-		if (share > best.share) best = { key, share };
+		if (share > (best?.share ?? -1)) best = { key, share };
 	return best;
 }
+
+/** A Choice's most probable answer other than `none`; undefined when there is none. */
+export const argmaxBesideNone = (
+	distribution: Readonly<Record<string, number>>,
+): Top | undefined =>
+	argmax(
+		Object.fromEntries(
+			Object.entries(distribution).filter(([key]) => key !== "none"),
+		),
+	);

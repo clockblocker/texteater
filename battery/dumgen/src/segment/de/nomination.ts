@@ -43,7 +43,7 @@ import {
 	wasFuerPairs,
 } from "./candidates.js";
 import type { GermanInventory } from "./inventory.js";
-import { argmax } from "./partition.js";
+import { argmaxBesideNone } from "./partition.js";
 import {
 	judgeState,
 	type Reference,
@@ -146,15 +146,10 @@ export function slotLinks(
 	const best = new Map<number, SlotLink>();
 	for (const slot of slots) {
 		const answer = choiceOf(answers, slotId(slot));
-		const hosts = Object.fromEntries(
-			Object.entries(answer.probabilities).filter(
-				([key]) => key !== "none",
-			),
-		);
-		const top = argmax(hosts);
+		const top = argmaxBesideNone(answer.probabilities);
 		const none = answer.probabilities.none ?? 0;
 		const margin = slot.kind === "idiom" ? 0 : satelliteMargin;
-		if (!top.key || top.share <= none + margin) continue;
+		if (!top || top.share <= none + margin) continue;
 		const link = {
 			from: slot.piece.id,
 			to: Number(top.key.slice(1)),

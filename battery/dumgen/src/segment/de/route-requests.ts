@@ -51,6 +51,10 @@ export type RouteJudgment = {
 	readonly source: "open" | "identity";
 };
 
+/** A judgment's top share; -1 for a Choice that came back with no probabilities. */
+const topShare = (probabilities: Readonly<Record<string, number>>) =>
+	argmax(probabilities)?.share ?? -1;
+
 const routeId = (group: readonly number[]) => `r_${group.join("_")}`;
 const identityId = (id: number) => `i_${id}`;
 const adjectiveTestId = (id: number) => `ta_${id}`;
@@ -157,12 +161,11 @@ function readRoutes(
 	const picks = new Map<string, IdentityPick>();
 	for (const group of groups) {
 		const answer = choiceOf(answers, routeId(group));
-		const top = argmax(answer.probabilities);
 		const judged: RouteJudgment = {
 			group,
 			choice: checkedRouteKey(answer.choice),
 			confidence: answer.confidence,
-			share: top.share,
+			share: topShare(answer.probabilities),
 			source: "open",
 		};
 		identity.set(groupKey(group), judged);
@@ -189,7 +192,7 @@ function readRoutes(
 				group,
 				choice: `Lexeme/${candidate.kind}`,
 				confidence: picked.confidence,
-				share: argmax(picked.probabilities).share,
+				share: topShare(picked.probabilities),
 				source: "identity",
 			});
 	}

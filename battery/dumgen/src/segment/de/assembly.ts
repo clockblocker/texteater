@@ -30,7 +30,12 @@ import {
 	selectedSayings,
 	slotLinks,
 } from "./nomination.js";
-import { argmax, groupKey, type Partition, partitionOf } from "./partition.js";
+import {
+	argmaxBesideNone,
+	groupKey,
+	type Partition,
+	partitionOf,
+} from "./partition.js";
 
 export type Family = "Lexeme" | "Locution" | "Saying";
 
@@ -378,14 +383,9 @@ export function stepZeroInput(
 	);
 	for (const id of reasked) {
 		const answer = choiceOf(answers, reaskedIdiomId(id));
-		const hosts = Object.fromEntries(
-			Object.entries(answer.probabilities).filter(
-				([key]) => key !== "none",
-			),
-		);
-		const top = argmax(hosts);
+		const top = argmaxBesideNone(answer.probabilities);
 		if (
-			top.key &&
+			top &&
 			top.share > (answer.probabilities.none ?? 0) &&
 			top.share >= idiomFloor
 		)

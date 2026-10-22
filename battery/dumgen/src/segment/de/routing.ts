@@ -123,7 +123,7 @@ export const structuralRoute =
 				),
 			),
 		);
-		return best.key ? checkedRouteKey(best.key) : jevRoute(group);
+		return best ? checkedRouteKey(best.key) : jevRoute(group);
 	};
 
 /** Two adjacent pieces that stay apart although both are interjections. */

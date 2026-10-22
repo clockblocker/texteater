@@ -59,7 +59,7 @@ import {
 } from "./candidates.js";
 import { boundPieces, type CodeRule } from "./code-rules.js";
 import { type Nomination, slotId } from "./nomination.js";
-import { argmax, partitionOf } from "./partition.js";
+import { argmaxBesideNone, partitionOf } from "./partition.js";
 import type { Piece } from "./sentence.js";
 import {
 	asksPerfectAuxiliary,
@@ -147,14 +147,8 @@ function slotHost(
 	);
 	const answer = slot ? nomination.first[slotId(slot)] : undefined;
 	if (answer?.type !== "choice") return undefined;
-	const top = argmax(
-		Object.fromEntries(
-			Object.entries(answer.probabilities).filter(
-				([key]) => key !== "none",
-			),
-		),
-	);
-	if (!top.key || top.share < floor) return undefined;
+	const top = argmaxBesideNone(answer.probabilities);
+	if (!top || top.share < floor) return undefined;
 	return nomination.sentence.pieces[Number(top.key.slice(1)) - 1];
 }
 

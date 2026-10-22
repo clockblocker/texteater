@@ -8,7 +8,7 @@ import type { Membership } from "./assembly.js";
 import { isArticle, nounLike } from "./candidates.js";
 import { boundPieces, type CodeRule } from "./code-rules.js";
 import { type Nomination, reaskedIdiomId, slotId } from "./nomination.js";
-import { argmax } from "./partition.js";
+import { argmaxBesideNone } from "./partition.js";
 import type { Piece } from "./sentence.js";
 
 export const governmentFamilies = [
@@ -108,18 +108,11 @@ function literalFlags(
 			(link) => link.kind === "idiom" && link.from === noun,
 		)?.to;
 		const reasked = nomination.final[reaskedIdiomId(noun)];
-		const step0 =
+		const top =
 			reasked?.type === "choice"
-				? Number(
-						argmax(
-							Object.fromEntries(
-								Object.entries(reasked.probabilities).filter(
-									([key]) => key !== "none",
-								),
-							),
-						).key?.slice(1),
-					)
+				? argmaxBesideNone(reasked.probabilities)
 				: undefined;
+		const step0 = top ? Number(top.key.slice(1)) : undefined;
 		const verb = [host, step0].find(
 			(id) =>
 				id !== undefined &&
