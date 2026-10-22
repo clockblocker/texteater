@@ -257,13 +257,14 @@ test("the lab's provenance hashes its own sources and the dumcorpus it imports",
 	const provenance = await provenanceOf({
 		packageRoot,
 		repository: resolve(packageRoot, "../.."),
-		cli: "cli/segment-in-units-lab.ts",
+		cliSources: ["cli/segment-in-units-lab.ts", "cli/segment-in-units-lab"],
 	});
 	expect(provenance.codeHash).toMatch(/^[0-9a-f]{64}$/u);
 	expect(provenance.dumcorpusHash).toMatch(/^[0-9a-f]{64}$/u);
 	expect(Object.keys(provenance.sourceHashes)).toEqual(
 		expect.arrayContaining([
 			"cli/segment-in-units-lab.ts",
+			"cli/segment-in-units-lab/run.ts",
 			"lab/segmentation/harness/provenance.ts",
 			"lab/evaluation/spec-corpus/segment-in-units-evaluation.ts",
 		]),

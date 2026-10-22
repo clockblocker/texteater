@@ -41,12 +41,12 @@ const labSources = [
  * records are left out: a run reads the frozen set, whose hash the manifest
  * keeps, and the records change under a concurrent review.
  */
-const dirtyScope = (cli: string) => [
+const dirtyScope = (cliSources: readonly string[]) => [
 	"battery/dumgen/src/segment",
 	"battery/dumgen/lab/segmentation",
 	"battery/dumgen/lab/evaluation/spec-corpus",
 	"battery/dumgen/tsconfig.segmentation.json",
-	`battery/dumgen/${cli}`,
+	...cliSources.map((path) => `battery/dumgen/${path}`),
 	"battery/dumcorpus/src",
 ];
 
@@ -275,8 +275,8 @@ export const recordedManifestSchema = z.union([
 export async function provenanceOf(args: {
 	readonly packageRoot: string;
 	readonly repository: string;
-	/** The CLI file, relative to the package root. */
-	readonly cli: string;
+	/** The CLI's files and directories, relative to the package root. */
+	readonly cliSources: readonly string[];
 }): Promise<
 	Pick<
 		RunManifest,
@@ -291,9 +291,9 @@ export async function provenanceOf(args: {
 > {
 	const hashes = await sourceHashes(args.packageRoot, [
 		...labSources,
-		args.cli,
+		...args.cliSources,
 	]);
-	const state = gitState(args.repository, dirtyScope(args.cli));
+	const state = gitState(args.repository, dirtyScope(args.cliSources));
 	const dumcorpus = await dumcorpusFingerprint();
 	return {
 		gitHead: state.gitHead,
