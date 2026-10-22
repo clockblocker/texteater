@@ -1,6 +1,6 @@
 /**
  * Runs one Dumgen experiment and prints its manifest, summary and metrics
- * (`docs/reference/segmentation-jev-lab.md`, "Evaluate").
+ * (`docs/reference/segmentation-jev-lab-evaluate.md`).
  *
  *   bun run evaluate --list
  *   bun run evaluate --experiment segment-in-units/de:dev --revision <rev>

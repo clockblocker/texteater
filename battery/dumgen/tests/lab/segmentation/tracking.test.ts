@@ -601,7 +601,14 @@ test("the lab tracks tokens only: no USD in its code, committed evidence or doc"
 		join(packageRoot, "evidence/segment-in-units-lab"),
 	)
 		.filter((path) => !path.endsWith(".gz"))
-		.concat(join(packageRoot, "docs/reference/segmentation-jev-lab.md"));
+		.concat(
+			["", "-evaluate", "-scoring"].map((part) =>
+				join(
+					packageRoot,
+					`docs/reference/segmentation-jev-lab${part}.md`,
+				),
+			),
+		);
 	// `usd` opening a word, `Usd` inside a camelCase name, or `USD`; not `Ausdruck`.
 	const usd = /\busd|Usd|USD/u;
 	const offenders = [
