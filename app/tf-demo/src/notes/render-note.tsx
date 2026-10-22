@@ -64,7 +64,7 @@ function configureRenderNote(layoutAdapter: LayoutAdapter) {
 		registryFor: registeredBlockMap,
 	});
 	return {
-		renderNote(input: RenderNoteInput): ReactElement {
+		renderNote: (input: RenderNoteInput): ReactElement => {
 			return layoutAdapter(input, "Note", (layout) =>
 				renderUniversalNoteBody({
 					...universalInput(input),
@@ -73,7 +73,7 @@ function configureRenderNote(layoutAdapter: LayoutAdapter) {
 				}),
 			);
 		},
-		renderNoteParts(input: RenderNoteInput): NoteParts {
+		renderNoteParts: (input: RenderNoteInput): NoteParts => {
 			return {
 				heading: renderUniversalNoteHeading(universalInput(input)),
 				body: layoutAdapter(input, "Body", (layout) =>

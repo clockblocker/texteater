@@ -27,7 +27,7 @@ export function useBarHold() {
 		/** Whether a hold is under way, so a second press does not start one. */
 		active: () => hold.current !== null,
 		/** Start the hold on `paneId`'s bar; held out, `onLift` runs. */
-		start(paneId: string, lift: Lift, onLift: () => void) {
+		start: (paneId: string, lift: Lift, onLift: () => void) => {
 			setHolding(paneId);
 			hold.current = {
 				...lift,
@@ -39,7 +39,7 @@ export function useBarHold() {
 			};
 		},
 		/** A pointer moving past the slop is not holding still: the hold is off. */
-		move(event: ReactPointerEvent<HTMLElement>) {
+		move: (event: ReactPointerEvent<HTMLElement>) => {
 			const current = hold.current;
 			if (!current || current.pointerId !== event.pointerId) return;
 			if (

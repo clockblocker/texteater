@@ -42,7 +42,7 @@ export function initializeMotionPreference(documentOverride?: Document) {
 
 type MotionPreferenceContextValue = {
 	preference: MotionPreference;
-	setPreference(preference: MotionPreference): void;
+	setPreference: (preference: MotionPreference) => void;
 };
 
 const MotionPreferenceContext =

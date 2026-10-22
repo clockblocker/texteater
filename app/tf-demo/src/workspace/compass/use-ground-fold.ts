@@ -13,13 +13,13 @@ export function useGroundFold() {
 	const [folded, setFolded] = useState<ReadonlySet<string>>(() => new Set());
 	return {
 		/** A Pane bar's height, in rem. */
-		barRemOf<S>(pane: PaneNode<S> | null): number {
+		barRemOf: <S>(pane: PaneNode<S> | null): number => {
 			if (!pane || isRooted(pane) || groundOf(pane).kind !== "Sheet")
 				return BAR_REM;
 			return coverHeadingRem(folded.has(pane.id));
 		},
 		/** A Floating Ground's body scrolled: its Pane bar folds, as a Cover's Heading does. */
-		onScroll(event: UIEvent<HTMLElement>) {
+		onScroll: (event: UIEvent<HTMLElement>) => {
 			const scroller = event.target;
 			if (
 				!(scroller instanceof HTMLElement) ||

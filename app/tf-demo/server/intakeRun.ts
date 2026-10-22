@@ -37,14 +37,14 @@ export function createIntakeRunRecorder(sentenceCount: number) {
 	let segmenting: readonly number[] | undefined;
 	return {
 		/** Intake's `onSegmenting`: every other Sentence is Plain. */
-		segmenting(positions: readonly number[]) {
+		segmenting: (positions: readonly number[]) => {
 			segmenting = positions;
 			const segmented = new Set(positions);
 			for (let position = 0; position < sentenceCount; position++)
 				if (!segmented.has(position)) outcomes.set(position, "Plain");
 		},
 		/** `createDumgen`'s `onOperation`. */
-		operation(trace: OperationTrace) {
+		operation: (trace: OperationTrace) => {
 			if (
 				trace.operation !== "language.detect" &&
 				trace.operation !== "segment.inUnits"
@@ -65,7 +65,7 @@ export function createIntakeRunRecorder(sentenceCount: number) {
 			for (const { sentence, outcome } of trace.sentences)
 				outcomes.set(segmenting?.[sentence] ?? sentence, outcome);
 		},
-		summary(
+		summary: (
 			attempt: Pick<
 				IntakeRun,
 				| "runId"
@@ -76,7 +76,7 @@ export function createIntakeRunRecorder(sentenceCount: number) {
 				| "durationMs"
 				| "createdAt"
 			>,
-		): IntakeRun {
+		): IntakeRun => {
 			return {
 				...attempt,
 				sentenceCount,

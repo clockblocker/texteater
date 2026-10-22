@@ -204,32 +204,32 @@ export type ResegmentedSentence = {
  * competing results return the committed occurrence instead of duplicating it.
  */
 export type OrchestrationPersistence = {
-	loadResolutionContext(
+	loadResolutionContext: (
 		input: ResolveSegmentInput,
-	): Promise<ResolutionContext>;
-	persistResolvedClick(
+	) => Promise<ResolutionContext>;
+	persistResolvedClick: (
 		input: ResolvedClickPersistence,
-	): Promise<ResolvedClickCommit>;
-	persistReusedResolvedClick(
+	) => Promise<ResolvedClickCommit>;
+	persistReusedResolvedClick: (
 		input: ResolveSegmentInput & {
 			readonly attestationId: string;
 		},
-	): Promise<ReusedResolvedClickCommit>;
+	) => Promise<ReusedResolvedClickCommit>;
 	/**
 	 * Stores a failed Sentence's re-segmentation for the click that ran it,
 	 * and returns the clicked Segment's index among the new Segments: the
 	 * Segment at the same place, should the Segments have come out
 	 * differently.
 	 */
-	storeResegmentedSentence?(
+	storeResegmentedSentence?: (
 		input: ResolveSegmentInput & ResegmentedSentence,
-	): Promise<{ readonly clickedSegmentIndex: number }>;
-	persistUnresolvedClick(input: {
+	) => Promise<{ readonly clickedSegmentIndex: number }>;
+	persistUnresolvedClick: (input: {
 		readonly requestId: string;
 		readonly visitorId: string;
 		readonly sentenceId: string;
 		readonly clickedSegmentIndex: number;
-	}): Promise<UnresolvedClickCommit | LateResolvedClickCommit>;
+	}) => Promise<UnresolvedClickCommit | LateResolvedClickCommit>;
 };
 
 export type ResolveSegmentInput = {
