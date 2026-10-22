@@ -9,6 +9,7 @@ import {
 	type OperationTrace,
 } from "dumgen";
 import * as Effect from "effect/Effect";
+import { logged } from "../server/logging";
 import { storedUnitOf } from "../server/storedSegments";
 import { internal } from "./_generated/api";
 import { env, internalAction } from "./_generated/server";
@@ -48,10 +49,12 @@ async function segmentDefinition(definition: string) {
 				? createOpenAILuna({ apiKey: env.OPENAI_API_KEY })
 				: noLuna,
 			onOperation: logFailedSentence,
-		}).segment.inUnits({
-			language: "de",
-			paragraphs: [{ sentences: [definition] }],
-		}),
+		})
+			.segment.inUnits({
+				language: "de",
+				paragraphs: [{ sentences: [definition] }],
+			})
+			.pipe(logged),
 	);
 	const sentence = segmented.paragraphs[0]?.sentences[0];
 	if (!sentence) throw new Error("The definition yielded no Sentence.");

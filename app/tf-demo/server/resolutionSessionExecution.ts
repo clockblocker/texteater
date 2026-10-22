@@ -95,16 +95,10 @@ type ResolutionSessionLinguisticPort = (
 	context?: ResolutionContext,
 ) => Effect.Effect<ResolveSegmentResult, ResolutionRunError, never>;
 
-type ResolutionExecutionDiagnostics = {
-	readonly info: (message: string) => void;
-	readonly error: (message: string) => void;
-};
-
 export type ResolutionSessionExecution = {
 	readonly identity: ResolutionSessionRunIdentity;
 	readonly lifecycle: ResolutionSessionLifecyclePort;
 	readonly resolve: ResolutionSessionLinguisticPort;
-	readonly diagnostics?: ResolutionExecutionDiagnostics;
 	readonly createDiagnosticId?: () => string;
 };
 
@@ -120,29 +114,31 @@ function recordedByCommit(result: ResolveSegmentResult): boolean {
 /**
  * Executes one guarded Resolution Session run. Callers cross one seam; this
  * module owns progress ordering, checkpoint resume, settlement, diagnostics,
- * and success/failure recording.
+ * and success/failure recording. Diagnostics are Effect logs, which the
+ * caller's logger writes (`logged`).
  */
 export function executeResolutionSession({
 	identity,
 	lifecycle,
 	resolve,
-	diagnostics = console,
 	createDiagnosticId = () => crypto.randomUUID(),
 }: ResolutionSessionExecution) {
 	let phase: ResolutionPhase = "Route";
 	const generationEvents: ResolutionGenerationEvent[] = [];
 	return Effect.gen(function* () {
+		// A generation event arrives through a plain callback; it is logged
+		// under the session's span.
+		const log = Effect.runSyncWith(yield* Effect.context<never>());
 		const onGenerationEvent = (event: GenerationEvent) => {
 			const projected = projectResolutionGenerationEvent(event, {
 				...identity,
 				phase,
 			});
 			generationEvents.push(projected);
-			diagnostics.info(
-				JSON.stringify({
-					event: "ResolutionGeneration",
-					generation: projected,
-				}),
+			log(
+				Effect.logInfo("ResolutionGeneration").pipe(
+					Effect.annotateLogs({ generation: projected }),
+				),
 			);
 		};
 		const observer: ResolutionProgressObserver = {
@@ -221,39 +217,36 @@ export function executeResolutionSession({
 					}),
 				);
 			}
-			diagnostics.error(
-				JSON.stringify({
-					event: "ResolutionRunInternalFailure",
+			return Effect.logError("ResolutionRunInternalFailure").pipe(
+				Effect.annotateLogs({
 					...identity,
 					phase,
 					diagnosticId,
 					errorName: classified.errorName,
 					errorFingerprint: classified.errorFingerprint,
 				}),
-			);
-			return Effect.tryPromise(() =>
-				lifecycle.record({
-					kind: "InternalFailed",
-					phase,
-					diagnosticId,
-					errorName: classified.errorName,
-					errorFingerprint: classified.errorFingerprint,
-					generationEvents,
-				}),
-			).pipe(
+				Effect.andThen(
+					Effect.tryPromise(() =>
+						lifecycle.record({
+							kind: "InternalFailed",
+							phase,
+							diagnosticId,
+							errorName: classified.errorName,
+							errorFingerprint: classified.errorFingerprint,
+							generationEvents,
+						}),
+					),
+				),
 				Effect.catch((recordingError) =>
-					Effect.sync(() => {
-						diagnostics.error(
-							JSON.stringify({
-								event: "ResolutionFailureRecordingFailed",
-								...identity,
-								phase,
-								diagnosticId,
-								recordingFailure:
-									internalErrorDescriptor(recordingError),
-							}),
-						);
-					}),
+					Effect.logError("ResolutionFailureRecordingFailed").pipe(
+						Effect.annotateLogs({
+							...identity,
+							phase,
+							diagnosticId,
+							recordingFailure:
+								internalErrorDescriptor(recordingError),
+						}),
+					),
 				),
 			);
 		}),

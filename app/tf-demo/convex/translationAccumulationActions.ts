@@ -5,6 +5,7 @@ import { createDumgen, createOpenAILuna, createTypeSafeAsk } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
+import { logged } from "../server/logging";
 import { parseGermanReading } from "../server/operationalParsing";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
@@ -78,12 +79,14 @@ export async function accumulateTranslations(
 		attestation: occurrence.attestation,
 	});
 	const exit = await Effect.runPromiseExit(
-		accumulate({
-			encounter,
-			reading,
-			attestation,
-			translations: occurrence.translations,
-		}),
+		logged(
+			accumulate({
+				encounter,
+				reading,
+				attestation,
+				translations: occurrence.translations,
+			}),
+		),
 	);
 	if (Exit.isFailure(exit)) {
 		console.error(

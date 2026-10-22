@@ -169,6 +169,11 @@ test("a failure recording that throws is logged as a structured line and leaves 
 				errorName: "Error",
 				errorFingerprint: expect.stringMatching(/^fnv1a-/),
 			},
+			// Logged under the run's span, after its hop failed.
+			span: {
+				name: "Generate and publish Knowledge",
+				id: expect.any(String),
+			},
 		},
 	]);
 	expect(JSON.stringify(logged)).not.toContain("secret recording failure");

@@ -5,6 +5,7 @@ import {
 	analyzeParagraphs,
 	type IntakeDumgen,
 } from "./intake";
+import { logged } from "./logging";
 
 /**
  * A book's Folio through intake, once the Learner asks for it (#1216).
@@ -118,10 +119,12 @@ export async function processFolio<Window extends FolioWindow>(options: {
 			const window = await port.nextWindow();
 			if (window === null) return { kind: "Done" };
 			const analyzed = await Effect.runPromise(
-				analyzeWindow<SentenceIdOf<Window>>(
-					options.dumgen,
-					window.sentences,
-					options.language,
+				logged(
+					analyzeWindow<SentenceIdOf<Window>>(
+						options.dumgen,
+						window.sentences,
+						options.language,
+					),
 				),
 			);
 			await port.storeWindow(analyzed);

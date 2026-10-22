@@ -23,6 +23,7 @@ import type {
 	KnowledgeProducer,
 	KnowledgeProduction,
 } from "../server/knowledgeProduction";
+import { logged } from "../server/logging";
 import { parseGermanReading } from "../server/operationalParsing";
 import { asksParticipleSource } from "../server/participleSource";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
@@ -327,17 +328,14 @@ function publishContribution(
 			Effect.catchCause((cause) =>
 				Cause.hasInterruptsOnly(cause)
 					? Effect.interrupt
-					: Effect.sync(() =>
-							console.error(
-								JSON.stringify({
-									event: "KnowledgeContributionPublicationFailed",
-									attemptKey: run.attemptKey,
-									runNumber: plan.input.runNumber,
-									...internalErrorDescriptor(
-										Cause.squash(cause),
-									),
-								}),
-							),
+					: Effect.logError(
+							"KnowledgeContributionPublicationFailed",
+						).pipe(
+							Effect.annotateLogs({
+								attemptKey: run.attemptKey,
+								runNumber: plan.input.runNumber,
+								...internalErrorDescriptor(Cause.squash(cause)),
+							}),
 						),
 			),
 		);
@@ -502,9 +500,8 @@ function recordFailure(
 			record.request,
 			error,
 		);
-		console.error(
-			JSON.stringify({
-				event: "KnowledgeGenerationFailed",
+		yield* Effect.logError("KnowledgeGenerationFailed").pipe(
+			Effect.annotateLogs({
 				attemptKey,
 				runNumber: record.runNumber,
 				phase: record.phase,
@@ -531,17 +528,14 @@ function recordFailure(
 			}),
 		).pipe(
 			Effect.catch((recordingError) =>
-				Effect.sync(() =>
-					console.error(
-						JSON.stringify({
-							event: "KnowledgeFailureRecordingFailed",
-							attemptKey,
-							runNumber: record.runNumber,
-							phase: record.phase,
-							recordingFailure:
-								internalErrorDescriptor(recordingError),
-						}),
-					),
+				Effect.logError("KnowledgeFailureRecordingFailed").pipe(
+					Effect.annotateLogs({
+						attemptKey,
+						runNumber: record.runNumber,
+						phase: record.phase,
+						recordingFailure:
+							internalErrorDescriptor(recordingError),
+					}),
 				),
 			),
 		);
@@ -636,6 +630,7 @@ export async function generateKnowledge(
 						...inspectionStep(OWNER, { attemptKey }),
 						root: true,
 					}),
+					logged,
 				),
 				inspection,
 			),

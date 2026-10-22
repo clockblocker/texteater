@@ -17,6 +17,7 @@ import {
 	type IntakeRun,
 	recordIntakeRun,
 } from "../../server/intakeRun";
+import { logged } from "../../server/logging";
 import { textSubmissionLimitViolation } from "../../server/textSubmissionLimits";
 import type { ScrollLanguage } from "../../shared/supported-target-language";
 import { internal } from "../_generated/api";
@@ -177,6 +178,7 @@ export async function analyzeScroll(
 							}),
 							root: true,
 						}),
+						logged,
 					),
 				inspection,
 			),

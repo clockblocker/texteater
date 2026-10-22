@@ -348,12 +348,11 @@ test.each([false, true])(
 		let finished = false;
 		try {
 			const running = generateWith(t, "progress", (_input, options) =>
-				Effect.promise(async () => {
-					// The finished leaves are handed on before the slow one.
-					await Effect.runPromise(
-						options.onContribution([definition, russian]),
-					);
-					await slow.promise;
+				Effect.gen(function* () {
+					// The finished leaves are handed on before the slow one,
+					// in the run's fiber as Dumgen hands them.
+					yield* options.onContribution([definition, russian]);
+					yield* Effect.promise(() => slow.promise);
 					return {
 						failures: [],
 						changes: [definition, russian, english, transcription],
@@ -396,6 +395,9 @@ test.each([false, true])(
 			});
 		} finally {
 			slow.resolve();
+			// The committed definition schedules its Definition Text; it
+			// settles here, not in a later test's console.
+			await t.finishAllScheduledFunctions(() => {});
 			errors.mockRestore();
 		}
 	},

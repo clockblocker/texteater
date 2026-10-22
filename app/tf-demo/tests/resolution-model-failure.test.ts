@@ -10,6 +10,7 @@ import {
 	executeResolutionSession,
 	type ResolutionSessionRunRecord,
 } from "../server/resolutionSessionExecution";
+import { capturedLogs } from "./support/logs";
 
 /*
  * A click whose model calls fail is recorded as a Generation failure, by
@@ -120,9 +121,8 @@ async function runSession(
 					persistence: { ...persistence, ...overrides },
 					observer,
 				}).resolveSegment(input, checkpoints, context),
-			diagnostics: { info: () => {}, error: () => {} },
 			createDiagnosticId: () => "diagnostic-1",
-		}),
+		}).pipe(capturedLogs().capture),
 	);
 	return records;
 }

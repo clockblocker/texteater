@@ -15,6 +15,7 @@ import {
 	LINK_REJECTED_MESSAGE,
 	readPage,
 } from "../server/linkIntake";
+import { logged } from "../server/logging";
 import { executeResolutionSession } from "../server/resolutionSessionExecution";
 import { submittedLink } from "../shared/submitted-link";
 import { internal } from "./_generated/api";
@@ -203,7 +204,7 @@ export const runResolutionSession = internalAction({
 			}),
 		);
 		try {
-			await Effect.runPromise(inspected(session, inspection));
+			await Effect.runPromise(inspected(logged(session), inspection));
 		} finally {
 			await inspection?.flush();
 		}
