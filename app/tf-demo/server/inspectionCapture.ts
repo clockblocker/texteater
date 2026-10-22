@@ -44,19 +44,22 @@ export function spanHops(services: Context.Context<never>) {
 			run: () => Promise<T>,
 		): Promise<T> {
 			const exit = await Effect.runPromiseExitWith(services)(
-				// The rejection only marks the span failed, then is rethrown as is.
-				// @effect-diagnostics-next-line unknownInEffectCatch:off
-				Effect.tryPromise({ try: run, catch: (error) => error }).pipe(
+				Effect.tryPromise(run).pipe(
 					Effect.withSpan(name, inspectionStep(owner, input)),
 				),
 			);
 			if (Exit.isSuccess(exit)) return exit.value;
-			throw Cause.squash(exit.cause);
+			// The rejection only marks the span failed, then is rethrown as
+			// is, unwrapped from the UnknownError that carried it.
+			throw Option.match(Cause.findErrorOption(exit.cause), {
+				onNone: () => Cause.squash(exit.cause),
+				onSome: (rejection) => rejection.cause,
+			});
 		},
 		/** Fails the enclosing step although its work returns normally. */
 		markFailed,
 		/** A handled failure: a failed step of its own that fails the enclosing step. */
-		failure(name: string, owner: string, input: unknown, error: unknown) {
+		failure<E>(name: string, owner: string, input: unknown, error: E) {
 			markFailed();
 			Effect.runSyncExitWith(services)(
 				Effect.fail(error).pipe(

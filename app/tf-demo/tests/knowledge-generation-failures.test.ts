@@ -121,7 +121,7 @@ test("a publication rejected after production keeps the run's aspect failures in
 			attemptKey: "rejected",
 			runNumber: 1,
 			phase: "Publish",
-			errorName: "Error",
+			errorName: "KnowledgePublicationRejected",
 		}),
 	]);
 });

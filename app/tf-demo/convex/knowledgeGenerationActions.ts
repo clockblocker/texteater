@@ -4,8 +4,10 @@ import { v } from "convex/values";
 import { createDumgen, createOpenAILuna, createTypeSafeAsk } from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as Cause from "effect/Cause";
+import * as Data from "effect/Data";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
+import * as Option from "effect/Option";
 import { dumgenKnowledgeProducer } from "../server/dumgenKnowledgeProducer";
 import type { generationRequestFor } from "../server/generatedKnowledgeRequest";
 import {
@@ -132,12 +134,32 @@ type KnowledgeRunRecord = {
 	readonly operationTraces: readonly string[];
 };
 
+/** A claimed Reading in a language Knowledge production does not cover. */
+class UnsupportedKnowledgeLanguage extends Data.TaggedError(
+	"UnsupportedKnowledgeLanguage",
+)<{ readonly message: string }> {}
+
+/** A publication `knowledgeGeneration.publish` answered Rejected. */
+class KnowledgePublicationRejected extends Data.TaggedError(
+	"KnowledgePublicationRejected",
+)<{ readonly message: string }> {}
+
+/**
+ * Every error a run's stages fail with: their own, or a Promise hop that
+ * rejected (Effect's UnknownError, carrying what was thrown). A defect is
+ * folded in as an UnknownError too, so the record describes what threw.
+ */
+type KnowledgeRunError =
+	| UnsupportedKnowledgeLanguage
+	| KnowledgePublicationRejected
+	| Cause.UnknownError;
+
 /** A stage's error or defect, with the record its failure path stores. */
 class KnowledgeRunFailure {
 	readonly _tag = "KnowledgeRunFailure";
 	readonly record: KnowledgeRunRecord;
-	readonly error: unknown;
-	constructor(record: KnowledgeRunRecord, error: unknown) {
+	readonly error: KnowledgeRunError;
+	constructor(record: KnowledgeRunRecord, error: KnowledgeRunError) {
 		this.record = record;
 		this.error = error;
 	}
@@ -149,7 +171,7 @@ class KnowledgeRunFailure {
  * nothing, and the stale-run watchdog ends it as interrupted.
  */
 function failsWith(record: KnowledgeRunRecord) {
-	return <A, E, R>(
+	return <A, E extends KnowledgeRunError, R>(
 		stage: Effect.Effect<A, E, R>,
 	): Effect.Effect<A, KnowledgeRunFailure, R> =>
 		stage.pipe(
@@ -159,19 +181,25 @@ function failsWith(record: KnowledgeRunRecord) {
 					: Effect.fail(
 							new KnowledgeRunFailure(
 								record,
-								Cause.squash(cause),
+								Option.getOrElse(
+									Cause.findErrorOption(cause),
+									() =>
+										new Cause.UnknownError(
+											Cause.squash(cause),
+										),
+								),
 							),
 						),
 			),
 		);
 }
 
-/** Promise work as an inspection step under the current span. */
+/**
+ * Promise work as an inspection step under the current span. A rejection
+ * fails with Effect's UnknownError, which carries what the work threw.
+ */
 function hop<T>(name: string, input: unknown, work: () => Promise<T>) {
-	// The rejection passes through untouched; failsWith folds it into a
-	// KnowledgeRunFailure.
-	// @effect-diagnostics-next-line unknownInEffectCatch:off
-	return Effect.tryPromise({ try: work, catch: (error) => error }).pipe(
+	return Effect.tryPromise(work).pipe(
 		Effect.withSpan(name, inspectionStep(OWNER, input)),
 	);
 }
@@ -179,11 +207,9 @@ function hop<T>(name: string, input: unknown, work: () => Promise<T>) {
 function planRun(input: ClaimedInput) {
 	return Effect.gen(function* () {
 		if (input.reading.lemma.language !== "de")
-			return yield* Effect.fail(
-				// failsWith folds this into a KnowledgeRunFailure.
-				// @effect-diagnostics-next-line globalErrorInEffectFailure:off
-				new Error("Unsupported Knowledge language."),
-			);
+			return yield* new UnsupportedKnowledgeLanguage({
+				message: "Unsupported Knowledge language.",
+			});
 		const reading = parseGermanReading(input.reading);
 		const { authorization } = input;
 		const qualifiedKinds = authorization.rollbackStopped
@@ -259,9 +285,11 @@ function publishKnowledge(
 	).pipe(
 		Effect.flatMap((result) =>
 			result.status === "Rejected"
-				? // failsWith folds this into a KnowledgeRunFailure.
-					// @effect-diagnostics-next-line globalErrorInEffectFailure:off
-					Effect.fail(new Error(result.message))
+				? Effect.fail(
+						new KnowledgePublicationRejected({
+							message: result.message,
+						}),
+					)
 				: Effect.succeed(result.status),
 		),
 	);
@@ -423,37 +451,37 @@ function publishGenerated(
 		);
 	return Effect.gen(function* () {
 		const services = yield* Effect.context<never>();
-		// The rethrown squash passes through; failsWith folds it into a
-		// KnowledgeRunFailure.
-		// @effect-diagnostics-next-line unknownInEffectCatch:off
-		yield* Effect.tryPromise({
-			try: (signal) =>
-				publishInRelationChunks(
-					generatedKnowledgeAllowedForPublication(
-						generated,
-						plan.qualifiedKinds,
-					),
-					async ({ final, proposed, ...chunk }) => {
-						const exit = await Effect.runPromiseExitWith(services)(
-							publishKnowledge(
-								run,
-								plan,
-								final,
-								chunk,
-								final ? generated.failures : [],
-								{
-									requestedKinds: plan.requestedKinds,
-									proposed: [...proposed],
-								},
-							),
-							{ signal },
-						);
-						if (Exit.isSuccess(exit)) return exit.value;
-						throw Cause.squash(exit.cause);
-					},
+		// A chunk that fails stops the chunking, and the run fails with its
+		// cause as the chunk's Effect failed.
+		const stopped: { cause?: Cause.Cause<KnowledgeRunError> } = {};
+		yield* Effect.tryPromise((signal) =>
+			publishInRelationChunks(
+				generatedKnowledgeAllowedForPublication(
+					generated,
+					plan.qualifiedKinds,
 				),
-			catch: (error) => error,
-		});
+				async ({ final, proposed, ...chunk }) => {
+					const exit = await Effect.runPromiseExitWith(services)(
+						publishKnowledge(
+							run,
+							plan,
+							final,
+							chunk,
+							final ? generated.failures : [],
+							{
+								requestedKinds: plan.requestedKinds,
+								proposed: [...proposed],
+							},
+						),
+						{ signal },
+					);
+					if (Exit.isSuccess(exit)) return exit.value;
+					stopped.cause = exit.cause;
+					return "Failed";
+				},
+			),
+		);
+		if (stopped.cause) return yield* Effect.failCause(stopped.cause);
 	});
 }
 
