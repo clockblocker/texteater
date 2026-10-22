@@ -429,6 +429,6 @@ export const produceValency = (
 		const changes = checkedChanges(context, "valency", [
 			{ kind: "Contribute", aspect: "valency", value: frame },
 		]);
-		if (!Array.isArray(changes)) return yield* Effect.fail(changes);
+		if (!Array.isArray(changes)) return yield* changes;
 		return { changes, failures: attested.failures };
 	});

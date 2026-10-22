@@ -5,9 +5,9 @@ import { authoredMembers } from "./inventory.js";
 type NavigableLemma =
 	| Dumling.Lemma<"de", "Lexeme", "PRON">
 	| Dumling.Lemma<"de", "Lexeme", "DET">;
-type NavigableFeature =
-	| keyof Dumling.Lemma<"de", "Lexeme", "PRON">["coreFeatures"]
-	| keyof Dumling.Lemma<"de", "Lexeme", "DET">["coreFeatures"];
+type NavigableFeature = NavigableLemma extends infer Lemma extends Dumling.Lemma
+	? keyof Lemma["coreFeatures"]
+	: never;
 
 /** Whether a PRON or DET Lemma is a pillar's Paradigm Cell: it marks its cell in Core. */
 function isParadigmCell(lemma: Dumling.Lemma): boolean {

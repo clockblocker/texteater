@@ -367,21 +367,21 @@ function caseRequest(
 	state: ReturnType<typeof targetState>,
 	open: readonly CaseOption[],
 ): Effect.Effect<CaseOption | UnresolvedAnswer | undefined, AskFailure> {
-	return open.length > 1
-		? Effect.gen(function* () {
-				const questionnaire = new Questionnaire();
-				const asked = caseQuestion(questionnaire, open);
-				const answered = yield* ask({
-					stage: "case",
-					state: {
-						...state,
-						policy: questionnaire.policyBlock(),
-					},
-					questions: questionnaire.questions,
-				});
-				return settle(() => new Answered(answered).pick(asked));
-			})
-		: Effect.succeed(undefined);
+	// @effect-diagnostics-next-line effectSucceedWithVoid:off -- Effect.void is Effect<void>, which the `| undefined` success type rejects
+	if (open.length <= 1) return Effect.succeed(undefined);
+	return Effect.gen(function* () {
+		const questionnaire = new Questionnaire();
+		const asked = caseQuestion(questionnaire, open);
+		const answered = yield* ask({
+			stage: "case",
+			state: {
+				...state,
+				policy: questionnaire.policyBlock(),
+			},
+			questions: questionnaire.questions,
+		});
+		return settle(() => new Answered(answered).pick(asked));
+	});
 }
 
 /**
@@ -573,7 +573,8 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	);
 	const writing: Effect.Effect<Written | undefined, AskFailure> =
 		particleSpelled.length === 1 && first.orthographies[0] === "Standard"
-			? Effect.succeed(undefined)
+			? // @effect-diagnostics-next-line effectSucceedWithVoid:off -- Effect.void is Effect<void>, which the `| undefined` success type rejects
+				Effect.succeed(undefined)
 			: rewritten(
 					scope,
 					write,

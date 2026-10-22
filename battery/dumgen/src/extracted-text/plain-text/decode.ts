@@ -33,8 +33,11 @@ function unmarkedUtf16(bytes: Uint8Array): "le" | "be" | undefined {
 	if (sample.length < 4) return undefined;
 	let evenZeros = 0;
 	let oddZeros = 0;
-	for (const [index, byte] of sample.entries())
-		if (byte === 0) index % 2 === 0 ? evenZeros++ : oddZeros++;
+	for (const [index, byte] of sample.entries()) {
+		if (byte !== 0) continue;
+		if (index % 2 === 0) evenZeros++;
+		else oddZeros++;
+	}
 	const pairs = sample.length / 2;
 	if (oddZeros / pairs > 0.3 && evenZeros / pairs < 0.05) return "le";
 	if (evenZeros / pairs > 0.3 && oddZeros / pairs < 0.05) return "be";
