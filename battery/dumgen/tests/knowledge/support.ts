@@ -3,14 +3,15 @@ import { isRecord } from "common-utils";
 import { parseUnit, routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
 import type {
 	KnowledgeProduction,
 	ProduceKnowledgeInput,
 } from "../../src/knowledge/types.js";
 import type { LunaAsk, LunaRequest } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
+import { operations } from "../../src/operations.js";
 import type { JevAsk, JevRequest } from "../../src/segment/jev.js";
+import { liveOver } from "../live-over.js";
 
 /** What a fake jev answers one question: a choice, and how sure it is, or a Noul. */
 export type JevPick =
@@ -311,10 +312,14 @@ export async function produceOnce<E = never>(
 }> {
 	const traces: OperationTrace[] = [];
 	const result = await Effect.runPromise(
-		createDumgen({
-			...models,
-			onOperation: (trace) => traces.push(trace),
-		}).knowledge.produce(input),
+		operations.knowledge.produce(input).pipe(
+			Effect.provide(
+				liveOver({
+					...models,
+					onOperation: (trace) => traces.push(trace),
+				}),
+			),
+		),
 	);
 	return { result, trace: traces[0] };
 }

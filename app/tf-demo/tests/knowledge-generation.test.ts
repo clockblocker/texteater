@@ -34,6 +34,7 @@ import {
 	seedDictionaryReading,
 	seedOccurrence,
 } from "./support/knowledge-generation";
+import { noModelCalls } from "./support/providers";
 
 beforeEach(() => {
 	// Scheduling a Knowledge attempt queues its action; nothing here runs it.
@@ -198,17 +199,9 @@ test("a deployment without TF_KNOWLEDGE_PRODUCTION fails a run with the safe mes
 	const occurrence = await seedDictionaryReading(t);
 	await insertAttempt(t, occurrence, "idle", { state: "Scheduled" });
 	const errors = spyOn(console, "error").mockImplementation(() => {});
-	const previousFetch = globalThis.fetch;
 	const previousFlag = process.env.TF_KNOWLEDGE_PRODUCTION;
 	delete process.env.TF_KNOWLEDGE_PRODUCTION;
-	const fetched: string[] = [];
-	globalThis.fetch = Object.assign(
-		async (url: string | URL | Request) => {
-			fetched.push(String(url));
-			throw new Error("No model may be called.");
-		},
-		{ preconnect: previousFetch.preconnect },
-	);
+	const models = noModelCalls();
 	try {
 		await t.action(
 			internal.knowledgeGenerationActions.runKnowledgeGeneration,
@@ -216,11 +209,11 @@ test("a deployment without TF_KNOWLEDGE_PRODUCTION fails a run with the safe mes
 		);
 	} finally {
 		errors.mockRestore();
-		globalThis.fetch = previousFetch;
+		models.restore();
 		if (previousFlag !== undefined)
 			process.env.TF_KNOWLEDGE_PRODUCTION = previousFlag;
 	}
-	expect(fetched).toEqual([]);
+	expect(models.requests).toEqual([]);
 	expect((await attempts(t))[0]).toMatchObject({
 		state: "Failed",
 		failureMessage: "Knowledge generation failed. Please retry.",

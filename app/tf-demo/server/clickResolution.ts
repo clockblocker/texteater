@@ -81,16 +81,19 @@ export type ClickReadingInput = {
 
 /**
  * Unresolved and Catalog Miss are answers; the error channel only says that
- * no usable answer came back (#859).
+ * no usable answer came back (#859). `R` is what the resolution needs:
+ * Dumgen's `Jev | Luna` in production, which the click's action provides;
+ * nothing for a test's fake.
  */
-export type ClickResolution = {
+export type ClickResolution<R = never> = {
 	readonly grammar: (
 		input: ClickGrammarInput,
-	) => Effect.Effect<ClickGrammar, ProviderFailure | InvalidModelOutput>;
+	) => Effect.Effect<ClickGrammar, ProviderFailure | InvalidModelOutput, R>;
 	readonly reading: (
 		input: ClickReadingInput,
 	) => Effect.Effect<
 		ReadingResolution | CatalogMissSignal,
-		ProviderFailure | InvalidModelOutput
+		ProviderFailure | InvalidModelOutput,
+		R
 	>;
 };

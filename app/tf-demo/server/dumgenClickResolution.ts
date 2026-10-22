@@ -1,7 +1,10 @@
 import type {
-	Dumgen,
 	ReadingResolution as DumgenReading,
 	GrammarResolution,
+	InvalidModelOutput,
+	ProviderFailure,
+	ResolveGrammarInput,
+	ResolveReadingInput,
 	SegmentedSentence,
 	Unit,
 } from "dumgen";
@@ -13,6 +16,20 @@ import type {
 	ReadingResolution,
 } from "./clickResolution";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
+
+type ModelFailure = ProviderFailure | InvalidModelOutput;
+
+/** Dumgen's click operations, `operations.resolve`, needing `R`. */
+export type ClickDumgen<R> = {
+	readonly resolve: {
+		readonly grammar: (
+			input: ResolveGrammarInput,
+		) => Effect.Effect<GrammarResolution, ModelFailure, R>;
+		readonly reading: (
+			input: ResolveReadingInput,
+		) => Effect.Effect<DumgenReading, ModelFailure, R>;
+	};
+};
 
 /** The stored Sentence as Dumgen's Segmented Sentence, with the one unit a click resolves. */
 function dumgenSentence(
@@ -37,12 +54,13 @@ function dumgenSentence(
  * Attestation. Reading: the Attestation, the Emoji Descriptions of its
  * Lemma's stored Readings and the draft go in, and a Reuse, a New or a
  * Catalog Miss comes back; a New carries the candidates its judge saw, so the commit can
- * refuse it once stale (ADR 0031). `dumgen` builds the instance when a
- * click first needs it.
+ * refuse it once stale (ADR 0031). `dumgen` hands over the operations
+ * when a click first needs them: in production `operations`, needing
+ * `Jev | Luna`, once the deployment's key is checked.
  */
-export function dumgenClickResolution(
-	dumgen: () => Pick<Dumgen, "resolve">,
-): ClickResolution {
+export function dumgenClickResolution<R>(
+	dumgen: () => ClickDumgen<R>,
+): ClickResolution<R> {
 	return Object.freeze({
 		grammar: (input) => {
 			const { unit } = input;
@@ -57,8 +75,8 @@ export function dumgenClickResolution(
 				route: { ...unit.route },
 				...(unit.identity ? { identity: { ...unit.identity } } : {}),
 			} as Unit;
-			// Built when a click needs it, so a click that reuses a committed
-			// occurrence needs no model key.
+			// Handed over when a click needs it, so a click that reuses a
+			// committed occurrence needs no model key.
 			return Effect.suspend(() =>
 				dumgen().resolve.grammar({
 					language: "de",

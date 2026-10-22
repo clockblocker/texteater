@@ -67,7 +67,7 @@
  * line to the lab ledger, refuses to go live when dumcorpus's prompt inputs
  * moved since the round was pinned (unless `--repin`) or when its projected
  * spend would cross the stop line, and stops at the line. It runs
- * production's `createDumgen` with the lab's cached jev as its transport,
+ * production's `DumgenLive` with the lab's cached jev as its transport,
  * which retries a rate limit or a server error; the ledger line and the
  * output give those retries and the requests that still failed as
  * `transport`.

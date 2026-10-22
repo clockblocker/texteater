@@ -37,9 +37,12 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { z } from "zod";
-import { createDumgen } from "../../../src/create-dumgen.js";
+import { DumgenLive } from "../../../src/dumgen-live.js";
+import { JevTransport } from "../../../src/jev-call.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
+import { LunaTransport } from "../../../src/luna-call.js";
 import type { OperationTrace } from "../../../src/operation-trace.js";
+import { operations } from "../../../src/operations.js";
 import {
 	draftsEmojiDescription,
 	markedSentence,
@@ -227,19 +230,27 @@ async function draftOf(
 		return undefined;
 	const { lemma, normalizedSurface } = goldCase.attestation.surface;
 	const grammar = await Effect.runPromise(
-		createDumgen({
-			jev: goldGrammarJev(goldCase),
-			luna: models.luna({ goldCase, arm }, repetition),
-		}).resolve.grammar({
-			language: "de",
-			sentence: goldCase.sentence,
-			unit: goldCase.unit,
-			neighbours: {},
-			lemmaCandidates:
-				candidatesOf(goldCase, arm).length > 0
-					? [{ lemma, foundUnder: [normalizedSurface] }]
-					: [],
-		}),
+		operations.resolve
+			.grammar({
+				language: "de",
+				sentence: goldCase.sentence,
+				unit: goldCase.unit,
+				neighbours: {},
+				lemmaCandidates:
+					candidatesOf(goldCase, arm).length > 0
+						? [{ lemma, foundUnder: [normalizedSurface] }]
+						: [],
+			})
+			.pipe(
+				Effect.provide(
+					DumgenLive({
+						jev: JevTransport.fromAsk(goldGrammarJev(goldCase)),
+						luna: LunaTransport.fromAsk(
+							models.luna({ goldCase, arm }, repetition),
+						),
+					}),
+				),
+			),
 	);
 	return grammar._tag === "Resolved" ? grammar.drafted : undefined;
 }
@@ -254,17 +265,25 @@ async function attempt(
 	const at = { goldCase, arm };
 	const drafted = await draftOf(goldCase, arm, repetition, models);
 	const result = await Effect.runPromise(
-		createDumgen({
-			jev: models.jev(at, repetition),
-			luna: models.luna(at, repetition),
-			onOperation: (trace) => traces.push(trace),
-		}).resolve.reading({
-			attestation: goldCase.attestation,
-			sentence: goldCase.sentence,
-			unit: goldCase.unit,
-			candidates: candidatesOf(goldCase, arm),
-			...(drafted === undefined ? {} : { drafted }),
-		}),
+		operations.resolve
+			.reading({
+				attestation: goldCase.attestation,
+				sentence: goldCase.sentence,
+				unit: goldCase.unit,
+				candidates: candidatesOf(goldCase, arm),
+				...(drafted === undefined ? {} : { drafted }),
+			})
+			.pipe(
+				Effect.provide(
+					DumgenLive({
+						jev: JevTransport.fromAsk(models.jev(at, repetition)),
+						luna: LunaTransport.fromAsk(
+							models.luna(at, repetition),
+						),
+						onOperation: (trace) => traces.push(trace),
+					}),
+				),
+			),
 	);
 	const reason = traces[0]?.resolution?.reason;
 	return {

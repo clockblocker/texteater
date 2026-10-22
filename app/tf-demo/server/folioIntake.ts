@@ -1,3 +1,4 @@
+import type { Jev } from "dumgen";
 import * as Effect from "effect/Effect";
 import type { ScrollLanguage } from "../shared/supported-target-language";
 import {
@@ -105,33 +106,35 @@ export type FolioRunEnd =
  * Processes one Folio window by window until none is left, or `hasTime`
  * says the action should hand over to a fresh one. A window that fails,
  * in jev or in storing, fails the Folio; what was stored before it stays,
- * and the next request starts with what is left.
+ * and the next request starts with what is left. It needs `Jev`, which
+ * the action provides once for all its windows.
  */
-export async function processFolio<Window extends FolioWindow>(options: {
+export function processFolio<Window extends FolioWindow>(options: {
 	readonly dumgen: IntakeDumgen;
 	readonly language: ScrollLanguage;
 	readonly port: FolioProcessingPort<Window>;
 	readonly hasTime: () => boolean;
-}): Promise<FolioRunEnd> {
+}): Effect.Effect<FolioRunEnd, never, Jev> {
 	const { port } = options;
-	try {
+	return Effect.gen(function* () {
 		while (options.hasTime()) {
-			const window = await port.nextWindow();
-			if (window === null) return { kind: "Done" };
-			const analyzed = await Effect.runPromise(
-				logged(
-					analyzeWindow<SentenceIdOf<Window>>(
-						options.dumgen,
-						window.sentences,
-						options.language,
-					),
+			const window = yield* Effect.promise(() => port.nextWindow());
+			if (window === null) return { kind: "Done" as const };
+			const analyzed = yield* logged(
+				analyzeWindow<SentenceIdOf<Window>>(
+					options.dumgen,
+					window.sentences,
+					options.language,
 				),
 			);
-			await port.storeWindow(analyzed);
+			yield* Effect.promise(() => port.storeWindow(analyzed));
 		}
-	} catch {
-		await port.failed();
-		return { kind: "Failed" };
-	}
-	return { kind: "Continue" };
+		return { kind: "Continue" as const };
+	}).pipe(
+		Effect.catchCause(() =>
+			Effect.promise(() => port.failed()).pipe(
+				Effect.as<FolioRunEnd>({ kind: "Failed" }),
+			),
+		),
+	);
 }

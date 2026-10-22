@@ -4,7 +4,6 @@ import { checkPromptCitations, rules } from "dumcorpus";
 import { authoredReading } from "dumcorpus/inventories";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
-import { createDumgen } from "../../src/create-dumgen.js";
 import {
 	accumulationPromptTexts,
 	occurrenceTranslationPrompt,
@@ -15,7 +14,9 @@ import type {
 } from "../../src/knowledge/types.js";
 import type { LunaAsk } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
+import { operations } from "../../src/operations.js";
 import type { JevAsk } from "../../src/segment/jev.js";
+import { liveOver } from "../live-over.js";
 import {
 	knowledgeInput,
 	knowledgeJev,
@@ -60,10 +61,14 @@ async function accumulateOnce(
 }> {
 	const traces: OperationTrace[] = [];
 	const result = await Effect.runPromise(
-		createDumgen({
-			...models,
-			onOperation: (trace) => traces.push(trace),
-		}).knowledge.accumulateTranslations(input),
+		operations.knowledge.accumulateTranslations(input).pipe(
+			Effect.provide(
+				liveOver({
+					...models,
+					onOperation: (trace) => traces.push(trace),
+				}),
+			),
+		),
 	);
 	return { result, trace: traces[0] };
 }
@@ -282,12 +287,9 @@ test("bad input is a Defect, raised before anything is asked", async () => {
 	const jev = knowledgeJev();
 	const luna = knowledgeLuna({});
 	const exit = await Effect.runPromiseExit(
-		createDumgen({
-			jev: jev.ask,
-			luna: luna.ask,
-		}).knowledge.accumulateTranslations(
-			bouquet({ fr: ["bouquet"] } as never),
-		),
+		operations.knowledge
+			.accumulateTranslations(bouquet({ fr: ["bouquet"] } as never))
+			.pipe(Effect.provide(liveOver({ jev: jev.ask, luna: luna.ask }))),
 	);
 	expect(Exit.isFailure(exit)).toBe(true);
 	expect(jev.sent).toEqual([]);

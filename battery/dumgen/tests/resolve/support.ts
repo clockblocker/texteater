@@ -2,9 +2,9 @@ import type { Question } from "@typesafe-ai/sdk";
 import { isRecord } from "common-utils";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
 import type { LunaAsk, LunaRequest } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
+import { operations } from "../../src/operations.js";
 import type {
 	GrammarResolution,
 	ResolveGrammarInput,
@@ -20,6 +20,7 @@ import type {
 	Unit,
 } from "../../src/segment/segmented-sentence.js";
 import { segmentsOf } from "../lab/evaluation/spec-corpus/fixtures.js";
+import { type FakeDumgenOptions, liveOver } from "../live-over.js";
 
 export const picked = (choice: string): Answer => ({
 	type: "choice",
@@ -147,7 +148,7 @@ export function unitOf(
 
 /** Resolves one click and keeps the trace it reported. */
 export async function resolveOnce(
-	options: Pick<DumgenOptions, "jev" | "luna"> & Partial<DumgenOptions>,
+	options: FakeDumgenOptions,
 	input: Omit<
 		ResolveGrammarInput,
 		"language" | "neighbours" | "lemmaCandidates"
@@ -156,15 +157,21 @@ export async function resolveOnce(
 ): Promise<{ result: GrammarResolution; trace: OperationTrace | undefined }> {
 	const traces: OperationTrace[] = [];
 	const result = await Effect.runPromise(
-		createDumgen({
-			...options,
-			onOperation: (trace) => traces.push(trace),
-		}).resolve.grammar({
-			language: "de",
-			neighbours: {},
-			lemmaCandidates: [],
-			...input,
-		}),
+		operations.resolve
+			.grammar({
+				language: "de",
+				neighbours: {},
+				lemmaCandidates: [],
+				...input,
+			})
+			.pipe(
+				Effect.provide(
+					liveOver({
+						...options,
+						onOperation: (trace) => traces.push(trace),
+					}),
+				),
+			),
 	);
 	return { result, trace: traces[0] };
 }

@@ -271,14 +271,14 @@ afterEach(() => {
 const ARTICLE_URL = "https://93.184.215.14/lokales/faehre";
 
 /**
- * TypeSafe answered by a fake jev, and the article served at
+ * jev faked as the deployment's TypeSafe transport, and the article served at
  * `ARTICLE_URL` (an address, so no lookup runs); `blocked` serves a 403.
  */
 function providersAndPage() {
 	const providers = fakeTypeSafe(fakeJev());
-	const typeSafeFetch = globalThis.fetch;
+	const previousFetch = globalThis.fetch;
 	const pageRequests: string[] = [];
-	globalThis.fetch = (async (url: string | URL | Request, init) => {
+	globalThis.fetch = (async (url: string | URL | Request) => {
 		const href = String(url);
 		if (href.startsWith("https://93.184.215.14/")) {
 			pageRequests.push(href);
@@ -289,9 +289,12 @@ function providersAndPage() {
 						headers: { "content-type": "text/html" },
 					});
 		}
-		return typeSafeFetch(url, init);
+		return new Response("unexpected request", { status: 400 });
 	}) as typeof fetch;
-	restore = providers.restore;
+	restore = () => {
+		globalThis.fetch = previousFetch;
+		providers.restore();
+	};
 	return { providers, pageRequests };
 }
 

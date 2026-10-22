@@ -18,9 +18,12 @@ import type { Question } from "@typesafe-ai/sdk";
 import { messageOf } from "common-utils";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
-import { createDumgen, type Dumgen } from "../../src/create-dumgen.js";
+import type { Jev } from "../../src/jev-call.js";
 import type { LunaAsk, LunaRequest } from "../../src/luna.js";
+import type { Luna } from "../../src/luna-call.js";
+import { operations } from "../../src/operations.js";
 import type { JevAsk, JevRequest } from "../../src/segment/jev.js";
+import { liveOver } from "../live-over.js";
 
 /** One request a transport was sent, whole, with the stage that sent it. */
 type GoldenRequest =
@@ -73,7 +76,9 @@ const sorted = (requests: readonly GoldenRequest[]) =>
  * failure's message.
  */
 export async function recorded(
-	operation: (dumgen: Dumgen) => Effect.Effect<unknown, unknown>,
+	operation: (
+		dumgen: typeof operations,
+	) => Effect.Effect<unknown, unknown, Jev | Luna>,
 	answer: { readonly jev?: JevAnswerer; readonly luna?: LunaAnswerer },
 ) {
 	const requests: GoldenRequest[] = [];
@@ -116,7 +121,7 @@ export async function recorded(
 		};
 	};
 	const exit = await Effect.runPromiseExit(
-		operation(createDumgen({ jev, luna })),
+		operation(operations).pipe(Effect.provide(liveOver({ jev, luna }))),
 	);
 	return {
 		requests: sorted(requests),

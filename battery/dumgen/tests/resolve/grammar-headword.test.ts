@@ -3,13 +3,14 @@ import { isRecord } from "common-utils";
 import { sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
 import { InvalidModelOutput } from "../../src/errors.js";
+import { operations } from "../../src/operations.js";
 import { generation } from "../../src/resolve/de/reading-prompts.js";
 import {
 	draftPrompt,
 	draftsEmojiDescription,
 } from "../../src/resolve/reading.js";
+import { liveOver } from "../live-over.js";
 import {
 	attested,
 	fakeJev,
@@ -223,16 +224,22 @@ test("Luna may correct a Typo, while a Standard member keeps its letters in Luna
 	// Too few words for the members Luna writes is no answer.
 	const short = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({
-				jev: fakeJev({ orthography: "t2" }).ask,
-				luna: writes("hereinkommen", ["komm", "doch"]).ask,
-			}).resolve.grammar({
-				language: "de",
-				sentence: sentenceOf("Komm doch herrein."),
-				unit: unitOf([0, 2, 4], "Lexeme/VERB"),
-				neighbours: {},
-				lemmaCandidates: [],
-			}),
+			operations.resolve
+				.grammar({
+					language: "de",
+					sentence: sentenceOf("Komm doch herrein."),
+					unit: unitOf([0, 2, 4], "Lexeme/VERB"),
+					neighbours: {},
+					lemmaCandidates: [],
+				})
+				.pipe(
+					Effect.provide(
+						liveOver({
+							jev: fakeJev({ orthography: "t2" }).ask,
+							luna: writes("hereinkommen", ["komm", "doch"]).ask,
+						}),
+					),
+				),
 		),
 	);
 	expect(short).toBeInstanceOf(InvalidModelOutput);

@@ -43,7 +43,7 @@ export function createIntakeRunRecorder(sentenceCount: number) {
 			for (let position = 0; position < sentenceCount; position++)
 				if (!segmented.has(position)) outcomes.set(position, "Plain");
 		},
-		/** `createDumgen`'s `onOperation`. */
+		/** The action's `TraceSink`. */
 		operation: (trace: OperationTrace) => {
 			if (
 				trace.operation !== "language.detect" &&

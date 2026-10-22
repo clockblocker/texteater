@@ -1,4 +1,4 @@
-import type { DumgenOptions, OperationTrace } from "dumgen";
+import { type OperationTrace, TracePayloads, TraceSink } from "dumgen";
 import * as Cause from "effect/Cause";
 import type * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
@@ -225,22 +225,23 @@ export function withoutPayloads(trace: OperationTrace): OperationTrace {
 }
 
 /**
- * The `createDumgen` trace options for one action. Payloads are on only
- * under DEV inspection, which renders every operation as rows; production
- * keeps them off (#858 point 6). `sink` receives each trace too, payloads
- * included when they are on.
+ * Dumgen's tracing for one action's program, as its `TraceSink` and
+ * `TracePayloads`. Payloads are on only under DEV inspection, which renders
+ * every operation as rows; production keeps them off (#858 point 6). `sink`
+ * receives each trace too, payloads included when they are on.
  */
-export function dumgenTracing(
+export function dumgenTraced(
 	inspection: InspectionCapture | undefined,
 	sink?: (trace: OperationTrace) => void,
-): Required<Pick<DumgenOptions, "onOperation" | "tracePayloads">> {
-	return {
-		tracePayloads: inspection !== undefined,
-		onOperation: (trace) => {
-			inspection?.operation(trace);
-			sink?.(trace);
-		},
-	};
+) {
+	return <A, E, R>(effect: Effect.Effect<A, E, R>) =>
+		effect.pipe(
+			Effect.provideService(TracePayloads, inspection !== undefined),
+			Effect.provideService(TraceSink, (trace: OperationTrace) => {
+				inspection?.operation(trace);
+				sink?.(trace);
+			}),
+		);
 }
 
 /**
@@ -359,7 +360,7 @@ export function createInspectionCapture() {
 	return {
 		steps,
 		tracer,
-		/** `createDumgen`'s `onOperation`: the operation's rows under its root. */
+		/** The action's `TraceSink`: the operation's rows under its root. */
 		operation(trace: OperationTrace) {
 			steps.push(...operationSteps(trace, operationRoots.shift()));
 		},

@@ -29,15 +29,26 @@ import {
 	pinnedJevModel,
 	questionsPerRequest,
 } from "./segment/jev.js";
+import {
+	createTypeSafeAsk,
+	type TypeSafeAskOptions,
+} from "./segment/typesafe-ask.js";
 
 /**
- * The host's jev transport, a Promise port taking a signal:
- * `createTypeSafeAsk` in production, the lab's cache or a fake elsewhere.
+ * The host's jev transport, a Promise port taking a signal: TypeSafe in
+ * production, the lab's cache or a fake elsewhere.
  */
 export class JevTransport extends Context.Service<
 	JevTransport,
 	{ readonly ask: JevAsk }
->()("dumgen/JevTransport") {}
+>()("dumgen/JevTransport") {
+	/** jev through the TypeSafe API (`createTypeSafeAsk`); an empty key is a Defect when it is built. */
+	static readonly typeSafe = (options: TypeSafeAskOptions) =>
+		Layer.sync(JevTransport, () => ({ ask: createTypeSafeAsk(options) }));
+	/** The host's own `JevAsk`: the lab's cache, or a test's fake. */
+	static readonly fromAsk = (ask: JevAsk) =>
+		Layer.succeed(JevTransport, { ask });
+}
 
 /** The jev version every request names; a floating alias is refused. */
 export const JevModel = Context.Reference<string>("dumgen/JevModel", {

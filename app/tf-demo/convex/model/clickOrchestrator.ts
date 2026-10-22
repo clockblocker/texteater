@@ -1,11 +1,8 @@
 "use node";
 
+import { operations } from "dumgen";
 import type { ReadingResolution } from "../../server/clickResolution";
 import { dumgenClickResolution } from "../../server/dumgenClickResolution";
-import {
-	dumgenTracing,
-	type InspectionCapture,
-} from "../../server/inspectionCapture";
 import { lemmaIdentityKey } from "../../server/linguisticIdentity";
 import { createTfDemoOrchestrator } from "../../server/linguisticOrchestration";
 import {
@@ -28,27 +25,28 @@ import { storedUnitOf } from "../../server/storedSegments";
 import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import type { ActionCtx } from "../_generated/server";
-import { clickDumgen, resegmenter } from "./deploymentDumgen";
+import { requireJev, resegment } from "./deploymentDumgen";
 import { convexId } from "./resolutionSessionLifecycle";
 
 /**
  * The click orchestrator for one action. Its grammar is Dumgen's
  * `resolve.grammar` (#876) and its Reading Dumgen's `resolve.reading`
  * (#877), judged over the Lemma's stored Readings, which Dumdict finds by
- * the case-folded Lemma identity (#764). Under DEV inspection every
- * Dumgen operation renders as inspection rows, with payloads (#885).
+ * the case-folded Lemma identity (#764). Its model work needs Dumgen's
+ * `Jev | Luna`, which the action provides once (`clickDumgen`), and a
+ * deployment with no TypeSafe key fails a click only once it needs a model.
  */
 export function orchestratorFor(
 	ctx: ActionCtx,
 	sessionGuard: ResolutionSessionGuard | null,
 	observer?: ResolutionProgressObserver,
-	inspection?: InspectionCapture,
 ) {
 	return createTfDemoOrchestrator({
-		resolution: dumgenClickResolution(() =>
-			clickDumgen(dumgenTracing(inspection)),
-		),
-		resegment: resegmenter(inspection),
+		resolution: dumgenClickResolution(() => {
+			requireJev();
+			return operations;
+		}),
+		resegment,
 		findStoredReadings: async (lemma) =>
 			(
 				await ctx.runQuery(

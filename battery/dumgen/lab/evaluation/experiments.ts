@@ -5,9 +5,9 @@
  *
  * - `segment-in-units/de:<set>`, gold mode: a lab set's gold Segments go in
  *   and the production unit stage's units come out, under the operation and
- *   call adapter `createDumgen` builds (`production-segmenter.ts`).
+ *   call adapter `DumgenLive` builds (`production-segmenter.ts`).
  * - `segment-in-units/de:<set>:raw`, raw mode, the production headline: the
- *   record's Sentence goes into `createDumgen`'s `segment.inUnits`, whose
+ *   record's Sentence goes into `operations.segment.inUnits`, whose
  *   Segment stage cuts it and whose unit stage groups the Segments
  *   (`segment-in-units-raw.ts`).
  * - `split-text/de:ud-drafts`, text mode: `splitText` cuts the ud-drafts
@@ -33,7 +33,7 @@
  *
  * `<set>` is one of the lab's frozen sets, `dev` or `heldout`. Each case
  * runs three times, as in the lab's runs, and jev answers come through the
- * lab's cache (`lab/segmentation/harness/jev-cache.ts`), the transport `createDumgen` is given,
+ * lab's cache (`lab/segmentation/harness/jev-cache.ts`), the transport `DumgenLive` is given,
  * so a case the lab has run replays without a call. The cache retries a
  * fresh request that met a rate limit or a server error, which production
  * never does, and the run reports every retry and failure as `transport`.

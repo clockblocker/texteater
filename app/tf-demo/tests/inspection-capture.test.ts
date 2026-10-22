@@ -1,10 +1,12 @@
 import { expect, test } from "bun:test";
+import { TracePayloads } from "dumgen";
 import * as Clock from "effect/Clock";
 import * as Effect from "effect/Effect";
 import { inspectionPayloadChunks } from "../convex/model/inspection";
 import {
 	createInspectionCapture,
-	dumgenTracing,
+	dumgenTraced,
+	type InspectionCapture,
 	inspected,
 	inspectionStep,
 	operationSteps,
@@ -75,14 +77,12 @@ test("failed code steps retain their input and error without changing the failur
 			),
 		),
 	);
-	await Effect.runPromise(
-		Effect.exit(
-			inspected(
-				Effect.interrupt.pipe(
-					Effect.withSpan("Wait", inspectionStep("app/tf-demo")),
-				),
-				capture,
+	await Effect.runPromiseExit(
+		inspected(
+			Effect.interrupt.pipe(
+				Effect.withSpan("Wait", inspectionStep("app/tf-demo")),
 			),
+			capture,
 		),
 	);
 	expect(capture.steps.map((step) => step.status)).toEqual([
@@ -348,8 +348,12 @@ test("an OperationTrace renders as its operation, its calls and its budget waits
 });
 
 test("Dumgen keeps payloads only under DEV inspection (#885)", () => {
-	expect(dumgenTracing(undefined).tracePayloads).toBe(false);
-	expect(dumgenTracing(createInspectionCapture()).tracePayloads).toBe(true);
+	const payloads = (inspection?: InspectionCapture) =>
+		Effect.runSync(
+			Effect.service(TracePayloads).pipe(dumgenTraced(inspection)),
+		);
+	expect(payloads(undefined)).toBe(false);
+	expect(payloads(createInspectionCapture())).toBe(true);
 });
 
 test("a click that came out is a successful operation, its dropped guessed call shown as interrupted", () => {

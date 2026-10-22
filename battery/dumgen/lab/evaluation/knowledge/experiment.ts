@@ -30,9 +30,12 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { z } from "zod";
-import { createDumgen } from "../../../src/create-dumgen.js";
+import { DumgenLive } from "../../../src/dumgen-live.js";
+import { JevTransport } from "../../../src/jev-call.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
+import { LunaTransport } from "../../../src/luna-call.js";
 import type { OperationTrace } from "../../../src/operation-trace.js";
+import { operations } from "../../../src/operations.js";
 import { markedSentence } from "../../../src/resolve/reading.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import {
@@ -249,19 +252,27 @@ async function attempt(
 	const traces: OperationTrace[] = [];
 	const at: KnowledgeAttempt = { goldCase, scope };
 	const result = await Effect.runPromise(
-		createDumgen({
-			jev: models.jev(at, repetition),
-			luna: models.luna(at, repetition),
-			onOperation: (trace) => traces.push(trace),
-		}).knowledge.produce({
-			language: "de",
-			reading: goldCase.reading,
-			attestation: goldCase.attestation,
-			sentence: goldCase.sentence,
-			origin: "New",
-			request: requestOf(goldCase, scope),
-			paradigm: { dimensions: paradigmRequestOf(goldCase, scope) },
-		}),
+		operations.knowledge
+			.produce({
+				language: "de",
+				reading: goldCase.reading,
+				attestation: goldCase.attestation,
+				sentence: goldCase.sentence,
+				origin: "New",
+				request: requestOf(goldCase, scope),
+				paradigm: { dimensions: paradigmRequestOf(goldCase, scope) },
+			})
+			.pipe(
+				Effect.provide(
+					DumgenLive({
+						jev: JevTransport.fromAsk(models.jev(at, repetition)),
+						luna: LunaTransport.fromAsk(
+							models.luna(at, repetition),
+						),
+						onOperation: (trace) => traces.push(trace),
+					}),
+				),
+			),
 	);
 	// A run cut short by a batch hold or a cap has no answer to score.
 	const held = result.failures.find(({ message }) =>

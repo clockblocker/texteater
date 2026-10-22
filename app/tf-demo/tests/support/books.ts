@@ -1,4 +1,5 @@
-import { createDumgen } from "dumgen";
+import { operations } from "dumgen";
+import * as Effect from "effect/Effect";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import type { ActionCtx } from "../../convex/_generated/server";
@@ -6,6 +7,7 @@ import { folioProcessingPort } from "../../convex/model/folios";
 import { processFolio } from "../../server/folioIntake";
 import { actionContext, type TestConvexDb } from "./convex";
 import { fakeJev } from "./jev";
+import { intakeDumgen } from "./providers";
 
 /* A .txt book the Folio test files share, and a run of its processing. */
 
@@ -68,14 +70,6 @@ export const foliosOf = (t: TestConvexDb, scrollId: Id<"scrolls">) =>
 export const portOf = (t: TestConvexDb, folioId: Id<"folios">, run: number) =>
 	folioProcessingPort(actionContext(t) as unknown as ActionCtx, folioId, run);
 
-const dumgenWith = (jev: ReturnType<typeof fakeJev>) =>
-	createDumgen({
-		jev: jev.ask,
-		luna: async () => {
-			throw Error("intake asked Luna");
-		},
-	});
-
 /**
  * Runs a requested Folio's processing to its end with `jev`, as the
  * action does, through `port` (the run's own by default).
@@ -89,12 +83,14 @@ export async function runFolio(
 	} = {},
 ) {
 	const folio = await t.run((ctx) => ctx.db.get(folioId));
-	return processFolio({
-		dumgen: dumgenWith(options.jev ?? fakeJev()),
-		language: "de",
-		hasTime: () => true,
-		port: options.port ?? portOf(t, folioId, folio?.run ?? 0),
-	});
+	return Effect.runPromise(
+		processFolio({
+			dumgen: operations,
+			language: "de",
+			hasTime: () => true,
+			port: options.port ?? portOf(t, folioId, folio?.run ?? 0),
+		}).pipe(Effect.provide(intakeDumgen(options.jev ?? fakeJev()))),
+	);
 }
 
 /** Asks for a Folio and processes it, as the reader's control does. */

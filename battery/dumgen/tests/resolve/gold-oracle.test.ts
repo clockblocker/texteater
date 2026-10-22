@@ -7,7 +7,8 @@ import {
 	goldAnswers,
 	goldWritten,
 } from "../../lab/evaluation/resolve-grammar/oracle.js";
-import { createDumgen } from "../../src/create-dumgen.js";
+import { operations } from "../../src/operations.js";
+import { liveOver } from "../live-over.js";
 
 /**
  * A judge and a writer that always answer as gold does: what is left
@@ -22,7 +23,7 @@ test("with gold's answers, resolve.grammar rebuilds nearly every gold Attestatio
 	let exact = 0;
 	const misses: string[] = [];
 	for (const goldCase of cases) {
-		const dumgen = createDumgen({
+		const live = liveOver({
 			jev: async (request) => ({
 				model: request.model,
 				answers: goldAnswers(goldCase, request.questions),
@@ -33,13 +34,15 @@ test("with gold's answers, resolve.grammar rebuilds nearly every gold Attestatio
 			}),
 		});
 		const result = await Effect.runPromise(
-			dumgen.resolve.grammar({
-				language: "de",
-				sentence: goldCase.sentence,
-				unit: goldCase.unit,
-				neighbours: {},
-				lemmaCandidates: [],
-			}),
+			operations.resolve
+				.grammar({
+					language: "de",
+					sentence: goldCase.sentence,
+					unit: goldCase.unit,
+					neighbours: {},
+					lemmaCandidates: [],
+				})
+				.pipe(Effect.provide(live)),
 		).catch((error: unknown) => ({ _tag: "Error" as const, error }));
 		if (result._tag !== "Resolved") {
 			misses.push(`${goldCase.id}: ${result._tag}`);

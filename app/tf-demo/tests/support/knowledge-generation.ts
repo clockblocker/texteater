@@ -10,10 +10,12 @@ import {
 	type FunctionReference,
 	getFunctionName,
 } from "convex/server";
+import { type LunaAsk, LunaTransport } from "dumgen";
 import { internal } from "../../convex/_generated/api";
 import type { Id, TableNames } from "../../convex/_generated/dataModel";
 import type { ActionCtx } from "../../convex/_generated/server";
 import { generateKnowledge } from "../../convex/knowledgeGenerationActions";
+import { replaceModelTransports } from "../../convex/model/deploymentDumgen";
 import * as containment from "../../convex/model/generatedKnowledgeContainment";
 import { RELATION_PUBLICATION_FINGERPRINTS } from "../../convex/model/generatedKnowledgeContainment";
 import { scheduleKnowledgeGeneration } from "../../convex/model/knowledgeScheduling";
@@ -362,56 +364,33 @@ export function logEvent(
 }
 
 /**
- * Stubs the model provider and restores it with the fixture API key. A
- * Valency Frame request gets `frame`; every other request gets text.
+ * Stubs the deployment's Luna transport, as a deployment with an OpenAI key
+ * and no TypeSafe key, until `restore`. A Valency Frame request gets
+ * `frame`; every other request gets text.
  */
 export function stubProvider(
 	respond: (modelInput: ModelInput) => Promise<string>,
 	frame: readonly unknown[] = [],
 	plural: unknown = { plurality: "NoPlural", plurals: [] },
 ) {
-	const previousFetch = globalThis.fetch;
-	const previousKey = process.env.OPENAI_API_KEY;
 	const requests: ModelInput[] = [];
-	process.env.OPENAI_API_KEY = "fixture";
-	globalThis.fetch = (async (_url, init) => {
-		const body = JSON.parse(String(init?.body));
-		const modelInput: ModelInput = JSON.parse(body.input[1].content);
+	const luna: LunaAsk = async (request) => {
+		const modelInput = request.input as ModelInput;
 		requests.push(modelInput);
-		return Response.json({
-			status: "completed",
-			output: [
-				{
-					content: [
-						{
-							type: "output_text",
-							text: JSON.stringify({
-								value:
-									modelInput.aspect === "valency"
-										? { valency: frame }
-										: modelInput.aspect === "pluralPattern"
-											? plural
-											: {
-													text:
-														await respond(
-															modelInput,
-														),
-												},
-							}),
-						},
-					],
-				},
-			],
-		});
-	}) as typeof fetch;
-	return {
-		requests,
-		restore() {
-			globalThis.fetch = previousFetch;
-			if (previousKey === undefined) delete process.env.OPENAI_API_KEY;
-			else process.env.OPENAI_API_KEY = previousKey;
-		},
+		return {
+			output:
+				modelInput.aspect === "valency"
+					? { valency: frame }
+					: modelInput.aspect === "pluralPattern"
+						? plural
+						: { text: await respond(modelInput) },
+			metadata: { model: null, usage: null },
+		};
 	};
+	const restore = replaceModelTransports({
+		luna: () => LunaTransport.fromAsk(luna),
+	});
+	return { requests, restore };
 }
 
 export type ModelInput = {

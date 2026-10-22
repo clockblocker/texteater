@@ -308,10 +308,10 @@ test("Dumgen's segmenter runs without package-relative file I/O", async () => {
 			`
  const original = process.getBuiltinModule.bind(process);
  process.getBuiltinModule = id => id === "node:fs" ? {...original(id), readFileSync() {throw Error("filesystem unavailable");}} : original(id);
- const {createDumgen} = await import("dumgen");
- const {runPromise} = await import("effect/Effect");
- const dumgen = createDumgen({jev: async () => {throw Error("controlled provider failure");}, luna: async () => {throw Error("segmentation asked Luna");}});
- const text = await runPromise(dumgen.segment.inUnits({language: "de", paragraphs: [{sentences: ["Die Banken sind geöffnet."]}]}));
+ const {DumgenLive, JevTransport, LunaTransport, operations} = await import("dumgen");
+ const {provide, runPromise} = await import("effect/Effect");
+ const dumgen = DumgenLive({jev: JevTransport.fromAsk(async () => {throw Error("controlled provider failure");}), luna: LunaTransport.fromAsk(async () => {throw Error("segmentation asked Luna");})});
+ const text = await runPromise(provide(operations.segment.inUnits({language: "de", paragraphs: [{sentences: ["Die Banken sind geöffnet."]}]}), dumgen));
  if (!text.paragraphs[0]?.sentences[0]?.failed) throw Error("Expected the controlled failure's mark");
  `,
 		],

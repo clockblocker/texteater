@@ -23,12 +23,20 @@ import {
 	type LunaDraft,
 	type LunaRequest,
 } from "./luna.js";
+import { createOpenAILuna, type OpenAILunaOptions } from "./openai-luna.js";
 
-/** The host's Luna transport, a Promise port taking a signal: `createOpenAILuna` in production. */
+/** The host's Luna transport, a Promise port taking a signal: OpenAI in production. */
 export class LunaTransport extends Context.Service<
 	LunaTransport,
 	{ readonly ask: LunaAsk }
->()("dumgen/LunaTransport") {}
+>()("dumgen/LunaTransport") {
+	/** Luna through the OpenAI Responses API (`createOpenAILuna`); an empty key is a Defect when it is built. */
+	static readonly openAI = (options: OpenAILunaOptions) =>
+		Layer.sync(LunaTransport, () => ({ ask: createOpenAILuna(options) }));
+	/** The host's own `LunaAsk`: the lab's cache or batch, or a test's fake. */
+	static readonly fromAsk = (ask: LunaAsk) =>
+		Layer.succeed(LunaTransport, { ask });
+}
 
 const tokenCount = (value: unknown) =>
 	typeof value === "number" && Number.isFinite(value) ? value : 0;

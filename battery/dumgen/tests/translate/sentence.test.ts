@@ -4,13 +4,14 @@ import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
-import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
 import type { LunaAsk, LunaRequest, LunaResponse } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
+import { operations } from "../../src/operations.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 import { sentenceTranslationPrompt } from "../../src/translate/de/prompt.js";
 import type { TranslateSentenceInput } from "../../src/translate/types.js";
+import { type FakeDumgenOptions, liveOver } from "../live-over.js";
 
 const jev: JevAsk = async () => {
 	throw Error("translate.sentence never asks jev");
@@ -63,16 +64,18 @@ function fakeLuna(
 
 function translator(
 	luna: ReturnType<typeof fakeLuna>,
-	options: Partial<DumgenOptions> = {},
+	options: Partial<FakeDumgenOptions> = {},
 ) {
 	const traces: OperationTrace[] = [];
-	const dumgen = createDumgen({
+	const live = liveOver({
 		jev,
 		luna: luna.ask,
 		onOperation: (trace) => traces.push(trace),
 		...options,
 	});
-	return { translate: dumgen.translate.sentence, traces };
+	const translate = (input: TranslateSentenceInput) =>
+		operations.translate.sentence(input).pipe(Effect.provide(live));
+	return { translate, live, traces };
 }
 
 const sentence = "Der Hund bellt.";
@@ -138,17 +141,25 @@ test("the neighbouring Sentences go as context, a blank one not at all, and payl
 	});
 });
 
-test("translations share the instance's request budget, and a queued one records its wait", async () => {
+test("translations under one provided Layer share its request budget, and a queued one records its wait", async () => {
 	const luna = fakeLuna(byLanguage, { delayMs: 10 });
-	const { translate, traces } = translator(luna, { requestBudget: 1 });
+	const { live, traces } = translator(luna, { requestBudget: 1 });
 	await Effect.runPromise(
 		Effect.all(
 			[
-				translate({ language: "de", sentence, into: "en" }),
-				translate({ language: "de", sentence, into: "ru" }),
+				operations.translate.sentence({
+					language: "de",
+					sentence,
+					into: "en",
+				}),
+				operations.translate.sentence({
+					language: "de",
+					sentence,
+					into: "ru",
+				}),
 			],
 			{ concurrency: "unbounded" },
-		),
+		).pipe(Effect.provide(live)),
 	);
 	expect(luna.most()).toBe(1);
 	const waits = traces.flatMap((trace) => trace.waits);

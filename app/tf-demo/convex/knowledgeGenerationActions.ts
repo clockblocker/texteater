@@ -1,7 +1,7 @@
 "use node";
 
 import { v } from "convex/values";
-import { createDumgen, createOpenAILuna, createTypeSafeAsk } from "dumgen";
+import type { Jev, Luna } from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as Cause from "effect/Cause";
 import * as Data from "effect/Data";
@@ -11,7 +11,7 @@ import * as Option from "effect/Option";
 import { dumgenKnowledgeProducer } from "../server/dumgenKnowledgeProducer";
 import type { generationRequestFor } from "../server/generatedKnowledgeRequest";
 import {
-	dumgenTracing,
+	dumgenTraced,
 	type InspectionCapture,
 	inspected,
 	inspectionStep,
@@ -31,6 +31,7 @@ import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
 import { type ActionCtx, env, internalAction } from "./_generated/server";
 import type { GenerationInput } from "./knowledgeGeneration";
+import { deploymentDumgen, modelTransports } from "./model/deploymentDumgen";
 import {
 	generatedKnowledgeAllowedForPublication,
 	type RelationPublicationFingerprints,
@@ -61,21 +62,17 @@ const BASE_TEXT_ASPECTS = new Set([
  * Knowledge on once the user rules on shipping it (#883 point 10); elsewhere,
  * and without a key, a run fails with the safe message and calls no model.
  */
-export function productionKnowledgeProducer(): KnowledgeProducer {
-	return dumgenKnowledgeProducer((tracing) => {
+export function productionKnowledgeProducer(): KnowledgeProducer<Jev | Luna> {
+	return dumgenKnowledgeProducer(() => {
 		if (env.TF_KNOWLEDGE_PRODUCTION !== "1")
 			throw new Error(
 				"Knowledge production is off on this deployment (TF_KNOWLEDGE_PRODUCTION).",
 			);
-		if (!env.TYPESAFE_API_KEY || !env.OPENAI_API_KEY)
+		const { jev, luna } = modelTransports();
+		if (!jev || !luna)
 			throw new Error(
 				"Knowledge production needs TYPESAFE_API_KEY and OPENAI_API_KEY.",
 			);
-		return createDumgen({
-			jev: createTypeSafeAsk({ apiKey: env.TYPESAFE_API_KEY }),
-			luna: createOpenAILuna({ apiKey: env.OPENAI_API_KEY }),
-			...tracing,
-		});
 	});
 }
 
@@ -103,7 +100,7 @@ type RejectedRelationRun = {
 type KnowledgeRun = {
 	readonly ctx: ActionCtx;
 	readonly attemptKey: string;
-	readonly produce: KnowledgeProducer;
+	readonly produce: KnowledgeProducer<Jev | Luna>;
 	readonly inspection: InspectionCapture | undefined;
 	/** Each Dumgen operation's trace without payloads, as evidence keeps it. */
 	readonly operationTraces: string[];
@@ -372,16 +369,16 @@ function produceKnowledge(run: KnowledgeRun, plan: KnowledgePlan) {
 					// Dumgen waits for each contribution's publication.
 					onContribution: (changes) =>
 						publishContribution(run, plan, changes),
-					// DEV inspection renders the calls with their payloads; the
-					// run's evidence keeps every trace without them.
-					...dumgenTracing(run.inspection, (trace) =>
-						run.operationTraces.push(
-							JSON.stringify(withoutPayloads(trace)),
-						),
-					),
 				},
 			)
 			.pipe(
+				// DEV inspection renders the calls with their payloads; the
+				// run's evidence keeps every trace without them.
+				dumgenTraced(run.inspection, (trace) =>
+					run.operationTraces.push(
+						JSON.stringify(withoutPayloads(trace)),
+					),
+				),
 				Effect.withSpan(
 					"Produce Knowledge",
 					inspectionStep(OWNER, { attemptKey: run.attemptKey }),
@@ -606,7 +603,7 @@ function knowledgeRun(run: KnowledgeRun) {
 export async function generateKnowledge(
 	ctx: ActionCtx,
 	{ attemptKey, inspect }: { attemptKey: string; inspect?: boolean },
-	produce: KnowledgeProducer,
+	produce: KnowledgeProducer<Jev | Luna>,
 ): Promise<null> {
 	const inspection = inspectionFor(
 		ctx,
@@ -631,6 +628,8 @@ export async function generateKnowledge(
 						root: true,
 					}),
 					logged,
+					// The action's one Dumgen, built when its run starts.
+					Effect.provide(deploymentDumgen()),
 				),
 				inspection,
 			),

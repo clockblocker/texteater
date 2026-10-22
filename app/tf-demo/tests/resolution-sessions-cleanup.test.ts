@@ -7,6 +7,7 @@ import {
 	commitBankOccurrence,
 	startSession,
 } from "./support/occurrences";
+import { noModelCalls } from "./support/providers";
 import {
 	bankenSource,
 	grammarProjection,
@@ -42,25 +43,17 @@ describe("Resolution Session", () => {
 		);
 		if (committed.status !== "Committed")
 			throw new Error("Expected a committed occurrence.");
-		const providerRequests: string[] = [];
-		const previousFetch = globalThis.fetch;
-		globalThis.fetch = Object.assign(
-			async (url: string | URL | Request) => {
-				providerRequests.push(String(url));
-				throw new Error("No model call is expected.");
-			},
-			{ preconnect: previousFetch.preconnect },
-		);
+		const models = noModelCalls();
 		try {
 			await t.action(
 				internal.orchestration.runResolutionSession,
 				running,
 			);
 		} finally {
-			globalThis.fetch = previousFetch;
+			models.restore();
 		}
 
-		expect(providerRequests).toEqual([]);
+		expect(models.requests).toEqual([]);
 		expect(await session(t, "request-1")).toMatchObject({
 			lifecycle: { state: "Terminal", outcome: "Complete" },
 			readingId: committed.readingId,
@@ -280,28 +273,20 @@ describe("Resolution Session", () => {
 			}),
 		);
 		const guard = await startSession(t, select("request-1"));
-		const providerRequests: string[] = [];
 		const errors: string[] = [];
-		const previousFetch = globalThis.fetch;
 		const previousError = console.error;
-		globalThis.fetch = Object.assign(
-			async (url: string | URL | Request) => {
-				providerRequests.push(String(url));
-				throw new Error("No model call is expected.");
-			},
-			{ preconnect: previousFetch.preconnect },
-		);
+		const models = noModelCalls();
 		console.error = (...values: unknown[]) => {
 			errors.push(values.map(String).join(" "));
 		};
 		try {
 			await t.action(internal.orchestration.runResolutionSession, guard);
 		} finally {
-			globalThis.fetch = previousFetch;
+			models.restore();
 			console.error = previousError;
 		}
 
-		expect(providerRequests).toEqual([]);
+		expect(models.requests).toEqual([]);
 		const failed = await session(t, "request-1");
 		expect(failed).toMatchObject({
 			lifecycle: { state: "Terminal", outcome: "PermanentFailure" },

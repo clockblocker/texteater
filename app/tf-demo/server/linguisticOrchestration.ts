@@ -46,9 +46,10 @@ export type {
 /** How often a click judges its Reading again after its New was refused as stale. */
 const MAX_STALE_REJUDGES = 2;
 
-type TfDemoOrchestratorOptions = {
+/** `R` is what the model work needs: Dumgen's `Jev | Luna` in production. */
+type TfDemoOrchestratorOptions<R = never> = {
 	/** Grammar, then the Reading's Emoji Description; production runs `dumgenClickResolution`. */
-	readonly resolution: ClickResolution;
+	readonly resolution: ClickResolution<R>;
 	/** The Readings the Shared Demo Dictionary already stores for a Lemma. */
 	readonly findStoredReadings: (
 		lemma: Dumling.Lemma<"de">,
@@ -65,7 +66,7 @@ type TfDemoOrchestratorOptions = {
 	 */
 	readonly resegment?: (
 		stitchedText: string,
-	) => Effect.Effect<ResegmentedSentence, ModelFailure>;
+	) => Effect.Effect<ResegmentedSentence, ModelFailure, R>;
 };
 
 /**
@@ -76,12 +77,14 @@ type TfDemoOrchestratorOptions = {
  * tests can use in-memory ones without changing workflow or conflict
  * semantics.
  */
-export function createTfDemoOrchestrator(options: TfDemoOrchestratorOptions) {
+export function createTfDemoOrchestrator<R = never>(
+	options: TfDemoOrchestratorOptions<R>,
+) {
 	function resolveSegment(
 		selection: ResolveSegmentInput,
 		checkpoints: ResolutionCheckpoints = {},
 		initialContext?: ResolutionContext,
-	): Effect.Effect<ResolveSegmentResult, ResolutionRunError> {
+	): Effect.Effect<ResolveSegmentResult, ResolutionRunError, R> {
 		return Effect.gen(function* () {
 			validateSelection(selection);
 			const loaded =
@@ -129,8 +132,8 @@ function validateSelection(input: ResolveSegmentInput): void {
 	}
 }
 
-function loadResolutionContext(
-	options: TfDemoOrchestratorOptions,
+function loadResolutionContext<R>(
+	options: TfDemoOrchestratorOptions<R>,
 	input: ResolveSegmentInput,
 ) {
 	return Effect.tryPromise(() =>
@@ -148,8 +151,8 @@ function loadResolutionContext(
  * click, its units stored, then resolved as usual (#861): the click's
  * Segment index and context after that, or both unchanged.
  */
-function resegmentIfFailed(
-	options: TfDemoOrchestratorOptions,
+function resegmentIfFailed<R>(
+	options: TfDemoOrchestratorOptions<R>,
 	input: ResolveSegmentInput,
 	context: ResolutionContext,
 	checkpoints: ResolutionCheckpoints,
@@ -190,8 +193,8 @@ function resegmentIfFailed(
 }
 
 /** A click on a Segment whose occurrence is stored already reuses it. */
-function commitReuse(
-	options: TfDemoOrchestratorOptions,
+function commitReuse<R>(
+	options: TfDemoOrchestratorOptions<R>,
 	input: ResolveSegmentInput,
 	reusable: ReusableAttestation,
 ) {
@@ -216,8 +219,8 @@ function commitReuse(
 }
 
 /** Commits a click Grammar left unresolved, or the occurrence a competing click resolved meanwhile. */
-function commitUnresolved(
-	options: TfDemoOrchestratorOptions,
+function commitUnresolved<R>(
+	options: TfDemoOrchestratorOptions<R>,
 	input: ResolveSegmentInput,
 	grammatical: NonResolvedGrammatical,
 ) {
@@ -241,8 +244,8 @@ function commitUnresolved(
 	);
 }
 
-function resolveGrammatical(
-	options: TfDemoOrchestratorOptions,
+function resolveGrammatical<R>(
+	options: TfDemoOrchestratorOptions<R>,
 	context: ResolutionContext,
 	request: ResolveSegmentInput,
 ) {
@@ -274,8 +277,8 @@ function resolveGrammatical(
  * A checkpointed Reading is saved already; any other rides along with its
  * commit as the ReadingAvailable progress.
  */
-function resolveAndCommitReading(
-	options: TfDemoOrchestratorOptions,
+function resolveAndCommitReading<R>(
+	options: TfDemoOrchestratorOptions<R>,
 	input: ResolveSegmentInput,
 	context: ResolutionContext,
 	checkpoints: ResolutionCheckpoints,
@@ -382,8 +385,8 @@ function resolveAndCommitReading(
  * Saves Grammar unless a checkpoint holds it, and meanwhile loads the
  * Lemma's stored Readings unless a checkpoint holds the Reading.
  */
-function saveGrammarAndLoadReadings(
-	options: TfDemoOrchestratorOptions,
+function saveGrammarAndLoadReadings<R>(
+	options: TfDemoOrchestratorOptions<R>,
 	checkpoints: ResolutionCheckpoints,
 	grammatical: ResolvedGrammatical,
 	lemma: Dumling.Lemma<"de">,
@@ -424,8 +427,8 @@ function saveGrammarAndLoadReadings(
 }
 
 /** The Reading a checkpoint holds, a Foreign Lemma's one Reading, or the one judged over the stored candidates. */
-function firstReading(
-	options: TfDemoOrchestratorOptions,
+function firstReading<R>(
+	options: TfDemoOrchestratorOptions<R>,
 	checkpoints: ResolutionCheckpoints,
 	grammatical: ResolvedGrammatical,
 	lemma: Dumling.Lemma<"de">,
@@ -497,8 +500,8 @@ export function resolvedClickCommit(
 }
 
 /** Commits a resolved click; `announce` sends its Reading as the ReadingAvailable progress. */
-function commitResolvedClick(
-	options: TfDemoOrchestratorOptions,
+function commitResolvedClick<R>(
+	options: TfDemoOrchestratorOptions<R>,
 	scope: ClickCommitScope,
 	reading: Dumling.Reading<"de">,
 	resolution: ReadingResolution,
@@ -536,8 +539,8 @@ function commitResolvedClick(
 }
 
 /** The Reading over `candidates`; Grammar's draft stands in for a description not yet written. */
-function resolveReading(
-	options: TfDemoOrchestratorOptions,
+function resolveReading<R>(
+	options: TfDemoOrchestratorOptions<R>,
 	resolved: ResolvedGrammatical,
 	lemma: Dumling.Lemma<"de">,
 	candidates: readonly string[],

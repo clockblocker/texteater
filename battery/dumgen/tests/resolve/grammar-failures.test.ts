@@ -1,8 +1,9 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
 import type { LunaAsk } from "../../src/luna.js";
+import { operations } from "../../src/operations.js";
+import { liveOver } from "../live-over.js";
 import {
 	fakeJev,
 	fakeLuna,
@@ -36,7 +37,7 @@ test("a unit intake left Unresolved stays Unresolved and asks nothing", async ()
 
 test("another language, a failed Sentence or a unit outside its Sentence is a Defect before anything is asked", async () => {
 	const jev = fakeJev();
-	const dumgen = createDumgen({ jev: jev.ask, luna: fakeLuna().ask });
+	const live = liveOver({ jev: jev.ask, luna: fakeLuna().ask });
 	const sentence = sentenceOf("Er kommt.");
 	const input = {
 		language: "de" as const,
@@ -47,23 +48,29 @@ test("another language, a failed Sentence or a unit outside its Sentence is a De
 	};
 	await expect(
 		Effect.runPromise(
-			dumgen.resolve.grammar({ ...input, language: "en" as "de" }),
+			operations.resolve
+				.grammar({ ...input, language: "en" as "de" })
+				.pipe(Effect.provide(live)),
 		),
 	).rejects.toThrow('German ("de") only');
 	await expect(
 		Effect.runPromise(
-			dumgen.resolve.grammar({
-				...input,
-				sentence: { ...sentence, units: [], failed: true },
-			}),
+			operations.resolve
+				.grammar({
+					...input,
+					sentence: { ...sentence, units: [], failed: true },
+				})
+				.pipe(Effect.provide(live)),
 		),
 	).rejects.toThrow("segment it again");
 	await expect(
 		Effect.runPromise(
-			dumgen.resolve.grammar({
-				...input,
-				unit: unitOf([1], "Lexeme/VERB"),
-			}),
+			operations.resolve
+				.grammar({
+					...input,
+					unit: unitOf([1], "Lexeme/VERB"),
+				})
+				.pipe(Effect.provide(live)),
 		),
 	).rejects.toThrow("ResolvableText");
 	expect(jev.sent).toEqual([]);
@@ -77,16 +84,22 @@ test("a transport failure is a ProviderFailure and an unusable answer an Invalid
 	const down = fakeJev({}, { fail: () => true });
 	const failure = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({
-				jev: down.ask,
-				luna: fakeLuna().ask,
-			}).resolve.grammar({
-				language: "de",
-				sentence,
-				unit,
-				neighbours: {},
-				lemmaCandidates: [],
-			}),
+			operations.resolve
+				.grammar({
+					language: "de",
+					sentence,
+					unit,
+					neighbours: {},
+					lemmaCandidates: [],
+				})
+				.pipe(
+					Effect.provide(
+						liveOver({
+							jev: down.ask,
+							luna: fakeLuna().ask,
+						}),
+					),
+				),
 		),
 	);
 	expect(failure).toBeInstanceOf(ProviderFailure);
@@ -94,16 +107,22 @@ test("a transport failure is a ProviderFailure and an unusable answer an Invalid
 	const garbled = fakeLuna(() => ({ canonicalForm: "kommen" }));
 	const unusable = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({
-				jev: fakeJev().ask,
-				luna: garbled.ask,
-			}).resolve.grammar({
-				language: "de",
-				sentence,
-				unit,
-				neighbours: {},
-				lemmaCandidates: [],
-			}),
+			operations.resolve
+				.grammar({
+					language: "de",
+					sentence,
+					unit,
+					neighbours: {},
+					lemmaCandidates: [],
+				})
+				.pipe(
+					Effect.provide(
+						liveOver({
+							jev: fakeJev().ask,
+							luna: garbled.ask,
+						}),
+					),
+				),
 		),
 	);
 	expect(unusable).toBeInstanceOf(InvalidModelOutput);
@@ -120,13 +139,17 @@ test("a click is all-or-nothing: a failed Case question interrupts Luna's call i
 	const luna = fakeLuna(undefined, { delayMs: 50 });
 	const failure = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({ jev: jev.ask, luna: luna.ask }).resolve.grammar({
-				language: "de",
-				sentence: sentenceOf("Er hilft der Anna."),
-				unit: unitOf([4, 6], "Lexeme/PROPN"),
-				neighbours: {},
-				lemmaCandidates: [],
-			}),
+			operations.resolve
+				.grammar({
+					language: "de",
+					sentence: sentenceOf("Er hilft der Anna."),
+					unit: unitOf([4, 6], "Lexeme/PROPN"),
+					neighbours: {},
+					lemmaCandidates: [],
+				})
+				.pipe(
+					Effect.provide(liveOver({ jev: jev.ask, luna: luna.ask })),
+				),
 		),
 	);
 	expect(failure).toBeInstanceOf(ProviderFailure);
@@ -164,13 +187,15 @@ test("a Luna answer the transport kept no output for is refused with the transpo
 	});
 	const failure = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({ jev: fakeJev().ask, luna }).resolve.grammar({
-				language: "de",
-				sentence: sentenceOf("Er kommt."),
-				unit: unitOf([2], "Lexeme/VERB"),
-				neighbours: {},
-				lemmaCandidates: [],
-			}),
+			operations.resolve
+				.grammar({
+					language: "de",
+					sentence: sentenceOf("Er kommt."),
+					unit: unitOf([2], "Lexeme/VERB"),
+					neighbours: {},
+					lemmaCandidates: [],
+				})
+				.pipe(Effect.provide(liveOver({ jev: fakeJev().ask, luna }))),
 		),
 	);
 	expect(failure).toBeInstanceOf(InvalidModelOutput);

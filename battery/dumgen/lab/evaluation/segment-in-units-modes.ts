@@ -47,7 +47,7 @@ export type Context = {
 	readonly calls: CallRecord[];
 };
 
-/** The cached jev at the context's repetition, as `createDumgen`'s transport. */
+/** The cached jev at the context's repetition, as `DumgenLive`'s transport. */
 const productionJev = ({ jev, repetition, calls }: Context): ProductionJev => ({
 	ask: jev.ask(repetition, calls),
 	model: jev.model,

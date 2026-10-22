@@ -1,8 +1,8 @@
 /**
  * The cached, retrying jev that segmentation evaluations and lab runs ask
- * through. It is a `JevAsk`, so `createDumgen` takes it as its transport
- * and an evaluation runs the production path; the lab's arms reach it
- * through `port`, the stages' `ask` port.
+ * through. It is a `JevAsk`, so `JevTransport.fromAsk` makes it the
+ * transport `DumgenLive` takes and an evaluation runs the production path;
+ * the lab's arms reach it through `port`, the stages' `ask` port.
  *
  * - **The cache keys each answer by its question**: the model, the judge
  *   state, the repetition and the question with its id. How a request was
@@ -154,8 +154,8 @@ export class JevCache {
 	}
 
 	/**
-	 * jev at `repetition` as a `JevAsk`: what `createDumgen` takes. Each
-	 * request it answers appends one record to `calls`.
+	 * jev at `repetition` as a `JevAsk`: what `JevTransport.fromAsk`
+	 * takes. Each request it answers appends one record to `calls`.
 	 */
 	ask(repetition: number, calls: CallRecord[] = []): JevAsk {
 		return (request, { stage, signal }) => {

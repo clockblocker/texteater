@@ -32,9 +32,12 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { z } from "zod";
-import { createDumgen } from "../../../src/create-dumgen.js";
+import { DumgenLive } from "../../../src/dumgen-live.js";
+import { JevTransport } from "../../../src/jev-call.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
+import { LunaTransport } from "../../../src/luna-call.js";
 import type { OperationTrace } from "../../../src/operation-trace.js";
+import { operations } from "../../../src/operations.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import type { Unit } from "../../../src/segment/segmented-sentence.js";
 import {
@@ -195,17 +198,27 @@ async function attempt(
 	}
 	const traces: OperationTrace[] = [];
 	const result = await Effect.runPromise(
-		createDumgen({
-			jev: models.jev(goldCase, repetition),
-			luna: models.luna(goldCase, repetition),
-			onOperation: (trace) => traces.push(trace),
-		}).resolve.grammar({
-			language: "de",
-			sentence: goldCase.sentence,
-			unit,
-			neighbours: {},
-			lemmaCandidates: [],
-		}),
+		operations.resolve
+			.grammar({
+				language: "de",
+				sentence: goldCase.sentence,
+				unit,
+				neighbours: {},
+				lemmaCandidates: [],
+			})
+			.pipe(
+				Effect.provide(
+					DumgenLive({
+						jev: JevTransport.fromAsk(
+							models.jev(goldCase, repetition),
+						),
+						luna: LunaTransport.fromAsk(
+							models.luna(goldCase, repetition),
+						),
+						onOperation: (trace) => traces.push(trace),
+					}),
+				),
+			),
 	);
 	const reason = traces[0]?.resolution?.reason;
 	return {

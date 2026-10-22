@@ -3,8 +3,9 @@ import * as Cause from "effect/Cause";
 import * as Data from "effect/Data";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
-import { createDumgen } from "../../src/create-dumgen.js";
 import type { GermanKnowledgeChange } from "../../src/knowledge/types.js";
+import { operations } from "../../src/operations.js";
+import { liveOver } from "../live-over.js";
 import {
 	adp,
 	attestedPreposition,
@@ -300,15 +301,23 @@ test("onContribution's error is the run's only error, and it interrupts the aspe
 		{ delayMs: (aspect) => (aspect === "definition" ? 200 : 1) },
 	);
 	const exit = await Effect.runPromiseExit(
-		createDumgen({ jev: jev.ask, luna: luna.ask }).knowledge.produce(
-			knowledgeInput(noun, "💐", "Sie bekam einen Strauß.", ["Strauß"], {
-				request: { transcription: null, definition: null },
-				onContribution: () =>
-					Effect.fail(
-						new PublicationFailed({ reason: "store full" }),
-					),
-			}),
-		),
+		operations.knowledge
+			.produce(
+				knowledgeInput(
+					noun,
+					"💐",
+					"Sie bekam einen Strauß.",
+					["Strauß"],
+					{
+						request: { transcription: null, definition: null },
+						onContribution: () =>
+							Effect.fail(
+								new PublicationFailed({ reason: "store full" }),
+							),
+					},
+				),
+			)
+			.pipe(Effect.provide(liveOver({ jev: jev.ask, luna: luna.ask }))),
 	);
 	expect(Exit.isFailure(exit)).toBe(true);
 	if (Exit.isFailure(exit)) {
@@ -641,7 +650,7 @@ test("aspects the route does not apply, and the deferred tree, are skipped (Dumg
 
 test("bad input is a Defect, raised before anything is asked (#883 point 6)", async () => {
 	const luna = knowledgeLuna({});
-	const dumgen = createDumgen({ jev: knowledgeJev().ask, luna: luna.ask });
+	const live = liveOver({ jev: knowledgeJev().ask, luna: luna.ask });
 	const base = knowledgeInput(
 		noun,
 		"💐",
@@ -673,7 +682,7 @@ test("bad input is a Defect, raised before anything is asked (#883 point 6)", as
 		},
 	]) {
 		const exit = await Effect.runPromiseExit(
-			dumgen.knowledge.produce(input),
+			operations.knowledge.produce(input).pipe(Effect.provide(live)),
 		);
 		expect(Exit.isFailure(exit) && Cause.hasDies(exit.cause)).toBe(true);
 	}

@@ -15,6 +15,7 @@ import {
 } from "./support/click-orchestration";
 import { createTestConvex, submitText } from "./support/convex";
 import { startSession } from "./support/occurrences";
+import { noModelCalls } from "./support/providers";
 
 /*
  * The click orchestrator where intake left the click nothing to resolve: a
@@ -73,21 +74,13 @@ test("a Resolution Session run on a unit intake left Unresolved ends Unresolved 
 	});
 	jest.useRealTimers();
 
-	const fetches: string[] = [];
-	const previousFetch = globalThis.fetch;
-	globalThis.fetch = Object.assign(
-		async (url: string | URL | Request) => {
-			fetches.push(String(url));
-			throw new Error("No model call is expected.");
-		},
-		{ preconnect: previousFetch.preconnect },
-	);
+	const models = noModelCalls();
 	try {
 		await t.action(internal.orchestration.runResolutionSession, guard);
 	} finally {
-		globalThis.fetch = previousFetch;
+		models.restore();
 	}
-	expect(fetches).toEqual([]);
+	expect(models.requests).toEqual([]);
 	const note = await t.query(api.resolutionSessions.getResolutionNote, {
 		requestId: "request-1",
 	});
@@ -104,7 +97,9 @@ test("a Resolution Session run on a unit intake left Unresolved ends Unresolved 
 
 /** A click on a Sentence intake failed to segment: `Banken`, stored with no units. */
 function failedSentenceRun(
-	resegment: Parameters<typeof createTfDemoOrchestrator>[0]["resegment"],
+	resegment: Parameters<
+		typeof createTfDemoOrchestrator<never>
+	>[0]["resegment"],
 ) {
 	const fake = fakeResolution();
 	const stored: Parameters<

@@ -18,14 +18,15 @@ two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contra
 3. tf-demo reads German Scrolls only for now. A Scroll submitted with another
    target language is rejected before any jev call; `language` stays a
    parameter so Hebrew can follow.
-4. `createDumgen({ jev: createTypeSafeAsk({ apiKey }), onOperation })` is the
-   production Dumgen. Its `language.detect({ paragraphs })` gives each
+4. Intake runs Dumgen's `operations` under the action's `DumgenLive`, whose
+   jev is `JevTransport.typeSafe({ apiKey })`, and the action's `TraceSink`
+   receives each trace. `language.detect({ paragraphs })` gives each
    Sentence its Detected Language (Dumgen ADR 0001): code settles Sentences
    with no letters or mostly Hebrew words, jev judges the rest with one
    Choice each in windows of about 30 Sentences, and an undetermined
    Sentence takes the language around it, or none. A failed jev request
-   fails the submission. Its `segment.inUnits({ language: "de", paragraphs
-   })` gets only the German Sentences and gives each its normalized text,
+   fails the submission. `segment.inUnits({ language: "de", paragraphs })`
+   gets only the German Sentences and gives each its normalized text,
    its Segments and its biggest units; tf-demo `yield*`s both inside its
    intake program. jev is the only model; the key is the Convex deployment's
    `TYPESAFE_API_KEY`.

@@ -1,6 +1,5 @@
 import { expect, test } from "bun:test";
 import type {
-	Dumgen,
 	GrammarResolution,
 	ReadingResolution,
 	ResolveGrammarInput,
@@ -10,7 +9,10 @@ import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { clickCallDeadlineMs } from "../convex/model/deploymentDumgen";
 import type { ClickGrammarInput } from "../server/clickResolution";
-import { dumgenClickResolution } from "../server/dumgenClickResolution";
+import {
+	type ClickDumgen,
+	dumgenClickResolution,
+} from "../server/dumgenClickResolution";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import { storedUnitOf } from "../server/storedSegments";
 
@@ -71,7 +73,7 @@ function fakeDumgen(
 	const inputs: ResolveGrammarInput[] = [];
 	const readingInputs: ResolveReadingInput[] = [];
 	let built = 0;
-	const dumgen = (): Pick<Dumgen, "resolve"> => {
+	const dumgen = (): ClickDumgen<never> => {
 		built++;
 		return {
 			resolve: {

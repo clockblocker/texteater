@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { createDumgen, extractPastedText, parseScroll } from "dumgen";
+import { extractPastedText, operations, parseScroll, TraceSink } from "dumgen";
 import * as Effect from "effect/Effect";
 import { projectSentenceView } from "../convex/modules/scroll/sentenceView";
 import {
@@ -20,6 +20,7 @@ import {
 	germanAnswers,
 	isLanguageRequest,
 } from "./support/jev";
+import { intakeDumgen } from "./support/providers";
 
 const SOURCE = "Er gibt auf. Er wohnt im Haus.\n\nJa!";
 
@@ -47,14 +48,7 @@ function intakeWith(jev: ReturnType<typeof fakeJev>, sentenceCount = 3) {
 	const stored: SubmittedScroll[] = [];
 	const run = createIntakeRunRecorder(sentenceCount);
 	const intake = createIntake({
-		dumgen: createDumgen({
-			jev: jev.ask,
-			// Intake never asks Luna.
-			luna: async () => {
-				throw Error("intake asked Luna");
-			},
-			onOperation: run.operation,
-		}),
+		dumgen: operations,
 		onSegmenting: run.segmenting,
 		persistence: {
 			persistSubmittedScroll: async (input) => {
@@ -69,12 +63,17 @@ function intakeWith(jev: ReturnType<typeof fakeJev>, sentenceCount = 3) {
 		extractedText = extractPastedText(sourceText),
 	) =>
 		Effect.runPromise(
-			intake.submitText({
-				submissionKey: "key",
-				sourceText,
-				extractedText,
-				language,
-			}),
+			intake
+				.submitText({
+					submissionKey: "key",
+					sourceText,
+					extractedText,
+					language,
+				})
+				.pipe(
+					Effect.provideService(TraceSink, run.operation),
+					Effect.provide(intakeDumgen(jev)),
+				),
 		);
 	return { stored, run, submit };
 }

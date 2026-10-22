@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test";
+import { type JevAsk, JevTransport, type LunaAsk, LunaTransport } from "dumgen";
 import { internal } from "../convex/_generated/api";
 import type { TableNames } from "../convex/_generated/dataModel";
+import { replaceModelTransports } from "../convex/model/deploymentDumgen";
 import {
 	foldedCanonicalForm,
 	lemmaIdentityKey,
@@ -14,10 +16,10 @@ import {
 
 /**
  * The production Knowledge action end to end with no network (#887): its
- * Dumgen `knowledge.produce` reaches jev and Luna through the real
- * TypeSafe and OpenAI transports, whose `fetch` answers here. It lives in
- * a file of its own so nothing another test scheduled can run while the
- * fixture keys are set, and it cancels what its own publication schedules.
+ * Dumgen `knowledge.produce` reaches jev and Luna through the deployment's
+ * transports, faked here as TypeSafe and OpenAI answer. It lives in a file
+ * of its own so nothing another test scheduled can run while the fakes are
+ * in place, and it cancels what its own publication schedules.
  */
 
 const BANK_LEMMA = {
@@ -105,24 +107,17 @@ function rows<Table extends TableNames>(t: TestConvexDb, table: Table) {
 }
 
 /**
- * Runs the production Knowledge action for `attemptKey` with the fixture
- * keys and transports, and cancels what its publication scheduled.
+ * Runs the production Knowledge action for `attemptKey` with the
+ * deployment's transports faked (`fromAsk`), and cancels what its
+ * publication scheduled. The fakes answer as TypeSafe and OpenAI do.
  */
 async function runProductionAction(
 	t: TestConvexDb,
 	attemptKey: string,
 	inspect?: boolean,
 ) {
-	const previous = {
-		fetch: globalThis.fetch,
-		flag: process.env.TF_KNOWLEDGE_PRODUCTION,
-		typesafe: process.env.TYPESAFE_API_KEY,
-		openai: process.env.OPENAI_API_KEY,
-	};
+	const flag = process.env.TF_KNOWLEDGE_PRODUCTION;
 	process.env.TF_KNOWLEDGE_PRODUCTION = "1";
-	process.env.TYPESAFE_API_KEY = "fixture";
-	process.env.OPENAI_API_KEY = "fixture";
-	const urls: string[] = [];
 	const aspects: string[] = [];
 	const lunaAnswers: Record<string, unknown> = {
 		transcription: "baŋk",
@@ -130,49 +125,39 @@ async function runProductionAction(
 		translations: ["bank"],
 		valency: { valency: [] },
 	};
-	globalThis.fetch = (async (url: string | URL | Request, init) => {
-		urls.push(String(url));
-		const body = JSON.parse(String(init?.body));
-		if (String(url).endsWith("/v1/systemone"))
-			return Response.json({
-				model: body.model,
-				answers: Object.fromEntries(
-					Object.keys(body.questions).map((id) => [
-						id,
-						{
-							type: "choice",
-							choice: "HasPlural",
-							confidence: 1,
-							probabilities: { HasPlural: 1 },
-						},
-					]),
-				),
-				usage: { input_tokens: 10, output_tokens: 1 },
-			});
-		const input = JSON.parse(body.input[1].content) as {
-			aspect: string;
-			language?: string;
-		};
-		aspects.push(input.aspect);
-		const value =
-			input.aspect === "translations" && input.language === "ru"
-				? ["банк"]
-				: lunaAnswers[input.aspect];
-		return Response.json({
-			status: "completed",
-			output: [
+	const jev: JevAsk = async (request) => ({
+		model: request.model,
+		answers: Object.fromEntries(
+			Object.keys(request.questions).map((id) => [
+				id,
 				{
-					content: [
-						{
-							type: "output_text",
-							text: JSON.stringify({ value }),
-						},
-					],
+					type: "choice",
+					choice: "HasPlural",
+					confidence: 1,
+					probabilities: { HasPlural: 1 },
 				},
-			],
-			usage: { input_tokens: 50, output_tokens: 5 },
-		});
-	}) as typeof fetch;
+			]),
+		),
+		usage: { input_tokens: 10, output_tokens: 1 },
+	});
+	const luna: LunaAsk = async (request) => {
+		const input = request.input as { aspect: string; language?: string };
+		aspects.push(input.aspect);
+		return {
+			output:
+				input.aspect === "translations" && input.language === "ru"
+					? ["банк"]
+					: lunaAnswers[input.aspect],
+			metadata: {
+				model: null,
+				usage: { input_tokens: 50, output_tokens: 5 },
+			},
+		};
+	};
+	const restore = replaceModelTransports({
+		jev: () => JevTransport.fromAsk(jev),
+		luna: () => LunaTransport.fromAsk(luna),
+	});
 	try {
 		await t.action(
 			internal.knowledgeGenerationActions.runKnowledgeGeneration,
@@ -180,7 +165,7 @@ async function runProductionAction(
 		);
 	} finally {
 		// What the publication scheduled (the definition's segmentation)
-		// never runs once the fixture keys and transports are gone.
+		// never runs once the fake transports are gone.
 		await t.run(async (ctx) => {
 			for (const job of await ctx.db.system
 				.query("_scheduled_functions")
@@ -188,16 +173,11 @@ async function runProductionAction(
 				if (job.state.kind === "pending")
 					await ctx.scheduler.cancel(job._id);
 		});
-		globalThis.fetch = previous.fetch;
-		for (const [name, value] of [
-			["TF_KNOWLEDGE_PRODUCTION", previous.flag],
-			["TYPESAFE_API_KEY", previous.typesafe],
-			["OPENAI_API_KEY", previous.openai],
-		] as const)
-			if (value === undefined) delete process.env[name];
-			else process.env[name] = value;
+		restore();
+		if (flag === undefined) delete process.env.TF_KNOWLEDGE_PRODUCTION;
+		else process.env.TF_KNOWLEDGE_PRODUCTION = flag;
 	}
-	return { urls, aspects };
+	return { aspects };
 }
 
 /** The run's evidence: one serialized Dumgen trace per operation. */
@@ -212,14 +192,7 @@ async function evidenceTraces(t: TestConvexDb) {
 test("the production producer runs Dumgen's knowledge.produce through the deployment's transports; structural changes publish with the final batch (#887)", async () => {
 	const t = createTestConvex();
 	await seedAttempt(t, "live");
-	const { urls, aspects } = await runProductionAction(t, "live");
-	expect(
-		urls.every(
-			(url) =>
-				url === "https://api.typesafe.ai/v1/systemone" ||
-				url === "https://api.openai.com/v1/responses",
-		),
-	).toBe(true);
+	const { aspects } = await runProductionAction(t, "live");
 	// The base request of a NOUN: its text and its frame. Its plural is the
 	// Lemma Paradigm's, which tf-demo doesn't request until it stores one
 	// (#1232).

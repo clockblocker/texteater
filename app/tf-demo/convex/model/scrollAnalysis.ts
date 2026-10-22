@@ -1,12 +1,12 @@
 "use node";
 
 import { ConvexError, type Infer, type Value, v } from "convex/values";
-import type { Scroll } from "dumgen";
+import { operations, type Scroll } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import {
-	dumgenTracing,
+	dumgenTraced,
 	inspected,
 	inspectionStep,
 } from "../../server/inspectionCapture";
@@ -24,7 +24,7 @@ import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import type { ActionCtx } from "../_generated/server";
 import { inspectionEnabled } from "../deploymentFlags";
-import { productionDumgen } from "./deploymentDumgen";
+import { deploymentDumgen, requireJev } from "./deploymentDumgen";
 import { inspectionFor } from "./inspectionAction";
 import { convexId } from "./resolutionSessionLifecycle";
 
@@ -135,8 +135,10 @@ export async function analyzeScroll(
 		outcome: "Accepted",
 	};
 	try {
+		// Without a TypeSafe key, intake fails here with the coded error.
+		requireJev();
 		const intake = createIntake({
-			dumgen: productionDumgen(dumgenTracing(inspection, run.operation)),
+			dumgen: operations,
 			onSegmenting: run.segmenting,
 			persistence: {
 				persistSubmittedScroll: (input) =>
@@ -179,6 +181,8 @@ export async function analyzeScroll(
 							root: true,
 						}),
 						logged,
+						dumgenTraced(inspection, run.operation),
+						Effect.provide(deploymentDumgen()),
 					),
 				inspection,
 			),

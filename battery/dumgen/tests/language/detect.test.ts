@@ -1,13 +1,14 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
 import type { LunaAsk } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
+import { operations } from "../../src/operations.js";
 import {
 	type JevAsk,
 	type JevRequest,
 	pinnedJevModel,
 } from "../../src/segment/jev.js";
+import { liveOver } from "../live-over.js";
 
 const luna: LunaAsk = async () => {
 	throw Error("language.detect never asks Luna");
@@ -56,13 +57,19 @@ const detect = (
 	onOperation?: (trace: OperationTrace) => void,
 ) =>
 	Effect.runPromise(
-		createDumgen({
-			jev,
-			luna,
-			...(onOperation ? { onOperation } : {}),
-		}).language.detect({
-			paragraphs: paragraphs.map((sentences) => ({ sentences })),
-		}),
+		operations.language
+			.detect({
+				paragraphs: paragraphs.map((sentences) => ({ sentences })),
+			})
+			.pipe(
+				Effect.provide(
+					liveOver({
+						jev,
+						luna,
+						...(onOperation ? { onOperation } : {}),
+					}),
+				),
+			),
 	);
 
 test("gives each Sentence the language jev picks, and Other for one Intake does not name", async () => {
@@ -158,9 +165,9 @@ test("a window jev fails fails the operation", async () => {
 		throw Error("TypeSafe is down");
 	};
 	const exit = await Effect.runPromiseExit(
-		createDumgen({ jev: failing, luna }).language.detect({
-			paragraphs: [{ sentences: ["Er kam."] }],
-		}),
+		operations.language
+			.detect({ paragraphs: [{ sentences: ["Er kam."] }] })
+			.pipe(Effect.provide(liveOver({ jev: failing, luna }))),
 	);
 	expect(exit._tag).toBe("Failure");
 });

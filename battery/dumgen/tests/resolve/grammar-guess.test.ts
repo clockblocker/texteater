@@ -1,9 +1,10 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
 import { ProviderFailure } from "../../src/errors.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
+import { operations } from "../../src/operations.js";
 import type { JevAsk } from "../../src/segment/jev.js";
+import { liveOver } from "../live-over.js";
 import {
 	attested,
 	fakeJev,
@@ -170,17 +171,23 @@ test("a failed or Unresolved grammar request ends the guessed call before the tr
 	const down = fakeLuna(undefined, { delayMs: 50 });
 	const failure = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({
-				jev: fakeJev({}, { fail: () => true }).ask,
-				luna: down.ask,
-				onOperation: (trace) => traces.push(trace),
-			}).resolve.grammar({
-				language: "de",
-				neighbours: {},
-				lemmaCandidates: [],
-				sentence: sentenceOf("Er kommt."),
-				unit: unitOf([2], "Lexeme/VERB"),
-			}),
+			operations.resolve
+				.grammar({
+					language: "de",
+					neighbours: {},
+					lemmaCandidates: [],
+					sentence: sentenceOf("Er kommt."),
+					unit: unitOf([2], "Lexeme/VERB"),
+				})
+				.pipe(
+					Effect.provide(
+						liveOver({
+							jev: fakeJev({}, { fail: () => true }).ask,
+							luna: down.ask,
+							onOperation: (trace) => traces.push(trace),
+						}),
+					),
+				),
 		),
 	);
 	expect(failure).toBeInstanceOf(ProviderFailure);

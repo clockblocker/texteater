@@ -1,26 +1,29 @@
 /**
- * `segment.inUnits` as the evaluations run it: through `createDumgen`, the
- * factory every host builds Dumgen with, so an evaluation sends the
- * requests production sends, chunked, checked and budgeted as production
- * does. The evaluation supplies only the transport, the lab's cached,
- * retrying jev (`lab/segmentation/harness/jev-cache.ts`), as a host supplies the TypeSafe ask.
+ * `segment.inUnits` as the evaluations run it: `operations.segment.inUnits`
+ * under `DumgenLive`, the Layer every host builds Dumgen with, so an
+ * evaluation sends the requests production sends, chunked, checked and
+ * budgeted as production does. The evaluation supplies only the transport,
+ * the lab's cached, retrying jev (`lab/segmentation/harness/jev-cache.ts`),
+ * through `JevTransport.fromAsk`, as a host supplies `JevTransport.typeSafe`.
  *
  * - `segmentSentence`, raw mode: one Sentence as written goes into
  *   `segment.inUnits`. A Sentence production marks failed rejects with its
  *   failure, so the run records its case as failed.
  * - `groupSegments`, gold mode: gold Segments skip the Segment stage and go
  *   into production's unit stage under the same operation, `Jev` and
- *   setting. `createDumgen` offers no entry that takes Segments, since no
+ *   setting. `operations` offers no entry that takes Segments, since no
  *   host has them before intake.
  */
 import { isRecord } from "common-utils";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import { RequestBudget, runOperation } from "../../src/call.js";
-import { createDumgen } from "../../src/create-dumgen.js";
+import { DumgenLive } from "../../src/dumgen-live.js";
 import { Jev, JevModel, JevTransport, stageAsk } from "../../src/jev-call.js";
 import type { LunaAsk } from "../../src/luna.js";
+import { LunaTransport } from "../../src/luna-call.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
+import { operations } from "../../src/operations.js";
 import {
 	productionUnitSettings,
 	segmentGermanUnits,
@@ -28,7 +31,7 @@ import {
 import { type JevAsk, pinnedJevModel } from "../../src/segment/jev.js";
 import type { Segment, Unit } from "../../src/segment/segmented-sentence.js";
 
-/** Segmentation never receives Luna; `createDumgen` still asks for one. */
+/** Segmentation never receives Luna; `DumgenLive` still asks for one. */
 const noLuna: LunaAsk = () =>
 	Promise.reject(Error("segment.inUnits never asks Luna"));
 
@@ -62,22 +65,28 @@ const unresolvedOf = (traces: readonly OperationTrace[]) =>
 			return segments;
 		});
 
-/** Raw mode: the Sentence as written, through `createDumgen`'s `segment.inUnits`. */
+/** Raw mode: the Sentence as written, through `operations.segment.inUnits`. */
 export async function segmentSentence(
 	jev: ProductionJev,
 	sentence: string,
 ): Promise<SegmentedRaw> {
 	const traces: OperationTrace[] = [];
 	const text = await Effect.runPromise(
-		createDumgen({
-			jev: jev.ask,
-			luna: noLuna,
-			...(jev.model ? { jevModel: jev.model } : {}),
-			onOperation: (trace) => traces.push(trace),
-		}).segment.inUnits({
-			language: "de",
-			paragraphs: [{ sentences: [sentence] }],
-		}),
+		operations.segment
+			.inUnits({
+				language: "de",
+				paragraphs: [{ sentences: [sentence] }],
+			})
+			.pipe(
+				Effect.provide(
+					DumgenLive({
+						jev: JevTransport.fromAsk(jev.ask),
+						luna: LunaTransport.fromAsk(noLuna),
+						...(jev.model ? { jevModel: jev.model } : {}),
+						onOperation: (trace) => traces.push(trace),
+					}),
+				),
+			),
 	);
 	const segmented = text.paragraphs[0]?.sentences[0];
 	if (!segmented) throw Error("segment.inUnits returned no Sentence");
@@ -100,7 +109,7 @@ export async function segmentSentence(
 
 /**
  * Gold mode: given Segments through production's unit stage, under the
- * `segment.inUnits` operation and the `Jev` `createDumgen` builds.
+ * `segment.inUnits` operation and the `Jev` `DumgenLive` builds.
  * A failed request rejects with its `ProviderFailure` or
  * `InvalidModelOutput`.
  */
@@ -118,7 +127,7 @@ export function groupSegments(
 			Effect.provide(
 				Jev.layer.pipe(
 					Layer.provide([
-						Layer.succeed(JevTransport, { ask: jev.ask }),
+						JevTransport.fromAsk(jev.ask),
 						Layer.succeed(JevModel, jev.model ?? pinnedJevModel),
 						RequestBudget.layer(16),
 					]),
