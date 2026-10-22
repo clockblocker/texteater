@@ -440,7 +440,7 @@ export function biteOut(
 	let remaining = due.length;
 	while (bites.length < limit && remaining > due.length * leftover) {
 		scores.sort((a, b) => b.gain - a.gain);
-		let best = scores[0];
+		let best = scores.at(0);
 		while (best && best.gain > 0) {
 			const fresh = gain(candidates[best.index]);
 			if (fresh >= (scores[1]?.gain ?? 0)) {
@@ -449,7 +449,7 @@ export function biteOut(
 			}
 			scores[0] = { index: best.index, gain: fresh };
 			scores.sort((a, b) => b.gain - a.gain);
-			best = scores[0];
+			best = scores.at(0);
 		}
 		if (!best || best.gain === 0) break;
 		const bite = candidates[best.index];
