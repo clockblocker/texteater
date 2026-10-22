@@ -39,12 +39,15 @@ export function unwrapDumdictParse<T>(parsed: DumdictParse<T>): T {
 }
 type RouteKey = DumdictValidationRouteKey | InternalDumdictValidationRouteKey;
 function parseRoute<T>(input: unknown, key: RouteKey): DumdictParse<T> {
-	if (!hasRoot(validationRegistry, key))
+	// Typed, every RouteKey is a root; the check guards a registry that has
+	// drifted from the route types, so it reads the key as a plain string.
+	const route: string = key;
+	if (!hasRoot(validationRegistry, route))
 		return new ParsingError([
 			{
 				code: "custom",
 				path: [],
-				message: `Unknown Dumdict validation route ${key}`,
+				message: `Unknown Dumdict validation route ${route}`,
 			},
 		]);
 	const recursiveIssue = recursiveInputIssueForRoute(input, key);

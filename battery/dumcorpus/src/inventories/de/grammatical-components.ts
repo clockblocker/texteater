@@ -103,10 +103,12 @@ export function deriveGrammaticalComponent(
 		const core: Readonly<Record<string, unknown>> =
 			surface.lemma.coreFeatures;
 		if (core.article !== "Definite" || !bag?.case) return null;
+		if (typeof bag.case !== "string")
+			throw new Error("An article needs its name's one case.");
 		if (typeof bag.number !== "string")
 			throw new Error("An article needs its name's number.");
 		const member = definiteArticleCell({
-			case: String(bag.case),
+			case: bag.case,
 			number: bag.number,
 			gender:
 				bag.number === "Plur"

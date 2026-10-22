@@ -38,8 +38,13 @@ const goldClaims = (goldCase: KnowledgeCase) =>
 		targets.map((target) => ({ relation, target })),
 	);
 
-const candidateOf = ({ instructions }: Question) =>
-	String((isRecord(instructions) ? instructions.candidate : "") ?? "");
+/** The candidate a relation or kind question names, else "". */
+const candidateOf = ({ instructions }: Question): string => {
+	const candidate = isRecord(instructions)
+		? instructions.candidate
+		: undefined;
+	return typeof candidate === "string" ? candidate : "";
+};
 
 /** Gold's choice for one question, else a plausible option. */
 function goldChoice(

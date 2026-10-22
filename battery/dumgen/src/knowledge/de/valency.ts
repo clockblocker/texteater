@@ -232,10 +232,12 @@ function slotProblem(slot: ProposedSlot): string | undefined {
 				: undefined;
 		if (form === undefined || !governable.has(form))
 			return `${form} is no preposition a governor selects`;
+		if (typeof governedCase !== "string")
+			return `${form} names no case it governs`;
 		if (
 			!germanAdpositionAllows(
 				{ family: "Lexeme", canonicalForm: form },
-				String(governedCase),
+				governedCase,
 			)
 		)
 			return `${form} governs no ${governedCase}`;

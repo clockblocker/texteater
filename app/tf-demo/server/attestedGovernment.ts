@@ -36,6 +36,10 @@ function coveredGovernment(slot: unknown): string[] {
 		const preposition = isRecord(complement.preposition)
 			? complement.preposition.canonicalForm
 			: undefined;
-		return [`${preposition}/${complement.governedCase}`];
+		const { governedCase } = complement;
+		return typeof preposition === "string" &&
+			typeof governedCase === "string"
+			? [`${preposition}/${governedCase}`]
+			: [];
 	});
 }

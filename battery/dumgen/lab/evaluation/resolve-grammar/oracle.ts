@@ -55,11 +55,13 @@ const useOf = Object.fromEntries(
 	Object.entries(auxiliaryUses).map(([use, text]) => [text, use]),
 );
 
-/** The option whose key or description is `value`, or Unresolved. */
+/**
+ * The option whose key or description is `value`, or Unresolved. Gold's
+ * feature values are read untyped; only a string can name an option.
+ */
 function option(question: Question, value: unknown): string {
 	if (question.type !== "choice") return "Unresolved";
-	const text =
-		value === null || value === undefined ? undefined : String(value);
+	const text = typeof value === "string" ? value : undefined;
 	if (text !== undefined && text in question.criteria) return text;
 	const found = Object.entries(question.criteria).find(
 		([, description]) => description === text,
@@ -217,7 +219,8 @@ const auxiliaryAnswer: Answering = ({ bag }, question) => {
 				)
 			: [];
 	const matching = uses.find(([, text]) => {
-		const features = useFeatures[useOf[String(text)] ?? ""];
+		const use = typeof text === "string" ? useOf[text] : undefined;
+		const features = use === undefined ? undefined : useFeatures[use];
 		return (
 			features !== undefined &&
 			Object.entries(features).every(
@@ -238,8 +241,10 @@ const shortAnswer: Answering = ({ surface }, question) => {
 	);
 	const found =
 		question.type === "choice"
-			? Object.entries(question.criteria).find(([, text]) =>
-					words.has(foldCase(String(text), "de")),
+			? Object.entries(question.criteria).find(
+					([, text]) =>
+						typeof text === "string" &&
+						words.has(foldCase(text, "de")),
 				)?.[0]
 			: undefined;
 	return picked(found ?? "Unresolved");

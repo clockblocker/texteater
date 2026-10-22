@@ -5,7 +5,7 @@ import {
 	parseCompiledValidation,
 } from "common-utils/validation";
 import { validationRegistry } from "./generated/linked-validation.js";
-import type { ParsedUnit } from "./generated/units.js";
+import type { ParsedUnit, UnitKind } from "./generated/units.js";
 import type { Unit, UnitRoute } from "./types.js";
 import { validationOperations } from "./validation/operations.js";
 
@@ -36,13 +36,25 @@ function object(value: unknown): Record<string, unknown> | undefined {
 	return isRecord(value) ? value : undefined;
 }
 function failure(
-	path: (string | number)[],
+	path: readonly (string | number)[],
 	message: string,
 ): ParseResult<never> {
 	return {
 		success: false,
-		error: new ParsingError([{ code: "custom", path, message }]),
+		error: new ParsingError([{ code: "custom", path: [...path], message }]),
 	};
+}
+
+/** Where each Unit Kind keeps its Lemma. */
+const lemmaPaths: Readonly<Record<UnitKind, readonly string[]>> = {
+	Lemma: [],
+	Surface: ["lemma"],
+	Reading: ["lemma"],
+	Attestation: ["surface", "lemma"],
+};
+
+function isUnitKind(value: unknown): value is UnitKind {
+	return typeof value === "string" && Object.hasOwn(lemmaPaths, value);
 }
 
 /**
@@ -66,23 +78,20 @@ export function parseUnit(
 	const unit = object(input);
 	if (!unit) return failure([], "Expected a Dumling unit object");
 	const unitKind = unit.unitKind;
-	const lemmaPath =
-		unitKind === "Lemma"
-			? []
-			: unitKind === "Surface" || unitKind === "Reading"
-				? ["lemma"]
-				: unitKind === "Attestation"
-					? ["surface", "lemma"]
-					: undefined;
-	if (!lemmaPath) return failure(["unitKind"], "Unknown Unit Kind");
+	if (!isUnitKind(unitKind))
+		return failure(["unitKind"], "Unknown Unit Kind");
+	const lemmaPath = lemmaPaths[unitKind];
 	let lemma: Record<string, unknown> | undefined = unit;
 	for (const key of lemmaPath) lemma = object(lemma?.[key]);
 	if (!lemma) return failure(lemmaPath, "Expected the unit's Lemma");
-	for (const key of ["language", "family", "kind"] as const) {
-		if (typeof lemma[key] !== "string")
-			return failure([...lemmaPath, key], `Expected ${key}`);
-	}
-	const key = `${unitKind}/${lemma.language}/${lemma.family}/${lemma.kind}`;
+	const { language, family, kind } = lemma;
+	if (typeof language !== "string")
+		return failure([...lemmaPath, "language"], "Expected language");
+	if (typeof family !== "string")
+		return failure([...lemmaPath, "family"], "Expected family");
+	if (typeof kind !== "string")
+		return failure([...lemmaPath, "kind"], "Expected kind");
+	const key = `${unitKind}/${language}/${family}/${kind}`;
 	if (!hasRoot(validationRegistry, key))
 		return failure(lemmaPath, "Unsupported grammatical route");
 	if (expected) {
@@ -109,9 +118,9 @@ export function parseUnit(
 		success: true,
 		chain: {
 			unitKind,
-			language: lemma.language,
-			family: lemma.family,
-			kind: lemma.kind,
+			language,
+			family,
+			kind,
 			value,
 		},
 	};

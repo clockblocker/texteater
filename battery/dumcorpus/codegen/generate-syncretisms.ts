@@ -96,7 +96,11 @@ function joinedKnowledge(
 					definition ??
 						[
 							...new Set(
-								values.filter((value) => value !== undefined),
+								knowledge.flatMap((each) =>
+									each.definition === undefined
+										? []
+										: [each.definition],
+								),
 							),
 						].join(" "),
 				];
