@@ -25,9 +25,9 @@ import {
 	type ClosedOption,
 	cellQuestion,
 	closedAttestation,
-	type MatchedRealization,
 	type OpenAnswer,
 } from "./closed-class.js";
+import type { MatchedRealization } from "./closed-realizations.js";
 import { resolveOpenRoute } from "./open-route.js";
 import { Answered, UnresolvedAnswer } from "./questions.js";
 import { type Target, targetOf, targetState } from "./target.js";
