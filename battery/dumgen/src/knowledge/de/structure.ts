@@ -410,7 +410,7 @@ export const produceParticipleSource = (
 		const form =
 			draft === null ? undefined : isParticipleOf(adjective, draft);
 		if (draft === null || form === undefined) {
-			context.scope.event({
+			context.log.event({
 				name: "NoParticipleSource",
 				data: draft === null ? null : { ...draft },
 			});
@@ -436,7 +436,7 @@ export const produceParticipleSource = (
 				: choiceOf(answers, "form").choice;
 		const meaning = choiceOf(answers, "meaning").choice;
 		if (verdict === "NotParticiple") {
-			context.scope.event({
+			context.log.event({
 				name: "RejectedParticipleSource",
 				data: { verb: draft.verb },
 			});

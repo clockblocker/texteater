@@ -4,10 +4,11 @@
  * language module checks and writes them.
  */
 import * as Effect from "effect/Effect";
-import type { OperationScope } from "../call.js";
-import type { JevSettings } from "../jev-call.js";
-import { type LanguageModules, languageModuleOf } from "../language-module.js";
-import type { LunaSettings } from "../luna-call.js";
+import type { CallLog } from "../call.js";
+import type { Jev } from "../jev-call.js";
+import { languageModuleOf } from "../language-module.js";
+import { Languages } from "../languages.js";
+import type { Luna } from "../luna-call.js";
 import type {
 	AccumulateTranslationsInput,
 	TranslationAccumulation,
@@ -19,12 +20,9 @@ import type {
  * Defect raised before anything is asked; the module checks the rest.
  */
 export const accumulateTranslations = (
-	scope: OperationScope,
-	models: { readonly jev: JevSettings; readonly luna: LunaSettings },
-	modules: LanguageModules,
 	input: AccumulateTranslationsInput,
-): Effect.Effect<TranslationAccumulation> =>
-	Effect.suspend(() => {
+): Effect.Effect<TranslationAccumulation, never, Jev | Luna | CallLog> =>
+	Effect.flatMap(Languages, (modules) => {
 		const language: string = input.reading.lemma.language;
 		const module = languageModuleOf(modules, input.language);
 		if (module === undefined || language !== input.language)
@@ -33,5 +31,5 @@ export const accumulateTranslations = (
 					`knowledge.accumulateTranslations accumulates German ("de") only, not ${JSON.stringify(language)}`,
 				),
 			);
-		return module.accumulateTranslations(scope, models, input);
+		return module.accumulateTranslations(input);
 	});

@@ -25,8 +25,10 @@ import { lemmaIdentityKey, normalizeForm, routeOf } from "dumling";
 import { selectKnowledge, translationLanguageValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
-import type { OperationScope } from "../../call.js";
+import type { CallLog } from "../../call.js";
 import { InvalidModelOutput } from "../../errors.js";
+import type { Jev } from "../../jev-call.js";
+import type { Luna } from "../../luna-call.js";
 import { markedSentence } from "../../resolve/reading.js";
 import { choice, choiceOf } from "../../segment/ask.js";
 import type {
@@ -46,7 +48,6 @@ import {
 	aspectContext,
 	checkedChanges,
 	judgeState,
-	type KnowledgeModels,
 	textsOf,
 	write,
 } from "./context.js";
@@ -221,10 +222,8 @@ function badInput(input: AccumulateTranslationsInput): string | undefined {
 }
 
 export const accumulateGermanTranslations = (
-	scope: OperationScope,
-	models: KnowledgeModels,
 	input: AccumulateTranslationsInput,
-): Effect.Effect<TranslationAccumulation> =>
+): Effect.Effect<TranslationAccumulation, never, Jev | Luna | CallLog> =>
 	Effect.gen(function* () {
 		const problem = badInput(input);
 		if (problem) return yield* Effect.die(Error(problem));
@@ -243,9 +242,7 @@ export const accumulateGermanTranslations = (
 				changes: [],
 				failures: [],
 			} satisfies TranslationAccumulation;
-		const context = aspectContext(
-			scope,
-			models,
+		const context = yield* aspectContext(
 			reading,
 			attestation,
 			markedSentence(input.sentence.segments, input.sentence.target),
@@ -261,7 +258,7 @@ export const accumulateGermanTranslations = (
 					translations[language] ?? [],
 				).pipe(
 					Effect.map(({ outcome, changes }) => {
-						scope.event({
+						context.log.event({
 							name: "TranslationAccumulation",
 							data: { language, ...outcome },
 						});

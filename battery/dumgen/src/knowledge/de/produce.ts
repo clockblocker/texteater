@@ -39,7 +39,9 @@ import {
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import * as Semaphore from "effect/Semaphore";
-import type { OperationScope } from "../../call.js";
+import type { CallLog } from "../../call.js";
+import type { Jev } from "../../jev-call.js";
+import type { Luna } from "../../luna-call.js";
 import { markedSentence } from "../../resolve/reading.js";
 import type {
 	GermanKnowledgeChange,
@@ -54,7 +56,6 @@ import {
 	type AspectContext,
 	type AspectError,
 	aspectContext,
-	type KnowledgeModels,
 	type StoredParadigm,
 } from "./context.js";
 import { paradigmJobsOf } from "./paradigm.js";
@@ -301,10 +302,8 @@ function storedParadigmOf<E>(
 }
 
 export const produceGermanKnowledge = <E>(
-	scope: OperationScope,
-	models: KnowledgeModels,
 	input: ProduceKnowledgeInput<E>,
-): Effect.Effect<KnowledgeProduction, E> =>
+): Effect.Effect<KnowledgeProduction, E, Jev | Luna | CallLog> =>
 	Effect.gen(function* () {
 		const problem = badInput(input);
 		if (problem) return yield* Effect.die(Error(problem));
@@ -317,9 +316,7 @@ export const produceGermanKnowledge = <E>(
 			return yield* Effect.die(
 				Error(`No German Knowledge Policy for ${family} ${kind}`),
 			);
-		const context = aspectContext(
-			scope,
-			models,
+		const context = yield* aspectContext(
 			reading,
 			attestation,
 			markedSentence(input.sentence.segments, input.sentence.target),
@@ -348,7 +345,7 @@ export const produceGermanKnowledge = <E>(
 			),
 		);
 		if (skipped.length > 0)
-			scope.event({ name: "SkippedAspects", data: { skipped } });
+			context.log.event({ name: "SkippedAspects", data: { skipped } });
 		// Authored Knowledge is tf-demo's to attach (ADR 0021).
 		if (closedRoute(reading.lemma) || authoredReading(reading))
 			return {

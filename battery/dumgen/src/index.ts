@@ -24,11 +24,8 @@
  * `createOpenAILuna` are the production transports: `fetch` to the
  * TypeSafe and OpenAI APIs, with no `node:*` import.
  */
-export {
-	createDumgen,
-	type Dumgen,
-	type DumgenOptions,
-} from "./create-dumgen.js";
+export { createDumgen, type Dumgen } from "./create-dumgen.js";
+export type { DumgenOptions } from "./dumgen-live.js";
 export { InvalidModelOutput, ProviderFailure } from "./errors.js";
 export {
 	type ExtractedText,

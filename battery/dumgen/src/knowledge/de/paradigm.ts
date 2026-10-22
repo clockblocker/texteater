@@ -221,7 +221,7 @@ const writtenThenJudged = (
 			if (licence instanceof InvalidModelOutput)
 				failures.push(failureOf(dimension, licence));
 			else changes.push(...licence);
-			context.scope.event({
+			context.log.event({
 				name: "ParadigmLicence",
 				data: {
 					dimension,

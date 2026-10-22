@@ -271,7 +271,7 @@ export const produceRelations = (
 			claims.push({ relation, target, confidence: answer.confidence });
 		}
 		if (rejected.length > 0)
-			context.scope.event({
+			context.log.event({
 				name: "RejectedRelationCandidates",
 				data: { rejected },
 			});

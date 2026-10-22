@@ -1,8 +1,8 @@
 /**
  * What every German Knowledge aspect works from: the Reading, the marked
- * Sentence, the two ports and the checks that turn an answer into Dumrel
- * changes. An aspect fails with a `ProviderFailure` or an
- * `InvalidModelOutput` from its calls, or with `KnowledgeUnresolved` when
+ * Sentence, jev's `Ask`, Luna's `Write` and the operation's log, and the
+ * checks that turn an answer into Dumrel changes. An aspect fails with a
+ * `ProviderFailure` or an `InvalidModelOutput` from its calls, or with `KnowledgeUnresolved` when
  * its judges or writer leave it undecided; `produce.ts` turns each into
  * that aspect's failure value.
  */
@@ -18,11 +18,11 @@ import {
 } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Data from "effect/Data";
-import type * as Effect from "effect/Effect";
-import type { OperationScope } from "../../call.js";
+import * as Effect from "effect/Effect";
+import { CallLog } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
-import { askThrough, type JevSettings } from "../../jev-call.js";
-import { askLuna, type LunaSettings } from "../../luna-call.js";
+import { type Jev, stageAsk } from "../../jev-call.js";
+import { type Luna, stageWrite, type Write } from "../../luna-call.js";
 import type { Ask } from "../../segment/ask.js";
 import type { GermanKnowledgeChange, KnowledgeAspect } from "../types.js";
 
@@ -36,12 +36,6 @@ export type AspectError =
 	| InvalidModelOutput
 	| KnowledgeUnresolved;
 
-/** What the aspects reach their models with: jev judges, Luna writes (#862). */
-export type KnowledgeModels = {
-	readonly jev: JevSettings;
-	readonly luna: LunaSettings;
-};
-
 /** The Reading as every prompt names it: the sense boundary (#623). */
 type ReadingView = {
 	readonly lemma: string;
@@ -51,9 +45,11 @@ type ReadingView = {
 };
 
 export type AspectContext = {
-	readonly scope: OperationScope;
-	readonly models: KnowledgeModels;
+	readonly log: CallLog["Service"];
+	/** jev judges (#862). */
 	readonly ask: Ask;
+	/** Luna writes (#862). */
+	readonly write: Write;
 	readonly reading: Dumling.Reading<"de">;
 	readonly lemma: Dumling.Lemma<"de">;
 	readonly view: ReadingView;
@@ -74,9 +70,8 @@ export type StoredParadigm = {
 	readonly readings: readonly Dumling.Reading<"de">[];
 };
 
-export function aspectContext(
-	scope: OperationScope,
-	models: KnowledgeModels,
+/** The aspects' context, with jev, Luna and the log of the running operation. */
+export const aspectContext = (
 	reading: Dumling.Reading<"de">,
 	attestation: Dumling.Attestation<"de">,
 	markedSentence: string,
@@ -84,28 +79,31 @@ export function aspectContext(
 		paradigm: { dimensions: {} },
 		readings: [reading],
 	},
-): AspectContext {
-	const { lemma } = reading;
-	// A Foreign Reading has no Emoji Description (ADR 0045).
-	const emojiDescription =
-		"emojiDescription" in reading ? reading.emojiDescription : undefined;
-	return {
-		scope,
-		models,
-		ask: askThrough(scope, models.jev),
-		reading,
-		lemma,
-		view: {
-			lemma: lemma.canonicalForm,
-			kind: lemma.kind,
-			family: lemma.family,
-			...(emojiDescription === undefined ? {} : { emojiDescription }),
-		},
-		markedSentence,
-		attestation,
-		paradigm,
-	};
-}
+): Effect.Effect<AspectContext, never, Jev | Luna | CallLog> =>
+	Effect.gen(function* () {
+		const { lemma } = reading;
+		// A Foreign Reading has no Emoji Description (ADR 0045).
+		const emojiDescription =
+			"emojiDescription" in reading
+				? reading.emojiDescription
+				: undefined;
+		return {
+			log: yield* CallLog,
+			ask: yield* stageAsk,
+			write: yield* stageWrite,
+			reading,
+			lemma,
+			view: {
+				lemma: lemma.canonicalForm,
+				kind: lemma.kind,
+				family: lemma.family,
+				...(emojiDescription === undefined ? {} : { emojiDescription }),
+			},
+			markedSentence,
+			attestation,
+			paradigm,
+		};
+	});
 
 /**
  * One Luna request of an aspect: its system prompt, the Reading and the
@@ -122,9 +120,7 @@ export function write<Output>(
 	check: (output: unknown) => Output | InvalidModelOutput,
 	options: { readonly withSentence?: boolean } = {},
 ): Effect.Effect<Output, ProviderFailure | InvalidModelOutput> {
-	return askLuna(
-		context.scope,
-		context.models.luna,
+	return context.write(
 		stage,
 		{
 			systemPrompt,

@@ -14,8 +14,8 @@
  * and the first window that brings no usable answer fails the operation.
  */
 import * as Effect from "effect/Effect";
-import type { OperationScope } from "../call.js";
-import { askThrough, type JevSettings } from "../jev-call.js";
+import { CallLog } from "../call.js";
+import { type Jev, stageAsk } from "../jev-call.js";
 import { type AskFailure, choice, choiceOf } from "../segment/ask.js";
 
 /**
@@ -147,13 +147,12 @@ function filledFromSurroundings(
 
 /** The body of `language.detect`. */
 export const detectLanguages = Effect.fnUntraced(function* (
-	scope: OperationScope,
-	jev: JevSettings,
 	input: DetectLanguagesInput,
-): Effect.fn.Return<LanguagedText, AskFailure> {
+): Effect.fn.Return<LanguagedText, AskFailure, Jev | CallLog> {
 	const sentences = input.paragraphs.flatMap(({ sentences }) => sentences);
 	const verdicts = sentences.map(scriptVerdict);
-	const ask = askThrough(scope, jev);
+	const log = yield* CallLog;
+	const ask = yield* stageAsk;
 	const judged = yield* Effect.forEach(
 		windowsOf(sentences.length),
 		([start, end]) => {
@@ -213,7 +212,7 @@ export const detectLanguages = Effect.fnUntraced(function* (
 			? options[judgment.choice as keyof typeof options]?.language
 			: undefined;
 	});
-	scope.event({
+	log.event({
 		name: "DetectedLanguages",
 		data: verdicts.map(
 			(verdict, sentence): Settlement =>

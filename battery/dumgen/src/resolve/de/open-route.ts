@@ -21,9 +21,9 @@ import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import type * as Scope from "effect/Scope";
-import type { OperationScope } from "../../call.js";
+import { CallLog } from "../../call.js";
 import type { LunaDraft } from "../../luna.js";
-import { askLuna, type LunaSettings } from "../../luna-call.js";
+import { type Luna, stageWrite } from "../../luna-call.js";
 import type { Answers, Ask, AskFailure } from "../../segment/ask.js";
 import { draftsEmojiDescription } from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
@@ -483,7 +483,7 @@ function canonicalFormOf(
  * jev's answers.
  */
 function rewritten(
-	scope: OperationScope,
+	log: CallLog["Service"],
 	write: (judged: Judged) => Effect.Effect<Written, AskFailure>,
 	request: (judged: Judged) => LunaDraft,
 	guessed:
@@ -504,7 +504,7 @@ function rewritten(
 			missed = verbMisses?.(written.canonicalForm);
 			if (!missed) return written;
 		}
-		scope.event({
+		log.event({
 			name: "CanonicalRewritten",
 			data: { reason: missed },
 		});
@@ -518,12 +518,12 @@ function rewritten(
  * should the guess miss, then the Attestation as an unchecked value.
  */
 export const resolveOpenRoute = Effect.fnUntraced(function* (
-	scope: OperationScope,
 	target: Target,
 	ask: Ask,
-	luna: LunaSettings,
 	candidates: readonly LemmaCandidate[],
-): Effect.fn.Return<OpenOutcome, AskFailure, Scope.Scope> {
+): Effect.fn.Return<OpenOutcome, AskFailure, Scope.Scope | Luna | CallLog> {
+	const log = yield* CallLog;
+	const luna = yield* stageWrite;
 	const planned = plan(target);
 	const { shape } = planned;
 	const state = targetState(target);
@@ -540,7 +540,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	const request = (judged: Judged) =>
 		canonicalFormRequest(target, judged, hints, drafts);
 	const write = (judged: Judged) =>
-		askLuna(scope, luna, "canonical", request(judged), (output) =>
+		luna("canonical", request(judged), (output) =>
 			checkWritten(target, judged, output),
 		);
 	// Luna writes while jev judges, on a guess at jev's answers; the
@@ -576,7 +576,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			? // @effect-diagnostics-next-line effectSucceedWithVoid:off -- Effect.void is Effect<void>, which the `| undefined` success type rejects
 				Effect.succeed(undefined)
 			: rewritten(
-					scope,
+					log,
 					write,
 					request,
 					guess && guessed

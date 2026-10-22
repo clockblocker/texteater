@@ -9,15 +9,16 @@
  *   `segment.inUnits`. A Sentence production marks failed rejects with its
  *   failure, so the run records its case as failed.
  * - `groupSegments`, gold mode: gold Segments skip the Segment stage and go
- *   into production's unit stage under the same operation, call adapter and
+ *   into production's unit stage under the same operation, `Jev` and
  *   setting. `createDumgen` offers no entry that takes Segments, since no
  *   host has them before intake.
  */
 import { isRecord } from "common-utils";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../../src/call.js";
+import * as Layer from "effect/Layer";
+import { RequestBudget, runOperation } from "../../src/call.js";
 import { createDumgen } from "../../src/create-dumgen.js";
-import { askThrough } from "../../src/jev-call.js";
+import { Jev, JevModel, JevTransport, stageAsk } from "../../src/jev-call.js";
 import type { LunaAsk } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
 import {
@@ -99,7 +100,7 @@ export async function segmentSentence(
 
 /**
  * Gold mode: given Segments through production's unit stage, under the
- * `segment.inUnits` operation and the call adapter `createDumgen` builds.
+ * `segment.inUnits` operation and the `Jev` `createDumgen` builds.
  * A failed request rejects with its `ProviderFailure` or
  * `InvalidModelOutput`.
  */
@@ -107,17 +108,22 @@ export function groupSegments(
 	jev: ProductionJev,
 	segments: readonly Segment[],
 ): Promise<Unit[]> {
-	const settings = { ask: jev.ask, model: jev.model ?? pinnedJevModel };
 	return Effect.runPromise(
 		runOperation(
 			"segment.inUnits",
-			{ budget: requestBudget(16), payloads: false },
-			(scope) =>
-				segmentGermanUnits(
-					{ segments },
-					askThrough(scope, settings),
-					productionUnitSettings,
+			Effect.flatMap(stageAsk, (ask) =>
+				segmentGermanUnits({ segments }, ask, productionUnitSettings),
+			),
+		).pipe(
+			Effect.provide(
+				Jev.layer.pipe(
+					Layer.provide([
+						Layer.succeed(JevTransport, { ask: jev.ask }),
+						Layer.succeed(JevModel, jev.model ?? pinnedJevModel),
+						RequestBudget.layer(16),
+					]),
 				),
+			),
 		),
 	);
 }

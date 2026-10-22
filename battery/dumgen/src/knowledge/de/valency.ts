@@ -409,7 +409,7 @@ export const produceValency = (
 		);
 		const { kept, dropped } = validFrame(context.reading, proposed);
 		if (dropped.length > 0)
-			context.scope.event({
+			context.log.event({
 				name: "DroppedValencySlots",
 				data: { dropped },
 			});

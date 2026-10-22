@@ -6,16 +6,16 @@
  * input, a Defect; the language's own code stays behind the module. `languages.ts` registers the modules.
  */
 import type * as Effect from "effect/Effect";
-import type { OperationScope } from "./call.js";
+import type { CallLog } from "./call.js";
 import type { InvalidModelOutput, ProviderFailure } from "./errors.js";
-import type { JevSettings } from "./jev-call.js";
+import type { Jev } from "./jev-call.js";
 import type {
 	AccumulateTranslationsInput,
 	KnowledgeProduction,
 	ProduceKnowledgeInput,
 	TranslationAccumulation,
 } from "./knowledge/types.js";
-import type { LunaSettings } from "./luna-call.js";
+import type { Luna } from "./luna-call.js";
 import type {
 	GrammarResolution,
 	ResolveGrammarInput,
@@ -27,11 +27,8 @@ import type {
 	Unit,
 } from "./segment/segmented-sentence.js";
 
-/** What the operations that write reach their models with. */
-type Models = {
-	readonly jev: JevSettings;
-	readonly luna: LunaSettings;
-};
+/** The services the bodies of the operations that write need: jev, Luna and their operation's log. */
+type Needs = Jev | Luna | CallLog;
 
 /**
  * One Sentence after the Segment stage: its Stitched Text, its Segments and
@@ -60,22 +57,20 @@ export type LanguageModule = {
 	};
 	/** The body of `resolve.grammar` for a click on a Sentence that segmented. */
 	readonly resolveGrammar: (
-		scope: OperationScope,
-		models: Models,
 		input: ResolveGrammarInput,
-	) => Effect.Effect<GrammarResolution, ProviderFailure | InvalidModelOutput>;
+	) => Effect.Effect<
+		GrammarResolution,
+		ProviderFailure | InvalidModelOutput,
+		Needs
+	>;
 	/** The body of `knowledge.produce` for a Reading of the language. */
 	readonly produceKnowledge: <E>(
-		scope: OperationScope,
-		models: Models,
 		input: ProduceKnowledgeInput<E>,
-	) => Effect.Effect<KnowledgeProduction, E>;
+	) => Effect.Effect<KnowledgeProduction, E, Needs>;
 	/** The body of `knowledge.accumulateTranslations` for a Reading of the language. */
 	readonly accumulateTranslations: (
-		scope: OperationScope,
-		models: Models,
 		input: AccumulateTranslationsInput,
-	) => Effect.Effect<TranslationAccumulation>;
+	) => Effect.Effect<TranslationAccumulation, never, Needs>;
 };
 
 /** Each registered language's module. */

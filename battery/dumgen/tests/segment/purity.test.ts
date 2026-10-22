@@ -1,6 +1,10 @@
 import { expect, test } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
+import type * as Effect from "effect/Effect";
+import type { Jev } from "../../src/jev-call.js";
+import type { Luna } from "../../src/luna-call.js";
+import { operations } from "../../src/operations.js";
 
 /**
  * Everything under `src/` is production code: it ships, and it runs where a
@@ -11,7 +15,8 @@ import { dirname, join, relative, resolve } from "node:path";
  * network; the stages reach jev and Luna through their ports, and
  * segmentation never Luna. Only the Extracted Text schema imports Zod,
  * and no other production file imports it. Time comes from Effect's
- * `Clock`, so a `TestClock` pins every trace.
+ * `Clock`, so a `TestClock` pins every trace. The models are services
+ * (Dumgen ADR 0009), and `segment.inUnits` needs `Jev` alone.
  */
 const src = resolve(import.meta.dir, "../../src");
 const lab = resolve(import.meta.dir, "../../lab");
@@ -30,10 +35,12 @@ const allowedPackages = new Set([
 	"dumrel/types",
 	"effect/Cause",
 	"effect/Clock",
+	"effect/Context",
 	"effect/Data",
 	"effect/Effect",
 	"effect/Exit",
 	"effect/Fiber",
+	"effect/Layer",
 	"effect/Result",
 	"effect/Scope",
 	"effect/Semaphore",
@@ -130,4 +137,18 @@ test("segmentation never receives Luna", () => {
 		)
 		.map((file) => relative(src, file));
 	expect(reaching).toEqual([]);
+});
+
+test("segment.inUnits needs Jev alone: its type shows it never reaches Luna", () => {
+	type Needs = Effect.Services<ReturnType<typeof operations.segment.inUnits>>;
+	// Each fails to compile once Luna, or anything but Jev, joins `Needs`.
+	const lunaFree: [Extract<Needs, Luna>] extends [never] ? true : false =
+		true;
+	const jevAlone: [Needs] extends [Jev]
+		? [Jev] extends [Needs]
+			? true
+			: false
+		: false = true;
+	expect([lunaFree, jevAlone]).toEqual([true, true]);
+	expect(typeof operations.segment.inUnits).toBe("function");
 });

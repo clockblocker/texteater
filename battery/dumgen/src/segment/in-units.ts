@@ -5,8 +5,9 @@
  * `Unresolved`. The Sentences' language module runs its Segment stage,
  * then its unit stage.
  *
- * Every jev request goes through the operation's calls, split into chunks
- * of `questionsPerRequest` questions, each naming the pinned model. The
+ * Every jev request goes through `Jev`, split into chunks of
+ * `questionsPerRequest` questions, each naming the pinned model, and each
+ * Sentence's calls are placed under it as the `CurrentSentence`. The
  * Sentences run side by side and each fails alone: a chunk that brought no
  * answer, or one a different model gave, or one missing or mistyping an
  * answer, fails its Sentence at once, interrupts that Sentence's other
@@ -19,14 +20,14 @@
  */
 import * as Effect from "effect/Effect";
 import * as Result from "effect/Result";
-import { callFailureOf, type OperationScope } from "../call.js";
-import { askThrough, type JevSettings } from "../jev-call.js";
+import { CallLog, CurrentSentence, callFailureOf } from "../call.js";
+import { type Jev, stageAsk } from "../jev-call.js";
 import {
 	type LanguageModule,
-	type LanguageModules,
 	languageModuleOf,
 	type SentenceSegmentation,
 } from "../language-module.js";
+import { Languages } from "../languages.js";
 import type { AskFailure } from "./ask.js";
 import type {
 	SegmentedSentence,
@@ -41,17 +42,14 @@ export type InUnitsInput = {
 	readonly paragraphs: readonly { readonly sentences: readonly string[] }[];
 };
 
-/** What `segment.inUnits` reaches jev with: the host's transport and the pinned version. */
-export type InUnitsJev = JevSettings;
-
 /** A Sentence whose segmentation failed, marked so, with its reason in the trace. */
 function failedSentence(
-	scope: OperationScope,
+	log: CallLog["Service"],
 	sentence: number,
 	failure: AskFailure,
 	segmentation: SentenceSegmentation,
 ): SegmentedSentence {
-	scope.sentence({
+	log.sentence({
 		sentence,
 		outcome: "Failed",
 		failure: callFailureOf(failure),
@@ -64,31 +62,31 @@ function failedSentence(
 	};
 }
 
+/** One Sentence's body, run with the Sentence as the `CurrentSentence`. */
 const segmentSentence = Effect.fnUntraced(function* (
-	scope: OperationScope,
-	jev: InUnitsJev,
 	module: LanguageModule,
 	text: string,
 	sentence: number,
 ) {
-	const ask = askThrough(scope, jev, sentence);
+	const log = yield* CallLog;
+	const ask = yield* stageAsk;
 	const cut = yield* Effect.result(module.segment.segments(text, ask));
 	if (Result.isFailure(cut))
 		return failedSentence(
-			scope,
+			log,
 			sentence,
 			cut.failure,
 			module.segment.writtenSegments(text),
 		);
 	if (cut.success.unresolved.length > 0)
-		scope.event({
+		log.event({
 			name: "UnresolvedSegments",
 			data: { sentence, segments: [...cut.success.unresolved] },
 		});
 	const units = yield* Effect.result(module.segment.units(cut.success, ask));
 	if (Result.isFailure(units))
-		return failedSentence(scope, sentence, units.failure, cut.success);
-	scope.sentence({ sentence, outcome: "Segmented" });
+		return failedSentence(log, sentence, units.failure, cut.success);
+	log.sentence({ sentence, outcome: "Segmented" });
 	return {
 		text: cut.success.text,
 		segments: cut.success.segments,
@@ -101,12 +99,9 @@ const segmentSentence = Effect.fnUntraced(function* (
  * Sentence, is a Defect raised before anything is asked.
  */
 export const segmentText = Effect.fnUntraced(function* (
-	scope: OperationScope,
-	jev: InUnitsJev,
-	modules: LanguageModules,
 	input: InUnitsInput,
-): Effect.fn.Return<SegmentedText> {
-	const module = languageModuleOf(modules, input.language);
+): Effect.fn.Return<SegmentedText, never, Jev | CallLog> {
+	const module = languageModuleOf(yield* Languages, input.language);
 	if (module === undefined)
 		return yield* Effect.die(
 			Error(
@@ -128,7 +123,9 @@ export const segmentText = Effect.fnUntraced(function* (
 	const segmented = yield* Effect.forEach(
 		placed.flat(),
 		({ text, sentence }) =>
-			segmentSentence(scope, jev, module, text, sentence),
+			segmentSentence(module, text, sentence).pipe(
+				Effect.provideService(CurrentSentence, sentence),
+			),
 		{ concurrency: "unbounded" },
 	);
 	return {

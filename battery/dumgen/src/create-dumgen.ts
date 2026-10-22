@@ -1,231 +1,100 @@
 /**
- * `createDumgen`, the one factory every host builds Dumgen with (#859). Its
- * operations are Effects whose error channel holds only `ProviderFailure`
- * and `InvalidModelOutput` (#552); a host `yield*`s them in its own
- * programs. It offers `language.detect`, `segment.inUnits`, `resolve.grammar`,
- * `resolve.reading`, `translate.sentence` (#1210), `knowledge.produce`,
- * whose error channel holds only the host's own `onContribution` error
- * (#883), and `knowledge.accumulateTranslations`, whose failures are all
- * values (ADR 0047).
+ * `createDumgen`, the interim facade over Dumgen's operations (Dumgen ADR
+ * 0009, #1273): it builds `DumgenLive(options)` once and provides it to
+ * each operation, so a host's operations need nothing. Its operations are
+ * Effects whose error channel holds only `ProviderFailure` and
+ * `InvalidModelOutput` (#552); a host `yield*`s them in its own programs.
+ * `knowledge.produce`'s error channel holds only the host's own
+ * `onContribution` error (#883), and `knowledge.accumulateTranslations`'s
+ * failures are all values (ADR 0047). Each operation is documented on
+ * `operations`.
  */
-import type * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "./call.js";
+import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
+import { DumgenLive, type DumgenOptions } from "./dumgen-live.js";
 import type { InvalidModelOutput, ProviderFailure } from "./errors.js";
-import { accumulateTranslations } from "./knowledge/accumulate.js";
-import { produceKnowledge } from "./knowledge/produce.js";
 import type {
 	AccumulateTranslationsInput,
 	KnowledgeProduction,
 	ProduceKnowledgeInput,
 	TranslationAccumulation,
 } from "./knowledge/types.js";
-import {
-	type DetectLanguagesInput,
-	detectLanguages,
-	type LanguagedText,
-} from "./language/detect.js";
-import { languageModules } from "./languages.js";
-import {
-	defaultLunaConfiguration,
-	type LunaAsk,
-	type LunaConfiguration,
-} from "./luna.js";
-import type { OperationTrace } from "./operation-trace.js";
-import { resolveGrammar } from "./resolve/grammar.js";
-import { resolveReading } from "./resolve/reading.js";
+import type { DetectLanguagesInput, LanguagedText } from "./language/detect.js";
+import { operations } from "./operations.js";
 import type {
 	GrammarResolution,
 	ReadingResolution,
 	ResolveGrammarInput,
 	ResolveReadingInput,
 } from "./resolve/types.js";
-import type { GermanInventory } from "./segment/de/inventory.js";
-import { type InUnitsInput, segmentText } from "./segment/in-units.js";
-import { isFloatingModel, type JevAsk, pinnedJevModel } from "./segment/jev.js";
+import type { InUnitsInput } from "./segment/in-units.js";
 import type { SegmentedText } from "./segment/segmented-sentence.js";
-import { translateSentence } from "./translate/sentence.js";
 import type { TranslateSentenceInput } from "./translate/types.js";
 
-export type DumgenOptions = {
-	/** jev (TypeSafe System One): `createTypeSafeAsk` in production. */
-	readonly jev: JevAsk;
-	/**
-	 * Luna, for the operations that write: `resolve.grammar` writes Canonical
-	 * Forms and spelling corrections with it and drafts Emoji Descriptions
-	 * in the same call, `resolve.reading` writes those no draft supplies
-	 * (#862), `translate.sentence` a Sentence's translation, and
-	 * `knowledge.produce` Knowledge text, plural and Präteritum forms,
-	 * frames and relation candidates. Segmentation never
-	 * receives it. `createOpenAILuna` in production.
-	 */
-	readonly luna: LunaAsk;
-	/** The Luna model and settings; `defaultLunaConfiguration` unless given. */
-	readonly lunaConfiguration?: LunaConfiguration;
-	/**
-	 * The model calls one instance keeps in flight, jev and Luna together;
-	 * 16 by default. A call holds its permit for its transport only.
-	 */
-	readonly requestBudget?: number;
-	/** Receives each operation's trace once the operation exits. */
-	readonly onOperation?: (trace: OperationTrace) => void;
-	/** Keeps every call's request and answer in its trace; off by default. */
-	readonly tracePayloads?: boolean;
-	/** The jev version every request names; a floating alias is refused. */
-	readonly jevModel?: string;
-	/** The German Authored Inventories the unit stage reads; dumcorpus's by default. */
-	readonly inventory?: GermanInventory;
-};
+export type { DumgenOptions } from "./dumgen-live.js";
 
+type ModelFailure = ProviderFailure | InvalidModelOutput;
+
+/** `operations` with `DumgenLive` provided. */
 export type Dumgen = {
 	readonly language: {
-		/**
-		 * Each Sentence's Detected Language, or none when it stays
-		 * undetermined (Dumgen ADR 0001): code settles what script decides,
-		 * jev judges the rest in windows, and surroundings fill what neither
-		 * placed. A failed window fails the operation; nothing is retried.
-		 */
 		readonly detect: (
 			input: DetectLanguagesInput,
-		) => Effect.Effect<LanguagedText, ProviderFailure | InvalidModelOutput>;
+		) => Effect.Effect<LanguagedText, ModelFailure>;
 	};
 	readonly segment: {
-		/**
-		 * Segments every Sentence and groups its Segments into biggest
-		 * units. A Sentence whose model calls fail comes back marked
-		 * `failed`, and the others are kept. Another language than German
-		 * or a blank Sentence is a Defect, raised before anything is asked.
-		 */
 		readonly inUnits: (input: InUnitsInput) => Effect.Effect<SegmentedText>;
 	};
 	readonly resolve: {
-		/**
-		 * The grammar of the stored unit a click landed on (#859): its
-		 * Attestation, or Unresolved, or a Catalog Miss, all as answers. A
-		 * click is all-or-nothing: any failed call fails it and interrupts
-		 * its other calls. Another language than German, a failed Sentence
-		 * or a unit that is no unit of its Sentence is a Defect.
-		 */
 		readonly grammar: (
 			input: ResolveGrammarInput,
-		) => Effect.Effect<
-			GrammarResolution,
-			ProviderFailure | InvalidModelOutput
-		>;
-		/**
-		 * The Reading a resolved click lands on (#859, ADR 0031): a stored
-		 * Emoji Description it reuses, or a New one, or a Catalog Miss, all
-		 * as answers. jev judges the stored candidates first; Luna writes
-		 * only after NoMatch or when nothing is stored. Authored Lemmas take
-		 * their authored Reading. A click is all-or-nothing, as in grammar.
-		 * Bad input, a Foreign Attestation among it, is a Defect.
-		 */
+		) => Effect.Effect<GrammarResolution, ModelFailure>;
 		readonly reading: (
 			input: ResolveReadingInput,
-		) => Effect.Effect<
-			ReadingResolution,
-			ProviderFailure | InvalidModelOutput
-		>;
+		) => Effect.Effect<ReadingResolution, ModelFailure>;
 	};
 	readonly translate: {
-		/**
-		 * One Sentence's translation into a Dumrel translation language
-		 * (#1210), Luna's text in one call, with the neighbouring Sentences
-		 * as context only. Interrupting it aborts the call. Another language
-		 * than German, a blank Sentence or another translation language is
-		 * a Defect, raised before anything is asked.
-		 */
 		readonly sentence: (
 			input: TranslateSentenceInput,
-		) => Effect.Effect<string, ProviderFailure | InvalidModelOutput>;
+		) => Effect.Effect<string, ModelFailure>;
 	};
 	readonly knowledge: {
-		/**
-		 * The Knowledge one occurrence asks for its resolved Reading (#883):
-		 * changes, Pending Semantic Relations and per-aspect failures, all
-		 * values. Each aspect's changes reach `onContribution` as soon as it
-		 * has them; its failure is the only error, and it interrupts the
-		 * rest. Bad input is a Defect.
-		 */
 		readonly produce: <E = never>(
 			input: ProduceKnowledgeInput<E>,
 		) => Effect.Effect<KnowledgeProduction, E>;
-		/**
-		 * The translations one occurrence adds to a Reading that already
-		 * has some (ADR 0047): per language, jev judges whether a stored
-		 * one covers the occurrence, and only after NoMatch does Luna write
-		 * the occurrence's equivalents, without seeing the stored ones.
-		 * Out comes a Contribute of those not stored yet per language, and
-		 * per-language failures, all values. Bad input is a Defect.
-		 */
 		readonly accumulateTranslations: (
 			input: AccumulateTranslationsInput,
 		) => Effect.Effect<TranslationAccumulation>;
 	};
 };
 
+/**
+ * Builds `DumgenLive(options)` once: a floating `jevModel` or a request
+ * budget that is no positive integer throws here.
+ */
 export function createDumgen(options: DumgenOptions): Dumgen {
-	const model = options.jevModel ?? pinnedJevModel;
-	if (isFloatingModel(model))
-		throw Error(
-			`${model} floats between jev versions; pin one, such as ${pinnedJevModel}`,
-		);
-	const operations = {
-		budget: requestBudget(options.requestBudget ?? 16),
-		payloads: options.tracePayloads ?? false,
-		...(options.onOperation ? { onOperation: options.onOperation } : {}),
-	};
-	const modules = languageModules(options);
-	const jev = { ask: options.jev, model };
-	const luna = {
-		ask: options.luna,
-		configuration: options.lunaConfiguration ?? defaultLunaConfiguration,
-	};
+	const context = Effect.runSync(
+		Effect.scoped(Layer.build(DumgenLive(options))),
+	);
+	const provided = Effect.provideContext(context);
 	return {
 		language: {
-			detect: (input) =>
-				runOperation("language.detect", operations, (scope) =>
-					detectLanguages(scope, jev, input),
-				),
+			detect: (input) => provided(operations.language.detect(input)),
 		},
 		segment: {
-			inUnits: (input) =>
-				runOperation("segment.inUnits", operations, (scope) =>
-					segmentText(scope, jev, modules, input),
-				),
+			inUnits: (input) => provided(operations.segment.inUnits(input)),
 		},
 		resolve: {
-			grammar: (input) =>
-				runOperation("resolve.grammar", operations, (scope) =>
-					resolveGrammar(scope, { jev, luna }, modules, input),
-				),
-			reading: (input) =>
-				runOperation("resolve.reading", operations, (scope) =>
-					resolveReading(scope, { jev, luna }, input),
-				),
+			grammar: (input) => provided(operations.resolve.grammar(input)),
+			reading: (input) => provided(operations.resolve.reading(input)),
 		},
 		translate: {
-			sentence: (input) =>
-				runOperation("translate.sentence", operations, (scope) =>
-					translateSentence(scope, luna, input),
-				),
+			sentence: (input) => provided(operations.translate.sentence(input)),
 		},
 		knowledge: {
-			produce: (input) =>
-				runOperation("knowledge.produce", operations, (scope) =>
-					produceKnowledge(scope, { jev, luna }, modules, input),
-				),
+			produce: (input) => provided(operations.knowledge.produce(input)),
 			accumulateTranslations: (input) =>
-				runOperation(
-					"knowledge.accumulateTranslations",
-					operations,
-					(scope) =>
-						accumulateTranslations(
-							scope,
-							{ jev, luna },
-							modules,
-							input,
-						),
-				),
+				provided(operations.knowledge.accumulateTranslations(input)),
 		},
 	};
 }

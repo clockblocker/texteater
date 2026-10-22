@@ -1,7 +1,10 @@
 /**
  * The language registry (#772): each language Dumgen runs, with its module.
- * Registering a language adds it to `SegmentLanguage` and here.
+ * Registering a language adds it to `SegmentLanguage` and here. The
+ * operations read the modules from `Languages`, the registry built with
+ * dumcorpus's inventories unless the host provides others.
  */
+import * as Context from "effect/Context";
 import { germanLanguage } from "./de/language.js";
 import type { LanguageModules } from "./language-module.js";
 import type { GermanInventory } from "./segment/de/inventory.js";
@@ -16,3 +19,9 @@ export type LanguageOptions = {
 export function languageModules(options: LanguageOptions): LanguageModules {
 	return { de: germanLanguage(options) };
 }
+
+/** The language modules the operations run: `languageModules({})` by default. */
+export const Languages = Context.Reference<LanguageModules>(
+	"dumgen/Languages",
+	{ defaultValue: () => languageModules({}) },
+);
