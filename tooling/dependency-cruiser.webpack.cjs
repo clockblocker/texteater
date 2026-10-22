@@ -1,7 +1,7 @@
 const { existsSync, readFileSync, readdirSync } = require("node:fs");
-const { join, resolve } = require("node:path");
+const path = require("node:path");
 
-const repositoryRoot = resolve(__dirname, "..");
+const repositoryRoot = path.resolve(__dirname, "..");
 
 function exportedTarget(value) {
 	if (typeof value === "string") return value;
@@ -19,10 +19,10 @@ function sourceTarget(workspaceDir, target, fallback) {
 			.replace(/^\.\/dist\//, "./src/")
 			.replace(/\.d\.[cm]?ts$/, ".ts")
 			.replace(/\.[cm]?js$/, ".ts");
-		const candidate = resolve(workspaceDir, sourceRelative);
+		const candidate = path.resolve(workspaceDir, sourceRelative);
 		if (existsSync(candidate)) return candidate;
 	}
-	return resolve(workspaceDir, fallback);
+	return path.resolve(workspaceDir, fallback);
 }
 
 /**
@@ -44,19 +44,19 @@ function wildcardAlias(workspaceDir, packageName, key, value) {
 	const keyMatch = /^\.\/(.+)\/\*$/.exec(key);
 	const targetMatch = target && /^\.\/(.+)\/\*(\.[a-z]+)?$/.exec(target);
 	if (!keyMatch || !targetMatch) return undefined;
-	const directory = resolve(workspaceDir, targetMatch[1]);
+	const directory = path.resolve(workspaceDir, targetMatch[1]);
 	if (!existsSync(directory)) return undefined;
 	return { alias: directory, name: `${packageName}/${keyMatch[1]}` };
 }
 
 const aliases = [];
 for (const kind of ["app", "battery"]) {
-	const parent = join(repositoryRoot, kind);
+	const parent = path.join(repositoryRoot, kind);
 	if (!existsSync(parent)) continue;
 	for (const entry of readdirSync(parent, { withFileTypes: true })) {
 		if (!entry.isDirectory()) continue;
-		const workspaceDir = join(parent, entry.name);
-		const manifestPath = join(workspaceDir, "package.json");
+		const workspaceDir = path.join(parent, entry.name);
+		const manifestPath = path.join(workspaceDir, "package.json");
 		if (!existsSync(manifestPath)) continue;
 		const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 		if (typeof manifest.name !== "string") continue;

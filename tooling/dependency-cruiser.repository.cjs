@@ -1,7 +1,7 @@
 const { existsSync, readFileSync, readdirSync } = require("node:fs");
-const { join, resolve } = require("node:path");
+const path = require("node:path");
 
-const repositoryRoot = resolve(__dirname, "..");
+const repositoryRoot = path.resolve(__dirname, "..");
 
 /**
  * The workspaces' layer order, lowest first. A package may import only
@@ -26,10 +26,10 @@ const layers = [
 
 const directories = new Map();
 for (const kind of ["app", "battery"]) {
-	const parent = join(repositoryRoot, kind);
+	const parent = path.join(repositoryRoot, kind);
 	if (!existsSync(parent)) continue;
 	for (const entry of readdirSync(parent, { withFileTypes: true })) {
-		const manifestPath = join(parent, entry.name, "package.json");
+		const manifestPath = path.join(parent, entry.name, "package.json");
 		if (!entry.isDirectory() || !existsSync(manifestPath)) continue;
 		const { name } = JSON.parse(readFileSync(manifestPath, "utf8"));
 		directories.set(name, `${kind}/${entry.name}`);

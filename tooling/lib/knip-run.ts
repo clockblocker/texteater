@@ -38,7 +38,7 @@ export async function runKnip(
 	// what `knip/session` builds on.
 	const runModule = join(repositoryRoot, "node_modules/knip/dist/run.js");
 	const { run } = (await import(runModule)) as {
-		run(options: unknown): Promise<KnipRunResult>;
+		run: (options: unknown) => Promise<KnipRunResult>;
 	};
 	const options = await createOptions({
 		cwd: repositoryRoot,
