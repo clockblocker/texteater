@@ -301,7 +301,7 @@ function possessorFeatures(
 	const stem = lemma.canonicalForm;
 	const none = { "gender[psor]": null, "number[psor]": null };
 	if (lemma.coreFeatures.poss !== "Yes") return none;
-	if (/^sein/u.test(stem))
+	if (stem.startsWith("sein"))
 		return { "gender[psor]": ["Masc", "Neut"], "number[psor]": "Sing" };
 	if (/^(?:mein|dein)/u.test(stem))
 		return { "gender[psor]": null, "number[psor]": "Sing" };
