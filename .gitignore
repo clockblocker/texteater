@@ -12,6 +12,7 @@ node_modules/
 *.tsbuildinfo
 backlog/
 .env.local
+.env.local.bak*
 **/direct-checkpoint.json
 repos-for-refrence/
 
