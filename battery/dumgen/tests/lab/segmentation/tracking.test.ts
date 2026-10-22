@@ -266,6 +266,8 @@ test("the lab's provenance hashes its own sources and the dumcorpus it imports",
 			"cli/segment-in-units-lab.ts",
 			"cli/segment-in-units-lab/run.ts",
 			"lab/segmentation/harness/provenance.ts",
+			"lab/segmentation/de/arms/production-levers.ts",
+			"lab/segmentation/de/arms/production-stage.ts",
 			"lab/evaluation/spec-corpus/segment-in-units-evaluation.ts",
 		]),
 	);
