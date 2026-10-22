@@ -444,7 +444,7 @@ export function knowledgeReport(attempts: readonly ScoredKnowledge[]) {
 	);
 	const repetitions = [
 		...new Set(attempts.map(({ repetition }) => repetition)),
-	].sort();
+	].sort((left, right) => left - right);
 	const valency = scored("valency");
 	const participle = entries.filter(
 		({ verdict }) =>

@@ -220,7 +220,7 @@ export function readingReport(attempts: readonly ScoredReading[]) {
 	const folded = attempts.filter(({ folded }) => folded);
 	const repetitions = [
 		...new Set(attempts.map(({ repetition }) => repetition)),
-	].sort();
+	].sort((left, right) => left - right);
 	return {
 		attempts: attempts.length,
 		cases: new Set(attempts.map(({ caseId }) => caseId)).size,
