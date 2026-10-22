@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/correctness/noUnusedVariables: README example file */
+/* oxlint-disable no-unused-vars -- README example file: bindings show values */
 import type * as Dumling from "dumling/types";
 
 import {type LemmaRecord,makeSurfaceId,type ReadingEntry,type SurfaceEntry} from "../../src";

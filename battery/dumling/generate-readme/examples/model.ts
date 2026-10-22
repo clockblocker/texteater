@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/correctness/noUnusedVariables: README example file */
+/* oxlint-disable no-unused-vars -- README example file: bindings show values */
 
 // README_BLOCK:lemma:start
 import type * as Dumling from "dumling/types";
