@@ -134,6 +134,7 @@ describe("Shadow descriptor and storage seam", () => {
 		const shadows = await rows(t, "shadows");
 		expect(shadows).toHaveLength(1);
 		const shadowId = shadows[0]?._id;
+		if (!shadowId) throw new Error("Expected a Shadow.");
 		const referenceIds = (await rows(t, "structuralShadowReferences")).map(
 			({ _id }) => _id,
 		);

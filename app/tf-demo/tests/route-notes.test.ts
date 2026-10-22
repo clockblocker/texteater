@@ -232,6 +232,7 @@ test("Lemma pages expose all polysemous Readings and exact-language same-form pe
 			kind: "NOUN",
 		},
 	]);
+	if (!morphemeId) throw new Error("Expected the Morpheme.");
 	for (let index = 0; index < 51; index += 1) {
 		await insertSurface(t, lemmaId, `Bank-${index}`);
 	}

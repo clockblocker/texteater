@@ -76,7 +76,7 @@ async function hasActiveAttempt(
 	ctx: MutationCtx,
 	ownerReadingKey: string,
 ): Promise<boolean> {
-	const [scheduled, running] = await Promise.all(
+	const active = await Promise.all(
 		(["Scheduled", "Running"] as const).map((state) =>
 			ctx.db
 				.query("knowledgeGenerationAttempts")
@@ -90,7 +90,7 @@ async function hasActiveAttempt(
 				.take(1),
 		),
 	);
-	return scheduled.length > 0 || running.length > 0;
+	return active.some((attempts) => attempts.length > 0);
 }
 
 /**

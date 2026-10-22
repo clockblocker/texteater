@@ -265,11 +265,11 @@ function parseDeploymentOptions(args: string[]): {
 } {
 	const positional: string[] = [];
 	const options: { deployment?: string; prod?: boolean } = {};
-	for (let index = 0; index < args.length; index++) {
-		const argument = args[index];
+	const rest = args.values();
+	for (const argument of rest) {
 		if (argument === "--prod") options.prod = true;
 		else if (argument === "--deployment") {
-			const deployment = args[++index];
+			const deployment = rest.next().value;
 			if (!deployment) usage();
 			options.deployment = deployment;
 		} else positional.push(argument);

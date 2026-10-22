@@ -244,7 +244,7 @@ function InspectionDetail({
 			steps: orderedSteps.filter(isTotal),
 			totals: true,
 		},
-	];
+	] as const;
 	const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
 	const [showDetailedTraces, setShowDetailedTraces] = useState(false);
 	const [now, setNow] = useState(Date.now);

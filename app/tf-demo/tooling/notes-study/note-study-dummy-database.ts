@@ -470,6 +470,7 @@ function relatedUnitFor(
 		},
 		emojiDescription: "🔗",
 	});
+	const context: NoteStudyLine = [token, "."];
 	const fixture = {
 		presentationKey: `related-${encodeURIComponent(token.text)}`,
 		...route,
@@ -477,7 +478,7 @@ function relatedUnitFor(
 		title: [token],
 		titleText: token.text,
 		summary: token.description ?? "Relation counterpart",
-		contexts: [[token, "."]],
+		contexts: [context],
 		definition:
 			token.description ?? `Relation counterpart for ${token.text}.`,
 		translations: [token.text, token.text],
@@ -491,7 +492,7 @@ function relatedUnitFor(
 		presentationSurfaces: [],
 		knowledge: { definition: fixture.definition },
 		personalAnnotation: "",
-		occurrences: [occurrenceFor(fixture, reading, fixture.contexts[0], 0)],
+		occurrences: [occurrenceFor(fixture, reading, context, 0)],
 	};
 }
 

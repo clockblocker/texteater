@@ -53,10 +53,12 @@ const batchWorkerDirectory = dirname(
 
 /** Each component convex.config.ts mounts that the functions call, by its mount path. */
 const components = await Promise.all(
-	[
-		["rateLimiter", rateLimiterDirectory],
-		["rateLimiter/batchWorker", batchWorkerDirectory],
-	].map(async ([name, directory]) => ({
+	(
+		[
+			["rateLimiter", rateLimiterDirectory],
+			["rateLimiter/batchWorker", batchWorkerDirectory],
+		] as const
+	).map(async ([name, directory]) => ({
 		name,
 		schema: (await import(join(directory, "dist/component/schema.js")))
 			.default,

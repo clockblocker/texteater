@@ -150,6 +150,8 @@ test("focused occurrence validates Scroll ownership and never substitutes stale 
 	const scrollB = await submitText(t, [["Eine", " ", "Bank", "."]]);
 	const [sentenceA] = scrollA.segmentIds;
 	const [sentenceB] = scrollB.segmentIds;
+	const [sentenceIdA] = scrollA.sentenceIds;
+	if (!sentenceIdA) throw new Error("Expected the first Scroll's Sentence.");
 	const validId = await attest(t, bank, [sentenceA?.[6], sentenceA?.[2]]);
 	const wrongScrollId = await attest(t, bank, [sentenceB?.[2]]);
 	const staleId = await attest(t, bank, [sentenceA?.[4]]);
@@ -163,7 +165,7 @@ test("focused occurrence validates Scroll ownership and never substitutes stale 
 	expect(await focus(validId)).toEqual({
 		kind: "Occurrence",
 		attestationId: validId,
-		sentenceId: scrollA.sentenceIds[0],
+		sentenceId: sentenceIdA,
 		position: 0,
 		memberSegmentIndices: [2, 6],
 	});

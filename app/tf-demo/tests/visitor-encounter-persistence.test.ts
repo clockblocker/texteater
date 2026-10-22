@@ -251,6 +251,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 		},
 	]);
 	const attestationId = attestations[0]?._id;
+	if (!attestationId) throw new Error("Expected an Attestation.");
 	const segment = await t.run((ctx) => ctx.db.get(segmentId));
 	expect(segment?.attestationMembership).toEqual({
 		attestationId,

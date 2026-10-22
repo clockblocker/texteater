@@ -110,7 +110,7 @@ export function startMouseTrace() {
 		if (now - lastSample >= 50) {
 			lastSample = now;
 			const hits = document.elementsFromPoint(point.x, point.y);
-			const top = hits[0];
+			const top = hits[0] ?? null;
 			const ancestors: ReturnType<typeof styles>[] = [];
 			for (
 				let el: Element | null = top;

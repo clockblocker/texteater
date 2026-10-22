@@ -322,6 +322,7 @@ test("a New homonym Reading of a stored Lemma commits against the Surface its Le
 	expect(await rows(t, "readings")).toHaveLength(2);
 	expect(await rows(t, "readingEntries")).toHaveLength(2);
 	const [ownedSurface] = await rows(t, "ownedSurfaces");
+	if (!ownedSurface) throw new Error("Expected an owned Surface.");
 	expect(await rows(t, "ownedSurfaces")).toHaveLength(1);
 	expect(
 		(await rows(t, "attestations")).map(({ readingId, surfaceId }) => ({
@@ -329,8 +330,8 @@ test("a New homonym Reading of a stored Lemma commits against the Surface its Le
 			surfaceId,
 		})),
 	).toEqual([
-		{ readingId: bank.readingId, surfaceId: ownedSurface?.surfaceId },
-		{ readingId: result.readingId, surfaceId: ownedSurface?.surfaceId },
+		{ readingId: bank.readingId, surfaceId: ownedSurface.surfaceId },
+		{ readingId: result.readingId, surfaceId: ownedSurface.surfaceId },
 	]);
 	await expectCompleted(t, "request-2", result.attestationId);
 });

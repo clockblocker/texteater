@@ -49,8 +49,11 @@ test("a book Scroll lists its pages and reads a page's Sentences, processed ones
 	expect(pages.length).toBeGreaterThan(2);
 	// The pages cover the Scroll in order, with no gap.
 	expect(pages[0]?.start).toBe(0);
-	for (const [index, page] of pages.entries())
-		expect(page.start).toBe(index === 0 ? 0 : pages[index - 1]?.end);
+	let end = 0;
+	for (const page of pages) {
+		expect(page.start).toBe(end);
+		end = page.end;
+	}
 	const sentenceCount = await t.run(
 		async (ctx) =>
 			(

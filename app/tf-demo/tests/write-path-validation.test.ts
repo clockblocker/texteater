@@ -211,19 +211,18 @@ describe("matchesStoredAnalysis", () => {
 	});
 
 	test("fails when a Sentence's text or position differs", () => {
+		const [first, second] = storedSentences;
+		if (!first || !second) throw new Error("Expected two Sentences.");
 		expect(
 			matchesStoredAnalysis(
-				[
-					{ ...storedSentences[0], stitchedText: "Ich ging." },
-					storedSentences[1],
-				],
+				[{ ...first, stitchedText: "Ich ging." }, second],
 				storedSegments,
 				submitted,
 			),
 		).toBe(false);
 		expect(
 			matchesStoredAnalysis(
-				[storedSentences[0], { ...storedSentences[1], position: 2 }],
+				[first, { ...second, position: 2 }],
 				storedSegments,
 				submitted,
 			),

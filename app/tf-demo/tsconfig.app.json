@@ -19,6 +19,7 @@
 
 		/* Linting */
 		"strict": true,
+		"noUncheckedIndexedAccess": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"erasableSyntaxOnly": true,
@@ -28,6 +29,6 @@
 			"@/*": ["./src/*"]
 		}
 	},
-	"include": ["src"],
+	"include": ["src", "server", "shared"],
 	"exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
 }

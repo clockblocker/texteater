@@ -28,8 +28,9 @@ export function layoutFlamegraph<T extends TimedSpan>(steps: readonly T[]) {
 			)
 		)
 			row++;
-		rows[row] ??= [];
-		rows[row].push(step);
+		const rowSteps = rows[row] ?? [];
+		rowSteps.push(step);
+		rows[row] = rowSteps;
 		placed.set(step.id, { step, row });
 		visiting.delete(step.id);
 		return row;
