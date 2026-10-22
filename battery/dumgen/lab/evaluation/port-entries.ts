@@ -223,6 +223,13 @@ export function licenceEntry(split: DoubletSplit): Experiment {
 		id: experiment.id,
 		caseCount: experiment.caseCount,
 		metrics: experiment.metrics,
+		requests: (args) =>
+			experiment.requests({
+				...(args.knowledgeSetsRoot
+					? { setsRoot: args.knowledgeSetsRoot }
+					: {}),
+				...(args.concurrency ? { concurrency: args.concurrency } : {}),
+			}),
 		async evaluate(args) {
 			if (args.goldOnly || args.grammarSubset)
 				throw Error(

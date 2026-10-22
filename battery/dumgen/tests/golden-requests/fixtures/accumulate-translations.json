@@ -1,0 +1,565 @@
+{
+	"covered": {
+		"requests": [
+			{
+				"executor": "jev",
+				"stage": "translationCoverage",
+				"request": {
+					"model": "jev-1.13.0",
+					"state": {
+						"reading": {
+							"lemma": "Strauß",
+							"kind": "NOUN",
+							"family": "Lexeme",
+							"emojiDescription": "💐"
+						},
+						"markedSentence": "Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
+						"language": "en",
+						"policy": {
+							"task": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. Each option is one translation of the Reading into `language` (en: English, ru: Russian) that its dictionary entry already gives.",
+							"covers": "Picture the natural translation of the whole sentence into `language`, as a good translator writes it for a reader, not a word-for-word gloss. An option covers the occurrence when that translation renders the target with it, in this form or another form of the same word: another tense, person, number, case or degree.",
+							"noMatch": "When that translation renders the target with a word or phrase none of the options is, answer NoMatch rather than take the nearest option, also when an option is what a gloss of the German word would give, and also when there is only one option. An option a natural translation would avoid here does not cover it."
+						}
+					},
+					"questions": {
+						"translation": {
+							"type": "choice",
+							"instructions": "Which option renders the target in the natural translation of this sentence into `language`? NoMatch if that translation renders it with a word or phrase no option is.",
+							"criteria": {
+								"t0": "bouquet",
+								"t1": "bunch of flowers",
+								"NoMatch": "The natural translation renders the target with a word or phrase no option is"
+							}
+						}
+					}
+				}
+			}
+		],
+		"result": {
+			"changes": [],
+			"failures": []
+		}
+	},
+	"added": {
+		"requests": [
+			{
+				"executor": "jev",
+				"stage": "translationCoverage",
+				"request": {
+					"model": "jev-1.13.0",
+					"state": {
+						"reading": {
+							"lemma": "Strauß",
+							"kind": "NOUN",
+							"family": "Lexeme",
+							"emojiDescription": "💐"
+						},
+						"markedSentence": "Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
+						"language": "en",
+						"policy": {
+							"task": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. Each option is one translation of the Reading into `language` (en: English, ru: Russian) that its dictionary entry already gives.",
+							"covers": "Picture the natural translation of the whole sentence into `language`, as a good translator writes it for a reader, not a word-for-word gloss. An option covers the occurrence when that translation renders the target with it, in this form or another form of the same word: another tense, person, number, case or degree.",
+							"noMatch": "When that translation renders the target with a word or phrase none of the options is, answer NoMatch rather than take the nearest option, also when an option is what a gloss of the German word would give, and also when there is only one option. An option a natural translation would avoid here does not cover it."
+						}
+					},
+					"questions": {
+						"translation": {
+							"type": "choice",
+							"instructions": "Which option renders the target in the natural translation of this sentence into `language`? NoMatch if that translation renders it with a word or phrase no option is.",
+							"criteria": {
+								"t0": "bouquet",
+								"NoMatch": "The natural translation renders the target with a word or phrase no option is"
+							}
+						}
+					}
+				}
+			},
+			{
+				"executor": "jev",
+				"stage": "translationCoverage",
+				"request": {
+					"model": "jev-1.13.0",
+					"state": {
+						"reading": {
+							"lemma": "Strauß",
+							"kind": "NOUN",
+							"family": "Lexeme",
+							"emojiDescription": "💐"
+						},
+						"markedSentence": "Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
+						"language": "ru",
+						"policy": {
+							"task": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. Each option is one translation of the Reading into `language` (en: English, ru: Russian) that its dictionary entry already gives.",
+							"covers": "Picture the natural translation of the whole sentence into `language`, as a good translator writes it for a reader, not a word-for-word gloss. An option covers the occurrence when that translation renders the target with it, in this form or another form of the same word: another tense, person, number, case or degree.",
+							"noMatch": "When that translation renders the target with a word or phrase none of the options is, answer NoMatch rather than take the nearest option, also when an option is what a gloss of the German word would give, and also when there is only one option. An option a natural translation would avoid here does not cover it."
+						}
+					},
+					"questions": {
+						"translation": {
+							"type": "choice",
+							"instructions": "Which option renders the target in the natural translation of this sentence into `language`? NoMatch if that translation renders it with a word or phrase no option is.",
+							"criteria": {
+								"t0": "букет",
+								"t1": "пучок",
+								"NoMatch": "The natural translation renders the target with a word or phrase no option is"
+							}
+						}
+					}
+				}
+			},
+			{
+				"executor": "luna",
+				"stage": "translationAccumulation",
+				"request": {
+					"systemPrompt": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, `kind` its word class and `family` whether it is a word (Lexeme), a multiword expression (Locution) or a Saying. Its `emojiDescription`, one to four emoji, labels the Reading's meaning, and `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>, which has that meaning.\nFirst write `sentence`: the natural translation of `markedSentence` into `language` (en: English, ru: Russian), as a good translator writes it for a reader, not a word-for-word gloss. Then write `equivalents`: the words or phrases that translation renders the marked words with. Translate what the target does in this sentence, never the meaning of a neighbouring word, and never another meaning of the German word the sentence does not use.\nWrite each equivalent in its dictionary headword form and carry over none of the sentence's tense, person, number, case or degree: a verb in its infinitive, a noun in the singular unless it exists only in the plural, an adjective in its positive. A verb's equivalent keeps the reflexive or particle its meaning needs, and every equivalent keeps the Reading's word class: an adverb takes an adverb, never an adjective of the same root. The equivalent translates the target alone, in every language: it takes in no neighbouring word, no object, adverb or predicative this sentence adds («Die Suppe riecht herrlich»: smell, пахнуть; not smell wonderful, вкусно пахнуть).\nNever pick a word only because it looks or sounds like the German one: a false friend names another thing. An abbreviation or a title takes the established equivalent of what it stands for, or the target language's usual rendering of it, never a coined word: an academic degree takes the target language's established term for that degree, else a plain description of its holder, never a compound or suffix built from the German parts. A proper name keeps its own form, transliterated into Cyrillic for ru, unless the language has an established name for it («München»: Munich, Мюнхен); never translate its parts («Lindenstraße»: Lindenstraße, Линденштрассе).\nTranslate a Locution or a Saying as a whole: by the target language's established expression with the same meaning when there is one, else by a plain paraphrase of that meaning. Never translate it word for word, and never give another expression that only shares its words or its image.\nAnswer with a JSON object: `sentence`, the translation, and `equivalents`, an array of the one equivalent it uses, or up to three when the target has several equally usual renderings here, the one in `sentence` first; each a word or a short phrase in its dictionary headword form, never a sentence.",
+					"input": {
+						"aspect": "translationAccumulation",
+						"reading": {
+							"lemma": "Strauß",
+							"kind": "NOUN",
+							"family": "Lexeme",
+							"emojiDescription": "💐"
+						},
+						"markedSentence": "Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
+						"language": "en"
+					},
+					"outputFormat": "json",
+					"outputSchema": {
+						"type": "object",
+						"properties": {
+							"sentence": {
+								"type": "string",
+								"minLength": 1
+							},
+							"equivalents": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"minLength": 1
+								},
+								"minItems": 1,
+								"maxItems": 3
+							}
+						},
+						"required": ["sentence", "equivalents"]
+					},
+					"configuration": {
+						"model": "gpt-5.6-luna",
+						"settings": {
+							"reasoning": {
+								"effort": "none"
+							},
+							"service_tier": "fast"
+						}
+					}
+				}
+			}
+		],
+		"result": {
+			"changes": [
+				{
+					"kind": "Contribute",
+					"aspect": "translations",
+					"language": "en",
+					"value": ["Bunch  of Flowers", "posy"]
+				}
+			],
+			"failures": []
+		}
+	},
+	"contained": {
+		"requests": [
+			{
+				"executor": "jev",
+				"stage": "translationCoverage",
+				"request": {
+					"model": "jev-1.13.0",
+					"state": {
+						"reading": {
+							"lemma": "Strauß",
+							"kind": "NOUN",
+							"family": "Lexeme",
+							"emojiDescription": "💐"
+						},
+						"markedSentence": "Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
+						"language": "en",
+						"policy": {
+							"task": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. Each option is one translation of the Reading into `language` (en: English, ru: Russian) that its dictionary entry already gives.",
+							"covers": "Picture the natural translation of the whole sentence into `language`, as a good translator writes it for a reader, not a word-for-word gloss. An option covers the occurrence when that translation renders the target with it, in this form or another form of the same word: another tense, person, number, case or degree.",
+							"noMatch": "When that translation renders the target with a word or phrase none of the options is, answer NoMatch rather than take the nearest option, also when an option is what a gloss of the German word would give, and also when there is only one option. An option a natural translation would avoid here does not cover it."
+						}
+					},
+					"questions": {
+						"translation": {
+							"type": "choice",
+							"instructions": "Which option renders the target in the natural translation of this sentence into `language`? NoMatch if that translation renders it with a word or phrase no option is.",
+							"criteria": {
+								"t0": "bouquet",
+								"t1": "bunch of flowers",
+								"NoMatch": "The natural translation renders the target with a word or phrase no option is"
+							}
+						}
+					}
+				}
+			},
+			{
+				"executor": "luna",
+				"stage": "translationAccumulation",
+				"request": {
+					"systemPrompt": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, `kind` its word class and `family` whether it is a word (Lexeme), a multiword expression (Locution) or a Saying. Its `emojiDescription`, one to four emoji, labels the Reading's meaning, and `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>, which has that meaning.\nFirst write `sentence`: the natural translation of `markedSentence` into `language` (en: English, ru: Russian), as a good translator writes it for a reader, not a word-for-word gloss. Then write `equivalents`: the words or phrases that translation renders the marked words with. Translate what the target does in this sentence, never the meaning of a neighbouring word, and never another meaning of the German word the sentence does not use.\nWrite each equivalent in its dictionary headword form and carry over none of the sentence's tense, person, number, case or degree: a verb in its infinitive, a noun in the singular unless it exists only in the plural, an adjective in its positive. A verb's equivalent keeps the reflexive or particle its meaning needs, and every equivalent keeps the Reading's word class: an adverb takes an adverb, never an adjective of the same root. The equivalent translates the target alone, in every language: it takes in no neighbouring word, no object, adverb or predicative this sentence adds («Die Suppe riecht herrlich»: smell, пахнуть; not smell wonderful, вкусно пахнуть).\nNever pick a word only because it looks or sounds like the German one: a false friend names another thing. An abbreviation or a title takes the established equivalent of what it stands for, or the target language's usual rendering of it, never a coined word: an academic degree takes the target language's established term for that degree, else a plain description of its holder, never a compound or suffix built from the German parts. A proper name keeps its own form, transliterated into Cyrillic for ru, unless the language has an established name for it («München»: Munich, Мюнхен); never translate its parts («Lindenstraße»: Lindenstraße, Линденштрассе).\nTranslate a Locution or a Saying as a whole: by the target language's established expression with the same meaning when there is one, else by a plain paraphrase of that meaning. Never translate it word for word, and never give another expression that only shares its words or its image.\nAnswer with a JSON object: `sentence`, the translation, and `equivalents`, an array of the one equivalent it uses, or up to three when the target has several equally usual renderings here, the one in `sentence` first; each a word or a short phrase in its dictionary headword form, never a sentence.",
+					"input": {
+						"aspect": "translationAccumulation",
+						"reading": {
+							"lemma": "Strauß",
+							"kind": "NOUN",
+							"family": "Lexeme",
+							"emojiDescription": "💐"
+						},
+						"markedSentence": "Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
+						"language": "en"
+					},
+					"outputFormat": "json",
+					"outputSchema": {
+						"type": "object",
+						"properties": {
+							"sentence": {
+								"type": "string",
+								"minLength": 1
+							},
+							"equivalents": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"minLength": 1
+								},
+								"minItems": 1,
+								"maxItems": 3
+							}
+						},
+						"required": ["sentence", "equivalents"]
+					},
+					"configuration": {
+						"model": "gpt-5.6-luna",
+						"settings": {
+							"reasoning": {
+								"effort": "none"
+							},
+							"service_tier": "fast"
+						}
+					}
+				}
+			}
+		],
+		"result": {
+			"changes": [],
+			"failures": []
+		}
+	},
+	"failed": {
+		"requests": [
+			{
+				"executor": "jev",
+				"stage": "translationCoverage",
+				"request": {
+					"model": "jev-1.13.0",
+					"state": {
+						"reading": {
+							"lemma": "Strauß",
+							"kind": "NOUN",
+							"family": "Lexeme",
+							"emojiDescription": "💐"
+						},
+						"markedSentence": "Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
+						"language": "en",
+						"policy": {
+							"task": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. Each option is one translation of the Reading into `language` (en: English, ru: Russian) that its dictionary entry already gives.",
+							"covers": "Picture the natural translation of the whole sentence into `language`, as a good translator writes it for a reader, not a word-for-word gloss. An option covers the occurrence when that translation renders the target with it, in this form or another form of the same word: another tense, person, number, case or degree.",
+							"noMatch": "When that translation renders the target with a word or phrase none of the options is, answer NoMatch rather than take the nearest option, also when an option is what a gloss of the German word would give, and also when there is only one option. An option a natural translation would avoid here does not cover it."
+						}
+					},
+					"questions": {
+						"translation": {
+							"type": "choice",
+							"instructions": "Which option renders the target in the natural translation of this sentence into `language`? NoMatch if that translation renders it with a word or phrase no option is.",
+							"criteria": {
+								"t0": "bouquet",
+								"NoMatch": "The natural translation renders the target with a word or phrase no option is"
+							}
+						}
+					}
+				}
+			},
+			{
+				"executor": "jev",
+				"stage": "translationCoverage",
+				"request": {
+					"model": "jev-1.13.0",
+					"state": {
+						"reading": {
+							"lemma": "Strauß",
+							"kind": "NOUN",
+							"family": "Lexeme",
+							"emojiDescription": "💐"
+						},
+						"markedSentence": "Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
+						"language": "ru",
+						"policy": {
+							"task": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. Each option is one translation of the Reading into `language` (en: English, ru: Russian) that its dictionary entry already gives.",
+							"covers": "Picture the natural translation of the whole sentence into `language`, as a good translator writes it for a reader, not a word-for-word gloss. An option covers the occurrence when that translation renders the target with it, in this form or another form of the same word: another tense, person, number, case or degree.",
+							"noMatch": "When that translation renders the target with a word or phrase none of the options is, answer NoMatch rather than take the nearest option, also when an option is what a gloss of the German word would give, and also when there is only one option. An option a natural translation would avoid here does not cover it."
+						}
+					},
+					"questions": {
+						"translation": {
+							"type": "choice",
+							"instructions": "Which option renders the target in the natural translation of this sentence into `language`? NoMatch if that translation renders it with a word or phrase no option is.",
+							"criteria": {
+								"t0": "букет",
+								"NoMatch": "The natural translation renders the target with a word or phrase no option is"
+							}
+						}
+					}
+				}
+			},
+			{
+				"executor": "luna",
+				"stage": "translationAccumulation",
+				"request": {
+					"systemPrompt": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, `kind` its word class and `family` whether it is a word (Lexeme), a multiword expression (Locution) or a Saying. Its `emojiDescription`, one to four emoji, labels the Reading's meaning, and `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>, which has that meaning.\nFirst write `sentence`: the natural translation of `markedSentence` into `language` (en: English, ru: Russian), as a good translator writes it for a reader, not a word-for-word gloss. Then write `equivalents`: the words or phrases that translation renders the marked words with. Translate what the target does in this sentence, never the meaning of a neighbouring word, and never another meaning of the German word the sentence does not use.\nWrite each equivalent in its dictionary headword form and carry over none of the sentence's tense, person, number, case or degree: a verb in its infinitive, a noun in the singular unless it exists only in the plural, an adjective in its positive. A verb's equivalent keeps the reflexive or particle its meaning needs, and every equivalent keeps the Reading's word class: an adverb takes an adverb, never an adjective of the same root. The equivalent translates the target alone, in every language: it takes in no neighbouring word, no object, adverb or predicative this sentence adds («Die Suppe riecht herrlich»: smell, пахнуть; not smell wonderful, вкусно пахнуть).\nNever pick a word only because it looks or sounds like the German one: a false friend names another thing. An abbreviation or a title takes the established equivalent of what it stands for, or the target language's usual rendering of it, never a coined word: an academic degree takes the target language's established term for that degree, else a plain description of its holder, never a compound or suffix built from the German parts. A proper name keeps its own form, transliterated into Cyrillic for ru, unless the language has an established name for it («München»: Munich, Мюнхен); never translate its parts («Lindenstraße»: Lindenstraße, Линденштрассе).\nTranslate a Locution or a Saying as a whole: by the target language's established expression with the same meaning when there is one, else by a plain paraphrase of that meaning. Never translate it word for word, and never give another expression that only shares its words or its image.\nAnswer with a JSON object: `sentence`, the translation, and `equivalents`, an array of the one equivalent it uses, or up to three when the target has several equally usual renderings here, the one in `sentence` first; each a word or a short phrase in its dictionary headword form, never a sentence.",
+					"input": {
+						"aspect": "translationAccumulation",
+						"reading": {
+							"lemma": "Strauß",
+							"kind": "NOUN",
+							"family": "Lexeme",
+							"emojiDescription": "💐"
+						},
+						"markedSentence": "Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
+						"language": "en"
+					},
+					"outputFormat": "json",
+					"outputSchema": {
+						"type": "object",
+						"properties": {
+							"sentence": {
+								"type": "string",
+								"minLength": 1
+							},
+							"equivalents": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"minLength": 1
+								},
+								"minItems": 1,
+								"maxItems": 3
+							}
+						},
+						"required": ["sentence", "equivalents"]
+					},
+					"configuration": {
+						"model": "gpt-5.6-luna",
+						"settings": {
+							"reasoning": {
+								"effort": "none"
+							},
+							"service_tier": "fast"
+						}
+					}
+				}
+			},
+			{
+				"executor": "luna",
+				"stage": "translationAccumulation",
+				"request": {
+					"systemPrompt": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, `kind` its word class and `family` whether it is a word (Lexeme), a multiword expression (Locution) or a Saying. Its `emojiDescription`, one to four emoji, labels the Reading's meaning, and `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>, which has that meaning.\nFirst write `sentence`: the natural translation of `markedSentence` into `language` (en: English, ru: Russian), as a good translator writes it for a reader, not a word-for-word gloss. Then write `equivalents`: the words or phrases that translation renders the marked words with. Translate what the target does in this sentence, never the meaning of a neighbouring word, and never another meaning of the German word the sentence does not use.\nWrite each equivalent in its dictionary headword form and carry over none of the sentence's tense, person, number, case or degree: a verb in its infinitive, a noun in the singular unless it exists only in the plural, an adjective in its positive. A verb's equivalent keeps the reflexive or particle its meaning needs, and every equivalent keeps the Reading's word class: an adverb takes an adverb, never an adjective of the same root. The equivalent translates the target alone, in every language: it takes in no neighbouring word, no object, adverb or predicative this sentence adds («Die Suppe riecht herrlich»: smell, пахнуть; not smell wonderful, вкусно пахнуть).\nNever pick a word only because it looks or sounds like the German one: a false friend names another thing. An abbreviation or a title takes the established equivalent of what it stands for, or the target language's usual rendering of it, never a coined word: an academic degree takes the target language's established term for that degree, else a plain description of its holder, never a compound or suffix built from the German parts. A proper name keeps its own form, transliterated into Cyrillic for ru, unless the language has an established name for it («München»: Munich, Мюнхен); never translate its parts («Lindenstraße»: Lindenstraße, Линденштрассе).\nTranslate a Locution or a Saying as a whole: by the target language's established expression with the same meaning when there is one, else by a plain paraphrase of that meaning. Never translate it word for word, and never give another expression that only shares its words or its image.\nAnswer with a JSON object: `sentence`, the translation, and `equivalents`, an array of the one equivalent it uses, or up to three when the target has several equally usual renderings here, the one in `sentence` first; each a word or a short phrase in its dictionary headword form, never a sentence.",
+					"input": {
+						"aspect": "translationAccumulation",
+						"reading": {
+							"lemma": "Strauß",
+							"kind": "NOUN",
+							"family": "Lexeme",
+							"emojiDescription": "💐"
+						},
+						"markedSentence": "Sie bekam einen <TARGET>Strauß</TARGET> zum Geburtstag.",
+						"language": "ru"
+					},
+					"outputFormat": "json",
+					"outputSchema": {
+						"type": "object",
+						"properties": {
+							"sentence": {
+								"type": "string",
+								"minLength": 1
+							},
+							"equivalents": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"minLength": 1
+								},
+								"minItems": 1,
+								"maxItems": 3
+							}
+						},
+						"required": ["sentence", "equivalents"]
+					},
+					"configuration": {
+						"model": "gpt-5.6-luna",
+						"settings": {
+							"reasoning": {
+								"effort": "none"
+							},
+							"service_tier": "fast"
+						}
+					}
+				}
+			}
+		],
+		"result": {
+			"changes": [
+				{
+					"kind": "Contribute",
+					"aspect": "translations",
+					"language": "ru",
+					"value": ["цветы"]
+				}
+			],
+			"failures": [
+				{
+					"aspect": "translations",
+					"leaf": "en",
+					"code": "InvalidModelOutput",
+					"message": "Luna answered no translation"
+				}
+			]
+		}
+	},
+	"verb": {
+		"requests": [
+			{
+				"executor": "jev",
+				"stage": "translationCoverage",
+				"request": {
+					"model": "jev-1.13.0",
+					"state": {
+						"reading": {
+							"lemma": "laufen",
+							"kind": "VERB",
+							"family": "Lexeme",
+							"emojiDescription": "🏃"
+						},
+						"markedSentence": "Er <TARGET>läuft</TARGET> jeden Morgen.",
+						"language": "en",
+						"policy": {
+							"task": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. Each option is one translation of the Reading into `language` (en: English, ru: Russian) that its dictionary entry already gives.",
+							"covers": "Picture the natural translation of the whole sentence into `language`, as a good translator writes it for a reader, not a word-for-word gloss. An option covers the occurrence when that translation renders the target with it, in this form or another form of the same word: another tense, person, number, case or degree.",
+							"noMatch": "When that translation renders the target with a word or phrase none of the options is, answer NoMatch rather than take the nearest option, also when an option is what a gloss of the German word would give, and also when there is only one option. An option a natural translation would avoid here does not cover it."
+						}
+					},
+					"questions": {
+						"translation": {
+							"type": "choice",
+							"instructions": "Which option renders the target in the natural translation of this sentence into `language`? NoMatch if that translation renders it with a word or phrase no option is.",
+							"criteria": {
+								"t0": "run",
+								"t1": "jog",
+								"NoMatch": "The natural translation renders the target with a word or phrase no option is"
+							}
+						}
+					}
+				}
+			},
+			{
+				"executor": "jev",
+				"stage": "translationCoverage",
+				"request": {
+					"model": "jev-1.13.0",
+					"state": {
+						"reading": {
+							"lemma": "laufen",
+							"kind": "VERB",
+							"family": "Lexeme",
+							"emojiDescription": "🏃"
+						},
+						"markedSentence": "Er <TARGET>läuft</TARGET> jeden Morgen.",
+						"language": "ru",
+						"policy": {
+							"task": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, and its `emojiDescription` names the Reading's one meaning. `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>. Each option is one translation of the Reading into `language` (en: English, ru: Russian) that its dictionary entry already gives.",
+							"covers": "Picture the natural translation of the whole sentence into `language`, as a good translator writes it for a reader, not a word-for-word gloss. An option covers the occurrence when that translation renders the target with it, in this form or another form of the same word: another tense, person, number, case or degree.",
+							"noMatch": "When that translation renders the target with a word or phrase none of the options is, answer NoMatch rather than take the nearest option, also when an option is what a gloss of the German word would give, and also when there is only one option. An option a natural translation would avoid here does not cover it."
+						}
+					},
+					"questions": {
+						"translation": {
+							"type": "choice",
+							"instructions": "Which option renders the target in the natural translation of this sentence into `language`? NoMatch if that translation renders it with a word or phrase no option is.",
+							"criteria": {
+								"t0": "бегать",
+								"NoMatch": "The natural translation renders the target with a word or phrase no option is"
+							}
+						}
+					}
+				}
+			},
+			{
+				"executor": "luna",
+				"stage": "translationAccumulation",
+				"request": {
+					"systemPrompt": "`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, `kind` its word class and `family` whether it is a word (Lexeme), a multiword expression (Locution) or a Saying. Its `emojiDescription`, one to four emoji, labels the Reading's meaning, and `markedSentence` marks one occurrence of it with <TARGET>…</TARGET>, which has that meaning.\nFirst write `sentence`: the natural translation of `markedSentence` into `language` (en: English, ru: Russian), as a good translator writes it for a reader, not a word-for-word gloss. Then write `equivalents`: the words or phrases that translation renders the marked words with. Translate what the target does in this sentence, never the meaning of a neighbouring word, and never another meaning of the German word the sentence does not use.\nWrite each equivalent in its dictionary headword form and carry over none of the sentence's tense, person, number, case or degree: a verb in its infinitive, a noun in the singular unless it exists only in the plural, an adjective in its positive. A verb's equivalent keeps the reflexive or particle its meaning needs, and every equivalent keeps the Reading's word class: an adverb takes an adverb, never an adjective of the same root. The equivalent translates the target alone, in every language: it takes in no neighbouring word, no object, adverb or predicative this sentence adds («Die Suppe riecht herrlich»: smell, пахнуть; not smell wonderful, вкусно пахнуть).\nNever pick a word only because it looks or sounds like the German one: a false friend names another thing. An abbreviation or a title takes the established equivalent of what it stands for, or the target language's usual rendering of it, never a coined word: an academic degree takes the target language's established term for that degree, else a plain description of its holder, never a compound or suffix built from the German parts. A proper name keeps its own form, transliterated into Cyrillic for ru, unless the language has an established name for it («München»: Munich, Мюнхен); never translate its parts («Lindenstraße»: Lindenstraße, Линденштрассе).\nTranslate a Locution or a Saying as a whole: by the target language's established expression with the same meaning when there is one, else by a plain paraphrase of that meaning. Never translate it word for word, and never give another expression that only shares its words or its image.\nAnswer with a JSON object: `sentence`, the translation, and `equivalents`, an array of the one equivalent it uses, or up to three when the target has several equally usual renderings here, the one in `sentence` first; each a word or a short phrase in its dictionary headword form, never a sentence.",
+					"input": {
+						"aspect": "translationAccumulation",
+						"reading": {
+							"lemma": "laufen",
+							"kind": "VERB",
+							"family": "Lexeme",
+							"emojiDescription": "🏃"
+						},
+						"markedSentence": "Er <TARGET>läuft</TARGET> jeden Morgen.",
+						"language": "ru"
+					},
+					"outputFormat": "json",
+					"outputSchema": {
+						"type": "object",
+						"properties": {
+							"sentence": {
+								"type": "string",
+								"minLength": 1
+							},
+							"equivalents": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"minLength": 1
+								},
+								"minItems": 1,
+								"maxItems": 3
+							}
+						},
+						"required": ["sentence", "equivalents"]
+					},
+					"configuration": {
+						"model": "gpt-5.6-luna",
+						"settings": {
+							"reasoning": {
+								"effort": "none"
+							},
+							"service_tier": "fast"
+						}
+					}
+				}
+			}
+		],
+		"result": {
+			"changes": [
+				{
+					"kind": "Contribute",
+					"aspect": "translations",
+					"language": "ru",
+					"value": ["бежать"]
+				}
+			],
+			"failures": []
+		}
+	}
+}

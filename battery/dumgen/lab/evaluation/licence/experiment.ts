@@ -39,6 +39,7 @@ import type {
 	KnowledgeEvaluateArgs,
 	KnowledgeEvaluated,
 } from "../knowledge/experiment.js";
+import { goldRequests } from "../request-diff.js";
 import {
 	CachedModels,
 	type GrammarModelsOptions,
@@ -228,6 +229,28 @@ async function pass(
 	);
 }
 
+/**
+ * One half's requests to jev and Luna (`request-diff.ts`): each case a run
+ * would ask once, Luna writing and the judge choosing as gold would, so
+ * the requests and the outcome are fixed.
+ */
+async function licenceRequests(
+	setsRoot: string,
+	split: DoubletSplit,
+	concurrency: number,
+) {
+	const set = await loadLicenceSet(setsRoot);
+	return goldRequests({
+		cases: splitCases(set.cases, split).map((licenceCase) => ({
+			id: licenceCase.id,
+			at: { licenceCase },
+		})),
+		oracle: licenceOracle,
+		attempt: (at, models) => attempt(at.licenceCase, 0, models),
+		concurrency,
+	});
+}
+
 /** The scored attempts of a run, one per case and repetition. */
 function licenceAttempts(run: OperationEvaluationRun): ScoredLicence[] {
 	return run.cases.flatMap((record) => {
@@ -269,6 +292,15 @@ export function licenceExperiment(split: DoubletSplit) {
 		id: experimentId,
 		caseCount: () => frozenSplitCases(trackedLicenceSetsRoot, split).length,
 		metrics: licenceMetrics,
+		requests: (args: {
+			readonly setsRoot?: string;
+			readonly concurrency?: number;
+		}) =>
+			licenceRequests(
+				args.setsRoot ?? trackedLicenceSetsRoot,
+				split,
+				args.concurrency ?? 12,
+			),
 		async evaluate(args: LicenceEvaluateArgs): Promise<LicenceEvaluated> {
 			const directory = join(args.root ?? defaultRoot, "cache");
 			const { set, repetitions } = await openFrozenSet({

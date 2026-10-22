@@ -216,3 +216,16 @@ test("resolve.reading's request run sends jev and Luna requests at gold's answer
 test("knowledge.produce's request run sends jev and Luna requests at gold's answers, the same each time", async () => {
 	await goldRequestRun("knowledge/de:dev");
 });
+
+test("the licence judge's request runs send jev and Luna requests at gold's answers, the same each time", async () => {
+	const tuning = await goldRequestRun("knowledge/de:doublets:tuning");
+	const heldout = await goldRequestRun("knowledge/de:doublets:heldout");
+	// The halves split the doublets set.
+	const ids = (run: typeof tuning) => run.cases.map(({ id }) => id);
+	expect(ids(tuning).filter((id) => ids(heldout).includes(id))).toEqual([]);
+	expect(
+		tuning.cases.some(({ requests }) =>
+			requests.some(({ stage }) => stage === "paradigmLicence"),
+		),
+	).toBe(true);
+});

@@ -209,6 +209,10 @@ export const productionPolicy = "step0+saying+maxim@0.7+closed";
 export const evaluateExperiment = (args: EvaluateArgs) =>
 	experimentOf(args.experimentId).evaluate(args);
 
+/** The experiments with a request diff, in the table's order. */
+export const requestExperimentIds = () =>
+	experiments.filter((experiment) => experiment.requests).map(({ id }) => id);
+
 /** Every case's requests to jev and Luna, built offline (`request-diff.ts`). */
 export async function experimentRequests(
 	args: EvaluateArgs,
@@ -216,10 +220,7 @@ export async function experimentRequests(
 	const { requests } = experimentOf(args.experimentId);
 	if (!requests)
 		throw Error(
-			`${args.experimentId} has no request diff; these do: ${experiments
-				.filter((experiment) => experiment.requests)
-				.map(({ id }) => id)
-				.join(", ")}`,
+			`${args.experimentId} has no request diff; these do: ${requestExperimentIds().join(", ")}`,
 		);
 	return requests(args);
 }

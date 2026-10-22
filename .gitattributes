@@ -16,6 +16,9 @@ battery/dumling/README.md linguist-generated
 battery/dumgen/evidence/** linguist-generated
 battery/dumgen/evidence/**/research-report.md -linguist-generated
 
+# Golden requests, written by their tests (`DUMGEN_WRITE_GOLDEN=1`).
+battery/dumgen/tests/golden-requests/fixtures/** linguist-generated
+
 # Installed skills and third-party reference material.
 .agents/skills/** linguist-vendored
 battery/dumling/resources/** linguist-vendored

@@ -32,6 +32,7 @@
  *   bun run evaluate --experiment resolve-grammar/de:dev --revision <rev> --requests
  *   bun run evaluate --experiment resolve-reading/de:dev --revision <rev> --requests
  *   bun run evaluate --experiment knowledge/de:dev --revision <rev> --requests
+ *   bun run evaluate --experiment knowledge/de:doublets:tuning --revision <rev> --requests
  *   bun run evaluate --open <runId>
  *   bun run evaluate --compare <leftRunId> <rightRunId>
  *

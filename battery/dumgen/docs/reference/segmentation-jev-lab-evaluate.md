@@ -80,8 +80,21 @@ bun run evaluate --experiment segment-in-units/de:dev --revision <rev> \
   a cold cache still reaches the branches behind a "no" or a later option;
   every request and outcome is tagged with its path. `resolve-grammar/de:dev`
   and `:heldout`, `resolve-reading/de:*` and `knowledge/de:*` answer jev
-  and Luna with their gold oracles. To compare two commits, run it in a
+  and Luna with their gold oracles, the licence judge's
+  `knowledge/de:doublets:*` included. To compare two commits, run it in a
   checkout of each.
+- **The request baselines** (`bun run request-baselines`,
+  `cli/request-baselines.ts`, #1271) run every request diff above, with
+  segment.inUnits under both `--units`, and an offline `replay` of the
+  latest dev and held-out production lab runs, behind a guard that makes
+  `fetch` throw and drops the provider keys. They save an index of the
+  run ids under `.runs/dumgen/requests/baselines/` and print it.
+  `--against <baselineId>` records them again, compares each request run
+  and each replay's summary line with the baseline's, and exits 1 on any
+  difference. The operations no experiment covers, `language.detect`,
+  `translate.sentence` and `knowledge.accumulateTranslations`, have
+  golden-request tests instead (`tests/golden-requests/`), whose fixtures
+  a test run rewrites only with `DUMGEN_WRITE_GOLDEN=1`.
 - **Transport is recorded apart from accuracy.** Every retry and every
   request that still failed is counted by cause (an HTTP status, `no
   status`, `invalid answer`), and requests abandoned with their operation

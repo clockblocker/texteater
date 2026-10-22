@@ -1,0 +1,716 @@
+{
+	"mixed": {
+		"requests": [
+			{
+				"executor": "jev",
+				"stage": "language",
+				"request": {
+					"model": "jev-1.13.0",
+					"state": {
+						"sentences": [
+							"Lies den Text.",
+							"Read the text.",
+							"Hm.",
+							"אני גר ב-Tel Aviv.",
+							"1984.",
+							"Er sagte שלום.",
+							"Je ne sais pas.",
+							"»Hm.«",
+							"Er kam.",
+							"—",
+							"He came."
+						]
+					},
+					"questions": {
+						"sentence-0": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[0]` written in? It reads: \"Lies den Text.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-1": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[1]` written in? It reads: \"Read the text.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-2": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[2]` written in? It reads: \"Hm.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-5": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[5]` written in? It reads: \"Er sagte שלום.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-6": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[6]` written in? It reads: \"Je ne sais pas.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-7": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[7]` written in? It reads: \"»Hm.«\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-8": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[8]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-10": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[10]` written in? It reads: \"He came.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						}
+					}
+				}
+			}
+		],
+		"result": {
+			"paragraphs": [
+				{
+					"sentences": [
+						{
+							"text": "Lies den Text.",
+							"language": "de"
+						},
+						{
+							"text": "Read the text.",
+							"language": "en"
+						},
+						{
+							"text": "Hm.",
+							"language": "en"
+						}
+					]
+				},
+				{
+					"sentences": [
+						{
+							"text": "אני גר ב-Tel Aviv.",
+							"language": "he"
+						},
+						{
+							"text": "1984.",
+							"language": "he"
+						},
+						{
+							"text": "Er sagte שלום.",
+							"language": "de"
+						}
+					]
+				},
+				{
+					"sentences": [
+						{
+							"text": "Je ne sais pas.",
+							"language": "other"
+						},
+						{
+							"text": "»Hm.«",
+							"language": "other"
+						}
+					]
+				},
+				{
+					"sentences": [
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "—",
+							"language": "de"
+						},
+						{
+							"text": "He came.",
+							"language": "en"
+						}
+					]
+				}
+			]
+		}
+	},
+	"windows": {
+		"requests": [
+			{
+				"executor": "jev",
+				"stage": "language",
+				"request": {
+					"model": "jev-1.13.0",
+					"state": {
+						"sentences": [
+							"Satz 0.",
+							"Er kam.",
+							"Satz 2.",
+							"Er kam.",
+							"Satz 4.",
+							"Er kam.",
+							"Satz 6.",
+							"Er kam.",
+							"Satz 8.",
+							"Er kam.",
+							"Satz 10.",
+							"Er kam.",
+							"Satz 12.",
+							"Er kam.",
+							"Satz 14.",
+							"Er kam."
+						]
+					},
+					"questions": {
+						"sentence-0": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[0]` written in? It reads: \"Satz 0.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-1": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[1]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-2": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[2]` written in? It reads: \"Satz 2.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-3": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[3]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-4": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[4]` written in? It reads: \"Satz 4.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-5": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[5]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-6": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[6]` written in? It reads: \"Satz 6.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-7": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[7]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-8": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[8]` written in? It reads: \"Satz 8.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-9": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[9]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-10": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[10]` written in? It reads: \"Satz 10.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-11": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[11]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-12": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[12]` written in? It reads: \"Satz 12.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-13": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[13]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-14": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[14]` written in? It reads: \"Satz 14.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-15": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[15]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						}
+					}
+				}
+			},
+			{
+				"executor": "jev",
+				"stage": "language",
+				"request": {
+					"model": "jev-1.13.0",
+					"state": {
+						"sentences": [
+							"Satz 16.",
+							"Er kam.",
+							"Satz 18.",
+							"Er kam.",
+							"Satz 20.",
+							"Er kam.",
+							"Satz 22.",
+							"Er kam.",
+							"Satz 24.",
+							"Er kam.",
+							"Satz 26.",
+							"Er kam.",
+							"Satz 28.",
+							"Er kam.",
+							"Satz 30."
+						]
+					},
+					"questions": {
+						"sentence-0": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[0]` written in? It reads: \"Satz 16.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-1": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[1]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-2": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[2]` written in? It reads: \"Satz 18.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-3": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[3]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-4": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[4]` written in? It reads: \"Satz 20.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-5": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[5]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-6": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[6]` written in? It reads: \"Satz 22.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-7": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[7]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-8": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[8]` written in? It reads: \"Satz 24.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-9": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[9]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-10": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[10]` written in? It reads: \"Satz 26.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-11": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[11]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-12": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[12]` written in? It reads: \"Satz 28.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-13": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[13]` written in? It reads: \"Er kam.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						},
+						"sentence-14": {
+							"type": "choice",
+							"instructions": "Which language is `sentences[14]` written in? It reads: \"Satz 30.\". Judge its own words; a Sentence that mixes languages takes the language of its own clauses, not of a quoted or borrowed phrase.",
+							"criteria": {
+								"German": "German",
+								"English": "English",
+								"Hebrew": "Hebrew",
+								"Other": "Another language, such as French, Dutch or Spanish",
+								"Unknown": "Cannot tell: only names, numbers, interjections or words several languages share"
+							}
+						}
+					}
+				}
+			}
+		],
+		"result": {
+			"paragraphs": [
+				{
+					"sentences": [
+						{
+							"text": "Satz 0.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 2.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 4.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 6.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 8.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 10.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 12.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 14.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 16.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 18.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 20.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 22.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 24.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 26.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 28.",
+							"language": "de"
+						},
+						{
+							"text": "Er kam.",
+							"language": "de"
+						},
+						{
+							"text": "Satz 30.",
+							"language": "de"
+						}
+					]
+				}
+			]
+		}
+	}
+}

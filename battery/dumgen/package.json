@@ -42,6 +42,7 @@
 		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
 		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository",
 		"evaluate": "bun --env-file=../../.env.local cli/evaluate.ts",
+		"request-baselines": "bun cli/request-baselines.ts",
 		"spec-coverage": "bun cli/spec-coverage.ts",
 		"segment-in-units-lab": "bun --env-file=../../.env.local cli/segment-in-units-lab.ts",
 		"segment-in-units-attribution": "bun cli/segment-in-units-attribution.ts"
