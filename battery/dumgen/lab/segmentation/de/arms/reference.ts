@@ -36,13 +36,15 @@ import {
 } from "../../../../src/segment/de/nomination.js";
 import type { Partition } from "../../../../src/segment/de/partition.js";
 import {
+	askRouteBatches,
+	askUnaskedRoutes,
+} from "../../../../src/segment/de/route-requests.js";
+import {
 	checkedRouteKey,
 	keyOf,
 	routeCriteria,
 } from "../../../../src/segment/de/routes.js";
 import {
-	askRouteBatches,
-	askUnaskedRoutes,
 	type RoutedMembership,
 	routeMembership,
 } from "../../../../src/segment/de/routing.js";

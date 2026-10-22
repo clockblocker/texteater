@@ -32,12 +32,8 @@ import * as Effect from "effect/Effect";
 import type { Ask, AskFailure } from "../ask.js";
 import type { Segment, Unit } from "../segmented-sentence.js";
 import { type Floors, membershipOf, type SayingAssembly } from "./assembly.js";
-import {
-	answerBeforeFormula,
-	type CodeRule,
-	codeRoutes,
-	withCodeRules,
-} from "./code-rules.js";
+import { type CodeRule, codeRoutes, withCodeRules } from "./code-rules.js";
+import { answerBeforeFormula } from "./code-rules-words.js";
 import {
 	askGovernmentChoice,
 	type GovernmentSettings,
@@ -50,11 +46,8 @@ import {
 	withLocutionChoice,
 } from "./locution-choice.js";
 import { nominate } from "./nomination.js";
-import {
-	askRouteBatches,
-	askUnaskedRoutes,
-	routeMembership,
-} from "./routing.js";
+import { askRouteBatches, askUnaskedRoutes } from "./route-requests.js";
+import { routeMembership } from "./routing.js";
 import {
 	askVerbChoice,
 	type VerbSettings,

@@ -5,7 +5,7 @@ import {
 } from "dumcorpus/inventories";
 import { prefixParticles } from "../../../src/resolve/de/open-route/separable-prefix.js";
 import { particleForms } from "../../../src/segment/de/candidates.js";
-import { strandedTails } from "../../../src/segment/de/code-rules.js";
+import { strandedTails } from "../../../src/segment/de/code-rules-words.js";
 import { germanInfixParticles } from "../../../src/segment/de/fusion-entries.js";
 
 // Each selection is a named filter over dumcorpus's separable prefixes

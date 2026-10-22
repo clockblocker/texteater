@@ -6,7 +6,7 @@
  */
 
 import type { Ask } from "../../../src/segment/ask.js";
-import type { RouteJudgment } from "../../../src/segment/de/routing.js";
+import type { RouteJudgment } from "../../../src/segment/de/route-requests.js";
 import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,

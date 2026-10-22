@@ -15,11 +15,11 @@ import {
 	membershipOf,
 } from "../../../../src/segment/de/assembly.js";
 import {
-	answerBeforeFormula,
 	type CodeRule,
 	codeRoutes,
 	withCodeRules,
 } from "../../../../src/segment/de/code-rules.js";
+import { answerBeforeFormula } from "../../../../src/segment/de/code-rules-words.js";
 import {
 	askGovernmentChoice,
 	withGovernmentChoice,
@@ -36,6 +36,8 @@ import {
 	askRouteBatches,
 	askUnaskedRoutes,
 	type RouteAnswers,
+} from "../../../../src/segment/de/route-requests.js";
+import {
 	type RoutedMembership,
 	routeMembership,
 } from "../../../../src/segment/de/routing.js";

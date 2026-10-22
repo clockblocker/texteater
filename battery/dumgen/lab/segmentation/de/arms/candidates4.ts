@@ -27,8 +27,8 @@ import {
 import { authoredInventory } from "../../../../src/segment/de/inventory.js";
 import { nominate } from "../../../../src/segment/de/nomination.js";
 import { groupKey, unitsOf } from "../../../../src/segment/de/partition.js";
+import { askRouteBatches } from "../../../../src/segment/de/route-requests.js";
 import {
-	askRouteBatches,
 	routeMembership,
 	structuralRoute,
 } from "../../../../src/segment/de/routing.js";

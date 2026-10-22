@@ -10,12 +10,12 @@ import {
 	splitAdverbForm,
 	splitTails,
 } from "../../../src/segment/de/candidates.js";
+import { seinParticiples } from "../../../src/segment/de/code-rules-verbs.js";
 import {
 	einForms,
 	objectPronounSubject,
 	quantityBisschen,
-	seinParticiples,
-} from "../../../src/segment/de/code-rules.js";
+} from "../../../src/segment/de/code-rules-words.js";
 import { authoredInventory } from "../../../src/segment/de/inventory.js";
 import { modalForms } from "../../../src/segment/de/locution-choice.js";
 import { sentenceOf } from "../../../src/segment/de/sentence.js";
