@@ -25,15 +25,12 @@
  *   with the projector's stand-in answers, and keeps every miss in
  *   `projection`, so a live run can price itself first (`round.ts`).
  */
-import { createHash, randomUUID } from "node:crypto";
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import type { EntryType, Question, Questions } from "@typesafe-ai/sdk";
+import { join } from "node:path";
+import type { EntryType, Questions } from "@typesafe-ai/sdk";
 import { canonicalJson, messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
-import { z } from "zod";
 import { checkedAnswers } from "../../../src/jev-call.js";
-import type { Answer, Answers, Ask } from "../../../src/segment/ask.js";
+import type { Answers, Ask } from "../../../src/segment/ask.js";
 import {
 	isFloatingModel,
 	type JevAsk,
@@ -42,367 +39,47 @@ import {
 	pinnedJevModel,
 	questionsPerRequest,
 } from "../../../src/segment/jev.js";
-import { answerSchema, storedAs } from "../../stored-json.js";
+import {
+	type Bucket,
+	canonicalObject,
+	emptyBucket,
+	hashOf,
+	hashOfText,
+	lookupIn,
+	readBucket,
+	requestText,
+	type Sent,
+	type Spelling,
+	spell,
+	spelledAt,
+	writeJson,
+} from "./jev-cache-buckets.js";
+import {
+	type AskContext,
+	type CallRecord,
+	causeOf,
+	defaultRetryDelay,
+	type JevCacheOptions,
+	type Projection,
+	type Projector,
+	retryable,
+	sleep,
+	type TransportRecord,
+	type TransportTally,
+	tally,
+} from "./jev-cache-records.js";
 
-/** One request as the ledger and the run record see it. */
-export type CallRecord = {
-	readonly executor: "jev" | "luna";
-	readonly stage: string;
-	readonly questions: number;
-	readonly inputTokens: number;
-	readonly outputTokens: number;
-	readonly latencyMs: number;
-	readonly cached: boolean;
-	readonly error?: string;
-	/** Attempts past the first a fresh request took; absent when none. */
-	readonly retries?: number;
-};
-
-/** A call as a run record keeps it. */
-export const callRecordSchema = z.object({
-	executor: z.enum(["jev", "luna"]),
-	stage: z.string(),
-	questions: z.number(),
-	inputTokens: z.number(),
-	outputTokens: z.number(),
-	latencyMs: z.number(),
-	cached: z.boolean(),
-	error: z.string().optional(),
-	retries: z.number().optional(),
-}) satisfies z.ZodType<CallRecord>;
-
-/**
- * What a run's fresh requests met on the way to jev, recorded beside its
- * accuracy: each retry and each request that brought no usable answer.
- * Causes are an HTTP status, `no status` (a timeout, a dropped connection,
- * an unreadable body) or `invalid answer` (another model, a missing answer).
- */
-export type TransportRecord = {
-	/** Fresh requests sent, each counted once however many attempts it took. */
-	readonly requests: number;
-	/** Attempts past each request's first. */
-	readonly retries: number;
-	/** Requests that needed at least one retry. */
-	readonly retriedRequests: number;
-	/** Requests that brought no usable answer after their last attempt. */
-	readonly failures: number;
-	/**
-	 * Requests abandoned because their operation was interrupted, a
-	 * sibling request's failure included; not failures of their own.
-	 */
-	readonly interrupted: number;
-	readonly retriesBy: Readonly<Record<string, number>>;
-	readonly failuresBy: Readonly<Record<string, number>>;
-};
-
-/** A transport record as the cache counts it up. */
-type TransportTally = {
-	requests: number;
-	retries: number;
-	retriedRequests: number;
-	failures: number;
-	interrupted: number;
-	retriesBy: Record<string, number>;
-	failuresBy: Record<string, number>;
-};
-
-/** A transport record as a run, its manifest or the ledger keeps it. */
-export const transportRecordSchema = z.object({
-	requests: z.number(),
-	retries: z.number(),
-	retriedRequests: z.number(),
-	failures: z.number(),
-	interrupted: z.number(),
-	retriesBy: z.record(z.string(), z.number()),
-	failuresBy: z.record(z.string(), z.number()),
-}) satisfies z.ZodType<TransportRecord>;
-
-/** One line for a run's output: requests, retries and failures by cause. */
-export function transportText(record: TransportRecord): string {
-	const causes = (counts: Readonly<Record<string, number>>) => {
-		const listed = Object.entries(counts)
-			.sort(([a], [b]) => a.localeCompare(b))
-			.map(([cause, count]) => `${cause} ×${count}`);
-		return listed.length > 0 ? ` (${listed.join(", ")})` : "";
-	};
-	return `jev transport: ${record.requests} fresh requests, ${record.retries} retries over ${record.retriedRequests} of them${causes(record.retriesBy)}, ${record.failures} failed${causes(record.failuresBy)}, ${record.interrupted} interrupted`;
-}
-
-/**
- * Stand-in answers for questions the cache misses, so a projection pass can
- * go on to the requests that depend on them.
- */
-export type Projector = (request: {
-	readonly stage: string;
-	readonly questions: Questions;
-}) => Answers;
-
-/** One request a projection pass found in the cache, for pricing the misses. */
-type ProjectionSample = {
-	readonly stage: string;
-	/** Characters of the request (state and questions) as JSON. */
-	readonly chars: number;
-	readonly inputTokens: number;
-};
-
-/**
- * One request a projection pass would send: the questions the cache
- * misses. `inputTokens` is known when the same questions are cached at
- * another repetition; otherwise the request is priced by its size.
- */
-type ProjectedRequest = {
-	readonly stage: string;
-	readonly chars: number;
-	readonly questions: number;
-	readonly inputTokens?: number;
-};
-
-export type Projection = {
-	readonly samples: ProjectionSample[];
-	readonly requests: ProjectedRequest[];
-};
-
-export function hashOf(value: unknown): string {
-	return hashOfText(canonicalJson(value));
-}
-
-const hashOfText = (text: string) =>
-	createHash("sha256").update(text).digest("hex");
-
-/**
- * The canonical JSON of an object whose members are spelled already:
- * `canonicalJson`'s object rule, keys in UTF-16 code-unit order. A key is
- * the hash of such an object, so it equals `hashOf` of the object itself.
- */
-function canonicalObject(
-	members: readonly (readonly [key: string, text: string])[],
-): string {
-	return `{${[...members]
-		.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
-		.map(([key, text]) => `${JSON.stringify(key)}:${text}`)
-		.join(",")}}`;
-}
-
-/**
- * A request's state and each of its questions as canonical JSON, and each
- * question's key in its bucket (`hashOf({ id, question })`), spelled once
- * on the way in: its bucket, prompt hash, lookups and size are all taken
- * from these, however many chunks and repetitions it is looked up in.
- */
-type Spelling = {
-	readonly state: string;
-	readonly questions: ReadonlyMap<string, string>;
-	readonly keys: ReadonlyMap<string, string>;
-};
-
-function spell(state: EntryType, questions: Questions): Spelling {
-	const texts = new Map(
-		Object.entries(questions).map(([id, question]) => [
-			id,
-			canonicalJson(question),
-		]),
-	);
-	const keys = new Map(
-		[...texts].map(([id, question]) => [
-			id,
-			hashOfText(
-				canonicalObject([
-					["id", JSON.stringify(id)],
-					["question", question],
-				]),
-			),
-		]),
-	);
-	return { state: canonicalJson(state), questions: texts, keys };
-}
-
-/** What a spelling's map holds for question `id`; one it lacks throws. */
-function spelledAt(texts: ReadonlyMap<string, string>, id: string): string {
-	const text = texts.get(id);
-	if (text === undefined) throw Error(`Question ${id} was not spelled`);
-	return text;
-}
-
-/** The text `canonicalJson({ state, questions })` spells for `asked`, some of the spelled questions. */
-function requestText(spelling: Spelling, asked: Questions): string {
-	const questions = Object.keys(asked).map(
-		(id) => [id, spelledAt(spelling.questions, id)] as const,
-	);
-	return canonicalObject([
-		["questions", canonicalObject(questions)],
-		["state", spelling.state],
-	]);
-}
-
-/**
- * The bucket at `path`; undefined when it is missing or not JSON. A bucket
- * of another shape throws.
- */
-async function readBucket(path: string): Promise<Bucket | undefined> {
-	let value: unknown;
-	try {
-		value = JSON.parse(await readFile(path, "utf8"));
-	} catch {
-		return undefined;
-	}
-	return storedAs(bucketSchema, value, path);
-}
-
-/** Writes beside the target and renames, so no reader sees half a file. */
-async function writeJson(path: string, value: unknown): Promise<void> {
-	await mkdir(dirname(path), { recursive: true });
-	const temporary = `${path}.${randomUUID()}.tmp`;
-	await writeFile(temporary, JSON.stringify(value));
-	await rename(temporary, path);
-}
-
-/** A fresh request's answers as `#send` returns them, before they are kept. */
-type Sent = {
-	readonly model: string;
-	readonly answers: Answers;
-	readonly usage: {
-		readonly input_tokens: number;
-		readonly output_tokens: number;
-	};
-	readonly latencyMs: number;
-};
-
-/**
- * The cached answers of one model, state and repetition: each answer with
- * the request that brought it, and each request's size, tokens and latency.
- */
-type Bucket = {
-	readonly requests: readonly {
-		readonly model: string;
-		readonly questions: number;
-		readonly usage: Sent["usage"];
-		readonly latencyMs: number;
-	}[];
-	readonly answers: Readonly<
-		Record<string, { readonly answer: Answer; readonly request: number }>
-	>;
-};
-
-const bucketSchema = z.object({
-	requests: z.array(
-		z.object({
-			model: z.string(),
-			questions: z.number(),
-			usage: z.object({
-				input_tokens: z.number(),
-				output_tokens: z.number(),
-			}),
-			latencyMs: z.number(),
-		}),
-	),
-	answers: z.record(
-		z.string(),
-		z.object({ answer: answerSchema, request: z.number() }),
-	),
-}) satisfies z.ZodType<Bucket>;
-
-const emptyBucket: Bucket = { requests: [], answers: {} };
-
-/** What the cache found for a request's questions. */
-type Lookup = {
-	readonly found: Record<string, Answer>;
-	readonly missing: Questions;
-	/** The tokens and latency the found answers cost when first asked. */
-	readonly usage: { input_tokens: number; output_tokens: number };
-	readonly latencyMs: number;
-	readonly models: readonly string[];
-};
-
-export type JevCacheOptions = {
-	readonly cacheDirectory: string;
-	/** A pinned jev version; `pinnedJevModel` by default. */
-	readonly model?: string;
-	/** Allow an alias such as `jev-latest`, whose answers may come from any version. */
-	readonly allowFloatingModel?: boolean;
-	/** Asked on a miss: `createTypeSafeAsk` live, a fake in tests. */
-	readonly transport?: JevAsk;
-	/** Answer only from the cache; a miss throws. */
-	readonly offline?: boolean;
-	/** Retries of a fresh request after a retryable failure; six by default. */
-	readonly maxRetries?: number;
-	/** Milliseconds before retry `attempt` (from 0); exponential with jitter by default. */
-	readonly retryDelay?: (attempt: number) => number;
-	/** Questions per request the lab's `port` sends; production's by default. */
-	readonly questionsPerRequest?: number;
-	/** Called before every fresh request; throw to stop spending. */
-	readonly beforeSpend?: () => void;
-	/** Receives the input tokens of every fresh request. */
-	readonly onSpend?: (inputTokens: number) => void;
-	/** Project instead of asking: a miss is answered as `Projector` says and kept in `projection`. */
-	readonly project?: Projector;
-	/**
-	 * Receives every request as the stages put it, before the cache looks
-	 * it up: what a request diff compares (`request-diff.ts`).
-	 */
-	readonly onRequest?: (request: AskedRequest) => void;
-};
-
-/** One request at one repetition: as production chunked it through `ask`, whole through `port`. */
-type AskedRequest = {
-	readonly stage: string;
-	readonly repetition: number;
-	readonly state: EntryType;
-	readonly questions: Questions;
-};
-
-/** Where a request goes in the cache, beside its body. */
-type AskContext = {
-	readonly stage: string;
-	readonly signal: AbortSignal;
-	readonly repetition: number;
-	readonly calls: CallRecord[];
-	/** Keeps a limit test's answers apart per chunk size (`limits.ts`). */
-	readonly salt?: string;
-};
-
-const defaultRetryDelay = (attempt: number) =>
-	1000 * 2 ** attempt + Math.random() * 500;
-
-/** An HTTP status the error carries, as the TypeSafe ask and SDK attach it. */
-function statusOf(error: unknown): number | undefined {
-	if (error && typeof error === "object" && "status" in error) {
-		const { status } = error;
-		return typeof status === "number" ? status : undefined;
-	}
-	return undefined;
-}
-
-const causeOf = (error: unknown) => {
-	const status = statusOf(error);
-	return status === undefined ? "no status" : String(status);
-};
-
-const retryable = (error: unknown) => {
-	const status = statusOf(error);
-	return (
-		status === undefined ||
-		status === 429 ||
-		status === 529 ||
-		status >= 500
-	);
-};
-
-function sleep(ms: number, signal: AbortSignal): Promise<void> {
-	return new Promise((resolve) => {
-		if (signal.aborted) return resolve();
-		const done = () => {
-			clearTimeout(timer);
-			signal.removeEventListener("abort", done);
-			resolve();
-		};
-		const timer = setTimeout(done, ms);
-		signal.addEventListener("abort", done);
-	});
-}
-
-const tally = (counts: Record<string, number>, key: string) => {
-	counts[key] = (counts[key] ?? 0) + 1;
-};
+export { hashOf } from "./jev-cache-buckets.js";
+export {
+	type CallRecord,
+	callRecordSchema,
+	type JevCacheOptions,
+	type Projection,
+	type Projector,
+	type TransportRecord,
+	transportRecordSchema,
+	transportText,
+} from "./jev-cache-records.js";
 
 const never = new AbortController().signal;
 
@@ -590,49 +267,6 @@ export class JevCache {
 		);
 	}
 
-	/** The bucket's answers to `questions`, and the questions it lacks; `keys` holds each question's key. */
-	#lookup(
-		bucket: Bucket,
-		questions: Questions,
-		keys: ReadonlyMap<string, string>,
-	): Lookup {
-		const found: Record<string, Answer> = {};
-		const missing: Record<string, Question> = {};
-		const byRequest = new Map<number, number>();
-		for (const [id, question] of Object.entries(questions)) {
-			const cached = bucket.answers[spelledAt(keys, id)];
-			if (!cached) {
-				missing[id] = question;
-				continue;
-			}
-			found[id] = cached.answer;
-			byRequest.set(
-				cached.request,
-				(byRequest.get(cached.request) ?? 0) + 1,
-			);
-		}
-		const usage = { input_tokens: 0, output_tokens: 0 };
-		let latencyMs = 0;
-		const models = new Set<string>();
-		for (const [index, count] of byRequest) {
-			const request = bucket.requests[index];
-			if (!request) continue;
-			// A request's whole question set costs what it cost; part of it
-			// costs its share.
-			const share =
-				count >= request.questions ? 1 : count / request.questions;
-			usage.input_tokens += Math.round(
-				request.usage.input_tokens * share,
-			);
-			usage.output_tokens += Math.round(
-				request.usage.output_tokens * share,
-			);
-			latencyMs = Math.max(latencyMs, request.latencyMs);
-			models.add(request.model);
-		}
-		return { found, missing, usage, latencyMs, models: [...models] };
-	}
-
 	/** Runs `change` on the bucket at `path` alone; it returns the new bucket, or nothing to keep it. */
 	async #update(
 		path: string,
@@ -742,7 +376,7 @@ export class JevCache {
 		);
 		const { keys } = spelling;
 		const bucket = (await readBucket(bucketPath)) ?? emptyBucket;
-		const lookup = this.#lookup(bucket, questions, keys);
+		const lookup = lookupIn(bucket, questions, keys);
 		for (const model of lookup.models) this.resolvedModels.add(model);
 		const missingCount = Object.keys(lookup.missing).length;
 		if (missingCount === 0)
@@ -916,7 +550,7 @@ export class JevCache {
 				this.#bucketPath(state, other, salt),
 			);
 			if (!bucket) continue;
-			const lookup = this.#lookup(bucket, missing, keys);
+			const lookup = lookupIn(bucket, missing, keys);
 			if (Object.keys(lookup.missing).length > 0) continue;
 			this.projection.requests.push({
 				...projected,
