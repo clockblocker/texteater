@@ -20,7 +20,6 @@ export async function scheduleTranslationAccumulation(
 		readonly attestationId: Id<"attestations">;
 	},
 ): Promise<void> {
-	if (!ctx.scheduler) return;
 	const attestation = await ctx.db.get(input.attestationId);
 	if (!attestation) return;
 	const first = await ctx.db

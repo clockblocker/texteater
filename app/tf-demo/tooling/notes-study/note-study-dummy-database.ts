@@ -436,13 +436,18 @@ const RELATED_ROUTES = {
 	Pick<Dumling.Lemma<"de">, "family" | "kind">
 >;
 
+/** The relation routes by any canonical form: a form the study lacks has none. */
+const relatedRoutes: Readonly<
+	Record<string, (typeof RELATED_ROUTES)[keyof typeof RELATED_ROUTES]>
+> = RELATED_ROUTES;
+
 /** Lexeme and Locution share one relation space (ADR 0039). */
 function relationSpace(family: Dumling.Family<"de">) {
 	return family === "Locution" ? "Lexeme" : family;
 }
 
 function relatedRoute(canonicalForm: string, source: Dumling.Reading<"de">) {
-	const route = RELATED_ROUTES[canonicalForm as keyof typeof RELATED_ROUTES];
+	const route = relatedRoutes[canonicalForm];
 	if (!route)
 		throw new Error(
 			`Missing Notes Study relation identity ${canonicalForm}.`,

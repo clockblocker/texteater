@@ -47,7 +47,7 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 			</div>
 		);
 	}
-	if (catalog.isError || !catalog.data) {
+	if (catalog.isError) {
 		return (
 			<p className="p-6 text-sm text-destructive" role="alert">
 				The playground fixtures could not be built. Check the Vite

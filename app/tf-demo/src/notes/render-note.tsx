@@ -162,11 +162,8 @@ function ReadingWithConfiguredLayout({
 			/>
 		);
 	}
-	if (layoutQuery.isError || !layoutQuery.data) {
-		return renderErrorNote(
-			layoutQuery.error ?? "Reading layout could not be loaded.",
-			"Reading Note unavailable",
-		);
+	if (layoutQuery.isError) {
+		return renderErrorNote(layoutQuery.error, "Reading Note unavailable");
 	}
 	return renderWithLayout({
 		order: layoutQuery.data.order,

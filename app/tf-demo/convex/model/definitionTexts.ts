@@ -128,7 +128,6 @@ export async function scheduleDefinitionTextRun(
 	ctx: MutationCtx,
 	row: Pick<Doc<"definitionTexts">, "ownerReadingKey" | "runNumber">,
 ): Promise<void> {
-	if (!ctx.scheduler) return;
 	await ctx.scheduler.runAfter(0, materializeDefinitionText, {
 		ownerReadingKey: row.ownerReadingKey,
 	});

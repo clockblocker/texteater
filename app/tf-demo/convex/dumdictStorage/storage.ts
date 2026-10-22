@@ -176,7 +176,6 @@ async function loadReading(
 	ctx: ServerCtx,
 	canonical: Awaited<ReturnType<typeof findCanonicalReading>> & {},
 ) {
-	if (!canonical) return null;
 	const [entry, lemma] = await Promise.all([
 		ctx.db
 			.query("readingEntries")

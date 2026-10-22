@@ -32,17 +32,23 @@ export type ClickEncounter = {
  * ascending, each a ResolvableText Segment.
  */
 export function validateClickEncounter(value: unknown): ClickEncounter {
-	const encounter = value as ClickEncounter;
+	// Unchecked input: any part of the shape may be missing.
+	const encounter = value as
+		| {
+				readonly sentence?: Partial<ClickSentence>;
+				readonly target?: Partial<ClickEncounter["target"]>;
+		  }
+		| null
+		| undefined;
 	const segments = encounter?.sentence?.segments;
 	const members = encounter?.target?.memberSegmentIndices;
 	if (
-		!encounter ||
-		typeof encounter.sentence.id !== "string" ||
+		typeof encounter?.sentence?.id !== "string" ||
 		encounter.sentence.language !== "de" ||
 		!Array.isArray(segments) ||
 		!Array.isArray(members) ||
 		members.length === 0 ||
-		typeof encounter.target.family !== "string" ||
+		typeof encounter.target?.family !== "string" ||
 		typeof encounter.target.kind !== "string"
 	)
 		throw new Error("Invalid Encounter.");
@@ -56,5 +62,5 @@ export function validateClickEncounter(value: unknown): ClickEncounter {
 				"An Encounter's members must be ascending ResolvableText Segments of its Sentence.",
 			);
 	});
-	return encounter;
+	return encounter as ClickEncounter;
 }

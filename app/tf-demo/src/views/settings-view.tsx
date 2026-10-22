@@ -87,9 +87,10 @@ export function SettingsView() {
 								className="text-sm text-destructive"
 								role="alert"
 							>
-								{settingsQuery.error
-									? visitorErrorMessage(settingsQuery.error)
-									: "Knowledge settings could not be loaded."}
+								{visitorErrorMessage(
+									settingsQuery.error,
+									"Knowledge settings could not be loaded.",
+								)}
 							</p>
 						)}
 					</CardContent>
