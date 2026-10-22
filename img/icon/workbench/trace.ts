@@ -3,7 +3,7 @@
  * simplified, as straight or curved path segments.
  */
 import type { Field, Point } from "./field";
-import { n, SIZE } from "./kit";
+import { itemAt, n, SIZE } from "./kit";
 
 /**
  * SVG path data for the edge of `field`, traced on a `step` px grid. Parts
@@ -63,7 +63,8 @@ export function loops(
 			values[row * columns + column] = value === 0 ? 1e-9 : value;
 		}
 	}
-	const at = (column: number, row: number) => values[row * columns + column];
+	const at = (column: number, row: number) =>
+		itemAt(values, row * columns + column);
 	const horizontal = (column: number, row: number) =>
 		(row * columns + column) * 2;
 	const vertical = (column: number, row: number) =>
@@ -181,18 +182,20 @@ export function loops(
 }
 
 function simplifyLoop(loop: Point[], tolerance: number): Point[] {
-	if (loop.length < 4) return loop;
+	const [start] = loop;
+	if (start === undefined || loop.length < 4) return loop;
 	let far = 0;
 	let farthest = -1;
-	for (let i = 1; i < loop.length; i++) {
-		const d = Math.hypot(loop[i][0] - loop[0][0], loop[i][1] - loop[0][1]);
+	for (const [i, [x, y]] of loop.entries()) {
+		if (i === 0) continue;
+		const d = Math.hypot(x - start[0], y - start[1]);
 		if (d > farthest) {
 			farthest = d;
 			far = i;
 		}
 	}
 	const first = simplifyChain(loop.slice(0, far + 1), tolerance);
-	const second = simplifyChain([...loop.slice(far), loop[0]], tolerance);
+	const second = simplifyChain([...loop.slice(far), start], tolerance);
 	return [...first.slice(0, -1), ...second.slice(0, -1)];
 }
 
@@ -203,13 +206,13 @@ function simplifyChain(chain: Point[], tolerance: number): Point[] {
 	const stack: [number, number][] = [[0, chain.length - 1]];
 	while (stack.length) {
 		const [start, end] = stack.pop() as [number, number];
-		const [ax, ay] = chain[start];
-		const [bx, by] = chain[end];
+		const [ax, ay] = itemAt(chain, start);
+		const [bx, by] = itemAt(chain, end);
 		const length = Math.hypot(bx - ax, by - ay) || 1;
 		let worst = -1;
 		let index = -1;
 		for (let i = start + 1; i < end; i++) {
-			const [px, py] = chain[i];
+			const [px, py] = itemAt(chain, i);
 			const d =
 				Math.abs((bx - ax) * (ay - py) - (ax - px) * (by - ay)) /
 				length;
@@ -232,7 +235,7 @@ function linePath(loop: Point[], digits: number): string {
 
 function curvePath(loop: Point[], corner: number, digits: number): string {
 	const count = loop.length;
-	const point = (i: number) => loop[((i % count) + count) % count];
+	const point = (i: number) => itemAt(loop, ((i % count) + count) % count);
 	const sharp = loop.map((_, i) => {
 		const [px, py] = point(i - 1);
 		const [x, y] = point(i);
@@ -246,16 +249,17 @@ function curvePath(loop: Point[], corner: number, digits: number): string {
 		return (turn * 180) / Math.PI > corner;
 	});
 	const f = (value: number) => n(value, digits);
-	let d = `M${f(loop[0][0])} ${f(loop[0][1])}`;
+	const [startX, startY] = point(0);
+	let d = `M${f(startX)} ${f(startY)}`;
 	for (let i = 0; i < count; i++) {
 		const [x0, y0] = point(i - 1);
 		const [x1, y1] = point(i);
 		const [x2, y2] = point(i + 1);
 		const [x3, y3] = point(i + 2);
-		const c1 = sharp[i]
+		const c1: Point = sharp[i]
 			? [x1, y1]
 			: [x1 + (x2 - x0) / 6, y1 + (y2 - y0) / 6];
-		const c2 = sharp[(i + 1) % count]
+		const c2: Point = sharp[(i + 1) % count]
 			? [x2, y2]
 			: [x2 - (x3 - x1) / 6, y2 - (y3 - y1) / 6];
 		d += `C${f(c1[0])} ${f(c1[1])} ${f(c2[0])} ${f(c2[1])} ${f(x2)} ${f(y2)}`;

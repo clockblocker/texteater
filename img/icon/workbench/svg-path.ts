@@ -3,6 +3,9 @@
  */
 import type { Point } from "./field";
 
+type Quadratic = readonly [Point, Point, Point];
+type Cubic = readonly [Point, Point, Point, Point];
+
 /** Flattens SVG path data into one closed point list per subpath. */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function pathPoints(d: string, tolerance = 0.25): Point[][] {
@@ -17,52 +20,42 @@ export function pathPoints(d: string, tolerance = 0.25): Point[][] {
 	let command = "";
 	let lastControl: Point | null = null;
 	let index = 0;
-	const number = () => Number(tokens[index++]);
+	const number = () => {
+		const token = tokens[index++];
+		if (token === undefined)
+			throw new Error(`path data ends inside its "${command}" command`);
+		return Number(token);
+	};
 	const close = () => {
 		if (current.length >= 3) shapes.push(current);
 		current = [];
 	};
-	const curve = (points: Point[], degree: 2 | 3) => {
-		const [p0, p1, p2, p3] = points;
-		const span = points.reduce(
-			(sum, point, i) =>
-				i
-					? sum +
-						Math.hypot(
-							point[0] - points[i - 1][0],
-							point[1] - points[i - 1][1],
-						)
-					: 0,
-			0,
-		);
+	const curve = (points: Quadratic | Cubic) => {
+		let span = 0;
+		let [previous] = points;
+		for (const point of points) {
+			span += Math.hypot(point[0] - previous[0], point[1] - previous[1]);
+			previous = point;
+		}
 		const segments = Math.max(
 			2,
 			Math.ceil(Math.sqrt(span / tolerance) / 2),
 		);
 		for (let s = 1; s <= segments; s++) {
 			const t = s / segments;
-			const u = 1 - t;
-			if (degree === 2)
-				current.push([
-					u * u * p0[0] + 2 * u * t * p1[0] + t * t * p2[0],
-					u * u * p0[1] + 2 * u * t * p1[1] + t * t * p2[1],
-				]);
-			else
-				current.push([
-					u ** 3 * p0[0] +
-						3 * u * u * t * p1[0] +
-						3 * u * t * t * p2[0] +
-						t ** 3 * p3[0],
-					u ** 3 * p0[1] +
-						3 * u * u * t * p1[1] +
-						3 * u * t * t * p2[1] +
-						t ** 3 * p3[1],
-				]);
+			current.push(
+				points.length === 3
+					? quadraticAt(points, t)
+					: cubicAt(points, t),
+			);
 		}
 	};
-	while (index < tokens.length) {
-		if (/[a-zA-Z]/.test(tokens[index])) command = tokens[index++];
-		else if (command === "M") command = "L";
+	let token = tokens[index];
+	while (token !== undefined) {
+		if (/[a-zA-Z]/.test(token)) {
+			command = token;
+			index++;
+		} else if (command === "M") command = "L";
 		else if (command === "m") command = "l";
 		const relative = command === command.toLowerCase();
 		const ox = relative ? x : 0;
@@ -101,7 +94,7 @@ export function pathPoints(d: string, tolerance = 0.25): Point[][] {
 							: [x, y];
 				const second: Point = [ox + number(), oy + number()];
 				const end: Point = [ox + number(), oy + number()];
-				curve([[x, y], first, second, end], 3);
+				curve([[x, y], first, second, end]);
 				control = second;
 				[x, y] = end;
 				break;
@@ -115,7 +108,7 @@ export function pathPoints(d: string, tolerance = 0.25): Point[][] {
 							? [2 * x - lastControl[0], 2 * y - lastControl[1]]
 							: [x, y];
 				const end: Point = [ox + number(), oy + number()];
-				curve([[x, y], middle, end], 2);
+				curve([[x, y], middle, end]);
 				control = middle;
 				[x, y] = end;
 				break;
@@ -151,9 +144,32 @@ export function pathPoints(d: string, tolerance = 0.25): Point[][] {
 				throw new Error(`unsupported path command "${command}"`);
 		}
 		lastControl = control;
+		token = tokens[index];
 	}
 	close();
 	return shapes;
+}
+
+function quadraticAt([p0, p1, p2]: Quadratic, t: number): Point {
+	const u = 1 - t;
+	return [
+		u * u * p0[0] + 2 * u * t * p1[0] + t * t * p2[0],
+		u * u * p0[1] + 2 * u * t * p1[1] + t * t * p2[1],
+	];
+}
+
+function cubicAt([p0, p1, p2, p3]: Cubic, t: number): Point {
+	const u = 1 - t;
+	return [
+		u ** 3 * p0[0] +
+			3 * u * u * t * p1[0] +
+			3 * u * t * t * p2[0] +
+			t ** 3 * p3[0],
+		u ** 3 * p0[1] +
+			3 * u * u * t * p1[1] +
+			3 * u * t * t * p2[1] +
+			t ** 3 * p3[1],
+	];
 }
 
 function arcPoints(

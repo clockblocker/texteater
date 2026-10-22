@@ -100,15 +100,15 @@ export function capsule(
 	};
 }
 
-/** Closed polygon through `points` (any winding). */
+/** Closed polygon through `points` (any winding); no points is no shape. */
 export function polygon(points: readonly Point[]): Field {
-	const count = points.length;
+	const last = points.at(-1);
+	if (last === undefined) return () => Number.POSITIVE_INFINITY;
 	return (x, y) => {
-		let nearest = (x - points[0][0]) ** 2 + (y - points[0][1]) ** 2;
+		let nearest = Number.POSITIVE_INFINITY;
 		let sign = 1;
-		for (let i = 0, j = count - 1; i < count; j = i, i++) {
-			const [ix, iy] = points[i];
-			const [jx, jy] = points[j];
+		let [jx, jy] = last;
+		for (const [ix, iy] of points) {
 			const ex = jx - ix;
 			const ey = jy - iy;
 			const wx = x - ix;
@@ -126,6 +126,8 @@ export function polygon(points: readonly Point[]): Field {
 			const left = ex * wy > ey * wx;
 			if ((above && below && left) || (!above && !below && !left))
 				sign = -sign;
+			jx = ix;
+			jy = iy;
 		}
 		return sign * Math.sqrt(nearest);
 	};
@@ -226,9 +228,8 @@ function smoothMin(a: number, b: number, k: number): number {
 /** Union with seams rounded over about `k` px, for organic bodies. */
 export function smoothUnion(k: number, ...fields: readonly Field[]): Field {
 	return (x, y) => {
-		let d = fields[0](x, y);
-		for (let i = 1; i < fields.length; i++)
-			d = smoothMin(d, fields[i](x, y), k);
+		let d = Number.POSITIVE_INFINITY;
+		for (const field of fields) d = smoothMin(d, field(x, y), k);
 		return d;
 	};
 }
@@ -248,9 +249,8 @@ export function smoothSubtract(
 
 export function smoothIntersect(k: number, ...fields: readonly Field[]): Field {
 	return (x, y) => {
-		let d = fields[0](x, y);
-		for (let i = 1; i < fields.length; i++)
-			d = -smoothMin(-d, -fields[i](x, y), k);
+		let d = Number.NEGATIVE_INFINITY;
+		for (const field of fields) d = -smoothMin(-d, -field(x, y), k);
 		return d;
 	};
 }
@@ -432,8 +432,8 @@ export function biteOut(
 
 	// Lazy greedy: a stale gain only ever overestimates, so re-score the
 	// leader until it stays ahead.
-	let scores = candidates.map((candidate, index) => ({
-		index,
+	let scores = candidates.map((candidate) => ({
+		candidate,
 		gain: gain(candidate),
 	}));
 	const bites: Circle[] = [];
@@ -442,21 +442,21 @@ export function biteOut(
 		scores.sort((a, b) => b.gain - a.gain);
 		let best = scores.at(0);
 		while (best && best.gain > 0) {
-			const fresh = gain(candidates[best.index]);
+			const fresh = gain(best.candidate);
 			if (fresh >= (scores[1]?.gain ?? 0)) {
-				best = { index: best.index, gain: fresh };
+				best = { candidate: best.candidate, gain: fresh };
 				break;
 			}
-			scores[0] = { index: best.index, gain: fresh };
+			scores[0] = { candidate: best.candidate, gain: fresh };
 			scores.sort((a, b) => b.gain - a.gain);
 			best = scores.at(0);
 		}
 		if (!best || best.gain === 0) break;
-		const bite = candidates[best.index];
+		const bite = best.candidate;
 		bites.push(bite);
 		mark(bite);
 		remaining -= best.gain;
-		scores = scores.filter(({ index }) => index !== best.index);
+		scores = scores.filter(({ candidate }) => candidate !== bite);
 	}
 	return bites;
 }
