@@ -199,7 +199,8 @@ export function flaggedPrepositions(
 			flag("weak", piece.id, top[0]);
 	}
 	// A host spelled the same and nearer the preposition may be its governor (Danke, danke für).
-	for (const { piece, host } of [...flags.values()]) {
+	const firstFlags = [...flags.values()];
+	for (const { piece, host } of firstFlags) {
 		const text = pieces[host - 1]?.text.toLowerCase();
 		for (const twin of pieces)
 			if (
