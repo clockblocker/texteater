@@ -76,7 +76,11 @@ export function storedIdentity(
 ): ClosedClassIdentity | undefined {
 	if (!pick || (pick.choice === "Other" && !fixed)) return undefined;
 	const kind =
-		route === "Lexeme/DET" ? "DET" : route === "Lexeme/PRON" ? "PRON" : "";
+		route === "Lexeme/DET"
+			? "DET"
+			: route === "Lexeme/PRON"
+				? "PRON"
+				: undefined;
 	if (!kind) return undefined;
 	const picked = pick.candidates[Number(pick.choice.slice(1))];
 	const candidate =
