@@ -61,6 +61,10 @@ GitHub Actions runs the CI gates on every push to `main`; `bun run ci`
 runs the same gates locally. They include tf-demo's backend-free Playwright
 specs; the specs that need a seeded Convex backend run only locally.
 
+`bun run oxlint` runs Oxlint with the Effect type-aware rules over the
+repository, or over one workspace when run inside it. It stays out of
+`validate` and CI for now and fails only on errors, not warnings.
+
 Cross-workspace imports use package exports. Do not reach into a sibling with a
 relative import or an undeclared package subpath.
 

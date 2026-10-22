@@ -51,6 +51,7 @@ const packageTestRunner = "bun ../../tooling/run-package-tests.ts";
  */
 const repositoryCheckScripts = {
 	knip: "tooling/knip.ts",
+	oxlint: "tooling/oxlint.ts",
 	"validate:imports": "tooling/validate-repository-architecture.ts",
 	"validate:manifests": "tooling/manifest-policy.ts repository",
 } as const;

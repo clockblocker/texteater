@@ -130,6 +130,9 @@ export default {
 				"@babel/preset-typescript",
 				// Run by path (tooling/lib/tools.ts).
 				"dependency-cruiser",
+				"oxlint",
+				// Oxlint's type-aware backend, which `typeAware` in .oxlintrc.json loads.
+				"oxlint-tsgolint",
 				// The pinned Node binary CI and `demo` put on PATH.
 				"node",
 				// One hoisted copy for every workspace (#868).
