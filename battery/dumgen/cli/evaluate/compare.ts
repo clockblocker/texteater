@@ -8,6 +8,7 @@ import {
 	isRequestRun,
 	loadRequestRun,
 } from "../../lab/evaluation/request-diff.js";
+import { verdictCounts } from "../../lab/evaluation/verdict-counts.js";
 
 /**
  * `--compare`: two request runs as a request diff, which exits 1 on any
@@ -58,7 +59,6 @@ type ComparedCase = ReturnType<typeof compareRuns>["cases"][number];
 type Compared =
 	| NonNullable<ComparedCase["left"]>["status"]
 	| ComparedCase["verdict"]["left"];
-const verdicts = ["Passed", "Failed", "Mixed", "Unscored"] as const;
 
 /**
  * Two runs side by side (`--compare`): what each ran and scored, the cases
@@ -73,14 +73,7 @@ function runComparison(left: StoredRun, right: StoredRun) {
 		sourceRevision: run.manifest.sourceRevision,
 		model: run.manifest.configurations.judgment.model,
 		cases: run.cases.length,
-		verdicts: Object.fromEntries(
-			verdicts.map((verdict) => [
-				verdict,
-				comparison.cases.filter(
-					(entry) => entry.verdict[key] === verdict,
-				).length,
-			]),
-		),
+		verdicts: verdictCounts(comparison, key),
 	});
 	const arrow = (before: Compared, after: Compared) => `${before} → ${after}`;
 	const changed = comparison.cases.flatMap((entry) => {
