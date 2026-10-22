@@ -3,7 +3,8 @@
  * 0.8 and the reference's whole + fragment at 0.4, under production's
  * floors (`prod+…`) and #762's (`762+…`: idiom 0.6, fixed 0.3), with step 0
  * and without it (`+nostep0`), each with closed-class identity and no code
- * rule, over the nomination without was … für.
+ * rule, over the nomination without was … für. A group no batched route
+ * request asked about routes `Unresolved`, unasked.
  */
 
 import {
@@ -82,9 +83,19 @@ function membershipUnder(
 export const gridPolicies: Policies = async (stage) => {
 	const read = await stage.read([]);
 	return Object.fromEntries(
-		Object.entries(grid).map(([name, assembly]) => [
-			name,
-			stage.units(read, membershipUnder(read.nomination, assembly), []),
-		]),
+		await Promise.all(
+			Object.entries(grid).map(
+				async ([name, assembly]) =>
+					[
+						name,
+						await stage.units(
+							read,
+							membershipUnder(read.nomination, assembly),
+							[],
+							"unresolved",
+						),
+					] as const,
+			),
+		),
 	);
 };

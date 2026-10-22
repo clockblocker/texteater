@@ -9,6 +9,7 @@ import type { ArmOptions } from "../../../lab/segmentation/de/arm.js";
 import { productionArm } from "../../../lab/segmentation/de/arms/production.js";
 import { JevCache } from "../../../lab/segmentation/harness/jev-cache.js";
 import { codeRules } from "../../../src/segment/de/code-rules.js";
+import { productionUnitSettings } from "../../../src/segment/de/units.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
 import { segmentsOf } from "../evaluation/spec-corpus/fixtures.js";
 import { answerEach, type Picks, zogSichAnGold } from "./support.js";
@@ -48,7 +49,7 @@ const hashJudge = judgeBy({
 	choice: (id, keys) => keys[Math.floor(shareOf(`a${id}`) * keys.length)],
 });
 
-/** The arm's result under `options`, and how many distinct requests it put per stage. */
+/** The arm's result under `options`, its distinct requests, and how many it put per stage. */
 async function runUnder(
 	options: ArmOptions,
 	{
@@ -79,7 +80,7 @@ async function runUnder(
 		calls: [],
 		options,
 	});
-	return { result, stages };
+	return { result, stages, requests: seen };
 }
 
 const { result: plain, stages: plainStages } = await runUnder({});
@@ -92,7 +93,11 @@ const weg = {
 	},
 	judge: hashJudge,
 } as const;
-const { stages: wegStages } = await runUnder({}, weg);
+const {
+	result: wegPlain,
+	stages: wegStages,
+	requests: wegRequests,
+} = await runUnder({}, weg);
 
 test("production runs the unit stage as intake does and heads its numbers", () => {
 	expect(plain.primary).toBe("production");
@@ -143,7 +148,7 @@ test("X3 adds each listed code rule to production's, and all of them together", 
 	]);
 });
 
-test("X5's Locution Choice variants read the locution request of their rule set", async () => {
+test("X5's Locution Choice variants run production's Verb and Government Choices after theirs", async () => {
 	const { result, stages } = await runUnder(
 		{ x5: "0.5,0.6-noabsorb,0.6-sc,0.7-sc" },
 		weg,
@@ -155,14 +160,18 @@ test("X5's Locution Choice variants read the locution request of their rule set"
 		"production+x5@0.6-sc",
 		"production+x5@0.7-sc",
 	]);
-	// Production's rules hold saying-closed, so every variant reads production's request.
+	// Production's rules hold saying-closed, so every variant reads
+	// production's locution and verb requests. Here every variant's
+	// membership comes out as production's, so it asks production's
+	// government request too.
 	expect(wegStages.locution).toBe(1);
 	expect(stages).toEqual(wegStages);
 });
 
-test("D4's Verb Choice and X4's Government Choice variants each read one request over every family", async () => {
-	// Production asks the verb request about three families and the
-	// government request about all but weak, which this Sentence lacks.
+test("D4's Verb Choice and X4's Government Choice variants each ask their families' request", async () => {
+	// Production asks the verb request about three families (state here)
+	// and the government request about all but weak, which this Sentence
+	// lacks.
 	const levers = { verb: "0.6,0.5-lassen-recipient", gov: "0.5,0.6-joined" };
 	const { result, stages } = await runUnder(levers, weg);
 	expect(Object.keys(result.outputs)).toEqual([
@@ -172,11 +181,51 @@ test("D4's Verb Choice and X4's Government Choice variants each read one request
 		"production+gov@0.5",
 		"production+gov@0.6-joined",
 	]);
-	expect(wegStages.verb).toBe(1);
-	expect(stages.verb).toBe(2);
-	expect(wegStages.government).toBe(1);
-	expect(stages).toEqual({ ...wegStages, verb: 2 });
+	// verb@0.6 asks every family, its reflexive flag included, and the
+	// membership that leaves asks its own government request. Neither
+	// lassen, recipient nor joined flags anything here, so those variants
+	// ask nothing, and gov@0.5 reads production's government request.
+	expect(wegStages).toMatchObject({ verb: 1, government: 1 });
+	expect(stages).toEqual({ ...wegStages, verb: 2, government: 2 });
+	// gov@0.6-joined applies no particle or rival answer: it replaces
+	// production's Government Choice rather than adding to it.
+	expect(result.outputs["production+gov@0.6-joined"]).not.toEqual(
+		result.outputs.production,
+	);
 });
+
+const {
+	rules: [rule],
+	locution,
+	verb,
+	government,
+} = productionUnitSettings;
+if (!rule || !locution || !verb || !government)
+	throw Error("Production runs a code rule and every Choice");
+
+/** Each lever with a variant that repeats production's own setting. */
+const asProduction = [
+	["x3", rule],
+	["x5", `${locution.floor}${locution.absorb ? "" : "-noabsorb"}`],
+	["x5", `${locution.floor}${locution.absorb ? "" : "-noabsorb"}-sc`],
+	["verb", [verb.floor, ...verb.families].join("-")],
+	["gov", [government.floor, ...government.families].join("-")],
+] as const;
+
+test.each(asProduction)(
+	"--opt %s=%s, production's own setting, outputs and asks exactly what production does",
+	async (key, variant) => {
+		const policy =
+			key === "x3"
+				? `production+${variant}`
+				: `production+${key}@${variant}`;
+		const { result, requests } = await runUnder({ [key]: variant }, weg);
+		expect(Object.keys(result.outputs)).toEqual(["production", policy]);
+		expect(result.outputs[policy]).toEqual(wegPlain.outputs.production);
+		expect(result.outputs.production).toEqual(wegPlain.outputs.production);
+		expect(requests).toEqual(wegRequests);
+	},
+);
 
 test("X2 pools every policy over repetitions 0 to 2, the same in each repetition", async () => {
 	const options = { pool: "mean,median", variants: "0.2" };
