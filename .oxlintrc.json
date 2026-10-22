@@ -5,6 +5,12 @@
 		"repos-for-refrence/**",
 		"backlog/**",
 		"**/dist/**",
-		"**/_generated/**"
+		"**/_generated/**",
+		"**/tests/**",
+		"**/test/**",
+		"**/e2e/**",
+		"**/testing/**",
+		"**/*.test.ts",
+		"**/*.test.tsx"
 	]
 }
