@@ -1,5 +1,5 @@
 import type { SchemaRoute } from "./schema-routes";
-import { featurePageId, routePageId } from "./spec-pages";
+import { featurePageId, routePageId } from "./spec-links";
 
 const routePagePattern =
 	/^(?<language>[^/]+)\/entity\/lemma\/(?:lexeme|locution|saying|morpheme|foreign)\/[^/]+$/u;
