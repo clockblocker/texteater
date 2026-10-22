@@ -344,9 +344,9 @@ function rulesPage(
 			ofLanguage.length === 0
 				? `No ${languageNames[language]} Rules yet.`
 				: `The ${ofLanguage.length} ${languageNames[language]} classification Rules. Each route page repeats the Rules that name its route.`,
-		sections: [
-			...ofLanguage.map((rule) => renderRule(rule, language, byId, "##")),
-		],
+		sections: ofLanguage.map((rule) =>
+			renderRule(rule, language, byId, "##"),
+		),
 		title: "Rules",
 	};
 }

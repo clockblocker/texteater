@@ -263,11 +263,10 @@ export function createOpenAILunaBatch(
 				);
 			const jsonl = `${requests
 				.map((request) =>
-					batchLineOf(request, {
-						...(options.promptCaching
-							? { promptCaching: true }
-							: {}),
-					}),
+					batchLineOf(
+						request,
+						options.promptCaching ? { promptCaching: true } : {},
+					),
 				)
 				.join("\n")}\n`;
 			const form = new FormData();

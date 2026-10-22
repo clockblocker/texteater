@@ -286,9 +286,10 @@ export function createOpenAILuna(options: OpenAILunaOptions): LunaAsk {
 	return async (request, { signal }) => {
 		const deadline = AbortSignal.timeout(timeoutMs);
 		const body = JSON.stringify(
-			lunaResponsesBody(request, {
-				...(options.promptCaching ? { promptCaching: true } : {}),
-			}),
+			lunaResponsesBody(
+				request,
+				options.promptCaching ? { promptCaching: true } : {},
+			),
 		);
 		let status: number;
 		let ok: boolean;

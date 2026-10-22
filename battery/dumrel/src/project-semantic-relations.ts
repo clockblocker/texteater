@@ -228,7 +228,8 @@ export function projectSemanticRelations(
 			provenance: "inferred",
 		});
 	}
-	for (const edge of [...edges.values()])
+	const directEdges = [...edges.values()];
+	for (const edge of directEdges)
 		for (const target of targetsFor(edge.target))
 			infer(target, algebra[edge.relation], edge.source);
 	const base = [...edges.values()];
