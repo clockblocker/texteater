@@ -104,7 +104,9 @@ function valuesOf(value: unknown): string[] {
 	if (Array.isArray(value)) return value.flatMap(valuesOf);
 	if (typeof value === "object" && "mixed" in value)
 		return valuesOf((value as { mixed: unknown }).mixed);
-	return [String(value)];
+	if (typeof value === "string" || typeof value === "boolean")
+		return [`${value}`];
+	throw new Error(`A feature value is no value: ${JSON.stringify(value)}`);
 }
 
 /**
