@@ -121,8 +121,12 @@ export default {
 				// Spawned by path.
 				"tooling/dum-entrypoint-rss/empty-module.ts",
 				"tooling/dum-entrypoint-rss/runner.ts",
+				// `bun img/icon/workbench/render.ts <variant>`, which imports each variant by path.
+				"img/icon/workbench/render.ts",
 			],
-			project: ["tooling/**/*.ts"],
+			// The icon workbench's renderer only: its variants load by path, and its
+			// drawing kit waits for the next variant to use it.
+			project: ["tooling/**/*.ts", "img/icon/workbench/render.ts"],
 			ignoreDependencies: [
 				// dependency-cruiser's Babel config (tooling/dependency-cruiser.babel.json).
 				"@babel/core",

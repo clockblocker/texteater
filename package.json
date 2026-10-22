@@ -25,8 +25,9 @@
 		"generate:check": "turbo run generate:check",
 		"knip": "bun tooling/knip.ts",
 		"oxlint": "bun tooling/oxlint.ts",
-		"lint": "turbo run lint lint:tooling --continue",
+		"lint": "turbo run lint lint:tooling lint:icon-workbench --continue",
 		"playground": "turbo run dev:package --filter=@texteater/playground",
+		"lint:icon-workbench": "biome check --error-on-warnings --config-path tooling/biome/base.json img/icon/workbench",
 		"lint:tooling": "biome check --error-on-warnings --config-path tooling/biome/base.json tooling",
 		"prepare": "effect-tsgo patch --typescript --oxlint && git config core.hooksPath .githooks",
 		"resolution_inspector": "bun app/tf-demo/tooling/resolution-inspector.ts",
@@ -54,6 +55,7 @@
 		"oxc-parser": "^0.140.0",
 		"oxlint": "1.87.0",
 		"oxlint-tsgolint": "7.0.2003",
+		"playwright": "^1.62.1",
 		"turbo": "^2.11.7",
 		"typescript": "^7.0.2",
 		"zod": "4.4.3"
