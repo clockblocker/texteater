@@ -11,6 +11,17 @@
 		"**/e2e/**",
 		"**/testing/**",
 		"**/*.test.ts",
-		"**/*.test.tsx"
-	]
+		"**/*.test.tsx",
+		"tooling/dum-entrypoint-rss/empty-module.ts"
+	],
+	"rules": {
+		"no-unused-vars": [
+			"warn",
+			{
+				"ignoreRestSiblings": true,
+				"varsIgnorePattern": "^_",
+				"argsIgnorePattern": "^_."
+			}
+		]
+	}
 }
