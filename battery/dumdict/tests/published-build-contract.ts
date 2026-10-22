@@ -6,7 +6,8 @@ const result = await build({
 		contents: `
 			import { createDumdictPlanner } from "./dist/planning.js";
 			import { derivePendingEntryId } from "./dist/pending.js";
-			console.log(createDumdictPlanner, derivePendingEntryId);
+			import { projectLemmaTables } from "./dist/inflection.js";
+			console.log(createDumdictPlanner, derivePendingEntryId, projectLemmaTables);
 		`,
 		resolveDir: new URL("..", import.meta.url).pathname,
 	},

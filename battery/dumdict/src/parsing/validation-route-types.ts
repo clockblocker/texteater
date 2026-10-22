@@ -33,6 +33,7 @@ export type DumdictValidationRouteKey =
 
 type InternalDumdictOwnedValidationRouteKey =
 	| "internal:knowledge-change"
+	| "internal:paradigm-change"
 	| "internal:pending-semantic-relation"
 	| `internal:reading:${Dumling.Language}`
 	| "internal:reading-knowledge";
@@ -42,6 +43,7 @@ export type InternalDumdictValidationRouteKey =
 
 type InternalDumdictValidationRouteOutputMap = {
 	"internal:knowledge-change": Dumrel.KnowledgeChange;
+	"internal:paradigm-change": Dumrel.ParadigmChange;
 	"internal:pending-semantic-relation": Dumrel.PendingSemanticRelation;
 	"internal:reading:de": ReadingEntry<"de">["reading"];
 	"internal:reading:en": ReadingEntry<"en">["reading"];

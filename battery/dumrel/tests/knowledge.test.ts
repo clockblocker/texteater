@@ -179,14 +179,24 @@ describe("applyKnowledgeChanges", () => {
 			relation: "nearSynonym",
 			value: [berlinLemma],
 		},
-		{ kind: "Contribute", aspect: "plural", value: ["Häuser"] },
+		{
+			kind: "Contribute",
+			aspect: "translations",
+			language: "ru",
+			value: ["здание"],
+		},
 		{
 			kind: "Correct",
 			aspect: "translations",
 			language: "en",
 			value: ["building"],
 		},
-		{ kind: "Contribute", aspect: "plural", value: ["Hause", "Häuser"] },
+		{
+			kind: "Contribute",
+			aspect: "translations",
+			language: "ru",
+			value: ["дом", "здание"],
+		},
 		{ kind: "Retract", aspect: "definition" },
 		{ kind: "Contribute", aspect: "transcription", value: "haʊ̯s" },
 	];

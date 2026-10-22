@@ -36,13 +36,13 @@ const reading = (lemma: Dumling.Lemma<"de">, emojiDescription: string) =>
 	({ unitKind: "Reading", lemma, emojiDescription }) as Dumling.Reading<"de">;
 const entryNote = {
 	attestedTranslations: ["note"],
-	attestations: ["Ein Beispiel."],
+	attestationLinks: [],
 	notes: "",
 };
 const storedNote = (
 	value: Dumling.Reading<"de">,
 ): SerializedDictionaryNote<"de"> => ({
-	schemaVersion: 1,
+	schemaVersion: 2,
 	lemmaRecord: { lemma: value.lemma },
 	readingEntries: [{ reading: value, ...entryNote }],
 	ownedSurfaceEntries: [],

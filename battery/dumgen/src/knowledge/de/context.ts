@@ -9,7 +9,14 @@
 
 import type { EntryType } from "@typesafe-ai/sdk";
 import type * as Dumling from "dumling/types";
-import { applyKnowledgeChange, parseKnowledgeChange } from "dumrel";
+import {
+	applyKnowledgeChange,
+	applyParadigmChanges,
+	paradigmChangesFor,
+	parseKnowledgeChange,
+	parseParadigmChange,
+} from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import * as Data from "effect/Data";
 import type * as Effect from "effect/Effect";
 import type { OperationScope } from "../../call.js";
@@ -53,6 +60,18 @@ export type AspectContext = {
 	/** The Sentence with the occurrence's Segments marked `<TARGET>…</TARGET>`. */
 	readonly markedSentence: string;
 	readonly attestation: Dumling.Attestation<"de">;
+	/**
+	 * The Lemma's stored Paradigm and its Readings, the produced one among
+	 * them, that Paradigm Changes are checked against; an empty Paradigm
+	 * and the Reading alone for a Lemma's first Reading.
+	 */
+	readonly paradigm: StoredParadigm;
+};
+
+/** A Lemma's stored Paradigm and the Readings its Licences name. */
+export type StoredParadigm = {
+	readonly paradigm: Dumrel.LemmaParadigm;
+	readonly readings: readonly Dumling.Reading<"de">[];
 };
 
 export function aspectContext(
@@ -61,6 +80,10 @@ export function aspectContext(
 	reading: Dumling.Reading<"de">,
 	attestation: Dumling.Attestation<"de">,
 	markedSentence: string,
+	paradigm: StoredParadigm = {
+		paradigm: { dimensions: {} },
+		readings: [reading],
+	},
 ): AspectContext {
 	const { lemma } = reading;
 	// A Foreign Reading has no Emoji Description (ADR 0045).
@@ -80,6 +103,7 @@ export function aspectContext(
 		},
 		markedSentence,
 		attestation,
+		paradigm,
 	};
 }
 
@@ -196,6 +220,67 @@ export function checkedChanges(
 			return unusable(
 				aspect,
 				`Dumrel refuses the ${aspect} change: ${parsed.error.message.slice(0, 200)}`,
+			);
+		accepted.push(parsed.value);
+	}
+	return accepted;
+}
+
+/**
+ * The Paradigm Changes that give the Reading the forms written for one
+ * Variation Dimension (ADR 0048): a Contribute per variant and a License
+ * over them all, each checked by Dumrel, and the list checked whole on the
+ * stored Paradigm. A form the Paradigm already holds contributes nothing
+ * new and is licensed all the same. Dumrel refusing any of them makes the
+ * answer unusable.
+ */
+export function checkedParadigmChanges(
+	context: AspectContext,
+	dimension: Dumrel.DimensionId,
+	values: readonly string[],
+): Dumrel.ParadigmChange[] | InvalidModelOutput {
+	return checkedOnStored(
+		context,
+		dimension,
+		paradigmChangesFor({
+			reading: context.reading,
+			dimension,
+			values,
+			provenance: "Produced",
+		}),
+		"forms",
+	);
+}
+
+/**
+ * `changes` of one dimension, each checked by Dumrel and the list checked
+ * whole on the stored Paradigm, or why Dumrel refuses them.
+ */
+export function checkedOnStored(
+	context: AspectContext,
+	dimension: Dumrel.DimensionId,
+	changes: readonly Dumrel.ParadigmChange[],
+	what: string,
+): Dumrel.ParadigmChange[] | InvalidModelOutput {
+	const { lemma } = context.reading;
+	const applied = applyParadigmChanges({
+		lemma,
+		readings: context.paradigm.readings,
+		paradigm: context.paradigm.paradigm,
+		changes,
+	});
+	if (!applied.success)
+		return unusable(
+			dimension,
+			`Dumrel refuses the ${dimension} ${what}: ${applied.error.message.slice(0, 200)}`,
+		);
+	const accepted: Dumrel.ParadigmChange[] = [];
+	for (const change of changes) {
+		const parsed = parseParadigmChange({ lemma, change });
+		if (!parsed.success)
+			return unusable(
+				dimension,
+				`Dumrel refuses the ${dimension} change: ${parsed.error.message.slice(0, 200)}`,
 			);
 		accepted.push(parsed.value);
 	}

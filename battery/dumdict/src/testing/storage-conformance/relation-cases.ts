@@ -27,9 +27,11 @@ import {
 	commitPlan,
 	exactPending,
 	expectBoundedInventory,
+	expectSameRecords,
 	knowledgeOf,
 	pendingMatchingLemma,
 	readingContext,
+	resolvedTo,
 	run,
 	seed,
 	semanticConflict,
@@ -80,7 +82,7 @@ const schreitenNote: AddNewNoteRequest<"de"> = {
 		reading: schreitenReading,
 		note: {
 			attestedTranslations: ["stride"],
-			attestations: [],
+			attestationLinks: [],
 			notes: "conformance",
 		},
 	},
@@ -134,8 +136,12 @@ export function describeRelationConformance(
 		expect(await knowledgeOf(storage, gehenReading)).toEqual({
 			semanticRelations: { synonym: [schreiten] },
 		});
-		expect(await exactPending(storage, [schreitenPending])).toEqual([]);
-		expect(await pendingMatchingLemma(storage, schreiten)).toEqual([
+		// The resolved relation keeps its Shadow beside its resolution.
+		expect(await exactPending(storage, [schreitenPending])).toEqual([
+			resolvedTo(gehenPendingRecord, schreiten),
+		]);
+		expectSameRecords(await pendingMatchingLemma(storage, schreiten), [
+			resolvedTo(gehenPendingRecord, schreiten),
 			laufenPendingRecord,
 		]);
 	});
@@ -170,7 +176,10 @@ export function describeRelationConformance(
 			expect(await knowledgeOf(storage, reading)).toEqual({
 				semanticRelations: { synonym: [schreiten] },
 			});
-		expect(await pendingMatchingLemma(storage, schreiten)).toEqual([]);
+		expectSameRecords(await pendingMatchingLemma(storage, schreiten), [
+			resolvedTo(gehenPendingRecord, schreiten),
+			resolvedTo(laufenPendingRecord, schreiten),
+		]);
 	});
 
 	test("cleanup keeps a Shadow that names no Lemma, or two, pending", async () => {
@@ -264,7 +273,9 @@ export function describeRelationConformance(
 		expect(await knowledgeOf(storage, gehenReading)).toEqual({
 			semanticRelations: { antonym: [springen], synonym: [schreiten] },
 		});
-		expect(await pendingMatchingLemma(storage, schreiten)).toEqual([]);
+		expect(await pendingMatchingLemma(storage, schreiten)).toEqual([
+			resolvedTo(gehenPendingRecord, schreiten),
+		]);
 		expect(
 			await exactPending(storage, [gehenNounPendingRecord.pending]),
 		).toEqual([gehenNounPendingRecord]);
@@ -341,6 +352,8 @@ export function describeRelationConformance(
 			definition: "sich zu Fuß fortbewegen",
 			semanticRelations: { antonym: [springen], synonym: [schreiten] },
 		});
-		expect(await exactPending(storage, [schreitenPending])).toEqual([]);
+		expect(await exactPending(storage, [schreitenPending])).toEqual([
+			resolvedTo(gehenPendingRecord, schreiten),
+		]);
 	});
 }

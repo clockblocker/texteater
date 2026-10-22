@@ -43,7 +43,6 @@
 			"reading": {
 				"emojiDescription": "🐈",
 				"knowledge": {
-					"plural": ["Katzen"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -79,9 +78,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Katzen"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -89,7 +88,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

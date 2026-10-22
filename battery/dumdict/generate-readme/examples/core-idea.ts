@@ -59,7 +59,14 @@ const walkLemmaRecord = {
 const walkReadingEntry = {
 	reading: walkReading,
 	attestedTranslations: ["caminar", "gehen"],
-	attestations: ["They walk home together."],
+	// One occurrence: the host's ref, the Surface it realized, its Reading.
+	attestationLinks: [
+		{
+			ref: "walk-home-together",
+			surfaceId: makeSurfaceId("en", walkSurface),
+			reading: walkReading,
+		},
+	],
 	notes: "Core motion sense.",
 } satisfies ReadingEntry<"en">;
 // README_BLOCK:english-walk-reading-entry:end
@@ -83,7 +90,7 @@ const runRequest = {
 		reading: runReading,
 		note: {
 			attestedTranslations: ["correr", "laufen"],
-			attestations: ["They run before breakfast."],
+			attestationLinks: [],
 			notes: "Core fast-motion sense.",
 		},
 	},
@@ -104,6 +111,8 @@ const runContext = {
 	pendingRelationsMatchingProposedLemma: [],
 	relationLemmas: [walkLemmaRecord],
 	relationReadings: [walkReadingEntry],
+	lemmaReadings: [],
+	attestationLinksWithRefs: [],
 } satisfies ReadingEntryContext<"en">;
 // README_BLOCK:planner-context:end
 

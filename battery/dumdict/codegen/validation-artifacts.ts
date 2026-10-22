@@ -9,6 +9,7 @@ import { registrations as dumlingOperations } from "dumling/codegen";
 import { encodedValidation as dumlingValidation } from "dumling/validation-artifact";
 import {
 	knowledgeChangeSchema,
+	paradigmChangeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
 } from "dumrel/schema";
@@ -84,6 +85,7 @@ export const canonicalDumdictValidationSchemas = {
 const allSchemas = {
 	...canonicalDumdictValidationSchemas,
 	"internal:knowledge-change": knowledgeChangeSchema,
+	"internal:paradigm-change": paradigmChangeSchema,
 	"internal:reading-knowledge": readingKnowledgeSchema,
 	"internal:pending-semantic-relation": pendingSemanticRelationSchema,
 	...Object.fromEntries(

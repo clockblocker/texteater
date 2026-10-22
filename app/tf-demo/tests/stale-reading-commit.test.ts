@@ -24,7 +24,7 @@ afterEach(() => {
 	jest.useRealTimers();
 });
 
-const note = { attestedTranslations: [], attestations: [], notes: "" };
+const note = { attestedTranslations: [], attestationLinks: [], notes: "" };
 
 /** Stores Bank's bench Reading, 🪑, as another click would have since. */
 function storeBench(t: TestConvexDb) {

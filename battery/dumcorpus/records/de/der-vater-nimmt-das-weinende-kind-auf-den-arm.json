@@ -425,7 +425,6 @@
 			"reading": {
 				"emojiDescription": "💪",
 				"knowledge": {
-					"plural": ["Arme"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -473,9 +472,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Arme"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -483,7 +482,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

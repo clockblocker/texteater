@@ -72,6 +72,14 @@ export function parseKnowledgeChangeForDumdictRuntime(
 > {
 	return parseRoute(input, "internal:knowledge-change");
 }
+/** A Paradigm Change's shape; Dumrel checks it against its Lemma. */
+export function parseParadigmChangeForDumdictRuntime(
+	input: unknown,
+): DumdictParse<
+	InternalDumdictValidationRouteOutput<"internal:paradigm-change">
+> {
+	return parseRoute(input, "internal:paradigm-change");
+}
 export function parsePendingSemanticRelationForDumdictRuntime(
 	input: unknown,
 ): DumdictParse<

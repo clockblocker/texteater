@@ -203,7 +203,6 @@
 			"reading": {
 				"emojiDescription": "📅",
 				"knowledge": {
-					"plural": ["Wochen"],
 					"semanticRelations": {
 						"nearSynonym": [
 							{
@@ -231,9 +230,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Wochen"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -241,7 +240,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

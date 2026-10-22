@@ -105,8 +105,18 @@ Absence of a required authored value on a Closed Route, or for an
 Authored Inventory member matched in a Fixed Population. See [ADR 0021].
 
 **Knowledge Production**:
-Proposed Knowledge changes and Pending Semantic Relations for a
-caller-supplied Reading in an Encounter. See [Dumgen ADR 0003].
+Proposed Knowledge changes, Paradigm Changes (Dumrel) and Pending Semantic
+Relations for a caller-supplied Reading in an Encounter. See
+[Dumgen ADR 0003] and [ADR 0048].
+
+**Licence Judge**:
+The jev judge Knowledge Production asks for a Lemma's later Reading, after
+Luna has written its forms: for each Variation Dimension where those forms
+differ from the stored Paradigm Variants (Dumrel), which of the stored and
+new forms, shown together and unattributed, its sense takes. It never routes
+a click; the Reading judge ignores the Paradigm. See [ADR 0048] and
+[Dumgen ADR 0003].
+_Avoid_: paradigm judge, variant matcher
 
 **`knowledge.accumulateTranslations`**:
 The step that adds to a Reading's stored translations the ones a later
@@ -130,6 +140,7 @@ settings, case outputs, failures and evaluation results.
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
 [ADR 0047]: ../../docs/adr/0047-accumulate-a-readings-translations-click-by-click.md
+[ADR 0048]: ../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md
 [Dumgen ADR 0001]: ./docs/adr/0001-judge-each-sentence-before-conditional-stitching-and-local-segmentation.md
 [Dumgen ADR 0003]: ./docs/adr/0003-split-german-knowledge-generation-by-family.md
 [Dumgen ADR 0004]: ./docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md

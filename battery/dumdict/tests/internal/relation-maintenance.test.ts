@@ -32,7 +32,7 @@ function entry(
 		reading,
 		knowledge: { semanticRelations },
 		attestedTranslations: [],
-		attestations: [],
+		attestationLinks: [],
 		notes: "",
 	};
 }

@@ -1,3 +1,4 @@
+import { dimensionIdValues } from "dumrel";
 import { z } from "zod";
 
 const indexSchema = z.number().int().nonnegative();
@@ -87,24 +88,47 @@ export const knowledgeCoverageSchema = z
 			.optional(),
 		valency: coverageStatusSchema,
 		participleSource: coverageStatusSchema,
-		plural: coverageStatusSchema,
-		conjugationClass: coverageStatusSchema,
-		preterite: coverageStatusSchema,
-		presentSingular: coverageStatusSchema,
-		pastParticiple: coverageStatusSchema,
-		subjunctivePast: coverageStatusSchema,
 		locutionType: coverageStatusSchema,
 		sayingType: coverageStatusSchema,
 		formulaRole: coverageStatusSchema,
+		paradigm: z
+			.strictObject(
+				Object.fromEntries(
+					dimensionIdValues.map((dimension) => [
+						dimension,
+						coverageStatusSchema,
+					]),
+				) as Record<
+					(typeof dimensionIdValues)[number],
+					typeof coverageStatusSchema
+				>,
+			)
+			.describe(
+				"Which Variation Dimensions of the Lemma's Paradigm a person has covered: Authored when `paradigm` holds the dimension, ReviewedEmpty when this Reading takes none.",
+			)
+			.optional(),
 	})
 	.describe(
-		"Which Knowledge aspects a person has covered: Authored when `knowledge` holds the aspect, ReviewedEmpty when it has none. Leave an unreviewed aspect out.",
+		"Which Knowledge aspects and Variation Dimensions a person has covered: Authored when `knowledge` or `paradigm` holds one, ReviewedEmpty when it has none. Leave an unreviewed one out.",
+	);
+
+/**
+ * What the Reading licenses in its Lemma's Paradigm (ADR 0048): per
+ * Variation Dimension its route's Paradigm Policy names, the forms or the
+ * marker its sense takes, each cited as a dictionary cites it (ADR 0038).
+ * The loader checks them with dumrel; a Lemma's Paradigm is its Readings'
+ * forms pooled.
+ */
+const readingParadigmSchema = z
+	.partialRecord(z.enum(dimensionIdValues), z.array(textSchema).min(1))
+	.describe(
+		"The forms, or the marker, this Reading licenses per Variation Dimension of its Lemma's Paradigm: plural (Pizzen, or NoPlural), preterite (stand auf), present1, present2, present3, pastParticiple, subjunctivePast.",
 	);
 
 /**
  * The Reading a target attests, named by its Emoji Description (ADR 0031),
- * the Reading Knowledge it owns and which aspects of it a person has
- * covered. A Foreign Reading has no Emoji Description (ADR 0045). Its Lemma
+ * the Reading Knowledge it owns, what it licenses in its Lemma's Paradigm,
+ * and which of them a person has covered. A Foreign Reading has no Emoji Description (ADR 0045). Its Lemma
  * is the target's; the loader checks the Reading with Dumling's `parseUnit`
  * and the Knowledge with dumrel's `parseReadingKnowledge`.
  */
@@ -116,6 +140,7 @@ function readingSchema<K extends z.ZodType>(knowledge: K) {
 			)
 			.optional(),
 		knowledge: knowledge.optional(),
+		paradigm: readingParadigmSchema.optional(),
 		coverage: knowledgeCoverageSchema.optional(),
 	});
 }

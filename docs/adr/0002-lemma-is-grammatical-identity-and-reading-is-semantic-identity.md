@@ -47,3 +47,9 @@ algorithms without making Dumling a dictionary.
 one optional normalized string in Reading Knowledge. One owner avoids
 ambiguous Knowledge ownership. There is deliberately no Lemma-Knowledge
 compatibility path.
+
+**A Lemma owns its Paradigm**, the inflectional alternatives its Readings
+license
+([ADR 0048](./0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md)).
+The Paradigm is grammatical, not Knowledge, and it is no part of the Lemma's
+identity: `Pizza` with `Pizzen` and `Pizzas` is one Lemma.

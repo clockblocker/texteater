@@ -213,7 +213,6 @@
 			"reading": {
 				"emojiDescription": "👁",
 				"knowledge": {
-					"plural": ["Augen"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -261,9 +260,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Augen"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -271,7 +270,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

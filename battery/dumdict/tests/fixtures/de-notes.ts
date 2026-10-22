@@ -21,13 +21,19 @@ export const germanGehenReading = {
 
 export const deSerializedNotes = [
 	{
-		schemaVersion: 1,
+		schemaVersion: 2,
 		lemmaRecord: { lemma: germanGehenLemma },
 		readingEntries: [
 			{
 				reading: germanGehenReading,
 				attestedTranslations: ["go", "walk"],
-				attestations: ["Wir gehen nach Hause."],
+				attestationLinks: [
+					{
+						ref: "Wir gehen nach Hause.",
+						surfaceId: null,
+						reading: germanGehenReading,
+					},
+				],
 				notes: "Core motion reading.",
 			},
 		],

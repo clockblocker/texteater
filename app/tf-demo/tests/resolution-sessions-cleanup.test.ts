@@ -1,18 +1,22 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import { api, internal } from "../convex/_generated/api";
-import crons from "../convex/crons";
-import { RESOLUTION_RETENTION_MS } from "../server/resolutionLifecycle";
 import { createTestConvex } from "./support/convex";
 import { enableDeploymentFlags } from "./support/deploymentFlags";
-import { commitBankOccurrence, startSession } from "./support/occurrences";
+import {
+	bankOccurrenceCommit,
+	commitBankOccurrence,
+	startSession,
+} from "./support/occurrences";
 import {
 	bankenSource,
+	grammarProjection,
 	patchSession,
 	pendingScheduled,
+	readingProjection,
 	rows,
 	segmentState,
 	session,
-} from "./support/resolutionSessions";
+} from "./support/resolution-sessions";
 
 enableDeploymentFlags();
 
@@ -26,258 +30,298 @@ afterEach(() => {
 });
 
 describe("Resolution Session", () => {
-	test("cleanup removes stale active and old terminal sessions, even a completed one whose Reading vanished", async () => {
-		const t = createTestConvex();
-		const { select } = await bankenSource(t);
-		await startSession(t, select("stale"));
-		const failed = await startSession(t, select("failed", "visitor-2"));
-		await t.mutation(internal.resolutionSessions.recordRunFailure, {
-			guard: failed,
-			failure: {
-				kind: "Internal",
-				phase: "Route",
-				diagnosticId: "diagnostic-1",
-				errorName: "Error",
-				errorFingerprint: "fnv1a-1",
-			},
-		});
-		await commitBankOccurrence(t, select("complete-missing", "visitor-3"));
-		const { readingId } = await session(t, "complete-missing");
-		await t.run(async (ctx) => {
-			if (readingId) await ctx.db.delete(readingId);
-		});
-		const old = Date.now() - 10_000;
-		for (const requestId of ["stale", "failed", "complete-missing"])
-			await patchSession(t, requestId, { updatedAt: old });
-
-		const cutoffs = {
-			staleBefore: Date.now() - 1,
-			terminalBefore: Date.now() - 1,
-		};
-
-		// Active sessions go in one batch, Terminal ones in the next.
-		expect(
-			await t.mutation(internal.resolutionSessions.cleanup, cutoffs),
-		).toEqual({ deleted: 1, hasMore: true });
-		expect(
-			await t.mutation(internal.resolutionSessions.cleanup, cutoffs),
-		).toEqual({ deleted: 2, hasMore: false });
-		expect(await rows(t, "resolutionSessions")).toEqual([]);
-	});
-
-	test("repeated cleanup removes every expired row, even past a batch of vanished Readings", async () => {
-		const t = createTestConvex();
-		const { select } = await bankenSource(t);
-		await commitBankOccurrence(t, select("complete-missing"));
-		// `Banken` is committed now, so the other sessions select `Die`.
-		const onDie = (requestId: string, visitorId: string) => ({
-			...select(requestId, visitorId),
-			clickedSegmentIndex: 0,
-		});
-		await startSession(t, onDie("recent", "visitor-2"));
-		const missing = await session(t, "complete-missing");
-		const old = Date.now() - 10_000;
-		await t.run(async (ctx) => {
-			if (missing.readingId) await ctx.db.delete(missing.readingId);
-			const { _id, _creationTime, ...row } = missing;
-			for (let index = 0; index < 250; index += 1)
-				await ctx.db.insert("resolutionSessions", {
-					...row,
-					requestId: `missing-${index}`,
-					updatedAt: old - 1,
-				});
-			await ctx.db.patch(_id, { updatedAt: old });
-		});
-		const failed = await startSession(t, onDie("failed", "visitor-3"));
-		await t.mutation(internal.resolutionSessions.recordRunFailure, {
-			guard: failed,
-			failure: {
-				kind: "Internal",
-				phase: "Route",
-				diagnosticId: "diagnostic-1",
-				errorName: "Error",
-				errorFingerprint: "fnv1a-1",
-			},
-		});
-		await patchSession(t, "failed", { updatedAt: old });
-		await t.run(async (ctx) => {
-			for (const run of await ctx.db.query("resolutionRuns").collect())
-				await ctx.db.patch(run._id, { expiresAt: old });
-		});
-
-		const cutoffs = {
-			staleBefore: Date.now() - 5_000,
-			terminalBefore: Date.now() - 5_000,
-		};
-		let batches = 0;
-		while (
-			(await t.mutation(internal.resolutionSessions.cleanup, cutoffs))
-				.hasMore
-		)
-			if (++batches > 5) throw new Error("Cleanup made no progress.");
-
-		expect(await rows(t, "resolutionRuns")).toEqual([]);
-		expect(
-			(await rows(t, "resolutionSessions")).map(
-				({ requestId }) => requestId,
-			),
-		).toEqual(["recent"]);
-	});
-
-	test("repeated cleanup removes expired runs whose traces outgrow one transaction", async () => {
-		const t = createTestConvex({ transactionLimits: true });
-		const expiredAt = Date.now() - 1;
-		// 120 runs of 200 KB are 24 MB, past the 16 MiB a transaction may read.
-		const traceJson = "x".repeat(200 * 1024);
-		for (let chunk = 0; chunk < 6; chunk += 1)
-			await t.run(async (ctx) => {
-				for (let index = 0; index < 20; index += 1) {
-					const requestId = `request-${chunk}-${index}`;
-					await ctx.db.insert("resolutionRuns", {
-						requestId,
-						runToken: "run-token",
-						runNumber: 1,
-						phase: "Route",
-						state: "Failed",
-						generationEvents: [
-							{
-								kind: "TraceRecorded",
-								requestId,
-								runToken: "run-token",
-								phase: "Route",
-								traceJson,
-							},
-						],
-						startedAt: expiredAt,
-						expiresAt: expiredAt,
-					});
-				}
-			});
-
-		const cutoffs = {
-			staleBefore: Date.now() - 1,
-			terminalBefore: Date.now() - 1,
-		};
-		let batches = 0;
-		while (
-			(await t.mutation(internal.resolutionSessions.cleanup, cutoffs))
-				.hasMore
-		)
-			if (++batches > 20) throw new Error("Cleanup made no progress.");
-
-		expect(await rows(t, "resolutionRuns")).toEqual([]);
-	});
-
-	test("scheduled cleanup continues until nothing expired is left", async () => {
-		const t = createTestConvex();
-		const { select } = await bankenSource(t);
-		await startSession(t, select("recent"));
-		const recent = await session(t, "recent");
-		await t.run(async (ctx) => {
-			const { _id, _creationTime, ...row } = recent;
-			for (let index = 0; index < 201; index += 1)
-				await ctx.db.insert("resolutionSessions", {
-					...row,
-					requestId: `expired-${index}`,
-					lifecycle: {
-						state: "Terminal",
-						progress: "Starting",
-						outcome: "Unresolved",
-					},
-					updatedAt: Date.now() - RESOLUTION_RETENTION_MS - 1,
-				});
-		});
-
-		await t.mutation(internal.resolutionSessions.cleanupExpired, {});
-		expect(await rows(t, "resolutionSessions")).toHaveLength(2);
-		expect(
-			(await pendingScheduled(t)).filter(
-				({ name }) => name === "resolutionSessions:cleanupExpired",
-			),
-		).toHaveLength(1);
-		await t.mutation(internal.resolutionSessions.cleanupExpired, {});
-		expect(
-			(await rows(t, "resolutionSessions")).map(
-				({ requestId }) => requestId,
-			),
-		).toEqual(["recent"]);
-		expect(crons.crons).toEqual({
-			"clean up expired Resolution Sessions": expect.objectContaining({
-				name: "resolutionSessions:cleanupExpired",
-			}),
-		});
-	});
-
-	test("cleanup ends Segment Resolution State once per deleted session", async () => {
+	test("the scheduled run completes an occurrence another session committed, without model work", async () => {
 		const t = createTestConvex();
 		const { select, segmentId } = await bankenSource(t);
-		await startSession(t, select("stale-1"));
-		await startSession(t, select("stale-2", "visitor-2"));
+		// Two Visitors select; the second session commits first.
+		const running = await startSession(t, select("request-1"));
+		const winner = await startSession(t, select("request-2", "visitor-2"));
+		const committed = await t.mutation(
+			internal.persistence.persistResolvedClick,
+			bankOccurrenceCommit(select("request-2", "visitor-2"), winner),
+		);
+		if (committed.status !== "Committed")
+			throw new Error("Expected a committed occurrence.");
+		const providerRequests: string[] = [];
+		const previousFetch = globalThis.fetch;
+		globalThis.fetch = Object.assign(
+			async (url: string | URL | Request) => {
+				providerRequests.push(String(url));
+				throw new Error("No model call is expected.");
+			},
+			{ preconnect: previousFetch.preconnect },
+		);
+		try {
+			await t.action(
+				internal.orchestration.runResolutionSession,
+				running,
+			);
+		} finally {
+			globalThis.fetch = previousFetch;
+		}
+
+		expect(providerRequests).toEqual([]);
+		expect(await session(t, "request-1")).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "Complete" },
+			readingId: committed.readingId,
+			attestationId: committed.attestationId,
+		});
+		expect(await rows(t, "resolutionRuns")).toEqual([
+			expect.objectContaining({
+				runToken: running.runToken,
+				state: "Succeeded",
+				generationEvents: [],
+			}),
+		]);
+		expect(await segmentState(t, segmentId)).toBeNull();
+	});
+
+	test("a loser that fails after another session committed converges on the winner", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		const failing = await startSession(t, select("request-generation"));
+		const missing = await startSession(
+			t,
+			select("request-miss", "visitor-2"),
+		);
+		for (const guard of [failing, missing])
+			await t.mutation(internal.resolutionSessions.beginRun, { guard });
+		await t.mutation(internal.resolutionSessions.advance, {
+			guard: failing,
+			progress: "GrammarAvailable",
+			grammar: grammarProjection("loser"),
+		});
+		await t.mutation(internal.resolutionSessions.advance, {
+			guard: failing,
+			progress: "ReadingAvailable",
+			reading: readingProjection("🧪", "loser"),
+		});
+		const winner = await commitBankOccurrence(
+			t,
+			select("request-winner", "visitor-3"),
+		);
+
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard: failing,
+			failure: {
+				kind: "Generation",
+				phase: "Commit",
+				failure: {
+					attempts: 1,
+					category: "ProviderUnavailable",
+					retryable: false,
+				},
+			},
+		});
+		await t.mutation(
+			internal.catalogGrowthSignals.recordAndSettleCatalogMiss,
+			{
+				guard: missing,
+				miss: {
+					decision: "CatalogMiss",
+					route: "de/Lexeme/NOUN",
+					stage: "resolveGrammar",
+					message: "No reviewed member matches",
+				},
+			},
+		);
+
+		for (const [requestId, visitorId] of [
+			["request-generation", "visitor-1"],
+			["request-miss", "visitor-2"],
+		] as const) {
+			const converged = await session(t, requestId);
+			expect(converged).toMatchObject({
+				lifecycle: { state: "Terminal", outcome: "Complete" },
+				readingId: winner.readingId,
+				attestationId: winner.attestationId,
+				grammar: { canonicalForm: "Bank" },
+				reading: { emojiDescription: "🏦", canonicalForm: "Bank" },
+			});
+			expect(converged).not.toHaveProperty("failureCode");
+			const encounter = (await rows(t, "visitorEncounters")).find(
+				(row) => row.visitorId === visitorId,
+			);
+			expect(encounter?.attestationId).toBe(winner.attestationId);
+		}
+		expect(await segmentState(t, segmentId)).toBeNull();
+	});
+
+	test("retrying a failure after another session committed lands on the winner", async () => {
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		const failed = await startSession(t, select("request-failed"));
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard: failed,
+			failure: {
+				kind: "Internal",
+				phase: "Grammar",
+				diagnosticId: "diagnostic-1",
+				errorName: "Error",
+				errorFingerprint: "fnv1a-1",
+			},
+		});
+		const winner = await commitBankOccurrence(
+			t,
+			select("request-winner", "visitor-2"),
+		);
+		const scheduledBefore = await pendingScheduled(t);
+
+		expect(
+			await t.mutation(api.resolutionSessions.retryResolution, {
+				requestId: "request-failed",
+				visitorId: "visitor-1",
+			}),
+		).toEqual({ retried: true });
+
+		expect(await session(t, "request-failed")).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "Complete" },
+			attestationId: winner.attestationId,
+		});
+		expect(
+			(await pendingScheduled(t)).filter(
+				({ name }) => name === "orchestration:runResolutionSession",
+			),
+		).toEqual(
+			scheduledBefore.filter(
+				({ name }) => name === "orchestration:runResolutionSession",
+			),
+		);
+	});
+
+	test("a reused-occurrence commit completes a session whose Encounter predates the winner", async () => {
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		const loser = await startSession(t, select("request-loser"));
+		const winner = await commitBankOccurrence(
+			t,
+			select("request-winner", "visitor-2"),
+		);
+
+		expect(
+			await t.mutation(internal.persistence.persistReusedResolvedClick, {
+				...select("request-loser"),
+				attestationId: winner.attestationId,
+				sessionGuard: loser,
+			}),
+		).toMatchObject({
+			status: "Reused",
+			readingId: winner.readingId,
+			attestationId: winner.attestationId,
+			// The winner's commit already advanced the loser's Encounter.
+			deduplicated: true,
+		});
+		expect(await session(t, "request-loser")).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "Complete" },
+			attestationId: winner.attestationId,
+		});
+	});
+
+	test("the Segment stays Active while any of several sessions is live", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		const first = await startSession(t, select("request-1"));
+		await startSession(t, select("request-3", "visitor-2"));
+		await startSession(t, select("request-4", "visitor-3"));
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 3,
+		});
+
+		await t.mutation(internal.persistence.persistUnresolvedClick, {
+			...select("request-1"),
+			sessionGuard: first,
+		});
 		expect(await segmentState(t, segmentId)).toEqual({
 			kind: "Active",
 			activeSessionCount: 2,
 		});
-		const old = Date.now() - 10_000;
-		for (const requestId of ["stale-1", "stale-2"])
-			await patchSession(t, requestId, { updatedAt: old });
+		// Once visitor-1's session has ended, its next click starts another.
+		await startSession(t, select("request-2"));
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 3,
+		});
 
+		// visitor-1 holds one Terminal and one Active session.
+		await t.action(api.demoReset.clearVisitorData, {
+			visitorId: "visitor-1",
+		});
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 2,
+		});
+
+		const old = Date.now() - 10_000;
+		for (const requestId of ["request-3", "request-4"])
+			await patchSession(t, requestId, { updatedAt: old });
 		await t.mutation(internal.resolutionSessions.cleanup, {
 			staleBefore: Date.now() - 1,
 			terminalBefore: Date.now() - 1,
 		});
-
-		expect(await rows(t, "resolutionSessions")).toEqual([]);
 		expect(await segmentState(t, segmentId)).toEqual({
 			kind: "PermanentFailure",
 		});
 	});
 
-	test("strip, visitor clear, and full reset invalidate sessions before source writes", async () => {
-		const stripped = createTestConvex();
-		{
-			const { select, segmentId, scrollId } =
-				await bankenSource(stripped);
-			await startSession(stripped, select("request-1"));
-			const first = await stripped.mutation(
-				internal.analysisStripping.stripScrollAnalysisGraphBatch,
-				{ scrollId },
-			);
-			expect(first).toEqual({
-				deleted: 1,
-				hasMore: true,
-				nextPosition: 0,
-			});
-			expect(await rows(stripped, "resolutionSessions")).toEqual([]);
-			expect(await segmentState(stripped, segmentId)).toEqual({
-				kind: "PermanentFailure",
-			});
+	test("the scheduled run records an unexpected failure and ends its session", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		// A malformed stored Lemma found under the clicked word breaks the run.
+		await t.run((ctx) =>
+			ctx.db.insert("lemmas", {
+				lemmaKey: "malformed",
+				language: "de",
+				family: "Lexeme",
+				kind: "NOUN",
+				canonicalForm: "Banken",
+				foldedCanonicalForm: "banken",
+				coreFeatures: "secret-malformed-features",
+			}),
+		);
+		const guard = await startSession(t, select("request-1"));
+		const providerRequests: string[] = [];
+		const errors: string[] = [];
+		const previousFetch = globalThis.fetch;
+		const previousError = console.error;
+		globalThis.fetch = Object.assign(
+			async (url: string | URL | Request) => {
+				providerRequests.push(String(url));
+				throw new Error("No model call is expected.");
+			},
+			{ preconnect: previousFetch.preconnect },
+		);
+		console.error = (...values: unknown[]) => {
+			errors.push(values.map(String).join(" "));
+		};
+		try {
+			await t.action(internal.orchestration.runResolutionSession, guard);
+		} finally {
+			globalThis.fetch = previousFetch;
+			console.error = previousError;
 		}
 
-		const cleared = createTestConvex();
-		{
-			const { select, segmentId } = await bankenSource(cleared);
-			await startSession(cleared, select("request-1"));
-			await cleared.action(api.demoReset.clearVisitorData, {
-				visitorId: "visitor-1",
-			});
-			expect(await rows(cleared, "resolutionSessions")).toEqual([]);
-			expect(await rows(cleared, "visitorEncounters")).toEqual([]);
-			expect(await segmentState(cleared, segmentId)).toEqual({
-				kind: "PermanentFailure",
-			});
-		}
-
-		const reset = createTestConvex();
-		{
-			const { select } = await bankenSource(reset);
-			await startSession(reset, select("request-1"));
-			expect(
-				await reset.mutation(internal.demoReset.clearSharedDataBatch, {
-					tableIndex: 0,
-				}),
-			).toEqual({ deleted: 1, hasMore: true, nextTableIndex: 1 });
-			expect(await rows(reset, "resolutionSessions")).toEqual([]);
-		}
+		expect(providerRequests).toEqual([]);
+		const failed = await session(t, "request-1");
+		expect(failed).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "PermanentFailure" },
+			failureCode: "Internal",
+			failureMessage: "Resolution could not be completed.",
+		});
+		expect(await rows(t, "resolutionRuns")).toEqual([
+			expect.objectContaining({
+				state: "Failed",
+				failureCode: "Internal",
+				diagnosticId: failed.diagnosticId,
+				errorName: expect.any(String),
+				errorFingerprint: expect.stringContaining("fnv1a-"),
+			}),
+		]);
+		expect(errors.join("\n")).toContain("ResolutionRunInternalFailure");
+		expect(errors.join("\n")).not.toContain("secret-malformed-features");
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "PermanentFailure",
+		});
 	});
 
 	test("reset batches spend one budget on sessions and end their Segment state", async () => {

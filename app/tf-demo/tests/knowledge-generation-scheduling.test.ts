@@ -1,25 +1,26 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { internal } from "../convex/_generated/api";
-import { KNOWLEDGE_RETRY_COOLDOWN_MS } from "../convex/model/knowledgeAttempts";
 import {
-	createTestConvex,
-	submitText,
-	type TestConvexDb,
-} from "./support/convex";
+	KNOWLEDGE_RETRY_COOLDOWN_MS,
+	STALE_KNOWLEDGE_RUN_AFTER_MS,
+} from "../convex/model/knowledgeAttempts";
+import { createTestConvex } from "./support/convex";
 import {
-	ANGST_READING,
 	attempts,
 	BANK_READING_KEY,
+	EMPTY_RELATION_RUN,
 	insertAccumulatedKnowledge,
 	insertAttempt,
 	type Occurrence,
-	PIZZA_READING,
+	publish,
+	publishArgs,
 	queued,
+	rows,
 	schedule,
 	scheduledAttempts,
-	seedDictionaryReading,
+	scheduledWatchdogs,
 	seedOccurrence,
-} from "./support/knowledgeGeneration";
+} from "./support/knowledge-generation";
 
 beforeEach(() => {
 	// Scheduling a Knowledge attempt queues its action; nothing here runs it.
@@ -28,87 +29,6 @@ beforeEach(() => {
 
 afterEach(() => {
 	jest.useRealTimers();
-});
-
-test("intake attests no government, so a Full Reading with its translations demands no top-up", async () => {
-	const input = (occurrence: Occurrence) => ({
-		attemptKey: "government-top-up",
-		visitorId: "visitor-1",
-		readingId: occurrence.readingId,
-		attestationId: occurrence.attestationId,
-	});
-	const t = createTestConvex();
-	const occurrence = await seedOccurrence(t, ANGST_READING);
-	await insertAccumulatedKnowledge(t, occurrence, {
-		knowledge: { translations: { en: ["fear"], ru: ["страх"] } },
-		status: "Full",
-		coveredTranslationLanguages: ["en", "ru"],
-	});
-	// `segment.inUnits` attests no governed preposition, so "Angst vor
-	// Hunden" leaves nothing for a Full Reading to top up.
-	await schedule(t, input(occurrence));
-	expect(await attempts(t)).toEqual([]);
-
-	const covered = createTestConvex();
-	const coveredOccurrence = await seedOccurrence(covered, ANGST_READING);
-	await insertAccumulatedKnowledge(covered, coveredOccurrence, {
-		knowledge: {
-			translations: { en: ["fear"], ru: ["страх"] },
-			valency: [
-				{
-					status: "Optional",
-					complements: [
-						{
-							kind: "Preposition",
-							preposition: { canonicalForm: "vor" },
-							governedCase: "Dat",
-							referent: "Either",
-						},
-					],
-				},
-			],
-		},
-		status: "Full",
-		coveredTranslationLanguages: ["en", "ru"],
-	});
-	await schedule(covered, input(coveredOccurrence));
-	expect(await attempts(covered)).toEqual([]);
-});
-
-test("a Full Reading's plural occurrence schedules no Knowledge run: a later occurrence never changes a stored aspect (#883 point 5)", async () => {
-	const pizzas = (grammaticalCase: string) => ({
-		normalizedSurface: "Pizzas",
-		inflectionalFeatures: {
-			case: grammaticalCase,
-			gender: null,
-			number: "Plur",
-		},
-	});
-	jest.useRealTimers();
-	// Whatever the stored plural, its own or none, a plural Surface demands nothing.
-	for (const stored of [["En"], ["En", "S"], "NoPlural", undefined]) {
-		const t = createTestConvex();
-		const occurrence = await seedOccurrence(
-			t,
-			PIZZA_READING,
-			pizzas("Nom"),
-		);
-		await insertAccumulatedKnowledge(t, occurrence, {
-			knowledge: {
-				translations: { en: ["pizza"], ru: ["пицца"] },
-				...(stored === undefined ? {} : { pluralPattern: stored }),
-			},
-			status: "Full" as const,
-			coveredTranslationLanguages: ["en" as const, "ru" as const],
-		});
-		await schedule(t, {
-			attemptKey: "plural-top-up",
-			visitorId: "visitor-1",
-			readingId: occurrence.readingId,
-			attestationId: occurrence.attestationId,
-		});
-		expect(await attempts(t)).toEqual([]);
-	}
 });
 
 test("scheduling is exact, idempotent, skips Full, and retries Failed", async () => {
@@ -383,51 +303,132 @@ test("a Reading cooling down after a failure starts no run for a demand under an
 	expect(await scheduledAttempts(t)).toEqual(queued("third-click"));
 });
 
-/** A second saved occurrence of the seeded Reading, in a Sentence of its own. */
-async function seedSecondOccurrence(
-	t: TestConvexDb,
-	occurrence: Occurrence,
-): Promise<Occurrence> {
-	const { sentenceIds, segmentIds } = await submitText(t, [
-		[
-			{ kind: "ResolvableText", text: "Bank" },
-			{ kind: "OpaqueText", text: " am See" },
-		],
-	]);
-	const sentenceId = sentenceIds[0];
-	const segmentId = segmentIds[0]?.[0];
-	if (!sentenceId || !segmentId) throw new Error("Expected a Segment.");
-	return t.run(async (ctx) => {
-		const first = await ctx.db.get(occurrence.attestationId);
-		if (!first) throw new Error("Expected the first Attestation.");
-		const attestationId = await ctx.db.insert("attestations", {
-			surfaceId: first.surfaceId,
-			readingId: occurrence.readingId,
-			realizationCoverage: "Full",
-			articleEvidence: null,
-			valencyEvidence: [],
-		});
-		await ctx.db.patch(segmentId, {
-			attestationMembership: { attestationId, orthography: "Standard" },
-		});
-		return { ...occurrence, attestationId, sentenceId, segmentId };
-	});
-}
-
-test("a run's origin is New for the Reading's first occurrence and TopUp for a later one (#677, #883 point 5)", async () => {
+test("a late action cannot end the run that replaced it", async () => {
 	const t = createTestConvex();
-	const first = await seedDictionaryReading(t);
-	const second = await seedSecondOccurrence(t, first);
-	await insertAttempt(t, first, "first", { state: "Scheduled" });
+	const occurrence = await seedOccurrence(t);
+	await insertAttempt(t, occurrence, "attempt-1", { runNumber: 2 });
+	const failure = {
+		attemptKey: "attempt-1",
+		failureCode: "generationFailed",
+		failureMessage: "failed",
+	};
+
+	// Run 1's action, and an action that never claimed a run, come back late.
+	await t.mutation(internal.knowledgeGeneration.fail, {
+		...failure,
+		runNumber: 1,
+	});
+	await t.mutation(internal.knowledgeGeneration.fail, {
+		...failure,
+		runNumber: null,
+	});
+	await t.mutation(internal.catalogGrowthSignals.recordKnowledgeCatalogMiss, {
+		attemptKey: "attempt-1",
+		runNumber: 1,
+		miss: {
+			decision: "CatalogMiss",
+			route: "de/Lexeme/NOUN",
+			stage: "produceKnowledge",
+			message: "No reviewed member matches",
+		},
+	});
+	expect(
+		await publish(
+			t,
+			publishArgs({
+				attemptKey: "attempt-1",
+				relationPublication: { ...EMPTY_RELATION_RUN, runNumber: 1 },
+			}),
+		),
+	).toEqual({ status: "Ignored" });
+	// Only a Scheduled attempt has a run to claim.
 	expect(
 		await t.mutation(internal.knowledgeGeneration.begin, {
-			attemptKey: "first",
+			attemptKey: "attempt-1",
 		}),
-	).toEqual(expect.objectContaining({ kind: "Generate", origin: "New" }));
-	await insertAttempt(t, second, "second", { state: "Scheduled" });
+	).toBe(null);
+	expect(await attempts(t)).toEqual([
+		expect.objectContaining({ state: "Running", runNumber: 2 }),
+	]);
+	expect(await rows(t, "catalogGrowthSignals")).toEqual([]);
+
+	await t.mutation(internal.knowledgeGeneration.fail, {
+		...failure,
+		runNumber: 2,
+	});
+	expect(await attempts(t)).toEqual([
+		expect.objectContaining({ state: "Failed", runNumber: 2 }),
+	]);
+});
+
+test("a run whose action died fails as interrupted, starts the next demand, and retries", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t);
+	await t.run((ctx) =>
+		ctx.db.insert("visitorEncounters", {
+			requestId: "click-request",
+			visitorId: "visitor-1",
+			scrollId: occurrence.scrollId,
+			sentenceId: occurrence.sentenceId,
+			segmentId: occurrence.segmentId,
+			attestationId: occurrence.attestationId,
+			encounteredAt: 1,
+		}),
+	);
+	const input = {
+		visitorId: "visitor-1",
+		readingId: occurrence.readingId,
+		attestationId: occurrence.attestationId,
+	};
+	await schedule(t, { ...input, attemptKey: "stuck" });
+	await schedule(t, { ...input, attemptKey: "behind" });
+	expect(await scheduledWatchdogs(t)).toEqual([
+		{ attemptKey: "stuck", runNumber: 1 },
+	]);
+	await t.mutation(internal.knowledgeGeneration.begin, {
+		attemptKey: "stuck",
+	});
+
+	// A run still inside an action's lifetime is left alone and checked again.
 	expect(
-		await t.mutation(internal.knowledgeGeneration.begin, {
-			attemptKey: "second",
+		await t.mutation(internal.knowledgeGeneration.recoverStaleRun, {
+			attemptKey: "stuck",
+			runNumber: 1,
 		}),
-	).toEqual(expect.objectContaining({ kind: "Generate", origin: "TopUp" }));
+	).toBe(false);
+	expect(await scheduledWatchdogs(t)).toHaveLength(2);
+
+	jest.setSystemTime(Date.now() + STALE_KNOWLEDGE_RUN_AFTER_MS);
+	expect(
+		await t.mutation(internal.knowledgeGeneration.recoverStaleRun, {
+			attemptKey: "stuck",
+			runNumber: 1,
+		}),
+	).toBe(true);
+	expect(await attempts(t)).toEqual([
+		expect.objectContaining({
+			attemptKey: "stuck",
+			state: "Failed",
+			failureCode: "interrupted",
+		}),
+		expect.objectContaining({ attemptKey: "behind", state: "Scheduled" }),
+	]);
+	expect(await scheduledAttempts(t)).toEqual(queued("stuck", "behind"));
+
+	// The dead action's own late failure no longer owns the attempt.
+	await t.mutation(internal.knowledgeGeneration.fail, {
+		attemptKey: "stuck",
+		runNumber: 1,
+		failureCode: "generationFailed",
+		failureMessage: "failed",
+	});
+	expect((await attempts(t))[0]).toMatchObject({
+		failureCode: "interrupted",
+	});
+
+	await t.mutation(internal.knowledgeGeneration.retry, {
+		...input,
+		attemptKey: "stuck",
+	});
+	expect((await attempts(t))[0]).toMatchObject({ state: "Waiting" });
 });

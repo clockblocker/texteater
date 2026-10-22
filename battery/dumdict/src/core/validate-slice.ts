@@ -6,6 +6,7 @@ import {
 } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
@@ -14,132 +15,53 @@ import type {
 } from "../domain-types";
 import { makeSurfaceId } from "../dumling-id";
 import {
-	parseAsLemmaRecord,
-	parseAsPendingSemanticRelationRecord,
-	parseAsReadingEntry,
-	parseAsSurfaceEntry,
 	parsePendingSemanticRelationForDumdictRuntime,
-	parseReadingForDumdictRuntime,
-	parseReadingKnowledgeForDumdictRuntime,
 	unwrapDumdictParse,
 } from "../parsing/lightweight-parsers";
+import type { DanglingRelationClaim } from "../public";
 import type {
 	AddNewNoteContext,
 	ApplyGeneratedKnowledgeContext,
 	CleanupRelationsSlice,
+	EnsureReadingEntryContext,
 	LoadReadingEntryContextRequest,
 	ReadingEntryContext,
+	ReevaluateShadowsSlice,
 } from "../storage";
 import { shadowMatchesLemma } from "./identity";
 import {
-	assertPendingSemanticRelationRecordIdentity,
 	derivePendingSemanticRelationLocator,
 	pendingSemanticRelationLocatorKey,
+	reevaluatedPendingEntryIds,
 } from "./pending";
-
-function assertNoDuplicates(values: string[], context: string) {
-	if (new Set(values).size !== values.length)
-		throw new Error(`${context} contains duplicates.`);
-}
-
-function validateLemmaRecord<L extends Dumling.Language>(
-	expected: L,
-	record: LemmaRecord<L>,
-) {
-	unwrapDumdictParse(parseAsLemmaRecord(record, expected));
-}
+import {
+	validateLemmaReadings,
+	validateLinksWithRefs,
+} from "./validate-occurrence-slice";
+import {
+	assertNoDuplicates,
+	validateLemmaRecord,
+	validatePendingRecord,
+	validateReading,
+	validateReadingEntry,
+	validateRevision,
+	validateSurfaceEntry,
+} from "./validate-records";
 
 /**
- * Throws unless parsing kept a Reading's Emoji Description: Dumdict takes it
- * already normalized. A Foreign Reading has none (ADR 0045).
+ * A relation inventory: each record parses, each once, and each Reading's
+ * Lemma is in it. A claim whose target it doesn't hold is reported, not
+ * thrown, so data an earlier removal left can't block planning; claims on
+ * `removed` Lemmas and their Readings are expected, since the plan moves
+ * them.
  */
-export function assertEmojiDescriptionNormalized(
-	reading: Dumling.Reading,
-	parsed: Dumling.Reading,
-) {
-	if (
-		"emojiDescription" in parsed &&
-		"emojiDescription" in reading &&
-		parsed.emojiDescription !== reading.emojiDescription
-	)
-		throw new Error("Reading emoji description must be normalized.");
-}
-
-function validateReading<L extends Dumling.Language>(
-	expected: L,
-	reading: Dumling.Reading<L>,
-) {
-	assertEmojiDescriptionNormalized(
-		reading,
-		unwrapDumdictParse(parseReadingForDumdictRuntime(reading, expected)),
-	);
-}
-
-function validateReadingEntry<L extends Dumling.Language>(
-	expected: L,
-	entry: ReadingEntry<L>,
-) {
-	unwrapDumdictParse(parseAsReadingEntry(entry, expected));
-	validateReading(expected, entry.reading);
-	if (entry.knowledge !== undefined) {
-		unwrapDumdictParse(
-			parseReadingKnowledgeForDumdictRuntime(entry.knowledge),
-		);
-		const relations = entry.knowledge.semanticRelations;
-		if (relations?.targetKind === "reading") {
-			for (const target of relations.synonym ?? []) {
-				validateReading(expected, target);
-				if (sameReading(entry.reading, target))
-					throw new Error(
-						"Reading Knowledge contains a direct self relation.",
-					);
-			}
-		} else {
-			for (const relation of directSemanticRelationValues) {
-				for (const target of relations?.[relation] ?? []) {
-					validateLemmaRecord(expected, { lemma: target });
-					if (sameLemma(entry.reading.lemma, target))
-						throw new Error(
-							"Reading Knowledge contains a direct same-Lemma relation.",
-						);
-				}
-			}
-		}
-	}
-}
-
-function validateSurfaceEntry<L extends Dumling.Language>(
-	expected: L,
-	entry: SurfaceEntry<L>,
-) {
-	unwrapDumdictParse(parseAsSurfaceEntry(entry, expected));
-	// The parse checks id and owner on normalized forms and is discarded;
-	// these check the raw entry that planning reads.
-	if (entry.id !== makeSurfaceId(expected, entry.surface))
-		throw new Error("surface entry id does not match its derived id.");
-	if (!sameLemma(entry.ownerLemma, entry.surface.lemma))
-		throw new Error(
-			"surface owner Lemma does not match the realized Lemma.",
-		);
-}
-
-function validatePendingRecord<L extends Dumling.Language>(
-	expected: L,
-	record: PendingSemanticRelationRecord<L>,
-) {
-	const parsedRecord = unwrapDumdictParse(
-		parseAsPendingSemanticRelationRecord(record, expected),
-	);
-	validateReading(expected, parsedRecord.sourceReading);
-	assertPendingSemanticRelationRecordIdentity(parsedRecord);
-}
-
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function validateRelationInventory<L extends Dumling.Language>(
 	expected: L,
 	lemmas: LemmaRecord<L>[],
 	readings: ReadingEntry<L>[],
-) {
+	/** Lemmas a removal took away, which stored claims may still name. */
+	removed: readonly Dumling.Lemma<L>[] = [],
+): DanglingRelationClaim<L>[] {
 	for (const record of lemmas) validateLemmaRecord(expected, record);
 	for (const entry of readings) validateReadingEntry(expected, entry);
 	assertNoDuplicates(
@@ -153,37 +75,63 @@ function validateRelationInventory<L extends Dumling.Language>(
 	const lemmaKeys = new Set(
 		lemmas.map(({ lemma }) => lemmaIdentityKey(lemma)),
 	);
-	const readingKeys = new Set(
-		readings.map(({ reading }) => readingIdentityKey(reading)),
-	);
-	for (const entry of readings) {
+	for (const entry of readings)
 		if (!lemmaKeys.has(lemmaIdentityKey(entry.reading.lemma)))
 			throw new Error(
 				"relation Reading inventory references an unstored owner Lemma.",
 			);
-		const relations = entry.knowledge?.semanticRelations;
-		if (relations?.targetKind === "reading") {
-			for (const target of relations.synonym ?? [])
-				if (!readingKeys.has(readingIdentityKey(target)))
-					throw new Error(
-						"relation Reading inventory references an unstored target Reading.",
-					);
-		} else {
-			for (const relation of directSemanticRelationValues) {
-				for (const target of relations?.[relation] ?? []) {
-					if (!lemmaKeys.has(lemmaIdentityKey(target)))
-						throw new Error(
-							"relation Reading inventory references an unstored target Lemma.",
-						);
-				}
-			}
-		}
-	}
+	return danglingClaims(readings, lemmaKeys, removed);
 }
 
-function validateRevision(value: unknown) {
-	if (typeof value !== "string" || value.length === 0)
-		throw new Error("Reading Entry context has an invalid revision.");
+function danglingClaims<L extends Dumling.Language>(
+	readings: readonly ReadingEntry<L>[],
+	lemmaKeys: ReadonlySet<string>,
+	removed: readonly Dumling.Lemma<L>[],
+): DanglingRelationClaim<L>[] {
+	const removedKeys = new Set(
+		removed.map((lemma) => lemmaIdentityKey(lemma)),
+	);
+	const readingKeys = new Set(
+		readings.map(({ reading }) => readingIdentityKey(reading)),
+	);
+	return readings.flatMap(({ reading, knowledge }) => {
+		const relations = knowledge?.semanticRelations;
+		if (relations?.targetKind === "reading")
+			return (relations.synonym ?? []).flatMap(
+				(target): DanglingRelationClaim<L>[] =>
+					readingKeys.has(readingIdentityKey(target)) ||
+					removedKeys.has(lemmaIdentityKey(target.lemma))
+						? []
+						: [
+								{
+									kind: "danglingRelationClaim",
+									reading,
+									relation: "synonym",
+									target: {
+										kind: "reading",
+										reading: target,
+									},
+								},
+							],
+			);
+		return directSemanticRelationValues.flatMap((relation) =>
+			(relations?.[relation] ?? []).flatMap(
+				(target): DanglingRelationClaim<L>[] => {
+					const key = lemmaIdentityKey(target);
+					return lemmaKeys.has(key) || removedKeys.has(key)
+						? []
+						: [
+								{
+									kind: "danglingRelationClaim",
+									reading,
+									relation,
+									target: { kind: "lemma", lemma: target },
+								},
+							];
+				},
+			),
+		);
+	});
 }
 
 function validateExistingIdentity<L extends Dumling.Language>(
@@ -259,7 +207,7 @@ function validateAddNewNoteContext<L extends Dumling.Language>(
 		LoadReadingEntryContextRequest<L>,
 		{ intent: "addNewNote" }
 	>,
-) {
+): DanglingRelationClaim<L>[] {
 	validateExistingIdentity(expected, context, request.reading);
 	validateRequestedSurfaces(
 		expected,
@@ -303,14 +251,56 @@ function validateAddNewNoteContext<L extends Dumling.Language>(
 		context.exactPendingRelations,
 		requestedPendingKeys,
 	);
-	for (const record of context.pendingRelationsMatchingProposedLemma) {
+	validateMatchingPendingRecords(
+		expected,
+		context.pendingRelationsMatchingProposedLemma,
+		request.reading.lemma,
+	);
+	const issues = validateRelationInventory(
+		expected,
+		context.relationLemmas,
+		context.relationReadings,
+	);
+	validateLemmaReadings(
+		expected,
+		request.reading.lemma,
+		context.lemmaReadings,
+		context.existingLemma,
+	);
+	validateLinksWithRefs(
+		expected,
+		context.attestationLinksWithRefs,
+		request.attestationRefs,
+	);
+	return issues;
+}
+
+function validateMatchingPendingRecords<L extends Dumling.Language>(
+	expected: L,
+	records: PendingSemanticRelationRecord<L>[],
+	lemma: Dumling.Lemma<L>,
+) {
+	for (const record of records) {
 		validatePendingRecord(expected, record);
-		if (!shadowMatchesLemma(record.pending.target, request.reading.lemma))
+		if (!shadowMatchesLemma(record.pending.target, lemma))
 			throw new Error(
 				"pending Semantic Relation does not match the proposed Lemma.",
 			);
 	}
-	validateRelationInventory(
+}
+
+function validateEnsureReadingEntryContext<L extends Dumling.Language>(
+	expected: L,
+	context: EnsureReadingEntryContext<L>,
+	reading: Dumling.Reading<L>,
+): DanglingRelationClaim<L>[] {
+	validateExistingIdentity(expected, context, reading);
+	validateMatchingPendingRecords(
+		expected,
+		context.pendingRelationsMatchingProposedLemma,
+		reading.lemma,
+	);
+	return validateRelationInventory(
 		expected,
 		context.relationLemmas,
 		context.relationReadings,
@@ -324,14 +314,24 @@ function validateApplyGeneratedKnowledgeContext<L extends Dumling.Language>(
 		LoadReadingEntryContextRequest<L>,
 		{ intent: "applyGeneratedKnowledge" }
 	>,
-) {
-	if (context.existingReading) {
-		validateReadingEntry(expected, context.existingReading);
-		if (!sameReading(context.existingReading.reading, request.reading))
-			throw new Error(
-				"existing Reading does not match the requested Reading identity.",
-			);
-	}
+): DanglingRelationClaim<L>[] {
+	validateExistingIdentity(expected, context, request.reading);
+	if (
+		context.existingReading &&
+		(!context.existingLemma ||
+			!context.lemmaReadings.some((reading) =>
+				sameReading(reading, request.reading),
+			))
+	)
+		throw new Error(
+			"existing Reading's Lemma and Readings are missing from the context.",
+		);
+	validateLemmaReadings(
+		expected,
+		request.reading.lemma,
+		context.lemmaReadings,
+		context.existingLemma,
+	);
 	validateExactPendingSelection(
 		expected,
 		context.exactPendingRelations,
@@ -346,7 +346,7 @@ function validateApplyGeneratedKnowledgeContext<L extends Dumling.Language>(
 			),
 		),
 	);
-	validateRelationInventory(
+	return validateRelationInventory(
 		expected,
 		context.relationLemmas,
 		context.relationReadings,
@@ -357,7 +357,7 @@ export function validateReadingEntryContext<L extends Dumling.Language>(
 	expected: L,
 	context: ReadingEntryContext<L>,
 	request: LoadReadingEntryContextRequest<L>,
-) {
+): DanglingRelationClaim<L>[] {
 	if (context.intent !== request.intent) intentMismatch();
 	validateRevision(context.revision);
 	validateReading(expected, request.reading);
@@ -379,13 +379,15 @@ export function validateReadingEntryContext<L extends Dumling.Language>(
 				)
 					throw new Error("Invalid direct Semantic Relation.");
 			}
-			validateAddNewNoteContext(expected, context, request);
-			return;
+			return validateAddNewNoteContext(expected, context, request);
 		case "applyGeneratedKnowledge":
 			if (context.intent !== "applyGeneratedKnowledge")
 				return intentMismatch();
-			validateApplyGeneratedKnowledgeContext(expected, context, request);
-			return;
+			return validateApplyGeneratedKnowledgeContext(
+				expected,
+				context,
+				request,
+			);
 		case "ensureOwnedSurface":
 			if (context.intent !== "ensureOwnedSurface")
 				return intentMismatch();
@@ -395,11 +397,27 @@ export function validateReadingEntryContext<L extends Dumling.Language>(
 				context.existingOwnedSurfaces,
 				new Set([makeSurfaceId(expected, request.surface)]),
 			);
-			return;
+			return [];
 		case "ensureReadingEntry":
 			if (context.intent !== "ensureReadingEntry")
 				return intentMismatch();
+			return validateEnsureReadingEntryContext(
+				expected,
+				context,
+				request.reading,
+			);
+		case "recordOccurrence":
+			if (context.intent !== "recordOccurrence") return intentMismatch();
 			validateExistingIdentity(expected, context, request.reading);
+			validateRequestedSurfaces(
+				expected,
+				context.existingOwnedSurfaces,
+				new Set([makeSurfaceId(expected, request.surface)]),
+			);
+			validateLinksWithRefs(expected, context.attestationLinksWithRefs, [
+				request.ref,
+			]);
+			return [];
 	}
 }
 
@@ -410,7 +428,7 @@ function intentMismatch(): never {
 export function validateCleanupRelationsSlice<L extends Dumling.Language>(
 	expected: L,
 	slice: CleanupRelationsSlice<L>,
-) {
+): DanglingRelationClaim<L>[] {
 	for (const record of slice.pendingRelations)
 		validatePendingRecord(expected, record);
 	assertNoDuplicates(
@@ -419,9 +437,45 @@ export function validateCleanupRelationsSlice<L extends Dumling.Language>(
 		),
 		"pending Semantic Relations",
 	);
-	validateRelationInventory(
+	return validateRelationInventory(
 		expected,
 		slice.relationLemmas,
 		slice.relationReadings,
+	);
+}
+
+/**
+ * A `reevaluateShadows` slice holds only records the request names, each
+ * once, and a relation inventory whose claims may still name the removed
+ * Lemmas.
+ */
+export function validateReevaluateShadowsSlice<L extends Dumling.Language>(
+	expected: L,
+	slice: ReevaluateShadowsSlice<L>,
+	request: {
+		readonly shadows?: readonly (Dumrel.UnitShadow & { language: L })[];
+		readonly removedLemmas?: readonly Dumling.Lemma<L>[];
+	},
+): DanglingRelationClaim<L>[] {
+	validateRevision(slice.revision);
+	const requested = new Set<string>(reevaluatedPendingEntryIds(request));
+	for (const record of slice.pendingRelations) {
+		validatePendingRecord(expected, record);
+		if (!requested.has(record.locator.targetPendingId))
+			throw new Error(
+				"pending Semantic Relation was not requested by this re-evaluation.",
+			);
+	}
+	assertNoDuplicates(
+		slice.pendingRelations.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
+		"pending Semantic Relations",
+	);
+	return validateRelationInventory(
+		expected,
+		slice.relationLemmas,
+		slice.relationReadings,
+		request.removedLemmas,
 	);
 }

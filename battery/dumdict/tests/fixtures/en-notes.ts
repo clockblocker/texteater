@@ -67,7 +67,7 @@ export const englishSwimDraft = {
 	reading: englishSwimReading,
 	note: {
 		attestedTranslations: ["swim"],
-		attestations: ["They swim every morning."],
+		attestationLinks: [],
 		notes: "Core swimming reading.",
 	},
 };
@@ -76,7 +76,7 @@ export const englishRunDraft = {
 	reading: englishRunReading,
 	note: {
 		attestedTranslations: ["run"],
-		attestations: ["They run every morning."],
+		attestationLinks: [],
 		notes: "Core running reading.",
 	},
 };
@@ -84,13 +84,19 @@ export const englishRunDraft = {
 const walkReading = {
 	reading: englishWalkReading,
 	attestedTranslations: ["walk"],
-	attestations: ["They walk home together."],
+	attestationLinks: [
+		{
+			ref: "They walk home together.",
+			surfaceId: null,
+			reading: englishWalkReading,
+		},
+	],
 	notes: "Core motion reading.",
 };
 
 export const enSerializedNotes = [
 	{
-		schemaVersion: 1,
+		schemaVersion: 2,
 		lemmaRecord: { lemma: englishWalkLemma },
 		readingEntries: [walkReading],
 		ownedSurfaceEntries: [],
@@ -107,7 +113,7 @@ const pendingSwimEntryId = derivePendingEntryId({
 
 export const enSerializedNotesWithPendingSwimRelation = [
 	{
-		schemaVersion: 1,
+		schemaVersion: 2,
 		lemmaRecord: { lemma: englishWalkLemma },
 		readingEntries: [walkReading],
 		ownedSurfaceEntries: [],

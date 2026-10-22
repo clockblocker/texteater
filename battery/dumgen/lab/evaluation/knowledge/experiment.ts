@@ -63,6 +63,7 @@ import {
 	type KnowledgeSet,
 	type KnowledgeSetName,
 	loadKnowledgeSet,
+	paradigmRequestOf,
 	requestOf,
 	trackedKnowledgeSetsRoot,
 	translationSlipSchema,
@@ -153,8 +154,15 @@ const proxyStageSizes: GrammarPrice["sizes"]["stages"] = {
 /** Each case runs three times; each repetition is its own cached answer. */
 const knowledgeRepetitions = 3;
 
-/** The operation a run measures. 1: the first port (#887). 2: the text prompts after the first spot-check. */
-const knowledgeOperationVersion = `${knowledgeRoute}@production-6`;
+/**
+ * The operation a run measures. 1: the first port (#887). 2: the text
+ * prompts after the first spot-check. 8: a Lemma's later Reading's
+ * Paradigm goes to the licence judge (#1230); a first Reading's requests
+ * are unchanged. 9: a later Reading's Luna writes first, and the judge
+ * chooses among the stored and written forms together (#1260); a first
+ * Reading's requests are unchanged.
+ */
+const knowledgeOperationVersion = `${knowledgeRoute}@production-9`;
 
 export type KnowledgeEvaluateArgs = {
 	readonly experimentId: string;
@@ -252,6 +260,7 @@ async function attempt(
 			sentence: goldCase.sentence,
 			origin: "New",
 			request: requestOf(goldCase, scope),
+			paradigm: { dimensions: paradigmRequestOf(goldCase, scope) },
 		}),
 	);
 	// A run cut short by a batch hold or a cap has no answer to score.
@@ -263,6 +272,7 @@ async function attempt(
 	if (held) throw Error(held.message);
 	return {
 		changes: [...result.changes],
+		paradigmChanges: [...result.paradigmChanges],
 		pendingRelations: result.pendingRelations.map(
 			({ relation, target }) => ({
 				relation,
@@ -545,12 +555,13 @@ export function knowledgeExperiment(setName: KnowledgeSetName) {
 							goldCase,
 							requestOf(goldCase, scope),
 							output,
+							paradigmRequestOf(goldCase, scope),
 						);
 					},
 				},
 				experimentId: id,
 				operationVersion: knowledgeOperationVersion,
-				evaluatorVersion: "knowledge-1",
+				evaluatorVersion: "knowledge-2",
 				sourceRevision: args.sourceRevision,
 				configurations: {
 					generation: {

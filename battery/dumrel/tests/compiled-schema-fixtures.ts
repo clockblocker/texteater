@@ -20,19 +20,6 @@ export const samples: Record<string, unknown[]> = {
 		{},
 		{ definition: "  Geba\u0308ude  ", translations: { en: [" house "] } },
 		{ semanticRelations: { synonym: [houseLemma] } },
-		{ plural: ["Bänke", "Banken"] },
-		{ plural: "NoPlural" },
-		{ conjugationClass: ["Weak", "Mixed"] },
-		{ preterite: [" sandte ", "sendete"], conjugationClass: ["Mixed"] },
-		{
-			presentSingular: {
-				first: ["fahre "],
-				second: ["fährst"],
-				third: ["fährt"],
-			},
-			pastParticiple: [" gefahren"],
-			subjunctivePast: ["führe"],
-		},
 		{ locutionType: "Idiom" },
 		{ sayingType: { type: "WingedWord", attribution: "  Shakespeare " } },
 		{ sayingType: { type: "Proverb" } },
@@ -140,25 +127,6 @@ export const samples: Record<string, unknown[]> = {
 			value: { verb: wartenReading.lemma, meaning: "Drifted" },
 		},
 		{ kind: "Retract", aspect: "participleSource" },
-		{ kind: "Contribute", aspect: "plural", value: ["Pizzen", "Pizzas"] },
-		{ kind: "Correct", aspect: "plural", value: "PluralOnly" },
-		{ kind: "Retract", aspect: "plural" },
-		{ kind: "Contribute", aspect: "conjugationClass", value: ["Weak"] },
-		{ kind: "Correct", aspect: "conjugationClass", value: ["Strong"] },
-		{ kind: "Retract", aspect: "conjugationClass" },
-		{ kind: "Contribute", aspect: "preterite", value: ["stand auf"] },
-		{ kind: "Correct", aspect: "preterite", value: ["wog", "wiegte"] },
-		{ kind: "Retract", aspect: "preterite" },
-		{
-			kind: "Contribute",
-			aspect: "presentSingular",
-			value: { first: ["kann"], second: ["kannst"], third: ["kann"] },
-		},
-		{ kind: "Retract", aspect: "presentSingular" },
-		{ kind: "Correct", aspect: "pastParticiple", value: ["gesandt"] },
-		{ kind: "Retract", aspect: "pastParticiple" },
-		{ kind: "Contribute", aspect: "subjunctivePast", value: ["brächte"] },
-		{ kind: "Retract", aspect: "subjunctivePast" },
 		{ kind: "Contribute", aspect: "locutionType", value: "Collocation" },
 		{
 			kind: "Correct",
@@ -171,16 +139,82 @@ export const samples: Record<string, unknown[]> = {
 		{ kind: "Retract", aspect: "formulaRole" },
 	],
 	pluralPattern: ["NoEnding", "UmlautEr", "Other"],
-	nounPlural: [["Mütter"], ["Pizzen", "Pizzas"], "NoPlural", "PluralOnly"],
 	conjugationClass: ["Strong", "Weak", "Mixed"],
-	conjugationClasses: [["Strong"], ["Weak", "Mixed"]],
-	preterite: [["wog"], [" stand auf ", "sandte"]],
-	presentSingular: [
-		{ first: ["fahre"], second: ["fährst"], third: [" fährt "] },
-		{ first: ["backe"], second: ["bäckst", "backst"], third: ["bäckt"] },
+	dimensionId: ["plural", "preterite", "present2"],
+	paradigmProvenance: ["Produced", "Migrated"],
+	paradigmVariant: [
+		{ id: "bänke", value: " Bänke", provenance: "Produced" },
+		{ id: "NoPlural", value: "NoPlural", provenance: "Authored" },
 	],
-	pastParticiple: [["abgefahren"], [" gesandt", "gesendet"]],
-	subjunctivePast: [["führe ab"], ["hülfe", " hälfe"]],
+	paradigmDimension: [
+		{
+			variants: [
+				{ id: "sandte", value: "sandte", provenance: "Attested" },
+			],
+			licences: {},
+		},
+		{
+			variants: [
+				{ id: "sandte", value: "sandte", provenance: "Produced" },
+				{ id: "sendete", value: "sendete", provenance: "Produced" },
+			],
+			licences: { reading: ["sandte", "sendete"] },
+		},
+	],
+	lemmaParadigm: [
+		{ dimensions: {} },
+		{
+			dimensions: {
+				plural: {
+					variants: [
+						{
+							id: "pizzen",
+							value: "Pizzen",
+							provenance: "Migrated",
+						},
+					],
+					licences: {},
+				},
+				present2: {
+					variants: [
+						{
+							id: "fährst",
+							value: "fährst ",
+							provenance: "Produced",
+						},
+					],
+					licences: { reading: ["fährst"] },
+				},
+			},
+		},
+	],
+	paradigmChange: [
+		{
+			kind: "Contribute",
+			dimension: "plural",
+			value: " Pizzas",
+			provenance: "Attested",
+		},
+		{
+			kind: "Correct",
+			dimension: "preterite",
+			variant: "wiegte",
+			value: "wog",
+		},
+		{
+			kind: "License",
+			dimension: "plural",
+			reading: houseReading,
+			variants: ["häuser"],
+		},
+		{
+			kind: "Unlicense",
+			dimension: "plural",
+			reading: houseReading,
+			variants: ["häuser"],
+		},
+		{ kind: "Retract", dimension: "subjunctivePast", variant: "brächte" },
+	],
 	locutionType: ["Idiom", "Collocation"],
 	sayingType: [
 		{ type: "Proverb" },

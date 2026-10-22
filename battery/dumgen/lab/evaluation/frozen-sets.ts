@@ -74,6 +74,20 @@ export async function storeFrozenSet(
 	);
 }
 
+/** The current frozen set `name`, checked by `schema`, read at once; undefined before its first freeze. */
+export function currentFrozenSetSync<T extends FrozenSet>(
+	root: string,
+	name: string,
+	schema: z.ZodType<T>,
+): T | undefined {
+	const hash = currentFrozenHash(root, name);
+	if (hash === undefined) return undefined;
+	const path = frozenSetPath(root, name, hash);
+	return existsSync(path)
+		? parse(schema, readFileSync(path), path)
+		: undefined;
+}
+
 /**
  * The frozen set `name`, checked by `schema`: the current one, or with
  * `hash` the set of that hash, current or replaced. `freeze` names the

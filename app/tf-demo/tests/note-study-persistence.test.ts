@@ -82,7 +82,7 @@ test(
 					},
 					note: {
 						attestedTranslations: [],
-						attestations: [],
+						attestationLinks: [],
 						notes: "",
 					},
 				},

@@ -17,13 +17,15 @@ function swimNote(
 	reading: Dumling.Reading<"en">,
 ): SerializedDictionaryNote<"en"> {
 	return {
-		schemaVersion: 1,
+		schemaVersion: 2,
 		lemmaRecord: { lemma: reading.lemma },
 		readingEntries: [
 			{
 				reading,
 				attestedTranslations: ["swim"],
-				attestations: ["They swim."],
+				attestationLinks: [
+					{ ref: "They swim.", surfaceId: null, reading },
+				],
 				notes: "Swimming.",
 			},
 		],
@@ -66,7 +68,7 @@ describe("relations cleanup", () => {
 		).toBeUndefined();
 	});
 
-	test("automatically resolves one Lemma, stores only the direct claim, and deletes pending atomically", async () => {
+	test("automatically resolves one Lemma, stores only the direct claim, and keeps its Shadow resolved", async () => {
 		const booted = getBootedUpDumdict("en", [
 			...enSerializedNotesWithPendingSwimRelation,
 			swimNote(englishSwimReading),
@@ -92,8 +94,9 @@ describe("relations cleanup", () => {
 		expect(
 			storage
 				.loadAll()
-				.flatMap(({ pendingRelations }) => pendingRelations),
-		).toEqual([]);
+				.flatMap(({ pendingRelations }) => pendingRelations)
+				.map(({ resolvedLemma }) => resolvedLemma),
+		).toEqual([englishSwimLemma]);
 	});
 
 	test("keeps an ambiguous multi-Lemma shadow pending and inert", async () => {

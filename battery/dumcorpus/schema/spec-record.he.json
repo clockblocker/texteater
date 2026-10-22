@@ -3954,80 +3954,6 @@
 										],
 										"additionalProperties": false
 									},
-									"plural": {
-										"anyOf": [
-											{
-												"$ref": "#/$defs/__schema207"
-											},
-											{
-												"type": "string",
-												"enum": [
-													"NoPlural",
-													"PluralOnly"
-												]
-											}
-										]
-									},
-									"conjugationClass": {
-										"minItems": 1,
-										"type": "array",
-										"items": {
-											"$ref": "#/$defs/__schema501"
-										}
-									},
-									"preterite": {
-										"minItems": 1,
-										"type": "array",
-										"items": {
-											"$ref": "#/$defs/__schema206"
-										}
-									},
-									"presentSingular": {
-										"type": "object",
-										"properties": {
-											"first": {
-												"minItems": 1,
-												"type": "array",
-												"items": {
-													"$ref": "#/$defs/__schema206"
-												}
-											},
-											"second": {
-												"minItems": 1,
-												"type": "array",
-												"items": {
-													"$ref": "#/$defs/__schema206"
-												}
-											},
-											"third": {
-												"minItems": 1,
-												"type": "array",
-												"items": {
-													"$ref": "#/$defs/__schema206"
-												}
-											}
-										},
-										"required": [
-											"first",
-											"second",
-											"third"
-										],
-										"additionalProperties": false
-									},
-									"pastParticiple": {
-										"minItems": 1,
-										"type": "array",
-										"items": {
-											"$ref": "#/$defs/__schema206"
-										}
-									},
-									"subjunctivePast": {
-										"minItems": 1,
-										"type": "array",
-										"items": {
-											"$ref": "#/$defs/__schema206"
-										}
-									},
 									"locutionType": {
 										"type": "string",
 										"enum": [
@@ -4073,60 +3999,55 @@
 								},
 								"additionalProperties": false
 							},
+							"paradigm": {
+								"type": "object",
+								"propertyNames": {
+									"$ref": "#/$defs/__schema501"
+								},
+								"additionalProperties": {
+									"$ref": "#/$defs/__schema502"
+								},
+								"description": "The forms, or the marker, this Reading licenses per Variation Dimension of its Lemma's Paradigm: plural (Pizzen, or NoPlural), preterite (stand auf), present1, present2, present3, pastParticiple, subjunctivePast."
+							},
 							"coverage": {
 								"type": "object",
 								"properties": {
 									"transcription": {
-										"$ref": "#/$defs/__schema502"
-									},
-									"definition": {
-										"$ref": "#/$defs/__schema502"
-									},
-									"translations": {
 										"$ref": "#/$defs/__schema503"
 									},
-									"morphologicalTree": {
-										"$ref": "#/$defs/__schema502"
+									"definition": {
+										"$ref": "#/$defs/__schema503"
 									},
-									"semanticRelations": {
+									"translations": {
 										"$ref": "#/$defs/__schema504"
 									},
+									"morphologicalTree": {
+										"$ref": "#/$defs/__schema503"
+									},
+									"semanticRelations": {
+										"$ref": "#/$defs/__schema505"
+									},
 									"valency": {
-										"$ref": "#/$defs/__schema502"
+										"$ref": "#/$defs/__schema503"
 									},
 									"participleSource": {
-										"$ref": "#/$defs/__schema502"
-									},
-									"plural": {
-										"$ref": "#/$defs/__schema502"
-									},
-									"conjugationClass": {
-										"$ref": "#/$defs/__schema502"
-									},
-									"preterite": {
-										"$ref": "#/$defs/__schema502"
-									},
-									"presentSingular": {
-										"$ref": "#/$defs/__schema502"
-									},
-									"pastParticiple": {
-										"$ref": "#/$defs/__schema502"
-									},
-									"subjunctivePast": {
-										"$ref": "#/$defs/__schema502"
+										"$ref": "#/$defs/__schema503"
 									},
 									"locutionType": {
-										"$ref": "#/$defs/__schema502"
+										"$ref": "#/$defs/__schema503"
 									},
 									"sayingType": {
-										"$ref": "#/$defs/__schema502"
+										"$ref": "#/$defs/__schema503"
 									},
 									"formulaRole": {
-										"$ref": "#/$defs/__schema502"
+										"$ref": "#/$defs/__schema503"
+									},
+									"paradigm": {
+										"$ref": "#/$defs/__schema506"
 									}
 								},
 								"additionalProperties": false,
-								"description": "Which Knowledge aspects a person has covered: Authored when `knowledge` holds the aspect, ReviewedEmpty when it has none. Leave an unreviewed aspect out."
+								"description": "Which Knowledge aspects and Variation Dimensions a person has covered: Authored when `knowledge` or `paradigm` holds one, ReviewedEmpty when it has none. Leave an unreviewed one out."
 							}
 						},
 						"additionalProperties": false
@@ -15306,12 +15227,23 @@
 		"__schema501": {
 			"type": "string",
 			"enum": [
-				"Strong",
-				"Weak",
-				"Mixed"
+				"plural",
+				"preterite",
+				"present1",
+				"present2",
+				"present3",
+				"pastParticiple",
+				"subjunctivePast"
 			]
 		},
 		"__schema502": {
+			"minItems": 1,
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/__schema0"
+			}
+		},
+		"__schema503": {
 			"type": "string",
 			"enum": [
 				"Authored",
@@ -15319,44 +15251,72 @@
 			],
 			"description": "Authored: the Knowledge holds this aspect. ReviewedEmpty: a person reviewed it and it has none."
 		},
-		"__schema503": {
+		"__schema504": {
 			"type": "object",
 			"properties": {
 				"en": {
-					"$ref": "#/$defs/__schema502"
+					"$ref": "#/$defs/__schema503"
 				},
 				"ru": {
-					"$ref": "#/$defs/__schema502"
+					"$ref": "#/$defs/__schema503"
 				}
 			},
 			"additionalProperties": false
 		},
-		"__schema504": {
+		"__schema505": {
 			"type": "object",
 			"properties": {
 				"synonym": {
-					"$ref": "#/$defs/__schema502"
+					"$ref": "#/$defs/__schema503"
 				},
 				"nearSynonym": {
-					"$ref": "#/$defs/__schema502"
+					"$ref": "#/$defs/__schema503"
 				},
 				"antonym": {
-					"$ref": "#/$defs/__schema502"
+					"$ref": "#/$defs/__schema503"
 				},
 				"nearAntonym": {
-					"$ref": "#/$defs/__schema502"
+					"$ref": "#/$defs/__schema503"
 				},
 				"hypernym": {
-					"$ref": "#/$defs/__schema502"
+					"$ref": "#/$defs/__schema503"
 				},
 				"holonym": {
-					"$ref": "#/$defs/__schema502"
+					"$ref": "#/$defs/__schema503"
 				},
 				"endonym": {
-					"$ref": "#/$defs/__schema502"
+					"$ref": "#/$defs/__schema503"
 				}
 			},
 			"additionalProperties": false
+		},
+		"__schema506": {
+			"type": "object",
+			"properties": {
+				"plural": {
+					"$ref": "#/$defs/__schema503"
+				},
+				"preterite": {
+					"$ref": "#/$defs/__schema503"
+				},
+				"present1": {
+					"$ref": "#/$defs/__schema503"
+				},
+				"present2": {
+					"$ref": "#/$defs/__schema503"
+				},
+				"present3": {
+					"$ref": "#/$defs/__schema503"
+				},
+				"pastParticiple": {
+					"$ref": "#/$defs/__schema503"
+				},
+				"subjunctivePast": {
+					"$ref": "#/$defs/__schema503"
+				}
+			},
+			"additionalProperties": false,
+			"description": "Which Variation Dimensions of the Lemma's Paradigm a person has covered: Authored when `paradigm` holds the dimension, ReviewedEmpty when this Reading takes none."
 		}
 	}
 }

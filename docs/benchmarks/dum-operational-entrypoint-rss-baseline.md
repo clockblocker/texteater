@@ -1,47 +1,48 @@
 # Dum operational-entrypoint RSS baseline
 
-Captured 2026-10-04T08:59:34.539Z from `3944990286f03dc7100112b411dcd9653e7327c7` with Bun 1.4.2 on darwin/arm64.
+Captured 2026-10-21T07:49:31.955Z from `10daabaac40eef53d98579a47942a2793f961788` with Bun 1.4.2 on darwin/arm64.
 
 Contract: the whole Dum chain must add at most 30 MiB peak RSS after Effect is loaded, using seven fresh processes and the median of within-process deltas. Isolated entrypoint measurements below are diagnostic. Raw samples are retained in the adjacent JSON artifact.
 
 ```text
-PASS shared Dum import RSS: +20.625 MiB after Effect; ceiling 30.000 MiB
-  dumling: +3.188 MiB at this step; +3.188 MiB since Effect
-  dumrel: +2.688 MiB at this step; +5.906 MiB since Effect
-  dumdict/planning: +14.516 MiB at this step; +20.625 MiB since Effect
+PASS shared Dum import RSS: +20.234 MiB after Effect; ceiling 30.000 MiB
+  dumling: +3.484 MiB at this step; +3.484 MiB since Effect
+  dumrel: +2.516 MiB at this step; +6.266 MiB since Effect
+  dumdict/planning: +14.656 MiB at this step; +20.234 MiB since Effect
   Seven-process median of paired peak deltas. Local import replay; not deployed tf-demo or operation memory.
 ```
 
 Each probe runs against staged package manifests and built JavaScript, outside development TypeScript path aliases. Bun reports maxRSS in KiB; raw samples convert that value to bytes before calculating deltas.
 
-Empty-module samples: `18497536`, `18513920`, `18595840`, `18530304`, `18661376` bytes; median `18530304` bytes.
+Empty-module samples: `21856256`, `21184512`, `21200896`, `21200896`, `21184512` bytes; median `21200896` bytes.
 
 ## Canonical matrix
 
 | Entrypoint | Classification | Representative operation | Import delta (MiB) | Import + operation delta (MiB) | Reachable schema/heavy dependencies |
 | --- | --- | --- | ---: | ---: | --- |
-| `dumling` | operational | parse unit | 5.047 | 5.563 | none |
+| `dumling` | operational | parse unit | 5.078 | 5.813 | none |
 | `dumling/types` | type-only | Structural declarations, with empty JavaScript. | — | — | — |
-| `dumling/validation` | operational | validate feature bag | 2.563 | 2.781 | none |
+| `dumling/validation` | operational | validate feature bag | 2.203 | 2.438 | none |
 | `dumling/package.json` | metadata | Package metadata. | — | — | — |
 | `dumling/schema/*` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
-| `dumrel` | operational | knowledge projection | 7.484 | 15.641 | none |
+| `dumrel` | operational | knowledge projection | 7.766 | 16.281 | none |
 | `dumrel/types` | type-only | Structural declarations, with empty JavaScript. | — | — | — |
 | `dumrel/schema` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
 | `dumrel/package.json` | metadata | Package metadata. | — | — | — |
-| `dumdict` | operational | parse record | 24.594 | 24.672 | none |
+| `dumdict` | operational | parse record | 24.875 | 25.094 | none |
 | `dumdict/schema` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
-| `dumdict/pending` | operational | pending identity | 5.188 | 5.594 | none |
-| `dumdict/planning` | operational | plan reading entry | 25.281 | 29.719 | none |
+| `dumdict/pending` | operational | pending identity | 5.125 | 5.750 | none |
+| `dumdict/planning` | operational | plan reading entry | 24.438 | 28.391 | none |
+| `dumdict/inflection` | operational | project lemma tables | 7.266 | 8.875 | none |
 | `dumdict/package.json` | metadata | Package metadata. | — | — | — |
 | `dumdict/testing` | development-support | Storage conformance suite for adapter tests; imports bun:test and is never loaded at application runtime. | — | — | — |
 | `dumling/validation-artifact` | development-support | Unlinked compiled validation that sibling generators link against; never loaded at application runtime. | — | — | — |
 | `dumling/codegen` | development-support | Codegen-only route manifest and operation table that sibling generators read; the import policy keeps runtime code from loading it. | — | — | — |
-| `dumling/compiled-validation` | operational | Validate through the shared rule protocol | 2.359 | 4.859 | none |
+| `dumling/compiled-validation` | operational | Validate through the shared rule protocol | 2.625 | 4.703 | none |
 | `dumrel/validation-artifact` | development-support | Unlinked compiled validation that sibling generators link against; never loaded at application runtime. | — | — | — |
-| `dumrel/compiled-validation` | operational | Validate through the shared rule protocol | 3.328 | 6.469 | none |
-| `common-utils` | operational | Write canonical JSON | 0.875 | 1.453 | none |
-| `common-utils/validation` | operational | Validate through the shared rule protocol | 0.313 | 0.891 | none |
+| `dumrel/compiled-validation` | operational | Validate through the shared rule protocol | 3.422 | 6.438 | none |
+| `common-utils` | operational | Write canonical JSON | 1.047 | 1.609 | none |
+| `common-utils/validation` | operational | Validate through the shared rule protocol | 0.656 | 1.266 | none |
 | `common-utils/validation-compiler` | schema-authoring-exempt | Build-time Zod compilation and rule linking. | — | — | — |
 | `common-utils/package.json` | metadata | Package metadata. | — | — | — |
 

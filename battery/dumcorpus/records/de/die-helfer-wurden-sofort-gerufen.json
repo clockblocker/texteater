@@ -55,15 +55,6 @@
 			"reading": {
 				"emojiDescription": "🗣🏃",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
-					"preterite": ["rief"],
-					"presentSingular": {
-						"first": ["rufe"],
-						"second": ["rufst"],
-						"third": ["ruft"]
-					},
-					"pastParticiple": ["gerufen"],
-					"subjunctivePast": ["riefe"],
 					"valency": [
 						{
 							"status": "Required",
@@ -102,19 +93,30 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["rief"],
+					"present1": ["rufe"],
+					"present2": ["rufst"],
+					"present3": ["ruft"],
+					"pastParticiple": ["gerufen"],
+					"subjunctivePast": ["riefe"]
+				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},

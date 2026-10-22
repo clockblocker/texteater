@@ -41,6 +41,10 @@
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0034", "ADR-0035", "ADR-0038", "ADR-0042"],
 		"rules": [
+			{
+				"rule": "de/meaning-conditioned-paradigm-doublets",
+				"hash": "0881d666fc1f106a"
+			},
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
 			{
@@ -114,15 +118,6 @@
 			"reading": {
 				"emojiDescription": "⚖",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
-					"preterite": ["wog"],
-					"presentSingular": {
-						"first": ["wiege"],
-						"second": ["wiegst"],
-						"third": ["wiegt"]
-					},
-					"pastParticiple": ["gewogen"],
-					"subjunctivePast": ["wöge"],
 					"valency": [
 						{
 							"status": "Required",
@@ -157,12 +152,15 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["wog"],
+					"present1": ["wiege"],
+					"present2": ["wiegst"],
+					"present3": ["wiegt"],
+					"pastParticiple": ["gewogen"],
+					"subjunctivePast": ["wöge"]
+				},
 				"coverage": {
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
@@ -170,6 +168,14 @@
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},
@@ -219,11 +225,9 @@
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": {
 				"emojiDescription": "⚖",
-				"knowledge": {
-					"plural": ["Lote"]
-				},
+				"knowledge": {},
+				"paradigm": { "plural": ["Lote"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
@@ -232,7 +236,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {
@@ -277,15 +282,6 @@
 			"reading": {
 				"emojiDescription": "🟰",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
-					"preterite": ["war"],
-					"presentSingular": {
-						"first": ["bin"],
-						"second": ["bist"],
-						"third": ["ist"]
-					},
-					"pastParticiple": ["gewesen"],
-					"subjunctivePast": ["wäre"],
 					"valency": [
 						{
 							"status": "Required",
@@ -329,12 +325,15 @@
 						}
 					]
 				},
+				"paradigm": {
+					"preterite": ["war"],
+					"present1": ["bin"],
+					"present2": ["bist"],
+					"present3": ["ist"],
+					"pastParticiple": ["gewesen"],
+					"subjunctivePast": ["wäre"]
+				},
 				"coverage": {
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
@@ -342,6 +341,14 @@
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},

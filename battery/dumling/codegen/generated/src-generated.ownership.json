@@ -1,6 +1,7 @@
 {
   "version": 1,
   "files": [
+    "inflectional-features.ts",
     "linked-validation.ts",
     "schemas/de/foreign/foreign.ts",
     "schemas/de/lexeme/adjective.ts",

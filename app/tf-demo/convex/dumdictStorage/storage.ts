@@ -194,10 +194,12 @@ async function loadReading(
 	return {
 		...canonical,
 		entry: {
-			...withoutKeys(record, ["knowledge"]),
+			// A row never holds occurrences, which tf-demo's host graph keeps
+			// (tf-demo ADR 0001); a version 1 row's empty list is dropped.
+			...withoutKeys(record, ["knowledge", "attestations"]),
 			...(knowledge === undefined ? {} : { knowledge }),
 			reading: readingValue(canonical, lemma),
-			attestations: [],
+			attestationLinks: [],
 		},
 		entryId: entry._id,
 	};

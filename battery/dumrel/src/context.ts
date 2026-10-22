@@ -2,9 +2,6 @@ import { ParsingError } from "common-utils/validation";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { structuralKeys } from "./fingerprint.js";
-import type { ConjugationClasses, NounPlural } from "./generated/types.js";
-import { verbFormsIssue, verbFormsOfChange } from "./german-verb-forms.js";
-import { knowledgePolicyApplies } from "./knowledge-policies.js";
 import type {
 	KnowledgeChange,
 	ParticipleSource,
@@ -343,41 +340,6 @@ function parseParticipleSource<R extends Dumling.Reading>(
 	return { ...value, verb };
 }
 
-/**
- * A plural belongs to a Reading whose route the Knowledge Policy gives one,
- * a German NOUN, and each plural form appears once (#657).
- */
-function parseNounPlural<R extends Dumling.Reading>(
-	source: R,
-	value: NounPlural,
-	path: Path,
-): NounPlural | ParsingError {
-	if (!knowledgePolicyApplies(source.lemma, "plural"))
-		return issue(path, "Only a German NOUN Reading has a plural");
-	if (typeof value !== "string" && new Set(value).size !== value.length)
-		return issue(path, "A plural lists each form once");
-	return value;
-}
-
-/**
- * Conjugation classes belong to a Reading whose route the Knowledge Policy
- * gives them, a German VERB, and each class appears once (ADR 0038).
- */
-function parseConjugationClasses<R extends Dumling.Reading>(
-	source: R,
-	value: ConjugationClasses,
-	path: Path,
-): ConjugationClasses | ParsingError {
-	if (!knowledgePolicyApplies(source.lemma, "conjugationClass"))
-		return issue(
-			path,
-			"Only a German VERB Reading has a conjugation class",
-		);
-	if (new Set(value).size !== value.length)
-		return issue(path, "A conjugation lists each class once");
-	return value;
-}
-
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function contextualizeKnowledge<R extends Dumling.Reading>(
 	source: R,
@@ -399,26 +361,6 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 		]);
 		if (failure) return failure;
 	}
-	if (result.plural) {
-		const plural = parseNounPlural(source, result.plural, [
-			"knowledge",
-			"plural",
-		]);
-		if (plural instanceof ParsingError) return plural;
-	}
-	if (result.conjugationClass) {
-		const classes = parseConjugationClasses(
-			source,
-			result.conjugationClass,
-			["knowledge", "conjugationClass"],
-		);
-		if (classes instanceof ParsingError) return classes;
-	}
-	const formsFailure = verbFormsIssue(source, result, (aspect) => [
-		"knowledge",
-		aspect,
-	]);
-	if (formsFailure) return formsFailure;
 	if (result.participleSource) {
 		const participle = parseParticipleSource(
 			source,
@@ -477,28 +419,6 @@ export function contextualizeChange<R extends Dumling.Reading>(
 	}
 	if (change.aspect === "locutionType" && change.kind !== "Retract") {
 		const failure = locutionTypeIssue(source, change.value, [
-			"change",
-			"value",
-		]);
-		if (failure) return failure;
-	}
-	if (change.aspect === "plural" && change.kind !== "Retract") {
-		const plural = parseNounPlural(source, change.value, [
-			"change",
-			"value",
-		]);
-		if (plural instanceof ParsingError) return plural;
-	}
-	if (change.aspect === "conjugationClass" && change.kind !== "Retract") {
-		const classes = parseConjugationClasses(source, change.value, [
-			"change",
-			"value",
-		]);
-		if (classes instanceof ParsingError) return classes;
-	}
-	const forms = verbFormsOfChange(change);
-	if (forms) {
-		const failure = verbFormsIssue(source, forms, () => [
 			"change",
 			"value",
 		]);

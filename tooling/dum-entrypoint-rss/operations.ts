@@ -164,12 +164,18 @@ export async function runRepresentativeOperation(
 				"createDumdictPlanner",
 			).createDumdictPlanner("de");
 			const planned = planner.ensureReadingEntry(
-				{ intent: "ensureReadingEntry", revision: "rss-0" },
+				{
+					intent: "ensureReadingEntry",
+					revision: "rss-0",
+					pendingRelationsMatchingProposedLemma: [],
+					relationLemmas: [],
+					relationReadings: [],
+				},
 				{
 					entry: {
 						reading,
 						attestedTranslations: [],
-						attestations: [],
+						attestationLinks: [],
 						notes: "",
 					},
 				},
@@ -178,6 +184,48 @@ export async function runRepresentativeOperation(
 			assert.deepEqual(
 				planned.plan.changes.map((change) => change.type),
 				["createLemma", "createReading"],
+			);
+			break;
+		}
+		case "dumdict.project-lemma-tables": {
+			const view = published<typeof import("dumdict/inflection")>(
+				module,
+				"projectLemmaTables",
+			).projectLemmaTables(
+				{
+					language: "de",
+					version: "rss",
+					schemaFor: () => ({
+						id: "rss/NOUN",
+						version: 1,
+						keyFeatures: ["case", "number"],
+						panels: [
+							{
+								id: "declension",
+								core: true,
+								fixed: {},
+								rows: [{ bundle: { case: "Nom" } }],
+								columns: [{ bundle: { number: "Plur" } }],
+							},
+						],
+					}),
+					derive: () => ({}),
+					formOfSurface: (surface) => surface.normalizedSurface,
+					codec: { key: (form) => form },
+					display: (form) => [{ text: form, role: "Form" }],
+					labels: { panel: String, axis: String, bundle: String },
+				},
+				{
+					lemmaRecord: { lemma },
+					readingEntries: [{ reading, attestationLinks: [] }],
+					ownedSurfaceEntries: [],
+				},
+			);
+			assert.deepEqual(
+				view.groups.map(
+					(group) => group.panels[0]?.cells[0]?.[0]?.status,
+				),
+				["Unknown"],
 			);
 			break;
 		}

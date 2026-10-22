@@ -12,8 +12,9 @@ language-neutral, and each language's classifications live in the
 
 **Lemma**:
 A grammatical entity whose identity is its language, Family, Kind, Core
-Features and Canonical Form. Its Readings carry meaning and its Surfaces carry
-inflection. See [ADR 0002].
+Features and Canonical Form. Its Readings carry meaning, its Surfaces carry
+inflection, and its Lemma Paradigm (Dumrel) names the alternatives its
+Readings license. See [ADR 0002] and [ADR 0048].
 _Avoid_: Linguistic Entry, Lemma Form, dictionary entry
 
 **Lexeme**:
@@ -94,7 +95,7 @@ _Avoid_: Gradability
 
 **Paradigm Cell**:
 One combination of case, number and gender in a closed, authored paradigm.
-See [ADR 0032] and [ADR 0044].
+It is identity, unlike a Table Cell. See [ADR 0032] and [ADR 0044].
 _Avoid_: Paradigm form, inflected closed-class Surface
 
 **Syncretism**:
@@ -103,8 +104,12 @@ route that only the referent tells apart. See [ADR 0046].
 _Avoid_: clash, clashed members, merged cell, gender-null cell
 
 **Spelling Crossroad**:
-A projection with no identity that gathers every Reading whose Lemma's
-Canonical Form has one spelling in one language.
+A projection with no identity that gathers every Lemma whose Canonical Form,
+and every met Surface whose form, has one `canonicalFormKey` in one language.
+That key folds letter case by the language's own rules (`foldCase`), so
+variant spellings such as Kuss and Kuß have different keys and stay apart. A
+Crossroad holds no data and has no stored record; hosts own whatever they show
+for it.
 _Avoid_: Headword, Vocable, Page, Homograph Set
 
 **Surface**:
@@ -113,7 +118,7 @@ analysis. See [ADR 0040] for nouns and [ADR 0022] for verbs.
 
 **Variant**:
 A spelling of a Surface's Lemma that is neither its standard spelling nor a
-mistake. See [ADR 0041].
+mistake. It is not a Paradigm Variant (Dumrel). See [ADR 0041].
 _Avoid_: licensed variant, for Variant in general; Variant type, for its tags
 
 **Attestation**:
@@ -166,6 +171,20 @@ One position in a Valency Frame, Required or Optional, holding one complement
 or alternatives that can replace each other. See [ADR 0034].
 _Avoid_: argument, valent, complement slot, Ergänzung
 
+### Inflection tables
+
+**Table Schema**:
+A route's label-free layout of its inflection tables: panels of rows and
+columns over Feature Pool bundles, each panel core or not. A language's
+Inflection Pack (Dumcorpus) supplies it. See [ADR 0049].
+_Avoid_: paradigm schema, table template, labelled table
+
+**Table Cell**:
+One cell of a Table Schema, named by its Cell Key: its feature bundle reduced
+to the schema's key features. It is never a Lemma, a Surface or a Paradigm
+Cell. See [ADR 0049].
+_Avoid_: Paradigm Cell, slot
+
 [ADR 0002]: ../../docs/adr/0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md
 [ADR 0003]: ../../docs/adr/0003-attestation-supersedes-selection-and-owns-realization-coverage.md
 [ADR 0022]: ../../docs/adr/0022-describe-whole-verbal-surfaces-compositionally.md
@@ -181,3 +200,5 @@ _Avoid_: argument, valent, complement slot, Ergänzung
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
+[ADR 0048]: ../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md
+[ADR 0049]: ../../docs/adr/0049-tabulate-a-lemmas-forms-as-projections.md

@@ -1,4 +1,14 @@
 import { v } from "convex/values";
+import { reevaluatedPendingEntryIds, unitShadowOf } from "dumdict/pending";
+import type {
+	OccurrenceSlice,
+	ReevaluateShadowsRequest,
+	RekeySurfacesSlice,
+	RekeySurfacesSliceRequest,
+	StoredSurfaceNote,
+} from "dumdict/planning";
+import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
 import { foldedCanonicalForm } from "../../server/linguisticIdentity";
 
 import { internalQuery } from "../_generated/server";
@@ -18,6 +28,7 @@ import type { ReadingEntryContextArgs } from "./contextRequest";
 import {
 	assertPlanBudget,
 	DICTIONARY_REVISION,
+	findCanonicalLemma,
 	findLemmaByKey,
 	findReadingByKey,
 	findSurface,
@@ -97,6 +108,66 @@ function pendingRelationSeeds(records: readonly AnyRecord[]) {
 	};
 }
 
+/**
+ * Every stored Pending Semantic Relation, resolved or not, whose Shadow has
+ * this Shadow's language, Family, Kind and folded Canonical Form: the
+ * records a Lemma with that description matches (system ADR 0011).
+ */
+async function loadPendingMatchingShadow(
+	ctx: ServerCtx,
+	shadow: {
+		readonly language: Dumling.Language;
+		readonly family: string;
+		readonly kind: string;
+		readonly canonicalForm: string;
+	},
+) {
+	const rows = await ctx.db
+		.query("pendingSemanticRelations")
+		.withIndex("by_target_folded_canonical_form", (q) =>
+			q.eq("targetFoldedCanonicalForm", foldedCanonicalForm(shadow)),
+		)
+		.take(MAX_PENDING_RELATIONS_PER_SLICE + 1);
+	if (rows.length > MAX_PENDING_RELATIONS_PER_SLICE)
+		throw new Error(
+			`A pending-relation slice supports at most ${MAX_PENDING_RELATIONS_PER_SLICE} matching records.`,
+		);
+	return rows.flatMap((row) => {
+		const parsed = parsePendingShadowDescriptor(row.record);
+		if (!parsed.ok) {
+			warnMalformedStoredRow(
+				"pendingSemanticRelations",
+				row._id,
+				parsed.error,
+			);
+			return [];
+		}
+		const descriptor = parsed.value;
+		return descriptor.language === shadow.language &&
+			foldedCanonicalForm(descriptor) === foldedCanonicalForm(shadow) &&
+			descriptor.family === shadow.family &&
+			descriptor.kind === shadow.kind
+			? [requireRecord(row.record, "Pending Semantic Relation record")]
+			: [];
+	});
+}
+
+/**
+ * The relation inventory re-evaluating these stored records reads: their
+ * source Readings with what those claim, and every dictionary Lemma their
+ * Shadows' Canonical Forms could match.
+ */
+function loadShadowNeighbourhood(
+	ctx: ServerCtx,
+	records: readonly AnyRecord[],
+	sourceLemmaKeys: readonly string[] = [],
+) {
+	return loadRelationNeighbourhood(ctx, {
+		...pendingRelationSeeds(records),
+		sourceLemmaKeys,
+	});
+}
+
 async function loadExactPendingRecords(
 	ctx: ServerCtx,
 	rawLocatorKeys: readonly string[],
@@ -157,24 +228,30 @@ export async function loadReadingEntryContextSlice(
 ) {
 	switch (args.intent) {
 		case "ensureReadingEntry": {
-			const [lemma, reading] = await Promise.all([
-				findLemmaByKey(ctx, args.lemmaKey),
-				findReadingByKey(ctx, args.readingKey),
-			]);
+			const [lemma, reading, pendingRelationsMatchingProposedLemma] =
+				await Promise.all([
+					findLemmaByKey(ctx, args.lemmaKey),
+					findReadingByKey(ctx, args.readingKey),
+					loadPendingMatchingShadow(ctx, args.proposedLemma),
+				]);
+			// Creating the Lemma re-evaluates the Shadows it matches.
+			const inventory = await loadShadowNeighbourhood(
+				ctx,
+				pendingRelationsMatchingProposedLemma,
+				[args.lemmaKey],
+			);
 			return {
 				intent: args.intent,
 				revision: DICTIONARY_REVISION,
-				...(lemma
-					? {
-							existingLemma: {
-								lemma: lemmaValue(lemma.canonical),
-							},
-						}
-					: {}),
+				...existingLemmaOf(lemma),
 				...(reading ? { existingReading: reading.entry } : {}),
+				pendingRelationsMatchingProposedLemma,
+				relationLemmas: inventory.lemmas,
+				relationReadings: inventory.readings,
 			};
 		}
-		case "ensureOwnedSurface": {
+		case "ensureOwnedSurface":
+		case "recordOccurrence": {
 			const [lemma, reading, surface] = await Promise.all([
 				findLemmaByKey(ctx, args.lemmaKey),
 				findReadingByKey(ctx, args.readingKey),
@@ -183,15 +260,13 @@ export async function loadReadingEntryContextSlice(
 			return {
 				intent: args.intent,
 				revision: DICTIONARY_REVISION,
-				...(lemma
-					? {
-							existingLemma: {
-								lemma: lemmaValue(lemma.canonical),
-							},
-						}
-					: {}),
+				...existingLemmaOf(lemma),
 				...(reading ? { existingReading: reading.entry } : {}),
 				existingOwnedSurfaces: surface ? [surface.entry] : [],
+				// tf-demo keeps occurrences in its host graph (tf-demo ADR 0001).
+				...(args.intent === "recordOccurrence"
+					? { attestationLinksWithRefs: [] }
+					: {}),
 			};
 		}
 		case "applyGeneratedKnowledge": {
@@ -199,20 +274,25 @@ export async function loadReadingEntryContextSlice(
 				generatedKnowledgeContextChanges(args),
 				"Generated-Knowledge context",
 			);
-			const [reading, pending, inventory] = await Promise.all([
-				findReadingByKey(ctx, args.readingKey),
-				loadExactPendingRecords(ctx, args.pendingLocatorKeys),
-				loadRelationNeighbourhood(ctx, {
-					sourceReadingKeys: [args.readingKey],
-					targetReadingKeys: args.relationTargetReadingKeys,
-					targetLemmaKeys: args.relationTargetLemmaKeys,
-					targetCanonicalForms: args.pendingTargetCanonicalForms,
-				}),
-			]);
+			const [lemma, lemmaReadings, reading, pending, inventory] =
+				await Promise.all([
+					findLemmaByKey(ctx, args.lemmaKey),
+					storedReadingsOf(ctx, args.lemmaKey),
+					findReadingByKey(ctx, args.readingKey),
+					loadExactPendingRecords(ctx, args.pendingLocatorKeys),
+					loadRelationNeighbourhood(ctx, {
+						sourceReadingKeys: [args.readingKey],
+						targetReadingKeys: args.relationTargetReadingKeys,
+						targetLemmaKeys: args.relationTargetLemmaKeys,
+						targetCanonicalForms: args.pendingTargetCanonicalForms,
+					}),
+				]);
 			return {
 				intent: args.intent,
 				revision: DICTIONARY_REVISION,
+				...existingLemmaOf(lemma),
 				...(reading ? { existingReading: reading.entry } : {}),
+				lemmaReadings,
 				exactPendingRelations: pending,
 				relationLemmas: inventory.lemmas,
 				relationReadings: inventory.readings,
@@ -236,13 +316,15 @@ export async function loadReadingEntryContextSlice(
 			);
 			const [
 				lemma,
+				lemmaReadings,
 				reading,
 				surfaces,
 				explicitTargets,
 				pending,
-				matchingPending,
+				pendingRelationsMatchingProposedLemma,
 			] = await Promise.all([
 				findLemmaByKey(ctx, args.lemmaKey),
+				storedReadingsOf(ctx, args.lemmaKey),
 				findReadingByKey(ctx, args.readingKey),
 				Promise.all(surfaceKeys.map((key) => findSurface(ctx, key))),
 				Promise.all(
@@ -251,46 +333,8 @@ export async function loadReadingEntryContextSlice(
 					),
 				),
 				loadExactPendingRecords(ctx, args.pendingLocatorKeys),
-				ctx.db
-					.query("pendingSemanticRelations")
-					.withIndex("by_target_folded_canonical_form", (q) =>
-						q.eq(
-							"targetFoldedCanonicalForm",
-							foldedCanonicalForm(args.proposedLemma),
-						),
-					)
-					.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
+				loadPendingMatchingShadow(ctx, args.proposedLemma),
 			]);
-			if (matchingPending.length > MAX_PENDING_RELATIONS_PER_SLICE)
-				throw new Error(
-					`A pending-relation slice supports at most ${MAX_PENDING_RELATIONS_PER_SLICE} matching records.`,
-				);
-			const pendingRelationsMatchingProposedLemma =
-				matchingPending.flatMap((record) => {
-					const parsed = parsePendingShadowDescriptor(record.record);
-					if (!parsed.ok) {
-						warnMalformedStoredRow(
-							"pendingSemanticRelations",
-							record._id,
-							parsed.error,
-						);
-						return [];
-					}
-					const descriptor = parsed.value;
-					return descriptor.language ===
-						args.proposedLemma.language &&
-						foldedCanonicalForm(descriptor) ===
-							foldedCanonicalForm(args.proposedLemma) &&
-						descriptor.family === args.proposedLemma.family &&
-						descriptor.kind === args.proposedLemma.kind
-						? [
-								requireRecord(
-									record.record,
-									"Pending Semantic Relation record",
-								),
-							]
-						: [];
-				});
 			// A click names no relations, so it only reads a neighbourhood
 			// when pending relations resolve to its new Lemma.
 			const matching = pendingRelationSeeds(
@@ -308,13 +352,7 @@ export async function loadReadingEntryContextSlice(
 			return {
 				intent: args.intent,
 				revision: DICTIONARY_REVISION,
-				...(lemma
-					? {
-							existingLemma: {
-								lemma: lemmaValue(lemma.canonical),
-							},
-						}
-					: {}),
+				...existingLemmaOf(lemma),
 				...(reading ? { existingReading: reading.entry } : {}),
 				existingOwnedSurfaces: surfaces.flatMap((surface) =>
 					surface ? [surface.entry] : [],
@@ -327,9 +365,19 @@ export async function loadReadingEntryContextSlice(
 				pendingRelationsMatchingProposedLemma,
 				relationLemmas: inventory.lemmas,
 				relationReadings: inventory.readings,
+				lemmaReadings,
+				// tf-demo keeps occurrences in its host graph (tf-demo ADR 0001).
+				attestationLinksWithRefs: [],
 			};
 		}
 	}
+}
+
+/** A stored Lemma as its context's `existingLemma`; tf-demo stores no Paradigm. */
+function existingLemmaOf(lemma: Awaited<ReturnType<typeof findLemmaByKey>>) {
+	return lemma
+		? { existingLemma: { lemma: lemmaValue(lemma.canonical) } }
+		: {};
 }
 
 /** Loads the exact pending relations one cleanup resolves and their neighbourhood. */
@@ -366,5 +414,149 @@ export async function loadCleanupRelationsSlice(
 		pendingRelations,
 		relationLemmas: inventory.lemmas,
 		relationReadings: inventory.readings,
+	};
+}
+
+/**
+ * Loads the stored records a `reevaluateShadows` request names, resolved or
+ * not, and the neighbourhood their re-evaluation reads.
+ */
+export async function loadReevaluateShadowsSlice(
+	ctx: ServerCtx,
+	request: Omit<ReevaluateShadowsRequest<"de">, "baseRevision">,
+) {
+	const shadows = [
+		...(request.shadows ?? []),
+		...(request.removedLemmas ?? []).map((lemma) => unitShadowOf(lemma)),
+	];
+	const ids = new Set<string>(reevaluatedPendingEntryIds(request));
+	const loaded = await Promise.all(
+		shadows.map((shadow) => loadPendingMatchingShadow(ctx, shadow)),
+	);
+	const byLocator = new Map<string, AnyRecord>();
+	for (const record of loaded.flat())
+		if (
+			ids.has(
+				requireString(
+					requireRecord(record.locator, "Pending locator")
+						.targetPendingId,
+					"targetPendingId",
+				),
+			)
+		)
+			byLocator.set(pendingLocatorKey(record), record);
+	const pendingRelations = [...byLocator.values()];
+	const removed = request.removedLemmas ?? [];
+	const seeds = pendingRelationSeeds(pendingRelations);
+	const inventory = await loadRelationNeighbourhood(ctx, {
+		sourceReadingKeys: [
+			...seeds.sourceReadingKeys,
+			...(await readingsClaimingRemoved(ctx, removed)),
+		],
+		// The Lemmas a removed Lemma's Shadow may now resolve to.
+		targetCanonicalForms: [
+			...seeds.targetCanonicalForms,
+			...removed.map(({ canonicalForm }) => canonicalForm),
+		],
+	});
+	return {
+		revision: DICTIONARY_REVISION,
+		pendingRelations,
+		relationLemmas: inventory.lemmas,
+		relationReadings: inventory.readings,
+	};
+}
+
+/**
+ * The keys of the Readings that claim a removed Lemma or one of its
+ * Readings. The re-evaluation moves those claims in its plan (system ADR
+ * 0011), so it loads them with what they claim.
+ */
+async function readingsClaimingRemoved(
+	ctx: ServerCtx,
+	lemmas: readonly Dumling.Lemma<"de">[],
+): Promise<string[]> {
+	const keys = new Set<string>();
+	for (const lemma of lemmas) {
+		// The planner refuses a malformed removed Lemma as an invalid request.
+		if (!parseUnit(lemma).success) continue;
+		const canonical = await findCanonicalLemma(ctx, lemma);
+		if (!canonical) continue;
+		const readings = await ctx.db
+			.query("readings")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", canonical._id))
+			.take(MAX_READING_CANDIDATES + 1);
+		const edges = (
+			await Promise.all([
+				ctx.db
+					.query("semanticRelationEdges")
+					.withIndex("by_target_lemma_id", (q) =>
+						q.eq("targetLemmaId", canonical._id),
+					)
+					.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
+				...readings.map((reading) =>
+					ctx.db
+						.query("semanticRelationEdges")
+						.withIndex("by_target_reading_id", (q) =>
+							q.eq("targetReadingId", reading._id),
+						)
+						.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
+				),
+			])
+		).flat();
+		if (
+			readings.length > MAX_READING_CANDIDATES ||
+			edges.length > MAX_PENDING_RELATIONS_PER_SLICE
+		)
+			throw new Error(
+				`A removed Lemma supports at most ${MAX_PENDING_RELATIONS_PER_SLICE} claims on it.`,
+			);
+		const sources = await Promise.all(
+			edges.map(({ sourceReadingId }) => ctx.db.get(sourceReadingId)),
+		);
+		for (const source of sources)
+			if (source && source.lemmaId !== canonical._id)
+				keys.add(source.readingKey);
+	}
+	return [...keys];
+}
+
+/**
+ * The slice `removeOccurrence` and `reconcileAttestationLinks` plan from.
+ * tf-demo keeps occurrences in its host graph (tf-demo ADR 0001), so no
+ * stored Lemma holds an Attestation Link with any ref.
+ */
+export function loadOccurrenceSlice(): OccurrenceSlice<"de"> {
+	return {
+		revision: DICTIONARY_REVISION,
+		lemmas: [],
+		claimingReadings: [],
+		pendingRelationsMatchingLemmas: [],
+	};
+}
+
+/**
+ * The slice `rekeySurfaces` plans from: each stored owned Surface with a
+ * requested id, without its Surface. No Reading Entry holds a link.
+ */
+export async function loadRekeySurfacesSlice(
+	ctx: ServerCtx,
+	request: RekeySurfacesSliceRequest<"de">,
+): Promise<RekeySurfacesSlice<"de">> {
+	const surfaces = await Promise.all(
+		uniqueBoundedKeys(request.surfaceIds, "Re-keyed Surface loading").map(
+			(key) => findSurface(ctx, key),
+		),
+	);
+	return {
+		revision: DICTIONARY_REVISION,
+		surfaces: surfaces.flatMap((stored) => {
+			if (!stored) return [];
+			const { surface: _surface, ...note } = stored.entry;
+			// The row's record is untyped; the planner's slice validation
+			// checks it as a stored Surface note.
+			return [note as unknown as StoredSurfaceNote<"de">];
+		}),
+		readings: [],
 	};
 }

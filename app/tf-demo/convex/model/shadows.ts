@@ -337,6 +337,16 @@ export function parsePendingShadowDescriptor(
 	return parseShadowDescriptor(recordValue.pending.target);
 }
 
+/**
+ * Whether a stored Pending Semantic Relation record resolves to a Lemma. A
+ * resolved record keeps its Shadow beside the direct claim it stands for
+ * (system ADR 0011), so it is no pending relation and no Shadow Note
+ * reference.
+ */
+export function isResolvedPendingRecord(recordValue: unknown): boolean {
+	return isRecord(recordValue) && recordValue.resolvedLemma !== undefined;
+}
+
 export function pendingShadowDescriptor(
 	recordValue: unknown,
 ): ShadowDescriptor {

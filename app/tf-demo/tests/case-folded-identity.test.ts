@@ -50,7 +50,7 @@ const morgenAdverb = {
 
 const reading = (lemma: Dumling.Lemma<"de">, emojiDescription: string) =>
 	({ unitKind: "Reading", lemma, emojiDescription }) as Dumling.Reading<"de">;
-const note = { attestedTranslations: [], attestations: [], notes: "" };
+const note = { attestedTranslations: [], attestationLinks: [], notes: "" };
 
 function inTransaction<Result>(
 	t: TestConvexDb,
@@ -155,7 +155,14 @@ describe("case-folded Lemma identity (system ADR 0002)", () => {
 		expect(
 			await addNote(t, reading(interjection("LOL"), "😂")),
 		).toMatchObject({ status: "committed" });
-		expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
+		// The relation keeps its Shadow, resolved to LOL (system ADR 0011).
+		expect(await rows(t, "pendingSemanticRelations")).toEqual([
+			expect.objectContaining({
+				record: expect.objectContaining({
+					resolvedLemma: interjection("LOL"),
+				}),
+			}),
+		]);
 		const [laughingLemma] = await rows(t, "lemmas").then((stored) =>
 			stored.filter(({ canonicalForm }) => canonicalForm === "LOL"),
 		);

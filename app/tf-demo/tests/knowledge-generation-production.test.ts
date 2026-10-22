@@ -1,9 +1,13 @@
 import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { internal } from "../convex/_generated/api";
+import { api, internal } from "../convex/_generated/api";
+import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
+import {
+	effectiveRelationPublicationPolicy,
+	generatedKnowledgeAllowedForPublication,
+} from "../convex/model/generatedKnowledgeContainment";
 import { generationRequestFor } from "../server/generatedKnowledgeRequest";
 import { missingKnowledgeRequest } from "../server/knowledgeCompletion";
-import type { KnowledgeInput } from "../server/knowledgeProduction";
 import { createTestConvex } from "./support/convex";
 import {
 	addToDictionary,
@@ -12,14 +16,16 @@ import {
 	generateWith,
 	insertAccumulatedKnowledge,
 	insertAttempt,
-	interceptPublish,
 	type KnowledgeChange,
 	logEvent,
-	type PublishArgs,
+	publish,
+	publishArgs,
 	rows,
 	seedDictionaryReading,
 	seedOccurrence,
-} from "./support/knowledgeGeneration";
+	seedSecondOccurrence,
+	stubProvider,
+} from "./support/knowledge-generation";
 
 beforeEach(() => {
 	// Scheduling a Knowledge attempt queues its action; nothing here runs it.
@@ -29,185 +35,6 @@ beforeEach(() => {
 afterEach(() => {
 	jest.useRealTimers();
 });
-
-test("a run that proposes an empty frame stores nothing and still completes the Reading", async () => {
-	const t = createTestConvex();
-	const occurrence = await seedDictionaryReading(t);
-	await insertAttempt(t, occurrence, "empty-frame", { state: "Scheduled" });
-	const requests: KnowledgeInput["request"][] = [];
-	await generateWith(t, "empty-frame", (input) => {
-		requests.push(input.request);
-		// No valency change: the proposed frame is empty.
-		return Effect.succeed({
-			failures: [],
-			changes: [
-				{
-					kind: "Contribute",
-					aspect: "definition",
-					value: "Ein Geldinstitut.",
-				},
-				{
-					kind: "Contribute",
-					aspect: "transcription",
-					value: "baŋk",
-				},
-				{
-					kind: "Contribute",
-					aspect: "translations",
-					language: "en",
-					value: ["bank"],
-				},
-				{
-					kind: "Contribute",
-					aspect: "translations",
-					language: "ru",
-					value: ["банк"],
-				},
-			],
-			pendingRelations: [],
-		});
-	});
-	expect(Object.keys(requests[0] ?? {})).toContain("valency");
-	const [accumulated] = await rows(t, "accumulatedKnowledge");
-	expect(accumulated?.knowledge).not.toHaveProperty("valency");
-	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
-});
-
-test("a deployment without TF_KNOWLEDGE_PRODUCTION fails a run with the safe message and calls no model (#887)", async () => {
-	const t = createTestConvex();
-	const occurrence = await seedDictionaryReading(t);
-	await insertAttempt(t, occurrence, "idle", { state: "Scheduled" });
-	const errors = spyOn(console, "error").mockImplementation(() => {});
-	const previousFetch = globalThis.fetch;
-	const previousFlag = process.env.TF_KNOWLEDGE_PRODUCTION;
-	delete process.env.TF_KNOWLEDGE_PRODUCTION;
-	const fetched: string[] = [];
-	globalThis.fetch = Object.assign(
-		async (url: string | URL | Request) => {
-			fetched.push(String(url));
-			throw new Error("No model may be called.");
-		},
-		{ preconnect: previousFetch.preconnect },
-	);
-	try {
-		await t.action(
-			internal.knowledgeGenerationActions.runKnowledgeGeneration,
-			{ attemptKey: "idle" },
-		);
-	} finally {
-		errors.mockRestore();
-		globalThis.fetch = previousFetch;
-		if (previousFlag !== undefined)
-			process.env.TF_KNOWLEDGE_PRODUCTION = previousFlag;
-	}
-	expect(fetched).toEqual([]);
-	expect((await attempts(t))[0]).toMatchObject({
-		state: "Failed",
-		failureMessage: "Knowledge generation failed. Please retry.",
-	});
-	expect(await rows(t, "knowledgeChanges")).toEqual([]);
-});
-
-test("each contribution's base text is published in order, one call each", async () => {
-	const t = createTestConvex();
-	const occurrence = await seedDictionaryReading(t);
-	await insertAttempt(t, occurrence, "in-order", { state: "Scheduled" });
-	const incremental: PublishArgs["changes"][] = [];
-	const definition: KnowledgeChange = {
-		kind: "Contribute",
-		aspect: "definition",
-		value: "Ein Geldinstitut.",
-	};
-	const russian: KnowledgeChange = {
-		kind: "Contribute",
-		aspect: "translations",
-		language: "ru",
-		value: ["банк"],
-	};
-	const english: KnowledgeChange = {
-		kind: "Contribute",
-		aspect: "translations",
-		language: "en",
-		value: ["bank"],
-	};
-	await generateWith(
-		t,
-		"in-order",
-		(_input, { onContribution }) =>
-			// The port's contract: one contribution at a time, each awaited.
-			Effect.gen(function* () {
-				yield* onContribution([definition]);
-				yield* onContribution([russian]);
-				yield* onContribution([english]);
-				return {
-					failures: [],
-					changes: [definition, russian, english],
-					pendingRelations: [],
-				};
-			}),
-		interceptPublish(t, async (args, commit) => {
-			if (!args.final) incremental.push(args.changes);
-			return commit();
-		}),
-	);
-	expect(incremental).toEqual([[definition], [russian], [english]]);
-	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
-});
-
-/**
- * Stubs the model provider and restores it with the fixture API key. A
- * Valency Frame request gets `frame`; every other request gets text.
- */
-function stubProvider(
-	respond: (modelInput: ModelInput) => Promise<string>,
-	frame: readonly unknown[] = [],
-	plural: unknown = { plurality: "NoPlural", plurals: [] },
-) {
-	const previousFetch = globalThis.fetch;
-	const previousKey = process.env.OPENAI_API_KEY;
-	const requests: ModelInput[] = [];
-	process.env.OPENAI_API_KEY = "fixture";
-	globalThis.fetch = (async (_url, init) => {
-		const body = JSON.parse(String(init?.body));
-		const modelInput: ModelInput = JSON.parse(body.input[1].content);
-		requests.push(modelInput);
-		return Response.json({
-			status: "completed",
-			output: [
-				{
-					content: [
-						{
-							type: "output_text",
-							text: JSON.stringify({
-								value:
-									modelInput.aspect === "valency"
-										? { valency: frame }
-										: modelInput.aspect === "pluralPattern"
-											? plural
-											: {
-													text:
-														await respond(
-															modelInput,
-														),
-												},
-							}),
-						},
-					],
-				},
-			],
-		});
-	}) as typeof fetch;
-	return {
-		requests,
-		restore() {
-			globalThis.fetch = previousFetch;
-			if (previousKey === undefined) delete process.env.OPENAI_API_KEY;
-			else process.env.OPENAI_API_KEY = previousKey;
-		},
-	};
-}
-
-type ModelInput = { readonly aspect?: string; readonly language?: string };
 
 test("Full is a zero-call cache hit and generation keeps the complete German base mask", async () => {
 	const t = createTestConvex();
@@ -238,13 +65,13 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 	expect(await rows(t, "knowledgeChanges")).toEqual([]);
 
 	const request = generationRequestFor(BANK_READING, []);
-	// The Knowledge call that creates the Reading proposes its frame and names its plural.
+	// The Knowledge call that creates the Reading proposes its frame; its plural
+	// is the Lemma Paradigm's, which tf-demo doesn't request yet (#1232).
 	expect(request).toEqual({
 		transcription: null,
 		definition: null,
 		translations: { en: null, ru: null },
 		valency: null,
-		plural: null,
 	});
 	expect(
 		generationRequestFor(BANK_READING, [], {
@@ -295,8 +122,141 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 	).toEqual({
 		transcription: null,
 		translations: { en: null, ru: null },
-		plural: null,
 	});
+});
+
+test("production publication remains empty without a reviewed verdict", () => {
+	expect(effectiveRelationPublicationPolicy()).toMatchObject({
+		artifactPath: null,
+		qualifiedKinds: [],
+		invalidationReasons: ["missingReviewedVerdictArtifact"],
+	});
+	const publishable = generatedKnowledgeAllowedForPublication({
+		changes: [
+			{
+				kind: "Contribute",
+				aspect: "transcription",
+				value: "bank",
+			},
+			{
+				kind: "Contribute",
+				aspect: "semanticRelations",
+				relation: "synonym",
+				value: [],
+			},
+			{
+				kind: "Contribute",
+				aspect: "definition",
+				value: "Ein Geldinstitut.",
+			},
+		],
+		pendingRelations: [
+			{
+				relation: "synonym",
+				target: {
+					language: "de",
+					family: "Lexeme",
+					kind: "NOUN",
+					canonicalForm: "Geldinstitut",
+				},
+			},
+		],
+	});
+
+	expect(publishable).toEqual({
+		changes: [
+			{
+				kind: "Contribute",
+				aspect: "transcription",
+				value: "bank",
+			},
+			{
+				kind: "Contribute",
+				aspect: "definition",
+				value: "Ein Geldinstitut.",
+			},
+		],
+		pendingRelations: [],
+	});
+});
+
+test("the production application path keeps generated relations outside Dumdict", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	await insertAttempt(t, occurrence, "attempt-1");
+	const result = await publish(
+		t,
+		publishArgs({
+			attemptKey: "attempt-1",
+			changes: [
+				{
+					kind: "Contribute",
+					aspect: "definition",
+					value: "Ein Geldinstitut.",
+				},
+				{
+					kind: "Contribute",
+					aspect: "semanticRelations",
+					relation: "synonym",
+					value: [],
+				},
+			],
+			pendingRelations: [
+				{
+					relation: "synonym",
+					target: {
+						language: "de",
+						family: "Lexeme",
+						kind: "NOUN",
+						canonicalForm: "Geldinstitut",
+					},
+				},
+			],
+		}),
+	);
+
+	expect(result).toEqual({ status: "Committed" });
+	expect(await rows(t, "knowledgeChanges")).toEqual([
+		expect.objectContaining({
+			knowledgeChangeKey: "attempt-1:1:1:0",
+			change: {
+				kind: "Contribute",
+				aspect: "definition",
+				value: "Ein Geldinstitut.",
+			},
+		}),
+	]);
+	expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
+	expect(await rows(t, "semanticRelationEdges")).toEqual([]);
+	expect((await attempts(t))[0]).toMatchObject({
+		state: "Committed",
+		publicationSequence: 1,
+	});
+});
+
+test("Knowledge settings default enabled and persist independently per visitor", async () => {
+	const t = createTestConvex();
+	const defaults = defaultKnowledgeSettings();
+	expect(defaults.semanticRelations.nearAntonym).toBe(true);
+	expect(defaults.translations).toEqual({ en: true, ru: true });
+	expect(
+		await t.query(api.knowledgeSettings.get, { visitorId: "visitor-1" }),
+	).toEqual(defaults);
+	const hiddenDefinition = { ...defaults, definition: false };
+	expect(
+		await t.mutation(api.knowledgeSettings.update, {
+			visitorId: "visitor-1",
+			settings: hiddenDefinition,
+		}),
+	).toEqual(hiddenDefinition);
+	expect(
+		await t.query(api.knowledgeSettings.get, { visitorId: "visitor-1" }),
+	).toEqual(hiddenDefinition);
+	expect(
+		await t.query(api.knowledgeSettings.get, { visitorId: "visitor-2" }),
+	).toEqual(defaults);
+
+	expect(generationRequestFor(BANK_READING, []).definition).toBeNull();
 });
 
 test.each([false, true])(
@@ -402,3 +362,140 @@ test.each([false, true])(
 		}
 	},
 );
+
+test.each([false, true])(
+	"partial generation commits valid changes and retains its final trace (incremental=%s)",
+	async (incremental) => {
+		const t = createTestConvex();
+		const occurrence = await seedDictionaryReading(t);
+		await insertAttempt(t, occurrence, "partial");
+		const change = {
+			kind: "Contribute",
+			aspect: "definition",
+			value: "Ein Geldinstitut.",
+		};
+		const evidence = {
+			request: { definition: null, translations: { ru: null } },
+			failures: [
+				{
+					aspect: "translations",
+					leaf: "ru",
+					code: "ProviderFailure",
+					message: "offline",
+				},
+			],
+			operationTraces: [
+				JSON.stringify({
+					operation: "produceKnowledge",
+					outcome: "Partial",
+					calls: [],
+				}),
+			],
+		};
+		if (incremental) {
+			const intermediate = publishArgs({
+				attemptKey: "partial",
+				final: false,
+				changes: [change],
+				productionEvidence: {
+					...evidence,
+					failures: [],
+					operationTraces: [],
+				},
+			});
+			expect(await publish(t, intermediate)).toEqual({
+				status: "Committed",
+			});
+			expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
+				knowledge: { definition: "Ein Geldinstitut." },
+				status: "Partial",
+			});
+			expect((await attempts(t))[0]).toMatchObject({
+				state: "Running",
+				publicationSequence: 1,
+			});
+			expect(await rows(t, "knowledgeProductionRuns")).toEqual([]);
+			// A repeated contribution is deduplicated by content, not by sequence.
+			expect(await publish(t, intermediate)).toEqual({
+				status: "Committed",
+			});
+			expect(await rows(t, "knowledgeChanges")).toHaveLength(1);
+			expect(
+				await publish(t, {
+					...intermediate,
+					relationPublication: {
+						...intermediate.relationPublication,
+						runNumber: 999,
+					},
+				}),
+			).toEqual({ status: "Ignored" });
+			expect(await rows(t, "knowledgeChanges")).toHaveLength(1);
+		}
+		const result = await publish(
+			t,
+			publishArgs({
+				attemptKey: "partial",
+				changes: [change],
+				productionEvidence: evidence,
+			}),
+		);
+		expect(result.status).toBe("Committed");
+		expect(await rows(t, "knowledgeChanges")).toHaveLength(1);
+		expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
+			status: "Partial",
+			knowledge: { definition: "Ein Geldinstitut." },
+			coveredTranslationLanguages: [],
+		});
+		expect((await attempts(t))[0]).toMatchObject({
+			state: "Failed",
+			failureCode: "partialKnowledge",
+		});
+		expect((await rows(t, "knowledgeProductionRuns"))[0]).toMatchObject({
+			outcome: "Partial",
+			evidence,
+		});
+	},
+);
+
+test("a run's origin is New for the Reading's first occurrence and TopUp for a later one (#677, #883 point 5)", async () => {
+	const t = createTestConvex();
+	const first = await seedDictionaryReading(t);
+	const second = await seedSecondOccurrence(t, first);
+	await insertAttempt(t, first, "first", { state: "Scheduled" });
+	expect(
+		await t.mutation(internal.knowledgeGeneration.begin, {
+			attemptKey: "first",
+		}),
+	).toEqual(expect.objectContaining({ kind: "Generate", origin: "New" }));
+	await insertAttempt(t, second, "second", { state: "Scheduled" });
+	expect(
+		await t.mutation(internal.knowledgeGeneration.begin, {
+			attemptKey: "second",
+		}),
+	).toEqual(expect.objectContaining({ kind: "Generate", origin: "TopUp" }));
+});
+
+test("a run whose every failure is a Catalog Miss records a growth signal and fails as catalogMiss (#883 point 8)", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	await insertAttempt(t, occurrence, "miss", { state: "Scheduled" });
+	await generateWith(t, "miss", () =>
+		Effect.succeed({
+			changes: [],
+			pendingRelations: [],
+			failures: [
+				{
+					aspect: "definition",
+					code: "CatalogMiss",
+					message:
+						"The authored NOUN Bank has no reviewed definition",
+				},
+			],
+		}),
+	);
+	expect(await rows(t, "catalogGrowthSignals")).toHaveLength(1);
+	expect((await attempts(t))[0]).toMatchObject({
+		state: "Failed",
+		failureCode: "catalogMiss",
+	});
+});

@@ -5,6 +5,7 @@ import type { EnsureReadingEntryRequest } from "../../public";
 import type { EnsureReadingEntryContext } from "../../storage";
 import { readingLemma } from "../identity";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
+import { planShadowReevaluation } from "./shadow-record-changes";
 
 function sameValue(left: unknown, right: unknown): boolean {
 	if (Object.is(left, right)) return true;
@@ -73,12 +74,34 @@ export function planEnsureReadingEntry<L extends Dumling.Language>(
 			{ kind: "readingMissing", reading },
 		],
 	});
+	if (slice.existingLemma)
+		return {
+			status: "planned",
+			baseRevision: slice.revision,
+			changes,
+			affected: { lemmas: [lemma], readings: [reading] },
+			summary: { message: "Ensured Reading Entry." },
+		};
 
+	// Creating the Lemma re-evaluates every stored Shadow it matches.
+	const reevaluation = planShadowReevaluation({
+		revision: slice.revision,
+		records: slice.pendingRelationsMatchingProposedLemma,
+		lemmas: [...slice.relationLemmas, { lemma }],
+		readings: slice.relationReadings,
+	});
+	if (reevaluation.status === "rejected") return reevaluation;
 	return {
 		status: "planned",
 		baseRevision: slice.revision,
-		changes,
-		affected: { lemmas: [lemma], readings: [reading] },
+		changes: [...changes, ...reevaluation.changes],
+		affected: {
+			lemmas: [lemma],
+			readings: [reading, ...reevaluation.readings],
+			...(reevaluation.pendingIds.length > 0
+				? { pendingIds: reevaluation.pendingIds }
+				: {}),
+		},
 		summary: { message: "Ensured Reading Entry." },
 	};
 }

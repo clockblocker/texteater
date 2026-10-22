@@ -13,20 +13,6 @@ const select = (
 const framed = { valency: null } as const;
 /** An adjectival participle names its source verb: `gekocht` from `kochen` (ADR 0036). */
 const participial = { ...framed, participleSource: null } as const;
-/** A noun records its plural forms: `Mutter` 👩 `Mütter`, 🔩 `Muttern` (#657). */
-const nominal = { ...framed, plural: null } as const;
-/**
- * A verb records how it conjugates and its principal parts: `wiegen` ⚖️
- * `wog`, Strong, `gewogen`, `wöge`, and `wiegte`, Weak, for rocking (ADR 0038).
- */
-const verbal = {
-	...framed,
-	conjugationClass: null,
-	preterite: null,
-	presentSingular: null,
-	pastParticiple: null,
-	subjunctivePast: null,
-} as const;
 
 /** A routine formula records what it does in conversation (ADR 0039). */
 const formula = { formulaRole: null } as const;
@@ -39,12 +25,6 @@ function request(
 		KnowledgeRequestMask,
 		| "valency"
 		| "participleSource"
-		| "plural"
-		| "conjugationClass"
-		| "preterite"
-		| "presentSingular"
-		| "pastParticiple"
-		| "subjunctivePast"
 		| "locutionType"
 		| "sayingType"
 		| "formulaRole"
@@ -98,7 +78,7 @@ const makeDeRelMap = () =>
 					"hypernym",
 					"holonym",
 				),
-				nominal,
+				framed,
 			),
 			NUM: request(select("synonym")),
 			PART: request(
@@ -125,7 +105,7 @@ const makeDeRelMap = () =>
 					"nearAntonym",
 					"hypernym",
 				),
-				verbal,
+				framed,
 			),
 		},
 		// A Locution route requests what the Lexeme route with its Kind does,

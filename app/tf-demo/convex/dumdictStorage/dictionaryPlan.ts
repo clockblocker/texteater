@@ -42,6 +42,13 @@ function mutablePendingRecord(
 			target: { ...input.pending.target },
 		},
 		locator: { ...input.locator },
+		...(input.resolvedLemma === undefined
+			? {}
+			: {
+					resolvedLemma: mutableReading({
+						lemma: input.resolvedLemma,
+					}).lemma,
+				}),
 	};
 }
 
@@ -55,7 +62,6 @@ function mutablePreconditions(
 				return { ...precondition, lemma: { ...precondition.lemma } };
 			case "readingExists":
 			case "readingMissing":
-			case "readingAttestationMissing":
 				return {
 					...precondition,
 					reading: mutableReading(precondition.reading),
@@ -66,10 +72,26 @@ function mutablePreconditions(
 					...precondition,
 					record: mutablePendingRecord(precondition.record),
 				};
+			case "attestationMissing":
+			case "attestationLinkExists":
+				throw hostGraphOwnsAttestations();
 			default:
 				return { ...precondition };
 		}
 	});
+}
+
+/** A Reading Entry's links, which tf-demo's host graph keeps instead. */
+function noLinks(links: readonly unknown[]): never[] {
+	if (links.length > 0) throw hostGraphOwnsAttestations();
+	return [];
+}
+
+/** tf-demo keeps occurrences in its host graph (tf-demo ADR 0001). */
+function hostGraphOwnsAttestations(): Error {
+	return new Error(
+		"tf-demo stores occurrence Attestations in its host graph, not in Dumdict entries.",
+	);
 }
 
 /**
@@ -101,7 +123,9 @@ export function dictionaryPlanResult(
 							attestedTranslations: [
 								...change.entry.attestedTranslations,
 							],
-							attestations: [...change.entry.attestations],
+							attestationLinks: noLinks(
+								change.entry.attestationLinks,
+							),
 						},
 						preconditions,
 					};
@@ -109,19 +133,19 @@ export function dictionaryPlanResult(
 					return {
 						...change,
 						reading: mutableReading(change.reading),
-						ops: change.ops.map((operation) =>
-							operation.kind === "addAttestation"
-								? { ...operation }
-								: {
-										...operation,
-										envelope: {
-											...operation.envelope,
-											reading: mutableReading(
-												operation.envelope.reading,
-											),
-										},
-									},
-						),
+						ops: change.ops.map((operation) => {
+							if (operation.kind !== "applyKnowledgeChange")
+								throw hostGraphOwnsAttestations();
+							return {
+								...operation,
+								envelope: {
+									...operation.envelope,
+									reading: mutableReading(
+										operation.envelope.reading,
+									),
+								},
+							};
+						}),
 						preconditions,
 					};
 				case "createOwnedSurface":
@@ -148,6 +172,13 @@ export function dictionaryPlanResult(
 						record: mutablePendingRecord(change.record),
 						preconditions,
 					};
+				case "setLemmaParadigm":
+				case "deleteReading":
+				case "deleteOwnedSurface":
+				case "deleteLemma":
+					throw new Error(
+						`tf-demo does not commit a Dumdict ${change.type} change (texteater#1232).`,
+					);
 				default: {
 					const unsupported: never = change;
 					throw new Error(

@@ -3,10 +3,7 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { isRecord } from "common-utils";
-import {
-	rejectUnreadRunOptions,
-	runEvaluationCli,
-} from "../../../cli/evaluate.js";
+import { runEvaluationCli } from "../../../cli/evaluate.js";
 import {
 	evaluateExperiment,
 	evaluationMetrics,
@@ -15,12 +12,7 @@ import {
 	productionPolicy,
 } from "../../../lab/evaluation/experiments.js";
 import { loadRequestRun } from "../../../lab/evaluation/request-diff.js";
-import type { SegmentInUnitsInput } from "../../../lab/evaluation/spec-corpus/segment-in-units.js";
-import {
-	type LabCase,
-	type LabSet,
-	storeSet,
-} from "../../../lab/segmentation/harness/corpus.js";
+import { storeSet } from "../../../lab/segmentation/harness/corpus.js";
 import { readLedger } from "../../../lab/segmentation/harness/ledger.js";
 import {
 	currentPin,
@@ -32,82 +24,22 @@ import {
 } from "../../../lab/segmentation/harness/round.js";
 import type { LabRun } from "../../../lab/segmentation/harness/run.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
-import { answerEach, zogSichAnGold } from "../segmentation/support.js";
+import {
+	goldJudge,
+	input,
+	labCase,
+	labWithSetIn,
+	set,
+} from "./experiments-support.js";
 import { segmentsOf } from "./spec-corpus/fixtures.js";
 
 const repository = resolve(import.meta.dir, "..", "..", "..", "..", "..");
 const directory = await mkdtemp(join(tmpdir(), "dumgen-experiments-"));
 afterAll(() => rm(directory, { recursive: true, force: true }));
 
-// Er0 _1 zog2 _3 sich4 _5 an6 ,7 _8 zu9 m10 _11 Glück12 .13
-const input: SegmentInUnitsInput = {
-	language: "de",
-	segments: [
-		...segmentsOf("Er zog sich an, "),
-		{ kind: "ResolvableText", text: "zu", surface: "zu" },
-		{ kind: "ResolvableText", text: "m", surface: "dem" },
-		...segmentsOf(" Glück."),
-	],
-};
-const route = (family: string, kind: string) => ({
-	language: "de",
-	family,
-	kind,
-});
-const labCase: LabCase = {
-	id: "de/er-zog-sich-an",
-	record: "de/er-zog-sich-an",
-	input,
-	idealOutput: {
-		units: [
-			{ segments: [0], route: route("Lexeme", "PRON") },
-			{ segments: [2, 4, 6], route: route("Lexeme", "VERB") },
-			{ segments: [9, 10, 12], route: route("Locution", "ADV") },
-		],
-	},
-	facts: {
-		coverage: "Full",
-		sources: [{ target: 0 }, { target: 1 }, { target: 2 }],
-	},
-	rules: [],
-	ruleExample: false,
-};
-const set: LabSet = {
-	name: "dev",
-	createdAt: "",
-	gitHead: "test",
-	dirtyRecordFiles: 0,
-	hash: "test",
-	cases: [labCase],
-};
+const labWithSet = (name: string) => labWithSetIn(directory, name);
 
-/** A judge that knows the gold (`zogSichAnGold`, and zum is a Fusion), counting its calls. */
-function goldJudge() {
-	const counter = { calls: 0, tokens: 0 };
-	const jev: JevAsk = async (request) => {
-		counter.calls++;
-		counter.tokens += 100;
-		const answers = answerEach(
-			request.questions,
-			zogSichAnGold({ source_9: "Fusion" }),
-		);
-		return {
-			model: request.model,
-			answers,
-			usage: { input_tokens: 100, output_tokens: 0 },
-		};
-	};
-	return { jev, counter };
-}
-
-async function labWithSet(name: string) {
-	const labRoot = join(directory, name);
-	const setsRoot = join(labRoot, "sets");
-	await storeSet(setsRoot, set);
-	return { labRoot, setsRoot };
-}
-
-test("the table lists gold and raw mode per frozen set, text mode, and resolve.grammar's, resolve.reading's and knowledge.produce's sets", () => {
+test("the table lists gold and raw mode per frozen set, text mode, and resolve.grammar's, resolve.reading's and knowledge.produce's sets, the doublets among them", () => {
 	expect(listExperiments().map(({ id }) => id)).toEqual([
 		"segment-in-units/de:dev",
 		"segment-in-units/de:dev:raw",
@@ -122,6 +54,8 @@ test("the table lists gold and raw mode per frozen set, text mode, and resolve.g
 		"knowledge/de:dev",
 		"knowledge/de:heldout",
 		"knowledge/de:spot-check",
+		"knowledge/de:doublets:tuning",
+		"knowledge/de:doublets:heldout",
 	]);
 });
 
@@ -569,190 +503,4 @@ test("--cases runs gold mode on a case list, and the manifest and ledger line na
 	).rejects.toThrow(
 		"--cases does not apply to an --estimate of resolve-grammar/de:dev",
 	);
-});
-
-test("an evaluate command given an option its experiment does not read in its mode fails before it prices or asks anything", async () => {
-	const lab = await labWithSet("unread-options");
-	const { jev, counter } = goldJudge();
-	const written: unknown[] = [];
-	const cli = (argv: string[]) =>
-		runEvaluationCli(argv, {
-			jev,
-			...lab,
-			repository,
-			write: (value) => written.push(value),
-			warn: () => {},
-		});
-	const estimate = ["--experiment", "segment-in-units/de:dev", "--estimate"];
-
-	await expect(cli([...estimate, "--limit", "2"])).rejects.toThrow(
-		"--limit does not apply to an --estimate of segment-in-units/de:dev, which takes --experiment, --revision, --output, --estimate, --units, --judgment-model, --concurrency, --cases, --cases-from, --token-budget. A segment.inUnits run always runs its whole set (or its case list) at 3 repetitions; use --cases <ids file> or --cases-from <request compare report> to run part of a set",
-	);
-	await expect(cli([...estimate, "--subset", "subset.json"])).rejects.toThrow(
-		"--subset does not apply",
-	);
-	await expect(
-		cli([...estimate, "--repetitions", "1", "--gold-only"]),
-	).rejects.toThrow("--repetitions, --gold-only do not apply");
-	// --requests wins over --estimate, which it does not read.
-	await expect(cli([...estimate, "--requests"])).rejects.toThrow(
-		"--estimate does not apply to a --requests run of segment-in-units/de:dev, which takes --experiment, --revision, --output, --requests, --units, --judgment-model, --concurrency",
-	);
-	await expect(
-		cli([
-			"--experiment",
-			"resolve-grammar/de:dev",
-			"--revision",
-			"test",
-			"--requests",
-			"--subset",
-			"evidence/resolve-grammar/round-2-subset.json",
-		]),
-	).rejects.toThrow(
-		"--subset does not apply to a --requests run of resolve-grammar/de:dev, which takes --experiment, --revision, --output, --requests, --concurrency",
-	);
-	await expect(
-		cli([
-			"--experiment",
-			"resolve-grammar/de:dev",
-			"--estimate",
-			"--gold-only",
-		]),
-	).rejects.toThrow(
-		"--gold-only does not apply to an --estimate of resolve-grammar/de:dev, which takes --experiment, --revision, --output, --estimate, --concurrency, --limit, --subset, --repetitions, --whole-round",
-	);
-	await expect(
-		cli([
-			"--experiment",
-			"resolve-reading/de:dev",
-			"--revision",
-			"test",
-			"--offline",
-			"--gold-only",
-		]),
-	).rejects.toThrow(
-		"--gold-only does not apply to an --offline run of resolve-reading/de:dev",
-	);
-	await expect(
-		cli([
-			"--experiment",
-			"split-text/de:ud-drafts",
-			"--revision",
-			"test",
-			"--limit",
-			"2",
-			"--units",
-			"reference",
-		]),
-	).rejects.toThrow(
-		"--limit, --units do not apply to a live run of split-text/de:ud-drafts, which takes --experiment, --revision, --output",
-	);
-	await expect(cli(["--list", "--limit", "2"])).rejects.toThrow(
-		"--limit does not apply to --list, which takes --list, --output",
-	);
-	// Every experiment has its options: none reads --parity in an estimate.
-	for (const { id } of listExperiments())
-		await expect(
-			cli(["--experiment", id, "--estimate", "--parity", "x"]),
-		).rejects.toThrow(`--parity does not apply to an --estimate of ${id}`);
-	expect(counter.calls).toBe(0);
-	expect(written).toEqual([]);
-});
-
-test("every option combination the evaluate CLI documents passes the option check", () => {
-	const documented: [string, Parameters<typeof rejectUnreadRunOptions>[0]][] =
-		[
-			[
-				"segment-in-units/de:dev",
-				{
-					revision: "r",
-					offline: true,
-					units: "reference",
-					parity: "x",
-				},
-			],
-			["segment-in-units/de:dev", { revision: "r", units: "production" }],
-			["segment-in-units/de:heldout:raw", { revision: "r" }],
-			["segment-in-units/de:dev:raw", { estimate: true }],
-			["segment-in-units/de:dev", { revision: "r", cases: "ids" }],
-			[
-				"segment-in-units/de:dev",
-				{ revision: "r", "cases-from": "report" },
-			],
-			[
-				"segment-in-units/de:dev",
-				{
-					revision: "r",
-					repin: true,
-					reason: "x",
-					"token-budget": "1",
-				},
-			],
-			["split-text/de:ud-drafts", { revision: "r" }],
-			["resolve-grammar/de:dev", { estimate: true }],
-			[
-				"resolve-grammar/de:dev",
-				{
-					revision: "r",
-					budget: "1",
-					"luna-budget": "1",
-					"luna-output-budget": "1",
-					limit: "1",
-					subset: "s",
-					repetitions: "1",
-				},
-			],
-			["resolve-reading/de:dev", { estimate: true, "whole-round": true }],
-			[
-				"resolve-reading/de:dev",
-				{
-					revision: "r",
-					budget: "1",
-					"luna-budget": "1",
-					"luna-output-budget": "1",
-					limit: "1",
-					"luna-batch": true,
-					"luna-prompt-cache": true,
-					"usd-budget": "1",
-					subset: "s",
-					repetitions: "1",
-				},
-			],
-			[
-				"knowledge/de:dev",
-				{
-					estimate: true,
-					"whole-round": true,
-					"gold-only": true,
-					subset: "s",
-				},
-			],
-			[
-				"knowledge/de:spot-check",
-				{
-					revision: "r",
-					budget: "1",
-					"luna-budget": "1",
-					"luna-output-budget": "1",
-					"luna-batch": true,
-					"usd-budget": "1",
-					limit: "1",
-					repetitions: "1",
-				},
-			],
-			[
-				"segment-in-units/de:dev",
-				{ revision: "r", requests: true, units: "reference" },
-			],
-			["resolve-grammar/de:dev", { revision: "r", requests: true }],
-			["resolve-reading/de:dev", { revision: "r", requests: true }],
-			["knowledge/de:dev", { revision: "r", requests: true }],
-		];
-	for (const [experiment, values] of documented)
-		expect(() =>
-			rejectUnreadRunOptions(
-				{ experiment, output: "o", ...values },
-				experiment,
-			),
-		).not.toThrow();
 });

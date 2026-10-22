@@ -34,7 +34,7 @@ describe("applyGeneratedKnowledge", () => {
 			entry: {
 				reading: germanRennenReading,
 				attestedTranslations: [],
-				attestations: [],
+				attestationLinks: [],
 				notes: "",
 			},
 		});
@@ -128,13 +128,13 @@ describe("applyGeneratedKnowledge", () => {
 	test("resolves a generated Unit Shadow without persisting its inverse", async () => {
 		const notes = structuredClone(deSerializedNotes);
 		notes.push({
-			schemaVersion: 1,
+			schemaVersion: 2,
 			lemmaRecord: { lemma: germanRennenLemma },
 			readingEntries: [
 				{
 					reading: germanRennenReading,
 					attestedTranslations: [],
-					attestations: [],
+					attestationLinks: [],
 					notes: "",
 				},
 			],
@@ -166,9 +166,28 @@ describe("applyGeneratedKnowledge", () => {
 		expect(
 			stored[1]?.readingEntries[0]?.knowledge?.semanticRelations,
 		).toBeUndefined();
+		// The relation keeps its Shadow beside the Lemma it resolved to.
 		expect(
-			stored.flatMap(({ pendingRelations }) => pendingRelations),
-		).toEqual([]);
+			stored
+				.flatMap(({ pendingRelations }) => pendingRelations)
+				.map(({ pending, resolvedLemma }) => ({
+					pending,
+					resolvedLemma,
+				})),
+		).toEqual([
+			{
+				pending: {
+					relation: "synonym",
+					target: {
+						language: "de",
+						canonicalForm: "rennen",
+						family: "Lexeme",
+						kind: "VERB",
+					},
+				},
+				resolvedLemma: germanRennenLemma,
+			},
+		]);
 	});
 
 	test("treats an empty generated batch as a valid no-op plan", async () => {

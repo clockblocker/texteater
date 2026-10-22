@@ -48,7 +48,6 @@
 			"reading": {
 				"emojiDescription": "💼👥",
 				"knowledge": {
-					"plural": ["Meetings"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -84,9 +83,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Meetings"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -94,7 +93,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

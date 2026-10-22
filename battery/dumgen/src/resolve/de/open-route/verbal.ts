@@ -22,11 +22,8 @@ import {
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
 import type { GovernedQuestions } from "./governed.js";
-import {
-	isParticle,
-	prefixAnswer,
-	prefixCandidates,
-} from "./separable-prefix.js";
+import { prefixAnswer } from "./prefix-answer.js";
+import { isParticle, prefixCandidates } from "./separable-prefix.js";
 import { fold, type Shape, spellingOf } from "./shape.js";
 
 /** A VERB Lexeme's Core Features; a VERB Locution has none. */

@@ -1,22 +1,26 @@
-import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
-import * as containment from "../convex/model/generatedKnowledgeContainment";
-import {
-	effectiveRelationPublicationPolicy,
-	generatedKnowledgeAllowedForPublication,
-	RELATION_PUBLICATION_FINGERPRINTS,
-} from "../convex/model/generatedKnowledgeContainment";
+import { afterEach, beforeEach, expect, jest, test } from "bun:test";
+import { internal } from "../convex/_generated/api";
+import { KNOWLEDGE_RETRY_COOLDOWN_MS } from "../convex/model/knowledgeAttempts";
 import { publishInRelationChunks } from "../convex/model/relationPublicationChunks";
+import {
+	answeredRelationKinds,
+	knowledgeRequestComplete,
+	missingKnowledgeRequest,
+} from "../server/knowledgeCompletion";
 import { createTestConvex } from "./support/convex";
 import {
 	attempts,
-	EMPTY_RELATION_RUN,
+	insertAccumulatedKnowledge,
 	insertAttempt,
 	PRODUCTION_EVIDENCE,
 	publish,
 	publishArgs,
+	publishSixtyPendingSynonyms,
 	rows,
+	schedule,
 	seedDictionaryReading,
-} from "./support/knowledgeGeneration";
+	seedOccurrence,
+} from "./support/knowledge-generation";
 
 beforeEach(() => {
 	// Scheduling a Knowledge attempt queues its action; nothing here runs it.
@@ -27,113 +31,205 @@ afterEach(() => {
 	jest.useRealTimers();
 });
 
-test("production publication remains empty without a reviewed verdict", () => {
-	expect(effectiveRelationPublicationPolicy()).toMatchObject({
-		artifactPath: null,
-		qualifiedKinds: [],
-		invalidationReasons: ["missingReviewedVerdictArtifact"],
-	});
-	const publishable = generatedKnowledgeAllowedForPublication({
-		changes: [
-			{
-				kind: "Contribute",
-				aspect: "transcription",
-				value: "bank",
-			},
-			{
-				kind: "Contribute",
-				aspect: "semanticRelations",
-				relation: "synonym",
-				value: [],
-			},
-			{
-				kind: "Contribute",
-				aspect: "definition",
-				value: "Ein Geldinstitut.",
-			},
-		],
-		pendingRelations: [
-			{
-				relation: "synonym",
-				target: {
-					language: "de",
-					family: "Lexeme",
-					kind: "NOUN",
-					canonicalForm: "Geldinstitut",
-				},
-			},
-		],
-	});
+test("an answered relation kind covers the request even with no stored target", async () => {
+	const request = {
+		definition: null,
+		semanticRelations: { synonym: null, antonym: null },
+	};
+	const knowledge = { definition: "Ein Geldinstitut." };
+	expect(
+		knowledgeRequestComplete(
+			{ knowledge, checkedRelationKinds: [] },
+			request,
+			[],
+		),
+	).toBe(false);
+	expect(
+		knowledgeRequestComplete(
+			{ knowledge, checkedRelationKinds: ["synonym", "antonym"] },
+			request,
+			[],
+		),
+	).toBe(true);
+	expect(
+		missingKnowledgeRequest(request, {
+			knowledge,
+			checkedRelationKinds: ["synonym"],
+		}),
+	).toEqual({ semanticRelations: { antonym: null } });
 
-	expect(publishable).toEqual({
-		changes: [
-			{
-				kind: "Contribute",
-				aspect: "transcription",
-				value: "bank",
-			},
-			{
-				kind: "Contribute",
-				aspect: "definition",
-				value: "Ein Geldinstitut.",
-			},
-		],
-		pendingRelations: [],
+	expect(answeredRelationKinds(["synonym", "antonym"], false, [])).toEqual(
+		[],
+	);
+	expect(
+		answeredRelationKinds(["synonym", "antonym"], true, [
+			{ aspect: "semanticRelations", leaf: "antonym" },
+		]),
+	).toEqual(["synonym"]);
+	expect(
+		answeredRelationKinds(["synonym"], true, [
+			{ aspect: "semanticRelations" },
+		]),
+	).toEqual([]);
+});
+
+test("recorded relation evidence lets a Reading whose relations live as edges reach Full", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t, {
+		knowledge: { definition: "Ein Geldinstitut." },
+	});
+	await insertAccumulatedKnowledge(t, occurrence, {
+		knowledge: { definition: "Ein Geldinstitut." },
+		status: "Partial",
+	});
+	await t.run(async (ctx) => {
+		const row = await ctx.db.query("accumulatedKnowledge").first();
+		if (row)
+			await ctx.db.patch(row._id, { checkedRelationKinds: ["synonym"] });
+	});
+	await insertAttempt(t, occurrence, "attempt-1");
+	const evidence = {
+		...PRODUCTION_EVIDENCE,
+		request: { definition: null, semanticRelations: { synonym: null } },
+	};
+
+	await publish(
+		t,
+		publishArgs({ attemptKey: "attempt-1", productionEvidence: evidence }),
+	);
+	// Replacing the content keeps the evidence recorded beside it.
+	expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
+		status: "Full",
+		checkedRelationKinds: ["synonym"],
 	});
 });
 
-test("the production application path keeps generated relations outside Dumdict", async () => {
+test("a final publication skips what its run already published behind many earlier changes", async () => {
 	const t = createTestConvex();
 	const occurrence = await seedDictionaryReading(t);
+	// Earlier attempts left more changes than one index page for this Reading.
+	await t.run(async (ctx) => {
+		for (let index = 0; index < 520; index++)
+			await ctx.db.insert("knowledgeChanges", {
+				knowledgeChangeKey: `earlier:1:1:${index}`,
+				ownerReadingKey: occurrence.readingKey,
+				change: {
+					kind: "Contribute",
+					aspect: "notes",
+					value: `${index}`,
+				},
+				createdAt: 1,
+			});
+	});
 	await insertAttempt(t, occurrence, "attempt-1");
-	const result = await publish(
-		t,
-		publishArgs({
-			attemptKey: "attempt-1",
-			changes: [
-				{
-					kind: "Contribute",
-					aspect: "definition",
-					value: "Ein Geldinstitut.",
+	const definition = {
+		kind: "Contribute",
+		aspect: "definition",
+		value: "Ein Geldinstitut.",
+	};
+	const transcription = {
+		kind: "Contribute",
+		aspect: "transcription",
+		value: "baŋk",
+	};
+	expect(
+		await publish(
+			t,
+			publishArgs({
+				attemptKey: "attempt-1",
+				final: false,
+				changes: [definition],
+			}),
+		),
+	).toEqual({ status: "Committed" });
+	expect(
+		await publish(
+			t,
+			publishArgs({
+				attemptKey: "attempt-1",
+				changes: [definition, transcription],
+			}),
+		),
+	).toEqual({ status: "Committed" });
+
+	const published = (await rows(t, "knowledgeChanges")).filter((row) =>
+		row.knowledgeChangeKey.startsWith("attempt-1:"),
+	);
+	expect(
+		published.map(({ knowledgeChangeKey, change }) => ({
+			knowledgeChangeKey,
+			change,
+		})),
+	).toEqual([
+		{ knowledgeChangeKey: "attempt-1:1:1:0", change: definition },
+		{ knowledgeChangeKey: "attempt-1:1:2:0", change: transcription },
+	]);
+	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
+});
+
+test("a top-up that partly fails keeps a Full Reading Full for the next top-up", async () => {
+	const t = createTestConvex();
+	const knowledge = {
+		definition: "Ein Geldinstitut.",
+		translations: { en: ["bank"] },
+	};
+	const occurrence = await seedDictionaryReading(t, { knowledge });
+	await insertAccumulatedKnowledge(t, occurrence, {
+		knowledge,
+		status: "Full",
+		coveredTranslationLanguages: ["en"],
+	});
+	await insertAttempt(t, occurrence, "russian-top-up", {
+		translationLanguages: ["ru"],
+	});
+
+	expect(
+		await publish(
+			t,
+			publishArgs({
+				attemptKey: "russian-top-up",
+				productionEvidence: {
+					request: { translations: { ru: null } },
+					failures: [
+						{
+							aspect: "translations",
+							leaf: "ru",
+							code: "ProviderFailure",
+							message: "offline",
+						},
+					],
+					operationTraces: [],
 				},
-				{
-					kind: "Contribute",
-					aspect: "semanticRelations",
-					relation: "synonym",
-					value: [],
-				},
-			],
-			pendingRelations: [
-				{
-					relation: "synonym",
-					target: {
-						language: "de",
-						family: "Lexeme",
-						kind: "NOUN",
-						canonicalForm: "Geldinstitut",
-					},
-				},
-			],
+			}),
+		),
+	).toEqual({ status: "Committed" });
+	expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
+		knowledge,
+		status: "Full",
+	});
+	expect((await attempts(t))[0]).toMatchObject({
+		state: "Failed",
+		failureCode: "partialKnowledge",
+	});
+
+	jest.setSystemTime(Date.now() + KNOWLEDGE_RETRY_COOLDOWN_MS);
+	await schedule(t, {
+		attemptKey: "next-demand",
+		visitorId: "visitor-1",
+		readingId: occurrence.readingId,
+		attestationId: occurrence.attestationId,
+	});
+	expect(
+		await t.mutation(internal.knowledgeGeneration.begin, {
+			attemptKey: "next-demand",
+		}),
+	).toEqual(
+		expect.objectContaining({
+			kind: "Generate",
+			topUpOnly: true,
+			translationLanguages: ["ru"],
 		}),
 	);
-
-	expect(result).toEqual({ status: "Committed" });
-	expect(await rows(t, "knowledgeChanges")).toEqual([
-		expect.objectContaining({
-			knowledgeChangeKey: "attempt-1:1:1:0",
-			change: {
-				kind: "Contribute",
-				aspect: "definition",
-				value: "Ein Geldinstitut.",
-			},
-		}),
-	]);
-	expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
-	expect(await rows(t, "semanticRelationEdges")).toEqual([]);
-	expect((await attempts(t))[0]).toMatchObject({
-		state: "Committed",
-		publicationSequence: 1,
-	});
 });
 
 test("relation chunks split a Contribute by target and keep the rest of the Knowledge for the final one", async () => {
@@ -192,113 +288,6 @@ test("relation chunks split a Contribute by target and keep the rest of the Know
 		},
 	]);
 });
-
-/**
- * Publishes a definition and 60 synonym proposals, each planning its own
- * pending record, through `publishInRelationChunks` against the real
- * `publish` mutation, and checks that all of it committed.
- */
-async function publishSixtyPendingSynonyms(unitsPerChunk?: number) {
-	const t = createTestConvex();
-	const occurrence = await seedDictionaryReading(t);
-	await insertAttempt(t, occurrence, "attempt-1");
-	const artifactPath = "gate/verdict.json";
-	const policy = spyOn(
-		containment,
-		"effectiveRelationPublicationPolicy",
-	).mockReturnValue({
-		artifactPath,
-		fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
-		qualifiedKinds: ["synonym"],
-		invalidationReasons: [],
-	});
-	// Each proposal plans its own pending record: 60 in all, over the cap.
-	const pendingRelations = Array.from({ length: 60 }, (_, index) => ({
-		relation: "synonym" as const,
-		target: {
-			language: "de" as const,
-			family: "Lexeme" as const,
-			kind: "NOUN" as const,
-			canonicalForm: `Geldinstitut${index}`,
-		},
-	}));
-	const statuses: string[] = [];
-	try {
-		await publishInRelationChunks(
-			{
-				changes: [
-					{
-						kind: "Contribute",
-						aspect: "definition",
-						value: "Ein Geldinstitut.",
-					},
-					{
-						kind: "Contribute",
-						aspect: "semanticRelations",
-						relation: "synonym",
-						value: [],
-					},
-				],
-				pendingRelations,
-			},
-			async ({ final, proposed, changes, pendingRelations }) => {
-				const { status } = await publish(
-					t,
-					publishArgs({
-						attemptKey: "attempt-1",
-						final,
-						changes,
-						pendingRelations,
-						productionEvidence: {
-							...PRODUCTION_EVIDENCE,
-							request: {
-								definition: null,
-								semanticRelations: { synonym: null },
-							},
-						},
-						relationPublication: {
-							...EMPTY_RELATION_RUN,
-							requestedKinds: ["synonym"],
-							artifactPath,
-							proposals: proposed.map(({ relation, target }) => ({
-								relation,
-								targetShadow: target,
-							})),
-						},
-					}),
-				);
-				statuses.push(status);
-				return status;
-			},
-			unitsPerChunk,
-		);
-	} finally {
-		policy.mockRestore();
-	}
-
-	const committed = statuses.filter((status) => status === "Committed");
-	expect(committed.length).toBeGreaterThan(1);
-	expect(statuses.at(-1)).toBe("Committed");
-	expect(await rows(t, "pendingSemanticRelations")).toHaveLength(60);
-	expect((await attempts(t))[0]).toMatchObject({
-		state: "Committed",
-		publicationSequence: committed.length,
-	});
-	expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
-		knowledge: { definition: "Ein Geldinstitut." },
-		status: "Full",
-		checkedRelationKinds: ["synonym"],
-	});
-	expect(await rows(t, "generatedRelationRuns")).toEqual([
-		expect.objectContaining({
-			relation: "synonym",
-			generatedTargets: 60,
-			pendingShadows: 60,
-			publicationFailures: 0,
-		}),
-	]);
-	return statuses;
-}
 
 test("a final publication with more relations than one plan commits them all in chunks", async () => {
 	const statuses = await publishSixtyPendingSynonyms();
@@ -367,4 +356,41 @@ test("relation chunks halve an OverBudget chunk and keep the rest of the Knowled
 			async () => "OverBudget",
 		),
 	).rejects.toThrow("cannot be split");
+});
+
+test("a rejected dictionary plan fails the final publication without recording changes", async () => {
+	const t = createTestConvex();
+	// The attempt's Reading is not in the dictionary, so planning is rejected.
+	const occurrence = await seedOccurrence(t);
+	await insertAccumulatedKnowledge(t, occurrence, {
+		knowledge: { definition: "partial" },
+		status: "Partial",
+	});
+	await insertAttempt(t, occurrence, "attempt-1");
+	const result = await publish(
+		t,
+		publishArgs({
+			attemptKey: "attempt-1",
+			changes: [
+				{
+					kind: "Contribute",
+					aspect: "definition",
+					value: "Ein Geldinstitut.",
+				},
+			],
+		}),
+	);
+	expect(result).toMatchObject({ status: "Rejected" });
+	expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
+		knowledge: { definition: "partial" },
+		status: "Partial",
+	});
+	expect((await attempts(t))[0]).toMatchObject({
+		state: "Failed",
+		failureCode: "generationFailed",
+	});
+	expect(await rows(t, "knowledgeChanges")).toEqual([]);
+	expect(await publish(t, publishArgs({ attemptKey: "attempt-1" }))).toEqual({
+		status: "Ignored",
+	});
 });
