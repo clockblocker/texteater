@@ -1,8 +1,11 @@
 /**
  * The cached, retrying jev that segmentation evaluations and lab runs ask
  * through. It is a `JevAsk`, so `JevTransport.fromAsk` makes it the
- * transport `DumgenLive` takes and an evaluation runs the production path;
- * the lab's arms reach it through `port`, the stages' `ask` port.
+ * transport `DumgenCore` takes and an evaluation runs the production path;
+ * the lab's arms reach it through `port`, the stages' `ask` port, which
+ * fails as production's `Jev` does: a `ProviderFailure` when no answer
+ * came (an unusable fresh answer is refused as the transport's failure),
+ * an `InvalidModelOutput` when a cached one does not fit its question.
  *
  * - **The cache keys each answer by its question**: the model, the judge
  *   state, the repetition and the question with its id. How a request was
@@ -29,6 +32,7 @@ import { join } from "node:path";
 import type { EntryType, Questions } from "@typesafe-ai/sdk";
 import { canonicalJson, messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
+import { InvalidModelOutput, ProviderFailure } from "../../../src/errors.js";
 import { checkedAnswers } from "../../../src/jev-call.js";
 import type { Answers, Ask } from "../../../src/segment/ask.js";
 import {
@@ -80,8 +84,6 @@ export {
 	transportRecordSchema,
 	transportText,
 } from "./jev-cache-records.js";
-
-const never = new AbortController().signal;
 
 /** Repetitions a projection pass reads a missed request's answers from. */
 const projectedRepetitions = [0, 1, 2] as const;
@@ -178,8 +180,10 @@ export class JevCache {
 	/**
 	 * The stages' `ask` port at `repetition`, for the lab's arms: each
 	 * request in chunks of `questionsPerRequest`, as production sends it,
-	 * every chunk checked as production checks it. A failed request rejects
-	 * with its error. `salt` keeps a limit test's answers apart.
+	 * every chunk checked as production checks it. A request that brought
+	 * no answer fails with a `ProviderFailure`, an unusable one with its
+	 * `InvalidModelOutput`; interrupted, it aborts its chunks' requests.
+	 * `salt` keeps a limit test's answers apart.
 	 */
 	port(
 		repetition: number,
@@ -191,55 +195,65 @@ export class JevCache {
 	): Ask {
 		const size = options.questionsPerRequest ?? this.questionsPerRequest;
 		return ({ stage, state, questions }) =>
-			Effect.promise(async () => {
-				const entries = Object.entries(questions);
-				if (entries.length === 0) return {};
-				const spelling = spell(state, questions);
-				this.#recordPrompt(
-					stage,
-					repetition,
-					state,
-					questions,
-					spelling,
-				);
-				const chunks: (typeof entries)[] = [];
-				for (let at = 0; at < entries.length; at += size)
-					chunks.push(entries.slice(at, at + size));
-				const answered = await Promise.all(
-					chunks.map(async (chunk) => {
-						const response = await this.#answer(
-							{
-								model: this.model,
-								state,
-								questions: Object.fromEntries(chunk),
-							},
-							{
+			Effect.tryPromise({
+				try: async (signal) => {
+					const entries = Object.entries(questions);
+					if (entries.length === 0) return {};
+					const spelling = spell(state, questions);
+					this.#recordPrompt(
+						stage,
+						repetition,
+						state,
+						questions,
+						spelling,
+					);
+					const chunks: (typeof entries)[] = [];
+					for (let at = 0; at < entries.length; at += size)
+						chunks.push(entries.slice(at, at + size));
+					const answered = await Promise.all(
+						chunks.map(async (chunk) => {
+							const response = await this.#answer(
+								{
+									model: this.model,
+									state,
+									questions: Object.fromEntries(chunk),
+								},
+								{
+									stage,
+									signal,
+									repetition,
+									calls,
+									...(options.salt === undefined
+										? {}
+										: { salt: options.salt }),
+								},
+								spelling,
+							);
+							const checked = checkedAnswers(
 								stage,
-								signal: never,
-								repetition,
-								calls,
-								...(options.salt === undefined
-									? {}
-									: { salt: options.salt }),
-							},
-							spelling,
-						);
-						const checked = checkedAnswers(
-							stage,
-							isFloatingModel(this.model)
-								? response.model
-								: this.model,
-							chunk,
-							response,
-						);
-						if (checked instanceof Error)
-							throw Error(checked.message);
-						return checked;
-					}),
-				);
-				return Object.fromEntries(
-					answered.flatMap((chunk) => Object.entries(chunk)),
-				);
+								isFloatingModel(this.model)
+									? response.model
+									: this.model,
+								chunk,
+								response,
+							);
+							if (checked instanceof InvalidModelOutput)
+								throw checked;
+							return checked;
+						}),
+					);
+					return Object.fromEntries(
+						answered.flatMap((chunk) => Object.entries(chunk)),
+					);
+				},
+				catch: (error) =>
+					error instanceof InvalidModelOutput
+						? error
+						: new ProviderFailure({
+								stage,
+								message: messageOf(error),
+								cause: error,
+							}),
 			});
 	}
 
