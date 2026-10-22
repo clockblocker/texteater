@@ -207,9 +207,9 @@ describe("Resolution Session execution", () => {
 								yield* Effect.void;
 								throw error;
 							});
-						return (kind === "failure" ? Effect.fail : Effect.die)(
-							error,
-						);
+						return kind === "failure"
+							? Effect.tryPromise(() => Promise.reject(error))
+							: Effect.die(error);
 					},
 					diagnostics: {
 						info: () => {},

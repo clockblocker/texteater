@@ -27,8 +27,10 @@ import type {
 	ResolvedClickPersistence,
 	ResolvedGrammatical,
 	ResolveSegmentInput,
+	ResolveSegmentResult,
 	ReusableAttestation,
 } from "./orchestrationPorts";
+import type { ModelFailure, ResolutionRunError } from "./resolutionFailure";
 import {
 	assertStoredSentence,
 	encounterSentenceOf,
@@ -51,7 +53,7 @@ type TfDemoOrchestratorOptions = {
 	readonly findStoredReadings: (
 		lemma: Dumling.Lemma<"de">,
 	) =>
-		| Effect.Effect<readonly Dumling.Reading<"de">[], unknown>
+		| Effect.Effect<readonly Dumling.Reading<"de">[], Cause.UnknownError>
 		| Promise<readonly Dumling.Reading<"de">[]>;
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
@@ -63,7 +65,7 @@ type TfDemoOrchestratorOptions = {
 	 */
 	readonly resegment?: (
 		stitchedText: string,
-	) => Effect.Effect<ResegmentedSentence, unknown>;
+	) => Effect.Effect<ResegmentedSentence, ModelFailure>;
 };
 
 /**
@@ -79,7 +81,7 @@ export function createTfDemoOrchestrator(options: TfDemoOrchestratorOptions) {
 		selection: ResolveSegmentInput,
 		checkpoints: ResolutionCheckpoints = {},
 		initialContext?: ResolutionContext,
-	) {
+	): Effect.Effect<ResolveSegmentResult, ResolutionRunError> {
 		return Effect.gen(function* () {
 			validateSelection(selection);
 			const loaded =

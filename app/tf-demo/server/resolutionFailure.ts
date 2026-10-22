@@ -1,4 +1,6 @@
 import type { Infer } from "convex/values";
+import type { InvalidModelOutput, ProviderFailure } from "dumgen";
+import type { UnknownError } from "effect/Cause";
 import type {
 	resolutionGenerationEventValidator,
 	safeGenerationFailureValidator,
@@ -31,41 +33,64 @@ export type ClassifiedResolutionFailure =
 	  };
 
 /**
- * A model call a ClickResolution made that failed at its provider or
- * answered unusably. The run records it as a Generation failure; any other
- * error is an Internal one.
+ * What a click's model calls fail with: Dumgen's whole error channel, which
+ * the ClickResolution port and a click's re-segmentation keep typed. The run
+ * records either as a Generation failure.
  */
-export class ModelCallFailure extends Error {
-	override readonly name = "ModelCallFailure";
-	readonly category: "ProviderUnavailable" | "InvalidOutput";
-	constructor(
-		category: "ProviderUnavailable" | "InvalidOutput",
-		message: string,
-	) {
-		super(message);
-		this.category = category;
+export type ModelFailure = ProviderFailure | InvalidModelOutput;
+
+/**
+ * Every error a Resolution run's error channel may carry: a model failure,
+ * or a Promise hop (persistence, lifecycle) that rejected. A defect is none
+ * of these and is recorded as Internal.
+ */
+export type ResolutionRunError = ModelFailure | UnknownError;
+
+/**
+ * A run's error by its tag: a model failure is a Generation failure, a
+ * rejected hop an Internal one. A new error in the run's channel fails to
+ * compile here until it is classified.
+ */
+export function classifyResolutionFailure(
+	error: ResolutionRunError,
+): ClassifiedResolutionFailure {
+	switch (error._tag) {
+		case "ProviderFailure":
+			// No answer came back: the deadline passed, the transport failed or
+			// the provider refused. A later retry may get one.
+			return generationFailure("ProviderUnavailable", true);
+		case "InvalidModelOutput":
+			return generationFailure("InvalidOutput", false);
+		case "UnknownError":
+			return internalResolutionFailure(error);
 	}
 }
 
-export function classifyResolutionFailure(
+/** A defect, or a hop that rejected: sanitized and fingerprinted. */
+export function internalResolutionFailure(
 	error: unknown,
 ): ClassifiedResolutionFailure {
-	if (error instanceof ModelCallFailure) {
-		return {
-			kind: "Generation",
-			failure: safeGenerationFailure({
-				attempts: 1,
-				category: error.category,
-				retryable: false,
-			}),
-		};
-	}
 	return {
 		kind: "Internal",
 		failureCode: "Internal",
 		...internalErrorDescriptor(error),
 	};
 }
+
+function generationFailure(
+	category: ModelFailureCategory,
+	retryable: boolean,
+): ClassifiedResolutionFailure {
+	return {
+		kind: "Generation",
+		failure: safeGenerationFailure({ attempts: 1, category, retryable }),
+	};
+}
+
+type ModelFailureCategory = Extract<
+	GenerationFailure["category"],
+	"ProviderUnavailable" | "InvalidOutput"
+>;
 
 export function projectResolutionGenerationEvent(
 	event: GenerationEvent,
@@ -103,16 +128,33 @@ function safeGenerationFailure(failure: GenerationFailure): GenerationFailure {
 	}) as GenerationFailure;
 }
 
-export function internalErrorDescriptor(error: unknown): {
+/**
+ * A sanitized name and fingerprint for an error, without its message. An
+ * `Effect.tryPromise` rejection is described by what it wraps, so a failed
+ * hop keeps the name of what threw.
+ */
+export function internalErrorDescriptor(thrown: unknown): {
 	readonly errorName: string;
 	readonly errorFingerprint: string;
 } {
+	const error = isUnknownError(thrown) ? thrown.cause : thrown;
 	const errorName = safeErrorName(error);
 	const message = safeErrorMessageForFingerprint(error);
 	return {
 		errorName,
 		errorFingerprint: `fnv1a-${fnv1a(`${errorName}\u0000${message}`)}`,
 	};
+}
+
+/**
+ * Effect's `UnknownError`, told by its tag: this module stays free of
+ * Effect at runtime, since isolate-side Convex modules import it.
+ */
+function isUnknownError(error: unknown): error is UnknownError {
+	return (
+		error instanceof Error &&
+		(error as { readonly _tag?: unknown })._tag === "UnknownError"
+	);
 }
 
 function safeErrorName(error: unknown): string {

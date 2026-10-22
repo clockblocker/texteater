@@ -1,5 +1,6 @@
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
+import * as Option from "effect/Option";
 import type {
 	ResolutionCheckpoints,
 	ResolutionContext,
@@ -7,11 +8,16 @@ import type {
 	ResolveSegmentInput,
 	ResolveSegmentResult,
 } from "./orchestrationPorts";
-import type { GenerationEvent, GenerationFailure } from "./resolutionFailure";
 import {
+	type ClassifiedResolutionFailure,
 	classifyResolutionFailure,
+	type GenerationEvent,
+	type GenerationFailure,
+	internalErrorDescriptor,
+	internalResolutionFailure,
 	projectResolutionGenerationEvent,
 	type ResolutionGenerationEvent,
+	type ResolutionRunError,
 } from "./resolutionFailure";
 import type { ResolutionPhase } from "./resolutionLifecycle";
 
@@ -87,7 +93,7 @@ type ResolutionSessionLinguisticPort = (
 	checkpoints: ResolutionCheckpoints,
 	observer: ResolutionProgressObserver,
 	context?: ResolutionContext,
-) => Effect.Effect<ResolveSegmentResult, unknown, never>;
+) => Effect.Effect<ResolveSegmentResult, ResolutionRunError, never>;
 
 type ResolutionExecutionDiagnostics = {
 	readonly info: (message: string) => void;
@@ -203,8 +209,7 @@ export function executeResolutionSession({
 	}).pipe(
 		Effect.catchCause((cause) => {
 			if (Cause.hasInterruptsOnly(cause)) return Effect.failCause(cause);
-			const error = Cause.squash(cause);
-			const classified = classifyResolutionFailure(error);
+			const classified = classifyRunCause(cause);
 			const diagnosticId = createDiagnosticId();
 			if (classified.kind === "Generation") {
 				return Effect.tryPromise(() =>
@@ -245,7 +250,7 @@ export function executeResolutionSession({
 								phase,
 								diagnosticId,
 								recordingFailure:
-									classifyResolutionFailure(recordingError),
+									internalErrorDescriptor(recordingError),
 							}),
 						);
 					}),
@@ -253,4 +258,18 @@ export function executeResolutionSession({
 			);
 		}),
 	);
+}
+
+/**
+ * A failed run by its first typed error, so a model failure stays a
+ * Generation failure even beside a defect; a cause with no typed error is a
+ * defect, recorded as Internal.
+ */
+function classifyRunCause(
+	cause: Cause.Cause<ResolutionRunError>,
+): ClassifiedResolutionFailure {
+	const error = Cause.findErrorOption(cause);
+	return Option.isSome(error)
+		? classifyResolutionFailure(error.value)
+		: internalResolutionFailure(Cause.squash(cause));
 }
