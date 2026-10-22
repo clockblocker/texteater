@@ -35,12 +35,12 @@ type LanguageRegistry<L extends SupportedTargetLanguage> = {
 };
 
 export type RendererRegistry<
-	L extends SupportedTargetLanguage | never = never,
-	N extends NoteKind | never = never,
+	L extends SupportedTargetLanguage = never,
+	N extends NoteKind = never,
 	F extends L extends SupportedTargetLanguage
 		? NoteFamilyFor<L>
 		: never = never,
-	K extends string | never = never,
+	K extends string = never,
 > = [L] extends [never]
 	? { [Language in SupportedTargetLanguage]: LanguageRegistry<Language> }
 	: L extends SupportedTargetLanguage

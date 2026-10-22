@@ -2,9 +2,19 @@ import type { NoteTitleTone } from "lego";
 import { featureValueText } from "../../../../../../shared/feature-values";
 import { coreGender } from "../../../../../../shared/grammatical-gender";
 
-type PresentedFeatures = Readonly<
-	Record<string, string | readonly string[] | null | undefined | unknown>
->;
+/**
+ * A presented feature value as `featureValueText` reads it: a value, a set,
+ * a noun's `mixed` gender, a yes/no flag, or none.
+ */
+type PresentedFeatureValue =
+	| string
+	| boolean
+	| readonly string[]
+	| { readonly mixed: readonly string[] }
+	| null
+	| undefined;
+
+type PresentedFeatures = Readonly<Record<string, PresentedFeatureValue>>;
 
 const GENDER_TONES: Readonly<Record<string, NoteTitleTone>> = {
 	Fem: "feminine",
