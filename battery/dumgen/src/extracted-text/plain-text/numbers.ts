@@ -43,13 +43,13 @@ const hebrewFeminineOrdinals = [
 
 const hebrewLetterValues: Readonly<Record<string, number>> = {
 	...Object.fromEntries(
-		[..."אבגדהוזחט"].map((letter, index) => [letter, index + 1]),
+		Array.from("אבגדהוזחט", (letter, index) => [letter, index + 1]),
 	),
 	...Object.fromEntries(
-		[..."יכלמנסעפצ"].map((letter, index) => [letter, (index + 1) * 10]),
+		Array.from("יכלמנסעפצ", (letter, index) => [letter, (index + 1) * 10]),
 	),
 	...Object.fromEntries(
-		[..."קרשת"].map((letter, index) => [letter, (index + 1) * 100]),
+		Array.from("קרשת", (letter, index) => [letter, (index + 1) * 100]),
 	),
 	ך: 20,
 	ם: 40,
@@ -70,10 +70,10 @@ const romanValues: Readonly<Record<string, number>> = {
 
 function romanNumber(token: string): number | undefined {
 	if (!/^[ivxlcdm]+$/u.test(token)) return undefined;
+	const values = Array.from(token, (char) => romanValues[char] ?? 0);
 	let total = 0;
-	for (const [index, char] of [...token].entries()) {
-		const value = romanValues[char] ?? 0;
-		const next = romanValues[token[index + 1] ?? ""] ?? 0;
+	for (const [index, value] of values.entries()) {
+		const next = values[index + 1] ?? 0;
 		total += value < next ? -value : value;
 	}
 	return total > 0 ? total : undefined;
@@ -99,7 +99,8 @@ function germanTensOrdinal(token: string): number | undefined {
 function hebrewNumber(token: string): number | undefined {
 	const letters = token.replace(/[׳״'"]/gu, "");
 	if (!/^[א-ת]{1,4}$/u.test(letters)) return undefined;
-	const values = [...letters].map(
+	const values = Array.from(
+		letters,
 		(letter) => hebrewLetterValues[letter] ?? 0,
 	);
 	const ordered = values.every(

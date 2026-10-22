@@ -193,7 +193,7 @@ export function majorityHit(
 	measure: Measure,
 ): boolean {
 	if (!outcome) return false;
-	const hits = [...outcome.v].filter((letter) =>
+	const hits = Array.from(outcome.v).filter((letter) =>
 		isHit(letter, measure),
 	).length;
 	return hits * 2 > outcome.v.length;
@@ -201,7 +201,7 @@ export function majorityHit(
 
 /** Whether a unit's membership holds in some repetitions and not in others. */
 export function membershipFlipped(outcome: PolicyOutcome | undefined): boolean {
-	const held = [...(outcome?.v ?? "")].map((letter) =>
+	const held = Array.from(outcome?.v ?? "", (letter) =>
 		isHit(letter, "membership"),
 	);
 	return held.some(Boolean) && held.some((entry) => !entry);
@@ -344,7 +344,7 @@ export function variantsOf(
 	for (const row of rows) {
 		const outcome = row.policies[policy];
 		if (row.stub || !outcome) continue;
-		[...outcome.v].forEach((letter, repetition) => {
+		Array.from(outcome.v).forEach((letter, repetition) => {
 			if (!isHit(letter, "membership")) return;
 			units++;
 			const count = outcome.k?.[repetition] ?? 0;
@@ -382,7 +382,7 @@ export function pickScore(
 		const variants = row.policies[variantsPolicy];
 		const picked = row.policies[pickPolicy];
 		if (row.stub || !variants || !picked) continue;
-		[...variants.v].forEach((letter, repetition) => {
+		Array.from(variants.v).forEach((letter, repetition) => {
 			if ((variants.k?.[repetition] ?? 0) === 0) return;
 			units++;
 			if (isHit(letter, "tolerant")) among++;

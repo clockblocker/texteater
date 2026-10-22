@@ -9,10 +9,12 @@ const UMLAUT: Readonly<Record<string, string>> = { a: "ä", o: "ö", u: "ü" };
  */
 function umlautings(singular: string): string[] {
 	const results: string[] = [];
-	for (const [index, letter] of [...singular].entries()) {
+	// UTF-16 indexes, as `slice` takes; each stem vowel is one unit.
+	for (let index = 0; index < singular.length; index++) {
+		const letter = singular.charAt(index);
 		const umlaut = UMLAUT[letter];
 		if (!umlaut) continue;
-		const doubled = singular[index + 1] === letter && letter !== "u";
+		const doubled = singular.charAt(index + 1) === letter && letter !== "u";
 		results.push(
 			singular.slice(0, index) +
 				umlaut +
