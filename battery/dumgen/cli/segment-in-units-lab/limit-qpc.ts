@@ -31,6 +31,7 @@ import {
 	packageRoot,
 	printEstimate,
 	repository,
+	runLab,
 	setsRoot,
 	values,
 } from "./context.js";
@@ -55,12 +56,14 @@ export async function limitQuestionsPerCall() {
 		offline: true,
 		project: standInAnswers,
 	});
-	await questionsPerCall({
-		cases,
-		jev: projecting,
-		sizes,
-		baselineRepetitions: 3,
-	});
+	await runLab(
+		questionsPerCall({
+			cases,
+			jev: projecting,
+			sizes,
+			baselineRepetitions: 3,
+		}),
+	);
 	const priced = priceProjection(projecting.projection);
 	console.log(projectionText(priced));
 	if (values.estimate) {
@@ -88,12 +91,14 @@ export async function limitQuestionsPerCall() {
 			fresh += tokens;
 		},
 	});
-	const results = await questionsPerCall({
-		cases,
-		jev,
-		sizes,
-		baselineRepetitions: 3,
-	});
+	const results = await runLab(
+		questionsPerCall({
+			cases,
+			jev,
+			sizes,
+			baselineRepetitions: 3,
+		}),
+	);
 	console.log(
 		`${cases.length} sentences, ${cases.map(pieces).join("/")} pieces`,
 	);

@@ -61,7 +61,7 @@ import {
 import { noul } from "../../../src/segment/ask.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import { segmentsOf } from "../evaluation/spec-corpus/fixtures.js";
-import { answerEach } from "./support.js";
+import { answerEach, onLabBudget } from "./support.js";
 
 const directory = await mkdtemp(join(tmpdir(), "segment-in-units-tracking-"));
 afterAll(() => rm(directory, { recursive: true, force: true }));
@@ -338,19 +338,21 @@ test("a repetition offset misses the cache while sending the same prompts", asyn
 			cacheDirectory,
 			transport: answeringAs(pinnedJevModel, counter),
 		});
-		const run = await runArm({
-			runId: `offset-${repetitionOffset}`,
-			arm: candidates4Arm,
-			options: { final: "1", closed: "1" },
-			set,
-			subset: "all",
-			cases: [labCase],
-			repetitions: 2,
-			repetitionOffset,
-			jev,
-			concurrency: 1,
-			gitHead: "test",
-		});
+		const run = await onLabBudget(
+			runArm({
+				runId: `offset-${repetitionOffset}`,
+				arm: candidates4Arm,
+				options: { final: "1", closed: "1" },
+				set,
+				subset: "all",
+				cases: [labCase],
+				repetitions: 2,
+				repetitionOffset,
+				jev,
+				concurrency: 1,
+				gitHead: "test",
+			}),
+		);
 		return { run, prompts: jev.promptHashes() };
 	};
 	const first = await runWith(0);

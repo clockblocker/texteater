@@ -7,8 +7,11 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { messageOf } from "common-utils";
+import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
+import * as Exit from "effect/Exit";
 import { z } from "zod";
+import type { RequestBudget } from "../../../src/call.js";
 import { isRouteKey } from "../../../src/segment/de/routes.js";
 import {
 	type SegmentInUnitsOutput,
@@ -140,7 +143,13 @@ export async function loadLabRun(root: string, runId: string): Promise<LabRun> {
 	return readStoredJson(labRunSchema, runPath(root, runId));
 }
 
-export async function runArm(args: {
+/**
+ * The arm over every case and repetition, `concurrency` cases at once and
+ * each case's repetitions in turn, on the run's request budget. A
+ * repetition that fails, a Defect included, is recorded with its message;
+ * interrupting the run interrupts the asks in flight.
+ */
+export const runArm = Effect.fnUntraced(function* (args: {
 	readonly runId: string;
 	readonly arm: Arm;
 	readonly options: ArmOptions;
@@ -155,61 +164,57 @@ export async function runArm(args: {
 	readonly codeHash?: string;
 	readonly dirty?: boolean;
 	readonly onProgress?: (done: number, total: number) => void;
-}): Promise<LabRun> {
+}): Effect.fn.Return<LabRun, never, RequestBudget> {
 	const startedAt = new Date().toISOString();
 	let done = 0;
 	const total = args.cases.length * args.repetitions;
-	const repetitionOf = async (
-		labCase: LabCase,
-		repetition: number,
-	): Promise<RepetitionRecord> => {
-		const calls: CallRecord[] = [];
-		const started = performance.now();
-		try {
-			const result = await args.arm.run(labCase.input, {
-				jev: args.jev,
-				repetition: repetition + (args.repetitionOffset ?? 0),
-				calls,
-				options: args.options,
-			});
+	const repetitionOf = (labCase: LabCase, repetition: number) =>
+		Effect.gen(function* () {
+			const calls: CallRecord[] = [];
+			const started = performance.now();
+			const exit = yield* Effect.exit(
+				Effect.suspend(() =>
+					args.arm.run(labCase.input, {
+						jev: args.jev,
+						repetition: repetition + (args.repetitionOffset ?? 0),
+						calls,
+						options: args.options,
+					}),
+				),
+			);
+			const wallMs = performance.now() - started;
+			done++;
+			args.onProgress?.(done, total);
+			if (Exit.isFailure(exit))
+				return {
+					calls,
+					wallMs,
+					error: messageOf(Cause.squash(exit.cause)),
+				} satisfies RepetitionRecord;
+			const result = exit.value;
 			return {
 				outputs: result.outputs,
 				primary: result.primary,
 				calls,
-				wallMs: performance.now() - started,
+				wallMs,
 				...(result.routes ? { routes: result.routes } : {}),
 				...(result.links ? { links: result.links } : {}),
-			};
-		} catch (error) {
-			return {
-				calls,
-				wallMs: performance.now() - started,
-				error: messageOf(error),
-			};
-		} finally {
-			done++;
-			args.onProgress?.(done, total);
-		}
-	};
-	// `concurrency` cases at once, each case's repetitions in turn.
-	const cases = await Effect.runPromise(
-		Effect.forEach(
-			args.cases,
-			(labCase) =>
-				Effect.promise(async (): Promise<CaseRun> => {
-					const repetitions: RepetitionRecord[] = [];
-					for (
-						let repetition = 0;
-						repetition < args.repetitions;
-						repetition++
-					)
-						repetitions.push(
-							await repetitionOf(labCase, repetition),
-						);
-					return { id: labCase.id, repetitions };
-				}),
-			{ concurrency: Math.max(1, args.concurrency) },
-		),
+			} satisfies RepetitionRecord;
+		});
+	const cases = yield* Effect.forEach(
+		args.cases,
+		(labCase) =>
+			Effect.gen(function* () {
+				const repetitions: RepetitionRecord[] = [];
+				for (
+					let repetition = 0;
+					repetition < args.repetitions;
+					repetition++
+				)
+					repetitions.push(yield* repetitionOf(labCase, repetition));
+				return { id: labCase.id, repetitions } satisfies CaseRun;
+			}),
+		{ concurrency: Math.max(1, args.concurrency) },
 	);
 	return {
 		runId: args.runId,
@@ -231,4 +236,4 @@ export async function runArm(args: {
 		transport: args.jev.transport,
 		cases,
 	};
-}
+});

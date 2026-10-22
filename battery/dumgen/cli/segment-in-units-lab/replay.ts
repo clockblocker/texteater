@@ -1,20 +1,80 @@
 /** The lab's `replay`: a raw run replayed offline against today's code. */
 import { canonicalJson } from "common-utils";
+import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
+import * as Exit from "effect/Exit";
+import type { ArmResult } from "../../lab/segmentation/de/arm.js";
 import { arms } from "../../lab/segmentation/de/arms/index.js";
 import { loadSet, setNameOf } from "../../lab/segmentation/harness/corpus.js";
 import { readManifest } from "../../lab/segmentation/harness/evidence.js";
 import type { CallRecord } from "../../lab/segmentation/harness/jev-cache.js";
 import { pinDrift, pinText } from "../../lab/segmentation/harness/round.js";
-import { loadLabRun } from "../../lab/segmentation/harness/run.js";
+import {
+	type LabRun,
+	loadLabRun,
+	type RepetitionRecord,
+} from "../../lab/segmentation/harness/run.js";
 import {
 	account,
 	evidenceRoot,
 	jevCache,
 	labRoot,
+	runLab,
 	setsRoot,
 	values,
 } from "./context.js";
+
+/** What a replay found so far. */
+type Tally = {
+	compared: number;
+	identical: number;
+	fresh: number;
+	readonly differing: string[];
+	readonly failed: string[];
+	readonly failedBefore: string[];
+};
+
+/** Adds one replayed repetition, at `at`, to the tally against what the run recorded. */
+function count(
+	tally: Tally,
+	at: string,
+	recorded: RepetitionRecord,
+	exit: Exit.Exit<ArmResult, unknown>,
+	calls: readonly CallRecord[],
+) {
+	if (Exit.isFailure(exit)) {
+		const error = Cause.squash(exit.cause);
+		const message = error instanceof Error ? error.message : String(error);
+		(recorded.error ? tally.failedBefore : tally.failed).push(
+			`${at}: ${message}`,
+		);
+		return;
+	}
+	const result = exit.value;
+	tally.fresh += calls.filter((call) => !call.cached).length;
+	if (recorded.error) {
+		tally.differing.push(`${at}: the run failed, the replay succeeds`);
+		return;
+	}
+	const stored = recorded.outputs ?? {};
+	const policies = new Set([
+		...Object.keys(stored),
+		...Object.keys(result.outputs),
+	]);
+	for (const policy of policies) {
+		tally.compared++;
+		if (
+			canonicalJson(result.outputs[policy] ?? null) ===
+			canonicalJson(stored[policy] ?? null)
+		)
+			tally.identical++;
+		else tally.differing.push(`${at} ${policy}`);
+	}
+	if (result.primary !== recorded.primary)
+		tally.differing.push(
+			`${at}: primary ${result.primary}, was ${recorded.primary}`,
+		);
+}
 
 /**
  * Replays a raw run offline with today's code and compares every policy's
@@ -49,78 +109,50 @@ export async function replayRun() {
 		allowFloatingModel: values["allow-floating-model"],
 		offline: true,
 	});
-	let compared = 0;
-	let identical = 0;
-	let fresh = 0;
-	const differing: string[] = [];
-	const failed: string[] = [];
-	const failedBefore: string[] = [];
-	await Effect.runPromise(
-		Effect.forEach(
-			original.cases,
-			(caseRun) =>
-				// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-				Effect.promise(async () => {
-					const labCase = byId.get(caseRun.id);
-					if (!labCase)
-						throw Error(`${set.name} has no case ${caseRun.id}`);
-					for (const [
-						repetition,
-						recorded,
-					] of caseRun.repetitions.entries()) {
-						const at = `${caseRun.id}#${repetition}`;
-						const calls: CallRecord[] = [];
-						try {
-							const result = await arm.run(labCase.input, {
-								jev,
-								repetition:
-									repetition +
-									(original.repetitionOffset ?? 0),
-								calls,
-								options: original.options,
-							});
-							fresh += calls.filter(
-								(call) => !call.cached,
-							).length;
-							if (recorded.error) {
-								differing.push(
-									`${at}: the run failed, the replay succeeds`,
-								);
-								continue;
-							}
-							const stored = recorded.outputs ?? {};
-							const policies = new Set([
-								...Object.keys(stored),
-								...Object.keys(result.outputs),
-							]);
-							for (const policy of policies) {
-								compared++;
-								if (
-									canonicalJson(
-										result.outputs[policy] ?? null,
-									) === canonicalJson(stored[policy] ?? null)
-								)
-									identical++;
-								else differing.push(`${at} ${policy}`);
-							}
-							if (result.primary !== recorded.primary)
-								differing.push(
-									`${at}: primary ${result.primary}, was ${recorded.primary}`,
-								);
-						} catch (error) {
-							const message =
-								error instanceof Error
-									? error.message
-									: String(error);
-							(recorded.error ? failedBefore : failed).push(
-								`${at}: ${message}`,
-							);
-						}
-					}
-				}),
-			{ concurrency: Number(values.concurrency), discard: true },
-		),
+	const tally: Tally = {
+		compared: 0,
+		identical: 0,
+		fresh: 0,
+		differing: [],
+		failed: [],
+		failedBefore: [],
+	};
+	// Each case's repetitions in turn, `--concurrency` cases at once.
+	const replayCase = (caseRun: LabRun["cases"][number]) =>
+		Effect.gen(function* () {
+			const labCase = byId.get(caseRun.id);
+			if (!labCase) throw Error(`${set.name} has no case ${caseRun.id}`);
+			for (const [
+				repetition,
+				recorded,
+			] of caseRun.repetitions.entries()) {
+				const calls: CallRecord[] = [];
+				const exit = yield* Effect.exit(
+					arm.run(labCase.input, {
+						jev,
+						repetition:
+							repetition + (original.repetitionOffset ?? 0),
+						calls,
+						options: original.options,
+					}),
+				);
+				count(
+					tally,
+					`${caseRun.id}#${repetition}`,
+					recorded,
+					exit,
+					calls,
+				);
+			}
+		});
+	await runLab(
+		Effect.forEach(original.cases, replayCase, {
+			concurrency: Number(values.concurrency),
+			discard: true,
+		}),
 	);
+	const { compared, identical, fresh, differing, failed, failedBefore } =
+		tally;
 	console.log(
 		`replay ${runId} (${original.arm} ${canonicalJson(original.options)}, ${original.cases.length} cases × ${original.repetitions}, set ${set.name}@${set.hash}): ${identical}/${compared} policy outputs identical, ${differing.length} differ, ${failed.length} case repetitions fail, ${failedBefore.length} failed in the run too, ${fresh} fresh calls`,
 	);

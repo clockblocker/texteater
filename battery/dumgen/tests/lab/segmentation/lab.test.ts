@@ -16,7 +16,7 @@ import { summarizePolicy } from "../../../lab/segmentation/harness/metrics.js";
 import { runArm } from "../../../lab/segmentation/harness/run.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
 import { segmentsOf } from "../evaluation/spec-corpus/fixtures.js";
-import { answerEach, zogSichAnGold } from "./support.js";
+import { answerEach, onLabBudget, zogSichAnGold } from "./support.js";
 
 const directory = await mkdtemp(join(tmpdir(), "segment-in-units-lab-"));
 afterAll(() => rm(directory, { recursive: true, force: true }));
@@ -93,18 +93,20 @@ test("candidates4 and the reference score every gold unit with a gold judge, thr
 		[arms.reference, {}, "idiom=0.6,fixed=0.3,saying=0.4"],
 	] as const) {
 		if (!arm) throw Error("A kept arm is missing");
-		const run = await runArm({
-			runId: `test-${arm.id}`,
-			arm,
-			options,
-			set,
-			subset: "all",
-			cases: [labCase],
-			repetitions: 2,
-			jev,
-			concurrency: 2,
-			gitHead: "test",
-		});
+		const run = await onLabBudget(
+			runArm({
+				runId: `test-${arm.id}`,
+				arm,
+				options,
+				set,
+				subset: "all",
+				cases: [labCase],
+				repetitions: 2,
+				jev,
+				concurrency: 2,
+				gitHead: "test",
+			}),
+		);
 		const summary = summarizePolicy(
 			run,
 			new Map([[labCase.id, labCase]]),
@@ -118,13 +120,17 @@ test("candidates4 and the reference score every gold unit with a gold judge, thr
 		});
 		expect(summary.flips).toBe(0);
 	}
+	const retired = arms.candidates4;
+	if (!retired) throw Error("candidates4 is missing");
 	expect(
-		arms.candidates4?.run(input, {
-			jev,
-			repetition: 0,
-			calls: [],
-			options: { final: "1", closed: "1", span: "1" },
-		}),
+		onLabBudget(
+			retired.run(input, {
+				jev,
+				repetition: 0,
+				calls: [],
+				options: { final: "1", closed: "1", span: "1" },
+			}),
+		),
 	).rejects.toThrow("other levers are retired");
 });
 

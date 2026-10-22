@@ -3,13 +3,15 @@
  * `ask`, in the pieces the production arm's levers recombine. A policy
  * runs production's settings with at most its own Choice replaced, so a
  * Choice production gains reaches every lever. Each nomination is asked
- * once, production's own units once, and each distinct request once,
- * however many policies read it.
+ * once (a `Cache` by was … für), production's own units once
+ * (`Effect.cached`), and each distinct request once (`onceEach`), however
+ * many policies read it.
  */
 
 import { canonicalJson } from "common-utils";
+import * as Cache from "effect/Cache";
 import * as Effect from "effect/Effect";
-import type { Answers, Ask, AskFailure } from "../../../../src/segment/ask.js";
+import type { Ask, AskFailure } from "../../../../src/segment/ask.js";
 import {
 	type Membership,
 	membershipOf,
@@ -53,6 +55,7 @@ import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
 } from "../../../evaluation/spec-corpus/segment-in-units.js";
+import { onceEach } from "../../harness/once.js";
 
 const settings = productionUnitSettings;
 
@@ -67,159 +70,162 @@ type Read = {
 
 export type UnitStage = {
 	/** Production's read and its membership routed as intake routes it. */
-	readonly production: () => Promise<{
-		readonly read: Read;
-		readonly routed: RoutedMembership;
-	}>;
+	readonly production: Effect.Effect<
+		{
+			readonly read: Read;
+			readonly routed: RoutedMembership;
+		},
+		AskFailure
+	>;
 	/** The read `rules` ask: was-fuer adds its Noul to `final`, and a Sentence without was … für asks the same. */
-	readonly read: (rules: readonly CodeRule[]) => Promise<Read>;
+	readonly read: (
+		rules: readonly CodeRule[],
+	) => Effect.Effect<Read, AskFailure>;
 	/** Production's floors and Saying assembly over `read`, then `rules`, then production's Choices with `replaced` in their place. */
 	readonly membership: (
 		read: Read,
 		rules: readonly CodeRule[],
 		replaced?: Partial<Choices>,
-	) => Promise<Membership>;
+	) => Effect.Effect<Membership, AskFailure>;
 	/** A membership's units under `rules`, routed as production routes them unless `unasked` says otherwise. */
 	readonly units: (
 		read: Read,
 		membership: Membership,
 		rules: readonly CodeRule[],
 		unasked?: UnitSettings["unasked"],
-	) => Promise<SegmentInUnitsOutput>;
+	) => Effect.Effect<SegmentInUnitsOutput, AskFailure>;
 };
 
 /** The policies one lever adds over a case's unit stage, by name. */
 export type Policies = (
 	stage: UnitStage,
-) => Promise<Readonly<Record<string, SegmentInUnitsOutput>>>;
-
-/** `ask`, sending each distinct request once and handing every later asker its answers. */
-function askingOnce(ask: Ask): Ask {
-	const asked = new Map<string, Effect.Effect<Answers, AskFailure>>();
-	return (request) => {
-		const key = canonicalJson(request);
-		const known = asked.get(key);
-		if (known) return known;
-		const once = Effect.runSync(Effect.cached(ask(request)));
-		asked.set(key, once);
-		return once;
-	};
-}
+) => Effect.Effect<Readonly<Record<string, SegmentInUnitsOutput>>, AskFailure>;
 
 /** Production's unit stage over `input`, asking through `ask`. */
-export function unitStageOf(input: SegmentInUnitsInput, ask: Ask): UnitStage {
-	const once = askingOnce(ask);
-	const run = <A>(effect: Effect.Effect<A, AskFailure>) =>
-		Effect.runPromise(effect);
-	const reads = new Map<boolean, Promise<Read>>();
-	const read = (rules: readonly CodeRule[]): Promise<Read> => {
-		const wasFuer = rules.includes("was-fuer");
-		const known = reads.get(wasFuer);
-		if (known) return known;
-		const reading = (async () => {
-			const nomination = await run(
-				nominate(input, once, settings.inventory, { wasFuer }),
-			);
-			return {
-				nomination,
-				answers: await run(askRouteBatches(nomination, once)),
-			};
-		})();
-		reads.set(wasFuer, reading);
-		return reading;
-	};
+export const unitStageOf = Effect.fnUntraced(function* (
+	input: SegmentInUnitsInput,
+	ask: Ask,
+): Effect.fn.Return<UnitStage> {
+	// `ask`, sending each distinct request once and handing every later asker its answers.
+	const once: Ask = yield* onceEach(canonicalJson, ask);
+	const reads = yield* Cache.make({
+		capacity: 2,
+		lookup: (wasFuer: boolean) =>
+			Effect.gen(function* () {
+				const nomination = yield* nominate(
+					input,
+					once,
+					settings.inventory,
+					{ wasFuer },
+				);
+				return {
+					nomination,
+					answers: yield* askRouteBatches(nomination, once),
+				};
+			}),
+	});
+	const read = (rules: readonly CodeRule[]) =>
+		Cache.get(reads, rules.includes("was-fuer"));
 	// As `segmentGermanUnits` runs them.
-	const membership = async (
+	const membership = (
 		{ nomination }: Read,
 		rules: readonly CodeRule[],
 		replaced: Partial<Choices> = {},
-	): Promise<Membership> => {
-		const { locution, verb, government }: Choices = {
-			...settings,
-			...replaced,
-		};
-		const base = membershipOf(nomination, settings.floors, settings.saying);
-		const ruled = withCodeRules(nomination, base, rules);
-		let current = ruled;
-		if (locution)
-			current = withLocutionChoice(
+	) =>
+		Effect.gen(function* () {
+			const { locution, verb, government }: Choices = {
+				...settings,
+				...replaced,
+			};
+			const base = membershipOf(
 				nomination,
-				base,
-				ruled,
-				await run(askLocutionChoice(nomination, ruled, once, rules)),
-				rules,
-				locution,
+				settings.floors,
+				settings.saying,
 			);
-		if (verb)
-			current = withVerbChoice(
-				nomination,
-				current,
-				await run(askVerbChoice(nomination, once, verb.families)),
-				rules,
-				verb,
-			);
-		if (government)
-			current = withGovernmentChoice(
-				nomination,
-				current,
-				await run(
-					askGovernmentChoice(
+			const ruled = withCodeRules(nomination, base, rules);
+			let current = ruled;
+			if (locution)
+				current = withLocutionChoice(
+					nomination,
+					base,
+					ruled,
+					yield* askLocutionChoice(nomination, ruled, once, rules),
+					rules,
+					locution,
+				);
+			if (verb)
+				current = withVerbChoice(
+					nomination,
+					current,
+					yield* askVerbChoice(nomination, once, verb.families),
+					rules,
+					verb,
+				);
+			if (government)
+				current = withGovernmentChoice(
+					nomination,
+					current,
+					yield* askGovernmentChoice(
 						nomination,
 						current,
 						once,
 						rules,
 						government.families,
 					),
-				),
-				rules,
-				government,
-			);
-		return current;
-	};
-	const routed = async (
+					rules,
+					government,
+				);
+			return current;
+		});
+	const routed = (
 		at: Read,
 		units: Membership,
 		rules: readonly CodeRule[],
 		unasked: UnitSettings["unasked"],
-	): Promise<RoutedMembership> =>
-		routeMembership(
-			at.nomination,
-			units,
-			at.answers,
-			unasked === "ask"
-				? await run(
-						askUnaskedRoutes(
+	) =>
+		Effect.gen(function* () {
+			const extra =
+				unasked === "ask"
+					? yield* askUnaskedRoutes(
 							at.nomination,
 							at.answers,
 							units.partition,
 							once,
-						),
-					)
-				: undefined,
-			rules.includes("answer-apart") ? answerBeforeFormula : undefined,
-			codeRoutes(at.nomination, rules),
-		);
-	let production: ReturnType<UnitStage["production"]> | undefined;
+						)
+					: undefined;
+			return routeMembership(
+				at.nomination,
+				units,
+				at.answers,
+				extra,
+				rules.includes("answer-apart")
+					? answerBeforeFormula
+					: undefined,
+				codeRoutes(at.nomination, rules),
+			);
+		});
+	const production = yield* Effect.cached(
+		Effect.gen(function* () {
+			const at = yield* read(settings.rules);
+			const units = yield* membership(at, settings.rules);
+			return {
+				read: at,
+				routed: yield* routed(
+					at,
+					units,
+					settings.rules,
+					settings.unasked,
+				),
+			};
+		}),
+	);
 	return {
-		production: () => {
-			production ??= (async () => {
-				const at = await read(settings.rules);
-				return {
-					read: at,
-					routed: await routed(
-						at,
-						await membership(at, settings.rules),
-						settings.rules,
-						settings.unasked,
-					),
-				};
-			})();
-			return production;
-		},
+		production,
 		read,
 		membership,
-		units: async (at, units, rules, unasked = settings.unasked) => ({
-			units: (await routed(at, units, rules, unasked)).units(),
-		}),
+		units: (at, units, rules, unasked = settings.unasked) =>
+			Effect.map(routed(at, units, rules, unasked), (routing) => ({
+				units: routing.units(),
+			})),
 	};
-}
+});

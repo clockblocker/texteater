@@ -6,7 +6,7 @@
  *   bun run segment-in-units-lab freeze [--force]
  *   bun run segment-in-units-lab run --arm pairwise --subset smoke --reps 1 [--opt render=tagged]
  *       [--parent <runId>] [--hypothesis "<one line>"] [--allow-dirty] [--model jev-1.13.0]
- *   bun run segment-in-units-lab replay --run <runId>
+ *   bun run segment-in-units-lab replay --run <runId> [--request-budget 12]
  *   bun run segment-in-units-lab report --run <runId> [--subset slice300]
  *   bun run segment-in-units-lab compare --left <runId>[:policy] --right <runId>[:policy]
  *       [--noise <noiseRunId>] [--record [--verdict "<text>"]]
@@ -27,6 +27,11 @@
  * manifest and summary, and the ledger live under
  * `evidence/segment-in-units-lab/`.
  *
+ * `run`, `noise`, `replay` and `limit-qpc` run their Effects on the
+ * process's one lab runtime, whose request budget (`--request-budget`, 12
+ * unless set) caps the jev requests in flight; Ctrl-C interrupts them and
+ * aborts the requests.
+ *
  * Each command lives in its module under `cli/segment-in-units-lab/`.
  */
 
@@ -36,6 +41,7 @@ import {
 } from "../lab/segmentation/harness/corpus.js";
 import { compare } from "./segment-in-units-lab/compare.js";
 import {
+	disposeLab,
 	positionals,
 	repository,
 	setsRoot,
@@ -58,18 +64,26 @@ async function freeze() {
 		);
 }
 
-const command = positionals[0];
-if (command === "freeze") await freeze();
-else if (command === "run") await run();
-else if (command === "report") await report(values.run ?? "");
-else if (command === "compare") await compare();
-else if (command === "replay") await replayRun();
-else if (command === "noise") await noise();
-else if (command === "sweep") await sweep();
-else if (command === "ledger") await ledger();
-else if (command === "limit-qpc") await limitQuestionsPerCall();
-else if (command === "round") await roundCommand();
-else
+const commands: Readonly<Record<string, () => Promise<void>>> = {
+	freeze,
+	run,
+	report: () => report(values.run ?? ""),
+	compare,
+	replay: replayRun,
+	noise,
+	sweep,
+	ledger,
+	round: roundCommand,
+	"limit-qpc": limitQuestionsPerCall,
+};
+
+const command = commands[positionals[0] ?? ""];
+if (!command)
 	throw Error(
 		"Commands: freeze, run, replay, report, compare, noise, sweep, ledger, round, limit-qpc",
 	);
+try {
+	await command();
+} finally {
+	await disposeLab();
+}

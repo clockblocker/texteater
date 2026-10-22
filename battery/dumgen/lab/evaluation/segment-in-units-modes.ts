@@ -65,10 +65,10 @@ const unitStages: Readonly<
 > = {
 	production: (segments, context) =>
 		groupSegments(productionJev(context), segments),
-	// The reference arm is the segmentation lab's, a Promise over its port.
+	// The reference arm is the segmentation lab's, asking through its port.
 	reference: (segments, context) =>
-		Effect.promise(async () => {
-			const result = await referenceArm.run(
+		Effect.gen(function* () {
+			const result = yield* referenceArm.run(
 				{ language: "de", segments },
 				{ ...context, options: {} },
 			);
@@ -148,7 +148,7 @@ export const rawMode: Mode<typeof rawInputSchema, typeof rawOutputSchema> = {
 			// The reference takes the Segment stage's cut through the lab's port.
 			const segmentation = yield* segmentGermanSentence(
 				input.sentence,
-				askOf(context),
+				yield* askOf(context),
 			);
 			const segments = plainSegments(segmentation.segments);
 			return {

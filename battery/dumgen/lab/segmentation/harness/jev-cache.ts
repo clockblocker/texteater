@@ -2,8 +2,8 @@
  * The cached, retrying jev that segmentation evaluations and lab runs ask
  * through. It is a `JevAsk`, so `JevTransport.fromAsk` makes it the
  * transport `DumgenCore` takes and an evaluation runs the production path;
- * the lab's arms reach it through `port`, the stages' `ask` port, which
- * fails as production's `Jev` does: a `ProviderFailure` when no answer
+ * the lab's arms reach it through `port`, the stages' `ask` port on the
+ * run's request budget, which fails as production's `Jev` does: a `ProviderFailure` when no answer
  * came (an unusable fresh answer is refused as the transport's failure),
  * an `InvalidModelOutput` when a cached one does not fit its question.
  *
@@ -29,9 +29,10 @@
  *   `projection`, so a live run can price itself first (`round.ts`).
  */
 import { join } from "node:path";
-import type { EntryType, Questions } from "@typesafe-ai/sdk";
+import type { EntryType, Question, Questions } from "@typesafe-ai/sdk";
 import { canonicalJson, messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
+import { RequestBudget, withPermit } from "../../../src/call.js";
 import { InvalidModelOutput, ProviderFailure } from "../../../src/errors.js";
 import { checkedAnswers } from "../../../src/jev-call.js";
 import type { Answers, Ask } from "../../../src/segment/ask.js";
@@ -178,11 +179,14 @@ export class JevCache {
 	}
 
 	/**
-	 * The stages' `ask` port at `repetition`, for the lab's arms: each
-	 * request in chunks of `questionsPerRequest`, as production sends it,
-	 * every chunk checked as production checks it. A request that brought
-	 * no answer fails with a `ProviderFailure`, an unusable one with its
-	 * `InvalidModelOutput`; interrupted, it aborts its chunks' requests.
+	 * The stages' `ask` port at `repetition`, for the lab's arms, on the
+	 * run's request budget (D4 on #1269): each request in chunks of
+	 * `questionsPerRequest`, sent side by side as production's `Jev` sends
+	 * them, each chunk holding one permit of the budget while it is answered
+	 * and checked as production checks it. The first chunk that fails fails
+	 * the request and interrupts the others: a chunk that brought no answer
+	 * fails with a `ProviderFailure`, an unusable one with its
+	 * `InvalidModelOutput`, and an interrupted chunk aborts its request.
 	 * `salt` keeps a limit test's answers apart.
 	 */
 	port(
@@ -192,69 +196,101 @@ export class JevCache {
 			readonly questionsPerRequest?: number;
 			readonly salt?: string;
 		} = {},
-	): Ask {
+	): Effect.Effect<Ask, never, RequestBudget> {
 		const size = options.questionsPerRequest ?? this.questionsPerRequest;
-		return ({ stage, state, questions }) =>
-			Effect.tryPromise({
-				try: async (signal) => {
-					const entries = Object.entries(questions);
-					if (entries.length === 0) return {};
-					const spelling = spell(state, questions);
-					this.#recordPrompt(
-						stage,
-						repetition,
-						state,
-						questions,
-						spelling,
-					);
-					const chunks: (typeof entries)[] = [];
-					for (let at = 0; at < entries.length; at += size)
-						chunks.push(entries.slice(at, at + size));
-					const answered = await Promise.all(
-						chunks.map(async (chunk) => {
-							const response = await this.#answer(
-								{
-									model: this.model,
-									state,
-									questions: Object.fromEntries(chunk),
-								},
-								{
+		const context = {
+			repetition,
+			calls,
+			...(options.salt === undefined ? {} : { salt: options.salt }),
+		};
+		return RequestBudget.useSync(
+			(budget): Ask =>
+				({ stage, state, questions }) => {
+					const failure = (error: unknown) =>
+						error instanceof InvalidModelOutput
+							? error
+							: new ProviderFailure({
 									stage,
-									signal,
-									repetition,
-									calls,
-									...(options.salt === undefined
-										? {}
-										: { salt: options.salt }),
-								},
+									message: messageOf(error),
+									cause: error,
+								});
+					const chunked = Effect.try({
+						try: () => {
+							const entries = Object.entries(questions);
+							if (entries.length === 0) return undefined;
+							const spelling = spell(state, questions);
+							this.#recordPrompt(
+								stage,
+								repetition,
+								state,
+								questions,
 								spelling,
 							);
-							const checked = checkedAnswers(
-								stage,
-								isFloatingModel(this.model)
-									? response.model
-									: this.model,
-								chunk,
-								response,
-							);
-							if (checked instanceof InvalidModelOutput)
-								throw checked;
-							return checked;
-						}),
-					);
-					return Object.fromEntries(
-						answered.flatMap((chunk) => Object.entries(chunk)),
+							const chunks: (typeof entries)[] = [];
+							for (let at = 0; at < entries.length; at += size)
+								chunks.push(entries.slice(at, at + size));
+							return { spelling, chunks };
+						},
+						catch: failure,
+					});
+					return Effect.flatMap(chunked, (request) =>
+						request === undefined
+							? Effect.succeed({})
+							: Effect.map(
+									Effect.forEach(
+										request.chunks,
+										(chunk) =>
+											withPermit(
+												budget,
+												Effect.tryPromise({
+													try: (signal) =>
+														this.#chunk(
+															state,
+															chunk,
+															{
+																stage,
+																signal,
+																...context,
+															},
+															request.spelling,
+														),
+													catch: failure,
+												}),
+											),
+										{ concurrency: "unbounded" },
+									),
+									(answered): Answers =>
+										Object.fromEntries(
+											answered.flatMap((chunk) =>
+												Object.entries(chunk),
+											),
+										),
+								),
 					);
 				},
-				catch: (error) =>
-					error instanceof InvalidModelOutput
-						? error
-						: new ProviderFailure({
-								stage,
-								message: messageOf(error),
-								cause: error,
-							}),
-			});
+		);
+	}
+
+	/** One chunk of a port's request, from the cache or else from jev, checked as production checks it. */
+	async #chunk(
+		state: JevRequest["state"],
+		chunk: readonly (readonly [string, Question])[],
+		context: AskContext,
+		spelling: Spelling,
+	): Promise<Answers> {
+		const response = await this.#answer(
+			{ model: this.model, state, questions: Object.fromEntries(chunk) },
+			context,
+			spelling,
+		);
+		const checked = checkedAnswers(
+			context.stage,
+			isFloatingModel(this.model) ? response.model : this.model,
+			chunk,
+			response,
+		);
+		if (checked instanceof InvalidModelOutput) throw checked;
+		return checked;
 	}
 
 	/** The bucket of the spelled `state` at `repetition`: `hashOf({ model, state, repetition, salt })`. */

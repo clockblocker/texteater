@@ -10,104 +10,121 @@
  */
 
 import { canonicalJson } from "common-utils";
-import type { Ask } from "../../../../src/segment/ask.js";
+import * as Effect from "effect/Effect";
+import type { RequestBudget } from "../../../../src/call.js";
+import type { Ask, AskFailure } from "../../../../src/segment/ask.js";
 import { productionUnitSettings } from "../../../../src/segment/de/units.js";
 import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
 } from "../../../evaluation/spec-corpus/segment-in-units.js";
+import { onceEach } from "../../harness/once.js";
 import { type Heard, pooledAsk, recording } from "../../harness/pool.js";
 import { type Arm, type ArmContext, askOf } from "../arm.js";
 import { type Levers, leversOf } from "./production-levers.js";
 import { unitStageOf } from "./production-stage.js";
 
 /** Production's policy and every lever's over one `ask`, each name prefixed. */
-async function outputsOf(
+const outputsOf = Effect.fnUntraced(function* (
 	input: SegmentInUnitsInput,
 	ask: Ask,
 	levers: Levers,
 	prefix = "",
 ) {
-	const stage = unitStageOf(input, ask);
-	const { read, routed } = await stage.production();
+	const stage = yield* unitStageOf(input, ask);
+	const { read, routed } = yield* stage.production;
 	const outputs: Record<string, SegmentInUnitsOutput> = {
 		[`${prefix}production`]: {
 			units: routed.units(productionUnitSettings.variantMargin),
 		},
 	};
 	for (const policies of levers.policies)
-		for (const [name, output] of Object.entries(await policies(stage)))
+		for (const [name, output] of Object.entries(yield* policies(stage)))
 			outputs[`${prefix}${name}`] = output;
 	return { outputs, routes: [...read.answers.routes.identity.values()] };
-}
+});
 
 /** The repetitions a pool reads. */
 const pooledRepetitions = [0, 1, 2] as const;
 
-/** Each case's answers by repetition, heard once per run. */
-const heardCache = new WeakMap<
-	ArmContext["jev"],
-	Map<string, Promise<Heard[]>>
->();
+/** A case's answers by repetition, heard once per run whichever repetition asks first. */
+type HeardOf = (asked: {
+	readonly input: SegmentInUnitsInput;
+	readonly context: ArmContext;
+}) => Effect.Effect<Heard[], AskFailure>;
 
-function heardOf(
-	input: SegmentInUnitsInput,
-	context: ArmContext,
-): Promise<Heard[]> {
-	const byCase = heardCache.get(context.jev) ?? new Map();
-	heardCache.set(context.jev, byCase);
-	const key = canonicalJson(input);
-	const known = byCase.get(key);
-	if (known) return known;
-	const heard = Promise.all(
-		pooledRepetitions.map(async (repetition) => {
-			const answers: Heard = new Map();
-			// Fresh calls land in this repetition's record, so a live run counts them.
-			await outputsOf(
-				input,
-				recording(
-					askOf({
-						jev: context.jev,
-						repetition,
-						calls: context.calls,
-					}),
-					answers,
-				),
-				{ pool: [], policies: [] },
-			);
-			return answers;
-		}),
+/** Each run's heard answers, by the cached jev the run asks. */
+const heardCache = new WeakMap<ArmContext["jev"], HeardOf>();
+
+/** The case's answers at each pooled repetition; fresh calls land in the first asker's record, so a live run counts them. */
+const hear = ({
+	input,
+	context,
+}: Parameters<HeardOf>[0]): Effect.Effect<Heard[], AskFailure, RequestBudget> =>
+	Effect.forEach(
+		pooledRepetitions,
+		(repetition) =>
+			Effect.gen(function* () {
+				const answers: Heard = new Map();
+				const ask = yield* askOf({
+					jev: context.jev,
+					repetition,
+					calls: context.calls,
+				});
+				yield* outputsOf(input, recording(ask, answers), {
+					pool: [],
+					policies: [],
+				});
+				return answers;
+			}),
+		{ concurrency: "unbounded" },
 	);
-	byCase.set(key, heard);
-	return heard;
-}
+
+/** The run's memo of heard answers, made the first time one of its cases asks. */
+const heardOf = (
+	context: ArmContext,
+): Effect.Effect<HeardOf, never, RequestBudget> =>
+	Effect.flatMap(
+		onceEach(
+			(asked: Parameters<HeardOf>[0]) => canonicalJson(asked.input),
+			hear,
+		),
+		(made) =>
+			Effect.sync(() => {
+				const known = heardCache.get(context.jev);
+				if (known) return known;
+				heardCache.set(context.jev, made);
+				return made;
+			}),
+	);
 
 export const productionArm: Arm = {
 	id: "production",
 	summary:
 		"production's unit stage with #851's offline levers: the X1 floors × Saying grid, X2 pooled repetitions, X7 route variants, X3 code rules and the X5 Locution, D4 Verb and X4 Government Choice variants",
-	async run(input, context) {
-		const levers = leversOf(context.options);
-		const { outputs, routes } = await outputsOf(
-			input,
-			askOf(context),
-			levers,
-		);
-		if (levers.pool.length > 0) {
-			const heard = await heardOf(input, context);
-			for (const pooling of levers.pool)
-				Object.assign(
-					outputs,
-					(
-						await outputsOf(
-							input,
-							pooledAsk(heard, pooling),
-							levers,
-							`pooled-${pooling}+`,
-						)
-					).outputs,
-				);
-		}
-		return { primary: "production", outputs, routes };
-	},
+	run: (input, context) =>
+		Effect.gen(function* () {
+			const levers = leversOf(context.options);
+			const { outputs, routes } = yield* outputsOf(
+				input,
+				yield* askOf(context),
+				levers,
+			);
+			if (levers.pool.length > 0) {
+				const heard = yield* (yield* heardOf(context))({
+					input,
+					context,
+				});
+				for (const pooling of levers.pool) {
+					const pooled = yield* outputsOf(
+						input,
+						pooledAsk(heard, pooling),
+						levers,
+						`pooled-${pooling}+`,
+					);
+					Object.assign(outputs, pooled.outputs);
+				}
+			}
+			return { primary: "production", outputs, routes };
+		}),
 };

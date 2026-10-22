@@ -14,7 +14,9 @@
  * ResolvableText Segments. Nothing here knows a language.
  */
 
-import type { Answer } from "../../../src/segment/ask.js";
+import * as Effect from "effect/Effect";
+import type { RequestBudget } from "../../../src/call.js";
+import type { Answer, AskFailure } from "../../../src/segment/ask.js";
 import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
@@ -83,17 +85,18 @@ export type Routed = {
 	readonly merges: readonly Edge[];
 };
 
+/** The asking stages are Effects on the run's request budget, as arms are (`../de/arm.ts`). */
 export type Stages<Evidence, Detail, Route extends Routed = Routed> = {
 	readonly nominate: (
 		input: SegmentInUnitsInput,
 		context: ArmContext,
-	) => Promise<Nomination<Evidence>>;
+	) => Effect.Effect<Nomination<Evidence>, AskFailure, RequestBudget>;
 	readonly resolve: (nomination: Nomination<Evidence>) => Membership<Detail>;
 	readonly route: (
 		nomination: Nomination<Evidence>,
 		membership: Membership<Detail>,
 		context: ArmContext,
-	) => Promise<Route>;
+	) => Effect.Effect<Route, AskFailure, RequestBudget>;
 };
 
 /** Everything one case and repetition went through. */
@@ -160,17 +163,21 @@ export function assertPartition(
 		);
 }
 
-/** Runs the three stages on one case and validates every hand-over. */
-export async function runStages<Evidence, Detail>(
+/** Runs the three stages on one case and validates every hand-over; a failed check is a Defect. */
+export const runStages = Effect.fnUntraced(function* <Evidence, Detail>(
 	stages: Stages<Evidence, Detail>,
 	input: SegmentInUnitsInput,
 	context: ArmContext,
-): Promise<{
-	readonly output: SegmentInUnitsOutput;
-	readonly trace: StageTrace;
-}> {
+): Effect.fn.Return<
+	{
+		readonly output: SegmentInUnitsOutput;
+		readonly trace: StageTrace;
+	},
+	AskFailure,
+	RequestBudget
+> {
 	const source = input.segments.map(({ text }) => text).join("");
-	const nomination = await stages.nominate(input, context);
+	const nomination = yield* stages.nominate(input, context);
 	const ids = new Set(nomination.pieces);
 	for (const connection of nomination.connections)
 		if (
@@ -185,7 +192,7 @@ export async function runStages<Evidence, Detail>(
 		key(membership.partition)
 	)
 		throw Error("The resolver's edges do not make its partition");
-	const routed = await stages.route(nomination, membership, context);
+	const routed = yield* stages.route(nomination, membership, context);
 	assertPartition(nomination.pieces, routed.partition);
 	if (
 		key(
@@ -245,6 +252,6 @@ export async function runStages<Evidence, Detail>(
 			final: routed.partition,
 		},
 	};
-}
+});
 
 const edgePairs = (edges: readonly Edge[]) => edges.map((edge) => edge.pieces);

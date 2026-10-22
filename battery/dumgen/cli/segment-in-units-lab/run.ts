@@ -57,6 +57,7 @@ import {
 	plainCases,
 	printEstimate,
 	repository,
+	runLab,
 	setsRoot,
 	values,
 } from "./context.js";
@@ -105,19 +106,21 @@ async function execute(args: {
 			offline: true,
 			project: standInAnswers,
 		});
-		await runArm({
-			runId: "projection",
-			arm,
-			options: args.options,
-			set,
-			subset: args.subsetName,
-			cases,
-			repetitions: args.repetitions,
-			repetitionOffset: args.repetitionOffset,
-			jev: projecting,
-			concurrency: Number(values.concurrency),
-			gitHead: args.provenance.gitHead,
-		});
+		await runLab(
+			runArm({
+				runId: "projection",
+				arm,
+				options: args.options,
+				set,
+				subset: args.subsetName,
+				cases,
+				repetitions: args.repetitions,
+				repetitionOffset: args.repetitionOffset,
+				jev: projecting,
+				concurrency: Number(values.concurrency),
+				gitHead: args.provenance.gitHead,
+			}),
+		);
 		const priced = priceProjection(projecting.projection);
 		console.log(projectionText(priced));
 		if (values.estimate) {
@@ -163,32 +166,34 @@ async function execute(args: {
 		`${runId}: ${cases.length} cases × ${args.repetitions} (repetitions from ${args.repetitionOffset}), model ${jev.model}, round ${round.id} so far ${spentBefore} of ${stopLine} fresh jev input tokens, ${pinText(pin)}`,
 	);
 	let last = 0;
-	const labRun = await runArm({
-		runId,
-		arm,
-		options: args.options,
-		set,
-		subset: args.subsetName,
-		cases,
-		repetitions: args.repetitions,
-		repetitionOffset: args.repetitionOffset,
-		jev,
-		concurrency: Number(values.concurrency),
-		gitHead: args.provenance.gitHead,
-		codeHash: args.provenance.codeHash,
-		dirty: args.provenance.dirty,
-		onProgress(done, total) {
-			if (
-				done - last >= Math.max(1, Math.floor(total / 10)) ||
-				done === total
-			) {
-				last = done;
-				process.stderr.write(
-					`  ${done}/${total} (${spentNow} fresh tokens)\n`,
-				);
-			}
-		},
-	});
+	const labRun = await runLab(
+		runArm({
+			runId,
+			arm,
+			options: args.options,
+			set,
+			subset: args.subsetName,
+			cases,
+			repetitions: args.repetitions,
+			repetitionOffset: args.repetitionOffset,
+			jev,
+			concurrency: Number(values.concurrency),
+			gitHead: args.provenance.gitHead,
+			codeHash: args.provenance.codeHash,
+			dirty: args.provenance.dirty,
+			onProgress(done, total) {
+				if (
+					done - last >= Math.max(1, Math.floor(total / 10)) ||
+					done === total
+				) {
+					last = done;
+					process.stderr.write(
+						`  ${done}/${total} (${spentNow} fresh tokens)\n`,
+					);
+				}
+			},
+		}),
+	);
 	await saveLabRun(labRoot, labRun);
 	const { patch, ...provenance } = args.provenance;
 	const promptHashes = Object.fromEntries(

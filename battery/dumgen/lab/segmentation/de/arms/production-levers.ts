@@ -42,6 +42,7 @@
  * share every request that comes out the same, production's included.
  */
 
+import * as Effect from "effect/Effect";
 import {
 	type CodeRule,
 	codeRules,
@@ -120,15 +121,15 @@ function variantPolicies(option: string): Policies | undefined {
 		return margin;
 	});
 	if (margins.length === 0) return undefined;
-	return async (stage) => {
-		const { routed } = await stage.production();
-		return Object.fromEntries(
-			margins.map((margin) => [
-				`production+variants@${margin}`,
-				{ units: routed.units(margin) },
-			]),
+	return (stage) =>
+		Effect.map(stage.production, ({ routed }) =>
+			Object.fromEntries(
+				margins.map((margin) => [
+					`production+variants@${margin}`,
+					{ units: routed.units(margin) },
+				]),
+			),
 		);
-	};
 }
 
 function x3Policies(option: string): Policies | undefined {
@@ -148,19 +149,21 @@ function x3Policies(option: string): Policies | undefined {
 		...(rules.length > 1 ? [["x3", rules] as const] : []),
 	];
 	if (policies.length === 0) return undefined;
-	return async (stage) => {
-		const outputs: Record<string, SegmentInUnitsOutput> = {};
-		for (const [name, added] of policies) {
-			const ruleSet = rulesWith(added);
-			const read = await stage.read(ruleSet);
-			outputs[`production+${name}`] = await stage.units(
-				read,
-				await stage.membership(read, ruleSet),
-				ruleSet,
-			);
-		}
-		return outputs;
-	};
+	return (stage) =>
+		Effect.gen(function* () {
+			const outputs: Record<string, SegmentInUnitsOutput> = {};
+			for (const [name, added] of policies) {
+				const ruleSet = rulesWith(added);
+				const read = yield* stage.read(ruleSet);
+				const membership = yield* stage.membership(read, ruleSet);
+				outputs[`production+${name}`] = yield* stage.units(
+					read,
+					membership,
+					ruleSet,
+				);
+			}
+			return outputs;
+		});
 }
 
 function x5Policies(option: string): Policies | undefined {
@@ -182,18 +185,22 @@ function x5Policies(option: string): Policies | undefined {
 		return { name, locution, rules: rulesWith(added) };
 	});
 	if (variants.length === 0) return undefined;
-	return async (stage) => {
-		const outputs: Record<string, SegmentInUnitsOutput> = {};
-		for (const { name, locution, rules } of variants) {
-			const read = await stage.read(rules);
-			outputs[`production+x5@${name}`] = await stage.units(
-				read,
-				await stage.membership(read, rules, { locution }),
-				rules,
-			);
-		}
-		return outputs;
-	};
+	return (stage) =>
+		Effect.gen(function* () {
+			const outputs: Record<string, SegmentInUnitsOutput> = {};
+			for (const { name, locution, rules } of variants) {
+				const read = yield* stage.read(rules);
+				const membership = yield* stage.membership(read, rules, {
+					locution,
+				});
+				outputs[`production+x5@${name}`] = yield* stage.units(
+					read,
+					membership,
+					rules,
+				);
+			}
+			return outputs;
+		});
 }
 
 /** Production with each variant's Choice, as `replacing` sets it, in place of its own. */
@@ -208,22 +215,22 @@ function choicePolicies<Family extends string>(
 ): Policies | undefined {
 	const variants = choiceVariantsOf(key, option, families);
 	if (variants.length === 0) return undefined;
-	return async (stage) => {
-		const rules = settings.rules;
-		const read = await stage.read(rules);
-		const outputs: Record<string, SegmentInUnitsOutput> = {};
-		for (const variant of variants)
-			outputs[`production+${key}@${variant.name}`] = await stage.units(
-				read,
-				await stage.membership(
+	return (stage) =>
+		Effect.gen(function* () {
+			const rules = settings.rules;
+			const read = yield* stage.read(rules);
+			const outputs: Record<string, SegmentInUnitsOutput> = {};
+			for (const variant of variants) {
+				const membership = yield* stage.membership(
 					read,
 					rules,
 					replacing(variant.settings),
-				),
-				rules,
-			);
-		return outputs;
-	};
+				);
+				outputs[`production+${key}@${variant.name}`] =
+					yield* stage.units(read, membership, rules);
+			}
+			return outputs;
+		});
 }
 
 /** Each lever by its `--opt` key, in the order its policies are asked and named; none when its value lists nothing. */

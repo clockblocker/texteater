@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import * as Effect from "effect/Effect";
 import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
@@ -15,6 +16,7 @@ import {
 	type Stages,
 } from "../../../lab/segmentation/harness/stages.js";
 import { validateUnits } from "../../../lab/segmentation/harness/validate.js";
+import { onLabBudget } from "./support.js";
 
 const route = { language: "de", family: "Lexeme", kind: "VERB" } as const;
 
@@ -101,21 +103,22 @@ function stagesWith(args: {
 }): Stages<null, null> {
 	const pieces = [1, 2, 3, 4, 5, 6];
 	return {
-		nominate: async () => ({
-			pieces,
-			connections: [
-				{
-					id: "sep",
-					kind: "separable",
-					pieces: [2, 6],
-					source: "judged",
-					probability: 0.9,
-					supported: true,
-				},
-			],
-			judgments: {},
-			evidence: null,
-		}),
+		nominate: () =>
+			Effect.succeed({
+				pieces,
+				connections: [
+					{
+						id: "sep",
+						kind: "separable",
+						pieces: [2, 6],
+						source: "judged",
+						probability: 0.9,
+						supported: true,
+					},
+				],
+				judgments: {},
+				evidence: null,
+			}),
 		resolve: () => ({
 			partition:
 				args.partition ??
@@ -126,19 +129,20 @@ function stagesWith(args: {
 			edges: args.edges,
 			detail: null,
 		}),
-		route: async (_, membership) => {
-			const partition =
-				args.routed ??
-				groupsOf(pieces, [
-					...membership.edges.map((edge) => edge.pieces),
-					...(args.merges ?? []).map((edge) => edge.pieces),
-				]);
-			return {
-				output: outputOf(partition),
-				partition,
-				merges: args.merges ?? [],
-			};
-		},
+		route: (_, membership) =>
+			Effect.sync(() => {
+				const partition =
+					args.routed ??
+					groupsOf(pieces, [
+						...membership.edges.map((edge) => edge.pieces),
+						...(args.merges ?? []).map((edge) => edge.pieces),
+					]);
+				return {
+					output: outputOf(partition),
+					partition,
+					merges: args.merges ?? [],
+				};
+			}),
 	};
 }
 
@@ -154,16 +158,18 @@ const context: ArmContext = {
 };
 
 test("runStages traces selected connections, assembly edges and merges", async () => {
-	const { output, trace } = await runStages(
-		stagesWith({
-			edges: [
-				{ pieces: [2, 6], connection: "sep" },
-				{ pieces: [3, 4], rule: "sibling" },
-			],
-			merges: [{ pieces: [4, 5], rule: "interjection" }],
-		}),
-		input,
-		context,
+	const { output, trace } = await onLabBudget(
+		runStages(
+			stagesWith({
+				edges: [
+					{ pieces: [2, 6], connection: "sep" },
+					{ pieces: [3, 4], rule: "sibling" },
+				],
+				merges: [{ pieces: [4, 5], rule: "interjection" }],
+			}),
+			input,
+			context,
+		),
 	);
 	expect(trace.selected).toEqual(["sep"]);
 	expect(trace.assembly).toEqual([{ pieces: [3, 4], rule: "sibling" }]);
@@ -174,36 +180,44 @@ test("runStages traces selected connections, assembly edges and merges", async (
 
 test("runStages rejects a resolver whose edges do not make its partition", async () => {
 	await expect(
-		runStages(
-			stagesWith({
-				edges: [{ pieces: [2, 6], connection: "sep" }],
-				partition: [[1], [2, 6], [3, 4], [5]],
-			}),
-			input,
-			context,
+		onLabBudget(
+			runStages(
+				stagesWith({
+					edges: [{ pieces: [2, 6], connection: "sep" }],
+					partition: [[1], [2, 6], [3, 4], [5]],
+				}),
+				input,
+				context,
+			),
 		),
 	).rejects.toThrow("The resolver's edges do not make its partition");
 });
 
 test("runStages rejects routing that regroups without recording a merge", async () => {
 	await expect(
-		runStages(
-			stagesWith({
-				edges: [{ pieces: [2, 6], connection: "sep" }],
-				routed: [[1, 2, 6], [3], [4], [5]],
-			}),
-			input,
-			context,
+		onLabBudget(
+			runStages(
+				stagesWith({
+					edges: [{ pieces: [2, 6], connection: "sep" }],
+					routed: [[1, 2, 6], [3], [4], [5]],
+				}),
+				input,
+				context,
+			),
 		),
 	).rejects.toThrow("Routing changed membership beyond its recorded merges");
 });
 
 test("runStages rejects an edge naming an unknown connection", async () => {
 	await expect(
-		runStages(
-			stagesWith({ edges: [{ pieces: [2, 6], connection: "missing" }] }),
-			input,
-			context,
+		onLabBudget(
+			runStages(
+				stagesWith({
+					edges: [{ pieces: [2, 6], connection: "missing" }],
+				}),
+				input,
+				context,
+			),
 		),
 	).rejects.toThrow("Edge names unknown connection missing");
 });

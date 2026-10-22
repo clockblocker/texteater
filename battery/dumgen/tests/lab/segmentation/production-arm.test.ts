@@ -12,7 +12,12 @@ import { codeRules } from "../../../src/segment/de/code-rules.js";
 import { productionUnitSettings } from "../../../src/segment/de/units.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
 import { segmentsOf } from "../evaluation/spec-corpus/fixtures.js";
-import { answerEach, type Picks, zogSichAnGold } from "./support.js";
+import {
+	answerEach,
+	onLabBudget,
+	type Picks,
+	zogSichAnGold,
+} from "./support.js";
 
 const directory = await mkdtemp(join(tmpdir(), "production-arm-"));
 afterAll(() => rm(directory, { recursive: true, force: true }));
@@ -74,12 +79,14 @@ async function runUnder(
 			stages[request.stage] = (stages[request.stage] ?? 0) + 1;
 		},
 	});
-	const result = await productionArm.run(sentence, {
-		jev,
-		repetition,
-		calls: [],
-		options,
-	});
+	const result = await onLabBudget(
+		productionArm.run(sentence, {
+			jev,
+			repetition,
+			calls: [],
+			options,
+		}),
+	);
 	return { result, stages, requests: seen };
 }
 

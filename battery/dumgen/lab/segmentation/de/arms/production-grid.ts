@@ -7,6 +7,7 @@
  * request asked about routes `Unresolved`, unasked.
  */
 
+import * as Effect from "effect/Effect";
 import {
 	type Floors,
 	full07,
@@ -80,22 +81,22 @@ function membershipUnder(
 	);
 }
 
-export const gridPolicies: Policies = async (stage) => {
-	const read = await stage.read([]);
-	return Object.fromEntries(
-		await Promise.all(
-			Object.entries(grid).map(
-				async ([name, assembly]) =>
-					[
-						name,
-						await stage.units(
-							read,
-							membershipUnder(read.nomination, assembly),
-							[],
-							"unresolved",
-						),
-					] as const,
-			),
-		),
-	);
-};
+// Routed `Unresolved`, unasked, so the policies ask nothing and run in turn.
+export const gridPolicies: Policies = (stage) =>
+	Effect.gen(function* () {
+		const read = yield* stage.read([]);
+		const outputs = yield* Effect.forEach(
+			Object.entries(grid),
+			([name, assembly]) =>
+				Effect.map(
+					stage.units(
+						read,
+						membershipUnder(read.nomination, assembly),
+						[],
+						"unresolved",
+					),
+					(output) => [name, output] as const,
+				),
+		);
+		return Object.fromEntries(outputs);
+	});

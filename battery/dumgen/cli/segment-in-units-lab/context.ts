@@ -1,10 +1,17 @@
 /**
  * What every command of the segment.inUnits lab (`cli/segment-in-units-lab.ts`)
- * shares: its roots, its arguments, its cached jev, the cases it reads and
- * the round a spending command counts against.
+ * shares: its roots, its arguments, its cached jev, the runtime its Effects
+ * run on, the cases it reads and the round a spending command counts
+ * against.
  */
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
+import type * as Effect from "effect/Effect";
+import {
+	labRequestBudget,
+	makeLabRuntime,
+	runInterruptibly,
+} from "../../lab/evaluation/lab-runtime.js";
 import {
 	type LabCase,
 	trackedSetsRoot,
@@ -23,6 +30,7 @@ import {
 	stopLineOf,
 } from "../../lab/segmentation/harness/round.js";
 import { conformTo734 } from "../../lab/segmentation/harness/ruling734.js";
+import type { RequestBudget } from "../../src/call.js";
 import { createTypeSafeAsk } from "../../src/segment/typesafe-ask.js";
 
 export const packageRoot = resolve(import.meta.dir, "../..");
@@ -69,6 +77,7 @@ export const { positionals, values } = parseArgs({
 		subset: { type: "string" },
 		reps: { type: "string" },
 		concurrency: { type: "string", default: "12" },
+		"request-budget": { type: "string", default: String(labRequestBudget) },
 		opt: { type: "string", multiple: true, default: [] },
 		limit: { type: "string" },
 		offline: { type: "boolean", default: false },
@@ -103,6 +112,28 @@ export const { positionals, values } = parseArgs({
 		table: { type: "boolean", default: false },
 	},
 });
+
+const requestBudget = Number(values["request-budget"]);
+if (!Number.isInteger(requestBudget) || requestBudget < 1)
+	throw Error(
+		`--request-budget ${values["request-budget"]} is not a positive integer`,
+	);
+
+/**
+ * The process's one lab runtime (`lab/evaluation/lab-runtime.ts`): every
+ * Effect a command runs, runs on it, and every jev request holds one of its
+ * `--request-budget` permits (12 unless set). `--concurrency` caps the
+ * cases a run works on at once; the budget caps their requests in flight.
+ */
+const runtime = makeLabRuntime(requestBudget);
+
+/** `effect` on the process's lab runtime; Ctrl-C interrupts it, aborting the jev requests in flight. */
+export const runLab = <A, E>(
+	effect: Effect.Effect<A, E, RequestBudget>,
+): Promise<A> => runInterruptibly(runtime, effect);
+
+/** Releases the process's lab runtime once its command is done. */
+export const disposeLab = (): Promise<void> => runtime.dispose();
 
 /** The cases by id, read against the #734 ruling when `--relabel 734`. */
 export function casesOf(cases: readonly LabCase[]): Map<string, LabCase> {

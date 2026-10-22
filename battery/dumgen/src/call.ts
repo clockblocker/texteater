@@ -244,7 +244,6 @@ export function callModel<Response, Output>(
 		const payloads = yield* TracePayloads;
 		const queuedAt = yield* Clock.monotonicTimeNanos;
 		const queued = budget.demand >= budget.permits;
-		budget.demand++;
 		const holding = Effect.uninterruptibleMask((restore) =>
 			// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 			Effect.gen(function* () {
@@ -338,8 +337,22 @@ export function callModel<Response, Output>(
 				return yield* exit;
 			}),
 		);
-		return yield* budget.semaphore
-			.withPermits(1)(holding)
+		return yield* withPermit(budget, holding);
+	});
+}
+
+/**
+ * `effect` holding one permit of `budget`, counted in its demand while it
+ * waits for the permit and while it holds it.
+ */
+export function withPermit<A, E, R>(
+	budget: RequestBudget["Service"],
+	effect: Effect.Effect<A, E, R>,
+): Effect.Effect<A, E, R> {
+	return Effect.suspend(() => {
+		budget.demand++;
+		return budget.semaphore
+			.withPermits(1)(effect)
 			.pipe(
 				Effect.ensuring(
 					Effect.sync(() => {

@@ -1,13 +1,13 @@
 /**
- * The runtime an evaluation runs on (Dumgen ADR 0009, D4 on #1269): one
- * `ManagedRuntime` per evaluate run, holding a request budget of 12 that
- * every attempt of the run shares, the cache fill's and the cases'
- * alike. Each attempt builds `DumgenCore` over its own cached transports
- * on that budget, so a run keeps at most 12 model calls in flight however
- * many attempts run at once. The segmentation lab already runs 12 cases
- * at a time.
+ * The runtime the labs run on (Dumgen ADR 0009, D4 on #1269): one
+ * `ManagedRuntime` per evaluate run or `segment-in-units-lab` command,
+ * holding a request budget of 12 that every attempt of the run shares,
+ * the cache fill's and the cases' alike. An evaluation's attempts build
+ * `DumgenCore` over their own cached transports on that budget, and the
+ * segmentation lab's arms ask the cached jev's port on it, so a run keeps
+ * at most 12 model calls in flight however many attempts run at once.
  *
- * Every Effect an evaluation runs goes through `runtime.runPromise(effect,
+ * Every Effect a lab runs goes through `runtime.runPromise(effect,
  * { signal })` with the run's signal, so aborting the run interrupts its
  * attempts, and an interrupted call aborts its transport.
  */
@@ -17,15 +17,14 @@ import * as Effect from "effect/Effect";
 import * as ManagedRuntime from "effect/ManagedRuntime";
 import { RequestBudget } from "../../src/call.js";
 
-/** The model calls one evaluate run keeps in flight, jev and Luna together. */
+/** The model calls one lab run keeps in flight by default, jev and Luna together. */
 export const labRequestBudget = 12;
-
-const LabLive = RequestBudget.layer(labRequestBudget);
 
 export type LabRuntime = ManagedRuntime.ManagedRuntime<RequestBudget, never>;
 
-/** A fresh runtime over `LabLive`: its own budget of `labRequestBudget`. */
-export const makeLabRuntime = (): LabRuntime => ManagedRuntime.make(LabLive);
+/** A fresh runtime over its own budget of `permits`, `labRequestBudget` unless a run sets it. */
+export const makeLabRuntime = (permits = labRequestBudget): LabRuntime =>
+	ManagedRuntime.make(RequestBudget.layer(permits));
 
 /**
  * `body` on `runtime`, or on a fresh lab runtime that is disposed once
@@ -61,6 +60,24 @@ export const runOn = <A, E>(
 	effect: Effect.Effect<A, E, RequestBudget>,
 	signal: AbortSignal | undefined,
 ): Promise<A> => runtime.runPromise(effect, { signal });
+
+/**
+ * `effect` on `runtime`, interrupted when the process gets SIGINT while it
+ * runs: a CLI's runtime edge, where Ctrl-C aborts the calls in flight.
+ */
+export async function runInterruptibly<A, E>(
+	runtime: LabRuntime,
+	effect: Effect.Effect<A, E, RequestBudget>,
+): Promise<A> {
+	const controller = new AbortController();
+	const interrupt = () => controller.abort();
+	process.once("SIGINT", interrupt);
+	try {
+		return await runOn(runtime, effect, controller.signal);
+	} finally {
+		process.removeListener("SIGINT", interrupt);
+	}
+}
 
 /**
  * Every item's attempt, `concurrency` at a time. A failed attempt, a

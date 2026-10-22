@@ -94,7 +94,7 @@ it and score it against frozen gold. Results live in the lab tickets
 bun run segment-in-units-lab freeze                      # once; --force refreezes
 bun run segment-in-units-lab run --arm candidates4 --subset slice300 --reps 3 \
   --opt final=1 --opt closed=1 --parent <runId> --hypothesis "<one line>"
-bun run segment-in-units-lab replay --run <runId>
+bun run segment-in-units-lab replay --run <runId> [--request-budget 12]
 bun run segment-in-units-lab report --run <runId> [--policy <p>] [--subset <s>] [--relabel 734]
 bun run segment-in-units-lab compare --left <runId>[:policy] --right <runId>[:policy] \
   [--subset <s>] [--noise <noiseRunId>] [--record [--verdict "<text>"]]
@@ -131,6 +131,18 @@ bun run segment-in-units-lab round --open <id> --cap <tokens> --stop-line <token
   error. `--estimate` prices a `run`, `noise` or `limit-qpc` offline and
   stops (see Rounds). `--token-budget` moves the round's stop line, up to
   its cap.
+- **One runtime and one request budget per command** (Dumgen ADR 0009,
+  D4 on #1269): `run`, `noise`, `replay` and `limit-qpc` run their arms as
+  Effects on one `ManagedRuntime` (`lab/evaluation/lab-runtime.ts`), and
+  every jev request an arm asks through the cache's port holds one permit
+  of its budget, hit or miss. `--request-budget` sets it (12 unless set);
+  `--concurrency` still caps the cases worked on at once. A budget changes
+  concurrency only, never requests or outputs. Runs record neither
+  setting. A repetition's `wallMs` now includes its waits for a permit,
+  and fewer requests in flight can change a fresh call's `latencyMs` (timed
+  around the transport alone), so neither compares with runs made before
+  #1276. Ctrl-C interrupts the run and aborts the requests in flight; the
+  cache counts them `interrupted`.
 - The `reference` arm takes its resolver floors as options (`--opt
   expression=0.6`; `floorsOf` in `arms/reference.ts`). Its default is the
   setting #762 adopted; `--opt floors=run` replays the #755 reference run.

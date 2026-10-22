@@ -151,18 +151,21 @@ export function referenceStagesUnder(
 	unasked: "ask" | "unresolved" = "ask",
 ): Stages<Nomination, Membership, ReferenceRouted> {
 	return {
-		async nominate(input, context) {
-			const nomination = await Effect.runPromise(
-				nominate(input, askOf(context), referenceInventory),
-			);
-			const connections = referenceConnections(nomination, floors);
-			return {
-				pieces: nomination.sentence.pieces.map((piece) => piece.id),
-				connections,
-				judgments: judgmentsOf(nomination, connections),
-				evidence: nomination,
-			};
-		},
+		nominate: (input, context) =>
+			Effect.gen(function* () {
+				const nomination = yield* nominate(
+					input,
+					yield* askOf(context),
+					referenceInventory,
+				);
+				const connections = referenceConnections(nomination, floors);
+				return {
+					pieces: nomination.sentence.pieces.map((piece) => piece.id),
+					connections,
+					judgments: judgmentsOf(nomination, connections),
+					evidence: nomination,
+				};
+			}),
 		resolve(nomination) {
 			const membership = membershipOf(
 				nomination.evidence,
@@ -179,41 +182,38 @@ export function referenceStagesUnder(
 				detail: membership,
 			};
 		},
-		async route(nomination, membership, context): Promise<ReferenceRouted> {
-			const ask = askOf(context);
-			const evidence = nomination.evidence;
-			const answers = await Effect.runPromise(
-				askRouteBatches(evidence, ask),
-			);
-			const extra =
-				unasked === "ask"
-					? await Effect.runPromise(
-							askUnaskedRoutes(
+		route: (nomination, membership, context) =>
+			Effect.gen(function* () {
+				const ask = yield* askOf(context);
+				const evidence = nomination.evidence;
+				const answers = yield* askRouteBatches(evidence, ask);
+				const extra =
+					unasked === "ask"
+						? yield* askUnaskedRoutes(
 								evidence,
 								answers,
 								membership.partition,
 								ask,
-							),
-						)
-					: undefined;
-			const routed = routeMembership(
-				evidence,
-				membership.detail,
-				answers,
-				extra,
-			);
-			return {
-				output: { units: routed.units() },
-				partition: routed.partition,
-				merges: routed.merges.map(
-					([a, b]): Edge => ({
-						pieces: [a, b],
-						rule: "interjection",
-					}),
-				),
-				routed,
-			};
-		},
+							)
+						: undefined;
+				const routed = routeMembership(
+					evidence,
+					membership.detail,
+					answers,
+					extra,
+				);
+				return {
+					output: { units: routed.units() },
+					partition: routed.partition,
+					merges: routed.merges.map(
+						([a, b]): Edge => ({
+							pieces: [a, b],
+							rule: "interjection",
+						}),
+					),
+					routed,
+				} satisfies ReferenceRouted;
+			}),
 	};
 }
 
@@ -303,52 +303,63 @@ export const referenceArm: Arm = {
 	id: "reference",
 	summary:
 		"The #755 candidate reference (candidates4 final=1 closed=1, step0+saying+closed) behind nomination, membership and routing stages, with the floors #762 adopted, route variants and the click-time pick (#760)",
-	async run(input, context) {
-		const floors = floorsOf(context.options);
-		const unasked = context.options.unasked ?? "ask";
-		if (unasked !== "ask" && unasked !== "unresolved")
-			throw Error(`--opt unasked=${unasked} must be ask or unresolved`);
-		const variantMargins = marginsOf(context.options.variants, "variants");
-		const [pickMargin, ...more] = marginsOf(context.options.pick, "pick");
-		if (more.length > 0) throw Error("--opt pick takes one margin");
-		const stages = referenceStagesUnder(floors, unasked);
-		let evidence: Nomination | undefined;
-		let routed: RoutedMembership | undefined;
-		const { output } = await runStages(
-			{
-				...stages,
-				nominate: async (stageInput, stageContext) => {
-					const nomination: StageNomination<Nomination> =
-						await stages.nominate(stageInput, stageContext);
-					evidence = nomination.evidence;
-					return nomination;
+	run: (input, context) =>
+		Effect.gen(function* () {
+			const floors = floorsOf(context.options);
+			const unasked = context.options.unasked ?? "ask";
+			if (unasked !== "ask" && unasked !== "unresolved")
+				throw Error(
+					`--opt unasked=${unasked} must be ask or unresolved`,
+				);
+			const variantMargins = marginsOf(
+				context.options.variants,
+				"variants",
+			);
+			const [pickMargin, ...more] = marginsOf(
+				context.options.pick,
+				"pick",
+			);
+			if (more.length > 0) throw Error("--opt pick takes one margin");
+			const stages = referenceStagesUnder(floors, unasked);
+			let evidence: Nomination | undefined;
+			let routed: RoutedMembership | undefined;
+			const { output } = yield* runStages(
+				{
+					...stages,
+					nominate: (stageInput, stageContext) =>
+						Effect.map(
+							stages.nominate(stageInput, stageContext),
+							(nomination: StageNomination<Nomination>) => {
+								evidence = nomination.evidence;
+								return nomination;
+							},
+						),
+					route: (nomination, membership, stageContext) =>
+						Effect.map(
+							stages.route(nomination, membership, stageContext),
+							(result) => {
+								routed = result.routed;
+								return result;
+							},
+						),
 				},
-				route: async (nomination, membership, stageContext) => {
-					const result = await stages.route(
-						nomination,
-						membership,
-						stageContext,
-					);
-					routed = result.routed;
-					return result;
-				},
-			},
-			input,
-			context,
-		);
-		const policy = floorsKey(floors);
-		const outputs: Record<string, SegmentInUnitsOutput> = {
-			[policy]: output,
-		};
-		if (!routed || !evidence) throw Error("The reference did not route");
-		for (const margin of variantMargins)
-			outputs[`${policy}+variants@${margin}`] = {
-				units: routed.units(margin),
+				input,
+				context,
+			);
+			const policy = floorsKey(floors);
+			const outputs: Record<string, SegmentInUnitsOutput> = {
+				[policy]: output,
 			};
-		if (pickMargin !== undefined) {
-			const withVariants = { units: routed.units(pickMargin) };
-			const picks = await Effect.runPromise(
-				askOf(context)({
+			if (!routed || !evidence)
+				throw Error("The reference did not route");
+			for (const margin of variantMargins)
+				outputs[`${policy}+variants@${margin}`] = {
+					units: routed.units(margin),
+				};
+			if (pickMargin !== undefined) {
+				const withVariants = { units: routed.units(pickMargin) };
+				const ask = yield* askOf(context);
+				const picks = yield* ask({
 					stage: "pick",
 					state: evidence.state,
 					questions: pickQuestions(
@@ -356,15 +367,14 @@ export const referenceArm: Arm = {
 						routed.partition,
 						withVariants,
 					),
-				}),
-			);
-			outputs[`${policy}+variants@${pickMargin}`] = withVariants;
-			outputs[`${policy}+variants@${pickMargin}+pick`] = pickedOutput(
-				routed.partition,
-				withVariants,
-				picks,
-			);
-		}
-		return { primary: policy, outputs };
-	},
+				});
+				outputs[`${policy}+variants@${pickMargin}`] = withVariants;
+				outputs[`${policy}+variants@${pickMargin}+pick`] = pickedOutput(
+					routed.partition,
+					withVariants,
+					picks,
+				);
+			}
+			return { primary: policy, outputs };
+		}),
 };
