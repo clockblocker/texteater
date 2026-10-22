@@ -8,6 +8,7 @@ import { resolve } from "node:path";
 import { type ParseArgsOptionsConfig, parseArgs } from "node:util";
 import type * as Experiments from "../../lab/evaluation/experiments.js";
 import type { UnitConfig } from "../../lab/evaluation/experiments.js";
+import type { LabRuntime } from "../../lab/evaluation/lab-runtime.js";
 import type { Splitter } from "../../lab/evaluation/split-text.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 
@@ -260,4 +261,6 @@ export type ExperimentCommand = {
 	readonly write: (value: unknown) => void;
 	readonly warn: (message: string) => void;
 	readonly experiments: typeof Experiments;
+	/** The process's one lab runtime: its run's request budget (`lab-runtime.ts`). */
+	readonly runtime: LabRuntime;
 };

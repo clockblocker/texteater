@@ -6,6 +6,11 @@
  * build makes a fresh budget, so the operations it serves share one.
  * `TraceSink` and `TracePayloads` are References: a host sets them here,
  * or provides them per program, around one operation or an action.
+ *
+ * `DumgenCore(options)` is the same Layer without its budget: it takes the
+ * `RequestBudget` from its context, so builds over different transports
+ * can share one. The lab builds one per attempt, over that attempt's
+ * cached transports, on its run's budget (`lab/evaluation/lab-runtime.ts`).
  */
 import * as Layer from "effect/Layer";
 import { RequestBudget, TracePayloads, TraceSink } from "./call.js";
@@ -57,7 +62,13 @@ export type DumgenOptions = {
 	readonly inventory?: GermanInventory;
 };
 
-export function DumgenLive(options: DumgenOptions): Layer.Layer<Jev | Luna> {
+/** `DumgenLive`'s options without its budget, which `DumgenCore` reads from its context. */
+type DumgenCoreOptions = Omit<DumgenOptions, "requestBudget">;
+
+/** `Jev` and `Luna` over the host's transports, on the `RequestBudget` its context holds. */
+export function DumgenCore(
+	options: DumgenCoreOptions,
+): Layer.Layer<Jev | Luna, never, RequestBudget> {
 	const settings = Layer.mergeAll(
 		Layer.succeed(JevModel, options.jevModel ?? pinnedJevModel),
 		Layer.succeed(
@@ -72,13 +83,15 @@ export function DumgenLive(options: DumgenOptions): Layer.Layer<Jev | Luna> {
 			? Layer.empty
 			: Layer.succeed(TraceSink, options.onOperation),
 	);
-	const transports = Layer.mergeAll(
-		options.jev,
-		options.luna,
-		RequestBudget.layer(options.requestBudget ?? 16),
-	);
 	return Layer.mergeAll(Jev.layer, Luna.layer).pipe(
-		Layer.provide(transports),
+		Layer.provide(Layer.mergeAll(options.jev, options.luna)),
 		Layer.provideMerge(settings),
+	);
+}
+
+/** `DumgenCore` on a fresh budget of `requestBudget`, 16 by default. */
+export function DumgenLive(options: DumgenOptions): Layer.Layer<Jev | Luna> {
+	return DumgenCore(options).pipe(
+		Layer.provide(RequestBudget.layer(options.requestBudget ?? 16)),
 	);
 }

@@ -67,10 +67,14 @@
  * line to the lab ledger, refuses to go live when dumcorpus's prompt inputs
  * moved since the round was pinned (unless `--repin`) or when its projected
  * spend would cross the stop line, and stops at the line. It runs
- * production's `DumgenLive` with the lab's cached jev as its transport,
+ * production's `DumgenCore` with the lab's cached jev as its transport,
  * which retries a rate limit or a server error; the ledger line and the
  * output give those retries and the requests that still failed as
  * `transport`.
+ *
+ * Every run's Effects run on the process's one lab runtime
+ * (`lab/evaluation/lab-runtime.ts`): all its attempts share one request
+ * budget of 12, and SIGINT interrupts them, aborting the calls in flight.
  *
  * A resolve.grammar, resolve.reading or knowledge run prices itself first and goes
  * live only under the budgets the main session granted the round:
@@ -175,6 +179,10 @@ export async function runEvaluationCli(
 	experiments.spendsJev(experimentId);
 	rejectUnreadRunOptions(values, experimentId);
 	const caseIds = await caseIdsOf(values);
+	// The process's one runtime: every Effect of the run runs on it, on
+	// one request budget (`lab/evaluation/lab-runtime.ts`).
+	const { makeLabRuntime } = await import("../lab/evaluation/lab-runtime.js");
+	const runtime = makeLabRuntime();
 	const command: ExperimentCommand = {
 		values,
 		experimentId,
@@ -185,10 +193,15 @@ export async function runEvaluationCli(
 		write,
 		warn,
 		experiments,
+		runtime,
 	};
-	return values.requests
-		? requestsCommand(command)
-		: experimentCommand(command);
+	try {
+		return await (values.requests
+			? requestsCommand(command)
+			: experimentCommand(command));
+	} finally {
+		await runtime.dispose();
+	}
 }
 
 /** `--requests`: every case's requests built offline, saved as a request run. */
@@ -200,10 +213,12 @@ async function requestsCommand({
 	dependencies,
 	write,
 	experiments,
+	runtime,
 }: ExperimentCommand) {
 	const built = await experiments.experimentRequests({
 		experimentId,
 		sourceRevision: values.revision ?? "",
+		runtime,
 		units,
 		...(dependencies.labRoot ? { labRoot: dependencies.labRoot } : {}),
 		...(dependencies.setsRoot ? { setsRoot: dependencies.setsRoot } : {}),

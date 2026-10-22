@@ -32,7 +32,7 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { z } from "zod";
-import { DumgenLive } from "../../../src/dumgen-live.js";
+import { DumgenCore } from "../../../src/dumgen-live.js";
 import { JevTransport } from "../../../src/jev-call.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
 import { LunaTransport } from "../../../src/luna-call.js";
@@ -49,6 +49,13 @@ import { loadSet, trackedSetsRoot } from "../../segmentation/harness/corpus.js";
 import { JevCache } from "../../segmentation/harness/jev-cache.js";
 import { storedAs } from "../../stored-json.js";
 import { frozenSetSize } from "../frozen-sets.js";
+import {
+	everyAttempt,
+	type LabEffect,
+	type LabRuntime,
+	onLabRuntime,
+	runOn,
+} from "../lab-runtime.js";
 import type { LunaBatch } from "../luna-batch.js";
 import { groupSegments } from "../production-segmenter.js";
 import { goldRequests } from "../request-diff.js";
@@ -130,6 +137,8 @@ export type GrammarEvaluateArgs = {
 	readonly caps?: GrammarCaps;
 	readonly outputDirectory?: string;
 	readonly signal?: AbortSignal;
+	/** The run's runtime and budget (`lab-runtime.ts`); a fresh one by default. */
+	readonly runtime?: LabRuntime;
 	readonly concurrency?: number;
 	/** The answer cache; `.runs/resolve-grammar` by default. */
 	readonly root?: string;
@@ -170,35 +179,35 @@ const routeKey = (goldCase: GrammarCase) =>
 type UnitSource = (
 	goldCase: GrammarCase,
 	repetition: number,
-) => Promise<readonly Unit[] | undefined>;
+) => LabEffect<readonly Unit[] | null>;
 
 /** One attempt: the click, its outcome as a run stores it, and its trace's reason. */
-async function attempt(
+const attempt = (
 	goldCase: GrammarCase,
 	repetition: number,
 	models: Pick<GrammarModels, "jev" | "luna">,
 	units?: UnitSource,
-): Promise<GrammarOutput> {
-	let unit = goldCase.unit;
-	if (units) {
-		const produced = await units(goldCase, repetition);
-		const match = produced?.find(
-			(candidate) =>
-				canonicalJson(candidate.segments) ===
-					canonicalJson(goldCase.unit.segments) &&
-				canonicalJson(candidate.route) ===
-					canonicalJson(goldCase.unit.route),
-		);
-		if (!match)
-			return {
-				_tag: "NoMatchingUnit",
-				reason: produced ? "NoMatchingUnit" : "NoCachedUnits",
-			};
-		unit = match;
-	}
-	const traces: OperationTrace[] = [];
-	const result = await Effect.runPromise(
-		operations.resolve
+): LabEffect<GrammarOutput> =>
+	Effect.gen(function* () {
+		let unit = goldCase.unit;
+		if (units) {
+			const produced = yield* units(goldCase, repetition);
+			const match = produced?.find(
+				(candidate) =>
+					canonicalJson(candidate.segments) ===
+						canonicalJson(goldCase.unit.segments) &&
+					canonicalJson(candidate.route) ===
+						canonicalJson(goldCase.unit.route),
+			);
+			if (!match)
+				return {
+					_tag: "NoMatchingUnit",
+					reason: produced ? "NoMatchingUnit" : "NoCachedUnits",
+				};
+			unit = match;
+		}
+		const traces: OperationTrace[] = [];
+		const result = yield* operations.resolve
 			.grammar({
 				language: "de",
 				sentence: goldCase.sentence,
@@ -208,7 +217,7 @@ async function attempt(
 			})
 			.pipe(
 				Effect.provide(
-					DumgenLive({
+					DumgenCore({
 						jev: JevTransport.fromAsk(
 							models.jev(goldCase, repetition),
 						),
@@ -218,58 +227,46 @@ async function attempt(
 						onOperation: (trace) => traces.push(trace),
 					}),
 				),
-			),
-	);
-	const reason = traces[0]?.resolution?.reason;
-	return {
-		_tag: result._tag,
-		...(result._tag === "Resolved"
-			? { attestation: result.attestation }
-			: {}),
-		...(result._tag === "CatalogMiss" ? { message: result.message } : {}),
-		...(reason === undefined ? {} : { reason }),
-	};
-}
+			);
+		const reason = traces[0]?.resolution?.reason;
+		return {
+			_tag: result._tag,
+			...(result._tag === "Resolved"
+				? { attestation: result.attestation }
+				: {}),
+			...(result._tag === "CatalogMiss"
+				? { message: result.message }
+				: {}),
+			...(reason === undefined ? {} : { reason }),
+		} satisfies GrammarOutput;
+	});
 
 /** Every case's every repetition, `concurrency` at a time; failures are left for the run. */
-async function pass(
+const pass = (
 	cases: readonly GrammarCase[],
 	models: GrammarModels,
 	concurrency: number,
 	repetitions: number,
 	units?: UnitSource,
-): Promise<void> {
-	const work = cases.flatMap((goldCase) =>
-		Array.from({ length: repetitions }, (_, repetition) => ({
-			goldCase,
-			repetition,
-		})),
+): LabEffect<void> =>
+	everyAttempt(
+		cases.flatMap((goldCase) =>
+			Array.from({ length: repetitions }, (_, repetition) => ({
+				goldCase,
+				repetition,
+			})),
+		),
+		(item) => attempt(item.goldCase, item.repetition, models, units),
+		concurrency,
 	);
-	let next = 0;
-	await Promise.all(
-		Array.from({ length: Math.max(1, concurrency) }, async () => {
-			for (;;) {
-				const item = work[next++];
-				if (!item) return;
-				try {
-					await attempt(
-						item.goldCase,
-						item.repetition,
-						models,
-						units,
-					);
-				} catch {
-					// The run records the failure.
-				}
-			}
-		}),
-	);
-}
+
+/** A record the lab set lacks, or whose cached units missed or failed. */
+const noUnits: LabEffect<readonly Unit[] | null> = Effect.succeed(null);
 
 /**
  * segment.inUnits' production units for a case's record, replayed from the
  * lab's cache at the attempt's repetition (gold Segments in, as the lab's
- * gold mode runs); undefined when the lab set lacks the record or the
+ * gold mode runs); null when the lab set lacks the record or the
  * cache misses.
  */
 async function cachedUnits(
@@ -284,18 +281,22 @@ async function cachedUnits(
 		cacheDirectory: join(labRoot, "cache"),
 		offline: true,
 	});
-	const memo = new Map<string, Promise<readonly Unit[] | undefined>>();
+	const memo = new Map<string, LabEffect<readonly Unit[] | null>>();
 	return (goldCase, repetition) => {
 		const key = `${goldCase.record}#${repetition}`;
 		let units = memo.get(key);
 		if (!units) {
 			const labCase = byRecord.get(goldCase.record);
 			units = labCase
-				? groupSegments(
-						{ ask: jev.ask(repetition), model: jev.model },
-						labCase.input.segments,
-					).catch(() => undefined)
-				: Promise.resolve(undefined);
+				? Effect.runSync(
+						Effect.cached(
+							groupSegments(
+								{ ask: jev.ask(repetition), model: jev.model },
+								labCase.input.segments,
+							).pipe(Effect.catchCause(() => noUnits)),
+						),
+					)
+				: noUnits;
 			memo.set(key, units);
 		}
 		return units;
@@ -372,6 +373,7 @@ async function grammarRequests(
 	setsRoot: string,
 	setName: GrammarSetName,
 	concurrency: number,
+	runtime: LabRuntime | undefined,
 ) {
 	const set = await loadGrammarSet(setsRoot, setName);
 	return goldRequests({
@@ -379,7 +381,168 @@ async function grammarRequests(
 		oracle: { answers: goldAnswers, written: goldWritten },
 		attempt: (goldCase, models) => attempt(goldCase, 0, models),
 		concurrency,
+		...(runtime ? { runtime } : {}),
 	});
+}
+
+/** A run of one set and input on `runtime`: priced, filled when live, then run case by case. */
+async function evaluateGrammarSet(
+	setName: GrammarSetName,
+	e2e: boolean,
+	args: GrammarEvaluateArgs,
+	runtime: LabRuntime,
+): Promise<GrammarEvaluated> {
+	const id = `${grammarRoute}:${setName}${e2e ? ":e2e" : ""}`;
+	const directory = join(args.root ?? defaultGrammarRoot, "cache");
+	const { set, repetitions } = await openFrozenSet({
+		setsRoot: args.setsRoot ?? trackedGrammarSetsRoot,
+		setName,
+		route: grammarRoute,
+		freezeCommand: "bun cli/resolve-grammar.ts freeze",
+		load: loadGrammarSet,
+		maximum: grammarRepetitions,
+		repetitions: args.repetitions,
+	});
+	const { cases: selected, caseFilter } = selectSubset({
+		set,
+		subset: args.subset,
+		load: loadSubset,
+		caseIds: subsetCaseIds,
+	});
+	const cases = selected.slice(0, args.limit ?? selected.length);
+	const concurrency = args.concurrency ?? 12;
+	const units = e2e
+		? await cachedUnits(
+				args.segmentLabRoot ?? defaultSegmentLabRoot,
+				args.segmentSetsRoot ?? trackedSetsRoot,
+			)
+		: undefined;
+	const identity = { name: set.name, hash: set.hash };
+	const passWith = (models: GrammarModels) =>
+		runOn(
+			runtime,
+			pass(cases, models, concurrency, repetitions, units),
+			args.signal,
+		);
+	const priced = await priceRound(args, {
+		id,
+		ledger: grammarLedgerPath,
+		directory,
+		models: (options) => new GrammarModels(options),
+		pass: passWith,
+		repetitions,
+		attempts: cases.length * repetitions,
+	});
+	const { price } = priced;
+	if (args.estimate) return { price, set: identity };
+	const live = new GrammarModels(runModelsOptions(args, directory, priced));
+	await fillLive(args, live, "resolve.grammar", () => passWith(live));
+	const replay = new GrammarModels({
+		directory,
+		mode: "offline",
+	});
+	const byId = new Map(cases.map((goldCase) => [goldCase.id, goldCase]));
+	const corpus = defineGoldenCorpus({
+		route: grammarRoute,
+		inputSchema,
+		outputSchema: grammarOutputSchema,
+		collections: {
+			dumcorpus: defineGoldenCaseCollection({
+				groups: {
+					cases: defineGoldenCaseGroup(
+						Object.fromEntries(
+							cases.map((goldCase) => [
+								goldCase.id,
+								{
+									input: {
+										caseId: goldCase.id,
+										record: goldCase.record,
+										route: routeKey(goldCase),
+										rules: [...goldCase.rules],
+									} satisfies GrammarInput,
+									idealOutput: {
+										_tag: "Resolved" as const,
+										attestation: goldCase.ideal,
+									},
+									contaminationKeys: [goldCase.record],
+								},
+							]),
+						),
+					),
+				},
+				cases: {},
+			}),
+		},
+	});
+	const attempts = new Map<string, number>();
+	const run = await runOperationExperiment({
+		experiment: {
+			corpus,
+			evaluation: corpus.select(cases.map(({ id }) => id)),
+			demonstrations: corpus.select([]),
+			// The one traced run adapter: promptsmith runs a case's
+			// repetitions back to back and passes no index, so the
+			// attempts at one case count off the cache's repetitions.
+			run: async (input, context) => {
+				const goldCase = byId.get(input.caseId);
+				if (!goldCase) throw Error(`No case ${input.caseId}`);
+				const repetition = attempts.get(input.caseId) ?? 0;
+				attempts.set(input.caseId, repetition + 1);
+				const output = await runOn(
+					runtime,
+					attempt(goldCase, repetition % repetitions, replay, units),
+					context.signal,
+				);
+				context.recordTrace({
+					...(output.reason ? { outcome: output.reason } : {}),
+					calls: [],
+				});
+				return output;
+			},
+			evaluator: ({ caseId, output }) => {
+				const goldCase = byId.get(caseId);
+				if (!goldCase) throw Error(`No case ${caseId}`);
+				return evaluateGrammar(goldCase.ideal, output);
+			},
+		},
+		experimentId: id,
+		operationVersion: `${grammarRoute}${e2e ? ":e2e" : ""}@production`,
+		evaluatorVersion: "resolve-grammar-1",
+		sourceRevision: args.sourceRevision,
+		configurations: {
+			generation: {
+				model: defaultLunaConfiguration.model,
+				settings: JSON.parse(
+					JSON.stringify(defaultLunaConfiguration.settings),
+				),
+			},
+			judgment: {
+				model: pinnedJevModel,
+				settings: {
+					set: set.name,
+					setHash: set.hash,
+					...(caseFilter
+						? {
+								caseFilter: {
+									...caseFilter,
+									missed: [...caseFilter.missed],
+									guard: [...caseFilter.guard],
+								},
+							}
+						: {}),
+				},
+			},
+		},
+		repetitions,
+		...(args.signal ? { signal: args.signal } : {}),
+	});
+	if (args.outputDirectory) await saveRun(args.outputDirectory, run);
+	return {
+		run,
+		...(price ? { price } : {}),
+		spend: live.report(),
+		set: identity,
+	};
 }
 
 /** The table's entry for one set and input. */
@@ -396,166 +559,18 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 					requests: (args: {
 						readonly setsRoot?: string;
 						readonly concurrency?: number;
+						readonly runtime?: LabRuntime;
 					}) =>
 						grammarRequests(
 							args.setsRoot ?? trackedGrammarSetsRoot,
 							setName,
 							args.concurrency ?? 12,
+							args.runtime,
 						),
 				}),
-		async evaluate(args: GrammarEvaluateArgs): Promise<GrammarEvaluated> {
-			const directory = join(args.root ?? defaultGrammarRoot, "cache");
-			const { set, repetitions } = await openFrozenSet({
-				setsRoot: args.setsRoot ?? trackedGrammarSetsRoot,
-				setName,
-				route: grammarRoute,
-				freezeCommand: "bun cli/resolve-grammar.ts freeze",
-				load: loadGrammarSet,
-				maximum: grammarRepetitions,
-				repetitions: args.repetitions,
-			});
-			const { cases: selected, caseFilter } = selectSubset({
-				set,
-				subset: args.subset,
-				load: loadSubset,
-				caseIds: subsetCaseIds,
-			});
-			const cases = selected.slice(0, args.limit ?? selected.length);
-			const concurrency = args.concurrency ?? 12;
-			const units = e2e
-				? await cachedUnits(
-						args.segmentLabRoot ?? defaultSegmentLabRoot,
-						args.segmentSetsRoot ?? trackedSetsRoot,
-					)
-				: undefined;
-			const identity = { name: set.name, hash: set.hash };
-			const passWith = (models: GrammarModels) =>
-				pass(cases, models, concurrency, repetitions, units);
-			const priced = await priceRound(args, {
-				id,
-				ledger: grammarLedgerPath,
-				directory,
-				models: (options) => new GrammarModels(options),
-				pass: passWith,
-				repetitions,
-				attempts: cases.length * repetitions,
-			});
-			const { price } = priced;
-			if (args.estimate) return { price, set: identity };
-			const live = new GrammarModels(
-				runModelsOptions(args, directory, priced),
-			);
-			await fillLive(args, live, "resolve.grammar", () => passWith(live));
-			const replay = new GrammarModels({ directory, mode: "offline" });
-			const byId = new Map(
-				cases.map((goldCase) => [goldCase.id, goldCase]),
-			);
-			const corpus = defineGoldenCorpus({
-				route: grammarRoute,
-				inputSchema,
-				outputSchema: grammarOutputSchema,
-				collections: {
-					dumcorpus: defineGoldenCaseCollection({
-						groups: {
-							cases: defineGoldenCaseGroup(
-								Object.fromEntries(
-									cases.map((goldCase) => [
-										goldCase.id,
-										{
-											input: {
-												caseId: goldCase.id,
-												record: goldCase.record,
-												route: routeKey(goldCase),
-												rules: [...goldCase.rules],
-											} satisfies GrammarInput,
-											idealOutput: {
-												_tag: "Resolved" as const,
-												attestation: goldCase.ideal,
-											},
-											contaminationKeys: [
-												goldCase.record,
-											],
-										},
-									]),
-								),
-							),
-						},
-						cases: {},
-					}),
-				},
-			});
-			const attempts = new Map<string, number>();
-			const run = await runOperationExperiment({
-				experiment: {
-					corpus,
-					evaluation: corpus.select(cases.map(({ id }) => id)),
-					demonstrations: corpus.select([]),
-					// The one traced run adapter: promptsmith runs a case's
-					// repetitions back to back and passes no index, so the
-					// attempts at one case count off the cache's repetitions.
-					run: async (input, context) => {
-						const goldCase = byId.get(input.caseId);
-						if (!goldCase) throw Error(`No case ${input.caseId}`);
-						const repetition = attempts.get(input.caseId) ?? 0;
-						attempts.set(input.caseId, repetition + 1);
-						const output = await attempt(
-							goldCase,
-							repetition % repetitions,
-							replay,
-							units,
-						);
-						context.recordTrace({
-							...(output.reason
-								? { outcome: output.reason }
-								: {}),
-							calls: [],
-						});
-						return output;
-					},
-					evaluator: ({ caseId, output }) => {
-						const goldCase = byId.get(caseId);
-						if (!goldCase) throw Error(`No case ${caseId}`);
-						return evaluateGrammar(goldCase.ideal, output);
-					},
-				},
-				experimentId: id,
-				operationVersion: `${grammarRoute}${e2e ? ":e2e" : ""}@production`,
-				evaluatorVersion: "resolve-grammar-1",
-				sourceRevision: args.sourceRevision,
-				configurations: {
-					generation: {
-						model: defaultLunaConfiguration.model,
-						settings: JSON.parse(
-							JSON.stringify(defaultLunaConfiguration.settings),
-						),
-					},
-					judgment: {
-						model: pinnedJevModel,
-						settings: {
-							set: set.name,
-							setHash: set.hash,
-							...(caseFilter
-								? {
-										caseFilter: {
-											...caseFilter,
-											missed: [...caseFilter.missed],
-											guard: [...caseFilter.guard],
-										},
-									}
-								: {}),
-						},
-					},
-				},
-				repetitions,
-				...(args.signal ? { signal: args.signal } : {}),
-			});
-			if (args.outputDirectory) await saveRun(args.outputDirectory, run);
-			return {
-				run,
-				...(price ? { price } : {}),
-				spend: live.report(),
-				set: identity,
-			};
-		},
+		evaluate: (args: GrammarEvaluateArgs): Promise<GrammarEvaluated> =>
+			onLabRuntime(args.runtime, (runtime) =>
+				evaluateGrammarSet(setName, e2e, args, runtime),
+			),
 	};
 }

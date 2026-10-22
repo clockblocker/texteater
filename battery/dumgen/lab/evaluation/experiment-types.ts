@@ -9,6 +9,7 @@ import type { JevAsk } from "../../src/segment/jev.js";
 import type { TransportRecord } from "../segmentation/harness/jev-cache.js";
 import type { Spend } from "../segmentation/harness/ledger.js";
 import type { PricedProjection } from "../segmentation/harness/round.js";
+import type { LabRuntime } from "./lab-runtime.js";
 import type { LunaBatch } from "./luna-batch.js";
 import type { RequestRun } from "./request-diff.js";
 import type {
@@ -35,7 +36,13 @@ export type EvaluateArgs = {
 	readonly offline?: boolean;
 	readonly sourceRevision: string;
 	readonly outputDirectory?: string;
+	/** Interrupts the run: every attempt in flight, and its model calls. */
 	readonly signal?: AbortSignal;
+	/**
+	 * The runtime the run's Effects run on, whose request budget all its
+	 * attempts share (`lab-runtime.ts`); a fresh one for the run by default.
+	 */
+	readonly runtime?: LabRuntime;
 	readonly units?: UnitConfig;
 	/** Cases run at once while a live run fills the cache. */
 	readonly concurrency?: number;
@@ -100,7 +107,7 @@ export type EvaluateArgs = {
 	readonly knowledgeSetsRoot?: string;
 };
 
-type Evaluated = {
+export type Evaluated = {
 	/** Absent when only estimated. */
 	readonly run?: OperationEvaluationRun;
 	readonly projection?: PricedProjection;

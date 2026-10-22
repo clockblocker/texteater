@@ -5,7 +5,7 @@
  *
  * - `segment-in-units/de:<set>`, gold mode: a lab set's gold Segments go in
  *   and the production unit stage's units come out, under the operation and
- *   call adapter `DumgenLive` builds (`production-segmenter.ts`).
+ *   call adapter `DumgenCore` builds (`production-segmenter.ts`).
  * - `segment-in-units/de:<set>:raw`, raw mode, the production headline: the
  *   record's Sentence goes into `operations.segment.inUnits`, whose
  *   Segment stage cuts it and whose unit stage groups the Segments
@@ -33,13 +33,17 @@
  *
  * `<set>` is one of the lab's frozen sets, `dev` or `heldout`. Each case
  * runs three times, as in the lab's runs, and jev answers come through the
- * lab's cache (`lab/segmentation/harness/jev-cache.ts`), the transport `DumgenLive` is given,
+ * lab's cache (`lab/segmentation/harness/jev-cache.ts`), the transport `DumgenCore` is given,
  * so a case the lab has run replays without a call. The cache retries a
  * fresh request that met a rate limit or a server error, which production
  * never does, and the run reports every retry and failure as `transport`.
  * `offline` makes a cache miss fail its case. A live run first prices
  * itself offline (`lab/segmentation/harness/round.ts`), hands the price to `beforeLive`, which
  * may refuse, then fills the cache concurrently and runs from it.
+ *
+ * A run's Effects run on one runtime (`lab-runtime.ts`), the CLI's or
+ * a fresh one per run, under the run's signal: its attempts, the cache
+ * fill's included, share one request budget of 12.
  *
  * This file holds the table and text mode. The segment.inUnits modes and
  * experiments are in `segment-in-units-modes.ts` and

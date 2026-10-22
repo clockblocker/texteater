@@ -265,6 +265,7 @@ export async function experimentCommand(command: ExperimentCommand) {
 			sourceRevision: values.revision ?? "estimate",
 			outputDirectory,
 			signal: controller.signal,
+			runtime: command.runtime,
 			units,
 			labRoot: place.labRoot,
 			...argumentOptions(command, dependencies),

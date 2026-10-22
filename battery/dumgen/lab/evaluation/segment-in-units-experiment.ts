@@ -6,7 +6,7 @@
  */
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { canonicalJson, messageOf } from "common-utils";
+import { canonicalJson } from "common-utils";
 import * as Effect from "effect/Effect";
 import {
 	defineGoldenCaseCollection,
@@ -43,8 +43,17 @@ import type {
 	BuiltRequests,
 	CaseList,
 	EvaluateArgs,
+	Evaluated,
 	Experiment,
 } from "./experiment-types.js";
+import {
+	everyAttempt,
+	type LabEffect,
+	type LabRuntime,
+	onLabRuntime,
+	outcomeOf,
+	runOn,
+} from "./lab-runtime.js";
 import {
 	type CaseRequests,
 	type RecordedOutcome,
@@ -104,57 +113,58 @@ function selectCases(
 }
 
 /** Every case's every repetition through `operation`, `concurrency` at a time; failures are left for the run. */
-async function pass<I>(
+const pass = <I>(
 	cases: readonly { readonly input: I }[],
-	operation: (input: I, context: Context) => Promise<unknown>,
+	operation: (input: I, context: Context) => LabEffect<unknown>,
 	jev: JevCache,
 	concurrency: number,
 	calls: CallRecord[],
-): Promise<void> {
-	await Effect.runPromise(
-		Effect.forEach(
-			cases.flatMap(({ input }) =>
-				Array.from({ length: repetitions }, (_, repetition) => ({
-					input,
-					repetition,
-				})),
-			),
-			({ input, repetition }) =>
-				Effect.promise(() =>
-					operation(input, { jev, repetition, calls }).catch(() => {
-						// The run records the failure.
-					}),
-				),
-			{ concurrency: Math.max(1, concurrency), discard: true },
+): LabEffect<void> =>
+	everyAttempt(
+		cases.flatMap(({ input }) =>
+			Array.from({ length: repetitions }, (_, repetition) => ({
+				input,
+				repetition,
+			})),
 		),
+		({ input, repetition }) => operation(input, { jev, repetition, calls }),
+		concurrency,
 	);
-}
 
 /**
  * The one traced run adapter: promptsmith runs a case's repetitions back
  * to back and passes no index, so the attempts at one input count off the
- * cache's repetitions, and each attempt's jev calls become its trace.
+ * cache's repetitions, and each attempt's jev calls become its trace. Each
+ * attempt runs on the run's runtime under promptsmith's signal.
  */
 function traced<I, O>(
-	operation: (input: I, context: Context) => Promise<O>,
+	operation: (input: I, context: Context) => LabEffect<O>,
 	jev: JevCache,
 	calls: CallRecord[],
+	runtime: LabRuntime,
 ) {
 	const attempts = new Map<string, number>();
 	return async (
 		input: I,
-		context: { recordTrace: (trace: OperationEvidence) => void },
+		context: {
+			readonly signal: AbortSignal;
+			readonly recordTrace: (trace: OperationEvidence) => void;
+		},
 	): Promise<O> => {
 		const key = canonicalJson(input);
 		const attempt = attempts.get(key) ?? 0;
 		attempts.set(key, attempt + 1);
 		const own: CallRecord[] = [];
 		try {
-			return await operation(input, {
-				jev,
-				repetition: attempt % repetitions,
-				calls: own,
-			});
+			return await runOn(
+				runtime,
+				operation(input, {
+					jev,
+					repetition: attempt % repetitions,
+					calls: own,
+				}),
+				context.signal,
+			);
 		} finally {
 			calls.push(...own);
 			context.recordTrace({
@@ -198,6 +208,7 @@ async function segmentInUnitsRequests<I extends z.ZodType, O extends z.ZodType>(
 	mode: Mode<I, O>,
 	setName: SetName,
 	args: EvaluateArgs,
+	runtime: LabRuntime,
 ): Promise<BuiltRequests> {
 	const set = await loadSet(args.setsRoot ?? trackedSetsRoot, setName);
 	const operation = mode.run(args.units ?? "production");
@@ -207,11 +218,12 @@ async function segmentInUnitsRequests<I extends z.ZodType, O extends z.ZodType>(
 		(typeof answerPaths)[number]["path"],
 		ReturnType<typeof counts>
 	> = { "stand-in": counts(), contrary: counts() };
-	const cases = await Effect.runPromise(
+	const cases = await runOn(
+		runtime,
 		Effect.forEach(
 			set.cases,
 			(labCase) =>
-				Effect.promise(async (): Promise<CaseRequests> => {
+				Effect.gen(function* () {
 					const input = mode.inputSchema.parse(
 						mode.caseOf(labCase).input,
 					);
@@ -240,13 +252,13 @@ async function segmentInUnitsRequests<I extends z.ZodType, O extends z.ZodType>(
 							outcomes.push({
 								path,
 								repetition,
-								outcome: await operation(input, {
-									jev,
-									repetition,
-									calls: [],
-								}).catch((error: unknown) => ({
-									failure: messageOf(error),
-								})),
+								outcome: yield* outcomeOf(
+									operation(input, {
+										jev,
+										repetition,
+										calls: [],
+									}),
+								),
 							});
 							const counted = answers[path];
 							counted.cached += jev.projection.samples.length;
@@ -259,10 +271,11 @@ async function segmentInUnitsRequests<I extends z.ZodType, O extends z.ZodType>(
 						id: labCase.id,
 						requests: sortedRequests(requests),
 						outcomes,
-					};
+					} satisfies CaseRequests;
 				}),
 			{ concurrency: Math.max(1, args.concurrency ?? 12) },
 		),
+		args.signal,
 	);
 	return {
 		answers: {
@@ -270,6 +283,151 @@ async function segmentInUnitsRequests<I extends z.ZodType, O extends z.ZodType>(
 			...answers,
 		},
 		cases,
+	};
+}
+
+/** A segment.inUnits run of `mode` on `setName`: priced, filled when live, then run case by case, on `runtime`. */
+async function evaluateSegmentInUnits<I extends z.ZodType, O extends z.ZodType>(
+	mode: Mode<I, O>,
+	setName: SetName,
+	args: EvaluateArgs,
+	runtime: LabRuntime,
+): Promise<Evaluated> {
+	const id = idOf(setName, mode.suffix);
+	const labRoot = args.labRoot ?? defaultLabRoot;
+	const set = await loadSet(args.setsRoot ?? trackedSetsRoot, setName);
+	const units = args.units ?? "production";
+	const operation = mode.run(units);
+	const chosen = selectCases(set, args.caseIds);
+	const cases = chosen.cases.map((labCase) => ({
+		labCase,
+		...mode.caseOf(labCase),
+	}));
+	// The cache passes read inputs as the run does, parsed.
+	const inputs = cases.map(({ input }) => ({
+		input: mode.inputSchema.parse(input),
+	}));
+	const concurrency = args.concurrency ?? 12;
+	const live = !args.offline && !args.estimate;
+	if (live && !args.jev)
+		throw Error(
+			`A live ${id} run needs a jev transport; run it --offline or --estimate`,
+		);
+	const jevOf = (options: {
+		readonly offline: boolean;
+		readonly project?: typeof standInAnswers;
+	}) =>
+		new JevCache({
+			cacheDirectory: join(labRoot, "cache"),
+			...(args.judgmentModel ? { model: args.judgmentModel } : {}),
+			...(args.jev && !options.offline ? { transport: args.jev } : {}),
+			...options,
+			...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
+			...(args.onSpend ? { onSpend: args.onSpend } : {}),
+		});
+	const identity = { name: set.name, hash: set.hash };
+	let projection: PricedProjection | undefined;
+	if (args.estimate || !args.offline) {
+		const projecting = jevOf({
+			offline: true,
+			project: standInAnswers,
+		});
+		await runOn(
+			runtime,
+			pass(inputs, operation, projecting, concurrency, []),
+			args.signal,
+		);
+		projection = priceProjection(projecting.projection);
+		if (args.estimate)
+			return { projection, set: identity, ...chosen.named };
+		await args.beforeLive?.(projection);
+	}
+	const jev = jevOf({ offline: args.offline ?? false });
+	const filled: CallRecord[] = [];
+	if (!args.offline)
+		await runOn(
+			runtime,
+			pass(inputs, operation, jev, concurrency, filled),
+			args.signal,
+		);
+	const calls: CallRecord[] = [];
+	const corpus = defineGoldenCorpus({
+		route: segmentInUnitsRoute,
+		inputSchema: mode.inputSchema,
+		outputSchema: mode.outputSchema,
+		collections: {
+			lab: defineGoldenCaseCollection({
+				groups: {
+					cases: defineGoldenCaseGroup(
+						Object.fromEntries(
+							cases.map((entry) => [
+								entry.labCase.id,
+								{
+									input: entry.input,
+									idealOutput: entry.idealOutput,
+									contaminationKeys: [entry.labCase.record],
+								},
+							]),
+						),
+					),
+				},
+				cases: {},
+			}),
+		},
+	});
+	const configuration = {
+		model: jev.model,
+		settings: {
+			units,
+			set: set.name,
+			setHash: set.hash,
+			...chosen.named,
+			offline: args.offline ?? false,
+			...args.settings,
+		},
+	};
+	const run = await runOperationExperiment({
+		experiment: {
+			corpus,
+			evaluation: corpus.select(chosen.cases.map(({ id }) => id)),
+			demonstrations: corpus.select([]),
+			run: traced(operation, jev, calls, runtime),
+			evaluator: mode.evaluator(
+				Object.fromEntries(
+					chosen.cases.map((labCase) => [labCase.id, labCase.facts]),
+				),
+			),
+		},
+		experimentId: id,
+		operationVersion: `${segmentInUnitsRoute}${mode.suffix}@${units}`,
+		evaluatorVersion: "segment-in-units-2",
+		sourceRevision: args.sourceRevision,
+		// jev cuts, groups and routes; nothing else generates.
+		configurations: {
+			generation: configuration,
+			judgment: configuration,
+		},
+		repetitions,
+		...(args.signal ? { signal: args.signal } : {}),
+	});
+	if (args.outputDirectory) await saveRun(args.outputDirectory, run);
+	const ran = spendOf(calls);
+	const fill = spendOf(filled);
+	return {
+		run,
+		...(projection ? { projection } : {}),
+		spend: {
+			jev: {
+				...ran.jev,
+				freshCalls: ran.jev.freshCalls + fill.jev.freshCalls,
+				freshInputTokens:
+					ran.jev.freshInputTokens + fill.jev.freshInputTokens,
+			},
+			luna: ran.luna,
+		},
+		transport: jev.transport,
+		set: identity,
+		...chosen.named,
 	};
 }
 
@@ -282,150 +440,13 @@ export function segmentInUnitsExperiment<
 		id,
 		caseCount: () => currentSetSize(trackedSetsRoot, setName),
 		metrics: mode.metrics,
-		requests: (args) => segmentInUnitsRequests(mode, setName, args),
-		async evaluate(args) {
-			const labRoot = args.labRoot ?? defaultLabRoot;
-			const set = await loadSet(
-				args.setsRoot ?? trackedSetsRoot,
-				setName,
-			);
-			const units = args.units ?? "production";
-			const operation = mode.run(units);
-			const chosen = selectCases(set, args.caseIds);
-			const cases = chosen.cases.map((labCase) => ({
-				labCase,
-				...mode.caseOf(labCase),
-			}));
-			// The cache passes read inputs as the run does, parsed.
-			const inputs = cases.map(({ input }) => ({
-				input: mode.inputSchema.parse(input),
-			}));
-			const concurrency = args.concurrency ?? 12;
-			const live = !args.offline && !args.estimate;
-			if (live && !args.jev)
-				throw Error(
-					`A live ${id} run needs a jev transport; run it --offline or --estimate`,
-				);
-			const jevOf = (options: {
-				readonly offline: boolean;
-				readonly project?: typeof standInAnswers;
-			}) =>
-				new JevCache({
-					cacheDirectory: join(labRoot, "cache"),
-					...(args.judgmentModel
-						? { model: args.judgmentModel }
-						: {}),
-					...(args.jev && !options.offline
-						? { transport: args.jev }
-						: {}),
-					...options,
-					...(args.beforeSpend
-						? { beforeSpend: args.beforeSpend }
-						: {}),
-					...(args.onSpend ? { onSpend: args.onSpend } : {}),
-				});
-			const identity = { name: set.name, hash: set.hash };
-			let projection: PricedProjection | undefined;
-			if (args.estimate || !args.offline) {
-				const projecting = jevOf({
-					offline: true,
-					project: standInAnswers,
-				});
-				await pass(inputs, operation, projecting, concurrency, []);
-				projection = priceProjection(projecting.projection);
-				if (args.estimate)
-					return { projection, set: identity, ...chosen.named };
-				await args.beforeLive?.(projection);
-			}
-			const jev = jevOf({ offline: args.offline ?? false });
-			const filled: CallRecord[] = [];
-			if (!args.offline)
-				await pass(inputs, operation, jev, concurrency, filled);
-			const calls: CallRecord[] = [];
-			const corpus = defineGoldenCorpus({
-				route: segmentInUnitsRoute,
-				inputSchema: mode.inputSchema,
-				outputSchema: mode.outputSchema,
-				collections: {
-					lab: defineGoldenCaseCollection({
-						groups: {
-							cases: defineGoldenCaseGroup(
-								Object.fromEntries(
-									cases.map((entry) => [
-										entry.labCase.id,
-										{
-											input: entry.input,
-											idealOutput: entry.idealOutput,
-											contaminationKeys: [
-												entry.labCase.record,
-											],
-										},
-									]),
-								),
-							),
-						},
-						cases: {},
-					}),
-				},
-			});
-			const configuration = {
-				model: jev.model,
-				settings: {
-					units,
-					set: set.name,
-					setHash: set.hash,
-					...chosen.named,
-					offline: args.offline ?? false,
-					...args.settings,
-				},
-			};
-			const run = await runOperationExperiment({
-				experiment: {
-					corpus,
-					evaluation: corpus.select(chosen.cases.map(({ id }) => id)),
-					demonstrations: corpus.select([]),
-					run: traced(operation, jev, calls),
-					evaluator: mode.evaluator(
-						Object.fromEntries(
-							chosen.cases.map((labCase) => [
-								labCase.id,
-								labCase.facts,
-							]),
-						),
-					),
-				},
-				experimentId: id,
-				operationVersion: `${segmentInUnitsRoute}${mode.suffix}@${units}`,
-				evaluatorVersion: "segment-in-units-2",
-				sourceRevision: args.sourceRevision,
-				// jev cuts, groups and routes; nothing else generates.
-				configurations: {
-					generation: configuration,
-					judgment: configuration,
-				},
-				repetitions,
-				...(args.signal ? { signal: args.signal } : {}),
-			});
-			if (args.outputDirectory) await saveRun(args.outputDirectory, run);
-			const ran = spendOf(calls);
-			const fill = spendOf(filled);
-			return {
-				run,
-				...(projection ? { projection } : {}),
-				spend: {
-					jev: {
-						...ran.jev,
-						freshCalls: ran.jev.freshCalls + fill.jev.freshCalls,
-						freshInputTokens:
-							ran.jev.freshInputTokens +
-							fill.jev.freshInputTokens,
-					},
-					luna: ran.luna,
-				},
-				transport: jev.transport,
-				set: identity,
-				...chosen.named,
-			};
-		},
+		requests: (args) =>
+			onLabRuntime(args.runtime, (runtime) =>
+				segmentInUnitsRequests(mode, setName, args, runtime),
+			),
+		evaluate: (args) =>
+			onLabRuntime(args.runtime, (runtime) =>
+				evaluateSegmentInUnits(mode, setName, args, runtime),
+			),
 	};
 }

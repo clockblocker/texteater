@@ -30,7 +30,7 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { z } from "zod";
-import { DumgenLive } from "../../../src/dumgen-live.js";
+import { DumgenCore } from "../../../src/dumgen-live.js";
 import { JevTransport } from "../../../src/jev-call.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
 import { LunaTransport } from "../../../src/luna-call.js";
@@ -44,6 +44,13 @@ import {
 } from "../../run-directory.js";
 import { storedAs } from "../../stored-json.js";
 import { frozenSetSize } from "../frozen-sets.js";
+import {
+	everyAttempt,
+	type LabEffect,
+	type LabRuntime,
+	onLabRuntime,
+	runOn,
+} from "../lab-runtime.js";
 import type { LunaBatch } from "../luna-batch.js";
 import { goldRequests } from "../request-diff.js";
 import {
@@ -189,6 +196,8 @@ export type KnowledgeEvaluateArgs = {
 	readonly caps?: GrammarCaps;
 	readonly outputDirectory?: string;
 	readonly signal?: AbortSignal;
+	/** The run's runtime and budget (`lab-runtime.ts`); a fresh one by default. */
+	readonly runtime?: LabRuntime;
 	readonly concurrency?: number;
 	/** The answer cache; `.runs/knowledge` by default. */
 	readonly root?: string;
@@ -212,7 +221,7 @@ export type KnowledgeEvaluated = {
 };
 
 /** `knowledge.produce`'s cached transports, its projections answered from gold. */
-export class KnowledgeModels extends CachedModels<KnowledgeAttempt> {
+class KnowledgeModels extends CachedModels<KnowledgeAttempt> {
 	constructor(options: GrammarModelsOptions) {
 		super(options, knowledgeOracle);
 	}
@@ -243,16 +252,16 @@ const scopeOf = (setName: KnowledgeSetName): KnowledgeScope =>
 	setName === "spot-check" ? "text" : "structural";
 
 /** One run of `knowledge.produce` on a case, as a run stores it. */
-async function attempt(
+const attempt = (
 	goldCase: KnowledgeCase,
 	scope: KnowledgeScope,
 	repetition: number,
 	models: Pick<KnowledgeModels, "jev" | "luna">,
-): Promise<KnowledgeOutput> {
-	const traces: OperationTrace[] = [];
-	const at: KnowledgeAttempt = { goldCase, scope };
-	const result = await Effect.runPromise(
-		operations.knowledge
+): LabEffect<KnowledgeOutput> =>
+	Effect.gen(function* () {
+		const traces: OperationTrace[] = [];
+		const at: KnowledgeAttempt = { goldCase, scope };
+		const result = yield* operations.knowledge
 			.produce({
 				language: "de",
 				reading: goldCase.reading,
@@ -264,7 +273,7 @@ async function attempt(
 			})
 			.pipe(
 				Effect.provide(
-					DumgenLive({
+					DumgenCore({
 						jev: JevTransport.fromAsk(models.jev(at, repetition)),
 						luna: LunaTransport.fromAsk(
 							models.luna(at, repetition),
@@ -272,70 +281,53 @@ async function attempt(
 						onOperation: (trace) => traces.push(trace),
 					}),
 				),
+			);
+		// A run cut short by a batch hold or a cap has no answer to score.
+		const held = result.failures.find(({ message }) =>
+			/held for the run's next batch|Stopped at the|cache miss in offline mode/u.test(
+				message,
 			),
-	);
-	// A run cut short by a batch hold or a cap has no answer to score.
-	const held = result.failures.find(({ message }) =>
-		/held for the run's next batch|Stopped at the|cache miss in offline mode/u.test(
-			message,
-		),
-	);
-	if (held) throw Error(held.message);
-	return {
-		changes: [...result.changes],
-		paradigmChanges: [...result.paradigmChanges],
-		pendingRelations: result.pendingRelations.map(
-			({ relation, target }) => ({
-				relation,
-				target: { ...target },
-			}),
-		),
-		failures: result.failures.map((failure) => ({ ...failure })),
-		...(traces[0]?.events
-			? {
-					events: traces[0].events.map(({ name, data }) => ({
-						name,
-						data: data ?? null,
-					})),
-				}
-			: {}),
-	};
-}
+		);
+		if (held) return yield* Effect.fail(Error(held.message));
+		return {
+			changes: [...result.changes],
+			paradigmChanges: [...result.paradigmChanges],
+			pendingRelations: result.pendingRelations.map(
+				({ relation, target }) => ({
+					relation,
+					target: { ...target },
+				}),
+			),
+			failures: result.failures.map((failure) => ({ ...failure })),
+			...(traces[0]?.events
+				? {
+						events: traces[0].events.map(({ name, data }) => ({
+							name,
+							data: data ?? null,
+						})),
+					}
+				: {}),
+		} satisfies KnowledgeOutput;
+	});
 
 /** Every case's every repetition, `concurrency` at a time; failures are left for the run. */
-async function pass(
+const pass = (
 	cases: readonly KnowledgeCase[],
 	scope: KnowledgeScope,
 	models: KnowledgeModels,
 	concurrency: number,
 	repetitions: number,
-): Promise<void> {
-	const work = cases.flatMap((goldCase) =>
-		Array.from({ length: repetitions }, (_, repetition) => ({
-			goldCase,
-			repetition,
-		})),
+): LabEffect<void> =>
+	everyAttempt(
+		cases.flatMap((goldCase) =>
+			Array.from({ length: repetitions }, (_, repetition) => ({
+				goldCase,
+				repetition,
+			})),
+		),
+		(item) => attempt(item.goldCase, scope, item.repetition, models),
+		concurrency,
 	);
-	let next = 0;
-	await Promise.all(
-		Array.from({ length: Math.max(1, concurrency) }, async () => {
-			for (;;) {
-				const item = work[next++];
-				if (!item) return;
-				try {
-					await attempt(
-						item.goldCase,
-						scope,
-						item.repetition,
-						models,
-					);
-				} catch {
-					// The run records the failure.
-				}
-			}
-		}),
-	);
-}
 
 /** The scored attempts of a run, one per case and repetition. */
 export function knowledgeAttempts(
@@ -385,6 +377,7 @@ async function knowledgeRequests(
 	setsRoot: string,
 	setName: KnowledgeSetName,
 	concurrency: number,
+	runtime: LabRuntime | undefined,
 ) {
 	const set = await loadKnowledgeSet(setsRoot, setName);
 	const scope = scopeOf(setName);
@@ -395,6 +388,7 @@ async function knowledgeRequests(
 		oracle: knowledgeOracle,
 		attempt: (at, models) => attempt(at.goldCase, at.scope, 0, models),
 		concurrency,
+		...(runtime ? { runtime } : {}),
 	});
 }
 
@@ -431,10 +425,177 @@ function runnableCases(
 	return { runnable, ...(subset ? { subset } : {}) };
 }
 
+/** A run of one set on `runtime`: priced, filled when live, then run case by case. */
+async function evaluateKnowledgeSet(
+	setName: KnowledgeSetName,
+	args: KnowledgeEvaluateArgs,
+	runtime: LabRuntime,
+): Promise<KnowledgeEvaluated> {
+	const id = `${knowledgeRoute}:${setName}`;
+	const scope = scopeOf(setName);
+	const directory = join(args.root ?? defaultKnowledgeRoot, "cache");
+	const { set, repetitions } = await openFrozenSet({
+		setsRoot: args.setsRoot ?? trackedKnowledgeSetsRoot,
+		setName,
+		route: knowledgeRoute,
+		freezeCommand: "bun cli/knowledge.ts freeze",
+		load: loadKnowledgeSet,
+		maximum: knowledgeRepetitions,
+		repetitions: args.repetitions,
+	});
+	const { runnable, subset } = runnableCases(set, setName, args);
+	const cases = runnable.slice(0, args.limit ?? runnable.length);
+	const concurrency = args.concurrency ?? 12;
+	const identity = { name: set.name, hash: set.hash };
+	const passWith = (models: KnowledgeModels) =>
+		runOn(
+			runtime,
+			pass(cases, scope, models, concurrency, repetitions),
+			args.signal,
+		);
+	const priced = await priceRound(args, {
+		id,
+		ledger: knowledgeLedgerPath,
+		directory,
+		stageSizes: proxyStageSizes,
+		models: (options) => new KnowledgeModels(options),
+		pass: passWith,
+		repetitions,
+		attempts: cases.length * repetitions,
+	});
+	const { price } = priced;
+	if (args.estimate) return { price, set: identity };
+	const live = new KnowledgeModels(runModelsOptions(args, directory, priced));
+	await fillLive(args, live, "knowledge.produce", () => passWith(live));
+	const replay = new KnowledgeModels({
+		directory,
+		mode: "offline",
+	});
+	const byId = new Map(cases.map((goldCase) => [goldCase.id, goldCase]));
+	const corpus = defineGoldenCorpus({
+		route: knowledgeRoute,
+		inputSchema,
+		outputSchema: knowledgeOutputSchema,
+		collections: {
+			dumcorpus: defineGoldenCaseCollection({
+				groups: {
+					cases: defineGoldenCaseGroup(
+						Object.fromEntries(
+							cases.map((goldCase) => [
+								goldCase.id,
+								{
+									input: {
+										caseId: goldCase.id,
+										record: goldCase.record,
+										route: routeKey(goldCase),
+										lemma: goldCase.reading.lemma
+											.canonicalForm,
+										emojiDescription: emojiOf(goldCase),
+										markedSentence: markedSentence(
+											goldCase.sentence.segments,
+											goldCase.sentence.target,
+										),
+										scope,
+										gold: goldCase.gold !== undefined,
+										authored: goldCase.authored,
+									} satisfies KnowledgeInput,
+									idealOutput: {
+										changes: [],
+										pendingRelations: [],
+										failures: [],
+									},
+									contaminationKeys: [goldCase.record],
+								},
+							]),
+						),
+					),
+				},
+				cases: {},
+			}),
+		},
+	});
+	const repetitionsSeen = new Map<string, number>();
+	const run = await runOperationExperiment({
+		experiment: {
+			corpus,
+			evaluation: corpus.select([...byId.keys()]),
+			demonstrations: corpus.select([]),
+			// The one traced run adapter: promptsmith runs a case's
+			// repetitions back to back and passes no index, so they
+			// count off the cache's repetitions.
+			run: async (input, context) => {
+				const goldCase = byId.get(input.caseId);
+				if (!goldCase) throw Error(`No case ${input.caseId}`);
+				const repetition = repetitionsSeen.get(input.caseId) ?? 0;
+				repetitionsSeen.set(input.caseId, repetition + 1);
+				const output = await runOn(
+					runtime,
+					attempt(goldCase, scope, repetition % repetitions, replay),
+					context.signal,
+				);
+				context.recordTrace({ calls: [] });
+				return output;
+			},
+			evaluator: ({ caseId, output }) => {
+				const goldCase = byId.get(caseId);
+				if (!goldCase) throw Error(`No case ${caseId}`);
+				return evaluateKnowledge(
+					goldCase,
+					requestOf(goldCase, scope),
+					output,
+					paradigmRequestOf(goldCase, scope),
+				);
+			},
+		},
+		experimentId: id,
+		operationVersion: knowledgeOperationVersion,
+		evaluatorVersion: "knowledge-2",
+		sourceRevision: args.sourceRevision,
+		configurations: {
+			generation: {
+				model: defaultLunaConfiguration.model,
+				settings: JSON.parse(
+					JSON.stringify(defaultLunaConfiguration.settings),
+				),
+			},
+			judgment: {
+				model: pinnedJevModel,
+				settings: JSON.parse(
+					JSON.stringify({
+						set: set.name,
+						setHash: set.hash,
+						scope,
+						...(args.goldOnly ? { goldOnly: true } : {}),
+						...(subset && args.subset
+							? {
+									subset: {
+										path: args.subset,
+										baselineRunId: subset.baselineRunId,
+										seed: subset.seed,
+										guardSize: subset.guardSize,
+									},
+								}
+							: {}),
+						...(set.slips ? { slips: set.slips } : {}),
+					}),
+				),
+			},
+		},
+		repetitions,
+		...(args.signal ? { signal: args.signal } : {}),
+	});
+	if (args.outputDirectory) await saveRun(args.outputDirectory, run);
+	return {
+		run,
+		...(price ? { price } : {}),
+		spend: live.report(),
+		set: identity,
+	};
+}
+
 /** The table's entry for one set. */
 export function knowledgeExperiment(setName: KnowledgeSetName) {
 	const id = `${knowledgeRoute}:${setName}`;
-	const scope = scopeOf(setName);
 	return {
 		id,
 		caseCount: () => frozenSetSize(trackedKnowledgeSetsRoot, setName),
@@ -442,179 +603,17 @@ export function knowledgeExperiment(setName: KnowledgeSetName) {
 		requests: (args: {
 			readonly setsRoot?: string;
 			readonly concurrency?: number;
+			readonly runtime?: LabRuntime;
 		}) =>
 			knowledgeRequests(
 				args.setsRoot ?? trackedKnowledgeSetsRoot,
 				setName,
 				args.concurrency ?? 12,
+				args.runtime,
 			),
-		async evaluate(
-			args: KnowledgeEvaluateArgs,
-		): Promise<KnowledgeEvaluated> {
-			const directory = join(args.root ?? defaultKnowledgeRoot, "cache");
-			const { set, repetitions } = await openFrozenSet({
-				setsRoot: args.setsRoot ?? trackedKnowledgeSetsRoot,
-				setName,
-				route: knowledgeRoute,
-				freezeCommand: "bun cli/knowledge.ts freeze",
-				load: loadKnowledgeSet,
-				maximum: knowledgeRepetitions,
-				repetitions: args.repetitions,
-			});
-			const { runnable, subset } = runnableCases(set, setName, args);
-			const cases = runnable.slice(0, args.limit ?? runnable.length);
-			const concurrency = args.concurrency ?? 12;
-			const identity = { name: set.name, hash: set.hash };
-			const passWith = (models: KnowledgeModels) =>
-				pass(cases, scope, models, concurrency, repetitions);
-			const priced = await priceRound(args, {
-				id,
-				ledger: knowledgeLedgerPath,
-				directory,
-				stageSizes: proxyStageSizes,
-				models: (options) => new KnowledgeModels(options),
-				pass: passWith,
-				repetitions,
-				attempts: cases.length * repetitions,
-			});
-			const { price } = priced;
-			if (args.estimate) return { price, set: identity };
-			const live = new KnowledgeModels(
-				runModelsOptions(args, directory, priced),
-			);
-			await fillLive(args, live, "knowledge.produce", () =>
-				passWith(live),
-			);
-			const replay = new KnowledgeModels({ directory, mode: "offline" });
-			const byId = new Map(
-				cases.map((goldCase) => [goldCase.id, goldCase]),
-			);
-			const corpus = defineGoldenCorpus({
-				route: knowledgeRoute,
-				inputSchema,
-				outputSchema: knowledgeOutputSchema,
-				collections: {
-					dumcorpus: defineGoldenCaseCollection({
-						groups: {
-							cases: defineGoldenCaseGroup(
-								Object.fromEntries(
-									cases.map((goldCase) => [
-										goldCase.id,
-										{
-											input: {
-												caseId: goldCase.id,
-												record: goldCase.record,
-												route: routeKey(goldCase),
-												lemma: goldCase.reading.lemma
-													.canonicalForm,
-												emojiDescription:
-													emojiOf(goldCase),
-												markedSentence: markedSentence(
-													goldCase.sentence.segments,
-													goldCase.sentence.target,
-												),
-												scope,
-												gold:
-													goldCase.gold !== undefined,
-												authored: goldCase.authored,
-											} satisfies KnowledgeInput,
-											idealOutput: {
-												changes: [],
-												pendingRelations: [],
-												failures: [],
-											},
-											contaminationKeys: [
-												goldCase.record,
-											],
-										},
-									]),
-								),
-							),
-						},
-						cases: {},
-					}),
-				},
-			});
-			const repetitionsSeen = new Map<string, number>();
-			const run = await runOperationExperiment({
-				experiment: {
-					corpus,
-					evaluation: corpus.select([...byId.keys()]),
-					demonstrations: corpus.select([]),
-					// The one traced run adapter: promptsmith runs a case's
-					// repetitions back to back and passes no index, so they
-					// count off the cache's repetitions.
-					run: async (input, context) => {
-						const goldCase = byId.get(input.caseId);
-						if (!goldCase) throw Error(`No case ${input.caseId}`);
-						const repetition =
-							repetitionsSeen.get(input.caseId) ?? 0;
-						repetitionsSeen.set(input.caseId, repetition + 1);
-						const output = await attempt(
-							goldCase,
-							scope,
-							repetition % repetitions,
-							replay,
-						);
-						context.recordTrace({ calls: [] });
-						return output;
-					},
-					evaluator: ({ caseId, output }) => {
-						const goldCase = byId.get(caseId);
-						if (!goldCase) throw Error(`No case ${caseId}`);
-						return evaluateKnowledge(
-							goldCase,
-							requestOf(goldCase, scope),
-							output,
-							paradigmRequestOf(goldCase, scope),
-						);
-					},
-				},
-				experimentId: id,
-				operationVersion: knowledgeOperationVersion,
-				evaluatorVersion: "knowledge-2",
-				sourceRevision: args.sourceRevision,
-				configurations: {
-					generation: {
-						model: defaultLunaConfiguration.model,
-						settings: JSON.parse(
-							JSON.stringify(defaultLunaConfiguration.settings),
-						),
-					},
-					judgment: {
-						model: pinnedJevModel,
-						settings: JSON.parse(
-							JSON.stringify({
-								set: set.name,
-								setHash: set.hash,
-								scope,
-								...(args.goldOnly ? { goldOnly: true } : {}),
-								...(subset && args.subset
-									? {
-											subset: {
-												path: args.subset,
-												baselineRunId:
-													subset.baselineRunId,
-												seed: subset.seed,
-												guardSize: subset.guardSize,
-											},
-										}
-									: {}),
-								...(set.slips ? { slips: set.slips } : {}),
-							}),
-						),
-					},
-				},
-				repetitions,
-				...(args.signal ? { signal: args.signal } : {}),
-			});
-			if (args.outputDirectory) await saveRun(args.outputDirectory, run);
-			return {
-				run,
-				...(price ? { price } : {}),
-				spend: live.report(),
-				set: identity,
-			};
-		},
+		evaluate: (args: KnowledgeEvaluateArgs): Promise<KnowledgeEvaluated> =>
+			onLabRuntime(args.runtime, (runtime) =>
+				evaluateKnowledgeSet(setName, args, runtime),
+			),
 	};
 }

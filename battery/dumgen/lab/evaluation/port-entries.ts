@@ -38,6 +38,7 @@ export function resolveGrammarEntry(
 							...(args.concurrency
 								? { concurrency: args.concurrency }
 								: {}),
+							...(args.runtime ? { runtime: args.runtime } : {}),
 						}),
 				}
 			: {}),
@@ -61,6 +62,7 @@ export function resolveGrammarEntry(
 					? { outputDirectory: args.outputDirectory }
 					: {}),
 				...(args.signal ? { signal: args.signal } : {}),
+				...(args.runtime ? { runtime: args.runtime } : {}),
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
 				...(args.grammarRoot ? { root: args.grammarRoot } : {}),
 				...(args.grammarSetsRoot
@@ -99,6 +101,7 @@ export function resolveReadingEntry(set: "dev" | "heldout"): Experiment {
 					? { setsRoot: args.readingSetsRoot }
 					: {}),
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
+				...(args.runtime ? { runtime: args.runtime } : {}),
 			}),
 		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 		async evaluate(args) {
@@ -120,6 +123,7 @@ export function resolveReadingEntry(set: "dev" | "heldout"): Experiment {
 					? { outputDirectory: args.outputDirectory }
 					: {}),
 				...(args.signal ? { signal: args.signal } : {}),
+				...(args.runtime ? { runtime: args.runtime } : {}),
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
 				...(args.readingRoot ? { root: args.readingRoot } : {}),
 				...(args.readingSetsRoot
@@ -163,6 +167,7 @@ function knowledgeArgs(args: EvaluateArgs) {
 			? { outputDirectory: args.outputDirectory }
 			: {}),
 		...(args.signal ? { signal: args.signal } : {}),
+		...(args.runtime ? { runtime: args.runtime } : {}),
 		...(args.concurrency ? { concurrency: args.concurrency } : {}),
 		...(args.knowledgeRoot ? { root: args.knowledgeRoot } : {}),
 		...(args.knowledgeSetsRoot ? { setsRoot: args.knowledgeSetsRoot } : {}),
@@ -197,6 +202,7 @@ export function knowledgeEntry(
 					? { setsRoot: args.knowledgeSetsRoot }
 					: {}),
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
+				...(args.runtime ? { runtime: args.runtime } : {}),
 			}),
 		async evaluate(args) {
 			return knowledgeEvaluated(
@@ -229,6 +235,7 @@ export function licenceEntry(split: DoubletSplit): Experiment {
 					? { setsRoot: args.knowledgeSetsRoot }
 					: {}),
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
+				...(args.runtime ? { runtime: args.runtime } : {}),
 			}),
 		async evaluate(args) {
 			if (args.goldOnly || args.grammarSubset)

@@ -17,6 +17,7 @@ import type {
 	JevCache,
 } from "../segmentation/harness/jev-cache.js";
 import type { UnitConfig } from "./experiment-types.js";
+import type { LabEffect } from "./lab-runtime.js";
 import {
 	groupSegments,
 	type ProductionJev,
@@ -47,7 +48,7 @@ export type Context = {
 	readonly calls: CallRecord[];
 };
 
-/** The cached jev at the context's repetition, as `DumgenLive`'s transport. */
+/** The cached jev at the context's repetition, as `DumgenCore`'s transport. */
 const productionJev = ({ jev, repetition, calls }: Context): ProductionJev => ({
 	ask: jev.ask(repetition, calls),
 	model: jev.model,
@@ -59,20 +60,23 @@ const unitStages: Readonly<
 		(
 			segments: SegmentInUnitsInput["segments"],
 			context: Context,
-		) => Promise<Unit[]>
+		) => LabEffect<Unit[]>
 	>
 > = {
 	production: (segments, context) =>
 		groupSegments(productionJev(context), segments),
-	async reference(segments, context) {
-		const result = await referenceArm.run(
-			{ language: "de", segments },
-			{ ...context, options: {} },
-		);
-		const output = result.outputs[result.primary];
-		if (!output) throw Error(`The reference returned no ${result.primary}`);
-		return output.units;
-	},
+	// The reference arm is the segmentation lab's, a Promise over its port.
+	reference: (segments, context) =>
+		Effect.promise(async () => {
+			const result = await referenceArm.run(
+				{ language: "de", segments },
+				{ ...context, options: {} },
+			);
+			const output = result.outputs[result.primary];
+			if (!output)
+				throw Error(`The reference returned no ${result.primary}`);
+			return output.units;
+		}),
 };
 
 /** One mode of a segment.inUnits experiment: its cases, operation and scoring. */
@@ -86,7 +90,7 @@ export type Mode<I extends z.ZodType, O extends z.ZodType> = {
 	};
 	readonly run: (
 		units: UnitConfig,
-	) => (input: z.output<I>, context: Context) => Promise<z.output<O>>;
+	) => (input: z.output<I>, context: Context) => LabEffect<z.output<O>>;
 	readonly evaluator: (
 		facts: Readonly<Record<string, LabCase["facts"]>>,
 	) => (args: {
@@ -106,11 +110,11 @@ export const goldMode: Mode<
 	inputSchema: segmentInUnitsInputSchema,
 	outputSchema: segmentInUnitsOutputSchema,
 	caseOf: ({ input, idealOutput }) => ({ input, idealOutput }),
-	run:
-		(units) =>
-		async (input, context): Promise<SegmentInUnitsOutput> => ({
-			units: await unitStages[units](input.segments, context),
-		}),
+	run: (units) => (input, context) =>
+		Effect.map(
+			unitStages[units](input.segments, context),
+			(produced): SegmentInUnitsOutput => ({ units: produced }),
+		),
 	evaluator: evaluateSegmentInUnits,
 	metrics: segmentInUnitsMetrics,
 };
@@ -128,11 +132,10 @@ export const rawMode: Mode<typeof rawInputSchema, typeof rawOutputSchema> = {
 	inputSchema: rawInputSchema,
 	outputSchema: rawOutputSchema,
 	caseOf: rawCaseOf,
-	run:
-		(units) =>
-		async (input, context): Promise<RawOutput> => {
+	run: (units) => (input, context) =>
+		Effect.gen(function* () {
 			if (units === "production") {
-				const segmented = await segmentSentence(
+				const segmented = yield* segmentSentence(
 					productionJev(context),
 					input.sentence,
 				);
@@ -140,19 +143,20 @@ export const rawMode: Mode<typeof rawInputSchema, typeof rawOutputSchema> = {
 					segments: plainSegments(segmented.segments),
 					units: [...segmented.units],
 					unresolved: [...segmented.unresolved],
-				};
+				} satisfies RawOutput;
 			}
 			// The reference takes the Segment stage's cut through the lab's port.
-			const segmentation = await Effect.runPromise(
-				segmentGermanSentence(input.sentence, askOf(context)),
+			const segmentation = yield* segmentGermanSentence(
+				input.sentence,
+				askOf(context),
 			);
 			const segments = plainSegments(segmentation.segments);
 			return {
 				segments,
-				units: await unitStages[units](segments, context),
+				units: yield* unitStages[units](segments, context),
 				unresolved: [...segmentation.unresolved],
-			};
-		},
+			} satisfies RawOutput;
+		}),
 	evaluator: evaluateRawSegmentInUnits,
 	metrics: rawSegmentInUnitsMetrics,
 };

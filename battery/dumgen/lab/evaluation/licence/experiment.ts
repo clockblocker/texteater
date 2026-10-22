@@ -29,7 +29,7 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { z } from "zod";
-import { DumgenLive } from "../../../src/dumgen-live.js";
+import { DumgenCore } from "../../../src/dumgen-live.js";
 import { JevTransport } from "../../../src/jev-call.js";
 import { defaultLunaConfiguration } from "../../../src/luna.js";
 import { LunaTransport } from "../../../src/luna-call.js";
@@ -42,6 +42,13 @@ import type {
 	KnowledgeEvaluateArgs,
 	KnowledgeEvaluated,
 } from "../knowledge/experiment.js";
+import {
+	everyAttempt,
+	type LabEffect,
+	type LabRuntime,
+	onLabRuntime,
+	runOn,
+} from "../lab-runtime.js";
 import { goldRequests } from "../request-diff.js";
 import {
 	CachedModels,
@@ -155,16 +162,16 @@ const emojiOf = (reading: LicenceCase["stored"]["reading"]) =>
 	"emojiDescription" in reading ? reading.emojiDescription : "";
 
 /** One run of `knowledge.produce` on a case, as a run stores it. */
-async function attempt(
+const attempt = (
 	licenceCase: LicenceCase,
 	repetition: number,
 	models: Pick<LicenceModels, "jev" | "luna">,
-): Promise<LicenceOutput> {
-	const traces: OperationTrace[] = [];
-	const at: LicenceAttempt = { licenceCase };
-	const { later, stored } = licenceCase;
-	const result = await Effect.runPromise(
-		operations.knowledge
+): LabEffect<LicenceOutput> =>
+	Effect.gen(function* () {
+		const traces: OperationTrace[] = [];
+		const at: LicenceAttempt = { licenceCase };
+		const { later, stored } = licenceCase;
+		const result = yield* operations.knowledge
 			.produce({
 				language: "de",
 				reading: later.reading,
@@ -180,7 +187,7 @@ async function attempt(
 			})
 			.pipe(
 				Effect.provide(
-					DumgenLive({
+					DumgenCore({
 						jev: JevTransport.fromAsk(models.jev(at, repetition)),
 						luna: LunaTransport.fromAsk(
 							models.luna(at, repetition),
@@ -188,57 +195,45 @@ async function attempt(
 						onOperation: (trace) => traces.push(trace),
 					}),
 				),
+			);
+		// A run cut short by a batch hold or a cap has no answer to score.
+		const held = result.failures.find(({ message }) =>
+			/held for the run's next batch|Stopped at the|cache miss in offline mode/u.test(
+				message,
 			),
-	);
-	// A run cut short by a batch hold or a cap has no answer to score.
-	const held = result.failures.find(({ message }) =>
-		/held for the run's next batch|Stopped at the|cache miss in offline mode/u.test(
-			message,
-		),
-	);
-	if (held) throw Error(held.message);
-	return {
-		paradigmChanges: [...result.paradigmChanges],
-		failures: result.failures.map(({ aspect, code, message }) => ({
-			aspect,
-			code,
-			message,
-		})),
-		events: (traces[0]?.events ?? []).map(({ name, data }) => ({
-			name,
-			data: data ?? null,
-		})),
-	};
-}
+		);
+		if (held) return yield* Effect.fail(Error(held.message));
+		return {
+			paradigmChanges: [...result.paradigmChanges],
+			failures: result.failures.map(({ aspect, code, message }) => ({
+				aspect,
+				code,
+				message,
+			})),
+			events: (traces[0]?.events ?? []).map(({ name, data }) => ({
+				name,
+				data: data ?? null,
+			})),
+		} satisfies LicenceOutput;
+	});
 
 /** Every case's every repetition, `concurrency` at a time; failures are left for the run. */
-async function pass(
+const pass = (
 	cases: readonly LicenceCase[],
 	models: LicenceModels,
 	concurrency: number,
 	repetitions: number,
-): Promise<void> {
-	const work = cases.flatMap((licenceCase) =>
-		Array.from({ length: repetitions }, (_, repetition) => ({
-			licenceCase,
-			repetition,
-		})),
+): LabEffect<void> =>
+	everyAttempt(
+		cases.flatMap((licenceCase) =>
+			Array.from({ length: repetitions }, (_, repetition) => ({
+				licenceCase,
+				repetition,
+			})),
+		),
+		(item) => attempt(item.licenceCase, item.repetition, models),
+		concurrency,
 	);
-	let next = 0;
-	await Promise.all(
-		Array.from({ length: Math.max(1, concurrency) }, async () => {
-			for (;;) {
-				const item = work[next++];
-				if (!item) return;
-				try {
-					await attempt(item.licenceCase, item.repetition, models);
-				} catch {
-					// The run records the failure.
-				}
-			}
-		}),
-	);
-}
 
 /**
  * One half's requests to jev and Luna (`request-diff.ts`): each case a run
@@ -249,6 +244,7 @@ async function licenceRequests(
 	setsRoot: string,
 	split: DoubletSplit,
 	concurrency: number,
+	runtime: LabRuntime | undefined,
 ) {
 	const set = await loadLicenceSet(setsRoot);
 	return goldRequests({
@@ -259,6 +255,7 @@ async function licenceRequests(
 		oracle: licenceOracle,
 		attempt: (at, models) => attempt(at.licenceCase, 0, models),
 		concurrency,
+		...(runtime ? { runtime } : {}),
 	});
 }
 
@@ -296,6 +293,149 @@ export type LicenceEvaluated = Omit<KnowledgeEvaluated, "set"> & {
 	readonly set?: { readonly name: "doublets"; readonly hash: string };
 };
 
+/** A run of one half on `runtime`: priced, filled when live, then run case by case. */
+async function evaluateDoubletHalf(
+	split: DoubletSplit,
+	args: LicenceEvaluateArgs,
+	runtime: LabRuntime,
+): Promise<LicenceEvaluated> {
+	const experimentId = `${route}:doublets:${split}`;
+	const directory = join(args.root ?? defaultRoot, "cache");
+	const { set, repetitions } = await openFrozenSet({
+		setsRoot: args.setsRoot ?? trackedLicenceSetsRoot,
+		setName: "doublets" as const,
+		route,
+		freezeCommand: licenceFreezeCommand,
+		load: loadLicenceSet,
+		maximum: maximumRepetitions,
+		repetitions: args.repetitions,
+	});
+	const half = splitCases(set.cases, split);
+	const cases = half.slice(0, args.limit ?? half.length);
+	const concurrency = args.concurrency ?? 12;
+	const passWith = (models: LicenceModels) =>
+		runOn(
+			runtime,
+			pass(cases, models, concurrency, repetitions),
+			args.signal,
+		);
+	const priced = await priceRound(args, {
+		id: experimentId,
+		ledger: ledgerPath,
+		directory,
+		stageSizes,
+		models: (options) => new LicenceModels(options),
+		pass: passWith,
+		repetitions,
+		attempts: cases.length * repetitions,
+	});
+	const { price } = priced;
+	const identity = { name: set.name, hash: set.hash };
+	if (args.estimate) return { ...(price ? { price } : {}), set: identity };
+	const live = new LicenceModels(runModelsOptions(args, directory, priced));
+	await fillLive(args, live, "knowledge.produce", () => passWith(live));
+	const replay = new LicenceModels({
+		directory,
+		mode: "offline",
+	});
+	const byId = new Map(cases.map((entry) => [entry.id, entry]));
+	const corpus = defineGoldenCorpus({
+		route,
+		inputSchema,
+		outputSchema: licenceOutputSchema,
+		collections: {
+			dumcorpus: defineGoldenCaseCollection({
+				groups: {
+					cases: defineGoldenCaseGroup(
+						Object.fromEntries(
+							cases.map((entry) => [
+								entry.id,
+								{
+									input: {
+										caseId: entry.id,
+										lemma: entry.lemma,
+										control: entry.control,
+										later: emojiOf(entry.later.reading),
+										stored: emojiOf(entry.stored.reading),
+										markedSentence: markedSentence(
+											entry.later.sentence.segments,
+											entry.later.sentence.target,
+										),
+									} satisfies LicenceInput,
+									idealOutput: {
+										paradigmChanges: [],
+										failures: [],
+										events: [],
+									},
+									contaminationKeys: [entry.later.record],
+								},
+							]),
+						),
+					),
+				},
+				cases: {},
+			}),
+		},
+	});
+	const repetitionsSeen = new Map<string, number>();
+	const run = await runOperationExperiment({
+		experiment: {
+			corpus,
+			evaluation: corpus.select([...byId.keys()]),
+			demonstrations: corpus.select([]),
+			// promptsmith runs a case's repetitions back to back and
+			// passes no index, so they count off the cache's.
+			run: async (input, context) => {
+				const entry = byId.get(input.caseId);
+				if (!entry) throw Error(`No case ${input.caseId}`);
+				const repetition = repetitionsSeen.get(input.caseId) ?? 0;
+				repetitionsSeen.set(input.caseId, repetition + 1);
+				const output = await runOn(
+					runtime,
+					attempt(entry, repetition % repetitions, replay),
+					context.signal,
+				);
+				context.recordTrace({ calls: [] });
+				return output;
+			},
+			evaluator: ({ caseId, output }) => {
+				const entry = byId.get(caseId);
+				if (!entry) throw Error(`No case ${caseId}`);
+				return evaluateLicence(entry, output);
+			},
+		},
+		experimentId,
+		operationVersion,
+		evaluatorVersion,
+		sourceRevision: args.sourceRevision,
+		configurations: {
+			generation: {
+				model: defaultLunaConfiguration.model,
+				settings: JSON.parse(
+					JSON.stringify(defaultLunaConfiguration.settings),
+				),
+			},
+			judgment: {
+				model: pinnedJevModel,
+				settings: {
+					set: set.name,
+					setHash: set.hash,
+					split,
+				},
+			},
+		},
+		repetitions,
+		...(args.signal ? { signal: args.signal } : {}),
+	});
+	if (args.outputDirectory) await saveRun(args.outputDirectory, run);
+	return {
+		run,
+		...(price ? { price } : {}),
+		spend: live.report(),
+		set: identity,
+	};
+}
+
 /** The table's entry for one half of the doublets set. */
 export function licenceExperiment(split: DoubletSplit) {
 	const experimentId = `${route}:doublets:${split}`;
@@ -306,149 +446,17 @@ export function licenceExperiment(split: DoubletSplit) {
 		requests: (args: {
 			readonly setsRoot?: string;
 			readonly concurrency?: number;
+			readonly runtime?: LabRuntime;
 		}) =>
 			licenceRequests(
 				args.setsRoot ?? trackedLicenceSetsRoot,
 				split,
 				args.concurrency ?? 12,
+				args.runtime,
 			),
-		async evaluate(args: LicenceEvaluateArgs): Promise<LicenceEvaluated> {
-			const directory = join(args.root ?? defaultRoot, "cache");
-			const { set, repetitions } = await openFrozenSet({
-				setsRoot: args.setsRoot ?? trackedLicenceSetsRoot,
-				setName: "doublets" as const,
-				route,
-				freezeCommand: licenceFreezeCommand,
-				load: loadLicenceSet,
-				maximum: maximumRepetitions,
-				repetitions: args.repetitions,
-			});
-			const half = splitCases(set.cases, split);
-			const cases = half.slice(0, args.limit ?? half.length);
-			const concurrency = args.concurrency ?? 12;
-			const passWith = (models: LicenceModels) =>
-				pass(cases, models, concurrency, repetitions);
-			const priced = await priceRound(args, {
-				id: experimentId,
-				ledger: ledgerPath,
-				directory,
-				stageSizes,
-				models: (options) => new LicenceModels(options),
-				pass: passWith,
-				repetitions,
-				attempts: cases.length * repetitions,
-			});
-			const { price } = priced;
-			const identity = { name: set.name, hash: set.hash };
-			if (args.estimate)
-				return { ...(price ? { price } : {}), set: identity };
-			const live = new LicenceModels(
-				runModelsOptions(args, directory, priced),
-			);
-			await fillLive(args, live, "knowledge.produce", () =>
-				passWith(live),
-			);
-			const replay = new LicenceModels({ directory, mode: "offline" });
-			const byId = new Map(cases.map((entry) => [entry.id, entry]));
-			const corpus = defineGoldenCorpus({
-				route,
-				inputSchema,
-				outputSchema: licenceOutputSchema,
-				collections: {
-					dumcorpus: defineGoldenCaseCollection({
-						groups: {
-							cases: defineGoldenCaseGroup(
-								Object.fromEntries(
-									cases.map((entry) => [
-										entry.id,
-										{
-											input: {
-												caseId: entry.id,
-												lemma: entry.lemma,
-												control: entry.control,
-												later: emojiOf(
-													entry.later.reading,
-												),
-												stored: emojiOf(
-													entry.stored.reading,
-												),
-												markedSentence: markedSentence(
-													entry.later.sentence
-														.segments,
-													entry.later.sentence.target,
-												),
-											} satisfies LicenceInput,
-											idealOutput: {
-												paradigmChanges: [],
-												failures: [],
-												events: [],
-											},
-											contaminationKeys: [
-												entry.later.record,
-											],
-										},
-									]),
-								),
-							),
-						},
-						cases: {},
-					}),
-				},
-			});
-			const repetitionsSeen = new Map<string, number>();
-			const run = await runOperationExperiment({
-				experiment: {
-					corpus,
-					evaluation: corpus.select([...byId.keys()]),
-					demonstrations: corpus.select([]),
-					// promptsmith runs a case's repetitions back to back and
-					// passes no index, so they count off the cache's.
-					run: async (input, context) => {
-						const entry = byId.get(input.caseId);
-						if (!entry) throw Error(`No case ${input.caseId}`);
-						const repetition =
-							repetitionsSeen.get(input.caseId) ?? 0;
-						repetitionsSeen.set(input.caseId, repetition + 1);
-						const output = await attempt(
-							entry,
-							repetition % repetitions,
-							replay,
-						);
-						context.recordTrace({ calls: [] });
-						return output;
-					},
-					evaluator: ({ caseId, output }) => {
-						const entry = byId.get(caseId);
-						if (!entry) throw Error(`No case ${caseId}`);
-						return evaluateLicence(entry, output);
-					},
-				},
-				experimentId,
-				operationVersion,
-				evaluatorVersion,
-				sourceRevision: args.sourceRevision,
-				configurations: {
-					generation: {
-						model: defaultLunaConfiguration.model,
-						settings: JSON.parse(
-							JSON.stringify(defaultLunaConfiguration.settings),
-						),
-					},
-					judgment: {
-						model: pinnedJevModel,
-						settings: { set: set.name, setHash: set.hash, split },
-					},
-				},
-				repetitions,
-				...(args.signal ? { signal: args.signal } : {}),
-			});
-			if (args.outputDirectory) await saveRun(args.outputDirectory, run);
-			return {
-				run,
-				...(price ? { price } : {}),
-				spend: live.report(),
-				set: identity,
-			};
-		},
+		evaluate: (args: LicenceEvaluateArgs): Promise<LicenceEvaluated> =>
+			onLabRuntime(args.runtime, (runtime) =>
+				evaluateDoubletHalf(split, args, runtime),
+			),
 	};
 }

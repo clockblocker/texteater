@@ -63,10 +63,19 @@ bun run evaluate --experiment segment-in-units/de:dev --revision <rev> \
   projection and the pin all apply. A live run fills the cache
   concurrently before promptsmith replays it case by case.
 - The production mode runs production's code path: raw mode calls
-  `operations.segment.inUnits` under `DumgenLive` with the cached jev as its
-  transport, and gold mode runs the unit stage under the same operation and
-  call adapter (`lab/evaluation/production-segmenter.ts`), since
-  `operations` takes no Segments. `--units reference` keeps the lab's port.
+  `operations.segment.inUnits` under `DumgenCore`, `DumgenLive` without its
+  budget, with the cached jev as its transport, and gold mode runs the unit
+  stage under the same operation and call adapter
+  (`lab/evaluation/production-segmenter.ts`), since `operations` takes no
+  Segments. `--units reference` keeps the lab's port.
+- **One runtime and one budget per run** (Dumgen ADR 0009): every evaluate
+  run's Effects run on one `ManagedRuntime` (`lab/evaluation/lab-runtime.ts`),
+  whose request budget of 12 all its attempts share, the cache fill's and
+  every experiment's alike. Each attempt builds `DumgenCore` over its own
+  cached transports on that budget. SIGINT aborts the run's signal, which
+  interrupts its attempts and aborts the calls in flight. Waits and
+  latencies in runs from before this budget can't be compared with later
+  ones; requests and outputs can.
 - **The request diff** (`--requests`, `lab/evaluation/request-diff.ts`) is
   the free no-change check for a refactor. It builds every case's requests
   and each repetition's outcome offline and saves them under
