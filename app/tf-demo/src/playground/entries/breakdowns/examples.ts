@@ -56,7 +56,7 @@ export const BREAKDOWN_EXAMPLES: readonly ExampleGroup[] = [
 			},
 			{
 				label: "Wachstube 💂",
-				hint: "Wache + Stube; Stube is stored, Wache pending",
+				hint: "wachen + Stube (DWDS): Wach links to the verb; Stube is stored, wachen pending",
 				note: reading("Wachstube", "💂"),
 			},
 			{

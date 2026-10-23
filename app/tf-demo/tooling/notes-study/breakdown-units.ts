@@ -265,7 +265,8 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		definition: "Raum, in dem sich die Wache aufhält.",
 		translations: ["guardroom", "караульное помещение"],
 		constituents: [
-			link("Wach", pendingNoun("Wache")),
+			// DWDS splits it wachen + Stube, as the Breakdown Record does.
+			link("Wach", pendingWord("VERB", "wachen")),
 			link("stube", STUBE),
 		],
 	},
