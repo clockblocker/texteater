@@ -1136,8 +1136,8 @@
 							]
 						}
 					],
-					"participleSource": {
-						"verb": {
+					"source": {
+						"target": {
 							"unitKind": "Lemma",
 							"language": "de",
 							"family": "Lexeme",
@@ -1153,7 +1153,7 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"participleSource": "Authored",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",

@@ -616,8 +616,8 @@
 			"reading": {
 				"emojiDescription": "⚠",
 				"knowledge": {
-					"participleSource": {
-						"verb": {
+					"source": {
+						"target": {
 							"unitKind": "Lemma",
 							"language": "de",
 							"family": "Lexeme",
@@ -659,7 +659,7 @@
 				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"participleSource": "Authored",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -730,7 +730,7 @@
 				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"participleSource": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -1252,7 +1252,7 @@
 				"knowledge": {},
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"participleSource": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
