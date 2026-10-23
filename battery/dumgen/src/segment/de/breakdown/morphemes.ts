@@ -126,7 +126,8 @@ const label = (pieces: readonly ProducedPiece[]) =>
 		)
 		.join(" · ");
 
-const instructions =
+/** The split question; its example is no Breakdown case (#693). */
+export const morphemesInstructions =
 	"Which split of `word` into morphemes does school morphemic analysis (Wortbausteine, разбор по составу) give? A prefix or suffix is cut off only where it is one in this word; otherwise it stays inside the root (Geselle: gesell · e).";
 
 /** German `segment.inMorphemes` on a single-word Lexeme. */
@@ -153,7 +154,7 @@ export const germanMorphemes = Effect.fnUntraced(function* (
 
 		questions: {
 			split: choice(
-				instructions,
+				morphemesInstructions,
 				Object.fromEntries(
 					splits.map((split, index) => [`s${index}`, label(split)]),
 				),

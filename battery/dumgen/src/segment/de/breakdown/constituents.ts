@@ -148,8 +148,49 @@ function linkedPieces(
 	return result;
 }
 
+/**
+ * The analysis question (#1241 round 1): read the sense `meaning` names,
+ * since a homograph splits by sense; know the prefix + noun or adjective +
+ * citation ending shape; and keep to parts that are words. Its examples
+ * are no Breakdown case (#693).
+ */
 const analysisInstructions =
-	"How was `word` built, one level down? Pick its two immediate parts as a dictionary's word formation (DWDS Wortzerlegung) splits it: a compound's first word and its head, which may be a compound itself (Kohle + kraftwerk); a prefix or verb particle and its base (ver- + kaufen); a base and a suffix (Entspann + -ung). Pick `none` for a word with no word inside, or one converted whole from another word with nothing cut off (Lauf from laufen).";
+	"How was `word` built, one level down, in the sense `meaning` names? `meaning` is an emoji for this Reading's sense, and one spelling can split differently by sense (Staubecken: Stau + becken, a reservoir; Staub + ecken, dusty corners), so pick the analysis whose parts together give that sense, even when another analysis gives a commoner word. Pick its immediate parts as a dictionary's word formation (DWDS Wortzerlegung) splits it: a compound's first word and its head, which may be a compound itself (Sommer + schlussverkauf); a prefix or verb particle and its base verb (ver- + brennen, since brennen is a verb); a base and a suffix (Heiz + -ung). Check the base after a verb's prefix: when it is no verb a dictionary lists on its own, the verb was made from the noun or adjective inside it, so pick the prefix, that noun or adjective and the citation ending (vergolden is ver- + gold + -en, since there is no verb golden). Every part that isn't an affix must be a word a dictionary lists, though it may show the word without a final -e, with an umlaut or as a verb's stem (Schwimm for schwimmen): never pick an analysis with a part that is no word at all. Pick `none` for a word with no word inside, or one converted whole from another word with nothing cut off (Schlag from schlagen).";
+
+/**
+ * Closes a compound part's route question (#1241 round 1): a first part
+ * showing a verb's stem is that verb (`Wach` in Wachstube 💂 is wachen,
+ * DWDS).
+ */
+const compoundRouteGuide =
+	"A part that shows a verb's stem without its ending is that verb (Schwimm in Schwimmbad is schwimmen, Bohr in Bohrmaschine is bohren).";
+
+/**
+ * Closes the base's route question in a prefix + base + citation ending
+ * analysis (#1241 round 1): the verb was made from that base.
+ */
+const prefixedBaseRouteGuide =
+	"This verb was made from a noun or adjective with a prefix and the citation ending, so the part between them is that noun or adjective, not a verb.";
+
+/** The route guide for an analysis's word parts: a compound's, a prefixed base's, or none. */
+function routeGuideOf(analysis: WordAnalysis): string | undefined {
+	if (analysis.pieces.some(({ role }) => role === "Ending"))
+		return prefixedBaseRouteGuide;
+	const words = analysis.pieces.filter(({ role }) => role === "Word");
+	return words.length === analysis.pieces.length && words.length > 1
+		? compoundRouteGuide
+		: undefined;
+}
+
+/**
+ * Closes a phraseme part's route question (#1241 round 1): a part's Kind is
+ * its role in the whole expression. Kept here, since the route descriptions
+ * are segment.inUnits's and stay shared.
+ */
+const phrasemeRouteGuide =
+	"Judge the part by the role it plays inside this whole expression, not by its commonest use: a word that opens a clause, an infinitive clause included, is SCONJ (statt in statt … zu); a comparison word, wie or als, is CCONJ before a phrase and SCONJ before a clause, never ADP or ADV (als in mehr Schein als Sein); a word that stands for a noun phrase on its own, with no noun after it, is PRON, not DET (jeder in jeder für sich).";
+
+const noneOption = "No immediate parts: a simple word, or a conversion";
 
 /** The analysis jev picks, or none. */
 const chosenAnalysis = Effect.fnUntraced(function* (
@@ -165,7 +206,7 @@ const chosenAnalysis = Effect.fnUntraced(function* (
 				...Object.fromEntries(
 					analyses.map(({ label }, index) => [`a${index}`, label]),
 				),
-				none: "No immediate parts: a simple word, or a conversion",
+				none: noneOption,
 			}),
 		},
 	});
@@ -205,7 +246,12 @@ const wordConstituents = Effect.fnUntraced(function* (
 				]
 			: [],
 	);
-	const targets = yield* partTargets(open, whole, ask);
+	const targets = yield* partTargets(
+		open,
+		whole,
+		ask,
+		routeGuideOf(analysis),
+	);
 	return constituentsOf(linkedPieces(analysis.pieces, targets));
 });
 
@@ -221,6 +267,24 @@ const reflexiveUses = {
 		"Part of the verb itself: dictionaries list the verb with sich for this sense, and nothing else can stand in its place (sich schämen, sich beeilen, sich weigern)",
 	other: "sich does not belong with this verb",
 };
+
+/** Whether a run inside a wording is a Locution of its own. */
+const locutionQuestion = (key: string, reads: string) =>
+	`Inside \`${key}\`, do the words "${reads}" form a fixed expression of their own that dictionaries list apart from it (auf jeden Fall, vor allem), rather than just neighbouring words of this one expression?`;
+
+/**
+ * Every text segment.inConstituents's questions and options carry beyond
+ * the shared route descriptions, for the disjointness test (#693).
+ */
+export const constituentsPromptTexts = (): readonly string[] => [
+	analysisInstructions,
+	noneOption,
+	compoundRouteGuide,
+	prefixedBaseRouteGuide,
+	phrasemeRouteGuide,
+	locutionQuestion("wording", "…"),
+	...Object.values(reflexiveUses),
+];
 
 /** What jev groups inside a wording: its inner Locutions and a reflexive verb's `sich`. */
 type Groups = {
@@ -242,7 +306,7 @@ const chosenGroups = Effect.fnUntraced(function* (
 	const questions: Questions = {};
 	for (const [index, candidate] of candidates.entries())
 		questions[`l_${index}`] = noul(
-			`Inside \`${whole.key}\`, do the words "${candidate.reads}" form a fixed expression of their own that dictionaries list apart from it (zu Hause, auf jeden Fall), rather than just neighbouring words of this one expression?`,
+			locutionQuestion(whole.key, candidate.reads),
 		);
 	for (const [index, candidate] of reflexives.entries())
 		questions[`x_${index}`] = choice(
@@ -326,7 +390,7 @@ const phrasemeConstituents = Effect.fnUntraced(function* (
 			? [{ reads: piece.reads, routes: partRoutes(piece) }]
 			: [],
 	);
-	const targets = yield* partTargets(open, whole, ask);
+	const targets = yield* partTargets(open, whole, ask, phrasemeRouteGuide);
 	let part = 0;
 	const linked = merged.map((piece) =>
 		piece.role === "Part" && !piece.ofVerb ? targets[part++] : undefined,

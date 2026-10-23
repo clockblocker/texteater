@@ -63,18 +63,21 @@ const kindNames: Readonly<Record<string, string>> = {
 /**
  * Each part's Unit Shadow, in order. Its route is the only one offered or
  * jev's pick, then its Canonical Form the only candidate or jev's pick; a
- * Locution keeps its wording.
+ * Locution keeps its wording. `routeGuide`, when given, closes every route
+ * question: how a word's or a phraseme's parts are judged. The route
+ * descriptions themselves are segment.inUnits's and stay shared.
  */
 export const partTargets = Effect.fnUntraced(function* (
 	parts: readonly OpenPart[],
 	whole: Whole,
 	ask: Ask,
+	routeGuide?: string,
 ): Effect.fn.Return<Dumrel.UnitShadow[], AskFailure> {
 	const routeQuestions: Questions = {};
 	for (const [index, part] of parts.entries())
 		if (part.routes.length > 1)
 			routeQuestions[`r_${index}`] = choice(
-				`In \`${whole.key}\`, the part "${part.reads}" is which kind of unit?`,
+				`In \`${whole.key}\`, the part "${part.reads}" is which kind of unit?${routeGuide ? ` ${routeGuide}` : ""}`,
 				routeCriteria(part.routes, true),
 			);
 	const routeAnswers = yield* askAny(ask, {
