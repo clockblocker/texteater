@@ -3,8 +3,7 @@ import { lexeme } from "./rules.js";
 
 /**
  * The German Doublet Rule (ADR 0048): one Lemma whose senses inflect
- * differently. It sits apart from `rules.ts`, which is past the file-token
- * limit. Its records are the gold a licence judge is scored on.
+ * differently. Its records are the gold a licence judge is scored on.
  */
 export const doubletRules: readonly Rule[] = [
 	{

@@ -1,0 +1,57 @@
+import { type Cite, paragraphRegistry } from "../../../prompt-paragraphs.js";
+
+/** The Rules the prompts cite, at the statement hashes they were checked against. */
+export const rules = {
+	unresolved: ["de/unresolved-over-repair", "a5da7c01b403fde8"],
+	largest: ["de/largest-fixed-unit", "9a404db30f2b7c82"],
+	core: ["de/core-features-are-identity", "c11b321c41f117a1"],
+	headword: ["de/canonical-form-is-the-headword", "43184aac9186aceb"],
+	orthography: ["de/member-orthography", "66373ce319bd065a"],
+	variant: ["de/variant-and-historical-status", "9e2c6c25c942a570"],
+	emptyInflection: ["de/empty-inflection-is-structural", "2ea5f1e19a7417ae"],
+	nounArticle: ["de/noun-owns-its-article", "c2b1f74a61545177"],
+	adjectivalNoun: ["de/adjectival-noun-lemma", "bcdaf66f8862eb29"],
+	neuterNoun: ["de/neuter-adjectival-noun", "a4bd8e12a664fd8e"],
+	pluralOnly: ["de/plural-only-noun-has-no-gender", "92946b73a6244500"],
+	freeGender: ["de/noun-gender-in-free-variation", "232a2eebe2947abc"],
+	properArticle: ["de/proper-noun-article", "c3eb61394edd1818"],
+	organisation: [
+		"de/organisation-name-takes-its-article",
+		"f554775a2a54046e",
+	],
+	title: ["de/title-before-a-name", "dd531115e2c8a2ef"],
+	verbalWhole: ["de/verbal-surface-is-whole", "ab79bbe68ce12d4c"],
+	verbalParticiple: ["de/verbal-participle", "8783a18791f95718"],
+	auxiliary: ["de/auxiliary-joins-the-verb-it-serves", "17cec6bff2108a22"],
+	causative: ["de/causative-lassen", "6df00ff37a0a5baa"],
+	recipient: ["de/recipient-passive", "0196915ee6d1a36d"],
+	verbCore: ["de/verb-core-features", "584917189382edfe"],
+	bracket: ["de/bracket-particle-or-circumposition", "60b1cecf8b3f74f1"],
+	expletive: ["de/expletive-es-joins-its-verb", "99bff23563b49716"],
+	government: [
+		"de/governed-preposition-joins-its-governor",
+		"19c59bf41ed26810",
+	],
+	comparability: ["de/comparability-is-lexical", "b72c043c004f9dc9"],
+	attributive: ["de/attributive-adjective-stands-alone", "dc0d3ef97ace5bc0"],
+	partial: ["de/partial-coverage", "5aa8e564f6ae1177"],
+	modification: ["de/modification-attests-partially", "91fc596acb3813f1"],
+	referent: ["de/open-referent", "eae1e1fa056277e4"],
+	interjection: ["de/interjection-counts-its-words", "b572bad8906b508d"],
+	foreign: ["de/foreign-unless-duden-or-german-grammar", "c2f06b03fed6e233"],
+	fused: ["de/fused-word-pieces", "53eb6d28dab42ddc"],
+	rShorthand: ["de/r-adverb-is-her-or-hin-shorthand", "41cf9da8689f34cb"],
+	drShorthand: ["de/dr-adverb-is-da-shorthand", "ccf47f0d9cfd6914"],
+	wShorthand: ["de/bare-w-word-is-shorthand", "7ae30cfdb910de05"],
+	suspended: ["de/suspended-compound-completion", "c86ab32a13fa94be"],
+	abbreviation: ["de/abbreviation-is-one-segment", "8b5d215a31ab7264"],
+	digits: ["de/digits-spell-the-numeral", "ae8bd58519856b20"],
+	idiom: ["de/idiom", "c05df428b3a42079"],
+	routine: ["de/routine-formula-is-intj", "32797f3b5f083780"],
+	pronOrDet: ["de/pron-or-det-by-use", "b7ac2bf4eaaf25be"],
+	splitAdverb: ["de/split-adverb-is-one-target", "05ddf27450fc5104"],
+	pronominalAdverb: ["de/pronominal-adverb-stands-alone", "1b11d9ee80ce12bd"],
+} as const satisfies Readonly<Record<string, Cite>>;
+
+export const registry = paragraphRegistry("de/resolve-grammar");
+export const { paragraph } = registry;
