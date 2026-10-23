@@ -463,7 +463,8 @@ test("the harness prices a round from the oracle without a call, runs live once 
 	] as const)
 		expect(metrics.lines[aspect]).toMatchObject({ correct: 1, count: 1 });
 	expect(metrics.lines.sayingType).toMatchObject({ correct: 1, count: 1 });
-	expect(metrics.lines.source.count).toBe(1);
+	// warten's Source (none) and verheiratet's.
+	expect(metrics.lines.source.count).toBe(2);
 	expect(metrics.lines.relationRecall.correct).toBeGreaterThan(0);
 	expect(metrics.flips).toEqual([]);
 
