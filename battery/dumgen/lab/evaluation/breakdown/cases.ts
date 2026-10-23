@@ -1,8 +1,10 @@
 /**
  * The Breakdown segmenters' gold (Dumgen ADR 0007): dumcorpus's Breakdown
- * Records as cases. Every record is a `segment.inConstituents` case: its
- * Constituents, or none for a record that holds a bottom word's morphemes
- * or a Source. A record that holds a bottom word's morphemes is also a
+ * Records as cases. Every record without a Source is a
+ * `segment.inConstituents` case: its Constituents, or none for a bottom
+ * word. A Reading with a Source runs neither segmenter, since the host asks
+ * Knowledge for the Source first (system ADR 0050), so its record is no
+ * case. A record that holds a bottom word's morphemes is also a
  * `segment.inMorphemes` case.
  *
  * A gold target is a Lemma or a Unit Shadow and a produced one a Unit
@@ -81,13 +83,14 @@ const groupOf = (record: Dumcorpus.BreakdownRecord) => {
 		: "phraseme";
 };
 
-/** Every record as a `segment.inConstituents` case, sorted by id. */
+/** Every record without a Source as a `segment.inConstituents` case, sorted by id. */
 export function constituentsCases(
 	records: readonly Dumcorpus.BreakdownRecord[] = loadBreakdownRecords(),
 ): BreakdownCase<ConstituentsOutput>[] {
-	return records.map((record) => {
+	return records.flatMap((record) => {
+		if (record.knowledge.source !== undefined) return [];
 		const constituents = record.knowledge.breakdown?.constituents;
-		return {
+		const goldCase: BreakdownCase<ConstituentsOutput> = {
 			id: record.id,
 			input: { reading: record.reading },
 			idealOutput:
@@ -99,6 +102,7 @@ export function constituentsCases(
 						},
 			group: groupOf(record),
 		};
+		return [goldCase];
 	});
 }
 

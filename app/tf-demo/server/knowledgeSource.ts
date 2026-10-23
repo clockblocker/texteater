@@ -5,9 +5,11 @@ import { selectKnowledge } from "dumrel";
 
 /**
  * Whether one Knowledge run asks for the Reading's Source (ADR 0036, ADR
- * 0050). Only a base run of an applicable Reading that stores none asks. The
- * aspect stays outside the coverage request: a plain adjective answers with no
- * contribution and must still reach Full.
+ * 0050): a participle's verb, or a conversion's, clipping's or acronym's
+ * base. Only a base run of a Reading whose route requests one and that
+ * stores none asks. The aspect stays outside the coverage request: a word
+ * formed from no other answers with no contribution and must still reach
+ * Full.
  */
 export function asksSource(
 	reading: { readonly lemma: Dumling.Lemma<"de"> },

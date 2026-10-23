@@ -7,6 +7,11 @@
  * and reaches jev alone: code proposes the cuts and the Canonical Forms,
  * jev picks. The Reading's language module does the work.
  *
+ * The host runs them in order: a Reading with a Source (Knowledge's
+ * `source`) runs neither, and one whose `source` failed or is Unresolved
+ * waits for it; any other runs `segment.inConstituents`, and
+ * `segment.inMorphemes` only when that finds none.
+ *
  * Their pieces are Dumrel Breakdown pieces whose targets are Unit Shadows;
  * the host stores them as the Reading's `breakdown.constituents` or
  * `breakdown.morphemes`, and they resolve as Pending Semantic Relations do.
@@ -41,9 +46,10 @@ export type ProducedPiece = {
 
 /**
  * What `segment.inConstituents` gives a Reading: its Constituents, which
- * link at least two parts, or none. None is a bottom word (`spannen`),
- * which `segment.inMorphemes` splits, or a formation whose letters can't
- * be cut (`Lauf` ← `laufen`), which has a Source instead.
+ * link at least two parts, or none. The host asks Knowledge for a single
+ * word's Source first and runs the segmenters only on a Reading without one
+ * (system ADR 0050), so none is a bottom word (`spannen`), which
+ * `segment.inMorphemes` splits.
  */
 export type Constituents =
 	| {

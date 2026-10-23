@@ -1,7 +1,8 @@
 /**
  * Answers `knowledge.produce`'s calls as gold would (#887): the judges pick
- * gold's plurality, participle meaning, types and relations, and Luna
- * writes gold's plural forms and principal parts, frame, source verb,
+ * gold's plurality, formation, participle meaning, types and relations, and
+ * Luna writes gold's plural forms and principal parts, frame, source verb or
+ * base,
  * attribution and relation targets. Where a case has no gold (dev, text aspects), it answers with
  * stand-ins of a typical size, so a pricing pass finds every request a run
  * would send and sizes its answers. It reads gold only; no model.
@@ -48,6 +49,19 @@ const candidateOf = ({ instructions }: Question): string => {
 	return typeof candidate === "string" ? candidate : "";
 };
 
+/**
+ * The formation gold's Source implies: a participle names its meaning, a
+ * shortening keeps its base's Kind, a conversion changes it.
+ */
+function goldFormation(goldCase: KnowledgeCase): string {
+	const source = goldOf(goldCase).source;
+	if (source === undefined) return "None";
+	if (source.meaning !== undefined) return "Participle";
+	return goldCase.reading.lemma.kind === source.target.kind
+		? "Clipping"
+		: "Conversion";
+}
+
 /** Gold's choice for one question, else a plausible option. */
 function goldChoice(
 	goldCase: KnowledgeCase,
@@ -69,6 +83,9 @@ function goldChoice(
 				: "HasPlural",
 		);
 	}
+	if (id === "formation") return offer(goldFormation(goldCase));
+	if (id === "direction") return offer("Formed");
+	if (id === "shortening") return offer("Short");
 	if (id === "form") return offer("Participle");
 	if (id === "meaning") return offer(gold.source?.meaning ?? "Verbal");
 	if (id === "locutionType") return offer(gold.locutionType ?? "Neither");
@@ -176,6 +193,12 @@ export function goldKnowledgeWritten(
 				preterite: `${verb.canonicalForm}te`,
 				participle: lemma,
 			};
+		}
+		case "sourceBase": {
+			const target = gold.source?.target;
+			return target
+				? { base: target.canonicalForm, kind: target.kind }
+				: { base: null };
 		}
 		case "attribution":
 			return gold.sayingType?.attribution ?? null;

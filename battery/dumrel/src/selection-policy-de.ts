@@ -11,8 +11,13 @@ const select = (
 
 /** Routes whose Readings own a Valency Frame (`valency-policy.ts`): `warten auf`, `stolz auf`, `Angst vor`, `Bescheid wissen über`. */
 const framed = { valency: null } as const;
-/** An adjectival participle names its verb as Source: `gekocht` from `kochen` (ADR 0036). */
-const participial = { ...framed, source: null } as const;
+/**
+ * A single word that may be formed whole from another names it as Source
+ * (ADR 0050): a participle (`gekocht` from `kochen`, ADR 0036), a
+ * conversion (`Lauf` from `laufen`), a clipping (`Uni`) or an acronym
+ * (`Kita`). Dumgen's `source` stage answers none for a multiword Lexeme.
+ */
+const formed = { ...framed, source: null } as const;
 
 /** A routine formula records what it does in conversation (ADR 0039). */
 const formula = { formulaRole: null } as const;
@@ -46,7 +51,7 @@ const makeDeRelMap = () =>
 		Lexeme: {
 			ADJ: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-				participial,
+				formed,
 			),
 			ADP: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
@@ -74,7 +79,7 @@ const makeDeRelMap = () =>
 					"hypernym",
 					"holonym",
 				),
-				framed,
+				formed,
 			),
 			NUM: request(select("synonym")),
 			PART: request(
@@ -101,7 +106,7 @@ const makeDeRelMap = () =>
 					"nearAntonym",
 					"hypernym",
 				),
-				framed,
+				formed,
 			),
 		},
 		// A Locution route requests what the Lexeme route with its Kind does,

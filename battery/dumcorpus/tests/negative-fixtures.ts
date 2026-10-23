@@ -368,7 +368,8 @@ export const negativeFixtures: {
 			record.targets[0].reading = {
 				emojiDescription: "👀",
 				knowledge: {},
-				coverage: { source: "ReviewedEmpty" },
+				// A VERB Lexeme has no Locution Type.
+				coverage: { locutionType: "ReviewedEmpty" },
 			};
 		},
 	},

@@ -47,7 +47,12 @@ Class, and the other principal parts (Präsens singular, Partizip II,
 Konjunktiv II). They wait because records over the file-token limit can't
 take them until they are split
 ([#1209](https://github.com/clockblocker/texteater/issues/1209),
-[#1217](https://github.com/clockblocker/texteater/issues/1217)). A record
+[#1217](https://github.com/clockblocker/texteater/issues/1217)). A NOUN's
+or VERB's Source waits for the same reason: the Knowledge Policy has
+requested it since the Source producer ruling on
+[#1241](https://github.com/clockblocker/texteater/issues/1241), and it is
+scored where a record covers it. An ADJ's Source holds depth back as
+before. A record
 reviewed through Knowledge fails while a target leaves a structural aspect
 uncovered. An Authored Inventory reviews its Readings' Knowledge and its
 members' Paradigms ([ADR 0021]), so `{}` completes a target whose Reading it

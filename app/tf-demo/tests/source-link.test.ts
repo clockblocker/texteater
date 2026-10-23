@@ -60,7 +60,7 @@ const SOURCE_CHANGE = {
 	value: KOCHEN_SOURCE,
 } as const;
 
-test("only a base run of an ADJ Reading without a stored Source asks for one", () => {
+test("only a base run of a Reading whose route requests a Source and that stores none asks for one (ADR 0050)", () => {
 	expect(
 		asksSource(GEKOCHT_READING, {
 			topUpOnly: false,
@@ -79,11 +79,27 @@ test("only a base run of an ADJ Reading without a stored Source asks for one", (
 			knowledge: { source: KOCHEN_SOURCE },
 		}),
 	).toBe(false);
+	// A verb may be a conversion of a noun (`fischen` from `Fisch`).
 	expect(
 		asksSource(KOCHEN_READING, {
 			topUpOnly: false,
 			knowledge: {},
 		}),
+	).toBe(true);
+	expect(
+		asksSource(
+			{
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADV",
+					canonicalForm: "gern",
+					coreFeatures: { comparable: "Yes" },
+				},
+			},
+			{ topUpOnly: false, knowledge: {} },
+		),
 	).toBe(false);
 });
 

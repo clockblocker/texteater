@@ -88,7 +88,8 @@ A participle's Source holds two things:
 - The verb, the full VERB Lemma in the same Language. It comes from the
   adjective's form alone, so *verschieden* always names `verscheiden`, and a
   form the verb does not build has none (*verlegen*). Knowledge Production
-  names it.
+  names it once its formation judge has called the adjective a participle
+  ([ADR 0050](./0050-break-a-reading-down-into-its-constituents.md)).
 - The Participle Meaning, `Verbal` or `Drifted`, judged per
   Reading: *gebildet* 'educated' is Verbal because `bilden` means to educate,
   *verschieden* ⚰️ 'deceased' is Verbal, and *verschieden* ↔️ 'different',

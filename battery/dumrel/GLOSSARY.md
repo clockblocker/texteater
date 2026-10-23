@@ -116,7 +116,9 @@ _Avoid_: governing verb
 The immediate base of a formation whose letters can't be cut into pieces: a
 conversion (`Lauf` ← `laufen`), a participle, an acronym or a clipping. It is
 the Reading Knowledge aspect `source`, outside the Breakdown (Dumling), and
-links to a Unit Shadow or a Lemma. The word's Morphemic Breakdown (Dumling)
+links to a Unit Shadow or a Lemma. A single NOUN, VERB or ADJ asks for it
+first: Dumgen's Knowledge stage produces every Source, and a Reading with
+one runs neither segmenter. The word's Morphemic Breakdown (Dumling)
 propagates through it. It is a grammatical link, not a Semantic Relation.
 See [ADR 0036], [ADR 0050] and [ADR 0051].
 _Avoid_: Participle Source, `participleSource`, base verb, derivation

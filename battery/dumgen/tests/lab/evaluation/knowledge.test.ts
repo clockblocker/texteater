@@ -65,7 +65,9 @@ test("held-out is the Readings reviewed to Knowledge depth, each once with its g
 });
 
 test("a structural run asks for the route's structural aspects only, a text run for its text aspects", () => {
+	// A VERB may be formed whole from another word, so it asks for a Source.
 	expect(requestOf(caseOf("warten"), "structural")).toEqual({
+		source: null,
 		valency: null,
 		semanticRelations: {
 			synonym: null,

@@ -44,6 +44,15 @@ writes no Breakdown: a Reading's Constituents come from
 `segment.inConstituents` and a bottom word's Morphemic Breakdown from
 `segment.inMorphemes` (Dumgen ADR 0007).
 
+**Production names every Source.** A single-word NOUN, VERB or ADJ asks for
+`source` (system ADR 0050). jev judges the formation first: a participle
+(ADJ only), a conversion, a clipping, an acronym or none. Luna writes only
+for a formation: a participle's verb as before (system ADR 0036), any
+other formation's base. Code checks the letters by type, and jev confirms,
+choosing a conversion's direction among both. A clipping or acronym whose
+base doesn't pass is Unresolved, so the host holds the segmenters for it
+rather than split it as a bottom word.
+
 The route names follow system ADR 0039, which replaced the Phraseme Family
 with Locution and Saying; the shipped code still names Phraseme routes until
 the rewrite on [#701](https://github.com/clockblocker/texteater/issues/701).

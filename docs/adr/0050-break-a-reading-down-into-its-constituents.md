@@ -141,6 +141,26 @@ Constituents instead. An affixal derivation has no Source, because its base
 is its word part (`Aufmachung` = `aufmachen + -ung`). The Reading Knowledge
 aspect `source` replaces `participleSource`.
 
+Knowledge Production produces every Source, on a single-word NOUN, VERB or
+ADJ Reading. First jev judges the formation: a participle (ADJ only), a
+conversion, a clipping, an acronym or none. A participle's verb comes as
+ADR 0036 says. For any other formation, Luna writes the base and code
+checks its letters by type: a conversion changes the Kind and adds no
+listed affix, and a clipping or acronym keeps the Kind and shows the
+base's letters in order. Then jev confirms, choosing a conversion's
+direction among both (`Lauf` from `laufen`, not the reverse). The type is
+not stored, since nothing reads it.
+
+The host asks for `source` before the segmenters. A Reading with a Source
+runs neither segmenter. Any other runs `segment.inConstituents`, and when
+that finds none, the Reading is a bottom word and `segment.inMorphemes`
+splits it (ADR 0051). A failed or Unresolved `source` holds both
+segmenters. A clipping or acronym whose base doesn't pass is Unresolved,
+not none, so no split is invented for `Kita`. A conversion that doesn't
+pass counts as none, since splitting `Lauf` as a bottom word shows the
+same `lauf · ∅`. The judges agreed on this on
+[#1241](https://github.com/clockblocker/texteater/issues/1241#issuecomment-6361530506).
+
 **Formations list the words built on a word.** A word's Note lists every
 stored word whose Constituents link to it, grouped by the Kind of the other
 piece: prefixed verbs, compounds, derivations. The `kaufen` Note lists
@@ -151,7 +171,8 @@ Note carries them, and resolution moves them to the Lemma. It copies the DWDS
 word-formation panel. The name Formations is provisional.
 
 **Who produces them.** `segment.inConstituents` produces the Constituents
-once per Reading (Dumgen ADR 0007). An authored closed-class member carries
+once per Reading that has no Source (Dumgen ADR 0007), and Knowledge
+Production produces the Source (above). An authored closed-class member carries
 authored Breakdowns
 ([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumcorpus.md)):
 the reciprocal pronominal adverbs link their preposition to the ADP (`mit` in
@@ -205,6 +226,16 @@ particle links to.
   contributes.
 - A Source with two targets for a blend. Rejected: a blend's letters can be
   cut.
+- `segment.inConstituents` returning a Source, with the base picked by jev
+  among bases code writes from the letters. Rejected: code can't write the
+  base of a clipping, an acronym or `Gang` ← `gehen`. Those words would be
+  split as bottom words (`kit · a`), and the participle's Source would
+  have a second producer.
+- `segment.inConstituents` deciding that a word has a Source, and Knowledge
+  writing the base. Rejected: whether `source` is requested would then
+  depend on a segmenter's answer, not on the route; a participle could get
+  both a Source and Constituents (`gekocht` as `ge- + kochen`); and a base
+  Luna can't write would leave the Reading with neither.
 
 ## Consequences
 

@@ -57,9 +57,13 @@ unit's first route, and only the lab and evaluation use variants (ADR 0008,
 [#860](https://github.com/clockblocker/texteater/issues/860)).
 
 **`segment.inConstituents` breaks a Reading down one level.** It runs once
-per Reading that has Constituents, on its Canonical Form or wording and the
-sentence that created the Reading. Every word built from a word plus pieces
-has them, whatever its part of speech, and so does every Locution and Saying.
+per Reading that has no Source, on its Canonical Form or wording and the
+sentence that created the Reading. The host asks Knowledge for a single
+word's `source` first (Dumgen ADR 0003). A Reading with a Source runs
+neither segmenter. One whose `source` failed or is Unresolved waits for
+it. Any other runs `segment.inConstituents`, and a word it finds none for
+is a bottom word. Every word built from a word plus pieces has Constituents,
+whatever its part of speech, and so does every Locution and Saying.
 For a phraseme it returns the same shape as `segment.inUnits` one level down:
 the biggest units strictly inside the wording, Lexemes or Locutions, never
 the whole Lemma as one unit. For a word it returns its immediate parts, words
@@ -70,7 +74,8 @@ its preposition, article, auxiliary or reflexive is read from model data and
 needs no segmenter; those satellites are never Constituents.
 
 **`segment.inMorphemes` splits bottom words only.** A bottom word has no word
-inside it. The segmenter splits off only affixes from the language's closed
+inside it, and the host runs the segmenter only when `segment.inConstituents`
+found no Constituents. The segmenter splits off only affixes from the language's closed
 affix inventory, and the remainder is the Root; a bound or cranberry Root
 gets a Root Lemma and Reading of its own. Every other word's morphemes are
 computed by propagation up its Constituents or through its Source, and the

@@ -120,9 +120,10 @@ The lab itself, its rounds and its artifacts are in
 `segment-in-constituents/de:breakdown` and `segment-in-morphemes/de:breakdown`
 score `segment.inConstituents` and `segment.inMorphemes` (Dumgen ADR 0007)
 against dumcorpus's Breakdown Records (`lab/evaluation/breakdown/`). Every
-record is a constituents case, one holding a bottom word's morphemes or a
-Source expecting none; a record holding a bottom word's morphemes is also a
-morphemes case. A case passes when its pieces come back exactly; the
+record without a Source is a constituents case, one holding a bottom word's
+morphemes expecting none; a record holding a bottom word's morphemes is
+also a morphemes case. A record with a Source is no case: the host asks
+Knowledge for the Source first and runs no segmenter on such a Reading. A case passes when its pieces come back exactly; the
 metrics add cut precision and recall, gold links placed, with gold's route
 and exact, and agreement on whether there are Constituents at all, overall
 and for phrasemes and words apart.

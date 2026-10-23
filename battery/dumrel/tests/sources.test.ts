@@ -148,15 +148,18 @@ test("a Source is atomic: Contribute conflicts, Correct replaces, Retract remove
 	).toEqual({ success: true, value: { definition: "x" } });
 });
 
-test("only German ADJ Readings request a Source", () => {
-	for (const [kind, expected] of [
-		["ADJ", true],
-		["VERB", false],
-		["NOUN", false],
-		["ADV", false],
+test("German ADJ, NOUN and VERB Lexemes request a Source, and no Locution does (ADR 0050)", () => {
+	for (const [family, kind, expected] of [
+		["Lexeme", "ADJ", true],
+		["Lexeme", "VERB", true],
+		["Lexeme", "NOUN", true],
+		["Lexeme", "ADV", false],
+		["Lexeme", "PROPN", false],
+		["Locution", "VERB", false],
+		["Locution", "ADJ", false],
 	] as const) {
 		const selected = selectKnowledge({
-			route: { language: "de", family: "Lexeme", kind } as never,
+			route: { language: "de", family, kind } as never,
 		});
 		expect(selected.success).toBe(true);
 		if (selected.success)

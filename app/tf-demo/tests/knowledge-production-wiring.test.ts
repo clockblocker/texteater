@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { isRecord } from "common-utils";
 import { type JevAsk, JevTransport, type LunaAsk, LunaTransport } from "dumgen";
 import { internal } from "../convex/_generated/api";
 import type { TableNames } from "../convex/_generated/dataModel";
@@ -125,16 +126,22 @@ async function runProductionAction(
 		translations: ["bank"],
 		valency: { valency: [] },
 	};
+	// `Bank` has a plural, and it was formed from no other word, so it has
+	// no Source.
+	const pick = (question: unknown) => {
+		const criteria = isRecord(question) ? question.criteria : undefined;
+		return isRecord(criteria) && "None" in criteria ? "None" : "HasPlural";
+	};
 	const jev: JevAsk = async (request) => ({
 		model: request.model,
 		answers: Object.fromEntries(
-			Object.keys(request.questions).map((id) => [
+			Object.entries(request.questions).map(([id, question]) => [
 				id,
 				{
 					type: "choice",
-					choice: "HasPlural",
+					choice: pick(question),
 					confidence: 1,
-					probabilities: { HasPlural: 1 },
+					probabilities: { [pick(question)]: 1 },
 				},
 			]),
 		),
@@ -255,9 +262,11 @@ test("under DEV inspection the run's Dumgen calls render as inspection rows with
 	});
 	const calls = steps.filter((step) => step.parentId === operation?.id);
 	expect(calls.length).toBeGreaterThan(0);
-	// A NOUN's base request asks jev nothing since its plural left Knowledge;
-	// its judges return with the Lemma Paradigm (#1232).
-	expect(new Set(calls.map((step) => step.kind))).toEqual(new Set(["LLM"]));
+	// A NOUN's base request asks Luna for its text and frame, and jev whether
+	// it was formed from another word (its Source, ADR 0050).
+	expect(new Set(calls.map((step) => step.kind))).toEqual(
+		new Set(["LLM", "TypeSafe"]),
+	);
 	const payloads = await t.run(async (ctx) =>
 		Promise.all(
 			calls.map(async (step) =>

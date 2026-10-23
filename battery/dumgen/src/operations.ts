@@ -72,8 +72,9 @@ export const operations = {
 			runOperation("segment.inUnits", segmentText(input)),
 		/**
 		 * A Reading's Constituents, its immediate parts one level down
-		 * (system ADR 0050), or none for a bottom word or a formation
-		 * with a Source. Code proposes the cuts and Canonical Forms and
+		 * (system ADR 0050), or none for a bottom word. The host runs it
+		 * only on a Reading with no Source, after Knowledge's `source`
+		 * answered none. Code proposes the cuts and Canonical Forms and
 		 * jev picks; each piece links to a Unit Shadow. Any failed call
 		 * fails it. Another language than German is a Defect.
 		 */
@@ -84,8 +85,9 @@ export const operations = {
 		/**
 		 * A bottom word's Morphemic Breakdown (ADR 0051): prefixes, Root,
 		 * suffixes and its Ending, a zero ending included, each linked to
-		 * a Morpheme's Unit Shadow. The host runs it only on a word with
-		 * no Constituents and no Source; every other word's morphemes are
+		 * a Morpheme's Unit Shadow. The host runs it only when
+		 * `segment.inConstituents` found none on a word with no Source;
+		 * every other word's morphemes are
 		 * propagated (Dumrel `propagateMorphemes`). A phraseme, a
 		 * Morpheme or another language than German is a Defect.
 		 */

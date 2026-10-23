@@ -59,11 +59,11 @@ import {
 } from "./context.js";
 import { paradigmJobsOf } from "./paradigm.js";
 import { produceRelations } from "./relations.js";
+import { produceSource } from "./source.js";
 import {
 	produceFormulaRole,
 	produceLocutionType,
 	produceSayingType,
-	produceSource,
 } from "./structure.js";
 import {
 	produceDefinition,

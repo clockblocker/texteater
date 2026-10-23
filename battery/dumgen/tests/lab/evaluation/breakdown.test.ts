@@ -30,11 +30,13 @@ const interfix = {
 	canonicalForm: "-e-",
 };
 
-test("every Breakdown Record is a segment.inConstituents case, and a bottom word's a segment.inMorphemes case", () => {
+test("every Breakdown Record without a Source is a segment.inConstituents case, and a bottom word's a segment.inMorphemes case", () => {
 	const cases = constituentsCases();
-	expect(cases.length).toBeGreaterThanOrEqual(28);
-	const lauf = cases.find(({ id }) => id === "breakdown/de/lauf");
-	expect(lauf?.idealOutput).toEqual({ kind: "NoConstituents" });
+	expect(cases.length).toBeGreaterThanOrEqual(27);
+	// Lauf has a Source, so the host never runs a segmenter on it (ADR 0050).
+	expect(cases.some(({ id }) => id === "breakdown/de/lauf")).toBe(false);
+	const spannen = cases.find(({ id }) => id === "breakdown/de/spannen");
+	expect(spannen?.idealOutput).toEqual({ kind: "NoConstituents" });
 	const gaestehaus = cases.find(({ id }) => id === "breakdown/de/gaestehaus");
 	expect(gaestehaus?.group).toBe("word");
 	expect(gaestehaus?.idealOutput).toEqual({

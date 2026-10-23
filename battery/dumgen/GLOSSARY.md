@@ -56,13 +56,16 @@ _Avoid_: route distribution, alternative route
 **`segment.inConstituents`**:
 The segmenter that produces a Reading's Constituents (Dumling), once per
 Reading: a word's immediate parts, or the biggest units strictly inside a
-phraseme's wording. See [Dumgen ADR 0007] and [ADR 0050].
+phraseme's wording. The host runs it only on a Reading with no Source
+(Dumrel), so a word it finds none for is a bottom word. See [Dumgen ADR
+0007] and [ADR 0050].
 _Avoid_: `segment.inLexemes`, Segment.Unit, Lexical Breakdown, inner layer
 
 **`segment.inMorphemes`**:
 The segmenter that splits a bottom word, one with no word inside, into its
-Morphemic Breakdown (Dumling). Every other word's is propagated in code. See
-[Dumgen ADR 0007] and [ADR 0051].
+Morphemic Breakdown (Dumling): a word with no Source (Dumrel) that
+`segment.inConstituents` finds no Constituents for. Every other word's is
+propagated in code. See [Dumgen ADR 0007] and [ADR 0051].
 
 **Encounter**:
 A Segmented Sentence together with one Analysis Target supplied for

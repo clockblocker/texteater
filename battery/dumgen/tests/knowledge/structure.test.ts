@@ -58,6 +58,7 @@ test("the plural dimension is the forms when jev judges a plural, else jev's mar
 });
 
 test("a participle's source verb is named by form, checked by jev, and its meaning judged (ADR 0036)", async () => {
+	// jev's formation judge picks its first option, Participle, on an ADJ.
 	const source = {
 		verb: "verlieben",
 		reflexive: "Acc",
@@ -101,7 +102,7 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 			},
 		},
 	]);
-	expect(verbal.stages()).toEqual(["participleJudgment"]);
+	expect(verbal.stages()).toEqual(["sourceFormation", "participleJudgment"]);
 
 	// The judge refuses the form: no source.
 	const refused = await produceOnce(
@@ -126,7 +127,7 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 		failures: [],
 	});
 
-	// A plain adjective, or a participle spelled otherwise, takes no judgment.
+	// A participle spelled otherwise takes no judgment past the formation.
 	const plain = knowledgeJev();
 	const none = await produceOnce(
 		{
@@ -146,7 +147,7 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 		),
 	);
 	expect(none.result.changes).toEqual([]);
-	expect(plain.sent).toEqual([]);
+	expect(plain.stages()).toEqual(["sourceFormation"]);
 });
 
 test("a Partizip I is checked by code, so jev judges only its meaning; an inseparable prefix is never separable (#887)", async () => {
@@ -179,7 +180,12 @@ test("a Partizip I is checked by code, so jev judges only its meaning; an insepa
 			value: expect.objectContaining({ meaning: "Verbal" }),
 		}),
 	]);
-	expect(Object.keys(judge.sent[0]?.questions ?? {})).toEqual(["meaning"]);
+	expect(
+		Object.keys(
+			judge.sent.find(({ stage }) => stage === "participleJudgment")
+				?.questions ?? {},
+		),
+	).toEqual(["meaning"]);
 
 	const inseparable = await produceOnce(
 		{

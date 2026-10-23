@@ -127,11 +127,14 @@ const lunaOutputs: Readonly<Record<string, number>> = {
 	verbForms: 45,
 	valency: 70,
 	participleSource: 30,
+	sourceBase: 12,
 	attribution: 12,
 	relationCandidates: 45,
 };
 const jevStages = [
 	"plurality",
+	"sourceFormation",
+	"sourceJudgment",
 	"participleJudgment",
 	"locutionType",
 	"sayingType",

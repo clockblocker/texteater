@@ -222,6 +222,20 @@ export function checkedChanges(
 	return accepted;
 }
 
+/** One Contribute change of a one-value `aspect`, checked by Dumrel. */
+export function checked(
+	context: AspectContext,
+	aspect: "source" | "locutionType" | "sayingType" | "formulaRole",
+	value: unknown,
+): Effect.Effect<GermanKnowledgeChange[], AspectError> {
+	const changes = checkedChanges(context, aspect, [
+		{ kind: "Contribute", aspect, value },
+	]);
+	return Array.isArray(changes)
+		? Effect.succeed(changes)
+		: Effect.fail(changes);
+}
+
 /**
  * The Paradigm Changes that give the Reading the forms written for one
  * Variation Dimension (ADR 0048): a Contribute per variant and a License
