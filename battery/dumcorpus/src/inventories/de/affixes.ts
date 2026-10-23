@@ -13,8 +13,8 @@
  * `germanSeparableParticles` (`verb-prefixes.ts`), not listed again here.
  *
  * The lists hold the affixes the gold and common German word formation
- * need, not every German affix; the foreign verb suffix `-ieren` and the
- * verbal `-eln` and `-ern` are not covered yet.
+ * need, not every German affix, except the verb-forming suffixes, which
+ * are the closed set the grammars give.
  */
 import type * as Dumrel from "dumrel/types";
 
@@ -97,13 +97,32 @@ export const germanSuffixes: readonly GermanAffix[] = [
 	suffix("los"),
 	suffix("weise"),
 	suffix("wärts"),
+	/*
+	 * The verb-forming suffixes, closed (Fleischer/Barz, Wortbildung der
+	 * deutschen Gegenwartssprache, 4th ed., 2012, Verbderivation; Duden, Die
+	 * Grammatik, 9th ed., 2016, Verbbildung): -ier(en), -el(n), -er(n) and
+	 * -ig(en). Each is spelled without the citation ending, which is the
+	 * verb's Ending (ADR 0051): `stud · ier · en`, `läch · el · n`, `steig ·
+	 * er · n`, `rein · ig · en`. -isier(en) and -ifizier(en) are -ier(en)
+	 * extended, so their letters are Surfaces of `-ier` (ADR 0051), as
+	 * `igkeit` is of `-heit`: `modern · isier · en`, `elektr · ifizier · en`
+	 * (https://www.dwds.de/wb/-ieren, …/-isieren, …/-ifizieren). The verbal
+	 * -er and -ig are the Lemmas `-er` and `-ig` above, each with a Reading
+	 * of its own, as homograph Morphemes are (ADR 0051); DWDS gives them no
+	 * verbal affix entry.
+	 */
+	suffix("ier"),
+	suffix("isier", "ier"),
+	suffix("ifizier", "ier"),
+	suffix("el"),
 ];
 
 /**
  * The overt endings a German citation form may close with, by Kind
- * (ADR 0051): a verb's `-en` or `-n` (`spann · en`, `wander · n`), a noun's
- * or adjective's `-e` (`gesell · e`, `müd · e`). Each is spelled as its
- * Ending Lemma's Canonical Form.
+ * (ADR 0051): a verb's `-en` or `-n` (`spann · en`, `stud · ier · en`,
+ * `läch · el · n`), a noun's or adjective's `-e` (`gesell · e`, `müd · e`).
+ * Each is spelled as its Ending Lemma's Canonical Form, and no suffix above
+ * includes one.
  */
 export const germanCitationEndings: Readonly<
 	Partial<Record<string, readonly string[]>>
