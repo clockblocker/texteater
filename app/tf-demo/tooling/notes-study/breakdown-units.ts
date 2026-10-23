@@ -297,13 +297,13 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		definition: "Sich irgendwo wohl und ungezwungen fühlen.",
 		translations: ["to feel at home", "чувствовать себя как дома"],
 		constituents: [
-			link("sich", pendingWord("PRON", "sich")),
+			link("sich", pendingWord("VERB", "sich fühlen")),
 			space,
 			link("wie", pendingWord("ADV", "wie")),
 			space,
 			link("zu Hause", ZU_HAUSE),
 			space,
-			link("fühlen", pendingWord("VERB", "fühlen")),
+			link("fühlen", pendingWord("VERB", "sich fühlen")),
 		],
 	},
 	{

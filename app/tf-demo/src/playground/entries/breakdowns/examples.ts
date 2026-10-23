@@ -76,7 +76,7 @@ export const BREAKDOWN_EXAMPLES: readonly ExampleGroup[] = [
 		examples: [
 			{
 				label: "sich wie zu Hause fühlen 🛋️",
-				hint: "A Locution as a part: zu Hause",
+				hint: "A Locution as a part (zu Hause), and sich linking to sich fühlen",
 				note: reading("sich wie zu Hause fühlen", "🛋️"),
 			},
 			{

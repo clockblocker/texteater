@@ -111,8 +111,9 @@ need not name its particle, since the constituent link does.
 
 **A phraseme's Constituents are the biggest units strictly inside its
 wording**, as `segment.inUnits` finds them one level down. A part may be a
-Locution: `sich wie zu Hause fühlen` = `sich · wie · [zu Hause] · fühlen`,
-and `zu Hause` breaks down into `zu + [[Haus|Hause]]`. An article is grouped
+Locution: `sich wie zu Hause fühlen` = `[[sich fühlen|sich]] · wie · [zu
+Hause] · [[sich fühlen|fühlen]]`, and `zu Hause` breaks down into `zu +
+[[Haus|Hause]]`. An article is grouped
 with its noun
 ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)):
 `[[Faden|den Faden]] + [[verlieren]]`. Fused words split by component.
@@ -120,7 +121,11 @@ with its noun
 - Placeholders (`jdm.`, `etwas`) are never parts. Negation is a part.
 - `sich` is no placeholder. It is grouped with a lexically reflexive verb
   (`sich verlassen`), and a free dative is a PRON part of its own, linking to
-  the unit that explains reflexivity (`sich den Kopf zerbrechen`).
+  the unit that explains reflexivity (`sich den Kopf zerbrechen`). A verb is
+  lexically reflexive when no other object can stand in place of `sich` in
+  the sense it has there, so `fühlen` in `sich wie zu Hause fühlen` is (DWDS
+  ⟨sich fühlen⟩), and `sich` and `fühlen` are two pieces linking to VERB
+  `sich fühlen`.
 - A word found only in idioms is a Lexeme if Duden or DWDS has a headword for
   it (`gäbe`), else unlinked filler.
 - An optional word in the Canonical Form is a part like any other (`genäht`

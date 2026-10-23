@@ -224,24 +224,23 @@ describe("German segment.inConstituents", () => {
 	test("a phraseme: a Locution inside it is one part", async () => {
 		const judge = judgeWanting(
 			"zu Hause",
-			"r_0=Lexeme/PRON",
-			"r_1=Lexeme/CCONJ",
-			"r_2=Locution/ADV",
-			"r_3=Lexeme/VERB",
-			"fühlen",
+			"x_0=lexical",
+			"r_0=Lexeme/CCONJ",
+			"r_1=Locution/ADV",
+			"sich fühlen",
 		);
 		const result = await run(
 			input("Locution", "VERB", "sich wie zu Hause fühlen"),
 			judge,
 		);
 		expect(result.kind === "Constituents" && shown(result.pieces)).toEqual([
-			"sich→Lexeme/PRON:sich",
+			"sich→Lexeme/VERB:sich fühlen",
 			" ",
 			"wie→Lexeme/CCONJ:wie",
 			" ",
 			"zu Hause→Locution/ADV:zu Hause",
 			" ",
-			"fühlen→Lexeme/VERB:fühlen",
+			"fühlen→Lexeme/VERB:sich fühlen",
 		]);
 	});
 	test("sich joins a verb lexically reflexive in the wording, as one part or two links to it (ADR 0050)", async () => {

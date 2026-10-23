@@ -106,20 +106,20 @@ describe("Breakdown Records", () => {
 		]);
 	});
 
-	test("let a Locution be a phraseme's part, broken down one level further", () => {
+	test("let a Locution be a phraseme's part, broken down one level further, and join sich to its lexically reflexive verb", () => {
 		expect(
 			pieces(
 				byId("breakdown/de/sich-wie-zu-hause-fuehlen"),
 				"constituents",
 			),
 		).toEqual([
-			"sich → sich",
+			"sich → sich fühlen",
 			" ",
 			"wie → wie",
 			" ",
 			"zu Hause → zu Hause",
 			" ",
-			"fühlen → fühlen",
+			"fühlen → sich fühlen",
 		]);
 		expect(pieces(byId("breakdown/de/zu-hause"), "constituents")).toEqual([
 			"zu → zu",

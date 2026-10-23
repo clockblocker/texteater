@@ -21,16 +21,11 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "sich",
+						"kind": "VERB",
+						"canonicalForm": "sich fühlen",
 						"coreFeatures": {
-							"case": null,
-							"number": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": null
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Acc"
 						}
 					}
 				},
@@ -74,10 +69,10 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "fühlen",
+						"canonicalForm": "sich fühlen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"lexicallyReflexive": "Acc"
 						}
 					}
 				}
@@ -102,10 +97,15 @@
 				"title": "Duden: Haus",
 				"url": "https://www.duden.de/rechtschreibung/Haus",
 				"supports": "The wording: sich [ganz] [wie] zu Haus[e] fühlen"
+			},
+			{
+				"title": "DWDS: fühlen",
+				"url": "https://www.dwds.de/wb/f%C3%BChlen",
+				"supports": "Reflexive sich fühlen, 'sich in einem bestimmten seelischen Zustand befinden': sich dort heimisch, wohl fühlen"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "A phraseme's Constituents are the biggest units strictly inside its wording, so the Locution zu Hause is one part (ADR 0050). sich is no placeholder: it links to the unit that explains reflexivity. Comparison wie before a phrase is CCONJ (de/relative-w-adverb-fills-a-slot)."
+		"rationale": "A phraseme's Constituents are the biggest units strictly inside its wording, so the Locution zu Hause is one part (ADR 0050). fühlen is lexically reflexive here: in the state sense (DWDS ⟨sich fühlen⟩) no other object can stand in place of sich, so sich and fühlen are two pieces linking to VERB sich fühlen (round-1 Q10, #1278). Comparison wie before a phrase is CCONJ (de/relative-w-adverb-fills-a-slot)."
 	}
 }
