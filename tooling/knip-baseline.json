@@ -129,11 +129,15 @@
 	],
 	"battery/dumrel": [
 		"battery/dumrel/src/index.ts: exports germanPluralPattern",
+		"battery/dumrel/src/index.ts: exports propagateMorphemes",
 		"battery/dumrel/src/select-knowledge.ts: types KnowledgePolicyUnavailable",
 		"battery/dumrel/src/types.ts: types KnowledgeParse",
 		"battery/dumrel/src/types.ts: types KnowledgePolicyUnavailable",
 		"battery/dumrel/src/types.ts: types KnowledgeSelection",
+		"battery/dumrel/src/types.ts: types LookupMorphemeSources",
+		"battery/dumrel/src/types.ts: types MorphemeSources",
 		"battery/dumrel/src/types.ts: types ParadigmProvenance",
-		"battery/dumrel/src/types.ts: types PluralPattern"
+		"battery/dumrel/src/types.ts: types PluralPattern",
+		"battery/dumrel/src/types.ts: types ShownMorpheme"
 	]
 }

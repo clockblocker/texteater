@@ -56,6 +56,7 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"parseReadingKnowledge",
 		"projectSemanticRelations",
 		"projectSources",
+		"propagateMorphemes",
 		"pruneParadigm",
 		"sayingTypeValues",
 		"selectKnowledge",
