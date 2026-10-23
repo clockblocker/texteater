@@ -22,7 +22,7 @@
 	"sources": {
 		"adrs": [],
 		"rules": [
-			{ "rule": "de/participial-adjective", "hash": "4435db81cfb4db93" }
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" }
 		],
 		"references": [
 			{
