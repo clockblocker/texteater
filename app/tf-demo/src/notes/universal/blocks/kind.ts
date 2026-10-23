@@ -6,12 +6,14 @@ import { z } from "zod";
  */
 export const noteLayoutBlockKindSchema = z.enum([
 	"Valency",
+	"Breakdown",
 	"Definition",
 	"Translations",
 	"PersonalAnnotation",
 	"Relations",
 	"Fusion",
 	"Routes",
+	"Formations",
 ]);
 
 export type NoteLayoutBlockKind = z.infer<typeof noteLayoutBlockKindSchema>;

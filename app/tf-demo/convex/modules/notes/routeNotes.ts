@@ -15,6 +15,7 @@ import {
 	presentSurface,
 } from "../../model/presentedDumling";
 import { familyValidator, kindValidator } from "../../model/validators";
+import { formationsValidator, loadFormations } from "./breakdown";
 import {
 	loadParticipialAdjectives,
 	participialAdjectiveValidator,
@@ -111,6 +112,8 @@ const lemmaRouteNoteValidator = v.object({
 	presented: presentedLemmaValidator,
 	/** A VERB's participial adjectives (ADR 0036); only the first page loads them. */
 	participialAdjectives: v.array(participialAdjectiveValidator),
+	/** The stored words built on this Lemma (ADR 0050); only the first page loads them. */
+	formations: formationsValidator,
 	connections: v.object({
 		surfaces: v.array(surfaceRouteConnectionValidator),
 		readings: v.array(
@@ -393,6 +396,8 @@ async function loadLemmaRouteNote(
 			contextCursor === undefined
 				? await loadParticipialAdjectives(ctx, lemma)
 				: [],
+		formations:
+			contextCursor === undefined ? await loadFormations(ctx, lemma) : [],
 		connections: {
 			surfaces: surfaces.flatMap((surface) =>
 				surface.language === "de" && lemma.language === "de"

@@ -79,6 +79,7 @@ function noteFixture(): ShadowNote {
 			continueCursor: "",
 			isDone: true,
 		},
+		formations: [],
 	};
 }
 

@@ -30,6 +30,7 @@ import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.
 import type * as knowledgeSettings from "../knowledgeSettings.js";
 import type * as library from "../library.js";
 import type * as libraryFixtures from "../libraryFixtures.js";
+import type * as model_breakdownWalk from "../model/breakdownWalk.js";
 import type * as model_clickOrchestrator from "../model/clickOrchestrator.js";
 import type * as model_codex from "../model/codex.js";
 import type * as model_definitionTexts from "../model/definitionTexts.js";
@@ -73,6 +74,7 @@ import type * as model_tables_visitors from "../model/tables/visitors.js";
 import type * as model_translationAccumulation from "../model/translationAccumulation.js";
 import type * as model_validators from "../model/validators.js";
 import type * as model_visitorEncounters from "../model/visitorEncounters.js";
+import type * as modules_notes_breakdown from "../modules/notes/breakdown.js";
 import type * as modules_notes_featurePresentation from "../modules/notes/featurePresentation.js";
 import type * as modules_notes_pendingRelations from "../modules/notes/pendingRelations.js";
 import type * as modules_notes_projections from "../modules/notes/projections.js";
@@ -138,6 +140,7 @@ declare const fullApi: ApiFromModules<{
   knowledgeSettings: typeof knowledgeSettings;
   library: typeof library;
   libraryFixtures: typeof libraryFixtures;
+  "model/breakdownWalk": typeof model_breakdownWalk;
   "model/clickOrchestrator": typeof model_clickOrchestrator;
   "model/codex": typeof model_codex;
   "model/definitionTexts": typeof model_definitionTexts;
@@ -181,6 +184,7 @@ declare const fullApi: ApiFromModules<{
   "model/translationAccumulation": typeof model_translationAccumulation;
   "model/validators": typeof model_validators;
   "model/visitorEncounters": typeof model_visitorEncounters;
+  "modules/notes/breakdown": typeof modules_notes_breakdown;
   "modules/notes/featurePresentation": typeof modules_notes_featurePresentation;
   "modules/notes/pendingRelations": typeof modules_notes_pendingRelations;
   "modules/notes/projections": typeof modules_notes_projections;

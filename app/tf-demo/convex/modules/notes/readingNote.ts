@@ -19,6 +19,7 @@ import {
 	projectSentenceView,
 	sentenceViewValidator,
 } from "../scroll/sentenceView";
+import { breakdownViewValidator, loadBreakdownView } from "./breakdown";
 import {
 	pendingRelationProjectionValidator,
 	projectPendingRelations,
@@ -137,6 +138,8 @@ export const readingNoteValidator = v.object({
 	grammaticalAlternatives: v.array(grammaticalAlternativeValidator),
 	/** Source links: stored on the Reading; a participle's is projected on its verb. */
 	sourceLinks: v.optional(v.array(sourceLinkValidator)),
+	/** Constituents and morphemes resolved to the Notes they open (ADR 0050). */
+	breakdown: v.optional(breakdownViewValidator),
 	pendingRelations: v.array(pendingRelationProjectionValidator),
 	structuralReferences: v.array(structuralShadowProjectionValidator),
 	definitionText: v.union(
@@ -244,6 +247,7 @@ export async function loadUnitReadingNote(
 		lemma,
 		knowledge.source,
 	);
+	const breakdown = await loadBreakdownView(ctx, lemma, knowledge);
 	const activeAttempt = attempts.find(
 		({ state }) =>
 			state === "Waiting" || state === "Scheduled" || state === "Running",
@@ -290,6 +294,7 @@ export async function loadUnitReadingNote(
 		relationsTruncated: relationProjections.truncated,
 		grammaticalAlternatives,
 		sourceLinks,
+		...(breakdown ? { breakdown } : {}),
 		pendingRelations: projectPendingRelations(pendingRelations),
 		structuralReferences,
 		sourceContexts,

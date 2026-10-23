@@ -4,6 +4,11 @@ export {
 	renderNote,
 	renderNoteParts,
 } from "./render-note";
+export {
+	type BreakdownDisplay,
+	BreakdownDisplayProvider,
+	DEFAULT_BREAKDOWN_DISPLAY,
+} from "./universal/blocks/renderers/common/breakdown-display";
 export { ResolvingReadingHeading } from "./universal/blocks/renderers/reading/heading/default";
 export {
 	attestationCaption,

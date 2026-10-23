@@ -3,14 +3,17 @@ import { renderDefaultAttestationFusion } from "../universal/blocks/renderers/at
 import { renderDefaultAttestationHeading } from "../universal/blocks/renderers/attestation/heading/default";
 import { renderDefaultAttestationRoutes } from "../universal/blocks/renderers/attestation/routes/default";
 import { renderDefaultAttestationSource } from "../universal/blocks/renderers/attestation/source-contexts/default";
+import { renderDefaultLemmaFormations } from "../universal/blocks/renderers/lemma/formations/default";
 import { renderDefaultLemmaHeading } from "../universal/blocks/renderers/lemma/heading/default";
 import { renderDefaultLemmaRoutes } from "../universal/blocks/renderers/lemma/routes/default";
+import { renderDefaultReadingBreakdown } from "../universal/blocks/renderers/reading/breakdown/default";
 import { renderReadingDefinition } from "../universal/blocks/renderers/reading/definition/static";
 import { DefaultReadingHeadingRenderer } from "../universal/blocks/renderers/reading/heading/default";
 import { renderReadingPersonalAnnotation } from "../universal/blocks/renderers/reading/personal-annotation/default";
 import { renderDefaultReadingRelations } from "../universal/blocks/renderers/reading/relations/default";
 import { renderDefaultReadingSourceContexts } from "../universal/blocks/renderers/reading/source-contexts/default";
 import { renderDefaultReadingTranslations } from "../universal/blocks/renderers/reading/translations/default";
+import { renderDefaultShadowFormations } from "../universal/blocks/renderers/shadow/formations/default";
 import { renderDefaultShadowHeading } from "../universal/blocks/renderers/shadow/heading/default";
 import { renderDefaultShadowRelations } from "../universal/blocks/renderers/shadow/relations/default";
 import { renderDefaultSurfaceHeading } from "../universal/blocks/renderers/surface/heading/default";
@@ -26,6 +29,7 @@ import { renderDeReadingValency } from "./block-renderers/reading/valency/defaul
 const READING_BASE = {
 	Heading: DefaultReadingHeadingRenderer,
 	SourceContexts: renderDefaultReadingSourceContexts,
+	Breakdown: renderDefaultReadingBreakdown,
 	Definition: renderReadingDefinition,
 	Translations: renderDefaultReadingTranslations,
 	PersonalAnnotation: renderReadingPersonalAnnotation,
@@ -98,6 +102,7 @@ const READING = {
 const LEMMA_ROUTE = {
 	Heading: renderDefaultLemmaHeading,
 	Routes: renderDefaultLemmaRoutes,
+	Formations: renderDefaultLemmaFormations,
 };
 const ATTESTATION_ROUTE = {
 	Heading: renderDefaultAttestationHeading,
@@ -108,6 +113,7 @@ const ATTESTATION_ROUTE = {
 const SHADOW_ROUTE = {
 	Heading: renderDefaultShadowHeading,
 	Relations: renderDefaultShadowRelations,
+	Formations: renderDefaultShadowFormations,
 };
 
 const LEMMA = {
