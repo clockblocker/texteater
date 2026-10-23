@@ -148,8 +148,7 @@ A replacing word with no Lemma of its own joins the changed unit as a member.
   rastet, rostet`).
 - *Doppelt gemoppelt hält besser* is Duden's proverb *doppelt [genäht] hält
   besser* with *gemoppelt* for *genäht*. *gemoppelt* is a rhyme echo of
-  *doppelt*, like *gäbe* in *gang und gäbe*, with nothing to resolve to on
-  its own. So the line attests the Saying `Doppelt genäht hält besser` over
+  *doppelt* with nothing to resolve to on its own. So the line attests the Saying `Doppelt genäht hält besser` over
   `[Doppelt, gemoppelt, hält, besser]`, Partial, and grouping, and so hover,
   covers all four words. No reference collection lists the modified line; the
   Saying it attests must pass the uptake test.
