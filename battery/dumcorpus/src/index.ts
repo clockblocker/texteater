@@ -9,6 +9,7 @@ export type { SpecCheck, SpecIssue } from "./issues.js";
 export { isReviewed } from "./layers.js";
 export {
 	findSpecRecord,
+	loadBreakdownRecords,
 	loadSpecRecords,
 	loadSpecSegmentations,
 	loadSpecWorklist,

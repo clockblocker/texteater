@@ -42,6 +42,7 @@ test("published operational entrypoint stays independent of Zod", async () => {
 		"parseReadingKnowledge",
 		"projectSemanticRelations",
 		"projectSources",
+		"propagateMorphemes",
 		"pruneParadigm",
 		"sayingTypeValues",
 		"selectKnowledge",

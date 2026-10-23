@@ -29,6 +29,12 @@ export type {
 	ValencySlot,
 	ValencySlotStatus,
 } from "./generated/types.js";
+export type {
+	LookupMorphemeSources,
+	MorphemePolicy,
+	MorphemeSources,
+	ShownMorpheme,
+} from "./propagate-morphemes.js";
 
 /** A Reading's governed complements in order; never empty. */
 export type ValencyFrame = NonNullable<CanonicalReadingKnowledge["valency"]>;
