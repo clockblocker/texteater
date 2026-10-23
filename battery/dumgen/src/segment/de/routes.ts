@@ -86,12 +86,12 @@ const routeDescriptions: Readonly<Record<RouteKey, string>> = {
 		"Fixed multiword adverbial (zum Teil, auf keinen Fall, so oder so, ganz und gar)",
 	"Locution/CCONJ":
 		"Fixed correlative conjunction (entweder … oder, weder … noch, nicht nur … sondern auch)",
-	"Locution/DET": "Fixed multiword determiner (was für ein)",
+	"Locution/DET": "Fixed multiword determiner (was für)",
 	"Locution/INTJ":
 		"Fixed routine formula or exclamation (guten Morgen, tut mir leid, gern geschehen)",
 	"Locution/NOUN": "Fixed multiword noun expression (weißer Rabe)",
 	"Locution/NUM": "Fixed multiword numeral expression",
-	"Locution/PRON": "Fixed multiword pronoun (was für einer)",
+	"Locution/PRON": "Fixed multiword pronoun",
 	"Locution/SCONJ":
 		"Fixed multiword subordinator or correlator (um … zu, je … desto, so dass)",
 	"Locution/VERB":

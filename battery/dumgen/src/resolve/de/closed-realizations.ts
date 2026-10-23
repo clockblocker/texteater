@@ -141,7 +141,7 @@ function typoRealizations(
 
 /**
  * The authored realizations of a multi-piece DET or PRON unit's route
- * whose spelling is its members' words joined (ein wenig, was für ein):
+ * whose spelling is its members' words joined (ein wenig, was für):
  * such a unit carries no identity, and its joined spelling names it.
  */
 export function joinedRealizations(

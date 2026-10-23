@@ -10,7 +10,6 @@ import {
 } from "dumcorpus/inventories";
 import type { AssembledEdge, Membership } from "./assembly.js";
 import {
-	articleForms,
 	foldedText,
 	isArticle,
 	nounLike,
@@ -25,6 +24,7 @@ import type { ClosedUnit, Decision } from "./code-rules.js";
 import { bracketClauses } from "./code-rules-verbs.js";
 import type { Nomination } from "./nomination.js";
 import { groupKey } from "./partition.js";
+import type { RouteKey } from "./routes.js";
 import type { FixedRoute } from "./routing.js";
 import type { Piece } from "./sentence.js";
 
@@ -294,38 +294,65 @@ export function articleHeads(nomination: Nomination): Decision {
 	};
 }
 
-/** Uninflected welch (welch ein Glück), which never follows was für. */
-const uninflectedWelch = "welch";
-
-/** The ein or welcher a was für takes right after für: the forms of ein and of DET welcher. */
-export const einForms: ReadonlySet<string> = new Set([
-	...[...articleForms].filter((form) => form.startsWith("ein")),
-	...authoredRealizations
-		.filter(
-			({ member, spelled }) =>
-				member.lemma.kind === "DET" &&
-				member.lemma.canonicalForm === "welcher" &&
-				spelled !== uninflectedWelch,
-		)
-		.map(({ spelled }) => spelled.toLowerCase()),
-]);
-
-export function wasFuer(nomination: Nomination): Decision {
-	const { pieces } = nomination.sentence;
-	const closed: ClosedUnit[] = [];
+/** The was … für pairs the judge, asked in `final`, reads as was für. */
+function wasFuerUnits(nomination: Nomination): (readonly [Piece, Piece])[] {
+	const units: (readonly [Piece, Piece])[] = [];
 	const used = new Set<number>();
 	for (const [was, fuer] of wasFuerPairs(nomination.sentence)) {
 		const answer = nomination.final[wasFuerId(was.id, fuer.id)];
 		if (answer?.type !== "noul" || answer.noul < 0.5) continue;
 		if (used.has(was.id) || used.has(fuer.id)) continue;
-		const ids = [was.id, fuer.id];
-		const next = pieces[fuer.id];
-		if (next && next.clause === fuer.clause && einForms.has(lower(next)))
-			ids.push(next.id);
-		for (const id of ids) used.add(id);
-		closed.push({ pieces: ids, family: "Locution" });
+		used.add(was.id).add(fuer.id);
+		units.push([was, fuer]);
 	}
-	return { closed };
+	return units;
+}
+
+export function wasFuer(nomination: Nomination): Decision {
+	return {
+		closed: wasFuerUnits(nomination).map(([was, fuer]) => ({
+			pieces: [was.id, fuer.id],
+			family: "Locution",
+		})),
+	};
+}
+
+/** The forms of the indefinite PRONs einer and welcher, standalone after was für. */
+export const standaloneAfterWasFuer: ReadonlySet<string> = new Set(
+	authoredRealizations
+		.filter(({ member: { lemma } }) => {
+			const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
+			return (
+				lemma.kind === "PRON" &&
+				lemma.family === "Lexeme" &&
+				core.pronType === "Ind" &&
+				/^(eine[mnrs]?|welcher)$/u.test(lemma.canonicalForm)
+			);
+		})
+		.map(({ spelled }) => spelled.toLowerCase()),
+);
+
+/**
+ * The routes the `was-fuer` rule fixes (de/was-fuer): Locution DET for a
+ * unit it closes, and Lexeme PRON for a form of einer or welcher left alone
+ * right after its für (aber was für einen?, was für welche?). An ein that
+ * opens a noun phrase groups with its noun, so it is never alone.
+ */
+export function wasFuerRoutes(nomination: Nomination): FixedRoute {
+	const { pieces } = nomination.sentence;
+	const fixed = new Map<string, RouteKey>();
+	for (const [was, fuer] of wasFuerUnits(nomination)) {
+		fixed.set(groupKey([was.id, fuer.id]), "Locution/DET");
+		// Piece ids count from 1, so the piece after für sits at its id.
+		const next = pieces[fuer.id];
+		if (
+			next &&
+			next.clause === fuer.clause &&
+			standaloneAfterWasFuer.has(lower(next))
+		)
+			fixed.set(groupKey([next.id]), "Lexeme/PRON");
+	}
+	return (group) => fixed.get(groupKey(group));
 }
 
 const coordinators = new Set(["und", "oder"]);

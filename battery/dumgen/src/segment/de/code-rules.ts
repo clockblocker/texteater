@@ -50,8 +50,9 @@
  *   the participle right before it: ist … aufgefunden worden, examiniert
  *   worden war, wäre … gewesen.
  * - `was-fuer` (de/was-fuer): was and für that the judge, asked in the
- *   `final` request, reads as was für (ein) are one Locution with the ein
- *   or welche right after für, split or not; the noun stays outside.
+ *   `final` request, reads as was für are one Locution DET, split or not.
+ *   An ein after für is left to the noun it opens, and a standalone einer
+ *   or welche right after für is a Lexeme PRON of its own.
  * - `infixed-zu` (de/fused-word-pieces, de/bare-infinitive-zu,
  *   de/verb-owns-its-scattered-members): an infinitive split around its
  *   infixed zu joins its particle and its stem, and zu stays apart:
@@ -108,6 +109,7 @@ import {
 	splitAdverbs,
 	strandedAdverbs,
 	wasFuer,
+	wasFuerRoutes,
 } from "./code-rules-words.js";
 import type { Nomination } from "./nomination.js";
 import { groupKey, partitionOf } from "./partition.js";
@@ -148,7 +150,7 @@ export type Decision = {
 };
 
 /**
- * The routes the listed rules fix (`quantifier`, `particle-verb`), the
+ * The routes the listed rules fix (`quantifier`, `was-fuer`, `particle-verb`), the
  * first rule's that fixes one; undefined when no listed rule fixes routes.
  */
 export function codeRoutes(
@@ -157,6 +159,7 @@ export function codeRoutes(
 ): FixedRoute | undefined {
 	const routes = [
 		...(rules.includes("quantifier") ? [quantifierRoutes(nomination)] : []),
+		...(rules.includes("was-fuer") ? [wasFuerRoutes(nomination)] : []),
 		...(rules.includes("particle-verb")
 			? [particleVerbRoutes(nomination)]
 			: []),

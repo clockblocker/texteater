@@ -292,17 +292,17 @@ test("sein-chain: worden joins its participle and the sein of its clause", async
 	expect(gewesen.with).toEqual([[0], [2, 6], [4]]);
 });
 
-test("was-fuer: final asks whether was … für is was für ein, and the judge's yes makes one Locution", async () => {
+test("was-fuer: final asks whether was … für is was für, and the judge's yes makes one Locution while ein stays with its noun", async () => {
 	// Was0 _1 ist2 _3 das4 _5 für6 _7 ein8 _9 Buch10 ?11
 	const segments = segmentsOf("Was ist das für ein Buch?");
 	const answers = {
 		s_article_5: picked("p6"),
 		w4_1_4: noul(0.9),
-		r_1_4_5: picked("Locution/DET"),
+		r_1_4: picked("Locution/DET"),
 	};
 	const result = await groups(segments, answers, "was-fuer");
 	expect(result.without).toContainEqual([8, 10]);
-	expect(result.with).toEqual([[0, 6, 8], [2], [4], [10]]);
+	expect(result.with).toEqual([[0, 6], [2], [4], [8, 10]]);
 	const judge = fakeJudge(answers);
 	const units = await Effect.runPromise(
 		segmentGermanUnits({ segments }, judge.ask, {
@@ -313,7 +313,7 @@ test("was-fuer: final asks whether was … für is was für ein, and the judge's
 	const final = judge.requests.find(({ stage }) => stage === "final");
 	expect(Object.keys(final?.questions ?? {})).toContain("w4_1_4");
 	expect(units).toContainEqual({
-		segments: [0, 6, 8],
+		segments: [0, 6],
 		route: route("Locution", "DET"),
 	});
 	// Without the rule, final asks nothing about was … für.
@@ -330,6 +330,28 @@ test("was-fuer: final asks whether was … für is was für ein, and the judge's
 				{},
 		),
 	).not.toContain("w4_1_4");
+});
+
+test("was-fuer: a standalone einer or welche right after für is a Lexeme PRON of its own", async () => {
+	// Aber0 _1 was2 _3 für4 _5 einen6 ?7
+	const segments = segmentsOf("Aber was für einen?");
+	const judge = fakeJudge({ w4_2_3: noul(0.9) });
+	const units = await Effect.runPromise(
+		segmentGermanUnits({ segments }, judge.ask, {
+			...productionUnitSettings,
+			rules: ["was-fuer"],
+		}),
+	);
+	expect(units).toContainEqual({
+		segments: [2, 4],
+		route: route("Locution", "DET"),
+	});
+	expect(units).toContainEqual(
+		expect.objectContaining({
+			segments: [6],
+			route: route("Lexeme", "PRON"),
+		}),
+	);
 });
 
 test("infixed-zu: the particle and stem around an infixed zu are one verb, and zu stays apart", async () => {

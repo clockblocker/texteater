@@ -258,7 +258,7 @@ export type FinalOptions = {
 
 /**
  * The `final` request: step 0's idiom hosts and `so … daß`, and the Saying
- * Choice; with `wasFuer`, whether was … für is was für (ein).
+ * Choice; with `wasFuer`, whether was … für is was für.
  */
 function finalQuestions(
 	sentence: Sentence,
@@ -295,7 +295,7 @@ function finalQuestions(
 	if (options.wasFuer)
 		for (const [was, fuer] of wasFuerPairs(sentence))
 			questions[wasFuerId(was.id, fuer.id)] = noul(
-				`In \`sentence\`, do ${ref(was)} and ${ref(fuer)} together form was für (ein), asking or exclaiming what kind of thing or person (Was für ein Buch liest du? Was ist das für ein Buch? Was für Bücher? Aber was für einen?), rather than was standing on its own and für being a preposition (Was hast du für das Buch bezahlt?)?`,
+				`In \`sentence\`, do ${ref(was)} and ${ref(fuer)} together form was für, asking or exclaiming what kind of thing or person (Was für ein Auto fährst du? Was hast du für ein Auto? Was sind das für Leute? Was für welche?), rather than was standing on its own and für being a preposition (Was hast du für das Buch bezahlt?)?`,
 			);
 	return questions;
 }

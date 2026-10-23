@@ -12,9 +12,9 @@ import {
 } from "../../../src/segment/de/candidates.js";
 import { seinParticiples } from "../../../src/segment/de/code-rules-verbs.js";
 import {
-	einForms,
 	objectPronounSubject,
 	quantityBisschen,
+	standaloneAfterWasFuer,
 } from "../../../src/segment/de/code-rules-words.js";
 import { authoredInventory } from "../../../src/segment/de/inventory.js";
 import { modalForms } from "../../../src/segment/de/locution-choice.js";
@@ -89,16 +89,16 @@ test("the code rules' word sets are the hand-typed ones", () => {
 	expect(sorted(seinParticiples)).toEqual(
 		sorted(["worden", "gewesen", "geworden"]),
 	);
-	expect(sorted(einForms)).toEqual(
+	expect(sorted(standaloneAfterWasFuer)).toEqual(
 		sorted([
-			"ein",
+			"einer",
 			"eine",
 			"einen",
 			"einem",
-			"einer",
 			"eines",
-			"welche",
+			"eins",
 			"welcher",
+			"welche",
 			"welchen",
 			"welchem",
 			"welches",
