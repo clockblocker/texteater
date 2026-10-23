@@ -114,3 +114,28 @@ bun run evaluate --experiment segment-in-units/de:dev --revision <rev> \
 
 The lab itself, its rounds and its artifacts are in
 [the lab reference](segmentation-jev-lab.md).
+
+## The Breakdown segmenters
+
+`segment-in-constituents/de:breakdown` and `segment-in-morphemes/de:breakdown`
+score `segment.inConstituents` and `segment.inMorphemes` (Dumgen ADR 0007)
+against dumcorpus's Breakdown Records (`lab/evaluation/breakdown/`). Every
+record is a constituents case, one holding a bottom word's morphemes or a
+Source expecting none; a record holding a bottom word's morphemes is also a
+morphemes case. A case passes when its pieces come back exactly; the
+metrics add cut precision and recall, gold links placed, with gold's route
+and exact, and agreement on whether there are Constituents at all, overall
+and for phrasemes and words apart.
+
+They answer jev through the lab's cache, as segment.inUnits does, but count
+against no lab round: a live run needs `--budget` (fresh jev input tokens),
+the budget the user granted that round, prices itself first, refuses a
+projection past it, stops at it, and writes its spend to
+`evidence/segment-breakdown/ledger.jsonl`. `--cases` or `--cases-from`
+take part of the set and `--repetitions` 1 to 3 (3 by default).
+
+```sh
+bun run --cwd battery/dumgen evaluate --experiment segment-in-constituents/de:breakdown --estimate
+bun run --cwd battery/dumgen evaluate --experiment segment-in-constituents/de:breakdown --revision YOUR_COMMIT --budget TOKENS
+bun run --cwd battery/dumgen evaluate --experiment segment-in-morphemes/de:breakdown --revision YOUR_COMMIT --offline
+```

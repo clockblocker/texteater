@@ -199,6 +199,42 @@ function roundOptions(
 	};
 }
 
+/**
+ * A live Breakdown segmenter run's granted budget of fresh jev input
+ * tokens (`--budget`): refused before anything is asked when its projected
+ * spend passes it, and stopped at it while it runs.
+ */
+function breakdownBudgetOptions(
+	{ values, experimentId, warn }: ExperimentCommand,
+	round: RunModules["round"],
+): Partial<EvaluateArgs> {
+	const budget = Number(values.budget);
+	if (!values.budget || !Number.isFinite(budget))
+		throw Error(
+			`A live ${experimentId} run needs --budget (fresh jev input tokens); price it with --estimate first. Nothing was asked.`,
+		);
+	let spent = 0;
+	return {
+		beforeLive(priced) {
+			warn(round.projectionText(priced));
+			const projected = round.projectedSpend(priced);
+			if (projected > budget)
+				throw Error(
+					`This run projects ${projected} fresh jev input tokens, past the budget of ${budget}. Nothing was asked.`,
+				);
+		},
+		beforeSpend() {
+			if (spent >= budget)
+				throw Error(
+					`The run reached its budget: ${spent} of ${budget} fresh jev input tokens`,
+				);
+		},
+		onSpend(tokens) {
+			spent += tokens;
+		},
+	};
+}
+
 /** The options a run takes from its arguments alone. */
 const argumentOptions = (
 	{ values, caseIds }: ExperimentCommand,
@@ -218,8 +254,12 @@ const argumentOptions = (
 export async function experimentCommand(command: ExperimentCommand) {
 	const { values, experimentId, units, outputDirectory, dependencies, warn } =
 		command;
-	const { defaultLabRoot, evaluateExperiment, spendsJev } =
-		command.experiments;
+	const {
+		defaultLabRoot,
+		evaluateExperiment,
+		spendsJev,
+		isBreakdownExperiment,
+	} = command.experiments;
 	const modules = await loadRunModules();
 	const evidenceRoot =
 		dependencies.evidenceRoot ??
@@ -239,6 +279,7 @@ export async function experimentCommand(command: ExperimentCommand) {
 	const grammar = /^(resolve-(grammar|reading)|knowledge)\//u.test(
 		experimentId,
 	);
+	const breakdown = isBreakdownExperiment(experimentId);
 	const controller = new AbortController();
 	const interrupt = () => controller.abort();
 	process.once("SIGINT", interrupt);
@@ -247,7 +288,7 @@ export async function experimentCommand(command: ExperimentCommand) {
 			experimentId,
 			// Every live run that asks jev asks it through production's
 			// TypeSafe ask; segment.inUnits wraps it in the lab's cache.
-			...(place.live && (grammar || round)
+			...(place.live && (grammar || round || breakdown)
 				? {
 						jev:
 							dependencies.jev ??
@@ -273,9 +314,14 @@ export async function experimentCommand(command: ExperimentCommand) {
 				? grammarLiveOptions(command, modules)
 				: {}),
 			...(round ? roundOptions(round, warn, modules.round) : {}),
+			...(breakdown && place.live
+				? breakdownBudgetOptions(command, modules.round)
+				: {}),
 		});
 		if (values.estimate)
 			return writeEstimate(command, evaluated, grammar, round, modules);
+		if (breakdown && place.live)
+			await appendBreakdownLedger(command, evaluated, place, modules);
 		return await finishRun(command, evaluated, place, round, modules);
 	} finally {
 		process.removeListener("SIGINT", interrupt);
@@ -285,6 +331,42 @@ export async function experimentCommand(command: ExperimentCommand) {
 type Evaluated = Awaited<
 	ReturnType<(typeof Experiments)["evaluateExperiment"]>
 >;
+
+/**
+ * A live Breakdown segmenter run's line in its own ledger,
+ * `evidence/segment-breakdown/ledger.jsonl`: what it spent under which
+ * budget, for the round the user granted it.
+ */
+async function appendBreakdownLedger(
+	{ values, experimentId, dependencies }: ExperimentCommand,
+	evaluated: Evaluated,
+	place: RunPlace,
+	modules: RunModules,
+) {
+	const { run, spend } = evaluated;
+	if (!run || !spend) return;
+	const path = join(
+		dependencies.resolveEvidenceRoot ?? join(packageRoot, "evidence"),
+		"segment-breakdown",
+		"ledger.jsonl",
+	);
+	await mkdir(dirname(path), { recursive: true });
+	await appendFile(
+		path,
+		`${JSON.stringify({
+			runId: run.manifest.runId,
+			at: new Date().toISOString(),
+			command: "evaluate",
+			experiment: experimentId,
+			budget: Number(values.budget),
+			cases: run.cases.length,
+			repetitions: run.manifest.repetitions ?? 1,
+			gitHead: modules.git(["rev-parse", "HEAD"], place.repository),
+			model: run.manifest.configurations.judgment.model,
+			...spend,
+		})}\n`,
+	);
+}
 
 /** `--estimate`'s price: resolve's in dollars and tokens, segment.inUnits's against its round. */
 function writeEstimate(

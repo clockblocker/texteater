@@ -47,7 +47,6 @@ export {
 	germanAdverbShorthands,
 } from "./inventories/de/adverb-shorthands.js";
 export {
-	type GermanAffix,
 	germanCitationEndings,
 	germanMorphemePolicy,
 	germanPrefixes,

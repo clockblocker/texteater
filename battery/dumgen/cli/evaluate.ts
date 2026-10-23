@@ -33,6 +33,10 @@
  *   bun run evaluate --experiment resolve-reading/de:dev --revision <rev> --requests
  *   bun run evaluate --experiment knowledge/de:dev --revision <rev> --requests
  *   bun run evaluate --experiment knowledge/de:doublets:tuning --revision <rev> --requests
+ *   bun run evaluate --experiment segment-in-constituents/de:breakdown --estimate
+ *   bun run evaluate --experiment segment-in-constituents/de:breakdown --revision <rev>
+ *       --budget <jev input tokens> [--cases <ids file>] [--repetitions 1]
+ *   bun run evaluate --experiment segment-in-morphemes/de:breakdown --revision <rev> --offline
  *   bun run evaluate --open <runId>
  *   bun run evaluate --compare <leftRunId> <rightRunId>
  *
@@ -86,6 +90,12 @@
  * from measured sizes wherever they exist; `--estimate --whole-round`
  * prices every request, cached ones included, as a round whose prompts
  * all moved would pay.
+ *
+ * A Breakdown segmenter run (`segment-in-constituents/de:breakdown`,
+ * `segment-in-morphemes/de:breakdown`) counts against no lab round: it
+ * goes live only under the `--budget` of fresh jev input tokens the user
+ * granted, priced first and stopped at it, and writes its spend to
+ * `evidence/segment-breakdown/ledger.jsonl`.
  *
  * `--luna-batch` sends such a run's Luna cache misses through OpenAI's
  * Batch API in stages (#891), its guard and caps pricing them at the Batch

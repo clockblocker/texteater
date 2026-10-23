@@ -1,6 +1,7 @@
 /**
  * The seam each language plugs into (#772): what Dumgen's operations need
- * from one language. `segment.inUnits`, `resolve.grammar`,
+ * from one language. `segment.inUnits`, `segment.inConstituents`,
+ * `segment.inMorphemes`, `resolve.grammar`,
  * `knowledge.produce` and `knowledge.accumulateTranslations` look the
  * module up by `input.language` and treat a language with none as bad
  * input, a Defect; the language's own code stays behind the module. `languages.ts` registers the modules.
@@ -21,6 +22,11 @@ import type {
 	ResolveGrammarInput,
 } from "./resolve/types.js";
 import type { Ask, AskFailure } from "./segment/ask.js";
+import type {
+	BreakdownInput,
+	Constituents,
+	ProducedPiece,
+} from "./segment/breakdown.js";
 import type {
 	Segment,
 	SegmentLanguage,
@@ -54,6 +60,16 @@ export type LanguageModule = {
 			segmentation: SentenceSegmentation,
 			ask: Ask,
 		) => Effect.Effect<readonly Unit[], AskFailure>;
+		/** The body of `segment.inConstituents`: a Reading's immediate parts, or none. */
+		readonly constituents: (
+			input: BreakdownInput,
+			ask: Ask,
+		) => Effect.Effect<Constituents, AskFailure>;
+		/** The body of `segment.inMorphemes`: a single-word Lexeme's morphemes. */
+		readonly morphemes: (
+			input: BreakdownInput,
+			ask: Ask,
+		) => Effect.Effect<readonly ProducedPiece[], AskFailure>;
 	};
 	/** The body of `resolve.grammar` for a click on a Sentence that segmented. */
 	readonly resolveGrammar: (

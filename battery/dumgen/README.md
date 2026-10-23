@@ -15,7 +15,11 @@ models they need. `language.detect` judges each Sentence's Detected
 Language, and `segment.inUnits` runs the German segmenter's stages under
 `src/segment/` on each Sentence: the Segment stage cuts it into Segments,
 and the unit stage groups and routes them. The stages reach jev only
-through the host's `JevTransport` and read no files. `translate.sentence`
+through the host's `JevTransport` and read no files.
+`segment.inConstituents` breaks a resolved Reading down one level, into
+its immediate parts, and `segment.inMorphemes` splits a bottom word into
+its morphemes (`src/segment/breakdown.ts`, `src/segment/de/breakdown/`);
+code proposes the cuts and Canonical Forms, jev picks. `translate.sentence`
 translates one German Sentence into `en` or `ru` through Luna, reading its
 neighbouring Sentences as context. A host builds
 `DumgenLive({ jev: JevTransport.typeSafe({ apiKey }), luna: LunaTransport.openAI({ apiKey }) })`

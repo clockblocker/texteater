@@ -32,6 +32,13 @@ import type {
 	ResolveGrammarInput,
 	ResolveReadingInput,
 } from "./resolve/types.js";
+import {
+	type BreakdownInput,
+	type Constituents,
+	constituentsOf,
+	morphemesOf,
+	type ProducedPiece,
+} from "./segment/breakdown.js";
 import { type InUnitsInput, segmentText } from "./segment/in-units.js";
 import type { SegmentedText } from "./segment/segmented-sentence.js";
 import { translateSentence } from "./translate/sentence.js";
@@ -63,6 +70,29 @@ export const operations = {
 			input: InUnitsInput,
 		): Effect.Effect<SegmentedText, never, Jev> =>
 			runOperation("segment.inUnits", segmentText(input)),
+		/**
+		 * A Reading's Constituents, its immediate parts one level down
+		 * (system ADR 0050), or none for a bottom word or a formation
+		 * with a Source. Code proposes the cuts and Canonical Forms and
+		 * jev picks; each piece links to a Unit Shadow. Any failed call
+		 * fails it. Another language than German is a Defect.
+		 */
+		inConstituents: (
+			input: BreakdownInput,
+		): Effect.Effect<Constituents, ModelFailure, Jev> =>
+			runOperation("segment.inConstituents", constituentsOf(input)),
+		/**
+		 * A bottom word's Morphemic Breakdown (ADR 0051): prefixes, Root,
+		 * suffixes and its Ending, a zero ending included, each linked to
+		 * a Morpheme's Unit Shadow. The host runs it only on a word with
+		 * no Constituents and no Source; every other word's morphemes are
+		 * propagated (Dumrel `propagateMorphemes`). A phraseme, a
+		 * Morpheme or another language than German is a Defect.
+		 */
+		inMorphemes: (
+			input: BreakdownInput,
+		): Effect.Effect<readonly ProducedPiece[], ModelFailure, Jev> =>
+			runOperation("segment.inMorphemes", morphemesOf(input)),
 	},
 	resolve: {
 		/**

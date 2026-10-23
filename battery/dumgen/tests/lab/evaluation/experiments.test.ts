@@ -39,7 +39,7 @@ afterAll(() => rm(directory, { recursive: true, force: true }));
 
 const labWithSet = (name: string) => labWithSetIn(directory, name);
 
-test("the table lists gold and raw mode per frozen set, text mode, and resolve.grammar's, resolve.reading's and knowledge.produce's sets, the doublets among them", () => {
+test("the table lists gold and raw mode per frozen set, text mode, resolve.grammar's, resolve.reading's and knowledge.produce's sets, the doublets among them, and the Breakdown segmenters'", () => {
 	expect(listExperiments().map(({ id }) => id)).toEqual([
 		"segment-in-units/de:dev",
 		"segment-in-units/de:dev:raw",
@@ -56,6 +56,8 @@ test("the table lists gold and raw mode per frozen set, text mode, and resolve.g
 		"knowledge/de:spot-check",
 		"knowledge/de:doublets:tuning",
 		"knowledge/de:doublets:heldout",
+		"segment-in-constituents/de:breakdown",
+		"segment-in-morphemes/de:breakdown",
 	]);
 });
 

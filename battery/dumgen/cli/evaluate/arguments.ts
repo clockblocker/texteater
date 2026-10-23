@@ -174,6 +174,23 @@ const resolveOptions = (extra: readonly OptionName[]): KindOptions => ({
 	},
 });
 
+/** The Breakdown segmenters: a case list and repetitions, live under `--budget`. */
+const breakdownRunReads = [
+	"judgment-model",
+	"concurrency",
+	"cases",
+	"cases-from",
+	"repetitions",
+] as const;
+const breakdownOptions: KindOptions = {
+	reads: {
+		requests: [],
+		estimate: breakdownRunReads,
+		offline: breakdownRunReads,
+		live: [...breakdownRunReads, "budget"],
+	},
+};
+
 /**
  * The options each kind of experiment reads, by its id's route (and
  * `:raw` for segment.inUnits's raw mode). An experiment without a request
@@ -188,6 +205,8 @@ const runOptions: Readonly<Record<string, KindOptions>> = {
 	"resolve-grammar": resolveOptions([]),
 	"resolve-reading": resolveOptions([]),
 	knowledge: resolveOptions(["gold-only"]),
+	"segment-in-constituents": breakdownOptions,
+	"segment-in-morphemes": breakdownOptions,
 };
 
 const kindOf = (experimentId: string) => {

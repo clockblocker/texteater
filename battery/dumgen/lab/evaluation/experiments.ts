@@ -31,6 +31,11 @@
  *   cache, transports, guard and caps. Prompts are tuned on `tuning`
  *   only.
  *
+ * - `segment-in-constituents/de:breakdown` and
+ *   `segment-in-morphemes/de:breakdown`: the Breakdown segmenters against
+ *   dumcorpus's Breakdown Records (`breakdown/experiment.ts`), through the
+ *   lab's jev cache, live only under a granted `--budget`.
+ *
  * `<set>` is one of the lab's frozen sets, `dev` or `heldout`. Each case
  * runs three times, as in the lab's runs, and jev answers come through the
  * lab's cache (`lab/segmentation/harness/jev-cache.ts`), the transport `DumgenCore` is given,
@@ -63,6 +68,7 @@ import {
 import { saveRun } from "promptsmith/storage";
 import { splitText } from "../../src/segment/split-text.js";
 import type { LabRun } from "../segmentation/harness/run.js";
+import { breakdownExperiments } from "./breakdown/experiment.js";
 import type {
 	BuiltRequests,
 	EvaluateArgs,
@@ -88,6 +94,7 @@ import {
 	udDraftTexts,
 } from "./split-text.js";
 
+export { isBreakdownExperiment } from "./breakdown/experiment.js";
 export type {
 	BuiltRequests,
 	EvaluateArgs,
@@ -178,6 +185,7 @@ const experiments: readonly Experiment[] = [
 	knowledgeEntry("spot-check"),
 	licenceEntry("tuning"),
 	licenceEntry("heldout"),
+	...breakdownExperiments,
 ];
 
 function experimentOf(id: string): Experiment {
