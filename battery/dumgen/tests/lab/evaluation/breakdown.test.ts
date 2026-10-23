@@ -5,6 +5,7 @@ import { join, resolve } from "node:path";
 import { runEvaluationCli } from "../../../cli/evaluate.js";
 import {
 	constituentsCases,
+	heldOutBreakdownIds,
 	morphemesCases,
 } from "../../../lab/evaluation/breakdown/cases.js";
 import {
@@ -50,6 +51,17 @@ test("every Breakdown Record without a Source is a segment.inConstituents case, 
 	expect(morphemesCases().map(({ id }) => id)).toEqual(
 		expect.arrayContaining(["breakdown/de/kaufen", "breakdown/de/spannen"]),
 	);
+});
+
+test("the records a held-out batch lists are segment.inConstituents's held-out set and leave the set prompts are tuned on", () => {
+	const heldOut = heldOutBreakdownIds();
+	expect(heldOut.size).toBeGreaterThanOrEqual(15);
+	const tuned = constituentsCases("breakdown").map(({ id }) => id);
+	const held = constituentsCases("heldout").map(({ id }) => id);
+	expect([...held].sort()).toEqual([...heldOut].sort());
+	expect(tuned.filter((id) => heldOut.has(id))).toEqual([]);
+	expect(tuned).toContain("breakdown/de/verarzten");
+	expect(held).toContain("breakdown/de/befreien");
 });
 
 test("an answer passes only exactly; cuts and links are counted apart", () => {

@@ -31,10 +31,12 @@
  *   cache, transports, guard and caps. Prompts are tuned on `tuning`
  *   only.
  *
- * - `segment-in-constituents/de:breakdown` and
+ * - `segment-in-constituents/de:breakdown` and `:heldout`, and
  *   `segment-in-morphemes/de:breakdown`: the Breakdown segmenters against
  *   dumcorpus's Breakdown Records (`breakdown/experiment.ts`), through the
- *   lab's jev cache, live only under a granted `--budget`.
+ *   lab's jev cache, live only under a granted `--budget`. Prompts are
+ *   tuned on `breakdown` only; `heldout` is the records dumcorpus's
+ *   Breakdown held-out batches list.
  *
  * `<set>` is one of the lab's frozen sets, `dev` or `heldout`. Each case
  * runs three times, as in the lab's runs, and jev answers come through the

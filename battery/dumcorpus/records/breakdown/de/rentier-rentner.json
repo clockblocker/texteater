@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Rentier",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "💰"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Rent",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Rente",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "ier",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-ier",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Rentier",
+				"url": "https://www.dwds.de/wb/Rentier",
+				"supports": "The Wortzerlegung Rente -ier, for der Rentier, who lives on a pension or capital"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The person living on a pension or capital, der Rentier. DWDS splits it Rente + -ier, Rent showing Rente with its final -e dropped; das Rentier, the reindeer, splits Ren + Tier (ADR 0050: the Reading owns the split)."
+	}
+}

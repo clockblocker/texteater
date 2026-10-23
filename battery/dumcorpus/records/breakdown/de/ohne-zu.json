@@ -1,0 +1,72 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "SCONJ",
+			"canonicalForm": "ohne … zu",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🚫"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ohne",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"canonicalForm": "ohne",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " … "
+				},
+				{
+					"letters": "zu",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PART",
+						"canonicalForm": "zu",
+						"coreFeatures": {
+							"partType": "Inf",
+							"polarity": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/correlator-anchors",
+				"hash": "18606bad03311909"
+			},
+			{
+				"rule": "de/bare-infinitive-zu",
+				"hash": "920eb73475a80ef0"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: ohne",
+				"url": "https://www.dwds.de/wb/ohne",
+				"supports": "ohne used as a conjunction in the construction ohne zu with an infinitive"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The open slot … is filler. ohne opens the zu-infinitive clause, so it links to the SCONJ ohne, as um does in um … zu (de/correlator-anchors), and zu to the infinitive PART zu (de/bare-infinitive-zu)."
+	}
+}

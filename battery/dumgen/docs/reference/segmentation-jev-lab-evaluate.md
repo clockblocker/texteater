@@ -119,7 +119,11 @@ The lab itself, its rounds and its artifacts are in
 
 `segment-in-constituents/de:breakdown` and `segment-in-morphemes/de:breakdown`
 score `segment.inConstituents` and `segment.inMorphemes` (Dumgen ADR 0007)
-against dumcorpus's Breakdown Records (`lab/evaluation/breakdown/`). Every
+against dumcorpus's Breakdown Records (`lab/evaluation/breakdown/`).
+`segment-in-constituents/de:heldout` scores the records dumcorpus's
+Breakdown held-out batches (`batches/breakdown-heldout-*.json`) list, and
+`:breakdown` every other: prompts are tuned on `:breakdown` alone, and no
+held-out record is a prompt's example (#693). Every
 record without a Source is a constituents case, one holding a bottom word's
 morphemes expecting none; a record holding a bottom word's morphemes is
 also a morphemes case. A record with a Source is no case: the host asks

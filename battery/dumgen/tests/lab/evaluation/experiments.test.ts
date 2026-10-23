@@ -57,6 +57,7 @@ test("the table lists gold and raw mode per frozen set, text mode, resolve.gramm
 		"knowledge/de:doublets:tuning",
 		"knowledge/de:doublets:heldout",
 		"segment-in-constituents/de:breakdown",
+		"segment-in-constituents/de:heldout",
 		"segment-in-morphemes/de:breakdown",
 	]);
 });

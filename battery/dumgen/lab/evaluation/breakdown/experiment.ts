@@ -1,8 +1,8 @@
 /**
  * The Breakdown segmenters' experiments (`experiments.ts`):
- * `segment-in-constituents/de:breakdown` and
- * `segment-in-morphemes/de:breakdown`, each over its cases from dumcorpus's
- * Breakdown Records (`cases.ts`), scored by `scoring.ts`.
+ * `segment-in-constituents/de:breakdown`, `segment-in-constituents/de:heldout`
+ * and `segment-in-morphemes/de:breakdown`, each over its cases from
+ * dumcorpus's Breakdown Records (`cases.ts`), scored by `scoring.ts`.
  *
  * Each runs production's operation under `DumgenCore`, as segment.inUnits's
  * evaluation does, with the lab's cached, retrying jev as its transport, so
@@ -87,6 +87,8 @@ const maxRepetitions = 3;
 /** One Breakdown segmenter as an experiment runs it. */
 type Segmenter<O extends z.ZodType> = {
 	readonly route: string;
+	/** The case set, the experiment id's last part. */
+	readonly set: string;
 	readonly outputSchema: O;
 	readonly cases: () => BreakdownCase<z.input<O>>[];
 	readonly operation: (
@@ -103,8 +105,9 @@ type Segmenter<O extends z.ZodType> = {
 
 const constituents: Segmenter<typeof constituentsOutputSchema> = {
 	route: "segment-in-constituents/de",
+	set: "breakdown",
 	outputSchema: constituentsOutputSchema,
-	cases: constituentsCases,
+	cases: () => constituentsCases("breakdown"),
 	operation: (input) =>
 		Effect.map(operations.segment.inConstituents(input), (result) =>
 			result.kind === "Constituents"
@@ -117,8 +120,16 @@ const constituents: Segmenter<typeof constituentsOutputSchema> = {
 	evaluator: evaluateConstituents,
 };
 
+/** The held-out constituents cases, scored only once prompts are settled. */
+const heldOutConstituents: Segmenter<typeof constituentsOutputSchema> = {
+	...constituents,
+	set: "heldout",
+	cases: () => constituentsCases("heldout"),
+};
+
 const morphemes: Segmenter<typeof morphemesOutputSchema> = {
 	route: "segment-in-morphemes/de",
+	set: "breakdown",
 	outputSchema: morphemesOutputSchema,
 	cases: morphemesCases,
 	operation: (input) =>
@@ -336,7 +347,7 @@ async function evaluateBreakdown<O extends z.ZodType>(
 function experimentOf<O extends z.ZodType>(
 	segmenter: Segmenter<O>,
 ): Experiment {
-	const id = `${segmenter.route}:breakdown`;
+	const id = `${segmenter.route}:${segmenter.set}`;
 	return {
 		id,
 		caseCount: () => segmenter.cases().length,
@@ -351,6 +362,7 @@ function experimentOf<O extends z.ZodType>(
 /** The Breakdown segmenters' experiments, in the table's order. */
 export const breakdownExperiments: readonly Experiment[] = [
 	experimentOf(constituents),
+	experimentOf(heldOutConstituents),
 	experimentOf(morphemes),
 ];
 

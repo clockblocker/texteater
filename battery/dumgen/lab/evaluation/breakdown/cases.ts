@@ -7,9 +7,15 @@
  * case. A record that holds a bottom word's morphemes is also a
  * `segment.inMorphemes` case.
  *
+ * The records dumcorpus's held-out batches list (`batches/breakdown-heldout-*.json`)
+ * are `segment.inConstituents`'s held-out set, `heldout`; every other case is
+ * `breakdown`, the set prompts are tuned on. A held-out record is never a
+ * prompt's example (#693).
+ *
  * A gold target is a Lemma or a Unit Shadow and a produced one a Unit
  * Shadow, so both are read as a Shadow: route and Canonical Form.
  */
+import { readdirSync, readFileSync } from "node:fs";
 import { loadBreakdownRecords } from "dumcorpus";
 import type * as Dumcorpus from "dumcorpus/types";
 import type * as Dumrel from "dumrel/types";
@@ -76,6 +82,32 @@ export type BreakdownCase<O> = {
 	readonly group: "phraseme" | "word";
 };
 
+/** A constituents set: the cases prompts are tuned on, or the held-out ones. */
+export type BreakdownSetName = "breakdown" | "heldout";
+
+const batchesDirectory = new URL(
+	"../../../../dumcorpus/batches/",
+	import.meta.url,
+);
+
+const heldOutBatchSchema = z.object({
+	rows: z.array(z.object({ record: z.string(), split: z.string() })),
+});
+
+/** The record ids dumcorpus's Breakdown held-out batches mark held-out. */
+export function heldOutBreakdownIds(
+	directory: URL = batchesDirectory,
+): ReadonlySet<string> {
+	const ids = new Set<string>();
+	for (const name of readdirSync(directory))
+		if (/^breakdown-heldout-.*\.json$/u.test(name))
+			for (const { record, split } of heldOutBatchSchema.parse(
+				JSON.parse(readFileSync(new URL(name, directory), "utf8")),
+			).rows)
+				if (split === "held-out") ids.add(record);
+	return ids;
+}
+
 const groupOf = (record: Dumcorpus.BreakdownRecord) => {
 	const { family, canonicalForm } = record.reading.lemma;
 	return family === "Lexeme" && !/\s/u.test(canonicalForm)
@@ -83,12 +115,18 @@ const groupOf = (record: Dumcorpus.BreakdownRecord) => {
 		: "phraseme";
 };
 
-/** Every record without a Source as a `segment.inConstituents` case, sorted by id. */
+/**
+ * Every record without a Source in `set` as a `segment.inConstituents`
+ * case, sorted by id.
+ */
 export function constituentsCases(
+	set: BreakdownSetName = "breakdown",
 	records: readonly Dumcorpus.BreakdownRecord[] = loadBreakdownRecords(),
+	heldOut: ReadonlySet<string> = heldOutBreakdownIds(),
 ): BreakdownCase<ConstituentsOutput>[] {
 	return records.flatMap((record) => {
 		if (record.knowledge.source !== undefined) return [];
+		if (heldOut.has(record.id) !== (set === "heldout")) return [];
 		const constituents = record.knowledge.breakdown?.constituents;
 		const goldCase: BreakdownCase<ConstituentsOutput> = {
 			id: record.id,

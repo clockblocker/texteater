@@ -1,0 +1,70 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "Hand in Hand gehen",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🤝"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Hand in Hand",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "ADV",
+						"canonicalForm": "Hand in Hand",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "gehen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "gehen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Hand",
+				"url": "https://www.dwds.de/wb/Hand",
+				"supports": "Hand in Hand as a multiword expression of its own"
+			},
+			{
+				"title": "Duden: Hand",
+				"url": "https://www.duden.de/rechtschreibung/Hand",
+				"supports": "mit etwas Hand in Hand gehen 'einhergehen', beside Hand in Hand arbeiten"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Hand in Hand is a Locution ADV of its own, used with other verbs (Hand in Hand arbeiten), so it is one part, the biggest unit inside the wording (ADR 0050)."
+	}
+}

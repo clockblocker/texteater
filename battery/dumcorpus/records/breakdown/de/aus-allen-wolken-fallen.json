@@ -1,0 +1,111 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "aus allen Wolken fallen",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "😲"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "aus",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "aus",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "allen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "DET",
+						"canonicalForm": "alle",
+						"coreFeatures": {
+							"case": null,
+							"gender": null,
+							"number": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Tot"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Wolken",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Wolke",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "fallen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "fallen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "b7ac2bf4eaaf25be"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Wolke",
+				"url": "https://www.dwds.de/wb/Wolke",
+				"supports": "The multiword expression aus allen Wolken fallen"
+			},
+			{
+				"title": "de.wiktionary: aus allen Wolken fallen",
+				"url": "https://de.wiktionary.org/wiki/aus_allen_Wolken_fallen",
+				"supports": "The idiom 'überrascht, perplex sein'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "No run inside it is a unit of its own: aus allen Wolken occurs only in this expression. allen modifies Wolken, so it links to the DET alle (de/pron-or-det-by-use)."
+	}
+}

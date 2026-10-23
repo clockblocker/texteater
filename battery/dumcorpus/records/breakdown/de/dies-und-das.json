@@ -1,0 +1,95 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "PRON",
+			"canonicalForm": "dies und das",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🧺"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "dies",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "dieser",
+						"coreFeatures": {
+							"case": null,
+							"gender": null,
+							"number": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Dem"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "und",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "und",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "das",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "das",
+						"coreFeatures": {
+							"case": "Nom",
+							"gender": "Neut",
+							"number": "Sing",
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Dem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "b7ac2bf4eaaf25be"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: dieser",
+				"url": "https://www.dwds.de/wb/dieser",
+				"supports": "The multiword expression dies und das, 'allerlei Verschiedenes', under the substantival use"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "dies and das each stand for a noun phrase, with no noun after them, so both are demonstrative PRON, not DET (de/pron-or-det-by-use); das links to its citation cell, Nom.Neut.Sing."
+	}
+}

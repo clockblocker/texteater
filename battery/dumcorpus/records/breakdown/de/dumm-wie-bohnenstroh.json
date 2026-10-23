@@ -1,0 +1,85 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "ADJ",
+			"canonicalForm": "dumm wie Bohnenstroh",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🤪"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "dumm",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "dumm",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "wie",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "wie",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Bohnenstroh",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Bohnenstroh",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/relative-w-adverb-fills-a-slot",
+				"hash": "1a40c9fa9b13cf2c"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Bohnenstroh",
+				"url": "https://www.dwds.de/wb/Bohnenstroh",
+				"supports": "The multiword expression dumm wie Bohnenstroh"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Comparison wie before a phrase fills no slot, so it links to the CCONJ wie (de/relative-w-adverb-fills-a-slot). No two of its words form a unit of their own."
+	}
+}
