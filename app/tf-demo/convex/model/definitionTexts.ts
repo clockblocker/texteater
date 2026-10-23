@@ -193,6 +193,7 @@ export async function writeDefinitionText(
 		segmentedSentenceId: input.segmentedSentenceId,
 		scrollId,
 		position: 0,
+		paragraph: 0,
 		language: input.language,
 		stitchedText,
 		units: units.map((unit) => ({ ...unit, segments: [...unit.segments] })),

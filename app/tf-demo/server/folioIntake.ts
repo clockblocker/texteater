@@ -20,7 +20,7 @@ import { logged } from "./logging";
 /** A stored, unprocessed Sentence of a window. */
 type WindowSentence = {
 	readonly sentenceId: string;
-	readonly paragraph?: number;
+	readonly paragraph: number;
 	readonly stitchedText: string;
 };
 
@@ -29,17 +29,13 @@ export type ProcessedSentence<Id extends string = string> = AnalyzedSentence & {
 	readonly sentenceId: Id;
 };
 
-/** The window's Sentences in their paragraphs; one with no paragraph reads alone. */
+/** The window's Sentences in their paragraphs. */
 function paragraphsOf(sentences: readonly WindowSentence[]) {
 	const paragraphs: { sentences: string[] }[] = [];
 	let previous: WindowSentence | undefined;
 	for (const sentence of sentences) {
 		const last = paragraphs.at(-1);
-		if (
-			last &&
-			sentence.paragraph !== undefined &&
-			sentence.paragraph === previous?.paragraph
-		)
+		if (last && sentence.paragraph === previous?.paragraph)
 			last.sentences.push(sentence.stitchedText);
 		else paragraphs.push({ sentences: [sentence.stitchedText] });
 		previous = sentence;

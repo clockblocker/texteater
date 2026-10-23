@@ -44,6 +44,7 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 				sourceText: "Macht die <Tür> & auf&",
 			}),
 			position: 0,
+			paragraph: 0,
 			language: "de",
 			stitchedText: "Macht die <Tür> & auf&",
 		});

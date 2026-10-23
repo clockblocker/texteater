@@ -85,6 +85,7 @@ test("moving an existing one-unit example preserves target IDs and encounter his
 			segmentedSentenceId: "notes-study:related-Deutschland:0:sentence",
 			language: "de",
 			position: 0,
+			paragraph: 0,
 			stitchedText: "Deutschland.",
 		});
 		const lemmaId = await ctx.db.insert("lemmas", {
@@ -188,6 +189,7 @@ test("case subtitles render as headings outside selectable Segments", () => {
 				{
 					sentenceId: "sentences-de" as Id<"sentences">,
 					position: 0,
+					paragraph: 0,
 					language: "de",
 					stitchedText: "Deutschland liegt in Mitteleuropa.",
 					heading: "Deutschland",

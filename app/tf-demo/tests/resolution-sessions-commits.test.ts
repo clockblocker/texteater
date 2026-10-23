@@ -405,6 +405,7 @@ describe("Resolution Session", () => {
 				segmentedSentenceId: "submission-1:0",
 				scrollId,
 				position: 0,
+				paragraph: 0,
 				language: "de",
 				stitchedText: "Die Banken.",
 			});

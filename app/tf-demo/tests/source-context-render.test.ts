@@ -17,6 +17,7 @@ test("a revealed occurrence selects all and only its discontinuous members", () 
 				{
 					sentenceId: SENTENCE_ID,
 					position: 0,
+					paragraph: 0,
 					language: "de",
 					stitchedText: "eins dazwischen vier",
 					segments: [
@@ -44,6 +45,7 @@ test("renders visitor-filtered terminal states with distinct failure color hooks
 				{
 					sentenceId: SENTENCE_ID,
 					position: 0,
+					paragraph: 0,
 					language: "de",
 					stitchedText: "active unresolved failed known",
 					segments: [
@@ -88,6 +90,7 @@ test("selecting one known member colors the complete occurrence", () => {
 				{
 					sentenceId: SENTENCE_ID,
 					position: 0,
+					paragraph: 0,
 					language: "de",
 					stitchedText: "rufe dich an",
 					segments: [
