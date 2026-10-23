@@ -76,9 +76,9 @@ export const kindDefinitions: readonly KindDefinition[] = [
 	locution("VERB", "`den Faden verlieren`, `eine Entscheidung treffen`"),
 	locution("ADP", "`in Bezug auf`, `von … an`"),
 	locution("CCONJ", "`entweder … oder`"),
-	locution("DET", "`was für ein`"),
+	locution("DET", "`was für`, `so ein`"),
 	locution("NUM", "`zwölf bis sechzehn`"),
-	locution("PRON", "`was für einer`"),
+	locution("PRON", "`dies und das`"),
 	locution("SCONJ", "`so dass`, `als ob`"),
 	{
 		definition:

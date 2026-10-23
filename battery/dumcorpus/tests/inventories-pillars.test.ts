@@ -208,7 +208,7 @@ describe("the German authored inventory", () => {
 		expect(failures).toEqual([]);
 	});
 
-	test("was für ein and was für einer are Locutions with no Locution Type (de/was-fuer)", () => {
+	test("was für is an invariant Locution DET with no Locution Type (de/was-fuer)", () => {
 		const locutions = authoredMembers.filter(
 			({ lemma }) => lemma.family === "Locution",
 		);
@@ -219,54 +219,36 @@ describe("the German authored inventory", () => {
 				locutionType: knowledge.locutionType ?? null,
 				coverage: coverage.locutionType,
 			})),
-		).toEqual(
-			["DET was für ein", "PRON was für einer"].map((route) => ({
-				route,
+		).toEqual([
+			{
+				route: "DET was für",
 				core: {},
 				locutionType: null,
 				coverage: "ReviewedEmpty",
-			})),
-		);
-		// Every spelling is a Surface Dumling accepts. Bare was für spells the
-		// DET's plural cells and, before a mass noun, realizes it without one.
+			},
+		]);
+		// Its one spelling realizes it without a cell, and Dumling accepts
+		// that Surface.
 		const realizations = authoredRealizations.filter(({ member }) =>
 			locutions.includes(member),
 		);
-		const failures = realizations.flatMap(
-			({ member, spelled, inflection }) => {
-				const parsed = parseUnit({
-					unitKind: "Surface",
-					language: "de",
-					lemma: member.lemma,
-					normalizedSurface: spelled,
-					spelling: { kind: "Canonical" },
-					surfaceFeatures: null,
-					inflectionalFeatures: inflection ?? null,
-				});
-				return parsed.success
-					? []
-					: [`${name(member)} ${spelled}: ${parsed.error.message}`];
-			},
-		);
-		expect(failures).toEqual([]);
 		expect(
-			realizations
-				.filter(({ spelled }) => spelled === "was für")
-				.map(({ member, inflection }) =>
-					[
-						member.lemma.kind,
-						...(inflection
-							? [inflection.case, inflection.number]
-							: ["uninflected"]),
-					].join(" "),
-				),
-		).toEqual([
-			"DET Nom Plur",
-			"DET Acc Plur",
-			"DET Dat Plur",
-			"DET Gen Plur",
-			"DET uninflected",
-		]);
+			realizations.map(({ spelled, inflection }) => [
+				spelled,
+				inflection,
+			]),
+		).toEqual([["was für", undefined]]);
+		const [member] = locutions;
+		const parsed = parseUnit({
+			unitKind: "Surface",
+			language: "de",
+			lemma: member?.lemma,
+			normalizedSurface: "was für",
+			spelling: { kind: "Canonical" },
+			surfaceFeatures: null,
+			inflectionalFeatures: null,
+		});
+		expect(parsed.success).toBe(true);
 	});
 
 	test("jemand, niemand, wer and was are stems (system ADR 0032)", () => {

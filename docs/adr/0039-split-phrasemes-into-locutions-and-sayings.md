@@ -46,7 +46,7 @@ A Locution's Kind is the part of speech the whole acts as:
 | --- | --- |
 | VERB | `den Faden verlieren`, `ins Gras beißen`, `eine Entscheidung treffen`, `geltend machen` |
 | NOUN | `weißer Rabe`, `blinder Passagier` |
-| DET, PRON | `was für ein`, `so ein` |
+| DET, PRON | `was für`, `so ein` |
 | ADJ | `fix und fertig` |
 | ADV | `zum Teil`, `vor allem`, `ganz und gar`, `zu Hause`, `unter vier Augen`, `auf keinen Fall` |
 | ADP | `in Bezug auf`, and circumpositions: `von … an`, `um … willen` |

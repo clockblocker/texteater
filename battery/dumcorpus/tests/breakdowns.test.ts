@@ -101,8 +101,7 @@ describe("Breakdown Records", () => {
 			["verkaufen", "Lexeme VERB 🏷", "constituents"],
 			["wachstube-wachlokal", "Lexeme NOUN 💂", "constituents"],
 			["wachstube-wachstube", "Lexeme NOUN 🕯", "constituents"],
-			["was-fuer-ein", "Locution DET ❓👉", "constituents"],
-			["was-fuer-einer", "Locution PRON ❓", "constituents"],
+			["was-fuer", "Locution DET ❓👉", "constituents"],
 			[
 				"wer-zuerst-kommt-mahlt-zuerst",
 				"Saying Saying 🥇",

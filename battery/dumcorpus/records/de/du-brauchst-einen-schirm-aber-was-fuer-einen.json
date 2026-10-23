@@ -80,7 +80,7 @@
 		"rules": [
 			{
 				"rule": "de/was-fuer",
-				"hash": "2f7aa9826f2670de"
+				"hash": "50657081f4721b85"
 			},
 			{
 				"rule": "de/noun-owns-its-article",
@@ -143,7 +143,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🫴❗" },
+			"reading": {
+				"emojiDescription": "🫴❗"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -195,7 +197,9 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "☂" },
+			"reading": {
+				"emojiDescription": "☂"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -275,16 +279,16 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [11, 13, 15],
+			"memberSegmentIndices": [11, 13],
 			"route": {
 				"family": "Locution",
-				"kind": "PRON"
+				"kind": "DET"
 			},
 			"reading": {
-				"emojiDescription": "❓"
+				"emojiDescription": "❓👉"
 			},
 			"notes": {
-				"rationale": "Standalone was für einen stands for a noun phrase, so it is one PRON Locution was für einer (de/was-fuer), unlike the article einen that Schirm owns."
+				"rationale": "was für is one invariant DET Locution (de/was-fuer). Standalone, the einen after it stands for a noun phrase, so it is its own PRON, unlike the article einen that Schirm owns (de/noun-owns-its-article)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -295,20 +299,16 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Locution",
-						"kind": "PRON",
-						"canonicalForm": "was für einer",
+						"kind": "DET",
+						"canonicalForm": "was für",
 						"coreFeatures": {}
 					},
-					"normalizedSurface": "was für einen",
+					"normalizedSurface": "was für",
 					"spelling": {
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"gender": "Masc",
-						"number": "Sing"
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{
@@ -318,13 +318,56 @@
 					{
 						"attested": "für",
 						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [15],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "1⃣"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "einen",
+						"coreFeatures": {
+							"case": "Acc",
+							"number": "Sing",
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Ind",
+							"gender": "Masc"
+						}
 					},
+					"normalizedSurface": "einen",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [
 					{
 						"attested": "einen",
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

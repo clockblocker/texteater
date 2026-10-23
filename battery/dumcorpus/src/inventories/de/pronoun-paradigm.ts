@@ -1,5 +1,4 @@
 import type * as Dumling from "dumling/types";
-import type * as Dumrel from "dumrel/types";
 import {
 	type AuthoredSpelling,
 	canonical,
@@ -291,25 +290,6 @@ export function pronounStemOf(
 		canonicalForm,
 		description,
 		spellings,
-	});
-}
-
-/**
- * A PRON Locution (was für einer) is a stem too: one Lemma, with an empty
- * Core, whose Surfaces mark the cell (ADR 0039). Its Canonical Form is its
- * Nom.Masc.Sg cell.
- */
-export function pronounLocution(
-	table: PronounTable,
-	description: StemDescription<Record<string, never>>,
-	locutionType: Dumrel.LocutionType | null,
-): ReviewedMember {
-	return stemMember({
-		kind: "PRON",
-		route: { family: "Locution", locutionType },
-		canonicalForm: canonicalFormCell(table),
-		description,
-		spellings: tableSpellings(table),
 	});
 }
 

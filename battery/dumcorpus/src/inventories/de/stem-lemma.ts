@@ -91,7 +91,7 @@ export function canonicalFormCell(table: PronounTable): PronounForm {
 
 /**
  * The route a stem Lemma takes. A Lexeme names its Core Features. A Locution
- * (was für ein) has an empty Core and names its Locution Type, or null when
+ * (was für) has an empty Core and names its Locution Type, or null when
  * it has none (ADR 0039).
  */
 export type StemRoute<Kind extends "PRON" | "DET"> =

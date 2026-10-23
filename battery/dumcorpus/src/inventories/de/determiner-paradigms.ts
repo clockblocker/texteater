@@ -65,28 +65,21 @@ function determinerStem(
 }
 
 /**
- * A DET Locution (was für ein) is a stem too: one Lemma, with an empty Core,
- * whose Surfaces mark the cell (ADR 0039). Its Canonical Form is its
- * Nom.Masc.Sg cell; uninflected spellings realize it without a cell.
+ * An invariant DET Locution (was für) is one Lemma with an empty Core whose
+ * one spelling realizes it without a cell, as uninflected viel does (ADR
+ * 0039).
  */
-function determinerLocution(
-	table: PronounTable,
+function invariantDeterminerLocution(
+	cited: PronounForm,
 	description: StemDescription<Record<string, never>>,
 	locutionType: Dumrel.LocutionType | null,
-	options: { readonly uninflected?: readonly string[] } = {},
 ): ReviewedMember {
 	return stemMember({
 		kind: "DET",
 		route: { family: "Locution", locutionType },
-		canonicalForm: canonicalFormCell(table),
+		canonicalForm: cited,
 		description,
-		spellings: [
-			...tableSpellings(table),
-			...(options.uninflected ?? []).map((spelled) => ({
-				spelled,
-				spelling: canonical,
-			})),
-		],
+		spellings: [{ spelled: cited.text, spelling: canonical }],
 	});
 }
 
@@ -323,30 +316,27 @@ add(
 	),
 );
 
-// was für ein is a Locution DET with an empty Core and no Locution Type
-// (de/was-fuer, ADR 0039; ruled on #741): a determiner in a noun phrase, not
-// a routine formula. The article has no plural or mass form, so bare was für
-// spells the plural cells (was für Leute) and, before a mass noun, realizes
-// the Lemma without a cell, as uninflected viel does (was für Wein).
-{
-	const t = einWord("was für ein", "vas fyːɐ̯ ˈaɪ̯n", false);
-	const bare = form("was für", "vas fyːɐ̯");
-	reviewed.push(
-		determinerLocution(
-			{ ...t, Plur: [bare, bare, bare, bare] },
-			{
-				core: {},
-				emoji: "❓👉",
-				definition:
-					"Der interrogative Determinierer „was für ein“ fragt nach der Art oder Beschaffenheit.",
-				en: ["what kind of a"],
-				ru: ["какой"],
-			},
-			null,
-			{ uninflected: [bare.text] },
-		),
-	);
-}
+// was für is a Locution DET with an empty Core and no Locution Type
+// (de/was-fuer, ADR 0039; re-ruled on #741, 2026-10-23), as Duden's was für
+// [ein] and DWDS's für² have it. It never inflects. Any ein after it is the
+// noun's own article, which drops in the plural and before a mass noun (was
+// für ein Buch, was für Bücher, was für Wein), and a standalone einer or
+// welche after it is a PRON of its own.
+// https://www.duden.de/rechtschreibung/fuer_welch
+reviewed.push(
+	invariantDeterminerLocution(
+		form("was für", "vas fyːɐ̯"),
+		{
+			core: {},
+			emoji: "❓👉",
+			definition:
+				"Der interrogative Determinierer „was für“ fragt nach der Art oder Beschaffenheit.",
+			en: ["what kind of"],
+			ru: ["что за; какой"],
+		},
+		null,
+	),
+);
 // wie viel is ADV wie and DET viel, two targets word by word, and wievielte
 // is an ADJ like the ordinals (der wievielte Versuch), so no DET is authored
 // for either. A one-word wieviel, the spelling before 1996, is a Historical

@@ -68,9 +68,9 @@ export const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/was-fuer",
 		statement:
-			"Standalone was für einer or was für welche is one PRON target. was für ein before a noun, and plural or mass was für, is one DET target. Either may be split across the sentence; the noun and other free words stay outside.",
-		adrs: ["ADR-0039"],
-		routes: locution("PRON", "DET"),
+			"was für, asking or exclaiming what kind, is one invariant DET Locution, split across the sentence or not: Was hast du für ein Auto? gives [Was, für]. Any ein after it is the noun's own article, which drops in the plural and before a mass noun, so Was für ein Buch gives [Was, für] and [ein, Buch], and was für Bücher gives [Was, für] and [Bücher]. Standalone, the word after für is its own PRON: was für einer gives [was, für] and einer, was für welche gives [was, für] and welche. In was für's Breakdown, für links to the ADP für.",
+		adrs: ["ADR-0039", "ADR-0040", "ADR-0050"],
+		routes: [...locution("DET"), ...lexeme("PRON")],
 		records: [
 			"de/was-fuer-ein-buch-liest-du",
 			"de/was-ist-das-fuer-ein-buch",

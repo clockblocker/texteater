@@ -210,7 +210,6 @@ describe("the German authored inventory", () => {
 			["eins", "PRON", undefined, "eines"],
 			["keins", "PRON", "Nom", "keiner"],
 			["irgendeins", "PRON", "Acc", "irgendeiner"],
-			["was für eins", "PRON", "Nom", "was für einer"],
 			["meins", "PRON", "Nom", "meiner"],
 			["dies", "PRON", "Acc", "dieser"],
 			["unsre", "DET", "Nom", "unser"],

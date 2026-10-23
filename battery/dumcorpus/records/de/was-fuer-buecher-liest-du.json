@@ -52,7 +52,7 @@
 		"rules": [
 			{
 				"rule": "de/was-fuer",
-				"hash": "2f7aa9826f2670de"
+				"hash": "50657081f4721b85"
 			}
 		],
 		"references": []
@@ -68,7 +68,7 @@
 				"emojiDescription": "❓👉"
 			},
 			"notes": {
-				"rationale": "Plural was für drops ein, as its paradigm does, and is still the DET Locution was für ein (de/was-fuer)."
+				"rationale": "was für is one invariant DET Locution (de/was-fuer). The plural noun takes no article, so nothing follows für but Bücher."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -80,7 +80,7 @@
 						"language": "de",
 						"family": "Locution",
 						"kind": "DET",
-						"canonicalForm": "was für ein",
+						"canonicalForm": "was für",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "was für",
@@ -88,11 +88,7 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"gender": null,
-						"number": "Plur"
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{
@@ -113,7 +109,9 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "📖" },
+			"reading": {
+				"emojiDescription": "📖"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -157,7 +155,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "📖" },
+			"reading": {
+				"emojiDescription": "📖"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -9,8 +9,7 @@ export const name = ({ lemma, reading }: AuthoredMember) =>
 	`${lemma.kind}/${lemma.canonicalForm} ${reading.emojiDescription} ${JSON.stringify(lemma.coreFeatures)}`;
 
 /**
- * The Surface a stem PRON's spelling realizes, marking the cell it names. A
- * Locution PRON (was für einer) marks no possessor features.
+ * The Surface a stem PRON's spelling realizes, marking the cell it names.
  */
 export function pronounSurface(
 	{ lemma }: AuthoredMember,
@@ -28,9 +27,8 @@ export function pronounSurface(
 			case: null,
 			gender: null,
 			number: null,
-			...(lemma.family === "Lexeme"
-				? { "gender[psor]": null, "number[psor]": null }
-				: {}),
+			"gender[psor]": null,
+			"number[psor]": null,
 			...cell,
 		},
 	};

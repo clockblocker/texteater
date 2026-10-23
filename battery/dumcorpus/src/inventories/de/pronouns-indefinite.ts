@@ -81,6 +81,21 @@ add(
 	),
 );
 
+// Indefinite welcher stands for an indefinite amount of a noun named before
+// (Hast du Geld? Ich habe welches.), and is the PRON after a standalone was
+// für (was für welche). It declines like irgendwelche. DWDS: 3welcher.
+// https://www.dwds.de/wb/welcher
+add(
+	strongPronoun("welch", "ˈvɛlç"),
+	description(
+		"Ind",
+		"❔",
+		"Steht für eine unbestimmte Menge oder Anzahl von etwas vorher Genanntem.",
+		["some; any"],
+		["немного; какие-нибудь"],
+	),
+);
+
 // all is total; keep each marked case instead of unmarked alle/alles placeholders.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-all3.html?lang=de
 {

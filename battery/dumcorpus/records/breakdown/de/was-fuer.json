@@ -7,7 +7,7 @@
 			"language": "de",
 			"family": "Locution",
 			"kind": "DET",
-			"canonicalForm": "was für ein",
+			"canonicalForm": "was für",
 			"coreFeatures": {}
 		},
 		"emojiDescription": "❓👉"
@@ -47,49 +47,32 @@
 						"canonicalForm": "für",
 						"coreFeatures": {}
 					}
-				},
-				{
-					"letters": " "
-				},
-				{
-					"letters": "ein",
-					"target": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "DET",
-						"canonicalForm": "ein",
-						"coreFeatures": {
-							"case": "Nom",
-							"gender": "Masc",
-							"number": "Sing",
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Art"
-						}
-					}
 				}
 			]
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0032", "ADR-0039", "ADR-0050"],
+		"adrs": ["ADR-0039", "ADR-0050"],
 		"rules": [
 			{
 				"rule": "de/was-fuer",
-				"hash": "2f7aa9826f2670de"
+				"hash": "50657081f4721b85"
 			}
 		],
 		"references": [
 			{
-				"title": "LEO Grammatik: was für (ein)",
-				"url": "https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/Pron-was_fuer.xml?lang=de",
-				"supports": "was für ein asks for a kind; its ein declines like the indefinite article"
+				"title": "Duden: für (welch)",
+				"url": "https://www.duden.de/rechtschreibung/fuer_welch",
+				"supports": "was für [ein] is the fixed expression, and ein is optional"
+			},
+			{
+				"title": "DWDS: für²",
+				"url": "https://www.dwds.de/wb/f%C3%BCr#2",
+				"supports": "this für occurs only in fixed combinations such as was für, with or without ein (was für Tee, was für welche)"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "ein links to the indefinite article in its citation cell, Nom.Masc.Sing, the cell the Canonical Form spells; in use it declines with the noun (was für einen Mann)."
+		"rationale": "für links to the ADP für. A link names a Lemma, never a Reading, and links follow form (ADR 0050): the für² homograph Duden and DWDS list shares the ADP's spelling, and its sense lives in this Reading. Two judges agreed on this, from the system and the learner view (#741 re-ruling, 2026-10-23)."
 	}
 }

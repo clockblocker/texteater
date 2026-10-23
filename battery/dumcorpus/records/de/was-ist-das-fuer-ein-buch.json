@@ -56,18 +56,22 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0039"],
+		"adrs": ["ADR-0039", "ADR-0040"],
 		"rules": [
 			{
 				"rule": "de/was-fuer",
-				"hash": "2f7aa9826f2670de"
+				"hash": "50657081f4721b85"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
 			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 6, 8],
+			"memberSegmentIndices": [0, 6],
 			"route": {
 				"family": "Locution",
 				"kind": "DET"
@@ -76,7 +80,7 @@
 				"emojiDescription": "❓👉"
 			},
 			"notes": {
-				"rationale": "Split was für ein is still one DET Locution: was opens the question and für ein stays before the noun (de/was-fuer). The predicate noun Buch is its own target, and das is the demonstrative subject."
+				"rationale": "Split was für is still one DET Locution: was opens the question and für stays before the noun phrase (de/was-fuer). ein is the predicate noun Buch's own article (de/noun-owns-its-article), and das is the demonstrative subject."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -88,19 +92,15 @@
 						"language": "de",
 						"family": "Locution",
 						"kind": "DET",
-						"canonicalForm": "was für ein",
+						"canonicalForm": "was für",
 						"coreFeatures": {}
 					},
-					"normalizedSurface": "was für ein",
+					"normalizedSurface": "was für",
 					"spelling": {
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": "Neut",
-						"number": "Sing"
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{
@@ -109,10 +109,6 @@
 					},
 					{
 						"attested": "für",
-						"orthography": "Standard"
-					},
-					{
-						"attested": "ein",
 						"orthography": "Standard"
 					}
 				],
@@ -221,12 +217,14 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [10],
+			"memberSegmentIndices": [8, 10],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "📖" },
+			"reading": {
+				"emojiDescription": "📖"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -255,12 +253,19 @@
 				},
 				"members": [
 					{
+						"attested": "ein",
+						"orthography": "Standard"
+					},
+					{
 						"attested": "Buch",
 						"orthography": "Standard"
 					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null,
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		}

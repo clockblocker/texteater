@@ -6,8 +6,9 @@ import {
 } from "../../../universal/index.js";
 import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
-// A DET Locution (was für ein) is a stem: one Lemma whose Surfaces mark case,
-// number and gender, under the closed-class rule (ADR 0039).
+// A DET Locution is a stem: one Lemma whose Surfaces mark case, number and
+// gender, under the closed-class rule (ADR 0039). An invariant one (was für)
+// marks none, and its Surfaces carry no inflectional features.
 export const DeDeterminerLocutionFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
