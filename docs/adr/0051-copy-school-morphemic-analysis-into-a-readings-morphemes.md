@@ -24,7 +24,9 @@ letters: `ent · spann · en`, `haus · ∅`. The Constituents never hold an
 inflectional piece and show the citation ending as unlinked filler
 (ADR 0050). An indeclinable word has no Ending piece, not even ∅, since a
 zero ending marks an empty slot in a paradigm and such a word has none:
-`obwohl`, `und`, `miteinander` = `mit · ein · ander`.
+`obwohl`, `und`, `miteinander` = `mit · ein · ander`. A verb's `n` after
+-el or -er is a Surface of the Ending `-en`, not a Lemma of its own:
+`läch · el · n`.
 
 **Morphemes are units like Lexemes.** A Morpheme Lemma has Surfaces and
 Readings, as Dumling's Morpheme routes already allow. An allomorph is a
@@ -47,7 +49,9 @@ Who generates Root Readings is not decided yet; `segment.inUnits` never
 routes to a Morpheme, so Dumgen generates none today.
 
 **`segment.inMorphemes` splits only bottom words.** A bottom word has no
-word inside it: `spannen` = `spann · en`. The segmenter splits off only
+word inside it: `spannen` = `spann · en`. The host knows one as a word with
+no Source that `segment.inConstituents` finds no Constituents for (ADR
+0050). The segmenter splits off only
 affixes from the language's closed affix inventory in dumcorpus, and the
 remainder is the Root, with a Root Lemma of its own when it is bound:
 `ver · gess · en`, `be · ginn · en`, `re · ceive`. A fossilized prefix that
@@ -73,6 +77,15 @@ A word with a Source instead of Constituents propagates through its Source:
 `Lauf` inherits `lauf` from `laufen` and adds its own ∅, and `gesungen`
 inherits the Root `sing` through its Surface `sung`. Computing is preferred
 over storing copies; the implementation makes the final choice.
+
+A link names a Lemma, never a Reading (ADR 0050), so the walk reads every
+stored Reading of a part's Lemma that has a Breakdown or a Source. When
+their walked morphemes agree, the part shows them. When they differ, it
+shows as one unsplit chunk, as a pending part does, and is never guessed
+by storage order. Most Readings of one Lemma share their morphemes, since
+morphemes follow form, but `Wachstube` 💂 is `wach · stub · e` and 🕯️
+`wachs · tub · e`. The judges agreed on this on
+[#1241](https://github.com/clockblocker/texteater/issues/1241#issuecomment-6361530506).
 
 The mechanism is the same for every language. What differs is a
 per-language policy in dumcorpus, an inventory or a Rule, that says which

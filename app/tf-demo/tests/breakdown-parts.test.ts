@@ -63,7 +63,8 @@ function store(parts: Record<string, Dumrel.MorphemeSources>) {
 	const loads: string[] = [];
 	const load = (target: Dumrel.LinkTarget) => {
 		loads.push(target.canonicalForm);
-		return Promise.resolve(parts[target.canonicalForm]);
+		const part = parts[target.canonicalForm];
+		return Promise.resolve(part ? [part] : []);
 	};
 	return { load, loads };
 }

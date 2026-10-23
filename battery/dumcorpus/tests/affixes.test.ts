@@ -15,15 +15,15 @@ const suffixLemma = (spelled: string) =>
  * as the Root.
  */
 function cutVerb(verb: string, suffix: string) {
-	const ending = (germanCitationEndings.VERB ?? [])
-		.map((form) => form.slice(1))
-		.find((letters) => verb.endsWith(`${suffix}${letters}`));
+	const ending = (germanCitationEndings.VERB ?? []).find(({ spelled }) =>
+		verb.endsWith(`${suffix}${spelled}`),
+	);
 	if (ending === undefined) return undefined;
-	const body = verb.slice(0, verb.length - ending.length);
+	const body = verb.slice(0, verb.length - ending.spelled.length);
 	return [
 		body.slice(0, body.length - suffix.length),
 		`${suffix} → ${suffixLemma(suffix)}`,
-		`-${ending}`,
+		`${ending.spelled} → ${ending.canonicalForm}`,
 	];
 }
 
@@ -55,18 +55,30 @@ test("-isier and -ifizier are Surfaces of the one Lemma -ier, as igkeit is of -h
 });
 
 test("a derived verb splits into Root, suffix and its citation Ending", () => {
-	expect(cutVerb("studieren", "ier")).toEqual(["stud", "ier → -ier", "-en"]);
+	expect(cutVerb("studieren", "ier")).toEqual([
+		"stud",
+		"ier → -ier",
+		"en → -en",
+	]);
 	expect(cutVerb("modernisieren", "isier")).toEqual([
 		"modern",
 		"isier → -ier",
-		"-en",
+		"en → -en",
 	]);
 	expect(cutVerb("elektrifizieren", "ifizier")).toEqual([
 		"elektr",
 		"ifizier → -ier",
-		"-en",
+		"en → -en",
 	]);
-	expect(cutVerb("lächeln", "el")).toEqual(["läch", "el → -el", "-n"]);
-	expect(cutVerb("steigern", "er")).toEqual(["steig", "er → -er", "-n"]);
-	expect(cutVerb("reinigen", "ig")).toEqual(["rein", "ig → -ig", "-en"]);
+	expect(cutVerb("lächeln", "el")).toEqual(["läch", "el → -el", "n → -en"]);
+	expect(cutVerb("steigern", "er")).toEqual(["steig", "er → -er", "n → -en"]);
+	expect(cutVerb("reinigen", "ig")).toEqual(["rein", "ig → -ig", "en → -en"]);
+});
+
+test("a verb's n after -el or -er is a Surface of the Ending -en, not a Lemma of its own (ADR 0051)", () => {
+	expect(
+		(germanCitationEndings.VERB ?? []).map(
+			({ spelled, canonicalForm }) => `${spelled} → ${canonicalForm}`,
+		),
+	).toEqual(["en → -en", "n → -en"]);
 });

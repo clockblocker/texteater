@@ -135,17 +135,18 @@ async function resolveTarget(
 	};
 }
 
-/** The first stored Reading of a part's Lemma that holds a Breakdown or Source. */
+/** Every stored Reading of a part's Lemma that holds a Breakdown or Source. */
 async function loadPartSources(
 	ctx: QueryCtx,
 	target: Dumrel.LinkTarget,
-): Promise<Dumrel.MorphemeSources | undefined> {
+): Promise<readonly Dumrel.MorphemeSources[]> {
 	const lemma = await storedLemma(ctx, target);
-	if (!lemma) return undefined;
+	if (!lemma) return [];
 	const readings = await ctx.db
 		.query("readings")
 		.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
 		.take(MAX_PART_READINGS);
+	const found: Dumrel.MorphemeSources[] = [];
 	for (const reading of readings) {
 		const row = await ctx.db
 			.query("accumulatedKnowledge")
@@ -154,9 +155,13 @@ async function loadPartSources(
 			)
 			.unique();
 		const knowledge = asKnowledge(row?.knowledge);
-		if (knowledge.breakdown || knowledge.source) return knowledge;
+		if (knowledge.breakdown || knowledge.source)
+			found.push({
+				breakdown: knowledge.breakdown,
+				source: knowledge.source,
+			});
 	}
-	return undefined;
+	return found;
 }
 
 /** A shown morpheme as the view carries it: its Kind, `Chunk` or `Filler`. */

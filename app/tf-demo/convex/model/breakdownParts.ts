@@ -19,13 +19,14 @@ export type BreakdownRoute = {
 };
 
 /**
- * Loads the Breakdown and Source of the Reading a part resolves to.
- * Undefined while the part is a pending Unit Shadow, or when its Lemma is
- * stored with neither yet.
+ * Loads the Breakdown and Source of every stored Reading a part resolves to
+ * that has either: none while the part is a pending Unit Shadow, or when its
+ * Lemma is stored with neither yet. The walk keeps a split only where the
+ * Readings agree (ADR 0051).
  */
 export type LoadMorphemeSources = (
 	target: Dumrel.LinkTarget,
-) => Promise<Dumrel.MorphemeSources | undefined>;
+) => Promise<readonly Dumrel.MorphemeSources[]>;
 
 /** Matches `propagateMorphemes`' own depth guard; real chains are short. */
 const MAX_WALK_DEPTH = 8;
@@ -51,7 +52,7 @@ export async function prefetchMorphemeSources(
 	owner: Dumrel.MorphemeSources,
 	load: LoadMorphemeSources,
 ): Promise<Dumrel.LookupMorphemeSources> {
-	const loaded = new Map<string, Dumrel.MorphemeSources | undefined>();
+	const loaded = new Map<string, readonly Dumrel.MorphemeSources[]>();
 	let level = walkedTargets(owner);
 	for (let depth = 0; depth < MAX_WALK_DEPTH && level.length > 0; depth++) {
 		const fresh = [
@@ -63,10 +64,10 @@ export async function prefetchMorphemeSources(
 		];
 		const sources = await Promise.all(fresh.map(load));
 		for (const [index, target] of fresh.entries())
-			loaded.set(keyOf(target), sources[index]);
-		level = sources.flatMap((part) => (part ? walkedTargets(part) : []));
+			loaded.set(keyOf(target), sources[index] ?? []);
+		level = sources.flat().flatMap(walkedTargets);
 	}
-	return (target) => loaded.get(keyOf(target));
+	return (target) => loaded.get(keyOf(target)) ?? [];
 }
 
 export const formationGroupValues = [

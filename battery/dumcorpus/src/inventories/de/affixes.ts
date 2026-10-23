@@ -119,17 +119,17 @@ export const germanSuffixes: readonly GermanAffix[] = [
 
 /**
  * The overt endings a German citation form may close with, by Kind
- * (ADR 0051): a verb's `-en` or `-n` (`spann · en`, `stud · ier · en`,
- * `läch · el · n`), a noun's or adjective's `-e` (`gesell · e`, `müd · e`).
- * Each is spelled as its Ending Lemma's Canonical Form, and no suffix above
- * includes one.
+ * (ADR 0051): a verb's `-en` (`spann · en`, `stud · ier · en`), whose `n`
+ * after -el or -er (`läch · el · n`) is a Surface of the same Ending Lemma
+ * as `-igkeit` is of `-heit`, and a noun's or adjective's `-e` (`gesell ·
+ * e`, `müd · e`). No suffix above includes one.
  */
 export const germanCitationEndings: Readonly<
-	Partial<Record<string, readonly string[]>>
+	Partial<Record<string, readonly GermanAffix[]>>
 > = {
-	VERB: ["-en", "-n"],
-	NOUN: ["-e"],
-	ADJ: ["-e"],
+	VERB: [suffix("en"), suffix("n", "en")],
+	NOUN: [suffix("e")],
+	ADJ: [suffix("e")],
 };
 
 /**
@@ -137,8 +137,17 @@ export const germanCitationEndings: Readonly<
  * (ADR 0051): the Kinds whose citation form, with no overt ending, ends in
  * the zero ending, because their paradigm has a slot for one (`Haus` =
  * `haus · ∅`). An indeclinable word gets no Ending, and a verb's citation
- * form always shows one.
+ * form always shows one, its letters linked to their Ending Lemma (`n` to
+ * `-en`).
  */
 export const germanMorphemePolicy: Dumrel.MorphemePolicy = {
 	zeroEndingKinds: new Set(["NOUN", "PROPN", "ADJ", "DET", "PRON"]),
+	endings: new Map(
+		Object.values(germanCitationEndings).flatMap((endings) =>
+			(endings ?? []).map(({ spelled, canonicalForm }) => [
+				spelled,
+				canonicalForm,
+			]),
+		),
+	),
 };

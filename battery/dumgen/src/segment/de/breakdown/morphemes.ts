@@ -44,25 +44,26 @@ const morpheme = (kind: string, canonicalForm: string) =>
 /** The minimum letters a Root keeps. */
 const minRoot = 2;
 
-/** The citation ending a word of `kind` shows, as a piece, or none. */
+/**
+ * The citation ending a word of `kind` shows, as a piece linked to its
+ * Ending Lemma (`n` of `wandern` to `-en`), or none.
+ */
 function endingOf(word: string, kind: string): ProducedPiece | undefined {
 	const folded = lower(word);
-	const overt = (germanCitationEndings[kind] ?? [])
-		.map((form) => form.slice(1))
+	const overt = (germanCitationEndings[kind] ?? []).find(({ spelled }) =>
 		// A verb's -n follows -el or -er (wander · n); its -en, any stem.
-		.find((letters) =>
-			letters === "n"
-				? /(?:el|er)n$/u.test(folded) || !folded.endsWith("en")
-				: folded.endsWith(letters),
-		);
+		spelled === "n"
+			? /(?:el|er)n$/u.test(folded) || !folded.endsWith("en")
+			: folded.endsWith(spelled),
+	);
 	if (
 		overt !== undefined &&
-		folded.endsWith(overt) &&
-		word.length - overt.length >= minRoot
+		folded.endsWith(overt.spelled) &&
+		word.length - overt.spelled.length >= minRoot
 	)
 		return {
-			letters: word.slice(-overt.length),
-			target: morpheme("Ending", `-${overt}`),
+			letters: word.slice(-overt.spelled.length),
+			target: morpheme("Ending", overt.canonicalForm),
 		};
 	return germanMorphemePolicy.zeroEndingKinds.has(kind)
 		? { letters: "", target: morpheme("Ending", zeroEndingCanonicalForm) }

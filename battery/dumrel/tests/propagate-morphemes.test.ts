@@ -12,6 +12,11 @@ import type * as Dumrel from "dumrel/types";
 
 const german: Dumrel.MorphemePolicy = {
 	zeroEndingKinds: new Set(["NOUN", "PROPN", "ADJ", "DET", "PRON"]),
+	endings: new Map([
+		["en", "-en"],
+		["n", "-en"],
+		["e", "-e"],
+	]),
 };
 
 const shadow = (
@@ -69,11 +74,28 @@ const entspannung = {
 	},
 };
 
-/** A dictionary of stored Readings by their link target's Canonical Form. */
+const isMany = (
+	found: Dumrel.MorphemeSources | readonly Dumrel.MorphemeSources[],
+): found is readonly Dumrel.MorphemeSources[] => Array.isArray(found);
+
+/**
+ * A dictionary of stored Readings by their link target's Canonical Form:
+ * one Reading's Knowledge, or every Reading's of a Lemma with several.
+ */
 const lookupIn =
-	(stored: Readonly<Record<string, Dumrel.MorphemeSources>>) =>
-	(target: Dumrel.LinkTarget) =>
-		stored[target.canonicalForm];
+	(
+		stored: Readonly<
+			Record<
+				string,
+				Dumrel.MorphemeSources | readonly Dumrel.MorphemeSources[]
+			>
+		>,
+	) =>
+	(target: Dumrel.LinkTarget): readonly Dumrel.MorphemeSources[] => {
+		const found = stored[target.canonicalForm];
+		if (found === undefined) return [];
+		return isMany(found) ? found : [found];
+	};
 
 /** Each shown piece as `letters:Kind`, an unsplit chunk as `[letters]`. */
 const shown = (pieces: readonly Dumrel.ShownMorpheme[] | undefined) =>
@@ -368,5 +390,96 @@ describe("each step's own pieces", () => {
 				german,
 			),
 		).toBeUndefined();
+	});
+});
+
+describe("a part whose Lemma has several Readings (ADR 0051)", () => {
+	const morphemes = (...pieces: [string, Dumrel.LinkTarget][]) => ({
+		breakdown: {
+			morphemes: pieces.map(([letters, target]) => ({ letters, target })),
+		},
+	});
+	const guard = morphemes(
+		["wach", root("wach")],
+		["stub", root("stub")],
+		["e", ending("-e")],
+	);
+	const candle = morphemes(
+		["wachs", root("wachs")],
+		["tub", root("tub")],
+		["e", ending("-e")],
+	);
+	const owner = {
+		reading: reading("NOUN", "Wachstubentür"),
+		knowledge: {
+			breakdown: {
+				constituents: [
+					{ letters: "Wachstube", target: noun("Wachstube") },
+					{
+						letters: "n",
+						target: shadow("Morpheme", "Interfix", "-n-"),
+					},
+					{ letters: "tür", target: noun("Tür") },
+				],
+			},
+		},
+	};
+
+	test("Readings that agree show their split", () => {
+		expect(
+			shown(
+				propagateMorphemes(
+					owner,
+					lookupIn({ Wachstube: [guard, guard] }),
+					german,
+				),
+			),
+		).toEqual([
+			"Wach:Root",
+			"stub:Root",
+			"e:Ending",
+			"n:Interfix",
+			"[tür]",
+		]);
+	});
+
+	test("Readings that split differently leave the part unsplit, whatever their order", () => {
+		for (const readings of [
+			[guard, candle],
+			[candle, guard],
+		])
+			expect(
+				shown(
+					propagateMorphemes(
+						owner,
+						lookupIn({ Wachstube: readings }),
+						german,
+					),
+				),
+			).toEqual(["[Wachstube]", "n:Interfix", "[tür]"]);
+	});
+});
+
+test("a verb's filler n links to the Ending -en its policy names, not to an -n of its own (ADR 0051)", () => {
+	const pieces = propagateMorphemes(
+		{
+			reading: reading("VERB", "verwandeln"),
+			knowledge: {
+				breakdown: {
+					constituents: [
+						{ letters: "ver", target: prefix("ver") },
+						{ letters: "wandel", target: noun("Wandel") },
+						{ letters: "n" },
+					],
+				},
+			},
+		},
+		lookupIn({}),
+		german,
+	);
+	expect(pieces?.at(-1)).toEqual({
+		kind: "Morpheme",
+		letters: "n",
+		target: ending("-en"),
 	});
 });

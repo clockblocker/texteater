@@ -14,21 +14,27 @@ import type {
  */
 export type MorphemePolicy = {
 	readonly zeroEndingKinds: ReadonlySet<string>;
+	/**
+	 * The Ending Lemma each overt citation-ending spelling links to, an
+	 * allomorph to its one Lemma (German `n` and `en` to `-en`). A
+	 * spelling it doesn't list links to the Lemma spelled like it.
+	 */
+	readonly endings: ReadonlyMap<string, string>;
 };
 
 /** The Knowledge of a stored Reading the walk reads: its Breakdown and Source. */
 export type MorphemeSources = Pick<ReadingKnowledge, "breakdown" | "source">;
 
 /**
- * The stored Knowledge of the Reading a link target resolves to, or
- * undefined while the target is a pending Unit Shadow or its Reading has
- * neither a Breakdown nor a Source. A Lemma with several Readings is the
- * host's to settle: sense lives in the owner's split, not in the target
- * (ADR 0050).
+ * The stored Knowledge of every Reading a link target resolves to that has
+ * a Breakdown or a Source, in any order; none while the target is a pending
+ * Unit Shadow or no Reading of its Lemma has either. A link names a Lemma,
+ * never a Reading (ADR 0050), so the walk reads them all and keeps a split
+ * only where they agree (ADR 0051).
  */
 export type LookupMorphemeSources = (
 	target: LinkTarget,
-) => MorphemeSources | undefined;
+) => readonly MorphemeSources[];
 
 /**
  * One piece of a Morphemic Breakdown as a Note shows it:
@@ -159,6 +165,7 @@ function alignByRoot(
 
 type Walk = {
 	readonly language: Dumling.Language;
+	readonly policy: MorphemePolicy;
 	readonly lookup: LookupMorphemeSources;
 	readonly seen: ReadonlySet<string>;
 };
@@ -179,17 +186,48 @@ function partPieces(
 	];
 	const key = keyOf(target);
 	if (walk.seen.has(key) || walk.seen.size >= maxDepth) return chunk;
-	const sources = walk.lookup(target);
-	if (sources === undefined) return chunk;
-	const inherited = walked(sources, target.canonicalForm, {
-		...walk,
-		seen: new Set([...walk.seen, key]),
+	const inner = { ...walk, seen: new Set([...walk.seen, key]) };
+	const placed = walk.lookup(target).map((sources) => {
+		const inherited = walked(sources, target.canonicalForm, inner);
+		return inherited === undefined
+			? undefined
+			: (alignFromStart(inherited, shown, walk.language) ??
+					(byRoot
+						? alignByRoot(inherited, shown, walk.language)
+						: undefined));
 	});
-	if (inherited === undefined) return chunk;
+	// Readings of one Lemma whose splits differ (`Wachstube` 💂 `wach ·
+	// stub · e`, 🕯 `wachs · tub · e`) leave the part unsplit, never guessed.
+	const [first] = placed;
+	return first !== undefined &&
+		placed.every((pieces) => sameShown(pieces, first))
+		? first
+		: chunk;
+}
+
+/** A shown piece's link for comparing splits; "" when it has none. */
+const linkKey = (piece: ShownMorpheme) =>
+	piece.kind === "Filler" || piece.target === undefined
+		? ""
+		: keyOf(piece.target);
+
+/** Whether two walked splits show the same letters linked to the same targets. */
+function sameShown(
+	left: readonly ShownMorpheme[] | undefined,
+	right: readonly ShownMorpheme[],
+): boolean {
 	return (
-		alignFromStart(inherited, shown, walk.language) ??
-		(byRoot ? alignByRoot(inherited, shown, walk.language) : undefined) ??
-		chunk
+		left !== undefined &&
+		left.length === right.length &&
+		left.every((piece, index) => {
+			const other = right[index];
+			return (
+				other !== undefined &&
+				piece.kind === other.kind &&
+				piece.letters === other.letters &&
+				linkKey(piece) === linkKey(other)
+			);
+		})
 	);
 }
 
@@ -218,7 +256,11 @@ function walked(
 							{
 								kind: "Morpheme",
 								letters,
-								target: endingOf(walk.language, `-${letters}`),
+								target: endingOf(
+									walk.language,
+									walk.policy.endings.get(letters) ??
+										`-${letters}`,
+								),
 							},
 						]
 					: [{ kind: "Filler", letters }];
@@ -278,6 +320,7 @@ export function propagateMorphemes(
 	if (stored !== undefined) return storedPieces(stored);
 	const pieces = walked(owner.knowledge, canonicalForm, {
 		language,
+		policy,
 		lookup,
 		seen: new Set(),
 	});
