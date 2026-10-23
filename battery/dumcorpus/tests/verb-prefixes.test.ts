@@ -1,5 +1,8 @@
 import { expect, test } from "bun:test";
-import { germanSeparableLexemeParts } from "../src/inventories/de/verb-prefixes.js";
+import {
+	germanLexemePartTargets,
+	germanSeparableLexemeParts,
+} from "../src/inventories/de/verb-prefixes.js";
 import {
 	germanInseparablePrefixes,
 	germanSeparableParticles,
@@ -37,7 +40,16 @@ test("the separable prefixes are the true particles and the Lexeme first parts",
 });
 
 test("the true particles include the compound particles and the ADR's examples", () => {
-	for (const particle of ["ab", "an", "auf", "aus", "ein", "hinaus", "dar"])
+	for (const particle of [
+		"ab",
+		"an",
+		"auf",
+		"aus",
+		"ein",
+		"hinaus",
+		"dar",
+		"preis",
+	])
 		expect(germanSeparableParticles.has(particle)).toBe(true);
 	for (const part of [
 		"teil",
@@ -78,5 +90,13 @@ test("every German gold hasSepPrefix is a separable prefix", () => {
 	expect(named.size).toBeGreaterThan(40);
 	expect(
 		[...named].filter((prefix) => !germanSeparablePrefixes.has(prefix)),
+	).toEqual([]);
+});
+
+test("every ruled Lexeme first part is on the Lexeme-parts list", () => {
+	expect(
+		Object.keys(germanLexemePartTargets).filter(
+			(part) => !germanSeparableLexemeParts.has(part),
+		),
 	).toEqual([]);
 });

@@ -7,7 +7,8 @@
  *
  * A first part is a particle when its free form is a preposition or an
  * adverb (ab, auf, durch, weg, zurück, hinaus, dabei, auseinander) or it has
- * no free form (dar). Duden, Die Grammatik (9th ed., 2016, Partikelverben)
+ * no free form (dar; preis of preisgeben, from French prise, not the noun
+ * Preis: DWDS's Wortzerlegung of preisgeben leaves it unlinked). Duden, Die Grammatik (9th ed., 2016, Partikelverben)
  * and Fleischer/Barz, Wortbildung der deutschen Gegenwartssprache (4th ed.,
  * 2012, Partikelverben) call these the particles homonymous with
  * prepositions and adverbs. DWDS gives most of them an affix entry for
@@ -18,7 +19,13 @@
  * The her- and hin- adverbs' r- shorthands (raus, rein) and the dar-
  * adverbs' dr- shorthands (dran, drauf) are listed as DWDS lists them
  * (…/raus-, …/drauf-); Rule de/r-adverb-is-her-or-hin-shorthand reads an
- * r- shorthand as the her- or hin- particle it stands for.
+ * r- shorthand in running text as the her- or hin- particle it stands for.
+ * Where a Canonical Form is itself spelled clipped (draufgehen 'die',
+ * rausfliegen 'get fired'), the clipped form is a particle of its own and
+ * links to its own Prefix Morpheme (`drauf-`, `raus-`), not as a Surface of
+ * `darauf-` or `heraus-`: DWDS splits draufgehen as drauf- + gehen, and
+ * calls raus- the umbrella over heraus- and hinaus-, a spelling of neither
+ * (#1241).
  *
  * Left out until a verb needs them, as adverbs with a noun inside that DWDS
  * gives no affix entry: zugute, zunichte, zuteil, zustatten, vonstatten,
@@ -73,7 +80,7 @@ export const germanSeparableParticles: ReadonlySet<string> = new Set([
 	"entzwei", // no DWDS affix entry
 	"fehl", // Duden's adverb; DWDS fehl-, for nouns and verbs
 	"fort",
-	"gegen", // DWDS gegen- is for nouns only; gegensteuern, gegenhalten
+	"gegen", // DWDS splits gegensteuern as gegen- + steuern; gegenhalten
 	"gegeneinander",
 	"gegenüber", // no DWDS affix entry
 	"heim",
@@ -99,7 +106,7 @@ export const germanSeparableParticles: ReadonlySet<string> = new Set([
 	"hinein",
 	"hintan",
 	"hintenüber",
-	"hinter", // colloquial: hinterbringen 'bring to the back', bringt hinter
+	"hinter", // DWDS hinter- I.3, separable, colloquial: bringt hinter
 	"hinterdrein",
 	"hintereinander",
 	"hinterher",
@@ -115,6 +122,7 @@ export const germanSeparableParticles: ReadonlySet<string> = new Set([
 	"nebeneinander",
 	"nebenher",
 	"nieder",
+	"preis", // no free form; preisgeben, from French prise (DWDS)
 	"ran",
 	"rauf",
 	"raus",
@@ -182,15 +190,41 @@ export const germanSeparableLexemeParts: ReadonlySet<string> = new Set([
 	"leid",
 	"nahe",
 	"offen",
-	"preis", // preisgeben, from French prise 'what is taken' (DWDS)
 	"sicher",
 	"stand",
-	"statt", // stattfinden, from the noun Statt 'place' (DWDS)
+	"statt",
 	"teil",
 	"übrig",
 	"voll",
 	"wahr",
 ]);
+
+/** The Lexeme a separable first part links to: its Kind and Canonical Form. */
+type GermanLexemePartTarget = {
+	readonly kind: string;
+	readonly canonicalForm: string;
+};
+
+/**
+ * The Lexeme each Lexeme first part links to, where it is ruled (ADR 0050,
+ * #1241): the ADR's examples, and the parts whose Lexeme is not plain. statt
+ * and stand are nouns (Amtliches Regelwerk §34(3); DWDS traces stattfinden
+ * to the noun Statt 'place', not the preposition, and splits standhalten as
+ * Stand + halten); kund and irre are the adjectives (DWDS lists kundtun and
+ * irreführen among their formations). A part not listed may link to any
+ * Lexeme; leid, ADJ leid or NOUN Leid, is waiting on the user.
+ */
+export const germanLexemePartTargets: Readonly<
+	Record<string, GermanLexemePartTarget>
+> = {
+	fest: { kind: "ADJ", canonicalForm: "fest" },
+	irre: { kind: "ADJ", canonicalForm: "irre" },
+	kennen: { kind: "VERB", canonicalForm: "kennen" },
+	kund: { kind: "ADJ", canonicalForm: "kund" },
+	stand: { kind: "NOUN", canonicalForm: "Stand" },
+	statt: { kind: "NOUN", canonicalForm: "Statt" },
+	teil: { kind: "NOUN", canonicalForm: "Teil" },
+};
 
 /**
  * The separable prefixes, the first parts of German particle verbs: the

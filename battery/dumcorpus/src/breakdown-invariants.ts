@@ -3,7 +3,10 @@ import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type { BreakdownKnowledge } from "./corpus-types.js";
 import { germanInterfixes } from "./inventories/de/interfixes.js";
-import { germanSeparableParticles } from "./inventories/de/verb-prefixes.js";
+import {
+	germanLexemePartTargets,
+	germanSeparableParticles,
+} from "./inventories/de/verb-prefixes.js";
 
 /** One failed invariant, at a path inside the record file. */
 export type BreakdownIssue = {
@@ -38,6 +41,19 @@ const separableParticles: Partial<
 	Record<Dumling.Language, ReadonlySet<string>>
 > = {
 	de: germanSeparableParticles,
+};
+
+/**
+ * Each language's ruled Lexemes for its Lexeme first parts (ADR 0050):
+ * `teil` links to NOUN `Teil`, `statt` to NOUN `Statt`.
+ */
+const lexemePartTargets: Partial<
+	Record<
+		Dumling.Language,
+		Readonly<Record<string, { kind: string; canonicalForm: string }>>
+	>
+> = {
+	de: germanLexemePartTargets,
 };
 
 /**
@@ -221,7 +237,8 @@ function sepPrefix(reading: Dumling.Reading): string | undefined {
  * hasSepPrefix names (ADR 0050): the part shows the particle, and links to
  * the Prefix Morpheme (`ein-` in einkaufen) if the language's closed list
  * holds it as a true particle, else to its own Lexeme (NOUN `Teil` in
- * teilnehmen, ADJ `fest` in festhalten).
+ * teilnehmen, ADJ `fest` in festhalten), the ruled one where the language
+ * names it.
  */
 function firstPartIssues(
 	language: Dumling.Language,
@@ -251,12 +268,22 @@ function firstPartIssues(
 						message: `${JSON.stringify(particle)} is a true separable particle, so it links to the Prefix Morpheme ${JSON.stringify(prefix)}`,
 					},
 				];
-	return target.family === "Lexeme"
+	if (target.family !== "Lexeme")
+		return [
+			{
+				path: `${path}.target`,
+				message: `${JSON.stringify(particle)} is no true separable particle, so it links to its own Lexeme`,
+			},
+		];
+	const ruled = lexemePartTargets[language]?.[particle];
+	return ruled === undefined ||
+		(target.kind === ruled.kind &&
+			target.canonicalForm === ruled.canonicalForm)
 		? []
 		: [
 				{
 					path: `${path}.target`,
-					message: `${JSON.stringify(particle)} is no true separable particle, so it links to its own Lexeme`,
+					message: `${JSON.stringify(particle)} links to its Lexeme ${ruled.kind} ${JSON.stringify(ruled.canonicalForm)}`,
 				},
 			];
 }
