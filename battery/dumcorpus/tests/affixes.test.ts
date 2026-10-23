@@ -48,9 +48,9 @@ test("the verb-forming suffixes are listed without the citation ending (ADR 0051
 		);
 });
 
-test("-isier and -ifizier are Surfaces of the one Lemma -ier, as igkeit is of -heit", () => {
-	expect(suffixLemma("isier")).toBe("-ier");
-	expect(suffixLemma("ifizier")).toBe("-ier");
+test("-isier and -ifizier are Lemmas of their own, while igkeit, which its base predicts, is a Surface of -heit", () => {
+	expect(suffixLemma("isier")).toBe("-isier");
+	expect(suffixLemma("ifizier")).toBe("-ifizier");
 	expect(suffixLemma("igkeit")).toBe("-heit");
 });
 
@@ -62,12 +62,12 @@ test("a derived verb splits into Root, suffix and its citation Ending", () => {
 	]);
 	expect(cutVerb("modernisieren", "isier")).toEqual([
 		"modern",
-		"isier → -ier",
+		"isier → -isier",
 		"en → -en",
 	]);
 	expect(cutVerb("elektrifizieren", "ifizier")).toEqual([
 		"elektr",
-		"ifizier → -ier",
+		"ifizier → -ifizier",
 		"en → -en",
 	]);
 	expect(cutVerb("lächeln", "el")).toEqual(["läch", "el → -el", "n → -en"]);

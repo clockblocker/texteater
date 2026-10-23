@@ -103,17 +103,20 @@ export const germanSuffixes: readonly GermanAffix[] = [
 	 * Grammatik, 9th ed., 2016, Verbbildung): -ier(en), -el(n), -er(n) and
 	 * -ig(en). Each is spelled without the citation ending, which is the
 	 * verb's Ending (ADR 0051): `stud · ier · en`, `läch · el · n`, `steig ·
-	 * er · n`, `rein · ig · en`. -isier(en) and -ifizier(en) are -ier(en)
-	 * extended, so their letters are Surfaces of `-ier` (ADR 0051), as
-	 * `igkeit` is of `-heit`: `modern · isier · en`, `elektr · ifizier · en`
+	 * er · n`, `rein · ig · en`. -isier(en) and -ifizier(en) are Lemmas of
+	 * their own, not Surfaces of `-ier` (ADR 0051): no base predicts them,
+	 * as an adjective in -ig predicts `igkeit` for `-heit`, and one base can
+	 * take two with different senses (harmonieren, harmonisieren;
+	 * elektrisieren, elektrifizieren). DWDS calls -ifizieren a "Synonym zu
+	 * -ieren" and gives -isieren a sense of its own, "mit etw. versehen"
 	 * (https://www.dwds.de/wb/-ieren, …/-isieren, …/-ifizieren). The verbal
 	 * -er and -ig are the Lemmas `-er` and `-ig` above, each with a Reading
 	 * of its own, as homograph Morphemes are (ADR 0051); DWDS gives them no
 	 * verbal affix entry.
 	 */
 	suffix("ier"),
-	suffix("isier", "ier"),
-	suffix("ifizier", "ier"),
+	suffix("isier"),
+	suffix("ifizier"),
 	suffix("el"),
 ];
 

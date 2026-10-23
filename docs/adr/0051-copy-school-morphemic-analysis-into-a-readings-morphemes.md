@@ -34,8 +34,11 @@ Surface of its Morpheme Lemma, spelled Canonical, not a Variant (a Variant
 is a spelling difference): `-keit` and `-igkeit` are Surfaces of `-heit`,
 `Gäst` a Surface of the Root `Gast`, `sung` of the Root `sing`, and Russian
 `меч` in `примечать` of the Root `мет`. A piece shows the allomorph's letters
-and links to the one Lemma. Synonyms are separate Lemmas, as `-chen` and
-`-lein` are.
+and links to the one Lemma. An allomorph is a form its surroundings choose,
+as an adjective in -ig takes `igkeit`. Synonyms are separate Lemmas, as `-chen` and
+`-lein` are, and so are forms a word picks freely: `-isier` and `-ifizier` are
+not Surfaces of `-ier`, since one base can take two with different senses
+(`harmonieren`, `harmonisieren`; `elektrisieren`, `elektrifizieren`).
 
 **A Root has a Reading of its own.** It gets a generated Reading with its own
 emoji, as Pealim gives a root its own box, never one borrowed from a word: a
