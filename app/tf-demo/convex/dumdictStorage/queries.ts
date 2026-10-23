@@ -425,10 +425,9 @@ export async function loadReevaluateShadowsSlice(
 	ctx: ServerCtx,
 	request: Omit<ReevaluateShadowsRequest<"de">, "baseRevision">,
 ) {
-	const shadows = [
-		...(request.shadows ?? []),
-		...(request.removedLemmas ?? []).map((lemma) => unitShadowOf(lemma)),
-	];
+	const shadows = (request.removedLemmas ?? []).map((lemma) =>
+		unitShadowOf(lemma),
+	);
 	const ids = new Set<string>(reevaluatedPendingEntryIds(request));
 	const loaded = await Promise.all(
 		shadows.map((shadow) => loadPendingMatchingShadow(ctx, shadow)),

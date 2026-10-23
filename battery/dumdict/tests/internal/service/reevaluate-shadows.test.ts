@@ -76,11 +76,41 @@ const records = (storage: ReturnType<typeof storeWith>) =>
 
 const meerNote = [createLemma(meer), createReading(readingEntry(meerReading))];
 
+/** Meer's synonym resolved through its `See` Shadow to der See. */
+const resolvedMeerSee = [
+	createLemma(meer),
+	createReading(
+		readingEntry(meerReading, {
+			knowledge: { semanticRelations: { synonym: [derSee] } },
+		}),
+	),
+	createPending({ ...meerSeePendingRecord, resolvedLemma: derSee }),
+];
+
+function addNote(
+	storage: ReturnType<typeof storeWith>,
+	reading: typeof derSeeReading | typeof dieSeeReading,
+) {
+	const request: AddNewNoteRequest<"de"> = {
+		draft: {
+			reading,
+			note: { attestedTranslations: [], attestationLinks: [], notes: "" },
+		},
+	};
+	const context = storage.loadReadingEntryContext(
+		planner.contextRequest({ intent: "addNewNote", request }),
+	);
+	if (context.intent !== "addNewNote")
+		throw new Error("Expected an addNewNote context.");
+	commit(storage, planner.addNewNote(context, request));
+}
+
 describe("reevaluateShadows", () => {
 	test("an exact claim absorbs a Shadow that resolves to it, and never moves", () => {
 		const storage = storeWith([
 			createLemma(derSee),
 			createReading(readingEntry(derSeeReading)),
+			createLemma(dieSee),
 			createLemma(meer),
 			createReading(
 				readingEntry(meerReading, {
@@ -89,24 +119,15 @@ describe("reevaluateShadows", () => {
 			),
 			createPending(meerSeePendingRecord),
 		]);
+		storage.removeLemma(dieSee);
 
-		commit(storage, plan(storage, { shadows: [seeShadow] }));
+		commit(storage, plan(storage, { removedLemmas: [dieSee] }));
 		expect(records(storage)).toEqual([]);
 		expect(meerKnowledge(storage)).toEqual({
 			semanticRelations: { synonym: [derSee] },
 		});
 
-		storage.commitChanges({
-			baseRevision: storage.revision(),
-			changes: [
-				createLemma(dieSee),
-				createReading(readingEntry(dieSeeReading)),
-			],
-		});
-		expect(plan(storage, { shadows: [seeShadow] })).toMatchObject({
-			status: "planned",
-			plan: { changes: [] },
-		});
+		addNote(storage, dieSeeReading);
 		expect(meerKnowledge(storage)).toEqual({
 			semanticRelations: { synonym: [derSee] },
 		});
@@ -135,6 +156,7 @@ describe("reevaluateShadows", () => {
 	test("a Shadow whose match the source claims under another relation stays pending", () => {
 		const storage = storeWith([
 			createLemma(derSee),
+			createLemma(dieSee),
 			createLemma(meer),
 			createReading(
 				readingEntry(meerReading, {
@@ -143,8 +165,9 @@ describe("reevaluateShadows", () => {
 			),
 			createPending(meerSeePendingRecord),
 		]);
+		storage.removeLemma(dieSee);
 
-		expect(plan(storage, { shadows: [seeShadow] })).toMatchObject({
+		expect(plan(storage, { removedLemmas: [dieSee] })).toMatchObject({
 			status: "planned",
 			plan: { changes: [] },
 		});
@@ -160,23 +183,13 @@ describe("reevaluateShadows", () => {
 			createPending({ ...meerSeePendingRecord, resolvedLemma: derSee }),
 		]);
 
-		commit(storage, plan(storage, { shadows: [seeShadow] }));
+		addNote(storage, dieSeeReading);
 		expect(records(storage)).toEqual([]);
 		expect(meerKnowledge(storage)).toBeUndefined();
-		expect(plan(storage, { shadows: [seeShadow] })).toMatchObject({
-			status: "planned",
-			plan: { changes: [] },
-		});
 	});
 
 	test("generated Knowledge that names a Shadow's Lemma absorbs it, so the claim never moves", () => {
-		const storage = storeWith([
-			createLemma(derSee),
-			...meerNote,
-			createPending(meerSeePendingRecord),
-		]);
-		commit(storage, plan(storage, { shadows: [seeShadow] }));
-		expect(records(storage)).toHaveLength(1);
+		const storage = storeWith([createLemma(derSee), ...resolvedMeerSee]);
 
 		const request: ApplyGeneratedKnowledgeRequest<"de"> = {
 			reading: meerReading,
@@ -258,12 +271,12 @@ describe("reevaluateShadows", () => {
 			createPending(meerSeePendingRecord),
 		]);
 		const slice = storage.loadReevaluateShadowsContext({
-			shadows: [seeShadow],
+			removedLemmas: [dieSee],
 		});
 		expect(
 			planner.reevaluateShadows(slice, {
 				baseRevision: "mem-0" as typeof slice.revision,
-				shadows: [seeShadow],
+				removedLemmas: [dieSee],
 			}),
 		).toMatchObject({ status: "conflict", code: "revisionConflict" });
 	});
@@ -274,25 +287,19 @@ describe("reevaluateShadows", () => {
 			createPending(meerSeePendingRecord),
 		]);
 		const slice = storage.loadReevaluateShadowsContext({
-			shadows: [seeShadow],
+			removedLemmas: [dieSee],
 		});
 		expect(() =>
 			planner.reevaluateShadows(slice, {
 				baseRevision: slice.revision,
-				shadows: [{ ...seeShadow, canonicalForm: "Meer" }],
+				removedLemmas: [{ ...dieSee, canonicalForm: "Meer" }],
 			}),
 		).toThrow("not requested by this re-evaluation");
 	});
 
-	test("refuses a Shadow or a removed Lemma in another language", () => {
+	test("refuses a removed Lemma in another language", () => {
 		const storage = storeWith([]);
 		const slice = storage.loadReevaluateShadowsContext({});
-		expect(
-			planner.reevaluateShadows(slice, {
-				baseRevision: slice.revision,
-				shadows: [{ ...seeShadow, language: "en" } as never],
-			}),
-		).toMatchObject({ status: "rejected", code: "invalidRequest" });
 		expect(
 			planner.reevaluateShadows(slice, {
 				baseRevision: slice.revision,
@@ -302,12 +309,7 @@ describe("reevaluateShadows", () => {
 	});
 
 	test("re-proposing a resolved Shadow through generated Knowledge changes nothing", () => {
-		const storage = storeWith([
-			createLemma(derSee),
-			...meerNote,
-			createPending(meerSeePendingRecord),
-		]);
-		commit(storage, plan(storage, { shadows: [seeShadow] }));
+		const storage = storeWith([createLemma(derSee), ...resolvedMeerSee]);
 		const request = {
 			reading: meerReading,
 			changes: [],

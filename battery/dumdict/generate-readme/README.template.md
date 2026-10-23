@@ -25,7 +25,7 @@ The planner's workflows each take that host-loaded slice and a request:
 - `reconcileAttestationLinks`: merge the links concurrent writers stored for one ref, keeping one
 - `rekeySurfaces`: rewrite Surface Entries and the links naming them after a Dumling Surface change
 - `cleanupRelations`: re-evaluate the Shadows of exact pending locators
-- `reevaluateShadows`: re-evaluate every stored Shadow that matches Lemmas the host removed, or Shadows it names, and move the claims on the removed Lemmas
+- `reevaluateShadows`: re-evaluate every stored Shadow that matches Lemmas the host removed, and move the claims on the removed Lemmas
 
 Each returns a validated plan, a rejection, or a conflict:
 

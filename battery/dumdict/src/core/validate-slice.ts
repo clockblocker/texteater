@@ -6,7 +6,6 @@ import {
 } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
-import type * as Dumrel from "dumrel/types";
 import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
@@ -433,7 +432,6 @@ export function validateReevaluateShadowsSlice<L extends Dumling.Language>(
 	expected: L,
 	slice: ReevaluateShadowsSlice<L>,
 	request: {
-		readonly shadows?: readonly (Dumrel.UnitShadow & { language: L })[];
 		readonly removedLemmas?: readonly Dumling.Lemma<L>[];
 	},
 ) {

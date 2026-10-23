@@ -28,7 +28,6 @@ import {
 	ozeanSeePendingRecord,
 	readingEntry,
 	schreiten,
-	schreitenPending,
 	seeShadow,
 	teich,
 	teichReading,
@@ -194,7 +193,6 @@ export function describeShadowConformance(
 	test("a Shadow follows its Lemmas: der See alone, then die See added, then die See removed", async () => {
 		const storage = await createStorage();
 		await seed(storage, seaSources);
-		const see = { shadows: [seeShadow] };
 		const sources = [
 			[meerReading, meerSeePendingRecord],
 			[ozeanReading, ozeanSeePendingRecord],
@@ -203,7 +201,6 @@ export function describeShadowConformance(
 		// der See alone: both links resolve to it in the plan that adds it.
 		await addNote(storage, derSeeReading);
 		await seed(storage, [createLemma(teich), createReading(exactTeich)]);
-		await expectAtRest(storage, see);
 		expect(await seeLink(storage)).toEqual({
 			kind: "Lemma",
 			lemma: derSee,
@@ -221,7 +218,6 @@ export function describeShadowConformance(
 		// die See added: both go back to the Spelling in the plan that adds
 		// it, and the inverses on der See go with them.
 		await addNote(storage, dieSeeReading);
-		await expectAtRest(storage, see);
 		expect(await seeLink(storage)).toEqual(spellingTarget("de", "See"));
 		for (const [reading, record] of sources) {
 			expect(await knowledgeOf(storage, reading)).toBeUndefined();
@@ -250,25 +246,6 @@ export function describeShadowConformance(
 		expect(await knowledgeOf(storage, teichReading)).toEqual(
 			exactTeich.knowledge,
 		);
-	});
-
-	test("a record stored without a resolution is resolved by one re-evaluation", async () => {
-		const storage = await createStorage();
-		// A store written before relations kept their Shadow holds only
-		// pending records, some of which may now match one Lemma.
-		await seed(storage, [
-			...seaSources,
-			createLemma(derSee),
-			createReading(readingEntry(derSeeReading)),
-		]);
-
-		await reevaluateToRest(storage, { shadows: [seeShadow] });
-		expect(await knowledgeOf(storage, meerReading)).toEqual({
-			semanticRelations: { synonym: [derSee] },
-		});
-		expect(await recordOf(storage, meerSeePendingRecord)).toEqual([
-			resolvedTo(meerSeePendingRecord, derSee),
-		]);
 	});
 
 	test("an exactly named relation never moves", async () => {
@@ -368,10 +345,9 @@ export function describeShadowConformance(
 		expect(await knowledgeOf(storage, meerReading)).toEqual({
 			semanticRelations: { synonym: [derSee] },
 		});
-		await expectAtRest(storage, { shadows: [seeShadow] });
 	});
 
-	test("re-evaluation reads only the requested Shadows' records", async () => {
+	test("re-evaluation reads only the removed Lemmas' Shadows' records", async () => {
 		const storage = await createStorage();
 		await seed(storage, [
 			...seaSources,
@@ -380,15 +356,17 @@ export function describeShadowConformance(
 			createPending(gehenPendingRecord),
 			createLemma(schreiten),
 		]);
+		await run(storage.removeLemma(schreiten));
 
 		const { slice } = await reevaluate(storage, {
-			shadows: [schreitenPending.target],
+			removedLemmas: [schreiten],
 		});
 		expect(slice.pendingRelations).toEqual([gehenPendingRecord]);
-		await reevaluateToRest(storage, { shadows: [schreitenPending.target] });
-		expect(await knowledgeOf(storage, gehenReading)).toEqual({
-			semanticRelations: { synonym: [schreiten] },
-		});
+		await reevaluateToRest(storage, { removedLemmas: [schreiten] });
+		expect(await knowledgeOf(storage, gehenReading)).toBeUndefined();
+		expect(await recordOf(storage, gehenPendingRecord)).toEqual([
+			gehenPendingRecord,
+		]);
 		expect(await recordOf(storage, meerSeePendingRecord)).toEqual([
 			meerSeePendingRecord,
 		]);

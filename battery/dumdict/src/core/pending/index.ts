@@ -144,22 +144,18 @@ export function unitShadowOf<L extends Dumling.Language>(
 
 /**
  * The Pending Entry IDs whose stored records a `reevaluateShadows` slice
- * holds: those of the request's Shadows and of its removed Lemmas.
+ * holds: those of its removed Lemmas' Shadows.
  */
 export function reevaluatedPendingEntryIds<
 	L extends Dumling.Language,
 >(request: {
-	readonly shadows?: readonly (Dumrel.UnitShadow & { language: L })[];
 	readonly removedLemmas?: readonly Dumling.Lemma<L>[];
 }): PendingEntryId<L>[] {
 	return [
-		...new Set([
-			...(request.shadows ?? []).map((shadow) =>
-				derivePendingEntryId<L>(shadow),
-			),
-			...(request.removedLemmas ?? []).map((lemma) =>
+		...new Set(
+			(request.removedLemmas ?? []).map((lemma) =>
 				derivePendingEntryId<L>(unitShadowOf(lemma)),
 			),
-		]),
+		),
 	];
 }

@@ -130,8 +130,8 @@ export type DumdictPlanner<L extends Dumling.Language> = {
 		request: CleanupRelationsRequest<L>,
 	): DumdictPlanOutcome<L>;
 	/**
-	 * Re-evaluates every stored Shadow that matches the request's Shadows or
-	 * removed Lemmas (system ADR 0011). A host plans it when Lemmas change
+	 * Re-evaluates every stored Shadow that matches the request's removed
+	 * Lemmas (system ADR 0011). A host plans it when Lemmas change
 	 * outside `addNewNote` and `ensureReadingEntry`, which re-evaluate the
 	 * Lemma they create: when it removes a Lemma, in the commit that removes
 	 * it or after. The same plan moves every claim on a removed Lemma: a
@@ -456,21 +456,6 @@ function reevaluateShadows<L extends Dumling.Language>(
 ): Workflow<L, ReevaluateShadowsRequest<L>, ReevaluateShadowsSlice<L>> {
 	return {
 		check(request) {
-			for (const shadow of request.shadows ?? []) {
-				// A Shadow parses as a pending relation's target; the relation
-				// is only the envelope that parser reads.
-				const parsed = parsePendingSemanticRelationForDumdictRuntime({
-					relation: "synonym",
-					target: shadow,
-				});
-				if (
-					parsed instanceof ParsingError ||
-					!pendingTargetsLanguage(parsed, language)
-				)
-					return invalidRequest(
-						"A re-evaluated Shadow is malformed or in another language.",
-					);
-			}
 			for (const lemma of request.removedLemmas ?? [])
 				if (
 					parseAsLemmaRecord({ lemma }, language) instanceof
