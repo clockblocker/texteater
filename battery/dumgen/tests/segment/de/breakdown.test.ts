@@ -244,6 +244,46 @@ describe("German segment.inConstituents", () => {
 			"fühlen→Lexeme/VERB:fühlen",
 		]);
 	});
+	test("sich joins a verb lexically reflexive in the wording, as one part or two links to it (ADR 0050)", async () => {
+		const together = await run(
+			input("Locution", "VERB", "sich freuen wie ein Schneekönig"),
+			judgeWanting("x_0=lexical", "sich freuen"),
+		);
+		expect(
+			together.kind === "Constituents" && shown(together.pieces).at(0),
+		).toBe("sich freuen→Lexeme/VERB:sich freuen");
+
+		const apart = await run(
+			input("Locution", "VERB", "sich in Grund und Boden schämen"),
+			judgeWanting(
+				"x_0=lexical",
+				"Grund und Boden",
+				"r_0=Lexeme/ADP",
+				"r_1=Locution/NOUN",
+				"in",
+				"sich schämen",
+			),
+		);
+		expect(apart.kind === "Constituents" && shown(apart.pieces)).toEqual([
+			"sich→Lexeme/VERB:sich schämen",
+			" ",
+			"in→Lexeme/ADP:in",
+			" ",
+			"Grund und Boden→Locution/NOUN:Grund und Boden",
+			" ",
+			"schämen→Lexeme/VERB:sich schämen",
+		]);
+	});
+
+	test("a free dative sich stays a part of its own (ADR 0050)", async () => {
+		const result = await run(
+			input("Locution", "VERB", "sich den Kopf zerbrechen"),
+			judgeWanting("x_0=dative", "r_0=Lexeme/PRON", "zerbrechen"),
+		);
+		expect(
+			result.kind === "Constituents" && shown(result.pieces).at(0),
+		).toBe("sich→Lexeme/PRON:sich");
+	});
 });
 
 describe("German segment.inMorphemes", () => {
@@ -288,4 +328,18 @@ describe("German segment.inMorphemes", () => {
 		]);
 		expect(judge.stages()).toEqual(["breakdown-morphemes"]);
 	});
+});
+
+test("a verb's n after -el is the Ending -en's Surface, not a Lemma of its own (ADR 0051)", async () => {
+	const pieces = await Effect.runPromise(
+		germanMorphemes(
+			input("Lexeme", "VERB", "lächeln"),
+			judgeWanting("läch (Root) · el (Suffix) · n (Ending)").ask,
+		),
+	);
+	expect(shown(pieces)).toEqual([
+		"läch→Morpheme/Root:läch",
+		"el→Morpheme/Suffix:-el",
+		"n→Morpheme/Ending:-en",
+	]);
 });

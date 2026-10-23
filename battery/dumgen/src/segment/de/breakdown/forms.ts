@@ -105,7 +105,8 @@ function authoredForms(word: string, kind: string): string[] {
  * The candidate Canonical Forms of a part that reads `reads` and takes the
  * route `family`/`kind`, distinct, the letters as they stand first. A
  * Locution part keeps its wording; a word part judges its last word, the
- * noun of an article group (`der Hase`).
+ * noun of an article group (`der Hase`) or the verb a `sich` joins
+ * (`sich schämen`).
  */
 export function formCandidates(
 	reads: string,
@@ -114,6 +115,9 @@ export function formCandidates(
 ): readonly string[] {
 	if (family !== "Lexeme") return [reads];
 	const word = reads.split(/\s+/u).at(-1) ?? reads;
+	// A lexically reflexive verb is cited with its `sich` (`sich schämen`).
+	if (kind === "VERB" && /^sich\s/u.test(reads))
+		return [...new Set(verbForms(word).map((form) => `sich ${form}`))];
 	const forms = (() => {
 		switch (kind) {
 			case "NOUN":
