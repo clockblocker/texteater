@@ -5,6 +5,7 @@ import {
 	directSemanticRelationValues,
 	translationLanguageValues,
 } from "dumrel";
+import { familyValues, kindValues, lemmaRouteKinds } from "./lemmaRoutes";
 
 const grammaticalResolutionLanguageValues = ["de"] as const;
 const segmentKindValues = [
@@ -13,105 +14,6 @@ const segmentKindValues = [
 	"Whitespace",
 	"Punctuation",
 ] as const;
-const lexemeKindValues = [
-	"ADJ",
-	"ADP",
-	"ADV",
-	"AUX",
-	"CCONJ",
-	"DET",
-	"INTJ",
-	"NOUN",
-	"NUM",
-	"PART",
-	"PRON",
-	"PROPN",
-	"PUNCT",
-	"SCONJ",
-	"SYM",
-	"VERB",
-] as const;
-const morphemeKindValues = [
-	"Circumfix",
-	"Duplifix",
-	"Infix",
-	"Interfix",
-	"Prefix",
-	"Root",
-	"Suffix",
-	"Suffixoid",
-] as const;
-/** Root-and-pattern morphology is Semitic, so only Hebrew picks Transfix. */
-const hebrewMorphemeKindValues = [...morphemeKindValues, "Transfix"] as const;
-
-/**
- * Every Dumling Lemma route as language → Family → Kinds. A Kind name may
- * appear in two Families: Lexeme VERB and Locution VERB are different routes
- * (ADR 0039).
- */
-const lemmaRouteKinds = {
-	de: {
-		Lexeme: lexemeKindValues,
-		Locution: [
-			"ADJ",
-			"ADP",
-			"ADV",
-			"CCONJ",
-			"DET",
-			"INTJ",
-			"NOUN",
-			"NUM",
-			"PRON",
-			"SCONJ",
-			"VERB",
-		],
-		Saying: ["Saying"],
-		Foreign: ["Foreign"],
-		Morpheme: morphemeKindValues,
-	},
-	en: {
-		Lexeme: lexemeKindValues,
-		Locution: ["ADP", "ADV", "INTJ", "NOUN", "SCONJ", "VERB"],
-		Saying: ["Saying"],
-		Foreign: ["Foreign"],
-		Morpheme: morphemeKindValues,
-	},
-	he: {
-		Lexeme: lexemeKindValues,
-		Locution: ["ADV", "INTJ"],
-		Saying: ["Saying"],
-		Foreign: ["Foreign"],
-		Morpheme: hebrewMorphemeKindValues,
-	},
-} as const;
-type ListedRoutes = typeof lemmaRouteKinds;
-type ListedRoute = {
-	[L in keyof ListedRoutes]: {
-		[F in keyof ListedRoutes[L]]: ListedRoutes[L][F] extends readonly string[]
-			? `${L}/${F & string}/${ListedRoutes[L][F][number]}`
-			: never;
-	}[keyof ListedRoutes[L]];
-}[keyof ListedRoutes];
-type DumlingRoute = Dumling.UnitRoute extends infer Route
-	? Route extends Dumling.UnitRoute
-		? `${Route["language"]}/${Route["family"]}/${Route["kind"]}`
-		: never
-	: never;
-
-/** Whether a language, Family and Kind name one Dumling Lemma route. */
-export function isLemmaRoute(
-	language: string,
-	family: string,
-	kind: string,
-): boolean {
-	if (!Object.hasOwn(lemmaRouteKinds, language)) return false;
-	const families: Partial<Record<string, readonly string[]>> =
-		lemmaRouteKinds[language as keyof ListedRoutes];
-	return (
-		Object.hasOwn(families, family) && !!families[family]?.includes(kind)
-	);
-}
-
 const memberOrthographyValues = [
 	"Standard",
 	"Typo",
@@ -154,20 +56,6 @@ export const detectedLanguageValidator = literalUnion([
 	"other",
 ]);
 
-const familyValues = [
-	"Lexeme",
-	"Locution",
-	"Saying",
-	"Foreign",
-	"Morpheme",
-] as const;
-const kindValues = [
-	...lexemeKindValues,
-	...hebrewMorphemeKindValues,
-	"Saying",
-	"Foreign",
-] as const;
-
 export const familyValidator = literalUnion(familyValues);
 export const kindValidator = literalUnion(kindValues);
 
@@ -179,7 +67,6 @@ type SameMembers<A, B> = [A] extends [B]
 // The validators admit every Dumling Family, Kind and route, and nothing else.
 true satisfies SameMembers<Infer<typeof familyValidator>, Dumling.Family>;
 true satisfies SameMembers<Infer<typeof kindValidator>, Dumling.Kind>;
-true satisfies SameMembers<ListedRoute, DumlingRoute>;
 true satisfies SameMembers<
 	(typeof variantTagValues)[number],
 	Dumling.VariantTag
@@ -537,131 +424,6 @@ export const catalogMissValidator = v.object({
 	route: v.string(),
 	message: v.string(),
 });
-
-export const resolutionProgressValidator = v.union(
-	v.literal("Starting"),
-	v.literal("RouteAvailable"),
-	v.literal("GrammarAvailable"),
-	v.literal("ReadingAvailable"),
-	v.literal("Committing"),
-);
-
-export const resolutionActivityValidator = v.union(
-	v.literal("Scheduled"),
-	v.literal("Running"),
-	v.literal("Terminal"),
-);
-
-export const activeResolutionActivityValidator = v.union(
-	v.literal("Scheduled"),
-	v.literal("Running"),
-);
-
-export const resolutionLifecycleValidator = v.union(
-	v.object({
-		state: v.literal("Active"),
-		progress: resolutionProgressValidator,
-		activity: activeResolutionActivityValidator,
-	}),
-	v.object({
-		state: v.literal("Terminal"),
-		progress: v.literal("Committing"),
-		outcome: v.literal("Complete"),
-	}),
-	v.object({
-		state: v.literal("Terminal"),
-		progress: resolutionProgressValidator,
-		outcome: v.literal("Unresolved"),
-	}),
-	v.object({
-		state: v.literal("Terminal"),
-		progress: resolutionProgressValidator,
-		outcome: v.literal("PermanentFailure"),
-	}),
-);
-
-const generationFailureCategoryValidator = v.union(
-	v.literal("Network"),
-	v.literal("RateLimited"),
-	v.literal("ProviderUnavailable"),
-	v.literal("RequestRejected"),
-	v.literal("InvalidOutput"),
-	v.literal("Refusal"),
-	v.literal("BudgetExhausted"),
-);
-
-export const resolutionFailureCodeValidator = v.union(
-	generationFailureCategoryValidator,
-	v.literal("CatalogMiss"),
-	v.literal("DictionaryConflict"),
-	v.literal("MembershipConflict"),
-	v.literal("Internal"),
-);
-
-export const safeGenerationFailureValidator = v.object({
-	category: generationFailureCategoryValidator,
-	retryable: v.boolean(),
-	status: v.optional(v.number()),
-	providerCode: v.optional(v.string()),
-	providerRequestId: v.optional(v.string()),
-	retryAfterMs: v.optional(v.number()),
-	attempts: v.number(),
-});
-
-export const resolutionPhaseValidator = v.union(
-	v.literal("Route"),
-	v.literal("Grammar"),
-	v.literal("Reading"),
-	v.literal("Commit"),
-);
-
-export const resolutionGenerationEventValidator = v.union(
-	v.object({
-		kind: v.literal("TraceRecorded"),
-		requestId: v.string(),
-		runToken: v.string(),
-		phase: resolutionPhaseValidator,
-		traceJson: v.string(),
-	}),
-	v.object({
-		kind: v.literal("AttemptStarted"),
-		requestId: v.string(),
-		runToken: v.string(),
-		phase: resolutionPhaseValidator,
-		attempt: v.number(),
-		model: v.string(),
-	}),
-	v.object({
-		kind: v.literal("AttemptFailed"),
-		requestId: v.string(),
-		runToken: v.string(),
-		phase: resolutionPhaseValidator,
-		failure: safeGenerationFailureValidator,
-	}),
-	v.object({
-		kind: v.literal("RetryScheduled"),
-		requestId: v.string(),
-		runToken: v.string(),
-		phase: resolutionPhaseValidator,
-		attempt: v.number(),
-		delayMs: v.number(),
-	}),
-	v.object({
-		kind: v.literal("Succeeded"),
-		requestId: v.string(),
-		runToken: v.string(),
-		phase: resolutionPhaseValidator,
-		attempt: v.number(),
-		latencyMs: v.number(),
-		providerRequestId: v.optional(v.string()),
-	}),
-);
-
-export const resolutionRunStateValidator = v.union(
-	v.literal("Running"),
-	v.literal("Failed"),
-	v.literal("Succeeded"),
-);
 
 export const resolutionRouteProjectionValidator = v.object({
 	scrollId: v.id("scrolls"),

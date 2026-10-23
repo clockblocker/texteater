@@ -16,10 +16,10 @@ import {
 	effectiveRelationPublicationPolicy,
 	type RelationPublicationFingerprints,
 } from "./model/generatedKnowledgeContainment";
+import { isLemmaRoute } from "./model/lemmaRoutes";
 import { isResolvedPendingRecord } from "./model/shadows";
 import {
 	directSemanticRelationValidator,
-	isLemmaRoute,
 	relationProposalOutcomeValidator,
 	relationPublicationFingerprintsValidator,
 	type relationPublicationRunValidator,

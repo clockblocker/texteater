@@ -2,10 +2,12 @@ import type { Infer } from "convex/values";
 import type {
 	resolutionActivityValidator,
 	resolutionFailureCodeValidator,
-	resolutionGrammarProjectionValidator,
 	resolutionLifecycleValidator,
 	resolutionPhaseValidator,
 	resolutionProgressValidator,
+} from "../convex/model/resolutionLifecycleValidators";
+import type {
+	resolutionGrammarProjectionValidator,
 	resolutionReadingProjectionValidator,
 	resolutionSessionGuardValidator,
 } from "../convex/model/validators";

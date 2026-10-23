@@ -9,7 +9,8 @@ import type { ScrollLanguage } from "../../shared/supported-target-language";
 import type { Id, TableNames } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { syncDefinitionText } from "./definitionTexts";
-import { isLemmaRoute, type StructuralShadowAspect } from "./validators";
+import { isLemmaRoute } from "./lemmaRoutes";
+import type { StructuralShadowAspect } from "./validators";
 
 export const MAX_STRUCTURAL_REFERENCES_PER_READING = 200;
 const descriptorKeys = ["canonicalForm", "family", "kind", "language"];

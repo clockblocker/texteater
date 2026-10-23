@@ -33,6 +33,7 @@
     "schemas/de/locution/verb.ts",
     "schemas/de/morpheme/circumfix.ts",
     "schemas/de/morpheme/duplifix.ts",
+    "schemas/de/morpheme/ending.ts",
     "schemas/de/morpheme/infix.ts",
     "schemas/de/morpheme/interfix.ts",
     "schemas/de/morpheme/prefix.ts",

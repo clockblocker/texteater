@@ -60,6 +60,7 @@ test("built operational entrypoint has no schema or compiler dependency", async 
 		"sameReading",
 		"syncretismView",
 		"syncretize",
+		"zeroEndingCanonicalForm",
 	]);
 	expect(module.parseUnit(null).success).toBe(false);
 });

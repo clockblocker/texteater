@@ -61,6 +61,10 @@ export const kindDefinitions: readonly KindDefinition[] = [
 	morpheme("Circumfix", "An affix in two parts around the stem."),
 	morpheme("Interfix", "A linking element between the parts of a compound."),
 	morpheme(
+		"Ending",
+		"A word's inflectional ending in its Canonical Form, a zero ending included.",
+	),
+	morpheme(
 		"Transfix",
 		"A discontinuous affix interleaved with a consonantal root.",
 	),

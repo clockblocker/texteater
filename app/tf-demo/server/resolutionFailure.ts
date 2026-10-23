@@ -4,7 +4,7 @@ import type { UnknownError } from "effect/Cause";
 import type {
 	resolutionGenerationEventValidator,
 	safeGenerationFailureValidator,
-} from "../convex/model/validators";
+} from "../convex/model/resolutionLifecycleValidators";
 import { MAX_IDENTIFIER_LENGTH } from "./identifiers";
 import type { ResolutionPhase } from "./resolutionLifecycle";
 

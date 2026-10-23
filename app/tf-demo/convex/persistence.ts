@@ -6,6 +6,10 @@ import {
 	reusedCommit,
 } from "./model/occurrenceCommit";
 import {
+	resolutionGenerationEventValidator,
+	resolutionPhaseValidator,
+} from "./model/resolutionLifecycleValidators";
+import {
 	advanceResolutionSession,
 	completeResolutionSession,
 	recordResolutionRunSuccess,
@@ -17,8 +21,6 @@ import {
 } from "./model/resolvedClickCommit";
 import {
 	readingCheckpointValidator,
-	resolutionGenerationEventValidator,
-	resolutionPhaseValidator,
 	resolutionReadingProjectionValidator,
 	resolvedClickCommitValidator,
 	reusedResolvedClickCommitValidator,

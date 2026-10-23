@@ -114,6 +114,8 @@ word that isn't a bottom word, so each view has one source.
 
 - Dumling gains an Ending Morpheme Kind, which each language picks where it
   applies. A zero ending's Lemma needs a written Canonical Form, because a
-  Canonical Form can't be empty; its name is not decided yet.
+  Canonical Form can't be empty; its name is not decided yet. Until it is,
+  the code names it `∅`, provisionally, in one constant
+  (`zeroEndingCanonicalForm`).
 - dumcorpus gains each built language's closed affix inventory and its
   constituent-step policy.

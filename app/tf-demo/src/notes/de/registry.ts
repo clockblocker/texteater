@@ -85,6 +85,7 @@ const READING = {
 	Morpheme: {
 		Circumfix: READING_BASE,
 		Duplifix: READING_BASE,
+		Ending: READING_BASE,
 		Infix: READING_BASE,
 		Interfix: READING_BASE,
 		Prefix: READING_BASE,
@@ -147,6 +148,7 @@ const LEMMA = {
 	Morpheme: {
 		Circumfix: LEMMA_ROUTE,
 		Duplifix: LEMMA_ROUTE,
+		Ending: LEMMA_ROUTE,
 		Infix: LEMMA_ROUTE,
 		Interfix: LEMMA_ROUTE,
 		Prefix: LEMMA_ROUTE,
@@ -193,6 +195,7 @@ const ATTESTATION = {
 	Morpheme: {
 		Circumfix: ATTESTATION_ROUTE,
 		Duplifix: ATTESTATION_ROUTE,
+		Ending: ATTESTATION_ROUTE,
 		Infix: ATTESTATION_ROUTE,
 		Interfix: ATTESTATION_ROUTE,
 		Prefix: ATTESTATION_ROUTE,
@@ -239,6 +242,7 @@ const SHADOW = {
 	Morpheme: {
 		Circumfix: SHADOW_ROUTE,
 		Duplifix: SHADOW_ROUTE,
+		Ending: SHADOW_ROUTE,
 		Infix: SHADOW_ROUTE,
 		Interfix: SHADOW_ROUTE,
 		Prefix: SHADOW_ROUTE,

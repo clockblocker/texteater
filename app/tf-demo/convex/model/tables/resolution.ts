@@ -1,17 +1,19 @@
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
 import {
-	catalogMissStageValidator,
-	readingCheckpointValidator,
 	resolutionFailureCodeValidator,
 	resolutionGenerationEventValidator,
-	resolutionGrammarProjectionValidator,
 	resolutionLifecycleValidator,
 	resolutionPhaseValidator,
-	resolutionReadingProjectionValidator,
-	resolutionRouteProjectionValidator,
 	resolutionRunStateValidator,
 	safeGenerationFailureValidator,
+} from "../resolutionLifecycleValidators";
+import {
+	catalogMissStageValidator,
+	readingCheckpointValidator,
+	resolutionGrammarProjectionValidator,
+	resolutionReadingProjectionValidator,
+	resolutionRouteProjectionValidator,
 	storedGrammaticalCheckpointValidator,
 } from "../validators";
 

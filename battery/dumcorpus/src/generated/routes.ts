@@ -41,6 +41,7 @@ export const unitRoutes: {
 		{ language: "de", family: "Locution", kind: "VERB" },
 		{ language: "de", family: "Morpheme", kind: "Circumfix" },
 		{ language: "de", family: "Morpheme", kind: "Duplifix" },
+		{ language: "de", family: "Morpheme", kind: "Ending" },
 		{ language: "de", family: "Morpheme", kind: "Infix" },
 		{ language: "de", family: "Morpheme", kind: "Interfix" },
 		{ language: "de", family: "Morpheme", kind: "Prefix" },
