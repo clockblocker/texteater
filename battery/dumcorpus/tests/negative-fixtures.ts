@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 import { lemmaIdentityKey, syncretismView, syncretize } from "dumling";
 import type * as Dumling from "dumling/types";
-import type { KnowledgeCoverage } from "../src/corpus-types.js";
 import { authoredMembers } from "../src/inventories.js";
 import type { SpecCheck } from "../src/issues.js";
 import { ruleStatementHash, rules } from "../src/rules.js";
+import { verbCoverage } from "./verb-fixtures.js";
 
 // biome-ignore lint/suspicious/noExplicitAny: fixtures edit raw record JSON.
 type RecordJson = any;
@@ -102,24 +102,6 @@ export function jedemSurface(
 export function attestJedem(record: RecordJson, surface: unknown) {
 	record.targets[0].attestation.surface = surface;
 }
-
-/**
- * Coverage of every structural aspect a German VERB Reading's policy
- * requests, for a Knowledge of a definition and a Paradigm of a Präteritum.
- */
-export const verbCoverage: KnowledgeCoverage = {
-	definition: "Authored",
-	valency: "ReviewedEmpty",
-	source: "ReviewedEmpty",
-	semanticRelations: {
-		synonym: "ReviewedEmpty",
-		nearSynonym: "ReviewedEmpty",
-		antonym: "ReviewedEmpty",
-		nearAntonym: "ReviewedEmpty",
-		hypernym: "ReviewedEmpty",
-	},
-	paradigm: { preterite: "Authored" },
-};
 
 /**
  * Negative fixtures for the per-record checks: each edits one seed record so

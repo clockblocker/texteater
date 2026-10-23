@@ -311,6 +311,14 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["brachte mit"],
+					"present1": ["bringe mit"],
+					"present2": ["bringst mit"],
+					"present3": ["bringt mit"],
+					"pastParticiple": ["mitgebracht"],
+					"subjunctivePast": ["brächte mit"]
+				},
 				"coverage": {
 					"source": "ReviewedEmpty",
 					"valency": "Authored",
@@ -320,6 +328,14 @@
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},

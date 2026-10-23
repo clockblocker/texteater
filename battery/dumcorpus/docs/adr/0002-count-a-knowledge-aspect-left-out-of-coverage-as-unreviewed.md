@@ -24,30 +24,18 @@ unreviewed. `reading.paradigm` holds, per dimension, the forms or the
 marker the target's Reading licenses, and `reading.coverage.paradigm` their
 statuses.
 
-A record over the file-token limit can't be staged until it is split, so it
-keeps the principal parts it stored as Reading Knowledge before ADR 0048. The
-loader reads them as the other records were migrated: each part moves to
-the dimension of its name, the Präsens singular splits into `present1`,
-`present2` and `present3`, and a conjugation class is dropped, since code
-derives classes from forms. A record under the limit must hold the current
-shape, so the old one can't spread.
-
 **Knowledge depth counts the structural aspects.** A target's Knowledge layer
 is complete when its coverage names every structural aspect its route
-requests: valency, Source, Locution Type, Saying Type, Formula
-Role, each requested semantic relation, and a German noun's `plural`
-dimension. `knowledge.produce` is scored against gold on these
+requests: valency, Source, Locution Type, Saying Type, Formula Role, each
+requested semantic relation, and each Variation Dimension its Paradigm
+Policy names. Those are a German noun's `plural` and a German verb's
+`preterite`, from which code derives the Conjugation Class, `present1`,
+`present2`, `present3`, `pastParticiple` and `subjunctivePast`.
+`knowledge.produce` is scored against gold on these
 ([#883](https://github.com/clockblocker/texteater/issues/883)). Definition,
 transcription and translations get a spot-check and do not hold depth back.
 The Breakdown is no Knowledge depth aspect: `segment.inConstituents` and
-`segment.inMorphemes` produce it, and they are scored as segmenters. A
-verb's dimensions are scored where a record covers them, but don't hold
-depth back yet: the Präteritum, from which code derives the Conjugation
-Class, and the other principal parts (Präsens singular, Partizip II,
-Konjunktiv II). They wait because records over the file-token limit can't
-take them until they are split
-([#1209](https://github.com/clockblocker/texteater/issues/1209),
-[#1217](https://github.com/clockblocker/texteater/issues/1217)). A record
+`segment.inMorphemes` produce it, and they are scored as segmenters. A record
 reviewed through Knowledge fails while a target leaves a structural aspect
 uncovered. An Authored Inventory reviews its Readings' Knowledge and its
 members' Paradigms ([ADR 0021]), so `{}` completes a target whose Reading it

@@ -7,7 +7,8 @@ import {
 } from "dumrel/schema";
 import { checkRecord } from "../src/check-record.js";
 import { knowledgeCoverageSchema } from "../src/record-schema.js";
-import { review, seedJson, verbCoverage } from "./negative-fixtures.js";
+import { review, seedJson } from "./negative-fixtures.js";
+import { verbCoverage, verbParadigm } from "./verb-fixtures.js";
 
 describe("Knowledge coverage", () => {
 	test("a target's Reading carries its Knowledge, checked against the Reading", () => {
@@ -24,7 +25,7 @@ describe("Knowledge coverage", () => {
 		const json = review(seedJson("de/pass-auf-dich-auf"));
 		json.reviewDepth = "Knowledge";
 		json.targets[0].reading.knowledge = { definition: "to watch out" };
-		json.targets[0].reading.paradigm = { preterite: ["passte auf"] };
+		json.targets[0].reading.paradigm = verbParadigm;
 		json.targets[0].reading.coverage = verbCoverage;
 		// dich is authored, so its Knowledge is reviewed in the inventory.
 		json.targets[1].reading.knowledge = {};
@@ -32,9 +33,7 @@ describe("Knowledge coverage", () => {
 		expect([...checked.errors, ...checked.issues]).toEqual([]);
 		expect(checked.validThrough).toBe("Knowledge");
 		expect(checked.record?.targets[0]?.coverage).toEqual(verbCoverage);
-		expect(checked.record?.targets[0]?.paradigm).toEqual({
-			preterite: ["passte auf"],
-		});
+		expect(checked.record?.targets[0]?.paradigm).toEqual(verbParadigm);
 		expect(checked.record?.targets[1]?.knowledge).toEqual({});
 	});
 

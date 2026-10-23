@@ -20,13 +20,6 @@ const structuralAspects = [
 	"semanticRelations",
 ] as const;
 
-/**
- * The structural Variation Dimensions: a German noun's `plural`. A verb's
- * dimensions are scored where a record covers them, but no record has to yet
- * (Dumcorpus ADR 0002).
- */
-const structuralDimensions: readonly Dumrel.DimensionId[] = ["plural"];
-
 /** The aspects covered per translation language and per semantic relation. */
 const bucketAspects = new Set(["translations", "semanticRelations"]);
 
@@ -173,11 +166,8 @@ export function knowledgeCoverageIssues(
 
 	const uncovered: string[] = [];
 	if (!isAuthoredReading(reading))
-		for (const dimension of structuralDimensions)
-			if (
-				dimensions.includes(dimension) &&
-				coveredDimensions[dimension] === undefined
-			)
+		for (const dimension of dimensions)
+			if (coveredDimensions[dimension] === undefined)
 				uncovered.push(`paradigm.${dimension}`);
 	if (mask !== undefined && !isAuthoredReading(reading))
 		for (const aspect of structuralAspects) {

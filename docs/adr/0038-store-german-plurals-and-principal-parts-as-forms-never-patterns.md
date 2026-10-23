@@ -102,6 +102,5 @@ alternatives mix across dimensions (`melkte` with `gemolken`).
 - Gold keeps each licensed selection consistent: a Weak verb's Konjunktiv II
   equal to its Präteritum, a Strong verb's Partizip II in -n and a Mixed
   one's in -t. Dumcorpus checks it per selection.
-- Records reviewed through Knowledge don't yet have to cover the verb
-  dimensions. Records over the file-token limit can't take them until they
-  are split (Dumcorpus ADR 0002).
+- A record reviewed through Knowledge covers every verb dimension, as it
+  covers a noun's `plural` (Dumcorpus ADR 0002).
