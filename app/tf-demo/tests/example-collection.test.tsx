@@ -4,6 +4,7 @@ import { api } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import schema from "../convex/schema";
 import { ScrollPresentation } from "../src/views/scroll-view";
+import { NOTE_STUDY_BREAKDOWN_DATABASE } from "../tooling/notes-study/breakdown-units";
 import { EXAMPLES_SCROLL_TITLE } from "../tooling/notes-study/example-contexts";
 import {
 	NOTE_STUDY_DATABASE,
@@ -40,6 +41,7 @@ test(
 		const definedUnits = [
 			...NOTE_STUDY_DATABASE,
 			...NOTE_STUDY_RELATED_DATABASE,
+			...NOTE_STUDY_BREAKDOWN_DATABASE,
 		].filter((unit) => unit.knowledge.definition);
 		expect(allScrolls.filter((text) => text.origin)).toHaveLength(
 			definedUnits.length,

@@ -613,7 +613,7 @@ export const NOTE_STUDY_DATABASE_BY_URL = new Map(
 );
 
 /** Fixture evidence intentionally leaves unrepresented inflection unknown. */
-function fixtureSurface(
+export function fixtureSurface(
 	lemma: Dumling.Lemma<"de">,
 	text = lemma.canonicalForm,
 ): Dumling.Surface<"de"> {

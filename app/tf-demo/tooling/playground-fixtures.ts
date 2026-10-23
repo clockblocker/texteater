@@ -11,7 +11,10 @@ import {
 import { ensureInlineDefinitionText } from "../convex/model/definitionTexts";
 import { pendingRecordLocatorIndexKey } from "../convex/model/dumdictPendingIndexes";
 import { requireRecord } from "../convex/model/readingKnowledge";
-import { shadowKeyFor } from "../convex/model/shadows";
+import {
+	replaceAccumulatedKnowledge,
+	shadowKeyFor,
+} from "../convex/model/shadows";
 import { ensureVisitorEncounter } from "../convex/model/visitorEncounters";
 import {
 	loadUnitReadingNote,
@@ -27,6 +30,7 @@ import {
 	type StoredUnit,
 	unitsAroundOccurrence,
 } from "../server/storedSegments";
+import { NOTE_STUDY_BREAKDOWN_DATABASE } from "./notes-study/breakdown-units";
 import {
 	makeUrl,
 	NOTE_STUDY_DATABASE,
@@ -38,6 +42,7 @@ import {
 	type NoteStudyDatabaseUnit,
 	storedRelation,
 } from "./notes-study/note-study-dummy-database";
+import { evidenceOf } from "./playground-attestation-evidence";
 import {
 	consolidateExampleScrolls,
 	proseSegments,
@@ -292,21 +297,6 @@ function unitRouteOf(lemma: Dumling.Lemma<"de">): StoredUnit["route"] {
 			} as StoredUnit["route"]);
 }
 
-/** The evidence an Attestation of its route carries, stored beside it. */
-function evidenceOf(attestation: Dumling.Attestation<"de">) {
-	return {
-		...("articleEvidence" in attestation
-			? { articleEvidence: attestation.articleEvidence }
-			: {}),
-		...("expletiveEvidence" in attestation
-			? { expletiveEvidence: attestation.expletiveEvidence }
-			: {}),
-		...("valencyEvidence" in attestation
-			? { valencyEvidence: attestation.valencyEvidence }
-			: {}),
-	};
-}
-
 async function ensureOccurrence(
 	ctx: MutationCtx,
 	unit: NoteStudyDatabaseUnit,
@@ -422,8 +412,16 @@ export const load = internalMutation({
 		for (const unit of [
 			...NOTE_STUDY_DATABASE,
 			...NOTE_STUDY_RELATED_DATABASE,
+			...NOTE_STUDY_BREAKDOWN_DATABASE,
 		]) {
 			const ids = await ensureUnit(ctx, unit);
+			// Breakdown pieces and Sources intern their parts' Shadows.
+			if (NOTE_STUDY_BREAKDOWN_DATABASE.includes(unit))
+				await replaceAccumulatedKnowledge(
+					ctx,
+					unit.readingKey,
+					unit.knowledge,
+				);
 			idsByReadingKey.set(unit.readingKey, ids);
 			await ensureOccurrence(
 				ctx,
@@ -621,34 +619,37 @@ export const playground = query({
 	}),
 	handler: async (ctx) => {
 		const entries = await Promise.all(
-			NOTE_STUDY_DATABASE.map(async (unit) => {
-				const reading = await ctx.db
-					.query("readings")
-					.withIndex("by_reading_key", (q) =>
-						q.eq("readingKey", unit.readingKey),
-					)
-					.unique();
-				if (!reading) return null;
-				const lemma = await ctx.db.get(reading.lemmaId);
-				if (!lemma) return null;
-				const attestation = await ctx.db
-					.query("attestations")
-					.withIndex("by_reading_id", (q) =>
-						q.eq("readingId", reading._id),
-					)
-					.first();
-				return {
-					readingKey: unit.readingKey,
-					canonicalForm: lemma.canonicalForm,
-					emojiDescription: unitReadingEmojiDescription(reading),
-					family: lemma.family,
-					kind: lemma.kind,
-					readingId: reading._id,
-					lemmaId: lemma._id,
-					normalizedSurface: unit.citationSurface.normalizedSurface,
-					attestationId: attestation?._id ?? null,
-				};
-			}),
+			[...NOTE_STUDY_DATABASE, ...NOTE_STUDY_BREAKDOWN_DATABASE].map(
+				async (unit) => {
+					const reading = await ctx.db
+						.query("readings")
+						.withIndex("by_reading_key", (q) =>
+							q.eq("readingKey", unit.readingKey),
+						)
+						.unique();
+					if (!reading) return null;
+					const lemma = await ctx.db.get(reading.lemmaId);
+					if (!lemma) return null;
+					const attestation = await ctx.db
+						.query("attestations")
+						.withIndex("by_reading_id", (q) =>
+							q.eq("readingId", reading._id),
+						)
+						.first();
+					return {
+						readingKey: unit.readingKey,
+						canonicalForm: lemma.canonicalForm,
+						emojiDescription: unitReadingEmojiDescription(reading),
+						family: lemma.family,
+						kind: lemma.kind,
+						readingId: reading._id,
+						lemmaId: lemma._id,
+						normalizedSurface:
+							unit.citationSurface.normalizedSurface,
+						attestationId: attestation?._id ?? null,
+					};
+				},
+			),
 		);
 		const shadowKeys = [
 			...new Set(
