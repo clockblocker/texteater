@@ -148,10 +148,10 @@ A replacing word with no Lemma of its own joins the changed unit as a member.
   rastet, rostet`).
 - *Doppelt gemoppelt hält besser* is Duden's proverb *doppelt [genäht] hält
   besser* with *gemoppelt* for *genäht*. *gemoppelt* is a rhyme echo of
-  *doppelt* with nothing to resolve to on its own. So the line attests the Saying `Doppelt genäht hält besser` over
-  `[Doppelt, gemoppelt, hält, besser]`, Partial, and grouping, and so hover,
-  covers all four words. No reference collection lists the modified line; the
-  Saying it attests must pass the uptake test.
+  *doppelt*, and DWDS lists it as a headword, so it resolves on its own. So
+  the line attests the Saying `Doppelt genäht hält besser` over `[Doppelt,
+  hält, besser]`, Partial. No reference collection lists the modified line;
+  the Saying it attests must pass the uptake test.
 - A Locution accepts only a fixed word expanded into a compound that it heads:
   `Er biss ins Kunstgras` attests `ins Gras beißen` with members `[biss, in,
   s]`, and `Kunstgras` is its own NOUN. The fused article stays with the
