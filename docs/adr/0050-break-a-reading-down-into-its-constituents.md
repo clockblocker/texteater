@@ -156,10 +156,12 @@ authored Breakdowns
 ([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumcorpus.md)):
 the reciprocal pronominal adverbs link their preposition to the ADP (`mit` in
 `miteinander`), and `einander` = `ein + ander`. A Breakdown Record in
-dumcorpus is gold for one phraseme Reading's Constituents. It points at its
-owning Reading, and its parts are Lexemes or Locutions, none covering the
-whole wording, with routes and no Surface or Reading. How single words'
-Breakdowns are gold-checked is not specified yet.
+dumcorpus is gold for one Reading, a phraseme's or a single word's. It
+points at its owning Reading and holds that Reading's `breakdown` or
+`source` as dumrel stores them: a phraseme's or a word's Constituents,
+`segment.inConstituents` gold; a bottom word's morphemes,
+`segment.inMorphemes` gold; or a Source. Its parts have no Surface or
+Reading, and its check enforces this ADR's and ADR 0051's invariants.
 
 **Scope.** German is built first. Russian is deferred, and its examples here
 only illustrate. English follows the rules above when it is built. No

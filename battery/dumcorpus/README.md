@@ -59,10 +59,12 @@ failing checks, beside every record whose `legacy` list still holds a case
 imported verbatim from Dumgen. A reviewed record, Text Records included,
 must cite at least one Rule in `sources.rules`.
 A Breakdown Record, under `records/breakdown/<language>/`, holds one
-Locution's or Saying's Breakdown: the Lemma, its Canonical Form as the
-sentence with Segments, and the Lexeme targets it breaks down into, which
-cover every word and never the whole Lemma. They load on the same terms,
-and `schema/breakdown-record.<language>.json` completes them.
+Reading's gold Breakdown or Source: the owning Reading, and its
+`knowledge.breakdown` (Constituents, morphemes or both) or
+`knowledge.source` as dumrel stores them. Each piece is shown letters and a
+link to a Unit Shadow or Lemma, or unlinked filler. It has one Annotation
+Layer, Segmentation, and loads when that passes;
+`schema/breakdown-record.<language>.json` completes it.
 Raw texts for intake are Text Records under `records/text/`, with the schema
 `schema/text-record.json`. `bun run worklist` prints the worklist; after a
 model change, `bun run demote-broken-reviewed` lowers the Review Depth of

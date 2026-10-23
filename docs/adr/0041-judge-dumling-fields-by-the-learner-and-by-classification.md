@@ -111,7 +111,7 @@ verb's Constituents and links to its Prefix Morpheme (`auf-` in
 
 **Gold.** A dumcorpus sentence record lists only biggest units, one target per
 Segment. Every target in it eventually names its Reading; a Reviewed target
-must. A Breakdown Record holds one phraseme Reading's Constituents
+must. A Breakdown Record holds one Reading's Breakdown or Source
 (ADR 0050).
 
 ## Considered Options

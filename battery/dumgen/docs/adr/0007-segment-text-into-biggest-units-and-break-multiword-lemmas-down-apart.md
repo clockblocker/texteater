@@ -109,6 +109,6 @@ implementation and out of the output.
   masses, roles and a Resolution Selector.
 - dumcorpus sentence records are `segment.inUnits` gold, their No Target
   entries `Unresolved`; Breakdown Records are `segment.inConstituents` gold
-  for phrasemes. Gold for single words' Breakdowns is not specified yet.
+  for phrasemes and words, and `segment.inMorphemes` gold for bottom words.
 - Implemented by the segmentation rewrite, which also decides the role and
   judgment vocabulary each language uses.
