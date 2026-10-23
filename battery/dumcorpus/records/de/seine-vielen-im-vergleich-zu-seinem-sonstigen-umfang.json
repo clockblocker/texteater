@@ -758,7 +758,6 @@
 			"reading": {
 				"emojiDescription": "✨〰",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
 					"valency": [
 						{
 							"status": "Required",
@@ -789,7 +788,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -1079,7 +1077,6 @@
 			"reading": {
 				"emojiDescription": "👁",
 				"knowledge": {
-					"plural": ["Augen"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -1127,9 +1124,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Augen"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -1137,7 +1134,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

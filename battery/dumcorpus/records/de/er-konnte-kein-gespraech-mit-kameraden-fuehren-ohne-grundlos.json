@@ -726,7 +726,6 @@
 			"reading": {
 				"emojiDescription": "🔇",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
 					"valency": [
 						{
 							"status": "Required",
@@ -757,7 +756,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -1115,7 +1113,6 @@
 			"reading": {
 				"emojiDescription": "🔄",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
 					"valency": [
 						{
 							"status": "Required",
@@ -1167,7 +1164,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",

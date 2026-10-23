@@ -346,7 +346,6 @@
 			"reading": {
 				"emojiDescription": "🔄",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
 					"valency": [
 						{
 							"status": "Required",
@@ -398,7 +397,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -673,7 +671,6 @@
 			"reading": {
 				"emojiDescription": "▶",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
 					"valency": [
 						{
 							"status": "Required",
@@ -732,7 +729,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -857,7 +853,6 @@
 			"reading": {
 				"emojiDescription": "💪🦵",
 				"knowledge": {
-					"plural": ["Glieder"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -895,9 +890,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Glieder"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -905,7 +900,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

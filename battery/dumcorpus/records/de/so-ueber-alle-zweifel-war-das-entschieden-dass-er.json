@@ -586,7 +586,6 @@
 			"reading": {
 				"emojiDescription": "🤨",
 				"knowledge": {
-					"plural": ["Zweifel"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -624,9 +623,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Zweifel"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -634,7 +633,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {
@@ -1323,7 +1323,6 @@
 			"reading": {
 				"emojiDescription": "🚶😌",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
 					"valency": [
 						{
 							"status": "Required",
@@ -1378,7 +1377,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -1733,7 +1731,6 @@
 			"reading": {
 				"emojiDescription": "🌙",
 				"knowledge": {
-					"plural": ["Nächte"],
 					"semanticRelations": {
 						"antonym": [
 							{
@@ -1761,9 +1758,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Nächte"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -1771,7 +1768,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

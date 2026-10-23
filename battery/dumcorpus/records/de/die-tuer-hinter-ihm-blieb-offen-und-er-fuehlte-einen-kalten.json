@@ -562,7 +562,6 @@
 			"reading": {
 				"emojiDescription": "🖐",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
 					"valency": [
 						{
 							"status": "Required",
@@ -646,7 +645,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -712,12 +710,10 @@
 			},
 			"reading": {
 				"emojiDescription": "🌬",
-				"knowledge": {
-					"plural": ["Hauche"]
-				},
+				"knowledge": {},
+				"paradigm": { "plural": ["Hauche"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -725,7 +721,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

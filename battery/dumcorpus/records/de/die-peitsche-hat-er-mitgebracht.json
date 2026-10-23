@@ -158,7 +158,6 @@
 			"reading": {
 				"emojiDescription": "➰",
 				"knowledge": {
-					"plural": ["Peitschen"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -196,9 +195,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Peitschen"] },
 				"coverage": {
 					"source": "ReviewedEmpty",
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
@@ -207,7 +206,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {
@@ -252,7 +252,6 @@
 			"reading": {
 				"emojiDescription": "🎒",
 				"knowledge": {
-					"conjugationClass": ["Mixed"],
 					"valency": [
 						{
 							"status": "Required",
@@ -314,7 +313,6 @@
 				},
 				"coverage": {
 					"source": "ReviewedEmpty",
-					"conjugationClass": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",

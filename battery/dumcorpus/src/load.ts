@@ -16,7 +16,6 @@ import type {
 	TextRecord,
 } from "./corpus-types.js";
 import { type SpecIssue, SpecRecordError } from "./issues.js";
-import { currentRecordJson } from "./legacy-principal-parts.js";
 import { textRecordFileSchema } from "./record-schema.js";
 
 const recordsDirectory = fileURLToPath(new URL("../records/", import.meta.url));
@@ -46,20 +45,12 @@ function readJsonFiles(directory: string, issues: SpecIssue[]) {
 		.toSorted();
 	for (const id of ids)
 		try {
-			const text = readFileSync(join(directory, `${id}.json`), "utf8");
-			const current = currentRecordJson(
-				JSON.parse(text),
-				Buffer.byteLength(text),
-			);
-			if ("issue" in current)
-				issues.push({
-					record: id,
-					check: "Knowledge",
-					layer: "Knowledge",
-					path: "targets",
-					message: current.issue,
-				});
-			else files.push({ id, input: current.record });
+			files.push({
+				id,
+				input: JSON.parse(
+					readFileSync(join(directory, `${id}.json`), "utf8"),
+				),
+			});
 		} catch (error) {
 			issues.push({
 				record: id,

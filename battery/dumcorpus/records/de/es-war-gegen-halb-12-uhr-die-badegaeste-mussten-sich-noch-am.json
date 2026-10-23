@@ -451,12 +451,10 @@
 			},
 			"reading": {
 				"emojiDescription": "🕐🔢",
-				"knowledge": {
-					"plural": ["Uhren"]
-				},
+				"knowledge": {},
+				"paradigm": { "plural": ["Uhren"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -464,7 +462,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {
@@ -515,12 +514,10 @@
 			},
 			"reading": {
 				"emojiDescription": "🏖🧑",
-				"knowledge": {
-					"plural": ["Badegäste"]
-				},
+				"knowledge": {},
+				"paradigm": { "plural": ["Badegäste"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -528,7 +525,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {
@@ -799,7 +797,6 @@
 			"reading": {
 				"emojiDescription": "🏖",
 				"knowledge": {
-					"plural": ["Strände"],
 					"semanticRelations": {
 						"nearSynonym": [
 							{
@@ -835,9 +832,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Strände"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -845,7 +842,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

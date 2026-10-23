@@ -1165,7 +1165,6 @@
 			"reading": {
 				"emojiDescription": "🎲",
 				"knowledge": {
-					"plural": ["Zufälle"],
 					"semanticRelations": {
 						"nearSynonym": [
 							{
@@ -1181,9 +1180,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Zufälle"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -1191,7 +1190,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {
