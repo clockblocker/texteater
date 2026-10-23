@@ -292,6 +292,21 @@ function unitRouteOf(lemma: Dumling.Lemma<"de">): StoredUnit["route"] {
 			} as StoredUnit["route"]);
 }
 
+/** The evidence an Attestation of its route carries, stored beside it. */
+function evidenceOf(attestation: Dumling.Attestation<"de">) {
+	return {
+		...("articleEvidence" in attestation
+			? { articleEvidence: attestation.articleEvidence }
+			: {}),
+		...("expletiveEvidence" in attestation
+			? { expletiveEvidence: attestation.expletiveEvidence }
+			: {}),
+		...("valencyEvidence" in attestation
+			? { valencyEvidence: attestation.valencyEvidence }
+			: {}),
+	};
+}
+
 async function ensureOccurrence(
 	ctx: MutationCtx,
 	unit: NoteStudyDatabaseUnit,
@@ -358,12 +373,7 @@ async function ensureOccurrence(
 				surfaceId: ids.surfaceId,
 				readingId: ids.readingId,
 				realizationCoverage: occurrence.attestation.realizationCoverage,
-				...("articleEvidence" in occurrence.attestation
-					? {
-							articleEvidence:
-								occurrence.attestation.articleEvidence,
-						}
-					: {}),
+				...evidenceOf(occurrence.attestation),
 			});
 			await Promise.all(
 				memberSegments.flatMap((segment) =>
