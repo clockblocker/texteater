@@ -6,6 +6,9 @@
  * Only files agents author count. Binary files are skipped, and so are paths
  * `.gitattributes` marks `linguist-generated` (lockfiles, codegen, run
  * output) or `linguist-vendored` (installed skills, third-party references).
+ * Gold records (`battery/dumcorpus/records/**\/*.json`) are skipped too: they
+ * are data, one record is one sentence and can't be split, and the limit
+ * protects hand-written code. `exemptPaths` in `./lib/file-tokens` lists them.
  * Bun runs a package script in its package's directory: at the repository
  * root every staged file counts, and inside a workspace only that
  * workspace's do.

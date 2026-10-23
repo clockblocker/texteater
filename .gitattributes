@@ -1,5 +1,9 @@
 # Files agents don't author. `bun run check:file-tokens`, the pre-commit
 # hook, skips them, and GitHub collapses their diffs.
+#
+# Gold records (`battery/dumcorpus/records/**/*.json`) are hand-written data,
+# so they aren't listed here: the check skips them by path instead
+# (`exemptPaths` in `tooling/lib/file-tokens.ts`), and their diffs stay open.
 
 # Lockfiles.
 *.lock linguist-generated

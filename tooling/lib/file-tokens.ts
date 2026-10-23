@@ -6,6 +6,15 @@ const bytesPerToken = 4;
 /** `.gitattributes` marks the files agents don't author with these. */
 const exemptingAttributes = ["linguist-generated", "linguist-vendored"];
 
+/**
+ * Hand-written data the limit doesn't apply to. The limit protects
+ * hand-written code, which can always be split. A gold record (dumcorpus
+ * sentence and Breakdown Records) is data, and one record holds one whole
+ * sentence, so it can't be split. It isn't generated either, so it isn't
+ * marked `linguist-generated`, which would also collapse its diffs on GitHub.
+ */
+const exemptPaths = [new Bun.Glob("battery/dumcorpus/records/**/*.json")];
+
 export interface StagedFile {
 	path: string;
 	tokens: number;
@@ -32,7 +41,11 @@ export async function stagedAuthoredFiles(cwd: string): Promise<StagedFile[]> {
 	];
 	const blobs = parseRaw(
 		await git(root, [...diff, "--raw", "--no-abbrev"]),
-	).filter((blob) => blob.path.startsWith(prefix));
+	).filter(
+		(blob) =>
+			blob.path.startsWith(prefix) &&
+			!exemptPaths.some((glob) => glob.match(blob.path)),
+	);
 	if (blobs.length === 0) return [];
 
 	const binary = parseBinaryPaths(await git(root, [...diff, "--numstat"]));
