@@ -1,0 +1,45 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Uni",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🎓"
+	},
+	"knowledge": {
+		"source": {
+			"target": {
+				"unitKind": "Lemma",
+				"language": "de",
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"canonicalForm": "Universität",
+				"coreFeatures": {
+					"gender": "Fem"
+				}
+			}
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Uni",
+				"url": "https://www.dwds.de/wb/Uni",
+				"supports": "Grundform Universität; die umgangssprachliche Kurzform Uni"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A clipping, so it has a Source, the word it was cut from, Universität, instead of Constituents, and no split is invented (ADR 0050)."
+	}
+}

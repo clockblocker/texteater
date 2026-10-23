@@ -1,0 +1,45 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Kita",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🧸"
+	},
+	"knowledge": {
+		"source": {
+			"target": {
+				"unitKind": "Lemma",
+				"language": "de",
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"canonicalForm": "Kindertagesstätte",
+				"coreFeatures": {
+					"gender": "Fem"
+				}
+			}
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Kita",
+				"url": "https://www.dwds.de/wb/Kita",
+				"supports": "Grundform Kindertagesstätte; also written KiTa"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "An acronym of Kindertagesstätte, so it has a Source, the word it shortens, instead of Constituents, and no split such as kit · a is invented (ADR 0050)."
+	}
+}

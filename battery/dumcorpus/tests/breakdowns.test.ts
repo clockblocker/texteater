@@ -38,6 +38,7 @@ describe("Breakdown Records", () => {
 				].join(" "),
 			]),
 		).toEqual([
+			["aufgabe", "Lexeme NOUN 📝", "source"],
 			[
 				"da-liegt-der-hase-im-pfeffer",
 				"Locution VERB 🔑",
@@ -51,11 +52,14 @@ describe("Breakdown Records", () => {
 			],
 			["einkaufen", "Lexeme VERB 🛒", "constituents"],
 			["entspannung", "Lexeme NOUN 🧘", "constituents"],
+			["fisch", "Lexeme NOUN 🐟", "morphemes"],
+			["fischen", "Lexeme VERB 🎣", "source"],
 			["gaestehaus", "Lexeme NOUN 🏨", "constituents"],
 			["guten-morgen", "Locution INTJ 👋", "constituents"],
 			["guten-tag", "Locution INTJ 👋", "constituents"],
 			["in-betracht-ziehen", "Locution VERB 🤔", "constituents"],
 			["kaufen", "Lexeme VERB 💶", "morphemes"],
+			["kita", "Lexeme NOUN 🧸", "source"],
 			["kohlekraftwerk", "Lexeme NOUN 🏭", "constituents"],
 			["lauf", "Lexeme NOUN 🏃", "source"],
 			[
@@ -65,11 +69,14 @@ describe("Breakdown Records", () => {
 			],
 			["na-ja", "Locution INTJ 🤷", "constituents"],
 			["nur-bahnhof-verstehen", "Locution VERB 😵‍💫", "constituents"],
+			["ruf", "Lexeme NOUN 📣", "source"],
+			["rufen", "Lexeme VERB 📣", "morphemes"],
 			["sich-wie-zu-hause-fuehlen", "Locution VERB 🏠😌", "constituents"],
 			["so-oder-so", "Locution ADV 🔁", "constituents"],
 			["spannen", "Lexeme VERB 🏹", "morphemes"],
 			["uebung-macht-den-meister", "Saying Saying 🔁🏆", "constituents"],
 			["um-zu", "Locution SCONJ 🎯", "constituents"],
+			["uni", "Lexeme NOUN 🎓", "source"],
 			["verarzten", "Lexeme VERB 🩹", "constituents"],
 			["verkaufen", "Lexeme VERB 🏷", "constituents"],
 			["wachstube-wachlokal", "Lexeme NOUN 💂", "constituents"],
@@ -168,6 +175,29 @@ describe("Breakdown Records", () => {
 			kind: "VERB",
 			canonicalForm: "laufen",
 		});
+	});
+
+	test("give each direction pair a Source one way only, and a shortening its base (#1279)", () => {
+		const sourceOf = (name: string) => {
+			const target = byId(`breakdown/de/${name}`).knowledge.source
+				?.target;
+			return target && `${target.kind} ${target.canonicalForm}`;
+		};
+		expect(sourceOf("fischen")).toBe("NOUN Fisch");
+		expect(sourceOf("fisch")).toBeUndefined();
+		expect(pieces(byId("breakdown/de/fisch"), "morphemes")).toEqual([
+			"Fisch → fisch",
+			" → ∅",
+		]);
+		expect(sourceOf("ruf")).toBe("VERB rufen");
+		expect(sourceOf("rufen")).toBeUndefined();
+		expect(pieces(byId("breakdown/de/rufen"), "morphemes")).toEqual([
+			"ruf → ruf",
+			"en → -en",
+		]);
+		expect(sourceOf("aufgabe")).toBe("VERB aufgeben");
+		expect(sourceOf("uni")).toBe("NOUN Universität");
+		expect(sourceOf("kita")).toBe("NOUN Kindertagesstätte");
 	});
 
 	test("give the two Readings of Wachstube one Lemma and two splits", () => {

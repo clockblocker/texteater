@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Ruf",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "📣"
+	},
+	"knowledge": {
+		"source": {
+			"target": {
+				"unitKind": "Lemma",
+				"language": "de",
+				"family": "Lexeme",
+				"kind": "VERB",
+				"canonicalForm": "rufen",
+				"coreFeatures": {
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null
+				}
+			}
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Ruf",
+				"url": "https://www.dwds.de/wb/Ruf",
+				"supports": "Herkunft: Ruf is one of the Abstraktbildungen zum Verb rufen; no Wortzerlegung"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A noun converted from a verb, so it has a Source, its immediate base rufen, instead of Constituents (ADR 0050). Its direction pair is rufen."
+	}
+}
