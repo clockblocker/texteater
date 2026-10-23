@@ -30,7 +30,7 @@ import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.
 import type * as knowledgeSettings from "../knowledgeSettings.js";
 import type * as library from "../library.js";
 import type * as libraryFixtures from "../libraryFixtures.js";
-import type * as model_breakdownWalk from "../model/breakdownWalk.js";
+import type * as model_breakdownParts from "../model/breakdownParts.js";
 import type * as model_clickOrchestrator from "../model/clickOrchestrator.js";
 import type * as model_codex from "../model/codex.js";
 import type * as model_definitionTexts from "../model/definitionTexts.js";
@@ -140,7 +140,7 @@ declare const fullApi: ApiFromModules<{
   knowledgeSettings: typeof knowledgeSettings;
   library: typeof library;
   libraryFixtures: typeof libraryFixtures;
-  "model/breakdownWalk": typeof model_breakdownWalk;
+  "model/breakdownParts": typeof model_breakdownParts;
   "model/clickOrchestrator": typeof model_clickOrchestrator;
   "model/codex": typeof model_codex;
   "model/definitionTexts": typeof model_definitionTexts;

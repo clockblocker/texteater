@@ -257,11 +257,12 @@ function endingOf(language: Dumling.Language, canonicalForm: string) {
  * The word's own Ending is the citation ending its Constituents show as
  * filler (`verarzten`), else the Ending its last part brings to the word's
  * end (`einkaufen`), else the zero ending when `policy` gives the word's
- * Kind one and no letters a Source left unplaced close the word
- * (`gesungen` = `ge · sung · en`, the Root `sing` found by its consonants
- * and the letters around it unsplit). Undefined for a phraseme or Morpheme Reading, which has no
- * Morphemic Breakdown, and for a word with no Breakdown and no Source.
- * Nothing is stored, generated or mutated.
+ * Kind one. An unsplit chunk that closes the word keeps the word's ending
+ * inside it, as `ent · spannen` keeps its `-en`: `Kohle · kraftwerk` while
+ * both parts are pending, and `ge · sung · en` with the letters a Source
+ * left around the Root `sing` unsplit. Undefined for a phraseme or
+ * Morpheme Reading, which has no Morphemic Breakdown, and for a word with
+ * no Breakdown and no Source. Nothing is stored, generated or mutated.
  */
 export function propagateMorphemes(
 	owner: {
@@ -284,10 +285,9 @@ export function propagateMorphemes(
 	// A zero ending inherited at the end is the part's, never the word's.
 	const shown = pieces.filter((piece) => !isZeroEnding(piece));
 	const last = shown.at(-1);
-	if (last !== undefined && isEnding(last)) return shown;
-	// Letters a Source left unplaced may hold the ending themselves.
-	const unplaced = last?.kind === "Unsplit" && last.target === undefined;
-	return policy.zeroEndingKinds.has(kind) && !unplaced
+	if (last !== undefined && (isEnding(last) || last.kind === "Unsplit"))
+		return shown;
+	return policy.zeroEndingKinds.has(kind)
 		? [
 				...shown,
 				{

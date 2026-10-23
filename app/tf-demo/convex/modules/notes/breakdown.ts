@@ -1,16 +1,18 @@
 import { isRecord } from "common-utils";
 import { type Infer, v } from "convex/values";
+import { germanMorphemePolicy } from "dumcorpus/inventories";
+import type * as Dumling from "dumling/types";
+import { propagateMorphemes } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { lemmaIdentityKey } from "../../../server/linguisticIdentity";
-import type { Doc, Id } from "../../_generated/dataModel";
+import type { Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import {
 	type BreakdownRoute,
 	formationGroupOf,
 	formationGroupValues,
-	type WalkedPart,
-	walkMorphemes,
-} from "../../model/breakdownWalk";
+	prefetchMorphemeSources,
+} from "../../model/breakdownParts";
 import { shadowKeyFor } from "../../model/shadows";
 import { unitReadingEmojiDescription } from "./unitReadingFamilies";
 
@@ -51,7 +53,10 @@ export const breakdownViewValidator = v.object({
 		v.array(
 			v.object({
 				letters: v.string(),
-				/** The Morpheme's Kind, or `Chunk` for a part not split yet. */
+				/**
+				 * The Morpheme's Kind, `Chunk` for a part not split yet, or
+				 * `Filler` for punctuation such as a compound's hyphen.
+				 */
 				kind: v.string(),
 				target: v.union(v.null(), breakdownTargetValidator),
 			}),
@@ -85,8 +90,8 @@ export const formationsValidator = v.array(
 
 export type FormationsView = Infer<typeof formationsValidator>;
 
-function asKnowledge(value: unknown): WalkedPart["knowledge"] {
-	return isRecord(value) ? (value as WalkedPart["knowledge"]) : {};
+function asKnowledge(value: unknown): Dumrel.MorphemeSources {
+	return isRecord(value) ? (value as Dumrel.MorphemeSources) : {};
 }
 
 async function storedLemma(ctx: QueryCtx, target: Dumrel.LinkTarget) {
@@ -131,12 +136,12 @@ async function resolveTarget(
 }
 
 /** The first stored Reading of a part's Lemma that holds a Breakdown or Source. */
-async function loadWalkedPart(
+async function loadPartSources(
 	ctx: QueryCtx,
 	target: Dumrel.LinkTarget,
-): Promise<WalkedPart | null> {
+): Promise<Dumrel.MorphemeSources | undefined> {
 	const lemma = await storedLemma(ctx, target);
-	if (!lemma) return null;
+	if (!lemma) return undefined;
 	const readings = await ctx.db
 		.query("readings")
 		.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
@@ -149,20 +154,33 @@ async function loadWalkedPart(
 			)
 			.unique();
 		const knowledge = asKnowledge(row?.knowledge);
-		if (knowledge.breakdown || knowledge.source)
-			return {
-				route: lemma,
-				canonicalForm: lemma.canonicalForm,
-				knowledge,
-			};
+		if (knowledge.breakdown || knowledge.source) return knowledge;
 	}
-	return null;
+	return undefined;
 }
 
-/** A Reading's Breakdown for its Note, or undefined when it has none to show. */
+/** A shown morpheme as the view carries it: its Kind, `Chunk` or `Filler`. */
+function shownKindAndTarget(piece: Dumrel.ShownMorpheme): {
+	readonly kind: string;
+	readonly target: Dumrel.LinkTarget | undefined;
+} {
+	switch (piece.kind) {
+		case "Morpheme":
+			return { kind: piece.target.kind, target: piece.target };
+		case "Unsplit":
+			return { kind: "Chunk", target: piece.target };
+		case "Filler":
+			return { kind: "Filler", target: undefined };
+	}
+}
+
+/**
+ * A Reading's Breakdown for its Note, or undefined when it has none to show.
+ * The morphemes are Dumrel's propagation under German's policy (ADR 0051).
+ */
 export async function loadBreakdownView(
 	ctx: QueryCtx,
-	lemma: Doc<"lemmas">,
+	reading: Dumling.Reading<"de">,
 	knowledge: Dumrel.ReadingKnowledge,
 ): Promise<BreakdownView | undefined> {
 	const stored = knowledge.breakdown?.constituents;
@@ -175,24 +193,27 @@ export async function loadBreakdownView(
 				),
 			)
 		: undefined;
-	const walked = await walkMorphemes(
-		{
-			route: lemma,
-			canonicalForm: lemma.canonicalForm,
-			knowledge: {
-				breakdown: knowledge.breakdown,
-				source: knowledge.source,
-			},
-		},
-		(target) => loadWalkedPart(ctx, target),
+	const owner = { breakdown: knowledge.breakdown, source: knowledge.source };
+	const lookup = await prefetchMorphemeSources(owner, (target) =>
+		loadPartSources(ctx, target),
 	);
-	const morphemes = walked
+	const shown = propagateMorphemes(
+		{ reading, knowledge: owner },
+		lookup,
+		germanMorphemePolicy,
+	);
+	const morphemes = shown
 		? await Promise.all(
-				walked.map(async ({ letters, kind, target }) => ({
-					letters,
-					kind,
-					target: target ? await resolveTarget(ctx, target) : null,
-				})),
+				shown.map(async (piece) => {
+					const { kind, target } = shownKindAndTarget(piece);
+					return {
+						letters: piece.letters,
+						kind,
+						target: target
+							? await resolveTarget(ctx, target)
+							: null,
+					};
+				}),
 			)
 		: undefined;
 	if (!constituents && !morphemes) return undefined;

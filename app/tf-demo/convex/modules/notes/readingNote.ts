@@ -237,8 +237,9 @@ export async function loadUnitReadingNote(
 		);
 	}
 
+	const readingValue = projectReadingValue(reading, lemma);
 	const knowledge = projectReadingKnowledge(
-		projectReadingValue(reading, lemma),
+		readingValue,
 		readingKnowledge?.knowledge,
 	);
 	const sourceLinks = await loadSourceLinks(
@@ -247,7 +248,7 @@ export async function loadUnitReadingNote(
 		lemma,
 		knowledge.source,
 	);
-	const breakdown = await loadBreakdownView(ctx, lemma, knowledge);
+	const breakdown = await loadBreakdownView(ctx, readingValue, knowledge);
 	const activeAttempt = attempts.find(
 		({ state }) =>
 			state === "Waiting" || state === "Scheduled" || state === "Running",

@@ -170,6 +170,31 @@ describe("the partial walk", () => {
 			),
 		).toEqual(["ent:Prefix", "[spannen]"]);
 	});
+
+	test("a noun whose last part is pending keeps its ending inside the chunk", () => {
+		expect(
+			shown(
+				propagateMorphemes(
+					{
+						reading: reading("NOUN", "Kohlekraftwerk"),
+						knowledge: {
+							breakdown: {
+								constituents: [
+									{ letters: "Kohle", target: noun("Kohle") },
+									{
+										letters: "kraftwerk",
+										target: noun("Kraftwerk"),
+									},
+								],
+							},
+						},
+					},
+					lookupIn({}),
+					german,
+				),
+			),
+		).toEqual(["[Kohle]", "[kraftwerk]"]);
+	});
 });
 
 describe("propagation through a Source", () => {
@@ -192,10 +217,9 @@ describe("propagation through a Source", () => {
 		).toEqual(["Lauf:Root", "∅:Ending"]);
 	});
 
-	test("a pending Source shows the whole word unsplit", () => {
+	test("a pending Source shows the whole word unsplit, its ending inside", () => {
 		expect(shown(propagateMorphemes(lauf, lookupIn({}), german))).toEqual([
 			"[Lauf]",
-			"∅:Ending",
 		]);
 	});
 
