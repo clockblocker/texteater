@@ -34,12 +34,13 @@ shape, so the old one can't spread.
 
 **Knowledge depth counts the structural aspects.** A target's Knowledge layer
 is complete when its coverage names every structural aspect its route
-requests: valency, Participle Source, Locution Type, Saying Type, Formula
+requests: valency, Source, Locution Type, Saying Type, Formula
 Role, each requested semantic relation, and a German noun's `plural`
 dimension. `knowledge.produce` is scored against gold on these
 ([#883](https://github.com/clockblocker/texteater/issues/883)). Definition,
 transcription and translations get a spot-check and do not hold depth back.
-The Morphological Tree belongs to the deferred `segment.inMorphemes`. A
+The Breakdown is no Knowledge depth aspect: `segment.inConstituents` and
+`segment.inMorphemes` produce it, and they are scored as segmenters. A
 verb's dimensions are scored where a record covers them, but don't hold
 depth back yet: the Präteritum, from which code derives the Conjugation
 Class, and the other principal parts (Präsens singular, Partizip II,

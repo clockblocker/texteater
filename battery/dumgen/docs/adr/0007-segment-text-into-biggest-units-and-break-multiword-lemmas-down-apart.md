@@ -2,15 +2,18 @@
 status: accepted
 ---
 
-# Segment text into biggest units, and break multiword Lemmas down apart
+# Segment text into biggest units, and break Readings down apart
 
 Segmentation serves two tasks: route a click or hover to the biggest semantic
-unit that contains the clicked piece, and let a multiword Lemma's Note drill
-down to its Lexemes ([ADR 0041](../../../../docs/adr/0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
-Each language implements one segmenter per task: `segment.inUnits` and
-`segment.inLexemes`. The set's third member, `segment.inMorphemes`, is named
-but out of scope. Splitting a text into paragraphs and Sentences happens
-above the segmenters and is not their concern.
+unit that contains the clicked piece, and let a resolved unit's Note drill
+down to its parts ([ADR 0041](../../../../docs/adr/0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
+Each language implements `segment.inUnits` for the first task. For the
+second, `segment.inConstituents` produces a Reading's Constituents
+([ADR 0050](../../../../docs/adr/0050-break-a-reading-down-into-its-constituents.md))
+and `segment.inMorphemes` a bottom word's Morphemic Breakdown
+([ADR 0051](../../../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md)).
+Splitting a text into paragraphs and Sentences happens above the segmenters
+and is not their concern.
 
 **`segment.inUnits` routes clicks.** It owes consistent grouping first, not a
 perfect route ([ADR 0008](./0008-judge-segment-in-units-by-membership-before-route.md)).
@@ -53,12 +56,28 @@ are, production `segment.inUnits` emits no variants, a click resolves the
 unit's first route, and only the lab and evaluation use variants (ADR 0008,
 [#860](https://github.com/clockblocker/texteater/issues/860)).
 
-**`segment.inLexemes` breaks down Locutions and Sayings.** It runs once per
-multiword Lemma, on the Lemma's wording and the sentence that created it, and
-returns the same shape as `segment.inUnits` one level down: it never returns the
-whole Lemma as one unit. Its pieces resolve through the click path. Drill-down
-from a Lexeme to its preposition, article, auxiliary or reflexive is read from
-model data and needs no segmenter.
+**`segment.inConstituents` breaks a Reading down one level.** It runs once
+per Reading that has Constituents, on its Canonical Form or wording and the
+sentence that created the Reading. Every word built from a word plus pieces
+has them, whatever its part of speech, and so does every Locution and Saying.
+For a phraseme it returns the same shape as `segment.inUnits` one level down:
+the biggest units strictly inside the wording, Lexemes or Locutions, never
+the whole Lemma as one unit. For a word it returns its immediate parts, words
+and Morphemes, each as shown letters with a route and Canonical Form that
+become a Unit Shadow. A click inside the wording resolves through the click
+path, so no piece stores a Surface or a Reading. Drill-down from a Lexeme to
+its preposition, article, auxiliary or reflexive is read from model data and
+needs no segmenter; those satellites are never Constituents.
+
+**`segment.inMorphemes` splits bottom words only.** A bottom word has no word
+inside it. The segmenter splits off only affixes from the language's closed
+affix inventory, and the remainder is the Root; a bound or cranberry Root
+gets a Root Lemma and Reading of its own. Every other word's morphemes are
+computed by propagation up its Constituents or through its Source, and the
+segmenter never runs on it as a fallback (ADR 0051).
+
+An Authored Inventory member carries authored Breakdowns, and neither
+segmenter runs on it.
 
 A language's implementation may use any linguistic vocabulary that helps its
 judge, Member Roles and fixedness included, as long as it stays inside the
@@ -70,7 +89,7 @@ implementation and out of the output.
   word split between two units.
 - Two layers in one call, Lexeme Targets under Phraseme Targets.
   Rejected: task 1 needs only the biggest unit, and a second layer duplicates
-  `segment.inLexemes`.
+  `segment.inConstituents`.
 - A route distribution handed to the click. Rejected: it puts open
   classification back on the click path.
 - One generic click-time prompt that picks among any unit's variants.
@@ -89,6 +108,7 @@ implementation and out of the output.
 - Intake owns pieces and biggest units, not two layers of targets with
   masses, roles and a Resolution Selector.
 - dumcorpus sentence records are `segment.inUnits` gold, their No Target
-  entries `Unresolved`; Breakdown Records are `segment.inLexemes` gold.
+  entries `Unresolved`; Breakdown Records are `segment.inConstituents` gold
+  for phrasemes. Gold for single words' Breakdowns is not specified yet.
 - Implemented by the segmentation rewrite, which also decides the role and
   judgment vocabulary each language uses.

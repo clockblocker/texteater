@@ -78,7 +78,8 @@ validation and relation algebra.
 ([#620](https://github.com/clockblocker/texteater/issues/620)). That includes
 the periphrastic `würde`, `haben zu`, `sein zu` and `sein am`. An auxiliary
 joins the verb it serves, so `segment.inUnits` never returns one as a target.
-`segment.inLexemes` reaches them by drill-down, and it is deferred.
+A Note reaches them by drill-down, read from model data
+([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
 
 **Every authored member is complete.** It stores all Knowledge required or
 advertised for its exact Reading under the applicable Knowledge policy, with
@@ -89,6 +90,10 @@ tests reject an incomplete member and a coverage claim that disagrees with
 its content, so adding an advertised aspect or translation language means
 completing the affected members before release. Resolving an exact authored
 Reading publishes its stored Knowledge with no Knowledge Production call.
+That includes its Breakdown: the segmenters never run on an authored member,
+whose Constituents and morphemes are authored with it, as the reciprocal
+pronominal adverbs' are in `pronominal-adverbs.ts`
+([ADR 0050](./0050-break-a-reading-down-into-its-constituents.md)).
 This trades catalog maintenance for deterministic content, and it removes
 encounter-time generation as a way to hide an incomplete member. Its
 translations still grow in its note as clicks come in

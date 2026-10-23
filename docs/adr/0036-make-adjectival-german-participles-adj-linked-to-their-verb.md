@@ -6,7 +6,7 @@ status: accepted
 
 Every adjectival use of a German Partizip I or II is an ADJ Lemma. Its
 Canonical Form is the uninflected participle, and its Reading names the VERB
-Lemma it comes from as its Participle Source:
+Lemma it comes from as its Source:
 
 - attributive: *die gekochten Kartoffeln* is `gekocht` from `kochen`, *das
   lachende Kind* is `lachend` from `lachen`, *der von allen bewunderte
@@ -59,7 +59,7 @@ Krug* are two Readings of one ADJ `gebildet`. *verheiratet*, *betrunken*,
 *geschlossene Gesellschaft* is ADJ `geschlossen` and a NOUN, not a
 Collocation. A plain adjective, an `un-` form (*ungelesen*) and a form the
 verb does not build (*verlegen* 'embarrassed', whose verb forms *verlegt*)
-have no Participle Source. Substantivized participles stay NOUN.
+have no Source. Substantivized participles stay NOUN.
 
 A participial adjective whose spelling has two Duden headwords is two ADJ
 Lemmas, and they may differ in Core comparability
@@ -67,7 +67,7 @@ Lemmas, and they may differ in Core comparability
 Adjektiv *entschieden* 'resolute' has comparison forms (*entschiedener*,
 *aufs Entschiedenste*) and is comparable; its Partizip *entschieden*
 'decided, settled' has none and is not. Both name `entscheiden` as
-Participle Source. A word with one headword and senses that differ in
+Source. A word with one headword and senses that differ in
 comparing stays one Lemma, comparable if any sense compares: *ergriffen*
 'grasped' and 'moved' is one non-comparable Lemma, and the two Readings of
 `gebildet` share one Lemma the same way. A Reading never overrides its
@@ -75,16 +75,21 @@ Lemma's comparability, because a Surface realizes a Lemma, not a Reading, and
 Dumling could no longer check Degree without it. The user ruled this on
 [#743](https://github.com/clockblocker/texteater/issues/743).
 
-The Participle Source is stored in the ADJ Reading's Knowledge as
-`participleSource`, the way a Governed Preposition is stored on its Governor
-([ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)). It is
-`{ verb, meaning }`:
+The Source is stored in the ADJ Reading's Knowledge as `source`, the way a
+Governed Preposition is stored on its Governor
+([ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)). The
+same aspect names the base of a conversion, an acronym or a clipping
+([ADR 0050](./0050-break-a-reading-down-into-its-constituents.md)), and the
+adjective's Morphemic Breakdown propagates through it: `gesungen` inherits
+the Root `sing` through its Surface `sung`
+([ADR 0051](./0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md)).
+A participle's Source holds two things:
 
-- `verb` is the full VERB Lemma in the same Language. It comes from the
+- The verb, the full VERB Lemma in the same Language. It comes from the
   adjective's form alone, so *verschieden* always names `verscheiden`, and a
   form the verb does not build has none (*verlegen*). Knowledge Production
   names it.
-- `meaning`, the Participle Meaning, is `Verbal` or `Drifted`, judged per
+- The Participle Meaning, `Verbal` or `Drifted`, judged per
   Reading: *gebildet* 'educated' is Verbal because `bilden` means to educate,
   *verschieden* ⚰️ 'deceased' is Verbal, and *verschieden* ↔️ 'different',
   *gelassen*, *bekannt*, *verwandt*, *besessen* 'obsessed' and *spannend* are
@@ -121,7 +126,7 @@ learner who meets *gekochten* the verb `kochen`, but agreement, comparison
 and predicative use belong to the adjective, and the verb's Surfaces would
 have to carry adjectival agreement. A productive or lexicalized boundary
 also leaves cases like *verliebt* that no test settles. An ADJ with a
-Participle Source keeps the adjective's grammar on the adjective and gives
+Source keeps the adjective's grammar on the adjective and gives
 the learner the verb one link away. The cost is one ADJ Lemma per participle
 a learner meets as an adjective, and a Knowledge aspect a host must honor.
 

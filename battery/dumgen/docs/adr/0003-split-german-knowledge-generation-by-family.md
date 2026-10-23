@@ -39,11 +39,10 @@ new contributions.
 This supersedes the model-emitted Kind and whole-response failure policy.
 The relation-space rule in system ADR 0020 remains. A combined Family route
 was rejected because it obscures applicability; model-selected Family was
-rejected because the source Reading already fixes it. Morphological Tree
-generation remains deferred. Lexical Breakdown generation is dropped: a
-multiword Lemma's Breakdown comes from `segment.inLexemes` (Dumgen ADR 0007), and
-[#720](https://github.com/clockblocker/texteater/issues/720) removes the
-leftover prompts.
+rejected because the source Reading already fixes it. Knowledge Production
+writes no Breakdown: a Reading's Constituents come from
+`segment.inConstituents` and a bottom word's Morphemic Breakdown from
+`segment.inMorphemes` (Dumgen ADR 0007).
 
 The route names follow system ADR 0039, which replaced the Phraseme Family
 with Locution and Saying; the shipped code still names Phraseme routes until

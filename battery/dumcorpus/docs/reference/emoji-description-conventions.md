@@ -114,8 +114,8 @@ and say which in the rationale.
   its verb: *Da kann ich nichts für* is `nichts dafür können` 🫵😬, and
   `können` keeps 💪. A sense that only governs a free complement stays a
   Reading: *auf einen Kompromiss hinauslaufen* is `hinauslaufen` ➡🎯 (#877).
-- In a Breakdown Record each word takes its literal Reading. The whole
-  meaning belongs to the Locution or Saying: in `so oder so` 🔁, `so` is 🔧.
+- A Breakdown Record's parts take no Reading ([ADR 0050]). The whole meaning
+  belongs to the Locution's or Saying's Reading: `so oder so` 🔁.
 
 ## Closed-class units
 
@@ -230,4 +230,5 @@ an owned article or an agreeing adjective in the sentence ([ADR 0040]).
 [ADR 0040]: ../../../../docs/adr/0040-make-the-article-a-satellite-of-its-phrase-head.md
 [ADR 0044]: ../../../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0046]: ../../../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
+[ADR 0050]: ../../../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
 [inventory]: ../../src/inventories/de/

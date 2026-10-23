@@ -84,14 +84,14 @@ Past, third person singular, `perfect: Yes`, while its members and
 Past, third person singular. Which verb owns the shared word in other word
 orders is settled by paired gold, not by a first-conjunct rule.
 
-**A Locution or Saying has a Breakdown.** Its parts are real Readings, reached
-the way a Definition Text's words are: the Lemma's wording is segmented into
-Lexemes and each piece resolves like any clicked piece. `den Faden verlieren`
-breaks down into `[den, Faden]` NOUN and `[verlieren]` VERB. The Breakdown
-belongs to the Lemma, so it is produced once per Lemma, and a component's Note
-lists the multiword Lemmas it is part of. A morphemic breakdown of a Lexeme is
-the same concept one level down and is out of scope. How the wording becomes
-something clickable is an implementation choice.
+**A unit's parts come from its Reading's Breakdown.** A word's or phraseme's
+Reading stores its immediate parts and its morphemes, each piece linking to
+a Unit Shadow or a Lemma
+([ADR 0050](./0050-break-a-reading-down-into-its-constituents.md),
+[ADR 0051](./0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md)):
+`den Faden verlieren` breaks down into `[[Faden|den Faden]] +
+[[verlieren]]`. How the wording becomes something clickable is an
+implementation choice.
 
 **Drill-down from a Lexeme is read from model data.** No segmentation runs:
 
@@ -105,13 +105,14 @@ something clickable is an implementation choice.
   reflexivity, never to a case cell: `sich` alone cannot tell *er schämt
   sich* (Acc) from *er bildet sich etwas ein* (Dat).
 
-A separable particle is a Morpheme and is not a drill-down target.
+A separable particle is not read from model data. It is a piece of its
+verb's Constituents and links to its Prefix Morpheme (`auf-` in
+`aufmachen`; ADR 0050).
 
 **Gold.** A dumcorpus sentence record lists only biggest units, one target per
-Segment. A Breakdown Record holds one multiword Lemma's Breakdown: the Lemma's
-wording as its sentence, its Lexeme targets as full Attestations, and a
-pointer to the Lemma. Every target in every record, Breakdown Records
-included, eventually names its Reading; a Reviewed target must.
+Segment. Every target in it eventually names its Reading; a Reviewed target
+must. A Breakdown Record holds one phraseme Reading's Constituents
+(ADR 0050).
 
 ## Considered Options
 
@@ -122,10 +123,6 @@ included, eventually names its Reading; a Reviewed target must.
   article, a role-neutral field would no longer say that the shared word is
   an article, and the agreement check needs to know that before it reads the
   spelling as a cell of `der` or `ein`.
-- Components as Unit Shadows in Reading Knowledge, modelled on Participle
-  Source. Rejected: the parts are real Readings.
-- Breakdowns stored per occurrence, as an inner layer of sentence records.
-  Rejected: two sentences with one idiom would repeat it and could disagree.
 - The ADP Case Table and the article paradigm stay in Dumling. Rejected: which
   cases `auf` takes is a fact about German, not about the model.
 
@@ -136,5 +133,5 @@ included, eventually names its Reading; a Reviewed target must.
 - Amends ADR 0040: the article is identified by `articleEvidence`, and the
   agreement check and DET-cell derivation move to dumcorpus.
 - The ADP Case Table lives in dumcorpus, not Dumling.
-- How segmentation produces units and Breakdowns is decided in Dumgen's
-  segmentation ADRs.
+- ADR 0050 and ADR 0051 decide what a Breakdown holds. How segmentation
+  produces units and Breakdowns is decided in Dumgen's segmentation ADRs.

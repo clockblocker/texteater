@@ -61,9 +61,48 @@ What a member is inside its unit: its Head or a satellite. The Attestation
 does not record it. See [ADR 0039] and [ADR 0041].
 
 **Breakdown**:
-The Lexemes a Locution or Saying is made of. It belongs to the Lemma, not to
-an occurrence. See [ADR 0041].
-_Avoid_: components, drill-down segmentation
+A Reading's parts, stored as the Reading Knowledge aspect `breakdown: {
+constituents, morphemes }`: its Constituents and its Morphemic Breakdown. It
+belongs to the Reading, never to the Lemma or an occurrence. See [ADR 0050]
+and [ADR 0051].
+_Avoid_: components, drill-down segmentation, Morphological Tree, Lexical
+Breakdown
+
+**Constituents**:
+A Reading's immediate parts, one level down, in `breakdown.constituents`: the
+parts of a Compound, an affixal derivation, a particle verb or a phraseme.
+Each part shows letters of the wording and links to a Unit Shadow (Dumrel)
+or a Lemma, never a Reading. A part is a word, a Morpheme, or inside a
+phraseme the biggest unit strictly inside its wording, which may be a
+Locution. See [ADR 0050].
+_Avoid_: morpho-lexemic breakdown, Lexical Breakdown, Wortzerlegung, parts
+list
+
+**Compound**:
+A word built from two or more words, sometimes joined by an Interfix:
+`Kohle + Kraftwerk`, `Gast + -e- + Haus`. Its Constituents show its immediate
+parts. It is a Lexeme, not a Family or Kind of its own. See [ADR 0050].
+_Avoid_: compound Kind, Kompositum, for a Lemma class
+
+**Morphemic Breakdown**:
+Every Morpheme of a single-word Lexeme's Reading, flat, in
+`breakdown.morphemes`, labelled as school morphemic analysis labels them:
+Prefix, Root, Suffix, Interfix, Ending. Each label is the linked Morpheme's
+Kind. `segment.inMorphemes` (Dumgen) splits bottom words; every other word's
+is propagated from its Constituents or Source (Dumrel). See [ADR 0051].
+_Avoid_: Morphological Tree, morpheme tree, morphological breakdown
+
+**Morpheme**:
+A Lemma of the Morpheme Family. Like a Lexeme it has Surfaces and Readings:
+its allomorphs are its Surfaces (`-keit` and `-igkeit` of `-heit`), and a
+Root has a generated Reading of its own. See [ADR 0051].
+_Avoid_: allomorph Lemma; Variant, for an allomorph
+
+**Ending**:
+The Morpheme Kind of a word's inflectional ending in its Canonical Form, a
+zero ending (∅) included. Only the Morphemic Breakdown shows it; an
+indeclinable word has none. See [ADR 0051].
+_Avoid_: inflectional suffix, Flexionsendung as a Suffix
 
 **Canonical Form**:
 The normalized form that names a Lemma. See [ADR 0002].
@@ -114,7 +153,8 @@ _Avoid_: Headword, Vocable, Page, Homograph Set
 
 **Surface**:
 A reusable grammatical form that realizes exactly one Lemma under one
-analysis. See [ADR 0040] for nouns and [ADR 0022] for verbs.
+analysis. A Morpheme's Surfaces are its allomorphs, spelled Canonical. See
+[ADR 0040] for nouns, [ADR 0022] for verbs and [ADR 0051] for Morphemes.
 
 **Variant**:
 A spelling of a Surface's Lemma that is neither its standard spelling nor a
@@ -202,3 +242,5 @@ _Avoid_: Paradigm Cell, slot
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
 [ADR 0048]: ../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md
 [ADR 0049]: ../../docs/adr/0049-tabulate-a-lemmas-forms-as-projections.md
+[ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
+[ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md

@@ -112,16 +112,27 @@ The Reading whose Valency Frame holds a Governed Preposition. The
 preposition's side of the link is projected, never stored. See [ADR 0034].
 _Avoid_: governing verb
 
-**Participle Source**:
-The VERB Lemma whose participle an adjective is, stored in the adjective's
-Reading Knowledge. It is a grammatical link, not a Semantic Relation. See
-[ADR 0036].
-_Avoid_: base verb, derivation relation, participle relation
+**Source**:
+The immediate base of a formation whose letters can't be cut into pieces: a
+conversion (`Lauf` ← `laufen`), a participle, an acronym or a clipping. It is
+the Reading Knowledge aspect `source`, outside the Breakdown (Dumling), and
+links to a Unit Shadow or a Lemma. The word's Morphemic Breakdown (Dumling)
+propagates through it. It is a grammatical link, not a Semantic Relation.
+See [ADR 0036], [ADR 0050] and [ADR 0051].
+_Avoid_: Participle Source, `participleSource`, base verb, derivation
+relation, etymology
 
 **Participle Meaning**:
-Whether a Reading with a Participle Source means a sense of its verb
+Whether a participle's Reading means a sense of the verb its Source names
 (Verbal) or has drifted from all of them (Drifted). See [ADR 0036].
 _Avoid_: lexicalized, etymology
+
+**Formations**:
+The stored words whose Constituents (Dumling) link to a word, listed on its
+Note and grouped by the Kind of the other piece: prefixed verbs, compounds,
+derivations. It is computed from those links, never stored, and opaque
+formations count. The name is provisional. See [ADR 0050].
+_Avoid_: family, word family, derivatives
 
 **Locution Type**:
 Whether a Locution's Reading is an Idiom or a Collocation (Dumling), if
@@ -145,6 +156,8 @@ _Avoid_: discourseFormulaRole, DiscourseFormula
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
 [ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
+[ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
+[ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md
 [ADR 0048]: ../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md
 [ADR 0049]: ../../docs/adr/0049-tabulate-a-lemmas-forms-as-projections.md
 [Dumrel ADR 0001]: ./docs/adr/0001-keep-dumrel-ownerless-and-pure.md

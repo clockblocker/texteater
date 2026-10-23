@@ -4,15 +4,12 @@ status: accepted
 
 # Keep structured Knowledge pointer-only
 
-Morphological Tree stores an ordered hierarchy whose leaves point to Morpheme
-Readings or lexical Unit Shadows. Prompt roles, source coordinates, alignment,
-and alternative analyses are transient execution data and disappear before
-Dumrel Knowledge projection.
+Structured Knowledge stores pointers. A Breakdown piece and a Source hold the
+letters a piece shows and a Unit Shadow or a Lemma, never a Reading
+([ADR 0050](./0050-break-a-reading-down-into-its-constituents.md)). Prompt
+roles, source coordinates, alignment, and alternative analyses are transient
+execution data and disappear before Dumrel Knowledge projection.
 
-This ADR also stored a Lexical Breakdown, an ordered list of Lexeme Unit
-Shadows, in Reading Knowledge.
-[ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)
-rejected that: a Locution's or Saying's Breakdown belongs to its Lemma, and its
-parts are real Readings.
-[#720](https://github.com/clockblocker/texteater/issues/720) removed the
-`lexicalBreakdown` aspect.
+No Knowledge stores a tree. The Constituents are one level, and a part's
+deeper levels are its own Constituents. The Morphemic Breakdown is flat
+([ADR 0051](./0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md)).
