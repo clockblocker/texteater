@@ -41,29 +41,29 @@ function pendingRow(
 function structuralRow(ownerReadingKey: string, path: string) {
 	return {
 		ownerReadingKey,
-		aspect: "morphologicalTree" as const,
+		aspect: "breakdown" as const,
 		path,
 		locatorKey: structuralShadowLocatorKey(
 			ownerReadingKey,
-			"morphologicalTree",
+			"breakdown",
 			path,
 		),
 	};
 }
 
-/** Knowledge whose Morphological Tree holds the Shadow at root.children[0] and [1]. */
-function treeKnowledge(readingKey: string, knowledge: unknown = undefined) {
+/** Knowledge whose Constituents link to the Shadow at constituents.0 and .1. */
+function breakdownKnowledge(
+	readingKey: string,
+	knowledge: unknown = undefined,
+) {
 	return {
 		_id: `knowledge-${readingKey}` as Id<"accumulatedKnowledge">,
 		knowledge: knowledge ?? {
-			morphologicalTree: {
-				root: {
-					nodeKind: "structure",
-					children: [
-						{ nodeKind: "unitShadow", unitShadow: bank },
-						{ nodeKind: "unitShadow", unitShadow: bank },
-					],
-				},
+			breakdown: {
+				constituents: [
+					{ letters: "Bank", target: bank },
+					{ letters: "bank", target: bank },
+				],
 			},
 		},
 	};
@@ -75,7 +75,7 @@ function owner(
 	overrides: Partial<{
 		reading: null;
 		lemma: null | { family: "Lexeme" | "Foreign"; canonicalForm: string };
-		knowledge: ReturnType<typeof treeKnowledge> | null;
+		knowledge: ReturnType<typeof breakdownKnowledge> | null;
 	}> = {},
 ) {
 	return [
@@ -94,7 +94,7 @@ function owner(
 					: overrides.lemma,
 			knowledge:
 				overrides.knowledge === undefined
-					? treeKnowledge(readingKey)
+					? breakdownKnowledge(readingKey)
 					: overrides.knowledge,
 		},
 	] as const;
@@ -129,8 +129,8 @@ test("groups pending and structural rows under their Reading, sorted", () => {
 		rows(
 			[pendingRow("r-zug", "p2"), pendingRow("r-zug", "p1")],
 			[
-				structuralRow("r-geld", "root.children[1]"),
-				structuralRow("r-geld", "root.children[0]"),
+				structuralRow("r-geld", "constituents.1"),
+				structuralRow("r-geld", "constituents.0"),
 			],
 		),
 		new Map([owner("r-zug", "Zug"), owner("r-geld", "Geld")]),
@@ -150,8 +150,8 @@ test("groups pending and structural rows under their Reading, sorted", () => {
 				},
 				pendingRelations: [],
 				structuralReferences: [
-					{ aspect: "morphologicalTree", path: "root.children[0]" },
-					{ aspect: "morphologicalTree", path: "root.children[1]" },
+					{ aspect: "breakdown", path: "constituents.0" },
+					{ aspect: "breakdown", path: "constituents.1" },
 				],
 			},
 			{
@@ -230,11 +230,11 @@ test("a structural row whose locator key is not its own gives null", () => {
 				[],
 				[
 					{
-						...structuralRow("r-geld", "root.children[0]"),
+						...structuralRow("r-geld", "constituents.0"),
 						locatorKey: structuralShadowLocatorKey(
 							"r-geld",
-							"morphologicalTree",
-							"root.children[1]",
+							"breakdown",
+							"constituents.1",
 						),
 					},
 				],
@@ -249,7 +249,7 @@ test("a structural row with no stored reference at its path gives null", () => {
 	expect(
 		buildShadowReferencePage(
 			shadow,
-			rows([], [structuralRow("r-geld", "root.children[2]")]),
+			rows([], [structuralRow("r-geld", "constituents.2")]),
 			new Map([owner("r-geld", "Geld")]),
 			collectWarnings().warn,
 		),
@@ -261,10 +261,10 @@ test("a malformed stored reference gives null and one warning", () => {
 	expect(
 		buildShadowReferencePage(
 			shadow,
-			rows([], [structuralRow("r-geld", "root.children[0]")]),
+			rows([], [structuralRow("r-geld", "constituents.0")]),
 			new Map([
 				owner("r-geld", "Geld", {
-					knowledge: treeKnowledge("r-geld", "not an object"),
+					knowledge: breakdownKnowledge("r-geld", "not an object"),
 				}),
 			]),
 			warn,

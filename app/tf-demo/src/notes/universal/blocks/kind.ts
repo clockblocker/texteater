@@ -10,7 +10,6 @@ export const noteLayoutBlockKindSchema = z.enum([
 	"Translations",
 	"PersonalAnnotation",
 	"Relations",
-	"MorphologicalTree",
 	"Fusion",
 	"Routes",
 ]);

@@ -30,7 +30,7 @@ export type KnowledgeAspect =
 	| "translations"
 	| "semanticRelations"
 	| "valency"
-	| "participleSource"
+	| "source"
 	| "locutionType"
 	| "sayingType"
 	| "formulaRole";
@@ -109,8 +109,8 @@ export type ProduceKnowledgeInput<E = never> = {
 	readonly sentence: KnowledgeSentence;
 	readonly origin: KnowledgeOrigin;
 	/**
-	 * The aspects to produce. An aspect the Reading's route does not apply,
-	 * and the deferred `morphologicalTree`, are skipped (Dumgen ADR 0003).
+	 * The aspects to produce. An aspect the Reading's route does not apply
+	 * is skipped (Dumgen ADR 0003).
 	 */
 	readonly request: Dumrel.KnowledgeRequestMask;
 	/**

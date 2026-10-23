@@ -33,12 +33,15 @@ export const knowledgeTables = {
 		checkedRelationKinds: v.optional(
 			v.array(directSemanticRelationValidator),
 		),
-		/** The stored Participle Source's Lemma key, so its verb finds this adjective. */
-		participleSourceLemmaKey: v.optional(v.string()),
+		/**
+		 * The stored Source's Lemma key when it targets a Lemma, so the Lemma
+		 * finds the Readings built on it (a verb, its participial adjectives).
+		 */
+		sourceLemmaKey: v.optional(v.string()),
 		updatedAt: v.number(),
 	})
 		.index("by_owner_reading_key", ["ownerReadingKey"])
-		.index("by_participle_source_lemma_key", ["participleSourceLemmaKey"]),
+		.index("by_source_lemma_key", ["sourceLemmaKey"]),
 
 	knowledgeProductionRuns: defineTable({
 		attemptKey: v.string(),

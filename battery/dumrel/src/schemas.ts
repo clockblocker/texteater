@@ -11,11 +11,8 @@ import {
 	adpositionLemmaSchemas,
 	knowledgeRouteSchema,
 	lemmaSchema,
-	lexicalUnitShadowSchema,
-	morphemeReadingSchema,
 	readingSchema,
 	unitShadowSchema,
-	verbLemmaSchema,
 } from "./generated/dumling-schemas.js";
 import {
 	adverbialStandInValues,
@@ -168,17 +165,49 @@ export const valencySlotSchema = z.strictObject({
  */
 export const valencyFrameSchema = z.array(valencySlotSchema).min(1);
 
+/**
+ * Where a Breakdown piece or a Source links (ADR 0050): the part's Unit
+ * Shadow while it is pending, its Lemma once resolved, never a Reading.
+ */
+export const linkTargetSchema = z.union([lemmaSchema, unitShadowSchema]);
+/**
+ * One piece of a Breakdown (ADR 0050): the letters it shows of the owning
+ * Reading's Canonical Form or cited wording, and the part they link to. A
+ * piece with no target is filler: a citation ending, a hyphen, a space, a
+ * placeholder. A zero ending shows no letters (ADR 0051). Pieces store no
+ * role, Surface or Reading.
+ */
+export const breakdownPieceSchema = z.strictObject({
+	letters: z.string(),
+	target: linkTargetSchema.optional(),
+});
+/** A Breakdown's pieces in order; their letters spell the wording back. */
+export const breakdownPiecesSchema = z.array(breakdownPieceSchema).min(1);
+/**
+ * A Reading's Breakdown (ADR 0050, ADR 0051): its Constituents, the
+ * immediate parts one level down (`Kohle + Kraftwerk`, `[[Faden|den Faden]] +
+ * [[verlieren]]`), and its Morphemic Breakdown, every Morpheme flat (`ent ·
+ * spann · ung · ∅`). A bottom word has morphemes only, a phraseme
+ * constituents only.
+ */
+export const breakdownSchema = z.strictObject({
+	constituents: breakdownPiecesSchema.optional(),
+	morphemes: breakdownPiecesSchema.optional(),
+});
+
 export const participleMeaningSchema = z.enum(participleMeaningValues);
 /**
- * The Participle Source of an adjectival participle Reading: the VERB Lemma
- * whose participle its form is (`gekocht` stores `kochen`), and whether this
- * Reading's meaning is a sense of that verb (`gelassen` 😌 stores `lassen`,
- * Drifted). The ADJ Reading owns the claim; the verb's side is a read-time
- * projection.
+ * A Reading's Source (ADR 0050): the immediate base of a formation whose
+ * letters can't be cut into pieces, linked as a Breakdown piece is. A
+ * conversion (`Lauf` ← `laufen`), an acronym (`Kita`) or a clipping (`Uni`)
+ * stores its target only. A participle's Source also stores its Participle
+ * Meaning (ADR 0036): `gekocht` stores `kochen`, Verbal, and `gelassen` 😌
+ * stores `lassen`, Drifted. The owning Reading holds the claim; the base's
+ * side is a read-time projection.
  */
-export const participleSourceSchema = z.strictObject({
-	verb: verbLemmaSchema,
-	meaning: participleMeaningSchema,
+export const sourceSchema = z.strictObject({
+	target: linkTargetSchema,
+	meaning: participleMeaningSchema.optional(),
 });
 
 /**
@@ -271,42 +300,6 @@ export const sayingTypeSchema = z.strictObject({
 /** What an INTJ Reading does as a routine formula (ADR 0039). */
 export const formulaRoleSchema = z.enum(formulaRoleValues);
 
-type MorphologicalNode =
-	| {
-			nodeKind: "morphemeReading";
-			reading: z.output<typeof morphemeReadingSchema>;
-	  }
-	| {
-			nodeKind: "unitShadow";
-			unitShadow: z.output<typeof lexicalUnitShadowSchema>;
-	  }
-	| { nodeKind: "structure"; children: MorphologicalNode[] };
-
-export const morphologicalTreeNodeSchema: z.ZodType<MorphologicalNode> = z.lazy(
-	() =>
-		z.union([
-			z.strictObject({
-				nodeKind: z.literal("morphemeReading"),
-				reading: morphemeReadingSchema,
-			}),
-			z.strictObject({
-				nodeKind: z.literal("unitShadow"),
-				unitShadow: lexicalUnitShadowSchema,
-			}),
-			z.strictObject({
-				nodeKind: z.literal("structure"),
-				children: z.array(morphologicalTreeNodeSchema).min(1),
-			}),
-		]),
-);
-
-export const morphologicalTreeSchema = z.strictObject({
-	root: z.strictObject({
-		nodeKind: z.literal("structure"),
-		children: z.array(morphologicalTreeNodeSchema).min(1),
-	}),
-});
-
 const lemmaRelationsSchema = z.strictObject({
 	targetKind: z.literal("lemma").optional(),
 	synonym: z.array(lemmaSchema).optional(),
@@ -340,16 +333,17 @@ export const readingKnowledgeSchema = z.strictObject({
 			ru: nonEmptyStringsSchema.optional(),
 		})
 		.optional(),
-	morphologicalTree: morphologicalTreeSchema.optional(),
+	breakdown: breakdownSchema.optional(),
 	semanticRelations: semanticRelationsSchema.optional(),
 	valency: valencyFrameSchema.optional(),
-	participleSource: participleSourceSchema.optional(),
+	source: sourceSchema.optional(),
 	locutionType: locutionTypeSchema.optional(),
 	sayingType: sayingTypeSchema.optional(),
 	formulaRole: formulaRoleSchema.optional(),
 });
 
 const setKinds = z.enum(["Contribute", "Correct"]);
+export const breakdownPartSchema = z.enum(["constituents", "morphemes"]);
 const atomicAspectSchema = z.enum(["transcription", "definition"]);
 const readingRelationSetSchema = z.strictObject({
 	kind: setKinds,
@@ -414,12 +408,27 @@ export const knowledgeChangeSchema = z.union([
 	}),
 	z.strictObject({
 		kind: setKinds,
-		aspect: z.literal("participleSource"),
-		value: participleSourceSchema,
+		aspect: z.literal("source"),
+		value: sourceSchema,
 	}),
 	z.strictObject({
 		kind: z.literal("Retract"),
-		aspect: z.literal("participleSource"),
+		aspect: z.literal("source"),
+	}),
+	/**
+	 * Each half of a Breakdown changes on its own, since different producers
+	 * give them (`segment.inConstituents`, `segment.inMorphemes`).
+	 */
+	z.strictObject({
+		kind: setKinds,
+		aspect: z.literal("breakdown"),
+		part: breakdownPartSchema,
+		value: breakdownPiecesSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Retract"),
+		aspect: z.literal("breakdown"),
+		part: breakdownPartSchema,
 	}),
 	z.strictObject({
 		kind: setKinds,
@@ -439,15 +448,6 @@ export const knowledgeChangeSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Retract"),
 		aspect: z.enum(["locutionType", "sayingType", "formulaRole"]),
-	}),
-	z.strictObject({
-		kind: setKinds,
-		aspect: z.literal("morphologicalTree"),
-		value: morphologicalTreeSchema,
-	}),
-	z.strictObject({
-		kind: z.literal("Retract"),
-		aspect: z.literal("morphologicalTree"),
 	}),
 ]);
 
@@ -477,9 +477,8 @@ function knowledgeAspectsSchema<Leaf extends z.ZodType>(leaf: Leaf) {
 	return z.strictObject({
 		transcription: leaf,
 		definition: leaf,
-		morphologicalTree: leaf,
 		valency: leaf,
-		participleSource: leaf,
+		source: leaf,
 		locutionType: leaf,
 		sayingType: leaf,
 		formulaRole: leaf,
@@ -544,17 +543,17 @@ export const governmentProjectionSchema = z.strictObject({
 });
 
 /**
- * One edge of a Participle Source. `participleSource` runs from the ADJ
- * Reading to the VERB Lemma it stores, with its Participle Meaning;
- * `participialAdjective` is the inferred inverse from that VERB Lemma back to
- * the ADJ Reading, for a Verbal meaning only.
+ * One edge of a Source. `source` runs from the owning Reading to the Lemma or
+ * Unit Shadow it stores, with its Participle Meaning if it is a participle's;
+ * `participialAdjective` is the inferred inverse from a VERB Lemma back to an
+ * ADJ Reading, for a Verbal meaning only.
  */
-export const participleProjectionSchema = z.union([
+export const sourceProjectionSchema = z.union([
 	z.strictObject({
 		source: readingSchema,
-		relation: z.literal("participleSource"),
-		target: lemmaSchema,
-		meaning: participleMeaningSchema,
+		relation: z.literal("source"),
+		target: linkTargetSchema,
+		meaning: participleMeaningSchema.optional(),
 		provenance: z.literal("direct"),
 	}),
 	z.strictObject({

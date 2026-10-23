@@ -9,12 +9,11 @@ import type { KnowledgeCoverage, ReadingParadigm } from "./corpus-types.js";
  * The structural aspects: the Knowledge `knowledge.produce` is scored on
  * against gold (#883). A record reviewed through Knowledge covers each one
  * its route's Knowledge Policy requests, every requested semantic relation
- * included. The text aspects get a spot-check instead, and the
- * morphological tree belongs to the deferred `segment.inMorphemes`.
+ * included. The text aspects get a spot-check instead.
  */
 const structuralAspects = [
 	"valency",
-	"participleSource",
+	"source",
 	"locutionType",
 	"sayingType",
 	"formulaRole",

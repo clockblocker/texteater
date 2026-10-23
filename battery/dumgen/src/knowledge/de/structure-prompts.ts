@@ -2,7 +2,7 @@
  * The texts the structural aspects send (#883 addenda), each a paragraph
  * that cites the dumcorpus Rules it states at the statement hash it was last
  * checked against (ADR 0037, #695): a noun's plural, a verb's principal
- * parts, an adjective's Participle Source, and a Locution's, Saying's or
+ * parts, a participial adjective's Source, and a Locution's, Saying's or
  * formula's type. `prompts.ts` keeps the Reading, the evidence and the other
  * aspects' texts; this registry is apart to keep each file under the
  * file-token limit.
@@ -117,7 +117,7 @@ export const verbForms = {
 	),
 } as const;
 
-// Participle Source: Luna names the verb by form, jev checks it and judges the meaning.
+// A participle's Source: Luna names the verb by form, jev checks it and judges the meaning.
 
 export const participle = {
 	task: paragraph(

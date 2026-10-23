@@ -23,9 +23,9 @@ import type {
 	KnowledgeProducer,
 	KnowledgeProduction,
 } from "../server/knowledgeProduction";
+import { asksSource } from "../server/knowledgeSource";
 import { logged } from "../server/logging";
 import { parseGermanReading } from "../server/operationalParsing";
-import { asksParticipleSource } from "../server/participleSource";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
@@ -113,7 +113,7 @@ type KnowledgePlan = {
 	readonly qualifiedKinds: ClaimedInput["authorization"]["qualifiedKinds"];
 	readonly request: ReturnType<typeof generationRequestFor>;
 	readonly requestedKinds: RequestedKinds;
-	readonly asksParticipleSource: boolean;
+	readonly asksSource: boolean;
 };
 
 /**
@@ -226,7 +226,7 @@ function planRun(input: ClaimedInput) {
 			requestedKinds: requestedRelationKinds(
 				"semanticRelations" in request ? request : {},
 			),
-			asksParticipleSource: asksParticipleSource(reading, {
+			asksSource: asksSource(reading, {
 				topUpOnly: input.topUpOnly,
 				knowledge: input.existingKnowledge,
 			}),
@@ -360,9 +360,7 @@ function produceKnowledge(run: KnowledgeRun, plan: KnowledgePlan) {
 							knowledge: input.existingKnowledge,
 							checkedRelationKinds: input.checkedRelationKinds,
 						}),
-						...(plan.asksParticipleSource
-							? { participleSource: null }
-							: {}),
+						...(plan.asksSource ? { source: null } : {}),
 					},
 				},
 				{

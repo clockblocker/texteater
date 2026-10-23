@@ -10,7 +10,6 @@ export const READING_BLOCK_KIND_VALUES = [
 	"Translations",
 	"Relations",
 	"PersonalAnnotation",
-	"MorphologicalTree",
 ] as const;
 
 export type ReadingBlockKind = (typeof READING_BLOCK_KIND_VALUES)[number];

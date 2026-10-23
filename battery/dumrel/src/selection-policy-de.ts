@@ -11,8 +11,8 @@ const select = (
 
 /** Routes whose Readings own a Valency Frame (`valency-policy.ts`): `warten auf`, `stolz auf`, `Angst vor`, `Bescheid wissen über`. */
 const framed = { valency: null } as const;
-/** An adjectival participle names its source verb: `gekocht` from `kochen` (ADR 0036). */
-const participial = { ...framed, participleSource: null } as const;
+/** An adjectival participle names its verb as Source: `gekocht` from `kochen` (ADR 0036). */
+const participial = { ...framed, source: null } as const;
 
 /** A routine formula records what it does in conversation (ADR 0039). */
 const formula = { formulaRole: null } as const;
@@ -23,11 +23,7 @@ function request(
 	relations: readonly SemanticRelation[],
 	extra: Pick<
 		KnowledgeRequestMask,
-		| "valency"
-		| "participleSource"
-		| "locutionType"
-		| "sayingType"
-		| "formulaRole"
+		"valency" | "source" | "locutionType" | "sayingType" | "formulaRole"
 	> = {},
 ): KnowledgeRequestMask {
 	const base = {

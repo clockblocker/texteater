@@ -86,15 +86,6 @@ const KNOWLEDGE_SETTING_LABELS: readonly KnowledgeSetting[] = [
 	},
 	translationSetting("en", "English translations"),
 	translationSetting("ru", "Russian translations"),
-	{
-		id: "morphologicalTree",
-		label: "Morphological tree",
-		read: (settings) => settings.morphologicalTree,
-		write: (settings, morphologicalTree) => ({
-			...settings,
-			morphologicalTree,
-		}),
-	},
 	...directSemanticRelationValues.map(
 		(relation): KnowledgeSetting => ({
 			id: `semanticRelations.${relation}`,

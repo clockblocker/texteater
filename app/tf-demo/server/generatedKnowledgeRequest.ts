@@ -37,11 +37,7 @@ export function generationRequestFor(
 			? { translations: applicable.translations }
 			: {};
 	}
-	const {
-		morphologicalTree: _morphologicalTree,
-		participleSource: _participleSource,
-		...request
-	} = applicable;
+	const { source: _source, ...request } = applicable;
 	const allowed = new Set(qualifiedKinds);
 	const semanticRelations = Object.fromEntries(
 		directSemanticRelationValues.flatMap((relation) =>

@@ -82,7 +82,7 @@ test("a structural run asks for the route's structural aspects only, a text run 
 	});
 	expect(
 		Object.keys(requestOf(caseOf("verheiratet"), "structural")),
-	).toContain("participleSource");
+	).toContain("source");
 	// The principal parts are Variation Dimensions, written beside the request.
 	expect(paradigmRequestOf(caseOf("warten"), "structural")).toEqual([
 		"preterite",
@@ -461,7 +461,7 @@ test("the harness prices a round from the oracle without a call, runs live once 
 	] as const)
 		expect(metrics.lines[aspect]).toMatchObject({ correct: 1, count: 1 });
 	expect(metrics.lines.sayingType).toMatchObject({ correct: 1, count: 1 });
-	expect(metrics.lines.participleSource.count).toBe(1);
+	expect(metrics.lines.source.count).toBe(1);
 	expect(metrics.lines.relationRecall.correct).toBeGreaterThan(0);
 	expect(metrics.flips).toEqual([]);
 

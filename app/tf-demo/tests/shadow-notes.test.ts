@@ -20,9 +20,9 @@ import {
 	pendingRecord,
 	replaceKnowledge,
 	rows,
+	shadowBreakdown,
 	shadowNote,
 	shadowReferences,
-	shadowTree,
 	verbShadow,
 } from "./support/shadows";
 
@@ -41,7 +41,7 @@ describe("Shadow presentation", () => {
 		await replaceKnowledge(
 			t,
 			"reading-source",
-			shadowTree(nounShadow, verbShadow),
+			shadowBreakdown(nounShadow, verbShadow),
 		);
 		const { readingId, malformedShadowId } = await t.run(async (ctx) => {
 			const readingId = await insertSourceReading(ctx);
@@ -90,7 +90,7 @@ describe("Shadow presentation", () => {
 		await replaceKnowledge(
 			t,
 			"reading-source",
-			shadowTree(nounShadow, nounShadow),
+			shadowBreakdown(nounShadow, nounShadow),
 		);
 		const shadowId = await t.run(async (ctx) => {
 			await insertSourceReading(ctx);

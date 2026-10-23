@@ -299,7 +299,7 @@ export const readingOwnedRows: Record<
 				kind: "Root",
 			}),
 			ownerReadingKey: owner.readingKey,
-			aspect: "morphologicalTree",
+			aspect: "breakdown",
 			path: "0",
 			locatorKey: `structure:${owner.readingKey}`,
 		}),

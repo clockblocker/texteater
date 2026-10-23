@@ -62,20 +62,12 @@ export const samples: Record<string, unknown[]> = {
 			},
 		},
 		{
-			morphologicalTree: {
-				root: {
-					nodeKind: "structure",
-					children: [
-						{
-							nodeKind: "morphemeReading",
-							reading: {
-								unitKind: "Reading",
-								lemma: prefixLemma,
-								emojiDescription: "🚫",
-							},
-						},
-					],
-				},
+			breakdown: {
+				constituents: [
+					{ letters: "un", target: prefixLemma },
+					{ letters: "haus", target: shadow },
+				],
+				morphemes: [{ letters: "" }],
 			},
 		},
 	],
@@ -123,10 +115,17 @@ export const samples: Record<string, unknown[]> = {
 		},
 		{
 			kind: "Contribute",
-			aspect: "participleSource",
-			value: { verb: wartenReading.lemma, meaning: "Drifted" },
+			aspect: "source",
+			value: { target: wartenReading.lemma, meaning: "Drifted" },
 		},
-		{ kind: "Retract", aspect: "participleSource" },
+		{ kind: "Retract", aspect: "source" },
+		{
+			kind: "Correct",
+			aspect: "breakdown",
+			part: "morphemes",
+			value: [{ letters: "un", target: shadow }],
+		},
+		{ kind: "Retract", aspect: "breakdown", part: "constituents" },
 		{ kind: "Contribute", aspect: "locutionType", value: "Collocation" },
 		{
 			kind: "Correct",
@@ -222,11 +221,14 @@ export const samples: Record<string, unknown[]> = {
 	],
 	formulaRole: ["Greeting", "Sympathy", "Transition"],
 	participleMeaning: ["Verbal", "Drifted"],
-	participleSource: [{ verb: wartenReading.lemma, meaning: "Verbal" }],
-	participleProjection: [
+	source: [
+		{ target: wartenReading.lemma, meaning: "Verbal" },
+		{ target: shadow },
+	],
+	sourceProjection: [
 		{
 			source: houseReading,
-			relation: "participleSource",
+			relation: "source",
 			target: wartenReading.lemma,
 			meaning: "Verbal",
 			provenance: "direct",
@@ -347,15 +349,10 @@ export const samples: Record<string, unknown[]> = {
 	],
 	pendingSemanticRelation: [{ relation: "nearSynonym", target: shadow }],
 	unitShadow: [shadow],
-	morphologicalTreeNode: [{ nodeKind: "unitShadow", unitShadow: shadow }],
-	morphologicalTree: [
-		{
-			root: {
-				nodeKind: "structure",
-				children: [{ nodeKind: "unitShadow", unitShadow: shadow }],
-			},
-		},
-	],
+	linkTarget: [shadow, houseLemma],
+	breakdownPart: ["constituents", "morphemes"],
+	breakdownPiece: [{ letters: "" }, { letters: "Haus", target: houseLemma }],
+	breakdown: [{}, { morphemes: [{ letters: "haus", target: shadow }] }],
 	semanticRelations: [
 		{ targetKind: "reading", synonym: [houseReading] },
 		{ hypernym: [houseLemma] },

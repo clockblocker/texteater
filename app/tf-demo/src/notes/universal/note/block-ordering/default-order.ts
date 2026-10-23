@@ -6,7 +6,6 @@ export const WEIGHT_FOR_NOTE_LAYOUT_BLOCK_KIND = {
 	Translations: 3,
 	Definition: 4,
 	PersonalAnnotation: 5,
-	MorphologicalTree: 6,
-	Fusion: 7,
-	Routes: 8,
+	Fusion: 6,
+	Routes: 7,
 } as const satisfies Record<NoteLayoutBlockKind, number>;

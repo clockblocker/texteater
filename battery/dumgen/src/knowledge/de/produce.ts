@@ -3,9 +3,8 @@
  * resolves, with no drafts (#623).
  *
  * - The Reading's route fixes what applies (Dumgen ADR 0003): an aspect
- *   or leaf its Knowledge Policy lacks, a Variation Dimension its Paradigm
- *   Policy doesn't name, and the deferred `morphologicalTree`, are skipped.
- *   The split by Family stays here.
+ *   or leaf its Knowledge Policy lacks and a Variation Dimension its
+ *   Paradigm Policy doesn't name are skipped. The split by Family stays here.
  * - A Closed Route, or an exact authored Reading, takes its Knowledge from
  *   dumcorpus through tf-demo, so every aspect still requested is a
  *   `CatalogMiss` and nothing is asked (ADR 0021).
@@ -63,8 +62,8 @@ import { produceRelations } from "./relations.js";
 import {
 	produceFormulaRole,
 	produceLocutionType,
-	produceParticipleSource,
 	produceSayingType,
+	produceSource,
 } from "./structure.js";
 import {
 	produceDefinition,
@@ -107,11 +106,10 @@ const requestAspects = new Set<string>([
 	"translations",
 	"semanticRelations",
 	"valency",
-	"participleSource",
+	"source",
 	"locutionType",
 	"sayingType",
 	"formulaRole",
-	"morphologicalTree",
 ]);
 
 const changesOnly = (
@@ -129,7 +127,7 @@ function jobsOf(
 	const jobs: Job[] = [];
 	const skipped: string[] = [];
 	for (const [aspect, selection] of Object.entries(request)) {
-		if (!(aspect in applicable) || aspect === "morphologicalTree") {
+		if (!(aspect in applicable)) {
 			skipped.push(aspect);
 			continue;
 		}
@@ -197,10 +195,10 @@ function jobsOf(
 			case "valency":
 				jobs.push({ aspect, run: produceValency(context, origin) });
 				break;
-			case "participleSource":
+			case "source":
 				jobs.push({
 					aspect,
-					run: changesOnly(produceParticipleSource(context)),
+					run: changesOnly(produceSource(context)),
 				});
 				break;
 			case "locutionType":

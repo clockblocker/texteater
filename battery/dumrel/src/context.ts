@@ -1,22 +1,22 @@
 import { ParsingError } from "common-utils/validation";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
+import {
+	parseBreakdown,
+	parseBreakdownPieces,
+	parseSourceLink,
+	sourceAndConstituentsIssue,
+} from "./breakdown-context.js";
 import { structuralKeys } from "./fingerprint.js";
+import { issue, type Path } from "./issue.js";
 import type {
 	KnowledgeChange,
-	ParticipleSource,
 	ReadingKnowledge,
 	ValencyComplement,
 	ValencyFrame,
 	ValencySlot,
 } from "./types.js";
 import { allowedComplementKinds } from "./valency-policy.js";
-
-type Path = (number | string)[];
-
-export function issue(path: Path, message: string): ParsingError {
-	return new ParsingError([{ code: "custom", path, message }]);
-}
 
 export function parseSource<R extends Dumling.Reading>(
 	source: R,
@@ -304,42 +304,6 @@ function parseValencyFrame<R extends Dumling.Reading>(
 	return slots;
 }
 
-/**
- * A Participle Source belongs to a Lexeme ADJ Reading and names a Lexeme VERB
- * Lemma of the same Language (ADR 0036).
- */
-function parseParticipleSource<R extends Dumling.Reading>(
-	source: R,
-	value: ParticipleSource,
-	path: Path,
-): ParticipleSource | ParsingError {
-	if (source.lemma.family !== "Lexeme" || source.lemma.kind !== "ADJ")
-		return issue(path, "Only an ADJ Reading has a Participle Source");
-	const verbPath = [...path, "verb"];
-	const parsed = parseUnit(value.verb);
-	if (!parsed.success)
-		return new ParsingError(
-			parsed.error.issues.map((entry) => ({
-				...entry,
-				path: [...verbPath, ...entry.path],
-			})),
-		);
-	const { chain } = parsed;
-	if (
-		chain.unitKind !== "Lemma" ||
-		chain.family !== "Lexeme" ||
-		chain.kind !== "VERB"
-	)
-		return issue(verbPath, "A Participle Source must be a VERB Lemma");
-	const verb = chain.value;
-	if (verb.language !== source.lemma.language)
-		return issue(
-			[...verbPath, "language"],
-			"A Participle Source must use the source Language",
-		);
-	return { ...value, verb };
-}
-
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function contextualizeKnowledge<R extends Dumling.Reading>(
 	source: R,
@@ -361,15 +325,24 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 		]);
 		if (failure) return failure;
 	}
-	if (result.participleSource) {
-		const participle = parseParticipleSource(
-			source,
-			result.participleSource,
-			["knowledge", "participleSource"],
-		);
-		if (participle instanceof ParsingError) return participle;
-		result.participleSource = participle;
+	if (result.source) {
+		const link = parseSourceLink(source, result.source, [
+			"knowledge",
+			"source",
+		]);
+		if (link instanceof ParsingError) return link;
+		result.source = link;
 	}
+	if (result.breakdown) {
+		const breakdown = parseBreakdown(source, result.breakdown, [
+			"knowledge",
+			"breakdown",
+		]);
+		if (breakdown instanceof ParsingError) return breakdown;
+		result.breakdown = breakdown;
+	}
+	const both = sourceAndConstituentsIssue(result, ["knowledge"]);
+	if (both) return both;
 	if (result.valency) {
 		const frame = parseValencyFrame(source, result.valency, [
 			"knowledge",
@@ -424,13 +397,18 @@ export function contextualizeChange<R extends Dumling.Reading>(
 		]);
 		if (failure) return failure;
 	}
-	if (change.aspect === "participleSource" && change.kind !== "Retract") {
-		const participle = parseParticipleSource(source, change.value, [
+	if (change.aspect === "source" && change.kind !== "Retract") {
+		const link = parseSourceLink(source, change.value, ["change", "value"]);
+		if (link instanceof ParsingError) return link;
+		return { ...change, value: link };
+	}
+	if (change.aspect === "breakdown" && change.kind !== "Retract") {
+		const pieces = parseBreakdownPieces(source, change.part, change.value, [
 			"change",
 			"value",
 		]);
-		if (participle instanceof ParsingError) return participle;
-		return { ...change, value: participle };
+		if (pieces instanceof ParsingError) return pieces;
+		return { ...change, value: pieces };
 	}
 	if (change.aspect === "valency") {
 		if (change.kind !== "Retract") {

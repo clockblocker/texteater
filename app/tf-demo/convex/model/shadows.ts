@@ -210,39 +210,62 @@ export function structuralShadowLocatorKey(
 	return JSON.stringify([ownerReadingKey, aspect, path]);
 }
 
-function parseMorphologicalNode(
+/**
+ * The Unit Shadow a stored link target names (ADR 0050): a Shadow target as
+ * it is, or a Lemma target's route and Canonical Form. The Lemma, not its
+ * Shadow, stays the link's identity; the Shadow only lets the Shadow Note
+ * list the link while no Lemma with that identity is stored.
+ */
+function parseLinkTargetDescriptor(
 	value: unknown,
-	path: string,
+	context: string,
+): ParseResult<ShadowDescriptor> {
+	if (!isRecord(value)) return parseFailure(`${context} must be an object.`);
+	if (value.unitKind === undefined) return parseShadowDescriptor(value);
+	if (value.unitKind !== "Lemma") {
+		return parseFailure(`${context} must be a Lemma or a Unit Shadow.`);
+	}
+	return parseShadowDescriptor({
+		language: value.language,
+		canonicalForm: value.canonicalForm,
+		family: value.family,
+		kind: value.kind,
+	});
+}
+
+/** One reference per linked piece of a stored Breakdown, at `<part>.<index>`. */
+function parseBreakdownReferences(
+	breakdown: unknown,
 ): ParseResult<StructuralShadowReference[]> {
-	if (!isRecord(value)) {
-		return parseFailure(
-			`Morphological Tree node at ${path} must be an object.`,
-		);
-	}
-	if (value.nodeKind === "morphemeReading") return parsed([]);
-	if (value.nodeKind === "unitShadow") {
-		const descriptor = parseShadowDescriptor(value.unitShadow);
-		if (!descriptor.ok) return descriptor;
-		if (descriptor.value.family === "Morpheme") {
-			return parseFailure(
-				`Morphological Tree Unit Shadow at ${path} must be lexical.`,
-			);
-		}
-		return parsed([
-			{ descriptor: descriptor.value, aspect: "morphologicalTree", path },
-		]);
-	}
-	if (value.nodeKind !== "structure" || !Array.isArray(value.children)) {
-		return parseFailure(`Unsupported Morphological Tree node at ${path}.`);
+	if (breakdown === undefined) return parsed([]);
+	if (!isRecord(breakdown)) {
+		return parseFailure("Breakdown must be an object.");
 	}
 	const references: StructuralShadowReference[] = [];
-	for (const [index, child] of value.children.entries()) {
-		const childReferences = parseMorphologicalNode(
-			child,
-			`${path}.children[${index}]`,
-		);
-		if (!childReferences.ok) return childReferences;
-		references.push(...childReferences.value);
+	for (const part of ["constituents", "morphemes"] as const) {
+		const pieces = breakdown[part];
+		if (pieces === undefined) continue;
+		if (!Array.isArray(pieces)) {
+			return parseFailure(`Breakdown ${part} must be an array.`);
+		}
+		for (const [index, piece] of pieces.entries()) {
+			if (!isRecord(piece)) {
+				return parseFailure(
+					`Breakdown piece ${part}.${index} must be an object.`,
+				);
+			}
+			if (piece.target === undefined) continue;
+			const descriptor = parseLinkTargetDescriptor(
+				piece.target,
+				`Breakdown target ${part}.${index}`,
+			);
+			if (!descriptor.ok) return descriptor;
+			references.push({
+				descriptor: descriptor.value,
+				aspect: "breakdown",
+				path: `${part}.${index}`,
+			});
+		}
 	}
 	return parsed(references);
 }
@@ -255,36 +278,21 @@ export function parseStructuralShadowReferences(
 	if (!isRecord(knowledgeValue)) {
 		return parseFailure("Reading Knowledge must be an object.");
 	}
-	const references: StructuralShadowReference[] = [];
-	const tree = knowledgeValue.morphologicalTree;
-	if (tree !== undefined) {
-		if (!isRecord(tree)) {
-			return parseFailure("Morphological Tree must be an object.");
-		}
-		const treeReferences = parseMorphologicalNode(tree.root, "root");
-		if (!treeReferences.ok) return treeReferences;
-		references.push(...treeReferences.value);
-	}
-	const verb = parseParticipleSourceVerb(knowledgeValue);
-	if (!verb.ok) return verb;
-	if (verb.value !== undefined) {
-		const descriptor = parseShadowDescriptor({
-			language: verb.value.language,
-			canonicalForm: verb.value.canonicalForm,
-			family: verb.value.family,
-			kind: verb.value.kind,
-		});
+	const breakdown = parseBreakdownReferences(knowledgeValue.breakdown);
+	if (!breakdown.ok) return breakdown;
+	const references = [...breakdown.value];
+	const target = parseSourceTarget(knowledgeValue);
+	if (!target.ok) return target;
+	if (target.value !== undefined) {
+		const descriptor = parseLinkTargetDescriptor(
+			target.value,
+			"Source target",
+		);
 		if (!descriptor.ok) return descriptor;
-		if (
-			descriptor.value.family !== "Lexeme" ||
-			descriptor.value.kind !== "VERB"
-		) {
-			return parseFailure("A Participle Source must be a VERB Lexeme.");
-		}
 		references.push({
 			descriptor: descriptor.value,
-			aspect: "participleSource",
-			path: "verb",
+			aspect: "source",
+			path: "target",
 		});
 	}
 	if (references.length > MAX_STRUCTURAL_REFERENCES_PER_READING) {
@@ -427,32 +435,30 @@ async function syncStructuralShadowReferences(
 }
 
 /**
- * The VERB Lemma a stored Participle Source names (ADR 0036), if any. The
- * Lemma, not its Shadow, is the link's identity: the Shadow carries no Core
- * Features, so `umfahren` with and without its separable prefix share one.
+ * The target a stored Source names (ADR 0050), if any: a Lemma or a Unit
+ * Shadow, as stored.
  */
-function parseParticipleSourceVerb(
+function parseSourceTarget(
 	knowledge: unknown,
-): ParseResult<Dumling.Lemma | undefined> {
-	const source = isRecord(knowledge) ? knowledge.participleSource : undefined;
+): ParseResult<Record<string, unknown> | undefined> {
+	const source = isRecord(knowledge) ? knowledge.source : undefined;
 	if (source === undefined) return parsed(undefined);
-	if (!isRecord(source)) {
-		return parseFailure("Participle Source must be an object.");
+	if (!isRecord(source)) return parseFailure("Source must be an object.");
+	if (!isRecord(source.target)) {
+		return parseFailure("Source target must be an object.");
 	}
-	if (!isRecord(source.verb)) {
-		return parseFailure("Participle Source verb must be an object.");
-	}
-	return parsed(source.verb as Dumling.Lemma);
+	return parsed(source.target);
 }
 
-function participleSourceVerb(knowledge: unknown): Dumling.Lemma | undefined {
-	return unwrap(parseParticipleSourceVerb(knowledge));
-}
-
-/** The Lemma key of a stored Participle Source, so its verb finds the adjective. */
-function participleSourceKey(knowledge: unknown): string | undefined {
-	const verb = participleSourceVerb(knowledge);
-	return verb ? lemmaIdentityKey(verb) : undefined;
+/**
+ * The Lemma key of a stored Source whose target is a Lemma, so the Lemma
+ * finds the Readings built on it. A pending Shadow target has none.
+ */
+function sourceLemmaKeyOf(knowledge: unknown): string | undefined {
+	const target = unwrap(parseSourceTarget(knowledge));
+	return target && target.unitKind === "Lemma"
+		? lemmaIdentityKey(target as Dumling.Lemma)
+		: undefined;
 }
 
 /**
@@ -476,13 +482,13 @@ export async function replaceAccumulatedKnowledge(
 	const content = knowledge ?? {};
 	await syncStructuralShadowReferences(ctx, ownerReadingKey, content);
 	await syncDefinitionText(ctx, ownerReadingKey, content);
-	const participleSourceLemmaKey = participleSourceKey(content);
+	const sourceLemmaKey = sourceLemmaKeyOf(content);
 	if (existing) {
 		// Coverage evidence outlives the content it was recorded beside.
 		await ctx.db.patch(existing._id, {
 			knowledge: content,
 			status,
-			participleSourceLemmaKey,
+			sourceLemmaKey,
 			updatedAt: Date.now(),
 		});
 		return existing._id;
@@ -491,7 +497,7 @@ export async function replaceAccumulatedKnowledge(
 		ownerReadingKey,
 		knowledge: content,
 		status,
-		...(participleSourceLemmaKey ? { participleSourceLemmaKey } : {}),
+		...(sourceLemmaKey ? { sourceLemmaKey } : {}),
 		updatedAt: Date.now(),
 	});
 }

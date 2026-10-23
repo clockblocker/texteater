@@ -70,8 +70,7 @@ function goldChoice(
 		);
 	}
 	if (id === "form") return offer("Participle");
-	if (id === "meaning")
-		return offer(gold.participleSource?.meaning ?? "Verbal");
+	if (id === "meaning") return offer(gold.source?.meaning ?? "Verbal");
 	if (id === "locutionType") return offer(gold.locutionType ?? "Neither");
 	if (id === "formulaRole") return offer(gold.formulaRole ?? "None");
 	if (id === "sayingType") return offer(gold.sayingType?.type ?? "Proverb");
@@ -165,10 +164,11 @@ export function goldKnowledgeWritten(
 				})),
 			};
 		case "participleSource": {
-			const source = gold.participleSource;
+			const source = gold.source;
 			if (!source) return { verb: null };
-			const { verb } = source;
-			const core: Readonly<Record<string, unknown>> = verb.coreFeatures;
+			const verb = source.target;
+			const core: Readonly<Record<string, unknown>> =
+				"coreFeatures" in verb ? verb.coreFeatures : {};
 			return {
 				verb: verb.canonicalForm.replace(/^sich\s+/u, ""),
 				reflexive: core.lexicallyReflexive ?? null,

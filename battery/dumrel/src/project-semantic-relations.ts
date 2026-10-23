@@ -1,9 +1,9 @@
 import { ParsingError } from "common-utils/validation";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import { issue } from "./context.js";
 import { compare, structuralKeys } from "./fingerprint.js";
 import type { SemanticRelationProjection } from "./generated/types.js";
+import { issue } from "./issue.js";
 import { parseProjectionInventory } from "./projection-inventory.js";
 import type { ReadingWithKnowledge, SemanticRelation } from "./types.js";
 import { parseProjectionShape } from "./validation.js";

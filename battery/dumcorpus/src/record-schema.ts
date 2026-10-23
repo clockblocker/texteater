@@ -74,7 +74,7 @@ export const knowledgeCoverageSchema = z
 				ru: coverageStatusSchema,
 			})
 			.optional(),
-		morphologicalTree: coverageStatusSchema,
+		breakdown: coverageStatusSchema,
 		semanticRelations: z
 			.strictObject({
 				synonym: coverageStatusSchema,
@@ -87,7 +87,7 @@ export const knowledgeCoverageSchema = z
 			})
 			.optional(),
 		valency: coverageStatusSchema,
-		participleSource: coverageStatusSchema,
+		source: coverageStatusSchema,
 		locutionType: coverageStatusSchema,
 		sayingType: coverageStatusSchema,
 		formulaRole: coverageStatusSchema,

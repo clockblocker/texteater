@@ -36,10 +36,10 @@ import type { PresentedRelations } from "./relations";
 import {
 	grammaticalAlternativeValidator,
 	loadGrammaticalAlternatives,
-	loadParticipleLinks,
 	loadRelationProjections,
-	participleLinkValidator,
+	loadSourceLinks,
 	relationProjectionValidator,
+	sourceLinkValidator,
 } from "./relations";
 import { unitShadowProjectionValidator } from "./shadowNote";
 import {
@@ -135,8 +135,8 @@ export const readingNoteValidator = v.object({
 	/** The relation neighbourhood passed a cap; more relations exist. */
 	relationsTruncated: v.boolean(),
 	grammaticalAlternatives: v.array(grammaticalAlternativeValidator),
-	/** Participle Source links, stored on the ADJ and projected on its verb. */
-	participleLinks: v.optional(v.array(participleLinkValidator)),
+	/** Source links: stored on the Reading; a participle's is projected on its verb. */
+	sourceLinks: v.optional(v.array(sourceLinkValidator)),
 	pendingRelations: v.array(pendingRelationProjectionValidator),
 	structuralReferences: v.array(structuralShadowProjectionValidator),
 	definitionText: v.union(
@@ -238,11 +238,11 @@ export async function loadUnitReadingNote(
 		projectReadingValue(reading, lemma),
 		readingKnowledge?.knowledge,
 	);
-	const participleLinks = await loadParticipleLinks(
+	const sourceLinks = await loadSourceLinks(
 		ctx,
 		reading,
 		lemma,
-		knowledge.participleSource,
+		knowledge.source,
 	);
 	const activeAttempt = attempts.find(
 		({ state }) =>
@@ -289,7 +289,7 @@ export async function loadUnitReadingNote(
 		relations: relationProjections.resolved,
 		relationsTruncated: relationProjections.truncated,
 		grammaticalAlternatives,
-		participleLinks,
+		sourceLinks,
 		pendingRelations: projectPendingRelations(pendingRelations),
 		structuralReferences,
 		sourceContexts,

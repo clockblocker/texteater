@@ -32,6 +32,7 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"sameReading",
 		"syncretismView",
 		"syncretize",
+		"zeroEndingCanonicalForm",
 	]);
 	expect(await rootKeys("dumrel")).toEqual([
 		"allowedComplementKinds",
@@ -53,8 +54,8 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"parseLemmaParadigm",
 		"parseParadigmChange",
 		"parseReadingKnowledge",
-		"projectParticipleSources",
 		"projectSemanticRelations",
+		"projectSources",
 		"pruneParadigm",
 		"sayingTypeValues",
 		"selectKnowledge",

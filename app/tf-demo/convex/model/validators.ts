@@ -88,12 +88,13 @@ export const segmentResolutionStateValidator = v.union(
 );
 
 /**
- * The Knowledge aspect a structural Shadow reference sits in. A Participle
- * Source refers to its verb's Shadow until that verb is stored (ADR 0036).
+ * The Knowledge aspect a structural Shadow reference sits in. A Breakdown
+ * piece or a Source refers to its part's Shadow until a Lemma with that
+ * identity is stored (ADR 0050).
  */
 export const structuralShadowAspectValidator = v.union(
-	v.literal("morphologicalTree"),
-	v.literal("participleSource"),
+	v.literal("breakdown"),
+	v.literal("source"),
 );
 export type StructuralShadowAspect = Infer<
 	typeof structuralShadowAspectValidator
@@ -376,7 +377,6 @@ export const knowledgeSettingsValidator = v.object({
 	transcription: v.boolean(),
 	definition: v.boolean(),
 	translations: v.object({ en: v.boolean(), ru: v.boolean() }),
-	morphologicalTree: v.boolean(),
 	semanticRelations: v.object({
 		synonym: v.boolean(),
 		nearSynonym: v.boolean(),

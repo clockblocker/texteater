@@ -368,7 +368,7 @@ export const negativeFixtures: {
 			record.targets[0].reading = {
 				emojiDescription: "👀",
 				knowledge: {},
-				coverage: { participleSource: "ReviewedEmpty" },
+				coverage: { source: "ReviewedEmpty" },
 			};
 		},
 	},

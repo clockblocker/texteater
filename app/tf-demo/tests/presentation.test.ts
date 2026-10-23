@@ -151,12 +151,12 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 		await ctx.db.insert("structuralShadowReferences", {
 			shadowId,
 			ownerReadingKey: source.readingKey,
-			aspect: "morphologicalTree",
-			path: "root.0",
+			aspect: "breakdown",
+			path: "constituents.0",
 			locatorKey: structuralShadowLocatorKey(
 				source.readingKey,
-				"morphologicalTree",
-				"root.0",
+				"breakdown",
+				"constituents.0",
 			),
 		});
 		// A Visitor who hid every Knowledge aspect still receives pure NoteData.

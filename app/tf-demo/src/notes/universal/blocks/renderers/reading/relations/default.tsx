@@ -22,12 +22,12 @@ export const renderDefaultReadingRelations = (({
 	);
 	const grammaticalAlternatives = noteData.grammaticalAlternatives ?? [];
 	// A grammatical link (ADR 0036), so no semantic-relation preference hides it.
-	const participleLinks = noteData.participleLinks ?? [];
+	const sourceLinks = noteData.sourceLinks ?? [];
 	if (
 		relations.length === 0 &&
 		pendingRelations.length === 0 &&
 		grammaticalAlternatives.length === 0 &&
-		participleLinks.length === 0
+		sourceLinks.length === 0
 	) {
 		return null;
 	}
@@ -82,12 +82,12 @@ export const renderDefaultReadingRelations = (({
 					))}
 				</ul>
 			) : null}
-			{participleLinks.length > 0 ? (
+			{sourceLinks.length > 0 ? (
 				<ul
 					className="grid gap-2 [p+&]:mt-2 [ul+&]:mt-2"
-					aria-label="Participle Source"
+					aria-label="Source"
 				>
-					{participleLinks.map((link) => {
+					{sourceLinks.map((link) => {
 						const drifted = link.meaning === "Drifted";
 						const label = drifted
 							? "historically the participle of"
@@ -111,7 +111,7 @@ export const renderDefaultReadingRelations = (({
 								>
 									{label}
 								</span>
-								{/* A source verb not stored yet is a Unit Shadow,
+								{/* A Source not stored yet is a Unit Shadow,
 								    locked like a pending relation target. */}
 								<LinkButton
 									tone={

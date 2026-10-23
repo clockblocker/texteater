@@ -616,12 +616,12 @@ test("a Closed Route or an authored Reading answers every requested aspect with 
 	]);
 });
 
-test("aspects the route does not apply, and the deferred tree, are skipped (Dumgen ADR 0003)", async () => {
+test("aspects the route does not apply are skipped (Dumgen ADR 0003)", async () => {
 	const luna = knowledgeLuna({ verbForms: { preterite: ["ritt"] } });
 	const { result, trace } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: luna.ask },
 		knowledgeInput(verb("reiten"), "🏇", "Sie ritt aus.", ["ritt"], {
-			request: { formulaRole: null, morphologicalTree: null },
+			request: { formulaRole: null },
 			paradigm: { dimensions: ["plural", "preterite"] },
 		}),
 	);
@@ -638,11 +638,7 @@ test("aspects the route does not apply, and the deferred tree, are skipped (Dumg
 		{
 			name: "SkippedAspects",
 			data: {
-				skipped: [
-					"formulaRole",
-					"morphologicalTree",
-					"paradigm.plural",
-				],
+				skipped: ["formulaRole", "paradigm.plural"],
 			},
 		},
 	]);

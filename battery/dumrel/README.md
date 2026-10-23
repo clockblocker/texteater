@@ -44,12 +44,20 @@ complement removes it from its Slot. Dumrel derives the inverse `governedBy`
 edges internally from every Preposition complement over a dictionary
 inventory, so a preposition lists its Governors without storing them.
 
-`participleSource` records the VERB Lemma an adjectival participle Reading's
-form comes from and whether the Reading's meaning is a sense of it
-(`gekocht` stores `kochen`, Verbal; `gelassen` 😌 stores `lassen`, Drifted).
-`projectParticipleSources` derives the inverse `participialAdjective` edges
-from the verb's Lemma for Verbal Readings, so a verb lists its participial
-adjectives without storing them.
+`breakdown` records a Reading's parts (system ADR 0050, ADR 0051): its
+`constituents`, the immediate parts one level down (`Kohle + Kraftwerk`,
+`[[Faden|den Faden]] + [[verlieren]]`), and its `morphemes`, every Morpheme
+flat (`ent · spann · ung · ∅`). Each piece pairs the letters it shows with a
+link to a Unit Shadow or a Lemma, or no link for filler, and the letters
+spell the Reading's Canonical Form back. Each half changes on its own.
+
+`source` records the immediate base of a formation whose letters can't be cut
+into pieces: a conversion (`Lauf` ← `laufen`), an acronym, a clipping or a
+participle. A participle's Source also records whether the Reading's meaning
+is a sense of its verb (`gekocht` stores `kochen`, Verbal; `gelassen` 😌
+stores `lassen`, Drifted). `projectSources` derives the inverse
+`participialAdjective` edges from the verb's Lemma for Verbal Readings, so a
+verb lists its participial adjectives without storing them.
 
 A Lemma's inflectional alternatives are not Reading Knowledge. They are its
 Lemma Paradigm (system ADR 0048): per Variation Dimension, its Paradigm

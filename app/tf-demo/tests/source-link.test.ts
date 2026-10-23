@@ -2,13 +2,13 @@ import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import { api, internal } from "../convex/_generated/api";
 import { RELATION_PUBLICATION_FINGERPRINTS } from "../convex/model/generatedKnowledgeContainment";
+import { asksSource } from "../server/knowledgeSource";
 import {
 	emojiDescriptionOf,
 	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
-import { asksParticipleSource } from "../server/participleSource";
 import {
 	createTestConvex,
 	submitText,
@@ -53,34 +53,34 @@ const GEKOCHT_READING = {
 	},
 	emojiDescription: "🥔",
 } as const satisfies Dumling.Reading<"de">;
-const KOCHEN_SOURCE = { verb: KOCHEN, meaning: "Verbal" } as const;
+const KOCHEN_SOURCE = { target: KOCHEN, meaning: "Verbal" } as const;
 const SOURCE_CHANGE = {
 	kind: "Contribute",
-	aspect: "participleSource",
+	aspect: "source",
 	value: KOCHEN_SOURCE,
 } as const;
 
-test("only a base run of an ADJ Reading without a stored source asks for its Participle Source", () => {
+test("only a base run of an ADJ Reading without a stored Source asks for one", () => {
 	expect(
-		asksParticipleSource(GEKOCHT_READING, {
+		asksSource(GEKOCHT_READING, {
 			topUpOnly: false,
 			knowledge: {},
 		}),
 	).toBe(true);
 	expect(
-		asksParticipleSource(GEKOCHT_READING, {
+		asksSource(GEKOCHT_READING, {
 			topUpOnly: true,
 			knowledge: {},
 		}),
 	).toBe(false);
 	expect(
-		asksParticipleSource(GEKOCHT_READING, {
+		asksSource(GEKOCHT_READING, {
 			topUpOnly: false,
-			knowledge: { participleSource: KOCHEN_SOURCE },
+			knowledge: { source: KOCHEN_SOURCE },
 		}),
 	).toBe(false);
 	expect(
-		asksParticipleSource(KOCHEN_READING, {
+		asksSource(KOCHEN_READING, {
 			topUpOnly: false,
 			knowledge: {},
 		}),
@@ -154,7 +154,8 @@ function publishSource(
 	t: TestConvexDb,
 	change: {
 		readonly kind: "Contribute";
-		readonly aspect: "participleSource";
+		readonly aspect: "source" | "breakdown";
+		readonly part?: "constituents" | "morphemes";
 		readonly value: unknown;
 	} = SOURCE_CHANGE,
 ) {
@@ -223,10 +224,10 @@ test("a missing source verb stays a Unit Shadow and no Reading is minted for it"
 		readingId: adjectiveId,
 		visitorId,
 	});
-	expect(adjectiveNote?.knowledge.participleSource).toEqual(KOCHEN_SOURCE);
-	expect(adjectiveNote?.participleLinks).toEqual([
+	expect(adjectiveNote?.knowledge.source).toEqual(KOCHEN_SOURCE);
+	expect(adjectiveNote?.sourceLinks).toEqual([
 		{
-			relation: "participleSource",
+			relation: "source",
 			meaning: "Verbal",
 			targetCanonicalForm: "kochen",
 			target: { kind: "Shadow", shadowId: shadow._id },
@@ -238,9 +239,7 @@ test("a missing source verb stays a Unit Shadow and no Reading is minted for it"
 	expect(shadowNote?.references.page).toMatchObject([
 		{
 			reading: { readingId: adjectiveId, canonicalForm: "gekocht" },
-			structuralReferences: [
-				{ aspect: "participleSource", path: "verb" },
-			],
+			structuralReferences: [{ aspect: "source", path: "target" }],
 		},
 	]);
 });
@@ -256,9 +255,9 @@ test("the link reaches the source verb once it is stored, and the verb's Lemma N
 		readingId: adjectiveId,
 		visitorId,
 	});
-	expect(adjectiveNote?.participleLinks).toEqual([
+	expect(adjectiveNote?.sourceLinks).toEqual([
 		{
-			relation: "participleSource",
+			relation: "source",
 			meaning: "Verbal",
 			targetCanonicalForm: "kochen",
 			target: { kind: "Lemma", lemmaId: verb.lemmaId },
@@ -269,7 +268,7 @@ test("the link reaches the source verb once it is stored, and the verb's Lemma N
 		readingId: verb.readingId,
 		visitorId,
 	});
-	expect(verbReadingNote?.participleLinks).toEqual([]);
+	expect(verbReadingNote?.sourceLinks).toEqual([]);
 	const verbLemmaNote = await t.query(api.routeNotes.get, {
 		target: { kind: "Lemma", lemmaId: verb.lemmaId },
 	});
@@ -285,7 +284,7 @@ test("the link reaches the source verb once it is stored, and the verb's Lemma N
 	]);
 });
 
-test("a stored Participle Source that no longer parses is skipped and reported, not listed under the verb", async () => {
+test("a stored Source that no longer parses is skipped and reported, not listed under the verb", async () => {
 	const t = createTestConvex();
 	const visitorId = "visitor-1";
 	await seedAdjective(t, visitorId);
@@ -294,8 +293,8 @@ test("a stored Participle Source that no longer parses is skipped and reported, 
 	const rowId = await t.run(async (ctx) => {
 		const row = await ctx.db
 			.query("accumulatedKnowledge")
-			.withIndex("by_participle_source_lemma_key", (q) =>
-				q.eq("participleSourceLemmaKey", lemmaIdentityKey(KOCHEN)),
+			.withIndex("by_source_lemma_key", (q) =>
+				q.eq("sourceLemmaKey", lemmaIdentityKey(KOCHEN)),
 			)
 			.unique();
 		if (!row) throw new Error("Expected the adjective's Knowledge row.");
@@ -303,7 +302,7 @@ test("a stored Participle Source that no longer parses is skipped and reported, 
 		await ctx.db.patch(row._id, {
 			knowledge: {
 				...row.knowledge,
-				participleSource: { ...KOCHEN_SOURCE, meaning: "Bogus" },
+				source: { ...KOCHEN_SOURCE, meaning: "Bogus" },
 			},
 		});
 		return row._id;
@@ -348,7 +347,7 @@ test("a stored verb with other Core Features is not the source", async () => {
 		readingId: adjectiveId,
 		visitorId,
 	});
-	expect(adjectiveNote?.participleLinks?.[0]?.target.kind).toBe("Shadow");
+	expect(adjectiveNote?.sourceLinks?.[0]?.target.kind).toBe("Shadow");
 });
 
 test("a drifted meaning keeps its link but is not listed under the verb", async () => {
@@ -358,7 +357,7 @@ test("a drifted meaning keeps its link but is not listed under the verb", async 
 	expect(
 		await publishSource(t, {
 			...SOURCE_CHANGE,
-			value: { verb: KOCHEN, meaning: "Drifted" },
+			value: { target: KOCHEN, meaning: "Drifted" },
 		}),
 	).toEqual({ status: "Committed" });
 	const verb = await storeVerb(t, KOCHEN_READING);
@@ -366,9 +365,9 @@ test("a drifted meaning keeps its link but is not listed under the verb", async 
 		readingId: adjectiveId,
 		visitorId,
 	});
-	expect(adjectiveNote?.participleLinks).toEqual([
+	expect(adjectiveNote?.sourceLinks).toEqual([
 		{
-			relation: "participleSource",
+			relation: "source",
 			meaning: "Drifted",
 			targetCanonicalForm: "kochen",
 			target: { kind: "Lemma", lemmaId: verb.lemmaId },
@@ -380,4 +379,58 @@ test("a drifted meaning keeps its link but is not listed under the verb", async 
 	expect(
 		verbLemmaNote?.kind === "Lemma" && verbLemmaNote.participialAdjectives,
 	).toEqual([]);
+});
+
+test("Breakdown pieces refer to their parts' Shadows, so each Shadow Note lists the Reading", async () => {
+	const t = createTestConvex();
+	const visitorId = "visitor-1";
+	const adjectiveId = await seedAdjective(t, visitorId);
+	const morpheme = (kind: string, canonicalForm: string) => ({
+		language: "de",
+		canonicalForm,
+		family: "Morpheme",
+		kind,
+	});
+	expect(
+		await publishSource(t, {
+			kind: "Contribute",
+			aspect: "breakdown",
+			part: "morphemes",
+			value: [
+				{ letters: "ge", target: morpheme("Prefix", "ge-") },
+				{ letters: "koch", target: morpheme("Root", "koch") },
+				{ letters: "t", target: morpheme("Suffix", "-t") },
+			],
+		}),
+	).toEqual({ status: "Committed" });
+	const root = await t.run((ctx) =>
+		ctx.db
+			.query("shadows")
+			.withIndex("by_shadow_key", (q) =>
+				q.eq(
+					"shadowKey",
+					JSON.stringify(["de", "koch", "Morpheme", "Root"]),
+				),
+			)
+			.unique(),
+	);
+	if (!root) throw new Error("Expected the Root's Shadow.");
+	const shadowNote = await t.query(api.shadowNotes.get, {
+		shadowId: root._id,
+	});
+	expect(shadowNote?.references.page).toMatchObject([
+		{
+			reading: { readingId: adjectiveId, canonicalForm: "gekocht" },
+			structuralReferences: [
+				{ aspect: "breakdown", path: "morphemes.1" },
+			],
+		},
+	]);
+	const adjectiveNote = await t.query(api.readingNotes.get, {
+		readingId: adjectiveId,
+		visitorId,
+	});
+	expect(
+		adjectiveNote?.structuralReferences.map(({ path }) => path).sort(),
+	).toEqual(["morphemes.0", "morphemes.1", "morphemes.2"]);
 });

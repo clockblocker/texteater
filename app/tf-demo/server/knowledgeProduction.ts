@@ -26,7 +26,7 @@ export type KnowledgeFailure = {
 		| "translations"
 		| "semanticRelations"
 		| "valency"
-		| "participleSource"
+		| "source"
 		| "locutionType"
 		| "sayingType"
 		| "formulaRole"

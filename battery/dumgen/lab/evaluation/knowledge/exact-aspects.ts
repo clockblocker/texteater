@@ -47,8 +47,8 @@ const formsKey = (value: readonly string[] | undefined) =>
 const verbKey = (source: unknown) => {
 	if (!source) return null;
 	// A produced source has passed Dumrel and gold's is Dumrel-checked, so
-	// both are Participle Sources; the reads only keep the unknown typed.
-	const { verb, meaning } = isRecord(source) ? source : {};
+	// both are participles' Sources; the reads only keep the unknown typed.
+	const { target: verb, meaning } = isRecord(source) ? source : {};
 	const lemma = isRecord(verb) ? verb : {};
 	const core = isRecord(lemma.coreFeatures) ? lemma.coreFeatures : {};
 	return canonicalJson({
@@ -62,7 +62,7 @@ const verbKey = (source: unknown) => {
 /** The structural Knowledge aspects scored exactly. */
 const exactKnowledgeAspects = [
 	"valency",
-	"participleSource",
+	"source",
 	"locutionType",
 	"sayingType",
 	"formulaRole",
@@ -94,7 +94,7 @@ const sameValue: {
 		produced: Dumrel.ReadingKnowledge[Aspect],
 	) => boolean;
 } = {
-	participleSource: (gold, produced) => verbKey(gold) === verbKey(produced),
+	source: (gold, produced) => verbKey(gold) === verbKey(produced),
 	locutionType: (gold, produced) => gold === produced,
 	formulaRole: (gold, produced) => gold === produced,
 	sayingType: (gold, produced) => gold?.type === produced?.type,

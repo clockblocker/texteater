@@ -36,7 +36,8 @@ test("Knowledge change schemas correlate structured aspects with their values", 
 	expect(
 		knowledgeChangeSchema.safeParse({
 			kind: "Contribute",
-			aspect: "morphologicalTree",
+			aspect: "breakdown",
+			part: "morphemes",
 			value: [
 				{
 					language: "de",

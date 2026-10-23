@@ -2,7 +2,7 @@ import { isRecord } from "common-utils";
 import { type Infer, v } from "convex/values";
 import { selectGrammaticalAlternatives } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
-import { parseReadingKnowledge, projectParticipleSources } from "dumrel";
+import { parseReadingKnowledge, projectSources } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import {
 	lemmaIdentityKey,
@@ -176,13 +176,14 @@ export const participleMeaningValidator = v.union(
 );
 
 /**
- * The Participle Source link on an ADJ Reading Note (ADR 0036): the source
- * VERB Lemma it names, or that verb's Unit Shadow while it is not stored.
+ * The Source link on a Reading Note (ADR 0050): the base Lemma it names, or
+ * that base's Unit Shadow while it is not stored. A participle's link also
+ * carries its Participle Meaning (ADR 0036).
  */
-export const participleLinkValidator = v.object({
-	relation: v.literal("participleSource"),
+export const sourceLinkValidator = v.object({
+	relation: v.literal("source"),
 	/** Drifted: the adjective's form comes from the verb, its meaning does not. */
-	meaning: participleMeaningValidator,
+	meaning: v.optional(participleMeaningValidator),
 	targetCanonicalForm: v.string(),
 	target: v.union(
 		v.object({ kind: v.literal("Lemma"), lemmaId: v.id("lemmas") }),
@@ -191,80 +192,76 @@ export const participleLinkValidator = v.object({
 });
 
 /**
- * Where a Participle Source link leads: the stored VERB Lemma, matched by its
- * full identity, or the Unit Shadow the adjective's Knowledge refers to while
- * the verb is missing. Null when neither is stored.
+ * Where a Source link leads: the stored Lemma a Lemma target names, matched
+ * by its full identity, or the Unit Shadow the Reading's Knowledge refers to
+ * while no such Lemma is stored. Null when neither is stored.
  */
-async function participleSourceTarget(
+async function sourceTarget(
 	ctx: QueryCtx,
 	ownerReadingKey: string,
-	verb: Dumling.Lemma,
-): Promise<Infer<typeof participleLinkValidator>["target"] | null> {
-	const lemma = await ctx.db
-		.query("lemmas")
-		.withIndex("by_lemma_key", (q) =>
-			q.eq("lemmaKey", lemmaIdentityKey(verb)),
-		)
-		.unique();
-	if (lemma) return { kind: "Lemma", lemmaId: lemma._id };
+	target: Dumrel.LinkTarget,
+): Promise<Infer<typeof sourceLinkValidator>["target"] | null> {
+	if ("unitKind" in target) {
+		const lemma = await ctx.db
+			.query("lemmas")
+			.withIndex("by_lemma_key", (q) =>
+				q.eq("lemmaKey", lemmaIdentityKey(target)),
+			)
+			.unique();
+		if (lemma) return { kind: "Lemma", lemmaId: lemma._id };
+	}
 	const references = await ctx.db
 		.query("structuralShadowReferences")
 		.withIndex("by_owner_reading_key", (q) =>
 			q.eq("ownerReadingKey", ownerReadingKey),
 		)
 		.take(MAX_STRUCTURAL_REFERENCES_PER_READING + 1);
+	const sourceLocator = structuralShadowLocatorKey(
+		ownerReadingKey,
+		"source",
+		"target",
+	);
 	const reference = references.find(
-		({ aspect, locatorKey }) =>
-			aspect === "participleSource" &&
-			locatorKey ===
-				structuralShadowLocatorKey(
-					ownerReadingKey,
-					"participleSource",
-					"verb",
-				),
+		({ locatorKey }) => locatorKey === sourceLocator,
 	);
 	const shadow = reference ? await ctx.db.get(reference.shadowId) : null;
 	return shadow &&
 		shadowIsCompatible(shadow, {
-			language: verb.language,
-			canonicalForm: verb.canonicalForm,
-			family: verb.family,
-			kind: verb.kind,
+			language: target.language,
+			canonicalForm: target.canonicalForm,
+			family: target.family,
+			kind: target.kind,
 		})
 		? { kind: "Shadow", shadowId: shadow._id }
 		: null;
 }
 
 /**
- * The Participle Source link this Reading stores, projected by Dumrel. The
- * verb's side lives on its Lemma Note ({@link loadParticipialAdjectives}).
+ * The Source link this Reading stores, projected by Dumrel. A verb's side of
+ * a participle lives on its Lemma Note ({@link loadParticipialAdjectives}).
  */
-export async function loadParticipleLinks(
+export async function loadSourceLinks(
 	ctx: QueryCtx,
 	source: Doc<"readings">,
 	sourceLemma: Doc<"lemmas">,
-	participleSource: Dumrel.ParticipleSource | undefined,
-): Promise<Infer<typeof participleLinkValidator>[]> {
-	if (!participleSource) return [];
-	const projected = projectParticipleSources([
+	stored: Dumrel.Source | undefined,
+): Promise<Infer<typeof sourceLinkValidator>[]> {
+	if (!stored) return [];
+	const projected = projectSources([
 		{
 			reading: projectReadingValue(source, sourceLemma),
-			knowledge: { participleSource },
+			knowledge: { source: stored },
 		},
 	]);
 	if (!projected.success) throw projected.error;
-	const links: Infer<typeof participleLinkValidator>[] = [];
+	const links: Infer<typeof sourceLinkValidator>[] = [];
 	for (const edge of projected.value) {
-		if (edge.relation !== "participleSource") continue;
-		const target = await participleSourceTarget(
-			ctx,
-			source.readingKey,
-			edge.target,
-		);
+		if (edge.relation !== "source") continue;
+		const target = await sourceTarget(ctx, source.readingKey, edge.target);
 		if (target)
 			links.push({
 				relation: edge.relation,
-				meaning: edge.meaning,
+				...(edge.meaning ? { meaning: edge.meaning } : {}),
 				targetCanonicalForm: edge.target.canonicalForm,
 				target,
 			});
@@ -284,8 +281,8 @@ export const participialAdjectiveValidator = v.object({
 });
 
 /**
- * The ADJ Readings that name this VERB Lemma as their Participle Source with
- * a Verbal meaning, projected by Dumrel as inverse edges from the Lemma. The
+ * The ADJ Readings that name this VERB Lemma as their Source with a Verbal
+ * Participle Meaning, projected by Dumrel as inverse edges from the Lemma. The
  * link targets the Lemma, so it is listed once here and on none of the verb's
  * Readings. A Drifted adjective (`gelassen` 😌 under `lassen`) is not listed.
  */
@@ -301,8 +298,8 @@ export async function loadParticipialAdjectives(
 		return [];
 	const rows = await ctx.db
 		.query("accumulatedKnowledge")
-		.withIndex("by_participle_source_lemma_key", (q) =>
-			q.eq("participleSourceLemmaKey", verb.lemmaKey),
+		.withIndex("by_source_lemma_key", (q) =>
+			q.eq("sourceLemmaKey", verb.lemmaKey),
 		)
 		.take(MAX_PARTICIPIAL_ADJECTIVES_PER_NOTE);
 	const entries: Dumrel.ReadingWithKnowledge[] = [];
@@ -317,13 +314,12 @@ export async function loadParticipialAdjectives(
 		const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
 		if (!reading || !lemma) continue;
 		const value = projectReadingValue(reading, lemma);
-		const participleSource = isRecord(row.knowledge)
-			? row.knowledge.participleSource
+		const stored = isRecord(row.knowledge)
+			? row.knowledge.source
 			: undefined;
 		const knowledge = parseReadingKnowledge({
 			source: value,
-			knowledge:
-				participleSource === undefined ? {} : { participleSource },
+			knowledge: stored === undefined ? {} : { source: stored },
 		});
 		if (!knowledge.success) {
 			warnMalformedStoredRow(
@@ -336,7 +332,7 @@ export async function loadParticipialAdjectives(
 		readings.set(reading.readingKey, reading);
 		entries.push({ reading: value, knowledge: knowledge.value });
 	}
-	const projected = projectParticipleSources(entries);
+	const projected = projectSources(entries);
 	if (!projected.success) throw projected.error;
 	return projected.value.flatMap((edge) => {
 		if (

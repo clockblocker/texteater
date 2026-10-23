@@ -17,8 +17,8 @@ export {
 } from "./paradigm.js";
 export { paradigmDimensions, variantIdOf } from "./paradigm-policy.js";
 export { parseReadingKnowledge } from "./parse-reading-knowledge.js";
-export { projectParticipleSources } from "./project-participle-sources.js";
 export { projectSemanticRelations } from "./project-semantic-relations.js";
+export { projectSources } from "./project-sources.js";
 export { selectKnowledge } from "./select-knowledge.js";
 export { allowedComplementKinds } from "./valency-policy.js";
 export {

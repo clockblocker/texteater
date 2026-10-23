@@ -1,6 +1,6 @@
 /**
  * The structural aspects that take one value each (#883 addenda): an
- * adjective's Participle Source and a Locution's, Saying's or formula's type,
+ * adjective's Source and a Locution's, Saying's or formula's type,
  * and the Variation Dimensions of a Lemma's Paradigm (ADR 0048): a noun's
  * plural and a verb's principal parts. Luna writes what must be written
  * (plural forms, a verb's principal parts, a source verb's parts, a Winged
@@ -116,7 +116,7 @@ export const producePlural = (
 /** One Contribute change of `aspect`, checked by Dumrel. */
 function checked(
 	context: AspectContext,
-	aspect: "participleSource" | "locutionType" | "sayingType" | "formulaRole",
+	aspect: "source" | "locutionType" | "sayingType" | "formulaRole",
 	value: unknown,
 ): Effect.Effect<GermanKnowledgeChange[], AspectError> {
 	const changes = checkedChanges(context, aspect, [
@@ -266,7 +266,7 @@ export const produceVerbForms = (
 		return { paradigmChanges, failures };
 	});
 
-// Participle Source (ADR 0036): Luna names the verb by form, jev checks it.
+// A participle's Source (ADR 0036): Luna names the verb by form, jev checks it.
 
 const participlePrompt = [
 	shared.reading,
@@ -382,11 +382,12 @@ function sourceVerbLemma(
 }
 
 /**
- * An adjective's Participle Source, or none: Luna names the verb by form,
- * code checks the form it spells, and jev checks the claim and judges the
- * meaning in one request. A plain adjective takes no judgment.
+ * An adjective's Source, the verb it is a participle of, or none (ADR 0036):
+ * Luna names the verb by form, code checks the form it spells, and jev checks
+ * the claim and judges the meaning in one request. A plain adjective takes no
+ * judgment.
  */
-export const produceParticipleSource = (
+export const produceSource = (
 	context: AspectContext,
 ): Effect.Effect<GermanKnowledgeChange[], AspectError> =>
 	Effect.gen(function* () {
@@ -446,8 +447,8 @@ export const produceParticipleSource = (
 			return yield* new KnowledgeUnresolved({
 				message: "jev left the participle's form or meaning undecided",
 			});
-		return yield* checked(context, "participleSource", {
-			verb: sourceVerbLemma(draft),
+		return yield* checked(context, "source", {
+			target: sourceVerbLemma(draft),
 			meaning,
 		});
 	});

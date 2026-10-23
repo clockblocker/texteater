@@ -401,7 +401,7 @@
 				"knowledge": {},
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"participleSource": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -513,7 +513,7 @@
 				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"participleSource": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

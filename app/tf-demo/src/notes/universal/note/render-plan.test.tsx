@@ -259,7 +259,7 @@ function readingFixture(): NoteDataFor<"Reading"> {
 		grammaticalAlternatives: [],
 		pendingRelations: [],
 		structuralReferences: [],
-		participleLinks: [],
+		sourceLinks: [],
 		sourceContexts: { page: [], continueCursor: "", isDone: true },
 	};
 }

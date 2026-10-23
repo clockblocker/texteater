@@ -77,16 +77,16 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 			"Sie ist verliebt.",
 			["verliebt"],
 			{
-				request: { participleSource: null },
+				request: { source: null },
 			},
 		),
 	);
 	expect(result.changes).toEqual([
 		{
 			kind: "Contribute",
-			aspect: "participleSource",
+			aspect: "source",
 			value: {
-				verb: {
+				target: {
 					unitKind: "Lemma",
 					language: "de",
 					family: "Lexeme",
@@ -115,7 +115,7 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 			"Sie ist verliebt.",
 			["verliebt"],
 			{
-				request: { participleSource: null },
+				request: { source: null },
 			},
 		),
 	);
@@ -141,7 +141,7 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 			"Sie ist verliebt.",
 			["verliebt"],
 			{
-				request: { participleSource: null },
+				request: { source: null },
 			},
 		),
 	);
@@ -170,12 +170,12 @@ test("a Partizip I is checked by code, so jev judges only its meaning; an insepa
 			"👃",
 			"Ein duftend Brot.",
 			["duftend"],
-			{ request: { participleSource: null } },
+			{ request: { source: null } },
 		),
 	);
 	expect(result.changes).toEqual([
 		expect.objectContaining({
-			aspect: "participleSource",
+			aspect: "source",
 			value: expect.objectContaining({ meaning: "Verbal" }),
 		}),
 	]);
@@ -199,13 +199,13 @@ test("a Partizip I is checked by code, so jev judges only its meaning; an insepa
 			"🙈",
 			"Ein versteckt Haus.",
 			["versteckt"],
-			{ request: { participleSource: null } },
+			{ request: { source: null } },
 		),
 	);
 	expect(inseparable.result.changes).toEqual([
 		expect.objectContaining({
 			value: expect.objectContaining({
-				verb: expect.objectContaining({
+				target: expect.objectContaining({
 					canonicalForm: "verstecken",
 					coreFeatures: {
 						hasSepPrefix: null,

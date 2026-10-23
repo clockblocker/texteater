@@ -17,6 +17,22 @@ const readingValueLemmaValidator = v.object({
 	coreFeatures: v.any(),
 });
 
+/** A Unit Shadow a pending link names (ADR 0050). */
+const linkTargetShadowValidator = v.object({
+	language: v.string(),
+	canonicalForm: v.string(),
+	family: v.string(),
+	kind: v.string(),
+});
+/** Where a Breakdown piece or a Source links: a Lemma, or a pending Shadow. */
+const linkTargetValidator = v.union(
+	readingValueLemmaValidator,
+	linkTargetShadowValidator,
+);
+const breakdownPiecesValidator = v.array(
+	v.object({ letters: v.string(), target: v.optional(linkTargetValidator) }),
+);
+
 const readingValueReadingValidator = v.object({
 	unitKind: v.literal("Reading"),
 	lemma: readingValueLemmaValidator,
@@ -133,12 +149,17 @@ export const readingKnowledgeValidator = v.object({
 			ru: v.optional(v.array(v.string())),
 		}),
 	),
-	morphologicalTree: v.optional(v.any()),
-	valency: v.optional(v.array(valencySlotValidator)),
-	participleSource: v.optional(
+	breakdown: v.optional(
 		v.object({
-			verb: readingValueLemmaValidator,
-			meaning: participleMeaningValidator,
+			constituents: v.optional(breakdownPiecesValidator),
+			morphemes: v.optional(breakdownPiecesValidator),
+		}),
+	),
+	valency: v.optional(v.array(valencySlotValidator)),
+	source: v.optional(
+		v.object({
+			target: linkTargetValidator,
+			meaning: v.optional(participleMeaningValidator),
 		}),
 	),
 	// The per-Reading aspects of ADR 0039, which Knowledge production writes

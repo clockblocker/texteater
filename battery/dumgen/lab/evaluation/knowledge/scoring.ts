@@ -1,7 +1,7 @@
 /**
  * How a `knowledge.produce` run is scored (#887, #873's method).
  *
- * - Structural aspects (`exactAspects`: valency, participle source, the
+ * - Structural aspects (`exactAspects`: valency, Source, the
  *   three types, and the Variation Dimensions: a noun's plural and a verb's
  *   principal parts) are right when the produced value equals gold's, an
  *   aspect gold reviewed empty being right only when nothing was produced.
@@ -258,10 +258,10 @@ export function evaluateKnowledge(
 						),
 					}
 				: {}),
-			...(aspect === "participleSource" && failed === undefined
+			...(aspect === "source" && failed === undefined
 				? {
 						sourceAgrees:
-							(authored.participleSource === undefined) ===
+							(authored.source === undefined) ===
 							(value === undefined),
 					}
 				: {}),
@@ -449,8 +449,7 @@ export function knowledgeReport(attempts: readonly ScoredKnowledge[]) {
 	const valency = scored("valency");
 	const participle = entries.filter(
 		({ verdict }) =>
-			verdict.aspect === "participleSource" &&
-			verdict.sourceAgrees !== undefined,
+			verdict.aspect === "source" && verdict.sourceAgrees !== undefined,
 	);
 	const sum = (
 		pick: (counts: NonNullable<AspectVerdict["complements"]>) => number,
@@ -483,7 +482,7 @@ export function knowledgeReport(attempts: readonly ScoredKnowledge[]) {
 			sum(({ matched }) => matched),
 			sum(({ produced }) => produced),
 		),
-		/** Whether a participle source exists at all. */
+		/** Whether a Source exists at all. */
 		participleDetected: lineOf(
 			participle.map(({ verdict }) => verdict.sourceAgrees === true),
 		),

@@ -1,7 +1,6 @@
 import {
 	hasRoot,
 	ParsingError,
-	type ParsingIssue,
 	parseCompiledValidation,
 } from "common-utils/validation";
 import type * as Dumling from "dumling/types";
@@ -50,8 +49,6 @@ function parseRoute<T>(input: unknown, key: RouteKey): DumdictParse<T> {
 				message: `Unknown Dumdict validation route ${route}`,
 			},
 		]);
-	const recursiveIssue = recursiveInputIssueForRoute(input, key);
-	if (recursiveIssue) return new ParsingError([recursiveIssue]);
 	return parseCompiledValidation<RouteKey, T>(
 		validationRegistry,
 		key,
@@ -123,139 +120,6 @@ export function parseReadingForDumdictRuntime<L extends Dumling.Language>(
 ): DumdictParse<Dumling.Reading<L>> {
 	return parseRoute(input, `internal:reading:${language}`);
 }
-const MAX_DUMDICT_RECURSIVE_INPUT_DEPTH = 128;
-
-function recursiveInputIssueForRoute(
-	input: unknown,
-	key: DumdictValidationRouteKey | InternalDumdictValidationRouteKey,
-): ParsingIssue | undefined {
-	if (!routeCanContainMorphologicalTree(key)) return undefined;
-	for (const candidate of morphologicalTreeRoots(input)) {
-		const issue = recursiveTreeIssue(candidate.value, candidate.path, []);
-		if (issue !== undefined) return issue;
-	}
-	return undefined;
-}
-
-export function routeCanContainMorphologicalTree(
-	key: DumdictValidationRouteKey | InternalDumdictValidationRouteKey,
-): boolean {
-	return (
-		key.startsWith("parseAsCommitChangesRequest:") ||
-		key.startsWith("parseAsDumdictPlan:") ||
-		key.startsWith("parseAsPlannedChangeOp:") ||
-		key.startsWith("parseAsReadingEntry:") ||
-		key.startsWith("parseAsReadingPatchOp:") ||
-		key === "internal:knowledge-change" ||
-		key === "internal:reading-knowledge"
-	);
-}
-
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-function morphologicalTreeRoots(
-	input: unknown,
-): Array<{ path: ParsingIssue["path"]; value: unknown }> {
-	const roots: Array<{ path: ParsingIssue["path"]; value: unknown }> = [];
-	const pending: Array<{ path: ParsingIssue["path"]; value: unknown }> = [
-		{ path: [], value: input },
-	];
-	const seen = new WeakSet<object>();
-	for (let index = 0; index < pending.length; index += 1) {
-		const candidate = pending[index];
-		if (
-			candidate === undefined ||
-			candidate.value === null ||
-			typeof candidate.value !== "object" ||
-			seen.has(candidate.value)
-		)
-			continue;
-		seen.add(candidate.value);
-		const value = candidate.value;
-		if (Reflect.get(value, "aspect") === "morphologicalTree") {
-			const changeValue = Reflect.get(value, "value");
-			if (changeValue !== null && typeof changeValue === "object") {
-				roots.push({
-					path: [...candidate.path, "value", "root"],
-					value: Reflect.get(changeValue, "root"),
-				});
-			}
-		}
-		const storedTree = Reflect.get(value, "morphologicalTree");
-		if (storedTree !== null && typeof storedTree === "object") {
-			roots.push({
-				path: [...candidate.path, "morphologicalTree", "root"],
-				value: Reflect.get(storedTree, "root"),
-			});
-		}
-		for (const key of [
-			"change",
-			"envelope",
-			"knowledge",
-			"record",
-		] as const) {
-			const child = Reflect.get(value, key);
-			if (child !== null && typeof child === "object")
-				pending.push({ path: [...candidate.path, key], value: child });
-		}
-		for (const key of ["changes", "ops"] as const) {
-			const children = Reflect.get(value, key);
-			if (!Array.isArray(children)) continue;
-			for (const [childIndex, child] of children.entries()) {
-				pending.push({
-					path: [...candidate.path, key, childIndex],
-					value: child,
-				});
-			}
-		}
-	}
-	return roots;
-}
-
-function recursiveTreeIssue(
-	value: unknown,
-	path: ParsingIssue["path"],
-	activeAncestors: object[],
-): ParsingIssue | undefined {
-	if (value === null || typeof value !== "object") return undefined;
-	if (activeAncestors.length >= MAX_DUMDICT_RECURSIVE_INPUT_DEPTH) {
-		return {
-			code: "custom",
-			message: "Input nesting exceeds the supported depth",
-			path,
-		};
-	}
-	if (activeAncestors.includes(value)) {
-		return {
-			code: "custom",
-			message: "Cyclic input is not supported",
-			path,
-		};
-	}
-	activeAncestors.push(value);
-	try {
-		if (Array.isArray(value)) {
-			for (const [index, child] of value.entries()) {
-				const issue = recursiveTreeIssue(
-					child,
-					[...path, index],
-					activeAncestors,
-				);
-				if (issue !== undefined) return issue;
-			}
-			return undefined;
-		}
-		const children = Reflect.get(value, "children");
-		if (!Array.isArray(children)) return undefined;
-		return recursiveTreeIssue(
-			children,
-			[...path, "children"],
-			activeAncestors,
-		);
-	} finally {
-		activeAncestors.pop();
-	}
-}
-
 type LanguageParserName =
 	| "parseAsChangePrecondition"
 	| "parseAsCommitChangesRequest"
@@ -322,7 +186,6 @@ export function parseAsChangePrecondition<Language extends Dumling.Language>(
 	return parseLanguageRoute(input, "parseAsChangePrecondition", language);
 }
 
-/** Rejects cyclic Morphological Trees and nesting beyond 128 as `ParsingError`. */
 export function parseAsCommitChangesRequest<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
@@ -336,7 +199,6 @@ export function parseAsCommitChangesResult(
 	return parseDumdictRoute(input, "parseAsCommitChangesResult");
 }
 
-/** Rejects cyclic Morphological Trees and nesting beyond 128 as `ParsingError`. */
 export function parseAsDumdictPlan<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
@@ -377,7 +239,6 @@ export function parseAsPendingSemanticRelationRecord<
 	);
 }
 
-/** Rejects cyclic Morphological Trees and nesting beyond 128 as `ParsingError`. */
 export function parseAsPlannedChangeOp<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
@@ -385,7 +246,6 @@ export function parseAsPlannedChangeOp<Language extends Dumling.Language>(
 	return parseLanguageRoute(input, "parseAsPlannedChangeOp", language);
 }
 
-/** Rejects cyclic Morphological Trees and nesting beyond 128 as `ParsingError`. */
 export function parseAsReadingEntry<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
@@ -393,7 +253,6 @@ export function parseAsReadingEntry<Language extends Dumling.Language>(
 	return parseLanguageRoute(input, "parseAsReadingEntry", language);
 }
 
-/** Rejects cyclic Morphological Trees and nesting beyond 128 as `ParsingError`. */
 export function parseAsReadingPatchOp<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,

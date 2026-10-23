@@ -87,26 +87,30 @@ function knowledgeUsesLanguage(
 		}
 	}
 
-	const visitMorphologyNode = (
-		node: Dumrel.MorphologicalTreeNode,
-	): boolean => {
-		if (node.nodeKind === "morphemeReading")
-			return readingUsesLanguage(node.reading, language);
-		if (node.nodeKind === "unitShadow")
-			return node.unitShadow.language === language;
-		return node.children.every(visitMorphologyNode);
-	};
-
+	const pieces = [
+		...(knowledge.breakdown?.constituents ?? []),
+		...(knowledge.breakdown?.morphemes ?? []),
+	];
 	if (
-		knowledge.morphologicalTree !== undefined &&
-		!visitMorphologyNode(knowledge.morphologicalTree.root)
+		pieces.some(
+			({ target }) =>
+				target !== undefined && !linkUsesLanguage(target, language),
+		)
 	)
 		return false;
 	if (!valencyUsesLanguage(knowledge.valency ?? [], language)) return false;
 	return (
-		knowledge.participleSource === undefined ||
-		lemmaUsesLanguage(knowledge.participleSource.verb, language)
+		knowledge.source === undefined ||
+		linkUsesLanguage(knowledge.source.target, language)
 	);
+}
+
+/** Whether a Breakdown piece's or Source's Lemma or Unit Shadow uses the language. */
+function linkUsesLanguage(
+	target: Dumrel.LinkTarget,
+	language: Dumling.Language,
+): boolean {
+	return target.language === language;
 }
 
 /** Whether every Lemma, Reading and Unit Shadow a Knowledge Change names uses the language. */
@@ -120,9 +124,9 @@ export function knowledgeChangeUsesLanguage(
 					readingUsesLanguage(reading, language),
 				)
 			: change.value.every((lemma) => lemmaUsesLanguage(lemma, language));
-	if (change.aspect === "morphologicalTree" && "value" in change)
+	if (change.aspect === "breakdown" && "value" in change)
 		return knowledgeUsesLanguage(
-			{ morphologicalTree: change.value },
+			{ breakdown: { [change.part]: change.value } },
 			language,
 		);
 	if (change.aspect === "valency")
@@ -133,8 +137,8 @@ export function knowledgeChangeUsesLanguage(
 						retractedSlot(change.complement),
 						language,
 					);
-	if (change.aspect === "participleSource" && "value" in change)
-		return lemmaUsesLanguage(change.value.verb, language);
+	if (change.aspect === "source" && "value" in change)
+		return linkUsesLanguage(change.value.target, language);
 	return true;
 }
 
