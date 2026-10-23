@@ -33,7 +33,7 @@ const rules = {
 		"99996175abb4200d",
 	],
 	idiom: ["de/idiom", "c05df428b3a42079"],
-	modification: ["de/modification-attests-partially", "91fc596acb3813f1"],
+	modification: ["de/modification-attests-partially", "c888ed5b9e59b0a1"],
 	auxiliary: ["de/auxiliary-joins-the-verb-it-serves", "17cec6bff2108a22"],
 	expletive: ["de/expletive-es-joins-its-verb", "99bff23563b49716"],
 } as const satisfies Readonly<Record<string, Cite>>;

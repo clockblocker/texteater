@@ -366,11 +366,11 @@ test("a Surface spelled like its Lemma with nothing to name says nothing, judged
 	expect(surfaceOf("bitte-komm-herein-lukas", "Lukas")).toBeNull();
 	// Not Grundform only for the gap a discontinuous Locution cites.
 	expect(surfaceOf("je-frueher-desto-besser", "Je desto")).toBeNull();
-	// Spelled otherwise with nothing stored to say how: the last resort.
+	// Quoting only some of its Lemma's words, in order: a part.
 	expect(
 		surfaceOf(
 			"die-blosse-meldung-der-bus-kommt-spaeter-war-nur-eine",
-			"Doppelt gemoppelt hält besser",
+			"Doppelt hält besser",
 		)?.sheet,
-	).toBe("form of Doppelt genäht hält besser");
+	).toBe("part of Doppelt genäht hält besser");
 });

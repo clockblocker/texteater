@@ -35,7 +35,7 @@ export const rules = {
 	comparability: ["de/comparability-is-lexical", "b72c043c004f9dc9"],
 	attributive: ["de/attributive-adjective-stands-alone", "dc0d3ef97ace5bc0"],
 	partial: ["de/partial-coverage", "5aa8e564f6ae1177"],
-	modification: ["de/modification-attests-partially", "91fc596acb3813f1"],
+	modification: ["de/modification-attests-partially", "c888ed5b9e59b0a1"],
 	referent: ["de/open-referent", "eae1e1fa056277e4"],
 	interjection: ["de/interjection-counts-its-words", "b572bad8906b508d"],
 	foreign: ["de/foreign-unless-duden-or-german-grammar", "c2f06b03fed6e233"],
