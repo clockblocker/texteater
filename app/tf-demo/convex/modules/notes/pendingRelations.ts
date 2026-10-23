@@ -40,7 +40,7 @@ export function projectPendingRelations(
 		locatorKey: string;
 		sourceReadingKey: string;
 		targetFoldedCanonicalForm: string;
-		shadowId?: Id<"shadows">;
+		shadowId: Id<"shadows">;
 		record: unknown;
 	}[],
 ): PendingRelationProjection[] {
@@ -61,7 +61,6 @@ export function projectPendingRelations(
 		// (system ADR 0011), so it is no pending relation.
 		return !isResolvedPendingRecord(record) &&
 			isSemanticRelation(relation) &&
-			shadowId &&
 			locator?.sourceReadingKey === row.sourceReadingKey &&
 			locator.relation === relation &&
 			typeof locator.targetPendingId === "string" &&

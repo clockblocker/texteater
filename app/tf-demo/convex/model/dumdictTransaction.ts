@@ -112,8 +112,8 @@ export type DumdictTransaction = {
 		request: CleanupRelationsRequest<"de">,
 	) => Promise<DumdictTransactionOutcome>;
 	/**
-	 * Re-evaluates the stored Shadows a Lemma change or a migration names. A
-	 * plan larger than one commit writes nothing and reports its size.
+	 * Re-evaluates the stored Shadows a Lemma change names. A plan larger
+	 * than one commit writes nothing and reports its size.
 	 */
 	readonly reevaluateShadows: (
 		request: ReevaluateShadowsRequest<"de">,

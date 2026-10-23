@@ -360,7 +360,7 @@ export async function attachPendingShadowReference(
 	return internShadow(ctx, pendingShadowDescriptor(recordValue));
 }
 
-export async function syncStructuralShadowReferences(
+async function syncStructuralShadowReferences(
 	ctx: MutationCtx,
 	ownerReadingKey: string,
 	knowledgeValue: unknown,

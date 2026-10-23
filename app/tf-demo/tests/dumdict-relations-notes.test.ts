@@ -3,6 +3,7 @@ import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
+import { attachPendingShadowReference } from "../convex/model/shadows";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import {
 	lemmaIdentityKey,
@@ -75,6 +76,10 @@ describe("tf-demo Dumdict relation orchestration", () => {
 				locatorKey: locatorKey(pendingRecord.locator),
 				sourceReadingKey: readingIdentityKey(gehenReading),
 				targetFoldedCanonicalForm: "laufen",
+				shadowId: await attachPendingShadowReference(
+					ctx,
+					pendingRecord,
+				),
 				record: pendingRecord,
 			});
 		});

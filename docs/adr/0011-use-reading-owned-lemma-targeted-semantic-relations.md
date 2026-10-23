@@ -139,16 +139,6 @@ current resolution (`pendingRelationTarget`). It maps each variant to a place
 of its own, such as a Crossroad note, a Lemma note, a Reading note or a
 Surface's entry in its Lemma note.
 
-**Migration.** Records written before relations kept their Shadow have no
-`resolvedLemma` and read as pending, which they are: the old planner deleted
-every record it resolved. A store runs `reevaluateShadows` once over every
-stored Shadow. That resolves each record that now has exactly one match,
-such as one whose Lemma came through `ensureReadingEntry`, which did not
-resolve Shadows before. The sweep is deterministic, and running it again
-changes nothing. A relation resolved before the change was stored as a plain
-claim without its Shadow. No migration can recover that Shadow, so such a
-relation reads as exactly named and moves only when its Lemma is removed.
-
 ## Considered Options
 
 - **Deciding Shadow targets at read time, with no fan-out.** Rejected: hosts

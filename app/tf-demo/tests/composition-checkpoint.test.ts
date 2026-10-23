@@ -24,6 +24,7 @@ const surface = {
 		},
 	},
 	inflectionalFeatures: {
+		expletive: null,
 		verbForm: "Fin",
 		tense: "Pres",
 		mood: "Ind",
@@ -38,7 +39,7 @@ const surface = {
 const checkpoint = {
 	encounter: {
 		sentence: {
-			id: "old",
+			id: "regnet",
 			language: "de",
 			segments: [
 				{ kind: "ResolvableText", text: "Es" },
@@ -54,99 +55,24 @@ const checkpoint = {
 			{ attested: "regnet", orthography: "Standard" },
 		] satisfies Dumling.Attestation<"de">["members"],
 		realizationCoverage: "Full",
+		expletiveEvidence: null,
+		valencyEvidence: [],
 	},
 };
-test("legacy verbal checkpoints default absent composition without absorbing adjacent es", () => {
-	expect(() => parseResolvedGrammar(checkpoint)).toThrow();
-	const restoration = restoreStoredGrammar(checkpoint);
-	if (!restoration.ok) throw new Error(restoration.reason);
-	const restored = restoration.grammar;
-	expect(restored.encounter).toEqual(checkpoint.encounter);
-	expect(restored.attestation.members).toEqual(
-		checkpoint.attestation.members,
-	);
-	expect(restored.attestation).toHaveProperty("expletiveEvidence", null);
-	expect(restored.attestation).toHaveProperty("valencyEvidence", []);
-	expect(restored.attestation.surface).toHaveProperty(
-		"inflectionalFeatures.expletive",
-		null,
-	);
-	expect(restoreStoredGrammar(restored)).toEqual({
+test("a stored checkpoint restores as it was stored", () => {
+	expect(restoreStoredGrammar(checkpoint)).toEqual({
 		ok: true,
-		grammar: restored,
+		grammar: parseResolvedGrammar(checkpoint),
 	});
-});
-test("legacy noun checkpoints discard component references but retain exact occurrence evidence", () => {
-	const noun = {
-		encounter: {
-			sentence: {
-				id: "noun-old",
-				language: "de",
-				segments: [
-					{ kind: "ResolvableText", text: "Der" },
-					{ kind: "ResolvableText", text: "Hund" },
-				],
-			},
-			target: {
-				family: "Lexeme",
-				kind: "NOUN",
-				memberSegmentIndices: [0, 1],
-			},
-		} satisfies ClickEncounter,
-		attestation: {
-			unitKind: "Attestation",
-			surface: {
-				...surface,
-				normalizedSurface: "Hund",
-				lemma: {
-					unitKind: "Lemma",
-					language: "de",
-					family: "Lexeme",
-					kind: "NOUN",
-					canonicalForm: "Hund",
-					coreFeatures: { gender: "Masc" },
-				},
-				inflectionalFeatures: {
-					case: "Nom",
-					number: "Sing",
-					gender: null,
-				},
-				articleReference: { obsolete: true },
-			},
-			members: [
-				{ attested: "Der", orthography: "Standard" },
-				{ attested: "Hund", orthography: "Standard" },
-			],
-			realizationCoverage: "Full",
-			articleEvidence: { kind: "Owned", member: 0 },
-			valencyEvidence: [],
-		},
-	};
-	expect(() => parseResolvedGrammar(noun)).toThrow();
-	const restoration = restoreStoredGrammar(noun);
-	if (!restoration.ok) throw new Error(restoration.reason);
-	const restored = restoration.grammar;
-	expect(restored.attestation.surface).not.toHaveProperty("articleReference");
-	expect(restored.attestation).toHaveProperty(
-		"articleEvidence",
-		noun.attestation.articleEvidence,
-	);
-	expect(restored.encounter).toEqual(noun.encounter);
 });
 test("a checkpoint whose attestation is not an object fails with a reason instead of throwing", () => {
-	expect(restoreStoredGrammar({ ...checkpoint, attestation: null })).toEqual({
-		ok: false,
-		reason: "Grammar checkpoint attestation must be an object.",
-	});
-	expect(
-		restoreStoredGrammar({
-			...checkpoint,
-			attestation: { ...checkpoint.attestation, surface: null },
-		}),
-	).toEqual({
-		ok: false,
-		reason: "Grammar checkpoint surface must be an object.",
-	});
+	for (const attestation of [
+		null,
+		{ ...checkpoint.attestation, surface: null },
+	])
+		expect(
+			restoreStoredGrammar({ ...checkpoint, attestation }),
+		).toMatchObject({ ok: false, reason: expect.any(String) });
 });
 test("a checkpoint that no longer matches its Encounter fails with the parser's reason", () => {
 	expect(

@@ -58,9 +58,9 @@ export type CleanupRelationsRequest<L extends Dumling.Language> = {
  *
  * @remarks `removedLemmas` names Lemmas the host removes in the commit that
  * applies this plan, or has already removed: they are never candidates, and
- * the plan moves the claims stored Readings still hold on them. `shadows` names Shadows to re-evaluate
- * against the dictionary as it stands, such as every stored Shadow once
- * after a migration. Every stored record matching either is re-evaluated.
+ * the plan moves the claims stored Readings still hold on them. `shadows`
+ * names Shadows to re-evaluate against the dictionary as it stands. Every
+ * stored record matching either is re-evaluated.
  */
 export type ReevaluateShadowsRequest<L extends Dumling.Language> = {
 	baseRevision: StoreRevision;

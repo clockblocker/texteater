@@ -1,8 +1,4 @@
 import {
-	germanGovernorKinds,
-	germanVerbalKinds,
-} from "../../server/germanEvidenceKinds";
-import {
 	parseGermanAttestation,
 	parseGermanReading,
 } from "../../server/operationalParsing";
@@ -49,14 +45,6 @@ export function lemmaValue(lemma: LemmaRecord) {
 }
 
 export function surfaceValue(surface: SurfaceRecord, lemma: LemmaRecord) {
-	const bag = surface.inflectionalFeatures;
-	const inflectionalFeatures =
-		lemma.language === "de" &&
-		germanVerbalKinds.includes(lemma.kind) &&
-		bag &&
-		typeof bag === "object"
-			? { expletive: null, ...bag }
-			: bag;
 	return {
 		unitKind: "Surface" as const,
 		language: surface.language,
@@ -65,7 +53,7 @@ export function surfaceValue(surface: SurfaceRecord, lemma: LemmaRecord) {
 		surfaceFeatures: surface.surfaceFeatures,
 		...(surface.inflectionalFeatures === undefined
 			? {}
-			: { inflectionalFeatures }),
+			: { inflectionalFeatures: surface.inflectionalFeatures }),
 		lemma: lemmaValue(lemma),
 	};
 }
@@ -202,15 +190,12 @@ export async function loadOccurrenceAttestation(
 		unitKind: "Attestation" as const,
 		members: orderedMembers.map(attestationMemberOf),
 		realizationCoverage: attestation.realizationCoverage,
-		...(lemma.language === "de" && germanVerbalKinds.includes(lemma.kind)
-			? { expletiveEvidence: attestation.expletiveEvidence ?? null }
-			: {}),
-		...(lemma.language === "de" && germanGovernorKinds.includes(lemma.kind)
-			? { valencyEvidence: attestation.valencyEvidence ?? [] }
-			: {}),
-		...(lemma.language === "de" && lemma.kind === "ADP"
-			? { valencyEvidence: attestation.valencyEvidence ?? [] }
-			: {}),
+		...(attestation.expletiveEvidence === undefined
+			? {}
+			: { expletiveEvidence: attestation.expletiveEvidence }),
+		...(attestation.valencyEvidence === undefined
+			? {}
+			: { valencyEvidence: attestation.valencyEvidence }),
 		...(attestation.articleEvidence === undefined
 			? {}
 			: { articleEvidence: attestation.articleEvidence }),

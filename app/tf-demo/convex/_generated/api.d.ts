@@ -101,7 +101,6 @@ import type * as routeNotes from "../routeNotes.js";
 import type * as scrollViews from "../scrollViews.js";
 import type * as shadowNotes from "../shadowNotes.js";
 import type * as shadowResolution from "../shadowResolution.js";
-import type * as shadows from "../shadows.js";
 import type * as textFileIntake from "../textFileIntake.js";
 import type * as textFiles from "../textFiles.js";
 import type * as translationAccumulation from "../translationAccumulation.js";
@@ -208,7 +207,6 @@ declare const fullApi: ApiFromModules<{
   scrollViews: typeof scrollViews;
   shadowNotes: typeof shadowNotes;
   shadowResolution: typeof shadowResolution;
-  shadows: typeof shadows;
   textFileIntake: typeof textFileIntake;
   textFiles: typeof textFiles;
   translationAccumulation: typeof translationAccumulation;

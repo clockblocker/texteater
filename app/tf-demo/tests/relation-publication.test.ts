@@ -254,6 +254,13 @@ test("rollback persistence and proposal monitoring are queryable through interna
 			]),
 			sourceReadingKey: "reading-key",
 			targetFoldedCanonicalForm: "geldinstitut",
+			shadowId: await ctx.db.insert("shadows", {
+				shadowKey: "shadow:geldinstitut",
+				language: "de",
+				canonicalForm: "Geldinstitut",
+				family: "Lexeme",
+				kind: "NOUN",
+			}),
 			record: {},
 		});
 		return row;

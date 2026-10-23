@@ -135,10 +135,9 @@ export type DumdictPlanner<L extends Dumling.Language> = {
 	 * removed Lemmas (system ADR 0011). A host plans it when Lemmas change
 	 * outside `addNewNote` and `ensureReadingEntry`, which re-evaluate the
 	 * Lemma they create: when it removes a Lemma, in the commit that removes
-	 * it or after, and once over every stored Shadow after a migration. The
-	 * same plan moves every claim on a removed Lemma: a Lemma-mode claim
-	 * becomes the Lemma's Shadow relation, and a Reading-mode claim on one of
-	 * its Readings is retracted. The host loads the stored records whose
+	 * it or after. The same plan moves every claim on a removed Lemma: a
+	 * Lemma-mode claim becomes the Lemma's Shadow relation, and a Reading-mode
+	 * claim on one of its Readings is retracted. The host loads the stored records whose
 	 * Pending Entry ID is one of `reevaluatedPendingEntryIds(request)`
 	 * (`dumdict/pending`), and the Readings claiming a removed Lemma.
 	 * Planning it again after its commit plans nothing.

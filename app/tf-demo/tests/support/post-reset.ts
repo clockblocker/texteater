@@ -279,6 +279,13 @@ export const readingOwnedRows: Record<
 			locatorKey: `locator:${owner.readingKey}`,
 			sourceReadingKey: owner.readingKey,
 			targetFoldedCanonicalForm: "laufen",
+			shadowId: await ctx.db.insert("shadows", {
+				shadowKey: `shadow:pending:${owner.readingKey}`,
+				language: "de",
+				canonicalForm: "laufen",
+				family: "Lexeme",
+				kind: "VERB",
+			}),
 			record: {},
 		}),
 	],

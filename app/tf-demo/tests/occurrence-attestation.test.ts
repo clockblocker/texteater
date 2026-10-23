@@ -34,6 +34,8 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 				emojiDescription: "🚪",
 			}),
 			realizationCoverage: "Partial",
+			expletiveEvidence: null,
+			valencyEvidence: [],
 		});
 		const sentenceId = await ctx.db.insert("sentences", {
 			segmentedSentenceId: "segmented-1",

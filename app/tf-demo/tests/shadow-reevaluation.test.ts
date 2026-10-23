@@ -3,7 +3,11 @@ import { createPendingSemanticRelationRecord } from "dumdict/pending";
 import type { PlannedChangeOp } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
 import { internal } from "../convex/_generated/api";
-import { applyDumdictPlanInTransaction } from "../convex/model/dumdictTransaction";
+import {
+	applyDumdictPlanInTransaction,
+	createDumdictTransaction,
+	DICTIONARY_REVISION,
+} from "../convex/model/dumdictTransaction";
 import { projectPendingRelations } from "../convex/modules/notes/pendingRelations";
 import { readingIdentityKey } from "../server/linguisticIdentity";
 import { createTestConvex } from "./support/convex";
@@ -72,9 +76,8 @@ const created = (reading: Dumling.Reading<"de">): PlannedChangeOp<"de">[] => [
 ];
 
 /**
- * der See and `Meer`, with Meer's synonym pending on some `See`: the state a
- * store holds when it was written before relations kept their Shadow and
- * der See arrived through a path that did not resolve it.
+ * der See and `Meer`, with Meer's synonym pending on some `See`: the plan
+ * that stored them re-evaluated no Shadow.
  */
 async function seededStore() {
 	const t = createTestConvex();
@@ -95,10 +98,14 @@ async function seededStore() {
 	return t;
 }
 
-const reevaluatePage = (t: Awaited<ReturnType<typeof seededStore>>) =>
-	t.mutation(internal.shadows.reevaluatePendingShadowsPage, {
-		paginationOpts: { cursor: null, numItems: 50 },
-	});
+/** Re-evaluates the pending `See` Shadow, as a host does after a Lemma change. */
+const reevaluateSee = (t: Awaited<ReturnType<typeof seededStore>>) =>
+	t.run((ctx) =>
+		createDumdictTransaction(ctx).reevaluateShadows({
+			baseRevision: DICTIONARY_REVISION,
+			shadows: [meerSee.pending.target],
+		}),
+	);
 
 const pendingRows = (t: Awaited<ReturnType<typeof seededStore>>) =>
 	t.run((ctx) => ctx.db.query("pendingSemanticRelations").collect());
@@ -122,28 +129,30 @@ const meerEdges = (t: Awaited<ReturnType<typeof seededStore>>) =>
 	});
 
 describe("Shadow re-evaluation in the Shared Demo Dictionary", () => {
-	test("the migration sweep resolves a stored Shadow that now names one Lemma, once", async () => {
+	test("re-evaluation resolves a stored Shadow that now names one Lemma, once", async () => {
 		const t = await seededStore();
 		expect((await pendingRows(t))[0]?.shadowId).toBeDefined();
 
-		expect(await reevaluatePage(t)).toMatchObject({
-			visited: 1,
-			changed: 1,
-			overBudget: 0,
-			malformed: 0,
-		});
+		const first = await reevaluateSee(t);
+		expect(first).toMatchObject({ status: "committed" });
+		expect(first.status === "committed" && first.plan.changes).not.toEqual(
+			[],
+		);
 		const [row] = await pendingRows(t);
 		expect(row?.record).toEqual({ ...meerSee, resolvedLemma: derSee });
 		// A resolved record is no pending relation on Meer's Reading Note.
 		expect(projectPendingRelations(await pendingRows(t))).toEqual([]);
 		expect(await meerEdges(t)).toHaveLength(1);
 
-		expect(await reevaluatePage(t)).toMatchObject({ changed: 0 });
+		expect(await reevaluateSee(t)).toMatchObject({
+			status: "committed",
+			plan: { changes: [] },
+		});
 	});
 
 	test("pruning the Lemma a Shadow resolved to sends it back to pending", async () => {
 		const t = await seededStore();
-		await reevaluatePage(t);
+		await reevaluateSee(t);
 		const lemmaId = await t.run(async (ctx) => {
 			const reading = await ctx.db
 				.query("readings")

@@ -114,7 +114,7 @@ export const dictionaryTables = {
 		sourceReadingKey: v.string(),
 		/** The target Shadow's Canonical Form, case-folded; `record` keeps its casing. */
 		targetFoldedCanonicalForm: v.string(),
-		shadowId: v.optional(v.id("shadows")),
+		shadowId: v.id("shadows"),
 		record: v.any(),
 	})
 		.index("by_locator_key", ["locatorKey"])
