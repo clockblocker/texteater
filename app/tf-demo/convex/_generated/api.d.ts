@@ -63,6 +63,7 @@ import type * as model_resolvedClickDictionary from "../model/resolvedClickDicti
 import type * as model_scrollAnalysis from "../model/scrollAnalysis.js";
 import type * as model_scrollAnalysisStripping from "../model/scrollAnalysisStripping.js";
 import type * as model_shadows from "../model/shadows.js";
+import type * as model_sourceDirection from "../model/sourceDirection.js";
 import type * as model_storedSegments from "../model/storedSegments.js";
 import type * as model_tables_dictionary from "../model/tables/dictionary.js";
 import type * as model_tables_inspection from "../model/tables/inspection.js";
@@ -173,6 +174,7 @@ declare const fullApi: ApiFromModules<{
   "model/scrollAnalysis": typeof model_scrollAnalysis;
   "model/scrollAnalysisStripping": typeof model_scrollAnalysisStripping;
   "model/shadows": typeof model_shadows;
+  "model/sourceDirection": typeof model_sourceDirection;
   "model/storedSegments": typeof model_storedSegments;
   "model/tables/dictionary": typeof model_tables_dictionary;
   "model/tables/inspection": typeof model_tables_inspection;

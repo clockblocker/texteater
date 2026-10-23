@@ -163,7 +163,10 @@ splits it (ADR 0051). A failed or Unresolved `source` holds both
 segmenters. A clipping or acronym whose base doesn't pass is Unresolved,
 not none, so no split is invented for `Kita`. A conversion that doesn't
 pass counts as none, since splitting `Lauf` as a bottom word shows the
-same `lauf · ∅`. The judges agreed on this on
+same `lauf · ∅`. The host also rejects a Source whose base's own stored
+Source points back at the word (`Fisch` ← `fischen` while `fischen` ←
+`Fisch`): the first stored direction wins, and the rejected Source counts
+as none. The judges agreed on this on
 [#1241](https://github.com/clockblocker/texteater/issues/1241#issuecomment-6361530506).
 
 **Formations list the words built on a word.** A word's Note lists every

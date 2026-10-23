@@ -450,3 +450,63 @@ test("Breakdown pieces refer to their parts' Shadows, so each Shadow Note lists 
 		adjectiveNote?.structuralReferences.map(({ path }) => path).sort(),
 	).toEqual(["morphemes.0", "morphemes.1", "morphemes.2"]);
 });
+
+/** The adjective's stored Source after publication, if any. */
+async function storedAdjectiveSource(t: TestConvexDb) {
+	const row = await t.run((ctx) =>
+		ctx.db
+			.query("accumulatedKnowledge")
+			.withIndex("by_owner_reading_key", (q) =>
+				q.eq("ownerReadingKey", readingIdentityKey(GEKOCHT_READING)),
+			)
+			.unique(),
+	);
+	return row?.knowledge?.source;
+}
+
+test("a Source whose stored base already names the word as its Source is dropped, not failed (#1279)", async () => {
+	const t = createTestConvex();
+	await seedAdjective(t, "visitor-1");
+	await storeVerb(t, KOCHEN_READING);
+	await t.run((ctx) =>
+		ctx.db.insert("accumulatedKnowledge", {
+			ownerReadingKey: readingIdentityKey(KOCHEN_READING),
+			knowledge: { source: { target: GEKOCHT_READING.lemma } },
+			status: "Full",
+			sourceLemmaKey: lemmaIdentityKey(GEKOCHT_READING.lemma),
+			updatedAt: 1,
+		}),
+	);
+	const warn = spyOn(console, "warn").mockImplementation(() => {});
+	try {
+		expect(await publishSource(t)).toEqual({ status: "Committed" });
+		expect(
+			warn.mock.calls.flatMap(([line]) =>
+				typeof line === "string" &&
+				line.includes("BackPointingSourceRejected")
+					? [JSON.parse(line)]
+					: [],
+			),
+		).toEqual([
+			{
+				event: "BackPointingSourceRejected",
+				ownerReadingKey: readingIdentityKey(GEKOCHT_READING),
+				baseReadingKey: readingIdentityKey(KOCHEN_READING),
+			},
+		]);
+	} finally {
+		warn.mockRestore();
+	}
+	expect(await storedAdjectiveSource(t)).toBeUndefined();
+	const attempt = await t.run((ctx) =>
+		ctx.db.query("knowledgeGenerationAttempts").unique(),
+	);
+	expect(attempt?.state).toBe("Committed");
+
+	// A stored base with no Source of its own takes the link.
+	const accepting = createTestConvex();
+	await seedAdjective(accepting, "visitor-1");
+	await storeVerb(accepting, KOCHEN_READING);
+	expect(await publishSource(accepting)).toEqual({ status: "Committed" });
+	expect(await storedAdjectiveSource(accepting)).toEqual(KOCHEN_SOURCE);
+});

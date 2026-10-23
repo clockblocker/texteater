@@ -39,6 +39,7 @@ import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
 import { scheduleKnowledgeGeneration } from "./model/knowledgeScheduling";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
+import { withoutBackPointingSource } from "./model/sourceDirection";
 import {
 	directSemanticRelationValidator,
 	knowledgeProductionEvidenceValidator,
@@ -386,14 +387,21 @@ export const publish = internalMutation({
 					.take(MAX_PUBLISHED_CHANGES_PER_RUN)
 			).map((row) => canonicalJson(row.change)),
 		);
-		const changes = publishable.changes.filter(
-			(change) => !published.has(canonicalJson(change)),
+		const ownerReading = parseGermanReading(args.reading);
+		// A Source whose base already names this Reading's Lemma as its own
+		// Source is dropped and counts as none (ADR 0050, #1279).
+		const changes = await withoutBackPointingSource(
+			ctx,
+			{ reading: ownerReading, key: attempt.ownerReadingKey },
+			publishable.changes.filter(
+				(change) => !published.has(canonicalJson(change)),
+			),
 		);
 
 		// The changes arrive as v.any(); Dumdict parses them here, refusing
 		// another language as the planner would.
 		const request = checkApplyGeneratedKnowledgeRequest("de", {
-			reading: parseGermanReading(args.reading),
+			reading: ownerReading,
 			changes,
 			pendingRelations: publishable.pendingRelations,
 		});
