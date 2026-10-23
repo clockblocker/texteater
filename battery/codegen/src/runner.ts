@@ -1,37 +1,25 @@
 import { createHash } from "node:crypto";
-import type { Dirent, Stats } from "node:fs";
-import {
-	lstat,
-	mkdir,
-	readdir,
-	readFile,
-	rename,
-	rm,
-	writeFile,
-} from "node:fs/promises";
-import {
-	basename,
-	dirname,
-	isAbsolute,
-	posix,
-	relative,
-	resolve,
-	sep,
-	win32,
-} from "node:path";
+import { dirname, isAbsolute, resolve, sep } from "node:path";
 import {
 	CodegenConfigurationError,
-	CodegenInputError,
 	CodegenOwnershipError,
 	CodegenPlanError,
 } from "./errors.js";
+import { type CodegenFileSystem, nodeFileSystem } from "./file-system.js";
+import { materializeInputs } from "./inputs.js";
+import {
+	compareCodeUnits,
+	destinationWithin,
+	pathIdentity,
+	resolveManifestDestination,
+	validateConfiguredAbsolutePath,
+	validateRelativePath,
+} from "./paths.js";
 import {
 	type ArtifactDraft,
 	type CodegenRecipe,
 	type CodegenRun,
-	type Input,
 	type Inputs,
-	type MaterializedInputs,
 	type Output,
 	type Outputs,
 	type PlannedArtifact,
@@ -39,112 +27,17 @@ import {
 	type Provenance,
 	type RunOptions,
 	recipeDefinition,
-	type TextSource,
 } from "./types.js";
-
-export interface CodegenFileSystem {
-	assertSafePath(root: string, path: string): Promise<void>;
-	listFiles(root: string, recursive: boolean): Promise<readonly string[]>;
-	read(path: string): Promise<Uint8Array | undefined>;
-	remove(path: string): Promise<void>;
-	write(path: string, content: Uint8Array): Promise<void>;
-}
-
-let temporaryFileCounter = 0;
-
-export const nodeFileSystem: CodegenFileSystem = {
-	async assertSafePath(root, path) {
-		const absoluteRoot = resolve(root);
-		const absolutePath = resolve(path);
-		if (!isWithin(absoluteRoot, absolutePath)) {
-			throw new CodegenPlanError(
-				`Path "${absolutePath}" escapes filesystem boundary "${absoluteRoot}".`,
-			);
-		}
-
-		const segments = relative(absoluteRoot, absolutePath)
-			.split(sep)
-			.filter((segment) => segment.length > 0);
-		let current = absoluteRoot;
-		for (const [index, segment] of segments.entries()) {
-			current = resolve(current, segment);
-			let stats: Stats;
-			try {
-				stats = await lstat(current);
-			} catch (error) {
-				if (errorCode(error) === "ENOENT") {
-					return;
-				}
-				throw new CodegenPlanError(
-					`Cannot inspect output path "${current}": ${errorMessage(error)}`,
-				);
-			}
-			if (stats.isSymbolicLink()) {
-				throw new CodegenPlanError(
-					`Output path "${absolutePath}" traverses symbolic link "${current}".`,
-				);
-			}
-			if (index < segments.length - 1 && !stats.isDirectory()) {
-				throw new CodegenPlanError(
-					`Output path "${absolutePath}" traverses non-directory "${current}".`,
-				);
-			}
-		}
-	},
-	async listFiles(root, recursive) {
-		const files: string[] = [];
-
-		async function visit(directory: string): Promise<void> {
-			let entries: Dirent[];
-			try {
-				entries = await readdir(directory, { withFileTypes: true });
-			} catch (error) {
-				throw new CodegenInputError(
-					`Cannot discover input directory "${directory}": ${errorMessage(error)}`,
-				);
-			}
-
-			for (const entry of entries) {
-				const path = resolve(directory, entry.name);
-				if (entry.isFile()) {
-					files.push(path);
-				} else if (recursive && entry.isDirectory()) {
-					await visit(path);
-				}
-			}
-		}
-
-		await visit(root);
-		return files;
-	},
-	async read(path) {
-		try {
-			return await readFile(path);
-		} catch (error) {
-			if (errorCode(error) === "ENOENT") {
-				return undefined;
-			}
-			throw error;
-		}
-	},
-	async remove(path) {
-		await rm(path, { force: true });
-	},
-	async write(path, content) {
-		await mkdir(dirname(path), { recursive: true });
-		const temporaryPath = resolve(
-			dirname(path),
-			`.${basename(path)}.codegen-${process.pid}-${temporaryFileCounter++}.tmp`,
-		);
-		try {
-			await writeFile(temporaryPath, content, { flag: "wx" });
-			await rename(temporaryPath, path);
-		} catch (error) {
-			await rm(temporaryPath, { force: true }).catch(() => undefined);
-			throw error;
-		}
-	},
-};
+import {
+	bytesEqual,
+	cloneAndFreezeMetadata,
+	cloneMetadata,
+	deepFreeze,
+	errorMessage,
+	formatProvenance,
+	freezeArray,
+	freezeChange,
+} from "./values.js";
 
 type OutputContext = Readonly<{
 	key: string;
@@ -331,92 +224,6 @@ function validateManifestDestinations(
 				`Ownership manifests for outputs "${manifest.target}" and "${other.target}" have conflicting paths "${manifest.destination}" and "${other.destination}".`,
 			);
 		}
-	}
-}
-
-async function materializeInputs<I extends Inputs>(
-	inputs: I,
-	fileSystem: CodegenFileSystem,
-): Promise<Readonly<MaterializedInputs<I>>> {
-	const materialized: Record<string, TextSource | readonly TextSource[]> = {};
-	for (const key of Object.keys(inputs).toSorted()) {
-		const input = inputs[key];
-		if (input === undefined) {
-			continue;
-		}
-		materialized[key] = await materializeInput(input, fileSystem);
-	}
-	return deepFreeze(materialized) as Readonly<MaterializedInputs<I>>;
-}
-
-async function materializeInput(
-	input: Input,
-	fileSystem: CodegenFileSystem,
-): Promise<TextSource | readonly TextSource[]> {
-	if (input.kind === "text") {
-		const path = resolve(input.path);
-		return readTextSource(path, fileSystem);
-	}
-
-	if (input.include.length === 0) {
-		throw new CodegenConfigurationError(
-			`Text-set input "${input.root}" must include at least one glob.`,
-		);
-	}
-
-	const root = resolve(input.root);
-	const recursive = input.recursive ?? false;
-	const candidates = await fileSystem.listFiles(root, recursive);
-	const include = input.include.map(globToRegExp);
-	const exclude = (input.exclude ?? []).map(globToRegExp);
-	const paths = candidates
-		.map((path) => ({
-			absolute: resolve(path),
-			relative: portablePath(relative(root, resolve(path))),
-		}))
-		.filter(
-			(candidate) =>
-				isWithin(root, candidate.absolute) &&
-				include.some((pattern) => pattern.test(candidate.relative)) &&
-				!exclude.some((pattern) => pattern.test(candidate.relative)),
-		)
-		.toSorted((left, right) =>
-			compareCodeUnits(left.relative, right.relative),
-		);
-
-	return freezeArray(
-		await Promise.all(
-			paths.map((candidate) =>
-				readTextSource(candidate.absolute, fileSystem),
-			),
-		),
-	);
-}
-
-async function readTextSource(
-	path: string,
-	fileSystem: CodegenFileSystem,
-): Promise<TextSource> {
-	let content: Uint8Array | undefined;
-	try {
-		content = await fileSystem.read(path);
-	} catch (error) {
-		throw new CodegenInputError(
-			`Cannot read input "${path}": ${errorMessage(error)}`,
-		);
-	}
-	if (content === undefined) {
-		throw new CodegenInputError(`Input "${path}" does not exist.`);
-	}
-	try {
-		return deepFreeze({
-			source: { kind: "source" as const, path },
-			text: decoder.decode(content),
-		});
-	} catch (error) {
-		throw new CodegenInputError(
-			`Input "${path}" is not valid UTF-8: ${errorMessage(error)}`,
-		);
 	}
 }
 
@@ -677,7 +484,7 @@ async function inspectFileSystem<Metadata>(
 		const current = await readForPlanning(manifest.destination, fileSystem);
 		const previousFiles =
 			current === undefined
-				? validateInitialFiles(output)
+				? []
 				: parseManifest(current, output.key, manifest.destination);
 		const files = [
 			...(desiredByTarget.get(output.key) ?? new Set<string>()),
@@ -817,132 +624,6 @@ function parseManifest(
 	return freezeArray(files.toSorted(compareCodeUnits));
 }
 
-function validateInitialFiles(output: OutputContext): readonly string[] {
-	const initialFiles = output.specification.ownership?.initialFiles;
-	if (initialFiles === undefined) {
-		return [];
-	}
-	if (!Array.isArray(initialFiles)) {
-		throw new CodegenConfigurationError(
-			`Initial ownership files for output "${output.key}" must be an array.`,
-		);
-	}
-	const files = initialFiles.map((path, index) =>
-		validateRelativePath(
-			path,
-			`initial ownership file ${index} for output "${output.key}"`,
-		),
-	);
-	if (new Set(files.map(pathIdentity)).size !== files.length) {
-		throw new CodegenConfigurationError(
-			`Initial ownership files for output "${output.key}" contain a duplicate.`,
-		);
-	}
-	return freezeArray(files.toSorted(compareCodeUnits));
-}
-
-function validateRelativePath(path: string, label: string): string {
-	if (
-		typeof path !== "string" ||
-		path.length === 0 ||
-		path.includes("\0") ||
-		path.includes("\\") ||
-		isAbsolute(path) ||
-		win32.isAbsolute(path)
-	) {
-		throw new CodegenConfigurationError(
-			`The ${label} must be a safe relative path; received "${String(path)}".`,
-		);
-	}
-	const normalized = posix.normalize(path);
-	const hasNonPortableSegment = path
-		.split("/")
-		.some((segment) => isUnsupportedPathSegment(segment));
-	if (
-		normalized !== path ||
-		normalized === "." ||
-		normalized === ".." ||
-		normalized.startsWith("../") ||
-		path.endsWith("/") ||
-		hasNonPortableSegment
-	) {
-		throw new CodegenConfigurationError(
-			`The ${label} must be a normalized, portable relative file path; received "${path}".`,
-		);
-	}
-	return normalized;
-}
-
-function destinationWithin(root: string, path: string): string {
-	const destination = resolve(root, path);
-	if (!isWithin(root, destination)) {
-		throw new CodegenConfigurationError(
-			`Path "${path}" escapes output root "${root}".`,
-		);
-	}
-	return destination;
-}
-
-function resolveManifestDestination(
-	root: string,
-	manifest: string,
-	target: string,
-): string {
-	if (manifest.includes("\0") || manifest.length === 0) {
-		throw new CodegenConfigurationError(
-			`Ownership manifest for output "${target}" has an invalid path.`,
-		);
-	}
-	if (isAbsolute(manifest)) {
-		const destination = resolve(manifest);
-		validateConfiguredAbsolutePath(
-			destination,
-			`ownership manifest for output "${target}"`,
-		);
-		return destination;
-	}
-	if (win32.isAbsolute(manifest)) {
-		throw new CodegenConfigurationError(
-			`Ownership manifest "${manifest}" uses an absolute path for a different platform.`,
-		);
-	}
-	return destinationWithin(
-		root,
-		validateRelativePath(
-			manifest,
-			`ownership manifest for output "${target}"`,
-		),
-	);
-}
-
-function validateConfiguredAbsolutePath(path: string, label: string): void {
-	if (process.platform !== "win32") {
-		return;
-	}
-	const root = win32.parse(path).root;
-	const segments = path
-		.slice(root.length)
-		.split(/[\\/]/u)
-		.filter((segment) => segment.length > 0);
-	if (segments.some((segment) => isUnsupportedPathSegment(segment))) {
-		throw new CodegenConfigurationError(
-			`The ${label} contains a path segment unsupported on Windows: "${path}".`,
-		);
-	}
-}
-
-function isUnsupportedPathSegment(segment: string): boolean {
-	return (
-		segment
-			.split("")
-			.some((character) => character.charCodeAt(0) <= 0x1f) ||
-		/[<>:"|?*]/u.test(segment) ||
-		/[. ]$/u.test(segment) ||
-		(process.platform === "win32" &&
-			/^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/iu.test(segment))
-	);
-}
-
 function manifestDescriptor(
 	output: OutputContext,
 ): ManifestDescriptor | undefined {
@@ -986,137 +667,4 @@ async function assertChangePathIsSafe(
 		);
 	}
 	await fileSystem.assertSafePath(manifest.boundary, manifest.destination);
-}
-
-function isWithin(root: string, path: string): boolean {
-	const remainder = relative(root, path);
-	return (
-		remainder === "" ||
-		(!remainder.startsWith("..") && !isAbsolute(remainder))
-	);
-}
-
-function globToRegExp(glob: string): RegExp {
-	if (
-		glob.length === 0 ||
-		glob.includes("\\") ||
-		glob.startsWith("/") ||
-		glob.includes("\0")
-	) {
-		throw new CodegenConfigurationError(`Invalid text-set glob "${glob}".`);
-	}
-
-	let source = "^";
-	for (let index = 0; index < glob.length; index += 1) {
-		const character = glob[index] ?? "";
-		if (character === "*") {
-			if (glob[index + 1] === "*") {
-				index += 1;
-				if (glob[index + 1] === "/") {
-					index += 1;
-					source += "(?:.*/)?";
-				} else {
-					source += ".*";
-				}
-			} else {
-				source += "[^/]*";
-			}
-		} else if (character === "?") {
-			source += "[^/]";
-		} else {
-			source += character.replace(/[|\\{}()[\]^$+?.]/g, "\\$&");
-		}
-	}
-	return new RegExp(`${source}$`);
-}
-
-function portablePath(path: string): string {
-	return path.replaceAll("\\", "/");
-}
-
-function compareCodeUnits(left: string, right: string): number {
-	return left < right ? -1 : left > right ? 1 : 0;
-}
-
-function pathIdentity(path: string): string {
-	return path.normalize("NFC").toUpperCase().toLowerCase();
-}
-
-function bytesEqual(left: Uint8Array, right: Uint8Array): boolean {
-	if (left.byteLength !== right.byteLength) {
-		return false;
-	}
-	return left.every((byte, index) => byte === right[index]);
-}
-
-function cloneAndFreezeMetadata<Metadata>(
-	metadata: Metadata,
-	artifactId: string,
-): Metadata {
-	return deepFreeze(cloneMetadata(metadata, artifactId));
-}
-
-function cloneMetadata<Metadata>(
-	metadata: Metadata,
-	artifactId: string,
-): Metadata {
-	try {
-		return structuredClone(metadata);
-	} catch (error) {
-		throw new CodegenPlanError(
-			`Artifact "${artifactId}" metadata is not cloneable: ${errorMessage(error)}`,
-		);
-	}
-}
-
-function deepFreeze<T>(value: T): T {
-	if (
-		typeof value !== "object" ||
-		value === null ||
-		ArrayBuffer.isView(value) ||
-		Object.isFrozen(value)
-	) {
-		return value;
-	}
-	for (const nested of Object.values(value)) {
-		deepFreeze(nested);
-	}
-	return Object.freeze(value);
-}
-
-function freezeArray<T>(items: readonly T[]): readonly T[] {
-	return Object.freeze([...items]);
-}
-
-function freezeChange(change: PlannedChange): PlannedChange {
-	return Object.freeze(change);
-}
-
-function formatProvenance(provenance: readonly Provenance[]): string {
-	if (provenance.length === 0) {
-		return "no provenance";
-	}
-	return provenance
-		.map((entry) =>
-			entry.kind === "source"
-				? `${entry.path}${entry.line === undefined ? "" : `:${entry.line}`}`
-				: `artifact:${entry.id}`,
-		)
-		.join(", ");
-}
-
-function errorCode(error: unknown): string | undefined {
-	if (
-		typeof error === "object" &&
-		error !== null &&
-		"code" in error &&
-		typeof error.code === "string"
-	) {
-		return error.code;
-	}
-	return undefined;
-}
-
-function errorMessage(error: unknown): string {
-	return error instanceof Error ? error.message : String(error);
 }

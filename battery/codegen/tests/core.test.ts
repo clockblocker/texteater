@@ -421,34 +421,6 @@ test("a missing ownership manifest never authorizes deletion", async () => {
 	);
 });
 
-test("initial ownership safely bootstraps an existing generator", async () => {
-	const fileSystem = new MemoryFileSystem({
-		"/workspace/output/legacy.txt": "previously generated",
-		"/workspace/output/unowned.txt": "leave me",
-	});
-	const recipe = defineCodegen({
-		inputs: {},
-		outputs: {
-			generated: {
-				root: "/workspace/output",
-				ownership: {
-					manifest: "/workspace/state/owned.json",
-					initialFiles: ["legacy.txt"],
-				},
-			},
-		},
-		build: () => [],
-	});
-
-	await runCodegenWithFileSystem(recipe, { mode: "write" }, fileSystem);
-
-	expect(fileSystem.text("/workspace/output/legacy.txt")).toBeUndefined();
-	expect(fileSystem.text("/workspace/output/unowned.txt")).toBe("leave me");
-	expect(fileSystem.text("/workspace/state/owned.json")).toBe(
-		'{\n  "version": 1,\n  "files": []\n}\n',
-	);
-});
-
 test("unsafe stale paths are rejected before mutation", async () => {
 	const fileSystem = new MemoryFileSystem({
 		"/workspace/output/.codegen/owned.json":
