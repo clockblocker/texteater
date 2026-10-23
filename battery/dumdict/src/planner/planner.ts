@@ -95,9 +95,8 @@ export type {
  * and passes it here. Each workflow checks the request, validates the slice
  * against it, and returns a parsed plan with its preconditions, a rejection,
  * or a conflict; the planner never reads or writes storage. It throws only
- * for malformed input or a slice that breaks the storage contract. A stored
- * claim whose target is gone doesn't break it: the plan reports it in
- * `issues` (system ADR 0011).
+ * for malformed input or a slice that breaks the storage contract, such as
+ * a stored claim whose target is gone (system ADR 0011).
  */
 export type DumdictPlanner<L extends Dumling.Language> = {
 	readonly language: L;
@@ -233,12 +232,12 @@ function addNewNote<L extends Dumling.Language>(
 			return ok(parsed);
 		},
 		plan(context, request) {
-			const issues = validateReadingEntryContext(
+			validateReadingEntryContext(
 				language,
 				context,
 				storageRequestFor({ intent: "addNewNote", request }),
 			);
-			return planned(planAddNewNote(context, request), issues);
+			return planned(planAddNewNote(context, request));
 		},
 	};
 }
@@ -321,7 +320,7 @@ function applyGeneratedKnowledge<L extends Dumling.Language>(
 		check: (request) =>
 			checkApplyGeneratedKnowledgeRequest(language, request),
 		plan(context, request) {
-			const issues = validateReadingEntryContext(
+			validateReadingEntryContext(
 				language,
 				context,
 				storageRequestFor({
@@ -331,10 +330,7 @@ function applyGeneratedKnowledge<L extends Dumling.Language>(
 			);
 			// Its check parsed the changes and pending relations, and the slice
 			// validation parsed the Reading and every stored entry.
-			return planned(
-				planApplyGeneratedKnowledge(context, request),
-				issues,
-			);
+			return planned(planApplyGeneratedKnowledge(context, request));
 		},
 	};
 }
@@ -390,12 +386,12 @@ function ensureReadingEntry<L extends Dumling.Language>(
 			return ok(parseEnsureReadingEntryRequest(language, request));
 		},
 		plan(context, request) {
-			const issues = validateReadingEntryContext(
+			validateReadingEntryContext(
 				language,
 				context,
 				storageRequestFor({ intent: "ensureReadingEntry", request }),
 			);
-			return planned(planEnsureReadingEntry(context, request), issues);
+			return planned(planEnsureReadingEntry(context, request));
 		},
 	};
 }
@@ -423,7 +419,7 @@ function cleanupRelations<L extends Dumling.Language>(
 			return ok(request);
 		},
 		plan(slice, request) {
-			const issues = validateCleanupRelationsSlice(language, slice);
+			validateCleanupRelationsSlice(language, slice);
 			if (slice.revision !== request.baseRevision)
 				return {
 					status: "conflict",
@@ -450,7 +446,7 @@ function cleanupRelations<L extends Dumling.Language>(
 				};
 			// The plan holds only slice values the validation parsed: a
 			// resolution's locator only selects a stored pending record.
-			return planned(planCleanupRelations(slice, request), issues);
+			return planned(planCleanupRelations(slice, request));
 		},
 	};
 }
@@ -486,18 +482,14 @@ function reevaluateShadows<L extends Dumling.Language>(
 			return ok(request);
 		},
 		plan(slice, request) {
-			const issues = validateReevaluateShadowsSlice(
-				language,
-				slice,
-				request,
-			);
+			validateReevaluateShadowsSlice(language, slice, request);
 			if (slice.revision !== request.baseRevision)
 				return {
 					status: "conflict",
 					code: "revisionConflict",
 					message: "Shadow re-evaluation slice is stale.",
 				};
-			return planned(planReevaluateShadows(slice, request), issues);
+			return planned(planReevaluateShadows(slice, request));
 		},
 	};
 }

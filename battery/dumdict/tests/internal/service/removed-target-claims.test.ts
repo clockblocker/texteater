@@ -238,43 +238,32 @@ describe("claims on a removed target", () => {
 });
 
 describe("dangling claims", () => {
-	test("a claim on a Lemma the dictionary lost is reported, not thrown", () => {
-		// Written before removals moved the claims on what they remove.
+	test("a claim on a Lemma the dictionary lost breaks the slice", () => {
 		const storage = storeWith([
 			createLemma(meer),
 			createReading(readingEntry(meerReading)),
 		]);
 		const slice = storage.loadReevaluateShadowsContext({});
-		const outcome = planner.reevaluateShadows(
-			{
-				...slice,
-				relationReadings: [
-					readingEntry(meerReading, {
-						knowledge: {
-							semanticRelations: {
-								synonym: [derSee],
-							},
-						},
-					}),
-				],
-			},
-			{ baseRevision: slice.revision },
-		);
-		expect(outcome).toMatchObject({
-			status: "planned",
-			plan: { changes: [] },
-			issues: [
+		expect(() =>
+			planner.reevaluateShadows(
 				{
-					kind: "danglingRelationClaim",
-					reading: meerReading,
-					relation: "synonym",
-					target: { kind: "lemma", lemma: derSee },
+					...slice,
+					relationReadings: [
+						readingEntry(meerReading, {
+							knowledge: {
+								semanticRelations: {
+									synonym: [derSee],
+								},
+							},
+						}),
+					],
 				},
-			],
-		});
+				{ baseRevision: slice.revision },
+			),
+		).toThrow("holds a claim on an unstored target");
 	});
 
-	test("a Reading-mode claim on a Reading the dictionary lost is reported, not thrown", () => {
+	test("a Reading-mode claim on a Reading the dictionary lost breaks the slice", () => {
 		const storage = storeWith([
 			createLemma(meer),
 			createReading(readingEntry(meerReading)),
@@ -285,41 +274,23 @@ describe("dangling claims", () => {
 		);
 		if (context.intent !== "ensureReadingEntry")
 			throw new Error("Expected an ensureReadingEntry context.");
-		const outcome = planner.ensureReadingEntry(
-			{
-				...context,
-				relationReadings: [
-					readingEntry(meerReading, {
-						knowledge: {
-							semanticRelations: {
-								targetKind: "reading",
-								synonym: [dieSeeReading],
-							},
-						},
-					}),
-				],
-			},
-			request,
-		);
-		expect(outcome).toMatchObject({
-			status: "planned",
-			issues: [
+		expect(() =>
+			planner.ensureReadingEntry(
 				{
-					kind: "danglingRelationClaim",
-					reading: meerReading,
-					target: { kind: "reading", reading: dieSeeReading },
+					...context,
+					relationReadings: [
+						readingEntry(meerReading, {
+							knowledge: {
+								semanticRelations: {
+									targetKind: "reading",
+									synonym: [dieSeeReading],
+								},
+							},
+						}),
+					],
 				},
-			],
-		});
-	});
-
-	test("a plan with no dangling claim has no issues", () => {
-		const storage = storeWith([]);
-		const slice = storage.loadReevaluateShadowsContext({});
-		const outcome = planner.reevaluateShadows(slice, {
-			baseRevision: slice.revision,
-		});
-		expect(outcome).toMatchObject({ status: "planned" });
-		expect(outcome).not.toHaveProperty("issues");
+				request,
+			),
+		).toThrow("holds a claim on an unstored target");
 	});
 });

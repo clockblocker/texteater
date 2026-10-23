@@ -99,11 +99,11 @@ the Lemmas a Shadow may match, so the host's re-evaluation resolves them.
 Claims carry no provenance beyond their source Reading and relation, and a
 converted claim keeps both.
 
-**Stored data whose target is gone is reported, not thrown.** A slice whose
-relation inventory holds a claim on a Lemma or Reading the dictionary no
-longer has, as data written before claims moved with their targets can,
-still plans. The plan carries the claim as a `danglingRelationClaim` in its
-`issues`, and the host may retract it.
+**A claim whose target is gone breaks the slice.** Every removal moves the
+claims on what it removes, so a stored claim always names a Lemma or Reading
+the dictionary holds. A slice whose relation inventory holds a claim on one
+it doesn't, other than the Lemmas a `reevaluateShadows` request removes,
+breaks the storage contract, and planning throws.
 
 **An exactly named relation never moves while its target stays.** A claim
 whose target was named exactly has no record, so nothing re-evaluates it.
