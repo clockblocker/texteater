@@ -112,7 +112,16 @@ export const knowledge: Rule[] = [
 			"A single word formed whole from one other word, nothing added and nothing cut into pieces, names that word as its Source, one step back: a conversion (Lauf from laufen, Wurf from werfen, a verbal noun with no suffix such as Ausgang from ausgehen, a verb from a noun), a clipping (Uni from Universität) or an acronym (Kita from Kindertagesstätte). A word with a prefix or suffix is an affixal derivation and has Constituents, no Source (Entspannung: entspannen + -ung), and so has a compound. de/participle-source-verb-and-meaning rules a participle's Source.",
 		adrs: ["ADR-0050"],
 		routes: lexeme("NOUN", "VERB", "ADJ"),
-		records: [],
+		records: [
+			// A verb converted from a noun, and a noun with no Source.
+			"de/er-salzt-den-teig",
+			// A noun converted from a verb, and the verb with no Source.
+			"de/sie-rufen-laut-doch-niemand-hoert-den-ruf",
+			// A verbal noun with no suffix.
+			"de/die-aufgabe-ist-schwer",
+			// A clipping and an acronym.
+			"de/die-kripo-untersucht-die-lok",
+		],
 	},
 	// The user's batch 2 ruling Q3 on #884. A wish (gute Besserung) has no
 	// value in Dumrel's set and is decided when one comes up.

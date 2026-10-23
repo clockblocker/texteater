@@ -1,0 +1,385 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie rufen laut, doch niemand hört den Ruf.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "rufen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "laut"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "doch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "niemand"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hört"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Ruf"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"reviewDepth": "Knowledge",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
+			},
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "c11b321c41f117a1"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "f0b9c8226ff45fb8"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "a45d1c0592489d6d"
+			},
+			{
+				"rule": "de/formation-names-its-source",
+				"hash": "06e7b4491887e741"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: rufen",
+				"url": "https://www.dwds.de/wb/rufen",
+				"supports": "Target 0 Knowledge: ruft, rief, hat gerufen; 1 ⟨jmd., ein Tier ruft⟩ jmd., ein Tier lässt seine Stimme ertönen; no Grundform, ahd. (h)ruofan, with Ruf formed from the verb; Thesaurus rufen · schreien"
+			},
+			{
+				"title": "Duden: rufen",
+				"url": "https://www.duden.de/rechtschreibung/rufen",
+				"supports": "Target 0 Knowledge: starkes Verb, ruft, rief, hat gerufen; 1a sich durch einen Ruf bemerkbar machen (laut rufen), no object. E-VALBU's rufen entry was unreachable, so the frame follows DWDS sense 1"
+			},
+			{
+				"title": "OpenThesaurus: rufen",
+				"url": "https://www.openthesaurus.de/synonyme/rufen",
+				"supports": "Target 0 Knowledge: synset rufen · schreien · brüllen (ugs.) · krakeelen (ugs.) · kreischen (ugs.) · krähen (ugs.); no Oberbegriff or Gegenteil"
+			},
+			{
+				"title": "DWDS: Ruf",
+				"url": "https://www.dwds.de/wb/Ruf",
+				"supports": "Target 1 Knowledge: Maskulinum, Plural Rufe; Etymologie: Ruf is one of the Abstraktbildungen zum Verb rufen (Source); 1 meist kurze, lautliche Äußerung des Menschen, Tieres"
+			},
+			{
+				"title": "Duden: Ruf",
+				"url": "https://www.duden.de/rechtschreibung/Ruf",
+				"supports": "Target 1 Knowledge: der Ruf, Plural die Rufe; 1 laut schallendes kurzes Rufen; Synonyme Schrei, Zuruf"
+			},
+			{
+				"title": "OpenThesaurus: Ruf",
+				"url": "https://www.openthesaurus.de/synonyme/Ruf",
+				"supports": "Target 1 Knowledge: synset Ausruf · Ruf · Schrei [Linguistik/Sprache], Oberbegriff Lautäußerung; no Gegenteil or Teil von"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "📣",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "schreien",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"paradigm": {
+					"preterite": ["rief"],
+					"present1": ["rufe"],
+					"present2": ["rufst"],
+					"present3": ["ruft"],
+					"pastParticiple": ["gerufen"],
+					"subjunctivePast": ["riefe"]
+				},
+				"coverage": {
+					"valency": "Authored",
+					"source": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
+					}
+				}
+			},
+			"notes": {
+				"rationale": "rufen is calling out loud, with no object (DWDS 1 ⟨jmd., ein Tier ruft⟩). The noun Ruf is formed from it, not the reverse, and rufen is formed from no other word, so it has no Source."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "rufen",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "rufen",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "rufen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [13, 15],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"reading": {
+				"emojiDescription": "📣",
+				"knowledge": {
+					"source": {
+						"target": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "rufen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						}
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Schrei",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Zuruf",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Lautäußerung",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"paradigm": {
+					"plural": ["Rufe"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"source": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"plural": "Authored"
+					}
+				}
+			},
+			"notes": {
+				"rationale": "Ruf is the call itself, the sound rufen makes. It is a conversion of the verb rufen with no suffix (DWDS: an Abstraktbildung zum Verb), so its Source is rufen (ADR 0050)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "den",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Ruf",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					},
+					"language": "de",
+					"normalizedSurface": "Ruf",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Ruf",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

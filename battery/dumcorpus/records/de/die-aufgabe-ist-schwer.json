@@ -1,0 +1,191 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Aufgabe ist schwer.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Aufgabe"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ist"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "schwer"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"reviewDepth": "Knowledge",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "c11b321c41f117a1"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "f0b9c8226ff45fb8"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "a45d1c0592489d6d"
+			},
+			{
+				"rule": "de/formation-names-its-source",
+				"hash": "06e7b4491887e741"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Aufgabe",
+				"url": "https://www.dwds.de/wb/Aufgabe",
+				"supports": "Target 0 Knowledge: Femininum, Plural Aufgaben; Grundform aufgeben (Source); 2 eine aufgegebene Arbeit; no Synonym, Oberbegriff or Gegensatz for this sense"
+			},
+			{
+				"title": "Duden: Aufgabe",
+				"url": "https://www.duden.de/rechtschreibung/Aufgabe",
+				"supports": "Target 0 Knowledge: die Aufgabe, Plural die Aufgaben; 2 zu erledigender Auftrag, gedankliches Problem, Schularbeit"
+			},
+			{
+				"title": "OpenThesaurus: Aufgabe",
+				"url": "https://www.openthesaurus.de/synonyme/Aufgabe",
+				"supports": "Target 0 Knowledge: synset Aufgabe · Aufgabenstellung · Fragestellung · Problemstellung; no Oberbegriff, Gegenteil or Teil von"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"reading": {
+				"emojiDescription": "📝",
+				"knowledge": {
+					"source": {
+						"target": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "aufgeben",
+							"coreFeatures": {
+								"hasSepPrefix": "auf",
+								"lexicallyReflexive": null
+							}
+						}
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Aufgabenstellung",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"paradigm": {
+					"plural": ["Aufgaben"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"source": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"plural": "Authored"
+					}
+				}
+			},
+			"notes": {
+				"rationale": "Aufgabe is a task set to be solved. It is the verbal noun of aufgeben 'set a task' with no suffix (DWDS Grundform aufgeben), so its Source is aufgeben (ADR 0050)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Aufgabe",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					},
+					"language": "de",
+					"normalizedSurface": "Aufgabe",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Aufgabe",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}
