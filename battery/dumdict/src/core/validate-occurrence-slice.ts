@@ -103,7 +103,7 @@ export function validateLinksWithRefs<L extends Dumling.Language>(
  * One whole Lemma: its records parse, each belongs to it once, its Paradigm
  * licenses only its Readings, and each link names a Surface it owns or none.
  */
-export function validateLemmaSlice<L extends Dumling.Language>(
+function validateLemmaSlice<L extends Dumling.Language>(
 	expected: L,
 	slice: LemmaSlice<L>,
 ) {
@@ -131,7 +131,7 @@ export function validateLemmaSlice<L extends Dumling.Language>(
 	);
 	for (const entry of slice.readingEntries)
 		for (const { surfaceId } of entry.attestationLinks)
-			if (surfaceId !== null && !surfaceIds.has(surfaceId))
+			if (!surfaceIds.has(surfaceId))
 				throw new Error(
 					"Attestation Link names a Surface its Lemma does not own.",
 				);
@@ -282,9 +282,8 @@ export function validateRekeySurfacesSlice<L extends Dumling.Language>(
 	for (const entry of slice.readings) {
 		validateReadingEntry(expected, entry);
 		if (
-			!entry.attestationLinks.some(
-				({ surfaceId }) =>
-					surfaceId !== null && requested.has(surfaceId),
+			!entry.attestationLinks.some(({ surfaceId }) =>
+				requested.has(surfaceId),
 			)
 		)
 			throw new Error(

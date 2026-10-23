@@ -6,10 +6,8 @@
 		"battery/dumcorpus/src/inflection.ts: types GermanWordForm"
 	],
 	"battery/dumdict": [
-		"battery/dumdict/src/dto/serialized-note.ts: types SerializedDictionaryNoteV1",
 		"battery/dumdict/src/index.ts: exports ParsingError",
 		"battery/dumdict/src/index.ts: exports linkTargetKey",
-		"battery/dumdict/src/index.ts: exports migrateV1toV2",
 		"battery/dumdict/src/index.ts: exports parseAsChangePrecondition",
 		"battery/dumdict/src/index.ts: exports parseAsCommitChangesRequest",
 		"battery/dumdict/src/index.ts: exports parseAsCommitChangesResult",
@@ -32,7 +30,6 @@
 		"battery/dumdict/src/index.ts: types LemmaSlice",
 		"battery/dumdict/src/index.ts: types LinkTarget",
 		"battery/dumdict/src/index.ts: types SerializedDictionaryNote",
-		"battery/dumdict/src/index.ts: types SerializedDictionaryNoteV1",
 		"battery/dumdict/src/index.ts: types SpellingLinkTarget",
 		"battery/dumdict/src/inflection.ts: exports placeSurface",
 		"battery/dumdict/src/inflection.ts: exports projectLemmaTables",

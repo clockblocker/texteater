@@ -166,8 +166,7 @@ export function projectLemmaTables<L extends Dumling.Language, F, P = string>(
 	);
 	const conflicts: LicenceConflict<L>[] = [];
 	for (const link of links) {
-		const surface =
-			link.surfaceId === null ? undefined : metById.get(link.surfaceId);
+		const surface = metById.get(link.surfaceId);
 		const own = groupOf.get(link.reading);
 		const fitsGroups = surface
 			? (lineById.get(surface.id)?.groups ?? [])
@@ -220,7 +219,7 @@ function selectionOf<P>(
 
 type Link = {
 	readonly ref: string;
-	readonly surfaceId: string | null;
+	readonly surfaceId: string;
 	readonly reading: Dumrel.ReadingKey;
 };
 

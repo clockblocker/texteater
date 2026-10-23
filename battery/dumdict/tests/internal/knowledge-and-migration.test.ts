@@ -180,7 +180,7 @@ describe("Reading Knowledge Changes", () => {
 					value: [decomposed, decomposed],
 				},
 			] as const satisfies readonly Dumrel.KnowledgeChange[];
-			let existing: Dumrel.ReadingKnowledge | undefined;
+			let existing: ReadingEntry<"en">["knowledge"];
 			for (const change of changes) {
 				const result = applyDumdictKnowledgeChanges(
 					{

@@ -141,7 +141,7 @@ export const samples: Record<string, unknown[]> = {
 	pluralPattern: ["NoEnding", "UmlautEr", "Other"],
 	conjugationClass: ["Strong", "Weak", "Mixed"],
 	dimensionId: ["plural", "preterite", "present2"],
-	paradigmProvenance: ["Produced", "Migrated"],
+	paradigmProvenance: ["Produced", "Attested"],
 	paradigmVariant: [
 		{ id: "bänke", value: " Bänke", provenance: "Produced" },
 		{ id: "NoPlural", value: "NoPlural", provenance: "Authored" },
@@ -170,7 +170,7 @@ export const samples: Record<string, unknown[]> = {
 						{
 							id: "pizzen",
 							value: "Pizzen",
-							provenance: "Migrated",
+							provenance: "Produced",
 						},
 					],
 					licences: {},

@@ -5,7 +5,7 @@ import type { AttestationLink } from "../../domain-types";
 
 type LinkLike = {
 	readonly ref: string;
-	readonly surfaceId: string | null;
+	readonly surfaceId: string;
 	readonly reading: Dumling.Reading;
 };
 
@@ -24,12 +24,11 @@ function surfaceIdOwnerKey(surfaceId: string): string | undefined {
 	}
 }
 
-/** A link's Surface, if it names one, belongs to its Reading's Lemma. */
+/** A link's Surface belongs to its Reading's Lemma. */
 export function linkNamesOwnSurface(link: LinkLike): boolean {
 	return (
-		link.surfaceId === null ||
 		surfaceIdOwnerKey(link.surfaceId) ===
-			lemmaIdentityKey(link.reading.lemma)
+		lemmaIdentityKey(link.reading.lemma)
 	);
 }
 
@@ -61,14 +60,14 @@ function compare(left: string, right: string): number {
 
 /**
  * Orders the links of one ref: the code-unit-smaller `readingIdentityKey`
- * first, then the smaller Surface ID, a link without one first.
+ * first, then the smaller Surface ID.
  */
 function compareLinks(left: LinkLike, right: LinkLike): number {
 	return (
 		compare(
 			readingIdentityKey(left.reading),
 			readingIdentityKey(right.reading),
-		) || compare(left.surfaceId ?? "", right.surfaceId ?? "")
+		) || compare(left.surfaceId, right.surfaceId)
 	);
 }
 

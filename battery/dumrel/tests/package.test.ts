@@ -34,7 +34,6 @@ test("published operational entrypoint stays independent of Zod", async () => {
 		"licenceGroups",
 		"licensed",
 		"locutionTypeValues",
-		"migratePrincipalParts",
 		"paradigmChangesFor",
 		"paradigmDimensions",
 		"parseKnowledgeChange",

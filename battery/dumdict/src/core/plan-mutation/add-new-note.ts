@@ -276,9 +276,7 @@ export function planAddNewNote<L extends Dumling.Language>(
 	const draftSurfaceIds = new Set(ownedSurfaceEntries.map(({ id }) => id));
 	const linkedSurfaces = uniqueBy(
 		note.attestationLinks.flatMap(({ surfaceId }) =>
-			surfaceId !== null && !draftSurfaceIds.has(surfaceId)
-				? [surfaceId]
-				: [],
+			draftSurfaceIds.has(surfaceId) ? [] : [surfaceId],
 		),
 		(id) => id,
 	);

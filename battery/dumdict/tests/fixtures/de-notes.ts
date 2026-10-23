@@ -1,5 +1,7 @@
 import type * as Dumling from "dumling/types";
+import type { SurfaceEntry } from "../../src/domain-types";
 import type { SerializedDictionaryNote } from "../../src/dto/serialized-note";
+import { makeSurfaceId } from "../../src/dumling-id";
 
 export const germanGehenLemma = {
 	unitKind: "Lemma" as const,
@@ -19,6 +21,25 @@ export const germanGehenReading = {
 	emojiDescription: "🚶",
 } satisfies Dumling.Reading<"de">;
 
+const germanGehenCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
+	language: "de",
+	lemma: germanGehenLemma,
+	normalizedSurface: "gehen",
+	spelling: { kind: "Canonical" },
+	surfaceFeatures: null,
+} satisfies Dumling.Surface<"de", "Lexeme", "VERB">;
+
+const gehenSurface = {
+	id: makeSurfaceId("de", germanGehenCitationSurface),
+	surface: germanGehenCitationSurface,
+	ownerLemma: germanGehenLemma,
+	attestedTranslations: [],
+	attestations: [],
+	notes: "",
+} satisfies SurfaceEntry<"de">;
+
 export const deSerializedNotes = [
 	{
 		schemaVersion: 2,
@@ -30,14 +51,14 @@ export const deSerializedNotes = [
 				attestationLinks: [
 					{
 						ref: "Wir gehen nach Hause.",
-						surfaceId: null,
+						surfaceId: gehenSurface.id,
 						reading: germanGehenReading,
 					},
 				],
 				notes: "Core motion reading.",
 			},
 		],
-		ownedSurfaceEntries: [],
+		ownedSurfaceEntries: [gehenSurface],
 		pendingRelations: [],
 	},
 ] satisfies SerializedDictionaryNote<"de">[];

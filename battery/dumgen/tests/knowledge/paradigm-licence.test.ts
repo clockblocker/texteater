@@ -198,7 +198,7 @@ test("an Unstated sibling is never licensed: it takes the new variant, as every 
 		dimensions: {
 			plural: {
 				variants: [
-					{ id: "bänke", value: "Bänke", provenance: "Migrated" },
+					{ id: "bänke", value: "Bänke", provenance: "Produced" },
 				],
 				licences: {},
 			},

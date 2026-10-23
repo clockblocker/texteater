@@ -126,14 +126,12 @@ export const dimensionIdValues = [
 
 /**
  * Where a Paradigm Variant came from: Knowledge Production, an Authored
- * Inventory, a later occurrence that met it, or a record migrated from
- * Reading Knowledge (ADR 0048).
+ * Inventory, or a later occurrence that met it (ADR 0048).
  */
 export const paradigmProvenanceValues = [
 	"Produced",
 	"Authored",
 	"Attested",
-	"Migrated",
 ] as const;
 
 /**

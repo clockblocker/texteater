@@ -25,25 +25,25 @@ describe("the worked examples of ADR 0048", () => {
 				kind: "Contribute",
 				dimension: "preterite",
 				value: "molk",
-				provenance: "Migrated",
+				provenance: "Produced",
 			},
 			{
 				kind: "Contribute",
 				dimension: "preterite",
 				value: "melkte",
-				provenance: "Migrated",
+				provenance: "Produced",
 			},
 			{
 				kind: "Contribute",
 				dimension: "pastParticiple",
 				value: "gemolken",
-				provenance: "Migrated",
+				provenance: "Produced",
 			},
 			{
 				kind: "Contribute",
 				dimension: "pastParticiple",
 				value: "gemelkt",
-				provenance: "Migrated",
+				provenance: "Produced",
 			},
 		];
 		const result = applyParadigmChanges({
@@ -95,7 +95,7 @@ describe("the worked examples of ADR 0048", () => {
 				kind: "Contribute",
 				dimension: "plural",
 				value,
-				provenance: "Migrated",
+				provenance: "Produced",
 			})),
 		});
 		if (!result.success) throw result.error;
@@ -106,12 +106,12 @@ describe("the worked examples of ADR 0048", () => {
 						{
 							id: "pizzas",
 							value: "Pizzas",
-							provenance: "Migrated",
+							provenance: "Produced",
 						},
 						{
 							id: "pizzen",
 							value: "Pizzen",
-							provenance: "Migrated",
+							provenance: "Produced",
 						},
 					],
 					licences: {},

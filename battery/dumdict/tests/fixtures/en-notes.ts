@@ -1,7 +1,9 @@
 import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import { derivePendingEntryId } from "../../src/core/pending";
+import type { SurfaceEntry } from "../../src/domain-types";
 import type { SerializedDictionaryNote } from "../../src/dto/serialized-note";
+import { makeSurfaceId } from "../../src/dumling-id";
 
 const englishVerbFeatures = {
 	phrasal: null,
@@ -81,13 +83,32 @@ export const englishRunDraft = {
 	},
 };
 
+const englishWalkCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
+	language: "en",
+	lemma: englishWalkLemma,
+	normalizedSurface: "walk",
+	spelling: { kind: "Canonical" },
+	surfaceFeatures: null,
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
+
+export const walkSurface = {
+	id: makeSurfaceId("en", englishWalkCitationSurface),
+	surface: englishWalkCitationSurface,
+	ownerLemma: englishWalkLemma,
+	attestedTranslations: [],
+	attestations: [],
+	notes: "",
+} satisfies SurfaceEntry<"en">;
+
 const walkReading = {
 	reading: englishWalkReading,
 	attestedTranslations: ["walk"],
 	attestationLinks: [
 		{
 			ref: "They walk home together.",
-			surfaceId: null,
+			surfaceId: walkSurface.id,
 			reading: englishWalkReading,
 		},
 	],
@@ -99,7 +120,7 @@ export const enSerializedNotes = [
 		schemaVersion: 2,
 		lemmaRecord: { lemma: englishWalkLemma },
 		readingEntries: [walkReading],
-		ownedSurfaceEntries: [],
+		ownedSurfaceEntries: [walkSurface],
 		pendingRelations: [],
 	},
 ] satisfies SerializedDictionaryNote<"en">[];
@@ -116,7 +137,7 @@ export const enSerializedNotesWithPendingSwimRelation = [
 		schemaVersion: 2,
 		lemmaRecord: { lemma: englishWalkLemma },
 		readingEntries: [walkReading],
-		ownedSurfaceEntries: [],
+		ownedSurfaceEntries: [walkSurface],
 		pendingRelations: [
 			{
 				sourceReading: englishWalkReading,

@@ -15,6 +15,7 @@ import {
 	bank,
 	banken,
 	bankParadigm,
+	bankSingular,
 	bench,
 	benchParadigm,
 	linkOf,
@@ -50,11 +51,14 @@ describe("reconcileAttestationLinks", () => {
 		});
 	});
 
-	test("of one Reading's two links for a ref, keeps the one without a Surface", () => {
-		const unrecorded = { ...a, surfaceId: null };
-		expect(reconcileAttestationLinks([a, unrecorded])).toEqual({
-			kept: [unrecorded],
-			dropped: [a],
+	test("of one Reading's two links for a ref, keeps the smaller Surface ID's", () => {
+		const other = linkOf("r1", bench, bankSingular);
+		const [smaller = a, larger = other] = [a, other].sort((left, right) =>
+			left.surfaceId < right.surfaceId ? -1 : 1,
+		);
+		expect(reconcileAttestationLinks([larger, smaller])).toEqual({
+			kept: [smaller],
+			dropped: [larger],
 		});
 	});
 });

@@ -105,9 +105,7 @@ or Conditioned, and the Readings that share one table; nothing derived is
 stored. `paradigmDimensions` is the Paradigm Policy. Code derives each
 plural form's Plural Pattern (`germanPluralPattern`) and each Präteritum
 form's Conjugation Class (`germanConjugationClass`, `aufstehen`, `stand auf` →
-`Strong`); patterns and classes are never stored. `migratePrincipalParts`
-moves the principal parts Readings stored as Knowledge before ADR 0048 into
-the Paradigm, deterministically.
+`Strong`); patterns and classes are never stored.
 
 Three atomic aspects type a multiword or formulaic Reading without splitting
 its Lemma (ADR 0039). `locutionType` marks a Locution Reading as an `Idiom`

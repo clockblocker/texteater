@@ -499,8 +499,7 @@ export function describeStorageConformance(
 		});
 
 		if (attestationLinks) describeOccurrenceConformance(createStorage);
-		if (paradigms)
-			describeParadigmConformance(createStorage, attestationLinks);
+		if (paradigms) describeParadigmConformance(createStorage);
 		describeRefusalConformance(createStorage, {
 			attestationLinks,
 			paradigms,

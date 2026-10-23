@@ -39,12 +39,11 @@ export type LemmaRecord<out L extends Dumling.Language> = {
  * The durable record of one occurrence (system ADR 0049): the host's opaque
  * `ref`, the Surface the occurrence realized and the Reading it was judged to
  * be. A `ref` is unique in a Dictionary Scope. `surfaceId` names a Surface
- * Entry the Reading's Lemma owns, and is null only for a ref migrated from a
- * version 1 note that recorded no form.
+ * Entry the Reading's Lemma owns.
  */
 export type AttestationLink<out L extends Dumling.Language> = {
 	ref: string;
-	surfaceId: SurfaceId<L> | null;
+	surfaceId: SurfaceId<L>;
 	reading: Dumling.Reading<L>;
 };
 

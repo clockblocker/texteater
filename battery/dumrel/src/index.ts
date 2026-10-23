@@ -6,7 +6,6 @@ export {
 export { applyParadigmChanges } from "./apply-paradigm-changes.js";
 export { germanConjugationClass } from "./german-conjugation-class.js";
 export { germanPluralPattern } from "./german-plural-pattern.js";
-export { migratePrincipalParts } from "./migrate-principal-parts.js";
 export {
 	isFree,
 	licenceGroups,

@@ -7,7 +7,6 @@ export {
 	type SpellingLinkTarget,
 	spellingTarget,
 } from "./core/link-target";
-export { migrateV1toV2 } from "./core/migrate-v1-to-v2";
 export { reconcileAttestationLinks } from "./core/occurrence/links";
 export { reconcileLemmaParadigms } from "./core/occurrence/paradigm";
 export type {
@@ -25,11 +24,7 @@ export type {
 	StoreRevision,
 	SurfaceEntry,
 } from "./domain-types";
-export type {
-	LemmaSlice,
-	SerializedDictionaryNote,
-	SerializedDictionaryNoteV1,
-} from "./dto";
+export type { LemmaSlice, SerializedDictionaryNote } from "./dto";
 export { makeSurfaceId } from "./dumling-id";
 export {
 	type DumdictParse,

@@ -25,9 +25,7 @@ export function paradigmFitsLemma(value: {
 }
 
 /** The Paradigm as Dumdict stores it: none when it holds no variants. */
-export function storedParadigm(
-	paradigm: Paradigm | undefined,
-): Paradigm | undefined {
+function storedParadigm(paradigm: Paradigm | undefined): Paradigm | undefined {
 	return paradigm === undefined ||
 		Object.keys(paradigm.dimensions).length === 0
 		? undefined

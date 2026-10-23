@@ -47,7 +47,6 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"licenceGroups",
 		"licensed",
 		"locutionTypeValues",
-		"migratePrincipalParts",
 		"paradigmChangesFor",
 		"paradigmDimensions",
 		"parseKnowledgeChange",

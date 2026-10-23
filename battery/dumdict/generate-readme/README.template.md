@@ -116,8 +116,8 @@ The root export is intentionally focused:
 - record and plan types such as `ReadingEntry`, `SurfaceEntry`, and `DumdictPlan`
 - the lightweight `parseAs*` parsers for stored records and plans
 - `makeSurfaceId`: the stable ID of an owned Surface
-- `migrateV1toV2`, and `reconcileAttestationLinks` and
-  `reconcileLemmaParadigms`, which merge concurrent writers' copies
+- `reconcileAttestationLinks` and `reconcileLemmaParadigms`, which merge
+  concurrent writers' copies
 - `LinkTarget`, the place a host's link goes (a Spelling Crossroad, a Lemma,
   a Reading or a met Surface), with `resolveShadow`, the pure match rule for a
   link whose exact sense is unknown, and `pendingRelationTarget`, a stored
@@ -133,11 +133,8 @@ app with a local cache, are future work; each would implement the slice reads
 and atomic commit the conformance suite checks.
 
 A serialized note is version 2: one Lemma with its Paradigm, its Readings
-with their Attestation Links, its Surfaces and its pending relations.
-`migrateV1toV2` reads a version 1 note deterministically: its Readings'
-principal parts become the Lemma Paradigm, and its attestation strings
-Attestation Links. Old unversioned, Reading-targeted relation data is a hard
-break the host must reset or rewrite.
+with their Attestation Links, its Surfaces and its pending relations. Any
+older note is a hard break the host must reset or rewrite.
 
 ## Inflection tables
 

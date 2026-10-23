@@ -23,9 +23,7 @@ function swimNote(
 			{
 				reading,
 				attestedTranslations: ["swim"],
-				attestationLinks: [
-					{ ref: "They swim.", surfaceId: null, reading },
-				],
+				attestationLinks: [],
 				notes: "Swimming.",
 			},
 		],

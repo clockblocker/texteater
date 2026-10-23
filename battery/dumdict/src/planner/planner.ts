@@ -224,14 +224,12 @@ function addNewNote<L extends Dumling.Language>(
 			const links = parsed.draft.note.attestationLinks;
 			if (
 				links.some(
-					(link) =>
-						link.surfaceId === null ||
-						!sameReading(link.reading, parsed.draft.reading),
+					(link) => !sameReading(link.reading, parsed.draft.reading),
 				)
 			)
 				return rejected(
 					"invalidDraft",
-					"Each Attestation Link of the draft names its Reading and a Surface.",
+					"Each Attestation Link of the draft names its Reading.",
 				);
 			return ok(parsed);
 		},

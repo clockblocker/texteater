@@ -92,8 +92,7 @@ strings, which lost which Surface an occurrence realized. Recording an
 occurrence ensures its Surface and appends its link in one operation. The
 same ref with the same Surface and Reading is a no-op; with anything else it
 is rejected, since re-attribution is a move
-([ADR 0043](./0043-correct-identity-by-moving-occurrences.md)). A ref
-migrated from a plain string with no recorded form has no Surface. A link
+([ADR 0043](./0043-correct-identity-by-moving-occurrences.md)). A link
 gives a Reading its contexts, and it serves moves, Licence Conflicts, added
 variants (ADR 0048) and forgetting. It never places a form: forms are the
 Lemma's, so a met Surface shows in every table whose variants it fits.
@@ -102,8 +101,7 @@ Lemma's, so a met Surface shows in every table whose variants it fits.
 Link, its Lemma forgets it, unless it holds user text: its notes, or
 translations the learner wrote. User text is never dropped. A kept Surface
 stays in the list, marked as having no attestations. A Surface that never
-had a link, such as one a migrated note held, is not forgotten by another
-occurrence's removal.
+had a link is not forgotten by another occurrence's removal.
 
 **Upstream of the tables.** A contraction never reaches a table. Dumgen's
 Segment stage cuts fused words

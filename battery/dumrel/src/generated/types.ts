@@ -3220,11 +3220,7 @@ export type DimensionId =
 	| "present3"
 	| "pastParticiple"
 	| "subjunctivePast";
-export type ParadigmProvenance =
-	| "Produced"
-	| "Authored"
-	| "Attested"
-	| "Migrated";
+export type ParadigmProvenance = "Produced" | "Authored" | "Attested";
 export type ParadigmChange =
 	| {
 			kind: "Contribute";

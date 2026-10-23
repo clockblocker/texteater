@@ -78,14 +78,14 @@ export function planRekeySurfaces<L extends Dumling.Language>(
 		});
 	}
 	const relinked = slice.readings.flatMap((entry) => {
-		const old = entry.attestationLinks.filter(
-			(link) => link.surfaceId !== null && moved.has(link.surfaceId),
+		const old = entry.attestationLinks.filter((link) =>
+			moved.has(link.surfaceId),
 		);
 		if (old.length === 0) return [];
 		const fresh = old.map(
 			(link): AttestationLink<L> => ({
 				...link,
-				surfaceId: moved.get(link.surfaceId ?? "") ?? null,
+				surfaceId: moved.get(link.surfaceId) ?? link.surfaceId,
 			}),
 		);
 		const patch = (ops: ReadingPatchOp<L>[]): PlannedChangeOp<L> => ({
@@ -113,10 +113,8 @@ export function planRekeySurfaces<L extends Dumling.Language>(
 				? {
 						readings: slice.readings
 							.filter((entry) =>
-								entry.attestationLinks.some(
-									(link) =>
-										link.surfaceId !== null &&
-										moved.has(link.surfaceId),
+								entry.attestationLinks.some((link) =>
+									moved.has(link.surfaceId),
 								),
 							)
 							.map(({ reading }) => reading),

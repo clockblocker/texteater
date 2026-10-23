@@ -185,7 +185,7 @@ function createSchemasFor<const L extends Dumling.Language>(
 	const attestationLinkSchema = z
 		.strictObject({
 			ref: z.string().min(1),
-			surfaceId: surfaceIdSchema.nullable(),
+			surfaceId: surfaceIdSchema,
 			reading: languageReadingSchema,
 		})
 		.refine(

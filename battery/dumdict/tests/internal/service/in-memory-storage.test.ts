@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { walkSurface } from "../../fixtures/en-notes";
 import {
 	englishSwimLemma,
 	englishWalkReading,
@@ -37,7 +38,7 @@ describe("in-memory storage", () => {
 							kind: "addAttestationLink",
 							link: {
 								ref: "Already attested",
-								surfaceId: null,
+								surfaceId: walkSurface.id,
 								reading: englishWalkReading,
 							},
 						},
@@ -76,7 +77,7 @@ describe("in-memory storage", () => {
 					kind: "addAttestationLink" as const,
 					link: {
 						ref: "They walk before sunrise.",
-						surfaceId: null,
+						surfaceId: walkSurface.id,
 						reading: englishWalkReading,
 					},
 				},

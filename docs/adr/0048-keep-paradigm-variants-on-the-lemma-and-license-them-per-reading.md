@@ -103,8 +103,7 @@ when it creates a Reading
     its rival, the form is judged by contrast instead
     ([#1260](https://github.com/clockblocker/texteater/issues/1260)).
 - **A Reading whose forms were never produced**, such as an authored member
-  without paradigm data or a migrated Reading that stored none, is Unstated
-  and licenses all. Every produced Reading's Licence is explicit, so a later
+  without paradigm data, is Unstated and licenses all. Every produced Reading's Licence is explicit, so a later
   variant never joins a Reading produced for another sense: 🪑 does not gain
   `Banken` when 🏦 is created.
 
@@ -115,10 +114,7 @@ meaning-conditioned doublets (`Bank`, `Mutter`, `Wort`, `Strauß`, `Druck`,
 `erschrecken`, `wiegen`) and free controls (`melken`, `Pizza`). The licence
 judge is tuned on one half of that gold and scored on the other, and its
 prompt cites the Rule. Code decides ids and merging: it splits a written list
-into one variant per form, sets Licences and removes unlicensed variants. A migrated Reading brings its
-stored forms as variants with provenance `Migrated` and an explicit Licence.
-A conjugation class stored without forms is not carried over, since code
-derives classes from forms only.
+into one variant per form, sets Licences and removes unlicensed variants.
 
 **Routing ignores the Paradigm.** The Reading judge picks by Emoji
 Description alone (ADR 0031): `Zieh die Muttern fest` reaches 🔩 by meaning.
