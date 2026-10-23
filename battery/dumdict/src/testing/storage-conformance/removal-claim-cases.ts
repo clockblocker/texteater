@@ -25,7 +25,6 @@ import {
 	exactPending,
 	knowledgeOf,
 	resolvedTo,
-	run,
 	seed,
 } from "./harness";
 import {
@@ -89,7 +88,7 @@ async function reevaluateToRest(
 	request: Omit<ReevaluateShadowsRequest<"de">, "baseRevision">,
 ) {
 	const plan = async () => {
-		const slice = await run(storage.loadReevaluateShadowsContext(request));
+		const slice = await storage.loadReevaluateShadowsContext(request);
 		return planner.reevaluateShadows(slice, {
 			...request,
 			baseRevision: slice.revision,
@@ -112,10 +111,8 @@ async function addNote(
 			note: { attestedTranslations: [], attestationLinks: [], notes: "" },
 		},
 	};
-	const context = await run(
-		storage.loadReadingEntryContext(
-			planner.contextRequest({ intent: "addNewNote", request }),
-		),
+	const context = await storage.loadReadingEntryContext(
+		planner.contextRequest({ intent: "addNewNote", request }),
 	);
 	if (context.intent !== "addNewNote")
 		throw new Error("Expected an addNewNote context.");
@@ -142,7 +139,7 @@ export function describeRemovalClaimConformance(
 			...claiming(teichReading, { hypernym: [dieSee] }),
 		]);
 
-		await run(storage.removeLemma(dieSee));
+		await storage.removeLemma(dieSee);
 		await reevaluateToRest(storage, { removedLemmas: [dieSee] });
 		expect(await knowledgeOf(storage, teichReading)).toBeUndefined();
 		expect(await recordOf(storage, teichOnDieSee)).toEqual([teichOnDieSee]);
@@ -166,7 +163,7 @@ export function describeRemovalClaimConformance(
 			...claiming(teichReading, { hypernym: [dieSee] }),
 		]);
 
-		await run(storage.removeLemma(dieSee));
+		await storage.removeLemma(dieSee);
 		await reevaluateToRest(storage, { removedLemmas: [dieSee] });
 		expect(await knowledgeOf(storage, teichReading)).toEqual({
 			semanticRelations: { hypernym: [derSee] },
@@ -187,7 +184,7 @@ export function describeRemovalClaimConformance(
 			}),
 		]);
 
-		await run(storage.removeLemma(dieSee));
+		await storage.removeLemma(dieSee);
 		await reevaluateToRest(storage, { removedLemmas: [dieSee] });
 		expect(await knowledgeOf(storage, teichReading)).toEqual({
 			semanticRelations: { targetKind: "reading" },
@@ -218,10 +215,8 @@ export function describeRemovalClaimConformance(
 	) => {
 		const surface = reading === bench ? baenke : banken;
 		const request = { link: linkOf(ref, reading, surface), surface };
-		const context = await run(
-			storage.loadReadingEntryContext(
-				planner.contextRequest({ intent: "recordOccurrence", request }),
-			),
+		const context = await storage.loadReadingEntryContext(
+			planner.contextRequest({ intent: "recordOccurrence", request }),
 		);
 		if (context.intent !== "recordOccurrence")
 			throw new Error("Expected a recordOccurrence context.");

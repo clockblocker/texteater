@@ -85,7 +85,6 @@
 		"dumrel": "workspace:^",
 		"dumcorpus": "workspace:^",
 		"zod": "4.4.3",
-		"effect": "4.0.0",
 		"dumling": "workspace:^"
 	},
 	"devDependencies": {

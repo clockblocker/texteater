@@ -9,7 +9,6 @@ import {
 	describeStorageConformance,
 } from "dumdict/testing";
 import type * as Dumling from "dumling/types";
-import * as Effect from "effect/Effect";
 import type { MutationCtx } from "../convex/_generated/server";
 import { pendingLocatorIndexKey } from "../convex/model/dumdictPendingIndexes";
 import {
@@ -42,47 +41,32 @@ function convexStorage(): ConformanceStorage {
 	const t = createTestConvex();
 	return {
 		commitChanges: (request) =>
-			Effect.promise(() =>
-				t.run((ctx) => applyDumdictPlanInTransaction(ctx, request)),
-			),
+			t.run((ctx) => applyDumdictPlanInTransaction(ctx, request)),
 		loadReadingEntryContext: (request) =>
-			Effect.promise(
-				() =>
-					t.run((ctx) =>
-						loadReadingEntryContextSlice(
-							ctx,
-							readingEntryContextArgs(request),
-						),
-					) as Promise<ReadingEntryContext<"de">>,
-			),
+			t.run((ctx) =>
+				loadReadingEntryContextSlice(
+					ctx,
+					readingEntryContextArgs(request),
+				),
+			) as Promise<ReadingEntryContext<"de">>,
 		loadCleanupRelationsContext: ({ resolutions }) =>
-			Effect.promise(
-				() =>
-					t.run((ctx) =>
-						loadCleanupRelationsSlice(
-							ctx,
-							resolutions.map(({ locator }) =>
-								pendingLocatorIndexKey(locator),
-							),
-						),
-					) as Promise<CleanupRelationsSlice<"de">>,
-			),
+			t.run((ctx) =>
+				loadCleanupRelationsSlice(
+					ctx,
+					resolutions.map(({ locator }) =>
+						pendingLocatorIndexKey(locator),
+					),
+				),
+			) as Promise<CleanupRelationsSlice<"de">>,
 		loadReevaluateShadowsContext: (request) =>
-			Effect.promise(
-				() =>
-					t.run((ctx) =>
-						loadReevaluateShadowsSlice(ctx, request),
-					) as Promise<ReevaluateShadowsSlice<"de">>,
-			),
-		loadOccurrenceSlice: () => Effect.sync(loadOccurrenceSlice),
+			t.run((ctx) => loadReevaluateShadowsSlice(ctx, request)) as Promise<
+				ReevaluateShadowsSlice<"de">
+			>,
+		loadOccurrenceSlice: async () => loadOccurrenceSlice(),
 		loadRekeySurfacesSlice: (request) =>
-			Effect.promise(() =>
-				t.run((ctx) => loadRekeySurfacesSlice(ctx, request)),
-			),
+			t.run((ctx) => loadRekeySurfacesSlice(ctx, request)),
 		removeLemma: (lemma) =>
-			Effect.promise(() =>
-				t.run((ctx) => removeDictionaryLemma(ctx, lemma)),
-			),
+			t.run((ctx) => removeDictionaryLemma(ctx, lemma)),
 	};
 }
 

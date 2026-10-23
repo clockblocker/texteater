@@ -39,7 +39,6 @@ import {
 	knowledgeOf,
 	readingContext,
 	resolvedTo,
-	run,
 	seed,
 	storedInventory,
 } from "./harness";
@@ -85,10 +84,8 @@ async function addNote(
 			note: { attestedTranslations: [], attestationLinks: [], notes: "" },
 		},
 	};
-	const context = await run(
-		storage.loadReadingEntryContext(
-			planner.contextRequest({ intent: "addNewNote", request }),
-		),
+	const context = await storage.loadReadingEntryContext(
+		planner.contextRequest({ intent: "addNewNote", request }),
 	);
 	if (context.intent !== "addNewNote")
 		throw new Error("Expected an addNewNote context.");
@@ -101,7 +98,7 @@ async function reevaluate(
 	storage: ConformanceStorage,
 	request: Omit<ReevaluateShadowsRequest<"de">, "baseRevision">,
 ) {
-	const slice = await run(storage.loadReevaluateShadowsContext(request));
+	const slice = await storage.loadReevaluateShadowsContext(request);
 	return {
 		slice,
 		outcome: planner.reevaluateShadows(slice, {
@@ -226,7 +223,7 @@ export function describeShadowConformance(
 		expect(await synonymsOf(storage, derSeeReading)).toEqual([]);
 
 		// die See removed: both resolve to der See again.
-		await run(storage.removeLemma(dieSee));
+		await storage.removeLemma(dieSee);
 		await reevaluateToRest(storage, { removedLemmas: [dieSee] });
 		expect(await seeLink(storage)).toEqual({
 			kind: "Lemma",
@@ -261,7 +258,7 @@ export function describeShadowConformance(
 		expect(await knowledgeOf(storage, teichReading)).toEqual(
 			exactTeich.knowledge,
 		);
-		await run(storage.removeLemma(dieSee));
+		await storage.removeLemma(dieSee);
 		await reevaluateToRest(storage, { removedLemmas: [dieSee] });
 		expect(await knowledgeOf(storage, teichReading)).toEqual(
 			exactTeich.knowledge,
@@ -283,7 +280,7 @@ export function describeShadowConformance(
 		expect(await commitPlan(storage, outcome)).toMatchObject({
 			status: "committed",
 		});
-		await run(storage.removeLemma(dieSee));
+		await storage.removeLemma(dieSee);
 		await expectAtRest(storage, { removedLemmas: [dieSee] });
 		expect(await knowledgeOf(storage, meerReading)).toEqual({
 			semanticRelations: { synonym: [derSee] },
@@ -306,7 +303,7 @@ export function describeShadowConformance(
 		});
 
 		// The claim on die See outlives its Lemma until the re-evaluation.
-		await run(storage.removeLemma(dieSee));
+		await storage.removeLemma(dieSee);
 		await reevaluateToRest(storage, { removedLemmas: [dieSee] });
 		expect(await knowledgeOf(storage, meerReading)).toBeUndefined();
 		expect(await recordOf(storage, meerSeePendingRecord)).toEqual([
@@ -322,13 +319,11 @@ export function describeShadowConformance(
 			createPending(meerSeePendingRecord),
 		]);
 		const request = { entry: readingEntry(derSeeReading) };
-		const context = await run(
-			storage.loadReadingEntryContext(
-				planner.contextRequest({
-					intent: "ensureReadingEntry",
-					request,
-				}),
-			),
+		const context = await storage.loadReadingEntryContext(
+			planner.contextRequest({
+				intent: "ensureReadingEntry",
+				request,
+			}),
 		);
 		if (context.intent !== "ensureReadingEntry")
 			throw new Error("Expected an ensureReadingEntry context.");
@@ -356,7 +351,7 @@ export function describeShadowConformance(
 			createPending(gehenPendingRecord),
 			createLemma(schreiten),
 		]);
-		await run(storage.removeLemma(schreiten));
+		await storage.removeLemma(schreiten);
 
 		const { slice } = await reevaluate(storage, {
 			removedLemmas: [schreiten],

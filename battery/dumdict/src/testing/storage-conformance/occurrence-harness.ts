@@ -3,7 +3,7 @@ import type * as Dumling from "dumling/types";
 import type { AttestationLink, PlannedChangeOp } from "../../domain-types";
 import { createDumdictPlanner } from "../../planner/planner";
 import { createOwnedSurface, createPending, readingEntry } from "./fixtures";
-import { type ConformanceStorage, readingContext, run, seed } from "./harness";
+import { type ConformanceStorage, readingContext, seed } from "./harness";
 import {
 	bank,
 	bankParadigm,
@@ -22,10 +22,8 @@ export async function planRecord(
 	surface: Dumling.Surface<"de">,
 ) {
 	const request = { link, surface };
-	const context = await run(
-		storage.loadReadingEntryContext(
-			planner.contextRequest({ intent: "recordOccurrence", request }),
-		),
+	const context = await storage.loadReadingEntryContext(
+		planner.contextRequest({ intent: "recordOccurrence", request }),
 	);
 	if (context.intent !== "recordOccurrence")
 		throw new Error("Expected a recordOccurrence context.");
@@ -34,8 +32,8 @@ export async function planRecord(
 
 /** Plans removing one occurrence against the store, as a host does. */
 export async function planRemove(storage: ConformanceStorage, ref: string) {
-	const slice = await run(
-		storage.loadOccurrenceSlice(planner.occurrenceSliceRequest({ ref })),
+	const slice = await storage.loadOccurrenceSlice(
+		planner.occurrenceSliceRequest({ ref }),
 	);
 	return planner.removeOccurrence(slice, { ref });
 }
@@ -61,13 +59,11 @@ export async function storedSurface(
 	storage: ConformanceStorage,
 	surface: Dumling.Surface<"de">,
 ) {
-	const context = await run(
-		storage.loadReadingEntryContext({
-			intent: "ensureOwnedSurface",
-			reading: bench,
-			surface,
-		}),
-	);
+	const context = await storage.loadReadingEntryContext({
+		intent: "ensureOwnedSurface",
+		reading: bench,
+		surface,
+	});
 	if (context.intent !== "ensureOwnedSurface")
 		throw new Error("Expected an ensureOwnedSurface context.");
 	return context.existingOwnedSurfaces[0];

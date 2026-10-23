@@ -28,7 +28,6 @@ import {
 	knowledgeOf,
 	pendingMatchingLemma,
 	readingContext,
-	run,
 	seed,
 	semanticConflict,
 	snapshot,
@@ -108,13 +107,11 @@ export function describeStorageConformance(
 				]),
 			).toMatchObject({ status: "committed" });
 
-			const context = await run(
-				storage.loadReadingEntryContext({
-					intent: "ensureOwnedSurface",
-					reading: gehenReading,
-					surface: gehenSurface,
-				}),
-			);
+			const context = await storage.loadReadingEntryContext({
+				intent: "ensureOwnedSurface",
+				reading: gehenReading,
+				surface: gehenSurface,
+			});
 			expect(context).toMatchObject({
 				intent: "ensureOwnedSurface",
 				existingLemma: { lemma: gehen },
@@ -133,12 +130,10 @@ export function describeStorageConformance(
 				await seed(storage, [createLemma(gehen)]);
 
 				expect(
-					await run(
-						storage.commitChanges({
-							baseRevision: revision,
-							changes: [createLemma(laufen)],
-						}),
-					),
+					await storage.commitChanges({
+						baseRevision: revision,
+						changes: [createLemma(laufen)],
+					}),
 				).toMatchObject({
 					status: "conflict",
 					code: "revisionConflict",

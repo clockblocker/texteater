@@ -6,7 +6,6 @@ import {
 	commit,
 	commitPlan,
 	exactPending,
-	run,
 	seed,
 	semanticConflict,
 } from "./harness";
@@ -116,10 +115,8 @@ export function describeOccurrenceConformance(
 			},
 		});
 		const plan = async (request: ReturnType<typeof draftOf>) => {
-			const context = await run(
-				storage.loadReadingEntryContext(
-					planner.contextRequest({ intent: "addNewNote", request }),
-				),
+			const context = await storage.loadReadingEntryContext(
+				planner.contextRequest({ intent: "addNewNote", request }),
 			);
 			if (context.intent !== "addNewNote")
 				throw new Error("Expected an addNewNote context.");
@@ -285,10 +282,8 @@ export function describeOccurrenceConformance(
 		await record(storage, r1, baenke);
 		const respelled = respelledBaenke;
 		const request = { rekeys: [{ from: noted.id, to: respelled }] };
-		const slice = await run(
-			storage.loadRekeySurfacesSlice(
-				planner.rekeySurfacesSliceRequest(request),
-			),
+		const slice = await storage.loadRekeySurfacesSlice(
+			planner.rekeySurfacesSliceRequest(request),
 		);
 		expect(
 			await commitPlan(storage, planner.rekeySurfaces(slice, request)),

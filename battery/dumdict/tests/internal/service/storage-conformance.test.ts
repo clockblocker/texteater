@@ -1,22 +1,20 @@
-import * as Effect from "effect/Effect";
 import { describeStorageConformance } from "../../../src/testing";
 import { createInMemoryTestStorage } from "../../support/in-memory-store";
 
 describeStorageConformance("The in-memory store", () => {
 	const storage = createInMemoryTestStorage("de");
 	return {
-		commitChanges: (request) =>
-			Effect.sync(() => storage.commitChanges(request)),
-		loadReadingEntryContext: (request) =>
-			Effect.sync(() => storage.loadReadingEntryContext(request)),
-		loadCleanupRelationsContext: (request) =>
-			Effect.sync(() => storage.loadCleanupRelationsContext(request)),
-		loadReevaluateShadowsContext: (request) =>
-			Effect.sync(() => storage.loadReevaluateShadowsContext(request)),
-		loadOccurrenceSlice: (request) =>
-			Effect.sync(() => storage.loadOccurrenceSlice(request)),
-		loadRekeySurfacesSlice: (request) =>
-			Effect.sync(() => storage.loadRekeySurfacesSlice(request)),
-		removeLemma: (lemma) => Effect.sync(() => storage.removeLemma(lemma)),
+		commitChanges: async (request) => storage.commitChanges(request),
+		loadReadingEntryContext: async (request) =>
+			storage.loadReadingEntryContext(request),
+		loadCleanupRelationsContext: async (request) =>
+			storage.loadCleanupRelationsContext(request),
+		loadReevaluateShadowsContext: async (request) =>
+			storage.loadReevaluateShadowsContext(request),
+		loadOccurrenceSlice: async (request) =>
+			storage.loadOccurrenceSlice(request),
+		loadRekeySurfacesSlice: async (request) =>
+			storage.loadRekeySurfacesSlice(request),
+		removeLemma: async (lemma) => storage.removeLemma(lemma),
 	};
 });

@@ -3,7 +3,7 @@ import { paradigmChangesFor } from "dumrel";
 
 import type { PlannedChangeOp } from "../../domain-types";
 import { createReading, readingEntry } from "./fixtures";
-import { type ConformanceStorage, commitPlan, run, seed } from "./harness";
+import { type ConformanceStorage, commitPlan, seed } from "./harness";
 import {
 	bank,
 	bankParadigm,
@@ -73,13 +73,11 @@ export function describeParadigmConformance(
 				provenance: "Produced",
 			}),
 		};
-		const context = await run(
-			storage.loadReadingEntryContext(
-				planner.contextRequest({
-					intent: "applyGeneratedKnowledge",
-					request: generated,
-				}),
-			),
+		const context = await storage.loadReadingEntryContext(
+			planner.contextRequest({
+				intent: "applyGeneratedKnowledge",
+				request: generated,
+			}),
 		);
 		if (context.intent !== "applyGeneratedKnowledge")
 			throw new Error("Expected an applyGeneratedKnowledge context.");
@@ -110,13 +108,11 @@ export function describeParadigmConformance(
 				}),
 			},
 		};
-		const added = await run(
-			storage.loadReadingEntryContext(
-				planner.contextRequest({
-					intent: "addNewNote",
-					request: draft,
-				}),
-			),
+		const added = await storage.loadReadingEntryContext(
+			planner.contextRequest({
+				intent: "addNewNote",
+				request: draft,
+			}),
 		);
 		if (added.intent !== "addNewNote")
 			throw new Error("Expected an addNewNote context.");

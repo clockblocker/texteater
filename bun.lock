@@ -193,7 +193,6 @@
         "dumcorpus": "workspace:^",
         "dumling": "workspace:^",
         "dumrel": "workspace:^",
-        "effect": "4.0.0",
         "zod": "4.4.3",
       },
       "devDependencies": {
