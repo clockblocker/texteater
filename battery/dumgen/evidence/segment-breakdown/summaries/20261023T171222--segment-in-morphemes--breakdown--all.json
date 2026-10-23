@@ -1,0 +1,130 @@
+{
+  "runId": "75e408bc-1727-4fa6-982e-e46684f30cd3",
+  "experimentId": "segment-in-morphemes/de:breakdown",
+  "round": "2026-10-23-first-breakdown",
+  "manifest": {
+    "version": 2,
+    "runId": "75e408bc-1727-4fa6-982e-e46684f30cd3",
+    "experimentId": "segment-in-morphemes/de:breakdown",
+    "evaluatorVersion": "breakdown-1",
+    "sourceRevision": "65748415f",
+    "startedAt": "2026-10-23T17:12:22.666Z",
+    "corpus": {
+      "fingerprint": "600895daf379184a079cb69225e766462f7b0ebf95e06336b6cec5cdd3cf9f1d",
+      "caseIds": [
+        "breakdown/de/fisch",
+        "breakdown/de/kaufen",
+        "breakdown/de/rufen",
+        "breakdown/de/spannen"
+      ]
+    },
+    "repetitions": 3,
+    "operationVersion": "segment-in-morphemes/de@production",
+    "configurations": {
+      "generation": {
+        "model": "jev-1.13.0",
+        "settings": { "cases": 4, "offline": false }
+      },
+      "judgment": {
+        "model": "jev-1.13.0",
+        "settings": { "cases": 4, "offline": false }
+      }
+    }
+  },
+  "summary": {
+    "quality": { "passed": 4, "failed": 0, "needsReview": 0, "unscored": 0 },
+    "status": "Completed",
+    "finishedAt": "2026-10-23T17:12:22.674Z",
+    "total": 4,
+    "succeeded": 4,
+    "failed": 0,
+    "interrupted": 0,
+    "stability": {
+      "repetitions": 3,
+      "flipped": 0,
+      "varyingOutputs": 0,
+      "quality": { "passed": 12, "failed": 0, "needsReview": 0, "unscored": 0 }
+    }
+  },
+  "metrics": {
+    "all": {
+      "attempts": 12,
+      "failed": 0,
+      "exact": 1,
+      "cutPrecision": 1,
+      "cutRecall": 1,
+      "linksPlaced": 1,
+      "linksWithGoldRoute": 1,
+      "linksExact": 1,
+      "hasConstituentsAgreed": 1
+    },
+    "word": {
+      "attempts": 12,
+      "failed": 0,
+      "exact": 1,
+      "cutPrecision": 1,
+      "cutRecall": 1,
+      "linksPlaced": 1,
+      "linksWithGoldRoute": 1,
+      "linksExact": 1,
+      "hasConstituentsAgreed": 1
+    }
+  },
+  "spend": {
+    "jev": {
+      "calls": 0,
+      "freshCalls": 0,
+      "freshInputTokens": 0,
+      "allInputTokens": 0
+    },
+    "luna": {
+      "calls": 0,
+      "freshCalls": 0,
+      "freshInputTokens": 0,
+      "freshOutputTokens": 0
+    }
+  },
+  "transport": {
+    "requests": 0,
+    "retries": 0,
+    "retriedRequests": 0,
+    "failures": 0,
+    "interrupted": 0,
+    "retriesBy": {},
+    "failuresBy": {}
+  },
+  "cases": [
+    {
+      "caseId": "breakdown/de/fisch",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 0, "returned": 0, "matched": 0 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    },
+    {
+      "caseId": "breakdown/de/kaufen",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 1, "returned": 1, "matched": 1 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    },
+    {
+      "caseId": "breakdown/de/rufen",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 1, "returned": 1, "matched": 1 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    },
+    {
+      "caseId": "breakdown/de/spannen",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 1, "returned": 1, "matched": 1 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    }
+  ]
+}

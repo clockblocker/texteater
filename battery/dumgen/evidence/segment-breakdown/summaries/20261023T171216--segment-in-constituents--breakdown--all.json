@@ -1,0 +1,443 @@
+{
+  "runId": "9bdec1ab-7c72-4120-b503-96bc417d9435",
+  "experimentId": "segment-in-constituents/de:breakdown",
+  "round": "2026-10-23-first-breakdown",
+  "manifest": {
+    "version": 2,
+    "runId": "9bdec1ab-7c72-4120-b503-96bc417d9435",
+    "experimentId": "segment-in-constituents/de:breakdown",
+    "evaluatorVersion": "breakdown-1",
+    "sourceRevision": "65748415f",
+    "startedAt": "2026-10-23T17:12:16.691Z",
+    "corpus": {
+      "fingerprint": "1257dd7293e658c1674fd2f1e3cdc66b4d44e17ea0a64253ae791909cf41b2c5",
+      "caseIds": [
+        "breakdown/de/da-liegt-der-hase-im-pfeffer",
+        "breakdown/de/den-faden-verlieren",
+        "breakdown/de/den-nagel-auf-den-kopf-treffen",
+        "breakdown/de/einkaufen",
+        "breakdown/de/entspannung",
+        "breakdown/de/fisch",
+        "breakdown/de/gaestehaus",
+        "breakdown/de/guten-morgen",
+        "breakdown/de/guten-tag",
+        "breakdown/de/in-betracht-ziehen",
+        "breakdown/de/kaufen",
+        "breakdown/de/kohlekraftwerk",
+        "breakdown/de/morgenstund-hat-gold-im-mund",
+        "breakdown/de/na-ja",
+        "breakdown/de/nur-bahnhof-verstehen",
+        "breakdown/de/rufen",
+        "breakdown/de/sich-wie-zu-hause-fuehlen",
+        "breakdown/de/so-oder-so",
+        "breakdown/de/spannen",
+        "breakdown/de/uebung-macht-den-meister",
+        "breakdown/de/um-zu",
+        "breakdown/de/verarzten",
+        "breakdown/de/verkaufen",
+        "breakdown/de/wachstube-wachlokal",
+        "breakdown/de/wachstube-wachstube",
+        "breakdown/de/was-fuer-ein",
+        "breakdown/de/was-fuer-einer",
+        "breakdown/de/wer-zuerst-kommt-mahlt-zuerst",
+        "breakdown/de/zu-hause"
+      ]
+    },
+    "repetitions": 3,
+    "operationVersion": "segment-in-constituents/de@production",
+    "configurations": {
+      "generation": {
+        "model": "jev-1.13.0",
+        "settings": { "cases": 29, "offline": false }
+      },
+      "judgment": {
+        "model": "jev-1.13.0",
+        "settings": { "cases": 29, "offline": false }
+      }
+    }
+  },
+  "summary": {
+    "quality": { "passed": 22, "failed": 7, "needsReview": 0, "unscored": 0 },
+    "status": "Completed",
+    "finishedAt": "2026-10-23T17:12:16.815Z",
+    "total": 29,
+    "succeeded": 29,
+    "failed": 0,
+    "interrupted": 0,
+    "stability": {
+      "repetitions": 3,
+      "flipped": 0,
+      "varyingOutputs": 0,
+      "quality": { "passed": 66, "failed": 21, "needsReview": 0, "unscored": 0 }
+    }
+  },
+  "metrics": {
+    "all": {
+      "attempts": 87,
+      "failed": 0,
+      "exact": 0.7586,
+      "cutPrecision": 0.9867,
+      "cutRecall": 0.925,
+      "linksPlaced": 0.9,
+      "linksWithGoldRoute": 0.8429,
+      "linksExact": 0.8429,
+      "hasConstituentsAgreed": 1
+    },
+    "phraseme": {
+      "attempts": 51,
+      "failed": 0,
+      "exact": 0.7647,
+      "cutPrecision": 1,
+      "cutRecall": 0.9429,
+      "linksPlaced": 0.9245,
+      "linksWithGoldRoute": 0.8679,
+      "linksExact": 0.8679,
+      "hasConstituentsAgreed": 1
+    },
+    "word": {
+      "attempts": 36,
+      "failed": 0,
+      "exact": 0.75,
+      "cutPrecision": 0.8889,
+      "cutRecall": 0.8,
+      "linksPlaced": 0.8235,
+      "linksWithGoldRoute": 0.7647,
+      "linksExact": 0.7647,
+      "hasConstituentsAgreed": 1
+    }
+  },
+  "spend": {
+    "jev": {
+      "calls": 189,
+      "freshCalls": 183,
+      "freshInputTokens": 158202,
+      "allInputTokens": 163419
+    },
+    "luna": {
+      "calls": 0,
+      "freshCalls": 0,
+      "freshInputTokens": 0,
+      "freshOutputTokens": 0
+    }
+  },
+  "transport": {
+    "requests": 183,
+    "retries": 0,
+    "retriedRequests": 0,
+    "failures": 0,
+    "interrupted": 0,
+    "retriesBy": {},
+    "failuresBy": {}
+  },
+  "cases": [
+    {
+      "caseId": "breakdown/de/da-liegt-der-hase-im-pfeffer",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 7, "returned": 7, "matched": 7 },
+      "links": { "gold": 5, "placed": 5, "route": 5, "linked": 5 }
+    },
+    {
+      "caseId": "breakdown/de/den-faden-verlieren",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 2, "returned": 2, "matched": 2 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    },
+    {
+      "caseId": "breakdown/de/den-nagel-auf-den-kopf-treffen",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 6, "returned": 6, "matched": 6 },
+      "links": { "gold": 4, "placed": 4, "route": 4, "linked": 4 }
+    },
+    {
+      "caseId": "breakdown/de/einkaufen",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 1, "returned": 1, "matched": 1 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    },
+    {
+      "caseId": "breakdown/de/entspannung",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 1, "returned": 1, "matched": 1 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    },
+    {
+      "caseId": "breakdown/de/fisch",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 0, "returned": 0, "matched": 0 },
+      "links": { "gold": 0, "placed": 0, "route": 0, "linked": 0 }
+    },
+    {
+      "caseId": "breakdown/de/gaestehaus",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 2, "returned": 2, "matched": 2 },
+      "links": { "gold": 3, "placed": 3, "route": 3, "linked": 3 }
+    },
+    {
+      "caseId": "breakdown/de/guten-morgen",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 2, "returned": 2, "matched": 2 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    },
+    {
+      "caseId": "breakdown/de/guten-tag",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 2, "returned": 2, "matched": 2 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    },
+    {
+      "caseId": "breakdown/de/in-betracht-ziehen",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 4, "returned": 4, "matched": 4 },
+      "links": { "gold": 3, "placed": 3, "route": 3, "linked": 3 }
+    },
+    {
+      "caseId": "breakdown/de/kaufen",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 0, "returned": 0, "matched": 0 },
+      "links": { "gold": 0, "placed": 0, "route": 0, "linked": 0 }
+    },
+    {
+      "caseId": "breakdown/de/kohlekraftwerk",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 1, "returned": 1, "matched": 1 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    },
+    {
+      "caseId": "breakdown/de/morgenstund-hat-gold-im-mund",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 7, "returned": 7, "matched": 7 },
+      "links": { "gold": 5, "placed": 5, "route": 5, "linked": 5 }
+    },
+    {
+      "caseId": "breakdown/de/na-ja",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 2, "returned": 2, "matched": 2 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    },
+    {
+      "caseId": "breakdown/de/nur-bahnhof-verstehen",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 4, "returned": 4, "matched": 4 },
+      "links": { "gold": 3, "placed": 3, "route": 3, "linked": 3 }
+    },
+    {
+      "caseId": "breakdown/de/rufen",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 0, "returned": 0, "matched": 0 },
+      "links": { "gold": 0, "placed": 0, "route": 0, "linked": 0 }
+    },
+    {
+      "caseId": "breakdown/de/sich-wie-zu-hause-fuehlen",
+      "group": "phraseme",
+      "exact": false,
+      "repetitionsExact": 0,
+      "cuts": { "gold": 6, "returned": 6, "matched": 6 },
+      "links": { "gold": 4, "placed": 4, "route": 3, "linked": 3 },
+      "gold": [
+        { "letters": "sich", "target": "Lexeme/VERB sich fühlen" },
+        { "letters": " " },
+        { "letters": "wie", "target": "Lexeme/CCONJ wie" },
+        { "letters": " " },
+        { "letters": "zu Hause", "target": "Locution/ADV zu Hause" },
+        { "letters": " " },
+        { "letters": "fühlen", "target": "Lexeme/VERB sich fühlen" }
+      ],
+      "returned": [
+        { "letters": "sich", "target": "Lexeme/VERB sich fühlen" },
+        { "letters": " " },
+        { "letters": "wie", "target": "Lexeme/ADV wie" },
+        { "letters": " " },
+        { "letters": "zu Hause", "target": "Locution/ADV zu Hause" },
+        { "letters": " " },
+        { "letters": "fühlen", "target": "Lexeme/VERB sich fühlen" }
+      ]
+    },
+    {
+      "caseId": "breakdown/de/so-oder-so",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 4, "returned": 4, "matched": 4 },
+      "links": { "gold": 3, "placed": 3, "route": 3, "linked": 3 }
+    },
+    {
+      "caseId": "breakdown/de/spannen",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 0, "returned": 0, "matched": 0 },
+      "links": { "gold": 0, "placed": 0, "route": 0, "linked": 0 }
+    },
+    {
+      "caseId": "breakdown/de/uebung-macht-den-meister",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 4, "returned": 4, "matched": 4 },
+      "links": { "gold": 3, "placed": 3, "route": 3, "linked": 3 }
+    },
+    {
+      "caseId": "breakdown/de/um-zu",
+      "group": "phraseme",
+      "exact": false,
+      "repetitionsExact": 0,
+      "cuts": { "gold": 2, "returned": 2, "matched": 2 },
+      "links": { "gold": 2, "placed": 2, "route": 1, "linked": 1 },
+      "gold": [
+        { "letters": "um", "target": "Lexeme/SCONJ um" },
+        { "letters": " … " },
+        { "letters": "zu", "target": "Lexeme/PART zu" }
+      ],
+      "returned": [
+        { "letters": "um", "target": "Lexeme/INTJ um" },
+        { "letters": " … " },
+        { "letters": "zu", "target": "Lexeme/PART zu" }
+      ]
+    },
+    {
+      "caseId": "breakdown/de/verarzten",
+      "group": "word",
+      "exact": false,
+      "repetitionsExact": 0,
+      "cuts": { "gold": 2, "returned": 1, "matched": 1 },
+      "links": { "gold": 2, "placed": 1, "route": 1, "linked": 1 },
+      "gold": [
+        { "letters": "ver", "target": "Morpheme/Prefix ver-" },
+        { "letters": "arzt", "target": "Lexeme/NOUN Arzt" },
+        { "letters": "en" }
+      ],
+      "returned": [
+        { "letters": "ver", "target": "Morpheme/Prefix ver-" },
+        { "letters": "arzten", "target": "Lexeme/VERB arzten" }
+      ]
+    },
+    {
+      "caseId": "breakdown/de/verkaufen",
+      "group": "word",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 1, "returned": 1, "matched": 1 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    },
+    {
+      "caseId": "breakdown/de/wachstube-wachlokal",
+      "group": "word",
+      "exact": false,
+      "repetitionsExact": 0,
+      "cuts": { "gold": 1, "returned": 1, "matched": 1 },
+      "links": { "gold": 2, "placed": 2, "route": 1, "linked": 1 },
+      "gold": [
+        { "letters": "Wach", "target": "Lexeme/VERB wachen" },
+        { "letters": "stube", "target": "Lexeme/NOUN Stube" }
+      ],
+      "returned": [
+        { "letters": "Wach", "target": "Lexeme/NOUN Wache" },
+        { "letters": "stube", "target": "Lexeme/NOUN Stube" }
+      ]
+    },
+    {
+      "caseId": "breakdown/de/wachstube-wachstube",
+      "group": "word",
+      "exact": false,
+      "repetitionsExact": 0,
+      "cuts": { "gold": 1, "returned": 1, "matched": 0 },
+      "links": { "gold": 2, "placed": 0, "route": 0, "linked": 0 },
+      "gold": [
+        { "letters": "Wachs", "target": "Lexeme/NOUN Wachs" },
+        { "letters": "tube", "target": "Lexeme/NOUN Tube" }
+      ],
+      "returned": [
+        { "letters": "Wach", "target": "Lexeme/NOUN Wache" },
+        { "letters": "stube", "target": "Lexeme/NOUN Stube" }
+      ]
+    },
+    {
+      "caseId": "breakdown/de/was-fuer-ein",
+      "group": "phraseme",
+      "exact": false,
+      "repetitionsExact": 0,
+      "cuts": { "gold": 4, "returned": 2, "matched": 2 },
+      "links": { "gold": 3, "placed": 1, "route": 1, "linked": 1 },
+      "gold": [
+        { "letters": "was", "target": "Lexeme/PRON was" },
+        { "letters": " " },
+        { "letters": "für", "target": "Lexeme/ADP für" },
+        { "letters": " " },
+        { "letters": "ein", "target": "Lexeme/DET ein" }
+      ],
+      "returned": [
+        { "letters": "was für", "target": "Locution/DET was für" },
+        { "letters": " " },
+        { "letters": "ein", "target": "Lexeme/DET ein" }
+      ]
+    },
+    {
+      "caseId": "breakdown/de/was-fuer-einer",
+      "group": "phraseme",
+      "exact": false,
+      "repetitionsExact": 0,
+      "cuts": { "gold": 4, "returned": 2, "matched": 2 },
+      "links": { "gold": 3, "placed": 1, "route": 0, "linked": 0 },
+      "gold": [
+        { "letters": "was", "target": "Lexeme/PRON was" },
+        { "letters": " " },
+        { "letters": "für", "target": "Lexeme/ADP für" },
+        { "letters": " " },
+        { "letters": "einer", "target": "Lexeme/PRON einer" }
+      ],
+      "returned": [
+        { "letters": "was für", "target": "Locution/DET was für" },
+        { "letters": " " },
+        { "letters": "einer", "target": "Lexeme/DET einer" }
+      ]
+    },
+    {
+      "caseId": "breakdown/de/wer-zuerst-kommt-mahlt-zuerst",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 8, "returned": 8, "matched": 8 },
+      "links": { "gold": 5, "placed": 5, "route": 5, "linked": 5 }
+    },
+    {
+      "caseId": "breakdown/de/zu-hause",
+      "group": "phraseme",
+      "exact": true,
+      "repetitionsExact": 3,
+      "cuts": { "gold": 2, "returned": 2, "matched": 2 },
+      "links": { "gold": 2, "placed": 2, "route": 2, "linked": 2 }
+    }
+  ]
+}
