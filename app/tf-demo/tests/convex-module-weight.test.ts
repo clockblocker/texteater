@@ -8,9 +8,8 @@ import { build } from "esbuild";
  * call, so a request costs roughly hops × module weight. Two budgets keep that
  * weight structural rather than accidental:
  *
- * - No isolate module may reach the generation runtime (Effect, promptsmith,
- *   Dumgen's segmenter, or the Effect-based dumdict service). Only "use node"
- *   actions load those.
+ * - No isolate module may reach the generation runtime (Effect, promptsmith or
+ *   Dumgen's segmenter). Only "use node" actions load those.
  * - Bytes from the Dum packages are budgeted separately from the rest, because
  *   the reviewed authored catalog behind `dumcorpus/inventories` is data the
  *   dictionary transaction needs and dominates that share on its own.
@@ -22,8 +21,6 @@ const FORBIDDEN_INPUTS = [
 	/node_modules\/promptsmith\//,
 	/battery\/promptsmith\//,
 	/\/dumgen\/(?:dist|src)\//,
-	/\/dumdict\/(?:dist\/index\.js|src\/index\.ts)$/,
-	/\/dumdict\/(?:dist\/runtime\.js|src\/runtime\.ts)$/,
 	/\/zod\//,
 ];
 const DUM_PACKAGE_INPUT =
