@@ -206,6 +206,7 @@
 				},
 				"coverage": {
 					"valency": "Authored",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

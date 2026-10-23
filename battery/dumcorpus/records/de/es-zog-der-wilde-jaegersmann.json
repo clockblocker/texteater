@@ -227,6 +227,7 @@
 				},
 				"coverage": {
 					"valency": "Authored",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -323,6 +324,7 @@
 				"paradigm": { "plural": ["Jägersleute", "Jägersmänner"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",

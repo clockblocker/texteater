@@ -60,6 +60,18 @@
 			"reading": {
 				"emojiDescription": "🧳",
 				"knowledge": {
+					"source": {
+						"target": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"canonicalForm": "reisend",
+							"coreFeatures": {
+								"comparable": null
+							}
+						}
+					},
 					"semanticRelations": {
 						"nearSynonym": [
 							{
@@ -98,6 +110,7 @@
 				"paradigm": { "plural": ["Reisenden"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",

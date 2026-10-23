@@ -162,6 +162,7 @@
 				},
 				"coverage": {
 					"valency": "Authored",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -229,6 +230,7 @@
 				"paradigm": { "plural": ["Lote"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -335,6 +337,7 @@
 				},
 				"coverage": {
 					"valency": "Authored",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",

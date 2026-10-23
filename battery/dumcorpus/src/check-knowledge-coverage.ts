@@ -27,17 +27,6 @@ const structuralAspects = [
  */
 const structuralDimensions: readonly Dumrel.DimensionId[] = ["plural"];
 
-/**
- * Structural aspects scored where a record covers them that hold no depth
- * back yet on some Kinds: a NOUN's or VERB's Source, requested since the
- * Source producer ruling on #1241. Records over the file-token limit can't
- * take it until they are split, as with a verb's dimensions (Dumcorpus ADR
- * 0002).
- */
-const awaitingAspects: Readonly<Record<string, ReadonlySet<string>>> = {
-	source: new Set(["NOUN", "VERB"]),
-};
-
 /** The aspects covered per translation language and per semantic relation. */
 const bucketAspects = new Set(["translations", "semanticRelations"]);
 
@@ -193,7 +182,6 @@ export function knowledgeCoverageIssues(
 	if (mask !== undefined && !isAuthoredReading(reading))
 		for (const aspect of structuralAspects) {
 			if (!Object.hasOwn(mask, aspect)) continue;
-			if (awaitingAspects[aspect]?.has(kind)) continue;
 			if (aspect !== "semanticRelations") {
 				if (covered[aspect] === undefined) uncovered.push(aspect);
 				continue;

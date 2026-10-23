@@ -121,6 +121,7 @@
 				"paradigm": { "plural": ["Bands"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

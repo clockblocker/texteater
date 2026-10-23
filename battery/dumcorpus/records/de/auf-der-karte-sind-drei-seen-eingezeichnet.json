@@ -133,6 +133,7 @@
 				"paradigm": { "plural": ["Seen"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

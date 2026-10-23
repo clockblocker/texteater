@@ -112,6 +112,7 @@
 				},
 				"coverage": {
 					"valency": "Authored",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -176,6 +177,18 @@
 			"reading": {
 				"emojiDescription": "💼",
 				"knowledge": {
+					"source": {
+						"target": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"canonicalForm": "Arbeit",
+							"coreFeatures": {
+								"gender": "Fem"
+							}
+						}
+					},
 					"valency": [
 						{
 							"status": "Required",
@@ -225,6 +238,7 @@
 				},
 				"coverage": {
 					"valency": "Authored",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",

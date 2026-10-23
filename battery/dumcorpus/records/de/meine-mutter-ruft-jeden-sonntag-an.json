@@ -103,6 +103,7 @@
 				"paradigm": { "plural": ["Mütter"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",

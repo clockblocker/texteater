@@ -178,6 +178,7 @@
 				},
 				"coverage": {
 					"valency": "Authored",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -274,6 +275,18 @@
 			"reading": {
 				"emojiDescription": "🇩🇪💬",
 				"knowledge": {
+					"source": {
+						"target": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"canonicalForm": "deutsch",
+							"coreFeatures": {
+								"comparable": null
+							}
+						}
+					},
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -304,6 +317,7 @@
 				"paradigm": { "plural": ["NoPlural"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",

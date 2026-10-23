@@ -110,6 +110,7 @@ export function attestJedem(record: RecordJson, surface: unknown) {
 export const verbCoverage: KnowledgeCoverage = {
 	definition: "Authored",
 	valency: "ReviewedEmpty",
+	source: "ReviewedEmpty",
 	semanticRelations: {
 		synonym: "ReviewedEmpty",
 		nearSynonym: "ReviewedEmpty",

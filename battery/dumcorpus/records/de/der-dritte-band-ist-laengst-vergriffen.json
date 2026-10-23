@@ -58,6 +58,19 @@
 			"reading": {
 				"emojiDescription": "📚",
 				"knowledge": {
+					"source": {
+						"target": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "binden",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						}
+					},
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -76,6 +89,7 @@
 				"paradigm": { "plural": ["Bände"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",

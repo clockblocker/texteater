@@ -197,6 +197,7 @@
 					}
 				},
 				"coverage": {
+					"source": "ReviewedEmpty",
 					"plural": "Authored",
 					"valency": "ReviewedEmpty",
 					"semanticRelations": {
@@ -312,6 +313,7 @@
 					}
 				},
 				"coverage": {
+					"source": "ReviewedEmpty",
 					"conjugationClass": "Authored",
 					"valency": "Authored",
 					"semanticRelations": {
