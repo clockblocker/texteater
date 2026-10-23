@@ -7,7 +7,6 @@
 import {
 	authoredRealizations,
 	germanConjunctionLocutions,
-	germanSeparablePrefixes,
 } from "dumcorpus/inventories";
 import type { AssembledEdge, Membership } from "./assembly.js";
 import {
@@ -15,6 +14,7 @@ import {
 	foldedText,
 	isArticle,
 	nounLike,
+	particleForms,
 	reflexiveSubject,
 	splitAdverbForm,
 	splitTails,
@@ -59,11 +59,11 @@ export function splitAdverbs(nomination: Nomination): Decision {
 }
 
 /**
- * The split-adverb tails that are no separable prefix (für, von, gegen, in,
+ * The split-adverb tails that open no particle slot (für, von, gegen, in,
  * neben, hinter, zwischen), so one left at its clause's end is stranded.
  */
 export const strandedTails: ReadonlySet<string> = new Set(
-	[...splitTails].filter((tail) => !germanSeparablePrefixes.has(tail)),
+	[...splitTails].filter((tail) => !particleForms.has(tail)),
 );
 
 export function strandedAdverbs(nomination: Nomination): Decision {

@@ -97,6 +97,7 @@ export {
 } from "./inventories/de/surface-syncretisms.js";
 export {
 	germanInseparablePrefixes,
+	germanSeparableParticles,
 	germanSeparablePrefixes,
 } from "./inventories/de/verb-prefixes.js";
 export type { AuthoredMember } from "./inventories/member.js";

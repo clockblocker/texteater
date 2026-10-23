@@ -9,8 +9,8 @@
  * Each affix pairs the letters it shows with the Canonical Form of its
  * Morpheme Lemma. An allomorph is a Surface of one Lemma (ADR 0051), so
  * `keit` and `igkeit` both link to `-heit`; synonyms such as `-chen` and
- * `-lein` stay two Lemmas. The separable particles are
- * `germanSeparablePrefixes` (`verb-prefixes.ts`), not listed again here.
+ * `-lein` stay two Lemmas. The true separable particles are
+ * `germanSeparableParticles` (`verb-prefixes.ts`), not listed again here.
  *
  * The lists hold the affixes the gold and common German word formation
  * need, not every German affix; the foreign verb suffix `-ieren` and the

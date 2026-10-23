@@ -68,6 +68,57 @@ export const articleForms: ReadonlySet<string> = new Set(
 );
 
 /**
+ * The true separable particles dumcorpus's closed list gained in #1241
+ * (gegen, hinter, zwischen, vorher, inne, …). No lab round has weighed a
+ * slot on them, and gegen, hinter and zwischen are split-adverb tails too
+ * (da … gegen), so they open no slot and resolution offers none of them as
+ * a prefix. An infixed zu still splits from them (innezuhalten).
+ */
+export const unweighedParticles: ReadonlySet<string> = new Set([
+	"abhanden",
+	"abwärts",
+	"aneinander",
+	"anheim",
+	"aufeinander",
+	"aufwärts",
+	"beieinander",
+	"beisammen",
+	"dahinter",
+	"danieder",
+	"darauf",
+	"darüber",
+	"darunter",
+	"davor",
+	"dran",
+	"drauf",
+	"drin",
+	"drüber",
+	"einher",
+	"gegen",
+	"gegeneinander",
+	"hernieder",
+	"herzu",
+	"hinan",
+	"hindurch",
+	"hintan",
+	"hintenüber",
+	"hinter",
+	"hinterdrein",
+	"hintereinander",
+	"ineinander",
+	"inne",
+	"nebeneinander",
+	"nebenher",
+	"überein",
+	"übereinander",
+	"umhin",
+	"vorher",
+	"vornüber",
+	"zuwider",
+	"zwischen",
+]);
+
+/**
  * Separable prefixes that open no particle slot. Standing apart, each is
  * mostly something else: an adjective or adverb (gut, offen, leer, voll,
  * groß, flach), the adverb or conjunction da, the pronominal adverb dagegen,
@@ -78,6 +129,7 @@ export const articleForms: ReadonlySet<string> = new Set(
  * (`prefixParticles`).
  */
 const noSlotParticles: ReadonlySet<string> = new Set([
+	...unweighedParticles,
 	"da",
 	"dagegen",
 	"flach",

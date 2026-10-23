@@ -3,6 +3,7 @@ import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type { BreakdownKnowledge } from "./corpus-types.js";
 import { germanInterfixes } from "./inventories/de/interfixes.js";
+import { germanSeparableParticles } from "./inventories/de/verb-prefixes.js";
 
 /** One failed invariant, at a path inside the record file. */
 export type BreakdownIssue = {
@@ -26,6 +27,17 @@ const citationEndings: Partial<Record<Dumling.Language, readonly string[]>> = {
 /** Each language's closed Interfix set, where it has one (ADR 0050). */
 const interfixes: Partial<Record<Dumling.Language, ReadonlySet<string>>> = {
 	de: germanInterfixes,
+};
+
+/**
+ * Each language's closed list of true separable particles, where it has one
+ * (ADR 0050): a particle verb's first part links to the particle's Prefix
+ * Morpheme, any other first part to its own Lexeme.
+ */
+const separableParticles: Partial<
+	Record<Dumling.Language, ReadonlySet<string>>
+> = {
+	de: germanSeparableParticles,
 };
 
 /**
@@ -205,14 +217,60 @@ function sepPrefix(reading: Dumling.Reading): string | undefined {
 }
 
 /**
+ * Checks a separable verb's first linked part against the particle its
+ * hasSepPrefix names (ADR 0050): the part shows the particle, and links to
+ * the Prefix Morpheme (`ein-` in einkaufen) if the language's closed list
+ * holds it as a true particle, else to its own Lexeme (NOUN `Teil` in
+ * teilnehmen, ADJ `fest` in festhalten).
+ */
+function firstPartIssues(
+	language: Dumling.Language,
+	particle: string,
+	first: Piece & { target: Dumrel.LinkTarget },
+	path: string,
+): BreakdownIssue[] {
+	if (foldCase(first.letters, language) !== foldCase(particle, language))
+		return [
+			{
+				path,
+				message: `A separable verb's first part is its particle ${JSON.stringify(particle)}`,
+			},
+		];
+	const particles = separableParticles[language];
+	if (particles === undefined) return [];
+	const { target } = first;
+	const prefix = `${particle}-`;
+	if (particles.has(particle))
+		return target.family === "Morpheme" &&
+			target.kind === "Prefix" &&
+			target.canonicalForm === prefix
+			? []
+			: [
+					{
+						path: `${path}.target`,
+						message: `${JSON.stringify(particle)} is a true separable particle, so it links to the Prefix Morpheme ${JSON.stringify(prefix)}`,
+					},
+				];
+	return target.family === "Lexeme"
+		? []
+		: [
+				{
+					path: `${path}.target`,
+					message: `${JSON.stringify(particle)} is no true separable particle, so it links to its own Lexeme`,
+				},
+			];
+}
+
+/**
  * The record-level invariants of ADR 0050 and ADR 0051 that dumrel leaves to
  * gold, checked on Knowledge dumrel has already parsed: a phraseme has
  * Constituents; Constituents link at least two parts, since a formation with
  * one base has a Source; a phraseme's parts are Lexemes or Locutions; a
  * word's shown letters fit their targets; filler stands only where it may;
  * Morphemes are spelled by Kind and Interfixes come from the closed set; a
- * separable verb's particle is its first part; and with both halves, every
- * constituent ends where a morpheme does.
+ * separable verb's particle is its first part, linked to its Prefix
+ * Morpheme if it is a true particle and to its own Lexeme if not; and with
+ * both halves, every constituent ends where a morpheme does.
  */
 export function breakdownInvariantIssues(
 	reading: Dumling.Reading,
@@ -247,7 +305,8 @@ export function breakdownInvariantIssues(
 	}
 	if (constituents !== undefined) {
 		const linked = constituents.filter(
-			(piece) => piece.target !== undefined,
+			(piece): piece is Piece & { target: Dumrel.LinkTarget } =>
+				piece.target !== undefined,
 		);
 		if (linked.length < 2)
 			issues.push({
@@ -257,15 +316,15 @@ export function breakdownInvariantIssues(
 			});
 		const particle = sepPrefix(reading);
 		const first = linked[0];
-		if (
-			particle !== undefined &&
-			first !== undefined &&
-			foldCase(first.letters, language) !== foldCase(particle, language)
-		)
-			issues.push({
-				path: "knowledge.breakdown.constituents.0",
-				message: `A separable verb's first part is its particle ${JSON.stringify(particle)}`,
-			});
+		if (particle !== undefined && first !== undefined)
+			issues.push(
+				...firstPartIssues(
+					language,
+					particle,
+					first,
+					`knowledge.breakdown.constituents.${constituents.indexOf(first)}`,
+				),
+			);
 	}
 	if (constituents !== undefined && morphemes !== undefined) {
 		const cuts = boundaries(morphemes);
