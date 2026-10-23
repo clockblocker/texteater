@@ -10,15 +10,19 @@ import {
 	auxiliarySurfaceFeatures,
 } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
+import * as Result from "effect/Result";
 import { reflexiveForms } from "../../../segment/de/candidates.js";
 import { rShortenings } from "../member-spelling.js";
 import { auxiliaryUses, fill, options, question } from "../prompts.js";
 import {
 	type Answered,
+	answerReader,
 	type Choice,
 	type ChoiceOf,
 	type Questionnaire,
-	UnresolvedAnswer,
+	type ReaderBody,
+	type Unresolved,
+	unresolved,
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
 import type { GovernedQuestions } from "./governed.js";
@@ -272,24 +276,24 @@ function askVerbForm(questionnaire: Questionnaire) {
  * subject es, its inflection unless it is cited, and the reading a
  * shortened particle takes from the prefix judged for it.
  */
-export function readVerbal(
+export const readVerbal = answerReader(function* (
 	target: Target,
 	verbal: VerbalPlan,
 	shape: Shape,
 	governable: readonly GovernedQuestions[],
 	answered: Answered,
 	cited: boolean,
-): {
+): ReaderBody<{
 	readonly core: VerbCore | Record<string, never>;
 	readonly inflection: VerbInflection | null;
 	readonly expletive: Member | undefined;
 	readonly readings: ReadonlyMap<number, string>;
-} {
+}> {
 	let core: VerbCore | Record<string, never> = {};
 	const readings = new Map<number, string>();
 	if (shape.lexeme) {
 		const prefix = verbal.prefix
-			? prefixAnswer(
+			? yield* prefixAnswer(
 					target,
 					verbal.prefixes,
 					verbal.prefix,
@@ -313,7 +317,7 @@ export function readVerbal(
 				readings.set(member.segment, hasSepPrefix);
 		const reflexive = verbal.reflexive;
 		const lexicallyReflexive = verbal.reflexiveCase
-			? answered.pick(verbal.reflexiveCase)
+			? yield* answered.pick(verbal.reflexiveCase)
 			: reflexive
 				? (reflexives.get(fold(reflexive.text)) ?? null)
 				: null;
@@ -323,18 +327,18 @@ export function readVerbal(
 		verbal.expletive &&
 		(shape.lexeme ||
 			(verbal.subjectEs !== undefined &&
-				answered.pick(verbal.subjectEs) === "Subject"))
+				(yield* answered.pick(verbal.subjectEs)) === "Subject"))
 			? verbal.expletive
 			: undefined;
 	return {
 		core,
 		inflection: cited
 			? null
-			: verbalInflection(verbal, answered, expletive),
+			: yield* verbalInflection(verbal, answered, expletive),
 		expletive,
 		readings,
 	};
-}
+});
 
 /**
  * The voice an auxiliary use sets, with the passive that goes with it:
@@ -355,31 +359,31 @@ function composed<Value>(
 	was: Value | null,
 	now: Value | undefined,
 	same: (left: Value, right: Value) => boolean = Object.is,
-): Value | null {
-	if (now === undefined) return was;
+): Result.Result<Value | null, Unresolved> {
+	if (now === undefined) return Result.succeed(was);
 	if (was !== null && !same(was, now))
-		throw new UnresolvedAnswer("The auxiliaries' uses do not compose");
-	return now;
+		return unresolved("The auxiliaries' uses do not compose");
+	return Result.succeed(now);
 }
 
 /** A verbal Surface's features, from its form questions and its auxiliaries' uses. */
-function verbalInflection(
+const verbalInflection = answerReader(function* (
 	verbal: VerbalPlan,
 	answered: Answered,
 	expletive: Member | undefined,
-): VerbInflection {
+): ReaderBody<VerbInflection> {
 	let perfect: VerbInflection["perfect"] = null;
 	let future: VerbInflection["future"] = null;
 	let voiced: Voice | null = null;
 	for (const { uses, use: asked } of verbal.auxiliaries) {
-		const answer = answered.pick(asked);
+		const answer = yield* answered.pick(asked);
 		if (answer === "Main") continue;
 		const use = uses[Number(answer.slice(1))];
 		const features =
 			(use === undefined ? undefined : auxiliaryFeatures.get(use)) ?? {};
-		perfect = composed(perfect, features.perfect);
-		future = composed(future, features.future);
-		voiced = composed(
+		perfect = yield* composed(perfect, features.perfect);
+		future = yield* composed(future, features.future);
+		voiced = yield* composed(
 			voiced,
 			voiceOf(features),
 			(left, right) =>
@@ -392,7 +396,7 @@ function verbalInflection(
 		...(voiced ?? { passive: null, voice: null }),
 	};
 	const subject = expletive ? "Subject" : null;
-	const verbForm = answered.pick(verbal.verbForm);
+	const verbForm = yield* answered.pick(verbal.verbForm);
 	if (verbForm === "Inf")
 		return {
 			mood: null,
@@ -414,17 +418,17 @@ function verbalInflection(
 			expletive: subject,
 			...composition,
 		};
-	const mood = answered.pick(verbal.mood);
-	const number = answered.pick(verbal.number);
-	const person = answered.pick(verbal.person);
+	const mood = yield* answered.pick(verbal.mood);
+	const number = yield* answered.pick(verbal.number);
+	const person = yield* answered.pick(verbal.person);
 	// A subject es takes a finite verb in the 3rd person singular, never
 	// an imperative: jev's agreement against it is a clash of answers.
 	if (expletive && (person !== "3" || number !== "Sing"))
-		throw new UnresolvedAnswer(
+		return yield* unresolved(
 			"The subject es clashes with the verb's agreement",
 		);
 	if (expletive && mood === "Imp")
-		throw new UnresolvedAnswer("The subject es clashes with an imperative");
+		return yield* unresolved("The subject es clashes with an imperative");
 	if (mood === "Imp")
 		return {
 			mood,
@@ -439,12 +443,12 @@ function verbalInflection(
 		mood,
 		number,
 		person,
-		tense: answered.pick(verbal.tense),
+		tense: yield* answered.pick(verbal.tense),
 		verbForm,
 		expletive: subject,
 		...composition,
 	};
-}
+});
 
 /** The VERB Core Features a headword reads, absent on a Locution. */
 type VerbCoreRead = {

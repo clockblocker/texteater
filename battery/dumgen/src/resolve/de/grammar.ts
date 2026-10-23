@@ -12,6 +12,7 @@
 import { closedRoute } from "dumcorpus/inventories";
 import { isSyncretism, lemmaIdentityKey, parseUnit } from "dumling";
 import * as Effect from "effect/Effect";
+import * as Result from "effect/Result";
 import { CallLog } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
 import { type Jev, stageAsk } from "../../jev-call.js";
@@ -29,18 +30,8 @@ import {
 } from "./closed-class.js";
 import type { MatchedRealization } from "./closed-realizations.js";
 import { resolveOpenRoute } from "./open-route.js";
-import { Answered, UnresolvedAnswer } from "./questions.js";
+import { Answered, type Unresolved } from "./questions.js";
 import { type Target, targetOf, targetState } from "./target.js";
-
-/** A deciding answer read synchronously, or why the click stops. */
-function settle<T>(read: () => T): T | UnresolvedAnswer {
-	try {
-		return read();
-	} catch (error) {
-		if (error instanceof UnresolvedAnswer) return error;
-		throw error;
-	}
-}
 
 type Outcome =
 	| {
@@ -48,7 +39,7 @@ type Outcome =
 			readonly attestation: unknown;
 			readonly drafted?: string;
 	  }
-	| { readonly _tag: "Unresolved"; readonly reason: string }
+	| Unresolved
 	| { readonly _tag: "CatalogMiss"; readonly message: string };
 
 /**
@@ -101,9 +92,9 @@ const resolveAuthored = Effect.fnUntraced(function* (
 		},
 		questions: cell.questionnaire.questions,
 	});
-	const picked = settle(() => new Answered(answers).pick("cell"));
-	if (picked instanceof UnresolvedAnswer)
-		return { _tag: "Unresolved", reason: picked.reason };
+	const cellAnswer = new Answered(answers).pick("cell");
+	if (Result.isFailure(cellAnswer)) return cellAnswer.failure;
+	const picked = cellAnswer.success;
 	const chosen = cell.answerOf(picked);
 	if (!chosen)
 		return yield* new InvalidModelOutput({

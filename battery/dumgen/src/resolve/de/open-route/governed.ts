@@ -10,10 +10,12 @@ import {
 import { fill, options, question } from "../prompts.js";
 import {
 	type Answered,
+	answerReader,
 	type Choice,
 	type ChoiceOf,
 	optionsOf,
 	type Questionnaire,
+	type ReaderBody,
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
 import {
@@ -175,28 +177,28 @@ export function askGoverned(
  * Reads which members the head governs: their positions, and a governor's
  * valency evidence for each.
  */
-export function readGoverned(
+export const readGoverned = answerReader(function* (
 	governable: readonly GovernedQuestions[],
 	shape: Shape,
 	answered: Answered,
-): {
+): ReaderBody<{
 	readonly governed: readonly ValencyEvidence[];
 	readonly governedPositions: readonly number[];
-} {
+}> {
 	const governed: ValencyEvidence[] = [];
 	const governedPositions: number[] = [];
 	for (const chosen of governable) {
 		const position = chosen.member.position;
 		if (
 			chosen.governed !== undefined &&
-			answered.pick(chosen.governed) !== "Governed"
+			(yield* answered.pick(chosen.governed)) !== "Governed"
 		)
 			continue;
 		governedPositions.push(position);
 		if (!shape.governor) continue;
 		const [only] = chosen.cases;
 		const governedCase = chosen.governedCase
-			? answered.pick(chosen.governedCase)
+			? yield* answered.pick(chosen.governedCase)
 			: only;
 		if (governedCase === undefined)
 			throw Error(
@@ -224,7 +226,7 @@ export function readGoverned(
 		});
 	}
 	return { governed, governedPositions };
-}
+});
 
 /**
  * Whether a VERB's prefix is a preposition it governs, and so no prefix

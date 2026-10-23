@@ -13,7 +13,13 @@ import type * as Dumling from "dumling/types";
 import { splitAdverbForm } from "../../../segment/de/candidates.js";
 import type { MemberOrthography } from "../member-spelling.js";
 import { fill, options, question } from "../prompts.js";
-import type { Answered, ChoiceOf, Questionnaire } from "../questions.js";
+import {
+	type Answered,
+	answerReader,
+	type ChoiceOf,
+	type Questionnaire,
+	type ReaderBody,
+} from "../questions.js";
 import type { Target } from "../target.js";
 import {
 	type AgreementQuestions,
@@ -106,21 +112,21 @@ export function askAdverbial(
  * Reads an ADV's or ADJ's block: comparability, and the degree and an
  * attributive ADJ's agreement as its inflection.
  */
-export function readAdverbial(
+export const readAdverbial = answerReader(function* (
 	adverbial: AdverbialPlan,
 	answered: Answered,
-): {
+): ReaderBody<{
 	readonly core: AdverbialCore;
 	readonly inflection: AdverbialInflection | null;
-} {
-	const comparable = answered.pick(adverbial.comparable) === "Yes";
+}> {
+	const comparable = (yield* answered.pick(adverbial.comparable)) === "Yes";
 	const core: AdverbialCore = { comparable: comparable ? "Yes" : null };
-	const degree = comparable ? answered.pick(adverbial.degree) : null;
+	const degree = comparable ? yield* answered.pick(adverbial.degree) : null;
 	const adjective = adverbial.attributive;
 	if (!adjective) return { core, inflection: comparable ? { degree } : null };
-	const attributive = answered.pick(adjective.attributive) === "Yes";
+	const attributive = (yield* answered.pick(adjective.attributive)) === "Yes";
 	const agreement = attributive
-		? readAgreement(adjective, answered)
+		? yield* readAgreement(adjective, answered)
 		: undefined;
 	return {
 		core,
@@ -134,7 +140,7 @@ export function readAdverbial(
 					}
 				: null,
 	};
-}
+});
 
 /**
  * The positive of each suppletive adverb's compared forms, keyed by the

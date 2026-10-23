@@ -24,11 +24,14 @@ import {
 import { type CaseOption, options, question } from "../prompts.js";
 import {
 	type Answered,
+	answerReader,
 	type Choice,
 	type ChoiceOf,
 	optionsOf,
 	type Questionnaire,
-	UnresolvedAnswer,
+	type ReaderBody,
+	Unresolved,
+	unresolved,
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
 import {
@@ -256,13 +259,16 @@ const genderNamed = (answer: string | undefined): Gender | null =>
 	(answer !== undefined && genderOfArticle.get(answer)) || null;
 
 /** A NOUN's Core Features: a proper noun's article, and the gender. */
-function nounCore(nominal: NominalPlan, answered: Answered): NounCore {
+const nounCore = answerReader(function* (
+	nominal: NominalPlan,
+	answered: Answered,
+): ReaderBody<NounCore> {
 	const article = nominal.article
-		? answered.pick(nominal.article) === "Definite"
+		? (yield* answered.pick(nominal.article)) === "Definite"
 			? "Definite"
 			: null
 		: undefined;
-	let gender = genderNamed(answered.pick(nominal.gender));
+	let gender = genderNamed(yield* answered.pick(nominal.gender));
 	// Only a person noun made from an adjective or participle, or a noun
 	// with no singular, has no gender (Rule de/adjectival-noun-lemma);
 	// an ordinary noun shown in its plural keeps its singular's.
@@ -275,7 +281,7 @@ function nounCore(nominal: NominalPlan, answered: Answered): NounCore {
 				.find((option) => genderOfArticle.has(option)),
 		);
 	return article === undefined ? { gender } : { article, gender };
-}
+});
 
 /** What a NOUN's block settles in the first request, and the cases still open. */
 export type NominalRead = {
@@ -292,15 +298,15 @@ export type NominalRead = {
  * cited, its cells and the cases still open.
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-export function readNominal(
+export const readNominal = answerReader(function* (
 	shape: Shape,
 	owned: OpeningArticle | undefined,
 	nominal: NominalPlan,
 	answered: Answered,
 	cited: boolean,
-): NominalRead {
+): ReaderBody<NominalRead> {
 	const common = shape.lexeme && !shape.proper;
-	let core = nounCore(nominal, answered);
+	let core = yield* nounCore(nominal, answered);
 	if (cited)
 		return {
 			common,
@@ -310,7 +316,7 @@ export function readNominal(
 			noun: undefined,
 		};
 	let noun: NounRead | undefined;
-	const number = answered.pick(nominal.number);
+	const number = yield* answered.pick(nominal.number);
 	const peekFormGender = () =>
 		nominal.formGender && answered.peek(nominal.formGender);
 	const shown =
@@ -356,19 +362,17 @@ export function readNominal(
 		number === "Sing" &&
 		!formGender
 	)
-		throw new UnresolvedAnswer("Unresolved formGender");
+		return yield* unresolved("Unresolved formGender");
 	let openCases: readonly CaseOption[] = owned
 		? articleCases(owned.article, number, formGender ?? core.gender)
 		: [...cases, "Unmarked"];
 	// A common NOUN waits for the article Luna writes before this verdict.
 	if (openCases.length === 0 && !noun)
-		throw new UnresolvedAnswer(
-			"The article agrees with no case of its head",
-		);
+		return yield* unresolved("The article agrees with no case of its head");
 	if (openCases.length > 0 && nominal.case) {
-		const answer = answered.pick(nominal.case);
+		const answer = yield* answered.pick(nominal.case);
 		if (!openCases.includes(answer))
-			throw new UnresolvedAnswer("The Case answer fits no open cell");
+			return yield* unresolved("The Case answer fits no open cell");
 		openCases = [answer];
 	}
 	const [only, ...others] = openCases;
@@ -380,7 +384,7 @@ export function readNominal(
 		? { case: settled, number }
 		: { case: settled, gender: formGender, number };
 	return { common, core, inflection, openCases, noun };
-}
+});
 
 /** A NOUN's settled Core Features and cells, and the cases still open. */
 type Cells = {
@@ -498,14 +502,14 @@ const mixedGenderOf = <Failure>(
 	written: Written | undefined,
 	senseOver: (
 		sense: string,
-	) => Effect.Effect<"Yes" | "No" | UnresolvedAnswer, Failure>,
-): Effect.Effect<MixedGender | UnresolvedAnswer | undefined, Failure> =>
+	) => Effect.Effect<"Yes" | "No" | Unresolved, Failure>,
+): Effect.Effect<MixedGender | Unresolved | undefined, Failure> =>
 	Effect.gen(function* () {
 		const listed = written && germanFreeGenderNoun(written.canonicalForm);
 		if (!listed) return undefined;
 		if (listed.sense === undefined) return listed.gender;
 		const answer = yield* senseOver(listed.sense);
-		if (answer instanceof UnresolvedAnswer) return answer;
+		if (answer instanceof Unresolved) return answer;
 		return answer === "Yes" ? listed.gender : undefined;
 	});
 
@@ -533,16 +537,16 @@ export const nominalCells = <Failure>(
 	writing: Effect.Effect<Written | undefined, Failure>,
 	caseOver: (
 		open: readonly CaseOption[],
-	) => Effect.Effect<CaseOption | UnresolvedAnswer | undefined, Failure>,
+	) => Effect.Effect<CaseOption | Unresolved | undefined, Failure>,
 	senseOver: (
 		sense: string,
-	) => Effect.Effect<"Yes" | "No" | UnresolvedAnswer, Failure>,
-): Effect.Effect<NominalCells | UnresolvedAnswer, Failure> =>
+	) => Effect.Effect<"Yes" | "No" | Unresolved, Failure>,
+): Effect.Effect<NominalCells | Unresolved, Failure> =>
 	Effect.gen(function* () {
 		if (first.noun && first.inflection) {
 			const written = yield* writing;
 			const mixed = yield* mixedGenderOf(written, senseOver);
-			if (mixed instanceof UnresolvedAnswer) return mixed;
+			if (mixed instanceof Unresolved) return mixed;
 			// A noun with no singular has gender null, whatever article Luna
 			// wrote (Rule de/plural-only-noun-has-no-gender): dumcorpus lists the
 			// Pluraletantum nouns Duden gives only in the plural.
@@ -557,9 +561,9 @@ export const nominalCells = <Failure>(
 					openCases: first.openCases,
 				};
 			if (cells.openCases.length === 0)
-				return new UnresolvedAnswer(
-					"The article agrees with no case of its head",
-				);
+				return new Unresolved({
+					reason: "The article agrees with no case of its head",
+				});
 			const caseAnswer = yield* caseOver(cells.openCases);
 			return withCase(cells, caseAnswer, written);
 		}
@@ -571,7 +575,7 @@ export const nominalCells = <Failure>(
 		const mixed = first.common
 			? yield* mixedGenderOf(written, senseOver)
 			: undefined;
-		if (mixed instanceof UnresolvedAnswer) return mixed;
+		if (mixed instanceof Unresolved) return mixed;
 		return withCase(
 			mixed
 				? { ...first, core: { ...first.core, gender: mixed } }
@@ -587,10 +591,10 @@ function withCase(
 		readonly core: SettledCore;
 		readonly inflection: NounInflection | null;
 	},
-	caseAnswer: CaseOption | UnresolvedAnswer | undefined,
+	caseAnswer: CaseOption | Unresolved | undefined,
 	written: Written | undefined,
-): NominalCells | UnresolvedAnswer {
-	if (caseAnswer instanceof UnresolvedAnswer) return caseAnswer;
+): NominalCells | Unresolved {
+	if (caseAnswer instanceof Unresolved) return caseAnswer;
 	const { core, inflection } = cells;
 	return {
 		written,

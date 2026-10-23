@@ -5,8 +5,9 @@
  */
 
 import { germanAdpositionEntry } from "dumcorpus/inventories";
+import * as Result from "effect/Result";
 import { rShortenings } from "../member-spelling.js";
-import type { Answered, Choice } from "../questions.js";
+import type { Answered, Choice, Unresolved } from "../questions.js";
 import type { Member, Target } from "../target.js";
 import {
 	coordinators,
@@ -28,7 +29,7 @@ export function prefixAnswer(
 	asked: Choice,
 	governable: readonly GovernedQuestions[],
 	answered: Answered,
-): string {
+): Result.Result<string, Unresolved> {
 	const governed = governedPrefix(target, governable, answered);
 	const settled = answered.peek(asked);
 	// A preposition the verb governs is never its prefix (Rule
@@ -37,7 +38,9 @@ export function prefixAnswer(
 	// er auf sie aufpasst.
 	if (settled !== undefined && settled !== "None") {
 		const prefix = prefixes[Number(settled.slice(1))];
-		return prefix !== undefined && governed(prefix) ? "None" : settled;
+		return Result.succeed(
+			prefix !== undefined && governed(prefix) ? "None" : settled,
+		);
 	}
 	// A particle standing apart that segmentation put in the VERB unit, and
 	// that the verb does not govern, is its separable prefix: it belongs to
@@ -82,7 +85,9 @@ export function prefixAnswer(
 	);
 	if (settled === "None") {
 		const [only, ...others] = standing;
-		return only !== undefined && others.length === 0 ? only : "None";
+		return Result.succeed(
+			only !== undefined && others.length === 0 ? only : "None",
+		);
 	}
 	const expansions = new Set(
 		target.members.flatMap((member) =>
@@ -96,7 +101,9 @@ export function prefixAnswer(
 		const prefix = prefixes[Number(option.slice(1))];
 		return prefix !== undefined && expansions.has(prefix);
 	});
-	return likeliest ?? answered.pick(asked);
+	return likeliest === undefined
+		? answered.pick(asked)
+		: Result.succeed(likeliest);
 }
 
 /** Each her- or hin- word an r- shortening stands for. */
