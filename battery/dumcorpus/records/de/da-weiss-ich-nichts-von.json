@@ -24,7 +24,7 @@
 			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
-				"hash": "ed9c0c62153c7596"
+				"hash": "1b11d9ee80ce12bd"
 			}
 		],
 		"references": []
@@ -69,7 +69,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🧠" },
 			"notes": {
-				"rationale": "wissen governs von, but davon never joins the verb, split or not."
+				"rationale": "wissen governs von (von etwas wissen), but davon never joins the verb, split or not, so the valency evidence records von + Dat with no member (de/pronominal-adverb-stands-alone)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -106,7 +106,25 @@
 				"members": [{ "attested": "weiß", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "von",
+								"coreFeatures": {}
+							},
+							"governedCase": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				]
 			}
 		}
 	],
