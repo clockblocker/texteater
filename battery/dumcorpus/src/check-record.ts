@@ -268,8 +268,7 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 type TargetFile = z.infer<typeof fileSchema>["targets"][number];
 
 /**
- * The checks a sentence record and a Breakdown Record share: the Segments
- * spell the sentence, and each target's members and route (Segmentation),
+ * The target checks of a sentence record: the Segments spell the sentence, and each target's members and route (Segmentation),
  * its strict Attestation, ADP cases, articles, closed PART, plural-only
  * nouns, Syncretisms and Grundform
  * (Attestation), its Reading (Reading) and its Reading Knowledge and
@@ -278,7 +277,7 @@ type TargetFile = z.infer<typeof fileSchema>["targets"][number];
  * and Knowledge that pass, how many targets claim each Segment, and whether
  * every target holds Knowledge that covers its structural aspects.
  */
-export function checkTargets(
+function checkTargets(
 	record: {
 		sentence: string;
 		segments: readonly Segment[];

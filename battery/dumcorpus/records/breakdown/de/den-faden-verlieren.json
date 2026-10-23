@@ -1,111 +1,56 @@
 {
 	"$schema": "../../../schema/breakdown-record.de.json",
-	"lemma": {
-		"unitKind": "Lemma",
-		"language": "de",
-		"canonicalForm": "den Faden verlieren",
-		"family": "Locution",
-		"kind": "VERB",
-		"coreFeatures": {}
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "den Faden verlieren",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "💭💨"
 	},
-	"sentence": "den Faden verlieren",
-	"segments": [
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Faden" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "verlieren" }
-	],
-	"sources": {
-		"adrs": ["ADR-0031", "ADR-0035", "ADR-0041"],
-		"rules": [],
-		"references": []
-	},
-	"targets": [
-		{
-			"memberSegmentIndices": [0, 2],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "The Breakdown reads Faden literally, as thread: the idiom's meaning belongs to the Locution, and its parts are the Readings a learner drills down to. The noun owns its article."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "den", "orthography": "Standard" },
-					{ "attested": "Faden", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "Faden",
-					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"gender": null,
-						"number": "Sing"
-					},
-					"lemma": {
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "den Faden",
+					"target": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "Faden",
 						"family": "Lexeme",
 						"kind": "NOUN",
+						"canonicalForm": "Faden",
 						"coreFeatures": {
 							"gender": "Masc"
 						}
-					},
-					"surfaceFeatures": null
-				}
-			},
-			"reading": { "emojiDescription": "🧵" }
-		},
-		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"grundform": true,
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "verlieren", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "verlieren",
-					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					},
-					"lemma": {
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "verlieren",
+					"target": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "verlieren",
 						"family": "Lexeme",
 						"kind": "VERB",
+						"canonicalForm": "verlieren",
 						"coreFeatures": {
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null
 						}
-					},
-					"surfaceFeatures": null
+					}
 				}
-			},
-			"reading": { "emojiDescription": "🫳" }
+			]
 		}
-	]
+	},
+	"sources": {
+		"adrs": ["ADR-0031", "ADR-0035", "ADR-0041", "ADR-0050"],
+		"rules": [],
+		"references": []
+	}
 }

@@ -1,0 +1,51 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Lauf",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🏃"
+	},
+	"knowledge": {
+		"source": {
+			"target": {
+				"unitKind": "Lemma",
+				"language": "de",
+				"family": "Lexeme",
+				"kind": "VERB",
+				"canonicalForm": "laufen",
+				"coreFeatures": {
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null
+				}
+			}
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: laufen",
+				"url": "https://www.dwds.de/wb/laufen",
+				"supports": "Wortbildung: Lauf has laufen as its Grundform"
+			},
+			{
+				"title": "DWDS: Lauf",
+				"url": "https://www.dwds.de/wb/Lauf",
+				"supports": "No Wortzerlegung: a conversion has no pieces to cut"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A conversion: its letters can't be cut into pieces, so it has a Source, its immediate base laufen, instead of Constituents (ADR 0050)."
+	}
+}

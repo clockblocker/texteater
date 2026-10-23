@@ -250,22 +250,27 @@ export interface SpecRecord extends Omit<SpecSegmentation, "targets"> {
 export type BreakdownRecordId = string;
 
 /**
- * One multiword Lemma's Breakdown (ADR 0041), the gold for `segment.inLexemes`
- * (Dumgen ADR 0007): the Lemma's wording as its sentence, segmented, and
- * the Lexeme targets it breaks down into. No target covers the whole
- * wording, and every ResolvableText Segment is in exactly one target.
+ * The gold Breakdown or Source of one Reading (ADR 0050, ADR 0051): a
+ * phraseme's Constituents, the gold for `segment.inConstituents` (Dumgen ADR
+ * 0007); a word's Constituents; a bottom word's Morphemic Breakdown, the gold
+ * for `segment.inMorphemes`; or an unsegmentable formation's Source.
  */
-export interface BreakdownRecord extends LayeredReview {
+export interface BreakdownRecord {
 	id: BreakdownRecordId;
 	language: Dumling.Language;
-	/** The Locution or Saying broken down. */
-	lemma: Dumling.Lemma;
-	/** The Lemma's Canonical Form. */
-	sentence: string;
-	segments: readonly Segment[];
-	targets: readonly SpecTarget[];
+	/** The Reading that owns the Breakdown or Source. */
+	reading: Dumling.Reading;
+	knowledge: BreakdownKnowledge;
+	/** Segmentation once a person has reviewed it; absent for a Draft. */
+	reviewDepth?: "Segmentation";
 	sources: Sources;
 }
+
+/** The Knowledge aspects a Breakdown Record holds, as dumrel stores them. */
+export type BreakdownKnowledge = Pick<
+	Dumrel.ReadingKnowledge,
+	"breakdown" | "source"
+>;
 
 /**
  * Raw text as a reader supplies it, before intake makes a sentence of it.

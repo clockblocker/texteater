@@ -1,8 +1,11 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { checkBreakdownRecord } from "./check-breakdown.js";
-import { checkRecord, uncitedIssue } from "./check-record.js";
+import {
+	type BreakdownRecordCheck,
+	checkBreakdownRecord,
+} from "./check-breakdown.js";
+import { checkRecord, type RecordCheck, uncitedIssue } from "./check-record.js";
 import type {
 	AnnotationLayer,
 	BreakdownRecord,
@@ -75,7 +78,7 @@ function readJsonFiles(directory: string, issues: SpecIssue[]) {
  * of its Draft layers put it on the worklist, as its imported cases do. Its
  * Segmentation loads when that layer passes, and the whole record when its
  * Attestation layer passes too. Breakdown Records, under `breakdown/`, load
- * alike from their Attestation layer. Text Records, under `text/`, are
+ * when their one layer, Segmentation, passes. Text Records, under `text/`, are
  * checked for shape and a Reviewed one's Rule citation, and join the worklist
  * while they hold imported cases.
  */
@@ -124,19 +127,22 @@ export function readRecords(directory: string): {
 				worklist.push({ record: id, issues: [], legacy });
 			continue;
 		}
-		const checked = id.startsWith(breakdownPrefix)
-			? checkBreakdownRecord(id, input)
-			: checkRecord(id, input);
+		let checked: RecordCheck | BreakdownRecordCheck;
+		if (id.startsWith(breakdownPrefix)) {
+			checked = checkBreakdownRecord(id, input);
+			if (checked.errors.length === 0 && checked.record)
+				breakdownRecords.push(checked.record);
+		} else {
+			checked = checkRecord(id, input);
+			if (checked.errors.length === 0) {
+				if (checked.segmentation)
+					segmentations.push(checked.segmentation);
+				if (checked.record) records.push(checked.record);
+			}
+		}
 		if (checked.errors.length > 0) {
 			issues.push(...checked.errors);
 			continue;
-		}
-		if ("segmentation" in checked && checked.segmentation)
-			segmentations.push(checked.segmentation);
-		if (checked.record) {
-			if ("lemma" in checked.record)
-				breakdownRecords.push(checked.record);
-			else records.push(checked.record);
 		}
 		const legacy = "legacy" in checked ? (checked.legacy ?? []) : [];
 		if (checked.issues.length > 0 || legacy.length > 0)
@@ -193,9 +199,9 @@ export function loadSpecRecords(): readonly SpecRecord[] {
 
 /**
  * Loads every Breakdown Record from the package's `records/breakdown/`
- * directory, sorted by id, under the same terms as `loadSpecRecords`: one
- * whose Segmentation or Attestation fails is left out and listed by
- * `loadSpecWorklist`, and a failing reviewed layer throws `SpecRecordError`.
+ * directory, sorted by id, under the same terms as `loadSpecRecords`: a Draft
+ * whose Segmentation fails is left out and listed by `loadSpecWorklist`, and
+ * a reviewed one that fails throws `SpecRecordError`.
  */
 export function loadBreakdownRecords(): readonly BreakdownRecord[] {
 	const { breakdownRecords, issues } = readRecords(recordsDirectory);

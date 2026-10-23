@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "kaufen",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "💶"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "kauf",
+					"target": {
+						"language": "de",
+						"canonicalForm": "kauf",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: kaufen",
+				"url": "https://www.dwds.de/wb/kaufen",
+				"supports": "A bottom word: DWDS gives no Wortzerlegung"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A bottom word: the Root kauf and the Ending en (ADR 0051). Its Formations, verkaufen and einkaufen, link to it from their own Constituents."
+	}
+}

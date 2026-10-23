@@ -169,6 +169,12 @@ const segmentsSchema = z
 	)
 	.min(1);
 
+/** Why an annotation is as it is, and what models get wrong about it. */
+const notesSchema = z.strictObject({
+	rationale: textSchema.optional(),
+	knownMistakes: z.array(textSchema).optional(),
+});
+
 /**
  * What a target holds that another package types: its route (Dumling's
  * Families and Kinds), its Attestation (Dumling) and its Reading Knowledge
@@ -203,12 +209,7 @@ function targetSchema<
 		attestation: attestation.optional(),
 		reading: readingSchema(knowledge).optional(),
 		grundform: z.boolean().optional(),
-		notes: z
-			.strictObject({
-				rationale: textSchema.optional(),
-				knownMistakes: z.array(textSchema).optional(),
-			})
-			.optional(),
+		notes: notesSchema.optional(),
 	});
 }
 
@@ -256,27 +257,61 @@ export function recordFileSchema<
 }
 
 /**
- * The shape of one Breakdown Record file under `records/breakdown/`: the
- * multiword Lemma, its wording as the sentence, and the wording's Lexeme
- * targets. The loader validates the Lemma and Attestations with Dumling's
- * `parseUnit` and Reading Knowledge with dumrel; the JSON Schema emitter
- * passes Dumling's Locution and Saying Lemma schemas, its Lexeme Attestation
- * schemas and dumrel's Reading Knowledge schema.
+ * What a Breakdown Record holds that another package types: its owning
+ * Reading (Dumling) and its Breakdown and Source (dumrel). The loader passes
+ * loose schemas and checks both itself; the JSON Schema emitter passes the
+ * owners' schemas.
+ */
+export interface BreakdownSchemas<
+	R extends z.ZodType,
+	B extends z.ZodType,
+	S extends z.ZodType,
+> {
+	reading: R;
+	breakdown: B;
+	source: S;
+}
+
+/**
+ * The shape of one Breakdown Record file under `records/breakdown/` (ADR
+ * 0050): the Reading that owns it and that Reading's Breakdown or Source,
+ * the Knowledge aspects as dumrel stores them. Its parts carry no Surface and
+ * no Reading, so a person reviews it at Segmentation only (ADR 0037).
  */
 export function breakdownRecordFileSchema<
-	L extends z.ZodType,
 	R extends z.ZodType,
-	A extends z.ZodType,
-	K extends z.ZodType,
->(lemma: L, target: TargetSchemas<R, A, K>) {
+	B extends z.ZodType,
+	S extends z.ZodType,
+>({ reading, breakdown, source }: BreakdownSchemas<R, B, S>) {
 	return z.strictObject({
 		$schema: z.string().optional(),
-		lemma,
-		sentence: textSchema,
-		segments: segmentsSchema,
-		reviewDepth: reviewDepthSchema,
+		reading: reading.describe(
+			"The Reading that owns the Breakdown: its Lemma and Emoji Description, as Dumling normalizes them.",
+		),
+		knowledge: z
+			.strictObject({
+				breakdown: breakdown
+					.describe(
+						"The Reading's Constituents, its Morphemic Breakdown, or both: pieces of shown letters, each linked to a Unit Shadow or a Lemma, or unlinked filler.",
+					)
+					.optional(),
+				source: source
+					.describe(
+						"The immediate base of a formation whose letters can't be cut into pieces: a conversion, participle, acronym or clipping.",
+					)
+					.optional(),
+			})
+			.describe(
+				"The owning Reading's Breakdown or Source, as dumrel stores them.",
+			),
+		reviewDepth: z
+			.literal("Segmentation")
+			.describe(
+				"Segmentation once a person has reviewed the pieces and their links. Leave it out for a Draft.",
+			)
+			.optional(),
 		sources: sourcesSchema,
-		targets: z.array(targetSchema(target)),
+		notes: notesSchema.optional(),
 	});
 }
 

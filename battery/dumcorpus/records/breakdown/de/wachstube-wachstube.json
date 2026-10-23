@@ -1,0 +1,68 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Wachstube",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🕯"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Wachs",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Wachs",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "tube",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Tube",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "en.wiktionary: Wachstube",
+				"url": "https://en.wiktionary.org/wiki/Wachstube",
+				"supports": "Etymology 2: Wachs + Tube, a tube of wax"
+			},
+			{
+				"title": "de.wiktionary: Wachstube",
+				"url": "https://de.wiktionary.org/wiki/Wachstube",
+				"supports": "Wachs·tu·be, 'Tube mit Wachs als Inhalt', a Reading apart from the guard room"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A tube of wax. DWDS has no entry for this Reading, so the en.wiktionary etymology line decides: Wachs + Tube. One Lemma, two Readings with two splits (ADR 0050)."
+	}
+}

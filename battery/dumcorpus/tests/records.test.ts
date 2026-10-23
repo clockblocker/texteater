@@ -60,10 +60,13 @@ describe("the corpus", () => {
 			fileURLToPath(new URL("../records/", import.meta.url)),
 		);
 		expect(
-			checkCitations([...records, ...textRecords], {
-				adrs: readRepositoryAdrIds(),
-				rules,
-			}),
+			checkCitations(
+				[...records, ...loadBreakdownRecords(), ...textRecords],
+				{
+					adrs: readRepositoryAdrIds(),
+					rules,
+				},
+			),
 		).toEqual([]);
 	});
 
@@ -529,9 +532,7 @@ describe("negative fixtures", () => {
 
 describe("the shared-Reading guard", () => {
 	test("passes the corpus", () => {
-		expect(
-			sharedReadingIssues([...records, ...loadBreakdownRecords()]),
-		).toEqual([]);
+		expect(sharedReadingIssues(records)).toEqual([]);
 	});
 
 	test("flags each occurrence of a Reading whose records disagree", () => {
