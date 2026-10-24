@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import { parseLemma, parseSurface } from "../../../server/operationalParsing";
 import {
 	isSupportedTargetLanguage,
-	type SupportedTargetLanguage,
+	type ScrollLanguage,
 } from "../../../shared/supported-target-language";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
@@ -152,7 +152,7 @@ type RouteNoteTarget =
 	  }
 	| {
 			readonly kind: "Surface";
-			readonly language: SupportedTargetLanguage;
+			readonly language: ScrollLanguage;
 			readonly normalizedSurface: string;
 			readonly activeAnalysisKey?: Id<"surfaces">;
 	  }
@@ -231,7 +231,7 @@ async function loadAttestationRouteNote(
 
 async function loadSurfaceRouteNote(
 	ctx: QueryCtx,
-	language: SupportedTargetLanguage,
+	language: ScrollLanguage,
 	normalizedSurface: string,
 	contextCursor?: string,
 	activeAnalysisKey?: Id<"surfaces">,
