@@ -104,28 +104,36 @@ test("a base run of a word with neither a Source nor a Breakdown asks for its Br
 	).toBe(false);
 });
 
-test("a Source, or a Source that failed, holds both segmenters", () => {
-	expect(segmentsAfterSource({ changes: [], failures: [] })).toBe(true);
+test("a Source, or a Source that failed, holds both segmenters, unless the Source points back (#1279)", async () => {
+	const runs = (
+		production: Parameters<typeof segmentsAfterSource>[0],
+		pointsBack = false,
+	) =>
+		Effect.runPromise(
+			segmentsAfterSource(production, () => Effect.succeed(pointsBack)),
+		);
+	const source = {
+		changes: [
+			{
+				kind: "Contribute",
+				aspect: "source",
+				value: { target: ENTSPANNEN_SHADOW },
+			},
+		] as never,
+		failures: [],
+	};
+	expect(await runs({ changes: [], failures: [] })).toBe(true);
 	expect(
-		segmentsAfterSource({
+		await runs({
 			changes: [],
 			failures: [
 				{ aspect: "source", code: "Unresolved", message: "Kita" },
 			],
 		}),
 	).toBe(false);
-	expect(
-		segmentsAfterSource({
-			changes: [
-				{
-					kind: "Contribute",
-					aspect: "source",
-					value: { target: ENTSPANNEN_SHADOW },
-				},
-			] as never,
-			failures: [],
-		}),
-	).toBe(false);
+	expect(await runs(source)).toBe(false);
+	// Publication drops a Source that points back, so it counts as none.
+	expect(await runs(source, true)).toBe(true);
 });
 
 /** Segmenters answering from fixed outputs, recording what they were asked. */

@@ -82,5 +82,13 @@ export type KnowledgeProducer<R = never> = <E>(
 		readonly onContribution: (
 			changes: KnowledgeProduction["changes"],
 		) => Effect.Effect<void, E>;
+		/**
+		 * Whether publication would drop this produced Source for pointing
+		 * back (#1279). Such a Source counts as none, so the Reading is still
+		 * broken down.
+		 */
+		readonly sourcePointsBack: (
+			change: KnowledgeProduction["changes"][number],
+		) => Effect.Effect<boolean, E>;
 	},
 ) => Effect.Effect<KnowledgeProduction, E, R>;

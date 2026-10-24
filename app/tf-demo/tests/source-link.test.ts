@@ -1,7 +1,9 @@
 import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
 import type * as Dumling from "dumling/types";
+import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
 import { RELATION_PUBLICATION_FINGERPRINTS } from "../convex/model/generatedKnowledgeContainment";
+import { type Segmenters, withBreakdown } from "../server/knowledgeBreakdown";
 import { asksSource } from "../server/knowledgeSource";
 import {
 	emojiDescriptionOf,
@@ -14,6 +16,7 @@ import {
 	submitText,
 	type TestConvexDb,
 } from "./support/convex";
+import { generateWith } from "./support/knowledge-generation";
 
 beforeEach(() => {
 	jest.useFakeTimers();
@@ -104,7 +107,11 @@ test("only a base run of a Reading whose route requests a Source and that stores
 });
 
 /** One running Knowledge attempt for a stored, encountered `gekocht`. */
-async function seedAdjective(t: TestConvexDb, visitorId: string) {
+async function seedAdjective(
+	t: TestConvexDb,
+	visitorId: string,
+	state: "Scheduled" | "Running" = "Running",
+) {
 	const { segmentIds } = await submitText(t, [
 		["Die", " ", "gekochten", " ", "Kartoffeln", "."],
 	]);
@@ -157,8 +164,8 @@ async function seedAdjective(t: TestConvexDb, visitorId: string) {
 			ownerReadingKey: readingKey,
 			readingId,
 			attestationId,
-			state: "Running",
-			runNumber: 1,
+			state,
+			...(state === "Running" ? { runNumber: 1 } : {}),
 			createdAt: 1,
 			updatedAt: 1,
 		});
@@ -508,5 +515,110 @@ test("a Source whose stored base already names the word as its Source is dropped
 	await seedAdjective(accepting, "visitor-1");
 	await storeVerb(accepting, KOCHEN_READING);
 	expect(await publishSource(accepting)).toEqual({ status: "Committed" });
+	expect(await storedAdjectiveSource(accepting)).toEqual(KOCHEN_SOURCE);
+});
+
+/** Stores `kochen` with its own Source naming `gekocht`, pointing back. */
+async function storeBackPointingVerb(t: TestConvexDb) {
+	await storeVerb(t, KOCHEN_READING);
+	await t.run((ctx) =>
+		ctx.db.insert("accumulatedKnowledge", {
+			ownerReadingKey: readingIdentityKey(KOCHEN_READING),
+			knowledge: { source: { target: GEKOCHT_READING.lemma } },
+			status: "Full",
+			sourceLemmaKey: lemmaIdentityKey(GEKOCHT_READING.lemma),
+			updatedAt: 1,
+		}),
+	);
+}
+
+const GEKOCHT_MORPHEMES = [
+	{
+		letters: "ge",
+		target: {
+			language: "de",
+			family: "Morpheme",
+			kind: "Prefix",
+			canonicalForm: "ge-",
+		},
+	},
+	{
+		letters: "koch",
+		target: {
+			language: "de",
+			family: "Morpheme",
+			kind: "Root",
+			canonicalForm: "koch",
+		},
+	},
+	{
+		letters: "t",
+		target: {
+			language: "de",
+			family: "Morpheme",
+			kind: "Suffix",
+			canonicalForm: "-t",
+		},
+	},
+] as const;
+
+/**
+ * Runs the scheduled `gekocht` attempt with a producer that answers
+ * `kochen` as its Source and breaks the word down as Dumgen's producer
+ * does, recording which segmenters it asked.
+ */
+async function runWithSource(t: TestConvexDb) {
+	const asked: string[] = [];
+	const segmenters: Segmenters<never> = {
+		inConstituents: () => {
+			asked.push("constituents");
+			return Effect.succeed({ kind: "NoConstituents" as const });
+		},
+		inMorphemes: () => {
+			asked.push("morphemes");
+			return Effect.succeed(GEKOCHT_MORPHEMES as never);
+		},
+	};
+	await generateWith(t, "participle", (input, { sourcePointsBack }) =>
+		withBreakdown(
+			segmenters,
+			{ changes: [SOURCE_CHANGE], failures: [], pendingRelations: [] },
+			input,
+			sourcePointsBack,
+		),
+	);
+	return asked;
+}
+
+test("a Source dropped for pointing back counts as none, so the run still breaks the word down (#1279)", async () => {
+	const t = createTestConvex();
+	await seedAdjective(t, "visitor-1", "Scheduled");
+	await storeBackPointingVerb(t);
+	const warn = spyOn(console, "warn").mockImplementation(() => {});
+	try {
+		expect(await runWithSource(t)).toEqual(["constituents", "morphemes"]);
+	} finally {
+		warn.mockRestore();
+	}
+	const attempt = await t.run((ctx) =>
+		ctx.db.query("knowledgeGenerationAttempts").unique(),
+	);
+	expect(attempt?.state).toBe("Committed");
+	expect(await storedAdjectiveSource(t)).toBeUndefined();
+	const row = await t.run((ctx) =>
+		ctx.db
+			.query("accumulatedKnowledge")
+			.withIndex("by_owner_reading_key", (q) =>
+				q.eq("ownerReadingKey", readingIdentityKey(GEKOCHT_READING)),
+			)
+			.unique(),
+	);
+	expect(row?.knowledge?.breakdown?.morphemes).toEqual(GEKOCHT_MORPHEMES);
+
+	// A Source that stands holds both segmenters.
+	const accepting = createTestConvex();
+	await seedAdjective(accepting, "visitor-1", "Scheduled");
+	await storeVerb(accepting, KOCHEN_READING);
+	expect(await runWithSource(accepting)).toEqual([]);
 	expect(await storedAdjectiveSource(accepting)).toEqual(KOCHEN_SOURCE);
 });

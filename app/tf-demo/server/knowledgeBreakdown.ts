@@ -13,7 +13,8 @@ import type {
  * A Reading's Breakdown in a Knowledge run (ADR 0050, ADR 0051, Dumgen ADR
  * 0007). The host asks Knowledge for the Source first, inside the run's
  * `knowledge.produce`. A Reading with a Source runs neither segmenter, and
- * one whose `source` failed or is Unresolved holds both. Any other runs
+ * one whose `source` failed or is Unresolved holds both. A Source that
+ * publication drops for pointing back (#1279) counts as none. Any other runs
  * `segment.inConstituents`, and a single-word Lexeme it finds none for is a
  * bottom word, which `segment.inMorphemes` splits. Each piece links to a
  * Unit Shadow, so nothing is generated for a part the learner hasn't met
@@ -51,16 +52,23 @@ export function asksBreakdown(
 	);
 }
 
-/** What `knowledge.produce` answered for the Source decides whether the segmenters run. */
-export function segmentsAfterSource(
+/**
+ * What `knowledge.produce` answered for the Source decides whether the
+ * segmenters run. A Source that publication drops for pointing back counts
+ * as none (#1279), so `pointsBack` is asked about the produced one.
+ */
+export function segmentsAfterSource<E, R>(
 	production: Pick<KnowledgeProduction, "changes" | "failures">,
-): boolean {
-	return (
-		!production.failures.some(({ aspect }) => aspect === "source") &&
-		!production.changes.some(
-			(change) => change.aspect === "source" && change.kind !== "Retract",
-		)
+	pointsBack: (
+		change: KnowledgeProduction["changes"][number],
+	) => Effect.Effect<boolean, E, R>,
+): Effect.Effect<boolean, E, R> {
+	if (production.failures.some(({ aspect }) => aspect === "source"))
+		return Effect.succeed(false);
+	const source = production.changes.find(
+		(change) => change.aspect === "source" && change.kind !== "Retract",
 	);
+	return source ? pointsBack(source) : Effect.succeed(true);
 }
 
 /** One produced piece: shown letters and, unless filler, a Unit Shadow. */
@@ -177,4 +185,41 @@ export function produceBreakdown<R>(
 		),
 		Effect.catch(asFailure("constituents")),
 	);
+}
+
+/**
+ * A run's production with its Breakdown added, when the run asks for one
+ * and what `knowledge.produce` answered for the Source leaves the
+ * segmenters to run.
+ */
+export function withBreakdown<E, R, RS>(
+	segmenters: Segmenters<RS>,
+	produced: KnowledgeProduction,
+	input: {
+		readonly reading: Dumling.Reading<"de">;
+		readonly breakdown: boolean;
+		readonly sentence?: string;
+	},
+	pointsBack: (
+		change: KnowledgeProduction["changes"][number],
+	) => Effect.Effect<boolean, E, R>,
+): Effect.Effect<KnowledgeProduction, E, R | RS> {
+	return Effect.gen(function* () {
+		if (
+			!input.breakdown ||
+			!(yield* segmentsAfterSource(produced, pointsBack))
+		)
+			return produced;
+		const breakdown = yield* produceBreakdown(segmenters, {
+			reading: input.reading,
+			...(input.sentence === undefined
+				? {}
+				: { sentence: input.sentence }),
+		});
+		return {
+			...produced,
+			changes: [...produced.changes, ...breakdown.changes],
+			failures: [...produced.failures, ...breakdown.failures],
+		};
+	});
 }

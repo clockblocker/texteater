@@ -375,6 +375,13 @@ function produceKnowledge(run: KnowledgeRun, plan: KnowledgePlan) {
 					// Dumgen waits for each contribution's publication.
 					onContribution: (changes) =>
 						publishContribution(run, plan, changes),
+					sourcePointsBack: (change) =>
+						hop("Check the Source's direction", change, () =>
+							run.ctx.runQuery(
+								internal.knowledgeGeneration.sourcePointsBack,
+								{ reading, change },
+							),
+						),
 				},
 			)
 			.pipe(

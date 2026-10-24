@@ -13,7 +13,7 @@ import type {
 	KnowledgeRequest,
 } from "../server/knowledgeProduction";
 import { parseGermanReading } from "../server/operationalParsing";
-import { internalMutation, mutation } from "./_generated/server";
+import { internalMutation, internalQuery, mutation } from "./_generated/server";
 import { loadKnowledgeSettings } from "./knowledgeSettings";
 import { createDumdictTransaction } from "./model/dumdictTransaction";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
@@ -40,7 +40,10 @@ import { scheduleKnowledgeGeneration } from "./model/knowledgeScheduling";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import { withStoredLinkTargets } from "./model/pendingLinks";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
-import { withoutBackPointingSource } from "./model/sourceDirection";
+import {
+	backPointingSourceBase,
+	withoutBackPointingSource,
+} from "./model/sourceDirection";
 import {
 	directSemanticRelationValidator,
 	knowledgeProductionEvidenceValidator,
@@ -283,6 +286,22 @@ const BASE_TEXT_ASPECTS = new Set([
 	"translations",
 ]);
 const MAX_PUBLISHED_CHANGES_PER_RUN = 500;
+
+/**
+ * Whether publication would drop this produced Source for pointing back
+ * (#1279). Such a Source counts as none, so the run still breaks the Reading
+ * down (ADR 0050).
+ */
+export const sourcePointsBack = internalQuery({
+	args: { reading: v.any(), change: v.any() },
+	returns: v.boolean(),
+	handler: async (ctx, args) =>
+		(await backPointingSourceBase(
+			ctx,
+			parseGermanReading(args.reading).lemma,
+			args.change,
+		)) !== undefined,
+});
 
 /**
  * Publishes one batch of generated Knowledge for a Running attempt.

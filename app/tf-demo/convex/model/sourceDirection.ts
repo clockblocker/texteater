@@ -5,7 +5,7 @@ import {
 	lemmaIdentityKey,
 } from "../../server/linguisticIdentity";
 import type { Doc } from "../_generated/dataModel";
-import type { MutationCtx } from "../_generated/server";
+import type { QueryCtx } from "../_generated/server";
 import { findAccumulatedKnowledge } from "./knowledgeCoverage";
 
 /**
@@ -13,7 +13,8 @@ import { findAccumulatedKnowledge } from "./knowledgeCoverage";
  * Reading's new Source is rejected when a stored Reading of its base already
  * names the Reading's Lemma as its own Source. The first stored direction
  * wins. A rejected Source counts as none, as a conversion that doesn't pass
- * does, so the Reading goes on as a word formed from no other.
+ * does, so the Reading goes on as a word formed from no other, and its run
+ * breaks it down as it would a Reading with no Source.
  */
 
 /** Lemmas sharing a route and folded Canonical Form differ by Core Features only. */
@@ -90,7 +91,7 @@ export function backPointingBase(
 
 /** The Knowledge rows of every stored Reading of a Lemma the target names. */
 async function loadBaseKnowledge(
-	ctx: MutationCtx,
+	ctx: QueryCtx,
 	owner: Dumling.Lemma<"de">,
 	target: unknown,
 ): Promise<StoredBaseKnowledge[]> {
@@ -137,29 +138,38 @@ async function loadBaseKnowledge(
 }
 
 /**
+ * The stored base Reading whose Source names the owner's Lemma, for a
+ * Source-setting change; any other change has none. Publication drops such a
+ * Source, and the run asks this before it skips the segmenters.
+ */
+export async function backPointingSourceBase(
+	ctx: QueryCtx,
+	owner: Dumling.Lemma<"de">,
+	change: unknown,
+): Promise<StoredBaseKnowledge | undefined> {
+	const target = sourceTargetOf(change);
+	return target === undefined
+		? undefined
+		: backPointingBase(owner, await loadBaseKnowledge(ctx, owner, target));
+}
+
+/**
  * Drops a Source change whose base's stored Source points back at the
  * owner, and reports the rejection as one JSON line. Every other change
  * passes untouched.
  */
 export async function withoutBackPointingSource<TChange>(
-	ctx: MutationCtx,
+	ctx: QueryCtx,
 	owner: { readonly reading: Dumling.Reading<"de">; readonly key: string },
 	changes: readonly TChange[],
 ): Promise<TChange[]> {
 	const kept: TChange[] = [];
 	for (const change of changes) {
-		const target = sourceTargetOf(change);
-		const base =
-			target === undefined
-				? undefined
-				: backPointingBase(
-						owner.reading.lemma,
-						await loadBaseKnowledge(
-							ctx,
-							owner.reading.lemma,
-							target,
-						),
-					);
+		const base = await backPointingSourceBase(
+			ctx,
+			owner.reading.lemma,
+			change,
+		);
 		if (!base) {
 			kept.push(change);
 			continue;
