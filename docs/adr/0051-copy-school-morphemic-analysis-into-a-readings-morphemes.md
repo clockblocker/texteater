@@ -45,7 +45,9 @@ emoji, as Pealim gives a root its own box, never one borrowed from a word: a
 bound root has no word to borrow from (`деж` in `одежда`, `ceive` in
 `receive`). Homograph roots are separate Readings (`меч` 🗡️ and the root
 `мет` 🏷️). A cranberry piece is a Root too, glossed from its etymology where a
-dictionary gives one: `Him` in `Himbeere` ← `Hinde` 'hind' (DWDS). A Root's
+dictionary gives one: `Him` in `Himbeere` ← `Hinde` 'hind' (DWDS). The
+Constituents link the same piece to the same Root, `[[him|Him]] +
+[[Beere|beere]]`, so the walk below stays unbroken (ADR 0050). A Root's
 Note can list the stored words built on it (`ceive`: `receive`, `conceive`,
 `deceive`, `perceive`). A cranberry needs no flag: its Root lists one word.
 Who generates Root Readings is not decided yet; `segment.inUnits` never
@@ -57,13 +59,14 @@ no Source that `segment.inConstituents` finds no Constituents for (ADR
 0050). The segmenter splits off only
 affixes from the language's closed affix inventory in dumcorpus, and the
 remainder is the Root, with a Root Lemma of its own when it is bound:
-`ver · gess · en`, `be · ginn · en`, `re · ceive`. A fossilized prefix that
-no test supports stays inside the Root, so `Geselle` = `gesell · e` (DWDS
-gives it no Wortzerlegung). The test that confirms an affix split is not
-decided ([#1243](https://github.com/clockblocker/texteater/issues/1243)):
-recurrence of the remainder or prefixal behaviour (no ge- in the
-participle), or confirmation by DWDS, else en.wiktionary. Both give the same
-result on every example above.
+`ver · gess · en`, `be · ginn · en`, `re · ceive`. An affix split needs two
+things: the affix is on the closed affix list, and the DWDS Wortzerlegung
+confirms the split. Where DWDS gives no Wortzerlegung, en.wiktionary's
+etymology decides, as it does for Constituents (ADR 0050). A fossilized
+prefix the test doesn't confirm stays inside the Root, so `Geselle` =
+`gesell · e`. The user ruled this on
+[#1243](https://github.com/clockblocker/texteater/issues/1243) on
+2026-10-24.
 
 **Every other word's morphemes come by propagation.** Code walks up the
 Constituents chain. Each step keeps the morphemes it inherits under that
@@ -122,6 +125,10 @@ word that isn't a bottom word, so each view has one source.
 - A Confix Kind. Rejected: school analysis labels a confix by position.
 - A Root Reading borrowed from a bottom word. Rejected: bound roots have no
   word.
+- Recurrence of the remainder, or prefixal behaviour such as no ge- in the
+  participle, as the affix test. Rejected: the dictionary test gives the
+  same results on every example, and the Breakdowns already copy DWDS and
+  en.wiktionary everywhere else.
 - An unlinked cranberry piece in the morphemes. Rejected: a Root with a
   Reading carries what a dictionary says about it, and its Note lists its
   word.

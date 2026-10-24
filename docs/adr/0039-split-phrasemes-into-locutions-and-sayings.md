@@ -54,6 +54,11 @@ A Locution's Kind is the part of speech the whole acts as:
 | NUM | `zwölf bis sechzehn`, `vier Komma neun` |
 | INTJ | `herzlichen Dank`, `guten Morgen`, `wie geht's` |
 
+`so ein` stays a Locution, unlike `was für`, whose `ein` is the noun's own
+article: that `ein` drops in the plural (`was für Bücher`), while `so ein`
+switches to `solche` (`solche Bücher`), so its `ein` belongs to it (user,
+[#1241](https://github.com/clockblocker/texteater/issues/1241), 2026-10-24).
+
 Its route borrows the inflection features and Grundform rule of the Lexeme
 route with the same Kind, narrowed to what a Locution varies. VERB and NOUN
 Locutions inflect (`Er hat den Faden verloren`; `unter weißen Raben`), and a

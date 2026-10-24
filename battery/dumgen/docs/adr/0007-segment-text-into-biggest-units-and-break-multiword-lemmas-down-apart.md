@@ -76,7 +76,8 @@ needs no segmenter; those satellites are never Constituents.
 **`segment.inMorphemes` splits bottom words only.** A bottom word has no word
 inside it, and the host runs the segmenter only when `segment.inConstituents`
 found no Constituents. The segmenter splits off only affixes from the language's closed
-affix inventory, and the remainder is the Root; a bound or cranberry Root
+affix inventory, where the DWDS Wortzerlegung confirms the split (else
+en.wiktionary's etymology), and the remainder is the Root; a bound or cranberry Root
 gets a Root Lemma and Reading of its own. Every other word's morphemes are
 computed by propagation up its Constituents or through its Source, and the
 segmenter never runs on it as a fallback (ADR 0051).

@@ -46,9 +46,11 @@ the same way, `-ung` to the Shadow (de, Morpheme, Suffix, `-ung`).
   compare case-insensitively and tolerate umlaut (`[[Gast|Gäst]]`), a dropped
   final -e (`Schul`, `Erd`, `Morgenstund`), a verb stem without its
   infinitive ending (`[[fahren|Fahr]] + [[Rad|rad]]`), a digit for its
-  numeral (`3` for NUM `drei`) and Hebrew final-letter forms. Hyphens,
-  ellipses, gershayim, spaces, punctuation and placeholders are unlinked
-  filler segments.
+  numeral (`3` for NUM `drei`), a reflexive form for the reflexivity unit
+  (`dich` for PRON `sich`), a hyphenated Locution part for its spaced
+  wording (`Rund-um-die-Uhr` for `rund um die Uhr`) and Hebrew final-letter
+  forms. Hyphens, ellipses, gershayim, spaces, punctuation and placeholders
+  are unlinked filler segments.
 - A Breakdown describes the Canonical Form or cited wording, never an
   occurrence's alignment.
 - A piece stores no head or modifier role, no Surface and no Reading. A click
@@ -62,8 +64,10 @@ the same way, `-ung` to the Shadow (de, Morpheme, Suffix, `-ung`).
 **Constituents are a word's immediate parts.** Every word built from a word
 plus pieces has them: compounds, affixal derivations and particle verbs
 alike (`Kohle + Kraftwerk`, `entspannen + -ung`, `ge- + Berg + -e`, `auf- +
-machen`). A part is a word where one exists, else a Morpheme (a formant or
-an Interfix). There are usually two; a coordinative compound
+machen`). A part is a word where one exists, else a Morpheme: a formant, an
+Interfix, or a cranberry piece, which links to its Root Morpheme
+(`Himbeere` = `[[him|Him]] + [[Beere|beere]]`), so the morphemes walk stays
+unbroken (ADR 0051). There are usually two; a coordinative compound
 (`schwarzrotgold`), `Hals-Nasen-Ohren-Arzt` and a parasynthetic `Gebirge` may
 have more. Each Note shows one level, and a part's own Constituents are one
 click away. A word with no word inside (`spannen`, `receive`) has none.
@@ -86,8 +90,16 @@ For German:
 - A true particle links to its Prefix Morpheme (`auf-` in `aufmachen`, `aus-`
   in `Ausland`). A closed particle list in dumcorpus decides which, compound
   particles included: `hinaus-` is one piece, and clicking it gives `hin +
-  aus`. Other first parts link to their own Lexeme: NOUN `Teil` in
-  `teilnehmen`, VERB `kennen` in `kennenlernen`, ADJ `fest`.
+  aus`. The adverbs DWDS gives no verbal affix entry are true particles too
+  (`dabei`, `gegenüber`, `vorher`, `rückwärts`, `vorwärts`, `zuwider`, …):
+  the Amtliches Regelwerk §34(1) names most of them as Verbpartikeln, their
+  free form is an adverb, and German writes them attached to the verb. So
+  are the rare first parts (`zunichte` in `zunichtemachen`, `zugute`,
+  `vorlieb`, `bevor`, `voneinander`) and the clipped forms (`rum`, `draus`,
+  `drum`, `drunter`). Other first parts link to their own Lexeme: NOUN
+  `Teil` in `teilnehmen`, VERB `kennen` in `kennenlernen`, ADJ `fest`, and
+  ADJ `leid` in `leidtun`, as Duden and DWDS class it and as the 2006
+  reform's lowercasing shows.
 - A loan piece is judged within the text language: listed in Duden, it links
   to the German Lexeme (`Software`, `Update`), else to a German Foreign Lemma
   ([ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md)).
@@ -97,7 +109,13 @@ For German:
   [[lunch|unch]]`). A part may be PROPN (`Goethe + Straße`, `Berlin + -er`).
 - Hyphenated compounds follow DWDS: `Mund-zu-Mund-Beatmung` and
   `3-Zimmer-Wohnung` are flat, and `Vitamin-C-Mangel` = `[Vitamin C] +
-  Mangel`. `Mail` in `E-Mail` links to its Lexeme.
+  Mangel`. In `E-Mail`, `E` links to DWDS's prefix `e-` (2e-, short for
+  *elektronisch*), the hyphen is filler, and `Mail` links to its Lexeme:
+  `[[e-|E]]` + `-` + `[[Mail]]`.
+- A phrasal compound with no DWDS split and no stored inner unit is flat,
+  every word a part: `Trimm-dich-Pfad` = `trimmen · sich · Pfad`, as DWDS
+  also splits it. When its front phrase is a real Locution, it stays two
+  parts: `[rund um die Uhr] + Betreuung`.
 
 **Satellites come from model data.** A Lexeme's reflexive, governed
 preposition, article and auxiliary are read from model data (ADR 0041) and
@@ -107,7 +125,12 @@ separable particle is a constituent, as above. English phrasal verbs work as
 German particle verbs do: `give up` = `give + up`, still one Lexeme VERB
 ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)). The
 closed English particle list lives in dumcorpus, and English VERB `phrasal`
-need not name its particle, since the constituent link does.
+need not name its particle, since the constituent link does. The particle
+links to its Lexeme, `up` (ADV) in `give up` and `take up`: English writes it
+as a separate word that can move (`give it up`), so it is a word, and no
+Morpheme Kind is added for it. German keeps the Prefix Morpheme, since it
+writes the particle attached (`aufgeben`). Either way the particle verb
+joins its base verb's Formations and the particle is one click away.
 
 **A phraseme's Constituents are the biggest units strictly inside its
 wording**, as `segment.inUnits` finds them one level down. A part may be a
@@ -130,6 +153,9 @@ with its noun
   it (`gäbe`), else unlinked filler.
 - An optional word in the Canonical Form is a part like any other (`genäht`
   in `Doppelt genäht hält besser`).
+- An optional intensifier stays out of the Canonical Form, so it is never a
+  part: `aus dem Häuschen sein`, not `(ganz) aus dem Häuschen sein`. Where
+  `ganz` occurs, Rule `de/modification-attests-partially` handles it.
 
 **A Source names an unsegmentable formation's base.** It points one step
 back, at the immediate base, as ru.wiktionary, DWDS and en.wiktionary do:
@@ -141,7 +167,10 @@ back, at the immediate base, as ru.wiktionary, DWDS and en.wiktionary do:
 - acronym: `Kita` ← `Kindertagesstätte`
 - clipping: `Uni` ← `Universität`, so `Unibibliothek` = `Uni + Bibliothek`
 
-A Source has one target, which links as a piece does. A blend takes
+A Source has one target, which links as a piece does. It records the
+formation, not how obvious the formation still is: `Band` 🎀 'ribbon' and
+`Band` 📚 'volume' both have the Source `binden`, as DWDS derives both. A
+blend takes
 Constituents instead. An affixal derivation has no Source, because its base
 is its word part (`Aufmachung` = `aufmachen + -ung`). The Reading Knowledge
 aspect `source` replaces `participleSource`.
@@ -198,14 +227,10 @@ decision excludes Hebrew: a construct chain is `[בית ספר] + תיכון`, a
 and pattern authoring belongs to the Hebrew owner
 ([#1246](https://github.com/clockblocker/texteater/issues/1246)).
 
-The user has not ruled on these, and this ADR does not decide them
-([#1241](https://github.com/clockblocker/texteater/issues/1241)): whether a
-cranberry piece in Constituents (`Him + Beere`) links to its Root Morpheme
-or stays unlinked; whether `E` in `E-Mail` links to the German Lemma `e-`;
-whether a phrasal compound with no DWDS split and no stored inner unit is
-flat or modifier + head; whether a free optional intensifier (`ganz` in
-`(ganz) aus dem Häuschen sein`) is a part; and which Kind the English
-particle links to.
+The user ruled the cranberry piece, `E-Mail`, phrasal compounds, optional
+intensifiers, the English particle, the particle list and `leid` on
+[#1241](https://github.com/clockblocker/texteater/issues/1241) on
+2026-10-24.
 
 ## Considered Options
 
@@ -232,6 +257,25 @@ particle links to.
 - No breakdown unless a piece's Reading contributes to the meaning (`receive`
   gets none). Rejected: a link names a Lemma, so it can't say which Reading
   contributes.
+- An unlinked cranberry piece in the Constituents (`Him + Beere`). Rejected:
+  the morphemes walk would break at it, and the Morphemic Breakdown links
+  the same piece to its Root anyway.
+- `E` in `E-Mail` as unlinked filler. Rejected: DWDS's Wortzerlegung links
+  it to the prefix 2e-.
+- A phrasal compound as modifier + head when nothing inside it is stored.
+  Rejected: no stored unit says where the modifier ends, and DWDS splits
+  `Trimm-dich-Pfad` flat.
+- An optional intensifier as a part linking to ADV `ganz`. Rejected: it is
+  ordinary modification, not part of the citation form.
+- A new Morpheme Kind `Particle` for the English particle. Rejected: English
+  writes the particle as a separate, movable word, which makes it a Lexeme.
+- The adverbs with no DWDS verbal affix entry linking to their ADV Lexeme.
+  Rejected: the Regelwerk names them as Verbpartikeln, and German writes
+  them attached.
+- Adding the rare first parts on demand. Rejected: listing them now moves
+  nothing, since Dumgen opens no slot on them until a lab round weighs one.
+- `leid` linking to NOUN `Leid`. Rejected: Duden and DWDS class it as an
+  adjective, and the 2006 reform lowercased it.
 - A Source with two targets for a blend. Rejected: a blend's letters can be
   cut.
 - `segment.inConstituents` returning a Source, with the base picked by jev
