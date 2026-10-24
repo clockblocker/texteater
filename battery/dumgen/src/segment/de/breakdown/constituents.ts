@@ -10,9 +10,12 @@
  *   the prefix e- (`E- + Book` or `E + Book`, jev picks). Its words before
  *   the last hyphen, two or more, are one Locution part when jev weighs
  *   them one in `breakdown-locutions` (`[Kopf an Kopf] + Rennen`), else
- *   flat. A compound's head takes the word's own Kind (a noun's head is a
- *   noun), so only its other parts' routes are asked, and a noun's first
- *   of two parts may be a cranberry piece, a Root (`Brom` in Brombeere).
+ *   flat. Before it offers a prefix and a base verb against a prefix, a
+ *   noun or adjective and the citation ending, jev weighs whether the base
+ *   is a verb (`word-gates.ts`). A compound's head takes the word's own
+ *   Kind, and code settles more parts unasked (`word-parts.ts`); a noun's
+ *   first of two parts may be a cranberry piece, a Root (`Brom` in
+ *   Brombeere), once jev weighs it no word of its own.
  * - A phraseme, or a Lexeme written as several words: its wording's parts
  *   come from code (`phraseme-parts.ts`), and jev weighs, in one request,
  *   `breakdown-locutions`, whether a run of neighbouring parts is a
@@ -21,12 +24,12 @@
  *   `sich` stays a part of its own, `sich den Kopf zerbrechen`).
  *
  * Every part's route and Canonical Form then come from `targets.ts`, and a
- * compound's linking element from its first part's form (`interfix.ts`). A
- * separable verb's first part whose Lexeme dumcorpus rules
- * (`germanLexemePartTargets`) is pinned to it, unasked.
+ * compound's linking element from its first part's form (`interfix.ts`).
+ * A phraseme's part that dumcorpus authors only as a pronoun is a PRON
+ * (`was`), and a `zu` closing a wording after its open slot is the
+ * infinitive PART (`um … zu`), both unasked.
  */
 import type { Questions } from "@typesafe-ai/sdk";
-import { germanLexemePartTargets } from "dumcorpus/inventories";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import {
@@ -44,7 +47,8 @@ import {
 	type Constituents,
 	type ProducedPiece,
 } from "../../breakdown.js";
-import { allRoutes, checkedRouteKey, type RouteKey } from "../routes.js";
+import { allRoutes, type RouteKey } from "../routes.js";
+import { onlyPronoun, reflexiveFormGuide } from "./forms.js";
 import { interfixOf } from "./interfix.js";
 import {
 	type LocutionCandidate,
@@ -70,35 +74,21 @@ import {
 	wordAnalyses,
 } from "./word-analyses.js";
 import {
+	mayBeCranberry,
+	verbBaseQuestion,
+	withVerbBases,
+	wordQuestion,
+} from "./word-gates.js";
+import { cranberryShaped, openWordParts } from "./word-parts.js";
+import {
 	analysisInstructions,
 	compoundRouteGuide,
 	noneOption,
 	phraseFormGuide,
-	phraseForms,
 	prefixedBaseRouteGuide,
 	routeGuideOf,
 	verbFirstPartRouteGuide,
 } from "./word-prompts.js";
-
-/** The routes a part of a word may take. */
-const wordPartRoutes: readonly RouteKey[] = [
-	"Lexeme/NOUN",
-	"Lexeme/VERB",
-	"Lexeme/ADJ",
-	"Lexeme/ADV",
-	"Lexeme/ADP",
-	"Lexeme/NUM",
-	"Lexeme/PRON",
-	"Lexeme/PROPN",
-];
-
-/** The Kinds whose compounds take their head's Kind: a proper name's head is a noun. */
-const headRoutes: Readonly<Record<string, RouteKey>> = {
-	NOUN: "Lexeme/NOUN",
-	PROPN: "Lexeme/NOUN",
-	VERB: "Lexeme/VERB",
-	ADJ: "Lexeme/ADJ",
-};
 
 const lexemeRoutes = allRoutes.filter((key) => key.startsWith("Lexeme/"));
 const locutionRoutes = allRoutes.filter((key) => key.startsWith("Locution/"));
@@ -178,38 +168,7 @@ function linkedPieces(
  * are segment.inUnits's and stay shared.
  */
 const phrasemeRouteGuide =
-	"Judge the part by the role it plays inside this whole expression, not by its commonest use: a word that opens a clause, an infinitive clause included, is SCONJ (statt in statt … zu); a comparison word, wie or als, is CCONJ before a phrase and SCONJ before a clause, never ADP or ADV (als in mehr Schein als Sein); a word that stands for a noun phrase on its own, with no noun after it, is PRON, not DET (jeder in jeder für sich).";
-
-/**
- * The first part of a verb cut into two words, pinned to the Lexeme
- * dumcorpus rules for it (ADR 0050, #1241): `weh` in wehtun is ADJ weh,
- * though its letters open wehen. The closed inventory decides, as it does
- * particle against Lexeme, so jev is not asked its route or headword.
- * Undefined for a part it doesn't list, or another analysis.
- */
-function ruledVerbFirstPart(
-	analysis: WordAnalysis,
-	kind: string,
-): OpenPart | undefined {
-	const [first, ...rest] = analysis.pieces;
-	if (
-		kind !== "VERB" ||
-		first?.role !== "Word" ||
-		rest.length !== 1 ||
-		rest[0]?.role !== "Word"
-	)
-		return undefined;
-	const folded = first.letters.toLocaleLowerCase("de");
-	const target = Object.hasOwn(germanLexemePartTargets, folded)
-		? germanLexemePartTargets[folded]
-		: undefined;
-	if (target === undefined) return undefined;
-	return {
-		reads: first.letters,
-		routes: [checkedRouteKey(`Lexeme/${target.kind}`)],
-		forms: [target.canonicalForm],
-	};
-}
+	"Judge the part by the role it plays inside this whole expression, not by its commonest use: a word that opens a clause, an infinitive clause included, is SCONJ (statt in statt … zu), while the zu right before an infinitive is PART; a comparison word, wie or als, is CCONJ before a phrase and SCONJ before a clause, never ADP or ADV (als in mehr Schein als Sein); a word that stands for a noun phrase on its own, with no noun after it, is PRON, not DET (jeder in jeder für sich), and so is a question word asking for a thing or a person (wer), whatever follows it.";
 
 /** The analysis jev picks, or none. */
 const chosenAnalysis = Effect.fnUntraced(function* (
@@ -278,44 +237,22 @@ const wordConstituents = Effect.fnUntraced(function* (
 ): Effect.fn.Return<Constituents, AskFailure> {
 	const { canonicalForm, kind } = input.reading.lemma;
 	const whole = wholeOf(input, "word");
+	const candidates = wordAnalyses(canonicalForm, kind);
 	const analysis = yield* analysisOf(
-		wordAnalyses(canonicalForm, kind),
+		kind === "VERB"
+			? yield* withVerbBases(candidates, whole, ask)
+			: candidates,
 		whole,
 		ask,
 	);
 	if (analysis === undefined) return none;
-	const head = headRoutes[kind];
-	const last = analysis.pieces.length - 1;
-	// A noun's first part beside its head may be a cranberry piece (ADR 0050).
+	const [first] = analysis.pieces;
 	const cranberry =
-		kind === "NOUN" &&
-		analysis.pieces.length === 2 &&
-		analysis.pieces.every(({ role }) => role === "Word");
-	const ruled = ruledVerbFirstPart(analysis, kind);
-	const open = analysis.pieces.flatMap((piece, index): OpenPart[] => {
-		if (index === 0 && ruled !== undefined) return [ruled];
-		if (piece.role === "Phrase")
-			return [
-				{
-					reads: piece.reads,
-					routes: locutionRoutes,
-					forms: phraseForms(piece.reads),
-					formGuide: phraseFormGuide,
-				},
-			];
-		if (piece.role !== "Word") return [];
-		if (index === last && head !== undefined)
-			return [{ reads: piece.letters, routes: [head] }];
-		return [
-			{
-				reads: piece.letters,
-				routes: wordPartRoutes,
-				...(cranberry && index === 0 ? { cranberry: true } : {}),
-			},
-		];
-	});
+		cranberryShaped(analysis, kind) &&
+		first !== undefined &&
+		(yield* mayBeCranberry(first.letters, whole, ask));
 	const targets = yield* partTargets(
-		open,
+		openWordParts(analysis, kind, cranberry),
 		whole,
 		ask,
 		routeGuideOf(analysis, kind),
@@ -353,6 +290,9 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	phrasemeRouteGuide,
 	cranberryOption,
 	phraseFormGuide,
+	reflexiveFormGuide,
+	verbBaseQuestion("word", "…"),
+	wordQuestion("word", "…"),
 	...Object.values(hyphenPrefixGlosses),
 	locutionQuestion("wording", "…"),
 	...Object.values(reflexiveUses),
@@ -422,14 +362,34 @@ const chosenGroups = Effect.fnUntraced(function* (
 	return { locutions, reflexive };
 });
 
-/** The route a wording's part may take: a reflexive verb, a noun group, a Locution or a word. */
+/**
+ * The route a wording's part may take: a reflexive verb, a noun group, a
+ * Locution, a pronoun dumcorpus authors only as one (`was`), the
+ * infinitive `zu` closing the wording after its open slot (`ohne … zu`),
+ * or a word.
+ */
 function partRoutes(
 	piece: WordingPiece & { role: "Part" },
+	closesSlot: boolean,
 ): readonly RouteKey[] {
 	if (piece.reflexive) return ["Lexeme/VERB"];
 	if (piece.article) return articleRoutes;
-	return piece.words > 1 ? locutionRoutes : lexemeRoutes;
+	if (piece.words > 1) return locutionRoutes;
+	if (onlyPronoun(piece.reads)) return ["Lexeme/PRON"];
+	if (closesSlot && piece.reads.toLocaleLowerCase("de") === "zu")
+		return ["Lexeme/PART"];
+	return lexemeRoutes;
 }
+
+/** Whether the piece at `index` ends the wording right after its open slot (`…`). */
+const closesSlot = (pieces: readonly WordingPiece[], index: number) => {
+	const before = pieces[index - 1];
+	return (
+		index === pieces.length - 1 &&
+		before?.role === "Filler" &&
+		before.letters.includes("…")
+	);
+};
 
 const phrasemeConstituents = Effect.fnUntraced(function* (
 	input: BreakdownInput,
@@ -457,9 +417,14 @@ const phrasemeConstituents = Effect.fnUntraced(function* (
 						pieces[reflexive.verb] as WordingPiece,
 					),
 				});
-	const open: OpenPart[] = merged.flatMap((piece) =>
+	const open: OpenPart[] = merged.flatMap((piece, index) =>
 		piece.role === "Part" && !piece.ofVerb
-			? [{ reads: piece.reads, routes: partRoutes(piece) }]
+			? [
+					{
+						reads: piece.reads,
+						routes: partRoutes(piece, closesSlot(merged, index)),
+					},
+				]
 			: [],
 	);
 	const targets = yield* partTargets(open, whole, ask, phrasemeRouteGuide);

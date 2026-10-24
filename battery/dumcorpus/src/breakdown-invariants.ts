@@ -2,6 +2,7 @@ import { foldCase, zeroEndingCanonicalForm } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type { BreakdownKnowledge } from "./corpus-types.js";
+import { germanReflexiveForms } from "./inventories/de/drill-down.js";
 import { germanInterfixes } from "./inventories/de/interfixes.js";
 import {
 	germanLexemePartTargets,
@@ -101,13 +102,11 @@ function comparable(text: string, language: Dumling.Language): string {
  * in `Trimm-dich-Pfad` links to PRON `sich`.
  */
 const reflexiveForms: Partial<
-	Record<Dumling.Language, { lemma: string; forms: ReadonlySet<string> }>
-> = {
-	de: {
-		lemma: "sich",
-		forms: new Set(["mich", "mir", "dich", "dir", "uns", "euch", "sich"]),
-	},
-};
+	Record<
+		Dumling.Language,
+		{ canonicalForm: string; forms: ReadonlySet<string> }
+	>
+> = { de: germanReflexiveForms };
 
 /**
  * Whether a word's shown letters fit their target (ADR 0050): the target's
@@ -126,7 +125,7 @@ function lettersFit(
 	if (
 		reflexive !== undefined &&
 		target.kind === "PRON" &&
-		target.canonicalForm === reflexive.lemma &&
+		target.canonicalForm === reflexive.canonicalForm &&
 		reflexive.forms.has(foldCase(letters, language))
 	)
 		return true;

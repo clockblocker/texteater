@@ -19,7 +19,11 @@ import {
 	choiceOf,
 } from "../../ask.js";
 import { type RouteKey, routeCriteria } from "../routes.js";
-import { formCandidates } from "./forms.js";
+import {
+	formCandidates,
+	offersReflexive,
+	reflexiveFormGuide,
+} from "./forms.js";
 
 /** A part whose link jev settles. */
 export type OpenPart = {
@@ -128,9 +132,12 @@ export const partTargets = Effect.fnUntraced(function* (
 	for (const [index, part] of parts.entries()) {
 		const forms = candidates[index] ?? [];
 		const [, kind = ""] = (routes[index] ?? "").split("/");
+		const guide =
+			part.formGuide ??
+			(offersReflexive(forms) ? reflexiveFormGuide : undefined);
 		if (forms.length > 1)
 			formQuestions[`f_${index}`] = choice(
-				`In \`${whole.key}\`, the part "${part.reads}" is a ${kindNames[kind] ?? kind}. Which is its dictionary headword?${part.formGuide ? ` ${part.formGuide}` : ""}`,
+				`In \`${whole.key}\`, the part "${part.reads}" is a ${kindNames[kind] ?? kind}. Which is its dictionary headword?${guide ? ` ${guide}` : ""}`,
 				Object.fromEntries(forms.map((form, at) => [`f${at}`, form])),
 			);
 	}

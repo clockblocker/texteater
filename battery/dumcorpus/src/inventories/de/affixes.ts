@@ -22,6 +22,11 @@ import type * as Dumrel from "dumrel/types";
 export type GermanAffix = {
 	readonly spelled: string;
 	readonly canonicalForm: string;
+	/**
+	 * A suffix's base Kind, when it derives from one Kind only: `-ung`
+	 * makes nouns from verbs (`gründen + -ung`).
+	 */
+	readonly baseKind?: string;
 };
 
 const prefix = (spelled: string): GermanAffix => ({
@@ -74,7 +79,15 @@ export const germanHyphenPrefixes: readonly GermanAffix[] = ["e"].map(prefix);
 
 /** The derivational suffixes, each allomorph linking to its one Lemma. */
 export const germanSuffixes: readonly GermanAffix[] = [
-	suffix("ung"),
+	/*
+	 * -ung derives nouns from verbs (Fleischer/Barz, Wortbildung der
+	 * deutschen Gegenwartssprache, 4th ed., 2012, on deverbal -ung
+	 * abstracts; de.wiktionary -ung: "Suffix zur Bildung von Substantiven
+	 * vorwiegend aus Verben"), so its base is a verb even where the stem
+	 * also spells a noun: `Gründ` is gründen, not Grund. The few old
+	 * collectives from nouns (Waldung, Stallung) are not productive.
+	 */
+	{ ...suffix("ung"), baseKind: "VERB" },
 	suffix("heit"),
 	suffix("keit", "heit"),
 	suffix("igkeit", "heit"),

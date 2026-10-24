@@ -3,10 +3,15 @@
  * that jev only picks among them (Dumgen ADR 0007; segmentation reaches no
  * writer). A part shows letters that may be inflected (`liegt`, `guten`,
  * `Hause`), truncated (`Wach` of wachen, `Schul` of Schule) or umlauted
- * (`Gäst` of Gast); each Kind undoes those in its own way. The first
- * candidate is the letters as they stand.
+ * (`Gäst` of Gast); each Kind undoes those in its own way. An open
+ * Kind's first candidate is the letters as they stand; a pronoun's or
+ * determiner's come from dumcorpus's Authored Inventory (#1241 round 3).
  */
-import { authoredRealizations, closedVerbForms } from "dumcorpus/inventories";
+import {
+	authoredRealizations,
+	closedVerbForms,
+	germanReflexiveForms,
+} from "dumcorpus/inventories";
 
 const capitalized = (word: string) =>
 	word.charAt(0).toLocaleUpperCase("de") + word.slice(1);
@@ -92,14 +97,50 @@ function adjectiveForms(word: string): string[] {
 	];
 }
 
-/** The Canonical Forms of authored members of `kind` a spelling realizes (`den` → der). */
+/** The authored members a spelling realizes (`den` → der), any Kind. */
+const realizedBy = (word: string) =>
+	authoredRealizations.filter(
+		({ spelled }) => lower(spelled) === lower(word),
+	);
+
+/**
+ * The Canonical Forms of the authored members of `kind` a spelling
+ * realizes, and for a reflexive form of a pronoun the reflexivity unit
+ * (`dich` → dich, sich), as dumcorpus's inventory has them; empty for a
+ * spelling it doesn't author (an adverb, a preposition).
+ */
 function authoredForms(word: string, kind: string): string[] {
-	return authoredRealizations
-		.filter(
-			({ spelled, member }) =>
-				lower(spelled) === lower(word) && member.lemma.kind === kind,
-		)
+	const forms = realizedBy(word)
+		.filter(({ member }) => member.lemma.kind === kind)
 		.map(({ member }) => member.lemma.canonicalForm);
+	return kind === "PRON" && germanReflexiveForms.forms.has(lower(word))
+		? [...forms, germanReflexiveForms.canonicalForm]
+		: forms;
+}
+
+/**
+ * Closes a pronoun's headword question when its candidates hold the
+ * reflexivity unit (`dich`: dich or sich). Its examples are no Breakdown
+ * case (#693).
+ */
+export const reflexiveFormGuide =
+	"sich is the reflexive pronoun: pick it when the pronoun points back to the one who acts, as in an order to oneself (setz dich, beeil dich), and the personal pronoun when it names someone else (hilf mir).";
+
+/** Whether `forms` offer the reflexivity unit beside another form, so its guide closes the question. */
+export const offersReflexive = (forms: readonly string[]) =>
+	forms.length > 1 && forms.includes(germanReflexiveForms.canonicalForm);
+
+/**
+ * Whether every authored member a spelling realizes is a pronoun, so its
+ * part is a PRON unasked (#1241 round 3: `was`, `dich`); a spelling also
+ * realizing a determiner (`das`) or none at all is asked.
+ */
+export function onlyPronoun(word: string): boolean {
+	const members = realizedBy(word);
+	return (
+		(members.length > 0 || germanReflexiveForms.forms.has(lower(word))) &&
+		members.every(({ member }) => member.lemma.kind === "PRON")
+	);
 }
 
 /**
@@ -129,8 +170,11 @@ export function formCandidates(
 				return verbForms(word);
 			case "ADJ":
 				return adjectiveForms(word);
-			default:
-				return [lower(word), ...authoredForms(word, kind)];
+			default: {
+				// The inventory names a closed Kind's Lemma: `dies` is dieser.
+				const authored = authoredForms(word, kind);
+				return authored.length > 0 ? authored : [lower(word)];
+			}
 		}
 	})();
 	return [...new Set(forms)];

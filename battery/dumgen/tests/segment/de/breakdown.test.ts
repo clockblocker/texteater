@@ -102,8 +102,10 @@ describe("German segment.inConstituents", () => {
 			"e→Morpheme/Interfix:-e-",
 			"haus→Lexeme/NOUN:Haus",
 		]);
+		// The cranberry check comes before the routes (#1241 round 3).
 		expect(judge.stages()).toEqual([
 			"breakdown-analysis",
+			"breakdown-words",
 			"breakdown-routes",
 			"breakdown-forms",
 		]);

@@ -42,6 +42,8 @@ export type WordPiece =
 			readonly role: "Prefix" | "Suffix";
 			readonly letters: string;
 			readonly canonicalForm: string;
+			/** A suffix's one base Kind, from the inventory (`-ung`: VERB). */
+			readonly baseKind?: string;
 	  }
 	| { readonly role: "Ending" | "Hyphen"; readonly letters: string };
 
@@ -167,13 +169,14 @@ function suffixCuts(word: string): WordAnalysis[] {
 			({ spelled }) =>
 				folded.endsWith(spelled) && word.length - spelled.length >= 2,
 		)
-		.map(({ spelled, canonicalForm }) =>
+		.map(({ spelled, canonicalForm, baseKind }) =>
 			analysis([
 				{ role: "Word", letters: word.slice(0, -spelled.length) },
 				{
 					role: "Suffix",
 					letters: word.slice(-spelled.length),
 					canonicalForm,
+					...(baseKind === undefined ? {} : { baseKind }),
 				},
 			]),
 		);
