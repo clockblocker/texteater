@@ -29,7 +29,7 @@ export type GermanAffix = {
 	readonly baseKind?: string;
 	/**
 	 * What a word made with the suffix names, `{base}` standing for its
-	 * base's letters, after Fleischer/Barz's word-formation patterns. Dumgen
+	 * base's letters (`Leit-`), after Fleischer/Barz's word-formation patterns. Dumgen
 	 * tests a homograph's analysis against its sense with it (#1241).
 	 */
 	readonly sense?: string;
@@ -58,13 +58,13 @@ const suffix = (
  * -ig, -isch and -bar).
  */
 const agent =
-	'someone or something that does what "{base}" names, or someone from or dealing with "{base}"';
+	"someone or something that does what {base} names, or that is marked by or deals with {base}";
 const quality =
-	'the state or quality of being what "{base}" names, or something that has it';
-const diminutive = 'a small or dear "{base}"';
+	"the state or quality of being what {base} names, or something that has it";
+const diminutive = "a small or dear {base}";
 const activity =
-	'the activity of what "{base}" names, or its place or its product';
-const having = 'having, like or to do with what "{base}" names';
+	"the activity of what {base} names, or its place or its product";
+const having = "having, like or to do with what {base} names";
 
 /**
  * The prefixes that are no separable particle: the inseparable verb
@@ -118,18 +118,14 @@ export const germanSuffixes: readonly GermanAffix[] = [
 		...suffix(
 			"ung",
 			"ung",
-			'the act, process or result of what "{base}" names',
+			"the act, process or result of what {base} names",
 		),
 		baseKind: "VERB",
 	},
 	suffix("heit", "heit", quality),
 	suffix("keit", "heit", quality),
 	suffix("igkeit", "heit", quality),
-	suffix(
-		"schaft",
-		"schaft",
-		'a group, state or domain of what "{base}" names',
-	),
+	suffix("schaft", "schaft", "a group, state or domain of what {base} names"),
 	suffix("tum"),
 	suffix("nis"),
 	suffix("sal"),
@@ -137,7 +133,7 @@ export const germanSuffixes: readonly GermanAffix[] = [
 	suffix("ler", "ler", agent),
 	suffix("ner", "ner", agent),
 	suffix("er", "er", agent),
-	suffix("in", "in", 'a female "{base}"'),
+	suffix("in", "in", "a female {base}"),
 	suffix("chen", "chen", diminutive),
 	suffix("lein", "lein", diminutive),
 	suffix("erei", "erei", activity),
@@ -150,7 +146,7 @@ export const germanSuffixes: readonly GermanAffix[] = [
 	suffix("lich", "lich", having),
 	suffix("ig", "ig", having),
 	suffix("isch", "isch", having),
-	suffix("bar", "bar", 'able to be done as "{base}" names'),
+	suffix("bar", "bar", "able to be done as {base} names"),
 	suffix("sam"),
 	suffix("haft"),
 	suffix("los"),

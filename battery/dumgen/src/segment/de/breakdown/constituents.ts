@@ -102,7 +102,7 @@ import {
 	verbFirstPartRouteGuide,
 } from "./word-prompts.js";
 import {
-	noneQuestion,
+	citedWord,
 	senseChecked,
 	senseQuestion,
 	weighedOptions,
@@ -180,15 +180,18 @@ function linkedPieces(
 	return result;
 }
 
+/** How the sense check names a word: as cited (`das Rentier`), and its Kind. */
+type Sense = { readonly cited: string; readonly kind: string };
+
 /**
- * The analysis jev picks, or none; with `kind`, the word's, once its sense
- * is checked when the pick is contested (`word-senses.ts`).
+ * The analysis jev picks, or none; with `sense`, once its sense is checked
+ * when the pick is contested (`word-senses.ts`).
  */
 const chosenAnalysis = Effect.fnUntraced(function* (
 	analyses: readonly WordAnalysis[],
 	whole: Whole,
 	ask: Ask,
-	kind?: string,
+	sense?: Sense,
 ): Effect.fn.Return<WordAnalysis | undefined, AskFailure> {
 	const answers = yield* ask({
 		stage: "breakdown-analysis",
@@ -207,12 +210,11 @@ const chosenAnalysis = Effect.fnUntraced(function* (
 		answer.choice === "none"
 			? undefined
 			: analyses[Number(answer.choice.slice(1))];
-	if (kind === undefined) return picked;
+	if (sense === undefined) return picked;
 	return yield* senseChecked(
 		weighedOptions(analyses, answer.probabilities),
 		picked,
-		whole,
-		kind,
+		{ whole, ...sense },
 		ask,
 	);
 });
@@ -237,17 +239,17 @@ const withLocutionFront = Effect.fnUntraced(function* (
 	return noulOf(answers, "l_0") >= locutionFloor ? front.analysis : flat;
 });
 
-/** The analysis a word of Kind `kind` breaks down by, or none. */
+/** The analysis a word breaks down by, or none. */
 const analysisOf = Effect.fnUntraced(function* (
 	analyses: readonly WordAnalysis[],
 	whole: Whole,
-	kind: string,
+	sense: Sense,
 	ask: Ask,
 ): Effect.fn.Return<WordAnalysis | undefined, AskFailure> {
 	const [only] = analyses;
 	if (only === undefined) return undefined;
 	if (!only.pieces.some(({ role }) => role === "Hyphen"))
-		return yield* chosenAnalysis(analyses, whole, ask, kind);
+		return yield* chosenAnalysis(analyses, whole, ask, sense);
 	const analysis =
 		analyses.length === 1
 			? only
@@ -261,15 +263,16 @@ const wordConstituents = Effect.fnUntraced(function* (
 	input: BreakdownInput,
 	ask: Ask,
 ): Effect.fn.Return<Constituents, AskFailure> {
-	const { canonicalForm, kind } = input.reading.lemma;
+	const { canonicalForm, kind, coreFeatures } = input.reading.lemma;
 	const whole = wholeOf(input, "word");
 	const candidates = wordAnalyses(canonicalForm, kind);
+	const gender = "gender" in coreFeatures ? coreFeatures.gender : undefined;
 	const analysis = yield* analysisOf(
 		kind === "VERB"
 			? yield* withVerbBases(candidates, whole, ask)
 			: candidates,
 		whole,
-		kind,
+		{ cited: citedWord(canonicalForm, gender), kind },
 		ask,
 	);
 	if (analysis === undefined) return none;
@@ -319,8 +322,7 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	verbBaseQuestion("word", "…"),
 	wordQuestion("word", "…"),
 	nounQuestion("word", "…"),
-	senseQuestion({ pieces: [], label: "…" }, "word", "NOUN"),
-	noneQuestion("word", ["…"]),
+	senseQuestion({ pieces: [], label: "…" }, "…", "…", "NOUN"),
 	...germanSuffixes.flatMap(({ sense }) => (sense ? [sense] : [])),
 	...Object.values(hyphenPrefixGlosses),
 	locutionQuestion("wording", "…"),

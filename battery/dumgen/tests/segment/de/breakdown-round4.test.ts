@@ -7,6 +7,7 @@ import { germanConstituents } from "../../../src/segment/de/breakdown/constituen
 import { formCandidates } from "../../../src/segment/de/breakdown/forms.js";
 import { germanMorphemes } from "../../../src/segment/de/breakdown/morphemes.js";
 import type { WordAnalysis } from "../../../src/segment/de/breakdown/word-analyses.js";
+import { noneOption } from "../../../src/segment/de/breakdown/word-prompts.js";
 import {
 	bestContender,
 	contendersOf,
@@ -19,7 +20,7 @@ import { asked, noul, picked } from "./fake-judge.js";
 
 /**
  * A judge that weighs the analysis question by `weights` (labels to
- * weights, the rest 0), answers each sense question by the label it quotes
+ * weights, the rest 0), answers each sense question by the text it holds
  * (`fits`, else 0.1), and otherwise answers as `judgeWanting(...wanted)`.
  */
 function senseJudge(
@@ -50,15 +51,24 @@ function senseJudge(
 			return Object.fromEntries(
 				Object.entries(request.questions).map(([id, question]) => {
 					const text = String(question.instructions);
-					const fit = Object.entries(fits).find(([label]) =>
-						text.includes(` ${label}?`),
+					const fit = Object.entries(fits).find(([held]) =>
+						text.includes(held),
 					)?.[1];
 					return [id, noul(fit ?? 0.1)];
 				}),
 			) satisfies Answers;
 		return Effect.runPromise(fallback.ask(request));
 	});
-	return { ask, stages: () => requests.map(({ stage }) => stage) };
+	return {
+		ask,
+		stages: () => requests.map(({ stage }) => stage),
+		texts: () =>
+			requests.flatMap(({ questions }) =>
+				Object.values(questions).map(({ instructions }) =>
+					String(instructions),
+				),
+			),
+	};
 }
 
 const run = async (reading: BreakdownInput, judge: { readonly ask: Ask }) => {
@@ -126,7 +136,7 @@ describe("the sense check (proposal 1)", () => {
 	test("on a contested word, the contender that gives the sense wins", async () => {
 		const judge = senseJudge(
 			{ "Land + -ung (suffix)": 0.9, "Lan + dung": 0.03 },
-			{ "Lan + dung": 0.9 },
+			{ "Is it a Dung": 0.9 },
 			"r_0=Lexeme/NOUN",
 			"Lan",
 			"Dung",
@@ -135,6 +145,46 @@ describe("the sense check (proposal 1)", () => {
 			await run(input("Lexeme", "NOUN", "Landung", "🧪"), judge),
 		).toEqual(["Lan→Lexeme/NOUN:Lan", "dung→Lexeme/NOUN:Dung"]);
 		expect(judge.stages()).toContain("breakdown-senses");
+	});
+
+	test("a pick that passes its own sense test stands, however the others answer", async () => {
+		const judge = senseJudge(
+			{ "Land + -ung (suffix)": 0.9, "Lan + dung": 0.03 },
+			{ "Is it a Dung": 0.9, "made from Land-": 0.6 },
+			"Land",
+			"landen",
+		);
+		expect(
+			(await run(input("Lexeme", "NOUN", "Landung", "🛬"), judge))[1],
+		).toBe("ung→Morpheme/Suffix:-ung");
+	});
+
+	test("none wins when no analysis gives the sense, and the question names the article", async () => {
+		const judge = senseJudge(
+			{
+				"Hamm + -er (suffix)": 0.6,
+				"Ham + mer": 0.2,
+				[noneOption]: 0.15,
+			},
+			{},
+		);
+		expect(
+			await run(
+				{
+					reading: {
+						...input("Lexeme", "NOUN", "Hammer", "🔨").reading,
+						lemma: {
+							...input("Lexeme", "NOUN", "Hammer").reading.lemma,
+							coreFeatures: { gender: "Masc" },
+						},
+					},
+				} as BreakdownInput,
+				judge,
+			),
+		).toBe("NoConstituents");
+		expect(judge.texts().join(" ")).toContain(
+			"Think of der Hammer in the sense 🔨.",
+		);
 	});
 
 	test("an uncontested word asks no sense question", async () => {

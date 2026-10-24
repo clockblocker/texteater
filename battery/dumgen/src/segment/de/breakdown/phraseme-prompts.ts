@@ -13,16 +13,16 @@
  * are segment.inUnits's and stay shared.
  */
 export const phrasemeRouteGuide =
-	"Judge the part as the word it is inside this expression, not by its commonest use and not by the whole expression's Kind: the route above is the whole's, and a part keeps its own. Test it: a part that only qualifies another part of the expression keeps its own Kind, so an adverb stays ADV even when the whole works as a conjunction (immer in immer wenn). Only a word that itself opens a clause, an infinitive clause included, is SCONJ (statt in statt … zu), while the zu right before an infinitive is PART; a comparison word, wie or als, is CCONJ before a phrase and SCONJ before a clause, never ADP or ADV (als in mehr Schein als Sein); a word that stands for a noun phrase on its own, with no noun after it, is PRON, not DET (jeder in jeder für sich), and so is a question word asking for a thing or a person (wer), whatever follows it.";
+	"Judge the part by the role it plays inside this whole expression, not by its commonest use. That role is the part's own, not the whole expression's: the route above is the whole's Kind, and a part that only qualifies another part keeps its own Kind, so an adverb stays ADV even when the whole works as a conjunction (immer in immer wenn). A word that itself opens a clause, an infinitive clause included, is SCONJ (statt in statt … zu), while the zu right before an infinitive is PART; a comparison word, wie or als, is CCONJ before a phrase and SCONJ before a clause, never ADP or ADV (als in mehr Schein als Sein); a word that stands for a noun phrase on its own, with no noun after it, is PRON, not DET (jeder in jeder für sich), and so is a question word asking for a thing or a person (wer), whatever follows it.";
 
 /**
  * Whether a run inside a wording is a Locution of its own (#1241 round 4):
- * its test is a meaning its words don't add up to, outside this wording,
- * since a plain run inside an idiom weighed as high as a real one (no
- * floor separates them).
+ * its test is a whole phrase that keeps its fixed meaning outside this
+ * wording, since a plain run inside an idiom weighed as high as a real one
+ * under the old wording, whose example (vor allem) also primed one.
  */
 export const locutionQuestion = (key: string, reads: string) =>
-	`Inside \`${key}\`, are the words "${reads}" a fixed expression of their own, one dictionaries list as an idiom apart from \`${key}\`? Test it: used on its own in other sentences, "${reads}" must mean something its words don't add up to, as auf jeden Fall means certainly, not on each case. Answer no when the words keep their plain meanings or are cut out of a longer phrase (ins Gras in ins Gras beißen), however fixed the whole expression is.`;
+	`Inside \`${key}\`, is "${reads}" a fixed expression that dictionaries list as a headword or idiom of its own, used apart from \`${key}\` (auf jeden Fall)? Test it: it must be a whole phrase that can stand alone in other sentences with this same fixed meaning. Answer no for ordinary words that just combine here, for words cut out of a longer phrase, and for words fixed only inside this expression (ins Gras in ins Gras beißen).`;
 
 /**
  * What `sich` is to a verb in a wording, judged in the sense the verb has
