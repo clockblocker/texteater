@@ -10,8 +10,10 @@
  * into at most one prefix and one suffix from dumcorpus's closed affix
  * inventory around a Root of at least two letters; the Root is whatever
  * remains, bound or free. When there is more than the bare Root, jev picks
- * one split in one request, `breakdown-morphemes`. Which test confirms an
- * affix split is not decided (#1243), so the question names none.
+ * one split in one request, `breakdown-morphemes`. The question names the
+ * test that confirms an affix split (system ADR 0051, #1243): the affix is
+ * on the closed list, which code already ensures, and the DWDS
+ * Wortzerlegung cuts it, else the en.wiktionary etymology.
  */
 
 import {
@@ -128,7 +130,7 @@ const label = (pieces: readonly ProducedPiece[]) =>
 
 /** The split question; its example is no Breakdown case (#693). */
 export const morphemesInstructions =
-	"Which split of `word` into morphemes does school morphemic analysis (Wortbausteine, разбор по составу) give? A prefix or suffix is cut off only where it is one in this word; otherwise it stays inside the root (Geselle: gesell · e).";
+	"Which split of `word` into morphemes does school morphemic analysis (Wortbausteine, разбор по составу) give? A prefix or suffix is cut off only where the dictionary's word-formation analysis cuts it in this word: the DWDS Wortzerlegung, else the Wiktionary etymology. Otherwise it stays inside the root (Geselle: gesell · e).";
 
 /** German `segment.inMorphemes` on a single-word Lexeme. */
 export const germanMorphemes = Effect.fnUntraced(function* (

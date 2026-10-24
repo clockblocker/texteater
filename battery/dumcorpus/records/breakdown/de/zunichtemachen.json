@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "zunichtemachen",
+			"coreFeatures": {
+				"hasSepPrefix": "zunichte",
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "💥"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "zunichte",
+					"target": {
+						"language": "de",
+						"canonicalForm": "zunichte-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "machen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "machen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: zunichtemachen",
+				"url": "https://www.dwds.de/wb/zunichtemachen",
+				"supports": "The Wortzerlegung links machen only, and the spelling is joined (Regelwerk §34(1.3))"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "zunichte is a true particle on dumcorpus's closed list (#1241, 2026-10-24), so it links to its Prefix Morpheme zunichte-."
+	}
+}

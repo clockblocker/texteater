@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Himbeere",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🍓"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Him",
+					"target": {
+						"language": "de",
+						"canonicalForm": "him",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "beere",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Beere",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Himbeere",
+				"url": "https://www.dwds.de/wb/Himbeere",
+				"supports": "The Wortzerlegung links Beere only, and the Herkunft traces Him- to Hinde, 'Beere der Hinde'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A cranberry piece links to its Root Morpheme (#1241, 2026-10-24), so the morphemes walk stays unbroken: Him has no word of its own, and its Root Lemma him is glossed from its etymology, Hinde (ADR 0051)."
+	}
+}

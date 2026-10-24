@@ -27,11 +27,20 @@
  * calls raus- the umbrella over heraus- and hinaus-, a spelling of neither
  * (#1241).
  *
- * Left out until a verb needs them, as adverbs with a noun inside that DWDS
- * gives no affix entry: zugute, zunichte, zuteil, zustatten, vonstatten,
- * vorlieb, überhand. bevor (bevorstehen) is left out too, and so are the
- * einander adverbs DWDS writes apart from the verb (voneinander,
- * zueinander).
+ * The adverbs DWDS gives no verbal affix entry (dabei, dazwischen, entzwei,
+ * gegenüber, vorweg, zuvor, rückwärts, aufwärts, abwärts, vorwärts,
+ * beiseite, inne, umhin, überein, vorher, zuwider) are true particles too,
+ * as the user ruled on #1241 (2026-10-24): the Amtliches Regelwerk §34(1)
+ * names most of them as Verbpartikeln, their free form is an adverb (round-1
+ * Q6), and they are written attached to the verb.
+ *
+ * The rare particles are listed too (#1241, 2026-10-24), each checked
+ * against Duden and DWDS: the adverbs with a noun inside that DWDS gives no
+ * affix entry (zugute, zunichte, zuteil, zustatten, vonstatten, vorlieb,
+ * überhand), bevor (bevorstehen), the einander adverbs (voneinander,
+ * zueinander) and the clipped forms rum (rumkriegen), draus (drauskommen),
+ * drum (drumlegen) and drunter (drunterhalten). Dumgen keeps them in
+ * `unweighedParticles`, so its slots don't move.
  */
 export const germanSeparableParticles: ReadonlySet<string> = new Set([
 	"ab",
@@ -49,6 +58,7 @@ export const germanSeparableParticles: ReadonlySet<string> = new Set([
 	"beieinander",
 	"beisammen",
 	"beiseite", // no DWDS affix entry; bei + Seite, an adverb
+	"bevor", // no DWDS affix entry; bevorstehen, while bevorzugen is inseparable
 	"da",
 	"dabei", // no DWDS affix entry
 	"dagegen",
@@ -68,8 +78,11 @@ export const germanSeparableParticles: ReadonlySet<string> = new Set([
 	"dazwischen", // no DWDS affix entry
 	"dran",
 	"drauf",
+	"draus", // the dr- shorthand of daraus; drauskommen (DWDS)
 	"drin",
+	"drum", // the dr- shorthand of darum; drumbinden, drumlegen (Duden)
 	"drüber",
+	"drunter", // the dr- shorthand of darunter; drunterhalten (DWDS)
 	"durch",
 	"durcheinander",
 	"ein",
@@ -129,32 +142,42 @@ export const germanSeparableParticles: ReadonlySet<string> = new Set([
 	"rein",
 	"rüber",
 	"rückwärts", // no DWDS affix entry
+	"rum", // the r- shorthand of herum; DWDS splits rumkriegen rum- + kriegen
 	"runter",
 	"über",
 	"überein", // no DWDS affix entry; übereinstimmen
+	"überhand", // no DWDS affix entry; überhandnehmen
 	"übereinander",
 	"um",
 	"umher",
 	"umhin", // no DWDS affix entry; umhinkönnen
 	"unter",
 	"vor",
+	"voneinander", // voneinanderreißen (DWDS Wortbildung)
 	"voran",
 	"voraus",
 	"vorbei",
 	"vorher", // no DWDS affix entry; vorhersagen
+	"vorlieb", // no DWDS affix entry; vorliebnehmen
 	"vornüber",
 	"vorüber",
-	"vorwärts",
+	"vorwärts", // no DWDS affix entry; vorwärtsgehen
 	"vorweg", // no DWDS affix entry
+	"vonstatten", // no DWDS affix entry; vonstattengehen
 	"weg",
 	"weiter", // DWDS weiter-, for verbs of motion
 	"wider",
 	"wieder",
 	"zu",
+	"zueinander", // zueinanderfinden (DWDS, Regelwerk §34 E1)
+	"zugute", // no DWDS affix entry; zugutekommen
 	"zurecht",
 	"zurück",
 	"zusammen",
 	"zuvor", // no DWDS affix entry
+	"zunichte", // no DWDS affix entry; zunichtemachen
+	"zustatten", // no DWDS affix entry; zustattenkommen
+	"zuteil", // no DWDS affix entry; zuteilwerden
 	"zuwider", // no DWDS affix entry; zuwiderhandeln
 	"zwischen",
 ]);
@@ -211,8 +234,9 @@ type GermanLexemePartTarget = {
  * and stand are nouns (Amtliches Regelwerk §34(3); DWDS traces stattfinden
  * to the noun Statt 'place', not the preposition, and splits standhalten as
  * Stand + halten); kund and irre are the adjectives (DWDS lists kundtun and
- * irreführen among their formations). A part not listed may link to any
- * Lexeme; leid, ADJ leid or NOUN Leid, is waiting on the user.
+ * irreführen among their formations); leid is ADJ leid, as Duden and DWDS
+ * class it and the 2006 reform's lowercasing shows (#1241, 2026-10-24). A
+ * part not listed may link to any Lexeme.
  */
 export const germanLexemePartTargets: Readonly<
 	Record<string, GermanLexemePartTarget>
@@ -221,6 +245,7 @@ export const germanLexemePartTargets: Readonly<
 	irre: { kind: "ADJ", canonicalForm: "irre" },
 	kennen: { kind: "VERB", canonicalForm: "kennen" },
 	kund: { kind: "ADJ", canonicalForm: "kund" },
+	leid: { kind: "ADJ", canonicalForm: "leid" },
 	stand: { kind: "NOUN", canonicalForm: "Stand" },
 	statt: { kind: "NOUN", canonicalForm: "Statt" },
 	teil: { kind: "NOUN", canonicalForm: "Teil" },

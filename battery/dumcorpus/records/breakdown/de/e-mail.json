@@ -1,0 +1,67 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "E-Mail",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "📧"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "E",
+					"target": {
+						"language": "de",
+						"canonicalForm": "e-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "-"
+				},
+				{
+					"letters": "Mail",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Mail",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: E-Mail",
+				"url": "https://www.dwds.de/wb/E-Mail",
+				"supports": "The Wortzerlegung 2e- Mail"
+			},
+			{
+				"title": "DWDS: e-",
+				"url": "https://www.dwds.de/wb/e-",
+				"supports": "2e-, an affix in English loans and words built on their model, 'Synonym zu elektronisch'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "E links to DWDS's prefix 2e- ('kurz für elektronisch'), the hyphen is filler, and Mail links to its Lexeme (#1241, 2026-10-24)."
+	}
+}

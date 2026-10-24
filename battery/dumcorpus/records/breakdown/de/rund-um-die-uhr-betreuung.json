@@ -1,0 +1,71 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Rund-um-die-Uhr-Betreuung",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "⏰🤲"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Rund-um-die-Uhr",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "ADV",
+						"canonicalForm": "rund um die Uhr",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": "-"
+				},
+				{
+					"letters": "Betreuung",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Betreuung",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Uhr",
+				"url": "https://www.dwds.de/wb/Uhr",
+				"supports": "The Mehrwortausdruck rund um die Uhr, 'ununterbrochen, pausenlos'"
+			},
+			{
+				"title": "DWDS: Rund-um-die-Uhr-Betreuung",
+				"url": "https://www.dwds.de/wb/Rund-um-die-Uhr-Betreuung",
+				"supports": "No entry in DWDS's lexical sources"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A phrasal compound whose front phrase is a real Locution stays two parts (#1241, 2026-10-24): the Locution ADV rund um die Uhr and Betreuung."
+	}
+}

@@ -1,0 +1,79 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "aus dem Häuschen sein",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🤩"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "aus",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "aus",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "dem Häuschen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Häuschen",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "sein",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sein",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0040", "ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Häuschen",
+				"url": "https://www.dwds.de/wb/H%C3%A4uschen",
+				"supports": "The Mehrwortausdruck aus dem Häuschen sein; the Etymologie gives (ganz) aus dem Häuschen sein, with ganz optional"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The optional intensifier ganz stays out of the Canonical Form (#1241, 2026-10-24); where it occurs, de/modification-attests-partially handles it. The article is grouped with its noun (ADR 0040)."
+	}
+}

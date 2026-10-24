@@ -85,19 +85,36 @@ const letterFolds: Readonly<Record<string, string>> = {
 	ץ: "צ",
 };
 
-/** Text as shown letters compare to a Canonical Form: case, umlaut and hyphens aside. */
+/**
+ * Text as shown letters compare to a Canonical Form: case, umlaut, hyphens
+ * and spaces aside, so a hyphenated Locution part spells its wording
+ * (`Rund-um-die-Uhr` for `rund um die Uhr`).
+ */
 function comparable(text: string, language: Dumling.Language): string {
 	return foldCase(text, language)
-		.replaceAll("-", "")
+		.replace(/[-\s]/gu, "")
 		.replace(/[äöüךםןףץ]/gu, (letter) => letterFolds[letter] ?? letter);
 }
+
+/**
+ * Each language's reflexive forms of its reflexivity unit (ADR 0050): `dich`
+ * in `Trimm-dich-Pfad` links to PRON `sich`.
+ */
+const reflexiveForms: Partial<
+	Record<Dumling.Language, { lemma: string; forms: ReadonlySet<string> }>
+> = {
+	de: {
+		lemma: "sich",
+		forms: new Set(["mich", "mir", "dich", "dir", "uns", "euch", "sich"]),
+	},
+};
 
 /**
  * Whether a word's shown letters fit their target (ADR 0050): the target's
  * Canonical Form, compared case-insensitively and with umlauts and Hebrew
  * final forms folded, or a truncation of it, which covers a dropped final -e
  * (`Schul`), a verb stem (`Fahr`) and a blend's part (`br`, `unch`). A digit
- * stands for a numeral.
+ * stands for a numeral, and a reflexive form for the reflexivity unit.
  */
 function lettersFit(
 	letters: string,
@@ -105,6 +122,14 @@ function lettersFit(
 	language: Dumling.Language,
 ): boolean {
 	if (/^\p{Nd}+$/u.test(letters)) return target.kind === "NUM";
+	const reflexive = reflexiveForms[language];
+	if (
+		reflexive !== undefined &&
+		target.kind === "PRON" &&
+		target.canonicalForm === reflexive.lemma &&
+		reflexive.forms.has(foldCase(letters, language))
+	)
+		return true;
 	const shown = comparable(letters, language);
 	const form = comparable(target.canonicalForm, language);
 	return shown.length > 0 && (form.startsWith(shown) || form.endsWith(shown));

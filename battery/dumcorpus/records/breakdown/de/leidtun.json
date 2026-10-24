@@ -1,0 +1,70 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "leidtun",
+			"coreFeatures": {
+				"hasSepPrefix": "leid",
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "😔"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "leid",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "leid",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": "tun",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "tun",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: leidtun",
+				"url": "https://www.dwds.de/wb/leidtun",
+				"supports": "The Wortzerlegung leid tun, written together (Regelwerk §34(3))"
+			},
+			{
+				"title": "DWDS: leid",
+				"url": "https://www.dwds.de/wb/leid",
+				"supports": "leid is an Adjektiv (nur prädikativ), written together with tun (leidtun)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "leid is no true particle: it links to ADJ leid, as Duden and DWDS class it and as the 2006 reform's lowercasing shows (#1241, 2026-10-24)."
+	}
+}

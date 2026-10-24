@@ -1,0 +1,89 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Trimm-dich-Pfad",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🏃🌲"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Trimm",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "trimmen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				},
+				{
+					"letters": "-"
+				},
+				{
+					"letters": "dich",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "sich",
+						"coreFeatures": {
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"case": null,
+							"number": null,
+							"gender": null
+						}
+					}
+				},
+				{
+					"letters": "-"
+				},
+				{
+					"letters": "Pfad",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Pfad",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Trimm-dich-Pfad",
+				"url": "https://www.dwds.de/wb/Trimm-dich-Pfad",
+				"supports": "The Wortzerlegung trimmen dich Pfad, flat"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A phrasal compound with no stored inner unit is flat, every word a part (#1241, 2026-10-24): Trimm shows the verb stem of trimmen, and dich links to the reflexivity unit sich."
+	}
+}

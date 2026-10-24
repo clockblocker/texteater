@@ -69,10 +69,12 @@ export const articleForms: ReadonlySet<string> = new Set(
 
 /**
  * The true separable particles dumcorpus's closed list gained in #1241
- * (gegen, hinter, zwischen, vorher, inne, …). No lab round has weighed a
- * slot on them, and gegen, hinter and zwischen are split-adverb tails too
- * (da … gegen), so they open no slot and resolution offers none of them as
- * a prefix. An infixed zu still splits from them (innezuhalten).
+ * (gegen, hinter, zwischen, vorher, inne, …), and the rare ones the user
+ * ruled in on 2026-10-24 (zugute, zunichte, bevor, voneinander, rum, drum,
+ * …). No lab round has weighed a slot on them, and gegen, hinter and
+ * zwischen are split-adverb tails too (da … gegen), so they open no slot
+ * and resolution offers none of them as a prefix. An infixed zu still
+ * splits from them (innezuhalten).
  */
 export const unweighedParticles: ReadonlySet<string> = new Set([
 	"abhanden",
@@ -83,15 +85,19 @@ export const unweighedParticles: ReadonlySet<string> = new Set([
 	"aufwärts",
 	"beieinander",
 	"beisammen",
+	"bevor",
 	"dahinter",
 	"danieder",
 	"darauf",
-	"darüber",
 	"darunter",
+	"darüber",
 	"davor",
 	"dran",
 	"drauf",
+	"draus",
 	"drin",
+	"drum",
+	"drunter",
 	"drüber",
 	"einher",
 	"gegen",
@@ -109,11 +115,21 @@ export const unweighedParticles: ReadonlySet<string> = new Set([
 	"inne",
 	"nebeneinander",
 	"nebenher",
+	"rum",
+	"umhin",
 	"überein",
 	"übereinander",
-	"umhin",
+	"überhand",
+	"voneinander",
+	"vonstatten",
 	"vorher",
+	"vorlieb",
 	"vornüber",
+	"zueinander",
+	"zugute",
+	"zunichte",
+	"zustatten",
+	"zuteil",
 	"zuwider",
 	"zwischen",
 ]);

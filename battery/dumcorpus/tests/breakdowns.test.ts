@@ -40,6 +40,7 @@ describe("Breakdown Records", () => {
 		).toEqual([
 			["aufgabe", "Lexeme NOUN 📝", "source"],
 			["aus-allen-wolken-fallen", "Locution VERB 😲", "constituents"],
+			["aus-dem-haeuschen-sein", "Locution VERB 🤩", "constituents"],
 			["befreien", "Lexeme VERB 🕊", "constituents"],
 			["bratpfanne", "Lexeme NOUN 🍳", "constituents"],
 			[
@@ -55,6 +56,7 @@ describe("Breakdown Records", () => {
 			],
 			["dies-und-das", "Locution PRON 🧺", "constituents"],
 			["dumm-wie-bohnenstroh", "Locution ADJ 🤪", "constituents"],
+			["e-mail", "Lexeme NOUN 📧", "constituents"],
 			["einkaufen", "Lexeme VERB 🛒", "constituents"],
 			["entkernen", "Lexeme VERB 🍒", "constituents"],
 			["entlarven", "Lexeme VERB 🎭", "constituents"],
@@ -71,11 +73,13 @@ describe("Breakdown Records", () => {
 			["guten-morgen", "Locution INTJ 👋", "constituents"],
 			["guten-tag", "Locution INTJ 👋", "constituents"],
 			["hand-in-hand-gehen", "Locution VERB 🤝", "constituents"],
+			["himbeere", "Lexeme NOUN 🍓", "constituents"],
 			["in-betracht-ziehen", "Locution VERB 🤔", "constituents"],
 			["kaufen", "Lexeme VERB 💶", "morphemes"],
 			["kita", "Lexeme NOUN 🧸", "source"],
 			["kohlekraftwerk", "Lexeme NOUN 🏭", "constituents"],
 			["lauf", "Lexeme NOUN 🏃", "source"],
+			["leidtun", "Lexeme VERB 😔", "constituents"],
 			[
 				"morgenstund-hat-gold-im-mund",
 				"Saying Saying 🌅💰",
@@ -88,11 +92,13 @@ describe("Breakdown Records", () => {
 			["rentier-rentner", "Lexeme NOUN 💰", "constituents"],
 			["ruf", "Lexeme NOUN 📣", "source"],
 			["rufen", "Lexeme VERB 📣", "morphemes"],
+			["rund-um-die-uhr-betreuung", "Lexeme NOUN ⏰🤲", "constituents"],
 			["schreibtisch", "Lexeme NOUN ✍", "constituents"],
 			["sich-wie-zu-hause-fuehlen", "Locution VERB 🏠😌", "constituents"],
 			["so-oder-so", "Locution ADV 🔁", "constituents"],
 			["sonnenbrille", "Lexeme NOUN 🕶", "constituents"],
 			["spannen", "Lexeme VERB 🏹", "morphemes"],
+			["trimm-dich-pfad", "Lexeme NOUN 🏃🌲", "constituents"],
 			["uebung-macht-den-meister", "Saying Saying 🔁🏆", "constituents"],
 			["um-zu", "Locution SCONJ 🎯", "constituents"],
 			["uni", "Lexeme NOUN 🎓", "source"],
@@ -108,6 +114,7 @@ describe("Breakdown Records", () => {
 				"constituents",
 			],
 			["zu-hause", "Locution ADV 🏠", "constituents"],
+			["zunichtemachen", "Lexeme VERB 💥", "constituents"],
 		]);
 	});
 
