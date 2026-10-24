@@ -58,7 +58,7 @@ const suffix = (
  * -ig, -isch and -bar).
  */
 const agent =
-	"someone or something that does what {base} names, or that is marked by or deals with {base}";
+	"a person, a tool, a vehicle or a thing that does, carries or holds what {base} names";
 const quality =
 	"the state or quality of being what {base} names, or something that has it";
 const diminutive = "a small or dear {base}";

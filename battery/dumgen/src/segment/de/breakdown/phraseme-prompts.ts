@@ -13,7 +13,7 @@
  * are segment.inUnits's and stay shared.
  */
 export const phrasemeRouteGuide =
-	"Judge the part by the role it plays inside this whole expression, not by its commonest use. That role is the part's own, not the whole expression's: the route above is the whole's Kind, and a part that only qualifies another part keeps its own Kind, so an adverb stays ADV even when the whole works as a conjunction (immer in immer wenn). A word that itself opens a clause, an infinitive clause included, is SCONJ (statt in statt … zu), while the zu right before an infinitive is PART; a comparison word, wie or als, is CCONJ before a phrase and SCONJ before a clause, never ADP or ADV (als in mehr Schein als Sein); a word that stands for a noun phrase on its own, with no noun after it, is PRON, not DET (jeder in jeder für sich), and so is a question word asking for a thing or a person (wer), whatever follows it.";
+	"Judge the part by the role it plays inside this whole expression, not by its commonest use; the route above is the whole expression's, not the part's. A word that itself opens a clause, an infinitive clause included, is SCONJ (statt in statt … zu), and a word before it that only qualifies it keeps its own Kind (immer in immer wenn stays ADV), while the zu right before an infinitive is PART; a comparison word, wie or als, is CCONJ before a phrase and SCONJ before a clause, never ADP or ADV (als in mehr Schein als Sein); a word that stands for a noun phrase on its own, with no noun after it, is PRON, not DET (jeder in jeder für sich), and so is a question word asking for a thing or a person (wer), whatever follows it.";
 
 /**
  * Whether a run inside a wording is a Locution of its own (#1241 round 4):
