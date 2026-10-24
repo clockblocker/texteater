@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 
 import { query } from "./_generated/server";
-import { grammaticalLanguageValidator } from "./model/validators";
+import { languageValidator } from "./model/validators";
 import { loadRouteNote, routeNoteValidator } from "./modules/notes/routeNotes";
 
 export const get = query({
@@ -15,7 +15,7 @@ export const get = query({
 			}),
 			v.object({
 				kind: v.literal("Surface"),
-				language: grammaticalLanguageValidator,
+				language: languageValidator,
 				normalizedSurface: v.string(),
 				activeAnalysisKey: v.optional(v.id("surfaces")),
 				contextCursor: v.optional(v.string()),
