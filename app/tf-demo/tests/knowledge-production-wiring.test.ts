@@ -231,6 +231,21 @@ test("the production producer runs Dumgen's knowledge.produce through the deploy
 			trace.includes('"operation":"knowledge.produce"'),
 		),
 	).toBe(true);
+	// With no Source, the run breaks `Bank` down after it (ADR 0050): a
+	// bottom word, `bank · ∅`.
+	expect(accumulated?.knowledge).toMatchObject({
+		breakdown: {
+			morphemes: [
+				{ letters: "Bank", target: { kind: "Root" } },
+				{ letters: "", target: { kind: "Ending" } },
+			],
+		},
+	});
+	expect(
+		traces.some((trace) =>
+			trace.includes('"operation":"segment.inConstituents"'),
+		),
+	).toBe(true);
 	expect(traces.some((trace) => trace.includes('"payload"'))).toBe(false);
 	expect(await rows(t, "inspectionSteps")).toEqual([]);
 });

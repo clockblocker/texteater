@@ -51,6 +51,7 @@ import type * as model_lemmaRoutes from "../model/lemmaRoutes.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
 import type * as model_occurrenceCommit from "../model/occurrenceCommit.js";
 import type * as model_ownedRowCleanup from "../model/ownedRowCleanup.js";
+import type * as model_pendingLinks from "../model/pendingLinks.js";
 import type * as model_presentedDumling from "../model/presentedDumling.js";
 import type * as model_readingKnowledge from "../model/readingKnowledge.js";
 import type * as model_relationPublicationChunks from "../model/relationPublicationChunks.js";
@@ -162,6 +163,7 @@ declare const fullApi: ApiFromModules<{
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
   "model/occurrenceCommit": typeof model_occurrenceCommit;
   "model/ownedRowCleanup": typeof model_ownedRowCleanup;
+  "model/pendingLinks": typeof model_pendingLinks;
   "model/presentedDumling": typeof model_presentedDumling;
   "model/readingKnowledge": typeof model_readingKnowledge;
   "model/relationPublicationChunks": typeof model_relationPublicationChunks;

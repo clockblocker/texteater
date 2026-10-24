@@ -22,6 +22,7 @@ import {
 } from "../../server/linguisticIdentity";
 import { parseUnitAs } from "../../server/operationalParsing";
 import type { MutationCtx } from "../_generated/server";
+import { moveLinksToStoredLemma } from "../model/pendingLinks";
 import type { AnyRecord } from "../model/readingKnowledge";
 import {
 	attachPendingShadowReference,
@@ -341,6 +342,7 @@ async function applyChange(
 					coreFeatures: lemma.coreFeatures,
 				}));
 			await ctx.db.insert("dictionaryLemmas", { lemmaId });
+			await moveLinksToStoredLemma(ctx, lemma);
 			return;
 		}
 		case "createReading": {

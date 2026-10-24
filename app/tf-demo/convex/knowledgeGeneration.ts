@@ -38,6 +38,7 @@ import {
 import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
 import { scheduleKnowledgeGeneration } from "./model/knowledgeScheduling";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
+import { withStoredLinkTargets } from "./model/pendingLinks";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
 import { withoutBackPointingSource } from "./model/sourceDirection";
 import {
@@ -390,11 +391,15 @@ export const publish = internalMutation({
 		const ownerReading = parseGermanReading(args.reading);
 		// A Source whose base already names this Reading's Lemma as its own
 		// Source is dropped and counts as none (ADR 0050, #1279).
-		const changes = await withoutBackPointingSource(
+		// A link whose part is already stored names its Lemma (ADR 0050).
+		const changes = await withStoredLinkTargets(
 			ctx,
-			{ reading: ownerReading, key: attempt.ownerReadingKey },
-			publishable.changes.filter(
-				(change) => !published.has(canonicalJson(change)),
+			await withoutBackPointingSource(
+				ctx,
+				{ reading: ownerReading, key: attempt.ownerReadingKey },
+				publishable.changes.filter(
+					(change) => !published.has(canonicalJson(change)),
+				),
 			),
 		);
 

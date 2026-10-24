@@ -18,6 +18,7 @@ import {
 	spanHops,
 	withoutPayloads,
 } from "../server/inspectionCapture";
+import { asksBreakdown } from "../server/knowledgeBreakdown";
 import { missingKnowledgeRequest } from "../server/knowledgeCompletion";
 import type {
 	KnowledgeProducer,
@@ -114,6 +115,7 @@ type KnowledgePlan = {
 	readonly request: ReturnType<typeof generationRequestFor>;
 	readonly requestedKinds: RequestedKinds;
 	readonly asksSource: boolean;
+	readonly asksBreakdown: boolean;
 };
 
 /**
@@ -227,6 +229,10 @@ function planRun(input: ClaimedInput) {
 				"semanticRelations" in request ? request : {},
 			),
 			asksSource: asksSource(reading, {
+				topUpOnly: input.topUpOnly,
+				knowledge: input.existingKnowledge,
+			}),
+			asksBreakdown: asksBreakdown(reading, {
 				topUpOnly: input.topUpOnly,
 				knowledge: input.existingKnowledge,
 			}),
@@ -362,6 +368,8 @@ function produceKnowledge(run: KnowledgeRun, plan: KnowledgePlan) {
 						}),
 						...(plan.asksSource ? { source: null } : {}),
 					},
+					// The segmenters follow the Source (ADR 0050).
+					breakdown: plan.asksBreakdown,
 				},
 				{
 					// Dumgen waits for each contribution's publication.

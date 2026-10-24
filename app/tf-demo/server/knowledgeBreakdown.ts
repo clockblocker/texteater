@@ -1,0 +1,180 @@
+import { isRecord } from "common-utils";
+import { authoredFor, closedRoute } from "dumcorpus/inventories";
+import type * as Dumling from "dumling/types";
+import { parseReadingKnowledge } from "dumrel";
+import type * as Dumrel from "dumrel/types";
+import * as Effect from "effect/Effect";
+import type {
+	KnowledgeFailure,
+	KnowledgeProduction,
+} from "./knowledgeProduction";
+
+/**
+ * A Reading's Breakdown in a Knowledge run (ADR 0050, ADR 0051, Dumgen ADR
+ * 0007). The host asks Knowledge for the Source first, inside the run's
+ * `knowledge.produce`. A Reading with a Source runs neither segmenter, and
+ * one whose `source` failed or is Unresolved holds both. Any other runs
+ * `segment.inConstituents`, and a single-word Lexeme it finds none for is a
+ * bottom word, which `segment.inMorphemes` splits. Each piece links to a
+ * Unit Shadow, so nothing is generated for a part the learner hasn't met
+ * (D20). The Breakdown stays outside the coverage request, as the Source
+ * does: a failure leaves the Reading Partial, and its retry asks again.
+ */
+
+/** The Families whose Readings have a Breakdown; a Morpheme or Foreign one has none. */
+const BREAKDOWN_FAMILIES: ReadonlySet<string> = new Set([
+	"Lexeme",
+	"Locution",
+	"Saying",
+]);
+
+/**
+ * Whether one Knowledge run asks for the Reading's Breakdown: a base run of
+ * a Lexeme, Locution or Saying that stores neither a Breakdown nor a
+ * Source. An authored or Closed Route member carries authored Breakdowns,
+ * so neither segmenter runs on it (ADR 0021).
+ */
+export function asksBreakdown(
+	reading: { readonly lemma: Dumling.Lemma<"de"> },
+	options: { readonly topUpOnly: boolean; readonly knowledge: unknown },
+): boolean {
+	const { lemma } = reading;
+	if (options.topUpOnly || !BREAKDOWN_FAMILIES.has(lemma.family))
+		return false;
+	if (closedRoute(lemma) || authoredFor(lemma).length > 0) return false;
+	const stored = isRecord(options.knowledge) ? options.knowledge : {};
+	if (stored.source !== undefined) return false;
+	const breakdown = isRecord(stored.breakdown) ? stored.breakdown : {};
+	return (
+		breakdown.constituents === undefined &&
+		breakdown.morphemes === undefined
+	);
+}
+
+/** What `knowledge.produce` answered for the Source decides whether the segmenters run. */
+export function segmentsAfterSource(
+	production: Pick<KnowledgeProduction, "changes" | "failures">,
+): boolean {
+	return (
+		!production.failures.some(({ aspect }) => aspect === "source") &&
+		!production.changes.some(
+			(change) => change.aspect === "source" && change.kind !== "Retract",
+		)
+	);
+}
+
+/** One produced piece: shown letters and, unless filler, a Unit Shadow. */
+type ProducedPiece = {
+	readonly letters: string;
+	readonly target?: Dumrel.UnitShadow;
+};
+
+/** A model failure as Dumgen's operations report it. */
+type ModelFailure = {
+	readonly _tag: "ProviderFailure" | "InvalidModelOutput";
+	readonly message: string;
+};
+
+/** The two segmenters a run reaches, Dumgen's in production and fakes in tests. */
+export type Segmenters<R> = {
+	readonly inConstituents: (input: {
+		readonly reading: Dumling.Reading<"de">;
+		readonly sentence?: string;
+	}) => Effect.Effect<
+		| {
+				readonly kind: "Constituents";
+				readonly pieces: readonly ProducedPiece[];
+		  }
+		| { readonly kind: "NoConstituents" },
+		ModelFailure,
+		R
+	>;
+	readonly inMorphemes: (input: {
+		readonly reading: Dumling.Reading<"de">;
+		readonly sentence?: string;
+	}) => Effect.Effect<readonly ProducedPiece[], ModelFailure, R>;
+};
+
+type BreakdownPart = "constituents" | "morphemes";
+type Produced = Pick<KnowledgeProduction, "changes" | "failures">;
+
+function failed(
+	part: BreakdownPart,
+	code: KnowledgeFailure["code"],
+	message: string,
+): Produced {
+	return {
+		changes: [],
+		failures: [{ aspect: "breakdown", leaf: part, code, message }],
+	};
+}
+
+/**
+ * One half of the Breakdown as a change, once Dumrel accepts it for the
+ * Reading: its letters spell the Canonical Form back and its targets fit
+ * (ADR 0050). A rejected split is an unusable answer, so the rest of the
+ * run still publishes.
+ */
+function contributed(
+	reading: Dumling.Reading<"de">,
+	part: BreakdownPart,
+	pieces: readonly ProducedPiece[],
+): Produced {
+	const value = pieces.map(({ letters, target }) =>
+		target ? { letters, target } : { letters },
+	);
+	const checked = parseReadingKnowledge({
+		source: reading,
+		knowledge: { breakdown: { [part]: value } },
+	});
+	if (!checked.success)
+		return failed(part, "InvalidModelOutput", checked.error.message);
+	return {
+		changes: [
+			{ kind: "Contribute", aspect: "breakdown", part, value },
+		] as unknown as KnowledgeProduction["changes"],
+		failures: [],
+	};
+}
+
+/** A bottom word's morphemes are split only on a single-word Lexeme. */
+const isSingleWordLexeme = (lemma: Dumling.Lemma<"de">) =>
+	lemma.family === "Lexeme" && !/\s/u.test(lemma.canonicalForm);
+
+/**
+ * The Breakdown changes and failures for a Reading the run found no Source
+ * for. A failed call is a failure of its part, never the run's error.
+ */
+export function produceBreakdown<R>(
+	segmenters: Segmenters<R>,
+	input: {
+		readonly reading: Dumling.Reading<"de">;
+		readonly sentence?: string;
+	},
+): Effect.Effect<Produced, never, R> {
+	const asFailure = (part: BreakdownPart) => (error: ModelFailure) =>
+		Effect.succeed(failed(part, error._tag, error.message));
+	return segmenters.inConstituents(input).pipe(
+		Effect.flatMap(
+			(constituents): Effect.Effect<Produced, ModelFailure, R> => {
+				if (constituents.kind === "Constituents")
+					return Effect.succeed(
+						contributed(
+							input.reading,
+							"constituents",
+							constituents.pieces,
+						),
+					);
+				if (!isSingleWordLexeme(input.reading.lemma))
+					return Effect.succeed({ changes: [], failures: [] });
+				return segmenters.inMorphemes(input).pipe(
+					Effect.map((pieces) =>
+						contributed(input.reading, "morphemes", pieces),
+					),
+					Effect.catch(asFailure("morphemes")),
+				);
+			},
+		),
+		Effect.catch(asFailure("constituents")),
+	);
+}

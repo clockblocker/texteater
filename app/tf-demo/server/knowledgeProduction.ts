@@ -27,6 +27,7 @@ export type KnowledgeFailure = {
 		| "semanticRelations"
 		| "valency"
 		| "source"
+		| "breakdown"
 		| "locutionType"
 		| "sayingType"
 		| "formulaRole"
@@ -53,7 +54,8 @@ export type KnowledgeProduction = {
  * One run's input, `knowledge.produce`'s: the occurrence's Encounter and
  * Attestation, whose `valencyEvidence` is the attested government, its
  * Reading, whether the occurrence created the Reading (`New`) or reused it
- * (`TopUp`), and what to produce.
+ * (`TopUp`), what to produce, and whether to break the Reading down after
+ * its Source (`breakdown`, `knowledgeBreakdown.ts`).
  */
 export type KnowledgeInput = {
 	readonly encounter: ClickEncounter;
@@ -61,6 +63,7 @@ export type KnowledgeInput = {
 	readonly attestation: Dumling.Attestation<"de">;
 	readonly origin: "New" | "TopUp";
 	readonly request: KnowledgeRequest;
+	readonly breakdown: boolean;
 };
 
 /**
