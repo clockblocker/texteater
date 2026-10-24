@@ -21,9 +21,12 @@
  *   `sich` stays a part of its own, `sich den Kopf zerbrechen`).
  *
  * Every part's route and Canonical Form then come from `targets.ts`, and a
- * compound's linking element from its first part's form (`interfix.ts`).
+ * compound's linking element from its first part's form (`interfix.ts`). A
+ * separable verb's first part whose Lexeme dumcorpus rules
+ * (`germanLexemePartTargets`) is pinned to it, unasked.
  */
 import type { Questions } from "@typesafe-ai/sdk";
+import { germanLexemePartTargets } from "dumcorpus/inventories";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import {
@@ -41,7 +44,7 @@ import {
 	type Constituents,
 	type ProducedPiece,
 } from "../../breakdown.js";
-import { allRoutes, type RouteKey } from "../routes.js";
+import { allRoutes, checkedRouteKey, type RouteKey } from "../routes.js";
 import { interfixOf } from "./interfix.js";
 import {
 	type LocutionCandidate,
@@ -177,6 +180,37 @@ function linkedPieces(
 const phrasemeRouteGuide =
 	"Judge the part by the role it plays inside this whole expression, not by its commonest use: a word that opens a clause, an infinitive clause included, is SCONJ (statt in statt … zu); a comparison word, wie or als, is CCONJ before a phrase and SCONJ before a clause, never ADP or ADV (als in mehr Schein als Sein); a word that stands for a noun phrase on its own, with no noun after it, is PRON, not DET (jeder in jeder für sich).";
 
+/**
+ * The first part of a verb cut into two words, pinned to the Lexeme
+ * dumcorpus rules for it (ADR 0050, #1241): `weh` in wehtun is ADJ weh,
+ * though its letters open wehen. The closed inventory decides, as it does
+ * particle against Lexeme, so jev is not asked its route or headword.
+ * Undefined for a part it doesn't list, or another analysis.
+ */
+function ruledVerbFirstPart(
+	analysis: WordAnalysis,
+	kind: string,
+): OpenPart | undefined {
+	const [first, ...rest] = analysis.pieces;
+	if (
+		kind !== "VERB" ||
+		first?.role !== "Word" ||
+		rest.length !== 1 ||
+		rest[0]?.role !== "Word"
+	)
+		return undefined;
+	const folded = first.letters.toLocaleLowerCase("de");
+	const target = Object.hasOwn(germanLexemePartTargets, folded)
+		? germanLexemePartTargets[folded]
+		: undefined;
+	if (target === undefined) return undefined;
+	return {
+		reads: first.letters,
+		routes: [checkedRouteKey(`Lexeme/${target.kind}`)],
+		forms: [target.canonicalForm],
+	};
+}
+
 /** The analysis jev picks, or none. */
 const chosenAnalysis = Effect.fnUntraced(function* (
 	analyses: readonly WordAnalysis[],
@@ -257,7 +291,9 @@ const wordConstituents = Effect.fnUntraced(function* (
 		kind === "NOUN" &&
 		analysis.pieces.length === 2 &&
 		analysis.pieces.every(({ role }) => role === "Word");
+	const ruled = ruledVerbFirstPart(analysis, kind);
 	const open = analysis.pieces.flatMap((piece, index): OpenPart[] => {
+		if (index === 0 && ruled !== undefined) return [ruled];
 		if (piece.role === "Phrase")
 			return [
 				{

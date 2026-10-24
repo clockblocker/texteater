@@ -220,6 +220,7 @@ export const germanSeparableLexemeParts: ReadonlySet<string> = new Set([
 	"übrig",
 	"voll",
 	"wahr",
+	"weh",
 ]);
 
 /** The Lexeme a separable first part links to: its Kind and Canonical Form. */
@@ -235,7 +236,12 @@ type GermanLexemePartTarget = {
  * to the noun Statt 'place', not the preposition, and splits standhalten as
  * Stand + halten); kund and irre are the adjectives (DWDS lists kundtun and
  * irreführen among their formations); leid is ADJ leid, as Duden and DWDS
- * class it and the 2006 reform's lowercasing shows (#1241, 2026-10-24). A
+ * class it and the 2006 reform's lowercasing shows (#1241, 2026-10-24); weh
+ * is ADJ weh, not the verb wehen its letters also open: DWDS splits wehtun
+ * as 2weh (Adjektiv) + tun (https://www.dwds.de/wb/wehtun), and Duden
+ * classes weh an Adjektiv with weh tun among its uses
+ * (https://www.duden.de/rechtschreibung/weh_traurig_verwundet_schmerzhaft)
+ * (#1241). Dumgen pins a listed part to its target without asking jev. A
  * part not listed may link to any Lexeme.
  */
 export const germanLexemePartTargets: Readonly<
@@ -249,6 +255,7 @@ export const germanLexemePartTargets: Readonly<
 	stand: { kind: "NOUN", canonicalForm: "Stand" },
 	statt: { kind: "NOUN", canonicalForm: "Statt" },
 	teil: { kind: "NOUN", canonicalForm: "Teil" },
+	weh: { kind: "ADJ", canonicalForm: "weh" },
 };
 
 /**

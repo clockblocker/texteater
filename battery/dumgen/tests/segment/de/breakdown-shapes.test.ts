@@ -52,8 +52,10 @@ describe("a cranberry piece links to its Root (ADR 0050, ADR 0051)", () => {
 	});
 
 	test("only a noun's first part is offered as one, never a head, a verb's or an adjective's part", async () => {
-		const verb = judgeWanting("r_0=Lexeme/ADJ", "weh + tun", "weh");
-		await run(input("Lexeme", "VERB", "wehtun"), verb);
+		// eislaufen (DWDS: eisgelaufen, eiszulaufen): eis is no listed part, so jev is asked.
+		const verb = judgeWanting("eis + laufen", "r_0=Lexeme/NOUN", "Eis");
+		await run(input("Lexeme", "VERB", "eislaufen"), verb);
+		expect(verb.stages()).toContain("breakdown-routes");
 		expect(offered(verb, "breakdown-routes")).not.toContain(
 			"Morpheme/Root",
 		);
@@ -171,8 +173,8 @@ describe("a verb's head may be tun, German's one infinitive of three letters", (
 	});
 
 	test("a verb's first part is judged as a word written apart, not as a verb's stem", async () => {
-		const judge = judgeWanting("weh + tun", "r_0=Lexeme/ADJ", "weh", "tun");
-		await run(input("Lexeme", "VERB", "wehtun"), judge);
+		const judge = judgeWanting("eis + laufen", "r_0=Lexeme/NOUN", "Eis");
+		await run(input("Lexeme", "VERB", "eislaufen"), judge);
 		const [routes] = judge
 			.requests()
 			.filter(({ stage }) => stage === "breakdown-routes");
@@ -184,5 +186,56 @@ describe("a verb's head may be tun, German's one infinitive of three letters", (
 	test("no other three-letter verb head is offered", () => {
 		expect(labels("verraten", "VERB")).not.toContain("verra + ten");
 		expect(labels("einladen", "VERB")).not.toContain("einla + den");
+	});
+});
+
+describe("a verb's first part dumcorpus lists is pinned to its ruled Lexeme (#1241)", () => {
+	/** Every question id the judge was asked at a stage. */
+	const askedIds = (judge: ReturnType<typeof judgeWanting>, stage: string) =>
+		judge
+			.requests()
+			.filter((request) => request.stage === stage)
+			.flatMap((request) => Object.keys(request.questions));
+
+	// DWDS: wehtun, Wortzerlegung "2weh" (Adjektiv) + "tun"; jev read wehen.
+	test("weh in wehtun is ADJ weh, whatever jev would say", async () => {
+		const judge = judgeWanting(
+			"weh + tun",
+			"r_0=Lexeme/VERB",
+			"wehen",
+			"tun",
+		);
+		expect(
+			await run(input("Lexeme", "VERB", "wehtun", "🤕"), judge),
+		).toEqual(["weh→Lexeme/ADJ:weh", "tun→Lexeme/VERB:tun"]);
+		expect(askedIds(judge, "breakdown-routes")).toEqual([]);
+		expect(askedIds(judge, "breakdown-forms")).not.toContain("f_0");
+	});
+
+	// DWDS: kennenlernen, Wortzerlegung "kennen" + "lernen".
+	test("kennen in kennenlernen is VERB kennen, unasked", async () => {
+		const judge = judgeWanting(
+			"kennen + lernen",
+			"r_0=Lexeme/ADJ",
+			"lernen",
+		);
+		expect(
+			await run(input("Lexeme", "VERB", "kennenlernen", "🤝"), judge),
+		).toEqual(["kennen→Lexeme/VERB:kennen", "lernen→Lexeme/VERB:lernen"]);
+		expect(askedIds(judge, "breakdown-routes")).toEqual([]);
+	});
+
+	test("a listed part that is no verb's first part is still asked", async () => {
+		// fest as a noun's first part: Festland, DWDS Wortzerlegung "fest" + "Land".
+		const judge = judgeWanting(
+			"Fest + land",
+			"r_0=Lexeme/ADJ",
+			"fest",
+			"Land",
+		);
+		expect(
+			await run(input("Lexeme", "NOUN", "Festland", "🏝"), judge),
+		).toEqual(["Fest→Lexeme/ADJ:fest", "land→Lexeme/NOUN:Land"]);
+		expect(askedIds(judge, "breakdown-routes")).toContain("r_0");
 	});
 });
