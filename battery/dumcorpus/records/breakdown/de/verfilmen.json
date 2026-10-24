@@ -56,6 +56,6 @@
 		]
 	},
 	"notes": {
-		"rationale": "DWDS splits it ver- + filmen, the prefix and the verb, not ver- + Film + en: a base verb exists, so the prefix + noun + ending analysis doesn't apply (ADR 0050)."
+		"rationale": "DWDS splits it ver- + filmen, the prefix and the verb, not ver- + Film + en, and its Wortzerlegung decides the bracketing (ADR 0050). That a verb filmen exists doesn't decide it: DWDS splits verkabeln ver- + Kabel though kabeln exists."
 	}
 }

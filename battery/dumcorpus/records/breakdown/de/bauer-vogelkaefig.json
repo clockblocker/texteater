@@ -9,7 +9,7 @@
 			"kind": "NOUN",
 			"canonicalForm": "Bauer",
 			"coreFeatures": {
-				"gender": "Neut"
+				"gender": { "mixed": ["Masc", "Neut"] }
 			}
 		},
 		"emojiDescription": "🐦"
@@ -40,16 +40,21 @@
 	},
 	"sources": {
 		"adrs": ["ADR-0050", "ADR-0051"],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/noun-gender-in-free-variation",
+				"hash": "232a2eebe2947abc"
+			}
+		],
 		"references": [
 			{
 				"title": "DWDS: Bauer",
 				"url": "https://www.dwds.de/wb/Bauer",
-				"supports": "No Wortzerlegung for das Bauer, the birdcage; Herkunft ahd. būr 'Wohnung, Vorratshaus' (8th c.), not from bauen"
+				"supports": "²Bauer, Substantiv (Neutrum, Maskulinum), the birdcage, has no Wortzerlegung; Herkunft ahd. būr 'Wohnung, Vorratshaus' (8th c.), a Germanic noun *būra- from the root of bauen, not built from the verb"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "The birdcage, das Bauer. DWDS gives this homograph no Wortzerlegung, so it is a bottom word with no Constituents: the Root bauer and the zero ending (ADR 0051). der Bauer, the farmer, splits bauen + -er (ADR 0050: the Reading owns the split)."
+		"rationale": "The birdcage, das or der Bauer: Duden gives das, auch: der, and DWDS Neutrum, Maskulinum, in one sense, so its Core gender is mixed Masc and Neut (de/noun-gender-in-free-variation; judges agreed on #1241). DWDS gives this homograph no Wortzerlegung, so it is a bottom word with no Constituents: the Root bauer and the zero ending (ADR 0051). der Bauer, the farmer, splits bauen + -er (ADR 0050: the Reading owns the split)."
 	}
 }
