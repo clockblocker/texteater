@@ -1,0 +1,597 @@
+{
+  "round": "2026-10-24-breakdown-round-3",
+  "note": "Read offline from the round's cached jev answers by replaying each case through production's segmenter (no spend). Weights are jev's probabilities per repetition. H = a case in the fresh held-out set breakdown-heldout-2026-10-24b; B = a tuning case. Prompts did not change this round.",
+  "spend": {
+    "runs": [
+      {
+        "runId": "0c38cdc1-84ef-4a5f-99b3-e3df1ca21662",
+        "experiment": "segment-in-constituents/de:heldout",
+        "budget": 200000,
+        "freshInputTokens": 127678,
+        "freshRequests": 181
+      },
+      {
+        "runId": "01aae1c8-d31f-4d58-b0a5-0d69757b0c35",
+        "experiment": "segment-in-constituents/de:breakdown",
+        "budget": 340000,
+        "freshInputTokens": 224004,
+        "freshRequests": 222
+      },
+      {
+        "runId": "726ed309-ceff-4986-b1be-b647521e99b7",
+        "experiment": "segment-in-morphemes/de:breakdown",
+        "budget": 10000,
+        "freshInputTokens": 5355,
+        "freshRequests": 12
+      }
+    ],
+    "roundCap": 550000,
+    "freshInputTokens": 357037,
+    "usd": 0.015,
+    "usdPerMillionInput": 0.042,
+    "standingGrant": {
+      "usd": 1,
+      "from": "round 3",
+      "spentUsd": 0.015,
+      "leftUsd": 0.985,
+      "note": "Counted from round 3 only; the prep checks before the grant are not counted."
+    },
+    "budgetStop": "No run reached its budget (64%, 66% and 54% of it), so the stop never fired and nothing overshot. The in-flight reserve was not exercised live."
+  },
+  "projection": {
+    "note": "Projected = exact cached-repetition tokens + estimated tokens x 1.25. Raw = the same without the margin.",
+    "sets": [
+      {
+        "experiment": "segment-in-constituents/de:heldout",
+        "projected": 176074,
+        "raw": 140859,
+        "actual": 127678,
+        "actualOverProjected": 0.725,
+        "actualOverRaw": 0.906,
+        "requestsProjected": 216,
+        "requestsActual": 181
+      },
+      {
+        "experiment": "segment-in-constituents/de:breakdown",
+        "projected": 318834,
+        "raw": 263372,
+        "actual": 224004,
+        "actualOverProjected": 0.703,
+        "actualOverRaw": 0.851,
+        "requestsProjected": 313,
+        "requestsActual": 222
+      },
+      {
+        "experiment": "segment-in-morphemes/de:breakdown",
+        "projected": 2606,
+        "raw": 2085,
+        "actual": 5355,
+        "actualOverProjected": 2.055,
+        "actualOverRaw": 2.568,
+        "requestsProjected": 12,
+        "requestsActual": 12,
+        "pricedFrom": "3 characters per token (no stage-tagged ledger line yet); actual 1.17 characters per token"
+      }
+    ],
+    "byStage": {
+      "heldout": {
+        "breakdown-analysis": {
+          "requests": [
+            45,
+            45
+          ],
+          "tokens": [
+            34656,
+            34926
+          ]
+        },
+        "breakdown-routes": {
+          "requests": [
+            63,
+            51
+          ],
+          "tokens": [
+            58920,
+            61176
+          ]
+        },
+        "breakdown-words": {
+          "requests": [
+            39,
+            24
+          ],
+          "tokens": [
+            13050,
+            8667
+          ]
+        },
+        "breakdown-forms": {
+          "requests": [
+            54,
+            46
+          ],
+          "tokens": [
+            26208,
+            17062
+          ]
+        },
+        "breakdown-locutions": {
+          "requests": [
+            15,
+            15
+          ],
+          "tokens": [
+            8025,
+            5847
+          ]
+        }
+      },
+      "breakdown": {
+        "breakdown-analysis": {
+          "requests": [
+            43,
+            43
+          ],
+          "tokens": [
+            32469,
+            32451
+          ]
+        },
+        "breakdown-routes": {
+          "requests": [
+            113,
+            96
+          ],
+          "tokens": [
+            175097,
+            161118
+          ]
+        },
+        "breakdown-words": {
+          "requests": [
+            67,
+            43
+          ],
+          "tokens": [
+            23800,
+            15409
+          ]
+        },
+        "breakdown-forms": {
+          "requests": [
+            82,
+            32
+          ],
+          "tokens": [
+            28485,
+            11505
+          ]
+        },
+        "breakdown-locutions": {
+          "requests": [
+            8,
+            8
+          ],
+          "tokens": [
+            3521,
+            3521
+          ]
+        }
+      },
+      "format": "[raw projected, actual]"
+    },
+    "reading": "Per-request prices are close where the stage is always asked (analysis within 1%, routes within 4% per request). The overcount is in request counts of the gated stages: the projection's stand-in answers open every words, routes and forms request, and real answers close many (forms 82 projected against 32 sent). The morphemes stage had no calibration and was priced 2.6x low."
+  },
+  "failuresByCause": [
+    {
+      "cause": "A. Sense ignored in the analysis",
+      "cases": [
+        {
+          "case": "bauer-vogelkaefig 🐦",
+          "set": "H",
+          "gold": "none",
+          "returned": "Bau + -er",
+          "weights": "Bau + -er 0.70 to 0.79, none 0.17 to 0.28"
+        },
+        {
+          "case": "wachstube-wachstube 🕯",
+          "set": "B",
+          "gold": "Wachs + tube",
+          "returned": "Wach + stube",
+          "weights": "0.67 to 0.69 against 0.26 to 0.28"
+        },
+        {
+          "case": "rentier-ren 🦌",
+          "set": "B",
+          "gold": "Ren + tier",
+          "returned": "Rent + -ier",
+          "weights": "Rent + -ier 0.72 to 0.73, Ren + tier 0.03"
+        },
+        {
+          "case": "gruendung-gruenduenger 🌱",
+          "set": "B",
+          "gold": "Grün + dung",
+          "returned": "Gründ + -ung",
+          "weights": "Gründ + -ung 0.88, Grün + dung 0.03 to 0.04"
+        },
+        {
+          "case": "leiter-sprossenleiter 🪜",
+          "set": "B",
+          "gold": "none",
+          "returned": "Leit + -er",
+          "weights": "Leit + -er 0.52 to 0.60, none 0.21 to 0.26"
+        },
+        {
+          "case": "laster-untugend 😈",
+          "set": "B",
+          "exact": "2/3",
+          "gold": "none",
+          "returned": "rep 3 Last + -er",
+          "weights": "none 0.47 / 0.51 / 0.43, Last + -er 0.42 / 0.38 / 0.45"
+        }
+      ]
+    },
+    {
+      "cause": "D. Route of a base that spells a noun and a verb stem",
+      "cases": [
+        {
+          "case": "bauer-landwirt 🧑‍🌾",
+          "set": "H",
+          "gold": "VERB bauen + -er",
+          "returned": "NOUN Bau + -er",
+          "weights": "NOUN 0.52 to 0.59, VERB 0.20 to 0.24, PROPN 0.20 to 0.28"
+        },
+        {
+          "case": "steuermann",
+          "set": "H",
+          "exact": "1/3",
+          "gold": "VERB steuern",
+          "returned": "NOUN Steuer (reps 2, 3)",
+          "weights": "VERB 0.55 / 0.47 / 0.42"
+        },
+        {
+          "case": "erbrecht",
+          "set": "B",
+          "gold": "VERB erben",
+          "returned": "NOUN Erbe",
+          "weights": "NOUN 0.67 to 0.72, VERB 0.28 to 0.32 (the word gate kept Root out: Erb 0.69 to 0.72)"
+        }
+      ]
+    },
+    {
+      "cause": "D'. Route of a suffix base that is no noun",
+      "cases": [
+        {
+          "case": "leiter-leiten 👔",
+          "set": "B",
+          "gold": "VERB leiten + -er",
+          "returned": "NOUN Leit + -er",
+          "weights": "NOUN 0.80 to 0.83; forms then keep Leit 0.82 to 0.85"
+        },
+        {
+          "case": "messer-messen 📏",
+          "set": "B",
+          "gold": "VERB messen + -er",
+          "returned": "NOUN Mess + -er",
+          "weights": "NOUN 0.91; forms Mess 0.88 to 0.90"
+        }
+      ]
+    },
+    {
+      "cause": "B. The verb-base gate rejects a rare verb",
+      "cases": [
+        {
+          "case": "vergiften",
+          "set": "H",
+          "gold": "ver- + giften (DWDS)",
+          "returned": "ver- + Gift + en",
+          "weights": "is giften a verb: 0.37 / 0.35 / 0.33. befreien's freien (no verb) got 0.31 to 0.33, so no threshold separates them"
+        }
+      ]
+    },
+    {
+      "cause": "C. Citation form of a part",
+      "cases": [
+        {
+          "case": "was-weiss-ich",
+          "set": "H",
+          "gold": "weiß → VERB wissen",
+          "returned": "weiß → weißen",
+          "weights": "forms offered only weißen 0.55 and weeßen 0.45: code builds verb headwords from the letters, so an irregular present (weiß ← wissen) has no candidate"
+        },
+        {
+          "case": "rentier-rentner 💰",
+          "set": "B",
+          "gold": "Rent → Rente",
+          "returned": "Rent → Rent",
+          "weights": "Rent 0.78 to 0.84, Rente 0.16 to 0.22 (the deferred -e half of proposal 2)"
+        },
+        {
+          "case": "trimm-dich-pfad",
+          "set": "B",
+          "exact": "2/3",
+          "gold": "dich → sich",
+          "returned": "rep 3 dich",
+          "weights": "sich 0.53 / 0.51 / 0.48"
+        }
+      ]
+    },
+    {
+      "cause": "E. Kind of a phraseme part",
+      "cases": [
+        {
+          "case": "kaum-dass",
+          "set": "H",
+          "gold": "kaum ADV",
+          "returned": "kaum SCONJ",
+          "weights": "SCONJ 0.62 to 0.64, ADV 0.35 to 0.37: the part takes the whole Locution's Kind"
+        },
+        {
+          "case": "rund-um-die-uhr-betreuung",
+          "set": "B",
+          "exact": "2/3",
+          "gold": "Locution/ADV",
+          "returned": "rep 3 Locution/ADJ",
+          "weights": "ADV 0.46 / 0.50 / 0.43, ADJ 0.39 / 0.37 / 0.45"
+        }
+      ]
+    },
+    {
+      "cause": "F. Inner Locution",
+      "cases": [
+        {
+          "case": "alles-in-allem",
+          "set": "H",
+          "gold": "flat: alles · in · allem",
+          "returned": "alles · [in allem] Locution/ADV",
+          "weights": "in allem 0.59 to 0.60"
+        },
+        {
+          "case": "aus-allen-wolken-fallen",
+          "set": "B",
+          "exact": "1/3",
+          "gold": "flat",
+          "returned": "[aus allen] Locution/ADP, reps 1 and 2",
+          "weights": "0.50 / 0.52 / 0.48"
+        }
+      ]
+    },
+    {
+      "cause": "G. segment.inMorphemes splits -er off a bottom word",
+      "cases": [
+        {
+          "case": "bauer-vogelkaefig 🐦",
+          "set": "H",
+          "gold": "bauer · ∅",
+          "returned": "bau · er · ∅",
+          "weights": "0.85 to 0.86"
+        },
+        {
+          "case": "leiter-sprossenleiter 🪜",
+          "set": "B",
+          "gold": "leiter · ∅",
+          "returned": "leit · er · ∅",
+          "weights": "0.84 to 0.86"
+        },
+        {
+          "case": "messer-schneidwerkzeug 🔪",
+          "set": "B",
+          "gold": "messer · ∅",
+          "returned": "mess · er · ∅",
+          "weights": "0.51 to 0.55 (segment.inConstituents got this word right: none 0.62 to 0.66)"
+        }
+      ]
+    }
+  ],
+  "gates": {
+    "note": "The two gates added in 536acc4c9 / d594890d6, every answer in both sets.",
+    "verbBase": {
+      "goldVerb": {
+        "filmen": [
+          0.92,
+          0.92,
+          0.91
+        ],
+        "kaufen": [
+          0.98,
+          0.98,
+          0.97
+        ],
+        "giften (H)": [
+          0.37,
+          0.35,
+          0.33
+        ]
+      },
+      "goldNoVerb": {
+        "armen (H)": [
+          0.14,
+          0.14,
+          0.13
+        ],
+        "gleisen (H)": [
+          0.16,
+          0.17,
+          0.17
+        ],
+        "larven": [
+          0.18,
+          0.19,
+          0.23
+        ],
+        "kernen": [
+          0.23,
+          0.25,
+          0.21
+        ],
+        "blinden": [
+          0.25,
+          0.23,
+          0.25
+        ],
+        "kabeln (H)": [
+          0.26,
+          0.27,
+          0.26
+        ],
+        "arzten": [
+          0.3,
+          0.28,
+          0.31
+        ],
+        "freien": [
+          0.31,
+          0.33,
+          0.32
+        ]
+      },
+      "reading": "It separates common verbs from non-verbs cleanly and won verarmen, entgleisen and verkabeln on held-out. It can't reach a rare listed verb: giften overlaps freien."
+    },
+    "word": {
+      "cranberry": {
+        "Him": [
+          0.33,
+          0.35,
+          0.34
+        ]
+      },
+      "stems": {
+        "Fahr": [
+          0.39,
+          0.39,
+          0.38
+        ],
+        "Schreib": [
+          0.49,
+          0.48,
+          0.46
+        ],
+        "Wach (Wachlokal)": [
+          0.69,
+          0.68,
+          0.62
+        ],
+        "Erb": [
+          0.72,
+          0.72,
+          0.69
+        ],
+        "Wach (Wachstube)": [
+          0.71,
+          0.69,
+          0.72
+        ],
+        "Brat": [
+          0.71,
+          0.72,
+          0.74
+        ]
+      },
+      "words": {
+        "Schlaf (H)": [
+          0.82,
+          0.78,
+          0.8
+        ],
+        "Steuer (H)": [
+          0.79,
+          0.84,
+          0.8
+        ],
+        "Koch (H)": [
+          0.8,
+          0.81,
+          0.81
+        ],
+        "Gäste": [
+          0.8,
+          0.84,
+          0.86
+        ],
+        "Sonnen": [
+          0.8,
+          0.8,
+          0.82
+        ],
+        "Apfel (H)": [
+          0.89,
+          0.89,
+          0.88
+        ],
+        "Kohle": [
+          0.91,
+          0.88,
+          0.89
+        ]
+      },
+      "reading": "Fahr (0.38 to 0.39) and Schreib (0.46 to 0.49) fall on the cranberry side, 0.03 to 0.05 above Him. Root then lost the routes question on both, so no case failed, but the gate's margin is thin."
+    }
+  },
+  "comparisonWithRound2": {
+    "note": "Only :breakdown shares cases with round 2: its 28 round-2 tuning cases and round 2's 27 held-out cases, now promoted. The 21 fresh held-out cases and the 8 homograph Readings are new.",
+    "commonCases": 55,
+    "exactAttempts": {
+      "round2": "107/142 (75.4%)",
+      "round3": "146/165 (88.5%)"
+    },
+    "casesExactEveryRepetition": {
+      "round2": 41,
+      "round3": 47
+    },
+    "round2Tuning28": {
+      "round2": "53/61",
+      "round3": "81/84",
+      "everyRepetition": [
+        24,
+        27
+      ]
+    },
+    "round2HeldOut27": {
+      "round2": "54/81",
+      "round3": "65/81",
+      "everyRepetition": [
+        17,
+        20
+      ]
+    },
+    "changed": [
+      {
+        "case": "dies-und-das",
+        "round2": "0/3",
+        "round3": "3/3"
+      },
+      {
+        "case": "entlarven",
+        "round2": "0/3",
+        "round3": "3/3"
+      },
+      {
+        "case": "gruendung-gruenden 🏛",
+        "round2": "0/3",
+        "round3": "3/3"
+      },
+      {
+        "case": "trimm-dich-pfad",
+        "round2": "0/3",
+        "round3": "2/3"
+      },
+      {
+        "case": "um-zu",
+        "round2": "2/3",
+        "round3": "3/3"
+      },
+      {
+        "case": "verarzten",
+        "round2": "2/3",
+        "round3": "3/3"
+      },
+      {
+        "case": "was-fuer",
+        "round2": "0/3",
+        "round3": "3/3"
+      }
+    ],
+    "regressions": [],
+    "morphemes": "Round 2's 4 cases stay 3/3; the 4 new ones go 1 of 4."
+  }
+}

@@ -1,0 +1,631 @@
+{
+  "runId": "0c38cdc1-84ef-4a5f-99b3-e3df1ca21662",
+  "experimentId": "segment-in-constituents/de:heldout",
+  "round": "2026-10-24-breakdown-round-3",
+  "note": "The fresh held-out batch breakdown-heldout-2026-10-24b (21 cases), 3 repetitions, one live run at d4e94f46f under --budget 200000; the budget stop never fired. None of these cases was a round-2 case, so there is no round-2 comparison for this set.",
+  "liveRuns": [
+    "0c38cdc1-84ef-4a5f-99b3-e3df1ca21662"
+  ],
+  "manifest": {
+    "version": 2,
+    "runId": "0c38cdc1-84ef-4a5f-99b3-e3df1ca21662",
+    "experimentId": "segment-in-constituents/de:heldout",
+    "evaluatorVersion": "breakdown-1",
+    "sourceRevision": "d4e94f46f",
+    "startedAt": "2026-10-24T07:05:06.084Z",
+    "corpus": {
+      "fingerprint": "467b89c45c2797cae126e40fa4bf9699c362aa8498476f2f5e87206379930e0e",
+      "caseIds": [
+        "breakdown/de/alles-in-allem",
+        "breakdown/de/apfelbaum",
+        "breakdown/de/bauer-landwirt",
+        "breakdown/de/bauer-vogelkaefig",
+        "breakdown/de/bildung",
+        "breakdown/de/dieses-und-jenes",
+        "breakdown/de/durchbrechen-entzwei",
+        "breakdown/de/durchbrechen-hindernis",
+        "breakdown/de/entgleisen",
+        "breakdown/de/freundschaft",
+        "breakdown/de/kaum-dass",
+        "breakdown/de/kleidung",
+        "breakdown/de/kochtopf",
+        "breakdown/de/schlafsack",
+        "breakdown/de/so-gut-wie",
+        "breakdown/de/steuermann",
+        "breakdown/de/um-jeden-preis",
+        "breakdown/de/verarmen",
+        "breakdown/de/vergiften",
+        "breakdown/de/verkabeln",
+        "breakdown/de/was-weiss-ich"
+      ]
+    },
+    "repetitions": 3,
+    "operationVersion": "segment-in-constituents/de@production",
+    "configurations": {
+      "generation": {
+        "model": "jev-1.13.0",
+        "settings": {
+          "cases": 21,
+          "offline": false
+        }
+      },
+      "judgment": {
+        "model": "jev-1.13.0",
+        "settings": {
+          "cases": 21,
+          "offline": false
+        }
+      }
+    }
+  },
+  "summary": {
+    "quality": {
+      "passed": 15,
+      "failed": 6,
+      "needsReview": 0,
+      "unscored": 0
+    },
+    "status": "Completed",
+    "finishedAt": "2026-10-24T07:05:06.183Z",
+    "total": 21,
+    "succeeded": 21,
+    "failed": 0,
+    "interrupted": 0,
+    "stability": {
+      "repetitions": 3,
+      "flipped": 1,
+      "varyingOutputs": 2,
+      "quality": {
+        "passed": 43,
+        "failed": 20,
+        "needsReview": 0,
+        "unscored": 0
+      }
+    }
+  },
+  "metrics": {
+    "all": {
+      "attempts": 63,
+      "failed": 0,
+      "exact": 0.6825,
+      "cutPrecision": 0.9487,
+      "cutRecall": 0.9487,
+      "linksPlaced": 0.9333,
+      "linksWithGoldRoute": 0.8741,
+      "linksExact": 0.8519,
+      "hasConstituentsAgreed": 0.9524
+    },
+    "phraseme": {
+      "attempts": 18,
+      "failed": 0,
+      "exact": 0.5,
+      "cutPrecision": 1,
+      "cutRecall": 0.9091,
+      "linksPlaced": 0.8824,
+      "linksWithGoldRoute": 0.8235,
+      "linksExact": 0.7647,
+      "hasConstituentsAgreed": 1
+    },
+    "word": {
+      "attempts": 45,
+      "failed": 0,
+      "exact": 0.7556,
+      "cutPrecision": 0.8947,
+      "cutRecall": 1,
+      "linksPlaced": 0.9643,
+      "linksWithGoldRoute": 0.9048,
+      "linksExact": 0.9048,
+      "hasConstituentsAgreed": 0.9333
+    }
+  },
+  "spend": {
+    "jev": {
+      "calls": 181,
+      "freshCalls": 181,
+      "freshInputTokens": 127678,
+      "allInputTokens": 127678
+    },
+    "luna": {
+      "calls": 0,
+      "freshCalls": 0,
+      "freshInputTokens": 0,
+      "freshOutputTokens": 0
+    }
+  },
+  "transport": {
+    "requests": 181,
+    "retries": 0,
+    "retriedRequests": 0,
+    "failures": 0,
+    "interrupted": 0,
+    "retriesBy": {},
+    "failuresBy": {}
+  },
+  "cases": [
+    {
+      "caseId": "breakdown/de/alles-in-allem",
+      "group": "phraseme",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "alles → Lexeme/PRON alle · in → Lexeme/ADP in · allem → Lexeme/PRON alle",
+      "returned": [
+        "alles → Lexeme/PRON alle · in allem → Locution/ADV in allem"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 3,
+        "placed": 1,
+        "route": 1,
+        "linked": 1
+      }
+    },
+    {
+      "caseId": "breakdown/de/apfelbaum",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Apfel → Lexeme/NOUN Apfel · baum → Lexeme/NOUN Baum",
+      "returned": [
+        "Apfel → Lexeme/NOUN Apfel · baum → Lexeme/NOUN Baum"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/bauer-landwirt",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "Bau → Lexeme/VERB bauen · er → Morpheme/Suffix -er",
+      "returned": [
+        "Bau → Lexeme/NOUN Bau · er → Morpheme/Suffix -er"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 1,
+        "linked": 1
+      }
+    },
+    {
+      "caseId": "breakdown/de/bauer-vogelkaefig",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "NoConstituents",
+      "returned": [
+        "Bau → Lexeme/PROPN Bau · er → Morpheme/Suffix -er",
+        "Bau → Lexeme/NOUN Bau · er → Morpheme/Suffix -er"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 1,
+        "matched": 0
+      },
+      "links": {
+        "gold": 0,
+        "placed": 0,
+        "route": 0,
+        "linked": 0
+      }
+    },
+    {
+      "caseId": "breakdown/de/bildung",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Bild → Lexeme/VERB bilden · ung → Morpheme/Suffix -ung",
+      "returned": [
+        "Bild → Lexeme/VERB bilden · ung → Morpheme/Suffix -ung"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/dieses-und-jenes",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "dieses → Lexeme/PRON dieser · und → Lexeme/CCONJ und · jenes → Lexeme/PRON jener",
+      "returned": [
+        "dieses → Lexeme/PRON dieser · und → Lexeme/CCONJ und · jenes → Lexeme/PRON jener"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/durchbrechen-entzwei",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "durch → Morpheme/Prefix durch- · brechen → Lexeme/VERB brechen",
+      "returned": [
+        "durch → Morpheme/Prefix durch- · brechen → Lexeme/VERB brechen"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/durchbrechen-hindernis",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "durch → Morpheme/Prefix durch- · brechen → Lexeme/VERB brechen",
+      "returned": [
+        "durch → Morpheme/Prefix durch- · brechen → Lexeme/VERB brechen"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/entgleisen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "ent → Morpheme/Prefix ent- · gleis → Lexeme/NOUN Gleis · en",
+      "returned": [
+        "ent → Morpheme/Prefix ent- · gleis → Lexeme/NOUN Gleis · en"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/freundschaft",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Freund → Lexeme/NOUN Freund · schaft → Morpheme/Suffix -schaft",
+      "returned": [
+        "Freund → Lexeme/NOUN Freund · schaft → Morpheme/Suffix -schaft"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/kaum-dass",
+      "group": "phraseme",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "kaum → Lexeme/ADV kaum · dass → Lexeme/SCONJ dass",
+      "returned": [
+        "kaum → Lexeme/SCONJ kaum · dass → Lexeme/SCONJ dass"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 1,
+        "linked": 1
+      }
+    },
+    {
+      "caseId": "breakdown/de/kleidung",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Kleid → Lexeme/VERB kleiden · ung → Morpheme/Suffix -ung",
+      "returned": [
+        "Kleid → Lexeme/VERB kleiden · ung → Morpheme/Suffix -ung"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/kochtopf",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Koch → Lexeme/VERB kochen · topf → Lexeme/NOUN Topf",
+      "returned": [
+        "Koch → Lexeme/VERB kochen · topf → Lexeme/NOUN Topf"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/schlafsack",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Schlaf → Lexeme/VERB schlafen · sack → Lexeme/NOUN Sack",
+      "returned": [
+        "Schlaf → Lexeme/VERB schlafen · sack → Lexeme/NOUN Sack"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/so-gut-wie",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "so → Lexeme/ADV so · gut → Lexeme/ADJ gut · wie → Lexeme/CCONJ wie",
+      "returned": [
+        "so → Lexeme/ADV so · gut → Lexeme/ADJ gut · wie → Lexeme/CCONJ wie"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/steuermann",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 1,
+      "repetitionsUnscored": 0,
+      "gold": "Steuer → Lexeme/VERB steuern · mann → Lexeme/NOUN Mann",
+      "returned": [
+        "Steuer → Lexeme/VERB steuern · mann → Lexeme/NOUN Mann",
+        "Steuer → Lexeme/NOUN Steuer · mann → Lexeme/NOUN Mann"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/um-jeden-preis",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "um → Lexeme/ADP um · jeden → Lexeme/DET jeder · Preis → Lexeme/NOUN Preis",
+      "returned": [
+        "um → Lexeme/ADP um · jeden → Lexeme/DET jeder · Preis → Lexeme/NOUN Preis"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/verarmen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "ver → Morpheme/Prefix ver- · arm → Lexeme/ADJ arm · en",
+      "returned": [
+        "ver → Morpheme/Prefix ver- · arm → Lexeme/ADJ arm · en"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/vergiften",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "ver → Morpheme/Prefix ver- · giften → Lexeme/VERB giften",
+      "returned": [
+        "ver → Morpheme/Prefix ver- · gift → Lexeme/NOUN Gift · en"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 2,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 1,
+        "route": 1,
+        "linked": 1
+      }
+    },
+    {
+      "caseId": "breakdown/de/verkabeln",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "ver → Morpheme/Prefix ver- · kabel → Lexeme/NOUN Kabel · n",
+      "returned": [
+        "ver → Morpheme/Prefix ver- · kabel → Lexeme/NOUN Kabel · n"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/was-weiss-ich",
+      "group": "phraseme",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "was → Lexeme/PRON was · weiß → Lexeme/VERB wissen · ich → Lexeme/PRON ich",
+      "returned": [
+        "was → Lexeme/PRON was · weiß → Lexeme/VERB weißen · ich → Lexeme/PRON ich"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 2
+      }
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+{
+  "runId": "726ed309-ceff-4986-b1be-b647521e99b7",
+  "experimentId": "segment-in-morphemes/de:breakdown",
+  "round": "2026-10-24-breakdown-round-3",
+  "note": "8 cases, 3 repetitions, one live run at d4e94f46f under --budget 10000. The four homograph bottom words (Bauer 🐦, Laster 😈, Leiter 🪜, Messer 🔪) are new and are the first cases here that ask jev.",
+  "liveRuns": [
+    "726ed309-ceff-4986-b1be-b647521e99b7"
+  ],
+  "manifest": {
+    "version": 2,
+    "runId": "726ed309-ceff-4986-b1be-b647521e99b7",
+    "experimentId": "segment-in-morphemes/de:breakdown",
+    "evaluatorVersion": "breakdown-1",
+    "sourceRevision": "d4e94f46f",
+    "startedAt": "2026-10-24T07:05:27.074Z",
+    "corpus": {
+      "fingerprint": "188307ba20b840c110695446838f0f6ae88ea34345d45423a214499ea874551a",
+      "caseIds": [
+        "breakdown/de/bauer-vogelkaefig",
+        "breakdown/de/fisch",
+        "breakdown/de/kaufen",
+        "breakdown/de/laster-untugend",
+        "breakdown/de/leiter-sprossenleiter",
+        "breakdown/de/messer-schneidwerkzeug",
+        "breakdown/de/rufen",
+        "breakdown/de/spannen"
+      ]
+    },
+    "repetitions": 3,
+    "operationVersion": "segment-in-morphemes/de@production",
+    "configurations": {
+      "generation": {
+        "model": "jev-1.13.0",
+        "settings": {
+          "cases": 8,
+          "offline": false
+        }
+      },
+      "judgment": {
+        "model": "jev-1.13.0",
+        "settings": {
+          "cases": 8,
+          "offline": false
+        }
+      }
+    }
+  },
+  "summary": {
+    "quality": {
+      "passed": 5,
+      "failed": 3,
+      "needsReview": 0,
+      "unscored": 0
+    },
+    "status": "Completed",
+    "finishedAt": "2026-10-24T07:05:27.099Z",
+    "total": 8,
+    "succeeded": 8,
+    "failed": 0,
+    "interrupted": 0,
+    "stability": {
+      "repetitions": 3,
+      "flipped": 0,
+      "varyingOutputs": 0,
+      "quality": {
+        "passed": 15,
+        "failed": 9,
+        "needsReview": 0,
+        "unscored": 0
+      }
+    }
+  },
+  "metrics": {
+    "all": {
+      "attempts": 24,
+      "failed": 0,
+      "exact": 0.625,
+      "cutPrecision": 0.5,
+      "cutRecall": 1,
+      "linksPlaced": 0.8125,
+      "linksWithGoldRoute": 0.8125,
+      "linksExact": 0.8125,
+      "hasConstituentsAgreed": 1
+    },
+    "word": {
+      "attempts": 24,
+      "failed": 0,
+      "exact": 0.625,
+      "cutPrecision": 0.5,
+      "cutRecall": 1,
+      "linksPlaced": 0.8125,
+      "linksWithGoldRoute": 0.8125,
+      "linksExact": 0.8125,
+      "hasConstituentsAgreed": 1
+    }
+  },
+  "spend": {
+    "jev": {
+      "calls": 12,
+      "freshCalls": 12,
+      "freshInputTokens": 5355,
+      "allInputTokens": 5355
+    },
+    "luna": {
+      "calls": 0,
+      "freshCalls": 0,
+      "freshInputTokens": 0,
+      "freshOutputTokens": 0
+    }
+  },
+  "transport": {
+    "requests": 12,
+    "retries": 0,
+    "retriedRequests": 0,
+    "failures": 0,
+    "interrupted": 0,
+    "retriesBy": {},
+    "failuresBy": {}
+  },
+  "cases": [
+    {
+      "caseId": "breakdown/de/bauer-vogelkaefig",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "Bauer → Morpheme/Root bauer · '' → Morpheme/Ending ∅",
+      "returned": [
+        "Bau → Morpheme/Root bau · er → Morpheme/Suffix -er · '' → Morpheme/Ending ∅"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 1,
+        "matched": 0
+      },
+      "links": {
+        "gold": 2,
+        "placed": 1,
+        "route": 1,
+        "linked": 1
+      }
+    },
+    {
+      "caseId": "breakdown/de/fisch",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Fisch → Morpheme/Root fisch · '' → Morpheme/Ending ∅",
+      "returned": [
+        "Fisch → Morpheme/Root fisch · '' → Morpheme/Ending ∅"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 0,
+        "matched": 0
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/kaufen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "kauf → Morpheme/Root kauf · en → Morpheme/Ending -en",
+      "returned": [
+        "kauf → Morpheme/Root kauf · en → Morpheme/Ending -en"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/laster-untugend",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Laster → Morpheme/Root laster · '' → Morpheme/Ending ∅",
+      "returned": [
+        "Laster → Morpheme/Root laster · '' → Morpheme/Ending ∅"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 0,
+        "matched": 0
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/leiter-sprossenleiter",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "Leiter → Morpheme/Root leiter · '' → Morpheme/Ending ∅",
+      "returned": [
+        "Leit → Morpheme/Root leit · er → Morpheme/Suffix -er · '' → Morpheme/Ending ∅"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 1,
+        "matched": 0
+      },
+      "links": {
+        "gold": 2,
+        "placed": 1,
+        "route": 1,
+        "linked": 1
+      }
+    },
+    {
+      "caseId": "breakdown/de/messer-schneidwerkzeug",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "Messer → Morpheme/Root messer · '' → Morpheme/Ending ∅",
+      "returned": [
+        "Mess → Morpheme/Root mess · er → Morpheme/Suffix -er · '' → Morpheme/Ending ∅"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 1,
+        "matched": 0
+      },
+      "links": {
+        "gold": 2,
+        "placed": 1,
+        "route": 1,
+        "linked": 1
+      }
+    },
+    {
+      "caseId": "breakdown/de/rufen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "ruf → Morpheme/Root ruf · en → Morpheme/Ending -en",
+      "returned": [
+        "ruf → Morpheme/Root ruf · en → Morpheme/Ending -en"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/spannen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "spann → Morpheme/Root spann · en → Morpheme/Ending -en",
+      "returned": [
+        "spann → Morpheme/Root spann · en → Morpheme/Ending -en"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    }
+  ]
+}

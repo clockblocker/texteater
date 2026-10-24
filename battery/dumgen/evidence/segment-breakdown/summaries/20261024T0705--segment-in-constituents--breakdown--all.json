@@ -1,0 +1,1641 @@
+{
+  "runId": "01aae1c8-d31f-4d58-b0a5-0d69757b0c35",
+  "experimentId": "segment-in-constituents/de:breakdown",
+  "round": "2026-10-24-breakdown-round-3",
+  "note": "63 tuning cases (round 2's 28 tuning and 27 held-out, now promoted, plus 8 homograph Readings), 3 repetitions, one live run at d4e94f46f under --budget 340000; the budget stop never fired. 230 requests replayed from round 2's and the prep checks' cache where the request was unchanged.",
+  "liveRuns": [
+    "01aae1c8-d31f-4d58-b0a5-0d69757b0c35"
+  ],
+  "manifest": {
+    "version": 2,
+    "runId": "01aae1c8-d31f-4d58-b0a5-0d69757b0c35",
+    "experimentId": "segment-in-constituents/de:breakdown",
+    "evaluatorVersion": "breakdown-1",
+    "sourceRevision": "d4e94f46f",
+    "startedAt": "2026-10-24T07:05:16.593Z",
+    "corpus": {
+      "fingerprint": "5467cc939c6afb5ce38f290ad52fcb918d1a4ca42b4cf28d25f7283670d21adf",
+      "caseIds": [
+        "breakdown/de/aus-allen-wolken-fallen",
+        "breakdown/de/aus-dem-haeuschen-sein",
+        "breakdown/de/befreien",
+        "breakdown/de/bratpfanne",
+        "breakdown/de/da-liegt-der-hase-im-pfeffer",
+        "breakdown/de/den-faden-verlieren",
+        "breakdown/de/den-nagel-auf-den-kopf-treffen",
+        "breakdown/de/dies-und-das",
+        "breakdown/de/dumm-wie-bohnenstroh",
+        "breakdown/de/e-mail",
+        "breakdown/de/einkaufen",
+        "breakdown/de/entkernen",
+        "breakdown/de/entlarven",
+        "breakdown/de/entspannung",
+        "breakdown/de/erblinden",
+        "breakdown/de/erbrecht",
+        "breakdown/de/fahrrad",
+        "breakdown/de/fisch",
+        "breakdown/de/freiheit",
+        "breakdown/de/gaestehaus",
+        "breakdown/de/gruendung-gruenden",
+        "breakdown/de/gruendung-gruenduenger",
+        "breakdown/de/guten-morgen",
+        "breakdown/de/guten-tag",
+        "breakdown/de/hand-in-hand-gehen",
+        "breakdown/de/himbeere",
+        "breakdown/de/in-betracht-ziehen",
+        "breakdown/de/kaufen",
+        "breakdown/de/kohlekraftwerk",
+        "breakdown/de/laster-lastwagen",
+        "breakdown/de/laster-untugend",
+        "breakdown/de/leidtun",
+        "breakdown/de/leiter-leiten",
+        "breakdown/de/leiter-sprossenleiter",
+        "breakdown/de/messer-messen",
+        "breakdown/de/messer-schneidwerkzeug",
+        "breakdown/de/morgenstund-hat-gold-im-mund",
+        "breakdown/de/na-ja",
+        "breakdown/de/nur-bahnhof-verstehen",
+        "breakdown/de/ohne-zu",
+        "breakdown/de/rentier-ren",
+        "breakdown/de/rentier-rentner",
+        "breakdown/de/rufen",
+        "breakdown/de/rund-um-die-uhr-betreuung",
+        "breakdown/de/schreibtisch",
+        "breakdown/de/sich-wie-zu-hause-fuehlen",
+        "breakdown/de/so-oder-so",
+        "breakdown/de/sonnenbrille",
+        "breakdown/de/spannen",
+        "breakdown/de/stimmung-laune",
+        "breakdown/de/stimmung-tonhoehe",
+        "breakdown/de/trimm-dich-pfad",
+        "breakdown/de/uebung-macht-den-meister",
+        "breakdown/de/um-zu",
+        "breakdown/de/verarzten",
+        "breakdown/de/verfilmen",
+        "breakdown/de/verkaufen",
+        "breakdown/de/wachstube-wachlokal",
+        "breakdown/de/wachstube-wachstube",
+        "breakdown/de/was-fuer",
+        "breakdown/de/wer-zuerst-kommt-mahlt-zuerst",
+        "breakdown/de/zu-hause",
+        "breakdown/de/zunichtemachen"
+      ]
+    },
+    "repetitions": 3,
+    "operationVersion": "segment-in-constituents/de@production",
+    "configurations": {
+      "generation": {
+        "model": "jev-1.13.0",
+        "settings": {
+          "cases": 63,
+          "offline": false
+        }
+      },
+      "judgment": {
+        "model": "jev-1.13.0",
+        "settings": {
+          "cases": 63,
+          "offline": false
+        }
+      }
+    }
+  },
+  "summary": {
+    "quality": {
+      "passed": 54,
+      "failed": 9,
+      "needsReview": 0,
+      "unscored": 0
+    },
+    "status": "Completed",
+    "finishedAt": "2026-10-24T07:05:16.787Z",
+    "total": 63,
+    "succeeded": 63,
+    "failed": 0,
+    "interrupted": 0,
+    "stability": {
+      "repetitions": 3,
+      "flipped": 4,
+      "varyingOutputs": 4,
+      "quality": {
+        "passed": 160,
+        "failed": 29,
+        "needsReview": 0,
+        "unscored": 0
+      }
+    }
+  },
+  "metrics": {
+    "all": {
+      "attempts": 189,
+      "failed": 0,
+      "exact": 0.8466,
+      "cutPrecision": 0.9672,
+      "cutRecall": 0.9672,
+      "linksPlaced": 0.9465,
+      "linksWithGoldRoute": 0.9221,
+      "linksExact": 0.9124,
+      "hasConstituentsAgreed": 0.9788
+    },
+    "phraseme": {
+      "attempts": 66,
+      "failed": 0,
+      "exact": 0.9697,
+      "cutPrecision": 1,
+      "cutRecall": 0.9845,
+      "linksPlaced": 0.9798,
+      "linksWithGoldRoute": 0.9798,
+      "linksExact": 0.9798,
+      "hasConstituentsAgreed": 1
+    },
+    "word": {
+      "attempts": 123,
+      "failed": 0,
+      "exact": 0.7805,
+      "cutPrecision": 0.9085,
+      "cutRecall": 0.9348,
+      "linksPlaced": 0.9155,
+      "linksWithGoldRoute": 0.8685,
+      "linksExact": 0.8498,
+      "hasConstituentsAgreed": 0.9675
+    }
+  },
+  "spend": {
+    "jev": {
+      "calls": 497,
+      "freshCalls": 222,
+      "freshInputTokens": 224004,
+      "allInputTokens": 382000
+    },
+    "luna": {
+      "calls": 0,
+      "freshCalls": 0,
+      "freshInputTokens": 0,
+      "freshOutputTokens": 0
+    }
+  },
+  "transport": {
+    "requests": 222,
+    "retries": 0,
+    "retriedRequests": 0,
+    "failures": 0,
+    "interrupted": 0,
+    "retriesBy": {},
+    "failuresBy": {}
+  },
+  "cases": [
+    {
+      "caseId": "breakdown/de/aus-allen-wolken-fallen",
+      "group": "phraseme",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 1,
+      "repetitionsUnscored": 0,
+      "gold": "aus → Lexeme/ADP aus · allen → Lexeme/DET alle · Wolken → Lexeme/NOUN Wolke · fallen → Lexeme/VERB fallen",
+      "returned": [
+        "aus allen → Locution/ADP aus allen · Wolken → Lexeme/NOUN Wolke · fallen → Lexeme/VERB fallen",
+        "aus → Lexeme/ADP aus · allen → Lexeme/DET alle · Wolken → Lexeme/NOUN Wolke · fallen → Lexeme/VERB fallen"
+      ],
+      "cuts": {
+        "gold": 6,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 4,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/aus-dem-haeuschen-sein",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "aus → Lexeme/ADP aus · dem Häuschen → Lexeme/NOUN Häuschen · sein → Lexeme/VERB sein",
+      "returned": [
+        "aus → Lexeme/ADP aus · dem Häuschen → Lexeme/NOUN Häuschen · sein → Lexeme/VERB sein"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/befreien",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "be → Morpheme/Prefix be- · frei → Lexeme/ADJ frei · en",
+      "returned": [
+        "be → Morpheme/Prefix be- · frei → Lexeme/ADJ frei · en"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/bratpfanne",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Brat → Lexeme/VERB braten · pfanne → Lexeme/NOUN Pfanne",
+      "returned": [
+        "Brat → Lexeme/VERB braten · pfanne → Lexeme/NOUN Pfanne"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/da-liegt-der-hase-im-pfeffer",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "da → Lexeme/ADV da · liegt → Lexeme/VERB liegen · der Hase → Lexeme/NOUN Hase · i → Lexeme/ADP in · m Pfeffer → Lexeme/NOUN Pfeffer",
+      "returned": [
+        "da → Lexeme/ADV da · liegt → Lexeme/VERB liegen · der Hase → Lexeme/NOUN Hase · i → Lexeme/ADP in · m Pfeffer → Lexeme/NOUN Pfeffer"
+      ],
+      "cuts": {
+        "gold": 7,
+        "returned": 7,
+        "matched": 7
+      },
+      "links": {
+        "gold": 5,
+        "placed": 5,
+        "route": 5,
+        "linked": 5
+      }
+    },
+    {
+      "caseId": "breakdown/de/den-faden-verlieren",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "den Faden → Lexeme/NOUN Faden · verlieren → Lexeme/VERB verlieren",
+      "returned": [
+        "den Faden → Lexeme/NOUN Faden · verlieren → Lexeme/VERB verlieren"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/den-nagel-auf-den-kopf-treffen",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "den Nagel → Lexeme/NOUN Nagel · auf → Lexeme/ADP auf · den Kopf → Lexeme/NOUN Kopf · treffen → Lexeme/VERB treffen",
+      "returned": [
+        "den Nagel → Lexeme/NOUN Nagel · auf → Lexeme/ADP auf · den Kopf → Lexeme/NOUN Kopf · treffen → Lexeme/VERB treffen"
+      ],
+      "cuts": {
+        "gold": 6,
+        "returned": 6,
+        "matched": 6
+      },
+      "links": {
+        "gold": 4,
+        "placed": 4,
+        "route": 4,
+        "linked": 4
+      }
+    },
+    {
+      "caseId": "breakdown/de/dies-und-das",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "dies → Lexeme/PRON dieser · und → Lexeme/CCONJ und · das → Lexeme/PRON das",
+      "returned": [
+        "dies → Lexeme/PRON dieser · und → Lexeme/CCONJ und · das → Lexeme/PRON das"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/dumm-wie-bohnenstroh",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "dumm → Lexeme/ADJ dumm · wie → Lexeme/CCONJ wie · Bohnenstroh → Lexeme/NOUN Bohnenstroh",
+      "returned": [
+        "dumm → Lexeme/ADJ dumm · wie → Lexeme/CCONJ wie · Bohnenstroh → Lexeme/NOUN Bohnenstroh"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/e-mail",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "E → Morpheme/Prefix e- · - · Mail → Lexeme/NOUN Mail",
+      "returned": [
+        "E → Morpheme/Prefix e- · - · Mail → Lexeme/NOUN Mail"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/einkaufen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "ein → Morpheme/Prefix ein- · kaufen → Lexeme/VERB kaufen",
+      "returned": [
+        "ein → Morpheme/Prefix ein- · kaufen → Lexeme/VERB kaufen"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/entkernen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "ent → Morpheme/Prefix ent- · kern → Lexeme/NOUN Kern · en",
+      "returned": [
+        "ent → Morpheme/Prefix ent- · kern → Lexeme/NOUN Kern · en"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/entlarven",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "ent → Morpheme/Prefix ent- · larv → Lexeme/NOUN Larve · en",
+      "returned": [
+        "ent → Morpheme/Prefix ent- · larv → Lexeme/NOUN Larve · en"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/entspannung",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Entspann → Lexeme/VERB entspannen · ung → Morpheme/Suffix -ung",
+      "returned": [
+        "Entspann → Lexeme/VERB entspannen · ung → Morpheme/Suffix -ung"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/erblinden",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "er → Morpheme/Prefix er- · blind → Lexeme/ADJ blind · en",
+      "returned": [
+        "er → Morpheme/Prefix er- · blind → Lexeme/ADJ blind · en"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/erbrecht",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "Erb → Lexeme/VERB erben · recht → Lexeme/NOUN Recht",
+      "returned": [
+        "Erb → Lexeme/NOUN Erbe · recht → Lexeme/NOUN Recht"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 1,
+        "linked": 1
+      }
+    },
+    {
+      "caseId": "breakdown/de/fahrrad",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Fahr → Lexeme/VERB fahren · rad → Lexeme/NOUN Rad",
+      "returned": [
+        "Fahr → Lexeme/VERB fahren · rad → Lexeme/NOUN Rad"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/fisch",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "NoConstituents",
+      "returned": [
+        "NoConstituents"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 0,
+        "matched": 0
+      },
+      "links": {
+        "gold": 0,
+        "placed": 0,
+        "route": 0,
+        "linked": 0
+      }
+    },
+    {
+      "caseId": "breakdown/de/freiheit",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Frei → Lexeme/ADJ frei · heit → Morpheme/Suffix -heit",
+      "returned": [
+        "Frei → Lexeme/ADJ frei · heit → Morpheme/Suffix -heit"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/gaestehaus",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Gäst → Lexeme/NOUN Gast · e → Morpheme/Interfix -e- · haus → Lexeme/NOUN Haus",
+      "returned": [
+        "Gäst → Lexeme/NOUN Gast · e → Morpheme/Interfix -e- · haus → Lexeme/NOUN Haus"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/gruendung-gruenden",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Gründ → Lexeme/VERB gründen · ung → Morpheme/Suffix -ung",
+      "returned": [
+        "Gründ → Lexeme/VERB gründen · ung → Morpheme/Suffix -ung"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/gruendung-gruenduenger",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "Grün → Lexeme/ADJ grün · dung → Lexeme/NOUN Dung",
+      "returned": [
+        "Gründ → Lexeme/VERB gründen · ung → Morpheme/Suffix -ung"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 0
+      },
+      "links": {
+        "gold": 2,
+        "placed": 0,
+        "route": 0,
+        "linked": 0
+      }
+    },
+    {
+      "caseId": "breakdown/de/guten-morgen",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "guten → Lexeme/ADJ gut · Morgen → Lexeme/NOUN Morgen",
+      "returned": [
+        "guten → Lexeme/ADJ gut · Morgen → Lexeme/NOUN Morgen"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/guten-tag",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "guten → Lexeme/ADJ gut · Tag → Lexeme/NOUN Tag",
+      "returned": [
+        "guten → Lexeme/ADJ gut · Tag → Lexeme/NOUN Tag"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/hand-in-hand-gehen",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Hand in Hand → Locution/ADV Hand in Hand · gehen → Lexeme/VERB gehen",
+      "returned": [
+        "Hand in Hand → Locution/ADV Hand in Hand · gehen → Lexeme/VERB gehen"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/himbeere",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Him → Morpheme/Root him · beere → Lexeme/NOUN Beere",
+      "returned": [
+        "Him → Morpheme/Root him · beere → Lexeme/NOUN Beere"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/in-betracht-ziehen",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "in → Lexeme/ADP in · Betracht → Lexeme/NOUN Betracht · ziehen → Lexeme/VERB ziehen",
+      "returned": [
+        "in → Lexeme/ADP in · Betracht → Lexeme/NOUN Betracht · ziehen → Lexeme/VERB ziehen"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/kaufen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "NoConstituents",
+      "returned": [
+        "NoConstituents"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 0,
+        "matched": 0
+      },
+      "links": {
+        "gold": 0,
+        "placed": 0,
+        "route": 0,
+        "linked": 0
+      }
+    },
+    {
+      "caseId": "breakdown/de/kohlekraftwerk",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Kohle → Lexeme/NOUN Kohle · kraftwerk → Lexeme/NOUN Kraftwerk",
+      "returned": [
+        "Kohle → Lexeme/NOUN Kohle · kraftwerk → Lexeme/NOUN Kraftwerk"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/laster-lastwagen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Last → Lexeme/NOUN Last · er → Morpheme/Suffix -er",
+      "returned": [
+        "Last → Lexeme/NOUN Last · er → Morpheme/Suffix -er"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/laster-untugend",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 2,
+      "repetitionsUnscored": 0,
+      "gold": "NoConstituents",
+      "returned": [
+        "NoConstituents",
+        "Last → Lexeme/NOUN Last · er → Morpheme/Suffix -er"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 0,
+        "matched": 0
+      },
+      "links": {
+        "gold": 0,
+        "placed": 0,
+        "route": 0,
+        "linked": 0
+      }
+    },
+    {
+      "caseId": "breakdown/de/leidtun",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "leid → Lexeme/ADJ leid · tun → Lexeme/VERB tun",
+      "returned": [
+        "leid → Lexeme/ADJ leid · tun → Lexeme/VERB tun"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/leiter-leiten",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "Leit → Lexeme/VERB leiten · er → Morpheme/Suffix -er",
+      "returned": [
+        "Leit → Lexeme/NOUN Leit · er → Morpheme/Suffix -er"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 1,
+        "linked": 1
+      }
+    },
+    {
+      "caseId": "breakdown/de/leiter-sprossenleiter",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "NoConstituents",
+      "returned": [
+        "Leit → Lexeme/NOUN Leit · er → Morpheme/Suffix -er"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 1,
+        "matched": 0
+      },
+      "links": {
+        "gold": 0,
+        "placed": 0,
+        "route": 0,
+        "linked": 0
+      }
+    },
+    {
+      "caseId": "breakdown/de/messer-messen",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "Mess → Lexeme/VERB messen · er → Morpheme/Suffix -er",
+      "returned": [
+        "Mess → Lexeme/NOUN Mess · er → Morpheme/Suffix -er"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 1,
+        "linked": 1
+      }
+    },
+    {
+      "caseId": "breakdown/de/messer-schneidwerkzeug",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "NoConstituents",
+      "returned": [
+        "NoConstituents"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 0,
+        "matched": 0
+      },
+      "links": {
+        "gold": 0,
+        "placed": 0,
+        "route": 0,
+        "linked": 0
+      }
+    },
+    {
+      "caseId": "breakdown/de/morgenstund-hat-gold-im-mund",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Morgenstund → Lexeme/NOUN Morgenstunde · hat → Lexeme/VERB haben · Gold → Lexeme/NOUN Gold · i → Lexeme/ADP in · m Mund → Lexeme/NOUN Mund",
+      "returned": [
+        "Morgenstund → Lexeme/NOUN Morgenstunde · hat → Lexeme/VERB haben · Gold → Lexeme/NOUN Gold · i → Lexeme/ADP in · m Mund → Lexeme/NOUN Mund"
+      ],
+      "cuts": {
+        "gold": 7,
+        "returned": 7,
+        "matched": 7
+      },
+      "links": {
+        "gold": 5,
+        "placed": 5,
+        "route": 5,
+        "linked": 5
+      }
+    },
+    {
+      "caseId": "breakdown/de/na-ja",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "na → Lexeme/INTJ na · ja → Lexeme/INTJ ja",
+      "returned": [
+        "na → Lexeme/INTJ na · ja → Lexeme/INTJ ja"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/nur-bahnhof-verstehen",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "nur → Lexeme/ADV nur · Bahnhof → Lexeme/NOUN Bahnhof · verstehen → Lexeme/VERB verstehen",
+      "returned": [
+        "nur → Lexeme/ADV nur · Bahnhof → Lexeme/NOUN Bahnhof · verstehen → Lexeme/VERB verstehen"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/ohne-zu",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "ohne → Lexeme/SCONJ ohne ·  …  · zu → Lexeme/PART zu",
+      "returned": [
+        "ohne → Lexeme/SCONJ ohne ·  …  · zu → Lexeme/PART zu"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/rentier-ren",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "Ren → Lexeme/NOUN Ren · tier → Lexeme/NOUN Tier",
+      "returned": [
+        "Rent → Lexeme/NOUN Rent · ier → Morpheme/Suffix -ier"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 0
+      },
+      "links": {
+        "gold": 2,
+        "placed": 0,
+        "route": 0,
+        "linked": 0
+      }
+    },
+    {
+      "caseId": "breakdown/de/rentier-rentner",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "Rent → Lexeme/NOUN Rente · ier → Morpheme/Suffix -ier",
+      "returned": [
+        "Rent → Lexeme/NOUN Rent · ier → Morpheme/Suffix -ier"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 1
+      }
+    },
+    {
+      "caseId": "breakdown/de/rufen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "NoConstituents",
+      "returned": [
+        "NoConstituents"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 0,
+        "matched": 0
+      },
+      "links": {
+        "gold": 0,
+        "placed": 0,
+        "route": 0,
+        "linked": 0
+      }
+    },
+    {
+      "caseId": "breakdown/de/rund-um-die-uhr-betreuung",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 2,
+      "repetitionsUnscored": 0,
+      "gold": "Rund-um-die-Uhr → Locution/ADV rund um die Uhr · - · Betreuung → Lexeme/NOUN Betreuung",
+      "returned": [
+        "Rund-um-die-Uhr → Locution/ADV rund um die Uhr · - · Betreuung → Lexeme/NOUN Betreuung",
+        "Rund-um-die-Uhr → Locution/ADJ rund um die Uhr · - · Betreuung → Lexeme/NOUN Betreuung"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/schreibtisch",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Schreib → Lexeme/VERB schreiben · tisch → Lexeme/NOUN Tisch",
+      "returned": [
+        "Schreib → Lexeme/VERB schreiben · tisch → Lexeme/NOUN Tisch"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/sich-wie-zu-hause-fuehlen",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "sich → Lexeme/VERB sich fühlen · wie → Lexeme/CCONJ wie · zu Hause → Locution/ADV zu Hause · fühlen → Lexeme/VERB sich fühlen",
+      "returned": [
+        "sich → Lexeme/VERB sich fühlen · wie → Lexeme/CCONJ wie · zu Hause → Locution/ADV zu Hause · fühlen → Lexeme/VERB sich fühlen"
+      ],
+      "cuts": {
+        "gold": 6,
+        "returned": 6,
+        "matched": 6
+      },
+      "links": {
+        "gold": 4,
+        "placed": 4,
+        "route": 4,
+        "linked": 4
+      }
+    },
+    {
+      "caseId": "breakdown/de/so-oder-so",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "so → Lexeme/ADV so · oder → Lexeme/CCONJ oder · so → Lexeme/ADV so",
+      "returned": [
+        "so → Lexeme/ADV so · oder → Lexeme/CCONJ oder · so → Lexeme/ADV so"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/sonnenbrille",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Sonne → Lexeme/NOUN Sonne · n → Morpheme/Interfix -n- · brille → Lexeme/NOUN Brille",
+      "returned": [
+        "Sonne → Lexeme/NOUN Sonne · n → Morpheme/Interfix -n- · brille → Lexeme/NOUN Brille"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/spannen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "NoConstituents",
+      "returned": [
+        "NoConstituents"
+      ],
+      "cuts": {
+        "gold": 0,
+        "returned": 0,
+        "matched": 0
+      },
+      "links": {
+        "gold": 0,
+        "placed": 0,
+        "route": 0,
+        "linked": 0
+      }
+    },
+    {
+      "caseId": "breakdown/de/stimmung-laune",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Stimm → Lexeme/VERB stimmen · ung → Morpheme/Suffix -ung",
+      "returned": [
+        "Stimm → Lexeme/VERB stimmen · ung → Morpheme/Suffix -ung"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/stimmung-tonhoehe",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Stimm → Lexeme/VERB stimmen · ung → Morpheme/Suffix -ung",
+      "returned": [
+        "Stimm → Lexeme/VERB stimmen · ung → Morpheme/Suffix -ung"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/trimm-dich-pfad",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 2,
+      "repetitionsUnscored": 0,
+      "gold": "Trimm → Lexeme/VERB trimmen · - · dich → Lexeme/PRON sich · - · Pfad → Lexeme/NOUN Pfad",
+      "returned": [
+        "Trimm → Lexeme/VERB trimmen · - · dich → Lexeme/PRON sich · - · Pfad → Lexeme/NOUN Pfad",
+        "Trimm → Lexeme/VERB trimmen · - · dich → Lexeme/PRON dich · - · Pfad → Lexeme/NOUN Pfad"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/uebung-macht-den-meister",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Übung → Lexeme/NOUN Übung · macht → Lexeme/VERB machen · den Meister → Lexeme/NOUN Meister",
+      "returned": [
+        "Übung → Lexeme/NOUN Übung · macht → Lexeme/VERB machen · den Meister → Lexeme/NOUN Meister"
+      ],
+      "cuts": {
+        "gold": 4,
+        "returned": 4,
+        "matched": 4
+      },
+      "links": {
+        "gold": 3,
+        "placed": 3,
+        "route": 3,
+        "linked": 3
+      }
+    },
+    {
+      "caseId": "breakdown/de/um-zu",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "um → Lexeme/SCONJ um ·  …  · zu → Lexeme/PART zu",
+      "returned": [
+        "um → Lexeme/SCONJ um ·  …  · zu → Lexeme/PART zu"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/verarzten",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "ver → Morpheme/Prefix ver- · arzt → Lexeme/NOUN Arzt · en",
+      "returned": [
+        "ver → Morpheme/Prefix ver- · arzt → Lexeme/NOUN Arzt · en"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/verfilmen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "ver → Morpheme/Prefix ver- · filmen → Lexeme/VERB filmen",
+      "returned": [
+        "ver → Morpheme/Prefix ver- · filmen → Lexeme/VERB filmen"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/verkaufen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "ver → Morpheme/Prefix ver- · kaufen → Lexeme/VERB kaufen",
+      "returned": [
+        "ver → Morpheme/Prefix ver- · kaufen → Lexeme/VERB kaufen"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/wachstube-wachlokal",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Wach → Lexeme/VERB wachen · stube → Lexeme/NOUN Stube",
+      "returned": [
+        "Wach → Lexeme/VERB wachen · stube → Lexeme/NOUN Stube"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/wachstube-wachstube",
+      "group": "word",
+      "exact": false,
+      "repetitions": 3,
+      "repetitionsExact": 0,
+      "repetitionsUnscored": 0,
+      "gold": "Wachs → Lexeme/NOUN Wachs · tube → Lexeme/NOUN Tube",
+      "returned": [
+        "Wach → Lexeme/VERB wachen · stube → Lexeme/NOUN Stube"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 0
+      },
+      "links": {
+        "gold": 2,
+        "placed": 0,
+        "route": 0,
+        "linked": 0
+      }
+    },
+    {
+      "caseId": "breakdown/de/was-fuer",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "was → Lexeme/PRON was · für → Lexeme/ADP für",
+      "returned": [
+        "was → Lexeme/PRON was · für → Lexeme/ADP für"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/wer-zuerst-kommt-mahlt-zuerst",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "Wer → Lexeme/PRON wer · zuerst → Lexeme/ADV zuerst · kommt → Lexeme/VERB kommen · ,  · mahlt → Lexeme/VERB mahlen · zuerst → Lexeme/ADV zuerst",
+      "returned": [
+        "Wer → Lexeme/PRON wer · zuerst → Lexeme/ADV zuerst · kommt → Lexeme/VERB kommen · ,  · mahlt → Lexeme/VERB mahlen · zuerst → Lexeme/ADV zuerst"
+      ],
+      "cuts": {
+        "gold": 8,
+        "returned": 8,
+        "matched": 8
+      },
+      "links": {
+        "gold": 5,
+        "placed": 5,
+        "route": 5,
+        "linked": 5
+      }
+    },
+    {
+      "caseId": "breakdown/de/zu-hause",
+      "group": "phraseme",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "zu → Lexeme/ADP zu · Hause → Lexeme/NOUN Haus",
+      "returned": [
+        "zu → Lexeme/ADP zu · Hause → Lexeme/NOUN Haus"
+      ],
+      "cuts": {
+        "gold": 2,
+        "returned": 2,
+        "matched": 2
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    },
+    {
+      "caseId": "breakdown/de/zunichtemachen",
+      "group": "word",
+      "exact": true,
+      "repetitions": 3,
+      "repetitionsExact": 3,
+      "repetitionsUnscored": 0,
+      "gold": "zunichte → Morpheme/Prefix zunichte- · machen → Lexeme/VERB machen",
+      "returned": [
+        "zunichte → Morpheme/Prefix zunichte- · machen → Lexeme/VERB machen"
+      ],
+      "cuts": {
+        "gold": 1,
+        "returned": 1,
+        "matched": 1
+      },
+      "links": {
+        "gold": 2,
+        "placed": 2,
+        "route": 2,
+        "linked": 2
+      }
+    }
+  ]
+}
