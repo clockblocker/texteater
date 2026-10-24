@@ -1,0 +1,77 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "SCONJ",
+			"canonicalForm": "je nachdem",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🔀"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "je",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "je",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "nachdem",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"canonicalForm": "nachdem",
+						"coreFeatures": {}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: je nachdem",
+				"url": "https://www.dwds.de/wb/je%20nachdem",
+				"supports": "The Mehrwortausdruck je nachdem, 'abhängig davon ob …, wie …, was …'"
+			},
+			{
+				"title": "DWDS: je",
+				"url": "https://www.dwds.de/wb/je",
+				"supports": "1je, Adverb, sense 2 b: in Verbindung mit nachdem, ⟨je nachdem (= gerade so, wie)⟩: je nachdem es ihnen passt"
+			},
+			{
+				"title": "DWDS: nachdem",
+				"url": "https://www.dwds.de/wb/nachdem",
+				"supports": "nachdem, Konjunktion, sense 3: ⟨je nachdem⟩, siehe auch 1je (2 b)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The conjunction reading, 'abhängig davon ob …': je nachdem, ob sie Lust hat. Each part keeps its own Kind: DWDS files je nachdem under the adverb je, so je links to ADV je, though the whole is a SCONJ, and nachdem to the SCONJ nachdem."
+	}
+}

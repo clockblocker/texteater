@@ -1,0 +1,85 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "am Ball bleiben",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "⚽"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "a",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "an",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": "m Ball",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Ball",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "bleiben",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "bleiben",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0040", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "53eb6d28dab42ddc"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: am Ball bleiben",
+				"url": "https://www.dwds.de/wb/am%20Ball%20bleiben",
+				"supports": "The Mehrwortausdruck am Ball bleiben, 'nicht lockerlassen'; Hauptbestandteile 1Ball, bleiben. DWDS has no entry am Ball of its own"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Flat: am Ball looks like a fixed phrase, but no dictionary lists it apart from am Ball bleiben and am Ball sein, so it is no inner unit. am splits by component (de/fused-word-pieces): a links to the ADP an, and m joins Ball, the noun that owns it as its article (de/noun-owns-its-article)."
+	}
+}

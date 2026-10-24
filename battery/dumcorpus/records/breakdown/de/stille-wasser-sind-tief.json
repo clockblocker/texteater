@@ -1,0 +1,106 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Saying",
+			"kind": "Saying",
+			"canonicalForm": "Stille Wasser sind tief",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🤫🌊"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Stille",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "still",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Wasser",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Wasser",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "sind",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sein",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "tief",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "tief",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "43184aac9186aceb"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: stille Wasser sind tief",
+				"url": "https://www.dwds.de/wb/stille%20Wasser%20sind%20tief",
+				"supports": "The Mehrwortausdruck stille Wasser sind tief, 'zurückhaltende Menschen haben oft ungeahnte Fähigkeiten'; Hauptbestandteile still, Wasser, tief"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "sind is a finite form of sein no letter rule builds from its headword, so it links to VERB sein, the copula. Stille links to ADJ still, and no two of its words form a unit of their own. The Canonical Form is capitalized as the other Sayings are."
+	}
+}

@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Schoner",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "⛵"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Schoner",
+					"target": {
+						"language": "de",
+						"canonicalForm": "schoner",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Schoner",
+				"url": "https://www.dwds.de/wb/Schoner",
+				"supports": "No Wortzerlegung for der Schoner, 'Segelschiff mit mehreren Masten'; the Etymologie gives a borrowing (2nd half of the 18th c.) from English schooner"
+			},
+			{
+				"title": "Wiktionary: Schoner",
+				"url": "https://en.wiktionary.org/wiki/Schoner#German",
+				"supports": "Etymology 2: from English schooner, ca. 1780"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The sailing ship, der Schoner, is a loan from English schooner with no Wortzerlegung, so it is a bottom word with no Constituents: the Root schoner and the zero ending (ADR 0050: a loan blended abroad has none; ADR 0051). der Schoner, a protective cover, splits schonen + -er (ADR 0050: the Reading owns the split)."
+	}
+}

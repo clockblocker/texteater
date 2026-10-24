@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Sticker",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🪡"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Stick",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sticken",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				},
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-er",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Sticker",
+				"url": "https://www.dwds.de/wb/Sticker",
+				"supports": "The Wortzerlegung sticken -er, for der Sticker, 'Person, die beruflich oder regelmäßig stickt' (DWDS 2021)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The embroiderer, der Sticker. DWDS splits it sticken + -er, Stick showing the verb's stem; der Sticker, the label, is a loan from English with no Wortzerlegung (ADR 0050: the Reading owns the split)."
+	}
+}

@@ -1,0 +1,85 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "ADV",
+			"canonicalForm": "Knall auf Fall",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "💥"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Knall",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Knall",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "auf",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "auf",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Fall",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Fall",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Knall auf Fall",
+				"url": "https://www.dwds.de/wb/Knall%20auf%20Fall",
+				"supports": "The Mehrwortausdruck Knall auf Fall, '(sehr) plötzlich, (völlig) überraschend', as an Adverbialbestimmung; Hauptbestandteile Knall, Fall"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The whole is an ADV, but no part is: Knall and Fall link to their nouns and auf to the ADP auf. No two of its words form a unit of their own."
+	}
+}

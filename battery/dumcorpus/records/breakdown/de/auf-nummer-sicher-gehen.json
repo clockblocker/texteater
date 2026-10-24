@@ -1,0 +1,70 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "auf Nummer sicher gehen",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🦺"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "auf Nummer sicher",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "ADV",
+						"canonicalForm": "auf Nummer sicher",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "gehen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "gehen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: auf Nummer sicher",
+				"url": "https://www.dwds.de/wb/auf%20Nummer%20sicher",
+				"supports": "The Mehrwortausdruck auf Nummer sicher, 'häufig adverbiell', with ⟨auf Nummer sicher gehen⟩ and ⟨auf Nummer sicher setzen⟩ and the collocations auf Nummer sicher spielen, fahren"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "auf Nummer sicher is a Locution ADV of its own, used with other verbs (auf Nummer sicher spielen, setzen), so it is one part, the biggest unit inside the wording, as Hand in Hand is in Hand in Hand gehen (ADR 0050)."
+	}
+}

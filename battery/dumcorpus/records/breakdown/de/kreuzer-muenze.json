@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Kreuzer",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🪙"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Kreuz",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Kreuz",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-er",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Kreuzer",
+				"url": "https://www.dwds.de/wb/Kreuzer",
+				"supports": "The Wortzerlegung Kreuz -er, for der Kreuzer, 'alte Münze mit einem aufgeprägten Kreuz'; the Etymologie: mhd. kriuzer, zu mhd. kriuz(e)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The coin, der Kreuzer. DWDS splits it Kreuz + -er: the coin with a cross on it. The warship der Kreuzer splits kreuzen + -er instead, so the same letters Kreuz link to the noun here and to the verb there (ADR 0050: the Reading owns the split)."
+	}
+}

@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Hamburger",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "⚓"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Hamburg",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Hamburg",
+						"coreFeatures": {
+							"article": null,
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-er",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Hamburger",
+				"url": "https://www.dwds.de/wb/Hamburger",
+				"supports": "The Wortzerlegung Hamburg (Eigenname) -er, for der Hamburger, 'Einwohner Hamburgs'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Someone from Hamburg, der Hamburger. DWDS splits it Hamburg + -er, a PROPN part (ADR 0050: Berlin + -er). The sandwich der Hamburger is a loan from English hamburger with no Wortzerlegung (ADR 0050: the Reading owns the split)."
+	}
+}

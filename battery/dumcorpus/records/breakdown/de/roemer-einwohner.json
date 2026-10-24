@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Römer",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🏛"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Röm",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Rom",
+						"coreFeatures": {
+							"article": null,
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-er",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Römer",
+				"url": "https://www.dwds.de/wb/R%C3%B6mer",
+				"supports": "The Wortzerlegung Rom -er, for der Römer, 'Einwohner Roms'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Someone from Rome, der Römer. DWDS splits it Rom + -er, Röm showing the PROPN with an umlaut (ADR 0050). The wine glass der Römer has no Wortzerlegung (ADR 0050: the Reading owns the split)."
+	}
+}

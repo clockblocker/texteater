@@ -1,172 +1,172 @@
 {
-	"note": "Held-out candidates for German segment.inConstituents, drafted 2026-10-24 as Draft Breakdown Records in records/breakdown/de after round 2 (held-out 16 of 27, breakdown 24 of 28 exact, #1241), when the 27 round-2 held-out records were promoted into the set prompts are tuned on. Each covers a round-2 failure class with fresh words: a split that depends on the Reading (Bauer), a prefix with a noun or adjective base and the citation ending (entgleisen, verkabeln, verarmen) against a prefix with a verb (vergiften), a verb's stem as a compound's first part (Steuermann, Schlafsack, Kochtopf), -ung after a verb (Bildung, Kleidung), a pronoun or determiner part cited by its inventory headword rather than its letters (alles in allem, um jeden Preis, dieses und jenes), and a phraseme part whose Kind depends on its role (was weiß ich, so gut wie, kaum dass); a compound and a derivation are controls. Every word split follows the DWDS Wortzerlegung (ADR 0050's tie rule) and every phraseme its DWDS entry, cited in its record. None is a round-1 or round-2 case, none is named by a Rule, none may be an example in a Breakdown prompt (#693), and none uses a word reserved for the next prompt examples. Avoided as waiting on the user or deferred (#1241): English particles, the missing Ending Kind, a noun first part that drops a final -e (Rent from Rente), a Locution front inside a hyphenated compound, an inner Locution near the 0.5 floor, and Sources (conversions, participles, clippings). One record, das Bauer, is a bottom word, so its morphemes use the zero ending ∅ as Fisch does. The homograph pairs that tune the sense-led analysis (Leiter, Laster, Messer, and Stimmung as a control) are not listed here, so they belong to the set prompts are tuned on. Consistency sets: D1 two Readings of one spelling split differently; D2 two Lemmas of one spelling, a separable and an inseparable verb, share one split; D3 the prefix + base + ending shape against prefix + verb, where a verb kabeln exists yet DWDS picks the noun, and giften exists and DWDS picks the verb; D4 a verb stem that also spells a noun (Steuer, Schlaf, Koch, Bild, Kleid); D5 a pronoun or determiner part cited by its headword (alle, jeder, dieser, jener).",
+	"note": "Held-out candidates for German segment.inConstituents, drafted 2026-10-24 as Draft Breakdown Records in records/breakdown/de after round 2 (held-out 16 of 27, breakdown 24 of 28 exact, #1241), when the 27 round-2 held-out records were promoted into the set prompts are tuned on. Each covers a round-2 failure class with fresh words: a split that depends on the Reading (Bauer), a prefix with a noun or adjective base and the citation ending (entgleisen, verkabeln, verarmen) against a prefix with a verb (vergiften), a verb's stem as a compound's first part (Steuermann, Schlafsack, Kochtopf), -ung after a verb (Bildung, Kleidung), a pronoun or determiner part cited by its inventory headword rather than its letters (alles in allem, um jeden Preis, dieses und jenes), and a phraseme part whose Kind depends on its role (was weiß ich, so gut wie, kaum dass); a compound and a derivation are controls. Every word split follows the DWDS Wortzerlegung (ADR 0050's tie rule) and every phraseme its DWDS entry, cited in its record. None is a round-1 or round-2 case, none is named by a Rule, none may be an example in a Breakdown prompt (#693), and none uses a word reserved for the next prompt examples. Avoided as waiting on the user or deferred (#1241): English particles, the missing Ending Kind, a noun first part that drops a final -e (Rent from Rente), a Locution front inside a hyphenated compound, an inner Locution near the 0.5 floor, and Sources (conversions, participles, clippings). One record, das Bauer, is a bottom word, so its morphemes use the zero ending ∅ as Fisch does. The homograph pairs that tune the sense-led analysis (Leiter, Laster, Messer, and Stimmung as a control) are not listed here, so they belong to the set prompts are tuned on. Consistency sets: D1 two Readings of one spelling split differently; D2 two Lemmas of one spelling, a separable and an inseparable verb, share one split; D3 the prefix + base + ending shape against prefix + verb, where a verb kabeln exists yet DWDS picks the noun, and giften exists and DWDS picks the verb; D4 a verb stem that also spells a noun (Steuer, Schlaf, Koch, Bild, Kleid); D5 a pronoun or determiner part cited by its headword (alle, jeder, dieser, jener). Until round 3 every row was held-out: the Breakdown lab scored these records only in segment-in-constituents/de:heldout. Promoted 2026-10-24 after round 3 scored them (#1241): every row is now dev, so the lab scores these records in segment-in-constituents/de:breakdown, the set prompts are tuned on, and a fresh batch judges round 4. They stay out of every Breakdown prompt's examples (#693).",
 	"rows": [
 		{
 			"row": "BJ1",
 			"record": "breakdown/de/bauer-landwirt",
 			"bucket": "reading-dependent",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D1"]
 		},
 		{
 			"row": "BJ2",
 			"record": "breakdown/de/bauer-vogelkaefig",
 			"bucket": "reading-dependent",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D1"]
 		},
 		{
 			"row": "BJ3",
 			"record": "breakdown/de/durchbrechen-entzwei",
 			"bucket": "reading-shared-split",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D2"]
 		},
 		{
 			"row": "BJ4",
 			"record": "breakdown/de/durchbrechen-hindernis",
 			"bucket": "reading-shared-split",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D2"]
 		},
 		{
 			"row": "BJ5",
 			"record": "breakdown/de/entgleisen",
 			"bucket": "prefix-base-ending",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D3"]
 		},
 		{
 			"row": "BJ6",
 			"record": "breakdown/de/verkabeln",
 			"bucket": "prefix-base-ending",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D3"]
 		},
 		{
 			"row": "BJ7",
 			"record": "breakdown/de/verarmen",
 			"bucket": "prefix-base-ending",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D3"]
 		},
 		{
 			"row": "BJ8",
 			"record": "breakdown/de/vergiften",
 			"bucket": "prefix-base-ending-contrast",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D3"]
 		},
 		{
 			"row": "BJ9",
 			"record": "breakdown/de/steuermann",
 			"bucket": "verb-stem-first-part",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D4"]
 		},
 		{
 			"row": "BJ10",
 			"record": "breakdown/de/schlafsack",
 			"bucket": "verb-stem-first-part",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D4"]
 		},
 		{
 			"row": "BJ11",
 			"record": "breakdown/de/kochtopf",
 			"bucket": "verb-stem-first-part",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D4"]
 		},
 		{
 			"row": "BJ12",
 			"record": "breakdown/de/bildung",
 			"bucket": "deverbal-ung",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D4"]
 		},
 		{
 			"row": "BJ13",
 			"record": "breakdown/de/kleidung",
 			"bucket": "deverbal-ung",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D4"]
 		},
 		{
 			"row": "BJ14",
 			"record": "breakdown/de/alles-in-allem",
 			"bucket": "pronoun-citation-form",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D5"]
 		},
 		{
 			"row": "BJ15",
 			"record": "breakdown/de/um-jeden-preis",
 			"bucket": "pronoun-citation-form",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D5"]
 		},
 		{
 			"row": "BJ16",
 			"record": "breakdown/de/dieses-und-jenes",
 			"bucket": "pronoun-citation-form",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["D5"]
 		},
 		{
 			"row": "BJ17",
 			"record": "breakdown/de/was-weiss-ich",
 			"bucket": "phraseme-part-kind-by-role",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BJ18",
 			"record": "breakdown/de/so-gut-wie",
 			"bucket": "phraseme-part-kind-by-role",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BJ19",
 			"record": "breakdown/de/kaum-dass",
 			"bucket": "phraseme-part-kind-by-role",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BJ20",
 			"record": "breakdown/de/apfelbaum",
 			"bucket": "control-compound",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BJ21",
 			"record": "breakdown/de/freundschaft",
 			"bucket": "control-derivation",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		}
 	]

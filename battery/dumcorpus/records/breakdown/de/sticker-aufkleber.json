@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Sticker",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🏷"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Sticker",
+					"target": {
+						"language": "de",
+						"canonicalForm": "sticker",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Sticker",
+				"url": "https://www.dwds.de/wb/Sticker",
+				"supports": "No Wortzerlegung for der Sticker, 'Synonym zu Aufkleber' (DWDS 2016)"
+			},
+			{
+				"title": "Wiktionary: Sticker",
+				"url": "https://en.wiktionary.org/wiki/Sticker#German",
+				"supports": "Borrowed from English sticker"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The label, der Sticker, is a loan from English sticker with no Wortzerlegung, so it is a bottom word: the Root sticker and the zero ending (ADR 0050: a loan blended abroad has no Constituents; ADR 0051). der Sticker who embroiders splits sticken + -er (ADR 0050: the Reading owns the split)."
+	}
+}

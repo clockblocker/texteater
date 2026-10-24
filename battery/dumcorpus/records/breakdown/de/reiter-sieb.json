@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Reiter",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🌾"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Reiter",
+					"target": {
+						"language": "de",
+						"canonicalForm": "reiter",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Reiter",
+				"url": "https://www.dwds.de/wb/Reiter",
+				"supports": "No Wortzerlegung for die Reiter (Femininum, DWDS 2024), 'Synonym zu Sieb'"
+			},
+			{
+				"title": "Wiktionary: Reiter",
+				"url": "https://en.wiktionary.org/wiki/Reiter#German",
+				"supports": "Etymology 2: from MHG rītere, OHG rîtera 'sieve' (glossing Latin cribrum), from Proto-West-Germanic *hrīdrā, not from reiten"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The sieve, die Reiter. DWDS gives this homograph no Wortzerlegung, and its -er is no suffix: it goes back to OHG rîtera 'sieve', unrelated to reiten. So it is a bottom word: the Root reiter and the zero ending (ADR 0051). der Reiter, the rider, splits reiten + -er (ADR 0050: the Reading owns the split)."
+	}
+}

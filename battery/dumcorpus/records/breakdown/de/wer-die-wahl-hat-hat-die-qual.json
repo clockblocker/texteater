@@ -1,0 +1,133 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Saying",
+			"kind": "Saying",
+			"canonicalForm": "Wer die Wahl hat, hat die Qual",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🤔"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Wer",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "wer",
+						"coreFeatures": {
+							"case": null,
+							"gender": "Masc",
+							"number": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Rel"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "die Wahl",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Wahl",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "hat",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "haben",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				},
+				{
+					"letters": ", "
+				},
+				{
+					"letters": "hat",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "haben",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "die Qual",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Qual",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0040", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "b7ac2bf4eaaf25be"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "43184aac9186aceb"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: wer die Wahl hat, hat die Qual",
+				"url": "https://www.dwds.de/wb/wer%20die%20Wahl%20hat,%20hat%20die%20Qual",
+				"supports": "The Mehrwortausdruck wer die Wahl hat, hat die Qual; Hauptbestandteile Wahl, Qual"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Both hat link to VERB haben, a form its headword's letters don't build. Wer links to the relative PRON wer of a free relative clause (de/pron-or-det-by-use), each article is grouped with its noun (ADR 0040), and the comma is filler."
+	}
+}

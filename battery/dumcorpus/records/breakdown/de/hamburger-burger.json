@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Hamburger",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🍔"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Hamburger",
+					"target": {
+						"language": "de",
+						"canonicalForm": "hamburger",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Hamburger",
+				"url": "https://www.dwds.de/wb/Hamburger",
+				"supports": "No Wortzerlegung for der Hamburger, 'aus den USA stammendes Fastfood'"
+			},
+			{
+				"title": "Wiktionary: Hamburger",
+				"url": "https://en.wiktionary.org/wiki/Hamburger#German",
+				"supports": "Etymology 2: borrowed from English hamburger"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The sandwich, der Hamburger, came back to German from English hamburger and DWDS gives it no Wortzerlegung, so it is a bottom word: the Root hamburger and the zero ending (ADR 0050: a loan blended abroad has no Constituents, as Motel; ADR 0051). Someone from Hamburg splits Hamburg + -er (ADR 0050: the Reading owns the split)."
+	}
+}

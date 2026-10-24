@@ -1,0 +1,182 @@
+{
+	"note": "Held-out candidates for German segment.inConstituents and segment.inMorphemes, drafted 2026-10-24 as Draft Breakdown Records in records/breakdown/de after round 3 (held-out 43 of 63, breakdown 160 of 189 exact, #1241), to judge round 4 with fresh words. Six sense-dependent homograph pairs, one spelling and Kind with two Readings whose Constituents differ: in five, an -er agent or inhabitant noun against a simplex or a loan with no Wortzerlegung (Schoner protective cover schonen + -er against the ship from English schooner; Reiter rider reiten + -er against die Reiter, a sieve from OHG rîtera; Sticker embroiderer sticken + -er against the label from English sticker; Hamburger Hamburg + -er against the sandwich from English hamburger; Römer Rom + -er against the wine glass from Dutch roemer), and in one, both split but the part links to a different Lemma (Kreuzer warship kreuzen + -er, coin Kreuz + -er). The rest cover a base that spells both a noun and a verb stem, where DWDS picks the verb in Segelboot and the noun in Ruderboot; an irregular finite verb no headword letter rule builds (sind in Stille Wasser sind tief, hat in Wer die Wahl hat, hat die Qual); a phraseme part whose Kind differs from the whole's (ADV je in the SCONJ je nachdem; NOUN and ADP parts in the ADV Knall auf Fall); an inner Locution part (auf Nummer sicher in auf Nummer sicher gehen) against a flat phraseme whose run looks fixed (am Ball in am Ball bleiben, which no dictionary lists apart); and a compound and a derivation as controls (Haustür, Kindheit). Five records are bottom words, so their morphemes are a Root and the zero ending ∅, as die Leiter's are. Every word split follows the DWDS Wortzerlegung (ADR 0050's tie rule), with en.wiktionary etymology cited only to confirm a loan or an unrelated homograph, and every phraseme its DWDS entry, cited in its record. None is a round-1, round-2 or round-3 case, none is named by a Rule, none may be an example in a Breakdown prompt (#693), and none uses a word reserved for the next prompt examples. Avoided: adverb + dass subordinators and ohne dass or statt dass (#1281); Sources (conversions such as die Mauser from mausern, participles, clippings such as der Zerstörer from Torpedobootzerstörer, acronyms); vergiften-like rare-verb gates; and a homograph whose split would need a letter the shown pieces can't hold (Spinner the lure, Spin + -er with a doubled n; Rauchwaren, plural-only, Rauch + waren). Consistency sets: E1 one spelling, one Reading split into stem + -er and the other a bottom word; E2 one spelling, both split, the same letters linking to a verb in one Reading and a noun in the other; E3 a PROPN part (Hamburg, Rom) against a loan of the same letters; E4 a first part that spells both a noun and a verb stem, where DWDS decides (Kreuz, Segel, Ruder); E5 a finite form of an irregular verb as a Saying's part; E6 a part keeping its own Kind inside a phraseme of another Kind; E7 an inner Locution against a run that is no unit. Judged 2026-10-24 by two judges (system and learner POV, #1241): they agreed on 21 gold calls; hamburger-burger is contested (its row says why), and the learner judge would also drop reiter-sieb as a rare, southeastern sense whose emoji shows no sieve, while the system judge keeps it.",
+	"rows": [
+		{
+			"row": "BK1",
+			"record": "breakdown/de/schoner-segelschiff",
+			"bucket": "reading-dependent",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1"]
+		},
+		{
+			"row": "BK2",
+			"record": "breakdown/de/schoner-schutzhuelle",
+			"bucket": "reading-dependent",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1"]
+		},
+		{
+			"row": "BK3",
+			"record": "breakdown/de/reiter-reiten",
+			"bucket": "reading-dependent",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1"]
+		},
+		{
+			"row": "BK4",
+			"record": "breakdown/de/reiter-sieb",
+			"bucket": "reading-dependent",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1"]
+		},
+		{
+			"row": "BK5",
+			"record": "breakdown/de/sticker-aufkleber",
+			"bucket": "reading-dependent",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1"]
+		},
+		{
+			"row": "BK6",
+			"record": "breakdown/de/sticker-sticken",
+			"bucket": "reading-dependent",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1"]
+		},
+		{
+			"row": "BK7",
+			"record": "breakdown/de/hamburger-einwohner",
+			"bucket": "reading-dependent",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1", "E3"]
+		},
+		{
+			"row": "BK8",
+			"record": "breakdown/de/hamburger-burger",
+			"bucket": "reading-dependent",
+			"split": "held-out",
+			"change": "new",
+			"contested": "The judges split (#1241): the learner judge keeps none, a loan from English hamburger; the system judge reads DWDS's Grundform line (→ the adjective Hamburger) as a conversion, so the Reading would have a Source and be no segmenter case. Its round-4 result is reported apart until the user rules.",
+			"consistencySets": ["E1", "E3"]
+		},
+		{
+			"row": "BK9",
+			"record": "breakdown/de/roemer-einwohner",
+			"bucket": "reading-dependent",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1", "E3"]
+		},
+		{
+			"row": "BK10",
+			"record": "breakdown/de/roemer-weinglas",
+			"bucket": "reading-dependent",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1", "E3"]
+		},
+		{
+			"row": "BK11",
+			"record": "breakdown/de/kreuzer-kriegsschiff",
+			"bucket": "reading-dependent-link",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E2", "E4"]
+		},
+		{
+			"row": "BK12",
+			"record": "breakdown/de/kreuzer-muenze",
+			"bucket": "reading-dependent-link",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E2", "E4"]
+		},
+		{
+			"row": "BK13",
+			"record": "breakdown/de/segelboot",
+			"bucket": "noun-or-verb-base",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E4"]
+		},
+		{
+			"row": "BK14",
+			"record": "breakdown/de/ruderboot",
+			"bucket": "noun-or-verb-base",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E4"]
+		},
+		{
+			"row": "BK15",
+			"record": "breakdown/de/stille-wasser-sind-tief",
+			"bucket": "irregular-finite-verb",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E5"]
+		},
+		{
+			"row": "BK16",
+			"record": "breakdown/de/wer-die-wahl-hat-hat-die-qual",
+			"bucket": "irregular-finite-verb",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E5"]
+		},
+		{
+			"row": "BK17",
+			"record": "breakdown/de/je-nachdem",
+			"bucket": "phraseme-part-kind-differs",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E6"]
+		},
+		{
+			"row": "BK18",
+			"record": "breakdown/de/knall-auf-fall",
+			"bucket": "phraseme-part-kind-differs",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E6"]
+		},
+		{
+			"row": "BK19",
+			"record": "breakdown/de/auf-nummer-sicher-gehen",
+			"bucket": "inner-locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E7"]
+		},
+		{
+			"row": "BK20",
+			"record": "breakdown/de/am-ball-bleiben",
+			"bucket": "inner-locution-flat",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E7"]
+		},
+		{
+			"row": "BK21",
+			"record": "breakdown/de/haustuer",
+			"bucket": "control-compound",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "BK22",
+			"record": "breakdown/de/kindheit",
+			"bucket": "control-derivation",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		}
+	]
+}

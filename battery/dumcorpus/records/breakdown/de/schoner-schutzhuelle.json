@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Schoner",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🛡"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Schon",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "schonen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				},
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-er",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Schoner",
+				"url": "https://www.dwds.de/wb/Schoner",
+				"supports": "The Wortzerlegung schonen -er, for der Schoner, '(kleine) Decke, Hülle zum Schutz gegen schnelle Abnutzung' (Ärmelschoner, Bildschirmschoner)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The protective cover, der Schoner. DWDS splits it schonen + -er, Schon showing the verb's stem; der Schoner, the sailing ship, is a loan from English schooner with no Wortzerlegung (ADR 0050: the Reading owns the split)."
+	}
+}

@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Kreuzer",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🚢"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Kreuz",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "kreuzen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				},
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-er",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Kreuzer",
+				"url": "https://www.dwds.de/wb/Kreuzer",
+				"supports": "The Wortzerlegung kreuzen -er, for der Kreuzer, 'größeres gepanzertes Kriegsschiff'; the Etymologie: 'Schiff, das hin und her fahrend eine Küste schützt', from 2kreuzen 'hin und her fahren'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The warship, der Kreuzer. DWDS splits it kreuzen + -er: the ship that cruises. Kreuz shows the verb's stem, though it also spells the noun Kreuz, which the coin der Kreuzer is built on (ADR 0050: the Reading owns the split)."
+	}
+}
