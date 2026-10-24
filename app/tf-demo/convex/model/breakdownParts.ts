@@ -73,8 +73,7 @@ export async function prefetchMorphemeSources(
 /**
  * The groups of a base's Formations, in the order its Note lists them.
  * `Sourced` holds the words that name the base as their Source (`Lauf` from
- * `laufen`), DWDS's `als Grundform`; whether Notes show it is a display
- * choice (#1241).
+ * `laufen`), DWDS's `als Grundform`, which Notes list as `Base of`.
  */
 export const formationGroupValues = [
 	"Prefixed",

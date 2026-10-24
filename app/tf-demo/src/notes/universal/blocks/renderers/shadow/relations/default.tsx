@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
-import { useBreakdownDisplay } from "../../common/breakdown-display";
 import { RouteAside } from "../../common/features";
 import { RelationMark } from "../../common/relation-mark";
 import { RouteMark } from "../../common/route-mark";
@@ -22,17 +21,16 @@ function ShadowRelations({
 	noteData,
 	PresentationCapabilities,
 }: ShadowRelationsProps) {
-	const display = useBreakdownDisplay();
 	const { references, cleanup } = PresentationCapabilities;
 	const isCard = PresentationCapabilities.presentation === "Card";
 	const { candidates } = noteData.inspection;
-	// A Breakdown's Constituents show under Formations instead (ADR 0050),
-	// and so does a Source when Formations list them.
+	// A Breakdown's Constituents and a Source show under Formations instead
+	// (ADR 0050).
 	const referrers = references.items.flatMap((referrer) => {
 		const structuralReferences = referrer.structuralReferences.filter(
 			({ aspect, path }) =>
 				!(aspect === "breakdown" && path.startsWith("constituents.")) &&
-				!(aspect === "source" && display.sources === "Listed"),
+				aspect !== "source",
 		);
 		return referrer.pendingRelations.length > 0 ||
 			structuralReferences.length > 0

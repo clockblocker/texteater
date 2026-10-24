@@ -27,7 +27,7 @@ const kindNames: Readonly<Record<string, string>> = {
 	Chunk: "not split yet",
 };
 
-export function kindName(kind: string): string {
+function kindName(kind: string): string {
 	return kindNames[kind] ?? kind.toLowerCase();
 }
 
@@ -41,31 +41,28 @@ export function morphemeLabel(piece: Morpheme): string {
 /** Shapes drawn around the letters rather than above them. */
 export const framedKinds: ReadonlySet<string> = new Set(["Ending", "Interfix"]);
 
-export type RevealMotion = "Draw" | "Fade" | "Instant";
+export type RevealMotion = "Draw" | "Instant";
 
 /**
  * How a revealed mark comes and goes. It enters with a short wipe from the
- * inline start (`Draw`) or a fade (`Fade`), on a strong ease-out, and leaves
- * with a quicker fade; the wipe resets only once the fade is done, so a
- * pointer that comes back mid-exit fades the whole mark back in. CSS
- * transitions retarget from the current value, so every change interrupts
- * cleanly. The durations come from the line's custom properties.
+ * inline start on a strong ease-out and leaves with a quicker fade; the wipe
+ * resets only once the fade is done, so a pointer that comes back mid-exit
+ * fades the whole mark back in. CSS transitions retarget from the current
+ * value, so every change interrupts cleanly. The durations come from the
+ * line's custom properties. Keyboard focus reveals `Instant`ly.
  */
 export function markMotionStyle(
 	shown: boolean,
 	motion: RevealMotion,
 ): CSSProperties {
-	const wiped = motion === "Draw" && !shown;
-	const clipPath = wiped ? "inset(0 100% 0 0)" : "inset(0 0 0 0)";
+	const clipPath = shown ? "inset(0 0 0 0)" : "inset(0 100% 0 0)";
 	if (motion === "Instant")
 		return { opacity: shown ? 1 : 0, clipPath, transition: "none" };
 	return {
 		opacity: shown ? 1 : 0,
 		clipPath,
 		transition: shown
-			? motion === "Draw"
-				? "clip-path var(--reveal-in) var(--reveal-ease), opacity calc(var(--reveal-in) * 0.5) linear"
-				: "opacity var(--reveal-in) var(--reveal-ease)"
+			? "clip-path var(--reveal-in) var(--reveal-ease), opacity calc(var(--reveal-in) * 0.5) linear"
 			: "opacity var(--reveal-out) ease-out, clip-path 0s linear var(--reveal-out)",
 	};
 }

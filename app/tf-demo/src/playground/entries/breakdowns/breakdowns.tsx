@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "lego";
 import { useMemo, useState } from "react";
-import { type BreakdownDisplay, BreakdownDisplayProvider } from "@/notes";
 import {
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
@@ -11,8 +10,7 @@ import { CardFrame, SheetFrame } from "../frames";
 import { segmentsFromTarget, targetFromSegments } from "../notes-gallery";
 import { PlaygroundNote, playgroundNotesQuery } from "../playground-note";
 import { BREAKDOWN_EXAMPLES, exampleTarget } from "./examples";
-import { Inspector, InspectorSection } from "./inspector";
-import { BreakdownKnobs, PROTOTYPE_BREAKDOWN_DISPLAY } from "./knobs";
+import { Inspector, InspectorChoice, InspectorSection } from "./inspector";
 
 const firstExample = BREAKDOWN_EXAMPLES[0]?.examples[0];
 
@@ -26,9 +24,6 @@ const firstExample = BREAKDOWN_EXAMPLES[0]?.examples[0];
  */
 export function BreakdownsPrototype({ route }: { readonly route: EntryRoute }) {
 	const snapshot = useQuery(playgroundNotesQuery);
-	const [display, setDisplay] = useState<BreakdownDisplay>(
-		PROTOTYPE_BREAKDOWN_DISPLAY,
-	);
 	const [presentation, setPresentation] = useState<"Sheet" | "Card">("Sheet");
 	const routed = useMemo(
 		() => targetFromSegments(route.segments),
@@ -57,13 +52,6 @@ export function BreakdownsPrototype({ route }: { readonly route: EntryRoute }) {
 			</p>
 		);
 	const data = snapshot.data;
-	const shownDisplay: BreakdownDisplay = {
-		...display,
-		formationsOfLemma: (lemmaId) => {
-			const note = data.notes[`Lemma:${lemmaId}`];
-			return note?.kind === "Lemma" ? note.formations : undefined;
-		},
-	};
 	const target =
 		routed ?? (firstExample ? exampleTarget(data, firstExample) : null);
 	const Frame = presentation === "Card" ? CardFrame : SheetFrame;
@@ -73,16 +61,14 @@ export function BreakdownsPrototype({ route }: { readonly route: EntryRoute }) {
 			<div className="w-full max-w-2xl">
 				{target ? (
 					<WorkspaceInteractionProvider interaction={interaction}>
-						<BreakdownDisplayProvider value={shownDisplay}>
-							<Frame>
-								<PlaygroundNote
-									target={target}
-									presentation={presentation}
-									snapshot={data}
-									follow={interaction.follow}
-								/>
-							</Frame>
-						</BreakdownDisplayProvider>
+						<Frame>
+							<PlaygroundNote
+								target={target}
+								presentation={presentation}
+								snapshot={data}
+								follow={interaction.follow}
+							/>
+						</Frame>
 					</WorkspaceInteractionProvider>
 				) : null}
 			</div>
@@ -98,7 +84,8 @@ export function BreakdownsPrototype({ route }: { readonly route: EntryRoute }) {
 						at rest, and under the pointer one morpheme turns blue
 						with its school mark drawn above it. Tab into the word
 						and walk it with ← →; Enter opens the morpheme's Note.
-						Browser Back walks back.
+						Browser Back walks back. These are the real Notes'
+						defaults, approved on 2026-10-24.
 					</p>
 				</InspectorSection>
 				{BREAKDOWN_EXAMPLES.map((group) => (
@@ -141,12 +128,17 @@ export function BreakdownsPrototype({ route }: { readonly route: EntryRoute }) {
 						</ul>
 					</InspectorSection>
 				))}
-				<BreakdownKnobs
-					display={display}
-					setDisplay={setDisplay}
-					presentation={presentation}
-					setPresentation={setPresentation}
-				/>
+				<InspectorSection title="Frame">
+					<InspectorChoice
+						label="Presentation"
+						value={presentation}
+						options={[
+							{ value: "Sheet", label: "Sheet" },
+							{ value: "Card", label: "Card" },
+						]}
+						onChange={setPresentation}
+					/>
+				</InspectorSection>
 				<InspectorSection title="Copied from">
 					<ul className="grid list-disc gap-1 ps-4 text-ink-soft">
 						{COPIED.map(([what, from]) => (
@@ -206,7 +198,6 @@ const OPEN_QUESTIONS: readonly string[] = [
 	"At rest nothing says the word can be explored; is the pointer cursor cue enough?",
 	"The zero ending's target is invisible until hovered; will a learner ever find it?",
 	"A pin lasts until a click elsewhere or Escape; is that the right way to clear it?",
-	"Formations on each Reading Note repeat the Lemma's list on every Reading.",
 	"Is “Base of” the right label for the words with this one as Source?",
 	"A fast sweep across the word flashes every mark; should the first reveal wait a beat?",
 ];
