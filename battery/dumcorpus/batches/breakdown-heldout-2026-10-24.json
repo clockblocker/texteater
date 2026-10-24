@@ -1,60 +1,60 @@
 {
-	"note": "Held-out candidates for German segment.inConstituents, drafted 2026-10-24 from the user's Breakdown rulings on #1241: a cranberry piece linking to its Root Morpheme (Himbeere), E in E-Mail linking to DWDS's 2e-, a phrasal compound flat (Trimm-dich-Pfad) or with a Locution front (Rund-um-die-Uhr-Betreuung), an optional intensifier left out of the Canonical Form (aus dem Häuschen sein), a rare true particle (zunichtemachen) and leid as ADJ leid (leidtun). Each record cites DWDS. None is a round-1 or round-2 case, none is named by a Rule, and none may be an example in a Breakdown prompt (#693). Since #1280, segment.inConstituents offers each shape these records need as a candidate: a noun's first part as a cranberry Root, a lone E before a hyphen as the prefix e-, a hyphenated word's front phrase as one Locution, and the verb head tun; jev still picks, so only the held-out round shows whether Himbeere, E-Mail, Rund-um-die-Uhr-Betreuung and leidtun pass. Every row is held-out: the Breakdown lab scores these records only in segment-in-constituents/de:heldout, never in :breakdown. Consistency set C1: a phrasal compound flat against one whose front phrase is a Locution.",
+	"note": "Held-out candidates for German segment.inConstituents, drafted 2026-10-24 from the user's Breakdown rulings on #1241: a cranberry piece linking to its Root Morpheme (Himbeere), E in E-Mail linking to DWDS's 2e-, a phrasal compound flat (Trimm-dich-Pfad) or with a Locution front (Rund-um-die-Uhr-Betreuung), an optional intensifier left out of the Canonical Form (aus dem Häuschen sein), a rare true particle (zunichtemachen) and leid as ADJ leid (leidtun). Each record cites DWDS. None is a round-1 or round-2 case, none is named by a Rule, and none may be an example in a Breakdown prompt (#693). Since #1280, segment.inConstituents offers each shape these records need as a candidate: a noun's first part as a cranberry Root, a lone E before a hyphen as the prefix e-, a hyphenated word's front phrase as one Locution, and the verb head tun; jev still picks, so only the held-out round shows whether Himbeere, E-Mail, Rund-um-die-Uhr-Betreuung and leidtun pass. Until round 2 every row was held-out: the Breakdown lab scored these records only in segment-in-constituents/de:heldout, never in :breakdown. Consistency set C1: a phrasal compound flat against one whose front phrase is a Locution. Promoted 2026-10-24 after round 2 scored them (#1241): every row is now dev, so the lab scores these records in segment-in-constituents/de:breakdown, the set prompts are tuned on, and a fresh batch judges round 3. They stay out of every Breakdown prompt's examples (#693).",
 	"rows": [
 		{
 			"row": "BI1",
 			"record": "breakdown/de/himbeere",
 			"bucket": "cranberry-root",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BI2",
 			"record": "breakdown/de/e-mail",
 			"bucket": "hyphen-prefix",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BI3",
 			"record": "breakdown/de/trimm-dich-pfad",
 			"bucket": "phrasal-compound-flat",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["C1"]
 		},
 		{
 			"row": "BI4",
 			"record": "breakdown/de/rund-um-die-uhr-betreuung",
 			"bucket": "phrasal-compound-locution",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["C1"]
 		},
 		{
 			"row": "BI5",
 			"record": "breakdown/de/aus-dem-haeuschen-sein",
 			"bucket": "optional-intensifier",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BI6",
 			"record": "breakdown/de/zunichtemachen",
 			"bucket": "rare-particle",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BI7",
 			"record": "breakdown/de/leidtun",
 			"bucket": "lexeme-first-part",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		}
 	]

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Messer",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🔪"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Messer",
+					"target": {
+						"language": "de",
+						"canonicalForm": "messer",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Messer",
+				"url": "https://www.dwds.de/wb/Messer",
+				"supports": "No Wortzerlegung for das Messer, the knife; Herkunft an obscured compound, ahd. meʒʒisahs (9th c.), not from messen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The knife, das Messer. DWDS gives this homograph no Wortzerlegung, so it is a bottom word with no Constituents: the Root messer and the zero ending (ADR 0051). der Messer, who or what measures, splits messen + -er (ADR 0050: the Reading owns the split)."
+	}
+}

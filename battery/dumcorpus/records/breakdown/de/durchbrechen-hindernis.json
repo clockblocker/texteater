@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "durchbrechen",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "🧱"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "durch",
+					"target": {
+						"language": "de",
+						"canonicalForm": "durch-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "brechen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "brechen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: durchbrechen",
+				"url": "https://www.dwds.de/wb/durchbrechen",
+				"supports": "The Wortzerlegung durch- brechen, for the inseparable durchbrechen (durchbricht), to break through a barrier"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The inseparable durchbrechen, to break through a barrier. DWDS splits it durch- + brechen, as it does the separable durchbrechen, another Lemma: two Lemmas of one spelling, one split (ADR 0050)."
+	}
+}

@@ -67,7 +67,9 @@ test("the records a held-out batch lists are segment.inConstituents's held-out s
 	expect([...held].sort()).toEqual([...heldOut].sort());
 	expect(tuned.filter((id) => heldOut.has(id))).toEqual([]);
 	expect(tuned).toContain("breakdown/de/verarzten");
-	expect(held).toContain("breakdown/de/befreien");
+	// Round 2's held-out records were promoted into the tuned set (#1241).
+	expect(tuned).toContain("breakdown/de/befreien");
+	expect(held).toContain("breakdown/de/entgleisen");
 });
 
 test("an answer passes only exactly; cuts and links are counted apart", () => {

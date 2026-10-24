@@ -1,0 +1,99 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "ADV",
+			"canonicalForm": "um jeden Preis",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "💪"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "um",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "um",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "jeden",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "DET",
+						"canonicalForm": "jeder",
+						"coreFeatures": {
+							"case": null,
+							"gender": null,
+							"number": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Tot"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Preis",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Preis",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "b7ac2bf4eaaf25be"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "43184aac9186aceb"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: um jeden Preis",
+				"url": "https://www.dwds.de/wb/um%20jeden%20Preis",
+				"supports": "The multiword expression um jeden Preis, 'unter allen Umständen, unbedingt'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "jeden modifies Preis, so it is DET, not PRON (de/pron-or-det-by-use), and links to the headword jeder (de/canonical-form-is-the-headword). It is no article, so it stays a part of its own (ADR 0040)."
+	}
+}

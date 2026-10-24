@@ -1,0 +1,99 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "PRON",
+			"canonicalForm": "dieses und jenes",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🗂"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "dieses",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "dieser",
+						"coreFeatures": {
+							"case": null,
+							"gender": null,
+							"number": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Dem"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "und",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "und",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "jenes",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "jener",
+						"coreFeatures": {
+							"case": null,
+							"gender": null,
+							"number": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Dem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "b7ac2bf4eaaf25be"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "43184aac9186aceb"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: dieses und jenes",
+				"url": "https://www.dwds.de/wb/dieses%20und%20jenes",
+				"supports": "The multiword expression dieses und jenes / dies und jenes, 'allerlei Verschiedenes'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "dieses and jenes each stand for a noun phrase, so both are demonstrative PRON (de/pron-or-det-by-use), and each links to its headword, dieser and jener, not to its letters (de/canonical-form-is-the-headword)."
+	}
+}

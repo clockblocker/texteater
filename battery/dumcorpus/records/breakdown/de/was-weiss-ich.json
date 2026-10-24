@@ -1,0 +1,98 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "INTJ",
+			"canonicalForm": "was weiß ich",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🤷"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "was",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "was",
+						"coreFeatures": {
+							"case": null,
+							"gender": "Neut",
+							"number": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Int"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "weiß",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "wissen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "ich",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "ich",
+						"coreFeatures": {
+							"case": "Nom",
+							"gender": null,
+							"number": "Sing",
+							"person": "1",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "b7ac2bf4eaaf25be"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: was weiß ich",
+				"url": "https://www.dwds.de/wb/was%20wei%C3%9F%20ich",
+				"supports": "The multiword expression was weiß ich, 'Ausdruck der Ratlosigkeit: ich weiß (es) nicht'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "was is the object of a question, rhetorical here, so it links to the interrogative PRON was (de/pron-or-det-by-use); weiß links to wissen, and ich to its own cell."
+	}
+}

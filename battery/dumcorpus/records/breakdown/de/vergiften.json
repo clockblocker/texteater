@@ -1,0 +1,66 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "vergiften",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "☠"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ver",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ver-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "giften",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "giften",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: vergiften",
+				"url": "https://www.dwds.de/wb/vergiften",
+				"supports": "The Wortzerlegung ver- + giften"
+			},
+			{
+				"title": "DWDS: giften",
+				"url": "https://www.dwds.de/wb/giften",
+				"supports": "giften is a verb of its own (giftet, giftete, hat gegiftet)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A prefix and a verb: DWDS splits it ver- + giften, not ver- + Gift + en, since giften is a verb a dictionary lists on its own (ADR 0050). Its contrast is verkabeln, where DWDS picks the noun though kabeln exists."
+	}
+}

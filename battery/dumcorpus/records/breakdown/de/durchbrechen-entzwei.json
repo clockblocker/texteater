@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "durchbrechen",
+			"coreFeatures": {
+				"hasSepPrefix": "durch",
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "🪵💥"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "durch",
+					"target": {
+						"language": "de",
+						"canonicalForm": "durch-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "brechen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "brechen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: durchbrechen",
+				"url": "https://www.dwds.de/wb/durchbrechen",
+				"supports": "The Wortzerlegung durch- brechen, for the separable durchbrechen (bricht durch), to break in two"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The separable durchbrechen, to break in two. durch is a true particle, so it links to its Prefix Morpheme durch- (ADR 0050). The inseparable durchbrechen, to break through a barrier, is another Lemma with the same split."
+	}
+}

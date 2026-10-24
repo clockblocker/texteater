@@ -1,0 +1,109 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "ADV",
+			"canonicalForm": "alles in allem",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🧮"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "alles",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "alle",
+						"coreFeatures": {
+							"case": null,
+							"gender": null,
+							"number": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Tot"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "in",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "in",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "allem",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "alle",
+						"coreFeatures": {
+							"case": null,
+							"gender": null,
+							"number": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Tot"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/standalone-alles-means-everything",
+				"hash": "8689c42ba09c6fbb"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "b7ac2bf4eaaf25be"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "43184aac9186aceb"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: alles in allem",
+				"url": "https://www.dwds.de/wb/alles%20in%20allem",
+				"supports": "The multiword expression alles in allem, 'insgesamt; im Ganzen gesehen'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "alles and allem stand alone, so both are PRON, and both link to the headword alle, the stem PRON's citation form (de/standalone-alles-means-everything, de/canonical-form-is-the-headword); in links to the ADP in."
+	}
+}

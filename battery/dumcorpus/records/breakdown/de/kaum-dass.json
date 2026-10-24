@@ -1,0 +1,67 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "SCONJ",
+			"canonicalForm": "kaum dass",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "⏱"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "kaum",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "kaum",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "dass",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"canonicalForm": "dass",
+						"coreFeatures": {}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: kaum",
+				"url": "https://www.dwds.de/wb/kaum",
+				"supports": "Sense 3, ⟨kaum dass⟩ in konjunktionaler Verwendung, 'in dem Moment, als', opening a Temporalsatz"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The whole opens a clause, so the Locution is SCONJ, but each part keeps its own Kind: kaum is the ADV kaum and dass the SCONJ dass (ADR 0039, ADR 0050)."
+	}
+}

@@ -1,0 +1,89 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "ADV",
+			"canonicalForm": "so gut wie",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🤏"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "so",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "so",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "gut",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "gut",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "wie",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "wie",
+						"coreFeatures": {}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/relative-w-adverb-fills-a-slot",
+				"hash": "1a40c9fa9b13cf2c"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: so gut wie",
+				"url": "https://www.dwds.de/wb/so%20gut%20wie",
+				"supports": "The multiword expression so gut wie, 'fast, beinahe', as an adverbial"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Comparison wie before a phrase fills no slot, so it links to the CCONJ wie, not to the ADV wie (de/relative-w-adverb-fills-a-slot). No two of its words form a unit of their own."
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Bauer",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🐦"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Bauer",
+					"target": {
+						"language": "de",
+						"canonicalForm": "bauer",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Bauer",
+				"url": "https://www.dwds.de/wb/Bauer",
+				"supports": "No Wortzerlegung for das Bauer, the birdcage; Herkunft ahd. būr 'Wohnung, Vorratshaus' (8th c.), not from bauen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The birdcage, das Bauer. DWDS gives this homograph no Wortzerlegung, so it is a bottom word with no Constituents: the Root bauer and the zero ending (ADR 0051). der Bauer, the farmer, splits bauen + -er (ADR 0050: the Reading owns the split)."
+	}
+}

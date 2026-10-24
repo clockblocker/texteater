@@ -1,164 +1,164 @@
 {
-	"note": "Held-out candidates for German segment.inConstituents, drafted 2026-10-23 as Draft Breakdown Records in records/breakdown/de after round 1 (22 of 29 exact, #1241). Each covers a round-1 failure class with fresh words: a prefix with a noun or adjective base and the citation ending (verarzten), a split that depends on the Reading (Wachstube), a verb's stem as a compound's first part (Wachstube 💂), a phraseme part whose Kind depends on its role (um … zu, wie, einer), and a run inside a phraseme that may or may not be a Locution; a compound and a derivation are controls. Every word split follows the DWDS Wortzerlegung (ADR 0050's tie rule), cited in its record. None is a round-1 case, none is named by a Rule, and none may be an example in a Breakdown prompt (#693). Avoided as waiting on the user (#1241): cranberry pieces, E-Mail, phrasal compounds without a DWDS split, optional intensifiers, English particles, the 15 adverb particles, leid, and Sources for opaque nouns; and, while the was für gold is re-examined, any near-Locution case built on that pattern. Every row is held-out: the Breakdown lab scores these records only in segment-in-constituents/de:heldout, never in :breakdown, the set prompts are tuned on. Consistency sets: B1 the prefix + base + ending shape against prefix + verb (verfilmen), B2 two Readings of one Lemma's spelling split differently, B3 a verb stem against a noun spelled like it (Erbe, Braten).",
+	"note": "Held-out candidates for German segment.inConstituents, drafted 2026-10-23 as Draft Breakdown Records in records/breakdown/de after round 1 (22 of 29 exact, #1241). Each covers a round-1 failure class with fresh words: a prefix with a noun or adjective base and the citation ending (verarzten), a split that depends on the Reading (Wachstube), a verb's stem as a compound's first part (Wachstube 💂), a phraseme part whose Kind depends on its role (um … zu, wie, einer), and a run inside a phraseme that may or may not be a Locution; a compound and a derivation are controls. Every word split follows the DWDS Wortzerlegung (ADR 0050's tie rule), cited in its record. None is a round-1 case, none is named by a Rule, and none may be an example in a Breakdown prompt (#693). Avoided as waiting on the user (#1241): cranberry pieces, E-Mail, phrasal compounds without a DWDS split, optional intensifiers, English particles, the 15 adverb particles, leid, and Sources for opaque nouns; and, while the was für gold is re-examined, any near-Locution case built on that pattern. Until round 2 every row was held-out: the Breakdown lab scored these records only in segment-in-constituents/de:heldout, never in :breakdown, the set prompts are tuned on. Consistency sets: B1 the prefix + base + ending shape against prefix + verb (verfilmen), B2 two Readings of one Lemma's spelling split differently, B3 a verb stem against a noun spelled like it (Erbe, Braten). Promoted 2026-10-24 after round 2 scored them (#1241): every row is now dev, so the lab scores these records in segment-in-constituents/de:breakdown, the set prompts are tuned on, and a fresh batch judges round 3. They stay out of every Breakdown prompt's examples (#693).",
 	"rows": [
 		{
 			"row": "BH1",
 			"record": "breakdown/de/befreien",
 			"bucket": "prefix-base-ending",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B1"]
 		},
 		{
 			"row": "BH2",
 			"record": "breakdown/de/entkernen",
 			"bucket": "prefix-base-ending",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B1"]
 		},
 		{
 			"row": "BH3",
 			"record": "breakdown/de/erblinden",
 			"bucket": "prefix-base-ending",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B1"]
 		},
 		{
 			"row": "BH4",
 			"record": "breakdown/de/entlarven",
 			"bucket": "prefix-base-ending",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B1"]
 		},
 		{
 			"row": "BH5",
 			"record": "breakdown/de/verfilmen",
 			"bucket": "prefix-base-ending-contrast",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B1"]
 		},
 		{
 			"row": "BH6",
 			"record": "breakdown/de/rentier-ren",
 			"bucket": "reading-dependent",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B2"]
 		},
 		{
 			"row": "BH7",
 			"record": "breakdown/de/rentier-rentner",
 			"bucket": "reading-dependent",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B2"]
 		},
 		{
 			"row": "BH8",
 			"record": "breakdown/de/gruendung-gruenden",
 			"bucket": "reading-dependent",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B2"]
 		},
 		{
 			"row": "BH9",
 			"record": "breakdown/de/gruendung-gruenduenger",
 			"bucket": "reading-dependent",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B2"]
 		},
 		{
 			"row": "BH10",
 			"record": "breakdown/de/schreibtisch",
 			"bucket": "verb-stem-first-part",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B3"]
 		},
 		{
 			"row": "BH11",
 			"record": "breakdown/de/fahrrad",
 			"bucket": "verb-stem-first-part",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B3"]
 		},
 		{
 			"row": "BH12",
 			"record": "breakdown/de/erbrecht",
 			"bucket": "verb-stem-first-part",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B3"]
 		},
 		{
 			"row": "BH13",
 			"record": "breakdown/de/bratpfanne",
 			"bucket": "verb-stem-first-part",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["B3"]
 		},
 		{
 			"row": "BH14",
 			"record": "breakdown/de/ohne-zu",
 			"bucket": "phraseme-part-kind-by-role",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BH15",
 			"record": "breakdown/de/dumm-wie-bohnenstroh",
 			"bucket": "phraseme-part-kind-by-role",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BH16",
 			"record": "breakdown/de/dies-und-das",
 			"bucket": "phraseme-part-kind-by-role",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BH17",
 			"record": "breakdown/de/hand-in-hand-gehen",
 			"bucket": "inner-locution",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BH18",
 			"record": "breakdown/de/aus-allen-wolken-fallen",
 			"bucket": "inner-locution",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BH19",
 			"record": "breakdown/de/sonnenbrille",
 			"bucket": "control-compound",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "BH20",
 			"record": "breakdown/de/freiheit",
 			"bucket": "control-derivation",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		}
 	]

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Leiter",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🪜"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Leiter",
+					"target": {
+						"language": "de",
+						"canonicalForm": "leiter",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Leiter",
+				"url": "https://www.dwds.de/wb/Leiter",
+				"supports": "No Wortzerlegung for die Leiter, the ladder; Herkunft ahd. (h)leitara (9th c.), formed with the old instrument suffix -trā, not from leiten"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The ladder, die Leiter. DWDS gives this homograph no Wortzerlegung, so it is a bottom word with no Constituents: the Root leiter and the zero ending (ADR 0051). der Leiter, who leads, splits leiten + -er (ADR 0050: the Reading owns the split)."
+	}
+}

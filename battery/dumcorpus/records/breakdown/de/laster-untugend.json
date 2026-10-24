@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Laster",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "😈"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Laster",
+					"target": {
+						"language": "de",
+						"canonicalForm": "laster",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Laster",
+				"url": "https://www.dwds.de/wb/Laster",
+				"supports": "No Wortzerlegung for das Laster, the vice; Herkunft ahd. lastar (8th c.), from a lost verb ahd. lahan 'tadeln', not from Last"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The vice, das Laster. DWDS gives this homograph no Wortzerlegung, so it is a bottom word with no Constituents: the Root laster and the zero ending (ADR 0051). der Laster, the lorry, splits Last + -er (ADR 0050: the Reading owns the split)."
+	}
+}
