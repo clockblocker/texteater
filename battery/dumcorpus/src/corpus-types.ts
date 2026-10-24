@@ -80,6 +80,18 @@ export type KnowledgeCoverage = {
 	readonly semanticRelations?: {
 		readonly [Relation in Dumrel.DirectSemanticRelation]?: CoverageStatus;
 	};
+	/** Which Variation Dimensions of the Lemma's Paradigm a person has covered (Dumcorpus ADR 0002). */
+	readonly paradigm?: {
+		readonly [Dimension in Dumrel.DimensionId]?: CoverageStatus;
+	};
+};
+
+/**
+ * What a Reading licenses in its Lemma's Paradigm (ADR 0048): per Variation
+ * Dimension, the forms or the marker its sense takes (`plural`: `Mütter`).
+ */
+export type ReadingParadigm = {
+	readonly [Dimension in Dumrel.DimensionId]?: readonly string[];
 };
 
 /**
@@ -102,8 +114,15 @@ export interface SpecTarget extends SegmentationTarget {
 	 */
 	knowledge?: Dumrel.ReadingKnowledge;
 	/**
-	 * Which aspects of `knowledge` a person has covered, authored as
-	 * `reading.coverage`. Present with the Knowledge it describes.
+	 * What the Reading licenses in its Lemma's Paradigm, authored as
+	 * `reading.paradigm` and checked with dumrel. The Lemma's Paradigm pools
+	 * its Readings' forms across records.
+	 */
+	paradigm?: ReadingParadigm;
+	/**
+	 * Which aspects of `knowledge` and dimensions of `paradigm` a person has
+	 * covered, authored as `reading.coverage`. Present with the Knowledge it
+	 * describes.
 	 */
 	coverage?: KnowledgeCoverage;
 	/** The authored Grundform verdict, checked wherever Dumling can decide it. */
@@ -231,22 +250,27 @@ export interface SpecRecord extends Omit<SpecSegmentation, "targets"> {
 export type BreakdownRecordId = string;
 
 /**
- * One multiword Lemma's Breakdown (ADR 0041), the gold for `segment.inLexemes`
- * (Dumgen ADR 0007): the Lemma's wording as its sentence, segmented, and
- * the Lexeme targets it breaks down into. No target covers the whole
- * wording, and every ResolvableText Segment is in exactly one target.
+ * The gold Breakdown or Source of one Reading (ADR 0050, ADR 0051): a
+ * phraseme's Constituents, the gold for `segment.inConstituents` (Dumgen ADR
+ * 0007); a word's Constituents; a bottom word's Morphemic Breakdown, the gold
+ * for `segment.inMorphemes`; or an unsegmentable formation's Source.
  */
-export interface BreakdownRecord extends LayeredReview {
+export interface BreakdownRecord {
 	id: BreakdownRecordId;
 	language: Dumling.Language;
-	/** The Locution or Saying broken down. */
-	lemma: Dumling.Lemma;
-	/** The Lemma's Canonical Form. */
-	sentence: string;
-	segments: readonly Segment[];
-	targets: readonly SpecTarget[];
+	/** The Reading that owns the Breakdown or Source. */
+	reading: Dumling.Reading;
+	knowledge: BreakdownKnowledge;
+	/** Segmentation once a person has reviewed it; absent for a Draft. */
+	reviewDepth?: "Segmentation";
 	sources: Sources;
 }
+
+/** The Knowledge aspects a Breakdown Record holds, as dumrel stores them. */
+export type BreakdownKnowledge = Pick<
+	Dumrel.ReadingKnowledge,
+	"breakdown" | "source"
+>;
 
 /**
  * Raw text as a reader supplies it, before intake makes a sentence of it.

@@ -1,6 +1,6 @@
-import { afterEach, expect, jest, test } from "bun:test";
+import { afterEach, expect, jest, spyOn, test } from "bun:test";
 import { makeSurfaceId } from "dumdict/planning";
-import { createDumgen, type Dumgen } from "dumgen";
+import { DumgenLive, JevTransport, LunaTransport, operations } from "dumgen";
 import * as Effect from "effect/Effect";
 import { internal } from "../convex/_generated/api";
 import { accumulateTranslations } from "../convex/translationAccumulationActions";
@@ -49,30 +49,34 @@ export const encounter = {
 
 test("translation accumulator forwards the occurrence's Hebrew language and source to Dumgen", async () => {
 	const seen: unknown[] = [];
-	const accumulate = dumgenTranslationAccumulator(() => ({
-		knowledge: {
-			...createDumgen({
-				jev: async () => {
-					throw Error("Unexpected jev call");
-				},
-				luna: async () => {
-					throw Error("Unexpected Luna call");
-				},
-			}).knowledge,
-			accumulateTranslations: ((input: unknown) => {
-				seen.push(input);
-				return Effect.succeed({ changes: [], failures: [] });
-			}) as Dumgen["knowledge"]["accumulateTranslations"],
-		},
-	}));
-	await Effect.runPromise(
-		accumulate({
-			encounter,
-			reading,
-			attestation,
-			translations: { en: ["hello"] },
+	const mock = spyOn(
+		operations.knowledge,
+		"accumulateTranslations",
+	).mockImplementation((input) => {
+		seen.push(input);
+		return Effect.succeed({ changes: [], failures: [] });
+	});
+	const layer = DumgenLive({
+		jev: JevTransport.fromAsk(async () => {
+			throw Error("Unexpected jev");
 		}),
-	);
+		luna: LunaTransport.fromAsk(async () => {
+			throw Error("Unexpected Luna");
+		}),
+	});
+	try {
+		await Effect.runPromise(
+			dumgenTranslationAccumulator({
+				encounter,
+				reading,
+				attestation,
+				translations: { en: ["hello"] },
+			}).pipe(Effect.provide(layer)),
+		);
+	} finally {
+		mock.mockRestore();
+	}
+
 	expect(seen).toEqual([
 		{
 			language: "he",

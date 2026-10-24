@@ -57,7 +57,18 @@
 			"reading": {
 				"emojiDescription": "💼",
 				"knowledge": {
-					"plural": ["Angestellten"],
+					"source": {
+						"target": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"canonicalForm": "angestellt",
+							"coreFeatures": {
+								"comparable": null
+							}
+						}
+					},
 					"semanticRelations": {
 						"nearSynonym": [
 							{
@@ -93,9 +104,10 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Angestellten"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -103,7 +115,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

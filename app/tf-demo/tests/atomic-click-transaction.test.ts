@@ -1,7 +1,5 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
-import { authoredFor } from "dumcorpus/inventories";
 import { makeSurfaceId } from "dumdict";
-import type * as Dumling from "dumling/types";
 import { internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
@@ -19,11 +17,12 @@ import {
 } from "./support/convex";
 import {
 	bankOccurrenceCommit,
-	dieBankenOccurrenceCommit,
+	expectCompleted,
 	bankLemma as lemma,
 	bankReading as reading,
 	resolutionSessionRow,
 	type Selection,
+	selectIn,
 	startSession,
 	bankenSurface as surface,
 } from "./support/occurrences";
@@ -78,28 +77,6 @@ function snapshot(
 	);
 }
 
-/** Stores one Sentence and selects the Segment at `clickedSegmentIndex`. */
-async function selectIn(
-	t: TestConvexDb,
-	segments: readonly string[],
-	clickedSegmentIndex = 0,
-) {
-	const { sentenceIds, segmentIds } = await submitText(t, [segments]);
-	const sentenceId = sentenceIds[0];
-	const sentenceSegmentIds = segmentIds[0];
-	if (!sentenceId || !sentenceSegmentIds) {
-		throw new Error("Expected a stored Sentence.");
-	}
-	const selection: Selection = {
-		requestId: "request-1",
-		visitorId: "visitor-1",
-		sentenceId,
-		clickedSegmentIndex,
-	};
-	const guard = await startSession(t, selection);
-	return { selection, guard, segmentIds: sentenceSegmentIds };
-}
-
 function insertBankLemma(ctx: MutationCtx) {
 	const { unitKind: _unitKind, ...fields } = lemma;
 	return ctx.db.insert("lemmas", {
@@ -114,21 +91,6 @@ function insertBankReading(ctx: MutationCtx, lemmaId: Id<"lemmas">) {
 		readingKey,
 		lemmaId,
 		emojiDescription: reading.emojiDescription,
-	});
-}
-
-async function expectCompleted(
-	t: TestConvexDb,
-	requestId: string,
-	attestationId: Id<"attestations">,
-) {
-	expect(await resolutionSessionRow(t, requestId)).toMatchObject({
-		lifecycle: {
-			state: "Terminal",
-			progress: "Committing",
-			outcome: "Complete",
-		},
-		attestationId,
 	});
 }
 
@@ -360,6 +322,7 @@ test("a New homonym Reading of a stored Lemma commits against the Surface its Le
 	expect(await rows(t, "readings")).toHaveLength(2);
 	expect(await rows(t, "readingEntries")).toHaveLength(2);
 	const [ownedSurface] = await rows(t, "ownedSurfaces");
+	if (!ownedSurface) throw new Error("Expected an owned Surface.");
 	expect(await rows(t, "ownedSurfaces")).toHaveLength(1);
 	expect(
 		(await rows(t, "attestations")).map(({ readingId, surfaceId }) => ({
@@ -367,8 +330,8 @@ test("a New homonym Reading of a stored Lemma commits against the Surface its Le
 			surfaceId,
 		})),
 	).toEqual([
-		{ readingId: bank.readingId, surfaceId: ownedSurface?.surfaceId },
-		{ readingId: result.readingId, surfaceId: ownedSurface?.surfaceId },
+		{ readingId: bank.readingId, surfaceId: ownedSurface.surfaceId },
+		{ readingId: result.readingId, surfaceId: ownedSurface.surfaceId },
 	]);
 	await expectCompleted(t, "request-2", result.attestationId);
 });
@@ -545,199 +508,4 @@ test("a readingKey for a different Reading is rejected without durable writes", 
 		"readingKey does not match the selected Reading identity.",
 	);
 	expect(await snapshot(t)).toEqual(before);
-});
-
-test("a noun's owned article is a member of its one occurrence, and derives no DET Reading until #683", async () => {
-	const t = createTestConvex();
-	const { selection, guard, segmentIds } = await selectIn(
-		t,
-		["die", " ", "Banken"],
-		2,
-	);
-
-	const result = await t.mutation(
-		internal.persistence.persistResolvedClick,
-		dieBankenOccurrenceCommit(selection, guard, [0, 2]),
-	);
-
-	if (result.status !== "Committed") throw new Error("Expected a commit.");
-	// The article's DET cell comes from dumcorpus once #683 rebuilds it
-	// (system ADR 0040); a noun Surface no longer carries an article.
-	expect(await rows(t, "lemmas")).toHaveLength(1);
-	expect(await rows(t, "readings")).toHaveLength(1);
-	expect(await rows(t, "attestations")).toHaveLength(1);
-	expect(await rows(t, "visitorEncounters")).toHaveLength(1);
-	const members = (await rows(t, "segments")).filter(({ _id }) =>
-		[segmentIds[0], segmentIds[2]].includes(_id),
-	);
-	expect(members).toHaveLength(2);
-	for (const member of members) {
-		expect(member.attestationMembership?.attestationId).toBe(
-			result.attestationId,
-		);
-		expect(member.resolutionState).toBeUndefined();
-	}
-	await expectCompleted(t, "request-1", result.attestationId);
-});
-
-test("subject es materializes its exact Reading and Knowledge while retaining one verbal occurrence", async () => {
-	const verbLemma = {
-		unitKind: "Lemma",
-		language: "de",
-		family: "Lexeme",
-		kind: "VERB",
-		canonicalForm: "geben",
-		coreFeatures: {
-			hasSepPrefix: null,
-			lexicallyReflexive: null,
-		},
-	} as const;
-	const verbReading = {
-		unitKind: "Reading",
-		lemma: verbLemma,
-		emojiDescription: "🌍",
-	} as const;
-	const verbSurface = {
-		unitKind: "Surface",
-		language: "de",
-		lemma: verbLemma,
-		normalizedSurface: "es gibt",
-		spelling: { kind: "Canonical" },
-		surfaceFeatures: null,
-		inflectionalFeatures: {
-			verbForm: "Fin",
-			tense: "Pres",
-			mood: "Ind",
-			person: "3",
-			number: "Sing",
-			expletive: "Subject",
-			perfect: null,
-			future: null,
-			passive: null,
-			voice: null,
-		},
-	} as const;
-	const t = createTestConvex();
-	const { selection, guard, segmentIds } = await selectIn(t, [
-		"Es",
-		" ",
-		"gibt",
-	]);
-
-	const result = await t.mutation(internal.persistence.persistResolvedClick, {
-		...bankOccurrenceCommit(selection, guard, "New"),
-		reading: verbReading,
-		readingKey: readingIdentityKey(verbReading),
-		occurrence: {
-			surfaceKey: makeSurfaceId("de", verbSurface),
-			lemmaKey: lemmaIdentityKey(verbLemma),
-			memberSegmentIndices: [0, 2],
-			attestation: {
-				unitKind: "Attestation",
-				surface: verbSurface,
-				members: [
-					{ attested: "Es", orthography: "Standard" },
-					{ attested: "gibt", orthography: "Standard" },
-				],
-				realizationCoverage: "Full",
-				expletiveEvidence: { attested: "Es", orthography: "Standard" },
-				valencyEvidence: [],
-			},
-		},
-	});
-
-	if (result.status !== "Committed") throw new Error("Expected a commit.");
-	const attestations = await rows(t, "attestations");
-	expect(attestations).toHaveLength(1);
-	expect(attestations[0]).toMatchObject({
-		expletiveEvidence: { attested: "Es", orthography: "Standard" },
-		valencyEvidence: [],
-	});
-	const componentLemma = (await rows(t, "lemmas")).find(
-		(row) => row.kind === "PRON",
-	);
-	const componentReading = (await rows(t, "readings")).find(
-		(row) => row.lemmaId === componentLemma?._id,
-	);
-	expect(componentReading?.emojiDescription).toBe("⚪");
-	expect(
-		(await rows(t, "accumulatedKnowledge")).some(
-			(row) => row.ownerReadingKey === componentReading?.readingKey,
-		),
-	).toBe(true);
-	const members = (await rows(t, "segments")).filter(({ _id }) =>
-		[segmentIds[0], segmentIds[2]].includes(_id),
-	);
-	expect(
-		members.map((row) => row.attestationMembership?.attestationId),
-	).toEqual([result.attestationId, result.attestationId]);
-	await expectCompleted(t, "request-1", result.attestationId);
-});
-
-test("an exact authored Reading publishes its authored Knowledge at commit and asks for no Knowledge run", async () => {
-	const t = createTestConvex();
-	const { selection, guard } = await selectIn(t, ["ich"]);
-	const [authored] = authoredFor({
-		unitKind: "Lemma",
-		language: "de",
-		family: "Lexeme",
-		kind: "PRON",
-		canonicalForm: "ich",
-		coreFeatures: {
-			person: "1",
-			polite: null,
-			poss: null,
-			pronType: "Prs",
-			case: "Nom",
-			number: "Sing",
-			gender: null,
-		},
-	});
-	if (!authored) throw new Error("Expected the authored ich.");
-	if (authored.lemma.family !== "Lexeme" || authored.lemma.kind !== "PRON")
-		throw new Error("Expected the authored ich to be a Lexeme PRON.");
-	const ichSurface = {
-		unitKind: "Surface",
-		language: "de",
-		normalizedSurface: "ich",
-		spelling: { kind: "Canonical" },
-		surfaceFeatures: null,
-		inflectionalFeatures: null,
-		lemma: authored.lemma,
-	} satisfies Dumling.Surface<"de">;
-	const commit = bankOccurrenceCommit(selection, guard, "New");
-
-	const result = await t.mutation(internal.persistence.persistResolvedClick, {
-		...commit,
-		reading: authored.reading,
-		readingKey: readingIdentityKey(authored.reading),
-		occurrence: {
-			...commit.occurrence,
-			attestation: {
-				unitKind: "Attestation" as const,
-				members: [
-					{ attested: "ich", orthography: "Standard" as const },
-				],
-				realizationCoverage: "Full" as const,
-				articleEvidence: null,
-				surface: ichSurface,
-			},
-			surfaceKey: makeSurfaceId("de", ichSurface),
-			lemmaKey: lemmaIdentityKey(authored.lemma),
-		},
-	});
-
-	if (result.status !== "Committed") throw new Error("Expected a commit.");
-	const [accumulated] = await rows(t, "accumulatedKnowledge");
-	expect(accumulated?.ownerReadingKey).toBe(
-		readingIdentityKey(authored.reading),
-	);
-	expect(accumulated?.knowledge).toMatchObject({
-		definition: authored.knowledge.definition,
-		transcription: "ɪç",
-		translations: { en: ["I"], ru: ["я"] },
-	});
-	expect(accumulated?.status).toBe("Full");
-	// Resolving an exact authored Reading calls no model (ADR 0021).
-	expect(await rows(t, "knowledgeGenerationAttempts")).toEqual([]);
 });

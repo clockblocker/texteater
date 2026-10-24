@@ -19,7 +19,6 @@ import { renderNote } from "../src/notes";
 import { createTestConvex, submitText } from "./support/convex";
 import { exportedArgs, exportedReturns } from "./support/convexRuntimeExports";
 import {
-	anrufenLemma,
 	bankLemma,
 	germanAdposition,
 	insertReading,
@@ -152,12 +151,12 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 		await ctx.db.insert("structuralShadowReferences", {
 			shadowId,
 			ownerReadingKey: source.readingKey,
-			aspect: "morphologicalTree",
-			path: "root.0",
+			aspect: "breakdown",
+			path: "constituents.0",
 			locatorKey: structuralShadowLocatorKey(
 				source.readingKey,
-				"morphologicalTree",
-				"root.0",
+				"breakdown",
+				"constituents.0",
 			),
 		});
 		// A Visitor who hid every Knowledge aspect still receives pure NoteData.
@@ -255,27 +254,8 @@ test("the Reading Note carries the per-Reading aspects Knowledge production writ
 	const t = createTestConvex();
 	const cases: readonly {
 		readonly reading: ReadingValue;
-		readonly knowledge: Pick<
-			Dumrel.ReadingKnowledge,
-			"conjugationClass" | "plural" | "formulaRole"
-		>;
+		readonly knowledge: Pick<Dumrel.ReadingKnowledge, "formulaRole">;
 	}[] = [
-		{
-			reading: {
-				unitKind: "Reading",
-				lemma: anrufenLemma,
-				emojiDescription: "📞",
-			},
-			knowledge: { conjugationClass: ["Strong"] },
-		},
-		{
-			reading: {
-				unitKind: "Reading",
-				lemma: bankLemma,
-				emojiDescription: "🏦",
-			},
-			knowledge: { plural: ["Banken"] },
-		},
 		{
 			reading: {
 				unitKind: "Reading",

@@ -19,11 +19,11 @@ test("published schema composition retains the structured Knowledge types", () =
 	).toBe("type DefinitionModel = { definition?: string | undefined; }");
 	expect(
 		inferredType(schemas, {
-			name: "ReadingFamily",
+			name: "EndingFamily",
 			full: true,
 			backend: "typescript7",
 		}),
-	).toBe('type ReadingFamily = "Morpheme"');
+	).toBe('type EndingFamily = "Morpheme"');
 }, 30_000);
 
 // Lexeme and Locution share one relation space (ADR 0039).
@@ -48,7 +48,7 @@ test("published operations infer the source's relation space without narrowing t
 	);
 }, 30_000);
 
-test("recursive Reading leaves retain their grammatical coordinates and features", () => {
+test("Breakdown link targets retain their grammatical coordinates and features", () => {
 	expect(
 		inferredType(consumer, {
 			name: "PrefixCoordinates",
@@ -67,14 +67,14 @@ test("recursive Reading leaves retain their grammatical coordinates and features
 	).toBe("type PrefixFeature = string | null");
 }, 30_000);
 
-test("recursive Reading leaves can be consumed as Dumling Readings", () => {
+test("Breakdown Lemma targets can be consumed as Dumling Lemmas", () => {
 	expect(
 		inferredType(consumer, {
-			name: "MorphemeReadingCompatible",
+			name: "LinkTargetCompatible",
 			full: true,
 			backend: "typescript7",
 		}),
-	).toBe("type MorphemeReadingCompatible = true");
+	).toBe("type LinkTargetCompatible = true");
 }, 30_000);
 
 test("source-specific retractions have no inferred value branch", () => {

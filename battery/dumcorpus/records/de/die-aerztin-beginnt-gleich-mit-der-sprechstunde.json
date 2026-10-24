@@ -22,7 +22,7 @@
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040"],
 		"rules": [
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" }
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
 		],
 		"references": [
 			{
@@ -49,7 +49,6 @@
 			"reading": {
 				"emojiDescription": "👩‍⚕",
 				"knowledge": {
-					"plural": ["Ärztinnen"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -75,9 +74,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Ärztinnen"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -85,7 +84,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

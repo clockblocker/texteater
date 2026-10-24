@@ -1,15 +1,16 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import { z } from "zod";
-import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
 import type { LunaAsk } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
+import { operations } from "../../src/operations.js";
 import type { Answer } from "../../src/segment/ask.js";
 import {
 	checkedRouteKey,
 	keyOf,
 	routeForKey,
 } from "../../src/segment/de/routes.js";
+import type { InUnitsInput } from "../../src/segment/in-units.js";
 import {
 	type JevAsk,
 	type JevRequest,
@@ -20,6 +21,7 @@ import type {
 	SegmentedText,
 } from "../../src/segment/segmented-sentence.js";
 import { splitText } from "../../src/segment/split-text.js";
+import { type FakeDumgenOptions, liveOver } from "../live-over.js";
 import fixture from "./fixtures/in-units-lab-answers.json";
 
 const probabilities = z.record(z.string(), z.number());
@@ -146,21 +148,20 @@ const noLuna: LunaAsk = async () => {
 
 /** Runs `segment.inUnits` once and keeps the traces it reported. */
 async function inUnits(
-	options: Omit<DumgenOptions, "luna">,
-	input: {
-		readonly language: "de";
-		readonly paragraphs: readonly {
-			readonly sentences: readonly string[];
-		}[];
-	},
+	options: Omit<FakeDumgenOptions, "luna">,
+	input: InUnitsInput,
 ): Promise<{ text: SegmentedText; traces: OperationTrace[] }> {
 	const traces: OperationTrace[] = [];
 	const text = await Effect.runPromise(
-		createDumgen({
-			...options,
-			luna: noLuna,
-			onOperation: (trace) => traces.push(trace),
-		}).segment.inUnits(input),
+		operations.segment.inUnits(input).pipe(
+			Effect.provide(
+				liveOver({
+					...options,
+					luna: noLuna,
+					onOperation: (trace) => traces.push(trace),
+				}),
+			),
+		),
 	);
 	return { text, traces };
 }
@@ -456,51 +457,81 @@ test("with payloads asked for, each call's trace keeps its request and answer", 
 test("another language or a blank Sentence is a Defect before anything is asked, and a floating model is refused", async () => {
 	const jev = fakeJev();
 	const traces: OperationTrace[] = [];
-	const dumgen = createDumgen({
+	const live = liveOver({
 		jev: jev.ask,
 		luna: noLuna,
 		onOperation: (trace) => traces.push(trace),
 	});
 	await expect(
 		Effect.runPromise(
-			dumgen.segment.inUnits({
-				language: "en" as "de",
-				paragraphs: [{ sentences: ["Hello."] }],
-			}),
+			operations.segment
+				.inUnits({
+					language: "en" as "de",
+					paragraphs: [{ sentences: ["Hello."] }],
+				})
+				.pipe(Effect.provide(live)),
 		),
 	).rejects.toThrow('No segmenter registered for "en"');
 	await expect(
 		Effect.runPromise(
-			dumgen.segment.inUnits({
-				language: "de",
-				paragraphs: [{ sentences: ["Gut.", " \t "] }],
-			}),
+			operations.segment
+				.inUnits({
+					language: "de",
+					paragraphs: [{ sentences: ["Gut.", " \t "] }],
+				})
+				.pipe(Effect.provide(live)),
 		),
 	).rejects.toThrow("Sentence 1 of paragraph 0 is blank");
 	expect(jev.sent).toEqual([]);
 	// Each failed operation still reports its (empty) trace.
 	expect(traces.map(({ calls }) => calls.length)).toEqual([0, 0]);
-	expect(() =>
-		createDumgen({ jev: jev.ask, luna: noLuna, jevModel: "jev-latest" }),
-	).toThrow("floats between jev versions");
-	expect(() =>
-		createDumgen({ jev: jev.ask, luna: noLuna, requestBudget: 0 }),
-	).toThrow("requestBudget");
+	const once = operations.segment.inUnits({
+		language: "de",
+		paragraphs: [{ sentences: ["Er kam."] }],
+	});
+	await expect(
+		Effect.runPromise(
+			once.pipe(
+				Effect.provide(
+					liveOver({
+						jev: jev.ask,
+						luna: noLuna,
+						jevModel: "jev-latest",
+					}),
+				),
+			),
+		),
+	).rejects.toThrow("floats between jev versions");
+	await expect(
+		Effect.runPromise(
+			once.pipe(
+				Effect.provide(
+					liveOver({ jev: jev.ask, luna: noLuna, requestBudget: 0 }),
+				),
+			),
+		),
+	).rejects.toThrow("requestBudget");
 });
 
 test("an exception from onOperation is the host's, and inUnits passes it on", async () => {
 	await expect(
 		Effect.runPromise(
-			createDumgen({
-				jev: fakeJev().ask,
-				luna: noLuna,
-				onOperation: () => {
-					throw Error("ledger is full");
-				},
-			}).segment.inUnits({
-				language: "de",
-				paragraphs: [{ sentences: ["Er kam."] }],
-			}),
+			operations.segment
+				.inUnits({
+					language: "de",
+					paragraphs: [{ sentences: ["Er kam."] }],
+				})
+				.pipe(
+					Effect.provide(
+						liveOver({
+							jev: fakeJev().ask,
+							luna: noLuna,
+							onOperation: () => {
+								throw Error("ledger is full");
+							},
+						}),
+					),
+				),
 		),
 	).rejects.toThrow("ledger is full");
 });

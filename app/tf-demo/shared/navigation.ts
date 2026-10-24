@@ -44,7 +44,7 @@ export type LemmaNoteTarget = {
 
 export type SurfaceNoteTarget = {
 	readonly kind: "Surface";
-	readonly language: "de";
+	readonly language: "de" | "en" | "he";
 	readonly normalizedSurface: string;
 };
 

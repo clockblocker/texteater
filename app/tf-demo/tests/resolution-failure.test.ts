@@ -1,27 +1,43 @@
 import { expect, test } from "bun:test";
+import { InvalidModelOutput, ProviderFailure } from "dumgen";
+import * as Cause from "effect/Cause";
 import type { GenerationEvent } from "../server/resolutionFailure";
 import {
 	classifyResolutionFailure,
-	ModelCallFailure,
+	internalResolutionFailure,
 	projectResolutionGenerationEvent,
 } from "../server/resolutionFailure";
 
-test("a failed model call becomes a Generation failure without its message", () => {
-	const classified = classifyResolutionFailure(
-		new ModelCallFailure("InvalidOutput", "secret model answer"),
+test("Dumgen's model failures become Generation failures without their message", () => {
+	const unavailable = classifyResolutionFailure(
+		new ProviderFailure({ stage: "route", message: "secret timeout" }),
 	);
-	expect(classified).toEqual({
+	const invalid = classifyResolutionFailure(
+		new InvalidModelOutput({
+			stage: "route",
+			message: "secret model answer",
+		}),
+	);
+	expect(unavailable).toEqual({
+		kind: "Generation",
+		failure: {
+			attempts: 1,
+			category: "ProviderUnavailable",
+			retryable: true,
+		},
+	});
+	expect(invalid).toEqual({
 		kind: "Generation",
 		failure: { attempts: 1, category: "InvalidOutput", retryable: false },
 	});
-	expect(JSON.stringify(classified)).not.toContain("secret");
+	expect(JSON.stringify([unavailable, invalid])).not.toContain("secret");
 });
 
 test("unexpected failures become sanitized correlated Internal failures", () => {
-	const first = classifyResolutionFailure(
+	const first = internalResolutionFailure(
 		new TypeError("secret prompt and provider response"),
 	);
-	const second = classifyResolutionFailure(
+	const second = internalResolutionFailure(
 		new TypeError("secret prompt and provider response"),
 	);
 
@@ -33,6 +49,13 @@ test("unexpected failures become sanitized correlated Internal failures", () => 
 	expect(first).toEqual(second);
 	expect(JSON.stringify(first)).not.toContain("secret prompt");
 	expect(JSON.stringify(first)).not.toContain("provider response");
+});
+
+test("a rejected hop is described by what it wraps", () => {
+	const thrown = new TypeError("secret prompt and provider response");
+	expect(classifyResolutionFailure(new Cause.UnknownError(thrown))).toEqual(
+		internalResolutionFailure(thrown),
+	);
 });
 
 test("provider attempt events gain Resolution Run correlation", () => {

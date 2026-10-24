@@ -1,6 +1,5 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../src/call.js";
 import { hebrewLanguage } from "../src/he/language.js";
 import { accumulateTranslations } from "../src/knowledge/accumulate.js";
 import type {
@@ -9,6 +8,7 @@ import type {
 } from "../src/knowledge/types.js";
 import type { LanguageModules } from "../src/language-module.js";
 import { defaultLunaConfiguration } from "../src/luna.js";
+import { requestBudget, runOperation } from "./service-test-adapter.js";
 
 const lemma = {
 	unitKind: "Lemma",
@@ -51,7 +51,9 @@ const run = (modules: LanguageModules, value = input) =>
 		runOperation(
 			"knowledge.accumulateTranslations",
 			{ budget: requestBudget(1), payloads: false },
-			(scope) => accumulateTranslations(scope, models, modules, value),
+			models,
+			accumulateTranslations(value),
+			modules,
 		),
 	);
 
@@ -71,7 +73,7 @@ test("translation accumulation dispatches the unchanged Hebrew occurrence to its
 	const modules: LanguageModules = {
 		he: {
 			...hebrewLanguage,
-			accumulateTranslations: (_scope, _models, value) => {
+			accumulateTranslations: (value) => {
 				received = value;
 				return Effect.succeed(result);
 			},

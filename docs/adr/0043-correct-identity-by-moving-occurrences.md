@@ -27,11 +27,15 @@ unit is corrected the same way, by giving its occurrence a unit.
 
 **What a move or removal leaves behind.** A Reading left with no Attestation
 Links is removed with its Knowledge and its Licences, and a Lemma left with
-no Readings is removed with its Paradigm. A Paradigm Variant that no
-remaining Reading licenses is removed
+no Readings is removed with its Paradigm and its Surfaces. A Paradigm
+Variant that no remaining Reading licenses is removed
 ([ADR 0048](./0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md)).
-A Surface left with no Attestation Link is removed unless it holds user text
-(ADR 0049). A Reading that receives occurrences keeps its own Knowledge and
+A Surface that loses its last Attestation Link is removed unless it holds
+user text (ADR 0049). User text is never dropped, so a Lemma left with no
+Readings stays, without a Paradigm, while one of its Surfaces holds some.
+The claims other Readings hold on a removed Reading or Lemma move in the
+same plan ([ADR 0011](./0011-use-reading-owned-lemma-targeted-semantic-relations.md)).
+A Reading that receives occurrences keeps its own Knowledge and
 Licences: a move never changes a Licence, and an occurrence whose form its
 new Reading doesn't license is flagged as a Licence Conflict.
 
@@ -49,9 +53,10 @@ Licences, so ADR 0031's identity key stays as it is.
 
 ## Consequences
 
-- Dumdict and tf-demo implement the move and the removal of empty units. They
-  are rebuilt after the segmentation rewrite
-  ([#701](https://github.com/clockblocker/texteater/issues/701)), so the
-  implementation waits for it.
+- Dumdict plans an occurrence's removal and what it leaves behind
+  (`removeOccurrence`). The move
+  ([#1233](https://github.com/clockblocker/texteater/issues/1233)) and
+  tf-demo's side wait for the segmentation rewrite
+  ([#701](https://github.com/clockblocker/texteater/issues/701)).
 - Decided on [#595](https://github.com/clockblocker/texteater/issues/595) from
   the model audit of 2026-09-27.

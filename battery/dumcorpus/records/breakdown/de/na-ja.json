@@ -1,21 +1,54 @@
 {
 	"$schema": "../../../schema/breakdown-record.de.json",
-	"lemma": {
-		"unitKind": "Lemma",
-		"language": "de",
-		"canonicalForm": "na ja",
-		"family": "Locution",
-		"kind": "INTJ",
-		"coreFeatures": {}
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "INTJ",
+			"canonicalForm": "na ja",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🤷"
 	},
-	"sentence": "na ja",
-	"segments": [
-		{ "kind": "ResolvableText", "text": "na" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ja" }
-	],
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "na",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"canonicalForm": "na",
+						"coreFeatures": {
+							"partType": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "ja",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"canonicalForm": "ja",
+						"coreFeatures": {
+							"partType": "Res"
+						}
+					}
+				}
+			]
+		}
+	},
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0039", "ADR-0041"],
+		"adrs": ["ADR-0031", "ADR-0039", "ADR-0041", "ADR-0050"],
 		"rules": [
 			{
 				"rule": "de/interjection-counts-its-words",
@@ -29,63 +62,5 @@
 				"supports": "The wording, the Locution's Canonical Form"
 			}
 		]
-	},
-	"targets": [
-		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "👉" },
-			"notes": {
-				"rationale": "Read literally, na is Duden's one na that leads from what went before into the speaker's reaction (na [ja] gut, na, dann mal los), whatever feeling it carries."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "na", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "na",
-					"spelling": { "kind": "Canonical" },
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "na",
-						"family": "Lexeme",
-						"kind": "INTJ",
-						"coreFeatures": { "partType": null }
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "✅" },
-			"notes": {
-				"rationale": "The Breakdown reads ja as the answer particle in its ordinary yes Reading, partType Res (de/interjection-counts-its-words): the softening meaning belongs to the Locution, and its parts are the Readings a learner drills down to, as Faden is read literally in den Faden verlieren."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "ja", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "ja",
-					"spelling": { "kind": "Canonical" },
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "ja",
-						"family": "Lexeme",
-						"kind": "INTJ",
-						"coreFeatures": { "partType": "Res" }
-					},
-					"surfaceFeatures": null
-				}
-			}
-		}
-	]
+	}
 }

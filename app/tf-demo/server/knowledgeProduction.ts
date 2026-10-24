@@ -1,4 +1,3 @@
-import type { OperationTrace } from "dumgen";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type * as Effect from "effect/Effect";
@@ -18,6 +17,8 @@ export type KnowledgeRequest = Dumrel.KnowledgeRequestMask;
 /**
  * One aspect or leaf a run could not produce, and why (#883 point 3). An
  * uncovered authored or Closed Route Reading comes back as a `CatalogMiss`.
+ * A Variation Dimension fails only for a run that asked for the Lemma
+ * Paradigm, which tf-demo does not yet store (#1232).
  */
 export type KnowledgeFailure = {
 	readonly aspect:
@@ -26,17 +27,12 @@ export type KnowledgeFailure = {
 		| "translations"
 		| "semanticRelations"
 		| "valency"
-		| "participleSource"
-		| "plural"
-		| "conjugationClass"
-		| "preterite"
-		| "presentSingular"
-		| "pastParticiple"
-		| "subjunctivePast"
+		| "source"
 		| "locutionType"
 		| "sayingType"
 		| "formulaRole"
-		| Exclude<keyof Dumrel.KnowledgeRequestMask, "morphologicalTree">;
+		| "hebrewParadigm"
+		| Dumrel.DimensionId;
 	readonly leaf?: string;
 	readonly code:
 		| "ProviderFailure"
@@ -71,7 +67,12 @@ export type KnowledgeInput = {
 	readonly request: KnowledgeRequest;
 };
 
-export type KnowledgeProducer = <E>(
+/**
+ * `R` is what the producer needs: Dumgen's `Jev | Luna` in production,
+ * which the run provides together with its `TraceSink`; nothing for a
+ * test's fake.
+ */
+export type KnowledgeProducer<R = never> = <E>(
 	input: KnowledgeInput,
 	options: {
 		/**
@@ -82,9 +83,5 @@ export type KnowledgeProducer = <E>(
 		readonly onContribution: (
 			changes: KnowledgeProduction["changes"],
 		) => Effect.Effect<void, E>;
-		/** Receives each Dumgen operation's trace, for the run's evidence and DEV inspection. */
-		readonly onOperation?: (trace: OperationTrace) => void;
-		/** Keeps each call's prompt and answer in its trace: DEV inspection only. */
-		readonly tracePayloads?: boolean;
 	},
-) => Effect.Effect<KnowledgeProduction, E>;
+) => Effect.Effect<KnowledgeProduction, E, R>;

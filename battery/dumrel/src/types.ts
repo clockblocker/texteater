@@ -4,25 +4,37 @@ import type {
 	KnowledgeChange as CanonicalKnowledgeChange,
 	ReadingKnowledge as CanonicalReadingKnowledge,
 	SemanticRelations as CanonicalSemanticRelations,
+	DimensionId,
 	DirectSemanticRelation,
+	ParadigmProvenance,
 } from "./generated/types.js";
 
 export type {
 	ConjugationClass,
+	DimensionId,
 	DirectSemanticRelation,
 	GermanValencyComplement,
 	GovernedCase,
+	LinkTarget,
 	LocutionType,
-	MorphologicalTreeNode,
-	ParticipleSource,
+	ParadigmChange,
+	ParadigmProvenance,
 	PendingSemanticRelation,
+	PluralPattern,
 	SemanticRelation,
+	Source,
 	TranslationLanguage,
 	UnitShadow,
 	ValencyComplement,
 	ValencySlot,
 	ValencySlotStatus,
 } from "./generated/types.js";
+export type {
+	LookupMorphemeSources,
+	MorphemePolicy,
+	MorphemeSources,
+	ShownMorpheme,
+} from "./propagate-morphemes.js";
 
 /** A Reading's governed complements in order; never empty. */
 export type ValencyFrame = NonNullable<CanonicalReadingKnowledge["valency"]>;
@@ -131,3 +143,62 @@ export type ReadingWithKnowledge<R extends Dumling.Reading = Dumling.Reading> =
 		readonly reading: R;
 		readonly knowledge: ReadingKnowledge<R>;
 	};
+
+/** A Paradigm Variant's id: the content key of its value (`banken`, `NoPlural`). */
+export type VariantId = string;
+/** A Reading's key in a Lemma Paradigm: its Dumling `readingIdentityKey`. */
+export type ReadingKey = string;
+
+/**
+ * One alternative in one Variation Dimension (ADR 0048): one form or one
+ * marker, `P` being the pack's value type. German stores one form string or a
+ * marker.
+ */
+export type ParadigmVariant<P = string> = {
+	readonly id: VariantId;
+	readonly value: P;
+	readonly provenance: ParadigmProvenance;
+};
+
+/**
+ * One dimension of a Lemma Paradigm: one or more variants, sorted by id, and
+ * each Licence a Reading states. A Reading absent from `licences` is Unstated
+ * and takes every variant.
+ */
+export type ParadigmDimension<P = string> = {
+	readonly variants: readonly ParadigmVariant<P>[];
+	readonly licences: Readonly<Record<ReadingKey, readonly VariantId[]>>;
+};
+
+/**
+ * A Lemma's inflectional alternatives and its Readings' Licences (ADR 0048),
+ * stored on Dumdict's Lemma Record. It is grammatical, not Knowledge, and no
+ * part of the Lemma's identity. A Lemma with no variants has an empty
+ * `dimensions` map and derives its forms from the language's rules alone.
+ */
+export type LemmaParadigm<P = string> = {
+	readonly dimensions: Readonly<
+		Partial<Record<DimensionId, ParadigmDimension<P>>>
+	>;
+};
+
+/**
+ * Readings whose Licences agree in every dimension (ADR 0048), with what they
+ * license per dimension and that selection's canonical `key`. They share one
+ * inflection table.
+ */
+export type LicenceGroup = {
+	readonly readings: readonly ReadingKey[];
+	readonly selection: Readonly<
+		Partial<Record<DimensionId, readonly VariantId[]>>
+	>;
+	readonly key: string;
+};
+
+/**
+ * What `parseLemmaParadigm` and `applyParadigmChanges` answer: the Paradigm,
+ * fresh, checked and in canonical order, or why it failed.
+ */
+export type ParadigmParse =
+	| { readonly success: true; readonly value: LemmaParadigm }
+	| { readonly success: false; readonly error: ParsingError };

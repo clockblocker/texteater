@@ -2,8 +2,7 @@ import type { Rule } from "../corpus-types.js";
 import { lexeme } from "./rules.js";
 
 /**
- * The German Rules on a verb's principal parts (ADR 0038, #1217). They sit
- * apart from `rules.ts`, which is past the file-token limit.
+ * The German Rules on a verb's principal parts (ADR 0038, #1217).
  */
 export const principalPartsRules: readonly Rule[] = [
 	{

@@ -1,7 +1,10 @@
 import type {
-	Dumgen,
 	ReadingResolution as DumgenReading,
 	GrammarResolution,
+	InvalidModelOutput,
+	ProviderFailure,
+	ResolveGrammarInput,
+	ResolveReadingInput,
 	SegmentedSentence,
 	Unit,
 } from "dumgen";
@@ -13,13 +16,35 @@ import type {
 	ClickSentence,
 	ReadingResolution,
 } from "./clickResolution";
-import { parseAttestation } from "./operationalParsing";
+import { parseAttestation, parseLemma } from "./operationalParsing";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
+
+type ModelFailure = ProviderFailure | InvalidModelOutput;
+
+/** Dumgen's click operations, `operations.resolve`, needing `R`. */
+export type ClickDumgen<R> = {
+	readonly resolve: {
+		readonly grammar: (
+			input: ResolveGrammarInput<SupportedTargetLanguage>,
+		) => Effect.Effect<
+			GrammarResolution<SupportedTargetLanguage>,
+			ModelFailure,
+			R
+		>;
+		readonly reading: (
+			input: ResolveReadingInput<SupportedTargetLanguage>,
+		) => Effect.Effect<
+			DumgenReading<SupportedTargetLanguage>,
+			ModelFailure,
+			R
+		>;
+	};
+};
 
 /** The stored Sentence as Dumgen's Segmented Sentence, with the one unit a click resolves. */
 function dumgenSentence(
 	sentence: ClickSentence,
-	unit: Unit,
+	unit: Unit<SupportedTargetLanguage>,
 ): SegmentedSentence<SupportedTargetLanguage> {
 	return {
 		text: sentence.segments.map(({ text }) => text).join(""),
@@ -39,12 +64,13 @@ function dumgenSentence(
  * Attestation. Reading: the Attestation, the Emoji Descriptions of its
  * Lemma's stored Readings and the draft go in, and a Reuse, a New or a
  * Catalog Miss comes back; a New carries the candidates its judge saw, so the commit can
- * refuse it once stale (ADR 0031). `dumgen` builds the instance when a
- * click first needs it.
+ * refuse it once stale (ADR 0031). `dumgen` hands over the operations
+ * when a click first needs them: in production `operations`, needing
+ * `Jev | Luna`, once the deployment's key is checked.
  */
-export function dumgenClickResolution(
-	dumgen: () => Pick<Dumgen, "resolve">,
-): ClickResolution {
+export function dumgenClickResolution<R>(
+	dumgen: () => ClickDumgen<R>,
+): ClickResolution<R> {
 	return Object.freeze({
 		grammar: (input) => {
 			const { unit } = input;
@@ -54,20 +80,25 @@ export function dumgenClickResolution(
 					decision: "Unresolved" as const,
 					language: input.sentence.language,
 				});
-			const stored: Unit = {
+			const stored: Unit<SupportedTargetLanguage> = {
 				segments: [...unit.segments],
 				route: { ...unit.route },
 				...(unit.identity ? { identity: { ...unit.identity } } : {}),
-			} as Unit;
-			// Built when a click needs it, so a click that reuses a committed
-			// occurrence needs no model key.
+			} as Unit<SupportedTargetLanguage>;
+			// Handed over when a click needs it, so a click that reuses a
+			// committed occurrence needs no model key.
 			return Effect.suspend(() =>
 				dumgen().resolve.grammar({
 					language: input.sentence.language,
 					sentence: dumgenSentence(input.sentence, stored),
 					unit: stored,
 					neighbours: input.neighbours,
-					lemmaCandidates: input.lemmaCandidates,
+					lemmaCandidates: input.lemmaCandidates.map(
+						({ lemma, foundUnder }) => ({
+							lemma: parseLemma(lemma, input.sentence.language),
+							foundUnder,
+						}),
+					),
 				}),
 			).pipe(
 				Effect.map((result) => clickGrammarOf(result, input, stored)),
@@ -82,7 +113,7 @@ export function dumgenClickResolution(
 					family: encounter.target.family,
 					kind: encounter.target.kind,
 				},
-			} as Unit;
+			} as Unit<SupportedTargetLanguage>;
 			return Effect.suspend(() =>
 				dumgen().resolve.reading({
 					attestation: parseAttestation(
@@ -129,7 +160,7 @@ function clickReadingOf(
 function clickGrammarOf(
 	result: GrammarResolution<SupportedTargetLanguage>,
 	input: Parameters<ClickResolution["grammar"]>[0],
-	unit: Unit,
+	unit: Unit<SupportedTargetLanguage>,
 ) {
 	if (result._tag === "Unresolved")
 		return {

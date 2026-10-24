@@ -36,6 +36,8 @@ if (process.env.TURBO_HASH === undefined) {
 }
 const manifest = await readJson(join(packageDir, "package.json"));
 const scripts = stringRecord(manifest.scripts);
+const packageName =
+	typeof manifest.name === "string" ? manifest.name : packageDir;
 const tools = toolPaths(repositoryRoot);
 const manifestIssues = await validateManifestPolicy({
 	cwd: packageDir,
@@ -57,9 +59,7 @@ function overrideOrDefault(stage: string, defaultArgs: string[]): Command {
 		args: override ? ["bun", "run", `validate:${stage}`] : defaultArgs,
 		cwd: packageDir,
 		env: { TOOLING_VALIDATE_ACTIVE: "1" },
-		label: `${manifest.name ?? packageDir}: ${stage}${
-			override ? " (override)" : ""
-		}`,
+		label: `${packageName}: ${stage}${override ? " (override)" : ""}`,
 	};
 }
 

@@ -21,8 +21,9 @@ import {
 	nounShadow,
 	pendingRecord,
 	replaceKnowledge,
+	rootShadow,
 	rows,
-	shadowTree,
+	shadowBreakdown,
 	structuralKnowledge,
 	verbShadow,
 } from "./support/shadows";
@@ -84,10 +85,7 @@ describe("Shadow descriptor and storage seam", () => {
 			collectStructuralShadowReferences(structuralKnowledge()).map(
 				({ aspect, path }) => `${aspect}:${path}`,
 			),
-		).toEqual([
-			"morphologicalTree:root.children[0]",
-			"morphologicalTree:root.children[1].children[0]",
-		]);
+		).toEqual(["breakdown:constituents.0", "breakdown:morphemes.0"]);
 	});
 
 	test("parses malformed stored values to a failure instead of throwing", () => {
@@ -106,7 +104,9 @@ describe("Shadow descriptor and storage seam", () => {
 			),
 		});
 		expect(
-			parseStructuralShadowReferences(shadowTree({ family: "Lexeme" })),
+			parseStructuralShadowReferences(
+				shadowBreakdown({ family: "Lexeme" }),
+			),
 		).toMatchObject({
 			ok: false,
 			error: expect.stringContaining("exactly language"),
@@ -134,6 +134,7 @@ describe("Shadow descriptor and storage seam", () => {
 		const shadows = await rows(t, "shadows");
 		expect(shadows).toHaveLength(1);
 		const shadowId = shadows[0]?._id;
+		if (!shadowId) throw new Error("Expected a Shadow.");
 		const referenceIds = (await rows(t, "structuralShadowReferences")).map(
 			({ _id }) => _id,
 		);
@@ -152,11 +153,11 @@ describe("Shadow descriptor and storage seam", () => {
 		await replaceKnowledge(
 			t,
 			"reading-source",
-			shadowTree(nounShadow, verbShadow),
+			shadowBreakdown(rootShadow, verbShadow),
 		);
 		expect(
 			(await rows(t, "shadows")).find(
-				({ shadowKey }) => shadowKey === shadowKeyFor(nounShadow),
+				({ shadowKey }) => shadowKey === shadowKeyFor(rootShadow),
 			)?._id,
 		).toBe(shadowId);
 	});
@@ -166,7 +167,7 @@ describe("Shadow descriptor and storage seam", () => {
 		await replaceKnowledge(
 			t,
 			"reading-source",
-			shadowTree(nounShadow, verbShadow),
+			shadowBreakdown(nounShadow, verbShadow),
 		);
 		const snapshot = async () => ({
 			accumulatedKnowledge: await rows(t, "accumulatedKnowledge"),
@@ -186,7 +187,7 @@ describe("Shadow descriptor and storage seam", () => {
 				await replaceAccumulatedKnowledge(
 					ctx,
 					"reading-source",
-					shadowTree(nounShadow, { family: "Lexeme" }),
+					shadowBreakdown(nounShadow, { family: "Lexeme" }),
 				);
 				return null;
 			} catch (error) {
@@ -204,12 +205,12 @@ describe("Shadow reset lifecycle", () => {
 		await replaceKnowledge(
 			t,
 			"reading-doomed",
-			shadowTree(nounShadow, nounShadow),
+			shadowBreakdown(nounShadow, nounShadow),
 		);
 		await replaceKnowledge(
 			t,
 			"reading-survivor",
-			shadowTree(nounShadow, nounShadow),
+			shadowBreakdown(nounShadow, nounShadow),
 		);
 		const { activeShadowId, dormantShadowId } = await t.run(async (ctx) => {
 			const pending = pendingRecord("reading-doomed");

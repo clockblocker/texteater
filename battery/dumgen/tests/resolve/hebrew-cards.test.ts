@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test";
 import { parseUnit } from "dumling";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../../src/call.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../src/luna.js";
 import { resolveHebrewGrammar } from "../../src/resolve/he/grammar.js";
 import { resolveHebrewReading } from "../../src/resolve/he/reading.js";
@@ -11,6 +10,7 @@ import type {
 	SegmentedSentence,
 	Unit,
 } from "../../src/segment/segmented-sentence.js";
+import { requestBudget, runOperation } from "./../service-test-adapter.js";
 
 const picked = (choice: string) => ({
 	type: "choice" as const,
@@ -59,8 +59,11 @@ const models = (output: unknown, jev: JevAsk = neverJev) => ({
 });
 const grammar = (output: unknown) =>
 	Effect.runPromise(
-		runOperation("resolve.grammar", options, (scope) =>
-			resolveHebrewGrammar(scope, models(output), {
+		runOperation(
+			"resolve.grammar",
+			options,
+			models(output),
+			resolveHebrewGrammar({
 				language: "he",
 				sentence,
 				unit,
@@ -127,8 +130,11 @@ test("Hebrew Reading judge reuses stored sense instead of forcing the canonical 
 		};
 	};
 	const result = await Effect.runPromise(
-		runOperation("resolve.reading", options, (scope) =>
-			resolveHebrewReading(scope, models("bad", jev), {
+		runOperation(
+			"resolve.reading",
+			options,
+			models("bad", jev),
+			resolveHebrewReading({
 				attestation: resolved.attestation,
 				sentence,
 				unit,
@@ -154,8 +160,11 @@ test("Hebrew Reading NoMatch uses validated draft, normalizes collisions and sup
 		extra: { drafted?: string; written?: string },
 	) =>
 		Effect.runPromise(
-			runOperation("resolve.reading", options, (scope) =>
-				resolveHebrewReading(scope, models("bad", jev), {
+			runOperation(
+				"resolve.reading",
+				options,
+				models("bad", jev),
+				resolveHebrewReading({
 					attestation: resolved.attestation,
 					sentence,
 					unit,
@@ -210,8 +219,11 @@ test("Hebrew Reading refuses an Attestation from a different source occurrence",
 	const different = { ...resolved.attestation, members };
 	await expect(
 		Effect.runPromise(
-			runOperation("resolve.reading", options, (scope) =>
-				resolveHebrewReading(scope, models("📚"), {
+			runOperation(
+				"resolve.reading",
+				options,
+				models("📚"),
+				resolveHebrewReading({
 					attestation: different,
 					sentence,
 					unit,
@@ -252,8 +264,11 @@ test("Hebrew route question gives UD-backed accusative את ADP, not PART", asyn
 test("unresolved Hebrew grammar asks nothing", async () => {
 	const unresolved = { ...unit, route: "Unresolved" as const };
 	const result = await Effect.runPromise(
-		runOperation("resolve.grammar", options, (scope) =>
-			resolveHebrewGrammar(scope, models(undefined), {
+		runOperation(
+			"resolve.grammar",
+			options,
+			models(undefined),
+			resolveHebrewGrammar({
 				language: "he",
 				sentence: { ...sentence, units: [unresolved] },
 				unit: unresolved,

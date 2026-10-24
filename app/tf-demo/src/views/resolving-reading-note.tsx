@@ -93,7 +93,7 @@ export function resolvingReadingNoteData(
 		relations: [],
 		relationsTruncated: false,
 		grammaticalAlternatives: [],
-		participleLinks: [],
+		sourceLinks: [],
 		pendingRelations: [],
 		structuralReferences: [],
 		definitionText: { state: "Pending" },

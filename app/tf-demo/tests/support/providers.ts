@@ -1,48 +1,52 @@
-import type { JevRequest } from "dumgen";
+import { DumgenLive, JevTransport, LunaTransport } from "dumgen";
+import { replaceModelTransports } from "../../convex/model/deploymentDumgen";
 import { fakeJev } from "./jev";
 
 /**
- * Answers the TypeSafe API (`POST /v1/systemone`) from a fake jev, so a real
- * intake action runs its real `segment.inUnits` with no network. A request
- * the jev refuses comes back as a 400, which the TypeSafe ask throws
- * without a retry; any other URL is refused the same way.
+ * Gives the deployment a fake jev for its TypeSafe transport
+ * (`JevTransport.fromAsk`), so a real intake action runs its real
+ * `segment.inUnits` with no network, and no Luna, as a deployment without
+ * an OpenAI key. `requests` are the requests jev was sent, each once, since
+ * nothing retries. `restore` puts the deployment's own transports back.
  */
 export function fakeTypeSafe(jev: ReturnType<typeof fakeJev> = fakeJev()) {
-	const previous = {
-		fetch: globalThis.fetch,
-		TYPESAFE_API_KEY: process.env.TYPESAFE_API_KEY,
-	};
-	const requests: string[] = [];
-	process.env.TYPESAFE_API_KEY = "fixture";
-	globalThis.fetch = (async (url: string | URL | Request, init) => {
-		requests.push(String(url));
-		if (!String(url).endsWith("/v1/systemone"))
-			return new Response("unexpected request", { status: 400 });
-		try {
-			const request = JSON.parse(String(init?.body)) as JevRequest;
-			return Response.json(
-				await jev.ask(request, {
-					stage: "fixture",
-					signal: init?.signal ?? new AbortController().signal,
-				}),
-			);
-		} catch (error) {
-			return new Response(String(error), { status: 400 });
-		}
-	}) as typeof fetch;
-	return {
-		jev,
-		requests,
-		restore() {
-			globalThis.fetch = previous.fetch;
-			if (previous.TYPESAFE_API_KEY === undefined)
-				delete process.env.TYPESAFE_API_KEY;
-			else process.env.TYPESAFE_API_KEY = previous.TYPESAFE_API_KEY;
-		},
-	};
+	const restore = replaceModelTransports({
+		jev: () => JevTransport.fromAsk(jev.ask),
+	});
+	return { jev, requests: jev.sent, restore };
 }
 
 /** Every jev request fails. */
 export function unavailableProviders() {
 	return fakeTypeSafe(fakeJev({ fail: () => true }));
+}
+
+/**
+ * Transports that fail any test that reaches a model: every request to jev
+ * or Luna is recorded by its stage, then refused.
+ */
+export function noModelCalls() {
+	const requests: string[] = [];
+	const refuse = async (_: unknown, { stage }: { stage: string }) => {
+		requests.push(stage);
+		throw new Error("No model call is expected.");
+	};
+	const restore = replaceModelTransports({
+		jev: () => JevTransport.fromAsk(refuse),
+		luna: () => LunaTransport.fromAsk(refuse),
+	});
+	return { requests, restore };
+}
+
+/**
+ * `DumgenLive` over a fake jev, for a test that runs intake's own code:
+ * what an action provides, with no Luna, which intake never asks.
+ */
+export function intakeDumgen(jev: ReturnType<typeof fakeJev> = fakeJev()) {
+	return DumgenLive({
+		jev: JevTransport.fromAsk(jev.ask),
+		luna: LunaTransport.fromAsk(async () => {
+			throw Error("intake asked Luna");
+		}),
+	});
 }

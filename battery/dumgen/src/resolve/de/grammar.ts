@@ -12,10 +12,11 @@
 import { closedRoute } from "dumcorpus/inventories";
 import { isSyncretism, lemmaIdentityKey, parseUnit } from "dumling";
 import * as Effect from "effect/Effect";
-import type { OperationScope } from "../../call.js";
+import * as Result from "effect/Result";
+import { CallLog } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
-import { askThrough, type JevSettings } from "../../jev-call.js";
-import type { LunaSettings } from "../../luna-call.js";
+import { type Jev, stageAsk } from "../../jev-call.js";
+import type { Luna } from "../../luna-call.js";
 import type { Ask } from "../../segment/ask.js";
 import type { Route } from "../../segment/segmented-sentence.js";
 import { parsedDescription } from "../reading.js";
@@ -25,28 +26,12 @@ import {
 	type ClosedOption,
 	cellQuestion,
 	closedAttestation,
-	type MatchedRealization,
 	type OpenAnswer,
 } from "./closed-class.js";
+import type { MatchedRealization } from "./closed-realizations.js";
 import { resolveOpenRoute } from "./open-route.js";
-import { Answered, UnresolvedAnswer } from "./questions.js";
+import { Answered, type Unresolved } from "./questions.js";
 import { type Target, targetOf, targetState } from "./target.js";
-
-/** What `resolve.grammar` reaches its models with. */
-export type GrammarModels = {
-	readonly jev: JevSettings;
-	readonly luna: LunaSettings;
-};
-
-/** A deciding answer read synchronously, or why the click stops. */
-function settle<T>(read: () => T): T | UnresolvedAnswer {
-	try {
-		return read();
-	} catch (error) {
-		if (error instanceof UnresolvedAnswer) return error;
-		throw error;
-	}
-}
 
 type Outcome =
 	| {
@@ -54,7 +39,7 @@ type Outcome =
 			readonly attestation: unknown;
 			readonly drafted?: string;
 	  }
-	| { readonly _tag: "Unresolved"; readonly reason: string }
+	| Unresolved
 	| { readonly _tag: "CatalogMiss"; readonly message: string };
 
 /**
@@ -107,9 +92,9 @@ const resolveAuthored = Effect.fnUntraced(function* (
 		},
 		questions: cell.questionnaire.questions,
 	});
-	const picked = settle(() => new Answered(answers).pick("cell"));
-	if (picked instanceof UnresolvedAnswer)
-		return { _tag: "Unresolved", reason: picked.reason };
+	const cellAnswer = new Answered(answers).pick("cell");
+	if (Result.isFailure(cellAnswer)) return cellAnswer.failure;
+	const picked = cellAnswer.success;
 	const chosen = cell.answerOf(picked);
 	if (!chosen)
 		return yield* new InvalidModelOutput({
@@ -162,18 +147,21 @@ function realizationOf(
  * asked.
  */
 export const resolveGermanGrammar = Effect.fnUntraced(function* (
-	scope: OperationScope,
-	models: GrammarModels,
 	input: ResolveGrammarInput,
-): Effect.fn.Return<GrammarResolution, ProviderFailure | InvalidModelOutput> {
+): Effect.fn.Return<
+	GrammarResolution,
+	ProviderFailure | InvalidModelOutput,
+	Jev | Luna | CallLog
+> {
 	const { unit } = input;
+	const log = yield* CallLog;
 	if (unit.route === "Unresolved") {
-		scope.resolution({ outcome: "Unresolved", reason: "UnresolvedUnit" });
+		log.resolution({ outcome: "Unresolved", reason: "UnresolvedUnit" });
 		return { _tag: "Unresolved" };
 	}
 	const route: Route = unit.route;
 	const target = targetOf(input.sentence, unit, route);
-	const ask = askThrough(scope, models.jev);
+	const ask = yield* stageAsk;
 	// A Locution DET or PRON an inventory authors resolves as authored too.
 	// A PART, closed as well, is closed on the open route: its spelling or
 	// Luna's headword must name an authored particle.
@@ -185,19 +173,13 @@ export const resolveGermanGrammar = Effect.fnUntraced(function* (
 			: undefined;
 	const outcome: Outcome =
 		authored ??
-		(yield* resolveOpenRoute(
-			scope,
-			target,
-			ask,
-			models.luna,
-			input.lemmaCandidates,
-		));
+		(yield* resolveOpenRoute(target, ask, input.lemmaCandidates));
 	if (outcome._tag === "Unresolved") {
-		scope.resolution({ outcome: "Unresolved", reason: outcome.reason });
+		log.resolution({ outcome: "Unresolved", reason: outcome.reason });
 		return { _tag: "Unresolved" };
 	}
 	if (outcome._tag === "CatalogMiss") {
-		scope.resolution({ outcome: "CatalogMiss", reason: outcome.message });
+		log.resolution({ outcome: "CatalogMiss", reason: outcome.message });
 		return { _tag: "CatalogMiss", route, message: outcome.message };
 	}
 	// Answers that clash are read as Unresolved before this point, so an
@@ -223,11 +205,11 @@ export const resolveGermanGrammar = Effect.fnUntraced(function* (
 			? undefined
 			: parsedDescription(attestation.surface.lemma, outcome.drafted);
 	if (outcome.drafted !== undefined && drafted === undefined)
-		scope.event({
+		log.event({
 			name: "DraftDropped",
 			data: { drafted: outcome.drafted.slice(0, 80) },
 		});
-	scope.resolution({ outcome: "Resolved" });
+	log.resolution({ outcome: "Resolved" });
 	return {
 		_tag: "Resolved",
 		attestation,

@@ -8,9 +8,9 @@
  */
 import { translationLanguageValues } from "dumrel";
 import * as Effect from "effect/Effect";
-import type { OperationScope } from "../call.js";
+import type { CallLog } from "../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../errors.js";
-import { askLuna, type LunaSettings } from "../luna-call.js";
+import { askLuna, type Luna } from "../luna-call.js";
 import { sentenceTranslationPrompt } from "./de/prompt.js";
 import type { TranslateSentenceInput } from "./types.js";
 
@@ -28,10 +28,12 @@ const isText = (value: unknown): value is string =>
  * is asked.
  */
 export const translateSentence = Effect.fnUntraced(function* (
-	scope: OperationScope,
-	luna: LunaSettings,
 	input: TranslateSentenceInput,
-): Effect.fn.Return<string, ProviderFailure | InvalidModelOutput> {
+): Effect.fn.Return<
+	string,
+	ProviderFailure | InvalidModelOutput,
+	Luna | CallLog
+> {
 	const language: string = input.language;
 	if (language !== "de")
 		return yield* Effect.die(
@@ -57,8 +59,6 @@ export const translateSentence = Effect.fnUntraced(function* (
 				),
 			);
 	return yield* askLuna(
-		scope,
-		luna,
 		stage,
 		{
 			systemPrompt: sentenceTranslationPrompt,

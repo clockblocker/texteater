@@ -1,5 +1,16 @@
 import type { Questions } from "@typesafe-ai/sdk";
+import * as Effect from "effect/Effect";
+import { labRequestBudget } from "../../../lab/evaluation/lab-runtime.js";
+import { RequestBudget } from "../../../src/call.js";
 import type { Answer, Answers } from "../../../src/segment/ask.js";
+
+/** `effect`, an arm's run or a lab run, on a request budget of its own, as a lab command runs it. */
+export const onLabBudget = <A, E>(
+	effect: Effect.Effect<A, E, RequestBudget>,
+): Promise<A> =>
+	Effect.runPromise(
+		Effect.provide(effect, RequestBudget.layer(labRequestBudget)),
+	);
 
 /** How a fake jev answers: a Noul's probability, and a Choice's key among the keys it offers. */
 export type Picks = {

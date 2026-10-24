@@ -19,7 +19,7 @@ const lemma = {
 } satisfies Dumling.Lemma<"de">;
 export const member: AuthoredMember = {
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🚫" }, lemma },
+	reading: { unitKind: "Reading", emojiDescription: "🚫", lemma },
 	knowledge: {
 		definition:
 			"Das Negativpronomen „nichts“ verneint das Vorhandensein einer Sache.",

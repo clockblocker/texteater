@@ -1,4 +1,4 @@
-import { jest } from "bun:test";
+import { expect, jest } from "bun:test";
 import { makeSurfaceId } from "dumdict";
 import { api, internal } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -6,7 +6,7 @@ import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../../server/linguisticIdentity";
-import type { TestConvexDb } from "./convex";
+import { submitText, type TestConvexDb } from "./convex";
 
 /** The German `Bank` (🏦) the Resolution Session tests resolve `Banken` to. */
 export const bankLemma = {
@@ -172,4 +172,42 @@ export async function resolutionSessionRow(t: TestConvexDb, requestId: string) {
 	);
 	if (!session) throw new Error(`No Resolution Session for ${requestId}.`);
 	return session;
+}
+
+/** Stores one Sentence and selects the Segment at `clickedSegmentIndex`. */
+export async function selectIn(
+	t: TestConvexDb,
+	segments: readonly string[],
+	clickedSegmentIndex = 0,
+) {
+	const { sentenceIds, segmentIds } = await submitText(t, [segments]);
+	const sentenceId = sentenceIds[0];
+	const sentenceSegmentIds = segmentIds[0];
+	if (!sentenceId || !sentenceSegmentIds) {
+		throw new Error("Expected a stored Sentence.");
+	}
+	const selection: Selection = {
+		requestId: "request-1",
+		visitorId: "visitor-1",
+		sentenceId,
+		clickedSegmentIndex,
+	};
+	const guard = await startSession(t, selection);
+	return { selection, guard, segmentIds: sentenceSegmentIds };
+}
+
+/** Expects the Resolution Session `requestId` to have committed `attestationId`. */
+export async function expectCompleted(
+	t: TestConvexDb,
+	requestId: string,
+	attestationId: Id<"attestations">,
+) {
+	expect(await resolutionSessionRow(t, requestId)).toMatchObject({
+		lifecycle: {
+			state: "Terminal",
+			progress: "Committing",
+			outcome: "Complete",
+		},
+		attestationId,
+	});
 }

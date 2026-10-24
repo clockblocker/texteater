@@ -1,11 +1,11 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../../../src/call.js";
 import { produceHebrewKnowledge } from "../../../src/knowledge/he/produce.js";
 import { hebrewKnowledgePrompts } from "../../../src/knowledge/he/prompts.js";
 import { defaultLunaConfiguration } from "../../../src/luna.js";
 import { pinnedJevModel } from "../../../src/segment/jev.js";
+import { requestBudget, runOperation } from "./../../service-test-adapter.js";
 import { knowledgeJev, knowledgeLuna } from "../support.js";
 
 const lemma = {
@@ -40,32 +40,28 @@ test("paradigm writer receives exact source context alongside the barber Reading
 		runOperation(
 			"knowledge.produce",
 			{ budget: requestBudget(1), payloads: true },
-			(scope) =>
-				produceHebrewKnowledge(
-					scope,
-					{
-						luna: {
-							ask: luna.ask,
-							configuration: defaultLunaConfiguration,
-						},
-						jev: { ask: knowledgeJev().ask, model: pinnedJevModel },
-					},
-					{
-						language: "he",
-						reading,
-						attestation,
-						sentence: {
-							segments: [
-								{ text: "ה" },
-								{ text: "ספר" },
-								{ text: " גזר את השיער." },
-							],
-							target: [0, 1],
-						},
-						origin: "New",
-						request: { hebrewParadigm: null },
-					},
-				),
+			{
+				luna: {
+					ask: luna.ask,
+					configuration: defaultLunaConfiguration,
+				},
+				jev: { ask: knowledgeJev().ask, model: pinnedJevModel },
+			},
+			produceHebrewKnowledge({
+				language: "he",
+				reading,
+				attestation,
+				sentence: {
+					segments: [
+						{ text: "ה" },
+						{ text: "ספר" },
+						{ text: " גזר את השיער." },
+					],
+					target: [0, 1],
+				},
+				origin: "New",
+				request: { hebrewParadigm: null },
+			}),
 		),
 	);
 	expect(luna.sent[0]?.input).toMatchObject({

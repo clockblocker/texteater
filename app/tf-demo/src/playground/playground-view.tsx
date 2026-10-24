@@ -1,4 +1,5 @@
 import {
+	BlocksIcon,
 	ClapperboardIcon,
 	LayersIcon,
 	LoaderIcon,
@@ -8,6 +9,7 @@ import {
 } from "lucide-react";
 import { type ReactNode, useEffect } from "react";
 import { AnimationWorkbench } from "./entries/animation-workbench/workbench";
+import { BreakdownsPrototype } from "./entries/breakdowns/breakdowns";
 import { DeckModelsGallery } from "./entries/deck-models-gallery";
 import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
@@ -40,6 +42,14 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"Every Note kind from the Notes Study fake db, as a Card and as a Sheet. Links navigate inside the gallery.",
 		render: (route) => <NotesGallery route={route} />,
+	},
+	{
+		key: "breakdowns",
+		title: "Breakdowns",
+		icon: BlocksIcon,
+		description:
+			"A Reading's Breakdown on its Note and a base's Formations (#1241), from the Notes fake db. Knobs and notes in the inspector.",
+		render: (route) => <BreakdownsPrototype route={route} />,
 	},
 	{
 		key: "loading",

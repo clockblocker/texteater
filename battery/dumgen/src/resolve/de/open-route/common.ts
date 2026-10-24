@@ -12,10 +12,12 @@ import { ambiguousPieces, type MemberOrthography } from "../member-spelling.js";
 import { fill, options, question } from "../prompts.js";
 import {
 	type Answered,
+	answerReader,
 	type Choice,
 	type ChoiceOf,
 	type Questionnaire,
-	UnresolvedAnswer,
+	type ReaderBody,
+	unresolved,
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
 import {
@@ -202,21 +204,21 @@ function askSpelling(
 }
 
 /** Reads the head: each member's orthography, the spelling, the readings, and a citation. */
-export function readHead(
+export const readHead = answerReader(function* (
 	target: Target,
 	article: OpeningArticle | undefined,
 	head: HeadPlan,
 	indefinite: ChoiceOf<typeof options.indefinite> | undefined,
 	answered: Answered,
-): {
+): ReaderBody<{
 	readonly orthographies: readonly MemberOrthography[];
 	readonly spelling: Spelling;
 	readonly surfaceFeatures: SurfaceFeatures;
 	readonly readings: ReadonlyMap<number, string>;
 	readonly cited: boolean;
-} {
+}> {
 	const irregular = head.orthography
-		? answered.pick(head.orthography)
+		? yield* answered.pick(head.orthography)
 		: "None";
 	const shorthand =
 		indefinite !== undefined && answered.peek(indefinite) === "Indefinite";
@@ -232,7 +234,7 @@ export function readHead(
 						: "Standard"),
 	);
 	const spellingAnswer = head.spelling
-		? answered.pick(head.spelling)
+		? yield* answered.pick(head.spelling)
 		: "Canonical";
 	const digits = target.members.every(
 		(member) => member.spelling || /^\d+$/u.test(member.text),
@@ -244,33 +246,29 @@ export function readHead(
 				? { kind: "Canonical" }
 				: { kind: "Variant", variantTags: [spellingAnswer] };
 	const surfaceFeatures: SurfaceFeatures =
-		head.archaic && answered.pick(head.archaic) === "Archaic"
+		head.archaic && (yield* answered.pick(head.archaic)) === "Archaic"
 			? { historicalStatus: "Archaic" }
 			: null;
 	const readings = new Map(head.presetReadings);
 	for (const piece of head.pieces) {
-		const answer = answered.pick(piece.reading);
+		const answer = yield* answered.pick(piece.reading);
 		const reading = piece.surfaces[Number(answer.slice(1))];
 		if (reading === undefined)
-			throw new UnresolvedAnswer(
-				`No reading of Segment ${piece.segment}`,
-			);
+			return yield* unresolved(`No reading of Segment ${piece.segment}`);
 		readings.set(piece.segment, reading);
 	}
 	for (const { member, reading: asked } of head.shortened) {
-		const answer = answered.pick(asked);
+		const answer = yield* answered.pick(asked);
 		const reading = member.spelling?.surfaces[Number(answer.slice(1))];
 		if (reading === undefined)
-			throw new UnresolvedAnswer(
-				`No reading of Segment ${member.segment}`,
-			);
+			return yield* unresolved(`No reading of Segment ${member.segment}`);
 		readings.set(member.segment, reading);
 	}
 	const cited =
 		head.citation !== undefined &&
-		answered.pick(head.citation) === "Citation";
+		(yield* answered.pick(head.citation)) === "Citation";
 	return { orthographies, spelling, surfaceFeatures, readings, cited };
-}
+});
 
 /** What the tail of the first request asked. */
 export type TailPlan = {
@@ -328,36 +326,41 @@ export function askTail(
  * verb, in a complete realization: jev's citation or Partial against it
  * is a clash.
  */
-export function readTail(
+export const readTail = answerReader(function* (
 	tail: TailPlan,
 	shape: Shape,
 	answered: Answered,
 	expletive: Member | undefined,
 	cited: boolean,
-): {
+): ReaderBody<{
 	readonly core: TailCore;
 	readonly coverage: "Full" | "Partial";
 	readonly governed: readonly ValencyEvidence[];
 	readonly governedPositions: readonly number[];
-} {
+}> {
 	const core: TailCore = tail.answer
-		? { partType: answered.pick(tail.answer) === "Res" ? "Res" : null }
+		? {
+				partType:
+					(yield* answered.pick(tail.answer)) === "Res"
+						? "Res"
+						: null,
+			}
 		: tail.sourceLanguage
-			? { sourceLang: answered.pick(tail.sourceLanguage) }
+			? { sourceLang: yield* answered.pick(tail.sourceLanguage) }
 			: {};
 	const coverage =
-		tail.coverage && answered.pick(tail.coverage) === "Partial"
+		tail.coverage && (yield* answered.pick(tail.coverage)) === "Partial"
 			? "Partial"
 			: "Full";
 	if (expletive && cited)
-		throw new UnresolvedAnswer("The subject es clashes with a citation");
+		return yield* unresolved("The subject es clashes with a citation");
 	if (expletive && coverage === "Partial")
-		throw new UnresolvedAnswer(
+		return yield* unresolved(
 			"The subject es clashes with a partial realization",
 		);
 	return {
 		core,
 		coverage,
-		...readGoverned(tail.governable, shape, answered),
+		...(yield* readGoverned(tail.governable, shape, answered)),
 	};
-}
+});

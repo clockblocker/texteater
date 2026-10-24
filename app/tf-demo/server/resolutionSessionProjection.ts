@@ -39,6 +39,7 @@ export type ResolutionGrammarProjection<
 		Dumling.Lemma<Dumling.Language> = Dumling.Lemma<Dumling.Language>,
 > = Lemma extends unknown
 	? {
+			language: Lemma["language"];
 			grundform: boolean | null;
 			members: ResolutionMember[];
 			/** Members realizing a valency marker, such as a governed preposition. */
@@ -83,6 +84,7 @@ export function projectResolutionGrammar(
 	// Family, Kind and Core Features all come from the same Lemma, which
 	// TypeScript cannot follow through a union value.
 	return {
+		language: surface.lemma.language,
 		grundform: assessment.success ? assessment.value : null,
 		members: grammatical.attestation.members.map(
 			(member): ResolutionMember =>

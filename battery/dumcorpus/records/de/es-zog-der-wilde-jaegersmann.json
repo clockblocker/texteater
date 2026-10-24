@@ -132,15 +132,6 @@
 			"reading": {
 				"emojiDescription": "👕",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
-					"preterite": ["zog an"],
-					"presentSingular": {
-						"first": ["ziehe an"],
-						"second": ["ziehst an"],
-						"third": ["zieht an"]
-					},
-					"pastParticiple": ["angezogen"],
-					"subjunctivePast": ["zöge an"],
 					"valency": [
 						{
 							"status": "Required",
@@ -226,19 +217,31 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["zog an"],
+					"present1": ["ziehe an"],
+					"present2": ["ziehst an"],
+					"present3": ["zieht an"],
+					"pastParticiple": ["angezogen"],
+					"subjunctivePast": ["zöge an"]
+				},
 				"coverage": {
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"valency": "Authored",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
 						"antonym": "Authored",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},
@@ -293,7 +296,6 @@
 			"reading": {
 				"emojiDescription": "🏹",
 				"knowledge": {
-					"plural": ["Jägersleute", "Jägersmänner"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -319,9 +321,10 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Jägersleute", "Jägersmänner"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -329,7 +332,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"grundform": true,

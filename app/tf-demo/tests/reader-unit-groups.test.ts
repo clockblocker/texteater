@@ -106,6 +106,7 @@ test("selecting one member of an unattested unit marks the whole unit selected",
 				{
 					sentenceId: SENTENCE_ID,
 					position: 0,
+					paragraph: 0,
 					language: "de",
 					stitchedText: "Sie gibt den alten Plan auf.",
 					segments: sentenceSegments(),
@@ -141,6 +142,7 @@ test("a selected unit keeps its look on the member whose click came back Unresol
 				{
 					sentenceId: SENTENCE_ID,
 					position: 0,
+					paragraph: 0,
 					language: "de",
 					stitchedText: "Sie gibt den alten Plan auf.",
 					segments,
@@ -162,6 +164,7 @@ test("a Sentence intake could not segment shows as not segmented, each word with
 				{
 					sentenceId: SENTENCE_ID,
 					position: 0,
+					paragraph: 0,
 					language: "de",
 					stitchedText: "Sie gibt den alten Plan auf.",
 					segmentationFailed: true,

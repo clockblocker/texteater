@@ -54,6 +54,12 @@
 		"//#check:tooling": {
 			"cache": false
 		},
+		"//#check:icon-workbench": {
+			"cache": false
+		},
+		"//#lint:icon-workbench": {
+			"cache": false
+		},
 		"//#lint:tooling": {
 			"cache": false
 		},

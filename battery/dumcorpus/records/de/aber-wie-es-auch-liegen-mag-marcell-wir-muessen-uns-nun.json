@@ -275,7 +275,7 @@
 			},
 			{
 				"rule": "de/modification-attests-partially",
-				"hash": "91fc596acb3813f1"
+				"hash": "c888ed5b9e59b0a1"
 			},
 			{
 				"rule": "de/only-der-and-ein-are-articles",
@@ -667,7 +667,6 @@
 			"reading": {
 				"emojiDescription": "🤷",
 				"knowledge": {
-					"conjugationClass": ["Mixed"],
 					"valency": [
 						{
 							"status": "Required",
@@ -692,7 +691,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -1077,7 +1075,6 @@
 			"reading": {
 				"emojiDescription": "🔨",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
 					"valency": [
 						{
 							"status": "Required",
@@ -1128,7 +1125,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",

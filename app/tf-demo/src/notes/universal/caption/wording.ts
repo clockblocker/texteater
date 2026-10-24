@@ -193,6 +193,15 @@ export const targetWordings = {
 		nounWithArticle: "{article} {noun}",
 		wordSeparator: " ",
 	},
+	he: {
+		pronoun: {},
+		imperativePronoun: {},
+		expletivePronoun: "",
+		article: { Masc: "ה", Fem: "ה", Neut: "ה" },
+		articleSeparator: "/",
+		nounWithArticle: "{article}{noun}",
+		wordSeparator: " ",
+	},
 } as const satisfies Record<SupportedTargetLanguage, TargetWording>;
 
 /**

@@ -17,7 +17,7 @@
 		"rules": [
 			{
 				"rule": "de/expletive-es-joins-its-verb",
-				"hash": "a5fb49a3b3ef1cb3"
+				"hash": "99bff23563b49716"
 			}
 		],
 		"references": [
@@ -50,15 +50,6 @@
 			"reading": {
 				"emojiDescription": "🌡",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
-					"preterite": ["ging"],
-					"presentSingular": {
-						"first": ["gehe"],
-						"second": ["gehst"],
-						"third": ["geht"]
-					},
-					"pastParticiple": ["gegangen"],
-					"subjunctivePast": ["ginge"],
 					"valency": [
 						{
 							"status": "Required",
@@ -96,19 +87,30 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["ging"],
+					"present1": ["gehe"],
+					"present2": ["gehst"],
+					"present3": ["geht"],
+					"pastParticiple": ["gegangen"],
+					"subjunctivePast": ["ginge"]
+				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},

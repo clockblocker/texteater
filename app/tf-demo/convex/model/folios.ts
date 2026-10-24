@@ -22,7 +22,7 @@ export async function writeFolios(
 	scrollId: Id<"scrolls">,
 	sentences: readonly {
 		readonly position: number;
-		readonly paragraph?: number;
+		readonly paragraph: number;
 		readonly stitchedText: string;
 	}[],
 ): Promise<void> {
@@ -111,9 +111,7 @@ export async function nextFolioWindow(
 	return {
 		sentences: window.map((sentence) => ({
 			sentenceId: sentence._id,
-			...(sentence.paragraph === undefined
-				? {}
-				: { paragraph: sentence.paragraph }),
+			paragraph: sentence.paragraph,
 			stitchedText: sentence.stitchedText,
 		})),
 	};

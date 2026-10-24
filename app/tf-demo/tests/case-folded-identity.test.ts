@@ -50,7 +50,7 @@ const morgenAdverb = {
 
 const reading = (lemma: Dumling.Lemma<"de">, emojiDescription: string) =>
 	({ unitKind: "Reading", lemma, emojiDescription }) as Dumling.Reading<"de">;
-const note = { attestedTranslations: [], attestations: [], notes: "" };
+const note = { attestedTranslations: [], attestationLinks: [], notes: "" };
 
 function inTransaction<Result>(
 	t: TestConvexDb,
@@ -96,6 +96,8 @@ describe("case-folded Lemma identity (system ADR 0002)", () => {
 				foldedCanonicalForm,
 			})),
 		).toEqual([{ canonicalForm: "LOL", foldedCanonicalForm: "lol" }]);
+		const [lemma] = lemmas;
+		if (!lemma) throw new Error("Expected the LOL Lemma.");
 		expect(
 			(await rows(t, "readings")).map(
 				({ lemmaId, emojiDescription }) => ({
@@ -104,8 +106,8 @@ describe("case-folded Lemma identity (system ADR 0002)", () => {
 				}),
 			),
 		).toEqual([
-			{ lemmaId: lemmas[0]?._id, emojiDescription: "😂" },
-			{ lemmaId: lemmas[0]?._id, emojiDescription: "🤣" },
+			{ lemmaId: lemma._id, emojiDescription: "😂" },
+			{ lemmaId: lemma._id, emojiDescription: "🤣" },
 		]);
 	});
 
@@ -155,7 +157,14 @@ describe("case-folded Lemma identity (system ADR 0002)", () => {
 		expect(
 			await addNote(t, reading(interjection("LOL"), "😂")),
 		).toMatchObject({ status: "committed" });
-		expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
+		// The relation keeps its Shadow, resolved to LOL (system ADR 0011).
+		expect(await rows(t, "pendingSemanticRelations")).toEqual([
+			expect.objectContaining({
+				record: expect.objectContaining({
+					resolvedLemma: interjection("LOL"),
+				}),
+			}),
+		]);
 		const [laughingLemma] = await rows(t, "lemmas").then((stored) =>
 			stored.filter(({ canonicalForm }) => canonicalForm === "LOL"),
 		);
@@ -164,6 +173,8 @@ describe("case-folded Lemma identity (system ADR 0002)", () => {
 				({ readingKey }) => readingKey === readingIdentityKey(giggling),
 			),
 		);
+		if (!laughingLemma || !gigglingReading)
+			throw new Error("Expected the LOL Lemma and the giggling Reading.");
 		expect(
 			(await rows(t, "semanticRelationEdges")).map(
 				({ sourceReadingId, targetLemmaId, relation }) => ({
@@ -174,8 +185,8 @@ describe("case-folded Lemma identity (system ADR 0002)", () => {
 			),
 		).toEqual([
 			{
-				sourceReadingId: gigglingReading?._id,
-				targetLemmaId: laughingLemma?._id,
+				sourceReadingId: gigglingReading._id,
+				targetLemmaId: laughingLemma._id,
 				relation: "nearSynonym",
 			},
 		]);

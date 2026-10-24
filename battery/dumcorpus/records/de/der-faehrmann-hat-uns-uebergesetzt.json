@@ -75,15 +75,6 @@
 			"reading": {
 				"emojiDescription": "⛴",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
-					"preterite": ["setzte über"],
-					"presentSingular": {
-						"first": ["setze über"],
-						"second": ["setzt über"],
-						"third": ["setzt über"]
-					},
-					"pastParticiple": ["übergesetzt"],
-					"subjunctivePast": ["setzte über"],
 					"valency": [
 						{
 							"status": "Required",
@@ -122,19 +113,31 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["setzte über"],
+					"present1": ["setze über"],
+					"present2": ["setzt über"],
+					"present3": ["setzt über"],
+					"pastParticiple": ["übergesetzt"],
+					"subjunctivePast": ["setzte über"]
+				},
 				"coverage": {
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"valency": "Authored",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},

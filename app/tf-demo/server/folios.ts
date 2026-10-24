@@ -24,8 +24,7 @@ const WINDOW_CHARACTERS = 15_000;
 /** A stored Sentence as the Folio cut reads it. */
 type FolioSentence = {
 	readonly position: number;
-	/** Absent for a Sentence stored before paragraphs were kept: it is one alone. */
-	readonly paragraph?: number;
+	readonly paragraph: number;
 	readonly stitchedText: string;
 };
 
@@ -62,9 +61,7 @@ export function cutFolios(
 	for (const [index, sentence] of sentences.entries()) {
 		const previous = sentences[index - 1];
 		const sameParagraph =
-			previous !== undefined &&
-			sentence.paragraph !== undefined &&
-			sentence.paragraph === previous.paragraph;
+			previous !== undefined && sentence.paragraph === previous.paragraph;
 		if (previous !== undefined && !sameParagraph) closeParagraph();
 		if (!sameParagraph) {
 			paragraphStart = index;

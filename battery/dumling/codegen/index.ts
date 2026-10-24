@@ -9,7 +9,7 @@ import type { Family, Kind, Language } from "../src/generated/units.js";
 import { routes } from "./generated/routes.js";
 
 /** One language × Family × Kind route and where its concrete schemas live. */
-export interface DumlingRoute {
+interface DumlingRoute {
 	readonly language: Language;
 	readonly family: Family;
 	readonly kind: Kind;

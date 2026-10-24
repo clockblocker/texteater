@@ -121,8 +121,12 @@ export default {
 				// Spawned by path.
 				"tooling/dum-entrypoint-rss/empty-module.ts",
 				"tooling/dum-entrypoint-rss/runner.ts",
+				// `bun img/icon/workbench/render.ts <variant>`, which imports each variant by path.
+				"img/icon/workbench/render.ts",
 			],
-			project: ["tooling/**/*.ts"],
+			// The icon workbench's renderer only: its variants load by path, and its
+			// drawing kit waits for the next variant to use it.
+			project: ["tooling/**/*.ts", "img/icon/workbench/render.ts"],
 			ignoreDependencies: [
 				// dependency-cruiser's Babel config (tooling/dependency-cruiser.babel.json).
 				"@babel/core",
@@ -130,6 +134,9 @@ export default {
 				"@babel/preset-typescript",
 				// Run by path (tooling/lib/tools.ts).
 				"dependency-cruiser",
+				"oxlint",
+				// Oxlint's type-aware backend, which `typeAware` in .oxlintrc.json loads.
+				"oxlint-tsgolint",
 				// The pinned Node binary CI and `demo` put on PATH.
 				"node",
 				// One hoisted copy for every workspace (#868).

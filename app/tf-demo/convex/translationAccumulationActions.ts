@@ -1,11 +1,11 @@
 "use node";
 
 import { v } from "convex/values";
-import { createDumgen, createTypeSafeAsk } from "dumgen";
+import type { Jev, Luna } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
-import { deploymentLuna } from "../server/deployment-luna";
+import { logged } from "../server/logging";
 import { parseReading } from "../server/operationalParsing";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
@@ -16,6 +16,7 @@ import {
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { type ActionCtx, env, internalAction } from "./_generated/server";
+import { deploymentDumgen, modelTransports } from "./model/deploymentDumgen";
 import { translationLanguageValidator } from "./model/validators";
 
 /**
@@ -26,19 +27,11 @@ import { translationLanguageValidator } from "./model/validators";
  * elsewhere it is undefined and the run calls no model.
  */
 function productionTranslationAccumulator():
-	| TranslationAccumulator
+	| TranslationAccumulator<Jev | Luna>
 	| undefined {
-	const jevKey = env.TYPESAFE_API_KEY;
-	const lunaKey = env.OPENAI_API_KEY;
-	if (env.TF_KNOWLEDGE_PRODUCTION !== "1" || !jevKey || !lunaKey)
-		return undefined;
-	return dumgenTranslationAccumulator((tracing) =>
-		createDumgen({
-			jev: createTypeSafeAsk({ apiKey: jevKey }),
-			...deploymentLuna(env),
-			...tracing,
-		}),
-	);
+	const { jev, luna } = modelTransports();
+	if (env.TF_KNOWLEDGE_PRODUCTION !== "1" || !jev || !luna) return undefined;
+	return dumgenTranslationAccumulator;
 }
 
 /** Accumulates one occurrence's translations, after its click (ADR 0047). */
@@ -66,7 +59,7 @@ export async function accumulateTranslations(
 		readonly attestationId: Id<"attestations">;
 		readonly languages: readonly ("en" | "ru")[];
 	},
-	accumulate: TranslationAccumulator,
+	accumulate: TranslationAccumulator<Jev | Luna>,
 ): Promise<void> {
 	const occurrence = await ctx.runQuery(
 		internal.translationAccumulation.begin,
@@ -82,12 +75,14 @@ export async function accumulateTranslations(
 		encounter.sentence.language,
 	);
 	const exit = await Effect.runPromiseExit(
-		accumulate({
-			encounter,
-			reading,
-			attestation,
-			translations: occurrence.translations,
-		}),
+		logged(
+			accumulate({
+				encounter,
+				reading,
+				attestation,
+				translations: occurrence.translations,
+			}),
+		).pipe(Effect.provide(deploymentDumgen())),
 	);
 	if (Exit.isFailure(exit)) {
 		console.error(

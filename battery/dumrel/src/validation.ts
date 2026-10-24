@@ -5,13 +5,20 @@ import {
 } from "common-utils/validation";
 import { validationOperations as dumlingValidationOperations } from "dumling/validation";
 import { validationRegistry } from "./generated/linked-validation.js";
-import type { KnowledgeChange, ReadingKnowledge } from "./types.js";
+import type {
+	KnowledgeChange,
+	LemmaParadigm,
+	ParadigmChange,
+	ReadingKnowledge,
+} from "./types.js";
 
 type Root =
 	| "semanticProjectionInput"
 	| "knowledgeChange"
 	| "readingKnowledge"
-	| "knowledgeSelectionInput";
+	| "knowledgeSelectionInput"
+	| "lemmaParadigm"
+	| "paradigmChange";
 const operations: ValidationOperations = dumlingValidationOperations;
 function parse<T>(root: Root, input: unknown) {
 	return parseCompiledValidation<Root, T>(
@@ -41,3 +48,12 @@ export const parseProjectionShape = (input: unknown) =>
 		"semanticProjectionInput",
 		input,
 	);
+
+export const parseLemmaParadigmShape = (
+	input: unknown,
+): LemmaParadigm | ParsingError => parse<LemmaParadigm>("lemmaParadigm", input);
+
+export const parseParadigmChangeShape = (
+	input: unknown,
+): ParadigmChange | ParsingError =>
+	parse<ParadigmChange>("paradigmChange", input);

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { createDumgen, stitchedText } from "dumgen";
+import { operations, stitchedText } from "dumgen";
+import * as Effect from "effect/Effect";
 import {
 	type FolioWindow,
 	type ProcessedSentence,
@@ -13,6 +14,7 @@ import {
 } from "../server/longSentences";
 import { MAX_SEGMENTS_PER_SENTENCE } from "../server/storedSegments";
 import { fakeJev, isLanguageRequest } from "./support/jev";
+import { intakeDumgen } from "./support/providers";
 
 /**
  * A long Sentence is still processed (#1193): `language.detect` reads its
@@ -101,6 +103,15 @@ test("joinedSentence shifts the parts' units and fails with any part", () => {
 	).toMatchObject({ text: "Haus Hof", units: [], failed: true });
 });
 
+/** Runs a Folio's processing as its action does, with intake's Dumgen over `jev`. */
+const runProcessFolio = (
+	jev: ReturnType<typeof fakeJev>,
+	options: Parameters<typeof processFolio>[0],
+) =>
+	Effect.runPromise(
+		processFolio(options).pipe(Effect.provide(intakeDumgen(jev))),
+	);
+
 test("a Folio processes a Sentence over the bound as one German Sentence", async () => {
 	const jev = fakeJev();
 	const window = {
@@ -111,13 +122,8 @@ test("a Folio processes a Sentence over the bound as one German Sentence", async
 	} satisfies FolioWindow;
 	const windows: FolioWindow[] = [window];
 	const stored: ProcessedSentence[] = [];
-	const end = await processFolio({
-		dumgen: createDumgen({
-			jev: jev.ask,
-			luna: async () => {
-				throw Error("intake asked Luna");
-			},
-		}),
+	const end = await runProcessFolio(jev, {
+		dumgen: operations,
 		language: "de",
 		hasTime: () => true,
 		port: {
@@ -174,13 +180,8 @@ test("a Sentence too long to store its Segments stays an undetermined Plain Sent
 		},
 	];
 	const stored: ProcessedSentence[] = [];
-	await processFolio({
-		dumgen: createDumgen({
-			jev: jev.ask,
-			luna: async () => {
-				throw Error("intake asked Luna");
-			},
-		}),
+	await runProcessFolio(jev, {
+		dumgen: operations,
 		language: "de",
 		hasTime: () => true,
 		port: {

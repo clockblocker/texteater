@@ -1,6 +1,6 @@
 import type { SpanHops } from "../../server/inspectionCapture";
-import type { ResolutionContext } from "../../server/linguisticOrchestration";
 import { parseLemma, parseReading } from "../../server/operationalParsing";
+import type { ResolutionContext } from "../../server/orchestrationPorts";
 import type { ResolutionSessionGuard } from "../../server/resolutionLifecycle";
 import type {
 	ResolutionSessionLifecyclePort,
@@ -62,7 +62,6 @@ export function createResolutionSessionLifecycle(
 					throw new Error(
 						"Resolution requires a supported target-language Sentence.",
 					);
-				const language = sentence?.language;
 				const restored: ResolutionSessionRunInput = {
 					selection: input.selection,
 					context: {
@@ -72,7 +71,7 @@ export function createResolutionSessionLifecycle(
 						sentence,
 						lemmaCandidates: input.context.lemmaCandidates.map(
 							({ lemma, foundUnder }) => ({
-								lemma: parseLemma(lemma, language),
+								lemma: parseLemma(lemma),
 								foundUnder,
 							}),
 						),

@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import type * as Dumrel from "dumrel/types";
 import {
 	knowledgeInput,
 	knowledgeJev,
@@ -19,7 +20,7 @@ const adjective = (canonicalForm: string) => ({
 	coreFeatures: { comparable: null },
 });
 
-test("the plural is the forms when jev judges a plural, else jev's marker; a plural with no form is Unresolved", async () => {
+test("the plural dimension is the forms when jev judges a plural, else jev's marker; a plural with no form is Unresolved", async () => {
 	const run = (plurality: string, forms: string[]) =>
 		produceOnce(
 			{
@@ -27,21 +28,37 @@ test("the plural is the forms when jev judges a plural, else jev's marker; a plu
 				luna: knowledgeLuna({ plural: forms }).ask,
 			},
 			knowledgeInput(noun, "💐", "Sie bekam einen Strauß.", ["Strauß"], {
-				request: { plural: null },
+				request: {},
+				paradigm: { dimensions: ["plural"] },
 			}),
 		);
-	expect((await run("PluralOnly", ["Sträuße"])).result.changes).toEqual([
-		{ kind: "Contribute", aspect: "plural", value: "PluralOnly" },
-	]);
-	expect((await run("NoPlural", [])).result.changes).toEqual([
-		{ kind: "Contribute", aspect: "plural", value: "NoPlural" },
-	]);
+	const marker = (value: string): Dumrel.ParadigmChange[] => [
+		{
+			kind: "Contribute",
+			dimension: "plural",
+			value,
+			provenance: "Produced",
+		},
+		{
+			kind: "License",
+			dimension: "plural",
+			reading: expect.objectContaining({ emojiDescription: "💐" }),
+			variants: [value],
+		},
+	];
+	expect(
+		(await run("PluralOnly", ["Sträuße"])).result.paradigmChanges,
+	).toEqual(marker("PluralOnly"));
+	expect((await run("NoPlural", [])).result.paradigmChanges).toEqual(
+		marker("NoPlural"),
+	);
 	expect((await run("HasPlural", [])).result.failures).toEqual([
 		expect.objectContaining({ aspect: "plural", code: "Unresolved" }),
 	]);
 });
 
 test("a participle's source verb is named by form, checked by jev, and its meaning judged (ADR 0036)", async () => {
+	// jev's formation judge picks its first option, Participle, on an ADJ.
 	const source = {
 		verb: "verlieben",
 		reflexive: "Acc",
@@ -61,16 +78,16 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 			"Sie ist verliebt.",
 			["verliebt"],
 			{
-				request: { participleSource: null },
+				request: { source: null },
 			},
 		),
 	);
 	expect(result.changes).toEqual([
 		{
 			kind: "Contribute",
-			aspect: "participleSource",
+			aspect: "source",
 			value: {
-				verb: {
+				target: {
 					unitKind: "Lemma",
 					language: "de",
 					family: "Lexeme",
@@ -85,7 +102,7 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 			},
 		},
 	]);
-	expect(verbal.stages()).toEqual(["participleJudgment"]);
+	expect(verbal.stages()).toEqual(["sourceFormation", "participleJudgment"]);
 
 	// The judge refuses the form: no source.
 	const refused = await produceOnce(
@@ -99,17 +116,18 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 			"Sie ist verliebt.",
 			["verliebt"],
 			{
-				request: { participleSource: null },
+				request: { source: null },
 			},
 		),
 	);
 	expect(refused.result).toEqual({
 		changes: [],
+		paradigmChanges: [],
 		pendingRelations: [],
 		failures: [],
 	});
 
-	// A plain adjective, or a participle spelled otherwise, takes no judgment.
+	// A participle spelled otherwise takes no judgment past the formation.
 	const plain = knowledgeJev();
 	const none = await produceOnce(
 		{
@@ -124,12 +142,12 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 			"Sie ist verliebt.",
 			["verliebt"],
 			{
-				request: { participleSource: null },
+				request: { source: null },
 			},
 		),
 	);
 	expect(none.result.changes).toEqual([]);
-	expect(plain.sent).toEqual([]);
+	expect(plain.stages()).toEqual(["sourceFormation"]);
 });
 
 test("a Partizip I is checked by code, so jev judges only its meaning; an inseparable prefix is never separable (#887)", async () => {
@@ -153,16 +171,21 @@ test("a Partizip I is checked by code, so jev judges only its meaning; an insepa
 			"👃",
 			"Ein duftend Brot.",
 			["duftend"],
-			{ request: { participleSource: null } },
+			{ request: { source: null } },
 		),
 	);
 	expect(result.changes).toEqual([
 		expect.objectContaining({
-			aspect: "participleSource",
+			aspect: "source",
 			value: expect.objectContaining({ meaning: "Verbal" }),
 		}),
 	]);
-	expect(Object.keys(judge.sent[0]?.questions ?? {})).toEqual(["meaning"]);
+	expect(
+		Object.keys(
+			judge.sent.find(({ stage }) => stage === "participleJudgment")
+				?.questions ?? {},
+		),
+	).toEqual(["meaning"]);
 
 	const inseparable = await produceOnce(
 		{
@@ -182,13 +205,13 @@ test("a Partizip I is checked by code, so jev judges only its meaning; an insepa
 			"🙈",
 			"Ein versteckt Haus.",
 			["versteckt"],
-			{ request: { participleSource: null } },
+			{ request: { source: null } },
 		),
 	);
 	expect(inseparable.result.changes).toEqual([
 		expect.objectContaining({
 			value: expect.objectContaining({
-				verb: expect.objectContaining({
+				target: expect.objectContaining({
 					canonicalForm: "verstecken",
 					coreFeatures: {
 						hasSepPrefix: null,

@@ -1,144 +1,72 @@
 {
 	"$schema": "../../../schema/breakdown-record.de.json",
-	"lemma": {
-		"unitKind": "Lemma",
-		"language": "de",
-		"canonicalForm": "Übung macht den Meister",
-		"family": "Saying",
-		"kind": "Saying",
-		"coreFeatures": {}
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Saying",
+			"kind": "Saying",
+			"canonicalForm": "Übung macht den Meister",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🔁🏆"
 	},
-	"sentence": "Übung macht den Meister",
-	"segments": [
-		{ "kind": "ResolvableText", "text": "Übung" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "macht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Meister" }
-	],
-	"sources": {
-		"adrs": ["ADR-0031", "ADR-0035", "ADR-0041"],
-		"rules": [],
-		"references": []
-	},
-	"targets": [
-		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "A bare noun: Übung has no article in the Saying, so it has no article evidence."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "Übung", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "Übung",
-					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": null,
-						"number": "Sing"
-					},
-					"lemma": {
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Übung",
+					"target": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "Übung",
 						"family": "Lexeme",
 						"kind": "NOUN",
+						"canonicalForm": "Übung",
 						"coreFeatures": {
 							"gender": "Fem"
 						}
-					},
-					"surfaceFeatures": null
-				}
-			},
-			"reading": { "emojiDescription": "🔁" }
-		},
-		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "macht", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "macht",
-					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					},
-					"lemma": {
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "macht",
+					"target": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "machen",
 						"family": "Lexeme",
 						"kind": "VERB",
+						"canonicalForm": "machen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null
 						}
-					},
-					"surfaceFeatures": null
-				}
-			},
-			"reading": { "emojiDescription": "🔨" }
-		},
-		{
-			"memberSegmentIndices": [4, 6],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "den", "orthography": "Standard" },
-					{ "attested": "Meister", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "Meister",
-					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"gender": null,
-						"number": "Sing"
-					},
-					"lemma": {
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "den Meister",
+					"target": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "Meister",
 						"family": "Lexeme",
 						"kind": "NOUN",
+						"canonicalForm": "Meister",
 						"coreFeatures": {
 							"gender": "Masc"
 						}
-					},
-					"surfaceFeatures": null
+					}
 				}
-			},
-			"reading": { "emojiDescription": "🥇" }
+			]
 		}
-	]
+	},
+	"sources": {
+		"adrs": ["ADR-0031", "ADR-0035", "ADR-0041", "ADR-0050"],
+		"rules": [],
+		"references": []
+	}
 }

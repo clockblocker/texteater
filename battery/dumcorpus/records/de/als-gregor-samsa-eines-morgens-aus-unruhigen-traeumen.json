@@ -524,12 +524,10 @@
 			},
 			"reading": {
 				"emojiDescription": "😴💭",
-				"knowledge": {
-					"plural": ["Träume"]
-				},
+				"knowledge": {},
+				"paradigm": { "plural": ["Träume"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -537,7 +535,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {
@@ -638,7 +637,6 @@
 			"reading": {
 				"emojiDescription": "🔍",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
 					"valency": [
 						{
 							"status": "Required",
@@ -701,7 +699,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -1136,8 +1133,8 @@
 							]
 						}
 					],
-					"participleSource": {
-						"verb": {
+					"source": {
+						"target": {
 							"unitKind": "Lemma",
 							"language": "de",
 							"family": "Lexeme",
@@ -1153,7 +1150,7 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"participleSource": "Authored",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",

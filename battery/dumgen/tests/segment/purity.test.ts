@@ -1,6 +1,10 @@
 import { expect, test } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
+import type * as Effect from "effect/Effect";
+import type { Jev } from "../../src/jev-call.js";
+import type { Luna } from "../../src/luna-call.js";
+import { operations } from "../../src/operations.js";
 
 /**
  * Everything under `src/` is production code: it ships, and it runs where a
@@ -9,9 +13,10 @@ import { dirname, join, relative, resolve } from "node:path";
  * evaluator and the jev lab under `lab/`, and it imports packages only from
  * the list here. Only the TypeSafe ask and the OpenAI Luna touch the
  * network; the stages reach jev and Luna through their ports, and
- * segmentation never Luna. Zod is confined to the Extracted Text schema and
- * Hebrew output-schema consumers. Their explicitly permitted schema entries
- * are checked transitively below; a schema path is not a filesystem exemption.
+ * segmentation never Luna. Only the Extracted Text schema imports Zod,
+ * and no other production file imports it. Time comes from Effect's
+ * `Clock`, so a `TestClock` pins every trace. The models are services
+ * (Dumgen ADR 0009), and `segment.inUnits` needs `Jev` alone.
  */
 const src = resolve(import.meta.dir, "../../src");
 const lab = resolve(import.meta.dir, "../../lab");
@@ -29,10 +34,13 @@ const allowedPackages = new Set([
 	"dumrel",
 	"dumrel/types",
 	"effect/Cause",
+	"effect/Clock",
+	"effect/Context",
 	"effect/Data",
 	"effect/Effect",
 	"effect/Exit",
 	"effect/Fiber",
+	"effect/Layer",
 	"effect/Result",
 	"effect/Scope",
 	"effect/Semaphore",
@@ -49,6 +57,8 @@ const forbidden = [
 	/\bprocess\./u,
 	/\bimport\.meta\b/u,
 	/\breadFile(?:Sync)?\b/u,
+	/\bDate\.now\b/u,
+	/\bperformance\.now\b/u,
 ];
 const zodFiles = new Set([
 	"extracted-text/schema.ts",
@@ -281,4 +291,18 @@ test("segmentation never receives Luna", () => {
 		)
 		.map((file) => relative(src, file));
 	expect(reaching).toEqual([]);
+});
+
+test("segment.inUnits needs Jev alone: its type shows it never reaches Luna", () => {
+	type Needs = Effect.Services<ReturnType<typeof operations.segment.inUnits>>;
+	// Each fails to compile once Luna, or anything but Jev, joins `Needs`.
+	const lunaFree: [Extract<Needs, Luna>] extends [never] ? true : false =
+		true;
+	const jevAlone: [Needs] extends [Jev]
+		? [Jev] extends [Needs]
+			? true
+			: false
+		: false = true;
+	expect([lunaFree, jevAlone]).toEqual([true, true]);
+	expect(typeof operations.segment.inUnits).toBe("function");
 });

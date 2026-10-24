@@ -43,10 +43,13 @@ export type SchemaRoute = Readonly<{
 	schemaPath: string;
 }>;
 
+/** The literal values a Dumling route schema's `const` and `enum` carry. */
+type JsonLiteral = string | number | boolean | null;
+
 type JsonSchema = {
 	anyOf?: JsonSchema[];
-	const?: unknown;
-	enum?: unknown[];
+	const?: JsonLiteral;
+	enum?: JsonLiteral[];
 	items?: JsonSchema | JsonSchema[];
 	oneOf?: JsonSchema[];
 	prefixItems?: JsonSchema[];
@@ -89,7 +92,7 @@ function acceptedValues(schemas: readonly JsonSchema[]): AcceptedValues {
 	let nullable = false;
 	let freeText = false;
 	let sets = false;
-	const accept = (value: unknown) => {
+	const accept = (value: JsonLiteral) => {
 		if (value === null) nullable = true;
 		else values.add(String(value));
 	};

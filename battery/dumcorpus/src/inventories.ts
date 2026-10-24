@@ -7,7 +7,9 @@
  *
  * This entry exports the authored members and their realizations, the closed
  * verb forms, their participles and the modal verbs, the clitic spellings of
- * es, the separable and inseparable verb prefixes, the parts of the adverbs
+ * es, the separable and inseparable verb prefixes, the affixes, Interfixes
+ * and citation endings word formation cuts off with German's Morphemic
+ * Breakdown policy, the parts of the adverbs
  * that split (Da … von), the colloquial r- and dr- adverb shorthands, the
  * suppletive comparisons, the Surface features each AUX use sets, and the
  * reviewed fusions, apostrophe clitics and abbreviations. The authored members include the pronoun Syncretisms
@@ -45,6 +47,12 @@ export {
 	germanAdverbShorthands,
 } from "./inventories/de/adverb-shorthands.js";
 export {
+	germanCitationEndings,
+	germanMorphemePolicy,
+	germanPrefixes,
+	germanSuffixes,
+} from "./inventories/de/affixes.js";
+export {
 	type ArticleMember,
 	germanArticleCell,
 	germanArticleSpellings,
@@ -69,6 +77,7 @@ export {
 	type GrammaticalComponent,
 } from "./inventories/de/grammatical-components.js";
 export { selectGrammaticalAlternatives } from "./inventories/de/grammatical-navigation.js";
+export { germanInterfixes } from "./inventories/de/interfixes.js";
 export {
 	germanParticleMember,
 	germanParticles,
@@ -87,6 +96,7 @@ export {
 } from "./inventories/de/surface-syncretisms.js";
 export {
 	germanInseparablePrefixes,
+	germanSeparableParticles,
 	germanSeparablePrefixes,
 } from "./inventories/de/verb-prefixes.js";
 export type { AuthoredMember } from "./inventories/member.js";

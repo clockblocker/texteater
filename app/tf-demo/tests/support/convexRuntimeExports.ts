@@ -4,13 +4,12 @@ import type { GenericValidator } from "convex/values";
  * Convex's runtime-only introspection members, which its public types mark
  * internal and omit: every validator has a `json` getter, and every
  * registered function has `exportArgs()` and `exportReturns()` that
- * stringify its validators, and `_handler`, the function it registered.
+ * stringify its validators.
  */
 type ValidatorRuntimeExports = { readonly json: unknown };
 type RegisteredFunctionRuntimeExports = {
 	exportArgs(): string;
 	exportReturns(): string;
-	_handler(ctx: unknown, args: unknown): Promise<unknown>;
 };
 
 /** A registered query, mutation, or action of any visibility. */
@@ -33,15 +32,4 @@ export function exportedReturns(registered: RegisteredFunction): string {
 	return (
 		registered as RegisteredFunction & RegisteredFunctionRuntimeExports
 	).exportReturns();
-}
-
-/**
- * The handler a Convex function registered, callable with a stub context so a
- * test can inject a failure the runtime would never produce on demand.
- */
-export function registeredHandler(
-	registered: RegisteredFunction,
-): (ctx: unknown, args: unknown) => Promise<unknown> {
-	return (registered as RegisteredFunction & RegisteredFunctionRuntimeExports)
-		._handler;
 }

@@ -1,23 +1,70 @@
 {
 	"$schema": "../../../schema/breakdown-record.de.json",
-	"lemma": {
-		"unitKind": "Lemma",
-		"language": "de",
-		"canonicalForm": "so oder so",
-		"family": "Locution",
-		"kind": "ADV",
-		"coreFeatures": { "comparable": null }
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "ADV",
+			"canonicalForm": "so oder so",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🔁"
 	},
-	"sentence": "so oder so",
-	"segments": [
-		{ "kind": "ResolvableText", "text": "so" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "oder" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "so" }
-	],
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "so",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "so",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "oder",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "oder",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "so",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "so",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				}
+			]
+		}
+	},
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0039", "ADR-0041"],
+		"adrs": ["ADR-0031", "ADR-0039", "ADR-0041", "ADR-0050"],
 		"rules": [
 			{
 				"rule": "de/comparability-is-lexical",
@@ -31,86 +78,5 @@
 				"supports": "The wording, the Locution's Canonical Form"
 			}
 		]
-	},
-	"targets": [
-		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "🔧" },
-			"notes": {
-				"rationale": "The Breakdown reads so as the ADV so 'thus', with no comparison forms: the idiom's meaning belongs to the Locution. One Reading for manner (DWDS so I.2) and degree (I.3): the user ruled on 2026-10-02 that they are too subtle for an emoji to separate."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "so", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "so",
-					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": null,
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "so",
-						"family": "Lexeme",
-						"kind": "ADV",
-						"coreFeatures": { "comparable": null }
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "oder", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "oder",
-					"spelling": { "kind": "Canonical" },
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "oder",
-						"family": "Lexeme",
-						"kind": "CCONJ",
-						"coreFeatures": {}
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "🔧" },
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "so", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "so",
-					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": null,
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "so",
-						"family": "Lexeme",
-						"kind": "ADV",
-						"coreFeatures": { "comparable": null }
-					},
-					"surfaceFeatures": null
-				}
-			}
-		}
-	]
+	}
 }

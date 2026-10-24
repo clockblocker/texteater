@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
+import { fakeDumgen } from "./../service-test-adapter.js";
 
 test("registered Hebrew module handles empty translation accumulation without a provider call", async () => {
 	const lemma = {
@@ -11,7 +11,7 @@ test("registered Hebrew module handles empty translation accumulation without a 
 		canonicalForm: "ספר",
 		coreFeatures: { gender: "Masc", abbr: null },
 	} as const;
-	const dumgen = createDumgen({
+	const dumgen = fakeDumgen({
 		luna: async () => {
 			throw Error("Unexpected Luna call");
 		},

@@ -29,11 +29,11 @@ import { authoredFor, closedRoute } from "dumcorpus/inventories";
 import { parseUnit, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import type { OperationScope } from "../../call.js";
+import { CallLog } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
-import { askThrough, type JevSettings } from "../../jev-call.js";
+import { type Jev, stageAsk } from "../../jev-call.js";
 import type { LunaDraft } from "../../luna.js";
-import { askLuna, type LunaSettings } from "../../luna-call.js";
+import { askLuna, type Luna } from "../../luna-call.js";
 import { type Ask, choice, choiceOf } from "../../segment/ask.js";
 import { germanFusionTable } from "../../segment/de/fusion-entries.js";
 import { fusedPieceAt, fusedWordAt } from "../../segment/fusion-table.js";
@@ -46,12 +46,6 @@ import {
 	readingDemonstrations,
 } from "./reading-prompts.js";
 import { targetOf } from "./target.js";
-
-/** What `resolve.reading` reaches its models with: jev judges, Luna writes. */
-export type ReadingModels = {
-	readonly jev: JevSettings;
-	readonly luna: LunaSettings;
-};
 
 /**
  * The word a Segment stands for when it is a piece of a table fusion the
@@ -287,11 +281,14 @@ const pick = Effect.fnUntraced(function* (
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export const resolveGermanReading = Effect.fnUntraced(function* (
-	scope: OperationScope,
-	models: ReadingModels,
 	input: ResolveReadingInput,
-): Effect.fn.Return<ReadingResolution, ProviderFailure | InvalidModelOutput> {
+): Effect.fn.Return<
+	ReadingResolution,
+	ProviderFailure | InvalidModelOutput,
+	Jev | Luna | CallLog
+> {
 	const { attestation, sentence, unit } = input;
+	const log = yield* CallLog;
 	const { lemma } = attestation.surface;
 	const defect = (message: string) => Effect.die(Error(message));
 	if (lemma.language !== "de")
@@ -339,7 +336,7 @@ export const resolveGermanReading = Effect.fnUntraced(function* (
 	): ReadingResolution => {
 		const key = keyOf(emojiDescription);
 		const stored = candidates.find((candidate) => keyOf(candidate) === key);
-		scope.resolution({ outcome: stored ? "Reuse" : "New", reason });
+		log.resolution({ outcome: stored ? "Reuse" : "New", reason });
 		return stored
 			? { _tag: "Reuse", emojiDescription: stored }
 			: { _tag: "New", emojiDescription };
@@ -348,7 +345,7 @@ export const resolveGermanReading = Effect.fnUntraced(function* (
 		markedSentence: markedSentence(sentence.segments, unit.segments),
 		lemma: lemma.canonicalForm,
 	};
-	const ask = askThrough(scope, models.jev);
+	const ask = yield* stageAsk;
 
 	const authored = authoredFor(lemma).map(
 		({ reading }) => reading.emojiDescription,
@@ -374,7 +371,7 @@ export const resolveGermanReading = Effect.fnUntraced(function* (
 			return answer(chosen, "AuthoredJudged");
 		}
 		const message = `No authored Reading of ${route.kind} ${lemma.canonicalForm}`;
-		scope.resolution({ outcome: "CatalogMiss", reason: message });
+		log.resolution({ outcome: "CatalogMiss", reason: message });
 		return { _tag: "CatalogMiss", route, message };
 	}
 
@@ -421,8 +418,6 @@ export const resolveGermanReading = Effect.fnUntraced(function* (
 	const emojiDescription =
 		drafted ??
 		(yield* askLuna(
-			scope,
-			models.luna,
 			"emojiDescription",
 			emojiDescriptionRequest(state),
 			(output) =>

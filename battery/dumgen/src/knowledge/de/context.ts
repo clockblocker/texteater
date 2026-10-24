@@ -1,21 +1,28 @@
 /**
  * What every German Knowledge aspect works from: the Reading, the marked
- * Sentence, the two ports and the checks that turn an answer into Dumrel
- * changes. An aspect fails with a `ProviderFailure` or an
- * `InvalidModelOutput` from its calls, or with `KnowledgeUnresolved` when
+ * Sentence, jev's `Ask`, Luna's `Write` and the operation's log, and the
+ * checks that turn an answer into Dumrel changes. An aspect fails with a
+ * `ProviderFailure` or an `InvalidModelOutput` from its calls, or with `KnowledgeUnresolved` when
  * its judges or writer leave it undecided; `produce.ts` turns each into
  * that aspect's failure value.
  */
 
 import type { EntryType } from "@typesafe-ai/sdk";
 import type * as Dumling from "dumling/types";
-import { applyKnowledgeChange, parseKnowledgeChange } from "dumrel";
+import {
+	applyKnowledgeChange,
+	applyParadigmChanges,
+	paradigmChangesFor,
+	parseKnowledgeChange,
+	parseParadigmChange,
+} from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import * as Data from "effect/Data";
-import type * as Effect from "effect/Effect";
-import type { OperationScope } from "../../call.js";
+import * as Effect from "effect/Effect";
+import { CallLog } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
-import { askThrough, type JevSettings } from "../../jev-call.js";
-import { askLuna, type LunaSettings } from "../../luna-call.js";
+import { type Jev, stageAsk } from "../../jev-call.js";
+import { type Luna, stageWrite, type Write } from "../../luna-call.js";
 import type { Ask } from "../../segment/ask.js";
 import type { GermanKnowledgeChange, KnowledgeAspect } from "../types.js";
 
@@ -29,12 +36,6 @@ export type AspectError =
 	| InvalidModelOutput
 	| KnowledgeUnresolved;
 
-/** What the aspects reach their models with: jev judges, Luna writes (#862). */
-export type KnowledgeModels = {
-	readonly jev: JevSettings;
-	readonly luna: LunaSettings;
-};
-
 /** The Reading as every prompt names it: the sense boundary (#623). */
 type ReadingView = {
 	readonly lemma: string;
@@ -44,44 +45,65 @@ type ReadingView = {
 };
 
 export type AspectContext = {
-	readonly scope: OperationScope;
-	readonly models: KnowledgeModels;
+	readonly log: CallLog["Service"];
+	/** jev judges (#862). */
 	readonly ask: Ask;
+	/** Luna writes (#862). */
+	readonly write: Write;
 	readonly reading: Dumling.Reading<"de">;
 	readonly lemma: Dumling.Lemma<"de">;
 	readonly view: ReadingView;
 	/** The Sentence with the occurrence's Segments marked `<TARGET>…</TARGET>`. */
 	readonly markedSentence: string;
 	readonly attestation: Dumling.Attestation<"de">;
+	/**
+	 * The Lemma's stored Paradigm and its Readings, the produced one among
+	 * them, that Paradigm Changes are checked against; an empty Paradigm
+	 * and the Reading alone for a Lemma's first Reading.
+	 */
+	readonly paradigm: StoredParadigm;
 };
 
-export function aspectContext(
-	scope: OperationScope,
-	models: KnowledgeModels,
+/** A Lemma's stored Paradigm and the Readings its Licences name. */
+export type StoredParadigm = {
+	readonly paradigm: Dumrel.LemmaParadigm;
+	readonly readings: readonly Dumling.Reading<"de">[];
+};
+
+/** The aspects' context, with jev, Luna and the log of the running operation. */
+export const aspectContext = (
 	reading: Dumling.Reading<"de">,
 	attestation: Dumling.Attestation<"de">,
 	markedSentence: string,
-): AspectContext {
-	const { lemma } = reading;
-	// A Foreign Reading has no Emoji Description (ADR 0045).
-	const emojiDescription =
-		"emojiDescription" in reading ? reading.emojiDescription : undefined;
-	return {
-		scope,
-		models,
-		ask: askThrough(scope, models.jev),
-		reading,
-		lemma,
-		view: {
-			lemma: lemma.canonicalForm,
-			kind: lemma.kind,
-			family: lemma.family,
-			...(emojiDescription === undefined ? {} : { emojiDescription }),
-		},
-		markedSentence,
-		attestation,
-	};
-}
+	paradigm: StoredParadigm = {
+		paradigm: { dimensions: {} },
+		readings: [reading],
+	},
+): Effect.Effect<AspectContext, never, Jev | Luna | CallLog> =>
+	Effect.gen(function* () {
+		const { lemma } = reading;
+		// A Foreign Reading has no Emoji Description (ADR 0045).
+		const emojiDescription =
+			"emojiDescription" in reading
+				? reading.emojiDescription
+				: undefined;
+		return {
+			log: yield* CallLog,
+			ask: yield* stageAsk,
+			write: yield* stageWrite,
+			reading,
+			lemma,
+			view: {
+				lemma: lemma.canonicalForm,
+				kind: lemma.kind,
+				family: lemma.family,
+				...(emojiDescription === undefined ? {} : { emojiDescription }),
+			},
+			markedSentence,
+			attestation,
+			paradigm,
+		};
+	});
 
 /**
  * One Luna request of an aspect: its system prompt, the Reading and the
@@ -98,9 +120,7 @@ export function write<Output>(
 	check: (output: unknown) => Output | InvalidModelOutput,
 	options: { readonly withSentence?: boolean } = {},
 ): Effect.Effect<Output, ProviderFailure | InvalidModelOutput> {
-	return askLuna(
-		context.scope,
-		context.models.luna,
+	return context.write(
 		stage,
 		{
 			systemPrompt,
@@ -196,6 +216,81 @@ export function checkedChanges(
 			return unusable(
 				aspect,
 				`Dumrel refuses the ${aspect} change: ${parsed.error.message.slice(0, 200)}`,
+			);
+		accepted.push(parsed.value);
+	}
+	return accepted;
+}
+
+/** One Contribute change of a one-value `aspect`, checked by Dumrel. */
+export function checked(
+	context: AspectContext,
+	aspect: "source" | "locutionType" | "sayingType" | "formulaRole",
+	value: unknown,
+): Effect.Effect<GermanKnowledgeChange[], AspectError> {
+	const changes = checkedChanges(context, aspect, [
+		{ kind: "Contribute", aspect, value },
+	]);
+	return Array.isArray(changes)
+		? Effect.succeed(changes)
+		: Effect.fail(changes);
+}
+
+/**
+ * The Paradigm Changes that give the Reading the forms written for one
+ * Variation Dimension (ADR 0048): a Contribute per variant and a License
+ * over them all, each checked by Dumrel, and the list checked whole on the
+ * stored Paradigm. A form the Paradigm already holds contributes nothing
+ * new and is licensed all the same. Dumrel refusing any of them makes the
+ * answer unusable.
+ */
+export function checkedParadigmChanges(
+	context: AspectContext,
+	dimension: Dumrel.DimensionId,
+	values: readonly string[],
+): Dumrel.ParadigmChange[] | InvalidModelOutput {
+	return checkedOnStored(
+		context,
+		dimension,
+		paradigmChangesFor({
+			reading: context.reading,
+			dimension,
+			values,
+			provenance: "Produced",
+		}),
+		"forms",
+	);
+}
+
+/**
+ * `changes` of one dimension, each checked by Dumrel and the list checked
+ * whole on the stored Paradigm, or why Dumrel refuses them.
+ */
+export function checkedOnStored(
+	context: AspectContext,
+	dimension: Dumrel.DimensionId,
+	changes: readonly Dumrel.ParadigmChange[],
+	what: string,
+): Dumrel.ParadigmChange[] | InvalidModelOutput {
+	const { lemma } = context.reading;
+	const applied = applyParadigmChanges({
+		lemma,
+		readings: context.paradigm.readings,
+		paradigm: context.paradigm.paradigm,
+		changes,
+	});
+	if (!applied.success)
+		return unusable(
+			dimension,
+			`Dumrel refuses the ${dimension} ${what}: ${applied.error.message.slice(0, 200)}`,
+		);
+	const accepted: Dumrel.ParadigmChange[] = [];
+	for (const change of changes) {
+		const parsed = parseParadigmChange({ lemma, change });
+		if (!parsed.success)
+			return unusable(
+				dimension,
+				`Dumrel refuses the ${dimension} change: ${parsed.error.message.slice(0, 200)}`,
 			);
 		accepted.push(parsed.value);
 	}

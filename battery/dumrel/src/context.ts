@@ -1,26 +1,23 @@
 import { ParsingError } from "common-utils/validation";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
+import {
+	parseBreakdown,
+	parseBreakdownPieces,
+	parseSourceLink,
+	sourceAndConstituentsIssue,
+} from "./breakdown-context.js";
 import { structuralKeys } from "./fingerprint.js";
-import type { ConjugationClasses, NounPlural } from "./generated/types.js";
-import { verbFormsIssue, verbFormsOfChange } from "./german-verb-forms.js";
 import { hebrewParadigmIssue } from "./hebrew-paradigm.js";
-import { knowledgePolicyApplies } from "./knowledge-policies.js";
+import { issue, type Path } from "./issue.js";
 import type {
 	KnowledgeChange,
-	ParticipleSource,
 	ReadingKnowledge,
 	ValencyComplement,
 	ValencyFrame,
 	ValencySlot,
 } from "./types.js";
 import { allowedComplementKinds } from "./valency-policy.js";
-
-type Path = (number | string)[];
-
-export function issue(path: Path, message: string): ParsingError {
-	return new ParsingError([{ code: "custom", path, message }]);
-}
 
 export function parseSource<R extends Dumling.Reading>(
 	source: R,
@@ -308,77 +305,6 @@ function parseValencyFrame<R extends Dumling.Reading>(
 	return slots;
 }
 
-/**
- * A Participle Source belongs to a Lexeme ADJ Reading and names a Lexeme VERB
- * Lemma of the same Language (ADR 0036).
- */
-function parseParticipleSource<R extends Dumling.Reading>(
-	source: R,
-	value: ParticipleSource,
-	path: Path,
-): ParticipleSource | ParsingError {
-	if (source.lemma.family !== "Lexeme" || source.lemma.kind !== "ADJ")
-		return issue(path, "Only an ADJ Reading has a Participle Source");
-	const verbPath = [...path, "verb"];
-	const parsed = parseUnit(value.verb);
-	if (!parsed.success)
-		return new ParsingError(
-			parsed.error.issues.map((entry) => ({
-				...entry,
-				path: [...verbPath, ...entry.path],
-			})),
-		);
-	const { chain } = parsed;
-	if (
-		chain.unitKind !== "Lemma" ||
-		chain.family !== "Lexeme" ||
-		chain.kind !== "VERB"
-	)
-		return issue(verbPath, "A Participle Source must be a VERB Lemma");
-	const verb = chain.value;
-	if (verb.language !== source.lemma.language)
-		return issue(
-			[...verbPath, "language"],
-			"A Participle Source must use the source Language",
-		);
-	return { ...value, verb };
-}
-
-/**
- * A plural belongs to a Reading whose route the Knowledge Policy gives one,
- * a German NOUN, and each plural form appears once (#657).
- */
-function parseNounPlural<R extends Dumling.Reading>(
-	source: R,
-	value: NounPlural,
-	path: Path,
-): NounPlural | ParsingError {
-	if (!knowledgePolicyApplies(source.lemma, "plural"))
-		return issue(path, "Only a German NOUN Reading has a plural");
-	if (typeof value !== "string" && new Set(value).size !== value.length)
-		return issue(path, "A plural lists each form once");
-	return value;
-}
-
-/**
- * Conjugation classes belong to a Reading whose route the Knowledge Policy
- * gives them, a German VERB, and each class appears once (ADR 0038).
- */
-function parseConjugationClasses<R extends Dumling.Reading>(
-	source: R,
-	value: ConjugationClasses,
-	path: Path,
-): ConjugationClasses | ParsingError {
-	if (!knowledgePolicyApplies(source.lemma, "conjugationClass"))
-		return issue(
-			path,
-			"Only a German VERB Reading has a conjugation class",
-		);
-	if (new Set(value).size !== value.length)
-		return issue(path, "A conjugation lists each class once");
-	return value;
-}
-
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function contextualizeKnowledge<R extends Dumling.Reading>(
 	source: R,
@@ -404,35 +330,24 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 		]);
 		if (failure) return failure;
 	}
-	if (result.plural) {
-		const plural = parseNounPlural(source, result.plural, [
+	if (result.source) {
+		const link = parseSourceLink(source, result.source, [
 			"knowledge",
-			"plural",
+			"source",
 		]);
-		if (plural instanceof ParsingError) return plural;
+		if (link instanceof ParsingError) return link;
+		result.source = link;
 	}
-	if (result.conjugationClass) {
-		const classes = parseConjugationClasses(
-			source,
-			result.conjugationClass,
-			["knowledge", "conjugationClass"],
-		);
-		if (classes instanceof ParsingError) return classes;
+	if (result.breakdown) {
+		const breakdown = parseBreakdown(source, result.breakdown, [
+			"knowledge",
+			"breakdown",
+		]);
+		if (breakdown instanceof ParsingError) return breakdown;
+		result.breakdown = breakdown;
 	}
-	const formsFailure = verbFormsIssue(source, result, (aspect) => [
-		"knowledge",
-		aspect,
-	]);
-	if (formsFailure) return formsFailure;
-	if (result.participleSource) {
-		const participle = parseParticipleSource(
-			source,
-			result.participleSource,
-			["knowledge", "participleSource"],
-		);
-		if (participle instanceof ParsingError) return participle;
-		result.participleSource = participle;
-	}
+	const both = sourceAndConstituentsIssue(result, ["knowledge"]);
+	if (both) return both;
 	if (result.valency) {
 		const frame = parseValencyFrame(source, result.valency, [
 			"knowledge",
@@ -491,35 +406,18 @@ export function contextualizeChange<R extends Dumling.Reading>(
 		]);
 		if (failure) return failure;
 	}
-	if (change.aspect === "plural" && change.kind !== "Retract") {
-		const plural = parseNounPlural(source, change.value, [
-			"change",
-			"value",
-		]);
-		if (plural instanceof ParsingError) return plural;
+	if (change.aspect === "source" && change.kind !== "Retract") {
+		const link = parseSourceLink(source, change.value, ["change", "value"]);
+		if (link instanceof ParsingError) return link;
+		return { ...change, value: link };
 	}
-	if (change.aspect === "conjugationClass" && change.kind !== "Retract") {
-		const classes = parseConjugationClasses(source, change.value, [
+	if (change.aspect === "breakdown" && change.kind !== "Retract") {
+		const pieces = parseBreakdownPieces(source, change.part, change.value, [
 			"change",
 			"value",
 		]);
-		if (classes instanceof ParsingError) return classes;
-	}
-	const forms = verbFormsOfChange(change);
-	if (forms) {
-		const failure = verbFormsIssue(source, forms, () => [
-			"change",
-			"value",
-		]);
-		if (failure) return failure;
-	}
-	if (change.aspect === "participleSource" && change.kind !== "Retract") {
-		const participle = parseParticipleSource(source, change.value, [
-			"change",
-			"value",
-		]);
-		if (participle instanceof ParsingError) return participle;
-		return { ...change, value: participle };
+		if (pieces instanceof ParsingError) return pieces;
+		return { ...change, value: pieces };
 	}
 	if (change.aspect === "valency") {
 		if (change.kind !== "Retract") {

@@ -65,15 +65,6 @@
 			"reading": {
 				"emojiDescription": "❗",
 				"knowledge": {
-					"conjugationClass": ["Mixed"],
-					"preterite": ["musste"],
-					"presentSingular": {
-						"first": ["muss"],
-						"second": ["musst"],
-						"third": ["muss"]
-					},
-					"pastParticiple": ["gemusst"],
-					"subjunctivePast": ["müsste"],
 					"valency": [
 						{
 							"status": "Required",
@@ -111,19 +102,31 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["musste"],
+					"present1": ["muss"],
+					"present2": ["musst"],
+					"present3": ["muss"],
+					"pastParticiple": ["gemusst"],
+					"subjunctivePast": ["müsste"]
+				},
 				"coverage": {
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"valency": "Authored",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},
@@ -174,15 +177,18 @@
 			"reading": {
 				"emojiDescription": "💼",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
-					"preterite": ["arbeitete"],
-					"presentSingular": {
-						"first": ["arbeite"],
-						"second": ["arbeitest"],
-						"third": ["arbeitet"]
+					"source": {
+						"target": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"canonicalForm": "Arbeit",
+							"coreFeatures": {
+								"gender": "Fem"
+							}
+						}
 					},
-					"pastParticiple": ["gearbeitet"],
-					"subjunctivePast": ["arbeitete"],
 					"valency": [
 						{
 							"status": "Required",
@@ -222,19 +228,31 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["arbeitete"],
+					"present1": ["arbeite"],
+					"present2": ["arbeitest"],
+					"present3": ["arbeitet"],
+					"pastParticiple": ["gearbeitet"],
+					"subjunctivePast": ["arbeitete"]
+				},
 				"coverage": {
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"valency": "Authored",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},

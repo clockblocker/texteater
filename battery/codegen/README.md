@@ -88,8 +88,6 @@ if (result.status === "changed") {
 }
 ```
 
-An output may provide `ownership.initialFiles` to adopt a precisely
-enumerated pre-manifest output set during a generator migration. The runner
-validates all artifact, manifest, and stale-file paths before mutation,
-rejects filesystem-equivalent collisions, and refuses symlink traversal
-below an output root.
+The runner validates all artifact, manifest, and stale-file paths before
+mutation, rejects filesystem-equivalent collisions, and refuses symlink
+traversal below an output root.

@@ -103,8 +103,36 @@ export const pluralPatternValues = [
 	"Other",
 ] as const;
 
-/** A noun with no plural pattern: no plural (`Milch`) or no singular (`Leute`). */
+/**
+ * The markers a German noun's `plural` dimension may hold instead of a form:
+ * no plural (`Milch`) or no singular (`Leute`).
+ */
 export const pluralMarkerValues = ["NoPlural", "PluralOnly"] as const;
+
+/**
+ * The Variation Dimensions a Paradigm Policy may name (ADR 0048): a German
+ * noun's `plural`, and a German verb's Präteritum, the Präsens of each
+ * singular person, Partizip II and Konjunktiv II (ADR 0038).
+ */
+export const dimensionIdValues = [
+	"plural",
+	"preterite",
+	"present1",
+	"present2",
+	"present3",
+	"pastParticiple",
+	"subjunctivePast",
+] as const;
+
+/**
+ * Where a Paradigm Variant came from: Knowledge Production, an Authored
+ * Inventory, or a later occurrence that met it (ADR 0048).
+ */
+export const paradigmProvenanceValues = [
+	"Produced",
+	"Authored",
+	"Attested",
+] as const;
 
 /**
  * How a German verb forms its Präteritum, judged on the stem: Strong changes

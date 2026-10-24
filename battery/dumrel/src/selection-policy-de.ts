@@ -11,22 +11,13 @@ const select = (
 
 /** Routes whose Readings own a Valency Frame (`valency-policy.ts`): `warten auf`, `stolz auf`, `Angst vor`, `Bescheid wissen über`. */
 const framed = { valency: null } as const;
-/** An adjectival participle names its source verb: `gekocht` from `kochen` (ADR 0036). */
-const participial = { ...framed, participleSource: null } as const;
-/** A noun records its plural forms: `Mutter` 👩 `Mütter`, 🔩 `Muttern` (#657). */
-const nominal = { ...framed, plural: null } as const;
 /**
- * A verb records how it conjugates and its principal parts: `wiegen` ⚖️
- * `wog`, Strong, `gewogen`, `wöge`, and `wiegte`, Weak, for rocking (ADR 0038).
+ * A single word that may be formed whole from another names it as Source
+ * (ADR 0050): a participle (`gekocht` from `kochen`, ADR 0036), a
+ * conversion (`Lauf` from `laufen`), a clipping (`Uni`) or an acronym
+ * (`Kita`). Dumgen's `source` stage answers none for a multiword Lexeme.
  */
-const verbal = {
-	...framed,
-	conjugationClass: null,
-	preterite: null,
-	presentSingular: null,
-	pastParticiple: null,
-	subjunctivePast: null,
-} as const;
+const formed = { ...framed, source: null } as const;
 
 /** A routine formula records what it does in conversation (ADR 0039). */
 const formula = { formulaRole: null } as const;
@@ -37,17 +28,7 @@ function request(
 	relations: readonly SemanticRelation[],
 	extra: Pick<
 		KnowledgeRequestMask,
-		| "valency"
-		| "participleSource"
-		| "plural"
-		| "conjugationClass"
-		| "preterite"
-		| "presentSingular"
-		| "pastParticiple"
-		| "subjunctivePast"
-		| "locutionType"
-		| "sayingType"
-		| "formulaRole"
+		"valency" | "source" | "locutionType" | "sayingType" | "formulaRole"
 	> = {},
 ): KnowledgeRequestMask {
 	const base = {
@@ -70,7 +51,7 @@ const makeDeRelMap = () =>
 		Lexeme: {
 			ADJ: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-				participial,
+				formed,
 			),
 			ADP: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
@@ -98,7 +79,7 @@ const makeDeRelMap = () =>
 					"hypernym",
 					"holonym",
 				),
-				nominal,
+				formed,
 			),
 			NUM: request(select("synonym")),
 			PART: request(
@@ -125,7 +106,7 @@ const makeDeRelMap = () =>
 					"nearAntonym",
 					"hypernym",
 				),
-				verbal,
+				formed,
 			),
 		},
 		// A Locution route requests what the Lexeme route with its Kind does,
@@ -202,6 +183,7 @@ const makeDeRelMap = () =>
 		Morpheme: {
 			Circumfix: request(select()),
 			Duplifix: request(select()),
+			Ending: request(select()),
 			Infix: request(select()),
 			Interfix: request(select()),
 			Prefix: request(select()),

@@ -12,7 +12,7 @@ const lemma = {
 /** One grammatical use of werden; the serving verb's form selects it (ADR 0026). */
 export const member: AuthoredMember = {
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🔄" }, lemma },
+	reading: { unitKind: "Reading", emojiDescription: "🔄", lemma },
 	knowledge: {
 		transcription: "ˈveːɐ̯dn̩",
 		definition:

@@ -40,6 +40,13 @@
 			"import": "./dist/inventories.js",
 			"default": "./dist/inventories.js"
 		},
+		"./inflection": {
+			"bun": "./src/inflection.ts",
+			"convex": "./src/inflection.ts",
+			"types": "./dist/inflection.d.ts",
+			"import": "./dist/inflection.js",
+			"default": "./dist/inflection.js"
+		},
 		"./schema/*": "./schema/*",
 		"./package.json": "./package.json"
 	},
@@ -59,7 +66,7 @@
 	"scripts": {
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:check && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/inventories.ts --bundle --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/inventories.ts src/inflection.ts --bundle --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../tooling/check-package-types.ts",
 		"demote-broken-reviewed": "bun scripts/demote-broken-reviewed.ts",
@@ -67,6 +74,7 @@
 		"generate": "bun codegen/generate-record-schemas.ts && bun codegen/generate-syncretisms.ts",
 		"generate:check": "bun codegen/generate-record-schemas.ts --check && bun codegen/generate-syncretisms.ts --check",
 		"knip": "bun ../../tooling/knip.ts",
+		"oxlint": "bun ../../tooling/oxlint.ts",
 		"lint": "bun run --silent biome check --error-on-warnings .",
 		"prepack": "bun run build",
 		"stts-table": "bun scripts/stts-table.ts",

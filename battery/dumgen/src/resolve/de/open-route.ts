@@ -20,10 +20,11 @@
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
+import * as Result from "effect/Result";
 import type * as Scope from "effect/Scope";
-import type { OperationScope } from "../../call.js";
+import { CallLog } from "../../call.js";
 import type { LunaDraft } from "../../luna.js";
-import { askLuna, type LunaSettings } from "../../luna-call.js";
+import { type Luna, stageWrite } from "../../luna-call.js";
 import type { Answers, Ask, AskFailure } from "../../segment/ask.js";
 import { draftsEmojiDescription } from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
@@ -95,7 +96,13 @@ import {
 	verbHeadword,
 } from "./open-route/verbal.js";
 import { type CaseOption, fill, options, question } from "./prompts.js";
-import { Answered, Questionnaire, UnresolvedAnswer } from "./questions.js";
+import {
+	Answered,
+	answerReader,
+	Questionnaire,
+	type ReaderBody,
+	Unresolved,
+} from "./questions.js";
 import { fixedSpelling, type Target, targetState } from "./target.js";
 
 /** What an open-route click comes to before it is checked against Dumling. */
@@ -107,7 +114,7 @@ export type OpenOutcome =
 			/** The Emoji Description Luna drafted with the headword, unchecked. */
 			readonly drafted?: string;
 	  }
-	| { readonly _tag: "Unresolved"; readonly reason: string }
+	| Unresolved
 	| { readonly _tag: "CatalogMiss"; readonly message: string };
 
 /** Everything the first request asks, and what code fixed before it. */
@@ -180,16 +187,21 @@ function plan(target: Target): Plan {
 	};
 }
 
+/** What a block's reading holds when no deciding answer stops the click. */
+type Read<
+	Reader extends (...args: never[]) => Result.Result<unknown, unknown>,
+> = Result.Result.Success<ReturnType<Reader>>;
+
 /**
  * What the block of a route's shape settles, by block: its Core Features
  * and inflection, typed as the block's routes take them, and its extras.
  * A shape with no block has no Core Features.
  */
 type ShapeRead =
-	| ({ readonly block: "verbal" } & ReturnType<typeof readVerbal>)
-	| ({ readonly block: "nominal" } & ReturnType<typeof readNominal>)
-	| ({ readonly block: "adverbial" } & ReturnType<typeof readAdverbial>)
-	| ({ readonly block: "agreeing" } & ReturnType<typeof readAgreeing>)
+	| ({ readonly block: "verbal" } & Read<typeof readVerbal>)
+	| ({ readonly block: "nominal" } & Read<typeof readNominal>)
+	| ({ readonly block: "adverbial" } & Read<typeof readAdverbial>)
+	| ({ readonly block: "agreeing" } & Read<typeof readAgreeing>)
 	| {
 			readonly block: "adposition";
 			readonly core: Record<string, never>;
@@ -217,45 +229,45 @@ type FirstRead = ShapeRead & {
 };
 
 /** Reads the block of the route's shape; a shape with none has no Core Features. */
-function readShape(
+const readShape = answerReader(function* (
 	target: Target,
 	planned: Plan,
 	answered: Answered,
 	cited: boolean,
-): ShapeRead {
+): ReaderBody<ShapeRead> {
 	const { shape } = planned;
 	if (planned.verbal)
 		return {
 			block: "verbal",
-			...readVerbal(
+			...(yield* readVerbal(
 				target,
 				planned.verbal,
 				shape,
 				planned.tail.governable,
 				answered,
 				cited,
-			),
+			)),
 		};
 	if (planned.nominal)
 		return {
 			block: "nominal",
-			...readNominal(
+			...(yield* readNominal(
 				shape,
 				planned.article,
 				planned.nominal,
 				answered,
 				cited,
-			),
+			)),
 		};
 	if (planned.adverbial)
 		return {
 			block: "adverbial",
-			...readAdverbial(planned.adverbial, answered),
+			...(yield* readAdverbial(planned.adverbial, answered)),
 		};
 	if (planned.agreeing)
 		return {
 			block: "agreeing",
-			...readAgreeing(planned.agreeing, answered),
+			...(yield* readAgreeing(planned.agreeing, answered)),
 		};
 	const inflection = shape.inflects ? null : undefined;
 	if (planned.adposition)
@@ -263,27 +275,27 @@ function readShape(
 			block: "adposition",
 			core: {},
 			inflection,
-			realizedCase: readAdposition(planned.adposition, answered),
+			realizedCase: yield* readAdposition(planned.adposition, answered),
 		};
 	return { block: "none", core: {}, inflection };
-}
+});
 
-/** Reads the first request's answers; an Unresolved deciding answer throws. */
-function readFirst(
+/** Reads the first request's answers; an Unresolved deciding answer stops it. */
+const readFirst = answerReader(function* (
 	target: Target,
 	planned: Plan,
 	answered: Answered,
-): FirstRead {
-	const head = readHead(
+): ReaderBody<FirstRead> {
+	const head = yield* readHead(
 		target,
 		planned.article,
 		planned,
 		planned.adverbial?.indefinite,
 		answered,
 	);
-	const read = readShape(target, planned, answered, head.cited);
+	const read = yield* readShape(target, planned, answered, head.cited);
 	const verbal = read.block === "verbal" ? read : undefined;
-	const tail = readTail(
+	const tail = yield* readTail(
 		planned.tail,
 		planned.shape,
 		answered,
@@ -301,17 +313,7 @@ function readFirst(
 		governed: tail.governed,
 		governedPositions: tail.governedPositions,
 	};
-}
-
-/** Settles a synchronous reading, an Unresolved deciding answer included. */
-function settle<T>(read: () => T): T | UnresolvedAnswer {
-	try {
-		return read();
-	} catch (error) {
-		if (error instanceof UnresolvedAnswer) return error;
-		throw error;
-	}
-}
+});
 
 /**
  * What Luna reads once jev has judged: the members' orthographies, the
@@ -366,22 +368,22 @@ function caseRequest(
 	ask: Ask,
 	state: ReturnType<typeof targetState>,
 	open: readonly CaseOption[],
-): Effect.Effect<CaseOption | UnresolvedAnswer | undefined, AskFailure> {
-	return open.length > 1
-		? Effect.gen(function* () {
-				const questionnaire = new Questionnaire();
-				const asked = caseQuestion(questionnaire, open);
-				const answered = yield* ask({
-					stage: "case",
-					state: {
-						...state,
-						policy: questionnaire.policyBlock(),
-					},
-					questions: questionnaire.questions,
-				});
-				return settle(() => new Answered(answered).pick(asked));
-			})
-		: Effect.succeed(undefined);
+): Effect.Effect<CaseOption | Unresolved | undefined, AskFailure> {
+	// @effect-diagnostics-next-line effectSucceedWithVoid:off -- Effect.void is Effect<void>, which the `| undefined` success type rejects
+	if (open.length <= 1) return Effect.succeed(undefined);
+	return Effect.gen(function* () {
+		const questionnaire = new Questionnaire();
+		const asked = caseQuestion(questionnaire, open);
+		const answered = yield* ask({
+			stage: "case",
+			state: {
+				...state,
+				policy: questionnaire.policyBlock(),
+			},
+			questions: questionnaire.questions,
+		});
+		return Result.merge(new Answered(answered).pick(asked));
+	});
 }
 
 /**
@@ -392,7 +394,7 @@ function senseRequest(
 	ask: Ask,
 	state: ReturnType<typeof targetState>,
 	sense: string,
-): Effect.Effect<"Yes" | "No" | UnresolvedAnswer, AskFailure> {
+): Effect.Effect<"Yes" | "No" | Unresolved, AskFailure> {
 	return Effect.gen(function* () {
 		const questionnaire = new Questionnaire();
 		const asked = questionnaire.choice(
@@ -405,7 +407,7 @@ function senseRequest(
 			state: { ...state, policy: questionnaire.policyBlock() },
 			questions: questionnaire.questions,
 		});
-		return settle(() => new Answered(answered).pick(asked));
+		return Result.merge(new Answered(answered).pick(asked));
 	});
 }
 
@@ -483,7 +485,7 @@ function canonicalFormOf(
  * jev's answers.
  */
 function rewritten(
-	scope: OperationScope,
+	log: CallLog["Service"],
 	write: (judged: Judged) => Effect.Effect<Written, AskFailure>,
 	request: (judged: Judged) => LunaDraft,
 	guessed:
@@ -504,7 +506,7 @@ function rewritten(
 			missed = verbMisses?.(written.canonicalForm);
 			if (!missed) return written;
 		}
-		scope.event({
+		log.event({
 			name: "CanonicalRewritten",
 			data: { reason: missed },
 		});
@@ -518,12 +520,12 @@ function rewritten(
  * should the guess miss, then the Attestation as an unchecked value.
  */
 export const resolveOpenRoute = Effect.fnUntraced(function* (
-	scope: OperationScope,
 	target: Target,
 	ask: Ask,
-	luna: LunaSettings,
 	candidates: readonly LemmaCandidate[],
-): Effect.fn.Return<OpenOutcome, AskFailure, Scope.Scope> {
+): Effect.fn.Return<OpenOutcome, AskFailure, Scope.Scope | Luna | CallLog> {
+	const log = yield* CallLog;
+	const luna = yield* stageWrite;
 	const planned = plan(target);
 	const { shape } = planned;
 	const state = targetState(target);
@@ -540,7 +542,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	const request = (judged: Judged) =>
 		canonicalFormRequest(target, judged, hints, drafts);
 	const write = (judged: Judged) =>
-		askLuna(scope, luna, "canonical", request(judged), (output) =>
+		luna("canonical", request(judged), (output) =>
 			checkWritten(target, judged, output),
 		);
 	// Luna writes while jev judges, on a guess at jev's answers; the
@@ -554,11 +556,9 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		? yield* Effect.forkScoped(write(guessed), { startImmediately: true })
 		: undefined;
 	const answers = yield* grammarRequest(ask, state, planned.questionnaire);
-	const first = settle(() =>
-		readFirst(target, planned, new Answered(answers)),
-	);
-	if (first instanceof UnresolvedAnswer)
-		return { _tag: "Unresolved", reason: first.reason };
+	const read = readFirst(target, planned, new Answered(answers));
+	if (Result.isFailure(read)) return read.failure;
+	const first = read.success;
 	const verbal = first.block === "verbal" ? first : undefined;
 	const article = planned.article;
 	const outsideHeadword = new Set<number>([
@@ -573,9 +573,10 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	);
 	const writing: Effect.Effect<Written | undefined, AskFailure> =
 		particleSpelled.length === 1 && first.orthographies[0] === "Standard"
-			? Effect.succeed(undefined)
+			? // @effect-diagnostics-next-line effectSucceedWithVoid:off -- Effect.void is Effect<void>, which the `| undefined` success type rejects
+				Effect.succeed(undefined)
 			: rewritten(
-					scope,
+					log,
 					write,
 					request,
 					guess && guessed
@@ -605,8 +606,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 					core: { ...first.core, ...first.tailCore },
 					inflection: first.inflection,
 				};
-	if (cells instanceof UnresolvedAnswer)
-		return { _tag: "Unresolved", reason: cells.reason };
+	if (cells instanceof Unresolved) return cells;
 	const { written } = cells;
 	const headword = canonicalFormOf(
 		target,

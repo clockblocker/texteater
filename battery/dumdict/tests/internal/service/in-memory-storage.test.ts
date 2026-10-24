@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { walkSurface } from "../../fixtures/en-notes";
 import {
 	englishSwimLemma,
 	englishWalkReading,
@@ -34,8 +35,12 @@ describe("in-memory storage", () => {
 					reading: englishWalkReading,
 					ops: [
 						{
-							kind: "addAttestation",
-							value: "Already attested",
+							kind: "addAttestationLink",
+							link: {
+								ref: "Already attested",
+								surfaceId: walkSurface.id,
+								reading: englishWalkReading,
+							},
 						},
 					],
 					preconditions: [
@@ -69,8 +74,12 @@ describe("in-memory storage", () => {
 			reading: englishWalkReading,
 			ops: [
 				{
-					kind: "addAttestation" as const,
-					value: "They walk before sunrise.",
+					kind: "addAttestationLink" as const,
+					link: {
+						ref: "They walk before sunrise.",
+						surfaceId: walkSurface.id,
+						reading: englishWalkReading,
+					},
 				},
 			],
 			preconditions: [

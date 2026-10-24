@@ -1,12 +1,12 @@
 /**
  * How a `knowledge.produce` run is scored (#887, #873's method).
  *
- * - Structural aspects (`exactAspects`: plural, valency, participle
- *   source, a verb's classes and principal parts, the three types) are
- *   right when the produced value equals gold's, an aspect gold reviewed
- *   empty being right only
- *   when nothing was produced. A failed aspect is wrong. Only an aspect
- *   gold covers is scored.
+ * - Structural aspects (`exactAspects`: valency, Source, the
+ *   three types, and the Variation Dimensions: a noun's plural and a verb's
+ *   principal parts) are right when the produced value equals gold's, an
+ *   aspect gold reviewed empty being right only when nothing was produced.
+ *   A dimension compares the forms the Reading licenses. A failed aspect is
+ *   wrong. Only an aspect gold covers is scored.
  * - Semantic relations are scored on recall: each gold claim is found when
  *   the run claims the same relation to the same Unit Shadow (Family, Kind
  *   and case-folded Canonical Form). Extra claims are not counted wrong; a
@@ -23,8 +23,6 @@
 import { createHash } from "node:crypto";
 import { canonicalJson } from "common-utils";
 import { foldCase } from "dumling";
-import type * as Dumling from "dumling/types";
-import { applyKnowledgeChange } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { z } from "zod";
 import { recordOf } from "../../records.js";
@@ -38,10 +36,16 @@ import {
 	type Slot,
 	sameAspect,
 } from "./exact-aspects.js";
+import { producedKnowledge, producedParadigm } from "./produced.js";
+import { goldRelationTargets, shadowKey } from "./relations.js";
+
+export { shadowKey } from "./relations.js";
 
 /** What one attempt returned, as a run stores it. */
 export const knowledgeOutputSchema = z.object({
 	changes: z.array(z.unknown()),
+	/** Absent from a run stored before ADR 0048, which wrote none. */
+	paradigmChanges: z.array(z.unknown()).default([]),
 	pendingRelations: z.array(
 		z.object({
 			relation: z.string(),
@@ -125,54 +129,6 @@ export const knowledgeEvaluationSchema = z.object({
 	),
 }) satisfies z.ZodType<KnowledgeEvaluation>;
 
-type Shadow = {
-	readonly family: string;
-	readonly kind: string;
-	readonly canonicalForm: string;
-};
-
-/** A Unit Shadow's identity, as relations are matched (#884 ruling 3). */
-export const shadowKey = ({ family, kind, canonicalForm }: Shadow) =>
-	`${family}/${kind}/${foldCase(canonicalForm, "de")}`;
-
-/**
- * Gold's targets of each Semantic Relation, by relation, in gold's order. A
- * Reading target stands for its Lemma's Unit Shadow.
- */
-export function goldRelationTargets(
-	knowledge: Dumrel.ReadingKnowledge | undefined,
-): ReadonlyMap<string, readonly Shadow[]> {
-	const targets = new Map<string, readonly Shadow[]>();
-	for (const [relation, value] of Object.entries(
-		knowledge?.semanticRelations ?? {},
-	))
-		if (Array.isArray(value))
-			targets.set(
-				relation,
-				value.map((target: Dumling.Lemma | Dumling.Reading) =>
-					target.unitKind === "Reading" ? target.lemma : target,
-				),
-			);
-	return targets;
-}
-
-/** The Knowledge an attempt's changes add up to, each change Dumrel takes applied in order. */
-function producedKnowledge(
-	reading: Dumling.Reading<"de">,
-	changes: readonly unknown[],
-): Dumrel.ReadingKnowledge<Dumling.Reading<"de">> {
-	let knowledge: Dumrel.ReadingKnowledge<Dumling.Reading<"de">> = {};
-	for (const change of changes) {
-		const applied = applyKnowledgeChange({
-			source: reading,
-			knowledge,
-			change,
-		});
-		if (applied.success) knowledge = applied.value;
-	}
-	return knowledge;
-}
-
 const textOf = (value: unknown): string | undefined =>
 	typeof value === "string"
 		? value
@@ -180,17 +136,29 @@ const textOf = (value: unknown): string | undefined =>
 			? value.join("; ")
 			: undefined;
 
-/** Scores one attempt against its case's gold Knowledge, aspect by aspect. */
+/**
+ * Scores one attempt against its case's gold Knowledge and Paradigm, aspect
+ * by aspect, then the requested Variation Dimensions in their order.
+ */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function evaluateKnowledge(
 	goldCase: KnowledgeCase,
 	request: Dumrel.KnowledgeRequestMask,
 	output: KnowledgeOutput,
+	dimensions: readonly Dumrel.DimensionId[] = [],
 ): KnowledgeEvaluation {
 	const producedValues: Dumrel.ReadingKnowledge = producedKnowledge(
 		goldCase.reading,
 		output.changes,
 	);
+	const producedForms = producedParadigm(
+		goldCase.reading,
+		output.paradigmChanges ?? [],
+	);
+	const goldValues = {
+		knowledge: goldCase.gold?.knowledge ?? {},
+		paradigm: goldCase.gold?.paradigm ?? {},
+	};
 	const produced: Readonly<Record<string, unknown>> = producedValues;
 	const goldKnowledge: Dumrel.ReadingKnowledge =
 		goldCase.gold?.knowledge ?? {};
@@ -272,7 +240,12 @@ export function evaluateKnowledge(
 		}
 		const authored = status === "Authored" ? goldKnowledge : {};
 		const correct =
-			failed === undefined && sameAspect(exact, authored, producedValues);
+			failed === undefined &&
+			sameAspect(
+				exact,
+				{ knowledge: authored, paradigm: {} },
+				{ knowledge: producedValues, paradigm: producedForms },
+			);
 		verdicts.push({
 			...base,
 			gold: status,
@@ -285,13 +258,41 @@ export function evaluateKnowledge(
 						),
 					}
 				: {}),
-			...(aspect === "participleSource" && failed === undefined
+			...(aspect === "source" && failed === undefined
 				? {
 						sourceAgrees:
-							(authored.participleSource === undefined) ===
+							(authored.source === undefined) ===
 							(value === undefined),
 					}
 				: {}),
+		});
+	}
+	for (const dimension of dimensions) {
+		const value = producedForms[dimension];
+		const failed = failure(dimension);
+		const status = coverageOf(goldCase, "paradigm", dimension);
+		const base = {
+			aspect: dimension,
+			...(failed ? { failed } : {}),
+			produced: value !== undefined,
+		};
+		if (!status) {
+			verdicts.push(base);
+			continue;
+		}
+		const authored =
+			status === "Authored"
+				? goldValues
+				: { knowledge: {}, paradigm: {} };
+		verdicts.push({
+			...base,
+			gold: status,
+			correct:
+				failed === undefined &&
+				sameAspect(dimension, authored, {
+					knowledge: producedValues,
+					paradigm: producedForms,
+				}),
 		});
 	}
 	return { verdicts };
@@ -444,12 +445,11 @@ export function knowledgeReport(attempts: readonly ScoredKnowledge[]) {
 	);
 	const repetitions = [
 		...new Set(attempts.map(({ repetition }) => repetition)),
-	].sort();
+	].sort((left, right) => left - right);
 	const valency = scored("valency");
 	const participle = entries.filter(
 		({ verdict }) =>
-			verdict.aspect === "participleSource" &&
-			verdict.sourceAgrees !== undefined,
+			verdict.aspect === "source" && verdict.sourceAgrees !== undefined,
 	);
 	const sum = (
 		pick: (counts: NonNullable<AspectVerdict["complements"]>) => number,
@@ -482,7 +482,7 @@ export function knowledgeReport(attempts: readonly ScoredKnowledge[]) {
 			sum(({ matched }) => matched),
 			sum(({ produced }) => produced),
 		),
-		/** Whether a participle source exists at all. */
+		/** Whether a Source exists at all. */
 		participleDetected: lineOf(
 			participle.map(({ verdict }) => verdict.sourceAgrees === true),
 		),

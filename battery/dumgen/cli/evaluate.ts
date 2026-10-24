@@ -1,6 +1,6 @@
 /**
  * Runs one Dumgen experiment and prints its manifest, summary and metrics
- * (`docs/reference/segmentation-jev-lab.md`, "Evaluate").
+ * (`docs/reference/segmentation-jev-lab-evaluate.md`).
  *
  *   bun run evaluate --list
  *   bun run evaluate --experiment segment-in-units/de:dev --revision <rev>
@@ -32,6 +32,11 @@
  *   bun run evaluate --experiment resolve-grammar/de:dev --revision <rev> --requests
  *   bun run evaluate --experiment resolve-reading/de:dev --revision <rev> --requests
  *   bun run evaluate --experiment knowledge/de:dev --revision <rev> --requests
+ *   bun run evaluate --experiment knowledge/de:doublets:tuning --revision <rev> --requests
+ *   bun run evaluate --experiment segment-in-constituents/de:breakdown --estimate
+ *   bun run evaluate --experiment segment-in-constituents/de:breakdown --revision <rev>
+ *       --budget <jev input tokens> [--cases <ids file>] [--repetitions 1]
+ *   bun run evaluate --experiment segment-in-morphemes/de:breakdown --revision <rev> --offline
  *   bun run evaluate --open <runId>
  *   bun run evaluate --compare <leftRunId> <rightRunId>
  *
@@ -66,10 +71,14 @@
  * line to the lab ledger, refuses to go live when dumcorpus's prompt inputs
  * moved since the round was pinned (unless `--repin`) or when its projected
  * spend would cross the stop line, and stops at the line. It runs
- * production's `createDumgen` with the lab's cached jev as its transport,
+ * production's `DumgenCore` with the lab's cached jev as its transport,
  * which retries a rate limit or a server error; the ledger line and the
  * output give those retries and the requests that still failed as
  * `transport`.
+ *
+ * Every run's Effects run on the process's one lab runtime
+ * (`lab/evaluation/lab-runtime.ts`): all its attempts share one request
+ * budget of 12, and SIGINT interrupts them, aborting the calls in flight.
  *
  * A resolve.grammar, resolve.reading or knowledge run prices itself first and goes
  * live only under the budgets the main session granted the round:
@@ -82,6 +91,12 @@
  * prices every request, cached ones included, as a round whose prompts
  * all moved would pay.
  *
+ * A Breakdown segmenter run (`segment-in-constituents/de:breakdown`,
+ * `segment-in-morphemes/de:breakdown`) counts against no lab round: it
+ * goes live only under the `--budget` of fresh jev input tokens the user
+ * granted, priced first and stopped at it, and writes its spend to
+ * `evidence/segment-breakdown/ledger.jsonl`.
+ *
  * `--luna-batch` sends such a run's Luna cache misses through OpenAI's
  * Batch API in stages (#891), its guard and caps pricing them at the Batch
  * rate; each batch's id goes to the port's ledger
@@ -89,90 +104,28 @@
  * `--luna-prompt-cache` asks Luna for explicit prompt caching. Production
  * clicks stay synchronous.
  */
-import { appendFile, mkdir, readFile } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
-import { type ParseArgsOptionsConfig, parseArgs } from "node:util";
 import { messageOf } from "common-utils";
-import { compareRuns, loadRun } from "promptsmith/storage";
-import type * as Experiments from "../lab/evaluation/experiments.js";
-import type {
-	EvaluateArgs,
-	parityWith,
-	UnitConfig,
-} from "../lab/evaluation/experiments.js";
+import { loadRun } from "promptsmith/storage";
 import {
-	compareRequestRuns,
-	isRequestRun,
-	loadRequestRun,
 	newRequestRunId,
 	type RequestRun,
 	saveRequestRun,
 } from "../lab/evaluation/request-diff.js";
-import type {
-	GrammarCaps,
-	GrammarPrice,
-	LunaBatchEvent,
-} from "../lab/evaluation/resolve-grammar/models.js";
-import type { RoundCost } from "../lab/evaluation/resolve-grammar/pricing.js";
-import type { Splitter } from "../lab/evaluation/split-text.js";
 import { defaultRunOutputDirectory } from "../lab/run-directory.js";
-import type { JevAsk } from "../src/segment/jev.js";
+import {
+	caseIdsOf,
+	type EvaluationCliDependencies,
+	type ExperimentCommand,
+	parseCli,
+	rejectUnread,
+	rejectUnreadRunOptions,
+} from "./evaluate/arguments.js";
+import { compareCommand } from "./evaluate/compare.js";
+import { experimentCommand } from "./evaluate/experiment-run.js";
 
-const packageRoot = resolve(import.meta.dir, "..");
-
-const cliOptions = {
-	list: { type: "boolean" },
-	experiment: { type: "string" },
-	"judgment-model": { type: "string" },
-	output: { type: "string" },
-	revision: { type: "string" },
-	open: { type: "string" },
-	compare: { type: "string" },
-	offline: { type: "boolean" },
-	units: { type: "string" },
-	parity: { type: "string" },
-	estimate: { type: "boolean" },
-	repin: { type: "boolean" },
-	reason: { type: "string" },
-	"token-budget": { type: "string" },
-	concurrency: { type: "string" },
-	budget: { type: "string" },
-	"luna-budget": { type: "string" },
-	"luna-output-budget": { type: "string" },
-	limit: { type: "string" },
-	cases: { type: "string" },
-	"cases-from": { type: "string" },
-	subset: { type: "string" },
-	repetitions: { type: "string" },
-	"luna-batch": { type: "boolean" },
-	"luna-prompt-cache": { type: "boolean" },
-	"usd-budget": { type: "string" },
-	"whole-round": { type: "boolean" },
-	"gold-only": { type: "boolean" },
-	requests: { type: "boolean" },
-} as const satisfies ParseArgsOptionsConfig;
-
-const parseCli = (argv: string[]) =>
-	parseArgs({ args: argv, allowPositionals: true, options: cliOptions });
-
-type CliValues = ReturnType<typeof parseCli>["values"];
-
-type EvaluationCliDependencies = {
-	/** jev for a live run; production's TypeSafe ask by default. */
-	jev?: JevAsk;
-	write?: (value: unknown) => void;
-	warn?: (message: string) => void;
-	split?: Splitter;
-	/** The lab's answer cache and raw runs. */
-	labRoot?: string;
-	/** The lab's frozen sets; the tracked ones by default. */
-	setsRoot?: string;
-	/** The lab's evidence: the ledger and the round book. */
-	evidenceRoot?: string;
-	/** Where resolve.grammar's and resolve.reading's ledgers are; `evidence/` by default. */
-	resolveEvidenceRoot?: string;
-	repository?: string;
-};
+// The CLI's checks its tests call, from where they lived before the split.
+export { guardGrammarBudget } from "./evaluate/grammar-budget.js";
+export { rejectUnreadRunOptions };
 
 export async function runEvaluationCli(
 	argv: string[],
@@ -236,6 +189,10 @@ export async function runEvaluationCli(
 	experiments.spendsJev(experimentId);
 	rejectUnreadRunOptions(values, experimentId);
 	const caseIds = await caseIdsOf(values);
+	// The process's one runtime: every Effect of the run runs on it, on
+	// one request budget (`lab/evaluation/lab-runtime.ts`).
+	const { makeLabRuntime } = await import("../lab/evaluation/lab-runtime.js");
+	const runtime = makeLabRuntime();
 	const command: ExperimentCommand = {
 		values,
 		experimentId,
@@ -246,250 +203,16 @@ export async function runEvaluationCli(
 		write,
 		warn,
 		experiments,
+		runtime,
 	};
-	return values.requests
-		? requestsCommand(command)
-		: experimentCommand(command);
-}
-
-/**
- * `--compare`: two request runs as a request diff, which exits 1 on any
- * difference, or two evaluation runs through `runComparison`.
- */
-async function compareCommand(
-	outputDirectory: string,
-	left: string,
-	positionals: readonly string[],
-	write: (value: unknown) => void,
-) {
-	const [right, ...rest] = positionals;
-	if (!right || rest.length > 0)
-		throw Error("--compare takes two run ids: --compare LEFT RIGHT");
-	const requestRuns = [left, right].filter((runId) =>
-		isRequestRun(outputDirectory, runId),
-	).length;
-	if (requestRuns === 1)
-		throw Error(
-			"--compare takes two request runs or two evaluation runs, not one of each",
-		);
-	if (requestRuns === 2) {
-		const report = compareRequestRuns(
-			await loadRequestRun(outputDirectory, left),
-			await loadRequestRun(outputDirectory, right),
-		);
-		write(report);
-		if (
-			report.changed.length > 0 ||
-			report.onlyLeft.length > 0 ||
-			report.onlyRight.length > 0
-		)
-			process.exitCode = 1;
-		return report;
+	try {
+		return await (values.requests
+			? requestsCommand(command)
+			: experimentCommand(command));
+	} finally {
+		await runtime.dispose();
 	}
-	const report = runComparison(
-		await loadRun(outputDirectory, left),
-		await loadRun(outputDirectory, right),
-	);
-	write(report);
-	return report;
 }
-
-type OptionName = keyof typeof cliOptions;
-
-/**
- * Throws, naming the options given that `subject` does not read, when
- * any are; `takes` and `--output`, which goes with any command, are the
- * ones it reads.
- */
-function rejectUnread(
-	values: CliValues,
-	takes: readonly OptionName[],
-	subject: string,
-	note?: Note,
-) {
-	const reads = new Set<string>([...takes, "output"]);
-	const given = Object.keys(values).filter((name) => !reads.has(name));
-	if (given.length === 0) return;
-	const flags = (names: Iterable<string>) =>
-		[...names].map((name) => `--${name}`).join(", ");
-	const noted = note && given.some((name) => note.options.has(name));
-	throw Error(
-		`${flags(given)} ${given.length === 1 ? "does" : "do"} not apply to ${subject}, which takes ${flags(reads)}${noted ? `. ${note.text}` : ""}`,
-	);
-}
-
-/** Said when a refusal names any of `options`. */
-type Note = {
-	readonly options: ReadonlySet<string>;
-	readonly text: string;
-};
-
-/** How an `--experiment` command runs: its flag, if any, wins in this order. */
-type RunMode = "requests" | "estimate" | "offline" | "live";
-
-const runModeOf = (values: CliValues): RunMode =>
-	values.requests
-		? "requests"
-		: values.estimate
-			? "estimate"
-			: values.offline
-				? "offline"
-				: "live";
-
-const modeSubject: Record<RunMode, string> = {
-	requests: "a --requests run of",
-	estimate: "an --estimate of",
-	offline: "an --offline run of",
-	live: "a live run of",
-};
-
-/**
- * The options one kind of experiment reads in each mode, beyond
- * `--experiment`, `--revision`, `--output` and the mode's own flag.
- */
-type KindOptions = {
-	readonly reads: Readonly<Record<RunMode, readonly OptionName[]>>;
-	/** Added to a refusal of a run, not of a request run. */
-	readonly note?: Note;
-};
-
-const segmentReads = ["units", "judgment-model", "concurrency"] as const;
-const segmentRunReads = [...segmentReads, "cases", "cases-from"] as const;
-const segmentNote: Note = {
-	options: new Set(["limit", "subset", "repetitions", "gold-only"]),
-	text: "A segment.inUnits run always runs its whole set (or its case list) at 3 repetitions; use --cases <ids file> or --cases-from <request compare report> to run part of a set",
-};
-
-/** segment.inUnits: `--parity` takes gold mode only. */
-const segmentOptions = (parity: readonly OptionName[]): KindOptions => ({
-	reads: {
-		requests: segmentReads,
-		estimate: [...segmentRunReads, "token-budget"],
-		offline: [...segmentRunReads, ...parity],
-		live: [
-			...segmentRunReads,
-			...parity,
-			"token-budget",
-			"repin",
-			"reason",
-		],
-	},
-	note: segmentNote,
-});
-
-const resolveRunReads = [
-	"concurrency",
-	"limit",
-	"subset",
-	"repetitions",
-] as const;
-const resolveLiveReads = [
-	"budget",
-	"luna-budget",
-	"luna-output-budget",
-	"usd-budget",
-	"luna-batch",
-	"luna-prompt-cache",
-] as const;
-
-/** resolve.grammar, resolve.reading and knowledge.produce, with `extra` on every run. */
-const resolveOptions = (extra: readonly OptionName[]): KindOptions => ({
-	reads: {
-		requests: ["concurrency"],
-		estimate: [...resolveRunReads, ...extra, "whole-round"],
-		offline: [...resolveRunReads, ...extra],
-		live: [...resolveRunReads, ...extra, ...resolveLiveReads],
-	},
-});
-
-/**
- * The options each kind of experiment reads, by its id's route (and
- * `:raw` for segment.inUnits's raw mode). An experiment without a request
- * diff refuses `--requests` itself.
- */
-const runOptions: Readonly<Record<string, KindOptions>> = {
-	"segment-in-units": segmentOptions(["parity"]),
-	"segment-in-units:raw": segmentOptions([]),
-	"split-text": {
-		reads: { requests: [], estimate: [], offline: [], live: [] },
-	},
-	"resolve-grammar": resolveOptions([]),
-	"resolve-reading": resolveOptions([]),
-	knowledge: resolveOptions(["gold-only"]),
-};
-
-const kindOf = (experimentId: string) => {
-	const route = experimentId.split("/")[0] ?? "";
-	return route === "segment-in-units" && experimentId.endsWith(":raw")
-		? `${route}:raw`
-		: route;
-};
-
-/**
- * Throws before anything is priced or asked when an `--experiment`
- * command is given an option its experiment does not read in its mode,
- * so a run meant to be small, or a request diff meant for a subset, does
- * not silently cover something else.
- */
-export function rejectUnreadRunOptions(
-	values: CliValues,
-	experimentId: string,
-) {
-	const kind = runOptions[kindOf(experimentId)];
-	if (!kind) throw Error(`${experimentId} names no options it reads`);
-	const mode = runModeOf(values);
-	rejectUnread(
-		values,
-		[
-			"experiment",
-			"revision",
-			"output",
-			...(mode === "live" ? [] : [mode]),
-			...kind.reads[mode],
-		],
-		`${modeSubject[mode]} ${experimentId}`,
-		mode === "requests" ? undefined : kind.note,
-	);
-}
-
-/**
- * The case ids `--cases` lists, one per line, or the cases a request diff
- * report saved from `--compare` names as `changed` (`--cases-from`); none
- * without either.
- */
-async function caseIdsOf(
-	values: CliValues,
-): Promise<readonly string[] | undefined> {
-	if (values.cases && values["cases-from"])
-		throw Error("Use --cases or --cases-from, not both");
-	if (values.cases)
-		return (await readFile(resolve(values.cases), "utf8"))
-			.split("\n")
-			.map((line) => line.trim())
-			.filter((line) => line.length > 0);
-	if (!values["cases-from"]) return undefined;
-	const { z } = await import("zod");
-	const { readStoredJson } = await import("../lab/stored-json.js");
-	const report = await readStoredJson(
-		z.object({ changed: z.array(z.object({ caseId: z.string() })) }),
-		resolve(values["cases-from"]),
-	);
-	return report.changed.map(({ caseId }) => caseId);
-}
-
-/** An `--experiment` command, once its arguments and the table are loaded. */
-type ExperimentCommand = {
-	readonly values: CliValues;
-	readonly experimentId: string;
-	/** `--cases` or `--cases-from`: only these cases run. */
-	readonly caseIds: readonly string[] | undefined;
-	readonly units: UnitConfig;
-	readonly outputDirectory: string;
-	readonly dependencies: EvaluationCliDependencies;
-	readonly write: (value: unknown) => void;
-	readonly warn: (message: string) => void;
-	readonly experiments: typeof Experiments;
-};
 
 /** `--requests`: every case's requests built offline, saved as a request run. */
 async function requestsCommand({
@@ -500,10 +223,12 @@ async function requestsCommand({
 	dependencies,
 	write,
 	experiments,
+	runtime,
 }: ExperimentCommand) {
 	const built = await experiments.experimentRequests({
 		experimentId,
 		sourceRevision: values.revision ?? "",
+		runtime,
 		units,
 		...(dependencies.labRoot ? { labRoot: dependencies.labRoot } : {}),
 		...(dependencies.setsRoot ? { setsRoot: dependencies.setsRoot } : {}),
@@ -535,538 +260,6 @@ async function requestsCommand({
 	};
 	write(summary);
 	return summary;
-}
-
-/** The transports and the lab harness a run loads, in the order it loads them. */
-async function loadRunModules() {
-	const { createOpenAILunaBatch } = await import(
-		"../lab/evaluation/luna-batch.js"
-	);
-	const { git } = await import("../lab/git.js");
-	const { transportText } = await import(
-		"../lab/segmentation/harness/jev-cache.js"
-	);
-	const { appendLedger, readLedger } = await import(
-		"../lab/segmentation/harness/ledger.js"
-	);
-	const round = await import("../lab/segmentation/harness/round.js");
-	const { createOpenAILuna } = await import("../src/openai-luna.js");
-	const { createTypeSafeAsk } = await import(
-		"../src/segment/typesafe-ask.js"
-	);
-	return {
-		createOpenAILunaBatch,
-		git,
-		transportText,
-		appendLedger,
-		readLedger,
-		round,
-		createOpenAILuna,
-		createTypeSafeAsk,
-	};
-}
-
-type RunModules = Awaited<ReturnType<typeof loadRunModules>>;
-
-const environment = (name: string) => {
-	const value = process.env[name];
-	if (!value) throw Error(`${name} is not set`);
-	return value;
-};
-
-/** Where a run's paths are, and whether it may ask anything. */
-type RunPlace = {
-	readonly labRoot: string;
-	readonly evidenceRoot: string;
-	readonly repository: string;
-	readonly ledgerPath: string;
-	readonly live: boolean;
-};
-
-/** A segment.inUnits run's round, its stop line and what it already spent. */
-type RoundAccount = {
-	readonly account: Awaited<ReturnType<RunModules["round"]["enterRound"]>>;
-	readonly stopLine: number;
-	readonly spent: number;
-};
-
-async function roundAccountOf(
-	{ values, experimentId, warn }: ExperimentCommand,
-	place: RunPlace,
-	modules: RunModules,
-): Promise<RoundAccount> {
-	const account = await modules.round.enterRound({
-		evidenceRoot: place.evidenceRoot,
-		repository: place.repository,
-		live: place.live,
-		repin: values.repin ?? false,
-		reason: values.reason ?? `evaluate ${experimentId} --repin`,
-	});
-	if (account.warning) warn(`*** ${account.warning}`);
-	const stopLine = modules.round.stopLineOf(
-		account.round,
-		values["token-budget"],
-	);
-	const spent = modules.round.roundSpend(
-		await modules.readLedger(place.ledgerPath),
-		account.round.id,
-	).jevFreshInputTokens;
-	return { account, stopLine, spent };
-}
-
-/**
- * A live resolve.grammar, resolve.reading or knowledge run's Luna
- * transport, its granted caps, and the price check before it goes live.
- */
-function grammarLiveOptions(
-	{ values, experimentId, dependencies, warn }: ExperimentCommand,
-	modules: RunModules,
-): Partial<EvaluateArgs> {
-	const lunaBatch = values["luna-batch"] ?? false;
-	const promptCaching = values["luna-prompt-cache"] ?? false;
-	// Each batch's id goes to the port's ledger as it is sent and settled.
-	const portLedger = join(
-		dependencies.resolveEvidenceRoot ?? join(packageRoot, "evidence"),
-		experimentId.split("/")[0] ?? "",
-		"ledger.jsonl",
-	);
-	// A port's first batch creates its ledger (knowledge has none yet).
-	const recordBatch = async (event: LunaBatchEvent) => {
-		await mkdir(dirname(portLedger), { recursive: true });
-		await appendFile(
-			portLedger,
-			`${JSON.stringify({
-				at: new Date().toISOString(),
-				command: "luna-batch",
-				experiment: experimentId,
-				...event,
-			})}\n`,
-		);
-	};
-	const guard = (price: GrammarPrice | undefined) =>
-		guardGrammarBudget(
-			price,
-			values.budget,
-			values["luna-budget"],
-			values["luna-output-budget"],
-			{ usdBudget: values["usd-budget"], lunaBatch },
-		);
-	return {
-		...(lunaBatch
-			? {
-					lunaBatch: modules.createOpenAILunaBatch({
-						apiKey: environment("OPENAI_API_KEY"),
-						promptCaching,
-						metadata: { experiment: experimentId },
-					}),
-					onLunaBatch: recordBatch,
-				}
-			: {
-					luna: modules.createOpenAILuna({
-						apiKey: environment("OPENAI_API_KEY"),
-						promptCaching,
-					}),
-				}),
-		grammarCaps: guard(undefined),
-		beforeGrammarLive(price: GrammarPrice) {
-			warn(JSON.stringify({ price }));
-			guard(price);
-		},
-	};
-}
-
-/**
- * A segment.inUnits run's round in its manifest, and the guards that
- * refuse it past the round's stop line, before it goes live and as it
- * spends.
- */
-function roundOptions(
-	{ account, stopLine, spent }: RoundAccount,
-	warn: (message: string) => void,
-	round: RunModules["round"],
-): Partial<EvaluateArgs> {
-	let spentNow = 0;
-	return {
-		settings: {
-			round: account.round.id,
-			pin: account.pin.hash,
-			dumcorpusCommit: account.pin.dumcorpusCommit,
-		},
-		beforeLive(priced) {
-			warn(round.projectionText(priced));
-			round.guardProjectedSpend({
-				round: account.round,
-				spent,
-				stopLine,
-				priced,
-			});
-		},
-		beforeSpend() {
-			if (spent + spentNow >= stopLine)
-				throw Error(
-					`Round ${account.round.id} reached its stop line: ${spent + spentNow} of ${stopLine} fresh jev input tokens`,
-				);
-		},
-		onSpend(tokens) {
-			spentNow += tokens;
-		},
-	};
-}
-
-/** The options a run takes from its arguments alone. */
-const argumentOptions = (
-	{ values, caseIds }: ExperimentCommand,
-	dependencies: EvaluationCliDependencies,
-) => ({
-	...(dependencies.setsRoot ? { setsRoot: dependencies.setsRoot } : {}),
-	...(caseIds ? { caseIds } : {}),
-	...(values.concurrency ? { concurrency: Number(values.concurrency) } : {}),
-	...(dependencies.split ? { split: dependencies.split } : {}),
-	...(values.limit ? { limit: Number(values.limit) } : {}),
-	...(values.subset ? { grammarSubset: values.subset } : {}),
-	...(values["gold-only"] ? { goldOnly: true } : {}),
-	...(values.repetitions ? { repetitions: Number(values.repetitions) } : {}),
-});
-
-/** An `--experiment` run: priced with `--estimate`, re-scored `--offline`, or live. */
-async function experimentCommand(command: ExperimentCommand) {
-	const { values, experimentId, units, outputDirectory, dependencies, warn } =
-		command;
-	const { defaultLabRoot, evaluateExperiment, spendsJev } =
-		command.experiments;
-	const modules = await loadRunModules();
-	const evidenceRoot =
-		dependencies.evidenceRoot ??
-		join(packageRoot, "evidence", "segment-in-units-lab");
-	const place: RunPlace = {
-		labRoot: dependencies.labRoot ?? defaultLabRoot,
-		evidenceRoot,
-		repository: dependencies.repository ?? resolve(packageRoot, "../.."),
-		ledgerPath: join(evidenceRoot, "ledger.jsonl"),
-		live: !values.offline && !values.estimate,
-	};
-	const round = spendsJev(experimentId)
-		? await roundAccountOf(command, place, modules)
-		: undefined;
-	// resolve.reading's and knowledge.produce's runs share resolve.grammar's
-	// transports and guard.
-	const grammar = /^(resolve-(grammar|reading)|knowledge)\//u.test(
-		experimentId,
-	);
-	const controller = new AbortController();
-	const interrupt = () => controller.abort();
-	process.once("SIGINT", interrupt);
-	try {
-		const evaluated = await evaluateExperiment({
-			experimentId,
-			// Every live run that asks jev asks it through production's
-			// TypeSafe ask; segment.inUnits wraps it in the lab's cache.
-			...(place.live && (grammar || round)
-				? {
-						jev:
-							dependencies.jev ??
-							modules.createTypeSafeAsk({
-								apiKey: environment("TYPESAFE_API_KEY"),
-							}),
-					}
-				: {}),
-			...(values["judgment-model"]
-				? { judgmentModel: values["judgment-model"] }
-				: {}),
-			offline: values.offline ?? false,
-			estimate: values.estimate ?? false,
-			...(values["whole-round"] ? { wholeRound: true } : {}),
-			sourceRevision: values.revision ?? "estimate",
-			outputDirectory,
-			signal: controller.signal,
-			units,
-			labRoot: place.labRoot,
-			...argumentOptions(command, dependencies),
-			...(grammar && place.live
-				? grammarLiveOptions(command, modules)
-				: {}),
-			...(round ? roundOptions(round, warn, modules.round) : {}),
-		});
-		if (values.estimate)
-			return writeEstimate(command, evaluated, grammar, round, modules);
-		return await finishRun(command, evaluated, place, round, modules);
-	} finally {
-		process.removeListener("SIGINT", interrupt);
-	}
-}
-
-type Evaluated = Awaited<
-	ReturnType<(typeof Experiments)["evaluateExperiment"]>
->;
-
-/** `--estimate`'s price: resolve's in dollars and tokens, segment.inUnits's against its round. */
-function writeEstimate(
-	{ experimentId, units, write }: ExperimentCommand,
-	evaluated: Evaluated,
-	grammar: boolean,
-	round: RoundAccount | undefined,
-	modules: RunModules,
-) {
-	if (grammar) {
-		const estimate = {
-			experiment: experimentId,
-			set: evaluated.set,
-			price: evaluated.price,
-		};
-		write(estimate);
-		return estimate;
-	}
-	const projected = evaluated.projection
-		? modules.round.projectedSpend(evaluated.projection)
-		: 0;
-	const estimate = {
-		experiment: experimentId,
-		units,
-		set: evaluated.set,
-		...(evaluated.caseList
-			? {
-					caseList: evaluated.caseList.hash,
-					cases: evaluated.caseList.ids.length,
-				}
-			: {}),
-		projection: evaluated.projection,
-		projectedTokens: projected,
-		...(round
-			? {
-					round: round.account.round.id,
-					spent: round.spent,
-					stopLine: round.stopLine,
-					fitsUnderStopLine:
-						round.spent + projected <= round.stopLine,
-				}
-			: {}),
-	};
-	write(estimate);
-	return estimate;
-}
-
-/**
- * A run's record and report: its ledger line when it counts against a
- * round, its transport, its manifest, summary and metrics, and `--parity`,
- * which exits 1 on any difference.
- */
-async function finishRun(
-	command: ExperimentCommand,
-	evaluated: Evaluated,
-	place: RunPlace,
-	round: RoundAccount | undefined,
-	modules: RunModules,
-) {
-	const { values, experimentId, units, write, warn } = command;
-	const { run } = evaluated;
-	if (!run) throw Error(`${experimentId} produced no run`);
-	if (round && evaluated.spend && evaluated.set)
-		await modules.appendLedger(place.ledgerPath, {
-			runId: run.manifest.runId,
-			at: new Date().toISOString(),
-			command: "evaluate",
-			round: round.account.round.id,
-			experiment: experimentId,
-			pin: round.account.pin.hash,
-			options: { units },
-			set: evaluated.set.name,
-			setHash: evaluated.set.hash,
-			...(evaluated.caseList
-				? { caseList: evaluated.caseList.hash }
-				: {}),
-			cases: run.cases.length,
-			repetitions: run.manifest.repetitions ?? 1,
-			gitHead: modules.git(["rev-parse", "HEAD"], place.repository),
-			dirty:
-				modules.git(
-					[
-						"status",
-						"--porcelain",
-						"--",
-						"battery/dumgen/src",
-						"battery/dumgen/cli",
-						"battery/dumcorpus/src",
-					],
-					place.repository,
-				).length > 0,
-			model: run.manifest.configurations.judgment.model,
-			...evaluated.spend,
-			...(evaluated.transport ? { transport: evaluated.transport } : {}),
-		});
-	if (evaluated.transport && evaluated.transport.requests > 0)
-		warn(modules.transportText(evaluated.transport));
-	const parity = values.parity
-		? await parityOf(values.parity, run, units, place.labRoot)
-		: undefined;
-	write({
-		manifest: run.manifest,
-		summary: run.summary,
-		metrics: command.experiments.evaluationMetrics(run),
-		...(evaluated.spend ? { spend: evaluated.spend } : {}),
-		...(evaluated.transport ? { transport: evaluated.transport } : {}),
-		...(evaluated.grammarSpend ? { spend: evaluated.grammarSpend } : {}),
-		...(parity ? { parity } : {}),
-	});
-	if (
-		parity &&
-		(parity.differing.length > 0 ||
-			parity.failed.length > 0 ||
-			parity.missing.length > 0)
-	)
-		process.exitCode = 1;
-	return run;
-}
-
-type StoredRun = Awaited<ReturnType<typeof loadRun>>;
-const verdicts = ["Passed", "Failed", "Mixed", "Unscored"] as const;
-
-/**
- * Two runs side by side (`--compare`): what each ran and scored, the cases
- * only one has, and each shared case whose status, verdict or output
- * changed, as `before → after` with the output's field-level diff.
- */
-export function runComparison(left: StoredRun, right: StoredRun) {
-	const comparison = compareRuns(left, right);
-	const side = (run: StoredRun, key: "left" | "right") => ({
-		runId: run.manifest.runId,
-		experimentId: run.manifest.experimentId,
-		sourceRevision: run.manifest.sourceRevision,
-		model: run.manifest.configurations.judgment.model,
-		cases: run.cases.length,
-		verdicts: Object.fromEntries(
-			verdicts.map((verdict) => [
-				verdict,
-				comparison.cases.filter(
-					(entry) => entry.verdict[key] === verdict,
-				).length,
-			]),
-		),
-	});
-	const arrow = (before: unknown, after: unknown) => `${before} → ${after}`;
-	const changed = comparison.cases.flatMap((entry) => {
-		if (!entry.left || !entry.right) return [];
-		const status = entry.left.status !== entry.right.status;
-		if (!status && !entry.verdictChanged && !entry.outputChanges.length)
-			return [];
-		return [
-			{
-				caseId: entry.caseId,
-				...(status
-					? { status: arrow(entry.left.status, entry.right.status) }
-					: {}),
-				verdict: entry.verdictChanged
-					? arrow(entry.verdict.left, entry.verdict.right)
-					: entry.verdict.left,
-				outputChanges: entry.outputChanges,
-			},
-		];
-	});
-	return {
-		left: side(left, "left"),
-		right: side(right, "right"),
-		sameExperiment: comparison.sameExperiment,
-		sameCorpus: comparison.sameCorpus,
-		unchanged:
-			comparison.cases.length -
-			changed.length -
-			comparison.onlyLeft.length -
-			comparison.onlyRight.length,
-		onlyLeft: comparison.onlyLeft,
-		onlyRight: comparison.onlyRight,
-		changed,
-	};
-}
-
-/**
- * The caps a live resolve.grammar, resolve.reading and knowledge.produce run was granted, refusing a run with no
- * granted budget or whose price exceeds it: fresh jev input tokens against
- * `--budget`, Luna's input against `--luna-budget` and its output against
- * `--luna-output-budget`, and, when `--usd-budget` is given, the price in
- * dollars at the rate Luna's transport pays: the Batch rate with
- * `--luna-batch`, the configuration's tier otherwise.
- */
-export function guardGrammarBudget(
-	price:
-		| {
-				readonly jev: { readonly inputTokens: number };
-				readonly luna: {
-					readonly inputTokens: number;
-					readonly outputTokens: number;
-				};
-				readonly cost: RoundCost;
-		  }
-		| undefined,
-	jevBudget: string | undefined,
-	lunaBudget: string | undefined,
-	lunaOutputBudget: string | undefined,
-	options: {
-		readonly usdBudget?: string | undefined;
-		readonly lunaBatch?: boolean;
-	} = {},
-): GrammarCaps {
-	const usd =
-		options.usdBudget === undefined ? undefined : Number(options.usdBudget);
-	if (usd !== undefined && !Number.isFinite(usd))
-		throw Error("--usd-budget is a number of dollars. Nothing was asked.");
-	const caps = {
-		jevInputTokens: Number(jevBudget),
-		lunaInputTokens: Number(lunaBudget),
-		lunaOutputTokens: Number(lunaOutputBudget),
-	};
-	if (
-		!jevBudget ||
-		!lunaBudget ||
-		!lunaOutputBudget ||
-		!Object.values(caps).every(Number.isFinite)
-	)
-		throw Error(
-			"A live resolve.grammar, resolve.reading and knowledge.produce run needs --budget (jev input tokens), --luna-budget (Luna input tokens) and --luna-output-budget (Luna output tokens); price it with --estimate first. Nothing was asked.",
-		);
-	if (
-		price &&
-		(price.jev.inputTokens > caps.jevInputTokens ||
-			price.luna.inputTokens > caps.lunaInputTokens ||
-			price.luna.outputTokens > caps.lunaOutputTokens)
-	)
-		throw Error(
-			`This run projects ${price.jev.inputTokens} jev input tokens and ${price.luna.inputTokens} in / ${price.luna.outputTokens} out Luna tokens, past the budgets of ${caps.jevInputTokens}, ${caps.lunaInputTokens} and ${caps.lunaOutputTokens}. Nothing was asked.`,
-		);
-	const projected = options.lunaBatch
-		? price?.cost.totalBatchUsd
-		: price?.cost.totalSyncUsd;
-	if (usd !== undefined && projected !== undefined && projected > usd)
-		throw Error(
-			`This run projects $${projected} with Luna ${options.lunaBatch ? "batched" : `synchronous (${price?.cost.luna.syncTier})`}, past the budget of $${usd}. Nothing was asked.`,
-		);
-	return usd === undefined ? caps : { ...caps, usd };
-}
-
-/**
- * Gold mode against a lab run (`--parity <runId>[:policy]`): production's
- * unit stage must give candidates4's maxim+closed outputs, the reference
- * the lab run's primary.
- */
-async function parityOf(
-	value: string,
-	run: Parameters<typeof parityWith>[0],
-	units: UnitConfig,
-	labRoot: string,
-) {
-	if (run.manifest.experimentId.endsWith(":raw"))
-		throw Error("--parity compares gold mode with a lab run");
-	const { parityWith, productionPolicy } = await import(
-		"../lab/evaluation/experiments.js"
-	);
-	const { loadLabRun } = await import("../lab/segmentation/harness/run.js");
-	const [labRunId = "", named] = value.split(":");
-	const labRun = await loadLabRun(labRoot, labRunId);
-	const policy =
-		named ??
-		(units === "production"
-			? productionPolicy
-			: labRun.cases[0]?.repetitions[0]?.primary);
-	if (!policy) throw Error(`--parity ${value} names no policy`);
-	return { labRun: labRunId, policy, ...parityWith(run, labRun, policy) };
 }
 
 if (import.meta.main)

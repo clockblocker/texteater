@@ -503,7 +503,6 @@
 			"reading": {
 				"emojiDescription": "🚶😌",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
 					"valency": [
 						{
 							"status": "Required",
@@ -558,7 +557,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -666,12 +664,10 @@
 			},
 			"reading": {
 				"emojiDescription": "♨🌳",
-				"knowledge": {
-					"plural": ["Kurgärten"]
-				},
+				"knowledge": {},
+				"paradigm": { "plural": ["Kurgärten"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -679,7 +675,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {

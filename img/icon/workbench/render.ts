@@ -85,7 +85,7 @@ async function loadVariants(
 		} catch (error) {
 			broken.push(id);
 			console.error(
-				`✗ ${id}: ${error instanceof Error ? error.message : error}`,
+				`✗ ${id}: ${error instanceof Error ? error.message : String(error)}`,
 			);
 		}
 	}

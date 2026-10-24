@@ -6,18 +6,30 @@ import type {
 	StoreRevision,
 } from "../../../src/domain-types";
 import type { SerializedDictionaryNote } from "../../../src/dto";
-import type { CleanupRelationResolution } from "../../../src/public";
+import type {
+	CleanupRelationResolution,
+	ReevaluateShadowsRequest,
+} from "../../../src/public";
 import type {
 	CleanupRelationsSlice,
 	LoadReadingEntryContextRequest,
+	OccurrenceSlice,
+	OccurrenceSliceRequest,
 	ReadingEntryContext,
+	ReevaluateShadowsSlice,
+	RekeySurfacesSlice,
+	RekeySurfacesSliceRequest,
 } from "../../../src/storage";
 import { commitChanges } from "./commit";
 import {
 	loadCleanupRelationsContext,
+	loadOccurrenceSlice,
 	loadReadingEntryContext,
+	loadReevaluateShadowsContext,
+	loadRekeySurfacesSlice,
 	type ReadingEntryContextRead,
 } from "./load-slices";
+import { removeLemma } from "./remove-lemma";
 import { createInMemoryStorageState } from "./state";
 
 /**
@@ -31,7 +43,16 @@ export type InMemoryTestStorage<L extends Dumling.Language> = {
 	loadCleanupRelationsContext(request: {
 		resolutions: CleanupRelationResolution<L>[];
 	}): CleanupRelationsSlice<L>;
+	loadReevaluateShadowsContext(
+		request: Omit<ReevaluateShadowsRequest<L>, "baseRevision">,
+	): ReevaluateShadowsSlice<L>;
+	loadOccurrenceSlice(request: OccurrenceSliceRequest): OccurrenceSlice<L>;
+	loadRekeySurfacesSlice(
+		request: RekeySurfacesSliceRequest<L>,
+	): RekeySurfacesSlice<L>;
 	commitChanges(request: CommitChangesRequest<L>): CommitChangesResult;
+	/** Removes a Lemma as a host does outside Dumdict's plans. */
+	removeLemma(lemma: Dumling.Lemma<L>): void;
 	loadAll(): SerializedDictionaryNote<L>[];
 	revision(): StoreRevision;
 	readingEntryContextReads(): ReadingEntryContextRead[];
@@ -51,7 +72,13 @@ export function createInMemoryTestStorage<L extends Dumling.Language>(
 			),
 		loadCleanupRelationsContext: (request) =>
 			loadCleanupRelationsContext(state, request),
+		loadReevaluateShadowsContext: (request) =>
+			loadReevaluateShadowsContext(state, request),
+		loadOccurrenceSlice: (request) => loadOccurrenceSlice(state, request),
+		loadRekeySurfacesSlice: (request) =>
+			loadRekeySurfacesSlice(state, request),
 		commitChanges: (request) => commitChanges(state, request),
+		removeLemma: (lemma) => removeLemma(state, lemma),
 		loadAll() {
 			return structuredClone(
 				state.storedNotes,

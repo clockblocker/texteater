@@ -36,6 +36,12 @@
 			"types": "./dist/planning.d.ts",
 			"import": "./dist/planning.js"
 		},
+		"./inflection": {
+			"bun": "./src/inflection.ts",
+			"convex": "./src/inflection.ts",
+			"types": "./dist/inflection.d.ts",
+			"import": "./dist/inflection.js"
+		},
 		"./package.json": "./package.json",
 		"./testing": {
 			"bun": "./src/testing/index.ts",
@@ -55,7 +61,7 @@
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:validation:check && bun run build:js && bun run build:types && bun run build:contract",
 		"build:contract": "bun run tests/published-build-contract.ts",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/pending.ts src/planning.ts --bundle --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/pending.ts src/planning.ts src/inflection.ts --bundle --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../tooling/check-package-types.ts",
 		"fix": "bun run --silent biome check --write .",
@@ -65,6 +71,7 @@
 		"generate:validation:check": "bun codegen/generate-validation-artifacts.ts --check",
 		"generate:readme": "bun run generate-readme/generate-readme.ts",
 		"knip": "bun ../../tooling/knip.ts",
+		"oxlint": "bun ../../tooling/oxlint.ts",
 		"lint": "bun run --silent biome check --error-on-warnings .",
 		"prepack": "bun run generate:readme && bun run build",
 		"test": "bun ../../tooling/run-package-tests.ts",
@@ -78,7 +85,6 @@
 		"dumrel": "workspace:^",
 		"dumcorpus": "workspace:^",
 		"zod": "4.4.3",
-		"effect": "4.0.0",
 		"dumling": "workspace:^"
 	},
 	"devDependencies": {

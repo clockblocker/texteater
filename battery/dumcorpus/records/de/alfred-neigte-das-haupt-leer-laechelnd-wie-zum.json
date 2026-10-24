@@ -479,7 +479,6 @@
 			"reading": {
 				"emojiDescription": "⤵",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
 					"valency": [
 						{
 							"status": "Required",
@@ -505,7 +504,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -572,7 +570,6 @@
 			"reading": {
 				"emojiDescription": "👤",
 				"knowledge": {
-					"plural": ["Häupter"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -600,9 +597,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Häupter"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -610,7 +607,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {
@@ -717,8 +715,8 @@
 			"reading": {
 				"emojiDescription": "🙂",
 				"knowledge": {
-					"participleSource": {
-						"verb": {
+					"source": {
+						"target": {
 							"unitKind": "Lemma",
 							"language": "de",
 							"family": "Lexeme",
@@ -734,7 +732,7 @@
 				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"participleSource": "Authored",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -1297,8 +1295,8 @@
 			"reading": {
 				"emojiDescription": "💔",
 				"knowledge": {
-					"participleSource": {
-						"verb": {
+					"source": {
+						"target": {
 							"unitKind": "Lemma",
 							"language": "de",
 							"family": "Lexeme",
@@ -1314,7 +1312,7 @@
 				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"participleSource": "Authored",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -1368,7 +1366,6 @@
 			"reading": {
 				"emojiDescription": "🪝",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
 					"valency": [
 						{
 							"status": "Required",
@@ -1419,7 +1416,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -1486,7 +1482,6 @@
 			"reading": {
 				"emojiDescription": "👐",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
 					"valency": [
 						{
 							"status": "Required",
@@ -1560,7 +1555,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -1627,7 +1621,6 @@
 			"reading": {
 				"emojiDescription": "↪",
 				"knowledge": {
-					"conjugationClass": ["Mixed", "Weak"],
 					"valency": [
 						{
 							"status": "Required",
@@ -1653,7 +1646,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",

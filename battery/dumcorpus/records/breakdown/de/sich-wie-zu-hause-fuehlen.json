@@ -1,0 +1,111 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "sich wie zu Hause fühlen",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🏠😌"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "sich",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sich fühlen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Acc"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "wie",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "wie",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "zu Hause",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "ADV",
+						"canonicalForm": "zu Hause",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "fühlen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sich fühlen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Acc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0041", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/relative-w-adverb-fills-a-slot",
+				"hash": "1a40c9fa9b13cf2c"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Haus",
+				"url": "https://www.dwds.de/wb/Haus",
+				"supports": "The wording: sich wie zu Hause fühlen, 'sich heimisch fühlen'"
+			},
+			{
+				"title": "Duden: Haus",
+				"url": "https://www.duden.de/rechtschreibung/Haus",
+				"supports": "The wording: sich [ganz] [wie] zu Haus[e] fühlen"
+			},
+			{
+				"title": "DWDS: fühlen",
+				"url": "https://www.dwds.de/wb/f%C3%BChlen",
+				"supports": "Reflexive sich fühlen, 'sich in einem bestimmten seelischen Zustand befinden': sich dort heimisch, wohl fühlen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A phraseme's Constituents are the biggest units strictly inside its wording, so the Locution zu Hause is one part (ADR 0050). fühlen is lexically reflexive here: in the state sense (DWDS ⟨sich fühlen⟩) no other object can stand in place of sich, so sich and fühlen are two pieces linking to VERB sich fühlen (round-1 Q10, #1278). Comparison wie before a phrase is CCONJ (de/relative-w-adverb-fills-a-slot)."
+	}
+}

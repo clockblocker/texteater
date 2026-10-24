@@ -1223,8 +1223,8 @@
 			"reading": {
 				"emojiDescription": "🌈",
 				"knowledge": {
-					"participleSource": {
-						"verb": {
+					"source": {
+						"target": {
 							"unitKind": "Lemma",
 							"language": "de",
 							"family": "Lexeme",
@@ -1264,7 +1264,7 @@
 				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"participleSource": "Authored",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -1528,8 +1528,8 @@
 							]
 						}
 					],
-					"participleSource": {
-						"verb": {
+					"source": {
+						"target": {
 							"unitKind": "Lemma",
 							"language": "de",
 							"family": "Lexeme",
@@ -1571,7 +1571,7 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"participleSource": "Authored",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -1630,7 +1630,6 @@
 			"reading": {
 				"emojiDescription": "🫃🍽",
 				"knowledge": {
-					"plural": ["Bäuche"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -1668,9 +1667,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Bäuche"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -1678,7 +1677,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {
@@ -2013,7 +2013,7 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"participleSource": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",

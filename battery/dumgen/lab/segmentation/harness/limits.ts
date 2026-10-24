@@ -6,7 +6,9 @@
  */
 
 import type { Questions } from "@typesafe-ai/sdk";
+import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
+import type { RequestBudget } from "../../../src/call.js";
 import { type Answers, noul } from "../../../src/segment/ask.js";
 import { judgeState, sentenceOf } from "../../../src/segment/de/sentence.js";
 import type { LabCase } from "./corpus.js";
@@ -44,12 +46,13 @@ function pairQuestions(
 	return questions;
 }
 
-export async function questionsPerCall(args: {
+/** Every size's answers over `cases`, each sentence's request asked at once, on the run's request budget. */
+export const questionsPerCall = Effect.fnUntraced(function* (args: {
 	readonly cases: readonly LabCase[];
 	readonly jev: JevCache;
 	readonly sizes: readonly number[];
 	readonly baselineRepetitions: number;
-}): Promise<ChunkingResult[]> {
+}): Effect.fn.Return<ChunkingResult[], never, RequestBudget> {
 	const prepared = args.cases.map((labCase) => {
 		const sentence = sentenceOf(labCase.input);
 		const { state, ref } = judgeState(sentence);
@@ -78,25 +81,28 @@ export async function questionsPerCall(args: {
 	for (const { size, repetition } of runs) {
 		const calls: CallRecord[] = [];
 		const errors: string[] = [];
-		const answers = await Promise.all(
-			prepared.map(async ({ state, questions }) => {
-				try {
-					// Each size keeps its own answers: comparing them is the test.
-					return await Effect.runPromise(
-						args.jev.port(repetition, calls, {
-							questionsPerRequest: size,
-							salt: `qpc-${size}`,
-						})({ stage: `qpc-${size}`, state, questions }),
-					);
-				} catch (error) {
-					errors.push(
-						error instanceof Error
-							? error.message.slice(0, 200)
-							: String(error),
-					);
-					return undefined;
-				}
-			}),
+		// Each size keeps its own answers: comparing them is the test.
+		const ask = yield* args.jev.port(repetition, calls, {
+			questionsPerRequest: size,
+			salt: `qpc-${size}`,
+		});
+		const answers = yield* Effect.forEach(
+			prepared,
+			({ state, questions }) =>
+				Effect.catchCause(
+					ask({ stage: `qpc-${size}`, state, questions }),
+					(cause) =>
+						Effect.sync(() => {
+							const error = Cause.squash(cause);
+							errors.push(
+								error instanceof Error
+									? error.message.slice(0, 200)
+									: String(error),
+							);
+							return undefined;
+						}),
+				),
+			{ concurrency: "unbounded" },
 		);
 		answered.set(
 			`${size}:${repetition}`,
@@ -149,4 +155,4 @@ export async function questionsPerCall(args: {
 			compared,
 		};
 	});
-}
+});

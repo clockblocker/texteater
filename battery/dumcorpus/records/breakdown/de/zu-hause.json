@@ -1,0 +1,64 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "ADV",
+			"canonicalForm": "zu Hause",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🏠"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "zu",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "zu",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Hause",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Haus",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: zu Hause",
+				"url": "https://www.dwds.de/wb/zu%20Hause",
+				"supports": "The wording, an adverb also spelled zuhause"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "One level down from sich wie zu Hause fühlen: zu links to the ADP zu, and Hause, an old dative, to the Lemma Haus."
+	}
+}

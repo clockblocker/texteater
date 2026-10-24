@@ -18,10 +18,10 @@ import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import * as Semaphore from "effect/Semaphore";
 import { z } from "zod";
-import type { OperationScope } from "../../call.js";
+import { CallLog } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
-import type { JevSettings } from "../../jev-call.js";
-import { askLuna, type LunaSettings } from "../../luna-call.js";
+import type { Jev } from "../../jev-call.js";
+import { type Luna, stageWrite, type Write } from "../../luna-call.js";
 import type {
 	KnowledgeChange,
 	KnowledgeFailure,
@@ -32,8 +32,7 @@ import { knownHebrewParadigm } from "./paradigm.js";
 import { hebrewKnowledgePrompts } from "./prompts.js";
 
 export type HebrewKnowledgeModels = {
-	readonly luna: LunaSettings;
-	readonly jev: JevSettings;
+	readonly write: Write;
 };
 type Change = KnowledgeChange<"he">;
 type Output = {
@@ -131,7 +130,7 @@ function checkedChanges<E>(
 }
 
 function textJob<E>(
-	scope: OperationScope,
+	_scope: CallLog["Service"],
 	models: HebrewKnowledgeModels,
 	input: ProduceKnowledgeInput<E, "he">,
 	aspect: "definition" | "transcription" | "translations",
@@ -147,9 +146,7 @@ function textJob<E>(
 	return {
 		aspect,
 		...(language === undefined ? {} : { leaf: language }),
-		run: askLuna(
-			scope,
-			models.luna,
+		run: models.write(
 			aspect,
 			{
 				systemPrompt: hebrewKnowledgePrompts[aspect],
@@ -270,16 +267,14 @@ const classificationSchemas = {
 	sayingType: sayingTypeSchema,
 };
 function classificationJob<E>(
-	scope: OperationScope,
+	_scope: CallLog["Service"],
 	models: HebrewKnowledgeModels,
 	input: ProduceKnowledgeInput<E, "he">,
 	aspect: keyof typeof classificationSchemas,
 ): Job {
 	return {
 		aspect,
-		run: askLuna(
-			scope,
-			models.luna,
+		run: models.write(
 			aspect,
 			{
 				systemPrompt: hebrewKnowledgePrompts[aspect],
@@ -316,7 +311,7 @@ function classificationJob<E>(
 }
 
 function valencyJob<E>(
-	scope: OperationScope,
+	_scope: CallLog["Service"],
 	models: HebrewKnowledgeModels,
 	input: ProduceKnowledgeInput<E, "he">,
 ): Job {
@@ -328,9 +323,7 @@ function valencyJob<E>(
 	);
 	return {
 		aspect: "valency",
-		run: askLuna(
-			scope,
-			models.luna,
+		run: models.write(
 			"valency",
 			{
 				systemPrompt: hebrewKnowledgePrompts.valency,
@@ -389,15 +382,13 @@ function valencyJob<E>(
 }
 
 function paradigmJob<E>(
-	scope: OperationScope,
+	scope: CallLog["Service"],
 	models: HebrewKnowledgeModels,
 	input: ProduceKnowledgeInput<E, "he">,
 ): Job {
 	return {
 		aspect: "hebrewParadigm",
-		run: askLuna(
-			scope,
-			models.luna,
+		run: models.write(
 			"hebrewParadigm",
 			{
 				systemPrompt: hebrewKnowledgePrompts.hebrewParadigm,
@@ -476,11 +467,11 @@ function paradigmJob<E>(
 
 /** Hebrew's Knowledge producer. Every contribution is source-checked; failures are values, not invented coverage. */
 export const produceHebrewKnowledge = <E>(
-	scope: OperationScope,
-	models: HebrewKnowledgeModels,
 	input: ProduceKnowledgeInput<E, "he">,
-): Effect.Effect<KnowledgeProduction<"he">, E> =>
+): Effect.Effect<KnowledgeProduction<"he">, E, Jev | Luna | CallLog> =>
 	Effect.gen(function* () {
+		const scope = yield* CallLog;
+		const models: HebrewKnowledgeModels = { write: yield* stageWrite };
 		const problem = validateInput(input);
 		if (problem) return yield* Effect.die(Error(problem));
 		const selected = selectKnowledge({
@@ -582,6 +573,7 @@ export const produceHebrewKnowledge = <E>(
 		);
 		return {
 			changes: outputs.flatMap((output) => output.changes),
+			paradigmChanges: [],
 			pendingRelations: [],
 			failures: outputs.flatMap((output) => output.failures),
 		};

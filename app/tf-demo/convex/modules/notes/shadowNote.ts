@@ -19,6 +19,7 @@ import {
 	semanticRelationValidator,
 	structuralShadowAspectValidator,
 } from "../../model/validators";
+import { formationsValidator, loadFormations } from "./breakdown";
 import {
 	featureProjectionValidator,
 	projectFeaturesForPresentation,
@@ -94,6 +95,8 @@ export const shadowNoteValidator = v.object({
 		),
 	}),
 	references: shadowReferencePageValidator,
+	/** The stored words built on this pending base (ADR 0050). */
+	formations: formationsValidator,
 });
 
 type ShadowReferenceCursor = {
@@ -225,6 +228,7 @@ export async function loadShadowNote(ctx: QueryCtx, shadowIdValue: string) {
 		descriptor,
 		inspection: await loadShadowInspection(ctx, descriptor),
 		references,
+		formations: await loadFormations(ctx, { shadowId: shadow._id }),
 	};
 }
 
@@ -390,7 +394,7 @@ async function loadShadowReferenceOwners(
 	const [lemmas, accumulated] = await Promise.all([
 		Promise.all(
 			readings.map((reading) =>
-				reading ? ctx.db.get(reading.lemmaId) : null,
+				reading ? ctx.db.get(reading.lemmaId) : Promise.resolve(null),
 			),
 		),
 		Promise.all(

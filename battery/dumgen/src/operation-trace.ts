@@ -93,6 +93,8 @@ export type OperationTrace = {
 	readonly operation:
 		| "language.detect"
 		| "segment.inUnits"
+		| "segment.inConstituents"
+		| "segment.inMorphemes"
 		| "resolve.grammar"
 		| "resolve.reading"
 		| "translate.sentence"

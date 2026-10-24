@@ -1,17 +1,23 @@
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
+import * as Option from "effect/Option";
 import type {
 	ResolutionCheckpoints,
 	ResolutionContext,
 	ResolutionProgressObserver,
 	ResolveSegmentInput,
 	ResolveSegmentResult,
-} from "./linguisticOrchestration";
-import type { GenerationEvent, GenerationFailure } from "./resolutionFailure";
+} from "./orchestrationPorts";
 import {
+	type ClassifiedResolutionFailure,
 	classifyResolutionFailure,
+	type GenerationEvent,
+	type GenerationFailure,
+	internalErrorDescriptor,
+	internalResolutionFailure,
 	projectResolutionGenerationEvent,
 	type ResolutionGenerationEvent,
+	type ResolutionRunError,
 } from "./resolutionFailure";
 import type { ResolutionPhase } from "./resolutionLifecycle";
 
@@ -87,18 +93,12 @@ type ResolutionSessionLinguisticPort = (
 	checkpoints: ResolutionCheckpoints,
 	observer: ResolutionProgressObserver,
 	context?: ResolutionContext,
-) => Effect.Effect<ResolveSegmentResult, unknown, never>;
-
-type ResolutionExecutionDiagnostics = {
-	readonly info: (message: string) => void;
-	readonly error: (message: string) => void;
-};
+) => Effect.Effect<ResolveSegmentResult, ResolutionRunError, never>;
 
 export type ResolutionSessionExecution = {
 	readonly identity: ResolutionSessionRunIdentity;
 	readonly lifecycle: ResolutionSessionLifecyclePort;
 	readonly resolve: ResolutionSessionLinguisticPort;
-	readonly diagnostics?: ResolutionExecutionDiagnostics;
 	readonly createDiagnosticId?: () => string;
 };
 
@@ -114,29 +114,31 @@ function recordedByCommit(result: ResolveSegmentResult): boolean {
 /**
  * Executes one guarded Resolution Session run. Callers cross one seam; this
  * module owns progress ordering, checkpoint resume, settlement, diagnostics,
- * and success/failure recording.
+ * and success/failure recording. Diagnostics are Effect logs, which the
+ * caller's logger writes (`logged`).
  */
 export function executeResolutionSession({
 	identity,
 	lifecycle,
 	resolve,
-	diagnostics = console,
 	createDiagnosticId = () => crypto.randomUUID(),
 }: ResolutionSessionExecution) {
 	let phase: ResolutionPhase = "Route";
 	const generationEvents: ResolutionGenerationEvent[] = [];
 	return Effect.gen(function* () {
+		// A generation event arrives through a plain callback; it is logged
+		// under the session's span.
+		const log = Effect.runSyncWith(yield* Effect.context<never>());
 		const onGenerationEvent = (event: GenerationEvent) => {
 			const projected = projectResolutionGenerationEvent(event, {
 				...identity,
 				phase,
 			});
 			generationEvents.push(projected);
-			diagnostics.info(
-				JSON.stringify({
-					event: "ResolutionGeneration",
-					generation: projected,
-				}),
+			log(
+				Effect.logInfo("ResolutionGeneration").pipe(
+					Effect.annotateLogs({ generation: projected }),
+				),
 			);
 		};
 		const observer: ResolutionProgressObserver = {
@@ -203,8 +205,7 @@ export function executeResolutionSession({
 	}).pipe(
 		Effect.catchCause((cause) => {
 			if (Cause.hasInterruptsOnly(cause)) return Effect.failCause(cause);
-			const error = Cause.squash(cause);
-			const classified = classifyResolutionFailure(error);
+			const classified = classifyRunCause(cause);
 			const diagnosticId = createDiagnosticId();
 			if (classified.kind === "Generation") {
 				return Effect.tryPromise(() =>
@@ -216,41 +217,52 @@ export function executeResolutionSession({
 					}),
 				);
 			}
-			diagnostics.error(
-				JSON.stringify({
-					event: "ResolutionRunInternalFailure",
+			return Effect.logError("ResolutionRunInternalFailure").pipe(
+				Effect.annotateLogs({
 					...identity,
 					phase,
 					diagnosticId,
 					errorName: classified.errorName,
 					errorFingerprint: classified.errorFingerprint,
 				}),
-			);
-			return Effect.tryPromise(() =>
-				lifecycle.record({
-					kind: "InternalFailed",
-					phase,
-					diagnosticId,
-					errorName: classified.errorName,
-					errorFingerprint: classified.errorFingerprint,
-					generationEvents,
-				}),
-			).pipe(
+				Effect.andThen(
+					Effect.tryPromise(() =>
+						lifecycle.record({
+							kind: "InternalFailed",
+							phase,
+							diagnosticId,
+							errorName: classified.errorName,
+							errorFingerprint: classified.errorFingerprint,
+							generationEvents,
+						}),
+					),
+				),
 				Effect.catch((recordingError) =>
-					Effect.sync(() => {
-						diagnostics.error(
-							JSON.stringify({
-								event: "ResolutionFailureRecordingFailed",
-								...identity,
-								phase,
-								diagnosticId,
-								recordingFailure:
-									classifyResolutionFailure(recordingError),
-							}),
-						);
-					}),
+					Effect.logError("ResolutionFailureRecordingFailed").pipe(
+						Effect.annotateLogs({
+							...identity,
+							phase,
+							diagnosticId,
+							recordingFailure:
+								internalErrorDescriptor(recordingError),
+						}),
+					),
 				),
 			);
 		}),
 	);
+}
+
+/**
+ * A failed run by its first typed error, so a model failure stays a
+ * Generation failure even beside a defect; a cause with no typed error is a
+ * defect, recorded as Internal.
+ */
+function classifyRunCause(
+	cause: Cause.Cause<ResolutionRunError>,
+): ClassifiedResolutionFailure {
+	const error = Cause.findErrorOption(cause);
+	return Option.isSome(error)
+		? classifyResolutionFailure(error.value)
+		: internalResolutionFailure(Cause.squash(cause));
 }

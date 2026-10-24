@@ -58,7 +58,19 @@
 			"reading": {
 				"emojiDescription": "📚",
 				"knowledge": {
-					"plural": ["Bände"],
+					"source": {
+						"target": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "binden",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						}
+					},
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -74,9 +86,10 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Bände"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -84,7 +97,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

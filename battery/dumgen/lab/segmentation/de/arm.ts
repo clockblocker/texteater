@@ -3,10 +3,18 @@
  * in. The arms are thin configurations of the production unit stage
  * (`src/segment/de/`); they reach jev through its `ask` port, which the lab
  * backs with its cached jev (`lab/segmentation/harness/jev-cache.ts`).
+ *
+ * An arm's run is an Effect that needs the run's `RequestBudget` and
+ * nothing else (Dumgen ADR 0009, D4 on #1269): every ask holds one of its
+ * permits, so a run keeps at most that many jev requests in flight however
+ * many cases it runs at once. It fails with the ask's `AskFailure`; anything
+ * else an arm throws is a Defect, which the run records by its message.
  */
 
-import type { Ask } from "../../../src/segment/ask.js";
-import type { RouteJudgment } from "../../../src/segment/de/routing.js";
+import type * as Effect from "effect/Effect";
+import type { RequestBudget } from "../../../src/call.js";
+import type { Ask, AskFailure } from "../../../src/segment/ask.js";
+import type { RouteJudgment } from "../../../src/segment/de/route-requests.js";
 import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
@@ -31,7 +39,7 @@ export type LinkJudgment = {
 	readonly probability: number;
 };
 
-type ArmResult = {
+export type ArmResult = {
 	/** One output per assembly policy, all from the same answers. */
 	readonly outputs: Readonly<Record<string, SegmentInUnitsOutput>>;
 	/** The policy the arm's headline numbers use. */
@@ -46,13 +54,15 @@ export type Arm = {
 	readonly run: (
 		input: SegmentInUnitsInput,
 		context: ArmContext,
-	) => Promise<ArmResult>;
+	) => Effect.Effect<ArmResult, AskFailure, RequestBudget>;
 };
 
 /**
  * The production stage's `ask` port, answered from the lab's cached jev at
- * this repetition. A failed request rejects with the lab's own error.
+ * this repetition, on the run's request budget. A failed request fails
+ * with its `AskFailure`.
  */
 export const askOf = (
 	context: Pick<ArmContext, "jev" | "repetition" | "calls">,
-): Ask => context.jev.port(context.repetition, context.calls);
+): Effect.Effect<Ask, never, RequestBudget> =>
+	context.jev.port(context.repetition, context.calls);

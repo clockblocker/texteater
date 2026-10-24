@@ -71,7 +71,6 @@
 			"reading": {
 				"emojiDescription": "🏞",
 				"knowledge": {
-					"plural": ["Seen"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -131,9 +130,10 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Seen"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -141,7 +141,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "Authored",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {
@@ -183,8 +184,8 @@
 			"reading": {
 				"emojiDescription": "🗺✏",
 				"knowledge": {
-					"participleSource": {
-						"verb": {
+					"source": {
+						"target": {
 							"unitKind": "Lemma",
 							"language": "de",
 							"family": "Lexeme",
@@ -200,7 +201,7 @@
 				},
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"participleSource": "Authored",
+					"source": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",

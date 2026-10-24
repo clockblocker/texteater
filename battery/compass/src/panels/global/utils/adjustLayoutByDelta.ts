@@ -128,11 +128,10 @@ function expandCollapsedDelta(
 	delta: number,
 ): number {
 	const index = delta < 0 ? secondPivotIndex : firstPivotIndex;
-	const {
-		collapsedSize = 0,
-		collapsible,
-		minSize = 0,
-	} = constraintsAt(regionConstraintsArray, index);
+	const { collapsedSize, collapsible, minSize } = constraintsAt(
+		regionConstraintsArray,
+		index,
+	);
 	if (!collapsible) {
 		return delta;
 	}
@@ -160,11 +159,7 @@ function collapseAtMinimumDelta(
 	delta: number,
 ): number {
 	const index = delta < 0 ? firstPivotIndex : secondPivotIndex;
-	const {
-		collapsedSize = 0,
-		collapsible,
-		minSize = 0,
-	} = constraintsAt(
+	const { collapsedSize, collapsible, minSize } = constraintsAt(
 		regionConstraintsArray,
 		index,
 		`No region constraints found for index ${index}`,

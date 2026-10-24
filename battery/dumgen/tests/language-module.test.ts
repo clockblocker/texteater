@@ -1,11 +1,11 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../src/call.js";
 import { germanLanguage } from "../src/de/language.js";
 import {
 	type LanguageModules,
 	languageModuleOf,
 } from "../src/language-module.js";
+import { requestBudget, runOperation } from "./service-test-adapter.js";
 
 test("module lookup refuses inherited names instead of dispatching to object prototypes", () => {
 	expect(languageModuleOf({}, "toString" as "de")).toBeUndefined();
@@ -75,7 +75,7 @@ test("Reading dispatch invokes the registered language handler without reaching 
 	const modules: LanguageModules = {
 		de: {
 			...germanLanguage({}),
-			resolveReading: (_scope, _models, value) => {
+			resolveReading: (value) => {
 				received = value;
 				return Effect.succeed({
 					_tag: "Reuse",
@@ -91,7 +91,9 @@ test("Reading dispatch invokes the registered language handler without reaching 
 				budget: requestBudget(1),
 				payloads: false,
 			},
-			(scope) => resolveReading(scope, models, modules, input),
+			models,
+			resolveReading(input),
+			modules,
 		),
 	);
 	expect(result).toEqual({ _tag: "Reuse", emojiDescription: "📚" });

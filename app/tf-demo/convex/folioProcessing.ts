@@ -1,12 +1,13 @@
 "use node";
 
 import { v } from "convex/values";
+import { operations } from "dumgen";
+import * as Effect from "effect/Effect";
 import { processFolio } from "../server/folioIntake";
-import { dumgenTracing } from "../server/inspectionCapture";
 import { SCROLL_TARGET_LANGUAGE } from "../shared/supported-target-language";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
-import { productionDumgen } from "./model/deploymentDumgen";
+import { deploymentDumgen, requireJev } from "./model/deploymentDumgen";
 import { folioProcessingPort } from "./model/folios";
 
 /** A run hands over to a fresh action after this long, inside Convex's 10 minutes. */
@@ -23,19 +24,20 @@ export const run = internalAction({
 	handler: async (ctx, { folioId, run }) => {
 		const startedAt = Date.now();
 		const port = folioProcessingPort(ctx, folioId, run);
-		let dumgen: ReturnType<typeof productionDumgen>;
 		try {
-			dumgen = productionDumgen(dumgenTracing(undefined));
+			requireJev();
 		} catch {
 			await port.failed();
 			return null;
 		}
-		const end = await processFolio({
-			dumgen,
-			language: SCROLL_TARGET_LANGUAGE,
-			hasTime: () => Date.now() - startedAt < RUN_BUDGET_MS,
-			port,
-		});
+		const end = await Effect.runPromise(
+			processFolio({
+				dumgen: operations,
+				language: SCROLL_TARGET_LANGUAGE,
+				hasTime: () => Date.now() - startedAt < RUN_BUDGET_MS,
+				port,
+			}).pipe(Effect.provide(deploymentDumgen())),
+		);
 		if (end.kind === "Continue")
 			await ctx.scheduler.runAfter(0, internal.folioProcessing.run, {
 				folioId,

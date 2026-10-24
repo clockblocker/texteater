@@ -51,17 +51,22 @@ describe("Reading Knowledge Changes", () => {
 			{ kind: "Retract", aspect: "definition" },
 			{
 				kind: "Contribute",
-				aspect: "morphologicalTree",
-				value: {
-					root: {
-						nodeKind: "structure",
-						children: [
-							{ nodeKind: "unitShadow", unitShadow: shadow },
-						],
+				aspect: "breakdown",
+				part: "morphemes",
+				value: [
+					{
+						letters: "walk",
+						target: { ...shadow, family: "Morpheme", kind: "Root" },
 					},
-				},
+				],
 			},
-			{ kind: "Retract", aspect: "morphologicalTree" },
+			{ kind: "Retract", aspect: "breakdown", part: "morphemes" },
+			{
+				kind: "Correct",
+				aspect: "source",
+				value: { target: shadow },
+			},
+			{ kind: "Retract", aspect: "source" },
 		] as const satisfies readonly Dumrel.KnowledgeChange[];
 
 		for (const existing of [undefined, {}] as const) {
@@ -180,7 +185,7 @@ describe("Reading Knowledge Changes", () => {
 					value: [decomposed, decomposed],
 				},
 			] as const satisfies readonly Dumrel.KnowledgeChange[];
-			let existing: Dumrel.ReadingKnowledge | undefined;
+			let existing: ReadingEntry<"en">["knowledge"];
 			for (const change of changes) {
 				const result = applyDumdictKnowledgeChanges(
 					{

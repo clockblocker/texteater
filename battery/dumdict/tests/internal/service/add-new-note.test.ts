@@ -16,8 +16,26 @@ describe("configured service", () => {
 	test("addNewNote creates a new learner Reading", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 
+		const link = {
+			ref: "They swim every morning.",
+			surfaceId: makeSurfaceId("en", englishSwimCitationSurface),
+			reading: englishSwimDraft.reading,
+		};
 		const result = dict.addNewNote({
-			draft: englishSwimDraft,
+			draft: {
+				...englishSwimDraft,
+				note: { ...englishSwimDraft.note, attestationLinks: [link] },
+				ownedSurfaces: [
+					{
+						surface: englishSwimCitationSurface,
+						note: {
+							attestedTranslations: [],
+							attestations: [],
+							notes: "",
+						},
+					},
+				],
+			},
 		});
 
 		const storedSwimNote = storage
@@ -27,9 +45,7 @@ describe("configured service", () => {
 			)?.readingEntries[0];
 
 		expect(result.status).toBe("applied");
-		expect(storedSwimNote?.attestations).toContain(
-			"They swim every morning.",
-		);
+		expect(storedSwimNote?.attestationLinks).toEqual([link]);
 		expect(storedSwimNote?.notes).toBe("Core swimming reading.");
 	});
 
@@ -85,7 +101,7 @@ describe("configured service", () => {
 				note: {
 					attestedTranslations:
 						existingWalkReading.attestedTranslations,
-					attestations: existingWalkReading.attestations,
+					attestationLinks: [],
 					notes: existingWalkReading.notes,
 				},
 			},
@@ -118,6 +134,8 @@ describe("configured service", () => {
 					pendingRelationsMatchingProposedLemma: [],
 					relationLemmas: [],
 					relationReadings: [],
+					lemmaReadings: [],
+					attestationLinksWithRefs: [],
 				};
 			},
 			commitChanges() {
@@ -162,6 +180,8 @@ describe("configured service", () => {
 					pendingRelationsMatchingProposedLemma: [],
 					relationLemmas: [],
 					relationReadings: [],
+					lemmaReadings: [],
+					attestationLinksWithRefs: [],
 				};
 			},
 			commitChanges() {

@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Aufgabe",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "📝"
+	},
+	"knowledge": {
+		"source": {
+			"target": {
+				"unitKind": "Lemma",
+				"language": "de",
+				"family": "Lexeme",
+				"kind": "VERB",
+				"canonicalForm": "aufgeben",
+				"coreFeatures": {
+					"hasSepPrefix": "auf",
+					"lexicallyReflexive": null
+				}
+			}
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Aufgabe",
+				"url": "https://www.dwds.de/wb/Aufgabe",
+				"supports": "Grundform aufgeben; sense 2 eine aufgegebene Arbeit"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A verbal noun with no suffix, so it has a Source, its immediate base aufgeben, instead of Constituents (ADR 0050)."
+	}
+}

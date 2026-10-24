@@ -45,8 +45,10 @@ See [ADR 0037].
 _Avoid_: case, example, gold case, fixture
 
 **Breakdown Record**:
-One Locution's or Saying's Breakdown (Dumling) as gold for
-`segment.inLexemes`. See [ADR 0041] and [Dumgen ADR 0007].
+The gold Breakdown or Source (Dumrel) of one Reading: a phraseme's or a
+word's Constituents for `segment.inConstituents`, a bottom word's morphemes
+for `segment.inMorphemes`, or a Source. Its parts have no Surface or Reading.
+See [ADR 0050], [ADR 0051] and [Dumgen ADR 0007].
 _Avoid_: inner layer, component record
 
 **Coverage**:
@@ -124,7 +126,7 @@ _Avoid_: state passive, as a verbal construction
 
 **Participial Adjective**:
 A participle used as an adjective: an ADJ Lexeme whose Reading names its verb
-as Participle Source (Dumrel). See [ADR 0036].
+as Source (Dumrel). See [ADR 0036].
 _Avoid_: productive participle and lexicalized participle, as a Kind contrast
 
 **Free `sich`**:
@@ -190,6 +192,8 @@ _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
 [ADR 0048]: ../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md
 [ADR 0049]: ../../docs/adr/0049-tabulate-a-lemmas-forms-as-projections.md
+[ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
+[ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md
 [Dumcorpus ADR 0001]: ./docs/adr/0001-assess-grundform-with-language-owned-rules.md
 [Dumcorpus ADR 0002]: ./docs/adr/0002-count-a-knowledge-aspect-left-out-of-coverage-as-unreviewed.md
 [Dumgen ADR 0007]: ../dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md

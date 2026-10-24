@@ -10,8 +10,8 @@ export const READING_BLOCK_KIND_VALUES = [
 	"Translations",
 	"Relations",
 	"PersonalAnnotation",
-	"MorphologicalTree",
 	"Paradigm",
+	"Breakdown",
 ] as const;
 
 export type ReadingBlockKind = (typeof READING_BLOCK_KIND_VALUES)[number];
@@ -34,6 +34,7 @@ export type SerializedReadingBlockLayout = {
 export const DEFAULT_DE_READING_LANGUAGE_LAYOUT = {
 	order: [
 		"Valency",
+		"Breakdown",
 		"Relations",
 		"Translations",
 		"Definition",

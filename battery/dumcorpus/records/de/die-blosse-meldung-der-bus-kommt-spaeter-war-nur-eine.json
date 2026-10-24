@@ -65,7 +65,7 @@
 		"rules": [
 			{
 				"rule": "de/modification-attests-partially",
-				"hash": "91fc596acb3813f1"
+				"hash": "c888ed5b9e59b0a1"
 			},
 			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
 			{
@@ -82,16 +82,21 @@
 			{
 				"title": "DWDS: doppeltgemoppelt",
 				"url": "https://www.dwds.de/wb/doppeltgemoppelt",
-				"supports": "Target 0, Doppelt (genäht) hält besser (variabel, Spruch); doppeltgemoppelt is an Adjektiv, so gemoppelt has no entry of its own."
+				"supports": "Target 0, Doppelt (genäht) hält besser (variabel, Spruch); the ADJ doppeltgemoppelt, spelled doppelt gemoppelt, means 'überflüssigerweise doppelt', not the proverb's sense."
+			},
+			{
+				"title": "DWDS: gemoppelt",
+				"url": "https://www.dwds.de/wb/gemoppelt",
+				"supports": "Target 1, the headword gemoppelt, a partizipiales Adjektiv (eWDG 1967); Duden also lists gemoppelt, pointing to doppelt."
 			}
 		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [46, 48, 50, 52],
+			"memberSegmentIndices": [46, 50, 52],
 			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
-				"rationale": "Mia's line is Duden's proverb doppelt [genäht] hält besser with gemoppelt for genäht; no collection that de/saying-needs-uptake counts lists the line itself. The bracketed genäht stays in the Canonical Form, as [guten] Morgen gives guten Morgen. gemoppelt is a rhyme echo of doppelt with no Lemma of its own (DWDS has only the ADJ doppeltgemoppelt), so by the exception in de/modification-attests-partially it joins the Saying as a member: all four words, Partial, since genäht is missing (#828). The sense is the proverb's 'doubling is safer', not the idiom's 'needlessly twice': Mia packs both copies. No member field marks gemoppelt as the word that replaced genäht, so only this note says so. The arbitrary unmarked quotation and ordinary assertion remain contextual contrast."
+				"rationale": "Mia's line is Duden's proverb doppelt [genäht] hält besser with gemoppelt for genäht; no collection that de/saying-needs-uptake counts lists the line itself. The bracketed genäht stays in the Canonical Form, as [guten] Morgen gives guten Morgen. The kept words Doppelt, hält and besser are the members, Partial, since genäht is missing (#828). gemoppelt, the replacing word, has a Duden and DWDS headword, so it resolves on its own (de/modification-attests-partially). The line is not the ADJ doppelt gemoppelt: the sense is the proverb's 'doubling is safer', not the ADJ's 'needlessly twice', since Mia packs both copies, and that reading would take the kept Doppelt out of the Saying. The arbitrary unmarked quotation and ordinary assertion remain contextual contrast."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -106,17 +111,50 @@
 						"canonicalForm": "Doppelt genäht hält besser",
 						"coreFeatures": {}
 					},
-					"normalizedSurface": "Doppelt gemoppelt hält besser",
+					"normalizedSurface": "Doppelt hält besser",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [
 					{ "attested": "Doppelt", "orthography": "Standard" },
-					{ "attested": "gemoppelt", "orthography": "Standard" },
 					{ "attested": "hält", "orthography": "Standard" },
 					{ "attested": "besser", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Partial"
+			}
+		},
+		{
+			"memberSegmentIndices": [48],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "gemoppelt replaces genäht in the proverb, a rhyme echo of doppelt. Duden and DWDS both list it as a headword (DWDS: partizipiales Adjektiv, only in doppelt gemoppelt), so by the round-1 ruling on idiom-only words it is a Lexeme ADJ of its own, as Kunstgras is a NOUN in Er biss ins Kunstgras. Uninflected after the Saying's Doppelt, and like doppeltgemoppelt it has no comparison."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "gemoppelt",
+						"coreFeatures": {
+							"comparable": null
+						}
+					},
+					"normalizedSurface": "gemoppelt",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [
+					{ "attested": "gemoppelt", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

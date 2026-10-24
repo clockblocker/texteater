@@ -28,22 +28,34 @@ import {
 	knowledgeOf,
 	pendingMatchingLemma,
 	readingContext,
-	run,
 	seed,
 	semanticConflict,
 	snapshot,
 } from "./harness";
+import { describeOccurrenceConformance } from "./occurrence-cases";
+import { describeParadigmConformance } from "./paradigm-cases";
+import { describeRefusalConformance } from "./refusal-cases";
 import { describeRelationConformance } from "./relation-cases";
+import { describeRemovalClaimConformance } from "./removal-claim-cases";
+import { describeShadowConformance } from "./shadow-cases";
 
 export type { ConformanceStorage } from "./harness";
 
 export type StorageConformanceOptions = {
 	/**
-	 * Whether the store keeps occurrence Attestations in Dumdict Reading
-	 * Entries. A host that keeps them in its own graph sets `false`, and must
-	 * then refuse every planned change that carries or checks one.
+	 * Whether the store keeps occurrences as Dumdict Attestation Links on its
+	 * Reading Entries, and with them the removals they plan. A host that keeps
+	 * occurrences in its own graph sets `false`, and must then refuse every
+	 * planned change that carries or checks a link, and every deletion of a
+	 * Reading, Surface or Lemma, since its graph owns that cleanup.
 	 */
-	readonly readingAttestations?: boolean;
+	readonly attestationLinks?: boolean;
+	/**
+	 * Whether the store keeps Lemma Paradigms on its Lemma Records. A host
+	 * that does not yet sets `false`, and must then refuse every Lemma Record
+	 * holding one and every `setLemmaParadigm`.
+	 */
+	readonly paradigms?: boolean;
 	/**
 	 * Whether the store's revision advances with each commit, so it refuses a
 	 * commit planned at an older one. A host whose commit is guarded by its
@@ -67,7 +79,8 @@ export function describeStorageConformance(
 	createStorage: () => ConformanceStorage | Promise<ConformanceStorage>,
 	options: StorageConformanceOptions = {},
 ): void {
-	const readingAttestations = options.readingAttestations ?? true;
+	const attestationLinks = options.attestationLinks ?? true;
+	const paradigms = options.paradigms ?? true;
 	const revisions = options.revisions ?? true;
 
 	describe(`${name} conforms to the Dumdict storage contract`, () => {
@@ -94,13 +107,11 @@ export function describeStorageConformance(
 				]),
 			).toMatchObject({ status: "committed" });
 
-			const context = await run(
-				storage.loadReadingEntryContext({
-					intent: "ensureOwnedSurface",
-					reading: gehenReading,
-					surface: gehenSurface,
-				}),
-			);
+			const context = await storage.loadReadingEntryContext({
+				intent: "ensureOwnedSurface",
+				reading: gehenReading,
+				surface: gehenSurface,
+			});
 			expect(context).toMatchObject({
 				intent: "ensureOwnedSurface",
 				existingLemma: { lemma: gehen },
@@ -119,12 +130,10 @@ export function describeStorageConformance(
 				await seed(storage, [createLemma(gehen)]);
 
 				expect(
-					await run(
-						storage.commitChanges({
-							baseRevision: revision,
-							changes: [createLemma(laufen)],
-						}),
-					),
+					await storage.commitChanges({
+						baseRevision: revision,
+						changes: [createLemma(laufen)],
+					}),
 				).toMatchObject({
 					status: "conflict",
 					code: "revisionConflict",
@@ -484,83 +493,14 @@ export function describeStorageConformance(
 			expect(await knowledgeOf(storage, gehenReading)).toBeUndefined();
 		});
 
-		if (readingAttestations) {
-			test("appends Reading Attestations and checks for one", async () => {
-				const storage = await createStorage();
-				await seed(storage, [
-					createLemma(gehen),
-					createReading(readingEntry(gehenReading)),
-				]);
-				const attest: PlannedChangeOp<"de"> = {
-					type: "patchReading",
-					reading: gehenReading,
-					ops: [{ kind: "addAttestation", value: "Wir gehen." }],
-					preconditions: [
-						{
-							kind: "readingAttestationMissing",
-							reading: gehenReading,
-							value: "Wir gehen.",
-						},
-					],
-				};
-
-				await seed(storage, [attest]);
-				expect(
-					(await readingContext(storage, gehenReading))
-						.existingReading?.attestations,
-				).toEqual(["Wir gehen."]);
-				expect(await commit(storage, [attest])).toMatchObject(
-					semanticConflict,
-				);
-			});
-		} else {
-			test("refuses every change that carries or checks a Reading Attestation", async () => {
-				const storage = await createStorage();
-				await seed(storage, [createLemma(gehen)]);
-				const attested = readingEntry(gehenReading, {
-					attestations: ["Wir gehen."],
-				});
-
-				await expect(
-					commit(storage, [createReading(attested)]),
-				).rejects.toThrow();
-				await expect(
-					commit(storage, [
-						createOwnedSurface({
-							...gehenSurfaceEntry,
-							attestations: ["Wir gehen."],
-						}),
-					]),
-				).rejects.toThrow();
-				await seed(storage, [
-					createReading(readingEntry(gehenReading)),
-				]);
-				await expect(
-					commit(storage, [
-						{
-							type: "patchReading",
-							reading: gehenReading,
-							ops: [
-								{ kind: "addAttestation", value: "Wir gehen." },
-							],
-							preconditions: [],
-						},
-					]),
-				).rejects.toThrow();
-				await expect(
-					commit(storage, [
-						createLemma(laufen, [
-							{
-								kind: "readingAttestationMissing",
-								reading: gehenReading,
-								value: "Wir gehen.",
-							},
-						]),
-					]),
-				).rejects.toThrow();
-			});
-		}
-
+		if (attestationLinks) describeOccurrenceConformance(createStorage);
+		if (paradigms) describeParadigmConformance(createStorage);
+		describeRefusalConformance(createStorage, {
+			attestationLinks,
+			paradigms,
+		});
 		describeRelationConformance(createStorage, revisions);
+		describeShadowConformance(createStorage);
+		describeRemovalClaimConformance(createStorage, { attestationLinks });
 	});
 }

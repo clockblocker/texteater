@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "fischen",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "🎣"
+	},
+	"knowledge": {
+		"source": {
+			"target": {
+				"unitKind": "Lemma",
+				"language": "de",
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"canonicalForm": "Fisch",
+				"coreFeatures": {
+					"gender": "Masc"
+				}
+			}
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: fischen",
+				"url": "https://www.dwds.de/wb/fischen",
+				"supports": "Grundform Fisch; Herkunft ahd. fiscōn (9. Jh.), formed from Fisch"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A verb converted from a noun, nothing added but the citation ending, so it has a Source, its immediate base Fisch, instead of Constituents (ADR 0050). Its direction pair is fisch."
+	}
+}

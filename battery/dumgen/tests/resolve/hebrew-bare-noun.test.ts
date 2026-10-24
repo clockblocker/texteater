@@ -1,9 +1,9 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../../src/call.js";
 import { defaultLunaConfiguration } from "../../src/luna.js";
 import { resolveHebrewGrammar } from "../../src/resolve/he/grammar.js";
 import type { Unit } from "../../src/segment/segmented-sentence.js";
+import { requestBudget, runOperation } from "./../service-test-adapter.js";
 
 test("a bare Hebrew noun resolves with explicit absent article evidence", async () => {
 	const unit: Unit<"he"> = {
@@ -30,35 +30,31 @@ test("a bare Hebrew noun resolves with explicit absent article evidence", async 
 		runOperation(
 			"resolve.grammar",
 			{ budget: requestBudget(2), payloads: false },
-			(scope) =>
-				resolveHebrewGrammar(
-					scope,
-					{
-						luna: {
-							configuration: defaultLunaConfiguration,
-							ask: async () => ({
-								output: { emojiDescription: "📚", surface },
-							}),
-						},
-						jev: {
-							model: "jev-test",
-							ask: async () => {
-								throw Error("Unexpected judge");
-							},
-						},
+			{
+				luna: {
+					configuration: defaultLunaConfiguration,
+					ask: async () => ({
+						output: { emojiDescription: "📚", surface },
+					}),
+				},
+				jev: {
+					model: "jev-test",
+					ask: async () => {
+						throw Error("Unexpected judge");
 					},
-					{
-						language: "he",
-						sentence: {
-							text: "ספר",
-							segments: [{ kind: "ResolvableText", text: "ספר" }],
-							units: [unit],
-						},
-						unit,
-						neighbours: {},
-						lemmaCandidates: [],
-					},
-				),
+				},
+			},
+			resolveHebrewGrammar({
+				language: "he",
+				sentence: {
+					text: "ספר",
+					segments: [{ kind: "ResolvableText", text: "ספר" }],
+					units: [unit],
+				},
+				unit,
+				neighbours: {},
+				lemmaCandidates: [],
+			}),
 		),
 	);
 	expect(result._tag).toBe("Resolved");

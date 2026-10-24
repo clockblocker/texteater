@@ -22,7 +22,17 @@ export const renderDefaultShadowRelations = (({
 	const { references, cleanup } = PresentationCapabilities;
 	const isCard = PresentationCapabilities.presentation === "Card";
 	const { candidates } = noteData.inspection;
-	const referrers = references.items;
+	// A Breakdown's Constituents show under Formations instead (ADR 0050).
+	const referrers = references.items.flatMap((referrer) => {
+		const structuralReferences = referrer.structuralReferences.filter(
+			({ aspect, path }) =>
+				!(aspect === "breakdown" && path.startsWith("constituents.")),
+		);
+		return referrer.pendingRelations.length > 0 ||
+			structuralReferences.length > 0
+			? [{ ...referrer, structuralReferences }]
+			: [];
+	});
 	if (referrers.length === 0 && candidates.length === 0) return null;
 
 	return (

@@ -4,12 +4,14 @@ import {
 	germanAdpositionAllowedCases,
 	germanAdpositionEntry,
 } from "dumcorpus/inventories";
+import * as Result from "effect/Result";
 import { options, question } from "../prompts.js";
 import {
 	type Answered,
 	type Choice,
 	optionsOf,
 	type Questionnaire,
+	type Unresolved,
 } from "../questions.js";
 import type { Target } from "../target.js";
 import { type AdpCase, fold, type Shape, spellingOf } from "./shape.js";
@@ -54,10 +56,10 @@ export function askAdposition(
 export function readAdposition(
 	adposition: AdpositionPlan,
 	answered: Answered,
-): AdpCase | "None" {
+): Result.Result<AdpCase | "None", Unresolved> {
 	const [only] = adposition.cases;
 	if (adposition.realizedCase) return answered.pick(adposition.realizedCase);
 	if (only === undefined)
 		throw Error("The ADP Case Table lets the ADP take no case");
-	return only;
+	return Result.succeed(only);
 }

@@ -106,7 +106,7 @@ function insertReading(
 	);
 }
 
-/** Commits one occurrence: an Attestation owning the given member Segments. */
+/** Commits one VERB occurrence: an Attestation owning the given member Segments. */
 function attest(
 	t: TestConvexDb,
 	owner: {
@@ -120,6 +120,8 @@ function attest(
 			surfaceId: owner.surfaceId,
 			readingId: owner.readingId,
 			realizationCoverage: "Full",
+			expletiveEvidence: null,
+			valencyEvidence: [],
 		});
 		for (const segmentId of memberSegmentIds) {
 			if (!segmentId) throw new Error("Expected a member Segment.");
@@ -233,6 +235,7 @@ test("Lemma pages expose all polysemous Readings and exact-language same-form pe
 			kind: "NOUN",
 		},
 	]);
+	if (!morphemeId) throw new Error("Expected the Morpheme.");
 	for (let index = 0; index < 51; index += 1) {
 		await insertSurface(t, lemmaId, `Bank-${index}`);
 	}

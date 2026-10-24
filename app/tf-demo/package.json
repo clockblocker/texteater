@@ -25,6 +25,7 @@
 		"test:e2e:playground": "VITE_CONVEX_URL=http://127.0.0.1:9 playwright test --project playground",
 		"test:pipeline:live": "bun tooling/run-live-pipeline.ts",
 		"knip": "bun ../../tooling/knip.ts",
+		"oxlint": "bun ../../tooling/oxlint.ts",
 		"validate": "bun ../../tooling/validate-package.ts",
 		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
 		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"

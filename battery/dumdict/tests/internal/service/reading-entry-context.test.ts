@@ -71,16 +71,22 @@ describe("Reading Entry context load", () => {
 		).toThrow("Reading Entry context intent does not match");
 	});
 
-	test("identity-only intents do not read relation inventory or pending records", async () => {
+	test("ensureReadingEntry reads the Shadows its Lemma may match and their inventory", async () => {
 		const readingEntry = getBootedUpDumdict("en", enSerializedNotes);
 		readingEntry.dict.ensureReadingEntry({
 			entry: englishWalkReadingEntry(),
 		});
+		// Creating the Lemma re-evaluates every stored Shadow it matches.
 		expect(readingEntry.storage.readingEntryContextReads()).toEqual([
 			"existingReading",
 			"existingLemma",
+			"pendingRelationsMatchingLemma",
+			"relationLemmas",
+			"relationReadings",
 		]);
+	});
 
+	test("ensureOwnedSurface does not read relation inventory or pending records", async () => {
 		const ownedSurface = getBootedUpDumdict("en", enSerializedNotes);
 		ownedSurface.dict.ensureOwnedSurface({
 			reading: englishWalkReading,

@@ -1,8 +1,5 @@
 {
 	"extends": "../../tooling/typescript/battery.json",
-	"compilerOptions": {
-		"plugins": [{ "name": "@effect/language-service" }]
-	},
 	"include": [
 		"codegen/**/*.ts",
 		"generate-readme/**/*.ts",

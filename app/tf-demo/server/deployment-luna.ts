@@ -1,4 +1,4 @@
-import { createOpenAILuna, type DumgenOptions } from "dumgen";
+import { type DumgenOptions, LunaTransport } from "dumgen";
 
 /** The deployment supplies configuration, never a process environment lookup. */
 type LunaEnvironment = {
@@ -48,15 +48,15 @@ export function deploymentLuna(
 			? {}
 			: { lunaConfiguration: { model, settings: {} } }),
 		luna: apiKey
-			? createOpenAILuna({
+			? LunaTransport.openAI({
 					apiKey,
 					...(baseUrl === undefined ? {} : { baseUrl }),
 					...(timeoutMs === undefined ? {} : { timeoutMs }),
 				})
-			: async () => {
+			: LunaTransport.fromAsk(async () => {
 					throw new Error(
 						"OPENAI_API_KEY is not set on the Convex deployment",
 					);
-				},
+				}),
 	};
 }

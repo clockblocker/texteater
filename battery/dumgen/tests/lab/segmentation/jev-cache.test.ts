@@ -5,13 +5,15 @@ import { join } from "node:path";
 import type { Questions } from "@typesafe-ai/sdk";
 import { canonicalJson } from "common-utils";
 import * as Effect from "effect/Effect";
+import * as Fiber from "effect/Fiber";
 import {
 	type CallRecord,
 	hashOf,
 	JevCache,
 	transportText,
 } from "../../../lab/segmentation/harness/jev-cache.js";
-import { noul } from "../../../src/segment/ask.js";
+import { RequestBudget } from "../../../src/call.js";
+import { type AskRequest, noul } from "../../../src/segment/ask.js";
 import {
 	type JevAsk,
 	type JevRequest,
@@ -35,6 +37,17 @@ const request = (asked: Questions = questions): JevRequest => ({
 	state: { sentence: "Er zog sich an." },
 	questions: asked,
 });
+
+/** One request through the arms' port at repetition 0, on a budget of its own. */
+const throughPort = (
+	jev: JevCache,
+	asked: AskRequest,
+	calls: CallRecord[] = [],
+	options: Parameters<JevCache["port"]>[2] = {},
+) =>
+	Effect.flatMap(jev.port(0, calls, options), (ask) => ask(asked)).pipe(
+		Effect.provide(RequestBudget.layer(12)),
+	);
 
 /** A transport that answers every question with a Noul, counting its requests. */
 function answering(counter = { requests: 0 }): JevAsk {
@@ -205,10 +218,9 @@ test("buckets, question keys, prompt hashes and request sizes are taken over eac
 		test: hashOf([hashOf({ state, questions: asked })]),
 	});
 	await Effect.runPromise(
-		jev.port(0, [], { salt: "limit", questionsPerRequest: 2 })({
-			stage: "test",
-			state,
-			questions: asked,
+		throughPort(jev, { stage: "test", state, questions: asked }, [], {
+			salt: "limit",
+			questionsPerRequest: 2,
 		}),
 	);
 	const salted = await bucketOf(
@@ -265,4 +277,63 @@ test("an answer from another jev version fails its request and is not cached", a
 			context,
 		),
 	).rejects.toThrow("cache miss");
+});
+
+test("the arms' port fails with a typed ProviderFailure when no answer came, a cache miss offline or a refused request", async () => {
+	const failureOf = async (jev: JevCache) => {
+		const exit = await Effect.runPromiseExit(
+			throughPort(jev, { stage: "test", ...request() }),
+		);
+		if (exit._tag === "Success") throw Error("The port answered");
+		const [reason] = exit.cause.reasons;
+		return reason?._tag === "Fail" ? reason.error : reason;
+	};
+	expect(
+		await failureOf(
+			new JevCache({ cacheDirectory: cacheDirectory(), offline: true }),
+		),
+	).toMatchObject({
+		_tag: "ProviderFailure",
+		stage: "test",
+		message: "jev cache miss in offline mode (test)",
+	});
+	expect(
+		await failureOf(
+			new JevCache({
+				cacheDirectory: cacheDirectory(),
+				transport: refusing(400),
+			}),
+		),
+	).toMatchObject({
+		_tag: "ProviderFailure",
+		stage: "test",
+		message: "TypeSafe answered 400: no",
+	});
+});
+
+test("interrupting the arms' port aborts the requests it sent", async () => {
+	const aborted: string[] = [];
+	const sent = Promise.withResolvers<void>();
+	const jev = new JevCache({
+		cacheDirectory: cacheDirectory(),
+		questionsPerRequest: 2,
+		// Never answers: each request settles only when its signal aborts.
+		transport: (asked, { signal }) =>
+			new Promise((_resolve, reject) => {
+				if (Object.keys(asked.questions).includes("r_1_2"))
+					sent.resolve();
+				signal.addEventListener("abort", () => {
+					aborted.push(Object.keys(asked.questions).join(","));
+					reject(signal.reason);
+				});
+			}),
+	});
+	const calls: CallRecord[] = [];
+	const fiber = Effect.runFork(
+		throughPort(jev, { stage: "test", ...request() }, calls),
+	);
+	await sent.promise;
+	await Effect.runPromise(Fiber.interrupt(fiber));
+	expect(aborted.sort()).toEqual(["a,b", "r_10,r_1_2"]);
+	expect(jev.transport.interrupted).toBe(2);
 });

@@ -7799,6 +7799,138 @@ export interface UnitMap {
 			realizationCoverage: "Full" | "Partial";
 		};
 	};
+	"de/Morpheme/Ending": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Morpheme";
+			kind: "Ending";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Morpheme";
+				kind: "Ending";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
+				  };
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Morpheme";
+				kind: "Ending";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Morpheme";
+					kind: "Ending";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
+					  };
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
 	"de/Morpheme/Infix": {
 		Lemma: {
 			unitKind: "Lemma";

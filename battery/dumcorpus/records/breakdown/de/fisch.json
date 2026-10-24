@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Fisch",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🐟"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Fisch",
+					"target": {
+						"language": "de",
+						"canonicalForm": "fisch",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Fisch",
+				"url": "https://www.dwds.de/wb/Fisch",
+				"supports": "No Wortzerlegung; Herkunft ahd. fisc (8. Jh.), ie. *peisk-, not formed from fischen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A bottom word with no Source: the noun is the base of fischen, never the reverse (ahd. fisc, 8th c., before fiscōn), so a Source fischen is wrongly claimed. Its morphemes are the Root fisch and the zero ending (ADR 0051)."
+	}
+}

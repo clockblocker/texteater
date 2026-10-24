@@ -540,7 +540,7 @@
 				"knowledge": {},
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"participleSource": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -642,8 +642,6 @@
 			"reading": {
 				"emojiDescription": "💭✅",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
-					"preterite": ["glaubte"],
 					"valency": [
 						{
 							"status": "Required",
@@ -697,17 +695,17 @@
 						]
 					}
 				},
+				"paradigm": { "preterite": ["glaubte"] },
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "preterite": "Authored" }
 				}
 			},
 			"attestation": {

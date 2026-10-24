@@ -8,6 +8,7 @@
  * this port (no Luna in segmentation): nothing under `src/segment/` may
  * import it.
  */
+import * as Context from "effect/Context";
 
 /**
  * One generation request: the model and its settings, the prompt and the
@@ -67,3 +68,9 @@ export const defaultLunaConfiguration: LunaConfiguration = {
 	model: "gpt-5.6-luna",
 	settings: { reasoning: { effort: "none" }, service_tier: "fast" },
 };
+
+/** The Luna model and settings the `Luna` service writes with. */
+export const LunaConfiguration = Context.Reference<LunaConfiguration>(
+	"dumgen/LunaConfiguration",
+	{ defaultValue: () => defaultLunaConfiguration },
+);

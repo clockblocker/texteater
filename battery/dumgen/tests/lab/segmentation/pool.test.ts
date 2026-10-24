@@ -1,10 +1,6 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import {
-	floors762,
-	x1Grid,
-} from "../../../lab/segmentation/de/arms/production.js";
-import {
 	type Heard,
 	type PoolTally,
 	poolAnswer,
@@ -12,7 +8,6 @@ import {
 	standIn,
 } from "../../../lab/segmentation/harness/pool.js";
 import type { Answer } from "../../../src/segment/ask.js";
-import { productionUnitSettings } from "../../../src/segment/de/units.js";
 
 const noul = (value: number): Answer => ({ type: "noul", noul: value });
 const picked = (probabilities: Record<string, number>): Answer => ({
@@ -107,23 +102,4 @@ test("the pooled ask answers from every repetition that heard a question", async
 	expect([0, 1, 2, 3].map((count) => tally[count] ?? 0)).toEqual([
 		1, 1, 0, 1,
 	]);
-});
-
-test("X1's grid crosses two floor settings, four Saying assemblies and step 0", () => {
-	expect(Object.keys(x1Grid)).toHaveLength(16);
-	expect(x1Grid["prod+maxim@0.7"]).toEqual({
-		floors: productionUnitSettings.floors,
-		saying: productionUnitSettings.saying,
-		stepZero: true,
-	});
-	expect(floors762).toMatchObject({
-		idiom: 0.6,
-		fixed: 0.3,
-		expression: 0.7,
-	});
-	expect(x1Grid["762+saying@0.4+nostep0"]).toEqual({
-		floors: floors762,
-		saying: { floor: 0.4, maxim: false },
-		stepZero: false,
-	});
 });

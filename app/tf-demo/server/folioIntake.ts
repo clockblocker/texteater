@@ -1,3 +1,4 @@
+import type { Jev } from "dumgen";
 import * as Effect from "effect/Effect";
 import type { ScrollLanguage } from "../shared/supported-target-language";
 import {
@@ -5,6 +6,7 @@ import {
 	analyzeParagraphs,
 	type IntakeDumgen,
 } from "./intake";
+import { logged } from "./logging";
 
 /**
  * A book's Folio through intake, once the Learner asks for it (#1216).
@@ -18,7 +20,7 @@ import {
 /** A stored, unprocessed Sentence of a window. */
 type WindowSentence = {
 	readonly sentenceId: string;
-	readonly paragraph?: number;
+	readonly paragraph: number;
 	readonly stitchedText: string;
 };
 
@@ -27,17 +29,13 @@ export type ProcessedSentence<Id extends string = string> = AnalyzedSentence & {
 	readonly sentenceId: Id;
 };
 
-/** The window's Sentences in their paragraphs; one with no paragraph reads alone. */
+/** The window's Sentences in their paragraphs. */
 function paragraphsOf(sentences: readonly WindowSentence[]) {
 	const paragraphs: { sentences: string[] }[] = [];
 	let previous: WindowSentence | undefined;
 	for (const sentence of sentences) {
 		const last = paragraphs.at(-1);
-		if (
-			last &&
-			sentence.paragraph !== undefined &&
-			sentence.paragraph === previous?.paragraph
-		)
+		if (last && sentence.paragraph === previous?.paragraph)
 			last.sentences.push(sentence.stitchedText);
 		else paragraphs.push({ sentences: [sentence.stitchedText] });
 		previous = sentence;
@@ -104,31 +102,35 @@ export type FolioRunEnd =
  * Processes one Folio window by window until none is left, or `hasTime`
  * says the action should hand over to a fresh one. A window that fails,
  * in jev or in storing, fails the Folio; what was stored before it stays,
- * and the next request starts with what is left.
+ * and the next request starts with what is left. It needs `Jev`, which
+ * the action provides once for all its windows.
  */
-export async function processFolio<Window extends FolioWindow>(options: {
+export function processFolio<Window extends FolioWindow>(options: {
 	readonly dumgen: IntakeDumgen;
 	readonly language: ScrollLanguage;
 	readonly port: FolioProcessingPort<Window>;
 	readonly hasTime: () => boolean;
-}): Promise<FolioRunEnd> {
+}): Effect.Effect<FolioRunEnd, never, Jev> {
 	const { port } = options;
-	try {
+	return Effect.gen(function* () {
 		while (options.hasTime()) {
-			const window = await port.nextWindow();
-			if (window === null) return { kind: "Done" };
-			const analyzed = await Effect.runPromise(
+			const window = yield* Effect.promise(() => port.nextWindow());
+			if (window === null) return { kind: "Done" as const };
+			const analyzed = yield* logged(
 				analyzeWindow<SentenceIdOf<Window>>(
 					options.dumgen,
 					window.sentences,
 					options.language,
 				),
 			);
-			await port.storeWindow(analyzed);
+			yield* Effect.promise(() => port.storeWindow(analyzed));
 		}
-	} catch {
-		await port.failed();
-		return { kind: "Failed" };
-	}
-	return { kind: "Continue" };
+		return { kind: "Continue" as const };
+	}).pipe(
+		Effect.catchCause(() =>
+			Effect.promise(() => port.failed()).pipe(
+				Effect.as<FolioRunEnd>({ kind: "Failed" }),
+			),
+		),
+	);
 }

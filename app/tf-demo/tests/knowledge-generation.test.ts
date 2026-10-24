@@ -14,12 +14,16 @@ import type {
 	KnowledgeProduction,
 } from "../server/knowledgeProduction";
 import {
+	HEBREW_READING,
+	seedOccurrence as seedHebrewOccurrence,
+} from "./knowledge-generation-fixtures";
+import { actionContext, createTestConvex } from "./support/convex";
+import {
 	ANGST_READING,
 	addToDictionary,
 	attempts,
 	BANK_READING_KEY,
 	generateWith,
-	HEBREW_READING,
 	insertAccumulatedKnowledge,
 	insertAttempt,
 	interceptPublish,
@@ -34,8 +38,8 @@ import {
 	schedule,
 	seedDictionaryReading,
 	seedOccurrence,
-} from "./knowledge-generation-fixtures";
-import { actionContext, createTestConvex } from "./support/convex";
+} from "./support/knowledge-generation";
+import { noModelCalls } from "./support/providers";
 
 beforeEach(() => {
 	// Scheduling a Knowledge attempt queues its action; nothing here runs it.
@@ -48,7 +52,7 @@ afterEach(() => {
 
 test("Hebrew Knowledge passes action planning and publishes to its dictionary Reading", async () => {
 	const t = createTestConvex();
-	const occurrence = await seedOccurrence(t, HEBREW_READING);
+	const occurrence = await seedHebrewOccurrence(t, HEBREW_READING);
 	await t.run((ctx) =>
 		ctx.db.patch(occurrence.sentenceId, { language: "he" }),
 	);
@@ -251,17 +255,9 @@ test("a deployment without TF_KNOWLEDGE_PRODUCTION fails a run with the safe mes
 	const occurrence = await seedDictionaryReading(t);
 	await insertAttempt(t, occurrence, "idle", { state: "Scheduled" });
 	const errors = spyOn(console, "error").mockImplementation(() => {});
-	const previousFetch = globalThis.fetch;
 	const previousFlag = process.env.TF_KNOWLEDGE_PRODUCTION;
 	delete process.env.TF_KNOWLEDGE_PRODUCTION;
-	const fetched: string[] = [];
-	globalThis.fetch = Object.assign(
-		async (url: string | URL | Request) => {
-			fetched.push(String(url));
-			throw new Error("No model may be called.");
-		},
-		{ preconnect: previousFetch.preconnect },
-	);
+	const models = noModelCalls();
 	try {
 		await t.action(
 			internal.knowledgeGenerationActions.runKnowledgeGeneration,
@@ -269,11 +265,11 @@ test("a deployment without TF_KNOWLEDGE_PRODUCTION fails a run with the safe mes
 		);
 	} finally {
 		errors.mockRestore();
-		globalThis.fetch = previousFetch;
+		models.restore();
 		if (previousFlag !== undefined)
 			process.env.TF_KNOWLEDGE_PRODUCTION = previousFlag;
 	}
-	expect(fetched).toEqual([]);
+	expect(models.requests).toEqual([]);
 	expect((await attempts(t))[0]).toMatchObject({
 		state: "Failed",
 		failureMessage: "Knowledge generation failed. Please retry.",
@@ -477,7 +473,7 @@ test("a publication rejected after production keeps the run's aspect failures in
 			attemptKey: "rejected",
 			runNumber: 1,
 			phase: "Publish",
-			errorName: "Error",
+			errorName: "KnowledgePublicationRejected",
 		}),
 	]);
 });
@@ -524,6 +520,11 @@ test("a failure recording that throws is logged as a structured line and leaves 
 			recordingFailure: {
 				errorName: "Error",
 				errorFingerprint: expect.stringMatching(/^fnv1a-/),
+			},
+			// Logged under the run's span, after its hop failed.
+			span: {
+				name: "Generate and publish Knowledge",
+				id: expect.any(String),
 			},
 		},
 	]);

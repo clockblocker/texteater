@@ -156,7 +156,8 @@ function counting(
 	const waiting = within.filter((connection) => connection.conditional);
 	for (let grew = true; grew; ) {
 		grew = false;
-		for (const connection of [...waiting])
+		const stillWaiting = [...waiting];
+		for (const connection of stillWaiting)
 			if (connection.pieces.some((id) => reached.has(id))) {
 				chosen.push(connection);
 				for (const id of connection.pieces) reached.add(id);

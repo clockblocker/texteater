@@ -2,10 +2,10 @@
 import { isRecord } from "common-utils";
 import { parseUnit } from "dumling";
 import * as Effect from "effect/Effect";
-import type { OperationScope } from "../../call.js";
+import { CallLog } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
-import { askLuna } from "../../luna-call.js";
-import type { GrammarModels } from "../de/grammar.js";
+import type { Jev } from "../../jev-call.js";
+import { askLuna, type Luna } from "../../luna-call.js";
 import type { GrammarResolution, ResolveGrammarInput } from "../types.js";
 import { parsedHebrewDescription } from "./reading.js";
 import { surfaceOutputSchema } from "./routes.js";
@@ -34,13 +34,14 @@ function normalizedSurfaceBag(surface: unknown): unknown {
 }
 
 export const resolveHebrewGrammar = Effect.fnUntraced(function* (
-	scope: OperationScope,
-	models: GrammarModels,
 	input: ResolveGrammarInput<"he">,
 ): Effect.fn.Return<
 	GrammarResolution<"he">,
-	ProviderFailure | InvalidModelOutput
+	ProviderFailure | InvalidModelOutput,
+	Jev | Luna | CallLog
 > {
+	const scope = yield* CallLog;
+
 	if (input.language !== "he") throw Error("Hebrew grammar resolves he only");
 	const members = targetMembers(input.sentence, input.unit);
 	if (input.unit.route === "Unresolved") {
@@ -77,8 +78,6 @@ export const resolveHebrewGrammar = Effect.fnUntraced(function* (
 			coreFeatures: lemma.coreFeatures,
 		}));
 	const result = yield* askLuna(
-		scope,
-		models.luna,
 		"hebrewCanonical",
 		{
 			systemPrompt: hebrewGrammarPrompt,

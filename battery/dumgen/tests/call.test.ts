@@ -1,27 +1,42 @@
 import { expect, test } from "bun:test";
+import * as Clock from "effect/Clock";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
 import * as Option from "effect/Option";
 import * as Tracer from "effect/Tracer";
+import { TestClock } from "effect/testing";
 import {
+	CurrentSentence,
+	callModel,
 	type Exchange,
-	type OperationOptions,
-	requestBudget,
+	RequestBudget,
 	runOperation,
+	TracePayloads,
+	TraceSink,
 } from "../src/call.js";
 import { InvalidModelOutput, ProviderFailure } from "../src/errors.js";
 import type { OperationTrace } from "../src/operation-trace.js";
 
-/** Options for one operation over a fresh budget, keeping the traces it reports. */
-function operationOptions(permits: number, payloads = false) {
+/**
+ * Operations over a fresh budget of `permits`: each runs its body as
+ * `segment.inUnits` and keeps the trace it reports.
+ */
+function operations(permits: number, payloads = false) {
 	const traces: OperationTrace[] = [];
-	const options: OperationOptions = {
-		budget: requestBudget(permits),
-		payloads,
-		onOperation: (trace) => traces.push(trace),
-	};
-	return { options, traces };
+	const budget = Effect.runSync(
+		Effect.provide(RequestBudget, RequestBudget.layer(permits)),
+	);
+	const call = <T, O>(exchange: Exchange<T, O>) =>
+		callModel(budget, exchange);
+	const operation = <A, E>(
+		body: Effect.Effect<A, E, Effect.Services<ReturnType<typeof call>>>,
+	) =>
+		runOperation("segment.inUnits", body).pipe(
+			Effect.provideService(TraceSink, (trace) => traces.push(trace)),
+			Effect.provideService(TracePayloads, payloads),
+		);
+	return { call, operation, traces };
 }
 
 /** An exchange that answers through `send`, with ten input tokens per answer. */
@@ -58,15 +73,15 @@ function hanging() {
 const tick = (ms = 5) => new Promise((resolve) => setTimeout(resolve, ms));
 
 test("interrupting an operation aborts its calls in flight and waits until they settle; a queued call starts nothing", async () => {
-	const { options, traces } = operationOptions(1);
+	const { call, operation, traces } = operations(1);
 	const transport = hanging();
 	let queuedSent = false;
 	const fiber = Effect.runFork(
-		runOperation("segment.inUnits", options, (scope) =>
+		operation(
 			Effect.all(
 				[
-					scope.call(exchange("first", transport.send("first"))),
-					scope.call(
+					call(exchange("first", transport.send("first"))),
+					call(
 						exchange("queued", async () => {
 							queuedSent = true;
 							return "never";
@@ -98,7 +113,7 @@ test("interrupting an operation aborts its calls in flight and waits until they 
 });
 
 test("one budget serves jev and Luna together, and a call that queued records its wait", async () => {
-	const { options, traces } = operationOptions(1);
+	const { call, operation, traces } = operations(1);
 	let inFlight = 0;
 	let most = 0;
 	const send = async () => {
@@ -109,11 +124,11 @@ test("one budget serves jev and Luna together, and a call that queued records it
 		return "answer";
 	};
 	await Effect.runPromise(
-		runOperation("segment.inUnits", options, (scope) =>
+		operation(
 			Effect.all(
 				[
-					scope.call(exchange("judge", send, "jev")),
-					scope.call(exchange("write", send, "luna")),
+					call(exchange("judge", send, "jev")),
+					call(exchange("write", send, "luna")),
 				],
 				{ concurrency: "unbounded" },
 			),
@@ -129,12 +144,55 @@ test("one budget serves jev and Luna together, and a call that queued records it
 	expect(trace?.waits[0]?.waitMs).toBeGreaterThan(5);
 });
 
+/** A transport whose answer takes `ms` of the test clock's time to arrive. */
+const answersAfter =
+	(clock: TestClock.TestClock, ms: number) => async (): Promise<string> => {
+		await Effect.runPromise(clock.adjust(ms));
+		return "answer";
+	};
+
+test("an operation's trace reads its times from Effect's Clock", async () => {
+	const { call, operation, traces } = operations(1);
+	const at = Date.UTC(2026, 9, 22, 12);
+	await Effect.runPromise(
+		Effect.scoped(
+			Effect.gen(function* () {
+				const clock = yield* TestClock.make();
+				yield* clock.setTime(at);
+				yield* operation(
+					Effect.all(
+						[
+							call(exchange("judge", answersAfter(clock, 40))),
+							call(exchange("route", answersAfter(clock, 25))),
+						],
+						{ concurrency: "unbounded" },
+					),
+				).pipe(Effect.provideService(Clock.Clock, clock));
+			}),
+		),
+	);
+	expect(traces).toEqual([
+		expect.objectContaining({ startedAt: at, durationMs: 65 }),
+	]);
+	expect(
+		traces[0]?.calls.map(({ startedAt, durationMs }) => ({
+			startedAt,
+			durationMs,
+		})),
+	).toEqual([
+		{ startedAt: at, durationMs: 40 },
+		{ startedAt: at + 40, durationMs: 25 },
+	]);
+	// The second call queued behind the first for the whole of its answer.
+	expect(traces[0]?.waits).toEqual([{ call: 1, waitMs: 40 }]);
+});
+
 test("anything a transport throws is one ProviderFailure, sent once; a refused check is an InvalidModelOutput", async () => {
-	const { options, traces } = operationOptions(4);
+	const { call, operation, traces } = operations(4);
 	let sent = 0;
 	const thrown = await Effect.runPromiseExit(
-		runOperation("segment.inUnits", options, (scope) =>
-			scope.call(
+		operation(
+			call(
 				exchange("route", () => {
 					sent++;
 					throw Error("socket hang up");
@@ -147,8 +205,8 @@ test("anything a transport throws is one ProviderFailure, sent once; a refused c
 		error: expect.any(ProviderFailure),
 	});
 	const refused = await Effect.runPromiseExit(
-		runOperation("segment.inUnits", options, (scope) =>
-			scope.call({
+		operation(
+			call({
 				...exchange("route", async () => "answer"),
 				check: () =>
 					new InvalidModelOutput({ stage: "route", message: "no" }),
@@ -186,13 +244,12 @@ test("dumgen.operation and dumgen.call spans name the operation and the call, an
 			return span;
 		},
 	});
-	const { options } = operationOptions(2, true);
+	const { call, operation } = operations(2, true);
 	await Effect.runPromise(
-		runOperation("segment.inUnits", options, (scope) =>
-			scope.call({
-				...exchange("route", async () => ({ secret: "Der Hund" })),
-				sentence: 3,
-			}),
+		operation(
+			call(exchange("route", async () => ({ secret: "Der Hund" }))).pipe(
+				Effect.provideService(CurrentSentence, 3),
+			),
 		).pipe(Effect.withTracer(tracer)),
 	);
 	expect(spans).toEqual([

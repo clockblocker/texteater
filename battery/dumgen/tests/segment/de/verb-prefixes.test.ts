@@ -1,11 +1,15 @@
 import { expect, test } from "bun:test";
 import {
 	germanInseparablePrefixes,
+	germanSeparableParticles,
 	germanSeparablePrefixes,
 } from "dumcorpus/inventories";
-import { prefixParticles } from "../../../src/resolve/de/open-route/verbal.js";
-import { particleForms } from "../../../src/segment/de/candidates.js";
-import { strandedTails } from "../../../src/segment/de/code-rules.js";
+import { prefixParticles } from "../../../src/resolve/de/open-route/separable-prefix.js";
+import {
+	particleForms,
+	unweighedParticles,
+} from "../../../src/segment/de/candidates.js";
+import { strandedTails } from "../../../src/segment/de/code-rules-words.js";
 import { germanInfixParticles } from "../../../src/segment/de/fusion-entries.js";
 
 // Each selection is a named filter over dumcorpus's separable prefixes
@@ -18,8 +22,8 @@ const without = (held: string) => {
 	return [...germanSeparablePrefixes].filter((word) => !out.has(word));
 };
 
-/** The words that open no particle slot (#1057). */
-const noSlot = "da dagegen flach groß gut irre leer offen stand voll";
+/** The words that open no particle slot (#1057), and those #1241 added. */
+const noSlot = `da dagegen flach groß gut irre leer offen stand voll ${[...unweighedParticles].join(" ")}`;
 
 test("the particle slot opens on every separable prefix but the held-out words", () => {
 	expect(sorted(particleForms)).toEqual(sorted(without(noSlot)));
@@ -33,8 +37,18 @@ test("the infixed zu takes every separable prefix but da and hin", () => {
 	expect(sorted(germanInfixParticles)).toEqual(sorted(without("da hin")));
 });
 
-test("resolution offers the slot particles and the held-out words but stand", () => {
-	expect(sorted(prefixParticles)).toEqual(sorted(without("stand")));
+test("resolution offers the slot particles and the held-out words but stand and #1241's", () => {
+	expect(sorted(prefixParticles)).toEqual(
+		sorted(without(`stand ${[...unweighedParticles].join(" ")}`)),
+	);
+});
+
+test("#1241's unweighed words are dumcorpus true particles", () => {
+	expect(
+		[...unweighedParticles].filter(
+			(word) => !germanSeparableParticles.has(word),
+		),
+	).toEqual([]);
 });
 
 test("the stranded tails are the hand-typed prepositions", () => {

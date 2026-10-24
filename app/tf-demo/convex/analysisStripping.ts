@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import type * as Dumling from "dumling/types";
 
 import type { Doc, Id } from "./_generated/dataModel";
 import {
@@ -6,7 +7,13 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
+import {
+	createDumdictTransaction,
+	DICTIONARY_REVISION,
+	MAX_PLANNED_CHANGES,
+} from "./model/dumdictTransaction";
 import { deleteKnowledgeAttempts } from "./model/knowledgeAttempts";
+import { lemmaValue } from "./model/occurrenceAttestations";
 import {
 	cleanupPhase,
 	cleanupStart,
@@ -22,6 +29,7 @@ import {
 } from "./model/ownedRowCleanup";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
 import { DESCRIPTOR_PAGE_SIZE } from "./model/scrollAnalysisStripping";
+import { warnMalformedStoredRow } from "./model/shadows";
 import { loadStoredSegments } from "./model/storedSegments";
 
 /** Segments one strip step deletes, each with its Encounters and emptied Attestation. */
@@ -471,6 +479,15 @@ export const clearLemmaDataBatch = internalMutation({
 						phaseComplete = !skipLemma && surfaces.length < limit;
 						break;
 					}
+					case "ShadowReevaluation": {
+						// One plan may write up to a commit's worth of changes.
+						if (remaining < MAX_PLANNED_CHANGES) {
+							phaseComplete = false;
+							break;
+						}
+						deleted += await reevaluateShadowsWithout(ctx, lemma);
+						break;
+					}
 					case "Lemma": {
 						const dictionaryLemma = await ctx.db
 							.query("dictionaryLemmas")
@@ -511,3 +528,27 @@ export const clearLemmaDataBatch = internalMutation({
 		};
 	},
 });
+
+/**
+ * Re-evaluates every stored Shadow a pruned Lemma matches, as if it were
+ * already gone, and turns the exact claims on it into its Shadow relations
+ * (system ADR 0011); returns the changes written. A plan that can't commit
+ * leaves the Shadows as they are, to be re-evaluated by the next change to a
+ * Lemma they match, and the Lemma's incoming-edge phase drops the claims.
+ */
+async function reevaluateShadowsWithout(
+	ctx: MutationCtx,
+	lemma: Doc<"lemmas">,
+): Promise<number> {
+	const outcome = await createDumdictTransaction(ctx).reevaluateShadows({
+		baseRevision: DICTIONARY_REVISION,
+		removedLemmas: [lemmaValue(lemma) as Dumling.Lemma<"de">],
+	});
+	if (outcome.status === "committed") return outcome.plan.changes.length;
+	warnMalformedStoredRow(
+		"lemmas",
+		lemma._id,
+		`Shadows matching the pruned Lemma stay as they are: ${outcome.status}.`,
+	);
+	return 0;
+}

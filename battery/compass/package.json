@@ -38,6 +38,7 @@
 		"lint": "bun run --silent biome check --error-on-warnings .",
 		"test": "bun ../../tooling/run-package-tests.ts",
 		"knip": "bun ../../tooling/knip.ts",
+		"oxlint": "bun ../../tooling/oxlint.ts",
 		"validate": "bun ../../tooling/validate-package.ts",
 		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
 		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"

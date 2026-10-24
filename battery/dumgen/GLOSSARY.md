@@ -53,14 +53,19 @@ clash set's focused prompt picks one. See [Dumgen ADR 0007] and
 [Dumgen ADR 0008].
 _Avoid_: route distribution, alternative route
 
-**`segment.inLexemes`**:
-The segmenter that breaks one Locution or Saying down into its Lexemes, once
-per Lemma. See [Dumgen ADR 0007].
-_Avoid_: Segment.Unit, Lexical Breakdown, inner layer
+**`segment.inConstituents`**:
+The segmenter that produces a Reading's Constituents (Dumling), once per
+Reading: a word's immediate parts, or the biggest units strictly inside a
+phraseme's wording. The host runs it only on a Reading with no Source
+(Dumrel), so a word it finds none for is a bottom word. See [Dumgen ADR
+0007] and [ADR 0050].
+_Avoid_: `segment.inLexemes`, Segment.Unit, Lexical Breakdown, inner layer
 
 **`segment.inMorphemes`**:
-The segmenter that would break a Lexeme down into its Morphemes. See
-[Dumgen ADR 0007].
+The segmenter that splits a bottom word, one with no word inside, into its
+Morphemic Breakdown (Dumling): a word with no Source (Dumrel) that
+`segment.inConstituents` finds no Constituents for. Every other word's is
+propagated in code. See [Dumgen ADR 0007] and [ADR 0051].
 
 **Encounter**:
 A Segmented Sentence together with one Analysis Target supplied for
@@ -109,6 +114,15 @@ Proposed Knowledge changes, Paradigm Changes (Dumrel) and Pending Semantic
 Relations for a caller-supplied Reading in an Encounter. See
 [Dumgen ADR 0003] and [ADR 0048].
 
+**Licence Judge**:
+The jev judge Knowledge Production asks for a Lemma's later Reading, after
+Luna has written its forms: for each Variation Dimension where those forms
+differ from the stored Paradigm Variants (Dumrel), which of the stored and
+new forms, shown together and unattributed, its sense takes. It never routes
+a click; the Reading judge ignores the Paradigm. See [ADR 0048] and
+[Dumgen ADR 0003].
+_Avoid_: paradigm judge, variant matcher
+
 **`knowledge.accumulateTranslations`**:
 The step that adds to a Reading's stored translations the ones a later
 occurrence needs: jev judges whether a stored one covers the occurrence, and
@@ -132,6 +146,8 @@ settings, case outputs, failures and evaluation results.
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
 [ADR 0047]: ../../docs/adr/0047-accumulate-a-readings-translations-click-by-click.md
 [ADR 0048]: ../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md
+[ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
+[ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md
 [Dumgen ADR 0001]: ./docs/adr/0001-judge-each-sentence-before-conditional-stitching-and-local-segmentation.md
 [Dumgen ADR 0003]: ./docs/adr/0003-split-german-knowledge-generation-by-family.md
 [Dumgen ADR 0004]: ./docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md

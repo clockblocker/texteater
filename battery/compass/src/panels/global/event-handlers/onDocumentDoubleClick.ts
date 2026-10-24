@@ -21,7 +21,7 @@ export function onDocumentDoubleClick(event: MouseEvent) {
 					splitId: current.split.id,
 					regionId: regionWithDefaultSize.id,
 				});
-				if (api && defaultSize !== undefined) {
+				if (defaultSize !== undefined) {
 					api.resize(defaultSize);
 
 					event.preventDefault();

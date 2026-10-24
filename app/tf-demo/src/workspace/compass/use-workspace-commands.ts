@@ -69,7 +69,7 @@ export function useWorkspaceCommands<S>({
 	return {
 		sweep,
 		/** The Menu's tap: a Menu Item is the Ground's next rung. */
-		openMenuItem(paneId: string, item: string) {
+		openMenuItem: (paneId: string, item: string) => {
 			dispatch({
 				type: "StepUp",
 				paneId,
@@ -77,7 +77,7 @@ export function useWorkspaceCommands<S>({
 			});
 		},
 		/** A Menu Item's selection: it is the Ground's content now. */
-		select(paneId: string, subject: S) {
+		select: (paneId: string, subject: S) => {
 			dispatch({
 				type: "StepUp",
 				paneId,
@@ -88,17 +88,17 @@ export function useWorkspaceCommands<S>({
 		 * A Ground walks its line: a Codex pick is one rung more, and next
 		 * at a Scroll's end replaces the rungs it does not share.
 		 */
-		walk(paneId: string, keep: number, to: readonly S[]) {
+		walk: (paneId: string, keep: number, to: readonly S[]) => {
 			dispatch({ type: "WalkLine", paneId, keep, to });
 		},
 		/** A Segment clicked in a Sheet deals a Deck that belongs to that Sheet. */
-		deal(
+		deal: (
 			paneId: string,
 			sheetId: string,
 			selection: string,
 			cards: readonly DealtCard<S>[],
 			from: HTMLElement,
-		) {
+		) => {
 			if (!allows("deal")) return;
 			const layout = current().layout;
 			const pane = findPane(layout, paneId);
@@ -112,7 +112,7 @@ export function useWorkspaceCommands<S>({
 		 * a Resolution's progress: the live Deck holding its slot takes
 		 * the Cards by key. It may run while a Card is in hand.
 		 */
-		reconcile(presentationId: string, cards: readonly KeyedCard<S>[]) {
+		reconcile: (presentationId: string, cards: readonly KeyedCard<S>[]) => {
 			const holder = deckHolding(current().layout, presentationId);
 			if (!holder?.deck) return;
 			dispatch({
@@ -121,7 +121,7 @@ export function useWorkspaceCommands<S>({
 				cards,
 			});
 		},
-		bringToFront(sheetId: string, card: Presentation<S>) {
+		bringToFront: (sheetId: string, card: Presentation<S>) => {
 			if (!allows("select")) return;
 			dispatch({
 				type: "BringToFront",
@@ -130,16 +130,16 @@ export function useWorkspaceCommands<S>({
 			});
 		},
 		/** A Link pushes a fresh Presentation as a Cover; Go to source is one. */
-		follow(paneId: string, subject: S) {
+		follow: (paneId: string, subject: S) => {
 			if (!allows("follow")) return;
 			dispatch({ type: "FollowLink", paneId, subject });
 		},
 		/** A Cover is a form, not a move: a dealt Card keeps its rank in its Deck. */
-		openCover(paneId: string) {
+		openCover: (paneId: string) => {
 			dispatch({ type: "Expand", paneId });
 		},
 		/** A Card on a Deck opens over it at once: the keyboard's Expand. */
-		expandCard(sheetId: string, card: Presentation<S>) {
+		expandCard: (sheetId: string, card: Presentation<S>) => {
 			const sheet = findSheet(current().layout, sheetId);
 			if (!sheet || !allows("expand")) return;
 			const lifted = dispatch({
@@ -151,11 +151,11 @@ export function useWorkspaceCommands<S>({
 			dispatch({ type: "Expand", paneId: sheet.paneId });
 		},
 		/** A Note or a Scroll dropped on an edge is the new Pane's Ground: a Floating Pane. */
-		splitPane(paneId: string, edge: Edge, size: number) {
+		splitPane: (paneId: string, edge: Edge, size: number) => {
 			dispatch({ type: "Expand", paneId, edge, size });
 		},
 		/** The Pane bar's control: the Ground's ←, or a Floating Pane's X. */
-		back(paneId: string) {
+		back: (paneId: string) => {
 			const pane = findPane(current().layout, paneId);
 			if (!pane || !allows("collapse")) return;
 			if (isRooted(pane)) {
@@ -163,7 +163,7 @@ export function useWorkspaceCommands<S>({
 			} else closePane(paneId);
 		},
 		/** A Cover bar's ←: only the top Cover's is reachable. */
-		coverBack(paneId: string, sheetId: string) {
+		coverBack: (paneId: string, sheetId: string) => {
 			const pane = findPane(current().layout, paneId);
 			const top = pane ? topSheetOf(pane) : null;
 			if (
@@ -179,7 +179,7 @@ export function useWorkspaceCommands<S>({
 		 * A Cover's ×: every Cover in the Pane leaves at once, each as its ←
 		 * would, and the Ground is what remains.
 		 */
-		clearCovers(paneId: string) {
+		clearCovers: (paneId: string) => {
 			const pane = findPane(current().layout, paneId);
 			if (!pane?.covers.length || !allows("collapse")) return;
 			dispatch({ type: "ClearCovers", paneId });

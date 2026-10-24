@@ -36,29 +36,20 @@ export type RelatedProperNoun = Extract<
 	{ kind: "PROPN" }
 >;
 
-type MorphemeReading = Extract<
-	Dumrel.MorphologicalTreeNode,
-	{ nodeKind: "morphemeReading" }
->["reading"];
-export type PrefixReading = Extract<
-	MorphemeReading,
-	{ lemma: { language: "de"; kind: "Prefix" } }
->;
+type PieceTarget = Dumrel.LinkTarget;
+type LemmaTarget = Extract<PieceTarget, { unitKind: "Lemma" }>;
+type PrefixLemma = Extract<LemmaTarget, { language: "de"; kind: "Prefix" }>;
 export type PrefixCoordinates = Pick<
-	PrefixReading["lemma"],
+	PrefixLemma,
 	"language" | "family" | "kind"
 >;
-export type PrefixFeature =
-	PrefixReading["lemma"]["coreFeatures"]["hasSepPrefix"];
-export type MorphemeReadingCompatible = MorphemeReading extends Dumling.Reading
+export type PrefixFeature = PrefixLemma["coreFeatures"]["hasSepPrefix"];
+export type LinkTargetCompatible = LemmaTarget extends Dumling.Lemma
 	? true
 	: false;
-type SuffixReading = Extract<
-	MorphemeReading,
-	{ lemma: { language: "de"; kind: "Suffix" } }
->;
+type SuffixLemma = Extract<LemmaTarget, { language: "de"; kind: "Suffix" }>;
 // @ts-expect-error An empty Feature Bag is an object, never a primitive.
-const invalidSuffixCore: SuffixReading["lemma"]["coreFeatures"] = 123;
+const invalidSuffixCore: SuffixLemma["coreFeatures"] = 123;
 export type RetractSynonym = Extract<
 	Dumrel.KnowledgeChange<NounReading>,
 	{
@@ -70,10 +61,10 @@ export type RetractSynonym = Extract<
 export type RetractionCarriesValue =
 	Extract<RetractSynonym, { value: unknown }> extends never ? false : true;
 
-// @ts-expect-error Recursive leaves contain actual Morpheme Readings.
-const invalidReading: MorphemeReading = 123;
-// @ts-expect-error A Lexeme Reading is not a Morpheme Reading.
-const invalidReadingFamily: MorphemeReading = source;
+// @ts-expect-error A link target is a Lemma or a Unit Shadow.
+const invalidReading: PieceTarget = 123;
+// @ts-expect-error A link target is never a Reading.
+const invalidReadingFamily: PieceTarget = source;
 const invalidRetract: Dumrel.KnowledgeChange<NounReading> = {
 	kind: "Retract",
 	aspect: "semanticRelations",

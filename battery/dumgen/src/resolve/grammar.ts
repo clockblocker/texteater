@@ -4,11 +4,12 @@
  * click's language module resolves it.
  */
 import * as Effect from "effect/Effect";
-import type { OperationScope } from "../call.js";
+import type { CallLog } from "../call.js";
 import type { InvalidModelOutput, ProviderFailure } from "../errors.js";
-import type { JevSettings } from "../jev-call.js";
-import { type LanguageModules, languageModuleOf } from "../language-module.js";
-import type { LunaSettings } from "../luna-call.js";
+import type { Jev } from "../jev-call.js";
+import { languageModuleOf } from "../language-module.js";
+import { Languages } from "../languages.js";
+import type { Luna } from "../luna-call.js";
 import type { SegmentLanguage } from "../segment/segmented-sentence.js";
 import type { GrammarResolution, ResolveGrammarInput } from "./types.js";
 
@@ -17,25 +18,27 @@ import type { GrammarResolution, ResolveGrammarInput } from "./types.js";
  * segmentation failed, or a unit that is no unit of its Sentence is bad
  * input, a Defect raised before anything is asked.
  */
-export const resolveGrammar = <L extends SegmentLanguage = "de">(
-	scope: OperationScope,
-	models: { readonly jev: JevSettings; readonly luna: LunaSettings },
-	modules: LanguageModules,
+export const resolveGrammar = Effect.fnUntraced(function* <
+	L extends SegmentLanguage,
+>(
 	input: ResolveGrammarInput<L>,
-): Effect.Effect<GrammarResolution<L>, ProviderFailure | InvalidModelOutput> =>
-	Effect.gen(function* () {
-		const module = languageModuleOf(modules, input.language);
-		if (module === undefined)
-			return yield* Effect.die(
-				Error(
-					`No grammar resolver registered for ${JSON.stringify(input.language)}`,
-				),
-			);
-		if (input.sentence.failed)
-			return yield* Effect.die(
-				Error(
-					"The Sentence's segmentation failed; segment it again before resolving a click on it",
-				),
-			);
-		return yield* module.resolveGrammar(scope, models, input);
-	});
+): Effect.fn.Return<
+	GrammarResolution<L>,
+	ProviderFailure | InvalidModelOutput,
+	Jev | Luna | CallLog
+> {
+	const module = languageModuleOf(yield* Languages, input.language);
+	if (module === undefined)
+		return yield* Effect.die(
+			Error(
+				`No grammar resolver registered for ${JSON.stringify(input.language)}`,
+			),
+		);
+	if (input.sentence.failed)
+		return yield* Effect.die(
+			Error(
+				"The Sentence's segmentation failed; segment it again before resolving a click on it",
+			),
+		);
+	return yield* module.resolveGrammar(input);
+});

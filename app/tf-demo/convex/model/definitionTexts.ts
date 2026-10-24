@@ -128,7 +128,6 @@ export async function scheduleDefinitionTextRun(
 	ctx: MutationCtx,
 	row: Pick<Doc<"definitionTexts">, "ownerReadingKey" | "runNumber">,
 ): Promise<void> {
-	if (!ctx.scheduler) return;
 	await ctx.scheduler.runAfter(0, materializeDefinitionText, {
 		ownerReadingKey: row.ownerReadingKey,
 	});
@@ -194,6 +193,7 @@ export async function writeDefinitionText(
 		segmentedSentenceId: input.segmentedSentenceId,
 		scrollId,
 		position: 0,
+		paragraph: 0,
 		language: input.language,
 		stitchedText,
 		units: units.map((unit) => ({ ...unit, segments: [...unit.segments] })),

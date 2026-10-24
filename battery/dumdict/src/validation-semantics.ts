@@ -4,6 +4,12 @@ import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
+import { shadowMatchesLemma } from "./core/identity.js";
+import {
+	entryLinksAreItsOwn,
+	linkNamesOwnSurface,
+} from "./core/occurrence/links.js";
+import { paradigmFitsLemma } from "./core/occurrence/paradigm.js";
 import type { DeepReadonly, PendingEntryId } from "./domain-types.js";
 import { makeSurfaceId } from "./dumling-id.js";
 
@@ -81,26 +87,30 @@ function knowledgeUsesLanguage(
 		}
 	}
 
-	const visitMorphologyNode = (
-		node: Dumrel.MorphologicalTreeNode,
-	): boolean => {
-		if (node.nodeKind === "morphemeReading")
-			return readingUsesLanguage(node.reading, language);
-		if (node.nodeKind === "unitShadow")
-			return node.unitShadow.language === language;
-		return node.children.every(visitMorphologyNode);
-	};
-
+	const pieces = [
+		...(knowledge.breakdown?.constituents ?? []),
+		...(knowledge.breakdown?.morphemes ?? []),
+	];
 	if (
-		knowledge.morphologicalTree !== undefined &&
-		!visitMorphologyNode(knowledge.morphologicalTree.root)
+		pieces.some(
+			({ target }) =>
+				target !== undefined && !linkUsesLanguage(target, language),
+		)
 	)
 		return false;
 	if (!valencyUsesLanguage(knowledge.valency ?? [], language)) return false;
 	return (
-		knowledge.participleSource === undefined ||
-		lemmaUsesLanguage(knowledge.participleSource.verb, language)
+		knowledge.source === undefined ||
+		linkUsesLanguage(knowledge.source.target, language)
 	);
+}
+
+/** Whether a Breakdown piece's or Source's Lemma or Unit Shadow uses the language. */
+function linkUsesLanguage(
+	target: Dumrel.LinkTarget,
+	language: Dumling.Language,
+): boolean {
+	return target.language === language;
 }
 
 /** Whether every Lemma, Reading and Unit Shadow a Knowledge Change names uses the language. */
@@ -114,9 +124,9 @@ export function knowledgeChangeUsesLanguage(
 					readingUsesLanguage(reading, language),
 				)
 			: change.value.every((lemma) => lemmaUsesLanguage(lemma, language));
-	if (change.aspect === "morphologicalTree" && "value" in change)
+	if (change.aspect === "breakdown" && "value" in change)
 		return knowledgeUsesLanguage(
-			{ morphologicalTree: change.value },
+			{ breakdown: { [change.part]: change.value } },
 			language,
 		);
 	if (change.aspect === "valency")
@@ -127,8 +137,8 @@ export function knowledgeChangeUsesLanguage(
 						retractedSlot(change.complement),
 						language,
 					);
-	if (change.aspect === "participleSource" && "value" in change)
-		return lemmaUsesLanguage(change.value.verb, language);
+	if (change.aspect === "source" && "value" in change)
+		return linkUsesLanguage(change.value.target, language);
 	return true;
 }
 
@@ -193,8 +203,9 @@ type PendingSemanticRelationRecordLike = {
 	};
 	readonly pending: {
 		readonly relation: string;
-		readonly target: { readonly language: Dumling.Language };
+		readonly target: Dumrel.UnitShadow;
 	};
+	readonly resolvedLemma?: Dumling.Lemma;
 	readonly sourceReading: Dumling.Reading;
 };
 
@@ -264,6 +275,21 @@ function pendingLocatorMatchesRelation(
 	return record.locator.relation === record.pending.relation;
 }
 
+/**
+ * A resolved record names a Lemma its Shadow matches, other than its source
+ * Reading's own Lemma, which no relation targets (system ADR 0011).
+ */
+function pendingResolutionMatches(
+	record: PendingSemanticRelationRecordLike,
+): boolean {
+	const resolved = record.resolvedLemma;
+	return (
+		resolved === undefined ||
+		(shadowMatchesLemma(record.pending.target, resolved) &&
+			!sameLemma(resolved, record.sourceReading.lemma))
+	);
+}
+
 function knowledgeChangeReadingMatchesPatched(
 	change: PlannedChangeLike,
 ): boolean {
@@ -296,16 +322,20 @@ function namedPredicate<Value>(
 }
 
 export const dumdictNamedValidationNames = [
+	"dumdict.attestation-link.surface-owner",
 	"dumdict.knowledge-change.language.de",
 	"dumdict.knowledge-change.language.en",
 	"dumdict.knowledge-change.language.he",
 	"dumdict.knowledge-change.preposition-case",
 	"dumdict.knowledge-change.reading-matches-patched",
+	"dumdict.lemma-record.paradigm",
 	"dumdict.pending.locator-matches-relation",
 	"dumdict.pending.locator-source",
+	"dumdict.pending.resolution-matches",
 	"dumdict.pending.target-language.de",
 	"dumdict.pending.target-language.en",
 	"dumdict.pending.target-language.he",
+	"dumdict.reading-entry.attestation-links",
 	"dumdict.reading-entry.no-same-lemma",
 	"dumdict.reading-entry.source-family",
 	"dumdict.reading-knowledge.language.de",
@@ -353,6 +383,12 @@ function lazyNamedRegistry<Name extends string, Value>(
 
 function constructNamedPredicate(name: PredicateName): NamedPredicate {
 	switch (name) {
+		case "dumdict.attestation-link.surface-owner":
+			return namedPredicate(linkNamesOwnSurface);
+		case "dumdict.lemma-record.paradigm":
+			return namedPredicate(paradigmFitsLemma);
+		case "dumdict.reading-entry.attestation-links":
+			return namedPredicate(entryLinksAreItsOwn);
 		case "dumdict.knowledge-change.language.de":
 			return forLanguage("de", knowledgeChangeUsesLanguage);
 		case "dumdict.knowledge-change.language.en":
@@ -367,6 +403,8 @@ function constructNamedPredicate(name: PredicateName): NamedPredicate {
 			return namedPredicate(pendingLocatorMatchesRelation);
 		case "dumdict.pending.locator-source":
 			return namedPredicate(pendingLocatorIdentifiesSource);
+		case "dumdict.pending.resolution-matches":
+			return namedPredicate(pendingResolutionMatches);
 		case "dumdict.pending.target-language.de":
 			return forLanguage(
 				"de",
@@ -424,6 +462,18 @@ function constantError(message: string): () => string {
 
 function constructNamedError(name: PredicateName): () => string {
 	switch (name) {
+		case "dumdict.attestation-link.surface-owner":
+			return constantError(
+				"An Attestation Link's Surface must be one its Reading's Lemma owns.",
+			);
+		case "dumdict.lemma-record.paradigm":
+			return constantError(
+				"A Lemma Paradigm must be one its Lemma's route takes.",
+			);
+		case "dumdict.reading-entry.attestation-links":
+			return constantError(
+				"A Reading Entry's Attestation Links must name its Reading, each ref once.",
+			);
 		case "dumdict.knowledge-change.language.de":
 			return constantError(
 				"Reading Knowledge Change references must use de.",
@@ -449,6 +499,10 @@ function constructNamedError(name: PredicateName): () => string {
 		case "dumdict.pending.locator-source":
 			return constantError(
 				"Pending Semantic Relation locator must identify its source Reading.",
+			);
+		case "dumdict.pending.resolution-matches":
+			return constantError(
+				"A resolved Pending Semantic Relation must name a Lemma its Shadow matches, other than its source Reading's.",
 			);
 		case "dumdict.pending.target-language.de":
 			return constantError(

@@ -1,22 +1,19 @@
 import { expect, test } from "bun:test";
 import { readFile } from "node:fs/promises";
-import { createDumgen } from "dumgen";
+import { DumgenLive, JevTransport, operations } from "dumgen";
 import * as Effect from "effect/Effect";
 import { deploymentLuna } from "../server/deployment-luna";
 
-for (const [path, instances] of [
-	["../convex/model/deploymentDumgen.ts", 2],
-	["../convex/knowledgeGenerationActions.ts", 1],
-	["../convex/translationAccumulationActions.ts", 1],
-] as const) {
-	test(`all generating Dumgen instances carry the paired Luna options: ${path}`, async () => {
+test("generating actions use the shared deployment Layer", async () => {
+	for (const path of [
+		"../convex/knowledgeGenerationActions.ts",
+		"../convex/translationAccumulationActions.ts",
+	]) {
 		const source = await readFile(new URL(path, import.meta.url), "utf8");
-		expect(
-			source.match(/\.\.\.deploymentLuna\(env(?:, timeoutMs)?\)/g),
-		).toHaveLength(instances);
+		expect(source).toContain("deploymentDumgen");
 		expect(source).not.toContain("createOpenAILuna");
-	});
-}
+	}
+});
 
 test("generated deployment environment exposes both bridge variables", async () => {
 	const declarations = await readFile(
@@ -29,7 +26,7 @@ test("generated deployment environment exposes both bridge variables", async () 
 
 test("without bridge configuration, Luna keeps Dumgen's default configuration", () => {
 	const options = deploymentLuna({ OPENAI_API_KEY: "fixture" });
-	expect(options.luna).toBeFunction();
+	expect(options.luna).toBeDefined();
 	expect(options).not.toHaveProperty("lunaConfiguration");
 });
 
@@ -106,10 +103,10 @@ test("the real Dumgen transport sends the selected model and only its settings t
 		});
 	}) as typeof fetch;
 	try {
-		const dumgen = createDumgen({
-			jev: async () => {
+		const layer = DumgenLive({
+			jev: JevTransport.fromAsk(async () => {
 				throw new Error("No jev call expected");
-			},
+			}),
 			...deploymentLuna(
 				{
 					OPENAI_API_KEY: "fixture-bridge-bearer",
@@ -120,11 +117,13 @@ test("the real Dumgen transport sends the selected model and only its settings t
 			),
 		});
 		await Effect.runPromise(
-			dumgen.translate.sentence({
-				language: "de",
-				sentence: "Hallo.",
-				into: "en",
-			}),
+			operations.translate
+				.sentence({
+					language: "de",
+					sentence: "Hallo.",
+					into: "en",
+				})
+				.pipe(Effect.provide(layer)),
 		);
 		expect(requests).toHaveLength(1);
 		expect(requests[0]?.url).toBe("http://127.0.0.1:3250/v1/responses");

@@ -1,6 +1,5 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
 import { InvalidModelOutput } from "../../src/errors.js";
 import type { LunaAsk } from "../../src/luna.js";
 import { guardedHeadword } from "../../src/resolve/de/headword-guards.js";
@@ -8,6 +7,7 @@ import { verbHeadword } from "../../src/resolve/de/open-route/verbal.js";
 import { targetOf } from "../../src/resolve/de/target.js";
 import type { RouteKey } from "../../src/segment/de/routes.js";
 import type { JevAsk } from "../../src/segment/jev.js";
+import { fakeDumgen } from "./../service-test-adapter.js";
 import { writes } from "./grammar-fixtures.js";
 import {
 	attested,
@@ -155,7 +155,7 @@ test("a Luna answer the transport kept no output for is refused with the transpo
 	});
 	const failure = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({ jev: fakeJev().ask, luna }).resolve.grammar({
+			fakeDumgen({ jev: fakeJev().ask, luna }).resolve.grammar({
 				language: "de",
 				sentence: sentenceOf("Er kommt."),
 				unit: unitOf([2], "Lexeme/VERB"),

@@ -56,31 +56,14 @@ describe("parseReadingKnowledge", () => {
 
 	test.each([
 		[
-			"an empty object as a Morpheme Reading",
-			{
-				morphologicalTree: {
-					root: {
-						nodeKind: "structure",
-						children: [
-							{ nodeKind: "morphemeReading", reading: {} },
-						],
-					},
-				},
-			},
+			"an empty object as a link target",
+			{ breakdown: { morphemes: [{ letters: "Haus", target: {} }] } },
 		],
 		[
-			"a Lexeme Reading as a Morpheme Reading",
+			"a Reading as a link target",
 			{
-				morphologicalTree: {
-					root: {
-						nodeKind: "structure",
-						children: [
-							{
-								nodeKind: "morphemeReading",
-								reading: houseReading,
-							},
-						],
-					},
+				breakdown: {
+					morphemes: [{ letters: "Haus", target: houseReading }],
 				},
 			},
 		],
@@ -179,14 +162,24 @@ describe("applyKnowledgeChanges", () => {
 			relation: "nearSynonym",
 			value: [berlinLemma],
 		},
-		{ kind: "Contribute", aspect: "plural", value: ["Häuser"] },
+		{
+			kind: "Contribute",
+			aspect: "translations",
+			language: "ru",
+			value: ["здание"],
+		},
 		{
 			kind: "Correct",
 			aspect: "translations",
 			language: "en",
 			value: ["building"],
 		},
-		{ kind: "Contribute", aspect: "plural", value: ["Hause", "Häuser"] },
+		{
+			kind: "Contribute",
+			aspect: "translations",
+			language: "ru",
+			value: ["дом", "здание"],
+		},
 		{ kind: "Retract", aspect: "definition" },
 		{ kind: "Contribute", aspect: "transcription", value: "haʊ̯s" },
 	];

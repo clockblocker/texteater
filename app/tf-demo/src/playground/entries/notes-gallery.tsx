@@ -47,7 +47,7 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 			</div>
 		);
 	}
-	if (catalog.isError || !catalog.data) {
+	if (catalog.isError) {
 		return (
 			<p className="p-6 text-sm text-destructive" role="alert">
 				The playground fixtures could not be built. Check the Vite
@@ -108,7 +108,7 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 }
 
 /** `["lemma", id]` and friends. Ids are trusted: this is a dev-only surface. */
-function targetFromSegments(
+export function targetFromSegments(
 	segments: readonly string[],
 ): WorkspaceTarget | null {
 	const [kind, id, step] = segments;
@@ -140,7 +140,7 @@ function targetFromSegments(
 	}
 }
 
-function segmentsFromTarget(target: WorkspaceTarget): readonly string[] {
+export function segmentsFromTarget(target: WorkspaceTarget): readonly string[] {
 	switch (target.kind) {
 		case "Attestation":
 			return ["attestation", target.attestationId];

@@ -1,6 +1,7 @@
 import { afterEach, expect, test } from "bun:test";
 import { ConvexError } from "convex/values";
 import { api } from "../convex/_generated/api";
+import { replaceModelTransports } from "../convex/model/deploymentDumgen";
 import {
 	GERMAN_ONLY_MESSAGE,
 	INTAKE_NOT_CONFIGURED_MESSAGE,
@@ -239,8 +240,8 @@ test("a pasted text mixing German and English is accepted: the English Sentences
 });
 
 test("without a TypeSafe key the submission fails with a NotConfigured error the Visitor sees, stores nothing and records a Failed run", async () => {
-	const providers = typeSafe();
-	delete process.env.TYPESAFE_API_KEY;
+	// A deployment with no TypeSafe key has no jev transport.
+	restore = replaceModelTransports({});
 	const t = createTestConvex();
 	const failure = await submit(t, "Die Banken sind geschlossen.").then(
 		() => undefined,
@@ -254,7 +255,6 @@ test("without a TypeSafe key the submission fails with a NotConfigured error the
 		},
 	});
 	expect(visitorErrorMessage(failure)).toBe(INTAKE_NOT_CONFIGURED_MESSAGE);
-	expect(providers.requests).toEqual([]);
 	expect(await storedScrolls(t)).toEqual([]);
 	expect(await intakeRuns(t)).toEqual([
 		expect.objectContaining({

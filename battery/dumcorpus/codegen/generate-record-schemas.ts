@@ -1,7 +1,11 @@
 import { fileURLToPath } from "node:url";
 import { type ArtifactDraft, defineCodegen, runCodegenCommand } from "codegen";
 import { dumlingRoutes } from "dumling/codegen";
-import { readingKnowledgeSchema } from "dumrel/schema";
+import {
+	breakdownSchema,
+	readingKnowledgeSchema,
+	sourceSchema,
+} from "dumrel/schema";
 import { z } from "zod";
 import {
 	breakdownRecordFileSchema,
@@ -12,7 +16,7 @@ import {
 // Emits one record JSON Schema per language, with each target's route and
 // Attestation drawn from Dumling's per-route schemas and its Reading Knowledge
 // from dumrel's schema, one Breakdown Record Schema per language, with its
-// Locution and Saying Lemmas and Lexeme routes and Attestations, and one for
+// owning Readings and dumrel's Breakdown and Source schemas, and one for
 // Text Records, so a record's `$schema` gives editors completion and
 // validation. Also emits `src/generated/routes.ts`, each language's routes,
 // which the loader checks a target's route against without its Attestation.
@@ -43,6 +47,7 @@ for (const language of ["de", "en", "he"] as const) {
 				...((await import(`dumling/schema/${route.schemaPath}`)) as {
 					lemmaSchema: z.ZodType;
 					attestationSchema: z.ZodType;
+					readingSchema: z.ZodType;
 				}),
 			})),
 	);
@@ -63,7 +68,6 @@ for (const language of ["de", "en", "he"] as const) {
 		.toSorted((a, b) =>
 			`${a.family}/${a.kind}` < `${b.family}/${b.kind}` ? -1 : 1,
 		);
-	const lexemes = schemas.filter(({ family }) => family === "Lexeme");
 	const { $schema, ...body } = z.toJSONSchema(
 		recordFileSchema({
 			route: union(routeSchemas(schemas), "routes"),
@@ -81,30 +85,21 @@ for (const language of ["de", "en", "he"] as const) {
 		title: `Dumcorpus ${language} Spec Record`,
 		...body,
 	});
-	const { $schema: breakdownSchema, ...breakdownBody } = z.toJSONSchema(
-		breakdownRecordFileSchema(
-			union(
+	const { $schema: breakdownRecordSchema, ...breakdownBody } = z.toJSONSchema(
+		breakdownRecordFileSchema({
+			reading: union(
 				schemas
-					.filter(
-						({ family }) =>
-							family === "Locution" || family === "Saying",
-					)
-					.map((schema) => schema.lemmaSchema),
-				"Locution or Saying routes",
+					.filter(({ family }) => family !== "Foreign")
+					.map((schema) => schema.readingSchema),
+				"routes",
 			),
-			{
-				route: union(routeSchemas(lexemes), "Lexeme routes"),
-				attestation: union(
-					lexemes.map((schema) => schema.attestationSchema),
-					"Lexeme routes",
-				),
-				knowledge: readingKnowledgeSchema,
-			},
-		),
+			breakdown: breakdownSchema,
+			source: sourceSchema,
+		}),
 		{ io: "input", unrepresentable: "any", reused: "ref" },
 	);
 	emit(`breakdown-record.${language}`, {
-		$schema: breakdownSchema,
+		$schema: breakdownRecordSchema,
 		$id: `https://unpkg.com/dumcorpus/schema/breakdown-record.${language}.json`,
 		title: `Dumcorpus ${language} Breakdown Record`,
 		...breakdownBody,

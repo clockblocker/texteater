@@ -2,12 +2,12 @@ import { expect, test } from "bun:test";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../src/create-dumgen.js";
 import type { OperationTrace } from "../src/operation-trace.js";
 import type {
 	SegmentedSentence,
 	Unit,
 } from "../src/segment/segmented-sentence.js";
+import { fakeDumgen } from "./service-test-adapter.js";
 
 const attestation: Dumling.Attestation<"he", "Lexeme", "NOUN"> = {
 	unitKind: "Attestation",
@@ -48,7 +48,7 @@ const noModels = async (): Promise<never> => {
 test("public Card operations reach Hebrew handlers through the shared registry", async () => {
 	expect(parseUnit(attestation).success).toBe(true);
 	const traces: OperationTrace[] = [];
-	const dumgen = createDumgen({
+	const dumgen = fakeDumgen({
 		jev: noModels,
 		luna: noModels,
 		onOperation: (trace) => traces.push(trace),
@@ -92,6 +92,7 @@ test("public Card operations reach Hebrew handlers through the shared registry",
 	expect(knowledge).toEqual({
 		changes: [],
 		pendingRelations: [],
+		paradigmChanges: [],
 		failures: [],
 	});
 	expect(traces.map(({ operation }) => operation)).toEqual([

@@ -2,9 +2,9 @@ import type { Question } from "@typesafe-ai/sdk";
 import { isRecord } from "common-utils";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
 import type { LunaAsk, LunaRequest } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
+import { operations } from "../../src/operations.js";
 import type {
 	GrammarResolution,
 	ResolveGrammarInput,
@@ -20,6 +20,7 @@ import type {
 	Unit,
 } from "../../src/segment/segmented-sentence.js";
 import { segmentsOf } from "../lab/evaluation/spec-corpus/fixtures.js";
+import { type FakeDumgenOptions, liveOver } from "../live-over.js";
 
 export const picked = (choice: string): Answer => ({
 	type: "choice",
@@ -147,7 +148,7 @@ export function unitOf(
 
 /** Resolves one click and keeps the trace it reported. */
 export async function resolveOnce(
-	options: Pick<DumgenOptions, "jev" | "luna"> & Partial<DumgenOptions>,
+	options: FakeDumgenOptions,
 	input: Omit<
 		ResolveGrammarInput,
 		"language" | "neighbours" | "lemmaCandidates"
@@ -156,15 +157,21 @@ export async function resolveOnce(
 ): Promise<{ result: GrammarResolution; trace: OperationTrace | undefined }> {
 	const traces: OperationTrace[] = [];
 	const result = await Effect.runPromise(
-		createDumgen({
-			...options,
-			onOperation: (trace) => traces.push(trace),
-		}).resolve.grammar({
-			language: "de",
-			neighbours: {},
-			lemmaCandidates: [],
-			...input,
-		}),
+		operations.resolve
+			.grammar({
+				language: "de",
+				neighbours: {},
+				lemmaCandidates: [],
+				...input,
+			})
+			.pipe(
+				Effect.provide(
+					liveOver({
+						...options,
+						onOperation: (trace) => traces.push(trace),
+					}),
+				),
+			),
 	);
 	return { result, trace: traces[0] };
 }
@@ -175,3 +182,56 @@ export function attested(result: GrammarResolution): Dumling.Attestation<"de"> {
 		throw Error(`Expected a Resolved click, got ${result._tag}`);
 	return result.attestation;
 }
+
+export const word = (text: string, surface?: string): Segment => ({
+	kind: "ResolvableText",
+	text,
+	...(surface === undefined ? {} : { surface }),
+});
+export const space: Segment = { kind: "Whitespace", text: " " };
+export const stop: Segment = { kind: "Punctuation", text: "." };
+
+/**
+ * Luna writing `canonicalForm` and the members as attested. For a
+ * Locution or Saying it ties each word of the form to the member, or run
+ * of members, that spells it, a finite verb citing its infinitive last.
+ */
+export const writes = (canonicalForm: string, members?: readonly string[]) =>
+	fakeLuna(({ members: sent }) => {
+		const spelled = members ?? sent.map(({ text }) => text);
+		const used = new Set<number>();
+		// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
+		const words = canonicalForm.split(" ").flatMap((word) => {
+			for (let start = 0; start < spelled.length; start++) {
+				let joined = "";
+				for (let end = start; end < spelled.length; end++) {
+					if (used.has(end)) break;
+					joined += spelled[end];
+					if (joined.toLowerCase() === word.toLowerCase()) {
+						const run = Array.from(
+							{ length: end - start + 1 },
+							(_, offset) => start + offset,
+						);
+						for (const position of run) used.add(position);
+						return run.map((position) => ({
+							member: `m${position}`,
+							text: "",
+							comma: false,
+						}));
+					}
+				}
+			}
+			const spare = spelled.findIndex(
+				(_, position) => !used.has(position),
+			);
+			if (spare >= 0) used.add(spare);
+			return [
+				{
+					member: spare >= 0 ? `m${spare}` : "",
+					text: word,
+					comma: false,
+				},
+			];
+		});
+		return { canonicalForm, words, members: spelled };
+	});

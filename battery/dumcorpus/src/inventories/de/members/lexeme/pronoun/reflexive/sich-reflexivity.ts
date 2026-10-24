@@ -25,7 +25,7 @@ const lemma = {
 } satisfies Dumling.Lemma<"de">;
 export const member: AuthoredMember = {
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🪞" }, lemma },
+	reading: { unitKind: "Reading", emojiDescription: "🪞", lemma },
 	knowledge: {
 		definition:
 			"Ein Reflexivpronomen verweist auf das Subjekt desselben Satzes zurück. Seine Form richtet sich nach der Person des Subjekts: ich – mich (Akkusativ) oder mir (Dativ), du – dich oder dir, er, sie, es und Sie – sich, wir – uns, ihr – euch. Nur mich/mir und dich/dir unterscheiden den Kasus; die übrigen Formen gelten für beide. Der Akkusativ steht, wenn das Pronomen das einzige Objekt ist: Ich wasche mich. Der Dativ steht, wenn daneben ein Akkusativobjekt steht: Ich wasche mir die Hände. Manche Verben sind immer reflexiv, und das Pronomen gehört fest zum Verb: sich schämen verlangt den Akkusativ (Ich schäme mich), sich etwas einbilden den Dativ (Ich bilde mir etwas ein).",

@@ -84,9 +84,11 @@ implementation; whether it obeys dumcorpus's Rules is decided by the eval,
 not by shared wording.
 
 **Review.** Records are reviewed one Annotation Layer at a time
-([#736](https://github.com/clockblocker/texteater/issues/736)). A sentence or
-Breakdown Record's annotation has four layers, each resting on the ones
-before it:
+([#736](https://github.com/clockblocker/texteater/issues/736)). A sentence
+record's annotation has four layers, each resting on the ones before it. A
+Breakdown Record's parts carry no Attestation and no Reading
+([ADR 0050](./0050-break-a-reading-down-into-its-constituents.md)), so its
+parts are reviewed in the first layer only:
 
 1. Segmentation: each target's member Segments and route, the No Target
    entries and the coverage.

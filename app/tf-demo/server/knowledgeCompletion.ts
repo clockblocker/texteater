@@ -93,8 +93,8 @@ export function knowledgeRequestComplete(
 /**
  * The request a final publication must cover in stored content. Some
  * aspects may rightly come back empty and store nothing: a Valency Frame
- * (ADR 0034), a Locution Type, a Formula Role and a Participle Source (ADR
- * 0036, ADR 0039). A run without failures has answered them whatever it
+ * (ADR 0034), a Locution Type, a Formula Role and a Source (ADR 0036, ADR
+ * 0039, ADR 0050). A run without failures has answered them whatever it
  * stored; any failure already leaves the request incomplete.
  */
 export function withoutAnswerableEmptyAspects(
@@ -104,7 +104,7 @@ export function withoutAnswerableEmptyAspects(
 		valency: _valency,
 		locutionType: _locutionType,
 		formulaRole: _formulaRole,
-		participleSource: _participleSource,
+		source: _source,
 		...rest
 	} = request;
 	return rest;

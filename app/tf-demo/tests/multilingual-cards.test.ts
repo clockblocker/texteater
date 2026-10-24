@@ -1,3 +1,7 @@
+// Convex marks its runtime JSON getter internal and omits it from declarations.
+const validatorToJson = (value: unknown): unknown =>
+	(value as { readonly json: unknown }).json;
+
 import { afterEach, expect, jest, test } from "bun:test";
 import { internal } from "../convex/_generated/api";
 import {
@@ -11,8 +15,12 @@ import {
 import { createTestConvex } from "./support/convex";
 
 test("stored Card routes and checkpoints register Hebrew without pretending to be German", () => {
-	expect(JSON.stringify(storedUnitValidator.json)).toContain('"he"');
-	expect(JSON.stringify(grammaticalLanguageValidator.json)).toContain('"he"');
+	expect(JSON.stringify(validatorToJson(storedUnitValidator))).toContain(
+		'"he"',
+	);
+	expect(
+		JSON.stringify(validatorToJson(grammaticalLanguageValidator)),
+	).toContain('"he"');
 });
 
 import { parseResolvedGrammar } from "../server/resolutionGrammar";

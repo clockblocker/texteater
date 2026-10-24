@@ -1,27 +1,18 @@
 "use node";
 
 import { v } from "convex/values";
-import {
-	createDumgen,
-	createOpenAILuna,
-	createTypeSafeAsk,
-	type LunaAsk,
-	type OperationTrace,
-} from "dumgen";
+import { type OperationTrace, operations, TraceSink } from "dumgen";
 import * as Effect from "effect/Effect";
+import { logged } from "../server/logging";
 import { storedUnitOf } from "../server/storedSegments";
 import {
 	isSupportedTargetLanguage,
 	type SupportedTargetLanguage,
 } from "../shared/supported-target-language";
 import { internal } from "./_generated/api";
-import { env, internalAction } from "./_generated/server";
+import { internalAction } from "./_generated/server";
+import { deploymentDumgen, modelTransports } from "./model/deploymentDumgen";
 import { stripScrollAnalysisGraph } from "./model/scrollAnalysisStripping";
-
-/** Segmentation never writes, so it needs no OpenAI key; Dumgen still takes a Luna. */
-const noLuna: LunaAsk = async () => {
-	throw Error("Segmentation never asks Luna");
-};
 
 /** Logs why the definition's Sentence failed; only the trace knows. */
 function logFailedSentence(trace: OperationTrace) {
@@ -37,28 +28,28 @@ function logFailedSentence(trace: OperationTrace) {
  * with Dumgen's `segment.inUnits`, the definition taken whole as that
  * Sentence: no `splitText`, since a Definition Text holds one Sentence. A
  * Sentence whose segmentation failed comes back marked `failed`, with no
- * units, and is stored so.
+ * units, and is stored so. Segmentation never asks Luna, so it needs no
+ * OpenAI key.
  */
 async function segmentDefinition(
 	definition: string,
 	language: SupportedTargetLanguage,
 ) {
-	const apiKey = env.TYPESAFE_API_KEY;
-	if (!apiKey)
+	if (!modelTransports().jev)
 		throw new Error(
 			"TYPESAFE_API_KEY is not set, so the definition cannot be segmented.",
 		);
 	const segmented = await Effect.runPromise(
-		createDumgen({
-			jev: createTypeSafeAsk({ apiKey }),
-			luna: env.OPENAI_API_KEY
-				? createOpenAILuna({ apiKey: env.OPENAI_API_KEY })
-				: noLuna,
-			onOperation: logFailedSentence,
-		}).segment.inUnits({
-			language,
-			paragraphs: [{ sentences: [definition] }],
-		}),
+		operations.segment
+			.inUnits({
+				language,
+				paragraphs: [{ sentences: [definition] }],
+			})
+			.pipe(
+				logged,
+				Effect.provideService(TraceSink, logFailedSentence),
+				Effect.provide(deploymentDumgen()),
+			),
 	);
 	const sentence = segmented.paragraphs[0]?.sentences[0];
 	if (!sentence) throw new Error("The definition yielded no Sentence.");

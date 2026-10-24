@@ -50,7 +50,7 @@ import {
 import { foldedText, fusedSiblings, reflexiveForms } from "./candidates.js";
 import { boundPieces, type CodeRule, withCodeRules } from "./code-rules.js";
 import { type Nomination, reaskedIdiomId, slotId } from "./nomination.js";
-import { argmax, groupKey, partitionOf } from "./partition.js";
+import { argmaxBesideNone, groupKey, partitionOf } from "./partition.js";
 import { joinRefs } from "./sentence.js";
 
 /** How the Locution Choice's answers become merges. */
@@ -149,14 +149,8 @@ function mergeCandidates(
 			nomination.final[reaskedIdiomId(slot.piece.id)],
 		]) {
 			if (answer?.type !== "choice") continue;
-			const top = argmax(
-				Object.fromEntries(
-					Object.entries(answer.probabilities).filter(
-						([key]) => key !== "none",
-					),
-				),
-			);
-			if (top.key && top.share >= idiomFlag)
+			const top = argmaxBesideNone(answer.probabilities);
+			if (top && top.share >= idiomFlag)
 				flag(slot.piece.id, Number(top.key.slice(1)));
 		}
 	}

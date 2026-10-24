@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
 import { isSyncreticUnit, isSyncretism } from "dumling";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
+import { fakeDumgen } from "./../service-test-adapter.js";
 import { writes } from "./grammar-fixtures.js";
 import {
 	attested,
@@ -37,7 +37,7 @@ test("a unit intake left Unresolved stays Unresolved and asks nothing", async ()
 
 test("another language, a failed Sentence or a unit outside its Sentence is a Defect before anything is asked", async () => {
 	const jev = fakeJev();
-	const dumgen = createDumgen({ jev: jev.ask, luna: fakeLuna().ask });
+	const dumgen = fakeDumgen({ jev: jev.ask, luna: fakeLuna().ask });
 	const sentence = sentenceOf("Er kommt.");
 	const input = {
 		language: "de" as const,
@@ -78,7 +78,7 @@ test("a transport failure is a ProviderFailure and an unusable answer an Invalid
 	const down = fakeJev({}, { fail: () => true });
 	const failure = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({
+			fakeDumgen({
 				jev: down.ask,
 				luna: fakeLuna().ask,
 			}).resolve.grammar({
@@ -95,7 +95,7 @@ test("a transport failure is a ProviderFailure and an unusable answer an Invalid
 	const garbled = fakeLuna(() => ({ canonicalForm: "kommen" }));
 	const unusable = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({
+			fakeDumgen({
 				jev: fakeJev().ask,
 				luna: garbled.ask,
 			}).resolve.grammar({
@@ -121,7 +121,7 @@ test("a click is all-or-nothing: a failed Case question interrupts Luna's call i
 	const luna = fakeLuna(undefined, { delayMs: 50 });
 	const failure = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({ jev: jev.ask, luna: luna.ask }).resolve.grammar({
+			fakeDumgen({ jev: jev.ask, luna: luna.ask }).resolve.grammar({
 				language: "de",
 				sentence: sentenceOf("Er hilft der Anna."),
 				unit: unitOf([4, 6], "Lexeme/PROPN"),

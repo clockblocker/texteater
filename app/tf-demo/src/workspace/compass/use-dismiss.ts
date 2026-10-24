@@ -122,7 +122,7 @@ export function useDismiss<S>({
 	return {
 		pageMove,
 		/** A press anywhere activates its Pane, and may become a dismissive click. */
-		pageDown(event: ReactPointerEvent<HTMLElement>) {
+		pageDown: (event: ReactPointerEvent<HTMLElement>) => {
 			dismissOnClick.current = false;
 			const at = (event.target as HTMLElement).closest<HTMLElement>(
 				"[data-deck-pane], [data-pane]",
@@ -139,7 +139,7 @@ export function useDismiss<S>({
 				scrolled: false,
 			};
 		},
-		pageUp(event: ReactPointerEvent<HTMLElement>) {
+		pageUp: (event: ReactPointerEvent<HTMLElement>) => {
 			const pointer = press.current;
 			if (!pointer || pointer.id !== event.pointerId) return;
 			pageMove(event);
@@ -153,10 +153,10 @@ export function useDismiss<S>({
 			}, 0);
 		},
 		/** A press that scrolled something is no click. */
-		pageScroll() {
+		pageScroll: () => {
 			if (press.current) press.current.scrolled = true;
 		},
-		pageClick(event: ReactMouseEvent<HTMLElement>) {
+		pageClick: (event: ReactMouseEvent<HTMLElement>) => {
 			if (swallowClick.current) {
 				swallowClick.current = false;
 				event.preventDefault();

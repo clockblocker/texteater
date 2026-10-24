@@ -1,7 +1,9 @@
 import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import { derivePendingEntryId } from "../../src/core/pending";
+import type { SurfaceEntry } from "../../src/domain-types";
 import type { SerializedDictionaryNote } from "../../src/dto/serialized-note";
+import { makeSurfaceId } from "../../src/dumling-id";
 
 const englishVerbFeatures = {
 	phrasal: null,
@@ -67,7 +69,7 @@ export const englishSwimDraft = {
 	reading: englishSwimReading,
 	note: {
 		attestedTranslations: ["swim"],
-		attestations: ["They swim every morning."],
+		attestationLinks: [],
 		notes: "Core swimming reading.",
 	},
 };
@@ -76,24 +78,49 @@ export const englishRunDraft = {
 	reading: englishRunReading,
 	note: {
 		attestedTranslations: ["run"],
-		attestations: ["They run every morning."],
+		attestationLinks: [],
 		notes: "Core running reading.",
 	},
 };
 
+const englishWalkCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
+	language: "en",
+	lemma: englishWalkLemma,
+	normalizedSurface: "walk",
+	spelling: { kind: "Canonical" },
+	surfaceFeatures: null,
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
+
+export const walkSurface = {
+	id: makeSurfaceId("en", englishWalkCitationSurface),
+	surface: englishWalkCitationSurface,
+	ownerLemma: englishWalkLemma,
+	attestedTranslations: [],
+	attestations: [],
+	notes: "",
+} satisfies SurfaceEntry<"en">;
+
 const walkReading = {
 	reading: englishWalkReading,
 	attestedTranslations: ["walk"],
-	attestations: ["They walk home together."],
+	attestationLinks: [
+		{
+			ref: "They walk home together.",
+			surfaceId: walkSurface.id,
+			reading: englishWalkReading,
+		},
+	],
 	notes: "Core motion reading.",
 };
 
 export const enSerializedNotes = [
 	{
-		schemaVersion: 1,
+		schemaVersion: 2,
 		lemmaRecord: { lemma: englishWalkLemma },
 		readingEntries: [walkReading],
-		ownedSurfaceEntries: [],
+		ownedSurfaceEntries: [walkSurface],
 		pendingRelations: [],
 	},
 ] satisfies SerializedDictionaryNote<"en">[];
@@ -107,10 +134,10 @@ const pendingSwimEntryId = derivePendingEntryId({
 
 export const enSerializedNotesWithPendingSwimRelation = [
 	{
-		schemaVersion: 1,
+		schemaVersion: 2,
 		lemmaRecord: { lemma: englishWalkLemma },
 		readingEntries: [walkReading],
-		ownedSurfaceEntries: [],
+		ownedSurfaceEntries: [walkSurface],
 		pendingRelations: [
 			{
 				sourceReading: englishWalkReading,

@@ -44,11 +44,3 @@ export function knowledgePolicyMask(
 		? kinds[route.kind]
 		: undefined;
 }
-
-/** Whether the Knowledge Policy applies `aspect` to a Lemma's route. */
-export function knowledgePolicyApplies(
-	lemma: Dumling.LemmaRoute,
-	aspect: keyof KnowledgeRequestMask,
-): boolean {
-	return knowledgePolicyMask(lemma)?.[aspect] !== undefined;
-}

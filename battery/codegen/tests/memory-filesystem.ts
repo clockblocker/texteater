@@ -1,5 +1,5 @@
 import { relative, resolve } from "node:path";
-import type { CodegenFileSystem } from "../src/runner.js";
+import type { CodegenFileSystem } from "../src/file-system.js";
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();

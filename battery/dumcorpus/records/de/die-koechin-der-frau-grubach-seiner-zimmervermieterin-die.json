@@ -817,12 +817,10 @@
 			},
 			"reading": {
 				"emojiDescription": "🕐🔢",
-				"knowledge": {
-					"plural": ["Uhren"]
-				},
+				"knowledge": {},
+				"paradigm": { "plural": ["Uhren"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
@@ -830,7 +828,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

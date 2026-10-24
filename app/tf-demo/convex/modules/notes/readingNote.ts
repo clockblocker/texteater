@@ -3,6 +3,7 @@ import { type Infer, v } from "convex/values";
 import { normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
+import { parseGermanReading } from "../../../server/operationalParsing";
 import type { Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import { findDefinitionText } from "../../model/definitionTexts";
@@ -19,6 +20,7 @@ import {
 	projectSentenceView,
 	sentenceViewValidator,
 } from "../scroll/sentenceView";
+import { breakdownViewValidator, loadBreakdownView } from "./breakdown";
 import {
 	pendingRelationProjectionValidator,
 	projectPendingRelations,
@@ -36,10 +38,10 @@ import type { PresentedRelations } from "./relations";
 import {
 	grammaticalAlternativeValidator,
 	loadGrammaticalAlternatives,
-	loadParticipleLinks,
 	loadRelationProjections,
-	participleLinkValidator,
+	loadSourceLinks,
 	relationProjectionValidator,
+	sourceLinkValidator,
 } from "./relations";
 import { unitShadowProjectionValidator } from "./shadowNote";
 import {
@@ -135,8 +137,10 @@ export const readingNoteValidator = v.object({
 	/** The relation neighbourhood passed a cap; more relations exist. */
 	relationsTruncated: v.boolean(),
 	grammaticalAlternatives: v.array(grammaticalAlternativeValidator),
-	/** Participle Source links, stored on the ADJ and projected on its verb. */
-	participleLinks: v.optional(v.array(participleLinkValidator)),
+	/** Source links: stored on the Reading; a participle's is projected on its verb. */
+	sourceLinks: v.optional(v.array(sourceLinkValidator)),
+	/** Constituents and morphemes resolved to the Notes they open (ADR 0050). */
+	breakdown: v.optional(breakdownViewValidator),
 	pendingRelations: v.array(pendingRelationProjectionValidator),
 	structuralReferences: v.array(structuralShadowProjectionValidator),
 	definitionText: v.union(
@@ -234,16 +238,25 @@ export async function loadUnitReadingNote(
 		);
 	}
 
+	const readingValue = projectReadingValue(reading, lemma);
 	const knowledge = projectReadingKnowledge(
-		projectReadingValue(reading, lemma),
+		readingValue,
 		readingKnowledge?.knowledge,
 	);
-	const participleLinks = await loadParticipleLinks(
+	const sourceLinks = await loadSourceLinks(
 		ctx,
 		reading,
 		lemma,
-		knowledge.participleSource,
+		knowledge.source,
 	);
+	const breakdown =
+		readingValue.lemma.language === "de"
+			? await loadBreakdownView(
+					ctx,
+					parseGermanReading(readingValue),
+					knowledge,
+				)
+			: undefined;
 	const activeAttempt = attempts.find(
 		({ state }) =>
 			state === "Waiting" || state === "Scheduled" || state === "Running",
@@ -289,7 +302,8 @@ export async function loadUnitReadingNote(
 		relations: relationProjections.resolved,
 		relationsTruncated: relationProjections.truncated,
 		grammaticalAlternatives,
-		participleLinks,
+		sourceLinks,
+		...(breakdown ? { breakdown } : {}),
 		pendingRelations: projectPendingRelations(pendingRelations),
 		structuralReferences,
 		sourceContexts,

@@ -1,4 +1,4 @@
-import type { DumgenOptions, OperationTrace } from "dumgen";
+import { type OperationTrace, TracePayloads, TraceSink } from "dumgen";
 import * as Cause from "effect/Cause";
 import type * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
@@ -44,19 +44,22 @@ export function spanHops(services: Context.Context<never>) {
 			run: () => Promise<T>,
 		): Promise<T> {
 			const exit = await Effect.runPromiseExitWith(services)(
-				// The rejection only marks the span failed, then is rethrown as is.
-				// @effect-diagnostics-next-line unknownInEffectCatch:off
-				Effect.tryPromise({ try: run, catch: (error) => error }).pipe(
+				Effect.tryPromise(run).pipe(
 					Effect.withSpan(name, inspectionStep(owner, input)),
 				),
 			);
 			if (Exit.isSuccess(exit)) return exit.value;
-			throw Cause.squash(exit.cause);
+			// The rejection only marks the span failed, then is rethrown as
+			// is, unwrapped from the UnknownError that carried it.
+			throw Option.match(Cause.findErrorOption(exit.cause), {
+				onNone: () => Cause.squash(exit.cause),
+				onSome: (rejection) => rejection.cause,
+			});
 		},
 		/** Fails the enclosing step although its work returns normally. */
 		markFailed,
 		/** A handled failure: a failed step of its own that fails the enclosing step. */
-		failure(name: string, owner: string, input: unknown, error: unknown) {
+		failure<E>(name: string, owner: string, input: unknown, error: E) {
 			markFailed();
 			Effect.runSyncExitWith(services)(
 				Effect.fail(error).pipe(
@@ -222,22 +225,23 @@ export function withoutPayloads(trace: OperationTrace): OperationTrace {
 }
 
 /**
- * The `createDumgen` trace options for one action. Payloads are on only
- * under DEV inspection, which renders every operation as rows; production
- * keeps them off (#858 point 6). `sink` receives each trace too, payloads
- * included when they are on.
+ * Dumgen's tracing for one action's program, as its `TraceSink` and
+ * `TracePayloads`. Payloads are on only under DEV inspection, which renders
+ * every operation as rows; production keeps them off (#858 point 6). `sink`
+ * receives each trace too, payloads included when they are on.
  */
-export function dumgenTracing(
+export function dumgenTraced(
 	inspection: InspectionCapture | undefined,
 	sink?: (trace: OperationTrace) => void,
-): Required<Pick<DumgenOptions, "onOperation" | "tracePayloads">> {
-	return {
-		tracePayloads: inspection !== undefined,
-		onOperation: (trace) => {
-			inspection?.operation(trace);
-			sink?.(trace);
-		},
-	};
+) {
+	return <A, E, R>(effect: Effect.Effect<A, E, R>) =>
+		effect.pipe(
+			Effect.provideService(TracePayloads, inspection !== undefined),
+			Effect.provideService(TraceSink, (trace: OperationTrace) => {
+				inspection?.operation(trace);
+				sink?.(trace);
+			}),
+		);
 }
 
 /**
@@ -356,7 +360,7 @@ export function createInspectionCapture() {
 	return {
 		steps,
 		tracer,
-		/** `createDumgen`'s `onOperation`: the operation's rows under its root. */
+		/** The action's `TraceSink`: the operation's rows under its root. */
 		operation(trace: OperationTrace) {
 			steps.push(...operationSteps(trace, operationRoots.shift()));
 		},

@@ -5,8 +5,10 @@
    */
   "compilerOptions": {
     /* These settings are not required by Convex and can be modified. */
+    "tsBuildInfoFile": "../node_modules/.tmp/tsconfig.convex.tsbuildinfo",
     "allowJs": true,
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "moduleResolution": "Bundler",
     /* Resolve workspace packages to their src, as Convex's bundler does. */
     "customConditions": ["convex"],

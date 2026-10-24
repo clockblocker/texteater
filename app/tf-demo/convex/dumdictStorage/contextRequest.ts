@@ -33,6 +33,7 @@ export type ReadingEntryContextArgs =
 	  }
 	| {
 			readonly intent: "applyGeneratedKnowledge";
+			readonly lemmaKey: string;
 			readonly readingKey: string;
 			readonly pendingLocatorKeys: string[];
 			readonly pendingTargetCanonicalForms: string[];
@@ -48,7 +49,15 @@ export type ReadingEntryContextArgs =
 	| {
 			readonly intent: "ensureReadingEntry";
 			readonly lemmaKey: string;
+			readonly proposedLemma: Infer<typeof lemmaValueValidator>;
 			readonly readingKey: string;
+	  }
+	| {
+			/** tf-demo holds no Attestation Links, so the ref reads nothing. */
+			readonly intent: "recordOccurrence";
+			readonly lemmaKey: string;
+			readonly readingKey: string;
+			readonly surfaceKey: string;
 	  };
 
 export function readingEntryContextArgs(
@@ -93,6 +102,7 @@ export function readingEntryContextArgs(
 		case "applyGeneratedKnowledge":
 			return {
 				intent: request.intent,
+				lemmaKey: lemmaIdentityKey(request.reading.lemma),
 				readingKey,
 				pendingLocatorKeys: request.pendingRelations.map((pending) =>
 					pendingLocatorIndexKey(
@@ -113,6 +123,7 @@ export function readingEntryContextArgs(
 				),
 			};
 		case "ensureOwnedSurface":
+		case "recordOccurrence":
 			return {
 				intent: request.intent,
 				lemmaKey: lemmaIdentityKey(request.reading.lemma),
@@ -126,6 +137,7 @@ export function readingEntryContextArgs(
 			return {
 				intent: request.intent,
 				lemmaKey: lemmaIdentityKey(request.reading.lemma),
+				proposedLemma: request.reading.lemma,
 				readingKey,
 			};
 	}

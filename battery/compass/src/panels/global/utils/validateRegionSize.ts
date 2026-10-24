@@ -14,13 +14,8 @@ export function validateRegionSize({
 	prevSize: number;
 	size: number;
 }) {
-	const {
-		collapsedSize = 0,
-		collapsible,
-		disabled,
-		maxSize = 100,
-		minSize = 0,
-	} = regionConstraints;
+	const { collapsedSize, collapsible, disabled, maxSize, minSize } =
+		regionConstraints;
 
 	if (disabled && !overrideDisabledRegions) {
 		return prevSize;

@@ -305,7 +305,6 @@
 			"reading": {
 				"emojiDescription": "✊🚪",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
 					"valency": [
 						{
 							"status": "Optional",
@@ -336,7 +335,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
@@ -444,7 +442,6 @@
 			"reading": {
 				"emojiDescription": "👨",
 				"knowledge": {
-					"plural": ["Männer"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -492,9 +489,9 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Männer"] },
 				"coverage": {
 					"valency": "ReviewedEmpty",
-					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
@@ -502,7 +499,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"attestation": {
@@ -929,7 +927,6 @@
 			"reading": {
 				"emojiDescription": "➡🚪",
 				"knowledge": {
-					"conjugationClass": ["Strong"],
 					"valency": [
 						{
 							"status": "Required",
@@ -984,7 +981,6 @@
 				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",

@@ -1,25 +1,76 @@
 {
 	"$schema": "../../../schema/breakdown-record.de.json",
-	"lemma": {
-		"unitKind": "Lemma",
-		"language": "de",
-		"canonicalForm": "nur Bahnhof verstehen",
-		"family": "Locution",
-		"kind": "VERB",
-		"coreFeatures": {}
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "nur Bahnhof verstehen",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "😵‍💫"
 	},
-	"sentence": "nur Bahnhof verstehen",
-	"segments": [
-		{ "kind": "ResolvableText", "text": "nur" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bahnhof" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "verstehen" }
-	],
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "nur",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "nur",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Bahnhof",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Bahnhof",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "verstehen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "verstehen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0039", "ADR-0041"],
+		"adrs": ["ADR-0031", "ADR-0039", "ADR-0041", "ADR-0050"],
 		"rules": [
-			{ "rule": "de/focus-word-is-adv", "hash": "c7d154ba1801d992" },
+			{
+				"rule": "de/focus-word-is-adv",
+				"hash": "c7d154ba1801d992"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
@@ -32,121 +83,5 @@
 				"supports": "The wording, the Locution's Canonical Form ([immer] nur Bahnhof verstehen)"
 			}
 		]
-	},
-	"targets": [
-		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "☝" },
-			"notes": {
-				"rationale": "nur is the restrictive focus word on Bahnhof: a single-member ADV, not comparable (de/focus-word-is-adv)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "nur", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "nur",
-					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": null,
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "nur",
-						"family": "Lexeme",
-						"kind": "ADV",
-						"coreFeatures": { "comparable": null }
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🚉" },
-			"notes": {
-				"rationale": "The Breakdown reads Bahnhof literally, as railway station: the idiom's meaning belongs to the Locution, and its parts are the Readings a learner drills down to. It is a bare noun with no article."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "Bahnhof", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "Bahnhof",
-					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"gender": null,
-						"number": "Sing"
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "Bahnhof",
-						"family": "Lexeme",
-						"kind": "NOUN",
-						"coreFeatures": { "gender": "Masc" }
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "💡" },
-			"notes": {
-				"rationale": "The Breakdown reads verstehen literally, Duden verstehen 2 'den Sinn von etwas erfassen; begreifen'; the idiom's 'understand nothing' belongs to the Locution."
-			},
-			"grundform": true,
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "verstehen", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "verstehen",
-					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "verstehen",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
-						}
-					},
-					"surfaceFeatures": null
-				}
-			}
-		}
-	]
+	}
 }

@@ -183,6 +183,12 @@ export const routes = [
 	{
 		language: "de",
 		family: "Morpheme",
+		kind: "Ending",
+		schemaPath: "de/morpheme/ending",
+	},
+	{
+		language: "de",
+		family: "Morpheme",
 		kind: "Infix",
 		schemaPath: "de/morpheme/infix",
 	},

@@ -1,30 +1,25 @@
-import type { Dumgen, DumgenOptions } from "dumgen";
+import { type Jev, type Luna, operations } from "dumgen";
 import * as Effect from "effect/Effect";
 import type { KnowledgeProducer } from "./knowledgeProduction";
 import { parseAttestation, parseReading } from "./operationalParsing";
 
 /**
  * The KnowledgeProducer whose model work is Dumgen's `knowledge.produce`
- * (#883, #887). The Encounter's stored Segments and member indices are the
- * Sentence with its target; the Attestation carries the attested
- * government (`valencyEvidence`), which Dumgen appends only on a `New`
- * occurrence (#677). Every failure comes back as a value, a Catalog Miss
- * among them; the only error is `onContribution`'s. `dumgen` builds the
- * instance when a run first needs it, with the run's trace options.
+ * (#883, #887), needing `Jev | Luna`. The Encounter's stored Segments and
+ * member indices are the Sentence with its target; the Attestation carries
+ * the attested government (`valencyEvidence`), which Dumgen appends only
+ * on a `New` occurrence (#677). Every failure comes back as a value, a
+ * Catalog Miss among them; the only error is `onContribution`'s. `ready`
+ * runs when a run first needs the model, and throws when the deployment
+ * can't produce Knowledge.
  */
 export function dumgenKnowledgeProducer(
-	dumgen: (
-		tracing: Pick<DumgenOptions, "onOperation" | "tracePayloads">,
-	) => Pick<Dumgen, "knowledge">,
-): KnowledgeProducer {
+	ready: () => void,
+): KnowledgeProducer<Jev | Luna> {
 	return (input, options) =>
-		Effect.suspend(() =>
-			dumgen({
-				...(options.onOperation
-					? { onOperation: options.onOperation }
-					: {}),
-				tracePayloads: options.tracePayloads ?? false,
-			}).knowledge.produce({
+		Effect.suspend(() => {
+			ready();
+			return operations.knowledge.produce({
 				language: input.encounter.sentence.language,
 				reading: parseReading(
 					input.reading,
@@ -43,6 +38,6 @@ export function dumgenKnowledgeProducer(
 				origin: input.origin,
 				request: input.request,
 				onContribution: options.onContribution,
-			}),
-		);
+			});
+		});
 }

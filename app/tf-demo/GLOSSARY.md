@@ -195,8 +195,10 @@ A learner-facing projection of one durable Occurrence Attestation that follows
 its resolved Reading route. It adds no identity.
 
 **Shadow Note**:
-A projection of one Unit Shadow and the pending references to it. It does not
-turn that Shadow into a provisional Reading.
+A projection of one Unit Shadow and the pending references to it, Breakdown
+pieces and Sources included, so it carries a pending base's Formations
+(Dumrel) until resolution moves them to the Lemma. It does not turn that
+Shadow into a provisional Reading. See [ADR 0050].
 
 **Visitor**:
 A stable anonymous interaction identity that owns Visitor Encounter history
@@ -338,6 +340,7 @@ _Avoid_: bubble, Caption, Region
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
 [ADR 0040]: ../../docs/adr/0040-make-the-article-a-satellite-of-its-phrase-head.md
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
+[ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
 [Dumgen ADR 0001]: ../../battery/dumgen/docs/adr/0001-judge-each-sentence-before-conditional-stitching-and-local-segmentation.md
 [Dumgen ADR 0004]: ../../battery/dumgen/docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md
 [Dumgen ADR 0007]: ../../battery/dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md

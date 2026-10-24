@@ -21,6 +21,11 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
+import * as Effect from "effect/Effect";
+import {
+	makeLabRuntime,
+	runInterruptibly,
+} from "../lab/evaluation/lab-runtime.js";
 import { udDraftsManifestSchema } from "../lab/evaluation/split-text.js";
 import { recordOf } from "../lab/records.js";
 import {
@@ -121,32 +126,41 @@ let reproduced = 0;
 const mismatches: string[] = [];
 const freshCalls: CallRecord[] = [];
 
-const traced = await Promise.all(
-	cases.map(async (labCase) => {
-		const run = recorded.get(labCase.id);
-		if (!run) throw Error(`${runId} has no case ${labCase.id}`);
-		const traces: StageTrace[] = [];
-		for (
-			let repetition = 0;
-			repetition < original.repetitions;
-			repetition++
-		) {
-			const calls: CallRecord[] = [];
-			const { output, trace } = await runStages(stages, labCase.input, {
-				jev,
-				repetition,
-				calls,
-				options: {},
-			});
-			freshCalls.push(...calls.filter((call) => !call.cached));
-			const cached = run.repetitions[repetition]?.outputs?.[policy];
-			if (stringify(output) === stringify(cached)) reproduced++;
-			else mismatches.push(`${labCase.id}#${repetition}`);
-			traces.push(trace);
-		}
-		return { labCase, traces };
-	}),
-);
+// One lab runtime for the process (`lab/evaluation/lab-runtime.ts`): every
+// case at once, their requests on its budget; Ctrl-C interrupts the replay.
+const runtime = makeLabRuntime();
+const traced = await runInterruptibly(
+	runtime,
+	Effect.forEach(
+		cases,
+		(labCase) =>
+			Effect.gen(function* () {
+				const run = recorded.get(labCase.id);
+				if (!run) throw Error(`${runId} has no case ${labCase.id}`);
+				const traces: StageTrace[] = [];
+				for (
+					let repetition = 0;
+					repetition < original.repetitions;
+					repetition++
+				) {
+					const calls: CallRecord[] = [];
+					const { output, trace } = yield* runStages(
+						stages,
+						labCase.input,
+						{ jev, repetition, calls, options: {} },
+					);
+					freshCalls.push(...calls.filter((call) => !call.cached));
+					const cached =
+						run.repetitions[repetition]?.outputs?.[policy];
+					if (stringify(output) === stringify(cached)) reproduced++;
+					else mismatches.push(`${labCase.id}#${repetition}`);
+					traces.push(trace);
+				}
+				return { labCase, traces };
+			}),
+		{ concurrency: "unbounded" },
+	),
+).finally(() => runtime.dispose());
 
 const units: UnitAttribution[] = traced.flatMap(({ labCase, traces }) =>
 	labCase.idealOutput.units.flatMap((_, unit) => {

@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "rufen",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "📣"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "ruf",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ruf",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: rufen",
+				"url": "https://www.dwds.de/wb/rufen",
+				"supports": "No Wortzerlegung; Herkunft germ. *hrōpan, probably onomatopoeic, with Ruf formed from the verb"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A bottom word with no Source: the verb is the base of Ruf, never the reverse, so a Source Ruf is wrongly claimed. Its morphemes are the Root ruf and the Ending en (ADR 0051)."
+	}
+}

@@ -130,6 +130,7 @@ describe("Catalog Growth Signals", () => {
 		const t = createTestConvex();
 		const guard = await startSession(t, "request-1");
 		const [before] = await tableRows(t, "resolutionSessions");
+		if (!before) throw new Error("Expected a resolution session.");
 		await expect(
 			t.mutation(
 				internal.catalogGrowthSignals.recordAndSettleCatalogMiss,

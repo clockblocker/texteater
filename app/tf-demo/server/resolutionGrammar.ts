@@ -1,7 +1,6 @@
-import { isRecord, messageOf } from "common-utils";
+import { messageOf } from "common-utils";
 import type * as Dumling from "dumling/types";
 import { type ClickEncounter, validateClickEncounter } from "./clickEncounter";
-import { germanGovernorKinds, germanVerbalKinds } from "./germanEvidenceKinds";
 import { parseAttestation } from "./operationalParsing";
 
 /** Durable grammar checkpoint retains the exact Encounter used for generation. */
@@ -64,59 +63,14 @@ export type StoredGrammarRestore =
 	| { readonly ok: true; readonly grammar: ResolvedGrammar }
 	| { readonly ok: false; readonly reason: string };
 
-function restoreFailure(reason: string): StoredGrammarRestore {
-	return { ok: false, reason };
-}
-
-/** Resumes stored pre-cutover work without reclassifying or changing occurrence membership. */
+/** Restores a stored Grammar checkpoint, or names why it no longer parses. */
 export function restoreStoredGrammar(input: {
 	encounter: unknown;
 	attestation: unknown;
 }): StoredGrammarRestore {
-	const { attestation } = input;
-	if (!isRecord(attestation))
-		return restoreFailure(
-			"Grammar checkpoint attestation must be an object.",
-		);
-	const { surface } = attestation;
-	if (!isRecord(surface))
-		return restoreFailure("Grammar checkpoint surface must be an object.");
-	const { lemma } = surface;
-	if (!isRecord(lemma))
-		return restoreFailure("Grammar checkpoint lemma must be an object.");
-	const { articleReference: _legacy, ...currentSurface } = surface;
-	const germanKind =
-		lemma.language === "de" && typeof lemma.kind === "string"
-			? lemma.kind
-			: undefined;
-	const verbal =
-		germanKind !== undefined && germanVerbalKinds.includes(germanKind);
-	const governor =
-		germanKind !== undefined && germanGovernorKinds.includes(germanKind);
-	const bag = currentSurface.inflectionalFeatures;
-	if (verbal && isRecord(bag))
-		currentSurface.inflectionalFeatures = { expletive: null, ...bag };
 	try {
-		return {
-			ok: true,
-			grammar: parseResolvedGrammar({
-				encounter: input.encounter,
-				attestation: {
-					...attestation,
-					surface: currentSurface,
-					...(verbal
-						? {
-								expletiveEvidence:
-									attestation.expletiveEvidence ?? null,
-							}
-						: {}),
-					...(governor || germanKind === "ADP"
-						? { valencyEvidence: attestation.valencyEvidence ?? [] }
-						: {}),
-				},
-			}),
-		};
+		return { ok: true, grammar: parseResolvedGrammar(input) };
 	} catch (error) {
-		return restoreFailure(messageOf(error));
+		return { ok: false, reason: messageOf(error) };
 	}
 }

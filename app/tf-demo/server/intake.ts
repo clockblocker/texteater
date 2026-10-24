@@ -1,7 +1,7 @@
 import {
 	type DetectedLanguage,
-	type Dumgen,
 	type LanguagedText,
+	type operations,
 	type Scroll,
 	type SegmentedText,
 	splitScroll,
@@ -195,8 +195,11 @@ function analyzedSentences(
 	);
 }
 
-/** The Dumgen operations intake runs. */
-export type IntakeDumgen = Pick<Dumgen, "language" | "segment">;
+/**
+ * The Dumgen operations intake runs, which need `Jev`: the action provides
+ * its `DumgenLive`, and a test one over a fake jev.
+ */
+export type IntakeDumgen = Pick<typeof operations, "language" | "segment">;
 
 /**
  * Intake's analysis of Sentences already split, the one path a paste and a
@@ -330,10 +333,7 @@ function submittedSentences(
 }
 
 export function createIntake(options: {
-	/**
-	 * `createDumgen({ jev })` with the host's jev, for `language.detect`
-	 * and `segment.inUnits`; a test passes one with a fake jev.
-	 */
+	/** Dumgen's `language.detect` and `segment.inUnits`: `operations`. */
 	readonly dumgen: IntakeDumgen;
 	readonly persistence: IntakePersistence;
 	/**

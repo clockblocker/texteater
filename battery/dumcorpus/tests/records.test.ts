@@ -11,11 +11,6 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { syncretize } from "dumling";
-import {
-	directSemanticRelationSchema,
-	readingKnowledgeSchema,
-	translationLanguageSchema,
-} from "dumrel/schema";
 import { demoteBrokenReviewed } from "../scripts/demote-broken-reviewed.js";
 import { checkCitations } from "../src/check-citations.js";
 import { checkRecord, type RecordCheck } from "../src/check-record.js";
@@ -31,7 +26,6 @@ import {
 import type { SpecIssue } from "../src/issues.js";
 import { layerRank } from "../src/layers.js";
 import { loadBreakdownRecords, readRecords } from "../src/load.js";
-import { knowledgeCoverageSchema } from "../src/record-schema.js";
 import { readRepositoryAdrIds } from "./adr-ids.js";
 import {
 	attestJedem,
@@ -42,7 +36,6 @@ import {
 	review,
 	ruleCitation,
 	seedJson,
-	verbCoverage,
 } from "./negative-fixtures.js";
 
 const records = loadSpecRecords();
@@ -67,10 +60,13 @@ describe("the corpus", () => {
 			fileURLToPath(new URL("../records/", import.meta.url)),
 		);
 		expect(
-			checkCitations([...records, ...textRecords], {
-				adrs: readRepositoryAdrIds(),
-				rules,
-			}),
+			checkCitations(
+				[...records, ...loadBreakdownRecords(), ...textRecords],
+				{
+					adrs: readRepositoryAdrIds(),
+					rules,
+				},
+			),
 		).toEqual([]);
 	});
 
@@ -242,61 +238,6 @@ describe("negative fixtures", () => {
 				new Set([fixture.check]),
 			);
 		});
-
-	test("a target's Reading carries its Knowledge, checked against the Reading", () => {
-		const json = seedJson("de/pass-auf-dich-auf");
-		const knowledge = {
-			definition: "to watch out",
-			conjugationClass: ["Weak" as const],
-		};
-		json.targets[0].reading = { emojiDescription: "👀", knowledge };
-		const checked = checkRecord("de/pass-auf-dich-auf", json);
-		expect(checked.errors).toEqual([]);
-		expect(checked.record?.targets[0]?.knowledge).toEqual(knowledge);
-		expect(checked.record?.targets[1]).not.toHaveProperty("knowledge");
-	});
-
-	test("a target's coverage covers its structural aspects, and an authored Reading's are the inventory's", () => {
-		const json = review(seedJson("de/pass-auf-dich-auf"));
-		json.reviewDepth = "Knowledge";
-		json.targets[0].reading.knowledge = {
-			definition: "to watch out",
-			conjugationClass: ["Weak"],
-		};
-		json.targets[0].reading.coverage = verbCoverage;
-		// dich is authored, so its Knowledge is reviewed in the inventory.
-		json.targets[1].reading.knowledge = {};
-		const checked = checkRecord("de/pass-auf-dich-auf", json);
-		expect([...checked.errors, ...checked.issues]).toEqual([]);
-		expect(checked.validThrough).toBe("Knowledge");
-		expect(checked.record?.targets[0]?.coverage).toEqual(verbCoverage);
-		expect(checked.record?.targets[1]?.knowledge).toEqual({});
-	});
-
-	test("Knowledge with a structural aspect uncovered stays work in a Draft", () => {
-		const json = seedJson("de/pass-auf-dich-auf");
-		json.targets[0].reading = {
-			emojiDescription: "👀",
-			knowledge: { conjugationClass: ["Weak"] },
-			coverage: { conjugationClass: "Authored" },
-		};
-		json.targets[1].reading = { emojiDescription: "👈", knowledge: {} };
-		const checked = checkRecord("de/pass-auf-dich-auf", json);
-		expect([...checked.errors, ...checked.issues]).toEqual([]);
-		expect(checked.validThrough).toBe("Reading");
-	});
-
-	test("coverage names every aspect and relation Reading Knowledge stores", () => {
-		const keys = (shape: object) => Object.keys(shape).toSorted();
-		const { shape } = knowledgeCoverageSchema;
-		expect(keys(shape)).toEqual(keys(readingKnowledgeSchema.shape));
-		expect(keys(shape.semanticRelations.unwrap().shape)).toEqual(
-			[...directSemanticRelationSchema.options].toSorted(),
-		);
-		expect(keys(shape.translations.unwrap().shape)).toEqual(
-			[...translationLanguageSchema.options].toSorted(),
-		);
-	});
 
 	test("a reviewed record attests a generated Syncretism stored whole (ADR 0046)", () => {
 		const json = seedJson("de/die-kinder-lachen-und-ich-sehe-sie");
@@ -591,17 +532,15 @@ describe("negative fixtures", () => {
 
 describe("the shared-Reading guard", () => {
 	test("passes the corpus", () => {
-		expect(
-			sharedReadingIssues([...records, ...loadBreakdownRecords()]),
-		).toEqual([]);
+		expect(sharedReadingIssues(records)).toEqual([]);
 	});
 
 	test("flags each occurrence of a Reading whose records disagree", () => {
 		const json = seedJson("de/pass-auf-dich-auf");
 		json.targets[0].reading = {
 			emojiDescription: "👀",
-			knowledge: { conjugationClass: ["Weak"] },
-			coverage: { conjugationClass: "Authored" },
+			knowledge: { definition: "to watch out" },
+			coverage: { definition: "Authored" },
 		};
 		const load = (id: string) => {
 			const record = checkRecord(id, json).record;
@@ -610,9 +549,11 @@ describe("the shared-Reading guard", () => {
 		};
 		const first = load("de/first");
 		const same = load("de/same");
-		json.targets[0].reading.knowledge.conjugationClass = ["Strong"];
+		json.targets[0].reading.paradigm = { preterite: ["passte auf"] };
+		json.targets[0].reading.coverage.paradigm = { preterite: "Authored" };
 		const other = load("de/other");
 		delete json.targets[0].reading.knowledge;
+		delete json.targets[0].reading.paradigm;
 		delete json.targets[0].reading.coverage;
 		const unauthored = load("de/unauthored");
 		expect(sharedReadingIssues([first, same, unauthored])).toEqual([]);

@@ -1,12 +1,12 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../../../src/call.js";
 import { produceHebrewKnowledge } from "../../../src/knowledge/he/produce.js";
 import { hebrewKnowledgePrompts } from "../../../src/knowledge/he/prompts.js";
 import type { ProduceKnowledgeInput } from "../../../src/knowledge/types.js";
 import { defaultLunaConfiguration } from "../../../src/luna.js";
 import { pinnedJevModel } from "../../../src/segment/jev.js";
+import { requestBudget, runOperation } from "./../../service-test-adapter.js";
 import { knowledgeJev, knowledgeLuna } from "../support.js";
 
 const lemma = {
@@ -49,18 +49,14 @@ const run = (
 		runOperation(
 			"knowledge.produce",
 			{ budget: requestBudget(1), payloads: true },
-			(scope) =>
-				produceHebrewKnowledge(
-					scope,
-					{
-						luna: {
-							ask: luna.ask,
-							configuration: defaultLunaConfiguration,
-						},
-						jev: { ask: knowledgeJev().ask, model: pinnedJevModel },
-					},
-					value,
-				),
+			{
+				luna: {
+					ask: luna.ask,
+					configuration: defaultLunaConfiguration,
+				},
+				jev: { ask: knowledgeJev().ask, model: pinnedJevModel },
+			},
+			produceHebrewKnowledge(value),
 		),
 	);
 

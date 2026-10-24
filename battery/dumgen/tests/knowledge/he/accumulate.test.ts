@@ -1,11 +1,11 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../../../src/call.js";
 import { accumulateHebrewTranslations } from "../../../src/knowledge/he/accumulate.js";
 import type { AccumulateTranslationsInput } from "../../../src/knowledge/types.js";
 import { defaultLunaConfiguration } from "../../../src/luna.js";
 import { pinnedJevModel } from "../../../src/segment/jev.js";
+import { requestBudget, runOperation } from "./../../service-test-adapter.js";
 import { knowledgeJev, knowledgeLuna, knowledgeLunaInput } from "../support.js";
 
 const lemma = {
@@ -54,18 +54,14 @@ const run = (
 		runOperation(
 			"knowledge.accumulateTranslations",
 			{ budget: requestBudget(4), payloads: true },
-			(scope) =>
-				accumulateHebrewTranslations(
-					scope,
-					{
-						luna: {
-							ask: luna.ask,
-							configuration: defaultLunaConfiguration,
-						},
-						jev: { ask: jev.ask, model: pinnedJevModel },
-					},
-					value,
-				),
+			{
+				luna: {
+					ask: luna.ask,
+					configuration: defaultLunaConfiguration,
+				},
+				jev: { ask: jev.ask, model: pinnedJevModel },
+			},
+			accumulateHebrewTranslations(value),
 		),
 	);
 

@@ -4,10 +4,11 @@
  * language module checks and writes them.
  */
 import * as Effect from "effect/Effect";
-import type { OperationScope } from "../call.js";
-import type { JevSettings } from "../jev-call.js";
-import { type LanguageModules, languageModuleOf } from "../language-module.js";
-import type { LunaSettings } from "../luna-call.js";
+import type { CallLog } from "../call.js";
+import type { Jev } from "../jev-call.js";
+import { languageModuleOf } from "../language-module.js";
+import { Languages } from "../languages.js";
+import type { Luna } from "../luna-call.js";
 import type { SegmentLanguage } from "../segment/segmented-sentence.js";
 import type {
 	AccumulateTranslationsInput,
@@ -19,13 +20,10 @@ import type {
  * or a Reading of another language than the input's, is bad input, a
  * Defect raised before anything is asked; the module checks the rest.
  */
-export const accumulateTranslations = <L extends SegmentLanguage = "de">(
-	scope: OperationScope,
-	models: { readonly jev: JevSettings; readonly luna: LunaSettings },
-	modules: LanguageModules,
+export const accumulateTranslations = <L extends SegmentLanguage>(
 	input: AccumulateTranslationsInput<L>,
-): Effect.Effect<TranslationAccumulation<L>> =>
-	Effect.suspend(() => {
+): Effect.Effect<TranslationAccumulation<L>, never, Jev | Luna | CallLog> =>
+	Effect.flatMap(Languages, (modules) => {
 		const language: string = input.reading.lemma.language;
 		const module = languageModuleOf(modules, input.language);
 		if (module === undefined || language !== input.language)
@@ -34,5 +32,5 @@ export const accumulateTranslations = <L extends SegmentLanguage = "de">(
 					`No translation accumulator registered for ${JSON.stringify(input.language)}, or Reading language ${JSON.stringify(language)} does not match`,
 				),
 			);
-		return module.accumulateTranslations(scope, models, input);
+		return module.accumulateTranslations(input);
 	});

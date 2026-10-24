@@ -20,8 +20,6 @@ import {
 import {
 	parseKnowledgeChangeForDumdictRuntime,
 	parseReadingForDumdictRuntime,
-	parseReadingKnowledgeForDumdictRuntime,
-	routeCanContainMorphologicalTree,
 } from "../../src/parsing/lightweight-parsers";
 import type { DumdictValidationRouteKey } from "../../src/parsing/validation-route-types";
 import { germanGehenLemma } from "../fixtures/de-notes";
@@ -160,17 +158,17 @@ describe("lightweight Dumdict parser differential", () => {
 			{ kind: "Retract", aspect: "definition" },
 			{
 				kind: "Contribute",
-				aspect: "morphologicalTree",
-				value: {
-					root: {
-						nodeKind: "structure",
-						children: [
-							{ nodeKind: "unitShadow", unitShadow: shadow },
-						],
-					},
-				},
+				aspect: "breakdown",
+				part: "constituents",
+				value: [{ letters: "Haus", target: shadow }],
 			},
-			{ kind: "Retract", aspect: "morphologicalTree" },
+			{ kind: "Retract", aspect: "breakdown", part: "morphemes" },
+			{
+				kind: "Correct",
+				aspect: "source",
+				value: { target: shadow },
+			},
+			{ kind: "Retract", aspect: "source" },
 		] as const;
 
 		for (const input of branchInputs) {
@@ -343,168 +341,6 @@ describe("lightweight Dumdict parser differential", () => {
 			});
 	});
 
-	test("returns deterministic failures for cyclic and excessively deep caller inputs", () => {
-		const parseTree = (root: unknown) =>
-			parseAsReadingPatchOp(
-				{
-					envelope: {
-						change: {
-							aspect: "morphologicalTree",
-							kind: "Contribute",
-							value: { root },
-						},
-						reading: englishWalkReading,
-					},
-					kind: "applyKnowledgeChange",
-				},
-				"en",
-			);
-
-		const cyclicNode: { children: unknown[]; nodeKind: "structure" } = {
-			children: [],
-			nodeKind: "structure",
-		};
-		cyclicNode.children.push(cyclicNode);
-		let cyclicResult: unknown;
-		expect(() => {
-			cyclicResult = parseTree(cyclicNode);
-		}).not.toThrow();
-		expect(cyclicResult).toBeInstanceOf(ParsingError);
-		if (!(cyclicResult instanceof ParsingError))
-			throw new Error("expected cyclic input failure");
-		expect(cyclicResult.issues[0]).toMatchObject({
-			code: "custom",
-			message: "Cyclic input is not supported",
-			path: ["envelope", "change", "value", "root", "children", 0],
-		});
-		expect(JSON.stringify(cyclicResult.issues)).toContain(
-			"Cyclic input is not supported",
-		);
-		const repeatedCyclicResult = parseTree(cyclicNode);
-		expect(repeatedCyclicResult).toBeInstanceOf(ParsingError);
-		if (!(repeatedCyclicResult instanceof ParsingError))
-			throw new Error("expected repeated cyclic input failure");
-		expect(repeatedCyclicResult.issues).toEqual(cyclicResult.issues);
-
-		const recursiveChildren: unknown[] = [];
-		const recursiveArrayNode = {
-			children: recursiveChildren,
-			nodeKind: "structure" as const,
-		};
-		recursiveChildren.push(recursiveArrayNode);
-		expect(parseTree(recursiveArrayNode)).toBeInstanceOf(ParsingError);
-
-		let deepNode: unknown = {
-			children: [],
-			nodeKind: "structure",
-		};
-		for (let depth = 0; depth < 200; depth += 1) {
-			deepNode = {
-				children: [deepNode],
-				nodeKind: "structure",
-			};
-		}
-		const deepResult = parseTree(deepNode);
-		expect(deepResult).toBeInstanceOf(ParsingError);
-		if (!(deepResult instanceof ParsingError))
-			throw new Error("expected deep input failure");
-		expect(deepResult.issues).toHaveLength(1);
-		expect(JSON.stringify(deepResult.issues)).toContain(
-			"Input nesting exceeds the supported depth",
-		);
-	});
-
-	test("guards every generated root that can reach recursive morphology", () => {
-		const guardedNames = new Set([
-			"parseAsCommitChangesRequest",
-			"parseAsDumdictPlan",
-			"parseAsPlannedChangeOp",
-			"parseAsReadingEntry",
-			"parseAsReadingPatchOp",
-		]);
-		const publicRoutes = Object.keys(
-			canonicalDumdictValidationSchemas,
-		) as DumdictValidationRouteKey[];
-		const expectedGuardedRoutes = publicRoutes.filter((route) =>
-			guardedNames.has(route.split(":")[0] ?? route),
-		);
-		expect(
-			publicRoutes.filter((route) =>
-				routeCanContainMorphologicalTree(route),
-			),
-		).toEqual(expectedGuardedRoutes);
-		expect(expectedGuardedRoutes).toHaveLength(15);
-
-		const cycle: { children: unknown[]; nodeKind: "structure" } = {
-			children: [],
-			nodeKind: "structure",
-		};
-		cycle.children.push(cycle);
-		const tree = { root: cycle };
-		for (const route of expectedGuardedRoutes) {
-			const [name] = route.split(":");
-			const readingPatch = {
-				envelope: {
-					change: {
-						aspect: "morphologicalTree",
-						kind: "Contribute",
-						value: tree,
-					},
-				},
-				kind: "applyKnowledgeChange",
-			};
-			const input =
-				name === "parseAsReadingEntry"
-					? { knowledge: { morphologicalTree: tree } }
-					: name === "parseAsReadingPatchOp"
-						? readingPatch
-						: name === "parseAsPlannedChangeOp"
-							? { ops: [readingPatch], type: "patchReading" }
-							: {
-									changes: [
-										{
-											ops: [readingPatch],
-											type: "patchReading",
-										},
-									],
-								};
-			const parsed = parseRoute(route, input);
-			expect(parsed).toBeInstanceOf(ParsingError);
-			if (!(parsed instanceof ParsingError))
-				throw new Error(`expected ${route} cycle failure`);
-			expect(parsed.issues).toHaveLength(1);
-			expect(parsed.issues[0]).toMatchObject({
-				code: "custom",
-				message: "Cyclic input is not supported",
-			});
-		}
-
-		const finiteInputs = successfulInputs();
-		for (const route of publicRoutes.filter(
-			(route) => !expectedGuardedRoutes.includes(route),
-		)) {
-			expect(routeCanContainMorphologicalTree(route)).toBe(false);
-			expect(() => parseRoute(route, finiteInputs[route])).not.toThrow();
-		}
-
-		for (const parsed of [
-			parseKnowledgeChangeForDumdictRuntime({
-				aspect: "morphologicalTree",
-				kind: "Contribute",
-				value: tree,
-			}),
-			parseReadingKnowledgeForDumdictRuntime({ morphologicalTree: tree }),
-		]) {
-			expect(parsed).toBeInstanceOf(ParsingError);
-			if (!(parsed instanceof ParsingError))
-				throw new Error("expected operational cycle failure");
-			expect(parsed.issues[0]).toMatchObject({
-				code: "custom",
-				message: "Cyclic input is not supported",
-			});
-		}
-	});
-
 	test("allows repeated non-cyclic aliases across structural siblings", () => {
 		const sharedShadow = {
 			canonicalForm: "walk",
@@ -516,23 +352,13 @@ describe("lightweight Dumdict parser differential", () => {
 			{
 				envelope: {
 					change: {
-						aspect: "morphologicalTree",
+						aspect: "breakdown",
 						kind: "Contribute",
-						value: {
-							root: {
-								children: [
-									{
-										nodeKind: "unitShadow",
-										unitShadow: sharedShadow,
-									},
-									{
-										nodeKind: "unitShadow",
-										unitShadow: sharedShadow,
-									},
-								],
-								nodeKind: "structure",
-							},
-						},
+						part: "constituents",
+						value: [
+							{ letters: "wa", target: sharedShadow },
+							{ letters: "lk", target: sharedShadow },
+						],
 					},
 					reading: englishWalkReading,
 				},

@@ -3,12 +3,12 @@ import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { applyKnowledgeChanges } from "dumrel";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../../../src/call.js";
 import { produceHebrewKnowledge } from "../../../src/knowledge/he/produce.js";
 import type { ProduceKnowledgeInput } from "../../../src/knowledge/types.js";
 import { defaultLunaConfiguration } from "../../../src/luna.js";
 import { lunaResponseOf } from "../../../src/openai-luna.js";
 import { pinnedJevModel } from "../../../src/segment/jev.js";
+import { requestBudget, runOperation } from "./../../service-test-adapter.js";
 import { knowledgeJev, knowledgeLuna, knowledgeLunaInput } from "../support.js";
 
 function checked<U extends Dumling.Unit>(value: U): U {
@@ -69,18 +69,14 @@ const run = (luna: ReturnType<typeof knowledgeLuna>, value = input()) =>
 		runOperation(
 			"knowledge.produce",
 			{ budget: requestBudget(4), payloads: true },
-			(scope) =>
-				produceHebrewKnowledge(
-					scope,
-					{
-						luna: {
-							ask: luna.ask,
-							configuration: defaultLunaConfiguration,
-						},
-						jev: { ask: knowledgeJev().ask, model: pinnedJevModel },
-					},
-					value,
-				),
+			{
+				luna: {
+					ask: luna.ask,
+					configuration: defaultLunaConfiguration,
+				},
+				jev: { ask: knowledgeJev().ask, model: pinnedJevModel },
+			},
+			produceHebrewKnowledge(value),
 		),
 	);
 
@@ -234,9 +230,6 @@ test("Hebrew paradigms contribute labeled forms without German structural fields
 		input({
 			request: {
 				hebrewParadigm: null,
-				plural: null,
-				conjugationClass: null,
-				preterite: null,
 			},
 		}),
 	);

@@ -11,7 +11,8 @@ import {
 	goldWritten,
 } from "../../lab/evaluation/resolve-grammar/oracle.js";
 import { evaluateGrammar } from "../../lab/evaluation/resolve-grammar/scoring.js";
-import { createDumgen } from "../../src/create-dumgen.js";
+import { operations } from "../../src/operations.js";
+import { liveOver } from "../live-over.js";
 
 type NounGender = Dumling.Lemma<
 	"de",
@@ -22,7 +23,7 @@ type NounGender = Dumling.Lemma<
 /** Resolves a case with gold's answers, and the question ids jev was asked. */
 async function underGold(goldCase: GrammarCase) {
 	const asked: string[] = [];
-	const dumgen = createDumgen({
+	const live = liveOver({
 		jev: async (request) => {
 			asked.push(...Object.keys(request.questions));
 			return {
@@ -36,13 +37,15 @@ async function underGold(goldCase: GrammarCase) {
 		}),
 	});
 	const result = await Effect.runPromise(
-		dumgen.resolve.grammar({
-			language: "de",
-			sentence: goldCase.sentence,
-			unit: goldCase.unit,
-			neighbours: {},
-			lemmaCandidates: [],
-		}),
+		operations.resolve
+			.grammar({
+				language: "de",
+				sentence: goldCase.sentence,
+				unit: goldCase.unit,
+				neighbours: {},
+				lemmaCandidates: [],
+			})
+			.pipe(Effect.provide(live)),
 	);
 	return { result, asked };
 }

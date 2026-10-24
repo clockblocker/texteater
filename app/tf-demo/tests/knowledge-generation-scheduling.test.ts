@@ -1,35 +1,26 @@
-import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
-import * as Effect from "effect/Effect";
-import { api, internal } from "../convex/_generated/api";
-import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
-import { KNOWLEDGE_RETRY_COOLDOWN_MS } from "../convex/model/knowledgeAttempts";
-import { publishInRelationChunks } from "../convex/model/relationPublicationChunks";
-import { generationRequestFor } from "../server/generatedKnowledgeRequest";
+import { afterEach, beforeEach, expect, jest, test } from "bun:test";
+import { internal } from "../convex/_generated/api";
 import {
-	answeredRelationKinds,
-	knowledgeRequestComplete,
-	missingKnowledgeRequest,
-} from "../server/knowledgeCompletion";
+	KNOWLEDGE_RETRY_COOLDOWN_MS,
+	STALE_KNOWLEDGE_RUN_AFTER_MS,
+} from "../convex/model/knowledgeAttempts";
+import { createTestConvex } from "./support/convex";
 import {
-	addToDictionary,
 	attempts,
-	BANK_READING,
-	generateWith,
+	BANK_READING_KEY,
+	EMPTY_RELATION_RUN,
 	insertAccumulatedKnowledge,
 	insertAttempt,
-	type KnowledgeChange,
-	logEvent,
-	PRODUCTION_EVIDENCE,
+	type Occurrence,
 	publish,
 	publishArgs,
-	publishSixtyPendingSynonyms,
+	queued,
 	rows,
 	schedule,
-	seedDictionaryReading,
+	scheduledAttempts,
+	scheduledWatchdogs,
 	seedOccurrence,
-	seedSecondOccurrence,
-} from "./knowledge-generation-fixtures";
-import { createTestConvex } from "./support/convex";
+} from "./support/knowledge-generation";
 
 beforeEach(() => {
 	// Scheduling a Knowledge attempt queues its action; nothing here runs it.
@@ -40,605 +31,404 @@ afterEach(() => {
 	jest.useRealTimers();
 });
 
-test("an answered relation kind covers the request even with no stored target", async () => {
-	const request = {
-		definition: null,
-		semanticRelations: { synonym: null, antonym: null },
-	};
-	const knowledge = { definition: "Ein Geldinstitut." };
-	expect(
-		knowledgeRequestComplete(
-			{ knowledge, checkedRelationKinds: [] },
-			request,
-			[],
-		),
-	).toBe(false);
-	expect(
-		knowledgeRequestComplete(
-			{ knowledge, checkedRelationKinds: ["synonym", "antonym"] },
-			request,
-			[],
-		),
-	).toBe(true);
-	expect(
-		missingKnowledgeRequest(request, {
-			knowledge,
-			checkedRelationKinds: ["synonym"],
-		}),
-	).toEqual({ semanticRelations: { antonym: null } });
-
-	expect(answeredRelationKinds(["synonym", "antonym"], false, [])).toEqual(
-		[],
-	);
-	expect(
-		answeredRelationKinds(["synonym", "antonym"], true, [
-			{ aspect: "semanticRelations", leaf: "antonym" },
-		]),
-	).toEqual(["synonym"]);
-	expect(
-		answeredRelationKinds(["synonym"], true, [
-			{ aspect: "semanticRelations" },
-		]),
-	).toEqual([]);
-});
-
-test("recorded relation evidence lets a Reading whose relations live as edges reach Full", async () => {
-	const t = createTestConvex();
-	const occurrence = await seedDictionaryReading(t, {
-		knowledge: { definition: "Ein Geldinstitut." },
-	});
-	await insertAccumulatedKnowledge(t, occurrence, {
-		knowledge: { definition: "Ein Geldinstitut." },
-		status: "Partial",
-	});
-	await t.run(async (ctx) => {
-		const row = await ctx.db.query("accumulatedKnowledge").first();
-		if (row)
-			await ctx.db.patch(row._id, { checkedRelationKinds: ["synonym"] });
-	});
-	await insertAttempt(t, occurrence, "attempt-1");
-	const evidence = {
-		...PRODUCTION_EVIDENCE,
-		request: { definition: null, semanticRelations: { synonym: null } },
-	};
-
-	await publish(
-		t,
-		publishArgs({ attemptKey: "attempt-1", productionEvidence: evidence }),
-	);
-	// Replacing the content keeps the evidence recorded beside it.
-	expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
-		status: "Full",
-		checkedRelationKinds: ["synonym"],
-	});
-});
-
-test("a final publication skips what its run already published behind many earlier changes", async () => {
-	const t = createTestConvex();
-	const occurrence = await seedDictionaryReading(t);
-	// Earlier attempts left more changes than one index page for this Reading.
-	await t.run(async (ctx) => {
-		for (let index = 0; index < 520; index++)
-			await ctx.db.insert("knowledgeChanges", {
-				knowledgeChangeKey: `earlier:1:1:${index}`,
-				ownerReadingKey: occurrence.readingKey,
-				change: {
-					kind: "Contribute",
-					aspect: "notes",
-					value: `${index}`,
-				},
-				createdAt: 1,
-			});
-	});
-	await insertAttempt(t, occurrence, "attempt-1");
-	const definition = {
-		kind: "Contribute",
-		aspect: "definition",
-		value: "Ein Geldinstitut.",
-	};
-	const transcription = {
-		kind: "Contribute",
-		aspect: "transcription",
-		value: "baŋk",
-	};
-	expect(
-		await publish(
-			t,
-			publishArgs({
-				attemptKey: "attempt-1",
-				final: false,
-				changes: [definition],
-			}),
-		),
-	).toEqual({ status: "Committed" });
-	expect(
-		await publish(
-			t,
-			publishArgs({
-				attemptKey: "attempt-1",
-				changes: [definition, transcription],
-			}),
-		),
-	).toEqual({ status: "Committed" });
-
-	const published = (await rows(t, "knowledgeChanges")).filter((row) =>
-		row.knowledgeChangeKey.startsWith("attempt-1:"),
-	);
-	expect(
-		published.map(({ knowledgeChangeKey, change }) => ({
-			knowledgeChangeKey,
-			change,
-		})),
-	).toEqual([
-		{ knowledgeChangeKey: "attempt-1:1:1:0", change: definition },
-		{ knowledgeChangeKey: "attempt-1:1:2:0", change: transcription },
-	]);
-	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
-});
-
-test("a top-up that partly fails keeps a Full Reading Full for the next top-up", async () => {
-	const t = createTestConvex();
-	const knowledge = {
-		definition: "Ein Geldinstitut.",
-		translations: { en: ["bank"] },
-	};
-	const occurrence = await seedDictionaryReading(t, { knowledge });
-	await insertAccumulatedKnowledge(t, occurrence, {
-		knowledge,
-		status: "Full",
-		coveredTranslationLanguages: ["en"],
-	});
-	await insertAttempt(t, occurrence, "russian-top-up", {
-		translationLanguages: ["ru"],
-	});
-
-	expect(
-		await publish(
-			t,
-			publishArgs({
-				attemptKey: "russian-top-up",
-				productionEvidence: {
-					request: { translations: { ru: null } },
-					failures: [
-						{
-							aspect: "translations",
-							leaf: "ru",
-							code: "ProviderFailure",
-							message: "offline",
-						},
-					],
-					operationTraces: [],
-				},
-			}),
-		),
-	).toEqual({ status: "Committed" });
-	expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
-		knowledge,
-		status: "Full",
-	});
-	expect((await attempts(t))[0]).toMatchObject({
-		state: "Failed",
-		failureCode: "partialKnowledge",
-	});
-
-	jest.setSystemTime(Date.now() + KNOWLEDGE_RETRY_COOLDOWN_MS);
-	await schedule(t, {
-		attemptKey: "next-demand",
+test("scheduling is exact, idempotent, skips Full, and retries Failed", async () => {
+	const inputFor = (occurrence: Occurrence, attemptKey: string) => ({
+		attemptKey,
 		visitorId: "visitor-1",
 		readingId: occurrence.readingId,
 		attestationId: occurrence.attestationId,
 	});
+
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t);
+	const input = inputFor(occurrence, "request-1");
+	await schedule(t, input);
+	await schedule(t, input);
+	expect(await scheduledAttempts(t)).toEqual(queued("request-1"));
+	expect(await attempts(t)).toEqual([
+		expect.objectContaining({
+			attemptKey: "request-1",
+			ownerReadingKey: BANK_READING_KEY,
+			state: "Scheduled",
+		}),
+	]);
+	const loaded = await t.mutation(internal.knowledgeGeneration.begin, {
+		attemptKey: "request-1",
+	});
+	expect(loaded).toEqual(
+		expect.objectContaining({
+			kind: "Generate",
+			reading: expect.objectContaining({ emojiDescription: "🏦" }),
+			encounter: expect.objectContaining({
+				target: {
+					family: "Lexeme",
+					kind: "NOUN",
+					memberSegmentIndices: [0],
+				},
+			}),
+			attestation: expect.objectContaining({ unitKind: "Attestation" }),
+		}),
+	);
+	expect(JSON.stringify(loaded)).toContain("Bank");
+	expect(JSON.stringify(loaded)).toContain("am Fluss");
+
+	const otherReadingId = await t.run((ctx) =>
+		ctx.db.insert("readings", {
+			readingKey: "reading-other",
+			lemmaId: occurrence.lemmaId,
+			emojiDescription: "🪑",
+		}),
+	);
+	await expect(
+		schedule(t, { ...input, readingId: otherReadingId }),
+	).rejects.toThrow("exact saved occurrence");
+
+	const full = createTestConvex();
+	const fullOccurrence = await seedOccurrence(full);
+	await insertAccumulatedKnowledge(full, fullOccurrence, {
+		knowledge: { translations: { en: ["bank"], ru: ["банк"] } },
+		status: "Full",
+		coveredTranslationLanguages: ["en", "ru"],
+	});
+	await schedule(full, inputFor(fullOccurrence, "full-request"));
+	expect(await scheduledAttempts(full)).toEqual([]);
+	expect(await attempts(full)).toEqual([]);
+
+	const supplement = createTestConvex();
+	const supplementOccurrence = await seedOccurrence(supplement);
+	await insertAccumulatedKnowledge(supplement, supplementOccurrence, {
+		knowledge: { translations: { en: ["bank"] } },
+		status: "Full",
+		coveredTranslationLanguages: ["en"],
+	});
+	await schedule(
+		supplement,
+		inputFor(supplementOccurrence, "russian-supplement"),
+	);
 	expect(
-		await t.mutation(internal.knowledgeGeneration.begin, {
-			attemptKey: "next-demand",
+		await supplement.mutation(internal.knowledgeGeneration.begin, {
+			attemptKey: "russian-supplement",
 		}),
 	).toEqual(
 		expect.objectContaining({
 			kind: "Generate",
-			topUpOnly: true,
 			translationLanguages: ["ru"],
+			topUpOnly: true,
+			government: [],
 		}),
 	);
-});
 
-test("relation chunks split a Contribute by target and keep the rest of the Knowledge for the final one", async () => {
-	const definition = { kind: "Contribute", aspect: "definition", value: "x" };
-	const synonyms = {
-		kind: "Contribute",
-		aspect: "semanticRelations",
-		relation: "synonym",
-		value: ["a", "b", "c", "d", "e"],
-	};
-	const chunks: unknown[] = [];
-	await publishInRelationChunks(
-		{ changes: [definition, synonyms], pendingRelations: ["p", "q"] },
-		async (chunk) => {
-			chunks.push(chunk);
-			return "Committed";
-		},
-		3,
-	);
-	expect(chunks).toEqual([
-		{
-			final: false,
-			changes: [{ ...synonyms, value: ["a", "b", "c"] }],
-			pendingRelations: [],
-			proposed: [],
-		},
-		{
-			final: false,
-			changes: [{ ...synonyms, value: ["d", "e"] }],
-			pendingRelations: ["p"],
-			proposed: ["p"],
-		},
-		{
-			final: true,
-			changes: [definition],
-			pendingRelations: ["q"],
-			proposed: ["p", "q"],
-		},
-	]);
-
-	// Within the budget the publication stays whole.
-	const whole: unknown[] = [];
-	await publishInRelationChunks(
-		{ changes: [definition, synonyms], pendingRelations: [] },
-		async (chunk) => {
-			whole.push(chunk);
-			return "Committed";
-		},
-	);
-	expect(whole).toEqual([
-		{
-			final: true,
-			changes: [definition, synonyms],
-			pendingRelations: [],
-			proposed: [],
-		},
-	]);
-});
-
-test("a final publication with more relations than one plan commits them all in chunks", async () => {
-	const statuses = await publishSixtyPendingSynonyms();
-	expect(statuses.every((status) => status === "Committed")).toBe(true);
-});
-
-test("a chunk whose plan exceeds the cap writes nothing and is split until every part commits", async () => {
-	// An estimate loose enough to send all 60 proposals at once.
-	const statuses = await publishSixtyPendingSynonyms(1_000);
-	expect(statuses[0]).toBe("OverBudget");
-});
-
-test("relation chunks halve an OverBudget chunk and keep the rest of the Knowledge for the last part", async () => {
-	const definition = { kind: "Contribute", aspect: "definition", value: "x" };
-	const synonyms = {
-		kind: "Contribute",
-		aspect: "semanticRelations",
-		relation: "synonym",
-		value: ["a", "b", "c"],
-	};
-	const sent: unknown[] = [];
-	await publishInRelationChunks(
-		{ changes: [definition, synonyms], pendingRelations: ["p"] },
-		async (chunk) => {
-			const units =
-				chunk.pendingRelations.length +
-				chunk.changes.reduce(
-					(total: number, change) =>
-						total +
-						(change === definition
-							? 0
-							: (change as typeof synonyms).value.length),
-					0,
-				);
-			// This planner fits two relation units in one commit.
-			if (units > 2) return "OverBudget";
-			sent.push(chunk);
-			return "Committed";
-		},
-		10,
-	);
-	expect(sent).toEqual([
-		{
-			final: false,
-			changes: [{ ...synonyms, value: ["a", "b"] }],
-			pendingRelations: [],
-			proposed: [],
-		},
-		{
-			final: false,
-			changes: [{ ...synonyms, value: ["c"] }],
-			pendingRelations: [],
-			proposed: [],
-		},
-		{
-			final: true,
-			changes: [definition],
-			pendingRelations: ["p"],
-			proposed: ["p"],
-		},
-	]);
-
-	await expect(
-		publishInRelationChunks(
-			{ changes: [synonyms], pendingRelations: [] },
-			async () => "OverBudget",
-		),
-	).rejects.toThrow("cannot be split");
-});
-
-test("a rejected dictionary plan fails the final publication without recording changes", async () => {
-	const t = createTestConvex();
-	// The attempt's Reading is not in the dictionary, so planning is rejected.
-	const occurrence = await seedOccurrence(t);
-	await insertAccumulatedKnowledge(t, occurrence, {
-		knowledge: { definition: "partial" },
-		status: "Partial",
-	});
-	await insertAttempt(t, occurrence, "attempt-1");
-	const result = await publish(
-		t,
-		publishArgs({
-			attemptKey: "attempt-1",
-			changes: [
-				{
-					kind: "Contribute",
-					aspect: "definition",
-					value: "Ein Geldinstitut.",
-				},
-			],
+	const retry = createTestConvex();
+	const retryOccurrence = await seedOccurrence(retry);
+	await retry.run((ctx) =>
+		ctx.db.insert("visitorEncounters", {
+			requestId: "click-request",
+			visitorId: "visitor-1",
+			scrollId: retryOccurrence.scrollId,
+			sentenceId: retryOccurrence.sentenceId,
+			segmentId: retryOccurrence.segmentId,
+			attestationId: retryOccurrence.attestationId,
+			encounteredAt: 1,
 		}),
 	);
-	expect(result).toMatchObject({ status: "Rejected" });
-	expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
-		knowledge: { definition: "partial" },
-		status: "Partial",
-	});
-	expect((await attempts(t))[0]).toMatchObject({
+	await insertAttempt(retry, retryOccurrence, "retry-request", {
 		state: "Failed",
 		failureCode: "generationFailed",
+		failureMessage: "Knowledge generation failed. Please retry.",
 	});
-	expect(await rows(t, "knowledgeChanges")).toEqual([]);
-	expect(await publish(t, publishArgs({ attemptKey: "attempt-1" }))).toEqual({
-		status: "Ignored",
+	await retry.mutation(internal.knowledgeGeneration.retry, {
+		attemptKey: "retry-request",
+		visitorId: "visitor-1",
+		readingId: retryOccurrence.readingId,
+		attestationId: retryOccurrence.attestationId,
 	});
+	expect(await scheduledAttempts(retry)).toEqual(queued("retry-request"));
+	const [retried] = await attempts(retry);
+	expect(retried).toEqual(expect.objectContaining({ state: "Scheduled" }));
+	expect(retried).not.toHaveProperty("failureMessage");
 });
 
-test("Knowledge settings default enabled and persist independently per visitor", async () => {
-	const t = createTestConvex();
-	const defaults = defaultKnowledgeSettings();
-	expect(defaults.semanticRelations.nearAntonym).toBe(true);
-	expect(defaults.translations).toEqual({ en: true, ru: true });
-	expect(
-		await t.query(api.knowledgeSettings.get, { visitorId: "visitor-1" }),
-	).toEqual(defaults);
-	const hiddenDefinition = { ...defaults, definition: false };
-	expect(
-		await t.mutation(api.knowledgeSettings.update, {
-			visitorId: "visitor-1",
-			settings: hiddenDefinition,
-		}),
-	).toEqual(hiddenDefinition);
-	expect(
-		await t.query(api.knowledgeSettings.get, { visitorId: "visitor-1" }),
-	).toEqual(hiddenDefinition);
-	expect(
-		await t.query(api.knowledgeSettings.get, { visitorId: "visitor-2" }),
-	).toEqual(defaults);
-
-	expect(generationRequestFor(BANK_READING, []).definition).toBeNull();
-});
-
-test.each([false, true])(
-	"the generation action publishes before a slow translation and retries failed publication (failure=%s)",
-	async (failFirstPublication) => {
-		// Nothing is scheduled here; the run is driven directly and polled.
-		jest.useRealTimers();
+test("a repeated demand reruns a Failed attempt only after its cooldown, unless it was interrupted", async () => {
+	const demandAgain = async (failureCode: string) => {
 		const t = createTestConvex();
 		const occurrence = await seedOccurrence(t);
-		// A Reading missing from the dictionary rejects the first publication,
-		// a transient failure the final publication recovers from.
-		if (!failFirstPublication) await addToDictionary(t, occurrence);
-		await insertAttempt(t, occurrence, "progress", { state: "Scheduled" });
-		const slow = Promise.withResolvers<void>();
-		const firstPublication = Promise.withResolvers<void>();
-		const errors = spyOn(console, "error").mockImplementation(
-			(message: unknown) => {
-				if (
-					logEvent(message)?.event ===
-					"KnowledgeContributionPublicationFailed"
-				)
-					firstPublication.resolve();
-			},
-		);
-		const definition: KnowledgeChange = {
-			kind: "Contribute",
-			aspect: "definition",
-			value: "Ein Geldinstitut.",
-		};
-		const russian: KnowledgeChange = {
-			kind: "Contribute",
-			aspect: "translations",
-			language: "ru",
-			value: ["банк"],
-		};
-		const english: KnowledgeChange = {
-			kind: "Contribute",
-			aspect: "translations",
-			language: "en",
-			value: ["bank"],
-		};
-		const transcription: KnowledgeChange = {
-			kind: "Contribute",
-			aspect: "transcription",
-			value: "baŋk",
-		};
-		const committedChanges = () =>
-			t.run((ctx) => ctx.db.query("knowledgeChanges").take(10));
-		let finished = false;
-		try {
-			const running = generateWith(t, "progress", (_input, options) =>
-				Effect.promise(async () => {
-					// The finished leaves are handed on before the slow one.
-					await Effect.runPromise(
-						options.onContribution([definition, russian]),
-					);
-					await slow.promise;
-					return {
-						failures: [],
-						changes: [definition, russian, english, transcription],
-						pendingRelations: [],
-					};
-				}),
-			).then(() => {
-				finished = true;
-			});
-			if (!failFirstPublication) {
-				void (async () => {
-					while (!finished && (await committedChanges()).length === 0)
-						await Bun.sleep(1);
-					firstPublication.resolve();
-				})();
-			}
-			await firstPublication.promise;
-			expect(finished).toBe(false);
-			expect((await committedChanges()).length).toBeLessThan(3);
-			expect((await attempts(t))[0]).toMatchObject({ state: "Running" });
-			if (failFirstPublication) {
-				expect(await committedChanges()).toEqual([]);
-				await addToDictionary(t, occurrence);
-			}
-			slow.resolve();
-			await running;
-			// The final publication always carries every change; the mutation
-			// drops what this run already published.
-			const changes = await committedChanges();
-			expect(changes).toHaveLength(4);
-			const sequences = new Set(
-				changes.map(
-					({ knowledgeChangeKey }) =>
-						knowledgeChangeKey.split(":")[2],
-				),
-			);
-			expect(sequences.size).toBe(failFirstPublication ? 1 : 2);
-			expect((await attempts(t))[0]).toMatchObject({
-				state: "Committed",
-			});
-		} finally {
-			slow.resolve();
-			errors.mockRestore();
-		}
-	},
-);
+		await insertAttempt(t, occurrence, "failed", {
+			state: "Failed",
+			failureCode,
+			failureMessage: "Knowledge generation failed. Please retry.",
+			createdAt: Date.now(),
+		});
+		await schedule(t, {
+			attemptKey: "failed",
+			visitorId: "visitor-1",
+			readingId: occurrence.readingId,
+			attestationId: occurrence.attestationId,
+		});
+		return t;
+	};
 
-test.each([false, true])(
-	"partial generation commits valid changes and retains its final trace (incremental=%s)",
-	async (incremental) => {
+	const failed = await demandAgain("generationFailed");
+	expect(await scheduledAttempts(failed)).toEqual([]);
+	expect((await attempts(failed))[0]).toMatchObject({ state: "Failed" });
+
+	jest.setSystemTime(Date.now() + KNOWLEDGE_RETRY_COOLDOWN_MS);
+	const [attempt] = await attempts(failed);
+	if (!attempt) throw new Error("Expected the Failed attempt.");
+	await schedule(failed, {
+		attemptKey: "failed",
+		visitorId: "visitor-1",
+		readingId: attempt.readingId,
+		attestationId: attempt.attestationId,
+	});
+	expect(await scheduledAttempts(failed)).toEqual(queued("failed"));
+	expect((await attempts(failed))[0]).toMatchObject({ state: "Scheduled" });
+
+	const interrupted = await demandAgain("interrupted");
+	expect(await scheduledAttempts(interrupted)).toEqual(queued("failed"));
+	expect((await attempts(interrupted))[0]).toMatchObject({
+		state: "Scheduled",
+	});
+});
+
+test("a second Knowledge demand for the same Reading waits for the active attempt", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t);
+	const input = {
+		visitorId: "visitor-1",
+		readingId: occurrence.readingId,
+		attestationId: occurrence.attestationId,
+	};
+
+	await schedule(t, { ...input, attemptKey: "resolution-request" });
+	await schedule(t, { ...input, attemptKey: "coverage-request" });
+
+	expect(await scheduledAttempts(t)).toEqual(queued("resolution-request"));
+	expect(await attempts(t)).toEqual([
+		expect.objectContaining({
+			attemptKey: "resolution-request",
+			state: "Scheduled",
+		}),
+		expect.objectContaining({
+			attemptKey: "coverage-request",
+			state: "Waiting",
+		}),
+	]);
+});
+
+test("settling an active Knowledge attempt schedules the next waiting demand", async () => {
+	const settle = async (failureCode: string) => {
 		const t = createTestConvex();
-		const occurrence = await seedDictionaryReading(t);
-		await insertAttempt(t, occurrence, "partial");
-		const change = {
-			kind: "Contribute",
-			aspect: "definition",
-			value: "Ein Geldinstitut.",
-		};
-		const evidence = {
-			request: { definition: null, translations: { ru: null } },
-			failures: [
-				{
-					aspect: "translations",
-					leaf: "ru",
-					code: "ProviderFailure",
-					message: "offline",
-				},
-			],
-			operationTraces: [
-				JSON.stringify({
-					operation: "produceKnowledge",
-					outcome: "Partial",
-					calls: [],
-				}),
-			],
-		};
-		if (incremental) {
-			const intermediate = publishArgs({
-				attemptKey: "partial",
-				final: false,
-				changes: [change],
-				productionEvidence: {
-					...evidence,
-					failures: [],
-					operationTraces: [],
-				},
-			});
-			expect(await publish(t, intermediate)).toEqual({
-				status: "Committed",
-			});
-			expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
-				knowledge: { definition: "Ein Geldinstitut." },
-				status: "Partial",
-			});
-			expect((await attempts(t))[0]).toMatchObject({
-				state: "Running",
-				publicationSequence: 1,
-			});
-			expect(await rows(t, "knowledgeProductionRuns")).toEqual([]);
-			// A repeated contribution is deduplicated by content, not by sequence.
-			expect(await publish(t, intermediate)).toEqual({
-				status: "Committed",
-			});
-			expect(await rows(t, "knowledgeChanges")).toHaveLength(1);
-			expect(
-				await publish(t, {
-					...intermediate,
-					relationPublication: {
-						...intermediate.relationPublication,
-						runNumber: 999,
-					},
-				}),
-			).toEqual({ status: "Ignored" });
-			expect(await rows(t, "knowledgeChanges")).toHaveLength(1);
-		}
-		const result = await publish(
+		const occurrence = await seedOccurrence(t);
+		await insertAttempt(t, occurrence, "resolution-request");
+		await insertAttempt(t, occurrence, "coverage-request", {
+			state: "Waiting",
+			createdAt: 2,
+		});
+		await t.mutation(internal.knowledgeGeneration.fail, {
+			attemptKey: "resolution-request",
+			runNumber: 1,
+			failureCode,
+			failureMessage: "failed",
+		});
+		return t;
+	};
+
+	// An interrupted run never reached the model, so the next demand starts.
+	const interrupted = await settle("interrupted");
+	expect(await scheduledAttempts(interrupted)).toEqual(
+		queued("coverage-request"),
+	);
+	expect(await attempts(interrupted)).toEqual([
+		expect.objectContaining({
+			attemptKey: "resolution-request",
+			state: "Failed",
+		}),
+		expect.objectContaining({
+			attemptKey: "coverage-request",
+			state: "Scheduled",
+		}),
+	]);
+
+	// Any other failure holds the next demand until the cooldown ends.
+	const failed = await settle("generationFailed");
+	expect(await scheduledAttempts(failed)).toEqual([]);
+	expect((await attempts(failed))[1]).toMatchObject({ state: "Waiting" });
+	const promotions = (
+		await failed.run((ctx) =>
+			ctx.db.system.query("_scheduled_functions").collect(),
+		)
+	).filter(({ name }) => name === "knowledgeGeneration:promoteWaiting");
+	expect(promotions).toEqual([
+		expect.objectContaining({
+			args: [{ ownerReadingKey: BANK_READING_KEY }],
+			scheduledTime: Date.now() + KNOWLEDGE_RETRY_COOLDOWN_MS,
+		}),
+	]);
+
+	jest.setSystemTime(Date.now() + KNOWLEDGE_RETRY_COOLDOWN_MS);
+	await failed.mutation(internal.knowledgeGeneration.promoteWaiting, {
+		ownerReadingKey: BANK_READING_KEY,
+	});
+	expect(await scheduledAttempts(failed)).toEqual(queued("coverage-request"));
+	expect((await attempts(failed))[1]).toMatchObject({ state: "Scheduled" });
+});
+
+test("a Reading cooling down after a failure starts no run for a demand under any attemptKey", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t);
+	await insertAttempt(t, occurrence, "first-click", {
+		state: "Failed",
+		failureCode: "generationFailed",
+		failureMessage: "Knowledge generation failed. Please retry.",
+		createdAt: Date.now(),
+	});
+	const demand = (attemptKey: string) =>
+		schedule(t, {
+			attemptKey,
+			visitorId: "visitor-2",
+			readingId: occurrence.readingId,
+			attestationId: occurrence.attestationId,
+		});
+
+	// A new click and a changed language set each bring a fresh key.
+	await demand("second-click");
+	await demand("coverage:click:en,ru");
+	expect(await scheduledAttempts(t)).toEqual([]);
+	expect((await attempts(t)).map(({ attemptKey }) => attemptKey)).toEqual([
+		"first-click",
+	]);
+
+	jest.setSystemTime(Date.now() + KNOWLEDGE_RETRY_COOLDOWN_MS);
+	await demand("third-click");
+	expect(await scheduledAttempts(t)).toEqual(queued("third-click"));
+});
+
+test("a late action cannot end the run that replaced it", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t);
+	await insertAttempt(t, occurrence, "attempt-1", { runNumber: 2 });
+	const failure = {
+		attemptKey: "attempt-1",
+		failureCode: "generationFailed",
+		failureMessage: "failed",
+	};
+
+	// Run 1's action, and an action that never claimed a run, come back late.
+	await t.mutation(internal.knowledgeGeneration.fail, {
+		...failure,
+		runNumber: 1,
+	});
+	await t.mutation(internal.knowledgeGeneration.fail, {
+		...failure,
+		runNumber: null,
+	});
+	await t.mutation(internal.catalogGrowthSignals.recordKnowledgeCatalogMiss, {
+		attemptKey: "attempt-1",
+		runNumber: 1,
+		miss: {
+			decision: "CatalogMiss",
+			route: "de/Lexeme/NOUN",
+			stage: "produceKnowledge",
+			message: "No reviewed member matches",
+		},
+	});
+	expect(
+		await publish(
 			t,
 			publishArgs({
-				attemptKey: "partial",
-				changes: [change],
-				productionEvidence: evidence,
+				attemptKey: "attempt-1",
+				relationPublication: { ...EMPTY_RELATION_RUN, runNumber: 1 },
 			}),
-		);
-		expect(result.status).toBe("Committed");
-		expect(await rows(t, "knowledgeChanges")).toHaveLength(1);
-		expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
-			status: "Partial",
-			knowledge: { definition: "Ein Geldinstitut." },
-			coveredTranslationLanguages: [],
-		});
-		expect((await attempts(t))[0]).toMatchObject({
-			state: "Failed",
-			failureCode: "partialKnowledge",
-		});
-		expect((await rows(t, "knowledgeProductionRuns"))[0]).toMatchObject({
-			outcome: "Partial",
-			evidence,
-		});
-	},
-);
+		),
+	).toEqual({ status: "Ignored" });
+	// Only a Scheduled attempt has a run to claim.
+	expect(
+		await t.mutation(internal.knowledgeGeneration.begin, {
+			attemptKey: "attempt-1",
+		}),
+	).toBe(null);
+	expect(await attempts(t)).toEqual([
+		expect.objectContaining({ state: "Running", runNumber: 2 }),
+	]);
+	expect(await rows(t, "catalogGrowthSignals")).toEqual([]);
 
-test("a run's origin is New for the Reading's first occurrence and TopUp for a later one (#677, #883 point 5)", async () => {
+	await t.mutation(internal.knowledgeGeneration.fail, {
+		...failure,
+		runNumber: 2,
+	});
+	expect(await attempts(t)).toEqual([
+		expect.objectContaining({ state: "Failed", runNumber: 2 }),
+	]);
+});
+
+test("a run whose action died fails as interrupted, starts the next demand, and retries", async () => {
 	const t = createTestConvex();
-	const first = await seedDictionaryReading(t);
-	const second = await seedSecondOccurrence(t, first);
-	await insertAttempt(t, first, "first", { state: "Scheduled" });
-	expect(
-		await t.mutation(internal.knowledgeGeneration.begin, {
-			attemptKey: "first",
+	const occurrence = await seedOccurrence(t);
+	await t.run((ctx) =>
+		ctx.db.insert("visitorEncounters", {
+			requestId: "click-request",
+			visitorId: "visitor-1",
+			scrollId: occurrence.scrollId,
+			sentenceId: occurrence.sentenceId,
+			segmentId: occurrence.segmentId,
+			attestationId: occurrence.attestationId,
+			encounteredAt: 1,
 		}),
-	).toEqual(expect.objectContaining({ kind: "Generate", origin: "New" }));
-	await insertAttempt(t, second, "second", { state: "Scheduled" });
+	);
+	const input = {
+		visitorId: "visitor-1",
+		readingId: occurrence.readingId,
+		attestationId: occurrence.attestationId,
+	};
+	await schedule(t, { ...input, attemptKey: "stuck" });
+	await schedule(t, { ...input, attemptKey: "behind" });
+	expect(await scheduledWatchdogs(t)).toEqual([
+		{ attemptKey: "stuck", runNumber: 1 },
+	]);
+	await t.mutation(internal.knowledgeGeneration.begin, {
+		attemptKey: "stuck",
+	});
+
+	// A run still inside an action's lifetime is left alone and checked again.
 	expect(
-		await t.mutation(internal.knowledgeGeneration.begin, {
-			attemptKey: "second",
+		await t.mutation(internal.knowledgeGeneration.recoverStaleRun, {
+			attemptKey: "stuck",
+			runNumber: 1,
 		}),
-	).toEqual(expect.objectContaining({ kind: "Generate", origin: "TopUp" }));
+	).toBe(false);
+	expect(await scheduledWatchdogs(t)).toHaveLength(2);
+
+	jest.setSystemTime(Date.now() + STALE_KNOWLEDGE_RUN_AFTER_MS);
+	expect(
+		await t.mutation(internal.knowledgeGeneration.recoverStaleRun, {
+			attemptKey: "stuck",
+			runNumber: 1,
+		}),
+	).toBe(true);
+	expect(await attempts(t)).toEqual([
+		expect.objectContaining({
+			attemptKey: "stuck",
+			state: "Failed",
+			failureCode: "interrupted",
+		}),
+		expect.objectContaining({ attemptKey: "behind", state: "Scheduled" }),
+	]);
+	expect(await scheduledAttempts(t)).toEqual(queued("stuck", "behind"));
+
+	// The dead action's own late failure no longer owns the attempt.
+	await t.mutation(internal.knowledgeGeneration.fail, {
+		attemptKey: "stuck",
+		runNumber: 1,
+		failureCode: "generationFailed",
+		failureMessage: "failed",
+	});
+	expect((await attempts(t))[0]).toMatchObject({
+		failureCode: "interrupted",
+	});
+
+	await t.mutation(internal.knowledgeGeneration.retry, {
+		...input,
+		attemptKey: "stuck",
+	});
+	expect((await attempts(t))[0]).toMatchObject({ state: "Waiting" });
 });

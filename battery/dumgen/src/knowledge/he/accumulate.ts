@@ -7,17 +7,16 @@ import {
 } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
-import type { OperationScope } from "../../call.js";
+import { CallLog } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
-import { askThrough } from "../../jev-call.js";
-import { askLuna } from "../../luna-call.js";
+import { type Jev, stageAsk } from "../../jev-call.js";
+import { askLuna, type Luna } from "../../luna-call.js";
 import { choice, choiceOf } from "../../segment/ask.js";
 import type {
 	AccumulateTranslationsInput,
 	KnowledgeFailure,
 	TranslationAccumulation,
 } from "../types.js";
-import type { HebrewKnowledgeModels } from "./produce.js";
 
 const translationKey = (text: string, language: Dumrel.TranslationLanguage) =>
 	normalizeForm(text).replace(/\s+/gu, " ").toLocaleLowerCase(language);
@@ -66,11 +65,11 @@ function badInput(
 
 /** Hebrew ADR0047 accumulator: stored equivalents are bare judge options, never writer hints. */
 export const accumulateHebrewTranslations = (
-	scope: OperationScope,
-	models: HebrewKnowledgeModels,
 	input: AccumulateTranslationsInput<"he">,
-): Effect.Effect<TranslationAccumulation<"he">> =>
+): Effect.Effect<TranslationAccumulation<"he">, never, Jev | Luna | CallLog> =>
 	Effect.gen(function* () {
+		const scope = yield* CallLog;
+		const ask = yield* stageAsk;
 		const problem = badInput(input);
 		if (problem) return yield* Effect.die(Error(problem));
 		const selected = selectKnowledge({
@@ -118,10 +117,7 @@ export const accumulateHebrewTranslations = (
 							changes: [],
 							failures: [],
 						} satisfies TranslationAccumulation<"he">;
-					const answers = yield* askThrough(
-						scope,
-						models.jev,
-					)({
+					const answers = yield* ask({
 						stage: "translationCoverage",
 						state: {
 							reading,
@@ -170,8 +166,6 @@ export const accumulateHebrewTranslations = (
 						} satisfies TranslationAccumulation<"he">;
 					}
 					const written = yield* askLuna(
-						scope,
-						models.luna,
 						"translationAccumulation",
 						{
 							systemPrompt:

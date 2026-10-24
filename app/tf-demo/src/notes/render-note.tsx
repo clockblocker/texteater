@@ -64,7 +64,7 @@ function configureRenderNote(layoutAdapter: LayoutAdapter) {
 		registryFor: registeredBlockMap,
 	});
 	return {
-		renderNote(input: RenderNoteInput): ReactElement {
+		renderNote: (input: RenderNoteInput): ReactElement => {
 			return layoutAdapter(input, "Note", (layout) =>
 				renderUniversalNoteBody({
 					...universalInput(input),
@@ -73,7 +73,7 @@ function configureRenderNote(layoutAdapter: LayoutAdapter) {
 				}),
 			);
 		},
-		renderNoteParts(input: RenderNoteInput): NoteParts {
+		renderNoteParts: (input: RenderNoteInput): NoteParts => {
 			return {
 				heading: renderUniversalNoteHeading(universalInput(input)),
 				body: layoutAdapter(input, "Body", (layout) =>
@@ -144,7 +144,7 @@ function ReadingWithConfiguredLayout({
 		...convexQuery(api.readingBlockLayouts.getFamilyKind, {
 			visitorId,
 			route: {
-				targetLanguage: lemma.language,
+				targetLanguage: lemma.language === "he" ? "he" : "de",
 				family: lemma.family,
 				kind: lemma.kind,
 			},
@@ -162,11 +162,8 @@ function ReadingWithConfiguredLayout({
 			/>
 		);
 	}
-	if (layoutQuery.isError || !layoutQuery.data) {
-		return renderErrorNote(
-			layoutQuery.error ?? "Reading layout could not be loaded.",
-			"Reading Note unavailable",
-		);
+	if (layoutQuery.isError) {
+		return renderErrorNote(layoutQuery.error, "Reading Note unavailable");
 	}
 	return renderWithLayout({
 		order: layoutQuery.data.order,

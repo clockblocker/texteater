@@ -61,7 +61,7 @@ import {
 import { noul } from "../../../src/segment/ask.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import { segmentsOf } from "../evaluation/spec-corpus/fixtures.js";
-import { answerEach } from "./support.js";
+import { answerEach, onLabBudget } from "./support.js";
 
 const directory = await mkdtemp(join(tmpdir(), "segment-in-units-tracking-"));
 afterAll(() => rm(directory, { recursive: true, force: true }));
@@ -257,14 +257,17 @@ test("the lab's provenance hashes its own sources and the dumcorpus it imports",
 	const provenance = await provenanceOf({
 		packageRoot,
 		repository: resolve(packageRoot, "../.."),
-		cli: "cli/segment-in-units-lab.ts",
+		cliSources: ["cli/segment-in-units-lab.ts", "cli/segment-in-units-lab"],
 	});
 	expect(provenance.codeHash).toMatch(/^[0-9a-f]{64}$/u);
 	expect(provenance.dumcorpusHash).toMatch(/^[0-9a-f]{64}$/u);
 	expect(Object.keys(provenance.sourceHashes)).toEqual(
 		expect.arrayContaining([
 			"cli/segment-in-units-lab.ts",
+			"cli/segment-in-units-lab/run.ts",
 			"lab/segmentation/harness/provenance.ts",
+			"lab/segmentation/de/arms/production-levers.ts",
+			"lab/segmentation/de/arms/production-stage.ts",
 			"lab/evaluation/spec-corpus/segment-in-units-evaluation.ts",
 		]),
 	);
@@ -335,19 +338,21 @@ test("a repetition offset misses the cache while sending the same prompts", asyn
 			cacheDirectory,
 			transport: answeringAs(pinnedJevModel, counter),
 		});
-		const run = await runArm({
-			runId: `offset-${repetitionOffset}`,
-			arm: candidates4Arm,
-			options: { final: "1", closed: "1" },
-			set,
-			subset: "all",
-			cases: [labCase],
-			repetitions: 2,
-			repetitionOffset,
-			jev,
-			concurrency: 1,
-			gitHead: "test",
-		});
+		const run = await onLabBudget(
+			runArm({
+				runId: `offset-${repetitionOffset}`,
+				arm: candidates4Arm,
+				options: { final: "1", closed: "1" },
+				set,
+				subset: "all",
+				cases: [labCase],
+				repetitions: 2,
+				repetitionOffset,
+				jev,
+				concurrency: 1,
+				gitHead: "test",
+			}),
+		);
 		return { run, prompts: jev.promptHashes() };
 	};
 	const first = await runWith(0);
@@ -598,7 +603,14 @@ test("the lab tracks tokens only: no USD in its code, committed evidence or doc"
 		join(packageRoot, "evidence/segment-in-units-lab"),
 	)
 		.filter((path) => !path.endsWith(".gz"))
-		.concat(join(packageRoot, "docs/reference/segmentation-jev-lab.md"));
+		.concat(
+			["", "-evaluate", "-scoring"].map((part) =>
+				join(
+					packageRoot,
+					`docs/reference/segmentation-jev-lab${part}.md`,
+				),
+			),
+		);
 	// `usd` opening a word, `Usd` inside a camelCase name, or `USD`; not `Ausdruck`.
 	const usd = /\busd|Usd|USD/u;
 	const offenders = [

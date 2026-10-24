@@ -30,7 +30,6 @@ export async function scheduleKnowledgeGeneration(
 ): Promise<void> {
 	assertIdentifier(input.attemptKey, "attemptKey");
 	assertIdentifier(input.visitorId, "visitorId");
-	if (!ctx.scheduler) return;
 	const occurrence = await loadOccurrenceAttestation(
 		ctx,
 		input.attestationId,

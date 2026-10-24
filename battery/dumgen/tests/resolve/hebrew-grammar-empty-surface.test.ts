@@ -1,9 +1,9 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../../src/call.js";
 import { defaultLunaConfiguration } from "../../src/luna.js";
 import { resolveHebrewGrammar } from "../../src/resolve/he/grammar.js";
 import type { Unit } from "../../src/segment/segmented-sentence.js";
+import { requestBudget, runOperation } from "./../service-test-adapter.js";
 
 // Grammatical response from frozen he01-book-raw-luna-4.json, 2026-10-21.
 // Replays the real rejected value offline; this is not a new model answer.
@@ -36,43 +36,39 @@ async function resolve(output: unknown) {
 		runOperation(
 			"resolve.grammar",
 			{ budget: requestBudget(1), payloads: false },
-			(scope) =>
-				resolveHebrewGrammar(
-					scope,
-					{
-						luna: {
-							configuration: defaultLunaConfiguration,
-							ask: async () => ({ output }),
-						},
-						jev: {
-							model: "jev-test",
-							ask: async () => {
-								throw Error("Unexpected judge");
-							},
-						},
+			{
+				luna: {
+					configuration: defaultLunaConfiguration,
+					ask: async () => ({ output }),
+				},
+				jev: {
+					model: "jev-test",
+					ask: async () => {
+						throw Error("Unexpected judge");
 					},
-					{
-						language: "he",
-						sentence: {
-							text: "קניתי ספר מעניין לקריאה.",
-							segments: [
-								{ kind: "ResolvableText", text: "קניתי" },
-								{ kind: "Whitespace", text: " " },
-								{ kind: "ResolvableText", text: "ספר" },
-								{ kind: "Whitespace", text: " " },
-								{ kind: "ResolvableText", text: "מעניין" },
-								{ kind: "Whitespace", text: " " },
-								{ kind: "ResolvableText", text: "ל" },
-								{ kind: "ResolvableText", text: "קריאה" },
-								{ kind: "Punctuation", text: "." },
-							],
-							units: [unit],
-						},
-						unit,
-						neighbours: {},
-						lemmaCandidates: [],
-					},
-				),
+				},
+			},
+			resolveHebrewGrammar({
+				language: "he",
+				sentence: {
+					text: "קניתי ספר מעניין לקריאה.",
+					segments: [
+						{ kind: "ResolvableText", text: "קניתי" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "ספר" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "מעניין" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "ל" },
+						{ kind: "ResolvableText", text: "קריאה" },
+						{ kind: "Punctuation", text: "." },
+					],
+					units: [unit],
+				},
+				unit,
+				neighbours: {},
+				lemmaCandidates: [],
+			}),
 		),
 	);
 }

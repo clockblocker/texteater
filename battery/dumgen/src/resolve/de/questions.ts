@@ -7,6 +7,8 @@
  * does.
  */
 import type { EntryType, Questions } from "@typesafe-ai/sdk";
+import * as Data from "effect/Data";
+import * as Result from "effect/Result";
 import { type Answers, choice, choiceOf } from "../../segment/ask.js";
 import { type PolicyName, policy, question } from "./prompts.js";
 
@@ -37,15 +39,36 @@ export function optionsOf<Option extends string>(
 const idOf = (asked: Choice | string) =>
 	typeof asked === "string" ? asked : asked.id;
 
-/** Why a click came back Unresolved; caught where the click's outcome is decided. */
-export class UnresolvedAnswer extends Error {
+/**
+ * Why a click came back Unresolved: a value, carried back to where the
+ * click's outcome is decided.
+ */
+export class Unresolved extends Data.TaggedClass("Unresolved")<{
 	readonly reason: string;
-	constructor(reason: string) {
-		super(reason);
-		this.reason = reason;
-		this.name = "UnresolvedAnswer";
-	}
-}
+}> {}
+
+/** A reading that stops the click as Unresolved, for `reason`. */
+export const unresolved = (reason: string): Result.Result<never, Unresolved> =>
+	Result.fail(new Unresolved({ reason }));
+
+/** What an `answerReader` body yields and returns. */
+export type ReaderBody<Value> = Generator<
+	Result.Result<unknown, Unresolved>,
+	Value,
+	never
+>;
+
+/**
+ * A reader of answers written as a generator, as `Effect.fn` writes an
+ * Effect: `yield*` of a pick reads its answer, and an Unresolved one
+ * stops the reading there.
+ */
+export const answerReader =
+	<Args extends readonly unknown[], Value>(
+		body: (...args: Args) => ReaderBody<Value>,
+	) =>
+	(...args: Args): Result.Result<Value, Unresolved> =>
+		Result.gen(() => body(...args));
 
 export class Questionnaire {
 	readonly questions: Questions = {};
@@ -96,14 +119,16 @@ export class Answered {
 	}
 
 	/** A deciding answer: Unresolved stops the click. */
-	pick<Option extends string>(asked: Choice<Option>): Option;
-	pick(id: string): string;
-	pick(asked: Choice | string): string {
+	pick<Option extends string>(
+		asked: Choice<Option>,
+	): Result.Result<Option, Unresolved>;
+	pick(id: string): Result.Result<string, Unresolved>;
+	pick(asked: Choice | string): Result.Result<string, Unresolved> {
 		const id = idOf(asked);
 		const { choice: answer } = choiceOf(this.answers, id);
-		if (answer === "Unresolved")
-			throw new UnresolvedAnswer(`Unresolved ${id}`);
-		return answer;
+		return answer === "Unresolved"
+			? unresolved(`Unresolved ${id}`)
+			: Result.succeed(answer);
 	}
 
 	/**

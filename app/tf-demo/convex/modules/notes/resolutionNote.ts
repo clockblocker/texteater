@@ -18,13 +18,15 @@ import {
 	surfaceValue,
 } from "../../model/occurrenceAttestations";
 import { presentSurface } from "../../model/presentedDumling";
-import { loadStoredSegments } from "../../model/storedSegments";
 import {
 	activeResolutionActivityValidator,
-	languageValidator,
 	resolutionFailureCodeValidator,
-	resolutionGrammarProjectionValidator,
 	resolutionProgressValidator,
+} from "../../model/resolutionLifecycleValidators";
+import { loadStoredSegments } from "../../model/storedSegments";
+import {
+	languageValidator,
+	resolutionGrammarProjectionValidator,
 	resolutionReadingProjectionValidator,
 	segmentKindValidator,
 	storedUnitValidator,

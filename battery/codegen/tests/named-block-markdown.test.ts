@@ -84,7 +84,7 @@ for (const [packageName, command] of [
 			recipe,
 			{ mode: "check" },
 			// Exercise the public Node filesystem without mutating.
-			(await import("../src/runner.js")).nodeFileSystem,
+			(await import("../src/file-system.js")).nodeFileSystem,
 		);
 		expect(result.status).toBe("clean");
 	});

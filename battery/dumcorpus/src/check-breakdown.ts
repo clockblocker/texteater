@@ -1,8 +1,9 @@
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
+import { parseReadingKnowledge } from "dumrel";
 import { z } from "zod";
+import { breakdownInvariantIssues } from "./breakdown-invariants.js";
 import {
-	checkTargets,
 	type IssueSink,
 	issueCollector,
 	type LayerVerdict,
@@ -10,40 +11,36 @@ import {
 	uncitedIssue,
 } from "./check-record.js";
 import type {
+	BreakdownKnowledge,
 	BreakdownRecord,
 	BreakdownRecordId,
-	SpecTarget,
 } from "./corpus-types.js";
 import { breakdownRecordIdPattern, idLanguage } from "./ids.js";
-import { layerRank } from "./layers.js";
-import {
-	breakdownRecordFileSchema,
-	looseRouteSchema,
-} from "./record-schema.js";
+import { breakdownRecordFileSchema } from "./record-schema.js";
 import { sameValue } from "./same-value.js";
 
-const fileSchema = breakdownRecordFileSchema(z.unknown(), {
-	route: looseRouteSchema,
-	attestation: z.unknown(),
-	knowledge: z.unknown(),
+const fileSchema = breakdownRecordFileSchema({
+	reading: z.unknown(),
+	breakdown: z.unknown(),
+	source: z.unknown(),
 });
-const brokenDown: readonly Dumling.Family[] = ["Locution", "Saying"];
 
 /**
- * A checked Breakdown Record. Without errors, it loads when its Attestation
- * layer passes.
+ * A checked Breakdown Record. Without errors, it loads when its one
+ * Annotation Layer, Segmentation, passes.
  */
 export interface BreakdownRecordCheck extends LayerVerdict {
 	record?: BreakdownRecord;
 }
 
 /**
- * Runs every check a Breakdown Record needs, each in its Annotation Layer.
- * Segmentation: its id and shape, a strict Locution or Saying Lemma whose
- * Canonical Form is the wording, Lexeme routes only, none covering the whole
- * wording, and every ResolvableText Segment in exactly one target. The deeper
- * layers are the target checks sentence records share. A reviewed layer must
- * pass, and a reviewed record cites a Rule.
+ * Runs every check a Breakdown Record needs (ADR 0050, ADR 0051). Its parts
+ * carry no Attestation and no Reading, so every check of its content belongs
+ * to Segmentation (ADR 0037): a strict, normalized owning Reading of the
+ * record's language; a Breakdown or Source that dumrel's
+ * `parseReadingKnowledge` accepts for that Reading, stored as it normalizes
+ * it; and the invariants dumrel leaves to gold. A reviewed record must pass
+ * and cite a Rule.
  */
 export function checkBreakdownRecord(
 	id: BreakdownRecordId,
@@ -64,78 +61,35 @@ export function checkBreakdownRecord(
 			issue(undefined, "Shape", error.path.join("."), error.message);
 		return { errors: found, issues: [] };
 	}
-	const { sentence, segments, targets, reviewDepth, sources } = file.data;
-
-	const lemma = checkLemma(file.data.lemma, language, issue);
-	if (lemma && lemma.canonicalForm !== sentence)
-		issue(
-			"Segmentation",
-			"Wording",
-			"sentence",
-			`The wording is the Lemma's Canonical Form ${JSON.stringify(lemma.canonicalForm)}`,
-		);
-
-	const checked = checkTargets(
-		{ sentence, segments, targets, reviewDepth },
-		language,
-		issue,
-	);
-	const { claims, resolvable } = checked;
-	const wording = segments.flatMap((_, index) =>
-		resolvable(index) ? [index] : [],
-	);
-	for (const [t, target] of targets.entries()) {
-		const path = `targets.${t}`;
-		if (target.route.family !== "Lexeme")
-			issue(
-				"Segmentation",
-				"Breakdown",
-				`${path}.route.family`,
-				"A Breakdown breaks its Lemma down into Lexemes",
-			);
-		if (
-			wording.length > 0 &&
-			wording.every((index) =>
-				target.memberSegmentIndices.includes(index),
-			)
-		)
-			issue(
-				"Segmentation",
-				"Breakdown",
-				`${path}.memberSegmentIndices`,
-				"A Breakdown never returns the whole Lemma as one target",
-			);
-	}
-	for (const [index, count] of claims.entries()) {
-		if (count > 1)
-			issue(
-				"Segmentation",
-				"Coverage",
-				`segments.${index}`,
-				"A Segment belongs to at most one target",
-			);
-		else if (count === 0 && resolvable(index))
-			issue(
-				"Segmentation",
-				"Coverage",
-				`segments.${index}`,
-				`A Breakdown covers every word; ${JSON.stringify(segments[index]?.text)} is in no target`,
-			);
-	}
+	const { reviewDepth, sources } = file.data;
+	const reading = checkOwner(file.data.reading, language, issue);
+	const knowledge =
+		reading && checkKnowledge(reading, file.data.knowledge, issue);
+	if (reading && knowledge)
+		for (const { path, message } of breakdownInvariantIssues(
+			reading,
+			knowledge,
+		))
+			issue("Segmentation", "Breakdown", path, message);
 	const uncited = uncitedIssue(id, reviewDepth !== undefined, sources);
 	if (uncited) found.push(uncited);
 
-	const verdict = settleLayers(found, reviewDepth, checked.knowledgeComplete);
-	const attested = checked.attested.filter(
-		(target): target is SpecTarget => target !== undefined,
-	);
+	const settled = settleLayers(found, reviewDepth, true);
+	// Segmentation is a Breakdown Record's only layer.
+	const verdict: LayerVerdict = {
+		errors: settled.errors,
+		issues: settled.issues,
+		...(reviewDepth === undefined ? {} : { reviewDepth }),
+		...(settled.validThrough === undefined
+			? {}
+			: { validThrough: "Segmentation" }),
+	};
 	if (
 		verdict.errors.length > 0 ||
-		!language ||
-		!lemma ||
 		verdict.validThrough === undefined ||
-		layerRank(verdict.validThrough) < layerRank("Attestation") ||
-		attested.length !== targets.length
+		!language ||
+		!reading ||
+		!knowledge
 	)
 		return verdict;
 	return {
@@ -143,59 +97,110 @@ export function checkBreakdownRecord(
 		record: {
 			id,
 			language,
-			lemma,
-			sentence,
-			segments,
-			targets: attested,
+			reading,
+			knowledge,
 			...(reviewDepth === undefined ? {} : { reviewDepth }),
-			validThrough: verdict.validThrough,
 			sources,
 		},
 	};
 }
 
-/** Parses the broken-down Lemma: a strict, normalized Locution or Saying. */
-function checkLemma(
+/** Parses the owning Reading: strict, normalized and of the record's language. */
+function checkOwner(
 	input: unknown,
 	language: Dumling.Language | undefined,
 	issue: IssueSink,
-): Dumling.Lemma | undefined {
+): Dumling.Reading | undefined {
 	const parsed = parseUnit(input);
 	if (!parsed.success) {
 		for (const error of parsed.error.issues)
 			issue(
 				"Segmentation",
-				"Lemma",
-				["lemma", ...error.path].join("."),
+				"Reading",
+				["reading", ...error.path].join("."),
 				error.message,
 			);
 		return undefined;
 	}
-	if (parsed.chain.unitKind !== "Lemma") {
-		issue("Segmentation", "Lemma", "lemma.unitKind", "Expected a Lemma");
+	if (parsed.chain.unitKind !== "Reading") {
+		issue(
+			"Segmentation",
+			"Reading",
+			"reading.unitKind",
+			"A Breakdown Record is owned by a Reading",
+		);
 		return undefined;
 	}
-	const lemma = parsed.chain.value;
-	if (!sameValue(lemma, input))
+	const reading = parsed.chain.value;
+	if (!sameValue(reading, input))
 		issue(
 			"Segmentation",
-			"Lemma",
-			"lemma",
-			"Store the Lemma exactly as parseUnit normalizes it",
+			"Reading",
+			"reading",
+			"Store the Reading exactly as parseUnit normalizes it",
 		);
-	if (!brokenDown.includes(lemma.family))
+	if (reading.lemma.family === "Foreign")
 		issue(
 			"Segmentation",
-			"Lemma",
-			"lemma.family",
-			"A Breakdown Record breaks down a Locution or Saying",
+			"Reading",
+			"reading.lemma.family",
+			"A Foreign Reading has no Breakdown",
 		);
-	if (language && lemma.language !== language)
+	if (language && reading.lemma.language !== language)
 		issue(
 			"Segmentation",
-			"Lemma",
-			"lemma.language",
-			`A ${language} Breakdown Record breaks down a ${language} Lemma`,
+			"Reading",
+			"reading.lemma.language",
+			`A ${language} Breakdown Record is owned by a ${language} Reading`,
 		);
-	return lemma;
+	return reading;
+}
+
+/**
+ * Checks the Breakdown or Source with dumrel against the owning Reading:
+ * piece targets, the spelled-back Canonical Form, a Source or Constituents
+ * but not both. The record stores what dumrel returns.
+ */
+function checkKnowledge(
+	reading: Dumling.Reading,
+	input: { breakdown?: unknown; source?: unknown },
+	issue: IssueSink,
+): BreakdownKnowledge | undefined {
+	if (input.breakdown === undefined && input.source === undefined) {
+		issue(
+			"Segmentation",
+			"Breakdown",
+			"knowledge",
+			"A Breakdown Record holds a Breakdown or a Source",
+		);
+		return undefined;
+	}
+	const parsed = parseReadingKnowledge({ source: reading, knowledge: input });
+	if (!parsed.success) {
+		for (const error of parsed.error.issues)
+			issue(
+				"Segmentation",
+				"Breakdown",
+				// dumrel's paths may start at the knowledge it was given.
+				[
+					"knowledge",
+					...error.path.slice(error.path[0] === "knowledge" ? 1 : 0),
+				].join("."),
+				error.message,
+			);
+		return undefined;
+	}
+	const { breakdown, source } = parsed.value;
+	const knowledge: BreakdownKnowledge = {
+		...(breakdown === undefined ? {} : { breakdown }),
+		...(source === undefined ? {} : { source }),
+	};
+	if (!sameValue(knowledge, input))
+		issue(
+			"Segmentation",
+			"Breakdown",
+			"knowledge",
+			"Store the Breakdown and Source exactly as dumrel normalizes them",
+		);
+	return knowledge;
 }

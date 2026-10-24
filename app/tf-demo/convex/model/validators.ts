@@ -78,12 +78,13 @@ export const grammaticalLanguageValidator = literalUnion(
 );
 
 /**
- * The Knowledge aspect a structural Shadow reference sits in. A Participle
- * Source refers to its verb's Shadow until that verb is stored (ADR 0036).
+ * The Knowledge aspect a structural Shadow reference sits in. A Breakdown
+ * piece or a Source refers to its part's Shadow until a Lemma with that
+ * identity is stored (ADR 0050).
  */
 export const structuralShadowAspectValidator = v.union(
-	v.literal("morphologicalTree"),
-	v.literal("participleSource"),
+	v.literal("breakdown"),
+	v.literal("source"),
 );
 export type StructuralShadowAspect = Infer<
 	typeof structuralShadowAspectValidator
@@ -319,7 +320,6 @@ export const knowledgeSettingsValidator = v.object({
 	transcription: v.boolean(),
 	definition: v.boolean(),
 	translations: v.object({ en: v.boolean(), ru: v.boolean() }),
-	morphologicalTree: v.boolean(),
 	semanticRelations: v.object({
 		synonym: v.boolean(),
 		nearSynonym: v.boolean(),
@@ -368,131 +368,6 @@ export const catalogMissValidator = v.object({
 	message: v.string(),
 });
 
-export const resolutionProgressValidator = v.union(
-	v.literal("Starting"),
-	v.literal("RouteAvailable"),
-	v.literal("GrammarAvailable"),
-	v.literal("ReadingAvailable"),
-	v.literal("Committing"),
-);
-
-export const resolutionActivityValidator = v.union(
-	v.literal("Scheduled"),
-	v.literal("Running"),
-	v.literal("Terminal"),
-);
-
-export const activeResolutionActivityValidator = v.union(
-	v.literal("Scheduled"),
-	v.literal("Running"),
-);
-
-export const resolutionLifecycleValidator = v.union(
-	v.object({
-		state: v.literal("Active"),
-		progress: resolutionProgressValidator,
-		activity: activeResolutionActivityValidator,
-	}),
-	v.object({
-		state: v.literal("Terminal"),
-		progress: v.literal("Committing"),
-		outcome: v.literal("Complete"),
-	}),
-	v.object({
-		state: v.literal("Terminal"),
-		progress: resolutionProgressValidator,
-		outcome: v.literal("Unresolved"),
-	}),
-	v.object({
-		state: v.literal("Terminal"),
-		progress: resolutionProgressValidator,
-		outcome: v.literal("PermanentFailure"),
-	}),
-);
-
-const generationFailureCategoryValidator = v.union(
-	v.literal("Network"),
-	v.literal("RateLimited"),
-	v.literal("ProviderUnavailable"),
-	v.literal("RequestRejected"),
-	v.literal("InvalidOutput"),
-	v.literal("Refusal"),
-	v.literal("BudgetExhausted"),
-);
-
-export const resolutionFailureCodeValidator = v.union(
-	generationFailureCategoryValidator,
-	v.literal("CatalogMiss"),
-	v.literal("DictionaryConflict"),
-	v.literal("MembershipConflict"),
-	v.literal("Internal"),
-);
-
-export const safeGenerationFailureValidator = v.object({
-	category: generationFailureCategoryValidator,
-	retryable: v.boolean(),
-	status: v.optional(v.number()),
-	providerCode: v.optional(v.string()),
-	providerRequestId: v.optional(v.string()),
-	retryAfterMs: v.optional(v.number()),
-	attempts: v.number(),
-});
-
-export const resolutionPhaseValidator = v.union(
-	v.literal("Route"),
-	v.literal("Grammar"),
-	v.literal("Reading"),
-	v.literal("Commit"),
-);
-
-export const resolutionGenerationEventValidator = v.union(
-	v.object({
-		kind: v.literal("TraceRecorded"),
-		requestId: v.string(),
-		runToken: v.string(),
-		phase: resolutionPhaseValidator,
-		traceJson: v.string(),
-	}),
-	v.object({
-		kind: v.literal("AttemptStarted"),
-		requestId: v.string(),
-		runToken: v.string(),
-		phase: resolutionPhaseValidator,
-		attempt: v.number(),
-		model: v.string(),
-	}),
-	v.object({
-		kind: v.literal("AttemptFailed"),
-		requestId: v.string(),
-		runToken: v.string(),
-		phase: resolutionPhaseValidator,
-		failure: safeGenerationFailureValidator,
-	}),
-	v.object({
-		kind: v.literal("RetryScheduled"),
-		requestId: v.string(),
-		runToken: v.string(),
-		phase: resolutionPhaseValidator,
-		attempt: v.number(),
-		delayMs: v.number(),
-	}),
-	v.object({
-		kind: v.literal("Succeeded"),
-		requestId: v.string(),
-		runToken: v.string(),
-		phase: resolutionPhaseValidator,
-		attempt: v.number(),
-		latencyMs: v.number(),
-		providerRequestId: v.optional(v.string()),
-	}),
-);
-
-export const resolutionRunStateValidator = v.union(
-	v.literal("Running"),
-	v.literal("Failed"),
-	v.literal("Succeeded"),
-);
-
 export const resolutionRouteProjectionValidator = v.object({
 	scrollId: v.id("scrolls"),
 	sentenceId: v.id("sentences"),
@@ -502,6 +377,7 @@ export const resolutionRouteProjectionValidator = v.object({
 });
 
 export const resolutionGrammarProjectionValidator = v.object({
+	language: v.optional(languageValidator),
 	grundform: grundformValidator,
 	members: v.array(attestationMemberValidator),
 	/** Members realizing a valency marker, such as a governed preposition. */

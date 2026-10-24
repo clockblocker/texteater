@@ -2,8 +2,8 @@
  * The texts the structural aspects send (#883 addenda), each a paragraph
  * that cites the dumcorpus Rules it states at the statement hash it was last
  * checked against (ADR 0037, #695): a noun's plural, a verb's principal
- * parts, an adjective's Participle Source, and a Locution's, Saying's or
- * formula's type. `prompts.ts` keeps the Reading, the evidence and the other
+ * parts, a single word's Source (its formation, a participle's verb or
+ * another formation's base), and a Locution's, Saying's or formula's type. `prompts.ts` keeps the Reading, the evidence and the other
  * aspects' texts; this registry is apart to keep each file under the
  * file-token limit.
  *
@@ -32,6 +32,7 @@ const rules = {
 	],
 	participle: ["de/participle-source-verb-and-meaning", "a97545caefc4a184"],
 	participial: ["de/participial-adjective", "5d4481bf31cb7267"],
+	formation: ["de/formation-names-its-source", "06e7b4491887e741"],
 	formulaRole: ["de/formula-role-is-narrow", "68e794801a922563"],
 	routine: ["de/routine-formula-is-intj", "32797f3b5f083780"],
 	saying: ["de/saying-needs-uptake", "b191e72860fbbf9c"],
@@ -117,7 +118,90 @@ export const verbForms = {
 	),
 } as const;
 
-// Participle Source: Luna names the verb by form, jev checks it and judges the meaning.
+// A participle's Source: Luna names the verb by form, jev checks it and judges the meaning.
+
+// A single word's Source (ADR 0050): jev judges the formation, Luna writes
+// a base that isn't a participle's verb, jev confirms it.
+
+export const formation = {
+	question: paragraph(
+		"formation.question",
+		"Was the Reading's word, in the meaning its Emoji Description names, formed whole from one other word, with nothing added and nothing cut into pieces? Judge its form as Duden's or DWDS's word formation explains it.",
+		rules.formation,
+		rules.meaning,
+	),
+	Participle: paragraph(
+		"formation.Participle",
+		"Participle: the adjective is a verb's Partizip II or Partizip I («gekocht», «lachend»)",
+		rules.participle,
+	),
+	Conversion: paragraph(
+		"formation.Conversion",
+		"Conversion: another word turned whole into this part of speech: a noun from a verb's stem, its vowel changed or not («Schlaf» from «schlafen», «Wurf» from «werfen», «Ausgang» from «ausgehen»), or a verb from a noun («fischen» from «Fisch»)",
+		rules.formation,
+	),
+	Clipping: paragraph(
+		"formation.Clipping",
+		"Clipping: a longer word cut short, with its meaning («Uni» from «Universität», «Abi» from «Abitur»)",
+		rules.formation,
+	),
+	Acronym: paragraph(
+		"formation.Acronym",
+		"Acronym: built from the first letters or syllables of a longer word's parts («Kita» from «Kindertagesstätte», «Lkw» from «Lastkraftwagen»)",
+		rules.formation,
+	),
+	None: paragraph(
+		"formation.None",
+		"None: a simple word, or one built from parts: a compound, or a word with a prefix or a suffix («Entspannung» is «entspannen» and -ung)",
+		rules.formation,
+	),
+	Unresolved: paragraph(
+		"formation.Unresolved",
+		"Cannot decide defensibly",
+		rules.formation,
+	),
+	base: paragraph(
+		"formation.base",
+		"The Reading's word is a `formation` (a Conversion, Clipping or Acronym) of one other word, the step just before it. Write that word's Canonical Form as Duden or DWDS spells its headword, a verb as its infinitive (base), and its part of speech (kind). Answer {base: null} when no one word fits.",
+		rules.formation,
+	),
+	directionQuestion: paragraph(
+		"formation.directionQuestion",
+		"`word` and `base` look like a conversion: one is the other turned whole into another part of speech. By Duden's or DWDS's word formation, which was formed from which?",
+		rules.formation,
+	),
+	Formed: paragraph(
+		"formation.Formed",
+		"`word` was formed from `base`",
+		rules.formation,
+	),
+	Reverse: paragraph(
+		"formation.Reverse",
+		"`base` was formed from `word`",
+		rules.formation,
+	),
+	Neither: paragraph(
+		"formation.Neither",
+		"Neither was formed from the other, or they are unrelated",
+		rules.formation,
+	),
+	shorteningQuestion: paragraph(
+		"formation.shorteningQuestion",
+		"Is `word`, in the Reading's meaning, a clipping or an acronym of `base`, short for it with its meaning, as Duden or DWDS gives it?",
+		rules.formation,
+		rules.meaning,
+	),
+	Short: paragraph(
+		"formation.Short",
+		"Yes: `word` is short for `base`",
+		rules.formation,
+	),
+	NotShort: paragraph(
+		"formation.NotShort",
+		"No: `word` doesn't shorten `base`, or means something else",
+		rules.formation,
+	),
+} as const;
 
 export const participle = {
 	task: paragraph(

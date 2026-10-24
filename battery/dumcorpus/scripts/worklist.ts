@@ -62,7 +62,9 @@ console.log(
 			", ",
 		)}; ${worklist.filter((entry) => entry.legacy.length > 0).length} holding imported cases`,
 );
-for (const [source, cases] of [...perSource].toSorted())
+for (const [source, cases] of [...perSource].toSorted(([left], [right]) =>
+	left.localeCompare(right),
+))
 	console.log(`${cases}\t${source}`);
 const long = longStatements(rules);
 if (long.length > 0) {

@@ -49,11 +49,6 @@ export type Output = Readonly<{
 	ownership?: Readonly<{
 		/** Absolute, or relative to this output's root. */
 		manifest: string;
-		/**
-		 * Files to adopt as previously owned when the manifest does not exist.
-		 * Paths are relative to this output's root.
-		 */
-		initialFiles?: readonly string[];
 	}>;
 }>;
 

@@ -19,3 +19,4 @@ export {
 	syncretismView,
 	syncretize,
 } from "./validation/syncretism.js";
+export { zeroEndingCanonicalForm } from "./zero-ending.js";

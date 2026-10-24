@@ -1,5 +1,4 @@
 import { expect, test } from "bun:test";
-import type { Dumgen } from "../src/create-dumgen.js";
 import type {
 	AccumulateTranslationsInput,
 	KnowledgeProduction,
@@ -16,6 +15,7 @@ import type {
 	Route,
 	SegmentedSentence,
 } from "../src/segment/segmented-sentence.js";
+import type { Dumgen } from "./service-test-adapter.js";
 
 /** Compile-only contract: Hebrew identities must not be disguised as German. */
 function languageContracts(
@@ -51,14 +51,13 @@ function languageContracts(
 	// @ts-expect-error A German accumulation cannot accept Hebrew identity.
 	const wrongAccumulation: AccumulateTranslationsInput<"de"> = accumulation;
 	const wrongModuleAccumulation = de.accumulateTranslations(
-		undefined as never,
-		undefined as never,
 		// @ts-expect-error A German module must not handle Hebrew accumulation.
 		accumulation,
 	);
 	const result: KnowledgeProduction<"he"> = {
 		changes: [],
 		pendingRelations: [],
+		paradigmChanges: [],
 		failures: [],
 	};
 	const sentence: SegmentedSentence<"he"> = grammar.sentence;

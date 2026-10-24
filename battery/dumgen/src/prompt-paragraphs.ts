@@ -22,7 +22,7 @@ export function paragraphRegistry(prompt: string) {
 	const registry: Paragraph[] = [];
 	return {
 		/** Registers one paragraph and returns its text. */
-		paragraph(name: string, text: string, ...cites: Cite[]): string {
+		paragraph: (name: string, text: string, ...cites: Cite[]): string => {
 			if (text.includes("\n"))
 				throw Error(`${name} is more than one paragraph`);
 			if (registry.some((entry) => entry.name === name))
@@ -31,8 +31,8 @@ export function paragraphRegistry(prompt: string) {
 			return text;
 		},
 		/** Every registered paragraph, as dumcorpus's citation check reads it. */
-		texts(): readonly CitingPrompt[] {
-			return registry.map(({ name, text, cites }) => ({
+		texts: (): readonly CitingPrompt[] =>
+			registry.map(({ name, text, cites }) => ({
 				name: `${prompt}/${name}`,
 				text,
 				paragraphs: [
@@ -44,26 +44,22 @@ export function paragraphRegistry(prompt: string) {
 						})),
 					},
 				],
-			}));
-		},
+			})),
 		/** Every registered paragraph's text. */
-		paragraphs(): readonly string[] {
-			return registry.map(({ text }) => text);
-		},
+		paragraphs: (): readonly string[] => registry.map(({ text }) => text),
 		/**
 		 * The German examples quoted «…» in the paragraphs whose name `keep`
 		 * accepts, every paragraph by default, «…» stripped, each as written.
 		 */
-		examples(
+		examples: (
 			keep: (name: string) => boolean = () => true,
-		): readonly string[] {
-			return registry
+		): readonly string[] =>
+			registry
 				.filter(({ name }) => keep(name))
 				.flatMap(({ text }) =>
 					[...text.matchAll(/«([^»]+)»/gu)].map(
 						([, example]) => example ?? "",
 					),
-				);
-		},
+				),
 	};
 }

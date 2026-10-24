@@ -1,11 +1,13 @@
 /**
- * Dumgen's call adapter: every model call of every operation goes through
- * `OperationScope.call`, which lifts the host's Promise transport into an
- * Effect (#551, #557, #558).
+ * Dumgen's call core: every model call of every operation goes through
+ * `callModel`, which lifts the host's Promise transport into an Effect
+ * (#551, #557, #558), and every operation runs under `runOperation`, which
+ * gives its calls a `CallLog` and hands the host its trace (Dumgen ADR
+ * 0009).
  *
- * - One request budget per Dumgen instance, shared by jev and Luna. A call
- *   holds one permit for its transport only; a call that had to wait for
- *   one records its wait.
+ * - One `RequestBudget` serves jev and Luna together. A call holds one
+ *   permit for its transport only; a call that had to wait for one
+ *   records its wait.
  * - Anything the transport throws is a `ProviderFailure`; an answer the
  *   exchange's check refuses is an `InvalidModelOutput`. Nothing is retried
  *   (#445, #446).
@@ -13,11 +15,17 @@
  *   records nothing. Interrupted in flight, it aborts the transport's signal
  *   and waits until the transport settles, so every call that started has
  *   settled and been traced before its operation's trace is emitted.
+ * - What an operation's trace keeps and where it goes are References with
+ *   defaults: `TracePayloads` (off), `TraceSink` (none) and
+ *   `CurrentSentence`, which places a call under the Sentence it serves.
  */
 import { messageOf } from "common-utils";
 import * as Cause from "effect/Cause";
+import * as Clock from "effect/Clock";
+import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
+import * as Layer from "effect/Layer";
 import * as Semaphore from "effect/Semaphore";
 import { InvalidModelOutput, ProviderFailure } from "./errors.js";
 import type {
@@ -30,19 +38,84 @@ import type {
 	SentenceOutcome,
 } from "./operation-trace.js";
 
-/** The requests one Dumgen instance keeps in flight, jev and Luna together. */
-export type RequestBudget = {
-	readonly permits: number;
-	readonly semaphore: Semaphore.Semaphore;
-	/** Calls holding or waiting for a permit, so a call knows it queued. */
-	demand: number;
-};
-
-export function requestBudget(permits: number): RequestBudget {
-	if (!Number.isInteger(permits) || permits < 1)
-		throw Error("requestBudget is a positive integer");
-	return { permits, semaphore: Semaphore.makeUnsafe(permits), demand: 0 };
+/** The requests one Dumgen keeps in flight, jev and Luna together. */
+export class RequestBudget extends Context.Service<
+	RequestBudget,
+	{
+		readonly permits: number;
+		readonly semaphore: Semaphore.Semaphore;
+		/** Calls holding or waiting for a permit, so a call knows it queued. */
+		demand: number;
+	}
+>()("dumgen/RequestBudget") {
+	/** A fresh budget of `permits`, a positive integer, each time it is built. */
+	static readonly layer = (permits: number) =>
+		Layer.sync(RequestBudget, () => {
+			if (!Number.isInteger(permits) || permits < 1)
+				throw Error("requestBudget is a positive integer");
+			return {
+				permits,
+				semaphore: Semaphore.makeUnsafe(permits),
+				demand: 0,
+			};
+		});
 }
+
+/**
+ * What one running operation records: its calls by the order they were
+ * sent, their waits, and the outcomes its value does not show.
+ * `runOperation` provides a fresh one to each operation.
+ */
+export class CallLog extends Context.Service<
+	CallLog,
+	{
+		/** Numbers a call as it is sent; a call that queued records its wait. */
+		readonly sent: (waitMs: number | undefined) => number;
+		/** A settled call's trace, in the slot its sending numbered. */
+		readonly settled: (call: number, trace: CallTrace) => void;
+		readonly sentence: (outcome: SentenceOutcome) => void;
+		/** How a click came out; the last one recorded is traced. */
+		readonly resolution: (outcome: ResolutionOutcome) => void;
+		/** Something the operation decided that its value does not show. */
+		readonly event: (event: OperationEvent) => void;
+	}
+>()("dumgen/CallLog") {}
+
+/** The Sentence the calls serve, when the operation reads several. */
+export const CurrentSentence = Context.Reference<number | undefined>(
+	"dumgen/CurrentSentence",
+	{ defaultValue: () => undefined },
+);
+
+/** Whether every call's request and answer stay in its trace; off by default. */
+export const TracePayloads = Context.Reference<boolean>(
+	"dumgen/TracePayloads",
+	{ defaultValue: () => false },
+);
+
+/**
+ * Receives each operation's trace once the operation exits; none by
+ * default. An exception from it is the host's and becomes a Defect.
+ */
+export const TraceSink = Context.Reference<
+	((trace: OperationTrace) => void) | undefined
+>("dumgen/TraceSink", { defaultValue: () => undefined });
+
+/**
+ * The running operation's CallLog and CurrentSentence as a Context, for a
+ * function that needs no services, such as a stage's `Ask`, to carry.
+ */
+export const callContext: Effect.Effect<
+	Context.Context<CallLog>,
+	never,
+	CallLog
+> = Effect.gen(function* () {
+	const log = yield* CallLog;
+	const sentence = yield* CurrentSentence;
+	return Context.make(CallLog, log).pipe(
+		Context.add(CurrentSentence, sentence),
+	);
+});
 
 /** The tokens a call's answer reports; Luna's say what the prompt cache read and wrote. */
 export type CallTokens = Pick<
@@ -53,7 +126,6 @@ export type CallTokens = Pick<
 /** One model call as an operation sends and checks it. */
 export type Exchange<Response, Output> = {
 	readonly stage: string;
-	readonly sentence?: number;
 	readonly executor: CallTrace["executor"];
 	/** What a payload keeps of the request. */
 	readonly request: unknown;
@@ -61,24 +133,6 @@ export type Exchange<Response, Output> = {
 	tokens(response: Response): CallTokens;
 	/** The output, or why the response cannot be used. */
 	check(response: Response): Output | InvalidModelOutput;
-};
-
-/** One running operation: the calls it sends and the outcomes it records. */
-export type OperationScope = {
-	readonly call: <Response, Output>(
-		exchange: Exchange<Response, Output>,
-	) => Effect.Effect<Output, ProviderFailure | InvalidModelOutput>;
-	readonly sentence: (outcome: SentenceOutcome) => void;
-	/** How a click came out; the last one recorded is traced. */
-	readonly resolution: (outcome: ResolutionOutcome) => void;
-	/** Something the operation decided that its value does not show. */
-	readonly event: (event: OperationEvent) => void;
-};
-
-export type OperationOptions = {
-	readonly budget: RequestBudget;
-	readonly payloads: boolean;
-	readonly onOperation?: (trace: OperationTrace) => void;
 };
 
 /** The tag and message of a call's or a Sentence's failure. */
@@ -105,25 +159,38 @@ function failureOf(
 	return undefined;
 }
 
+/** The milliseconds between two readings of `Clock.monotonicTimeNanos`. */
+const millisBetween = (from: bigint, to: bigint) =>
+	Number(to - from) / 1_000_000;
+
 /**
- * Runs `body` as one operation under a `dumgen.operation` span and hands
- * `onOperation` its trace once it exits, however it exits. An exception
- * from `onOperation` is the host's and becomes a Defect.
+ * Runs `body` as one operation under a `dumgen.operation` span, with a
+ * fresh `CallLog`, and hands `TraceSink` its trace once it exits, however
+ * it exits. Its times, and its calls', come from Effect's `Clock`.
  */
-export function runOperation<A, E>(
+export function runOperation<A, E, R>(
 	name: OperationTrace["operation"],
-	options: OperationOptions,
-	body: (scope: OperationScope) => Effect.Effect<A, E>,
-): Effect.Effect<A, E> {
-	return Effect.suspend(() => {
-		const startedAt = Date.now();
-		const start = performance.now();
-		const record: CallRecord = { calls: [], waits: [], sent: 0 };
+	body: Effect.Effect<A, E, R>,
+): Effect.Effect<A, E, Exclude<R, CallLog>> {
+	return Effect.gen(function* () {
+		const sink = yield* TraceSink;
+		const startedAt = yield* Clock.currentTimeMillis;
+		const start = yield* Clock.monotonicTimeNanos;
+		const calls: CallTrace[] = [];
+		const waits: BudgetWait[] = [];
 		const sentences: SentenceOutcome[] = [];
 		const events: OperationEvent[] = [];
+		let sent = 0;
 		let resolution: ResolutionOutcome | undefined;
-		const scope: OperationScope = {
-			call: (exchange) => call(options, record, exchange),
+		const log = CallLog.of({
+			sent: (waitMs) => {
+				const call = sent++;
+				if (waitMs !== undefined) waits.push({ call, waitMs });
+				return call;
+			},
+			settled: (call, trace) => {
+				calls[call] = trace;
+			},
 			sentence: (outcome) => {
 				sentences.push(outcome);
 			},
@@ -133,56 +200,55 @@ export function runOperation<A, E>(
 			event: (event) => {
 				events.push(event);
 			},
-		};
-		return body(scope).pipe(
+		});
+		return yield* body.pipe(
+			Effect.provideService(CallLog, log),
 			Effect.withSpan("dumgen.operation", {
 				attributes: { "dumgen.operation": name },
 			}),
 			Effect.onExit(() =>
-				Effect.sync(() =>
-					options.onOperation?.({
-						operation: name,
-						startedAt,
-						durationMs: performance.now() - start,
-						// A slot stays empty only when a check threw (a Defect).
-						calls: record.calls.filter(
-							(trace) => trace !== undefined,
-						),
-						waits: [...record.waits],
-						sentences: [...sentences],
-						...(resolution ? { resolution } : {}),
-						...(events.length > 0 ? { events: [...events] } : {}),
-					}),
+				Effect.flatMap(Clock.monotonicTimeNanos, (end) =>
+					Effect.sync(() =>
+						sink?.({
+							operation: name,
+							startedAt,
+							durationMs: millisBetween(start, end),
+							// A slot stays empty only when a check threw (a Defect).
+							calls: calls.filter((trace) => trace !== undefined),
+							waits: [...waits],
+							sentences: [...sentences],
+							...(resolution ? { resolution } : {}),
+							...(events.length > 0
+								? { events: [...events] }
+								: {}),
+						}),
+					),
 				),
 			),
 		);
 	});
 }
 
-/** An operation's calls by the order they were sent, and their waits. */
-type CallRecord = {
-	readonly calls: CallTrace[];
-	readonly waits: BudgetWait[];
-	sent: number;
-};
-
-/** One call: a permit, the transport, the check and its trace. */
-function call<Response, Output>(
-	options: OperationOptions,
-	record: CallRecord,
+/**
+ * One call: a permit of `budget`, the transport, the check and its trace in
+ * the operation's `CallLog`, placed under the `CurrentSentence`.
+ */
+export function callModel<Response, Output>(
+	budget: RequestBudget["Service"],
 	exchange: Exchange<Response, Output>,
-): Effect.Effect<Output, ProviderFailure | InvalidModelOutput> {
-	const { budget } = options;
-	const { stage, sentence, executor } = exchange;
-	return Effect.suspend(() => {
+): Effect.Effect<Output, ProviderFailure | InvalidModelOutput, CallLog> {
+	const { stage, executor } = exchange;
+	return Effect.gen(function* () {
+		const log = yield* CallLog;
+		const sentence = yield* CurrentSentence;
+		const payloads = yield* TracePayloads;
+		const queuedAt = yield* Clock.monotonicTimeNanos;
 		const queued = budget.demand >= budget.permits;
-		const queuedAt = performance.now();
-		budget.demand++;
 		const holding = Effect.uninterruptibleMask((restore) =>
 			// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 			Effect.gen(function* () {
-				const startedAt = Date.now();
-				const start = performance.now();
+				const startedAt = yield* Clock.currentTimeMillis;
+				const start = yield* Clock.monotonicTimeNanos;
 				let index: number | undefined;
 				let settled:
 					| { readonly ok: true; readonly response: Response }
@@ -194,12 +260,11 @@ function call<Response, Output>(
 							// Interrupted before it was sent, say by a sibling's
 							// failure as the permit came free: nothing starts.
 							if (signal.aborted) return;
-							index = record.sent++;
-							if (queued)
-								record.waits.push({
-									call: index,
-									waitMs: start - queuedAt,
-								});
+							index = log.sent(
+								queued
+									? millisBetween(queuedAt, start)
+									: undefined,
+							);
 							try {
 								const response = await exchange.send(signal);
 								settled = { ok: true, response };
@@ -243,11 +308,12 @@ function call<Response, Output>(
 					),
 				);
 				if (index === undefined) return yield* exit;
+				const end = yield* Clock.monotonicTimeNanos;
 				const failure = failureOf(
 					exit,
 					settled?.ok === false ? settled.error : undefined,
 				);
-				record.calls[index] = {
+				log.settled(index, {
 					stage,
 					...(sentence === undefined ? {} : { sentence }),
 					executor,
@@ -255,9 +321,9 @@ function call<Response, Output>(
 						? exchange.tokens(settled.response)
 						: { inputTokens: 0, outputTokens: 0 }),
 					startedAt,
-					durationMs: performance.now() - start,
+					durationMs: millisBetween(start, end),
 					...(failure ? { failure } : {}),
-					...(options.payloads
+					...(payloads
 						? {
 								payload: {
 									request: exchange.request,
@@ -267,12 +333,26 @@ function call<Response, Output>(
 								},
 							}
 						: {}),
-				};
+				});
 				return yield* exit;
 			}),
 		);
+		return yield* withPermit(budget, holding);
+	});
+}
+
+/**
+ * `effect` holding one permit of `budget`, counted in its demand while it
+ * waits for the permit and while it holds it.
+ */
+export function withPermit<A, E, R>(
+	budget: RequestBudget["Service"],
+	effect: Effect.Effect<A, E, R>,
+): Effect.Effect<A, E, R> {
+	return Effect.suspend(() => {
+		budget.demand++;
 		return budget.semaphore
-			.withPermits(1)(holding)
+			.withPermits(1)(effect)
 			.pipe(
 				Effect.ensuring(
 					Effect.sync(() => {

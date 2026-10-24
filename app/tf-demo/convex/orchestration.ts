@@ -5,6 +5,7 @@ import { parseScroll, type Scroll } from "dumgen";
 import * as Effect from "effect/Effect";
 import { extractPaste } from "../server/extraction";
 import {
+	dumgenTraced,
 	inspected,
 	inspectionStep,
 	spanHops,
@@ -15,11 +16,13 @@ import {
 	LINK_REJECTED_MESSAGE,
 	readPage,
 } from "../server/linkIntake";
+import { logged } from "../server/logging";
 import { executeResolutionSession } from "../server/resolutionSessionExecution";
 import { submittedLink } from "../shared/submitted-link";
 import { internal } from "./_generated/api";
 import { action, internalAction } from "./_generated/server";
 import { orchestratorFor } from "./model/clickOrchestrator";
+import { clickDumgen } from "./model/deploymentDumgen";
 import { inspectionFor } from "./model/inspectionAction";
 import { createResolutionSessionLifecycle } from "./model/resolutionSessionLifecycle";
 import {
@@ -180,8 +183,12 @@ export const runResolutionSession = internalAction({
 					guard,
 					spanHops(services),
 				),
+				// The click's Dumgen is built here, once, inside the run, so
+				// a click that fails to build it is recorded as failed. Under
+				// DEV inspection every Dumgen operation renders as inspection
+				// rows, with payloads (#885).
 				resolve: (selection, checkpoints, observer, context) =>
-					orchestratorFor(ctx, guard, observer, inspection)
+					orchestratorFor(ctx, guard, observer)
 						.resolveSegment(selection, checkpoints, context)
 						.pipe(
 							Effect.withSpan(
@@ -191,6 +198,8 @@ export const runResolutionSession = internalAction({
 									{ selection, checkpoints },
 								),
 							),
+							dumgenTraced(inspection),
+							Effect.provide(clickDumgen),
 						),
 			}),
 		).pipe(
@@ -203,7 +212,7 @@ export const runResolutionSession = internalAction({
 			}),
 		);
 		try {
-			await Effect.runPromise(inspected(session, inspection));
+			await Effect.runPromise(inspected(logged(session), inspection));
 		} finally {
 			await inspection?.flush();
 		}

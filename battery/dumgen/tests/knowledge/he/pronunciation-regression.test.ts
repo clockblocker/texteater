@@ -2,11 +2,11 @@ import { expect, test } from "bun:test";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../../../src/call.js";
 import { produceHebrewKnowledge } from "../../../src/knowledge/he/produce.js";
 import { hebrewKnowledgePrompts } from "../../../src/knowledge/he/prompts.js";
 import { defaultLunaConfiguration } from "../../../src/luna.js";
 import { pinnedJevModel } from "../../../src/segment/jev.js";
+import { requestBudget, runOperation } from "./../../service-test-adapter.js";
 import { knowledgeJev, knowledgeLuna } from "../support.js";
 
 // Frozen real subscription output: knowledge-targeted-before-20261021T065833Z.
@@ -55,28 +55,24 @@ async function run(output: string) {
 		runOperation(
 			"knowledge.produce",
 			{ budget: requestBudget(1), payloads: true },
-			(scope) =>
-				produceHebrewKnowledge(
-					scope,
-					{
-						luna: {
-							ask: luna.ask,
-							configuration: defaultLunaConfiguration,
-						},
-						jev: { ask: knowledgeJev().ask, model: pinnedJevModel },
-					},
-					{
-						language: "he",
-						reading,
-						attestation,
-						sentence: {
-							segments: [{ text: "היא כתבה מכתב." }],
-							target: [0],
-						},
-						origin: "New",
-						request: { transcription: null },
-					},
-				),
+			{
+				luna: {
+					ask: luna.ask,
+					configuration: defaultLunaConfiguration,
+				},
+				jev: { ask: knowledgeJev().ask, model: pinnedJevModel },
+			},
+			produceHebrewKnowledge({
+				language: "he",
+				reading,
+				attestation,
+				sentence: {
+					segments: [{ text: "היא כתבה מכתב." }],
+					target: [0],
+				},
+				origin: "New",
+				request: { transcription: null },
+			}),
 		),
 	);
 }
@@ -93,28 +89,24 @@ test("verb valency writer receives the resolved binyan and occurrence evidence",
 		runOperation(
 			"knowledge.produce",
 			{ budget: requestBudget(1), payloads: true },
-			(scope) =>
-				produceHebrewKnowledge(
-					scope,
-					{
-						luna: {
-							ask: luna.ask,
-							configuration: defaultLunaConfiguration,
-						},
-						jev: { ask: knowledgeJev().ask, model: pinnedJevModel },
-					},
-					{
-						language: "he",
-						reading,
-						attestation,
-						sentence: {
-							segments: [{ text: "היא כתבה מכתב." }],
-							target: [0],
-						},
-						origin: "New",
-						request: { valency: null },
-					},
-				),
+			{
+				luna: {
+					ask: luna.ask,
+					configuration: defaultLunaConfiguration,
+				},
+				jev: { ask: knowledgeJev().ask, model: pinnedJevModel },
+			},
+			produceHebrewKnowledge({
+				language: "he",
+				reading,
+				attestation,
+				sentence: {
+					segments: [{ text: "היא כתבה מכתב." }],
+					target: [0],
+				},
+				origin: "New",
+				request: { valency: null },
+			}),
 		),
 	);
 	expect(luna.sent[0]?.input).toMatchObject({

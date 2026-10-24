@@ -1,23 +1,24 @@
-import { sameLemma } from "dumling";
+import { sameLemma, sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 
 import { pendingSemanticRelationLocatorKey } from "../core/pending";
 import {
-	type PlanMutationResult,
 	planAddNewNote,
 	planApplyGeneratedKnowledge,
 	planCleanupRelations,
 	planEnsureOwnedSurface,
 	planEnsureReadingEntry,
+	planReevaluateShadows,
 } from "../core/plan-mutation";
-import type { PlanMutationRejected } from "../core/plan-mutation/result";
 import {
 	validateCleanupRelationsSlice,
 	validateReadingEntryContext,
+	validateReevaluateShadowsSlice,
 } from "../core/validate-slice";
-import type { DumdictPlan } from "../domain-types";
 import {
+	ParsingError,
+	parseAsLemmaRecord,
 	parseKnowledgeChangeForDumdictRuntime,
 	parsePendingSemanticRelationForDumdictRuntime,
 	pendingTargetsLanguage,
@@ -25,13 +26,15 @@ import {
 } from "../parsing/lightweight-parsers";
 import type {
 	AddNewNoteRequest,
-	AffectedDictionaryEntities,
 	ApplyGeneratedKnowledgeRequest,
 	CleanupRelationsRequest,
 	EnsureOwnedSurfaceRequest,
 	EnsureReadingEntryRequest,
-	MutationRejectedCode,
-	MutationSummary,
+	ReconcileAttestationLinksRequest,
+	RecordOccurrenceRequest,
+	ReevaluateShadowsRequest,
+	RekeySurfacesRequest,
+	RemoveOccurrenceRequest,
 } from "../public";
 import type {
 	AddNewNoteContext,
@@ -40,45 +43,49 @@ import type {
 	EnsureOwnedSurfaceContext,
 	EnsureReadingEntryContext,
 	LoadReadingEntryContextRequest,
+	OccurrenceSlice,
+	OccurrenceSliceRequest,
+	RecordOccurrenceContext,
+	ReevaluateShadowsSlice,
+	RekeySurfacesSlice,
+	RekeySurfacesSliceRequest,
 } from "../storage";
-import {
-	knowledgeChangeUsesLanguage,
-	retainDumdictPlan,
-} from "../validation-semantics";
+import { knowledgeChangeUsesLanguage } from "../validation-semantics";
 import {
 	type ReadingEntryContextLoad,
 	storageRequestFor,
 } from "./context-request";
 import {
+	occurrenceSliceRequest,
+	reconcileAttestationLinks,
+	recordOccurrence,
+	rekeySurfaces,
+	rekeySurfacesSliceRequest,
+	removeOccurrence,
+} from "./occurrence-workflows";
+import {
 	parseAddNewNoteRequest,
 	parseEnsureOwnedSurfaceRequest,
 	parseEnsureReadingEntryRequest,
+	parseParadigmChanges,
 } from "./request-parsing";
+import {
+	type DumdictPlanOutcome,
+	type DumdictPlanRejected,
+	invalidRequest,
+	ok,
+	planned,
+	rejected,
+	run,
+	type Workflow,
+} from "./workflow";
 
-export type DumdictPlanned<L extends Dumling.Language> = Readonly<{
-	status: "planned";
-	plan: DumdictPlan<L>;
-	affected: AffectedDictionaryEntities<L>;
-	summary: MutationSummary;
-}>;
-
-export type DumdictPlanRejected = Readonly<{
-	status: "rejected";
-	code: MutationRejectedCode;
-	message?: string;
-}>;
-
-/** The loaded slice no longer supports the request, so planning stopped. */
-export type DumdictPlanConflict = Readonly<{
-	status: "conflict";
-	code: "revisionConflict" | "semanticPreconditionFailed";
-	message?: string;
-}>;
-
-export type DumdictPlanOutcome<L extends Dumling.Language> =
-	| DumdictPlanned<L>
-	| DumdictPlanRejected
-	| DumdictPlanConflict;
+export type {
+	DumdictPlanConflict,
+	DumdictPlanned,
+	DumdictPlanOutcome,
+	DumdictPlanRejected,
+} from "./workflow";
 
 /**
  * Synchronous dictionary planning over a host-loaded storage slice.
@@ -88,7 +95,8 @@ export type DumdictPlanOutcome<L extends Dumling.Language> =
  * and passes it here. Each workflow checks the request, validates the slice
  * against it, and returns a parsed plan with its preconditions, a rejection,
  * or a conflict; the planner never reads or writes storage. It throws only
- * for malformed input or a slice that breaks the storage contract.
+ * for malformed input or a slice that breaks the storage contract, such as
+ * a stored claim whose target is gone (system ADR 0011).
  */
 export type DumdictPlanner<L extends Dumling.Language> = {
 	readonly language: L;
@@ -121,77 +129,71 @@ export type DumdictPlanner<L extends Dumling.Language> = {
 		slice: CleanupRelationsSlice<L>,
 		request: CleanupRelationsRequest<L>,
 	): DumdictPlanOutcome<L>;
+	/**
+	 * Re-evaluates every stored Shadow that matches the request's removed
+	 * Lemmas (system ADR 0011). A host plans it when Lemmas change
+	 * outside `addNewNote` and `ensureReadingEntry`, which re-evaluate the
+	 * Lemma they create: when it removes a Lemma, in the commit that removes
+	 * it or after. The same plan moves every claim on a removed Lemma: a
+	 * Lemma-mode claim becomes the Lemma's Shadow relation, and a Reading-mode
+	 * claim on one of its Readings is retracted. The host loads the stored records whose
+	 * Pending Entry ID is one of `reevaluatedPendingEntryIds(request)`
+	 * (`dumdict/pending`), and the Readings claiming a removed Lemma.
+	 * Planning it again after its commit plans nothing.
+	 */
+	reevaluateShadows(
+		slice: ReevaluateShadowsSlice<L>,
+		request: ReevaluateShadowsRequest<L>,
+	): DumdictPlanOutcome<L>;
+	/**
+	 * Records one occurrence (system ADR 0049): ensures its Surface and
+	 * appends its link. The same ref with the same Surface and Reading plans
+	 * nothing; with anything else it is `occurrenceAttestedElsewhere`.
+	 */
+	recordOccurrence(
+		context: RecordOccurrenceContext<L>,
+		request: RecordOccurrenceRequest<L>,
+	): DumdictPlanOutcome<L>;
+	/** The storage read `removeOccurrence` and `reconcileAttestationLinks` need. */
+	occurrenceSliceRequest(
+		request: RemoveOccurrenceRequest | ReconcileAttestationLinksRequest,
+	): OccurrenceSliceRequest;
+	/**
+	 * Removes one occurrence's links and what they leave behind (system ADR
+	 * 0043, ADR 0049): an unlinked Reading, a Surface that lost its last link
+	 * and holds no user text, a Lemma with no Reading, and the variants no
+	 * remaining Reading licenses. The same plan retracts every claim other
+	 * Readings hold on what goes, and leaves each Lemma-mode one as a pending
+	 * Shadow relation (system ADR 0011). `affected.removed` lists what goes;
+	 * once the plan commits, the host re-evaluates Shadows with its Lemmas.
+	 */
+	removeOccurrence(
+		slice: OccurrenceSlice<L>,
+		request: RemoveOccurrenceRequest,
+	): DumdictPlanOutcome<L>;
+	/**
+	 * Merges each requested ref's stored links as a set: the link with the
+	 * code-unit-smaller `readingIdentityKey` stays, and every other is
+	 * removed as `removeOccurrence` removes it and reported in
+	 * `affected.removed.attestationLinks`.
+	 */
+	reconcileAttestationLinks(
+		slice: OccurrenceSlice<L>,
+		request: ReconcileAttestationLinksRequest,
+	): DumdictPlanOutcome<L>;
+	/** The storage read `rekeySurfaces` needs. */
+	rekeySurfacesSliceRequest(
+		request: RekeySurfacesRequest<L>,
+	): RekeySurfacesSliceRequest<L>;
+	/**
+	 * Re-keys Surface Entries and the links naming them in one plan, after a
+	 * Dumling Surface DTO change changes their ids.
+	 */
+	rekeySurfaces(
+		slice: RekeySurfacesSlice<L>,
+		request: RekeySurfacesRequest<L>,
+	): DumdictPlanOutcome<L>;
 };
-
-type Refusal = DumdictPlanRejected | DumdictPlanConflict;
-
-/** A request check passes the request to plan with, or refuses it. */
-type Checked<Request> =
-	| { readonly status: "ok"; readonly request: Request }
-	| Refusal;
-
-/**
- * One dictionary workflow. `check` runs on the request alone; `plan` validates
- * the host-loaded slice against the checked request and plans over it.
- */
-type Workflow<L extends Dumling.Language, Request, Slice> = {
-	readonly check: (request: Request) => Checked<Request>;
-	readonly plan: (slice: Slice, request: Request) => DumdictPlanOutcome<L>;
-};
-
-function ok<Request>(request: Request): Checked<Request> {
-	return { status: "ok", request };
-}
-
-function rejected(
-	code: MutationRejectedCode,
-	message: string | undefined,
-): DumdictPlanRejected {
-	return {
-		status: "rejected",
-		code,
-		...(message === undefined ? {} : { message }),
-	};
-}
-
-function invalidRequest(message: string): DumdictPlanRejected {
-	return rejected("invalidRequest", message);
-}
-
-/**
- * A workflow's outcome. Every workflow parses its request on the way in, and
- * its slice validation parses every stored value it reads, so a plan holds
- * only checked values and isn't parsed again: the host parses each change at
- * its write boundary (`parseAsPlannedChangeOp`).
- */
-function planned<L extends Dumling.Language>(
-	plan: PlanMutationResult<L> | PlanMutationRejected,
-): DumdictPlanOutcome<L> {
-	if (plan.status === "rejected") return rejected(plan.code, plan.message);
-	const checked: DumdictPlan<L> = retainDumdictPlan({
-		baseRevision: plan.baseRevision,
-		changes: plan.changes,
-	});
-	return {
-		status: "planned",
-		...structuredClone({
-			plan: checked,
-			affected: plan.affected,
-			summary: plan.summary,
-		}),
-	};
-}
-
-function run<L extends Dumling.Language, Request, Slice>(
-	workflow: Workflow<L, Request, Slice>,
-	slice: Slice,
-	request: Request,
-): DumdictPlanOutcome<L> {
-	const checked = workflow.check(request);
-	return checked.status === "ok"
-		? workflow.plan(slice, checked.request)
-		: checked;
-}
 
 function addNewNote<L extends Dumling.Language>(
 	language: L,
@@ -217,6 +219,16 @@ function addNewNote<L extends Dumling.Language>(
 					"invalidDraft",
 					"Semantic Relation endpoints must use the source Reading language.",
 				);
+			const links = parsed.draft.note.attestationLinks;
+			if (
+				links.some(
+					(link) => !sameReading(link.reading, parsed.draft.reading),
+				)
+			)
+				return rejected(
+					"invalidDraft",
+					"Each Attestation Link of the draft names its Reading.",
+				);
 			return ok(parsed);
 		},
 		plan(context, request) {
@@ -237,13 +249,14 @@ export type UncheckedApplyGeneratedKnowledgeRequest<
 	readonly reading: Dumling.Reading<L>;
 	readonly changes: readonly unknown[];
 	readonly pendingRelations: readonly unknown[];
+	readonly paradigmChanges?: readonly unknown[];
 };
 
 /**
  * Checks a generated-Knowledge request the way `applyGeneratedKnowledge`
  * does, so a host whose changes arrive untyped can parse them once at its
- * edge. It parses every change and pending relation, throwing `ParsingError`
- * for a malformed one, and refuses a Reading, change or pending target in
+ * edge. It parses every change, Paradigm Change and pending relation,
+ * throwing `ParsingError` for a malformed one, and refuses a Reading, change or pending target in
  * another language as `invalidRequest`.
  */
 export function checkApplyGeneratedKnowledgeRequest<L extends Dumling.Language>(
@@ -285,7 +298,14 @@ export function checkApplyGeneratedKnowledgeRequest<L extends Dumling.Language>(
 		);
 	return {
 		status: "ok",
-		request: { reading: request.reading, changes, pendingRelations },
+		request: {
+			reading: request.reading,
+			changes,
+			pendingRelations,
+			...(request.paradigmChanges && {
+				paradigmChanges: parseParadigmChanges(request.paradigmChanges),
+			}),
+		},
 	};
 }
 
@@ -431,6 +451,34 @@ function cleanupRelations<L extends Dumling.Language>(
 	};
 }
 
+function reevaluateShadows<L extends Dumling.Language>(
+	language: L,
+): Workflow<L, ReevaluateShadowsRequest<L>, ReevaluateShadowsSlice<L>> {
+	return {
+		check(request) {
+			for (const lemma of request.removedLemmas ?? [])
+				if (
+					parseAsLemmaRecord({ lemma }, language) instanceof
+					ParsingError
+				)
+					return invalidRequest(
+						"A removed Lemma is malformed or in another language.",
+					);
+			return ok(request);
+		},
+		plan(slice, request) {
+			validateReevaluateShadowsSlice(language, slice, request);
+			if (slice.revision !== request.baseRevision)
+				return {
+					status: "conflict",
+					code: "revisionConflict",
+					message: "Shadow re-evaluation slice is stale.",
+				};
+			return planned(planReevaluateShadows(slice, request));
+		},
+	};
+}
+
 export function createDumdictPlanner<L extends Dumling.Language>(
 	language: L,
 ): DumdictPlanner<L> {
@@ -440,6 +488,11 @@ export function createDumdictPlanner<L extends Dumling.Language>(
 		ensureOwnedSurface: ensureOwnedSurface(language),
 		ensureReadingEntry: ensureReadingEntry(language),
 		cleanupRelations: cleanupRelations(language),
+		reevaluateShadows: reevaluateShadows(language),
+		recordOccurrence: recordOccurrence(language),
+		removeOccurrence: removeOccurrence(language),
+		reconcileAttestationLinks: reconcileAttestationLinks(language),
+		rekeySurfaces: rekeySurfaces(language),
 	};
 	return {
 		language,
@@ -454,5 +507,17 @@ export function createDumdictPlanner<L extends Dumling.Language>(
 			run(workflows.ensureReadingEntry, context, request),
 		cleanupRelations: (slice, request) =>
 			run(workflows.cleanupRelations, slice, request),
+		reevaluateShadows: (slice, request) =>
+			run(workflows.reevaluateShadows, slice, request),
+		recordOccurrence: (context, request) =>
+			run(workflows.recordOccurrence, context, request),
+		occurrenceSliceRequest,
+		removeOccurrence: (slice, request) =>
+			run(workflows.removeOccurrence, slice, request),
+		reconcileAttestationLinks: (slice, request) =>
+			run(workflows.reconcileAttestationLinks, slice, request),
+		rekeySurfacesSliceRequest,
+		rekeySurfaces: (slice, request) =>
+			run(workflows.rekeySurfaces, slice, request),
 	};
 }

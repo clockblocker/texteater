@@ -1,24 +1,42 @@
 /**
- * How an operation reaches Luna through the call adapter: one request, its
- * output checked before it is used, its tokens read from what the
- * transport reports (OpenAI's `usage`, as `createOpenAILuna` returns it).
+ * How every operation reaches Luna: the `Luna` service, built from the
+ * host's `LunaTransport`, the `RequestBudget` and the `LunaConfiguration`.
+ * One request, its output checked before it is used, its tokens read from
+ * what the transport reports (OpenAI's `usage`, as `createOpenAILuna`
+ * returns it).
  */
 import { isRecord } from "common-utils";
-import type * as Effect from "effect/Effect";
-import type { CallTokens, OperationScope } from "./call.js";
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
+import {
+	type CallLog,
+	type CallTokens,
+	callContext,
+	callModel,
+	RequestBudget,
+} from "./call.js";
 import { InvalidModelOutput, type ProviderFailure } from "./errors.js";
-import type {
-	LunaAsk,
+import {
+	type LunaAsk,
 	LunaConfiguration,
-	LunaDraft,
-	LunaRequest,
+	type LunaDraft,
+	type LunaRequest,
 } from "./luna.js";
+import { createOpenAILuna, type OpenAILunaOptions } from "./openai-luna.js";
 
-/** What an operation reaches Luna with: the host's transport and the configuration. */
-export type LunaSettings = {
-	readonly ask: LunaAsk;
-	readonly configuration: LunaConfiguration;
-};
+/** The host's Luna transport, a Promise port taking a signal: OpenAI in production. */
+export class LunaTransport extends Context.Service<
+	LunaTransport,
+	{ readonly ask: LunaAsk }
+>()("dumgen/LunaTransport") {
+	/** Luna through the OpenAI Responses API (`createOpenAILuna`); an empty key is a Defect when it is built. */
+	static readonly openAI = (options: OpenAILunaOptions) =>
+		Layer.sync(LunaTransport, () => ({ ask: createOpenAILuna(options) }));
+	/** The host's own `LunaAsk`: the lab's cache or batch, or a test's fake. */
+	static readonly fromAsk = (ask: LunaAsk) =>
+		Layer.succeed(LunaTransport, { ask });
+}
 
 const tokenCount = (value: unknown) =>
 	typeof value === "number" && Number.isFinite(value) ? value : 0;
@@ -48,33 +66,86 @@ export function lunaTokens(metadata: unknown): CallTokens & {
 	};
 }
 
-/** Sends one Luna request under the request budget and checks its output. */
-export function askLuna<Output>(
-	scope: OperationScope,
-	luna: LunaSettings,
-	stage: string,
-	request: LunaDraft,
-	check: (output: unknown) => Output | InvalidModelOutput,
-): Effect.Effect<Output, ProviderFailure | InvalidModelOutput> {
-	const sent: LunaRequest = {
-		...request,
-		configuration: luna.configuration,
-	};
-	return scope.call({
-		stage,
-		executor: "luna",
-		request: sent,
-		send: (signal) => luna.ask(sent, { stage, signal }),
-		tokens: (response) => lunaTokens(response.metadata),
-		check: (response) => {
-			// A transport that kept no output says why (a refusal, JSON
-			// without its value); that reason is the refusal's.
-			const problem = isRecord(response.metadata)
-				? response.metadata.problem
-				: undefined;
-			return response.output === undefined && typeof problem === "string"
-				? new InvalidModelOutput({ stage, message: problem })
-				: check(response.output);
-		},
-	});
+/** The output a check makes of Luna's, or why it cannot be used. */
+type Check<Output> = (output: unknown) => Output | InvalidModelOutput;
+
+/**
+ * Luna as the operations reach it: one request under the request budget,
+ * its output checked. A transport that kept no output says why (a refusal,
+ * JSON without its value); that reason is the refusal's.
+ */
+export class Luna extends Context.Service<
+	Luna,
+	{
+		readonly ask: <Output>(
+			stage: string,
+			draft: LunaDraft,
+			check: Check<Output>,
+		) => Effect.Effect<
+			Output,
+			ProviderFailure | InvalidModelOutput,
+			CallLog
+		>;
+	}
+>()("dumgen/Luna") {
+	static readonly layer = Layer.effect(
+		Luna,
+		Effect.gen(function* () {
+			const transport = yield* LunaTransport;
+			const budget = yield* RequestBudget;
+			const configuration = yield* LunaConfiguration;
+			return Luna.of({
+				ask: (stage, draft, check) => {
+					const request: LunaRequest = { ...draft, configuration };
+					return callModel(budget, {
+						stage,
+						executor: "luna",
+						request,
+						send: (signal) =>
+							transport.ask(request, { stage, signal }),
+						tokens: (response) => lunaTokens(response.metadata),
+						check: (response) => {
+							const problem = isRecord(response.metadata)
+								? response.metadata.problem
+								: undefined;
+							return response.output === undefined &&
+								typeof problem === "string"
+								? new InvalidModelOutput({
+										stage,
+										message: problem,
+									})
+								: check(response.output);
+						},
+					});
+				},
+			});
+		}),
+	);
 }
+
+/** Sends one Luna request under the request budget and checks its output. */
+export const askLuna = <Output>(
+	stage: string,
+	draft: LunaDraft,
+	check: Check<Output>,
+): Effect.Effect<
+	Output,
+	ProviderFailure | InvalidModelOutput,
+	Luna | CallLog
+> => Luna.use((luna) => luna.ask(stage, draft, check));
+
+/** `Luna`'s ask carrying the running operation's CallLog, for helpers that read no services. */
+export type Write = <Output>(
+	stage: string,
+	draft: LunaDraft,
+	check: Check<Output>,
+) => Effect.Effect<Output, ProviderFailure | InvalidModelOutput>;
+
+/** The running operation's `Write`, as `stageAsk` is its `Ask`. */
+export const stageWrite: Effect.Effect<Write, never, Luna | CallLog> =
+	Effect.gen(function* () {
+		const luna = yield* Luna;
+		const context = yield* callContext;
+		return (stage, draft, check) =>
+			luna.ask(stage, draft, check).pipe(Effect.provideContext(context));
+	});

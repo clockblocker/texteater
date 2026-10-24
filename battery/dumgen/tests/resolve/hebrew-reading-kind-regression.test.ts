@@ -1,11 +1,11 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../../src/call.js";
 import { defaultLunaConfiguration } from "../../src/luna.js";
 import { resolveHebrewReading } from "../../src/resolve/he/reading.js";
 import type { ResolveReadingInput } from "../../src/resolve/types.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 import type { Unit } from "../../src/segment/segmented-sentence.js";
+import { requestBudget, runOperation } from "./../service-test-adapter.js";
 
 const unit: Unit<"he"> = {
 	segments: [5],
@@ -101,22 +101,16 @@ test("Hebrew Reading distinguishes different kinds without exposing drafts or st
 		runOperation(
 			"resolve.reading",
 			{ budget: requestBudget(1), payloads: true },
-			(scope) =>
-				resolveHebrewReading(
-					scope,
-					{
-						jev: { ask: jev, model: "jev-test" },
-						luna: {
-							configuration: defaultLunaConfiguration,
-							ask: async () => {
-								throw Error(
-									"validated draft requires no Luna call",
-								);
-							},
-						},
+			{
+				jev: { ask: jev, model: "jev-test" },
+				luna: {
+					configuration: defaultLunaConfiguration,
+					ask: async () => {
+						throw Error("validated draft requires no Luna call");
 					},
-					input,
-				),
+				},
+			},
+			resolveHebrewReading(input),
 		),
 	);
 	expect(result).toEqual({ _tag: "New", emojiDescription: "🐭" });

@@ -13,6 +13,7 @@ export async function temporaryRepository(): Promise<string> {
 		scripts: {
 			build: "bun tooling/manifest-policy.ts repository && turbo run build:package",
 			knip: "bun tooling/knip.ts",
+			oxlint: "bun tooling/oxlint.ts",
 			validate: "bun tooling/ci.ts validate knip dum-runtime",
 			"validate:imports":
 				"bun tooling/validate-repository-architecture.ts",
@@ -60,6 +61,7 @@ export async function addWorkspace(
 			"build:package":
 				"bun ../../tooling/manifest-policy.ts package && bun build src/index.ts",
 			knip: "bun ../../tooling/knip.ts",
+			oxlint: "bun ../../tooling/oxlint.ts",
 			test: "bun ../../tooling/run-package-tests.ts",
 			validate: "bun ../../tooling/validate-package.ts",
 			"validate:imports":

@@ -14,7 +14,8 @@ export const ciGates = [
 	{
 		// Turbo runs each workspace's check, lint, test, generated-file
 		// freshness and policy stages (turbo.json), next to the repository's manifest policy, import
-		// policy, documentation integrity and tooling's types, lint and tests.
+		// policy, documentation integrity, tooling's types, lint and tests, and
+		// the icon workbench's types and lint.
 		name: "validate",
 		args: [
 			"node_modules/.bin/turbo",
@@ -24,6 +25,8 @@ export const ciGates = [
 			"validate:imports",
 			"check:docs",
 			"check:tooling",
+			"check:icon-workbench",
+			"lint:icon-workbench",
 			"lint:tooling",
 			"test:tooling",
 			"--continue",

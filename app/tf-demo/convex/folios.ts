@@ -49,7 +49,7 @@ export const nextWindow = internalMutation({
 			sentences: v.array(
 				v.object({
 					sentenceId: v.id("sentences"),
-					paragraph: v.optional(v.number()),
+					paragraph: v.number(),
 					stitchedText: v.string(),
 				}),
 			),

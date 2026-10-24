@@ -15,5 +15,10 @@
 			"dumrel/types": ["../dumrel/dist/types.d.ts"]
 		}
 	},
-	"include": ["src/index.ts", "src/inventories.ts", "src/types.ts"]
+	"include": [
+		"src/index.ts",
+		"src/inflection.ts",
+		"src/inventories.ts",
+		"src/types.ts"
+	]
 }

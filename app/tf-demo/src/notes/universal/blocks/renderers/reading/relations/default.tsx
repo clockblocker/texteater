@@ -21,13 +21,11 @@ export const renderDefaultReadingRelations = (({
 			],
 	);
 	const grammaticalAlternatives = noteData.grammaticalAlternatives ?? [];
-	// A grammatical link (ADR 0036), so no semantic-relation preference hides it.
-	const participleLinks = noteData.participleLinks ?? [];
+	// A Source shows in the Breakdown Block (ADR 0050).
 	if (
 		relations.length === 0 &&
 		pendingRelations.length === 0 &&
-		grammaticalAlternatives.length === 0 &&
-		participleLinks.length === 0
+		grammaticalAlternatives.length === 0
 	) {
 		return null;
 	}
@@ -80,75 +78,6 @@ export const renderDefaultReadingRelations = (({
 							</LinkButton>
 						</li>
 					))}
-				</ul>
-			) : null}
-			{participleLinks.length > 0 ? (
-				<ul
-					className="grid gap-2 [p+&]:mt-2 [ul+&]:mt-2"
-					aria-label="Participle Source"
-				>
-					{participleLinks.map((link) => {
-						const drifted = link.meaning === "Drifted";
-						const label = drifted
-							? "historically the participle of"
-							: "from";
-						const pending = link.target.kind === "Shadow";
-						return (
-							<li
-								key={
-									link.target.kind === "Shadow"
-										? link.target.shadowId
-										: link.target.lemmaId
-								}
-								className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
-							>
-								<span
-									className={
-										drifted
-											? "text-xs text-ink-muted italic"
-											: "text-sm text-ink-muted compact:text-xs"
-									}
-								>
-									{label}
-								</span>
-								{/* A source verb not stored yet is a Unit Shadow,
-								    locked like a pending relation target. */}
-								<LinkButton
-									tone={
-										pending
-											? "shadow"
-											: drifted
-												? "quiet"
-												: "link"
-									}
-									className={
-										drifted
-											? "text-sm compact:text-xs"
-											: undefined
-									}
-									onClick={() =>
-										PresentationCapabilities.follow(
-											link.target,
-										)
-									}
-									{...(pending
-										? {
-												"aria-label": `${label} Unit Shadow ${link.targetCanonicalForm}`,
-											}
-										: {})}
-								>
-									{pending ? (
-										<LockIcon
-											aria-hidden="true"
-											strokeWidth={1.5}
-											className="me-1"
-										/>
-									) : null}
-									{link.targetCanonicalForm}
-								</LinkButton>
-							</li>
-						);
-					})}
 				</ul>
 			) : null}
 			{noteData.relationsTruncated ? (

@@ -9,6 +9,7 @@ import {
 	type ResolutionSessionRunRecord,
 	type ResolutionSessionSettlement,
 } from "../server/resolutionSessionExecution";
+import { capturedLogs } from "./support/logs";
 
 const identity = { requestId: "request-1", runToken: "run-1" };
 const selection = {
@@ -56,8 +57,7 @@ describe("Resolution Session execution", () => {
 							},
 						};
 					}),
-				diagnostics: { info: () => {}, error: () => {} },
-			}),
+			}).pipe(capturedLogs().capture),
 		);
 
 		expect(advances).toEqual([{ progress: "RouteAvailable" }]);
@@ -124,8 +124,7 @@ describe("Resolution Session execution", () => {
 							},
 						};
 					}),
-				diagnostics: { info: () => {}, error: () => {} },
-			}),
+			}).pipe(capturedLogs().capture),
 		);
 
 		expect(advances).toEqual([{ progress: "RouteAvailable" }]);
@@ -174,8 +173,7 @@ describe("Resolution Session execution", () => {
 						resolved = true;
 						throw new Error("must not run");
 					}),
-				diagnostics: { info: () => {}, error: () => {} },
-			}),
+			}).pipe(capturedLogs().capture),
 		);
 
 		expect(resolved).toBe(false);
@@ -186,7 +184,7 @@ describe("Resolution Session execution", () => {
 		"unexpected %s is fingerprinted and recorded without its message",
 		async (kind) => {
 			const records: ResolutionSessionRunRecord[] = [];
-			const errors: string[] = [];
+			const logs = capturedLogs();
 			await Effect.runPromise(
 				executeResolutionSession({
 					identity,
@@ -207,16 +205,12 @@ describe("Resolution Session execution", () => {
 								yield* Effect.void;
 								throw error;
 							});
-						return (kind === "failure" ? Effect.fail : Effect.die)(
-							error,
-						);
-					},
-					diagnostics: {
-						info: () => {},
-						error: (message) => errors.push(message),
+						return kind === "failure"
+							? Effect.tryPromise(() => Promise.reject(error))
+							: Effect.die(error);
 					},
 					createDiagnosticId: () => "diagnostic-1",
-				}),
+				}).pipe(logs.capture),
 			);
 
 			expect(records).toEqual([
@@ -228,8 +222,18 @@ describe("Resolution Session execution", () => {
 					errorFingerprint: expect.stringContaining("fnv1a-"),
 				}),
 			]);
-			expect(errors.join("\n")).toContain("ResolutionRunInternalFailure");
-			expect(errors.join("\n")).not.toContain(
+			expect(logs.events).toEqual([
+				{
+					level: "Error",
+					event: "ResolutionRunInternalFailure",
+					...identity,
+					phase: "Grammar",
+					diagnosticId: "diagnostic-1",
+					errorName: "TypeError",
+					errorFingerprint: expect.stringContaining("fnv1a-"),
+				},
+			]);
+			expect(JSON.stringify(logs.events)).not.toContain(
 				"secret checkpoint payload",
 			);
 		},

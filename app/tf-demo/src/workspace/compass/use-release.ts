@@ -89,7 +89,7 @@ export function useRelease<S>({
 		restore,
 		sweepByDrag,
 		/** Let go over `target`: do what the preview showed. */
-		commitAt(d: Drag<S>, target: Destination | null) {
+		commitAt: (d: Drag<S>, target: Destination | null) => {
 			if (!target || target.kind === "return" || target.kind === "home") {
 				goHome(d);
 				return;
@@ -105,7 +105,7 @@ export function useRelease<S>({
 		 * Let go of a Sheet that never left its bar's slop: a tap on a bar is
 		 * not a close, so a Sheet that would close stays a Sheet.
 		 */
-		releaseInPlace(d: Drag<S>) {
+		releaseInPlace: (d: Drag<S>) => {
 			if (d.home === "close") restore(d);
 			else goHome(d);
 		},

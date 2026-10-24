@@ -3,14 +3,15 @@ import { authoredFor, authoredMembers } from "dumcorpus/inventories";
 import { parseUnit, routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
+import { operations } from "../../src/operations.js";
 import { markedSentence } from "../../src/resolve/reading.js";
 import type {
 	ReadingResolution,
 	ResolveReadingInput,
 } from "../../src/resolve/types.js";
+import { liveOver } from "../live-over.js";
 import { fakeJev, fakeLuna, sentenceOf, unitOf } from "./support.js";
 
 /** The fields of an Attestation's route beyond its Surface's Lemma, spelling and members. */
@@ -83,16 +84,22 @@ async function readOnce(
 ): Promise<{ result: ReadingResolution; trace: OperationTrace | undefined }> {
 	const traces: OperationTrace[] = [];
 	const result = await Effect.runPromise(
-		createDumgen({
-			jev: jev.ask,
-			luna: luna.ask,
-			onOperation: (trace) => traces.push(trace),
-		}).resolve.reading({
-			attestation: schlossAttestation,
-			sentence,
-			unit: nounUnit,
-			...input,
-		}),
+		operations.resolve
+			.reading({
+				attestation: schlossAttestation,
+				sentence,
+				unit: nounUnit,
+				...input,
+			})
+			.pipe(
+				Effect.provide(
+					liveOver({
+						jev: jev.ask,
+						luna: luna.ask,
+						onOperation: (trace) => traces.push(trace),
+					}),
+				),
+			),
 	);
 	return { result, trace: traces[0] };
 }
@@ -456,15 +463,21 @@ test("Luna's text that is no Emoji Description is an InvalidModelOutput, neither
 	const luna = writes("😔 unfortunately");
 	const failure = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({
-				jev: fakeJev().ask,
-				luna: luna.ask,
-			}).resolve.reading({
-				attestation: schlossAttestation,
-				sentence,
-				unit: nounUnit,
-				candidates: [],
-			}),
+			operations.resolve
+				.reading({
+					attestation: schlossAttestation,
+					sentence,
+					unit: nounUnit,
+					candidates: [],
+				})
+				.pipe(
+					Effect.provide(
+						liveOver({
+							jev: fakeJev().ask,
+							luna: luna.ask,
+						}),
+					),
+				),
 		),
 	);
 	expect(failure).toBeInstanceOf(InvalidModelOutput);
@@ -477,15 +490,21 @@ test("a jev failure is a ProviderFailure, and a pick outside the options an Inva
 	const reading = (jev: ReturnType<typeof fakeJev>) =>
 		Effect.runPromise(
 			Effect.flip(
-				createDumgen({
-					jev: jev.ask,
-					luna: writes("🔐").ask,
-				}).resolve.reading({
-					attestation: schlossAttestation,
-					sentence,
-					unit: nounUnit,
-					candidates: ["🏰"],
-				}),
+				operations.resolve
+					.reading({
+						attestation: schlossAttestation,
+						sentence,
+						unit: nounUnit,
+						candidates: ["🏰"],
+					})
+					.pipe(
+						Effect.provide(
+							liveOver({
+								jev: jev.ask,
+								luna: writes("🔐").ask,
+							}),
+						),
+					),
 			),
 		);
 	expect(await reading(down)).toBeInstanceOf(ProviderFailure);
@@ -498,7 +517,7 @@ test("a jev failure is a ProviderFailure, and a pick outside the options an Inva
 test("a Foreign Attestation, a unit off its route, a failed Sentence or a candidate that is no Emoji Description is a Defect before anything is asked", async () => {
 	const jev = fakeJev();
 	const luna = writes("🔐");
-	const dumgen = createDumgen({ jev: jev.ask, luna: luna.ask });
+	const live = liveOver({ jev: jev.ask, luna: luna.ask });
 	const input: ResolveReadingInput = {
 		attestation: schlossAttestation,
 		sentence,
@@ -529,7 +548,11 @@ test("a Foreign Attestation, a unit off its route, a failed Sentence or a candid
 	];
 	for (const [change, message] of cases)
 		await expect(
-			Effect.runPromise(dumgen.resolve.reading({ ...input, ...change })),
+			Effect.runPromise(
+				operations.resolve
+					.reading({ ...input, ...change })
+					.pipe(Effect.provide(live)),
+			),
 		).rejects.toThrow(message);
 	expect(jev.sent).toEqual([]);
 	expect(luna.sent).toEqual([]);

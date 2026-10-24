@@ -20,35 +20,48 @@ export const verbShadow = {
 	kind: "VERB",
 } as const;
 
-export function shadowTree(...unitShadows: readonly object[]) {
+/** The source Reading's Canonical Form, which a Breakdown's letters spell. */
+const sourceWording = "laufen";
+
+/**
+ * Knowledge whose Constituents link to each Shadow in turn, at
+ * `constituents.<index>`, their letters spelling `laufen` in up to six parts.
+ */
+export function shadowBreakdown(...targets: readonly object[]) {
+	const size = Math.ceil(sourceWording.length / targets.length);
 	return {
-		morphologicalTree: {
-			root: {
-				nodeKind: "structure",
-				children: unitShadows.map((unitShadow) => ({
-					nodeKind: "unitShadow",
-					unitShadow,
-				})),
-			},
+		breakdown: {
+			constituents: targets.map((target, index) => ({
+				letters:
+					index === targets.length - 1
+						? sourceWording.slice(index * size)
+						: sourceWording.slice(index * size, (index + 1) * size),
+				target,
+			})),
 		},
 	};
 }
 
+/** The Root Morpheme Shadow of `laufen`. */
+export const rootShadow = {
+	language: "de",
+	canonicalForm: "lauf",
+	family: "Morpheme",
+	kind: "Root",
+} as const;
+
+/** Knowledge whose two Breakdown halves both link to `rootShadow`, before a filler. */
 export function structuralKnowledge() {
 	return {
-		morphologicalTree: {
-			root: {
-				nodeKind: "structure",
-				children: [
-					{ nodeKind: "unitShadow", unitShadow: nounShadow },
-					{
-						nodeKind: "structure",
-						children: [
-							{ nodeKind: "unitShadow", unitShadow: nounShadow },
-						],
-					},
-				],
-			},
+		breakdown: {
+			constituents: [
+				{ letters: "lauf", target: rootShadow },
+				{ letters: "en" },
+			],
+			morphemes: [
+				{ letters: "lauf", target: rootShadow },
+				{ letters: "en" },
+			],
 		},
 	};
 }

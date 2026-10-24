@@ -488,8 +488,8 @@ function centerInScroller(sentence: HTMLElement): void {
 type Paragraph = readonly [SentenceView, ...SentenceView[]];
 
 /**
- * Consecutive Sentences sharing a paragraph, in order. A Sentence without a
- * paragraph, or one opening under a heading, starts a paragraph of its own.
+ * Consecutive Sentences sharing a paragraph, in order. A Sentence opening
+ * under a heading starts a paragraph of its own.
  */
 function paragraphsOf(sentences: readonly SentenceView[]): Paragraph[] {
 	const paragraphs: Paragraph[] = [];
@@ -497,7 +497,6 @@ function paragraphsOf(sentences: readonly SentenceView[]): Paragraph[] {
 	for (const sentence of sentences) {
 		if (
 			current &&
-			sentence.paragraph !== undefined &&
 			sentence.paragraph === current[0].paragraph &&
 			!sentence.heading
 		) {

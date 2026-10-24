@@ -19,6 +19,7 @@ test("routes Lemma and Attestation subjects through the universal pipeline", () 
 		target: { kind: "Lemma", lemmaId: "lemma-1" },
 		presented: presentedLemma("Bank", "NOUN"),
 		participialAdjectives: [],
+		formations: [],
 		connections: {
 			surfaces: [],
 			readings: [

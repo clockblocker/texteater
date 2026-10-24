@@ -3,12 +3,7 @@ import type { ReadingDefaultRenderer } from "../../universal/blocks/renderer";
 import { hebrewFeaturePhrases } from "../features";
 
 /** Show only positively known cells; missing forms are not a defective paradigm. */
-export const renderHebrewParadigm = (({
-	noteData,
-	PresentationCapabilities,
-}) => {
-	if (PresentationCapabilities.knowledgeSettings.hebrewParadigm === false)
-		return null;
+export const renderHebrewParadigm = (({ noteData }) => {
 	const forms = noteData.knowledge.hebrewParadigm?.forms;
 	if (!forms?.length) return null;
 	return (

@@ -37,9 +37,12 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { z } from "zod";
-import { createDumgen } from "../../../src/create-dumgen.js";
+import { DumgenCore } from "../../../src/dumgen-live.js";
+import { JevTransport } from "../../../src/jev-call.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../../src/luna.js";
+import { LunaTransport } from "../../../src/luna-call.js";
 import type { OperationTrace } from "../../../src/operation-trace.js";
+import { operations } from "../../../src/operations.js";
 import {
 	draftsEmojiDescription,
 	markedSentence,
@@ -52,6 +55,13 @@ import {
 } from "../../run-directory.js";
 import { storedAs } from "../../stored-json.js";
 import { frozenSetSize } from "../frozen-sets.js";
+import {
+	everyAttempt,
+	type LabEffect,
+	type LabRuntime,
+	onLabRuntime,
+	runOn,
+} from "../lab-runtime.js";
 import type { LunaBatch } from "../luna-batch.js";
 import { goldRequests } from "../request-diff.js";
 import {
@@ -154,6 +164,8 @@ export type ReadingEvaluateArgs = {
 	readonly caps?: GrammarCaps;
 	readonly outputDirectory?: string;
 	readonly signal?: AbortSignal;
+	/** The run's runtime and budget (`lab-runtime.ts`); a fresh one by default. */
+	readonly runtime?: LabRuntime;
 	readonly concurrency?: number;
 	/** The answer cache; `.runs/resolve-reading` by default. */
 	readonly root?: string;
@@ -216,102 +228,100 @@ const goldGrammarJev =
  * none or the call gives no usable draft; `resolve.reading` then asks
  * Luna alone, as a click resumed without one does.
  */
-async function draftOf(
+const draftOf = (
 	goldCase: ReadingCase,
 	arm: ReadingArm,
 	repetition: number,
 	models: Pick<ReadingModels, "luna">,
-): Promise<string | undefined> {
-	const { route } = goldCase.unit;
-	if (route === "Unresolved" || !draftsEmojiDescription(route))
-		return undefined;
-	const { lemma, normalizedSurface } = goldCase.attestation.surface;
-	const grammar = await Effect.runPromise(
-		createDumgen({
-			jev: goldGrammarJev(goldCase),
-			luna: models.luna({ goldCase, arm }, repetition),
-		}).resolve.grammar({
-			language: "de",
-			sentence: goldCase.sentence,
-			unit: goldCase.unit,
-			neighbours: {},
-			lemmaCandidates:
-				candidatesOf(goldCase, arm).length > 0
-					? [{ lemma, foundUnder: [normalizedSurface] }]
-					: [],
-		}),
-	);
-	return grammar._tag === "Resolved" ? grammar.drafted : undefined;
-}
+): LabEffect<string | undefined> =>
+	Effect.gen(function* () {
+		const { route } = goldCase.unit;
+		if (route === "Unresolved" || !draftsEmojiDescription(route))
+			return undefined;
+		const { lemma, normalizedSurface } = goldCase.attestation.surface;
+		const grammar = yield* operations.resolve
+			.grammar({
+				language: "de",
+				sentence: goldCase.sentence,
+				unit: goldCase.unit,
+				neighbours: {},
+				lemmaCandidates:
+					candidatesOf(goldCase, arm).length > 0
+						? [{ lemma, foundUnder: [normalizedSurface] }]
+						: [],
+			})
+			.pipe(
+				Effect.provide(
+					DumgenCore({
+						jev: JevTransport.fromAsk(goldGrammarJev(goldCase)),
+						luna: LunaTransport.fromAsk(
+							models.luna({ goldCase, arm }, repetition),
+						),
+					}),
+				),
+			);
+		return grammar._tag === "Resolved" ? grammar.drafted : undefined;
+	});
 
-async function attempt(
+const attempt = (
 	goldCase: ReadingCase,
 	arm: ReadingArm,
 	repetition: number,
 	models: Pick<ReadingModels, "jev" | "luna">,
-): Promise<ReadingOutput> {
-	const traces: OperationTrace[] = [];
-	const at = { goldCase, arm };
-	const drafted = await draftOf(goldCase, arm, repetition, models);
-	const result = await Effect.runPromise(
-		createDumgen({
-			jev: models.jev(at, repetition),
-			luna: models.luna(at, repetition),
-			onOperation: (trace) => traces.push(trace),
-		}).resolve.reading({
-			attestation: goldCase.attestation,
-			sentence: goldCase.sentence,
-			unit: goldCase.unit,
-			candidates: candidatesOf(goldCase, arm),
-			...(drafted === undefined ? {} : { drafted }),
-		}),
-	);
-	const reason = traces[0]?.resolution?.reason;
-	return {
-		_tag: result._tag,
-		...(result._tag === "CatalogMiss"
-			? { message: result.message }
-			: { emojiDescription: result.emojiDescription }),
-		...(reason === undefined ? {} : { reason }),
-	};
-}
+): LabEffect<ReadingOutput> =>
+	Effect.gen(function* () {
+		const traces: OperationTrace[] = [];
+		const at = { goldCase, arm };
+		const drafted = yield* draftOf(goldCase, arm, repetition, models);
+		const result = yield* operations.resolve
+			.reading({
+				attestation: goldCase.attestation,
+				sentence: goldCase.sentence,
+				unit: goldCase.unit,
+				candidates: candidatesOf(goldCase, arm),
+				...(drafted === undefined ? {} : { drafted }),
+			})
+			.pipe(
+				Effect.provide(
+					DumgenCore({
+						jev: JevTransport.fromAsk(models.jev(at, repetition)),
+						luna: LunaTransport.fromAsk(
+							models.luna(at, repetition),
+						),
+						onOperation: (trace) => traces.push(trace),
+					}),
+				),
+			);
+		const reason = traces[0]?.resolution?.reason;
+		return {
+			_tag: result._tag,
+			...(result._tag === "CatalogMiss"
+				? { message: result.message }
+				: { emojiDescription: result.emojiDescription }),
+			...(reason === undefined ? {} : { reason }),
+		} satisfies ReadingOutput;
+	});
 
 /** Every case's every arm and repetition, `concurrency` at a time; failures are left for the run. */
-async function pass(
+const pass = (
 	cases: readonly ReadingCase[],
 	models: ReadingModels,
 	concurrency: number,
 	repetitions: number,
-): Promise<void> {
-	const work = cases.flatMap((goldCase) =>
-		armsOf(goldCase).flatMap((arm) =>
-			Array.from({ length: repetitions }, (_, repetition) => ({
-				goldCase,
-				arm,
-				repetition,
-			})),
+): LabEffect<void> =>
+	everyAttempt(
+		cases.flatMap((goldCase) =>
+			armsOf(goldCase).flatMap((arm) =>
+				Array.from({ length: repetitions }, (_, repetition) => ({
+					goldCase,
+					arm,
+					repetition,
+				})),
+			),
 		),
+		(item) => attempt(item.goldCase, item.arm, item.repetition, models),
+		concurrency,
 	);
-	let next = 0;
-	await Promise.all(
-		Array.from({ length: Math.max(1, concurrency) }, async () => {
-			for (;;) {
-				const item = work[next++];
-				if (!item) return;
-				try {
-					await attempt(
-						item.goldCase,
-						item.arm,
-						item.repetition,
-						models,
-					);
-				} catch {
-					// The run records the failure.
-				}
-			}
-		}),
-	);
-}
 
 /** The run's id for one case in one arm. */
 const attemptId = (goldCase: ReadingCase, arm: ReadingArm) =>
@@ -369,6 +379,7 @@ async function readingRequests(
 	setsRoot: string,
 	setName: ReadingSetName,
 	concurrency: number,
+	runtime: LabRuntime | undefined,
 ) {
 	const set = await loadReadingSet(setsRoot, setName);
 	return goldRequests({
@@ -382,7 +393,194 @@ async function readingRequests(
 		attempt: ({ goldCase, arm }, models) =>
 			attempt(goldCase, arm, 0, models),
 		concurrency,
+		...(runtime ? { runtime } : {}),
 	});
+}
+
+/** A run of one set on `runtime`: priced, filled when live, then run case by case. */
+async function evaluateReadingSet(
+	setName: ReadingSetName,
+	args: ReadingEvaluateArgs,
+	runtime: LabRuntime,
+): Promise<ReadingEvaluated> {
+	const id = `${readingRoute}:${setName}`;
+	const directory = join(args.root ?? defaultReadingRoot, "cache");
+	const { set, repetitions } = await openFrozenSet({
+		setsRoot: args.setsRoot ?? trackedReadingSetsRoot,
+		setName,
+		route: readingRoute,
+		freezeCommand: "bun cli/resolve-reading.ts freeze",
+		load: loadReadingSet,
+		maximum: readingRepetitions,
+		repetitions: args.repetitions,
+	});
+	const { cases: selected, caseFilter } = selectSubset({
+		set,
+		subset: args.subset,
+		load: loadReadingSubset,
+		caseIds: readingSubsetCaseIds,
+	});
+	const cases = selected.slice(0, args.limit ?? selected.length);
+	const concurrency = args.concurrency ?? 12;
+	const identity = { name: set.name, hash: set.hash };
+	const attempts = cases.reduce(
+		(sum, goldCase) => sum + armsOf(goldCase).length,
+		0,
+	);
+	const passWith = (models: ReadingModels) =>
+		runOn(
+			runtime,
+			pass(cases, models, concurrency, repetitions),
+			args.signal,
+		);
+	const priced = await priceRound(args, {
+		id,
+		ledger: readingLedgerPath,
+		directory,
+		models: (options) => new ReadingModels(options),
+		pass: passWith,
+		repetitions,
+		attempts: attempts * repetitions,
+	});
+	const { price } = priced;
+	if (args.estimate) return { price, set: identity };
+	const live = new ReadingModels(runModelsOptions(args, directory, priced));
+	await fillLive(args, live, "resolve.reading", () => passWith(live));
+	const replay = new ReadingModels({
+		directory,
+		mode: "offline",
+	});
+	const byId = new Map(
+		cases.flatMap((goldCase) =>
+			armsOf(goldCase).map(
+				(arm) => [attemptId(goldCase, arm), { goldCase, arm }] as const,
+			),
+		),
+	);
+	const corpus = defineGoldenCorpus({
+		route: readingRoute,
+		inputSchema,
+		outputSchema: readingOutputSchema,
+		collections: {
+			dumcorpus: defineGoldenCaseCollection({
+				groups: {
+					cases: defineGoldenCaseGroup(
+						Object.fromEntries(
+							[...byId].map(([caseId, { goldCase, arm }]) => [
+								caseId,
+								{
+									input: {
+										caseId: goldCase.id,
+										arm,
+										record: goldCase.record,
+										route: routeKey(goldCase),
+										lemma: goldCase.attestation.surface
+											.lemma.canonicalForm,
+										markedSentence: markedSentence(
+											goldCase.sentence.segments,
+											goldCase.unit.segments,
+										),
+										ideal: goldCase.ideal,
+										candidates: candidatesOf(goldCase, arm)
+											.length,
+										authored: goldCase.authored,
+										folded: goldCase.rejected.length > 0,
+									} satisfies ReadingInput,
+									idealOutput:
+										arm === "present" || goldCase.authored
+											? {
+													_tag: "Reuse" as const,
+													emojiDescription:
+														goldCase.ideal,
+												}
+											: {
+													_tag: "New" as const,
+												},
+									contaminationKeys: [goldCase.record],
+								},
+							]),
+						),
+					),
+				},
+				cases: {},
+			}),
+		},
+	});
+	const repetitionsSeen = new Map<string, number>();
+	const run = await runOperationExperiment({
+		experiment: {
+			corpus,
+			evaluation: corpus.select([...byId.keys()]),
+			demonstrations: corpus.select([]),
+			// The one traced run adapter: promptsmith runs an attempt's
+			// repetitions back to back and passes no index, so they
+			// count off the cache's repetitions.
+			run: async (input, context) => {
+				const id = `${input.caseId}:${input.arm}`;
+				const found = byId.get(id);
+				if (!found) throw Error(`No case ${id}`);
+				const repetition = repetitionsSeen.get(id) ?? 0;
+				repetitionsSeen.set(id, repetition + 1);
+				const output = await runOn(
+					runtime,
+					attempt(
+						found.goldCase,
+						found.arm,
+						repetition % repetitions,
+						replay,
+					),
+					context.signal,
+				);
+				context.recordTrace({
+					...(output.reason ? { outcome: output.reason } : {}),
+					calls: [],
+				});
+				return output;
+			},
+			evaluator: ({ caseId, output }) => {
+				const found = byId.get(caseId);
+				if (!found) throw Error(`No case ${caseId}`);
+				return evaluateReading(found.goldCase, found.arm, output);
+			},
+		},
+		experimentId: id,
+		operationVersion: readingOperationVersion,
+		evaluatorVersion: "resolve-reading-1",
+		sourceRevision: args.sourceRevision,
+		configurations: {
+			generation: {
+				model: defaultLunaConfiguration.model,
+				settings: JSON.parse(
+					JSON.stringify(defaultLunaConfiguration.settings),
+				),
+			},
+			judgment: {
+				model: pinnedJevModel,
+				settings: {
+					set: set.name,
+					setHash: set.hash,
+					...(caseFilter
+						? {
+								caseFilter: {
+									...caseFilter,
+									missed: [...caseFilter.missed],
+									guard: [...caseFilter.guard],
+								},
+							}
+						: {}),
+				},
+			},
+		},
+		repetitions,
+		...(args.signal ? { signal: args.signal } : {}),
+	});
+	if (args.outputDirectory) await saveRun(args.outputDirectory, run);
+	return {
+		run,
+		...(price ? { price } : {}),
+		spend: live.report(),
+		set: identity,
+	};
 }
 
 /** The table's entry for one set. */
@@ -395,204 +593,17 @@ export function readingExperiment(setName: ReadingSetName) {
 		requests: (args: {
 			readonly setsRoot?: string;
 			readonly concurrency?: number;
+			readonly runtime?: LabRuntime;
 		}) =>
 			readingRequests(
 				args.setsRoot ?? trackedReadingSetsRoot,
 				setName,
 				args.concurrency ?? 12,
+				args.runtime,
 			),
-		async evaluate(args: ReadingEvaluateArgs): Promise<ReadingEvaluated> {
-			const directory = join(args.root ?? defaultReadingRoot, "cache");
-			const { set, repetitions } = await openFrozenSet({
-				setsRoot: args.setsRoot ?? trackedReadingSetsRoot,
-				setName,
-				route: readingRoute,
-				freezeCommand: "bun cli/resolve-reading.ts freeze",
-				load: loadReadingSet,
-				maximum: readingRepetitions,
-				repetitions: args.repetitions,
-			});
-			const { cases: selected, caseFilter } = selectSubset({
-				set,
-				subset: args.subset,
-				load: loadReadingSubset,
-				caseIds: readingSubsetCaseIds,
-			});
-			const cases = selected.slice(0, args.limit ?? selected.length);
-			const concurrency = args.concurrency ?? 12;
-			const identity = { name: set.name, hash: set.hash };
-			const attempts = cases.reduce(
-				(sum, goldCase) => sum + armsOf(goldCase).length,
-				0,
-			);
-			const passWith = (models: ReadingModels) =>
-				pass(cases, models, concurrency, repetitions);
-			const priced = await priceRound(args, {
-				id,
-				ledger: readingLedgerPath,
-				directory,
-				models: (options) => new ReadingModels(options),
-				pass: passWith,
-				repetitions,
-				attempts: attempts * repetitions,
-			});
-			const { price } = priced;
-			if (args.estimate) return { price, set: identity };
-			const live = new ReadingModels(
-				runModelsOptions(args, directory, priced),
-			);
-			await fillLive(args, live, "resolve.reading", () => passWith(live));
-			const replay = new ReadingModels({ directory, mode: "offline" });
-			const byId = new Map(
-				cases.flatMap((goldCase) =>
-					armsOf(goldCase).map(
-						(arm) =>
-							[
-								attemptId(goldCase, arm),
-								{ goldCase, arm },
-							] as const,
-					),
-				),
-			);
-			const corpus = defineGoldenCorpus({
-				route: readingRoute,
-				inputSchema,
-				outputSchema: readingOutputSchema,
-				collections: {
-					dumcorpus: defineGoldenCaseCollection({
-						groups: {
-							cases: defineGoldenCaseGroup(
-								Object.fromEntries(
-									[...byId].map(
-										([caseId, { goldCase, arm }]) => [
-											caseId,
-											{
-												input: {
-													caseId: goldCase.id,
-													arm,
-													record: goldCase.record,
-													route: routeKey(goldCase),
-													lemma: goldCase.attestation
-														.surface.lemma
-														.canonicalForm,
-													markedSentence:
-														markedSentence(
-															goldCase.sentence
-																.segments,
-															goldCase.unit
-																.segments,
-														),
-													ideal: goldCase.ideal,
-													candidates: candidatesOf(
-														goldCase,
-														arm,
-													).length,
-													authored: goldCase.authored,
-													folded:
-														goldCase.rejected
-															.length > 0,
-												} satisfies ReadingInput,
-												idealOutput:
-													arm === "present" ||
-													goldCase.authored
-														? {
-																_tag: "Reuse" as const,
-																emojiDescription:
-																	goldCase.ideal,
-															}
-														: {
-																_tag: "New" as const,
-															},
-												contaminationKeys: [
-													goldCase.record,
-												],
-											},
-										],
-									),
-								),
-							),
-						},
-						cases: {},
-					}),
-				},
-			});
-			const repetitionsSeen = new Map<string, number>();
-			const run = await runOperationExperiment({
-				experiment: {
-					corpus,
-					evaluation: corpus.select([...byId.keys()]),
-					demonstrations: corpus.select([]),
-					// The one traced run adapter: promptsmith runs an attempt's
-					// repetitions back to back and passes no index, so they
-					// count off the cache's repetitions.
-					run: async (input, context) => {
-						const id = `${input.caseId}:${input.arm}`;
-						const found = byId.get(id);
-						if (!found) throw Error(`No case ${id}`);
-						const repetition = repetitionsSeen.get(id) ?? 0;
-						repetitionsSeen.set(id, repetition + 1);
-						const output = await attempt(
-							found.goldCase,
-							found.arm,
-							repetition % repetitions,
-							replay,
-						);
-						context.recordTrace({
-							...(output.reason
-								? { outcome: output.reason }
-								: {}),
-							calls: [],
-						});
-						return output;
-					},
-					evaluator: ({ caseId, output }) => {
-						const found = byId.get(caseId);
-						if (!found) throw Error(`No case ${caseId}`);
-						return evaluateReading(
-							found.goldCase,
-							found.arm,
-							output,
-						);
-					},
-				},
-				experimentId: id,
-				operationVersion: readingOperationVersion,
-				evaluatorVersion: "resolve-reading-1",
-				sourceRevision: args.sourceRevision,
-				configurations: {
-					generation: {
-						model: defaultLunaConfiguration.model,
-						settings: JSON.parse(
-							JSON.stringify(defaultLunaConfiguration.settings),
-						),
-					},
-					judgment: {
-						model: pinnedJevModel,
-						settings: {
-							set: set.name,
-							setHash: set.hash,
-							...(caseFilter
-								? {
-										caseFilter: {
-											...caseFilter,
-											missed: [...caseFilter.missed],
-											guard: [...caseFilter.guard],
-										},
-									}
-								: {}),
-						},
-					},
-				},
-				repetitions,
-				...(args.signal ? { signal: args.signal } : {}),
-			});
-			if (args.outputDirectory) await saveRun(args.outputDirectory, run);
-			return {
-				run,
-				...(price ? { price } : {}),
-				spend: live.report(),
-				set: identity,
-			};
-		},
+		evaluate: (args: ReadingEvaluateArgs): Promise<ReadingEvaluated> =>
+			onLabRuntime(args.runtime, (runtime) =>
+				evaluateReadingSet(setName, args, runtime),
+			),
 	};
 }

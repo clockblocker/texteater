@@ -7,22 +7,12 @@ import {
 	spyOn,
 	test,
 } from "bun:test";
-import { api, internal } from "../convex/_generated/api";
+import { api } from "../convex/_generated/api";
 import { createDumdictTransaction } from "../convex/model/dumdictTransaction";
 import { attachPendingShadowReference } from "../convex/model/shadows";
-import {
-	auditPendingShadowReferencesPage,
-	auditStructuralShadowReferencesPage,
-	backfillPendingShadowReferencesPage,
-	backfillStructuralShadowReferencesPage,
-} from "../convex/shadows";
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import { createPaginatedNoteLoader } from "../src/views/paginated-note-loading";
 import { createTestConvex } from "./support/convex";
-import {
-	exportedArgs,
-	registeredHandler,
-} from "./support/convexRuntimeExports";
 import {
 	insertPendingRelation,
 	insertSourceReading,
@@ -30,10 +20,9 @@ import {
 	pendingRecord,
 	replaceKnowledge,
 	rows,
+	shadowBreakdown,
 	shadowNote,
 	shadowReferences,
-	shadowTree,
-	structuralKnowledge,
 	verbShadow,
 } from "./support/shadows";
 
@@ -46,155 +35,13 @@ afterEach(() => {
 	jest.useRealTimers();
 });
 
-describe("Shadow backfills and presentation", () => {
-	test("keeps shadowId optional while page-level backfills and audits are runnable", async () => {
-		const schemaSource = await Bun.file(
-			new URL("../convex/model/tables/dictionary.ts", import.meta.url),
-		).text();
-		expect(schemaSource).toContain('shadowId: v.optional(v.id("shadows"))');
-		for (const registered of [
-			backfillPendingShadowReferencesPage,
-			backfillStructuralShadowReferencesPage,
-			auditPendingShadowReferencesPage,
-			auditStructuralShadowReferencesPage,
-		]) {
-			expect(exportedArgs(registered)).toContain("paginationOpts");
-		}
-	});
-
-	test("backfills pending and structural references idempotently and audits them in bounded pages", async () => {
-		const t = createTestConvex();
-		await t.run(async (ctx) => {
-			await ctx.db.insert("pendingSemanticRelations", {
-				locatorKey: '["reading-source","synonym","pending-1"]',
-				sourceReadingKey: "reading-source",
-				targetFoldedCanonicalForm: " Bank ",
-				record: pendingRecord(),
-			});
-			await ctx.db.insert("accumulatedKnowledge", {
-				ownerReadingKey: "reading-source",
-				knowledge: structuralKnowledge(),
-				status: "Partial",
-				updatedAt: 1,
-			});
-		});
-		const paginationOpts = { cursor: null, numItems: 50 };
-		const structuralPaginationOpts = { cursor: null, numItems: 8 };
-		const backfillPending = () =>
-			t.mutation(internal.shadows.backfillPendingShadowReferencesPage, {
-				paginationOpts,
-			});
-		const backfillStructural = () =>
-			t.mutation(
-				internal.shadows.backfillStructuralShadowReferencesPage,
-				{
-					paginationOpts: structuralPaginationOpts,
-				},
-			);
-		const auditPending = () =>
-			t.query(internal.shadows.auditPendingShadowReferencesPage, {
-				paginationOpts,
-			});
-		const auditStructural = () =>
-			t.query(internal.shadows.auditStructuralShadowReferencesPage, {
-				paginationOpts,
-			});
-
-		await expect(
-			t.mutation(
-				internal.shadows.backfillStructuralShadowReferencesPage,
-				{
-					paginationOpts: { cursor: null, numItems: 9 },
-				},
-			),
-		).rejects.toThrow("at most 8 Reading owners");
-		expect(await backfillPending()).toMatchObject({
-			changed: 1,
-			malformed: 0,
-		});
-		expect(await backfillStructural()).toMatchObject({
-			changed: 1,
-			malformed: 0,
-		});
-		expect(await rows(t, "shadows")).toHaveLength(1);
-		expect(await rows(t, "structuralShadowReferences")).toHaveLength(2);
-
-		expect(await backfillPending()).toMatchObject({ changed: 0 });
-		expect(await backfillStructural()).toMatchObject({ changed: 0 });
-		expect(await auditPending()).toMatchObject({
-			valid: 1,
-			missing: 0,
-			mismatched: 0,
-			malformed: 0,
-		});
-		expect(await auditStructural()).toMatchObject({
-			valid: 2,
-			missing: 0,
-			mismatched: 0,
-			malformed: 0,
-		});
-		const [shadow] = await rows(t, "shadows");
-		if (!shadow) throw new Error("Expected a Shadow row.");
-		await t.run((ctx) => ctx.db.patch(shadow._id, { kind: "VERB" }));
-		expect(await auditPending()).toMatchObject({ valid: 0, mismatched: 1 });
-		expect(await auditStructural()).toMatchObject({
-			valid: 0,
-			mismatched: 2,
-		});
-	});
-
-	test("the structural audit counts unparseable Knowledge as malformed and lets a DB error propagate", async () => {
-		const t = createTestConvex();
-		await replaceKnowledge(t, "reading-source", structuralKnowledge());
-		const args = { paginationOpts: { cursor: null, numItems: 50 } };
-		const audit = registeredHandler(auditStructuralShadowReferencesPage);
-		const databaseFailure = new Error("Database unavailable.");
-		await expect(
-			t.run((ctx) =>
-				audit(
-					{
-						...ctx,
-						db: new Proxy(ctx.db, {
-							get(target, key) {
-								if (key === "get") {
-									return () =>
-										Promise.reject(databaseFailure);
-								}
-								const member = Reflect.get(target, key);
-								return typeof member === "function"
-									? member.bind(target)
-									: member;
-							},
-						}),
-					},
-					args,
-				),
-			),
-		).rejects.toBe(databaseFailure);
-
-		await t.run(async (ctx) => {
-			const [knowledge] = await ctx.db
-				.query("accumulatedKnowledge")
-				.collect();
-			if (!knowledge) throw new Error("Expected stored Knowledge.");
-			await ctx.db.patch(knowledge._id, {
-				knowledge: shadowTree({ family: "Lexeme" }),
-			});
-		});
-		expect(
-			await t.query(
-				internal.shadows.auditStructuralShadowReferencesPage,
-				args,
-			),
-		).toMatchObject({ valid: 0, malformed: 2 });
-	});
-
+describe("Shadow presentation", () => {
 	test("a Reading Note skips a malformed structural Shadow, keeps the rest, and logs the skip once", async () => {
 		const t = createTestConvex();
 		await replaceKnowledge(
 			t,
 			"reading-source",
-			shadowTree(nounShadow, verbShadow),
+			shadowBreakdown(nounShadow, verbShadow),
 		);
 		const { readingId, malformedShadowId } = await t.run(async (ctx) => {
 			const readingId = await insertSourceReading(ctx);
@@ -243,7 +90,7 @@ describe("Shadow backfills and presentation", () => {
 		await replaceKnowledge(
 			t,
 			"reading-source",
-			shadowTree(nounShadow, nounShadow),
+			shadowBreakdown(nounShadow, nounShadow),
 		);
 		const shadowId = await t.run(async (ctx) => {
 			await insertSourceReading(ctx);
@@ -341,7 +188,7 @@ describe("Shadow backfills and presentation", () => {
 				entry: {
 					reading: gehenReading,
 					attestedTranslations: [],
-					attestations: [],
+					attestationLinks: [],
 					notes: "",
 				},
 			}),

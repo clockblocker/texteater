@@ -42,7 +42,7 @@ function WorkspaceCard({
 	onCloseAllSheets,
 }: {
 	canCloseAllSheets: boolean;
-	onCloseAllSheets(): void;
+	onCloseAllSheets: () => void;
 }) {
 	return (
 		<Card>
@@ -152,9 +152,9 @@ function DemoDataCard({
 	isClearingSharedData: boolean;
 	isClearingVisitorData: boolean;
 	isStrippingScrollAnalysis: boolean;
-	handleClearVisitorData(): Promise<void>;
-	handleStripScrollAnalysis(): Promise<void>;
-	handleClearSharedData(): Promise<void>;
+	handleClearVisitorData: () => Promise<void>;
+	handleStripScrollAnalysis: () => Promise<void>;
+	handleClearSharedData: () => Promise<void>;
 }) {
 	return (
 		<Card>

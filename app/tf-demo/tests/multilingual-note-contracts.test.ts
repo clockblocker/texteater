@@ -1,3 +1,7 @@
+// Convex marks its runtime JSON getter internal and omits it from declarations.
+const validatorToJson = (value: unknown): unknown =>
+	(value as { readonly json: unknown }).json;
+
 import { expect, test } from "bun:test";
 import { readingKnowledgeValidator } from "../convex/modules/notes/readingKnowledgeValidator";
 
@@ -6,7 +10,9 @@ test("Reading Note exposes typed Hebrew paradigm forms", () => {
 		"optional",
 	);
 	expect(
-		JSON.stringify(readingKnowledgeValidator.fields.hebrewParadigm.json),
+		JSON.stringify(
+			validatorToJson(readingKnowledgeValidator.fields.hebrewParadigm),
+		),
 	).toContain('"forms"');
 });
 
@@ -19,21 +25,21 @@ import {
 import { canonicalOccurrenceValidator } from "../convex/modules/notes/resolutionNote";
 
 test("canonical navigation accepts all stored dictionary languages", () => {
-	expect(canonicalOccurrenceValidator.fields.surfaceLanguage.json).toEqual(
-		languageValidator.json,
-	);
+	expect(
+		validatorToJson(canonicalOccurrenceValidator.fields.surfaceLanguage),
+	).toEqual(validatorToJson(languageValidator));
 });
 
 test("layout routes and both stored layout scopes use registered target languages", () => {
-	expect(readingBlockRouteValidator.fields.targetLanguage.json).toEqual(
-		grammaticalLanguageValidator.json,
-	);
+	expect(
+		validatorToJson(readingBlockRouteValidator.fields.targetLanguage),
+	).toEqual(validatorToJson(grammaticalLanguageValidator));
 	for (const table of [
 		visitorTables.readingLanguageLayouts,
 		visitorTables.readingFamilyKindLayouts,
 	]) {
-		expect(table.validator.fields.targetLanguage.json).toEqual(
-			grammaticalLanguageValidator.json,
+		expect(validatorToJson(table.validator.fields.targetLanguage)).toEqual(
+			validatorToJson(grammaticalLanguageValidator),
 		);
 	}
 });

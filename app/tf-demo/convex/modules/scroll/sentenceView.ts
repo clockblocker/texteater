@@ -41,7 +41,7 @@ const sentenceSegmentViewValidator = storedSegmentValidator.extend({
 export const sentenceViewValidator = v.object({
 	sentenceId: v.id("sentences"),
 	position: v.number(),
-	paragraph: v.optional(v.number()),
+	paragraph: v.number(),
 	/** The Detected Language, absent when undetermined. */
 	language: v.optional(detectedLanguageValidator),
 	/** A Plain Sentence: shown, with no Segments to click. */
@@ -106,9 +106,7 @@ export async function projectSentenceView(
 	return {
 		sentenceId: sentence._id,
 		position: sentence.position,
-		...(sentence.paragraph === undefined
-			? {}
-			: { paragraph: sentence.paragraph }),
+		paragraph: sentence.paragraph,
 		...(sentence.language === undefined
 			? {}
 			: { language: sentence.language }),

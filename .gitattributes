@@ -1,5 +1,9 @@
 # Files agents don't author. `bun run check:file-tokens`, the pre-commit
 # hook, skips them, and GitHub collapses their diffs.
+#
+# Gold records (`battery/dumcorpus/records/**/*.json`) are hand-written data,
+# so they aren't listed here: the check skips them by path instead
+# (`exemptPaths` in `tooling/lib/file-tokens.ts`), and their diffs stay open.
 
 # Lockfiles.
 *.lock linguist-generated
@@ -15,6 +19,9 @@ battery/dumling/README.md linguist-generated
 # Lab and eval run output. A research report is written by hand.
 battery/dumgen/evidence/** linguist-generated
 battery/dumgen/evidence/**/research-report.md -linguist-generated
+
+# Golden requests, written by their tests (`DUMGEN_WRITE_GOLDEN=1`).
+battery/dumgen/tests/golden-requests/fixtures/** linguist-generated
 
 # Installed skills and third-party reference material.
 .agents/skills/** linguist-vendored

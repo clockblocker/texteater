@@ -1,6 +1,6 @@
 import { beforeAll, expect, test } from "bun:test";
 import type * as Dumrel from "dumrel/types";
-import { berlinLemma, houseReading, prefixLemma } from "./fixtures.js";
+import { berlinLemma, houseReading } from "./fixtures.js";
 import { buildPublishedPackage, distFile } from "./published-build.js";
 
 let published: typeof import("../src/index.ts");
@@ -12,11 +12,17 @@ beforeAll(async () => {
 	schemas = await import(distFile("schemas.js"));
 }, 60_000);
 
-const nounShadow = {
+const rootShadow = {
 	language: "de",
-	family: "Lexeme",
-	kind: "NOUN",
-	canonicalForm: "Haus",
+	family: "Morpheme",
+	kind: "Root",
+	canonicalForm: "haus",
+} as const;
+const zeroEnding = {
+	language: "de",
+	family: "Morpheme",
+	kind: "Ending",
+	canonicalForm: "∅",
 } as const;
 
 test("published schemas and runtime agree on normalized, structured Knowledge", () => {
@@ -24,21 +30,11 @@ test("published schemas and runtime agree on normalized, structured Knowledge", 
 		transcription: " haʊs ",
 		definition: " Geba\u0308ude ",
 		translations: { en: [" house "] },
-		morphologicalTree: {
-			root: {
-				nodeKind: "structure",
-				children: [
-					{
-						nodeKind: "morphemeReading",
-						reading: {
-							unitKind: "Reading",
-							lemma: prefixLemma,
-							emojiDescription: "🧩",
-						},
-					},
-					{ nodeKind: "unitShadow", unitShadow: nounShadow },
-				],
-			},
+		breakdown: {
+			morphemes: [
+				{ letters: "haus", target: rootShadow },
+				{ letters: "", target: zeroEnding },
+			],
 		},
 		semanticRelations: { nearSynonym: [berlinLemma] },
 	} satisfies Dumrel.ReadingKnowledge;
@@ -60,14 +56,7 @@ test("published schemas and runtime agree on normalized, structured Knowledge", 
 test.each([
 	[
 		"a primitive Reading",
-		{
-			morphologicalTree: {
-				root: {
-					nodeKind: "structure",
-					children: [{ nodeKind: "morphemeReading", reading: 123 }],
-				},
-			},
-		},
+		{ breakdown: { morphemes: [{ letters: "haus", target: 123 }] } },
 	],
 ])("published schemas and runtime reject %s", (_, knowledge) => {
 	expect(schemas.readingKnowledgeSchema.safeParse(knowledge).success).toBe(

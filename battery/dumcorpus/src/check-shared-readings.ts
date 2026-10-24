@@ -1,9 +1,13 @@
 import { readingIdentityKey } from "dumling";
-import type { SpecRecordId, SpecTarget } from "./corpus-types.js";
+import type {
+	BreakdownRecord,
+	SpecRecordId,
+	SpecTarget,
+} from "./corpus-types.js";
 import type { SpecIssue } from "./issues.js";
 import { sameValue } from "./same-value.js";
 
-/** A loaded record whose targets may carry Knowledge: a Spec or Breakdown Record. */
+/** A loaded record whose targets may carry Knowledge. */
 type RecordWithTargets = {
 	readonly id: SpecRecordId;
 	readonly targets: readonly SpecTarget[];
@@ -17,8 +21,9 @@ type Occurrence = {
 
 /**
  * The shared-Reading guard (#884). A Reading that appears in several records,
- * matched by Dumling's `readingIdentityKey`, carries one Knowledge value and
- * one coverage, so its gold is scored once. Returns an issue at every
+ * matched by Dumling's `readingIdentityKey`, carries one Knowledge value, one
+ * Licence per Variation Dimension and one coverage, so its gold is scored
+ * once. Returns an issue at every
  * occurrence of a Reading whose occurrences disagree. A target that holds no
  * Knowledge yet takes no part.
  */
@@ -38,6 +43,7 @@ export function sharedReadingIssues(
 					target: index,
 					value: {
 						knowledge: target.knowledge,
+						paradigm: target.paradigm ?? null,
 						coverage: target.coverage ?? null,
 					},
 				},
@@ -64,5 +70,55 @@ export function sharedReadingIssues(
 			});
 		}
 	}
+	return issues;
+}
+
+/**
+ * The Breakdown guard (ADR 0050). A Reading has one Breakdown Record at most,
+ * matched by Dumling's `readingIdentityKey`, and a Spec Record target whose
+ * Reading has one holds the same Breakdown and Source where it holds them at
+ * all, so the gold is scored once.
+ */
+export function breakdownReadingIssues(
+	records: readonly RecordWithTargets[],
+	breakdowns: readonly BreakdownRecord[],
+): SpecIssue[] {
+	const issues: SpecIssue[] = [];
+	const byReading = new Map<string, BreakdownRecord>();
+	for (const breakdown of breakdowns) {
+		const key = readingIdentityKey(breakdown.reading);
+		const first = byReading.get(key);
+		if (first)
+			issues.push({
+				record: breakdown.id,
+				check: "SharedReading",
+				layer: "Segmentation",
+				path: "reading",
+				message: `${first.id} already breaks this Reading down; a Reading has one Breakdown Record`,
+			});
+		else byReading.set(key, breakdown);
+	}
+	for (const record of records)
+		for (const [index, target] of record.targets.entries()) {
+			if (target.reading === undefined || target.knowledge === undefined)
+				continue;
+			const breakdown = byReading.get(readingIdentityKey(target.reading));
+			if (!breakdown) continue;
+			for (const aspect of ["breakdown", "source"] as const) {
+				const held = target.knowledge[aspect];
+				if (
+					held === undefined ||
+					sameValue(held, breakdown.knowledge[aspect])
+				)
+					continue;
+				issues.push({
+					record: record.id,
+					check: "SharedReading",
+					layer: "Knowledge",
+					path: `targets.${index}.reading.knowledge.${aspect}`,
+					message: `This Reading's ${aspect} differs from its Breakdown Record ${breakdown.id}`,
+				});
+			}
+		}
 	return issues;
 }

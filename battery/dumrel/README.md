@@ -44,40 +44,76 @@ complement removes it from its Slot. Dumrel derives the inverse `governedBy`
 edges internally from every Preposition complement over a dictionary
 inventory, so a preposition lists its Governors without storing them.
 
-`participleSource` records the VERB Lemma an adjectival participle Reading's
-form comes from and whether the Reading's meaning is a sense of it
-(`gekocht` stores `kochen`, Verbal; `gelassen` 😌 stores `lassen`, Drifted).
-`projectParticipleSources` derives the inverse `participialAdjective` edges
-from the verb's Lemma for Verbal Readings, so a verb lists its participial
-adjectives without storing them.
+`breakdown` records a Reading's parts (system ADR 0050, ADR 0051): its
+`constituents`, the immediate parts one level down (`Kohle + Kraftwerk`,
+`[[Faden|den Faden]] + [[verlieren]]`), and its `morphemes`, every Morpheme
+flat (`ent · spann · ung · ∅`). Each piece pairs the letters it shows with a
+link to a Unit Shadow or a Lemma, or no link for filler, and the letters
+spell the Reading's Canonical Form back. Each half changes on its own.
 
-`plural` records a German NOUN Reading's plural forms (`Pizzen`, `Pizzas`),
-or `NoPlural` or `PluralOnly`. `Contribute` adds the forms it lacks, and a
-marker is atomic. Dumrel derives a form's Plural Pattern internally from the
-singular (`Mutter`, `Muttern` → `En`); patterns are never stored.
+`source` records the immediate base of a formation whose letters can't be cut
+into pieces: a conversion (`Lauf` ← `laufen`), an acronym, a clipping or a
+participle. A participle's Source also records whether the Reading's meaning
+is a sense of its verb (`gekocht` stores `kochen`, Verbal; `gelassen` 😌
+stores `lassen`, Drifted). `projectSources` derives the inverse
+`participialAdjective` edges from the verb's Lemma for Verbal Readings, so a
+verb lists its participial adjectives without storing them.
 
-`conjugationClass` records how a German VERB Reading forms its Präteritum: the
-Strong, Weak and Mixed classes its Präteritum forms attest. `Contribute` adds
-the classes it lacks, so `senden` can hold Weak and Mixed.
-`germanConjugationClass` derives a class from an infinitive and a Präteritum
-form, ignoring `sich` and a separable particle (`aufstehen`, `stand auf` →
-`Strong`; `bringen`, `brachte` → `Mixed`).
+A Lemma's inflectional alternatives are not Reading Knowledge. They are its
+Lemma Paradigm (system ADR 0048): per Variation Dimension, its Paradigm
+Variants, each one form or one marker, and the Licence of each Reading that
+states one. A German NOUN has `plural` (`Pizzen`, `Pizzas`, or `NoPlural` or
+`PluralOnly`); a German VERB has `preterite`, `present1`, `present2`,
+`present3`, `pastParticiple` and `subjunctivePast`, each form cited as a
+dictionary cites it (`stand auf`, `fährt ab`, `abgefahren`; system ADR 0038).
+A Reading with no Licence in a dimension is Unstated and takes every
+variant, so `Bank` 🪑 licenses `Bänke` and 🏦 `Banken`, while `melken` ✋ takes
+`molk` and `melkte`.
 
-`preterite` records the third person singular Präteritum forms the classes
-are judged on, as a dictionary cites them: one word, or a separable verb's
-finite word and particle (`stand auf`), never with `sich`. `Contribute` adds
-the forms it lacks. The two aspects are checked apart: a later occurrence
-never changes a stored aspect, so forms kept after the classes were stored
-may attest a class the Reading lacks, and Dumrel keeps both.
+```ts
+import {
+	applyParadigmChanges,
+	licenceGroups,
+	paradigmChangesFor,
+} from "dumrel";
+import { readingIdentityKey } from "dumling";
 
-Three more aspects keep the rest of a German VERB Reading's principal parts,
-spelled the same way: `presentSingular`, the Präsens forms of each singular
-person (`fahre`, `fährst`, `fährt`; `fährt ab`), `pastParticiple`, the
-Partizip II as one word (`abgefahren`, `trompetet`), and `subjunctivePast`,
-the third person singular Konjunktiv II (`führe`, `brächte`). `Contribute`
-adds the forms an aspect, or a Präsens person, lacks. Dumrel checks only the
-endings it can be sure of: a second person Präsens ends in -t, a Partizip II
-in -t or -n and a Konjunktiv II in -e.
+const changed = applyParadigmChanges({
+	lemma: bank,
+	readings: [bench, money],
+	paradigm: { dimensions: {} },
+	changes: [
+		...paradigmChangesFor({
+			reading: bench,
+			dimension: "plural",
+			values: ["Bänke"],
+			provenance: "Produced",
+		}),
+		...paradigmChangesFor({
+			reading: money,
+			dimension: "plural",
+			values: ["Banken"],
+			provenance: "Produced",
+		}),
+	],
+});
+
+if (changed.success) {
+	// Two Licence Groups, so two inflection tables.
+	licenceGroups(changed.value, [bench, money].map(readingIdentityKey));
+}
+```
+
+A variant's id is the content key of its value, so two writers that add
+`Banken` add one variant. Paradigm Changes Contribute and Correct variants,
+License and Unlicense them for a Reading, and Retract them; after each list
+of changes, a variant no Reading licenses is removed. `licensed`, `isFree`
+and `licenceGroups` derive what a Reading takes, whether a dimension is Free
+or Conditioned, and the Readings that share one table; nothing derived is
+stored. `paradigmDimensions` is the Paradigm Policy. Code derives each
+plural form's Plural Pattern (`germanPluralPattern`) and each Präteritum
+form's Conjugation Class (`germanConjugationClass`, `aufstehen`, `stand auf` →
+`Strong`); patterns and classes are never stored.
 
 Three atomic aspects type a multiword or formulaic Reading without splitting
 its Lemma (ADR 0039). `locutionType` marks a Locution Reading as an `Idiom`

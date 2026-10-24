@@ -5,8 +5,9 @@ import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import { grammarCases } from "../../lab/evaluation/resolve-grammar/cases.js";
 import { goldWritten } from "../../lab/evaluation/resolve-grammar/oracle.js";
-import { createDumgen } from "../../src/create-dumgen.js";
 import { InvalidModelOutput } from "../../src/errors.js";
+import { operations } from "../../src/operations.js";
+import { liveOver } from "../live-over.js";
 import { picked } from "./support.js";
 
 const seed = 952;
@@ -46,7 +47,7 @@ test("no combination of valid answers makes an invalid Attestation", async () =>
 	const tally: Record<string, number> = {};
 	const failures: string[] = [];
 	for (const goldCase of cases) {
-		const dumgen = createDumgen({
+		const live = liveOver({
 			jev: async (request) => ({
 				model: request.model,
 				answers: Object.fromEntries(
@@ -62,13 +63,15 @@ test("no combination of valid answers makes an invalid Attestation", async () =>
 			}),
 		});
 		const exit = await Effect.runPromiseExit(
-			dumgen.resolve.grammar({
-				language: "de",
-				sentence: goldCase.sentence,
-				unit: goldCase.unit,
-				neighbours: {},
-				lemmaCandidates: [],
-			}),
+			operations.resolve
+				.grammar({
+					language: "de",
+					sentence: goldCase.sentence,
+					unit: goldCase.unit,
+					neighbours: {},
+					lemmaCandidates: [],
+				})
+				.pipe(Effect.provide(live)),
 		);
 		const outcome = Exit.isSuccess(exit)
 			? exit.value._tag

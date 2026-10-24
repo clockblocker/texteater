@@ -21,7 +21,7 @@ test("renders every global setting and reflects disabled leaves", () => {
 		}),
 	);
 
-	expect(markup.match(/type="checkbox"/g)).toHaveLength(12);
+	expect(markup.match(/type="checkbox"/g)).toHaveLength(11);
 	expect(markup).toContain("English translations");
 	expect(markup).toContain("Russian translations");
 	expect(markup).toContain("near synonym");

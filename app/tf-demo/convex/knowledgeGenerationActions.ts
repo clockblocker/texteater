@@ -1,16 +1,17 @@
 "use node";
 
 import { v } from "convex/values";
-import { createDumgen, createTypeSafeAsk } from "dumgen";
+import type { Jev, Luna } from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as Cause from "effect/Cause";
+import * as Data from "effect/Data";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
-import { deploymentLuna } from "../server/deployment-luna";
+import * as Option from "effect/Option";
 import { dumgenKnowledgeProducer } from "../server/dumgenKnowledgeProducer";
 import type { generationRequestFor } from "../server/generatedKnowledgeRequest";
 import {
-	dumgenTracing,
+	dumgenTraced,
 	type InspectionCapture,
 	inspected,
 	inspectionStep,
@@ -22,14 +23,16 @@ import type {
 	KnowledgeProducer,
 	KnowledgeProduction,
 } from "../server/knowledgeProduction";
+import { asksSource } from "../server/knowledgeSource";
+import { logged } from "../server/logging";
 import { parseReading } from "../server/operationalParsing";
-import { asksParticipleSource } from "../server/participleSource";
 import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import { isSupportedTargetLanguage } from "../shared/supported-target-language";
 import { internal } from "./_generated/api";
 import { type ActionCtx, env, internalAction } from "./_generated/server";
 import type { GenerationInput } from "./knowledgeGeneration";
+import { deploymentDumgen, modelTransports } from "./model/deploymentDumgen";
 import {
 	generatedKnowledgeAllowedForPublication,
 	type RelationPublicationFingerprints,
@@ -60,21 +63,17 @@ const BASE_TEXT_ASPECTS = new Set([
  * Knowledge on once the user rules on shipping it (#883 point 10); elsewhere,
  * and without a key, a run fails with the safe message and calls no model.
  */
-export function productionKnowledgeProducer(): KnowledgeProducer {
-	return dumgenKnowledgeProducer((tracing) => {
+export function productionKnowledgeProducer(): KnowledgeProducer<Jev | Luna> {
+	return dumgenKnowledgeProducer(() => {
 		if (env.TF_KNOWLEDGE_PRODUCTION !== "1")
 			throw new Error(
 				"Knowledge production is off on this deployment (TF_KNOWLEDGE_PRODUCTION).",
 			);
-		if (!env.TYPESAFE_API_KEY || !env.OPENAI_API_KEY)
+		const { jev, luna } = modelTransports();
+		if (!jev || !luna)
 			throw new Error(
 				"Knowledge production needs TYPESAFE_API_KEY and OPENAI_API_KEY.",
 			);
-		return createDumgen({
-			jev: createTypeSafeAsk({ apiKey: env.TYPESAFE_API_KEY }),
-			...deploymentLuna(env),
-			...tracing,
-		});
 	});
 }
 
@@ -102,7 +101,7 @@ type RejectedRelationRun = {
 type KnowledgeRun = {
 	readonly ctx: ActionCtx;
 	readonly attemptKey: string;
-	readonly produce: KnowledgeProducer;
+	readonly produce: KnowledgeProducer<Jev | Luna>;
 	readonly inspection: InspectionCapture | undefined;
 	/** Each Dumgen operation's trace without payloads, as evidence keeps it. */
 	readonly operationTraces: string[];
@@ -115,7 +114,7 @@ type KnowledgePlan = {
 	readonly qualifiedKinds: ClaimedInput["authorization"]["qualifiedKinds"];
 	readonly request: ReturnType<typeof generationRequestFor>;
 	readonly requestedKinds: RequestedKinds;
-	readonly asksParticipleSource: boolean;
+	readonly asksSource: boolean;
 };
 
 /**
@@ -134,12 +133,32 @@ type KnowledgeRunRecord = {
 	readonly operationTraces: readonly string[];
 };
 
+/** A claimed Reading in a language Knowledge production does not cover. */
+class UnsupportedKnowledgeLanguage extends Data.TaggedError(
+	"UnsupportedKnowledgeLanguage",
+)<{ readonly message: string }> {}
+
+/** A publication `knowledgeGeneration.publish` answered Rejected. */
+class KnowledgePublicationRejected extends Data.TaggedError(
+	"KnowledgePublicationRejected",
+)<{ readonly message: string }> {}
+
+/**
+ * Every error a run's stages fail with: their own, or a Promise hop that
+ * rejected (Effect's UnknownError, carrying what was thrown). A defect is
+ * folded in as an UnknownError too, so the record describes what threw.
+ */
+type KnowledgeRunError =
+	| UnsupportedKnowledgeLanguage
+	| KnowledgePublicationRejected
+	| Cause.UnknownError;
+
 /** A stage's error or defect, with the record its failure path stores. */
 class KnowledgeRunFailure {
 	readonly _tag = "KnowledgeRunFailure";
 	readonly record: KnowledgeRunRecord;
-	readonly error: unknown;
-	constructor(record: KnowledgeRunRecord, error: unknown) {
+	readonly error: KnowledgeRunError;
+	constructor(record: KnowledgeRunRecord, error: KnowledgeRunError) {
 		this.record = record;
 		this.error = error;
 	}
@@ -151,7 +170,7 @@ class KnowledgeRunFailure {
  * nothing, and the stale-run watchdog ends it as interrupted.
  */
 function failsWith(record: KnowledgeRunRecord) {
-	return <A, E, R>(
+	return <A, E extends KnowledgeRunError, R>(
 		stage: Effect.Effect<A, E, R>,
 	): Effect.Effect<A, KnowledgeRunFailure, R> =>
 		stage.pipe(
@@ -161,19 +180,25 @@ function failsWith(record: KnowledgeRunRecord) {
 					: Effect.fail(
 							new KnowledgeRunFailure(
 								record,
-								Cause.squash(cause),
+								Option.getOrElse(
+									Cause.findErrorOption(cause),
+									() =>
+										new Cause.UnknownError(
+											Cause.squash(cause),
+										),
+								),
 							),
 						),
 			),
 		);
 }
 
-/** Promise work as an inspection step under the current span. */
+/**
+ * Promise work as an inspection step under the current span. A rejection
+ * fails with Effect's UnknownError, which carries what the work threw.
+ */
 function hop<T>(name: string, input: unknown, work: () => Promise<T>) {
-	// The rejection passes through untouched; failsWith folds it into a
-	// KnowledgeRunFailure.
-	// @effect-diagnostics-next-line unknownInEffectCatch:off
-	return Effect.tryPromise({ try: work, catch: (error) => error }).pipe(
+	return Effect.tryPromise(work).pipe(
 		Effect.withSpan(name, inspectionStep(OWNER, input)),
 	);
 }
@@ -181,15 +206,10 @@ function hop<T>(name: string, input: unknown, work: () => Promise<T>) {
 function planRun(input: ClaimedInput) {
 	return Effect.gen(function* () {
 		if (!isSupportedTargetLanguage(input.reading.lemma.language))
-			return yield* Effect.fail(
-				// failsWith folds this into a KnowledgeRunFailure.
-				// @effect-diagnostics-next-line globalErrorInEffectFailure:off
-				new Error("Unsupported Knowledge language."),
-			);
-		const reading = parseReading(
-			input.reading,
-			input.reading.lemma.language,
-		);
+			return yield* new UnsupportedKnowledgeLanguage({
+				message: "Unsupported Knowledge language.",
+			});
+		const reading = parseReading(input.reading);
 		const { authorization } = input;
 		const qualifiedKinds = authorization.rollbackStopped
 			? []
@@ -207,7 +227,7 @@ function planRun(input: ClaimedInput) {
 			requestedKinds: requestedRelationKinds(
 				"semanticRelations" in request ? request : {},
 			),
-			asksParticipleSource: asksParticipleSource(reading, {
+			asksSource: asksSource(reading, {
 				topUpOnly: input.topUpOnly,
 				knowledge: input.existingKnowledge,
 			}),
@@ -264,9 +284,11 @@ function publishKnowledge(
 	).pipe(
 		Effect.flatMap((result) =>
 			result.status === "Rejected"
-				? // failsWith folds this into a KnowledgeRunFailure.
-					// @effect-diagnostics-next-line globalErrorInEffectFailure:off
-					Effect.fail(new Error(result.message))
+				? Effect.fail(
+						new KnowledgePublicationRejected({
+							message: result.message,
+						}),
+					)
 				: Effect.succeed(result.status),
 		),
 	);
@@ -304,17 +326,14 @@ function publishContribution(
 			Effect.catchCause((cause) =>
 				Cause.hasInterruptsOnly(cause)
 					? Effect.interrupt
-					: Effect.sync(() =>
-							console.error(
-								JSON.stringify({
-									event: "KnowledgeContributionPublicationFailed",
-									attemptKey: run.attemptKey,
-									runNumber: plan.input.runNumber,
-									...internalErrorDescriptor(
-										Cause.squash(cause),
-									),
-								}),
-							),
+					: Effect.logError(
+							"KnowledgeContributionPublicationFailed",
+						).pipe(
+							Effect.annotateLogs({
+								attemptKey: run.attemptKey,
+								runNumber: plan.input.runNumber,
+								...internalErrorDescriptor(Cause.squash(cause)),
+							}),
 						),
 			),
 		);
@@ -342,25 +361,23 @@ function produceKnowledge(run: KnowledgeRun, plan: KnowledgePlan) {
 							knowledge: input.existingKnowledge,
 							checkedRelationKinds: input.checkedRelationKinds,
 						}),
-						...(plan.asksParticipleSource
-							? { participleSource: null }
-							: {}),
+						...(plan.asksSource ? { source: null } : {}),
 					},
 				},
 				{
 					// Dumgen waits for each contribution's publication.
 					onContribution: (changes) =>
 						publishContribution(run, plan, changes),
-					// DEV inspection renders the calls with their payloads; the
-					// run's evidence keeps every trace without them.
-					...dumgenTracing(run.inspection, (trace) =>
-						run.operationTraces.push(
-							JSON.stringify(withoutPayloads(trace)),
-						),
-					),
 				},
 			)
 			.pipe(
+				// DEV inspection renders the calls with their payloads; the
+				// run's evidence keeps every trace without them.
+				dumgenTraced(run.inspection, (trace) =>
+					run.operationTraces.push(
+						JSON.stringify(withoutPayloads(trace)),
+					),
+				),
 				Effect.withSpan(
 					"Produce Knowledge",
 					inspectionStep(OWNER, { attemptKey: run.attemptKey }),
@@ -428,37 +445,37 @@ function publishGenerated(
 		);
 	return Effect.gen(function* () {
 		const services = yield* Effect.context<never>();
-		// The rethrown squash passes through; failsWith folds it into a
-		// KnowledgeRunFailure.
-		// @effect-diagnostics-next-line unknownInEffectCatch:off
-		yield* Effect.tryPromise({
-			try: (signal) =>
-				publishInRelationChunks(
-					generatedKnowledgeAllowedForPublication(
-						generated,
-						plan.qualifiedKinds,
-					),
-					async ({ final, proposed, ...chunk }) => {
-						const exit = await Effect.runPromiseExitWith(services)(
-							publishKnowledge(
-								run,
-								plan,
-								final,
-								chunk,
-								final ? generated.failures : [],
-								{
-									requestedKinds: plan.requestedKinds,
-									proposed: [...proposed],
-								},
-							),
-							{ signal },
-						);
-						if (Exit.isSuccess(exit)) return exit.value;
-						throw Cause.squash(exit.cause);
-					},
+		// A chunk that fails stops the chunking, and the run fails with its
+		// cause as the chunk's Effect failed.
+		const stopped: { cause?: Cause.Cause<KnowledgeRunError> } = {};
+		yield* Effect.tryPromise((signal) =>
+			publishInRelationChunks(
+				generatedKnowledgeAllowedForPublication(
+					generated,
+					plan.qualifiedKinds,
 				),
-			catch: (error) => error,
-		});
+				async ({ final, proposed, ...chunk }) => {
+					const exit = await Effect.runPromiseExitWith(services)(
+						publishKnowledge(
+							run,
+							plan,
+							final,
+							chunk,
+							final ? generated.failures : [],
+							{
+								requestedKinds: plan.requestedKinds,
+								proposed: [...proposed],
+							},
+						),
+						{ signal },
+					);
+					if (Exit.isSuccess(exit)) return exit.value;
+					stopped.cause = exit.cause;
+					return "Failed";
+				},
+			),
+		);
+		if (stopped.cause) return yield* Effect.failCause(stopped.cause);
 	});
 }
 
@@ -479,9 +496,8 @@ function recordFailure(
 			record.request,
 			error,
 		);
-		console.error(
-			JSON.stringify({
-				event: "KnowledgeGenerationFailed",
+		yield* Effect.logError("KnowledgeGenerationFailed").pipe(
+			Effect.annotateLogs({
 				attemptKey,
 				runNumber: record.runNumber,
 				phase: record.phase,
@@ -508,17 +524,14 @@ function recordFailure(
 			}),
 		).pipe(
 			Effect.catch((recordingError) =>
-				Effect.sync(() =>
-					console.error(
-						JSON.stringify({
-							event: "KnowledgeFailureRecordingFailed",
-							attemptKey,
-							runNumber: record.runNumber,
-							phase: record.phase,
-							recordingFailure:
-								internalErrorDescriptor(recordingError),
-						}),
-					),
+				Effect.logError("KnowledgeFailureRecordingFailed").pipe(
+					Effect.annotateLogs({
+						attemptKey,
+						runNumber: record.runNumber,
+						phase: record.phase,
+						recordingFailure:
+							internalErrorDescriptor(recordingError),
+					}),
 				),
 			),
 		);
@@ -589,7 +602,7 @@ function knowledgeRun(run: KnowledgeRun) {
 export async function generateKnowledge(
 	ctx: ActionCtx,
 	{ attemptKey, inspect }: { attemptKey: string; inspect?: boolean },
-	produce: KnowledgeProducer,
+	produce: KnowledgeProducer<Jev | Luna>,
 ): Promise<null> {
 	const inspection = inspectionFor(
 		ctx,
@@ -613,6 +626,9 @@ export async function generateKnowledge(
 						...inspectionStep(OWNER, { attemptKey }),
 						root: true,
 					}),
+					logged,
+					// The action's one Dumgen, built when its run starts.
+					Effect.provide(deploymentDumgen()),
 				),
 				inspection,
 			),

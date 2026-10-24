@@ -26,6 +26,7 @@ type DefinitionSentence = Extract<
 const SENTENCE: DefinitionSentence = {
 	sentenceId: "sentences-definition" as Id<"sentences">,
 	position: 0,
+	paragraph: 0,
 	language: "de",
 	stitchedText: "Ein Haus ist ein Haus.",
 	segments: [

@@ -1,0 +1,22 @@
+// Generated concrete schemas. Run bun run generate.
+import type { Assert } from "common-utils";
+import type { z } from "zod";
+import { DeEndingMorphemeFeatureBagsSchema as featureBags } from "../../../../schemas/concrete-language/de/morpheme/ending.js";
+import { deRoutePolicy as routePolicy } from "../../../../schemas/concrete-language/de/route-policy.js";
+import { buildUnitSchemas } from "../../../../schemas/units.js";
+import type { IsUniversalFeatureBags } from "../../../../schemas/universal/features/catalog.js";
+
+// The route's Feature Bags draw only on the Feature Pool (system ADR 0032).
+type _InFeaturePool = Assert<
+	IsUniversalFeatureBags<z.infer<typeof featureBags>>
+>;
+const schemas = buildUnitSchemas(
+	routePolicy,
+	{ language: "de", family: "Morpheme", kind: "Ending" },
+	featureBags.shape.core,
+	undefined,
+);
+export const lemmaSchema = schemas.Lemma;
+export const surfaceSchema = schemas.Surface;
+export const readingSchema = schemas.Reading;
+export const attestationSchema = schemas.Attestation;

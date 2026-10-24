@@ -10,6 +10,7 @@ import {
 } from "./helpers";
 
 const note = { attestedTranslations: [], attestations: [], notes: "" };
+const entryNote = { attestedTranslations: [], attestationLinks: [], notes: "" };
 
 /**
  * Each workflow parses its typed request whole before planning, so a
@@ -22,7 +23,10 @@ describe("malformed workflow requests", () => {
 		const { dict } = getBootedUpDumdict("en", enSerializedNotes);
 		expect(() =>
 			dict.plan.addNewNote({
-				draft: { ...englishSwimDraft, note: { ...note, notes: 42 } },
+				draft: {
+					...englishSwimDraft,
+					note: { ...entryNote, notes: 42 },
+				},
 			} as never),
 		).toThrow(ParsingError);
 	});
@@ -50,7 +54,7 @@ describe("malformed workflow requests", () => {
 			dict.plan.addNewNote({
 				draft: {
 					reading: englishWalkReading,
-					note: { ...note, attestedTranslations: "walk" },
+					note: { ...entryNote, attestedTranslations: "walk" },
 				},
 			} as never),
 		).toThrow(ParsingError);
@@ -68,7 +72,7 @@ describe("malformed workflow requests", () => {
 		const { dict } = getBootedUpDumdict("en", [
 			...enSerializedNotes,
 			{
-				schemaVersion: 1,
+				schemaVersion: 2,
 				lemmaRecord: { lemma: angst },
 				readingEntries: [],
 				ownedSurfaceEntries: [],
@@ -112,7 +116,7 @@ describe("malformed workflow requests", () => {
 			dict.plan.ensureReadingEntry({
 				entry: {
 					reading: englishSwimReading,
-					...note,
+					...entryNote,
 					knowledge: { definition: 7 },
 				},
 			} as never),

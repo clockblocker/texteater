@@ -436,13 +436,18 @@ const RELATED_ROUTES = {
 	Pick<Dumling.Lemma<"de">, "family" | "kind">
 >;
 
+/** The relation routes by any canonical form: a form the study lacks has none. */
+const relatedRoutes: Readonly<
+	Record<string, (typeof RELATED_ROUTES)[keyof typeof RELATED_ROUTES]>
+> = RELATED_ROUTES;
+
 /** Lexeme and Locution share one relation space (ADR 0039). */
 function relationSpace(family: Dumling.Family<"de">) {
 	return family === "Locution" ? "Lexeme" : family;
 }
 
 function relatedRoute(canonicalForm: string, source: Dumling.Reading<"de">) {
-	const route = RELATED_ROUTES[canonicalForm as keyof typeof RELATED_ROUTES];
+	const route = relatedRoutes[canonicalForm];
 	if (!route)
 		throw new Error(
 			`Missing Notes Study relation identity ${canonicalForm}.`,
@@ -470,6 +475,7 @@ function relatedUnitFor(
 		},
 		emojiDescription: "🔗",
 	});
+	const context: NoteStudyLine = [token, "."];
 	const fixture = {
 		presentationKey: `related-${encodeURIComponent(token.text)}`,
 		...route,
@@ -477,7 +483,7 @@ function relatedUnitFor(
 		title: [token],
 		titleText: token.text,
 		summary: token.description ?? "Relation counterpart",
-		contexts: [[token, "."]],
+		contexts: [context],
 		definition:
 			token.description ?? `Relation counterpart for ${token.text}.`,
 		translations: [token.text, token.text],
@@ -491,7 +497,7 @@ function relatedUnitFor(
 		presentationSurfaces: [],
 		knowledge: { definition: fixture.definition },
 		personalAnnotation: "",
-		occurrences: [occurrenceFor(fixture, reading, fixture.contexts[0], 0)],
+		occurrences: [occurrenceFor(fixture, reading, context, 0)],
 	};
 }
 
@@ -607,7 +613,7 @@ export const NOTE_STUDY_DATABASE_BY_URL = new Map(
 );
 
 /** Fixture evidence intentionally leaves unrepresented inflection unknown. */
-function fixtureSurface(
+export function fixtureSurface(
 	lemma: Dumling.Lemma<"de">,
 	text = lemma.canonicalForm,
 ): Dumling.Surface<"de"> {

@@ -232,10 +232,12 @@ function slotProblem(slot: ProposedSlot): string | undefined {
 				: undefined;
 		if (form === undefined || !governable.has(form))
 			return `${form} is no preposition a governor selects`;
+		if (typeof governedCase !== "string")
+			return `${form} names no case it governs`;
 		if (
 			!germanAdpositionAllows(
 				{ family: "Lexeme", canonicalForm: form },
-				String(governedCase),
+				governedCase,
 			)
 		)
 			return `${form} governs no ${governedCase}`;
@@ -407,7 +409,7 @@ export const produceValency = (
 		);
 		const { kept, dropped } = validFrame(context.reading, proposed);
 		if (dropped.length > 0)
-			context.scope.event({
+			context.log.event({
 				name: "DroppedValencySlots",
 				data: { dropped },
 			});
@@ -427,6 +429,6 @@ export const produceValency = (
 		const changes = checkedChanges(context, "valency", [
 			{ kind: "Contribute", aspect: "valency", value: frame },
 		]);
-		if (!Array.isArray(changes)) return yield* Effect.fail(changes);
+		if (!Array.isArray(changes)) return yield* changes;
 		return { changes, failures: attested.failures };
 	});

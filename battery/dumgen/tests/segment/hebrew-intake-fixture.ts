@@ -1,9 +1,9 @@
 import { expect } from "bun:test";
 import type { Question } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
 import type { LunaAsk } from "../../src/luna.js";
 import type { JevAsk } from "../../src/segment/jev.js";
+import { fakeDumgen } from "./../service-test-adapter.js";
 import { picked } from "./hebrew-choices.js";
 import { routeAnswers } from "./hebrew-route-fixture.js";
 
@@ -121,7 +121,7 @@ function fakeHebrewJev(lowMembership = false) {
 export async function intake(sentence: string, lowMembership = false) {
 	const jev = fakeHebrewJev(lowMembership);
 	const text = await Effect.runPromise(
-		createDumgen({ jev: jev.ask, luna: noLuna }).segment.inUnits({
+		fakeDumgen({ jev: jev.ask, luna: noLuna }).segment.inUnits({
 			language: "he",
 			paragraphs: [{ sentences: [sentence] }],
 		}),

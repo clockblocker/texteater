@@ -22,12 +22,18 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { gunzipSync, gzipSync } from "node:zlib";
 import type { JsonValue } from "@typesafe-ai/sdk";
-import { messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
 import { z } from "zod";
 import type { LunaAsk } from "../../src/luna.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 import { parseStoredJson } from "../stored-json.js";
+import {
+	type LabEffect,
+	type LabRuntime,
+	onLabRuntime,
+	outcomeOf,
+	runOn,
+} from "./lab-runtime.js";
 import type { GoldOracle } from "./resolve-grammar/models.js";
 
 /**
@@ -133,67 +139,72 @@ type AttemptModels<At> = {
 export async function goldRequests<At>(args: {
 	readonly cases: readonly { readonly id: string; readonly at: At }[];
 	readonly oracle: GoldOracle<At>;
-	readonly attempt: (at: At, models: AttemptModels<At>) => Promise<unknown>;
+	readonly attempt: (at: At, models: AttemptModels<At>) => LabEffect<unknown>;
 	readonly concurrency: number;
+	/** The request run's runtime; a fresh one by default. */
+	readonly runtime?: LabRuntime;
 }): Promise<Pick<RequestRun, "answers" | "cases">> {
 	const { oracle } = args;
-	const cases = await Effect.runPromise(
-		Effect.forEach(
-			args.cases,
-			({ id, at }) =>
-				Effect.promise(async (): Promise<CaseRequests> => {
-					const requests: RecordedRequest[] = [];
-					const outcome = await args
-						.attempt(at, {
-							jev:
-								(asked, repetition) =>
-								async (request, { stage }) => {
-									requests.push({
-										executor: "jev",
-										stage,
-										repetition,
-										state: request.state,
-										questions: request.questions,
-									});
-									return {
-										model: request.model,
-										answers: oracle.answers(
-											asked,
-											request.questions,
-										),
-										usage: {
-											input_tokens: 0,
-											output_tokens: 0,
-										},
-									};
-								},
-							luna:
-								(asked, repetition) =>
-								async (request, { stage }) => {
-									requests.push({
-										executor: "luna",
-										stage,
-										repetition,
-										request,
-									});
-									return {
-										output: oracle.written(
-											asked,
-											request.input,
-										),
-									};
-								},
-						})
-						.catch((error: unknown) => ({
-							failure: messageOf(error),
-						}));
-					return {
-						id,
-						requests: sortedRequests(requests),
-						outcomes: [{ repetition: 0, outcome }],
-					};
-				}),
-			{ concurrency: Math.max(1, args.concurrency) },
+	const cases = await onLabRuntime(args.runtime, (runtime) =>
+		runOn(
+			runtime,
+			Effect.forEach(
+				args.cases,
+				({ id, at }) =>
+					Effect.gen(function* () {
+						const requests: RecordedRequest[] = [];
+						const outcome = yield* outcomeOf(
+							args.attempt(at, {
+								jev:
+									(asked, repetition) =>
+									async (request, { stage }) => {
+										requests.push({
+											executor: "jev",
+											stage,
+											repetition,
+											state: request.state,
+											questions: request.questions,
+										});
+										return {
+											model: request.model,
+											answers: oracle.answers(
+												asked,
+												request.questions,
+											),
+											usage: {
+												input_tokens: 0,
+												output_tokens: 0,
+											},
+										};
+									},
+								luna:
+									(asked, repetition) =>
+									async (request, { stage }) => {
+										requests.push({
+											executor: "luna",
+											stage,
+											repetition,
+											request,
+										});
+										return {
+											output: oracle.written(
+												asked,
+												request.input,
+											),
+										};
+									},
+							}),
+						);
+						return {
+							id,
+							requests: sortedRequests(requests),
+							outcomes: [{ repetition: 0, outcome }],
+						} satisfies CaseRequests;
+					}),
+				{ concurrency: Math.max(1, args.concurrency) },
+			),
+			// A request run asks nothing, so nothing interrupts it.
+			undefined,
 		),
 	);
 	return { answers: { source: "gold" }, cases };

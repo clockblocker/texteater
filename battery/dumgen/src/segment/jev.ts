@@ -1,9 +1,10 @@
 /**
  * jev (TypeSafe System One) as `segment.inUnits` reaches it: one request of
  * state and questions to a pinned model, answered with the model that
- * answered and the tokens it used. `createDumgen` sends every request of
- * the segmenter through a `JevAsk` in chunks of `questionsPerRequest`.
- * `createTypeSafeAsk` sends them to the TypeSafe API; a test passes a fake.
+ * answered and the tokens it used. `Jev` sends every request of the
+ * segmenter through the host's `JevAsk` in chunks of `questionsPerRequest`.
+ * `JevTransport.typeSafe` sends them to the TypeSafe API; a test passes a
+ * fake through `JevTransport.fromAsk`.
  */
 import type { EntryType, Questions } from "@typesafe-ai/sdk";
 

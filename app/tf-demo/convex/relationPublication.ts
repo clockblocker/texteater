@@ -16,9 +16,10 @@ import {
 	effectiveRelationPublicationPolicy,
 	type RelationPublicationFingerprints,
 } from "./model/generatedKnowledgeContainment";
+import { isLemmaRoute } from "./model/lemmaRoutes";
+import { isResolvedPendingRecord } from "./model/shadows";
 import {
 	directSemanticRelationValidator,
-	isLemmaRoute,
 	relationProposalOutcomeValidator,
 	relationPublicationFingerprintsValidator,
 	type relationPublicationRunValidator,
@@ -306,9 +307,14 @@ export async function recordCommittedRelationRun(
 						),
 					)
 					.unique();
-				// Resolution is only a structural storage outcome, never semantic proof.
-				outcome = pending ? "PendingShadow" : "DirectMatch";
-				if (pending) pendingShadows += 1;
+				// Resolution is only a structural storage outcome, never semantic
+				// proof. A resolved record keeps its Shadow beside its direct
+				// claim (system ADR 0011), so only an unresolved one is pending.
+				const stillPending =
+					pending !== null &&
+					!isResolvedPendingRecord(pending.record);
+				outcome = stillPending ? "PendingShadow" : "DirectMatch";
+				if (stillPending) pendingShadows += 1;
 				else directMatches += 1;
 			}
 			if (!run.artifactPath) continue;

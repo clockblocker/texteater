@@ -1,13 +1,14 @@
-/** Reading resolution dispatches to the Attestation's language module. */
+/** Reading resolution dispatches through the language-correlated service registry. */
 import * as Effect from "effect/Effect";
-import type { OperationScope } from "../call.js";
+import type { CallLog } from "../call.js";
 import type { InvalidModelOutput, ProviderFailure } from "../errors.js";
-import { type LanguageModules, languageModuleOf } from "../language-module.js";
+import type { Jev } from "../jev-call.js";
+import { languageModuleOf } from "../language-module.js";
+import { Languages } from "../languages.js";
+import type { Luna } from "../luna-call.js";
 import type { SegmentLanguage } from "../segment/segmented-sentence.js";
-import type { ReadingModels } from "./de/reading.js";
 import type { ReadingResolution, ResolveReadingInput } from "./types.js";
 
-// Preserve existing German helper imports; shared dispatch does not use them.
 export {
 	draftPrompt,
 	draftsEmojiDescription,
@@ -16,25 +17,20 @@ export {
 	generationPrompt,
 	markedSentence,
 	parsedDescription,
-	type ReadingModels,
 } from "./de/reading.js";
-
-export const resolveReading = <L extends SegmentLanguage = "de">(
-	scope: OperationScope,
-	models: ReadingModels,
-	modules: LanguageModules,
+export const resolveReading = <L extends SegmentLanguage>(
 	input: ResolveReadingInput<L>,
-): Effect.Effect<ReadingResolution<L>, ProviderFailure | InvalidModelOutput> =>
+): Effect.Effect<
+	ReadingResolution<L>,
+	ProviderFailure | InvalidModelOutput,
+	Jev | Luna | CallLog
+> =>
 	Effect.gen(function* () {
-		const language = input.attestation.surface.lemma.language;
-		// Dumling expands the Attestation union, losing the generic L here;
-		// the input contract guarantees its Lemma has exactly language L.
-		const module = languageModuleOf<L>(modules, language as L);
-		if (module === undefined)
+		const language = input.attestation.surface.lemma.language as L;
+		const module = languageModuleOf(yield* Languages, language);
+		if (!module)
 			return yield* Effect.die(
-				Error(
-					`No Reading resolver registered for ${JSON.stringify(language)}`,
-				),
+				Error(`No Reading resolver registered for ${language}`),
 			);
-		return yield* module.resolveReading(scope, models, input);
+		return yield* module.resolveReading(input);
 	});

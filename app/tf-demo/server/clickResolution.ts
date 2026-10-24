@@ -1,7 +1,6 @@
 import type { InvalidModelOutput, ProviderFailure } from "dumgen";
 import type * as Dumling from "dumling/types";
 import type * as Effect from "effect/Effect";
-import type { SupportedTargetLanguage } from "../shared/supported-target-language";
 import type { ClickSentence } from "./clickEncounter";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
 import type { StoredUnit } from "./storedSegments";
@@ -21,7 +20,7 @@ export type { ClickEncounter, ClickSentence } from "./clickEncounter";
 
 /** A stored Lemma and the Sentence texts it was found under. */
 export type LemmaCandidate = {
-	readonly lemma: Dumling.Lemma<SupportedTargetLanguage>;
+	readonly lemma: Dumling.Lemma<Dumling.Language>;
 	readonly foundUnder: readonly string[];
 };
 
@@ -64,7 +63,7 @@ export type ReadingResolution = {
 
 export type ClickReadingInput = {
 	readonly grammar: ResolvedGrammar;
-	readonly lemma: Dumling.Lemma<SupportedTargetLanguage>;
+	readonly lemma: Dumling.Lemma<Dumling.Language>;
 	/** The Emoji Descriptions of the Lemma's stored Readings. */
 	readonly candidates: readonly string[];
 	/**
@@ -82,16 +81,19 @@ export type ClickReadingInput = {
 
 /**
  * Unresolved and Catalog Miss are answers; the error channel only says that
- * no usable answer came back (#859).
+ * no usable answer came back (#859). `R` is what the resolution needs:
+ * Dumgen's `Jev | Luna` in production, which the click's action provides;
+ * nothing for a test's fake.
  */
-export type ClickResolution = {
+export type ClickResolution<R = never> = {
 	readonly grammar: (
 		input: ClickGrammarInput,
-	) => Effect.Effect<ClickGrammar, ProviderFailure | InvalidModelOutput>;
+	) => Effect.Effect<ClickGrammar, ProviderFailure | InvalidModelOutput, R>;
 	readonly reading: (
 		input: ClickReadingInput,
 	) => Effect.Effect<
 		ReadingResolution | CatalogMissSignal,
-		ProviderFailure | InvalidModelOutput
+		ProviderFailure | InvalidModelOutput,
+		R
 	>;
 };

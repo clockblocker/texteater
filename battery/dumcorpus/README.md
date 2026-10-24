@@ -59,10 +59,12 @@ failing checks, beside every record whose `legacy` list still holds a case
 imported verbatim from Dumgen. A reviewed record, Text Records included,
 must cite at least one Rule in `sources.rules`.
 A Breakdown Record, under `records/breakdown/<language>/`, holds one
-Locution's or Saying's Breakdown: the Lemma, its Canonical Form as the
-sentence with Segments, and the Lexeme targets it breaks down into, which
-cover every word and never the whole Lemma. They load on the same terms,
-and `schema/breakdown-record.<language>.json` completes them.
+Reading's gold Breakdown or Source: the owning Reading, and its
+`knowledge.breakdown` (Constituents, morphemes or both) or
+`knowledge.source` as dumrel stores them. Each piece is shown letters and a
+link to a Unit Shadow or Lemma, or unlinked filler. It has one Annotation
+Layer, Segmentation, and loads when that passes;
+`schema/breakdown-record.<language>.json` completes it.
 Raw texts for intake are Text Records under `records/text/`, with the schema
 `schema/text-record.json`. `bun run worklist` prints the worklist; after a
 model change, `bun run demote-broken-reviewed` lowers the Review Depth of
@@ -109,6 +111,32 @@ The selectors read the inventories without a model. `authoredReading` and
 Paradigm Cells (system ADR 0019), and `deriveGrammaticalComponent` gives the
 article of a name cited with one, or the subject expletive `es`, that a
 Surface brings.
+
+`dumcorpus/inflection` holds each language's Inflection Pack (system ADR
+0049), the only part of an inflection table that knows its language. Like
+`dumcorpus/inventories`, it reads no files and loads no Zod. A host hands `inflectionPacks.de` to `dumdict/inflection`'s
+`projectLemmaTables` and draws the view with the pack's `display` and
+`labels`:
+
+- `schemaFor(lemma)`: the Table Schema of a NOUN, a VERB, a closed AUX, a
+  comparable ADJ or ADV, or a declining DET or PRON stem, with its core
+  panels: the declension; Präsens, Präteritum, Konjunktiv II and Partizip II;
+  the comparison. Konjunktiv I and Imperativ are not core.
+- `derive({ lemma, selection, schema })`: one Licence Group's forms from the
+  Paradigm Variants it licenses (`Variant`), the German rules (`Rule`) and
+  the Authored Inventory's closed tables and suppletive comparisons
+  (`Authored`). A cell in doubt is left out, never guessed.
+- The forms are `GermanWordForm` (`der Tag`, the article as Context) and
+  `GermanVerbForm`, whose pronoun, finite word, reflexive, other words and
+  split-off particle stay apart: `display` shows `er fährt … ab` and `hat
+  gefahren`.
+- `labels`: `N`, `A`, `G`, `D`, `Sg`, `Pl`, `Präsens`, `Konjunktiv II`,
+  `Partizip II`, and list-line bundles such as `Dat.Pl`.
+
+`germanAuthoredParadigm` gives a closed VERB (sein, haben, werden, the
+modals) its Lemma Paradigm, read off its authored table, and
+`germanSelectionIssues` checks a Licence Group's selection against the
+conjugation class of each Präteritum variant.
 
 `checkIfGrundform` asks whether a Surface realizes its Lemma's Grundform.
 A Surface stores no Citation/Inflection discriminator, so the entry assesses

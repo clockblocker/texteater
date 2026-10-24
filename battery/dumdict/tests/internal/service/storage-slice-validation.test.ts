@@ -26,6 +26,7 @@ const addNewNoteRequest = (
 	reading: draft.reading,
 	ownedSurfaces: draft.ownedSurfaces?.map(({ surface }) => surface) ?? [],
 	relations: [...(draft.relations ?? [])],
+	attestationRefs: draft.note.attestationLinks.map(({ ref }) => ref),
 });
 
 describe("storage slice validation", () => {
@@ -42,6 +43,8 @@ describe("storage slice validation", () => {
 			pendingRelationsMatchingProposedLemma: [],
 			relationLemmas: [],
 			relationReadings: [],
+			lemmaReadings: [],
+			attestationLinksWithRefs: [],
 		} satisfies AddNewNoteContext<"en">;
 
 		expect(() =>
@@ -61,6 +64,8 @@ describe("storage slice validation", () => {
 			pendingRelationsMatchingProposedLemma: [],
 			relationLemmas: [],
 			relationReadings: [],
+			lemmaReadings: [],
+			attestationLinksWithRefs: [],
 		} satisfies AddNewNoteContext<"en">;
 
 		expect(() =>
@@ -124,6 +129,8 @@ describe("storage slice validation", () => {
 			],
 			relationLemmas: [],
 			relationReadings: [],
+			lemmaReadings: [],
+			attestationLinksWithRefs: [],
 		} satisfies AddNewNoteContext<"en">;
 
 		expect(() =>
@@ -143,6 +150,8 @@ describe("storage slice validation", () => {
 			pendingRelationsMatchingProposedLemma: [],
 			relationLemmas: [],
 			relationReadings: [],
+			lemmaReadings: [],
+			attestationLinksWithRefs: [],
 		} satisfies AddNewNoteContext<"en">;
 		const pendingRecord = () => {
 			const stored =

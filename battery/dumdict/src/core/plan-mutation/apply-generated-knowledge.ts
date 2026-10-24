@@ -1,4 +1,9 @@
-import { readingIdentityKey, sameLemma, sameReading } from "dumling";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey,
+	sameLemma,
+	sameReading,
+} from "dumling";
 import type * as Dumling from "dumling/types";
 import type {
 	PendingSemanticRelationRecord,
@@ -10,6 +15,7 @@ import type { ApplyGeneratedKnowledgeRequest } from "../../public";
 import type { ApplyGeneratedKnowledgeContext } from "../../storage";
 import { applyDumdictKnowledgeChanges } from "../apply-reading-knowledge-change.js";
 import { lemmaLanguage, readingLemma } from "../identity";
+import { applyParadigm, paradigmChange } from "../occurrence/paradigm";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,
@@ -22,6 +28,7 @@ import {
 import { relationAdditionsToPatches } from "./relation-additions-to-patches";
 import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
+import { shadowRecordChanges, shadowRequest } from "./shadow-record-changes";
 
 function pendingRecords<L extends Dumling.Language>(
 	request: ApplyGeneratedKnowledgeRequest<L>,
@@ -35,6 +42,10 @@ function pendingRecords<L extends Dumling.Language>(
 		),
 	);
 	return deduplicatePendingSemanticRelationRecords(records);
+}
+
+function namedClaimKey(relation: string, lemma: Dumling.Lemma): string {
+	return JSON.stringify([relation, lemmaIdentityKey(lemma)]);
 }
 
 function relationTargetMissing<L extends Dumling.Language>(
@@ -100,6 +111,25 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 			message:
 				"Direct Semantic Relation target is missing from the dictionary",
 		};
+	const lemma = readingLemma(request.reading);
+	const paradigm = applyParadigm({
+		lemma,
+		readings: slice.lemmaReadings,
+		paradigm: slice.existingLemma?.paradigm,
+		changes: request.paradigmChanges ?? [],
+	});
+	if (!paradigm.ok)
+		return {
+			status: "rejected",
+			code: "invalidRequest",
+			message: paradigm.message,
+		};
+	const paradigmChanges = paradigmChange(
+		slice.revision,
+		lemma,
+		slice.existingLemma?.paradigm,
+		paradigm.paradigm,
+	);
 
 	const proposed = pendingRecords(request);
 	const existingByKey = new Map(
@@ -108,21 +138,39 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 			record,
 		]),
 	);
-	const relationRequests: RelationRequest<L>[] = proposed.map((record) => {
-		const pendingRecord =
-			existingByKey.get(
-				pendingSemanticRelationLocatorKey(record.locator),
-			) ?? record;
-		return {
-			sourceReading: request.reading,
-			relation: pendingRecord.pending.relation,
-			target: {
-				kind: "shadow",
-				shadow: pendingRecord.pending.target,
-				pendingRecord,
-			},
-		};
-	});
+	// A change naming the Lemma a stored Shadow resolved to names its claim
+	// exactly, so the Shadow is absorbed and its claim never moves again.
+	const named = new Set(
+		request.changes.flatMap((change) =>
+			change.aspect === "semanticRelations" &&
+			"value" in change &&
+			change.targetKind !== "reading"
+				? change.value.map((lemma) =>
+						namedClaimKey(change.relation, lemma),
+					)
+				: [],
+		),
+	);
+	const absorbed = new Set(
+		[...existingByKey.entries()].flatMap(([key, record]) =>
+			record.resolvedLemma &&
+			named.has(
+				namedClaimKey(record.pending.relation, record.resolvedLemma),
+			)
+				? [key]
+				: [],
+		),
+	);
+	// A proposal the store already holds is planned from its stored record,
+	// which keeps any resolution it has.
+	const relationRequests: RelationRequest<L>[] = proposed.flatMap(
+		(record) => {
+			const key = pendingSemanticRelationLocatorKey(record.locator);
+			return absorbed.has(key)
+				? []
+				: [shadowRequest(existingByKey.get(key) ?? record, "propose")];
+		},
+	);
 	const changedReadings = slice.relationReadings.map((entry) =>
 		sameReading(entry.reading, changed.reading) ? changed : entry,
 	);
@@ -151,23 +199,16 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 			),
 		});
 	}
-	for (const relationPatch of relationAdditionsToPatches(
-		relationPlan.additions,
-		slice.revision,
-	)) {
-		const readingKey = readingIdentityKey(relationPatch.reading);
-		const patch = operations.get(readingKey) ?? {
-			reading: relationPatch.reading,
-			ops: [],
-		};
-		patch.ops.push(...relationPatch.ops);
-		operations.set(readingKey, patch);
-	}
-	for (const relationPatch of relationRemovalsToPatches(
-		relationPlan.removals,
-		changedReadings,
-		slice.revision,
-	)) {
+	// A removal rewrites its bucket from the Knowledge before the plan, so it
+	// comes before the additions that extend that bucket.
+	for (const relationPatch of [
+		...relationRemovalsToPatches(
+			relationPlan.removals,
+			changedReadings,
+			slice.revision,
+		),
+		...relationAdditionsToPatches(relationPlan.additions, slice.revision),
+	]) {
 		const readingKey = readingIdentityKey(relationPatch.reading);
 		const patch = operations.get(readingKey) ?? {
 			reading: relationPatch.reading,
@@ -177,15 +218,16 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 		operations.set(readingKey, patch);
 	}
 
-	const resolvedKeys = new Set(
-		relationPlan.resolvedPending.map(({ locator }) =>
-			pendingSemanticRelationLocatorKey(locator),
-		),
-	);
-	const unresolvedKeys = new Set(
-		relationPlan.unresolvedPending.map(({ locator }) =>
-			pendingSemanticRelationLocatorKey(locator),
-		),
+	const records = shadowRecordChanges(
+		[
+			...relationPlan.shadowOutcomes,
+			...[...absorbed].flatMap((key) => {
+				const record = existingByKey.get(key);
+				return record ? [{ record, next: undefined }] : [];
+			}),
+		],
+		[...existingByKey.values()],
+		slice.revision,
 	);
 	const changes: PlannedChangeOp<L>[] = [
 		...[...operations.values()].map(
@@ -199,40 +241,9 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 				],
 			}),
 		),
-		...proposed.flatMap((record): PlannedChangeOp<L>[] => {
-			const key = pendingSemanticRelationLocatorKey(record.locator);
-			if (existingByKey.has(key) || !unresolvedKeys.has(key)) return [];
-			return [
-				{
-					type: "createPendingSemanticRelation",
-					record,
-					preconditions: [
-						{ kind: "revisionMatches", revision: slice.revision },
-						{ kind: "pendingRelationMissing", record },
-					],
-				},
-			];
-		}),
-		...[...existingByKey.values()].flatMap(
-			(record): PlannedChangeOp<L>[] =>
-				resolvedKeys.has(
-					pendingSemanticRelationLocatorKey(record.locator),
-				)
-					? [
-							{
-								type: "deletePendingSemanticRelation",
-								record,
-								preconditions: [
-									{
-										kind: "revisionMatches",
-										revision: slice.revision,
-									},
-									{ kind: "pendingRelationExists", record },
-								],
-							},
-						]
-					: [],
-		),
+		...records.deletions,
+		...records.creations,
+		...paradigmChanges,
 	];
 
 	const affectedReadings = new Map<string, Dumling.Reading<L>>();
@@ -243,6 +254,7 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 		baseRevision: slice.revision,
 		changes,
 		affected: {
+			...(paradigmChanges.length > 0 ? { lemmas: [lemma] } : {}),
 			readings:
 				affectedReadings.size > 0
 					? [...affectedReadings.values()]

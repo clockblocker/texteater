@@ -6,7 +6,13 @@
 
 import type * as Dumling from "dumling/types";
 import { options, question } from "../prompts.js";
-import type { Answered, ChoiceOf, Questionnaire } from "../questions.js";
+import {
+	type Answered,
+	answerReader,
+	type ChoiceOf,
+	type Questionnaire,
+	type ReaderBody,
+} from "../questions.js";
 
 /** An agreeing word's case, gender and number, as a NUM Lexeme's Surface takes them. */
 export type Agreement = NonNullable<
@@ -38,18 +44,18 @@ export function agreementQuestions(questionnaire: Questionnaire) {
 }
 
 /** Reads an agreeing word's case, gender and number: a plural has no gender. */
-export function readAgreement(
+export const readAgreement = answerReader(function* (
 	agreement: AgreementQuestions,
 	answered: Answered,
-): Agreement {
-	const number = answered.pick(agreement.number);
-	const gender = answered.pick(agreement.gender);
+): ReaderBody<Agreement> {
+	const number = yield* answered.pick(agreement.number);
+	const gender = yield* answered.pick(agreement.gender);
 	return {
-		case: answered.pick(agreement.case),
+		case: yield* answered.pick(agreement.case),
 		gender: gender === "Unmarked" || number === "Plur" ? null : gender,
 		number,
 	};
-}
+});
 
 /** What an agreeing word's block asked. */
 export type AgreeingPlan = AgreementQuestions & {
@@ -68,16 +74,16 @@ export function askAgreeing(questionnaire: Questionnaire): AgreeingPlan {
 }
 
 /** Reads an agreeing word's block: its agreement when it inflects here. */
-export function readAgreeing(
+export const readAgreeing = answerReader(function* (
 	agreeing: AgreeingPlan,
 	answered: Answered,
-): {
+): ReaderBody<{
 	readonly core: Record<string, never>;
 	readonly inflection: Agreement | null;
-} {
-	const inflects = answered.pick(agreeing.inflects) === "Yes";
+}> {
+	const inflects = (yield* answered.pick(agreeing.inflects)) === "Yes";
 	return {
 		core: {},
-		inflection: inflects ? readAgreement(agreeing, answered) : null,
+		inflection: inflects ? yield* readAgreement(agreeing, answered) : null,
 	};
-}
+});

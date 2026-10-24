@@ -21,6 +21,7 @@ import {
 import type { AddNewNoteRequest } from "../../public";
 import type { AddNewNoteContext } from "../../storage";
 import { lemmaLanguage, readingLemma } from "../identity";
+import { applyParadigm, paradigmChange } from "../occurrence/paradigm";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,
@@ -33,6 +34,7 @@ import {
 import { relationAdditionsToPatches } from "./relation-additions-to-patches";
 import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
+import { shadowRecordChanges, shadowRequest } from "./shadow-record-changes";
 
 function uniqueBy<T>(values: T[], keyFor: (value: T) => string): T[] {
 	const seen = new Set<string>();
@@ -141,9 +143,33 @@ export function planAddNewNote<L extends Dumling.Language>(
 			code: "relationTargetMissing",
 			message: "An explicit relation target Lemma is missing.",
 		};
+	if (slice.attestationLinksWithRefs.length > 0)
+		return {
+			status: "rejected",
+			code: "occurrenceAttestedElsewhere",
+			message:
+				"An occurrence of the draft is already attested elsewhere.",
+		};
+	const paradigm = applyParadigm({
+		lemma,
+		readings: [...slice.lemmaReadings, reading],
+		paradigm: slice.existingLemma?.paradigm,
+		changes: request.draft.paradigmChanges ?? [],
+	});
+	if (!paradigm.ok)
+		return {
+			status: "rejected",
+			code: "invalidRequest",
+			message: paradigm.message,
+		};
 
 	const baseReading: ReadingEntry<L> = { reading, ...note };
-	const lemmaRecord: LemmaRecord<L> = { lemma };
+	const lemmaRecord: LemmaRecord<L> = {
+		lemma,
+		...(!slice.existingLemma && paradigm.paradigm
+			? { paradigm: paradigm.paradigm }
+			: {}),
+	};
 	const ownedSurfaceEntries: SurfaceEntry<L>[] = uniqueBy(
 		(request.draft.ownedSurfaces ?? []).map(
 			({ surface, note: surfaceNote }) => ({
@@ -156,10 +182,20 @@ export function planAddNewNote<L extends Dumling.Language>(
 		({ id }) => id,
 	);
 	const newPending = makePendingRecords(slice, request);
-	const pending = deduplicatePendingSemanticRelationRecords([
-		...newPending,
-		...slice.pendingRelationsMatchingProposedLemma,
-	]);
+	const newPendingKeys = new Set(
+		newPending.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
+	);
+	// Adding the Lemma re-evaluates every stored Shadow it matches.
+	const reevaluated = deduplicatePendingSemanticRelationRecords(
+		slice.pendingRelationsMatchingProposedLemma,
+	).filter(
+		(record) =>
+			!newPendingKeys.has(
+				pendingSemanticRelationLocatorKey(record.locator),
+			),
+	);
 	const requests: RelationRequest<L>[] = [
 		...(request.draft.relations ?? []).flatMap((relation) =>
 			relation.target.kind === "existing" && "relation" in relation
@@ -175,15 +211,8 @@ export function planAddNewNote<L extends Dumling.Language>(
 					]
 				: [],
 		),
-		...pending.map((record) => ({
-			sourceReading: record.sourceReading,
-			relation: record.pending.relation,
-			target: {
-				kind: "shadow" as const,
-				shadow: record.pending.target,
-				pendingRecord: record,
-			},
-		})),
+		...newPending.map((record) => shadowRequest(record, "propose")),
+		...reevaluated.map((record) => shadowRequest(record, "reevaluate")),
 	];
 	const relationPlan = planRelationMaintenance({
 		lemmas: [
@@ -227,19 +256,10 @@ export function planAddNewNote<L extends Dumling.Language>(
 			slice.revision,
 		),
 	];
-	const newPendingKeys = new Set(
-		newPending.map(({ locator }) =>
-			pendingSemanticRelationLocatorKey(locator),
-		),
-	);
-	const pendingToCreate = relationPlan.unresolvedPending.filter((record) =>
-		newPendingKeys.has(pendingSemanticRelationLocatorKey(record.locator)),
-	);
-	const pendingToDelete = relationPlan.resolvedPending.filter(
-		(record) =>
-			!newPendingKeys.has(
-				pendingSemanticRelationLocatorKey(record.locator),
-			),
+	const records = shadowRecordChanges(
+		relationPlan.shadowOutcomes,
+		reevaluated,
+		slice.revision,
 	);
 
 	const changes: PlannedChangeOp<L>[] = [];
@@ -252,6 +272,14 @@ export function planAddNewNote<L extends Dumling.Language>(
 				{ kind: "lemmaMissing", lemma },
 			],
 		});
+	// A link names a Surface the draft adds or one the Lemma already owns.
+	const draftSurfaceIds = new Set(ownedSurfaceEntries.map(({ id }) => id));
+	const linkedSurfaces = uniqueBy(
+		note.attestationLinks.flatMap(({ surfaceId }) =>
+			draftSurfaceIds.has(surfaceId) ? [] : [surfaceId],
+		),
+		(id) => id,
+	);
 	changes.push(
 		{
 			type: "createReading",
@@ -260,29 +288,23 @@ export function planAddNewNote<L extends Dumling.Language>(
 				{ kind: "revisionMatches", revision: slice.revision },
 				{ kind: "lemmaExists", lemma },
 				{ kind: "readingMissing", reading },
+				...linkedSurfaces.map((surfaceId) => ({
+					kind: "surfaceExists" as const,
+					surfaceId,
+				})),
 			],
 		},
+		...(slice.existingLemma
+			? paradigmChange(
+					slice.revision,
+					lemma,
+					slice.existingLemma.paradigm,
+					paradigm.paradigm,
+				)
+			: []),
 		...patches,
-		...pendingToDelete.map(
-			(record): PlannedChangeOp<L> => ({
-				type: "deletePendingSemanticRelation",
-				record,
-				preconditions: [
-					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "pendingRelationExists", record },
-				],
-			}),
-		),
-		...pendingToCreate.map(
-			(record): PlannedChangeOp<L> => ({
-				type: "createPendingSemanticRelation",
-				record,
-				preconditions: [
-					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "pendingRelationMissing", record },
-				],
-			}),
-		),
+		...records.deletions,
+		...records.creations,
 		...ownedSurfaceEntries.map(
 			(entry): PlannedChangeOp<L> => ({
 				type: "createOwnedSurface",
@@ -306,12 +328,14 @@ export function planAddNewNote<L extends Dumling.Language>(
 				[
 					reading,
 					...relationPlan.additions.map(({ reading }) => reading),
+					...relationPlan.removals.map(({ reading }) => reading),
 				],
 				readingIdentityKey,
 			),
 			surfaceIds: ownedSurfaceEntries.map(({ id }) => id),
-			pendingIds: [...pendingToCreate, ...pendingToDelete].map(
-				({ locator }) => locator.targetPendingId,
+			pendingIds: uniqueBy(
+				records.touched.map(({ locator }) => locator.targetPendingId),
+				(id) => id,
 			),
 		},
 		summary: { message: "Added new learner reading." },

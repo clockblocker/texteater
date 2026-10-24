@@ -1,6 +1,5 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import { requestBudget, runOperation } from "../../src/call.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../src/luna.js";
 import { resolveHebrewGrammar } from "../../src/resolve/he/grammar.js";
 import type { LemmaCandidate } from "../../src/resolve/types.js";
@@ -8,6 +7,7 @@ import type {
 	SegmentedSentence,
 	Unit,
 } from "../../src/segment/segmented-sentence.js";
+import { requestBudget, runOperation } from "./../service-test-adapter.js";
 
 const unit: Unit<"he"> = {
 	segments: [0, 1],
@@ -50,31 +50,27 @@ test("Hebrew grammatical hints belong to the target host, not another noun or it
 		runOperation(
 			"resolve.grammar",
 			{ budget: requestBudget(1), payloads: false },
-			(scope) =>
-				resolveHebrewGrammar(
-					scope,
-					{
-						jev: {
-							model: "test",
-							ask: async () => {
-								throw Error("unexpected judge");
-							},
-						},
-						luna: { ask, configuration: defaultLunaConfiguration },
+			{
+				jev: {
+					model: "test",
+					ask: async () => {
+						throw Error("unexpected judge");
 					},
-					{
-						language: "he",
-						sentence,
-						unit,
-						neighbours: {},
-						lemmaCandidates: [
-							candidate("ספר", ["ספר"]),
-							candidate("סופר", ["סֵּפֶר"]),
-							candidate("בית", ["הבית"]),
-							candidate("ממשלה", ["הַ"]),
-						],
-					},
-				),
+				},
+				luna: { ask, configuration: defaultLunaConfiguration },
+			},
+			resolveHebrewGrammar({
+				language: "he",
+				sentence,
+				unit,
+				neighbours: {},
+				lemmaCandidates: [
+					candidate("ספר", ["ספר"]),
+					candidate("סופר", ["סֵּפֶר"]),
+					candidate("בית", ["הבית"]),
+					candidate("ממשלה", ["הַ"]),
+				],
+			}),
 		),
 	);
 	expect(hints).toEqual([

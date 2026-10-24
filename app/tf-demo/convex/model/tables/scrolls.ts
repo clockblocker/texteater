@@ -142,11 +142,8 @@ export const scrollTables = {
 		segmentedSentenceId: v.string(),
 		scrollId: v.id("scrolls"),
 		position: v.number(),
-		/**
-		 * Sentences sharing a paragraph run together in the reader. Absent for
-		 * Sentences stored before paragraphs were kept; each reads alone.
-		 */
-		paragraph: v.optional(v.number()),
+		/** Sentences sharing a paragraph run together in the reader. */
+		paragraph: v.number(),
 		/**
 		 * The Detected Language, absent when undetermined. Any but the Scroll's
 		 * target language makes it a Plain Sentence: no Segments, no units.

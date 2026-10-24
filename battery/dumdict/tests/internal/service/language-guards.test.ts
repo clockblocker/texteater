@@ -26,6 +26,8 @@ const emptyAddNewNoteContext: AddNewNoteContext<"en"> = {
 	pendingRelationsMatchingProposedLemma: [],
 	relationLemmas: [],
 	relationReadings: [],
+	lemmaReadings: [],
+	attestationLinksWithRefs: [],
 };
 
 describe("language guards", () => {
@@ -78,23 +80,19 @@ describe("language guards", () => {
 				changes: [
 					{
 						kind: "Contribute",
-						aspect: "morphologicalTree",
-						value: {
-							root: {
-								nodeKind: "structure",
-								children: [
-									{
-										nodeKind: "unitShadow",
-										unitShadow: {
-											canonicalForm: "walk",
-											family: "Lexeme",
-											kind: "VERB",
-											language: "en",
-										},
-									},
-								],
+						aspect: "breakdown",
+						part: "constituents",
+						value: [
+							{
+								letters: "gehen",
+								target: {
+									canonicalForm: "walk",
+									family: "Lexeme",
+									kind: "VERB",
+									language: "en",
+								},
 							},
-						},
+						],
 					},
 				],
 				pendingRelations: [],

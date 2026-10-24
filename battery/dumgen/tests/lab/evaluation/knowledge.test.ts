@@ -3,12 +3,14 @@ import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { canonicalJson, isRecord } from "common-utils";
+import { paradigmChangesFor } from "dumrel";
 import { listExperiments } from "../../../lab/evaluation/experiments.js";
 import { storeFrozenSet } from "../../../lab/evaluation/frozen-sets.js";
 import {
 	type KnowledgeCase,
 	type KnowledgeSet,
 	knowledgeCases,
+	paradigmRequestOf,
 	requestOf,
 	spotCheckCases,
 } from "../../../lab/evaluation/knowledge/cases.js";
@@ -63,13 +65,10 @@ test("held-out is the Readings reviewed to Knowledge depth, each once with its g
 });
 
 test("a structural run asks for the route's structural aspects only, a text run for its text aspects", () => {
+	// A VERB may be formed whole from another word, so it asks for a Source.
 	expect(requestOf(caseOf("warten"), "structural")).toEqual({
+		source: null,
 		valency: null,
-		conjugationClass: null,
-		preterite: null,
-		presentSingular: null,
-		pastParticiple: null,
-		subjunctivePast: null,
 		semanticRelations: {
 			synonym: null,
 			nearSynonym: null,
@@ -85,7 +84,17 @@ test("a structural run asks for the route's structural aspects only, a text run 
 	});
 	expect(
 		Object.keys(requestOf(caseOf("verheiratet"), "structural")),
-	).toContain("participleSource");
+	).toContain("source");
+	// The principal parts are Variation Dimensions, written beside the request.
+	expect(paradigmRequestOf(caseOf("warten"), "structural")).toEqual([
+		"preterite",
+		"present1",
+		"present2",
+		"present3",
+		"pastParticiple",
+		"subjunctivePast",
+	]);
+	expect(paradigmRequestOf(caseOf("warten"), "text")).toEqual([]);
 });
 
 test("the spot-check set holds #545's six slips and a seeded dev sample (#545, #883 point 10)", () => {
@@ -110,6 +119,7 @@ test("the spot-check set holds #545's six slips and a seeded dev sample (#545, #
 
 const output = (partial: Partial<KnowledgeOutput>): KnowledgeOutput => ({
 	changes: [],
+	paradigmChanges: [],
 	pendingRelations: [],
 	failures: [],
 	...partial,
@@ -118,21 +128,26 @@ const output = (partial: Partial<KnowledgeOutput>): KnowledgeOutput => ({
 test("structural aspects are scored exactly, a reviewed-empty aspect is right only when empty, and a failure is wrong", () => {
 	const warten = caseOf("warten");
 	const request = requestOf(warten, "structural");
+	const dimensions = paradigmRequestOf(warten, "structural");
 	const gold = warten.gold?.knowledge;
 	if (!gold?.valency) throw Error("warten has no gold valency");
+	const preterite = (value: string) =>
+		paradigmChangesFor({
+			reading: warten.reading,
+			dimension: "preterite",
+			values: [value],
+			provenance: "Produced",
+		});
 	const right = evaluateKnowledge(
 		warten,
 		request,
 		output({
 			changes: [
 				{ kind: "Contribute", aspect: "valency", value: gold.valency },
-				{
-					kind: "Contribute",
-					aspect: "conjugationClass",
-					value: ["Weak"],
-				},
 			],
+			paradigmChanges: preterite("WARTETE"),
 		}),
+		dimensions,
 	);
 	const verdict = (aspect: string, of = right) =>
 		of.verdicts.find((entry) => entry.aspect === aspect);
@@ -141,24 +156,28 @@ test("structural aspects are scored exactly, a reviewed-empty aspect is right on
 		correct: true,
 		complements: { gold: 6, produced: 6, matched: 6 },
 	});
-	expect(verdict("conjugationClass")?.correct).toBe(true);
+	expect(verdict("preterite")).toMatchObject({
+		gold: "Authored",
+		correct: true,
+	});
+	// Gold covers every dimension, so one the run didn't write is wrong.
+	expect(verdict("present1")).toMatchObject({
+		gold: "Authored",
+		produced: false,
+		correct: false,
+	});
 	const wrong = evaluateKnowledge(
 		warten,
 		request,
 		output({
-			changes: [
-				{
-					kind: "Contribute",
-					aspect: "conjugationClass",
-					value: ["Strong"],
-				},
-			],
+			paradigmChanges: preterite("wart"),
 			failures: [
 				{ aspect: "valency", code: "ProviderFailure", message: "down" },
 			],
 		}),
+		dimensions,
 	);
-	expect(verdict("conjugationClass", wrong)?.correct).toBe(false);
+	expect(verdict("preterite", wrong)?.correct).toBe(false);
 	expect(verdict("valency", wrong)).toMatchObject({
 		correct: false,
 		failed: "ProviderFailure",
@@ -435,14 +454,17 @@ test("the harness prices a round from the oracle without a call, runs live once 
 	if (!("lines" in metrics)) throw Error("Expected a Knowledge report");
 	// Each exact aspect's line is keyed by its name.
 	for (const aspect of [
-		"conjugationClass",
-		"presentSingular",
+		"preterite",
+		"present1",
+		"present2",
+		"present3",
 		"pastParticiple",
 		"subjunctivePast",
 	] as const)
 		expect(metrics.lines[aspect]).toMatchObject({ correct: 1, count: 1 });
 	expect(metrics.lines.sayingType).toMatchObject({ correct: 1, count: 1 });
-	expect(metrics.lines.participleSource.count).toBe(1);
+	// warten's Source (none) and verheiratet's.
+	expect(metrics.lines.source.count).toBe(2);
 	expect(metrics.lines.relationRecall.correct).toBeGreaterThan(0);
 	expect(metrics.flips).toEqual([]);
 

@@ -40,6 +40,7 @@ import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
 import { scheduleKnowledgeGeneration } from "./model/knowledgeScheduling";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
+import { withoutBackPointingSource } from "./model/sourceDirection";
 import {
 	directSemanticRelationValidator,
 	knowledgeProductionEvidenceValidator,
@@ -387,21 +388,27 @@ export const publish = internalMutation({
 					.take(MAX_PUBLISHED_CHANGES_PER_RUN)
 			).map((row) => canonicalJson(row.change)),
 		);
-		const changes = publishable.changes.filter(
-			(change) => !published.has(canonicalJson(change)),
+		const ownerReading = parseReading(args.reading);
+		if (readingIdentityKey(ownerReading) !== attempt.ownerReadingKey)
+			throw new Error(
+				"Generated Knowledge must target the attempt's Reading.",
+			);
+		// A Source whose base already names this Reading's Lemma as its own
+		// Source is dropped and counts as none (ADR 0050, #1279).
+		const changes = await withoutBackPointingSource(
+			ctx,
+			{ reading: ownerReading, key: attempt.ownerReadingKey },
+			publishable.changes.filter(
+				(change) => !published.has(canonicalJson(change)),
+			),
 		);
 
 		// The changes arrive as v.any(); Dumdict parses them here, refusing
 		// another language as the planner would.
-		const proposedReading = parseReading(args.reading);
-		if (readingIdentityKey(proposedReading) !== attempt.ownerReadingKey)
-			throw new Error(
-				"Generated Knowledge must target the attempt's Reading.",
-			);
 		const request = checkApplyGeneratedKnowledgeRequest(
-			proposedReading.lemma.language,
+			ownerReading.lemma.language,
 			{
-				reading: proposedReading,
+				reading: ownerReading,
 				changes,
 				pendingRelations: publishable.pendingRelations,
 			},
@@ -410,7 +417,7 @@ export const publish = internalMutation({
 			request.status === "ok"
 				? await createDumdictTransaction(
 						ctx,
-						proposedReading.lemma.language,
+						ownerReading.lemma.language,
 					).applyGeneratedKnowledge(request.request)
 				: request;
 		// Nothing above wrote, so the action may split this batch and resend.

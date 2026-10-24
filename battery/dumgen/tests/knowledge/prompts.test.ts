@@ -7,6 +7,10 @@ import {
 	spotCheckCases,
 } from "../../lab/evaluation/knowledge/cases.js";
 import {
+	licenceExamples,
+	licencePromptTexts,
+} from "../../src/knowledge/de/licence-prompts.js";
+import {
 	knowledgeExamples,
 	knowledgeParagraphs,
 	knowledgePromptTexts,
@@ -26,8 +30,12 @@ import {
 import { valencyPrompt } from "../../src/knowledge/de/valency.js";
 
 test("every Knowledge prompt paragraph cites the Rules it states at their current hashes (ADR 0037, #695)", () => {
-	const prompts = [...knowledgePromptTexts(), ...structurePromptTexts()];
-	expect(prompts.length).toBeGreaterThan(60);
+	const prompts = [
+		...knowledgePromptTexts(),
+		...structurePromptTexts(),
+		...licencePromptTexts(),
+	];
+	expect(prompts.length).toBeGreaterThan(70);
 	expect(checkPromptCitations(prompts, rules)).toEqual([]);
 });
 
@@ -118,7 +126,11 @@ test("no example in a Knowledge prompt uses a Lemma of the Knowledge gold or the
 	for (const goldCase of spotCheckCases(records, dev).cases)
 		lemmasIn(goldCase.reading, forms, goldCase.id);
 	expect(forms.size).toBeGreaterThan(100);
-	const examples = [...knowledgeExamples(), ...structureExamples()];
+	const examples = [
+		...knowledgeExamples(),
+		...structureExamples(),
+		...licenceExamples(),
+	];
 	expect(examples.length).toBeGreaterThan(15);
 	const clashes = examples.flatMap((example) =>
 		[...forms]

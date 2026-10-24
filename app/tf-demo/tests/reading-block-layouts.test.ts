@@ -56,6 +56,7 @@ const LANGUAGE_ORDER: ReadingBlockKind[] = [
 	"Translations",
 	"Valency",
 	"PersonalAnnotation",
+	"Breakdown",
 ];
 const LOCAL_VERB_ORDER: ReadingBlockKind[] = [
 	"Translations",
@@ -63,6 +64,7 @@ const LOCAL_VERB_ORDER: ReadingBlockKind[] = [
 	"Valency",
 	"Relations",
 	"PersonalAnnotation",
+	"Breakdown",
 ];
 
 describe("Reading Block layout persistence", () => {

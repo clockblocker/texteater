@@ -26,7 +26,9 @@ import type * as Dumcorpus from "dumcorpus/types";
 import { readingIdentityKey, routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
+	dimensionIdValues,
 	directSemanticRelationValues,
+	paradigmDimensions,
 	parseReadingKnowledge,
 	selectKnowledge,
 	translationLanguageValues,
@@ -45,9 +47,12 @@ import {
 } from "../../stored-json.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
+import { currentGold } from "./legacy-gold.js";
 
 type KnowledgeGold = {
 	readonly knowledge: Dumrel.ReadingKnowledge;
+	/** What the Reading licenses in its Lemma's Paradigm (ADR 0048). */
+	readonly paradigm: Dumcorpus.ReadingParadigm;
 	readonly coverage: Dumcorpus.KnowledgeCoverage;
 };
 
@@ -97,15 +102,9 @@ const coverageStatusSchema = z.enum(["Authored", "ReviewedEmpty"]);
 const coverageSchema = z.object({
 	transcription: coverageStatusSchema.optional(),
 	definition: coverageStatusSchema.optional(),
-	morphologicalTree: coverageStatusSchema.optional(),
+	breakdown: coverageStatusSchema.optional(),
 	valency: coverageStatusSchema.optional(),
-	participleSource: coverageStatusSchema.optional(),
-	plural: coverageStatusSchema.optional(),
-	conjugationClass: coverageStatusSchema.optional(),
-	preterite: coverageStatusSchema.optional(),
-	presentSingular: coverageStatusSchema.optional(),
-	pastParticiple: coverageStatusSchema.optional(),
-	subjunctivePast: coverageStatusSchema.optional(),
+	source: coverageStatusSchema.optional(),
 	locutionType: coverageStatusSchema.optional(),
 	sayingType: coverageStatusSchema.optional(),
 	formulaRole: coverageStatusSchema.optional(),
@@ -117,6 +116,9 @@ const coverageSchema = z.object({
 			z.enum(directSemanticRelationValues),
 			coverageStatusSchema,
 		)
+		.optional(),
+	paradigm: z
+		.partialRecord(z.enum(dimensionIdValues), coverageStatusSchema)
 		.optional(),
 }) satisfies z.ZodType<Dumcorpus.KnowledgeCoverage>;
 
@@ -137,7 +139,17 @@ const knowledgeCaseSchema = z
 		}),
 		text: z.string(),
 		gold: z
-			.object({ knowledge: knowledgeSchema, coverage: coverageSchema })
+			.preprocess(
+				currentGold,
+				z.object({
+					knowledge: knowledgeSchema,
+					paradigm: z.partialRecord(
+						z.enum(dimensionIdValues),
+						z.array(z.string()),
+					),
+					coverage: coverageSchema,
+				}),
+			)
 			.optional(),
 		authored: z.boolean(),
 		rules: z.array(z.string()),
@@ -230,6 +242,7 @@ function casesOf(record: Dumcorpus.SpecRecord): KnowledgeCase[] {
 					? {
 							gold: {
 								knowledge: target.knowledge ?? {},
+								paradigm: target.paradigm ?? {},
 								coverage: target.coverage,
 							},
 						}
@@ -519,18 +532,10 @@ const scopeSettings: Readonly<
 		transcription: false,
 		definition: false,
 		translations: allOff(translationLanguageValues),
-		morphologicalTree: false,
 	},
 	text: {
-		morphologicalTree: false,
-		plural: false,
 		valency: false,
-		participleSource: false,
-		conjugationClass: false,
-		preterite: false,
-		presentSingular: false,
-		pastParticiple: false,
-		subjunctivePast: false,
+		source: false,
 		locutionType: false,
 		sayingType: false,
 		formulaRole: false,
@@ -548,6 +553,19 @@ export function requestOf(
 		settings: scopeSettings[scope],
 	});
 	return selected.success ? selected.value : {};
+}
+
+/**
+ * The Variation Dimensions a case's run writes: in the structural scope,
+ * every one its route's Paradigm Policy names; none in the text scope.
+ */
+export function paradigmRequestOf(
+	goldCase: Pick<KnowledgeCase, "reading">,
+	scope: KnowledgeScope,
+): readonly Dumrel.DimensionId[] {
+	return scope === "structural"
+		? paradigmDimensions(goldCase.reading.lemma)
+		: [];
 }
 
 /** The tracked frozen sets (`frozen-sets.ts`). */

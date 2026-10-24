@@ -1,13 +1,13 @@
 import { expect } from "bun:test";
 import { sameLemma, sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
-import * as Effect from "effect/Effect";
 
 import type {
 	CommitChangesRequest,
 	CommitChangesResult,
 	DumdictPendingSemanticRelation,
 	LemmaRecord,
+	PendingSemanticRelationRecord,
 	PlannedChangeOp,
 	ReadingEntry,
 } from "../../domain-types";
@@ -16,11 +16,19 @@ import {
 	unwrapDumdictParse,
 } from "../../parsing/lightweight-parsers";
 import type { DumdictPlanOutcome } from "../../planner/planner";
-import type { CleanupRelationResolution } from "../../public";
+import type {
+	CleanupRelationResolution,
+	ReevaluateShadowsRequest,
+} from "../../public";
 import type {
 	CleanupRelationsSlice,
 	LoadReadingEntryContextRequest,
+	OccurrenceSlice,
+	OccurrenceSliceRequest,
 	ReadingEntryContext,
+	ReevaluateShadowsSlice,
+	RekeySurfacesSlice,
+	RekeySurfacesSliceRequest,
 } from "../../storage";
 import {
 	gehenReading,
@@ -31,19 +39,54 @@ import {
 
 /**
  * The storage operations the conformance suite drives: the commit, and the
- * slice reads the planner plans from. A failing Effect fails the test.
+ * slice reads the planner plans from. A rejected Promise fails the test.
  */
 export type ConformanceStorage = {
 	commitChanges(
 		request: CommitChangesRequest<"de">,
-	): Effect.Effect<CommitChangesResult, unknown>;
+	): Promise<CommitChangesResult>;
 	loadReadingEntryContext(
 		request: LoadReadingEntryContextRequest<"de">,
-	): Effect.Effect<ReadingEntryContext<"de">, unknown>;
+	): Promise<ReadingEntryContext<"de">>;
 	/** The slice `cleanupRelations` plans from, for these resolutions. */
 	loadCleanupRelationsContext(request: {
 		resolutions: CleanupRelationResolution<"de">[];
-	}): Effect.Effect<CleanupRelationsSlice<"de">, unknown>;
+	}): Promise<CleanupRelationsSlice<"de">>;
+	/**
+	 * The slice `reevaluateShadows` plans from: every stored record whose
+	 * Pending Entry ID is one of `reevaluatedPendingEntryIds(request)`, every
+	 * stored Reading claiming a removed Lemma or one of its Readings, and
+	 * their relation inventory.
+	 */
+	loadReevaluateShadowsContext(
+		request: Omit<ReevaluateShadowsRequest<"de">, "baseRevision">,
+	): Promise<ReevaluateShadowsSlice<"de">>;
+	/**
+	 * The slice `removeOccurrence` and `reconcileAttestationLinks` plan
+	 * from: each stored Lemma one of whose Readings holds a link with a
+	 * requested ref, whole, every other Reading claiming one of them or their
+	 * Readings, and every stored Shadow relation one of them matches. A store
+	 * that keeps no Attestation Links (`attestationLinks: false`) answers no
+	 * Lemma.
+	 */
+	loadOccurrenceSlice(
+		request: OccurrenceSliceRequest,
+	): Promise<OccurrenceSlice<"de">>;
+	/**
+	 * The slice `rekeySurfaces` plans from: each stored Surface Entry with a
+	 * requested id, without its Surface, and each Reading whose links name
+	 * one.
+	 */
+	loadRekeySurfacesSlice(
+		request: RekeySurfacesSliceRequest<"de">,
+	): Promise<RekeySurfacesSlice<"de">>;
+	/**
+	 * Removes a Lemma as the host does outside Dumdict's plans, such as when
+	 * the user deletes its note: the Lemma, its Readings with their pending
+	 * records, and its owned Surfaces. Claims other Readings hold on it stay
+	 * until a re-evaluation moves them.
+	 */
+	removeLemma(lemma: Dumling.Lemma<"de">): Promise<void>;
 };
 
 export const semanticConflict = {
@@ -51,16 +94,12 @@ export const semanticConflict = {
 	code: "semanticPreconditionFailed",
 } as const;
 
-export function run<A, E>(effect: Effect.Effect<A, E>): Promise<A> {
-	return Effect.runPromise(effect);
-}
-
 export async function commit(
 	storage: ConformanceStorage,
 	changes: PlannedChangeOp<"de">[],
 ): Promise<CommitChangesResult> {
 	const { revision } = await readingContext(storage, gehenReading);
-	return run(storage.commitChanges({ baseRevision: revision, changes }));
+	return storage.commitChanges({ baseRevision: revision, changes });
 }
 
 export async function seed(
@@ -81,10 +120,8 @@ export async function commitPlan(
 ): Promise<CommitChangesResult> {
 	if (outcome.status !== "planned")
 		throw new Error(`Expected a plan, got ${JSON.stringify(outcome)}.`);
-	return run(
-		storage.commitChanges(
-			unwrapDumdictParse(parseAsCommitChangesRequest(outcome.plan, "de")),
-		),
+	return storage.commitChanges(
+		unwrapDumdictParse(parseAsCommitChangesRequest(outcome.plan, "de")),
 	);
 }
 
@@ -92,12 +129,10 @@ export async function readingContext(
 	storage: ConformanceStorage,
 	reading: Dumling.Reading<"de">,
 ) {
-	const context = await run(
-		storage.loadReadingEntryContext({
-			intent: "ensureReadingEntry",
-			reading,
-		}),
-	);
+	const context = await storage.loadReadingEntryContext({
+		intent: "ensureReadingEntry",
+		reading,
+	});
 	if (context.intent !== "ensureReadingEntry")
 		throw new Error(`Expected an ensureReadingEntry context.`);
 	return context;
@@ -115,15 +150,13 @@ export async function exactPending(
 	pendingRelations: DumdictPendingSemanticRelation<"de">[],
 	reading: Dumling.Reading<"de"> = gehenReading,
 ) {
-	const context = await run(
-		storage.loadReadingEntryContext({
-			intent: "applyGeneratedKnowledge",
-			reading,
-			pendingRelations,
-			relationTargetLemmas: [],
-			relationTargetReadings: [],
-		}),
-	);
+	const context = await storage.loadReadingEntryContext({
+		intent: "applyGeneratedKnowledge",
+		reading,
+		pendingRelations,
+		relationTargetLemmas: [],
+		relationTargetReadings: [],
+	});
 	if (context.intent !== "applyGeneratedKnowledge")
 		throw new Error(`Expected an applyGeneratedKnowledge context.`);
 	return context.exactPendingRelations;
@@ -133,14 +166,13 @@ export async function pendingMatchingLemma(
 	storage: ConformanceStorage,
 	lemma: Dumling.Lemma<"de", "Lexeme", "VERB">,
 ) {
-	const context = await run(
-		storage.loadReadingEntryContext({
-			intent: "addNewNote",
-			reading: { unitKind: "Reading", lemma, emojiDescription: "🦶" },
-			ownedSurfaces: [],
-			relations: [],
-		}),
-	);
+	const context = await storage.loadReadingEntryContext({
+		intent: "addNewNote",
+		reading: { unitKind: "Reading", lemma, emojiDescription: "🦶" },
+		ownedSurfaces: [],
+		relations: [],
+		attestationRefs: [],
+	});
 	if (context.intent !== "addNewNote")
 		throw new Error(`Expected an addNewNote context.`);
 	return context.pendingRelationsMatchingProposedLemma;
@@ -148,13 +180,11 @@ export async function pendingMatchingLemma(
 
 /** Every fixture value a refused commit must leave as it was. */
 export async function snapshot(storage: ConformanceStorage) {
-	const surfaces = await run(
-		storage.loadReadingEntryContext({
-			intent: "ensureOwnedSurface",
-			reading: gehenReading,
-			surface: gehenSurface,
-		}),
-	);
+	const surfaces = await storage.loadReadingEntryContext({
+		intent: "ensureOwnedSurface",
+		reading: gehenReading,
+		surface: gehenSurface,
+	});
 	return {
 		surfaces,
 		laufen: await readingContext(storage, laufenReading),
@@ -233,4 +263,21 @@ export function expectBoundedInventory(
 		expect(stored.relationLemmas).toContainEqual(record);
 	for (const entry of inventory.relationReadings)
 		expect(stored.relationReadings).toContainEqual(entry);
+}
+
+/** A stored pending record once its Shadow resolves to `lemma`. */
+export function resolvedTo(
+	record: PendingSemanticRelationRecord<"de">,
+	lemma: Dumling.Lemma<"de">,
+): PendingSemanticRelationRecord<"de"> {
+	return { ...record, resolvedLemma: lemma };
+}
+
+/** The same records, in any order: a store may list them in its own. */
+export function expectSameRecords(
+	actual: readonly PendingSemanticRelationRecord<"de">[],
+	expected: readonly PendingSemanticRelationRecord<"de">[],
+): void {
+	expect(actual).toHaveLength(expected.length);
+	expect(actual).toEqual(expect.arrayContaining([...expected]));
 }

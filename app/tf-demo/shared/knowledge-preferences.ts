@@ -4,7 +4,6 @@ export const DEFAULT_KNOWLEDGE_SETTINGS = {
 	transcription: true,
 	definition: true,
 	translations: { en: true, ru: true },
-	morphologicalTree: true,
 	semanticRelations: {
 		synonym: true,
 		nearSynonym: true,

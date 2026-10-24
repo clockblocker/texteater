@@ -13,6 +13,13 @@ import {
 } from "./_generated/server";
 import { inspectionEnabled } from "./deploymentFlags";
 import { scheduleKnowledgeGeneration } from "./model/knowledgeScheduling";
+import {
+	resolutionActivityValidator,
+	resolutionGenerationEventValidator,
+	resolutionPhaseValidator,
+	resolutionProgressValidator,
+	safeGenerationFailureValidator,
+} from "./model/resolutionLifecycleValidators";
 import { requireClickableSegment } from "./model/resolutionLookup";
 import {
 	advanceResolutionSession,
@@ -27,15 +34,10 @@ import {
 } from "./model/resolutionSessions";
 import {
 	readingCheckpointValidator,
-	resolutionActivityValidator,
-	resolutionGenerationEventValidator,
 	resolutionGrammarProjectionValidator,
-	resolutionPhaseValidator,
-	resolutionProgressValidator,
 	resolutionReadingProjectionValidator,
 	resolutionSessionGuardValidator,
 	resolvedGrammaticalValidator,
-	safeGenerationFailureValidator,
 	storedUnitValidator,
 	visitorError,
 } from "./model/validators";

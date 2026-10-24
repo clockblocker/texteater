@@ -43,10 +43,19 @@ const LANDING_ORDER = [
 	["violet", "right-of-head"],
 ] as const;
 
-export const BITES: readonly Bite[] = LANDING_ORDER.map(([colour, role]) => {
-	const [cx, cy, r] = circles.circles_by_role[role];
-	return { role, colour, cx, cy, r };
-});
+export const BITES: readonly Bite[] = LANDING_ORDER.map(([colour, role]) => ({
+	role,
+	colour,
+	...circleFrom(circles.circles_by_role[role]),
+}));
+
+/** A circle stored as `[cx, cy, r]`, as `optimal_circles.json` keeps them. */
+function circleFrom(values: readonly number[]): Circle {
+	const [cx, cy, r, ...extra] = values;
+	if (cx === undefined || cy === undefined || r === undefined || extra.length)
+		throw new Error(`Expected [cx, cy, r], got ${JSON.stringify(values)}`);
+	return { cx, cy, r };
+}
 
 export const EYE = { cx: 407.5, cy: 262, r: 15 } as const;
 
@@ -216,6 +225,14 @@ export function rng(seed: number): () => number {
 		t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
 		return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 	};
+}
+
+/** The item at `index`, which the caller knows is in range. */
+export function itemAt<T>(items: ArrayLike<T>, index: number): T {
+	const item = items[index];
+	if (item === undefined)
+		throw new RangeError(`No item at ${index} of ${items.length}`);
+	return item;
 }
 
 /** Short numbers keep generated SVGs small. */

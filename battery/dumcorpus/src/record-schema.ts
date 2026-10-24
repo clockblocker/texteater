@@ -1,3 +1,4 @@
+import { dimensionIdValues } from "dumrel";
 import { z } from "zod";
 
 const indexSchema = z.number().int().nonnegative();
@@ -73,7 +74,7 @@ export const knowledgeCoverageSchema = z
 				ru: coverageStatusSchema,
 			})
 			.optional(),
-		morphologicalTree: coverageStatusSchema,
+		breakdown: coverageStatusSchema,
 		semanticRelations: z
 			.strictObject({
 				synonym: coverageStatusSchema,
@@ -86,25 +87,49 @@ export const knowledgeCoverageSchema = z
 			})
 			.optional(),
 		valency: coverageStatusSchema,
-		participleSource: coverageStatusSchema,
-		plural: coverageStatusSchema,
-		conjugationClass: coverageStatusSchema,
-		preterite: coverageStatusSchema,
-		presentSingular: coverageStatusSchema,
-		pastParticiple: coverageStatusSchema,
-		subjunctivePast: coverageStatusSchema,
+		source: coverageStatusSchema,
 		locutionType: coverageStatusSchema,
 		sayingType: coverageStatusSchema,
 		formulaRole: coverageStatusSchema,
+		hebrewParadigm: coverageStatusSchema,
+		paradigm: z
+			.strictObject(
+				Object.fromEntries(
+					dimensionIdValues.map((dimension) => [
+						dimension,
+						coverageStatusSchema,
+					]),
+				) as Record<
+					(typeof dimensionIdValues)[number],
+					typeof coverageStatusSchema
+				>,
+			)
+			.describe(
+				"Which Variation Dimensions of the Lemma's Paradigm a person has covered: Authored when `paradigm` holds the dimension, ReviewedEmpty when this Reading takes none.",
+			)
+			.optional(),
 	})
 	.describe(
-		"Which Knowledge aspects a person has covered: Authored when `knowledge` holds the aspect, ReviewedEmpty when it has none. Leave an unreviewed aspect out.",
+		"Which Knowledge aspects and Variation Dimensions a person has covered: Authored when `knowledge` or `paradigm` holds one, ReviewedEmpty when it has none. Leave an unreviewed one out.",
+	);
+
+/**
+ * What the Reading licenses in its Lemma's Paradigm (ADR 0048): per
+ * Variation Dimension its route's Paradigm Policy names, the forms or the
+ * marker its sense takes, each cited as a dictionary cites it (ADR 0038).
+ * The loader checks them with dumrel; a Lemma's Paradigm is its Readings'
+ * forms pooled.
+ */
+const readingParadigmSchema = z
+	.partialRecord(z.enum(dimensionIdValues), z.array(textSchema).min(1))
+	.describe(
+		"The forms, or the marker, this Reading licenses per Variation Dimension of its Lemma's Paradigm: plural (Pizzen, or NoPlural), preterite (stand auf), present1, present2, present3, pastParticiple, subjunctivePast.",
 	);
 
 /**
  * The Reading a target attests, named by its Emoji Description (ADR 0031),
- * the Reading Knowledge it owns and which aspects of it a person has
- * covered. A Foreign Reading has no Emoji Description (ADR 0045). Its Lemma
+ * the Reading Knowledge it owns, what it licenses in its Lemma's Paradigm,
+ * and which of them a person has covered. A Foreign Reading has no Emoji Description (ADR 0045). Its Lemma
  * is the target's; the loader checks the Reading with Dumling's `parseUnit`
  * and the Knowledge with dumrel's `parseReadingKnowledge`.
  */
@@ -116,6 +141,7 @@ function readingSchema<K extends z.ZodType>(knowledge: K) {
 			)
 			.optional(),
 		knowledge: knowledge.optional(),
+		paradigm: readingParadigmSchema.optional(),
 		coverage: knowledgeCoverageSchema.optional(),
 	});
 }
@@ -143,6 +169,12 @@ const segmentsSchema = z
 		}),
 	)
 	.min(1);
+
+/** Why an annotation is as it is, and what models get wrong about it. */
+const notesSchema = z.strictObject({
+	rationale: textSchema.optional(),
+	knownMistakes: z.array(textSchema).optional(),
+});
 
 /**
  * What a target holds that another package types: its route (Dumling's
@@ -178,12 +210,7 @@ function targetSchema<
 		attestation: attestation.optional(),
 		reading: readingSchema(knowledge).optional(),
 		grundform: z.boolean().optional(),
-		notes: z
-			.strictObject({
-				rationale: textSchema.optional(),
-				knownMistakes: z.array(textSchema).optional(),
-			})
-			.optional(),
+		notes: notesSchema.optional(),
 	});
 }
 
@@ -231,27 +258,61 @@ export function recordFileSchema<
 }
 
 /**
- * The shape of one Breakdown Record file under `records/breakdown/`: the
- * multiword Lemma, its wording as the sentence, and the wording's Lexeme
- * targets. The loader validates the Lemma and Attestations with Dumling's
- * `parseUnit` and Reading Knowledge with dumrel; the JSON Schema emitter
- * passes Dumling's Locution and Saying Lemma schemas, its Lexeme Attestation
- * schemas and dumrel's Reading Knowledge schema.
+ * What a Breakdown Record holds that another package types: its owning
+ * Reading (Dumling) and its Breakdown and Source (dumrel). The loader passes
+ * loose schemas and checks both itself; the JSON Schema emitter passes the
+ * owners' schemas.
+ */
+export interface BreakdownSchemas<
+	R extends z.ZodType,
+	B extends z.ZodType,
+	S extends z.ZodType,
+> {
+	reading: R;
+	breakdown: B;
+	source: S;
+}
+
+/**
+ * The shape of one Breakdown Record file under `records/breakdown/` (ADR
+ * 0050): the Reading that owns it and that Reading's Breakdown or Source,
+ * the Knowledge aspects as dumrel stores them. Its parts carry no Surface and
+ * no Reading, so a person reviews it at Segmentation only (ADR 0037).
  */
 export function breakdownRecordFileSchema<
-	L extends z.ZodType,
 	R extends z.ZodType,
-	A extends z.ZodType,
-	K extends z.ZodType,
->(lemma: L, target: TargetSchemas<R, A, K>) {
+	B extends z.ZodType,
+	S extends z.ZodType,
+>({ reading, breakdown, source }: BreakdownSchemas<R, B, S>) {
 	return z.strictObject({
 		$schema: z.string().optional(),
-		lemma,
-		sentence: textSchema,
-		segments: segmentsSchema,
-		reviewDepth: reviewDepthSchema,
+		reading: reading.describe(
+			"The Reading that owns the Breakdown: its Lemma and Emoji Description, as Dumling normalizes them.",
+		),
+		knowledge: z
+			.strictObject({
+				breakdown: breakdown
+					.describe(
+						"The Reading's Constituents, its Morphemic Breakdown, or both: pieces of shown letters, each linked to a Unit Shadow or a Lemma, or unlinked filler.",
+					)
+					.optional(),
+				source: source
+					.describe(
+						"The immediate base of a formation whose letters can't be cut into pieces: a conversion, participle, acronym or clipping.",
+					)
+					.optional(),
+			})
+			.describe(
+				"The owning Reading's Breakdown or Source, as dumrel stores them.",
+			),
+		reviewDepth: z
+			.literal("Segmentation")
+			.describe(
+				"Segmentation once a person has reviewed the pieces and their links. Leave it out for a Draft.",
+			)
+			.optional(),
 		sources: sourcesSchema,
-		targets: z.array(targetSchema(target)),
+		notes: notesSchema.optional(),
 	});
 }
 

@@ -1,6 +1,7 @@
 import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 
-import { assertEmojiDescriptionNormalized } from "../core/validate-slice";
+import { assertEmojiDescriptionNormalized } from "../core/validate-records";
 import type {
 	DumdictReadingDraft,
 	DumdictSemanticRelationDraft,
@@ -11,6 +12,7 @@ import {
 	parseAsLemmaRecord,
 	parseAsReadingEntry,
 	parseAsSurfaceEntry,
+	parseParadigmChangeForDumdictRuntime,
 	parsePendingSemanticRelationForDumdictRuntime,
 	parseReadingForDumdictRuntime,
 	pendingTargetsLanguage,
@@ -20,6 +22,8 @@ import type {
 	AddNewNoteRequest,
 	EnsureOwnedSurfaceRequest,
 	EnsureReadingEntryRequest,
+	RecordOccurrenceRequest,
+	RekeySurfacesRequest,
 } from "../public";
 
 /*
@@ -152,6 +156,55 @@ export function parseAddNewNoteRequest<L extends Dumling.Language>(
 			),
 		}),
 		...(relations && { relations }),
+		...(draft.paradigmChanges && {
+			paradigmChanges: parseParadigmChanges(draft.paradigmChanges),
+		}),
 	};
 	return { draft: parsed };
+}
+
+/** Paradigm Changes in Dumrel's shape; Dumrel checks them against the Lemma. */
+export function parseParadigmChanges(
+	changes: readonly unknown[],
+): Dumrel.ParadigmChange[] {
+	return changes.map((change) =>
+		unwrapDumdictParse(parseParadigmChangeForDumdictRuntime(change)),
+	);
+}
+
+const emptyNote = { attestedTranslations: [], notes: "" };
+
+/** The link parsed as its Reading's, and the Surface as its Lemma's. */
+export function parseRecordOccurrenceRequest<L extends Dumling.Language>(
+	language: L,
+	request: RecordOccurrenceRequest<L>,
+): RecordOccurrenceRequest<L> {
+	const entry = parseEntry(language, {
+		reading: request.link.reading,
+		...emptyNote,
+		attestationLinks: [request.link],
+	});
+	const [link] = entry.attestationLinks;
+	if (!link) throw new Error("The occurrence's link did not parse.");
+	const { surface } = parseOwnedSurface(language, entry.reading.lemma, {
+		surface: request.surface,
+		note: { ...emptyNote, attestations: [] },
+	});
+	return { link, surface };
+}
+
+/** Each re-keyed Surface parsed as its Lemma would own it. */
+export function parseRekeySurfacesRequest<L extends Dumling.Language>(
+	language: L,
+	request: RekeySurfacesRequest<L>,
+): RekeySurfacesRequest<L> {
+	return {
+		rekeys: request.rekeys.map(({ from, to }) => ({
+			from,
+			to: parseOwnedSurface(language, to.lemma, {
+				surface: to,
+				note: { ...emptyNote, attestations: [] },
+			}).surface,
+		})),
+	};
 }

@@ -47,7 +47,9 @@ test("plans an unseen Surface and treats an existing Surface as a no-op", () => 
 	expect(planned.plan.changes.map(({ type }) => type)).toEqual([
 		"createOwnedSurface",
 	]);
-	expect(storage.loadAll()[0]?.ownedSurfaceEntries).toEqual([]);
+	expect(storage.loadAll()[0]?.ownedSurfaceEntries).toEqual(
+		enSerializedNotes[0]?.ownedSurfaceEntries,
+	);
 	dict.ensureOwnedSurface(request);
 	const revisionAfterCreate = storage.revision();
 	const noOp = plannedOf(dict.plan.ensureOwnedSurface(request));

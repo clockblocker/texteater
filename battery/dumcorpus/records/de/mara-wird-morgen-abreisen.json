@@ -61,15 +61,6 @@
 			"reading": {
 				"emojiDescription": "🧳👋",
 				"knowledge": {
-					"conjugationClass": ["Weak"],
-					"preterite": ["reiste ab"],
-					"presentSingular": {
-						"first": ["reise ab"],
-						"second": ["reist ab"],
-						"third": ["reist ab"]
-					},
-					"pastParticiple": ["abgereist"],
-					"subjunctivePast": ["reiste ab"],
 					"valency": [
 						{
 							"status": "Required",
@@ -135,19 +126,30 @@
 						]
 					}
 				},
+				"paradigm": {
+					"preterite": ["reiste ab"],
+					"present1": ["reise ab"],
+					"present2": ["reist ab"],
+					"present3": ["reist ab"],
+					"pastParticiple": ["abgereist"],
+					"subjunctivePast": ["reiste ab"]
+				},
 				"coverage": {
 					"valency": "Authored",
-					"conjugationClass": "Authored",
-					"preterite": "Authored",
-					"presentSingular": "Authored",
-					"pastParticiple": "Authored",
-					"subjunctivePast": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
 						"antonym": "Authored",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
+					},
+					"paradigm": {
+						"preterite": "Authored",
+						"present1": "Authored",
+						"present2": "Authored",
+						"present3": "Authored",
+						"pastParticiple": "Authored",
+						"subjunctivePast": "Authored"
 					}
 				}
 			},

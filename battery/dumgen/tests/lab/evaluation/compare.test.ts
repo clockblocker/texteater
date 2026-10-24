@@ -53,7 +53,10 @@ async function savedRun(
 			}: {
 				output: { kind: string };
 				idealOutput: { kind: string };
-			}) => ({ contractPass: output.kind === idealOutput.kind }),
+			}) => ({
+				contractPass: output.kind === idealOutput.kind,
+				needsReview: output.kind === "?",
+			}),
 		},
 	});
 	await saveRun(directory, run);
@@ -93,6 +96,29 @@ test("--compare loads two saved runs and reports verdict counts, one-sided cases
 				],
 			},
 		],
+	});
+});
+
+test("--compare counts a NeedsReview case on its side and shows it in the verdict change", async () => {
+	const left = await savedRun(["kept", "moved"], (input) => input);
+	const right = await savedRun(["kept", "moved"], (input) =>
+		input.kind === "B" ? { kind: "?" } : input,
+	);
+	const report = await runEvaluationCli(
+		["--compare", left, right, "--output", directory],
+		{ write: () => {} },
+	);
+	const counts = (passed: number, needsReview: number) => ({
+		Passed: passed,
+		Failed: 0,
+		NeedsReview: needsReview,
+		Mixed: 0,
+		Unscored: 0,
+	});
+	expect(report).toMatchObject({
+		left: { cases: 2, verdicts: counts(2, 0) },
+		right: { cases: 2, verdicts: counts(1, 1) },
+		changed: [{ caseId: "moved", verdict: "Passed → NeedsReview" }],
 	});
 });
 

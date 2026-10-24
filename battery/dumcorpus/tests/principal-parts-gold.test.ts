@@ -1,67 +1,104 @@
 import { expect, test } from "bun:test";
+import type * as Dumling from "dumling/types";
+import { germanConjugationClass, variantIdOf } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import { loadSpecRecords } from "../src/index.js";
+import { germanSelectionIssues } from "../src/inflection.js";
 
-/** Each gold verb with one conjugation class and its principal parts. */
+/** Each gold verb Reading's licensed principal parts, as a selection. */
 function goldVerbs() {
 	return loadSpecRecords().flatMap((record) =>
 		record.targets.flatMap((target) => {
-			const {
-				conjugationClass,
-				preterite,
-				pastParticiple,
-				subjunctivePast,
-			} = target.knowledge ?? {};
-			const [onlyClass, ...others] = conjugationClass ?? [];
-			return onlyClass === undefined ||
-				others.length > 0 ||
-				!preterite ||
-				!pastParticiple ||
-				!subjunctivePast
-				? []
-				: [
-						{
-							lemma: target.attestation.surface.lemma
-								.canonicalForm,
-							onlyClass,
-							preterite,
-							pastParticiple,
-							subjunctivePast,
-						},
-					];
+			const { lemma } = target.attestation.surface;
+			const paradigm = target.paradigm ?? {};
+			if (lemma.language !== "de" || !paradigm.preterite) return [];
+			const selection: Partial<
+				Record<Dumrel.DimensionId, Dumrel.ParadigmVariant[]>
+			> = {};
+			for (const [dimension, values] of Object.entries(paradigm) as [
+				Dumrel.DimensionId,
+				readonly string[],
+			][])
+				selection[dimension] = values.map((value) => ({
+					id: variantIdOf(lemma, dimension, value),
+					value,
+					provenance: "Authored",
+				}));
+			return [
+				{
+					id: record.id,
+					lemma: lemma as Dumling.Lemma<"de">,
+					selection,
+				},
+			];
 		}),
 	);
 }
 
-// The forms are the source of truth (ADR 0038); these hold for every verb
-// of one class, so gold that breaks them is a slip.
-test("gold's principal parts agree with its one conjugation class (#1217)", () => {
-	const slips: string[] = [];
+// The forms are the source of truth, and gold keeps each licensed selection
+// consistent with the classes its Präteritum forms derive (ADR 0038), per
+// variant; gold that breaks that is a slip.
+test("gold's licensed principal parts agree with the conjugation class of each Präteritum (#1217)", () => {
 	const verbs = goldVerbs();
-	for (const verb of verbs) {
-		const finite = (form: string) => form.split(" ")[0] ?? "";
-		const sameAsPreterite =
-			verb.subjunctivePast.join() === verb.preterite.join();
-		// A Weak verb's Konjunktiv II is its Präteritum; a Strong or Mixed
-		// verb's never is (`wäre`, `müsste`, `verbrennte`).
-		if (sameAsPreterite !== (verb.onlyClass === "Weak"))
-			slips.push(`${verb.lemma}: Konjunktiv II ${verb.subjunctivePast}`);
-		// A Strong verb's Partizip II ends in -n and a Mixed one's in -t; a
-		// Weak Präteritum may have a strong participle (`backte`, `gebacken`).
-		const ending =
-			verb.onlyClass === "Strong"
-				? /n$/u
-				: verb.onlyClass === "Mixed"
-					? /t$/u
-					: undefined;
-		if (
-			ending &&
-			!verb.pastParticiple.every((form) => ending.test(finite(form)))
-		)
-			slips.push(`${verb.lemma}: Partizip II ${verb.pastParticiple}`);
-	}
+	const slips = verbs.flatMap(({ id, lemma, selection }) =>
+		germanSelectionIssues(lemma, selection).map(
+			(issue) => `${id}: ${issue}`,
+		),
+	);
 	expect(slips).toEqual([]);
 	expect(verbs.length).toBeGreaterThan(20);
-	expect(new Set(verbs.map((verb) => verb.onlyClass))).toEqual(
-		new Set(["Strong", "Weak", "Mixed"]),
+	const classes = new Set(
+		verbs.flatMap(({ lemma, selection }) =>
+			(selection.preterite ?? []).map(({ value }) =>
+				germanConjugationClass(lemma.canonicalForm, value),
+			),
+		),
 	);
+	expect(classes).toEqual(new Set(["Strong", "Weak", "Mixed"]));
+	// Free and conditioned doublets are checked per variant too.
+	expect(
+		verbs.some(({ selection }) => (selection.preterite ?? []).length > 1),
+	).toBe(true);
+});
+
+test("a Weak Präteritum's Konjunktiv II is itself, and a Strong one's never is", () => {
+	const variant = (value: string) => ({
+		id: value,
+		value,
+		provenance: "Produced" as const,
+	});
+	const lemma = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "VERB",
+		canonicalForm: "melken",
+		coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+	} as const;
+	expect(
+		germanSelectionIssues(lemma, {
+			preterite: [variant("melkte"), variant("molk")],
+			subjunctivePast: [variant("melkte"), variant("mölke")],
+			pastParticiple: [variant("gemelkt"), variant("gemolken")],
+		}),
+	).toEqual([]);
+	expect(
+		germanSelectionIssues(lemma, {
+			preterite: [variant("melkte")],
+			subjunctivePast: [variant("mölke")],
+		}),
+	).toEqual([
+		"The Weak Präteritum melkte is no Konjunktiv II form",
+		"A Weak verb's Konjunktiv II mölke is no Präteritum",
+	]);
+	expect(
+		germanSelectionIssues(lemma, {
+			preterite: [variant("molk")],
+			subjunctivePast: [variant("molk")],
+			pastParticiple: [variant("gemelkt")],
+		}),
+	).toEqual([
+		"The Strong Präteritum molk is a Konjunktiv II form",
+		"A Strong Präteritum takes a Partizip II in -n: gemelkt",
+	]);
 });

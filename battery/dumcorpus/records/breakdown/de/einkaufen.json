@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "einkaufen",
+			"coreFeatures": {
+				"hasSepPrefix": "ein",
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "🛒"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ein",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ein-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "kaufen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "kaufen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: einkaufen",
+				"url": "https://www.dwds.de/wb/einkaufen",
+				"supports": "The Wortzerlegung ein- + kaufen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A particle verb: the separable particle ein, which hasSepPrefix names, is a constituent and links to its Prefix Morpheme ein- (ADR 0050)."
+	}
+}

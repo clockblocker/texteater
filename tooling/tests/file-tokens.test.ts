@@ -67,6 +67,23 @@ test("generated, vendored and binary files are skipped", async () => {
 	}
 });
 
+test("gold records are skipped; other dumcorpus files count", async () => {
+	const big = "a".repeat(limitBytes + 1);
+	const root = await repository({
+		"battery/dumcorpus/records/de/sentence.json": big,
+		"battery/dumcorpus/records/breakdown/de/word.json": big,
+		"battery/dumcorpus/src/rules.ts": big,
+	});
+	try {
+		const { exitCode, stderr } = await check(root);
+		expect(exitCode).toBe(1);
+		expect(stderr).toContain("- battery/dumcorpus/src/rules.ts");
+		expect(stderr).not.toContain("records/");
+	} finally {
+		await rm(root, { recursive: true, force: true });
+	}
+});
+
 test("only the staged content counts", async () => {
 	const root = await repository({ "small.ts": "a" });
 	try {

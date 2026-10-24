@@ -32,8 +32,13 @@ dumcorpus applies. The Attestation records the Family, but no Head and no
 Member Role ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)).
 
 At text time a Locution is one unit over its Segments. Its words come out only
-in the Note's drill-down: a Locution or Saying has a Breakdown, its wording
-segmented into Lexemes that each resolve like a clicked piece (ADR 0041).
+in the Note's drill-down: a Locution's or Saying's Reading has Constituents,
+the biggest units strictly inside its wording, Lexemes or Locutions, each
+linking to a Unit Shadow or a Lemma
+([ADR 0050](./0050-break-a-reading-down-into-its-constituents.md)). A
+Lexeme whose Canonical Form holds a separable particle has Constituents too:
+`take off` and `give up` break down into verb + particle, as `aufmachen`
+does.
 
 A Locution's Kind is the part of speech the whole acts as:
 
@@ -148,11 +153,10 @@ A replacing word with no Lemma of its own joins the changed unit as a member.
   rastet, rostet`).
 - *Doppelt gemoppelt hält besser* is Duden's proverb *doppelt [genäht] hält
   besser* with *gemoppelt* for *genäht*. *gemoppelt* is a rhyme echo of
-  *doppelt*, like *gäbe* in *gang und gäbe*, with nothing to resolve to on
-  its own. So the line attests the Saying `Doppelt genäht hält besser` over
-  `[Doppelt, gemoppelt, hält, besser]`, Partial, and grouping, and so hover,
-  covers all four words. No reference collection lists the modified line; the
-  Saying it attests must pass the uptake test.
+  *doppelt*, and DWDS lists it as a headword, so it resolves on its own. So
+  the line attests the Saying `Doppelt genäht hält besser` over `[Doppelt,
+  hält, besser]`, Partial. No reference collection lists the modified line;
+  the Saying it attests must pass the uptake test.
 - A Locution accepts only a fixed word expanded into a compound that it heads:
   `Er biss ins Kunstgras` attests `ins Gras beißen` with members `[biss, in,
   s]`, and `Kunstgras` is its own NOUN. The fused article stays with the

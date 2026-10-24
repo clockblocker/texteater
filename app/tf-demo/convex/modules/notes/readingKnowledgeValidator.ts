@@ -17,6 +17,22 @@ const readingValueLemmaValidator = v.object({
 	coreFeatures: v.any(),
 });
 
+/** A Unit Shadow a pending link names (ADR 0050). */
+const linkTargetShadowValidator = v.object({
+	language: v.string(),
+	canonicalForm: v.string(),
+	family: v.string(),
+	kind: v.string(),
+});
+/** Where a Breakdown piece or a Source links: a Lemma, or a pending Shadow. */
+const linkTargetValidator = v.union(
+	readingValueLemmaValidator,
+	linkTargetShadowValidator,
+);
+const breakdownPiecesValidator = v.array(
+	v.object({ letters: v.string(), target: v.optional(linkTargetValidator) }),
+);
+
 const readingValueReadingValidator = v.object({
 	unitKind: v.literal("Reading"),
 	lemma: readingValueLemmaValidator,
@@ -157,32 +173,21 @@ export const readingKnowledgeValidator = v.object({
 			ru: v.optional(v.array(v.string())),
 		}),
 	),
-	morphologicalTree: v.optional(v.any()),
+	breakdown: v.optional(
+		v.object({
+			constituents: v.optional(breakdownPiecesValidator),
+			morphemes: v.optional(breakdownPiecesValidator),
+		}),
+	),
 	valency: v.optional(v.array(valencySlotValidator)),
-	participleSource: v.optional(
+	source: v.optional(
 		v.object({
-			verb: readingValueLemmaValidator,
-			meaning: participleMeaningValidator,
+			target: linkTargetValidator,
+			meaning: v.optional(participleMeaningValidator),
 		}),
 	),
-	// The per-Reading aspects of ADR 0038 and 0039, which Knowledge
-	// production writes (#887); Dumrel's parse has already checked them.
-	plural: v.optional(
-		v.union(v.array(v.string()), literalUnion(["NoPlural", "PluralOnly"])),
-	),
-	conjugationClass: v.optional(
-		v.array(literalUnion(["Strong", "Weak", "Mixed"])),
-	),
-	preterite: v.optional(v.array(v.string())),
-	presentSingular: v.optional(
-		v.object({
-			first: v.array(v.string()),
-			second: v.array(v.string()),
-			third: v.array(v.string()),
-		}),
-	),
-	pastParticiple: v.optional(v.array(v.string())),
-	subjunctivePast: v.optional(v.array(v.string())),
+	// The per-Reading aspects of ADR 0039, which Knowledge production writes
+	// (#887); Dumrel's parse has already checked them.
 	locutionType: v.optional(literalUnion(locutionTypeValues)),
 	sayingType: v.optional(
 		v.object({

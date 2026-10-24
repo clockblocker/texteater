@@ -62,9 +62,9 @@ export function useNoteMoves() {
 		 */
 		flight(h: NoteHandle, direction: WritingDirection): Promise<unknown> {
 			if (reduce)
-				return Promise.all([
+				return Promise.resolve(
 					animate(h.opacity, 0, transition(FLY_FADE)),
-				]);
+				);
 			const sign = inlineSign(direction);
 			const travel = animate(
 				h.x,
@@ -78,7 +78,7 @@ export function useNoteMoves() {
 		},
 		/** A Card that goes where it is: it fades. */
 		fade(h: NoteHandle): Promise<unknown> {
-			return Promise.all([animate(h.opacity, 0, transition(FLY_FADE))]);
+			return Promise.resolve(animate(h.opacity, 0, transition(FLY_FADE)));
 		},
 		/**
 		 * The Note stays exactly where the hand left it and grows from

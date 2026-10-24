@@ -1,9 +1,7 @@
-import { canonicalJson, isRecord } from "common-utils";
+import { canonicalJson } from "common-utils";
 import {
-	authoredReading,
 	deriveGrammaticalComponent,
 	type GrammaticalComponent,
-	selectAuthoredArticle,
 } from "dumcorpus/inventories";
 import {
 	applyDumdictKnowledgeChanges,
@@ -25,13 +23,22 @@ import {
 import { parseUnitAs } from "../../server/operationalParsing";
 import { SUPPORTED_TARGET_LANGUAGE_VALUES } from "../../shared/supported-target-language";
 import type { MutationCtx } from "../_generated/server";
-import { type AnyRecord, requireRecord } from "../model/readingKnowledge";
+import type { AnyRecord } from "../model/readingKnowledge";
 import {
 	attachPendingShadowReference,
 	ensureAccumulatedKnowledgeStatus,
 	pendingShadowDescriptor,
 	replaceAccumulatedKnowledge,
 } from "../model/shadows";
+import {
+	completeAuthoredComponentKnowledge,
+	withAuthoredArticleKnowledge,
+} from "./authoredKnowledge";
+import {
+	knowledgeRelationEdits,
+	relationEdgeEdit,
+	syncRelationEdges,
+} from "./relationEdges";
 import {
 	DICTIONARY_REVISION,
 	findCanonicalLemma,
@@ -47,12 +54,6 @@ import {
 	storedReadingEntry,
 	withoutSemanticRelationTargets,
 } from "./storage";
-
-import {
-	knowledgeRelationEdits,
-	relationEdgeEdit,
-	syncRelationEdges,
-} from "./transactionRelations";
 
 type PlannedChange = PlannedChangeOp<Dumling.Language>;
 type GermanReadingEntry = ReadingEntry<Dumling.Language>;
@@ -76,8 +77,21 @@ function hostGraphOwnsAttestations(): Error {
 	);
 }
 
-function assertNoAttestations(attestations: readonly string[]): void {
+function assertNoAttestations(attestations: readonly unknown[]): void {
 	if (attestations.length > 0) throw hostGraphOwnsAttestations();
+}
+
+/** The host graph owns occurrence cleanup, so no Dumdict plan deletes a record. */
+function hostGraphOwnsRemovals(): Error {
+	return new Error(
+		"tf-demo removes Readings, Surfaces and Lemmas through its host graph (tf-demo ADR 0001), not through Dumdict plans.",
+	);
+}
+
+function storesNoParadigms(): Error {
+	return new Error(
+		"tf-demo stores no Lemma Paradigms until texteater#1232 migrates it.",
+	);
 }
 
 function divergedFromPreflight(): Error {
@@ -186,7 +200,8 @@ async function preconditionFails(
 				? !exists
 				: exists;
 		}
-		case "readingAttestationMissing":
+		case "attestationMissing":
+		case "attestationLinkExists":
 			throw hostGraphOwnsAttestations();
 	}
 }
@@ -202,7 +217,7 @@ function applyPatchOps(
 	ops: Extract<PlannedChange, { type: "patchReading" }>["ops"],
 ): GermanReadingEntry {
 	const attestationAt = ops.findIndex(
-		(operation) => operation.kind === "addAttestation",
+		(operation) => operation.kind !== "applyKnowledgeChange",
 	);
 	const applied = applyDumdictKnowledgeChanges(
 		entry,
@@ -242,10 +257,17 @@ async function advancePreflightState(
 ): Promise<void> {
 	switch (change.type) {
 		case "createLemma":
+			if (change.record.paradigm !== undefined) throw storesNoParadigms();
 			shadow.lemmas.set(lemmaIdentityKey(change.record.lemma), true);
 			return;
+		case "setLemmaParadigm":
+			throw storesNoParadigms();
+		case "deleteReading":
+		case "deleteOwnedSurface":
+		case "deleteLemma":
+			throw hostGraphOwnsRemovals();
 		case "createReading": {
-			assertNoAttestations(change.entry.attestations);
+			assertNoAttestations(change.entry.attestationLinks);
 			const entry = withAuthoredArticleKnowledge(change.entry);
 			const key = readingIdentityKey(entry.reading);
 			shadow.readings.set(key, true);
@@ -292,7 +314,7 @@ async function advancePreflightState(
 function readingEntryRecord(entry: GermanReadingEntry): AnyRecord {
 	const {
 		reading: _reading,
-		attestations: _attestations,
+		attestationLinks: _attestationLinks,
 		knowledge,
 		...content
 	} = entry;
@@ -501,6 +523,12 @@ async function applyChange(
 			await ctx.db.delete(stored._id);
 			return;
 		}
+		case "setLemmaParadigm":
+			throw storesNoParadigms();
+		case "deleteReading":
+		case "deleteOwnedSurface":
+		case "deleteLemma":
+			throw hostGraphOwnsRemovals();
 	}
 }
 
@@ -546,7 +574,7 @@ export async function materializeGrammaticalComponent(
 	reference: GrammaticalComponent,
 ) {
 	const { reading, surface } = reference;
-	const empty = { notes: "", attestedTranslations: [], attestations: [] };
+	const note = { notes: "", attestedTranslations: [] };
 	if (!(await findLemma(ctx, reading.lemma)))
 		await applyChange(ctx, {
 			type: "createLemma",
@@ -556,7 +584,7 @@ export async function materializeGrammaticalComponent(
 	if (!(await findReading(ctx, reading)))
 		await applyChange(ctx, {
 			type: "createReading",
-			entry: { reading, ...empty },
+			entry: { reading, ...note, attestationLinks: [] },
 			preconditions: [],
 		});
 	await completeAuthoredComponentKnowledge(ctx, reading);
@@ -564,71 +592,13 @@ export async function materializeGrammaticalComponent(
 	if (!(await findSurface(ctx, id)))
 		await applyChange(ctx, {
 			type: "createOwnedSurface",
-			entry: { id, ownerLemma: surface.lemma, surface, ...empty },
+			entry: {
+				id,
+				ownerLemma: surface.lemma,
+				surface,
+				...note,
+				attestations: [],
+			},
 			preconditions: [],
 		});
-}
-
-/**
- * Completes reviewed component entries outside a planned commit, without
- * replacing existing Knowledge or creating encounters.
- */
-export async function completeAuthoredComponentKnowledge(
-	ctx: MutationCtx,
-	reading: unknown,
-) {
-	const authored = authoredReading(reading);
-	if (!authored) return false;
-	const stored = await findReading(ctx, authored.reading);
-	if (!stored) return false;
-	const accumulated = await ctx.db
-		.query("accumulatedKnowledge")
-		.withIndex("by_owner_reading_key", (q) =>
-			q.eq("ownerReadingKey", stored.readingKey),
-		)
-		.unique();
-	const entry = await ctx.db.get(stored.entryId);
-	if (!entry) return false;
-	const record = requireRecord(entry.record, "Reading Entry record");
-	const knowledge = {
-		...optionalRecord(withoutSemanticRelationTargets(authored.knowledge)),
-		...optionalRecord(record.knowledge),
-		...accumulated?.knowledge,
-	};
-	const knowledgeJson = canonicalJson(knowledge);
-	if (
-		record.knowledge !== undefined &&
-		canonicalJson(record.knowledge) === knowledgeJson &&
-		accumulated !== null &&
-		canonicalJson(accumulated.knowledge) === knowledgeJson
-	)
-		return false;
-	await ctx.db.patch(entry._id, { record: { ...record, knowledge } });
-	// An authored member stores all its Knowledge (ADR 0021).
-	await replaceAccumulatedKnowledge(ctx, stored.readingKey, knowledge, {
-		status: "Full",
-	});
-	return true;
-}
-
-function optionalRecord(value: unknown): AnyRecord | null {
-	return isRecord(value) ? value : null;
-}
-
-/** A reviewed article's Reading Entry starts with its authored Knowledge. */
-function withAuthoredArticleKnowledge(
-	entry: GermanReadingEntry,
-): GermanReadingEntry {
-	const authored = selectAuthoredArticle(entry.reading);
-	if (!authored) return entry;
-	return {
-		...entry,
-		// Authored Knowledge is Dumdict Knowledge for its own Reading.
-		knowledge: {
-			...optionalRecord(
-				withoutSemanticRelationTargets(authored.knowledge),
-			),
-			...entry.knowledge,
-		} as GermanReadingEntry["knowledge"],
-	};
 }

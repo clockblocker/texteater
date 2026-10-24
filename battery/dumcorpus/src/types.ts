@@ -1,9 +1,11 @@
 export type {
 	AnnotationLayer,
+	BreakdownRecord,
 	CitingPrompt,
 	Coverage,
 	KnowledgeCoverage,
 	NoTarget,
+	ReadingParadigm,
 	Rule,
 	RuleCitation,
 	RuleId,

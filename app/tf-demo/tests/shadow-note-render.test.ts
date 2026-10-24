@@ -70,8 +70,8 @@ function noteFixture(): ShadowNote {
 					],
 					structuralReferences: [
 						{
-							aspect: "morphologicalTree",
-							path: "root.children[0]",
+							aspect: "breakdown",
+							path: "constituents.0",
 						},
 					],
 				},
@@ -79,6 +79,7 @@ function noteFixture(): ShadowNote {
 			continueCursor: "",
 			isDone: true,
 		},
+		formations: [],
 	};
 }
 
@@ -116,9 +117,11 @@ test("the paginated Note interface merges Shadow referrers by Reading", async ()
 	first.references.continueCursor = "cursor-1";
 	first.references.isDone = false;
 	const next = noteFixture();
+	const [group] = next.references.page;
+	if (!group) throw new Error("Expected a Shadow referrer group.");
 	next.references.page = [
 		{
-			...next.references.page[0],
+			...group,
 			pendingRelations: [
 				{ locatorKey: "locator-three", relation: "synonym" },
 			],

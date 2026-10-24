@@ -75,7 +75,6 @@
 			"reading": {
 				"emojiDescription": "🧒",
 				"knowledge": {
-					"plural": ["Kinder"],
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -103,9 +102,10 @@
 						]
 					}
 				},
+				"paradigm": { "plural": ["Kinder"] },
 				"coverage": {
-					"plural": "Authored",
 					"valency": "ReviewedEmpty",
+					"source": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -113,7 +113,8 @@
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
 						"holonym": "ReviewedEmpty"
-					}
+					},
+					"paradigm": { "plural": "Authored" }
 				}
 			},
 			"notes": {

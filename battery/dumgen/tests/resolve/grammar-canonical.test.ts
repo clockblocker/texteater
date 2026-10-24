@@ -3,7 +3,6 @@ import { isRecord } from "common-utils";
 import { sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
 import { generation } from "../../src/resolve/de/reading-prompts.js";
@@ -12,6 +11,7 @@ import {
 	draftsEmojiDescription,
 } from "../../src/resolve/reading.js";
 import type { JevAsk } from "../../src/segment/jev.js";
+import { fakeDumgen } from "./../service-test-adapter.js";
 import { writes } from "./grammar-fixtures.js";
 import {
 	attested,
@@ -342,7 +342,7 @@ test("a failed or Unresolved grammar request ends the guessed call before the tr
 	const down = fakeLuna(undefined, { delayMs: 50 });
 	const failure = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({
+			fakeDumgen({
 				jev: fakeJev({}, { fail: () => true }).ask,
 				luna: down.ask,
 				onOperation: (trace) => traces.push(trace),
@@ -421,7 +421,7 @@ test("Luna may correct a Typo, while a Standard member keeps its letters in Luna
 	// Too few words for the members Luna writes is no answer.
 	const short = await Effect.runPromise(
 		Effect.flip(
-			createDumgen({
+			fakeDumgen({
 				jev: fakeJev({ orthography: "t2" }).ask,
 				luna: writes("hereinkommen", ["komm", "doch"]).ask,
 			}).resolve.grammar({
