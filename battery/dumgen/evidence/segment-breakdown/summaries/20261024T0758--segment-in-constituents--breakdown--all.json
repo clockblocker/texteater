@@ -1,0 +1,2112 @@
+{
+	"runId": "4cdadbb2-bf62-45e0-b975-55110ab4a8a5",
+	"experimentId": "segment-in-constituents/de:breakdown",
+	"round": "2026-10-24-breakdown-round-4",
+	"note": "The tuning set: round 3's 63 tuning cases plus round 3's 21 held-out cases, promoted (breakdown-heldout-2026-10-24b, now dev). 3 repetitions, one live run at 45c63199b under --budget 335000; 450 of 730 requests replayed from the cache (round 3 and the round-4 live checks). Every case is shared with round 3; round3RepetitionsExact gives its round-3 count and round3Set the set it sat in then.",
+	"liveRuns": [
+		"4cdadbb2-bf62-45e0-b975-55110ab4a8a5"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "4cdadbb2-bf62-45e0-b975-55110ab4a8a5",
+		"experimentId": "segment-in-constituents/de:breakdown",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "45c63199b",
+		"startedAt": "2026-10-24T07:59:05.815Z",
+		"corpus": {
+			"fingerprint": "15164907df1a23480d8fba3bf3fc02bca5ee4b4797f8578bc8396285b079622a",
+			"caseIds": [
+				"breakdown/de/alles-in-allem",
+				"breakdown/de/apfelbaum",
+				"breakdown/de/aus-allen-wolken-fallen",
+				"breakdown/de/aus-dem-haeuschen-sein",
+				"breakdown/de/bauer-landwirt",
+				"breakdown/de/bauer-vogelkaefig",
+				"breakdown/de/befreien",
+				"breakdown/de/bildung",
+				"breakdown/de/bratpfanne",
+				"breakdown/de/da-liegt-der-hase-im-pfeffer",
+				"breakdown/de/den-faden-verlieren",
+				"breakdown/de/den-nagel-auf-den-kopf-treffen",
+				"breakdown/de/dies-und-das",
+				"breakdown/de/dieses-und-jenes",
+				"breakdown/de/dumm-wie-bohnenstroh",
+				"breakdown/de/durchbrechen-entzwei",
+				"breakdown/de/durchbrechen-hindernis",
+				"breakdown/de/e-mail",
+				"breakdown/de/einkaufen",
+				"breakdown/de/entgleisen",
+				"breakdown/de/entkernen",
+				"breakdown/de/entlarven",
+				"breakdown/de/entspannung",
+				"breakdown/de/erblinden",
+				"breakdown/de/erbrecht",
+				"breakdown/de/fahrrad",
+				"breakdown/de/fisch",
+				"breakdown/de/freiheit",
+				"breakdown/de/freundschaft",
+				"breakdown/de/gaestehaus",
+				"breakdown/de/gruendung-gruenden",
+				"breakdown/de/gruendung-gruenduenger",
+				"breakdown/de/guten-morgen",
+				"breakdown/de/guten-tag",
+				"breakdown/de/hand-in-hand-gehen",
+				"breakdown/de/himbeere",
+				"breakdown/de/in-betracht-ziehen",
+				"breakdown/de/kaufen",
+				"breakdown/de/kaum-dass",
+				"breakdown/de/kleidung",
+				"breakdown/de/kochtopf",
+				"breakdown/de/kohlekraftwerk",
+				"breakdown/de/laster-lastwagen",
+				"breakdown/de/laster-untugend",
+				"breakdown/de/leidtun",
+				"breakdown/de/leiter-leiten",
+				"breakdown/de/leiter-sprossenleiter",
+				"breakdown/de/messer-messen",
+				"breakdown/de/messer-schneidwerkzeug",
+				"breakdown/de/morgenstund-hat-gold-im-mund",
+				"breakdown/de/na-ja",
+				"breakdown/de/nur-bahnhof-verstehen",
+				"breakdown/de/ohne-zu",
+				"breakdown/de/rentier-ren",
+				"breakdown/de/rentier-rentner",
+				"breakdown/de/rufen",
+				"breakdown/de/rund-um-die-uhr-betreuung",
+				"breakdown/de/schlafsack",
+				"breakdown/de/schreibtisch",
+				"breakdown/de/sich-wie-zu-hause-fuehlen",
+				"breakdown/de/so-gut-wie",
+				"breakdown/de/so-oder-so",
+				"breakdown/de/sonnenbrille",
+				"breakdown/de/spannen",
+				"breakdown/de/steuermann",
+				"breakdown/de/stimmung-laune",
+				"breakdown/de/stimmung-tonhoehe",
+				"breakdown/de/trimm-dich-pfad",
+				"breakdown/de/uebung-macht-den-meister",
+				"breakdown/de/um-jeden-preis",
+				"breakdown/de/um-zu",
+				"breakdown/de/verarmen",
+				"breakdown/de/verarzten",
+				"breakdown/de/verfilmen",
+				"breakdown/de/vergiften",
+				"breakdown/de/verkabeln",
+				"breakdown/de/verkaufen",
+				"breakdown/de/wachstube-wachlokal",
+				"breakdown/de/wachstube-wachstube",
+				"breakdown/de/was-fuer",
+				"breakdown/de/was-weiss-ich",
+				"breakdown/de/wer-zuerst-kommt-mahlt-zuerst",
+				"breakdown/de/zu-hause",
+				"breakdown/de/zunichtemachen"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-constituents/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 84,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 84,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 76,
+			"failed": 8,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-24T07:59:06.104Z",
+		"total": 84,
+		"succeeded": 84,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 3,
+			"varyingOutputs": 3,
+			"quality": {
+				"passed": 227,
+				"failed": 25,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"attempts": 252,
+			"exactAttempts": 227,
+			"exact": 0.9008,
+			"casesExactEveryRepetition": 74,
+			"cases": 84,
+			"cutPrecision": 0.9825,
+			"cutRecall": 0.9825,
+			"linksPlaced": 0.9615,
+			"linksWithGoldRoute": 0.9377,
+			"linksExact": 0.9377,
+			"hasConstituentsAgreed": 0.9881,
+			"failed": 0
+		},
+		"phraseme": {
+			"attempts": 84,
+			"exactAttempts": 80,
+			"exact": 0.9524,
+			"casesExactEveryRepetition": 26,
+			"cases": 28,
+			"cutPrecision": 1.0,
+			"cutRecall": 1.0,
+			"linksPlaced": 1.0,
+			"linksWithGoldRoute": 0.9839,
+			"linksExact": 0.9839,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		},
+		"word": {
+			"attempts": 168,
+			"exactAttempts": 147,
+			"exact": 0.875,
+			"casesExactEveryRepetition": 48,
+			"cases": 56,
+			"cutPrecision": 0.9524,
+			"cutRecall": 0.9524,
+			"linksPlaced": 0.9293,
+			"linksWithGoldRoute": 0.899,
+			"linksExact": 0.899,
+			"hasConstituentsAgreed": 0.9821,
+			"failed": 0
+		}
+	},
+	"comparisonWithRound3": {
+		"all": {
+			"cases": 84,
+			"attempts": 252,
+			"round3Exact": 203,
+			"round4Exact": 227,
+			"round3EveryRepetition": 65,
+			"round4EveryRepetition": 74
+		},
+		"round3Tuning": {
+			"cases": 63,
+			"attempts": 189,
+			"round3Exact": 160,
+			"round4Exact": 173,
+			"round3EveryRepetition": 51,
+			"round4EveryRepetition": 57
+		},
+		"round3HeldOutPromoted": {
+			"cases": 21,
+			"attempts": 63,
+			"round3Exact": 43,
+			"round4Exact": 54,
+			"round3EveryRepetition": 14,
+			"round4EveryRepetition": 17
+		}
+	},
+	"spend": {
+		"jev": {
+			"calls": 730,
+			"freshCalls": 280,
+			"freshInputTokens": 276201,
+			"allInputTokens": 555214
+		},
+		"luna": {
+			"calls": 0,
+			"freshCalls": 0,
+			"freshInputTokens": 0,
+			"freshOutputTokens": 0
+		}
+	},
+	"transport": {
+		"requests": 280,
+		"retries": 0,
+		"retriedRequests": 0,
+		"failures": 0,
+		"interrupted": 0,
+		"retriesBy": {},
+		"failuresBy": {}
+	},
+	"cases": [
+		{
+			"caseId": "breakdown/de/alles-in-allem",
+			"group": "phraseme",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "alles → Lexeme/PRON alle · in → Lexeme/ADP in · allem → Lexeme/PRON alle",
+			"returned": [
+				"3x alles → Lexeme/PRON alle · in → Lexeme/ADP in · allem → Lexeme/NOUN Allem"
+			],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/apfelbaum",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Apfel → Lexeme/NOUN Apfel · baum → Lexeme/NOUN Baum",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/aus-allen-wolken-fallen",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "aus → Lexeme/ADP aus · allen → Lexeme/DET alle · Wolken → Lexeme/NOUN Wolke · fallen → Lexeme/VERB fallen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 18,
+				"returned": 18,
+				"matched": 18
+			},
+			"linksOverRepetitions": {
+				"gold": 12,
+				"placed": 12,
+				"route": 12,
+				"linked": 12
+			},
+			"round3RepetitionsExact": 1,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/aus-dem-haeuschen-sein",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "aus → Lexeme/ADP aus · dem Häuschen → Lexeme/NOUN Häuschen · sein → Lexeme/VERB sein",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/bauer-landwirt",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Bau → Lexeme/VERB bauen · er → Morpheme/Suffix -er",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/bauer-vogelkaefig",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "none",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 0,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/befreien",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "be → Morpheme/Prefix be- · frei → Lexeme/ADJ frei",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/bildung",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Bild → Lexeme/VERB bilden · ung → Morpheme/Suffix -ung",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/bratpfanne",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Brat → Lexeme/VERB braten · pfanne → Lexeme/NOUN Pfanne",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/da-liegt-der-hase-im-pfeffer",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "da → Lexeme/ADV da · liegt → Lexeme/VERB liegen · der Hase → Lexeme/NOUN Hase · i → Lexeme/ADP in · m Pfeffer → Lexeme/NOUN Pfeffer",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 21,
+				"returned": 21,
+				"matched": 21
+			},
+			"linksOverRepetitions": {
+				"gold": 15,
+				"placed": 15,
+				"route": 15,
+				"linked": 15
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/den-faden-verlieren",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "den Faden → Lexeme/NOUN Faden · verlieren → Lexeme/VERB verlieren",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/den-nagel-auf-den-kopf-treffen",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "den Nagel → Lexeme/NOUN Nagel · auf → Lexeme/ADP auf · den Kopf → Lexeme/NOUN Kopf · treffen → Lexeme/VERB treffen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 18,
+				"returned": 18,
+				"matched": 18
+			},
+			"linksOverRepetitions": {
+				"gold": 12,
+				"placed": 12,
+				"route": 12,
+				"linked": 12
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/dies-und-das",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "dies → Lexeme/PRON dieser · und → Lexeme/CCONJ und · das → Lexeme/PRON das",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/dieses-und-jenes",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "dieses → Lexeme/PRON dieser · und → Lexeme/CCONJ und · jenes → Lexeme/PRON jener",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/dumm-wie-bohnenstroh",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "dumm → Lexeme/ADJ dumm · wie → Lexeme/CCONJ wie · Bohnenstroh → Lexeme/NOUN Bohnenstroh",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/durchbrechen-entzwei",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "durch → Morpheme/Prefix durch- · brechen → Lexeme/VERB brechen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/durchbrechen-hindernis",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "durch → Morpheme/Prefix durch- · brechen → Lexeme/VERB brechen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/e-mail",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "E → Morpheme/Prefix e- · Mail → Lexeme/NOUN Mail",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/einkaufen",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "ein → Morpheme/Prefix ein- · kaufen → Lexeme/VERB kaufen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/entgleisen",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "ent → Morpheme/Prefix ent- · gleis → Lexeme/NOUN Gleis",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/entkernen",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "ent → Morpheme/Prefix ent- · kern → Lexeme/NOUN Kern",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/entlarven",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "ent → Morpheme/Prefix ent- · larv → Lexeme/NOUN Larve",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/entspannung",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Entspann → Lexeme/VERB entspannen · ung → Morpheme/Suffix -ung",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/erblinden",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "er → Morpheme/Prefix er- · blind → Lexeme/ADJ blind",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/erbrecht",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "Erb → Lexeme/VERB erben · recht → Lexeme/NOUN Recht",
+			"returned": [
+				"3x Erb → Lexeme/NOUN Erbe · recht → Lexeme/NOUN Recht"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 3,
+				"linked": 3
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/fahrrad",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Fahr → Lexeme/VERB fahren · rad → Lexeme/NOUN Rad",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/fisch",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "none",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 0,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/freiheit",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Frei → Lexeme/ADJ frei · heit → Morpheme/Suffix -heit",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/freundschaft",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Freund → Lexeme/NOUN Freund · schaft → Morpheme/Suffix -schaft",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/gaestehaus",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Gäst → Lexeme/NOUN Gast · e → Morpheme/Interfix -e- · haus → Lexeme/NOUN Haus",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/gruendung-gruenden",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Gründ → Lexeme/VERB gründen · ung → Morpheme/Suffix -ung",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/gruendung-gruenduenger",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "Grün → Lexeme/ADJ grün · dung → Lexeme/NOUN Dung",
+			"returned": [
+				"3x Gründ → Lexeme/VERB gründen · ung → Morpheme/Suffix -ung"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/guten-morgen",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "guten → Lexeme/ADJ gut · Morgen → Lexeme/NOUN Morgen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/guten-tag",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "guten → Lexeme/ADJ gut · Tag → Lexeme/NOUN Tag",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/hand-in-hand-gehen",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Hand in Hand → Locution/ADV Hand in Hand · gehen → Lexeme/VERB gehen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/himbeere",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Him → Morpheme/Root him · beere → Lexeme/NOUN Beere",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/in-betracht-ziehen",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "in → Lexeme/ADP in · Betracht → Lexeme/NOUN Betracht · ziehen → Lexeme/VERB ziehen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/kaufen",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "none",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 0,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/kaum-dass",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "kaum → Lexeme/ADV kaum · dass → Lexeme/SCONJ dass",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/kleidung",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Kleid → Lexeme/VERB kleiden · ung → Morpheme/Suffix -ung",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/kochtopf",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Koch → Lexeme/VERB kochen · topf → Lexeme/NOUN Topf",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/kohlekraftwerk",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Kohle → Lexeme/NOUN Kohle · kraftwerk → Lexeme/NOUN Kraftwerk",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/laster-lastwagen",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "Last → Lexeme/NOUN Last · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x none"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 0,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/laster-untugend",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "none",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 0,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			},
+			"round3RepetitionsExact": 2,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/leidtun",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "leid → Lexeme/ADJ leid · tun → Lexeme/VERB tun",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/leiter-leiten",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Leit → Lexeme/VERB leiten · er → Morpheme/Suffix -er",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/leiter-sprossenleiter",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "none",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 0,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/messer-messen",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 2,
+			"gold": "Mess → Lexeme/VERB messen · er → Morpheme/Suffix -er",
+			"returned": [
+				"1x Mess → Lexeme/NOUN Messe · er → Morpheme/Suffix -er"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 5,
+				"linked": 5
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/messer-schneidwerkzeug",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "none",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 0,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/morgenstund-hat-gold-im-mund",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Morgenstund → Lexeme/NOUN Morgenstunde · hat → Lexeme/VERB haben · Gold → Lexeme/NOUN Gold · i → Lexeme/ADP in · m Mund → Lexeme/NOUN Mund",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 21,
+				"returned": 21,
+				"matched": 21
+			},
+			"linksOverRepetitions": {
+				"gold": 15,
+				"placed": 15,
+				"route": 15,
+				"linked": 15
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/na-ja",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "na → Lexeme/INTJ na · ja → Lexeme/INTJ ja",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/nur-bahnhof-verstehen",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "nur → Lexeme/ADV nur · Bahnhof → Lexeme/NOUN Bahnhof · verstehen → Lexeme/VERB verstehen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/ohne-zu",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "ohne → Lexeme/SCONJ ohne · zu → Lexeme/PART zu",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/rentier-ren",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "Ren → Lexeme/NOUN Ren · tier → Lexeme/NOUN Tier",
+			"returned": [
+				"3x Ren → Morpheme/Root ren · tier → Lexeme/NOUN Tier"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 3,
+				"linked": 3
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/rentier-rentner",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Rent → Lexeme/NOUN Rente · ier → Morpheme/Suffix -ier",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/rufen",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "none",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 0,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/rund-um-die-uhr-betreuung",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Rund-um-die-Uhr → Locution/ADV rund um die Uhr · Betreuung → Lexeme/NOUN Betreuung",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 2,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/schlafsack",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Schlaf → Lexeme/VERB schlafen · sack → Lexeme/NOUN Sack",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/schreibtisch",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Schreib → Lexeme/VERB schreiben · tisch → Lexeme/NOUN Tisch",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/sich-wie-zu-hause-fuehlen",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "sich → Lexeme/VERB sich fühlen · wie → Lexeme/CCONJ wie · zu Hause → Locution/ADV zu Hause · fühlen → Lexeme/VERB sich fühlen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 18,
+				"returned": 18,
+				"matched": 18
+			},
+			"linksOverRepetitions": {
+				"gold": 12,
+				"placed": 12,
+				"route": 12,
+				"linked": 12
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/so-gut-wie",
+			"group": "phraseme",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 2,
+			"gold": "so → Lexeme/ADV so · gut → Lexeme/ADJ gut · wie → Lexeme/CCONJ wie",
+			"returned": [
+				"1x so → Lexeme/ADV so · gut → Lexeme/ADJ gut · wie → Lexeme/ADV wie"
+			],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 8,
+				"linked": 8
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/so-oder-so",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "so → Lexeme/ADV so · oder → Lexeme/CCONJ oder · so → Lexeme/ADV so",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/sonnenbrille",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Sonne → Lexeme/NOUN Sonne · n → Morpheme/Interfix -n- · brille → Lexeme/NOUN Brille",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/spannen",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "none",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 0,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/steuermann",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 1,
+			"gold": "Steuer → Lexeme/VERB steuern · mann → Lexeme/NOUN Mann",
+			"returned": [
+				"2x Steuer → Lexeme/NOUN Steuer · mann → Lexeme/NOUN Mann"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 4,
+				"linked": 4
+			},
+			"round3RepetitionsExact": 1,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/stimmung-laune",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Stimm → Lexeme/VERB stimmen · ung → Morpheme/Suffix -ung",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/stimmung-tonhoehe",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Stimm → Lexeme/VERB stimmen · ung → Morpheme/Suffix -ung",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/trimm-dich-pfad",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Trimm → Lexeme/VERB trimmen · dich → Lexeme/PRON sich · Pfad → Lexeme/NOUN Pfad",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 2,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/uebung-macht-den-meister",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Übung → Lexeme/NOUN Übung · macht → Lexeme/VERB machen · den Meister → Lexeme/NOUN Meister",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/um-jeden-preis",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "um → Lexeme/ADP um · jeden → Lexeme/DET jeder · Preis → Lexeme/NOUN Preis",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/um-zu",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "um → Lexeme/SCONJ um · zu → Lexeme/PART zu",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/verarmen",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "ver → Morpheme/Prefix ver- · arm → Lexeme/ADJ arm",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/verarzten",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "ver → Morpheme/Prefix ver- · arzt → Lexeme/NOUN Arzt",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/verfilmen",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "ver → Morpheme/Prefix ver- · filmen → Lexeme/VERB filmen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/vergiften",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "ver → Morpheme/Prefix ver- · giften → Lexeme/VERB giften",
+			"returned": [
+				"3x ver → Morpheme/Prefix ver- · gift → Lexeme/NOUN Gift"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 6,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 3,
+				"route": 3,
+				"linked": 3
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/verkabeln",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "ver → Morpheme/Prefix ver- · kabel → Lexeme/NOUN Kabel",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/verkaufen",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "ver → Morpheme/Prefix ver- · kaufen → Lexeme/VERB kaufen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/wachstube-wachlokal",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Wach → Lexeme/VERB wachen · stube → Lexeme/NOUN Stube",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/wachstube-wachstube",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "Wachs → Lexeme/NOUN Wachs · tube → Lexeme/NOUN Tube",
+			"returned": [
+				"3x Wach → Lexeme/VERB wachen · stube → Lexeme/NOUN Stube"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/was-fuer",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "was → Lexeme/PRON was · für → Lexeme/ADP für",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/was-weiss-ich",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "was → Lexeme/PRON was · weiß → Lexeme/VERB wissen · ich → Lexeme/PRON ich",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			},
+			"round3RepetitionsExact": 0,
+			"round3Set": "heldout"
+		},
+		{
+			"caseId": "breakdown/de/wer-zuerst-kommt-mahlt-zuerst",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Wer → Lexeme/PRON wer · zuerst → Lexeme/ADV zuerst · kommt → Lexeme/VERB kommen · mahlt → Lexeme/VERB mahlen · zuerst → Lexeme/ADV zuerst",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 24,
+				"returned": 24,
+				"matched": 24
+			},
+			"linksOverRepetitions": {
+				"gold": 15,
+				"placed": 15,
+				"route": 15,
+				"linked": 15
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/zu-hause",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "zu → Lexeme/ADP zu · Hause → Lexeme/NOUN Haus",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		},
+		{
+			"caseId": "breakdown/de/zunichtemachen",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "zunichte → Morpheme/Prefix zunichte- · machen → Lexeme/VERB machen",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			},
+			"round3RepetitionsExact": 3,
+			"round3Set": "breakdown"
+		}
+	]
+}

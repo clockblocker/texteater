@@ -1,0 +1,750 @@
+{
+	"round": "2026-10-24-breakdown-round-4",
+	"note": "Read offline from the round's cached jev answers by replaying each case through production's segmenter (no spend). Weights are jev's probabilities per repetition. H = a case in the fresh held-out set breakdown-heldout-2026-10-24c; B = a tuning case; U = an unseen segment-in-morphemes case (one of the held-out batch's five bottom words). Hamburger 🍔 is left out of every held-out count here and reported apart. Prompts did not change this round.",
+	"spend": {
+		"runs": [
+			{
+				"runId": "f691464f-5db5-407a-af64-84b84b0763af",
+				"experiment": "segment-in-constituents/de:heldout",
+				"budget": 240000,
+				"freshInputTokens": 170487,
+				"freshRequests": 235
+			},
+			{
+				"runId": "4cdadbb2-bf62-45e0-b975-55110ab4a8a5",
+				"experiment": "segment-in-constituents/de:breakdown",
+				"budget": 335000,
+				"freshInputTokens": 276201,
+				"freshRequests": 280,
+				"cachedRequests": 450
+			},
+			{
+				"runId": "784bce5e-5509-47f3-a9d6-2385c42b2a8c",
+				"experiment": "segment-in-morphemes/de:breakdown",
+				"budget": 75000,
+				"freshInputTokens": 14412,
+				"freshRequests": 32,
+				"cachedRequests": 4
+			}
+		],
+		"roundCap": 650000,
+		"freshInputTokens": 461100,
+		"usd": 0.0194,
+		"usdPerMillionInput": 0.042,
+		"standingGrant": {
+			"usd": 1,
+			"from": "round 3",
+			"spentTokens": 933346,
+			"spentUsd": 0.0392,
+			"leftUsd": 0.9608,
+			"note": "Round 3 357,037 + round-4 prep 115,209 + round 4 461,100 fresh jev input tokens."
+		},
+		"budgetStop": "No run reached its budget (71%, 82% and 19% of it), so the stop never fired and nothing overshot."
+	},
+	"projection": {
+		"note": "Projected = exact cached-repetition tokens + estimated tokens x 1.25; raw = the same without the margin. The held-out projection has no breakdown-senses requests (the stand-in answers never contest a word), so the prep added about 20,000 for them.",
+		"sets": [
+			{
+				"experiment": "segment-in-constituents/de:heldout",
+				"projected": 210188,
+				"projectedWithSenseAddition": 230188,
+				"raw": 168150,
+				"actual": 170487,
+				"actualOverProjected": 0.811,
+				"actualOverProjectedWithSenseAddition": 0.741,
+				"actualOverRaw": 1.014,
+				"requestsProjected": 216,
+				"requestsActual": 235
+			},
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"projected": 306420,
+				"raw": 257339,
+				"actual": 276201,
+				"actualOverProjected": 0.901,
+				"actualOverRaw": 1.073,
+				"requestsProjected": 317,
+				"requestsActual": 280
+			},
+			{
+				"experiment": "segment-in-morphemes/de:breakdown",
+				"projectedAtEstimate": 59291,
+				"projectedAtLiveStart": 45030,
+				"actual": 14412,
+				"actualOverProjected": 0.243,
+				"actualOverProjectedAtLiveStart": 0.32,
+				"requestsProjected": 26,
+				"requestsActual": 32,
+				"note": "The live run re-priced itself after the constituents runs had added breakdown-words samples, so its own projection fell from 59,291 to 45,030."
+			}
+		],
+		"total": {
+			"projected": 595899,
+			"actual": 461100,
+			"actualOverProjected": 0.774,
+			"prepLikely": 420000,
+			"actualOverPrepLikely": 1.098
+		},
+		"byStage": {
+			"heldout": {
+				"breakdown-analysis": {
+					"requests": [
+						48,
+						48
+					],
+					"tokens": [
+						36402,
+						36414
+					]
+				},
+				"breakdown-routes": {
+					"requests": [
+						60,
+						46
+					],
+					"tokens": [
+						58329,
+						69920
+					]
+				},
+				"breakdown-forms": {
+					"requests": [
+						54,
+						52
+					],
+					"tokens": [
+						48513,
+						24525
+					]
+				},
+				"breakdown-locutions": {
+					"requests": [
+						12,
+						12
+					],
+					"tokens": [
+						11922,
+						8637
+					]
+				},
+				"breakdown-words": {
+					"requests": [
+						42,
+						38
+					],
+					"tokens": [
+						12984,
+						15059
+					]
+				},
+				"breakdown-senses": {
+					"requests": [
+						0,
+						39
+					],
+					"tokens": [
+						0,
+						15932
+					],
+					"prepAddition": 20000
+				}
+			},
+			"breakdown": {
+				"breakdown-routes": {
+					"requests": [
+						81,
+						82
+					],
+					"tokens": [
+						144161,
+						183280
+					]
+				},
+				"breakdown-forms": {
+					"requests": [
+						117,
+						81
+					],
+					"tokens": [
+						52752,
+						35254
+					]
+				},
+				"breakdown-locutions": {
+					"requests": [
+						56,
+						56
+					],
+					"tokens": [
+						32618,
+						32831
+					]
+				},
+				"breakdown-senses": {
+					"requests": [
+						46,
+						46
+					],
+					"tokens": [
+						20586,
+						18603
+					]
+				},
+				"breakdown-words": {
+					"requests": [
+						17,
+						15
+					],
+					"tokens": [
+						7222,
+						6233
+					]
+				}
+			},
+			"morphemes": {
+				"breakdown-words": {
+					"requests": [
+						23,
+						23
+					],
+					"tokens": [
+						46834,
+						10305
+					],
+					"tokensPerRequest": [
+						2036,
+						448
+					]
+				},
+				"breakdown-morphemes": {
+					"requests": [
+						3,
+						9
+					],
+					"tokens": [
+						1341,
+						4107
+					]
+				}
+			},
+			"note": "[projected raw, actual]. Raw projections exclude the x1.25 margin; :breakdown's include its exactly priced cached-repetition tokens."
+		},
+		"findings": [
+			"Raw prices are close per set (1.01 and 1.07 of raw), so the x1.25 margin is what made the round come in under projection.",
+			"breakdown-routes is underpriced: 1,520 tokens per request on held-out against 972 projected, and 2,235 against 1,780 on :breakdown (+20% and +27% in stage tokens). The margin covered it.",
+			"breakdown-forms is overcounted, as in round 3: the stand-in answers open more forms requests (117 projected, 81 sent on :breakdown).",
+			"The morphemes pricing gap is confirmed: breakdown-words was priced at 2,036 tokens per request (this pass's same-stage fit from constituents' shapes) and cost 448, near the 411 the prep measured. breakdown-morphemes went the other way: 3 requests projected, 9 sent.",
+			"The held-out sense addition was right: 13 contested held-out words (as predicted) took 39 requests and 15,932 tokens, 409 per request, inside the 20,000 added."
+		]
+	},
+	"senseCheck": {
+		"heldout": {
+			"wordAttemptsAnalysed": 45,
+			"contested": 36,
+			"stoodOnAYes": 16,
+			"stoodOnScore": 10,
+			"flipped": 10,
+			"flipsRight": 5,
+			"flipsWrong": 5,
+			"freshRequests": 39,
+			"freshTokens": 15932,
+			"right": [
+				"Schoner ⛵ reps 2 and 3 (to none)",
+				"Sticker 🏷 all 3 (to none)"
+			],
+			"wrong": [
+				"Schoner 🛡 reps 1 and 2 (to none)",
+				"Sticker 🪡 reps 1 and 2 (to none)",
+				"Hamburger ⚓ rep 3 (Hamburg + -er to Ham + burger)"
+			],
+			"withHamburgerBurger": {
+				"wordAttemptsAnalysed": 48,
+				"contested": 39,
+				"flipped": 11,
+				"note": "Hamburger 🍔 rep 3 flipped Hamburg + -er to Ham + burger, neither of them gold."
+			}
+		},
+		"breakdown": {
+			"wordAttemptsAnalysed": 159,
+			"contested": 65,
+			"stoodOnAYes": 43,
+			"stoodOnScore": 9,
+			"flipped": 13,
+			"flipsRight": 10,
+			"flipsWrong": 3,
+			"freshRequests": 46,
+			"cachedRequests": 19,
+			"freshTokens": 18603,
+			"right": [
+				"Bauer 🐦 all 3 (to none)",
+				"Leiter 🪜 all 3 (to none)",
+				"Laster 😈 rep 3 (to none)",
+				"Rentier 🦌 all 3 (to Ren + tier; the case still fails on the cranberry route)"
+			],
+			"wrong": [
+				"Laster 🚚 all 3 (to none): the round's one regression from 3/3"
+			]
+		},
+		"cost": {
+			"freshTokens": 34535,
+			"freshRequests": 85,
+			"tokensPerRequest": 406,
+			"shareOfRoundSpend": 0.075,
+			"usd": 0.0015
+		},
+		"erFits": {
+			"note": "The -er derivation's sense answer per Reading, over the three repetitions. Gold-derivation and gold-none Readings overlap from 0.28 to 0.47, so no line between them holds; none's own fit is one minus the best answer, so every pick under 0.5 hands none more than 0.5.",
+			"goldDerivation": {
+				"Reiter 🏇 (H)": "0.93",
+				"Römer 🏛 (H)": "0.80-0.82",
+				"Leiter 👔 (B)": "0.64-0.66",
+				"Messer 📏 (B)": "0.58-0.59",
+				"Kreuzer 🪙 (H)": "0.46-0.50",
+				"Kreuzer 🚢 (H)": "0.44",
+				"Bauer 🧑‍🌾 (B)": "0.42-0.43",
+				"Schoner 🛡 (H)": "0.39-0.42",
+				"Sticker 🪡 (H)": "0.37-0.47",
+				"Laster 🚚 (B)": "0.34-0.39",
+				"Hamburger ⚓ (H)": "0.32-0.37"
+			},
+			"goldNone": {
+				"Reiter 🌾 (H)": "0.73-0.77",
+				"Messer 🔪 (B)": "0.53-0.57",
+				"Römer 🍷 (H)": "0.40-0.46",
+				"Sticker 🏷 (H)": "0.35-0.38",
+				"Schoner ⛵ (H)": "0.28-0.31",
+				"Leiter 🪜 (B)": "0.27-0.29",
+				"Bauer 🐦 (B)": "0.22-0.24",
+				"Laster 😈 (B)": "0.17-0.23"
+			}
+		},
+		"nearMisses": [
+			"Bauer 🧑‍🌾 (B) and Kreuzer 🚢/🪙 (H) stood only by score: none fit 0.53-0.58 against a pick weighed 0.70-0.83.",
+			"Messer 🔪 (B) stood by score with Mess + -er answering 0.53-0.57.",
+			"Kleidung (B) stood by score with Kleid + -ung answering 0.33-0.37."
+		]
+	},
+	"failuresByCause": [
+		{
+			"cause": "D. A base that spells a noun and a verb stem is routed NOUN",
+			"attempts": {
+				"H": 7,
+				"B": 6
+			},
+			"cases": [
+				{
+					"case": "Kreuzer 🚢",
+					"set": "H",
+					"failed": 3,
+					"gold": "kreuzen + -er",
+					"returned": "NOUN Kreuz + -er",
+					"weights": "verb test kreuzen 0.90, noun test Kreuz 0.61-0.62, so the route is asked: NOUN 0.94"
+				},
+				{
+					"case": "Segelboot",
+					"set": "H",
+					"failed": 3,
+					"gold": "VERB segeln + Boot",
+					"returned": "NOUN Segel + Boot",
+					"weights": "a compound's first part gets no verb test; route NOUN 0.94-0.95"
+				},
+				{
+					"case": "Sticker 🪡",
+					"set": "H",
+					"failed": 1,
+					"gold": "sticken + -er",
+					"returned": "rep 3 NOUN Stick + -er",
+					"weights": "verb 0.88, noun 0.86; route NOUN 0.61"
+				},
+				{
+					"case": "Erbrecht",
+					"set": "B",
+					"failed": 3,
+					"gold": "VERB erben + Recht",
+					"returned": "NOUN Erbe + Recht",
+					"weights": "NOUN 0.67-0.72"
+				},
+				{
+					"case": "Steuermann",
+					"set": "B",
+					"failed": 2,
+					"gold": "VERB steuern + Mann",
+					"returned": "NOUN Steuer + Mann",
+					"weights": "NOUN 0.53 / 0.58, VERB 0.47 / 0.42 (rep 1 VERB 0.55)"
+				},
+				{
+					"case": "Messer 📏",
+					"set": "B",
+					"failed": 1,
+					"gold": "messen + -er",
+					"returned": "rep 1 NOUN Messe + -er",
+					"weights": "noun test Mess 0.52 / 0.48 / 0.42: over 0.5 on rep 1 alone, so the route was asked (NOUN 0.91, form Messe 0.67)"
+				}
+			]
+		},
+		{
+			"cause": "S3. jev doesn't know the sense",
+			"attempts": {
+				"H": 6,
+				"B": 6
+			},
+			"cases": [
+				{
+					"case": "Reiter 🌾",
+					"set": "H",
+					"failed": 3,
+					"gold": "none",
+					"returned": "reiten + -er",
+					"weights": "the -er test answers 0.73-0.77 in the sense 🌾"
+				},
+				{
+					"case": "Hamburger ⚓",
+					"set": "H",
+					"failed": 3,
+					"gold": "PROPN Hamburg + -er",
+					"returned": "Ham + Burger",
+					"weights": "Ham + burger 0.45-0.50 against Hamburg + -er 0.34-0.48; 'a kind of Burger' 0.62-0.65 in the sense ⚓, the -er test 0.32-0.37 (its gloss names no inhabitant)"
+				},
+				{
+					"case": "Gründung 🌱",
+					"set": "B",
+					"failed": 3,
+					"gold": "grün + Dung",
+					"returned": "gründen + -ung",
+					"weights": "Grün + dung 0.10-0.11"
+				},
+				{
+					"case": "Wachstube 🕯",
+					"set": "B",
+					"failed": 3,
+					"gold": "Wachs + Tube",
+					"returned": "wachen + Stube",
+					"weights": "Wachs + tube 0.22-0.23, Wach + stube 0.77"
+				}
+			]
+		},
+		{
+			"cause": "S1. The sense check flips a real -er derivation to none",
+			"attempts": {
+				"H": 4,
+				"B": 3
+			},
+			"cases": [
+				{
+					"case": "Laster 🚚",
+					"set": "B",
+					"failed": 3,
+					"gold": "Last + -er",
+					"returned": "none",
+					"weights": "-er 0.34-0.39, so none answers 0.61-0.66 and scores 0.38-0.42 against the pick's 0.31-0.36",
+					"round3": "3/3"
+				},
+				{
+					"case": "Schoner 🛡",
+					"set": "H",
+					"failed": 2,
+					"gold": "schonen + -er",
+					"returned": "none",
+					"weights": "-er 0.39 on reps 1-2 (0.42 on rep 3, which stood)"
+				},
+				{
+					"case": "Sticker 🪡",
+					"set": "H",
+					"failed": 2,
+					"gold": "sticken + -er",
+					"returned": "none",
+					"weights": "-er 0.37-0.40"
+				}
+			]
+		},
+		{
+			"cause": "E. A phraseme part's own Kind",
+			"attempts": {
+				"H": 3,
+				"B": 4
+			},
+			"cases": [
+				{
+					"case": "je nachdem",
+					"set": "H",
+					"failed": 3,
+					"gold": "ADV je",
+					"returned": "PRON je",
+					"weights": "PRON 0.47-0.53, ADV 0.17-0.24"
+				},
+				{
+					"case": "alles in allem",
+					"set": "B",
+					"failed": 3,
+					"gold": "PRON alle",
+					"returned": "NOUN Allem",
+					"weights": "allem NOUN 0.63-0.69, PRON 0.10-0.15; now flat, as gold"
+				},
+				{
+					"case": "so gut wie",
+					"set": "B",
+					"failed": 1,
+					"gold": "CCONJ wie",
+					"returned": "rep 3 ADV wie",
+					"weights": "CCONJ 0.33-0.40 vs ADV 0.32-0.35; on rep 3 jev's choice was ADV 0.32 over CCONJ 0.33",
+					"round3": "3/3"
+				}
+			]
+		},
+		{
+			"cause": "S2. The sense check too weak to flip a simplex",
+			"attempts": {
+				"H": 3,
+				"B": 0
+			},
+			"cases": [
+				{
+					"case": "Römer 🍷",
+					"set": "H",
+					"failed": 3,
+					"gold": "none",
+					"returned": "Rom + -er",
+					"weights": "-er 0.40-0.46, none 0.54-0.60, but none weighed 0.18-0.19: it scores 0.33-0.36 against the pick's 0.37-0.42"
+				}
+			]
+		},
+		{
+			"cause": "P. A place-name base is routed NOUN",
+			"attempts": {
+				"H": 3,
+				"B": 0
+			},
+			"cases": [
+				{
+					"case": "Römer 🏛",
+					"set": "H",
+					"failed": 3,
+					"gold": "PROPN Rom + -er",
+					"returned": "NOUN Rom + -er",
+					"weights": "NOUN 0.80-0.81, PROPN 0.19-0.20. Hamburger ⚓ would meet the same once its analysis is right."
+				}
+			]
+		},
+		{
+			"cause": "F. An inner Locution below the floor",
+			"attempts": {
+				"H": 3,
+				"B": 0
+			},
+			"cases": [
+				{
+					"case": "auf Nummer sicher gehen",
+					"set": "H",
+					"failed": 3,
+					"gold": "[auf Nummer sicher] + gehen",
+					"returned": "flat",
+					"weights": "auf Nummer sicher 0.42-0.43 against the 0.5 floor"
+				}
+			]
+		},
+		{
+			"cause": "C′. A real first word routed as a cranberry piece",
+			"attempts": {
+				"H": 0,
+				"B": 3
+			},
+			"cases": [
+				{
+					"case": "Rentier 🦌",
+					"set": "B",
+					"failed": 3,
+					"gold": "NOUN Ren + Tier",
+					"returned": "Root ren + Tier",
+					"weights": "the sense check now picks Ren + tier (fit 0.76-0.78), but the word gate weighs Ren 0.36-0.39 and the route then goes cranberry 0.67"
+				}
+			]
+		},
+		{
+			"cause": "B. The verb-base gate rejects a rare verb (left alone, as asked)",
+			"attempts": {
+				"H": 0,
+				"B": 3
+			},
+			"cases": [
+				{
+					"case": "vergiften",
+					"set": "B",
+					"failed": 3,
+					"gold": "ver- + giften",
+					"returned": "ver- + Gift",
+					"weights": "giften 0.33-0.37"
+				}
+			]
+		},
+		{
+			"cause": "G′. segment.inMorphemes keeps a split off a bound base",
+			"attempts": {
+				"U": 3
+			},
+			"cases": [
+				{
+					"case": "Römer 🍷",
+					"set": "U",
+					"failed": 3,
+					"gold": "römer · ∅",
+					"returned": "röm · er · ∅",
+					"weights": "Röm weighed no word 0.33-0.35, so the bottom-word test keeps the split, which jev weighs 0.91-0.93"
+				}
+			]
+		}
+	],
+	"failureTotals": {
+		"heldoutAttempts": 29,
+		"heldoutCases": 10,
+		"breakdownAttempts": 25,
+		"breakdownCases": 10,
+		"morphemesUnseenAttempts": 3
+	},
+	"hamburgerBurger": {
+		"returned": "Ham + Burger on all 3 repetitions",
+		"weights": "Ham + burger 0.44-0.58; 'a kind of Burger' 0.73-0.74 in the sense 🍔. Rep 3 picked Hamburg + -er (0.47) and the sense check flipped it to Ham + burger.",
+		"morphemes": "hamburger · ∅, 3/3",
+		"note": "It fails under either reading of the contested gold."
+	},
+	"comparisonWithRound3": {
+		"sharedCases": 84,
+		"note": "Every :breakdown case of round 4 was a round-3 case: its 63 tuning cases and its 21 held-out cases, now promoted. No round-4 held-out case was in round 3.",
+		"rows": [
+			{
+				"set": "all 84",
+				"round3": "203 / 252 (80.6%)",
+				"round4": "227 / 252 (90.1%)",
+				"everyRepetition": [
+					65,
+					74
+				]
+			},
+			{
+				"set": "round 3's tuning 63",
+				"round3": "160 / 189 (84.7%)",
+				"round4": "173 / 189 (91.5%)",
+				"everyRepetition": [
+					51,
+					57
+				]
+			},
+			{
+				"set": "round 3's held-out 21",
+				"round3": "43 / 63 (68.3%)",
+				"round4": "54 / 63 (85.7%)",
+				"everyRepetition": [
+					14,
+					17
+				]
+			},
+			{
+				"set": "morphemes, round 3's 8",
+				"round3": "15 / 24",
+				"round4": "24 / 24",
+				"everyRepetition": [
+					5,
+					8
+				]
+			}
+		],
+		"improved": {
+			"Bauer 🧑‍🌾": "0→3",
+			"Bauer 🐦": "0→3",
+			"kaum dass": "0→3",
+			"was weiß ich": "0→3",
+			"Leiter 👔": "0→3",
+			"Leiter 🪜": "0→3",
+			"Rentier 💰": "0→3",
+			"Messer 📏": "0→2",
+			"aus allen Wolken fallen": "1→3",
+			"Laster 😈": "2→3",
+			"Rund-um-die-Uhr-Betreuung": "2→3",
+			"Trimm-dich-Pfad": "2→3"
+		},
+		"regressed": {
+			"Laster 🚚": "3→0",
+			"so gut wie": "3→2"
+		},
+		"unchangedFailing": {
+			"alles in allem": "0 (was [in allem] Locution, now flat but allem routes NOUN)",
+			"Erbrecht": "0",
+			"Gründung 🌱": "0",
+			"Rentier 🦌": "0 (analysis now right, route wrong)",
+			"Steuermann": "1",
+			"vergiften": "0",
+			"Wachstube 🕯": "0"
+		},
+		"heldoutLevel": "The fresh held-out set comes in at 54.0% (34 / 63) against round 3's fresh held-out 68.3% and round 2's 66.7%. Its batch is built mostly of sense-dependent -er pairs, the class the round-4 fixes targeted, so it is the harder test."
+	},
+	"compoundGap": {
+		"note": "Staubecken-type compound homographs whose runner-up weighs under 0.15 never trigger the sense check. No failing case this round sits in that gap.",
+		"untriggeredCompounds": "103 word attempts went uncontested. Code offers every cut, so a rule that counts any compound cut within one or two letters a rival would trigger 50 of them (about 20,000 tokens a round at 406 per request) and change no failing case on these sets.",
+		"lighterRule": "A rival floor of 0.03 instead would add about 10 attempts: Wachstube 💂 (Wachs + tube 0.04-0.06), Fahrrad (Fah + rrad 0.03-0.04), Himbeere, Haustür (Hau + stür 0.03).",
+		"recommendation": "Add Staubecken-type pairs to the tuning set (Staubecken, Druckerzeugnis, Spielende, Urinstinkt) before building the rule."
+	},
+	"jevChoiceVsArgmax": "Code reads jev's choice. In 2 of 966 choice answers it is not the most probable option, both near ties: so gut wie rep 3 (ADV 0.32 over CCONJ 0.33, the case's one failure) and na ja rep 2 (INTJ 0.46 over PART 0.47).",
+	"proposedFixes": [
+		{
+			"rank": 1,
+			"fix": "A sense-led route for a base that spells a noun and a verb stem",
+			"fixes": "D: up to 13 attempts, 6 cases (7 H)",
+			"heldOut": true,
+			"detail": "When the verb and noun tests both say yes (or for a compound's first part that spells both), ask the sense question across the two routes: 'made from kreuzen, so that it is a ship that cruises' against 'made from Kreuz'. Kreuzer 🪙 (NOUN, passing) is the guard. Tune on Erbrecht, Steuermann, Messer 📏 and Bauer 🧑‍🌾, which are tuning cases now. Compounds like Segelboot (a boat that sails, or one with a sail) may not split by sense at all, so whether DWDS's verb call for a compound's first part should be scored as exact is a question for the user."
+		},
+		{
+			"rank": 2,
+			"fix": "Ask the sense check as one relative question",
+			"fixes": "S1 + S2: 10 attempts, 4 cases (7 H), Laster 🚚's regression included",
+			"heldOut": true,
+			"detail": "Independent yes-or-no answers put real -er derivations at 0.32-0.47 and simplexes at 0.28-0.46, and none's fit is one minus the best answer, so every pick under 0.5 hands none more than 0.5. One choice question over the contenders and none ('which of these gives der Laster 🚚 its sense?') compares them directly. A threshold fix doesn't work: one that keeps Laster 🚚 (0.34-0.39) would also stop Sticker 🏷's right flips (0.35-0.38). Tune on the tuning pairs: Laster, Leiter, Bauer, Messer, Rentier, Gründung and Stimmung."
+		},
+		{
+			"rank": 3,
+			"fix": "The inhabitant sense in -er's gloss, and place names as PROPN",
+			"fixes": "6 attempts, 2 cases (Hamburger ⚓, Römer 🏛), all H",
+			"heldOut": true,
+			"detail": "-er's inventory gloss names a person, tool, vehicle or thing that does, carries or holds what its base names, but not someone from a place, which Fleischer/Barz list. The route question weighs Rom PROPN 0.19-0.20. Both changes come from the inventory and the route guide, but every case showing them is held-out, so add tuning cases first (Berliner, Schweizer, Wiener 🌭/🧑)."
+		},
+		{
+			"rank": 4,
+			"fix": "Closed-class parts pinned from the inventory",
+			"fixes": "E: alles in allem 3 (B), plus je nachdem 3 (H) if je is inventoried as ADV",
+			"heldOut": "partly",
+			"detail": "allem is an inventory form of alle, yet the route weighs it NOUN 0.63-0.69. A part whose letters are a closed-class inventory form could take that route without a question. so gut wie's one failure is a coin flip."
+		},
+		{
+			"rank": 5,
+			"fix": "The inner-Locution floor",
+			"fixes": "F: 3 attempts, 1 case, H",
+			"heldOut": true,
+			"detail": "auf Nummer sicher weighs 0.42-0.43. On the tuning set the gold Locutions weigh 0.58 and 0.79 and the non-gold ones 0.12-0.17, so any floor from 0.18 to 0.57 fits the tuning set. Picking a lower one now would fit the held-out set. Add tuning inner Locutions first."
+		},
+		{
+			"rank": 6,
+			"fix": "No cranberry route for a first part the sense check named as a word",
+			"fixes": "C′: Rentier 🦌 3 (B)",
+			"heldOut": false,
+			"detail": "The sense check now picks Ren + tier, but the word gate weighs Ren 0.36-0.39 and the route goes cranberry 0.67. When the winning compound passed 'a kind of Tier that Ren tells apart', keep the cranberry route out or ask the noun test on Ren."
+		},
+		{
+			"rank": 7,
+			"fix": "The bottom-word test tries the base with its umlaut undone",
+			"fixes": "G′: Römer 🍷 morphemes 3 (U)",
+			"heldOut": true,
+			"detail": "Röm weighs no word (0.33-0.35), so the split is kept. forms already undoes umlauts (Rom 0.85-0.87). The case is unseen and no tuning case shows this."
+		},
+		{
+			"rank": 8,
+			"fix": "Senses jev doesn't know",
+			"fixes": "S3: 12 attempts (Reiter 🌾, Hamburger ⚓, Gründung 🌱, Wachstube 🕯)",
+			"heldOut": "partly",
+			"detail": "No wording is in sight: jev answers with the common sense. Hamburger ⚓ may fall to fix 3. The learner judge's call to drop Reiter 🌾 (a rare sense whose emoji shows no sieve) looks right."
+		},
+		{
+			"rank": 9,
+			"fix": "Tooling: pricing",
+			"fixes": "no accuracy gain",
+			"detail": "Have the stand-in answers contest words, so held-out senses are projected. Price morphemes' breakdown-words from that experiment's own ledger stage (448 per request, not 2,036). breakdown-routes runs 20-27% over its per-request price; breakdown-forms is overcounted."
+		}
+	]
+}

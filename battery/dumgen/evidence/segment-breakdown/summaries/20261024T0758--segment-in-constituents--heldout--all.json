@@ -1,0 +1,667 @@
+{
+	"runId": "f691464f-5db5-407a-af64-84b84b0763af",
+	"experimentId": "segment-in-constituents/de:heldout",
+	"round": "2026-10-24-breakdown-round-4",
+	"note": "The fresh held-out batch breakdown-heldout-2026-10-24c (22 records), 3 repetitions, one live run at 45c63199b under --budget 240000; the budget stop never fired. The headline leaves out Hamburger 🍔 (breakdown/de/hamburger-burger): its gold is contested and waits on the user (none as a loan, or a Source through DWDS's Grundform line, which would make it no segmenter case). No case is shared with round 3. Exact counts and rates come from each repetition's contractPass; cuts and links per case are summed over its repetitions.",
+	"liveRuns": [
+		"f691464f-5db5-407a-af64-84b84b0763af"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "f691464f-5db5-407a-af64-84b84b0763af",
+		"experimentId": "segment-in-constituents/de:heldout",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "45c63199b",
+		"startedAt": "2026-10-24T07:58:50.519Z",
+		"corpus": {
+			"fingerprint": "82e30c7e5345427545301c15659e546352e29c00e3d4f891c34bb458d12824ee",
+			"caseIds": [
+				"breakdown/de/am-ball-bleiben",
+				"breakdown/de/auf-nummer-sicher-gehen",
+				"breakdown/de/hamburger-burger",
+				"breakdown/de/hamburger-einwohner",
+				"breakdown/de/haustuer",
+				"breakdown/de/je-nachdem",
+				"breakdown/de/kindheit",
+				"breakdown/de/knall-auf-fall",
+				"breakdown/de/kreuzer-kriegsschiff",
+				"breakdown/de/kreuzer-muenze",
+				"breakdown/de/reiter-reiten",
+				"breakdown/de/reiter-sieb",
+				"breakdown/de/roemer-einwohner",
+				"breakdown/de/roemer-weinglas",
+				"breakdown/de/ruderboot",
+				"breakdown/de/schoner-schutzhuelle",
+				"breakdown/de/schoner-segelschiff",
+				"breakdown/de/segelboot",
+				"breakdown/de/sticker-aufkleber",
+				"breakdown/de/sticker-sticken",
+				"breakdown/de/stille-wasser-sind-tief",
+				"breakdown/de/wer-die-wahl-hat-hat-die-qual"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-constituents/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 22,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 22,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 11,
+			"failed": 11,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-24T07:58:50.623Z",
+		"total": 22,
+		"succeeded": 22,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 1,
+			"varyingOutputs": 2,
+			"quality": {
+				"passed": 34,
+				"failed": 32,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"headline": {
+		"leftOut": [
+			"breakdown/de/hamburger-burger"
+		],
+		"metrics": {
+			"all": {
+				"attempts": 63,
+				"exactAttempts": 34,
+				"exact": 0.5397,
+				"casesExactEveryRepetition": 11,
+				"cases": 21,
+				"cutPrecision": 0.8279,
+				"cutRecall": 0.9352,
+				"linksPlaced": 0.8618,
+				"linksWithGoldRoute": 0.7561,
+				"linksExact": 0.7561,
+				"hasConstituentsAgreed": 0.8413,
+				"failed": 0
+			},
+			"phraseme": {
+				"attempts": 18,
+				"exactAttempts": 12,
+				"exact": 0.6667,
+				"casesExactEveryRepetition": 4,
+				"cases": 6,
+				"cutPrecision": 0.8621,
+				"cutRecall": 1.0,
+				"linksPlaced": 0.9474,
+				"linksWithGoldRoute": 0.8947,
+				"linksExact": 0.8947,
+				"hasConstituentsAgreed": 1.0,
+				"failed": 0
+			},
+			"word": {
+				"attempts": 45,
+				"exactAttempts": 22,
+				"exact": 0.4889,
+				"casesExactEveryRepetition": 7,
+				"cases": 15,
+				"cutPrecision": 0.7429,
+				"cutRecall": 0.7879,
+				"linksPlaced": 0.7879,
+				"linksWithGoldRoute": 0.6364,
+				"linksExact": 0.6364,
+				"hasConstituentsAgreed": 0.7778,
+				"failed": 0
+			}
+		}
+	},
+	"contested": {
+		"caseId": "breakdown/de/hamburger-burger",
+		"repetitionsExact": 0,
+		"returned": [
+			"3x Ham → Lexeme/NOUN Ham · burger → Lexeme/NOUN Burger"
+		],
+		"note": "Ham + Burger on every repetition, so it fails against either reading of the gold: none (the learner judge) or no segmenter case at all (the system judge)."
+	},
+	"metricsAll22": {
+		"all": {
+			"attempts": 66,
+			"failed": 0,
+			"exact": 0.5152,
+			"cutPrecision": 0.808,
+			"cutRecall": 0.9352,
+			"linksPlaced": 0.8618,
+			"linksWithGoldRoute": 0.7561,
+			"linksExact": 0.7561,
+			"hasConstituentsAgreed": 0.803
+		},
+		"phraseme": {
+			"attempts": 18,
+			"failed": 0,
+			"exact": 0.6667,
+			"cutPrecision": 0.8621,
+			"cutRecall": 1,
+			"linksPlaced": 0.9474,
+			"linksWithGoldRoute": 0.8947,
+			"linksExact": 0.8947,
+			"hasConstituentsAgreed": 1
+		},
+		"word": {
+			"attempts": 48,
+			"failed": 0,
+			"exact": 0.4583,
+			"cutPrecision": 0.6842,
+			"cutRecall": 0.7879,
+			"linksPlaced": 0.7879,
+			"linksWithGoldRoute": 0.6364,
+			"linksExact": 0.6364,
+			"hasConstituentsAgreed": 0.7292
+		}
+	},
+	"spend": {
+		"jev": {
+			"calls": 235,
+			"freshCalls": 235,
+			"freshInputTokens": 170487,
+			"allInputTokens": 170487
+		},
+		"luna": {
+			"calls": 0,
+			"freshCalls": 0,
+			"freshInputTokens": 0,
+			"freshOutputTokens": 0
+		}
+	},
+	"transport": {
+		"requests": 235,
+		"retries": 0,
+		"retriedRequests": 0,
+		"failures": 0,
+		"interrupted": 0,
+		"retriesBy": {},
+		"failuresBy": {}
+	},
+	"cases": [
+		{
+			"caseId": "breakdown/de/am-ball-bleiben",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "a → Lexeme/ADP an · m Ball → Lexeme/NOUN Ball · bleiben → Lexeme/VERB bleiben",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 9,
+				"returned": 9,
+				"matched": 9
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			}
+		},
+		{
+			"caseId": "breakdown/de/auf-nummer-sicher-gehen",
+			"group": "phraseme",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "auf Nummer sicher → Locution/ADV auf Nummer sicher · gehen → Lexeme/VERB gehen",
+			"returned": [
+				"3x auf → Lexeme/ADP auf · Nummer → Lexeme/NOUN Nummer · sicher → Lexeme/ADJ sicher · gehen → Lexeme/VERB gehen"
+			],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 18,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 3,
+				"route": 3,
+				"linked": 3
+			}
+		},
+		{
+			"caseId": "breakdown/de/hamburger-burger",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "none",
+			"returned": [
+				"3x Ham → Lexeme/NOUN Ham · burger → Lexeme/NOUN Burger"
+			],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 3,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			}
+		},
+		{
+			"caseId": "breakdown/de/hamburger-einwohner",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "Hamburg → Lexeme/PROPN Hamburg · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x Ham → Lexeme/NOUN Ham · burger → Lexeme/NOUN Burger"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			}
+		},
+		{
+			"caseId": "breakdown/de/haustuer",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Haus → Lexeme/NOUN Haus · tür → Lexeme/NOUN Tür",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			}
+		},
+		{
+			"caseId": "breakdown/de/je-nachdem",
+			"group": "phraseme",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "je → Lexeme/ADV je · nachdem → Lexeme/SCONJ nachdem",
+			"returned": [
+				"3x je → Lexeme/PRON je · nachdem → Lexeme/SCONJ nachdem"
+			],
+			"cutsOverRepetitions": {
+				"gold": 6,
+				"returned": 6,
+				"matched": 6
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 3,
+				"linked": 3
+			}
+		},
+		{
+			"caseId": "breakdown/de/kindheit",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Kind → Lexeme/NOUN Kind · heit → Morpheme/Suffix -heit",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			}
+		},
+		{
+			"caseId": "breakdown/de/knall-auf-fall",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Knall → Lexeme/NOUN Knall · auf → Lexeme/ADP auf · Fall → Lexeme/NOUN Fall",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 12,
+				"returned": 12,
+				"matched": 12
+			},
+			"linksOverRepetitions": {
+				"gold": 9,
+				"placed": 9,
+				"route": 9,
+				"linked": 9
+			}
+		},
+		{
+			"caseId": "breakdown/de/kreuzer-kriegsschiff",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "Kreuz → Lexeme/VERB kreuzen · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x Kreuz → Lexeme/NOUN Kreuz · er → Morpheme/Suffix -er"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 3,
+				"linked": 3
+			}
+		},
+		{
+			"caseId": "breakdown/de/kreuzer-muenze",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Kreuz → Lexeme/NOUN Kreuz · er → Morpheme/Suffix -er",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			}
+		},
+		{
+			"caseId": "breakdown/de/reiter-reiten",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Reit → Lexeme/VERB reiten · er → Morpheme/Suffix -er",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			}
+		},
+		{
+			"caseId": "breakdown/de/reiter-sieb",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "none",
+			"returned": [
+				"3x Reit → Lexeme/VERB reiten · er → Morpheme/Suffix -er"
+			],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 3,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			}
+		},
+		{
+			"caseId": "breakdown/de/roemer-einwohner",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "Röm → Lexeme/PROPN Rom · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x Röm → Lexeme/NOUN Rom · er → Morpheme/Suffix -er"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 3,
+				"linked": 3
+			}
+		},
+		{
+			"caseId": "breakdown/de/roemer-weinglas",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "none",
+			"returned": [
+				"3x Röm → Lexeme/NOUN Rom · er → Morpheme/Suffix -er"
+			],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 3,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			}
+		},
+		{
+			"caseId": "breakdown/de/ruderboot",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Ruder → Lexeme/NOUN Ruder · boot → Lexeme/NOUN Boot",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 6,
+				"linked": 6
+			}
+		},
+		{
+			"caseId": "breakdown/de/schoner-schutzhuelle",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 1,
+			"gold": "Schon → Lexeme/VERB schonen · er → Morpheme/Suffix -er",
+			"returned": [
+				"2x none"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 1,
+				"matched": 1
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 2,
+				"route": 2,
+				"linked": 2
+			}
+		},
+		{
+			"caseId": "breakdown/de/schoner-segelschiff",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "none",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 0,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			}
+		},
+		{
+			"caseId": "breakdown/de/segelboot",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "Segel → Lexeme/VERB segeln · boot → Lexeme/NOUN Boot",
+			"returned": [
+				"3x Segel → Lexeme/NOUN Segel · boot → Lexeme/NOUN Boot"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 3,
+				"matched": 3
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 6,
+				"route": 3,
+				"linked": 3
+			}
+		},
+		{
+			"caseId": "breakdown/de/sticker-aufkleber",
+			"group": "word",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "none",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 0,
+				"returned": 0,
+				"matched": 0
+			},
+			"linksOverRepetitions": {
+				"gold": 0,
+				"placed": 0,
+				"route": 0,
+				"linked": 0
+			}
+		},
+		{
+			"caseId": "breakdown/de/sticker-sticken",
+			"group": "word",
+			"exact": false,
+			"repetitions": 3,
+			"repetitionsExact": 0,
+			"gold": "Stick → Lexeme/VERB sticken · er → Morpheme/Suffix -er",
+			"returned": [
+				"1x Stick → Lexeme/NOUN Stick · er → Morpheme/Suffix -er",
+				"2x none"
+			],
+			"cutsOverRepetitions": {
+				"gold": 3,
+				"returned": 1,
+				"matched": 1
+			},
+			"linksOverRepetitions": {
+				"gold": 6,
+				"placed": 2,
+				"route": 1,
+				"linked": 1
+			}
+		},
+		{
+			"caseId": "breakdown/de/stille-wasser-sind-tief",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Stille → Lexeme/ADJ still · Wasser → Lexeme/NOUN Wasser · sind → Lexeme/VERB sein · tief → Lexeme/ADJ tief",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 18,
+				"returned": 18,
+				"matched": 18
+			},
+			"linksOverRepetitions": {
+				"gold": 12,
+				"placed": 12,
+				"route": 12,
+				"linked": 12
+			}
+		},
+		{
+			"caseId": "breakdown/de/wer-die-wahl-hat-hat-die-qual",
+			"group": "phraseme",
+			"exact": true,
+			"repetitions": 3,
+			"repetitionsExact": 3,
+			"gold": "Wer → Lexeme/PRON wer · die Wahl → Lexeme/NOUN Wahl · hat → Lexeme/VERB haben · hat → Lexeme/VERB haben · die Qual → Lexeme/NOUN Qual",
+			"returned": [],
+			"cutsOverRepetitions": {
+				"gold": 24,
+				"returned": 24,
+				"matched": 24
+			},
+			"linksOverRepetitions": {
+				"gold": 15,
+				"placed": 15,
+				"route": 15,
+				"linked": 15
+			}
+		}
+	]
+}
