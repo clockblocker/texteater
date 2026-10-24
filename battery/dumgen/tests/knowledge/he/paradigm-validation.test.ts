@@ -128,6 +128,60 @@ test("article-bearing noun conflict omits both assertions without choosing the f
 	}
 });
 
+test("state-conflict detection compares normalized forms without changing either literal", () => {
+	const plural = {
+		form: "מְלָכִים",
+		features: { number: "Plur", definite: "Ind" },
+	} as const;
+	for (const form of [` ${absolute.form} `, absolute.form.normalize("NFD")]) {
+		const falseDef = {
+			form,
+			features: { number: "Sing", definite: "Def" },
+		} as const;
+		for (const conflict of [
+			[absolute, falseDef],
+			[falseDef, absolute],
+		]) {
+			const proposal = { forms: [...conflict, plural] };
+			const before = JSON.stringify(proposal);
+			const result = knownHebrewParadigm(noun, proposal);
+			expect(result).not.toBeInstanceOf(InvalidModelOutput);
+			if (result instanceof InvalidModelOutput) throw result;
+			expect(result.value.forms).toEqual([plural]);
+			expect(result.omitted.toSorted()).toEqual([0, 1]);
+			expect(JSON.stringify(proposal)).toBe(before);
+		}
+	}
+});
+
+test("state conflicts recognize genuinely reordered Hebrew combining marks", () => {
+	const canonical = "הַמֶּלֶךְ";
+	const reordered = "הַמֶּלֶךְ";
+	expect(reordered).not.toBe(canonical);
+	expect(reordered.normalize("NFC")).toBe(canonical.normalize("NFC"));
+	const definite = {
+		form: canonical,
+		features: { number: "Sing", definite: "Def" },
+	} as const;
+	const falseInd = {
+		form: reordered,
+		features: { number: "Sing", definite: "Ind" },
+	} as const;
+	for (const conflict of [
+		[definite, falseInd],
+		[falseInd, definite],
+	]) {
+		const proposal = { forms: [...conflict, absolute] };
+		const before = JSON.stringify(proposal);
+		const result = knownHebrewParadigm(noun, proposal);
+		expect(result).not.toBeInstanceOf(InvalidModelOutput);
+		if (result instanceof InvalidModelOutput) throw result;
+		expect(result.value.forms).toEqual([absolute]);
+		expect(result.omitted.toSorted()).toEqual([0, 1]);
+		expect(JSON.stringify(proposal)).toBe(before);
+	}
+});
+
 test("noun state-conflict omission is lexical-independent and order-independent", () => {
 	const result = knownHebrewParadigm(noun, {
 		forms: [

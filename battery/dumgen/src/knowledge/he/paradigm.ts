@@ -66,7 +66,7 @@ export function knownHebrewParadigm(
 				cell.features.definite === "Ind") &&
 			forms.some(
 				(other) =>
-					other.form === cell.form &&
+					normalizeForm(other.form) === normalizeForm(cell.form) &&
 					other.features.number === cell.features.number &&
 					other.features.definite ===
 						(cell.features.definite === "Def" ? "Ind" : "Def"),

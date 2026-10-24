@@ -59,7 +59,7 @@ const capture = async (
 	return { requests, result };
 };
 
-test("Hebrew segment requests and results preserve the baseline apart from reviewed house guidance", async () => {
+test("Hebrew segment requests and results preserve the baseline apart from reviewed house and before guidance", async () => {
 	const snapshots = [];
 	for (const sentence of fixtures)
 		for (const policy of policies)
@@ -70,10 +70,14 @@ test("Hebrew segment requests and results preserve the baseline apart from revie
 			});
 	// Strip only the reviewed additive wording. Keep the original digest so
 	// changes to menus, source text, batching or returned Segments still fail.
-	// The separate house-source-question test requires this wording to exist.
+	// Separate house-source-question and lexical-before tests require the wording.
 	const houseGuidance =
 		" Initial letters of a lexical root stay inside its noun in every inflection. In 'הם בנו בַּיִת קטן', בַּיִת is one whole noun; in 'בֵּית האבן עומד ליד הנהר', בֵּית is the whole construct noun. Their initial ב is a root letter, not a preposition: choose AsWritten for each, preserving every vowel and dagesh. Construct state changes inflection, not syntactic-word boundaries. Contrast 'גרתי בבית קטן': בבית = ב + בית, where an additional outer ב is the preposition.";
-	const baseline = JSON.stringify(snapshots).replaceAll(houseGuidance, "");
+	const beforeGuidance =
+		" In 'נפגשנו לִפְנֵי ההרצאה.', לִפְנֵי is the whole lexical preposition 'before': choose AsWritten, not לִ + פְנֵי. Unpointed לפני likewise stays whole, not ל + פני. This is a lexical preposition, not an infinitive or a productive ל prefix before a noun; contrast לרגע = ל + רגע.";
+	const baseline = JSON.stringify(snapshots)
+		.replaceAll(houseGuidance, "")
+		.replaceAll(beforeGuidance, "");
 	expect(createHash("sha256").update(baseline).digest("hex")).toBe(
 		"1e1edbfae5f76a5ed2e1db7f7ca97fc2338865bdf268322260472170ac6fd950",
 	);
