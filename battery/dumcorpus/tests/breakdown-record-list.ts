@@ -3,7 +3,7 @@
  * load: its id, its route and emoji, and what it holds (constituents,
  * morphemes, a Source).
  */
-export const breakdownRecordList: readonly (readonly string[])[] = [
+export const breakdownRecordList: string[][] = [
 	["alles-in-allem", "Locution ADV 🧮", "constituents"],
 	["am-ball-bleiben", "Locution VERB ⚽", "constituents"],
 	["apfelbaum", "Lexeme NOUN 🍎🌳", "constituents"],
