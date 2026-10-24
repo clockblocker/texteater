@@ -333,6 +333,12 @@ test("an infinitive's infixed zu is a piece, decided by code (de/fused-word-piec
 		{ kind: "ResolvableText", text: "und" },
 		...infixed("hinzu", "zu", "fügen"),
 	]);
+	// bevor is a true particle, so bevorstehen still takes an infixed zu.
+	expect(resolvable("bevorzustehen").map(({ text }) => text)).toEqual([
+		"bevor",
+		"zu",
+		"stehen",
+	]);
 	for (const whole of [
 		"die auszubildenden Lehrlinge",
 		"die anzuwendenden Regeln",
@@ -341,6 +347,9 @@ test("an infinitive's infixed zu is a piece, decided by code (de/fused-word-piec
 		"wird hinzufügen",
 		"abzugsfähigen Aufwand",
 		"Abzuspannen ist schwer",
+		"die bevorzugenden Leser",
+		"die überzuckerten Kekse",
+		"die durchzuckenden Blitze",
 	])
 		expect(resolvable(whole).map(({ text }) => text)).toEqual(
 			whole.split(" "),

@@ -199,19 +199,30 @@ const infixParticles = [...germanInfixParticles].sort(
 );
 
 /**
+ * Inseparable verbs whose letters open with a separable particle and zu,
+ * so no zu is infixed in them: bevorzugen (bevorzugenden is no bevor, zu
+ * and genden; DWDS: bevorzugte, hat bevorzugt).
+ */
+const inseparableZuVerbs: readonly string[] = ["bevorzug"];
+
+/**
  * An infinitive's infixed zu as its three pieces, each standing for
  * itself (de/fused-word-pieces, de/bare-infinitive-zu): abzuspannen is ab,
  * zu and spannen. The word must be lowercase, open with a separable
  * particle and zu, and end in a stem with a vowel and an infinitive's n; a
- * gerundive (auszubildenden) or a word on Zug (abzugsfähigen) is no
- * infinitive and stays whole.
+ * gerundive (auszubildenden), a word on Zug (abzugsfähigen), a verb on
+ * zucken (durchzuckenden, überzuckerten: no German stem opens with ck) and
+ * an inseparable verb such as bevorzugen are no infinitive and stay whole.
  */
 function infixedZuPieces(text: string): readonly string[] | undefined {
 	if (!/^\p{Ll}+$/u.test(text)) return undefined;
+	if (inseparableZuVerbs.some((verb) => text.startsWith(verb)))
+		return undefined;
 	for (const particle of infixParticles) {
 		if (!text.startsWith(`${particle}zu`)) continue;
 		const stem = text.slice(particle.length + 2);
-		if (stem.length < 3 || !stem.endsWith("n")) continue;
+		if (stem.length < 3 || !stem.endsWith("n") || stem.startsWith("ck"))
+			continue;
 		if (!/[aeiouäöüy]/u.test(stem.replace(/(?:e|er|el)?n$/u, ""))) continue;
 		if (/^g[^aeiouäöülnr]/u.test(stem)) continue;
 		const participle = stem.match(/^(.+)den$/u)?.[1];
