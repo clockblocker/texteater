@@ -1,0 +1,394 @@
+{
+  "round": "2026-10-24-breakdown-round-2",
+  "note": "Over-generation risks of the #1280 candidate shapes, read offline from the round's cached jev answers (heldout 3 repetitions, breakdown 2).",
+  "cranberryRoot": {
+    "offeredOn": [
+      "breakdown/de/bratpfanne",
+      "breakdown/de/erbrecht",
+      "breakdown/de/fahrrad",
+      "breakdown/de/gaestehaus",
+      "breakdown/de/himbeere",
+      "breakdown/de/kohlekraftwerk",
+      "breakdown/de/schreibtisch",
+      "breakdown/de/sonnenbrille",
+      "breakdown/de/wachstube-wachlokal",
+      "breakdown/de/wachstube-wachstube"
+    ],
+    "questions": 26,
+    "nonCranberryQuestions": 23,
+    "nonCranberryWins": [
+      {
+        "set": "heldout",
+        "case": "breakdown/de/erbrecht",
+        "repetition": 0,
+        "part": "Erb",
+        "goldRoot": false,
+        "pRoot": 0.6900000000000001,
+        "picked": "Morpheme/Root"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/erbrecht",
+        "repetition": 1,
+        "part": "Erb",
+        "goldRoot": false,
+        "pRoot": 0.68,
+        "picked": "Morpheme/Root"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/erbrecht",
+        "repetition": 2,
+        "part": "Erb",
+        "goldRoot": false,
+        "pRoot": 0.72,
+        "picked": "Morpheme/Root"
+      }
+    ],
+    "nonCranberryMaxPRoot": 0.72,
+    "nonCranberryMeanPRoot": 0.321,
+    "answers": [
+      {
+        "set": "heldout",
+        "case": "breakdown/de/bratpfanne",
+        "repetition": 0,
+        "part": "Brat",
+        "goldRoot": false,
+        "pRoot": 0.37,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/bratpfanne",
+        "repetition": 1,
+        "part": "Brat",
+        "goldRoot": false,
+        "pRoot": 0.44,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/bratpfanne",
+        "repetition": 2,
+        "part": "Brat",
+        "goldRoot": false,
+        "pRoot": 0.37,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/erbrecht",
+        "repetition": 0,
+        "part": "Erb",
+        "goldRoot": false,
+        "pRoot": 0.6900000000000001,
+        "picked": "Morpheme/Root"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/erbrecht",
+        "repetition": 1,
+        "part": "Erb",
+        "goldRoot": false,
+        "pRoot": 0.68,
+        "picked": "Morpheme/Root"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/erbrecht",
+        "repetition": 2,
+        "part": "Erb",
+        "goldRoot": false,
+        "pRoot": 0.72,
+        "picked": "Morpheme/Root"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/fahrrad",
+        "repetition": 0,
+        "part": "Fahr",
+        "goldRoot": false,
+        "pRoot": 0.29,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/fahrrad",
+        "repetition": 1,
+        "part": "Fahr",
+        "goldRoot": false,
+        "pRoot": 0.34,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/fahrrad",
+        "repetition": 2,
+        "part": "Fahr",
+        "goldRoot": false,
+        "pRoot": 0.34,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/himbeere",
+        "repetition": 0,
+        "part": "Him",
+        "goldRoot": true,
+        "pRoot": 0.81,
+        "picked": "Morpheme/Root"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/himbeere",
+        "repetition": 1,
+        "part": "Him",
+        "goldRoot": true,
+        "pRoot": 0.81,
+        "picked": "Morpheme/Root"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/himbeere",
+        "repetition": 2,
+        "part": "Him",
+        "goldRoot": true,
+        "pRoot": 0.83,
+        "picked": "Morpheme/Root"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/schreibtisch",
+        "repetition": 0,
+        "part": "Schreib",
+        "goldRoot": false,
+        "pRoot": 0.3,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/schreibtisch",
+        "repetition": 1,
+        "part": "Schreib",
+        "goldRoot": false,
+        "pRoot": 0.3,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/schreibtisch",
+        "repetition": 2,
+        "part": "Schreib",
+        "goldRoot": false,
+        "pRoot": 0.3,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/sonnenbrille",
+        "repetition": 0,
+        "part": "Sonnen",
+        "goldRoot": false,
+        "pRoot": 0.24,
+        "picked": "Lexeme/NOUN"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/sonnenbrille",
+        "repetition": 1,
+        "part": "Sonnen",
+        "goldRoot": false,
+        "pRoot": 0.21,
+        "picked": "Lexeme/NOUN"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/sonnenbrille",
+        "repetition": 2,
+        "part": "Sonnen",
+        "goldRoot": false,
+        "pRoot": 0.19,
+        "picked": "Lexeme/NOUN"
+      },
+      {
+        "set": "breakdown",
+        "case": "breakdown/de/gaestehaus",
+        "repetition": 0,
+        "part": "Gäste",
+        "goldRoot": false,
+        "pRoot": 0.1,
+        "picked": "Lexeme/NOUN"
+      },
+      {
+        "set": "breakdown",
+        "case": "breakdown/de/gaestehaus",
+        "repetition": 1,
+        "part": "Gäste",
+        "goldRoot": false,
+        "pRoot": 0.11,
+        "picked": "Lexeme/NOUN"
+      },
+      {
+        "set": "breakdown",
+        "case": "breakdown/de/kohlekraftwerk",
+        "repetition": 0,
+        "part": "Kohle",
+        "goldRoot": false,
+        "pRoot": 0.16,
+        "picked": "Lexeme/NOUN"
+      },
+      {
+        "set": "breakdown",
+        "case": "breakdown/de/kohlekraftwerk",
+        "repetition": 1,
+        "part": "Kohle",
+        "goldRoot": false,
+        "pRoot": 0.11,
+        "picked": "Lexeme/NOUN"
+      },
+      {
+        "set": "breakdown",
+        "case": "breakdown/de/wachstube-wachlokal",
+        "repetition": 0,
+        "part": "Wach",
+        "goldRoot": false,
+        "pRoot": 0.24,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "breakdown",
+        "case": "breakdown/de/wachstube-wachlokal",
+        "repetition": 1,
+        "part": "Wach",
+        "goldRoot": false,
+        "pRoot": 0.33,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "breakdown",
+        "case": "breakdown/de/wachstube-wachstube",
+        "repetition": 0,
+        "part": "Wach",
+        "goldRoot": false,
+        "pRoot": 0.28,
+        "picked": "Lexeme/VERB"
+      },
+      {
+        "set": "breakdown",
+        "case": "breakdown/de/wachstube-wachstube",
+        "repetition": 1,
+        "part": "Wach",
+        "goldRoot": false,
+        "pRoot": 0.27,
+        "picked": "Lexeme/VERB"
+      }
+    ]
+  },
+  "frontPhrase": {
+    "requests": 6,
+    "inputTokens": 2085,
+    "answers": [
+      {
+        "set": "heldout",
+        "case": "breakdown/de/rund-um-die-uhr-betreuung",
+        "repetition": 0,
+        "phrase": "Rund um die Uhr",
+        "noul": 0.73,
+        "inputTokens": 352
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/rund-um-die-uhr-betreuung",
+        "repetition": 1,
+        "phrase": "Rund um die Uhr",
+        "noul": 0.71,
+        "inputTokens": 352
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/rund-um-die-uhr-betreuung",
+        "repetition": 2,
+        "phrase": "Rund um die Uhr",
+        "noul": 0.72,
+        "inputTokens": 352
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/trimm-dich-pfad",
+        "repetition": 0,
+        "phrase": "Trimm dich",
+        "noul": 0.21,
+        "inputTokens": 343
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/trimm-dich-pfad",
+        "repetition": 1,
+        "phrase": "Trimm dich",
+        "noul": 0.23,
+        "inputTokens": 343
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/trimm-dich-pfad",
+        "repetition": 2,
+        "phrase": "Trimm dich",
+        "noul": 0.23,
+        "inputTokens": 343
+      }
+    ]
+  },
+  "hyphenPrefixE": {
+    "decisions": 3,
+    "answers": [
+      {
+        "set": "heldout",
+        "case": "breakdown/de/e-mail",
+        "repetition": 0,
+        "criteria": {
+          "a0": "E + Mail",
+          "a1": "E- (prefix, short for elektronisch) + Mail",
+          "none": "No immediate parts: a simple word, or a conversion"
+        },
+        "probabilities": {
+          "a0": 0.29,
+          "a1": 0.61,
+          "none": 0.1
+        },
+        "picked": "E- (prefix, short for elektronisch) + Mail"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/e-mail",
+        "repetition": 1,
+        "criteria": {
+          "a0": "E + Mail",
+          "a1": "E- (prefix, short for elektronisch) + Mail",
+          "none": "No immediate parts: a simple word, or a conversion"
+        },
+        "probabilities": {
+          "a0": 0.3,
+          "a1": 0.61,
+          "none": 0.09
+        },
+        "picked": "E- (prefix, short for elektronisch) + Mail"
+      },
+      {
+        "set": "heldout",
+        "case": "breakdown/de/e-mail",
+        "repetition": 2,
+        "criteria": {
+          "a0": "E + Mail",
+          "a1": "E- (prefix, short for elektronisch) + Mail",
+          "none": "No immediate parts: a simple word, or a conversion"
+        },
+        "probabilities": {
+          "a0": 0.28,
+          "a1": 0.62,
+          "none": 0.1
+        },
+        "picked": "E- (prefix, short for elektronisch) + Mail"
+      }
+    ]
+  }
+}

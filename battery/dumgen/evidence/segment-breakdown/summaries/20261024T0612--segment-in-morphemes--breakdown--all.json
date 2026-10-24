@@ -1,0 +1,104 @@
+{
+  "runId": "ab0c7c41-7e82-491a-8e33-b28f8874a063",
+  "experimentId": "segment-in-morphemes/de:breakdown",
+  "round": "2026-10-24-breakdown-round-2",
+  "note": "Offline; every case is a bare Root and no jev call is made.",
+  "manifest": {
+    "version": 2,
+    "runId": "ab0c7c41-7e82-491a-8e33-b28f8874a063",
+    "experimentId": "segment-in-morphemes/de:breakdown",
+    "evaluatorVersion": "breakdown-1",
+    "sourceRevision": "5528108a8",
+    "startedAt": "2026-10-24T06:12:12.331Z",
+    "corpus": {
+      "fingerprint": "600895daf379184a079cb69225e766462f7b0ebf95e06336b6cec5cdd3cf9f1d",
+      "caseIds": [
+        "breakdown/de/fisch",
+        "breakdown/de/kaufen",
+        "breakdown/de/rufen",
+        "breakdown/de/spannen"
+      ]
+    },
+    "repetitions": 3,
+    "operationVersion": "segment-in-morphemes/de@production",
+    "configurations": {
+      "generation": {
+        "model": "jev-1.13.0",
+        "settings": {
+          "cases": 4,
+          "offline": true
+        }
+      },
+      "judgment": {
+        "model": "jev-1.13.0",
+        "settings": {
+          "cases": 4,
+          "offline": true
+        }
+      }
+    }
+  },
+  "summary": {
+    "quality": {
+      "passed": 4,
+      "failed": 0,
+      "needsReview": 0,
+      "unscored": 0
+    },
+    "status": "Completed",
+    "finishedAt": "2026-10-24T06:12:12.341Z",
+    "total": 4,
+    "succeeded": 4,
+    "failed": 0,
+    "interrupted": 0,
+    "stability": {
+      "repetitions": 3,
+      "flipped": 0,
+      "varyingOutputs": 0,
+      "quality": {
+        "passed": 12,
+        "failed": 0,
+        "needsReview": 0,
+        "unscored": 0
+      }
+    }
+  },
+  "metrics": {
+    "all": {
+      "attempts": 12,
+      "failed": 0,
+      "exact": 1,
+      "cutPrecision": 1,
+      "cutRecall": 1,
+      "linksPlaced": 1,
+      "linksWithGoldRoute": 1,
+      "linksExact": 1,
+      "hasConstituentsAgreed": 1
+    },
+    "word": {
+      "attempts": 12,
+      "failed": 0,
+      "exact": 1,
+      "cutPrecision": 1,
+      "cutRecall": 1,
+      "linksPlaced": 1,
+      "linksWithGoldRoute": 1,
+      "linksExact": 1,
+      "hasConstituentsAgreed": 1
+    }
+  },
+  "spend": {
+    "jev": {
+      "calls": 0,
+      "freshCalls": 0,
+      "freshInputTokens": 0,
+      "allInputTokens": 0
+    },
+    "luna": {
+      "calls": 0,
+      "freshCalls": 0,
+      "freshInputTokens": 0,
+      "freshOutputTokens": 0
+    }
+  }
+}
