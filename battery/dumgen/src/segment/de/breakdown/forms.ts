@@ -74,7 +74,8 @@ function verbForms(word: string): string[] {
 		infinitive,
 	);
 	return [
-		...(/(?:en|[elr]n)$/u.test(shown) ? [shown] : []),
+		// An infinitive as it stands, `tun` included, German's one of three letters.
+		...(/(?:en|[elr]n)$|^tun$/u.test(shown) ? [shown] : []),
 		...closed,
 		...infinitives,
 	];

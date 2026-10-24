@@ -6,9 +6,13 @@
  *   picks one, or none, in one request, `breakdown-analysis`, reading the
  *   Reading's emoji for its sense (`Wachstube` 💂 `Wach + stube`, 🕯
  *   `Wachs + tube`). A word too short to cut has none unasked, and a
- *   hyphenated one splits at its hyphens unasked. A compound's head takes
- *   the word's own Kind (a noun's head is a noun), so only its other parts'
- *   routes are asked.
+ *   hyphenated one splits at its hyphens unasked, unless a lone `E` may be
+ *   the prefix e- (`E- + Book` or `E + Book`, jev picks). Its words before
+ *   the last hyphen, two or more, are one Locution part when jev weighs
+ *   them one in `breakdown-locutions` (`[Kopf an Kopf] + Rennen`), else
+ *   flat. A compound's head takes the word's own Kind (a noun's head is a
+ *   noun), so only its other parts' routes are asked, and a noun's first
+ *   of two parts may be a cranberry piece, a Root (`Brom` in Brombeere).
  * - A phraseme, or a Lexeme written as several words: its wording's parts
  *   come from code (`phraseme-parts.ts`), and jev weighs, in one request,
  *   `breakdown-locutions`, whether a run of neighbouring parts is a
@@ -49,12 +53,29 @@ import {
 	withReflexive,
 	wordingPieces,
 } from "./phraseme-parts.js";
-import { type OpenPart, partTargets, type Whole } from "./targets.js";
 import {
+	cranberryOption,
+	type OpenPart,
+	partTargets,
+	type Whole,
+} from "./targets.js";
+import {
+	hyphenPrefixGlosses,
 	type WordAnalysis,
 	type WordPiece,
+	withFrontPhrase,
 	wordAnalyses,
 } from "./word-analyses.js";
+import {
+	analysisInstructions,
+	compoundRouteGuide,
+	noneOption,
+	phraseFormGuide,
+	phraseForms,
+	prefixedBaseRouteGuide,
+	routeGuideOf,
+	verbFirstPartRouteGuide,
+} from "./word-prompts.js";
 
 /** The routes a part of a word may take. */
 const wordPartRoutes: readonly RouteKey[] = [
@@ -124,13 +145,13 @@ function linkedPieces(
 			});
 			continue;
 		}
-		if (piece.role !== "Word") {
+		if (piece.role !== "Word" && piece.role !== "Phrase") {
 			result.push({ letters: piece.letters });
 			continue;
 		}
 		const target = words[word++];
 		if (target === undefined) throw Error("A word part has no link");
-		const last = index === pieces.length - 1;
+		const last = index === pieces.length - 1 || piece.role === "Phrase";
 		const split = last
 			? undefined
 			: interfixOf(piece.letters, target.canonicalForm);
@@ -149,48 +170,12 @@ function linkedPieces(
 }
 
 /**
- * The analysis question (#1241 round 1): read the sense `meaning` names,
- * since a homograph splits by sense; know the prefix + noun or adjective +
- * citation ending shape; and keep to parts that are words. Its examples
- * are no Breakdown case (#693).
- */
-const analysisInstructions =
-	"How was `word` built, one level down, in the sense `meaning` names? `meaning` is an emoji for this Reading's sense, and one spelling can split differently by sense (Staubecken: Stau + becken, a reservoir; Staub + ecken, dusty corners), so pick the analysis whose parts together give that sense, even when another analysis gives a commoner word. Pick its immediate parts as a dictionary's word formation (DWDS Wortzerlegung) splits it: a compound's first word and its head, which may be a compound itself (Sommer + schlussverkauf); a prefix or verb particle and its base verb (ver- + brennen, since brennen is a verb); a base and a suffix (Heiz + -ung). Check the base after a verb's prefix: when it is no verb a dictionary lists on its own, the verb was made from the noun or adjective inside it, so pick the prefix, that noun or adjective and the citation ending (vergolden is ver- + gold + -en, since there is no verb golden). Every part that isn't an affix must be a word a dictionary lists, though it may show the word without a final -e, with an umlaut or as a verb's stem (Schwimm for schwimmen): never pick an analysis with a part that is no word at all. Pick `none` for a word with no word inside, or one converted whole from another word with nothing cut off (Schlag from schlagen).";
-
-/**
- * Closes a compound part's route question (#1241 round 1): a first part
- * showing a verb's stem is that verb (`Wach` in Wachstube 💂 is wachen,
- * DWDS).
- */
-const compoundRouteGuide =
-	"A part that shows a verb's stem without its ending is that verb (Schwimm in Schwimmbad is schwimmen, Bohr in Bohrmaschine is bohren).";
-
-/**
- * Closes the base's route question in a prefix + base + citation ending
- * analysis (#1241 round 1): the verb was made from that base.
- */
-const prefixedBaseRouteGuide =
-	"This verb was made from a noun or adjective with a prefix and the citation ending, so the part between them is that noun or adjective, not a verb.";
-
-/** The route guide for an analysis's word parts: a compound's, a prefixed base's, or none. */
-function routeGuideOf(analysis: WordAnalysis): string | undefined {
-	if (analysis.pieces.some(({ role }) => role === "Ending"))
-		return prefixedBaseRouteGuide;
-	const words = analysis.pieces.filter(({ role }) => role === "Word");
-	return words.length === analysis.pieces.length && words.length > 1
-		? compoundRouteGuide
-		: undefined;
-}
-
-/**
  * Closes a phraseme part's route question (#1241 round 1): a part's Kind is
  * its role in the whole expression. Kept here, since the route descriptions
  * are segment.inUnits's and stay shared.
  */
 const phrasemeRouteGuide =
 	"Judge the part by the role it plays inside this whole expression, not by its commonest use: a word that opens a clause, an infinitive clause included, is SCONJ (statt in statt … zu); a comparison word, wie or als, is CCONJ before a phrase and SCONJ before a clause, never ADP or ADV (als in mehr Schein als Sein); a word that stands for a noun phrase on its own, with no noun after it, is PRON, not DET (jeder in jeder für sich).";
-
-const noneOption = "No immediate parts: a simple word, or a conversion";
 
 /** The analysis jev picks, or none. */
 const chosenAnalysis = Effect.fnUntraced(function* (
@@ -214,43 +199,90 @@ const chosenAnalysis = Effect.fnUntraced(function* (
 	return picked === "none" ? undefined : analyses[Number(picked.slice(1))];
 });
 
+/**
+ * A flat hyphenated analysis with its front phrase as one Locution part,
+ * when jev weighs that phrase a fixed expression of its own (ADR 0050:
+ * `[rund um die Uhr] + Betreuung`), else as it was (`Trimm-dich-Pfad`).
+ */
+const withLocutionFront = Effect.fnUntraced(function* (
+	flat: WordAnalysis,
+	whole: Whole,
+	ask: Ask,
+): Effect.fn.Return<WordAnalysis, AskFailure> {
+	const front = withFrontPhrase(flat);
+	if (front === undefined) return flat;
+	const answers = yield* ask({
+		stage: "breakdown-locutions",
+		state: whole.state,
+		questions: { l_0: noul(locutionQuestion(whole.key, front.reads)) },
+	});
+	return noulOf(answers, "l_0") >= locutionFloor ? front.analysis : flat;
+});
+
+/** The analysis a word breaks down by, or none. */
+const analysisOf = Effect.fnUntraced(function* (
+	analyses: readonly WordAnalysis[],
+	whole: Whole,
+	ask: Ask,
+): Effect.fn.Return<WordAnalysis | undefined, AskFailure> {
+	const [only] = analyses;
+	if (only === undefined) return undefined;
+	if (!only.pieces.some(({ role }) => role === "Hyphen"))
+		return yield* chosenAnalysis(analyses, whole, ask);
+	const analysis =
+		analyses.length === 1
+			? only
+			: yield* chosenAnalysis(analyses, whole, ask);
+	return analysis === only
+		? yield* withLocutionFront(only, whole, ask)
+		: analysis;
+});
+
 const wordConstituents = Effect.fnUntraced(function* (
 	input: BreakdownInput,
 	ask: Ask,
 ): Effect.fn.Return<Constituents, AskFailure> {
 	const { canonicalForm, kind } = input.reading.lemma;
-	const analyses = wordAnalyses(canonicalForm, kind);
 	const whole = wholeOf(input, "word");
-	const [only] = analyses;
-	const hyphenated =
-		analyses.length === 1 &&
-		only?.pieces.some(({ role }) => role === "Hyphen");
-	const analysis = hyphenated
-		? only
-		: analyses.length === 0
-			? undefined
-			: yield* chosenAnalysis(analyses, whole, ask);
+	const analysis = yield* analysisOf(
+		wordAnalyses(canonicalForm, kind),
+		whole,
+		ask,
+	);
 	if (analysis === undefined) return none;
 	const head = headRoutes[kind];
 	const last = analysis.pieces.length - 1;
-	const open: OpenPart[] = analysis.pieces.flatMap((piece, index) =>
-		piece.role === "Word"
-			? [
-					{
-						reads: piece.letters,
-						routes:
-							index === last && head !== undefined
-								? [head]
-								: wordPartRoutes,
-					},
-				]
-			: [],
-	);
+	// A noun's first part beside its head may be a cranberry piece (ADR 0050).
+	const cranberry =
+		kind === "NOUN" &&
+		analysis.pieces.length === 2 &&
+		analysis.pieces.every(({ role }) => role === "Word");
+	const open = analysis.pieces.flatMap((piece, index): OpenPart[] => {
+		if (piece.role === "Phrase")
+			return [
+				{
+					reads: piece.reads,
+					routes: locutionRoutes,
+					forms: phraseForms(piece.reads),
+					formGuide: phraseFormGuide,
+				},
+			];
+		if (piece.role !== "Word") return [];
+		if (index === last && head !== undefined)
+			return [{ reads: piece.letters, routes: [head] }];
+		return [
+			{
+				reads: piece.letters,
+				routes: wordPartRoutes,
+				...(cranberry && index === 0 ? { cranberry: true } : {}),
+			},
+		];
+	});
 	const targets = yield* partTargets(
 		open,
 		whole,
 		ask,
-		routeGuideOf(analysis),
+		routeGuideOf(analysis, kind),
 	);
 	return constituentsOf(linkedPieces(analysis.pieces, targets));
 });
@@ -280,8 +312,12 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	analysisInstructions,
 	noneOption,
 	compoundRouteGuide,
+	verbFirstPartRouteGuide,
 	prefixedBaseRouteGuide,
 	phrasemeRouteGuide,
+	cranberryOption,
+	phraseFormGuide,
+	...Object.values(hyphenPrefixGlosses),
 	locutionQuestion("wording", "…"),
 	...Object.values(reflexiveUses),
 ];

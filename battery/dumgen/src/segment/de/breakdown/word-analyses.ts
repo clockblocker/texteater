@@ -4,15 +4,19 @@
  * two words (`Kohle + kraftwerk`), a prefix or particle with its base
  * (`ver + kaufen`, `ein + kaufen`), a base with a suffix (`Entspann +
  * ung`), and a prefix with a noun or adjective base and the citation ending
- * (`ver + arzt + en`). A hyphenated word splits at its hyphens only.
+ * (`ver + arzt + en`). A hyphenated word splits at its hyphens only, and
+ * a lone `E` before its one hyphen may also be DWDS's prefix 2e-
+ * (`E- + Book` beside `E + Book`); no word without a hyphen is cut there.
  *
  * A linking element is not cut here: once a part's Canonical Form is known,
  * the letters it shows past that form are an Interfix (`interfix.ts`). The
  * cuts come from dumcorpus's closed affix inventory and its true separable
  * particles; a part that is a word needs at least two letters, a head three
- * (a verb's four, its ending included).
+ * (a verb's four, its ending included, or `tun`, German's one infinitive of
+ * three letters).
  */
 import {
+	germanHyphenPrefixes,
 	germanPrefixes,
 	germanSeparableParticles,
 	germanSuffixes,
@@ -23,10 +27,17 @@ import {
  * picks; a prefix, true separable particle or suffix with its Morpheme
  * Lemma's Canonical Form (`ein-` in einkaufen, ADR 0050: dumcorpus's closed
  * particle list decides, and a first part such as teil or fest is a word);
- * a verb's citation ending, shown as filler; or a hyphen.
+ * a verb's citation ending, shown as filler; a hyphen; or a hyphenated
+ * compound's front phrase as one Locution part, read with spaces
+ * (`Kopf-an-Kopf` read `Kopf an Kopf`).
  */
 export type WordPiece =
 	| { readonly role: "Word"; readonly letters: string }
+	| {
+			readonly role: "Phrase";
+			readonly letters: string;
+			readonly reads: string;
+	  }
 	| {
 			readonly role: "Prefix" | "Suffix";
 			readonly letters: string;
@@ -58,16 +69,38 @@ const suffixSpellings: ReadonlySet<string> = new Set(
 	germanSuffixes.map(({ spelled }) => spelled),
 );
 
+/**
+ * What a hyphen-only prefix stands for, read in its analysis's label, since
+ * its letters alone also spell a letter of the alphabet or a note.
+ */
+export const hyphenPrefixGlosses: Readonly<Record<string, string>> = {
+	"e-": "short for elektronisch",
+};
+
+/** The hyphen-only prefixes by their letters: `e` → `e-`. */
+const hyphenPrefixes: ReadonlyMap<string, string> = new Map(
+	germanHyphenPrefixes.map(({ spelled, canonicalForm }) => [
+		spelled,
+		canonicalForm,
+	]),
+);
+
+/** How the judge reads an analysis; a hyphen is filler and left out. */
 function labelOf(pieces: readonly WordPiece[]): string {
 	return pieces
+		.filter(({ role }) => role !== "Hyphen")
 		.map((piece) => {
 			switch (piece.role) {
-				case "Prefix":
-					return `${piece.letters}- (prefix)`;
+				case "Prefix": {
+					const gloss = hyphenPrefixGlosses[piece.canonicalForm];
+					return `${piece.letters}- (prefix${gloss ? `, ${gloss}` : ""})`;
+				}
 				case "Suffix":
 					return `-${piece.letters} (suffix)`;
 				case "Ending":
 					return `-${piece.letters} (citation ending)`;
+				case "Phrase":
+					return `[${piece.reads}]`;
 				default:
 					return piece.letters;
 			}
@@ -98,12 +131,24 @@ function citationEnding(word: string): string | undefined {
 	return folded.endsWith("en") ? "en" : undefined;
 }
 
-/** Every cut into a first part and a head, the head at least `minHead` letters. */
-function binaryCuts(word: string, minHead: number): WordAnalysis[] {
+/** The verb heads shorter than four letters a cut may still leave: `tun` (weh + tun). */
+const shortVerbHeads: ReadonlySet<string> = new Set(["tun"]);
+
+/**
+ * Every cut into a first part and a head, the head at least `minHead`
+ * letters or one of `shortHeads`.
+ */
+function binaryCuts(
+	word: string,
+	minHead: number,
+	shortHeads: ReadonlySet<string> = new Set(),
+): WordAnalysis[] {
 	const result: WordAnalysis[] = [];
-	for (let cut = 2; cut <= word.length - minHead; cut++) {
+	for (let cut = 2; cut <= word.length - 2; cut++) {
+		const head = lower(word.slice(cut));
+		if (word.length - cut < minHead && !shortHeads.has(head)) continue;
 		// A suffix is no head: `suffixCuts` offers that cut.
-		if (suffixSpellings.has(lower(word.slice(cut)))) continue;
+		if (suffixSpellings.has(head)) continue;
 		result.push(
 			analysis([
 				firstPiece(word.slice(0, cut)),
@@ -158,19 +203,70 @@ function prefixedVerbStems(word: string): WordAnalysis[] {
 	return result;
 }
 
-/** A hyphenated word, flat at its hyphens: `E-Mail`, `Mund-zu-Mund-Beatmung`. */
-function hyphenated(word: string): WordAnalysis {
-	return analysis(
-		word
-			.split(/(-)/u)
-			.filter((part) => part.length > 0)
-			.map(
-				(part): WordPiece =>
-					part === "-"
-						? { role: "Hyphen", letters: part }
-						: { role: "Word", letters: part },
-			),
-	);
+/**
+ * A hyphenated word, flat at its hyphens (`Mund-zu-Mund-Beatmung`), and,
+ * when it is a hyphen-only prefix's letters, one hyphen and a word, that
+ * prefix and the word (`E- + Book`). A word with more hyphens stays flat.
+ */
+function hyphenated(word: string): WordAnalysis[] {
+	const pieces = word
+		.split(/(-)/u)
+		.filter((part) => part.length > 0)
+		.map(
+			(part): WordPiece =>
+				part === "-"
+					? { role: "Hyphen", letters: part }
+					: { role: "Word", letters: part },
+		);
+	const [first, hyphen, rest, ...more] = pieces;
+	const prefix = hyphenPrefixes.get(lower(first?.letters ?? ""));
+	if (
+		first === undefined ||
+		prefix === undefined ||
+		hyphen === undefined ||
+		rest === undefined ||
+		more.length > 0
+	)
+		return [analysis(pieces)];
+	return [
+		analysis(pieces),
+		analysis([
+			{ role: "Prefix", letters: first.letters, canonicalForm: prefix },
+			hyphen,
+			rest,
+		]),
+	];
+}
+
+/**
+ * A flat hyphenated analysis with the words before its last hyphen as one
+ * front phrase, a candidate Locution (`[Kopf an Kopf] + Rennen`, ADR 0050),
+ * when there are at least two of them; else undefined.
+ */
+export function withFrontPhrase(
+	flat: WordAnalysis,
+): { readonly analysis: WordAnalysis; readonly reads: string } | undefined {
+	const { pieces } = flat;
+	const lastHyphen = pieces.findLastIndex(({ role }) => role === "Hyphen");
+	const front = pieces.slice(0, Math.max(lastHyphen, 0));
+	const words = front.filter(({ role }) => role === "Word");
+	if (
+		words.length < 2 ||
+		front.some(({ role }) => role !== "Word" && role !== "Hyphen")
+	)
+		return undefined;
+	const reads = words.map(({ letters }) => letters).join(" ");
+	return {
+		reads,
+		analysis: analysis([
+			{
+				role: "Phrase",
+				letters: front.map(({ letters }) => letters).join(""),
+				reads,
+			},
+			...pieces.slice(lastHyphen),
+		]),
+	};
 }
 
 /**
@@ -178,10 +274,10 @@ function hyphenated(word: string): WordAnalysis {
  * repeats; none for a word too short to cut.
  */
 export function wordAnalyses(word: string, kind: string): WordAnalysis[] {
-	if (/\p{L}-\p{L}/u.test(word)) return [hyphenated(word)];
+	if (/\p{L}-\p{L}/u.test(word)) return hyphenated(word);
 	const verb = kind === "VERB";
 	const candidates = [
-		...binaryCuts(word, verb ? 4 : 3),
+		...binaryCuts(word, verb ? 4 : 3, verb ? shortVerbHeads : undefined),
 		...suffixCuts(word),
 		...(verb ? prefixedVerbStems(word) : []),
 	];

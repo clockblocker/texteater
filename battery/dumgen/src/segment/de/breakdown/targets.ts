@@ -4,7 +4,9 @@
  * ones code offers in one request, `breakdown-routes`, then the Canonical
  * Form among the ones code writes (`forms.ts`) in a second,
  * `breakdown-forms`. A part with one option is not asked about, and a
- * request with no question is not sent.
+ * request with no question is not sent. A compound's first part may also
+ * be offered as a cranberry piece, which links to its Root Morpheme
+ * (`Brom` in Brombeere, ADR 0050, ADR 0051), spelled as it shows.
  */
 import type { EntryType, Questions } from "@typesafe-ai/sdk";
 import type * as Dumrel from "dumrel/types";
@@ -25,7 +27,23 @@ export type OpenPart = {
 	readonly reads: string;
 	/** The routes it may take, the likeliest first. */
 	readonly routes: readonly RouteKey[];
+	/** Whether it may also be a cranberry piece, a Root of its own. */
+	readonly cranberry?: true;
+	/** Its candidate Canonical Forms, when code knows them better than `forms.ts`. */
+	readonly forms?: readonly string[];
+	/** Closes its headword question, when its forms need one. */
+	readonly formGuide?: string;
 };
+
+/** The option a cranberry piece takes. */
+const rootKey = "Morpheme/Root";
+
+/**
+ * What a cranberry piece is, for its option (ADR 0050); its examples are no
+ * Breakdown case (#693).
+ */
+export const cranberryOption =
+	"A cranberry piece: no word of its own, found only in this word and the words built on it, and in no dictionary as a headword (Schorn in Schornstein, Sint in Sintflut)";
 
 /** The judge's view of the whole being broken down. */
 export type Whole = {
@@ -34,15 +52,17 @@ export type Whole = {
 	readonly state: Readonly<Record<string, EntryType>>;
 };
 
+type PartRoute = RouteKey | typeof rootKey;
+
 /** The chosen key among `routes`; an answer outside them is a bug the adapter already refused. */
-function routeOf(routes: readonly RouteKey[], picked: string): RouteKey {
+function routeOf(routes: readonly PartRoute[], picked: string): PartRoute {
 	const route = routes.find((key) => key === picked);
 	if (route === undefined) throw Error(`Not an offered route: ${picked}`);
 	return route;
 }
 
 /** A Unit Shadow on a German route; `routes.ts` checked the route. */
-function shadowOf(route: RouteKey, canonicalForm: string): Dumrel.UnitShadow {
+function shadowOf(route: PartRoute, canonicalForm: string): Dumrel.UnitShadow {
 	const [family = "", kind = ""] = route.split("/");
 	// Sound: every RouteKey names a German route with a Unit Shadow shape.
 	return { language: "de", family, kind, canonicalForm } as Dumrel.UnitShadow;
@@ -73,28 +93,35 @@ export const partTargets = Effect.fnUntraced(function* (
 	ask: Ask,
 	routeGuide?: string,
 ): Effect.fn.Return<Dumrel.UnitShadow[], AskFailure> {
+	const offered = parts.map((part): readonly PartRoute[] =>
+		part.cranberry ? [...part.routes, rootKey] : part.routes,
+	);
 	const routeQuestions: Questions = {};
 	for (const [index, part] of parts.entries())
-		if (part.routes.length > 1)
+		if ((offered[index] ?? []).length > 1)
 			routeQuestions[`r_${index}`] = choice(
 				`In \`${whole.key}\`, the part "${part.reads}" is which kind of unit?${routeGuide ? ` ${routeGuide}` : ""}`,
-				routeCriteria(part.routes, true),
+				{
+					...routeCriteria(part.routes, true),
+					...(part.cranberry ? { [rootKey]: cranberryOption } : {}),
+				},
 			);
 	const routeAnswers = yield* askAny(ask, {
 		stage: "breakdown-routes",
 		state: whole.state,
 		questions: routeQuestions,
 	});
-	const routes = parts.map((part, index) => {
-		const [only] = part.routes;
-		if (part.routes.length === 1 && only !== undefined) return only;
-		return routeOf(
-			part.routes,
-			choiceOf(routeAnswers, `r_${index}`).choice,
-		);
+	const routes = parts.map((_, index) => {
+		const options = offered[index] ?? [];
+		const [only] = options;
+		if (options.length === 1 && only !== undefined) return only;
+		return routeOf(options, choiceOf(routeAnswers, `r_${index}`).choice);
 	});
 	const candidates = parts.map((part, index) => {
-		const [family = "", kind = ""] = (routes[index] ?? "").split("/");
+		const route = routes[index] ?? "";
+		if (route === rootKey) return [part.reads.toLocaleLowerCase("de")];
+		if (part.forms !== undefined) return part.forms;
+		const [family = "", kind = ""] = route.split("/");
 		return formCandidates(part.reads, family, kind);
 	});
 	const formQuestions: Questions = {};
@@ -103,7 +130,7 @@ export const partTargets = Effect.fnUntraced(function* (
 		const [, kind = ""] = (routes[index] ?? "").split("/");
 		if (forms.length > 1)
 			formQuestions[`f_${index}`] = choice(
-				`In \`${whole.key}\`, the part "${part.reads}" is a ${kindNames[kind] ?? kind}. Which is its dictionary headword?`,
+				`In \`${whole.key}\`, the part "${part.reads}" is a ${kindNames[kind] ?? kind}. Which is its dictionary headword?${part.formGuide ? ` ${part.formGuide}` : ""}`,
 				Object.fromEntries(forms.map((form, at) => [`f${at}`, form])),
 			);
 	}

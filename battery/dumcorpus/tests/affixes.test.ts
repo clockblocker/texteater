@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import {
 	germanCitationEndings,
+	germanHyphenPrefixes,
 	germanPrefixes,
 	germanSuffixes,
 } from "../src/inventories.js";
@@ -28,7 +29,10 @@ function cutVerb(verb: string, suffix: string) {
 }
 
 test("every affix is spelled by its Kind: a prefix ends in a hyphen, a suffix starts with one", () => {
-	for (const { spelled, canonicalForm } of germanPrefixes)
+	for (const { spelled, canonicalForm } of [
+		...germanPrefixes,
+		...germanHyphenPrefixes,
+	])
 		expect(canonicalForm).toBe(`${spelled}-`);
 	for (const { canonicalForm } of germanSuffixes)
 		expect(canonicalForm).toMatch(/^-\p{Ll}+$/u);
@@ -81,4 +85,13 @@ test("a verb's n after -el or -er is a Surface of the Ending -en, not a Lemma of
 			({ spelled, canonicalForm }) => `${spelled} → ${canonicalForm}`,
 		),
 	).toEqual(["en → -en", "n → -en"]);
+});
+
+test("a hyphen-only prefix is no ordinary prefix, so no word opening with its letters is cut there", () => {
+	expect(
+		germanHyphenPrefixes.map(({ canonicalForm }) => canonicalForm),
+	).toEqual(["e-"]);
+	const ordinary = new Set(germanPrefixes.map(({ spelled }) => spelled));
+	for (const { spelled } of germanHyphenPrefixes)
+		expect(ordinary.has(spelled)).toBe(false);
 });
