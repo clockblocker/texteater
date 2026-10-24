@@ -119,7 +119,7 @@ describe("closed-class parts come from dumcorpus (proposals 2 and 5)", () => {
 
 	test("was is a PRON unasked, and so is uns, whose headword question names sich", async () => {
 		const was = judgeWanting("was");
-		await run(input("Locution", "ADV", "was weiß ich", "🤷"), was);
+		await run(input("Locution", "ADV", "was sonst noch", "➕"), was);
 		expect(askedAt(was, "breakdown-routes").join(" ")).not.toContain(
 			'"was"',
 		);
