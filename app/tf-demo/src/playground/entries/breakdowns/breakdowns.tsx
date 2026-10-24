@@ -1,11 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "lego";
 import { useMemo, useState } from "react";
-import {
-	type BreakdownDisplay,
-	BreakdownDisplayProvider,
-	DEFAULT_BREAKDOWN_DISPLAY,
-} from "@/notes";
+import { type BreakdownDisplay, BreakdownDisplayProvider } from "@/notes";
 import {
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
@@ -15,7 +11,8 @@ import { CardFrame, SheetFrame } from "../frames";
 import { segmentsFromTarget, targetFromSegments } from "../notes-gallery";
 import { PlaygroundNote, playgroundNotesQuery } from "../playground-note";
 import { BREAKDOWN_EXAMPLES, exampleTarget } from "./examples";
-import { Inspector, InspectorChoice, InspectorSection } from "./inspector";
+import { Inspector, InspectorSection } from "./inspector";
+import { BreakdownKnobs, PROTOTYPE_BREAKDOWN_DISPLAY } from "./knobs";
 
 const firstExample = BREAKDOWN_EXAMPLES[0]?.examples[0];
 
@@ -30,7 +27,7 @@ const firstExample = BREAKDOWN_EXAMPLES[0]?.examples[0];
 export function BreakdownsPrototype({ route }: { readonly route: EntryRoute }) {
 	const snapshot = useQuery(playgroundNotesQuery);
 	const [display, setDisplay] = useState<BreakdownDisplay>(
-		DEFAULT_BREAKDOWN_DISPLAY,
+		PROTOTYPE_BREAKDOWN_DISPLAY,
 	);
 	const [presentation, setPresentation] = useState<"Sheet" | "Card">("Sheet");
 	const routed = useMemo(
@@ -60,6 +57,13 @@ export function BreakdownsPrototype({ route }: { readonly route: EntryRoute }) {
 			</p>
 		);
 	const data = snapshot.data;
+	const shownDisplay: BreakdownDisplay = {
+		...display,
+		formationsOfLemma: (lemmaId) => {
+			const note = data.notes[`Lemma:${lemmaId}`];
+			return note?.kind === "Lemma" ? note.formations : undefined;
+		},
+	};
 	const target =
 		routed ?? (firstExample ? exampleTarget(data, firstExample) : null);
 	const Frame = presentation === "Card" ? CardFrame : SheetFrame;
@@ -69,7 +73,7 @@ export function BreakdownsPrototype({ route }: { readonly route: EntryRoute }) {
 			<div className="w-full max-w-2xl">
 				{target ? (
 					<WorkspaceInteractionProvider interaction={interaction}>
-						<BreakdownDisplayProvider value={display}>
+						<BreakdownDisplayProvider value={shownDisplay}>
 							<Frame>
 								<PlaygroundNote
 									target={target}
@@ -86,10 +90,15 @@ export function BreakdownsPrototype({ route }: { readonly route: EntryRoute }) {
 				<InspectorSection>
 					<p className="text-ink-soft">
 						A Reading's Breakdown on its Note (ADR 0050, ADR 0051):
-						Constituents, morphemes under school marks, or a Source;
-						and on a base's Note, its Formations. Every piece opens
-						its Note; a pending part opens its Shadow Note. Browser
-						Back walks back.
+						Constituents by dictionary form, the word's morphemes,
+						or a Source; and on a base's Note, its Formations.
+					</p>
+					<p className="text-ink-soft">
+						The morphemes line is the user's sketch: the word plain
+						at rest, and under the pointer one morpheme turns blue
+						with its school mark drawn above it. Tab into the word
+						and walk it with ← →; Enter opens the morpheme's Note.
+						Browser Back walks back.
 					</p>
 				</InspectorSection>
 				{BREAKDOWN_EXAMPLES.map((group) => (
@@ -132,51 +141,25 @@ export function BreakdownsPrototype({ route }: { readonly route: EntryRoute }) {
 						</ul>
 					</InspectorSection>
 				))}
-				<InspectorSection title="Knobs">
-					<InspectorChoice
-						label="Constituents of a word"
-						value={display.constituents}
-						options={[
-							{
-								value: "DictionaryForms",
-								label: "Gast + -e- + Haus",
-							},
-							{ value: "ShownLetters", label: "Gäste|haus" },
-						]}
-						onChange={(constituents) =>
-							setDisplay((current) => ({
-								...current,
-								constituents,
-							}))
-						}
-					/>
-					<InspectorChoice
-						label="Morphemes"
-						value={display.morphemes}
-						options={[
-							{ value: "Marks", label: "Marks only" },
-							{ value: "Dots", label: "Marks + ·" },
-						]}
-						onChange={(morphemes) =>
-							setDisplay((current) => ({ ...current, morphemes }))
-						}
-					/>
-					<InspectorChoice
-						label="Presentation"
-						value={presentation}
-						options={[
-							{ value: "Sheet", label: "Sheet" },
-							{ value: "Card", label: "Card" },
-						]}
-						onChange={setPresentation}
-					/>
-				</InspectorSection>
+				<BreakdownKnobs
+					display={display}
+					setDisplay={setDisplay}
+					presentation={presentation}
+					setPresentation={setPresentation}
+				/>
 				<InspectorSection title="Copied from">
 					<ul className="grid list-disc gap-1 ps-4 text-ink-soft">
 						{COPIED.map(([what, from]) => (
 							<li key={what}>
 								<span className="text-ink">{what}</span>: {from}
 							</li>
+						))}
+					</ul>
+				</InspectorSection>
+				<InspectorSection title="Open questions">
+					<ul className="grid list-disc gap-1 ps-4 text-ink-soft">
+						{OPEN_QUESTIONS.map((question) => (
+							<li key={question}>{question}</li>
 						))}
 					</ul>
 				</InspectorSection>
@@ -202,15 +185,28 @@ const COPIED: readonly (readonly [string, string])[] = [
 	],
 	[
 		"Morpheme marks",
-		"разбор по составу: prefix ¬, root ⌒, suffix ^, ending □, zero ending empty □; the Interfix ring is a guess",
+		"разбор по составу: prefix ¬ (tick at the end, as sketched), root ⌒, suffix ^, ending □, zero ending empty □, Interfix ring",
 	],
 	["Source", "DWDS Grundform (Lauf: Grundform laufen), worded as “from”"],
 	[
 		"Formations",
-		"DWDS Wortbildung: one line per group, words joined by ·, three shown, then “… N more”",
+		"DWDS Wortbildung: one line per group, words joined by ·, three shown, then “… N more”; “Base of” is DWDS's “als Grundform”",
+	],
+	[
+		"Reveal motion",
+		"emil-design-eng: a 170 ms ease-out wipe in, a 110 ms fade out, CSS transitions so a reveal interrupts cleanly; keyboard focus reveals at once",
 	],
 	[
 		"Phrasemes",
 		"running text: words joined by ·, a fused word kept together",
 	],
+];
+
+const OPEN_QUESTIONS: readonly string[] = [
+	"At rest nothing says the word can be explored; is the pointer cursor cue enough?",
+	"The zero ending's target is invisible until hovered; will a learner ever find it?",
+	"A pin lasts until a click elsewhere or Escape; is that the right way to clear it?",
+	"Formations on each Reading Note repeat the Lemma's list on every Reading.",
+	"Is “Base of” the right label for the words with this one as Source?",
+	"A fast sweep across the word flashes every mark; should the first reveal wait a beat?",
 ];

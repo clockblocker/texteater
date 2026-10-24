@@ -81,6 +81,7 @@ const ending = (letters: string) =>
 	);
 
 const KAUFEN = verb("kaufen");
+const EINKAUFEN = verb("einkaufen");
 const HAUS = noun("Haus");
 const GAST = noun("Gast");
 const ARZT = noun("Arzt");
@@ -109,7 +110,7 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		morphemes: [root("kauf"), ending("en")],
 	},
 	{
-		lemma: verb("einkaufen"),
+		lemma: EINKAUFEN,
 		emoji: "🛍️",
 		definition: "Waren für den täglichen Bedarf kaufen.",
 		translations: ["to shop", "делать покупки"],
@@ -157,6 +158,21 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 			link("er", morpheme("Prefix", "er-")),
 			link("kaufen", KAUFEN),
 		],
+	},
+	{
+		// The user's sketch (#1241): ein · kauf · ∅, through its Source.
+		lemma: noun("Einkauf"),
+		emoji: "🧺",
+		definition: "Das Einkaufen von Waren für den täglichen Bedarf.",
+		translations: ["shopping", "покупка"],
+		source: EINKAUFEN,
+	},
+	{
+		lemma: noun("Kauf"),
+		emoji: "🤝",
+		definition: "Erwerb einer Sache gegen Bezahlung.",
+		translations: ["purchase", "покупка"],
+		source: KAUFEN,
 	},
 	{
 		lemma: noun("Kaufhaus"),

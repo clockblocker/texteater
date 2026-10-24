@@ -30,6 +30,11 @@ export const BREAKDOWN_EXAMPLES: readonly ExampleGroup[] = [
 		title: "Words",
 		examples: [
 			{
+				label: "Einkauf 🧺",
+				hint: "The sketch: ein · kauf · ∅ through its Source; the zero ending's target sits after the f",
+				note: reading("Einkauf", "🧺"),
+			},
+			{
 				label: "Kohlekraftwerk 🏭",
 				hint: "Both parts pending: two Shadow links, two unsplit chunks",
 				note: reading("Kohlekraftwerk", "🏭"),
@@ -41,7 +46,7 @@ export const BREAKDOWN_EXAMPLES: readonly ExampleGroup[] = [
 			},
 			{
 				label: "Gästehaus 🏨",
-				hint: "An Interfix; switch to shown letters for Gäste|haus",
+				hint: "An Interfix: its ring, and Gast + -e- + Haus",
 				note: reading("Gästehaus", "🏨"),
 			},
 			{
@@ -66,7 +71,7 @@ export const BREAKDOWN_EXAMPLES: readonly ExampleGroup[] = [
 			},
 			{
 				label: "Lauf 👟",
-				hint: "A conversion: a Source instead of Constituents",
+				hint: "A conversion: a Source instead of Constituents; laufen lists it as Base of",
 				note: reading("Lauf", "👟"),
 			},
 		],
@@ -95,8 +100,13 @@ export const BREAKDOWN_EXAMPLES: readonly ExampleGroup[] = [
 		title: "Formations",
 		examples: [
 			{
+				label: "kaufen 🛒 (Reading)",
+				hint: "Its Reading Note; set Formations to “+ each Reading Note”",
+				note: reading("kaufen", "🛒"),
+			},
+			{
 				label: "kaufen",
-				hint: "Prefixed verbs, a compound and a derivation",
+				hint: "Prefixed verbs, a compound, a derivation, and Base of: Kauf",
 				note: { kind: "Lemma", form: "kaufen" },
 			},
 			{

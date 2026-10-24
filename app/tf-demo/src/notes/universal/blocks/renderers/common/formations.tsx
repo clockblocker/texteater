@@ -3,6 +3,7 @@ import { Fragment, useState } from "react";
 
 import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import type { NoteDataFor } from "../../../note/data";
+import { useBreakdownDisplay } from "./breakdown-display";
 
 type Formations = NoteDataFor<"Lemma">["formations"];
 type FormationGroup = Formations[number];
@@ -20,6 +21,10 @@ function groupLabel({ group, formations }: FormationGroup): string {
 			return "Compounds";
 		case "Derivations":
 			return "Derivations";
+		case "Sourced":
+			// DWDS's `als Grundform`: the words that name this one as their
+			// Source, as `Lauf` names `laufen` ("from laufen").
+			return "Base of";
 		case "Phrases":
 			return "Phrases";
 	}
@@ -77,7 +82,8 @@ function FormationLine({
 /**
  * The stored words built on a base (ADR 0050), one line per group as DWDS's
  * word-formation panel sets them: `Prefixed verbs: abkaufen · einkaufen ·
- * verkaufen … 2 more`.
+ * verkaufen … 2 more`. The words whose Source is the base show as
+ * `Base of: Lauf` only when the display lists them.
  */
 export function FormationsSection({
 	formations,
@@ -86,9 +92,14 @@ export function FormationsSection({
 	readonly formations: Formations;
 	readonly follow: (target: WorkspaceTarget) => void;
 }) {
-	if (formations.length === 0) return null;
+	const display = useBreakdownDisplay();
+	const listed =
+		display.sources === "Listed"
+			? formations
+			: formations.filter(({ group }) => group !== "Sourced");
+	if (listed.length === 0) return null;
 	const counts = new Map<string, number>();
-	for (const { formations: members } of formations)
+	for (const { formations: members } of listed)
 		for (const { canonicalForm } of members)
 			counts.set(canonicalForm, (counts.get(canonicalForm) ?? 0) + 1);
 	const ambiguous = new Set(
@@ -97,7 +108,7 @@ export function FormationsSection({
 	return (
 		<NoteSection aria-label="Formations" label="Formations">
 			<div className="grid gap-1.5">
-				{formations.map((group) => (
+				{listed.map((group) => (
 					<FormationLine
 						key={group.group}
 						group={group}

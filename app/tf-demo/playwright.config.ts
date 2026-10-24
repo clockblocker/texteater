@@ -9,6 +9,7 @@ const playgroundUrl = `http://127.0.0.1:${port}`;
    `app-provider.tsx` throws without `VITE_CONVEX_URL` on every route, so
    that script sets a placeholder (process env wins over `.env.local`). */
 const playgroundSpecs = [
+	"breakdowns-reveal.pw.ts",
 	"compass.pw.ts",
 	"deck-motion.pw.ts",
 	"playground-isolation.pw.ts",

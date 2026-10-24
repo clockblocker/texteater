@@ -3,7 +3,6 @@ import { Fragment, type ReactNode } from "react";
 
 import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import type { NoteDataFor } from "../../../../note/data";
-import { useBreakdownDisplay } from "../../common/breakdown-display";
 
 export type BreakdownData = NonNullable<NoteDataFor<"Reading">["breakdown"]>;
 type Constituent = NonNullable<BreakdownData["constituents"]>[number];
@@ -111,41 +110,6 @@ function DictionaryForms({
 	));
 }
 
-/**
- * A word cut into its own letters, `|` between parts and an Interfix glued
- * to the part before it (`Gäste|haus`), as ADR 0050 allows.
- */
-function ShownLetters({
-	pieces,
-	follow,
-}: {
-	readonly pieces: readonly Constituent[];
-	readonly follow: (target: WorkspaceTarget) => void;
-}) {
-	return pieces.map((piece, index) => {
-		const glued =
-			index === 0 ||
-			(piece.target?.family === "Morpheme" &&
-				piece.target.kind === "Interfix");
-		return (
-			<Fragment key={`${index}:${piece.letters}`}>
-				{glued ? null : <span className="text-ink-muted">|</span>}
-				{piece.target ? (
-					<PieceLink
-						target={piece.target}
-						follow={follow}
-						label={`${piece.letters}, ${piece.target.canonicalForm}`}
-					>
-						{piece.letters}
-					</PieceLink>
-				) : (
-					<Filler>{piece.letters}</Filler>
-				)}
-			</Fragment>
-		);
-	});
-}
-
 /** The Constituents line: one level down, each part one click away. */
 export function ConstituentsLine({
 	pieces,
@@ -156,14 +120,11 @@ export function ConstituentsLine({
 	readonly ownerFamily: string;
 	readonly follow: (target: WorkspaceTarget) => void;
 }) {
-	const display = useBreakdownDisplay();
 	const phraseme = ownerFamily === "Locution" || ownerFamily === "Saying";
 	return (
 		<div data-breakdown-line="constituents" className="text-pretty">
 			{phraseme ? (
 				<PhrasemeConstituents pieces={pieces} follow={follow} />
-			) : display.constituents === "ShownLetters" ? (
-				<ShownLetters pieces={pieces} follow={follow} />
 			) : (
 				<DictionaryForms pieces={pieces} follow={follow} />
 			)}

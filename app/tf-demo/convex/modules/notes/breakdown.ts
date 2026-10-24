@@ -229,10 +229,11 @@ export async function loadBreakdownView(
 }
 
 /**
- * The stored words whose Constituents link to a base (ADR 0050), grouped by
- * the Kind of their other pieces. The base is named by its Shadow: a pending
- * base's own, or the one interned for a stored Lemma's identity, so
- * resolution needs no move. Computed from the links, never stored.
+ * The stored words built on a base (ADR 0050): those whose Constituents link
+ * to it, grouped by the Kind of their other pieces, and those whose Source
+ * names it. The base is named by its Shadow: a pending base's own, or the
+ * one interned for a stored Lemma's identity, so resolution needs no move.
+ * Computed from the links, never stored.
  */
 async function loadFormationsOfShadow(
 	ctx: QueryCtx,
@@ -242,18 +243,18 @@ async function loadFormationsOfShadow(
 		.query("structuralShadowReferences")
 		.withIndex("by_shadow_id", (q) => q.eq("shadowId", shadowId))
 		.take(MAX_FORMATION_REFERENCES);
-	const owners = new Set(
-		references.flatMap(({ aspect, path, ownerReadingKey }) =>
-			aspect === "breakdown" && path.startsWith("constituents.")
-				? [ownerReadingKey]
-				: [],
-		),
-	);
+	const owners = new Map<string, "Constituents" | "Source">();
+	for (const { aspect, path, ownerReadingKey } of references) {
+		if (aspect === "breakdown" && path.startsWith("constituents."))
+			owners.set(ownerReadingKey, "Constituents");
+		else if (aspect === "source" && !owners.has(ownerReadingKey))
+			owners.set(ownerReadingKey, "Source");
+	}
 	const groups = new Map<
 		FormationsView[number]["group"],
 		FormationsView[number]["formations"]
 	>();
-	for (const ownerReadingKey of owners) {
+	for (const [ownerReadingKey, via] of owners) {
 		const reading = await ctx.db
 			.query("readings")
 			.withIndex("by_reading_key", (q) =>
@@ -261,16 +262,20 @@ async function loadFormationsOfShadow(
 			)
 			.unique();
 		const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
-		const row = await ctx.db
-			.query("accumulatedKnowledge")
-			.withIndex("by_owner_reading_key", (q) =>
-				q.eq("ownerReadingKey", ownerReadingKey),
-			)
-			.unique();
-		const constituents = asKnowledge(row?.knowledge).breakdown
-			?.constituents;
-		if (!reading || !lemma || !constituents) continue;
-		const group = formationGroupOf(lemma, constituents);
+		if (!reading || !lemma) continue;
+		let group: FormationsView[number]["group"] = "Sourced";
+		if (via === "Constituents") {
+			const row = await ctx.db
+				.query("accumulatedKnowledge")
+				.withIndex("by_owner_reading_key", (q) =>
+					q.eq("ownerReadingKey", ownerReadingKey),
+				)
+				.unique();
+			const constituents = asKnowledge(row?.knowledge).breakdown
+				?.constituents;
+			if (!constituents) continue;
+			group = formationGroupOf(lemma, constituents);
+		}
 		const members = groups.get(group) ?? [];
 		members.push({
 			readingId: reading._id,
