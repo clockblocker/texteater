@@ -36,6 +36,9 @@ async function loadRunModules() {
 		"../../lab/segmentation/harness/ledger.js"
 	);
 	const round = await import("../../lab/segmentation/harness/round.js");
+	const { readCalibration } = await import(
+		"../../lab/segmentation/harness/pricing.js"
+	);
 	const { createOpenAILuna } = await import("../../src/openai-luna.js");
 	const { createTypeSafeAsk } = await import(
 		"../../src/segment/typesafe-ask.js"
@@ -47,6 +50,7 @@ async function loadRunModules() {
 		appendLedger,
 		readLedger,
 		round,
+		readCalibration,
 		createOpenAILuna,
 		createTypeSafeAsk,
 	};
@@ -199,10 +203,20 @@ function roundOptions(
 	};
 }
 
+/** The Breakdown segmenters' ledger, `evidence/segment-breakdown/ledger.jsonl`. */
+const breakdownLedgerPath = (dependencies: EvaluationCliDependencies) =>
+	join(
+		dependencies.resolveEvidenceRoot ?? join(packageRoot, "evidence"),
+		"segment-breakdown",
+		"ledger.jsonl",
+	);
+
 /**
  * A live Breakdown segmenter run's granted budget of fresh jev input
  * tokens (`--budget`): refused before anything is asked when its projected
- * spend passes it, and stopped at it while it runs.
+ * spend passes it, and kept to while it runs: each fresh request holds
+ * its price until it is over, and one that would carry what was spent and
+ * what the requests in flight hold past the budget is refused.
  */
 function breakdownBudgetOptions(
 	{ values, experimentId, warn }: ExperimentCommand,
@@ -214,6 +228,7 @@ function breakdownBudgetOptions(
 			`A live ${experimentId} run needs --budget (fresh jev input tokens); price it with --estimate first. Nothing was asked.`,
 		);
 	let spent = 0;
+	let reserved = 0;
 	return {
 		beforeLive(priced) {
 			warn(round.projectionText(priced));
@@ -229,10 +244,37 @@ function breakdownBudgetOptions(
 					`The run reached its budget: ${spent} of ${budget} fresh jev input tokens`,
 				);
 		},
+		reserve({ stage, tokens }) {
+			if (spent + reserved + tokens > budget)
+				throw Error(
+					`The run would pass its budget of ${budget} fresh jev input tokens: ${spent} spent, ${reserved} reserved for the requests in flight, and this ${stage} request priced at ${tokens}`,
+				);
+			reserved += tokens;
+			return () => {
+				reserved -= tokens;
+			};
+		},
 		onSpend(tokens) {
 			spent += tokens;
 		},
 	};
+}
+
+/**
+ * The usage the Breakdown ledger recorded for the experiment's route, both
+ * sets of segment.inConstituents together, which prices the requests no
+ * cache prices; none without a line with fresh calls.
+ */
+async function breakdownCalibration(
+	{ experimentId, dependencies }: ExperimentCommand,
+	modules: RunModules,
+): Promise<Partial<EvaluateArgs>> {
+	const route = experimentId.slice(0, experimentId.lastIndexOf(":"));
+	const calibration = await modules.readCalibration(
+		breakdownLedgerPath(dependencies),
+		route,
+	);
+	return calibration ? { calibration } : {};
 }
 
 /** The options a run takes from its arguments alone. */
@@ -314,6 +356,7 @@ export async function experimentCommand(command: ExperimentCommand) {
 				? grammarLiveOptions(command, modules)
 				: {}),
 			...(round ? roundOptions(round, warn, modules.round) : {}),
+			...(breakdown ? await breakdownCalibration(command, modules) : {}),
 			...(breakdown && place.live
 				? breakdownBudgetOptions(command, modules.round)
 				: {}),
@@ -335,7 +378,8 @@ type Evaluated = Awaited<
 /**
  * A live Breakdown segmenter run's line in its own ledger,
  * `evidence/segment-breakdown/ledger.jsonl`: what it spent under which
- * budget, for the round the user granted it.
+ * budget, for the round the user granted it, and its fresh requests per
+ * stage (`stages`), which later projections are priced from.
  */
 async function appendBreakdownLedger(
 	{ values, experimentId, dependencies }: ExperimentCommand,
@@ -343,13 +387,9 @@ async function appendBreakdownLedger(
 	place: RunPlace,
 	modules: RunModules,
 ) {
-	const { run, spend } = evaluated;
+	const { run, spend, stages } = evaluated;
 	if (!run || !spend) return;
-	const path = join(
-		dependencies.resolveEvidenceRoot ?? join(packageRoot, "evidence"),
-		"segment-breakdown",
-		"ledger.jsonl",
-	);
+	const path = breakdownLedgerPath(dependencies);
 	await mkdir(dirname(path), { recursive: true });
 	await appendFile(
 		path,
@@ -364,6 +404,7 @@ async function appendBreakdownLedger(
 			gitHead: modules.git(["rev-parse", "HEAD"], place.repository),
 			model: run.manifest.configurations.judgment.model,
 			...spend,
+			...(stages ? { stages } : {}),
 		})}\n`,
 	);
 }

@@ -456,7 +456,7 @@ export class JevCache {
 		const fresh = await this.#send(
 			{ model: request.model, state, questions: lookup.missing },
 			context,
-			missingCount,
+			{ questions: missingCount, chars: chars(lookup.missing) },
 		);
 		await this.#store(bucketPath, lookup.missing, keys, fresh);
 		return {
@@ -466,18 +466,41 @@ export class JevCache {
 		};
 	}
 
-	/** One fresh request, retried on a retryable failure; checked before it is kept. */
-	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
+	/**
+	 * One fresh request, once `beforeSpend` and `reserve` let it go; its
+	 * reservation is released after its last attempt.
+	 */
 	async #send(
 		request: JevRequest,
 		context: AskContext,
-		questions: number,
+		size: { readonly questions: number; readonly chars: number },
 	): Promise<Sent> {
-		const { stage, signal, calls } = context;
 		const transport = this.#options.transport;
 		if (!transport)
-			throw Error(`jev cache miss in offline mode (${stage})`);
+			throw Error(`jev cache miss in offline mode (${context.stage})`);
 		this.#options.beforeSpend?.();
+		const release = this.#options.reserve?.({
+			stage: context.stage,
+			chars: size.chars,
+		});
+		try {
+			return await this.#attempts(transport, request, context, size);
+		} finally {
+			release?.();
+		}
+	}
+
+	/** A fresh request's attempts, retried on a retryable failure; checked before it is kept. */
+	async #attempts(
+		transport: JevAsk,
+		request: JevRequest,
+		context: AskContext,
+		{
+			questions,
+			chars,
+		}: { readonly questions: number; readonly chars: number },
+	): Promise<Sent> {
+		const { stage, signal, calls } = context;
 		const counts = this.#transport;
 		counts.requests++;
 		const maxRetries = this.#options.maxRetries ?? 6;
@@ -504,6 +527,7 @@ export class JevCache {
 				cached: false,
 				error: messageOf(error),
 				...(retries > 0 ? { retries } : {}),
+				chars,
 			});
 			throw error;
 		};
@@ -563,6 +587,7 @@ export class JevCache {
 				latencyMs,
 				cached: false,
 				...(attempt > 0 ? { retries: attempt } : {}),
+				chars,
 			});
 			return {
 				model: response.model,

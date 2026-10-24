@@ -337,3 +337,68 @@ test("interrupting the arms' port aborts the requests it sent", async () => {
 	expect(aborted.sort()).toEqual(["a,b", "r_10,r_1_2"]);
 	expect(jev.transport.interrupted).toBe(2);
 });
+
+test("a reservation holds each fresh request's price until it is over, so requests in flight cannot carry the spend past a budget", async () => {
+	const budget = 250;
+	/** Eight requests at once against a slow jev, stopped at `budget`. */
+	const spendOn = async (reserving: boolean) => {
+		let spent = 0;
+		let reserved = 0;
+		const sizes: number[] = [];
+		const jev = new JevCache({
+			cacheDirectory: cacheDirectory(),
+			transport: async (asked, at) => {
+				await new Promise((resolve) => setTimeout(resolve, 20));
+				return answering()(asked, at).then((response) => ({
+					...response,
+					usage: { input_tokens: 100, output_tokens: 0 },
+				}));
+			},
+			beforeSpend: () => {
+				if (spent >= budget) throw Error("budget reached");
+			},
+			onSpend: (tokens) => {
+				spent += tokens;
+			},
+			...(reserving
+				? {
+						reserve: ({ chars }: { readonly chars: number }) => {
+							sizes.push(chars);
+							if (spent + reserved + 100 > budget)
+								throw Error("would pass the budget");
+							reserved += 100;
+							return () => {
+								reserved -= 100;
+							};
+						},
+					}
+				: {}),
+		});
+		const calls: CallRecord[] = [];
+		const asked = await Promise.allSettled(
+			Array.from({ length: 8 }, (_, index) =>
+				jev.ask(0, calls)(
+					request({ [`q${index}`]: noul(`Is ${index} so?`) }),
+					context,
+				),
+			),
+		);
+		return {
+			spent,
+			reserved,
+			sizes,
+			calls,
+			answered: asked.filter(({ status }) => status === "fulfilled")
+				.length,
+		};
+	};
+	const unreserved = await spendOn(false);
+	expect(unreserved.spent).toBe(800);
+	const reserving = await spendOn(true);
+	expect(reserving).toMatchObject({ spent: 200, reserved: 0, answered: 2 });
+	// The size a fresh call records is the one its reservation was asked with.
+	expect(reserving.calls.map(({ chars }) => chars).sort()).toEqual(
+		reserving.sizes.slice(0, 2).sort(),
+	);
+	expect(reserving.sizes.every((chars) => chars > 0)).toBe(true);
+});

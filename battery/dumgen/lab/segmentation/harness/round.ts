@@ -28,6 +28,13 @@ import { git } from "../../git.js";
 import { readStoredJson } from "../../stored-json.js";
 import { hashOf, type Projection, type Projector } from "./jev-cache.js";
 import { isSpend, type LedgerEntry } from "./ledger.js";
+import {
+	type Calibration,
+	fallbackCharsPerToken,
+	type PriceBasis,
+	pricerOf,
+	projectionMargin,
+} from "./pricing.js";
 
 /** The dumcorpus state a round's prompts were built from. */
 export type Pin = {
@@ -384,70 +391,47 @@ export const standInAnswers = projectorPicking("first", 0.9);
  */
 export const contraryAnswers = projectorPicking("last", 0.1);
 
-/** Least squares of tokens on characters; undefined without two sizes. */
-function fit(samples: readonly { chars: number; inputTokens: number }[]) {
-	const n = samples.length;
-	if (n === 0) return undefined;
-	const meanX = samples.reduce((total, { chars }) => total + chars, 0) / n;
-	const meanY =
-		samples.reduce((total, { inputTokens }) => total + inputTokens, 0) / n;
-	let covariance = 0;
-	let variance = 0;
-	for (const { chars, inputTokens } of samples) {
-		covariance += (chars - meanX) * (inputTokens - meanY);
-		variance += (chars - meanX) ** 2;
-	}
-	if (variance === 0)
-		return (chars: number) =>
-			meanX === 0 ? meanY : (meanY / meanX) * chars;
-	const slope = covariance / variance;
-	return (chars: number) => meanY + slope * (chars - meanX);
-}
-
-/** Characters per token when no cached request prices a stage. */
-const fallbackCharsPerToken = 3;
+/** What priced a projected request: another repetition's usage, or its size. */
+type ProjectionBasis = "repetition" | PriceBasis;
 
 /**
  * The fresh tokens a projection pass foresees. A request cached at another
- * repetition costs what it cost then; any other is priced by its size,
- * from a fit of the cached requests of its stage, or of every stage when
- * its own has none.
+ * repetition costs what it cost then; any other is priced by its size
+ * (`pricing.ts`): from a fit of the cached requests of its stage, else the
+ * ledger's tokens per character of its stage (`calibration`), else a fit of
+ * every stage's, else the ledger's tokens per request, else 3 characters
+ * per token. `pricedFrom` counts the requests each basis priced.
  */
-export function priceProjection(projection: Projection) {
-	const all = fit(projection.samples);
-	const byStageFit = new Map<string, ReturnType<typeof fit>>();
-	const fitOf = (stage: string) => {
-		if (!byStageFit.has(stage))
-			byStageFit.set(
-				stage,
-				fit(
-					projection.samples.filter(
-						(sample) => sample.stage === stage,
-					),
-				),
-			);
-		return byStageFit.get(stage) ?? all;
-	};
+export function priceProjection(
+	projection: Projection,
+	calibration?: Calibration,
+) {
+	const price = pricerOf(projection.samples, calibration);
 	const byStage: Record<
 		string,
 		{ requests: number; questions: number; tokens: number }
 	> = {};
+	const pricedFrom: Record<ProjectionBasis, number> = {
+		repetition: 0,
+		stage: 0,
+		ledgerStage: 0,
+		allStages: 0,
+		ledgerRequest: 0,
+		characters: 0,
+	};
 	let exact = 0;
 	let estimated = 0;
 	for (const request of projection.requests) {
-		const tokens =
-			request.inputTokens ??
-			Math.max(
-				0,
-				Math.round(
-					(
-						fitOf(request.stage) ??
-						((chars: number) => chars / fallbackCharsPerToken)
-					)(request.chars),
-				),
-			);
-		if (request.inputTokens === undefined) estimated += tokens;
-		else exact += tokens;
+		let tokens = request.inputTokens;
+		if (tokens === undefined) {
+			const priced = price(request.stage, request.chars);
+			tokens = priced.tokens;
+			pricedFrom[priced.basis]++;
+			estimated += tokens;
+		} else {
+			pricedFrom.repetition++;
+			exact += tokens;
+		}
 		const stage = byStage[request.stage] ?? {
 			requests: 0,
 			questions: 0,
@@ -465,13 +449,11 @@ export function priceProjection(projection: Projection) {
 		estimatedTokens: estimated,
 		tokens: exact + estimated,
 		byStage,
+		pricedFrom,
 	};
 }
 
 export type PricedProjection = ReturnType<typeof priceProjection>;
-
-/** Headroom on the estimated part of a projection before it meets the stop line. */
-const projectionMargin = 1.25;
 
 /** The tokens a run is assumed to spend: exact ones as they are, estimated ones with headroom. */
 export const projectedSpend = (priced: PricedProjection) =>
@@ -494,10 +476,20 @@ export function guardProjectedSpend(args: {
 		);
 }
 
+/** What `projectionText` calls each basis of `pricedFrom`, in its order. */
+const basisNames = [
+	["repetition", "another repetition's usage"],
+	["stage", "this pass's fit of their stage"],
+	["ledgerStage", "the ledger's tokens per character of their stage"],
+	["allStages", "this pass's fit of every stage"],
+	["ledgerRequest", "the ledger's tokens per request"],
+	["characters", `${fallbackCharsPerToken} characters per token`],
+] as const satisfies readonly (readonly [ProjectionBasis, string])[];
+
 export const projectionText = (priced: PricedProjection) =>
-	`projected ${projectedSpend(priced)} fresh jev input tokens: ${priced.requests} requests the cache misses (${priced.exactTokens} tokens priced from another repetition, ${priced.estimatedTokens} estimated by size ×${projectionMargin}), ${priced.cachedRequests} cached; by stage ${Object.entries(
-		priced.byStage,
-	)
+	`projected ${projectedSpend(priced)} fresh jev input tokens: ${priced.requests} requests the cache misses (${priced.exactTokens} tokens priced from another repetition, ${priced.estimatedTokens} estimated by size ×${projectionMargin}), ${priced.cachedRequests} cached; priced from ${basisNames
+		.map(([basis, name]) => `${name} ${priced.pricedFrom[basis]}`)
+		.join(", ")}; by stage ${Object.entries(priced.byStage)
 		.sort(([a], [b]) => a.localeCompare(b))
 		.map(
 			([stage, entry]) =>

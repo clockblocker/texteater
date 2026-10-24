@@ -12,7 +12,11 @@
  * prices the run from a projection pass and asks nothing; a live run prices
  * itself the same way first and hands the price to `beforeLive`, where the
  * CLI refuses a run past its granted `--budget`, then fills the cache and
- * runs from it.
+ * runs from it. The CLI hands in the usage the Breakdown ledger recorded
+ * (`calibration`), which prices what no cache prices, and `reserve`, which
+ * holds each fresh request's price against the budget while it is in
+ * flight. A run reports its fresh requests per stage (`stages`) for that
+ * ledger.
  */
 import { join } from "node:path";
 import { canonicalJson } from "common-utils";
@@ -43,6 +47,12 @@ import {
 	JevCache,
 } from "../../segmentation/harness/jev-cache.js";
 import { spendOf } from "../../segmentation/harness/ledger.js";
+import {
+	type Pricer,
+	pricerOf,
+	projectionMargin,
+	stageUsageOf,
+} from "../../segmentation/harness/pricing.js";
 import {
 	type PricedProjection,
 	priceProjection,
@@ -193,15 +203,33 @@ async function evaluateBreakdown<O extends z.ZodType>(
 	const jevOf = (options: {
 		readonly offline: boolean;
 		readonly project?: typeof standInAnswers;
-	}) =>
-		new JevCache({
+		readonly price?: Pricer;
+	}) => {
+		const { price, ...rest } = options;
+		const { reserve } = args;
+		return new JevCache({
 			cacheDirectory,
 			...(args.judgmentModel ? { model: args.judgmentModel } : {}),
 			...(args.jev && !options.offline ? { transport: args.jev } : {}),
-			...options,
+			...rest,
 			...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
 			...(args.onSpend ? { onSpend: args.onSpend } : {}),
+			// Each fresh request holds its price, as the projection priced its
+			// size, until it is over.
+			...(reserve && price
+				? {
+						reserve: ({ stage, chars }) =>
+							reserve({
+								stage,
+								tokens: Math.round(
+									price(stage, chars).tokens *
+										projectionMargin,
+								),
+							}),
+					}
+				: {}),
 		});
+	};
 	const inputs = cases.flatMap(({ input }) =>
 		Array.from({ length: repetitions }, (_, repetition) => ({
 			input: breakdownInputSchema.parse(input),
@@ -221,14 +249,19 @@ async function evaluateBreakdown<O extends z.ZodType>(
 			args.signal,
 		);
 	let projection: PricedProjection | undefined;
+	let price: Pricer | undefined;
 	if (args.estimate || live) {
 		const projecting = jevOf({ offline: true, project: standInAnswers });
 		await pass(projecting, []);
-		projection = priceProjection(projecting.projection);
+		projection = priceProjection(projecting.projection, args.calibration);
 		if (args.estimate) return { projection };
+		price = pricerOf(projecting.projection.samples, args.calibration);
 		await args.beforeLive?.(projection);
 	}
-	const jev = jevOf({ offline: args.offline ?? false });
+	const jev = jevOf({
+		offline: args.offline ?? false,
+		...(price ? { price } : {}),
+	});
 	const filled: CallRecord[] = [];
 	if (live) await pass(jev, filled);
 	const calls: CallRecord[] = [];
@@ -341,6 +374,7 @@ async function evaluateBreakdown<O extends z.ZodType>(
 			luna: ran.luna,
 		},
 		transport: jev.transport,
+		stages: stageUsageOf([...filled, ...calls]),
 	};
 }
 

@@ -8,6 +8,10 @@ import type { LunaAsk } from "../../src/luna.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 import type { TransportRecord } from "../segmentation/harness/jev-cache.js";
 import type { Spend } from "../segmentation/harness/ledger.js";
+import type {
+	Calibration,
+	StageUsage,
+} from "../segmentation/harness/pricing.js";
 import type { PricedProjection } from "../segmentation/harness/round.js";
 import type { LabRuntime } from "./lab-runtime.js";
 import type { LunaBatch } from "./luna-batch.js";
@@ -60,6 +64,21 @@ export type EvaluateArgs = {
 	readonly beforeSpend?: () => void;
 	/** Receives the input tokens of every fresh request. */
 	readonly onSpend?: (inputTokens: number) => void;
+	/**
+	 * The Breakdown segmenters: the usage their ledger recorded, which
+	 * prices the requests no cache prices (`pricing.ts`).
+	 */
+	readonly calibration?: Calibration;
+	/**
+	 * The Breakdown segmenters: called before every fresh request, after
+	 * `beforeSpend`, with its price (its size's, ×1.25); throw to refuse it.
+	 * The release it returns is called once the request is over, after
+	 * `onSpend` counted its tokens.
+	 */
+	readonly reserve?: (request: {
+		readonly stage: string;
+		readonly tokens: number;
+	}) => () => void;
 	/** Recorded in the run manifest's settings, beside the experiment's own. */
 	readonly settings?: Readonly<Record<string, JsonValue>>;
 	/** Text mode's splitter; production's `splitText` by default. */
@@ -119,6 +138,8 @@ export type Evaluated = {
 	 * apart from the accuracy.
 	 */
 	readonly transport?: TransportRecord;
+	/** The Breakdown segmenters: per stage, the run's fresh jev requests, for their ledger. */
+	readonly stages?: Readonly<Record<string, StageUsage>>;
 	readonly set?: { readonly name: string; readonly hash: string };
 	/** segment.inUnits: the case list the run took, when it took one. */
 	readonly caseList?: CaseList;

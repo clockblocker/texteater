@@ -2,6 +2,7 @@ import { afterAll, expect, test } from "bun:test";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { z } from "zod";
 import { runEvaluationCli } from "../../../cli/evaluate.js";
 import {
 	constituentsCases,
@@ -12,6 +13,11 @@ import {
 	evaluateConstituents,
 	evaluateMorphemes,
 } from "../../../lab/evaluation/breakdown/scoring.js";
+import { evaluateExperiment } from "../../../lab/evaluation/experiments.js";
+import {
+	requestText,
+	spell,
+} from "../../../lab/segmentation/harness/jev-cache-buckets.js";
 import type { JevAsk } from "../../../src/segment/jev.js";
 
 const repository = resolve(import.meta.dir, "..", "..", "..", "..", "..");
@@ -197,4 +203,122 @@ test("a live run needs a granted budget, prices itself first, writes its ledger 
 	expect(written.at(-1)).toMatchObject({
 		metrics: { all: { attempts: 1, exact: 0 } },
 	});
+});
+
+/**
+ * A slow jev that says no to everything, as `noJudge`, and bills each
+ * request at 3 characters per token: what a projection prices a request at
+ * when nothing measured applies. Saying no asks more of a phraseme than the
+ * projection's stand-in yes foresees.
+ */
+function slowNoJudge() {
+	const { jev: answer } = noJudge();
+	const jev: JevAsk = async (request, context) => {
+		await new Promise((resolve) => setTimeout(resolve, 25));
+		const response = await answer(request, context);
+		const spelling = spell(request.state, request.questions);
+		return {
+			...response,
+			usage: {
+				input_tokens: Math.floor(
+					requestText(spelling, request.questions).length / 3,
+				),
+				output_tokens: 0,
+			},
+		};
+	};
+	return jev;
+}
+
+test("a budgeted run reserves each request in flight at its price, so it ends within its budget where the stop alone overshoots, and its ledger line records each stage's fresh requests", async () => {
+	const casesFile = join(directory, "phrasemes.txt");
+	const caseIds = [
+		"breakdown/de/den-nagel-auf-den-kopf-treffen",
+		"breakdown/de/wer-zuerst-kommt-mahlt-zuerst",
+		"breakdown/de/da-liegt-der-hase-im-pfeffer",
+		"breakdown/de/morgenstund-hat-gold-im-mund",
+	];
+	await writeFile(casesFile, `${caseIds.join("\n")}\n`);
+	const jev = slowNoJudge();
+	const evidence = join(directory, "reserving-evidence");
+	const written: unknown[] = [];
+	const cli = (labRoot: string, argv: string[]) =>
+		runEvaluationCli(
+			[
+				"--experiment",
+				"segment-in-constituents/de:breakdown",
+				"--revision",
+				"test",
+				"--cases",
+				casesFile,
+				"--concurrency",
+				"12",
+				"--output",
+				join(directory, "reserving-runs"),
+				...argv,
+			],
+			{
+				jev,
+				labRoot: join(directory, labRoot),
+				repository,
+				resolveEvidenceRoot: evidence,
+				write: (value) => written.push(value),
+				warn: () => {},
+			},
+		);
+	await cli("reserving-estimate", ["--estimate"]);
+	const { projectedTokens: budget } = z
+		.object({ projectedTokens: z.number() })
+		.parse(written.at(-1));
+	// The stop alone, as the CLI had it: whatever is in flight when the
+	// spend reaches the budget still lands.
+	let stopped = 0;
+	await evaluateExperiment({
+		experimentId: "segment-in-constituents/de:breakdown",
+		sourceRevision: "test",
+		labRoot: join(directory, "reserving-stop-only"),
+		jev,
+		caseIds,
+		concurrency: 12,
+		beforeSpend: () => {
+			if (stopped >= budget) throw Error("budget reached");
+		},
+		onSpend: (tokens) => {
+			stopped += tokens;
+		},
+	});
+	expect(stopped).toBeGreaterThan(budget);
+	await cli("reserving-lab", ["--budget", String(budget)]);
+	const stageUsage = z.object({
+		requests: z.number(),
+		chars: z.number(),
+		inputTokens: z.number(),
+	});
+	const line = z
+		.object({
+			jev: z.object({
+				freshCalls: z.number(),
+				freshInputTokens: z.number(),
+			}),
+			stages: z.record(z.string(), stageUsage),
+		})
+		.parse(
+			JSON.parse(
+				await readFile(
+					join(evidence, "segment-breakdown", "ledger.jsonl"),
+					"utf8",
+				),
+			),
+		);
+	expect(line.jev.freshInputTokens).toBeGreaterThan(0);
+	expect(line.jev.freshInputTokens).toBeLessThanOrEqual(budget);
+	const stages = Object.values(line.stages);
+	expect(stages.length).toBeGreaterThan(0);
+	expect(stages.reduce((sum, stage) => sum + stage.requests, 0)).toBe(
+		line.jev.freshCalls,
+	);
+	expect(stages.reduce((sum, stage) => sum + stage.inputTokens, 0)).toBe(
+		line.jev.freshInputTokens,
+	);
+	expect(stages.every((stage) => stage.chars > stage.inputTokens)).toBe(true);
 });

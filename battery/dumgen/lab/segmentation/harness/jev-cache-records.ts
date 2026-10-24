@@ -20,6 +20,11 @@ export type CallRecord = {
 	readonly error?: string;
 	/** Attempts past the first a fresh request took; absent when none. */
 	readonly retries?: number;
+	/**
+	 * A fresh jev request's characters as a projection measures them (the
+	 * state and the questions sent): what the ledger's calibration reads.
+	 */
+	readonly chars?: number;
 };
 
 /** A call as a run record keeps it. */
@@ -33,6 +38,7 @@ export const callRecordSchema = z.object({
 	cached: z.boolean(),
 	error: z.string().optional(),
 	retries: z.number().optional(),
+	chars: z.number().optional(),
 }) satisfies z.ZodType<CallRecord>;
 
 /**
@@ -146,6 +152,15 @@ export type JevCacheOptions = {
 	readonly beforeSpend?: () => void;
 	/** Receives the input tokens of every fresh request. */
 	readonly onSpend?: (inputTokens: number) => void;
+	/**
+	 * Called before every fresh request, after `beforeSpend`, with its stage
+	 * and size; throw to refuse it. The release it returns is called once
+	 * the request's last attempt is over, after `onSpend` counted its tokens.
+	 */
+	readonly reserve?: (request: {
+		readonly stage: string;
+		readonly chars: number;
+	}) => () => void;
 	/** Project instead of asking: a miss is answered as `Projector` says and kept in `projection`. */
 	readonly project?: Projector;
 	/**

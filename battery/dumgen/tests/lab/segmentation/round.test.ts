@@ -1,5 +1,5 @@
 import { afterAll, expect, test } from "bun:test";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { JevCache } from "../../../lab/segmentation/harness/jev-cache.js";
@@ -9,6 +9,10 @@ import {
 	type SpendEntry,
 } from "../../../lab/segmentation/harness/ledger.js";
 import {
+	type Calibration,
+	readCalibration,
+} from "../../../lab/segmentation/harness/pricing.js";
+import {
 	checkPin,
 	currentPin,
 	enterRound,
@@ -16,6 +20,7 @@ import {
 	type Pin,
 	priceProjection,
 	projectedSpend,
+	projectionText,
 	type Round,
 	readRounds,
 	roundOf,
@@ -306,4 +311,111 @@ test("the round book names a current round it holds, and 2026-10-02-5usd stays 1
 		).jevFreshInputTokens,
 	).toBe(6_890_292);
 	expect((await currentPin(repository)).inputs).toHaveProperty("inventories");
+});
+
+test("a request no cached sample of its stage prices is priced from the ledger's tokens per character of its stage, then this pass's every-stage fit, then the ledger's tokens per request, then 3 characters per token", () => {
+	const requests = [
+		{ stage: "route", chars: 3000, questions: 1 },
+		{ stage: "forms", chars: 1000, questions: 1 },
+		{ stage: "analysis", chars: 900, questions: 1 },
+		{ stage: "route", chars: 100, questions: 1, inputTokens: 70 },
+	];
+	const calibration: Calibration = {
+		stages: { forms: { requests: 4, chars: 8000, inputTokens: 2000 } },
+		perRequest: { gitHead: "head", requests: 10, inputTokens: 8000 },
+	};
+	const samples = [
+		{ stage: "route", chars: 1000, inputTokens: 400 },
+		{ stage: "route", chars: 2000, inputTokens: 800 },
+	];
+	// The stage's own fit first; forms from the ledger's 0.25 tokens per
+	// character; analysis, with neither, from the fit of every stage.
+	const withSamples = priceProjection({ samples, requests }, calibration);
+	expect(withSamples).toMatchObject({
+		exactTokens: 70,
+		estimatedTokens: 1200 + 250 + 360,
+		pricedFrom: {
+			repetition: 1,
+			stage: 1,
+			ledgerStage: 1,
+			allStages: 1,
+			ledgerRequest: 0,
+			characters: 0,
+		},
+	});
+	expect(projectionText(withSamples)).toContain(
+		"priced from another repetition's usage 1, this pass's fit of their stage 1, the ledger's tokens per character of their stage 1, this pass's fit of every stage 1, the ledger's tokens per request 0, 3 characters per token 0",
+	);
+	// No sample: route and analysis at the ledger's 800 tokens per request.
+	expect(
+		priceProjection({ samples: [], requests }, calibration),
+	).toMatchObject({
+		estimatedTokens: 800 + 250 + 800,
+		pricedFrom: { ledgerStage: 1, ledgerRequest: 2, characters: 0 },
+	});
+	// Nothing measured: 3 characters per token, as before calibration.
+	expect(priceProjection({ samples: [], requests })).toMatchObject({
+		estimatedTokens: 1000 + 333 + 300,
+		pricedFrom: { repetition: 1, characters: 3 },
+	});
+});
+
+test("a ledger's calibration sums the route's recorded stages and takes tokens per request from the lines at the latest commit with fresh calls", async () => {
+	const path = join(directory, "breakdown-ledger.jsonl");
+	const line = (
+		experiment: string,
+		gitHead: string,
+		freshCalls: number,
+		freshInputTokens: number,
+		stages?: object,
+	) =>
+		JSON.stringify({
+			runId: `${experiment}-${gitHead}`,
+			at: "",
+			command: "evaluate",
+			experiment,
+			budget: 1,
+			gitHead,
+			jev: {
+				calls: freshCalls,
+				freshCalls,
+				freshInputTokens,
+				allInputTokens: 0,
+			},
+			luna: {
+				calls: 0,
+				freshCalls: 0,
+				freshInputTokens: 0,
+				freshOutputTokens: 0,
+			},
+			...(stages ? { stages } : {}),
+		});
+	await writeFile(
+		path,
+		`${[
+			line("segment-in-constituents/de:breakdown", "a", 10, 1000, {
+				routes: { requests: 2, chars: 3000, inputTokens: 1000 },
+			}),
+			line("segment-in-constituents/de:heldout", "b", 4, 4000, {
+				routes: { requests: 1, chars: 1000, inputTokens: 500 },
+				forms: { requests: 3, chars: 1200, inputTokens: 400 },
+			}),
+			line("segment-in-constituents/de:breakdown", "b", 6, 2000),
+			line("segment-in-morphemes/de:breakdown", "c", 0, 0),
+			line("segment-in-units/de:dev", "c", 9, 99_999),
+		].join("\n")}\n`,
+	);
+	expect(await readCalibration(path, "segment-in-constituents/de")).toEqual({
+		stages: {
+			routes: { requests: 3, chars: 4000, inputTokens: 1500 },
+			forms: { requests: 3, chars: 1200, inputTokens: 400 },
+		},
+		perRequest: { gitHead: "b", requests: 10, inputTokens: 6000 },
+	});
+	expect(
+		await readCalibration(path, "segment-in-morphemes/de"),
+	).toBeUndefined();
+	expect(
+		await readCalibration(join(directory, "none.jsonl"), "x"),
+	).toBeUndefined();
 });

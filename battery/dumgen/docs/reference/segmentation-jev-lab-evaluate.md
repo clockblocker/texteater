@@ -135,8 +135,12 @@ and for phrasemes and words apart.
 They answer jev through the lab's cache, as segment.inUnits does, but count
 against no lab round: a live run needs `--budget` (fresh jev input tokens),
 the budget the user granted that round, prices itself first, refuses a
-projection past it, stops at it, and writes its spend to
-`evidence/segment-breakdown/ledger.jsonl`. `--cases` or `--cases-from`
+projection past it, and writes its spend, with its fresh requests per stage
+(`stages`), to `evidence/segment-breakdown/ledger.jsonl`. While it runs, each
+fresh request holds its projected price until it is over, and one that would
+carry the spend and the requests in flight past the budget is refused. A
+request no cache prices is priced from that ledger when this pass measured
+nothing of its stage (`lab/segmentation/harness/pricing.ts`). `--cases` or `--cases-from`
 take part of the set and `--repetitions` 1 to 3 (3 by default).
 
 ```sh
