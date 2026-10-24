@@ -23,9 +23,22 @@ import type { WordAnalysis } from "./word-analyses.js";
 /** A yes must reach this for the shape it gates to be offered or kept. */
 const gateFloor = 0.5;
 
-/** Whether the letters after a verb's prefix are a verb of their own. */
+/**
+ * Whether the letters after a verb's prefix are a verb of their own,
+ * tested by its first person, which code writes from the base: `arzten`
+ * gives `ich arzte`, which no one says.
+ */
 export const verbBaseQuestion = (key: string, base: string) =>
-	`In \`${key}\`, is "${base}", after the prefix, a verb of its own that a dictionary lists as a headword, as brennen is in verbrennen? Answer no when no such verb exists, as there is no verb golden in vergolden.`;
+	`In \`${key}\`, does German have a verb "${base}" of its own, used with no prefix at all? Test it: "ich ${firstPerson(base)}" must be an ordinary sentence start, as "ich brenne" is for brennen. Answer no when the verb occurs only with a prefix, as there is no "ich golde" beside vergolden.`;
+
+/** A base's first person singular: its citation ending off, `-e` on (`brennen` → brenne, `wandern` → wandere). */
+const firstPerson = (base: string) => {
+	const lower = base.toLocaleLowerCase("de");
+	const stem = /(?:el|er)n$/u.test(lower)
+		? lower.slice(0, -1)
+		: lower.replace(/en$/u, "");
+	return `${stem}e`;
+};
 
 /** Whether a noun's first part is a word, or a word's stem, of its own. */
 export const wordQuestion = (key: string, letters: string) =>
