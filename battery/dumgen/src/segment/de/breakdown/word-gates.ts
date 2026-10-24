@@ -1,7 +1,8 @@
 /**
- * Two yes-or-no checks German `segment.inConstituents` asks about a word's
- * letters before it offers a shape that needs them (#1241 round 3), each
- * in the stage `breakdown-words`:
+ * The yes-or-no checks German `segment.inConstituents` and
+ * `segment.inMorphemes` ask about a word's letters before they offer a
+ * shape or a route that needs them (#1241 rounds 3 and 4), each in the
+ * stage `breakdown-words`:
  *
  * - **A prefix's base is a verb.** A verb cut into a prefix and a base
  *   verb (`ver- + brennen`) is offered only when the base is a verb a
@@ -11,12 +12,20 @@
  * - **A cranberry piece is no word.** A noun's first part is offered as a
  *   cranberry Root only when it is no word of its own and no word's stem
  *   (`Kau` is kauen's), so a verb stem keeps its route question's share.
+ * - **A suffix's base is a verb or a noun.** Before a suffix with no one
+ *   base Kind (`-er`), a base jev weighs a verb and no noun is a VERB
+ *   (`Lehr` is lehren), and one it weighs a noun and no verb a NOUN,
+ *   unasked; a base that is both or neither keeps its route question.
+ * - **A bottom word's Root is no word** (`morphemes.ts`). A bottom word has
+ *   no word inside it (ADR 0051), so a split that cuts a suffix off a word
+ *   or a verb's stem is no split of it.
  *
  * Their examples are no Breakdown case (#693).
  */
-import type { Questions } from "@typesafe-ai/sdk";
+import type { EntryType, Questions } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
 import { type Ask, type AskFailure, askAny, noul, noulOf } from "../../ask.js";
+import type { RouteKey } from "../routes.js";
 import type { Whole } from "./targets.js";
 import type { WordAnalysis } from "./word-analyses.js";
 
@@ -39,6 +48,16 @@ const firstPerson = (base: string) => {
 		: lower.replace(/en$/u, "");
 	return `${stem}e`;
 };
+
+/** The infinitive a stem's letters would have: `-n` after -el and -er, else `-en` (`Lehr` → lehren). */
+const infinitiveOf = (letters: string) => {
+	const lower = letters.toLocaleLowerCase("de");
+	return /(?:el|er)$/u.test(lower) ? `${lower}n` : `${lower}en`;
+};
+
+/** Whether letters, as they stand, are a noun. */
+export const nounQuestion = (key: string, letters: string) =>
+	`In \`${key}\`, is "${letters.charAt(0).toLocaleUpperCase("de")}${letters.slice(1)}", spelled exactly so, a noun a dictionary lists as a headword? Answer no when only a longer noun has these letters, as there is no noun "Lehr", only Lehre.`;
 
 /** Whether a noun's first part is a word, or a word's stem, of its own. */
 export const wordQuestion = (key: string, letters: string) =>
@@ -118,4 +137,60 @@ export const mayBeCranberry = Effect.fnUntraced(function* (
 		questions: { w_0: noul(wordQuestion(whole.key, letters)) },
 	});
 	return noulOf(answers, "w_0") < gateFloor;
+});
+
+/**
+ * The route a suffix's base takes unasked, by its letters: VERB when jev
+ * weighs them a verb's stem and no noun, NOUN when a noun and no verb's
+ * stem, in one request; undefined, unasked, after a suffix with one base
+ * Kind, which already routes it.
+ */
+export const suffixBaseRoute = Effect.fnUntraced(function* (
+	base: string,
+	whole: Whole,
+	ask: Ask,
+): Effect.fn.Return<RouteKey | undefined, AskFailure> {
+	const answers = yield* ask({
+		stage: "breakdown-words",
+		state: whole.state,
+		questions: {
+			b_0: noul(verbBaseQuestion(whole.key, infinitiveOf(base))),
+			n_0: noul(nounQuestion(whole.key, base)),
+		},
+	});
+	const verb = noulOf(answers, "b_0") >= gateFloor;
+	const noun = noulOf(answers, "n_0") >= gateFloor;
+	if (verb === noun) return undefined;
+	return verb ? "Lexeme/VERB" : "Lexeme/NOUN";
+});
+
+/**
+ * Of a bottom word's would-be Roots, the ones jev weighs a word or a
+ * verb's stem of its own, in one request: neither the verb test nor the
+ * word test may pass for a Root a suffix is cut off.
+ */
+export const wordRoots = Effect.fnUntraced(function* (
+	roots: readonly string[],
+	state: Readonly<Record<string, EntryType>>,
+	ask: Ask,
+): Effect.fn.Return<ReadonlySet<string>, AskFailure> {
+	const questions: Questions = {};
+	for (const [index, root] of roots.entries()) {
+		questions[`b_${index}`] = noul(
+			verbBaseQuestion("word", infinitiveOf(root)),
+		);
+		questions[`w_${index}`] = noul(wordQuestion("word", root));
+	}
+	const answers = yield* askAny(ask, {
+		stage: "breakdown-words",
+		state,
+		questions,
+	});
+	return new Set(
+		roots.filter(
+			(_, index) =>
+				noulOf(answers, `b_${index}`) >= gateFloor ||
+				noulOf(answers, `w_${index}`) >= gateFloor,
+		),
+	);
 });

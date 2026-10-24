@@ -10,6 +10,7 @@
 import {
 	authoredRealizations,
 	closedVerbForms,
+	germanIrregularPresents,
 	germanReflexiveForms,
 } from "dumcorpus/inventories";
 
@@ -51,14 +52,30 @@ function nounForms(word: string): string[] {
 /** Verb endings a finite or stem form shows before its stem (`liegt`, `kommst`). */
 const verbEndings = ["est", "et", "st", "t", "e"];
 
-/** A stem's alternating vowel undone, as the infinitive shows it (`triff`, `lies`, `fäng`). */
+/**
+ * A stem's alternating vowel undone, as the infinitive shows it (`triff`,
+ * `lies`, `fäng`). The `i` of a diphthong stays (`weiß` gives no weeßen).
+ */
 function stemVowels(stem: string): string[] {
 	return [
 		stem.replace(/ie(?=[^aeiouäöü]*$)/u, "e"),
-		stem.replace(/i(?=[^aeiouäöü]*$)/u, "e"),
+		stem.replace(/(?<![aeu])i(?=[^aeiouäöü]*$)/u, "e"),
 		withoutUmlaut(stem),
 	].filter((variant) => variant !== stem);
 }
+
+/**
+ * The verbs dumcorpus lists with `shown` among their forms: the closed
+ * paradigms (sein, the modals) and the open verbs whose Präsens no vowel
+ * rule undoes (`weiß` is wissen, `tut` tun).
+ */
+const listedVerbs = (shown: string) =>
+	[
+		...Object.entries(closedVerbForms),
+		...Object.entries(germanIrregularPresents),
+	]
+		.filter(([, forms]) => forms.includes(shown))
+		.map(([lemma]) => lemma);
 
 /** An infinitive of a stem: `-n` after -el and -er (`wander`), else `-en`. */
 const infinitive = (stem: string) =>
@@ -66,9 +83,7 @@ const infinitive = (stem: string) =>
 
 function verbForms(word: string): string[] {
 	const shown = lower(word);
-	const closed = Object.entries(closedVerbForms)
-		.filter(([, forms]) => forms.includes(shown))
-		.map(([lemma]) => lemma);
+	const listed = listedVerbs(shown);
 	const stems = [
 		shown,
 		...defined(verbEndings.map((ending) => stripped(shown, ending))),
@@ -81,7 +96,7 @@ function verbForms(word: string): string[] {
 	return [
 		// An infinitive as it stands, `tun` included, German's one of three letters.
 		...(/(?:en|[elr]n)$|^tun$/u.test(shown) ? [shown] : []),
-		...closed,
+		...listed,
 		...infinitives,
 	];
 }
@@ -124,7 +139,16 @@ function authoredForms(word: string, kind: string): string[] {
  * case (#693).
  */
 export const reflexiveFormGuide =
-	"sich is the reflexive pronoun: pick it when the pronoun points back to the one who acts, as in an order to oneself (setz dich, beeil dich), and the personal pronoun when it names someone else (hilf mir).";
+	"sich is the headword of the reflexive pronoun. Test it: name who acts, which for an order is du (beeil dich: du beeilst dich). When the pronoun is that same one (du … dich, wir … uns), its headword is sich, even in an order; when it names someone else (hilf mir: du hilfst mir), it is the personal pronoun.";
+
+/**
+ * Closes a word part's headword question when it is a noun (#1241 round
+ * 4): the part may drop the noun's final -e, and letters no dictionary
+ * lists as a noun are never its headword. Its example is no Breakdown case
+ * (#693).
+ */
+export const nounPartFormGuide =
+	"A noun inside a compound or before a suffix often drops its final -e (Kirch in Kirchturm is Kirche). Pick the noun a dictionary lists as a headword, never letters no dictionary lists as a noun.";
 
 /** Whether `forms` offer the reflexivity unit beside another form, so its guide closes the question. */
 export const offersReflexive = (forms: readonly string[]) =>

@@ -14,6 +14,11 @@
  * test that confirms an affix split (system ADR 0051, #1243): the affix is
  * on the closed list, which code already ensures, and the DWDS
  * Wortzerlegung cuts it, else the en.wiktionary etymology.
+ *
+ * A bottom word has no word inside it, so first jev weighs, in
+ * `breakdown-words`, each Root a suffix would be cut off (#1241 round 4):
+ * one that is a word or a verb's stem of its own (`Bau`, `leit`) leaves
+ * its split out, since a word built on it would have had Constituents.
  */
 
 import {
@@ -31,6 +36,7 @@ import {
 	breakdownState,
 	type ProducedPiece,
 } from "../../breakdown.js";
+import { wordRoots } from "./word-gates.js";
 
 const lower = (text: string) => text.toLocaleLowerCase("de");
 
@@ -150,19 +156,37 @@ export const germanMorphemes = Effect.fnUntraced(function* (
 	if (bare === undefined)
 		return [{ letters: word, target: morpheme("Root", lower(word)) }];
 	if (splits.length === 1) return bare;
+	const state = breakdownState(input, "word");
+	const rootOf = (split: Split) =>
+		split.some(({ target }) => target?.kind === "Suffix")
+			? split.find(({ target }) => target?.kind === "Root")?.letters
+			: undefined;
+	const roots = [
+		...new Set(
+			splits.flatMap((split) => {
+				const root = rootOf(split);
+				return root === undefined ? [] : [root];
+			}),
+		),
+	];
+	const words = yield* wordRoots(roots, state, ask);
+	const kept = splits.filter((split) => {
+		const root = rootOf(split);
+		return root === undefined || !words.has(root);
+	});
+	if (kept.length === 1) return bare;
 	const answers = yield* ask({
 		stage: "breakdown-morphemes",
-		state: breakdownState(input, "word"),
-
+		state,
 		questions: {
 			split: choice(
 				morphemesInstructions,
 				Object.fromEntries(
-					splits.map((split, index) => [`s${index}`, label(split)]),
+					kept.map((split, index) => [`s${index}`, label(split)]),
 				),
 			),
 		},
 	});
 	const picked = Number(choiceOf(answers, "split").choice.slice(1));
-	return splits[picked] ?? bare;
+	return kept[picked] ?? bare;
 });

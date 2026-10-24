@@ -90,12 +90,15 @@ const kindNames: Readonly<Record<string, string>> = {
  * Locution keeps its wording. `routeGuide`, when given, closes every route
  * question: how a word's or a phraseme's parts are judged. The route
  * descriptions themselves are segment.inUnits's and stay shared.
+ * `formGuides` close the headword question of a part of a given Kind,
+ * unless the part brings its own guide.
  */
 export const partTargets = Effect.fnUntraced(function* (
 	parts: readonly OpenPart[],
 	whole: Whole,
 	ask: Ask,
 	routeGuide?: string,
+	formGuides: Readonly<Partial<Record<string, string>>> = {},
 ): Effect.fn.Return<Dumrel.UnitShadow[], AskFailure> {
 	const offered = parts.map((part): readonly PartRoute[] =>
 		part.cranberry ? [...part.routes, rootKey] : part.routes,
@@ -134,7 +137,7 @@ export const partTargets = Effect.fnUntraced(function* (
 		const [, kind = ""] = (routes[index] ?? "").split("/");
 		const guide =
 			part.formGuide ??
-			(offersReflexive(forms) ? reflexiveFormGuide : undefined);
+			(offersReflexive(forms) ? reflexiveFormGuide : formGuides[kind]);
 		if (forms.length > 1)
 			formQuestions[`f_${index}`] = choice(
 				`In \`${whole.key}\`, the part "${part.reads}" is a ${kindNames[kind] ?? kind}. Which is its dictionary headword?${guide ? ` ${guide}` : ""}`,

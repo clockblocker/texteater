@@ -40,13 +40,23 @@ export const verbFirstPartRouteGuide =
 	"In a verb, the part before the verb at its end is a word also written on its own, usually an adjective (fest in festhalten, voll in volltanken) or a noun (Teil in teilnehmen). It is a verb only when it shows a whole infinitive (kennen in kennenlernen), never a bare stem.";
 
 /**
- * The route guide for an analysis's word parts: a compound's, a verb's
- * first part's, a prefixed base's, or none.
+ * Closes a hyphenated compound's front phrase's route question (#1241
+ * round 4): the phrase keeps the Kind dictionaries give it on its own,
+ * though in front of the head it describes it.
+ */
+export const phraseFrontRouteGuide =
+	"Judge the phrase in front of the compound's head as the phrase it is on its own, as dictionaries list it, not by its job in front of the head: a phrase that says when, where, how or how long something happens is ADV (Hals über Kopf), even though in front of the head it describes it.";
+
+/**
+ * The route guide for an analysis's word parts: a front phrase's, a
+ * compound's, a verb's first part's, a prefixed base's, or none.
  */
 export function routeGuideOf(
 	analysis: WordAnalysis,
 	kind: string,
 ): string | undefined {
+	if (analysis.pieces.some(({ role }) => role === "Phrase"))
+		return phraseFrontRouteGuide;
 	if (analysis.pieces.some(({ role }) => role === "Ending"))
 		return prefixedBaseRouteGuide;
 	const words = analysis.pieces.filter(({ role }) => role === "Word");

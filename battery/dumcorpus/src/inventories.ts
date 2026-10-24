@@ -80,6 +80,7 @@ export {
 } from "./inventories/de/grammatical-components.js";
 export { selectGrammaticalAlternatives } from "./inventories/de/grammatical-navigation.js";
 export { germanInterfixes } from "./inventories/de/interfixes.js";
+export { germanIrregularPresents } from "./inventories/de/irregular-presents.js";
 export {
 	germanParticleMember,
 	germanParticles,

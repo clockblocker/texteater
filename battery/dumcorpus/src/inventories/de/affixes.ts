@@ -27,6 +27,12 @@ export type GermanAffix = {
 	 * makes nouns from verbs (`gründen + -ung`).
 	 */
 	readonly baseKind?: string;
+	/**
+	 * What a word made with the suffix names, `{base}` standing for its
+	 * base's letters, after Fleischer/Barz's word-formation patterns. Dumgen
+	 * tests a homograph's analysis against its sense with it (#1241).
+	 */
+	readonly sense?: string;
 };
 
 const prefix = (spelled: string): GermanAffix => ({
@@ -34,10 +40,31 @@ const prefix = (spelled: string): GermanAffix => ({
 	canonicalForm: `${spelled}-`,
 });
 
-const suffix = (spelled: string, canonical = spelled): GermanAffix => ({
+const suffix = (
+	spelled: string,
+	canonical = spelled,
+	sense?: string,
+): GermanAffix => ({
 	spelled,
 	canonicalForm: `-${canonical}`,
+	...(sense === undefined ? {} : { sense }),
 });
+
+/*
+ * The senses of the common noun- and adjective-forming patterns
+ * (Fleischer/Barz, Wortbildung der deutschen Gegenwartssprache, 4th ed.,
+ * 2012: nomina agentis and instrumenti in -er, abstracts in -ung and -heit,
+ * collectives in -schaft, diminutives, motion in -in, adjectives in -lich,
+ * -ig, -isch and -bar).
+ */
+const agent =
+	'someone or something that does what "{base}" names, or someone from or dealing with "{base}"';
+const quality =
+	'the state or quality of being what "{base}" names, or something that has it';
+const diminutive = 'a small or dear "{base}"';
+const activity =
+	'the activity of what "{base}" names, or its place or its product';
+const having = 'having, like or to do with what "{base}" names';
 
 /**
  * The prefixes that are no separable particle: the inseparable verb
@@ -87,32 +114,43 @@ export const germanSuffixes: readonly GermanAffix[] = [
 	 * also spells a noun: `Gründ` is gründen, not Grund. The few old
 	 * collectives from nouns (Waldung, Stallung) are not productive.
 	 */
-	{ ...suffix("ung"), baseKind: "VERB" },
-	suffix("heit"),
-	suffix("keit", "heit"),
-	suffix("igkeit", "heit"),
-	suffix("schaft"),
+	{
+		...suffix(
+			"ung",
+			"ung",
+			'the act, process or result of what "{base}" names',
+		),
+		baseKind: "VERB",
+	},
+	suffix("heit", "heit", quality),
+	suffix("keit", "heit", quality),
+	suffix("igkeit", "heit", quality),
+	suffix(
+		"schaft",
+		"schaft",
+		'a group, state or domain of what "{base}" names',
+	),
 	suffix("tum"),
 	suffix("nis"),
 	suffix("sal"),
 	suffix("ling"),
-	suffix("ler"),
-	suffix("ner"),
-	suffix("er"),
-	suffix("in"),
-	suffix("chen"),
-	suffix("lein"),
-	suffix("erei"),
-	suffix("ei"),
+	suffix("ler", "ler", agent),
+	suffix("ner", "ner", agent),
+	suffix("er", "er", agent),
+	suffix("in", "in", 'a female "{base}"'),
+	suffix("chen", "chen", diminutive),
+	suffix("lein", "lein", diminutive),
+	suffix("erei", "erei", activity),
+	suffix("ei", "ei", activity),
 	suffix("ie"),
 	suffix("ion"),
 	suffix("ität"),
 	suffix("ismus"),
 	suffix("ist"),
-	suffix("lich"),
-	suffix("ig"),
-	suffix("isch"),
-	suffix("bar"),
+	suffix("lich", "lich", having),
+	suffix("ig", "ig", having),
+	suffix("isch", "isch", having),
+	suffix("bar", "bar", 'able to be done as "{base}" names'),
 	suffix("sam"),
 	suffix("haft"),
 	suffix("los"),

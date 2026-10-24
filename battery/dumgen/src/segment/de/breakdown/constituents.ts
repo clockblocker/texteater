@@ -12,10 +12,13 @@
  *   them one in `breakdown-locutions` (`[Kopf an Kopf] + Rennen`), else
  *   flat. Before it offers a prefix and a base verb against a prefix, a
  *   noun or adjective and the citation ending, jev weighs whether the base
- *   is a verb (`word-gates.ts`). A compound's head takes the word's own
- *   Kind, and code settles more parts unasked (`word-parts.ts`); a noun's
- *   first of two parts may be a cranberry piece, a Root (`Brom` in
- *   Brombeere), once jev weighs it no word of its own.
+ *   is a verb (`word-gates.ts`). When the pick is contested, jev weighs
+ *   whether each contender gives the Reading's sense, in
+ *   `breakdown-senses` (`word-senses.ts`). A compound's head takes the
+ *   word's own Kind, and code settles more parts unasked (`word-parts.ts`);
+ *   a noun's first of two parts may be a cranberry piece, a Root (`Brom` in
+ *   Brombeere), once jev weighs it no word of its own; and a suffix's base
+ *   is a verb or a noun unasked when jev weighs it one and not the other.
  * - A phraseme, or a Lexeme written as several words: its wording's parts
  *   come from code (`phraseme-parts.ts`), and jev weighs, in one request,
  *   `breakdown-locutions`, whether a run of neighbouring parts is a
@@ -30,6 +33,7 @@
  * infinitive PART (`um … zu`), both unasked.
  */
 import type { Questions } from "@typesafe-ai/sdk";
+import { germanSuffixes } from "dumcorpus/inventories";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import {
@@ -48,7 +52,7 @@ import {
 	type ProducedPiece,
 } from "../../breakdown.js";
 import { allRoutes, type RouteKey } from "../routes.js";
-import { onlyPronoun, reflexiveFormGuide } from "./forms.js";
+import { nounPartFormGuide, onlyPronoun, reflexiveFormGuide } from "./forms.js";
 import { interfixOf } from "./interfix.js";
 import {
 	type LocutionCandidate,
@@ -60,6 +64,11 @@ import {
 	withReflexive,
 	wordingPieces,
 } from "./phraseme-parts.js";
+import {
+	locutionQuestion,
+	phrasemeRouteGuide,
+	reflexiveUses,
+} from "./phraseme-prompts.js";
 import {
 	cranberryOption,
 	type OpenPart,
@@ -75,6 +84,8 @@ import {
 } from "./word-analyses.js";
 import {
 	mayBeCranberry,
+	nounQuestion,
+	suffixBaseRoute,
 	verbBaseQuestion,
 	withVerbBases,
 	wordQuestion,
@@ -85,10 +96,17 @@ import {
 	compoundRouteGuide,
 	noneOption,
 	phraseFormGuide,
+	phraseFrontRouteGuide,
 	prefixedBaseRouteGuide,
 	routeGuideOf,
 	verbFirstPartRouteGuide,
 } from "./word-prompts.js";
+import {
+	noneQuestion,
+	senseChecked,
+	senseQuestion,
+	weighedOptions,
+} from "./word-senses.js";
 
 const lexemeRoutes = allRoutes.filter((key) => key.startsWith("Lexeme/"));
 const locutionRoutes = allRoutes.filter((key) => key.startsWith("Locution/"));
@@ -163,18 +181,14 @@ function linkedPieces(
 }
 
 /**
- * Closes a phraseme part's route question (#1241 round 1): a part's Kind is
- * its role in the whole expression. Kept here, since the route descriptions
- * are segment.inUnits's and stay shared.
+ * The analysis jev picks, or none; with `kind`, the word's, once its sense
+ * is checked when the pick is contested (`word-senses.ts`).
  */
-const phrasemeRouteGuide =
-	"Judge the part by the role it plays inside this whole expression, not by its commonest use: a word that opens a clause, an infinitive clause included, is SCONJ (statt in statt … zu), while the zu right before an infinitive is PART; a comparison word, wie or als, is CCONJ before a phrase and SCONJ before a clause, never ADP or ADV (als in mehr Schein als Sein); a word that stands for a noun phrase on its own, with no noun after it, is PRON, not DET (jeder in jeder für sich), and so is a question word asking for a thing or a person (wer), whatever follows it.";
-
-/** The analysis jev picks, or none. */
 const chosenAnalysis = Effect.fnUntraced(function* (
 	analyses: readonly WordAnalysis[],
 	whole: Whole,
 	ask: Ask,
+	kind?: string,
 ): Effect.fn.Return<WordAnalysis | undefined, AskFailure> {
 	const answers = yield* ask({
 		stage: "breakdown-analysis",
@@ -188,8 +202,19 @@ const chosenAnalysis = Effect.fnUntraced(function* (
 			}),
 		},
 	});
-	const picked = choiceOf(answers, "analysis").choice;
-	return picked === "none" ? undefined : analyses[Number(picked.slice(1))];
+	const answer = choiceOf(answers, "analysis");
+	const picked =
+		answer.choice === "none"
+			? undefined
+			: analyses[Number(answer.choice.slice(1))];
+	if (kind === undefined) return picked;
+	return yield* senseChecked(
+		weighedOptions(analyses, answer.probabilities),
+		picked,
+		whole,
+		kind,
+		ask,
+	);
 });
 
 /**
@@ -212,16 +237,17 @@ const withLocutionFront = Effect.fnUntraced(function* (
 	return noulOf(answers, "l_0") >= locutionFloor ? front.analysis : flat;
 });
 
-/** The analysis a word breaks down by, or none. */
+/** The analysis a word of Kind `kind` breaks down by, or none. */
 const analysisOf = Effect.fnUntraced(function* (
 	analyses: readonly WordAnalysis[],
 	whole: Whole,
+	kind: string,
 	ask: Ask,
 ): Effect.fn.Return<WordAnalysis | undefined, AskFailure> {
 	const [only] = analyses;
 	if (only === undefined) return undefined;
 	if (!only.pieces.some(({ role }) => role === "Hyphen"))
-		return yield* chosenAnalysis(analyses, whole, ask);
+		return yield* chosenAnalysis(analyses, whole, ask, kind);
 	const analysis =
 		analyses.length === 1
 			? only
@@ -243,39 +269,36 @@ const wordConstituents = Effect.fnUntraced(function* (
 			? yield* withVerbBases(candidates, whole, ask)
 			: candidates,
 		whole,
+		kind,
 		ask,
 	);
 	if (analysis === undefined) return none;
-	const [first] = analysis.pieces;
+	const [first, suffix, ...rest] = analysis.pieces;
 	const cranberry =
 		cranberryShaped(analysis, kind) &&
 		first !== undefined &&
 		(yield* mayBeCranberry(first.letters, whole, ask));
+	const parts = openWordParts(analysis, kind, cranberry);
+	// A suffix's base with no one base Kind: its letters may settle its route.
+	const baseRoute =
+		first?.role === "Word" &&
+		suffix?.role === "Suffix" &&
+		suffix.baseKind === undefined &&
+		rest.length === 0
+			? yield* suffixBaseRoute(first.letters, whole, ask)
+			: undefined;
+	const [base] = parts;
 	const targets = yield* partTargets(
-		openWordParts(analysis, kind, cranberry),
+		baseRoute === undefined || base === undefined
+			? parts
+			: [{ ...base, routes: [baseRoute] }, ...parts.slice(1)],
 		whole,
 		ask,
 		routeGuideOf(analysis, kind),
+		{ NOUN: nounPartFormGuide },
 	);
 	return constituentsOf(linkedPieces(analysis.pieces, targets));
 });
-
-/**
- * What `sich` is to a verb in a wording, judged in the sense the verb has
- * there (ADR 0050): only `lexical` joins it to the verb. Unlike a click's
- * reflexive question, there is no Sentence, so each use names its test.
- */
-const reflexiveUses = {
-	free: "An object of its own: in this sense the verb also takes another person or thing in the place of sich, and the subject only happens to be the one it acts on (sich waschen: ihn waschen; sich verteidigen: sie verteidigen)",
-	dative: "A dative beside another object, for whom something is done or whose body it concerns (sich die Hände reiben; sich die Zähne putzen)",
-	lexical:
-		"Part of the verb itself: dictionaries list the verb with sich for this sense, and nothing else can stand in its place (sich schämen, sich beeilen, sich weigern)",
-	other: "sich does not belong with this verb",
-};
-
-/** Whether a run inside a wording is a Locution of its own. */
-const locutionQuestion = (key: string, reads: string) =>
-	`Inside \`${key}\`, do the words "${reads}" form a fixed expression of their own that dictionaries list apart from it (auf jeden Fall, vor allem), rather than just neighbouring words of this one expression?`;
 
 /**
  * Every text segment.inConstituents's questions and options carry beyond
@@ -287,12 +310,18 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	compoundRouteGuide,
 	verbFirstPartRouteGuide,
 	prefixedBaseRouteGuide,
+	phraseFrontRouteGuide,
 	phrasemeRouteGuide,
 	cranberryOption,
 	phraseFormGuide,
 	reflexiveFormGuide,
+	nounPartFormGuide,
 	verbBaseQuestion("word", "…"),
 	wordQuestion("word", "…"),
+	nounQuestion("word", "…"),
+	senseQuestion({ pieces: [], label: "…" }, "word", "NOUN"),
+	noneQuestion("word", ["…"]),
+	...germanSuffixes.flatMap(({ sense }) => (sense ? [sense] : [])),
 	...Object.values(hyphenPrefixGlosses),
 	locutionQuestion("wording", "…"),
 	...Object.values(reflexiveUses),
