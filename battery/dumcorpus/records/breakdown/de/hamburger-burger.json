@@ -55,6 +55,6 @@
 		]
 	},
 	"notes": {
-		"rationale": "The sandwich, der Hamburger, came back to German from English hamburger and DWDS gives it no Wortzerlegung, so it is a bottom word: the Root hamburger and the zero ending (ADR 0050: a loan blended abroad has no Constituents, as Motel; ADR 0051). Someone from Hamburg splits Hamburg + -er (ADR 0050: the Reading owns the split)."
+		"rationale": "The sandwich, der Hamburger, came back to German from English hamburger and DWDS gives it no Wortzerlegung, so it is a bottom word: the Root hamburger and the zero ending (ADR 0050: a loan blended abroad has no Constituents, as Motel; ADR 0051). Someone from Hamburg splits Hamburg + -er (ADR 0050: the Reading owns the split). The judges split on it, and the user ruled on 2026-10-25 (#1241): German borrowed it whole from English, so it gets no Constituents."
 	}
 }
