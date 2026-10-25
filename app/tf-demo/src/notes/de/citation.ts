@@ -1,15 +1,9 @@
+import { reflexiveMarker } from "dumcorpus/inventories";
 import type { ReflexiveSlot } from "../../../shared/reflexive-slot";
 import type {
 	CitationPart,
 	CitationPresenter,
 } from "../universal/blocks/citation";
-
-/**
- * The emoji a Reading with a Required Reflexive Slot starts with (ADR 0052).
- * Resolution writes it before Knowledge gives the Reading its frame, so it
- * stands for that Slot until the frame arrives.
- */
-const REFLEXIVE_MARKER = "🪞";
 
 /** A citation cites the third person, whose reflexive is `sich` in either case. */
 const CITED_REFLEXIVE = {
@@ -33,7 +27,9 @@ export const germanCitation: CitationPresenter = ({
 }) => {
 	const slot: ReflexiveSlot | null =
 		reflexive ??
-		(emojiDescription?.startsWith(REFLEXIVE_MARKER)
+		// A Reading with a Required Reflexive Slot starts with the 🪞 that
+		// resolution writes before Knowledge gives it a frame (ADR 0052).
+		(emojiDescription?.startsWith(reflexiveMarker)
 			? { status: "Required", governedCase: null, preposition: null }
 			: null);
 	if (!slot) return [{ kind: "Words", text: lemma.canonicalForm }];

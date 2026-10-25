@@ -103,9 +103,11 @@ The Block showing a Reading's Lemma with its Valency Frame. See [ADR 0034].
 
 **Citation**:
 How a Note prints a Reading: its Canonical Form (Dumling) with the lexical
-reflexive its Valency Frame holds, placed by the language (`sich erinnern`,
-`es sich gemütlich machen`). One presenter renders it; a Lemma-level heading
-shows the bare Canonical Form. See [ADR 0052].
+reflexive its Valency Frame holds, placed by the language. German puts `sich`
+right after the Reflexive Slot's preposition when it has one (`außer sich
+sein`, `es in sich haben`), and otherwise first or right after a leading `es`
+(`sich erinnern`, `es sich gemütlich machen`). One presenter renders it; a
+Lemma-level heading shows the bare Canonical Form. See [ADR 0052].
 _Avoid_: Canonical Form, for the printed citation; headword
 
 **Fusion Block**:

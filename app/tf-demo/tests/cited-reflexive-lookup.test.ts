@@ -4,17 +4,24 @@ import { withoutCitedReflexive } from "../server/citedReflexive";
 import { createTestConvex } from "./support/convex";
 import { insertDictionaryLemma } from "./support/dumdict-relations";
 
-test("lookup removes the sich a wording cites first, or after a leading es", () => {
+test("lookup removes the sich wherever a Citation puts it", () => {
 	expect(withoutCitedReflexive("sich erinnern")).toBe("erinnern");
 	expect(withoutCitedReflexive("Sich Sorgen machen")).toBe("Sorgen machen");
 	expect(withoutCitedReflexive("es sich gemütlich machen")).toBe(
 		"es gemütlich machen",
 	);
+	expect(withoutCitedReflexive("außer sich sein")).toBe("außer sein");
+	expect(withoutCitedReflexive("zu sich kommen")).toBe("zu kommen");
+	expect(withoutCitedReflexive("es in sich haben")).toBe("es in haben");
 });
 
 test("a wording that cites no reflexive, or is only sich, stays as it is", () => {
 	expect(withoutCitedReflexive("erinnert sich")).toBe("erinnert sich");
 	expect(withoutCitedReflexive("an sich")).toBe("an sich");
+	expect(withoutCitedReflexive("Leute wie sich")).toBe("Leute wie sich");
+	expect(withoutCitedReflexive("kümmert sich darum")).toBe(
+		"kümmert sich darum",
+	);
 	expect(withoutCitedReflexive("sich")).toBe("sich");
 	expect(withoutCitedReflexive("es eilig haben")).toBe("es eilig haben");
 });
