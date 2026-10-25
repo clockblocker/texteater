@@ -53,6 +53,37 @@ test("a lexical reflexive is a Reflexive in valencyEvidence, in the case jev jud
 	expect(Object.keys(jev.sent[0]?.questions ?? {})).toContain("reflexive");
 });
 
+test("jev judges a reflexive whose form hides its case in the first person: mir is Dat, mich is Acc", async () => {
+	// Er0 _1 macht2 _3 sich4 _5 Sorgen6 .7
+	const jev = fakeJev({ reflexive: "Dat", ...finite });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: writes("sich Sorgen machen").ask },
+		{
+			sentence: sentenceOf("Er macht sich Sorgen."),
+			unit: unitOf([2, 4, 6], "Locution/VERB"),
+		},
+	);
+	const asked = jev.sent[0]?.questions.reflexive;
+	expect(asked?.type).toBe("choice");
+	if (asked?.type !== "choice") return;
+	expect(asked.instructions).toContain("with ich as its subject");
+	expect(asked.criteria).toMatchObject({
+		Acc: "mich: the reflexive is accusative",
+		Dat: "mir: the reflexive is dative",
+	});
+	// The policy the question cites goes with it, and states the test.
+	expect(JSON.stringify(jev.sent[0]?.state)).toContain(
+		"test it in the first person",
+	);
+	expect(attested(result)).toHaveProperty("valencyEvidence", [
+		{
+			member: 1,
+			complement: { kind: "Reflexive", governedCase: "Dat" },
+			realizedCase: "Dat",
+		},
+	]);
+});
+
 test("a reflexive whose form shows its case is not asked, and a verbal Locution's leaves its headword", async () => {
 	// Ich0 _1 erinnere2 _3 mich4 .5
 	const remember = fakeJev(finite);

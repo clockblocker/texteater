@@ -37,7 +37,7 @@ export const options = {
 		Citation: "Only mentioned, as a dictionary entry, a name or a title",
 	},
 	auxiliary: { Main: question.auxiliaryMain },
-	reflexive: { Acc: "Accusative", Dat: "Dative" },
+	reflexive: { Acc: question.reflexiveAcc, Dat: question.reflexiveDat },
 	expletive: {
 		Subject: "Yes: the subject es, referring to nothing",
 		None: "No: an object or a fixed word of the expression",

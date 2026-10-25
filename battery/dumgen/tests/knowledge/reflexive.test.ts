@@ -72,14 +72,55 @@ async function frame(
 	return { result, trace, luna };
 }
 
-test("Luna is offered the Reflexive, and a 🪞 Reading's Reflexive Slot is Required, in the case the creating occurrence realized", async () => {
+test("Luna is offered the Reflexive, and a 🪞 Reading's Reflexive Slot is Required, in the case the creating occurrence's form shows", async () => {
 	const { result, luna } = await frame(
 		"🪞😳",
 		[subject, reflexive("Dat", "Optional")],
 		[attestedReflexive("Acc")],
+		"New",
+		{
+			lemma: verb("schämen"),
+			sentence: "Ich schäme mich.",
+			target: ["schäme", "mich"],
+		},
 	);
 	expect(JSON.stringify(luna.sent[0]?.outputSchema)).toContain("Reflexive");
 	expect(frameOf(result.changes)).toEqual([subject, reflexive("Acc")]);
+	expect(luna.sent[0]?.systemPrompt).toContain("Test it in the first person");
+});
+
+test("a sich hides its case, so Luna's case for the meaning goes before the one jev judged", async () => {
+	// macht sich Sorgen: jev judged Acc, Luna proposes Dat.
+	const { result } = await frame(
+		"🪞😟",
+		[subject, reflexive("Dat")],
+		[attestedReflexive("Acc")],
+		"New",
+		{
+			lemma: { ...besideOneself, canonicalForm: "Sorgen machen" },
+			sentence: "Er macht sich Sorgen.",
+			target: ["macht", "sich", "Sorgen"],
+		},
+	);
+	expect(frameOf(result.changes)).toEqual([subject, reflexive("Dat")]);
+	// A blank preposition, as Luna writes outside a fixed phrase, is none.
+	const blank = await frame(
+		"🪞😳",
+		[
+			subject,
+			{
+				status: "Required",
+				complements: [
+					{ kind: "Reflexive", governedCase: "Dat", preposition: "" },
+				],
+			},
+		],
+		[attestedReflexive("Acc")],
+	);
+	expect(frameOf(blank.result.changes)).toEqual([subject, reflexive("Dat")]);
+	// Luna proposing none, the occurrence's still stands.
+	const added = await frame("🪞😳", [subject], [attestedReflexive("Acc")]);
+	expect(frameOf(added.result.changes)).toEqual([subject, reflexive("Acc")]);
 });
 
 test("a 🪞 Reading gets the occurrence's Reflexive right after the subject when Luna proposes none, and Luna's case on a later occurrence", async () => {

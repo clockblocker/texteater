@@ -15,7 +15,9 @@
  *
  * The Reading's 🪞 settles its Reflexive Slot (ADR 0052): a 🪞 Reading's
  * frame has a Required one, right after the subject, as the creating
- * occurrence's reflexive realized it, else as Luna proposed it; a Reading
+ * occurrence's reflexive realized it where its form or preposition fixed
+ * the case, else as Luna proposed it: sich hides its case, so jev only
+ * judged it, and Luna judges the meaning's case better; a Reading
  * without 🪞 has no Required one, though an Optional one may stand. A
  * Reflexive inside a fixed phrase names its preposition (`außer sein`:
  * `außer` + Dat).
@@ -27,10 +29,12 @@ import {
 	germanGovernablePrepositions,
 	reflexiveMarker,
 } from "dumcorpus/inventories";
+import { foldCase } from "dumling";
 import type * as Dumling from "dumling/types";
 import { allowedComplementKinds, applyKnowledgeChange } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
+import { reflexives } from "../../resolve/de/open-route/verbal.js";
 import type {
 	GermanKnowledgeChange,
 	KnowledgeFailure,
@@ -219,7 +223,11 @@ const prepositionLemma = (
 	coreFeatures: {},
 });
 
-/** A proposed complement in Dumrel's shape: a preposition becomes its ADP Lemma. */
+/**
+ * A proposed complement in Dumrel's shape: a preposition becomes its ADP
+ * Lemma. A Reflexive's blank preposition, as Luna writes for one outside
+ * a fixed phrase, is none.
+ */
 function complementOf(value: unknown): unknown {
 	if (
 		!isRecord(value) ||
@@ -227,6 +235,14 @@ function complementOf(value: unknown): unknown {
 		value.preposition === undefined
 	)
 		return value;
+	if (
+		value.kind === "Reflexive" &&
+		typeof value.preposition === "string" &&
+		value.preposition.trim() === ""
+	) {
+		const { preposition: _blank, ...reflexive } = value;
+		return reflexive;
+	}
 	return {
 		...value,
 		preposition:
@@ -429,18 +445,40 @@ const reflexiveOf = (complements: readonly { readonly kind: string }[]) =>
 	);
 
 /**
+ * Whether the occurrence fixed its Reflexive's case: its form shows the
+ * case (mich, mir), or it follows a fixed phrase's preposition. sich, uns
+ * and euch hide it, so the case is only jev's judgment.
+ */
+function fixedCase(
+	attestation: Dumling.Attestation<"de">,
+	evidence: readonly ValencyEvidence[],
+): boolean {
+	const entry = evidence.find(
+		({ complement }) => complement.kind === "Reflexive",
+	);
+	if (entry === undefined || entry.member === null) return false;
+	if ("preposition" in entry.complement && entry.complement.preposition)
+		return true;
+	const form = attestation.members[entry.member]?.attested;
+	return (
+		form !== undefined && reflexives.get(foldCase(form, "de")) !== undefined
+	);
+}
+
+/**
  * The frame with the Reflexive Slot the Reading's 🪞 settles (ADR 0052),
  * and the Slot it drops. A 🪞 Reading's Reflexive is Required and stands
- * right after the subject, as the creating occurrence realized it, with
- * its case and any fixed phrase's preposition, else as Luna proposed it.
- * A Reading without 🪞 keeps no Required one. A 🪞 Reading neither names a
- * Reflexive for is a failure.
+ * right after the subject. The creating occurrence's goes first where it
+ * fixed the case (`fixedCase`), with any fixed phrase's preposition, else
+ * Luna's, then the occurrence's. A Reading without 🪞 keeps no Required
+ * one. A 🪞 Reading neither names a Reflexive for is a failure.
  */
 function settledReflexive(
 	reading: Dumling.Reading<"de">,
 	frame: readonly GermanSlot[],
 	evidence: readonly ValencyEvidence[],
 	origin: KnowledgeOrigin,
+	attestation: Dumling.Attestation<"de">,
 ):
 	| {
 			readonly frame: GermanSlot[];
@@ -468,7 +506,9 @@ function settledReflexive(
 	const attested = reflexiveOf(evidence.map(({ complement }) => complement));
 	const offered = proposed && reflexiveOf(proposed.complements);
 	const complement =
-		origin === "New" ? (attested ?? offered) : (offered ?? attested);
+		origin === "New" && fixedCase(attestation, evidence)
+			? (attested ?? offered)
+			: (offered ?? attested);
 	if (complement === undefined)
 		return {
 			failure: {
@@ -546,6 +586,7 @@ export const produceValency = (
 			[...kept, ...attested.slots],
 			evidence,
 			origin,
+			context.attestation,
 		);
 		if ("failure" in settled)
 			return {

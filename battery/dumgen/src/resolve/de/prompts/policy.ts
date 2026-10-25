@@ -63,7 +63,7 @@ export const policy = {
 	),
 	reflexive: paragraph(
 		"policy.reflexive",
-		"A lexical reflexive is a member of its verb's unit, never part of its Canonical Form: it fills the Reflexive Slot of the verb's meaning, in the one case that meaning fixes. It is dative where an accusative object, a fixed noun of the expression or a clause also stands with the verb («ich merke mir den Weg», «du legst dir Geld zurück»), and in the few expressions that always take a dative one; after a preposition of a fixed phrase it takes the case that preposition governs there («an sich halten»: dative); otherwise it is accusative («wir beeilen uns»).",
+		"A lexical reflexive is a member of its verb's unit, never part of its Canonical Form: it fills the Reflexive Slot of the verb's meaning, in the one case that meaning fixes. sich, uns and euch hide that case, so test it in the first person: say the clause again with ich as its subject, in the same meaning, and the reflexive reads mich where it is accusative and mir where it is dative («sie merkt sich den Weg» is «ich merke mir den Weg»: dative; «wir beeilen uns» is «ich beeile mich»: accusative). A dative one mostly stands beside an accusative object, a fixed noun of the expression or a clause («du legst dir Geld zurück»). After a preposition of a fixed phrase it takes the case that preposition governs there («an sich halten»: dative).",
 		rules.verbCore,
 		rules.ownsMembers,
 	),

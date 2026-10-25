@@ -214,7 +214,18 @@ export const question = {
 	),
 	reflexive: paragraph(
 		"question.reflexive",
-		"Under `policy.reflexive`, which case does the lexical reflexive {m} take here?",
+		"Under `policy.reflexive`, say the clause again with ich as its subject, in the same meaning: does the lexical reflexive {m} then read mich or mir?",
+		rules.verbCore,
+		rules.ownsMembers,
+	),
+	reflexiveAcc: paragraph(
+		"question.reflexive.Acc",
+		"mich: the reflexive is accusative",
+		rules.verbCore,
+	),
+	reflexiveDat: paragraph(
+		"question.reflexive.Dat",
+		"mir: the reflexive is dative",
 		rules.verbCore,
 	),
 	expletive: paragraph(
