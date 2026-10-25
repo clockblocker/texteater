@@ -19,7 +19,6 @@ import type { TestConvexDb } from "./convex";
  */
 
 const verbFeatures = {
-	lexicallyReflexive: null,
 	hasSepPrefix: null,
 } as const;
 

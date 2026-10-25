@@ -227,8 +227,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -427,8 +426,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

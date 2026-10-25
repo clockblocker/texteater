@@ -120,8 +120,7 @@
 						"kind": "VERB",
 						"canonicalForm": "trompeten",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

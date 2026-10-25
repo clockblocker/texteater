@@ -92,8 +92,7 @@
 						"kind": "VERB",
 						"canonicalForm": "nachgeben",
 						"coreFeatures": {
-							"hasSepPrefix": "nach",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "nach"
 						}
 					},
 					"normalizedSurface": "gab nach",

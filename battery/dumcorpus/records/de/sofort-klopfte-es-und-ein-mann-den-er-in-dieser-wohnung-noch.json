@@ -326,8 +326,7 @@
 								"kind": "VERB",
 								"canonicalForm": "hämmern",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -356,8 +355,7 @@
 						"kind": "VERB",
 						"canonicalForm": "klopfen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "klopfte es",
@@ -878,8 +876,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "gesehen hatte",
@@ -948,8 +945,7 @@
 								"kind": "VERB",
 								"canonicalForm": "betreten",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						],
@@ -961,8 +957,7 @@
 								"kind": "VERB",
 								"canonicalForm": "hineingehen",
 								"coreFeatures": {
-									"hasSepPrefix": "hinein",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "hinein"
 								}
 							},
 							{
@@ -972,8 +967,7 @@
 								"kind": "VERB",
 								"canonicalForm": "hereinkommen",
 								"coreFeatures": {
-									"hasSepPrefix": "herein",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "herein"
 								}
 							}
 						]
@@ -1002,8 +996,7 @@
 						"kind": "VERB",
 						"canonicalForm": "eintreten",
 						"coreFeatures": {
-							"hasSepPrefix": "ein",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "ein"
 						}
 					},
 					"normalizedSurface": "trat ein",

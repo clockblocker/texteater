@@ -125,8 +125,7 @@
 						"kind": "VERB",
 						"canonicalForm": "herüberkommen",
 						"coreFeatures": {
-							"hasSepPrefix": "herüber",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "herüber"
 						}
 					},
 					"normalizedSurface": "kommst herüber",

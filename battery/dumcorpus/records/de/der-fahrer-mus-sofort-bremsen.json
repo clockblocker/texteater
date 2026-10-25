@@ -40,8 +40,7 @@
 						"kind": "VERB",
 						"canonicalForm": "müssen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "muss",

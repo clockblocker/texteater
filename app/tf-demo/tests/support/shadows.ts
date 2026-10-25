@@ -121,7 +121,7 @@ const laufen = {
 	family: "Lexeme",
 	kind: "VERB",
 	canonicalForm: "laufen",
-	coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+	coreFeatures: { hasSepPrefix: null },
 } as const;
 
 /** A dictionary Lemma and its Reading, owner of `readingKey`. */

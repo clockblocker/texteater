@@ -204,8 +204,7 @@
 						"kind": "VERB",
 						"canonicalForm": "legen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "legt",
@@ -437,8 +436,7 @@
 						"kind": "VERB",
 						"canonicalForm": "zuhören",
 						"coreFeatures": {
-							"hasSepPrefix": "zu",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "zu"
 						}
 					},
 					"normalizedSurface": "hört zu",

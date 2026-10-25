@@ -43,8 +43,7 @@
 						"kind": "VERB",
 						"canonicalForm": "freuen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "freut",

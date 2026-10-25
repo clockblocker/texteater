@@ -99,8 +99,7 @@
 								"kind": "VERB",
 								"canonicalForm": "fürchten",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -123,8 +122,7 @@
 								"kind": "VERB",
 								"canonicalForm": "befürchten",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

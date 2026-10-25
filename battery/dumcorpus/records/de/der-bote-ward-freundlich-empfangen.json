@@ -75,8 +75,7 @@
 						"kind": "VERB",
 						"canonicalForm": "empfangen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": { "historicalStatus": "Archaic" }

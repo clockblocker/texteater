@@ -140,8 +140,7 @@
 						"kind": "VERB",
 						"canonicalForm": "abfahren",
 						"coreFeatures": {
-							"hasSepPrefix": "ab",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "ab"
 						}
 					},
 					"surfaceFeatures": null

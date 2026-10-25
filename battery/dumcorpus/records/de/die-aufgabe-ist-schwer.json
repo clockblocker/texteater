@@ -100,8 +100,7 @@
 							"kind": "VERB",
 							"canonicalForm": "aufgeben",
 							"coreFeatures": {
-								"hasSepPrefix": "auf",
-								"lexicallyReflexive": null
+								"hasSepPrefix": "auf"
 							}
 						}
 					},

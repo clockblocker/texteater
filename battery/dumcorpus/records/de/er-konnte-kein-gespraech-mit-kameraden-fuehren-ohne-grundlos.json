@@ -378,8 +378,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -747,8 +746,7 @@
 								"kind": "VERB",
 								"canonicalForm": "schweigen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -802,8 +800,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -867,8 +864,7 @@
 							"kind": "VERB",
 							"canonicalForm": "zerstreuen",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Drifted"
@@ -1144,8 +1140,7 @@
 								"kind": "VERB",
 								"canonicalForm": "austauschen",
 								"coreFeatures": {
-									"hasSepPrefix": "aus",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "aus"
 								}
 							},
 							{
@@ -1155,8 +1150,7 @@
 								"kind": "VERB",
 								"canonicalForm": "auswechseln",
 								"coreFeatures": {
-									"hasSepPrefix": "aus",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "aus"
 								}
 							}
 						]
@@ -1210,8 +1204,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

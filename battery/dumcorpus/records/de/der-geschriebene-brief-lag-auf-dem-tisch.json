@@ -68,8 +68,7 @@
 							"kind": "VERB",
 							"canonicalForm": "schreiben",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"

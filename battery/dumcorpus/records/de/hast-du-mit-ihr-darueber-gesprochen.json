@@ -115,8 +115,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sprechen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "hast gesprochen",

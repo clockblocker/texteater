@@ -49,8 +49,7 @@
 						"kind": "VERB",
 						"canonicalForm": "herumkommen",
 						"coreFeatures": {
-							"hasSepPrefix": "herum",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "herum"
 						}
 					},
 					"normalizedSurface": "kommt herum",

@@ -5065,10 +5065,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "VERB";
 			canonicalForm: string;
-			coreFeatures: {
-				hasSepPrefix: string | null;
-				lexicallyReflexive: ("Acc" | "Dat") | null;
-			};
+			coreFeatures: { hasSepPrefix: string | null };
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -5079,10 +5076,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "VERB";
 				canonicalForm: string;
-				coreFeatures: {
-					hasSepPrefix: string | null;
-					lexicallyReflexive: ("Acc" | "Dat") | null;
-				};
+				coreFeatures: { hasSepPrefix: string | null };
 			};
 			normalizedSurface: string;
 			spelling:
@@ -5265,10 +5259,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "VERB";
 				canonicalForm: string;
-				coreFeatures: {
-					hasSepPrefix: string | null;
-					lexicallyReflexive: ("Acc" | "Dat") | null;
-				};
+				coreFeatures: { hasSepPrefix: string | null };
 			};
 			emojiDescription: string;
 		};
@@ -5283,10 +5274,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "VERB";
 					canonicalForm: string;
-					coreFeatures: {
-						hasSepPrefix: string | null;
-						lexicallyReflexive: ("Acc" | "Dat") | null;
-					};
+					coreFeatures: { hasSepPrefix: string | null };
 				};
 				normalizedSurface: string;
 				spelling:

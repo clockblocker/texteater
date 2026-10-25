@@ -312,8 +312,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sollen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -827,8 +826,7 @@
 							"kind": "VERB",
 							"canonicalForm": "nachschleifen",
 							"coreFeatures": {
-								"hasSepPrefix": "nach",
-								"lexicallyReflexive": null
+								"hasSepPrefix": "nach"
 							}
 						},
 						"meaning": "Verbal"
@@ -1034,8 +1032,7 @@
 						"kind": "VERB",
 						"canonicalForm": "hinunterkollern",
 						"coreFeatures": {
-							"hasSepPrefix": "hinunter",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "hinunter"
 						}
 					},
 					"surfaceFeatures": null

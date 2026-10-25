@@ -7,7 +7,6 @@ import {
 
 const DeVerbCoreFeatureBagSchema = z.strictObject({
 	hasSepPrefix: DE_FEATURE_SCHEMA.hasSepPrefix.nullable(),
-	lexicallyReflexive: DE_FEATURE_SCHEMA.lexicallyReflexive.nullable(),
 });
 
 export const DeVerbFeatureBagsSchema = featureBags({

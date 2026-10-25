@@ -100,8 +100,7 @@
 						"kind": "VERB",
 						"canonicalForm": "gehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -138,8 +137,7 @@
 								"kind": "VERB",
 								"canonicalForm": "schlendern",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -149,8 +147,7 @@
 								"kind": "VERB",
 								"canonicalForm": "flanieren",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						],
@@ -162,8 +159,7 @@
 								"kind": "VERB",
 								"canonicalForm": "gehen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -220,8 +216,7 @@
 						"kind": "VERB",
 						"canonicalForm": "spazieren",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

@@ -58,8 +58,7 @@
 							"kind": "VERB",
 							"canonicalForm": "glänzen",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"

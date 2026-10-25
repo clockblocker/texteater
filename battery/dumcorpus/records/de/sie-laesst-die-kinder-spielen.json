@@ -85,8 +85,7 @@
 								"kind": "VERB",
 								"canonicalForm": "zulassen",
 								"coreFeatures": {
-									"hasSepPrefix": "zu",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "zu"
 								}
 							}
 						],
@@ -98,8 +97,7 @@
 								"kind": "VERB",
 								"canonicalForm": "erlauben",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -109,8 +107,7 @@
 								"kind": "VERB",
 								"canonicalForm": "gestatten",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -160,8 +157,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -207,8 +203,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

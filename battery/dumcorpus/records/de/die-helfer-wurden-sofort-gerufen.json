@@ -86,8 +86,7 @@
 								"kind": "VERB",
 								"canonicalForm": "herbeirufen",
 								"coreFeatures": {
-									"hasSepPrefix": "herbei",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "herbei"
 								}
 							}
 						]
@@ -156,8 +155,7 @@
 						"kind": "VERB",
 						"canonicalForm": "rufen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

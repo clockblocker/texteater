@@ -985,8 +985,7 @@
 						"kind": "VERB",
 						"canonicalForm": "bringen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "brachte",
@@ -1040,8 +1039,7 @@
 						"kind": "VERB",
 						"canonicalForm": "kommen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "kam",

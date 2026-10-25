@@ -63,7 +63,6 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 			canonicalForm: "aufpassen",
 			coreFeatures: {
 				hasSepPrefix: "auf",
-				lexicallyReflexive: null,
 			},
 		},
 	);
@@ -75,7 +74,6 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 
 	expect(reading.lemma.coreFeatures).toEqual({
 		hasSepPrefix: "auf",
-		lexicallyReflexive: null,
 	});
 	expect(knowledge).toEqual({
 		transcription: "aʊ̯fˌpasn̩",
@@ -94,7 +92,6 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 		canonicalForm: "aufpassen",
 		coreFeatures: {
 			hasSepPrefix: "auf",
-			lexicallyReflexive: null,
 		},
 	} as const;
 	const targetLemma = {
@@ -206,7 +203,6 @@ test("a stored Valency Frame reaches the Reading Note and renders its Valency Bl
 		canonicalForm: "aufpassen",
 		coreFeatures: {
 			hasSepPrefix: "auf",
-			lexicallyReflexive: null,
 		},
 	} as const;
 	const valency: Dumrel.ValencyFrame = [
@@ -302,7 +298,7 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 			family: "Lexeme",
 			kind: "VERB",
 			canonicalForm,
-			coreFeatures: { hasSepPrefix, lexicallyReflexive: null },
+			coreFeatures: { hasSepPrefix },
 		}) as const;
 	const subject: Dumrel.ValencySlot = {
 		status: "Required",

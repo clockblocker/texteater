@@ -104,8 +104,7 @@
 						"kind": "VERB",
 						"canonicalForm": "bringen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "bringt",

@@ -18,7 +18,6 @@
  */
 import type { EntryType } from "@typesafe-ai/sdk";
 import type * as Dumling from "dumling/types";
-import { breakdownWording } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import type { CallLog } from "../call.js";
@@ -61,8 +60,7 @@ export type Constituents =
 
 /**
  * What a breakdown judge reads about the Reading, under `key`: the wording
- * its Breakdown spells (its Canonical Form, a lexically reflexive Lexeme's
- * without the reflexive: `erinnern`), route, Emoji Description (its sense;
+ * its Breakdown spells (its Canonical Form), route, Emoji Description (its sense;
  * a Foreign Reading has none) and the Sentence that created it.
  */
 export function breakdownState(
@@ -72,7 +70,7 @@ export function breakdownState(
 	const { reading, sentence } = input;
 	const { lemma } = reading;
 	return {
-		[key]: breakdownWording(lemma),
+		[key]: lemma.canonicalForm,
 		route: `${lemma.family} ${lemma.kind}`,
 		...("emojiDescription" in reading
 			? { meaning: reading.emojiDescription }
@@ -106,11 +104,10 @@ export const constituentsOf = Effect.fnUntraced(function* (
 
 /**
  * Whether a Reading is a single-word Lexeme, the only kind with a Morphemic
- * Breakdown (ADR 0051): a lexically reflexive one counts by its word
- * (`sich erinnern` by `erinnern`), since its reflexive is a satellite.
+ * Breakdown (ADR 0051). A reflexive is in no Canonical Form (ADR 0052).
  */
 export const isSingleWordLexeme = (lemma: Dumling.Lemma) =>
-	lemma.family === "Lexeme" && !/\s/u.test(breakdownWording(lemma));
+	lemma.family === "Lexeme" && !/\s/u.test(lemma.canonicalForm);
 
 /**
  * The body of `segment.inMorphemes`. A Reading that isn't a single-word

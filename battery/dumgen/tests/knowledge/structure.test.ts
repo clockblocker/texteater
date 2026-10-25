@@ -92,11 +92,8 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 					language: "de",
 					family: "Lexeme",
 					kind: "VERB",
-					canonicalForm: "sich verlieben",
-					coreFeatures: {
-						hasSepPrefix: null,
-						lexicallyReflexive: "Acc",
-					},
+					canonicalForm: "verlieben",
+					coreFeatures: { hasSepPrefix: null },
 				},
 				meaning: "Verbal",
 			},
@@ -215,7 +212,6 @@ test("a Partizip I is checked by code, so jev judges only its meaning; an insepa
 					canonicalForm: "verstecken",
 					coreFeatures: {
 						hasSepPrefix: null,
-						lexicallyReflexive: null,
 					},
 				}),
 			}),

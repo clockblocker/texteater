@@ -1,12 +1,16 @@
 import { describe, expect, it } from "bun:test";
 
-import { panels, verb } from "./support.js";
+import { panels, type Reflexive, verb } from "./support.js";
 
 type Core = Parameters<typeof verb>[1];
 
 /** A weak verb's table from its licensed Präteritum, the form its class is derived from. */
-const weakly = (infinitive: string, preterite: string, core: Core = {}) =>
-	panels(verb(infinitive, core), { preterite: [preterite] });
+const weakly = (
+	infinitive: string,
+	preterite: string,
+	core: Core = {},
+	reflexive?: Reflexive,
+) => panels(verb(infinitive, core), { preterite: [preterite] }, reflexive);
 
 /** Every panel of the 5 weak vault verbs (filler-de#62). */
 describe("the dev vault's weak verbs", () => {
@@ -64,12 +68,10 @@ describe("the dev vault's weak verbs", () => {
 		});
 	});
 
-	it("sich hüten places its reflexive and links its t-stem with e", () => {
+	it("hüten 🪞 places its Reflexive Slot's reflexive and links its t-stem with e", () => {
 		const past =
 			"ich hütete mich, du hütetest dich, er hütete sich, wir hüteten uns, ihr hütetet euch, sie hüteten sich";
-		expect(
-			weakly("sich hüten", "hütete", { lexicallyReflexive: "Acc" }),
-		).toEqual({
+		expect(weakly("hüten", "hütete", {}, "Acc")).toEqual({
 			Imperativ: "hüte dich, hütet euch",
 			"Konjunktiv II": past,
 			"Partizip II": "gehütet",

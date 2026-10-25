@@ -85,7 +85,7 @@ const geben = (expletive: "Subject" | null) =>
 			family: "Lexeme",
 			kind: "VERB",
 			canonicalForm: "geben",
-			coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+			coreFeatures: { hasSepPrefix: null },
 		},
 		normalizedSurface: expletive ? "es gab" : "gab",
 		inflectionalFeatures: {

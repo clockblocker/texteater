@@ -57,8 +57,7 @@
 						"kind": "VERB",
 						"canonicalForm": "hinauswerfen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinaus",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "hinaus"
 						}
 					},
 					"normalizedSurface": "warf hinaus",

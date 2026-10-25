@@ -38,7 +38,7 @@ const kommt: Dumling.Attestation<"de"> = {
 			family: "Lexeme",
 			kind: "VERB",
 			canonicalForm: "kommen",
-			coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+			coreFeatures: { hasSepPrefix: null },
 		},
 		normalizedSurface: "kommt",
 		spelling: { kind: "Canonical" },

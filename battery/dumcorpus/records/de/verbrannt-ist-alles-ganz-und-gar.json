@@ -126,8 +126,7 @@
 								"kind": "VERB",
 								"canonicalForm": "abbrennen",
 								"coreFeatures": {
-									"hasSepPrefix": "ab",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "ab"
 								}
 							},
 							{
@@ -137,8 +136,7 @@
 								"kind": "VERB",
 								"canonicalForm": "niederbrennen",
 								"coreFeatures": {
-									"hasSepPrefix": "nieder",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "nieder"
 								}
 							},
 							{
@@ -216,8 +214,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

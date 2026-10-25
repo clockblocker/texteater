@@ -96,8 +96,7 @@
 								"kind": "VERB",
 								"canonicalForm": "befragen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

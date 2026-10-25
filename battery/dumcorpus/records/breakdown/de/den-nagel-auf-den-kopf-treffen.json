@@ -70,8 +70,7 @@
 						"kind": "VERB",
 						"canonicalForm": "treffen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				}

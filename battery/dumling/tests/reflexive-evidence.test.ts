@@ -8,9 +8,7 @@ const lemma = (kind: "VERB" | "ADJ", canonicalForm: string) => ({
 	kind,
 	canonicalForm,
 	coreFeatures:
-		kind === "VERB"
-			? { hasSepPrefix: null, lexicallyReflexive: null }
-			: { comparable: null },
+		kind === "VERB" ? { hasSepPrefix: null } : { comparable: null },
 });
 
 /** *Sie erinnert sich an den Geruch*: `sich` fills `erinnern` 🪞🧠's Reflexive Slot. */

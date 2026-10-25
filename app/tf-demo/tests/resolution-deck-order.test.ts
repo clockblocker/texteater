@@ -73,7 +73,7 @@ function grammar(
 		canonicalForm: "verarbeiten",
 		family: "Lexeme",
 		kind: "VERB",
-		coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+		coreFeatures: { hasSepPrefix: null },
 	};
 }
 

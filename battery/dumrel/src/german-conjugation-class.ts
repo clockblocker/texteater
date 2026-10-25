@@ -4,7 +4,7 @@ const words = (form: string) =>
 	form
 		.toLocaleLowerCase("de")
 		.split(/\s+/u)
-		.filter((word) => word !== "" && word !== "sich");
+		.filter((word) => word !== "");
 
 /** The infinitive without `-en` or `-n`: `wiegen` → `wieg`, `wandern` → `wander`. */
 const stemOf = (infinitive: string) =>
@@ -19,7 +19,7 @@ const stemOf = (infinitive: string) =>
  * 0038), judged on the stem. Weak adds `-te` or `-ete` to the unchanged stem
  * (`wiegen`, `wiegte`; `arbeiten`, `arbeitete`), Mixed adds `-te` to a changed
  * stem (`bringen`, `brachte`), and Strong adds no `-te` (`wiegen`, `wog`).
- * Both forms are compared without case and without `sich`, and a separable
+ * Both forms are compared without case, and a separable
  * verb is judged by its stem, its particle split off or not: `aufstehen`,
  * `stand auf` is `stehen`, `stand`, Strong; `abholen`, `holte ab` is Weak.
  */

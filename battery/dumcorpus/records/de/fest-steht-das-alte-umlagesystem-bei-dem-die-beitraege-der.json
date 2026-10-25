@@ -141,8 +141,7 @@
 								"kind": "VERB",
 								"canonicalForm": "weitergeben",
 								"coreFeatures": {
-									"hasSepPrefix": "weiter",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "weiter"
 								}
 							}
 						],
@@ -154,8 +153,7 @@
 								"kind": "VERB",
 								"canonicalForm": "nachsenden",
 								"coreFeatures": {
-									"hasSepPrefix": "nach",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "nach"
 								}
 							}
 						]
@@ -203,8 +201,7 @@
 						"kind": "VERB",
 						"canonicalForm": "weiterleiten",
 						"coreFeatures": {
-							"hasSepPrefix": "weiter",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "weiter"
 						}
 					},
 					"normalizedSurface": "weitergeleitet werden",

@@ -176,8 +176,7 @@
 						"kind": "VERB",
 						"canonicalForm": "nehmen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "nehme",

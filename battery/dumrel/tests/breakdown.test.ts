@@ -1,10 +1,6 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
-import {
-	applyKnowledgeChange,
-	breakdownWording,
-	parseReadingKnowledge,
-} from "dumrel";
+import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { houseLemma, prefixLemma } from "./fixtures.js";
 
@@ -160,7 +156,7 @@ test("pieces spell the Canonical Form and link where each half allows", () => {
 		expect(parse(entspannungReading, { breakdown }).success).toBe(false);
 });
 
-test("a lexically reflexive Lexeme's Breakdown spells its word, without the reflexive", () => {
+test("a reflexive Reading's Breakdown spells its Canonical Form, the bare word", () => {
 	const erinnernReading = {
 		unitKind: "Reading",
 		lemma: {
@@ -168,10 +164,10 @@ test("a lexically reflexive Lexeme's Breakdown spells its word, without the refl
 			language: "de",
 			family: "Lexeme",
 			kind: "VERB",
-			canonicalForm: "sich erinnern",
-			coreFeatures: { hasSepPrefix: null, lexicallyReflexive: "Acc" },
+			canonicalForm: "erinnern",
+			coreFeatures: { hasSepPrefix: null },
 		},
-		emojiDescription: "💭",
+		emojiDescription: "🪞🧠",
 	} as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;
 	// erinnern is a bottom word: its base innern died out.
 	const word = {
@@ -181,12 +177,11 @@ test("a lexically reflexive Lexeme's Breakdown spells its word, without the refl
 			{ letters: "n", target: shadow("Morpheme", "Ending", "-en") },
 		],
 	};
-	expect(breakdownWording(erinnernReading.lemma)).toBe("erinnern");
 	expect(parse(erinnernReading, { breakdown: word })).toEqual({
 		success: true,
 		value: { breakdown: word },
 	});
-	// The reflexive is a satellite, never a piece.
+	// The reflexive fills the Reading's Reflexive Slot and is never a piece.
 	expect(
 		parse(erinnernReading, {
 			breakdown: {
@@ -194,10 +189,6 @@ test("a lexically reflexive Lexeme's Breakdown spells its word, without the refl
 			},
 		}).success,
 	).toBe(false);
-	// A phraseme keeps its whole wording.
-	expect(breakdownWording(fadenVerlierenReading.lemma)).toBe(
-		"den Faden verlieren",
-	);
 });
 
 test("a Reading has a Source or Constituents, not both", () => {

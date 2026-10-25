@@ -85,8 +85,7 @@
 								"kind": "VERB",
 								"canonicalForm": "abfahren",
 								"coreFeatures": {
-									"hasSepPrefix": "ab",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "ab"
 								}
 							}
 						],
@@ -98,8 +97,7 @@
 								"kind": "VERB",
 								"canonicalForm": "abfliegen",
 								"coreFeatures": {
-									"hasSepPrefix": "ab",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "ab"
 								}
 							},
 							{
@@ -109,8 +107,7 @@
 								"kind": "VERB",
 								"canonicalForm": "aufbrechen",
 								"coreFeatures": {
-									"hasSepPrefix": "auf",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "auf"
 								}
 							}
 						],
@@ -122,8 +119,7 @@
 								"kind": "VERB",
 								"canonicalForm": "anreisen",
 								"coreFeatures": {
-									"hasSepPrefix": "an",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "an"
 								}
 							}
 						]
@@ -192,8 +188,7 @@
 						"kind": "VERB",
 						"canonicalForm": "abreisen",
 						"coreFeatures": {
-							"hasSepPrefix": "ab",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "ab"
 						}
 					},
 					"surfaceFeatures": null

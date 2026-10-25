@@ -24,7 +24,7 @@ type Piece = { readonly letters: string; readonly target?: Dumrel.LinkTarget };
 
 const coreFeaturesByRoute: Readonly<Record<string, object>> = {
 	"Lexeme/NOUN": { gender: null },
-	"Lexeme/VERB": { hasSepPrefix: null, lexicallyReflexive: null },
+	"Lexeme/VERB": { hasSepPrefix: null },
 	"Locution/ADV": { comparable: null },
 	"Locution/VERB": {},
 	"Morpheme/Suffix": {},

@@ -83,8 +83,7 @@
 								"kind": "VERB",
 								"canonicalForm": "schüren",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -94,8 +93,7 @@
 								"kind": "VERB",
 								"canonicalForm": "anheizen",
 								"coreFeatures": {
-									"hasSepPrefix": "an",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "an"
 								}
 							},
 							{
@@ -105,8 +103,7 @@
 								"kind": "VERB",
 								"canonicalForm": "anfachen",
 								"coreFeatures": {
-									"hasSepPrefix": "an",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "an"
 								}
 							}
 						],

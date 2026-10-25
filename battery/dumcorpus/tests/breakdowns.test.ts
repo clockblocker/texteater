@@ -115,11 +115,9 @@ describe("Breakdown Records", () => {
 		]);
 		// The reflexive is a satellite: the word erinnern is broken down, a
 		// bottom word whose base innern died out.
-		expect(pieces(byId("breakdown/de/sich-erinnern"), "morphemes")).toEqual([
-			"er → er-",
-			"inner → inner",
-			"n → -en",
-		]);
+		expect(pieces(byId("breakdown/de/sich-erinnern"), "morphemes")).toEqual(
+			["er → er-", "inner → inner", "n → -en"],
+		);
 		expect(pieces(byId("breakdown/de/spannen"), "morphemes")).toEqual([
 			"spann → spann",
 			"en → -en",

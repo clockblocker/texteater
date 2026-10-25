@@ -29,7 +29,7 @@ test("each AUX use's features make a German VERB Surface Dumling accepts", () =>
 				family: "Lexeme",
 				kind: "VERB",
 				canonicalForm: "machen",
-				coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+				coreFeatures: { hasSepPrefix: null },
 			},
 			inflectionalFeatures: {
 				verbForm: "Fin",

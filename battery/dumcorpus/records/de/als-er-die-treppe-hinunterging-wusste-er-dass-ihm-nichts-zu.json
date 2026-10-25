@@ -442,8 +442,7 @@
 						"kind": "VERB",
 						"canonicalForm": "hinuntergehen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinunter",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "hinunter"
 						}
 					},
 					"normalizedSurface": "hinunterging",
@@ -497,8 +496,7 @@
 						"kind": "VERB",
 						"canonicalForm": "wissen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "wußte",
@@ -799,8 +797,7 @@
 								"kind": "VERB",
 								"canonicalForm": "machen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -832,8 +829,7 @@
 						"kind": "VERB",
 						"canonicalForm": "tun",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "tun",
@@ -923,8 +919,7 @@
 						"kind": "VERB",
 						"canonicalForm": "übrig bleiben",
 						"coreFeatures": {
-							"hasSepPrefix": "übrig",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "übrig"
 						}
 					},
 					"normalizedSurface": "übrig blieb",
@@ -1038,8 +1033,7 @@
 								"kind": "VERB",
 								"canonicalForm": "beenden",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

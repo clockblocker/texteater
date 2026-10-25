@@ -42,8 +42,7 @@
 						"kind": "VERB",
 						"canonicalForm": "reisen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "wird reisen",

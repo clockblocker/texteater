@@ -307,8 +307,7 @@
 						"kind": "VERB",
 						"canonicalForm": "hinsagen",
 						"coreFeatures": {
-							"hasSepPrefix": "hin",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "hin"
 						}
 					},
 					"normalizedSurface": "sagen hin",
@@ -720,8 +719,7 @@
 						"kind": "VERB",
 						"canonicalForm": "glauben",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "glauben",

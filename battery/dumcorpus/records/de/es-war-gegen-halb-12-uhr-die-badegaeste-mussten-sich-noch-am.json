@@ -271,8 +271,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sein",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "es war",
@@ -595,8 +594,7 @@
 						"kind": "VERB",
 						"canonicalForm": "müssen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "mußten",

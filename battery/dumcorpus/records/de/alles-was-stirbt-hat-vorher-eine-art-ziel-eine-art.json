@@ -517,8 +517,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sterben",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -576,8 +575,7 @@
 						"kind": "VERB",
 						"canonicalForm": "haben",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1162,8 +1160,7 @@
 						"kind": "VERB",
 						"canonicalForm": "zutreffen",
 						"coreFeatures": {
-							"hasSepPrefix": "zu",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "zu"
 						}
 					},
 					"surfaceFeatures": null

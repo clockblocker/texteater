@@ -1,7 +1,6 @@
 import { ParsingError } from "common-utils/validation";
 import { foldCase, parseUnit, zeroEndingCanonicalForm } from "dumling";
 import type * as Dumling from "dumling/types";
-import { breakdownWording } from "./breakdown-wording.js";
 import type {
 	Breakdown,
 	BreakdownPart,
@@ -80,8 +79,8 @@ function pieceTargetIssue(
  * One half of a Breakdown checked against its owning Reading. Each piece
  * shows letters, except a zero ending, which shows none and links to the zero
  * Ending (ADR 0051). The letters spell the Reading's Canonical Form back,
- * compared case-insensitively; a lexically reflexive Lexeme's spell its
- * word, without the reflexive it cites (`erinnern` of `sich erinnern`).
+ * compared case-insensitively. A reflexive is in no Canonical Form, so
+ * `erinnern` 🪞🧠 spells `erinnern` (ADR 0052).
  */
 export function parseBreakdownPieces(
 	source: Dumling.Reading,
@@ -120,13 +119,13 @@ export function parseBreakdownPieces(
 	}
 	const { language } = source.lemma;
 	const spelled = result.map(({ letters }) => letters).join("");
-	const wording = breakdownWording(source.lemma);
-	if (foldCase(spelled, language) !== foldCase(wording, language))
+	if (
+		foldCase(spelled, language) !==
+		foldCase(source.lemma.canonicalForm, language)
+	)
 		return issue(
 			path,
-			wording === source.lemma.canonicalForm
-				? "A Breakdown's letters spell its Reading's Canonical Form"
-				: `A lexically reflexive Lexeme's Breakdown spells its word ${JSON.stringify(wording)}, without the reflexive`,
+			"A Breakdown's letters spell its Reading's Canonical Form",
 		);
 	return result;
 }

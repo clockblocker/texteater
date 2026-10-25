@@ -42,8 +42,7 @@
 						"kind": "VERB",
 						"canonicalForm": "überreichen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "erhielt überreicht",

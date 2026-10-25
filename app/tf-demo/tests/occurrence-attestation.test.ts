@@ -15,7 +15,6 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 			foldedCanonicalForm: "aufmachen",
 			coreFeatures: {
 				hasSepPrefix: "Yes",
-				lexicallyReflexive: null,
 			},
 		});
 		const attestationId = await ctx.db.insert("attestations", {

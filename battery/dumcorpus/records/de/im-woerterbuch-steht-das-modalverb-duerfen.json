@@ -49,8 +49,7 @@
 						"kind": "VERB",
 						"canonicalForm": "dürfen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "dürfen",

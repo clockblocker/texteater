@@ -32,7 +32,6 @@ const sterben = {
 		canonicalForm: "sterben",
 		coreFeatures: {
 			hasSepPrefix: null,
-			lexicallyReflexive: null,
 		},
 	},
 	emojiDescription: "🪦",

@@ -28,7 +28,6 @@ export const anrufenLemma = {
 	canonicalForm: "anrufen",
 	coreFeatures: {
 		hasSepPrefix: "an",
-		lexicallyReflexive: null,
 	},
 } as const;
 

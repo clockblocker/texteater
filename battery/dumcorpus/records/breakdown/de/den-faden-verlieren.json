@@ -40,8 +40,7 @@
 						"kind": "VERB",
 						"canonicalForm": "verlieren",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				}

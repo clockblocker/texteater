@@ -71,8 +71,7 @@
 						"kind": "VERB",
 						"canonicalForm": "auffinden",
 						"coreFeatures": {
-							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "auf"
 						}
 					},
 					"normalizedSurface": "ist aufgefunden worden",

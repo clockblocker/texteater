@@ -450,8 +450,7 @@
 						"kind": "VERB",
 						"canonicalForm": "geschehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

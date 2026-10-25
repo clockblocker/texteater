@@ -64,8 +64,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "entlang",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "entlang"
 						}
 					},
 					"surfaceFeatures": null

@@ -121,8 +121,7 @@
 								"kind": "VERB",
 								"canonicalForm": "ausspannen",
 								"coreFeatures": {
-									"hasSepPrefix": "aus",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "aus"
 								}
 							},
 							{
@@ -132,8 +131,7 @@
 								"kind": "VERB",
 								"canonicalForm": "genesen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

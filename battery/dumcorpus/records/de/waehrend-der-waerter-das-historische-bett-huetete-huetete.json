@@ -87,8 +87,7 @@
 								"kind": "VERB",
 								"canonicalForm": "flachliegen",
 								"coreFeatures": {
-									"hasSepPrefix": "flach",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "flach"
 								}
 							},
 							{
@@ -98,8 +97,7 @@
 								"kind": "VERB",
 								"canonicalForm": "darniederliegen",
 								"coreFeatures": {
-									"hasSepPrefix": "darnieder",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "darnieder"
 								}
 							}
 						]

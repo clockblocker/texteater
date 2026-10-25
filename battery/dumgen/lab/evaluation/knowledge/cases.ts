@@ -343,7 +343,6 @@ const slipSpecs: readonly (Omit<TranslationSlip, "caseId"> & {
 						canonicalForm: "schmecken",
 						coreFeatures: {
 							hasSepPrefix: null,
-							lexicallyReflexive: null,
 						},
 					},
 					normalizedSurface: "schmeckt",

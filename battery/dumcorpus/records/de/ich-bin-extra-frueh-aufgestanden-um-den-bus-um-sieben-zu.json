@@ -209,8 +209,7 @@
 						"kind": "VERB",
 						"canonicalForm": "aufstehen",
 						"coreFeatures": {
-							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "auf"
 						}
 					},
 					"normalizedSurface": "bin aufgestanden",
@@ -528,8 +527,7 @@
 						"kind": "VERB",
 						"canonicalForm": "erreichen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "erreichen",

@@ -430,8 +430,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -624,8 +623,7 @@
 							"kind": "VERB",
 							"canonicalForm": "drohen",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"
@@ -913,8 +911,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "auf"
 						}
 					},
 					"surfaceFeatures": null
@@ -1015,8 +1012,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1346,8 +1342,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

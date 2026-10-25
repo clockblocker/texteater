@@ -570,8 +570,7 @@
 						"kind": "VERB",
 						"canonicalForm": "liegen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "lag",
@@ -889,8 +888,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "sah",
@@ -1128,8 +1126,7 @@
 						"kind": "VERB",
 						"canonicalForm": "heben",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "hob",
@@ -1536,8 +1533,7 @@
 							"kind": "VERB",
 							"canonicalForm": "teilen",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"
@@ -2305,8 +2301,7 @@
 						"kind": "VERB",
 						"canonicalForm": "können",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "konnte",

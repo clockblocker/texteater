@@ -40,7 +40,6 @@
 							"canonicalForm": "wohnen",
 							"coreFeatures": {
 								"hasSepPrefix": null,
-								"lexicallyReflexive": null,
 								"verbType": null
 							}
 						},

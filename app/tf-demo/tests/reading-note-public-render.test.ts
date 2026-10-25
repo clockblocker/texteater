@@ -148,10 +148,7 @@ function readingNote(): ReadingNote {
 				family: "Lexeme",
 				kind: "VERB",
 				canonicalForm: "sich freuen",
-				coreFeatures: {
-					lexicallyReflexive: "Acc",
-					hasSepPrefix: null,
-				},
+				coreFeatures: { hasSepPrefix: null },
 			},
 		},
 		knowledgeState: { status: "Full", activity: "Idle" },

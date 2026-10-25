@@ -9,8 +9,7 @@
 			"kind": "VERB",
 			"canonicalForm": "leidtun",
 			"coreFeatures": {
-				"hasSepPrefix": "leid",
-				"lexicallyReflexive": null
+				"hasSepPrefix": "leid"
 			}
 		},
 		"emojiDescription": "😔"
@@ -40,8 +39,7 @@
 						"kind": "VERB",
 						"canonicalForm": "tun",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				}

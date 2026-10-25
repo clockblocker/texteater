@@ -66,8 +66,7 @@
 							"kind": "VERB",
 							"canonicalForm": "binden",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						}
 					},

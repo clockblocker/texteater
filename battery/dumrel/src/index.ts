@@ -4,7 +4,6 @@ export {
 	parseKnowledgeChange,
 } from "./apply-knowledge-change.js";
 export { applyParadigmChanges } from "./apply-paradigm-changes.js";
-export { breakdownWording } from "./breakdown-wording.js";
 export { germanConjugationClass } from "./german-conjugation-class.js";
 export { germanPluralPattern } from "./german-plural-pattern.js";
 export {

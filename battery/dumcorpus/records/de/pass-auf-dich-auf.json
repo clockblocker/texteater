@@ -82,8 +82,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "auf"
 						}
 					},
 					"surfaceFeatures": null

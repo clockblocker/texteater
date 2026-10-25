@@ -86,7 +86,6 @@ export const wartenReading = {
 		canonicalForm: "warten",
 		coreFeatures: {
 			hasSepPrefix: null,
-			lexicallyReflexive: null,
 		},
 	},
 	emojiDescription: "⏳",

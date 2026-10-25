@@ -47,7 +47,7 @@ const DUAL_PREFIXES = [
 ] as const;
 
 export type Stem = {
-	/** The infinitive without particle or `sich`. */
+	/** The infinitive without its particle. */
 	readonly infinitive: string;
 	/** `pass`, `hüt`, `sammel`, `wander`. */
 	readonly stem: string;

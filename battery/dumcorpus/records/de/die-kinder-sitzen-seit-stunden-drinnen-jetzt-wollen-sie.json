@@ -57,8 +57,7 @@
 						"kind": "VERB",
 						"canonicalForm": "wollen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "wollen",

@@ -187,8 +187,9 @@ export function goldKnowledgeWritten(
 			const core: Readonly<Record<string, unknown>> =
 				"coreFeatures" in verb ? verb.coreFeatures : {};
 			return {
-				verb: verb.canonicalForm.replace(/^sich\s+/u, ""),
-				reflexive: core.lexicallyReflexive ?? null,
+				verb: verb.canonicalForm,
+				// A Source names its bare verb (ADR 0052).
+				reflexive: null,
 				separablePrefix: core.hasSepPrefix ?? null,
 				preterite: `${verb.canonicalForm}te`,
 				participle: lemma,

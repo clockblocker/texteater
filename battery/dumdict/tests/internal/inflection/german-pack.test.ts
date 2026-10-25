@@ -208,7 +208,7 @@ describe("the German pack through projectLemmaTables", () => {
 			family: "Lexeme",
 			kind: "VERB",
 			canonicalForm: "abfahren",
-			coreFeatures: { hasSepPrefix: "ab", lexicallyReflexive: null },
+			coreFeatures: { hasSepPrefix: "ab" },
 		} as Dumling.Lemma<"de", "Lexeme", "VERB">;
 		const reading = readingOf(abfahren, "🚆");
 		const view = projectLemmaTables(
@@ -252,6 +252,59 @@ describe("the German pack through projectLemmaTables", () => {
 			"preterite",
 			"subjunctive2",
 			"participle",
+		]);
+	});
+
+	it("shows the reflexive of a group's Reflexive Slot beside the bare met form (ADR 0052)", () => {
+		const erinnern = {
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "VERB",
+			canonicalForm: "erinnern",
+			coreFeatures: { hasSepPrefix: null },
+		} as Dumling.Lemma<"de", "Lexeme", "VERB">;
+		const reading = readingOf(erinnern, "🪞🧠");
+		const slice = sliceOf({
+			lemma: erinnern,
+			paradigm: paradigmOf(erinnern, {
+				present3: { variants: ["erinnert"] },
+			}),
+			readings: [reading],
+			occurrences: [
+				[
+					"r1",
+					reading,
+					verbSurface(erinnern, "erinnert", {
+						tense: "Pres",
+						person: "3",
+						number: "Sing",
+					}),
+				],
+			],
+		});
+		const er = (view: View) =>
+			view.groups[0]?.panels
+				.find(({ id }) => id === "present")
+				?.cells[2]?.[0]?.forms.map(({ form, attested }) => [
+					shown(form),
+					attested.length,
+				]);
+		expect(er(projectLemmaTables(pack, slice))).toEqual([
+			["er erinnert", 1],
+		]);
+		const [entry] = slice.readingEntries;
+		if (!entry) throw Error("Expected a Reading Entry");
+		entry.knowledge = {
+			valency: [
+				{
+					status: "Required",
+					complements: [{ kind: "Reflexive", governedCase: "Acc" }],
+				},
+			],
+		};
+		expect(er(projectLemmaTables(pack, slice))).toEqual([
+			["er erinnert sich", 1],
 		]);
 	});
 });

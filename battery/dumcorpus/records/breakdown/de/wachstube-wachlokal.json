@@ -26,8 +26,7 @@
 						"kind": "VERB",
 						"canonicalForm": "wachen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				},

@@ -11,7 +11,7 @@ import {
 	fits,
 	stateOf,
 } from "./cells";
-import type { InflectionPack, ParadigmSelection } from "./pack";
+import type { DeriveReading, InflectionPack, ParadigmSelection } from "./pack";
 import {
 	compare,
 	type Placement,
@@ -73,8 +73,17 @@ export function projectLemmaTables<L extends Dumling.Language, F, P = string>(
 	};
 	const schema = pack.schemaFor(lemma);
 	const readings = new Map<Dumrel.ReadingKey, Dumling.Reading<L>>();
-	for (const entry of slice.readingEntries)
-		readings.set(readingIdentityKey(entry.reading), entry.reading);
+	const entries = new Map<Dumrel.ReadingKey, DeriveReading<L>>();
+	for (const entry of slice.readingEntries) {
+		const key = readingIdentityKey(entry.reading);
+		readings.set(key, entry.reading);
+		entries.set(key, {
+			reading: entry.reading,
+			...(entry.knowledge === undefined
+				? {}
+				: { knowledge: entry.knowledge }),
+		});
+	}
 	const readingKeys = [...readings.keys()].sort(compare);
 	const groups = licenceGroups(paradigm, readingKeys).map(
 		(group): Group<F> => {
@@ -85,6 +94,9 @@ export function projectLemmaTables<L extends Dumling.Language, F, P = string>(
 							lemma,
 							selection: selectionOf(paradigm, group),
 							schema,
+							readings: group.readings.flatMap(
+								(key) => entries.get(key) ?? [],
+							),
 						});
 			const states = new Map<Dumling.CellKey, CellState<F>>();
 			const cells = schema && schemaIndex(schema);

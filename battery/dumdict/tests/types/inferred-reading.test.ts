@@ -20,7 +20,7 @@ type _GermanVerbStoredReading = Extract<
 	GermanVerb
 >;
 
-const germanVerbReading = `{ unitKind: "Reading"; lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasSepPrefix: string | null; lexicallyReflexive: "Acc" | "Dat" | null; }; }; emojiDescription: string; }`;
+const germanVerbReading = `{ unitKind: "Reading"; lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasSepPrefix: string | null; }; }; emojiDescription: string; }`;
 
 describe("Dumdict Reading inference", () => {
 	it("preserves the selected branch at the draft ingress", () => {

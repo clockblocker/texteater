@@ -93,8 +93,7 @@
 								"kind": "VERB",
 								"canonicalForm": "bereitstellen",
 								"coreFeatures": {
-									"hasSepPrefix": "bereit",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "bereit"
 								}
 							}
 						],
@@ -106,8 +105,7 @@
 								"kind": "VERB",
 								"canonicalForm": "anbieten",
 								"coreFeatures": {
-									"hasSepPrefix": "an",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "an"
 								}
 							},
 							{
@@ -117,8 +115,7 @@
 								"kind": "VERB",
 								"canonicalForm": "liefern",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

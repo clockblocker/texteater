@@ -23,8 +23,7 @@
 				"kind": "VERB",
 				"canonicalForm": "laufen",
 				"coreFeatures": {
-					"hasSepPrefix": null,
-					"lexicallyReflexive": null
+					"hasSepPrefix": null
 				}
 			}
 		}

@@ -228,8 +228,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sollen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -294,8 +293,7 @@
 								"kind": "VERB",
 								"canonicalForm": "ausspannen",
 								"coreFeatures": {
-									"hasSepPrefix": "aus",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "aus"
 								}
 							},
 							{
@@ -305,8 +303,7 @@
 								"kind": "VERB",
 								"canonicalForm": "genesen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -529,8 +526,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sein",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

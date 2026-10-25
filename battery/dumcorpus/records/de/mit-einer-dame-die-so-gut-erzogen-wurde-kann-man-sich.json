@@ -572,8 +572,7 @@
 								"kind": "VERB",
 								"canonicalForm": "aufziehen",
 								"coreFeatures": {
-									"hasSepPrefix": "auf",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "auf"
 								}
 							},
 							{
@@ -583,8 +582,7 @@
 								"kind": "VERB",
 								"canonicalForm": "großziehen",
 								"coreFeatures": {
-									"hasSepPrefix": "groß",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "groß"
 								}
 							}
 						]
@@ -615,8 +613,7 @@
 						"kind": "VERB",
 						"canonicalForm": "erziehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "erzogen wurde",
@@ -674,8 +671,7 @@
 						"kind": "VERB",
 						"canonicalForm": "können",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "kann",

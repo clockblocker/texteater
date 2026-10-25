@@ -33,8 +33,7 @@
 						"kind": "VERB",
 						"canonicalForm": "werden",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "wird",

@@ -82,7 +82,6 @@
 						"canonicalForm": "liefern",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},

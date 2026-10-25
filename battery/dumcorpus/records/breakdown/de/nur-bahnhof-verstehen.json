@@ -56,8 +56,7 @@
 						"kind": "VERB",
 						"canonicalForm": "verstehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				}

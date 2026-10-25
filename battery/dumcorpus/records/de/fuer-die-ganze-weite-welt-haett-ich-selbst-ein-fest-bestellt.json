@@ -66,8 +66,7 @@
 						"kind": "VERB",
 						"canonicalForm": "bestellen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "hätte bestellt",

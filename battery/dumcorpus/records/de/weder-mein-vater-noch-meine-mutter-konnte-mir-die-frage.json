@@ -381,8 +381,7 @@
 						"kind": "VERB",
 						"canonicalForm": "können",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "konnte",
@@ -534,8 +533,7 @@
 						"kind": "VERB",
 						"canonicalForm": "beantworten",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "beantworten",

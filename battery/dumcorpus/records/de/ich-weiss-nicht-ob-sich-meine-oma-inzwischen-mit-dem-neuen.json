@@ -239,8 +239,7 @@
 						"kind": "VERB",
 						"canonicalForm": "wissen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "weiß",

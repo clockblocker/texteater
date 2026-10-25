@@ -49,8 +49,7 @@
 						"kind": "VERB",
 						"canonicalForm": "hinausreichen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinaus",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "hinaus"
 						}
 					},
 					"normalizedSurface": "reicht hinaus",

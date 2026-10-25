@@ -380,30 +380,41 @@ describe("the German authored inventory", () => {
 		).toBe(false);
 	});
 
-	test("drills down from a reflexive to the reflexivity unit, never a case cell", () => {
-		const verb = (
-			canonicalForm: string,
-			lexicallyReflexive: "Acc" | "Dat" | null,
-		) =>
+	test("drills down from a Reading's Reflexive Slot to the reflexivity unit, never a case cell", () => {
+		const reading = (canonicalForm: string, emojiDescription: string) =>
 			({
-				unitKind: "Lemma",
-				language: "de",
-				family: "Lexeme",
-				kind: "VERB",
-				canonicalForm,
-				coreFeatures: {
-					hasSepPrefix: null,
-					lexicallyReflexive,
+				unitKind: "Reading",
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "VERB",
+					canonicalForm,
+					coreFeatures: { hasSepPrefix: null },
 				},
+				emojiDescription,
 			}) as const;
+		const frame = (governedCase: "Acc" | "Dat") => ({
+			valency: [
+				{
+					status: "Required" as const,
+					complements: [{ kind: "Reflexive" as const, governedCase }],
+				},
+			],
+		});
 		// er schämt sich takes the Acc, er bildet sich etwas ein the Dat.
-		for (const reflexive of [
-			verb("sich schämen", "Acc"),
-			verb("sich einbilden", "Dat"),
-		]) {
+		for (const [reflexive, knowledge] of [
+			[reading("schämen", "🪞😳"), frame("Acc")],
+			[reading("einbilden", "🪞💭"), frame("Dat")],
+		] as const) {
 			expect(parseUnit(reflexive).success).toBe(true);
-			expect(reflexiveDrillDown(reflexive)).toBe(reflexivityUnit);
+			expect(reflexiveDrillDown(reflexive, knowledge)).toBe(
+				reflexivityUnit,
+			);
 		}
-		expect(reflexiveDrillDown(verb("warten", null))).toBeUndefined();
+		expect(reflexiveDrillDown(reading("warten", "⏳"), {})).toBeUndefined();
+		expect(
+			reflexiveDrillDown(reading("warten", "⏳"), undefined),
+		).toBeUndefined();
 	});
 });

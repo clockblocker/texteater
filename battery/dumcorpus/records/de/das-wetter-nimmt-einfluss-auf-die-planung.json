@@ -96,8 +96,7 @@
 								"kind": "VERB",
 								"canonicalForm": "beeinflussen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

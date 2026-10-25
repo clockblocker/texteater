@@ -34,7 +34,6 @@ const KOCHEN = {
 	canonicalForm: "kochen",
 	coreFeatures: {
 		hasSepPrefix: null,
-		lexicallyReflexive: null,
 	},
 } as const satisfies Dumling.Lemma<"de">;
 const KOCHEN_READING = {
@@ -358,12 +357,13 @@ test("a stored verb with other Core Features is not the source", async () => {
 	const visitorId = "visitor-1";
 	const adjectiveId = await seedAdjective(t, visitorId);
 	expect(await publishSource(t)).toEqual({ status: "Committed" });
-	// Same Canonical Form and Kind, so the same Unit Shadow, but another Lemma.
+	// Same Canonical Form and Kind, so the same Unit Shadow, but another
+	// Lemma: its Core names a separable prefix.
 	await storeVerb(t, {
 		...KOCHEN_READING,
 		lemma: {
 			...KOCHEN,
-			coreFeatures: { ...KOCHEN.coreFeatures, lexicallyReflexive: "Acc" },
+			coreFeatures: { ...KOCHEN.coreFeatures, hasSepPrefix: "ko" },
 		},
 	});
 	const adjectiveNote = await t.query(api.readingNotes.get, {

@@ -16,7 +16,7 @@ import { makeSurfaceId } from "../../dumling-id";
  * articles and contractions, so a host that completes reviewed grammatical
  * members adds nothing beside them.
  */
-const verbFeatures = { lexicallyReflexive: null, hasSepPrefix: null };
+const verbFeatures = { hasSepPrefix: null };
 
 type Verb = Dumling.Lemma<"de", "Lexeme", "VERB">;
 
@@ -77,45 +77,46 @@ export const gehenSurfaceEntry: SurfaceEntry<"de"> = {
 };
 
 /** A synonym of `gehen` the dictionary does not hold yet. */
-export const schreitenPending = {
+export const durchlaufenPending = {
 	relation: "synonym",
 	target: {
 		language: "de",
-		canonicalForm: "schreiten",
+		canonicalForm: "durchlaufen",
 		family: "Lexeme",
 		kind: "VERB",
 	},
 } as const;
 
-export const schreiten = verbLemma("schreiten");
-export const schreitenReading = readingOf(schreiten, "🦶");
+export const durchlaufen = verbLemma("durchlaufen");
+export const durchlaufenReading = readingOf(durchlaufen, "🔁");
 
 /**
- * A second `schreiten` Lemma on the same route and Canonical Form, so a
- * `schreiten` Shadow matches two Lemmas once both are stored.
+ * A second `durchlaufen` Lemma on the same route and Canonical Form, the
+ * separable one ('seep through') beside 'pass through', so a `durchlaufen`
+ * Shadow matches two Lemmas once both are stored.
  */
-export const reflexiveSchreiten: Verb = {
-	...schreiten,
-	coreFeatures: { ...verbFeatures, lexicallyReflexive: "Acc" },
+export const separableDurchlaufen: Verb = {
+	...durchlaufen,
+	coreFeatures: { hasSepPrefix: "durch" },
 };
 
 export const gehenPendingRecord: PendingSemanticRelationRecord<"de"> =
-	createPendingSemanticRelationRecord(gehenReading, schreitenPending);
+	createPendingSemanticRelationRecord(gehenReading, durchlaufenPending);
 
 /** The same pending synonym, from `laufen`. */
 export const laufenPendingRecord: PendingSemanticRelationRecord<"de"> =
-	createPendingSemanticRelationRecord(laufenReading, schreitenPending);
+	createPendingSemanticRelationRecord(laufenReading, durchlaufenPending);
 
 /**
- * A pending synonym from `gehen` whose Shadow differs from the `schreiten`
+ * A pending synonym from `gehen` whose Shadow differs from the `durchlaufen`
  * Lemma only by kind, so creating that Lemma must not match it.
  */
 export const gehenNounPendingRecord: PendingSemanticRelationRecord<"de"> =
 	createPendingSemanticRelationRecord(gehenReading, {
 		relation: "synonym",
 		target: {
-			...schreitenPending.target,
-			canonicalForm: "Schreiten",
+			...durchlaufenPending.target,
+			canonicalForm: "Durchlaufen",
 			kind: "NOUN",
 		},
 	});
@@ -123,7 +124,7 @@ export const gehenNounPendingRecord: PendingSemanticRelationRecord<"de"> =
 /** A pending relation the suite never stores. */
 export const gehenUnstoredPendingRecord: PendingSemanticRelationRecord<"de"> =
 	createPendingSemanticRelationRecord(gehenReading, {
-		...schreitenPending,
+		...durchlaufenPending,
 		relation: "antonym",
 	});
 

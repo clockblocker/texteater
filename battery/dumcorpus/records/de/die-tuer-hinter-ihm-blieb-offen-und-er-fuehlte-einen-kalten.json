@@ -391,8 +391,7 @@
 						"kind": "VERB",
 						"canonicalForm": "bleiben",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "blieb",
@@ -612,8 +611,7 @@
 								"kind": "VERB",
 								"canonicalForm": "spüren",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -623,8 +621,7 @@
 								"kind": "VERB",
 								"canonicalForm": "verspüren",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						],
@@ -636,8 +633,7 @@
 								"kind": "VERB",
 								"canonicalForm": "empfinden",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -666,8 +662,7 @@
 						"kind": "VERB",
 						"canonicalForm": "fühlen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "fühlte",

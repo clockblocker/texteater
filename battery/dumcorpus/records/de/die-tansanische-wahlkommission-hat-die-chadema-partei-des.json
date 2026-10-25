@@ -69,8 +69,7 @@
 						"kind": "VERB",
 						"canonicalForm": "ausschließen",
 						"coreFeatures": {
-							"hasSepPrefix": "aus",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "aus"
 						}
 					},
 					"normalizedSurface": "hat ausgeschlossen",

@@ -165,8 +165,7 @@
 								"kind": "VERB",
 								"canonicalForm": "ersuchen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						],
@@ -178,8 +177,7 @@
 								"kind": "VERB",
 								"canonicalForm": "erbitten",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -189,8 +187,7 @@
 								"kind": "VERB",
 								"canonicalForm": "betteln",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -239,8 +236,7 @@
 						"kind": "VERB",
 						"canonicalForm": "bitten",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "wurde gebeten",

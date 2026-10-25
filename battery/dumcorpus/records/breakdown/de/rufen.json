@@ -9,8 +9,7 @@
 			"kind": "VERB",
 			"canonicalForm": "rufen",
 			"coreFeatures": {
-				"hasSepPrefix": null,
-				"lexicallyReflexive": null
+				"hasSepPrefix": null
 			}
 		},
 		"emojiDescription": "📣"

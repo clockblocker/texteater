@@ -39,7 +39,6 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"applyKnowledgeChange",
 		"applyKnowledgeChanges",
 		"applyParadigmChanges",
-		"breakdownWording",
 		"dimensionIdValues",
 		"directSemanticRelationValues",
 		"formulaRoleValues",

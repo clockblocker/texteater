@@ -1,11 +1,22 @@
 import { describe, expect, it } from "bun:test";
 import type * as Dumling from "dumling/types";
 
-import { cellsOf, pack, panels, selectionOf, verb } from "./support.js";
+import {
+	cellsOf,
+	pack,
+	panels,
+	type Reflexive,
+	selectionOf,
+	verb,
+} from "./support.js";
 
 type Core = Parameters<typeof verb>[1];
-const weakly = (infinitive: string, preterite: string, core: Core = {}) =>
-	panels(verb(infinitive, core), { preterite: [preterite] });
+const weakly = (
+	infinitive: string,
+	preterite: string,
+	core: Core = {},
+	reflexive?: Reflexive,
+) => panels(verb(infinitive, core), { preterite: [preterite] }, reflexive);
 
 /**
  * The principal parts texteater#1218 stores, now Paradigm Variants, as
@@ -41,6 +52,7 @@ describe("verbs with licensed principal parts", () => {
 			lemma,
 			schema,
 			selection: selectionOf(lemma, fahren),
+			readings: [],
 		});
 		const at = (bundle: Record<string, string>) =>
 			Object.entries(table).find(
@@ -202,15 +214,19 @@ describe("verbs with licensed principal parts", () => {
 		});
 	});
 
-	it("places a reflexive in the licensed finite forms", () => {
+	it("places the Reflexive Slot's reflexive in the licensed finite forms", () => {
 		expect(
-			panels(verb("sich erinnern", { lexicallyReflexive: "Acc" }), {
-				pastParticiple: ["erinnert"],
-				present1: ["erinnere"],
-				present2: ["erinnerst"],
-				present3: ["erinnert"],
-				subjunctivePast: ["erinnerte"],
-			}),
+			panels(
+				verb("erinnern"),
+				{
+					pastParticiple: ["erinnert"],
+					present1: ["erinnere"],
+					present2: ["erinnerst"],
+					present3: ["erinnert"],
+					subjunctivePast: ["erinnerte"],
+				},
+				"Acc",
+			),
 		).toMatchObject({
 			"Konjunktiv II":
 				"ich erinnerte mich, du erinnertest dich, er erinnerte sich, wir erinnerten uns, ihr erinnertet euch, sie erinnerten sich",
@@ -318,9 +334,8 @@ describe("weak stems", () => {
 	});
 
 	it("a Dat reflexive", () => {
-		expect(
-			weakly("sich merken", "merkte", { lexicallyReflexive: "Dat" })
-				.Imperativ,
-		).toBe("merk dir, merkt euch");
+		expect(weakly("merken", "merkte", {}, "Dat").Imperativ).toBe(
+			"merk dir, merkt euch",
+		);
 	});
 });

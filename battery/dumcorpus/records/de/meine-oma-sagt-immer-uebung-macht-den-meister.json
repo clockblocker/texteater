@@ -215,8 +215,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sagen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "sagt",

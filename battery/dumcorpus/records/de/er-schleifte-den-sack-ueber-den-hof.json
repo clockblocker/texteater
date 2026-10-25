@@ -156,8 +156,7 @@
 						"kind": "VERB",
 						"canonicalForm": "schleifen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

@@ -38,8 +38,7 @@
 						"kind": "VERB",
 						"canonicalForm": "regnen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "regnet es",

@@ -622,8 +622,7 @@
 						"kind": "VERB",
 						"canonicalForm": "liegen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "liegen",
@@ -712,8 +711,7 @@
 						"kind": "VERB",
 						"canonicalForm": "mögen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "mag",
@@ -858,8 +856,7 @@
 						"kind": "VERB",
 						"canonicalForm": "müssen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "müssen",
@@ -1146,8 +1143,7 @@
 						"kind": "VERB",
 						"canonicalForm": "machen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "machen",
@@ -1514,8 +1510,7 @@
 						"kind": "VERB",
 						"canonicalForm": "wollen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "willst",

@@ -192,8 +192,7 @@
 							"kind": "VERB",
 							"canonicalForm": "einzeichnen",
 							"coreFeatures": {
-								"hasSepPrefix": "ein",
-								"lexicallyReflexive": null
+								"hasSepPrefix": "ein"
 							}
 						},
 						"meaning": "Verbal"

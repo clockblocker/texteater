@@ -595,8 +595,7 @@
 						"kind": "VERB",
 						"canonicalForm": "erwachen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "erwachte",
@@ -668,8 +667,7 @@
 								"kind": "VERB",
 								"canonicalForm": "entdecken",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -679,8 +677,7 @@
 								"kind": "VERB",
 								"canonicalForm": "auffinden",
 								"coreFeatures": {
-									"hasSepPrefix": "auf",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "auf"
 								}
 							},
 							{
@@ -690,8 +687,7 @@
 								"kind": "VERB",
 								"canonicalForm": "vorfinden",
 								"coreFeatures": {
-									"hasSepPrefix": "vor",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "vor"
 								}
 							}
 						]
@@ -720,8 +716,7 @@
 						"kind": "VERB",
 						"canonicalForm": "finden",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "fand",
@@ -1141,8 +1136,7 @@
 							"kind": "VERB",
 							"canonicalForm": "verwandeln",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"

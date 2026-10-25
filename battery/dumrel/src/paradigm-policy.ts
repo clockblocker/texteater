@@ -41,7 +41,7 @@ function separablePrefixOf(lemma: Dumling.Lemma): string | undefined {
 /**
  * Why a German finite form is not one a dictionary cites, or undefined: one
  * word, or a separable verb's finite word and its particle split off (`stand
- * auf`), never `sich`, its finite word ending as `ending` requires.
+ * auf`), its finite word ending as `ending` requires.
  */
 function finiteFormIssue(
 	name: string,
@@ -51,7 +51,7 @@ function finiteFormIssue(
 		const particle = separablePrefixOf(lemma);
 		const words = foldCase(form, "de").split(" ");
 		const fits =
-			words.every((word) => /^\S+$/u.test(word) && word !== "sich") &&
+			words.every((word) => /^\S+$/u.test(word)) &&
 			(particle === undefined
 				? words.length === 1
 				: words.length === 2 && words[1] === particle);
@@ -67,7 +67,7 @@ function finiteFormIssue(
 /**
  * Why a Partizip II is not one a dictionary cites, or undefined: one word
  * ending in -t or -n, a separable verb's opening with its particle
- * (`abgefahren`), never `sich`.
+ * (`abgefahren`).
  */
 function participleIssue(
 	form: string,

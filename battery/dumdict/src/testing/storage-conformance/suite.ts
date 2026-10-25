@@ -7,6 +7,8 @@ import {
 	createPending,
 	createReading,
 	deletePending,
+	durchlaufen,
+	durchlaufenPending,
 	gehen,
 	gehenPendingRecord,
 	gehenReading,
@@ -17,8 +19,6 @@ import {
 	laufenReading,
 	patchKnowledge,
 	readingEntry,
-	schreiten,
-	schreitenPending,
 	springen,
 } from "./fixtures";
 import {
@@ -237,7 +237,7 @@ export function describeStorageConformance(
 					{
 						kind: "Correct",
 						aspect: "definition",
-						value: "schreiten",
+						value: "durchlaufen",
 					},
 					{
 						kind: "Correct",
@@ -248,7 +248,7 @@ export function describeStorageConformance(
 				]),
 			]);
 			expect(await knowledgeOf(storage, gehenReading)).toEqual({
-				definition: "schreiten",
+				definition: "durchlaufen",
 				semanticRelations: { synonym: [springen, laufen] },
 			});
 
@@ -315,16 +315,20 @@ export function describeStorageConformance(
 			]);
 
 			await seed(storage, [createPending(gehenPendingRecord)]);
-			expect(await exactPending(storage, [schreitenPending])).toEqual([
+			expect(await exactPending(storage, [durchlaufenPending])).toEqual([
 				gehenPendingRecord,
 			]);
-			expect(await pendingMatchingLemma(storage, schreiten)).toEqual([
+			expect(await pendingMatchingLemma(storage, durchlaufen)).toEqual([
 				gehenPendingRecord,
 			]);
 
 			await seed(storage, [deletePending(gehenPendingRecord)]);
-			expect(await exactPending(storage, [schreitenPending])).toEqual([]);
-			expect(await pendingMatchingLemma(storage, schreiten)).toEqual([]);
+			expect(await exactPending(storage, [durchlaufenPending])).toEqual(
+				[],
+			);
+			expect(await pendingMatchingLemma(storage, durchlaufen)).toEqual(
+				[],
+			);
 		});
 
 		test("checks pending-relation and Surface preconditions", async () => {
@@ -361,7 +365,7 @@ export function describeStorageConformance(
 					},
 				]),
 			).toMatchObject({ status: "committed" });
-			expect(await exactPending(storage, [schreitenPending])).toEqual([
+			expect(await exactPending(storage, [durchlaufenPending])).toEqual([
 				gehenPendingRecord,
 			]);
 		});

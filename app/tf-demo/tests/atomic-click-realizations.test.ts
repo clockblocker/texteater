@@ -79,7 +79,6 @@ test("subject es materializes its exact Reading and Knowledge while retaining on
 		canonicalForm: "geben",
 		coreFeatures: {
 			hasSepPrefix: null,
-			lexicallyReflexive: null,
 		},
 	} as const;
 	const verbReading = {

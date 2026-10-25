@@ -65,8 +65,7 @@
 						"kind": "VERB",
 						"canonicalForm": "hinausgehen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinaus",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "hinaus"
 						}
 					},
 					"normalizedSurface": "geh hinaus",

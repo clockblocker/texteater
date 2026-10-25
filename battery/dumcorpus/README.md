@@ -122,14 +122,17 @@ Surface brings.
   comparable ADJ or ADV, or a declining DET or PRON stem, with its core
   panels: the declension; Präsens, Präteritum, Konjunktiv II and Partizip II;
   the comparison. Konjunktiv I and Imperativ are not core.
-- `derive({ lemma, selection, schema })`: one Licence Group's forms from the
-  Paradigm Variants it licenses (`Variant`), the German rules (`Rule`) and
-  the Authored Inventory's closed tables and suppletive comparisons
-  (`Authored`). A cell in doubt is left out, never guessed.
+- `derive({ lemma, selection, schema, readings })`: one Licence Group's
+  forms from the Paradigm Variants it licenses (`Variant`), the German rules
+  (`Rule`) and the Authored Inventory's closed tables and suppletive
+  comparisons (`Authored`). A cell in doubt is left out, never guessed. A
+  verb whose group's Readings all have a Required Reflexive Slot of one case
+  shows the person's reflexive beside its finite forms.
 - The forms are `GermanWordForm` (`der Tag`, the article as Context) and
   `GermanVerbForm`, whose pronoun, finite word, reflexive, other words and
-  split-off particle stay apart: `display` shows `er fährt … ab` and `hat
-  gefahren`.
+  split-off particle stay apart: `display` shows `er fährt … ab`, `hat
+  gefahren` and `er erinnert sich`, the pronoun and reflexive as Context and
+  out of the form's key.
 - `labels`: `N`, `A`, `G`, `D`, `Sg`, `Pl`, `Präsens`, `Konjunktiv II`,
   `Partizip II`, and list-line bundles such as `Dat.Pl`.
 

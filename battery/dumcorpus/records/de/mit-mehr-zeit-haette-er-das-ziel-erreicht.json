@@ -74,8 +74,7 @@
 						"kind": "VERB",
 						"canonicalForm": "erreichen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

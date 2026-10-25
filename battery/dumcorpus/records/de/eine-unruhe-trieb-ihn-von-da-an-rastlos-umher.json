@@ -221,8 +221,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "umher",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "umher"
 						}
 					},
 					"surfaceFeatures": null

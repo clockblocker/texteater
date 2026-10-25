@@ -105,9 +105,10 @@ test("a Typo jev finds makes Luna write again with jev's answers, and the guesse
 	]);
 });
 
-test("a verb headword written on the guess with a sich or a prefix jev judged away is written again", async () => {
-	// Er0 _1 wäscht2 _3 sich4 .5: sich stays outside the unit.
-	const washes = writesOnGuess("sich waschen", "waschen");
+test("a verb headword written on the guess with a prefix jev judged away is written again, and a sich dropped", async () => {
+	// Er0 _1 wäscht2 _3 sich4 .5: sich stays outside the unit, and no
+	// Canonical Form holds one (ADR 0052).
+	const washes = writesOnGuess("sich waschen", "never asked");
 	const wash = await resolveOnce(
 		{ jev: fakeJev().ask, luna: washes.ask },
 		{
@@ -116,12 +117,7 @@ test("a verb headword written on the guess with a sich or a prefix jev judged aw
 		},
 	);
 	expect(attested(wash.result).surface.lemma.canonicalForm).toBe("waschen");
-	expect(wash.trace?.events).toEqual([
-		{
-			name: "CanonicalRewritten",
-			data: { reason: "jev judged the verb not lexically reflexive" },
-		},
-	]);
+	expect(wash.trace?.events).toBeUndefined();
 	// Sie0 _1 zankt2 _3 sich4 _5 mit6 _7 ihm8 .9
 	const quarrels = writesOnGuess("sich mitzanken", "sich zanken");
 	const quarrel = await resolveOnce(
@@ -138,16 +134,14 @@ test("a verb headword written on the guess with a sich or a prefix jev judged aw
 			unit: unitOf([2, 4, 6], "Lexeme/VERB"),
 		},
 	);
-	expect(attested(quarrel.result).surface.lemma.canonicalForm).toBe(
-		"sich zanken",
-	);
+	expect(attested(quarrel.result).surface.lemma.canonicalForm).toBe("zanken");
 	expect(quarrel.trace?.events).toEqual([
 		{
 			name: "CanonicalRewritten",
 			data: { reason: "jev judged the verb without a separable prefix" },
 		},
 	]);
-	// A guess that already fits stands: sich zanken is lexically reflexive.
+	// A guess that already fits stands, its sich dropped.
 	const fits = writesOnGuess("sich zanken", "never asked");
 	await resolveOnce(
 		{

@@ -65,8 +65,7 @@
 							"kind": "VERB",
 							"canonicalForm": "schweigen",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"

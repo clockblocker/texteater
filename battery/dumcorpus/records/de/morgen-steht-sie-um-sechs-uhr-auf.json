@@ -76,7 +76,6 @@
 						"canonicalForm": "aufstehen",
 						"coreFeatures": {
 							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},

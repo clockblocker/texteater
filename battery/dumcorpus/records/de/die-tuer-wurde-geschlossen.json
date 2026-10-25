@@ -45,8 +45,7 @@
 						"kind": "VERB",
 						"canonicalForm": "schließen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "wurde geschlossen",

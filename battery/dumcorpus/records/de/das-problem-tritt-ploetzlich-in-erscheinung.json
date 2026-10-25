@@ -91,8 +91,7 @@
 								"kind": "VERB",
 								"canonicalForm": "erscheinen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

@@ -74,8 +74,7 @@
 								"kind": "VERB",
 								"canonicalForm": "aufklären",
 								"coreFeatures": {
-									"hasSepPrefix": "auf",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "auf"
 								}
 							},
 							{
@@ -85,8 +84,7 @@
 								"kind": "VERB",
 								"canonicalForm": "klären",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

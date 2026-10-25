@@ -29,7 +29,7 @@ const gehtEs = {
 		family: "Lexeme",
 		kind: "VERB",
 		canonicalForm: "gehen",
-		coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+		coreFeatures: { hasSepPrefix: null },
 	},
 	inflectionalFeatures: {
 		verbForm: "Fin",

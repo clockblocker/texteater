@@ -80,8 +80,7 @@
 						"kind": "VERB",
 						"canonicalForm": "dürfen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "darf",
@@ -165,8 +164,7 @@
 						"kind": "VERB",
 						"canonicalForm": "bitten",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "bitten",

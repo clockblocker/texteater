@@ -56,8 +56,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sein",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				},

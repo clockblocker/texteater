@@ -80,8 +80,7 @@
 								"kind": "VERB",
 								"canonicalForm": "anmelden",
 								"coreFeatures": {
-									"hasSepPrefix": "an",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "an"
 								}
 							}
 						]

@@ -9,8 +9,7 @@
 			"kind": "VERB",
 			"canonicalForm": "mitnehmen",
 			"coreFeatures": {
-				"hasSepPrefix": "mit",
-				"lexicallyReflexive": null
+				"hasSepPrefix": "mit"
 			}
 		},
 		"emojiDescription": "🧳"
@@ -36,8 +35,7 @@
 						"kind": "VERB",
 						"canonicalForm": "nehmen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				}

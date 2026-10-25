@@ -9,8 +9,7 @@
 			"kind": "VERB",
 			"canonicalForm": "abfallen",
 			"coreFeatures": {
-				"hasSepPrefix": "ab",
-				"lexicallyReflexive": null
+				"hasSepPrefix": "ab"
 			}
 		},
 		"emojiDescription": "🍂"
@@ -36,8 +35,7 @@
 						"kind": "VERB",
 						"canonicalForm": "fallen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				}

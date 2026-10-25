@@ -39,7 +39,7 @@ describe("Reading renderer inference", () => {
 				project,
 			}),
 		).toMatchInlineSnapshot(
-			`"type GermanVerbReadingNoteIdentity = { lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasSepPrefix: string | null; lexicallyReflexive: "Acc" | "Dat" | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<"lemmas">; }; unitKind: "Reading"; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
+			`"type GermanVerbReadingNoteIdentity = { lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasSepPrefix: string | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<"lemmas">; }; unitKind: "Reading"; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
 		);
 	}, 30_000);
 
@@ -52,7 +52,7 @@ describe("Reading renderer inference", () => {
 				project,
 			}),
 		).toMatchInlineSnapshot(
-			`"type GermanVerbRendererReading = { lemma: { language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasSepPrefix: string | null; lexicallyReflexive: "Acc" | "Dat" | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<...>; }; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<...>; }"`,
+			`"type GermanVerbRendererReading = { lemma: { language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasSepPrefix: string | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<"lemmas">; }; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<...>; }"`,
 		);
 	}, 30_000);
 
@@ -65,7 +65,7 @@ describe("Reading renderer inference", () => {
 				project,
 			}),
 		).toMatchInlineSnapshot(
-			`"type GermanVerbRendererReading = { lemma: { language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasSepPrefix: string | null; lexicallyReflexive: "Acc" | "Dat" | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<"lemmas">; }; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
+			`"type GermanVerbRendererReading = { lemma: { language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasSepPrefix: string | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<"lemmas">; }; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
 		);
 	}, 30_000);
 });

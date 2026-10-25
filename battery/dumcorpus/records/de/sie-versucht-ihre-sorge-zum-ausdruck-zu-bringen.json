@@ -88,8 +88,7 @@
 								"kind": "VERB",
 								"canonicalForm": "vermitteln",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

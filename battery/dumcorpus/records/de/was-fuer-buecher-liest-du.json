@@ -170,8 +170,7 @@
 						"kind": "VERB",
 						"canonicalForm": "lesen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "liest",

@@ -47,7 +47,7 @@ const ENTSPANNEN = {
 		family: "Lexeme",
 		kind: "VERB",
 		canonicalForm: "entspannen",
-		coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+		coreFeatures: { hasSepPrefix: null },
 	},
 	emojiDescription: "😌",
 } as const satisfies Dumling.Reading<"de">;

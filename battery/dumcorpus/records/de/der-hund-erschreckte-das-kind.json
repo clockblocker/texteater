@@ -140,8 +140,7 @@
 						"kind": "VERB",
 						"canonicalForm": "erschrecken",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

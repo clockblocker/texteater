@@ -20,7 +20,6 @@ const surface = {
 		canonicalForm: "regnen",
 		coreFeatures: {
 			hasSepPrefix: null,
-			lexicallyReflexive: null,
 		},
 	},
 	inflectionalFeatures: {

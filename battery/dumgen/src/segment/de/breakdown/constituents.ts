@@ -38,7 +38,6 @@
  */
 import type { Questions } from "@typesafe-ai/sdk";
 import { germanSuffixes } from "dumcorpus/inventories";
-import { breakdownWording } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import {
@@ -290,8 +289,7 @@ const wordConstituents = Effect.fnUntraced(function* (
 ): Effect.fn.Return<Constituents, AskFailure> {
 	const { lemma } = input.reading;
 	const { kind, coreFeatures } = lemma;
-	// A lexically reflexive verb breaks down as its word (`erinnern`).
-	const canonicalForm = breakdownWording(lemma);
+	const { canonicalForm } = lemma;
 	const whole = wholeOf(input, "word");
 	const candidates = wordAnalyses(canonicalForm, kind);
 	const gender = "gender" in coreFeatures ? coreFeatures.gender : undefined;

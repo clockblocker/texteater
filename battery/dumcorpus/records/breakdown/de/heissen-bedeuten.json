@@ -9,8 +9,7 @@
 			"kind": "VERB",
 			"canonicalForm": "heißen",
 			"coreFeatures": {
-				"hasSepPrefix": null,
-				"lexicallyReflexive": null
+				"hasSepPrefix": null
 			}
 		},
 		"emojiDescription": "💬"

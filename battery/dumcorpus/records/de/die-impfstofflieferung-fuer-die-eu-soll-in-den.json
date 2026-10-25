@@ -83,8 +83,7 @@
 						"kind": "VERB",
 						"canonicalForm": "herstellen",
 						"coreFeatures": {
-							"hasSepPrefix": "her",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "her"
 						}
 					},
 					"normalizedSurface": "hergestellt werden",

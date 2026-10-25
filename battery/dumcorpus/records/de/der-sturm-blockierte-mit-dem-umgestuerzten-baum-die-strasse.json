@@ -59,8 +59,7 @@
 							"kind": "VERB",
 							"canonicalForm": "umstürzen",
 							"coreFeatures": {
-								"hasSepPrefix": "um",
-								"lexicallyReflexive": null
+								"hasSepPrefix": "um"
 							}
 						},
 						"meaning": "Verbal"

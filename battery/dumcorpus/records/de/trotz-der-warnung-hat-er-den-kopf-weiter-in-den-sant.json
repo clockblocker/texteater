@@ -89,8 +89,7 @@
 								"kind": "VERB",
 								"canonicalForm": "wegsehen",
 								"coreFeatures": {
-									"hasSepPrefix": "weg",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "weg"
 								}
 							},
 							{
@@ -100,8 +99,7 @@
 								"kind": "VERB",
 								"canonicalForm": "ignorieren",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						],

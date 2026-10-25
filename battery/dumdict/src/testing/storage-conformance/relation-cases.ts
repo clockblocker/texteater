@@ -7,6 +7,9 @@ import {
 	createPending,
 	createReading,
 	deletePending,
+	durchlaufen,
+	durchlaufenPending,
+	durchlaufenReading,
 	gehen,
 	gehenNounPendingRecord,
 	gehenPendingRecord,
@@ -16,10 +19,7 @@ import {
 	laufenPendingRecord,
 	laufenReading,
 	readingEntry,
-	reflexiveSchreiten,
-	schreiten,
-	schreitenPending,
-	schreitenReading,
+	separableDurchlaufen,
 	springen,
 } from "./fixtures";
 import {
@@ -41,14 +41,14 @@ const planner = createDumdictPlanner("de");
 
 /** Every Lemma and Reading the relation cases store. */
 const dictionary = {
-	lemmas: [gehen, laufen, springen, schreiten, reflexiveSchreiten],
-	readings: [gehenReading, laufenReading, schreitenReading],
+	lemmas: [gehen, laufen, springen, durchlaufen, separableDurchlaufen],
+	readings: [gehenReading, laufenReading, durchlaufenReading],
 };
 
 const stored = (storage: ConformanceStorage) =>
 	storedInventory(storage, dictionary.lemmas, dictionary.readings);
 
-/** `gehen` with a synonym pending on a `schreiten` the store does not hold. */
+/** `gehen` with a synonym pending on a `durchlaufen` the store does not hold. */
 const pendingGehen = [
 	createLemma(gehen),
 	createReading(readingEntry(gehenReading)),
@@ -74,9 +74,9 @@ async function cleanup(
 	return { slice, outcome };
 }
 
-const schreitenNote: AddNewNoteRequest<"de"> = {
+const durchlaufenNote: AddNewNoteRequest<"de"> = {
 	draft: {
-		reading: schreitenReading,
+		reading: durchlaufenReading,
 		note: {
 			attestedTranslations: ["stride"],
 			attestationLinks: [],
@@ -85,16 +85,16 @@ const schreitenNote: AddNewNoteRequest<"de"> = {
 	},
 };
 
-async function addSchreitenNote(storage: ConformanceStorage) {
+async function addDurchlaufenNote(storage: ConformanceStorage) {
 	const context = await storage.loadReadingEntryContext(
 		planner.contextRequest({
 			intent: "addNewNote",
-			request: schreitenNote,
+			request: durchlaufenNote,
 		}),
 	);
 	if (context.intent !== "addNewNote")
 		throw new Error("Expected an addNewNote context.");
-	return { context, outcome: planner.addNewNote(context, schreitenNote) };
+	return { context, outcome: planner.addNewNote(context, durchlaufenNote) };
 }
 
 /**
@@ -114,14 +114,14 @@ export function describeRelationConformance(
 			...pendingGehen,
 			...unrelatedLaufen,
 			createPending(laufenPendingRecord),
-			createLemma(schreiten),
+			createLemma(durchlaufen),
 		]);
 		const before = await stored(storage);
 
 		const { slice, outcome } = await cleanup(storage);
 		expect(slice.pendingRelations).toEqual([gehenPendingRecord]);
 		expectBoundedInventory(slice, before, {
-			lemmas: [gehen, schreiten],
+			lemmas: [gehen, durchlaufen],
 			readings: [gehenReading],
 		});
 		expect(await commitPlan(storage, outcome)).toMatchObject({
@@ -129,14 +129,14 @@ export function describeRelationConformance(
 		});
 
 		expect(await knowledgeOf(storage, gehenReading)).toEqual({
-			semanticRelations: { synonym: [schreiten] },
+			semanticRelations: { synonym: [durchlaufen] },
 		});
 		// The resolved relation keeps its Shadow beside its resolution.
-		expect(await exactPending(storage, [schreitenPending])).toEqual([
-			resolvedTo(gehenPendingRecord, schreiten),
+		expect(await exactPending(storage, [durchlaufenPending])).toEqual([
+			resolvedTo(gehenPendingRecord, durchlaufen),
 		]);
-		expectSameRecords(await pendingMatchingLemma(storage, schreiten), [
-			resolvedTo(gehenPendingRecord, schreiten),
+		expectSameRecords(await pendingMatchingLemma(storage, durchlaufen), [
+			resolvedTo(gehenPendingRecord, durchlaufen),
 			laufenPendingRecord,
 		]);
 	});
@@ -147,7 +147,7 @@ export function describeRelationConformance(
 			...pendingGehen,
 			...unrelatedLaufen,
 			createPending(laufenPendingRecord),
-			createLemma(schreiten),
+			createLemma(durchlaufen),
 		]);
 		const before = await stored(storage);
 
@@ -160,7 +160,7 @@ export function describeRelationConformance(
 			expect.arrayContaining([gehenPendingRecord, laufenPendingRecord]),
 		);
 		expectBoundedInventory(slice, before, {
-			lemmas: [gehen, laufen, schreiten],
+			lemmas: [gehen, laufen, durchlaufen],
 			readings: [gehenReading, laufenReading],
 		});
 		expect(await commitPlan(storage, outcome)).toMatchObject({
@@ -169,11 +169,11 @@ export function describeRelationConformance(
 
 		for (const reading of [gehenReading, laufenReading])
 			expect(await knowledgeOf(storage, reading)).toEqual({
-				semanticRelations: { synonym: [schreiten] },
+				semanticRelations: { synonym: [durchlaufen] },
 			});
-		expectSameRecords(await pendingMatchingLemma(storage, schreiten), [
-			resolvedTo(gehenPendingRecord, schreiten),
-			resolvedTo(laufenPendingRecord, schreiten),
+		expectSameRecords(await pendingMatchingLemma(storage, durchlaufen), [
+			resolvedTo(gehenPendingRecord, durchlaufen),
+			resolvedTo(laufenPendingRecord, durchlaufen),
 		]);
 	});
 
@@ -191,17 +191,17 @@ export function describeRelationConformance(
 				status: "committed",
 			});
 			expect(await knowledgeOf(storage, gehenReading)).toBeUndefined();
-			expect(await exactPending(storage, [schreitenPending])).toEqual([
+			expect(await exactPending(storage, [durchlaufenPending])).toEqual([
 				gehenPendingRecord,
 			]);
 		};
 
 		await unresolved([gehen]);
 		await seed(storage, [
-			createLemma(schreiten),
-			createLemma(reflexiveSchreiten),
+			createLemma(durchlaufen),
+			createLemma(separableDurchlaufen),
 		]);
-		await unresolved([gehen, schreiten, reflexiveSchreiten]);
+		await unresolved([gehen, durchlaufen, separableDurchlaufen]);
 	});
 
 	test("cleanup of a pending relation the store does not hold conflicts", async () => {
@@ -220,7 +220,7 @@ export function describeRelationConformance(
 
 	test("a cleanup plan whose pending relation is gone commits nothing", async () => {
 		const storage = await createStorage();
-		await seed(storage, [...pendingGehen, createLemma(schreiten)]);
+		await seed(storage, [...pendingGehen, createLemma(durchlaufen)]);
 		const { outcome } = await cleanup(storage);
 		await seed(storage, [deletePending(gehenPendingRecord)]);
 
@@ -250,7 +250,7 @@ export function describeRelationConformance(
 		]);
 		const before = await stored(storage);
 
-		const { context, outcome } = await addSchreitenNote(storage);
+		const { context, outcome } = await addDurchlaufenNote(storage);
 		expect(context.pendingRelationsMatchingProposedLemma).toEqual([
 			gehenPendingRecord,
 		]);
@@ -263,13 +263,13 @@ export function describeRelationConformance(
 		});
 
 		expect(
-			(await readingContext(storage, schreitenReading)).existingReading,
-		).toEqual(readingEntry(schreitenReading, schreitenNote.draft.note));
+			(await readingContext(storage, durchlaufenReading)).existingReading,
+		).toEqual(readingEntry(durchlaufenReading, durchlaufenNote.draft.note));
 		expect(await knowledgeOf(storage, gehenReading)).toEqual({
-			semanticRelations: { antonym: [springen], synonym: [schreiten] },
+			semanticRelations: { antonym: [springen], synonym: [durchlaufen] },
 		});
-		expect(await pendingMatchingLemma(storage, schreiten)).toEqual([
-			resolvedTo(gehenPendingRecord, schreiten),
+		expect(await pendingMatchingLemma(storage, durchlaufen)).toEqual([
+			resolvedTo(gehenPendingRecord, durchlaufen),
 		]);
 		expect(
 			await exactPending(storage, [gehenNounPendingRecord.pending]),
@@ -278,12 +278,15 @@ export function describeRelationConformance(
 
 	test("creating a Lemma beside another the Shadow names keeps its pending relations", async () => {
 		const storage = await createStorage();
-		await seed(storage, [...pendingGehen, createLemma(reflexiveSchreiten)]);
+		await seed(storage, [
+			...pendingGehen,
+			createLemma(separableDurchlaufen),
+		]);
 		const before = await stored(storage);
 
-		const { context, outcome } = await addSchreitenNote(storage);
+		const { context, outcome } = await addDurchlaufenNote(storage);
 		expectBoundedInventory(context, before, {
-			lemmas: [gehen, reflexiveSchreiten],
+			lemmas: [gehen, separableDurchlaufen],
 			readings: [gehenReading],
 		});
 		expect(await commitPlan(storage, outcome)).toMatchObject({
@@ -291,7 +294,7 @@ export function describeRelationConformance(
 		});
 
 		expect(await knowledgeOf(storage, gehenReading)).toBeUndefined();
-		expect(await pendingMatchingLemma(storage, schreiten)).toEqual([
+		expect(await pendingMatchingLemma(storage, durchlaufen)).toEqual([
 			gehenPendingRecord,
 		]);
 	});
@@ -301,7 +304,7 @@ export function describeRelationConformance(
 		await seed(storage, [
 			...unrelatedLaufen,
 			createLemma(springen),
-			createLemma(schreiten),
+			createLemma(durchlaufen),
 			createLemma(gehen),
 			createReading(
 				readingEntry(gehenReading, {
@@ -319,7 +322,7 @@ export function describeRelationConformance(
 					value: "sich zu Fuß fortbewegen",
 				},
 			],
-			pendingRelations: [schreitenPending],
+			pendingRelations: [durchlaufenPending],
 		} as const;
 
 		const context = await storage.loadReadingEntryContext(
@@ -331,7 +334,7 @@ export function describeRelationConformance(
 		if (context.intent !== "applyGeneratedKnowledge")
 			throw new Error("Expected an applyGeneratedKnowledge context.");
 		expectBoundedInventory(context, before, {
-			lemmas: [gehen, springen, schreiten],
+			lemmas: [gehen, springen, durchlaufen],
 			readings: [gehenReading],
 		});
 		expect(
@@ -343,10 +346,10 @@ export function describeRelationConformance(
 
 		expect(await knowledgeOf(storage, gehenReading)).toEqual({
 			definition: "sich zu Fuß fortbewegen",
-			semanticRelations: { antonym: [springen], synonym: [schreiten] },
+			semanticRelations: { antonym: [springen], synonym: [durchlaufen] },
 		});
-		expect(await exactPending(storage, [schreitenPending])).toEqual([
-			resolvedTo(gehenPendingRecord, schreiten),
+		expect(await exactPending(storage, [durchlaufenPending])).toEqual([
+			resolvedTo(gehenPendingRecord, durchlaufen),
 		]);
 	});
 }

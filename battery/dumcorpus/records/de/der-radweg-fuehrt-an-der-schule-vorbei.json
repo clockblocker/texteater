@@ -49,8 +49,7 @@
 						"kind": "VERB",
 						"canonicalForm": "vorbeiführen",
 						"coreFeatures": {
-							"hasSepPrefix": "vorbei",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "vorbei"
 						}
 					},
 					"normalizedSurface": "führt vorbei",

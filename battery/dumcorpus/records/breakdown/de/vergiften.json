@@ -9,8 +9,7 @@
 			"kind": "VERB",
 			"canonicalForm": "vergiften",
 			"coreFeatures": {
-				"hasSepPrefix": null,
-				"lexicallyReflexive": null
+				"hasSepPrefix": null
 			}
 		},
 		"emojiDescription": "☠"
@@ -36,8 +35,7 @@
 						"kind": "VERB",
 						"canonicalForm": "giften",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				}

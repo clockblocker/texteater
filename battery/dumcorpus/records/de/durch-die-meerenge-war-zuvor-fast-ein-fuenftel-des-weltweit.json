@@ -55,8 +55,7 @@
 						"kind": "VERB",
 						"canonicalForm": "verschiffen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "war verschifft worden",

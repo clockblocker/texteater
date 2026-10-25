@@ -73,7 +73,7 @@ test("a Weak Präteritum's Konjunktiv II is itself, and a Strong one's never is"
 		family: "Lexeme",
 		kind: "VERB",
 		canonicalForm: "melken",
-		coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+		coreFeatures: { hasSepPrefix: null },
 	} as const;
 	expect(
 		germanSelectionIssues(lemma, {

@@ -177,7 +177,6 @@ describe("Shadow presentation", () => {
 				kind: "VERB",
 				canonicalForm: "gehen",
 				coreFeatures: {
-					lexicallyReflexive: null,
 					hasSepPrefix: null,
 				},
 			},

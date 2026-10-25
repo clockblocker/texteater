@@ -54,8 +54,7 @@
 						"kind": "VERB",
 						"canonicalForm": "ziehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				}

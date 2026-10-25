@@ -81,8 +81,7 @@
 								"kind": "VERB",
 								"canonicalForm": "aufgeben",
 								"coreFeatures": {
-									"hasSepPrefix": "auf",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "auf"
 								}
 							},
 							{
@@ -92,8 +91,7 @@
 								"kind": "VERB",
 								"canonicalForm": "resignieren",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

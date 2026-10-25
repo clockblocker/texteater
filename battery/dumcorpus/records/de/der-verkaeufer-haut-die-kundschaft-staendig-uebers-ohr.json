@@ -85,8 +85,7 @@
 								"kind": "VERB",
 								"canonicalForm": "betrügen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -96,8 +95,7 @@
 								"kind": "VERB",
 								"canonicalForm": "hereinlegen",
 								"coreFeatures": {
-									"hasSepPrefix": "herein",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "herein"
 								}
 							}
 						]

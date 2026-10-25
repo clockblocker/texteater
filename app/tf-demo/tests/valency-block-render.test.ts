@@ -21,7 +21,7 @@ const verb = (canonicalForm: string, hasSepPrefix: string | null): Lemma => ({
 	family: "Lexeme",
 	kind: "VERB",
 	canonicalForm,
-	coreFeatures: { lexicallyReflexive: null, hasSepPrefix },
+	coreFeatures: { hasSepPrefix },
 });
 type GermanPreposition = Extract<
 	Extract<
@@ -175,7 +175,7 @@ const cases: readonly {
 			family: "Lexeme",
 			kind: "VERB",
 			canonicalForm: "sich vorstellen",
-			coreFeatures: { lexicallyReflexive: "Dat", hasSepPrefix: "vor" },
+			coreFeatures: { hasSepPrefix: "vor" },
 		},
 		frame: [
 			{

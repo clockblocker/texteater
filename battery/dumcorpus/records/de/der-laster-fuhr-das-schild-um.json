@@ -74,8 +74,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "um",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "um"
 						}
 					},
 					"surfaceFeatures": null

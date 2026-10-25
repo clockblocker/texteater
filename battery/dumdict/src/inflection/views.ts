@@ -18,6 +18,8 @@ export type LemmaTablesSlice<L extends Dumling.Language, P = string> = {
 	};
 	readonly readingEntries: readonly {
 		readonly reading: Dumling.Reading<L>;
+		/** Its Knowledge, whose Valency Frame a pack may read (a Reflexive Slot). */
+		readonly knowledge?: Dumrel.ReadingKnowledge<Dumling.Reading<L>>;
 		readonly attestationLinks: readonly AttestationLink<L>[];
 	}[];
 	readonly ownedSurfaceEntries: readonly {

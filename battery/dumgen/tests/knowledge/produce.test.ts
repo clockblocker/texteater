@@ -26,7 +26,7 @@ const verb = (canonicalForm: string, hasSepPrefix: string | null = null) => ({
 	family: "Lexeme",
 	kind: "VERB",
 	canonicalForm,
-	coreFeatures: { hasSepPrefix, lexicallyReflexive: null },
+	coreFeatures: { hasSepPrefix },
 });
 /** The frame a run contributed, if any. */
 const frameOf = (changes: readonly GermanKnowledgeChange[]) => {

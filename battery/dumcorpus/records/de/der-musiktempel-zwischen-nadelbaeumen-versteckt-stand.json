@@ -551,8 +551,7 @@
 							"kind": "VERB",
 							"canonicalForm": "verstecken",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"
@@ -627,8 +626,7 @@
 						"kind": "VERB",
 						"canonicalForm": "gegenüberstehen",
 						"coreFeatures": {
-							"hasSepPrefix": "gegenüber",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "gegenüber"
 						}
 					},
 					"normalizedSurface": "stand gegenüber",
@@ -1170,8 +1168,7 @@
 							"kind": "VERB",
 							"canonicalForm": "verbinden",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"

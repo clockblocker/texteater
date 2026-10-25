@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Knowledge",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034", "ADR-0038"],
@@ -120,8 +120,7 @@
 								"kind": "VERB",
 								"canonicalForm": "harren",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						],
@@ -133,8 +132,7 @@
 								"kind": "VERB",
 								"canonicalForm": "abwarten",
 								"coreFeatures": {
-									"hasSepPrefix": "ab",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "ab"
 								}
 							},
 							{
@@ -144,8 +142,7 @@
 								"kind": "VERB",
 								"canonicalForm": "zuwarten",
 								"coreFeatures": {
-									"hasSepPrefix": "zu",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "zu"
 								}
 							},
 							{
@@ -244,8 +241,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

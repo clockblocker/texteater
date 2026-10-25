@@ -121,8 +121,7 @@
 								"kind": "VERB",
 								"canonicalForm": "nutzen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -132,8 +131,7 @@
 								"kind": "VERB",
 								"canonicalForm": "wahrnehmen",
 								"coreFeatures": {
-									"hasSepPrefix": "wahr",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "wahr"
 								}
 							}
 						]

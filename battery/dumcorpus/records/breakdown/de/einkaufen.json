@@ -9,8 +9,7 @@
 			"kind": "VERB",
 			"canonicalForm": "einkaufen",
 			"coreFeatures": {
-				"hasSepPrefix": "ein",
-				"lexicallyReflexive": null
+				"hasSepPrefix": "ein"
 			}
 		},
 		"emojiDescription": "🛒"
@@ -36,8 +35,7 @@
 						"kind": "VERB",
 						"canonicalForm": "kaufen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				}

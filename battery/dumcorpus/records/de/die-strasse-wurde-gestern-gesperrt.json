@@ -68,8 +68,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sperren",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

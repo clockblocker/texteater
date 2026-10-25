@@ -32,7 +32,12 @@ export type GermanVerbForm = {
 	readonly pronoun?: string;
 	/** The finite word: `fährt`, `hat`. A non-finite form has none. */
 	readonly finite?: string;
-	/** The reflexive a reflexive verb takes in this person: `sich`, `dir`. */
+	/**
+	 * The reflexive a cell shows in this person (`mich`, `dir`) when every
+	 * Reading of its group has a Required Reflexive Slot of one case. It fills
+	 * that Slot and is no part of the form, whose Surface leaves it out
+	 * (ADR 0052).
+	 */
 	readonly reflexive?: string;
 	/**
 	 * The other words of the form: a periphrasis's participle or infinitive
@@ -59,7 +64,7 @@ export type GermanDisplayRun = {
 /** The words a form spells, in the order a main clause has them. */
 function wordsOf(form: GermanForm): string[] {
 	if (form.kind === "Word") return [form.word];
-	return [form.finite, form.reflexive, form.nonFinite, form.particle].filter(
+	return [form.finite, form.nonFinite, form.particle].filter(
 		(word) => word !== undefined && word !== "",
 	) as string[];
 }
@@ -74,10 +79,10 @@ export function germanFormKey(form: GermanForm): string {
 }
 
 /**
- * How a host shows a form: the article or pronoun as Context, the words as
- * Form, and a Gap before a particle split off a finite word, where a clause
- * puts its other words (`er fährt … ab`). A periphrasis is joined without a
- * Gap (`hat gefahren`).
+ * How a host shows a form: the article, pronoun or reflexive as Context, the
+ * words as Form, and a Gap before a particle split off a finite word, where a
+ * clause puts its other words (`er fährt … ab`). A periphrasis is joined
+ * without a Gap (`hat gefahren`, `hat sich erinnert`).
  */
 export function displayGermanForm(form: GermanForm): GermanDisplayRun[] {
 	if (form.kind === "Word")
@@ -91,11 +96,18 @@ export function displayGermanForm(form: GermanForm): GermanDisplayRun[] {
 		form.pronoun === undefined
 			? []
 			: [{ text: `${form.pronoun} `, role: "Context" }];
-	const words = [form.finite, form.reflexive, form.nonFinite].filter(
-		(word): word is string => word !== undefined && word !== "",
+	const words = (
+		[
+			[form.finite, "Form"],
+			[form.reflexive, "Context"],
+			[form.nonFinite, "Form"],
+		] as const
+	).filter(
+		(part): part is readonly [string, "Form" | "Context"] =>
+			part[0] !== undefined && part[0] !== "",
 	);
-	for (const [index, word] of words.entries())
-		runs.push({ text: index === 0 ? word : ` ${word}`, role: "Form" });
+	for (const [index, [word, role]] of words.entries())
+		runs.push({ text: index === 0 ? word : ` ${word}`, role });
 	if (form.particle !== undefined && form.particle !== "") {
 		if (form.finite !== undefined && words.length > 0)
 			runs.push({ text: " … ", role: "Gap" });
@@ -104,16 +116,6 @@ export function displayGermanForm(form: GermanForm): GermanDisplayRun[] {
 	}
 	return runs;
 }
-
-const REFLEXIVES: ReadonlySet<string> = new Set([
-	"mich",
-	"dich",
-	"sich",
-	"uns",
-	"euch",
-	"mir",
-	"dir",
-]);
 
 /** The finite words of haben, sein and werden a periphrasis opens with. */
 const AUXILIARY =
@@ -128,10 +130,11 @@ const bagOf = (surface: Dumling.Surface<"de">): Bag =>
 
 /**
  * The form a met verb Surface spells. Its words are told apart by the
- * Lemma's Core and the Surface's bundle: the reflexive of a reflexive verb,
- * the separable particle when it stands apart, and, in a periphrasis
- * (`perfect`, `future`, `passive` or a voice), the finite auxiliary. Word
- * order is a clause's, so `sich etabliert hat` reads as `hat sich etabliert`.
+ * Lemma's Core and the Surface's bundle: the separable particle when it
+ * stands apart and, in a periphrasis (`perfect`, `future`, `passive` or a
+ * voice), the finite auxiliary. Word order is a clause's, so `etabliert hat`
+ * reads as `hat etabliert`. Its Surface leaves a lexical reflexive out
+ * (ADR 0052).
  */
 function verbFormOf(surface: Dumling.Surface<"de">): GermanVerbForm {
 	const core: Bag = surface.lemma.coreFeatures;
@@ -140,17 +143,12 @@ function verbFormOf(surface: Dumling.Surface<"de">): GermanVerbForm {
 		typeof core.hasSepPrefix === "string"
 			? foldCase(core.hasSepPrefix, "de")
 			: undefined;
-	const reflexiveVerb =
-		core.lexicallyReflexive === "Acc" || core.lexicallyReflexive === "Dat";
 	const words = surface.normalizedSurface.split(" ").filter(Boolean);
-	let reflexive: string | undefined;
 	let split: string | undefined;
 	const rest: string[] = [];
 	for (const [index, word] of words.entries()) {
 		const folded = foldCase(word, "de");
-		if (reflexiveVerb && reflexive === undefined && REFLEXIVES.has(folded))
-			reflexive = word;
-		else if (index > 0 && split === undefined && folded === particle)
+		if (index > 0 && split === undefined && folded === particle)
 			split = word;
 		else rest.push(word);
 	}
@@ -173,7 +171,6 @@ function verbFormOf(surface: Dumling.Surface<"de">): GermanVerbForm {
 	return {
 		kind: "Verb",
 		...(finite === undefined ? {} : { finite }),
-		...(reflexive === undefined ? {} : { reflexive }),
 		...(others === "" ? {} : { nonFinite: others }),
 		...(split === undefined ? {} : { particle: split }),
 	};

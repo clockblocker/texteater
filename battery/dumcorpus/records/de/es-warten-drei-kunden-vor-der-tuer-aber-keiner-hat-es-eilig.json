@@ -205,8 +205,7 @@
 						"kind": "VERB",
 						"canonicalForm": "warten",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "warten",

@@ -249,23 +249,15 @@ test("a subject es whose verb jev answers in the plural makes the click Unresolv
 	});
 });
 
-test("a VERB's Canonical Form carries its judged separable prefix and lexical reflexive", () => {
-	const core = (
-		hasSepPrefix: string | null,
-		lexicallyReflexive: string | null = null,
-	) => ({
-		hasSepPrefix,
-		lexicallyReflexive,
-	});
+test("a VERB's Canonical Form carries its judged separable prefix, never a lexical reflexive (ADR 0052)", () => {
+	const core = (hasSepPrefix: string | null) => ({ hasSepPrefix });
 	expect(verbHeadword("führen", core("vorbei"))).toBe("vorbeiführen");
 	expect(verbHeadword("reinkommen", core("herein"))).toBe("hereinkommen");
 	expect(verbHeadword("umkommen", core("herum"))).toBe("herumkommen");
 	expect(verbHeadword("gehen", core("entlang"))).toBe("entlanggehen");
 	expect(verbHeadword("übrig bleiben", core("übrig"))).toBe("übrig bleiben");
-	expect(verbHeadword("erinnern", core(null, "Acc"))).toBe("sich erinnern");
-	expect(verbHeadword("sich abfinden", core("ab", "Acc"))).toBe(
-		"sich abfinden",
-	);
+	expect(verbHeadword("erinnern", core(null))).toBe("erinnern");
+	expect(verbHeadword("sich abfinden", core("ab"))).toBe("abfinden");
 	expect(verbHeadword("finden", core(null))).toBe("finden");
 });
 

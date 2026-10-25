@@ -54,7 +54,6 @@ const verbKey = (source: unknown) => {
 	return canonicalJson({
 		verb: foldCase(String(lemma.canonicalForm), "de"),
 		hasSepPrefix: core.hasSepPrefix ?? null,
-		lexicallyReflexive: core.lexicallyReflexive ?? null,
 		meaning,
 	});
 };

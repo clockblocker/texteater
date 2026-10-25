@@ -1808,25 +1808,10 @@
 									"type": "null"
 								}
 							]
-						},
-						"lexicallyReflexive": {
-							"anyOf": [
-								{
-									"type": "string",
-									"enum": [
-										"Acc",
-										"Dat"
-									]
-								},
-								{
-									"type": "null"
-								}
-							]
 						}
 					},
 					"required": [
-						"hasSepPrefix",
-						"lexicallyReflexive"
+						"hasSepPrefix"
 					],
 					"additionalProperties": false
 				}

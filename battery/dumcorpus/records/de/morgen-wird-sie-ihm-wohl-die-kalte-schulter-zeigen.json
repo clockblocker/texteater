@@ -83,8 +83,7 @@
 								"kind": "VERB",
 								"canonicalForm": "abweisen",
 								"coreFeatures": {
-									"hasSepPrefix": "ab",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "ab"
 								}
 							},
 							{
@@ -94,8 +93,7 @@
 								"kind": "VERB",
 								"canonicalForm": "zurückweisen",
 								"coreFeatures": {
-									"hasSepPrefix": "zurück",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "zurück"
 								}
 							}
 						]

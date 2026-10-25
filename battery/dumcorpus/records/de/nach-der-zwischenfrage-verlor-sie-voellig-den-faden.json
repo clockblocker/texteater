@@ -81,8 +81,7 @@
 								"kind": "VERB",
 								"canonicalForm": "durcheinanderkommen",
 								"coreFeatures": {
-									"hasSepPrefix": "durcheinander",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "durcheinander"
 								}
 							},
 							{

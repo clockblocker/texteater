@@ -58,8 +58,7 @@
 						"kind": "VERB",
 						"canonicalForm": "herauskommen",
 						"coreFeatures": {
-							"hasSepPrefix": "heraus",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "heraus"
 						}
 					},
 					"normalizedSurface": "komm heraus",

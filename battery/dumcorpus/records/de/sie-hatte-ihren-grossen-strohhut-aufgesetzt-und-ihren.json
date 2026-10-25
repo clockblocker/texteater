@@ -352,8 +352,7 @@
 						"kind": "VERB",
 						"canonicalForm": "aufsetzen",
 						"coreFeatures": {
-							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "auf"
 						}
 					},
 					"normalizedSurface": "hatte aufgesetzt",
@@ -753,8 +752,7 @@
 						"kind": "VERB",
 						"canonicalForm": "aufspannen",
 						"coreFeatures": {
-							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "auf"
 						}
 					},
 					"normalizedSurface": "aufgespannt",
@@ -892,8 +890,7 @@
 						"kind": "VERB",
 						"canonicalForm": "herrschen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "herrschte",
@@ -1123,8 +1120,7 @@
 						"kind": "VERB",
 						"canonicalForm": "gehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "ging",

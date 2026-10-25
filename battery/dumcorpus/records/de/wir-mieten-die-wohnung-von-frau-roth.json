@@ -42,7 +42,6 @@
 							"kind": "VERB",
 							"coreFeatures": {
 								"hasSepPrefix": null,
-								"lexicallyReflexive": null,
 								"verbType": null
 							},
 							"unitKind": "Lemma"

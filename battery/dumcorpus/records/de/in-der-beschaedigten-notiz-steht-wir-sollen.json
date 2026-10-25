@@ -48,8 +48,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sollen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "sollen",

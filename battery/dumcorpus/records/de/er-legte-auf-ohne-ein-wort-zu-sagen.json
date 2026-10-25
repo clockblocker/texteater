@@ -180,8 +180,7 @@
 						"kind": "VERB",
 						"canonicalForm": "auflegen",
 						"coreFeatures": {
-							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "auf"
 						}
 					},
 					"normalizedSurface": "legte auf",
@@ -336,8 +335,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sagen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "sagen",

@@ -94,8 +94,7 @@
 							"kind": "VERB",
 							"canonicalForm": "interessieren",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"

@@ -78,8 +78,9 @@ function finitesOf(
  * The rest is left out rather than guessed: a Strong verb's Konjunktiv II,
  * a participle whose `ge-` is in doubt, a stored form whose particle is not
  * the verb's. Nothing is derived when the Canonical Form is not one word
- * once its particle and `sich` are removed, or its stem is one no rule here
- * spells (knien).
+ * once its particle is removed, or its stem is one no rule here spells
+ * (knien). A group whose every Reading has a Required Reflexive Slot shows
+ * the person's reflexive beside its finite forms (ADR 0052).
  */
 export function conjugateGermanVerb(
 	input: PackDeriveInput<"de">,
@@ -119,7 +120,7 @@ function verbOf(
 	const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
 	const particle =
 		typeof core.hasSepPrefix === "string" ? core.hasSepPrefix : null;
-	let infinitive = lemma.canonicalForm.replace(/^sich\s+/u, "");
+	let infinitive = lemma.canonicalForm;
 	if (particle !== null) {
 		if (!lower(infinitive).startsWith(lower(particle))) return undefined;
 		infinitive = infinitive.slice(particle.length);
@@ -139,11 +140,7 @@ function verbOf(
 		infinitive,
 		stem,
 		particle,
-		reflexive:
-			core.lexicallyReflexive === "Acc" ||
-			core.lexicallyReflexive === "Dat"
-				? REFLEXIVE[core.lexicallyReflexive]
-				: undefined,
+		reflexive: reflexiveOf(input.readings),
 		preterites,
 		weakAt,
 		weak: preterites.length > 0 && weakAt.every(Boolean),
@@ -160,6 +157,33 @@ const ref = (
 	dimension,
 	id: variant.id,
 });
+
+/**
+ * The reflexive forms a group's cells show: those of the case of the
+ * Required Reflexive Slot every Reading of the group has (ADR 0052). A group
+ * with a plain Reading, or with Readings of two cases, shows none.
+ */
+function reflexiveOf(
+	readings: PackDeriveInput<"de">["readings"],
+): Readonly<Record<Person, string>> | undefined {
+	const cases = readings.map(
+		({ knowledge }) =>
+			knowledge?.valency?.flatMap(({ status, complements }) =>
+				status === "Required"
+					? complements.flatMap((complement) =>
+							complement.kind === "Reflexive" &&
+							"governedCase" in complement
+								? [complement.governedCase]
+								: [],
+						)
+					: [],
+			)[0],
+	);
+	const [first] = cases;
+	return first !== undefined && cases.every((one) => one === first)
+		? REFLEXIVE[first]
+		: undefined;
+}
 
 /** A finite form with its pronoun, the person's reflexive and the particle. */
 function finiteForm(

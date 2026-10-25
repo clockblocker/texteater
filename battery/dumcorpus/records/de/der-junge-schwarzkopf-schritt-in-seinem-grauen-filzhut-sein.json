@@ -403,8 +403,7 @@
 						"kind": "VERB",
 						"canonicalForm": "herschreiten",
 						"coreFeatures": {
-							"hasSepPrefix": "her",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "her"
 						}
 					},
 					"normalizedSurface": "schritt her",
@@ -1014,8 +1013,7 @@
 						"kind": "VERB",
 						"canonicalForm": "betrachten",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "betrachtete",

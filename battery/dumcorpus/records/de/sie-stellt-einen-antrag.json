@@ -76,8 +76,7 @@
 								"kind": "VERB",
 								"canonicalForm": "beantragen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{

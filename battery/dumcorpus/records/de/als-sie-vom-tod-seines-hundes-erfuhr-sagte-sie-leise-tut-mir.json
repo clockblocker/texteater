@@ -87,8 +87,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "leid",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "leid"
 						}
 					},
 					"surfaceFeatures": null

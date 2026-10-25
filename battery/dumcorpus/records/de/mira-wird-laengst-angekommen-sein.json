@@ -79,8 +79,7 @@
 						"kind": "VERB",
 						"canonicalForm": "ankommen",
 						"coreFeatures": {
-							"hasSepPrefix": "an",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "an"
 						}
 					},
 					"surfaceFeatures": null

@@ -17,9 +17,7 @@ export const lemmaOf = <K extends "NOUN" | "VERB">(
 		kind,
 		canonicalForm,
 		coreFeatures:
-			kind === "NOUN"
-				? { gender: "Fem" }
-				: { lexicallyReflexive: null, hasSepPrefix: null },
+			kind === "NOUN" ? { gender: "Fem" } : { hasSepPrefix: null },
 	}) as Dumling.Lemma<"de", "Lexeme", K>;
 
 export const readingOf = (

@@ -27,7 +27,7 @@ export const verb = (
 		family: "Lexeme",
 		kind: "VERB",
 		canonicalForm,
-		coreFeatures: { hasSepPrefix, lexicallyReflexive: null },
+		coreFeatures: { hasSepPrefix },
 	}) as const satisfies Dumling.Lemma<"de", "Lexeme", "VERB">;
 export const reading = <
 	L extends Dumling.Lemma<"de", "Lexeme", "NOUN" | "VERB">,

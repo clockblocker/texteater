@@ -6,8 +6,7 @@ export const renderHeadingDeLexemeVerb = (({
 	noteData,
 	PresentationCapabilities,
 }) => {
-	const { hasSepPrefix, lexicallyReflexive } =
-		noteData.reading.lemma.coreFeatures;
+	const { hasSepPrefix } = noteData.reading.lemma.coreFeatures;
 
 	return (
 		<ReadingHeading
@@ -15,7 +14,6 @@ export const renderHeadingDeLexemeVerb = (({
 			capabilities={PresentationCapabilities}
 			title={verbCanonicalForm(
 				noteData.reading.lemma.canonicalForm,
-				lexicallyReflexive !== null,
 				hasSepPrefix,
 			)}
 		/>
@@ -24,17 +22,8 @@ export const renderHeadingDeLexemeVerb = (({
 
 function verbCanonicalForm(
 	canonicalForm: string,
-	isLexicallyReflexive: boolean,
 	separablePrefix: string | null,
 ): ReactNode {
-	if (isLexicallyReflexive && canonicalForm.startsWith("sich ")) {
-		return (
-			<>
-				<span className="text-ink-muted">sich </span>
-				{canonicalForm.slice("sich ".length)}
-			</>
-		);
-	}
 	if (
 		separablePrefix &&
 		canonicalForm.startsWith(separablePrefix) &&

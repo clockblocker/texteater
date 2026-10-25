@@ -56,8 +56,7 @@
 							"kind": "VERB",
 							"canonicalForm": "spielen",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"

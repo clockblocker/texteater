@@ -9,8 +9,7 @@
 			"kind": "VERB",
 			"canonicalForm": "zunichtemachen",
 			"coreFeatures": {
-				"hasSepPrefix": "zunichte",
-				"lexicallyReflexive": null
+				"hasSepPrefix": "zunichte"
 			}
 		},
 		"emojiDescription": "💥"
@@ -36,8 +35,7 @@
 						"kind": "VERB",
 						"canonicalForm": "machen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				}

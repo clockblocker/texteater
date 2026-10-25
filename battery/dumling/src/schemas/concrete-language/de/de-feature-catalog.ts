@@ -61,7 +61,6 @@ const DeArticleSchema = UNIVERSAL_FEATURE_SCHEMA.article.extract(["Definite"]);
 export const DE_FEATURE_SCHEMA = {
 	comparable: UNIVERSAL_FEATURE_SCHEMA.comparable,
 	hasSepPrefix: UNIVERSAL_FEATURE_SCHEMA.hasSepPrefix,
-	lexicallyReflexive: UNIVERSAL_FEATURE_SCHEMA.lexicallyReflexive,
 	poss: UNIVERSAL_FEATURE_SCHEMA.poss,
 	sourceLang: UNIVERSAL_FEATURE_SCHEMA.sourceLang,
 	gender: DeGenderSchema,

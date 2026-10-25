@@ -779,8 +779,7 @@
 								"kind": "VERB",
 								"canonicalForm": "flirren",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -809,8 +808,7 @@
 						"kind": "VERB",
 						"canonicalForm": "flimmern",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "flimmerten",

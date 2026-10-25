@@ -39,8 +39,7 @@
 						"kind": "VERB",
 						"canonicalForm": "aufstehen",
 						"coreFeatures": {
-							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "auf"
 						}
 					},
 					"normalizedSurface": "steht auf",

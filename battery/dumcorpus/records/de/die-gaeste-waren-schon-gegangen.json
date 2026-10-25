@@ -72,8 +72,7 @@
 						"kind": "VERB",
 						"canonicalForm": "gehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

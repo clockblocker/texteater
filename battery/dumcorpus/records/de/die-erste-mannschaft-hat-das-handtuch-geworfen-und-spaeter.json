@@ -92,8 +92,7 @@
 								"kind": "VERB",
 								"canonicalForm": "aufgeben",
 								"coreFeatures": {
-									"hasSepPrefix": "auf",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "auf"
 								}
 							},
 							{
@@ -103,8 +102,7 @@
 								"kind": "VERB",
 								"canonicalForm": "kapitulieren",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

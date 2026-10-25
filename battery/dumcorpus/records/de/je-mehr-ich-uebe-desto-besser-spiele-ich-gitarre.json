@@ -269,8 +269,7 @@
 						"kind": "VERB",
 						"canonicalForm": "üben",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "übe",
@@ -369,8 +368,7 @@
 						"kind": "VERB",
 						"canonicalForm": "spielen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "spiele",

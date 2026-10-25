@@ -95,8 +95,7 @@
 								"kind": "VERB",
 								"canonicalForm": "danebenhauen",
 								"coreFeatures": {
-									"hasSepPrefix": "daneben",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "daneben"
 								}
 							}
 						]

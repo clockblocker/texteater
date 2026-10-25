@@ -57,8 +57,7 @@
 							"kind": "VERB",
 							"canonicalForm": "lassen",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Drifted"

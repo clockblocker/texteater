@@ -249,8 +249,7 @@
 						"kind": "VERB",
 						"canonicalForm": "ankommen",
 						"coreFeatures": {
-							"hasSepPrefix": "an",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "an"
 						}
 					},
 					"normalizedSurface": "kommt es an",

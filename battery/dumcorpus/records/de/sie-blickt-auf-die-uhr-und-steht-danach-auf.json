@@ -112,8 +112,7 @@
 						"kind": "VERB",
 						"canonicalForm": "blicken",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "blickt",
@@ -264,8 +263,7 @@
 						"kind": "VERB",
 						"canonicalForm": "aufstehen",
 						"coreFeatures": {
-							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "auf"
 						}
 					},
 					"normalizedSurface": "steht auf",

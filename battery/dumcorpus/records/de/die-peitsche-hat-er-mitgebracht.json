@@ -293,8 +293,7 @@
 								"kind": "VERB",
 								"canonicalForm": "bringen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -304,8 +303,7 @@
 								"kind": "VERB",
 								"canonicalForm": "herbringen",
 								"coreFeatures": {
-									"hasSepPrefix": "her",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "her"
 								}
 							}
 						]
@@ -375,8 +373,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "mit",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "mit"
 						}
 					},
 					"surfaceFeatures": null

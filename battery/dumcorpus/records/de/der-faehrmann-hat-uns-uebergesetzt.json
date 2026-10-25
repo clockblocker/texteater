@@ -106,8 +106,7 @@
 								"kind": "VERB",
 								"canonicalForm": "hinüberfahren",
 								"coreFeatures": {
-									"hasSepPrefix": "hinüber",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "hinüber"
 								}
 							}
 						]
@@ -177,8 +176,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "über",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "über"
 						}
 					},
 					"surfaceFeatures": null

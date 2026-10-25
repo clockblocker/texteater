@@ -291,8 +291,7 @@
 						"kind": "VERB",
 						"canonicalForm": "müssen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -575,8 +574,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sitzen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -634,8 +632,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sagen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

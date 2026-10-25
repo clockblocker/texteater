@@ -488,7 +488,6 @@ function lemmaCoreFeatures({ canonicalForm, kind, pronType }: LemmaSeed) {
 	if (kind === "NOUN") return { gender: null };
 	if (kind === "VERB") {
 		return {
-			lexicallyReflexive: null,
 			hasSepPrefix: null,
 		};
 	}

@@ -62,8 +62,7 @@
 						"kind": "VERB",
 						"canonicalForm": "heraufbringen",
 						"coreFeatures": {
-							"hasSepPrefix": "herauf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "herauf"
 						}
 					},
 					"normalizedSurface": "bring herauf",

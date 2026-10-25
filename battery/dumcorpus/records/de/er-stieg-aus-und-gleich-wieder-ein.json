@@ -196,8 +196,7 @@
 								"kind": "VERB",
 								"canonicalForm": "entsteigen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						],
@@ -209,8 +208,7 @@
 								"kind": "VERB",
 								"canonicalForm": "heraussteigen",
 								"coreFeatures": {
-									"hasSepPrefix": "heraus",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "heraus"
 								}
 							}
 						],
@@ -222,8 +220,7 @@
 								"kind": "VERB",
 								"canonicalForm": "einsteigen",
 								"coreFeatures": {
-									"hasSepPrefix": "ein",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "ein"
 								}
 							}
 						]
@@ -300,8 +297,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "aus",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "aus"
 						}
 					},
 					"surfaceFeatures": null
@@ -457,8 +453,7 @@
 								"kind": "VERB",
 								"canonicalForm": "besteigen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						],
@@ -470,8 +465,7 @@
 								"kind": "VERB",
 								"canonicalForm": "zusteigen",
 								"coreFeatures": {
-									"hasSepPrefix": "zu",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "zu"
 								}
 							},
 							{
@@ -489,8 +483,7 @@
 								"kind": "VERB",
 								"canonicalForm": "boarden",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						],
@@ -502,8 +495,7 @@
 								"kind": "VERB",
 								"canonicalForm": "aussteigen",
 								"coreFeatures": {
-									"hasSepPrefix": "aus",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "aus"
 								}
 							}
 						]
@@ -576,8 +568,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "ein",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "ein"
 						}
 					},
 					"surfaceFeatures": null

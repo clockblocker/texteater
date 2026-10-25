@@ -257,8 +257,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "weg",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "weg"
 						}
 					},
 					"surfaceFeatures": null
@@ -515,8 +514,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -584,8 +582,7 @@
 							"kind": "VERB",
 							"canonicalForm": "ergreifen",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"

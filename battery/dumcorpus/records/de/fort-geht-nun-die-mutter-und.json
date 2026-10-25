@@ -145,8 +145,7 @@
 						"kind": "VERB",
 						"canonicalForm": "fortgehen",
 						"coreFeatures": {
-							"hasSepPrefix": "fort",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "fort"
 						}
 					},
 					"normalizedSurface": "fort geht",

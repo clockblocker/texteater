@@ -315,13 +315,7 @@ export const readVerbal = answerReader(function* (
 				member.spelling.surfaces.includes(hasSepPrefix)
 			)
 				readings.set(member.segment, hasSepPrefix);
-		const reflexive = verbal.reflexive;
-		const lexicallyReflexive = verbal.reflexiveCase
-			? yield* answered.pick(verbal.reflexiveCase)
-			: reflexive
-				? (reflexives.get(fold(reflexive.text)) ?? null)
-				: null;
-		core = { hasSepPrefix, lexicallyReflexive };
+		core = { hasSepPrefix };
 	}
 	const expletive =
 		verbal.expletive &&
@@ -458,14 +452,13 @@ type VerbCoreRead = {
 /**
  * A VERB's Canonical Form as its judged Core Features require it (Rule
  * de/verb-core-features, de/canonical-form-is-the-headword): the
- * infinitive with its separable prefix and, for a lexical reflexive, sich
- * before it. Luna's form is kept when it already has both. A prefix it
+ * infinitive with its separable prefix, never a lexical reflexive (ADR
+ * 0052). Luna's form is kept when it already has its prefix. A prefix it
  * left out is written on, over the r- shortening Luna wrote for it
  * (reinkommen is hereinkommen) or over a shorter particle that ends the
  * prefix (umkommen is herumkommen).
  */
 export function verbHeadword(form: string, core: VerbCoreRead): string {
-	const reflexive = /^sich\s+/u.test(form) || core.lexicallyReflexive;
 	let verb = form.replace(/^sich\s+/u, "");
 	const prefix = core.hasSepPrefix;
 	if (typeof prefix === "string" && !fold(verb).startsWith(fold(prefix))) {
@@ -486,21 +479,19 @@ export function verbHeadword(form: string, core: VerbCoreRead): string {
 		);
 		verb = `${prefix}${verb.slice(shortening?.length ?? tail?.length ?? 0)}`;
 	}
-	return reflexive ? `sich ${verb}` : verb;
+	return verb;
 }
 
 /**
  * Why a VERB's headword Luna wrote on the guess cannot stand: it carries a
- * sich or a separable prefix jev judged away, which `verbHeadword` adds
- * but never takes off.
+ * separable prefix jev judged away, which `verbHeadword` adds but never
+ * takes off.
  */
 export function verbGuessMisses(
 	form: string,
 	core: VerbCoreRead,
 	prefixes: readonly string[],
 ): string | undefined {
-	if (/^sich\s/u.test(form) && !core.lexicallyReflexive)
-		return "jev judged the verb not lexically reflexive";
 	const bare = fold(form.replace(/^sich\s+/u, ""));
 	return core.hasSepPrefix === null &&
 		prefixes.some((prefix) => bare.startsWith(fold(prefix)))

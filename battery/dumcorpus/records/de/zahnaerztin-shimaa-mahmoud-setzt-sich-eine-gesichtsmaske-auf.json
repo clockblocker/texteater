@@ -51,8 +51,7 @@
 						"kind": "VERB",
 						"canonicalForm": "aufsetzen",
 						"coreFeatures": {
-							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "auf"
 						}
 					},
 					"normalizedSurface": "setzt auf",

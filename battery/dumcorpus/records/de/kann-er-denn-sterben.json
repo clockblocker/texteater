@@ -124,8 +124,7 @@
 						"kind": "VERB",
 						"canonicalForm": "können",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -272,8 +271,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sterben",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

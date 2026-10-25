@@ -185,8 +185,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sein",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "ist",
@@ -230,8 +229,7 @@
 							"kind": "VERB",
 							"canonicalForm": "schließen",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"

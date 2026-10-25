@@ -78,7 +78,7 @@ test("a consumer on Node projects a German table through the inflection entry", 
 		const pack = inflectionPacks.de;
 		const lemma = { unitKind: "Lemma", language: "de", family: "Lexeme", kind: "NOUN", canonicalForm: "Tag", coreFeatures: { gender: "Masc" } };
 		const schema = pack.schemaFor(lemma);
-		const table = pack.derive({ lemma, schema, selection: { plural: [{ id: "tage", value: "Tage", provenance: "Produced" }] } });
+		const table = pack.derive({ lemma, schema, selection: { plural: [{ id: "tage", value: "Tage", provenance: "Produced" }] }, readings: [] });
 		console.log(JSON.stringify({ id: schema.id, dative: table["case=Dat|number=Plur"].map(({ form }) => pack.display(form).map(({ text }) => text).join("")) }));`,
 	]);
 	expect(JSON.parse(output)).toEqual({

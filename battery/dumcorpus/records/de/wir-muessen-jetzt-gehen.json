@@ -36,7 +36,6 @@
 							"kind": "VERB",
 							"coreFeatures": {
 								"hasSepPrefix": null,
-								"lexicallyReflexive": null,
 								"verbType": "Mod"
 							},
 							"unitKind": "Lemma"

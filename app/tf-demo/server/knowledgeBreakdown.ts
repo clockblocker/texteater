@@ -1,7 +1,7 @@
 import { isRecord } from "common-utils";
 import { authoredFor, closedRoute } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
-import { breakdownWording, parseReadingKnowledge } from "dumrel";
+import { parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import type {
@@ -145,13 +145,9 @@ function contributed(
 	};
 }
 
-/**
- * A bottom word's morphemes are split only on a single-word Lexeme; a
- * lexically reflexive one counts by its word (`sich erinnern` by
- * `erinnern`), since its reflexive is a satellite (ADR 0050).
- */
+/** A bottom word's morphemes are split only on a single-word Lexeme. */
 const isSingleWordLexeme = (lemma: Dumling.Lemma<"de">) =>
-	lemma.family === "Lexeme" && !/\s/u.test(breakdownWording(lemma));
+	lemma.family === "Lexeme" && !/\s/u.test(lemma.canonicalForm);
 
 /**
  * The Breakdown changes and failures for a Reading the run found no Source

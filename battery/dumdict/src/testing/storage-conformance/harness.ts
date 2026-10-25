@@ -31,10 +31,10 @@ import type {
 	RekeySurfacesSliceRequest,
 } from "../../storage";
 import {
+	durchlaufenPending,
 	gehenReading,
 	gehenSurface,
 	laufenReading,
-	schreitenPending,
 } from "./fixtures";
 
 /**
@@ -168,7 +168,7 @@ export async function pendingMatchingLemma(
 ) {
 	const context = await storage.loadReadingEntryContext({
 		intent: "addNewNote",
-		reading: { unitKind: "Reading", lemma, emojiDescription: "🦶" },
+		reading: { unitKind: "Reading", lemma, emojiDescription: "🔁" },
 		ownedSurfaces: [],
 		relations: [],
 		attestationRefs: [],
@@ -188,7 +188,7 @@ export async function snapshot(storage: ConformanceStorage) {
 	return {
 		surfaces,
 		laufen: await readingContext(storage, laufenReading),
-		pending: await exactPending(storage, [schreitenPending]),
+		pending: await exactPending(storage, [durchlaufenPending]),
 	};
 }
 

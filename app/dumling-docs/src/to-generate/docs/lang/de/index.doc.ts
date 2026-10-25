@@ -39,7 +39,7 @@ German has richer inflectional coverage than English for nouns and adjectives.
 | Subkind | Inherent examples | Inflectional examples |
 | --- | --- | --- |
 | \`NOUN\` | \`gender\` | \`case\`, \`gender\`, \`number\` |
-| \`VERB\` | \`hasSepPrefix\`, \`lexicallyReflexive\` | \`aspect\`, \`gender\`, \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
+| \`VERB\` | \`hasSepPrefix\` | \`aspect\`, \`gender\`, \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
 | \`ADJ\` | \`comparable\` | \`case\`, \`degree\`, \`gender\`, \`number\` |
 
 German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`, or a \`mixed\` value for a noun that takes more than one gender in the same sense: \`Balg\` (child), "der oder das", is \`{ mixed: ["Masc", "Neut"] }\`, its genders distinct and in catalog order (\`Fem\`, \`Masc\`, \`Neut\`), as in every feature value set. A gender that changes the meaning makes separate Lemmas (\`der See\`, \`die See\`). An adjectival noun for a person (\`Angestellte\`, \`Reisende\`) has no Lemma gender, since its gender is the referent's; its singular Surface marks the gender its form shows (\`der Reisende\` and \`ein Verletzter\` are \`Masc\`), and no other noun Surface marks gender. German nominal and adjectival \`case\` supports \`Nom\`, \`Acc\`, \`Dat\`, and \`Gen\`.

@@ -92,8 +92,7 @@
 								"kind": "VERB",
 								"canonicalForm": "erwägen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{

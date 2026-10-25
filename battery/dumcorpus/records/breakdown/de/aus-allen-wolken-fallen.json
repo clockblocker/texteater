@@ -76,8 +76,7 @@
 						"kind": "VERB",
 						"canonicalForm": "fallen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				}

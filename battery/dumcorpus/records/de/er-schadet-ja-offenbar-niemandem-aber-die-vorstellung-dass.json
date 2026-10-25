@@ -377,8 +377,7 @@
 						"kind": "VERB",
 						"canonicalForm": "schaden",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -883,8 +882,7 @@
 						"kind": "VERB",
 						"canonicalForm": "überleben",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -938,8 +936,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sollen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -993,8 +990,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sein",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

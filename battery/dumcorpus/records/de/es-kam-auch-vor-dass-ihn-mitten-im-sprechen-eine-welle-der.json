@@ -501,8 +501,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "vor",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "vor"
 						}
 					},
 					"surfaceFeatures": null
@@ -1035,8 +1034,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1230,8 +1228,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1314,8 +1311,7 @@
 								"kind": "VERB",
 								"canonicalForm": "stammeln",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						],
@@ -1340,8 +1336,7 @@
 								"kind": "VERB",
 								"canonicalForm": "sprechen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -1395,8 +1390,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1464,8 +1458,7 @@
 								"kind": "VERB",
 								"canonicalForm": "anfangen",
 								"coreFeatures": {
-									"hasSepPrefix": "an",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "an"
 								}
 							}
 						],
@@ -1477,8 +1470,7 @@
 								"kind": "VERB",
 								"canonicalForm": "enden",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -1488,8 +1480,7 @@
 								"kind": "VERB",
 								"canonicalForm": "beenden",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -1543,8 +1534,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1662,8 +1652,7 @@
 								"kind": "VERB",
 								"canonicalForm": "wegwenden",
 								"coreFeatures": {
-									"hasSepPrefix": "weg",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "weg"
 								}
 							},
 							{
@@ -1673,8 +1662,7 @@
 								"kind": "VERB",
 								"canonicalForm": "wegdrehen",
 								"coreFeatures": {
-									"hasSepPrefix": "weg",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "weg"
 								}
 							}
 						]
@@ -1728,8 +1716,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": "ab",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "ab"
 						}
 					},
 					"surfaceFeatures": null
@@ -1784,8 +1771,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

@@ -21,8 +21,8 @@ test("a Präteritum form derives the verb's conjugation class from its stem", ()
 		["abholen", "holte", "Weak"],
 		["abholen", "abholte", "Weak"],
 		["anerkennen", "erkannte an", "Mixed"],
-		["sich freuen", "freute sich", "Weak"],
-		["sich gewöhnen", "gewöhnte", "Weak"],
+		["freuen", "freute", "Weak"],
+		["gewöhnen", "gewöhnte", "Weak"],
 		["Wiegen", "WOG", "Strong"],
 	] as const)
 		expect([

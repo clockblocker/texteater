@@ -221,8 +221,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sein",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "ist",
@@ -616,8 +615,7 @@
 								"kind": "VERB",
 								"canonicalForm": "eintreten",
 								"coreFeatures": {
-									"hasSepPrefix": "ein",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "ein"
 								}
 							},
 							{
@@ -657,8 +655,7 @@
 						"kind": "VERB",
 						"canonicalForm": "verteidigen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "verteidigen",
@@ -712,8 +709,7 @@
 						"kind": "VERB",
 						"canonicalForm": "wollen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "wolltest",
@@ -777,8 +773,7 @@
 							"kind": "VERB",
 							"canonicalForm": "verleiden",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"

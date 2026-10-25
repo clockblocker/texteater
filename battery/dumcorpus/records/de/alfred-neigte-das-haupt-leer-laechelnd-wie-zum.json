@@ -528,8 +528,7 @@
 						"kind": "VERB",
 						"canonicalForm": "neigen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "neigte",
@@ -723,8 +722,7 @@
 							"kind": "VERB",
 							"canonicalForm": "lächeln",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"
@@ -966,8 +964,7 @@
 						"kind": "VERB",
 						"canonicalForm": "ergreifen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "ergriff",
@@ -1303,8 +1300,7 @@
 							"kind": "VERB",
 							"canonicalForm": "entfremden",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"
@@ -1396,8 +1392,7 @@
 								"kind": "VERB",
 								"canonicalForm": "herunterhängen",
 								"coreFeatures": {
-									"hasSepPrefix": "herunter",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "herunter"
 								}
 							},
 							{
@@ -1407,8 +1402,7 @@
 								"kind": "VERB",
 								"canonicalForm": "baumeln",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -1440,8 +1434,7 @@
 						"kind": "VERB",
 						"canonicalForm": "hängen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "hängen",
@@ -1522,8 +1515,7 @@
 								"kind": "VERB",
 								"canonicalForm": "zulassen",
 								"coreFeatures": {
-									"hasSepPrefix": "zu",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "zu"
 								}
 							}
 						],
@@ -1535,8 +1527,7 @@
 								"kind": "VERB",
 								"canonicalForm": "erlauben",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -1546,8 +1537,7 @@
 								"kind": "VERB",
 								"canonicalForm": "gestatten",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -1579,8 +1569,7 @@
 						"kind": "VERB",
 						"canonicalForm": "lassen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "ließ",
@@ -1670,8 +1659,7 @@
 						"kind": "VERB",
 						"canonicalForm": "wenden",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "wandte",
@@ -1809,8 +1797,7 @@
 						"kind": "VERB",
 						"canonicalForm": "gehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "ging",

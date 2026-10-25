@@ -98,7 +98,7 @@ const NULL_CORE_FEATURES_BY_ROUTE = {
 	"Lexeme/PROPN": { article: null, gender: null },
 	"Lexeme/SCONJ": {},
 	"Lexeme/SYM": {},
-	"Lexeme/VERB": { hasSepPrefix: null, lexicallyReflexive: null },
+	"Lexeme/VERB": { hasSepPrefix: null },
 	"Locution/ADV": { comparable: null },
 	"Locution/VERB": {},
 	"Saying/Saying": {},

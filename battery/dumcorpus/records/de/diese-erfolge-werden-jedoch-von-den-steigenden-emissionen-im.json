@@ -101,8 +101,7 @@
 								"kind": "VERB",
 								"canonicalForm": "verschlingen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -150,8 +149,7 @@
 						"kind": "VERB",
 						"canonicalForm": "auffressen",
 						"coreFeatures": {
-							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "auf"
 						}
 					},
 					"normalizedSurface": "werden aufgefressen",

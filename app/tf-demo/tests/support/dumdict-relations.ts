@@ -20,7 +20,6 @@ import {
 import { createTestConvex, type TestConvexDb } from "./convex";
 
 export const verbFeatures = {
-	lexicallyReflexive: null,
 	hasSepPrefix: null,
 } as const;
 

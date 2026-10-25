@@ -9,8 +9,7 @@
 			"kind": "VERB",
 			"canonicalForm": "fischen",
 			"coreFeatures": {
-				"hasSepPrefix": null,
-				"lexicallyReflexive": null
+				"hasSepPrefix": null
 			}
 		},
 		"emojiDescription": "🎣"

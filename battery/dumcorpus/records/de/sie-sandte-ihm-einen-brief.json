@@ -140,8 +140,7 @@
 						"kind": "VERB",
 						"canonicalForm": "senden",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

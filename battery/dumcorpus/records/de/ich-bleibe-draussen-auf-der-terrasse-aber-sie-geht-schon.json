@@ -62,8 +62,7 @@
 						"kind": "VERB",
 						"canonicalForm": "hineingehen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinein",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "hinein"
 						}
 					},
 					"normalizedSurface": "geht hinein",

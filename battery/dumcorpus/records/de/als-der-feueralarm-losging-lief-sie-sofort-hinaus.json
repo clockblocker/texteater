@@ -52,8 +52,7 @@
 						"kind": "VERB",
 						"canonicalForm": "hinauslaufen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinaus",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "hinaus"
 						}
 					},
 					"normalizedSurface": "lief hinaus",

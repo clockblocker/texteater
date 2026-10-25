@@ -118,21 +118,21 @@ const participleQuestions = {
 	}),
 };
 
-/** The source verb's Lemma, with the identity Core Features grammar gives a verb. */
+/**
+ * The source verb's Lemma, with the identity Core Features grammar gives a
+ * verb. A reflexive is in no Canonical Form (ADR 0052): `verliebt` links to
+ * `verlieben`.
+ */
 function sourceVerbLemma(
-	draft: Pick<SourceDraft, "verb" | "reflexive" | "separablePrefix">,
+	draft: Pick<SourceDraft, "verb" | "separablePrefix">,
 ): Dumling.Lemma<"de", "Lexeme", "VERB"> {
 	return {
 		unitKind: "Lemma",
 		language: "de",
 		family: "Lexeme",
 		kind: "VERB",
-		canonicalForm:
-			draft.reflexive === null ? draft.verb : `sich ${draft.verb}`,
-		coreFeatures: {
-			hasSepPrefix: draft.separablePrefix,
-			lexicallyReflexive: draft.reflexive,
-		},
+		canonicalForm: draft.verb,
+		coreFeatures: { hasSepPrefix: draft.separablePrefix },
 	};
 }
 

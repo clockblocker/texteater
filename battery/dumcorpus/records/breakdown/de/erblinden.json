@@ -9,8 +9,7 @@
 			"kind": "VERB",
 			"canonicalForm": "erblinden",
 			"coreFeatures": {
-				"hasSepPrefix": null,
-				"lexicallyReflexive": null
+				"hasSepPrefix": null
 			}
 		},
 		"emojiDescription": "🦯"

@@ -204,8 +204,7 @@
 							"kind": "VERB",
 							"canonicalForm": "überraschen",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"

@@ -17,6 +17,7 @@ import {
 	derSeeReading,
 	dieSee,
 	dieSeeReading,
+	durchlaufen,
 	gehen,
 	gehenPendingRecord,
 	gehenReading,
@@ -27,7 +28,6 @@ import {
 	ozeanReading,
 	ozeanSeePendingRecord,
 	readingEntry,
-	schreiten,
 	seeShadow,
 	teich,
 	teichReading,
@@ -47,7 +47,7 @@ const planner = createDumdictPlanner("de");
 
 /** Every Lemma and Reading the Shadow cases store. */
 const dictionary = {
-	lemmas: [derSee, dieSee, meer, ozean, teich, gehen, schreiten],
+	lemmas: [derSee, dieSee, meer, ozean, teich, gehen, durchlaufen],
 	readings: [
 		derSeeReading,
 		dieSeeReading,
@@ -349,15 +349,15 @@ export function describeShadowConformance(
 			createLemma(gehen),
 			createReading(readingEntry(gehenReading)),
 			createPending(gehenPendingRecord),
-			createLemma(schreiten),
+			createLemma(durchlaufen),
 		]);
-		await storage.removeLemma(schreiten);
+		await storage.removeLemma(durchlaufen);
 
 		const { slice } = await reevaluate(storage, {
-			removedLemmas: [schreiten],
+			removedLemmas: [durchlaufen],
 		});
 		expect(slice.pendingRelations).toEqual([gehenPendingRecord]);
-		await reevaluateToRest(storage, { removedLemmas: [schreiten] });
+		await reevaluateToRest(storage, { removedLemmas: [durchlaufen] });
 		expect(await knowledgeOf(storage, gehenReading)).toBeUndefined();
 		expect(await recordOf(storage, gehenPendingRecord)).toEqual([
 			gehenPendingRecord,

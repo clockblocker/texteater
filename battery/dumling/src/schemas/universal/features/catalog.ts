@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { ComparableSchema } from "./custom/comparable.js";
-import { LexicallyReflexiveSchema } from "./custom/lexically-reflexive.js";
 import { PhrasalSchema } from "./custom/phrasal.js";
 import { HasSepPrefixSchema } from "./custom/separable.js";
 import { SourceLangSchema } from "./custom/source-lang.js";
@@ -73,7 +72,6 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	hebBinyan: HebBinyanSchema,
 	hebExistential: HebExistentialSchema,
 	hyph: HyphSchema,
-	lexicallyReflexive: LexicallyReflexiveSchema,
 	mood: MoodSchema,
 	nounClass: NounClassSchema,
 	numForm: NumFormSchema,

@@ -142,6 +142,10 @@ function goldOf(goldCase: GrammarCase) {
 					slot.member === position,
 			),
 		caseSlot: valency.find((slot) => slot.complement.kind === "Case"),
+		/** The case of the lexical reflexive gold names (ADR 0052). */
+		reflexiveCase: valency.flatMap(({ complement }) =>
+			complement.kind === "Reflexive" ? [complement.governedCase] : [],
+		)[0],
 	};
 }
 
@@ -284,7 +288,7 @@ const answeringOf: ReadonlyMap<string, Answering> = new Map<string, Answering>([
 		),
 	],
 	["prefix", reads(({ core }) => core.hasSepPrefix ?? "None")],
-	["reflexive", reads(({ core }) => core.lexicallyReflexive)],
+	["reflexive", reads(({ reflexiveCase }) => reflexiveCase)],
 	[
 		"expletive",
 		reads(({ bag }) => (bag?.expletive === "Subject" ? "Subject" : "None")),

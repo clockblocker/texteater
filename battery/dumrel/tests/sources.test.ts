@@ -14,16 +14,15 @@ const verlieben = {
 	language: "de",
 	family: "Lexeme",
 	kind: "VERB",
-	canonicalForm: "sich verlieben",
+	canonicalForm: "verlieben",
 	coreFeatures: {
 		hasSepPrefix: null,
-		lexicallyReflexive: "Acc",
 	},
 } as const satisfies Dumling.Lemma<"de", "Lexeme", "VERB">;
 const verliebenReading = {
 	unitKind: "Reading",
 	lemma: verlieben,
-	emojiDescription: "😍",
+	emojiDescription: "🪞😍",
 } as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;
 const verliebtReading = {
 	unitKind: "Reading",

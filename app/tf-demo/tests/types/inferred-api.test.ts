@@ -67,7 +67,7 @@ describe("Convex API types the client reads", () => {
 
 	it("a Resolution Note projects its Lemma per Kind, without any", () => {
 		expect(inferred("VerbResolutionGrammar")).toMatchInlineSnapshot(
-			`"type VerbResolutionGrammar = { grundform: boolean | null; members: ResolutionMember[]; valencyMembers: number[]; realizationCoverage: "Full" | "Partial"; normalizedSurface: string; spelling: SurfaceSpelling; canonicalForm: string; family: "Lexeme"; kind: "VERB"; coreFeatures: { hasSepPrefix: string | null; lexicallyReflexive: "Acc" | "Dat" | null; }; }"`,
+			`"type VerbResolutionGrammar = { grundform: boolean | null; members: ResolutionMember[]; valencyMembers: number[]; realizationCoverage: "Full" | "Partial"; normalizedSurface: string; spelling: SurfaceSpelling; canonicalForm: string; family: "Lexeme"; kind: "VERB"; coreFeatures: { hasSepPrefix: string | null; }; }"`,
 		);
 		expect(inferred("VerbResolutionReading")).toMatchInlineSnapshot(
 			`"type VerbResolutionReading = { emojiDescription: string; canonicalForm: string; family: "Lexeme"; kind: "VERB"; }"`,

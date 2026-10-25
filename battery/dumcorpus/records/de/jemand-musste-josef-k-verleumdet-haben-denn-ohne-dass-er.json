@@ -335,8 +335,7 @@
 						"kind": "VERB",
 						"canonicalForm": "müssen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "mußte",
@@ -442,8 +441,7 @@
 						"kind": "VERB",
 						"canonicalForm": "verleumden",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "verleumdet haben",
@@ -738,8 +736,7 @@
 								"kind": "VERB",
 								"canonicalForm": "machen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -768,8 +765,7 @@
 						"kind": "VERB",
 						"canonicalForm": "tun",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "getan hätte",
@@ -848,8 +844,7 @@
 								"kind": "VERB",
 								"canonicalForm": "festnehmen",
 								"coreFeatures": {
-									"hasSepPrefix": "fest",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "fest"
 								}
 							},
 							{
@@ -869,8 +864,7 @@
 								"kind": "VERB",
 								"canonicalForm": "ergreifen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -880,8 +874,7 @@
 								"kind": "VERB",
 								"canonicalForm": "aufgreifen",
 								"coreFeatures": {
-									"hasSepPrefix": "auf",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "auf"
 								}
 							}
 						]
@@ -910,8 +903,7 @@
 						"kind": "VERB",
 						"canonicalForm": "verhaften",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "wurde verhaftet",

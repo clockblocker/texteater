@@ -493,8 +493,7 @@
 						"kind": "VERB",
 						"canonicalForm": "warten",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "wartete",
@@ -656,8 +655,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "sah",
@@ -1092,8 +1090,7 @@
 						"kind": "VERB",
 						"canonicalForm": "wohnen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "wohnte",
@@ -1543,8 +1540,7 @@
 						"kind": "VERB",
 						"canonicalForm": "beobachten",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "beobachtete",
@@ -1709,8 +1705,7 @@
 							"kind": "VERB",
 							"canonicalForm": "befremden",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"
@@ -1896,8 +1891,7 @@
 						"kind": "VERB",
 						"canonicalForm": "läuten",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "läutete",

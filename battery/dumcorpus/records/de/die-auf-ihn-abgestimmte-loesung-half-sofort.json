@@ -113,8 +113,7 @@
 							"kind": "VERB",
 							"canonicalForm": "abstimmen",
 							"coreFeatures": {
-								"hasSepPrefix": "ab",
-								"lexicallyReflexive": null
+								"hasSepPrefix": "ab"
 							}
 						},
 						"meaning": "Verbal"

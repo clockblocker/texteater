@@ -71,8 +71,7 @@
 								"kind": "VERB",
 								"canonicalForm": "überzeugen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

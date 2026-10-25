@@ -172,8 +172,7 @@
 								"kind": "VERB",
 								"canonicalForm": "schreien",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]
@@ -247,8 +246,7 @@
 						"kind": "VERB",
 						"canonicalForm": "rufen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -272,8 +270,7 @@
 							"kind": "VERB",
 							"canonicalForm": "rufen",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": null
+								"hasSepPrefix": null
 							}
 						}
 					},

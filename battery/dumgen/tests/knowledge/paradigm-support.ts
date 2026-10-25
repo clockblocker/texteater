@@ -17,7 +17,7 @@ export const verb = (canonicalForm: string) => ({
 	family: "Lexeme",
 	kind: "VERB",
 	canonicalForm,
-	coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+	coreFeatures: { hasSepPrefix: null },
 });
 
 export type Forms = Partial<Record<Dumrel.DimensionId, readonly string[]>>;

@@ -26,8 +26,7 @@
 						"kind": "VERB",
 						"canonicalForm": "schlafen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					}
 				},

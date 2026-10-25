@@ -19,7 +19,7 @@ const verb = {
 	family: "Lexeme",
 	kind: "VERB",
 	canonicalForm: "laufen",
-	coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+	coreFeatures: { hasSepPrefix: null },
 };
 
 /** An accumulation input for a Reading of `shape` in one Sentence. */

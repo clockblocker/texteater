@@ -293,8 +293,7 @@
 						"kind": "VERB",
 						"canonicalForm": "abholen",
 						"coreFeatures": {
-							"hasSepPrefix": "ab",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "ab"
 						}
 					},
 					"normalizedSurface": "holt ab",
@@ -829,8 +828,7 @@
 						"kind": "VERB",
 						"canonicalForm": "ankommen",
 						"coreFeatures": {
-							"hasSepPrefix": "an",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "an"
 						}
 					},
 					"normalizedSurface": "ankommt",

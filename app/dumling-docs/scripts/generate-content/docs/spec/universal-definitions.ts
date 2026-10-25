@@ -142,7 +142,6 @@ export const dumlingOwnFeatures: ReadonlySet<string> = new Set([
 	"expletive",
 	"future",
 	"hasSepPrefix",
-	"lexicallyReflexive",
 	"participleForm",
 	"passive",
 	"perfect",

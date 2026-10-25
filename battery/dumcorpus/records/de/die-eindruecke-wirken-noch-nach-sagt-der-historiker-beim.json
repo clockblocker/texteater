@@ -63,8 +63,7 @@
 						"kind": "VERB",
 						"canonicalForm": "nachwirken",
 						"coreFeatures": {
-							"hasSepPrefix": "nach",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "nach"
 						}
 					},
 					"normalizedSurface": "wirken nach",

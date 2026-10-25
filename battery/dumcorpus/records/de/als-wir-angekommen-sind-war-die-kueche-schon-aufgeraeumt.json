@@ -259,8 +259,7 @@
 						"kind": "VERB",
 						"canonicalForm": "ankommen",
 						"coreFeatures": {
-							"hasSepPrefix": "an",
-							"lexicallyReflexive": null
+							"hasSepPrefix": "an"
 						}
 					},
 					"normalizedSurface": "angekommen sind",
@@ -318,8 +317,7 @@
 						"kind": "VERB",
 						"canonicalForm": "sein",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
+							"hasSepPrefix": null
 						}
 					},
 					"normalizedSurface": "war",
@@ -506,8 +504,7 @@
 							"kind": "VERB",
 							"canonicalForm": "aufräumen",
 							"coreFeatures": {
-								"hasSepPrefix": "auf",
-								"lexicallyReflexive": null
+								"hasSepPrefix": "auf"
 							}
 						},
 						"meaning": "Verbal"

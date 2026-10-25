@@ -90,8 +90,7 @@
 								"kind": "VERB",
 								"canonicalForm": "fragen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
+									"hasSepPrefix": null
 								}
 							}
 						]

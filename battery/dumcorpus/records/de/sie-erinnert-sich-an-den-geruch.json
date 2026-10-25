@@ -52,7 +52,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Knowledge",
+	"reviewDepth": "Segmentation",
 	"provenance": {
 		"kind": "Authored"
 	},
@@ -181,8 +181,7 @@
 								"kind": "VERB",
 								"canonicalForm": "zurückdenken",
 								"coreFeatures": {
-									"hasSepPrefix": "zurück",
-									"lexicallyReflexive": null
+									"hasSepPrefix": "zurück"
 								}
 							},
 							{

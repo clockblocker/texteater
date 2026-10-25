@@ -28,7 +28,7 @@ describe("the German Inflection Pack", () => {
 	it("is the registry's de pack, versioned", () => {
 		expect(Object.keys(inflectionPacks)).toEqual(["de"]);
 		expect(pack.language).toBe("de");
-		expect(pack.version).toBe("1");
+		expect(pack.version).toBe("2");
 	});
 
 	it("gives each tabulated route a schema Dumling accepts for it", () => {
@@ -167,7 +167,7 @@ const finite = {
 };
 
 describe("met Surfaces", () => {
-	it("read a split particle and a reflexive apart, keyed as the derived form", () => {
+	it("read a split particle apart, keyed as the derived form", () => {
 		const abfahren = verb("abfahren", { hasSepPrefix: "ab" });
 		const met = pack.formOfSurface(surface(abfahren, "fährt ab", finite));
 		expect(met).toEqual({ kind: "Verb", finite: "fährt", particle: "ab" });
@@ -179,20 +179,32 @@ describe("met Surfaces", () => {
 				particle: "ab",
 			}),
 		);
-		const vorbereiten = verb("sich vorbereiten", {
-			hasSepPrefix: "vor",
-			lexicallyReflexive: "Acc",
-		});
-		expect(
-			pack.formOfSurface(
-				surface(vorbereiten, "bereitet sich vor", finite),
-			),
-		).toEqual({
+		// A Surface leaves the lexical reflexive out, and a derived cell shows
+		// it as Context, no part of the form (ADR 0052).
+		const vorbereiten = verb("vorbereiten", { hasSepPrefix: "vor" });
+		const bereitet = pack.formOfSurface(
+			surface(vorbereiten, "bereitet vor", finite),
+		);
+		expect(bereitet).toEqual({
 			kind: "Verb",
+			finite: "bereitet",
+			particle: "vor",
+		});
+		const derived = {
+			kind: "Verb",
+			pronoun: "er",
 			finite: "bereitet",
 			reflexive: "sich",
 			particle: "vor",
-		});
+		} as const;
+		expect(pack.codec.key(bereitet)).toBe(pack.codec.key(derived));
+		expect(pack.display(derived)).toEqual([
+			{ text: "er ", role: "Context" },
+			{ text: "bereitet", role: "Form" },
+			{ text: " sich", role: "Context" },
+			{ text: " … ", role: "Gap" },
+			{ text: "vor", role: "Form" },
+		]);
 	});
 
 	it("read a periphrasis as its finite auxiliary and the rest, shown as hat gefahren", () => {
@@ -212,15 +224,15 @@ describe("met Surfaces", () => {
 				.map(({ text }) => text)
 				.join(""),
 		).toBe("hat gefahren");
-		const etablieren = verb("sich etablieren", {
-			lexicallyReflexive: "Acc",
-		});
-		const subordinate = pack.formOfSurface(
-			surface(etablieren, "sich etabliert hat", perfect),
-		);
+		const etabliert = {
+			kind: "Verb",
+			finite: "hat",
+			reflexive: "sich",
+			nonFinite: "etabliert",
+		} as const;
 		expect(
 			pack
-				.display(subordinate)
+				.display(etabliert)
 				.map(({ text }) => text)
 				.join(""),
 		).toBe("hat sich etabliert");
