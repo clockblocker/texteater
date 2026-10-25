@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "wissen",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "🧠"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "wiss",
+					"target": {
+						"language": "de",
+						"canonicalForm": "wiss",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: wissen",
+				"url": "https://www.dwds.de/wb/wissen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. wiʒʒan, a preterite-present verb"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "DWDS gives no Wortzerlegung, so it is a bottom word: the Root wiss and the Ending en (ADR 0051). weiß and wusste show allomorphs of the same Root."
+	}
+}

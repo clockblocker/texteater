@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Varzin",
+			"coreFeatures": {
+				"article": null,
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🏰"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Varzin",
+					"target": {
+						"language": "de",
+						"canonicalForm": "varzin",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "de.wikipedia: Warcino",
+				"url": "https://de.wikipedia.org/wiki/Warcino",
+				"supports": "Warcino (deutsch Varzin), a village in Hinterpommern, 'slawischen Ursprungs'; Bismarck's estate"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Bismarck's Pomeranian estate, a name of Slavic origin. No dictionary splits it within German, and a PROPN has no Source (ADR 0050), so it is a bottom word: the Root varzin and the zero ending (ADR 0051)."
+	}
+}

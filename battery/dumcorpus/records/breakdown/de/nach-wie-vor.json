@@ -1,0 +1,104 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "ADV",
+			"canonicalForm": "nach wie vor",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🔁"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "nach",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "nach",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "wie",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "wie",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "vor",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "vor",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/relative-w-adverb-fills-a-slot",
+				"hash": "1a40c9fa9b13cf2c"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: nach wie vor",
+				"url": "https://www.dwds.de/wb/nach%20wie%20vor",
+				"supports": "The Mehrwortausdruck nach wie vor, 'weiterhin, immer noch; seit jeher, (so) wie früher, wie bisher'; Hauptbestandteile 2nach, 2vor"
+			},
+			{
+				"title": "DWDS: nach",
+				"url": "https://www.dwds.de/wb/nach",
+				"supports": "2nach, Adverb, sense 2 b: ⟨nach wie vor⟩"
+			},
+			{
+				"title": "DWDS: vor",
+				"url": "https://www.dwds.de/wb/vor",
+				"supports": "2vor, Adverb, sense 3: ⟨nach wie vor⟩"
+			},
+			{
+				"title": "DWDS: wie",
+				"url": "https://www.dwds.de/wb/wie",
+				"supports": "wie, II. konjunktional, 1 a α, 'setzt vergleichend einzelne Wörter zueinander in Beziehung': er ist nach wie vor (= noch immer) der beliebteste Sänger"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The adverb 'still, as before': sie wohnt nach wie vor in Köln. Each part keeps its own Kind: DWDS files nach wie vor under the adverbs nach and vor, not the prepositions, so both link to ADV, and wie compares two single words and fills no slot, so it links to the CCONJ wie (de/relative-w-adverb-fills-a-slot). No two of its words form a unit of their own."
+	}
+}

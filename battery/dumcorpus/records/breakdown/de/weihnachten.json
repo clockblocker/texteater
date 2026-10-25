@@ -1,0 +1,65 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Weihnachten",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🎄"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Weihnachten",
+					"target": {
+						"language": "de",
+						"canonicalForm": "weihnachten",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Weihnachten",
+				"url": "https://www.dwds.de/wb/Weihnachten",
+				"supports": "Substantiv (Neutrum), no Wortzerlegung, only 'formal verwandt mit Weihnacht'; Etymologie: the Nominative plural mhd. wīhenachten, formed from the dative plural ze den wīhen nahten, used as a singular since the 14th century"
+			},
+			{
+				"title": "DWDS: Weihnacht",
+				"url": "https://www.dwds.de/wb/Weihnacht",
+				"supports": "The Wortzerlegung weihen Nacht, for the feminine Weihnacht, not for Weihnachten"
+			},
+			{
+				"title": "en.wiktionary: Weihnachten",
+				"url": "https://en.wiktionary.org/wiki/Weihnachten",
+				"supports": "German etymology: inherited from MHG wīhenahten, from the dative plural ze den wīhen nahten; 'Compare modern weihen and Nacht'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "DWDS gives Weihnachten no Wortzerlegung, only a formal link to Weihnacht, and en.wiktionary calls it inherited from a Middle High German phrase, so no German bracketing exists and it is a bottom word (ADR 0050's tie rule). Its en is no ending today: the genitive is Weihnachtens. So the Root weihnachten and the zero ending (ADR 0051)."
+	}
+}

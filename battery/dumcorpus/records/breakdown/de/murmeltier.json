@@ -1,0 +1,75 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Murmeltier",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🐿"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Murmel",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Murmel",
+						"coreFeatures": {
+							"gender": {
+								"mixed": ["Masc", "Neut"]
+							}
+						}
+					}
+				},
+				{
+					"letters": "tier",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Tier",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/noun-gender-in-free-variation",
+				"hash": "232a2eebe2947abc"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Murmeltier",
+				"url": "https://www.dwds.de/wb/Murmeltier",
+				"supports": "The Wortzerlegung 2Murmel Tier, for das Murmeltier; the Etymologie: from mlat. murem montis 'Bergmaus', leaned on murmeln by folk etymology and made clear by composition into murmelti(e)r (14th c.)"
+			},
+			{
+				"title": "DWDS: Murmel",
+				"url": "https://www.dwds.de/wb/Murmel",
+				"supports": "2Murmel, das, der, regional, Synonym zu Murmeltier; 1Murmel, die, is the glass marble"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The marmot, das Murmeltier. DWDS splits it Murmel + Tier, linking 2Murmel, a regional noun of its own for the animal, as Ren is in Rentier, so Murmel is a word, not a cranberry piece, and not die Murmel, the marble, a NOUN of another gender (ADR 0050). DWDS gives 2Murmel, the animal, das and der in one sense, so the part's Core gender is mixed Masc and Neut (de/noun-gender-in-free-variation; the round-5 judges agreed on #1241)."
+	}
+}

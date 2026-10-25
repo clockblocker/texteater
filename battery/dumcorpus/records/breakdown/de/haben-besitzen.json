@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "haben",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "🤲"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "hab",
+					"target": {
+						"language": "de",
+						"canonicalForm": "hab",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: haben",
+				"url": "https://www.dwds.de/wb/haben",
+				"supports": "No Wortzerlegung; sense 1 'etw. besitzen, sein Eigentum nennen'; Etymologie: ahd. habēn, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Full-verb haben, not the auxiliary. DWDS gives no Wortzerlegung, so it is a bottom word: the Root hab and the Ending en (ADR 0051)."
+	}
+}

@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "können",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "💪"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "könn",
+					"target": {
+						"language": "de",
+						"canonicalForm": "könn",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: können",
+				"url": "https://www.dwds.de/wb/k%C3%B6nnen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. kunnan, a Germanic preterite-present verb, not built from another German word"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Der Fürst kann alles: können as a full verb, to be able to do (draw 84). DWDS gives no Wortzerlegung, so it is a bottom word: the Root könn, as the infinitive shows it (the Root's other Surfaces, kann and konn, are its Lemma's), and the Ending en (ADR 0051)."
+	}
+}

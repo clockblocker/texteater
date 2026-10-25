@@ -1,0 +1,65 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Fischer",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🎣"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Fisch",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "fischen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				},
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-er",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Fischer",
+				"url": "https://www.dwds.de/wb/Fischer",
+				"supports": "The Wortzerlegung fischen -er, for der Fischer, 'Fachmann, der … Fischfang betreibt'; the Etymologie: Fischer 'wer Fische fängt', ahd. fiscāri"
+			},
+			{
+				"title": "DWDS: fischen",
+				"url": "https://www.dwds.de/wb/fischen",
+				"supports": "fischen is a verb of its own (fischt, fischte, hat gefischt), with Fischer among the words built on it"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The fisherman, der Fischer. DWDS splits it fischen + -er: someone who fishes. Fisch shows the verb's stem, though it also spells the noun Fisch, which fischen is itself made from (ADR 0050: the DWDS Wortzerlegung decides)."
+	}
+}

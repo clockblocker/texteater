@@ -1,0 +1,68 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Musikerleben",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🎧"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Musik",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Musik",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "erleben",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Erleben",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Musikerleben",
+				"url": "https://www.dwds.de/wb/Musikerleben",
+				"supports": "The Wortzerlegung Musik Erleben, for 2Musikerleben, Musik-Erleben, das, 'aktive, bewusste Wahrnehmung von Musik, dadurch ausgelöste Empfindung, Erfahrung'"
+			},
+			{
+				"title": "DWDS: Erleben",
+				"url": "https://www.dwds.de/wb/Erleben",
+				"supports": "das Erleben, a noun headword of its own (Grundform erleben), listing 2Musikerleben among the words with Erleben as Letztglied"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The experience of music. DWDS splits it Musik + Erleben, the noun das Erleben, which DWDS lists as a headword of its own; 1Musikerleben, a musician's life, splits Musiker + Leben (ADR 0050: the Reading owns the split)."
+	}
+}

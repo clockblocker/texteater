@@ -1,0 +1,51 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "nur",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "☝"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "nur",
+					"target": {
+						"language": "de",
+						"canonicalForm": "nur",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: nur",
+				"url": "https://www.dwds.de/wb/nur",
+				"supports": "Adverb with no Wortzerlegung; Etymologie: the word arises 'durch Verkürzung' of an older phrase"
+			},
+			{
+				"title": "en.wiktionary: nur",
+				"url": "https://en.wiktionary.org/wiki/nur",
+				"supports": "German etymology: contracted from MHG niwer, newære, from OHG ni wāri 'were it not'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "nur Friedrich und Rollo folgten, 'only'. Its old source, ni wāri, is contracted beyond any cut, and DWDS gives no Wortzerlegung, so it is a bottom word, an indeclinable one with no Ending (ADR 0051): the Root nur alone."
+	}
+}

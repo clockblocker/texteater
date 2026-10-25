@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Herr",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🎩"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Herr",
+					"target": {
+						"language": "de",
+						"canonicalForm": "herr",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Herr",
+				"url": "https://www.dwds.de/wb/Herr",
+				"supports": "No Wortzerlegung; sense 3 'jmd., der anderen zu befehlen hat, Gebieter'. Etymologie: ahd. hēriro, hērro, inherited, not built in German"
+			},
+			{
+				"title": "en.wiktionary: Herr",
+				"url": "https://en.wiktionary.org/wiki/Herr",
+				"supports": "German etymology: inherited from MHG hērre, OHG hēriro, originally a comparative of OHG hēr (whence hehr)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "der gnädige Herr, the master of the house in a servant's mouth (DWDS sense 3). DWDS gives no Wortzerlegung, and the old comparative of hehr is inherited, not a German formation, so it is a bottom word: the Root herr and the zero ending (ADR 0051)."
+	}
+}

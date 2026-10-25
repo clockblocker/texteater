@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "zuhören",
+			"coreFeatures": {
+				"hasSepPrefix": "zu",
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "👂"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "zu",
+					"target": {
+						"language": "de",
+						"canonicalForm": "zu-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "hören",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "hören",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: zuhören",
+				"url": "https://www.dwds.de/wb/zuh%C3%B6ren",
+				"supports": "The Wortzerlegung zu- hören"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "hörte dabei gerne zu. A particle verb: the separable particle zu, which hasSepPrefix names, links to its Prefix Morpheme zu- (ADR 0050)."
+	}
+}

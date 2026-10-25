@@ -1,0 +1,44 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "CCONJ",
+			"canonicalForm": "und",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "➕"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "und",
+					"target": {
+						"language": "de",
+						"canonicalForm": "und",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: und",
+				"url": "https://www.dwds.de/wb/und",
+				"supports": "Konjunktion with no Wortzerlegung; Etymologie: ahd. anti, enti, unti, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A bottom word, and indeclinable, so it has no Ending, not even ∅: the Root und alone, ADR 0051's own example."
+	}
+}

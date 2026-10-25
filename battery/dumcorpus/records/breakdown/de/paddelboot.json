@@ -1,0 +1,63 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Paddelboot",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🛶"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Paddel",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Paddel",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "boot",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Boot",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Paddelboot",
+				"url": "https://www.dwds.de/wb/Paddelboot",
+				"supports": "The Wortzerlegung 1Paddel Boot, linking the noun das Paddel, not the verb paddeln; the Etymologie: Paddelboot n. 'mit einem Paddel fortzubewegendes Boot'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "DWDS splits it Paddel + Boot: Paddel is the noun here, though it also spells the stem of paddeln, a verb made from it (ADR 0050: the DWDS Wortzerlegung decides). Schaukelpferd, the same shape, links the verb schaukeln instead."
+	}
+}

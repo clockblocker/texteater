@@ -1,0 +1,369 @@
+{
+	"note": "Held-out real-text batch for German segment.inConstituents and segment.inMorphemes, round 5 of #1241, authored 2026-10-25 as Draft Breakdown Records in records/breakdown/de. Its 30 targets were sampled uniformly at random from the sentences tf-demo's Learners read (see sampling), and gold was authored only after sampling, so no target was replaced, skipped or reordered for being easy, hard or odd; rows RT1 to RT30 follow draw order. Three accepted draws were excluded after sampling and replaced by the next accepted draws, 80, 82 and 84 (see sampling): draw 74, PROPN Hohen-Cremmen, which the two judges agreed to drop (its inflected adjective first part is a structural snag); draw 8, ADJ schlimm, because its unit call is contested (the gold author argues the sampled unit is NOUN das Schlimmste, under Rule de/neuter-adjectival-noun, which would take a Source), and draw 54, anschließen in sich jmdm. anschließen, because of a structural snag: no Breakdown for a lexically reflexive one-word Lexeme passes the checker (it also hits ADR 0050's sich erinnern), and a structural fix follows round 5. The lab scores these records in segment-in-constituents/de:realtext, the round's headline set, and its bottom words in segment-in-morphemes/de:realtext. Gold: 22 of 30 have no Constituents, so they are NoConstituents cases for segment.inConstituents and morphemes cases for segment.inMorphemes: 11 declinable bottom words with a Root and an Ending (verbs geben, heißen, haben, sagen, wissen, weinen, können with en; nouns and adjectives Herr, kurz, Gefahr, Weihnachten with ∅), 8 indeclinables with a Root and no Ending (hin, schon, nur, erst, noch, gar, und, ja), and 3 proper names with a Root and ∅ (Kopp, Schrimm, Varzin). 8 have Constituents: 4 derivations (Genesung = genesen + -ung, jugendlich = Jugend + -lich, gnädig = Gnade + -ig, erkennen = er- + kennen), 3 particle verbs (mitnehmen, zuhören, abfallen) and 1 phraseme (zu Gast sein = zu · Gast · sein). No compound was drawn, and no target has a Source. Every word split follows the DWDS Wortzerlegung, and every bottom word is one DWDS gives none (ADR 0050's tie rule), each cited in its record. Debatable calls, for the judges: Weihnachten (DWDS gives it no Wortzerlegung, only a formal link to Weihnacht, whose Wortzerlegung is weihen Nacht; gold keeps it a bottom word); Gefahr (DWDS's Etymologie calls mhd. gevāre a ge- formation on obsolete Fahr, but no Wortzerlegung confirms the cut, so ge- stays in the Root as in Geselle); Kopp, Schrimm and Varzin (no dictionary splits them; a PROPN takes ∅ by German's morpheme policy); gar (DWDS derives the adverb from the adjective gar, but no Source is produced on an ADV). Judged 2026-10-25 by two judges, system and learner POV (#1241); their agreed changes are applied and their splits are listed on #1241, none of them changing a gold Breakdown; none may be an example in a Breakdown prompt (#693).",
+	"set": "realtext",
+	"sampling": {
+		"frame": "tf-demo Library's German Scrolls on 2026-10-25: Effi Briest's 37 chapter Scrolls plus the Tagesschau article's German Sentences",
+		"frameSentences": 6183,
+		"frameTokens": 95628,
+		"frameSha256": "76219ae743508c6807837dc869e41c7ff54e57f1a050700c21cf423dd337501b",
+		"tokens": "Maximal letter runs in each Sentence, a run joined across an inner apostrophe kept whole (sich's)",
+		"seed": 20261025,
+		"prng": "Python 3 random.Random(20261025).shuffle over the frame's word-token indices, drawn in shuffled order",
+		"acceptance": [
+			"The token's unit in context is a Lexeme, Locution or Saying tf-demo would ask a Breakdown for: not a closed route (AUX, DET, PRON, PART), not an Authored Inventory member, not Foreign",
+			"The token is the unit's first member in the sentence, so each unit occurrence has one chance",
+			"Its Lemma is not already Breakdown gold",
+			"It is not a prompt word (#693)",
+			"Its Reading was not accepted before"
+		],
+		"accepted": 30,
+		"drawsJudged": 84,
+		"drawLogFormat": "One string per draw, in draw order: draw · token · Effi Briest chapter Scroll #sentence position · the unit in context · verdict: reason",
+		"drawLog": [
+			"1 · in · Einundzwanzigstes Kapitel #34 · Lexeme ADP in · reject: authored member",
+			"2 · denn · Dreizehntes Kapitel #84 · Lexeme PART denn · reject: closed route (modal particle in denn auch)",
+			"3 · Genesung · Vierunddreißigstes Kapitel #22 · Lexeme NOUN Genesung · accept",
+			"4 · Herr · Zweiunddreißigstes Kapitel #76 · Lexeme NOUN Herr · accept",
+			"5 · gibt · Neunzehntes Kapitel #51 · Lexeme VERB geben (es gibt) · accept",
+			"6 · heißt · Neunundzwanzigstes Kapitel #137 · Lexeme VERB heißen · accept",
+			"7 · sind · Sechstes Kapitel #48 · Lexeme VERB sein (copula) · reject: prompt word (#693): sein is named in a Breakdown prompt (mehr Schein als Sein)",
+			"8 · Schlimmste · Achtzehntes Kapitel #178 · Lexeme ADJ schlimm · excluded after sampling: unit call contested: the gold author argues the sampled unit is NOUN das Schlimmste, not ADJ schlimm",
+			"9 · das · Einundzwanzigstes Kapitel #243 · Lexeme PRON der (relative) · reject: closed route",
+			"10 · sich · Fünfunddreißigstes Kapitel #77 · Lexeme PRON sich · reject: closed route",
+			"11 · die · Erstes Kapitel #31 · Lexeme DET der · reject: closed route",
+			"12 · hat · Siebzehntes Kapitel #28 · Lexeme VERB haben (possess) · accept",
+			"13 · an · Siebzehntes Kapitel #124 · Lexeme VERB ansehen · reject: not the unit's first member (sah ... an)",
+			"14 · das · Zwölftes Kapitel #106 · Lexeme PRON der (demonstrative) · reject: closed route",
+			"15 · kurzen · Einunddreißgstes Kapitel #64 · Lexeme ADJ kurz · accept",
+			"16 · Stille · Zweites Kapitel #15 · Saying Stille Wasser sind tief · reject: already Breakdown gold",
+			"17 · sich · Zwölftes Kapitel #45 · Lexeme PRON sich · reject: closed route",
+			"18 · wo · Fünfzehntes Kapitel #43 · Lexeme ADV wo · reject: authored member",
+			"19 · jugendliche · Neuntes Kapitel #71 · Lexeme ADJ jugendlich · accept",
+			"20 · sie · Dreiundzwanzigstes Kapitel #208 · Lexeme PRON sie · reject: closed route",
+			"21 · dem · Neunundzwanzigstes Kapitel #106 · Lexeme DET der · reject: closed route",
+			"22 · Kopp · Fünfunddreißigstes Kapitel #184 · Lexeme PROPN Kopp · accept",
+			"23 · wäre · Neunundzwanzigstes Kapitel #140 · Lexeme VERB sein (copula) · reject: prompt word (#693)",
+			"24 · gnädigen · Fünfundzwanzigstes Kapitel #55 · Lexeme ADJ gnädig · accept",
+			"25 · oder · Neunzehntes Kapitel #141 · Locution ADV wohl oder übel · reject: not the unit's first member",
+			"26 · ihrem · Siebentes Kapitel #6 · Lexeme DET ihr · reject: closed route",
+			"27 · wird · Zweiundzwanzigstes Kapitel #44 · Lexeme AUX werden · reject: closed route",
+			"28 · hin · Neuntes Kapitel #78 · Lexeme ADV hin · accept",
+			"29 · wie · Erstes Kapitel #168 · Lexeme CCONJ wie (comparison) · reject: prompt word (#693): wie is named in a Breakdown prompt",
+			"30 · ich · Dreiundzwanzigstes Kapitel #31 · Lexeme PRON ich · reject: closed route",
+			"31 · schon · Achtzehntes Kapitel #49 · Lexeme ADV schon · accept",
+			"32 · mit · Zweiunddreißigstes Kapitel #192 · Lexeme ADP mit · reject: authored member",
+			"33 · diesen · Fünfunddreißigstes Kapitel #172 · Lexeme DET dieser · reject: closed route",
+			"34 · sagte · Zweiundzwanzigstes Kapitel #82 · Lexeme VERB sagen · accept",
+			"35 · ins · Sechsundzwanzigstes Kapitel #37 · Locution VERB ins Stolpern geraten · reject: not the unit's first member (geriet ... ins Stolpern)",
+			"36 · Gefahr · Fünfzehntes Kapitel #6 · Lexeme NOUN Gefahr · accept",
+			"37 · ein · Dreizehntes Kapitel #47 · Lexeme DET ein · reject: closed route",
+			"38 · Der · Dreizehntes Kapitel #58 · Lexeme DET der (in the name Der Schnatermann) · reject: closed route",
+			"39 · hinauf · Fünfzehntes Kapitel #10 · Lexeme ADV hinauf · reject: authored member",
+			"40 · zu · Dreißigstes Kapitel #22 · Lexeme PART zu (infinitive) · reject: closed route",
+			"41 · bist · Sechstes Kapitel #186 · Locution VERB zu Gast sein · accept",
+			"42 · den · Zweiunddreißigstes Kapitel #43 · Lexeme DET der · reject: closed route",
+			"43 · nur · Sechstes Kapitel #163 · Lexeme ADV nur · accept",
+			"44 · sind · Fünftes Kapitel #49 · Lexeme VERB sein (copula) · reject: prompt word (#693)",
+			"45 · erkannte · Siebenundzwanzigstes Kapitel #26 · Lexeme VERB erkennen · accept",
+			"46 · zu · Fünfunddreißigstes Kapitel #102 · Lexeme PART zu (infinitive) · reject: closed route",
+			"47 · Erst · Siebentes Kapitel #37 · Lexeme ADV erst · accept",
+			"48 · ihm · Einundzwanzigstes Kapitel #208 · Lexeme PRON er · reject: closed route",
+			"49 · so · Achtzehntes Kapitel #64 · Lexeme ADV so · reject: authored member",
+			"50 · auf · Erstes Kapitel #35 · Lexeme ADP auf · reject: authored member",
+			"51 · Schrimm · Fünfundzwanzigstes Kapitel #27 · Lexeme PROPN Schrimm · accept",
+			"52 · es · Zehntes Kapitel #193 · Lexeme PRON es · reject: closed route",
+			"53 · sein · Zwanzigstes Kapitel #141 · Lexeme VERB sein (copula) · reject: prompt word (#693)",
+			"54 · schloß · Achtzehntes Kapitel #139 · Lexeme VERB anschließen (sich jemandem anschließen) · excluded after sampling: structural snag: no Breakdown for a lexically reflexive one-word Lexeme passes the checker (also hits ADR 0050's sich erinnern); a separate structural fix follows round 5",
+			"55 · bist · Zwanzigstes Kapitel #16 · Lexeme VERB sein (copula) · reject: prompt word (#693)",
+			"56 · wüßte · Zweiunddreißigstes Kapitel #141 · Lexeme VERB wissen · accept",
+			"57 · und · Sechzehntes Kapitel #52 · Lexeme CCONJ und · accept",
+			"58 · noch · Fünfzehntes Kapitel #61 · Lexeme ADV noch · accept",
+			"59 · Du · Siebentes Kapitel #135 · Lexeme PRON du · reject: closed route",
+			"60 · Und · Dreizehntes Kapitel #68 · Lexeme CCONJ und · reject: repeat of an accepted Reading",
+			"61 · volatile · Zweiundzwanzigstes Kapitel #201 · Foreign volatile (Sal volatile) · reject: Foreign, no Breakdown",
+			"62 · Der · Zehntes Kapitel #31 · Lexeme PRON der · reject: closed route",
+			"63 · alles · Fünfunddreißigstes Kapitel #126 · Lexeme PRON alle · reject: closed route",
+			"64 · ich · Achtzehntes Kapitel #100 · Lexeme PRON ich · reject: closed route",
+			"65 · Haben · Dreißigstes Kapitel #64 · Lexeme AUX haben · reject: closed route",
+			"66 · Weihnachten · Neuntes Kapitel #70 · Lexeme NOUN Weihnachten · accept",
+			"67 · weintest · Viertes Kapitel #207 · Lexeme VERB weinen · accept",
+			"68 · gar · Zehntes Kapitel #160 · Lexeme ADV gar · accept",
+			"69 · mitnehmen · Zweiundzwanzigstes Kapitel #127 · Lexeme VERB mitnehmen · accept",
+			"70 · hörte · Vierzehntes Kapitel #24 · Lexeme VERB zuhören · accept",
+			"71 · weißt · Achtzehntes Kapitel #67 · Lexeme VERB wissen · reject: repeat of an accepted Reading",
+			"72 · und · Erstes Kapitel #55 · Lexeme CCONJ und · reject: repeat of an accepted Reading",
+			"73 · viele · Neunzehntes Kapitel #51 · Lexeme DET viel · reject: closed route",
+			"74 · Hohen · Fünfzehntes Kapitel #76 · Lexeme PROPN Hohen-Cremmen · excluded after sampling: structural snag the two judges agreed on: Hohen is an inflected adjective first part (hoch) whose letters no Constituent rule lets spell its Lemma, as in Langeweile; a structural fix follows round 5",
+			"75 · verheiraten · Fünftes Kapitel #185 · Lexeme VERB sich verheiraten · reject: not the unit's first member (sich ... verheiraten)",
+			"76 · in · Einundzwanzigstes Kapitel #151 · Lexeme ADP in · reject: authored member",
+			"77 · Varzin · Zehntes Kapitel #95 · Lexeme PROPN Varzin · accept",
+			"78 · keine · Elftes Kapitel #11 · Lexeme DET kein · reject: closed route",
+			"79 · und · Neuntes Kapitel #256 · Lexeme CCONJ und · reject: repeat of an accepted Reading",
+			"80 · Ja · Drittes Kapitel #19 · Lexeme INTJ ja · accept",
+			"81 · ein · Siebzehntes Kapitel #147 · Lexeme DET ein · reject: closed route",
+			"82 · fiel · Fünfundzwanzigstes Kapitel #43 · Lexeme VERB abfallen · accept",
+			"83 · mir · Fünfundzwanzigstes Kapitel #73 · Lexeme PRON ich · reject: closed route",
+			"84 · kann · Einundzwanzigstes Kapitel #229 · Lexeme VERB können (Der Fürst kann alles) · accept"
+		],
+		"excludedAfterSampling": [
+			{
+				"draw": 8,
+				"unit": "Lexeme ADJ schlimm",
+				"reason": "unit call contested: the gold author argues the sampled unit is NOUN das Schlimmste, not ADJ schlimm"
+			},
+			{
+				"draw": 54,
+				"unit": "Lexeme VERB anschließen (sich jemandem anschließen)",
+				"reason": "structural snag: no Breakdown for a lexically reflexive one-word Lexeme passes the checker (also hits ADR 0050's sich erinnern); a separate structural fix follows round 5"
+			},
+			{
+				"draw": 74,
+				"unit": "Lexeme PROPN Hohen-Cremmen",
+				"reason": "structural snag the two judges agreed on: Hohen is an inflected adjective first part (hoch) whose letters no Constituent rule lets spell its Lemma, as in Langeweile; a structural fix follows round 5"
+			}
+		],
+		"replacements": "The coordinator excluded draws 8 and 54 after gold authoring began and took the next accepted draws, 80 (ja) and 82 (abfallen), judging draws 78 to 82. After the two judges agreed to drop draw 74 (Hohen-Cremmen), the coordinator judged draws 83 and 84 and took 84 (können), stopping there. The excluded targets have no record and are scored in no set."
+	},
+	"rows": [
+		{
+			"row": "RT1",
+			"record": "breakdown/de/genesung",
+			"bucket": "derivation",
+			"split": "held-out",
+			"change": "new",
+			"draw": 3
+		},
+		{
+			"row": "RT2",
+			"record": "breakdown/de/herr-gebieter",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 4
+		},
+		{
+			"row": "RT3",
+			"record": "breakdown/de/geben-es-gibt",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 5
+		},
+		{
+			"row": "RT4",
+			"record": "breakdown/de/heissen-bedeuten",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 6
+		},
+		{
+			"row": "RT5",
+			"record": "breakdown/de/haben-besitzen",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 12
+		},
+		{
+			"row": "RT6",
+			"record": "breakdown/de/kurz",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 15
+		},
+		{
+			"row": "RT7",
+			"record": "breakdown/de/jugendlich",
+			"bucket": "derivation",
+			"split": "held-out",
+			"change": "new",
+			"draw": 19
+		},
+		{
+			"row": "RT8",
+			"record": "breakdown/de/kopp",
+			"bucket": "proper-name",
+			"split": "held-out",
+			"change": "new",
+			"draw": 22
+		},
+		{
+			"row": "RT9",
+			"record": "breakdown/de/gnaedig",
+			"bucket": "derivation",
+			"split": "held-out",
+			"change": "new",
+			"draw": 24
+		},
+		{
+			"row": "RT10",
+			"record": "breakdown/de/hin",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 28
+		},
+		{
+			"row": "RT11",
+			"record": "breakdown/de/schon",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 31
+		},
+		{
+			"row": "RT12",
+			"record": "breakdown/de/sagen",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 34
+		},
+		{
+			"row": "RT13",
+			"record": "breakdown/de/gefahr",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 36
+		},
+		{
+			"row": "RT14",
+			"record": "breakdown/de/zu-gast-sein",
+			"bucket": "phraseme",
+			"split": "held-out",
+			"change": "new",
+			"draw": 41
+		},
+		{
+			"row": "RT15",
+			"record": "breakdown/de/nur",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 43
+		},
+		{
+			"row": "RT16",
+			"record": "breakdown/de/erkennen",
+			"bucket": "derivation",
+			"split": "held-out",
+			"change": "new",
+			"draw": 45
+		},
+		{
+			"row": "RT17",
+			"record": "breakdown/de/erst",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 47
+		},
+		{
+			"row": "RT18",
+			"record": "breakdown/de/schrimm",
+			"bucket": "proper-name",
+			"split": "held-out",
+			"change": "new",
+			"draw": 51
+		},
+		{
+			"row": "RT19",
+			"record": "breakdown/de/wissen",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 56
+		},
+		{
+			"row": "RT20",
+			"record": "breakdown/de/und",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 57
+		},
+		{
+			"row": "RT21",
+			"record": "breakdown/de/noch",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 58
+		},
+		{
+			"row": "RT22",
+			"record": "breakdown/de/weihnachten",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 66
+		},
+		{
+			"row": "RT23",
+			"record": "breakdown/de/weinen",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 67
+		},
+		{
+			"row": "RT24",
+			"record": "breakdown/de/gar",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 68
+		},
+		{
+			"row": "RT25",
+			"record": "breakdown/de/mitnehmen",
+			"bucket": "particle-verb",
+			"split": "held-out",
+			"change": "new",
+			"draw": 69
+		},
+		{
+			"row": "RT26",
+			"record": "breakdown/de/zuhoeren",
+			"bucket": "particle-verb",
+			"split": "held-out",
+			"change": "new",
+			"draw": 70
+		},
+		{
+			"row": "RT27",
+			"record": "breakdown/de/varzin",
+			"bucket": "proper-name",
+			"split": "held-out",
+			"change": "new",
+			"draw": 77
+		},
+		{
+			"row": "RT28",
+			"record": "breakdown/de/ja",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 80
+		},
+		{
+			"row": "RT29",
+			"record": "breakdown/de/abfallen-schwinden",
+			"bucket": "particle-verb",
+			"split": "held-out",
+			"change": "new",
+			"draw": 82
+		},
+		{
+			"row": "RT30",
+			"record": "breakdown/de/koennen",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 84
+		}
+	]
+}

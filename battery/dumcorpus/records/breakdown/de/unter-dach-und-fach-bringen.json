@@ -1,0 +1,70 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "unter Dach und Fach bringen",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "✅"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "unter Dach und Fach",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "ADV",
+						"canonicalForm": "unter Dach und Fach",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "bringen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "bringen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: unter Dach und Fach",
+				"url": "https://www.dwds.de/wb/unter%20Dach%20und%20Fach",
+				"supports": "The Mehrwortausdruck unter Dach und Fach, '(erfolgreich) abgeschlossen, verbindlich vereinbart', with the Wendungen ⟨etw. unter Dach und Fach bringen⟩ and ⟨unter Dach und Fach sein⟩ and, als Adverbialbestimmung, unter Dach und Fach haben, kriegen, bekommen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "unter Dach und Fach is a Locution ADV of its own, used with other verbs (unter Dach und Fach sein, haben, kriegen), so it is one part, the biggest unit inside the wording, as auf Nummer sicher is in auf Nummer sicher gehen (ADR 0050). The placeholder etw. is no part."
+	}
+}

@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "heißen",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "💬"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "heiß",
+					"target": {
+						"language": "de",
+						"canonicalForm": "heiß",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: heißen",
+				"url": "https://www.dwds.de/wb/hei%C3%9Fen",
+				"supports": "No Wortzerlegung; sense 4 'einen bestimmten Sinn haben, etw. bedeuten'; Etymologie: the once reduplicating verb ahd. heiʒan"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Was heißt lange her?, 'what does it mean' (DWDS sense 4). DWDS gives no Wortzerlegung, so it is a bottom word: the Root heiß and the Ending en (ADR 0051). The weak homograph heißen 'heat' is another Lemma."
+	}
+}

@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "gnädig",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "🙇"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "gnäd",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Gnade",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "ig",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-ig",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gnädig",
+				"url": "https://www.dwds.de/wb/gn%C3%A4dig",
+				"supports": "The Wortzerlegung Gnade -ig"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "der gnädigen Frau, the polite address of a lady. DWDS splits it Gnade + -ig (ADR 0050): gnäd shows Gnade with umlaut and the final -e dropped. It is comparable: the batch's own text has meine gnädigste Frau."
+	}
+}

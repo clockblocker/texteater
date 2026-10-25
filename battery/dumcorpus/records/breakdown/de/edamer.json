@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Edamer",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🧀"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Edam",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Edam",
+						"coreFeatures": {
+							"article": null,
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-er",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Edamer",
+				"url": "https://www.dwds.de/wb/Edamer",
+				"supports": "The Wortzerlegung Edam (Eigenname) 1-er, for der Edamer, 'hell- bis goldgelber, fester Schnittkäse mit Rinde aus rotem Paraffin'; Mehrwortausdruck Edamer Käse; no Grundform line"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The cheese, der Edamer. DWDS splits it Edam + -er, the PROPN for the Dutch town, though the word names a cheese, not someone from Edam (ADR 0050: a part may be PROPN). Unlike der Hamburger 🍔, DWDS gives this noun a Wortzerlegung of its own and no Grundform line, so it is no conversion from an adjective."
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Honig",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🍯"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Honig",
+					"target": {
+						"language": "de",
+						"canonicalForm": "honig",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Honig",
+				"url": "https://www.dwds.de/wb/Honig",
+				"supports": "No Wortzerlegung for der Honig; the Etymologie gives ahd. honag, honeg, honig (8th-9th c.), germ. *hona(n)ga-, named for its golden colour"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A bottom word has no word inside it. DWDS gives no Wortzerlegung, so the ig on the affix list is not cut off, and the morphemes are the Root honig and the zero ending (ADR 0051: an affix split needs the DWDS Wortzerlegung to confirm it). Hon is no German word, so the bare letters can't show the cut is wrong, as Röm can't in der Römer 🍷."
+	}
+}

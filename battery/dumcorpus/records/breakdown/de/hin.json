@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "hin",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "➡"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "hin",
+					"target": {
+						"language": "de",
+						"canonicalForm": "hin",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: hin",
+				"url": "https://www.dwds.de/wb/hin",
+				"supports": "Adverb with no Wortzerlegung; Etymologie: ahd. hina, an old n-suffix formation on a pronoun stem, not a German one"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "durch die Stadt hin, the direction away from the speaker. DWDS gives no Wortzerlegung, so it is a bottom word. An adverb is indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root hin alone."
+	}
+}

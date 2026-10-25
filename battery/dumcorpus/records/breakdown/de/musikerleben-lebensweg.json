@@ -1,0 +1,63 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Musikerleben",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🧑‍🎤"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Musiker",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Musiker",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": "leben",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Leben",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Musikerleben",
+				"url": "https://www.dwds.de/wb/Musikerleben",
+				"supports": "The Wortzerlegung Musiker Leben, for 1Musikerleben, Musiker-Leben, das, 'Lebensweg und Lebensführung einer Person, die ihr Leben der Musik, dem Musizieren gewidmet hat'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A musician's life. DWDS gives the spelling two articles: this one splits Musiker + Leben, and 2Musikerleben, the experience of music, splits Musik + Erleben (ADR 0050: the Reading owns the split). Musiker is itself Musik + -er, one click away."
+	}
+}

@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "weinen",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "😢"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "wein",
+					"target": {
+						"language": "de",
+						"canonicalForm": "wein",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: weinen",
+				"url": "https://www.dwds.de/wb/weinen",
+				"supports": "No Wortzerlegung; Etymologie: germ. *wainōn, 'abgeleitet mit n-Infix von der Interjektion germ. *wai (s. weh)'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The n-formation on wai is Germanic, not German, and DWDS gives no Wortzerlegung, so it is a bottom word: the Root wein and the Ending en (ADR 0051). The Root of Wein 'wine' is a homograph Reading of its own."
+	}
+}

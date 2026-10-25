@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "INTJ",
+			"canonicalForm": "ja",
+			"coreFeatures": {
+				"partType": "Res"
+			}
+		},
+		"emojiDescription": "👍"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "ja",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ja",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: ja",
+				"url": "https://www.dwds.de/wb/ja",
+				"supports": "No Wortzerlegung; sense I.1 'drückt Zustimmung, Gewissheit aus'; Etymologie: ahd. jā, a Germanic answer word of uncertain origin"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Ja, ja, so geht es, an answer word. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root ja alone."
+	}
+}

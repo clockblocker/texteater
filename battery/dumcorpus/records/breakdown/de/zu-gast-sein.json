@@ -1,0 +1,79 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "zu Gast sein",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🛎"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "zu",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "zu",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Gast",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Gast",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "sein",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sein",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gast",
+				"url": "https://www.dwds.de/wb/Gast",
+				"supports": "The Mehrwortausdruck bei jmdm., etw. zu Gast sein; DWDS has no entry zu Gast of its own"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A Locution's Constituents are the biggest units inside its wording (ADR 0050). zu Gast is no inner unit: DWDS lists it only inside zu Gast sein and jmdn. zu Gast haben. The placeholder bei jmdm. is never a part, so the parts are zu, Gast and sein."
+	}
+}

@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "abfallen",
+			"coreFeatures": {
+				"hasSepPrefix": "ab",
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "🍂"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ab",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ab-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "fallen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "fallen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: abfallen",
+				"url": "https://www.dwds.de/wb/abfallen",
+				"supports": "The Wortzerlegung ab- fallen; sense 2 'sich ablösen'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "da fiel es allmählich von ihr ab, a weight falling away from her. A particle verb: the separable particle ab, which hasSepPrefix names, links to its Prefix Morpheme ab- (ADR 0050), as DWDS splits it."
+	}
+}

@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "geben",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "🌍"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "geb",
+					"target": {
+						"language": "de",
+						"canonicalForm": "geb",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: geben",
+				"url": "https://www.dwds.de/wb/geben",
+				"supports": "No Wortzerlegung ('formal verwandt mit Gabe'); sense 14 a ⟨es gibt⟩; Etymologie: a common Germanic verb, ahd. geban"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "es gibt, 'there is' (DWDS sense 14 a), a Reading of geben; the expletive es is a satellite, never a part (ADR 0050). DWDS gives no Wortzerlegung, so it is a bottom word: the Root geb and the Ending en (ADR 0051)."
+	}
+}

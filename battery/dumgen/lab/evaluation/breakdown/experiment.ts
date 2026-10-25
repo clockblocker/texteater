@@ -1,8 +1,10 @@
 /**
  * The Breakdown segmenters' experiments (`experiments.ts`):
- * `segment-in-constituents/de:breakdown`, `segment-in-constituents/de:heldout`
- * and `segment-in-morphemes/de:breakdown`, each over its cases from
- * dumcorpus's Breakdown Records (`cases.ts`), scored by `scoring.ts`.
+ * `segment-in-constituents/de:breakdown`, its held-out sets
+ * `segment-in-constituents/de:realtext` and `:adversarial`, and
+ * `segment-in-morphemes/de:breakdown` with the same held-out sets, each
+ * over its cases from dumcorpus's
+ * Breakdown Records (`cases.ts`), scored by `scoring.ts`.
  *
  * Each runs production's operation under `DumgenCore`, as segment.inUnits's
  * evaluation does, with the lab's cached, retrying jev as its transport, so
@@ -54,9 +56,9 @@ import {
 	stageUsageOf,
 } from "../../segmentation/harness/pricing.js";
 import {
+	breakdownStandIns,
 	type PricedProjection,
 	priceProjection,
-	standInAnswers,
 } from "../../segmentation/harness/round.js";
 import type {
 	EvaluateArgs,
@@ -77,6 +79,8 @@ import {
 	comparablePiece,
 	constituentsCases,
 	constituentsOutputSchema,
+	type HeldOutSetName,
+	heldOutSetNames,
 	morphemesCases,
 	morphemesOutputSchema,
 } from "./cases.js";
@@ -130,24 +134,35 @@ const constituents: Segmenter<typeof constituentsOutputSchema> = {
 	evaluator: evaluateConstituents,
 };
 
-/** The held-out constituents cases, scored only once prompts are settled. */
-const heldOutConstituents: Segmenter<typeof constituentsOutputSchema> = {
+/** A held-out set's constituents cases, scored only once prompts are settled. */
+const heldOutConstituents = (
+	set: HeldOutSetName,
+): Segmenter<typeof constituentsOutputSchema> => ({
 	...constituents,
-	set: "heldout",
-	cases: () => constituentsCases("heldout"),
-};
+	set,
+	cases: () => constituentsCases(set),
+});
 
 const morphemes: Segmenter<typeof morphemesOutputSchema> = {
 	route: "segment-in-morphemes/de",
 	set: "breakdown",
 	outputSchema: morphemesOutputSchema,
-	cases: morphemesCases,
+	cases: () => morphemesCases("breakdown"),
 	operation: (input) =>
 		Effect.map(operations.segment.inMorphemes(input), (pieces) => ({
 			pieces: pieces.map(comparablePiece),
 		})),
 	evaluator: evaluateMorphemes,
 };
+
+/** A held-out set's bottom words as `segment.inMorphemes` cases. */
+const heldOutMorphemes = (
+	set: HeldOutSetName,
+): Segmenter<typeof morphemesOutputSchema> => ({
+	...morphemes,
+	set,
+	cases: () => morphemesCases(set),
+});
 
 /** The operation over the cached jev at one repetition, its calls kept in `calls`. */
 const attemptOf =
@@ -202,7 +217,7 @@ async function evaluateBreakdown<O extends z.ZodType>(
 	const cacheDirectory = join(args.labRoot ?? defaultLabRoot, "cache");
 	const jevOf = (options: {
 		readonly offline: boolean;
-		readonly project?: typeof standInAnswers;
+		readonly project?: typeof breakdownStandIns;
 		readonly price?: Pricer;
 	}) => {
 		const { price, ...rest } = options;
@@ -251,7 +266,7 @@ async function evaluateBreakdown<O extends z.ZodType>(
 	let projection: PricedProjection | undefined;
 	let price: Pricer | undefined;
 	if (args.estimate || live) {
-		const projecting = jevOf({ offline: true, project: standInAnswers });
+		const projecting = jevOf({ offline: true, project: breakdownStandIns });
 		await pass(projecting, []);
 		projection = priceProjection(projecting.projection, args.calibration);
 		if (args.estimate) return { projection };
@@ -396,8 +411,9 @@ function experimentOf<O extends z.ZodType>(
 /** The Breakdown segmenters' experiments, in the table's order. */
 export const breakdownExperiments: readonly Experiment[] = [
 	experimentOf(constituents),
-	experimentOf(heldOutConstituents),
+	...heldOutSetNames.map((set) => experimentOf(heldOutConstituents(set))),
 	experimentOf(morphemes),
+	...heldOutSetNames.map((set) => experimentOf(heldOutMorphemes(set))),
 ];
 
 /** Whether `id` names a Breakdown segmenter's experiment. */

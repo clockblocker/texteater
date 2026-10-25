@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "erkennen",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "🔍"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "er-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "kennen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "kennen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: erkennen",
+				"url": "https://www.dwds.de/wb/erkennen",
+				"supports": "The Wortzerlegung er- kennen; Etymologie: 'Präfixverb zu kennen'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "DWDS splits it er- + kennen (ADR 0050). An inseparable prefix links to its Prefix Morpheme, and the base verb shows its whole citation form."
+	}
+}

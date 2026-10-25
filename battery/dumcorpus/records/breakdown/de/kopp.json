@@ -1,0 +1,66 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Kopp",
+			"coreFeatures": {
+				"article": null,
+				"gender": null
+			}
+		},
+		"emojiDescription": "⛪"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Kopp",
+					"target": {
+						"language": "de",
+						"canonicalForm": "kopp",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "de.wikipedia: Georg von Kopp",
+				"url": "https://de.wikipedia.org/wiki/Georg_von_Kopp",
+				"supports": "Georg Kopp, from 1887 Fürstbischof von Breslau: the Fürstbischof Kopp of the sentence"
+			},
+			{
+				"title": "de.wikipedia: Kopp (Familienname)",
+				"url": "https://de.wikipedia.org/wiki/Kopp_(Familienname)",
+				"supports": "The surname Kopp may go back to the given name Jakob or be a Low German variant of mnd. kop 'Kopf' or kop(pe) 'Becher', among other origins"
+			},
+			{
+				"title": "DWDS: Kopp",
+				"url": "https://www.dwds.de/wb/Kopp",
+				"supports": "Only the common noun Kopp (Maskulinum), a regional form of Kopf, with no Wortzerlegung; no entry for the surname"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A surname, cited bare and with no Core gender. No dictionary splits it, and a PROPN has no Source (ADR 0050 gives Sources to NOUN, VERB and ADJ only), so it is a bottom word: the Root kopp and the zero ending, since PROPN has an ending slot (Kopps) (ADR 0051)."
+	}
+}

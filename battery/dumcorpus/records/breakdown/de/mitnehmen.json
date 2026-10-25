@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "mitnehmen",
+			"coreFeatures": {
+				"hasSepPrefix": "mit",
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "🧳"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "mit",
+					"target": {
+						"language": "de",
+						"canonicalForm": "mit-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "nehmen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "nehmen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: mitnehmen",
+				"url": "https://www.dwds.de/wb/mitnehmen",
+				"supports": "The Wortzerlegung mit- nehmen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A particle verb: the separable particle mit, which hasSepPrefix names, links to its Prefix Morpheme mit- (ADR 0050)."
+	}
+}

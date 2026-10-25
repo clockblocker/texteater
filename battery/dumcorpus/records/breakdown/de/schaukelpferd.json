@@ -1,0 +1,69 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Schaukelpferd",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🎠"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Schaukel",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "schaukeln",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					}
+				},
+				{
+					"letters": "pferd",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Pferd",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Schaukelpferd",
+				"url": "https://www.dwds.de/wb/Schaukelpferd",
+				"supports": "The Wortzerlegung schaukeln Pferd, for das Schaukelpferd, 'auf nach oben gebogenen Kufen stehendes, meist hölzernes Pferd', linking the verb schaukeln, not the noun Schaukel"
+			},
+			{
+				"title": "DWDS: Schaukel",
+				"url": "https://www.dwds.de/wb/Schaukel",
+				"supports": "die Schaukel is a noun of its own, 'an Seilen frei aufgehängter Sitz', formally related to schaukeln"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "DWDS splits it schaukeln + Pferd: a horse that rocks. Schaukel is the verb's stem here, though it also spells the noun Schaukel, a swing (ADR 0050: the DWDS Wortzerlegung decides). Paddelboot, the same shape, links the noun Paddel instead."
+	}
+}

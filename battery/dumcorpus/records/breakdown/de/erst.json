@@ -1,0 +1,51 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "erst",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🥇"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "erst",
+					"target": {
+						"language": "de",
+						"canonicalForm": "erst",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: erst",
+				"url": "https://www.dwds.de/wb/erst",
+				"supports": "Adverb with no Wortzerlegung; Etymologie: from the ordinal erster, a superlative of the comparative behind eher"
+			},
+			{
+				"title": "en.wiktionary: erst",
+				"url": "https://en.wiktionary.org/wiki/erst",
+				"supports": "German etymology: 'See the numeral erste'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Erst klang es, 'at first'. It goes back to a West Germanic superlative, *airista-, whose -st no German affix list holds, and DWDS gives no Wortzerlegung, so it is a bottom word, an indeclinable one with no Ending (ADR 0051): the Root erst alone."
+	}
+}

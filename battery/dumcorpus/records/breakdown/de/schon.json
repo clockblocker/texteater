@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "schon",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "⌛"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "schon",
+					"target": {
+						"language": "de",
+						"canonicalForm": "schon",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: schon",
+				"url": "https://www.dwds.de/wb/schon",
+				"supports": "Adverb with no Wortzerlegung; Etymologie: from the umlautless adverb of schön, ahd. scōno, split from the adjective in meaning"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Ich bin schon gerade eitel genug, 'as it is, already'. DWDS gives no Wortzerlegung, so it is a bottom word, an indeclinable one with no Ending (ADR 0051): the Root schon alone."
+	}
+}

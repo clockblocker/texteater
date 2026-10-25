@@ -120,17 +120,25 @@ The lab itself, its rounds and its artifacts are in
 `segment-in-constituents/de:breakdown` and `segment-in-morphemes/de:breakdown`
 score `segment.inConstituents` and `segment.inMorphemes` (Dumgen ADR 0007)
 against dumcorpus's Breakdown Records (`lab/evaluation/breakdown/`).
-`segment-in-constituents/de:heldout` scores the records dumcorpus's
-Breakdown held-out batches (`batches/breakdown-heldout-*.json`) list, and
-`:breakdown` every other: prompts are tuned on `:breakdown` alone, and no
-held-out record is a prompt's example (#693). Every
+The records dumcorpus's Breakdown held-out batches
+(`batches/breakdown-heldout-*.json`) list form two held-out sets, each batch
+naming its own in `set`: `segment-in-constituents/de:realtext`, the
+headline, targets sampled at random from the sentences tf-demo's Learners
+read with gold authored after sampling, and `:adversarial`, hard
+homographs and edge cases, reported apart. `:breakdown` scores every other
+record: prompts are tuned on `:breakdown` alone, and no held-out record is a
+prompt's example (#693). `segment-in-morphemes/de` has the same three
+sets, so a held-out bottom word is scored as unseen. Every
 record without a Source is a constituents case, one holding a bottom word's
 morphemes expecting none; a record holding a bottom word's morphemes is
 also a morphemes case. A record with a Source is no case: the host asks
 Knowledge for the Source first and runs no segmenter on such a Reading. A case passes when its pieces come back exactly; the
 metrics add cut precision and recall, gold links placed, with gold's route
 and exact, and agreement on whether there are Constituents at all, overall
-and for phrasemes and words apart.
+and for phrasemes and words apart. `lenientExact` is the exact rate under
+the noun-or-verb tolerance (#1241, provisional): a compound's first part
+whose letters spell both a noun and a verb's stem (`Segel` in `Segelboot`)
+passes linked to either.
 
 They answer jev through the lab's cache, as segment.inUnits does, but count
 against no lab round: a live run needs `--budget` (fresh jev input tokens),

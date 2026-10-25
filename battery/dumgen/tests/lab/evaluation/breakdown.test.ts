@@ -59,18 +59,47 @@ test("every Breakdown Record without a Source is a segment.inConstituents case, 
 	);
 });
 
-test("the records a held-out batch lists are segment.inConstituents's held-out set and leave the set prompts are tuned on", () => {
+test("the records a held-out batch lists are its set's held-out cases and leave the set prompts are tuned on", () => {
 	const heldOut = heldOutBreakdownIds();
-	expect(heldOut.size).toBeGreaterThanOrEqual(15);
 	const tuned = constituentsCases("breakdown").map(({ id }) => id);
-	const held = constituentsCases("heldout").map(({ id }) => id);
-	expect([...held].sort()).toEqual([...heldOut].sort());
+	const realText = constituentsCases("realtext").map(({ id }) => id);
+	const adversarial = constituentsCases("adversarial").map(({ id }) => id);
+	const held = [...realText, ...adversarial];
+	expect(held.length).toBeGreaterThan(0);
+	for (const id of realText) expect(heldOut.get(id)).toBe("realtext");
+	for (const id of adversarial) expect(heldOut.get(id)).toBe("adversarial");
 	expect(tuned.filter((id) => heldOut.has(id))).toEqual([]);
 	expect(tuned).toContain("breakdown/de/verarzten");
-	// Round 2's and round 3's held-out records were promoted into the tuned set (#1241).
+	// Rounds 2 to 4's held-out records were promoted into the tuned set (#1241).
 	expect(tuned).toContain("breakdown/de/befreien");
 	expect(tuned).toContain("breakdown/de/entgleisen");
-	expect(held).toContain("breakdown/de/kreuzer-muenze");
+	expect(tuned).toContain("breakdown/de/kreuzer-muenze");
+	// A held-out bottom word is its set's morphemes case, never a tuned one.
+	const tunedMorphemes = morphemesCases("breakdown").map(({ id }) => id);
+	expect(tunedMorphemes.filter((id) => heldOut.has(id))).toEqual([]);
+	for (const set of ["realtext", "adversarial"] as const)
+		for (const { id } of morphemesCases(set))
+			expect(heldOut.get(id)).toBe(set);
+});
+
+test("a held-out batch must name its held-out set", async () => {
+	const batches = await mkdtemp(join(directory, "batches-"));
+	const batch = (set?: string) =>
+		JSON.stringify({
+			...(set ? { set } : {}),
+			rows: [{ record: "breakdown/de/x", split: "held-out" }],
+		});
+	await writeFile(
+		join(batches, "breakdown-heldout-a.json"),
+		batch("realtext"),
+	);
+	expect([...heldOutBreakdownIds(new URL(`file://${batches}/`))]).toEqual([
+		["breakdown/de/x", "realtext"],
+	]);
+	await writeFile(join(batches, "breakdown-heldout-b.json"), batch());
+	expect(() => heldOutBreakdownIds(new URL(`file://${batches}/`))).toThrow(
+		/names no held-out set/u,
+	);
 });
 
 test("an answer passes only exactly; cuts and links are counted apart", () => {
@@ -121,6 +150,88 @@ test("an answer passes only exactly; cuts and links are counted apart", () => {
 			output: { pieces: [{ letters: "Haus" }] },
 		}).contractPass,
 	).toBe(true);
+});
+
+test("a compound's first part passes leniently linked to the noun or the verb its letters spell", () => {
+	const verb = (canonicalForm: string) => ({
+		language: "de",
+		family: "Lexeme",
+		kind: "VERB",
+		canonicalForm,
+	});
+	const evaluate = evaluateConstituents({ case: "word" });
+	const compound = (first: ReturnType<typeof noun>) => ({
+		kind: "Constituents" as const,
+		pieces: [
+			{ letters: "Segel", target: first },
+			{ letters: "boot", target: noun("Boot") },
+		],
+	});
+	const verbFirst = evaluate({
+		caseId: "case",
+		idealOutput: compound(verb("segeln")),
+		output: compound(noun("Segel")),
+	});
+	expect(verbFirst).toMatchObject({ contractPass: false, lenientPass: true });
+	expect(
+		evaluate({
+			caseId: "case",
+			idealOutput: compound(noun("Segel")),
+			output: compound(verb("segeln")),
+		}),
+	).toMatchObject({ contractPass: false, lenientPass: true });
+	// A dropped final -e still spells the noun: Erb for Erbe and erben.
+	const erb = (first: ReturnType<typeof noun>) => ({
+		kind: "Constituents" as const,
+		pieces: [
+			{ letters: "Erb", target: first },
+			{ letters: "recht", target: noun("Recht") },
+		],
+	});
+	expect(
+		evaluate({
+			caseId: "case",
+			idealOutput: erb(verb("erben")),
+			output: erb(noun("Erbe")),
+		}).lenientPass,
+	).toBe(true);
+	// Another noun, a verb the letters don't spell, or a suffix after it fails.
+	expect(
+		evaluate({
+			caseId: "case",
+			idealOutput: compound(verb("segeln")),
+			output: compound(noun("Segeln")),
+		}).lenientPass,
+	).toBe(false);
+	expect(
+		evaluate({
+			caseId: "case",
+			idealOutput: compound(noun("Segel")),
+			output: compound(verb("siegeln")),
+		}).lenientPass,
+	).toBe(false);
+	const suffixed = (first: ReturnType<typeof noun>) => ({
+		kind: "Constituents" as const,
+		pieces: [
+			{ letters: "Leit", target: first },
+			{
+				letters: "er",
+				target: {
+					language: "de",
+					family: "Morpheme",
+					kind: "Suffix",
+					canonicalForm: "-er",
+				},
+			},
+		],
+	});
+	expect(
+		evaluate({
+			caseId: "case",
+			idealOutput: suffixed(verb("leiten")),
+			output: suffixed(noun("Leite")),
+		}).lenientPass,
+	).toBe(false);
 });
 
 /** A jev that says no to everything: a Choice's last option, a low Noul. */
@@ -211,8 +322,8 @@ test("a live run needs a granted budget, prices itself first, writes its ledger 
 /**
  * A slow jev that says no to everything, as `noJudge`, and bills each
  * request at 3 characters per token: what a projection prices a request at
- * when nothing measured applies. Saying no asks more of a phraseme than the
- * projection's stand-in yes foresees.
+ * when nothing measured applies, so each request costs less than the price
+ * a run reserves for it.
  */
 function slowNoJudge() {
 	const { jev: answer } = noJudge();
@@ -270,19 +381,32 @@ test("a budgeted run reserves each request in flight at its price, so it ends wi
 			},
 		);
 	await cli("reserving-estimate", ["--estimate"]);
-	const { projectedTokens: budget } = z
+	const { projectedTokens } = z
 		.object({ projectedTokens: z.number() })
 		.parse(written.at(-1));
+	// A budget the run's spend passes, as a projection that misses requests
+	// would grant (#1241 round 5's stand-ins foresee these, so it is set).
+	const budget = Math.round(projectedTokens / 2);
+	const run = (
+		labRoot: string,
+		hooks: Pick<
+			Parameters<typeof evaluateExperiment>[0],
+			"beforeSpend" | "onSpend" | "reserve"
+		>,
+	) =>
+		evaluateExperiment({
+			experimentId: "segment-in-constituents/de:breakdown",
+			sourceRevision: "test",
+			labRoot: join(directory, labRoot),
+			jev,
+			caseIds,
+			concurrency: 12,
+			...hooks,
+		});
 	// The stop alone, as the CLI had it: whatever is in flight when the
 	// spend reaches the budget still lands.
 	let stopped = 0;
-	await evaluateExperiment({
-		experimentId: "segment-in-constituents/de:breakdown",
-		sourceRevision: "test",
-		labRoot: join(directory, "reserving-stop-only"),
-		jev,
-		caseIds,
-		concurrency: 12,
+	await run("reserving-stop-only", {
 		beforeSpend: () => {
 			if (stopped >= budget) throw Error("budget reached");
 		},
@@ -291,7 +415,27 @@ test("a budgeted run reserves each request in flight at its price, so it ends wi
 		},
 	});
 	expect(stopped).toBeGreaterThan(budget);
-	await cli("reserving-lab", ["--budget", String(budget)]);
+	// Each request in flight holding its price, as the CLI's --budget does.
+	let spent = 0;
+	let reserved = 0;
+	await run("reserving-held", {
+		beforeSpend: () => {
+			if (spent >= budget) throw Error("budget reached");
+		},
+		onSpend: (tokens) => {
+			spent += tokens;
+		},
+		reserve: ({ tokens }) => {
+			if (spent + reserved + tokens > budget) throw Error("past budget");
+			reserved += tokens;
+			return () => {
+				reserved -= tokens;
+			};
+		},
+	});
+	expect(spent).toBeGreaterThan(0);
+	expect(spent).toBeLessThanOrEqual(budget);
+	await cli("reserving-lab", ["--budget", String(projectedTokens)]);
 	const stageUsage = z.object({
 		requests: z.number(),
 		chars: z.number(),
@@ -314,7 +458,7 @@ test("a budgeted run reserves each request in flight at its price, so it ends wi
 			),
 		);
 	expect(line.jev.freshInputTokens).toBeGreaterThan(0);
-	expect(line.jev.freshInputTokens).toBeLessThanOrEqual(budget);
+	expect(line.jev.freshInputTokens).toBeLessThanOrEqual(projectedTokens);
 	const stages = Object.values(line.stages);
 	expect(stages.length).toBeGreaterThan(0);
 	expect(stages.reduce((sum, stage) => sum + stage.requests, 0)).toBe(

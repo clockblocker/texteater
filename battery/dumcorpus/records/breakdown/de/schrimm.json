@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Schrimm",
+			"coreFeatures": {
+				"article": null,
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🏘"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Schrimm",
+					"target": {
+						"language": "de",
+						"canonicalForm": "schrimm",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "de.wikipedia: Śrem",
+				"url": "https://de.wikipedia.org/wiki/%C5%9Arem",
+				"supports": "Śrem (deutsch Schrimm), a town on the Warthe south of Posen, in the Prussian province of Posen from 1818"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The German name of Śrem, the town of the Spottvers Schrimm / Ist schlimm. No dictionary splits it, and a PROPN has no Source (ADR 0050), so it is a bottom word: the Root schrimm and the zero ending, since PROPN has an ending slot (Schrimms) (ADR 0051)."
+	}
+}

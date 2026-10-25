@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "sagen",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": null
+			}
+		},
+		"emojiDescription": "🗣"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "sag",
+					"target": {
+						"language": "de",
+						"canonicalForm": "sag",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: sagen",
+				"url": "https://www.dwds.de/wb/sagen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. sagēn, a common Germanic verb"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "DWDS gives no Wortzerlegung, so it is a bottom word: the Root sag and the Ending en (ADR 0051)."
+	}
+}

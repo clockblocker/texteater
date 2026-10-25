@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "gar",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "💯"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "gar",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gar",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gar",
+				"url": "https://www.dwds.de/wb/gar",
+				"supports": "²gar, Adverb, sense I.1 'verstärkt eine Verneinung: überhaupt'; Grundform ¹gar, the adjective; no Wortzerlegung"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Du glaubst gar nicht, 'at all'. DWDS derives the adverb from the adjective gar with no affix, but a Source is given only to NOUN, VERB and ADJ (ADR 0050), so the adverb is a bottom word, indeclinable, with no Ending (ADR 0051): the Root gar alone."
+	}
+}

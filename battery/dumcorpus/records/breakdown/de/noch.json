@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "noch",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "⏳"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "noch",
+					"target": {
+						"language": "de",
+						"canonicalForm": "noch",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: noch",
+				"url": "https://www.dwds.de/wb/noch",
+				"supports": "¹noch, Adverb, with no Wortzerlegung; Etymologie: ahd. noh, 'wohl … eine Verbindung von ie. *nū̌ ‘nun’ mit ie. *-ku̯e'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ist noch in gutem Stande, 'still'. Its Indo-European compound is no German formation, and DWDS gives no Wortzerlegung, so it is a bottom word, an indeclinable one with no Ending (ADR 0051): the Root noch alone."
+	}
+}

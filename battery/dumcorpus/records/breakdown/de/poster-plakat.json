@@ -1,0 +1,62 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Poster",
+			"coreFeatures": {
+				"gender": {
+					"mixed": ["Masc", "Neut"]
+				}
+			}
+		},
+		"emojiDescription": "🖼"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Poster",
+					"target": {
+						"language": "de",
+						"canonicalForm": "poster",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [
+			{
+				"rule": "de/noun-gender-in-free-variation",
+				"hash": "232a2eebe2947abc"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Poster",
+				"url": "https://www.dwds.de/wb/Poster",
+				"supports": "No Wortzerlegung for 1Poster, das, '(künstlerisch gestaltetes) Plakat zu Dekorationszwecken'; the Etymologie: übernommen (1960s) von gleichbed. engl. poster, a formation on English to post"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The wall poster, das Poster, is a loan from English poster with no Wortzerlegung, so it is a bottom word with no Constituents: the Root poster and the zero ending (ADR 0050: a loan blended abroad has none; ADR 0051). Neither Post nor posten is inside it in German. der Poster, someone who posts in a forum, splits posten + -er and is another Lemma, DWDS's 2Poster, a headword with its own sense. Duden and DWDS give das Poster, also der, in one sense, so its Core gender is mixed Masc and Neut (de/noun-gender-in-free-variation; the round-5 judges agreed on #1241)."
+	}
+}

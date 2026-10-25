@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "kurz",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "⏱"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "kurz",
+					"target": {
+						"language": "de",
+						"canonicalForm": "kurz",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: kurz",
+				"url": "https://www.dwds.de/wb/kurz",
+				"supports": "No Wortzerlegung; Etymologie: ahd. kurz, borrowed before the High German sound shift from Latin curtus"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "nach einem kurzen Vorstudium, short in time. DWDS gives no Wortzerlegung, and a loan from Latin has no German pieces, so it is a bottom word: the Root kurz and the zero ending (ADR 0051)."
+	}
+}

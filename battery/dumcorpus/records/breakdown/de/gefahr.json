@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Gefahr",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "⚠"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Gefahr",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gefahr",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gefahr",
+				"url": "https://www.dwds.de/wb/Gefahr",
+				"supports": "No Wortzerlegung; Etymologie: mhd. gevāre 'ist eine verstärkende Präfixbildung zu ahd. fāra' (nhd. Fahr, in use until the 18th century)"
+			},
+			{
+				"title": "en.wiktionary: Gefahr",
+				"url": "https://en.wiktionary.org/wiki/Gefahr",
+				"supports": "German etymology: inherited from MHG gevāre, from OHG fāra; no German formation given"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The ge- of mhd. gevāre is a fossilized prefix: DWDS gives no Wortzerlegung to confirm the split, and its base Fahr has died out, so it stays inside the Root, as in Geselle (ADR 0051). A bottom word: the Root gefahr and the zero ending."
+	}
+}
