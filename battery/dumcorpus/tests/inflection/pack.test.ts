@@ -28,7 +28,7 @@ describe("the German Inflection Pack", () => {
 	it("is the registry's de pack, versioned", () => {
 		expect(Object.keys(inflectionPacks)).toEqual(["de"]);
 		expect(pack.language).toBe("de");
-		expect(pack.version).toBe("2");
+		expect(pack.version).toBe("3");
 	});
 
 	it("gives each tabulated route a schema Dumling accepts for it", () => {
@@ -179,8 +179,8 @@ describe("met Surfaces", () => {
 				particle: "ab",
 			}),
 		);
-		// A Surface leaves the lexical reflexive out, and a derived cell shows
-		// it as Context, no part of the form (ADR 0052).
+		// A Surface leaves the lexical reflexive out, and so does every cell
+		// (ADR 0052).
 		const vorbereiten = verb("vorbereiten", { hasSepPrefix: "vor" });
 		const bereitet = pack.formOfSurface(
 			surface(vorbereiten, "bereitet vor", finite),
@@ -194,14 +194,12 @@ describe("met Surfaces", () => {
 			kind: "Verb",
 			pronoun: "er",
 			finite: "bereitet",
-			reflexive: "sich",
 			particle: "vor",
 		} as const;
 		expect(pack.codec.key(bereitet)).toBe(pack.codec.key(derived));
 		expect(pack.display(derived)).toEqual([
 			{ text: "er ", role: "Context" },
 			{ text: "bereitet", role: "Form" },
-			{ text: " sich", role: "Context" },
 			{ text: " … ", role: "Gap" },
 			{ text: "vor", role: "Form" },
 		]);
@@ -224,18 +222,6 @@ describe("met Surfaces", () => {
 				.map(({ text }) => text)
 				.join(""),
 		).toBe("hat gefahren");
-		const etabliert = {
-			kind: "Verb",
-			finite: "hat",
-			reflexive: "sich",
-			nonFinite: "etabliert",
-		} as const;
-		expect(
-			pack
-				.display(etabliert)
-				.map(({ text }) => text)
-				.join(""),
-		).toBe("hat sich etabliert");
 	});
 
 	it("read a noun's spelling as one word with its cell's article, folded for its key", () => {

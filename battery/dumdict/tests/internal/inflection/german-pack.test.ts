@@ -255,7 +255,7 @@ describe("the German pack through projectLemmaTables", () => {
 		]);
 	});
 
-	it("shows the reflexive of a group's Reflexive Slot beside the bare met form (ADR 0052)", () => {
+	it("shows a met form bare, even when the Reading has a Required Reflexive Slot (ADR 0052)", () => {
 		const erinnern = {
 			unitKind: "Lemma",
 			language: "de",
@@ -304,7 +304,7 @@ describe("the German pack through projectLemmaTables", () => {
 			],
 		};
 		expect(er(projectLemmaTables(pack, slice))).toEqual([
-			["er erinnert sich", 1],
+			["er erinnert", 1],
 		]);
 	});
 });

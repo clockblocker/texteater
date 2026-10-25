@@ -133,7 +133,9 @@ Canonical Form uses it. German puts `sich` first, or right after a leading
 `es`: `sich erinnern`, `sich Sorgen machen`, `es sich gemütlich machen`. A
 heading at Lemma level has no frame to read, so it shows the bare Lemma,
 `erinnern`. How the Valency Block places `sich` among the Slots, and whether
-it shows the case, is decided in tf-demo as a presentation question. Dumgen's
+it shows the case, is decided in tf-demo as a presentation question. An
+inflection table never prints the reflexive: its cells are bare forms (`er
+schämt`, not `er schämt sich`), as the user ruled on 2026-10-25. Dumgen's
 prompts are not read by a learner, and they pass the Canonical Form and the
 frame as data.
 
@@ -158,9 +160,9 @@ Whether that fits the Hebrew Grundform rule is the Hebrew owner's call.
 
 ## Considered Options
 
-- A boolean `isReflexive` Core Feature. Rejected: conjugation needs the case
-  (*mich* or *mir*), and with a bare Canonical Form, `vorstellen` 'introduce
-  oneself' and 'imagine' would differ by nothing.
+- A boolean `isReflexive` Core Feature. Rejected: the reflexive's form needs
+  the case (*mich* or *mir*), and with a bare Canonical Form, `vorstellen`
+  'introduce oneself' and 'imagine' would differ by nothing.
 - `lexicallyReflexive` Acc | Dat kept in Core, with a bare Canonical Form.
   Rejected: reflexivity is not grammatical identity. Unit Shadows carry no
   Core, so they couldn't tell `erinnern` from its reflexive twin

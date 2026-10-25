@@ -33,18 +33,10 @@ export type PackSelection = Readonly<
 	Partial<Record<Dumrel.DimensionId, readonly Dumrel.ParadigmVariant[]>>
 >;
 
-/** One Reading of the Licence Group, with the Knowledge its entry holds. */
-type PackReading<L extends Dumling.Language> = {
-	readonly reading: Dumling.Reading<L>;
-	readonly knowledge?: Dumrel.ReadingKnowledge<Dumling.Reading<L>>;
-};
-
 export type PackDeriveInput<L extends Dumling.Language> = {
 	readonly lemma: Dumling.Lemma<L>;
 	readonly selection: PackSelection;
 	readonly schema: Dumling.TableSchema;
-	/** The group's Readings: a German verb reads its Reflexive Slot there (ADR 0052). */
-	readonly readings: readonly PackReading<L>[];
 };
 
 /** A table being derived: cells by key, each form added in order. */

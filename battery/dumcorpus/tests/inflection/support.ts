@@ -95,49 +95,14 @@ type Cell = {
 	readonly forms: "Absent" | readonly string[];
 };
 
-/** The case of a Required Reflexive Slot every Reading of the group has. */
-export type Reflexive = "Acc" | "Dat";
-
-/** The group's one Reading, whose frame holds a Required Reflexive Slot of `reflexive`. */
-function readingsOf(
-	lemma: Dumling.Lemma<De>,
-	reflexive?: Reflexive,
-): Parameters<typeof pack.derive>[0]["readings"] {
-	if (reflexive === undefined) return [];
-	return [
-		{
-			reading: {
-				unitKind: "Reading",
-				lemma,
-				emojiDescription: "🪞",
-			} as Dumling.Reading<De>,
-			knowledge: {
-				valency: [
-					{
-						status: "Required",
-						complements: [
-							{ kind: "Reflexive", governedCase: reflexive },
-						],
-					},
-				],
-			},
-		},
-	];
-}
-
 /** Every cell of the Lemma's schema in schema order, with its derived forms as text. */
-export function cellsOf(
-	lemma: Dumling.Lemma<De>,
-	parts: Parts = {},
-	reflexive?: Reflexive,
-): Cell[] {
+export function cellsOf(lemma: Dumling.Lemma<De>, parts: Parts = {}): Cell[] {
 	const schema = pack.schemaFor(lemma);
 	if (schema === undefined) throw new Error("Expected a Table Schema");
 	const table = pack.derive({
 		lemma,
 		schema,
 		selection: selectionOf(lemma, parts),
-		readings: readingsOf(lemma, reflexive),
 	});
 	return schema.panels.flatMap((panel) =>
 		panel.rows.flatMap((row) =>
@@ -173,10 +138,9 @@ const known = (cell: Cell) => (cell.forms === "Absent" ? [] : cell.forms);
 export function panels(
 	lemma: Dumling.Lemma<De>,
 	parts: Parts = {},
-	reflexive?: Reflexive,
 ): Record<string, string> {
 	const lines: Record<string, string> = {};
-	for (const cell of cellsOf(lemma, parts, reflexive)) {
+	for (const cell of cellsOf(lemma, parts)) {
 		const label = pack.labels.panel(cell.panel.id);
 		const forms = known(cell);
 		if (forms.length > 0)

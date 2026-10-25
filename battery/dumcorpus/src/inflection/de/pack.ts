@@ -105,7 +105,7 @@ function derive(input: PackDeriveInput<"de">): PackDerivedTable<GermanForm> {
  */
 export const germanInflectionPack: GermanInflectionPack = {
 	language: "de",
-	version: "2",
+	version: "3",
 	schemaFor,
 	derive,
 	formOfSurface: germanFormOfSurface,

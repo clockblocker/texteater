@@ -20,7 +20,6 @@ import {
 	type Person,
 	pastForms,
 	presentForms,
-	REFLEXIVE,
 	type Stem,
 	takesGe,
 } from "./verb-stem.js";
@@ -79,8 +78,7 @@ function finitesOf(
  * a participle whose `ge-` is in doubt, a stored form whose particle is not
  * the verb's. Nothing is derived when the Canonical Form is not one word
  * once its particle is removed, or its stem is one no rule here spells
- * (knien). A group whose every Reading has a Required Reflexive Slot shows
- * the person's reflexive beside its finite forms (ADR 0052).
+ * (knien). A lexical reflexive is never shown (ADR 0052).
  */
 export function conjugateGermanVerb(
 	input: PackDeriveInput<"de">,
@@ -104,7 +102,6 @@ type Verb = {
 	readonly infinitive: string;
 	readonly stem: Stem;
 	readonly particle: string | null;
-	readonly reflexive: Readonly<Record<Person, string>> | undefined;
 	readonly preterites: readonly Finite[];
 	/** Whether each licensed Präteritum is Weak, by position. */
 	readonly weakAt: readonly boolean[];
@@ -140,7 +137,6 @@ function verbOf(
 		infinitive,
 		stem,
 		particle,
-		reflexive: reflexiveOf(input.readings),
 		preterites,
 		weakAt,
 		weak: preterites.length > 0 && weakAt.every(Boolean),
@@ -158,34 +154,7 @@ const ref = (
 	id: variant.id,
 });
 
-/**
- * The reflexive forms a group's cells show: those of the case of the
- * Required Reflexive Slot every Reading of the group has (ADR 0052). A group
- * with a plain Reading, or with Readings of two cases, shows none.
- */
-function reflexiveOf(
-	readings: PackDeriveInput<"de">["readings"],
-): Readonly<Record<Person, string>> | undefined {
-	const cases = readings.map(
-		({ knowledge }) =>
-			knowledge?.valency?.flatMap(({ status, complements }) =>
-				status === "Required"
-					? complements.flatMap((complement) =>
-							complement.kind === "Reflexive" &&
-							"governedCase" in complement
-								? [complement.governedCase]
-								: [],
-						)
-					: [],
-			)[0],
-	);
-	const [first] = cases;
-	return first !== undefined && cases.every((one) => one === first)
-		? REFLEXIVE[first]
-		: undefined;
-}
-
-/** A finite form with its pronoun, the person's reflexive and the particle. */
+/** A finite form with its pronoun and the particle. */
 function finiteForm(
 	verb: Verb,
 	finite: string,
@@ -196,9 +165,6 @@ function finiteForm(
 		kind: "Verb",
 		...(shown ? { pronoun } : {}),
 		finite,
-		...(verb.reflexive === undefined
-			? {}
-			: { reflexive: verb.reflexive[pronoun] }),
 		...(verb.particle === null ? {} : { particle: verb.particle }),
 	};
 }

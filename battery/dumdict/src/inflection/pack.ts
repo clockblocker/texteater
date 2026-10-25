@@ -55,22 +55,13 @@ export type ParadigmSelection<P = string> = Readonly<
 >;
 
 /**
- * What a pack derives from: the Lemma, one Licence Group's selection, the
- * schema `schemaFor` chose for the Lemma, and the group's Readings with their
- * Knowledge, in key order. A pack may read a Reading's frame there, such as
- * the Reflexive Slot every Reading of a German group shares (ADR 0052).
+ * What a pack derives from: the Lemma, one Licence Group's selection and the
+ * schema `schemaFor` chose for the Lemma.
  */
 export type DeriveInput<L extends Dumling.Language, P = string> = {
 	readonly lemma: Dumling.Lemma<L>;
 	readonly selection: ParadigmSelection<P>;
 	readonly schema: Dumling.TableSchema;
-	readonly readings: readonly DeriveReading<L>[];
-};
-
-/** One Reading of a Licence Group, with the Knowledge its entry holds. */
-export type DeriveReading<L extends Dumling.Language> = {
-	readonly reading: Dumling.Reading<L>;
-	readonly knowledge?: Dumrel.ReadingKnowledge<Dumling.Reading<L>>;
 };
 
 /**

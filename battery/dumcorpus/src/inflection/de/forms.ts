@@ -33,13 +33,6 @@ export type GermanVerbForm = {
 	/** The finite word: `fährt`, `hat`. A non-finite form has none. */
 	readonly finite?: string;
 	/**
-	 * The reflexive a cell shows in this person (`mich`, `dir`) when every
-	 * Reading of its group has a Required Reflexive Slot of one case. It fills
-	 * that Slot and is no part of the form, whose Surface leaves it out
-	 * (ADR 0052).
-	 */
-	readonly reflexive?: string;
-	/**
 	 * The other words of the form: a periphrasis's participle or infinitive
 	 * (`gefahren` in `hat gefahren`), or a non-finite form's own word.
 	 */
@@ -79,10 +72,11 @@ export function germanFormKey(form: GermanForm): string {
 }
 
 /**
- * How a host shows a form: the article, pronoun or reflexive as Context, the
- * words as Form, and a Gap before a particle split off a finite word, where a
- * clause puts its other words (`er fährt … ab`). A periphrasis is joined
- * without a Gap (`hat gefahren`, `hat sich erinnert`).
+ * How a host shows a form: the article or pronoun as Context, the words as
+ * Form, and a Gap before a particle split off a finite word, where a clause
+ * puts its other words (`er fährt … ab`). A periphrasis is joined without a
+ * Gap (`hat gefahren`). A lexical reflexive is never shown: it fills a
+ * Reading's Reflexive Slot, not a form (ADR 0052).
  */
 export function displayGermanForm(form: GermanForm): GermanDisplayRun[] {
 	if (form.kind === "Word")
@@ -96,18 +90,11 @@ export function displayGermanForm(form: GermanForm): GermanDisplayRun[] {
 		form.pronoun === undefined
 			? []
 			: [{ text: `${form.pronoun} `, role: "Context" }];
-	const words = (
-		[
-			[form.finite, "Form"],
-			[form.reflexive, "Context"],
-			[form.nonFinite, "Form"],
-		] as const
-	).filter(
-		(part): part is readonly [string, "Form" | "Context"] =>
-			part[0] !== undefined && part[0] !== "",
+	const words = [form.finite, form.nonFinite].filter(
+		(word): word is string => word !== undefined && word !== "",
 	);
-	for (const [index, [word, role]] of words.entries())
-		runs.push({ text: index === 0 ? word : ` ${word}`, role });
+	for (const [index, word] of words.entries())
+		runs.push({ text: index === 0 ? word : ` ${word}`, role: "Form" });
 	if (form.particle !== undefined && form.particle !== "") {
 		if (form.finite !== undefined && words.length > 0)
 			runs.push({ text: " … ", role: "Gap" });

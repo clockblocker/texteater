@@ -342,7 +342,6 @@ describe("other plural shapes", () => {
 			lemma,
 			schema,
 			selection: selectionOf(lemma, { plural: ["Tage"] }),
-			readings: [],
 		});
 		expect(table["case=Nom|number=Plur"]).toEqual([
 			{

@@ -1,22 +1,11 @@
 import { describe, expect, it } from "bun:test";
 import type * as Dumling from "dumling/types";
 
-import {
-	cellsOf,
-	pack,
-	panels,
-	type Reflexive,
-	selectionOf,
-	verb,
-} from "./support.js";
+import { cellsOf, pack, panels, selectionOf, verb } from "./support.js";
 
 type Core = Parameters<typeof verb>[1];
-const weakly = (
-	infinitive: string,
-	preterite: string,
-	core: Core = {},
-	reflexive?: Reflexive,
-) => panels(verb(infinitive, core), { preterite: [preterite] }, reflexive);
+const weakly = (infinitive: string, preterite: string, core: Core = {}) =>
+	panels(verb(infinitive, core), { preterite: [preterite] });
 
 /**
  * The principal parts texteater#1218 stores, now Paradigm Variants, as
@@ -52,7 +41,6 @@ describe("verbs with licensed principal parts", () => {
 			lemma,
 			schema,
 			selection: selectionOf(lemma, fahren),
-			readings: [],
 		});
 		const at = (bundle: Record<string, string>) =>
 			Object.entries(table).find(
@@ -214,25 +202,21 @@ describe("verbs with licensed principal parts", () => {
 		});
 	});
 
-	it("places the Reflexive Slot's reflexive in the licensed finite forms", () => {
+	it("keeps a reflexive verb's licensed finite forms bare (ADR 0052)", () => {
 		expect(
-			panels(
-				verb("erinnern"),
-				{
-					pastParticiple: ["erinnert"],
-					present1: ["erinnere"],
-					present2: ["erinnerst"],
-					present3: ["erinnert"],
-					subjunctivePast: ["erinnerte"],
-				},
-				"Acc",
-			),
+			panels(verb("erinnern"), {
+				pastParticiple: ["erinnert"],
+				present1: ["erinnere"],
+				present2: ["erinnerst"],
+				present3: ["erinnert"],
+				subjunctivePast: ["erinnerte"],
+			}),
 		).toMatchObject({
 			"Konjunktiv II":
-				"ich erinnerte mich, du erinnertest dich, er erinnerte sich, wir erinnerten uns, ihr erinnertet euch, sie erinnerten sich",
+				"ich erinnerte, du erinnertest, er erinnerte, wir erinnerten, ihr erinnertet, sie erinnerten",
 			"Partizip II": "erinnert",
 			Präsens:
-				"ich erinnere mich, du erinnerst dich, er erinnert sich, wir erinnern uns, ihr erinnert euch, sie erinnern sich",
+				"ich erinnere, du erinnerst, er erinnert, wir erinnern, ihr erinnert, sie erinnern",
 		});
 	});
 });
@@ -331,11 +315,5 @@ describe("weak stems", () => {
 				"Partizip II"
 			],
 		).toBe("übergesetzt");
-	});
-
-	it("a Dat reflexive", () => {
-		expect(weakly("merken", "merkte", {}, "Dat").Imperativ).toBe(
-			"merk dir, merkt euch",
-		);
 	});
 });
