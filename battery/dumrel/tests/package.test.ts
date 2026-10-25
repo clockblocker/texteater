@@ -25,6 +25,7 @@ test("published operational entrypoint stays independent of Zod", async () => {
 		"applyKnowledgeChange",
 		"applyKnowledgeChanges",
 		"applyParadigmChanges",
+		"breakdownWording",
 		"dimensionIdValues",
 		"directSemanticRelationValues",
 		"formulaRoleValues",

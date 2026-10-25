@@ -1,6 +1,10 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
-import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
+import {
+	applyKnowledgeChange,
+	breakdownWording,
+	parseReadingKnowledge,
+} from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { houseLemma, prefixLemma } from "./fixtures.js";
 
@@ -154,6 +158,54 @@ test("pieces spell the Canonical Form and link where each half allows", () => {
 		},
 	])
 		expect(parse(entspannungReading, { breakdown }).success).toBe(false);
+});
+
+test("a lexically reflexive Lexeme's Breakdown spells its word, without the reflexive", () => {
+	const erinnernReading = {
+		unitKind: "Reading",
+		lemma: {
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "VERB",
+			canonicalForm: "sich erinnern",
+			coreFeatures: { hasSepPrefix: null, lexicallyReflexive: "Acc" },
+		},
+		emojiDescription: "💭",
+	} as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;
+	const prefix = {
+		letters: "er",
+		target: shadow("Morpheme", "Prefix", "er-"),
+	};
+	const word = {
+		constituents: [
+			prefix,
+			{ letters: "inner", target: shadow("Lexeme", "ADJ", "inner") },
+			{ letters: "n" },
+		],
+		morphemes: [
+			prefix,
+			{ letters: "inner", target: shadow("Morpheme", "Root", "inner") },
+			{ letters: "n", target: shadow("Morpheme", "Ending", "-en") },
+		],
+	};
+	expect(breakdownWording(erinnernReading.lemma)).toBe("erinnern");
+	expect(parse(erinnernReading, { breakdown: word })).toEqual({
+		success: true,
+		value: { breakdown: word },
+	});
+	// The reflexive is a satellite, never a piece.
+	expect(
+		parse(erinnernReading, {
+			breakdown: {
+				constituents: [{ letters: "sich " }, ...word.constituents],
+			},
+		}).success,
+	).toBe(false);
+	// A phraseme keeps its whole wording.
+	expect(breakdownWording(fadenVerlierenReading.lemma)).toBe(
+		"den Faden verlieren",
+	);
 });
 
 test("a Reading has a Source or Constituents, not both", () => {

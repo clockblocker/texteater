@@ -63,7 +63,9 @@ does not record it. See [ADR 0039] and [ADR 0041].
 **Breakdown**:
 A Reading's parts, stored as the Reading Knowledge aspect `breakdown: {
 constituents, morphemes }`: its Constituents and its Morphemic Breakdown. It
-belongs to the Reading, never to the Lemma or an occurrence. See [ADR 0050]
+belongs to the Reading, never to the Lemma or an occurrence. Its letters
+spell the Canonical Form; a lexically reflexive Lexeme's spell its word,
+without the reflexive (`sich erinnern`: `er- + inner + n`). See [ADR 0050]
 and [ADR 0051].
 _Avoid_: components, drill-down segmentation, Morphological Tree, Lexical
 Breakdown
@@ -85,7 +87,8 @@ parts. It is a Lexeme, not a Family or Kind of its own. See [ADR 0050].
 _Avoid_: compound Kind, Kompositum, for a Lemma class
 
 **Morphemic Breakdown**:
-Every Morpheme of a single-word Lexeme's Reading, flat, in
+Every Morpheme of a single-word Lexeme's Reading (a lexically reflexive one
+counts by its word), flat, in
 `breakdown.morphemes`, labelled as school morphemic analysis labels them:
 Prefix, Root, Suffix, Interfix, Ending. Each label is the linked Morpheme's
 Kind. `segment.inMorphemes` (Dumgen) splits bottom words; every other word's

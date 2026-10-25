@@ -38,6 +38,7 @@
  */
 import type { Questions } from "@typesafe-ai/sdk";
 import { germanSuffixes } from "dumcorpus/inventories";
+import { breakdownWording } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import {
@@ -53,6 +54,7 @@ import {
 	type BreakdownInput,
 	breakdownState,
 	type Constituents,
+	isSingleWordLexeme,
 	type ProducedPiece,
 } from "../../breakdown.js";
 import { allRoutes, type RouteKey } from "../routes.js";
@@ -286,7 +288,10 @@ const wordConstituents = Effect.fnUntraced(function* (
 	input: BreakdownInput,
 	ask: Ask,
 ): Effect.fn.Return<Constituents, AskFailure> {
-	const { canonicalForm, kind, coreFeatures } = input.reading.lemma;
+	const { lemma } = input.reading;
+	const { kind, coreFeatures } = lemma;
+	// A lexically reflexive verb breaks down as its word (`erinnern`).
+	const canonicalForm = breakdownWording(lemma);
 	const whole = wholeOf(input, "word");
 	const candidates = wordAnalyses(canonicalForm, kind);
 	const gender = "gender" in coreFeatures ? coreFeatures.gender : undefined;
@@ -551,15 +556,15 @@ const withTarget = (target: Dumrel.UnitShadow | undefined) => {
 };
 
 /**
- * German `segment.inConstituents`: a single-word Lexeme as a word, any
- * other Reading by its wording.
+ * German `segment.inConstituents`: a single-word Lexeme as a word, a
+ * lexically reflexive one as its word without the reflexive (`sich
+ * anschließen` as `anschließen`, ADR 0050), any other Reading by its
+ * wording.
  */
 export const germanConstituents = (
 	input: BreakdownInput,
 	ask: Ask,
-): Effect.Effect<Constituents, AskFailure> => {
-	const { family, canonicalForm } = input.reading.lemma;
-	return family === "Lexeme" && !/\s/u.test(canonicalForm)
+): Effect.Effect<Constituents, AskFailure> =>
+	isSingleWordLexeme(input.reading.lemma)
 		? wordConstituents(input, ask)
 		: phrasemeConstituents(input, ask);
-};

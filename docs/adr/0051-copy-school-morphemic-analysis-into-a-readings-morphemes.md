@@ -9,6 +9,8 @@ A Reading's Morphemic Breakdown, `breakdown.morphemes`
 every morpheme of a word, flat, exactly as school morphemic analysis does
 (разбор по составу, Wortbausteine): `ent · spann · ung · ∅`, `при · меч · а ·
 тель · н · ость`. Every single-word Lexeme has one (`Haus` = `haus · ∅`).
+A lexically reflexive Lexeme counts by its word, without the
+reflexive it cites: `sich erinnern` = `er · inner · n` (ADR 0050).
 Morpheme Lemmas and phrasemes have none. Its pieces are shown letters and
 links, as in the Constituents: each links to a Morpheme's Unit Shadow or
 Lemma, never a Reading.

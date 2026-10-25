@@ -51,6 +51,10 @@ the same way, `-ung` to the Shadow (de, Morpheme, Suffix, `-ung`).
   wording (`Rund-um-die-Uhr` for `rund um die Uhr`) and Hebrew final-letter
   forms. Hyphens, ellipses, gershayim, spaces, punctuation and placeholders
   are unlinked filler segments.
+- A lexically reflexive Lexeme's Breakdown spells its word, without the
+  reflexive its Canonical Form cites: `sich erinnern` spells `erinnern`,
+  and `sich anschließen` spells `anschließen`. The reflexive is a
+  satellite (below), never a piece.
 - A Breakdown describes the Canonical Form or cited wording, never an
   occurrence's alignment.
 - A piece stores no head or modifier role, no Surface and no Reading. A click
@@ -120,7 +124,13 @@ For German:
 **Satellites come from model data.** A Lexeme's reflexive, governed
 preposition, article and auxiliary are read from model data (ADR 0041) and
 are never Constituents. Its other words are: `Frankfurt am Main` =
-`Frankfurt · am · Main`, while `sich erinnern` has only `er- + innern`. A
+`Frankfurt · am · Main`, while `sich erinnern` has only `er- + inner + n`
+and `sich anschließen` only `an- + schließen`. The Breakdown spells the word,
+and the Note shows `sich` from the Lemma, as it shows an article. No
+headword `innern` exists, so its base is ADJ `inner`, which DWDS and
+en.wiktionary trace it to, and its `n` is the citation ending, as in
+`verarzten`. The judges agreed on this on
+[#1241](https://github.com/clockblocker/texteater/issues/1241#issuecomment-6393717905). A
 separable particle is a constituent, as above. English phrasal verbs work as
 German particle verbs do: `give up` = `give + up`, still one Lexeme VERB
 ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)). The
@@ -257,6 +267,12 @@ intensifiers, the English particle, the particle list and `leid` on
 - No breakdown unless a piece's Reading contributes to the meaning (`receive`
   gets none). Rejected: a link names a Lemma, so it can't say which Reading
   contributes.
+- A lexically reflexive Lexeme's `sich` as leading unlinked filler, so the
+  letters spell the whole Canonical Form. Rejected: `sich` is a word, not a
+  morpheme, and the morphemes line would show a piece that links nowhere.
+- That `sich` as a linked PRON part. Rejected: a satellite is never a
+  constituent, PRON `sich`'s Formations would list every reflexive verb,
+  and the morphemes half would still have no place for it.
 - An unlinked cranberry piece in the Constituents (`Him + Beere`). Rejected:
   the morphemes walk would break at it, and the Morphemic Breakdown links
   the same piece to its Root anyway.

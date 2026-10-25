@@ -28,6 +28,7 @@ import {
 	germanSuffixes,
 } from "dumcorpus/inventories";
 import { zeroEndingCanonicalForm } from "dumling";
+import { breakdownWording } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import { type Ask, type AskFailure, choice, choiceOf } from "../../ask.js";
@@ -144,7 +145,8 @@ export const germanMorphemes = Effect.fnUntraced(function* (
 	ask: Ask,
 ): Effect.fn.Return<readonly ProducedPiece[], AskFailure> {
 	const { lemma } = input.reading;
-	const word = lemma.canonicalForm;
+	// A lexically reflexive verb splits as its word (`erinnern`).
+	const word = breakdownWording(lemma);
 	const ending = endingOf(word, lemma.kind);
 	const body = ending
 		? word.slice(0, word.length - ending.letters.length)

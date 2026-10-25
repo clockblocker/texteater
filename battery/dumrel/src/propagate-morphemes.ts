@@ -1,5 +1,6 @@
 import { foldCase, zeroEndingCanonicalForm } from "dumling";
 import type * as Dumling from "dumling/types";
+import { breakdownWording } from "./breakdown-wording.js";
 import type {
 	BreakdownPiece,
 	LinkTarget,
@@ -314,11 +315,12 @@ export function propagateMorphemes(
 	lookup: LookupMorphemeSources,
 	policy: MorphemePolicy,
 ): readonly ShownMorpheme[] | undefined {
-	const { language, family, kind, canonicalForm } = owner.reading.lemma;
+	const { lemma } = owner.reading;
+	const { language, family, kind } = lemma;
 	if (family !== "Lexeme") return undefined;
 	const stored = owner.knowledge.breakdown?.morphemes;
 	if (stored !== undefined) return storedPieces(stored);
-	const pieces = walked(owner.knowledge, canonicalForm, {
+	const pieces = walked(owner.knowledge, breakdownWording(lemma), {
 		language,
 		policy,
 		lookup,
