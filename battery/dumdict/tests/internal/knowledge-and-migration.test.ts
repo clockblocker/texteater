@@ -11,6 +11,7 @@ import type {
 import {
 	englishRunLemma,
 	englishRunReading,
+	englishSwimLemma,
 	englishWalkLemma,
 	englishWalkReading,
 	enSerializedNotes,
@@ -224,14 +225,14 @@ describe("Reading Knowledge Changes", () => {
 					aspect: "semanticRelations",
 					relation: "nearSynonym",
 					targetKind: "lemma",
-					value: [englishRunLemma],
+					value: [englishSwimLemma],
 				},
 			},
 		]);
 		expect(changed.knowledge?.semanticRelations).toEqual({
 			targetKind: "lemma",
 			synonym: [englishRunLemma],
-			nearSynonym: [englishRunLemma],
+			nearSynonym: [englishSwimLemma],
 		});
 		expect(() =>
 			applyDumdictKnowledgeChanges(withLemmaMode, [

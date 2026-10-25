@@ -24,6 +24,7 @@ const dog = reading("Hund");
 const animal = reading("Tier");
 const brute = reading("Tier", "😈");
 const hound = reading("Hündchen");
+const wolf = reading("Wolf");
 function project(
 	entries: readonly Dumrel.ReadingWithKnowledge[],
 	options: Parameters<typeof projectSemanticRelations>[1] = {},
@@ -320,7 +321,7 @@ test("all inverse pairs, synonym substitution, and direct provenance", () => {
 				semanticRelations: {
 					synonym: [hound.lemma],
 					hypernym: [animal.lemma],
-					nearAntonym: [brute.lemma],
+					nearAntonym: [wolf.lemma],
 				},
 			},
 		},
@@ -329,6 +330,8 @@ test("all inverse pairs, synonym substitution, and direct provenance", () => {
 			knowledge: { semanticRelations: { hypernym: [animal.lemma] } },
 		},
 		{ reading: animal, knowledge: {} },
+		// Wolf reaches one Reading, so only the near rule keeps it from substituting.
+		{ reading: wolf, knowledge: {} },
 	]);
 	expect(edges).toContainEqual({
 		source: hound,
@@ -339,7 +342,7 @@ test("all inverse pairs, synonym substitution, and direct provenance", () => {
 	expect(edges).not.toContainEqual({
 		source: hound,
 		relation: "nearAntonym",
-		target: brute.lemma,
+		target: wolf.lemma,
 		provenance: "inferred",
 	});
 	expect(edges).toContainEqual({
@@ -385,7 +388,7 @@ test("empty, self, and cyclic inventories terminate without inferred self edges"
 			{
 				reading: dog,
 				knowledge: {
-					semanticRelations: { synonym: [dog.lemma, dog.lemma] },
+					semanticRelations: { synonym: [dog.lemma] },
 				},
 			},
 		]),
@@ -530,7 +533,7 @@ test("a requested source gets exactly its edges from the whole projection", () =
 				semanticRelations: {
 					synonym: [hound.lemma],
 					hypernym: [animal.lemma],
-					nearAntonym: [brute.lemma],
+					nearAntonym: [wolf.lemma],
 				},
 			},
 		},

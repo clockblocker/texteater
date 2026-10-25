@@ -1,5 +1,5 @@
 import { ParsingError } from "common-utils/validation";
-import { parseUnit } from "dumling";
+import { lemmaIdentityKey, parseUnit, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
 	parseBreakdown,
@@ -10,13 +10,16 @@ import {
 import { structuralKeys } from "./fingerprint.js";
 import { issue, type Path } from "./issue.js";
 import type {
+	DirectSemanticRelation,
 	KnowledgeChange,
 	ReadingKnowledge,
+	SemanticRelations,
 	ValencyComplement,
 	ValencyFrame,
 	ValencySlot,
 } from "./types.js";
 import { allowedComplementKinds } from "./valency-policy.js";
+import { directSemanticRelationValues } from "./vocabulary.js";
 
 export function parseSource<R extends Dumling.Reading>(
 	source: R,
@@ -340,6 +343,49 @@ function parseValencyFrame<R extends Dumling.Reading>(
 	return slots;
 }
 
+/**
+ * A Reading names each target once across all its Semantic Relations: twice
+ * in one list says nothing more, and under two relations the claims contradict
+ * each other (`synonym` and `nearSynonym`, `synonym` and `antonym`), as
+ * Dumdict's `relationConflict` refuses (ADR 0011). Relations are read in
+ * vocabulary order, so the later one is named. A Lemma counts by its
+ * `lemmaIdentityKey`, an exact Reading by its `readingIdentityKey`, so two
+ * Readings of one Lemma are two targets.
+ */
+function repeatedTargetIssue(
+	relations: SemanticRelations,
+	path: Path,
+): ParsingError | undefined {
+	const named = new Map<string, string>();
+	const lists: Partial<
+		Record<
+			DirectSemanticRelation,
+			readonly (Dumling.Lemma | Dumling.Reading)[]
+		>
+	> = relations;
+	for (const relation of directSemanticRelationValues) {
+		for (const [index, target] of (lists[relation] ?? []).entries()) {
+			const identity =
+				target.unitKind === "Lemma"
+					? lemmaIdentityKey(target)
+					: readingIdentityKey(target);
+			const earlier = named.get(identity);
+			if (earlier === undefined) {
+				named.set(identity, relation);
+				continue;
+			}
+			const unit = target.unitKind;
+			return issue(
+				[...path, relation, index],
+				earlier === relation
+					? `A Semantic Relation lists each ${unit} once: this ${unit} is already a ${relation}`
+					: `A Reading relates to each ${unit} under one Semantic Relation: this ${unit} is already a ${earlier}, so it cannot also be a ${relation}`,
+			);
+		}
+	}
+	return undefined;
+}
+
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function contextualizeKnowledge<R extends Dumling.Reading>(
 	source: R,
@@ -403,6 +449,11 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 			targets[index] = parsed;
 		}
 	}
+	const repeated = repeatedTargetIssue(relations, [
+		"knowledge",
+		"semanticRelations",
+	]);
+	if (repeated) return repeated;
 	if (relations.targetKind !== "reading" && relations.endonym) {
 		const path = ["knowledge", "semanticRelations", "endonym"];
 		const failure = endonymIssue(source, relations.endonym, {

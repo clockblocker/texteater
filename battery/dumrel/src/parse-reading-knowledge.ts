@@ -7,7 +7,8 @@ import { parseKnowledgeShape } from "./validation.js";
 /**
  * Validates and normalizes Knowledge against its exact owning Reading. Structural
  * schemas alone do not enforce source language/Family, self-reference or bucket
- * uniqueness. Returns a fresh value or ParsingError; input is never mutated.
+ * uniqueness. A Semantic Relation target appears once across all the Reading's
+ * relations. Returns a fresh value or ParsingError; input is never mutated.
  */
 export function parseReadingKnowledge<const R extends Dumling.Reading>(input: {
 	source: R;

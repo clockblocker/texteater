@@ -6,7 +6,12 @@ import {
 	parseReadingKnowledge,
 } from "../src/index.js";
 import type { KnowledgeParse, ReadingKnowledge } from "../src/types.js";
-import { berlinLemma, houseReading, prefixLemma } from "./fixtures.js";
+import {
+	berlinLemma,
+	houseReading,
+	prefixLemma,
+	wartenReading,
+} from "./fixtures.js";
 
 describe("parseReadingKnowledge", () => {
 	test("accepts empty Knowledge and returns a fresh value", () => {
@@ -76,6 +81,96 @@ describe("parseReadingKnowledge", () => {
 			).toBe(false);
 		},
 	);
+});
+
+describe("a Reading names each Semantic Relation target once", () => {
+	/** `Berlin` spelled as display casing never makes another Lemma. */
+	const shoutedBerlin = { ...berlinLemma, canonicalForm: "BERLIN" };
+	const issueOf = (knowledge: unknown) => {
+		const result = parseReadingKnowledge({
+			source: houseReading,
+			knowledge,
+		});
+		return result.success ? undefined : result.error.issues[0];
+	};
+
+	test("rejects a Lemma listed twice in one relation", () => {
+		expect(
+			issueOf({
+				semanticRelations: { synonym: [berlinLemma, shoutedBerlin] },
+			}),
+		).toMatchObject({
+			path: ["knowledge", "semanticRelations", "synonym", 1],
+			message:
+				"A Semantic Relation lists each Lemma once: this Lemma is already a synonym",
+		});
+	});
+
+	test.each([
+		["synonym", "nearSynonym"],
+		["antonym", "nearAntonym"],
+		["synonym", "antonym"],
+		["nearSynonym", "hypernym"],
+		["hypernym", "holonym"],
+	] as const)("rejects one Lemma as both %s and %s", (first, second) => {
+		expect(
+			issueOf({
+				semanticRelations: {
+					[first]: [berlinLemma],
+					[second]: [shoutedBerlin],
+				},
+			}),
+		).toMatchObject({
+			path: ["knowledge", "semanticRelations", second, 0],
+			message: `A Reading relates to each Lemma under one Semantic Relation: this Lemma is already a ${first}, so it cannot also be a ${second}`,
+		});
+	});
+
+	test("rejects an exact Reading target listed twice, but not two Readings of one Lemma", () => {
+		const otherSense = { ...wartenReading, emojiDescription: "🧍" };
+		expect(
+			issueOf({
+				semanticRelations: {
+					targetKind: "reading",
+					synonym: [wartenReading, otherSense, wartenReading],
+				},
+			}),
+		).toMatchObject({
+			path: ["knowledge", "semanticRelations", "synonym", 2],
+			message:
+				"A Semantic Relation lists each Reading once: this Reading is already a synonym",
+		});
+		expect(
+			issueOf({
+				semanticRelations: {
+					targetKind: "reading",
+					synonym: [wartenReading, otherSense],
+				},
+			}),
+		).toBeUndefined();
+	});
+
+	test("refuses a change that relates a Lemma under a second relation", () => {
+		const knowledge = { semanticRelations: { nearSynonym: [berlinLemma] } };
+		const result = applyKnowledgeChange({
+			source: houseReading,
+			knowledge,
+			change: {
+				kind: "Contribute",
+				aspect: "semanticRelations",
+				relation: "synonym",
+				value: [shoutedBerlin],
+			},
+		});
+		expect(result.success).toBe(false);
+		if (!result.success)
+			expect(result.error.issues[0]?.path).toEqual([
+				"knowledge",
+				"semanticRelations",
+				"nearSynonym",
+				0,
+			]);
+	});
 });
 
 describe("applyKnowledgeChange", () => {

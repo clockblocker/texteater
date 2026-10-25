@@ -18,11 +18,12 @@ import { parseChangeShape } from "./validation.js";
  * Applies one source-aware change atomically. Contribute adds absent atomic
  * aspects or distinct bucket values; Correct replaces; Retract removes. Exact
  * Reading targets support synonym only and require targetKind: "reading",
- * including retractions. The Valency Frame: Contribute appends each Slot none
- * of whose complements a stored complement covers, never adding an
- * alternative to a stored Slot; Correct replaces the frame; and Retract
- * removes the frame or, given a complement, that complement from its Slot and
- * the Slot once it is empty (ADR 0034). Each half of a Breakdown is atomic on
+ * including retractions. A target the Reading already relates to under
+ * another relation fails: Retract it there first. The Valency Frame:
+ * Contribute appends each Slot none of whose complements a stored complement
+ * covers, never adding an alternative to a stored Slot; Correct replaces the
+ * frame; and Retract removes the frame or, given a complement, that
+ * complement from its Slot and the Slot once it is empty (ADR 0034). Each half of a Breakdown is atomic on
  * its own, and a Source, Locution Type, Saying Type and Formula Role are
  * atomic like a definition.
  * Failure returns ParsingError without a partial value.
