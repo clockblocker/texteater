@@ -13,7 +13,8 @@
  *    saying plus other words, a general maxim, an idiom or none.
  *
  * These are candidates v3's requests and candidates4's `final` request,
- * worded byte for byte as the lab sent them, so cached answers replay.
+ * worded byte for byte as the lab sent them, so cached answers replay. The
+ * reflexive slot question is the exception, reworded on #1285.
  */
 
 import type { Questions } from "@typesafe-ai/sdk";
@@ -60,8 +61,15 @@ const slotQuestion: Record<SlotKind, (piece: string) => string> = {
 		`In \`sentence\`, is ${piece} the separable particle of a verb standing apart from it (zog … an, kam … zurück)? If so, which piece is that verb? Choose none if it is a preposition, an adverb or anything else.`,
 	auxiliary: (piece) =>
 		`In \`sentence\`, is ${piece} an auxiliary that forms the perfect, future or passive of another verb (hat … gegessen, ist … gekommen, wird … gebaut, wird … kommen, ist … verleumdet worden)? If so, which piece is the participle or infinitive it combines with? Only in hat … schreiben müssen, where an infinitive-shaped modal stands for the participle, choose the modal. Choose none if ${piece} is a full verb here: a copula before an adjective or noun, possession, or becoming.`,
+	/**
+	 * de/verb-owns-its-scattered-members: a reflexive is the verb's member
+	 * when this sense needs it coreferent with the subject; one that
+	 * alternates with other objects in the same sense is a PRON of its own
+	 * (ADR 0052). 1st and 2nd person reflexives count, and a plain use of
+	 * the verb in another sense leaves its reflexive lexical (#1285).
+	 */
 	reflexive: (piece) =>
-		`In \`sentence\`, is ${piece} the inherently required reflexive of a verb (sich schämen, sich erinnern, sich beeilen), which cannot be replaced by another object? If so, which piece is that verb? Choose none if it is an ordinary object, a reciprocal or a personal pronoun.`,
+		`In \`sentence\`, is ${piece} the lexical reflexive of a verb? Most verbs take a reflexive as an ordinary object, so test it: put another object (ihn, den Kunden) in its place. If the verb keeps the meaning it has in this sentence, the reflexive is an ordinary object and you choose none, even when the verb has a lexical reflexive in another sense: du rasierst dich and du rasierst den Kunden both mean shaving, ich verteidige mich and ich verteidige das Tor both mean defending, wir kaufen uns ein Buch and wir kaufen ihr ein Buch both mean buying. If the verb keeps this meaning only with the reflexive, it is lexical: sie beeilt sich, du weigerst dich; ich erinnere mich 'I remember' is lexical though ich erinnere ihn exists, since that means 'I remind him'. A lexical reflexive refers back to the subject: sich, or mich, mir, dich, dir, uns, euch beside ich, du, wir, ihr. If it is lexical, which piece is that verb? Choose none also for a reciprocal 'each other' (sie umarmen sich) and for a pronoun that does not refer to the subject (er sieht mich).`,
 	expletive: (piece) =>
 		`In \`sentence\`, is ${piece} a non-referential es that a verb lexically selects (es gibt, es regnet, es geht um, es handelt sich um)? If so, which piece is that verb? Choose none if it refers to something, anticipates a clause, or only fills the first position.`,
 	preposition: (piece) =>
