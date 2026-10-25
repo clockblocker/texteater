@@ -1,0 +1,374 @@
+{
+	"round": "2026-10-25-breakdown-round-5",
+	"note": "Round 5 of the Breakdown segmenters (#1241): the held-out set measured two ways (the user, 2026-10-25), a real-text sample as the headline and an adversarial batch apart, then the tuning set and the morphemes sets. jev-1.13.0 at ba518fa5a, 3 repetitions, the lab's cached jev transport, no reasoning model, no prompt change during the run. The strict score is contractPass; the lenient one counts a compound's first part linked to the noun or the verb its letters spell as exact (provisional, pending the user's confirmation).",
+	"spend": {
+		"cap": 700000,
+		"runs": [
+			{
+				"experiment": "segment-in-constituents/de:realtext",
+				"runId": "ed9c4ba4-22cc-4279-8a3a-f08dc6edbeb1",
+				"budget": 180000,
+				"freshRequests": 111,
+				"freshTokens": 68416
+			},
+			{
+				"experiment": "segment-in-constituents/de:adversarial",
+				"runId": "a5383853-d437-48fe-820a-82311b1b5f8f",
+				"budget": 200000,
+				"freshRequests": 120,
+				"freshTokens": 87882
+			},
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "d69f239f-4b5e-4569-b743-d5096b7e8ca2",
+				"budget": 20000,
+				"freshRequests": 4,
+				"freshTokens": 2322
+			},
+			{
+				"experiment": "segment-in-morphemes/de:realtext",
+				"runId": "f4c0f560-9dba-4666-90ab-e2fd0df577cd",
+				"budget": 20000,
+				"freshRequests": 18,
+				"freshTokens": 7911
+			},
+			{
+				"experiment": "segment-in-morphemes/de:adversarial",
+				"runId": "af701721-8789-4ece-ab54-e7b57061429a",
+				"budget": 15000,
+				"freshRequests": 12,
+				"freshTokens": 5247
+			},
+			{
+				"experiment": "segment-in-morphemes/de:breakdown",
+				"runId": "89c32f31-9bb3-489c-baa6-274522674dbb",
+				"budget": 5000,
+				"freshRequests": 0,
+				"freshTokens": 0
+			}
+		],
+		"roundRunTokens": 171778,
+		"prepLiveCheckTokens": 1161,
+		"roundTokens": 172939,
+		"roundDollars": 0.0073,
+		"standingDollar": {
+			"from": "round 3",
+			"tokens": 1106285,
+			"spentDollars": 0.0465,
+			"leftDollars": 0.9535
+		}
+	},
+	"realTextDistribution": {
+		"cases": 30,
+		"noConstituents": {
+			"total": 22,
+			"declinableBottomWords": 11,
+			"indeclinables": 8,
+			"properNames": 3
+		},
+		"withConstituents": {
+			"total": 8,
+			"derivations": 4,
+			"particleVerbs": 3,
+			"phrasemes": 1,
+			"compounds": 0
+		},
+		"sources": 0,
+		"exactBy": {
+			"noConstituents": "62/66",
+			"withConstituents": "19/24"
+		}
+	},
+	"headline": {
+		"realtext": {
+			"strict": "81/90 (90.0%)",
+			"lenient": "81/90 (90.0%)",
+			"casesExactEveryRepetition": "26/30",
+			"cutPrecision": 0.8919,
+			"cutRecall": 1.0,
+			"linksPlaced": 1.0,
+			"linksExact": 0.902,
+			"hasConstituentsAgreed": 0.9556
+		},
+		"adversarial": {
+			"strict": "12/36 (33.3%)",
+			"lenient": "17/36 (47.2%)",
+			"casesExactEveryRepetition": "4/12 (5 lenient)",
+			"cutPrecision": 0.6111,
+			"cutRecall": 0.7857,
+			"linksPlaced": 0.6667,
+			"linksExact": 0.381,
+			"hasConstituentsAgreed": 0.8333
+		},
+		"tuning": {
+			"strict": "264/315 (83.8%)",
+			"lenient": "272/315 (86.3%)",
+			"casesExactEveryRepetition": "86/105 (89 lenient)",
+			"leftOut": "hamburger-burger, 0/3 (Ham + Burger every repetition)"
+		},
+		"morphemes": {
+			"realtext": "63/66, 21/22 every repetition (Gefahr 0/3: ge · fahr · ∅)",
+			"adversarial": "6/6",
+			"tuning": "36/39, Römer 🍷 0/3 as in round 4"
+		}
+	},
+	"comparisonWithRound4": {
+		"note": "Tuning replays round 4's cache except 4 requests, so it moves only where the fixes changed a request.",
+		"all105": {
+			"round4": "261/315 strict, 269 lenient, 85 every repetition",
+			"round5": "264/315 strict, 272 lenient, 86 every repetition"
+		},
+		"round4Tuning84": {
+			"round4": "227/252, 74",
+			"round5": "230/252, 75"
+		},
+		"promoted24c21": {
+			"round4": "34/63 (as held-out), 11",
+			"round5": "34/63, 11"
+		},
+		"changed": [
+			"alles in allem 0/3 -> 3/3 (allem PRON alle, unasked)"
+		],
+		"unchangedFailure": [
+			"Rentier 🦌 still 0/3: Ren now routes NOUN, not a cranberry Root, but the headword question picks Rene"
+		],
+		"round4HeldOutLenient": "34/63 strict, 37/63 lenient (Segelboot 0 -> 3)"
+	},
+	"senseCheck": {
+		"realtext": {
+			"attemptsContested": 21,
+			"cases": 7,
+			"stoodOnOwnYes": "Genesung 3, jugendlich 3, gnädig 3, Gefahr 3 (wrongly: ge- + fahr answers 0.68 to 0.70)",
+			"noneStood": "heißen 3, können 3 (können's kö + nnen answered 0.48 to 0.50, just under a yes)",
+			"flipped": "Weihnachten 2, both right (Weih + nachten answered 0.37 and 0.40); the third, 0.43, kept it",
+			"requests": 21,
+			"tokens": 7854
+		},
+		"adversarial": {
+			"attemptsContested": 21,
+			"flippedRight": "Poster 🖼 3",
+			"flippedWrong": "Poster 💬 3 (posten + -er answered 0.38 to 0.41)",
+			"stoodWrong": "Musikerleben 🎧 3: the pick Musiker + leben answered 0.70 to 0.75, a yes, so it stood although Musik + Erleben answered 0.83 to 0.85",
+			"requests": 21,
+			"tokens": 8085
+		}
+	},
+	"failuresByCause": [
+		{
+			"cause": "Fossilized prefix ge- cut off (DWDS gives Gefahr no Wortzerlegung)",
+			"attempts": "3 RT + 3 RT morphemes",
+			"cases": "Gefahr: Ge- + fahr 0.61 to 0.68, sense yes 0.68 to 0.70, headword Fahre 0.68, a noun no dictionary lists"
+		},
+		{
+			"cause": "A suffix base with umlaut and a dropped -e",
+			"attempts": "3 RT",
+			"cases": "gnädig: gnäd routes ADJ 0.95, headword gnäd; NOUN Gnade is never offered (Gnäd as a noun 0.14)"
+		},
+		{
+			"cause": "zu before a noun in a phraseme routed PART",
+			"attempts": "2 RT",
+			"cases": "zu Gast sein: PART 0.74 and 0.63, ADP 0.51 on the passing repetition; the route guide's 'zu right before an infinitive is PART' seems to pull"
+		},
+		{
+			"cause": "Cranberry Root for a real first part",
+			"attempts": "1 RT + 1 AD",
+			"cases": "Weihnachten rep 2 (Weih Root + Nacht); Murmeltier rep 1 (Murmel Root 0.49)"
+		},
+		{
+			"cause": "A base that spells a noun and a verb stem goes NOUN (or VERB)",
+			"attempts": "6 AD strict (3 lenient) + tuning as round 4",
+			"cases": "Fischer: verb test 0.97, noun test 0.70, route NOUN 0.85; Schaukelpferd: NOUN 0.61 (lenient pass); Murmeltier: VERB murmeln 0.51 to 0.53 (lenient pass)"
+		},
+		{
+			"cause": "The sense check flips a real -er derivation to none, or lets a yes pick stand over a better contender",
+			"attempts": "6 AD",
+			"cases": "Poster 💬 3; Musikerleben 🎧 3"
+		},
+		{
+			"cause": "An inner Locution of four parts is never offered",
+			"attempts": "3 AD",
+			"cases": "unter Dach und Fach bringen: code proposes runs of two or three parts only, so [unter Dach und Fach] is no candidate"
+		},
+		{
+			"cause": "A phraseme part's own Kind",
+			"attempts": "3 AD + 3 tuning (je nachdem)",
+			"cases": "nach wie vor: nach ADP 0.95, vor ADP 0.47 vs ADV 0.42, wie ADV 0.69 vs CCONJ 0.17"
+		},
+		{
+			"cause": "A place-name base before -er goes none",
+			"attempts": "3 AD",
+			"cases": "Edamer: Edam + -er 0.45 to 0.49 vs none 0.49 to 0.53; -er sense answer 0.34 to 0.36"
+		}
+	],
+	"projection": {
+		"note": "Per-request prices are now right; request counts are high because breakdownStandIns contest every word and pick an analysis with parts.",
+		"realtext": {
+			"projected": 120968,
+			"raw": 96774,
+			"actual": 68416,
+			"actualOverRaw": 0.71,
+			"byStage": {
+				"breakdown-analysis": [
+					48,
+					36201,
+					48,
+					35541
+				],
+				"breakdown-senses": [
+					48,
+					17805,
+					21,
+					7854
+				],
+				"breakdown-routes": [
+					24,
+					24363,
+					7,
+					11081
+				],
+				"breakdown-forms": [
+					33,
+					14703,
+					22,
+					8408
+				],
+				"breakdown-words": [
+					6,
+					2187,
+					10,
+					4026
+				],
+				"breakdown-locutions": [
+					3,
+					1515,
+					3,
+					1506
+				]
+			}
+		},
+		"adversarial": {
+			"projected": 141686,
+			"raw": 113349,
+			"actual": 87882,
+			"actualOverRaw": 0.78,
+			"byStage": {
+				"breakdown-analysis": [
+					30,
+					23001,
+					30,
+					23511
+				],
+				"breakdown-senses": [
+					30,
+					11493,
+					21,
+					8085
+				],
+				"breakdown-routes": [
+					36,
+					45366,
+					24,
+					34722
+				],
+				"breakdown-forms": [
+					36,
+					18237,
+					21,
+					10383
+				],
+				"breakdown-words": [
+					30,
+					10668,
+					18,
+					6567
+				],
+				"breakdown-locutions": [
+					6,
+					4584,
+					6,
+					4614
+				]
+			}
+		},
+		"morphemes": {
+			"realtext": [
+				7947,
+				7911
+			],
+			"adversarial": [
+				5280,
+				5247
+			]
+		},
+		"total": {
+			"projected": 281510,
+			"actual": 171778,
+			"actualOverProjected": 0.61
+		},
+		"byStageFormat": "[requests projected, tokens projected raw, requests sent, tokens spent]"
+	},
+	"implicationsForHeldOutFixes": "Real text drew no compound, no -er derivation, no inner Locution and no place-name base, and the sense check flipped 2 real-text attempts, both right. Round 4's held-out-based fixes 1 (sense-led route for a noun-or-verb base), 2 (the sense check as one relative question), 3 (-er's inhabitant sense and place names) and 5 (the inner-Locution floor) would move no real-text attempt; they serve the adversarial classes. Under the lenient tolerance the compound half of fix 1 is moot (Segelboot, Schaukelpferd, Erbrecht, Steuermann pass); its derivation half (Fischer, Kreuzer 🚢) remains.",
+	"proposedFixes": [
+		{
+			"rank": 1,
+			"fix": "A fossilized prefix: drop a prefix analysis whose base's chosen headword is no listed noun (the exact-letters noun test on Fahre)",
+			"fixes": "Gefahr 3 RT, and its morphemes 3",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 2,
+			"fix": "A suffix base with umlaut and a dropped -e: before -ig and -lich, offer the noun with the umlaut undone and -e restored (Gnade for gnäd)",
+			"fixes": "gnädig 3 RT",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 3,
+			"fix": "zu right before a noun inside a phraseme is ADP, by code, as zu closing a slot is PART",
+			"fixes": "zu Gast sein 2 RT",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 4,
+			"fix": "Offer four-part inner Locution runs",
+			"fixes": "unter Dach und Fach bringen 3 AD",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 5,
+			"fix": "The sense check as one relative question over the contenders and none (round 4's fix 2), letting a better contender beat a pick's own yes",
+			"fixes": "Poster 💬 3 AD, Musikerleben 🎧 3 AD, Laster 🚚 3 tuning",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 6,
+			"fix": "A noun-or-verb suffix base by sense (round 4's fix 1, derivation half)",
+			"fixes": "Fischer 3 AD, Kreuzer 🚢 3 tuning",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 7,
+			"fix": "A phraseme part's own Kind: adverbial nach and vor, comparison wie",
+			"fixes": "nach wie vor 3 AD, je nachdem 3 tuning",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 8,
+			"fix": "A noun first part's headword: test the -e form with the exact-letters noun test before picking it",
+			"fixes": "Rentier 🦌 3 tuning, Messer 📏 1 tuning",
+			"heldOutFitting": false
+		},
+		{
+			"rank": 9,
+			"fix": "-er's inhabitant and product sense, place names as PROPN (round 4's fix 3)",
+			"fixes": "Edamer 3 AD, Römer 🏛 and Hamburger ⚓ tuning",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 10,
+			"fix": "Projection: weigh stand-in contests and parts by the ledger's share of none answers",
+			"fixes": "no accuracy; projection 0.61 of spend",
+			"heldOutFitting": false
+		}
+	],
+	"verdict": "Real text scores 90.0% (81 of 90 attempts; 26 of 30 cases exact on every repetition), strict and lenient alike. The simple words a learner meets most are essentially solved: 62 of 66 attempts on words with no Constituents, every particle verb and three of four derivations. The remaining failures are not rare-word noise: Gefahr, gnädig and Weihnachten are common words and zu Gast sein a common phraseme, and three of the four failures are systematic, code-fixable classes (a fossilized prefix, a base with umlaut and dropped -e, zu before a noun). With 30 cases the interval is wide (4 failing cases)."
+}

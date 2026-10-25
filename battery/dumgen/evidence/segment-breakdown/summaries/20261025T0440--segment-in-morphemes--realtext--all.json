@@ -1,0 +1,346 @@
+{
+	"runId": "f4c0f560-9dba-4666-90ab-e2fd0df577cd",
+	"experimentId": "segment-in-morphemes/de:realtext",
+	"round": "2026-10-25-breakdown-round-5",
+	"note": "The real-text batch's 22 bottom words, unseen. 3 repetitions, one live run at ba518fa5a; exact counts come from each repetition's contractPass and lenient ones from its lenientPass (the noun-or-verb tolerance for a compound's first part, provisional).",
+	"liveRuns": [
+		"f4c0f560-9dba-4666-90ab-e2fd0df577cd"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "f4c0f560-9dba-4666-90ab-e2fd0df577cd",
+		"experimentId": "segment-in-morphemes/de:realtext",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "ba518fa5a",
+		"startedAt": "2026-10-25T04:40:04.576Z",
+		"corpus": {
+			"fingerprint": "59d06e962f7e08065e3d4a980b9097267ad6f2f2efac96062942593735d17630",
+			"caseIds": [
+				"breakdown/de/erst",
+				"breakdown/de/gar",
+				"breakdown/de/geben-es-gibt",
+				"breakdown/de/gefahr",
+				"breakdown/de/haben-besitzen",
+				"breakdown/de/heissen-bedeuten",
+				"breakdown/de/herr-gebieter",
+				"breakdown/de/hin",
+				"breakdown/de/ja",
+				"breakdown/de/koennen",
+				"breakdown/de/kopp",
+				"breakdown/de/kurz",
+				"breakdown/de/noch",
+				"breakdown/de/nur",
+				"breakdown/de/sagen",
+				"breakdown/de/schon",
+				"breakdown/de/schrimm",
+				"breakdown/de/und",
+				"breakdown/de/varzin",
+				"breakdown/de/weihnachten",
+				"breakdown/de/weinen",
+				"breakdown/de/wissen"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 22,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 22,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 21,
+			"failed": 1,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-25T04:40:04.614Z",
+		"total": 22,
+		"succeeded": 22,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 0,
+			"quality": {
+				"passed": 63,
+				"failed": 3,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 22,
+			"attempts": 66,
+			"exactAttempts": 63,
+			"exact": 0.9545,
+			"lenientExactAttempts": 63,
+			"lenientExact": 0.9545,
+			"casesExactEveryRepetition": 21,
+			"casesLenientEveryRepetition": 21,
+			"cutPrecision": 0.875,
+			"cutRecall": 1.0,
+			"linksPlaced": 0.9722,
+			"linksWithGoldRoute": 0.9722,
+			"linksExact": 0.9722,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		},
+		"word": {
+			"cases": 22,
+			"attempts": 66,
+			"exactAttempts": 63,
+			"exact": 0.9545,
+			"lenientExactAttempts": 63,
+			"lenientExact": 0.9545,
+			"casesExactEveryRepetition": 21,
+			"casesLenientEveryRepetition": 21,
+			"cutPrecision": 0.875,
+			"cutRecall": 1.0,
+			"linksPlaced": 0.9722,
+			"linksWithGoldRoute": 0.9722,
+			"linksExact": 0.9722,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		}
+	},
+	"spend": {
+		"jev": {
+			"calls": 18,
+			"freshCalls": 18,
+			"freshInputTokens": 7911,
+			"allInputTokens": 7911
+		},
+		"stages": {
+			"breakdown-words": {
+				"requests": 6,
+				"chars": 3801,
+				"inputTokens": 2583
+			},
+			"breakdown-morphemes": {
+				"requests": 12,
+				"chars": 6267,
+				"inputTokens": 5328
+			}
+		}
+	},
+	"transport": null,
+	"cases": [
+		{
+			"caseId": "breakdown/de/erst",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "erst → Morpheme/Root erst",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gar",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "gar → Morpheme/Root gar",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geben-es-gibt",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "geb → Morpheme/Root geb · en → Morpheme/Ending -en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gefahr",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Gefahr → Morpheme/Root gefahr ·  → Morpheme/Ending ∅",
+			"returned": [
+				"3x Ge → Morpheme/Prefix ge- · fahr → Morpheme/Root fahr ·  → Morpheme/Ending ∅"
+			]
+		},
+		{
+			"caseId": "breakdown/de/haben-besitzen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "hab → Morpheme/Root hab · en → Morpheme/Ending -en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/heissen-bedeuten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "heiß → Morpheme/Root heiß · en → Morpheme/Ending -en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/herr-gebieter",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Herr → Morpheme/Root herr ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hin",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "hin → Morpheme/Root hin",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ja",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ja → Morpheme/Root ja",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/koennen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "könn → Morpheme/Root könn · en → Morpheme/Ending -en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kopp",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Kopp → Morpheme/Root kopp ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kurz",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "kurz → Morpheme/Root kurz ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/noch",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "noch → Morpheme/Root noch",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nur",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "nur → Morpheme/Root nur",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sagen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "sag → Morpheme/Root sag · en → Morpheme/Ending -en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schon",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "schon → Morpheme/Root schon",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schrimm",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Schrimm → Morpheme/Root schrimm ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/und",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "und → Morpheme/Root und",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/varzin",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Varzin → Morpheme/Root varzin ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weihnachten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Weihnachten → Morpheme/Root weihnachten ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weinen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "wein → Morpheme/Root wein · en → Morpheme/Ending -en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wissen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "wiss → Morpheme/Root wiss · en → Morpheme/Ending -en",
+			"returned": []
+		}
+	]
+}

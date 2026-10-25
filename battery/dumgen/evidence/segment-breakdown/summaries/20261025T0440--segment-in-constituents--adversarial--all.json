@@ -1,0 +1,298 @@
+{
+	"runId": "a5383853-d437-48fe-820a-82311b1b5f8f",
+	"experimentId": "segment-in-constituents/de:adversarial",
+	"round": "2026-10-25-breakdown-round-5",
+	"note": "The adversarial held-out batch breakdown-heldout-2026-10-25-adversarial (12 records probing round 4's failure classes), reported apart from the headline. 3 repetitions, one live run at ba518fa5a; exact counts come from each repetition's contractPass and lenient ones from its lenientPass (the noun-or-verb tolerance for a compound's first part, provisional).",
+	"liveRuns": [
+		"a5383853-d437-48fe-820a-82311b1b5f8f"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "a5383853-d437-48fe-820a-82311b1b5f8f",
+		"experimentId": "segment-in-constituents/de:adversarial",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "ba518fa5a",
+		"startedAt": "2026-10-25T04:40:01.560Z",
+		"corpus": {
+			"fingerprint": "10b1c103d8f87490e9e08fff0c94fa61e7f61accaed40d784fa5adc2f971d63d",
+			"caseIds": [
+				"breakdown/de/edamer",
+				"breakdown/de/fischer",
+				"breakdown/de/honig",
+				"breakdown/de/murmeltier",
+				"breakdown/de/musikerleben-erleben",
+				"breakdown/de/musikerleben-lebensweg",
+				"breakdown/de/nach-wie-vor",
+				"breakdown/de/paddelboot",
+				"breakdown/de/poster-forum",
+				"breakdown/de/poster-plakat",
+				"breakdown/de/schaukelpferd",
+				"breakdown/de/unter-dach-und-fach-bringen"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-constituents/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 12,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 12,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 4,
+			"failed": 8,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-25T04:40:01.643Z",
+		"total": 12,
+		"succeeded": 12,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 1,
+			"quality": {
+				"passed": 12,
+				"failed": 24,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 12,
+			"attempts": 36,
+			"exactAttempts": 12,
+			"exact": 0.3333,
+			"lenientExactAttempts": 17,
+			"lenientExact": 0.4722,
+			"casesExactEveryRepetition": 4,
+			"casesLenientEveryRepetition": 5,
+			"cutPrecision": 0.6111,
+			"cutRecall": 0.7857,
+			"linksPlaced": 0.6667,
+			"linksWithGoldRoute": 0.381,
+			"linksExact": 0.381,
+			"hasConstituentsAgreed": 0.8333,
+			"failed": 0
+		},
+		"word": {
+			"cases": 10,
+			"attempts": 30,
+			"exactAttempts": 12,
+			"exact": 0.4,
+			"lenientExactAttempts": 17,
+			"lenientExact": 0.5667,
+			"casesExactEveryRepetition": 4,
+			"casesLenientEveryRepetition": 5,
+			"cutPrecision": 0.8333,
+			"cutRecall": 0.625,
+			"linksPlaced": 0.625,
+			"linksWithGoldRoute": 0.4375,
+			"linksExact": 0.4375,
+			"hasConstituentsAgreed": 0.8,
+			"failed": 0
+		},
+		"phraseme": {
+			"cases": 2,
+			"attempts": 6,
+			"exactAttempts": 0,
+			"exact": 0.0,
+			"lenientExactAttempts": 0,
+			"lenientExact": 0.0,
+			"casesExactEveryRepetition": 0,
+			"casesLenientEveryRepetition": 0,
+			"cutPrecision": 0.5,
+			"cutRecall": 1.0,
+			"linksPlaced": 0.8,
+			"linksWithGoldRoute": 0.2,
+			"linksExact": 0.2,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		}
+	},
+	"spend": {
+		"jev": {
+			"calls": 120,
+			"freshCalls": 120,
+			"freshInputTokens": 87882,
+			"allInputTokens": 87882
+		},
+		"stages": {
+			"breakdown-analysis": {
+				"requests": 30,
+				"chars": 52962,
+				"inputTokens": 23511
+			},
+			"breakdown-senses": {
+				"requests": 21,
+				"chars": 9494,
+				"inputTokens": 8085
+			},
+			"breakdown-words": {
+				"requests": 18,
+				"chars": 6783,
+				"inputTokens": 6567
+			},
+			"breakdown-routes": {
+				"requests": 24,
+				"chars": 87009,
+				"inputTokens": 34722
+			},
+			"breakdown-forms": {
+				"requests": 21,
+				"chars": 14040,
+				"inputTokens": 10383
+			},
+			"breakdown-locutions": {
+				"requests": 6,
+				"chars": 13308,
+				"inputTokens": 4614
+			}
+		}
+	},
+	"transport": null,
+	"cases": [
+		{
+			"caseId": "breakdown/de/edamer",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Edam → Lexeme/PROPN Edam · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/fischer",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Fisch → Lexeme/VERB fischen · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x Fisch → Lexeme/NOUN Fisch · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/honig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/murmeltier",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 2,
+			"gold": "Murmel → Lexeme/NOUN Murmel · tier → Lexeme/NOUN Tier",
+			"returned": [
+				"1x Murmel → Morpheme/Root murmel · tier → Lexeme/NOUN Tier",
+				"2x Murmel → Lexeme/VERB murmeln · tier → Lexeme/NOUN Tier"
+			]
+		},
+		{
+			"caseId": "breakdown/de/musikerleben-erleben",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Musik → Lexeme/NOUN Musik · erleben → Lexeme/NOUN Erleben",
+			"returned": [
+				"3x Musiker → Lexeme/NOUN Musiker · leben → Lexeme/NOUN Leben"
+			]
+		},
+		{
+			"caseId": "breakdown/de/musikerleben-lebensweg",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Musiker → Lexeme/NOUN Musiker · leben → Lexeme/NOUN Leben",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nach-wie-vor",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "nach → Lexeme/ADV nach · ' ' · wie → Lexeme/CCONJ wie · ' ' · vor → Lexeme/ADV vor",
+			"returned": [
+				"3x nach → Lexeme/ADP nach · ' ' · wie → Lexeme/ADV wie · ' ' · vor → Lexeme/ADP vor"
+			]
+		},
+		{
+			"caseId": "breakdown/de/paddelboot",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Paddel → Lexeme/NOUN Paddel · boot → Lexeme/NOUN Boot",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/poster-forum",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Post → Lexeme/VERB posten · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/poster-plakat",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schaukelpferd",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 3,
+			"gold": "Schaukel → Lexeme/VERB schaukeln · pferd → Lexeme/NOUN Pferd",
+			"returned": [
+				"3x Schaukel → Lexeme/NOUN Schaukel · pferd → Lexeme/NOUN Pferd"
+			]
+		},
+		{
+			"caseId": "breakdown/de/unter-dach-und-fach-bringen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "unter Dach und Fach → Locution/ADV unter Dach und Fach · ' ' · bringen → Lexeme/VERB bringen",
+			"returned": [
+				"3x unter → Lexeme/ADP unter · ' ' · Dach → Lexeme/NOUN Dach · ' ' · und → Lexeme/CCONJ und · ' ' · Fach → Lexeme/NOUN Fach · ' ' · bringen → Lexeme/VERB bringen"
+			]
+		}
+	]
+}

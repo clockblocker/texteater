@@ -1,0 +1,144 @@
+{
+	"runId": "af701721-8789-4ece-ab54-e7b57061429a",
+	"experimentId": "segment-in-morphemes/de:adversarial",
+	"round": "2026-10-25-breakdown-round-5",
+	"note": "The adversarial batch's 2 bottom words, unseen. 3 repetitions, one live run at ba518fa5a; exact counts come from each repetition's contractPass and lenient ones from its lenientPass (the noun-or-verb tolerance for a compound's first part, provisional).",
+	"liveRuns": [
+		"af701721-8789-4ece-ab54-e7b57061429a"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "af701721-8789-4ece-ab54-e7b57061429a",
+		"experimentId": "segment-in-morphemes/de:adversarial",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "ba518fa5a",
+		"startedAt": "2026-10-25T04:40:05.487Z",
+		"corpus": {
+			"fingerprint": "1053ae994a9a57d5b3ff376c6fb2dba323bf013c73bb52266135facd02ed98b3",
+			"caseIds": [
+				"breakdown/de/honig",
+				"breakdown/de/poster-plakat"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 2,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 2,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 2,
+			"failed": 0,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-25T04:40:05.507Z",
+		"total": 2,
+		"succeeded": 2,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 0,
+			"quality": {
+				"passed": 6,
+				"failed": 0,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 2,
+			"attempts": 6,
+			"exactAttempts": 6,
+			"exact": 1.0,
+			"lenientExactAttempts": 6,
+			"lenientExact": 1.0,
+			"casesExactEveryRepetition": 2,
+			"casesLenientEveryRepetition": 2,
+			"cutPrecision": null,
+			"cutRecall": null,
+			"linksPlaced": 1.0,
+			"linksWithGoldRoute": 1.0,
+			"linksExact": 1.0,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		},
+		"word": {
+			"cases": 2,
+			"attempts": 6,
+			"exactAttempts": 6,
+			"exact": 1.0,
+			"lenientExactAttempts": 6,
+			"lenientExact": 1.0,
+			"casesExactEveryRepetition": 2,
+			"casesLenientEveryRepetition": 2,
+			"cutPrecision": null,
+			"cutRecall": null,
+			"linksPlaced": 1.0,
+			"linksWithGoldRoute": 1.0,
+			"linksExact": 1.0,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		}
+	},
+	"spend": {
+		"jev": {
+			"calls": 12,
+			"freshCalls": 12,
+			"freshInputTokens": 5247,
+			"allInputTokens": 5247
+		},
+		"stages": {
+			"breakdown-words": {
+				"requests": 6,
+				"chars": 3804,
+				"inputTokens": 2580
+			},
+			"breakdown-morphemes": {
+				"requests": 6,
+				"chars": 3123,
+				"inputTokens": 2667
+			}
+		}
+	},
+	"transport": null,
+	"cases": [
+		{
+			"caseId": "breakdown/de/honig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Honig → Morpheme/Root honig ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/poster-plakat",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Poster → Morpheme/Root poster ·  → Morpheme/Ending ∅",
+			"returned": []
+		}
+	]
+}

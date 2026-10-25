@@ -1,0 +1,245 @@
+{
+	"runId": "89c32f31-9bb3-489c-baa6-274522674dbb",
+	"experimentId": "segment-in-morphemes/de:breakdown",
+	"round": "2026-10-25-breakdown-round-5",
+	"note": "The tuning bottom words; every answer replays round 4's cache. 3 repetitions, one live run at ba518fa5a; exact counts come from each repetition's contractPass and lenient ones from its lenientPass (the noun-or-verb tolerance for a compound's first part, provisional).",
+	"liveRuns": [
+		"89c32f31-9bb3-489c-baa6-274522674dbb"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "89c32f31-9bb3-489c-baa6-274522674dbb",
+		"experimentId": "segment-in-morphemes/de:breakdown",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "ba518fa5a",
+		"startedAt": "2026-10-25T04:40:05.945Z",
+		"corpus": {
+			"fingerprint": "e290142fd605ef6048019dfc6292975808cc504f3ed25908a666810179782e54",
+			"caseIds": [
+				"breakdown/de/bauer-vogelkaefig",
+				"breakdown/de/fisch",
+				"breakdown/de/hamburger-burger",
+				"breakdown/de/kaufen",
+				"breakdown/de/laster-untugend",
+				"breakdown/de/leiter-sprossenleiter",
+				"breakdown/de/messer-schneidwerkzeug",
+				"breakdown/de/reiter-sieb",
+				"breakdown/de/roemer-weinglas",
+				"breakdown/de/rufen",
+				"breakdown/de/schoner-segelschiff",
+				"breakdown/de/spannen",
+				"breakdown/de/sticker-aufkleber"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 13,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 13,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 12,
+			"failed": 1,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-25T04:40:05.965Z",
+		"total": 13,
+		"succeeded": 13,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 0,
+			"quality": {
+				"passed": 36,
+				"failed": 3,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 13,
+			"attempts": 39,
+			"exactAttempts": 36,
+			"exact": 0.9231,
+			"lenientExactAttempts": 36,
+			"lenientExact": 0.9231,
+			"casesExactEveryRepetition": 12,
+			"casesLenientEveryRepetition": 12,
+			"cutPrecision": 0.75,
+			"cutRecall": 1.0,
+			"linksPlaced": 0.9615,
+			"linksWithGoldRoute": 0.9615,
+			"linksExact": 0.9615,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		},
+		"word": {
+			"cases": 13,
+			"attempts": 39,
+			"exactAttempts": 36,
+			"exact": 0.9231,
+			"lenientExactAttempts": 36,
+			"lenientExact": 0.9231,
+			"casesExactEveryRepetition": 12,
+			"casesLenientEveryRepetition": 12,
+			"cutPrecision": 0.75,
+			"cutRecall": 1.0,
+			"linksPlaced": 0.9615,
+			"linksWithGoldRoute": 0.9615,
+			"linksExact": 0.9615,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		}
+	},
+	"spend": {
+		"jev": {
+			"calls": 36,
+			"freshCalls": 0,
+			"freshInputTokens": 0,
+			"allInputTokens": 17546
+		},
+		"stages": {}
+	},
+	"transport": null,
+	"cases": [
+		{
+			"caseId": "breakdown/de/bauer-vogelkaefig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Bauer → Morpheme/Root bauer ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fisch",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Fisch → Morpheme/Root fisch ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hamburger-burger",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Hamburger → Morpheme/Root hamburger ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kaufen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "kauf → Morpheme/Root kauf · en → Morpheme/Ending -en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/laster-untugend",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Laster → Morpheme/Root laster ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leiter-sprossenleiter",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Leiter → Morpheme/Root leiter ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/messer-schneidwerkzeug",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Messer → Morpheme/Root messer ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/reiter-sieb",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Reiter → Morpheme/Root reiter ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/roemer-weinglas",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Römer → Morpheme/Root römer ·  → Morpheme/Ending ∅",
+			"returned": [
+				"3x Röm → Morpheme/Root röm · er → Morpheme/Suffix -er ·  → Morpheme/Ending ∅"
+			]
+		},
+		{
+			"caseId": "breakdown/de/rufen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ruf → Morpheme/Root ruf · en → Morpheme/Ending -en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schoner-segelschiff",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Schoner → Morpheme/Root schoner ·  → Morpheme/Ending ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/spannen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "spann → Morpheme/Root spann · en → Morpheme/Ending -en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sticker-aufkleber",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Sticker → Morpheme/Root sticker ·  → Morpheme/Ending ∅",
+			"returned": []
+		}
+	]
+}

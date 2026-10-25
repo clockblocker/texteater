@@ -1,0 +1,469 @@
+{
+	"runId": "ed9c4ba4-22cc-4279-8a3a-f08dc6edbeb1",
+	"experimentId": "segment-in-constituents/de:realtext",
+	"round": "2026-10-25-breakdown-round-5",
+	"note": "The real-text held-out batch breakdown-heldout-2026-10-25-realtext (30 records sampled at random from tf-demo's Library, seed 20261025), the round's headline. No compound was drawn, so the strict and lenient scores agree. 3 repetitions, one live run at ba518fa5a; exact counts come from each repetition's contractPass and lenient ones from its lenientPass (the noun-or-verb tolerance for a compound's first part, provisional).",
+	"liveRuns": [
+		"ed9c4ba4-22cc-4279-8a3a-f08dc6edbeb1"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "ed9c4ba4-22cc-4279-8a3a-f08dc6edbeb1",
+		"experimentId": "segment-in-constituents/de:realtext",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "ba518fa5a",
+		"startedAt": "2026-10-25T04:39:58.984Z",
+		"corpus": {
+			"fingerprint": "459a28cb34f8dd7f43567873924ac5f7d50db375c43bf042151eb7271b37901c",
+			"caseIds": [
+				"breakdown/de/abfallen-schwinden",
+				"breakdown/de/erkennen",
+				"breakdown/de/erst",
+				"breakdown/de/gar",
+				"breakdown/de/geben-es-gibt",
+				"breakdown/de/gefahr",
+				"breakdown/de/genesung",
+				"breakdown/de/gnaedig",
+				"breakdown/de/haben-besitzen",
+				"breakdown/de/heissen-bedeuten",
+				"breakdown/de/herr-gebieter",
+				"breakdown/de/hin",
+				"breakdown/de/ja",
+				"breakdown/de/jugendlich",
+				"breakdown/de/koennen",
+				"breakdown/de/kopp",
+				"breakdown/de/kurz",
+				"breakdown/de/mitnehmen",
+				"breakdown/de/noch",
+				"breakdown/de/nur",
+				"breakdown/de/sagen",
+				"breakdown/de/schon",
+				"breakdown/de/schrimm",
+				"breakdown/de/und",
+				"breakdown/de/varzin",
+				"breakdown/de/weihnachten",
+				"breakdown/de/weinen",
+				"breakdown/de/wissen",
+				"breakdown/de/zu-gast-sein",
+				"breakdown/de/zuhoeren"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-constituents/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 30,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 30,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 28,
+			"failed": 2,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-25T04:39:59.051Z",
+		"total": 30,
+		"succeeded": 30,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 2,
+			"varyingOutputs": 2,
+			"quality": {
+				"passed": 81,
+				"failed": 9,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 30,
+			"attempts": 90,
+			"exactAttempts": 81,
+			"exact": 0.9,
+			"lenientExactAttempts": 81,
+			"lenientExact": 0.9,
+			"casesExactEveryRepetition": 26,
+			"casesLenientEveryRepetition": 26,
+			"cutPrecision": 0.8919,
+			"cutRecall": 1.0,
+			"linksPlaced": 1.0,
+			"linksWithGoldRoute": 0.902,
+			"linksExact": 0.902,
+			"hasConstituentsAgreed": 0.9556,
+			"failed": 0
+		},
+		"word": {
+			"cases": 29,
+			"attempts": 87,
+			"exactAttempts": 80,
+			"exact": 0.9195,
+			"lenientExactAttempts": 80,
+			"lenientExact": 0.9195,
+			"casesExactEveryRepetition": 26,
+			"casesLenientEveryRepetition": 26,
+			"cutPrecision": 0.84,
+			"cutRecall": 1.0,
+			"linksPlaced": 1.0,
+			"linksWithGoldRoute": 0.9286,
+			"linksExact": 0.9286,
+			"hasConstituentsAgreed": 0.954,
+			"failed": 0
+		},
+		"phraseme": {
+			"cases": 1,
+			"attempts": 3,
+			"exactAttempts": 1,
+			"exact": 0.3333,
+			"lenientExactAttempts": 1,
+			"lenientExact": 0.3333,
+			"casesExactEveryRepetition": 0,
+			"casesLenientEveryRepetition": 0,
+			"cutPrecision": 1.0,
+			"cutRecall": 1.0,
+			"linksPlaced": 1.0,
+			"linksWithGoldRoute": 0.7778,
+			"linksExact": 0.7778,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		}
+	},
+	"spend": {
+		"jev": {
+			"calls": 111,
+			"freshCalls": 111,
+			"freshInputTokens": 68416,
+			"allInputTokens": 68416
+		},
+		"stages": {
+			"breakdown-words": {
+				"requests": 10,
+				"chars": 5215,
+				"inputTokens": 4026
+			},
+			"breakdown-analysis": {
+				"requests": 48,
+				"chars": 81993,
+				"inputTokens": 35541
+			},
+			"breakdown-senses": {
+				"requests": 21,
+				"chars": 8724,
+				"inputTokens": 7854
+			},
+			"breakdown-forms": {
+				"requests": 22,
+				"chars": 7162,
+				"inputTokens": 8408
+			},
+			"breakdown-routes": {
+				"requests": 7,
+				"chars": 28304,
+				"inputTokens": 11081
+			},
+			"breakdown-locutions": {
+				"requests": 3,
+				"chars": 3081,
+				"inputTokens": 1506
+			}
+		}
+	},
+	"transport": null,
+	"cases": [
+		{
+			"caseId": "breakdown/de/abfallen-schwinden",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ab → Morpheme/Prefix ab- · fallen → Lexeme/VERB fallen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erkennen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "er → Morpheme/Prefix er- · kennen → Lexeme/VERB kennen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erst",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gar",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geben-es-gibt",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gefahr",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "none",
+			"returned": [
+				"3x Ge → Morpheme/Prefix ge- · fahr → Lexeme/NOUN Fahre"
+			]
+		},
+		{
+			"caseId": "breakdown/de/genesung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Genes → Lexeme/VERB genesen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gnaedig",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "gnäd → Lexeme/NOUN Gnade · ig → Morpheme/Suffix -ig",
+			"returned": [
+				"3x gnäd → Lexeme/ADJ gnäd · ig → Morpheme/Suffix -ig"
+			]
+		},
+		{
+			"caseId": "breakdown/de/haben-besitzen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/heissen-bedeuten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/herr-gebieter",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hin",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ja",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/jugendlich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "jugend → Lexeme/NOUN Jugend · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/koennen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kopp",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kurz",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/mitnehmen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "mit → Morpheme/Prefix mit- · nehmen → Lexeme/VERB nehmen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/noch",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nur",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sagen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schon",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schrimm",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/und",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/varzin",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weihnachten",
+			"group": "word",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "none",
+			"returned": [
+				"1x Weih → Morpheme/Root weih · nachten → Lexeme/NOUN Nacht"
+			]
+		},
+		{
+			"caseId": "breakdown/de/weinen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wissen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zu-gast-sein",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 1,
+			"gold": "zu → Lexeme/ADP zu · ' ' · Gast → Lexeme/NOUN Gast · ' ' · sein → Lexeme/VERB sein",
+			"returned": [
+				"2x zu → Lexeme/PART zu · ' ' · Gast → Lexeme/NOUN Gast · ' ' · sein → Lexeme/VERB sein"
+			]
+		},
+		{
+			"caseId": "breakdown/de/zuhoeren",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "zu → Morpheme/Prefix zu- · hören → Lexeme/VERB hören",
+			"returned": []
+		}
+	]
+}
