@@ -143,6 +143,7 @@ test("groups pending and structural rows under their Reading, sorted", () => {
 					readingId: "reading-r-geld" as Id<"readings">,
 					canonicalForm: "Geld",
 					emojiDescription: "🏦",
+					reflexive: null,
 					target: {
 						kind: "Reading",
 						readingId: "reading-r-geld" as Id<"readings">,
@@ -159,6 +160,7 @@ test("groups pending and structural rows under their Reading, sorted", () => {
 					readingId: "reading-r-zug" as Id<"readings">,
 					canonicalForm: "Zug",
 					emojiDescription: "🏦",
+					reflexive: null,
 					target: {
 						kind: "Reading",
 						readingId: "reading-r-zug" as Id<"readings">,

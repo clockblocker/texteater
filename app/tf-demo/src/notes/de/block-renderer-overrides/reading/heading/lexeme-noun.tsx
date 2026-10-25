@@ -3,6 +3,7 @@ import {
 	coreGenders,
 	type GrammaticalGender,
 } from "../../../../../../shared/grammatical-gender";
+import { citedNoteReading } from "../../../../universal/blocks/citation";
 import type { NoteBlockRenderer } from "../../../../universal/blocks/renderer";
 import { ReadingHeading } from "../../../../universal/blocks/renderers/reading/heading/default";
 
@@ -15,10 +16,12 @@ const definiteArticle: Readonly<Record<GrammaticalGender, string>> = {
 export const renderHeadingDeLexemeNoun = (({
 	noteData,
 	PresentationCapabilities,
+	Citation,
 }) => (
 	<ReadingHeading
 		note={noteData}
 		capabilities={PresentationCapabilities}
+		citation={Citation(citedNoteReading(noteData))}
 		title={nounHeadword(noteData.reading.lemma)}
 	/>
 )) satisfies NoteBlockRenderer<"de", "Reading", "Lexeme", "NOUN">;

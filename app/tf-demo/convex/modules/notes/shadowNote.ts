@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import { foldedCanonicalForm } from "../../../server/linguisticIdentity";
+import type { ReflexiveSlot } from "../../../shared/reflexive-slot";
 
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
@@ -26,6 +27,10 @@ import {
 } from "./featurePresentation";
 import { projectPendingRelations } from "./pendingRelations";
 import {
+	reflexiveSlotValidator,
+	storedReflexiveSlot,
+} from "./readingReflexive";
+import {
 	isUnitReadingFamily,
 	type UnitReadingFamily,
 	unitReadingEmojiDescription,
@@ -49,6 +54,8 @@ export const shadowReferencePageValidator = v.object({
 				readingId: v.id("readings"),
 				canonicalForm: v.string(),
 				emojiDescription: v.string(),
+				/** The Reading's Reflexive Slot, for its Citation (ADR 0052). */
+				reflexive: reflexiveSlotValidator,
 				target: v.object({
 					kind: v.literal("Reading"),
 					readingId: v.id("readings"),
@@ -281,6 +288,7 @@ type ShadowReferenceGroup = {
 		readingId: Id<"readings">;
 		canonicalForm: string;
 		emojiDescription: string;
+		reflexive: ReflexiveSlot | null;
 		target: { kind: "Reading"; readingId: Id<"readings"> };
 	};
 	pendingRelations: {
@@ -510,7 +518,7 @@ export function buildShadowReferencePage(
 ) {
 	const groups = new Map<string, ShadowReferenceGroup>();
 	for (const ownerReadingKey of ownerReadingKeysOf(rows)) {
-		const { reading, lemma } = owners.get(ownerReadingKey) ?? {};
+		const { reading, lemma, knowledge } = owners.get(ownerReadingKey) ?? {};
 		if (!reading || !lemma || !isUnitReadingFamily(lemma.family)) {
 			return null;
 		}
@@ -519,6 +527,7 @@ export function buildShadowReferencePage(
 				readingId: reading._id,
 				canonicalForm: lemma.canonicalForm,
 				emojiDescription: unitReadingEmojiDescription(reading),
+				reflexive: storedReflexiveSlot(knowledge?.knowledge),
 				target: { kind: "Reading", readingId: reading._id },
 			},
 			pendingRelations: [],

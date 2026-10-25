@@ -34,7 +34,8 @@ test("the public renderer preserves ordered German Reading output, workspace com
 		}),
 	);
 
-	expect(markup).toContain("sich ");
+	// The frame's Reflexive Slot is cited; the Canonical Form is bare (ADR 0052).
+	expect(markup).toContain(">sich freuen<");
 	expect(markup).toContain('data-slot="ipa"');
 	expect(markup).toContain("/zɪç/");
 	expect(markup).toContain("de");
@@ -139,7 +140,7 @@ function readingNote(): ReadingNote {
 			ownerKind: "Reading",
 			ownerKey: "reading-key-1",
 			readingId: "reading-1",
-			emojiDescription: "🏃",
+			emojiDescription: "🪞😊",
 			lemma: {
 				unitKind: "Lemma",
 				ownerKind: "Lemma",
@@ -147,7 +148,7 @@ function readingNote(): ReadingNote {
 				language: "de",
 				family: "Lexeme",
 				kind: "VERB",
-				canonicalForm: "sich freuen",
+				canonicalForm: "freuen",
 				coreFeatures: { hasSepPrefix: null },
 			},
 		},
@@ -157,6 +158,12 @@ function readingNote(): ReadingNote {
 			transcription: "zɪç",
 			translations: { en: ["to be happy"] },
 			definition: "To experience happiness.",
+			valency: [
+				{
+					status: "Required",
+					complements: [{ kind: "Reflexive", governedCase: "Acc" }],
+				},
+			],
 		},
 		knowledgeUpdatedAt: null,
 		definitionText: { state: "Plain" },

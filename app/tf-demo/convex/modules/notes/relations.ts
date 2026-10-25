@@ -8,6 +8,7 @@ import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../../../server/linguisticIdentity";
+import type { ReflexiveSlot } from "../../../shared/reflexive-slot";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import {
@@ -18,6 +19,7 @@ import {
 } from "../../model/shadows";
 import { semanticRelationValidator } from "../../model/validators";
 import { projectReadingValue } from "./projections";
+import { loadReflexiveSlot, reflexiveSlotValidator } from "./readingReflexive";
 import {
 	loadTargetedRelationProjections,
 	MAX_RELATIONS_PER_NOTE,
@@ -30,6 +32,8 @@ const MAX_PARTICIPIAL_ADJECTIVES_PER_NOTE = 50;
 export const relationProjectionValidator = v.object({
 	relation: semanticRelationValidator,
 	targetCanonicalForm: v.string(),
+	/** A Reading target's Reflexive Slot, for its Citation; null for a Lemma target. */
+	targetReflexive: reflexiveSlotValidator,
 	provenance: v.union(v.literal("direct"), v.literal("inferred")),
 	target: v.union(
 		v.object({
@@ -65,6 +69,7 @@ type RelationProjection<
 > = {
 	readonly relation: Dumrel.SemanticRelation;
 	readonly targetCanonicalForm: string;
+	readonly targetReflexive: ReflexiveSlot | null;
 	readonly provenance: "direct" | "inferred";
 	readonly target:
 		| {
@@ -139,6 +144,10 @@ export async function loadRelationProjections(
 				relation: projection.relation,
 				targetCanonicalForm:
 					projection.targetReading.lemma.canonicalForm,
+				targetReflexive: await loadReflexiveSlot(
+					ctx,
+					targetDoc.readingKey,
+				),
 				provenance: projection.provenance,
 				target: {
 					kind: "Reading",
@@ -156,6 +165,7 @@ export async function loadRelationProjections(
 		resolved.push({
 			relation: projection.relation,
 			targetCanonicalForm: targetDoc.canonicalForm,
+			targetReflexive: null,
 			provenance: projection.provenance,
 			target: {
 				kind: "Lemma",

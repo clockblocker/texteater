@@ -16,6 +16,7 @@ import {
 } from "../../model/presentedDumling";
 import { familyValidator, kindValidator } from "../../model/validators";
 import { formationsValidator, loadFormations } from "./breakdown";
+import { loadReflexiveSlot, reflexiveSlotValidator } from "./readingReflexive";
 import {
 	loadParticipialAdjectives,
 	participialAdjectiveValidator,
@@ -69,6 +70,8 @@ const attestationRouteNoteValidator = v.object({
 	reading: v.object({
 		/** A Foreign Reading has none (ADR 0045). */
 		emojiDescription: v.optional(v.string()),
+		/** The Reading's Reflexive Slot, for its Citation (ADR 0052). */
+		reflexive: reflexiveSlotValidator,
 		target: readingTargetValidator,
 	}),
 });
@@ -121,6 +124,8 @@ const lemmaRouteNoteValidator = v.object({
 				readingId: v.id("readings"),
 				/** A Foreign Reading has none (ADR 0045). */
 				emojiDescription: v.optional(v.string()),
+				/** The Reading's Reflexive Slot, for its Citation (ADR 0052). */
+				reflexive: reflexiveSlotValidator,
 				target: readingTargetValidator,
 			}),
 		),
@@ -212,6 +217,10 @@ async function loadAttestationRouteNote(
 		},
 		reading: {
 			emojiDescription: occurrence.reading.emojiDescription,
+			reflexive: await loadReflexiveSlot(
+				ctx,
+				occurrence.reading.readingKey,
+			),
 			target: {
 				kind: "Reading" as const,
 				readingId: occurrence.reading._id,
@@ -418,14 +427,17 @@ async function loadLemmaRouteNote(
 						]
 					: [],
 			),
-			readings: readings.map((reading) => ({
-				readingId: reading._id,
-				emojiDescription: reading.emojiDescription,
-				target: {
-					kind: "Reading" as const,
+			readings: await Promise.all(
+				readings.map(async (reading) => ({
 					readingId: reading._id,
-				},
-			})),
+					emojiDescription: reading.emojiDescription,
+					reflexive: await loadReflexiveSlot(ctx, reading.readingKey),
+					target: {
+						kind: "Reading" as const,
+						readingId: reading._id,
+					},
+				})),
+			),
 			sameWrittenForm: sameWritten.flatMap((candidate) =>
 				candidate._id !== lemma._id &&
 				isUnitReadingFamily(candidate.family)

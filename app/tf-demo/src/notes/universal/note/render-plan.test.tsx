@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import type { RegisteredBlockMap } from "../../renderer-registry";
+import { bareCitation } from "../blocks/citation";
 import type { NoteDataFor } from "./data";
 import { renderUniversalNoteBody, renderUniversalNoteHeading } from "./render";
 import { resolveRenderPlan } from "./render-plan";
@@ -147,6 +148,7 @@ test("splits the Heading from a Body that keeps the Note's tags", () => {
 		noteData: readingFixture(),
 		capabilities: readingCapabilities(),
 		registryFor: () => registry,
+		citationFor: () => bareCitation,
 	};
 	const heading = renderUniversalNoteHeading(input);
 	const body = renderToStaticMarkup(
@@ -172,6 +174,7 @@ test("composes the Heading first inside the Body", () => {
 		noteData: readingFixture(),
 		capabilities: readingCapabilities(),
 		registryFor: () => registry,
+		citationFor: () => bareCitation,
 	};
 	const markup = renderToStaticMarkup(
 		renderUniversalNoteBody({
@@ -190,6 +193,7 @@ test("leaves the Heading out of a Note that cannot render", () => {
 	const input = {
 		noteData: { kind: "Mystery" } as never,
 		registryFor: () => null,
+		citationFor: () => bareCitation,
 	};
 
 	expect(renderUniversalNoteHeading(input)).toBeNull();
@@ -214,6 +218,7 @@ test("isolates a failing block while preserving subsequent registered blocks", (
 		noteData: readingFixture(),
 		capabilities: readingCapabilities(),
 		registryFor: () => registry,
+		citationFor: () => bareCitation,
 	};
 	const markup = renderToStaticMarkup(
 		renderUniversalNoteBody({

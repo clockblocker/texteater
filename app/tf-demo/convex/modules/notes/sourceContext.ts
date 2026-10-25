@@ -7,6 +7,7 @@
 import { type Infer, v } from "convex/values";
 
 import type { SourceScrollTarget } from "../../../shared/navigation";
+import type { ReflexiveSlot } from "../../../shared/reflexive-slot";
 import { scrollTitle } from "../../../shared/scroll-title";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
@@ -16,6 +17,7 @@ import {
 	grammaticalGenderValidator,
 	projectSentenceView,
 } from "../scroll/sentenceView";
+import { loadReflexiveSlot, reflexiveSlotValidator } from "./readingReflexive";
 import { unitReadingEmojiDescription } from "./unitReadingFamilies";
 
 /** Where a source Sentence lives: a Visitor-submitted Scroll or one Reading's Definition. */
@@ -26,6 +28,8 @@ export const sourceOriginValidator = v.union(
 		readingId: v.id("readings"),
 		emojiDescription: v.string(),
 		canonicalForm: v.string(),
+		/** The defined Reading's Reflexive Slot, for its Citation (ADR 0052). */
+		reflexive: reflexiveSlotValidator,
 	}),
 );
 
@@ -53,6 +57,7 @@ export type SourceOrigin =
 			readonly readingId: Id<"readings">;
 			readonly emojiDescription: string;
 			readonly canonicalForm: string;
+			readonly reflexive: ReflexiveSlot | null;
 	  };
 
 export type SourceTarget = SourceScrollTarget & {
@@ -83,6 +88,7 @@ async function projectSourceOrigin(
 		readingId: reading._id,
 		emojiDescription: unitReadingEmojiDescription(reading),
 		canonicalForm: lemma.canonicalForm,
+		reflexive: await loadReflexiveSlot(ctx, reading.readingKey),
 	};
 }
 

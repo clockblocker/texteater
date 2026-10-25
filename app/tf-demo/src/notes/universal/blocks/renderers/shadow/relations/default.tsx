@@ -5,6 +5,7 @@ import {
 	LoaderCircleIcon,
 } from "lucide-react";
 
+import { citationText } from "../../../citation";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 import { RouteAside } from "../../common/features";
 import { RelationMark } from "../../common/relation-mark";
@@ -20,6 +21,7 @@ type ShadowRelationsProps = Parameters<GrammaticalDefaultRenderer<"Shadow">>[0];
 function ShadowRelations({
 	noteData,
 	PresentationCapabilities,
+	Citation,
 }: ShadowRelationsProps) {
 	const { references, cleanup } = PresentationCapabilities;
 	const isCard = PresentationCapabilities.presentation === "Card";
@@ -60,7 +62,12 @@ function ShadowRelations({
 									<span className="me-[0.35em] text-ink">
 										{referrer.reading.emojiDescription}
 									</span>
-									{referrer.reading.canonicalForm}
+									{citationText(
+										Citation({
+											...referrer.reading,
+											lemma: referrer.reading,
+										}),
+									)}
 								</LinkButton>
 								{referrer.pendingRelations.length > 0 ||
 								referrer.structuralReferences.length > 0 ? (

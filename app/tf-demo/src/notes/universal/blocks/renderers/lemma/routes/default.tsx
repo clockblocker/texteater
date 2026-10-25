@@ -2,6 +2,7 @@ import { Button, IconSwap, LinkButton, NoteSection } from "lego";
 import { ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { citationText } from "../../../citation";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 import { RouteAside } from "../../common/features";
 import { RouteMark } from "../../common/route-mark";
@@ -14,6 +15,7 @@ import { RouteMark } from "../../common/route-mark";
 export const renderDefaultLemmaRoutes = (({
 	noteData,
 	PresentationCapabilities,
+	Citation,
 }) => {
 	const { connections, presented } = noteData;
 	const isCard = PresentationCapabilities.presentation === "Card";
@@ -37,7 +39,9 @@ export const renderDefaultLemmaRoutes = (({
 								<span className="me-[0.35em] text-ink">
 									{reading.emojiDescription}
 								</span>
-								{presented.canonicalForm}
+								{citationText(
+									Citation({ ...reading, lemma: presented }),
+								)}
 							</LinkButton>
 						</li>
 					))}

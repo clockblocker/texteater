@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import type { NoteDataFor } from "../../../../note/data";
 import type { ReadingDefaultRenderer } from "../../../renderer";
-import { SourceQuote } from "../../common/source-quote";
+import { citedOrigin, SourceQuote } from "../../common/source-quote";
 
 type SourceContext = NoteDataFor<"Reading">["sourceContexts"]["page"][number];
 
@@ -25,7 +25,7 @@ export type SourceContextCaption = (
 export function readingSourceContextsRenderer(
 	caption?: SourceContextCaption,
 ): ReadingDefaultRenderer {
-	return (({ noteData, PresentationCapabilities }) => {
+	return (({ noteData, PresentationCapabilities, Citation }) => {
 		const { sourceContexts } = PresentationCapabilities;
 		if (noteData.pending?.sourceContexts) {
 			return (
@@ -62,7 +62,10 @@ export function readingSourceContextsRenderer(
 									memberSegmentIndices={
 										sourceContext.memberSegmentIndices
 									}
-									origin={sourceContext.origin}
+									origin={citedOrigin(
+										sourceContext.origin,
+										Citation,
+									)}
 									follow={() =>
 										PresentationCapabilities.follow(
 											sourceContext.target,

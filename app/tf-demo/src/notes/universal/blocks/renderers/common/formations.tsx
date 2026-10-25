@@ -3,6 +3,7 @@ import { Fragment, useState } from "react";
 
 import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import type { NoteDataFor } from "../../../note/data";
+import { type CitationPresenter, citationText } from "../../citation";
 
 type Formations = NoteDataFor<"Lemma">["formations"];
 type FormationGroup = Formations[number];
@@ -33,10 +34,12 @@ function FormationLine({
 	group,
 	ambiguous,
 	follow,
+	cited,
 }: {
 	readonly group: FormationGroup;
 	readonly ambiguous: ReadonlySet<string>;
 	readonly follow: (target: WorkspaceTarget) => void;
+	readonly cited: (formation: FormationGroup["formations"][number]) => string;
 }) {
 	const [open, setOpen] = useState(false);
 	const { formations } = group;
@@ -54,9 +57,9 @@ function FormationLine({
 						<span className="text-ink-muted"> · </span>
 					) : null}
 					<LinkButton onClick={() => follow(formation.target)}>
-						{formation.canonicalForm}
-						{/* Two Readings spelled alike tell themselves apart by emoji. */}
-						{ambiguous.has(formation.canonicalForm) ? (
+						{cited(formation)}
+						{/* Two Readings cited alike tell themselves apart by emoji. */}
+						{ambiguous.has(cited(formation)) ? (
 							<span className="ms-[0.25em]">
 								{formation.emojiDescription}
 							</span>
@@ -87,15 +90,22 @@ function FormationLine({
 export function FormationsSection({
 	formations,
 	follow,
+	cite,
 }: {
 	readonly formations: Formations;
 	readonly follow: (target: WorkspaceTarget) => void;
+	/** Prints each formation's Citation (ADR 0052). */
+	readonly cite: CitationPresenter;
 }) {
 	if (formations.length === 0) return null;
+	const cited = (formation: FormationGroup["formations"][number]) =>
+		citationText(cite({ ...formation, lemma: formation }));
 	const counts = new Map<string, number>();
 	for (const { formations: members } of formations)
-		for (const { canonicalForm } of members)
-			counts.set(canonicalForm, (counts.get(canonicalForm) ?? 0) + 1);
+		for (const member of members) {
+			const citation = cited(member);
+			counts.set(citation, (counts.get(citation) ?? 0) + 1);
+		}
 	const ambiguous = new Set(
 		[...counts].flatMap(([form, count]) => (count > 1 ? [form] : [])),
 	);
@@ -108,6 +118,7 @@ export function FormationsSection({
 						group={group}
 						ambiguous={ambiguous}
 						follow={follow}
+						cited={cited}
 					/>
 				))}
 			</div>

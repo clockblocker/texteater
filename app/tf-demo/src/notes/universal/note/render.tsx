@@ -1,6 +1,7 @@
 import { DensityScope, NoteTags } from "lego";
 import { createElement, type ReactElement } from "react";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../../../../shared/knowledge-preferences";
+import type { CitationPresenter } from "../blocks/citation";
 import type { NoteBlockKind } from "../blocks/kind";
 import { ReadingMetadata } from "../blocks/renderers/reading/heading/default";
 import type {
@@ -22,6 +23,7 @@ type RegistryFor = (
 ) => Partial<
 	Record<NoteBlockKind, (context: never) => ReactElement | null>
 > | null;
+type CitationFor = (language: string) => CitationPresenter;
 
 /**
  * The Heading Block alone, which a Card or a Cover draws as its lift handle.
@@ -33,10 +35,12 @@ export function renderUniversalNoteHeading({
 	noteData,
 	capabilities,
 	registryFor,
+	citationFor,
 }: {
 	readonly noteData: NoteData;
 	readonly capabilities?: unknown;
 	readonly registryFor: RegistryFor;
+	readonly citationFor: CitationFor;
 }): ReactElement | null {
 	const described = describeRenderableNote(noteData);
 	if (!described) return null;
@@ -47,6 +51,7 @@ export function renderUniversalNoteHeading({
 		noteData,
 		coordinates,
 		capabilities ?? defaultCapabilities(noteData),
+		citationFor(coordinates.language),
 	);
 	return renderBlock("Heading", renderer, context, identity);
 }
@@ -88,12 +93,14 @@ export function renderUniversalNoteBody({
 	capabilities,
 	layout,
 	registryFor,
+	citationFor,
 	heading = null,
 }: {
 	readonly noteData: NoteData;
 	readonly capabilities?: unknown;
 	readonly layout: NoteBlockLayout;
 	readonly registryFor: RegistryFor;
+	readonly citationFor: CitationFor;
 	readonly heading?: ReactElement | null;
 }): ReactElement {
 	try {
@@ -108,7 +115,12 @@ export function renderUniversalNoteBody({
 		const renderCapabilities =
 			capabilities ?? defaultCapabilities(noteData);
 		const { plan } = resolveRenderPlan(registryFor, coordinates, layout);
-		const context = blockContext(noteData, coordinates, renderCapabilities);
+		const context = blockContext(
+			noteData,
+			coordinates,
+			renderCapabilities,
+			citationFor(coordinates.language),
+		);
 		const blocks = plan.body.flatMap(({ blockKind, renderer }) => {
 			const rendered = renderBlock(
 				blockKind,
@@ -147,13 +159,19 @@ function blockContext(
 	noteData: NoteData,
 	coordinates: NoteCoordinates,
 	capabilities: unknown,
+	citation: CitationPresenter,
 ) {
 	return noteData.kind === "Surface"
-		? { noteData, PresentationCapabilities: capabilities }
+		? {
+				noteData,
+				PresentationCapabilities: capabilities,
+				Citation: citation,
+			}
 		: {
 				noteData,
 				RouteKey: { ...coordinates, noteKind: noteData.kind },
 				PresentationCapabilities: capabilities,
+				Citation: citation,
 			};
 }
 

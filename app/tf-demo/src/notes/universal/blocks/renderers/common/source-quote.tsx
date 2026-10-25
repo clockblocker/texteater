@@ -1,15 +1,42 @@
 import { LinkButton, type NoteTitleTone, Quote } from "lego";
 import type { ReactNode } from "react";
 
+import type { ReflexiveSlot } from "../../../../../../shared/reflexive-slot";
+import { type CitationPresenter, citationText } from "../../citation";
 import { linkMembers, type SourceSegment } from "./link-members";
 
-type SourceOrigin =
+type StoredOrigin =
 	| { readonly kind: "Scroll" }
 	| {
 			readonly kind: "Definition";
 			readonly emojiDescription: string;
 			readonly canonicalForm: string;
+			readonly reflexive: ReflexiveSlot | null;
 	  };
+
+/** Where a quote comes from, a defined Reading named by its Citation. */
+type SourceOrigin =
+	| { readonly kind: "Scroll" }
+	| {
+			readonly kind: "Definition";
+			readonly emojiDescription: string;
+			readonly citation: string;
+	  };
+
+/** A stored origin with its defined Reading cited (ADR 0052). */
+export function citedOrigin(
+	origin: StoredOrigin,
+	cite: CitationPresenter,
+): SourceOrigin {
+	if (origin.kind === "Scroll") return origin;
+	return {
+		kind: "Definition",
+		emojiDescription: origin.emojiDescription,
+		citation: citationText(
+			cite({ ...origin, lemma: { canonicalForm: origin.canonicalForm } }),
+		),
+	};
+}
 
 /**
  * One quoted Source Context. A Scroll occurrence is the bare sentence with its
@@ -30,7 +57,7 @@ export function SourceQuote({
 }): ReactNode {
 	const destination =
 		origin.kind === "Definition"
-			? `the definition of ${origin.canonicalForm}`
+			? `the definition of ${origin.citation}`
 			: "the source Text";
 	const members = linkMembers(
 		segments,
@@ -64,7 +91,7 @@ export function SourceQuote({
 		<Quote data-origin="Definition" {...quote}>
 			<LinkButton
 				className="me-[0.35em]"
-				aria-label={`${origin.canonicalForm}, open its definition`}
+				aria-label={`${origin.citation}, open its definition`}
 				onClick={(event) => {
 					if (event.detail > 0) event.currentTarget.blur();
 					follow();
@@ -73,7 +100,7 @@ export function SourceQuote({
 				<span className="me-[0.35em] text-ink">
 					{origin.emojiDescription}
 				</span>
-				{origin.canonicalForm}:
+				{origin.citation}:
 			</LinkButton>
 			{members}
 		</Quote>

@@ -12,19 +12,34 @@ import { featureValueText } from "../../../../../../../shared/feature-values";
 import { coreGender } from "../../../../../../../shared/grammatical-gender";
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
 import type { ReadingNotePending } from "../../../../note/data";
+import {
+	type CitationPart,
+	citationText,
+	citedNoteReading,
+} from "../../../citation";
 import type { ReadingDefaultRenderer } from "../../../renderer";
 import { genderTone } from "../../common/feature-values";
 
 export const DefaultReadingHeadingRenderer = (({
 	noteData,
 	PresentationCapabilities,
+	Citation,
 }) => (
-	<ReadingHeading note={noteData} capabilities={PresentationCapabilities} />
+	<ReadingHeading
+		note={noteData}
+		capabilities={PresentationCapabilities}
+		citation={Citation(citedNoteReading(noteData))}
+	/>
 )) satisfies ReadingDefaultRenderer;
 
+/**
+ * A Reading Note's title: its emoji and its Citation (ADR 0052), which a
+ * route may set as its own `title`, as a separable verb marks its prefix.
+ */
 export function ReadingHeading({
 	note,
 	capabilities,
+	citation,
 	title,
 }: {
 	note: {
@@ -43,13 +58,15 @@ export function ReadingHeading({
 		pending?: ReadingNotePending;
 	};
 	capabilities: ReadingPresentationCapabilities;
+	citation: readonly CitationPart[];
 	title?: ReactNode;
 }) {
 	const id = useId();
 	const { lemma } = note.reading;
 	const gender = coreGender(lemma);
 	const pending = note.pending;
-	const headword = title ?? lemma.canonicalForm;
+	const cited = citationText(citation);
+	const headword = title ?? cited;
 	return (
 		<header>
 			<NoteTitleRow>
@@ -92,7 +109,7 @@ export function ReadingHeading({
 						</span>
 					) : (
 						<NoteTitleLink
-							aria-label={`${lemma.canonicalForm}, open its Lemma`}
+							aria-label={`${cited}, open its Lemma`}
 							onClick={() =>
 								capabilities.follow({
 									kind: "Lemma",

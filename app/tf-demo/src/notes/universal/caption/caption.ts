@@ -210,9 +210,11 @@ function pronounOf(
 }
 
 /**
- * The title of the Card an Attestation's caption names: the next Card dealt
- * in front of it. That is its Surface when the Surface says something, and
- * otherwise the Lemma or the Reading, both titled by the canonical form.
+ * The word an Attestation's caption names: its Surface when the Surface
+ * says something, and otherwise its Lemma by the bare Canonical Form. The
+ * Reading's title cites a lexical reflexive (`sich erinnern`), but the
+ * caption names what the written form is a form of, and `sich` is no form
+ * of `erinnern` (ADR 0052).
  */
 export function attestationNextTitle(
 	surface: Parameters<typeof surfaceSaysSomething>[0],

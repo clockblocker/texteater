@@ -5,7 +5,7 @@ import type { ReactElement } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
-import { registeredBlockMap } from "./renderer-registry";
+import { citationFor, registeredBlockMap } from "./renderer-registry";
 import type { NotePresentationCapabilitiesFor } from "./universal/blocks/renderer";
 import type { NoteData, NoteDataFor } from "./universal/note/data";
 import { renderErrorNote } from "./universal/note/error";
@@ -62,6 +62,7 @@ function configureRenderNote(layoutAdapter: LayoutAdapter) {
 		noteData: input.noteData,
 		capabilities: input.capabilities,
 		registryFor: registeredBlockMap,
+		citationFor,
 	});
 	return {
 		renderNote: (input: RenderNoteInput): ReactElement => {

@@ -8,9 +8,11 @@ import { FormationsSection } from "../../common/formations";
 export const renderDefaultShadowFormations = (({
 	noteData,
 	PresentationCapabilities,
+	Citation,
 }) => (
 	<FormationsSection
 		formations={noteData.formations}
 		follow={PresentationCapabilities.follow}
+		cite={Citation}
 	/>
 )) satisfies GrammaticalDefaultRenderer<"Shadow">;

@@ -1,6 +1,12 @@
 import type { ReactElement } from "react";
 
+import type { SupportedTargetLanguage } from "../../shared/supported-target-language";
+import { germanCitation } from "./de/citation";
 import { DE_RENDERER_REGISTRY } from "./de/registry";
+import {
+	bareCitation,
+	type CitationPresenter,
+} from "./universal/blocks/citation";
 import type { NoteBlockKind } from "./universal/blocks/kind";
 import type { RendererRegistry } from "./universal/blocks/renderer-registry";
 import type { NoteCoordinates } from "./universal/note/data";
@@ -8,6 +14,15 @@ import type { NoteCoordinates } from "./universal/note/data";
 export const RENDERER_REGISTRY = {
 	de: DE_RENDERER_REGISTRY,
 } satisfies RendererRegistry;
+
+/** How each language prints a Reading's Citation (ADR 0052). */
+const CITATION_PRESENTERS = {
+	de: germanCitation,
+} satisfies Record<SupportedTargetLanguage, CitationPresenter>;
+
+export function citationFor(language: string): CitationPresenter {
+	return language === "de" ? CITATION_PRESENTERS.de : bareCitation;
+}
 
 export type RegisteredBlockMap = Partial<
 	Record<NoteBlockKind, (context: never) => ReactElement | null>

@@ -82,6 +82,7 @@ import type * as modules_notes_pendingRelations from "../modules/notes/pendingRe
 import type * as modules_notes_projections from "../modules/notes/projections.js";
 import type * as modules_notes_readingKnowledgeValidator from "../modules/notes/readingKnowledgeValidator.js";
 import type * as modules_notes_readingNote from "../modules/notes/readingNote.js";
+import type * as modules_notes_readingReflexive from "../modules/notes/readingReflexive.js";
 import type * as modules_notes_relationNeighborhood from "../modules/notes/relationNeighborhood.js";
 import type * as modules_notes_relations from "../modules/notes/relations.js";
 import type * as modules_notes_resolutionNote from "../modules/notes/resolutionNote.js";
@@ -194,6 +195,7 @@ declare const fullApi: ApiFromModules<{
   "modules/notes/projections": typeof modules_notes_projections;
   "modules/notes/readingKnowledgeValidator": typeof modules_notes_readingKnowledgeValidator;
   "modules/notes/readingNote": typeof modules_notes_readingNote;
+  "modules/notes/readingReflexive": typeof modules_notes_readingReflexive;
   "modules/notes/relationNeighborhood": typeof modules_notes_relationNeighborhood;
   "modules/notes/relations": typeof modules_notes_relations;
   "modules/notes/resolutionNote": typeof modules_notes_resolutionNote;

@@ -12,6 +12,7 @@ import type {
 } from "../note/capabilities";
 import type { NoteDataFor } from "../note/data";
 import type { NoteKind } from "../note/kind";
+import type { CitationPresenter } from "./citation";
 
 export type GrammaticalNoteKind = Exclude<NoteKind, "Surface">;
 /** The Unit Reading Families; a Foreign unit has no Note of its own yet. */
@@ -140,6 +141,8 @@ export type ReadingRenderContext<
 		readonly noteKind: "Reading";
 	};
 	readonly PresentationCapabilities: ReadingPresentationCapabilities;
+	/** How the Note's language prints a Reading's Citation (ADR 0052). */
+	readonly Citation: CitationPresenter;
 };
 
 type GrammaticalRenderContext<
@@ -158,6 +161,8 @@ type GrammaticalRenderContext<
 	readonly PresentationCapabilities: N extends "Shadow"
 		? ShadowPresentationCapabilities
 		: RoutePresentationCapabilities;
+	/** How the Note's language prints a Reading's Citation (ADR 0052). */
+	readonly Citation: CitationPresenter;
 };
 
 type InflectionalFeaturesFor<
@@ -212,6 +217,8 @@ type ConcreteSurfaceNoteData<L extends SupportedTargetLanguage> = Omit<
 type SurfaceRenderContext<L extends SupportedTargetLanguage> = {
 	readonly noteData: ConcreteSurfaceNoteData<L>;
 	readonly PresentationCapabilities: SurfacePresentationCapabilities;
+	/** How the Note's language prints a Reading's Citation (ADR 0052). */
+	readonly Citation: CitationPresenter;
 };
 
 export type NotePresentationCapabilitiesFor<N extends NoteKind> =

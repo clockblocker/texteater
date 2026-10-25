@@ -1,12 +1,14 @@
 import { LinkButton, NoteSection } from "lego";
 import { LockIcon } from "lucide-react";
 import { relationPreference } from "../../../../../../../shared/knowledge-preferences";
+import { citationText } from "../../../citation";
 import type { ReadingDefaultRenderer } from "../../../renderer";
 import { RelationMark } from "../../common/relation-mark";
 
 export const renderDefaultReadingRelations = (({
 	noteData,
 	PresentationCapabilities,
+	Citation,
 }) => {
 	const relations = noteData.relations.filter(
 		({ relation }) =>
@@ -50,7 +52,16 @@ export const renderDefaultReadingRelations = (({
 								}
 							>
 								<RelationMark relation={relation.relation} />
-								{relation.targetCanonicalForm}
+								{/* A Lemma target has no frame, so it cites the bare form. */}
+								{citationText(
+									Citation({
+										lemma: {
+											canonicalForm:
+												relation.targetCanonicalForm,
+										},
+										reflexive: relation.targetReflexive,
+									}),
+								)}
 							</LinkButton>
 						</li>
 					))}

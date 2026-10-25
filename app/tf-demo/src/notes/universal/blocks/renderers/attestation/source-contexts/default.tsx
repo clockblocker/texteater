@@ -1,12 +1,13 @@
 import { NoteSection } from "lego";
 
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
-import { SourceQuote } from "../../common/source-quote";
+import { citedOrigin, SourceQuote } from "../../common/source-quote";
 
 /** The one Sentence this Attestation lives in, with its members lit. */
 export const renderDefaultAttestationSource = (({
 	noteData,
 	PresentationCapabilities,
+	Citation,
 }) => {
 	const { source } = noteData;
 	if (!source.sentenceSnippet) return null;
@@ -19,7 +20,7 @@ export const renderDefaultAttestationSource = (({
 			<SourceQuote
 				segments={source.segments}
 				memberSegmentIndices={source.memberSegmentIndices}
-				origin={source.origin}
+				origin={citedOrigin(source.origin, Citation)}
 				follow={() => PresentationCapabilities.follow(source.target)}
 			/>
 		</NoteSection>

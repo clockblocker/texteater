@@ -119,12 +119,14 @@ const valencySlotValidator = v.object({
 				form: literalUnion(clauseFormValues),
 				correlate: v.optional(literalUnion(clauseCorrelateValues)),
 			}),
-			// A lexical reflexive: German names its case, English none (ADR 0052).
+			// A lexical reflexive: German names its case, English none, and
+			// one inside a fixed phrase its preposition (ADR 0052).
 			v.object({
 				kind: v.literal("Reflexive"),
 				governedCase: v.optional(
 					v.union(v.literal("Acc"), v.literal("Dat")),
 				),
+				preposition: v.optional(readingValueLemmaValidator),
 			}),
 			v.object({
 				kind: v.union(

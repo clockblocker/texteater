@@ -14,6 +14,10 @@ import {
 	prefetchMorphemeSources,
 } from "../../model/breakdownParts";
 import { shadowKeyFor } from "../../model/shadows";
+import {
+	reflexiveSlotValidator,
+	storedReflexiveSlot,
+} from "./readingReflexive";
 import { unitReadingEmojiDescription } from "./unitReadingFamilies";
 
 /** The Formations a base's Note lists at most; a learner meets few per base. */
@@ -78,6 +82,8 @@ export const formationsValidator = v.array(
 				readingId: v.id("readings"),
 				canonicalForm: v.string(),
 				emojiDescription: v.string(),
+				/** The Reading's Reflexive Slot, for its Citation (ADR 0052). */
+				reflexive: reflexiveSlotValidator,
 				kind: v.string(),
 				target: v.object({
 					kind: v.literal("Reading"),
@@ -263,14 +269,14 @@ async function loadFormationsOfShadow(
 			.unique();
 		const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
 		if (!reading || !lemma) continue;
+		const row = await ctx.db
+			.query("accumulatedKnowledge")
+			.withIndex("by_owner_reading_key", (q) =>
+				q.eq("ownerReadingKey", ownerReadingKey),
+			)
+			.unique();
 		let group: FormationsView[number]["group"] = "Sourced";
 		if (via === "Constituents") {
-			const row = await ctx.db
-				.query("accumulatedKnowledge")
-				.withIndex("by_owner_reading_key", (q) =>
-					q.eq("ownerReadingKey", ownerReadingKey),
-				)
-				.unique();
 			const constituents = asKnowledge(row?.knowledge).breakdown
 				?.constituents;
 			if (!constituents) continue;
@@ -281,6 +287,7 @@ async function loadFormationsOfShadow(
 			readingId: reading._id,
 			canonicalForm: lemma.canonicalForm,
 			emojiDescription: unitReadingEmojiDescription(reading),
+			reflexive: storedReflexiveSlot(row?.knowledge),
 			kind: lemma.kind,
 			target: { kind: "Reading", readingId: reading._id },
 		});

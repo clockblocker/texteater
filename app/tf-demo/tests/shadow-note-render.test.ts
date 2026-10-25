@@ -59,6 +59,7 @@ function noteFixture(): ShadowNote {
 						readingId: "reading-source" as Id<"readings">,
 						canonicalForm: "laufen",
 						emojiDescription: "🏃",
+						reflexive: null,
 						target: {
 							kind: "Reading",
 							readingId: "reading-source" as Id<"readings">,

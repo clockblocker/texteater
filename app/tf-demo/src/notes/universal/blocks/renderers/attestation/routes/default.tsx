@@ -1,5 +1,6 @@
 import { LinkButton, NoteSection } from "lego";
 
+import { citationText } from "../../../citation";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 import { featureSummary } from "../../common/feature-values";
 import { RouteAside } from "../../common/features";
@@ -12,6 +13,7 @@ import { RouteMark } from "../../common/route-mark";
 export const renderDefaultAttestationRoutes = (({
 	noteData,
 	PresentationCapabilities,
+	Citation,
 }) => {
 	const { surface } = noteData.presented;
 	const inflection = featureSummary(surface.inflectionalFeatures);
@@ -59,7 +61,12 @@ export const renderDefaultAttestationRoutes = (({
 						<span className="me-[0.35em] text-ink">
 							{noteData.reading.emojiDescription}
 						</span>
-						{surface.lemma.canonicalForm}
+						{citationText(
+							Citation({
+								...noteData.reading,
+								lemma: surface.lemma,
+							}),
+						)}
 					</LinkButton>
 					<RouteAside>
 						{surface.lemma.family} · {surface.lemma.kind}
