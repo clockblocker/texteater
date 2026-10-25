@@ -25,7 +25,7 @@
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -79,14 +79,13 @@
 							"language": "de",
 							"family": "Lexeme",
 							"kind": "VERB",
-							"canonicalForm": "sich gewöhnen",
+							"canonicalForm": "gewöhnen",
 							"coreFeatures": {
 								"hasSepPrefix": null,
-								"lexicallyReflexive": "Yes",
 								"verbType": null
 							}
 						},
-						"emojiDescription": "🔄"
+						"emojiDescription": "🪞🔄"
 					}
 				},
 				"idealOutput": {
@@ -105,6 +104,15 @@
 							"status": "Required",
 							"complements": [
 								{
+									"kind": "Reflexive",
+									"governedCase": "Acc"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
 									"kind": "Preposition",
 									"preposition": "an",
 									"governedCase": "Acc",
@@ -114,7 +122,7 @@
 						}
 					]
 				},
-				"explanation": "sich is the lexical reflexive, a fixed part from Lemma identity, so it has no slot. The an + Acc complement is Required.",
+				"explanation": "sich is the lexical reflexive, so its Reflexive Slot is Required with Acc (ADR 0052). The an + Acc complement is Required.",
 				"sources": [
 					{
 						"title": "#599 acceptance case 3",

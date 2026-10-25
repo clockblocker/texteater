@@ -129,7 +129,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -145,7 +145,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": [
@@ -495,7 +495,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "👥💬" },
+			"reading": { "emojiDescription": "🪞👥💬" },
 			"notes": {
 				"rationale": "sich unterhalten 'talk' needs the reflexive: jemanden unterhalten means entertaining or supporting someone. über + Acc is governed. Same spelling sich, opposite verdict from grüßen sich."
 			},
@@ -509,13 +509,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich unterhalten",
+						"canonicalForm": "unterhalten",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "unterhalten sich",
+					"normalizedSurface": "unterhalten",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -535,6 +534,14 @@
 				},
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 2,
 						"complement": {

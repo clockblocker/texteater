@@ -17,7 +17,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0031"],
-		"rules": [{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }],
+		"rules": [{ "rule": "de/modal-is-a-verb", "hash": "c979a55f5d5f98b0" }],
 		"references": []
 	},
 	"targets": [

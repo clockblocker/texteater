@@ -88,10 +88,9 @@
 								"language": "de",
 								"family": "Lexeme",
 								"kind": "VERB",
-								"canonicalForm": "sich auskennen",
+								"canonicalForm": "auskennen",
 								"coreFeatures": {
-									"hasSepPrefix": "aus",
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": "aus"
 								}
 							}
 						]

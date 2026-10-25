@@ -77,10 +77,9 @@
 								"language": "de",
 								"family": "Lexeme",
 								"kind": "VERB",
-								"canonicalForm": "sich verabschieden",
+								"canonicalForm": "verabschieden",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": null
 								}
 							}
 						]

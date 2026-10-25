@@ -22,7 +22,7 @@
 		"rules": [
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": []
@@ -31,7 +31,7 @@
 		{
 			"memberSegmentIndices": [0, 2, 4, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🔎" },
+			"reading": { "emojiDescription": "🪞🔎" },
 			"notes": {
 				"rationale": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate."
 			},
@@ -45,13 +45,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich handeln",
+						"canonicalForm": "handeln",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "es handelt sich",
+					"normalizedSurface": "es handelt",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -79,6 +78,14 @@
 					"orthography": "Standard"
 				},
 				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 3,
 						"complement": {

@@ -155,7 +155,7 @@
 			},
 			{
 				"rule": "de/modal-is-a-verb",
-				"hash": "fbed9130c4b77fbf"
+				"hash": "c979a55f5d5f98b0"
 			},
 			{
 				"rule": "de/nicht-is-part",
@@ -167,7 +167,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/verbal-participle",
@@ -187,7 +187,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": [
@@ -255,7 +255,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "😠🗯" },
+			"reading": { "emojiDescription": "🪞😠🗯" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -266,13 +266,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich zanken",
+						"canonicalForm": "zanken",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "sich zanken",
+					"normalizedSurface": "zanken",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -322,6 +321,14 @@
 							"referent": "Someone"
 						},
 						"realizedCase": "Dat"
+					},
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
 					}
 				],
 				"expletiveEvidence": null

@@ -113,7 +113,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -133,7 +133,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": [
@@ -248,7 +248,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "😔🤝" },
+			"reading": { "emojiDescription": "🪞😔🤝" },
 			"notes": {
 				"rationale": "Consistency partner of ich-weiss-nicht-ob-sich-…: the same sich abfinden mit, verb-second with the particle split to the end, past einfach and nicht."
 			},
@@ -262,13 +262,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich abfinden",
+						"canonicalForm": "abfinden",
 						"coreFeatures": {
-							"hasSepPrefix": "ab",
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": "ab"
 						}
 					},
-					"normalizedSurface": "findet sich ab",
+					"normalizedSurface": "findet ab",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -288,6 +287,14 @@
 				},
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 2,
 						"complement": {

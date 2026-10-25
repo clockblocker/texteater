@@ -34,8 +34,8 @@ export const readings: Rule[] = [
 	{
 		id: "de/distinct-concepts-get-distinct-readings",
 		statement:
-			"A Lemma's meanings get different Emoji Descriptions, and so different Readings, only when they are different concepts a model would tell apart from the sentence: Mutter is 👩‍👧 'mother' and 🔩 'nut', noch ⏳ 'still' and ➕ 'in addition'. Closely related uses, figurative ones and functional or grammatical shades of one meaning share one description: so of manner and of degree is 🔧. When in doubt, fold.",
-		adrs: ["ADR-0031"],
+			"A Lemma's meanings get different Emoji Descriptions, and so different Readings, only when they are different concepts a model would tell apart from the sentence: Mutter is 👩‍👧 'mother' and 🔩 'nut', noch ⏳ 'still' and ➕ 'in addition'. Closely related uses, figurative ones and functional or grammatical shades of one meaning share one description: so of manner and of degree is 🔧. When in doubt, fold. A use whose frame has a Required Reflexive Slot is a Reading of its own, its description starting with 🪞: fürchten 😨 and 🪞😨.",
+		adrs: ["ADR-0031", "ADR-0052"],
 		routes: [],
 		records: [
 			"de/die-mutter-passt-nicht-auf-diese-schraube",

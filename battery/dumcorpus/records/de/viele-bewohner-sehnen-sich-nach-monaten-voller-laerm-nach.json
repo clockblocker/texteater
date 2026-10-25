@@ -50,7 +50,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -66,7 +66,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": [
@@ -196,7 +196,7 @@
 		{
 			"memberSegmentIndices": [4, 6, 16],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🥺💭" },
+			"reading": { "emojiDescription": "🪞🥺💭" },
 			"notes": {
 				"rationale": "sich sehnen has no non-reflexive use, so sich is a member. Of the two nach, only the second, nach etwas Ruhe, is the governed nach + Dat; the first, nach Monaten, is a free temporal adjunct and a unit of its own (de/governed-preposition-joins-its-governor)."
 			},
@@ -210,13 +210,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich sehnen",
+						"canonicalForm": "sehnen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "sehnen sich",
+					"normalizedSurface": "sehnen",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -234,6 +233,14 @@
 				},
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 2,
 						"complement": {

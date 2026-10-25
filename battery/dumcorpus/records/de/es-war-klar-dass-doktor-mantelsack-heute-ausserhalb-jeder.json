@@ -235,7 +235,7 @@
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "abeb2e5948f88fe7"
+				"hash": "8982593963a4d507"
 			},
 			{
 				"rule": "de/core-features-are-identity",
@@ -271,7 +271,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/verbal-participle",
@@ -287,7 +287,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			},
 			{
 				"rule": "de/adjective-stays-adj",
@@ -1070,7 +1070,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "👀" },
+			"reading": { "emojiDescription": "🪞👀" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1086,6 +1086,14 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": null,
 						"complement": {
@@ -1107,7 +1115,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "sich kümmerte",
+					"normalizedSurface": "kümmerte",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -1126,12 +1134,11 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "sich kümmern",
+						"canonicalForm": "kümmern",
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

@@ -46,7 +46,7 @@
 				"hash": "0881d666fc1f106a"
 			},
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
-			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"

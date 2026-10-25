@@ -39,14 +39,13 @@
 							"language": "de",
 							"family": "Lexeme",
 							"kind": "VERB",
-							"canonicalForm": "sich bedanken",
+							"canonicalForm": "bedanken",
 							"coreFeatures": {
 								"hasSepPrefix": null,
-								"lexicallyReflexive": "Yes",
 								"verbType": null
 							}
 						},
-						"emojiDescription": "🙏"
+						"emojiDescription": "🪞🙏"
 					}
 				},
 				"idealOutput": {
@@ -58,6 +57,15 @@
 									"kind": "Case",
 									"governedCase": "Nom",
 									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Reflexive",
+									"governedCase": "Acc"
 								}
 							]
 						},
@@ -85,7 +93,7 @@
 						}
 					]
 				},
-				"explanation": "sich bei jemandem für etwas bedanken: both prepositional complements are governed and Optional, and the lexical reflexive is not a slot.",
+				"explanation": "sich bei jemandem für etwas bedanken: both prepositional complements are governed and Optional, and the lexical reflexive fills a Required Reflexive Slot with Acc (ADR 0052).",
 				"sources": [
 					{
 						"title": "ADR 0034",

@@ -56,7 +56,7 @@
 		"adrs": [],
 		"rules": [
 			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" },
+			{ "rule": "de/verb-core-features", "hash": "53f39c352354bcbe" },
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
 				"hash": "19c59bf41ed26810"

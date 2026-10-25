@@ -141,7 +141,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -161,7 +161,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": [
@@ -351,7 +351,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "😔🤝" },
+			"reading": { "emojiDescription": "🪞😔🤝" },
 			"notes": {
 				"rationale": "Verb-final control: the particle stays inside abgefunden, but sich, mit and the auxiliary hat still join. sich abfinden 'come to terms' needs the reflexive (jemanden abfinden means paying someone off), and mit + Dat is governed."
 			},
@@ -365,13 +365,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich abfinden",
+						"canonicalForm": "abfinden",
 						"coreFeatures": {
-							"hasSepPrefix": "ab",
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": "ab"
 						}
 					},
-					"normalizedSurface": "sich abgefunden hat",
+					"normalizedSurface": "abgefunden hat",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -391,6 +390,14 @@
 				},
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 1,
 						"complement": {

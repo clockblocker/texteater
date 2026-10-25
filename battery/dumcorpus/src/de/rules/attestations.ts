@@ -202,8 +202,8 @@ export const attestations: Rule[] = [
 	{
 		id: "de/verb-core-features",
 		statement:
-			"A VERB's hasSepPrefix names only its separable prefix, never a governed preposition or a preposition with its own complement. lexicallyReflexive names the case its lexical reflexive takes, which is fixed per word: sich erinnern is Acc (ich erinnere mich).",
-		adrs: ["ADR-0029"],
+			"A VERB's hasSepPrefix names only its separable prefix, never a governed preposition or a preposition with its own complement. A lexical reflexive is no Core Feature and stays out of the Canonical Form: sich erinnern is the Lemma erinnern. It fills the Reading's Reflexive Slot, which names the case fixed for that Reading (ich erinnere mich: Acc).",
+		adrs: ["ADR-0029", "ADR-0052"],
 		routes: lexeme("VERB"),
 		records: [
 			"de/der-faehrmann-hat-uns-uebergesetzt",

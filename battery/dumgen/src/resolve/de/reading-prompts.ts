@@ -20,7 +20,7 @@ const rules = {
 	meaning: ["de/emoji-description-names-the-meaning", "5532d94dbbc3bb71"],
 	distinct: [
 		"de/distinct-concepts-get-distinct-readings",
-		"500ad6b7f0020325",
+		"434871d7862a9fb0",
 	],
 	copula: ["de/copula-describes-its-own-part", "986b2cb2531c76d7"],
 	polarity: [
@@ -32,7 +32,7 @@ const rules = {
 		"de/multiword-unit-describes-its-whole-meaning",
 		"99996175abb4200d",
 	],
-	idiom: ["de/idiom", "c05df428b3a42079"],
+	idiom: ["de/idiom", "d25679f2a06809b9"],
 	modification: ["de/modification-attests-partially", "c888ed5b9e59b0a1"],
 	auxiliary: ["de/auxiliary-joins-the-verb-it-serves", "17cec6bff2108a22"],
 	expletive: ["de/expletive-es-joins-its-verb", "99bff23563b49716"],

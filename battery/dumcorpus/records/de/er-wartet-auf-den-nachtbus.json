@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034", "ADR-0038"],
@@ -150,10 +150,9 @@
 								"language": "de",
 								"family": "Lexeme",
 								"kind": "VERB",
-								"canonicalForm": "sich gedulden",
+								"canonicalForm": "gedulden",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": null
 								}
 							}
 						]

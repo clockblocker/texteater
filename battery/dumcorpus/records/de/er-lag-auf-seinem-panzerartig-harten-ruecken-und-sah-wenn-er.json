@@ -382,11 +382,11 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/modal-is-a-verb",
-				"hash": "fbed9130c4b77fbf"
+				"hash": "c979a55f5d5f98b0"
 			},
 			{
 				"rule": "de/participial-adjective",
@@ -418,7 +418,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			},
 			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
 		],
@@ -1228,8 +1228,7 @@
 							"kind": "VERB",
 							"canonicalForm": "wölben",
 							"coreFeatures": {
-								"hasSepPrefix": null,
-								"lexicallyReflexive": "Acc"
+								"hasSepPrefix": null
 							}
 						},
 						"meaning": "Verbal"
@@ -1865,7 +1864,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "📌" },
+			"reading": { "emojiDescription": "🪞📌" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1876,13 +1875,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich erhalten",
+						"canonicalForm": "erhalten",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "sich erhalten",
+					"normalizedSurface": "erhalten",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -1912,7 +1910,16 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					}
+				]
 			},
 			"notes": {
 				"rationale": "Ruled on #743 (VP-B7, A4). sich erhalten here is 'stay in place, hold on' (Duden erhalten 2: Bestand haben, sich halten), an anticausative with no object role for sich: *die Bettdecke erhielt die Decke. So sich is a lexical reflexive and a member (de/verb-owns-its-scattered-members). The infinitive is its own VERB target under konnte (de/modal-is-a-verb)."

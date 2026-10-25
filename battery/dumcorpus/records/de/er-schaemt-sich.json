@@ -16,7 +16,7 @@
 		"rules": [
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": []
@@ -25,7 +25,7 @@
 		{
 			"memberSegmentIndices": [2, 4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "😳" },
+			"reading": { "emojiDescription": "🪞😳" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -36,13 +36,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich schämen",
+						"canonicalForm": "schämen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "schämt sich",
+					"normalizedSurface": "schämt",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -64,7 +63,16 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					}
+				]
 			}
 		}
 	],

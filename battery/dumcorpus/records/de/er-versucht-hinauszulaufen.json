@@ -52,9 +52,9 @@
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
-			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" },
+			{ "rule": "de/verb-core-features", "hash": "53f39c352354bcbe" },
 			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
 			{ "rule": "de/bare-infinitive-zu", "hash": "920eb73475a80ef0" }
 		],

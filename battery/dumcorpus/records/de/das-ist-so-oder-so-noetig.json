@@ -21,12 +21,12 @@
 	"sources": {
 		"adrs": ["ADR-0039", "ADR-0042"],
 		"rules": [
-			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/idiom", "hash": "d25679f2a06809b9" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
 			{ "rule": "de/pron-or-det-by-use", "hash": "b7ac2bf4eaaf25be" },
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" }
 		],

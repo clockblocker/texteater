@@ -24,7 +24,7 @@
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
 			{ "rule": "de/verbal-surface-is-whole", "hash": "ab79bbe68ce12d4c" }
 		],
 		"references": []

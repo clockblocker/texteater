@@ -59,7 +59,7 @@
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
 			},
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
+			{ "rule": "de/modal-is-a-verb", "hash": "c979a55f5d5f98b0" }
 		],
 		"references": []
 	},

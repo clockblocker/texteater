@@ -19,10 +19,10 @@
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
-			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
+			{ "rule": "de/verb-core-features", "hash": "53f39c352354bcbe" },
+			{ "rule": "de/modal-is-a-verb", "hash": "c979a55f5d5f98b0" }
 		],
 		"references": []
 	},
@@ -41,9 +41,9 @@
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🧠💭" },
+			"reading": { "emojiDescription": "🪞🧠💭" },
 			"notes": {
-				"rationale": "sich erinnern is inherently reflexive, so mich is a member of the infinitive's target (de/verb-owns-its-scattered-members), with the gold's 'remember' Reading 🧠💭. The modal kann is a VERB of its own. A Lexeme has no Breakdown: its reflexive drill-down is read from model data (ADR 0041), so the two lexical-breakdown cases are dropped (#700)."
+				"rationale": "sich erinnern is inherently reflexive, so mich is a member of the infinitive's target (de/verb-owns-its-scattered-members), with the gold's 'remember' Reading 🪞🧠💭, whose Reflexive Slot mich fills (ADR 0052). The modal kann is a VERB of its own. A Lexeme has no Breakdown: its reflexive drill-down is read from model data (ADR 0041), so the two lexical-breakdown cases are dropped (#700)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -53,11 +53,20 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": [],
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "mich erinnern",
+					"normalizedSurface": "erinnern",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": null,
@@ -76,10 +85,9 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich erinnern",
+						"canonicalForm": "erinnern",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

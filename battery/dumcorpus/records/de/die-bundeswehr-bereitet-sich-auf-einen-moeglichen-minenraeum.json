@@ -38,7 +38,7 @@
 		"rules": [
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": []
@@ -47,7 +47,7 @@
 		{
 			"memberSegmentIndices": [4, 6, 8, 26],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🛠🔜" },
+			"reading": { "emojiDescription": "🪞🛠🔜" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -58,13 +58,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich vorbereiten",
+						"canonicalForm": "vorbereiten",
 						"coreFeatures": {
-							"hasSepPrefix": "vor",
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": "vor"
 						}
 					},
-					"normalizedSurface": "bereitet sich vor",
+					"normalizedSurface": "bereitet vor",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -89,6 +88,14 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 2,
 						"complement": {

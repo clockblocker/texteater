@@ -274,11 +274,11 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/verbal-participle",
@@ -911,7 +911,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🪫" },
+			"reading": { "emojiDescription": "🪞🪫" },
 			"notes": {
 				"rationale": "sich zerreiben 'wear oneself out' (DWDS: sich zerreiben = sich aufreiben; Duden: <zerreiben + sich>) is the reflexive sense: the subject is what is worn down, so sich is no object that another noun could replace in this sense. It joins the verb with the perfect auxiliary hat (de/verb-owns-its-scattered-members, de/auxiliary-joins-the-verb-it-serves). Ruled on #743 (SZ-B3, A4)."
 			},
@@ -933,11 +933,20 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": [],
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "hat sich zerrieben",
+					"normalizedSurface": "hat zerrieben",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -958,10 +967,9 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich zerreiben",
+						"canonicalForm": "zerreiben",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

@@ -210,7 +210,7 @@
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "abeb2e5948f88fe7"
+				"hash": "8982593963a4d507"
 			},
 			{
 				"rule": "de/expletive-es-joins-its-verb",
@@ -218,7 +218,7 @@
 			},
 			{
 				"rule": "de/modal-is-a-verb",
-				"hash": "fbed9130c4b77fbf"
+				"hash": "c979a55f5d5f98b0"
 			},
 			{
 				"rule": "de/nicht-is-part",
@@ -238,7 +238,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/verbal-participle",

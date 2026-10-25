@@ -118,11 +118,11 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/verbal-surface-is-whole",
@@ -218,7 +218,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🤔" },
+			"reading": { "emojiDescription": "🪞🤔" },
 			"notes": {
 				"rationale": "frage … mich is sich fragen 'wonder' (Duden fragen 4 <sich fragen>, DWDS ⟨sich etw. fragen⟩): in this sense the reflexive is required, as in the Reviewed sich erinnern, so it joins the verb (de/verb-owns-its-scattered-members). Ruled on #743 (SZ-B1, A4). sich fragen 'wonder' (Duden fragen 4 'sich etwas überlegen, über etwas nachdenken')."
 			},
@@ -236,11 +236,20 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": [],
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "frage mich",
+					"normalizedSurface": "frage",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -261,10 +270,9 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich fragen",
+						"canonicalForm": "fragen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

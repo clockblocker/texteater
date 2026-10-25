@@ -45,7 +45,7 @@
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
 			{ "rule": "de/sein-perfect-or-copula", "hash": "2f0a185d7f35c1e9" },
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },

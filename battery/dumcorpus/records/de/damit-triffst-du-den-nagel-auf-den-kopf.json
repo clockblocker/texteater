@@ -25,7 +25,7 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [
-			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/idiom", "hash": "d25679f2a06809b9" },
 			{ "rule": "de/fixed-member-test", "hash": "1a5d9f3240c41e69" },
 			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },

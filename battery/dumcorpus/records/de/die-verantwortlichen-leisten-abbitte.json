@@ -84,8 +84,7 @@
 								"kind": "VERB",
 								"canonicalForm": "entschuldigen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": null
 								}
 							}
 						]

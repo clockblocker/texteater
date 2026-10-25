@@ -88,8 +88,8 @@ export const knowledge: Rule[] = [
 	{
 		id: "de/participle-source-verb-and-meaning",
 		statement:
-			"A Participial Adjective's Participle Source is the verb its form comes from. Its meaning is Verbal when a current Duden or DWDS sense of the verb paraphrases the Reading, a Partizip II in the passive (geschlossen: has been closed), a Partizip I in the progressive; Drifted when none does (gelassen 'calm', bekannt). Comparability alone is no drift. The head noun picks the verb: the plain verb if it is its object (Tür, schließen), the reflexive if it is the reflexive's subject (verheiratet, sich verheiraten); if both fit, the plain verb, unless Duden or DWDS files the participle under sich.",
-		adrs: ["ADR-0036"],
+			"A Participial Adjective's Participle Source is the verb its form comes from. Its meaning is Verbal when a current Duden or DWDS sense of the verb paraphrases the Reading, a Partizip II in the passive (geschlossen: has been closed), a Partizip I in the progressive; Drifted when none does (gelassen 'calm', bekannt). Comparability alone is no drift. The head noun picks the sense the paraphrase tests: the plain one if it is its object (Tür, schließen), the reflexive one if it is the reflexive's subject (verheiratet: sich verheiraten); the Source names the bare verb either way.",
+		adrs: ["ADR-0036", "ADR-0052"],
 		routes: lexeme("ADJ"),
 		records: [
 			"de/die-tuer-ist-geschlossen",
@@ -99,7 +99,7 @@ export const knowledge: Rule[] = [
 			// Partizip I, checked in the progressive.
 			"de/der-reisende-haendler-wartete-draussen",
 			"de/er-sass-schweigend-am-fenster",
-			// The head noun is the reflexive verb's subject.
+			// The head noun is the subject of the verb's reflexive sense.
 			"de/sie-ist-verheiratet",
 			"de/die-auf-ihn-abgestimmte-loesung-half-sofort",
 			"de/ein-interessierter-leser-fragte-nach",

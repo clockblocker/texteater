@@ -20,15 +20,15 @@
 		"rules": [
 			{
 				"rule": "de/causative-lassen",
-				"hash": "6df00ff37a0a5baa"
+				"hash": "af12a3e45b1d22a6"
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			}
 		],
 		"references": []
@@ -37,9 +37,9 @@
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "👌" },
+			"reading": { "emojiDescription": "🪞👌" },
 			"notes": {
-				"rationale": "The modal-passive sich lassen ('can be done'): the window can be opened. sich is a member by the reflexive test, so lässt sich is VERB sich lassen and öffnen a target of its own (de/causative-lassen, de/verb-owns-its-scattered-members, #723 ruling 10). Its Core names the case of its reflexive, lexicallyReflexive Acc, as for every lexical reflexive (de/verb-core-features). Modal-passive sich lassen 'can be done' (Duden lassen: die Möglichkeit zu etwas bieten; das Fenster lässt sich öffnen)."
+				"rationale": "The modal-passive sich lassen ('can be done'): the window can be opened. sich is a member by the reflexive test, so lässt sich is VERB lassen and öffnen a target of its own (de/causative-lassen, de/verb-owns-its-scattered-members, #723 ruling 10). The modal-passive is lassen's 🪞👌 Reading: sich fills its Required Reflexive Slot, Acc, and valencyEvidence names it (ADR 0052). Modal-passive sich lassen 'can be done' (Duden lassen: die Möglichkeit zu etwas bieten; das Fenster lässt sich öffnen)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -49,11 +49,20 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": [],
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "lässt sich",
+					"normalizedSurface": "lässt",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -70,12 +79,11 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "sich lassen",
+						"canonicalForm": "lassen",
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null
@@ -87,7 +95,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🔓" },
 			"notes": {
-				"rationale": "The infinitive under VERB sich lassen is a target of its own."
+				"rationale": "The infinitive under the modal-passive lassen is a target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

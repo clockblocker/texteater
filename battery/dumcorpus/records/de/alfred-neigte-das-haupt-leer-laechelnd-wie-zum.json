@@ -244,7 +244,7 @@
 			},
 			{
 				"rule": "de/causative-lassen",
-				"hash": "6df00ff37a0a5baa"
+				"hash": "af12a3e45b1d22a6"
 			},
 			{
 				"rule": "de/nicht-is-part",
@@ -276,7 +276,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			}
 		],
 		"references": [

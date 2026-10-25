@@ -19,7 +19,7 @@
 	"sources": {
 		"adrs": [],
 		"rules": [
-			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" },
+			{ "rule": "de/verb-core-features", "hash": "53f39c352354bcbe" },
 			{
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"

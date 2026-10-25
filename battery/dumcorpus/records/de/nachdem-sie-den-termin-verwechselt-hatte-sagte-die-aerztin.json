@@ -40,7 +40,7 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034", "ADR-0039", "ADR-0044", "dumgen/ADR-0007"],
@@ -183,10 +183,9 @@
 								"language": "de",
 								"family": "Lexeme",
 								"kind": "VERB",
-								"canonicalForm": "sich entschuldigen",
+								"canonicalForm": "entschuldigen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": null
 								}
 							},
 							{

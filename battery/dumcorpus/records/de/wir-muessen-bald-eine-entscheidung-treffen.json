@@ -25,7 +25,7 @@
 				"rule": "de/funktionsverbgefuege-are-collocations",
 				"hash": "57f04b272a0e9aeb"
 			},
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
+			{ "rule": "de/modal-is-a-verb", "hash": "c979a55f5d5f98b0" },
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
 			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" }
 		],

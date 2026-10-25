@@ -22,7 +22,7 @@
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
 				"hash": "f0b9c8226ff45fb8"

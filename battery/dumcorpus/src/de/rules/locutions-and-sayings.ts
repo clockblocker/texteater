@@ -26,7 +26,7 @@ export const locutionsAndSayings: Rule[] = [
 		id: "de/funktionsverbgefuege-are-collocations",
 		statement:
 			"A Collocation is a Locution VERB whose verb only supports its noun or adjective predicate: a Funktionsverbgefüge (zur Verfügung stellen) or a verb with an adjective predicate (ernst nehmen). Its members are the verb, the predicate, the noun's own article or both pieces of its fused word, a reflexive by de/verb-owns-its-scattered-members (sich Sorgen machen), and a preposition the noun or the expression governs; free arguments and adverbs stay outside. A weak collocation with a literal meaning is separate Lexemes. Collocation is the Reading's Locution Type, never part of the Lemma.",
-		adrs: ["ADR-0039", "ADR-0034", "dumgen/ADR-0007"],
+		adrs: ["ADR-0039", "ADR-0034", "dumgen/ADR-0007", "ADR-0052"],
 		routes: locution("VERB"),
 		records: [
 			"de/wir-stellen-die-daten-zur-verfuegung",
@@ -44,7 +44,7 @@ export const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/idiom",
 		statement:
-			"An established expression whose meaning here is not the sum of its words is an Idiom, a Locution whose Kind is the part of speech the whole acts as: den Faden verlieren and es in sich haben are VERB, weißer Rabe is NOUN, ganz und gar and unter vier Augen are ADV. A VERB or NOUN Idiom inflects like its verb or noun (hat den Faden verloren). The same words used literally are separate units. A click on any fixed member, a fixed article or preposition included, selects the whole Locution. Idiom is the Reading's Locution Type, never part of the Lemma.",
+			"An established expression whose meaning here is not the sum of its words is an Idiom, a Locution whose Kind is the part of speech the whole acts as: den Faden verlieren and ins Gras beißen are VERB, weißer Rabe is NOUN, ganz und gar and unter vier Augen are ADV. A VERB or NOUN Idiom inflects like its verb or noun (hat den Faden verloren). The same words used literally are separate units. A click on any fixed member, a fixed article or preposition included, selects the whole Locution. Idiom is the Reading's Locution Type, never part of the Lemma.",
 		adrs: ["ADR-0039", "dumgen/ADR-0007"],
 		routes: everyLocution,
 		records: [

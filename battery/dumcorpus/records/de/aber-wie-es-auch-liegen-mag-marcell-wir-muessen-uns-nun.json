@@ -263,7 +263,7 @@
 			},
 			{
 				"rule": "de/idiom",
-				"hash": "c05df428b3a42079"
+				"hash": "d25679f2a06809b9"
 			},
 			{
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
@@ -271,7 +271,7 @@
 			},
 			{
 				"rule": "de/modal-is-a-verb",
-				"hash": "fbed9130c4b77fbf"
+				"hash": "c979a55f5d5f98b0"
 			},
 			{
 				"rule": "de/modification-attests-partially",
@@ -295,11 +295,11 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "abeb2e5948f88fe7"
+				"hash": "8982593963a4d507"
 			},
 			{
 				"rule": "de/empty-inflection-is-structural",
@@ -311,7 +311,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": [
@@ -1268,7 +1268,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "👍👎" },
+			"reading": { "emojiDescription": "🪞👍👎" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1279,13 +1279,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich stellen",
+						"canonicalForm": "stellen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "dich stellen",
+					"normalizedSurface": "stellen",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -1335,6 +1334,14 @@
 							"referent": "Something"
 						},
 						"realizedCase": "Dat"
+					},
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
 					}
 				],
 				"expletiveEvidence": null

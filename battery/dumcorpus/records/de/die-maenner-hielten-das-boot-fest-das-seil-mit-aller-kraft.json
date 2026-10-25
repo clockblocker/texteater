@@ -36,7 +36,7 @@
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{ "rule": "de/pron-or-det-by-use", "hash": "b7ac2bf4eaaf25be" },

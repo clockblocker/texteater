@@ -7,13 +7,12 @@
 			"language": "de",
 			"family": "Lexeme",
 			"kind": "VERB",
-			"canonicalForm": "sich erinnern",
+			"canonicalForm": "erinnern",
 			"coreFeatures": {
-				"hasSepPrefix": null,
-				"lexicallyReflexive": "Acc"
+				"hasSepPrefix": null
 			}
 		},
-		"emojiDescription": "💭"
+		"emojiDescription": "🪞🧠💭"
 	},
 	"knowledge": {
 		"breakdown": {
@@ -49,7 +48,7 @@
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0029", "ADR-0050", "ADR-0051"],
+		"adrs": ["ADR-0050", "ADR-0051", "ADR-0052"],
 		"rules": [],
 		"references": [
 			{
@@ -70,6 +69,6 @@
 		]
 	},
 	"notes": {
-		"rationale": "The reflexive is a satellite, read from lexicallyReflexive, so the Breakdown spells the word erinnern, not the Canonical Form sich erinnern (ADR 0050). erinnern is a bottom word, as vergessen (ver · gess · en) is: its base innern is Middle High German and has no modern headword, so it has no word inside and no Constituents (user, #1241, 2026-10-25). DWDS splits off only er-, which is on the closed affix list, so the remainder inner is the Root, and the citation ending n is a Surface of the Ending -en, as in läch · el · n (ADR 0051)."
+		"rationale": "The Canonical Form is the bare word erinnern, since the reflexive of the 🪞🧠💭 'remember' Reading lives in its frame, never in the Lemma (ADR 0052), so the Breakdown spells erinnern (ADR 0050). erinnern is a bottom word, as vergessen (ver · gess · en) is: its base innern is Middle High German and has no modern headword, so it has no word inside and no Constituents (user, #1241, 2026-10-25). DWDS splits off only er-, which is on the closed affix list, so the remainder inner is the Root, and the citation ending n is a Surface of the Ending -en, as in läch · el · n (ADR 0051)."
 	}
 }

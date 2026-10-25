@@ -26,7 +26,7 @@
 			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" },
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
 			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" }

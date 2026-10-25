@@ -89,7 +89,7 @@
 			},
 			{
 				"rule": "de/idiom",
-				"hash": "c05df428b3a42079"
+				"hash": "d25679f2a06809b9"
 			},
 			{
 				"rule": "de/fixed-member-test",
@@ -97,7 +97,7 @@
 			},
 			{
 				"rule": "de/modal-is-a-verb",
-				"hash": "fbed9130c4b77fbf"
+				"hash": "c979a55f5d5f98b0"
 			},
 			{
 				"rule": "de/modal-particle-is-part",

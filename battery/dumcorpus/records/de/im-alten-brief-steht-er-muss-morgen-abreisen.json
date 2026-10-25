@@ -32,7 +32,7 @@
 				"rule": "de/variant-and-historical-status",
 				"hash": "9e2c6c25c942a570"
 			},
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
+			{ "rule": "de/modal-is-a-verb", "hash": "c979a55f5d5f98b0" }
 		],
 		"references": []
 	},

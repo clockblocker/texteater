@@ -255,11 +255,9 @@ export const sttsRowsPdatToPtkant: readonly SttsRow[] = [
 			{
 				use: "inherent reflexive",
 				becomes: reflexive(lexeme("VERB")),
-				records: [],
-				missing: {
-					gap: "No record names a Reflexive in valencyEvidence until the gold is rewritten to ADR 0052",
-					issue: 1285,
-				},
+				records: [
+					show("sie-erinnert-sich-an-den-geruch", "sich", "erinnern"),
+				],
 			},
 			{
 				use: "reciprocal einander",

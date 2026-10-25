@@ -89,10 +89,9 @@
 								"language": "de",
 								"family": "Lexeme",
 								"kind": "VERB",
-								"canonicalForm": "sich verheddern",
+								"canonicalForm": "verheddern",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": null
 								}
 							}
 						]

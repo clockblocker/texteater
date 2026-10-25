@@ -42,7 +42,7 @@
 			},
 			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
+			{ "rule": "de/modal-is-a-verb", "hash": "c979a55f5d5f98b0" },
 			{ "rule": "de/pron-or-det-by-use", "hash": "b7ac2bf4eaaf25be" }
 		],
 		"references": [

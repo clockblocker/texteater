@@ -21,7 +21,7 @@ const rules = {
 	translation: ["de/translation-gives-the-equivalent", "51e2aee5b7c8f087"],
 	distinct: [
 		"de/distinct-concepts-get-distinct-readings",
-		"500ad6b7f0020325",
+		"434871d7862a9fb0",
 	],
 } as const satisfies Readonly<Record<string, Cite>>;
 

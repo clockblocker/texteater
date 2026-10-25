@@ -23,7 +23,7 @@
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "uns eilen is sich eilen 'hurry' (Duden eilen 3: sich beeilen; sich eilen, nach Hause zu kommen). This sense needs the reflexive, and a non-reflexive object would change it, so uns is a member of the VERB sich eilen (de/verb-owns-its-scattered-members). müssen is a separate modal VERB (de/modal-is-a-verb)."
+				"rationale": "uns eilen is sich eilen 'hurry' (Duden eilen 3: sich beeilen; sich eilen, nach Hause zu kommen). This sense needs the reflexive, and a non-reflexive object would change it, so uns is a member of the VERB eilen and fills its Reading's Reflexive Slot (de/verb-owns-its-scattered-members, ADR 0052). müssen is a separate modal VERB (de/modal-is-a-verb)."
 			}
 		}
 	],

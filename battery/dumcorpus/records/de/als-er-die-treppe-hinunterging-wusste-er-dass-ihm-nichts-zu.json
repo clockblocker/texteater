@@ -187,7 +187,7 @@
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "abeb2e5948f88fe7"
+				"hash": "8982593963a4d507"
 			},
 			{
 				"rule": "de/funktionsverbgefuege-are-collocations",
@@ -215,7 +215,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			},
 			{
 				"rule": "de/comparison-als",

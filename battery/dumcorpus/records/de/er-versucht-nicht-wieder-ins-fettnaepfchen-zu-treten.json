@@ -117,8 +117,7 @@
 								"kind": "VERB",
 								"canonicalForm": "blamieren",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": null
 								}
 							}
 						]

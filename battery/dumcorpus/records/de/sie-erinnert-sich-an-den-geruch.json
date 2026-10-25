@@ -52,7 +52,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Segmentation",
+	"reviewDepth": "Knowledge",
 	"provenance": {
 		"kind": "Authored"
 	},
@@ -61,7 +61,7 @@
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -69,7 +69,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
@@ -102,7 +102,7 @@
 			"memberSegmentIndices": [2, 4, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": {
-				"emojiDescription": "🧠💭",
+				"emojiDescription": "🪞🧠💭",
 				"knowledge": {
 					"valency": [
 						{
@@ -112,6 +112,15 @@
 									"kind": "Case",
 									"governedCase": "Nom",
 									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Reflexive",
+									"governedCase": "Acc"
 								}
 							]
 						},
@@ -166,10 +175,9 @@
 								"language": "de",
 								"family": "Lexeme",
 								"kind": "VERB",
-								"canonicalForm": "sich entsinnen",
+								"canonicalForm": "entsinnen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": null
 								}
 							}
 						],
@@ -189,10 +197,9 @@
 								"language": "de",
 								"family": "Lexeme",
 								"kind": "VERB",
-								"canonicalForm": "sich zurückerinnern",
+								"canonicalForm": "zurückerinnern",
 								"coreFeatures": {
-									"hasSepPrefix": "zurück",
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": "zurück"
 								}
 							}
 						]
@@ -227,7 +234,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "sich erinnern is inherently reflexive, so sich is a member and part of the normalized Surface erinnert sich. an is governed by erinnern: it is a member recorded in valencyEvidence as an + Acc and stays out of the normalized Surface. Knowledge (#884): the an Slot is Required with E-VALBU's Gen alternative; decided by agents under the user's delegation. sich entsinnen is a synonym, since register neither makes a near-synonym nor blocks a claim (#884 G1), and vergessen is no antonym, since none is read off a definition's negation (#884 G2); both ruled by the user."
+				"rationale": "sich erinnern is inherently reflexive, so sich is a member of erinnern's 🪞🧠💭 'remember' Reading: it fills the Required Reflexive Slot (Acc), valencyEvidence names it, and the normalized Surface is erinnert (ADR 0052). an is governed by erinnern: it is a member recorded in valencyEvidence as an + Acc and stays out of the normalized Surface. Knowledge (#884): the an Slot is Required with E-VALBU's Gen alternative; decided by agents under the user's delegation. sich entsinnen is a synonym, since register neither makes a near-synonym nor blocks a claim (#884 G1), and vergessen is no antonym, since none is read off a definition's negation (#884 G2); both ruled by the user."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -239,13 +246,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich erinnern",
+						"canonicalForm": "erinnern",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "erinnert sich",
+					"normalizedSurface": "erinnert",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -278,6 +284,14 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 2,
 						"complement": {

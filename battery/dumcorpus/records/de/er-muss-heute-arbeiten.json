@@ -12,15 +12,15 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0034", "ADR-0038"],
 		"rules": [
-			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" },
+			{ "rule": "de/verb-core-features", "hash": "53f39c352354bcbe" },
 			{
 				"rule": "de/modal-is-a-verb",
-				"hash": "fbed9130c4b77fbf"
+				"hash": "c979a55f5d5f98b0"
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
@@ -206,10 +206,9 @@
 								"language": "de",
 								"family": "Lexeme",
 								"kind": "VERB",
-								"canonicalForm": "sich betätigen",
+								"canonicalForm": "betätigen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": null
 								}
 							},
 							{

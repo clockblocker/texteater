@@ -28,15 +28,15 @@
 		"rules": [
 			{
 				"rule": "de/causative-lassen",
-				"hash": "6df00ff37a0a5baa"
+				"hash": "af12a3e45b1d22a6"
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			}
 		],
 		"references": []
@@ -91,9 +91,9 @@
 		{
 			"memberSegmentIndices": [6, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "👌" },
+			"reading": { "emojiDescription": "🪞👌" },
 			"notes": {
-				"rationale": "The modal-passive sich lassen ('can be done'): the riddle could be solved faster. sich is a member by the reflexive test, so ließ sich is VERB sich lassen and lösen a target of its own (de/causative-lassen, de/verb-owns-its-scattered-members, #723 ruling 10). Its Core names the case of its reflexive, lexicallyReflexive Acc, as for every lexical reflexive (de/verb-core-features)."
+				"rationale": "The modal-passive sich lassen ('can be done'): the riddle could be solved faster. sich is a member by the reflexive test, so ließ sich is VERB lassen and lösen a target of its own (de/causative-lassen, de/verb-owns-its-scattered-members, #723 ruling 10). The modal-passive is lassen's 🪞👌 Reading: sich fills its Required Reflexive Slot, Acc, and valencyEvidence names it (ADR 0052)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -103,11 +103,20 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": [],
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "ließ sich",
+					"normalizedSurface": "ließ",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -124,12 +133,11 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "sich lassen",
+						"canonicalForm": "lassen",
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

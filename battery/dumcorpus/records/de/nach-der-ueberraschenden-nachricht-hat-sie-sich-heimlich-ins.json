@@ -45,11 +45,11 @@
 			},
 			{
 				"rule": "de/idiom",
-				"hash": "c05df428b3a42079"
+				"hash": "d25679f2a06809b9"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/fused-word-pieces",
@@ -282,7 +282,7 @@
 			"memberSegmentIndices": [8, 12, 16, 17, 19, 21],
 			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": {
-				"emojiDescription": "🤭",
+				"emojiDescription": "🪞🤭",
 				"knowledge": {
 					"valency": [
 						{
@@ -292,6 +292,15 @@
 									"kind": "Case",
 									"governedCase": "Nom",
 									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Reflexive",
+									"governedCase": "Dat"
 								}
 							]
 						}
@@ -304,7 +313,7 @@
 								"language": "de",
 								"family": "Locution",
 								"kind": "VERB",
-								"canonicalForm": "sich die Hände reiben",
+								"canonicalForm": "die Hände reiben",
 								"coreFeatures": {}
 							}
 						]
@@ -331,10 +340,10 @@
 						"language": "de",
 						"family": "Locution",
 						"kind": "VERB",
-						"canonicalForm": "sich ins Fäustchen lachen",
+						"canonicalForm": "ins Fäustchen lachen",
 						"coreFeatures": {}
 					},
-					"normalizedSurface": "hat sich ins Fäustchen gelacht",
+					"normalizedSurface": "hat ins Fäustchen gelacht",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -382,10 +391,19 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Dat"
+						},
+						"realizedCase": "Dat"
+					}
+				]
 			},
 			"notes": {
-				"rationale": "Knowledge (#887, dev draft): The reflexive sich is part of the wording, so only the subject is a Slot."
+				"rationale": "Knowledge (#887, dev draft): The reflexive sich is fixed (ich lache mir ins Fäustchen), so it fills a Required Reflexive Slot with Dat beside the subject, and the wording is ins Fäustchen lachen (ADR 0052)."
 			}
 		},
 		{

@@ -12,8 +12,8 @@ const lemma = {
 /**
  * Causative lassen inside the target of the verb it serves, which carries
  * voice Cau (ADR 0026, Rule de/causative-lassen). Every other lassen is the
- * VERB lassen, the VERB sich lassen of the modal passive (lässt sich öffnen)
- * or a member of an Idiom (Rule de/idiom).
+ * VERB lassen, its 🪞 modal-passive Reading included (lässt sich öffnen,
+ * ADR 0052), or a member of an Idiom (Rule de/idiom).
  */
 export const member: AuthoredMember = {
 	lemma,

@@ -156,7 +156,7 @@
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "abeb2e5948f88fe7"
+				"hash": "8982593963a4d507"
 			},
 			{
 				"rule": "de/expletive-es-joins-its-verb",
@@ -172,7 +172,7 @@
 			},
 			{
 				"rule": "de/modal-is-a-verb",
-				"hash": "fbed9130c4b77fbf"
+				"hash": "c979a55f5d5f98b0"
 			},
 			{
 				"rule": "de/noun-owns-its-article",
@@ -184,7 +184,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/digits-spell-the-numeral",
@@ -192,7 +192,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": [
@@ -633,7 +633,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "📍" },
+			"reading": { "emojiDescription": "🪞📍" },
 			"notes": {
 				"rationale": "sich befinden 'be located' needs its reflexive: befinden without it is another verb ('judge'). So sich is a member (de/verb-owns-its-scattered-members); noch and am Strande stay outside."
 			},
@@ -647,13 +647,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich befinden",
+						"canonicalForm": "befinden",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "sich befinden",
+					"normalizedSurface": "befinden",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -683,7 +682,16 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					}
+				]
 			}
 		},
 		{

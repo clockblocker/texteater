@@ -112,7 +112,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			}
 		],
 		"references": [
@@ -288,7 +288,7 @@
 				"kind": "VERB"
 			},
 			"reading": {
-				"emojiDescription": "😟",
+				"emojiDescription": "🪞😟",
 				"knowledge": {
 					"valency": [
 						{
@@ -298,6 +298,15 @@
 									"kind": "Case",
 									"governedCase": "Nom",
 									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Reflexive",
+									"governedCase": "Dat"
 								}
 							]
 						},
@@ -330,8 +339,7 @@
 								"kind": "VERB",
 								"canonicalForm": "sorgen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": null
 								}
 							},
 							{
@@ -341,8 +349,7 @@
 								"kind": "VERB",
 								"canonicalForm": "beunruhigen",
 								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": "Acc"
+									"hasSepPrefix": null
 								}
 							}
 						],
@@ -352,7 +359,7 @@
 								"language": "de",
 								"family": "Locution",
 								"kind": "VERB",
-								"canonicalForm": "sich Gedanken machen",
+								"canonicalForm": "Gedanken machen",
 								"coreFeatures": {}
 							}
 						]
@@ -382,10 +389,10 @@
 						"language": "de",
 						"family": "Locution",
 						"kind": "VERB",
-						"canonicalForm": "sich Sorgen machen",
+						"canonicalForm": "Sorgen machen",
 						"coreFeatures": {}
 					},
-					"normalizedSurface": "macht sich Sorgen",
+					"normalizedSurface": "macht Sorgen",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -405,6 +412,14 @@
 				},
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Dat"
+						},
+						"realizedCase": "Dat"
+					},
 					{
 						"member": 3,
 						"complement": {

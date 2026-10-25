@@ -33,7 +33,7 @@
 			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" },
 			{ "rule": "de/bare-infinitive-zu", "hash": "920eb73475a80ef0" },
 			{ "rule": "de/degree-word-is-adv", "hash": "b27dedd36b0a24bb" },
-			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
 		],
 		"references": []

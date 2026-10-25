@@ -46,7 +46,7 @@
 		"rules": [
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": [
@@ -77,7 +77,7 @@
 			"memberSegmentIndices": [7, 17, 19],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": {
-				"emojiDescription": "⚓",
+				"emojiDescription": "🪞⚓",
 				"knowledge": {
 					"valency": [
 						{
@@ -87,6 +87,15 @@
 									"kind": "Case",
 									"governedCase": "Nom",
 									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Reflexive",
+									"governedCase": "Acc"
 								}
 							]
 						}
@@ -141,13 +150,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich etablieren",
+						"canonicalForm": "etablieren",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "sich etabliert hat",
+					"normalizedSurface": "etabliert hat",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -170,7 +178,16 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					}
+				]
 			}
 		}
 	],

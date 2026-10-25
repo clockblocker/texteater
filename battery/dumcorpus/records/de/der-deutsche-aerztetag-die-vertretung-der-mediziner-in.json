@@ -52,7 +52,7 @@
 		"rules": [
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": []
@@ -61,7 +61,7 @@
 		{
 			"memberSegmentIndices": [20, 22, 24, 40],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🗣👍" },
+			"reading": { "emojiDescription": "🪞🗣👍" },
 			"notes": {
 				"rationale": "sich für etwas aussprechen is Duden aussprechen 'Stellung nehmen; etwas befürworten', which Duden keeps apart from sich gegen etwas aussprechen 'ablehnen'."
 			},
@@ -75,13 +75,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich aussprechen",
+						"canonicalForm": "aussprechen",
 						"coreFeatures": {
-							"hasSepPrefix": "aus",
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": "aus"
 						}
 					},
-					"normalizedSurface": "hat sich ausgesprochen",
+					"normalizedSurface": "hat ausgesprochen",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -106,6 +105,14 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 2,
 						"complement": {

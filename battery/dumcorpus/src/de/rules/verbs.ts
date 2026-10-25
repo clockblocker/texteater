@@ -5,8 +5,8 @@ export const verbs: Rule[] = [
 	{
 		id: "de/verb-owns-its-scattered-members",
 		statement:
-			"A verb's target includes its separable particle, its lexical reflexive and the auxiliaries of its own perfect, future and passive, wherever they stand: zog … an gives [zog, an] VERB anziehen. The reflexive is lexical when this sense needs it coreferent with the subject and a non-reflexive object would change the sense. The same test decides a reflexive in Locutions of every type: sich Sorgen machen, sich ins Fäustchen lachen. A reflexive that alternates with other objects in the same sense is a PRON target of its own.",
-		adrs: ["ADR-0003", "ADR-0022", "ADR-0039"],
+			"A verb's target includes its separable particle, its lexical reflexive and the auxiliaries of its own perfect, future and passive, wherever they stand: zog … an gives [zog, an] VERB anziehen. The reflexive is lexical when this sense needs it coreferent with the subject and a non-reflexive object would change the sense; it fills the Reading's Reflexive Slot, never the Canonical Form. The same test decides a reflexive in Locutions of every type: macht sich Sorgen gives Locution VERB Sorgen machen. A reflexive that alternates with other objects in the same sense is a PRON target of its own.",
+		adrs: ["ADR-0003", "ADR-0022", "ADR-0039", "ADR-0052"],
 		routes: [...lexeme("VERB"), ...everyLocution],
 		records: [
 			"de/es-zog-der-wilde-jaegersmann",
@@ -181,7 +181,7 @@ export const verbs: Rule[] = [
 	{
 		id: "de/modal-is-a-verb",
 		statement:
-			"A modal (dürfen, können, mögen, müssen, sollen, wollen) is a VERB with its own meaning, whether or not an infinitive follows. Without one, a directional word after it is an ADV, never its particle, though dictionaries list herausmüssen. It owns the auxiliaries that serve it, and the infinitive it governs is a separate VERB target: hat … schreiben müssen gives [hat, müssen] and [schreiben]. Verbs that add a meaning beside a construction (sich lassen, gehören with a participle, brauchen, scheinen, drohen, versprechen or pflegen with zu, copular bleiben) are VERBs in the same way.",
+			"A modal (dürfen, können, mögen, müssen, sollen, wollen) is a VERB with its own meaning, whether or not an infinitive follows. Without one, a directional word after it is an ADV, never its particle, though dictionaries list herausmüssen. It owns the auxiliaries that serve it, and the infinitive it governs is a separate VERB target: hat … schreiben müssen gives [hat, müssen] and [schreiben]. Verbs that add a meaning beside a construction (lassen with sich, gehören with a participle, brauchen, scheinen, drohen, versprechen or pflegen with zu, copular bleiben) are VERBs in the same way.",
 		adrs: ["ADR-0026", "ADR-0022"],
 		routes: lexeme("VERB"),
 		records: [
@@ -212,8 +212,8 @@ export const verbs: Rule[] = [
 	{
 		id: "de/causative-lassen",
 		statement:
-			"lassen with an infinitive joins that infinitive's target as its causative, voice Cau on the Surface, only when the clause names no doer in any form and lassen is not the modal-passive sich lassen ('can be done'): Ich lasse mir die Haare schneiden gives [lasse, schneiden] VERB schneiden. With an intransitive infinitive, the accusative is its doer. The modal-passive is VERB sich lassen over lassen and its sich, and any other lassen, permissive let included, is VERB lassen; the infinitive is then a target of its own. All of this holds unless the combination is an Idiom under de/idiom.",
-		adrs: ["ADR-0026", "ADR-0022"],
+			"lassen with an infinitive joins that infinitive's target as its causative, voice Cau on the Surface, only when the clause names no doer in any form and is not the modal passive: Ich lasse mir die Haare schneiden gives [lasse, schneiden] VERB schneiden. With an intransitive infinitive, the accusative is its doer. Otherwise lassen, permissive let included, is VERB lassen and the infinitive a target of its own; in the modal passive ('can be done') lassen's sich is a member and fills a Reflexive Slot. All of this holds unless the combination is an Idiom under de/idiom.",
+		adrs: ["ADR-0026", "ADR-0022", "ADR-0052"],
 		routes: lexeme("VERB", "AUX"),
 		records: [
 			"de/ich-lasse-mir-morgen-die-haare-schneiden",
@@ -241,8 +241,8 @@ export const verbs: Rule[] = [
 	{
 		id: "de/copula-stays-apart",
 		statement:
-			"A copula (sein, werden, bleiben, scheinen, wirken, sich zeigen) never joins its predicate: in Das Wetter ist schön, ist is a single-member VERB and schön an ADJ of its own. A copula and a predicative adjective never form a Collocation, so Er ist stolz auf seinen Sohn gives [ist] VERB and [stolz, auf] ADJ. The one exception is a copula expression whose reflexive is a member by de/verb-owns-its-scattered-members (sich schlüssig werden, sich im Klaren sein): copula, reflexive and predicate form one Locution VERB, not a Collocation.",
-		adrs: ["ADR-0026", "ADR-0034", "ADR-0036", "ADR-0039"],
+			"A copula (sein, werden, bleiben, scheinen, wirken, zeigen with sich) never joins its predicate: in Das Wetter ist schön, ist is a single-member VERB and schön an ADJ of its own. A copula and a predicative adjective never form a Collocation, so Er ist stolz auf seinen Sohn gives [ist] VERB and [stolz, auf] ADJ. The one exception is a copula expression with a reflexive the copula alone lacks, a member by de/verb-owns-its-scattered-members: copula, reflexive and predicate form one Locution VERB, not a Collocation (wird sich schlüssig gives schlüssig werden).",
+		adrs: ["ADR-0026", "ADR-0034", "ADR-0036", "ADR-0039", "ADR-0052"],
 		routes: [...lexeme("VERB", "ADJ"), ...locution("VERB")],
 		records: [
 			"de/das-wetter-ist-xqzt",

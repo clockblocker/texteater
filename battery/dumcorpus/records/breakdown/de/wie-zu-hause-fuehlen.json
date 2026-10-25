@@ -7,31 +7,14 @@
 			"language": "de",
 			"family": "Locution",
 			"kind": "VERB",
-			"canonicalForm": "sich wie zu Hause fühlen",
+			"canonicalForm": "wie zu Hause fühlen",
 			"coreFeatures": {}
 		},
-		"emojiDescription": "🏠😌"
+		"emojiDescription": "🪞🏠😌"
 	},
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
-				{
-					"letters": "sich",
-					"target": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "sich fühlen",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
-						}
-					}
-				},
-				{
-					"letters": " "
-				},
 				{
 					"letters": "wie",
 					"target": {
@@ -69,10 +52,9 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich fühlen",
+						"canonicalForm": "fühlen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					}
 				}
@@ -80,7 +62,7 @@
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0039", "ADR-0041", "ADR-0050"],
+		"adrs": ["ADR-0039", "ADR-0041", "ADR-0050", "ADR-0052"],
 		"rules": [
 			{
 				"rule": "de/relative-w-adverb-fills-a-slot",
@@ -106,6 +88,6 @@
 		]
 	},
 	"notes": {
-		"rationale": "A phraseme's Constituents are the biggest units strictly inside its wording, so the Locution zu Hause is one part (ADR 0050). fühlen is lexically reflexive here: in the state sense (DWDS ⟨sich fühlen⟩) no other object can stand in place of sich, so sich and fühlen are two pieces linking to VERB sich fühlen (round-1 Q10, #1278). Comparison wie before a phrase is CCONJ (de/relative-w-adverb-fills-a-slot)."
+		"rationale": "A phraseme's Constituents are the biggest units strictly inside its wording, so the Locution zu Hause is one part (ADR 0050). The reflexive is lexical: in the state sense (DWDS ⟨sich fühlen⟩) no other object can stand in place of sich, so it fills the Reading's Reflexive Slot (Acc) and stays out of the wording wie zu Hause fühlen, which the Breakdown spells (ADR 0052). fühlen links to VERB fühlen. Comparison wie before a phrase is CCONJ (de/relative-w-adverb-fills-a-slot)."
 	}
 }

@@ -133,7 +133,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -149,7 +149,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": [
@@ -214,7 +214,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🤝" },
+			"reading": { "emojiDescription": "🪞🤝" },
 			"notes": {
 				"rationale": "sich verlassen auf 'rely on' needs the reflexive (jemanden verlassen means leaving someone); auf + Acc is governed and a member."
 			},
@@ -228,13 +228,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich verlassen",
+						"canonicalForm": "verlassen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "verlasse mich",
+					"normalizedSurface": "verlasse",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -254,6 +253,14 @@
 				},
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 2,
 						"complement": {
@@ -480,7 +487,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🤝" },
+			"reading": { "emojiDescription": "🪞🤝" },
 			"notes": {
 				"rationale": "Control: the same verb whose slot darauf fills. darauf stands alone and never joins (de/pronominal-adverb-stands-alone); the slot is recorded with no member."
 			},
@@ -494,13 +501,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich verlassen",
+						"canonicalForm": "verlassen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "verlässt sich",
+					"normalizedSurface": "verlässt",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -520,6 +526,14 @@
 				},
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": null,
 						"complement": {

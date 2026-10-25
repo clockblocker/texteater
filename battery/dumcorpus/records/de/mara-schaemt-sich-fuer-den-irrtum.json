@@ -22,7 +22,7 @@
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -30,7 +30,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			}
 		],
 		"references": [
@@ -50,9 +50,9 @@
 		{
 			"memberSegmentIndices": [2, 4, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "😳" },
+			"reading": { "emojiDescription": "🪞😳" },
 			"notes": {
-				"rationale": "sich schämen is lexically reflexive: the sense needs sich coreferent with Mara, and no other object can stand in its place, so sich is a member of the verb's target and part of the normalized Surface schämt sich (de/verb-owns-its-scattered-members). Its lexicallyReflexive is Acc, as in ich schäme mich (de/verb-core-features). für is governed: E-VALBU has no schämen entry, so Duden decides, and it gives ich schäme mich für dich; DWDS lists sich für etwas schämen beside the elevated sich einer Sache schämen. für + Acc names what one is ashamed of, as the genitive object does, so für is a member recorded in valencyEvidence as für + Acc and stays out of the normalized Surface, as an does for sich erinnern (de/governed-preposition-joins-its-governor). den Irrtum fills the slot and stays outside. Decided by agents under the user's delegation (2026-10-02)."
+				"rationale": "sich schämen is lexically reflexive: the sense needs sich coreferent with Mara, and no other object can stand in its place, so sich is a member of the verb's target (de/verb-owns-its-scattered-members). It fills the Reading's Required Reflexive Slot, Acc as in ich schäme mich, so valencyEvidence names it, the Reading is 🪞😳, and the normalized Surface is schämt (ADR 0052). für is governed: E-VALBU has no schämen entry, so Duden decides, and it gives ich schäme mich für dich; DWDS lists sich für etwas schämen beside the elevated sich einer Sache schämen. für + Acc names what one is ashamed of, as the genitive object does, so für is a member recorded in valencyEvidence as für + Acc and stays out of the normalized Surface, as an does for sich erinnern (de/governed-preposition-joins-its-governor). den Irrtum fills the slot and stays outside. Decided by agents under the user's delegation (2026-10-02)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -64,13 +64,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich schämen",
+						"canonicalForm": "schämen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "schämt sich",
+					"normalizedSurface": "schämt",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -94,6 +93,14 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 2,
 						"complement": {

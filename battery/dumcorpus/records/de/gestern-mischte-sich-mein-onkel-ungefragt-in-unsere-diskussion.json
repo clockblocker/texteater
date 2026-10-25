@@ -105,7 +105,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -113,7 +113,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			},
 			{
 				"rule": "de/canonical-form-is-the-headword",
@@ -176,7 +176,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "👃➡" },
+			"reading": { "emojiDescription": "🪞👃➡" },
 			"notes": {
 				"rationale": "sich einmischen 'interfere' needs the reflexive: etwas einmischen means mixing an ingredient in, another sense. ein is its particle, and in + Acc its governed preposition (Duden: sich [in etwas] einmischen), a member left out of the Surface. hasSepPrefix names ein, never in (de/verb-core-features)."
 			},
@@ -190,13 +190,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich einmischen",
+						"canonicalForm": "einmischen",
 						"coreFeatures": {
-							"hasSepPrefix": "ein",
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": "ein"
 						}
 					},
-					"normalizedSurface": "mischte sich ein",
+					"normalizedSurface": "mischte ein",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -216,6 +215,14 @@
 				},
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 2,
 						"complement": {

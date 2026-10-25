@@ -41,11 +41,11 @@
 		"rules": [
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -84,7 +84,7 @@
 			"memberSegmentIndices": [3, 5, 7, 13],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": {
-				"emojiDescription": "🙋👥",
+				"emojiDescription": "🪞🙋👥",
 				"knowledge": {
 					"valency": [
 						{
@@ -94,6 +94,15 @@
 									"kind": "Case",
 									"governedCase": "Nom",
 									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Reflexive",
+									"governedCase": "Acc"
 								}
 							]
 						},
@@ -179,7 +188,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "sich beteiligen 'take part' (Duden beteiligen 1: sich an einem Spiel beteiligen) needs the reflexive, since jemanden an etwas beteiligen gives someone a share (2), another sense. So sich is a member, and the Core names its case, lexicallyReflexive Acc (ich beteilige mich). an + Dat is governed, a member left out of the normalized Surface, and wird is the future auxiliary (de/verb-owns-its-scattered-members, de/governed-preposition-joins-its-governor, de/verb-core-features, de/auxiliary-joins-the-verb-it-serves). Knowledge (#887, dev draft): No E-VALBU entry; DWDS brackets the an-object, so its Slot is Optional."
+				"rationale": "sich beteiligen 'take part' (Duden beteiligen 1: sich an einem Spiel beteiligen) needs the reflexive, since jemanden an etwas beteiligen gives someone a share (2), another sense. So sich is a member, and it fills the 🪞 Reading's Required Reflexive Slot with Acc (ich beteilige mich), named in valencyEvidence and left out of the normalized Surface (ADR 0052). an + Dat is governed, a member left out of the normalized Surface too, and wird is the future auxiliary (de/verb-owns-its-scattered-members, de/governed-preposition-joins-its-governor, de/auxiliary-joins-the-verb-it-serves). Knowledge (#887, dev draft): No E-VALBU entry; DWDS brackets the an-object, so its Slot is Optional."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -191,13 +200,12 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich beteiligen",
+						"canonicalForm": "beteiligen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "wird sich beteiligen",
+					"normalizedSurface": "wird beteiligen",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -222,6 +230,14 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					},
 					{
 						"member": 2,
 						"complement": {

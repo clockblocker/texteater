@@ -30,8 +30,8 @@
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
 				"hash": "fdaeed620ab52c64"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
+			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
+			{ "rule": "de/modal-is-a-verb", "hash": "c979a55f5d5f98b0" }
 		],
 		"references": [
 			{

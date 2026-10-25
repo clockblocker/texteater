@@ -62,20 +62,15 @@ describe("Breakdown Records", () => {
 		]);
 	});
 
-	test("let a Locution be a phraseme's part, broken down one level further, and join sich to its lexically reflexive verb", () => {
+	test("let a Locution be a phraseme's part, broken down one level further, and spell the wording without its lexical reflexive", () => {
 		expect(
-			pieces(
-				byId("breakdown/de/sich-wie-zu-hause-fuehlen"),
-				"constituents",
-			),
+			pieces(byId("breakdown/de/wie-zu-hause-fuehlen"), "constituents"),
 		).toEqual([
-			"sich → sich fühlen",
-			" ",
 			"wie → wie",
 			" ",
 			"zu Hause → zu Hause",
 			" ",
-			"fühlen → sich fühlen",
+			"fühlen → fühlen",
 		]);
 		expect(pieces(byId("breakdown/de/zu-hause"), "constituents")).toEqual([
 			"zu → zu",
@@ -113,11 +108,13 @@ describe("Breakdown Records", () => {
 			"arzt → Arzt",
 			"en",
 		]);
-		// The reflexive is a satellite: the word erinnern is broken down, a
-		// bottom word whose base innern died out.
-		expect(pieces(byId("breakdown/de/sich-erinnern"), "morphemes")).toEqual(
-			["er → er-", "inner → inner", "n → -en"],
-		);
+		// The Canonical Form is the bare erinnern, a bottom word whose base
+		// innern died out; its reflexive lives in the Reading's frame.
+		expect(pieces(byId("breakdown/de/erinnern"), "morphemes")).toEqual([
+			"er → er-",
+			"inner → inner",
+			"n → -en",
+		]);
 		expect(pieces(byId("breakdown/de/spannen"), "morphemes")).toEqual([
 			"spann → spann",
 			"en → -en",
@@ -309,8 +306,8 @@ const fixtures: {
 		},
 	},
 	{
-		name: "a lexically reflexive verb's sich shown as a piece (dumrel)",
-		seed: "sich-erinnern",
+		name: "a lexical reflexive's sich shown as a piece of its verb (dumrel)",
+		seed: "erinnern",
 		check: "Breakdown",
 		edit: (record) => {
 			record.knowledge.breakdown.morphemes.unshift({ letters: "sich " });

@@ -30,7 +30,7 @@
 				"rule": "de/pronominal-adverb-stands-alone",
 				"hash": "1b11d9ee80ce12bd"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
 			{ "rule": "de/degree-word-is-adv", "hash": "b27dedd36b0a24bb" },
 			{ "rule": "de/bare-infinitive-zu", "hash": "920eb73475a80ef0" }
 		],

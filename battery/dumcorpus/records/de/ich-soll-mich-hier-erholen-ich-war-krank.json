@@ -87,19 +87,19 @@
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "abeb2e5948f88fe7"
+				"hash": "8982593963a4d507"
 			},
 			{
 				"rule": "de/modal-is-a-verb",
-				"hash": "fbed9130c4b77fbf"
+				"hash": "c979a55f5d5f98b0"
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "584917189382edfe"
+				"hash": "53f39c352354bcbe"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "11bcdacfa342c436"
+				"hash": "9139952c458faeb2"
 			}
 		],
 		"references": [
@@ -242,7 +242,7 @@
 				"kind": "VERB"
 			},
 			"reading": {
-				"emojiDescription": "😌🔋",
+				"emojiDescription": "🪞😌🔋",
 				"knowledge": {
 					"valency": [
 						{
@@ -252,6 +252,15 @@
 									"kind": "Case",
 									"governedCase": "Nom",
 									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Reflexive",
+									"governedCase": "Acc"
 								}
 							]
 						},
@@ -353,11 +362,20 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": [],
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Acc"
+						},
+						"realizedCase": "Acc"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "mich erholen",
+					"normalizedSurface": "erholen",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -378,10 +396,9 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "sich erholen",
+						"canonicalForm": "erholen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": "Acc"
+							"hasSepPrefix": null
 						}
 					},
 					"surfaceFeatures": null

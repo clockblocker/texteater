@@ -16,8 +16,8 @@ import { type Cite, paragraphRegistry } from "../../prompt-paragraphs.js";
 /** The Rules the structural prompts cite, at the statement hashes they were checked against. */
 const rules = {
 	meaning: ["de/emoji-description-names-the-meaning", "5532d94dbbc3bb71"],
-	idiom: ["de/idiom", "c05df428b3a42079"],
-	verbCore: ["de/verb-core-features", "584917189382edfe"],
+	idiom: ["de/idiom", "d25679f2a06809b9"],
+	verbCore: ["de/verb-core-features", "53f39c352354bcbe"],
 	collocation: [
 		"de/funktionsverbgefuege-are-collocations",
 		"57f04b272a0e9aeb",
@@ -30,7 +30,7 @@ const rules = {
 		"de/principal-parts-as-the-dictionary-cites",
 		"3757ab1bafee87f5",
 	],
-	participle: ["de/participle-source-verb-and-meaning", "a97545caefc4a184"],
+	participle: ["de/participle-source-verb-and-meaning", "3b416e24f9413f79"],
 	participial: ["de/participial-adjective", "5d4481bf31cb7267"],
 	formation: ["de/formation-names-its-source", "06e7b4491887e741"],
 	formulaRole: ["de/formula-role-is-narrow", "68e794801a922563"],

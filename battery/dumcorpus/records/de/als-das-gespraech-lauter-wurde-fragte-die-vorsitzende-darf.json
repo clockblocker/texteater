@@ -42,7 +42,7 @@
 				"rule": "de/routine-formula-is-intj",
 				"hash": "32797f3b5f083780"
 			},
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
+			{ "rule": "de/modal-is-a-verb", "hash": "c979a55f5d5f98b0" },
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
 				"hash": "19c59bf41ed26810"
