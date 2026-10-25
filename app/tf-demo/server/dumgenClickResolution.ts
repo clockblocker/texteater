@@ -8,6 +8,7 @@ import type {
 	SegmentedSentence,
 	Unit,
 } from "dumgen";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import type {
 	ClickReadingInput,
@@ -57,9 +58,16 @@ function dumgenSentence(
  * refuse it once stale (ADR 0031). `dumgen` hands over the operations
  * when a click first needs them: in production `operations`, needing
  * `Jev | Luna`, once the deployment's key is checked.
+ * `optionallyReflexive` finds, in stored Knowledge, the Lemma's Readings
+ * whose Reflexive Slot is Optional; only a click whose Attestation holds a
+ * lexical reflexive asks, and the judge is offered them beside the 🪞
+ * Readings (ADR 0052).
  */
 export function dumgenClickResolution<R>(
 	dumgen: () => ClickDumgen<R>,
+	optionallyReflexive: (
+		lemma: Dumling.Lemma<"de">,
+	) => Promise<readonly string[]> = async () => [],
 ): ClickResolution<R> {
 	return Object.freeze({
 		grammar: (input) => {
@@ -99,23 +107,40 @@ export function dumgenClickResolution<R>(
 					kind: encounter.target.kind,
 				},
 			} as Unit;
-			return Effect.suspend(() =>
-				dumgen().resolve.reading({
-					attestation,
-					sentence: dumgenSentence(encounter.sentence, unit),
-					unit,
-					candidates: input.candidates,
-					...(input.written === undefined
-						? {}
-						: { written: input.written }),
-					...(input.drafted === undefined
-						? {}
-						: { drafted: input.drafted }),
-				}),
-			).pipe(Effect.map((result) => clickReadingOf(result, input)));
+			return (
+				holdsReflexive(attestation)
+					? Effect.promise(() => optionallyReflexive(input.lemma))
+					: Effect.succeed([])
+			).pipe(
+				Effect.flatMap((optional) =>
+					dumgen().resolve.reading({
+						attestation,
+						sentence: dumgenSentence(encounter.sentence, unit),
+						unit,
+						candidates: input.candidates,
+						...(optional.length > 0
+							? { optionallyReflexive: optional }
+							: {}),
+						...(input.written === undefined
+							? {}
+							: { written: input.written }),
+						...(input.drafted === undefined
+							? {}
+							: { drafted: input.drafted }),
+					}),
+				),
+				Effect.map((result) => clickReadingOf(result, input)),
+			);
 		},
 	});
 }
+
+/** Whether an Attestation's valency evidence names a lexical reflexive (ADR 0052). */
+const holdsReflexive = (attestation: Dumling.Attestation<"de">) =>
+	"valencyEvidence" in attestation &&
+	attestation.valencyEvidence.some(
+		({ complement }) => complement.kind === "Reflexive",
+	);
 
 /** Dumgen's Reading as the orchestrator commits it; a New keeps the candidates its judge saw. */
 function clickReadingOf(

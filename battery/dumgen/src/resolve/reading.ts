@@ -22,9 +22,11 @@
  *   second NoMatch takes it (ADR 0031).
  * - Grammar, never an emoji model, supplies the 🪞 marker (ADR 0052). When
  *   the Attestation's members hold a lexical reflexive, its valency
- *   evidence names a Reflexive: the judge is offered only the 🪞 Readings,
- *   and code writes 🪞 before the description Luna proposes. Otherwise it
- *   is offered none of them, and Luna's description never starts with 🪞.
+ *   evidence names a Reflexive: the judge is offered only the 🪞 Readings
+ *   and those the host names `optionallyReflexive`, and code writes 🪞
+ *   before the description Luna proposes, which an optionally reflexive
+ *   one with the same bare emoji takes. Otherwise the judge is offered no
+ *   🪞 Reading, and Luna's description never starts with 🪞.
  *
  * Descriptions compare as Dumling parses them, so `🕰️` is `🕰`. Nothing is
  * retried, and no answer is salvaged (#889).
@@ -364,13 +366,29 @@ export const resolveReading = Effect.fnUntraced(function* (
 		seen.add(key);
 		candidates.push(candidate);
 	}
+	const reflexive = holdsReflexive(attestation);
+	const optional = new Set((input.optionallyReflexive ?? []).map(keyOf));
+	/**
+	 * The stored candidate a description is: itself, or for a 🪞 one on a
+	 * reflexive click the optionally reflexive Reading with its bare emoji,
+	 * since a Lemma never has both (ADR 0052).
+	 */
+	const storedAs = (emojiDescription: string) => {
+		const key = keyOf(emojiDescription);
+		const bare = keyOf(withReflexiveMarker(emojiDescription, false));
+		return (
+			candidates.find((candidate) => keyOf(candidate) === key) ??
+			(reflexive && optional.has(bare)
+				? candidates.find((candidate) => keyOf(candidate) === bare)
+				: undefined)
+		);
+	};
 	/** A stored candidate the description is, as stored, or the description as New. */
 	const answer = (
 		emojiDescription: string,
 		reason: string,
 	): ReadingResolution => {
-		const key = keyOf(emojiDescription);
-		const stored = candidates.find((candidate) => keyOf(candidate) === key);
+		const stored = storedAs(emojiDescription);
 		log.resolution({ outcome: stored ? "Reuse" : "New", reason });
 		return stored
 			? { _tag: "Reuse", emojiDescription: stored }
@@ -411,14 +429,16 @@ export const resolveReading = Effect.fnUntraced(function* (
 	}
 
 	// An Open Route: the judge over the authored and stored descriptions
-	// whose 🪞 agrees with the click's reflexive, then Luna.
-	const reflexive = holdsReflexive(attestation);
+	// whose 🪞 agrees with the click's reflexive, or whose Reflexive Slot
+	// is Optional, then Luna.
 	const authoredKeys = new Set(authored.map(keyOf));
 	const options = [...authored, ...candidates]
 		.filter(
 			(option, index, all) =>
 				all.findIndex((other) => keyOf(other) === keyOf(option)) ===
-					index && option.startsWith(reflexiveMarker) === reflexive,
+					index &&
+				(option.startsWith(reflexiveMarker) === reflexive ||
+					optional.has(keyOf(option))),
 		)
 		.map((description) => ({
 			description,
@@ -438,7 +458,10 @@ export const resolveReading = Effect.fnUntraced(function* (
 		return yield* defect(
 			`The written ${JSON.stringify(input.written)} is no Emoji Description`,
 		);
-	if (written !== undefined && offered.has(keyOf(written)))
+	/** Whether a description is, or stands for, one the judge is offered. */
+	const isOffered = (description: string) =>
+		offered.has(keyOf(storedAs(description) ?? description));
+	if (written !== undefined && isOffered(written))
 		return answer(written, "WrittenStored");
 	const drafted =
 		input.drafted === undefined
@@ -478,7 +501,7 @@ export const resolveReading = Effect.fnUntraced(function* (
 		));
 	return answer(
 		emojiDescription,
-		offered.has(keyOf(emojiDescription))
+		isOffered(emojiDescription)
 			? "Collision"
 			: markedDraft === undefined
 				? "Written"

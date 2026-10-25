@@ -242,3 +242,53 @@ test("a click with no lexical reflexive is offered no 🪞 Reading, and Luna's �
 	expect(withReflexiveMarker(" 🪞😨", false)).toBe("😨");
 	expect(withReflexiveMarker("😨", true)).toBe("🪞😨");
 });
+
+test("a click with a lexical reflexive is offered a Reading whose Reflexive Slot is Optional too, and Luna's 🪞 description takes it", async () => {
+	// Er0 _1 ruht2 _3 sich4 _5 aus6 .7
+	const click = await clickOn("Er ruht sich aus.", [2, 4, 6], "ausruhen");
+	expect(click.attestation.surface.lemma.canonicalForm).toBe("ausruhen");
+	const candidates = ["😴", "🪞🧘", "💤"];
+	const jev = fakeJev({ reading: "c0" });
+	const picked = await readOnce(click, jev, fakeLuna(), {
+		candidates,
+		optionallyReflexive: ["😴"],
+	});
+	const offered = jev.sent[0]?.questions.reading;
+	expect(
+		offered?.type === "choice" ? Object.values(offered.criteria) : [],
+	).toEqual(["😴", "🪞🧘", expect.any(String)]);
+	expect(picked).toEqual({ _tag: "Reuse", emojiDescription: "😴" });
+	// The judge finds none, and Luna's 😴, marked 🪞😴, is the Optional one.
+	const written = await readOnce(
+		click,
+		fakeJev({ reading: "NoMatch" }),
+		fakeLuna(() => "😴"),
+		{ candidates, optionallyReflexive: ["😴"] },
+	);
+	expect(written).toEqual({ _tag: "Reuse", emojiDescription: "😴" });
+});
+
+test("a Reading Knowledge has given no frame yet falls back to the 🪞 rule", async () => {
+	const click = await clickOn("Er ruht sich aus.", [2, 4, 6], "ausruhen");
+	const jev = fakeJev({ reading: "NoMatch" });
+	const result = await readOnce(
+		click,
+		jev,
+		fakeLuna(() => "😴"),
+		{
+			candidates: ["😴", "🪞🧘"],
+		},
+	);
+	const offered = jev.sent[0]?.questions.reading;
+	expect(JSON.stringify(offered)).not.toContain('"😴"');
+	expect(result).toEqual({ _tag: "New", emojiDescription: "🪞😴" });
+	// Off a reflexive click the Optional one is offered as any other.
+	const plain = await clickOn("Er ruht.", [2], "ruhen");
+	const judge = fakeJev({ reading: "c0" });
+	expect(
+		await readOnce(plain, judge, fakeLuna(), {
+			candidates: ["😴", "🪞🧘"],
+			optionallyReflexive: ["😴"],
+		}),
+	).toEqual({ _tag: "Reuse", emojiDescription: "😴" });
+});

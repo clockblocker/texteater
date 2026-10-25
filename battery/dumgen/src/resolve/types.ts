@@ -82,6 +82,14 @@ export type ResolveReadingInput = {
 	/** The Emoji Descriptions of the Lemma's stored Readings, as stored. */
 	readonly candidates: readonly string[];
 	/**
+	 * The candidates whose stored Valency Frame has an Optional Reflexive
+	 * Slot, as `(sich) ausruhen` has (ADR 0052): a click whose members hold
+	 * a lexical reflexive is offered them beside the 🪞 Readings. A Reading
+	 * Knowledge has given no frame yet is not among them, so its 🪞 alone
+	 * decides whether it is offered.
+	 */
+	readonly optionallyReflexive?: readonly string[];
+	/**
 	 * The Emoji Description Luna wrote for this click before the host
 	 * refused its New as stale (ADR 0031): the judge runs again over the
 	 * current candidates, and a second NoMatch takes this one instead of

@@ -1,8 +1,11 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import { renderToStaticMarkup } from "react-dom/server";
-import { api } from "../convex/_generated/api";
-import { readingIdentityKey } from "../server/linguisticIdentity";
+import { api, internal } from "../convex/_generated/api";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey,
+} from "../server/linguisticIdentity";
 import { parseGermanReading } from "../server/operationalParsing";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 import { renderNote } from "../src/notes";
@@ -117,4 +120,51 @@ test("a Reading Note's heading cites the reflexive its frame holds", async () =>
 		}),
 	);
 	expect(headings).toEqual(["sich erinnern", "erinnern"]);
+});
+
+test("a click finds the Readings whose stored frame has an Optional Reflexive Slot", async () => {
+	const t = createTestConvex();
+	const ausruhen: Dumling.Lemma<"de"> = {
+		...ERINNERN,
+		canonicalForm: "ausruhen",
+		coreFeatures: { hasSepPrefix: "aus" },
+	};
+	const lemmaId = await insertDictionaryLemma(t, ausruhen);
+	const frames = {
+		"😴": "Optional",
+		"🪞🧘": "Required",
+		"💤": undefined,
+	} as const;
+	for (const [emojiDescription, status] of Object.entries(frames)) {
+		const stored = parseGermanReading({
+			unitKind: "Reading",
+			lemma: ausruhen,
+			emojiDescription,
+		});
+		await insertReading(t, lemmaId, stored);
+		if (status === undefined) continue;
+		await t.run((ctx) =>
+			ctx.db.insert("accumulatedKnowledge", {
+				ownerReadingKey: readingIdentityKey(stored),
+				knowledge: {
+					valency: [
+						{
+							status,
+							complements: [
+								{ kind: "Reflexive", governedCase: "Acc" },
+							],
+						},
+					],
+				},
+				status: "Partial",
+				updatedAt: 1,
+			}),
+		);
+	}
+	expect(
+		await t.query(
+			internal.dumdictStorage.queries.findOptionallyReflexiveReadings,
+			{ lemmaKey: lemmaIdentityKey(ausruhen) },
+		),
+	).toEqual(["😴"]);
 });

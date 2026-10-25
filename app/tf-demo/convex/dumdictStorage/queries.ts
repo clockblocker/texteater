@@ -24,6 +24,7 @@ import {
 	warnMalformedStoredRow,
 } from "../model/shadows";
 import { readingValueValidator } from "../model/validators";
+import { loadReflexiveSlot } from "../modules/notes/readingReflexive";
 import type { ReadingEntryContextArgs } from "./contextRequest";
 import {
 	assertPlanBudget,
@@ -90,6 +91,39 @@ export const findStoredReadings = internalQuery({
 	args: { lemmaKey: v.string() },
 	returns: v.array(readingValueValidator),
 	handler: (ctx, { lemmaKey }) => storedReadingsOf(ctx, lemmaKey),
+});
+
+/**
+ * The Emoji Descriptions of a Lemma's stored Readings whose accumulated
+ * Knowledge gives an Optional Reflexive Slot, as `(sich) ausruhen` has (ADR
+ * 0052). A click with a lexical reflexive offers them beside the 🪞
+ * Readings; a Reading with no Knowledge yet is not among them.
+ */
+export const findOptionallyReflexiveReadings = internalQuery({
+	args: { lemmaKey: v.string() },
+	returns: v.array(v.string()),
+	handler: async (ctx, { lemmaKey }) => {
+		const lemma = await ctx.db
+			.query("lemmas")
+			.withIndex("by_lemma_key", (q) => q.eq("lemmaKey", lemmaKey))
+			.unique();
+		if (!lemma) return [];
+		const readings = await ctx.db
+			.query("readings")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+			.take(MAX_READING_CANDIDATES);
+		const slots = await Promise.all(
+			readings.map(({ readingKey }) =>
+				loadReflexiveSlot(ctx, readingKey),
+			),
+		);
+		return readings.flatMap(({ emojiDescription }, index) =>
+			emojiDescription !== undefined &&
+			slots[index]?.status === "Optional"
+				? [emojiDescription]
+				: [],
+		);
+	},
 });
 
 /** The Readings pending relations start from and the Shadow forms they target. */

@@ -310,3 +310,85 @@ test("a Reading Catalog Miss comes back as tf-demo's signal", async () => {
 		message: "No authored Reading of VERB kommen",
 	});
 });
+
+// A Reading with an Optional Reflexive Slot on a reflexive click (ADR 0052).
+
+const ruhtSichAus = {
+	...kommt,
+	surface: {
+		...kommt.surface,
+		lemma: {
+			...kommen,
+			canonicalForm: "ausruhen",
+			coreFeatures: { hasSepPrefix: "aus" },
+		},
+		normalizedSurface: "ruht aus",
+	},
+	members: [
+		{ attested: "ruht", orthography: "Standard" },
+		{ attested: "sich", orthography: "Standard" },
+		{ attested: "aus", orthography: "Standard" },
+	],
+	valencyEvidence: [
+		{
+			member: 1,
+			complement: { kind: "Reflexive", governedCase: "Acc" },
+			realizedCase: "Acc",
+		},
+	],
+} as Dumling.Attestation<"de">;
+
+test("a click with a lexical reflexive asks stored Knowledge for the Readings whose Reflexive Slot is Optional, and passes them on", async () => {
+	const segments = ["Er", " ", "ruht", " ", "sich", " ", "aus", "."];
+	const resolved = parseResolvedGrammar({
+		encounter: {
+			sentence: {
+				...sentence,
+				segments: segments.map((text) => ({
+					kind:
+						text === " "
+							? "Whitespace"
+							: text === "."
+								? "Punctuation"
+								: "ResolvableText",
+					text,
+				})),
+			},
+			target: {
+				family: "Lexeme",
+				kind: "VERB",
+				memberSegmentIndices: [2, 4, 6],
+			},
+		},
+		attestation: ruhtSichAus,
+	});
+	const asked: Dumling.Lemma<"de">[] = [];
+	const lookup = async (lemma: Dumling.Lemma<"de">) => {
+		asked.push(lemma);
+		return ["😴"];
+	};
+	const fake = fakeDumgen(
+		{ _tag: "Unresolved" },
+		{ _tag: "Reuse", emojiDescription: "😴" },
+	);
+	const resolution = dumgenClickResolution(fake.dumgen, lookup);
+	await Effect.runPromise(
+		resolution.reading({
+			grammar: resolved,
+			lemma: ruhtSichAus.surface.lemma,
+			candidates: ["😴", "🪞🧘"],
+		}),
+	);
+	expect(asked).toEqual([ruhtSichAus.surface.lemma]);
+	expect(fake.readingInputs[0]?.optionallyReflexive).toEqual(["😴"]);
+	// A click with no reflexive asks nothing.
+	await Effect.runPromise(
+		resolution.reading({
+			grammar: resolvedKommt,
+			lemma: kommen,
+			candidates: ["🚶"],
+		}),
+	);
+	expect(asked).toHaveLength(1);
+	expect(fake.readingInputs[1]).not.toHaveProperty("optionallyReflexive");
+});

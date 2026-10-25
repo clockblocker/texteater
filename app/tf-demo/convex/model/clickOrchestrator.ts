@@ -42,10 +42,18 @@ export function orchestratorFor(
 	observer?: ResolutionProgressObserver,
 ) {
 	return createTfDemoOrchestrator({
-		resolution: dumgenClickResolution(() => {
-			requireJev();
-			return operations;
-		}),
+		resolution: dumgenClickResolution(
+			() => {
+				requireJev();
+				return operations;
+			},
+			(lemma) =>
+				ctx.runQuery(
+					internal.dumdictStorage.queries
+						.findOptionallyReflexiveReadings,
+					{ lemmaKey: lemmaIdentityKey(lemma) },
+				),
+		),
 		resegment,
 		findStoredReadings: async (lemma) =>
 			(
