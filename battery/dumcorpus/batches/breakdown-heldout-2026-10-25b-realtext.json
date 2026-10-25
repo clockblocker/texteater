@@ -1,5 +1,5 @@
 {
-	"note": "Held-out real-text batch for German segment.inConstituents and segment.inMorphemes, round 6 of #1241, authored 2026-10-25 as Draft Breakdown Records in records/breakdown/de. Its 60 targets were sampled uniformly at random from the same frame as round 5's real-text batch (breakdown-heldout-2026-10-25-realtext, now promoted to tuning), with a new seed, and gold was authored only after sampling, so no target was replaced, skipped or reordered for being easy, hard or odd; rows RT1 to RT60 follow draw order. The frame is far from exhausted: of its 95,628 word tokens, 136 draws were judged. Two accepted draws were excluded after sampling as structural snags and replaced by the next accepted draws, 135 and 136 (see sampling): draw 24, eigentlich, whose epenthetic t (eigen-t-lich) no piece may show, and draw 125, traurig, whose traur drops an inner e of Trauer. The lab scores these records in segment-in-constituents/de:realtext, the round's headline set, and its bottom words in segment-in-morphemes/de:realtext. Gold: 36 of 60 have no Constituents: 23 declinable bottom words with a Root and an Ending (verbs kommen, wollen, reisen, sollen, dürfen, machen, schneien with en; nouns and adjectives Meile, Freude, Geschichte with e; Nacht, Gewissen, Gesicht, leicht, Bad, Kalauer, Haus, klein, Fürst, Kuckuck, Paket, Legat, Blut with ∅), 8 indeclinables with a Root and no Ending (desto, her, ei, gern, sondern, wieder, recht, sehr), and 5 proper names with a Root and ∅ (Bottegone, Effi, Europa, Roswitha, Innstetten). 24 have Constituents: 7 derivations (richtig = richten + -ig, Verneigung, Wohnung, vertreiben, Verlegenheit, anders = ander + -s, wirklich), 7 compounds (Schaukelbrett, Schulvorsteherin, dienstfrei, Landrat, Veilchenwurzelluft, Blumenschale with the Interfix -n-, Nadelkissen), 5 particle verbs (gegenübersitzen, aufkommen, durchführen, zugeben, herantreten), 3 proper names (Thora von Penz = Thora · von · Penz; Güldenklee = gülden + Klee; Reeperbahn = Reep + -er- + Bahn) and 2 phrasemes (gefallen lassen, gnädige Frau). No target has a Source: a click unit with one is no segmenter case and was rejected at its draw. Every word split follows the DWDS Wortzerlegung, and every bottom word is one DWDS gives none (ADR 0050's tie rule), each cited in its record. Two judges, system and learner POV, review the debatable calls before round 6 runs (#1241). None may be an example in a Breakdown prompt (#693).",
+	"note": "Held-out real-text batch for German segment.inConstituents and segment.inMorphemes, round 6 of #1241, authored 2026-10-25 as Draft Breakdown Records in records/breakdown/de. Its 60 targets were sampled uniformly at random from the same frame as round 5's real-text batch (breakdown-heldout-2026-10-25-realtext, now promoted to tuning), with a new seed, and gold was authored only after sampling, so no target was replaced, skipped or reordered for being easy, hard or odd; rows RT1 to RT60 follow draw order. The frame is far from exhausted: of its 95,628 word tokens, 136 draws were judged. Two accepted draws were excluded after sampling as structural snags and replaced by the next accepted draws, 135 and 136 (see sampling): draw 24, eigentlich, whose epenthetic t (eigen-t-lich) no piece may show, and draw 125, traurig, whose traur drops an inner e of Trauer. The lab scores these records in segment-in-constituents/de:realtext, the round's headline set, and its bottom words in segment-in-morphemes/de:realtext. Gold: 36 of 60 have no Constituents: 23 declinable bottom words with a Root and an Ending (verbs kommen, wollen, reisen, sollen, dürfen, machen, schneien with en; nouns and adjectives Meile, Freude, Geschichte with e; Nacht, Gewissen, Gesicht, leicht, Bad, Kalauer, Haus, klein, Fürst, Kuckuck, Paket, Legat, Blut with ∅), 8 indeclinables with a Root and no Ending (desto, her, ei, gern, sondern, wieder, recht, sehr), and 5 proper names with a Root and ∅ (Bottegone, Effi, Europa, Roswitha, Innstetten). 24 have Constituents: 7 derivations (richtig = richten + -ig, Verneigung, Wohnung, vertreiben, Verlegenheit, anders = ander + -s, wirklich), 7 compounds (Schaukelbrett, Schulvorsteherin, dienstfrei, Landrat, Veilchenwurzelluft, Blumenschale with the Interfix -n-, Nadelkissen), 5 particle verbs (gegenübersitzen, aufkommen, durchführen, zugeben, herantreten), 3 proper names (Thora von Penz = Thora · von · Penz; Güldenklee = gülden + Klee; Reeperbahn = Reep + -er- + Bahn) and 2 phrasemes (gefallen lassen, gnädige Frau). No target has a Source: a click unit with one is no segmenter case and was rejected at its draw. Every word split follows the DWDS Wortzerlegung, and every bottom word is one DWDS gives none (ADR 0050's tie rule), each cited in its record. Judged 2026-10-25 by two judges, system and learner POV (#1241), on 17 calls: they agreed on every other call and on both exclusions, and split on five rows, which carry contested and are reported apart from the headline until the user rules: anders, her, Gewissen, Gesicht and wirklich (the Kind only). The system judge also asked that the two excluded snags be logged as model gaps (an epenthetic t; an inner e dropped before -ig). None may be an example in a Breakdown prompt (#693).",
 	"set": "realtext",
 	"sampling": {
 		"frame": "tf-demo Library's German Scrolls on 2026-10-25, as round 5 drew them: Effi Briest's 37 chapter Scrolls plus the Tagesschau article's German Sentences",
@@ -130,6 +130,7 @@
 			"bucket": "bottom-word",
 			"split": "held-out",
 			"change": "new",
+			"contested": "The judges split (#1241): the learner judge keeps the bottom word gewissen · ∅ (no DWDS Wortzerlegung); the system judge cuts ge- + wissen, since with no Wortzerlegung en.wiktionary decides and gives ge- + wissen. Reported apart from the headline until the user rules.",
 			"draw": 27
 		},
 		{
@@ -138,6 +139,7 @@
 			"bucket": "bottom-word",
 			"split": "held-out",
 			"change": "new",
+			"contested": "The judges split (#1241): the learner judge keeps the bottom word gesicht · ∅ (no DWDS Wortzerlegung); the system judge cuts ge- + Sicht, since with no Wortzerlegung en.wiktionary decides and gives ge- + Sicht. Reported apart from the headline until the user rules.",
 			"draw": 28
 		},
 		{
@@ -146,6 +148,7 @@
 			"bucket": "indeclinable",
 			"split": "held-out",
 			"change": "new",
+			"contested": "The judges split (#1241): the learner judge keeps ADV her; the system judge rejects the draw, since von … her is an authored Locution ADP (adposition-cases.ts), so her is not its unit's first member. Reported apart from the headline until the user rules.",
 			"draw": 30
 		},
 		{
@@ -490,6 +493,7 @@
 			"bucket": "derivation",
 			"split": "held-out",
 			"change": "new",
+			"contested": "The judges split (#1241): the learner judge keeps ander + -s, an affixal derivation on DWDS's Grundform ander; the system judge makes it the bottom word anders, since -s is on no closed affix list. Reported apart from the headline until the user rules.",
 			"draw": 132
 		},
 		{
@@ -514,6 +518,7 @@
 			"bucket": "derivation",
 			"split": "held-out",
 			"change": "new",
+			"contested": "The judges split (#1241) on the Kind only, not the Breakdown (wirken + -lich either way): the learner judge keeps ADJ used adverbially; the system judge makes it ADV, the sentence adverb Rule de/adjective-stays-adj names. Reported apart from the headline until the user rules.",
 			"draw": 136
 		}
 	]
