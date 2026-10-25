@@ -300,8 +300,9 @@ test("the oracle answers as gold would, so a pricing pass finds every request", 
 			{ aspect: "participleSource" },
 		),
 	).toMatchObject({
+		// The Source names the bare verb; its reflexive is the Reading's (ADR 0052).
 		verb: "verheiraten",
-		reflexive: "Acc",
+		reflexive: null,
 		participle: "verheiratet",
 	});
 	const warten = caseOf("warten");

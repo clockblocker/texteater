@@ -47,7 +47,6 @@ import {
 } from "../../stored-json.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
-import { currentGold } from "./legacy-gold.js";
 
 type KnowledgeGold = {
 	readonly knowledge: Dumrel.ReadingKnowledge;
@@ -139,17 +138,14 @@ const knowledgeCaseSchema = z
 		}),
 		text: z.string(),
 		gold: z
-			.preprocess(
-				currentGold,
-				z.object({
-					knowledge: knowledgeSchema,
-					paradigm: z.partialRecord(
-						z.enum(dimensionIdValues),
-						z.array(z.string()),
-					),
-					coverage: coverageSchema,
-				}),
-			)
+			.object({
+				knowledge: knowledgeSchema,
+				paradigm: z.partialRecord(
+					z.enum(dimensionIdValues),
+					z.array(z.string()),
+				),
+				coverage: coverageSchema,
+			})
 			.optional(),
 		authored: z.boolean(),
 		rules: z.array(z.string()),
