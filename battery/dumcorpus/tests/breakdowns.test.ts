@@ -113,6 +113,12 @@ describe("Breakdown Records", () => {
 			"arzt → Arzt",
 			"en",
 		]);
+		// The reflexive is a satellite: the word erinnern is broken down.
+		expect(constituents("sich-erinnern")).toEqual([
+			"er → er-",
+			"inner → inner",
+			"n",
+		]);
 		expect(pieces(byId("breakdown/de/spannen"), "morphemes")).toEqual([
 			"spann → spann",
 			"en → -en",
@@ -301,6 +307,14 @@ const fixtures: {
 		check: "Breakdown",
 		edit: (record) => {
 			record.reading.lemma.coreFeatures.hasSepPrefix = "aus";
+		},
+	},
+	{
+		name: "a lexically reflexive verb's sich shown as a piece (dumrel)",
+		seed: "sich-erinnern",
+		check: "Breakdown",
+		edit: (record) => {
+			constituentsOf(record).unshift({ letters: "sich " });
 		},
 	},
 	{

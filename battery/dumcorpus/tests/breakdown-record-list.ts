@@ -120,6 +120,7 @@ export const breakdownRecordList: string[][] = [
 	["schreibtisch", "Lexeme NOUN ✍", "constituents"],
 	["schrimm", "Lexeme PROPN 🏘", "morphemes"],
 	["segelboot", "Lexeme NOUN ⛵", "constituents"],
+	["sich-erinnern", "Lexeme VERB 💭", "constituents"],
 	["sich-wie-zu-hause-fuehlen", "Locution VERB 🏠😌", "constituents"],
 	["so-gut-wie", "Locution ADV 🤏", "constituents"],
 	["so-oder-so", "Locution ADV 🔁", "constituents"],

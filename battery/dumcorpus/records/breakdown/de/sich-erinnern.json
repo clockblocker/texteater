@@ -1,0 +1,73 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "sich erinnern",
+			"coreFeatures": {
+				"hasSepPrefix": null,
+				"lexicallyReflexive": "Acc"
+			}
+		},
+		"emojiDescription": "💭"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "er-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "inner",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "inner",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": "n"
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0029", "ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: erinnern",
+				"url": "https://www.dwds.de/wb/erinnern",
+				"supports": "The Wortzerlegung er-, with no headword for the rest; ⟨sich an etw., jmdn. erinnern⟩ is sense 1a; Etymologie: the prefix formation, like mhd. innern, belongs to the comparative ahd. innaro 'inner'"
+			},
+			{
+				"title": "DWDS: inner",
+				"url": "https://www.dwds.de/wb/inner",
+				"supports": "inner is an Adjektiv (nur attributiv, ohne Komparativ)"
+			},
+			{
+				"title": "en.wiktionary: erinnern",
+				"url": "https://en.wiktionary.org/wiki/erinnern",
+				"supports": "From Middle High German erinnern, from er- + innern, from Old High German innarōn, from innar 'inner'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "The reflexive is a satellite, read from lexicallyReflexive, so the Breakdown spells the word erinnern, not the Canonical Form sich erinnern (ADR 0050; judges agreed on #1241, 2026-10-25). No headword innern exists, so the base is the word DWDS and en.wiktionary trace it to, ADJ inner, with the citation ending n as filler, as in verarzten = ver- + Arzt + en."
+	}
+}
