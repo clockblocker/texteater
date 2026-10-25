@@ -27,12 +27,17 @@ import {
 import { DeAdpositionFeatureBagsSchema } from "./lexeme/adposition.js";
 
 const germanCaseSchema = z.enum(["Nom", "Acc", "Dat", "Gen"]);
+const germanPrepositionSchema = plainLemmaSchema(
+	{ language: "de", family: "Lexeme", kind: "ADP" },
+	DeAdpositionFeatureBagsSchema.shape.core,
+);
 
 /**
  * The German valency complements an occurrence can realize (ADR 0034), after
  * E-VALBU: a bare case, a preposition's ADP Lemma with the case it governs
  * in this construction, or a lexical reflexive with the case its Reading
- * fixes (ADR 0052). `referent` says whether a Case or Preposition names a
+ * fixes, and with the ADP Lemma it follows inside a fixed phrase (`außer sich
+ * sein`: `außer` + Dat) (ADR 0052). `referent` says whether a Case or Preposition names a
  * person, a thing, or either. The field is `governedCase`, since an
  * Attestation names no Feature Pool feature (ADR 0032). Evidence takes no
  * Adverbial, Predicative or Clause: nothing produces or reads them here.
@@ -45,16 +50,14 @@ const germanComplementSchema = z.union([
 	}),
 	z.strictObject({
 		kind: z.literal("Preposition"),
-		preposition: plainLemmaSchema(
-			{ language: "de", family: "Lexeme", kind: "ADP" },
-			DeAdpositionFeatureBagsSchema.shape.core,
-		),
+		preposition: germanPrepositionSchema,
 		governedCase: germanCaseSchema.exclude(["Nom"]),
 		referent: referentSchema,
 	}),
 	z.strictObject({
 		kind: z.literal("Reflexive"),
 		governedCase: germanCaseSchema.extract(["Acc", "Dat"]),
+		preposition: germanPrepositionSchema.optional(),
 	}),
 ]);
 

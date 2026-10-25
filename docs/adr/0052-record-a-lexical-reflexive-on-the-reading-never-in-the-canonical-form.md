@@ -40,15 +40,16 @@ complement. The German one names the case of its reflexive, which is fixed
 per Reading:
 
 ```ts
-{ kind: "Reflexive", governedCase: "Acc" | "Dat" }
+{ kind: "Reflexive", governedCase: "Acc" | "Dat", preposition?: /* ADP Lexeme Lemma */ }
 ```
 
 `erinnern` 🪞🧠 takes Acc (*ich erinnere mich*). `vorstellen` 'imagine' takes
 Dat (*ich stelle mir etwas vor*). The field is `governedCase` for the reason
 ADR 0034 gives. The Reflexive has no referent, since it is the subject. The
-English Reflexive has no case (`pride oneself on`). Hebrew adds none, since
-HITPAEL is a binyan, not a pronoun. A Reflexive is the only complement in its
-Slot, and a frame has at most one. Its Slot takes a status like any other.
+English Reflexive has no case (`pride oneself on`), and it takes the optional
+preposition too (`be beside oneself`, below). Hebrew adds none, since HITPAEL
+is a binyan, not a pronoun. A Reflexive is the only complement in its Slot,
+and a frame has at most one. Its Slot takes a status like any other.
 `schämen` takes a Required one. Where Duden gives one sense with and without
 the reflexive, as in `(sich) ausruhen`, the Slot is Optional.
 
@@ -81,6 +82,25 @@ Slot in the same way, and its Canonical Form drops `sich`:
 `jdm. Sorgen machen` 'cause someone worry' is another Reading of `Sorgen
 machen`, with an ordinary Dat Slot. A Saying is a sentence, so its `sich` is
 one of its words, not valency: `Wie man sich bettet, so liegt man` keeps it.
+
+**A reflexive inside a fixed phrase keeps its Slot.** A reflexive can be the
+object of a preposition that belongs to the phrase. It still fills a
+Reflexive Slot, and the Slot names that preposition. The Canonical Form drops
+only `sich`:
+
+- `außer sein` 'be beside oneself', Reflexive `außer` + Dat
+- `zu kommen` 'come round', Reflexive `zu` + Dat
+- `es in haben` 'be tougher than it looks', Reflexive `in` + Dat
+
+The preposition is an ADP Lemma, as in a Preposition complement. It is a word
+of the Canonical Form, since the phrase holds it, and Dumrel checks that.
+`governedCase` is the case the preposition governs here. dumcorpus checks it
+against the ADP Case Table
+([ADR 0053](./0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md)).
+The preposition is a fixed member, not a governed one. It makes no
+Preposition Slot, and its ADP lists no Governor. The user ruled this on
+[#1285](https://github.com/clockblocker/texteater/issues/1285) on
+2026-10-25.
 
 **A Required Reflexive Slot marks its Reading with 🪞.** Readings of one Lemma
 are told apart by their Emoji Description alone
@@ -116,22 +136,27 @@ member of its verb's or Locution's Attestation, so clicking `sich` in *sie
 erinnert sich* opens `erinnern` 🪞🧠
 ([ADR 0003](./0003-attestation-supersedes-selection-and-owns-realization-coverage.md)).
 `valencyEvidence` names that member with its Reflexive complement and the case
-it took, as it names a governed preposition. Three things read it: the Reading
-judge's offer above, `normalizedSurface`, and the Knowledge call, which adds a
-Reflexive Slot its sentence realizes when the proposed frame omits one (ADR
-0034).
+it took, as it names a governed preposition. Inside a fixed phrase the
+complement names its preposition too, and the member is still the reflexive:
+*er war außer sich* names `sich`, Reflexive `außer` + Dat. Three things read
+it: the Reading judge's offer above, `normalizedSurface`, and the Knowledge
+call, which adds a Reflexive Slot its sentence realizes when the proposed
+frame omits one (ADR 0034).
 
 `normalizedSurface` leaves the reflexive out, as it leaves out governed
-prepositions: `erinnert`, not `erinnert sich`, and `macht Sorgen`, not `macht
-sich Sorgen`. A Surface is a form of its Lemma, and `sich` is no form of
-`erinnern`, so the Grundform check compares bare forms. `segment.inUnits`
+prepositions: `erinnert`, not `erinnert sich`, `macht Sorgen`, not `macht
+sich Sorgen`, and `war außer`, not `war außer sich`. A Surface is a form of
+its Lemma, and `sich` is no form of `erinnern`, so the Grundform check
+compares bare forms. `segment.inUnits`
 doesn't change. It decides membership and routes, it writes no Canonical Form,
 and the reflexive is still a member.
 
 **Only the presentation layer prints `sich`.** tf-demo owns one shared
 presenter, in its German overrides, that renders a Reading's Citation from the
 Reading's Lemma and frame. Every place that now prints a Reading's raw
-Canonical Form uses it. German puts `sich` first, or right after a leading
+Canonical Form uses it. German puts `sich` directly after the Slot's
+preposition when the Slot has one: `außer sich sein`, `zu sich kommen`, `es
+in sich haben`. Otherwise it puts `sich` first, or right after a leading
 `es`: `sich erinnern`, `sich Sorgen machen`, `es sich gemütlich machen`. A
 heading at Lemma level has no frame to read, so it shows the bare Lemma,
 `erinnern`. How the Valency Block places `sich` among the Slots, and whether
@@ -144,10 +169,11 @@ frame as data.
 **Lookup strips the reflexive.** Some wordings cite a reflexive, such as a
 lookup a learner types (`sich erinnern`) or a relation target a model wrote
 (`sich freuen`). Such a wording is normalized before it is matched: lookup
-removes `sich`, or the `sich` after a leading `es`. The wording then resolves
-to the Lemma like any other. Where a Reading is chosen, a 🪞 Reading is
-preferred. `erinnern` and `sich erinnern` share one Spelling Crossroad, and
-that is fine, because a Crossroad holds every Lemma with its key.
+removes its `sich`, wherever the Citation puts it (`sich erinnern`, `es sich
+gemütlich machen`, `außer sich sein`). The wording then resolves to the
+Lemma like any other. Where a Reading is chosen, a 🪞 Reading is preferred.
+`erinnern` and `sich erinnern` share one Spelling Crossroad, and that is
+fine, because a Crossroad holds every Lemma with its key.
 
 **Breakdowns need no exception.** A Breakdown spells the Canonical Form, which
 is now the bare word: `erinnern` = `er · inner · n`
@@ -176,6 +202,12 @@ Whether that fits the Hebrew Grundform rule is the Hebrew owner's call.
   (above).
 - 🪞 only where two Readings would collide. Rejected: the generator can't see
   the stored Readings.
+- `sich` kept in the Canonical Form of a phrase whose preposition takes it
+  (`außer sich sein`). Rejected: it is the same lexical reflexive, and its
+  form follows the subject (*ich war außer mir*).
+- A Preposition complement for that preposition, beside a Reflexive.
+  Rejected: the phrase fixes the preposition, nothing governs it, and the
+  reflexive is its object, not a participant of its own.
 - `sich` kept in `normalizedSurface`. Rejected: a Surface is a form of its
   Lemma, and governed prepositions are already left out.
 - Dumling or dumrel owning the citation presenter. Rejected: the user ruled
@@ -189,7 +221,8 @@ Whether that fits the Hebrew Grundform rule is the Hebrew owner's call.
   0041, ADR 0044, ADR 0050 and ADR 0051.
 - Dumling deletes `lexicallyReflexive` with its legacy `"Yes"` values, and a
   German Attestation's `valencyEvidence` gains the Reflexive. Dumrel's German
-  and English complement vocabularies gain the Reflexive.
+  and English complement vocabularies gain the Reflexive, with the optional
+  preposition of a fixed phrase.
 - dumcorpus rewrites its gold once. The six base/reflexive twin Lemmas merge
   (`entscheiden`, `entschuldigen`, `fragen`, `fühlen`, `fürchten`, `lassen`).
   About 50 Spec Records and 2 Breakdown Records lose `sich` from Canonical

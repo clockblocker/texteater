@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
-import { aufLemma, houseReading, wartenReading } from "./fixtures.js";
+import { aufLemma, houseReading, onLemma, wartenReading } from "./fixtures.js";
 
 const required = <const C extends unknown[]>(...complements: C) =>
 	({ status: "Required", complements }) as const;
@@ -114,4 +114,72 @@ test("only verbs take a Reflexive, caseless outside German", () => {
 	expect(parses(samachReading, [required({ kind: "Reflexive" })])).toBe(
 		false,
 	);
+});
+
+/** `außer sich sein` 🪞🤯: the reflexive is the object of the phrase's `außer`. */
+const ausserSeinReading = {
+	unitKind: "Reading",
+	lemma: {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Locution",
+		kind: "VERB",
+		canonicalForm: "außer sein",
+		coreFeatures: {},
+	},
+	emojiDescription: "🪞🤯",
+} as const satisfies Dumling.Reading<"de", "Locution", "VERB">;
+const ausserDat = {
+	kind: "Reflexive",
+	governedCase: "Dat",
+	preposition: { ...aufLemma, canonicalForm: "außer" },
+} as const;
+
+test("a Reflexive inside a fixed phrase names the preposition it follows (ADR 0052)", () => {
+	const frame = [required(nom), required(ausserDat)];
+	expect(
+		parseReadingKnowledge({
+			source: ausserSeinReading,
+			knowledge: { valency: frame },
+		}),
+	).toEqual({ success: true, value: { valency: frame } });
+	for (const invalid of [
+		// The phrase holds its preposition: `sein` has no `zu`.
+		{ ...ausserDat, preposition: { ...aufLemma, canonicalForm: "zu" } },
+		{ ...ausserDat, preposition: onLemma },
+		{
+			...ausserDat,
+			preposition: { ...ausserDat.preposition, kind: "ADV" },
+		},
+		{ ...ausserDat, referent: "Someone" },
+	])
+		expect(
+			parses(ausserSeinReading, [required(nom), required(invalid)]),
+		).toBe(false);
+});
+
+test("an English Reflexive names the preposition it follows, with no case", () => {
+	const beBeside = {
+		unitKind: "Reading",
+		lemma: {
+			unitKind: "Lemma",
+			language: "en",
+			family: "Locution",
+			kind: "VERB",
+			canonicalForm: "be beside",
+			coreFeatures: {},
+		},
+		emojiDescription: "🪞🤯",
+	} as const satisfies Dumling.Reading<"en", "Locution", "VERB">;
+	const beside = { ...onLemma, canonicalForm: "beside" };
+	expect(
+		parses(beBeside, [
+			required({ kind: "Reflexive", preposition: beside }),
+		]),
+	).toBe(true);
+	expect(
+		parses(beBeside, [
+			required({ kind: "Reflexive", preposition: { ...onLemma } }),
+		]),
+	).toBe(false);
 });

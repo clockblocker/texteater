@@ -40,7 +40,9 @@ Required or Optional and holding one complement or several alternatives.
 German complements are a bare case, an ADP Lemma with the case it governs, an
 Adverbial named by its stand-in, a Predicative, a Clause of one form, or a
 lexical Reflexive with its case (`erinnern` 🪞🧠: Reflexive Acc), alone in
-its Slot and at most one per frame.
+its Slot and at most one per frame. A Reflexive inside a fixed phrase names
+its preposition, a word of the Canonical Form (`außer sein`: Reflexive
+`außer` + Dat).
 `Contribute` adds a whole Slot or nothing, and a `Retract` that names a
 complement removes it from its Slot. Dumrel derives the inverse `governedBy`
 edges internally from every Preposition complement over a dictionary

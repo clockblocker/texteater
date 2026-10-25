@@ -66,7 +66,11 @@ type ValencyEvidence = {
 				preposition: { canonicalForm: string };
 				governedCase: string;
 		  }
-		| { kind: "Reflexive"; governedCase: string };
+		| {
+				kind: "Reflexive";
+				governedCase: string;
+				preposition?: { canonicalForm: string };
+		  };
 	realizedCase: string;
 };
 
@@ -113,7 +117,9 @@ function namesMarkerMembers(
  * German slots also keep their case: a preposition slot's occurrence shows
  * the case the slot governs, and a bare-case slot has no marker member. A
  * Reflexive, allowed only where `reflexive` says so, names its owned member
- * and shows the case its Reading fixes, at most once (ADR 0052). Which cases
+ * and shows the case its Reading fixes, at most once; after a fixed phrase's
+ * preposition (`außer sich`) that is the case the preposition governs, and
+ * the member is still the reflexive (ADR 0052). Which cases
  * a preposition takes, and which forms spell a reflexive, are facts about
  * German, checked in dumcorpus (ADR 0041).
  */

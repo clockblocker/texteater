@@ -1,5 +1,10 @@
 import { ParsingError } from "common-utils/validation";
-import { lemmaIdentityKey, parseUnit, readingIdentityKey } from "dumling";
+import {
+	foldCase,
+	lemmaIdentityKey,
+	parseUnit,
+	readingIdentityKey,
+} from "dumling";
 import type * as Dumling from "dumling/types";
 import {
 	parseBreakdown,
@@ -199,14 +204,19 @@ function endonymIssue(
  * A complement the source's route allows. A Preposition complement names an
  * ADP Lemma of the source Language. A German one names an oblique case, and
  * dumcorpus checks it against the ADP Case Table (ADR 0041). A Hebrew or
- * English one names no case (`סמך על`, `depend on`).
+ * English one names no case (`סמך על`, `depend on`). A German Reflexive names
+ * its case, another language's none. A Reflexive that is the object of a
+ * fixed phrase's preposition names that ADP Lemma too, and the preposition is
+ * a word of the source's Canonical Form, since the phrase holds it (`außer
+ * sein` for `außer sich sein`); dumcorpus checks its case as a Preposition's
+ * (ADR 0052).
  */
 function parseValencyComplement<R extends Dumling.Reading>(
 	source: R,
 	complement: ValencyComplement,
 	path: Path,
 ): ValencyComplement | ParsingError {
-	const { family, kind } = source.lemma;
+	const { family, kind, language } = source.lemma;
 	if (!allowedComplementKinds(source.lemma).includes(complement.kind))
 		return issue(
 			[...path, "kind"],
@@ -214,19 +224,50 @@ function parseValencyComplement<R extends Dumling.Reading>(
 		);
 	if (
 		complement.kind === "Reflexive" &&
-		"governedCase" in complement !== (source.lemma.language === "de")
+		"governedCase" in complement !== (language === "de")
 	)
 		return issue(
 			path,
 			"A German Reflexive names its case; another language's names none",
 		);
-	if (complement.kind !== "Preposition") return complement;
-	const parsed = parseUnit(complement.preposition);
+	if (!("preposition" in complement) || complement.preposition === undefined)
+		return complement;
+	const preposition = parsePreposition(source, complement.preposition, [
+		...path,
+		"preposition",
+	]);
+	if (preposition instanceof ParsingError) return preposition;
+	if (
+		complement.kind === "Reflexive" &&
+		!source.lemma.canonicalForm
+			.split(" ")
+			.some(
+				(word) =>
+					foldCase(word, language) ===
+					foldCase(preposition.canonicalForm, language),
+			)
+	)
+		return issue(
+			[...path, "preposition"],
+			"A Reflexive's preposition is a word of its Reading's Canonical Form",
+		);
+	// parseUnit keeps the input's Language, so the parsed ADP Lemma fits the
+	// variant complement came from; TypeScript can't correlate the two unions.
+	return { ...complement, preposition } as ValencyComplement;
+}
+
+/** A complement's preposition: an ADP Lemma of the source Language. */
+function parsePreposition<R extends Dumling.Reading>(
+	source: R,
+	value: unknown,
+	path: Path,
+): Dumling.Lemma | ParsingError {
+	const parsed = parseUnit(value);
 	if (!parsed.success)
 		return new ParsingError(
 			parsed.error.issues.map((entry) => ({
 				...entry,
-				path: [...path, "preposition", ...entry.path],
+				path: [...path, ...entry.path],
 			})),
 		);
 	const { chain } = parsed;
@@ -235,19 +276,13 @@ function parseValencyComplement<R extends Dumling.Reading>(
 		chain.family !== "Lexeme" ||
 		chain.kind !== "ADP"
 	)
+		return issue(path, "A governed preposition must be an ADP Lemma");
+	if (chain.value.language !== source.lemma.language)
 		return issue(
-			[...path, "preposition"],
-			"A governed preposition must be an ADP Lemma",
-		);
-	const preposition = chain.value;
-	if (preposition.language !== source.lemma.language)
-		return issue(
-			[...path, "preposition", "language"],
+			[...path, "language"],
 			"A governed preposition must use the source Language",
 		);
-	// parseUnit keeps the input's Language, so the parsed ADP Lemma fits the
-	// variant complement came from; TypeScript can't correlate the two unions.
-	return { ...complement, preposition } as ValencyComplement;
+	return chain.value;
 }
 
 /** A Reflexive alone in its Slot, at most one per frame (ADR 0052). */

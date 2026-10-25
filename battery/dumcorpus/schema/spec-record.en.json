@@ -15812,6 +15812,9 @@
 								"Acc",
 								"Dat"
 							]
+						},
+						"preposition": {
+							"$ref": "#/$defs/__schema269"
 						}
 					},
 					"required": [
@@ -15953,6 +15956,9 @@
 						"kind": {
 							"type": "string",
 							"const": "Reflexive"
+						},
+						"preposition": {
+							"$ref": "#/$defs/__schema76"
 						}
 					},
 					"required": [

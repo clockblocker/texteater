@@ -132,8 +132,9 @@ _Avoid_: productive participle and lexicalized participle, as a Kind contrast
 **Lexical Reflexive**:
 A `sich` that no other noun phrase can replace in its sense: inherent
 (`sich schämen`), reciprocal-inherent (`sich zanken`) or the modal-passive
-`sich lassen`. It is a member of its verb's or Locution's target and fills
-the Reading's Reflexive Slot (Dumrel), never the Canonical Form. See
+`sich lassen`. It may be the object of a fixed preposition (`außer sich
+sein`, `zu sich kommen`). It is a member of its verb's or Locution's target
+and fills the Reading's Reflexive Slot (Dumrel), never the Canonical Form. See
 [ADR 0052].
 _Avoid_: reflexive verb, for a Lemma of its own; inherent reflexive, for all
 three

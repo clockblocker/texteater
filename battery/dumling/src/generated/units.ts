@@ -347,7 +347,20 @@ export interface UnitMap {
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
-					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
+					| {
+							kind: "Reflexive";
+							governedCase: "Acc" | "Dat";
+							preposition?:
+								| {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+								  }
+								| undefined;
+					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -503,7 +516,20 @@ export interface UnitMap {
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
-					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
+					| {
+							kind: "Reflexive";
+							governedCase: "Acc" | "Dat";
+							preposition?:
+								| {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+								  }
+								| undefined;
+					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -1123,7 +1149,20 @@ export interface UnitMap {
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
-					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
+					| {
+							kind: "Reflexive";
+							governedCase: "Acc" | "Dat";
+							preposition?:
+								| {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+								  }
+								| undefined;
+					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -1902,7 +1941,20 @@ export interface UnitMap {
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
-					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
+					| {
+							kind: "Reflexive";
+							governedCase: "Acc" | "Dat";
+							preposition?:
+								| {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+								  }
+								| undefined;
+					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -5535,7 +5587,20 @@ export interface UnitMap {
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
-					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
+					| {
+							kind: "Reflexive";
+							governedCase: "Acc" | "Dat";
+							preposition?:
+								| {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+								  }
+								| undefined;
+					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -5703,7 +5768,20 @@ export interface UnitMap {
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
-					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
+					| {
+							kind: "Reflexive";
+							governedCase: "Acc" | "Dat";
+							preposition?:
+								| {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+								  }
+								| undefined;
+					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -5859,7 +5937,20 @@ export interface UnitMap {
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
-					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
+					| {
+							kind: "Reflexive";
+							governedCase: "Acc" | "Dat";
+							preposition?:
+								| {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+								  }
+								| undefined;
+					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -6629,7 +6720,20 @@ export interface UnitMap {
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
-					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
+					| {
+							kind: "Reflexive";
+							governedCase: "Acc" | "Dat";
+							preposition?:
+								| {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+								  }
+								| undefined;
+					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -7527,7 +7631,20 @@ export interface UnitMap {
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
-					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
+					| {
+							kind: "Reflexive";
+							governedCase: "Acc" | "Dat";
+							preposition?:
+								| {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+								  }
+								| undefined;
+					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};

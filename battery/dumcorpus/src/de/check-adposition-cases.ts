@@ -18,16 +18,27 @@ type AdpositionLemma = Parameters<typeof germanAdpositionEntry>[0];
 type Complement =
 	| { readonly kind: "Case"; readonly governedCase: string }
 	| {
-			readonly kind: "Preposition";
-			readonly preposition: AdpositionLemma;
+			readonly kind: "Preposition" | "Reflexive";
+			readonly preposition?: AdpositionLemma;
 			readonly governedCase?: string;
 	  }
 	| { readonly kind: string };
 
-const isPreposition = (
+/**
+ * A complement with a preposition and the case it governs: a Preposition, or
+ * a Reflexive that is the object of a fixed phrase's preposition (`außer sich
+ * sein`: `außer` + Dat, ADR 0052).
+ */
+const hasPreposition = (
 	complement: Complement,
-): complement is Extract<Complement, { kind: "Preposition" }> =>
-	complement.kind === "Preposition";
+): complement is Complement & {
+	readonly preposition: AdpositionLemma;
+	readonly governedCase: string;
+} =>
+	"preposition" in complement &&
+	complement.preposition !== undefined &&
+	"governedCase" in complement &&
+	complement.governedCase !== undefined;
 
 /**
  * The issue for an ADP the table lacks, at `lemmaPath`, or for a case none
@@ -67,8 +78,7 @@ function prepositionIssue(
 	complement: Complement,
 	path: string,
 ): AdpositionCaseIssue[] {
-	if (!isPreposition(complement) || complement.governedCase === undefined)
-		return [];
+	if (!hasPreposition(complement)) return [];
 	return caseIssue(complement.preposition, complement.governedCase, {
 		lemma: `${path}.preposition`,
 		case: `${path}.governedCase`,
@@ -79,9 +89,9 @@ function prepositionIssue(
  * Where a German Attestation relies on what the ADP Case Table lacks. An ADP
  * occurrence, Lexeme or Locution, fails when the table doesn't list it, and
  * when its realized case is one none of its positions takes (`auf` + Gen). A
- * governor's Preposition evidence fails when the table doesn't list its
- * preposition or the preposition doesn't take its governed case (`für` +
- * Dat).
+ * governor's Preposition evidence, and Reflexive evidence after a fixed
+ * phrase's preposition, fails when the table doesn't list its preposition or
+ * the preposition doesn't take its governed case (`für` + Dat).
  * Dumling checks only the evidence's shape (ADR 0041).
  */
 export function attestationAdpositionCaseIssues(
@@ -117,10 +127,10 @@ export function attestationAdpositionCaseIssues(
 
 /**
  * Where a German Reading's Valency Frame relies on what the ADP Case Table
- * lacks, checking every Preposition complement, alternatives included:
- * `warten` `auf` + Acc and `bestehen` `auf` + Dat pass, `für` + Dat fails,
- * and so does a preposition the table doesn't list. Dumrel checks only the
- * frame's shape.
+ * lacks, checking every Preposition complement, alternatives included, and
+ * every Reflexive's preposition: `warten` `auf` + Acc, `bestehen` `auf` + Dat
+ * and `außer sich sein` `außer` + Dat pass, `für` + Dat fails, and so does a
+ * preposition the table doesn't list. Dumrel checks only the frame's shape.
  */
 export function frameAdpositionCaseIssues(
 	frame: Dumrel.ValencyFrame,

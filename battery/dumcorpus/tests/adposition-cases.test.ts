@@ -210,6 +210,45 @@ test("a Valency Frame's preposition is listed and takes the slot's case", () => 
 	]);
 });
 
+test("a Reflexive's preposition takes the Reflexive's case (ADR 0052)", () => {
+	const reflexive = (canonicalForm: string, governedCase: string) =>
+		[
+			{
+				status: "Required",
+				complements: [
+					{
+						kind: "Reflexive",
+						governedCase,
+						preposition: adposition(canonicalForm),
+					},
+				],
+			},
+		] as unknown as Dumrel.ValencyFrame;
+	// außer sich sein, zu sich kommen, es in sich haben.
+	for (const [canonicalForm, governedCase] of [
+		["außer", "Dat"],
+		["zu", "Dat"],
+		["in", "Dat"],
+	] as const)
+		expect(
+			frameAdpositionCaseIssues(reflexive(canonicalForm, governedCase)),
+		).toEqual([]);
+	expect(frameAdpositionCaseIssues(reflexive("zu", "Acc"))).toEqual([
+		{
+			path: "0.complements.0.governedCase",
+			message: "zu does not take Acc",
+		},
+	]);
+	expect(
+		frameAdpositionCaseIssues([
+			{
+				status: "Required",
+				complements: [{ kind: "Reflexive", governedCase: "Acc" }],
+			},
+		]),
+	).toEqual([]);
+});
+
 test("the table lists each Lexeme ADP's positions with a case set each", () => {
 	const positions = (canonicalForm: string) => {
 		const entry = germanAdpositionEntry(adposition(canonicalForm));

@@ -58,8 +58,10 @@ export const valencyReferentSchema = z.enum(valencyReferentValues);
  * Adverbial named by its stand-in (`wohnen` irgendwo); a Predicative of the
  * subject or object with its free marker (`jN für dumm halten`); or a Clause
  * of one form, with the correlate it may need (`freuen` 🪞 `auf`: Dass,
- * Required `darauf`); or a lexical Reflexive with its case (ADR 0052). Only
- * Case and Preposition name a referent.
+ * Required `darauf`); or a lexical Reflexive with its case, and with the ADP
+ * Lemma it follows when it is the object of a fixed phrase's preposition
+ * (`außer sich sein`: `außer` + Dat), the case that preposition governs
+ * (ADR 0052). Only Case and Preposition name a referent.
  */
 export const germanValencyComplementSchema = z.union([
 	z.strictObject({
@@ -90,6 +92,7 @@ export const germanValencyComplementSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Reflexive"),
 		governedCase: z.enum(reflexiveCaseValues),
+		preposition: adpositionLemmaSchemas.de.optional(),
 	}),
 ]);
 /**
@@ -116,7 +119,8 @@ export const hebrewValencyComplementSchema = z.union([
  * English complements, marked by position and preposition with no case: the
  * subject, the direct object, the indirect object (the first object of `give
  * him a book`), a governed preposition with the ADP Lemma it selects
- * (`depend on`), or a caseless lexical Reflexive (`pride oneself on`).
+ * (`depend on`), or a caseless lexical Reflexive (`pride oneself on`), with
+ * the ADP Lemma it follows inside a fixed phrase (`be beside oneself`).
  */
 export const englishValencyComplementSchema = z.union([
 	z.strictObject({
@@ -136,7 +140,10 @@ export const englishValencyComplementSchema = z.union([
 		preposition: adpositionLemmaSchemas.en,
 		referent: valencyReferentSchema,
 	}),
-	z.strictObject({ kind: z.literal("Reflexive") }),
+	z.strictObject({
+		kind: z.literal("Reflexive"),
+		preposition: adpositionLemmaSchemas.en.optional(),
+	}),
 ]);
 /**
  * The Slot skeleton is shared; each language brings its own complement

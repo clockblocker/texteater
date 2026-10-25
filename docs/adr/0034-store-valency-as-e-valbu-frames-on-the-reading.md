@@ -74,7 +74,7 @@ vocabulary. German follows E-VALBU:
 { kind: "Adverbial", standIn: "Irgendwo" | "Irgendwohin" | "Irgendwie" | "IrgendwieLange" | "IrgendwieViel" }
 { kind: "Predicative", of: "Subject" | "Object", marker: "None" | "Als" | "Für" }
 { kind: "Clause", form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W", correlate?: "Required" | "Optional" }
-{ kind: "Reflexive", governedCase: "Acc" | "Dat" }
+{ kind: "Reflexive", governedCase: "Acc" | "Dat", preposition?: /* ADP Lexeme Lemma */ }
 // referent: "Someone" | "Something" | "Either"
 ```
 
@@ -119,8 +119,10 @@ vocabulary. German follows E-VALBU:
   of Clause alternatives.
 - **Reflexive** is a lexical reflexive, one no other noun phrase can replace
   in the sense, with the case it takes: `erinnern` 🪞🧠 Acc, `vorstellen`
-  'imagine' Dat. It is the only complement of its Slot, at most one per
-  frame, and has no referent
+  'imagine' Dat. Inside a fixed phrase it names the preposition it is the
+  object of, with the case that preposition governs: `außer sein` (*außer
+  sich sein*) `außer` + Dat. It is the only complement of its Slot, at most
+  one per frame, and has no referent
   ([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
 
 Hebrew marks function and preposition, with no case: Subject, DirectObject

@@ -2068,7 +2068,11 @@ export type GermanValencyComplement =
 			form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W";
 			correlate?: ("Required" | "Optional") | undefined;
 	  }
-	| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
+	| {
+			kind: "Reflexive";
+			governedCase: "Acc" | "Dat";
+			preposition?: Dumling.Lemma<"de", "Lexeme", "ADP"> | undefined;
+	  };
 export type HebrewValencyComplement =
 	| { kind: "Subject"; referent: ValencyReferent }
 	| { kind: "DirectObject"; referent: ValencyReferent }
@@ -2086,7 +2090,10 @@ export type EnglishValencyComplement =
 			preposition: Dumling.Lemma<"en", "Lexeme", "ADP">;
 			referent: ValencyReferent;
 	  }
-	| { kind: "Reflexive" };
+	| {
+			kind: "Reflexive";
+			preposition?: Dumling.Lemma<"en", "Lexeme", "ADP"> | undefined;
+	  };
 export type ValencyComplement =
 	| {
 			kind: "Case";
@@ -2118,7 +2125,11 @@ export type ValencyComplement =
 			form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W";
 			correlate?: ("Required" | "Optional") | undefined;
 	  }
-	| { kind: "Reflexive"; governedCase: "Acc" | "Dat" }
+	| {
+			kind: "Reflexive";
+			governedCase: "Acc" | "Dat";
+			preposition?: Dumling.Lemma<"de", "Lexeme", "ADP"> | undefined;
+	  }
 	| { kind: "Subject"; referent: ValencyReferent }
 	| { kind: "DirectObject"; referent: ValencyReferent }
 	| {
@@ -2134,7 +2145,10 @@ export type ValencyComplement =
 			preposition: Dumling.Lemma<"en", "Lexeme", "ADP">;
 			referent: ValencyReferent;
 	  }
-	| { kind: "Reflexive" };
+	| {
+			kind: "Reflexive";
+			preposition?: Dumling.Lemma<"en", "Lexeme", "ADP"> | undefined;
+	  };
 export type ValencySlot = {
 	status: ValencySlotStatus;
 	complements: Array<ValencyComplement>;
