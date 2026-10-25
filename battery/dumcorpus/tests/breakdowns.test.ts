@@ -113,11 +113,12 @@ describe("Breakdown Records", () => {
 			"arzt → Arzt",
 			"en",
 		]);
-		// The reflexive is a satellite: the word erinnern is broken down.
-		expect(constituents("sich-erinnern")).toEqual([
+		// The reflexive is a satellite: the word erinnern is broken down, a
+		// bottom word whose base innern died out.
+		expect(pieces(byId("breakdown/de/sich-erinnern"), "morphemes")).toEqual([
 			"er → er-",
 			"inner → inner",
-			"n",
+			"n → -en",
 		]);
 		expect(pieces(byId("breakdown/de/spannen"), "morphemes")).toEqual([
 			"spann → spann",
@@ -314,7 +315,7 @@ const fixtures: {
 		seed: "sich-erinnern",
 		check: "Breakdown",
 		edit: (record) => {
-			constituentsOf(record).unshift({ letters: "sich " });
+			record.knowledge.breakdown.morphemes.unshift({ letters: "sich " });
 		},
 	},
 	{

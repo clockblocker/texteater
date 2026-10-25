@@ -124,13 +124,15 @@ For German:
 **Satellites come from model data.** A Lexeme's reflexive, governed
 preposition, article and auxiliary are read from model data (ADR 0041) and
 are never Constituents. Its other words are: `Frankfurt am Main` =
-`Frankfurt · am · Main`, while `sich erinnern` has only `er- + inner + n`
-and `sich anschließen` only `an- + schließen`. The Breakdown spells the word,
-and the Note shows `sich` from the Lemma, as it shows an article. No
-headword `innern` exists, so its base is ADJ `inner`, which DWDS and
-en.wiktionary trace it to, and its `n` is the citation ending, as in
-`verarzten`. The judges agreed on this on
-[#1241](https://github.com/clockblocker/texteater/issues/1241#issuecomment-6393717905). A
+`Frankfurt · am · Main`, while `sich anschließen` has only `an- +
+schließen`, as DWDS splits `anschließen`. The Breakdown spells the word,
+and the Note shows `sich` from the Lemma, as it shows an article. The judges
+agreed on this on
+[#1241](https://github.com/clockblocker/texteater/issues/1241#issuecomment-6393717905).
+A reflexive Lexeme whose word has no word inside is a bottom word like any
+other: `sich erinnern` has no Constituents and the morphemes `er · inner ·
+n` (ADR 0051), since its base `innern` is Middle High German and has no
+modern headword (the user, 2026-10-25). A
 separable particle is a constituent, as above. English phrasal verbs work as
 German particle verbs do: `give up` = `give + up`, still one Lexeme VERB
 ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)). The

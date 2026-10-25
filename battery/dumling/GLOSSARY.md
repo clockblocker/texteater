@@ -65,7 +65,7 @@ A Reading's parts, stored as the Reading Knowledge aspect `breakdown: {
 constituents, morphemes }`: its Constituents and its Morphemic Breakdown. It
 belongs to the Reading, never to the Lemma or an occurrence. Its letters
 spell the Canonical Form; a lexically reflexive Lexeme's spell its word,
-without the reflexive (`sich erinnern`: `er- + inner + n`). See [ADR 0050]
+without the reflexive (`sich anschließen`: `an- + schließen`). See [ADR 0050]
 and [ADR 0051].
 _Avoid_: components, drill-down segmentation, Morphological Tree, Lexical
 Breakdown

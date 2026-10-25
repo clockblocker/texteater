@@ -17,7 +17,7 @@
 	},
 	"knowledge": {
 		"breakdown": {
-			"constituents": [
+			"morphemes": [
 				{
 					"letters": "er",
 					"target": {
@@ -30,35 +30,37 @@
 				{
 					"letters": "inner",
 					"target": {
-						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADJ",
 						"canonicalForm": "inner",
-						"coreFeatures": {
-							"comparable": null
-						}
+						"family": "Morpheme",
+						"kind": "Root"
 					}
 				},
 				{
-					"letters": "n"
+					"letters": "n",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
 				}
 			]
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0029", "ADR-0050"],
+		"adrs": ["ADR-0029", "ADR-0050", "ADR-0051"],
 		"rules": [],
 		"references": [
 			{
 				"title": "DWDS: erinnern",
 				"url": "https://www.dwds.de/wb/erinnern",
-				"supports": "The Wortzerlegung er-, with no headword for the rest; ⟨sich an etw., jmdn. erinnern⟩ is sense 1a; Etymologie: the prefix formation, like mhd. innern, belongs to the comparative ahd. innaro 'inner'"
+				"supports": "The Wortzerlegung is only er-; ⟨sich an etw., jmdn. erinnern⟩ is sense 1a; Etymologie (Pfeifer): a Präfixbildung (frühnhd. erinnern) belonging, like the simplex mhd. innern, to ahd. innaro 'inner'"
 			},
 			{
-				"title": "DWDS: inner",
-				"url": "https://www.dwds.de/wb/inner",
-				"supports": "inner is an Adjektiv (nur attributiv, ohne Komparativ)"
+				"title": "DWDS: innern",
+				"url": "https://www.dwds.de/wb/innern",
+				"supports": "No headword innern: DWDS offers the adjective inner instead"
 			},
 			{
 				"title": "en.wiktionary: erinnern",
@@ -68,6 +70,6 @@
 		]
 	},
 	"notes": {
-		"rationale": "The reflexive is a satellite, read from lexicallyReflexive, so the Breakdown spells the word erinnern, not the Canonical Form sich erinnern (ADR 0050; judges agreed on #1241, 2026-10-25). No headword innern exists, so the base is the word DWDS and en.wiktionary trace it to, ADJ inner, with the citation ending n as filler, as in verarzten = ver- + Arzt + en."
+		"rationale": "The reflexive is a satellite, read from lexicallyReflexive, so the Breakdown spells the word erinnern, not the Canonical Form sich erinnern (ADR 0050). erinnern is a bottom word, as vergessen (ver · gess · en) is: its base innern is Middle High German and has no modern headword, so it has no word inside and no Constituents (user, #1241, 2026-10-25). DWDS splits off only er-, which is on the closed affix list, so the remainder inner is the Root, and the citation ending n is a Surface of the Ending -en, as in läch · el · n (ADR 0051)."
 	}
 }

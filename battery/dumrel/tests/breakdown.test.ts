@@ -173,18 +173,10 @@ test("a lexically reflexive Lexeme's Breakdown spells its word, without the refl
 		},
 		emojiDescription: "💭",
 	} as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;
-	const prefix = {
-		letters: "er",
-		target: shadow("Morpheme", "Prefix", "er-"),
-	};
+	// erinnern is a bottom word: its base innern died out.
 	const word = {
-		constituents: [
-			prefix,
-			{ letters: "inner", target: shadow("Lexeme", "ADJ", "inner") },
-			{ letters: "n" },
-		],
 		morphemes: [
-			prefix,
+			{ letters: "er", target: shadow("Morpheme", "Prefix", "er-") },
 			{ letters: "inner", target: shadow("Morpheme", "Root", "inner") },
 			{ letters: "n", target: shadow("Morpheme", "Ending", "-en") },
 		],
@@ -198,7 +190,7 @@ test("a lexically reflexive Lexeme's Breakdown spells its word, without the refl
 	expect(
 		parse(erinnernReading, {
 			breakdown: {
-				constituents: [{ letters: "sich " }, ...word.constituents],
+				morphemes: [{ letters: "sich " }, ...word.morphemes],
 			},
 		}).success,
 	).toBe(false);

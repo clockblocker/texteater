@@ -61,7 +61,8 @@ no Source that `segment.inConstituents` finds no Constituents for (ADR
 0050). The segmenter splits off only
 affixes from the language's closed affix inventory in dumcorpus, and the
 remainder is the Root, with a Root Lemma of its own when it is bound:
-`ver · gess · en`, `be · ginn · en`, `re · ceive`. An affix split needs two
+`ver · gess · en`, `be · ginn · en`, `re · ceive`, and `er · inner · n` for
+`sich erinnern`, whose base `innern` died out. An affix split needs two
 things: the affix is on the closed affix list, and the DWDS Wortzerlegung
 confirms the split. Where DWDS gives no Wortzerlegung, en.wiktionary's
 etymology decides, as it does for Constituents (ADR 0050). A fossilized
