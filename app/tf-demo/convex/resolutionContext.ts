@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { withoutCitedReflexive } from "../server/citedReflexive";
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import { spellingOf } from "../server/storedSegments";
 import type { Doc, Id } from "./_generated/dataModel";
@@ -101,22 +102,25 @@ export async function loadResolutionContext(
 	// Every word is looked up so a target's far member, such as a separated
 	// prefix, still finds its Lemma; each spelling keeps the Sentence text it
 	// came from, so ClickResolution can offer only Lemmas found under the
-	// target's own.
+	// target's own. A phrase that cites a reflexive (`sich erinnern`) is
+	// looked up without it too, since a Canonical Form never holds one
+	// (ADR 0052).
 	const foundUnder = new Map<string, Set<string>>();
 	for (const text of [
 		words[clicked] ? spellingOf(words[clicked]) : "",
 		...phrases,
 		...words.map(spellingOf),
 	].filter(Boolean))
-		for (const spelling of [
-			text,
-			text.slice(0, 1).toLocaleLowerCase("de") + text.slice(1),
-			text.slice(0, 1).toLocaleUpperCase("de") + text.slice(1),
-		])
-			foundUnder.set(
-				spelling,
-				(foundUnder.get(spelling) ?? new Set()).add(text),
-			);
+		for (const wording of new Set([text, withoutCitedReflexive(text)]))
+			for (const spelling of [
+				wording,
+				wording.slice(0, 1).toLocaleLowerCase("de") + wording.slice(1),
+				wording.slice(0, 1).toLocaleUpperCase("de") + wording.slice(1),
+			])
+				foundUnder.set(
+					spelling,
+					(foundUnder.get(spelling) ?? new Set()).add(text),
+				);
 	const spellings = [...foundUnder.keys()].slice(0, 64);
 	const matches = await Promise.all(
 		spellings.map(async (spelling) => {
