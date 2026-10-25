@@ -1,0 +1,357 @@
+{
+	"runId": "262e9dad-fa57-4ee4-9500-68ce56a4cd38",
+	"experimentId": "segment-in-morphemes/de:realtext",
+	"round": "2026-10-25-breakdown-round-6",
+	"liveRuns": [
+		"262e9dad-fa57-4ee4-9500-68ce56a4cd38"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "262e9dad-fa57-4ee4-9500-68ce56a4cd38",
+		"experimentId": "segment-in-morphemes/de:realtext",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "99571120e",
+		"startedAt": "2026-10-25T18:34:45.706Z",
+		"corpus": {
+			"fingerprint": "833a17528336045957b30971ade9ac120ac0d78a41f45383a66586d246da2f32",
+			"caseIds": [
+				"breakdown/de/bad",
+				"breakdown/de/blut",
+				"breakdown/de/bottegone",
+				"breakdown/de/desto",
+				"breakdown/de/duerfen",
+				"breakdown/de/effi",
+				"breakdown/de/ei",
+				"breakdown/de/europa",
+				"breakdown/de/freude",
+				"breakdown/de/fuerst",
+				"breakdown/de/gern",
+				"breakdown/de/geschichte-erzaehlung",
+				"breakdown/de/gesicht",
+				"breakdown/de/gewissen",
+				"breakdown/de/haus",
+				"breakdown/de/her",
+				"breakdown/de/innstetten",
+				"breakdown/de/kalauer",
+				"breakdown/de/klein",
+				"breakdown/de/kommen-geschehen",
+				"breakdown/de/kuckuck",
+				"breakdown/de/legat",
+				"breakdown/de/leicht",
+				"breakdown/de/machen",
+				"breakdown/de/meile",
+				"breakdown/de/nacht",
+				"breakdown/de/paket",
+				"breakdown/de/recht-ziemlich",
+				"breakdown/de/reisen",
+				"breakdown/de/roswitha",
+				"breakdown/de/schneien",
+				"breakdown/de/sehr",
+				"breakdown/de/sollen-bedeuten",
+				"breakdown/de/sondern",
+				"breakdown/de/wieder",
+				"breakdown/de/wollen-moechten"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 36,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 36,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 35,
+			"failed": 1,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-25T18:34:45.739Z",
+		"total": 36,
+		"succeeded": 36,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 0,
+			"quality": {
+				"passed": 105,
+				"failed": 3,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"exact": "105/108",
+	"cases": [
+		{
+			"caseId": "breakdown/de/bad",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Bad · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/blut",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Blut · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bottegone",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Bottegone · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/desto",
+			"reps": 3,
+			"exact": 3,
+			"gold": "desto",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/duerfen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "dürf · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/effi",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Effi · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ei",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ei",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/europa",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Europa · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/freude",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Freud · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fuerst",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Fürst · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gern",
+			"reps": 3,
+			"exact": 3,
+			"gold": "gern",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geschichte-erzaehlung",
+			"reps": 3,
+			"exact": 0,
+			"gold": "Geschicht · e",
+			"returned": [
+				"Ge · schicht · e"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gesicht",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Gesicht · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gewissen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Gewissen · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/haus",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Haus · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/her",
+			"reps": 3,
+			"exact": 3,
+			"gold": "her",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/innstetten",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Innstetten · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kalauer",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Kalauer · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/klein",
+			"reps": 3,
+			"exact": 3,
+			"gold": "klein · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kommen-geschehen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "komm · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kuckuck",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Kuckuck · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/legat",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Legat · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leicht",
+			"reps": 3,
+			"exact": 3,
+			"gold": "leicht · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/machen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "mach · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meile",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Meil · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nacht",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Nacht · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/paket",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Paket · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/recht-ziemlich",
+			"reps": 3,
+			"exact": 3,
+			"gold": "recht",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/reisen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "reis · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/roswitha",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Roswitha · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schneien",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schnei · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sehr",
+			"reps": 3,
+			"exact": 3,
+			"gold": "sehr",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sollen-bedeuten",
+			"reps": 3,
+			"exact": 3,
+			"gold": "soll · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sondern",
+			"reps": 3,
+			"exact": 3,
+			"gold": "sondern",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wieder",
+			"reps": 3,
+			"exact": 3,
+			"gold": "wieder",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wollen-moechten",
+			"reps": 3,
+			"exact": 3,
+			"gold": "woll · en",
+			"returned": []
+		}
+	]
+}

@@ -1,0 +1,375 @@
+{
+	"runId": "f50a56c2-5d13-488a-bc6f-1846ee856aab",
+	"experimentId": "segment-in-morphemes/de:breakdown",
+	"round": "2026-10-25-breakdown-round-6",
+	"liveRuns": [
+		"f50a56c2-5d13-488a-bc6f-1846ee856aab"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "f50a56c2-5d13-488a-bc6f-1846ee856aab",
+		"experimentId": "segment-in-morphemes/de:breakdown",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "99571120e",
+		"startedAt": "2026-10-25T18:34:47.204Z",
+		"corpus": {
+			"fingerprint": "d962ab6ad50f5da2a22008d5085062accdca8742a325ef34f966d9a413e69d92",
+			"caseIds": [
+				"breakdown/de/bauer-vogelkaefig",
+				"breakdown/de/erinnern",
+				"breakdown/de/erst",
+				"breakdown/de/fisch",
+				"breakdown/de/gar",
+				"breakdown/de/geben-es-gibt",
+				"breakdown/de/gefahr",
+				"breakdown/de/haben-besitzen",
+				"breakdown/de/hamburger-burger",
+				"breakdown/de/heissen-bedeuten",
+				"breakdown/de/herr-gebieter",
+				"breakdown/de/hin",
+				"breakdown/de/honig",
+				"breakdown/de/ja",
+				"breakdown/de/kaufen",
+				"breakdown/de/koennen",
+				"breakdown/de/kopp",
+				"breakdown/de/kurz",
+				"breakdown/de/laster-untugend",
+				"breakdown/de/leiter-sprossenleiter",
+				"breakdown/de/messer-schneidwerkzeug",
+				"breakdown/de/noch",
+				"breakdown/de/nur",
+				"breakdown/de/poster-plakat",
+				"breakdown/de/reiter-sieb",
+				"breakdown/de/roemer-weinglas",
+				"breakdown/de/rufen",
+				"breakdown/de/sagen",
+				"breakdown/de/schon",
+				"breakdown/de/schoner-segelschiff",
+				"breakdown/de/schrimm",
+				"breakdown/de/spannen",
+				"breakdown/de/sticker-aufkleber",
+				"breakdown/de/und",
+				"breakdown/de/varzin",
+				"breakdown/de/weihnachten",
+				"breakdown/de/weinen",
+				"breakdown/de/wissen"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 38,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 38,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 37,
+			"failed": 1,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-25T18:34:47.255Z",
+		"total": 38,
+		"succeeded": 38,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 1,
+			"varyingOutputs": 1,
+			"quality": {
+				"passed": 110,
+				"failed": 4,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"exact": "110/114",
+	"cases": [
+		{
+			"caseId": "breakdown/de/bauer-vogelkaefig",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Bauer · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erinnern",
+			"reps": 3,
+			"exact": 2,
+			"gold": "er · inner · n",
+			"returned": [
+				"erinner · n"
+			]
+		},
+		{
+			"caseId": "breakdown/de/erst",
+			"reps": 3,
+			"exact": 3,
+			"gold": "erst",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fisch",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Fisch · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gar",
+			"reps": 3,
+			"exact": 3,
+			"gold": "gar",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geben-es-gibt",
+			"reps": 3,
+			"exact": 3,
+			"gold": "geb · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gefahr",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Gefahr · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/haben-besitzen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "hab · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hamburger-burger",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Hamburger · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/heissen-bedeuten",
+			"reps": 3,
+			"exact": 3,
+			"gold": "heiß · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/herr-gebieter",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Herr · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hin",
+			"reps": 3,
+			"exact": 3,
+			"gold": "hin",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/honig",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Honig · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ja",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ja",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kaufen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "kauf · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/koennen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "könn · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kopp",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Kopp · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kurz",
+			"reps": 3,
+			"exact": 3,
+			"gold": "kurz · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/laster-untugend",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Laster · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leiter-sprossenleiter",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Leiter · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/messer-schneidwerkzeug",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Messer · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/noch",
+			"reps": 3,
+			"exact": 3,
+			"gold": "noch",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nur",
+			"reps": 3,
+			"exact": 3,
+			"gold": "nur",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/poster-plakat",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Poster · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/reiter-sieb",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Reiter · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/roemer-weinglas",
+			"reps": 3,
+			"exact": 0,
+			"gold": "Römer · ∅",
+			"returned": [
+				"Röm · er · ∅"
+			]
+		},
+		{
+			"caseId": "breakdown/de/rufen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ruf · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sagen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "sag · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schon",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schon",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schoner-segelschiff",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Schoner · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schrimm",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Schrimm · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/spannen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "spann · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sticker-aufkleber",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Sticker · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/und",
+			"reps": 3,
+			"exact": 3,
+			"gold": "und",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/varzin",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Varzin · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weihnachten",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Weihnachten · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weinen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "wein · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wissen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "wiss · en",
+			"returned": []
+		}
+	]
+}

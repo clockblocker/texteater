@@ -1,0 +1,795 @@
+{
+	"runId": "1efda312-151f-4ba4-a0b0-4ffdd9e1da97",
+	"experimentId": "segment-in-constituents/de:realtext",
+	"round": "2026-10-25-breakdown-round-6",
+	"note": "The real-text held-out batch breakdown-heldout-2026-10-25b-realtext (60 records sampled at random from tf-demo's Library, seed 2026102506), the round's headline. metrics scores all 60; metricsUncontested leaves out the five rows the judges split on (contested), the headline. 3 repetitions, one live run at 99571120e.",
+	"liveRuns": [
+		"1efda312-151f-4ba4-a0b0-4ffdd9e1da97"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "1efda312-151f-4ba4-a0b0-4ffdd9e1da97",
+		"experimentId": "segment-in-constituents/de:realtext",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "99571120e",
+		"startedAt": "2026-10-25T18:34:39.168Z",
+		"corpus": {
+			"fingerprint": "1d6d5e575177086ca6dd22b131ea1cc61552fed67cb3630d70a9ab803a34a33f",
+			"caseIds": [
+				"breakdown/de/anders",
+				"breakdown/de/aufkommen-entstehen",
+				"breakdown/de/bad",
+				"breakdown/de/blumenschale",
+				"breakdown/de/blut",
+				"breakdown/de/bottegone",
+				"breakdown/de/desto",
+				"breakdown/de/dienstfrei",
+				"breakdown/de/duerfen",
+				"breakdown/de/durchfuehren",
+				"breakdown/de/effi",
+				"breakdown/de/ei",
+				"breakdown/de/europa",
+				"breakdown/de/freude",
+				"breakdown/de/fuerst",
+				"breakdown/de/gefallen-lassen",
+				"breakdown/de/gegenuebersitzen",
+				"breakdown/de/gern",
+				"breakdown/de/geschichte-erzaehlung",
+				"breakdown/de/gesicht",
+				"breakdown/de/gewissen",
+				"breakdown/de/gnaedige-frau",
+				"breakdown/de/gueldenklee",
+				"breakdown/de/haus",
+				"breakdown/de/her",
+				"breakdown/de/herantreten",
+				"breakdown/de/innstetten",
+				"breakdown/de/kalauer",
+				"breakdown/de/klein",
+				"breakdown/de/kommen-geschehen",
+				"breakdown/de/kuckuck",
+				"breakdown/de/landrat",
+				"breakdown/de/legat",
+				"breakdown/de/leicht",
+				"breakdown/de/machen",
+				"breakdown/de/meile",
+				"breakdown/de/nacht",
+				"breakdown/de/nadelkissen",
+				"breakdown/de/paket",
+				"breakdown/de/recht-ziemlich",
+				"breakdown/de/reeperbahn",
+				"breakdown/de/reisen",
+				"breakdown/de/richtig",
+				"breakdown/de/roswitha",
+				"breakdown/de/schaukelbrett",
+				"breakdown/de/schneien",
+				"breakdown/de/schulvorsteherin",
+				"breakdown/de/sehr",
+				"breakdown/de/sollen-bedeuten",
+				"breakdown/de/sondern",
+				"breakdown/de/thora-von-penz",
+				"breakdown/de/veilchenwurzelluft",
+				"breakdown/de/verlegenheit",
+				"breakdown/de/verneigung",
+				"breakdown/de/vertreiben",
+				"breakdown/de/wieder",
+				"breakdown/de/wirklich",
+				"breakdown/de/wohnung",
+				"breakdown/de/wollen-moechten",
+				"breakdown/de/zugeben"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-constituents/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 60,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 60,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 55,
+			"failed": 5,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-25T18:34:39.276Z",
+		"total": 60,
+		"succeeded": 60,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 4,
+			"varyingOutputs": 4,
+			"quality": {
+				"passed": 164,
+				"failed": 16,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 60,
+			"attempts": 180,
+			"exactAttempts": 164,
+			"exact": 0.9111,
+			"lenientExactAttempts": 166,
+			"lenientExact": 0.9222,
+			"casesExactEveryRepetition": 53,
+			"casesLenientEveryRepetition": 54,
+			"cutPrecision": 0.8854,
+			"cutRecall": 0.914,
+			"linksPlaced": 0.8954,
+			"linksWithGoldRoute": 0.8824,
+			"linksExact": 0.8824,
+			"hasConstituentsAgreed": 0.95,
+			"failed": 0
+		},
+		"word": {
+			"cases": 57,
+			"attempts": 171,
+			"exactAttempts": 155,
+			"exact": 0.9064,
+			"lenientExactAttempts": 157,
+			"lenientExact": 0.9181,
+			"casesExactEveryRepetition": 50,
+			"casesLenientEveryRepetition": 51,
+			"cutPrecision": 0.8472,
+			"cutRecall": 0.8841,
+			"linksPlaced": 0.8788,
+			"linksWithGoldRoute": 0.8636,
+			"linksExact": 0.8636,
+			"hasConstituentsAgreed": 0.9474,
+			"failed": 0
+		},
+		"phraseme": {
+			"cases": 3,
+			"attempts": 9,
+			"exactAttempts": 9,
+			"exact": 1.0,
+			"lenientExactAttempts": 9,
+			"lenientExact": 1.0,
+			"casesExactEveryRepetition": 3,
+			"casesLenientEveryRepetition": 3,
+			"cutPrecision": 1.0,
+			"cutRecall": 1.0,
+			"linksPlaced": 1.0,
+			"linksWithGoldRoute": 1.0,
+			"linksExact": 1.0,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		}
+	},
+	"metricsUncontested": {
+		"all": {
+			"cases": 55,
+			"attempts": 165,
+			"exactAttempts": 152,
+			"exact": 0.9212,
+			"lenientExactAttempts": 154,
+			"lenientExact": 0.9333,
+			"casesExactEveryRepetition": 49,
+			"casesLenientEveryRepetition": 50,
+			"cutPrecision": 0.8817,
+			"cutRecall": 0.9425,
+			"linksPlaced": 0.9291,
+			"linksWithGoldRoute": 0.9149,
+			"linksExact": 0.9149,
+			"hasConstituentsAgreed": 0.9636,
+			"failed": 0
+		},
+		"word": {
+			"cases": 52,
+			"attempts": 156,
+			"exactAttempts": 143,
+			"exact": 0.9167,
+			"lenientExactAttempts": 145,
+			"lenientExact": 0.9295,
+			"casesExactEveryRepetition": 46,
+			"casesLenientEveryRepetition": 47,
+			"cutPrecision": 0.8406,
+			"cutRecall": 0.9206,
+			"linksPlaced": 0.9167,
+			"linksWithGoldRoute": 0.9,
+			"linksExact": 0.9,
+			"hasConstituentsAgreed": 0.9615,
+			"failed": 0
+		},
+		"phraseme": {
+			"cases": 3,
+			"attempts": 9,
+			"exactAttempts": 9,
+			"exact": 1.0,
+			"lenientExactAttempts": 9,
+			"lenientExact": 1.0,
+			"casesExactEveryRepetition": 3,
+			"casesLenientEveryRepetition": 3,
+			"cutPrecision": 1.0,
+			"cutRecall": 1.0,
+			"linksPlaced": 1.0,
+			"linksWithGoldRoute": 1.0,
+			"linksExact": 1.0,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		}
+	},
+	"contested": [
+		"breakdown/de/anders",
+		"breakdown/de/her",
+		"breakdown/de/gewissen",
+		"breakdown/de/gesicht",
+		"breakdown/de/wirklich"
+	],
+	"cases": [
+		{
+			"caseId": "breakdown/de/anders",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "ander → Lexeme/PRON ander · s → Morpheme/Suffix -s",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/aufkommen-entstehen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "auf → Morpheme/Prefix auf- · kommen → Lexeme/VERB kommen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bad",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/blumenschale",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Blume → Lexeme/NOUN Blume · n → Morpheme/Interfix -n- · schale → Lexeme/NOUN Schale",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/blut",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bottegone",
+			"group": "word",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "none",
+			"returned": [
+				"1x Botte → Lexeme/PROPN Botte · gone → Lexeme/NOUN Gon"
+			]
+		},
+		{
+			"caseId": "breakdown/de/desto",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/dienstfrei",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "dienst → Lexeme/NOUN Dienst · frei → Lexeme/ADJ frei",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/duerfen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/durchfuehren",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "durch → Morpheme/Prefix durch- · führen → Lexeme/VERB führen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/effi",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ei",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/europa",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/freude",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fuerst",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gefallen-lassen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "gefallen → Lexeme/VERB gefallen · ' ' · lassen → Lexeme/VERB lassen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gegenuebersitzen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "gegenüber → Morpheme/Prefix gegenüber- · sitzen → Lexeme/VERB sitzen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gern",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geschichte-erzaehlung",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "none",
+			"returned": [
+				"3x Ge → Morpheme/Prefix ge- · schichte → Lexeme/NOUN Schicht"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gesicht",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gewissen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gnaedige-frau",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "gnädige → Lexeme/ADJ gnädig · ' ' · Frau → Lexeme/NOUN Frau",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gueldenklee",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Gülden → Lexeme/ADJ gülden · klee → Lexeme/NOUN Klee",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/haus",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/her",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/herantreten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "heran → Morpheme/Prefix heran- · treten → Lexeme/VERB treten",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/innstetten",
+			"group": "word",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 1,
+			"gold": "none",
+			"returned": [
+				"1x Inn → Lexeme/PROPN Inn · stetten → Lexeme/NOUN Stette",
+				"1x Inn → Lexeme/PROPN Inn · stetten → Lexeme/NOUN Stetten"
+			]
+		},
+		{
+			"caseId": "breakdown/de/kalauer",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/klein",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kommen-geschehen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kuckuck",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/landrat",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Land → Lexeme/NOUN Land · rat → Lexeme/NOUN Rat",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/legat",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leicht",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/machen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meile",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nacht",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nadelkissen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Nadel → Lexeme/NOUN Nadel · kissen → Lexeme/NOUN Kissen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/paket",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/recht-ziemlich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/reeperbahn",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Reep → Lexeme/NOUN Reep · er → Morpheme/Interfix -er- · bahn → Lexeme/NOUN Bahn",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/reisen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/richtig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "richt → Lexeme/VERB richten · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/roswitha",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schaukelbrett",
+			"group": "word",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 3,
+			"gold": "Schaukel → Lexeme/NOUN Schaukel · brett → Lexeme/NOUN Brett",
+			"returned": [
+				"2x Schaukel → Lexeme/VERB schaukeln · brett → Lexeme/NOUN Brett"
+			]
+		},
+		{
+			"caseId": "breakdown/de/schneien",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schulvorsteherin",
+			"group": "word",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 1,
+			"gold": "Schul → Lexeme/NOUN Schule · vorsteherin → Lexeme/NOUN Vorsteherin",
+			"returned": [
+				"2x Schulvorsteher → Lexeme/NOUN Schulvorsteher · in → Morpheme/Suffix -in"
+			]
+		},
+		{
+			"caseId": "breakdown/de/sehr",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sollen-bedeuten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sondern",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/thora-von-penz",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Thora → Lexeme/PROPN Thora · ' ' · von → Lexeme/ADP von · ' ' · Penz → Lexeme/PROPN Penz",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/veilchenwurzelluft",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Veilchenwurzel → Lexeme/NOUN Veilchenwurzel · luft → Lexeme/NOUN Luft",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verlegenheit",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Verlegen → Lexeme/ADJ verlegen · heit → Morpheme/Suffix -heit",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verneigung",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Verneig → Lexeme/VERB verneigen · ung → Morpheme/Suffix -ung",
+			"returned": [
+				"3x Ver → Morpheme/Prefix ver- · neigung → Lexeme/NOUN Neigung"
+			]
+		},
+		{
+			"caseId": "breakdown/de/vertreiben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ver → Morpheme/Prefix ver- · treiben → Lexeme/VERB treiben",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wieder",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wirklich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "wirk → Lexeme/VERB wirken · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wohnung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Wohn → Lexeme/VERB wohnen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wollen-moechten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zugeben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "zu → Morpheme/Prefix zu- · geben → Lexeme/VERB geben",
+			"returned": []
+		}
+	]
+}

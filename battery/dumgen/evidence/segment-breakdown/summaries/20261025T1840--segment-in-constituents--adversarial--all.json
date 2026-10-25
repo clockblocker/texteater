@@ -1,0 +1,228 @@
+{
+	"runId": "1944c88f-f812-4af7-a4e0-91a743f9c4ef",
+	"experimentId": "segment-in-constituents/de:adversarial",
+	"round": "2026-10-25-breakdown-round-6",
+	"note": "The adversarial held-out batch breakdown-heldout-2026-10-25b-adversarial (10 records on both sides of round 6's fixes), reported apart. 3 repetitions, one live run at 99571120e.",
+	"liveRuns": [
+		"1944c88f-f812-4af7-a4e0-91a743f9c4ef"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "1944c88f-f812-4af7-a4e0-91a743f9c4ef",
+		"experimentId": "segment-in-constituents/de:adversarial",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "99571120e",
+		"startedAt": "2026-10-25T18:34:41.485Z",
+		"corpus": {
+			"fingerprint": "b8ad846175f17751a3434dcf774ee7b684e48070aac700905be215d9343afe83",
+			"caseIds": [
+				"breakdown/de/beweglich",
+				"breakdown/de/gemuet",
+				"breakdown/de/geschrei",
+				"breakdown/de/gestein",
+				"breakdown/de/getreide",
+				"breakdown/de/glaeubig",
+				"breakdown/de/roetlich",
+				"breakdown/de/sonnig",
+				"breakdown/de/stuendlich",
+				"breakdown/de/zur-sprache-bringen"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-constituents/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 10,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 10,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 6,
+			"failed": 4,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-25T18:34:41.539Z",
+		"total": 10,
+		"succeeded": 10,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 0,
+			"quality": {
+				"passed": 18,
+				"failed": 12,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 10,
+			"attempts": 30,
+			"exactAttempts": 18,
+			"exact": 0.6,
+			"lenientExactAttempts": 18,
+			"lenientExact": 0.6,
+			"casesExactEveryRepetition": 6,
+			"casesLenientEveryRepetition": 6,
+			"cutPrecision": 1.0,
+			"cutRecall": 0.9091,
+			"linksPlaced": 0.8947,
+			"linksWithGoldRoute": 0.7895,
+			"linksExact": 0.7368,
+			"hasConstituentsAgreed": 0.9,
+			"failed": 0
+		},
+		"word": {
+			"cases": 9,
+			"attempts": 27,
+			"exactAttempts": 15,
+			"exact": 0.5556,
+			"lenientExactAttempts": 15,
+			"lenientExact": 0.5556,
+			"casesExactEveryRepetition": 5,
+			"casesLenientEveryRepetition": 5,
+			"cutPrecision": 1.0,
+			"cutRecall": 0.875,
+			"linksPlaced": 0.875,
+			"linksWithGoldRoute": 0.75,
+			"linksExact": 0.6875,
+			"hasConstituentsAgreed": 0.8889,
+			"failed": 0
+		},
+		"phraseme": {
+			"cases": 1,
+			"attempts": 3,
+			"exactAttempts": 3,
+			"exact": 1.0,
+			"lenientExactAttempts": 3,
+			"lenientExact": 1.0,
+			"casesExactEveryRepetition": 1,
+			"casesLenientEveryRepetition": 1,
+			"cutPrecision": 1.0,
+			"cutRecall": 1.0,
+			"linksPlaced": 1.0,
+			"linksWithGoldRoute": 1.0,
+			"linksExact": 1.0,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		}
+	},
+	"cases": [
+		{
+			"caseId": "breakdown/de/beweglich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "beweg → Lexeme/VERB bewegen · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gemuet",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Ge → Morpheme/Prefix ge- · müt → Lexeme/NOUN Mut",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/geschrei",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Ge → Morpheme/Prefix ge- · schrei → Lexeme/VERB schreien",
+			"returned": [
+				"3x Ge → Morpheme/Prefix ge- · schrei → Lexeme/NOUN Schrei"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gestein",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Ge → Morpheme/Prefix ge- · stein → Lexeme/NOUN Stein",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/getreide",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/glaeubig",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "gläub → Lexeme/NOUN Glaube · ig → Morpheme/Suffix -ig",
+			"returned": [
+				"3x gläub → Lexeme/ADJ gläub · ig → Morpheme/Suffix -ig"
+			]
+		},
+		{
+			"caseId": "breakdown/de/roetlich",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "röt → Lexeme/ADJ rot · lich → Morpheme/Suffix -lich",
+			"returned": [
+				"3x röt → Lexeme/ADJ röt · lich → Morpheme/Suffix -lich"
+			]
+		},
+		{
+			"caseId": "breakdown/de/sonnig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "sonn → Lexeme/NOUN Sonne · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/stuendlich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "stünd → Lexeme/NOUN Stunde · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zur-sprache-bringen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "zu → Lexeme/ADP zu · r Sprache → Lexeme/NOUN Sprache · ' ' · bringen → Lexeme/VERB bringen",
+			"returned": []
+		}
+	]
+}

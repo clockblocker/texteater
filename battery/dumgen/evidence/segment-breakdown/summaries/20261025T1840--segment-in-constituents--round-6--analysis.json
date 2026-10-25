@@ -1,0 +1,310 @@
+{
+	"round": "2026-10-25-breakdown-round-6",
+	"note": "Round 6 of the Breakdown segmenters (#1241): a fresh real-text sample of 60 (seed 2026102506, round 5's frame) as the headline, a fresh adversarial batch of 10 apart, then the tuning set (round 5's held-out promoted) and the morphemes sets. jev-1.13.0 at 99571120e, 3 repetitions, the lab's cached jev transport, no reasoning model, no prompt change during the run. Strict is contractPass; lenient adds the confirmed noun-or-verb tolerance for a compound's first part. The headline leaves out the five rows the judges split on (contested).",
+	"fixes": [
+		"A ge- cut stays only when jev weighs the affix test passed (ADR 0051, #1243); asked only when a ge- analysis is the pick or a contender (f982c45cd)",
+		"Before -ig and -lich, the base's noun test runs on the nouns its letters stand for with the umlaut undone and the -e restored; a base that is also an adjective keeps its route question (f982c45cd)",
+		"A phraseme's zu right before a noun, or fused with its article, is ADP unasked (f982c45cd)"
+	],
+	"spend": {
+		"cap": 800000,
+		"prepLiveCheck": [
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "18537edb-7933-4c59-831a-8c42187ffe6c",
+				"cases": 5,
+				"freshTokens": 4725,
+				"exact": "15/15"
+			},
+			{
+				"experiment": "segment-in-morphemes/de:breakdown",
+				"runId": "5ddcf831-0920-4e6c-9f8c-2fd07c117a55",
+				"cases": 1,
+				"freshTokens": 0,
+				"exact": "3/3"
+			}
+		],
+		"runs": [
+			{
+				"experiment": "segment-in-constituents/de:realtext",
+				"runId": "1efda312-151f-4ba4-a0b0-4ffdd9e1da97",
+				"budget": 450000,
+				"projected": 431974,
+				"freshRequests": 376,
+				"freshTokens": 230025
+			},
+			{
+				"experiment": "segment-in-constituents/de:adversarial",
+				"runId": "1944c88f-f812-4af7-a4e0-91a743f9c4ef",
+				"budget": 90000,
+				"projected": 82001,
+				"freshRequests": 101,
+				"freshTokens": 59628
+			},
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "47095b57-4d93-40ff-bd95-dec93031e502",
+				"budget": 60000,
+				"projected": 51908,
+				"freshRequests": 50,
+				"freshTokens": 34457
+			},
+			{
+				"experiment": "segment-in-morphemes/de:realtext",
+				"runId": "262e9dad-fa57-4ee4-9500-68ce56a4cd38",
+				"budget": 25000,
+				"projected": 23606,
+				"freshRequests": 39,
+				"freshTokens": 16926
+			},
+			{
+				"experiment": "segment-in-morphemes/de:adversarial",
+				"runId": "35cbaf3f-6986-46d9-b6d4-2990baa68a47",
+				"budget": 2000,
+				"projected": 1365,
+				"freshRequests": 0,
+				"freshTokens": 0
+			},
+			{
+				"experiment": "segment-in-morphemes/de:breakdown",
+				"runId": "f50a56c2-5d13-488a-bc6f-1846ee856aab",
+				"budget": 6000,
+				"projected": 5216,
+				"freshRequests": 6,
+				"freshTokens": 4311
+			}
+		],
+		"roundRunTokens": 345347,
+		"prepLiveCheckTokens": 4725,
+		"roundTokens": 350072,
+		"roundDollars": 0.0147,
+		"projectedOverActual": "596,070 projected against 345,347 spent (0.58)",
+		"standingDollar": {
+			"from": "round 3",
+			"tokens": 1458694,
+			"spentDollars": 0.0613,
+			"leftDollars": 0.9387,
+			"note": "Round 5's 1,106,285 tokens, the rulings' 2,337-token live check, and this round's 350,072"
+		}
+	},
+	"headline": {
+		"realtextUncontested55": {
+			"strict": "152/165 (92.1%)",
+			"lenient": "154/165 (93.3%)",
+			"casesExactEveryRepetition": "49/55 (50 lenient)",
+			"wilson95": [
+				0.87,
+				0.953
+			],
+			"caseBootstrap95": [
+				0.855,
+				0.976
+			],
+			"lenientCaseBootstrap95": [
+				0.867,
+				0.988
+			]
+		},
+		"realtextAll60": {
+			"strict": "164/180 (91.1%)",
+			"lenient": "166/180 (92.2%)",
+			"caseBootstrap95": [
+				0.839,
+				0.972
+			]
+		},
+		"round5RealtextForComparison": {
+			"strict": "81/90 (90.0%)",
+			"wilson95": [
+				0.821,
+				0.947
+			],
+			"caseBootstrap95": [
+				0.789,
+				0.989
+			]
+		},
+		"adversarial": {
+			"strict": "18/30 (60.0%)",
+			"lenient": "18/30",
+			"casesExactEveryRepetition": "6/10"
+		},
+		"tuning152": {
+			"strict": "374/456 (82.0%)",
+			"lenient": "387/456 (84.9%)",
+			"casesExactEveryRepetition": "122/152 (126 lenient)"
+		},
+		"tuningRound5Cases105": {
+			"round5": "261/315 strict, 269 lenient",
+			"round6": "261/315 strict, 269 lenient",
+			"note": "unchanged; Hamburger 🍔 now counted (0/3)"
+		},
+		"promotedRound5Realtext30": {
+			"round5AsHeldOut": "81/90",
+			"round6": "89/90",
+			"note": "Gefahr 0 -> 3, gnädig 0 -> 3, zu Gast sein 1 -> 3; Weihnachten still 2/3"
+		},
+		"promotedRound5Adversarial12": {
+			"round5": "12/36 strict, 17 lenient",
+			"round6": "12/36 strict, 17 lenient"
+		},
+		"morphemes": {
+			"realtext": "105/108 (Geschichte 0/3)",
+			"adversarial": "3/3 (Getreide)",
+			"tuning": "110/114 (Römer 🍷 0/3, erinnern 2/3)"
+		}
+	},
+	"realtextDistribution": {
+		"cases": 60,
+		"noConstituents": {
+			"bottomWords": 23,
+			"indeclinables": 8,
+			"properNames": 5
+		},
+		"withConstituents": {
+			"derivations": 7,
+			"compounds": 7,
+			"particleVerbs": 5,
+			"properNames": 3,
+			"phrasemes": 2
+		},
+		"exactBy": {
+			"noConstituents36": "102/108",
+			"withConstituents24": "62/72"
+		}
+	},
+	"contested": [
+		{
+			"row": "anders",
+			"result": "0/3 (none)",
+			"split": "learner: ander + -s; system: bottom word anders (-s is on no affix list)"
+		},
+		{
+			"row": "her",
+			"result": "3/3",
+			"split": "learner: ADV her; system: reject the draw, von … her is an authored Locution ADP"
+		},
+		{
+			"row": "Gewissen",
+			"result": "3/3 under the draft",
+			"split": "learner: bottom word; system: ge- + wissen (en.wiktionary)"
+		},
+		{
+			"row": "Gesicht",
+			"result": "3/3 under the draft",
+			"split": "learner: bottom word; system: ge- + Sicht (en.wiktionary)"
+		},
+		{
+			"row": "wirklich",
+			"result": "3/3",
+			"split": "the Kind only: ADJ (learner) or ADV (system)"
+		}
+	],
+	"failuresByCause": [
+		{
+			"cause": "The ge- affix test answers near chance",
+			"attempts": "3 RT + 3 RT morphemes, 3 AD",
+			"cases": "Geschichte: p_0 0.50 to 0.53, so Ge- + Schicht stood; Gemüt (AD): analysis none 0.69 and p_0 0.43. On held-out ge- words p_0 sat at 0.42 to 0.53 (Gesicht 0.42 to 0.45, Gewissen 0.46 to 0.49, Getreide 0.44, Gestein 0.53), only Geschrei clear at 0.71"
+		},
+		{
+			"cause": "A pick's own sense yes stands over a better contender",
+			"attempts": "3 RT",
+			"cases": "Verneigung: Ver- + Neigung 0.74, sense 0.83, stood over Verneig + -ung at 0.90"
+		},
+		{
+			"cause": "A competing bracketing DWDS doesn't give",
+			"attempts": "2 RT",
+			"cases": "Schulvorsteherin: Schulvorsteher + -in 0.52 to 0.59, sense 0.90 (DWDS's only split is machine-generated Schul + Vorsteherin; a gold question)"
+		},
+		{
+			"cause": "A proper name split into words",
+			"attempts": "3 RT",
+			"cases": "Innstetten 2 (Inn + stetten, sense 0.41 to 0.44 against none at 0.19 to 0.28: the combining knife edge); Bottegone 1 (Botte + gone 0.38 to 0.42)"
+		},
+		{
+			"cause": "Noun-or-verb first part",
+			"attempts": "2 RT strict, 0 lenient",
+			"cases": "Schaukelbrett: VERB schaukeln, DWDS the noun Schaukel"
+		},
+		{
+			"cause": "A suffix base routed ADJ",
+			"attempts": "3 AD",
+			"cases": "gläubig: the verb test said yes to gläuben 0.84 and the noun test yes to Glaube 0.87, so the route question ran and chose ADJ 0.85 though the adjective test said no to glaub 0.14"
+		},
+		{
+			"cause": "No ADJ headword undoes the umlaut",
+			"attempts": "3 AD",
+			"cases": "rötlich: the adjective guard worked (rot 0.56, route ADJ 0.84), but the only ADJ form is röt"
+		},
+		{
+			"cause": "A prefixed noun's base forced to NOUN",
+			"attempts": "3 AD",
+			"cases": "Geschrei: ge- confirmed at 0.71, but the head takes the word's Kind, so Schrei, not schreien"
+		},
+		{
+			"cause": "An inventory gap",
+			"attempts": "3 RT (contested)",
+			"cases": "anders: -s is on no affix list, so ander + -s is never offered"
+		}
+	],
+	"fixesOnTheirTargets": {
+		"realtext": "Gefahr, gnädig and zu Gast sein (now tuning) 0 -> 3, 0 -> 3, 1 -> 3; the zu rule and the restored noun moved nothing else",
+		"adversarial": "Gestein, Getreide, stündlich, sonnig, beweglich and zur Sprache bringen pass; Gemüt, Geschrei, gläubig and rötlich fail for the causes above"
+	},
+	"proposedFixes": [
+		{
+			"rank": 1,
+			"fix": "Make the ge- affix test discriminate: ask it as a relative choice between the cut, with its base's headword named (ge- + Schicht), and no cut, or gate it on the base headword passing the exact-letters word test and the sense test",
+			"fixes": "Geschichte 3 RT + 3 RT morphemes; Gemüt 3 AD",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 2,
+			"fix": "Ask the sense check as one relative question over the contenders and none, so a better contender can beat a pick's own yes (round 5's proposal 5)",
+			"fixes": "Verneigung 3 RT; Poster 💬, Musikerleben 🎧 and Laster 🚚 in tuning",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 3,
+			"fix": "Before -ig and -lich, offer no ADJ route when the adjective test says no, and test the verb on the umlaut-undone stem",
+			"fixes": "gläubig 3 AD",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 4,
+			"fix": "ADJ headword candidates undo the umlaut (röt -> rot)",
+			"fixes": "rötlich 3 AD",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 5,
+			"fix": "After a nominal prefix, let the base be a verb's stem (Geschrei = ge- + schreien); only a compound's head takes the word's Kind",
+			"fixes": "Geschrei 3 AD",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 6,
+			"fix": "A proper name's split needs the sense check's yes: a PROPN whose analysis answers under 0.5 goes none",
+			"fixes": "Innstetten 2 RT, Bottegone 1 RT",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 7,
+			"fix": "A PROPN compound's head may stay PROPN (Hohen-Cremmen's Cremmen)",
+			"fixes": "Hohen-Cremmen 3 tuning",
+			"heldOutFitting": false
+		},
+		{
+			"rank": 8,
+			"fix": "Add the adverbial -s to the affix inventory, only if the user rules anders = ander + -s",
+			"fixes": "anders 3 RT (contested)",
+			"heldOutFitting": true
+		}
+	],
+	"structuralGaps": [
+		"The epenthetic t of eigen-t-lich (also wesentlich, hoffentlich, namentlich): no piece may show it",
+		"An inner e dropped before -ig (traurig from Trauer; also eitrig, neblig): no letter tolerance spells the noun"
+	],
+	"goldQuestion": "Schulvorsteherin: DWDS's only Wortzerlegung is machine-generated (Schul + Vorsteherin); Schulvorsteher + -in, a motion noun like Lehrerin, is the bracketing jev chose 2 of 3 times. The judges were asked only about the first part's link.",
+	"verdict": "Not yet. On the 55 uncontested real-text cases the segmenters are 92.1% exact strict (152 of 165 attempts; 85% to 98% by a case bootstrap) and 93.3% lenient, against round 5's 90.0% on 30 cases (79% to 99%): the intervals overlap, so the gain is not shown. Round 5's three systematic failures are fixed (its 30 cases now score 89 of 90). The misses that remain are not all rare-word noise: Geschichte and Verneigung are common words that fail for systematic reasons (a ge- affix test that answers near chance, and a sense check that lets a pick's own yes stand). The proper-name splits (Innstetten, Bottegone) and one bracketing gold question (Schulvorsteherin) are the noise part. After fixes 1 and 2, the remaining real-text misses would be names and a disputed bracketing."
+}
