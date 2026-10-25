@@ -14,10 +14,8 @@ import type {
 	SpecRecordId,
 	SpecTarget,
 } from "./corpus-types.js";
+import { reflexiveMarker as marker } from "./inventories/de/drill-down.js";
 import type { SpecIssue } from "./issues.js";
-
-/** The emoji that marks a Reading with a Required Reflexive Slot. */
-const marker = "🪞";
 
 type Located = { readonly path: string; readonly message: string };
 

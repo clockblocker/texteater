@@ -7,6 +7,14 @@ import { member as reflexivity } from "./members/lexeme/pronoun/reflexive/sich-r
 export const reflexivityUnit: AuthoredMember = reflexivity;
 
 /**
+ * The emoji that starts the Emoji Description of a Reading whose frame has a
+ * Required Reflexive Slot (ADR 0052): the reflexivity unit's own Reading, as
+ * a reciprocal starts with the Reading of `einander`. `fürchten` has 😨 and
+ * 🪞😨.
+ */
+export const reflexiveMarker: string = reflexivity.reading.emojiDescription;
+
+/**
  * The forms German's reflexivity unit shows in a word or wording, each
  * linking to its Lemma `sich` (ADR 0050): `dich` in `Trimm-dich-Pfad`. They
  * are the reflexive forms the unit's definition lists for each person.

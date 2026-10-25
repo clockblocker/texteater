@@ -65,7 +65,10 @@ export {
 	modalVerbs,
 } from "./inventories/de/closed-verb-paradigms.js";
 export { germanConjunctionLocutions } from "./inventories/de/conjunction-locutions.js";
-export { germanReflexiveForms } from "./inventories/de/drill-down.js";
+export {
+	germanReflexiveForms,
+	reflexiveMarker,
+} from "./inventories/de/drill-down.js";
 export { cliticEsSpellings } from "./inventories/de/expletive-spellings.js";
 export { germanFreeGenderNoun } from "./inventories/de/free-gender-nouns.js";
 export {
