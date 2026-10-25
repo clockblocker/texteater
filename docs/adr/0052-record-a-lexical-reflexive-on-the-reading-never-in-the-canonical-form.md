@@ -29,9 +29,11 @@ Core. Duden and DWDS list ⟨sich erinnern⟩ as a sense under `erinnern`. ADR
 ([ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)). So no
 route has a reflexive Core Feature, and German VERB has no
 `lexicallyReflexive`. One Lemma holds the plain and the reflexive Readings.
-`vorstellen` has three: 'introduce someone', 🪞 'introduce oneself' (Reflexive
-Acc) and 🪞 'imagine' (Reflexive Dat, then Acc). A relation or Source that
-names the bare Lemma (`entschuldigen`, `sorgen`) needs no change.
+`vorstellen` has 'introduce' and 🪞 'imagine' (Reflexive Dat, then Acc).
+Introducing oneself is no Reading of its own: another noun phrase can replace
+its `sich` (*er stellt seine Frau vor*, E-VALBU), so that `sich` is a free
+PRON (below). A relation or Source that names the bare Lemma
+(`entschuldigen`, `sorgen`) needs no change.
 
 **The Reflexive complement.** The frame vocabulary gains a Reflexive
 complement. The German one names the case of its reflexive, which is fixed
@@ -161,8 +163,7 @@ Whether that fits the Hebrew Grundform rule is the Hebrew owner's call.
 ## Considered Options
 
 - A boolean `isReflexive` Core Feature. Rejected: the reflexive's form needs
-  the case (*mich* or *mir*), and with a bare Canonical Form, `vorstellen`
-  'introduce oneself' and 'imagine' would differ by nothing.
+  the case (*mich* or *mir*), which a boolean doesn't hold.
 - `lexicallyReflexive` Acc | Dat kept in Core, with a bare Canonical Form.
   Rejected: reflexivity is not grammatical identity. Unit Shadows carry no
   Core, so they couldn't tell `erinnern` from its reflexive twin
