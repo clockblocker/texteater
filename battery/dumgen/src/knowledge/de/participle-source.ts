@@ -10,6 +10,7 @@ import { foldCase, normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { choice, choiceOf } from "../../segment/ask.js";
+import { withoutReflexive } from "../../segment/de/candidates.js";
 import type { GermanKnowledgeChange } from "../types.js";
 import {
 	type AspectContext,
@@ -37,7 +38,6 @@ const participleSchema = {
 	type: "object",
 	properties: {
 		verb: nullableString,
-		reflexive: { type: ["string", "null"], enum: ["Acc", "Dat", null] },
 		separablePrefix: nullableString,
 		preterite: nullableString,
 		participle: nullableString,
@@ -49,7 +49,6 @@ const participleSchema = {
 /** The source verb Luna named by form: its parts, or none. */
 type SourceDraft = {
 	readonly verb: string;
-	readonly reflexive: "Acc" | "Dat" | null;
 	readonly separablePrefix: string | null;
 	readonly preterite: string;
 	readonly participle: string;
@@ -72,17 +71,16 @@ function isParticipleOf(
 function sourceDraftOf(output: unknown): SourceDraft | null | undefined {
 	if (!isRecord(output)) return undefined;
 	if (output.verb === null) return null;
-	const { verb, reflexive, separablePrefix, preterite } = output;
+	const { verb, separablePrefix, preterite } = output;
 	const participleForm = output.participle;
 	if (
 		typeof verb !== "string" ||
 		typeof preterite !== "string" ||
 		typeof participleForm !== "string" ||
-		(reflexive !== null && reflexive !== "Acc" && reflexive !== "Dat") ||
 		(separablePrefix !== null && typeof separablePrefix !== "string")
 	)
 		return undefined;
-	const infinitive = normalizeForm(verb).replace(/^sich\s+/u, "");
+	const infinitive = withoutReflexive(normalizeForm(verb));
 	const named =
 		separablePrefix === null ? null : normalizeForm(separablePrefix);
 	// An inseparable prefix is no separable one, whatever Luna calls it.
@@ -98,7 +96,6 @@ function sourceDraftOf(output: unknown): SourceDraft | null | undefined {
 		return undefined;
 	return {
 		verb: infinitive,
-		reflexive: reflexive ?? null,
 		separablePrefix: prefix,
 		preterite: normalizeForm(preterite),
 		participle: normalizeForm(participleForm),

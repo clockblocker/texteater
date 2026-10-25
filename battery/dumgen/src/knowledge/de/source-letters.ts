@@ -23,9 +23,9 @@ const plain = (word: string) =>
 		.replace(/ß/gu, "ss")
 		.replace(/[^\p{L}]/gu, "");
 
-/** A form's stem: a verb without `sich` and its citation ending. */
+/** A form's stem: a verb without its citation ending. */
 function stemOf(form: string, kind: string): string {
-	const word = plain(form.replace(/^sich\s+/u, ""));
+	const word = plain(form);
 	if (kind !== "VERB") return word;
 	if (/(?:el|er)n$/u.test(word)) return word.slice(0, -1);
 	return word.endsWith("en") ? word.slice(0, -2) : word;

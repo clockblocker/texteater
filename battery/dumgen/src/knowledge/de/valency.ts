@@ -12,12 +12,18 @@
  * comes in as an Optional Slot. A later occurrence's government changes
  * nothing; a preposition no governor selects stays an attributable
  * failure.
+ *
+ * The Reading's 🪞 settles its Reflexive Slot (ADR 0052): a 🪞 Reading's
+ * frame has a Required one, right after the subject, in the case the
+ * creating occurrence's reflexive realized, else in Luna's; a Reading
+ * without 🪞 has no Required one, though an Optional one may stand.
  */
 
 import { isRecord } from "common-utils";
 import {
 	germanAdpositionAllows,
 	germanGovernablePrepositions,
+	reflexiveMarker,
 } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
 import { allowedComplementKinds, applyKnowledgeChange } from "dumrel";
@@ -48,6 +54,7 @@ export const valencyPrompt = [
 	shared.evidence,
 	valency.task,
 	valency.subject,
+	valency.reflexive,
 	valency.lesart,
 	valency.status,
 	valency.alternatives,
@@ -75,13 +82,18 @@ type GermanSlot = {
 };
 
 const referent = { type: "string", enum: ["Someone", "Something", "Either"] };
-// Luna is offered no Reflexive complement yet (#1285).
 const complementSchemas: Readonly<
-	Record<
-		Exclude<ComplementKind, "Reflexive">,
-		Readonly<Record<string, unknown>>
-	>
+	Record<ComplementKind, Readonly<Record<string, unknown>>>
 > = {
+	Reflexive: {
+		type: "object",
+		properties: {
+			kind: { type: "string", enum: ["Reflexive"] },
+			governedCase: { type: "string", enum: ["Acc", "Dat"] },
+		},
+		required: ["kind", "governedCase"],
+		additionalProperties: false,
+	},
 	Case: {
 		type: "object",
 		properties: {
@@ -384,9 +396,93 @@ function attestedSlots(
 	return { slots, failures };
 }
 
+/** Whether a Slot holds the frame's Reflexive. */
+const isReflexiveSlot = (slot: GermanSlot) =>
+	slot.complements.some(({ kind }) => kind === "Reflexive");
+
+/** The case of a Slot's Reflexive or an occurrence's, if it names one. */
+function reflexiveCase(
+	complements: readonly Dumrel.GermanValencyComplement[],
+): "Acc" | "Dat" | undefined {
+	for (const complement of complements)
+		if (complement.kind === "Reflexive") return complement.governedCase;
+	return undefined;
+}
+
+/**
+ * The frame with the Reflexive Slot the Reading's 🪞 settles (ADR 0052),
+ * and the Slot it drops. A 🪞 Reading's Reflexive is Required and stands
+ * right after the subject, in the case the creating occurrence realized,
+ * else the one Luna proposed. A Reading without 🪞 keeps no Required one.
+ * A 🪞 Reading whose case neither names is a failure.
+ */
+function settledReflexive(
+	reading: Dumling.Reading<"de">,
+	frame: readonly GermanSlot[],
+	evidence: readonly ValencyEvidence[],
+	origin: KnowledgeOrigin,
+):
+	| {
+			readonly frame: GermanSlot[];
+			readonly dropped?: {
+				readonly slot: unknown;
+				readonly reason: string;
+			};
+	  }
+	| { readonly failure: KnowledgeFailure } {
+	const marked =
+		"emojiDescription" in reading &&
+		reading.emojiDescription.startsWith(reflexiveMarker);
+	const proposed = frame.find(isReflexiveSlot);
+	const rest = frame.filter((slot) => slot !== proposed);
+	if (!marked)
+		return proposed?.status === "Required"
+			? {
+					frame: rest,
+					dropped: {
+						slot: proposed,
+						reason: `A Reading whose Emoji Description has no ${reflexiveMarker} has no Required Reflexive Slot`,
+					},
+				}
+			: { frame: [...frame] };
+	const attested = reflexiveCase(
+		evidence.map(({ complement }) => complement),
+	);
+	const offered = proposed && reflexiveCase(proposed.complements);
+	const governedCase =
+		origin === "New" ? (attested ?? offered) : (offered ?? attested);
+	if (governedCase === undefined)
+		return {
+			failure: {
+				aspect: "valency",
+				leaf: "Reflexive",
+				code: "Unresolved",
+				message: `A ${reflexiveMarker} Reading takes a Required Reflexive Slot, and neither Luna nor the occurrence names its case`,
+			},
+		};
+	const subject = rest.findIndex(({ complements }) =>
+		complements.some(
+			(complement) =>
+				complement.kind === "Case" && complement.governedCase === "Nom",
+		),
+	);
+	const slot: GermanSlot = {
+		status: "Required",
+		complements: [{ kind: "Reflexive", governedCase }],
+	};
+	return {
+		frame: [
+			...rest.slice(0, subject + 1),
+			slot,
+			...rest.slice(subject + 1),
+		],
+	};
+}
+
 /**
  * The Reading's proposed frame as one Contribute change, the creating
- * occurrence's government appended, or no change when it governs nothing.
+ * occurrence's government appended and its Reflexive Slot settled by its
+ * 🪞, or no change when it governs nothing.
  */
 export const produceValency = (
 	context: AspectContext,
@@ -419,17 +515,31 @@ export const produceValency = (
 				name: "DroppedValencySlots",
 				data: { dropped },
 			});
+		const evidence =
+			"valencyEvidence" in context.attestation
+				? context.attestation.valencyEvidence
+				: [];
 		const attested =
 			origin === "New"
-				? attestedSlots(
-						context.lemma,
-						kept,
-						"valencyEvidence" in context.attestation
-							? context.attestation.valencyEvidence
-							: [],
-					)
+				? attestedSlots(context.lemma, kept, evidence)
 				: { slots: [], failures: [] };
-		const frame = [...kept, ...attested.slots];
+		const settled = settledReflexive(
+			context.reading,
+			[...kept, ...attested.slots],
+			evidence,
+			origin,
+		);
+		if ("failure" in settled)
+			return {
+				changes: [],
+				failures: [...attested.failures, settled.failure],
+			};
+		if (settled.dropped)
+			context.log.event({
+				name: "DroppedValencySlots",
+				data: { dropped: [settled.dropped] },
+			});
+		const { frame } = settled;
 		if (frame.length === 0)
 			return { changes: [], failures: attested.failures };
 		const changes = checkedChanges(context, "valency", [

@@ -145,7 +145,6 @@ export function goldKnowledgeWritten(
 			const particle =
 				typeof core.hasSepPrefix === "string" ? core.hasSepPrefix : "";
 			const stem = lemma
-				.replace(/^sich\s+/u, "")
 				.slice(particle.length)
 				.trim()
 				.replace(/e?n$/u, "");

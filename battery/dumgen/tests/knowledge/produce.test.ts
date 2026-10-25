@@ -475,13 +475,14 @@ test("a Slot holds alternatives, and the covered set counts every one of them (#
 	const change = { value: frameOf(result.changes) };
 	expect(change?.value).toHaveLength(2);
 	expect(change.value?.[1]?.complements).toHaveLength(2);
-	// The frame request names the route's complement kinds, a verb's all five.
+	// The frame request names the route's complement kinds, a verb's all six.
 	expect(luna.sent[0]?.input).toHaveProperty("complementKinds", [
 		"Case",
 		"Preposition",
 		"Adverbial",
 		"Predicative",
 		"Clause",
+		"Reflexive",
 	]);
 });
 

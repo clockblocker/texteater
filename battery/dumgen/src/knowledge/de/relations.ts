@@ -4,8 +4,9 @@
  * candidate's relation and Kind in one request whose state states the
  * policy, the relations and the Kinds once (#697). Code supplies Language
  * and Family: a Saying relates to Sayings, and a word or Locution to words
- * and Locutions, a candidate of one word (a reflexive's `sich` aside) being
- * a Lexeme and a longer one a Locution (ADR 0039). A relation keeps at
+ * and Locutions, a candidate of one word being a Lexeme and a longer one a
+ * Locution (ADR 0039). A candidate is the bare Lemma a lookup finds, its
+ * reflexive's `sich` stripped (ADR 0052). A relation keeps at
  * most three claims, the judge's most confident (`de/relations-need-a-
  * dictionary`). Candidate discovery never establishes absence.
  */
@@ -15,6 +16,7 @@ import { foldCase, normalizeForm } from "dumling";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import { choice, choiceOf } from "../../segment/ask.js";
+import { withoutReflexive } from "../../segment/de/candidates.js";
 import type { GermanPendingRelation } from "../types.js";
 import {
 	type AspectContext,
@@ -107,7 +109,7 @@ function candidateFamily(
 	candidate: string,
 ): "Lexeme" | "Locution" | "Saying" {
 	if (sourceFamily === "Saying") return "Saying";
-	const words = candidate.replace(/^sich\s+/u, "").split(/\s+/u);
+	const words = candidate.split(/\s+/u);
 	return words.length === 1 ? "Lexeme" : "Locution";
 }
 
@@ -207,7 +209,9 @@ export const produceRelations = (
 		const candidates = [
 			...new Map(
 				written
-					.map(normalizeForm)
+					.map((candidate) =>
+						withoutReflexive(normalizeForm(candidate)),
+					)
 					.filter(
 						(candidate) =>
 							candidate !== "" &&

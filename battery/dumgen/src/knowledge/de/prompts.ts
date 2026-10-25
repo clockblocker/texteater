@@ -39,6 +39,11 @@ const rules = {
 		"19c59bf41ed26810",
 	],
 	verbCore: ["de/verb-core-features", "53f39c352354bcbe"],
+	ownsMembers: ["de/verb-owns-its-scattered-members", "9139952c458faeb2"],
+	distinct: [
+		"de/distinct-concepts-get-distinct-readings",
+		"434871d7862a9fb0",
+	],
 	collocation: [
 		"de/funktionsverbgefuege-are-collocations",
 		"57f04b272a0e9aeb",
@@ -55,8 +60,10 @@ const { paragraph } = registry;
 export const shared = {
 	reading: paragraph(
 		"shared.reading",
-		"`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, `kind` its word class and `family` whether it is a word (Lexeme), a multiword expression (Locution) or a Saying. Its `emojiDescription`, one to four emoji, names the Reading's one meaning: write about that meaning, the one it has in every sentence where the word means it.",
+		"`reading` names one Reading of a German Lemma: `lemma` is its Canonical Form, `kind` its word class and `family` whether it is a word (Lexeme), a multiword expression (Locution) or a Saying. Its `emojiDescription`, one to four emoji, names the Reading's one meaning: write about that meaning, the one it has in every sentence where the word means it. A description that starts with 🪞 names the meaning the word has with its lexical reflexive sich, which the Canonical Form leaves out; the other emoji name that meaning.",
 		rules.meaning,
+		rules.distinct,
+		rules.verbCore,
 	),
 	evidence: paragraph(
 		"shared.evidence",
@@ -147,7 +154,14 @@ export const valency = {
 		"valency.subject",
 		"A verb's frame, a verbal Locution's included, opens with its subject: a Required Slot holding a Nom Case complement, whatever this sentence does with it (an imperative, an infinitive or a passive still has a subject in the frame). Only an expletive «es» subject takes no Slot.",
 		rules.valency,
+	),
+	reflexive: paragraph(
+		"valency.reflexive",
+		"A lexical reflexive, a sich no other noun phrase could replace in this meaning, takes a Slot of its own right after the subject, holding one Reflexive complement in the case the meaning fixes: Acc, or Dat where an accusative object or a clause also stands with the verb («beeilen»: Nom, Reflexive Acc; «merken»: Nom, Reflexive Dat, Acc). It is Required exactly when the Emoji Description starts with 🪞. Without 🪞 it is Optional where the word keeps this meaning with and without it («ausruhen»), and absent otherwise. A sich another object could replace in this meaning is an ordinary Acc or Dat Case complement.",
 		rules.verbCore,
+		rules.ownsMembers,
+		rules.distinct,
+		rules.valency,
 	),
 	lesart: paragraph(
 		"valency.lesart",
@@ -167,32 +181,33 @@ export const valency = {
 	),
 	freeMarker: paragraph(
 		"valency.freeMarker",
-		"Include a complement the word requires even when its marker is free: a place («hausen» irgendwo), a direction («rücken» irgendwohin), a manner, a duration or an amount (Adverbial), a predicative, or a zu-infinitive («sich erdreisten»). The test is that dropping it is ungrammatical or changes the meaning. Leave out free adjuncts of time, place, manner or cause, a place or time complement the dictionary marks optional, and a free dative. Add an Adverbial, a Predicative or a Clause only when the dictionary's pattern for this meaning names it.",
+		"Include a complement the word requires even when its marker is free: a place («hausen» irgendwo), a direction («rücken» irgendwohin), a manner, a duration or an amount (Adverbial), a predicative, or a zu-infinitive («erdreisten»). The test is that dropping it is ungrammatical or changes the meaning. Leave out free adjuncts of time, place, manner or cause, a place or time complement the dictionary marks optional, and a free dative. Add an Adverbial, a Predicative or a Clause only when the dictionary's pattern for this meaning names it.",
 		rules.valency,
 		rules.governed,
 	),
 	preposition: paragraph(
 		"valency.preposition",
-		"A Preposition complement names the preposition the word selects and the case it governs in this construction («sich sehnen nach» + Dat, «pochen auf» + Acc). A participial adjective takes its verb's preposition unless the dictionary gives the adjective one of its own.",
+		"A Preposition complement names the preposition the word selects and the case it governs in this construction («fahnden nach» + Dat, «pochen auf» + Acc). A participial adjective takes its verb's preposition unless the dictionary gives the adjective one of its own.",
 		rules.governed,
 		rules.valency,
 	),
 	route: paragraph(
 		"valency.route",
-		"An adjective's frame has no Nom Slot, since the copula owns the subject («neidisch»: «auf» + Acc). A noun's frame holds only the prepositions and clauses it governs («Sehnsucht»: «nach» + Dat), never a bare case. A Collocation's frame is its whole predicate's and takes its noun's government («Kritik üben»: «an» + Dat).",
+		"An adjective's frame has no Nom Slot, since the copula owns the subject («neidisch»: «auf» + Acc). A noun's frame holds only the prepositions and clauses it governs («Sehnsucht»: «nach» + Dat), never a bare case. A Collocation's frame is its whole predicate's and takes its noun's government («Kritik üben»: «an» + Dat), and a copula expression its reflexive makes a verbal Locution has a verb's subject and Reflexive Slot.",
 		rules.valency,
 		rules.copula,
 		rules.collocation,
 	),
 	fixed: paragraph(
 		"valency.fixed",
-		"Fixed parts are never Slots: a separable prefix, a lexical reflexive («sich verbeugen» has no Slot for «sich»), an expletive es, and a Locution's own words. A Locution's fixed noun is never its object, nor its fixed prepositional phrase a Preposition complement: a Locution VERB's frame holds its subject and only what it governs beyond its own words («Däumchen drehen»: the Nom Slot alone; «einen Rat geben»: Nom, then a Dat Slot for whom).",
+		"Fixed parts are never Slots: a separable prefix, an expletive es, and a Locution's own words. A Locution's fixed noun is never its object, nor its fixed prepositional phrase a Preposition complement: a Locution VERB's frame holds its subject, its lexical reflexive and only what it governs beyond its own words («Däumchen drehen»: the Nom Slot alone; «einen Rat geben»: Nom, then a Dat Slot for whom; «ins Zeug legen» with sich: Nom, then a Reflexive Dat).",
 		rules.verbCore,
 		rules.idiom,
+		rules.ownsMembers,
 	),
 	referent: paragraph(
 		"valency.referent",
-		"A Case or Preposition complement's referent is the dictionary's jemand (Someone) or etwas (Something) for this meaning: Either when it gives both, or when a person and a thing fill it alike («sich kümmern um»: Either), never just what this sentence happens to show. A subject is Either whenever an institution, a machine, an event or a thing can fill it as well as a person; it is Someone only when the meaning needs a person who thinks, speaks, feels or acts on purpose, and Something only when no person can fill it.",
+		"A Case or Preposition complement's referent is the dictionary's jemand (Someone) or etwas (Something) for this meaning: Either when it gives both, or when a person and a thing fill it alike («kümmern» with «um»: Either), never just what this sentence happens to show. A subject is Either whenever an institution, a machine, an event or a thing can fill it as well as a person; it is Someone only when the meaning needs a person who thinks, speaks, feels or acts on purpose, and Something only when no person can fill it.",
 		rules.valency,
 	),
 	shapes: paragraph(
@@ -212,9 +227,10 @@ export const valency = {
 export const relationCandidates = {
 	task: paragraph(
 		"relations.task",
-		"List German words and expressions that Duden, DWDS or OpenThesaurus list in one of the relations `relations` names to the Reading's meaning: at most twelve, each written as its dictionary headword. List candidates, not labels; a judge decides each one's relation.",
+		"List German words and expressions that Duden, DWDS or OpenThesaurus list in one of the relations `relations` names to the Reading's meaning: at most twelve, each written as its dictionary headword, a verb or a verbal expression without its reflexive sich. List candidates, not labels; a judge decides each one's relation.",
 		rules.relations,
 		rules.headword,
+		rules.verbCore,
 	),
 	whole: paragraph(
 		"relations.whole",

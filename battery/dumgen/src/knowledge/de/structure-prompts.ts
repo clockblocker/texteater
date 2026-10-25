@@ -212,13 +212,13 @@ export const participle = {
 	),
 	reflexive: paragraph(
 		"participle.reflexive",
-		"When the verb has a plain and a reflexive form, the noun the adjective describes picks one: the plain verb when the noun is its object, the reflexive verb when the noun is its subject («verliebt»: «sich verlieben»); when both fit, the plain verb, unless the dictionary files the participle under the reflexive.",
+		"Name the verb without sich, also when the adjective comes from its reflexive use, whose subject the noun it describes is («verliebt»: «verlieben»).",
 		rules.participle,
 		rules.verbCore,
 	),
 	parts: paragraph(
 		"participle.parts",
-		"Write the verb's dictionary infinitive without «sich» (verb), the case of its lexical reflexive, Acc or Dat, or null (reflexive), its separable prefix or null (separablePrefix; an inseparable prefix such as ver- or ent- is none), its third person singular Präteritum (preterite) and the participle the adjective is, its Partizip II or, for an adjective in -end, its Partizip I (participle).",
+		"Write the verb's dictionary infinitive (verb), its separable prefix or null (separablePrefix; an inseparable prefix such as ver- or ent- is none), its third person singular Präteritum (preterite) and the participle the adjective is, its Partizip II or, for an adjective in -end, its Partizip I (participle).",
 		rules.verbCore,
 		rules.participle,
 	),
@@ -245,7 +245,7 @@ export const participle = {
 	),
 	meaningQuestion: paragraph(
 		"participle.meaningQuestion",
-		"The adjective's form is a participle of `verb`. Does a current meaning of that verb paraphrase the Reading's meaning, the one its Emoji Description names? Test a Partizip II in the passive (has been …ed) and a Partizip I in the progressive (is …ing).",
+		"The adjective's form is a participle of `verb`. Does a current meaning of that verb paraphrase the Reading's meaning, the one its Emoji Description names? Test a Partizip II in the passive (has been …ed) and a Partizip I in the progressive (is …ing). The noun the adjective describes picks the verb's use to test: its plain use when the noun is its object, its use with sich when the noun is the reflexive's subject («verliebt»: has fallen in love).",
 		rules.participle,
 		rules.meaning,
 	),

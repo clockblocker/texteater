@@ -26,6 +26,7 @@ import { normalizeForm } from "dumling";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import { choice, choiceOf } from "../../segment/ask.js";
+import { withoutReflexive } from "../../segment/de/candidates.js";
 import type { GermanKnowledgeChange } from "../types.js";
 import {
 	type AspectContext,
@@ -94,14 +95,13 @@ function baseOf(
 			"sourceBase",
 			`Luna wrote no usable base: ${JSON.stringify(output).slice(0, 120)}`,
 		);
-	const canonicalForm = normalizeForm(base);
+	// A base is the bare Lemma a lookup finds (ADR 0052).
+	const canonicalForm = withoutReflexive(normalizeForm(base));
 	// Sound: a German word's or Locution's route on a Kind from `baseKinds`;
 	// Dumrel's check refuses one the Locution family lacks.
 	return {
 		language: "de",
-		family: /\s/u.test(canonicalForm.replace(/^sich\s+/u, ""))
-			? "Locution"
-			: "Lexeme",
+		family: /\s/u.test(canonicalForm) ? "Locution" : "Lexeme",
 		kind,
 		canonicalForm,
 	} as Dumrel.UnitShadow;
@@ -175,7 +175,7 @@ export const produceSource = (
 	context: AspectContext,
 ): Effect.Effect<GermanKnowledgeChange[], AspectError> =>
 	Effect.gen(function* () {
-		const word = context.lemma.canonicalForm.replace(/^sich\s+/u, "");
+		const word = context.lemma.canonicalForm;
 		if (/\s/u.test(word)) return [];
 		const answers = yield* context.ask({
 			stage: "sourceFormation",
