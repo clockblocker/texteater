@@ -261,18 +261,16 @@ function breakdownBudgetOptions(
 }
 
 /**
- * The usage the Breakdown ledger recorded for the experiment's route, both
- * sets of segment.inConstituents together, which prices the requests no
- * cache prices; none without a line with fresh calls.
+ * The usage the Breakdown ledger recorded, every Breakdown route's runs
+ * together, which prices the requests no cache prices; none without a line
+ * with fresh calls.
  */
 async function breakdownCalibration(
-	{ experimentId, dependencies }: ExperimentCommand,
+	{ dependencies }: ExperimentCommand,
 	modules: RunModules,
 ): Promise<Partial<EvaluateArgs>> {
-	const route = experimentId.slice(0, experimentId.lastIndexOf(":"));
 	const calibration = await modules.readCalibration(
 		breakdownLedgerPath(dependencies),
-		route,
 	);
 	return calibration ? { calibration } : {};
 }

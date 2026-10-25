@@ -397,10 +397,11 @@ type ProjectionBasis = "repetition" | PriceBasis;
 /**
  * The fresh tokens a projection pass foresees. A request cached at another
  * repetition costs what it cost then; any other is priced by its size
- * (`pricing.ts`): from a fit of the cached requests of its stage, else the
- * ledger's tokens per character of its stage (`calibration`), else a fit of
- * every stage's, else the ledger's tokens per request, else 3 characters
- * per token. `pricedFrom` counts the requests each basis priced.
+ * (`pricing.ts`): a request's overhead plus its characters at its stage's
+ * rate, fitted over the pass's cached requests and the ledger's stages
+ * (`calibration`), else at the rate of every stage, else the ledger's
+ * tokens per request, else 3 characters per token. `pricedFrom` counts the
+ * requests each basis priced.
  */
 export function priceProjection(
 	projection: Projection,
@@ -414,7 +415,6 @@ export function priceProjection(
 	const pricedFrom: Record<ProjectionBasis, number> = {
 		repetition: 0,
 		stage: 0,
-		ledgerStage: 0,
 		allStages: 0,
 		ledgerRequest: 0,
 		characters: 0,
@@ -479,9 +479,8 @@ export function guardProjectedSpend(args: {
 /** What `projectionText` calls each basis of `pricedFrom`, in its order. */
 const basisNames = [
 	["repetition", "another repetition's usage"],
-	["stage", "this pass's fit of their stage"],
-	["ledgerStage", "the ledger's tokens per character of their stage"],
-	["allStages", "this pass's fit of every stage"],
+	["stage", "the fit of their stage"],
+	["allStages", "the fit of every stage"],
 	["ledgerRequest", "the ledger's tokens per request"],
 	["characters", `${fallbackCharsPerToken} characters per token`],
 ] as const satisfies readonly (readonly [ProjectionBasis, string])[];

@@ -10,7 +10,9 @@ import {
 } from "../../../lab/segmentation/harness/ledger.js";
 import {
 	type Calibration,
+	pricerOf,
 	readCalibration,
+	tokenModel,
 } from "../../../lab/segmentation/harness/pricing.js";
 import {
 	checkPin,
@@ -313,45 +315,59 @@ test("the round book names a current round it holds, and 2026-10-02-5usd stays 1
 	expect((await currentPin(repository)).inputs).toHaveProperty("inventories");
 });
 
-test("a request no cached sample of its stage prices is priced from the ledger's tokens per character of its stage, then this pass's every-stage fit, then the ledger's tokens per request, then 3 characters per token", () => {
+test("a request no cache prices costs a shared overhead plus its characters at its stage's rate, fitted over the pass's cached requests and the ledger's stages", () => {
 	const requests = [
 		{ stage: "route", chars: 3000, questions: 1 },
 		{ stage: "forms", chars: 1000, questions: 1 },
 		{ stage: "analysis", chars: 900, questions: 1 },
 		{ stage: "route", chars: 100, questions: 1, inputTokens: 70 },
 	];
+	// Every request costs 100 tokens plus 0.3 a character for route and 0.2
+	// for forms: two route sizes in the pass, forms from a ledger line.
 	const calibration: Calibration = {
-		stages: { forms: { requests: 4, chars: 8000, inputTokens: 2000 } },
+		stages: [
+			{ stage: "forms", requests: 4, chars: 2000, inputTokens: 800 },
+		],
 		perRequest: { gitHead: "head", requests: 10, inputTokens: 8000 },
 	};
 	const samples = [
 		{ stage: "route", chars: 1000, inputTokens: 400 },
-		{ stage: "route", chars: 2000, inputTokens: 800 },
+		{ stage: "route", chars: 2000, inputTokens: 700 },
 	];
-	// The stage's own fit first; forms from the ledger's 0.25 tokens per
-	// character; analysis, with neither, from the fit of every stage.
+	// analysis, with no data of its own, takes every stage's rate:
+	// (2,200,000 − 100 × 5,000) / 6,000,000 a character.
 	const withSamples = priceProjection({ samples, requests }, calibration);
 	expect(withSamples).toMatchObject({
 		exactTokens: 70,
-		estimatedTokens: 1200 + 250 + 360,
+		estimatedTokens: 1000 + 300 + 355,
 		pricedFrom: {
 			repetition: 1,
-			stage: 1,
-			ledgerStage: 1,
+			stage: 2,
 			allStages: 1,
 			ledgerRequest: 0,
 			characters: 0,
 		},
 	});
 	expect(projectionText(withSamples)).toContain(
-		"priced from another repetition's usage 1, this pass's fit of their stage 1, the ledger's tokens per character of their stage 1, this pass's fit of every stage 1, the ledger's tokens per request 0, 3 characters per token 0",
+		"priced from another repetition's usage 1, the fit of their stage 2, the fit of every stage 1, the ledger's tokens per request 0, 3 characters per token 0",
 	);
-	// No sample: route and analysis at the ledger's 800 tokens per request.
+	// One request size tells no overhead from a rate, so forms alone is 0.4
+	// a character, and the other stages take it.
 	expect(
 		priceProjection({ samples: [], requests }, calibration),
 	).toMatchObject({
-		estimatedTokens: 800 + 250 + 800,
-		pricedFrom: { ledgerStage: 1, ledgerRequest: 2, characters: 0 },
+		estimatedTokens: 1200 + 400 + 360,
+		pricedFrom: { stage: 1, allStages: 2 },
+	});
+	// No stage measured: the ledger's 800 tokens per request.
+	expect(
+		priceProjection(
+			{ samples: [], requests },
+			{ ...calibration, stages: [] },
+		),
+	).toMatchObject({
+		estimatedTokens: 2400,
+		pricedFrom: { ledgerRequest: 3, characters: 0 },
 	});
 	// Nothing measured: 3 characters per token, as before calibration.
 	expect(priceProjection({ samples: [], requests })).toMatchObject({
@@ -360,7 +376,27 @@ test("a request no cached sample of its stage prices is priced from the ledger's
 	});
 });
 
-test("a ledger's calibration sums the route's recorded stages and takes tokens per request from the lines at the latest commit with fresh calls", async () => {
+test("a stage whose requests are all one size is priced near them, not off a fitted slope (#1241 round 4)", () => {
+	// Round 4 priced segment.inMorphemes' breakdown-words at 2,036 tokens a
+	// request from four cached requests of 632 to 636 characters; it cost 448.
+	const samples = [
+		{ stage: "breakdown-words", chars: 632, inputTokens: 426 },
+		{ stage: "breakdown-words", chars: 634, inputTokens: 425 },
+		{ stage: "breakdown-words", chars: 636, inputTokens: 428 },
+		{ stage: "breakdown-words", chars: 635, inputTokens: 424 },
+		{ stage: "breakdown-routes", chars: 2000, inputTokens: 920 },
+		{ stage: "breakdown-routes", chars: 6000, inputTokens: 2220 },
+	];
+	const { tokens } = pricerOf(samples)("breakdown-words", 700);
+	expect(tokens).toBeGreaterThan(440);
+	expect(tokens).toBeLessThan(480);
+	const model = tokenModel(
+		samples.map((sample) => ({ ...sample, requests: 1 })),
+	);
+	expect(model?.overhead).toBeCloseTo(270, 0);
+});
+
+test("a ledger's calibration keeps every Breakdown line's recorded stages and takes tokens per request from the lines at the latest commit with fresh calls", async () => {
 	const path = join(directory, "breakdown-ledger.jsonl");
 	const line = (
 		experiment: string,
@@ -396,26 +432,29 @@ test("a ledger's calibration sums the route's recorded stages and takes tokens p
 			line("segment-in-constituents/de:breakdown", "a", 10, 1000, {
 				routes: { requests: 2, chars: 3000, inputTokens: 1000 },
 			}),
-			line("segment-in-constituents/de:heldout", "b", 4, 4000, {
+			line("segment-in-constituents/de:realtext", "b", 4, 4000, {
 				routes: { requests: 1, chars: 1000, inputTokens: 500 },
 				forms: { requests: 3, chars: 1200, inputTokens: 400 },
 			}),
-			line("segment-in-constituents/de:breakdown", "b", 6, 2000),
+			line("segment-in-morphemes/de:breakdown", "b", 6, 2000, {
+				words: { requests: 6, chars: 3000, inputTokens: 2000 },
+			}),
 			line("segment-in-morphemes/de:breakdown", "c", 0, 0),
-			line("segment-in-units/de:dev", "c", 9, 99_999),
+			line("segment-in-units/de:dev", "c", 9, 99_999, {
+				units: { requests: 9, chars: 9000, inputTokens: 99_999 },
+			}),
 		].join("\n")}\n`,
 	);
-	expect(await readCalibration(path, "segment-in-constituents/de")).toEqual({
-		stages: {
-			routes: { requests: 3, chars: 4000, inputTokens: 1500 },
-			forms: { requests: 3, chars: 1200, inputTokens: 400 },
-		},
+	expect(await readCalibration(path)).toEqual({
+		stages: [
+			{ stage: "routes", requests: 2, chars: 3000, inputTokens: 1000 },
+			{ stage: "routes", requests: 1, chars: 1000, inputTokens: 500 },
+			{ stage: "forms", requests: 3, chars: 1200, inputTokens: 400 },
+			{ stage: "words", requests: 6, chars: 3000, inputTokens: 2000 },
+		],
 		perRequest: { gitHead: "b", requests: 10, inputTokens: 6000 },
 	});
 	expect(
-		await readCalibration(path, "segment-in-morphemes/de"),
-	).toBeUndefined();
-	expect(
-		await readCalibration(join(directory, "none.jsonl"), "x"),
+		await readCalibration(join(directory, "none.jsonl")),
 	).toBeUndefined();
 });

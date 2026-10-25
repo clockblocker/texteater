@@ -139,8 +139,10 @@ projection past it, and writes its spend, with its fresh requests per stage
 (`stages`), to `evidence/segment-breakdown/ledger.jsonl`. While it runs, each
 fresh request holds its projected price until it is over, and one that would
 carry the spend and the requests in flight past the budget is refused. A
-request no cache prices is priced from that ledger when this pass measured
-nothing of its stage (`lab/segmentation/harness/pricing.ts`). `--cases` or `--cases-from`
+request no cache prices costs a shared overhead plus its characters at its
+stage's rate, both fitted over this pass's cached requests and every
+Breakdown line of that ledger (`lab/segmentation/harness/pricing.ts`).
+`--cases` or `--cases-from`
 take part of the set and `--repetitions` 1 to 3 (3 by default).
 
 ```sh
