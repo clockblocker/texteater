@@ -1,0 +1,289 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Als er die Rechnung sah, war er außer sich vor Wut.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Als"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Rechnung"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sah"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "war"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "außer"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "vor"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Wut"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0003", "ADR-0034", "ADR-0039", "ADR-0052"],
+		"rules": [
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "1a5d9f3240c41e69"
+			},
+			{
+				"rule": "de/idiom",
+				"hash": "d25679f2a06809b9"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "9139952c458faeb2"
+			},
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "8982593963a4d507"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: außer sich sein",
+				"url": "https://www.dwds.de/wb/au%C3%9Fer%20sich%20sein",
+				"supports": "Target 0 Knowledge: Mehrwortausdruck, sense 1 'überwältigt sein, dass man sein seelisches Gleichgewicht verliert', 1a 'aufgebracht, voller Wut, Verzweiflung, Entsetzen sein; die Fassung verloren haben', 1b 'überglücklich, begeistert bzw. sehr belustigt sein'; Der Mann war vollkommen außer sich; collocations außer sich sein vor Wut, vor Freude; siehe auch nicht bei sich sein, aus dem Häuschen sein"
+			},
+			{
+				"title": "DWDS: außer",
+				"url": "https://www.dwds.de/wb/au%C3%9Fer",
+				"supports": "Target 0 Knowledge: Präposition, sense 2c außer sich geraten (= die Fassung verlieren), mit Dativ; außer sich sein among its Mehrwortausdrücke"
+			},
+			{
+				"title": "DWDS: die Fassung verlieren",
+				"url": "https://www.dwds.de/wb/die%20Fassung%20verlieren",
+				"supports": "Target 0 Knowledge: 'sein inneres Gleichgewicht, die Kontrolle über seine Emotionen verlieren'; siehe auch außer sich geraten. A change of state beside außer sich sein's state, so nearSynonym"
+			},
+			{
+				"title": "OpenThesaurus: außer sich",
+				"url": "https://www.openthesaurus.de/synonyme/au%C3%9Fer%20sich",
+				"supports": "Target 0 Knowledge: synsets 4405 and 26864 hold außer sich (vor Wut), the rage sub-sense only; no claim taken for the whole Reading; no Gegenteil"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [11, 15, 17],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🪞🤯",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Reflexive",
+									"governedCase": "Dat",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "außer",
+										"coreFeatures": {}
+									}
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "die Fassung verlieren",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
+			"notes": {
+				"rationale": "außer sich sein is DWDS sense 1 'so überwältigt sein, dass man sein seelisches Gleichgewicht verliert'. Its sub-senses, rage (1a) and delight (1b), are one Reading, since the sentence says which feeling it is (vor Wut), as with leidtun (ADR 0031). The copula sein and the PP form one Locution VERB, not a Collocation, because the copula alone lacks the reflexive (de/copula-stays-apart). sich is the object of the fixed außer and no other noun phrase can replace it (*er war außer ihr), so it fills a Required Reflexive Slot with außer + Dat, and the wording is außer sein (ADR 0052). vor Wut is a free cause adjunct, as DWDS's collocations vor Wut, vor Freude show, and stays out."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "außer sein",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "war außer",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{
+						"attested": "war",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "außer",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Dat",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "außer",
+								"coreFeatures": {}
+							}
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		}
+	],
+	"noTarget": []
+}

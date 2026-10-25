@@ -1,0 +1,295 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Nach der Narkose kam die Patientin nur langsam zu sich.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Nach"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Narkose"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "kam"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Patientin"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nur"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "langsam"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0003", "ADR-0034", "ADR-0039", "ADR-0052"],
+		"rules": [
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "1a5d9f3240c41e69"
+			},
+			{
+				"rule": "de/idiom",
+				"hash": "d25679f2a06809b9"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "9139952c458faeb2"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: sich",
+				"url": "https://www.dwds.de/wb/sich",
+				"supports": "Target 0 Knowledge: sense 1.c.β, Dativ after a preposition: er kam bald wieder zu sich (= er wachte bald wieder aus der Ohnmacht auf)"
+			},
+			{
+				"title": "DWDS: kommen",
+				"url": "https://www.dwds.de/wb/kommen",
+				"supports": "Target 0 Knowledge: sense 11b 'einen erstrebenswerten, angenehmen Zustand herstellen, wiederherstellen': er kam langsam wieder zu sich, zur Besinnung, zur Vernunft"
+			},
+			{
+				"title": "DWDS: Ohnmacht",
+				"url": "https://www.dwds.de/wb/Ohnmacht",
+				"supports": "Target 0 Knowledge: Bewusstlosigkeit, in gegensätzlicher Bedeutung zu Bewusstsein: aus der Ohnmacht erwachen, wieder zu Bewusstsein kommen (synonym; aufwachen nearSynonym, waking from any sleep); sie (ver)sank, fiel, lag in Ohnmacht (antonym in Ohnmacht fallen)"
+			},
+			{
+				"title": "OpenThesaurus: zu sich kommen",
+				"url": "https://www.openthesaurus.de/synonyme/zu%20sich%20kommen",
+				"supports": "Target 0 Knowledge: synset 5912 is calming down (sich beruhigen), another sense, so no claim taken; its Wiktionary extract gives '(wieder) klares Bewusstsein erlangen'"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [6, 16, 18],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🪞😵➡👀",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Reflexive",
+									"governedCase": "Dat",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "zu",
+										"coreFeatures": {}
+									}
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "zu Bewusstsein kommen",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "aufwachen",
+								"coreFeatures": {
+									"hasSepPrefix": "auf"
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "in Ohnmacht fallen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
+			"notes": {
+				"rationale": "zu sich kommen is DWDS sich 1.c.β 'er kam bald wieder zu sich (= er wachte bald wieder aus der Ohnmacht auf)', regaining consciousness, and kommen 11b lists zu sich beside zur Besinnung. After a Narkose only that sense fits. sich is the object of the fixed zu and no other noun phrase can replace it (sie kam zu ihm only means reaching him), so it fills a Required Reflexive Slot with zu + Dat, and the wording is zu kommen (ADR 0052). nur and langsam are free adverbs."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "zu kommen",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "kam zu",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{
+						"attested": "kam",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Reflexive",
+							"governedCase": "Dat",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "zu",
+								"coreFeatures": {}
+							}
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		}
+	],
+	"noTarget": []
+}
