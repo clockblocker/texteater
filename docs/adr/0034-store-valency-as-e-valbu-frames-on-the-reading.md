@@ -300,53 +300,6 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   The Collocation stores its own frame, not a projection of its members'
   frames, because slots like the Dat of `jemandem auf den Keks gehen` come
   from no member.
-- [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md) defines
-  the Collocation: a Locution whose verb only supports its noun or adjective
-  predicate, as in `Angst haben`, `Lust haben auf` and `Rücksicht nehmen
-  auf`. A copula (`sein`, `werden`, `bleiben`, `scheinen`, `wirken`, `sich
-  zeigen`) never forms a Collocation with a predicative adjective, so an
-  adjective and its governed preposition resolve to the ADJ even beside a
-  copula. `Angst haben` shows restricted lexical choice (`Angst
-  haben/bekommen`, not `*Angst besitzen`), though it fails grammis's
-  Funktionsverbgefüge tests. `stolz auf jN sein` was rejected as a
-  Collocation: it fails the restricted-choice test, it would make one
-  Collocation per copula and adjective, and UD attaches `sein` as the
-  adjective's `cop`.
-- German ADP Core has no `governedCase`, since no two German ADPs differ by
-  case alone. An authored, closed table per language, the ADP Case Table,
-  lists each adposition with the positions it takes, before (Prep) or after
-  (Post) its complement, and for each position its allowed cases, a
-  preferred case where there is a norm, and whether it is two-way: `für`
-  Prep {Acc}, `mit` Prep {Dat}, `auf` and `in` Prep {Acc, Dat} two-way,
-  `trotz` Prep {Gen, Dat} preferring Gen, `wegen` Prep {Gen, Dat} preferring
-  Gen and Post {Gen}, `entlang` Post {Acc, Dat} preferring Acc and Prep
-  {Gen, Dat}. A position it doesn't list isn't allowed. A circumposition or
-  other Locution ADP has one case set and no position, since its words are
-  its Canonical Form. Neither the Lemma nor the Attestation records the
-  position
-  ([ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)):
-  the sentence shows it, and the table states what German allows and what a
-  Note can show. Every Preposition complement of a governor's frame,
-  alternatives included, is validated against the table: `warten` `auf` +
-  Acc and `bestehen` `auf` + Dat pass, `für` + Dat fails. The table and its
-  check live in dumcorpus
-  ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classification.md)),
-  since which cases a preposition takes is a fact about the language.
-- A free ADP occurrence records the case it took as `realizedCase` in its
-  `valencyEvidence`, from the judgement Grammatical Resolution already makes
-  for the case. `[Wegen] dem Regen` records Dat against the preferred Gen. A
-  Locution ADP records it the same way (`um des Friedens willen` Gen). An
-  occurrence whose complement shows no case records none (`Köln versus
-  Berlin`). dumcorpus accepts a realized case that one of the adposition's
-  positions allows. It fails an adposition the table doesn't list, naming
-  it, a case none of its positions allows, naming the word and the case, and
-  a governor's Preposition complement whose preposition the table lacks. A
-  governed preposition has no ADP Attestation; its case lives in the
-  governor's frame. The ADP's Valency Block renders from the table
-  (`` auf `etw` · Akk: wohin? · Dat: wo? ``), and each Source Context shows
-  its realized case and marks a colloquial one (`Dat · umgangssprachlich`).
-  A Core case set was rejected: it holds the same facts inside identity with
-  no preferred case and no per-sentence case. So was a generated frame per
-  ADP Reading: two-way would depend on the emoji judge splitting location
-  from direction, and a one-case slot cannot hold both cases when the judge
-  merges them.
+- An adposition's own cases are no frame. dumcorpus's ADP Case Table lists
+  them, checks every Preposition complement against them and renders the
+  ADP's Valency Block from them ([ADR 0053](./0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md)).

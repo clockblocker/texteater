@@ -93,7 +93,7 @@ const prepOrPost = (
  * produces in its reviewed cases. `preferred` marks
  * only a split between the written norm and colloquial or regional use; an
  * elevated or rare second case leaves it null. Case is grammar, not Lemma
- * identity (ADR 0034): no two German ADPs differ by case alone. It is a fact
+ * identity (ADR 0053): no two German ADPs differ by case alone. It is a fact
  * about German, so it lives here and not in Dumling (ADR 0041).
  */
 const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {

@@ -72,7 +72,8 @@ Lexeme ADP's does
 most one bare-case slot, with no member. `um des Friedens willen` records Gen,
 and `von da an` records none, since `da` shows no case. It records no
 position, since its words are its Canonical Form, and dumcorpus's ADP Case
-Table gives it one case set.
+Table gives it one case set
+([ADR 0053](./0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md)).
 
 **Subordinators with `dass`.** A preposition that joins `dass` into one
 subordinator (`ohne dass`, `statt dass`, `anstatt dass`) makes one Locution
@@ -88,10 +89,18 @@ ADP `anstatt` used as a subordinator, so Dumling's German ADP schema has no
 such value.
 
 **Collocation.** A Collocation is a Locution whose verb only supports its noun
-or adjective predicate: `eine Entscheidung treffen`, `Angst haben`, `Kritik
-üben`, `geltend machen`. A weak collocation whose meaning is literal
-(`starker Raucher`, `Zähne putzen`) is ordinary Lexemes. This one definition
-replaces the three that `GLOSSARY.md`, ADR 0034 and dumcorpus held.
+or adjective predicate: `eine Entscheidung treffen`, `Angst haben`, `Lust
+haben auf`, `Rücksicht nehmen auf`, `Kritik üben`, `geltend machen`. A weak
+collocation whose meaning is literal (`starker Raucher`, `Zähne putzen`) is
+ordinary Lexemes. This one definition replaces the three that `GLOSSARY.md`,
+ADR 0034 and dumcorpus held. `Angst haben` shows restricted lexical choice
+(`Angst haben/bekommen`, not `*Angst besitzen`), though it fails grammis's
+Funktionsverbgefüge tests. A copula (`sein`, `werden`, `bleiben`, `scheinen`,
+`wirken`, `sich zeigen`) never forms a Collocation with a predicative
+adjective, so an adjective and its governed preposition resolve to the ADJ
+even beside a copula. `stolz auf jN sein` was rejected as a Collocation: it
+fails the restricted-choice test, it would make one Collocation per copula
+and adjective, and UD attaches `sein` as the adjective's `cop`.
 
 **Formulas.** A routine formula is an INTJ: a Lexeme when it is one word
 (`danke`, `Entschuldigung!`), a Locution otherwise (`guten Morgen`).

@@ -73,7 +73,7 @@ const valencyEvidenceSchema = z.array(
  * AUX) names the valency slots it realizes, such as its governed preposition
  * member (ADR 0034). A German ADP Attestation, Lexeme or Locution, records the
  * case its complement took as its one bare-case slot, and no position;
- * dumcorpus checks the case against the ADP Case Table. A Locution route is a
+ * dumcorpus checks the case against the ADP Case Table (ADR 0053). A Locution route is a
  * governor where the Lexeme route of its Kind is (ADR 0039); the Kind alone
  * never decides, since Lexeme and Locution share Kind names.
  */

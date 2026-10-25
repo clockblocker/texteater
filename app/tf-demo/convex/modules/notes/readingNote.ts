@@ -101,7 +101,7 @@ export const sourceContextPageValidator = v.object({
 			memberTexts: v.array(v.string()),
 			origin: sourceOriginValidator,
 			target: sourceTargetValidator,
-			/** The case an ADP occurrence's complement took (ADR 0034). */
+			/** The case an ADP occurrence's complement took (ADR 0053). */
 			realizedCase: v.optional(governedCaseValidator),
 		}),
 	),
@@ -170,7 +170,7 @@ export type SourceContextProjection = {
 	readonly memberTexts: string[];
 	readonly origin: SourceOrigin;
 	readonly target: SourceTarget;
-	/** The case an ADP occurrence's complement took (ADR 0034). */
+	/** The case an ADP occurrence's complement took (ADR 0053). */
 	readonly realizedCase?: Infer<typeof governedCaseValidator>;
 };
 

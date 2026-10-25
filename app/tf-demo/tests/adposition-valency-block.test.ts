@@ -13,7 +13,7 @@ type RealizedCase = "Acc" | "Dat" | "Gen";
 type AdpositionFamily = "Lexeme" | "Locution";
 
 // An ADP Reading has no Valency Frame: its block renders from dumcorpus's ADP
-// Case Table, and each Source Context shows the case it realized (ADR 0034).
+// Case Table, and each Source Context shows the case it realized (ADR 0053).
 // The Lemma records no position, so a Lexeme ADP shows one line for each
 // position the table lists, the preposition first.
 const lines = [

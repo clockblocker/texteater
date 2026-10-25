@@ -54,7 +54,7 @@ Valency ([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)
 [ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)) and the
 Locution and Saying Types ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md))
 are Reading Knowledge. Governed case is a dumcorpus table plus Attestation
-evidence (ADR 0034), the article an Attestation member plus evidence
+evidence ([ADR 0053](./0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md)), the article an Attestation member plus evidence
 ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)), and
 `foreign` is dropped
 ([ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md)).
@@ -167,7 +167,7 @@ tell them apart.
   `wegen`; Duden, grammis and LEO each give the position as a usage line
   under one headword. No Lemma or Attestation records the position, since
   the sentence shows it. The ADP Case Table in dumcorpus lists the positions
-  each adposition takes, with the cases for each (ADR 0034). German ADP has
+  each adposition takes, with the cases for each (ADR 0053). German ADP has
   no `Circ`: a circumposition is a Locution ADP (ADR 0039), its bracket part
   of its Canonical Form. It has no `partType: Vbp`, since a separated verb
   particle is a member of its verb, and no `extPos: ADV`, which no Rule

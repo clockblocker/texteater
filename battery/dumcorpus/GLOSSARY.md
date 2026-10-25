@@ -22,7 +22,7 @@ Core Features and varying explicitly named coordinates. See [ADR 0019].
 
 **ADP Case Table**:
 A language's closed, authored list of its adpositions with the cases each
-takes. See [ADR 0034] and [ADR 0041].
+takes. See [ADR 0053] and [ADR 0041].
 _Avoid_: governed case, an ADP `governedCase` feature, case government
 feature
 
@@ -194,6 +194,7 @@ _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 [ADR 0049]: ../../docs/adr/0049-tabulate-a-lemmas-forms-as-projections.md
 [ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
 [ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md
+[ADR 0053]: ../../docs/adr/0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md
 [Dumcorpus ADR 0001]: ./docs/adr/0001-assess-grundform-with-language-owned-rules.md
 [Dumcorpus ADR 0002]: ./docs/adr/0002-count-a-knowledge-aspect-left-out-of-coverage-as-unreviewed.md
 [Dumgen ADR 0007]: ../dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md
