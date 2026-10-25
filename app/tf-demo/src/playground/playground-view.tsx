@@ -1,6 +1,7 @@
 import {
 	BlocksIcon,
 	ClapperboardIcon,
+	FlipHorizontal2Icon,
 	LayersIcon,
 	LoaderIcon,
 	type LucideIcon,
@@ -14,6 +15,7 @@ import { DeckModelsGallery } from "./entries/deck-models-gallery";
 import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
 import { PaletteGallery } from "./entries/palette-gallery";
+import { ReflexivesPrototype } from "./entries/reflexives/reflexives";
 import {
 	type EntryRoute,
 	navigatePlayground,
@@ -50,6 +52,14 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"A Reading's Breakdown on its Note and a base's Formations (#1241), from the Notes fake db. Knobs and notes in the inspector.",
 		render: (route) => <BreakdownsPrototype route={route} />,
+	},
+	{
+		key: "reflexives",
+		title: "Reflexives",
+		icon: FlipHorizontal2Icon,
+		description:
+			"A Reading's Citation with its lexical reflexive, and where the Valency Line puts it (#1285), from the Notes fake db. Knobs in the inspector.",
+		render: (route) => <ReflexivesPrototype route={route} />,
 	},
 	{
 		key: "loading",

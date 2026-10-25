@@ -16,7 +16,9 @@ import {
  * Breakdown fixtures for the playground (ADR 0050, ADR 0051). Nothing
  * produces Breakdowns yet, so these Readings carry hand-written ones that
  * Dumrel validates. Stored parts are Lemma targets; pending parts are Unit
- * Shadows, so the Notes show partial walks and Shadow Formations.
+ * Shadows, so the Notes show partial walks and Shadow Formations. Some carry
+ * a hand-written Valency Frame too, so the lexical reflexive's Citation and
+ * Valency Line can be judged (ADR 0052).
  */
 
 type Route = { readonly family: string; readonly kind: string };
@@ -34,6 +36,7 @@ function lemma(
 	family: string,
 	kind: string,
 	canonicalForm: string,
+	coreFeatures: object = coreFeaturesByRoute[`${family}/${kind}`] ?? {},
 ): Dumling.Lemma<"de"> {
 	return parseGermanReading({
 		unitKind: "Reading",
@@ -43,7 +46,7 @@ function lemma(
 			family,
 			kind,
 			canonicalForm,
-			coreFeatures: coreFeaturesByRoute[`${family}/${kind}`] ?? {},
+			coreFeatures,
 		},
 		emojiDescription: "🔗",
 	}).lemma;
@@ -88,6 +91,15 @@ const ARZT = noun("Arzt");
 const LAUFEN = verb("laufen");
 const STUBE = noun("Stube");
 const ZU_HAUSE = lemma("Locution", "ADV", "zu Hause");
+const ERINNERN = verb("erinnern");
+const adposition = (canonicalForm: string) => ({
+	unitKind: "Lemma" as const,
+	language: "de" as const,
+	family: "Lexeme" as const,
+	kind: "ADP" as const,
+	canonicalForm,
+	coreFeatures: {},
+});
 /** The Notes Study's stored Suffix Lemma, so `-ung` links to a real Note. */
 const UNG = lemma("Morpheme", "Suffix", "-ung");
 
@@ -99,7 +111,49 @@ type BreakdownFixture = {
 	readonly constituents?: readonly Piece[];
 	readonly morphemes?: readonly Piece[];
 	readonly source?: Dumrel.LinkTarget;
+	readonly valency?: readonly Dumrel.ValencySlot[];
 };
+
+const subject: Dumrel.ValencySlot = {
+	status: "Required",
+	complements: [{ kind: "Case", governedCase: "Nom", referent: "Someone" }],
+};
+
+/** A lexical reflexive's Slot, after its fixed phrase's preposition if any (ADR 0052). */
+const reflexive = (
+	governedCase: "Acc" | "Dat",
+	options: {
+		readonly status?: Dumrel.ValencySlotStatus;
+		readonly after?: string;
+	} = {},
+): Dumrel.ValencySlot => ({
+	status: options.status ?? "Required",
+	complements: [
+		{
+			kind: "Reflexive",
+			governedCase,
+			...(options.after
+				? { preposition: adposition(options.after) }
+				: {}),
+		},
+	],
+});
+
+const governed = (
+	preposition: string,
+	governedCase: "Acc" | "Dat",
+	status: Dumrel.ValencySlotStatus = "Optional",
+): Dumrel.ValencySlot => ({
+	status,
+	complements: [
+		{
+			kind: "Preposition",
+			preposition: adposition(preposition),
+			governedCase,
+			referent: "Either",
+		},
+	],
+});
 
 const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 	{
@@ -308,19 +362,76 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		],
 	},
 	{
-		lemma: lemma("Locution", "VERB", "sich wie zu Hause fühlen"),
-		emoji: "🛋️",
+		lemma: lemma("Locution", "VERB", "wie zu Hause fühlen"),
+		emoji: "🪞🏠😌",
 		definition: "Sich irgendwo wohl und ungezwungen fühlen.",
 		translations: ["to feel at home", "чувствовать себя как дома"],
 		constituents: [
-			link("sich", pendingWord("VERB", "sich fühlen")),
-			space,
-			link("wie", pendingWord("ADV", "wie")),
+			link("wie", pendingWord("CCONJ", "wie")),
 			space,
 			link("zu Hause", ZU_HAUSE),
 			space,
-			link("fühlen", pendingWord("VERB", "sich fühlen")),
+			link("fühlen", pendingWord("VERB", "fühlen")),
 		],
+		valency: [subject, reflexive("Acc")],
+	},
+	{
+		lemma: ERINNERN,
+		emoji: "💭",
+		definition: "Jemanden dazu bringen, an etwas zu denken.",
+		translations: ["to remind", "напоминать"],
+		valency: [
+			subject,
+			{
+				status: "Required",
+				complements: [
+					{ kind: "Case", governedCase: "Acc", referent: "Someone" },
+				],
+			},
+			governed("an", "Acc", "Required"),
+		],
+	},
+	{
+		lemma: ERINNERN,
+		emoji: "🪞🧠",
+		definition: "Etwas im Gedächtnis haben und es wieder vor Augen sehen.",
+		translations: ["to remember", "вспоминать"],
+		valency: [subject, reflexive("Acc"), governed("an", "Acc")],
+	},
+	{
+		lemma: verb("schämen"),
+		emoji: "🪞😳",
+		definition: "Ein Gefühl der Scham empfinden.",
+		translations: ["to be ashamed", "стыдиться"],
+		valency: [subject, reflexive("Acc"), governed("für", "Acc")],
+	},
+	{
+		lemma: lemma("Lexeme", "VERB", "ausruhen", { hasSepPrefix: "aus" }),
+		emoji: "🛌",
+		definition: "Eine Pause machen, um wieder zu Kräften zu kommen.",
+		translations: ["to rest", "отдыхать"],
+		valency: [subject, reflexive("Acc", { status: "Optional" })],
+	},
+	{
+		lemma: lemma("Locution", "VERB", "Sorgen machen"),
+		emoji: "🪞😟",
+		definition: "Sich um jemanden oder etwas sorgen.",
+		translations: ["to worry", "беспокоиться"],
+		valency: [subject, reflexive("Dat"), governed("um", "Acc")],
+	},
+	{
+		lemma: lemma("Locution", "VERB", "es gemütlich machen"),
+		emoji: "🪞🛋️",
+		definition: "Sich bequem einrichten und entspannen.",
+		translations: ["to make oneself comfortable", "устроиться поудобнее"],
+		valency: [subject, reflexive("Dat")],
+	},
+	{
+		lemma: lemma("Locution", "VERB", "außer sein"),
+		emoji: "🪞😤",
+		definition: "Vor Wut oder Aufregung die Fassung verloren haben.",
+		translations: ["to be beside oneself", "быть вне себя"],
+		valency: [subject, reflexive("Dat", { after: "außer" })],
 	},
 	{
 		lemma: lemma("Locution", "VERB", "den Faden verlieren"),
@@ -379,6 +490,7 @@ function unitFor(fixture: BreakdownFixture): NoteStudyDatabaseUnit {
 					}
 				: {}),
 			...(fixture.source ? { source: { target: fixture.source } } : {}),
+			...(fixture.valency ? { valency: fixture.valency } : {}),
 		},
 	});
 	if (!parsed.success) throw parsed.error;

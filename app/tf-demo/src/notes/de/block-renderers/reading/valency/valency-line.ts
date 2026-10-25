@@ -1,3 +1,7 @@
+import {
+	type ReflexiveSlot,
+	reflexiveSlotOf,
+} from "../../../../../../shared/reflexive-slot";
 import type { NoteDataFor } from "../../../../universal/note/data";
 
 type FrameSlot = NonNullable<
@@ -18,7 +22,13 @@ export type ValencyLinePart =
 			/** A separable verb's base, which its prefix attaches to on the left. */
 			readonly separable: boolean;
 	  }
-	| { readonly part: "Reflexive"; readonly text: string }
+	| {
+			readonly part: "Reflexive";
+			readonly text: string;
+			/** The case the line names beside `sich`, if its style names one. */
+			readonly case: "Acc" | "Dat" | null;
+			readonly optional: boolean;
+	  }
 	| { readonly part: "Fixed"; readonly text: string }
 	| {
 			readonly part: "Slot";
@@ -29,6 +39,23 @@ export type ValencyLinePart =
 			readonly token: string;
 	  }
 	| { readonly part: "SeparatedPrefix"; readonly text: string };
+
+/**
+ * Where the line puts a lexical reflexive and which case it names (#1285, a
+ * presentation choice). The default follows DWDS's WDG lines, which read in
+ * main-clause order with the reflexive right after the verb (`/jmd. stellt
+ * sich <Dat.> etw. vor/`), and Duden, which names a dative reflexive and
+ * leaves the accusative unmarked (`sich (Dativ) etwas vorstellen`).
+ */
+export type ValencyLineStyle = {
+	readonly reflexivePlacement: "AfterHead" | "BeforeHead";
+	readonly reflexiveCase: "DativeOnly" | "Always" | "Never";
+};
+
+export const DEFAULT_VALENCY_LINE_STYLE: ValencyLineStyle = {
+	reflexivePlacement: "AfterHead",
+	reflexiveCase: "DativeOnly",
+};
 
 type ValencyLemma = {
 	readonly family: string;
@@ -56,25 +83,29 @@ const CASE_SLOT_ORDER = [
  * `null` when the frame has nothing to show. It is computed each render and
  * never stored.
  *
- * The line reads: the head (a separable verb's base, marked `>`), a lexical
- * reflexive `sich`, the bare case slots (Dat before Acc before Gen), a
- * Locution's other Fixed words, the preposition slots, and last the separated
- * prefix (marked `<`). Optional slots are parenthesised. A Nom slot is the
- * subject and is not shown.
+ * The line reads: the head (a separable verb's base, marked `>`), the
+ * frame's lexical reflexive `sich`, the bare case slots (Dat before Acc
+ * before Gen), a Locution's other Fixed words, the preposition slots, and
+ * last the separated prefix (marked `<`). Optional slots are parenthesised.
+ * A Nom slot is the subject and is not shown. A leading `es` stays before
+ * the reflexive (`machen es sich gemütlich`), and a reflexive with a
+ * preposition follows it among the Fixed words (`sein außer sich`), as in a
+ * German main clause.
  *
  * Provisional: where slots go relative to a Locution's Fixed words is not
- * decided yet (#711). This order matches ADR 0034's six examples, and
- * placing `sich` before the case slots follows German word order
- * (`nimmt sich etwas zu Herzen`). Keep the whole ordering rule here.
+ * decided yet (#711). This order matches ADR 0034's six examples. Keep the
+ * whole ordering rule here.
  */
 export function germanValencyLine(
 	lemma: ValencyLemma,
 	frame: readonly FrameSlot[] | undefined,
+	style: ValencyLineStyle = DEFAULT_VALENCY_LINE_STYLE,
 ): readonly ValencyLinePart[] | null {
 	const slots = (frame ?? []).flatMap(slotPart);
-	if (slots.length === 0) return null;
+	const reflexive = reflexiveSlotOf(frame);
+	if (slots.length === 0 && !reflexive) return null;
 
-	const { head, reflexive, fixed } = splitCanonicalForm(lemma);
+	const { head, fixed } = splitCanonicalForm(lemma);
 	const prefix = separablePrefix(lemma.coreFeatures, head);
 	const caseSlots = CASE_SLOT_ORDER.flatMap((grammaticalCase) =>
 		slots.filter(
@@ -83,40 +114,66 @@ export function germanValencyLine(
 		),
 	);
 	const prepositionSlots = slots.filter((slot) => slot.preposition !== null);
+	const headPart: ValencyLinePart = {
+		part: "Head",
+		text: prefix ? head.slice(prefix.length) : head,
+		separable: prefix !== null,
+	};
+	const sich = reflexive ? reflexivePart(reflexive, style) : null;
+	const preposition = reflexive?.preposition ?? null;
+	const governor = preposition === null ? -1 : fixed.indexOf(preposition);
+	const leadingEs = governor < 0 && fixed[0] === "es" ? 1 : 0;
+	const [beforeSich, afterSich] =
+		governor >= 0
+			? [fixed.slice(0, governor + 1), fixed.slice(governor + 1)]
+			: [fixed.slice(0, leadingEs), fixed.slice(leadingEs)];
+	const fixedPart = (words: readonly string[]): ValencyLinePart[] =>
+		words.length > 0 ? [{ part: "Fixed", text: words.join(" ") }] : [];
+	const around = [...fixedPart(beforeSich), ...(sich ? [sich] : [])];
 
 	return [
-		{
-			part: "Head",
-			text: prefix ? head.slice(prefix.length) : head,
-			separable: prefix !== null,
-		},
-		...(reflexive ? [{ part: "Reflexive" as const, text: reflexive }] : []),
-		...caseSlots,
-		...(fixed ? [{ part: "Fixed" as const, text: fixed }] : []),
+		...(governor < 0 && style.reflexivePlacement === "BeforeHead"
+			? [...around, headPart, ...caseSlots]
+			: governor < 0
+				? [headPart, ...around, ...caseSlots]
+				: [headPart, ...caseSlots, ...around]),
+		...fixedPart(afterSich),
 		...prepositionSlots,
 		...(prefix ? [{ part: "SeparatedPrefix" as const, text: prefix }] : []),
 	];
 }
 
+/** The reflexive as the line shows it, with the case its style names. */
+function reflexivePart(
+	reflexive: ReflexiveSlot,
+	style: ValencyLineStyle,
+): ValencyLinePart {
+	const shown =
+		style.reflexiveCase === "Always" ||
+		(style.reflexiveCase === "DativeOnly" &&
+			reflexive.governedCase === "Dat");
+	return {
+		part: "Reflexive",
+		text: "sich",
+		case: shown ? reflexive.governedCase : null,
+		optional: reflexive.status === "Optional",
+	};
+}
+
 /**
- * A verbal Locution's head is its final infinitive (`auf den Keks gehen`), and
- * so is a reflexive verb's (`sich freuen`). Any other Canonical Form is its
- * own head.
+ * A verbal Locution's head is its final infinitive (`auf den Keks gehen`),
+ * and its other words are Fixed. Any other Canonical Form is its own head.
  */
 function splitCanonicalForm(lemma: ValencyLemma): {
 	readonly head: string;
-	readonly reflexive: string | null;
-	readonly fixed: string | null;
+	readonly fixed: readonly string[];
 } {
 	const words = lemma.canonicalForm.trim().split(/\s+/u);
 	const last = words.at(-1) ?? "";
 	if (words.length < 2 || !/^[a-zäöüß]+n$/u.test(last)) {
-		return { head: lemma.canonicalForm, reflexive: null, fixed: null };
+		return { head: lemma.canonicalForm, fixed: [] };
 	}
-	const rest = words.slice(0, -1);
-	const reflexive = rest[0] === "sich" ? "sich" : null;
-	const fixed = (reflexive ? rest.slice(1) : rest).join(" ");
-	return { head: last, reflexive, fixed: fixed === "" ? null : fixed };
+	return { head: last, fixed: words.slice(0, -1) };
 }
 
 /** The `hasSepPrefix` Core Feature, when it really begins the head. */
@@ -143,7 +200,7 @@ type SlotPart = Extract<ValencyLinePart, { part: "Slot" }>;
  * The part a Slot shows: its one complement marked by case, unless that is
  * the subject's Nom. A Slot with alternatives, or with an Adverbial,
  * Predicative or Clause, shows nothing until #676 decides how the line
- * renders them, and a Reflexive nothing until #1285 places it.
+ * renders them. A Reflexive is placed by {@link germanValencyLine} itself.
  */
 function slotPart(slot: FrameSlot): SlotPart[] {
 	const [complement, ...alternatives] = slot.complements;

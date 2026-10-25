@@ -40,6 +40,31 @@ const adp = (canonicalForm: string): GermanPreposition => ({
 	coreFeatures: {},
 });
 
+const locution = (canonicalForm: string): Lemma => ({
+	family: "Locution",
+	kind: "VERB",
+	canonicalForm,
+	coreFeatures: {},
+});
+
+/** A Reflexive Slot, with the preposition a fixed phrase puts it after. */
+const reflexive = (
+	status: "Required" | "Optional",
+	governedCase: "Acc" | "Dat",
+	preposition?: string,
+): ValencyFrame[number] => ({
+	status,
+	complements: [
+		{
+			kind: "Reflexive",
+			governedCase,
+			...(preposition === undefined
+				? {}
+				: { preposition: adp(preposition) }),
+		},
+	],
+});
+
 const cases: readonly {
 	readonly lemma: Lemma;
 	readonly frame: ValencyFrame;
@@ -169,23 +194,72 @@ const cases: readonly {
 		],
 		line: "stellen (`jM`) `etw` zur Verfügung",
 	},
+	// Not ADR 0034's lines: the frame's lexical reflexive follows the head
+	// (ADR 0052), naming its case when it is Dat.
 	{
-		// Not one of ADR 0034's lines: a lexical reflexive follows the head.
-		lemma: {
-			family: "Lexeme",
-			kind: "VERB",
-			canonicalForm: "sich vorstellen",
-			coreFeatures: { hasSepPrefix: "vor" },
-		},
+		lemma: verb("vorstellen", "vor"),
 		frame: [
+			reflexive("Required", "Dat"),
 			{
 				status: "Required",
 				complements: [
-					{ kind: "Case", governedCase: "Acc", referent: "Either" },
+					{
+						kind: "Case",
+						governedCase: "Acc",
+						referent: "Something",
+					},
 				],
 			},
 		],
-		line: ">stellen sich `jN/etw` vor<",
+		line: ">stellen sich (Dat) `etw` vor<",
+	},
+	{
+		lemma: verb("erinnern", null),
+		frame: [
+			reflexive("Required", "Acc"),
+			{
+				status: "Optional",
+				complements: [
+					{
+						kind: "Preposition",
+						preposition: adp("an"),
+						governedCase: "Acc",
+						referent: "Either",
+					},
+				],
+			},
+		],
+		line: "erinnern sich (an `jN/etw`)",
+	},
+	{
+		lemma: verb("schämen", null),
+		frame: [reflexive("Required", "Acc")],
+		line: "schämen sich",
+	},
+	{
+		lemma: verb("ausruhen", "aus"),
+		frame: [reflexive("Optional", "Acc")],
+		line: ">ruhen (sich) aus<",
+	},
+	{
+		lemma: locution("Sorgen machen"),
+		frame: [reflexive("Required", "Dat")],
+		line: "machen sich (Dat) Sorgen",
+	},
+	{
+		lemma: locution("es gemütlich machen"),
+		frame: [reflexive("Required", "Dat")],
+		line: "machen es sich (Dat) gemütlich",
+	},
+	{
+		lemma: locution("außer sein"),
+		frame: [reflexive("Required", "Dat", "außer")],
+		line: "sein außer sich (Dat)",
+	},
+	{
+		lemma: locution("es in haben"),
+		frame: [reflexive("Required", "Dat", "in")],
+		line: "haben es in sich (Dat)",
 	},
 ];
 
@@ -202,7 +276,8 @@ test("only separable verbs carry the split marks", () => {
 	expect(marked.map(({ lemma }) => lemma.canonicalForm)).toEqual([
 		"aufpassen",
 		"anfangen",
-		"sich vorstellen",
+		"vorstellen",
+		"ausruhen",
 	]);
 });
 

@@ -49,10 +49,6 @@ const contexts: Record<string, readonly [string, string]> = {
 		".“",
 	],
 	"eine Entscheidung fällen": ["Das Gericht muss heute ", "."],
-	"sich entscheiden": [
-		"Bis Freitag muss sie ",
-		", welches Angebot sie annimmt.",
-	],
 	"eine Entscheidung aufschieben": [
 		"Wir können nicht noch einmal ",
 		", denn die Frist endet heute.",

@@ -1,23 +1,51 @@
 import { NoteSection } from "lego";
-import { Fragment, type ReactNode } from "react";
+import { createContext, Fragment, type ReactNode, useContext } from "react";
 
 import type { ReadingDefaultRenderer } from "../../../../universal/blocks/renderer";
-import { germanValencyLine, type ValencyLinePart } from "./valency-line";
+import {
+	DEFAULT_VALENCY_LINE_STYLE,
+	germanValencyLine,
+	type ValencyLinePart,
+	type ValencyLineStyle,
+} from "./valency-line";
+
+/**
+ * The line's style, which the Playground's inspector varies to compare
+ * where the reflexive goes (#1285). The app always reads the default.
+ */
+export const ValencyLineStyleContext = createContext<ValencyLineStyle>(
+	DEFAULT_VALENCY_LINE_STYLE,
+);
 
 /**
  * The German Valency Block: the Lemma with its Reading's Valency Frame, as in
  * `>passen (auf jN/etw) auf<`. A Reading without a frame has no block.
  */
-export const renderDeReadingValency = (({ noteData }) => {
-	const { lemma } = noteData.reading;
-	const parts = germanValencyLine(lemma, noteData.knowledge.valency);
+export const renderDeReadingValency = (({ noteData }) => (
+	<ValencyBlock
+		lemma={noteData.reading.lemma}
+		frame={noteData.knowledge.valency}
+	/>
+)) satisfies ReadingDefaultRenderer;
+
+function ValencyBlock({
+	lemma,
+	frame,
+}: {
+	readonly lemma: Parameters<typeof germanValencyLine>[0] & {
+		readonly language: string;
+	};
+	readonly frame: Parameters<typeof germanValencyLine>[1];
+}) {
+	const style = useContext(ValencyLineStyleContext);
+	const parts = germanValencyLine(lemma, frame, style);
 	if (!parts) return null;
 
 	return (
 		<NoteSection aria-label="Valency" label="Valency">
 			<p data-slot="valency-line" lang={lemma.language}>
 				{parts.map((part, index) => (
-					<Fragment key={partKey(part)}>
+					<Fragment key={`${index}:${part.part}`}>
 						{index > 0 ? " " : null}
 						{renderPart(part)}
 					</Fragment>
@@ -25,7 +53,7 @@ export const renderDeReadingValency = (({ noteData }) => {
 			</p>
 		</NoteSection>
 	);
-}) satisfies ReadingDefaultRenderer;
+}
 
 function renderPart(part: ValencyLinePart): ReactNode {
 	switch (part.part) {
@@ -38,7 +66,25 @@ function renderPart(part: ValencyLinePart): ReactNode {
 			) : (
 				part.text
 			);
-		case "Reflexive":
+		case "Reflexive": {
+			const reflexive = (
+				<>
+					{part.text}
+					{part.case ? (
+						<>
+							{" "}
+							<span
+								data-slot="valency-reflexive-case"
+								className="text-[0.8em] text-ink-muted"
+							>
+								({part.case})
+							</span>
+						</>
+					) : null}
+				</>
+			);
+			return part.optional ? <Optional>{reflexive}</Optional> : reflexive;
+		}
 		case "Fixed":
 			return part.text;
 		case "Slot": {
@@ -53,15 +99,7 @@ function renderPart(part: ValencyLinePart): ReactNode {
 					</span>
 				</>
 			);
-			return part.optional ? (
-				<>
-					<span className="text-ink-muted">(</span>
-					{slot}
-					<span className="text-ink-muted">)</span>
-				</>
-			) : (
-				slot
-			);
+			return part.optional ? <Optional>{slot}</Optional> : slot;
 		}
 		case "SeparatedPrefix":
 			return (
@@ -73,6 +111,17 @@ function renderPart(part: ValencyLinePart): ReactNode {
 	}
 }
 
+/** An Optional Slot, in muted parentheses. */
+function Optional({ children }: { readonly children: ReactNode }) {
+	return (
+		<>
+			<span className="text-ink-muted">(</span>
+			{children}
+			<span className="text-ink-muted">)</span>
+		</>
+	);
+}
+
 /** A separable verb's split: `>` before the base, `<` after the prefix. */
 function SplitMark({ children }: { readonly children: ReactNode }) {
 	return (
@@ -80,10 +129,4 @@ function SplitMark({ children }: { readonly children: ReactNode }) {
 			{children}
 		</span>
 	);
-}
-
-function partKey(part: ValencyLinePart): string {
-	return part.part === "Slot"
-		? `Slot:${part.preposition ?? ""}:${part.case}:${part.token}`
-		: part.part;
 }
