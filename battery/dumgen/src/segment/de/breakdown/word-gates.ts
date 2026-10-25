@@ -18,6 +18,13 @@
  *   base Kind (`-er`), a base jev weighs a verb and no noun is a VERB
  *   (`Lehr` is lehren), and one it weighs a noun and no verb a NOUN,
  *   unasked; a base that is both or neither keeps its route question.
+ *   Before -ig and -lich, the noun is tested with its umlaut undone and its
+ *   dropped -e restored (`gnäd` is Gnade), and a base that is also an
+ *   adjective keeps its route question (#1241 round 6).
+ * - **A fossilized prefix stays inside the word.** An analysis or a split
+ *   that cuts `ge-` off stays only when jev weighs the affix test passed
+ *   (system ADR 0051, #1243): a dictionary's word-formation analysis cuts
+ *   the prefix off this word (#1241 round 6).
  * - **A bottom word's Root is no word** (`morphemes.ts`). A bottom word has
  *   no word inside it (ADR 0051), so a split that cuts a suffix off a word
  *   or a verb's stem is no split of it.
@@ -28,8 +35,10 @@ import type { EntryType, Questions } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
 import { type Ask, type AskFailure, askAny, noul, noulOf } from "../../ask.js";
 import type { RouteKey } from "../routes.js";
+import { restoredNouns, withoutUmlaut } from "./forms.js";
 import type { Whole } from "./targets.js";
 import type { WordAnalysis } from "./word-analyses.js";
+import { contendersOf, type Weighed } from "./word-senses.js";
 
 /** A yes must reach this for the shape it gates to be offered or kept. */
 const gateFloor = 0.5;
@@ -60,6 +69,18 @@ const infinitiveOf = (letters: string) => {
 /** Whether letters, as they stand, are a noun. */
 export const nounQuestion = (key: string, letters: string) =>
 	`In \`${key}\`, is "${letters.charAt(0).toLocaleUpperCase("de")}${letters.slice(1)}", spelled exactly so, a noun a dictionary lists as a headword? Answer no when only a longer noun has these letters, as there is no noun "Lehr", only Lehre.`;
+
+/** Whether letters, as they stand, are an adjective. */
+export const adjectiveQuestion = (key: string, letters: string) =>
+	`In \`${key}\`, is "${letters}", spelled exactly so, an adjective a dictionary lists as a headword?`;
+
+/**
+ * Whether the dictionary's word-formation analysis cuts `prefix` off the
+ * word: the affix test (system ADR 0051, #1243). Its example is no
+ * Breakdown case (#693).
+ */
+export const prefixCutQuestion = (key: string, prefix: string) =>
+	`In \`${key}\`, does a dictionary's word-formation analysis cut the prefix ${prefix} off this word: the DWDS Wortzerlegung, else the Wiktionary etymology? Answer no when ${prefix} stays inside a word whose base died out or never stood on its own (Geselle).`;
 
 /** Whether a noun's first part is a word, or a word's stem, of its own. */
 export const wordQuestion = (key: string, letters: string) =>
@@ -141,29 +162,142 @@ export const mayBeCranberry = Effect.fnUntraced(function* (
 	return noulOf(answers, "w_0") < gateFloor;
 });
 
+/** The suffixes before which a base noun may show an umlaut and drop its -e (`gnäd` + -ig is Gnade). */
+const nounRestoringSuffixes: ReadonlySet<string> = new Set(["ig", "lich"]);
+
+/** A suffix's base settled unasked: its route, and the nouns it may be when code tested them. */
+export type BaseRoute = {
+	readonly route: RouteKey;
+	readonly forms?: readonly string[];
+};
+
 /**
  * The route a suffix's base takes unasked, by its letters: VERB when jev
  * weighs them a verb's stem and no noun, NOUN when a noun and no verb's
  * stem, in one request; undefined, unasked, after a suffix with one base
- * Kind, which already routes it.
+ * Kind, which already routes it. Before -ig and -lich the noun test runs
+ * on the nouns the letters may stand for (`restoredNouns`), the ones that
+ * pass are the base's forms, and a base that is also an adjective is left
+ * to its route question.
  */
 export const suffixBaseRoute = Effect.fnUntraced(function* (
 	base: string,
+	suffix: string,
 	whole: Whole,
 	ask: Ask,
-): Effect.fn.Return<RouteKey | undefined, AskFailure> {
+): Effect.fn.Return<BaseRoute | undefined, AskFailure> {
+	const restoring = nounRestoringSuffixes.has(suffix.toLocaleLowerCase("de"));
+	const nouns = restoring ? restoredNouns(base) : [base];
+	const questions: Questions = {
+		b_0: noul(verbBaseQuestion(whole.key, infinitiveOf(base))),
+	};
+	for (const [index, noun] of nouns.entries())
+		questions[`n_${index}`] = noul(nounQuestion(whole.key, noun));
+	if (restoring)
+		questions.a_0 = noul(
+			adjectiveQuestion(
+				whole.key,
+				withoutUmlaut(base).toLocaleLowerCase("de"),
+			),
+		);
+	const answers = yield* askAny(ask, {
+		stage: "breakdown-words",
+		state: whole.state,
+		questions,
+	});
+	const verb = noulOf(answers, "b_0") >= gateFloor;
+	const listed = nouns
+		.map((noun, index) => ({ noun, weight: noulOf(answers, `n_${index}`) }))
+		.filter(({ weight }) => weight >= gateFloor)
+		.sort((left, right) => right.weight - left.weight)
+		.map(({ noun }) => noun);
+	const noun = listed.length > 0;
+	const adjective = restoring && noulOf(answers, "a_0") >= gateFloor;
+	if (verb === noun || adjective) return undefined;
+	if (verb) return { route: "Lexeme/VERB" };
+	return restoring
+		? { route: "Lexeme/NOUN", forms: listed }
+		: { route: "Lexeme/NOUN" };
+});
+
+/**
+ * The prefixes that fossilized inside many simple words, so a cut there
+ * must pass the affix test (system ADR 0051): `ge-`, which Gefahr keeps,
+ * its base having died out (#1241 round 6).
+ */
+const affixTestedPrefixes: ReadonlySet<string> = new Set(["ge-"]);
+
+/** Whether a prefix's cut must pass the affix test before it stays. */
+export const isAffixTested = (prefix: string) =>
+	affixTestedPrefixes.has(prefix);
+
+/** Whether jev weighs the cut of `prefix` off the word confirmed by the affix test, in one request. */
+export const prefixCutConfirmed = Effect.fnUntraced(function* (
+	prefix: string,
+	whole: Whole,
+	ask: Ask,
+): Effect.fn.Return<boolean, AskFailure> {
 	const answers = yield* ask({
 		stage: "breakdown-words",
 		state: whole.state,
-		questions: {
-			b_0: noul(verbBaseQuestion(whole.key, infinitiveOf(base))),
-			n_0: noul(nounQuestion(whole.key, base)),
-		},
+		questions: { p_0: noul(prefixCutQuestion(whole.key, prefix)) },
 	});
-	const verb = noulOf(answers, "b_0") >= gateFloor;
-	const noun = noulOf(answers, "n_0") >= gateFloor;
-	if (verb === noun) return undefined;
-	return verb ? "Lexeme/VERB" : "Lexeme/NOUN";
+	return noulOf(answers, "p_0") >= gateFloor;
+});
+
+/** The affix-tested prefix an analysis cuts off first, if any. */
+function testedPrefix(analysis: WordAnalysis | undefined) {
+	const [first] = analysis?.pieces ?? [];
+	return first?.role === "Prefix" && isAffixTested(first.canonicalForm)
+		? first.canonicalForm
+		: undefined;
+}
+
+/**
+ * The analysis question's options and pick once every analysis that cuts
+ * an affix-tested prefix off the word passes the affix test: asked, one
+ * request per prefix, only when such an analysis is the pick or one of
+ * its contenders (`word-senses.ts`). One that fails leaves the options,
+ * and when it was the pick, the heaviest option left is.
+ */
+export const withTestedPrefixes = Effect.fnUntraced(function* (
+	options: readonly Weighed[],
+	picked: WordAnalysis | undefined,
+	whole: Whole,
+	ask: Ask,
+): Effect.fn.Return<
+	{
+		readonly options: readonly Weighed[];
+		readonly picked: WordAnalysis | undefined;
+	},
+	AskFailure
+> {
+	const inPlay =
+		contendersOf(options) ??
+		options.filter(({ analysis }) => analysis === picked);
+	const prefixes = new Set(
+		inPlay.flatMap(({ analysis }) => {
+			const prefix = testedPrefix(analysis);
+			return prefix === undefined ? [] : [prefix];
+		}),
+	);
+	const failed = new Set<string>();
+	for (const prefix of prefixes)
+		if (!(yield* prefixCutConfirmed(prefix, whole, ask)))
+			failed.add(prefix);
+	if (failed.size === 0) return { options, picked };
+	const fails = (analysis: WordAnalysis | undefined) => {
+		const prefix = testedPrefix(analysis);
+		return prefix !== undefined && failed.has(prefix);
+	};
+	const kept = options.filter(({ analysis }) => !fails(analysis));
+	const [heaviest] = [...kept].sort(
+		(left, right) => right.weight - left.weight,
+	);
+	return {
+		options: kept,
+		picked: fails(picked) ? heaviest?.analysis : picked,
+	};
 });
 
 /**

@@ -32,9 +32,9 @@
  * A phraseme's part that dumcorpus authors only as a pronoun is a PRON
  * (`was`); one it authors only as an inflected determiner or pronoun is a
  * DET before a noun and a PRON where no noun can follow (`allem` in
- * `alles in allem`, Rule de/pron-or-det-by-use); and a `zu` closing a
- * wording after its open slot is the infinitive PART (`um … zu`), all
- * unasked.
+ * `alles in allem`, Rule de/pron-or-det-by-use); a `zu` closing a
+ * wording after its open slot is the infinitive PART (`um … zu`), and one
+ * right before a noun the ADP (`zu Gast sein`), all unasked.
  */
 import type { Questions } from "@typesafe-ai/sdk";
 import { germanSuffixes, isGermanAttributiveForm } from "dumcorpus/inventories";
@@ -86,10 +86,13 @@ import {
 	wordAnalyses,
 } from "./word-analyses.js";
 import {
+	adjectiveQuestion,
 	mayBeCranberry,
 	nounQuestion,
+	prefixCutQuestion,
 	suffixBaseRoute,
 	verbBaseQuestion,
+	withTestedPrefixes,
 	withVerbBases,
 	wordQuestion,
 } from "./word-gates.js";
@@ -228,13 +231,19 @@ const chosenAnalysis = Effect.fnUntraced(function* (
 			? undefined
 			: analyses[Number(answer.choice.slice(1))];
 	if (sense === undefined) return { analysis: picked, bySense: false };
-	const checked = yield* senseChecked(
+	const tested = yield* withTestedPrefixes(
 		weighedOptions(analyses, answer.probabilities),
 		picked,
+		whole,
+		ask,
+	);
+	const checked = yield* senseChecked(
+		tested.options,
+		tested.picked,
 		{ whole, ...sense },
 		ask,
 	);
-	return { analysis: checked, bySense: checked !== picked };
+	return { analysis: checked, bySense: checked !== tested.picked };
 });
 
 /**
@@ -315,13 +324,22 @@ const wordConstituents = Effect.fnUntraced(function* (
 		suffix?.role === "Suffix" &&
 		suffix.baseKind === undefined &&
 		rest.length === 0
-			? yield* suffixBaseRoute(first.letters, whole, ask)
+			? yield* suffixBaseRoute(first.letters, suffix.letters, whole, ask)
 			: undefined;
 	const [base] = parts;
 	const targets = yield* partTargets(
 		baseRoute === undefined || base === undefined
 			? parts
-			: [{ ...base, routes: [baseRoute] }, ...parts.slice(1)],
+			: [
+					{
+						...base,
+						routes: [baseRoute.route],
+						...(baseRoute.forms === undefined
+							? {}
+							: { forms: baseRoute.forms }),
+					},
+					...parts.slice(1),
+				],
 		whole,
 		ask,
 		routeGuideOf(analysis, kind),
@@ -349,6 +367,8 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	verbBaseQuestion("word", "…"),
 	wordQuestion("word", "…"),
 	nounQuestion("word", "…"),
+	adjectiveQuestion("word", "…"),
+	prefixCutQuestion("word", "…"),
 	senseQuestion({ pieces: [], label: "…" }, "…", "…", "NOUN"),
 	...germanSuffixes.flatMap(({ sense }) => (sense ? [sense] : [])),
 	...Object.values(hyphenPrefixGlosses),
@@ -424,7 +444,8 @@ function determinerOrPronoun(
 /**
  * The route a wording's part may take: a noun group, a Locution, a pronoun dumcorpus authors only as one (`was`), an inflected
  * determiner or pronoun by what follows it (`allem`), the infinitive `zu`
- * closing the wording after its open slot (`ohne … zu`), or a word.
+ * closing the wording after its open slot (`ohne … zu`), the preposition
+ * `zu` before a noun (`zu Gast`), or a word.
  */
 function partRoutes(
 	pieces: readonly WordingPiece[],
@@ -439,13 +460,31 @@ function partRoutes(
 		? determinerOrPronoun(pieces[index + 1], pieces[index + 2])
 		: undefined;
 	if (settled !== undefined) return [settled];
-	if (
-		closesSlot(pieces, index) &&
-		piece.reads.toLocaleLowerCase("de") === "zu"
-	)
-		return ["Lexeme/PART"];
+	if (piece.reads.toLocaleLowerCase("de") === "zu") {
+		if (closesSlot(pieces, index)) return ["Lexeme/PART"];
+		if (beforeNoun(pieces, index)) return ["Lexeme/ADP"];
+	}
 	return lexemeRoutes;
 }
+
+/**
+ * Whether the part right after the piece at `index`, joined to it or one
+ * space on, is a noun or an article with its noun (`zu Gast`, `zu|m
+ * Glück`), so a `zu` there is the preposition, not the infinitive's PART
+ * (#1241 round 6).
+ */
+const beforeNoun = (pieces: readonly WordingPiece[], index: number) => {
+	const next = pieces[index + 1];
+	const part =
+		next?.role === "Filler" && next.letters === " "
+			? pieces[index + 2]
+			: next;
+	return (
+		part?.role === "Part" &&
+		part.words === 1 + (part.article ? 1 : 0) &&
+		(part.article === true || /^\p{Lu}/u.test(part.reads))
+	);
+};
 
 /** Whether the piece at `index` ends the wording right after its open slot (`…`). */
 const closesSlot = (pieces: readonly WordingPiece[], index: number) => {

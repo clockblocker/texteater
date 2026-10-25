@@ -22,7 +22,7 @@ const capitalized = (word: string) =>
 const lower = (word: string) => word.toLocaleLowerCase("de");
 
 /** The word with its umlauts undone: `Gäst` → `Gast`, `Häus` → `Haus`. */
-const withoutUmlaut = (word: string) =>
+export const withoutUmlaut = (word: string) =>
 	word.replace(/[äöüÄÖÜ]/gu, (letter) =>
 		letter.normalize("NFD").replace(/\p{M}/gu, "").normalize("NFC"),
 	);
@@ -39,6 +39,17 @@ const defined = <T>(values: readonly (T | undefined)[]): T[] =>
 
 /** The noun case and plural endings a shown noun may carry (`Hause`, `Herzen`, `Kinder`). */
 const nounEndings = ["e", "en", "n", "s", "es", "er", "ern", "ens"];
+
+/**
+ * The nouns a suffix's base may stand for once its umlaut is undone and its
+ * dropped final -e restored, the letters as they stand first: `gnäd` gives
+ * Gnäd, Gnäde, Gnad and Gnade (#1241 round 6).
+ */
+export function restoredNouns(letters: string): readonly string[] {
+	const shown = capitalized(letters);
+	const plain = withoutUmlaut(shown);
+	return [...new Set([shown, `${shown}e`, plain, `${plain}e`])];
+}
 
 function nounForms(word: string): string[] {
 	const base = capitalized(word);

@@ -90,6 +90,9 @@ For German:
 - When two bracketings compete, the DWDS Wortzerlegung decides, else the
   en.wiktionary etymology line: `un- + glücklich`, `verarzten` = `ver- +
   Arzt`.
+- A fossilized `ge-` is cut off only where ADR 0051's affix test confirms
+  it, so `Gefahr`, whose base died out, has no Constituents (the user,
+  2026-10-25).
 - The citation ending is unlinked filler: `verarzten` = `[[ver-|ver]] +
   [[Arzt|arzt]] + en`. Constituents hold no inflectional piece.
 - A linking element is its own piece, linking to an Interfix from the closed

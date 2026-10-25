@@ -19,6 +19,9 @@
  * `breakdown-words`, each Root a suffix would be cut off (#1241 round 4):
  * one that is a word or a verb's stem of its own (`Bau`, `leit`) leaves
  * its split out, since a word built on it would have had Constituents.
+ * A split cutting off a fossilized prefix (`ge-`) stays only when jev
+ * weighs the affix test passed, as `segment.inConstituents` asks it
+ * (`word-gates.ts`, #1241 round 6).
  */
 
 import {
@@ -36,7 +39,7 @@ import {
 	breakdownState,
 	type ProducedPiece,
 } from "../../breakdown.js";
-import { wordRoots } from "./word-gates.js";
+import { isAffixTested, prefixCutConfirmed, wordRoots } from "./word-gates.js";
 
 const lower = (text: string) => text.toLocaleLowerCase("de");
 
@@ -134,6 +137,38 @@ const label = (pieces: readonly ProducedPiece[]) =>
 		)
 		.join(" · ");
 
+/** The affix-tested prefix a split cuts off, if any (`ge-`). */
+const testedPrefixOf = (split: Split) => {
+	const [first] = split;
+	return first?.target?.kind === "Prefix" &&
+		isAffixTested(first.target.canonicalForm)
+		? first.target.canonicalForm
+		: undefined;
+};
+
+/** The splits without those whose fossil-prone prefix jev weighs unconfirmed, one request per prefix. */
+const withoutUnconfirmedPrefixes = Effect.fnUntraced(function* (
+	splits: readonly Split[],
+	state: ReturnType<typeof breakdownState>,
+	ask: Ask,
+): Effect.fn.Return<readonly Split[], AskFailure> {
+	if (splits.length < 2) return splits;
+	const prefixes = new Set(
+		splits.flatMap((split) => {
+			const prefix = testedPrefixOf(split);
+			return prefix === undefined ? [] : [prefix];
+		}),
+	);
+	const failed = new Set<string>();
+	for (const prefix of prefixes)
+		if (!(yield* prefixCutConfirmed(prefix, { key: "word", state }, ask)))
+			failed.add(prefix);
+	return splits.filter((split) => {
+		const prefix = testedPrefixOf(split);
+		return prefix === undefined || !failed.has(prefix);
+	});
+});
+
 /** The split question; its example is no Breakdown case (#693). */
 export const morphemesInstructions =
 	"Which split of `word` into morphemes does school morphemic analysis (Wortbausteine, разбор по составу) give? A prefix or suffix is cut off only where the dictionary's word-formation analysis cuts it in this word: the DWDS Wortzerlegung, else the Wiktionary etymology. Otherwise it stays inside the root (Geselle: gesell · e).";
@@ -170,10 +205,11 @@ export const germanMorphemes = Effect.fnUntraced(function* (
 		),
 	];
 	const words = yield* wordRoots(roots, state, ask);
-	const kept = splits.filter((split) => {
+	const unrooted = splits.filter((split) => {
 		const root = rootOf(split);
 		return root === undefined || !words.has(root);
 	});
+	const kept = yield* withoutUnconfirmedPrefixes(unrooted, state, ask);
 	if (kept.length === 1) return bare;
 	const answers = yield* ask({
 		stage: "breakdown-morphemes",
