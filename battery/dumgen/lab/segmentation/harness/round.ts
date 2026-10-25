@@ -340,9 +340,13 @@ export function repinned(
 	};
 }
 
-/** A projector that picks one end of every Choice and answers every Noul with `noul`. */
+/**
+ * A projector that picks one end of every Choice and answers every Noul
+ * with `noul`; with `runnerUp`, a Choice of two or more options weighs the
+ * option next to its pick that much.
+ */
 const projectorPicking =
-	(end: "first" | "last", noul: number): Projector =>
+	(end: "first" | "last", noul: number, runnerUp = 0): Projector =>
 	({ questions }) =>
 		Object.fromEntries(
 			Object.entries(questions).map(
@@ -354,13 +358,21 @@ const projectorPicking =
 						const choice =
 							(end === "first" ? options[0] : options.at(-1)) ??
 							"";
+						const next =
+							end === "first" ? options[1] : options.at(-2);
 						return [
 							id,
 							{
 								type: "choice",
 								choice,
 								confidence: 1,
-								probabilities: { [choice]: 1 },
+								probabilities:
+									runnerUp > 0 && next !== undefined
+										? {
+												[choice]: 1 - runnerUp,
+												[next]: runnerUp,
+											}
+										: { [choice]: 1 },
 							},
 						];
 					}
@@ -390,6 +402,16 @@ export const standInAnswers = projectorPicking("first", 0.9);
  * (#1064).
  */
 export const contraryAnswers = projectorPicking("last", 0.1);
+
+/**
+ * Stand-ins for the Breakdown segmenters' projection pass (#1241 round 4):
+ * the first option of a Choice, weighed 0.7 against 0.3 on the second, so
+ * a word's analysis is contested and its sense check priced, and a low
+ * Noul. There a "yes" merges a wording's parts into a Locution and closes
+ * a gate, so `standInAnswers` built route requests a fifth smaller than
+ * jev's answers did, and priced no sense check on a word no cache held.
+ */
+export const breakdownStandIns = projectorPicking("first", 0.1, 0.3);
 
 /** What priced a projected request: another repetition's usage, or its size. */
 type ProjectionBasis = "repetition" | PriceBasis;
