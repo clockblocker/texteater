@@ -12,10 +12,11 @@
  *   gold's Canonical Form too;
  * - for `segment.inConstituents`, whether gold and the answer agree that the
  *   Reading has Constituents at all (`hasConstituents`);
- * - `lenientPass`, the verdict under the noun-or-verb tolerance (#1241,
- *   provisional): a compound's first part whose letters spell both a noun and
- *   a verb's stem (`Segel` in `Segelboot`: NOUN `Segel` or VERB `segeln`)
- *   passes linked to either. Everything else must still come back exactly.
+ * - `lenientPass`, the verdict under the noun-or-verb tolerance (the user,
+ *   2026-10-25, #1241): a compound's first part whose letters spell both a
+ *   noun and a verb's stem (`Segel` in `Segelboot`: NOUN `Segel` or VERB
+ *   `segeln`) passes linked to either. Everything else must still come back
+ *   exactly.
  */
 import type { OperationEvaluationRun } from "promptsmith/evaluation";
 import type {

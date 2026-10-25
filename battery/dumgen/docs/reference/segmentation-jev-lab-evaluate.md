@@ -136,9 +136,9 @@ Knowledge for the Source first and runs no segmenter on such a Reading. A case p
 metrics add cut precision and recall, gold links placed, with gold's route
 and exact, and agreement on whether there are Constituents at all, overall
 and for phrasemes and words apart. `lenientExact` is the exact rate under
-the noun-or-verb tolerance (#1241, provisional): a compound's first part
-whose letters spell both a noun and a verb's stem (`Segel` in `Segelboot`)
-passes linked to either.
+the noun-or-verb tolerance, which the user confirmed on #1241 on
+2026-10-25: a compound's first part whose letters spell both a noun and a
+verb's stem (`Segel` in `Segelboot`) passes linked to either.
 
 They answer jev through the lab's cache, as segment.inUnits does, but count
 against no lab round: a live run needs `--budget` (fresh jev input tokens),
