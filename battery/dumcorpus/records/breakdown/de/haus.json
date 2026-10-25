@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Haus",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🏠"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Haus",
+					"target": {
+						"language": "de",
+						"canonicalForm": "haus",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Haus",
+				"url": "https://www.dwds.de/wb/Haus",
+				"supports": "No Wortzerlegung; Etymologie: ahd. hūs, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "verkauft sein Haus. DWDS gives no Wortzerlegung, so it is a bottom word: the Root haus and the zero ending (ADR 0051)."
+	}
+}

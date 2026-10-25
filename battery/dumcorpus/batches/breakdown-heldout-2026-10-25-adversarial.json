@@ -1,101 +1,101 @@
 {
-	"note": "Adversarial held-out candidates for German segment.inConstituents and segment.inMorphemes, drafted 2026-10-25 as Draft Breakdown Records in records/breakdown/de to judge round 5 (#1241). Reported apart from the headline real-text set (breakdown-heldout-2026-10-25-realtext): fresh words that probe the failure classes round 4 found (summaries/20261024T0758--segment-in-constituents--round-4--analysis.json), so the score says whether a class generalizes, not whether its tuning cases pass. Per row: AD1 Fischer and AD2 Schaukelpferd, a base that spells a noun and a verb stem where DWDS picks the verb (class D; AD1 an -er derivation like Kreuzer 🚢, AD2 a compound's first part like Segelboot), with AD3 Paddelboot as the control where DWDS picks the noun Paddel though paddeln exists, so a sense-led route that always prefers the verb fails it; AD4 and AD5 Poster, one spelling with two Lemmas, two DWDS headwords with their own senses (das Poster, also der, in free variation; der Poster): das Poster 🖼, a loan from English poster with no Wortzerlegung whose letters invite Post + -er or posten + -er (class S2), and der Poster 💬, someone who posts in a forum, posten + -er, an -er agent whose base also spells the noun Post (classes S1 and D); AD6 Edamer 🧀, a PROPN base (Edam + -er) whose sense is a cheese, not an inhabitant, with its own Wortzerlegung and no Grundform line, unlike Hamburger 🍔 (class P); AD7 nach wie vor, an ADV Locution whose parts DWDS files under the adverbs nach and vor, not the prepositions, with the CCONJ wie between them (class E); AD8 unter Dach und Fach bringen, an inner Locution ADV that DWDS lists apart and uses with other verbs, as auf Nummer sicher (class F); AD9 Murmeltier, a first part that is a real but regional noun (DWDS 2Murmel, the animal), as Ren is in Rentier, beside die Murmel, the marble (class C′); AD10 Honig, a bottom word whose ending is the listed suffix -ig on a bound piece Hon, so the bottom-word test can't reject the cut as it can when the base is a word (class G′, without the umlaut Römer 🍷 had); AD11 and AD12 Musikerleben, one Lemma with two Readings that DWDS gives two articles: Musiker + Leben 🧑‍🎤 and Musik + Erleben 🎧 (the Staubecken / Wachstube type). Every word split follows the DWDS Wortzerlegung (ADR 0050's tie rule) and every phraseme its DWDS entry, cited in its record. Avoided: every Lemma with a Breakdown Record; the words round 4 proposed as tuning cases (Staubecken, Druckerzeugnis, Spielende, Urinstinkt, Berliner, Schweizer, Wiener, Hamburger, Erbrecht, Steuermann, Messer, Bauer, Leiter, Laster, Rentier, Gründung, Wachstube, Stimmung); the real-text batch's Lemmas; words any Breakdown prompt names and Lemmas a Rule names; vor allem, an earlier prompt's example; adverb + dass subordinators, ohne dass and statt dass (#1281); Sources (Dampfer, which the Etymologie calls a Kurzform of Dampfschiff; Pilsner 🍺, Emmentaler 🧀 and Puffer, which DWDS gives a Grundform line; Boxer 🐕, a sense transferred from Boxer 🥊 with no Wortzerlegung of its own); ab und zu, whose zu DWDS links to the preposition while its Etymologie calls it an adverb; and rare senses (Schauer 'Zuschauer', Hammer for someone from Hamm). Consistency sets: A1 one spelling, an -er derivation against a loan with no Wortzerlegung (Poster); A2 one Lemma whose two Readings cut the compound in different places (Musikerleben); A3 a base that spells both a noun and a verb stem, where DWDS decides (Fischer, Schaukelpferd, Paddelboot, Poster 💬); A4 a bottom word whose last letters look like a listed suffix but stay in the Root (Honig, Poster 🖼). Until two judges (system and learner POV, #1241) review the calls, every row is a Draft; the lab scores these records only in segment-in-constituents/de:heldout, as the adversarial set, and they stay out of every Breakdown prompt's examples (#693). Judged 2026-10-25 by two judges, system and learner POV (#1241): on their agreement Poster 🖼 (AD4) and the part Murmel in Murmeltier (AD9) take a mixed Masc and Neut Core gender (de/noun-gender-in-free-variation); their splits are listed on #1241.",
+	"note": "Adversarial held-out candidates for German segment.inConstituents and segment.inMorphemes, drafted 2026-10-25 as Draft Breakdown Records in records/breakdown/de to judge round 5 (#1241). Reported apart from the headline real-text set (breakdown-heldout-2026-10-25-realtext): fresh words that probe the failure classes round 4 found (summaries/20261024T0758--segment-in-constituents--round-4--analysis.json), so the score says whether a class generalizes, not whether its tuning cases pass. Per row: AD1 Fischer and AD2 Schaukelpferd, a base that spells a noun and a verb stem where DWDS picks the verb (class D; AD1 an -er derivation like Kreuzer 🚢, AD2 a compound's first part like Segelboot), with AD3 Paddelboot as the control where DWDS picks the noun Paddel though paddeln exists, so a sense-led route that always prefers the verb fails it; AD4 and AD5 Poster, one spelling with two Lemmas, two DWDS headwords with their own senses (das Poster, also der, in free variation; der Poster): das Poster 🖼, a loan from English poster with no Wortzerlegung whose letters invite Post + -er or posten + -er (class S2), and der Poster 💬, someone who posts in a forum, posten + -er, an -er agent whose base also spells the noun Post (classes S1 and D); AD6 Edamer 🧀, a PROPN base (Edam + -er) whose sense is a cheese, not an inhabitant, with its own Wortzerlegung and no Grundform line, unlike Hamburger 🍔 (class P); AD7 nach wie vor, an ADV Locution whose parts DWDS files under the adverbs nach and vor, not the prepositions, with the CCONJ wie between them (class E); AD8 unter Dach und Fach bringen, an inner Locution ADV that DWDS lists apart and uses with other verbs, as auf Nummer sicher (class F); AD9 Murmeltier, a first part that is a real but regional noun (DWDS 2Murmel, the animal), as Ren is in Rentier, beside die Murmel, the marble (class C′); AD10 Honig, a bottom word whose ending is the listed suffix -ig on a bound piece Hon, so the bottom-word test can't reject the cut as it can when the base is a word (class G′, without the umlaut Römer 🍷 had); AD11 and AD12 Musikerleben, one Lemma with two Readings that DWDS gives two articles: Musiker + Leben 🧑‍🎤 and Musik + Erleben 🎧 (the Staubecken / Wachstube type). Every word split follows the DWDS Wortzerlegung (ADR 0050's tie rule) and every phraseme its DWDS entry, cited in its record. Avoided: every Lemma with a Breakdown Record; the words round 4 proposed as tuning cases (Staubecken, Druckerzeugnis, Spielende, Urinstinkt, Berliner, Schweizer, Wiener, Hamburger, Erbrecht, Steuermann, Messer, Bauer, Leiter, Laster, Rentier, Gründung, Wachstube, Stimmung); the real-text batch's Lemmas; words any Breakdown prompt names and Lemmas a Rule names; vor allem, an earlier prompt's example; adverb + dass subordinators, ohne dass and statt dass (#1281); Sources (Dampfer, which the Etymologie calls a Kurzform of Dampfschiff; Pilsner 🍺, Emmentaler 🧀 and Puffer, which DWDS gives a Grundform line; Boxer 🐕, a sense transferred from Boxer 🥊 with no Wortzerlegung of its own); ab und zu, whose zu DWDS links to the preposition while its Etymologie calls it an adverb; and rare senses (Schauer 'Zuschauer', Hammer for someone from Hamm). Consistency sets: A1 one spelling, an -er derivation against a loan with no Wortzerlegung (Poster); A2 one Lemma whose two Readings cut the compound in different places (Musikerleben); A3 a base that spells both a noun and a verb stem, where DWDS decides (Fischer, Schaukelpferd, Paddelboot, Poster 💬); A4 a bottom word whose last letters look like a listed suffix but stay in the Root (Honig, Poster 🖼). Until two judges (system and learner POV, #1241) review the calls, every row is a Draft; the lab scores these records only in segment-in-constituents/de:heldout, as the adversarial set, and they stay out of every Breakdown prompt's examples (#693). Judged 2026-10-25 by two judges, system and learner POV (#1241): on their agreement Poster 🖼 (AD4) and the part Murmel in Murmeltier (AD9) take a mixed Masc and Neut Core gender (de/noun-gender-in-free-variation); their splits are listed on #1241. Promoted 2026-10-25 after round 5 scored them (#1241): every row is now dev, so the lab scores these records in segment-in-constituents/de:breakdown and their bottom words in segment-in-morphemes/de:breakdown, the sets prompts are tuned on, and round 6 is judged by a fresh real-text sample and a fresh adversarial batch (breakdown-heldout-2026-10-25b-adversarial). They stay out of every Breakdown prompt's examples (#693).",
 	"set": "adversarial",
 	"rows": [
 		{
 			"row": "AD1",
 			"record": "breakdown/de/fischer",
 			"bucket": "noun-or-verb-base",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["A3"]
 		},
 		{
 			"row": "AD2",
 			"record": "breakdown/de/schaukelpferd",
 			"bucket": "noun-or-verb-base",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["A3"]
 		},
 		{
 			"row": "AD3",
 			"record": "breakdown/de/paddelboot",
 			"bucket": "control-noun-base",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["A3"]
 		},
 		{
 			"row": "AD4",
 			"record": "breakdown/de/poster-plakat",
 			"bucket": "er-loan-simplex",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["A1", "A4"]
 		},
 		{
 			"row": "AD5",
 			"record": "breakdown/de/poster-forum",
 			"bucket": "er-derivation",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["A1", "A3"]
 		},
 		{
 			"row": "AD6",
 			"record": "breakdown/de/edamer",
 			"bucket": "place-name-base",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "AD7",
 			"record": "breakdown/de/nach-wie-vor",
 			"bucket": "phraseme-part-kind-differs",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "AD8",
 			"record": "breakdown/de/unter-dach-und-fach-bringen",
 			"bucket": "inner-locution",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "AD9",
 			"record": "breakdown/de/murmeltier",
 			"bucket": "real-first-word-not-cranberry",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": []
 		},
 		{
 			"row": "AD10",
 			"record": "breakdown/de/honig",
 			"bucket": "bound-base-bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["A4"]
 		},
 		{
 			"row": "AD11",
 			"record": "breakdown/de/musikerleben-lebensweg",
 			"bucket": "compound-homograph",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["A2"]
 		},
 		{
 			"row": "AD12",
 			"record": "breakdown/de/musikerleben-erleben",
 			"bucket": "compound-homograph",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"consistencySets": ["A2"]
 		}
 	]

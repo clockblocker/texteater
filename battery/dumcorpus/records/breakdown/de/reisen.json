@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "reisen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🧳"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "reis",
+					"target": {
+						"language": "de",
+						"canonicalForm": "reis",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: reisen",
+				"url": "https://www.dwds.de/wb/reisen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. reisōn"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "nach Italien zu reisen. DWDS gives no Wortzerlegung, so it is a bottom word: the Root reis and the Ending en (ADR 0051)."
+	}
+}

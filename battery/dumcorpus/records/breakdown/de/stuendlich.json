@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "stündlich",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🕐"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "stünd",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Stunde",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "lich",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-lich",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: stündlich",
+				"url": "https://www.dwds.de/wb/st%C3%BCndlich",
+				"supports": "The Wortzerlegung Stunde -lich"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "every hour. DWDS splits it Stunde + -lich: the noun shows an umlaut and drops its -e (stünd)."
+	}
+}

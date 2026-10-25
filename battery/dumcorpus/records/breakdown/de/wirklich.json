@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "wirklich",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "✔"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "wirk",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "wirken",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				},
+				{
+					"letters": "lich",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-lich",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: wirklich",
+				"url": "https://www.dwds.de/wb/wirklich",
+				"supports": "The Wortzerlegung 1wirken -lich; sense 3 'dient zur Verstärkung ... in der Tat'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "hatte sich wirklich ... begnügt, indeed. DWDS splits it wirken + -lich (ADR 0050)."
+	}
+}

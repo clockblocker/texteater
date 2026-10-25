@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "gern",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "💕"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "gern",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gern",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gern",
+				"url": "https://www.dwds.de/wb/gern",
+				"supports": "No Wortzerlegung; Etymologie: ahd. gerno, inherited; comparison lieber, am liebsten"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "er lebt gern. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root gern alone."
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Nacht",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🌙"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Nacht",
+					"target": {
+						"language": "de",
+						"canonicalForm": "nacht",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Nacht",
+				"url": "https://www.dwds.de/wb/Nacht",
+				"supports": "No Wortzerlegung; ›Nacht‹ is the Grundform of nachten, nächtens and nachts; Etymologie: ahd. naht, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "in der Nacht aufwachen. DWDS gives no Wortzerlegung, so it is a bottom word: the Root nacht and the zero ending (ADR 0051)."
+	}
+}

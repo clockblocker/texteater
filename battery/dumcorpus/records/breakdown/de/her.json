@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "her",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "↩"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "her",
+					"target": {
+						"language": "de",
+						"canonicalForm": "her",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: her",
+				"url": "https://www.dwds.de/wb/her",
+				"supports": "No Wortzerlegung; Adverb 'von dort (nach hier)'; Etymologie: ahd. hera, an old adverb"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "von den Dünen her, the direction toward the speaker; von ... her is the preposition von and this adverb, no unit of its own. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root her alone."
+	}
+}

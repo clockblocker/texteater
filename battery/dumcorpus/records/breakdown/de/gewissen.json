@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Gewissen",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "😇"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Gewissen",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gewissen",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gewissen",
+				"url": "https://www.dwds.de/wb/Gewissen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. giwiʒʒanī, an abstract on giwiʒʒan, the old participle of wissen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ihr schlechtes Gewissen. The ge- belongs to an Old High German participle that left no modern word, so it is a fossilized prefix the affix test doesn't confirm, and it stays inside the Root, as in Geselle. DWDS gives no Wortzerlegung, so it is a bottom word: the Root gewissen and the zero ending (ADR 0051)."
+	}
+}

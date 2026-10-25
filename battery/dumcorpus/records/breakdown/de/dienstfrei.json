@@ -1,0 +1,63 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "dienstfrei",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🏖"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "dienst",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Dienst",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": "frei",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "frei",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: dienstfrei",
+				"url": "https://www.dwds.de/wb/dienstfrei",
+				"supports": "The Wortzerlegung Dienst frei"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "für jede dienstfreie Stunde, off duty. DWDS splits it Dienst + frei (ADR 0050)."
+	}
+}

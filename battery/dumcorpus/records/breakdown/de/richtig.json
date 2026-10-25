@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "richtig",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "✅"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "richt",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "richten",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				},
+				{
+					"letters": "ig",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-ig",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: richtig",
+				"url": "https://www.dwds.de/wb/richtig",
+				"supports": "The Wortzerlegung shows only -ig; Etymologie: ahd. rihtīg 'ist eine Ableitung von dem unter richten behandelten Verb, kaum von dem unter recht behandelten Adjektiv'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ein richtiges Leben, a real, proper one. DWDS's Wortzerlegung names only the suffix -ig, and its Etymologie names the base: the verb richten, not the adjective recht. So it is richt (the stem of richten) + -ig (ADR 0050)."
+	}
+}

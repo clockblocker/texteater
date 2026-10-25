@@ -1,0 +1,68 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Veilchenwurzelluft",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🌸"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Veilchenwurzel",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Veilchenwurzel",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "luft",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Luft",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Veilchenwurzelluft",
+				"url": "https://www.dwds.de/wb/Veilchenwurzelluft",
+				"supports": "A machine-generated Wortzerlegung 'Veilchenwurzel Luft'"
+			},
+			{
+				"title": "DWDS: Veilchenwurzel",
+				"url": "https://www.dwds.de/wb/Veilchenwurzel",
+				"supports": "The Wortzerlegung Veilchen Wurzel"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "the orris-scented air through the house. DWDS splits it Veilchenwurzel + Luft, whose first part is itself Veilchen + Wurzel, one click away (ADR 0050)."
+	}
+}

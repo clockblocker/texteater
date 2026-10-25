@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "kommen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "⏳"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "komm",
+					"target": {
+						"language": "de",
+						"canonicalForm": "komm",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: kommen",
+				"url": "https://www.dwds.de/wb/kommen",
+				"supports": "No Wortzerlegung; ›kommen‹ is the Grundform of Kunft and of many particle verbs; Etymologie: ahd. queman, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Als es kam, da dacht ich ebenso: 'when it came about'. DWDS gives no Wortzerlegung, so it is a bottom word: the Root komm and the Ending en (ADR 0051)."
+	}
+}

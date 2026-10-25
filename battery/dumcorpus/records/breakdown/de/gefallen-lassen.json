@@ -1,0 +1,64 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "gefallen lassen",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "😤"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "gefallen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "gefallen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "lassen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "lassen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gefallen",
+				"url": "https://www.dwds.de/wb/gefallen",
+				"supports": "Mehrwortausdruck ⟨sich [Dativ] etw. gefallen lassen⟩ '= etw. ohne Aufbegehren hinnehmen'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "daß er sich das alles ruhig gefallen läßt, put up with it. DWDS lists sich etw. gefallen lassen as a Mehrwortausdruck, a Locution whose sich fills the Reading's Reflexive Slot and is no part (ADR 0052). Its parts are its two verbs; lassen is the VERB, since only causative lassen is the AUX."
+	}
+}

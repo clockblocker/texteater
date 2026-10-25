@@ -1,0 +1,63 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Schaukelbrett",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🛝"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Schaukel",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Schaukel",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "brett",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Brett",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Schaukelbrett",
+				"url": "https://www.dwds.de/wb/Schaukelbrett",
+				"supports": "The Wortzerlegung Schaukel Brett"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "the swing's board. DWDS splits it Schaukel + Brett, the noun, not the verb schaukeln (ADR 0050's tie rule)."
+	}
+}

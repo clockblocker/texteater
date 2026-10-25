@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Verneigung",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🙇"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Verneig",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "verneigen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				},
+				{
+					"letters": "ung",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-ung",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Verneigung",
+				"url": "https://www.dwds.de/wb/Verneigung",
+				"supports": "The Wortzerlegung verneigen -ung"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "unter freundlicher Verneigung, a bow. DWDS splits it verneigen + -ung (ADR 0050); Verneig is the verb's stem."
+	}
+}

@@ -1,0 +1,63 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Landrat",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🏛"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Land",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Land",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "rat",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Rat",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Landrat",
+				"url": "https://www.dwds.de/wb/Landrat",
+				"supports": "The Wortzerlegung Land Rat"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "der Herr Landrat, the district administrator. DWDS splits it Land + Rat (ADR 0050)."
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Bad",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🛁"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Bad",
+					"target": {
+						"language": "de",
+						"canonicalForm": "bad",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Bad",
+				"url": "https://www.dwds.de/wb/Bad",
+				"supports": "No Wortzerlegung; ›Bad‹ is the base of baden; Etymologie: ahd. bad, an old participial formation on the root of bähen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ein etwas kaltes Bad. DWDS gives no Wortzerlegung, so it is a bottom word: the Root bad and the zero ending (ADR 0051)."
+	}
+}

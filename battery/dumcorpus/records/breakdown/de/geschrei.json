@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Geschrei",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "😱"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Ge",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ge-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "schrei",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "schreien",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Geschrei",
+				"url": "https://www.dwds.de/wb/Geschrei",
+				"supports": "The Wortzerlegung ge- schreien"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "screaming. DWDS splits it ge- + schreien, the verb's stem (schrei): a ge- the affix test confirms."
+	}
+}

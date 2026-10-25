@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "machen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🛠"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "mach",
+					"target": {
+						"language": "de",
+						"canonicalForm": "mach",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: machen",
+				"url": "https://www.dwds.de/wb/machen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. mahhōn, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "alles machen. DWDS gives no Wortzerlegung, so it is a bottom word: the Root mach and the Ending en (ADR 0051)."
+	}
+}

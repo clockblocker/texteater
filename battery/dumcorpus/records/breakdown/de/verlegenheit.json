@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Verlegenheit",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "😳"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Verlegen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "verlegen",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": "heit",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-heit",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Verlegenheit",
+				"url": "https://www.dwds.de/wb/Verlegenheit",
+				"supports": "The Wortzerlegung 2verlegen -heit"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "diese kleinen Verlegenheiten, awkward moments. DWDS splits it the adjective verlegen + -heit (ADR 0050)."
+	}
+}

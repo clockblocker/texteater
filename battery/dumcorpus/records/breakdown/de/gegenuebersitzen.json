@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "gegenübersitzen",
+			"coreFeatures": {
+				"hasSepPrefix": "gegenüber"
+			}
+		},
+		"emojiDescription": "🪑"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "gegenüber",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gegenüber-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "sitzen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sitzen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gegenübersitzen",
+				"url": "https://www.dwds.de/wb/gegen%C3%BCbersitzen",
+				"supports": "The Wortzerlegung gegenüber sitzen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "als er mir erst gegenübersaß. A particle verb: gegenüber, which hasSepPrefix names, is a true separable particle on dumcorpus's list (no DWDS affix entry, ADR 0050), so it links to its Prefix Morpheme gegenüber-."
+	}
+}

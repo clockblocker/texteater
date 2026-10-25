@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Geschichte",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "📖"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Geschicht",
+					"target": {
+						"language": "de",
+						"canonicalForm": "geschicht",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Geschichte",
+				"url": "https://www.dwds.de/wb/Geschichte",
+				"supports": "No Wortzerlegung, only 'formal verwandt mit geschehen'; Etymologie: ahd. gisciht 'Ereignis'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Geschichten ausplaudert, stories. The ge- is a fossilized prefix no Wortzerlegung confirms, so it stays inside the Root. DWDS gives no Wortzerlegung, so it is a bottom word: the Root geschicht and the Ending e (ADR 0051)."
+	}
+}

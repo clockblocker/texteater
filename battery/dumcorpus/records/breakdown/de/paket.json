@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Paket",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "📦"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Paket",
+					"target": {
+						"language": "de",
+						"canonicalForm": "paket",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Paket",
+				"url": "https://www.dwds.de/wb/Paket",
+				"supports": "No Wortzerlegung; a loan from French paquet"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Er steckte das Paket zu sich. DWDS gives no Wortzerlegung, so it is a bottom word: the Root paket and the zero ending (ADR 0051)."
+	}
+}

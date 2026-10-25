@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "dürfen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🆗"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "dürf",
+					"target": {
+						"language": "de",
+						"canonicalForm": "dürf",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: dürfen",
+				"url": "https://www.dwds.de/wb/d%C3%BCrfen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. durfan, a preterite-present verb"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "das muß ich Ihnen doch sagen dürfen. DWDS gives no Wortzerlegung, so it is a bottom word: the Root dürf and the Ending en (ADR 0051)."
+	}
+}

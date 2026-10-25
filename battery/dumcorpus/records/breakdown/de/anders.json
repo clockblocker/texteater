@@ -1,0 +1,60 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "anders",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🔀"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ander",
+					"target": {
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "ander"
+					}
+				},
+				{
+					"letters": "s",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-s",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: anders",
+				"url": "https://www.dwds.de/wb/anders",
+				"supports": "Adverb with the Grundform ander and no Wortzerlegung"
+			},
+			{
+				"title": "DWDS: ander",
+				"url": "https://www.dwds.de/wb/ander",
+				"supports": "ander, Indefinitpronomen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Kann es anders sein? DWDS derives the adverb from the pronoun ander (its Grundform) with the adverbial -s; an affixal derivation takes Constituents, not a Source (ADR 0050). The adverbial -s is on no closed affix list yet. The pronoun ander is no authored member, so the part links to its Unit Shadow, pending."
+	}
+}

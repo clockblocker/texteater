@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "gläubig",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "🙏"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "gläub",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Glaube",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": "ig",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-ig",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gläubig",
+				"url": "https://www.dwds.de/wb/gl%C3%A4ubig",
+				"supports": "The Wortzerlegung Glaube -ig"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "devout. DWDS splits it the noun Glaube + -ig (gläub), though the letters also spell the stem of glauben."
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Meile",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "📏"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Meil",
+					"target": {
+						"language": "de",
+						"canonicalForm": "meil",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Meile",
+				"url": "https://www.dwds.de/wb/Meile",
+				"supports": "No Wortzerlegung; Etymologie: ahd. mīla, 'eine Entlehnung aus lat. mīlia'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "eine Meile lang. A loan from Latin, with no German formation. DWDS gives no Wortzerlegung, so it is a bottom word: the Root meil and the Ending e (ADR 0051)."
+	}
+}

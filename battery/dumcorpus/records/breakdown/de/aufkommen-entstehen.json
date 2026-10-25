@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "aufkommen",
+			"coreFeatures": {
+				"hasSepPrefix": "auf"
+			}
+		},
+		"emojiDescription": "💭"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "auf",
+					"target": {
+						"language": "de",
+						"canonicalForm": "auf-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "kommen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "kommen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: aufkommen",
+				"url": "https://www.dwds.de/wb/aufkommen",
+				"supports": "The Wortzerlegung auf- kommen; sense 1 ⟨etw. kommt auf⟩, ⟨etw. aufkommen lassen⟩ '(unvermutet) entstehen'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "den Verdacht nicht aufkommen lassen, let a suspicion arise: DWDS lists ⟨etw. aufkommen lassen⟩ as a use of aufkommen, so lassen is no part. A particle verb: auf links to its Prefix Morpheme auf- (ADR 0050)."
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Kuckuck",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🐦"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Kuckuck",
+					"target": {
+						"language": "de",
+						"canonicalForm": "kuckuck",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Kuckuck",
+				"url": "https://www.dwds.de/wb/Kuckuck",
+				"supports": "No Wortzerlegung; Etymologie: ahd. kukuc, 'lautmalende Nachbildung des Vogelrufs'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "da ruft der Kuckuck. DWDS gives no Wortzerlegung, so it is a bottom word: the Root kuckuck and the zero ending (ADR 0051)."
+	}
+}

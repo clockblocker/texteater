@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "wollen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🙋"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "woll",
+					"target": {
+						"language": "de",
+						"canonicalForm": "woll",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: wollen",
+				"url": "https://www.dwds.de/wb/wollen",
+				"supports": "No Wortzerlegung for the modal verb (the homograph adjective wollen 'aus Wolle' is Wolle + -en); Etymologie: ahd. wellen, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "der noch plaudern wollte, the modal 'want'. DWDS gives no Wortzerlegung, so it is a bottom word: the Root woll and the Ending en (ADR 0051)."
+	}
+}

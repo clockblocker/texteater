@@ -1,0 +1,68 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Schulvorsteherin",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "👩‍🏫"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Schul",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Schule",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "vorsteherin",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Vorsteherin",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Schulvorsteherin",
+				"url": "https://www.dwds.de/wb/Schulvorsteherin",
+				"supports": "A machine-generated Wortzerlegung 'schulen Vorsteherin'"
+			},
+			{
+				"title": "DWDS: Schule",
+				"url": "https://www.dwds.de/wb/Schule",
+				"supports": "Schule f., the institution whose head a Schulvorsteherin is"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "die Schulvorsteherin, the woman who heads a school. DWDS's only Wortzerlegung is machine-generated and names the verb schulen; the sense is the noun Schule, whose final -e the first part drops (Schul). Under the confirmed noun-or-verb tolerance either link passes."
+	}
+}

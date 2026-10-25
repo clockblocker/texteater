@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "zugeben",
+			"coreFeatures": {
+				"hasSepPrefix": "zu"
+			}
+		},
+		"emojiDescription": "🤷"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "zu",
+					"target": {
+						"language": "de",
+						"canonicalForm": "zu-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "geben",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "geben",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: zugeben",
+				"url": "https://www.dwds.de/wb/zugeben",
+				"supports": "The Wortzerlegung zu- geben"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Das muß ich zugeben, admit. A particle verb: zu links to its Prefix Morpheme zu- (ADR 0050)."
+	}
+}

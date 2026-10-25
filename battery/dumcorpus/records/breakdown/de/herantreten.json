@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "herantreten",
+			"coreFeatures": {
+				"hasSepPrefix": "heran"
+			}
+		},
+		"emojiDescription": "🚶"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "heran",
+					"target": {
+						"language": "de",
+						"canonicalForm": "heran-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "treten",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "treten",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: herantreten",
+				"url": "https://www.dwds.de/wb/herantreten",
+				"supports": "The Wortzerlegung heran- treten"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "so trat auch schon der Wirt an sie heran. A particle verb: heran links to its Prefix Morpheme heran- (ADR 0050)."
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Legat",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "📜"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Legat",
+					"target": {
+						"language": "de",
+						"canonicalForm": "legat",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Legat",
+				"url": "https://www.dwds.de/wb/Legat",
+				"supports": "No Wortzerlegung; 2Legat n. 'Vermächtnis', 'Entlehnung des 16. Jhs. aus gleichbed. lat. lēgātum'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "bloß ein Legat für die Trippelli, a bequest. DWDS gives no Wortzerlegung, so it is a bottom word: the Root legat and the zero ending (ADR 0051)."
+	}
+}

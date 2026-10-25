@@ -1,0 +1,72 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Blumenschale",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "💐"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Blume",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Blume",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "n",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-n-",
+						"family": "Morpheme",
+						"kind": "Interfix"
+					}
+				},
+				{
+					"letters": "schale",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Schale",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Blumenschale",
+				"url": "https://www.dwds.de/wb/Blumenschale",
+				"supports": "The Wortzerlegung Blume 2Schale"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "mit einer Blumenschale darauf. DWDS splits it Blume + Schale; the n is a linking element, an Interfix piece (ADR 0050)."
+	}
+}

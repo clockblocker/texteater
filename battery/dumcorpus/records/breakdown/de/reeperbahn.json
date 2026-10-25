@@ -1,0 +1,78 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Reeperbahn",
+			"coreFeatures": {
+				"article": "Definite",
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🪢"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Reep",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Reep",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-er-",
+						"family": "Morpheme",
+						"kind": "Interfix"
+					}
+				},
+				{
+					"letters": "bahn",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Bahn",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/proper-noun-article",
+				"hash": "c3eb61394edd1818"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Reeperbahn",
+				"url": "https://www.dwds.de/wb/Reeperbahn",
+				"supports": "The Wortzerlegung Reep Bahn; historisch 'langer, gerader Platz' where ropes were made"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "die »Reeperbahn« hieß, an avenue's name, so a PROPN cited with its article, as a street's name is (Rule de/proper-noun-article). DWDS splits the word Reep + Bahn, so er is a linking element, an Interfix piece (ADR 0050)."
+	}
+}

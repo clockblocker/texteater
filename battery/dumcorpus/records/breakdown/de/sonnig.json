@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "sonnig",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "☀"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "sonn",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Sonne",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "ig",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-ig",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: sonnig",
+				"url": "https://www.dwds.de/wb/sonnig",
+				"supports": "The Wortzerlegung Sonne -ig"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "sunny. DWDS splits it Sonne + -ig, the noun's -e dropped (sonn)."
+	}
+}

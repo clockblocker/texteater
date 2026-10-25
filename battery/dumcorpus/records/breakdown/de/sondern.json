@@ -1,0 +1,44 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "CCONJ",
+			"canonicalForm": "sondern",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "↔"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "sondern",
+					"target": {
+						"language": "de",
+						"canonicalForm": "sondern",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: sondern",
+				"url": "https://www.dwds.de/wb/sondern",
+				"supports": "No Wortzerlegung, only 'formal verwandt mit sonder'; Etymologie: ahd. suntar"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "nicht weil ..., sondern weil .... DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root sondern alone."
+	}
+}

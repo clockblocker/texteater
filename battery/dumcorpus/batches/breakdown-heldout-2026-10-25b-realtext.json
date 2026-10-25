@@ -1,0 +1,520 @@
+{
+	"note": "Held-out real-text batch for German segment.inConstituents and segment.inMorphemes, round 6 of #1241, authored 2026-10-25 as Draft Breakdown Records in records/breakdown/de. Its 60 targets were sampled uniformly at random from the same frame as round 5's real-text batch (breakdown-heldout-2026-10-25-realtext, now promoted to tuning), with a new seed, and gold was authored only after sampling, so no target was replaced, skipped or reordered for being easy, hard or odd; rows RT1 to RT60 follow draw order. The frame is far from exhausted: of its 95,628 word tokens, 136 draws were judged. Two accepted draws were excluded after sampling as structural snags and replaced by the next accepted draws, 135 and 136 (see sampling): draw 24, eigentlich, whose epenthetic t (eigen-t-lich) no piece may show, and draw 125, traurig, whose traur drops an inner e of Trauer. The lab scores these records in segment-in-constituents/de:realtext, the round's headline set, and its bottom words in segment-in-morphemes/de:realtext. Gold: 36 of 60 have no Constituents: 23 declinable bottom words with a Root and an Ending (verbs kommen, wollen, reisen, sollen, dürfen, machen, schneien with en; nouns and adjectives Meile, Freude, Geschichte with e; Nacht, Gewissen, Gesicht, leicht, Bad, Kalauer, Haus, klein, Fürst, Kuckuck, Paket, Legat, Blut with ∅), 8 indeclinables with a Root and no Ending (desto, her, ei, gern, sondern, wieder, recht, sehr), and 5 proper names with a Root and ∅ (Bottegone, Effi, Europa, Roswitha, Innstetten). 24 have Constituents: 7 derivations (richtig = richten + -ig, Verneigung, Wohnung, vertreiben, Verlegenheit, anders = ander + -s, wirklich), 7 compounds (Schaukelbrett, Schulvorsteherin, dienstfrei, Landrat, Veilchenwurzelluft, Blumenschale with the Interfix -n-, Nadelkissen), 5 particle verbs (gegenübersitzen, aufkommen, durchführen, zugeben, herantreten), 3 proper names (Thora von Penz = Thora · von · Penz; Güldenklee = gülden + Klee; Reeperbahn = Reep + -er- + Bahn) and 2 phrasemes (gefallen lassen, gnädige Frau). No target has a Source: a click unit with one is no segmenter case and was rejected at its draw. Every word split follows the DWDS Wortzerlegung, and every bottom word is one DWDS gives none (ADR 0050's tie rule), each cited in its record. Two judges, system and learner POV, review the debatable calls before round 6 runs (#1241). None may be an example in a Breakdown prompt (#693).",
+	"set": "realtext",
+	"sampling": {
+		"frame": "tf-demo Library's German Scrolls on 2026-10-25, as round 5 drew them: Effi Briest's 37 chapter Scrolls plus the Tagesschau article's German Sentences",
+		"frameSentences": 6183,
+		"frameTokens": 95628,
+		"frameSha256": "76219ae743508c6807837dc869e41c7ff54e57f1a050700c21cf423dd337501b",
+		"tokens": "Maximal letter runs in each Sentence, a run joined across an inner apostrophe kept whole (sich's)",
+		"seed": 2026102506,
+		"prng": "Python 3 random.Random(2026102506).shuffle over the frame's word-token indices, drawn in shuffled order",
+		"acceptance": [
+			"A sampled token stands for its click unit: the biggest unit a click on it resolves to in context (Schlimmste in das Schlimmste is NOUN Schlimmste, not ADJ schlimm; the coordinator's ruling on round 5's draw 8, #1241)",
+			"That unit is a Lexeme, Locution or Saying tf-demo would ask a Breakdown for: not a closed route (AUX, DET, PRON, PART), not an Authored Inventory member, not Foreign",
+			"It has no Source (ADR 0050): the host runs no segmenter on a conversion, a participle, a clipping or an acronym (a DWDS Grundform line names one)",
+			"The token is the unit's first member in the sentence, so each unit occurrence has one chance",
+			"Its Lemma is not already Breakdown gold",
+			"It is not a prompt word (#693)",
+			"Its Reading was not accepted before"
+		],
+		"accepted": 62,
+		"excludedAfterSampling": [
+			{
+				"draw": 24,
+				"unit": "Lexeme ADV eigentlich",
+				"reason": "structural snag: the epenthetic t of eigen-t-lich (DWDS: eigen -lich) is no Interfix, filler or letter a piece may show, so no Breakdown of it passes the checker"
+			},
+			{
+				"draw": 125,
+				"unit": "Lexeme ADJ traurig",
+				"reason": "structural snag: DWDS splits it Trauer -ig, and traur drops an inner e that no letter tolerance lets spell Trauer or trauern"
+			}
+		],
+		"replacements": "The two excluded draws have no record in this batch and are scored in no set; the next accepted draws, 135 (Blut) and 136 (wirklich), took their places, and drawing stopped there.",
+		"drawsJudged": 136,
+		"drawLogFile": "breakdown-draws-2026-10-25b-realtext.json"
+	},
+	"rows": [
+		{
+			"row": "RT1",
+			"record": "breakdown/de/kommen-geschehen",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 2
+		},
+		{
+			"row": "RT2",
+			"record": "breakdown/de/bottegone",
+			"bucket": "proper-name",
+			"split": "held-out",
+			"change": "new",
+			"draw": 6
+		},
+		{
+			"row": "RT3",
+			"record": "breakdown/de/richtig",
+			"bucket": "derivation",
+			"split": "held-out",
+			"change": "new",
+			"draw": 8
+		},
+		{
+			"row": "RT4",
+			"record": "breakdown/de/verneigung",
+			"bucket": "derivation",
+			"split": "held-out",
+			"change": "new",
+			"draw": 10
+		},
+		{
+			"row": "RT5",
+			"record": "breakdown/de/thora-von-penz",
+			"bucket": "proper-name",
+			"split": "held-out",
+			"change": "new",
+			"draw": 13
+		},
+		{
+			"row": "RT6",
+			"record": "breakdown/de/gegenuebersitzen",
+			"bucket": "particle-verb",
+			"split": "held-out",
+			"change": "new",
+			"draw": 16
+		},
+		{
+			"row": "RT7",
+			"record": "breakdown/de/wohnung",
+			"bucket": "derivation",
+			"split": "held-out",
+			"change": "new",
+			"draw": 17
+		},
+		{
+			"row": "RT8",
+			"record": "breakdown/de/schaukelbrett",
+			"bucket": "compound",
+			"split": "held-out",
+			"change": "new",
+			"draw": 18
+		},
+		{
+			"row": "RT9",
+			"record": "breakdown/de/nacht",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 20
+		},
+		{
+			"row": "RT10",
+			"record": "breakdown/de/meile",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 23
+		},
+		{
+			"row": "RT11",
+			"record": "breakdown/de/desto",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 25
+		},
+		{
+			"row": "RT12",
+			"record": "breakdown/de/gewissen",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 27
+		},
+		{
+			"row": "RT13",
+			"record": "breakdown/de/gesicht",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 28
+		},
+		{
+			"row": "RT14",
+			"record": "breakdown/de/her",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 30
+		},
+		{
+			"row": "RT15",
+			"record": "breakdown/de/schulvorsteherin",
+			"bucket": "compound",
+			"split": "held-out",
+			"change": "new",
+			"draw": 36
+		},
+		{
+			"row": "RT16",
+			"record": "breakdown/de/aufkommen-entstehen",
+			"bucket": "particle-verb",
+			"split": "held-out",
+			"change": "new",
+			"draw": 37
+		},
+		{
+			"row": "RT17",
+			"record": "breakdown/de/leicht",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 40
+		},
+		{
+			"row": "RT18",
+			"record": "breakdown/de/bad",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 44
+		},
+		{
+			"row": "RT19",
+			"record": "breakdown/de/wollen-moechten",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 46
+		},
+		{
+			"row": "RT20",
+			"record": "breakdown/de/dienstfrei",
+			"bucket": "compound",
+			"split": "held-out",
+			"change": "new",
+			"draw": 47
+		},
+		{
+			"row": "RT21",
+			"record": "breakdown/de/ei",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 51
+		},
+		{
+			"row": "RT22",
+			"record": "breakdown/de/effi",
+			"bucket": "proper-name",
+			"split": "held-out",
+			"change": "new",
+			"draw": 53
+		},
+		{
+			"row": "RT23",
+			"record": "breakdown/de/freude",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 56
+		},
+		{
+			"row": "RT24",
+			"record": "breakdown/de/landrat",
+			"bucket": "compound",
+			"split": "held-out",
+			"change": "new",
+			"draw": 58
+		},
+		{
+			"row": "RT25",
+			"record": "breakdown/de/gueldenklee",
+			"bucket": "proper-name",
+			"split": "held-out",
+			"change": "new",
+			"draw": 59
+		},
+		{
+			"row": "RT26",
+			"record": "breakdown/de/kalauer",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 60
+		},
+		{
+			"row": "RT27",
+			"record": "breakdown/de/durchfuehren",
+			"bucket": "particle-verb",
+			"split": "held-out",
+			"change": "new",
+			"draw": 63
+		},
+		{
+			"row": "RT28",
+			"record": "breakdown/de/reisen",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 65
+		},
+		{
+			"row": "RT29",
+			"record": "breakdown/de/gern",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 74
+		},
+		{
+			"row": "RT30",
+			"record": "breakdown/de/veilchenwurzelluft",
+			"bucket": "compound",
+			"split": "held-out",
+			"change": "new",
+			"draw": 77
+		},
+		{
+			"row": "RT31",
+			"record": "breakdown/de/blumenschale",
+			"bucket": "compound",
+			"split": "held-out",
+			"change": "new",
+			"draw": 78
+		},
+		{
+			"row": "RT32",
+			"record": "breakdown/de/sollen-bedeuten",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 79
+		},
+		{
+			"row": "RT33",
+			"record": "breakdown/de/vertreiben",
+			"bucket": "derivation",
+			"split": "held-out",
+			"change": "new",
+			"draw": 81
+		},
+		{
+			"row": "RT34",
+			"record": "breakdown/de/sondern",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 82
+		},
+		{
+			"row": "RT35",
+			"record": "breakdown/de/haus",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 84
+		},
+		{
+			"row": "RT36",
+			"record": "breakdown/de/zugeben",
+			"bucket": "particle-verb",
+			"split": "held-out",
+			"change": "new",
+			"draw": 86
+		},
+		{
+			"row": "RT37",
+			"record": "breakdown/de/reeperbahn",
+			"bucket": "proper-name",
+			"split": "held-out",
+			"change": "new",
+			"draw": 88
+		},
+		{
+			"row": "RT38",
+			"record": "breakdown/de/europa",
+			"bucket": "proper-name",
+			"split": "held-out",
+			"change": "new",
+			"draw": 90
+		},
+		{
+			"row": "RT39",
+			"record": "breakdown/de/gefallen-lassen",
+			"bucket": "phraseme",
+			"split": "held-out",
+			"change": "new",
+			"draw": 92
+		},
+		{
+			"row": "RT40",
+			"record": "breakdown/de/wieder",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 96
+		},
+		{
+			"row": "RT41",
+			"record": "breakdown/de/duerfen",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 99
+		},
+		{
+			"row": "RT42",
+			"record": "breakdown/de/roswitha",
+			"bucket": "proper-name",
+			"split": "held-out",
+			"change": "new",
+			"draw": 100
+		},
+		{
+			"row": "RT43",
+			"record": "breakdown/de/recht-ziemlich",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 101
+		},
+		{
+			"row": "RT44",
+			"record": "breakdown/de/klein",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 103
+		},
+		{
+			"row": "RT45",
+			"record": "breakdown/de/fuerst",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 110
+		},
+		{
+			"row": "RT46",
+			"record": "breakdown/de/sehr",
+			"bucket": "indeclinable",
+			"split": "held-out",
+			"change": "new",
+			"draw": 111
+		},
+		{
+			"row": "RT47",
+			"record": "breakdown/de/machen",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 112
+		},
+		{
+			"row": "RT48",
+			"record": "breakdown/de/kuckuck",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 113
+		},
+		{
+			"row": "RT49",
+			"record": "breakdown/de/geschichte-erzaehlung",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 114
+		},
+		{
+			"row": "RT50",
+			"record": "breakdown/de/verlegenheit",
+			"bucket": "derivation",
+			"split": "held-out",
+			"change": "new",
+			"draw": 119
+		},
+		{
+			"row": "RT51",
+			"record": "breakdown/de/herantreten",
+			"bucket": "particle-verb",
+			"split": "held-out",
+			"change": "new",
+			"draw": 120
+		},
+		{
+			"row": "RT52",
+			"record": "breakdown/de/nadelkissen",
+			"bucket": "compound",
+			"split": "held-out",
+			"change": "new",
+			"draw": 123
+		},
+		{
+			"row": "RT53",
+			"record": "breakdown/de/gnaedige-frau",
+			"bucket": "phraseme",
+			"split": "held-out",
+			"change": "new",
+			"draw": 124
+		},
+		{
+			"row": "RT54",
+			"record": "breakdown/de/paket",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 126
+		},
+		{
+			"row": "RT55",
+			"record": "breakdown/de/innstetten",
+			"bucket": "proper-name",
+			"split": "held-out",
+			"change": "new",
+			"draw": 129
+		},
+		{
+			"row": "RT56",
+			"record": "breakdown/de/schneien",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 131
+		},
+		{
+			"row": "RT57",
+			"record": "breakdown/de/anders",
+			"bucket": "derivation",
+			"split": "held-out",
+			"change": "new",
+			"draw": 132
+		},
+		{
+			"row": "RT58",
+			"record": "breakdown/de/legat",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 134
+		},
+		{
+			"row": "RT59",
+			"record": "breakdown/de/blut",
+			"bucket": "bottom-word",
+			"split": "held-out",
+			"change": "new",
+			"draw": 135
+		},
+		{
+			"row": "RT60",
+			"record": "breakdown/de/wirklich",
+			"bucket": "derivation",
+			"split": "held-out",
+			"change": "new",
+			"draw": 136
+		}
+	]
+}

@@ -1,0 +1,75 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "zur Sprache bringen",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🗣"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "zu",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "zu",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": "r Sprache",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Sprache",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "bringen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "bringen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Sprache",
+				"url": "https://www.dwds.de/wb/Sprache",
+				"supports": "Mehrwortausdruck etw. zur Sprache bringen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "raise a topic (DWDS's Mehrwortausdruck etw. zur Sprache bringen, the placeholder no part). The fused zur splits by component, as running text does: zu, the ADP, and r, the article grouped with its noun Sprache (ADR 0040, ADR 0050)."
+	}
+}

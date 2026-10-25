@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Freude",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "😊"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Freud",
+					"target": {
+						"language": "de",
+						"canonicalForm": "freud",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Freude",
+				"url": "https://www.dwds.de/wb/Freude",
+				"supports": "No Wortzerlegung; Etymologie: ahd. frewida, made with the old abstract suffix -ida on froh, a suffix no longer in use"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "in all meiner Freude. DWDS gives no Wortzerlegung, so it is a bottom word: the Root freud and the Ending e (ADR 0051)."
+	}
+}

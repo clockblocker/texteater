@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "klein",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "🤏"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "klein",
+					"target": {
+						"language": "de",
+						"canonicalForm": "klein",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: klein",
+				"url": "https://www.dwds.de/wb/klein",
+				"supports": "No Wortzerlegung; Etymologie: ahd. kleini, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "kleine Differenzen. DWDS gives no Wortzerlegung, so it is a bottom word: the Root klein and the zero ending (ADR 0051)."
+	}
+}

@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Roswitha",
+			"coreFeatures": {
+				"article": null,
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "👩‍🍳"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Roswitha",
+					"target": {
+						"language": "de",
+						"canonicalForm": "roswitha",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "de.wikipedia: Roswitha",
+				"url": "https://de.wikipedia.org/wiki/Roswitha",
+				"supports": "A female given name from OHG hrōd 'Ruhm' and swinth 'stark'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Effi's servant's given name (Fem). No dictionary splits it within German, and a PROPN has no Source (ADR 0050 gives Sources to NOUN, VERB and ADJ only), so it is a bottom word: the Root roswitha and the zero ending, since PROPN has an ending slot (ADR 0051)."
+	}
+}

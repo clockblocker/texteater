@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "wieder",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🔁"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "wieder",
+					"target": {
+						"language": "de",
+						"canonicalForm": "wieder",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: wieder",
+				"url": "https://www.dwds.de/wb/wieder",
+				"supports": "No Wortzerlegung; Adverb; Etymologie: ahd. widar"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Wenn er wieder da ist. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root wieder alone."
+	}
+}

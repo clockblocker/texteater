@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "INTJ",
+			"canonicalForm": "ei",
+			"coreFeatures": {
+				"partType": null
+			}
+		},
+		"emojiDescription": "😮"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "ei",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ei",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: ei",
+				"url": "https://www.dwds.de/wb/ei",
+				"supports": "Interjektion, 'Ausruf von Anteilnahme, Freude, Spott'; Etymologie: mhd. ei, 'oft in der Doppelung ei ei'; no Wortzerlegung"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "»Ei, ei, Sie scheinen ihn ja gut zu kennen.«, mock surprise. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root ei alone."
+	}
+}

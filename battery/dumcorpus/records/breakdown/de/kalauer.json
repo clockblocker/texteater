@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Kalauer",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🤡"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Kalauer",
+					"target": {
+						"language": "de",
+						"canonicalForm": "kalauer",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Kalauer",
+				"url": "https://www.dwds.de/wb/Kalauer",
+				"supports": "No Wortzerlegung; Etymologie: 'entwickelt sich wohl aus der Ortsangabe Kalau', reshaped after French calembour"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "einen Kalauer, a cheap pun. DWDS gives it no Wortzerlegung: its Etymologie ties it to the town Calau and to French calembour, a reshaping rather than a German formation. DWDS gives no Wortzerlegung, so it is a bottom word: the Root kalauer and the zero ending (ADR 0051)."
+	}
+}

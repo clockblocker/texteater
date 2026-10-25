@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "sehr",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "‼"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "sehr",
+					"target": {
+						"language": "de",
+						"canonicalForm": "sehr",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: sehr",
+				"url": "https://www.dwds.de/wb/sehr",
+				"supports": "No Wortzerlegung; Etymologie: ahd. sēro 'schmerzlich', inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "nicht sehr ähnlich. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root sehr alone."
+	}
+}

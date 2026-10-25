@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Gesicht",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🙂"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Gesicht",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gesicht",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gesicht",
+				"url": "https://www.dwds.de/wb/Gesicht",
+				"supports": "No Wortzerlegung, only 'formal verwandt mit Angesicht'; Etymologie: ahd. gisiht, 'präfigierte Abstraktbildungen zu ... sehen'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ihr gutes Gesicht, a face. The ge- is a fossilized prefix: no Wortzerlegung confirms the cut, so it stays inside the Root, as in Geselle. DWDS gives no Wortzerlegung, so it is a bottom word: the Root gesicht and the zero ending (ADR 0051)."
+	}
+}

@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Gestein",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🪨"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Ge",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ge-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "stein",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Stein",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gestein",
+				"url": "https://www.dwds.de/wb/Gestein",
+				"supports": "The Wortzerlegung ge- Stein"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "rock as a mass. DWDS splits it ge- + Stein, so the affix test confirms the cut (ADR 0051): a ge- that stays."
+	}
+}

@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "desto",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "⚖"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "desto",
+					"target": {
+						"language": "de",
+						"canonicalForm": "desto",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: desto",
+				"url": "https://www.dwds.de/wb/desto",
+				"supports": "No Wortzerlegung; Form: Konjunktion before a comparative; Etymologie: ahd. thesthiu, a fused case form of the demonstrative"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "»Desto besser.«, 'so much the better'. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root desto alone."
+	}
+}

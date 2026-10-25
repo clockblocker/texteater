@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "recht",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "📈"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "recht",
+					"target": {
+						"language": "de",
+						"canonicalForm": "recht",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: recht",
+				"url": "https://www.dwds.de/wb/recht",
+				"supports": "No Wortzerlegung; as a degree word 'ziemlich, sehr'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Es ist oft recht schwer, quite hard. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root recht alone."
+	}
+}

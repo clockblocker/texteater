@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Gemüt",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "💗"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Ge",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ge-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "müt",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Mut",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gemüt",
+				"url": "https://www.dwds.de/wb/Gem%C3%BCt",
+				"supports": "The Wortzerlegung ge- Mut; Etymologie: 'Kollektivbildung zu ... Mut'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "the seat of feeling. DWDS splits it ge- + Mut, whose letters show the umlaut (müt)."
+	}
+}

@@ -1,0 +1,69 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Güldenklee",
+			"coreFeatures": {
+				"article": null,
+				"gender": null
+			}
+		},
+		"emojiDescription": "👴"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Gülden",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "gülden",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": "klee",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Klee",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gülden",
+				"url": "https://www.dwds.de/wb/g%C3%BClden",
+				"supports": "gülden, a poetic form of golden"
+			},
+			{
+				"title": "DWDS: Klee",
+				"url": "https://www.dwds.de/wb/Klee",
+				"supports": "Klee m., the plant"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "des alten Güldenklee, a Kessin worthy's surname, so no Core gender. A speaking name built from words, so like Hohen-Cremmen it has Constituents: the adjective gülden and the noun Klee (ADR 0050)."
+	}
+}

@@ -1,5 +1,5 @@
 {
-	"note": "Held-out real-text batch for German segment.inConstituents and segment.inMorphemes, round 5 of #1241, authored 2026-10-25 as Draft Breakdown Records in records/breakdown/de. Its 30 targets were sampled uniformly at random from the sentences tf-demo's Learners read (see sampling), and gold was authored only after sampling, so no target was replaced, skipped or reordered for being easy, hard or odd; rows RT1 to RT30 follow draw order. Three accepted draws were excluded after sampling and replaced by the next accepted draws, 80, 82 and 84 (see sampling): draw 74, PROPN Hohen-Cremmen, which the two judges agreed to drop (its inflected adjective first part is a structural snag); draw 8, ADJ schlimm, because its unit call is contested (the gold author argues the sampled unit is NOUN das Schlimmste, under Rule de/neuter-adjectival-noun, which would take a Source), and draw 54, anschließen in sich jmdm. anschließen, because of a structural snag: no Breakdown for a lexically reflexive one-word Lexeme passes the checker (it also hits ADR 0050's sich erinnern), and a structural fix follows round 5. The lab scores these records in segment-in-constituents/de:realtext, the round's headline set, and its bottom words in segment-in-morphemes/de:realtext. Gold: 22 of 30 have no Constituents, so they are NoConstituents cases for segment.inConstituents and morphemes cases for segment.inMorphemes: 11 declinable bottom words with a Root and an Ending (verbs geben, heißen, haben, sagen, wissen, weinen, können with en; nouns and adjectives Herr, kurz, Gefahr, Weihnachten with ∅), 8 indeclinables with a Root and no Ending (hin, schon, nur, erst, noch, gar, und, ja), and 3 proper names with a Root and ∅ (Kopp, Schrimm, Varzin). 8 have Constituents: 4 derivations (Genesung = genesen + -ung, jugendlich = Jugend + -lich, gnädig = Gnade + -ig, erkennen = er- + kennen), 3 particle verbs (mitnehmen, zuhören, abfallen) and 1 phraseme (zu Gast sein = zu · Gast · sein). No compound was drawn, and no target has a Source. Every word split follows the DWDS Wortzerlegung, and every bottom word is one DWDS gives none (ADR 0050's tie rule), each cited in its record. Debatable calls, for the judges: Weihnachten (DWDS gives it no Wortzerlegung, only a formal link to Weihnacht, whose Wortzerlegung is weihen Nacht; gold keeps it a bottom word); Gefahr (DWDS's Etymologie calls mhd. gevāre a ge- formation on obsolete Fahr, but no Wortzerlegung confirms the cut, so ge- stays in the Root as in Geselle); Kopp, Schrimm and Varzin (no dictionary splits them; a PROPN takes ∅ by German's morpheme policy); gar (DWDS derives the adverb from the adjective gar, but no Source is produced on an ADV). Judged 2026-10-25 by two judges, system and learner POV (#1241); their agreed changes are applied and their splits are listed on #1241, none of them changing a gold Breakdown; none may be an example in a Breakdown prompt (#693).",
+	"note": "Held-out real-text batch for German segment.inConstituents and segment.inMorphemes, round 5 of #1241, authored 2026-10-25 as Draft Breakdown Records in records/breakdown/de. Its 30 targets were sampled uniformly at random from the sentences tf-demo's Learners read (see sampling), and gold was authored only after sampling, so no target was replaced, skipped or reordered for being easy, hard or odd; rows RT1 to RT30 follow draw order. Three accepted draws were excluded after sampling and replaced by the next accepted draws, 80, 82 and 84 (see sampling): draw 74, PROPN Hohen-Cremmen, which the two judges agreed to drop (its inflected adjective first part is a structural snag); draw 8, ADJ schlimm, because its unit call is contested (the gold author argues the sampled unit is NOUN das Schlimmste, under Rule de/neuter-adjectival-noun, which would take a Source), and draw 54, anschließen in sich jmdm. anschließen, because of a structural snag: no Breakdown for a lexically reflexive one-word Lexeme passes the checker (it also hits ADR 0050's sich erinnern), and a structural fix follows round 5. The lab scores these records in segment-in-constituents/de:realtext, the round's headline set, and its bottom words in segment-in-morphemes/de:realtext. Gold: 22 of 30 have no Constituents, so they are NoConstituents cases for segment.inConstituents and morphemes cases for segment.inMorphemes: 11 declinable bottom words with a Root and an Ending (verbs geben, heißen, haben, sagen, wissen, weinen, können with en; nouns and adjectives Herr, kurz, Gefahr, Weihnachten with ∅), 8 indeclinables with a Root and no Ending (hin, schon, nur, erst, noch, gar, und, ja), and 3 proper names with a Root and ∅ (Kopp, Schrimm, Varzin). 8 have Constituents: 4 derivations (Genesung = genesen + -ung, jugendlich = Jugend + -lich, gnädig = Gnade + -ig, erkennen = er- + kennen), 3 particle verbs (mitnehmen, zuhören, abfallen) and 1 phraseme (zu Gast sein = zu · Gast · sein). No compound was drawn, and no target has a Source. Every word split follows the DWDS Wortzerlegung, and every bottom word is one DWDS gives none (ADR 0050's tie rule), each cited in its record. Debatable calls, for the judges: Weihnachten (DWDS gives it no Wortzerlegung, only a formal link to Weihnacht, whose Wortzerlegung is weihen Nacht; gold keeps it a bottom word); Gefahr (DWDS's Etymologie calls mhd. gevāre a ge- formation on obsolete Fahr, but no Wortzerlegung confirms the cut, so ge- stays in the Root as in Geselle); Kopp, Schrimm and Varzin (no dictionary splits them; a PROPN takes ∅ by German's morpheme policy); gar (DWDS derives the adverb from the adjective gar, but no Source is produced on an ADV). Judged 2026-10-25 by two judges, system and learner POV (#1241); their agreed changes are applied and their splits are listed on #1241, none of them changing a gold Breakdown; none may be an example in a Breakdown prompt (#693). Promoted 2026-10-25 after round 5 scored them (#1241): every row is now dev, so the lab scores these records in segment-in-constituents/de:breakdown and their bottom words in segment-in-morphemes/de:breakdown, the sets prompts are tuned on, and round 6 is judged by a fresh real-text sample (breakdown-heldout-2026-10-25b-realtext) and a fresh adversarial batch. They stay out of every Breakdown prompt's examples (#693).",
 	"set": "realtext",
 	"sampling": {
 		"frame": "tf-demo Library's German Scrolls on 2026-10-25: Effi Briest's 37 chapter Scrolls plus the Tagesschau article's German Sentences",
@@ -109,7 +109,8 @@
 			{
 				"draw": 8,
 				"unit": "Lexeme ADJ schlimm",
-				"reason": "unit call contested: the gold author argues the sampled unit is NOUN das Schlimmste, not ADJ schlimm"
+				"reason": "unit call contested: the gold author argues the sampled unit is NOUN das Schlimmste, not ADJ schlimm",
+				"resolved": "Settled 2026-10-25 by the coordinator's ruling (#1241): following Rule de/neuter-adjectival-noun, the sampled unit is NOUN Schlimmste, a conversion whose Source is schlimm, so it is no segmenter case and stays out of every set. Round 6's sampler states that a sampled token stands for its click unit."
 			},
 			{
 				"draw": 54,
@@ -129,240 +130,240 @@
 			"row": "RT1",
 			"record": "breakdown/de/genesung",
 			"bucket": "derivation",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 3
 		},
 		{
 			"row": "RT2",
 			"record": "breakdown/de/herr-gebieter",
 			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 4
 		},
 		{
 			"row": "RT3",
 			"record": "breakdown/de/geben-es-gibt",
 			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 5
 		},
 		{
 			"row": "RT4",
 			"record": "breakdown/de/heissen-bedeuten",
 			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 6
 		},
 		{
 			"row": "RT5",
 			"record": "breakdown/de/haben-besitzen",
 			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 12
 		},
 		{
 			"row": "RT6",
 			"record": "breakdown/de/kurz",
 			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 15
 		},
 		{
 			"row": "RT7",
 			"record": "breakdown/de/jugendlich",
 			"bucket": "derivation",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 19
 		},
 		{
 			"row": "RT8",
 			"record": "breakdown/de/kopp",
 			"bucket": "proper-name",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 22
 		},
 		{
 			"row": "RT9",
 			"record": "breakdown/de/gnaedig",
 			"bucket": "derivation",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 24
 		},
 		{
 			"row": "RT10",
 			"record": "breakdown/de/hin",
 			"bucket": "indeclinable",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 28
 		},
 		{
 			"row": "RT11",
 			"record": "breakdown/de/schon",
 			"bucket": "indeclinable",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 31
 		},
 		{
 			"row": "RT12",
 			"record": "breakdown/de/sagen",
 			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 34
 		},
 		{
 			"row": "RT13",
 			"record": "breakdown/de/gefahr",
 			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 36
 		},
 		{
 			"row": "RT14",
 			"record": "breakdown/de/zu-gast-sein",
 			"bucket": "phraseme",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 41
 		},
 		{
 			"row": "RT15",
 			"record": "breakdown/de/nur",
 			"bucket": "indeclinable",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 43
 		},
 		{
 			"row": "RT16",
 			"record": "breakdown/de/erkennen",
 			"bucket": "derivation",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 45
 		},
 		{
 			"row": "RT17",
 			"record": "breakdown/de/erst",
 			"bucket": "indeclinable",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 47
 		},
 		{
 			"row": "RT18",
 			"record": "breakdown/de/schrimm",
 			"bucket": "proper-name",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 51
 		},
 		{
 			"row": "RT19",
 			"record": "breakdown/de/wissen",
 			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 56
 		},
 		{
 			"row": "RT20",
 			"record": "breakdown/de/und",
 			"bucket": "indeclinable",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 57
 		},
 		{
 			"row": "RT21",
 			"record": "breakdown/de/noch",
 			"bucket": "indeclinable",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 58
 		},
 		{
 			"row": "RT22",
 			"record": "breakdown/de/weihnachten",
 			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 66
 		},
 		{
 			"row": "RT23",
 			"record": "breakdown/de/weinen",
 			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 67
 		},
 		{
 			"row": "RT24",
 			"record": "breakdown/de/gar",
 			"bucket": "indeclinable",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 68
 		},
 		{
 			"row": "RT25",
 			"record": "breakdown/de/mitnehmen",
 			"bucket": "particle-verb",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 69
 		},
 		{
 			"row": "RT26",
 			"record": "breakdown/de/zuhoeren",
 			"bucket": "particle-verb",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 70
 		},
 		{
 			"row": "RT27",
 			"record": "breakdown/de/varzin",
 			"bucket": "proper-name",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 77
 		},
 		{
 			"row": "RT28",
 			"record": "breakdown/de/ja",
 			"bucket": "indeclinable",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 80
 		},
 		{
 			"row": "RT29",
 			"record": "breakdown/de/abfallen-schwinden",
 			"bucket": "particle-verb",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 82
 		},
 		{
 			"row": "RT30",
 			"record": "breakdown/de/koennen",
 			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
+			"split": "dev",
+			"change": "promote",
 			"draw": 84
 		}
 	]

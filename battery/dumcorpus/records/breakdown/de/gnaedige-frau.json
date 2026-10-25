@@ -1,0 +1,66 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "NOUN",
+			"canonicalForm": "gnädige Frau",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "👒"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "gnädige",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "gnädig",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Frau",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Frau",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gnädig",
+				"url": "https://www.dwds.de/wb/gn%C3%A4dig",
+				"supports": "Under gnädig: gnädige Frau as a polite form of address"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "»Gewiß, gnäd'ge Frau.«, the servant's form of address, cited in its standard spelling. Its parts are its words; gnädige shows the adjective gnädig with its attributive ending (ADR 0050)."
+	}
+}

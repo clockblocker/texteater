@@ -1,0 +1,88 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Thora von Penz",
+			"coreFeatures": {
+				"article": null,
+				"gender": null
+			}
+		},
+		"emojiDescription": "👩"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Thora",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Thora",
+						"coreFeatures": {
+							"article": null,
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "von",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "von",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Penz",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Penz",
+						"coreFeatures": {
+							"article": null,
+							"gender": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/proper-noun-article",
+				"hash": "c3eb61394edd1818"
+			}
+		],
+		"references": [
+			{
+				"title": "Projekt Gutenberg: Effi Briest, 24. Kapitel",
+				"url": "https://www.projekt-gutenberg.org/fontane/effibrie/chap024.html",
+				"supports": "»vor allem von Thora von Penz, die ... typisch skandinavisch gewesen sei«: one woman's full name"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "A full name, one PROPN Lexeme with no Core gender (Rule de/proper-noun-article). Its Constituents are its words, as Frankfurt am Main's are (ADR 0050): the given name Thora (Fem), the name particle von, an ADP, and the family name Penz."
+	}
+}

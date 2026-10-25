@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Wohnung",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🏢"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Wohn",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "wohnen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				},
+				{
+					"letters": "ung",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-ung",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Wohnung",
+				"url": "https://www.dwds.de/wb/Wohnung",
+				"supports": "The Wortzerlegung wohnen -ung"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "eine Wohnung gemietet. DWDS splits it wohnen + -ung (ADR 0050)."
+	}
+}

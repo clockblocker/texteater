@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "rötlich",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "🔴"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "röt",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "rot",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": "lich",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-lich",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: rötlich",
+				"url": "https://www.dwds.de/wb/r%C3%B6tlich",
+				"supports": "The Wortzerlegung rot -lich"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "reddish. DWDS splits it the adjective rot + -lich, umlauted (röt), though the letters also open the noun Röte."
+	}
+}

@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Europa",
+			"coreFeatures": {
+				"article": null,
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🌍"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Europa",
+					"target": {
+						"language": "de",
+						"canonicalForm": "europa",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Europa",
+				"url": "https://www.dwds.de/wb/Europa",
+				"supports": "No entry splits the name; a continent's name from Greek Eurṓpē"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ganz Europa, the continent. No dictionary splits it within German, and a PROPN has no Source (ADR 0050 gives Sources to NOUN, VERB and ADJ only), so it is a bottom word: the Root europa and the zero ending, since PROPN has an ending slot (ADR 0051)."
+	}
+}

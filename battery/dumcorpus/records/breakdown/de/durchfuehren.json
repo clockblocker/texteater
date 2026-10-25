@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "durchführen",
+			"coreFeatures": {
+				"hasSepPrefix": "durch"
+			}
+		},
+		"emojiDescription": "🧪"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "durch",
+					"target": {
+						"language": "de",
+						"canonicalForm": "durch-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "führen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "führen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: durchführen",
+				"url": "https://www.dwds.de/wb/durchf%C3%BChren",
+				"supports": "The Wortzerlegung durch- führen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "führt ... Tests durch, carries out tests. A particle verb: durch links to its Prefix Morpheme durch- (ADR 0050)."
+	}
+}
