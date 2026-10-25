@@ -1,7 +1,8 @@
 /**
  * A VERB's satellites (auxiliaries, lexical reflexive, subject es) and
  * separable prefix, its block of the first request and the reading of its
- * answers, and its headword.
+ * answers, its headword, and the Reflexive its valency evidence names
+ * (ADR 0052).
  */
 
 import {
@@ -11,7 +12,10 @@ import {
 } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
 import * as Result from "effect/Result";
-import { reflexiveForms } from "../../../segment/de/candidates.js";
+import {
+	reflexiveForms,
+	withoutReflexive,
+} from "../../../segment/de/candidates.js";
 import { rShortenings } from "../member-spelling.js";
 import { auxiliaryUses, fill, options, question } from "../prompts.js";
 import {
@@ -28,7 +32,7 @@ import type { Member, Target } from "../target.js";
 import type { GovernedQuestions } from "./governed.js";
 import { prefixAnswer } from "./prefix-answer.js";
 import { isParticle, prefixCandidates } from "./separable-prefix.js";
-import { fold, type Shape, spellingOf } from "./shape.js";
+import { fold, type Shape, spellingOf, type ValencyEvidence } from "./shape.js";
 
 /** A VERB Lexeme's Core Features; a VERB Locution has none. */
 export type VerbCore = Dumling.Lemma<"de", "Lexeme", "VERB">["coreFeatures"];
@@ -120,7 +124,12 @@ const spellsEs = (member: Member) =>
 /** An auxiliary member, and the authored AUX uses its spelling realizes. */
 type Auxiliary = { readonly member: Member; readonly uses: readonly string[] };
 
-/** A VERB unit's satellite members: its auxiliaries, lexical reflexive and subject es. */
+/**
+ * A VERB unit's satellite members: its auxiliaries, lexical reflexive and
+ * subject es. A Lexeme's or Locution's reflexive member is lexical, since
+ * segmentation leaves a free one a unit of its own
+ * (de/verb-owns-its-scattered-members).
+ */
 export type VerbalSatellites = {
 	readonly auxiliaries: readonly Auxiliary[];
 	readonly reflexive: Member | undefined;
@@ -155,10 +164,9 @@ export function verbalSatellites(
 					return uses.length > 0 ? [{ member, uses }] : [];
 				})
 			: [];
-	const reflexive =
-		shape.verbal && shape.lexeme
-			? target.members.find((member) => reflexives.has(fold(member.text)))
-			: undefined;
+	const reflexive = shape.verbal
+		? target.members.find((member) => reflexives.has(fold(member.text)))
+		: undefined;
 	return {
 		auxiliaries,
 		reflexive,
@@ -203,7 +211,7 @@ export function askVerbal(
 					"reflexive",
 					fill(question.reflexive, { m: reflexive.ref }),
 					options.reflexive,
-					["verbCore"],
+					["reflexive"],
 				)
 			: undefined;
 	const subjectEs =
@@ -272,9 +280,9 @@ function askVerbForm(questionnaire: Questionnaire) {
 }
 
 /**
- * Reads a VERB's block: its separable prefix and lexical reflexive, its
- * subject es, its inflection unless it is cited, and the reading a
- * shortened particle takes from the prefix judged for it.
+ * Reads a VERB's block: its separable prefix, its lexical reflexive's
+ * evidence, its subject es, its inflection unless it is cited, and the
+ * reading a shortened particle takes from the prefix judged for it.
  */
 export const readVerbal = answerReader(function* (
 	target: Target,
@@ -287,6 +295,7 @@ export const readVerbal = answerReader(function* (
 	readonly core: VerbCore | Record<string, never>;
 	readonly inflection: VerbInflection | null;
 	readonly expletive: Member | undefined;
+	readonly reflexive: ValencyEvidence | undefined;
 	readonly readings: ReadonlyMap<number, string>;
 }> {
 	let core: VerbCore | Record<string, never> = {};
@@ -330,7 +339,33 @@ export const readVerbal = answerReader(function* (
 			? null
 			: yield* verbalInflection(verbal, answered, expletive),
 		expletive,
+		reflexive: yield* reflexiveEvidence(verbal, answered),
 		readings,
+	};
+});
+
+/**
+ * The valency evidence a lexical reflexive member gives (ADR 0052): its
+ * Reflexive complement, in the case its form shows or jev judged, which is
+ * the case it realizes.
+ */
+const reflexiveEvidence = answerReader(function* (
+	verbal: VerbalPlan,
+	answered: Answered,
+): ReaderBody<ValencyEvidence | undefined> {
+	const { reflexive } = verbal;
+	if (!reflexive) return undefined;
+	const governedCase = verbal.reflexiveCase
+		? yield* answered.pick(verbal.reflexiveCase)
+		: reflexives.get(fold(reflexive.text));
+	if (governedCase === undefined)
+		throw Error(
+			"A reflexive whose form leaves its case open was not asked",
+		);
+	return {
+		member: reflexive.position,
+		complement: { kind: "Reflexive", governedCase },
+		realizedCase: governedCase,
 	};
 });
 
@@ -459,7 +494,7 @@ type VerbCoreRead = {
  * prefix (umkommen is herumkommen).
  */
 export function verbHeadword(form: string, core: VerbCoreRead): string {
-	let verb = form.replace(/^sich\s+/u, "");
+	let verb = withoutReflexive(form);
 	const prefix = core.hasSepPrefix;
 	if (typeof prefix === "string" && !fold(verb).startsWith(fold(prefix))) {
 		const folded = fold(verb);
@@ -492,7 +527,7 @@ export function verbGuessMisses(
 	core: VerbCoreRead,
 	prefixes: readonly string[],
 ): string | undefined {
-	const bare = fold(form.replace(/^sich\s+/u, ""));
+	const bare = fold(withoutReflexive(form));
 	return core.hasSepPrefix === null &&
 		prefixes.some((prefix) => bare.startsWith(fold(prefix)))
 		? "jev judged the verb without a separable prefix"

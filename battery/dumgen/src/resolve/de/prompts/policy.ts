@@ -57,9 +57,15 @@ export const policy = {
 	),
 	verbCore: paragraph(
 		"policy.verbCore",
-		"A verb's separable prefix is only its separable particle, attached or standing apart, never a preposition the verb governs or one with its own complement; a directional word in the verbal bracket is the particle when verb and word form a particle verb («führt … vorüber» is «vorüberführen»), and so is a noun or adjective the infinitive writes as one word with the verb («findet … statt» is «stattfinden»). A prefix the verb never splits off, which takes no ge- in the participle («überquert», «widerlegt»), is inseparable and no separable prefix. A lexical reflexive's case is fixed per verb.",
+		"A verb's separable prefix is only its separable particle, attached or standing apart, never a preposition the verb governs or one with its own complement; a directional word in the verbal bracket is the particle when verb and word form a particle verb («führt … vorüber» is «vorüberführen»), and so is a noun or adjective the infinitive writes as one word with the verb («findet … statt» is «stattfinden»). A prefix the verb never splits off, which takes no ge- in the participle («überquert», «widerlegt»), is inseparable and no separable prefix.",
 		rules.verbCore,
 		rules.bracket,
+	),
+	reflexive: paragraph(
+		"policy.reflexive",
+		"A lexical reflexive is a member of its verb's unit, never part of its Canonical Form: it fills the Reflexive Slot of the verb's meaning, in the one case that meaning fixes. It is dative where an accusative object, a fixed noun of the expression or a clause also stands with the verb («ich merke mir den Weg», «du legst dir Geld zurück»), and in the few expressions that always take a dative one; otherwise it is accusative («wir beeilen uns»).",
+		rules.verbCore,
+		rules.ownsMembers,
 	),
 	government: paragraph(
 		"policy.government",

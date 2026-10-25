@@ -20,12 +20,21 @@
  * - A host that refused a New as stale passes the description Luna wrote
  *   as `written`: the judge runs again over the current candidates, and a
  *   second NoMatch takes it (ADR 0031).
+ * - Grammar, never an emoji model, supplies the 🪞 marker (ADR 0052). When
+ *   the Attestation's members hold a lexical reflexive, its valency
+ *   evidence names a Reflexive: the judge is offered only the 🪞 Readings,
+ *   and code writes 🪞 before the description Luna proposes. Otherwise it
+ *   is offered none of them, and Luna's description never starts with 🪞.
  *
  * Descriptions compare as Dumling parses them, so `🕰️` is `🕰`. Nothing is
  * retried, and no answer is salvaged (#889).
  */
 
-import { authoredFor, closedRoute } from "dumcorpus/inventories";
+import {
+	authoredFor,
+	closedRoute,
+	reflexiveMarker,
+} from "dumcorpus/inventories";
 import { parseUnit, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
@@ -219,6 +228,32 @@ export function parsedDescription(
 	return "emojiDescription" in reading ? reading.emojiDescription : undefined;
 }
 
+/**
+ * Whether an Attestation's members hold a lexical reflexive: its valency
+ * evidence names a Reflexive (ADR 0052).
+ */
+const holdsReflexive = (attestation: Dumling.Attestation<"de">) =>
+	"valencyEvidence" in attestation &&
+	attestation.valencyEvidence.some(
+		({ complement }) => complement.kind === "Reflexive",
+	);
+
+/**
+ * A description with the 🪞 marker grammar gives it (ADR 0052): before it
+ * when the click holds a lexical reflexive, never otherwise, whatever the
+ * model wrote.
+ */
+export function withReflexiveMarker(
+	description: string,
+	reflexive: boolean,
+): string {
+	const trimmed = description.trim();
+	const bare = trimmed.startsWith(reflexiveMarker)
+		? trimmed.slice(reflexiveMarker.length)
+		: trimmed;
+	return reflexive ? `${reflexiveMarker}${bare}` : bare;
+}
+
 /** One option the judge sees: an Emoji Description, and whether dumcorpus authors it. */
 type Option = { readonly description: string; readonly authored: boolean };
 
@@ -375,14 +410,15 @@ export const resolveReading = Effect.fnUntraced(function* (
 		return { _tag: "CatalogMiss", route, message };
 	}
 
-	// An Open Route: the judge over the authored and stored descriptions,
-	// then Luna.
+	// An Open Route: the judge over the authored and stored descriptions
+	// whose 🪞 agrees with the click's reflexive, then Luna.
+	const reflexive = holdsReflexive(attestation);
 	const authoredKeys = new Set(authored.map(keyOf));
 	const options = [...authored, ...candidates]
 		.filter(
 			(option, index, all) =>
 				all.findIndex((other) => keyOf(other) === keyOf(option)) ===
-				index,
+					index && option.startsWith(reflexiveMarker) === reflexive,
 		)
 		.map((description) => ({
 			description,
@@ -394,7 +430,10 @@ export const resolveReading = Effect.fnUntraced(function* (
 	const written =
 		input.written === undefined
 			? undefined
-			: parsedDescription(lemma, input.written);
+			: parsedDescription(
+					lemma,
+					withReflexiveMarker(input.written, reflexive),
+				);
 	if (input.written !== undefined && written === undefined)
 		return yield* defect(
 			`The written ${JSON.stringify(input.written)} is no Emoji Description`,
@@ -409,6 +448,11 @@ export const resolveReading = Effect.fnUntraced(function* (
 		return yield* defect(
 			`The drafted ${JSON.stringify(input.drafted)} is no Emoji Description`,
 		);
+	// A draft the marker leaves no Emoji Description, as a bare 🪞, is no draft.
+	const markedDraft =
+		drafted === undefined
+			? undefined
+			: parsedDescription(lemma, withReflexiveMarker(drafted, reflexive));
 	if (options.length > 0) {
 		const index = yield* pick(ask, "reading", state, options);
 		const picked = index === undefined ? undefined : options[index];
@@ -416,12 +460,17 @@ export const resolveReading = Effect.fnUntraced(function* (
 	}
 	if (written !== undefined) return answer(written, "Rejudged");
 	const emojiDescription =
-		drafted ??
+		markedDraft ??
 		(yield* askLuna(
 			"emojiDescription",
 			emojiDescriptionRequest(state),
 			(output) =>
-				parsedDescription(lemma, output) ??
+				parsedDescription(
+					lemma,
+					typeof output === "string"
+						? withReflexiveMarker(output, reflexive)
+						: output,
+				) ??
 				new InvalidModelOutput({
 					stage: "emojiDescription",
 					message: `Luna answered no Emoji Description: ${JSON.stringify(output).slice(0, 80)}`,
@@ -431,7 +480,7 @@ export const resolveReading = Effect.fnUntraced(function* (
 		emojiDescription,
 		offered.has(keyOf(emojiDescription))
 			? "Collision"
-			: drafted === undefined
+			: markedDraft === undefined
 				? "Written"
 				: "Drafted",
 	);

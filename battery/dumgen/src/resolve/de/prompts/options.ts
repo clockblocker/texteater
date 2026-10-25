@@ -202,7 +202,7 @@ export const auxiliaryUses: Readonly<Record<string, string>> = {
 	),
 	"lassen 🗣👉": paragraph(
 		"question.auxiliary.lassen-causative",
-		"Causative lassen with an infinitive whose doer the clause does not name",
+		"Causative lassen with an infinitive whose doer the clause does not name; never lassen with its own reflexive, the modal passive ('can be done')",
 		rules.causative,
 	),
 	"haben 📌": paragraph(

@@ -26,6 +26,7 @@ export const rules = {
 	causative: ["de/causative-lassen", "af12a3e45b1d22a6"],
 	recipient: ["de/recipient-passive", "0196915ee6d1a36d"],
 	verbCore: ["de/verb-core-features", "53f39c352354bcbe"],
+	ownsMembers: ["de/verb-owns-its-scattered-members", "9139952c458faeb2"],
 	bracket: ["de/bracket-particle-or-circumposition", "60b1cecf8b3f74f1"],
 	expletive: ["de/expletive-es-joins-its-verb", "99bff23563b49716"],
 	government: [

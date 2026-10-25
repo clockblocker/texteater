@@ -214,7 +214,7 @@ export const question = {
 	),
 	reflexive: paragraph(
 		"question.reflexive",
-		"Under `policy.verbCore`, which case does the verb's lexical reflexive {m} take?",
+		"Under `policy.reflexive`, which case does the lexical reflexive {m} take here?",
 		rules.verbCore,
 	),
 	expletive: paragraph(

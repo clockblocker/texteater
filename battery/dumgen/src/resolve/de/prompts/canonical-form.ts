@@ -62,7 +62,7 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 	),
 	"Lexeme/VERB": paragraph(
 		"canonical.route.Lexeme/VERB",
-		"A verb is cited as the infinitive of its main verb, with sich before it when `judged.lexicallyReflexive` is set and with its separable prefix (`judged.hasSepPrefix`) written on, never with the members in `auxiliaries`, causative lassen, its subject es or a governed preposition: «sich sputen», «fortfahren».",
+		"A verb is cited as the infinitive of its main verb, with its separable prefix (`judged.hasSepPrefix`) written on, never with its lexical reflexive, the members in `auxiliaries`, causative lassen, its subject es or a governed preposition: «sputet sich» is «sputen», «fährt … fort» is «fortfahren».",
 		rules.headword,
 		rules.verbCore,
 		rules.expletive,
@@ -132,9 +132,10 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 	),
 	Locution: paragraph(
 		"canonical.route.Locution",
-		"A Locution is cited in its dictionary wording: a verbal one as its fixed words with the infinitive last, keeping the article or fused preposition that wording has and leaving out open slots, never a placeholder such as jemandem or etwas («Maulaffen feilhalten»), a nominal one in the nominative, an adpositional or conjunctional one with … for each slot.",
+		"A Locution is cited in its dictionary wording: a verbal one as its fixed words with the infinitive last, keeping the article or fused preposition that wording has and leaving out open slots and its lexical reflexive, never a placeholder such as jemandem or etwas («Maulaffen feilhalten»; «keinen Zwang antun» without its sich), a nominal one in the nominative, an adpositional or conjunctional one with … for each slot.",
 		rules.headword,
 		rules.idiom,
+		rules.ownsMembers,
 	),
 	"Saying/Saying": paragraph(
 		"canonical.route.Saying/Saying",

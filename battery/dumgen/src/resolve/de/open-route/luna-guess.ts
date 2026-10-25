@@ -4,30 +4,35 @@ import { isRecord } from "common-utils";
 import type { LunaDraft } from "../../../luna.js";
 import type { Judged } from "../canonical-form.js";
 import type { MemberOrthography } from "../member-spelling.js";
-import type { Target } from "../target.js";
+import type { Member, Target } from "../target.js";
 import type { OpeningArticle } from "./nominal.js";
 
 /**
  * What Luna reads before jev has answered: every member Standard unless
  * the unit or dumcorpus's tables already fix its orthography, the opening
- * article outside the headword, no auxiliary, no governed member, only
- * the readings code fixes, and no judged features.
+ * article and a lexical reflexive outside the headword, no auxiliary, no
+ * governed member, only the readings code fixes, and no judged features.
  */
 export function guessedJudgment(
 	target: Target,
 	planned: {
 		readonly article: OpeningArticle | undefined;
+		readonly verbal: { readonly reflexive: Member | undefined } | undefined;
 		readonly presetReadings: ReadonlyMap<number, string>;
 	},
 ): Judged {
 	const { article } = planned;
+	const reflexive = planned.verbal?.reflexive;
 	return {
 		orthographies: target.members.map(
 			(member): MemberOrthography =>
 				member.spelling?.orthography ??
 				(member === article?.member ? article.orthography : "Standard"),
 		),
-		outsideHeadword: new Set(article ? [article.member.position] : []),
+		outsideHeadword: new Set([
+			...(article ? [article.member.position] : []),
+			...(reflexive ? [reflexive.position] : []),
+		]),
 		readings: new Map(planned.presetReadings),
 	};
 }

@@ -62,7 +62,7 @@ export const judgePolicy = {
 	),
 	distinct: paragraph(
 		"judge.distinct",
-		"Meanings get different Readings when they are different concepts a model would tell apart from the sentence: «Birne» the pear and the light bulb, «Pflaster» the sticking plaster and the paving. Closely related uses of one meaning, figurative ones and functional or grammatical shades included, share one Reading.",
+		"Meanings get different Readings when they are different concepts a model would tell apart from the sentence: «Birne» the pear and the light bulb, «Pflaster» the sticking plaster and the paving. Closely related uses of one meaning, figurative ones and functional or grammatical shades included, share one Reading. An option that starts with 🪞 labels a use with a lexical reflexive, which the target here has: its other emoji name the meaning, and they decide.",
 		rules.distinct,
 	),
 	noMatch: paragraph(
@@ -128,7 +128,7 @@ export const generation = {
 	),
 	distinct: paragraph(
 		"generation.distinct",
-		"Different concepts get different descriptions; closely related uses of one meaning may share one.",
+		"Different concepts get different descriptions; closely related uses of one meaning may share one. Never write 🪞: code puts it before the description of a use with a lexical reflexive, so describe the meaning alone, also when a sich is among the marked words.",
 		rules.distinct,
 	),
 	copula: paragraph(
@@ -222,7 +222,8 @@ function demonstration(
 
 /**
  * The generation demonstrations: an adjective, a noun, a verb with its
- * auxiliary, a copula, a function word, a numeral, a sign, a Locution and
+ * auxiliary, a verb with its lexical reflexive, whose 🪞 code writes (ADR
+ * 0052), a copula, a function word, a numeral, a sign, a Locution and
  * existential es gibt (#694). None of their Lemmas or target words is an
  * evaluation case's.
  */
@@ -257,6 +258,17 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 		"🩹",
 		rules.meaning,
 		rules.auxiliary,
+	),
+	demonstration(
+		"reflexive",
+		{
+			markedSentence:
+				"Wir <TARGET>beeilen</TARGET> <TARGET>uns</TARGET> lieber.",
+			lemma: "beeilen",
+		},
+		"⏩",
+		rules.meaning,
+		rules.distinct,
 	),
 	demonstration(
 		"copula",

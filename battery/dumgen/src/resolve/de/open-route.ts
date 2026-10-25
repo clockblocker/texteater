@@ -14,7 +14,9 @@
  * derives the rest: the article's cell and evidence (#681), perfect,
  * future, passive and causative from the auxiliaries (#686), a lexical
  * reflexive's case where its form shows it, a VERB's subject es, an ADP's
- * case where the ADP Case Table allows one.
+ * case where the ADP Case Table allows one. A lexical reflexive stays out
+ * of the Canonical Form and the normalized Surface, and its Reflexive is
+ * valency evidence (ADR 0052).
  */
 
 import type * as Dumling from "dumling/types";
@@ -26,6 +28,7 @@ import { CallLog } from "../../call.js";
 import type { LunaDraft } from "../../luna.js";
 import { type Luna, stageWrite } from "../../luna-call.js";
 import type { Answers, Ask, AskFailure } from "../../segment/ask.js";
+import { withoutReflexive } from "../../segment/de/candidates.js";
 import { draftsEmojiDescription } from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
 import {
@@ -295,6 +298,7 @@ const readFirst = answerReader(function* (
 	);
 	const read = yield* readShape(target, planned, answered, head.cited);
 	const verbal = read.block === "verbal" ? read : undefined;
+	const reflexive = verbal?.reflexive;
 	const tail = yield* readTail(
 		planned.tail,
 		planned.shape,
@@ -310,7 +314,10 @@ const readFirst = answerReader(function* (
 		surfaceFeatures: head.surfaceFeatures,
 		coverage: tail.coverage,
 		readings: new Map([...head.readings, ...(verbal?.readings ?? [])]),
-		governed: tail.governed,
+		// The evidence in member order, as gold records it.
+		governed: [...(reflexive ? [reflexive] : []), ...tail.governed].sort(
+			(left, right) => (left.member ?? 0) - (right.member ?? 0),
+		),
 		governedPositions: tail.governedPositions,
 	};
 });
@@ -414,9 +421,10 @@ function senseRequest(
 /**
  * The headword: Luna's Canonical Form and members' words, over which each
  * route shape's step writes what the Rules settle, in this order: a VERB
- * Lexeme's prefix and sich, a PART's authored Lemma, a numeral Locution's
- * members or a Locution's guarded headword, a NUM's digits, an ADV's or
- * ADJ's. A PART no authored Lemma names is a Catalog Miss.
+ * Lexeme's prefix, a PART's authored Lemma, a numeral Locution's members
+ * or a Locution's guarded headword, a NUM's digits, an ADV's or ADJ's. No
+ * verbal headword keeps a lexical reflexive (ADR 0052). A PART no authored
+ * Lemma names is a Catalog Miss.
  */
 function canonicalFormOf(
 	target: Target,
@@ -428,8 +436,10 @@ function canonicalFormOf(
 ): Headword | Extract<OpenOutcome, { readonly _tag: "CatalogMiss" }> {
 	let core = cells;
 	let canonicalForm =
-		written && first.block === "verbal" && shape.lexeme
-			? verbHeadword(written.canonicalForm, first.core)
+		written && first.block === "verbal"
+			? shape.lexeme
+				? verbHeadword(written.canonicalForm, first.core)
+				: withoutReflexive(written.canonicalForm)
 			: written?.canonicalForm;
 	const normalized = [
 		...(written?.members ??
@@ -480,7 +490,7 @@ function canonicalFormOf(
 
 /**
  * Luna's headword once jev has judged. The guessed answer stands when jev
- * changed nothing Luna reads and, on a VERB Lexeme, judged away no sich or
+ * changed nothing Luna reads and, on a VERB Lexeme, judged away no
  * prefix the guessed headword carries; otherwise Luna writes again with
  * jev's answers.
  */
@@ -563,6 +573,9 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	const article = planned.article;
 	const outsideHeadword = new Set<number>([
 		...(article ? [article.member.position] : []),
+		...(planned.verbal?.reflexive
+			? [planned.verbal.reflexive.position]
+			: []),
 		...first.governedPositions,
 	]);
 	const judged = judgedOf(
