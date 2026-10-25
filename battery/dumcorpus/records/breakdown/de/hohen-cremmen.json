@@ -1,0 +1,73 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Hohen-Cremmen",
+			"coreFeatures": {
+				"article": null,
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🏡"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Hohen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "hoch",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": "-"
+				},
+				{
+					"letters": "Cremmen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Cremmen",
+						"coreFeatures": {
+							"article": null,
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "de.wikipedia: Effi Briest",
+				"url": "https://de.wikipedia.org/wiki/Effi_Briest",
+				"supports": "Hohen-Cremmen, 'dem elterlichen Anwesen und Haus ihrer glücklichen Kindheit': Fontane's fictional estate"
+			},
+			{
+				"title": "DWDS: hoch",
+				"url": "https://www.dwds.de/wb/hoch",
+				"supports": "The adjective hoch, attributive form hohe (usw.); DWDS has no entry for Hohen-Cremmen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Fontane's fictional estate in Effi Briest, built like the Brandenburg names Hohen Neuendorf and Hohennauen from the inflected adjective hohen and a place name. No dictionary splits it. Hohen shows hoch's declension stem hoh with the attributive ending -en (ADR 0050), the hyphen is filler, and Cremmen is a PROPN Lemma of its own, as the novel spells it, not a spelling Variant of the town Kremmen (the user, 2026-10-25, #1241). Round 5's real-text draw 74; restored as a tuning record after the ruling, outside that frozen batch."
+	}
+}

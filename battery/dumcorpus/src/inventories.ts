@@ -11,7 +11,8 @@
  * and citation endings word formation cuts off with German's Morphemic
  * Breakdown policy, the parts of the adverbs
  * that split (Da … von), the colloquial r- and dr- adverb shorthands, the
- * suppletive comparisons, the Surface features each AUX use sets, and the
+ * suppletive comparisons, the attributive adjective forms a Breakdown piece
+ * may show, the Surface features each AUX use sets, and the
  * reviewed fusions, apostrophe clitics and abbreviations. The authored members include the pronoun Syncretisms
  * generated from the pronoun cells (system ADR 0046). It also exports German
  * lookups: the ADP Case Table, its governable prepositions and its Valency
@@ -34,6 +35,11 @@
 
 export { frameAdpositionCaseIssues } from "./de/check-adposition-cases.js";
 export { checkIfGrundform } from "./grundform/check-if-grundform.js";
+export {
+	germanAttributiveEndings,
+	germanStemCitations,
+	isGermanAttributiveForm,
+} from "./inventories/de/adjective-declension.js";
 export {
 	type GermanAdpositionCases,
 	type GermanAdpositionPosition,

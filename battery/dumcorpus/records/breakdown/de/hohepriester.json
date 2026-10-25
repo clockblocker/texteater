@@ -1,0 +1,63 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Hohepriester",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🕍"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Hohe",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "hoch",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": "priester",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Priester",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Hohepriester",
+				"url": "https://www.dwds.de/wb/Hohepriester",
+				"supports": "The Wortzerlegung hoch Priester, for 'oberster altjüdischer Priester'; beside it Hohe Priester (Genitiv Hohen Priesters): when the adjectival first part is inflected, only the spelling apart is correct"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "DWDS splits it hoch + Priester. Hohe shows hoch's declension stem hoh with the frozen attributive ending -e, which the shown letters tolerate (ADR 0050; the user, 2026-10-25, #1241). Held out of every Breakdown prompt's examples (#693)."
+	}
+}

@@ -1,13 +1,17 @@
 import { describe, expect, test } from "bun:test";
 import { checkBreakdownRecord } from "../src/check-breakdown.js";
 import {
+	germanStemCitations,
+	isGermanAttributiveForm,
+} from "../src/inventories/de/adjective-declension.js";
+import {
 	germanLexemePartTargets,
 	germanSeparableParticles,
 } from "../src/inventories/de/verb-prefixes.js";
 import { loadBreakdownRecords } from "../src/load.js";
 import { seedJson } from "./negative-fixtures.js";
 
-// The user's Breakdown rulings of 2026-10-24 on #1241.
+// The user's Breakdown rulings of 2026-10-24 and 2026-10-25 on #1241.
 
 const breakdowns = loadBreakdownRecords();
 
@@ -114,5 +118,66 @@ describe("Breakdown rulings of 2026-10-24", () => {
 		expect(failures(id, json)).toEqual([
 			"Breakdown knowledge.breakdown.constituents.2.letters",
 		]);
+	});
+});
+
+describe("Breakdown rulings of 2026-10-25", () => {
+	test("let an adjective first part show its frozen attributive ending", () => {
+		expect(constituents("langeweile")).toEqual([
+			"Lange → Lexeme ADJ lang",
+			"weile → Lexeme NOUN Weile",
+		]);
+		expect(constituents("hohepriester")).toEqual([
+			"Hohe → Lexeme ADJ hoch",
+			"priester → Lexeme NOUN Priester",
+		]);
+		expect(constituents("hohen-cremmen")).toEqual([
+			"Hohen → Lexeme ADJ hoch",
+			"-",
+			"Cremmen → Lexeme PROPN Cremmen",
+		]);
+	});
+
+	test("tolerate the attributive ending on an adjective target only", () => {
+		const id = "breakdown/de/langeweile";
+		const json = seedJson(id);
+		json.knowledge.breakdown.constituents[0].target = {
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: "Lang",
+			coreFeatures: { gender: "Fem" },
+		};
+		expect(failures(id, json)).toEqual([
+			"Breakdown knowledge.breakdown.constituents.0.letters",
+		]);
+	});
+
+	test("build an adjective's attributive forms from its declension stems", () => {
+		const fits: [string, string][] = [
+			["Hohen", "hoch"],
+			["dunkle", "dunkel"],
+			["teure", "teuer"],
+			["leisen", "leise"],
+			["kleines", "klein"],
+		];
+		for (const [letters, adjective] of fits)
+			expect(
+				`${letters} ${isGermanAttributiveForm(letters, adjective)}`,
+			).toBe(`${letters} true`);
+		const misfits: [string, string][] = [
+			["Hohe", "hohl"],
+			["Langs", "lang"],
+			["Lang", "lange"],
+		];
+		for (const [letters, adjective] of misfits)
+			expect(
+				`${letters} ${isGermanAttributiveForm(letters, adjective)}`,
+			).toBe(`${letters} false`);
+		expect(germanStemCitations("hoh")).toEqual(["hoh", "hoch"]);
+		expect(germanStemCitations("dunkl")).toEqual(["dunkl", "dunkel"]);
+		expect(germanStemCitations("teur")).toEqual(["teur", "teuer"]);
+		expect(germanStemCitations("hell")).toEqual(["hell"]);
 	});
 });

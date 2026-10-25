@@ -37,7 +37,7 @@
  * unasked.
  */
 import type { Questions } from "@typesafe-ai/sdk";
-import { germanSuffixes } from "dumcorpus/inventories";
+import { germanSuffixes, isGermanAttributiveForm } from "dumcorpus/inventories";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import {
@@ -143,7 +143,8 @@ const morpheme = (kind: string, canonicalForm: string) =>
 /**
  * An analysis's pieces with their links: a word part's from jev, an
  * affix's from the inventory, and a first word part's letters past its
- * form split off as its Interfix.
+ * form split off as its Interfix, unless they are an adjective's frozen
+ * attributive ending (`[[lang|Lange]] + [[Weile|weile]]`, ADR 0050).
  */
 function linkedPieces(
 	pieces: readonly WordPiece[],
@@ -166,9 +167,13 @@ function linkedPieces(
 		const target = words[word++];
 		if (target === undefined) throw Error("A word part has no link");
 		const last = index === pieces.length - 1 || piece.role === "Phrase";
-		const split = last
-			? undefined
-			: interfixOf(piece.letters, target.canonicalForm);
+		const attributive =
+			target.kind === "ADJ" &&
+			isGermanAttributiveForm(piece.letters, target.canonicalForm);
+		const split =
+			last || attributive
+				? undefined
+				: interfixOf(piece.letters, target.canonicalForm);
 		if (split === undefined)
 			result.push({ letters: piece.letters, target });
 		else

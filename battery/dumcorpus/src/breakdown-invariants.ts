@@ -2,6 +2,7 @@ import { foldCase, zeroEndingCanonicalForm } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type { BreakdownKnowledge } from "./corpus-types.js";
+import { isGermanAttributiveForm } from "./inventories/de/adjective-declension.js";
 import { germanReflexiveForms } from "./inventories/de/drill-down.js";
 import { germanInterfixes } from "./inventories/de/interfixes.js";
 import {
@@ -109,11 +110,24 @@ const reflexiveForms: Partial<
 > = { de: germanReflexiveForms };
 
 /**
+ * Each language's test for an adjective's attributive form (ADR 0050): a
+ * declension stem and an attributive ending, `Lange` in `Langeweile` for
+ * ADJ `lang`, `Hohe` in `Hohepriester` for ADJ `hoch`.
+ */
+const attributiveForms: Partial<
+	Record<
+		Dumling.Language,
+		(letters: string, canonicalForm: string) => boolean
+	>
+> = { de: isGermanAttributiveForm };
+
+/**
  * Whether a word's shown letters fit their target (ADR 0050): the target's
  * Canonical Form, compared case-insensitively and with umlauts and Hebrew
  * final forms folded, or a truncation of it, which covers a dropped final -e
  * (`Schul`), a verb stem (`Fahr`) and a blend's part (`br`, `unch`). A digit
- * stands for a numeral, and a reflexive form for the reflexivity unit.
+ * stands for a numeral, a reflexive form for the reflexivity unit, and an
+ * adjective's attributive form for the adjective.
  */
 function lettersFit(
 	letters: string,
@@ -127,6 +141,11 @@ function lettersFit(
 		target.kind === "PRON" &&
 		target.canonicalForm === reflexive.canonicalForm &&
 		reflexive.forms.has(foldCase(letters, language))
+	)
+		return true;
+	if (
+		target.kind === "ADJ" &&
+		attributiveForms[language]?.(letters, target.canonicalForm) === true
 	)
 		return true;
 	const shown = comparable(letters, language);

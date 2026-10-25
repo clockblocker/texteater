@@ -1,0 +1,63 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Langeweile",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🥱"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Lange",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "lang",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": "weile",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Weile",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Langeweile",
+				"url": "https://www.dwds.de/wb/Langeweile",
+				"supports": "The Wortzerlegung 1lang Weile; the Grammatik note: the occasional inflection of the adjectival first part recalls that the compound grew out of a phrase (vor, aus langer Weile); Genitiv Singular: Langeweile"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "DWDS splits it lang + Weile. Lange shows the adjective with its frozen attributive ending, which the shown letters tolerate (ADR 0050; the user, 2026-10-25, #1241), so the e is no Interfix. Held out of every Breakdown prompt's examples (#693)."
+	}
+}

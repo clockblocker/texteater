@@ -10,8 +10,10 @@
 import {
 	authoredRealizations,
 	closedVerbForms,
+	germanAttributiveEndings,
 	germanIrregularPresents,
 	germanReflexiveForms,
+	germanStemCitations,
 } from "dumcorpus/inventories";
 
 const capitalized = (word: string) =>
@@ -101,14 +103,18 @@ function verbForms(word: string): string[] {
 	];
 }
 
-/** The endings an attributive adjective adds (`guten`, `kleines`). */
-const adjectiveEndings = ["e", "en", "em", "er", "es"];
-
+/**
+ * An adjective's letters as they stand, then without an attributive ending
+ * (`guten`, `kleines`), its declension stem undone (`Hohe` → hoch, `dunkle`
+ * → dunkel).
+ */
 function adjectiveForms(word: string): string[] {
 	const shown = lower(word);
 	return [
 		shown,
-		...defined(adjectiveEndings.map((ending) => stripped(shown, ending))),
+		...defined(
+			germanAttributiveEndings.map((ending) => stripped(shown, ending)),
+		).flatMap(germanStemCitations),
 	];
 }
 

@@ -48,9 +48,17 @@ the same way, `-ung` to the Shadow (de, Morpheme, Suffix, `-ung`).
   infinitive ending (`[[fahren|Fahr]] + [[Rad|rad]]`), a digit for its
   numeral (`3` for NUM `drei`), a reflexive form for the reflexivity unit
   (`dich` for PRON `sich`), a hyphenated Locution part for its spaced
-  wording (`Rund-um-die-Uhr` for `rund um die Uhr`) and Hebrew final-letter
+  wording (`Rund-um-die-Uhr` for `rund um die Uhr`), an adjective's
+  declension stem with an attributive ending, and Hebrew final-letter
   forms. Hyphens, ellipses, gershayim, spaces, punctuation and placeholders
   are unlinked filler segments.
+- The attributive ending is an adjective's frozen ending, never an
+  Interfix: `Langeweile` = `[[lang|Lange]] + [[Weile|weile]]`,
+  `Hohepriester` = `[[hoch|Hohe]] + [[Priester|priester]]` (DWDS), on a
+  listed stem (`hoch` → `hoh`). The intended replacement, once dumcorpus
+  has adjective paradigms, is that a piece may show any inflected Surface
+  of its target, phraseme parts and Hebrew construct states included (the
+  user, 2026-10-25).
 - A Breakdown describes the Canonical Form or cited wording, never an
   occurrence's alignment.
 - A piece stores no head or modifier role, no Surface and no Reading. A click
@@ -107,6 +115,9 @@ For German:
   no Constituents (`Motel`).
 - A blend shows truncated letters (`brunch` = `[[breakfast|br]] +
   [[lunch|unch]]`). A part may be PROPN (`Goethe + Straße`, `Berlin + -er`).
+  Fontane's fictional `Hohen-Cremmen` = `[[hoch|Hohen]]` + `-` +
+  `[[Cremmen]]`, PROPN `Cremmen` its own Lemma, not a Variant of the town
+  `Kremmen` (the user, 2026-10-25).
 - Hyphenated compounds follow DWDS: `Mund-zu-Mund-Beatmung` and
   `3-Zimmer-Wohnung` are flat, and `Vitamin-C-Mangel` = `[Vitamin C] +
   Mangel`. In `E-Mail`, `E` links to DWDS's prefix `e-` (2e-, short for
@@ -284,6 +295,9 @@ intensifiers, the English particle, the particle list and `leid` on
   nothing, since Dumgen opens no slot on them until a lab round weighs one.
 - `leid` linking to NOUN `Leid`. Rejected: Duden and DWDS class it as an
   adjective, and the 2006 reform lowercased it.
+- An adjective's frozen ending as an Interfix (`Lang + -e- + weile`).
+  Rejected: it is no Fuge, and `Langeweile` would join `Gästehaus` in the
+  Interfix's Formations.
 - A Source with two targets for a blend. Rejected: a blend's letters can be
   cut.
 - `segment.inConstituents` returning a Source, with the base picked by jev
