@@ -84,6 +84,9 @@ export type SttsRoute = WithoutLanguage<Extract<SpecRoute, { language: "de" }>>;
  * - `Member`: one member of a target whose unit is another word or a
  *   multiword Lemma: an article of its Head, a particle of its verb, an
  *   anchor of a Locution.
+ * - `Reflexive`: the lexical reflexive of a target of `route`, a member its
+ *   Attestation's `valencyEvidence` names with a Reflexive complement, as it
+ *   fills the Reading's Reflexive Slot (ADR 0052).
  * - `Component`: a piece of a fused word, a Segment standing for another
  *   word (`m` in `im` stands for `dem`), inside a target of `route`.
  * - `NoTarget`: a Segment of a No Target entry.
@@ -91,7 +94,7 @@ export type SttsRoute = WithoutLanguage<Extract<SpecRoute, { language: "de" }>>;
  */
 export type SttsBecomes =
 	| { role: "Target"; route: SttsRoute; satellites?: true }
-	| { role: "Member" | "Component"; route: SttsRoute }
+	| { role: "Member" | "Component" | "Reflexive"; route: SttsRoute }
 	| { role: "NoTarget" }
 	| { role: "Punctuation" };
 

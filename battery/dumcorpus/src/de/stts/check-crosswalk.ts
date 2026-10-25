@@ -73,27 +73,60 @@ function showingIssue(
 	const members = target.memberSegmentIndices.length;
 	if (becomes.role === "Target" && !becomes.satellites && members > 1)
 		return `${at} is one of ${members} members, not the whole target`;
-	if (becomes.role === "Member" && members < 2)
+	if (
+		(becomes.role === "Member" || becomes.role === "Reflexive") &&
+		members < 2
+	)
 		return `${at} is a target alone, not a member`;
 	if (
 		becomes.role === "Component" &&
 		record.segments[index]?.surface === undefined
 	)
 		return `${at} is no piece of a fused word`;
-	if (showing.lemma !== undefined) {
-		const attested = context.records
-			.find(({ id }) => id === showing.record)
-			?.targets.find(
-				(candidate) =>
-					candidate.memberSegmentIndices.join() ===
-					target.memberSegmentIndices.join(),
-			)?.attestation.surface.lemma.canonicalForm;
-		if (attested === undefined)
-			return `${at}: the record's Attestation fails, so the Lemma can't be checked`;
-		if (attested !== showing.lemma)
-			return `${at} is in the target of ${attested}, not ${showing.lemma}`;
-	}
-	return undefined;
+	return attestedIssue(becomes, showing, target.memberSegmentIndices, index, {
+		at,
+		context,
+	});
+}
+
+/**
+ * Why the target's Attestation doesn't show the mapping: its Lemma is not
+ * the showing's, or a Reflexive's member is not the one its valencyEvidence
+ * names as Reflexive (ADR 0052). Read only when the showing names a Lemma or
+ * the mapping a Reflexive.
+ */
+function attestedIssue(
+	becomes: SttsMapping["becomes"],
+	showing: SttsShowing,
+	members: readonly number[],
+	index: number,
+	{ at, context }: { at: string; context: CrosswalkContext },
+): string | undefined {
+	if (showing.lemma === undefined && becomes.role !== "Reflexive")
+		return undefined;
+	const attestation = context.records
+		.find(({ id }) => id === showing.record)
+		?.targets.find(
+			(candidate) =>
+				candidate.memberSegmentIndices.join() === members.join(),
+		)?.attestation;
+	if (attestation === undefined)
+		return `${at}: the record's Attestation fails, so it can't be checked`;
+	const attested = attestation.surface.lemma.canonicalForm;
+	if (showing.lemma !== undefined && attested !== showing.lemma)
+		return `${at} is in the target of ${attested}, not ${showing.lemma}`;
+	if (becomes.role !== "Reflexive") return undefined;
+	const member = members.indexOf(index);
+	const evidence =
+		"valencyEvidence" in attestation
+			? (attestation.valencyEvidence ?? [])
+			: [];
+	return evidence.some(
+		(slot) =>
+			slot.member === member && slot.complement.kind === "Reflexive",
+	)
+		? undefined
+		: `${at} is no member its Attestation names as Reflexive`;
 }
 
 /** Whether a record reviewed through Attestation shows the mapping. */

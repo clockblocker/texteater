@@ -15,6 +15,8 @@ export type SpecCheck =
 	| "AdpositionCase"
 	| "ArticleAgreement"
 	| "ExpletiveSpelling"
+	| "ReflexiveSpelling"
+	| "ReflexiveMarker"
 	| "ClosedPart"
 	| "PluralOnly"
 	| "Syncretism"

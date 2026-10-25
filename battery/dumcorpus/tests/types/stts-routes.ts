@@ -1,4 +1,4 @@
-import { lexeme, locution } from "../../src/de/stts/crosswalk.js";
+import { lexeme, locution } from "../../src/de/stts/crosswalk-parts.js";
 import type { SttsRoute } from "../../src/de/stts/types.js";
 
 lexeme("VERB");

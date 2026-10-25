@@ -10,6 +10,7 @@ import {
 	checkParadigm,
 	checkReading,
 } from "./check-reading.js";
+import { reflexiveMarkerIssues } from "./check-reflexive-readings.js";
 import { attestationSyncretismIssues } from "./check-syncretisms.js";
 import type {
 	AnnotationLayer,
@@ -577,6 +578,17 @@ function checkTargetLayers(
 				"KnowledgeCoverage",
 				`${path}.reading.coverage`,
 				`A record reviewed through Knowledge covers each structural aspect its route requests; uncovered: ${covered.uncovered.join(", ")}`,
+			);
+		for (const found of reflexiveMarkerIssues(
+			reading.value,
+			knowledge,
+			authoredCoverage,
+		))
+			issue(
+				"Knowledge",
+				"ReflexiveMarker",
+				`${path}.${found.path}`,
+				found.message,
 			);
 		if (covered.issues.length === 0) coverage = authoredCoverage;
 		complete =

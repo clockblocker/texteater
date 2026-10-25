@@ -148,6 +148,41 @@ describe("the crosswalk checks", () => {
 		]);
 	});
 
+	test("fail a Reflexive its Attestation doesn't name in valencyEvidence (ADR 0052)", () => {
+		const [mapping] = row.mappings;
+		if (!mapping) throw Error("Expected a mapping");
+		const becomes = {
+			role: "Reflexive",
+			route: { family: "Lexeme", kind: "VERB" },
+		} as const;
+		expect(
+			only({
+				...row,
+				mappings: [
+					{
+						...mapping,
+						becomes,
+						records: [
+							{ record: "de/pass-auf-dich-auf", word: "auf" },
+						],
+					},
+					{
+						...mapping,
+						use: "free",
+						becomes,
+						records: [
+							{ record: "de/pass-auf-dich-auf", word: "dich" },
+						],
+					},
+				],
+				gold: "No",
+			}),
+		).toEqual([
+			"PTKNEG: nicht: de/pass-auf-dich-auf auf is no member its Attestation names as Reflexive",
+			"PTKNEG: free: de/pass-auf-dich-auf dich is in a Lexeme/PRON target, not Lexeme/VERB",
+		]);
+	});
+
 	test("fail gold claimed without a record reviewed through Attestation", () => {
 		const [mapping] = row.mappings;
 		if (!mapping) throw Error("Expected a mapping");
