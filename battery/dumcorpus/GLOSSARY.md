@@ -134,8 +134,10 @@ A `sich` that no other noun phrase can replace in its sense: inherent
 (`sich schämen`), reciprocal-inherent (`sich zanken`) or the modal-passive
 `sich lassen`. It may be the object of a fixed preposition (`außer sich
 sein`, `zu sich kommen`). It is a member of its verb's or Locution's target
-and fills the Reading's Reflexive Slot (Dumrel), never the Canonical Form. See
-[ADR 0052].
+and fills the Reading's Reflexive Slot (Dumrel), never the Canonical Form. Its
+Attestation's evidence names the case where the form (`mich`, `mir`) or the
+fixed preposition shows it, and may leave it out after `sich`, `uns` or
+`euch`. See [ADR 0052].
 _Avoid_: reflexive verb, for a Lemma of its own; inherent reflexive, for all
 three
 

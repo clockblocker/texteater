@@ -39,7 +39,7 @@ export function isGermanVerbalAttestation(value: {
 	);
 }
 export function germanVerbalAttestationError(): string {
-	return "Subject expletive requires third-person singular agreement and owned expletive evidence in the complete verbal realization; valency evidence must name distinct owned members spelling its preposition, keeping the slot's case, and at most one Reflexive, named by its owned member in its case";
+	return "Subject expletive requires third-person singular agreement and owned expletive evidence in the complete verbal realization; valency evidence must name distinct owned members spelling its preposition, keeping the slot's case, and at most one Reflexive, named by its owned member, in its case where it names one";
 }
 
 /**
@@ -68,10 +68,10 @@ type ValencyEvidence = {
 		  }
 		| {
 				kind: "Reflexive";
-				governedCase: string;
+				governedCase?: string;
 				preposition?: { canonicalForm: string };
 		  };
-	realizedCase: string;
+	realizedCase?: string;
 };
 
 type ValencySlot = {
@@ -116,12 +116,13 @@ function namesMarkerMembers(
 /**
  * German slots also keep their case: a preposition slot's occurrence shows
  * the case the slot governs, and a bare-case slot has no marker member. A
- * Reflexive, allowed only where `reflexive` says so, names its owned member
- * and shows the case its Reading fixes, at most once; after a fixed phrase's
- * preposition (`außer sich`) that is the case the preposition governs, and
- * the member is still the reflexive (ADR 0052). Which cases
- * a preposition takes, and which forms spell a reflexive, are facts about
- * German, checked in dumcorpus (ADR 0041).
+ * Reflexive, allowed only where `reflexive` says so, names its owned member,
+ * at most once, and the case its Reading fixes where it names one; after a
+ * fixed phrase's preposition (`außer sich`) that is the case the preposition
+ * governs, and the member is still the reflexive (ADR 0052). Which cases a
+ * preposition takes, which forms spell a reflexive, and so when the
+ * occurrence shows the case and must name it, are facts about German,
+ * checked in dumcorpus (ADR 0041).
  */
 function isOwnedValencyEvidence(
 	evidence: readonly ValencyEvidence[],

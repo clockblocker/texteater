@@ -83,8 +83,12 @@ declare const adpositionOccurrence: Unit<"Attestation", "de", "Lexeme", "ADP">;
 // @ts-expect-error The sentence shows an adposition's position; no Attestation records it.
 adpositionOccurrence.adpType;
 declare const circumposition: Unit<"Attestation", "de", "Locution", "ADP">;
+const [circumpositionSlot] = circumposition.valencyEvidence;
+// Only a Reflexive whose case the occurrence hides names no realizedCase (ADR 0052).
 const _circumpositionCase: "Nom" | "Acc" | "Dat" | "Gen" | undefined =
-	circumposition.valencyEvidence[0]?.realizedCase;
+	circumpositionSlot && "realizedCase" in circumpositionSlot
+		? circumpositionSlot.realizedCase
+		: undefined;
 // @ts-expect-error German noun _gender is restricted.
 const _wrongGender: "Com" = noun.coreFeatures.gender;
 declare const reading: Reading<"de", "Lexeme", "NOUN">;

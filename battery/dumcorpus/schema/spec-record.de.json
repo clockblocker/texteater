@@ -6146,107 +6146,147 @@
 		"__schema86": {
 			"type": "array",
 			"items": {
-				"type": "object",
-				"properties": {
-					"member": {
-						"anyOf": [
-							{
-								"$ref": "#/$defs/__schema62"
+				"anyOf": [
+					{
+						"type": "object",
+						"properties": {
+							"member": {
+								"anyOf": [
+									{
+										"$ref": "#/$defs/__schema62"
+									},
+									{
+										"type": "null"
+									}
+								]
 							},
-							{
-								"type": "null"
+							"complement": {
+								"anyOf": [
+									{
+										"type": "object",
+										"properties": {
+											"kind": {
+												"type": "string",
+												"const": "Case"
+											},
+											"governedCase": {
+												"$ref": "#/$defs/__schema87"
+											},
+											"referent": {
+												"$ref": "#/$defs/__schema88"
+											}
+										},
+										"required": [
+											"kind",
+											"governedCase",
+											"referent"
+										],
+										"additionalProperties": false
+									},
+									{
+										"type": "object",
+										"properties": {
+											"kind": {
+												"type": "string",
+												"const": "Preposition"
+											},
+											"preposition": {
+												"$ref": "#/$defs/__schema89"
+											},
+											"governedCase": {
+												"type": "string",
+												"enum": [
+													"Acc",
+													"Dat",
+													"Gen"
+												]
+											},
+											"referent": {
+												"$ref": "#/$defs/__schema88"
+											}
+										},
+										"required": [
+											"kind",
+											"preposition",
+											"governedCase",
+											"referent"
+										],
+										"additionalProperties": false
+									},
+									{
+										"type": "object",
+										"properties": {
+											"kind": {
+												"type": "string",
+												"const": "Reflexive"
+											},
+											"governedCase": {
+												"type": "string",
+												"enum": [
+													"Acc",
+													"Dat"
+												]
+											},
+											"preposition": {
+												"$ref": "#/$defs/__schema89"
+											}
+										},
+										"required": [
+											"kind",
+											"governedCase"
+										],
+										"additionalProperties": false
+									}
+								]
+							},
+							"realizedCase": {
+								"$ref": "#/$defs/__schema87"
 							}
-						]
+						},
+						"required": [
+							"member",
+							"complement",
+							"realizedCase"
+						],
+						"additionalProperties": false
 					},
-					"complement": {
-						"anyOf": [
-							{
-								"type": "object",
-								"properties": {
-									"kind": {
-										"type": "string",
-										"const": "Case"
+					{
+						"type": "object",
+						"properties": {
+							"member": {
+								"anyOf": [
+									{
+										"$ref": "#/$defs/__schema62"
 									},
-									"governedCase": {
-										"$ref": "#/$defs/__schema87"
-									},
-									"referent": {
-										"$ref": "#/$defs/__schema88"
+									{
+										"type": "null"
 									}
-								},
-								"required": [
-									"kind",
-									"governedCase",
-									"referent"
-								],
-								"additionalProperties": false
+								]
 							},
-							{
-								"type": "object",
-								"properties": {
-									"kind": {
-										"type": "string",
-										"const": "Preposition"
-									},
-									"preposition": {
-										"$ref": "#/$defs/__schema89"
-									},
-									"governedCase": {
-										"type": "string",
-										"enum": [
-											"Acc",
-											"Dat",
-											"Gen"
-										]
-									},
-									"referent": {
-										"$ref": "#/$defs/__schema88"
-									}
-								},
-								"required": [
-									"kind",
-									"preposition",
-									"governedCase",
-									"referent"
-								],
-								"additionalProperties": false
-							},
-							{
+							"complement": {
 								"type": "object",
 								"properties": {
 									"kind": {
 										"type": "string",
 										"const": "Reflexive"
 									},
-									"governedCase": {
-										"type": "string",
-										"enum": [
-											"Acc",
-											"Dat"
-										]
-									},
 									"preposition": {
 										"$ref": "#/$defs/__schema89"
 									}
 								},
 								"required": [
-									"kind",
-									"governedCase"
+									"kind"
 								],
 								"additionalProperties": false
 							}
-						]
-					},
-					"realizedCase": {
-						"$ref": "#/$defs/__schema87"
+						},
+						"required": [
+							"member",
+							"complement"
+						],
+						"additionalProperties": false
 					}
-				},
-				"required": [
-					"member",
-					"complement",
-					"realizedCase"
-				],
-				"additionalProperties": false
+				]
 			}
 		},
 		"__schema87": {

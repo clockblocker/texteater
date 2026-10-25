@@ -65,14 +65,26 @@ const germanComplementSchema = z.union([
  * The valency slots one occurrence realizes (ADR 0034). `member` indexes the
  * owned member realizing the slot's marker, such as a governed preposition or
  * the lexical reflexive (ADR 0052), and is null when no member does.
- * `realizedCase` is the case the occurrence shows.
+ * `realizedCase` is the case the occurrence shows. A reflexive whose case
+ * the occurrence hides (`sich`, `uns`, `euch`, after no preposition that
+ * fixes it) may name no case, in neither field: the case is the Reading's,
+ * stored in its frame (ADR 0052).
  */
 const valencyEvidenceSchema = z.array(
-	z.strictObject({
-		member: indexSchema.nullable(),
-		complement: germanComplementSchema,
-		realizedCase: germanCaseSchema,
-	}),
+	z.union([
+		z.strictObject({
+			member: indexSchema.nullable(),
+			complement: germanComplementSchema,
+			realizedCase: germanCaseSchema,
+		}),
+		z.strictObject({
+			member: indexSchema.nullable(),
+			complement: z.strictObject({
+				kind: z.literal("Reflexive"),
+				preposition: germanPrepositionSchema.optional(),
+			}),
+		}),
+	]),
 );
 
 /**

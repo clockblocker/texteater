@@ -26,9 +26,9 @@ const finite = {
 	number: "Sing",
 };
 
-test("a lexical reflexive is a Reflexive in valencyEvidence, in the case jev judged, and stays out of the Lemma and the Surface", async () => {
+test("a lexical reflexive is a Reflexive in valencyEvidence, with no case where sich hides it, and stays out of the Lemma and the Surface", async () => {
 	// Er0 _1 schämt2 _3 sich4 .5
-	const jev = fakeJev({ reflexive: "Acc", ...finite });
+	const jev = fakeJev(finite);
 	const luna = writes("sich schämen");
 	const { result } = await resolveOnce(
 		{ jev: jev.ask, luna: luna.ask },
@@ -40,53 +40,40 @@ test("a lexical reflexive is a Reflexive in valencyEvidence, in the case jev jud
 	const attestation = attested(result);
 	expect(attestation.surface.lemma.canonicalForm).toBe("schämen");
 	expect(attestation.surface.normalizedSurface).toBe("schämt");
+	// The Reading's frame holds the case; jev is never asked it.
 	expect(attestation).toHaveProperty("valencyEvidence", [
-		{
-			member: 1,
-			complement: { kind: "Reflexive", governedCase: "Acc" },
-			realizedCase: "Acc",
-		},
+		{ member: 1, complement: { kind: "Reflexive" } },
 	]);
+	expect(Object.keys(jev.sent[0]?.questions ?? {})).not.toContain(
+		"reflexive",
+	);
 	// sich is outside the headword on the guess too, so Luna wrote once.
 	expect(luna.sent).toHaveLength(1);
 	expect(luna.sent[0]?.input).toHaveProperty("outsideHeadword", ["m1"]);
-	expect(Object.keys(jev.sent[0]?.questions ?? {})).toContain("reflexive");
 });
 
-test("jev judges a reflexive whose form hides its case in the first person: mir is Dat, mich is Acc", async () => {
-	// Er0 _1 macht2 _3 sich4 _5 Sorgen6 .7
-	const jev = fakeJev({ reflexive: "Dat", ...finite });
-	const { result } = await resolveOnce(
-		{ jev: jev.ask, luna: writes("sich Sorgen machen").ask },
+test("a reflexive's form names its case where it shows it (mir, mich), and a verbal Locution's leaves its headword", async () => {
+	// Ich0 _1 mache2 _3 mir4 _5 Sorgen6 .7
+	const mine = fakeJev({ ...finite, person: "1" });
+	const worry = await resolveOnce(
+		{ jev: mine.ask, luna: writes("sich Sorgen machen").ask },
 		{
-			sentence: sentenceOf("Er macht sich Sorgen."),
+			sentence: sentenceOf("Ich mache mir Sorgen."),
 			unit: unitOf([2, 4, 6], "Locution/VERB"),
 		},
 	);
-	const asked = jev.sent[0]?.questions.reflexive;
-	expect(asked?.type).toBe("choice");
-	if (asked?.type !== "choice") return;
-	expect(asked.instructions).toContain("with ich as its subject");
-	expect(asked.criteria).toMatchObject({
-		Acc: "mich: the reflexive is accusative",
-		Dat: "mir: the reflexive is dative",
-	});
-	// The policy the question cites goes with it, and states the test.
-	expect(JSON.stringify(jev.sent[0]?.state)).toContain(
-		"test it in the first person",
-	);
-	expect(attested(result)).toHaveProperty("valencyEvidence", [
+	const locution = attested(worry.result);
+	expect(locution.surface.lemma.canonicalForm).toBe("Sorgen machen");
+	expect(locution.surface.normalizedSurface).toBe("mache Sorgen");
+	expect(locution).toHaveProperty("valencyEvidence", [
 		{
 			member: 1,
 			complement: { kind: "Reflexive", governedCase: "Dat" },
 			realizedCase: "Dat",
 		},
 	]);
-});
-
-test("a reflexive whose form shows its case is not asked, and a verbal Locution's leaves its headword", async () => {
 	// Ich0 _1 erinnere2 _3 mich4 .5
-	const remember = fakeJev(finite);
+	const remember = fakeJev({ ...finite, person: "1" });
 	const { result } = await resolveOnce(
 		{ jev: remember.ask, luna: writes("sich erinnern").ask },
 		{
@@ -101,29 +88,16 @@ test("a reflexive whose form shows its case is not asked, and a verbal Locution'
 			realizedCase: "Acc",
 		},
 	]);
-	expect(Object.keys(remember.sent[0]?.questions ?? {})).not.toContain(
-		"reflexive",
-	);
-	// Sie0 _1 macht2 _3 sich4 _5 Sorgen6 .7
-	const worry = await resolveOnce(
+	// Er0 _1 macht2 _3 sich4 _5 Sorgen6 .7
+	const his = await resolveOnce(
+		{ jev: fakeJev(finite).ask, luna: writes("sich Sorgen machen").ask },
 		{
-			jev: fakeJev({ reflexive: "Dat", ...finite }).ask,
-			luna: writes("sich Sorgen machen").ask,
-		},
-		{
-			sentence: sentenceOf("Sie macht sich Sorgen."),
+			sentence: sentenceOf("Er macht sich Sorgen."),
 			unit: unitOf([2, 4, 6], "Locution/VERB"),
 		},
 	);
-	const locution = attested(worry.result);
-	expect(locution.surface.lemma.canonicalForm).toBe("Sorgen machen");
-	expect(locution.surface.normalizedSurface).toBe("macht Sorgen");
-	expect(locution).toHaveProperty("valencyEvidence", [
-		{
-			member: 1,
-			complement: { kind: "Reflexive", governedCase: "Dat" },
-			realizedCase: "Dat",
-		},
+	expect(attested(his.result)).toHaveProperty("valencyEvidence", [
+		{ member: 1, complement: { kind: "Reflexive" } },
 	]);
 });
 
@@ -165,6 +139,34 @@ test("a reflexive inside a fixed phrase names its preposition, in the case the A
 	expect(Object.keys(jev.sent[0]?.questions ?? {})).not.toContain(
 		"governed_m1",
 	);
+	// Der0 _1 Test2 _3 hat4 _5 es6 _7 in8 _9 sich10 .11
+	// in takes Acc or Dat, so sich still hides the case.
+	const tough = await resolveOnce(
+		{
+			jev: fakeJev({ ...finite, expletive: "None" }).ask,
+			luna: writes("es in sich haben").ask,
+		},
+		{
+			sentence: sentenceOf("Der Test hat es in sich."),
+			unit: unitOf([4, 6, 8, 10], "Locution/VERB"),
+		},
+	);
+	expect(attested(tough.result)).toHaveProperty("valencyEvidence", [
+		{
+			member: 3,
+			complement: {
+				kind: "Reflexive",
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: "in",
+					coreFeatures: {},
+				},
+			},
+		},
+	]);
 });
 
 /** The Attestation and unit of a click on `sentence`, resolved with a fake jev and Luna. */
@@ -181,7 +183,7 @@ async function clickOn(
 	const segmented = sentenceOf(sentence);
 	const { result } = await resolveOnce(
 		{
-			jev: fakeJev({ reflexive: "Acc", ...finite }).ask,
+			jev: fakeJev(finite).ask,
 			luna: writes(canonicalForm).ask,
 		},
 		{ sentence: segmented, unit },

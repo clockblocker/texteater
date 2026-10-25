@@ -77,6 +77,22 @@ test("a verbal Attestation names its lexical reflexive member and its case (ADR 
 		).toBe(false);
 });
 
+test("a Reflexive whose case the occurrence hides may name no case, in neither field (ADR 0052)", () => {
+	const caseless = { member: 1, complement: { kind: "Reflexive" } };
+	expect(
+		parseUnit({ ...erinnert, valencyEvidence: [caseless] }).success,
+	).toBe(true);
+	for (const invalid of [
+		{ ...caseless, realizedCase: "Acc" },
+		{ ...caseless, member: null },
+		{ ...caseless, complement: { kind: "Case" } },
+		{ ...reflexive, realizedCase: undefined },
+	])
+		expect(
+			parseUnit({ ...erinnert, valencyEvidence: [invalid] }).success,
+		).toBe(false);
+});
+
 test("an adjective or noun names no Reflexive", () => {
 	const stolz = {
 		...erinnert,

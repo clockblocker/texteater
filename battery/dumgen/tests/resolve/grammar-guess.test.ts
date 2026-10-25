@@ -124,7 +124,6 @@ test("a verb headword written on the guess with a prefix jev judged away is writ
 		{
 			jev: fakeJev({
 				prefix: "None",
-				reflexive: "Acc",
 				governed_m2: "Free",
 			}).ask,
 			luna: quarrels.ask,
@@ -147,7 +146,6 @@ test("a verb headword written on the guess with a prefix jev judged away is writ
 		{
 			jev: fakeJev({
 				prefix: "None",
-				reflexive: "Acc",
 				governed_m2: "Free",
 			}).ask,
 			luna: fits.ask,

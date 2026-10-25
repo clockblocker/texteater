@@ -74,15 +74,45 @@ function caseIssue(
 	];
 }
 
+/**
+ * A preposition's issue, or a caseless Reflexive's after a preposition that
+ * leaves the reflexive one case and so shows it (`außer sich`: Dat; `in
+ * sich` may be either). Only an occurrence's Reflexive is ever caseless
+ * (ADR 0052).
+ */
 function prepositionIssue(
 	complement: Complement,
 	path: string,
 ): AdpositionCaseIssue[] {
-	if (!hasPreposition(complement)) return [];
-	return caseIssue(complement.preposition, complement.governedCase, {
+	if (hasPreposition(complement))
+		return caseIssue(complement.preposition, complement.governedCase, {
+			lemma: `${path}.preposition`,
+			case: `${path}.governedCase`,
+		});
+	if (
+		complement.kind !== "Reflexive" ||
+		!("preposition" in complement) ||
+		complement.preposition === undefined
+	)
+		return [];
+	const { preposition } = complement;
+	const unlisted = caseIssue(preposition, undefined, {
 		lemma: `${path}.preposition`,
-		case: `${path}.governedCase`,
+		case: "",
 	});
+	if (unlisted.length > 0) return unlisted;
+	const entry = germanAdpositionEntry(preposition);
+	const shown = (entry ? germanAdpositionAllowedCases(entry) : []).filter(
+		(allowed) => allowed === "Acc" || allowed === "Dat",
+	);
+	return shown.length === 1
+		? [
+				{
+					path: `${path}.governedCase`,
+					message: `${preposition.canonicalForm} shows the reflexive's ${shown[0]}, and the evidence names no case`,
+				},
+			]
+		: [];
 }
 
 /**
@@ -91,8 +121,9 @@ function prepositionIssue(
  * when its realized case is one none of its positions takes (`auf` + Gen). A
  * governor's Preposition evidence, and Reflexive evidence after a fixed
  * phrase's preposition, fails when the table doesn't list its preposition or
- * the preposition doesn't take its governed case (`für` + Dat).
- * Dumling checks only the evidence's shape (ADR 0041).
+ * the preposition doesn't take its governed case (`für` + Dat), or names no
+ * case where the preposition shows it (`außer sich`: Dat). Dumling checks
+ * only the evidence's shape (ADR 0041).
  */
 export function attestationAdpositionCaseIssues(
 	attestation: Dumling.Attestation<"de">,
@@ -105,7 +136,7 @@ export function attestationAdpositionCaseIssues(
 		(lemma.family === "Lexeme" || lemma.family === "Locution");
 	const slots: readonly {
 		readonly complement: Complement;
-		readonly realizedCase: string;
+		readonly realizedCase?: string;
 	}[] = "valencyEvidence" in attestation ? attestation.valencyEvidence : [];
 	if (adposition) {
 		const unlisted = caseIssue(lemma, undefined, {

@@ -212,22 +212,6 @@ export const question = {
 		rules.bracket,
 		rules.rShorthand,
 	),
-	reflexive: paragraph(
-		"question.reflexive",
-		"Under `policy.reflexive`, say the clause again with ich as its subject, in the same meaning: does the lexical reflexive {m} then read mich or mir?",
-		rules.verbCore,
-		rules.ownsMembers,
-	),
-	reflexiveAcc: paragraph(
-		"question.reflexive.Acc",
-		"mich: the reflexive is accusative",
-		rules.verbCore,
-	),
-	reflexiveDat: paragraph(
-		"question.reflexive.Dat",
-		"mir: the reflexive is dative",
-		rules.verbCore,
-	),
 	expletive: paragraph(
 		"question.expletive",
 		"Is {m} the subject es the verb selects, which refers to nothing?",

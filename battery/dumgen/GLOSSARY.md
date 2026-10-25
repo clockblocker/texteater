@@ -82,9 +82,12 @@ keeps the route segmentation chose, and settles a target's Route Variants
 first. See [Dumgen ADR 0007].
 
 **`valencyEvidence`**:
-The Case and Preposition complements one occurrence realizes, recorded on its
-Attestation. Grammatical Resolution writes it and Knowledge Production reads
-it. See [ADR 0034] and [Dumgen ADR 0007].
+The Case, Preposition and Reflexive complements one occurrence realizes,
+recorded on its Attestation. A Reflexive names its case only where the
+occurrence shows it, by its form or its fixed phrase's preposition; otherwise
+the Reading's frame holds the case. Grammatical Resolution writes it and
+Knowledge Production reads it. See [ADR 0034], [ADR 0052] and
+[Dumgen ADR 0007].
 _Avoid_: Realized Slot, intake slots, government list, valency guess,
 governed-preposition prompt
 
@@ -148,6 +151,7 @@ settings, case outputs, failures and evaluation results.
 [ADR 0048]: ../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md
 [ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
 [ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md
+[ADR 0052]: ../../docs/adr/0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md
 [Dumgen ADR 0001]: ./docs/adr/0001-judge-each-sentence-before-conditional-stitching-and-local-segmentation.md
 [Dumgen ADR 0003]: ./docs/adr/0003-split-german-knowledge-generation-by-family.md
 [Dumgen ADR 0004]: ./docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md

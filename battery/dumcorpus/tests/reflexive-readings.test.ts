@@ -198,6 +198,35 @@ describe("a lexical reflexive in an Attestation (ADR 0052)", () => {
 		).toEqual(["The normalized Surface leaves out the reflexive sich"]);
 	});
 
+	test("names its case where the form shows it, and may leave out a case sich hides", () => {
+		const caseless = (reflexive: string) => {
+			const unit = attestation("erinnern", reflexive, infinitive);
+			return {
+				...unit,
+				valencyEvidence: [
+					{ member: 0, complement: { kind: "Reflexive" } },
+				],
+			} as unknown as Dumling.Attestation<"de">;
+		};
+		for (const hidden of ["sich", "uns", "euch"]) {
+			expect(parseUnit(caseless(hidden)).success).toBe(true);
+			expect(
+				attestationReflexiveSpellingIssues(caseless(hidden)),
+			).toEqual([]);
+		}
+		expect(
+			["mich", "dir", "ihn"].flatMap((form) =>
+				attestationReflexiveSpellingIssues(caseless(form)).map(
+					({ message }) => message,
+				),
+			),
+		).toEqual([
+			"mich shows Acc, and the evidence names no case",
+			"dir shows Dat, and the evidence names no case",
+			"ihn is no reflexive",
+		]);
+	});
+
 	test("leaves a bare Surface to the Grundform spell-back, as the Canonical Form is bare", () => {
 		expect(
 			checkIfGrundform(

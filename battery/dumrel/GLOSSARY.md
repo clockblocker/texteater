@@ -116,6 +116,8 @@ _Avoid_: governing verb
 A Slot of a Valency Frame (Dumling) holding a Reflexive complement: the
 lexical reflexive its Reading needs, which no other noun phrase can replace,
 with its case where the language has one (German Acc or Dat; English none).
+The Slot holds the case; an occurrence's `valencyEvidence` (Dumling) names it
+only where the occurrence shows it.
 When the reflexive is the object of a fixed phrase's preposition, the Slot
 names that preposition (`außer sich sein`). A Required one puts 🪞 first in
 the Reading's Emoji Description (Dumling). See [ADR 0034] and [ADR 0052].

@@ -486,3 +486,36 @@ test("a Locution governor's preposition slot is checked like a Lexeme's", () => 
 		},
 	]);
 });
+
+test("a caseless Reflexive names the case its fixed phrase's preposition shows (ADR 0052)", () => {
+	const occurrence = (canonicalForm: string) =>
+		({
+			surface: {
+				lemma: { language: "de", family: "Locution", kind: "VERB" },
+			},
+			valencyEvidence: [
+				{
+					member: 1,
+					complement: {
+						kind: "Reflexive",
+						preposition: adposition(canonicalForm),
+					},
+				},
+			],
+		}) as unknown as Dumling.Attestation<"de">;
+	// es in sich haben: in takes Acc or Dat, so sich hides the case.
+	expect(attestationAdpositionCaseIssues(occurrence("in"))).toEqual([]);
+	expect(attestationAdpositionCaseIssues(occurrence("außer"))).toEqual([
+		{
+			path: "valencyEvidence.0.complement.governedCase",
+			message:
+				"außer shows the reflexive's Dat, and the evidence names no case",
+		},
+	]);
+	expect(attestationAdpositionCaseIssues(occurrence("à"))).toEqual([
+		{
+			path: "valencyEvidence.0.complement.preposition",
+			message: "The ADP Case Table does not list à",
+		},
+	]);
+});

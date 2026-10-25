@@ -322,7 +322,7 @@ test("a particle standing apart in the VERB unit is its prefix when jev says Non
 test("a preposition with its own complement is never taken as the prefix when jev says None", async () => {
 	const quarrel = await resolveOnce(
 		{
-			jev: fakeJev({ prefix: "None", reflexive: "Acc" }).ask,
+			jev: fakeJev({ prefix: "None" }).ask,
 			luna: writes("sich zanken").ask,
 		},
 		{

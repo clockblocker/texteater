@@ -92,7 +92,7 @@ export const auxiliaryFeatures: ReadonlyMap<string, AuxiliaryFeatures> =
 /**
  * Each form a lexical reflexive takes, with the case it shows: the one case
  * all its personal-pronoun realizations share (mich Acc, mir Dat), none when
- * they differ (sich, uns, euch), so jev is asked.
+ * they differ (sich, uns, euch): the form hides it.
  */
 export const reflexives: ReadonlyMap<string, "Acc" | "Dat" | undefined> =
 	new Map(
@@ -150,8 +150,6 @@ export type VerbalPlan = Omit<VerbalSatellites, "auxiliaries"> &
 	VerbFormQuestions & {
 		/** Each auxiliary, with the question of its use. */
 		readonly auxiliaries: readonly (Auxiliary & { readonly use: Choice })[];
-		/** The case of a reflexive whose form leaves it open. */
-		readonly reflexiveCase: ChoiceOf<typeof options.reflexive> | undefined;
 		/** Whether a Locution's es is its subject es. */
 		readonly subjectEs: ChoiceOf<typeof options.expletive> | undefined;
 		readonly prefixes: readonly string[];
@@ -229,9 +227,9 @@ export function verbalSatellites(
 }
 
 /**
- * Asks a VERB's block: each auxiliary's use, a reflexive's case its form
- * leaves open, a Locution's subject es, the separable prefix among the
- * members no satellite `taken`, and the verb's form.
+ * Asks a VERB's block: each auxiliary's use, a Locution's subject es, the
+ * separable prefix among the members no satellite `taken`, and the verb's
+ * form.
  */
 export function askVerbal(
 	questionnaire: Questionnaire,
@@ -240,7 +238,7 @@ export function askVerbal(
 	satellites: VerbalSatellites,
 	taken: ReadonlySet<number>,
 ): VerbalPlan {
-	const { reflexive, expletive } = satellites;
+	const { expletive } = satellites;
 	const auxiliaries = satellites.auxiliaries.map((auxiliary) => ({
 		...auxiliary,
 		use: questionnaire.choice(
@@ -258,17 +256,6 @@ export function askVerbal(
 			["verbal"],
 		),
 	}));
-	const reflexiveCase =
-		reflexive &&
-		reflexives.get(fold(reflexive.text)) === undefined &&
-		prepositionCase(satellites.reflexivePreposition) === undefined
-			? questionnaire.choice(
-					"reflexive",
-					fill(question.reflexive, { m: reflexive.ref }),
-					options.reflexive,
-					["reflexive"],
-				)
-			: undefined;
 	const subjectEs =
 		expletive && shape.locution
 			? questionnaire.choice(
@@ -298,7 +285,6 @@ export function askVerbal(
 	return {
 		...satellites,
 		auxiliaries,
-		reflexiveCase,
 		subjectEs,
 		prefixes,
 		prefix,
@@ -394,53 +380,48 @@ export const readVerbal = answerReader(function* (
 			? null
 			: yield* verbalInflection(verbal, answered, expletive),
 		expletive,
-		reflexive: yield* reflexiveEvidence(verbal, answered),
+		reflexive: reflexiveEvidence(verbal),
 		readings,
 	};
 });
 
 /**
  * The valency evidence a lexical reflexive member gives (ADR 0052): its
- * Reflexive complement, in the case its form shows or jev judged, which is
- * the case it realizes. A reflexive inside a fixed phrase names the
- * preposition it is the object of, in the case that preposition's table
- * leaves when it leaves one.
+ * Reflexive complement, with its case only where the occurrence shows it,
+ * through its form (mich, mir) or a fixed phrase's preposition that leaves
+ * it one case (`außer sich`). sich, uns and euch hide the case, so it is
+ * left out: the Reading's frame holds it. A reflexive inside a fixed phrase
+ * names the preposition it is the object of.
  */
-const reflexiveEvidence = answerReader(function* (
-	verbal: VerbalPlan,
-	answered: Answered,
-): ReaderBody<ValencyEvidence | undefined> {
+function reflexiveEvidence(verbal: VerbalPlan): ValencyEvidence | undefined {
 	const { reflexive, reflexivePreposition } = verbal;
 	if (!reflexive) return undefined;
-	const governedCase = verbal.reflexiveCase
-		? yield* answered.pick(verbal.reflexiveCase)
-		: (prepositionCase(reflexivePreposition) ??
-			reflexives.get(fold(reflexive.text)));
-	if (governedCase === undefined)
-		throw Error(
-			"A reflexive whose form leaves its case open was not asked",
-		);
-	return {
-		member: reflexive.position,
-		complement: {
-			kind: "Reflexive",
-			governedCase,
-			...(reflexivePreposition
-				? {
-						preposition: {
-							unitKind: "Lemma",
-							language: "de",
-							family: "Lexeme",
-							kind: "ADP",
-							canonicalForm: reflexivePreposition.canonicalForm,
-							coreFeatures: {},
-						},
-					}
-				: {}),
-		},
-		realizedCase: governedCase,
-	};
-});
+	const governedCase =
+		reflexives.get(fold(reflexive.text)) ??
+		prepositionCase(reflexivePreposition);
+	const preposition = reflexivePreposition
+		? {
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: reflexivePreposition.canonicalForm,
+					coreFeatures: {},
+				} as const,
+			}
+		: {};
+	return governedCase === undefined
+		? {
+				member: reflexive.position,
+				complement: { kind: "Reflexive", ...preposition },
+			}
+		: {
+				member: reflexive.position,
+				complement: { kind: "Reflexive", governedCase, ...preposition },
+				realizedCase: governedCase,
+			};
+}
 
 /**
  * The voice an auxiliary use sets, with the passive that goes with it:

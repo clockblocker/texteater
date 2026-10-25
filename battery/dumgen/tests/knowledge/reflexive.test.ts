@@ -89,12 +89,13 @@ test("Luna is offered the Reflexive, and a 🪞 Reading's Reflexive Slot is Requ
 	expect(luna.sent[0]?.systemPrompt).toContain("Test it in the first person");
 });
 
-test("a sich hides its case, so Luna's case for the meaning goes before the one jev judged", async () => {
-	// macht sich Sorgen: jev judged Acc, Luna proposes Dat.
+test("a sich names no case, so Luna's case for the meaning stands, and with neither the frame fails", async () => {
+	// macht sich Sorgen: the occurrence hides the case, Luna proposes Dat.
+	const hidden = { member: 1, complement: { kind: "Reflexive" } };
 	const { result } = await frame(
 		"🪞😟",
 		[subject, reflexive("Dat")],
-		[attestedReflexive("Acc")],
+		[hidden],
 		"New",
 		{
 			lemma: { ...besideOneself, canonicalForm: "Sorgen machen" },
@@ -115,12 +116,15 @@ test("a sich hides its case, so Luna's case for the meaning goes before the one 
 				],
 			},
 		],
-		[attestedReflexive("Acc")],
+		[hidden],
 	);
 	expect(frameOf(blank.result.changes)).toEqual([subject, reflexive("Dat")]);
-	// Luna proposing none, the occurrence's still stands.
-	const added = await frame("🪞😳", [subject], [attestedReflexive("Acc")]);
-	expect(frameOf(added.result.changes)).toEqual([subject, reflexive("Acc")]);
+	// Luna proposing none, nothing names the case.
+	const none = await frame("🪞😳", [subject], [hidden]);
+	expect(frameOf(none.result.changes)).toBeUndefined();
+	expect(none.result.failures).toEqual([
+		expect.objectContaining({ aspect: "valency", leaf: "Reflexive" }),
+	]);
 });
 
 test("a 🪞 Reading gets the occurrence's Reflexive right after the subject when Luna proposes none, and Luna's case on a later occurrence", async () => {

@@ -135,13 +135,29 @@ The judges agreed on this on
 member of its verb's or Locution's Attestation, so clicking `sich` in *sie
 erinnert sich* opens `erinnern` 🪞🧠
 ([ADR 0003](./0003-attestation-supersedes-selection-and-owns-realization-coverage.md)).
-`valencyEvidence` names that member with its Reflexive complement and the case
-it took, as it names a governed preposition. Inside a fixed phrase the
-complement names its preposition too, and the member is still the reflexive:
-*er war außer sich* names `sich`, Reflexive `außer` + Dat. Three things read
-it: the Reading judge's offer above, `normalizedSurface`, and the Knowledge
-call, which adds a Reflexive Slot its sentence realizes when the proposed
-frame omits one (ADR 0034).
+`valencyEvidence` names that member with its Reflexive complement, as it names
+a governed preposition. Inside a fixed phrase the complement names its
+preposition too, and the member is still the reflexive: *er war außer sich*
+names `sich`, Reflexive `außer` + Dat. Three things read it: the Reading
+judge's offer above, `normalizedSurface`, and the Knowledge call, which adds
+a Reflexive Slot its sentence realizes when the proposed frame omits one
+(ADR 0034).
+
+**The evidence names the reflexive's case only where the occurrence shows
+it.** The form shows it in `mich`, `mir`, `dich` and `dir`. A fixed phrase's
+preposition shows it when the ADP Case Table leaves the reflexive one case
+(`außer sich`: Dat). `sich`, `uns` and `euch` hide it, and so does a two-way
+preposition (`es in sich haben`). Then the complement names no case, and
+the entry has no `realizedCase`: *er macht sich Sorgen* names `sich`,
+Reflexive. The case belongs to the Reading, and its frame stores it. Where
+the creating occurrence shows the case, the Knowledge call takes it for the
+frame. Otherwise it takes the case from the proposed frame, and a 🪞 Reading
+with neither fails. Dumling checks only the shape: a Reflexive names its case in
+both fields or in neither. dumcorpus checks the fact about German: a form or
+preposition that shows the case requires it, and the case must match the
+form. Gold may give a hidden case where its authors know it. This was
+decided on [#1285](https://github.com/clockblocker/texteater/issues/1285) on
+2026-10-25.
 
 `normalizedSurface` leaves the reflexive out, as it leaves out governed
 prepositions: `erinnert`, not `erinnert sich`, `macht Sorgen`, not `macht
@@ -208,6 +224,10 @@ Whether that fits the Hebrew Grundform rule is the Hebrew owner's call.
 - A Preposition complement for that preposition, beside a Reflexive.
   Rejected: the phrase fixes the preposition, nothing governs it, and the
   reflexive is its object, not a participant of its own.
+- jev judging a hidden reflexive case, with a first-person test (*sich* read
+  as *mich* or *mir*). Rejected: jev answered Acc for *Er macht sich Sorgen*
+  (Dat) under the prompt and five contrast-pair variants of it, so the evidence
+  asserted a guess that could contradict the Reading's frame.
 - `sich` kept in `normalizedSurface`. Rejected: a Surface is a form of its
   Lemma, and governed prepositions are already left out.
 - Dumling or dumrel owning the citation presenter. Rejected: the user ruled

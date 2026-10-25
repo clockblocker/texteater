@@ -326,30 +326,57 @@ export interface UnitMap {
 						  }
 				  )
 				| null;
-			valencyEvidence: Array<{
-				member: number | null;
-				complement:
-					| {
-							kind: "Case";
-							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
-							kind: "Preposition";
-							preposition: {
-								unitKind: "Lemma";
-								language: "de";
-								family: "Lexeme";
-								kind: "ADP";
-								canonicalForm: string;
-								coreFeatures: Record<string, never>;
-							};
-							governedCase: "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
+			valencyEvidence: Array<
+				| {
+						member: number | null;
+						complement:
+							| {
+									kind: "Case";
+									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+									};
+									governedCase: "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Reflexive";
+									governedCase: "Acc" | "Dat";
+									preposition?:
+										| {
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "ADP";
+												canonicalForm: string;
+												coreFeatures: Record<
+													string,
+													never
+												>;
+										  }
+										| undefined;
+							  };
+						realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+				  }
+				| {
+						member: number | null;
+						complement: {
 							kind: "Reflexive";
-							governedCase: "Acc" | "Dat";
 							preposition?:
 								| {
 										unitKind: "Lemma";
@@ -360,9 +387,9 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 								  }
 								| undefined;
-					  };
-				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			}>;
+						};
+				  }
+			>;
 		};
 	};
 	"de/Lexeme/ADP": {
@@ -495,30 +522,57 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
-			valencyEvidence: Array<{
-				member: number | null;
-				complement:
-					| {
-							kind: "Case";
-							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
-							kind: "Preposition";
-							preposition: {
-								unitKind: "Lemma";
-								language: "de";
-								family: "Lexeme";
-								kind: "ADP";
-								canonicalForm: string;
-								coreFeatures: Record<string, never>;
-							};
-							governedCase: "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
+			valencyEvidence: Array<
+				| {
+						member: number | null;
+						complement:
+							| {
+									kind: "Case";
+									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+									};
+									governedCase: "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Reflexive";
+									governedCase: "Acc" | "Dat";
+									preposition?:
+										| {
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "ADP";
+												canonicalForm: string;
+												coreFeatures: Record<
+													string,
+													never
+												>;
+										  }
+										| undefined;
+							  };
+						realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+				  }
+				| {
+						member: number | null;
+						complement: {
 							kind: "Reflexive";
-							governedCase: "Acc" | "Dat";
 							preposition?:
 								| {
 										unitKind: "Lemma";
@@ -529,9 +583,9 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 								  }
 								| undefined;
-					  };
-				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			}>;
+						};
+				  }
+			>;
 		};
 	};
 	"de/Lexeme/ADV": {
@@ -1128,30 +1182,57 @@ export interface UnitMap {
 						  }
 				  )
 				| null;
-			valencyEvidence: Array<{
-				member: number | null;
-				complement:
-					| {
-							kind: "Case";
-							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
-							kind: "Preposition";
-							preposition: {
-								unitKind: "Lemma";
-								language: "de";
-								family: "Lexeme";
-								kind: "ADP";
-								canonicalForm: string;
-								coreFeatures: Record<string, never>;
-							};
-							governedCase: "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
+			valencyEvidence: Array<
+				| {
+						member: number | null;
+						complement:
+							| {
+									kind: "Case";
+									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+									};
+									governedCase: "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Reflexive";
+									governedCase: "Acc" | "Dat";
+									preposition?:
+										| {
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "ADP";
+												canonicalForm: string;
+												coreFeatures: Record<
+													string,
+													never
+												>;
+										  }
+										| undefined;
+							  };
+						realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+				  }
+				| {
+						member: number | null;
+						complement: {
 							kind: "Reflexive";
-							governedCase: "Acc" | "Dat";
 							preposition?:
 								| {
 										unitKind: "Lemma";
@@ -1162,9 +1243,9 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 								  }
 								| undefined;
-					  };
-				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			}>;
+						};
+				  }
+			>;
 		};
 	};
 	"de/Lexeme/CCONJ": {
@@ -1920,30 +2001,57 @@ export interface UnitMap {
 						  }
 				  )
 				| null;
-			valencyEvidence: Array<{
-				member: number | null;
-				complement:
-					| {
-							kind: "Case";
-							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
-							kind: "Preposition";
-							preposition: {
-								unitKind: "Lemma";
-								language: "de";
-								family: "Lexeme";
-								kind: "ADP";
-								canonicalForm: string;
-								coreFeatures: Record<string, never>;
-							};
-							governedCase: "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
+			valencyEvidence: Array<
+				| {
+						member: number | null;
+						complement:
+							| {
+									kind: "Case";
+									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+									};
+									governedCase: "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Reflexive";
+									governedCase: "Acc" | "Dat";
+									preposition?:
+										| {
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "ADP";
+												canonicalForm: string;
+												coreFeatures: Record<
+													string,
+													never
+												>;
+										  }
+										| undefined;
+							  };
+						realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+				  }
+				| {
+						member: number | null;
+						complement: {
 							kind: "Reflexive";
-							governedCase: "Acc" | "Dat";
 							preposition?:
 								| {
 										unitKind: "Lemma";
@@ -1954,9 +2062,9 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 								  }
 								| undefined;
-					  };
-				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			}>;
+						};
+				  }
+			>;
 		};
 	};
 	"de/Lexeme/NUM": {
@@ -5566,30 +5674,57 @@ export interface UnitMap {
 						  }
 				  )
 				| null;
-			valencyEvidence: Array<{
-				member: number | null;
-				complement:
-					| {
-							kind: "Case";
-							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
-							kind: "Preposition";
-							preposition: {
-								unitKind: "Lemma";
-								language: "de";
-								family: "Lexeme";
-								kind: "ADP";
-								canonicalForm: string;
-								coreFeatures: Record<string, never>;
-							};
-							governedCase: "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
+			valencyEvidence: Array<
+				| {
+						member: number | null;
+						complement:
+							| {
+									kind: "Case";
+									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+									};
+									governedCase: "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Reflexive";
+									governedCase: "Acc" | "Dat";
+									preposition?:
+										| {
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "ADP";
+												canonicalForm: string;
+												coreFeatures: Record<
+													string,
+													never
+												>;
+										  }
+										| undefined;
+							  };
+						realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+				  }
+				| {
+						member: number | null;
+						complement: {
 							kind: "Reflexive";
-							governedCase: "Acc" | "Dat";
 							preposition?:
 								| {
 										unitKind: "Lemma";
@@ -5600,9 +5735,9 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 								  }
 								| undefined;
-					  };
-				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			}>;
+						};
+				  }
+			>;
 		};
 	};
 	"de/Locution/ADJ": {
@@ -5747,30 +5882,57 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
-			valencyEvidence: Array<{
-				member: number | null;
-				complement:
-					| {
-							kind: "Case";
-							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
-							kind: "Preposition";
-							preposition: {
-								unitKind: "Lemma";
-								language: "de";
-								family: "Lexeme";
-								kind: "ADP";
-								canonicalForm: string;
-								coreFeatures: Record<string, never>;
-							};
-							governedCase: "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
+			valencyEvidence: Array<
+				| {
+						member: number | null;
+						complement:
+							| {
+									kind: "Case";
+									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+									};
+									governedCase: "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Reflexive";
+									governedCase: "Acc" | "Dat";
+									preposition?:
+										| {
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "ADP";
+												canonicalForm: string;
+												coreFeatures: Record<
+													string,
+													never
+												>;
+										  }
+										| undefined;
+							  };
+						realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+				  }
+				| {
+						member: number | null;
+						complement: {
 							kind: "Reflexive";
-							governedCase: "Acc" | "Dat";
 							preposition?:
 								| {
 										unitKind: "Lemma";
@@ -5781,9 +5943,9 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 								  }
 								| undefined;
-					  };
-				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			}>;
+						};
+				  }
+			>;
 		};
 	};
 	"de/Locution/ADP": {
@@ -5916,30 +6078,57 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
-			valencyEvidence: Array<{
-				member: number | null;
-				complement:
-					| {
-							kind: "Case";
-							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
-							kind: "Preposition";
-							preposition: {
-								unitKind: "Lemma";
-								language: "de";
-								family: "Lexeme";
-								kind: "ADP";
-								canonicalForm: string;
-								coreFeatures: Record<string, never>;
-							};
-							governedCase: "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
+			valencyEvidence: Array<
+				| {
+						member: number | null;
+						complement:
+							| {
+									kind: "Case";
+									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+									};
+									governedCase: "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Reflexive";
+									governedCase: "Acc" | "Dat";
+									preposition?:
+										| {
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "ADP";
+												canonicalForm: string;
+												coreFeatures: Record<
+													string,
+													never
+												>;
+										  }
+										| undefined;
+							  };
+						realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+				  }
+				| {
+						member: number | null;
+						complement: {
 							kind: "Reflexive";
-							governedCase: "Acc" | "Dat";
 							preposition?:
 								| {
 										unitKind: "Lemma";
@@ -5950,9 +6139,9 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 								  }
 								| undefined;
-					  };
-				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			}>;
+						};
+				  }
+			>;
 		};
 	};
 	"de/Locution/ADV": {
@@ -6699,30 +6888,57 @@ export interface UnitMap {
 						| null
 				  )
 				| undefined;
-			valencyEvidence: Array<{
-				member: number | null;
-				complement:
-					| {
-							kind: "Case";
-							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
-							kind: "Preposition";
-							preposition: {
-								unitKind: "Lemma";
-								language: "de";
-								family: "Lexeme";
-								kind: "ADP";
-								canonicalForm: string;
-								coreFeatures: Record<string, never>;
-							};
-							governedCase: "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
+			valencyEvidence: Array<
+				| {
+						member: number | null;
+						complement:
+							| {
+									kind: "Case";
+									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+									};
+									governedCase: "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Reflexive";
+									governedCase: "Acc" | "Dat";
+									preposition?:
+										| {
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "ADP";
+												canonicalForm: string;
+												coreFeatures: Record<
+													string,
+													never
+												>;
+										  }
+										| undefined;
+							  };
+						realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+				  }
+				| {
+						member: number | null;
+						complement: {
 							kind: "Reflexive";
-							governedCase: "Acc" | "Dat";
 							preposition?:
 								| {
 										unitKind: "Lemma";
@@ -6733,9 +6949,9 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 								  }
 								| undefined;
-					  };
-				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			}>;
+						};
+				  }
+			>;
 		};
 	};
 	"de/Locution/NUM": {
@@ -7610,30 +7826,57 @@ export interface UnitMap {
 						  }
 				  )
 				| null;
-			valencyEvidence: Array<{
-				member: number | null;
-				complement:
-					| {
-							kind: "Case";
-							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
-							kind: "Preposition";
-							preposition: {
-								unitKind: "Lemma";
-								language: "de";
-								family: "Lexeme";
-								kind: "ADP";
-								canonicalForm: string;
-								coreFeatures: Record<string, never>;
-							};
-							governedCase: "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
+			valencyEvidence: Array<
+				| {
+						member: number | null;
+						complement:
+							| {
+									kind: "Case";
+									governedCase: "Nom" | "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "de";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: Record<string, never>;
+									};
+									governedCase: "Acc" | "Dat" | "Gen";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Reflexive";
+									governedCase: "Acc" | "Dat";
+									preposition?:
+										| {
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "ADP";
+												canonicalForm: string;
+												coreFeatures: Record<
+													string,
+													never
+												>;
+										  }
+										| undefined;
+							  };
+						realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+				  }
+				| {
+						member: number | null;
+						complement: {
 							kind: "Reflexive";
-							governedCase: "Acc" | "Dat";
 							preposition?:
 								| {
 										unitKind: "Lemma";
@@ -7644,9 +7887,9 @@ export interface UnitMap {
 										coreFeatures: Record<string, never>;
 								  }
 								| undefined;
-					  };
-				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			}>;
+						};
+				  }
+			>;
 		};
 	};
 	"de/Morpheme/Circumfix": {
