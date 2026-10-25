@@ -143,67 +143,40 @@ describe("German segment.inConstituents", () => {
 		).toEqual({ kind: "NoConstituents" });
 	});
 
-	test("a phraseme: a Locution inside it is one part", async () => {
+	test("a phraseme: a Locution inside it is one part, the wording bare (ADR 0052)", async () => {
 		const judge = judgeWanting(
 			"zu Hause",
-			"x_0=lexical",
 			"r_0=Lexeme/CCONJ",
 			"r_1=Locution/ADV",
-			"sich fühlen",
+			"r_2=Lexeme/VERB",
+			"fühlen",
 		);
 		const result = await run(
-			input("Locution", "VERB", "sich wie zu Hause fühlen"),
+			input("Locution", "VERB", "wie zu Hause fühlen"),
 			judge,
 		);
 		expect(result.kind === "Constituents" && shown(result.pieces)).toEqual([
-			"sich→Lexeme/VERB:sich fühlen",
-			" ",
 			"wie→Lexeme/CCONJ:wie",
 			" ",
 			"zu Hause→Locution/ADV:zu Hause",
 			" ",
-			"fühlen→Lexeme/VERB:sich fühlen",
-		]);
-	});
-	test("sich joins a verb lexically reflexive in the wording, as one part or two links to it (ADR 0050)", async () => {
-		const together = await run(
-			input("Locution", "VERB", "sich freuen wie ein Schneekönig"),
-			judgeWanting("x_0=lexical", "sich freuen"),
-		);
-		expect(
-			together.kind === "Constituents" && shown(together.pieces).at(0),
-		).toBe("sich freuen→Lexeme/VERB:sich freuen");
-
-		const apart = await run(
-			input("Locution", "VERB", "sich in Grund und Boden schämen"),
-			judgeWanting(
-				"x_0=lexical",
-				"Grund und Boden",
-				"r_0=Lexeme/ADP",
-				"r_1=Locution/NOUN",
-				"in",
-				"sich schämen",
-			),
-		);
-		expect(apart.kind === "Constituents" && shown(apart.pieces)).toEqual([
-			"sich→Lexeme/VERB:sich schämen",
-			" ",
-			"in→Lexeme/ADP:in",
-			" ",
-			"Grund und Boden→Locution/NOUN:Grund und Boden",
-			" ",
-			"schämen→Lexeme/VERB:sich schämen",
+			"fühlen→Lexeme/VERB:fühlen",
 		]);
 	});
 
-	test("a free dative sich stays a part of its own (ADR 0050)", async () => {
+	test("a Saying's sich is a part of its own, never joined to its verb (ADR 0052)", async () => {
+		const judge = judgeWanting(
+			"r_1=Lexeme/PRON",
+			"r_2=Lexeme/VERB",
+			"betten",
+		);
 		const result = await run(
-			input("Locution", "VERB", "sich den Kopf zerbrechen"),
-			judgeWanting("x_0=dative", "r_0=Lexeme/PRON", "zerbrechen"),
+			input("Saying", "Saying", "Wie man sich bettet, so liegt man"),
+			judge,
 		);
 		expect(
-			result.kind === "Constituents" && shown(result.pieces).at(0),
-		).toBe("sich→Lexeme/PRON:sich");
+			result.kind === "Constituents" && shown(result.pieces).slice(4, 7),
+		).toEqual(["sich→Lexeme/PRON:sich", " ", "bettet→Lexeme/VERB:betten"]);
 	});
 });
 

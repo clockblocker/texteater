@@ -5,9 +5,9 @@
  * noun that follows it (`der Hase`, `m Pfeffer`; ADR 0040), placeholders
  * (`jdm.`, `etwas`) and punctuation left as filler. Code also proposes the
  * runs of two or three neighbouring parts that could be a Locution inside
- * the wording (`zu Hause` in `sich wie zu Hause fühlen`), and the verbs a
- * `sich` may belong to (`sich in Grund und Boden schämen`), for jev to
- * weigh.
+ * the wording (`zu Hause` in `wie zu Hause fühlen`), for jev to weigh. A
+ * Locution's wording holds no lexical reflexive (ADR 0052), and a Saying's
+ * `sich` is one of its words, a part of its own.
  */
 
 import { articleForms } from "../candidates.js";
@@ -24,10 +24,6 @@ export type WordingPiece =
 			readonly words: number;
 			/** An article grouped with its noun. */
 			readonly article?: true;
-			/** A lexically reflexive verb read with its `sich` (`sich schämen`). */
-			readonly reflexive?: true;
-			/** A `sich` apart from its verb, linking where that verb's part does. */
-			readonly ofVerb?: true;
 	  }
 	| { readonly role: "Filler"; readonly letters: string };
 
@@ -182,79 +178,4 @@ export function withLocutions(
 		index = run.last;
 	}
 	return result;
-}
-
-/** A `sich` and an infinitive after it that may be lexically reflexive: their piece indices. */
-export type ReflexiveCandidate = {
-	readonly sich: number;
-	readonly verb: number;
-	readonly reads: string;
-};
-
-/** A lower-case word that may be an infinitive, past `den` and its like. */
-const isInfinitive = (word: string) =>
-	word.length >= 4 && /^\p{Ll}+(?:en|[elr]n)$/u.test(word);
-
-/**
- * Each infinitive after the wording's `sich` (ADR 0050: `sich` joins a
- * lexically reflexive verb, and a free one is a part of its own).
- */
-export function reflexiveCandidates(
-	pieces: readonly WordingPiece[],
-): ReflexiveCandidate[] {
-	const sich = pieces.findIndex(
-		(piece) =>
-			piece.role === "Part" &&
-			piece.words === 1 &&
-			piece.reads.toLocaleLowerCase("de") === "sich",
-	);
-	if (sich < 0) return [];
-	return pieces.flatMap((piece, verb) =>
-		verb > sich &&
-		piece.role === "Part" &&
-		piece.words === 1 &&
-		!piece.article &&
-		isInfinitive(piece.reads)
-			? [{ sich, verb, reads: piece.reads }]
-			: [],
-	);
-}
-
-/**
- * The pieces with `sich` joined to its verb: one part when only a space
- * stands between them (`sich verlassen`), else two that link to the one
- * reflexive verb (`sich` … `schämen`).
- */
-export function withReflexive(
-	pieces: readonly WordingPiece[],
-	{ sich, verb }: ReflexiveCandidate,
-): WordingPiece[] {
-	const own = pieces[sich];
-	const host = pieces[verb];
-	const between = pieces[sich + 1];
-	if (own?.role !== "Part" || host?.role !== "Part") return [...pieces];
-	const reads = `${own.reads} ${host.reads}`;
-	if (
-		verb === sich + 2 &&
-		between?.role === "Filler" &&
-		between.letters === " "
-	)
-		return [
-			...pieces.slice(0, sich),
-			{
-				role: "Part",
-				letters: own.letters + between.letters + host.letters,
-				reads,
-				words: 2,
-				reflexive: true,
-			},
-			...pieces.slice(verb + 1),
-		];
-	return pieces.map((piece, index) =>
-		index === sich
-			? { ...own, ofVerb: true }
-			: index === verb
-				? { ...host, reads, reflexive: true }
-				: piece,
-	);
 }

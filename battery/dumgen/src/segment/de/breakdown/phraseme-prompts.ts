@@ -1,8 +1,8 @@
 /**
  * What German `segment.inConstituents` asks about a wording's parts
  * (`constituents.ts`): the guide that closes a phraseme part's route
- * question, whether a run of parts is a Locution of its own, and what
- * `sich` is to a verb. Their examples are no Breakdown case (#693).
+ * question and whether a run of parts is a Locution of its own. Their
+ * examples are no Breakdown case (#693).
  */
 
 /**
@@ -23,16 +23,3 @@ export const phrasemeRouteGuide =
  */
 export const locutionQuestion = (key: string, reads: string) =>
 	`Inside \`${key}\`, is "${reads}" a fixed expression that dictionaries list as a headword or idiom of its own, used apart from \`${key}\` (auf jeden Fall)? Test it: it must be a whole phrase that can stand alone in other sentences with this same fixed meaning. Answer no for ordinary words that just combine here, for words cut out of a longer phrase, and for words fixed only inside this expression (ins Gras in ins Gras beißen).`;
-
-/**
- * What `sich` is to a verb in a wording, judged in the sense the verb has
- * there (ADR 0050): only `lexical` joins it to the verb. Unlike a click's
- * reflexive question, there is no Sentence, so each use names its test.
- */
-export const reflexiveUses = {
-	free: "An object of its own: in this sense the verb also takes another person or thing in the place of sich, and the subject only happens to be the one it acts on (sich waschen: ihn waschen; sich verteidigen: sie verteidigen)",
-	dative: "A dative beside another object, for whom something is done or whose body it concerns (sich die Hände reiben; sich die Zähne putzen)",
-	lexical:
-		"Part of the verb itself: dictionaries list the verb with sich for this sense, and nothing else can stand in its place (sich schämen, sich beeilen, sich weigern)",
-	other: "sich does not belong with this verb",
-};

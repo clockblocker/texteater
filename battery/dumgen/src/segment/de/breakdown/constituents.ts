@@ -23,9 +23,9 @@
  * - A phraseme, or a Lexeme written as several words: its wording's parts
  *   come from code (`phraseme-parts.ts`), and jev weighs, in one request,
  *   `breakdown-locutions`, whether a run of neighbouring parts is a
- *   Locution of its own (`zu Hause`) and whether `sich` belongs to a verb
- *   lexically reflexive here, which it then joins (`sich verlassen`; a free
- *   `sich` stays a part of its own, `sich den Kopf zerbrechen`).
+ *   Locution of its own (`zu Hause`). The wording is the bare Canonical
+ *   Form, with no lexical reflexive (ADR 0052); a Saying's `sich` is a part
+ *   of its own.
  *
  * Every part's route and Canonical Form then come from `targets.ts`, and a
  * compound's linking element from its first part's form (`interfix.ts`).
@@ -67,18 +67,11 @@ import { interfixOf } from "./interfix.js";
 import {
 	type LocutionCandidate,
 	locutionCandidates,
-	type ReflexiveCandidate,
-	reflexiveCandidates,
 	type WordingPiece,
 	withLocutions,
-	withReflexive,
 	wordingPieces,
 } from "./phraseme-parts.js";
-import {
-	locutionQuestion,
-	phrasemeRouteGuide,
-	reflexiveUses,
-} from "./phraseme-prompts.js";
+import { locutionQuestion, phrasemeRouteGuide } from "./phraseme-prompts.js";
 import {
 	cranberryOption,
 	type OpenPart,
@@ -355,59 +348,33 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	...germanSuffixes.flatMap(({ sense }) => (sense ? [sense] : [])),
 	...Object.values(hyphenPrefixGlosses),
 	locutionQuestion("wording", "…"),
-	...Object.values(reflexiveUses),
 ];
 
-/** What jev groups inside a wording: its inner Locutions and a reflexive verb's `sich`. */
-type Groups = {
-	readonly locutions: LocutionCandidate[];
-	readonly reflexive: ReflexiveCandidate | undefined;
-};
-
 /**
- * In one request: whether `sich` belongs to a verb, lexically reflexive in
- * this wording (ADR 0050, `sich verlassen`), and the heaviest Locution
- * candidates over the floor that overlap neither each other nor that pair.
+ * In one request, the heaviest Locution candidates inside a wording over
+ * the floor that overlap no other.
  */
-const chosenGroups = Effect.fnUntraced(function* (
+const chosenLocutions = Effect.fnUntraced(function* (
 	candidates: readonly LocutionCandidate[],
-	reflexives: readonly ReflexiveCandidate[],
 	whole: Whole,
 	ask: Ask,
-): Effect.fn.Return<Groups, AskFailure> {
+): Effect.fn.Return<LocutionCandidate[], AskFailure> {
 	const questions: Questions = {};
 	for (const [index, candidate] of candidates.entries())
 		questions[`l_${index}`] = noul(
 			locutionQuestion(whole.key, candidate.reads),
-		);
-	for (const [index, candidate] of reflexives.entries())
-		questions[`x_${index}`] = choice(
-			`In \`${whole.key}\`, what is "sich" to the verb "${candidate.reads}"? Judge the verb in the sense it has inside this expression.`,
-			reflexiveUses,
 		);
 	const answers = yield* askAny(ask, {
 		stage: "breakdown-locutions",
 		state: whole.state,
 		questions,
 	});
-	const reflexive = reflexives.find(
-		(_, index) => choiceOf(answers, `x_${index}`).choice === "lexical",
-	);
-	const free = (first: number, last: number) =>
-		reflexive === undefined ||
-		[reflexive.sich, reflexive.verb].every(
-			(index) => index < first || index > last,
-		);
 	const weighed = candidates
 		.map((candidate, index) => ({
 			candidate,
 			weight: noulOf(answers, `l_${index}`),
 		}))
-		.filter(
-			({ candidate, weight }) =>
-				weight >= locutionFloor &&
-				free(candidate.first, candidate.last),
-		)
+		.filter(({ weight }) => weight >= locutionFloor)
 		.sort((left, right) => right.weight - left.weight);
 	const locutions: LocutionCandidate[] = [];
 	for (const { candidate } of weighed)
@@ -419,7 +386,7 @@ const chosenGroups = Effect.fnUntraced(function* (
 			)
 		)
 			locutions.push(candidate);
-	return { locutions, reflexive };
+	return locutions;
 });
 
 /** The endings an attributive adjective shows after a determiner (`aller guten`). */
@@ -450,8 +417,7 @@ function determinerOrPronoun(
 }
 
 /**
- * The route a wording's part may take: a reflexive verb, a noun group, a
- * Locution, a pronoun dumcorpus authors only as one (`was`), an inflected
+ * The route a wording's part may take: a noun group, a Locution, a pronoun dumcorpus authors only as one (`was`), an inflected
  * determiner or pronoun by what follows it (`allem`), the infinitive `zu`
  * closing the wording after its open slot (`ohne … zu`), or a word.
  */
@@ -461,7 +427,6 @@ function partRoutes(
 ): readonly RouteKey[] {
 	const piece = pieces[index];
 	if (piece?.role !== "Part") return lexemeRoutes;
-	if (piece.reflexive) return ["Lexeme/VERB"];
 	if (piece.article) return articleRoutes;
 	if (piece.words > 1) return locutionRoutes;
 	if (onlyPronoun(piece.reads)) return ["Lexeme/PRON"];
@@ -494,27 +459,13 @@ const phrasemeConstituents = Effect.fnUntraced(function* (
 	const whole = wholeOf(input, "wording");
 	const pieces = wordingPieces(input.reading.lemma.canonicalForm);
 	const candidates = locutionCandidates(pieces);
-	const reflexives = reflexiveCandidates(pieces);
-	const { locutions, reflexive } =
-		candidates.length + reflexives.length > 0
-			? yield* chosenGroups(candidates, reflexives, whole, ask)
-			: { locutions: [], reflexive: undefined };
-	const withRuns = withLocutions(pieces, locutions);
-	// The runs keep `sich` and its verb as they were, so their pieces are found again.
-	const merged =
-		reflexive === undefined
-			? withRuns
-			: withReflexive(withRuns, {
-					...reflexive,
-					sich: withRuns.indexOf(
-						pieces[reflexive.sich] as WordingPiece,
-					),
-					verb: withRuns.indexOf(
-						pieces[reflexive.verb] as WordingPiece,
-					),
-				});
+	const locutions =
+		candidates.length > 0
+			? yield* chosenLocutions(candidates, whole, ask)
+			: [];
+	const merged = withLocutions(pieces, locutions);
 	const open: OpenPart[] = merged.flatMap((piece, index) =>
-		piece.role === "Part" && !piece.ofVerb
+		piece.role === "Part"
 			? [
 					{
 						reads: piece.reads,
@@ -525,25 +476,11 @@ const phrasemeConstituents = Effect.fnUntraced(function* (
 	);
 	const targets = yield* partTargets(open, whole, ask, phrasemeRouteGuide);
 	let part = 0;
-	const linked = merged.map((piece) =>
-		piece.role === "Part" && !piece.ofVerb ? targets[part++] : undefined,
-	);
-	const verbTarget =
-		linked[
-			merged.findIndex(
-				(piece) => piece.role === "Part" && piece.reflexive === true,
-			)
-		];
 	return constituentsOf(
-		merged.map((piece, index) =>
+		merged.map((piece) =>
 			piece.role !== "Part"
 				? { letters: piece.letters }
-				: {
-						letters: piece.letters,
-						...withTarget(
-							piece.ofVerb ? verbTarget : linked[index],
-						),
-					},
+				: { letters: piece.letters, ...withTarget(targets[part++]) },
 		),
 	);
 });
@@ -554,10 +491,8 @@ const withTarget = (target: Dumrel.UnitShadow | undefined) => {
 };
 
 /**
- * German `segment.inConstituents`: a single-word Lexeme as a word, a
- * lexically reflexive one as its word without the reflexive (`sich
- * anschließen` as `anschließen`, ADR 0050), any other Reading by its
- * wording.
+ * German `segment.inConstituents`: a single-word Lexeme as a word, any
+ * other Reading by its wording, its bare Canonical Form (ADR 0052).
  */
 export const germanConstituents = (
 	input: BreakdownInput,
