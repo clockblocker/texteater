@@ -101,9 +101,11 @@ implementation choice.
   an occurrence, its DET cell derived in dumcorpus;
 - an auxiliary (`hat` in `hat gekocht` → AUX `haben` perfect) from the
   authored units in dumcorpus;
-- a reflexive to the one authored unit per language that explains
-  reflexivity, never to a case cell: `sich` alone cannot tell *er schämt
-  sich* (Acc) from *er bildet sich etwas ein* (Dat).
+- a reflexive, from the Reading's Reflexive Slot
+  ([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)),
+  to the one authored unit per language that explains reflexivity, never to
+  a case cell: `sich` alone cannot tell *er schämt sich* (Acc) from *er
+  bildet sich etwas ein* (Dat).
 
 A separable particle is not read from model data. It is a piece of its
 verb's Constituents and links to its Prefix Morpheme (`auf-` in

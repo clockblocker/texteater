@@ -62,14 +62,11 @@ An adposition's position is in the dumcorpus table alone (below).
 
 One check helps: does a standard learner's dictionary of the language give the
 value its own headword, or only a usage line under one headword? A usage line
-means the value is not identity.
-
-The check gives way for German reflexive verbs. Duden gives `sich lassen` only
-a grammar line under `lassen`, yet each `sich X` is a VERB Lemma of its own,
-and its `lexicallyReflexive` names the reflexive's case, Acc or Dat
-([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)).
-E-VALBU gives `sich X` its own entry, learners learn `sich erinnern` as a
-word, and the reflexive's case is fixed per such word.
+means the value is not identity. German reflexive verbs follow the check:
+Duden and DWDS give ⟨sich erinnern⟩ as a sense under `erinnern`, so a lexical
+reflexive is a Reflexive Slot in a Reading's Valency Frame, with its case,
+and no route has a reflexive Core Feature
+([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
 
 The test reopens no split decided elsewhere: ADR 0044's pronoun cells, its
 Dem/Rel split and the per-route choices below stand. Cells that only the

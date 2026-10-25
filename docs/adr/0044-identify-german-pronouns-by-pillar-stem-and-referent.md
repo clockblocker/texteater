@@ -61,9 +61,14 @@ formal `Sie` and 3pl `sie` differ in politeness alone. `polite` is Form or
 null: informal `du`, `ihr`, `dein` and `euer` leave it null, since person 2
 already says who is meant.
 
-**Free `sich`.** A reflexive the verb does not require is a unit of its own,
-and a lexical reflexive is a member of its verb (`sich erinnern`,
-[ADR 0003](./0003-attestation-supersedes-selection-and-owns-realization-coverage.md)).
+**Free `sich`.** A reflexive that another noun phrase can replace in the
+same sense is a unit of its own and fills an ordinary Acc or Dat Slot (*er
+wäscht sich*, *er wäscht ihn*). A lexical reflexive, which none can replace,
+is a member of its verb's target
+([ADR 0003](./0003-attestation-supersedes-selection-and-owns-realization-coverage.md))
+and fills the Reflexive Slot of its Reading: *sie erinnert sich* attests
+`erinnern` 🪞🧠
+([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
 Free `sich` is the reflexive's Acc or Dat cell, with person 3 in Core.
 Reflexive `mich`, `uns` and `euch` stay their personal cells, and no Surface
 marks the reflexive use, which the sentence shows. A reciprocal use

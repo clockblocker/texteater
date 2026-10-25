@@ -64,9 +64,7 @@ does not record it. See [ADR 0039] and [ADR 0041].
 A Reading's parts, stored as the Reading Knowledge aspect `breakdown: {
 constituents, morphemes }`: its Constituents and its Morphemic Breakdown. It
 belongs to the Reading, never to the Lemma or an occurrence. Its letters
-spell the Canonical Form; a lexically reflexive Lexeme's spell its word,
-without the reflexive (`sich anschließen`: `an- + schließen`). See [ADR 0050]
-and [ADR 0051].
+spell the Canonical Form. See [ADR 0050] and [ADR 0051].
 _Avoid_: components, drill-down segmentation, Morphological Tree, Lexical
 Breakdown
 
@@ -87,8 +85,7 @@ parts. It is a Lexeme, not a Family or Kind of its own. See [ADR 0050].
 _Avoid_: compound Kind, Kompositum, for a Lemma class
 
 **Morphemic Breakdown**:
-Every Morpheme of a single-word Lexeme's Reading (a lexically reflexive one
-counts by its word), flat, in
+Every Morpheme of a single-word Lexeme's Reading, flat, in
 `breakdown.morphemes`, labelled as school morphemic analysis labels them:
 Prefix, Root, Suffix, Interfix, Ending. Each label is the linked Morpheme's
 Kind. `segment.inMorphemes` (Dumgen) splits bottom words; every other word's
@@ -108,7 +105,9 @@ indeclinable word has none. See [ADR 0051].
 _Avoid_: inflectional suffix, Flexionsendung as a Suffix
 
 **Canonical Form**:
-The normalized form that names a Lemma. See [ADR 0002].
+The normalized form that names a Lemma. It never holds valency: no
+placeholder, no governed preposition and no lexical reflexive (`erinnern`,
+not `sich erinnern`). See [ADR 0002] and [ADR 0052].
 _Avoid_: Citation Form, Lemma Form
 
 **Family**:
@@ -205,7 +204,9 @@ _Avoid_: Mnemonic, Gloss, Sense ID
 
 **Valency Frame**:
 The governed complements of one Reading, an ordered list of Slots in its
-Knowledge. It never creates a Lemma or a Reading. See [ADR 0034].
+Knowledge, a lexical reflexive included. It never creates a Lemma or a
+Reading; a Required Reflexive Slot (Dumrel) shows in the Emoji Description as
+🪞. See [ADR 0034] and [ADR 0052].
 _Avoid_: valency pattern, Satzbauplan, argument structure, governed
 prepositions
 
@@ -247,3 +248,4 @@ _Avoid_: Paradigm Cell, slot
 [ADR 0049]: ../../docs/adr/0049-tabulate-a-lemmas-forms-as-projections.md
 [ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
 [ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md
+[ADR 0052]: ../../docs/adr/0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md

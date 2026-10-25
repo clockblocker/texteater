@@ -17,7 +17,7 @@ Lemma it comes from as its Source:
   (*offenbar* 'apparently') are ADV (Rule `de/adjective-stays-adj`).
 - predicative after `sein`, the state passive included: *Die Tür ist
   geschlossen* is the copula VERB `sein` plus ADJ `geschlossen` from
-  `schließen`, and *Er ist verliebt* is ADJ `verliebt` from `sich verlieben`
+  `schließen`, and *Er ist verliebt* is ADJ `verliebt` from `verlieben`
 - predicative after a stative `haben`: *Der Laden hat bis 20 Uhr geöffnet* is
   VERB `haben` plus ADJ `geöffnet` from `öffnen`, and *Er hat die ganze Zeit
   die Augen geschlossen* is VERB `haben` plus ADJ `geschlossen`

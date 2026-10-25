@@ -48,6 +48,22 @@ for authored, drafted and generated Readings alike.
 When a Lemma gains a second Reading, name the Duden or DWDS sense you picked
 in the target's rationale. When you fold dictionary senses, cite ADR 0031.
 
+## Reflexive Readings
+
+A Reading whose Valency Frame has a Required Reflexive Slot starts with 🪞,
+the emoji of the reflexivity unit `sich`, then its meaning emoji
+([ADR 0052]). The marker goes on every such Reading, even where no plain
+Reading of the Lemma shares its emoji. Grammatical Resolution decides it, not
+the emoji: the reflexive is lexical when no other noun phrase can replace it.
+Being applied.
+
+| Lemma | Readings |
+| --- | --- |
+| `erinnern` | 💭 'remind someone', 🪞🧠 'remember' |
+| `fürchten` | 😨 'fear something', 🪞😨 'be afraid' (*sich fürchten vor*) |
+| `ausruhen` | 😴: an Optional Reflexive Slot, `(sich) ausruhen`, takes no marker |
+| `waschen` | 🧼: the `sich` of *er wäscht sich* is free and fills the Acc Slot |
+
 ## Judge the sense on the record's sentence
 
 Only the Spec Record's own sentence decides which Reading a target takes.
@@ -231,4 +247,5 @@ an owned article or an agreeing adjective in the sentence ([ADR 0040]).
 [ADR 0044]: ../../../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0046]: ../../../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
 [ADR 0050]: ../../../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
+[ADR 0052]: ../../../../docs/adr/0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md
 [inventory]: ../../src/inventories/de/

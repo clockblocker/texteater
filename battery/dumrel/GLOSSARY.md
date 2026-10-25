@@ -112,6 +112,14 @@ The Reading whose Valency Frame holds a Governed Preposition. The
 preposition's side of the link is projected, never stored. See [ADR 0034].
 _Avoid_: governing verb
 
+**Reflexive Slot**:
+A Slot of a Valency Frame (Dumling) holding a Reflexive complement: the
+lexical reflexive its Reading needs, which no other noun phrase can replace,
+with its case where the language has one (German Acc or Dat; English none).
+A Required one puts 🪞 first in the Reading's Emoji Description (Dumling).
+See [ADR 0034] and [ADR 0052].
+_Avoid_: `lexicallyReflexive`, `isReflexive`, reflexive verb Lemma
+
 **Source**:
 The immediate base of a formation whose letters can't be cut into pieces: a
 conversion (`Lauf` ← `laufen`), a participle, an acronym or a clipping. It is
@@ -160,6 +168,7 @@ _Avoid_: discourseFormulaRole, DiscourseFormula
 [ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
 [ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
 [ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md
+[ADR 0052]: ../../docs/adr/0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md
 [ADR 0048]: ../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md
 [ADR 0049]: ../../docs/adr/0049-tabulate-a-lemmas-forms-as-projections.md
 [Dumrel ADR 0001]: ./docs/adr/0001-keep-dumrel-ownerless-and-pure.md

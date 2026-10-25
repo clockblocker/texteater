@@ -9,8 +9,9 @@ A Reading's Morphemic Breakdown, `breakdown.morphemes`
 every morpheme of a word, flat, exactly as school morphemic analysis does
 (разбор по составу, Wortbausteine): `ent · spann · ung · ∅`, `при · меч · а ·
 тель · н · ость`. Every single-word Lexeme has one (`Haus` = `haus · ∅`).
-A lexically reflexive Lexeme counts by its word, without the
-reflexive it cites: `sich erinnern` = `er · inner · n` (ADR 0050).
+A reflexive Reading is no exception, since no Canonical Form holds a
+reflexive: `erinnern` = `er · inner · n`
+([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
 Morpheme Lemmas and phrasemes have none. Its pieces are shown letters and
 links, as in the Constituents: each links to a Morpheme's Unit Shadow or
 Lemma, never a Reading.
@@ -62,7 +63,7 @@ no Source that `segment.inConstituents` finds no Constituents for (ADR
 affixes from the language's closed affix inventory in dumcorpus, and the
 remainder is the Root, with a Root Lemma of its own when it is bound:
 `ver · gess · en`, `be · ginn · en`, `re · ceive`, and `er · inner · n` for
-`sich erinnern`, whose base `innern` died out. An affix split needs two
+`erinnern`, whose base `innern` died out. An affix split needs two
 things: the affix is on the closed affix list, and the DWDS Wortzerlegung
 confirms the split. Where DWDS gives no Wortzerlegung, en.wiktionary's
 etymology decides, as it does for Constituents (ADR 0050). A fossilized

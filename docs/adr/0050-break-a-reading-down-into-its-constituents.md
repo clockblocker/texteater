@@ -51,10 +51,6 @@ the same way, `-ung` to the Shadow (de, Morpheme, Suffix, `-ung`).
   wording (`Rund-um-die-Uhr` for `rund um die Uhr`) and Hebrew final-letter
   forms. Hyphens, ellipses, gershayim, spaces, punctuation and placeholders
   are unlinked filler segments.
-- A lexically reflexive Lexeme's Breakdown spells its word, without the
-  reflexive its Canonical Form cites: `sich erinnern` spells `erinnern`,
-  and `sich anschließen` spells `anschließen`. The reflexive is a
-  satellite (below), never a piece.
 - A Breakdown describes the Canonical Form or cited wording, never an
   occurrence's alignment.
 - A piece stores no head or modifier role, no Surface and no Reading. A click
@@ -123,16 +119,16 @@ For German:
 
 **Satellites come from model data.** A Lexeme's reflexive, governed
 preposition, article and auxiliary are read from model data (ADR 0041) and
-are never Constituents. Its other words are: `Frankfurt am Main` =
-`Frankfurt · am · Main`, while `sich anschließen` has only `an- +
-schließen`, as DWDS splits `anschließen`. The Breakdown spells the word,
-and the Note shows `sich` from the Lemma, as it shows an article. The judges
-agreed on this on
+are never Constituents. The judges agreed on this for the reflexive on
 [#1241](https://github.com/clockblocker/texteater/issues/1241#issuecomment-6393717905).
-A reflexive Lexeme whose word has no word inside is a bottom word like any
-other: `sich erinnern` has no Constituents and the morphemes `er · inner ·
-n` (ADR 0051), since its base `innern` is Middle High German and has no
-modern headword (the user, 2026-10-25). A
+Its other words are: `Frankfurt am Main` = `Frankfurt · am · Main`. A
+reflexive is in no Canonical Form
+([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)),
+so a reflexive Reading's Breakdown is its word's: `anschließen` 🪞 'join' is
+`an- + schließen`, as DWDS splits it, and the Note shows `sich` from the
+Reading's Reflexive Slot. `erinnern` has no Constituents and the
+morphemes `er · inner · n` (ADR 0051), since its base `innern` is Middle
+High German and has no modern headword (the user, 2026-10-25). A
 separable particle is a constituent, as above. English phrasal verbs work as
 German particle verbs do: `give up` = `give + up`, still one Lexeme VERB
 ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)). The
@@ -146,21 +142,21 @@ joins its base verb's Formations and the particle is one click away.
 
 **A phraseme's Constituents are the biggest units strictly inside its
 wording**, as `segment.inUnits` finds them one level down. A part may be a
-Locution: `sich wie zu Hause fühlen` = `[[sich fühlen|sich]] · wie · [zu
-Hause] · [[sich fühlen|fühlen]]`, and `zu Hause` breaks down into `zu +
+Locution: `wie zu Hause fühlen`, printed `sich wie zu Hause fühlen`, =
+`wie · [zu Hause] · [[fühlen]]`, and `zu Hause` breaks down into `zu +
 [[Haus|Hause]]`. An article is grouped
 with its noun
 ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)):
 `[[Faden|den Faden]] + [[verlieren]]`. Fused words split by component.
 
 - Placeholders (`jdm.`, `etwas`) are never parts. Negation is a part.
-- `sich` is no placeholder. It is grouped with a lexically reflexive verb
-  (`sich verlassen`), and a free dative is a PRON part of its own, linking to
-  the unit that explains reflexivity (`sich den Kopf zerbrechen`). A verb is
-  lexically reflexive when no other object can stand in place of `sich` in
-  the sense it has there, so `fühlen` in `sich wie zu Hause fühlen` is (DWDS
-  ⟨sich fühlen⟩), and `sich` and `fühlen` are two pieces linking to VERB
-  `sich fühlen`.
+- A lexical reflexive is no part. It fills the Reading's Reflexive Slot and
+  is in no Locution's wording (ADR 0052). A verb inside the wording links to
+  its Lemma, whatever Reading it has there: `fühlen` in `wie zu Hause fühlen`
+  links to `fühlen`, whose 🪞 Reading DWDS gives as ⟨sich fühlen⟩. A Saying's
+  wording keeps its `sich`. There a lexical reflexive is grouped with its
+  verb, both pieces linking to the verb's Lemma, and a free one is a PRON
+  part of its own, linking to the unit that explains reflexivity.
 - A word found only in idioms is a Lexeme if Duden or DWDS has a headword for
   it (`gäbe`), else unlinked filler.
 - An optional word in the Canonical Form is a part like any other (`genäht`
@@ -269,12 +265,6 @@ intensifiers, the English particle, the particle list and `leid` on
 - No breakdown unless a piece's Reading contributes to the meaning (`receive`
   gets none). Rejected: a link names a Lemma, so it can't say which Reading
   contributes.
-- A lexically reflexive Lexeme's `sich` as leading unlinked filler, so the
-  letters spell the whole Canonical Form. Rejected: `sich` is a word, not a
-  morpheme, and the morphemes line would show a piece that links nowhere.
-- That `sich` as a linked PRON part. Rejected: a satellite is never a
-  constituent, PRON `sich`'s Formations would list every reflexive verb,
-  and the morphemes half would still have no place for it.
 - An unlinked cranberry piece in the Constituents (`Him + Beere`). Rejected:
   the morphemes walk would break at it, and the Morphemic Breakdown links
   the same piece to its Root anyway.

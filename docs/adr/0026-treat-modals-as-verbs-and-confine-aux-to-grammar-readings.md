@@ -57,8 +57,10 @@ Reading, and German `voice` is `Cau` beside `Pass`, with `passive` null:
 `[hat, reparieren, lassen]`. A free dative or a free `sich` leaves it a
 causative: *Sie lässt sich die Haare schneiden*, and *Er lässt sich
 untersuchen* ('has himself examined'), where `sich` alternates with *ihn*.
-The modal-passive *lässt sich öffnen* is the VERB `sich lassen` over `[lässt,
-sich]`, with the infinitive a target of its own, as the list of VERBs with a
+The modal-passive *lässt sich öffnen* is the VERB `lassen` over `[lässt,
+sich]`, its 🪞 modal-passive Reading with a Reflexive Acc Slot
+([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)),
+with the infinitive a target of its own, as the list of VERBs with a
 meaning of their own above says. Everything else is the VERB `lassen` with
 the infinitive as a target of its own: a doer in any form (*lässt ihn
 reparieren*, *lässt es von ihm reparieren*), permissive *lässt die Kinder

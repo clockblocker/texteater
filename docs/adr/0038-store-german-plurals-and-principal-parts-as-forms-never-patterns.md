@@ -67,8 +67,8 @@ Reading's classes are those of the variants it licenses.
 
 **A verb's Präteritum.** The `preterite` dimension holds the third person
 singular Präteritum forms, each one variant, as a dictionary cites them
-(`wog`; `stand auf` for `aufstehen`, never `aufstand`; `erinnerte` for `sich
-erinnern`). A Strong or Mixed verb's past forms can't be rebuilt from its
+(`wog`; `stand auf` for `aufstehen`, never `aufstand`; `erinnerte` for
+`erinnern`, reflexive Readings included). A Strong or Mixed verb's past forms can't be rebuilt from its
 class, so a host renders these forms and never guesses them
 ([#1209](https://github.com/clockblocker/texteater/issues/1209)).
 

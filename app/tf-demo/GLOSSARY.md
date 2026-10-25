@@ -101,6 +101,13 @@ The pinned Block listing where the Subject was met. See [tf-demo ADR 0006].
 **Valency Block**:
 The Block showing a Reading's Lemma with its Valency Frame. See [ADR 0034].
 
+**Citation**:
+How a Note prints a Reading: its Canonical Form (Dumling) with the lexical
+reflexive its Valency Frame holds, placed by the language (`sich erinnern`,
+`es sich gemütlich machen`). One presenter renders it; a Lemma-level heading
+shows the bare Canonical Form. See [ADR 0052].
+_Avoid_: Canonical Form, for the printed citation; headword
+
 **Fusion Block**:
 The Attestation Note Block for a fused word that the Attestation holds a piece
 of: the fused word and the words it stands for. See [ADR 0035].
@@ -341,6 +348,7 @@ _Avoid_: bubble, Caption, Region
 [ADR 0040]: ../../docs/adr/0040-make-the-article-a-satellite-of-its-phrase-head.md
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
 [ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
+[ADR 0052]: ../../docs/adr/0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md
 [Dumgen ADR 0001]: ../../battery/dumgen/docs/adr/0001-judge-each-sentence-before-conditional-stitching-and-local-segmentation.md
 [Dumgen ADR 0004]: ../../battery/dumgen/docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md
 [Dumgen ADR 0007]: ../../battery/dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md

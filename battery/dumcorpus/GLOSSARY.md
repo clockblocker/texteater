@@ -129,9 +129,19 @@ A participle used as an adjective: an ADJ Lexeme whose Reading names its verb
 as Source (Dumrel). See [ADR 0036].
 _Avoid_: productive participle and lexicalized participle, as a Kind contrast
 
+**Lexical Reflexive**:
+A `sich` that no other noun phrase can replace in its sense: inherent
+(`sich schämen`), reciprocal-inherent (`sich zanken`) or the modal-passive
+`sich lassen`. It is a member of its verb's or Locution's target and fills
+the Reading's Reflexive Slot (Dumrel), never the Canonical Form. See
+[ADR 0052].
+_Avoid_: reflexive verb, for a Lemma of its own; inherent reflexive, for all
+three
+
 **Free `sich`**:
-The reflexive `sich` as a unit of its own rather than a member of its verb.
-See [ADR 0044].
+A reflexive that another noun phrase can replace in the same sense (*er
+wäscht sich*), a unit of its own rather than a member of its verb. It fills
+an ordinary Acc or Dat Slot. See [ADR 0044] and [ADR 0052].
 _Avoid_: Reciprocal `sich`, `pronType=Rcp` `sich`
 
 **Standalone `einander`**:
@@ -194,6 +204,7 @@ _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 [ADR 0049]: ../../docs/adr/0049-tabulate-a-lemmas-forms-as-projections.md
 [ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
 [ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md
+[ADR 0052]: ../../docs/adr/0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md
 [ADR 0053]: ../../docs/adr/0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md
 [Dumcorpus ADR 0001]: ./docs/adr/0001-assess-grundform-with-language-owned-rules.md
 [Dumcorpus ADR 0002]: ./docs/adr/0002-count-a-knowledge-aspect-left-out-of-coverage-as-unreviewed.md

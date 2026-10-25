@@ -43,14 +43,18 @@ together are separate Slots, each with its own status, so E-VALBU's `v` is not
 modelled: `wohnen` has a Required place and an Optional manner. A different
 sense is a different Reading.
 
-A frame never creates a Lemma or a Reading. Only the Emoji Description splits
+A frame never creates a Lemma, and only the Emoji Description splits
 Readings ([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md)).
+A Required Reflexive Slot shows in it as a leading 🪞
+([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
 `warten` with and without `auf` is one Reading with an Optional `auf` slot.
-`sich gewöhnen an` has a Required `an` slot. `bestehen auf` and `bestehen aus`
-are two Readings because their senses differ, and each has its own frame.
+`gewöhnen` 🪞 'get used to' has a Required Reflexive Acc and a Required `an`
+slot (`sich gewöhnen an`). `bestehen auf` and `bestehen aus` are two Readings
+because their senses differ, and each has its own frame.
 
-Fixed parts are not slots. A separable prefix, a lexical reflexive and a
-Locution's wording come from Lemma identity.
+Fixed parts are not slots. A separable prefix and a Locution's wording come
+from Lemma identity. A lexical reflexive is valency, a Reflexive Slot
+(ADR 0052).
 
 The frame sits on the Reading because government varies by sense, and it is
 Knowledge, not a Semantic Relation. Its edges carry a case, cross Families
@@ -70,6 +74,7 @@ vocabulary. German follows E-VALBU:
 { kind: "Adverbial", standIn: "Irgendwo" | "Irgendwohin" | "Irgendwie" | "IrgendwieLange" | "IrgendwieViel" }
 { kind: "Predicative", of: "Subject" | "Object", marker: "None" | "Als" | "Für" }
 { kind: "Clause", form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W", correlate?: "Required" | "Optional" }
+{ kind: "Reflexive", governedCase: "Acc" | "Dat" }
 // referent: "Someone" | "Something" | "Either"
 ```
 
@@ -112,17 +117,22 @@ vocabulary. German follows E-VALBU:
   never a member: `es` stays a PRON and `darauf` an ADV. Recording a clause
   form as a field on the Acc or Preposition complement was rejected in favour
   of Clause alternatives.
+- **Reflexive** is a lexical reflexive, one no other noun phrase can replace
+  in the sense, with the case it takes: `erinnern` 🪞🧠 Acc, `vorstellen`
+  'imagine' Dat. It is the only complement of its Slot, at most one per
+  frame, and has no referent
+  ([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
 
 Hebrew marks function and preposition, with no case: Subject, DirectObject
 and Preposition. English marks position and preposition, with no case:
-Subject, DirectObject, IndirectObject (`him` in `give him a book`) and
-Preposition. Neither adds an Adverbial, a Predicative or a Clause until
+Subject, DirectObject, IndirectObject (`him` in `give him a book`),
+Preposition and a caseless Reflexive (`pride oneself on`). Neither adds an Adverbial, a Predicative or a Clause until
 reviewed examples establish one, and both share the Slot shape.
 
 Each language × Family × Kind route chooses which complements it allows, as
 [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md) does for
-Core Features. German VERB routes, Lexeme and Locution, allow all five kinds.
-ADJ routes allow all but Predicative, and a measure (`drei Jahre alt`) is
+Core Features. German VERB routes, Lexeme and Locution, allow all six kinds.
+ADJ routes allow all but Predicative and Reflexive, and a measure (`drei Jahre alt`) is
 decided per Reading. NOUN routes allow Preposition and Clause, a Clause both
 beside a Preposition (`die Freude darauf, dass …`) and in a Slot of its own
 (`der Versuch, etw zu tun`). A route that allows none, such as Foreign
@@ -146,7 +156,8 @@ The Knowledge call proposes the whole frame, statuses and alternatives
 included, when it creates a Reading: the Satzbauplan of the one Lesart its
 sentence shows. A governed preposition that sentence realizes is added when
 the proposal omits it, since that sentence anchors the sense the frame is
-proposed for (*bedanken* gets its `bei`). Mistakes go through Knowledge's
+proposed for (*bedanken* gets its `bei`). So is a lexical reflexive it
+realizes (ADR 0052). Mistakes go through Knowledge's
 Correct. Only the proposal and Correct group complements as alternatives. A
 Contribute appends a Slot only when no stored complement covers any of its
 complements, and never adds a complement to a stored Slot: contributing `von`
@@ -176,9 +187,10 @@ The Attestation replaces `governedPrepositionEvidence` with
 member index says which member realizes the slot. `Pass auf dich auf` has two
 members spelled `auf`, and only the index tells them apart. The evidence names
 the complement the sentence realized, even when the frame lacks it. Its
-complements are Case and Preposition only, a strict subset of the frame's
-vocabulary: nothing produces or reads an Adverbial, Predicative or Clause
-there.
+complements are Case, Preposition and Reflexive only, a strict subset of the
+frame's vocabulary: nothing produces or reads an Adverbial, Predicative or
+Clause there. A Reflexive names the lexical reflexive member and the case it
+took (ADR 0052).
 
 Grammatical Resolution writes `valencyEvidence` as part of the grammar
 judgment a click already runs for its unit, and Knowledge reads it. Intake
@@ -193,16 +205,17 @@ only if it is accurate and does not hurt grouping accuracy, cost or latency.
 
 A governed preposition stays an Attestation member, so clicking it still
 routes to the governor: `aus Angst vor Hunden` gives `[Angst, vor]` NOUN.
-`normalizedSurface` leaves out the governed prepositions that `valencyEvidence`
-names: `wartet`, not `wartet auf`; `pass auf`, not `pass auf auf`. The
+`normalizedSurface` leaves out the governed prepositions and the lexical
+reflexive that `valencyEvidence` names: `wartet`, not `wartet auf`; `pass
+auf`, not `pass auf auf`; `erinnert`, not `erinnert sich`. The
 preposition inside an Adverbial is not a member: in `legt das Buch auf den
 Tisch` and `wohnt in Bonn`, the verb requires a direction or a place, not
 `auf` or `in`. Neither is the `als` or `für` that marks a Predicative, nor a
 preposition heading a free adjunct: the `im` of `wartet im Keller` is no
 member of `warten`.
 
-A governor's evidence lists only the governed prepositions its sentence
-realizes, for every governor Kind but INTJ, which records no
+A governor's evidence lists only the governed prepositions and the lexical
+reflexive its sentence realizes, for every governor Kind but INTJ, which records no
 `valencyEvidence`. Case slots (bare Nom, Acc, Dat or Gen noun
 phrases) come only from the Knowledge call's frame, and so do Adverbial,
 Predicative and Clause complements. The frame is already complete without
@@ -233,7 +246,11 @@ are in parentheses. `jN` is an Acc person, `jM` a Dat person and `etw`
 something. A separable verb's `>` and `<` mark its split and are rendered
 from its `hasSepPrefix` Core Feature: `>passen` is the base the prefix
 attaches to on its left and `auf<` is the separated prefix, so `auf<` +
-`>passen` reads `aufpassen`. Only separable verbs carry them.
+`>passen` reads `aufpassen`. Only separable verbs carry them. A Reflexive
+Slot prints `sich`, never stored in the Canonical Form. The Reading's Citation
+puts it first or after a leading `es` (`sich erinnern`, `es sich gemütlich
+machen`), and tf-demo decides where the Block places it among the Slots
+(ADR 0052).
 
 ```text
 >passen (auf `jN/etw`) auf<             aufpassen

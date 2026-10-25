@@ -8,17 +8,11 @@ A lexically governed preposition is valency, not identity. `warten auf` is
 still `warten`, `bitten um` is still `bitten`, and `stolz auf` is still
 `stolz`. No VERB Core Feature `hasGovPrep` exists in any language, and no Kind
 has a governed-preposition Core Feature. Dropping the preposition gives the
-same word without its complement, unlike `hasSepPrefix` and
-`lexicallyReflexive`, which pick a different headword (`aufpassen` is not
-`passen`, `sich erinnern` is not `erinnern`).
-
-`lexicallyReflexive` names the case its reflexive takes, Acc or Dat, fixed per
-word: `sich erinnern` is Acc (*ich erinnere mich*), `sich etwas vorstellen`
-Dat (*ich stelle mir etwas vor*). So `sich vorstellen` (Acc, 'introduce
-oneself') and `sich etwas vorstellen` (Dat, 'imagine') are two Lemmas, apart
-from `vorstellen`. A reflexive verb is a Lemma of its own with a "sich X"
-Canonical Form. Merging it into its base verb was rejected, and so was
-recording the mark on a Reading or in Knowledge.
+same word without its complement, unlike `hasSepPrefix`, which picks a
+different headword (`aufpassen` is not `passen`). A lexical reflexive is
+valency too: `sich erinnern` is the Lemma `erinnern`, whose 🪞🧠 Reading has
+a Reflexive Slot
+([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
 
 Government lives in two places, neither of them the Lemma
 ([ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)): the
@@ -80,4 +74,5 @@ and PRON `beide` is 2⃣, like DET `beide`. The perfect auxiliaries `haben` and
 
 - A verb with and without its governed preposition is one Lemma, so senses
   such as `es geht um` and `gehen` are separate Readings under the Emoji
-  Description, not separate Lemmas.
+  Description, not separate Lemmas. A verb with and without its lexical
+  reflexive is one Lemma in the same way: `erinnern` 💭 and 🪞🧠 (ADR 0052).

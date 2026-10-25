@@ -22,10 +22,12 @@ satellites: a separable particle, governed preposition, reflexive, expletive,
 article, auxiliary or DegreeMarker, the word that marks an analytic
 comparative or superlative (`am` in `am liebsten`, `most` in `most
 beautiful`; [ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)).
-A satellite may be part of the Canonical Form (`sich erinnern`, `take off`),
-or a Core Feature may record it: the PROPN `Schweiz` has Core `article:
-Definite` and owns its `die`. A Lemma with two or more Heads is a Locution. A
-proper name is one Lexeme whatever its length (`Angela Merkel`, `New York`,
+A satellite may be part of the Canonical Form (`take off`), or a Core
+Feature may record it: the PROPN `Schweiz` has Core `article: Definite` and
+owns its `die`. A lexical reflexive is neither: it fills a Reflexive Slot in
+the Reading's Valency Frame, and `sich erinnern` is the Lemma `erinnern`
+([ADR 0052](./0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md)).
+A Lemma with two or more Heads is a Locution. A proper name is one Lexeme whatever its length (`Angela Merkel`, `New York`,
 `Deutsche Bank`): its words are parts of the name, which UD attaches as
 `flat`, not Heads. Head and satellite describe this Family Rule, which
 dumcorpus applies. The Attestation records the Family, but no Head and no
@@ -152,9 +154,11 @@ grammar causes the change and every fixed word is present: `Die Entscheidung
 wurde gestern getroffen`, `Sie trafen mehrere Entscheidungen`, `Sie nahm ihren
 Hut`. `normalizedSurface` records the wording and no features describe it. A
 change of word breaks the Locution (`einen Faden` while sewing). The Canonical
-Form is the dictionary's citation form (`eine Entscheidung treffen`, `seinen
-Hut nehmen`, `sich den Kopf zerbrechen`), and open slots belong to the Valency
-Frame (`auf den Keks gehen` with its dative Slot).
+Form is the dictionary's citation form less its valency (`eine Entscheidung
+treffen`, `seinen Hut nehmen`, `den Kopf zerbrechen`). Open slots and a
+lexical reflexive belong to the Valency Frame: `auf den Keks gehen` has its
+dative Slot, and `den Kopf zerbrechen`, printed `sich den Kopf zerbrechen`,
+its Reflexive Dat Slot (ADR 0052).
 
 **Modification.** A deliberate change of wording still attests the unit, with
 Partial coverage. The kept words are members and the missing ones are the
