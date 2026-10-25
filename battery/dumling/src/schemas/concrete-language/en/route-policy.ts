@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
 	caselessValencyAttestationError,
 	isCaselessValencyAttestation,
-} from "../../../validation/semantics.js";
+} from "../../../validation/evidence-semantics.js";
 import { routePolicy } from "../../route-policy.js";
 import {
 	indexSchema,

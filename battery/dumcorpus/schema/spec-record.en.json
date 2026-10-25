@@ -15819,6 +15819,27 @@
 					"properties": {
 						"kind": {
 							"type": "string",
+							"const": "Reflexive"
+						},
+						"governedCase": {
+							"type": "string",
+							"enum": [
+								"Acc",
+								"Dat"
+							]
+						}
+					},
+					"required": [
+						"kind",
+						"governedCase"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
 							"const": "Subject"
 						},
 						"referent": {
@@ -15938,6 +15959,19 @@
 						"kind",
 						"preposition",
 						"referent"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "Reflexive"
+						}
+					},
+					"required": [
+						"kind"
 					],
 					"additionalProperties": false
 				}

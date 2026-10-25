@@ -1,18 +1,20 @@
 import { z } from "zod";
 import {
 	germanAdpositionAttestationError,
+	germanValencyAttestationError,
+	germanVerbalAttestationError,
+	isGermanAdpositionAttestation,
+	isGermanValencyAttestation,
+	isGermanVerbalAttestation,
+} from "../../../validation/evidence-semantics.js";
+import {
 	germanClosedClassSurfaceError,
 	germanNounSurfaceError,
 	germanProperNounSurfaceError,
-	germanValencyAttestationError,
-	germanVerbalAttestationError,
 	germanVerbalSurfaceError,
-	isGermanAdpositionAttestation,
 	isGermanClosedClassSurface,
 	isGermanNounSurface,
 	isGermanProperNounSurface,
-	isGermanValencyAttestation,
-	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
 } from "../../../validation/semantics.js";
 import { routePolicy } from "../../route-policy.js";
@@ -28,8 +30,9 @@ const germanCaseSchema = z.enum(["Nom", "Acc", "Dat", "Gen"]);
 
 /**
  * The German valency complements an occurrence can realize (ADR 0034), after
- * E-VALBU: a bare case, or a preposition's ADP Lemma with the case it governs
- * in this construction. `referent` says whether the complement names a
+ * E-VALBU: a bare case, a preposition's ADP Lemma with the case it governs
+ * in this construction, or a lexical reflexive with the case its Reading
+ * fixes (ADR 0052). `referent` says whether a Case or Preposition names a
  * person, a thing, or either. The field is `governedCase`, since an
  * Attestation names no Feature Pool feature (ADR 0032). Evidence takes no
  * Adverbial, Predicative or Clause: nothing produces or reads them here.
@@ -49,13 +52,17 @@ const germanComplementSchema = z.union([
 		governedCase: germanCaseSchema.exclude(["Nom"]),
 		referent: referentSchema,
 	}),
+	z.strictObject({
+		kind: z.literal("Reflexive"),
+		governedCase: germanCaseSchema.extract(["Acc", "Dat"]),
+	}),
 ]);
 
 /**
  * The valency slots one occurrence realizes (ADR 0034). `member` indexes the
- * owned member realizing the slot's marker, such as a governed preposition,
- * and is null when no member does. `realizedCase` is the case the occurrence
- * shows.
+ * owned member realizing the slot's marker, such as a governed preposition or
+ * the lexical reflexive (ADR 0052), and is null when no member does.
+ * `realizedCase` is the case the occurrence shows.
  */
 const valencyEvidenceSchema = z.array(
 	z.strictObject({
@@ -71,7 +78,7 @@ const valencyEvidenceSchema = z.array(
  * Attestation names its owned subject-expletive member as evidence (ADR
  * 0022). Every German governor (a Lexeme or Locution VERB, ADJ or NOUN, and
  * AUX) names the valency slots it realizes, such as its governed preposition
- * member (ADR 0034). A German ADP Attestation, Lexeme or Locution, records the
+ * member (ADR 0034); only a verbal one names a lexical reflexive (ADR 0052). A German ADP Attestation, Lexeme or Locution, records the
  * case its complement took as its one bare-case slot, and no position;
  * dumcorpus checks the case against the ADP Case Table (ADR 0053). A Locution route is a
  * governor where the Lexeme route of its Kind is (ADR 0039); the Kind alone

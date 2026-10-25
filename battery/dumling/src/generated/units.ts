@@ -346,7 +346,8 @@ export interface UnitMap {
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
-					  };
+					  }
+					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -501,7 +502,8 @@ export interface UnitMap {
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
-					  };
+					  }
+					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -1120,7 +1122,8 @@ export interface UnitMap {
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
-					  };
+					  }
+					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -1898,7 +1901,8 @@ export interface UnitMap {
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
-					  };
+					  }
+					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -5542,7 +5546,8 @@ export interface UnitMap {
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
-					  };
+					  }
+					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -5709,7 +5714,8 @@ export interface UnitMap {
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
-					  };
+					  }
+					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -5864,7 +5870,8 @@ export interface UnitMap {
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
-					  };
+					  }
+					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -6633,7 +6640,8 @@ export interface UnitMap {
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
-					  };
+					  }
+					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};
@@ -7530,7 +7538,8 @@ export interface UnitMap {
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
-					  };
+					  }
+					| { kind: "Reflexive"; governedCase: "Acc" | "Dat" };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			}>;
 		};

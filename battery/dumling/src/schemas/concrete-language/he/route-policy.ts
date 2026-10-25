@@ -1,8 +1,10 @@
 import { z } from "zod";
 import {
 	caselessValencyAttestationError,
-	hebrewArticleAttestationError,
 	isCaselessValencyAttestation,
+} from "../../../validation/evidence-semantics.js";
+import {
+	hebrewArticleAttestationError,
 	isHebrewArticleAttestation,
 } from "../../../validation/semantics.js";
 import { routePolicy } from "../../route-policy.js";
