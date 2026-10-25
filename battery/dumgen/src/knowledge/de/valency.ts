@@ -75,8 +75,12 @@ type GermanSlot = {
 };
 
 const referent = { type: "string", enum: ["Someone", "Something", "Either"] };
+// Luna is offered no Reflexive complement yet (#1285).
 const complementSchemas: Readonly<
-	Record<ComplementKind, Readonly<Record<string, unknown>>>
+	Record<
+		Exclude<ComplementKind, "Reflexive">,
+		Readonly<Record<string, unknown>>
+	>
 > = {
 	Case: {
 		type: "object",
@@ -395,7 +399,9 @@ export const produceValency = (
 	AspectError
 > =>
 	Effect.gen(function* () {
-		const kinds = allowedComplementKinds(context.lemma);
+		const kinds = allowedComplementKinds(context.lemma).filter(
+			(kind) => kind in complementSchemas,
+		);
 		const proposed = yield* write(
 			context,
 			"valency",

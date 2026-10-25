@@ -30,6 +30,7 @@ import {
 	pluralPatternValues,
 	predicativeMarkerValues,
 	predicativeOfValues,
+	reflexiveCaseValues,
 	sayingTypeValues,
 	translationLanguageValues,
 	valencyReferentValues,
@@ -56,8 +57,9 @@ export const valencyReferentSchema = z.enum(valencyReferentValues);
  * in this construction (`warten auf` + Acc, `bestehen auf` + Dat); an
  * Adverbial named by its stand-in (`wohnen` irgendwo); a Predicative of the
  * subject or object with its free marker (`jN für dumm halten`); or a Clause
- * of one form, with the correlate it may need (`sich freuen auf`: Dass,
- * Required `darauf`). Only Case and Preposition name a referent.
+ * of one form, with the correlate it may need (`freuen` 🪞 `auf`: Dass,
+ * Required `darauf`); or a lexical Reflexive with its case (ADR 0052). Only
+ * Case and Preposition name a referent.
  */
 export const germanValencyComplementSchema = z.union([
 	z.strictObject({
@@ -85,6 +87,10 @@ export const germanValencyComplementSchema = z.union([
 		form: z.enum(clauseFormValues),
 		correlate: z.enum(clauseCorrelateValues).optional(),
 	}),
+	z.strictObject({
+		kind: z.literal("Reflexive"),
+		governedCase: z.enum(reflexiveCaseValues),
+	}),
 ]);
 /**
  * Hebrew complements, marked by function and preposition with no case: the
@@ -109,8 +115,8 @@ export const hebrewValencyComplementSchema = z.union([
 /**
  * English complements, marked by position and preposition with no case: the
  * subject, the direct object, the indirect object (the first object of `give
- * him a book`), or a governed preposition with the ADP Lemma it selects
- * (`depend on`).
+ * him a book`), a governed preposition with the ADP Lemma it selects
+ * (`depend on`), or a caseless lexical Reflexive (`pride oneself on`).
  */
 export const englishValencyComplementSchema = z.union([
 	z.strictObject({
@@ -130,6 +136,7 @@ export const englishValencyComplementSchema = z.union([
 		preposition: adpositionLemmaSchemas.en,
 		referent: valencyReferentSchema,
 	}),
+	z.strictObject({ kind: z.literal("Reflexive") }),
 ]);
 /**
  * The Slot skeleton is shared; each language brings its own complement
@@ -158,10 +165,11 @@ export const valencySlotSchema = z.strictObject({
 /**
  * The owning Reading's Valency Frame: its Slots in order. A Case or
  * Preposition complement sits in at most one of them; an Adverbial,
- * Predicative or Clause may recur in another Slot (ADR 0034). The governor
- * owns every claim; a preposition's side is a read-time projection. Fixed
- * parts (a separable prefix, a lexical reflexive, a Locution's wording) come
- * from Lemma identity and are never Slots.
+ * Predicative or Clause may recur in another Slot (ADR 0034). A Reflexive is
+ * alone in its Slot, at most one per frame (ADR 0052). The governor owns
+ * every claim; a preposition's side is a read-time projection. Fixed parts
+ * (a separable prefix, a Locution's wording) come from Lemma identity and
+ * are never Slots.
  */
 export const valencyFrameSchema = z.array(valencySlotSchema).min(1);
 

@@ -209,6 +209,14 @@ function parseValencyComplement<R extends Dumling.Reading>(
 			[...path, "kind"],
 			`${family} ${kind} Readings take no ${complement.kind} complement`,
 		);
+	if (
+		complement.kind === "Reflexive" &&
+		"governedCase" in complement !== (source.lemma.language === "de")
+	)
+		return issue(
+			path,
+			"A German Reflexive names its case; another language's names none",
+		);
 	if (complement.kind !== "Preposition") return complement;
 	const parsed = parseUnit(complement.preposition);
 	if (!parsed.success)
@@ -239,6 +247,31 @@ function parseValencyComplement<R extends Dumling.Reading>(
 	return { ...complement, preposition } as ValencyComplement;
 }
 
+/** A Reflexive alone in its Slot, at most one per frame (ADR 0052). */
+function reflexiveIssue(
+	frame: ValencyFrame,
+	path: Path,
+): ParsingError | undefined {
+	let seen = false;
+	for (const [index, { complements }] of frame.entries()) {
+		const at = complements.findIndex(({ kind }) => kind === "Reflexive");
+		if (at === -1) continue;
+		const complementPath = [...path, index, "complements", at];
+		if (complements.length > 1)
+			return issue(
+				complementPath,
+				"A Reflexive is the only complement of its Slot",
+			);
+		if (seen)
+			return issue(
+				complementPath,
+				"A Valency Frame has at most one Reflexive",
+			);
+		seen = true;
+	}
+	return undefined;
+}
+
 /**
  * A frame whose complements the source's route allows. A complement with a
  * referent (a Case or Preposition, or a Hebrew or English Subject or object)
@@ -248,7 +281,8 @@ function parseValencyComplement<R extends Dumling.Reading>(
  * Nom Slot and in its Acc Slot. Which complements belong in one Slot is the
  * proposal's call; only the correlate is checked: a Clause with a correlate
  * takes its `da(r)-` from the Slot's preposition, so a Slot that holds one has
- * at most one Preposition (ADR 0034).
+ * at most one Preposition (ADR 0034). A Reflexive is the only complement of
+ * its Slot, and a frame has at most one (ADR 0052).
  */
 function parseValencyFrame<R extends Dumling.Reading>(
 	source: R,
@@ -258,6 +292,8 @@ function parseValencyFrame<R extends Dumling.Reading>(
 	const key = structuralKeys();
 	const slots: ValencySlot[] = [];
 	const inFrame = new Set<string>();
+	const reflexive = reflexiveIssue(frame, path);
+	if (reflexive) return reflexive;
 	for (const [index, slot] of frame.entries()) {
 		const complements: ValencyComplement[] = [];
 		const inSlot = new Set<string>();

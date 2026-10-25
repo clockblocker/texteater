@@ -39,6 +39,13 @@ export const participleMeaningValues = ["Verbal", "Drifted"] as const;
 export const germanComplementCaseValues = ["Nom", "Acc", "Dat", "Gen"] as const;
 
 /**
+ * Cases a German lexical reflexive takes, fixed per Reading: `erinnern` 🪞🧠
+ * Acc (*ich erinnere mich*), `vorstellen` 'imagine' Dat (*ich stelle mir
+ * etwas vor*) (ADR 0052).
+ */
+export const reflexiveCaseValues = ["Acc", "Dat"] as const;
+
+/**
  * The adverb that stands in for a German Adverbial complement, as E-VALBU
  * substitutes it (ADR 0034): a place (`wohnen` irgendwo), a direction
  * (`legen` irgendwohin), a manner (`sich benehmen` irgendwie), a duration

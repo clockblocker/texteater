@@ -87,8 +87,8 @@ const clauseCorrelateValues = [
 /**
  * A Valency Frame Slot, as the Valency Block reads it: its status and its
  * alternatives (ADR 0034). German complements are marked by case, or are an
- * Adverbial, Predicative or Clause with no referent; Hebrew and English ones
- * are marked by function or position and preposition.
+ * Adverbial, Predicative, Clause or Reflexive with no referent; Hebrew and
+ * English ones are marked by function or position and preposition.
  */
 const valencySlotValidator = v.object({
 	status: v.union(v.literal("Required"), v.literal("Optional")),
@@ -118,6 +118,13 @@ const valencySlotValidator = v.object({
 				kind: v.literal("Clause"),
 				form: literalUnion(clauseFormValues),
 				correlate: v.optional(literalUnion(clauseCorrelateValues)),
+			}),
+			// A lexical reflexive: German names its case, English none (ADR 0052).
+			v.object({
+				kind: v.literal("Reflexive"),
+				governedCase: v.optional(
+					v.union(v.literal("Acc"), v.literal("Dat")),
+				),
 			}),
 			v.object({
 				kind: v.union(

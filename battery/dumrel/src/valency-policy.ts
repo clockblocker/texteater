@@ -36,6 +36,7 @@ const germanVerbComplements = [
 	"Adverbial",
 	"Predicative",
 	"Clause",
+	"Reflexive",
 ] as const;
 const germanAdjectiveComplements = [
 	"Case",
@@ -55,18 +56,21 @@ const positionOrPreposition = [
 	"IndirectObject",
 	"Preposition",
 ] as const;
+const englishVerbComplements = [...positionOrPreposition, "Reflexive"] as const;
 
 /**
  * The complements each language × Family × Kind route lets its Valency Frame
  * hold, chosen per route the way ADR 0032 chooses Core Features. A route
  * missing here takes no frame. German verbs take every German kind; adjectives
- * all but Predicative. German nouns take governed prepositions (`Angst vor`)
+ * all but Predicative and Reflexive. German nouns take governed prepositions (`Angst vor`)
  * and clauses, beside a preposition (`die Freude darauf, dass …`) or alone
  * (`der Versuch, etw zu tun`); their bare cases are attributes, not valency.
  * A Locution route takes the frame of the Lexeme route with its Kind (ADR
  * 0039): `Angst haben vor`. Hebrew mirrors the German choices with its own
  * complements: nouns take only governed prepositions, and it has no framed
- * Locution route yet. English makes the same choices with its own complements.
+ * Locution route yet. English makes the same choices with its own complements,
+ * and only its verbs take a Reflexive (`pride oneself on`). Hebrew takes none:
+ * HITPAEL is a binyan, not a pronoun (ADR 0052).
  */
 const valencyPolicy = {
 	de: {
@@ -90,12 +94,12 @@ const valencyPolicy = {
 	},
 	en: {
 		Lexeme: {
-			VERB: positionOrPreposition,
+			VERB: englishVerbComplements,
 			ADJ: positionOrPreposition,
 			NOUN: ["Preposition"],
 		},
 		Locution: {
-			VERB: positionOrPreposition,
+			VERB: englishVerbComplements,
 			NOUN: ["Preposition"],
 		},
 	},

@@ -6,7 +6,7 @@ type FrameSlot = NonNullable<
 /** The German complements the line shows are the ones marked by case. */
 type Complement = Extract<
 	FrameSlot["complements"][number],
-	{ governedCase: string }
+	{ governedCase: string; referent: string }
 >;
 type RenderedCase = Exclude<Complement["governedCase"], "Nom">;
 
@@ -143,13 +143,14 @@ type SlotPart = Extract<ValencyLinePart, { part: "Slot" }>;
  * The part a Slot shows: its one complement marked by case, unless that is
  * the subject's Nom. A Slot with alternatives, or with an Adverbial,
  * Predicative or Clause, shows nothing until #676 decides how the line
- * renders them.
+ * renders them, and a Reflexive nothing until #1285 places it.
  */
 function slotPart(slot: FrameSlot): SlotPart[] {
 	const [complement, ...alternatives] = slot.complements;
 	if (
 		complement === undefined ||
 		alternatives.length > 0 ||
+		complement.kind === "Reflexive" ||
 		!("governedCase" in complement)
 	)
 		return [];
