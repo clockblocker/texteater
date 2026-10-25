@@ -125,6 +125,13 @@ const particles: readonly ModalParticle[] = [
 				ru: ["же", "а"],
 			},
 			{
+				emoji: "➡",
+				definition:
+					"Wirkt in Aussagesätzen verstärkend und drückt oft eine Folgerung aus; also, schließlich, nun: Ihr war es denn doch zu anstrengend. Das schien ihm denn auch genug.",
+				en: ["then", "after all"],
+				ru: ["всё-таки", "и в самом деле"],
+			},
+			{
 				emoji: "🙄",
 				definition:
 					"Steht in rhetorischen Fragen, auf die man keine Antwort erwartet: Bist du denn taub? Kannst du denn nicht hören?",
