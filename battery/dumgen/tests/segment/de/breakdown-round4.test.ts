@@ -1,7 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import type { Question } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import type { Answers, Ask, AskRequest } from "../../../src/segment/ask.js";
+import type { Ask } from "../../../src/segment/ask.js";
 import type { BreakdownInput } from "../../../src/segment/breakdown.js";
 import { germanConstituents } from "../../../src/segment/de/breakdown/constituents.js";
 import { formCandidates } from "../../../src/segment/de/breakdown/forms.js";
@@ -13,63 +12,9 @@ import {
 	contendersOf,
 	type Weighed,
 } from "../../../src/segment/de/breakdown/word-senses.js";
-import { input, judgeWanting, shown } from "./breakdown-support.js";
-import { asked, noul, picked } from "./fake-judge.js";
+import { input, judgeWanting, senseJudge, shown } from "./breakdown-support.js";
 
 // The round-4 fixes (#1241), each shown on a word that is no Breakdown Record.
-
-/**
- * A judge that weighs the analysis question by `weights` (labels to
- * weights, the rest 0), answers each sense question by the text it holds
- * (`fits`, else 0.1), and otherwise answers as `judgeWanting(...wanted)`.
- */
-function senseJudge(
-	weights: Readonly<Record<string, number>>,
-	fits: Readonly<Record<string, number>>,
-	...wanted: string[]
-) {
-	const fallback = judgeWanting(...wanted);
-	const requests: AskRequest[] = [];
-	const ask = asked(async (request) => {
-		requests.push(request);
-		if (request.stage === "breakdown-analysis") {
-			const question = request.questions.analysis as Question;
-			const criteria =
-				question.type === "choice" ? question.criteria : {};
-			const probabilities = Object.fromEntries(
-				Object.entries(criteria).map(([key, label]) => [
-					key,
-					weights[String(label)] ?? 0,
-				]),
-			);
-			const [best = "none"] = Object.entries(probabilities)
-				.sort(([, left], [, right]) => right - left)
-				.map(([key]) => key);
-			return { analysis: picked(best, probabilities) } satisfies Answers;
-		}
-		if (request.stage === "breakdown-senses")
-			return Object.fromEntries(
-				Object.entries(request.questions).map(([id, question]) => {
-					const text = String(question.instructions);
-					const fit = Object.entries(fits).find(([held]) =>
-						text.includes(held),
-					)?.[1];
-					return [id, noul(fit ?? 0.1)];
-				}),
-			) satisfies Answers;
-		return Effect.runPromise(fallback.ask(request));
-	});
-	return {
-		ask,
-		stages: () => requests.map(({ stage }) => stage),
-		texts: () =>
-			requests.flatMap(({ questions }) =>
-				Object.values(questions).map(({ instructions }) =>
-					String(instructions),
-				),
-			),
-	};
-}
 
 const run = async (reading: BreakdownInput, judge: { readonly ask: Ask }) => {
 	const result = await Effect.runPromise(

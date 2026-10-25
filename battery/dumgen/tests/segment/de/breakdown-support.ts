@@ -1,5 +1,6 @@
 import type { Question } from "@typesafe-ai/sdk";
 import type * as Dumling from "dumling/types";
+import * as Effect from "effect/Effect";
 import type { Answers, AskRequest } from "../../../src/segment/ask.js";
 import type {
 	BreakdownInput,
@@ -85,3 +86,56 @@ export const shown = (pieces: readonly ProducedPiece[]) =>
 			? `${letters}→${target.family}/${target.kind}:${target.canonicalForm}`
 			: letters,
 	);
+
+/**
+ * A judge that weighs the analysis question by `weights` (labels to
+ * weights, the rest 0), answers each sense question by the text it holds
+ * (`fits`, else 0.1), and otherwise answers as `judgeWanting(...wanted)`.
+ */
+export function senseJudge(
+	weights: Readonly<Record<string, number>>,
+	fits: Readonly<Record<string, number>>,
+	...wanted: string[]
+) {
+	const fallback = judgeWanting(...wanted);
+	const requests: AskRequest[] = [];
+	const ask = asked(async (request) => {
+		requests.push(request);
+		if (request.stage === "breakdown-analysis") {
+			const question = request.questions.analysis as Question;
+			const criteria =
+				question.type === "choice" ? question.criteria : {};
+			const probabilities = Object.fromEntries(
+				Object.entries(criteria).map(([key, label]) => [
+					key,
+					weights[String(label)] ?? 0,
+				]),
+			);
+			const [best = "none"] = Object.entries(probabilities)
+				.sort(([, left], [, right]) => right - left)
+				.map(([key]) => key);
+			return { analysis: picked(best, probabilities) } satisfies Answers;
+		}
+		if (request.stage === "breakdown-senses")
+			return Object.fromEntries(
+				Object.entries(request.questions).map(([id, question]) => {
+					const text = String(question.instructions);
+					const fit = Object.entries(fits).find(([held]) =>
+						text.includes(held),
+					)?.[1];
+					return [id, noul(fit ?? 0.1)];
+				}),
+			) satisfies Answers;
+		return Effect.runPromise(fallback.ask(request));
+	});
+	return {
+		ask,
+		stages: () => requests.map(({ stage }) => stage),
+		texts: () =>
+			requests.flatMap(({ questions }) =>
+				Object.values(questions).map(({ instructions }) =>
+					String(instructions),
+				),
+			),
+	};
+}

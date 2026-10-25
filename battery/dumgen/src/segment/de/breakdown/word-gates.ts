@@ -12,6 +12,8 @@
  * - **A cranberry piece is no word.** A noun's first part is offered as a
  *   cranberry Root only when it is no word of its own and no word's stem
  *   (`Kau` is kauen's), so a verb stem keeps its route question's share.
+ *   A compound the sense check chose over the analysis question's pick is
+ *   not asked: it won as two words (`constituents.ts`).
  * - **A suffix's base is a verb or a noun.** Before a suffix with no one
  *   base Kind (`-er`), a base jev weighs a verb and no noun is a VERB
  *   (`Lehr` is lehren), and one it weighs a noun and no verb a NOUN,

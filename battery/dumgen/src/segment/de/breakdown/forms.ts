@@ -168,6 +168,29 @@ export function onlyPronoun(word: string): boolean {
 }
 
 /**
+ * Whether a spelling is only an inflected form of authored determiners and
+ * pronouns, so Rule de/pron-or-det-by-use settles a phraseme part's route
+ * from what follows it (#1241 round 4: `allem`, `dieses`). It must realize
+ * a DET and a PRON member and nothing else, be no member's Canonical Form,
+ * since a bare one may be another word's too (adverbial `mehr`, `weniger`),
+ * and end in -em, -es or -er, as no verb form does (`meine` and `meinen`
+ * are also meinen's).
+ */
+export function inflectedDeterminerOrPronoun(word: string): boolean {
+	const members = realizedBy(word);
+	const kinds = new Set(members.map(({ member }) => member.lemma.kind));
+	return (
+		kinds.size === 2 &&
+		kinds.has("DET") &&
+		kinds.has("PRON") &&
+		members.every(
+			({ member }) => lower(member.lemma.canonicalForm) !== lower(word),
+		) &&
+		/(?:em|es|er)$/u.test(lower(word))
+	);
+}
+
+/**
  * The candidate Canonical Forms of a part that reads `reads` and takes the
  * route `family`/`kind`, distinct, the letters as they stand first. A
  * Locution part keeps its wording; a word part judges its last word, the

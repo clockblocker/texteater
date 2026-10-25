@@ -17,7 +17,8 @@
  *   `breakdown-senses` (`word-senses.ts`). A compound's head takes the
  *   word's own Kind, and code settles more parts unasked (`word-parts.ts`);
  *   a noun's first of two parts may be a cranberry piece, a Root (`Brom` in
- *   Brombeere), once jev weighs it no word of its own; and a suffix's base
+ *   Brombeere), once jev weighs it no word of its own, unless the sense
+ *   check chose that compound over the pick; and a suffix's base
  *   is a verb or a noun unasked when jev weighs it one and not the other.
  * - A phraseme, or a Lexeme written as several words: its wording's parts
  *   come from code (`phraseme-parts.ts`), and jev weighs, in one request,
@@ -29,8 +30,11 @@
  * Every part's route and Canonical Form then come from `targets.ts`, and a
  * compound's linking element from its first part's form (`interfix.ts`).
  * A phraseme's part that dumcorpus authors only as a pronoun is a PRON
- * (`was`), and a `zu` closing a wording after its open slot is the
- * infinitive PART (`um … zu`), both unasked.
+ * (`was`); one it authors only as an inflected determiner or pronoun is a
+ * DET before a noun and a PRON where no noun can follow (`allem` in
+ * `alles in allem`, Rule de/pron-or-det-by-use); and a `zu` closing a
+ * wording after its open slot is the infinitive PART (`um … zu`), all
+ * unasked.
  */
 import type { Questions } from "@typesafe-ai/sdk";
 import { germanSuffixes } from "dumcorpus/inventories";
@@ -52,7 +56,12 @@ import {
 	type ProducedPiece,
 } from "../../breakdown.js";
 import { allRoutes, type RouteKey } from "../routes.js";
-import { nounPartFormGuide, onlyPronoun, reflexiveFormGuide } from "./forms.js";
+import {
+	inflectedDeterminerOrPronoun,
+	nounPartFormGuide,
+	onlyPronoun,
+	reflexiveFormGuide,
+} from "./forms.js";
 import { interfixOf } from "./interfix.js";
 import {
 	type LocutionCandidate,
@@ -184,6 +193,15 @@ function linkedPieces(
 type Sense = { readonly cited: string; readonly kind: string };
 
 /**
+ * A word's analysis, or none, and whether the sense check chose it over
+ * the analysis question's pick.
+ */
+type Chosen = {
+	readonly analysis: WordAnalysis | undefined;
+	readonly bySense: boolean;
+};
+
+/**
  * The analysis jev picks, or none; with `sense`, once its sense is checked
  * when the pick is contested (`word-senses.ts`).
  */
@@ -192,7 +210,7 @@ const chosenAnalysis = Effect.fnUntraced(function* (
 	whole: Whole,
 	ask: Ask,
 	sense?: Sense,
-): Effect.fn.Return<WordAnalysis | undefined, AskFailure> {
+): Effect.fn.Return<Chosen, AskFailure> {
 	const answers = yield* ask({
 		stage: "breakdown-analysis",
 		state: whole.state,
@@ -210,13 +228,14 @@ const chosenAnalysis = Effect.fnUntraced(function* (
 		answer.choice === "none"
 			? undefined
 			: analyses[Number(answer.choice.slice(1))];
-	if (sense === undefined) return picked;
-	return yield* senseChecked(
+	if (sense === undefined) return { analysis: picked, bySense: false };
+	const checked = yield* senseChecked(
 		weighedOptions(analyses, answer.probabilities),
 		picked,
 		{ whole, ...sense },
 		ask,
 	);
+	return { analysis: checked, bySense: checked !== picked };
 });
 
 /**
@@ -245,18 +264,22 @@ const analysisOf = Effect.fnUntraced(function* (
 	whole: Whole,
 	sense: Sense,
 	ask: Ask,
-): Effect.fn.Return<WordAnalysis | undefined, AskFailure> {
+): Effect.fn.Return<Chosen, AskFailure> {
 	const [only] = analyses;
-	if (only === undefined) return undefined;
+	if (only === undefined) return { analysis: undefined, bySense: false };
 	if (!only.pieces.some(({ role }) => role === "Hyphen"))
 		return yield* chosenAnalysis(analyses, whole, ask, sense);
 	const analysis =
 		analyses.length === 1
 			? only
-			: yield* chosenAnalysis(analyses, whole, ask);
-	return analysis === only
-		? yield* withLocutionFront(only, whole, ask)
-		: analysis;
+			: (yield* chosenAnalysis(analyses, whole, ask)).analysis;
+	return {
+		analysis:
+			analysis === only
+				? yield* withLocutionFront(only, whole, ask)
+				: analysis,
+		bySense: false,
+	};
 });
 
 const wordConstituents = Effect.fnUntraced(function* (
@@ -267,7 +290,7 @@ const wordConstituents = Effect.fnUntraced(function* (
 	const whole = wholeOf(input, "word");
 	const candidates = wordAnalyses(canonicalForm, kind);
 	const gender = "gender" in coreFeatures ? coreFeatures.gender : undefined;
-	const analysis = yield* analysisOf(
+	const { analysis, bySense } = yield* analysisOf(
 		kind === "VERB"
 			? yield* withVerbBases(candidates, whole, ask)
 			: candidates,
@@ -277,8 +300,11 @@ const wordConstituents = Effect.fnUntraced(function* (
 	);
 	if (analysis === undefined) return none;
 	const [first, suffix, ...rest] = analysis.pieces;
+	// A compound the sense check chose over the pick won as two words, the
+	// first telling the head apart: it is no cranberry piece (#1241 round 4).
 	const cranberry =
 		cranberryShaped(analysis, kind) &&
+		!bySense &&
 		first !== undefined &&
 		(yield* mayBeCranberry(first.letters, whole, ask));
 	const parts = openWordParts(analysis, kind, cranberry);
@@ -393,21 +419,57 @@ const chosenGroups = Effect.fnUntraced(function* (
 	return { locutions, reflexive };
 });
 
+/** The endings an attributive adjective shows after a determiner (`aller guten`). */
+const adjectiveEnding = /(?:e|en|em|er|es)$/u;
+
+/**
+ * Rule de/pron-or-det-by-use read off the wording, for a part that is only
+ * an inflected determiner or pronoun (`inflectedDeterminerOrPronoun`): a
+ * DET before a noun, a PRON at the wording's end or before a word no
+ * attributive adjective could be (`alles in allem`, `dieses und jenes`);
+ * undefined, so jev is asked, before an adjective-like word, a slot,
+ * placeholder or punctuation, where the noun may come later.
+ */
+function determinerOrPronoun(
+	next: WordingPiece | undefined,
+	after: WordingPiece | undefined,
+): RouteKey | undefined {
+	if (next === undefined) return "Lexeme/PRON";
+	if (
+		next.role !== "Filler" ||
+		next.letters !== " " ||
+		after?.role !== "Part"
+	)
+		return undefined;
+	const [word = ""] = after.reads.split(/\s+/u);
+	if (/^\p{Lu}/u.test(word)) return "Lexeme/DET";
+	return adjectiveEnding.test(word) ? undefined : "Lexeme/PRON";
+}
+
 /**
  * The route a wording's part may take: a reflexive verb, a noun group, a
- * Locution, a pronoun dumcorpus authors only as one (`was`), the
- * infinitive `zu` closing the wording after its open slot (`ohne … zu`),
- * or a word.
+ * Locution, a pronoun dumcorpus authors only as one (`was`), an inflected
+ * determiner or pronoun by what follows it (`allem`), the infinitive `zu`
+ * closing the wording after its open slot (`ohne … zu`), or a word.
  */
 function partRoutes(
-	piece: WordingPiece & { role: "Part" },
-	closesSlot: boolean,
+	pieces: readonly WordingPiece[],
+	index: number,
 ): readonly RouteKey[] {
+	const piece = pieces[index];
+	if (piece?.role !== "Part") return lexemeRoutes;
 	if (piece.reflexive) return ["Lexeme/VERB"];
 	if (piece.article) return articleRoutes;
 	if (piece.words > 1) return locutionRoutes;
 	if (onlyPronoun(piece.reads)) return ["Lexeme/PRON"];
-	if (closesSlot && piece.reads.toLocaleLowerCase("de") === "zu")
+	const settled = inflectedDeterminerOrPronoun(piece.reads)
+		? determinerOrPronoun(pieces[index + 1], pieces[index + 2])
+		: undefined;
+	if (settled !== undefined) return [settled];
+	if (
+		closesSlot(pieces, index) &&
+		piece.reads.toLocaleLowerCase("de") === "zu"
+	)
 		return ["Lexeme/PART"];
 	return lexemeRoutes;
 }
@@ -453,7 +515,7 @@ const phrasemeConstituents = Effect.fnUntraced(function* (
 			? [
 					{
 						reads: piece.reads,
-						routes: partRoutes(piece, closesSlot(merged, index)),
+						routes: partRoutes(merged, index),
 					},
 				]
 			: [],
