@@ -15,6 +15,12 @@ const verb = (canonicalForm: string) => ({
 	canonicalForm,
 	coreFeatures: { hasSepPrefix: null },
 });
+const besideOneself = {
+	family: "Locution",
+	kind: "VERB",
+	canonicalForm: "außer sein",
+	coreFeatures: {},
+};
 const subject = {
 	status: "Required",
 	complements: [{ kind: "Case", governedCase: "Nom", referent: "Someone" }],
@@ -42,15 +48,24 @@ async function frame(
 	valency: readonly unknown[],
 	valencyEvidence: readonly unknown[] = [],
 	origin: "New" | "TopUp" = "New",
+	occurrence: {
+		readonly lemma: ReturnType<typeof verb> | typeof besideOneself;
+		readonly sentence: string;
+		readonly target: readonly string[];
+	} = {
+		lemma: verb("schämen"),
+		sentence: "Er schämt sich.",
+		target: ["schämt", "sich"],
+	},
 ) {
 	const luna = knowledgeLuna({ valency: { valency } });
 	const { result, trace } = await produceOnce(
 		{ jev: knowledgeJev().ask, luna: luna.ask },
 		knowledgeInput(
-			verb("schämen"),
+			occurrence.lemma,
 			emoji,
-			"Er schämt sich.",
-			["schämt", "sich"],
+			occurrence.sentence,
+			occurrence.target,
 			{ request: { valency: null }, valencyEvidence, origin },
 		),
 	);
@@ -101,5 +116,39 @@ test("a Reading without 🪞 drops a Required Reflexive Slot and keeps an Option
 	expect(frameOf(optional.result.changes)).toEqual([
 		subject,
 		reflexive("Acc", "Optional"),
+	]);
+});
+
+test("a fixed phrase's Reflexive keeps the preposition the occurrence realized it after", async () => {
+	const ausser = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "ADP",
+		canonicalForm: "außer",
+		coreFeatures: {},
+	} as const;
+	const evidence = {
+		member: 2,
+		complement: {
+			kind: "Reflexive",
+			governedCase: "Dat",
+			preposition: ausser,
+		},
+		realizedCase: "Dat",
+	};
+	const { result } = await frame("🪞😡", [subject], [evidence], "New", {
+		lemma: besideOneself,
+		sentence: "Er war außer sich.",
+		target: ["war", "außer", "sich"],
+	});
+	expect(frameOf(result.changes)).toEqual([
+		subject,
+		{
+			status: "Required",
+			complements: [
+				{ kind: "Reflexive", governedCase: "Dat", preposition: ausser },
+			],
+		},
 	]);
 });

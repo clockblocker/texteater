@@ -157,7 +157,7 @@ export const valency = {
 	),
 	reflexive: paragraph(
 		"valency.reflexive",
-		"A lexical reflexive, a sich no other noun phrase could replace in this meaning, takes a Slot of its own right after the subject, holding one Reflexive complement in the case the meaning fixes: Acc, or Dat where an accusative object or a clause also stands with the verb («beeilen»: Nom, Reflexive Acc; «merken»: Nom, Reflexive Dat, Acc). It is Required exactly when the Emoji Description starts with 🪞. Without 🪞 it is Optional where the word keeps this meaning with and without it («ausruhen»), and absent otherwise. A sich another object could replace in this meaning is an ordinary Acc or Dat Case complement.",
+		"A lexical reflexive, a sich no other noun phrase could replace in this meaning, takes a Slot of its own right after the subject, holding one Reflexive complement in the case the meaning fixes: Acc, or Dat where an accusative object or a clause also stands with the verb («beeilen»: Nom, Reflexive Acc; «merken»: Nom, Reflexive Dat, Acc). Inside a fixed phrase it is the object of the phrase's preposition, which the Reflexive names, in the case that preposition governs there («an sich halten»: Reflexive «an» + Dat). It is Required exactly when the Emoji Description starts with 🪞. Without 🪞 it is Optional where the word keeps this meaning with and without it («ausruhen»), and absent otherwise. A sich another object could replace in this meaning is an ordinary Acc or Dat Case complement.",
 		rules.verbCore,
 		rules.ownsMembers,
 		rules.distinct,

@@ -14,9 +14,11 @@
  * failure.
  *
  * The Reading's 🪞 settles its Reflexive Slot (ADR 0052): a 🪞 Reading's
- * frame has a Required one, right after the subject, in the case the
- * creating occurrence's reflexive realized, else in Luna's; a Reading
- * without 🪞 has no Required one, though an Optional one may stand.
+ * frame has a Required one, right after the subject, as the creating
+ * occurrence's reflexive realized it, else as Luna proposed it; a Reading
+ * without 🪞 has no Required one, though an Optional one may stand. A
+ * Reflexive inside a fixed phrase names its preposition (`außer sein`:
+ * `außer` + Dat).
  */
 
 import { isRecord } from "common-utils";
@@ -90,6 +92,8 @@ const complementSchemas: Readonly<
 		properties: {
 			kind: { type: "string", enum: ["Reflexive"] },
 			governedCase: { type: "string", enum: ["Acc", "Dat"] },
+			// Only inside a fixed phrase: außer sich sein (ADR 0052).
+			preposition: { type: "string" },
 		},
 		required: ["kind", "governedCase"],
 		additionalProperties: false,
@@ -217,7 +221,12 @@ const prepositionLemma = (
 
 /** A proposed complement in Dumrel's shape: a preposition becomes its ADP Lemma. */
 function complementOf(value: unknown): unknown {
-	if (!isRecord(value) || value.kind !== "Preposition") return value;
+	if (
+		!isRecord(value) ||
+		(value.kind !== "Preposition" && value.kind !== "Reflexive") ||
+		value.preposition === undefined
+	)
+		return value;
 	return {
 		...value,
 		preposition:
@@ -238,7 +247,14 @@ type ProposedSlot = Readonly<Record<string, unknown>> & {
 /** Why Dumgen refuses a Slot before Dumrel sees it, if it does. */
 function slotProblem(slot: ProposedSlot): string | undefined {
 	for (const complement of slot.complements) {
-		if (!isRecord(complement) || complement.kind !== "Preposition")
+		if (!isRecord(complement)) continue;
+		// A Reflexive's preposition is a fixed phrase's, so any the ADP Case
+		// Table lists; a Preposition complement's is one a governor selects.
+		const reflexive = complement.kind === "Reflexive";
+		if (
+			!(complement.kind === "Preposition") &&
+			!(reflexive && complement.preposition !== undefined)
+		)
 			continue;
 		const { preposition, governedCase } = complement;
 		const form =
@@ -246,7 +262,7 @@ function slotProblem(slot: ProposedSlot): string | undefined {
 			typeof preposition.canonicalForm === "string"
 				? preposition.canonicalForm
 				: undefined;
-		if (form === undefined || !governable.has(form))
+		if (form === undefined || (!reflexive && !governable.has(form)))
 			return `${form} is no preposition a governor selects`;
 		if (typeof governedCase !== "string")
 			return `${form} names no case it governs`;
@@ -400,21 +416,25 @@ function attestedSlots(
 const isReflexiveSlot = (slot: GermanSlot) =>
 	slot.complements.some(({ kind }) => kind === "Reflexive");
 
-/** The case of a Slot's Reflexive or an occurrence's, if it names one. */
-function reflexiveCase(
-	complements: readonly Dumrel.GermanValencyComplement[],
-): "Acc" | "Dat" | undefined {
-	for (const complement of complements)
-		if (complement.kind === "Reflexive") return complement.governedCase;
-	return undefined;
-}
+type Reflexive = Extract<
+	Dumrel.GermanValencyComplement,
+	{ readonly kind: "Reflexive" }
+>;
+
+/** A Slot's Reflexive or an occurrence's, if it names one. */
+const reflexiveOf = (complements: readonly { readonly kind: string }[]) =>
+	complements.find(
+		(complement): complement is Reflexive =>
+			complement.kind === "Reflexive",
+	);
 
 /**
  * The frame with the Reflexive Slot the Reading's 🪞 settles (ADR 0052),
  * and the Slot it drops. A 🪞 Reading's Reflexive is Required and stands
- * right after the subject, in the case the creating occurrence realized,
- * else the one Luna proposed. A Reading without 🪞 keeps no Required one.
- * A 🪞 Reading whose case neither names is a failure.
+ * right after the subject, as the creating occurrence realized it, with
+ * its case and any fixed phrase's preposition, else as Luna proposed it.
+ * A Reading without 🪞 keeps no Required one. A 🪞 Reading neither names a
+ * Reflexive for is a failure.
  */
 function settledReflexive(
 	reading: Dumling.Reading<"de">,
@@ -445,13 +465,11 @@ function settledReflexive(
 					},
 				}
 			: { frame: [...frame] };
-	const attested = reflexiveCase(
-		evidence.map(({ complement }) => complement),
-	);
-	const offered = proposed && reflexiveCase(proposed.complements);
-	const governedCase =
+	const attested = reflexiveOf(evidence.map(({ complement }) => complement));
+	const offered = proposed && reflexiveOf(proposed.complements);
+	const complement =
 		origin === "New" ? (attested ?? offered) : (offered ?? attested);
-	if (governedCase === undefined)
+	if (complement === undefined)
 		return {
 			failure: {
 				aspect: "valency",
@@ -468,7 +486,7 @@ function settledReflexive(
 	);
 	const slot: GermanSlot = {
 		status: "Required",
-		complements: [{ kind: "Reflexive", governedCase }],
+		complements: [complement],
 	};
 	return {
 		frame: [

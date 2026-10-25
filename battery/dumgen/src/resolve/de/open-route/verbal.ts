@@ -9,6 +9,8 @@ import {
 	type AuthoredMember,
 	authoredRealizations,
 	auxiliarySurfaceFeatures,
+	germanAdpositionAllowedCases,
+	germanAdpositionEntry,
 } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
 import * as Result from "effect/Result";
@@ -133,6 +135,11 @@ type Auxiliary = { readonly member: Member; readonly uses: readonly string[] };
 export type VerbalSatellites = {
 	readonly auxiliaries: readonly Auxiliary[];
 	readonly reflexive: Member | undefined;
+	/**
+	 * The preposition a verbal Locution's reflexive is the object of, inside
+	 * its fixed phrase (`außer sich sein`): the member right before it.
+	 */
+	readonly reflexivePreposition: Preposition | undefined;
 	/** Every member that spells es; the subject es when there is one only. */
 	readonly expletives: readonly Member[];
 	readonly expletive: Member | undefined;
@@ -150,6 +157,48 @@ export type VerbalPlan = Omit<VerbalSatellites, "auxiliaries"> &
 		readonly prefixes: readonly string[];
 		readonly prefix: Choice | undefined;
 	};
+
+/** A member preposition, and the cases the ADP Case Table lets it take. */
+type Preposition = {
+	readonly member: Member;
+	readonly canonicalForm: string;
+	readonly cases: readonly string[];
+};
+
+/**
+ * The preposition a verbal Locution's reflexive is the object of: the
+ * member right before it, with nothing but space between, that the ADP
+ * Case Table lists (ADR 0052, ADR 0053).
+ */
+function prepositionBefore(
+	target: Target,
+	reflexive: Member,
+): Preposition | undefined {
+	const member = target.members[reflexive.position - 1];
+	if (
+		!member ||
+		target.segments
+			.slice(member.segment + 1, reflexive.segment)
+			.some((segment) => segment.kind === "ResolvableText")
+	)
+		return undefined;
+	const canonicalForm = fold(spellingOf(member));
+	const entry = germanAdpositionEntry({ family: "Lexeme", canonicalForm });
+	return entry
+		? { member, canonicalForm, cases: germanAdpositionAllowedCases(entry) }
+		: undefined;
+}
+
+/** The reflexive case a preposition's table leaves, when it leaves one. */
+function prepositionCase(
+	preposition: Preposition | undefined,
+): "Acc" | "Dat" | undefined {
+	const cases = (preposition?.cases ?? []).filter(
+		(grammaticalCase): grammaticalCase is "Acc" | "Dat" =>
+			grammaticalCase === "Acc" || grammaticalCase === "Dat",
+	);
+	return cases.length === 1 ? cases[0] : undefined;
+}
 
 /** A unit's verbal satellites, none off a VERB route. */
 export function verbalSatellites(
@@ -170,6 +219,10 @@ export function verbalSatellites(
 	return {
 		auxiliaries,
 		reflexive,
+		reflexivePreposition:
+			reflexive && shape.locution
+				? prepositionBefore(target, reflexive)
+				: undefined,
 		expletives,
 		expletive: expletives.length === 1 ? expletives[0] : undefined,
 	};
@@ -206,7 +259,9 @@ export function askVerbal(
 		),
 	}));
 	const reflexiveCase =
-		reflexive && reflexives.get(fold(reflexive.text)) === undefined
+		reflexive &&
+		reflexives.get(fold(reflexive.text)) === undefined &&
+		prepositionCase(satellites.reflexivePreposition) === undefined
 			? questionnaire.choice(
 					"reflexive",
 					fill(question.reflexive, { m: reflexive.ref }),
@@ -347,24 +402,42 @@ export const readVerbal = answerReader(function* (
 /**
  * The valency evidence a lexical reflexive member gives (ADR 0052): its
  * Reflexive complement, in the case its form shows or jev judged, which is
- * the case it realizes.
+ * the case it realizes. A reflexive inside a fixed phrase names the
+ * preposition it is the object of, in the case that preposition's table
+ * leaves when it leaves one.
  */
 const reflexiveEvidence = answerReader(function* (
 	verbal: VerbalPlan,
 	answered: Answered,
 ): ReaderBody<ValencyEvidence | undefined> {
-	const { reflexive } = verbal;
+	const { reflexive, reflexivePreposition } = verbal;
 	if (!reflexive) return undefined;
 	const governedCase = verbal.reflexiveCase
 		? yield* answered.pick(verbal.reflexiveCase)
-		: reflexives.get(fold(reflexive.text));
+		: (prepositionCase(reflexivePreposition) ??
+			reflexives.get(fold(reflexive.text)));
 	if (governedCase === undefined)
 		throw Error(
 			"A reflexive whose form leaves its case open was not asked",
 		);
 	return {
 		member: reflexive.position,
-		complement: { kind: "Reflexive", governedCase },
+		complement: {
+			kind: "Reflexive",
+			governedCase,
+			...(reflexivePreposition
+				? {
+						preposition: {
+							unitKind: "Lemma",
+							language: "de",
+							family: "Lexeme",
+							kind: "ADP",
+							canonicalForm: reflexivePreposition.canonicalForm,
+							coreFeatures: {},
+						},
+					}
+				: {}),
+		},
 		realizedCase: governedCase,
 	};
 });

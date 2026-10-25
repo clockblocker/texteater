@@ -193,13 +193,14 @@ export const reflexiveForms: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * A wording without the reflexive a citation puts first, or right after a
- * leading es, as lookup strips it (ADR 0052): a model's `sich freuen` is
- * the Lemma `freuen`, and `es sich gemütlich machen` is `es gemütlich
- * machen`.
+ * A verb's or verbal Locution's wording without the lexical reflexive a
+ * citation prints (ADR 0052): first, after a leading es or after a fixed
+ * phrase's preposition. A model's `sich freuen` is the Lemma `freuen`,
+ * `es sich gemütlich machen` is `es gemütlich machen` and `außer sich
+ * sein` is `außer sein`. A Saying keeps its sich, so it never comes here.
  */
 export const withoutReflexive = (wording: string): string =>
-	wording.replace(/^(es\s+)?sich\s+/u, "$1");
+	wording.replace(/(^|\s)sich\s+/u, "$1");
 
 /**
  * Each 1st and 2nd person object pronoun and the subject its reflexive use

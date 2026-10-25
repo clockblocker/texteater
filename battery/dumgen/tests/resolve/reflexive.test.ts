@@ -96,6 +96,46 @@ test("a reflexive whose form shows its case is not asked, and a verbal Locution'
 	]);
 });
 
+test("a reflexive inside a fixed phrase names its preposition, in the case the ADP Case Table leaves, and leaves the headword", async () => {
+	// Er0 _1 war2 _3 außer4 _5 sich6 .7
+	const jev = fakeJev({ ...finite, tense: "Past" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: writes("außer sich sein").ask },
+		{
+			sentence: sentenceOf("Er war außer sich."),
+			unit: unitOf([2, 4, 6], "Locution/VERB"),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.lemma.canonicalForm).toBe("außer sein");
+	expect(attestation.surface.normalizedSurface).toBe("war außer");
+	expect(attestation).toHaveProperty("valencyEvidence", [
+		{
+			member: 2,
+			complement: {
+				kind: "Reflexive",
+				governedCase: "Dat",
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: "außer",
+					coreFeatures: {},
+				},
+			},
+			realizedCase: "Dat",
+		},
+	]);
+	// Neither a reflexive case nor a governed außer is asked.
+	expect(Object.keys(jev.sent[0]?.questions ?? {})).not.toContain(
+		"reflexive",
+	);
+	expect(Object.keys(jev.sent[0]?.questions ?? {})).not.toContain(
+		"governed_m1",
+	);
+});
+
 /** The Attestation and unit of a click on `sentence`, resolved with a fake jev and Luna. */
 async function clickOn(
 	sentence: string,

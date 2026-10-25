@@ -63,7 +63,7 @@ export const policy = {
 	),
 	reflexive: paragraph(
 		"policy.reflexive",
-		"A lexical reflexive is a member of its verb's unit, never part of its Canonical Form: it fills the Reflexive Slot of the verb's meaning, in the one case that meaning fixes. It is dative where an accusative object, a fixed noun of the expression or a clause also stands with the verb («ich merke mir den Weg», «du legst dir Geld zurück»), and in the few expressions that always take a dative one; otherwise it is accusative («wir beeilen uns»).",
+		"A lexical reflexive is a member of its verb's unit, never part of its Canonical Form: it fills the Reflexive Slot of the verb's meaning, in the one case that meaning fixes. It is dative where an accusative object, a fixed noun of the expression or a clause also stands with the verb («ich merke mir den Weg», «du legst dir Geld zurück»), and in the few expressions that always take a dative one; after a preposition of a fixed phrase it takes the case that preposition governs there («an sich halten»: dative); otherwise it is accusative («wir beeilen uns»).",
 		rules.verbCore,
 		rules.ownsMembers,
 	),

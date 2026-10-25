@@ -209,8 +209,12 @@ export const produceRelations = (
 		const candidates = [
 			...new Map(
 				written
+					.map(normalizeForm)
+					// A Saying keeps its sich (ADR 0052).
 					.map((candidate) =>
-						withoutReflexive(normalizeForm(candidate)),
+						source.family === "Saying"
+							? candidate
+							: withoutReflexive(candidate),
 					)
 					.filter(
 						(candidate) =>

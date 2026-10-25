@@ -156,6 +156,9 @@ function plan(target: Target): Plan {
 		[
 			...satellites.auxiliaries.map(({ member }) => member),
 			...(satellites.reflexive ? [satellites.reflexive] : []),
+			...(satellites.reflexivePreposition
+				? [satellites.reflexivePreposition.member]
+				: []),
 			...satellites.expletives,
 			...(article ? [article.member] : []),
 		].map(({ position }) => position),
