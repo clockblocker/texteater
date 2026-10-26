@@ -13,7 +13,7 @@
  *   flat. Before it offers a prefix and a base verb against a prefix, a
  *   noun or adjective and the citation ending, jev weighs whether the base
  *   is a verb (`word-gates.ts`). When the pick is contested, jev weighs
- *   whether each contender gives the Reading's sense, in
+ *   which contender gives the Reading's sense, in
  *   `breakdown-senses` (`word-senses.ts`). A compound's head takes the
  *   word's own Kind, and code settles more parts unasked (`word-parts.ts`);
  *   a noun's first of two parts may be a cranberry piece, a Root (`Brom` in
@@ -73,6 +73,12 @@ import {
 } from "./phraseme-parts.js";
 import { locutionQuestion, phrasemeRouteGuide } from "./phraseme-prompts.js";
 import {
+	keptPrefixOption,
+	prefixCutInstructions,
+	prefixCutOption,
+	withTestedPrefixes,
+} from "./prefix-cut.js";
+import {
 	cranberryOption,
 	type OpenPart,
 	partTargets,
@@ -89,10 +95,8 @@ import {
 	adjectiveQuestion,
 	mayBeCranberry,
 	nounQuestion,
-	prefixCutQuestion,
 	suffixBaseRoute,
 	verbBaseQuestion,
-	withTestedPrefixes,
 	withVerbBases,
 	wordQuestion,
 } from "./word-gates.js";
@@ -109,8 +113,10 @@ import {
 } from "./word-prompts.js";
 import {
 	citedWord,
+	noSenseOption,
 	senseChecked,
-	senseQuestion,
+	senseInstructions,
+	senseOption,
 	weighedOptions,
 } from "./word-senses.js";
 
@@ -234,7 +240,7 @@ const chosenAnalysis = Effect.fnUntraced(function* (
 	const tested = yield* withTestedPrefixes(
 		weighedOptions(analyses, answer.probabilities),
 		picked,
-		whole,
+		{ whole, kind: sense.kind },
 		ask,
 	);
 	const checked = yield* senseChecked(
@@ -368,8 +374,12 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	wordQuestion("word", "…"),
 	nounQuestion("word", "…"),
 	adjectiveQuestion("word", "…"),
-	prefixCutQuestion("word", "…"),
-	senseQuestion({ pieces: [], label: "…" }, "…", "…", "NOUN"),
+	prefixCutInstructions("word", "…"),
+	prefixCutOption("word", "…", "…"),
+	keptPrefixOption("word", "…"),
+	senseInstructions("…", "…"),
+	senseOption({ pieces: [], label: "…" }, "NOUN"),
+	noSenseOption,
 	...germanSuffixes.flatMap(({ sense }) => (sense ? [sense] : [])),
 	...Object.values(hyphenPrefixGlosses),
 	locutionQuestion("wording", "…"),

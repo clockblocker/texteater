@@ -79,7 +79,7 @@ test("a compound the sense check chose over the pick is no cranberry piece", asy
 	// jev weighs Lan no word, but the sense check named Lan + dung as two words.
 	const judge = senseJudge(
 		{ "Land + -ung (suffix)": 0.9, "Lan + dung": 0.03 },
-		{ "Is it a Dung": 0.9 },
+		{ "it is a Dung": 0.9 },
 		"r_0=Lexeme/NOUN",
 		"Dung",
 	);

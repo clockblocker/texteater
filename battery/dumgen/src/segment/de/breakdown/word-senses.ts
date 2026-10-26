@@ -1,13 +1,13 @@
 /**
  * The sense check of German `segment.inConstituents` (#1241 round 4,
- * proposal 1): on a contested word only, jev answers one yes-or-no
- * question per contending analysis, in one request, `breakdown-senses`:
- * does this analysis give the sense the Reading's emoji names? Each
- * question names the word with its article and the emoji, and carries a
- * concrete test written by code from the analysis's shape: a compound
- * must be a kind of its head ("Is it a Tier?"), a derivation what its
- * suffix makes of its base (dumcorpus's affix inventory glosses the
- * common suffixes).
+ * proposal 1; relative since round 7): on a contested word only, jev
+ * answers one question over the contending analyses and `none`, in one
+ * request, `breakdown-senses`: which of these splits gives the sense the
+ * Reading's emoji names? The question names the word with its article and
+ * the emoji, and each option carries a concrete claim written by code from
+ * its analysis's shape: a compound is a kind of its head ("it is a Tier"),
+ * a derivation what its suffix makes of its base (dumcorpus's affix
+ * inventory glosses the common suffixes).
  *
  * - **Contested.** The analysis question's runner-up, `none` included,
  *   weighs at least `contestFloor`, or the pick is a base and a suffix:
@@ -18,23 +18,20 @@
  *   not the sense.
  * - **Contenders.** The pick, every option at or above the floor, the
  *   two-part analyses cutting one letter off a derivation's cut, and
- *   `none`. `none` gets no question of its own: it gives the sense as far
- *   as no analysis does, one minus the best analysis's answer (a question
- *   for it weighed Leiter 🪜 and 👔 alike, 0.21 and 0.22).
- * - **Combining.** The pick stands when its own answer is a yes (at least
- *   0.5), since analyses that give one sense alike (a prefix and a noun, or
- *   a verb and a suffix) are a bracketing question, not a sense question.
- *   Otherwise each contender scores its answer times its analysis weight
- *   raised to `weightExponent`, and the best score wins: the answer leads,
- *   so a gold analysis the analysis question weighed 0.03 can still win
- *   when it alone gives the sense, while the weight still counts.
+ *   `none`, an option of its own: none of these splits gives the sense.
+ * - **Combining.** The splits are weighed against each other, so a pick
+ *   that gives the sense loses to a contender that gives it better (round
+ *   6 kept a pick whose own yes stood over a better one). Each contender
+ *   scores its share of the answer times its analysis weight raised to
+ *   `weightExponent`, and the best score wins: the answer leads, so a gold
+ *   analysis the analysis question weighed 0.03 can still win when it alone
+ *   gives the sense, while the weight still counts.
  *
  * Its wording names no Breakdown case (#693).
  */
-import type { Questions } from "@typesafe-ai/sdk";
 import { germanSuffixes } from "dumcorpus/inventories";
 import * as Effect from "effect/Effect";
-import { type Ask, type AskFailure, noul, noulOf } from "../../ask.js";
+import { type Ask, type AskFailure, choice, choiceOf } from "../../ask.js";
 import type { Whole } from "./targets.js";
 import type { WordAnalysis, WordPiece } from "./word-analyses.js";
 
@@ -46,9 +43,6 @@ export type Weighed = {
 
 /** A runner-up at or above this weight contests the pick. */
 const contestFloor = 0.15;
-
-/** A sense answer at or above this is a yes: the analysis gives the sense. */
-const yes = 0.5;
 
 /**
  * How much the analysis weight counts beside the sense answer: a contender
@@ -128,17 +122,17 @@ function suffixSense(suffix: WordPiece, base: string): string {
 	).replaceAll("{base}", base);
 }
 
-/** The question an analysis's sense must pass, by its shape, after "Think of … in the sense …". */
-function testOf(analysis: WordAnalysis, kind: string): string {
+/** The claim an option makes about an analysis's sense, by its shape. */
+function claimOf(analysis: WordAnalysis, kind: string): string {
 	const [first, second, third] = analysis.pieces;
 	const made = (from: string, sense: string) =>
-		`Was it made from ${from}, so that it is ${sense}? Answer no when its letters only happen to contain them.`;
+		`it was made from ${from}, so that it is ${sense}`;
 	if (first?.role === "Word" && second?.role === "Word" && !third) {
 		if (kind === "NOUN") {
 			const head = capitalized(second.letters);
-			return `Is it a ${head}, a kind of ${head} that ${first.letters} tells apart? Answer no when it is no ${head} at all.`;
+			return `it is a ${head}, a kind of ${head} that ${first.letters} tells apart`;
 		}
-		return `Does it mean ${second.letters}, in a way ${first.letters} tells apart? Answer no when it does not mean ${second.letters} at all.`;
+		return `it means ${second.letters}, in a way ${first.letters} tells apart`;
 	}
 	if (first?.role === "Word" && second?.role === "Suffix" && !third)
 		return made(
@@ -151,11 +145,8 @@ function testOf(analysis: WordAnalysis, kind: string): string {
 			`still a kind of ${second.letters}, changed by the prefix`,
 		);
 	if (first?.role === "Prefix" && second?.role === "Word")
-		return made(
-			`${second.letters} with the prefix ${first.letters}- and the verb ending`,
-			`to make, give, become or treat with ${second.letters}`,
-		);
-	return made(analysis.label, "something whose sense comes from theirs");
+		return `it was made from ${second.letters} with the prefix ${first.letters}- and the verb ending, so that it means to make, give, become or treat with ${second.letters}`;
+	return made("these parts", "something whose sense comes from theirs");
 }
 
 /** The word as the sense question names it: a noun with its article (`das Rentier`). */
@@ -180,13 +171,17 @@ export function citedWord(word: string, gender: unknown): string {
 	return named.length > 0 ? `${named.join("/")} ${word}` : word;
 }
 
-/** Whether an analysis gives the sense `emoji` names of `cited` (`das Rentier`). */
-export const senseQuestion = (
-	analysis: WordAnalysis,
-	cited: string,
-	emoji: string,
-	kind: string,
-) => `Think of ${cited} in the sense ${emoji}. ${testOf(analysis, kind)}`;
+/** The sense question: which split gives the sense `emoji` names of `cited` (`das Rentier`). */
+export const senseInstructions = (cited: string, emoji: string) =>
+	`Think of ${cited} in the sense ${emoji}. Which of these splits gives that sense: which one was it made from?`;
+
+/** A contender's option in the sense question: its analysis and its claim. */
+export const senseOption = (analysis: WordAnalysis, kind: string) =>
+	`${analysis.label}: ${claimOf(analysis, kind)}`;
+
+/** The sense question's `none`. */
+export const noSenseOption =
+	"None of these: its letters only happen to contain those parts, and it was made from none of them";
 
 /** The contender with the best score: its sense answer times its weight to `weightExponent`. */
 export function bestContender(
@@ -202,8 +197,8 @@ export function bestContender(
 
 /**
  * The analysis a word breaks down by once its sense is checked: `picked`,
- * the analysis question's pick, unless the word is contested and the pick
- * fails its sense test, then the best contender; in one request.
+ * the analysis question's pick, unless the word is contested, then the
+ * contender with the best score, in one request.
  */
 export const senseChecked = Effect.fnUntraced(function* (
 	options: readonly Weighed[],
@@ -222,27 +217,26 @@ export const senseChecked = Effect.fnUntraced(function* (
 	const analyses = contenders.flatMap(({ analysis }) =>
 		analysis === undefined ? [] : [analysis],
 	);
-	const questions: Questions = Object.fromEntries(
-		analyses.map((analysis, index) => [
-			`s_${index}`,
-			noul(senseQuestion(analysis, word.cited, emoji, word.kind)),
-		]),
-	);
 	const answers = yield* ask({
 		stage: "breakdown-senses",
 		state: word.whole.state,
-		questions,
+		questions: {
+			s: choice(senseInstructions(word.cited, emoji), {
+				...Object.fromEntries(
+					analyses.map((analysis, index) => [
+						`a${index}`,
+						senseOption(analysis, word.kind),
+					]),
+				),
+				none: noSenseOption,
+			}),
+		},
 	});
-	const fits = new Map(
-		analyses.map((analysis, index) => [
-			analysis,
-			noulOf(answers, `s_${index}`),
-		]),
-	);
-	const none = 1 - Math.max(0, ...fits.values());
+	const { probabilities } = choiceOf(answers, "s");
 	const fitOf = (analysis: WordAnalysis | undefined) =>
-		analysis === undefined ? none : (fits.get(analysis) ?? 0);
-	if (fitOf(picked) >= yes) return picked;
+		analysis === undefined
+			? (probabilities.none ?? 0)
+			: (probabilities[`a${analyses.indexOf(analysis)}`] ?? 0);
 	const best = bestContender(
 		contenders.map((weighed) => ({
 			weighed,

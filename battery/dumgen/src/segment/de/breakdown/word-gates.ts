@@ -21,10 +21,9 @@
  *   Before -ig and -lich, the noun is tested with its umlaut undone and its
  *   dropped -e restored (`gnäd` is Gnade), and a base that is also an
  *   adjective keeps its route question (#1241 round 6).
- * - **A fossilized prefix stays inside the word.** An analysis or a split
- *   that cuts `ge-` off stays only when jev weighs the affix test passed
- *   (system ADR 0051, #1243): a dictionary's word-formation analysis cuts
- *   the prefix off this word (#1241 round 6).
+ * - **A fossilized prefix stays inside the word** (`prefix-cut.ts`). An
+ *   analysis or a split that cuts `ge-` off stays only when jev weighs the
+ *   affix test passed (system ADR 0051, #1243).
  * - **A bottom word's Root is no word** (`morphemes.ts`). A bottom word has
  *   no word inside it (ADR 0051), so a split that cuts a suffix off a word
  *   or a verb's stem is no split of it.
@@ -38,7 +37,6 @@ import type { RouteKey } from "../routes.js";
 import { restoredNouns, withoutUmlaut } from "./forms.js";
 import type { Whole } from "./targets.js";
 import type { WordAnalysis } from "./word-analyses.js";
-import { contendersOf, type Weighed } from "./word-senses.js";
 
 /** A yes must reach this for the shape it gates to be offered or kept. */
 const gateFloor = 0.5;
@@ -73,14 +71,6 @@ export const nounQuestion = (key: string, letters: string) =>
 /** Whether letters, as they stand, are an adjective. */
 export const adjectiveQuestion = (key: string, letters: string) =>
 	`In \`${key}\`, is "${letters}", spelled exactly so, an adjective a dictionary lists as a headword?`;
-
-/**
- * Whether the dictionary's word-formation analysis cuts `prefix` off the
- * word: the affix test (system ADR 0051, #1243). Its example is no
- * Breakdown case (#693).
- */
-export const prefixCutQuestion = (key: string, prefix: string) =>
-	`In \`${key}\`, does a dictionary's word-formation analysis cut the prefix ${prefix} off this word: the DWDS Wortzerlegung, else the Wiktionary etymology? Answer no when ${prefix} stays inside a word whose base died out or never stood on its own (Geselle).`;
 
 /** Whether a noun's first part is a word, or a word's stem, of its own. */
 export const wordQuestion = (key: string, letters: string) =>
@@ -218,86 +208,6 @@ export const suffixBaseRoute = Effect.fnUntraced(function* (
 	return restoring
 		? { route: "Lexeme/NOUN", forms: listed }
 		: { route: "Lexeme/NOUN" };
-});
-
-/**
- * The prefixes that fossilized inside many simple words, so a cut there
- * must pass the affix test (system ADR 0051): `ge-`, which Gefahr keeps,
- * its base having died out (#1241 round 6).
- */
-const affixTestedPrefixes: ReadonlySet<string> = new Set(["ge-"]);
-
-/** Whether a prefix's cut must pass the affix test before it stays. */
-export const isAffixTested = (prefix: string) =>
-	affixTestedPrefixes.has(prefix);
-
-/** Whether jev weighs the cut of `prefix` off the word confirmed by the affix test, in one request. */
-export const prefixCutConfirmed = Effect.fnUntraced(function* (
-	prefix: string,
-	whole: Whole,
-	ask: Ask,
-): Effect.fn.Return<boolean, AskFailure> {
-	const answers = yield* ask({
-		stage: "breakdown-words",
-		state: whole.state,
-		questions: { p_0: noul(prefixCutQuestion(whole.key, prefix)) },
-	});
-	return noulOf(answers, "p_0") >= gateFloor;
-});
-
-/** The affix-tested prefix an analysis cuts off first, if any. */
-function testedPrefix(analysis: WordAnalysis | undefined) {
-	const [first] = analysis?.pieces ?? [];
-	return first?.role === "Prefix" && isAffixTested(first.canonicalForm)
-		? first.canonicalForm
-		: undefined;
-}
-
-/**
- * The analysis question's options and pick once every analysis that cuts
- * an affix-tested prefix off the word passes the affix test: asked, one
- * request per prefix, only when such an analysis is the pick or one of
- * its contenders (`word-senses.ts`). One that fails leaves the options,
- * and when it was the pick, the heaviest option left is.
- */
-export const withTestedPrefixes = Effect.fnUntraced(function* (
-	options: readonly Weighed[],
-	picked: WordAnalysis | undefined,
-	whole: Whole,
-	ask: Ask,
-): Effect.fn.Return<
-	{
-		readonly options: readonly Weighed[];
-		readonly picked: WordAnalysis | undefined;
-	},
-	AskFailure
-> {
-	const inPlay =
-		contendersOf(options) ??
-		options.filter(({ analysis }) => analysis === picked);
-	const prefixes = new Set(
-		inPlay.flatMap(({ analysis }) => {
-			const prefix = testedPrefix(analysis);
-			return prefix === undefined ? [] : [prefix];
-		}),
-	);
-	const failed = new Set<string>();
-	for (const prefix of prefixes)
-		if (!(yield* prefixCutConfirmed(prefix, whole, ask)))
-			failed.add(prefix);
-	if (failed.size === 0) return { options, picked };
-	const fails = (analysis: WordAnalysis | undefined) => {
-		const prefix = testedPrefix(analysis);
-		return prefix !== undefined && failed.has(prefix);
-	};
-	const kept = options.filter(({ analysis }) => !fails(analysis));
-	const [heaviest] = [...kept].sort(
-		(left, right) => right.weight - left.weight,
-	);
-	return {
-		options: kept,
-		picked: fails(picked) ? heaviest?.analysis : picked,
-	};
 });
 
 /**

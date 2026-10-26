@@ -21,7 +21,7 @@
  * its split out, since a word built on it would have had Constituents.
  * A split cutting off a fossilized prefix (`ge-`) stays only when jev
  * weighs the affix test passed, as `segment.inConstituents` asks it
- * (`word-gates.ts`, #1241 round 6).
+ * (`prefix-cut.ts`, #1241 rounds 6 and 7).
  */
 
 import {
@@ -39,7 +39,8 @@ import {
 	breakdownState,
 	type ProducedPiece,
 } from "../../breakdown.js";
-import { isAffixTested, prefixCutConfirmed, wordRoots } from "./word-gates.js";
+import { isAffixTested, prefixCutConfirmed } from "./prefix-cut.js";
+import { wordRoots } from "./word-gates.js";
 
 const lower = (text: string) => text.toLocaleLowerCase("de");
 
@@ -137,35 +138,49 @@ const label = (pieces: readonly ProducedPiece[]) =>
 		)
 		.join(" · ");
 
-/** The affix-tested prefix a split cuts off, if any (`ge-`). */
+/** The affix-tested prefix a split cuts off with its letters, if any (`ge-`). */
 const testedPrefixOf = (split: Split) => {
 	const [first] = split;
 	return first?.target?.kind === "Prefix" &&
 		isAffixTested(first.target.canonicalForm)
-		? first.target.canonicalForm
+		? { prefix: first.target.canonicalForm, letters: first.letters }
 		: undefined;
 };
 
-/** The splits without those whose fossil-prone prefix jev weighs unconfirmed, one request per prefix. */
+/**
+ * The splits without those whose fossil-prone prefix jev weighs
+ * unconfirmed, one request per prefix, which names the word it leaves.
+ */
 const withoutUnconfirmedPrefixes = Effect.fnUntraced(function* (
 	splits: readonly Split[],
+	word: { readonly form: string; readonly kind: string },
 	state: ReturnType<typeof breakdownState>,
 	ask: Ask,
 ): Effect.fn.Return<readonly Split[], AskFailure> {
 	if (splits.length < 2) return splits;
-	const prefixes = new Set(
+	const prefixes = new Map(
 		splits.flatMap((split) => {
-			const prefix = testedPrefixOf(split);
-			return prefix === undefined ? [] : [prefix];
+			const cut = testedPrefixOf(split);
+			return cut === undefined ? [] : [[cut.prefix, cut.letters]];
 		}),
 	);
 	const failed = new Set<string>();
-	for (const prefix of prefixes)
-		if (!(yield* prefixCutConfirmed(prefix, { key: "word", state }, ask)))
+	for (const [prefix, letters] of prefixes)
+		if (
+			!(yield* prefixCutConfirmed(
+				prefix,
+				{
+					letters: word.form.slice(letters.length),
+					noun: word.kind === "NOUN",
+				},
+				{ key: "word", state },
+				ask,
+			))
+		)
 			failed.add(prefix);
 	return splits.filter((split) => {
-		const prefix = testedPrefixOf(split);
-		return prefix === undefined || !failed.has(prefix);
+		const cut = testedPrefixOf(split);
+		return cut === undefined || !failed.has(cut.prefix);
 	});
 });
 
@@ -209,7 +224,12 @@ export const germanMorphemes = Effect.fnUntraced(function* (
 		const root = rootOf(split);
 		return root === undefined || !words.has(root);
 	});
-	const kept = yield* withoutUnconfirmedPrefixes(unrooted, state, ask);
+	const kept = yield* withoutUnconfirmedPrefixes(
+		unrooted,
+		{ form: word, kind: lemma.kind },
+		state,
+		ask,
+	);
 	if (kept.length === 1) return bare;
 	const answers = yield* ask({
 		stage: "breakdown-morphemes",

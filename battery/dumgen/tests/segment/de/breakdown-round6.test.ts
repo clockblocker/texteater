@@ -7,7 +7,7 @@ import { restoredNouns } from "../../../src/segment/de/breakdown/forms.js";
 import { germanMorphemes } from "../../../src/segment/de/breakdown/morphemes.js";
 import { noneOption } from "../../../src/segment/de/breakdown/word-prompts.js";
 import { input, judgeWanting, senseJudge, shown } from "./breakdown-support.js";
-import { asked, noul } from "./fake-judge.js";
+import { asked, picked } from "./fake-judge.js";
 
 // The round-6 fixes (#1241), each shown on a word or wording that is no
 // Breakdown Record.
@@ -17,12 +17,17 @@ const run = async (reading: BreakdownInput, ask: Ask) => {
 	return result.kind === "Constituents" ? shown(result.pieces) : result.kind;
 };
 
-/** `ask` with the affix test's question answered `weight`. */
+/** `ask` with the affix test's cut weighed `weight`, no cut the rest. */
 const prefixTest =
 	(weight: number, ask: Ask): Ask =>
 	(request) =>
 		"p_0" in request.questions
-			? asked(() => ({ p_0: noul(weight) }))(request)
+			? asked(() => ({
+					p_0: picked(weight >= 0.5 ? "c0" : "none", {
+						c0: weight,
+						none: 1 - weight,
+					}),
+				}))(request)
 			: ask(request);
 
 /** Every question text a judge's requests held. */
