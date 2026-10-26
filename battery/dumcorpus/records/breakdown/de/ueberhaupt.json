@@ -16,31 +16,49 @@
 	},
 	"knowledge": {
 		"breakdown": {
-			"morphemes": [
+			"constituents": [
 				{
-					"letters": "überhaupt",
+					"letters": "über",
 					"target": {
 						"language": "de",
-						"canonicalForm": "überhaupt",
+						"canonicalForm": "über-",
 						"family": "Morpheme",
-						"kind": "Root"
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "haupt",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Haupt",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					}
 				}
 			]
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0051"],
+		"adrs": ["ADR-0050"],
 		"rules": [],
 		"references": [
 			{
 				"title": "DWDS: überhaupt",
 				"url": "https://www.dwds.de/wb/%C3%BCberhaupt",
-				"supports": "No Wortzerlegung; Adverb 'aufs Ganze gesehen'"
+				"supports": "No Wortzerlegung; Etymologie: Zusammenrückung der Präp. über mit dem Akkusativ des Substantivs Haupt"
+			},
+			{
+				"title": "en.wiktionary: überhaupt",
+				"url": "https://en.wiktionary.org/wiki/%C3%BCberhaupt",
+				"supports": "'From Middle High German überhoubet, equivalent to über- + Haupt'"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "weil Soldaten überhaupt nicht sehr für derlei Dinge sind, at all. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root überhaupt alone."
+		"rationale": "weil Soldaten überhaupt nicht sehr für derlei Dinge sind, at all. DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: über- + Haupt (ADR 0050). Both judges cut it so on 2026-10-26; which Lemma über links to, the Prefix über- on the closed particle list or the ADP über DWDS's Zusammenrückung names, is contested (#1241)."
 	}
 }

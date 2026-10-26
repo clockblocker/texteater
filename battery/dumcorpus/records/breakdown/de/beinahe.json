@@ -16,31 +16,51 @@
 	},
 	"knowledge": {
 		"breakdown": {
-			"morphemes": [
+			"constituents": [
 				{
-					"letters": "beinahe",
+					"letters": "bei",
 					"target": {
+						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "beinahe",
-						"family": "Morpheme",
-						"kind": "Root"
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "bei",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": "nahe",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "nah",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
 					}
 				}
 			]
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0051"],
+		"adrs": ["ADR-0050"],
 		"rules": [],
 		"references": [
 			{
 				"title": "DWDS: beinahe",
 				"url": "https://www.dwds.de/wb/beinahe",
-				"supports": "No Wortzerlegung; Adverb; Etymologie under nah: 'beinah(e)'"
+				"supports": "No Wortzerlegung; Etymologie: ahd. bi nah, spätmhd. binahe"
+			},
+			{
+				"title": "en.wiktionary: beinahe",
+				"url": "https://en.wiktionary.org/wiki/beinahe",
+				"supports": "'From Middle High German bīnāhe. Analysable as bei + nah'"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "in beinahe Jahresfrist, almost a year. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root beinahe alone."
+		"rationale": "in beinahe Jahresfrist, almost a year. DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: bei + nah, the preposition and the adjective, whose nahe is the frozen -e DWDS's headword nah, nahe spells (ADR 0050). Both judges, system and learner POV, made this correction on 2026-10-26 (#1241)."
 	}
 }

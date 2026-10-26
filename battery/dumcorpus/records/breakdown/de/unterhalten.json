@@ -49,7 +49,12 @@
 			{
 				"title": "DWDS: unterhalten",
 				"url": "https://www.dwds.de/wb/unterhalten",
-				"supports": "The Wortzerlegung unter- halten; the separable homograph has its own article"
+				"supports": "The inseparable verb's article gives the Wortzerlegung halten; unter- halten is the separable homograph's"
+			},
+			{
+				"title": "en.wiktionary: unterhalten",
+				"url": "https://en.wiktionary.org/wiki/unterhalten",
+				"supports": "'From unter + halten'"
 			}
 		]
 	},
