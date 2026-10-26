@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "ruhig",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "😌"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ruh",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Ruhe",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "ig",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-ig",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: ruhig",
+				"url": "https://www.dwds.de/wb/ruhig",
+				"supports": "The Wortzerlegung Ruhe -ig"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ruhig lächelnd fortfuhr, calmly: the adjective, not the modal particle, since the same sense stands before a noun (Rule de/adjective-stays-adj). DWDS splits it Ruhe + -ig (ADR 0050); ruh drops the noun's -e."
+	}
+}

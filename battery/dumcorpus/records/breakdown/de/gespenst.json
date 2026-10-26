@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Gespenst",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "👻"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Gespenst",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gespenst",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gespenst",
+				"url": "https://www.dwds.de/wb/Gespenst",
+				"supports": "No Wortzerlegung; Etymologie: ahd. gispensti 'Verlockung', on spanan 'locken', a verb that died out"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "a ghost. The ge- is fossilized: no Wortzerlegung confirms the cut, so it stays inside the Root. DWDS gives no Wortzerlegung, so it is a bottom word: the Root gespenst and the zero ending (ADR 0051)."
+	}
+}

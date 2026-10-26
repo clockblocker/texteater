@@ -1,0 +1,63 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Eisentür",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🚪"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Eisen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Eisen",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "tür",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Tür",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Eisentür",
+				"url": "https://www.dwds.de/wb/Eisent%C3%BCr",
+				"supports": "The Wortzerlegung Eisen Tür"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "aus der ... angebrachten Eisentür, an iron door. DWDS splits it Eisen + Tür (ADR 0050)."
+	}
+}

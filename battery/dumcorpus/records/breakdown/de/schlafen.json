@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "schlafen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "😴"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "schlaf",
+					"target": {
+						"language": "de",
+						"canonicalForm": "schlaf",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: schlafen",
+				"url": "https://www.dwds.de/wb/schlafen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. slāfan, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "lassen Sie Christel schlafen. DWDS gives no Wortzerlegung, so it is a bottom word: the Root schlaf and the Ending en (ADR 0051)."
+	}
+}

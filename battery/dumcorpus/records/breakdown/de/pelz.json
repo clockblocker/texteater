@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Pelz",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🧥"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Pelz",
+					"target": {
+						"language": "de",
+						"canonicalForm": "pelz",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Pelz",
+				"url": "https://www.dwds.de/wb/Pelz",
+				"supports": "No Wortzerlegung; Etymologie: ahd. pelliz, a loan of mlat. pellicia"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ein ... Mann in Pelz und Pelzmütze. DWDS gives no Wortzerlegung, so it is a bottom word: the Root pelz and the zero ending (ADR 0051)."
+	}
+}

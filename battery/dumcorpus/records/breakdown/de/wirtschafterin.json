@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Wirtschafterin",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🧹"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Wirtschafter",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Wirtschafter",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": "in",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-in",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Wirtschafterin",
+				"url": "https://www.dwds.de/wb/Wirtschafterin",
+				"supports": "The Wortzerlegung Wirtschafter -in"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "eine Wirtschafterin geheiratet, a housekeeper. DWDS splits it Wirtschafter + -in, the motion suffix (ADR 0050)."
+	}
+}

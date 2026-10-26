@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "hübsch",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "✨"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "hübsch",
+					"target": {
+						"language": "de",
+						"canonicalForm": "hübsch",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: hübsch",
+				"url": "https://www.dwds.de/wb/h%C3%BCbsch",
+				"supports": "No Wortzerlegung; Etymologie: mhd. hübesch 'höfisch', a formation on Hof no longer read"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Es war so hübsch in Berlin. DWDS gives no Wortzerlegung, so it is a bottom word: the Root hübsch and the zero ending (ADR 0051)."
+	}
+}

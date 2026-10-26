@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Zauber",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🪄"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Zauber",
+					"target": {
+						"language": "de",
+						"canonicalForm": "zauber",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Zauber",
+				"url": "https://www.dwds.de/wb/Zauber",
+				"supports": "No Wortzerlegung; ›Zauber‹ is the Grundform of zaubern; Etymologie: ahd. zoubar, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "viel von seinem Zauber ... eingebüßt, its charm. DWDS gives no Wortzerlegung, so it is a bottom word: the Root zauber and the zero ending (ADR 0051)."
+	}
+}

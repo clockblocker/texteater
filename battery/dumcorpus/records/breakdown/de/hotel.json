@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Hotel",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🏨"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Hotel",
+					"target": {
+						"language": "de",
+						"canonicalForm": "hotel",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Hotel",
+				"url": "https://www.dwds.de/wb/Hotel",
+				"supports": "No Wortzerlegung; Etymologie: a loan of frz. hôtel"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "nicht im Hotel. DWDS gives no Wortzerlegung, so it is a bottom word: the Root hotel and the zero ending (ADR 0051)."
+	}
+}

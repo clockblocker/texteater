@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "springen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🦘"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "spring",
+					"target": {
+						"language": "de",
+						"canonicalForm": "spring",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: springen",
+				"url": "https://www.dwds.de/wb/springen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. springan, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Und Annie springt aus ihrem Schuh. DWDS gives no Wortzerlegung, so it is a bottom word: the Root spring and the Ending en (ADR 0051)."
+	}
+}

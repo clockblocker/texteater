@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "vornehmen",
+			"coreFeatures": {
+				"hasSepPrefix": "vor"
+			}
+		},
+		"emojiDescription": "🔧"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "vor",
+					"target": {
+						"language": "de",
+						"canonicalForm": "vor-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "nehmen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "nehmen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: vornehmen",
+				"url": "https://www.dwds.de/wb/vornehmen",
+				"supports": "The Wortzerlegung vor- nehmen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "eh wir Änderungen vornehmen, carry out changes. A particle verb: vor links to its Prefix Morpheme vor- (ADR 0050)."
+	}
+}

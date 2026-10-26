@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "sehen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "👀"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "seh",
+					"target": {
+						"language": "de",
+						"canonicalForm": "seh",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: sehen",
+				"url": "https://www.dwds.de/wb/sehen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. sehan, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "»wie ich sehe«, as I notice. DWDS gives no Wortzerlegung, so it is a bottom word: the Root seh and the Ending en (ADR 0051)."
+	}
+}

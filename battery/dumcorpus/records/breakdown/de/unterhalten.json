@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "unterhalten",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "💭"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "unter",
+					"target": {
+						"language": "de",
+						"canonicalForm": "unter-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "halten",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "halten",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: unterhalten",
+				"url": "https://www.dwds.de/wb/unterhalten",
+				"supports": "The Wortzerlegung unter- halten; the separable homograph has its own article"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "weil wir die Vorstellung unterhalten, entertain the notion: the inseparable verb, whose DWDS article splits it halten with the prefix unter- (ADR 0050)."
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Turm",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🗼"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Turm",
+					"target": {
+						"language": "de",
+						"canonicalForm": "turm",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Turm",
+				"url": "https://www.dwds.de/wb/Turm",
+				"supports": "No Wortzerlegung; Etymologie: ahd. turn, a loan of afrz. *torn"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "den Turm von Kessin. DWDS gives no Wortzerlegung, so it is a bottom word: the Root turm and the zero ending (ADR 0051)."
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "schreiben",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "✉"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "schreib",
+					"target": {
+						"language": "de",
+						"canonicalForm": "schreib",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: schreiben",
+				"url": "https://www.dwds.de/wb/schreiben",
+				"supports": "No Wortzerlegung; Etymologie: ahd. scrīban, a loan of lat. scrībere"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "schrieb ein Telegramm. DWDS gives no Wortzerlegung, so it is a bottom word: the Root schreib and the Ending en (ADR 0051)."
+	}
+}

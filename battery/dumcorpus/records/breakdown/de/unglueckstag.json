@@ -1,0 +1,72 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Unglückstag",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "📅"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Unglück",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Unglück",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "s",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-s-",
+						"family": "Morpheme",
+						"kind": "Interfix"
+					}
+				},
+				{
+					"letters": "tag",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Tag",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Unglückstag",
+				"url": "https://www.dwds.de/wb/Ungl%C3%BCckstag",
+				"supports": "The Wortzerlegung Unglück 1Tag"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "an diesem Unglückstag, a day of misfortune. DWDS splits it Unglück + Tag; the s is a linking element, an Interfix piece (ADR 0050)."
+	}
+}

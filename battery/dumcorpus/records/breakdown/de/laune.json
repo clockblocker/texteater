@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Laune",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "😀"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Laun",
+					"target": {
+						"language": "de",
+						"canonicalForm": "laun",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Laune",
+				"url": "https://www.dwds.de/wb/Laune",
+				"supports": "No Wortzerlegung; Etymologie: mhd. lūne, a loan of lat. lūna 'Mond'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ist ungewöhnlich guter Laune, in a good mood. A loan from Latin. DWDS gives no Wortzerlegung, so it is a bottom word: the Root laun and the Ending e (ADR 0051)."
+	}
+}

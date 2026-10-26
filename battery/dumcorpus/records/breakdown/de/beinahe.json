@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "beinahe",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🤏"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "beinahe",
+					"target": {
+						"language": "de",
+						"canonicalForm": "beinahe",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: beinahe",
+				"url": "https://www.dwds.de/wb/beinahe",
+				"supports": "No Wortzerlegung; Adverb; Etymologie under nah: 'beinah(e)'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "in beinahe Jahresfrist, almost a year. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root beinahe alone."
+	}
+}

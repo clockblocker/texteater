@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "auffallen",
+			"coreFeatures": {
+				"hasSepPrefix": "auf"
+			}
+		},
+		"emojiDescription": "👀"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "auf",
+					"target": {
+						"language": "de",
+						"canonicalForm": "auf-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "fallen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "fallen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: auffallen",
+				"url": "https://www.dwds.de/wb/auffallen",
+				"supports": "The Wortzerlegung auf- fallen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Mir ist nichts aufgefallen. A particle verb: auf links to its Prefix Morpheme auf- (ADR 0050)."
+	}
+}

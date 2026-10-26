@@ -1,0 +1,44 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "SCONJ",
+			"canonicalForm": "dass",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🔗"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "dass",
+					"target": {
+						"language": "de",
+						"canonicalForm": "dass",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: dass",
+				"url": "https://www.dwds.de/wb/dass",
+				"supports": "No Wortzerlegung; Konjunktion (old spelling daß); Etymologie: the demonstrative das turned subordinator"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "hörte sie wieder, daß es ..., cited in its standard spelling. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root dass alone."
+	}
+}

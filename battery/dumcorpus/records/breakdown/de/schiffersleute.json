@@ -1,0 +1,72 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Schiffersleute",
+			"coreFeatures": {
+				"gender": null
+			}
+		},
+		"emojiDescription": "⚓"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Schiffer",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Schiffer",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": "s",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-s-",
+						"family": "Morpheme",
+						"kind": "Interfix"
+					}
+				},
+				{
+					"letters": "leute",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Leute",
+						"coreFeatures": {
+							"gender": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Schiffersleute",
+				"url": "https://www.dwds.de/wb/Schiffersleute",
+				"supports": "A machine-generated Wortzerlegung 'Schiffer Leute'; listed as a noun in the plural"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "die Schiffersleute kalfaterten ... ihre Boote, the boatmen. A plural-only noun like its head Leute, so gender null (Rule de/plural-only-noun-has-no-gender). DWDS splits it Schiffer + Leute; the s is a linking element, an Interfix piece (ADR 0050)."
+	}
+}

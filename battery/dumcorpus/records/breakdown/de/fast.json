@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "fast",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🔜"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "fast",
+					"target": {
+						"language": "de",
+						"canonicalForm": "fast",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: fast",
+				"url": "https://www.dwds.de/wb/fast",
+				"supports": "No Wortzerlegung; Etymologie: 'das umlautlose Adverb zu ... fest'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "sah man dagegen fast allzu deutlich an, almost. An ADV takes no Source (ADR 0050), so it is a bottom word. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root fast alone."
+	}
+}

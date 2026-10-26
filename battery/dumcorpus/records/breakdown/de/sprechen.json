@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "sprechen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "💬"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "sprech",
+					"target": {
+						"language": "de",
+						"canonicalForm": "sprech",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: sprechen",
+				"url": "https://www.dwds.de/wb/sprechen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. sprehhan, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "sprach ein paar Worte mit ihr. DWDS gives no Wortzerlegung, so it is a bottom word: the Root sprech and the Ending en (ADR 0051)."
+	}
+}

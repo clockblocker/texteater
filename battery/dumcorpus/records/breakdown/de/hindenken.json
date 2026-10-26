@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "hindenken",
+			"coreFeatures": {
+				"hasSepPrefix": "hin"
+			}
+		},
+		"emojiDescription": "🤔"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "hin",
+					"target": {
+						"language": "de",
+						"canonicalForm": "hin-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "denken",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "denken",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: hindenken",
+				"url": "https://www.dwds.de/wb/hindenken",
+				"supports": "The Wortzerlegung hin- denken; sense 1 ⟨jmd. denkt (irgendwohin) hin⟩ with »Wo denken Sie hin (= aber nein)«"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "»Wo denkst du hin, Mama.«, a disbelieving 'what are you thinking of': DWDS gives Wo denken Sie hin as a use of hindenken, so the click unit is the verb. A particle verb: hin links to its Prefix Morpheme hin- (ADR 0050)."
+	}
+}

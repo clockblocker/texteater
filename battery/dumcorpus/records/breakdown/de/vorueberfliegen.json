@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "vorüberfliegen",
+			"coreFeatures": {
+				"hasSepPrefix": "vorüber"
+			}
+		},
+		"emojiDescription": "💨"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "vorüber",
+					"target": {
+						"language": "de",
+						"canonicalForm": "vorüber-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "fliegen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "fliegen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: vorüberfliegen",
+				"url": "https://www.dwds.de/wb/vor%C3%BCberfliegen",
+				"supports": "The Wortzerlegung vorüber- fliegen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "einige Zeilen ... flogen dabei an seinem Auge vorüber, flew past his eye. A particle verb: vorüber is a true separable particle on dumcorpus's list, so it links to its Prefix Morpheme vorüber- (ADR 0050)."
+	}
+}

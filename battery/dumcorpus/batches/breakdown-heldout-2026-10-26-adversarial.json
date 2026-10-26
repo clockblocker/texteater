@@ -1,0 +1,86 @@
+{
+	"note": "Adversarial held-out candidates for German segment.inConstituents and segment.inMorphemes, drafted 2026-10-26 as Draft Breakdown Records in records/breakdown/de to judge round 7 (#1241). Reported apart from the headline real-text set (breakdown-heldout-2026-10-26-realtext): fresh words on both sides of each round-7 fix, so the score says whether a fix generalizes or overreaches, not whether its tuning cases pass. Per row: AD1 Gewässer, AD2 Gewölk and AD3 Gehölz, a ge- the DWDS Wortzerlegung confirms on a noun base whose letters show an umlaut (wässer, wölk with its -e dropped, hölz), against AD4 Gespenst, AD5 Gestalt and AD6 Gelenk, a fossilized ge- with no Wortzerlegung whose base left no word (class C1: the comparative affix test, in both segmenters, must keep the first three cuts and stop the last three); AD7 Verzeihung, AD8 Verwaltung and AD9 Erkältung, a prefixed verb + -ung whose letters also offer the prefix and a noun that isn't one (Zeihung, Waltung, Kältung), against AD10 Unordnung, un- + Ordnung, where the prefix and the noun are right since there is no verb unordnen (class C2: the relative sense check must let the derivation beat a heavier prefix pick and must not overturn a right one). Every word split follows the DWDS Wortzerlegung (ADR 0050's tie rule), and every bottom word is one DWDS gives none and en.wiktionary splits no further, cited in its record. Avoided: every Lemma with a Breakdown Record; the real-text batch's Lemmas; the words the round-6 and round-7 unit tests use (Geduld, Gebüsch, Gerste, Gebühr, Gebirge, Verbeugung, bärtig, rundlich, Bäcker); words a Breakdown prompt names; Sources (Geschenk, whose DWDS Grundform is schenken); a ge- on a verb base (Gebell, Geläut), which round 6's held-back fix 5 owns. Consistency sets: C1 ge- confirmed against fossilized; C2 a derivation against a prefix and a noun. Two judges, system and learner POV, review the debatable calls before round 7 runs (#1241). They stay out of every Breakdown prompt's examples (#693).",
+	"set": "adversarial",
+	"rows": [
+		{
+			"row": "AD1",
+			"record": "breakdown/de/gewaesser",
+			"bucket": "ge-prefix-confirmed",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["C1"]
+		},
+		{
+			"row": "AD2",
+			"record": "breakdown/de/gewoelk",
+			"bucket": "ge-prefix-confirmed",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["C1"]
+		},
+		{
+			"row": "AD3",
+			"record": "breakdown/de/gehoelz",
+			"bucket": "ge-prefix-confirmed",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["C1"]
+		},
+		{
+			"row": "AD4",
+			"record": "breakdown/de/gespenst",
+			"bucket": "ge-prefix-fossil",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["C1"]
+		},
+		{
+			"row": "AD5",
+			"record": "breakdown/de/gestalt",
+			"bucket": "ge-prefix-fossil",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["C1"]
+		},
+		{
+			"row": "AD6",
+			"record": "breakdown/de/gelenk",
+			"bucket": "ge-prefix-fossil",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["C1"]
+		},
+		{
+			"row": "AD7",
+			"record": "breakdown/de/verzeihung",
+			"bucket": "derivation-over-prefixed-noun",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["C2"]
+		},
+		{
+			"row": "AD8",
+			"record": "breakdown/de/verwaltung",
+			"bucket": "derivation-over-prefixed-noun",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["C2"]
+		},
+		{
+			"row": "AD9",
+			"record": "breakdown/de/erkaeltung",
+			"bucket": "derivation-over-prefixed-noun",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["C2"]
+		},
+		{
+			"row": "AD10",
+			"record": "breakdown/de/unordnung",
+			"bucket": "prefixed-noun-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["C2"]
+		}
+	]
+}

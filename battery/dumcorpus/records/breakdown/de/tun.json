@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "tun",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "👐"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "tu",
+					"target": {
+						"language": "de",
+						"canonicalForm": "tu",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "n",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: tun",
+				"url": "https://www.dwds.de/wb/tun",
+				"supports": "No Wortzerlegung; Etymologie: ahd. tuon, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Gut aussehen tun die meisten hier, tun as a dummy verb before its infinitive. DWDS gives no Wortzerlegung, so it is a bottom word: the Root tu and the citation ending n, German's -en after a vowel (ADR 0051)."
+	}
+}

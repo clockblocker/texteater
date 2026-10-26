@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Tag",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🗓"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Tag",
+					"target": {
+						"language": "de",
+						"canonicalForm": "tag",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Tag",
+				"url": "https://www.dwds.de/wb/Tag",
+				"supports": "No Wortzerlegung; Etymologie: ahd. tag, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "aus den Kessiner Tagen. DWDS gives no Wortzerlegung, so it is a bottom word: the Root tag and the zero ending (ADR 0051)."
+	}
+}

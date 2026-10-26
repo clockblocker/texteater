@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Gewässer",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🏞"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Ge",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ge-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "wässer",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Wasser",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gewässer",
+				"url": "https://www.dwds.de/wb/Gew%C3%A4sser",
+				"supports": "The Wortzerlegung ge- Wasser"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "a body of water. DWDS splits it ge- + Wasser, whose letters show the umlaut (wässer): a ge- the affix test confirms."
+	}
+}

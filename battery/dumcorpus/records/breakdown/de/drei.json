@@ -1,0 +1,44 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NUM",
+			"canonicalForm": "drei",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🔢"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "drei",
+					"target": {
+						"language": "de",
+						"canonicalForm": "drei",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: drei",
+				"url": "https://www.dwds.de/wb/drei",
+				"supports": "Kardinalzahl; no Wortzerlegung; Etymologie: ahd. drī"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "drei junge Mädchen. DWDS gives no Wortzerlegung, so it is a bottom word, and a NUM has no ending slot (ADR 0051): the Root drei alone."
+	}
+}

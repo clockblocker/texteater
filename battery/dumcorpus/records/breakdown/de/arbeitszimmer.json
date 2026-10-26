@@ -1,0 +1,72 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Arbeitszimmer",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🖥"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Arbeit",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Arbeit",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "s",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-s-",
+						"family": "Morpheme",
+						"kind": "Interfix"
+					}
+				},
+				{
+					"letters": "zimmer",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Zimmer",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Arbeitszimmer",
+				"url": "https://www.dwds.de/wb/Arbeitszimmer",
+				"supports": "The Wortzerlegung Arbeit Zimmer"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "in des Hausherrn Wohn- und Arbeitszimmer, his study. DWDS splits it Arbeit + Zimmer; the s is a linking element, an Interfix piece (ADR 0050)."
+	}
+}

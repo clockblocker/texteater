@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "weit",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "🔭"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "weit",
+					"target": {
+						"language": "de",
+						"canonicalForm": "weit",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: weit",
+				"url": "https://www.dwds.de/wb/weit",
+				"supports": "No Wortzerlegung; Etymologie: ahd. wīt, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Alles Geschehene lag so weit zurück, far back; the same sense stands before a noun (ein weiter Weg), so ADJ (Rule de/adjective-stays-adj). DWDS gives no Wortzerlegung, so it is a bottom word: the Root weit and the zero ending (ADR 0051)."
+	}
+}

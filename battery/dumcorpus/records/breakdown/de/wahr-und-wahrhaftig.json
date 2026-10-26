@@ -1,0 +1,80 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "ADV",
+			"canonicalForm": "wahr und wahrhaftig",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "✋"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "wahr",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "wahr",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "und",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "und",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "wahrhaftig",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "wahrhaftig",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: wahr",
+				"url": "https://www.dwds.de/wb/wahr",
+				"supports": "⟨wahr und wahrhaftig⟩, veraltend, with Fontane's »wahr und wahrhaftig nicht«"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "»Wahr und wahrhaftig nicht«, truly not. DWDS lists ⟨wahr und wahrhaftig⟩ under wahr, a Locution ADV. Its parts are its words: the adjectives wahr and wahrhaftig and the CCONJ und (ADR 0050)."
+	}
+}

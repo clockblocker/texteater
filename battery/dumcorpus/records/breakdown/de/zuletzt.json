@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "zuletzt",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🔚"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "zu",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "zu",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": "letzt",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "letzt",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: zuletzt",
+				"url": "https://www.dwds.de/wb/zuletzt",
+				"supports": "The Wortzerlegung 1zu letzt"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Zuletzt ist es doch so, in the end. DWDS splits it the preposition zu + the adjective letzt (ADR 0050)."
+	}
+}

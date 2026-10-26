@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "gut",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "👌"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "gut",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gut",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gut",
+				"url": "https://www.dwds.de/wb/gut",
+				"supports": "No Wortzerlegung; Etymologie: ahd. guot, inherited; comparison besser, best"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "»Daß sie wirklich gut sind«. DWDS gives no Wortzerlegung, so it is a bottom word: the Root gut and the zero ending (ADR 0051)."
+	}
+}

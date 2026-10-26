@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "glücklich",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "😊"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "glück",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Glück",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "lich",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-lich",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: glücklich",
+				"url": "https://www.dwds.de/wb/gl%C3%BCcklich",
+				"supports": "The Wortzerlegung Glück -lich"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "war man glücklich, happy. DWDS splits it Glück + -lich (ADR 0050)."
+	}
+}

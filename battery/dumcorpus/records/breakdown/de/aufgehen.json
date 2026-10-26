@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "aufgehen",
+			"coreFeatures": {
+				"hasSepPrefix": "auf"
+			}
+		},
+		"emojiDescription": "🌕"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "auf",
+					"target": {
+						"language": "de",
+						"canonicalForm": "auf-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "gehen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "gehen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: aufgehen",
+				"url": "https://www.dwds.de/wb/aufgehen",
+				"supports": "The Wortzerlegung auf- gehen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "wo der Mond ... eben aufgegangen war, the moon had risen. A particle verb: auf links to its Prefix Morpheme auf- (ADR 0050)."
+	}
+}

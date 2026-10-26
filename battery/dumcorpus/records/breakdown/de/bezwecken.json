@@ -1,0 +1,62 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "bezwecken",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🎯"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "be",
+					"target": {
+						"language": "de",
+						"canonicalForm": "be-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "zweck",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Zweck",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": "en"
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: bezwecken",
+				"url": "https://www.dwds.de/wb/bezwecken",
+				"supports": "The Wortzerlegung be- Zweck"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "»Und was bezwecken die?«, what are they after. A verb made from the noun Zweck: DWDS splits it be- + Zweck, and the citation ending en is unlinked filler (ADR 0050), as in verarzten."
+	}
+}

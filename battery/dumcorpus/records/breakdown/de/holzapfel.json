@@ -1,0 +1,64 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Holzapfel",
+			"coreFeatures": {
+				"article": null,
+				"gender": null
+			}
+		},
+		"emojiDescription": "👨‍🏫"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Holz",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Holz",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "apfel",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Apfel",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Holzapfel",
+				"url": "https://www.dwds.de/wb/Holzapfel",
+				"supports": "The common noun's Wortzerlegung Holz Apfel"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Kandidat Holzapfel, a teacher's surname, so no Core gender (Rule de/proper-noun-article). A speaking name built from words, so like Güldenklee it has Constituents: the nouns Holz and Apfel, as DWDS splits the common noun (ADR 0050)."
+	}
+}

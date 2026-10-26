@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "unnachsichtig",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "😠"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "un",
+					"target": {
+						"language": "de",
+						"canonicalForm": "un-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "nachsichtig",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "nachsichtig",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: unnachsichtig",
+				"url": "https://www.dwds.de/wb/unnachsichtig",
+				"supports": "The Wortzerlegung un- nachsichtig"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "mit unnachsichtiger Strenge, unrelenting. DWDS splits it un- + nachsichtig (ADR 0050)."
+	}
+}

@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "vorlegen",
+			"coreFeatures": {
+				"hasSepPrefix": "vor"
+			}
+		},
+		"emojiDescription": "📄"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "vor",
+					"target": {
+						"language": "de",
+						"canonicalForm": "vor-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "legen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "legen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: vorlegen",
+				"url": "https://www.dwds.de/wb/vorlegen",
+				"supports": "The Wortzerlegung vor- legen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "das Gedicht ... der Klassenlehrerin vorlegen, show it to the teacher. A particle verb: vor links to its Prefix Morpheme vor- (ADR 0050)."
+	}
+}

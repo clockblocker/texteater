@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "INTJ",
+			"canonicalForm": "ach",
+			"coreFeatures": {
+				"partType": null
+			}
+		},
+		"emojiDescription": "😩"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "ach",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ach",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: ach",
+				"url": "https://www.dwds.de/wb/ach",
+				"supports": "Interjektion; no Wortzerlegung; Etymologie: ahd. ah"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "'Ach, Geert, dann reise ich nie.' DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root ach alone."
+	}
+}

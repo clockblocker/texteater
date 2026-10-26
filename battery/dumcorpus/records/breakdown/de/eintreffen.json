@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "eintreffen",
+			"coreFeatures": {
+				"hasSepPrefix": "ein"
+			}
+		},
+		"emojiDescription": "🚉"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ein",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ein-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "treffen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "treffen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: eintreffen",
+				"url": "https://www.dwds.de/wb/eintreffen",
+				"supports": "The Wortzerlegung ein- treffen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "nicht vor Abend in Kessin eintreffen werde, arrive. A particle verb: ein links to its Prefix Morpheme ein- (ADR 0050)."
+	}
+}

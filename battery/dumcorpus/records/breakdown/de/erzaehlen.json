@@ -1,0 +1,64 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "erzählen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🗣"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "er-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "zählen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "zählen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: erzählen",
+				"url": "https://www.dwds.de/wb/erz%C3%A4hlen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. irzellen, 'zunächst ... für zählen, (der Reihe nach) aufzählen'"
+			},
+			{
+				"title": "en.wiktionary: erzählen",
+				"url": "https://en.wiktionary.org/wiki/erz%C3%A4hlen",
+				"supports": "'Equivalent to er- + zählen'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "daß du mir's erzählen kannst. DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: er- + zählen, an opaque but structural prefix verb, as bekommen is be- + kommen (ADR 0050)."
+	}
+}

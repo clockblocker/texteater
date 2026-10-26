@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Gelenk",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🦴"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Gelenk",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gelenk",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gelenk",
+				"url": "https://www.dwds.de/wb/Gelenk",
+				"supports": "No Wortzerlegung; Etymologie: ahd. gilenki, on a base that left no word"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "a joint. The ge- is fossilized: no Wortzerlegung confirms the cut, so it stays inside the Root. DWDS gives no Wortzerlegung, so it is a bottom word: the Root gelenk and the zero ending (ADR 0051)."
+	}
+}

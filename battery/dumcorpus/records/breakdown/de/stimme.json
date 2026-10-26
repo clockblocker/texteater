@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Stimme",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🎙"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Stimm",
+					"target": {
+						"language": "de",
+						"canonicalForm": "stimm",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Stimme",
+				"url": "https://www.dwds.de/wb/Stimme",
+				"supports": "No Wortzerlegung; Etymologie: ahd. stimma, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "des Vaters Stimme. DWDS gives no Wortzerlegung, so it is a bottom word: the Root stimm and the Ending e (ADR 0051)."
+	}
+}

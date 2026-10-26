@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "ganz",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "💯"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "ganz",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ganz",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: ganz",
+				"url": "https://www.dwds.de/wb/ganz",
+				"supports": "No Wortzerlegung; Adv. 'vollkommen, sehr, ziemlich' beside the Adj."
+			}
+		]
+	},
+	"notes": {
+		"rationale": "die Fenster würden wohl ganz zugewachsen sein, completely. A degree word, so ADV (Rule de/adjective-stays-adj names ganz). DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root ganz alone."
+	}
+}

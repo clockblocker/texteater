@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "überhaupt",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🌐"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "überhaupt",
+					"target": {
+						"language": "de",
+						"canonicalForm": "überhaupt",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: überhaupt",
+				"url": "https://www.dwds.de/wb/%C3%BCberhaupt",
+				"supports": "No Wortzerlegung; Adverb 'aufs Ganze gesehen'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "weil Soldaten überhaupt nicht sehr für derlei Dinge sind, at all. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root überhaupt alone."
+	}
+}

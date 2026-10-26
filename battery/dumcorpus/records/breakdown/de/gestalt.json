@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Gestalt",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🧍"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Gestalt",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gestalt",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gestalt",
+				"url": "https://www.dwds.de/wb/Gestalt",
+				"supports": "No Wortzerlegung; Etymologie: mhd. gestalt, an old participle of stellen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "a figure. The ge- is fossilized: no Wortzerlegung confirms the cut, so it stays inside the Root. DWDS gives no Wortzerlegung, so it is a bottom word: the Root gestalt and the zero ending (ADR 0051)."
+	}
+}
