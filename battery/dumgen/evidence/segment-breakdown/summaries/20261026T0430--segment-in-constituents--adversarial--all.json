@@ -1,0 +1,209 @@
+{
+	"runId": "dcd92827-0280-4674-8d8c-da645d4cd360",
+	"experimentId": "segment-in-constituents/de:adversarial",
+	"round": "2026-10-26-breakdown-round-7",
+	"note": "The adversarial held-out batch breakdown-heldout-2026-10-26-adversarial (10 records on both sides of round 7's fixes), reported apart. 3 repetitions, one live run at 249b52282.",
+	"liveRuns": [
+		"dcd92827-0280-4674-8d8c-da645d4cd360"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "dcd92827-0280-4674-8d8c-da645d4cd360",
+		"experimentId": "segment-in-constituents/de:adversarial",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "249b52282",
+		"startedAt": "2026-10-26T04:30:16.310Z",
+		"corpus": {
+			"fingerprint": "b386c3efa639e1b1ae23bbe0e22267afa99e4a427aa424a0072b602010691a6b",
+			"caseIds": [
+				"breakdown/de/erkaeltung",
+				"breakdown/de/gehoelz",
+				"breakdown/de/gelenk",
+				"breakdown/de/gespenst",
+				"breakdown/de/gestalt",
+				"breakdown/de/gewaesser",
+				"breakdown/de/gewoelk",
+				"breakdown/de/unordnung",
+				"breakdown/de/verwaltung",
+				"breakdown/de/verzeihung"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-constituents/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 10,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 10,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 8,
+			"failed": 2,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-26T04:30:16.355Z",
+		"total": 10,
+		"succeeded": 10,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 1,
+			"varyingOutputs": 1,
+			"quality": {
+				"passed": 22,
+				"failed": 8,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 10,
+			"attempts": 30,
+			"exactAttempts": 22,
+			"exact": 0.7333,
+			"lenientExactAttempts": 22,
+			"lenientExact": 0.7333,
+			"casesExactEveryRepetition": 7,
+			"casesLenientEveryRepetition": 7,
+			"cutPrecision": 1.0,
+			"cutRecall": 0.8571,
+			"linksPlaced": 0.8571,
+			"linksWithGoldRoute": 0.8571,
+			"linksExact": 0.7381,
+			"hasConstituentsAgreed": 0.9,
+			"failed": 0
+		},
+		"word": {
+			"cases": 10,
+			"attempts": 30,
+			"exactAttempts": 22,
+			"exact": 0.7333,
+			"lenientExactAttempts": 22,
+			"lenientExact": 0.7333,
+			"casesExactEveryRepetition": 7,
+			"casesLenientEveryRepetition": 7,
+			"cutPrecision": 1.0,
+			"cutRecall": 0.8571,
+			"linksPlaced": 0.8571,
+			"linksWithGoldRoute": 0.8571,
+			"linksExact": 0.7381,
+			"hasConstituentsAgreed": 0.9,
+			"failed": 0
+		}
+	},
+	"cases": [
+		{
+			"caseId": "breakdown/de/erkaeltung",
+			"group": "word",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 1,
+			"gold": "Erkält → Lexeme/VERB erkälten · ung → Morpheme/Suffix -ung",
+			"returned": [
+				"2x Erkält → Lexeme/VERB erkalten · ung → Morpheme/Suffix -ung"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gehoelz",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Ge → Morpheme/Prefix ge- · hölz → Lexeme/NOUN Holz",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gelenk",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gespenst",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gestalt",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gewaesser",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Ge → Morpheme/Prefix ge- · wässer → Lexeme/NOUN Wasser",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gewoelk",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Ge → Morpheme/Prefix ge- · wölk → Lexeme/NOUN Wolke",
+			"returned": [
+				"3x Ge → Morpheme/Prefix ge- · wölk → Lexeme/NOUN Wölke"
+			]
+		},
+		{
+			"caseId": "breakdown/de/unordnung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Un → Morpheme/Prefix un- · ordnung → Lexeme/NOUN Ordnung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verwaltung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Verwalt → Lexeme/VERB verwalten · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verzeihung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Verzeih → Lexeme/VERB verzeihen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		}
+	]
+}

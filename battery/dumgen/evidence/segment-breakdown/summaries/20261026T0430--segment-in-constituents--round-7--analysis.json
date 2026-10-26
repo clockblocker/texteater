@@ -1,0 +1,318 @@
+{
+	"round": "2026-10-26-breakdown-round-7",
+	"note": "Round 7 of the Breakdown segmenters (#1241): a fresh real-text sample of 60 (seed 2026102607, rounds 5 and 6's frame) as the headline, a fresh adversarial batch of 10 apart, then the tuning set (round 6's held-out promoted) and the morphemes sets. jev-1.13.0 at 249b52282, 3 repetitions, the lab's cached jev transport, no reasoning model, no prompt change during the measurement runs. Strict is contractPass; lenient adds the confirmed noun-or-verb tolerance for a compound's first part. The headline leaves out the three rows the judges split on (contested). Both judges' calls were made in the round's own session, one from the system's point of view and one from the learner's, with no subagent.",
+	"fixes": [
+		"The ge- affix test is one comparative choice: the cut, each option naming the word it leaves by its headwords (the letters as they stand, a noun's with its -e dropped or restored, each with the umlaut undone), against no cut (08a6c8a88)",
+		"The cut stays only when its best candidate outweighs no cut; the spellings are not summed (b3fba6253, after the prep live check)",
+		"The sense check weighs the splits against each other: round 6's yes or no per contender gives how far a split gives the sense at all (none as one minus the best yes), and a choice over the splits shares that yes; a pick no longer stands on its own yes (08a6c8a88 as a choice alone, 39b4b048c in its final form after the first tuning run)"
+	],
+	"spend": {
+		"cap": {
+			"dollars": 0.05,
+			"tokens": 1190476,
+			"granted": 882000,
+			"note": "the sum of the eight live runs' --budget values"
+		},
+		"prepLiveCheck": [
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "4df13dd3-53a7-498f-9b14-a3c53815980f",
+				"gitHead": "bdad34499",
+				"cases": 10,
+				"budget": 40000,
+				"freshRequests": 63,
+				"freshTokens": 29762,
+				"exact": "23/30"
+			},
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "9873d813-1915-4aa8-85d6-e9618ea4655d",
+				"gitHead": "b3fba6253",
+				"cases": 222,
+				"budget": 255000,
+				"freshRequests": 318,
+				"freshTokens": 146309,
+				"exact": "535/666",
+				"note": "the sense check as a choice alone; it lost six bottom-word homographs, so the check was rebuilt (39b4b048c) and the set rerun"
+			}
+		],
+		"runs": [
+			{
+				"experiment": "segment-in-constituents/de:realtext",
+				"runId": "4b7b238d-1743-445b-9121-ec40c18f38f7",
+				"budget": 445000,
+				"projected": 441398,
+				"freshRequests": 353,
+				"freshTokens": 213035
+			},
+			{
+				"experiment": "segment-in-constituents/de:adversarial",
+				"runId": "dcd92827-0280-4674-8d8c-da645d4cd360",
+				"budget": 97000,
+				"projected": 95888,
+				"freshRequests": 90,
+				"freshTokens": 50169
+			},
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "2f8e0958-50c9-4caf-994d-e69d4b50bf05",
+				"budget": 5000,
+				"projected": 4394,
+				"freshRequests": 10,
+				"freshTokens": 3390
+			},
+			{
+				"experiment": "segment-in-morphemes/de:realtext",
+				"runId": "48876977-6bd4-4aa4-8cbf-a4108d5bba95",
+				"budget": 22000,
+				"projected": 21442,
+				"freshRequests": 30,
+				"freshTokens": 13101
+			},
+			{
+				"experiment": "segment-in-morphemes/de:adversarial",
+				"runId": "8ffc1a92-96d2-4474-978c-36943d1da07f",
+				"budget": 11000,
+				"projected": 10084,
+				"freshRequests": 0,
+				"freshTokens": 0
+			},
+			{
+				"experiment": "segment-in-morphemes/de:breakdown",
+				"runId": "ad30882b-915d-4ec4-a688-0c14a3fd5e3a",
+				"budget": 7000,
+				"projected": 6622,
+				"freshRequests": 9,
+				"freshTokens": 3996
+			}
+		],
+		"roundRunTokens": 283691,
+		"prepLiveCheckTokens": 176071,
+		"roundTokens": 459762,
+		"roundDollars": 0.0193,
+		"standingDollar": {
+			"from": "round 3",
+			"tokens": 1918456,
+			"spentDollars": 0.0806,
+			"leftDollars": 0.9194,
+			"note": "Round 6's standing 1,458,694 tokens and this round's 459,762"
+		}
+	},
+	"headline": {
+		"realtextUncontested57": {
+			"strict": "149/171 (87.1%)",
+			"lenient": "149/171 (87.1%)",
+			"casesExactEveryRepetition": "49/57",
+			"wilson95": [
+				0.813,
+				0.914
+			],
+			"caseBootstrap95": [
+				0.784,
+				0.947
+			]
+		},
+		"realtextAll60": {
+			"strict": "152/180 (84.4%)",
+			"lenient": "152/180",
+			"caseBootstrap95": [
+				0.75,
+				0.928
+			]
+		},
+		"round6RealtextForComparison": {
+			"strict": "152/165 (92.1%)",
+			"lenient": "154/165 (93.3%)",
+			"wilson95": [
+				0.87,
+				0.953
+			],
+			"caseBootstrap95": [
+				0.855,
+				0.976
+			]
+		},
+		"adversarial": {
+			"strict": "22/30 (73.3%)",
+			"lenient": "22/30",
+			"casesExactEveryRepetition": "7/10"
+		},
+		"tuning222": {
+			"strict": "558/666 (83.8%)",
+			"lenient": "573/666 (86.0%)",
+			"casesExactEveryRepetition": "181/222 (186 lenient)"
+		},
+		"tuningUncontested217": {
+			"strict": "552/651 (84.8%)",
+			"lenient": "567/651 (87.1%)",
+			"casesExactEveryRepetition": "179/217 (184 lenient)"
+		},
+		"tuningRound6Cases152": {
+			"round6": "374/456 strict, 387 lenient",
+			"round7": "374/456 strict, 387 lenient",
+			"note": "Musikerleben 🎧 0 -> 3 and Römer 🍷 0 -> 1 against verfilmen 3 -> 0 and Gefahr 3 -> 2"
+		},
+		"promotedRound6Realtext55": {
+			"round6AsHeldOut": "152/165",
+			"round7": "158/165",
+			"note": "Geschichte 0 -> 3, Verneigung 0 -> 3, Bottegone 2 -> 3, Schulvorsteherin 1 -> 0; the contested Gewissen and Gesicht 3 -> 0 under the draft gold, since the affix test now confirms ge- + Wissen and ge- + Sicht, the system judge's gold"
+		},
+		"promotedRound6Adversarial10": {
+			"round6": "18/30",
+			"round7": "20/30",
+			"note": "Gemüt 0 -> 2"
+		},
+		"morphemes": {
+			"realtext": "105/105 (35 cases, the three contested included)",
+			"adversarial": "9/9 (Gespenst, Gestalt, Gelenk)",
+			"tuning": "214/225 (Geschichte 3/3; Gewissen and Gesicht 0/3 under the draft gold, Römer 🍷 0/3, Gefahr and erinnern 2/3)"
+		}
+	},
+	"targets": {
+		"Geschichte": "0 -> 3/3, and its morphemes 0 -> 3/3: the best cut, ge- + Schicht, 0.28 to 0.33 against no cut 0.47 to 0.55",
+		"Gemüt": "0 -> 2/3: ge- + Mut 0.65 to 0.69 against no cut 0.23 to 0.27; one repetition still goes to none at the sense check (its yes 0.54, none's analysis weight 0.68)",
+		"Verneigung": "0 -> 3/3: the choice gives Verneig + -ung 0.76 to 0.80 against Ver- + Neigung",
+		"Musikerleben 🎧": "0 -> 3/3: Musik + Erleben 0.78 to 0.82 in the choice",
+		"Poster 💬": "0/3, not fixed: its sense yes for Post + -er is 0.40, so none wins, as for its homograph Poster 🖼 (0.23 to 0.27); the choice alone picked the split for both",
+		"Laster 🚚": "0/3, not fixed: none wins on the same low yes; the choice alone picked Last + -er, then the form question took Laste"
+	},
+	"realtextDistribution": {
+		"cases": 60,
+		"noConstituents": {
+			"bottomWords": 25,
+			"indeclinables": 8,
+			"properNames": 2
+		},
+		"withConstituents": {
+			"derivations": 11,
+			"particleVerbs": 7,
+			"compounds": 5,
+			"properNames": 1,
+			"phrasemes": 1
+		},
+		"exactBy": {
+			"noConstituents35": "96/105 (93/96 uncontested)",
+			"withConstituents25": "56/75",
+			"particleVerbs7": "21/21",
+			"derivations11": "21/33"
+		}
+	},
+	"contested": [
+		{
+			"row": "ganz",
+			"result": "3/3 (ADV)",
+			"split": "the Kind, which changes the morphemes: system ADV ganz (DWDS Adv. 'vollkommen', the Rule names ganz); learner ADJ ganz · ∅ ('completely' is ein ganzer Erfolg's attributive sense)"
+		},
+		{
+			"row": "beinahe",
+			"result": "0/3 (bei + nah)",
+			"split": "learner: bottom word (no Wortzerlegung); system: bei + nah by en.wiktionary, which is what the segmenter returned"
+		},
+		{
+			"row": "überhaupt",
+			"result": "0/3 (über- + Haupt)",
+			"split": "learner: bottom word; system: über- + Haupt by en.wiktionary, which is what the segmenter returned"
+		}
+	],
+	"failuresByCause": [
+		{
+			"cause": "Prefix + verb against prefix + noun + citation ending: the sense check prefers the noun's claim",
+			"attempts": "3 RT, 3 tuning",
+			"cases": "erzählen: the choice gives er- + Zahl + -en 0.60 against er- + zählen 0.32, the yes 0.65 against 0.38, though the verb test gave zählen 0.95 (round 6's design would have failed it too: the pick's yes is under 0.5); verfilmen (tuning, 3 -> 0): ver- + Film + -en 0.92 in the choice though DWDS splits ver- + filmen and both yeses pass"
+		},
+		{
+			"cause": "A derivation's sense test says no, so none wins",
+			"attempts": "3 RT, 3 AD",
+			"cases": "sonderbar: the -bar test answered 0.28 ('able to be sonder-ed' is not 'strange'); Gewässer (AD): the affix test confirmed ge- + Wasser at 0.81 to 0.83 and the choice favoured that split at 0.62, but its yes was 0.39"
+		},
+		{
+			"cause": "A compound's head that is no word",
+			"attempts": "3 RT",
+			"cases": "Ministerium: Minister + Ium at 0.95 in the analysis question; no test checks a head"
+		},
+		{
+			"cause": "A suffix base routed ADJ",
+			"attempts": "3 RT",
+			"cases": "ruhig: the verb test passed ruhen 0.87 and the noun test Ruhe 0.85, so the route question ran and chose ADJ 0.64 though the adjective test said no to ruh 0.09 (round 6's gläubig, its held-back fix 3)"
+		},
+		{
+			"cause": "A suffix base's gate errs at the edge",
+			"attempts": "3 RT",
+			"cases": "Wirtschafterin: the verb test passed wirtschaftern at 0.53 and the noun test failed Wirtschafter at 0.45, so VERB unasked"
+		},
+		{
+			"cause": "An adverb's zu linked as the verb particle",
+			"attempts": "3 RT",
+			"cases": "zuletzt: zu- (prefix) + letzt 0.89, so zu is the Prefix Morpheme from the separable particle list, not the ADP DWDS gives (1zu letzt)"
+		},
+		{
+			"cause": "A phraseme part's Kind on the edge",
+			"attempts": "3 RT",
+			"cases": "wahr und wahrhaftig: wahrhaftig ADV 0.51 against ADJ 0.48"
+		},
+		{
+			"cause": "A first part's word test on the edge",
+			"attempts": "1 RT",
+			"cases": "Arbeitszimmer: Arbeits weighed a word at 0.58, the route NOUN 0.52 against VERB 0.48; one repetition made Arbeits a Root"
+		},
+		{
+			"cause": "The form question takes a spelling no dictionary lists",
+			"attempts": "5 AD",
+			"cases": "Gewölk: Wölke 0.55 to 0.68 over Wolke (the affix test was right, ge- + Wölke 0.38, ge- + Wolke 0.37); Erkältung: erkalten over erkälten in 2 of 3"
+		},
+		{
+			"cause": "The affix test at the edge",
+			"attempts": "1 tuning",
+			"cases": "Gefahr: ge- + Fahr 0.47 against no cut 0.43 in one repetition"
+		}
+	],
+	"fixesOnTheirTargets": {
+		"affixTest": "On the adversarial batch the comparative test decided all six ge- words right in every repetition: the cut 0.81 to 0.84 for Gewässer and Gehölz and 0.37 to 0.39 (best of four spellings, no cut lower) for Gewölk; no cut 0.56 to 0.77 for Gespenst, Gestalt and Gelenk. On tuning it fixed Geschichte (also its morphemes) and Gemüt (2/3) and kept Gestein, Getreide and Genesung; Gefahr lost one repetition at 0.47 against 0.43.",
+		"senseCheck": "Fixed Verneigung and Musikerleben 🎧; on the adversarial batch Verzeihung, Verwaltung and the control Unordnung pass 3/3. As a choice alone (the first tuning run) it lost six bottom-word homographs and erinnern and wieder, which the yes-or-no footing for none restored. It broke verfilmen and does not fix Poster 💬 or Laster 🚚."
+	},
+	"proposedFixes": [
+		{
+			"rank": 1,
+			"fix": "When the base verb test passes (zählen 0.95), offer prefix + verb and drop prefix + noun + citation ending unless the noun's verb is not the base verb's (the verb gate already exists for the other direction), so the sense check no longer chooses the bracketing",
+			"fixes": "erzählen 3 RT; verfilmen 3 tuning",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 2,
+			"fix": "Ground none in the dictionary: when the affix or word-formation test confirms a split (Gewässer's ge- 0.83), let it stand for the split's yes; and test a suffix derivation against the dictionary's analysis, not only its sense",
+			"fixes": "Gewässer 3 AD, sonderbar 3 RT; Poster 💬 and Laster 🚚 in tuning",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 3,
+			"fix": "A compound's head must pass the word test, as a cranberry first part's must",
+			"fixes": "Ministerium 3 RT",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 4,
+			"fix": "Before -ig and -lich, drop the ADJ route when the adjective test says no (round 6's fix 3)",
+			"fixes": "ruhig 3 RT; gläubig in tuning",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 5,
+			"fix": "In an adverb (not a verb), a first part zu is the ADP, as in a phraseme",
+			"fixes": "zuletzt 3 RT",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 6,
+			"fix": "The form question offers only headwords: drop an umlauted or -e form when its plain form is the noun (Wölke, Laste, Rene)",
+			"fixes": "Gewölk 3 AD; Laster 🚚 and Rentier 🦌 in tuning, if the split comes back",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 7,
+			"fix": "Held from round 6 as asked: the umlaut of gläubig and rötlich, Geschrei's verb base, proper-name splits, the adverbial -s",
+			"fixes": "tuning cases",
+			"heldOutFitting": false
+		}
+	],
+	"verdict": "Not yet. On the 57 uncontested real-text cases the segmenters are 87.1% exact strict and lenient (149 of 171 attempts; 78% to 95% by a case bootstrap), against round 6's 92.1% on 55 cases (85% to 98%): the intervals overlap, so neither a gain nor a loss is shown, and this sample holds more derivations (11 against 7), where most misses fall. Both fixes work on what they target: the comparative affix test decided every ge- word of the adversarial batch right and fixed Geschichte and Gemüt, and the relative sense check fixed Verneigung and Musikerleben 🎧. The misses that remain are systematic, not rare-word noise: the sense check choosing a prefix + noun bracketing over prefix + verb (erzählen, and verfilmen in tuning), none winning on a low sense yes for a true derivation (sonderbar, Gewässer), a head that is no word (Ministerium), and suffix-base routes (ruhig, Wirtschafterin). Tuning should go on with fixes 1 to 5."
+}

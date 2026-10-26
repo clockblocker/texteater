@@ -1,0 +1,347 @@
+{
+	"runId": "48876977-6bd4-4aa4-8cbf-a4108d5bba95",
+	"experimentId": "segment-in-morphemes/de:realtext",
+	"round": "2026-10-26-breakdown-round-7",
+	"liveRuns": [
+		"48876977-6bd4-4aa4-8cbf-a4108d5bba95"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "48876977-6bd4-4aa4-8cbf-a4108d5bba95",
+		"experimentId": "segment-in-morphemes/de:realtext",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "249b52282",
+		"startedAt": "2026-10-26T04:30:27.584Z",
+		"corpus": {
+			"fingerprint": "1b56f604627ea498f7f8c7b8c71a82419ee4c3234e8f74b9cdb45d79369e7c9f",
+			"caseIds": [
+				"breakdown/de/ach",
+				"breakdown/de/beinahe",
+				"breakdown/de/dass",
+				"breakdown/de/drei",
+				"breakdown/de/fast",
+				"breakdown/de/frau",
+				"breakdown/de/ganz",
+				"breakdown/de/geert",
+				"breakdown/de/gut",
+				"breakdown/de/hotel",
+				"breakdown/de/huebsch",
+				"breakdown/de/klingen",
+				"breakdown/de/kreis",
+				"breakdown/de/laune",
+				"breakdown/de/major",
+				"breakdown/de/meer",
+				"breakdown/de/meinen",
+				"breakdown/de/ministerium",
+				"breakdown/de/muessen",
+				"breakdown/de/oft",
+				"breakdown/de/pelz",
+				"breakdown/de/schlafen",
+				"breakdown/de/schreiben",
+				"breakdown/de/sehen",
+				"breakdown/de/sprechen",
+				"breakdown/de/springen",
+				"breakdown/de/stimme",
+				"breakdown/de/tag",
+				"breakdown/de/tun",
+				"breakdown/de/turm",
+				"breakdown/de/ueberhaupt",
+				"breakdown/de/weit",
+				"breakdown/de/wisby",
+				"breakdown/de/zauber",
+				"breakdown/de/zeit"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 35,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 35,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 35,
+			"failed": 0,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-26T04:30:27.626Z",
+		"total": 35,
+		"succeeded": 35,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 0,
+			"quality": {
+				"passed": 105,
+				"failed": 0,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"exact": "105/105",
+	"cases": [
+		{
+			"caseId": "breakdown/de/ach",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ach",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/beinahe",
+			"reps": 3,
+			"exact": 3,
+			"gold": "beinahe",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/dass",
+			"reps": 3,
+			"exact": 3,
+			"gold": "dass",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/drei",
+			"reps": 3,
+			"exact": 3,
+			"gold": "drei",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fast",
+			"reps": 3,
+			"exact": 3,
+			"gold": "fast",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/frau",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Frau · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ganz",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ganz",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geert",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Geert · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gut",
+			"reps": 3,
+			"exact": 3,
+			"gold": "gut · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hotel",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Hotel · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/huebsch",
+			"reps": 3,
+			"exact": 3,
+			"gold": "hübsch · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/klingen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "kling · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kreis",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Kreis · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/laune",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Laun · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/major",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Major · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meer",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Meer · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meinen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "mein · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ministerium",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Ministerium · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/muessen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "müss · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/oft",
+			"reps": 3,
+			"exact": 3,
+			"gold": "oft",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/pelz",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Pelz · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schlafen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schlaf · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schreiben",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schreib · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sehen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "seh · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sprechen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "sprech · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/springen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "spring · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/stimme",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Stimm · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/tag",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Tag · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/tun",
+			"reps": 3,
+			"exact": 3,
+			"gold": "tu · n",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/turm",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Turm · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ueberhaupt",
+			"reps": 3,
+			"exact": 3,
+			"gold": "überhaupt",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weit",
+			"reps": 3,
+			"exact": 3,
+			"gold": "weit · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wisby",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Wisby · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zauber",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Zauber · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zeit",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Zeit · ∅",
+			"returned": []
+		}
+	]
+}

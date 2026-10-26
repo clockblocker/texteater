@@ -1,0 +1,91 @@
+{
+	"runId": "8ffc1a92-96d2-4474-978c-36943d1da07f",
+	"experimentId": "segment-in-morphemes/de:adversarial",
+	"round": "2026-10-26-breakdown-round-7",
+	"liveRuns": [
+		"8ffc1a92-96d2-4474-978c-36943d1da07f"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "8ffc1a92-96d2-4474-978c-36943d1da07f",
+		"experimentId": "segment-in-morphemes/de:adversarial",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "249b52282",
+		"startedAt": "2026-10-26T04:30:28.093Z",
+		"corpus": {
+			"fingerprint": "4166797f7ebb747e38b1e70edfc1c8db08a61e8437f74ffc0f6d6e6356f63b09",
+			"caseIds": [
+				"breakdown/de/gelenk",
+				"breakdown/de/gespenst",
+				"breakdown/de/gestalt"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 3,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 3,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 3,
+			"failed": 0,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-26T04:30:28.100Z",
+		"total": 3,
+		"succeeded": 3,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 0,
+			"quality": {
+				"passed": 9,
+				"failed": 0,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"exact": "9/9",
+	"cases": [
+		{
+			"caseId": "breakdown/de/gelenk",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Gelenk · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gespenst",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Gespenst · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gestalt",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Gestalt · ∅",
+			"returned": []
+		}
+	]
+}
