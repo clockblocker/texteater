@@ -10,8 +10,10 @@
  * named by its headwords (`ge- + Schicht`), against no cut. The headwords
  * are the letters after the prefix as they stand, a noun's with its final
  * -e dropped or restored, and each with an umlaut undone, so a cut whose
- * base shows a changed vowel is named by the word it was made from. The cut stays when its options together
- * weigh at least half.
+ * base shows a changed vowel is named by the word it was made from. The
+ * cut stays when its best candidate outweighs no cut: the headwords are
+ * spellings of one candidate, so their weights are not summed (summed,
+ * the spellings no dictionary lists carried a fossil's cut past half).
  *
  * Its examples are no Breakdown case (#693).
  */
@@ -21,9 +23,6 @@ import { withoutUmlaut } from "./forms.js";
 import type { Whole } from "./targets.js";
 import type { WordAnalysis } from "./word-analyses.js";
 import { contendersOf, type Weighed } from "./word-senses.js";
-
-/** The cut's options together must weigh this for the cut to stay. */
-const cutFloor = 0.5;
 
 /**
  * The prefixes that fossilized inside many simple words, so a cut there
@@ -84,8 +83,8 @@ export const keptPrefixOption = (key: string, prefix: string) =>
 
 /**
  * Whether jev weighs the cut of `prefix` off the word, leaving `base`,
- * confirmed by the affix test, in one request; `noun` names the base's
- * headwords as nouns.
+ * confirmed by the affix test: its best candidate outweighs no cut, in one
+ * request; `noun` names the base's headwords as nouns.
  */
 export const prefixCutConfirmed = Effect.fnUntraced(function* (
 	prefix: string,
@@ -110,11 +109,11 @@ export const prefixCutConfirmed = Effect.fnUntraced(function* (
 		},
 	});
 	const { probabilities } = choiceOf(answers, "p_0");
-	const cut = headwords.reduce(
-		(sum, _, index) => sum + (probabilities[`c${index}`] ?? 0),
+	const best = Math.max(
 		0,
+		...headwords.map((_, index) => probabilities[`c${index}`] ?? 0),
 	);
-	return cut >= cutFloor;
+	return best > (probabilities.none ?? 0);
 });
 
 /** The affix-tested prefix an analysis cuts off first, with the letters it leaves, if any. */

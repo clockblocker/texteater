@@ -72,14 +72,17 @@ test("the affix test weighs the cut, naming the word it leaves, against no cut",
 	expect(options?.none).toStartWith("No cut:");
 });
 
-test("the cut's options weigh together: two halves of a cut beat a lighter no cut", async () => {
-	const judge = senseJudge({ "Ge- (prefix) + büsch": 0.9 }, {}, "Busch");
+test("the best candidate must outweigh no cut: two spellings of a cut are not summed", async () => {
+	const judge = senseJudge(
+		{ "Ge- (prefix) + büsch": 0.6, [noneOption]: 0.4 },
+		{},
+	);
 	expect(
 		await run(
 			input("Lexeme", "NOUN", "Gebüsch", "🌳"),
-			prefixChoice(() => ({ c0: 0.3, c1: 0.3, none: 0.4 }), judge.ask),
+			prefixChoice(() => ({ c0: 0.3, c2: 0.3, none: 0.4 }), judge.ask),
 		),
-	).toEqual(["Ge→Morpheme/Prefix:ge-", "büsch→Lexeme/NOUN:Busch"]);
+	).toBe("NoConstituents");
 });
 
 test("a cut no cut outweighs leaves the options, and the heaviest left is the pick", async () => {
