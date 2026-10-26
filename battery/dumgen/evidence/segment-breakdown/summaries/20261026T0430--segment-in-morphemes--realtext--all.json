@@ -2,6 +2,7 @@
 	"runId": "48876977-6bd4-4aa4-8cbf-a4108d5bba95",
 	"experimentId": "segment-in-morphemes/de:realtext",
 	"round": "2026-10-26-breakdown-round-7",
+	"note": "The real-text held-out batch's bottom words. 3 repetitions, one live run at 249b52282. Rescored 2026-10-26 from the run's stored outputs, with no jev call, against the re-judged gold (#1241): beinahe and überhaupt are no longer bottom words, so their 6 attempts left the set, 33 cases where the run had 35; manifest and summary are the run's own.",
 	"liveRuns": [
 		"48876977-6bd4-4aa4-8cbf-a4108d5bba95"
 	],
@@ -96,20 +97,13 @@
 			}
 		}
 	},
-	"exact": "105/105",
+	"exact": "99/99",
 	"cases": [
 		{
 			"caseId": "breakdown/de/ach",
 			"reps": 3,
 			"exact": 3,
 			"gold": "ach",
-			"returned": []
-		},
-		{
-			"caseId": "breakdown/de/beinahe",
-			"reps": 3,
-			"exact": 3,
-			"gold": "beinahe",
 			"returned": []
 		},
 		{
@@ -306,13 +300,6 @@
 			"reps": 3,
 			"exact": 3,
 			"gold": "Turm · ∅",
-			"returned": []
-		},
-		{
-			"caseId": "breakdown/de/ueberhaupt",
-			"reps": 3,
-			"exact": 3,
-			"gold": "überhaupt",
 			"returned": []
 		},
 		{

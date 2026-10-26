@@ -1,6 +1,6 @@
 {
 	"round": "2026-10-26-breakdown-round-7",
-	"note": "Round 7 of the Breakdown segmenters (#1241): a fresh real-text sample of 60 (seed 2026102607, rounds 5 and 6's frame) as the headline, a fresh adversarial batch of 10 apart, then the tuning set (round 6's held-out promoted) and the morphemes sets. jev-1.13.0 at 249b52282, 3 repetitions, the lab's cached jev transport, no reasoning model, no prompt change during the measurement runs. Strict is contractPass; lenient adds the confirmed noun-or-verb tolerance for a compound's first part. The headline leaves out the three rows the judges split on (contested). Both judges' calls were made in the round's own session, one from the system's point of view and one from the learner's, with no subagent.",
+	"note": "Round 7 of the Breakdown segmenters (#1241): a fresh real-text sample of 60 (seed 2026102607, rounds 5 and 6's frame) as the headline, a fresh adversarial batch of 10 apart, then the tuning set (round 6's held-out promoted) and the morphemes sets. jev-1.13.0 at 249b52282, 3 repetitions, the lab's cached jev transport, no reasoning model, no prompt change during the measurement runs. Strict is contractPass; lenient adds the confirmed noun-or-verb tolerance for a compound's first part. The headline leaves out the one row the judges split on (contested). The first judging (249b52282) had one agent make both judges' calls, so they were not independent; on 2026-10-26 two independent judge agents, one from the system's point of view and one from the learner's, neither seeing the other's verdicts or the first judging, re-judged every held-out row, and the held-out sets were rescored from the runs' stored outputs with no jev call (rejudging).",
 	"fixes": [
 		"The ge- affix test is one comparative choice: the cut, each option naming the word it leaves by its headwords (the letters as they stand, a noun's with its -e dropped or restored, each with the umlaut undone), against no cut (08a6c8a88)",
 		"The cut stays only when its best candidate outweighs no cut; the spellings are not summed (b3fba6253, after the prep live check)",
@@ -99,26 +99,32 @@
 		}
 	},
 	"headline": {
-		"realtextUncontested57": {
-			"strict": "149/171 (87.1%)",
-			"lenient": "149/171 (87.1%)",
-			"casesExactEveryRepetition": "49/57",
+		"realtextUncontested59": {
+			"strict": "152/177 (85.9%)",
+			"lenient": "152/177 (85.9%)",
+			"casesExactEveryRepetition": "50/59",
 			"wilson95": [
-				0.813,
-				0.914
+				0.8,
+				0.902
 			],
 			"caseBootstrap95": [
-				0.784,
-				0.947
-			]
+				0.763,
+				0.938
+			],
+			"firstJudging": "149/171 (87.1%) on 57 cases, Wilson 81.3% to 91.4%, case bootstrap 78.4% to 94.7%, with ganz, beinahe and überhaupt contested"
 		},
 		"realtextAll60": {
-			"strict": "152/180 (84.4%)",
-			"lenient": "152/180",
+			"strict": "155/180 (86.1%)",
+			"lenient": "155/180",
+			"wilson95": [
+				0.803,
+				0.904
+			],
 			"caseBootstrap95": [
-				0.75,
-				0.928
-			]
+				0.767,
+				0.944
+			],
+			"firstJudging": "152/180 (84.4%)"
 		},
 		"round6RealtextForComparison": {
 			"strict": "152/165 (92.1%)",
@@ -135,7 +141,16 @@
 		"adversarial": {
 			"strict": "22/30 (73.3%)",
 			"lenient": "22/30",
-			"casesExactEveryRepetition": "7/10"
+			"casesExactEveryRepetition": "7/10",
+			"wilson95": [
+				0.556,
+				0.858
+			],
+			"caseBootstrap95": [
+				0.467,
+				1.0
+			],
+			"note": "unchanged by the rejudging: both judges kept all ten rows"
 		},
 		"tuning222": {
 			"strict": "558/666 (83.8%)",
@@ -163,7 +178,7 @@
 			"note": "Gemüt 0 -> 2"
 		},
 		"morphemes": {
-			"realtext": "105/105 (35 cases, the three contested included)",
+			"realtext": "99/99 (33 cases; beinahe and überhaupt left the set, no longer bottom words; the run scored 105/105 on 35)",
 			"adversarial": "9/9 (Gespenst, Gestalt, Gelenk)",
 			"tuning": "214/225 (Geschichte 3/3; Gewissen and Gesicht 0/3 under the draft gold, Römer 🍷 0/3, Gefahr and erinnern 2/3)"
 		}
@@ -180,38 +195,28 @@
 		"cases": 60,
 		"noConstituents": {
 			"bottomWords": 25,
-			"indeclinables": 8,
+			"indeclinables": 6,
 			"properNames": 2
 		},
 		"withConstituents": {
-			"derivations": 11,
+			"derivations": 12,
 			"particleVerbs": 7,
-			"compounds": 5,
+			"compounds": 6,
 			"properNames": 1,
 			"phrasemes": 1
 		},
 		"exactBy": {
-			"noConstituents35": "96/105 (93/96 uncontested)",
-			"withConstituents25": "56/75",
+			"noConstituents33": "96/99",
+			"withConstituents27": "59/81 (56/78 uncontested)",
 			"particleVerbs7": "21/21",
-			"derivations11": "21/33"
+			"derivations12": "24/36 (21/33 uncontested)"
 		}
 	},
 	"contested": [
 		{
-			"row": "ganz",
-			"result": "3/3 (ADV)",
-			"split": "the Kind, which changes the morphemes: system ADV ganz (DWDS Adv. 'vollkommen', the Rule names ganz); learner ADJ ganz · ∅ ('completely' is ein ganzer Erfolg's attributive sense)"
-		},
-		{
-			"row": "beinahe",
-			"result": "0/3 (bei + nah)",
-			"split": "learner: bottom word (no Wortzerlegung); system: bei + nah by en.wiktionary, which is what the segmenter returned"
-		},
-		{
 			"row": "überhaupt",
-			"result": "0/3 (über- + Haupt)",
-			"split": "learner: bottom word; system: über- + Haupt by en.wiktionary, which is what the segmenter returned"
+			"result": "3/3 (über- + Haupt)",
+			"split": "both judges cut über + Haupt by en.wiktionary; system: über links to the Prefix über- on the closed particle list (aus- in Ausland); learner: to the ADP über, as DWDS's Etymologie names a Zusammenrückung of the preposition über with Haupt"
 		}
 	],
 	"failuresByCause": [
@@ -254,6 +259,11 @@
 			"cause": "A first part's word test on the edge",
 			"attempts": "1 RT",
 			"cases": "Arbeitszimmer: Arbeits weighed a word at 0.58, the route NOUN 0.52 against VERB 0.48; one repetition made Arbeits a Root"
+		},
+		{
+			"cause": "A fused preposition linked as the particle prefix",
+			"attempts": "3 RT",
+			"cases": "beinahe: bei + nahe cut right, but bei linked to the Prefix bei- (the separable particle list) where the judges' gold has ADP bei; the same question as the contested überhaupt"
 		},
 		{
 			"cause": "The form question takes a spelling no dictionary lists",
@@ -314,5 +324,30 @@
 			"heldOutFitting": false
 		}
 	],
-	"verdict": "Not yet. On the 57 uncontested real-text cases the segmenters are 87.1% exact strict and lenient (149 of 171 attempts; 78% to 95% by a case bootstrap), against round 6's 92.1% on 55 cases (85% to 98%): the intervals overlap, so neither a gain nor a loss is shown, and this sample holds more derivations (11 against 7), where most misses fall. Both fixes work on what they target: the comparative affix test decided every ge- word of the adversarial batch right and fixed Geschichte and Gemüt, and the relative sense check fixed Verneigung and Musikerleben 🎧. The misses that remain are systematic, not rare-word noise: the sense check choosing a prefix + noun bracketing over prefix + verb (erzählen, and verfilmen in tuning), none winning on a low sense yes for a true derivation (sonderbar, Gewässer), a head that is no word (Ministerium), and suffix-base routes (ruhig, Wirtschafterin). Tuning should go on with fixes 1 to 5."
+	"verdict": "Not yet. On the 59 uncontested real-text cases, as two independent judges re-judged them, the segmenters are 85.9% exact strict and lenient (152 of 177 attempts; 76% to 94% by a case bootstrap), against round 6's 92.1% on 55 cases (85% to 98%): the intervals overlap, so neither a gain nor a loss is shown, and this sample holds more derivations (12 against 7), where most misses fall. Both fixes work on what they target: the comparative affix test decided every ge- word of the adversarial batch right and fixed Geschichte and Gemüt, and the relative sense check fixed Verneigung and Musikerleben 🎧. The misses that remain are systematic, not rare-word noise: the sense check choosing a prefix + noun bracketing over prefix + verb (erzählen, and verfilmen in tuning), none winning on a low sense yes for a true derivation (sonderbar, Gewässer), a head that is no word (Ministerium), and suffix-base routes (ruhig, Wirtschafterin). Tuning should go on with fixes 1 to 5.",
+	"rejudging": {
+		"note": "Two independent judge agents (system POV: the model, the ADRs, the tie rule; learner POV: what helps a German learner drill down) reviewed all 60 real-text rows, the drüberhin exclusion and the 10 adversarial rows, each writing its own verdicts; agreement is the verdict, a split is contested. The bootstrap resamples cases 10,000 times (seed 2026102607).",
+		"changedAgainstFirstJudging": [
+			{
+				"row": "ganz",
+				"first": "contested (ADV or ADJ ganz · ∅)",
+				"now": "ADV ganz as drafted, uncontested: both judges keep ADV",
+				"result": "3/3"
+			},
+			{
+				"row": "beinahe",
+				"first": "contested (bottom word or bei + nah)",
+				"now": "bei + nah, uncontested: both judges cut it by en.wiktionary ('Analysable as bei + nah'), bei linked to ADP bei and nahe to ADJ nah",
+				"result": "0/3: the segmenter links bei to the Prefix bei- (the separable particle list)"
+			},
+			{
+				"row": "überhaupt",
+				"first": "contested (bottom word or über- + Haupt)",
+				"now": "über + Haupt, still contested: both judges cut it by en.wiktionary, but link über to the Prefix über- (system) or the ADP über (learner); the record holds the system judge's link",
+				"result": "3/3 under the stored gold, reported apart"
+			}
+		],
+		"unchanged": "The other 57 real-text rows, the drüberhin exclusion and all ten adversarial rows, as drafted. The system judge also corrected two citations, not the gold: unterhalten (the inseparable verb's DWDS article gives the Wortzerlegung halten; unter- halten is the separable homograph's) and Schiffersleute (DWDS says only 'Substantiv (computergeneriert)').",
+		"round6ContestedKept": "anders, her (von … her), Gewissen, Gesicht and wirklich stay contested in tuning until the user rules; the rejudging covered round 7's held-out rows only"
+	}
 }
