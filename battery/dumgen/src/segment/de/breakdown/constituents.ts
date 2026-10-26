@@ -79,6 +79,13 @@ import {
 	withTestedPrefixes,
 } from "./prefix-cut.js";
 import {
+	citedWord,
+	noSenseOption,
+	senseInstructions,
+	senseOption,
+	senseQuestion,
+} from "./sense-prompts.js";
+import {
 	cranberryOption,
 	type OpenPart,
 	partTargets,
@@ -111,14 +118,7 @@ import {
 	routeGuideOf,
 	verbFirstPartRouteGuide,
 } from "./word-prompts.js";
-import {
-	citedWord,
-	noSenseOption,
-	senseChecked,
-	senseInstructions,
-	senseOption,
-	weighedOptions,
-} from "./word-senses.js";
+import { senseChecked, weighedOptions } from "./word-senses.js";
 
 const lexemeRoutes = allRoutes.filter((key) => key.startsWith("Lexeme/"));
 const locutionRoutes = allRoutes.filter((key) => key.startsWith("Locution/"));
@@ -377,6 +377,7 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	prefixCutInstructions("word", "…"),
 	prefixCutOption("word", "…", "…"),
 	keptPrefixOption("word", "…"),
+	senseQuestion({ pieces: [], label: "…" }, "…", "…", "NOUN"),
 	senseInstructions("…", "…"),
 	senseOption({ pieces: [], label: "…" }, "NOUN"),
 	noSenseOption,

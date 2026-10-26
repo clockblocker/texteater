@@ -81,7 +81,7 @@ describe("the sense check (proposal 1)", () => {
 	test("on a contested word, the contender that gives the sense wins", async () => {
 		const judge = senseJudge(
 			{ "Land + -ung (suffix)": 0.9, "Lan + dung": 0.03 },
-			{ "it is a Dung": 0.9 },
+			{ "a Dung": 0.9 },
 			"r_0=Lexeme/NOUN",
 			"Lan",
 			"Dung",
@@ -95,7 +95,7 @@ describe("the sense check (proposal 1)", () => {
 	test("a heavy pick that gives the sense stands over a contender weighed 0.03 that gives it better", async () => {
 		const judge = senseJudge(
 			{ "Land + -ung (suffix)": 0.9, "Lan + dung": 0.03 },
-			{ "it is a Dung": 0.9, "made from Land-": 0.6 },
+			{ "a Dung": 0.9, "made from Land-": 0.6 },
 			"Land",
 			"landen",
 		);

@@ -89,9 +89,10 @@ export const shown = (pieces: readonly ProducedPiece[]) =>
 
 /**
  * A judge that weighs the analysis question by `weights` (labels to
- * weights, the rest 0), weighs each sense option by the text it holds
- * (`fits`, else 0.1; `none` as one minus the best unless `fits` names it),
- * normalized, and otherwise answers as `judgeWanting(...wanted)`.
+ * weights, the rest 0), answers each sense question, and weighs each
+ * option of the sense choice, by the text it holds (`fits`, else 0.1; the
+ * choice's weights normalized), and otherwise answers as
+ * `judgeWanting(...wanted)`.
  */
 export function senseJudge(
 	weights: Readonly<Record<string, number>>,
@@ -120,27 +121,20 @@ export function senseJudge(
 		if (request.stage === "breakdown-senses")
 			return Object.fromEntries(
 				Object.entries(request.questions).map(([id, question]) => {
+					const fitOf = (text: string) =>
+						Object.entries(fits).find(([held]) =>
+							text.includes(held),
+						)?.[1] ?? 0.1;
+					if (question.type === "noul")
+						return [id, noul(fitOf(String(question.instructions)))];
 					const criteria =
 						question.type === "choice" ? question.criteria : {};
-					const raw = Object.entries(criteria).map(
+					const weighed = Object.entries(criteria).map(
 						([key, option]): [string, number] => [
 							key,
-							Object.entries(fits).find(([held]) =>
-								String(option).includes(held),
-							)?.[1] ?? 0.1,
+							fitOf(String(option)),
 						],
 					);
-					// `none` is as likely as no analysis gives the sense.
-					const best = Math.max(
-						0,
-						...raw
-							.filter(([key]) => key !== "none")
-							.map(([, fit]) => fit),
-					);
-					const weighed = raw.map(([key, fit]): [string, number] => [
-						key,
-						key === "none" && !("none" in fits) ? 1 - best : fit,
-					]);
 					const total = weighed.reduce(
 						(sum, [, fit]) => sum + fit,
 						0,

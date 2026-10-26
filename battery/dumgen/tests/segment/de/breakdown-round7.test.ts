@@ -113,7 +113,7 @@ test("the sense check weighs the contenders against each other: a pick that give
 	).toEqual(["Verbeug→Lexeme/VERB:verbeugen", "ung→Morpheme/Suffix:-ung"]);
 });
 
-test("the sense check is one question whose options are the contenders and none", async () => {
+test("the sense check asks which split gives the sense, and none wins when no split gives it", async () => {
 	const judge = senseJudge(
 		{
 			"Ver- (prefix) + beugung": 0.7,
