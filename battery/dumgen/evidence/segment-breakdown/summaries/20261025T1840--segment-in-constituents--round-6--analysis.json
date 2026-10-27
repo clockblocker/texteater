@@ -88,7 +88,29 @@
 		}
 	},
 	"headline": {
-		"realtextUncontested55": {
+		"realtextUncontested58": {
+			"strict": "155/174 (89.1%)",
+			"lenient": "157/174 (90.2%)",
+			"casesExactEveryRepetition": "50/58 (51 lenient)",
+			"wilson95": [
+				0.836,
+				0.929
+			],
+			"caseBootstrap95": [
+				0.81,
+				0.96
+			],
+			"lenientWilson95": [
+				0.849,
+				0.938
+			],
+			"lenientCaseBootstrap95": [
+				0.828,
+				0.966
+			],
+			"note": "Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user's ruling: Gewissen and Gesicht (none returned, gold now ge- + wissen and ge- + Sicht) 0/3 each, anders (none returned, gold now the bottom word) 3/3; her and wirklich stay contested"
+		},
+		"realtextUncontested55FirstJudging": {
 			"strict": "152/165 (92.1%)",
 			"lenient": "154/165 (93.3%)",
 			"casesExactEveryRepetition": "49/55 (50 lenient)",
@@ -103,15 +125,21 @@
 			"lenientCaseBootstrap95": [
 				0.867,
 				0.988
-			]
+			],
+			"note": "the first judging, with anders, her, Gewissen, Gesicht and wirklich contested"
 		},
 		"realtextAll60": {
-			"strict": "164/180 (91.1%)",
-			"lenient": "166/180 (92.2%)",
+			"strict": "161/180 (89.4%)",
+			"lenient": "163/180 (90.6%)",
+			"wilson95": [
+				0.841,
+				0.931
+			],
 			"caseBootstrap95": [
-				0.839,
-				0.972
-			]
+				0.817,
+				0.961
+			],
+			"firstJudging": "164/180 (91.1%), 166/180 lenient"
 		},
 		"round5RealtextForComparison": {
 			"strict": "81/90 (90.0%)",
@@ -127,12 +155,38 @@
 		"adversarial": {
 			"strict": "18/30 (60.0%)",
 			"lenient": "18/30",
-			"casesExactEveryRepetition": "6/10"
+			"casesExactEveryRepetition": "6/10",
+			"wilson95": [
+				0.423,
+				0.754
+			],
+			"caseBootstrap95": [
+				0.3,
+				0.9
+			],
+			"note": "unchanged by the 2026-10-27 ruling"
 		},
 		"tuning152": {
 			"strict": "374/456 (82.0%)",
 			"lenient": "387/456 (84.9%)",
-			"casesExactEveryRepetition": "122/152 (126 lenient)"
+			"casesExactEveryRepetition": "122/152 (126 lenient)",
+			"wilson95": [
+				0.782,
+				0.853
+			],
+			"caseBootstrap95": [
+				0.759,
+				0.877
+			],
+			"lenientWilson95": [
+				0.813,
+				0.879
+			],
+			"lenientCaseBootstrap95": [
+				0.792,
+				0.901
+			],
+			"note": "unchanged by the 2026-10-27 ruling: none of its cases changed gold"
 		},
 		"tuningRound5Cases105": {
 			"round5": "261/315 strict, 269 lenient",
@@ -149,7 +203,7 @@
 			"round6": "12/36 strict, 17 lenient"
 		},
 		"morphemes": {
-			"realtext": "105/108 (Geschichte 0/3)",
+			"realtext": "99/102 (34 cases, Geschichte 0/3; Gewissen and Gesicht left the set, no longer bottom words, since the 2026-10-27 ruling; the run scored 105/108 on 36)",
 			"adversarial": "3/3 (Getreide)",
 			"tuning": "110/114 (Römer 🍷 0/3, erinnern 2/3)"
 		}
@@ -175,24 +229,9 @@
 	},
 	"contested": [
 		{
-			"row": "anders",
-			"result": "0/3 (none)",
-			"split": "learner: ander + -s; system: bottom word anders (-s is on no affix list)"
-		},
-		{
 			"row": "her",
 			"result": "3/3",
 			"split": "learner: ADV her; system: reject the draw, von … her is an authored Locution ADP"
-		},
-		{
-			"row": "Gewissen",
-			"result": "3/3 under the draft",
-			"split": "learner: bottom word; system: ge- + wissen (en.wiktionary)"
-		},
-		{
-			"row": "Gesicht",
-			"result": "3/3 under the draft",
-			"split": "learner: bottom word; system: ge- + Sicht (en.wiktionary)"
 		},
 		{
 			"row": "wirklich",
@@ -243,8 +282,8 @@
 		},
 		{
 			"cause": "An inventory gap",
-			"attempts": "3 RT (contested)",
-			"cases": "anders: -s is on no affix list, so ander + -s is never offered"
+			"attempts": "3 RT (contested at the run)",
+			"cases": "anders: -s is on no affix list, so ander + -s is never offered; moot since the 2026-10-27 ruling made anders a bottom word, which none matches"
 		}
 	],
 	"fixesOnTheirTargets": {
@@ -296,7 +335,7 @@
 		},
 		{
 			"rank": 8,
-			"fix": "Add the adverbial -s to the affix inventory, only if the user rules anders = ander + -s",
+			"fix": "Add the adverbial -s to the affix inventory, only if the user rules anders = ander + -s (dropped: the user's ruling of 2026-10-27 makes anders a bottom word)",
 			"fixes": "anders 3 RT (contested)",
 			"heldOutFitting": true
 		}
@@ -305,6 +344,36 @@
 		"The epenthetic t of eigen-t-lich (also wesentlich, hoffentlich, namentlich): no piece may show it",
 		"An inner e dropped before -ig (traurig from Trauer; also eitrig, neblig): no letter tolerance spells the noun"
 	],
-	"goldQuestion": "Schulvorsteherin: DWDS's only Wortzerlegung is machine-generated (Schul + Vorsteherin); Schulvorsteher + -in, a motion noun like Lehrerin, is the bracketing jev chose 2 of 3 times. The judges were asked only about the first part's link.",
-	"verdict": "Not yet. On the 55 uncontested real-text cases the segmenters are 92.1% exact strict (152 of 165 attempts; 85% to 98% by a case bootstrap) and 93.3% lenient, against round 5's 90.0% on 30 cases (79% to 99%): the intervals overlap, so the gain is not shown. Round 5's three systematic failures are fixed (its 30 cases now score 89 of 90). The misses that remain are not all rare-word noise: Geschichte and Verneigung are common words that fail for systematic reasons (a ge- affix test that answers near chance, and a sense check that lets a pick's own yes stand). The proper-name splits (Innstetten, Bottegone) and one bracketing gold question (Schulvorsteherin) are the noise part. After fixes 1 and 2, the remaining real-text misses would be names and a disputed bracketing."
+	"goldQuestion": "Schulvorsteherin: DWDS's only Wortzerlegung is machine-generated (Schul + Vorsteherin); Schulvorsteher + -in, a motion noun like Lehrerin, is the bracketing jev chose 2 of 3 times. The judges were asked only about the first part's link. Settled by the user's ruling of 2026-10-27: the DWDS Wortzerlegung decides, so the gold Schul + Vorsteherin stands, uncontested.",
+	"verdict": "Not yet. On the 55 uncontested real-text cases the segmenters are 92.1% exact strict (152 of 165 attempts; 85% to 98% by a case bootstrap) and 93.3% lenient, against round 5's 90.0% on 30 cases (79% to 99%): the intervals overlap, so the gain is not shown. Round 5's three systematic failures are fixed (its 30 cases now score 89 of 90). The misses that remain are not all rare-word noise: Geschichte and Verneigung are common words that fail for systematic reasons (a ge- affix test that answers near chance, and a sense check that lets a pick's own yes stand). The proper-name splits (Innstetten, Bottegone) and one bracketing gold question (Schulvorsteherin) are the noise part. After fixes 1 and 2, the remaining real-text misses would be names and a disputed bracketing. Rescored 2026-10-27 after the user's ruling on split against no split, the 58 uncontested real-text cases score 89.1% strict (155 of 174; 81% to 96% by a case bootstrap) and 90.2% lenient: Gewissen and Gesicht, which the segmenters left whole, now count as misses, and anders, which they left whole, as a pass.",
+	"ruling20261027": {
+		"note": "The user ruled on 2026-10-27 (#1241): whether a word splits is decided as the tie rule decides between splits, by the DWDS Wortzerlegung, else the en.wiktionary etymology, else no split, however opaque the word now is; and outside a verb a particle-like part (bei in beinahe, über in überhaupt) links to its ADP, not to the verb Prefix (ADR 0050). Rescored from the runs' stored outputs with no jev call: the real-text constituents and morphemes runs change; the tuning and adversarial runs hold no changed case.",
+		"changed": [
+			{
+				"row": "Gewissen",
+				"dictionaries": "DWDS: no Wortzerlegung; en.wiktionary: 'equivalent to ge- + wissen'",
+				"gold": "ge- + wissen, uncontested",
+				"result": "0/3 (none returned)"
+			},
+			{
+				"row": "Gesicht",
+				"dictionaries": "DWDS: no Wortzerlegung; en.wiktionary: surface analysis ge- + Sicht",
+				"gold": "ge- + Sicht, uncontested",
+				"result": "0/3 (none returned)"
+			},
+			{
+				"row": "anders",
+				"dictionaries": "DWDS: no Wortzerlegung (its word-formation panel names only the Grundform ander); en.wiktionary: no German etymology",
+				"gold": "the bottom word anders, uncontested",
+				"result": "3/3"
+			},
+			{
+				"row": "Schulvorsteherin",
+				"dictionaries": "DWDS: the machine-generated Wortzerlegung Schul(en) + Vorsteherin",
+				"gold": "Schul + Vorsteherin stands; the gold question is settled",
+				"result": "1/3, unchanged"
+			}
+		],
+		"stillContested": "her (von … her) and wirklich, part-of-speech questions"
+	}
 }

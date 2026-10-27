@@ -2,6 +2,7 @@
 	"runId": "ad30882b-915d-4ec4-a688-0c14a3fd5e3a",
 	"experimentId": "segment-in-morphemes/de:breakdown",
 	"round": "2026-10-26-breakdown-round-7",
+	"note": "The tuning set's bottom words. Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: Gewissen and Gesicht are no longer bottom words, so their 6 attempts left the set, 73 cases where the run had 75; anders, now a bottom word, was no case of this run. manifest and summary are the run's own.",
 	"liveRuns": [
 		"ad30882b-915d-4ec4-a688-0c14a3fd5e3a"
 	],
@@ -136,7 +137,7 @@
 			}
 		}
 	},
-	"exact": "214/225",
+	"exact": "214/219",
 	"cases": [
 		{
 			"caseId": "breakdown/de/bad",
@@ -276,29 +277,11 @@
 			"returned": []
 		},
 		{
-			"caseId": "breakdown/de/gesicht",
-			"reps": 3,
-			"exact": 0,
-			"gold": "Gesicht · ∅",
-			"returned": [
-				"Ge · sicht · ∅"
-			]
-		},
-		{
 			"caseId": "breakdown/de/getreide",
 			"reps": 3,
 			"exact": 3,
 			"gold": "Getreid · e",
 			"returned": []
-		},
-		{
-			"caseId": "breakdown/de/gewissen",
-			"reps": 3,
-			"exact": 0,
-			"gold": "Gewissen · ∅",
-			"returned": [
-				"Ge · wissen · ∅"
-			]
 		},
 		{
 			"caseId": "breakdown/de/haben-besitzen",

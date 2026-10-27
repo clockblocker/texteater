@@ -2,7 +2,7 @@
 	"runId": "2f8e0958-50c9-4caf-994d-e69d4b50bf05",
 	"experimentId": "segment-in-constituents/de:breakdown",
 	"round": "2026-10-26-breakdown-round-7",
-	"note": "The tuning set, round 6's 70 held-out records promoted into it. metricsUncontested leaves out the five rows still waiting on the user. 3 repetitions at 249b52282; the earlier live run 9873d813 at b3fba6253 (the sense check as a choice alone) and the prep live check filled most of the cache, and this run asked 10 requests.",
+	"note": "The tuning set, round 6's 70 held-out records promoted into it. metricsUncontested leaves out the rows still waiting on the user: five at the run, two (her, wirklich) since the user's ruling of 2026-10-27. 3 repetitions at 249b52282; the earlier live run 9873d813 at b3fba6253 (the sense check as a choice alone) and the prep live check filled most of the cache, and this run asked 10 requests. Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: Gewissen (ge- + wissen), Gesicht (ge- + Sicht) and anders (a bottom word) are uncontested; metricsUncontested now leaves out her and wirklich only. manifest and summary are the run's own, scored against the first gold.",
 	"liveRuns": [
 		"9873d813-1915-4aa8-85d6-e9618ea4655d",
 		"2f8e0958-50c9-4caf-994d-e69d4b50bf05"
@@ -289,35 +289,35 @@
 		"all": {
 			"cases": 222,
 			"attempts": 666,
-			"exactAttempts": 558,
-			"exact": 0.8378,
-			"lenientExactAttempts": 573,
-			"lenientExact": 0.8604,
-			"casesExactEveryRepetition": 181,
-			"casesLenientEveryRepetition": 186,
-			"cutPrecision": 0.9272,
-			"cutRecall": 0.9686,
-			"linksPlaced": 0.9365,
-			"linksWithGoldRoute": 0.8849,
-			"linksExact": 0.879,
-			"hasConstituentsAgreed": 0.9474,
+			"exactAttempts": 564,
+			"exact": 0.8468,
+			"lenientExactAttempts": 579,
+			"lenientExact": 0.8694,
+			"casesExactEveryRepetition": 183,
+			"casesLenientEveryRepetition": 188,
+			"cutPrecision": 0.9341,
+			"cutRecall": 0.9723,
+			"linksPlaced": 0.9428,
+			"linksWithGoldRoute": 0.8886,
+			"linksExact": 0.8826,
+			"hasConstituentsAgreed": 0.961,
 			"failed": 0
 		},
 		"word": {
 			"cases": 181,
 			"attempts": 543,
-			"exactAttempts": 448,
-			"exact": 0.825,
-			"lenientExactAttempts": 463,
-			"lenientExact": 0.8527,
-			"casesExactEveryRepetition": 145,
-			"casesLenientEveryRepetition": 150,
-			"cutPrecision": 0.9129,
-			"cutRecall": 0.9301,
-			"linksPlaced": 0.9109,
-			"linksWithGoldRoute": 0.851,
-			"linksExact": 0.8418,
-			"hasConstituentsAgreed": 0.9355,
+			"exactAttempts": 454,
+			"exact": 0.8361,
+			"lenientExactAttempts": 469,
+			"lenientExact": 0.8637,
+			"casesExactEveryRepetition": 147,
+			"casesLenientEveryRepetition": 152,
+			"cutPrecision": 0.9288,
+			"cutRecall": 0.9387,
+			"linksPlaced": 0.9209,
+			"linksWithGoldRoute": 0.8569,
+			"linksExact": 0.8478,
+			"hasConstituentsAgreed": 0.9521,
 			"failed": 0
 		},
 		"phraseme": {
@@ -340,37 +340,37 @@
 	},
 	"metricsUncontested": {
 		"all": {
-			"cases": 217,
-			"attempts": 651,
-			"exactAttempts": 552,
-			"exact": 0.8479,
-			"lenientExactAttempts": 567,
-			"lenientExact": 0.871,
-			"casesExactEveryRepetition": 179,
-			"casesLenientEveryRepetition": 184,
-			"cutPrecision": 0.9334,
-			"cutRecall": 0.972,
-			"linksPlaced": 0.9418,
-			"linksWithGoldRoute": 0.8896,
-			"linksExact": 0.8835,
-			"hasConstituentsAgreed": 0.9601,
+			"cases": 220,
+			"attempts": 660,
+			"exactAttempts": 558,
+			"exact": 0.8455,
+			"lenientExactAttempts": 573,
+			"lenientExact": 0.8682,
+			"casesExactEveryRepetition": 181,
+			"casesLenientEveryRepetition": 186,
+			"cutPrecision": 0.9339,
+			"cutRecall": 0.9722,
+			"linksPlaced": 0.9425,
+			"linksWithGoldRoute": 0.8879,
+			"linksExact": 0.8819,
+			"hasConstituentsAgreed": 0.9606,
 			"failed": 0
 		},
 		"word": {
-			"cases": 176,
-			"attempts": 528,
-			"exactAttempts": 442,
-			"exact": 0.8371,
-			"lenientExactAttempts": 457,
-			"lenientExact": 0.8655,
-			"casesExactEveryRepetition": 143,
-			"casesLenientEveryRepetition": 148,
-			"cutPrecision": 0.927,
-			"cutRecall": 0.9372,
-			"linksPlaced": 0.9186,
-			"linksWithGoldRoute": 0.8576,
-			"linksExact": 0.8482,
-			"hasConstituentsAgreed": 0.9508,
+			"cases": 179,
+			"attempts": 537,
+			"exactAttempts": 448,
+			"exact": 0.8343,
+			"lenientExactAttempts": 463,
+			"lenientExact": 0.8622,
+			"casesExactEveryRepetition": 145,
+			"casesLenientEveryRepetition": 150,
+			"cutPrecision": 0.9282,
+			"cutRecall": 0.9382,
+			"linksPlaced": 0.9201,
+			"linksWithGoldRoute": 0.8556,
+			"linksExact": 0.8464,
+			"hasConstituentsAgreed": 0.9516,
 			"failed": 0
 		},
 		"phraseme": {
@@ -392,10 +392,7 @@
 		}
 	},
 	"contested": [
-		"breakdown/de/anders",
 		"breakdown/de/her",
-		"breakdown/de/gewissen",
-		"breakdown/de/gesicht",
 		"breakdown/de/wirklich"
 	],
 	"cases": [
@@ -430,12 +427,10 @@
 			"caseId": "breakdown/de/anders",
 			"group": "word",
 			"reps": 3,
-			"exact": 0,
-			"lenient": 0,
-			"gold": "ander → Lexeme/PRON ander · s → Morpheme/Suffix -s",
-			"returned": [
-				"3x none"
-			]
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
 		},
 		{
 			"caseId": "breakdown/de/apfelbaum",
@@ -995,12 +990,10 @@
 			"caseId": "breakdown/de/gesicht",
 			"group": "word",
 			"reps": 3,
-			"exact": 0,
-			"lenient": 0,
-			"gold": "none",
-			"returned": [
-				"3x Ge → Morpheme/Prefix ge- · sicht → Lexeme/NOUN Sicht"
-			]
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Ge → Morpheme/Prefix ge- · sicht → Lexeme/NOUN Sicht",
+			"returned": []
 		},
 		{
 			"caseId": "breakdown/de/gestein",
@@ -1026,7 +1019,7 @@
 			"reps": 3,
 			"exact": 0,
 			"lenient": 0,
-			"gold": "none",
+			"gold": "Ge → Morpheme/Prefix ge- · wissen → Lexeme/VERB wissen",
 			"returned": [
 				"3x Ge → Morpheme/Prefix ge- · wissen → Lexeme/NOUN Wissen"
 			]

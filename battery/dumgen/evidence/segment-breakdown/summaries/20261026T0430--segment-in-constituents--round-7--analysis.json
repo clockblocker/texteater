@@ -99,44 +99,50 @@
 		}
 	},
 	"headline": {
-		"realtextUncontested59": {
-			"strict": "152/177 (85.9%)",
-			"lenient": "152/177 (85.9%)",
-			"casesExactEveryRepetition": "50/59",
+		"realtextUncontested60": {
+			"strict": "152/180 (84.4%)",
+			"lenient": "152/180 (84.4%)",
+			"casesExactEveryRepetition": "50/60",
 			"wilson95": [
-				0.8,
-				0.902
+				0.784,
+				0.89
 			],
 			"caseBootstrap95": [
-				0.763,
-				0.938
+				0.75,
+				0.928
 			],
+			"note": "Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user's ruling: überhaupt's über now links to ADP über, so the segmenter's Prefix über- fails 0/3, and no row is contested",
+			"rejudging": "152/177 (85.9%) on 59 cases, Wilson 80.0% to 90.2%, case bootstrap 76.3% to 93.8%, with überhaupt contested",
 			"firstJudging": "149/171 (87.1%) on 57 cases, Wilson 81.3% to 91.4%, case bootstrap 78.4% to 94.7%, with ganz, beinahe and überhaupt contested"
 		},
 		"realtextAll60": {
-			"strict": "155/180 (86.1%)",
-			"lenient": "155/180",
+			"strict": "152/180 (84.4%)",
+			"lenient": "152/180",
 			"wilson95": [
-				0.803,
-				0.904
+				0.784,
+				0.89
 			],
 			"caseBootstrap95": [
-				0.767,
-				0.944
+				0.75,
+				0.928
 			],
-			"firstJudging": "152/180 (84.4%)"
+			"rejudging": "155/180 (86.1%)",
+			"firstJudging": "152/180 (84.4%)",
+			"note": "the same as the headline since the 2026-10-27 ruling left no row contested"
 		},
 		"round6RealtextForComparison": {
-			"strict": "152/165 (92.1%)",
-			"lenient": "154/165 (93.3%)",
+			"strict": "155/174 (89.1%)",
+			"lenient": "157/174 (90.2%)",
 			"wilson95": [
-				0.87,
-				0.953
+				0.836,
+				0.929
 			],
 			"caseBootstrap95": [
-				0.855,
-				0.976
-			]
+				0.81,
+				0.96
+			],
+			"note": "round 6's 58 uncontested cases, rescored after the 2026-10-27 ruling",
+			"beforeRuling": "152/165 (92.1%), 154/165 (93.3%) lenient, on 55 cases, Wilson 87.0% to 95.3%, case bootstrap 85.5% to 97.6%"
 		},
 		"adversarial": {
 			"strict": "22/30 (73.3%)",
@@ -153,19 +159,43 @@
 			"note": "unchanged by the rejudging: both judges kept all ten rows"
 		},
 		"tuning222": {
-			"strict": "558/666 (83.8%)",
-			"lenient": "573/666 (86.0%)",
-			"casesExactEveryRepetition": "181/222 (186 lenient)"
+			"strict": "564/666 (84.7%)",
+			"lenient": "579/666 (86.9%)",
+			"casesExactEveryRepetition": "183/222 (188 lenient)",
+			"beforeRuling": "558/666 (83.8%), 573/666 lenient, 181/222 (186 lenient)"
 		},
-		"tuningUncontested217": {
-			"strict": "552/651 (84.8%)",
-			"lenient": "567/651 (87.1%)",
-			"casesExactEveryRepetition": "179/217 (184 lenient)"
+		"tuningUncontested220": {
+			"strict": "558/660 (84.5%)",
+			"lenient": "573/660 (86.8%)",
+			"casesExactEveryRepetition": "181/220 (186 lenient)",
+			"wilson95": [
+				0.816,
+				0.871
+			],
+			"caseBootstrap95": [
+				0.8,
+				0.889
+			],
+			"lenientWilson95": [
+				0.84,
+				0.892
+			],
+			"lenientCaseBootstrap95": [
+				0.824,
+				0.909
+			],
+			"note": "Rescored 2026-10-27 after the user's ruling: Gewissen (ge- + NOUN Wissen returned, gold ge- + VERB wissen) 0/3, Gesicht (ge- + Sicht) 3/3 and anders (none) 3/3 now count; her and wirklich stay contested",
+			"beforeRuling": "552/651 (84.8%) on 217, 567/651 lenient, 179/217 (184 lenient)"
 		},
 		"tuningRound6Cases152": {
 			"round6": "374/456 strict, 387 lenient",
 			"round7": "374/456 strict, 387 lenient",
 			"note": "Musikerleben 🎧 0 -> 3 and Römer 🍷 0 -> 1 against verfilmen 3 -> 0 and Gefahr 3 -> 2"
+		},
+		"promotedRound6Realtext58": {
+			"round6AsHeldOut": "155/174 (157 lenient)",
+			"round7": "164/174 (166 lenient)",
+			"note": "under the 2026-10-27 ruling: Geschichte 0 -> 3, Verneigung 0 -> 3, Bottegone 2 -> 3, Gesicht 0 -> 3, Schulvorsteherin 1 -> 0; Gewissen 0 -> 0 (none, then ge- + NOUN Wissen where the gold links VERB wissen); anders 3/3 in both"
 		},
 		"promotedRound6Realtext55": {
 			"round6AsHeldOut": "152/165",
@@ -180,7 +210,7 @@
 		"morphemes": {
 			"realtext": "99/99 (33 cases; beinahe and überhaupt left the set, no longer bottom words; the run scored 105/105 on 35)",
 			"adversarial": "9/9 (Gespenst, Gestalt, Gelenk)",
-			"tuning": "214/225 (Geschichte 3/3; Gewissen and Gesicht 0/3 under the draft gold, Römer 🍷 0/3, Gefahr and erinnern 2/3)"
+			"tuning": "214/219 (73 cases; Gewissen and Gesicht left the set, no longer bottom words, since the 2026-10-27 ruling; Römer 🍷 0/3, Gefahr and erinnern 2/3; the run scored 214/225 on 75)"
 		}
 	},
 	"targets": {
@@ -199,26 +229,20 @@
 			"properNames": 2
 		},
 		"withConstituents": {
-			"derivations": 12,
+			"derivations": 11,
 			"particleVerbs": 7,
-			"compounds": 6,
+			"compounds": 7,
 			"properNames": 1,
 			"phrasemes": 1
 		},
 		"exactBy": {
 			"noConstituents33": "96/99",
-			"withConstituents27": "59/81 (56/78 uncontested)",
+			"withConstituents27": "56/81",
 			"particleVerbs7": "21/21",
-			"derivations12": "24/36 (21/33 uncontested)"
+			"derivations11": "21/33"
 		}
 	},
-	"contested": [
-		{
-			"row": "überhaupt",
-			"result": "3/3 (über- + Haupt)",
-			"split": "both judges cut über + Haupt by en.wiktionary; system: über links to the Prefix über- on the closed particle list (aus- in Ausland); learner: to the ADP über, as DWDS's Etymologie names a Zusammenrückung of the preposition über with Haupt"
-		}
-	],
+	"contested": [],
 	"failuresByCause": [
 		{
 			"cause": "Prefix + verb against prefix + noun + citation ending: the sense check prefers the noun's claim",
@@ -261,9 +285,9 @@
 			"cases": "Arbeitszimmer: Arbeits weighed a word at 0.58, the route NOUN 0.52 against VERB 0.48; one repetition made Arbeits a Root"
 		},
 		{
-			"cause": "A fused preposition linked as the particle prefix",
-			"attempts": "3 RT",
-			"cases": "beinahe: bei + nahe cut right, but bei linked to the Prefix bei- (the separable particle list) where the judges' gold has ADP bei; the same question as the contested überhaupt"
+			"cause": "A particle-like part outside a verb linked as the particle prefix",
+			"attempts": "6 RT",
+			"cases": "beinahe and überhaupt: bei + nahe and über + haupt cut right, but bei and über linked to the Prefixes bei- and über- (the separable particle list) where the gold has ADP bei and ADP über (the user, 2026-10-27); zuletzt above is the same cause"
 		},
 		{
 			"cause": "The form question takes a spelling no dictionary lists",
@@ -274,6 +298,11 @@
 			"cause": "The affix test at the edge",
 			"attempts": "1 tuning",
 			"cases": "Gefahr: ge- + Fahr 0.47 against no cut 0.43 in one repetition"
+		},
+		{
+			"cause": "A ge- base linked to the nominalized noun, not the verb",
+			"attempts": "3 tuning",
+			"cases": "Gewissen: ge- + NOUN Wissen where the gold, by en.wiktionary's ge- + wissen, links VERB wissen"
 		}
 	],
 	"fixesOnTheirTargets": {
@@ -307,8 +336,8 @@
 		},
 		{
 			"rank": 5,
-			"fix": "In an adverb (not a verb), a first part zu is the ADP, as in a phraseme",
-			"fixes": "zuletzt 3 RT",
+			"fix": "Outside a verb, a particle-like first part (zu, bei, über) is the ADP, as in a phraseme (the user, 2026-10-27); a fix for the next round",
+			"fixes": "zuletzt, beinahe and überhaupt 9 RT",
 			"heldOutFitting": true
 		},
 		{
@@ -319,12 +348,12 @@
 		},
 		{
 			"rank": 7,
-			"fix": "Held from round 6 as asked: the umlaut of gläubig and rötlich, Geschrei's verb base, proper-name splits, the adverbial -s",
+			"fix": "Held from round 6 as asked: the umlaut of gläubig and rötlich, Geschrei's verb base, proper-name splits, the adverbial -s (the adverbial -s is moot: anders is a bottom word since the user's ruling of 2026-10-27)",
 			"fixes": "tuning cases",
 			"heldOutFitting": false
 		}
 	],
-	"verdict": "Not yet. On the 59 uncontested real-text cases, as two independent judges re-judged them, the segmenters are 85.9% exact strict and lenient (152 of 177 attempts; 76% to 94% by a case bootstrap), against round 6's 92.1% on 55 cases (85% to 98%): the intervals overlap, so neither a gain nor a loss is shown, and this sample holds more derivations (12 against 7), where most misses fall. Both fixes work on what they target: the comparative affix test decided every ge- word of the adversarial batch right and fixed Geschichte and Gemüt, and the relative sense check fixed Verneigung and Musikerleben 🎧. The misses that remain are systematic, not rare-word noise: the sense check choosing a prefix + noun bracketing over prefix + verb (erzählen, and verfilmen in tuning), none winning on a low sense yes for a true derivation (sonderbar, Gewässer), a head that is no word (Ministerium), and suffix-base routes (ruhig, Wirtschafterin). Tuning should go on with fixes 1 to 5.",
+	"verdict": "Not yet. On the 59 uncontested real-text cases, as two independent judges re-judged them, the segmenters are 85.9% exact strict and lenient (152 of 177 attempts; 76% to 94% by a case bootstrap), against round 6's 92.1% on 55 cases (85% to 98%): the intervals overlap, so neither a gain nor a loss is shown, and this sample holds more derivations (12 against 7), where most misses fall. Both fixes work on what they target: the comparative affix test decided every ge- word of the adversarial batch right and fixed Geschichte and Gemüt, and the relative sense check fixed Verneigung and Musikerleben 🎧. The misses that remain are systematic, not rare-word noise: the sense check choosing a prefix + noun bracketing over prefix + verb (erzählen, and verfilmen in tuning), none winning on a low sense yes for a true derivation (sonderbar, Gewässer), a head that is no word (Ministerium), and suffix-base routes (ruhig, Wirtschafterin). Tuning should go on with fixes 1 to 5. Rescored 2026-10-27 after the user's ruling, no real-text row is contested: all 60 score 84.4% strict and lenient (152 of 180; 75% to 93% by a case bootstrap). überhaupt now fails as beinahe and zuletzt do, its über linked to the Prefix über- where the gold has the ADP; fix 5, widened to every particle-like part outside a verb, covers all three. Round 6, rescored the same way, gives 89.1% on its 58 uncontested cases (81% to 96%): the intervals still overlap.",
 	"rejudging": {
 		"note": "Two independent judge agents (system POV: the model, the ADRs, the tie rule; learner POV: what helps a German learner drill down) reviewed all 60 real-text rows, the drüberhin exclusion and the 10 adversarial rows, each writing its own verdicts; agreement is the verdict, a split is contested. The bootstrap resamples cases 10,000 times (seed 2026102607).",
 		"changedAgainstFirstJudging": [
@@ -344,10 +373,49 @@
 				"row": "überhaupt",
 				"first": "contested (bottom word or über- + Haupt)",
 				"now": "über + Haupt, still contested: both judges cut it by en.wiktionary, but link über to the Prefix über- (system) or the ADP über (learner); the record holds the system judge's link",
-				"result": "3/3 under the stored gold, reported apart"
+				"result": "3/3 under the stored gold, reported apart",
+				"afterRuling": "über + Haupt with über linked to ADP über, uncontested (the user, 2026-10-27): 0/3, the segmenter links the Prefix über-"
 			}
 		],
 		"unchanged": "The other 57 real-text rows, the drüberhin exclusion and all ten adversarial rows, as drafted. The system judge also corrected two citations, not the gold: unterhalten (the inseparable verb's DWDS article gives the Wortzerlegung halten; unter- halten is the separable homograph's) and Schiffersleute (DWDS says only 'Substantiv (computergeneriert)').",
-		"round6ContestedKept": "anders, her (von … her), Gewissen, Gesicht and wirklich stay contested in tuning until the user rules; the rejudging covered round 7's held-out rows only"
+		"round6ContestedKept": "anders, her (von … her), Gewissen, Gesicht and wirklich stay contested in tuning until the user rules; the rejudging covered round 7's held-out rows only. The user's ruling of 2026-10-27 settled anders (a bottom word), Gewissen (ge- + wissen) and Gesicht (ge- + Sicht); her and wirklich stay contested"
+	},
+	"ruling20261027": {
+		"note": "The user ruled on 2026-10-27 (#1241): whether a word splits is decided as the tie rule decides between splits, by the DWDS Wortzerlegung, else the en.wiktionary etymology, else no split, however opaque the word now is; and outside a verb a particle-like part (bei in beinahe, über in überhaupt) links to its ADP, not to the verb Prefix (ADR 0050). Rescored from the runs' stored outputs with no jev call: the real-text and tuning constituents runs and the tuning morphemes run change; the adversarial runs hold no changed case.",
+		"changed": [
+			{
+				"row": "überhaupt",
+				"set": "realtext",
+				"dictionaries": "DWDS: no Wortzerlegung, Etymologie a Zusammenrückung of the preposition über with Haupt; en.wiktionary: 'equivalent to über- + Haupt'",
+				"gold": "ADP über + Haupt, uncontested",
+				"result": "0/3 (Prefix über- returned)"
+			},
+			{
+				"row": "beinahe",
+				"set": "realtext",
+				"dictionaries": "DWDS: no Wortzerlegung; en.wiktionary: 'Analysable as bei + nah'",
+				"gold": "ADP bei + nah stands, confirmed",
+				"result": "0/3, unchanged"
+			},
+			{
+				"row": "Gewissen",
+				"set": "tuning",
+				"gold": "ge- + VERB wissen, uncontested",
+				"result": "0/3 (ge- + NOUN Wissen returned)"
+			},
+			{
+				"row": "Gesicht",
+				"set": "tuning",
+				"gold": "ge- + Sicht, uncontested",
+				"result": "3/3"
+			},
+			{
+				"row": "anders",
+				"set": "tuning",
+				"gold": "the bottom word anders, uncontested",
+				"result": "3/3 (none returned)"
+			}
+		],
+		"stillContested": "her (von … her) and wirklich in tuning, part-of-speech questions"
 	}
 }

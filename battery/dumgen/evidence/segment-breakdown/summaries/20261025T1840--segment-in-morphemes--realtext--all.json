@@ -2,6 +2,7 @@
 	"runId": "262e9dad-fa57-4ee4-9500-68ce56a4cd38",
 	"experimentId": "segment-in-morphemes/de:realtext",
 	"round": "2026-10-25-breakdown-round-6",
+	"note": "The real-text held-out batch's bottom words. Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: Gewissen and Gesicht are no longer bottom words, so their 6 attempts left the set, 34 cases where the run had 36; anders, now a bottom word, was no case of this run. manifest and summary are the run's own.",
 	"liveRuns": [
 		"262e9dad-fa57-4ee4-9500-68ce56a4cd38"
 	],
@@ -97,7 +98,7 @@
 			}
 		}
 	},
-	"exact": "105/108",
+	"exact": "99/102",
 	"cases": [
 		{
 			"caseId": "breakdown/de/bad",
@@ -184,20 +185,6 @@
 			"returned": [
 				"Ge · schicht · e"
 			]
-		},
-		{
-			"caseId": "breakdown/de/gesicht",
-			"reps": 3,
-			"exact": 3,
-			"gold": "Gesicht · ∅",
-			"returned": []
-		},
-		{
-			"caseId": "breakdown/de/gewissen",
-			"reps": 3,
-			"exact": 3,
-			"gold": "Gewissen · ∅",
-			"returned": []
 		},
 		{
 			"caseId": "breakdown/de/haus",

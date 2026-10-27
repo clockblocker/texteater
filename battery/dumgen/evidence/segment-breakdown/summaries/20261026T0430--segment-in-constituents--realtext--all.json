@@ -2,7 +2,7 @@
 	"runId": "4b7b238d-1743-445b-9121-ec40c18f38f7",
 	"experimentId": "segment-in-constituents/de:realtext",
 	"round": "2026-10-26-breakdown-round-7",
-	"note": "The real-text held-out batch breakdown-heldout-2026-10-26-realtext (60 records sampled at random from tf-demo's Library, seed 2026102607), the round's headline. metrics scores all 60; metricsUncontested leaves out the one row the judges split on (contested, überhaupt), the headline. 3 repetitions, one live run at 249b52282. Rescored 2026-10-26 from the run's stored outputs, with no jev call, against the gold two independent judges (system and learner POV, separate agents) re-judged (#1241): beinahe is now bei + nah and uncontested, ganz stays ADV and is uncontested, überhaupt is now über- + Haupt and stays contested. manifest and summary are the run's own, scored against the first gold.",
+	"note": "The real-text held-out batch breakdown-heldout-2026-10-26-realtext (60 records sampled at random from tf-demo's Library, seed 2026102607), the round's headline. metrics scores all 60; metricsUncontested, the headline, leaves out the rows still contested, none since the user's ruling of 2026-10-27. 3 repetitions, one live run at 249b52282. Rescored 2026-10-26 from the run's stored outputs, with no jev call, against the gold two independent judges (system and learner POV, separate agents) re-judged (#1241): beinahe is now bei + nah and uncontested, ganz stays ADV and is uncontested, überhaupt is now über- + Haupt and stays contested. manifest and summary are the run's own, scored against the first gold. Rescored again 2026-10-27, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: überhaupt is now über + Haupt with über linked to ADP über, and uncontested, so metricsUncontested scores all 60.",
 	"liveRuns": [
 		"4b7b238d-1743-445b-9121-ec40c18f38f7"
 	],
@@ -126,34 +126,34 @@
 		"all": {
 			"cases": 60,
 			"attempts": 180,
-			"exactAttempts": 155,
-			"exact": 0.8611,
-			"lenientExactAttempts": 155,
-			"lenientExact": 0.8611,
-			"casesExactEveryRepetition": 51,
-			"casesLenientEveryRepetition": 51,
+			"exactAttempts": 152,
+			"exact": 0.8444,
+			"lenientExactAttempts": 152,
+			"lenientExact": 0.8444,
+			"casesExactEveryRepetition": 50,
+			"casesLenientEveryRepetition": 50,
 			"cutPrecision": 0.9423,
 			"cutRecall": 0.9608,
 			"linksPlaced": 0.9368,
-			"linksWithGoldRoute": 0.8506,
-			"linksExact": 0.8506,
+			"linksWithGoldRoute": 0.8333,
+			"linksExact": 0.8333,
 			"hasConstituentsAgreed": 0.9667,
 			"failed": 0
 		},
 		"word": {
 			"cases": 59,
 			"attempts": 177,
-			"exactAttempts": 155,
-			"exact": 0.8757,
-			"lenientExactAttempts": 155,
-			"lenientExact": 0.8757,
-			"casesExactEveryRepetition": 51,
-			"casesLenientEveryRepetition": 51,
+			"exactAttempts": 152,
+			"exact": 0.8588,
+			"lenientExactAttempts": 152,
+			"lenientExact": 0.8588,
+			"casesExactEveryRepetition": 50,
+			"casesLenientEveryRepetition": 50,
 			"cutPrecision": 0.9348,
 			"cutRecall": 0.9556,
 			"linksPlaced": 0.9333,
-			"linksWithGoldRoute": 0.8606,
-			"linksExact": 0.8606,
+			"linksWithGoldRoute": 0.8424,
+			"linksExact": 0.8424,
 			"hasConstituentsAgreed": 0.9661,
 			"failed": 0
 		},
@@ -177,6 +177,23 @@
 	},
 	"metricsUncontested": {
 		"all": {
+			"cases": 60,
+			"attempts": 180,
+			"exactAttempts": 152,
+			"exact": 0.8444,
+			"lenientExactAttempts": 152,
+			"lenientExact": 0.8444,
+			"casesExactEveryRepetition": 50,
+			"casesLenientEveryRepetition": 50,
+			"cutPrecision": 0.9423,
+			"cutRecall": 0.9608,
+			"linksPlaced": 0.9368,
+			"linksWithGoldRoute": 0.8333,
+			"linksExact": 0.8333,
+			"hasConstituentsAgreed": 0.9667,
+			"failed": 0
+		},
+		"word": {
 			"cases": 59,
 			"attempts": 177,
 			"exactAttempts": 152,
@@ -185,29 +202,12 @@
 			"lenientExact": 0.8588,
 			"casesExactEveryRepetition": 50,
 			"casesLenientEveryRepetition": 50,
-			"cutPrecision": 0.9406,
-			"cutRecall": 0.9596,
-			"linksPlaced": 0.9345,
-			"linksWithGoldRoute": 0.8452,
-			"linksExact": 0.8452,
+			"cutPrecision": 0.9348,
+			"cutRecall": 0.9556,
+			"linksPlaced": 0.9333,
+			"linksWithGoldRoute": 0.8424,
+			"linksExact": 0.8424,
 			"hasConstituentsAgreed": 0.9661,
-			"failed": 0
-		},
-		"word": {
-			"cases": 58,
-			"attempts": 174,
-			"exactAttempts": 152,
-			"exact": 0.8736,
-			"lenientExactAttempts": 152,
-			"lenientExact": 0.8736,
-			"casesExactEveryRepetition": 50,
-			"casesLenientEveryRepetition": 50,
-			"cutPrecision": 0.9326,
-			"cutRecall": 0.954,
-			"linksPlaced": 0.9308,
-			"linksWithGoldRoute": 0.8553,
-			"linksExact": 0.8553,
-			"hasConstituentsAgreed": 0.9655,
 			"failed": 0
 		},
 		"phraseme": {
@@ -228,9 +228,7 @@
 			"failed": 0
 		}
 	},
-	"contested": [
-		"breakdown/de/ueberhaupt"
-	],
+	"contested": [],
 	"cases": [
 		{
 			"caseId": "breakdown/de/ach",
@@ -653,10 +651,12 @@
 			"caseId": "breakdown/de/ueberhaupt",
 			"group": "word",
 			"reps": 3,
-			"exact": 3,
-			"lenient": 3,
-			"gold": "über → Morpheme/Prefix über- · haupt → Lexeme/NOUN Haupt",
-			"returned": []
+			"exact": 0,
+			"lenient": 0,
+			"gold": "über → Lexeme/ADP über · haupt → Lexeme/NOUN Haupt",
+			"returned": [
+				"3x über → Morpheme/Prefix über- · haupt → Lexeme/NOUN Haupt"
+			]
 		},
 		{
 			"caseId": "breakdown/de/unglueckstag",
