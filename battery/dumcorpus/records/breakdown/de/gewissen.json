@@ -16,40 +16,49 @@
 	},
 	"knowledge": {
 		"breakdown": {
-			"morphemes": [
+			"constituents": [
 				{
-					"letters": "Gewissen",
+					"letters": "Ge",
 					"target": {
 						"language": "de",
-						"canonicalForm": "gewissen",
+						"canonicalForm": "ge-",
 						"family": "Morpheme",
-						"kind": "Root"
+						"kind": "Prefix"
 					}
 				},
 				{
-					"letters": "",
+					"letters": "wissen",
 					"target": {
+						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "∅",
-						"family": "Morpheme",
-						"kind": "Ending"
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "wissen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
 					}
 				}
 			]
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0050", "ADR-0051"],
+		"adrs": ["ADR-0050"],
 		"rules": [],
 		"references": [
 			{
 				"title": "DWDS: Gewissen",
 				"url": "https://www.dwds.de/wb/Gewissen",
 				"supports": "No Wortzerlegung; Etymologie: ahd. giwiʒʒanī, an abstract on giwiʒʒan, the old participle of wissen"
+			},
+			{
+				"title": "en.wiktionary: Gewissen",
+				"url": "https://en.wiktionary.org/wiki/Gewissen",
+				"supports": "'From Middle High German, from Old High German giwizzani, a calque of Latin cōnscientia; equivalent to ge- + wissen'"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "ihr schlechtes Gewissen. The ge- belongs to an Old High German participle that left no modern word, so it is a fossilized prefix the affix test doesn't confirm, and it stays inside the Root, as in Geselle. DWDS gives no Wortzerlegung, so it is a bottom word: the Root gewissen and the zero ending (ADR 0051)."
+		"rationale": "ihr schlechtes Gewissen. DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: ge- + wissen (ADR 0050). The user ruled on 2026-10-27 (#1241) that the dictionary, not how opaque the word now is, decides split against no split."
 	}
 }

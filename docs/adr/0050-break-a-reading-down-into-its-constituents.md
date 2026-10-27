@@ -82,35 +82,31 @@ click away. A word with no word inside (`spannen`, `receive`) has none.
 
 The rule is structural for every part of speech (`obwohl` = `ob + wohl`), and
 links follow form, not meaning. Opaque formations get Constituents
-(`bekommen` = `be- + kommen`, `verstehen` = `ver- + stehen`), and no mark
-says a formation is opaque.
+(`bekommen` = `be- + kommen`), and no mark says a formation is opaque.
 
 For German:
 
-- When two bracketings compete, the DWDS Wortzerlegung decides, else the
-  en.wiktionary etymology line: `un- + glücklich`, `verarzten` = `ver- +
-  Arzt`.
-- A fossilized `ge-` is cut off only where ADR 0051's affix test confirms
-  it, so `Gefahr`, whose base died out, has no Constituents (the user,
-  2026-10-25).
+- The dictionary decides whether a word splits and how, however opaque it
+  now is: the DWDS Wortzerlegung, else the en.wiktionary etymology line,
+  else no split (the user, 2026-10-27): `verarzten` = `ver- + Arzt`
+  (DWDS), `Gewissen` = `ge- + wissen` (en.wiktionary), and `Gefahr`, split
+  by neither, has none.
 - The citation ending is unlinked filler: `verarzten` = `[[ver-|ver]] +
   [[Arzt|arzt]] + en`. Constituents hold no inflectional piece.
 - A linking element is its own piece, linking to an Interfix from the closed
   set s, es, n, en, e, er, ens: `Arbeit + -s- + Amt`, `[[Gast|Gäst]] +
   [[-e-|e]] + [[Haus|haus]]`, `Kind + -er- + Garten`.
-- A true particle links to its Prefix Morpheme (`auf-` in `aufmachen`, `aus-`
-  in `Ausland`). A closed particle list in dumcorpus decides which, compound
+- In a verb, a true particle links to its Prefix Morpheme (`auf-` in
+  `aufmachen`). A closed particle list in dumcorpus decides which, compound
   particles included: `hinaus-` is one piece, and clicking it gives `hin +
   aus`. The adverbs DWDS gives no verbal affix entry are true particles too
-  (`dabei`, `gegenüber`, `vorher`, `rückwärts`, `vorwärts`, `zuwider`, …):
-  the Amtliches Regelwerk §34(1) names most of them as Verbpartikeln, their
-  free form is an adverb, and German writes them attached to the verb. So
-  are the rare first parts (`zunichte` in `zunichtemachen`, `zugute`,
+  (`dabei`, `gegenüber`, `vorher`, `rückwärts`, `vorwärts`, `zuwider`, …).
+  So are the rare first parts (`zunichte` in `zunichtemachen`, `zugute`,
   `vorlieb`, `bevor`, `voneinander`) and the clipped forms (`rum`, `draus`,
   `drum`, `drunter`). Other first parts link to their own Lexeme: NOUN
-  `Teil` in `teilnehmen`, VERB `kennen` in `kennenlernen`, ADJ `fest`, and
-  ADJ `leid` in `leidtun`, as Duden and DWDS class it and as the 2006
-  reform's lowercasing shows.
+  `Teil` in `teilnehmen`, VERB `kennen` in `kennenlernen`, ADJ `fest`, ADJ
+  `leid` in `leidtun`. Outside a verb, a particle-like part links to its
+  ADP: `aus` in `Ausland`, `über` in `überhaupt` (the user, 2026-10-27).
 - A loan piece is judged within the text language: listed in Duden, it links
   to the German Lexeme (`Software`, `Update`), else to a German Foreign Lemma
   ([ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md)).
@@ -291,11 +287,14 @@ intensifiers, the English particle, the particle list and `leid` on
   ordinary modification, not part of the citation form.
 - A new Morpheme Kind `Particle` for the English particle. Rejected: English
   writes the particle as a separate, movable word, which makes it a Lexeme.
+- Opaque words as bottom words (`Gewissen`). Rejected: opacity is graded;
+  a dictionary split can be checked.
+- `über-` in `überhaupt`. Rejected: nothing outside a verb separates.
 - The adverbs with no DWDS verbal affix entry linking to their ADV Lexeme.
-  Rejected: the Regelwerk names them as Verbpartikeln, and German writes
-  them attached.
-- Adding the rare first parts on demand. Rejected: listing them now moves
-  nothing, since Dumgen opens no slot on them until a lab round weighs one.
+  Rejected: the Amtliches Regelwerk §34(1) names most as Verbpartikeln, and
+  German writes them attached.
+- Adding the rare first parts on demand. Rejected: listing them moves
+  nothing until a lab round weighs one.
 - `leid` linking to NOUN `Leid`. Rejected: Duden and DWDS class it as an
   adjective, and the 2006 reform lowercased it.
 - An adjective's frozen ending as an Interfix (`Lang + -e- + weile`).

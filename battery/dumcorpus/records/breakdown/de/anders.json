@@ -16,45 +16,36 @@
 	},
 	"knowledge": {
 		"breakdown": {
-			"constituents": [
+			"morphemes": [
 				{
-					"letters": "ander",
+					"letters": "anders",
 					"target": {
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "ander"
-					}
-				},
-				{
-					"letters": "s",
-					"target": {
-						"language": "de",
-						"canonicalForm": "-s",
+						"canonicalForm": "anders",
 						"family": "Morpheme",
-						"kind": "Suffix"
+						"kind": "Root"
 					}
 				}
 			]
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0050"],
+		"adrs": ["ADR-0050", "ADR-0051"],
 		"rules": [],
 		"references": [
 			{
 				"title": "DWDS: anders",
 				"url": "https://www.dwds.de/wb/anders",
-				"supports": "Adverb with the Grundform ander and no Wortzerlegung"
+				"supports": "No Wortzerlegung; its word-formation panel gives only the Grundform ander"
 			},
 			{
-				"title": "DWDS: ander",
-				"url": "https://www.dwds.de/wb/ander",
-				"supports": "ander, Indefinitpronomen"
+				"title": "en.wiktionary: anders",
+				"url": "https://en.wiktionary.org/wiki/anders",
+				"supports": "The German entry has no etymology and no analysis"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "Kann es anders sein? DWDS derives the adverb from the pronoun ander (its Grundform) with the adverbial -s; an affixal derivation takes Constituents, not a Source (ADR 0050). The adverbial -s is on no closed affix list yet. The pronoun ander is no authored member, so the part links to its Unit Shadow, pending."
+		"rationale": "Kann es anders sein? Neither DWDS's Wortzerlegung nor en.wiktionary splits it, so it is a bottom word (the user, 2026-10-27, #1241), though DWDS's word-formation panel names the Grundform ander. Indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root anders alone."
 	}
 }

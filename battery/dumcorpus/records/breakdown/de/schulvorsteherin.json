@@ -63,6 +63,6 @@
 		]
 	},
 	"notes": {
-		"rationale": "die Schulvorsteherin, the woman who heads a school. DWDS's only Wortzerlegung is machine-generated and names the verb schulen; the sense is the noun Schule, whose final -e the first part drops (Schul). Under the confirmed noun-or-verb tolerance either link passes."
+		"rationale": "die Schulvorsteherin, the woman who heads a school. The DWDS Wortzerlegung, though machine-generated, decides the bracketing: Schul + Vorsteherin, not Schulvorsteher + -in (the user, 2026-10-27, #1241). It names the verb schulen; the sense is the noun Schule, whose final -e the first part drops (Schul). Under the confirmed noun-or-verb tolerance either link passes."
 	}
 }

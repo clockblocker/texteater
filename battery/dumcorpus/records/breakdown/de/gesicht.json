@@ -16,40 +16,49 @@
 	},
 	"knowledge": {
 		"breakdown": {
-			"morphemes": [
+			"constituents": [
 				{
-					"letters": "Gesicht",
+					"letters": "Ge",
 					"target": {
 						"language": "de",
-						"canonicalForm": "gesicht",
+						"canonicalForm": "ge-",
 						"family": "Morpheme",
-						"kind": "Root"
+						"kind": "Prefix"
 					}
 				},
 				{
-					"letters": "",
+					"letters": "sicht",
 					"target": {
+						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "∅",
-						"family": "Morpheme",
-						"kind": "Ending"
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Sicht",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					}
 				}
 			]
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0050", "ADR-0051"],
+		"adrs": ["ADR-0050"],
 		"rules": [],
 		"references": [
 			{
 				"title": "DWDS: Gesicht",
 				"url": "https://www.dwds.de/wb/Gesicht",
 				"supports": "No Wortzerlegung, only 'formal verwandt mit Angesicht'; Etymologie: ahd. gisiht, 'präfigierte Abstraktbildungen zu ... sehen'"
+			},
+			{
+				"title": "en.wiktionary: Gesicht",
+				"url": "https://en.wiktionary.org/wiki/Gesicht",
+				"supports": "'From Middle High German gesiht, from Old High German gisiht'; surface analysis ge- + Sicht"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "ihr gutes Gesicht, a face. The ge- is a fossilized prefix: no Wortzerlegung confirms the cut, so it stays inside the Root, as in Geselle. DWDS gives no Wortzerlegung, so it is a bottom word: the Root gesicht and the zero ending (ADR 0051)."
+		"rationale": "ihr gutes Gesicht, a face. DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: its surface analysis ge- + Sicht (ADR 0050). The user ruled on 2026-10-27 (#1241) that the dictionary, not how opaque the word now is, decides split against no split."
 	}
 }

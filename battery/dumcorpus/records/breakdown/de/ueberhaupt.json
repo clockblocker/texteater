@@ -20,10 +20,12 @@
 				{
 					"letters": "über",
 					"target": {
+						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "über-",
-						"family": "Morpheme",
-						"kind": "Prefix"
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "über",
+						"coreFeatures": {}
 					}
 				},
 				{
@@ -59,6 +61,6 @@
 		]
 	},
 	"notes": {
-		"rationale": "weil Soldaten überhaupt nicht sehr für derlei Dinge sind, at all. DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: über- + Haupt (ADR 0050). Both judges cut it so on 2026-10-26; which Lemma über links to, the Prefix über- on the closed particle list or the ADP über DWDS's Zusammenrückung names, is contested (#1241)."
+		"rationale": "weil Soldaten überhaupt nicht sehr für derlei Dinge sind, at all. DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: über + Haupt (ADR 0050). Outside a verb a particle-like part links to its ADP, not to the verb Prefix über-, as DWDS's Etymologie names the preposition über (the user, 2026-10-27, #1241)."
 	}
 }
