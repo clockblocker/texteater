@@ -108,7 +108,7 @@
 				0.828,
 				0.966
 			],
-			"note": "Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user's ruling: Gewissen and Gesicht (none returned, gold now ge- + wissen and ge- + Sicht) 0/3 each, anders (none returned, gold now the bottom word) 3/3; her and wirklich stay contested"
+			"note": "Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user's ruling: Gewissen and Gesicht (none returned, gold now ge- + wissen and ge- + Sicht) 0/3 each, anders (none returned, gold now the bottom word) 3/3; her and wirklich stay contested; unchanged by her's exclusion on 2026-10-28, since it already left her out: wirklich alone stays contested"
 		},
 		"realtextUncontested55FirstJudging": {
 			"strict": "152/165 (92.1%)",
@@ -128,17 +128,28 @@
 			],
 			"note": "the first judging, with anders, her, Gewissen, Gesicht and wirklich contested"
 		},
-		"realtextAll60": {
-			"strict": "161/180 (89.4%)",
-			"lenient": "163/180 (90.6%)",
+		"realtextAll59": {
+			"strict": "158/177 (89.3%)",
+			"lenient": "160/177 (90.4%)",
+			"casesExactEveryRepetition": "51/59 (52 lenient)",
 			"wilson95": [
-				0.841,
-				0.931
+				0.838,
+				0.93
 			],
 			"caseBootstrap95": [
-				0.817,
+				0.814,
 				0.961
 			],
+			"lenientWilson95": [
+				0.852,
+				0.939
+			],
+			"lenientCaseBootstrap95": [
+				0.831,
+				0.966
+			],
+			"note": "every row but her, excluded on 2026-10-28 (a piece of the authored circumposition von … her); wirklich, still contested, counted",
+			"beforeExclusion": "161/180 (89.4%), 163/180 lenient, on all 60, Wilson 84.1% to 93.1%, case bootstrap 81.7% to 96.1%",
 			"firstJudging": "164/180 (91.1%), 166/180 lenient"
 		},
 		"round5RealtextForComparison": {
@@ -203,7 +214,7 @@
 			"round6": "12/36 strict, 17 lenient"
 		},
 		"morphemes": {
-			"realtext": "99/102 (34 cases, Geschichte 0/3; Gewissen and Gesicht left the set, no longer bottom words, since the 2026-10-27 ruling; the run scored 105/108 on 36)",
+			"realtext": "96/99 (33 cases, Geschichte 0/3; Gewissen and Gesicht left the set, no longer bottom words, since the 2026-10-27 ruling, and her, 3/3, since its exclusion on 2026-10-28; the run scored 105/108 on 36)",
 			"adversarial": "3/3 (Getreide)",
 			"tuning": "110/114 (Römer 🍷 0/3, erinnern 2/3)"
 		}
@@ -228,11 +239,6 @@
 		}
 	},
 	"contested": [
-		{
-			"row": "her",
-			"result": "3/3",
-			"split": "learner: ADV her; system: reject the draw, von … her is an authored Locution ADP"
-		},
 		{
 			"row": "wirklich",
 			"result": "3/3",
@@ -375,5 +381,10 @@
 			}
 		],
 		"stillContested": "her (von … her) and wirklich, part-of-speech questions"
+	},
+	"ruling20261028": {
+		"note": "The user ruled on 2026-10-28 (#1241) that her in von den Dünen her (round 6's real-text draw 30) is excluded: under the round 6 sampler's rule a token stands for its click unit, here the authored circumposition von … her (a Locution ADP in adposition-cases.ts), and authored grammar pieces get no Breakdown, so there is nothing to grade. It is a structural exclusion, as round 7's drüberhin, not a contested case: its row and record are gone, and it is scored in no set. Rescored from the runs' stored outputs with no jev call: only the sets that held her change, and the uncontested scores, which already left her out, do not.",
+		"excluded": "her (3/3 in every run that scored it)",
+		"stillContested": "wirklich, a part-of-speech question (ADJ or ADV)"
 	}
 }

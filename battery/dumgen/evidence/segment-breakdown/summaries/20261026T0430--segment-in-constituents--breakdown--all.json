@@ -2,7 +2,7 @@
 	"runId": "2f8e0958-50c9-4caf-994d-e69d4b50bf05",
 	"experimentId": "segment-in-constituents/de:breakdown",
 	"round": "2026-10-26-breakdown-round-7",
-	"note": "The tuning set, round 6's 70 held-out records promoted into it. metricsUncontested leaves out the rows still waiting on the user: five at the run, two (her, wirklich) since the user's ruling of 2026-10-27. 3 repetitions at 249b52282; the earlier live run 9873d813 at b3fba6253 (the sense check as a choice alone) and the prep live check filled most of the cache, and this run asked 10 requests. Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: Gewissen (ge- + wissen), Gesicht (ge- + Sicht) and anders (a bottom word) are uncontested; metricsUncontested now leaves out her and wirklich only. manifest and summary are the run's own, scored against the first gold.",
+	"note": "The tuning set, round 6's 70 held-out records promoted into it. metricsUncontested leaves out the rows still waiting on the user: five at the run, two (her, wirklich) since the user's ruling of 2026-10-27. 3 repetitions at 249b52282; the earlier live run 9873d813 at b3fba6253 (the sense check as a choice alone) and the prep live check filled most of the cache, and this run asked 10 requests. Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: Gewissen (ge- + wissen), Gesicht (ge- + Sicht) and anders (a bottom word) are uncontested; metricsUncontested now leaves out her and wirklich only. manifest and summary are the run's own, scored against the first gold. The user ruled on 2026-10-28 (#1241) that her in von den Dünen her (round 6's draw 30) is excluded: under the sampler's rule a token stands for its click unit, here the authored circumposition von … her, and authored grammar pieces get no Breakdown, so there is nothing to grade. Its record is deleted, so it leaves every set as a structural exclusion, not a contested case. Rescored 2026-10-28 from the run's stored outputs, with no jev call. metrics now scores 221 of the 222, and metricsUncontested, which already left her out, still leaves out wirklich only and is unchanged.",
 	"liveRuns": [
 		"9873d813-1915-4aa8-85d6-e9618ea4655d",
 		"2f8e0958-50c9-4caf-994d-e69d4b50bf05"
@@ -287,37 +287,37 @@
 	},
 	"metrics": {
 		"all": {
-			"cases": 222,
-			"attempts": 666,
-			"exactAttempts": 564,
-			"exact": 0.8468,
-			"lenientExactAttempts": 579,
-			"lenientExact": 0.8694,
-			"casesExactEveryRepetition": 183,
-			"casesLenientEveryRepetition": 188,
+			"cases": 221,
+			"attempts": 663,
+			"exactAttempts": 561,
+			"exact": 0.8462,
+			"lenientExactAttempts": 576,
+			"lenientExact": 0.8688,
+			"casesExactEveryRepetition": 182,
+			"casesLenientEveryRepetition": 187,
 			"cutPrecision": 0.9341,
 			"cutRecall": 0.9723,
 			"linksPlaced": 0.9428,
 			"linksWithGoldRoute": 0.8886,
 			"linksExact": 0.8826,
-			"hasConstituentsAgreed": 0.961,
+			"hasConstituentsAgreed": 0.9608,
 			"failed": 0
 		},
 		"word": {
-			"cases": 181,
-			"attempts": 543,
-			"exactAttempts": 454,
-			"exact": 0.8361,
-			"lenientExactAttempts": 469,
-			"lenientExact": 0.8637,
-			"casesExactEveryRepetition": 147,
-			"casesLenientEveryRepetition": 152,
+			"cases": 180,
+			"attempts": 540,
+			"exactAttempts": 451,
+			"exact": 0.8352,
+			"lenientExactAttempts": 466,
+			"lenientExact": 0.863,
+			"casesExactEveryRepetition": 146,
+			"casesLenientEveryRepetition": 151,
 			"cutPrecision": 0.9288,
 			"cutRecall": 0.9387,
 			"linksPlaced": 0.9209,
 			"linksWithGoldRoute": 0.8569,
 			"linksExact": 0.8478,
-			"hasConstituentsAgreed": 0.9521,
+			"hasConstituentsAgreed": 0.9519,
 			"failed": 0
 		},
 		"phraseme": {
@@ -392,7 +392,6 @@
 		}
 	},
 	"contested": [
-		"breakdown/de/her",
 		"breakdown/de/wirklich"
 	],
 	"cases": [
@@ -1161,15 +1160,6 @@
 		},
 		{
 			"caseId": "breakdown/de/heissen-bedeuten",
-			"group": "word",
-			"reps": 3,
-			"exact": 3,
-			"lenient": 3,
-			"gold": "none",
-			"returned": []
-		},
-		{
-			"caseId": "breakdown/de/her",
 			"group": "word",
 			"reps": 3,
 			"exact": 3,

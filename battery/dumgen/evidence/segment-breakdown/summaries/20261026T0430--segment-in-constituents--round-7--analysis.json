@@ -158,10 +158,28 @@
 			],
 			"note": "unchanged by the rejudging: both judges kept all ten rows"
 		},
-		"tuning222": {
-			"strict": "564/666 (84.7%)",
-			"lenient": "579/666 (86.9%)",
-			"casesExactEveryRepetition": "183/222 (188 lenient)",
+		"tuning221": {
+			"strict": "561/663 (84.6%)",
+			"lenient": "576/663 (86.9%)",
+			"casesExactEveryRepetition": "182/221 (187 lenient)",
+			"wilson95": [
+				0.817,
+				0.872
+			],
+			"caseBootstrap95": [
+				0.799,
+				0.89
+			],
+			"lenientWilson95": [
+				0.841,
+				0.892
+			],
+			"lenientCaseBootstrap95": [
+				0.825,
+				0.911
+			],
+			"note": "every case but her, excluded on 2026-10-28 (a piece of the authored circumposition von … her); wirklich, still contested, counted",
+			"beforeExclusion": "564/666 (84.7%), 579/666 lenient, 183/222 (188 lenient), with her",
 			"beforeRuling": "558/666 (83.8%), 573/666 lenient, 181/222 (186 lenient)"
 		},
 		"tuningUncontested220": {
@@ -184,7 +202,7 @@
 				0.824,
 				0.909
 			],
-			"note": "Rescored 2026-10-27 after the user's ruling: Gewissen (ge- + NOUN Wissen returned, gold ge- + VERB wissen) 0/3, Gesicht (ge- + Sicht) 3/3 and anders (none) 3/3 now count; her and wirklich stay contested",
+			"note": "Rescored 2026-10-27 after the user's ruling: Gewissen (ge- + NOUN Wissen returned, gold ge- + VERB wissen) 0/3, Gesicht (ge- + Sicht) 3/3 and anders (none) 3/3 now count; her and wirklich stay contested; unchanged by her's exclusion on 2026-10-28, since it already left her out: wirklich alone stays contested",
 			"beforeRuling": "552/651 (84.8%) on 217, 567/651 lenient, 179/217 (184 lenient)"
 		},
 		"tuningRound6Cases152": {
@@ -210,7 +228,7 @@
 		"morphemes": {
 			"realtext": "99/99 (33 cases; beinahe and überhaupt left the set, no longer bottom words; the run scored 105/105 on 35)",
 			"adversarial": "9/9 (Gespenst, Gestalt, Gelenk)",
-			"tuning": "214/219 (73 cases; Gewissen and Gesicht left the set, no longer bottom words, since the 2026-10-27 ruling; Römer 🍷 0/3, Gefahr and erinnern 2/3; the run scored 214/225 on 75)"
+			"tuning": "211/216 (72 cases; Gewissen and Gesicht left the set, no longer bottom words, since the 2026-10-27 ruling, and her, 3/3, since its exclusion on 2026-10-28; Römer 🍷 0/3, Gefahr and erinnern 2/3; the run scored 214/225 on 75)"
 		}
 	},
 	"targets": {
@@ -378,7 +396,7 @@
 			}
 		],
 		"unchanged": "The other 57 real-text rows, the drüberhin exclusion and all ten adversarial rows, as drafted. The system judge also corrected two citations, not the gold: unterhalten (the inseparable verb's DWDS article gives the Wortzerlegung halten; unter- halten is the separable homograph's) and Schiffersleute (DWDS says only 'Substantiv (computergeneriert)').",
-		"round6ContestedKept": "anders, her (von … her), Gewissen, Gesicht and wirklich stay contested in tuning until the user rules; the rejudging covered round 7's held-out rows only. The user's ruling of 2026-10-27 settled anders (a bottom word), Gewissen (ge- + wissen) and Gesicht (ge- + Sicht); her and wirklich stay contested"
+		"round6ContestedKept": "anders, her (von … her), Gewissen, Gesicht and wirklich stay contested in tuning until the user rules; the rejudging covered round 7's held-out rows only. The user's ruling of 2026-10-27 settled anders (a bottom word), Gewissen (ge- + wissen) and Gesicht (ge- + Sicht); her and wirklich stay contested; on 2026-10-28 the user excluded her as a piece of the authored circumposition von … her, so wirklich alone stays contested"
 	},
 	"ruling20261027": {
 		"note": "The user ruled on 2026-10-27 (#1241): whether a word splits is decided as the tie rule decides between splits, by the DWDS Wortzerlegung, else the en.wiktionary etymology, else no split, however opaque the word now is; and outside a verb a particle-like part (bei in beinahe, über in überhaupt) links to its ADP, not to the verb Prefix (ADR 0050). Rescored from the runs' stored outputs with no jev call: the real-text and tuning constituents runs and the tuning morphemes run change; the adversarial runs hold no changed case.",
@@ -417,5 +435,10 @@
 			}
 		],
 		"stillContested": "her (von … her) and wirklich in tuning, part-of-speech questions"
+	},
+	"ruling20261028": {
+		"note": "The user ruled on 2026-10-28 (#1241) that her in von den Dünen her (round 6's real-text draw 30) is excluded: under the round 6 sampler's rule a token stands for its click unit, here the authored circumposition von … her (a Locution ADP in adposition-cases.ts), and authored grammar pieces get no Breakdown, so there is nothing to grade. It is a structural exclusion, as round 7's drüberhin, not a contested case: its row and record are gone, and it is scored in no set. Rescored from the runs' stored outputs with no jev call: only the sets that held her change, and the uncontested scores, which already left her out, do not.",
+		"excluded": "her (3/3 in every run that scored it)",
+		"stillContested": "wirklich, a part-of-speech question (ADJ or ADV)"
 	}
 }

@@ -2,7 +2,7 @@
 	"runId": "ad30882b-915d-4ec4-a688-0c14a3fd5e3a",
 	"experimentId": "segment-in-morphemes/de:breakdown",
 	"round": "2026-10-26-breakdown-round-7",
-	"note": "The tuning set's bottom words. Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: Gewissen and Gesicht are no longer bottom words, so their 6 attempts left the set, 73 cases where the run had 75; anders, now a bottom word, was no case of this run. manifest and summary are the run's own.",
+	"note": "The tuning set's bottom words. Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: Gewissen and Gesicht are no longer bottom words, so their 6 attempts left the set, 73 cases where the run had 75; anders, now a bottom word, was no case of this run. manifest and summary are the run's own. The user ruled on 2026-10-28 (#1241) that her in von den Dünen her (round 6's draw 30) is excluded: under the sampler's rule a token stands for its click unit, here the authored circumposition von … her, and authored grammar pieces get no Breakdown, so there is nothing to grade. Its record is deleted, so it leaves every set as a structural exclusion, not a contested case. Rescored 2026-10-28 from the run's stored outputs, with no jev call. her, a bottom word that passed 3/3, leaves the set: 72 cases where the 2026-10-27 rescore had 73.",
 	"liveRuns": [
 		"ad30882b-915d-4ec4-a688-0c14a3fd5e3a"
 	],
@@ -137,7 +137,7 @@
 			}
 		}
 	},
-	"exact": "214/219",
+	"exact": "211/216",
 	"cases": [
 		{
 			"caseId": "breakdown/de/bad",
@@ -309,13 +309,6 @@
 			"reps": 3,
 			"exact": 3,
 			"gold": "heiß · en",
-			"returned": []
-		},
-		{
-			"caseId": "breakdown/de/her",
-			"reps": 3,
-			"exact": 3,
-			"gold": "her",
 			"returned": []
 		},
 		{
