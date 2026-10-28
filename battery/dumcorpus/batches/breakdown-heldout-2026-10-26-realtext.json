@@ -12,6 +12,7 @@
 		"acceptance": [
 			"A sampled token stands for its click unit: the biggest unit a click on it resolves to in context (Schlimmste in das Schlimmste is NOUN Schlimmste, not ADJ schlimm; the coordinator's ruling on round 5's draw 8, #1241)",
 			"That unit is a Lexeme, Locution or Saying tf-demo would ask a Breakdown for: not a closed route (AUX, DET, PRON, PART), not an Authored Inventory member, not Foreign",
+			"A token inside an authored grammar piece stands for that piece, an Authored Inventory member that gets no Breakdown, so its draw is excluded even when the token alone reads as a word: her in von den Dünen her is the circumposition von … her, an authored Locution ADP (adposition-cases.ts), not ADV her (the user's ruling of 2026-10-28 on round 6's draw 30, #1241)",
 			"It has no Source (ADR 0050): the host runs no segmenter on a conversion, a participle, a clipping or an acronym (a DWDS Grundform line names one)",
 			"The token is the unit's first member in the sentence, so each unit occurrence has one chance",
 			"Its Lemma is not already Breakdown gold",

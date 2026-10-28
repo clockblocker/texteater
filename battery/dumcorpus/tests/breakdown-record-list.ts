@@ -114,7 +114,6 @@ export const breakdownRecordList: string[][] = [
 	["haus", "Lexeme NOUN 🏠", "morphemes"],
 	["haustuer", "Lexeme NOUN 🚪", "constituents"],
 	["heissen-bedeuten", "Lexeme VERB 💬", "morphemes"],
-	["her", "Lexeme ADV ↩", "morphemes"],
 	["herantreten", "Lexeme VERB 🚶", "constituents"],
 	["herr-gebieter", "Lexeme NOUN 🎩", "morphemes"],
 	["himbeere", "Lexeme NOUN 🍓", "constituents"],

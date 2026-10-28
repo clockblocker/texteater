@@ -33,7 +33,7 @@
 		"27 · Gewissen · Achtzehntes Kapitel #133 · Lexeme NOUN Gewissen · accept",
 		"28 · Gesicht · Vierzehntes Kapitel #8 · Lexeme NOUN Gesicht · accept",
 		"29 · schon · Neunzehntes Kapitel #19 · Lexeme ADV schon · reject: already Breakdown gold",
-		"30 · her · Neunzehntes Kapitel #191 · Lexeme ADV her (von den Dünen her) · accept",
+		"30 · her · Neunzehntes Kapitel #191 · Locution ADP von … her (von den Dünen her) · excluded after scoring: structural: its click unit is the circumposition von … her, an authored Locution ADP (adposition-cases.ts), and authored grammar pieces get no Breakdown, so there is nothing to grade (the user's ruling of 2026-10-28, #1241); accepted at the draw as Lexeme ADV her",
 		"31 · blitzte · Dreizehntes Kapitel #215 · Lexeme VERB blitzen · reject: its click unit has a Source, so no segmenter runs on it (ADR 0050): DWDS gives the Grundform Blitz",
 		"32 · der · Zwanzigstes Kapitel #122 · Lexeme DET der · reject: closed route",
 		"33 · in · Sechsundzwanzigstes Kapitel #26 · Lexeme ADP in · reject: authored member",
