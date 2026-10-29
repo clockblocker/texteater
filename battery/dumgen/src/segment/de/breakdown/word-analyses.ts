@@ -68,8 +68,11 @@ const suffixes = [...germanSuffixes].sort(
 	(left, right) => right.spelled.length - left.spelled.length,
 );
 
+/** The suffixes no head may spell; one that is also a head (`voll`) is cut both ways. */
 const suffixSpellings: ReadonlySet<string> = new Set(
-	germanSuffixes.map(({ spelled }) => spelled),
+	germanSuffixes
+		.filter(({ alsoAHead }) => alsoAHead !== true)
+		.map(({ spelled }) => spelled),
 );
 
 /**
@@ -163,7 +166,8 @@ function binaryCuts(
 	for (let cut = 2; cut <= word.length - 2; cut++) {
 		const head = lower(word.slice(cut));
 		if (word.length - cut < minHead && !shortHeads.has(head)) continue;
-		// A suffix is no head: `suffixCuts` offers that cut.
+		// A suffix is no head, unless it is also a word that heads
+		// compounds: `suffixCuts` offers that cut.
 		if (suffixSpellings.has(head)) continue;
 		result.push(
 			analysis([

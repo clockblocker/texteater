@@ -33,6 +33,13 @@ export type GermanAffix = {
 	 * tests a homograph's analysis against its sense with it (#1241).
 	 */
 	readonly sense?: string;
+	/**
+	 * A suffix whose letters also spell a word that heads compounds of
+	 * its own, so a word ending in them is offered both cuts: DWDS cuts
+	 * mühevoll `Mühe -voll` but randvoll `Rand voll`, with the adjective
+	 * (https://www.dwds.de/wb/randvoll).
+	 */
+	readonly alsoAHead?: true;
 };
 
 const prefix = (spelled: string): GermanAffix => ({
@@ -161,6 +168,7 @@ export const germanSuffixes: readonly GermanAffix[] = [
 	{
 		...suffix("voll", "voll", "full of or marked by what {base} names"),
 		baseKind: "NOUN",
+		alsoAHead: true,
 	},
 	suffix("weise"),
 	suffix("wärts"),

@@ -7,7 +7,6 @@ import { germanConstituents } from "../../../src/segment/de/breakdown/constituen
 import { wordAnalyses } from "../../../src/segment/de/breakdown/word-analyses.js";
 import { noneOption } from "../../../src/segment/de/breakdown/word-prompts.js";
 import { input, senseJudge, shown } from "./breakdown-support.js";
-import { noul, picked } from "./fake-judge.js";
 
 // The round-9 fixes (#1241), each shown on a word that is no Breakdown
 // Record.
@@ -29,78 +28,22 @@ const offeredAnalyses = (judge: ReturnType<typeof senseJudge>) =>
 				: [];
 		});
 
-test("a word part's letters as they stand win when the headword test passes them, whatever the headword question picks", async () => {
-	// The headword question picks Lacke (f_1=f1); the test passes Lack.
-	const judge = senseJudge(
-		{ "Auto + lack": 0.9 },
-		{},
-		"Auto",
-		"Lack",
-		"r_0=Lexeme/NOUN",
-		"f_1=f1",
-	);
-	expect(
-		await run(input("Lexeme", "NOUN", "Autolack", "🚗"), judge.ask),
-	).toEqual(["Auto→Lexeme/NOUN:Auto", "lack→Lexeme/NOUN:Lack"]);
-});
-
-test("a proper name's umlaut before a suffix is undone, and the form the headword test passes wins over the letters", async () => {
+test("a proper name's umlaut before a suffix is undone, as a form the headword question may pick", async () => {
 	const judge = senseJudge(
 		{ "röm + -isch (suffix)": 0.9 },
 		{},
 		"Rom",
 		"r_0=Lexeme/PROPN",
-		"f_0=f0",
 	);
 	expect(
 		await run(input("Lexeme", "ADJ", "römisch", "🏛"), judge.ask),
 	).toEqual(["röm→Lexeme/PROPN:Rom", "isch→Morpheme/Suffix:-isch"]);
-});
-
-/**
- * `judge`'s answers, but the headword question over the head's forms (Lack,
- * Lacke) picks Lacke, and the headword tests weigh them `lack` and `lacke`.
- */
-const testedForms =
-	(judge: ReturnType<typeof senseJudge>, lack: number, lacke: number): Ask =>
-	(request) =>
-		request.stage !== "breakdown-forms"
-			? judge.ask(request)
-			: Effect.map(judge.ask(request), (answers) => ({
-					...answers,
-					f_1: picked("f1", { f0: 0.4, f1: 0.6 }),
-					h_1_0: noul(lack),
-					h_1_1: noul(lacke),
-				}));
-
-test("the letters as they stand win when the headword test weighs them highest, though under the floor", async () => {
-	const judge = senseJudge(
-		{ "Auto + lack": 0.9 },
-		{},
-		"Auto",
-		"r_0=Lexeme/NOUN",
-	);
 	expect(
-		await run(
-			input("Lexeme", "NOUN", "Autolack", "🚗"),
-			testedForms(judge, 0.4, 0.27),
-		),
-	).toEqual(["Auto→Lexeme/NOUN:Auto", "lack→Lexeme/NOUN:Lack"]);
-});
-
-test("with no form passing the headword test and another weighed higher, the headword question's pick stands", async () => {
-	const judge = senseJudge(
-		{ "Auto + lack": 0.9 },
-		{},
-		"Auto",
-		"r_0=Lexeme/NOUN",
-	);
-	expect(
-		await run(
-			input("Lexeme", "NOUN", "Autolack", "🚗"),
-			testedForms(judge, 0.3, 0.4),
-		),
-	).toEqual(["Auto→Lexeme/NOUN:Auto", "lack→Lexeme/NOUN:Lacke"]);
+		judge
+			.requests()
+			.filter(({ stage }) => stage === "breakdown-forms")
+			.flatMap(({ questions }) => Object.keys(questions)),
+	).toEqual(["f_0"]);
 });
 
 test("an adverb's last word that is a particle and a preposition links to its ADP, unasked", async () => {
@@ -115,12 +58,27 @@ test("an adverb's last word that is a particle and a preposition links to its AD
 	).toEqual(["eben→Lexeme/ADV:eben", "zu→Lexeme/ADP:zu"]);
 });
 
-test("-voll is a suffix with a noun base, never the adjective voll as a head", async () => {
-	const judge = senseJudge({ "kraft + -voll (suffix)": 0.9 }, {}, "Kraft");
+test("-voll is a suffix with a noun base, and the adjective voll stays a head", async () => {
+	const suffixed = senseJudge(
+		{ "kraft + -voll (suffix)": 0.9, "kraft + voll": 0.1 },
+		{},
+		"Kraft",
+	);
 	expect(
-		await run(input("Lexeme", "ADJ", "kraftvoll", "💪"), judge.ask),
+		await run(input("Lexeme", "ADJ", "kraftvoll", "💪"), suffixed.ask),
 	).toEqual(["kraft→Lexeme/NOUN:Kraft", "voll→Morpheme/Suffix:-voll"]);
-	expect(offeredAnalyses(judge)).not.toContain("kraft + voll");
+	expect(offeredAnalyses(suffixed)).toContain("kraft + voll");
+	const compound = senseJudge(
+		{ "kraft + voll": 0.9, "kraft + -voll (suffix)": 0.1 },
+		{},
+		"Kraft",
+		"voll",
+		"r_0=Lexeme/NOUN",
+		"r_1=Lexeme/ADJ",
+	);
+	expect(
+		await run(input("Lexeme", "ADJ", "kraftvoll", "💪"), compound.ask),
+	).toEqual(["kraft→Lexeme/NOUN:Kraft", "voll→Lexeme/ADJ:voll"]);
 });
 
 test("an adverb's two words are asked whether a dictionary splits them so, and that yes beats none", async () => {

@@ -77,32 +77,6 @@ export const nounQuestion = (key: string, letters: string) =>
 export const adjectiveQuestion = (key: string, letters: string) =>
 	`In \`${key}\`, is "${letters}", spelled exactly so, an adjective a dictionary lists as a headword?`;
 
-/** Whether letters, as they stand, are a proper name. */
-export const nameQuestion = (key: string, letters: string) =>
-	`In \`${key}\`, is "${letters}", spelled exactly so, a name a dictionary or an atlas lists as a headword? Answer no when only a longer name has these letters.`;
-
-/**
- * The headword test of a word part's candidate Canonical Form of Kind
- * `kind` (#1241 round 9): the noun, name or adjective test on the form as
- * it stands; undefined for a Kind with no test.
- */
-export function headwordQuestion(
-	key: string,
-	form: string,
-	kind: string,
-): string | undefined {
-	switch (kind) {
-		case "NOUN":
-			return nounQuestion(key, form);
-		case "PROPN":
-			return nameQuestion(key, form);
-		case "ADJ":
-			return adjectiveQuestion(key, form);
-		default:
-			return undefined;
-	}
-}
-
 /** Whether a noun's first part is a word, or a word's stem, of its own. */
 export const wordQuestion = (key: string, letters: string) =>
 	`In \`${key}\`, is "${letters}" a word of its own, or a word's stem without its ending (Kau for kauen), that a dictionary lists as a headword? Answer no for a piece that lives on only inside words like this one.`;

@@ -101,7 +101,6 @@ import {
 import {
 	adjectiveQuestion,
 	mayBeCranberry,
-	nameQuestion,
 	nounQuestion,
 	suffixBaseRoute,
 	verbBaseQuestion,
@@ -128,13 +127,6 @@ import { senseChecked, weighedOptions } from "./word-senses.js";
 const lexemeRoutes = allRoutes.filter((key) => key.startsWith("Lexeme/"));
 const locutionRoutes = allRoutes.filter((key) => key.startsWith("Locution/"));
 const articleRoutes: readonly RouteKey[] = ["Lexeme/NOUN", "Lexeme/PROPN"];
-
-/** The Kinds whose word parts have their candidate forms tested as headwords (#1241 round 9). */
-const headwordTestedKinds: ReadonlySet<string> = new Set([
-	"NOUN",
-	"PROPN",
-	"ADJ",
-]);
 
 /** A Locution candidate's weight must reach this to make one part. */
 const locutionFloor = 0.5;
@@ -372,7 +364,6 @@ const wordConstituents = Effect.fnUntraced(function* (
 		ask,
 		routeGuideOf(analysis, kind),
 		{ NOUN: nounPartFormGuide },
-		headwordTestedKinds,
 	);
 	return constituentsOf(linkedPieces(analysis.pieces, targets, kind));
 });
@@ -402,7 +393,6 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	phraseFormGuide,
 	reflexiveFormGuide,
 	nounPartFormGuide,
-	nameQuestion("word", "…"),
 	verbBaseQuestion("word", "…"),
 	wordQuestion("word", "…"),
 	nounQuestion("word", "…"),
