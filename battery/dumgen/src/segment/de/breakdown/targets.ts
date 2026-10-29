@@ -98,22 +98,25 @@ const headwordFloor = 0.5;
 /**
  * The index of the form a part takes among its `count` candidates: the
  * headword question's pick, unless its forms were tested as headwords,
- * then the first, the letters as they stand, when it passes, else the
- * passing form the headword question weighs most; with none passing, its
- * pick.
+ * then the first, the letters as they stand, when it passes or the test
+ * weighs it at least as high as any other form (the test reads a part's
+ * letters inside the whole word lower: Lack 0.40 over Lacke 0.27, both
+ * under the floor, #1241 round 9), else the passing form the headword
+ * question weighs most; with none passing, its pick.
  */
 function formIndex(answers: Answers, index: number, count: number): number {
 	const { choice: picked, probabilities } = choiceOf(answers, `f_${index}`);
 	const pick = Number(picked.slice(1));
 	if (answers[`h_${index}_0`] === undefined) return pick;
-	const passing = Array.from({ length: count }, (_, at) => at).filter(
-		(at) => noulOf(answers, `h_${index}_${at}`) >= headwordFloor,
+	const tests = Array.from({ length: count }, (_, at) =>
+		noulOf(answers, `h_${index}_${at}`),
 	);
-	if (passing.includes(0)) return 0;
+	const [letters = 0] = tests;
+	if (letters >= headwordFloor || letters >= Math.max(...tests)) return 0;
 	const weight = (at: number) => probabilities[`f${at}`] ?? 0;
-	const [heaviest] = passing.sort(
-		(left, right) => weight(right) - weight(left),
-	);
+	const [heaviest] = tests
+		.flatMap((test, at) => (test >= headwordFloor ? [at] : []))
+		.sort((left, right) => weight(right) - weight(left));
 	return heaviest ?? pick;
 }
 

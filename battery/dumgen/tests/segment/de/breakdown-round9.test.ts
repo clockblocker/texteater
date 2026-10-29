@@ -7,6 +7,7 @@ import { germanConstituents } from "../../../src/segment/de/breakdown/constituen
 import { wordAnalyses } from "../../../src/segment/de/breakdown/word-analyses.js";
 import { noneOption } from "../../../src/segment/de/breakdown/word-prompts.js";
 import { input, senseJudge, shown } from "./breakdown-support.js";
+import { noul, picked } from "./fake-judge.js";
 
 // The round-9 fixes (#1241), each shown on a word that is no Breakdown
 // Record.
@@ -56,17 +57,62 @@ test("a proper name's umlaut before a suffix is undone, and the form the headwor
 	).toEqual(["röm→Lexeme/PROPN:Rom", "isch→Morpheme/Suffix:-isch"]);
 });
 
-test("with no form passing the headword test, the headword question's pick stands", async () => {
+/**
+ * `judge`'s answers, but the headword question over the head's forms (Lack,
+ * Lacke) picks Lacke, and the headword tests weigh them `lack` and `lacke`.
+ */
+const testedForms =
+	(judge: ReturnType<typeof senseJudge>, lack: number, lacke: number): Ask =>
+	(request) =>
+		request.stage !== "breakdown-forms"
+			? judge.ask(request)
+			: Effect.map(judge.ask(request), (answers) => ({
+					...answers,
+					f_1: picked("f1", { f0: 0.4, f1: 0.6 }),
+					h_1_0: noul(lack),
+					h_1_1: noul(lacke),
+				}));
+
+test("the letters as they stand win when the headword test weighs them highest, though under the floor", async () => {
 	const judge = senseJudge(
 		{ "Auto + lack": 0.9 },
 		{},
 		"Auto",
 		"r_0=Lexeme/NOUN",
-		"f_1=f1",
 	);
 	expect(
-		await run(input("Lexeme", "NOUN", "Autolack", "🚗"), judge.ask),
+		await run(
+			input("Lexeme", "NOUN", "Autolack", "🚗"),
+			testedForms(judge, 0.4, 0.27),
+		),
+	).toEqual(["Auto→Lexeme/NOUN:Auto", "lack→Lexeme/NOUN:Lack"]);
+});
+
+test("with no form passing the headword test and another weighed higher, the headword question's pick stands", async () => {
+	const judge = senseJudge(
+		{ "Auto + lack": 0.9 },
+		{},
+		"Auto",
+		"r_0=Lexeme/NOUN",
+	);
+	expect(
+		await run(
+			input("Lexeme", "NOUN", "Autolack", "🚗"),
+			testedForms(judge, 0.3, 0.4),
+		),
 	).toEqual(["Auto→Lexeme/NOUN:Auto", "lack→Lexeme/NOUN:Lacke"]);
+});
+
+test("an adverb's last word that is a particle and a preposition links to its ADP, unasked", async () => {
+	const judge = senseJudge(
+		{ "eben + zu": 0.9 },
+		{},
+		"eben",
+		"r_0=Lexeme/ADV",
+	);
+	expect(
+		await run(input("Lexeme", "ADV", "ebenzu", "🎯"), judge.ask),
+	).toEqual(["eben→Lexeme/ADV:eben", "zu→Lexeme/ADP:zu"]);
 });
 
 test("-voll is a suffix with a noun base, never the adjective voll as a head", async () => {

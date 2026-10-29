@@ -13,7 +13,9 @@
  * - A front phrase is a Locution part, its headword asked with its guide.
  * - Outside a verb, a particle-like first part that is also a preposition
  *   links to its ADP Lexeme, not to the verb Prefix (ADR 0054: `über` in
- *   `überhaupt`); nothing outside a verb separates.
+ *   `überhaupt`); nothing outside a verb separates. So does the last of
+ *   two words written together, an adverb's or a conjunction's (`zu` in
+ *   `geradezu`, #1241 round 9), unasked.
  */
 import {
 	germanAdpositionEntry,
@@ -24,7 +26,7 @@ import type * as Dumrel from "dumrel/types";
 import { allRoutes, checkedRouteKey, type RouteKey } from "../routes.js";
 import { onlyPronoun } from "./forms.js";
 import type { OpenPart } from "./targets.js";
-import type { WordAnalysis } from "./word-analyses.js";
+import { headedKinds, type WordAnalysis } from "./word-analyses.js";
 import { phraseFormGuide, phraseForms } from "./word-prompts.js";
 
 /** The routes a part of a word may take. */
@@ -120,6 +122,21 @@ export function openWordParts(
 				{
 					reads: piece.letters,
 					routes: [checkedRouteKey(`Lexeme/${next.baseKind}`)],
+				},
+			];
+		const adposition =
+			index === last && !headedKinds.has(kind)
+				? particleAdposition(
+						piece.letters.toLocaleLowerCase("de"),
+						kind,
+					)
+				: undefined;
+		if (adposition !== undefined)
+			return [
+				{
+					reads: piece.letters,
+					routes: ["Lexeme/ADP"],
+					forms: [adposition.canonicalForm],
 				},
 			];
 		if (hyphenated && onlyPronoun(piece.letters))
