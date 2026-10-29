@@ -1,0 +1,67 @@
+{
+	"round": "2026-10-29-breakdown-closeout",
+	"note": "The close-out of the Breakdown segmenters' eval (#1241) after round 9, with no new round. The shipped producer is 46ab48d69: round 9's headword test dropped (round 8's behaviour, the headword question's pick), round 9's other fixes kept, and the adjective voll offered as a head beside the suffix -voll. It was replayed from the jev cache at 3 repetitions; only the voll words missed the cache (the forms answers are cached per question). Then nennen, gerade and allein's morphemes were settled under existing rulings (6616c715b) and round 9 rescored from stored outputs, no jev call. Strict is contractPass; Wilson 95% intervals on attempts.",
+	"shippedProducer": {
+		"commit": "46ab48d69",
+		"replayRuns": [
+			{
+				"experiment": "segment-in-constituents/de:realtext",
+				"runId": "63da1347-7e77-42a8-b60b-f83e763fb81d",
+				"budget": 12000,
+				"freshRequests": 9,
+				"freshTokens": 5256,
+				"strict": "138/180 (76.7%), lenient the same; every case as round 9's run"
+			},
+			{
+				"experiment": "segment-in-constituents/de:adversarial",
+				"runId": "a4f01bea-0297-4806-8862-d91b24f4328a",
+				"budget": 26000,
+				"freshRequests": 18,
+				"freshTokens": 9852,
+				"strict": "18/30 (60.0%): Gästebuch 0 -> 3, Nagellack 3 -> 0 (Lacke); randvoll still 0/3"
+			},
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "d544a8c8-0428-4e1e-9ea4-e7f862246022",
+				"budget": 14000,
+				"freshRequests": 9,
+				"freshTokens": 5130,
+				"strict": "943/1083 (87.1%; 84.9-88.9%), lenient 958, against round 9's 925 and round 8's 928 on the same 361 cases"
+			}
+		],
+		"tuningMoves": "Blumenschale, Gästehaus, Sonnenbrille, Hohepriester, Langeweile, beinahe and Rentier (Rentner) 0 -> 3/3 again; Lederlack 3 -> 0 (Lacke). Kept from round 9: geradezu, vielleicht, mühevoll, rötlich and holländisch 3/3.",
+		"randvoll": "voll is now reachable as an ADJ head (randvoll is offered rand + voll), but the sense check still picks the suffix -voll 3/3; mühevoll, taktvoll and respektvoll stay 3/3.",
+		"morphemes": "offline at 46ab48d69 with the settled gold: real text 99/102 (allein 0/3, the segmenter gives an indeclinable ADJ ∅), adversarial 3/3, tuning 433/447"
+	},
+	"settled": [
+		{
+			"row": "nennen (round 8)",
+			"ruling": "the 2026-10-27 dictionary rule (ADR 0054)",
+			"result": "a bottom word: no DWDS Wortzerlegung, and en.wiktionary gives only an inheritance chain to Proto-Germanic; uncontested, 3/3"
+		},
+		{
+			"row": "gerade (round 9 RT36)",
+			"ruling": "the 2026-10-27 dictionary rule (ADR 0054)",
+			"result": "a bottom word: en.wiktionary's ge- + the root of Rad analyses Old High German girat, no modern surface; uncontested, 3/3"
+		},
+		{
+			"row": "allein's morphemes (round 9 RT30)",
+			"ruling": "ADR 0051: an indeclinable word has no Ending, not even ∅",
+			"result": "Root allein alone, as every other indeclinable in the gold; morphemes 0/3"
+		}
+	],
+	"rescore": {
+		"realtextRound9": "60 uncontested: 138/180 (76.7%; 70.0-82.2%), from 135/177 on 59",
+		"realtextRound8": "60 uncontested with nennen: 146/180 (81.1%; 74.8-86.2%), from 143/177 on 59",
+		"pooledRounds6to9": "240 uncontested cases, each with its own round's producer: 591/714 (82.8%; 79.8-85.4%), from 585/708 (82.6%)",
+		"morphemesRealtextRound9": "99/102, from 102/102 (allein)"
+	},
+	"spend": {
+		"closeout": {
+			"cap": "$0.005 (119,047 tokens)",
+			"freshTokens": 20238,
+			"dollars": 0.00085
+		},
+		"standing": "$1 from 2026-10-24: 2,751,523 tokens, $0.1156 spent, $0.8844 left"
+	}
+}
