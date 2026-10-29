@@ -25,15 +25,6 @@
 						"family": "Morpheme",
 						"kind": "Root"
 					}
-				},
-				{
-					"letters": "",
-					"target": {
-						"language": "de",
-						"canonicalForm": "∅",
-						"family": "Morpheme",
-						"kind": "Ending"
-					}
 				}
 			]
 		}
@@ -50,6 +41,6 @@
 		]
 	},
 	"notes": {
-		"rationale": "nur daran, allein zu sein, to be alone: DWDS gives the entry no word class and files the sense 'adverbiell', and its etymology labels it Adj., so ADJ (ADR 0054). DWDS gives no Wortzerlegung, so it is a bottom word: the Root allein and the zero ending (ADR 0051)."
+		"rationale": "nur daran, allein zu sein, to be alone: DWDS gives the entry no word class and files the sense 'adverbiell', and its etymology labels it Adj., so ADJ (ADR 0054). DWDS gives no Wortzerlegung, so it is a bottom word. It is predicative only, so it has no paradigm and is indeclinable, with no Ending, not even ∅ (ADR 0051), as every other indeclinable in the gold: the Root allein alone (#1241 round 9, settled by ADR 0051)."
 	}
 }

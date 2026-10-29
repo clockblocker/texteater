@@ -46,10 +46,15 @@
 				"title": "DWDS: nennen",
 				"url": "https://www.dwds.de/wb/nennen",
 				"supports": "No Wortzerlegung; Etymologie: ahd. nemnen, inherited"
+			},
+			{
+				"title": "en.wiktionary: nennen",
+				"url": "https://en.wiktionary.org/wiki/nennen",
+				"supports": "Etymology: inherited from Middle High German nennen, Old High German nemnen, Proto-Germanic *namnijaną; no 'equivalent to' or 'analysable as' line"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "meinen Freund nennen zu dürfen, to call him my friend. DWDS gives no Wortzerlegung, so it is a bottom word: the Root nenn and the Ending en (ADR 0051)."
+		"rationale": "meinen Freund nennen zu dürfen, to call him my friend. DWDS gives no Wortzerlegung, and en.wiktionary gives only an inheritance chain back to Proto-Germanic *namnijaną, no modern German surface analysis, so under the 2026-10-27 dictionary rule (ADR 0054) it is a bottom word, with no Source from Name (#1241 round 8, settled): the Root nenn and the Ending en (ADR 0051)."
 	}
 }
