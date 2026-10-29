@@ -1,0 +1,288 @@
+{
+	"round": "2026-10-29-breakdown-round-8",
+	"note": "Round 8 of the Breakdown segmenters (#1241): a fresh real-text sample of 60 (seed 2026102908, rounds 5 to 7's frame) as the headline, a fresh adversarial batch of 10 apart, then the tuning set (round 7's held-out promoted) and the morphemes sets. jev-1.13.0 at 85b3bc8bf, 3 repetitions, the lab's cached jev transport, no reasoning model, no prompt change during the measurement runs. Strict is contractPass; lenient adds the confirmed noun-or-verb tolerance for a compound's first part. The headline leaves out nennen, the one row the two independent judges split on (contested). Intervals: Wilson on attempts, and a case bootstrap of 20,000 resamples with seed 2026102908.",
+	"fixes": [
+		"Outside a verb, a true separable particle that the ADP Case Table lists as a preposition links to its ADP Lexeme, not the verb Prefix (ADR 0054; a19771941): beinahe, überhaupt, zuletzt",
+		"When jev weighs a prefixed verb's base a verb of its own, prefix + noun or adjective + citation ending is no longer offered (a19771941): erzählen, verfilmen",
+		"Before -ig and -lich, a base that is no adjective but both a verb's stem and a noun is asked between VERB and NOUN alone, the likelier first (a19771941): ruhig, gläubig"
+	],
+	"spend": {
+		"cap": {
+			"dollars": 0.05,
+			"tokens": 1190476,
+			"granted": 608000,
+			"note": "the sum of the seven live runs' --budget values"
+		},
+		"prepLiveCheck": [
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "073e415c-9a2e-4653-92dd-66f1fa2263b6",
+				"gitHead": "fe12638dc",
+				"cases": 8,
+				"budget": 22000,
+				"projected": 21019,
+				"freshRequests": 16,
+				"freshTokens": 8627,
+				"exact": "18/24"
+			}
+		],
+		"runs": [
+			{
+				"experiment": "segment-in-constituents/de:realtext",
+				"runId": "338856b7-3784-472d-b5c2-fdc2933e869b",
+				"budget": 400000,
+				"projected": 394024,
+				"freshRequests": 313,
+				"freshTokens": 187534
+			},
+			{
+				"experiment": "segment-in-constituents/de:adversarial",
+				"runId": "049b92c1-b669-4759-81f0-5cbd2e2fa41c",
+				"budget": 106000,
+				"projected": 104441,
+				"freshRequests": 103,
+				"freshTokens": 53801
+			},
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "ef947969-b731-478b-b787-4ef226bee684",
+				"budget": 52000,
+				"projected": 50193,
+				"freshRequests": 26,
+				"freshTokens": 20230
+			},
+			{
+				"experiment": "segment-in-morphemes/de:realtext",
+				"runId": "d90dcd58-df64-4d7e-81ef-e2596d86ceda",
+				"budget": 25000,
+				"projected": 23801,
+				"freshRequests": 39,
+				"freshTokens": 17433
+			},
+			{
+				"experiment": "segment-in-morphemes/de:adversarial",
+				"runId": "326f3c2b-7e80-490b-b6c9-cc96a60f39da",
+				"budget": 1000,
+				"projected": 0,
+				"freshRequests": 0,
+				"freshTokens": 0
+			},
+			{
+				"experiment": "segment-in-morphemes/de:breakdown",
+				"runId": "c5a6029c-904e-40ad-90ea-a02b955683a6",
+				"budget": 2000,
+				"projected": 1676,
+				"freshRequests": 3,
+				"freshTokens": 1329
+			}
+		],
+		"roundRunTokens": 280327,
+		"prepLiveCheckTokens": 8627,
+		"roundTokens": 288954,
+		"roundDollars": 0.0121,
+		"standingDollar": {
+			"tokens": 2207410,
+			"spentDollars": 0.0927,
+			"leftDollars": 0.9073,
+			"note": "round 7's standing 1,918,456 tokens and this round's 288,954, at $0.042 per million"
+		}
+	},
+	"headline": {
+		"realtextUncontested59": {
+			"strict": "143/177 (80.8%)",
+			"lenient": "143/177 (80.8%)",
+			"casesExactEveryRepetition": "47/59",
+			"wilson95": [
+				0.744,
+				0.859
+			],
+			"caseBootstrap95": [
+				0.706,
+				0.904
+			]
+		},
+		"realtextAll60": {
+			"strict": "146/180 (81.1%)",
+			"lenient": "146/180",
+			"casesExactEveryRepetition": "48/60",
+			"wilson95": [
+				0.748,
+				0.862
+			],
+			"caseBootstrap95": [
+				0.711,
+				0.9
+			],
+			"note": "nennen, contested, 3/3"
+		},
+		"round7RealtextForComparison": {
+			"strict": "152/180 (84.4%)",
+			"lenient": "152/180",
+			"wilson95": [
+				0.784,
+				0.89
+			],
+			"caseBootstrap95": [
+				0.75,
+				0.928
+			],
+			"note": "as rescored on 2026-10-27 and 2026-10-29"
+		},
+		"round6RealtextForComparison": {
+			"strict": "155/174 (89.1%)",
+			"lenient": "157/174 (90.2%)",
+			"wilson95": [
+				0.836,
+				0.929
+			],
+			"caseBootstrap95": [
+				0.81,
+				0.96
+			],
+			"note": "as rescored on 2026-10-29: 58 cases"
+		},
+		"adversarial": {
+			"strict": "29/30 (96.7%)",
+			"lenient": "29/30",
+			"casesExactEveryRepetition": "9/10",
+			"wilson95": [
+				0.833,
+				0.994
+			],
+			"caseBootstrap95": [
+				0.9,
+				1.0
+			]
+		},
+		"tuning291": {
+			"strict": "753/873 (86.3%)",
+			"lenient": "768/873 (88.0%)",
+			"casesExactEveryRepetition": "244/291 (249 lenient)",
+			"wilson95": [
+				0.838,
+				0.884
+			],
+			"caseBootstrap95": [
+				0.825,
+				0.899
+			]
+		},
+		"tuningRound7Cases219": {
+			"round7": "558/657 strict, 573 lenient (rescored 2026-10-29)",
+			"round8": "564/657 strict, 579 lenient",
+			"note": "verfilmen 0 -> 3, gläubig 0 -> 3; no case lost"
+		},
+		"promotedRound7Realtext60": {
+			"round7AsHeldOut": "152/180",
+			"round8": "164/180",
+			"note": "beinahe, überhaupt, zuletzt 0 -> 3, erzählen 0 -> 2, ruhig 0 -> 1; no case lost"
+		},
+		"promotedRound7Adversarial10": {
+			"round7": "22/30",
+			"round8": "22/30"
+		},
+		"morphemes": {
+			"realtext40": "111/120 (nennen 3/3; 108/117 on 39 uncontested)",
+			"adversarial": "no case: the batch has no bottom word",
+			"tuning109": "322/327"
+		}
+	},
+	"realtextDistribution": {
+		"cases": 60,
+		"noConstituents": {
+			"bottomWords": 29,
+			"indeclinables": 6,
+			"properNames": 5
+		},
+		"withConstituents": {
+			"derivations": 8,
+			"compounds": 6,
+			"particleVerbs": 4,
+			"properNames": 1,
+			"phrasemes": 1
+		},
+		"exactBy": {
+			"noConstituents40": "114/120",
+			"withConstituents20": "32/60",
+			"particleVerbs4": "12/12",
+			"derivations8": "15/24"
+		}
+	},
+	"contested": [
+		{
+			"row": "nennen",
+			"result": "3/3",
+			"split": "a bottom word (learner) or a conversion of Name with a Source, so no case (system)"
+		}
+	],
+	"targets": {
+		"beinahe": "0 -> 3/3: bei links to ADP bei",
+		"überhaupt": "0 -> 3/3: über links to ADP über",
+		"zuletzt": "0 -> 3/3: zu links to ADP zu",
+		"erzählen": "0 -> 2/3: er- + Zahl + -en is no longer offered (zählen 0.95); one repetition went to none at the sense check",
+		"verfilmen": "0 -> 3/3",
+		"ruhig": "0 -> 1/3: asked between VERB and NOUN alone, jev picks VERB ruhen twice",
+		"gläubig": "0 -> 3/3: NOUN Glaube",
+		"adversarial": "D1 Nachwelt, Beiname 3/3, Zuname 2/3 (one none), control nachfragen 3/3; D2 bezahlen, erleben 3/3, control verkörpern 3/3; D3 salzig, staubig 3/3, control rutschig 3/3"
+	},
+	"failuresByCause": [
+		{
+			"cause": "The form question takes a word that is not the part's headword",
+			"attempts": "9 RT",
+			"cases": "holländisch: PROPN Holländ over Holland; Lederlack: Lacke over Lack; mittlerweile: ADJ mittel over mittler (round 7's Gewölk class)"
+		},
+		{
+			"cause": "The gold suffix is not on the closed affix list, so no analysis can offer it",
+			"attempts": "6 RT",
+			"cases": "nachmittags: the adverbial -s (en.wiktionary Nachmittag + -s); mühevoll: -voll (DWDS Mühe -voll), returned as ADJ voll"
+		},
+		{
+			"cause": "None wins on an adverb built from a word and a particle",
+			"attempts": "6 RT",
+			"cases": "geradezu (gerade + zu) and vielleicht (viel + leicht): none 3/3 each (round 7's sonderbar class)"
+		},
+		{
+			"cause": "A part's route on the edge",
+			"attempts": "7 RT",
+			"cases": "Gott sei Dank: Gott PROPN, not NOUN (3); Frühstück: Früh a cranberry Root (3); solange: So PROPN once"
+		},
+		{
+			"cause": "A name or a fossil cut as a derivation",
+			"attempts": "6 RT, 9 RT morphemes",
+			"cases": "Annie: Ann + -ie; gesamt: ge- + samt, though no dictionary splits it (the comparative affix test passed); morphemes also Gieshübl · er"
+		}
+	],
+	"proposedFixes": [
+		{
+			"rank": 1,
+			"fix": "Let the form question offer only a part's dictionary headwords: drop a spelling the word test or the noun test refuses (Holländ, Lacke) and keep the letters' own headword before a related one (mittler before mittel)",
+			"fixes": "holländisch, Lederlack, mittlerweile 9 RT; Gewölk 3 AD in round 7",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 2,
+			"fix": "Add the adverbial -s and the suffix -voll to dumcorpus's closed affix list, with ADR 0054's dictionary backing (DWDS lists -voll; en.wiktionary the adverbial -s)",
+			"fixes": "nachmittags, mühevoll 6 RT",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 3,
+			"fix": "Ground none in the dictionary: when the analysis question picks a cut the dictionary gives (a word + particle adverb, a confirmed affix), let that confirmation stand for the split's yes",
+			"fixes": "geradezu, vielleicht 6 RT; sonderbar, Gewässer in round 7",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 4,
+			"fix": "A proper name is a bottom word unless a dictionary splits the common noun it spells: no suffix cut on a given name (Ann + -ie)",
+			"fixes": "Annie 3 RT and 3 RT morphemes; Gieshübler morphemes",
+			"heldOutFitting": true
+		},
+		{
+			"rank": 5,
+			"fix": "Single cases, held: Gott as PROPN in a phraseme, Früh as a cranberry piece, gesamt's ge- cut, ruhig's VERB pick, vergiften",
+			"fixes": "1 case each",
+			"heldOutFitting": false
+		}
+	],
+	"verdict": "Not yet, but change what is tuned. On the 59 uncontested real-text cases the segmenters are 80.8% exact, strict and lenient (143 of 177; Wilson 74.4% to 85.9%, case bootstrap 70.6% to 90.4%), against round 7's 84.4% and round 6's 89.1% as rescored: the intervals overlap, so no loss is shown, but three fresh samples have not shown a gain either. The round's fixes work where they aim: all three particle words, verfilmen and gläubig pass 3/3, erzählen 2/3, the adversarial batch 29/30, and tuning gains 18 attempts with no case lost. What the fresh sample exposes is structural, not rare-word noise: the form question's headword pick, two suffixes missing from the affix list, and none winning on word + particle adverbs. Fix those three classes in one more round; if the real-text score does not rise, stop tuning these segmenters."
+}

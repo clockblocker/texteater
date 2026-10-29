@@ -1,0 +1,66 @@
+{
+	"runId": "326f3c2b-7e80-490b-b6c9-cc96a60f39da",
+	"experimentId": "segment-in-morphemes/de:adversarial",
+	"round": "2026-10-29-breakdown-round-8",
+	"note": "The adversarial batch has no bottom word, so this run has no case.",
+	"liveRuns": [
+		"326f3c2b-7e80-490b-b6c9-cc96a60f39da"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "326f3c2b-7e80-490b-b6c9-cc96a60f39da",
+		"experimentId": "segment-in-morphemes/de:adversarial",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "85b3bc8bf",
+		"startedAt": "2026-10-29T15:51:52.956Z",
+		"corpus": {
+			"fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+			"caseIds": []
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 0,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 0,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 0,
+			"failed": 0,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-29T15:51:52.958Z",
+		"total": 0,
+		"succeeded": 0,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 0,
+			"quality": {
+				"passed": 0,
+				"failed": 0,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"exact": "0/0",
+	"cases": []
+}

@@ -1,0 +1,394 @@
+{
+	"runId": "d90dcd58-df64-4d7e-81ef-e2596d86ceda",
+	"experimentId": "segment-in-morphemes/de:realtext",
+	"round": "2026-10-29-breakdown-round-8",
+	"note": "The real-text held-out batch's bottom words, contested nennen included (3/3). 3 repetitions at 85b3bc8bf.",
+	"liveRuns": [
+		"d90dcd58-df64-4d7e-81ef-e2596d86ceda"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "d90dcd58-df64-4d7e-81ef-e2596d86ceda",
+		"experimentId": "segment-in-morphemes/de:realtext",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "85b3bc8bf",
+		"startedAt": "2026-10-29T15:51:52.446Z",
+		"corpus": {
+			"fingerprint": "76b7591bb3f54c327e0153757223b3d4acc52cbb7075058436a8ebe75c9cde73",
+			"caseIds": [
+				"breakdown/de/aber",
+				"breakdown/de/akt",
+				"breakdown/de/angst",
+				"breakdown/de/annie",
+				"breakdown/de/blume",
+				"breakdown/de/denken",
+				"breakdown/de/devot",
+				"breakdown/de/elite",
+				"breakdown/de/fahren",
+				"breakdown/de/form",
+				"breakdown/de/fuehlen",
+				"breakdown/de/ganz-vollstaendig",
+				"breakdown/de/gesamt",
+				"breakdown/de/gieshuebler",
+				"breakdown/de/glauben",
+				"breakdown/de/halb",
+				"breakdown/de/hoeren",
+				"breakdown/de/hund",
+				"breakdown/de/jahr",
+				"breakdown/de/jung",
+				"breakdown/de/kessin",
+				"breakdown/de/lassen",
+				"breakdown/de/leben",
+				"breakdown/de/legen",
+				"breakdown/de/mirambo",
+				"breakdown/de/morgen",
+				"breakdown/de/nennen",
+				"breakdown/de/nun",
+				"breakdown/de/oder",
+				"breakdown/de/quell",
+				"breakdown/de/ruck",
+				"breakdown/de/schoen",
+				"breakdown/de/schwarz",
+				"breakdown/de/schweigen",
+				"breakdown/de/setzen",
+				"breakdown/de/spaet",
+				"breakdown/de/suchen",
+				"breakdown/de/trotz",
+				"breakdown/de/waterloo",
+				"breakdown/de/weil"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 40,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 40,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 37,
+			"failed": 3,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-29T15:51:52.490Z",
+		"total": 40,
+		"succeeded": 40,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 0,
+			"quality": {
+				"passed": 111,
+				"failed": 9,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"exact": "111/120",
+	"cases": [
+		{
+			"caseId": "breakdown/de/aber",
+			"reps": 3,
+			"exact": 3,
+			"gold": "aber",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/akt",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Akt · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/angst",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Angst · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/annie",
+			"reps": 3,
+			"exact": 0,
+			"gold": "Annie · ∅",
+			"returned": [
+				"Ann · ie · ∅"
+			]
+		},
+		{
+			"caseId": "breakdown/de/blume",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Blum · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/denken",
+			"reps": 3,
+			"exact": 3,
+			"gold": "denk · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/devot",
+			"reps": 3,
+			"exact": 3,
+			"gold": "devot · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/elite",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Elit · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fahren",
+			"reps": 3,
+			"exact": 3,
+			"gold": "fahr · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/form",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Form · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fuehlen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "fühl · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ganz-vollstaendig",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ganz · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gesamt",
+			"reps": 3,
+			"exact": 0,
+			"gold": "gesamt · ∅",
+			"returned": [
+				"ge · samt · ∅"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gieshuebler",
+			"reps": 3,
+			"exact": 0,
+			"gold": "Gieshübler · ∅",
+			"returned": [
+				"Gieshübl · er · ∅"
+			]
+		},
+		{
+			"caseId": "breakdown/de/glauben",
+			"reps": 3,
+			"exact": 3,
+			"gold": "glaub · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/halb",
+			"reps": 3,
+			"exact": 3,
+			"gold": "halb · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hoeren",
+			"reps": 3,
+			"exact": 3,
+			"gold": "hör · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hund",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Hund · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/jahr",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Jahr · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/jung",
+			"reps": 3,
+			"exact": 3,
+			"gold": "jung · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kessin",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Kessin · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/lassen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "lass · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leben",
+			"reps": 3,
+			"exact": 3,
+			"gold": "leb · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/legen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "leg · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/mirambo",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Mirambo · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/morgen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "morgen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nennen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "nenn · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nun",
+			"reps": 3,
+			"exact": 3,
+			"gold": "nun",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/oder",
+			"reps": 3,
+			"exact": 3,
+			"gold": "oder",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/quell",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Quell · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ruck",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Ruck · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schoen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schön · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schwarz",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schwarz · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schweigen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schweig · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/setzen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "setz · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/spaet",
+			"reps": 3,
+			"exact": 3,
+			"gold": "spät · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/suchen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "such · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/trotz",
+			"reps": 3,
+			"exact": 3,
+			"gold": "trotz",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/waterloo",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Waterloo · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weil",
+			"reps": 3,
+			"exact": 3,
+			"gold": "weil",
+			"returned": []
+		}
+	]
+}

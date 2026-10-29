@@ -1,0 +1,206 @@
+{
+	"runId": "049b92c1-b669-4759-81f0-5cbd2e2fa41c",
+	"experimentId": "segment-in-constituents/de:adversarial",
+	"round": "2026-10-29-breakdown-round-8",
+	"note": "The adversarial held-out batch breakdown-heldout-2026-10-29-adversarial (10 records on both sides of round 8's fixes), reported apart. 3 repetitions, one live run at 85b3bc8bf.",
+	"liveRuns": [
+		"049b92c1-b669-4759-81f0-5cbd2e2fa41c"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "049b92c1-b669-4759-81f0-5cbd2e2fa41c",
+		"experimentId": "segment-in-constituents/de:adversarial",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "85b3bc8bf",
+		"startedAt": "2026-10-29T15:51:48.477Z",
+		"corpus": {
+			"fingerprint": "7ca43a85b9167a350092a6b55d25fcfb7a36857a0d0d7e6cd43c02a89628522e",
+			"caseIds": [
+				"breakdown/de/beiname",
+				"breakdown/de/bezahlen",
+				"breakdown/de/erleben",
+				"breakdown/de/nachfragen",
+				"breakdown/de/nachwelt",
+				"breakdown/de/rutschig",
+				"breakdown/de/salzig",
+				"breakdown/de/staubig",
+				"breakdown/de/verkoerpern",
+				"breakdown/de/zuname"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-constituents/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 10,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 10,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 9,
+			"failed": 1,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-29T15:51:48.523Z",
+		"total": 10,
+		"succeeded": 10,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 1,
+			"varyingOutputs": 1,
+			"quality": {
+				"passed": 29,
+				"failed": 1,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 10,
+			"attempts": 30,
+			"exactAttempts": 29,
+			"exact": 0.9667,
+			"lenientExactAttempts": 29,
+			"lenientExact": 0.9667,
+			"casesExactEveryRepetition": 9,
+			"casesLenientEveryRepetition": 9,
+			"cutPrecision": 1.0,
+			"cutRecall": 0.9697,
+			"linksPlaced": 0.9667,
+			"linksWithGoldRoute": 0.9667,
+			"linksExact": 0.9667,
+			"hasConstituentsAgreed": 0.9667,
+			"failed": 0
+		},
+		"word": {
+			"cases": 10,
+			"attempts": 30,
+			"exactAttempts": 29,
+			"exact": 0.9667,
+			"lenientExactAttempts": 29,
+			"lenientExact": 0.9667,
+			"casesExactEveryRepetition": 9,
+			"casesLenientEveryRepetition": 9,
+			"cutPrecision": 1.0,
+			"cutRecall": 0.9697,
+			"linksPlaced": 0.9667,
+			"linksWithGoldRoute": 0.9667,
+			"linksExact": 0.9667,
+			"hasConstituentsAgreed": 0.9667,
+			"failed": 0
+		}
+	},
+	"contested": [],
+	"cases": [
+		{
+			"caseId": "breakdown/de/beiname",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Bei → Lexeme/ADP bei · name → Lexeme/NOUN Name",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bezahlen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "be → Morpheme/Prefix be- · zahlen → Lexeme/VERB zahlen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erleben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "er → Morpheme/Prefix er- · leben → Lexeme/VERB leben",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nachfragen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "nach → Morpheme/Prefix nach- · fragen → Lexeme/VERB fragen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nachwelt",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Nach → Lexeme/ADP nach · welt → Lexeme/NOUN Welt",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/rutschig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "rutsch → Lexeme/VERB rutschen · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/salzig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "salz → Lexeme/NOUN Salz · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/staubig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "staub → Lexeme/NOUN Staub · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verkoerpern",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ver → Morpheme/Prefix ver- · körper → Lexeme/NOUN Körper · 'n'",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zuname",
+			"group": "word",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "Zu → Lexeme/ADP zu · name → Lexeme/NOUN Name",
+			"returned": [
+				"1x none"
+			]
+		}
+	]
+}
