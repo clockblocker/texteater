@@ -12,7 +12,7 @@
 				"comparable": null
 			}
 		},
-		"emojiDescription": "1⃣🔁"
+		"emojiDescription": "1⃣🕰"
 	},
 	"knowledge": {
 		"breakdown": {
@@ -56,6 +56,6 @@
 		]
 	},
 	"notes": {
-		"rationale": "Einmal hab ich gehört, I once heard: the adverb 'once', not the modal particle einmal. DWDS splits it the numeral 3ein + the noun 2Mal (ADR 0054)."
+		"rationale": "Einmal hab ich gehört, I once heard: the adverb in DWDS's sense II.2 'zu einer unbestimmten Zeit, irgendwann', not the count 'ein einziges Mal' and not the modal particle einmal. DWDS splits it the numeral 3ein + the noun 2Mal (ADR 0054)."
 	}
 }

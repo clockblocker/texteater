@@ -37,10 +37,15 @@
 				"title": "DWDS: gerade",
 				"url": "https://www.dwds.de/wb/gerade",
 				"supports": "No Wortzerlegung; the Adverb entry ('betont die Exaktheit einer Angabe: genau'), apart from the two Adjektiv entries"
+			},
+			{
+				"title": "en.wiktionary: gerade",
+				"url": "https://en.wiktionary.org/wiki/gerade",
+				"supports": "Etymology 1 (the adverb senses): 'equivalent to ge- + the root of Rad'"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "gerade das, was die Männer einen 'Scharm' nennen, precisely that: DWDS's Adverb, so ADV (ADR 0054); geradezu's gold description 🎯 fits it too. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root gerade alone."
+		"rationale": "gerade das, was die Männer einen 'Scharm' nennen, precisely that: DWDS's Adverb, so ADV (ADR 0054); geradezu's gold description 🎯 fits it too. en.wiktionary's etymology names ge- and the root of Rad, read here as no German split, as gold Bad and Bauer; contested (#1241 round 9). DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root gerade alone."
 	}
 }

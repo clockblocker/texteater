@@ -201,6 +201,7 @@ export const germanSeparableLexemeParts: ReadonlySet<string> = new Set([
 	"fest",
 	"flach",
 	"frei",
+	"gern", // gernhaben: DWDS Wortzerlegung gern haben (#1241 round 9)
 	"groß",
 	"gut",
 	"hoch",

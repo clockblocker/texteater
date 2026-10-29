@@ -1,5 +1,5 @@
 {
-	"note": "Held-out real-text batch for German segment.inConstituents and segment.inMorphemes, round 9 of #1241, authored 2026-10-29 as Draft Breakdown Records in records/breakdown/de. Its 60 targets were sampled uniformly at random from the same frame as rounds 5 to 8 (breakdown-heldout-2026-10-25-realtext, -25b-realtext, -26-realtext and -29-realtext, all now promoted to tuning), with a new seed, and gold was authored only after sampling, so no target was replaced, skipped or reordered for being easy, hard or odd; rows RT1 to RT60 follow draw order. Of the frame's 95,628 word tokens, 263 draws were judged. Three accepted draws were excluded after sampling as structural snags, and drawing went on until 60 rows were accepted (see sampling): draw 17, draußen, whose en.wiktionary split dr- + außen shows the affix dar- as dr; draw 62, zurück, whose split shows Rücken as rück; and draw 185, Hohen-Cremmer, whose part Hohen-Cremm can't spell Hohen-Cremmen. An ADV takes no Source (ADR 0050), as round 8's nachmittags, so the adverbs anfangs, meist and eher, which DWDS gives a Grundform line, are cases. The lab scores these records in segment-in-constituents/de:realtext, the round's headline set, and its bottom words in segment-in-morphemes/de:realtext. Gold: 35 of 60 have no Constituents: 27 declinable bottom words with a Root and an Ending (verbs zwingen, tauschen, stürzen, sitzen with en; nouns Stunde, Lippe, Düne, Woche, Stelle, Auge, Karte, Truhe and the adjective öde with e; Majorität, Mann, Trotz, Brief, Gott, arm, Fach, allein, Mensch, König, Schwester, blond, Herz, Onkel with ∅), 5 indeclinable adverbs with a Root and no Ending (heute, meist, gerade, eher, inkognito), and 3 proper names with a Root and ∅ (Rollo, Ems, Ring). 25 have Constituents: 11 derivations (entsinnen, anfangs = Anfang + -s by en.wiktionary, lächeln = lachen + -el + n, freilich = frei + -lich by en.wiktionary, Gefühl, bereits = bereit + -s by en.wiktionary, respektvoll = Respekt + -voll, Einrichtung, sparsam, erschrecken, Geräusch), 6 compounds (Nordkorea = Nord + Korea by en.wiktionary, einmal = ein + Mal, Aschenputtel = Asche + -n- + the cranberry puttel by en.wiktionary, Blutentziehung, Vertrauensperson, indessen = in + dessen) and 8 particle verbs (einleben, anmelden, eintreten, einstecken, umherstehen, abbrechen, fortfahren, herankommen). Every word split follows the DWDS Wortzerlegung, else the en.wiktionary etymology where DWDS gives none or names one part only, every bottom word is one neither splits, and every Kind is the part of speech DWDS gives the sense, else en.wiktionary's (ADR 0054), each cited in its record. Two independent judges review the gold before the run. None may be an example in a Breakdown prompt (#693).",
+	"note": "Held-out real-text batch for German segment.inConstituents and segment.inMorphemes, round 9 of #1241, authored 2026-10-29 as Draft Breakdown Records in records/breakdown/de. Its 60 targets were sampled uniformly at random from the same frame as rounds 5 to 8 (breakdown-heldout-2026-10-25-realtext, -25b-realtext, -26-realtext and -29-realtext, all now promoted to tuning), with a new seed, and gold was authored only after sampling, so no target was replaced, skipped or reordered for being easy, hard or odd; rows RT1 to RT60 follow draw order. Of the frame's 95,628 word tokens, 263 draws were judged. Two accepted draws were excluded after sampling as structural snags, and drawing went on until 60 rows were accepted (see sampling): draw 17, draußen, whose en.wiktionary split dr- + außen shows the affix dar- as dr, and draw 185, Hohen-Cremmer, whose part Hohen-Cremm can't spell Hohen-Cremmen. An ADV takes no Source (ADR 0050), as round 8's nachmittags, so the adverbs anfangs, meist and eher, which DWDS gives a Grundform line, are cases. The lab scores these records in segment-in-constituents/de:realtext, the round's headline set, and its bottom words in segment-in-morphemes/de:realtext. Gold: 34 of 60 have no Constituents: 26 declinable bottom words with a Root and an Ending (verbs zwingen, tauschen, stürzen, sitzen with en; nouns Stunde, Lippe, Düne, Woche, Auge, Karte, Truhe and the adjective öde with e; Majorität, Mann, Trotz, Brief, Gott, arm, Fach, allein, Mensch, König, Schwester, blond, Herz, Onkel with ∅), 5 indeclinable adverbs with a Root and no Ending (heute, meist, gerade, eher, inkognito), and 3 proper names with a Root and ∅ (Rollo, Ems, Ring). 26 have Constituents: 11 derivations (entsinnen, anfangs = Anfang + -s by en.wiktionary, lächeln = lachen + -el + n, freilich = frei + -lich by en.wiktionary, Gefühl, bereits = bereit + -s by en.wiktionary, respektvoll = Respekt + -voll, Einrichtung, sparsam, erschrecken, Geräusch), 6 compounds (Nordkorea = Nord + Korea by en.wiktionary, einmal = ein + Mal, Aschenputtel = Asche + -n- + the cranberry puttel by en.wiktionary, Blutentziehung, Vertrauensperson, indessen = in + dessen) and 9 particle verbs (einleben, anmelden, eintreten, gernhaben = gern + haben, einstecken, umherstehen, abbrechen, fortfahren, herankommen). Every word split follows the DWDS Wortzerlegung, else the en.wiktionary etymology where DWDS gives none or names one part only, every bottom word is one neither splits, and every Kind is the part of speech DWDS gives the sense, else en.wiktionary's (ADR 0054), each cited in its record. Judged 2026-10-29 by two independent judges, system and learner POV (#1241), each a separate agent that saw neither the other's verdicts nor the drafting notes, on all 60 rows, the three exclusions, all 263 draw verdicts and the adversarial batch. Both found draw 152, Stelle, a back-formation from stellen (DWDS's Pfeifer, en.wiktionary), so a Source and no case, and draw 154 wrongly rejected: man hat es doch gern is DWDS's headword gernhaben (sense b), not gold haben, so it is now a row, gern + haben. Both changed einmal's description to 1⃣🕰 (DWDS II.2 'irgendwann') and Gefühl's to 🫶 (Reuse, gold fühlen); the learner judge alone changed einstecken ➡🕳, abbrechen 💥✂ and herankommen 🚶🧲, each by the conventions (no scene, Reuse), and these were applied, since the Breakdown gold is the same either way. The system judge found draw 62 not a snag but zurück the particle of kehrten … zurück, so not the unit's first member, and the reasons of draws 19 and 20 Locutions (auf die Neige gehen, und Ähnliches); the learner judge those of 19, 99 and 172. Contested, reported apart: gerade (RT36), a bottom word for the learner judge and a structural snag for the system judge (en.wiktionary: ge- + the root of Rad); and allein's morphemes (RT30), Root and ∅ for the learner judge, Root alone for the system judge. The learner judge would also accept the five draws rejected as a closed-route AUX whose verb follows (89, 102, 114, 131, 150), since a click on a perfect, passive or future auxiliary selects its verb; the system judge keeps them, as earlier rounds did. That is a sampling question for the user, not applied. None may be an example in a Breakdown prompt (#693).",
 	"set": "realtext",
 	"sampling": {
 		"frame": "tf-demo Library's German Scrolls on 2026-10-25, as rounds 5 to 8 drew them: Effi Briest's 37 chapter Scrolls plus the Tagesschau article's German Sentences",
@@ -19,17 +19,12 @@
 			"It is not a prompt word (#693)",
 			"Its Reading was not accepted before"
 		],
-		"accepted": 63,
+		"accepted": 62,
 		"excludedAfterSampling": [
 			{
 				"draw": 17,
 				"unit": "Lexeme ADV draußen",
 				"reason": "structural snag: DWDS gives no Wortzerlegung, and en.wiktionary splits it dr- + außen, dr- a short form of the affix dar-, which no letter tolerance lets dr spell"
-			},
-			{
-				"draw": 62,
-				"unit": "Lexeme ADV zurück",
-				"reason": "structural snag: DWDS's Wortzerlegung names only 1zu, 'formal verwandt mit rück-', and en.wiktionary's zu + Rücken shows Rücken as rück, which no letter tolerance lets spell Rücken (a noun's -en dropped)"
 			},
 			{
 				"draw": 185,
@@ -271,11 +266,11 @@
 		},
 		{
 			"row": "RT29",
-			"record": "breakdown/de/stelle",
-			"bucket": "bottom-word",
+			"record": "breakdown/de/gernhaben",
+			"bucket": "particle-verb",
 			"split": "held-out",
 			"change": "new",
-			"draw": 152
+			"draw": 154
 		},
 		{
 			"row": "RT30",
@@ -283,7 +278,8 @@
 			"bucket": "bottom-word",
 			"split": "held-out",
 			"change": "new",
-			"draw": 156
+			"draw": 156,
+			"contested": "Contested for segment.inMorphemes only (#1241): both judges keep ADJ allein, a bottom word with no Constituents; the system judge would drop its zero ending, since the adjective is predicative only and has no paradigm (ADR 0051), the learner judge keeps allein · ∅. Its Constituents row counts in the headline; its morphemes are reported apart."
 		},
 		{
 			"row": "RT31",
@@ -331,7 +327,8 @@
 			"bucket": "indeclinable",
 			"split": "held-out",
 			"change": "new",
-			"draw": 179
+			"draw": 179,
+			"contested": "The judges split (#1241): the learner judge keeps the bottom word gerade, reading en.wiktionary's 'equivalent to ge- + the root of Rad' as no German split, as gold Bad and Bauer; the system judge reads it as a split by the wording that split Gewissen, which the final e leaves no piece for in an indeclinable ADV, and would exclude the draw as a structural snag. Reported apart from the headline until the user rules."
 		},
 		{
 			"row": "RT37",

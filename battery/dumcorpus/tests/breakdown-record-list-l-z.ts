@@ -131,7 +131,6 @@ export const breakdownRecordsLToZ: string[][] = [
 	["sprechen", "Lexeme VERB 💬", "morphemes"],
 	["springen", "Lexeme VERB 🦘", "morphemes"],
 	["staubig", "Lexeme ADJ 🌫", "constituents"],
-	["stelle", "Lexeme NOUN 🏛", "morphemes"],
 	["steuermann", "Lexeme NOUN 🧭", "constituents"],
 	["sticker-aufkleber", "Lexeme NOUN 🏷", "morphemes"],
 	["sticker-sticken", "Lexeme NOUN 🪡", "constituents"],

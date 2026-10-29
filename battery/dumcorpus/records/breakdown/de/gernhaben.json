@@ -1,0 +1,63 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "gernhaben",
+			"coreFeatures": {
+				"hasSepPrefix": "gern"
+			}
+		},
+		"emojiDescription": "💕"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "gern",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "gern",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": "haben",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "haben",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0054"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gernhaben",
+				"url": "https://www.dwds.de/wb/gernhaben",
+				"supports": "The Wortzerlegung gern haben; Verb; Ungültige Schreibung gern haben; sense b) ⟨jmd. hat etw. gern⟩ 'gut finden'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "aber man hat es doch gern, wenn man mal was hört und sieht, one likes it: DWDS's headword gernhaben, sense b), whose example reads Rudolf hat es nicht gern, wenn .... DWDS splits it the adverb gern + haben; like leidtun, its first part is a Lexeme of its own, hasSepPrefix gern (ADR 0054); 💕 as gold gern."
+	}
+}
