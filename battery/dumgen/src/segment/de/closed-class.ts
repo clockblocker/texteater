@@ -3,7 +3,10 @@
  * #734 ruling (2026-09-29, issuecomment-5897200578): PART is nicht,
  * infinitive zu and the modal particles; focus and degree words and
  * sentence adverbs are ADV; answers are INTJ; aber is CCONJ in every
- * position. A piece whose spelling the ruling covers chooses among the uses
+ * position. Since the 2026-10-29 ruling, a sense DWDS files under its
+ * Adjektiv is ADJ however it is used (Rule de/adjective-stays-adj), so
+ * wirklich, offenbar, wahrscheinlich, natürlich, ziemlich, recht and früh
+ * route as open adjectives and are not listed here. A piece whose spelling the ruling covers chooses among the uses
  * the ruling gives that spelling, and the use implies the route (Dumgen ADR
  * 0007's closed-class rule, extended to PART as #734 allows).
  *
@@ -108,8 +111,8 @@ export const uses: Readonly<Record<string, Readonly<Record<string, Use>>>> = {
 	},
 	eigentlich: {
 		modal: modal("Was wolltest du eigentlich?"),
-		adverb: adverb(
-			"A sentence adverb 'actually, in fact' commenting on the statement",
+		adjective: adjective(
+			"The adjective 'actual, real', also commenting on the statement 'actually, in fact' (die eigentliche Arbeit; eigentlich müsste ich gehen)",
 		),
 	},
 	bloß: {
@@ -169,58 +172,10 @@ export const uses: Readonly<Record<string, Readonly<Record<string, Use>>>> = {
 	},
 	ganz: {
 		degree: adverb(
-			"The degree word 'quite, fairly' before an adjective (ganz gut)",
+			"The degree word 'quite, fairly, completely' (ganz gut; ganz normal; ganz aufgegessen)",
 		),
 		adjective: adjective(
-			"The adjective 'whole, entire, completely' (die ganze Stadt; ganz aufgegessen)",
-		),
-	},
-	ziemlich: {
-		degree: adverb("The degree word 'rather, fairly' (ziemlich spät)"),
-		adjective: adjective(
-			"The adjective 'considerable' before a noun (eine ziemliche Menge)",
-		),
-	},
-	recht: {
-		degree: adverb(
-			"The degree word 'fairly, really' (recht gut; ohne recht zu glauben)",
-		),
-		adjective: adjective(
-			"The adjective 'right, proper' (die rechte Hand; das ist mir recht)",
-		),
-	},
-	früh: {
-		morning: adverb(
-			"'in the morning' after a time (acht Uhr früh; heute früh)",
-		),
-		adjective: adjective(
-			"The adjective 'early' (früh aufstehen; der frühe Vogel)",
-		),
-	},
-	offenbar: {
-		sentence: adverb(
-			"A sentence adverb 'apparently' commenting on the statement",
-		),
-		adjective: adjective(
-			"The adjective 'obvious' describing a thing (ein offenbarer Irrtum)",
-		),
-	},
-	wahrscheinlich: {
-		sentence: adverb("A sentence adverb 'probably'"),
-		adjective: adjective(
-			"The adjective 'likely, probable' describing a thing (eine wahrscheinliche Folge)",
-		),
-	},
-	natürlich: {
-		sentence: adverb("A sentence adverb 'of course'"),
-		adjective: adjective(
-			"The adjective 'natural' (natürliches Licht; sie lachte natürlich = naturally)",
-		),
-	},
-	wirklich: {
-		sentence: adverb("A sentence adverb 'really, in fact'"),
-		adjective: adjective(
-			"The adjective 'real, actual' (eine wirkliche Gefahr)",
+			"The adjective 'whole, entire, intact' (die ganze Stadt; das Glas blieb ganz)",
 		),
 	},
 };
