@@ -26,7 +26,7 @@
 				"hash": "19c59bf41ed26810"
 			},
 			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
-			{ "rule": "de/adjective-stays-adj", "hash": "3dec7dc4ab585a57" },
+			{ "rule": "de/adjective-stays-adj", "hash": "32d6fdacb9b0763e" },
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" }
 		],
 		"references": [

@@ -34,9 +34,31 @@ meaning has one Kind wherever it is met:
 - A sense DWDS labels Adv. is ADV: `ganz` 'quite', whose etymology says
   *Adv. 'vollkommen, sehr, ziemlich'* beside the Adj., and `lange` 'for a
   long time', an Adverb entry.
-- A Rule that classes a closed set by use still decides it: `nicht` and the
-  modal particles are PART (Rule `de/modal-particle-is-part`), and adverbial
-  `viel` and `wenig` are ADV (Rule `de/quantifier-by-use`).
+
+DWDS decides when its class maps to exactly one Kind. When it maps to none,
+or to more than one, UD's guidelines decide (the user, 2026-10-29): the
+answer word `ja`, a *Partikel* in DWDS, is INTJ with partType Res, and
+`desto`, a *Konjunktion* in DWDS, is ADV, since it opens a verb-second
+clause as no CCONJ or SCONJ does.
+
+Earlier user rulings stand as named exceptions to the dictionary rule (the
+user, 2026-10-29), and each keeps the Kind its gold had:
+
+- `gleichzeitig` 'at the same time' is ADV, though DWDS files the sense
+  under its Adjektiv: an earlier user ruling,
+  [#739](https://github.com/clockblocker/texteater/issues/739).
+- `nicht` and the modal particles (`einfach`, `ruhig`, `doch`, `denn`,
+  `aber`, …) are PART (Rule `de/modal-particle-is-part`), and focus `auch`
+  is ADV (Rule `de/focus-word-is-adv`), though DWDS classes them Adjektiv,
+  Adverb or Konjunktion: an earlier user ruling,
+  [#734](https://github.com/clockblocker/texteater/issues/734).
+- Adverbial `viel` and `wenig` are ADV (Rule `de/quantifier-by-use`),
+  though DWDS files them under its Adjektiv: an earlier user ruling,
+  [#743](https://github.com/clockblocker/texteater/issues/743).
+- `genug` in *scharf genug* is ADV, though DWDS's only class is
+  Indefinitpronomen, and `echt` in *Echt?* is ADV, though en.wiktionary
+  also gives it an Interjection: an earlier user ruling,
+  [#1241](https://github.com/clockblocker/texteater/issues/1241#issuecomment-6500490577).
 
 A productive participle has no entry of its own, so the rules above decide
 it. Classing a sense by its use alone, a sentence adverb as ADV, was

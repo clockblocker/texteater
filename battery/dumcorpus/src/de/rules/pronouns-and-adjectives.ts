@@ -133,7 +133,7 @@ export const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/adjective-stays-adj",
 		statement:
-			"A Reading's Kind is the part of speech DWDS gives its sense, in the entry or its etymology's labels, else en.wiktionary's (ADR 0036). So an adjective used adverbially, compared, or as a sentence or degree adverb stays ADJ when DWDS files that sense under its Adjektiv: sie singt laut gives [laut] ADJ, as do wirklich 'in der Tat', offenbar 'apparently', früh 'in the morning' and ziemlich 'fairly'. A sense DWDS labels Adv. is ADV: ganz 'quite', lange 'for a long time'. Modal particles stay PART (de/modal-particle-is-part), and adverbial viel and wenig ADV (de/quantifier-by-use).",
+			"A Reading's Kind is the part of speech DWDS gives its sense, in the entry or its etymology's labels, else en.wiktionary's (ADR 0036). A DWDS class that maps to no single Kind leaves it to UD's guidelines: answer ja, DWDS's Partikel, is INTJ, and desto, its Konjunktion, ADV. So an adjective used adverbially, compared, or as a sentence or degree adverb stays ADJ when DWDS files that sense under its Adjektiv: sie singt laut gives [laut] ADJ, as do wirklich 'in der Tat', offenbar 'apparently', früh 'in the morning' and ziemlich 'fairly'. A sense DWDS labels Adv. is ADV: ganz 'quite', lange 'for a long time'. Earlier rulings stand as named exceptions (ADR 0036): modal particles and nicht stay PART (de/modal-particle-is-part), focus auch ADV (de/focus-word-is-adv), adverbial viel and wenig ADV (de/quantifier-by-use), and gleichzeitig 'at the same time', genug in scharf genug and echt in Echt? ADV.",
 		adrs: ["ADR-0036", "ADR-0054"],
 		routes: lexeme("ADJ", "ADV"),
 		records: [

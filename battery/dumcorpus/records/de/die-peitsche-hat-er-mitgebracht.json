@@ -60,7 +60,7 @@
 				"rule": "de/variant-and-historical-status",
 				"hash": "9e2c6c25c942a570"
 			},
-			{ "rule": "de/adjective-stays-adj", "hash": "3dec7dc4ab585a57" },
+			{ "rule": "de/adjective-stays-adj", "hash": "32d6fdacb9b0763e" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"

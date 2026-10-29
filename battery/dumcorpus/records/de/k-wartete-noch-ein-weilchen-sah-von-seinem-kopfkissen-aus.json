@@ -354,7 +354,7 @@
 			},
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "5bbd43bbbc51067f"
+				"hash": "32d6fdacb9b0763e"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
@@ -1685,7 +1685,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "Before two coordinated states, gleichzeitig means 'at once, both … and': Duden's sense 2, 'zugleich erfolgend, auch noch' (das Rauchtischchen ist gleichzeitig ein Schachbrett). That sense has no attributive form, so by de/adjective-stays-adj's within-sense test it is another word, an ADV, and Duden gives it no comparison forms. Sense 1, 'zur gleichen Zeit', stays ADJ. Ruled by the user on #739 (2026-10-01)."
+				"rationale": "Before two coordinated states, gleichzeitig means 'at once, both … and': Duden's sense 2, 'zugleich erfolgend, auch noch' (das Rauchtischchen ist gleichzeitig ein Schachbrett). DWDS files that sense under its Adjektiv (2b, 'sowohl … als auch'), but the user's #739 ruling (2026-10-01) makes it an ADV, a named exception to the dictionary rule (de/adjective-stays-adj, ADR 0036), and Duden gives it no comparison forms. Sense 1, 'zur gleichen Zeit', stays ADJ."
 			}
 		},
 		{
