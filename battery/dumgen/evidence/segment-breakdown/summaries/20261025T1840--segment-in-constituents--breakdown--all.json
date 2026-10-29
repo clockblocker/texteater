@@ -2,7 +2,7 @@
 	"runId": "47095b57-4d93-40ff-bd95-dec93031e502",
 	"experimentId": "segment-in-constituents/de:breakdown",
 	"round": "2026-10-25-breakdown-round-6",
-	"note": "The tuning set, round 5's 42 held-out records promoted into it and Hamburger 🍔 no longer contested, so it is scored. 3 repetitions, one live run at 99571120e; the prep live check had filled 5 cases.",
+	"note": "The tuning set, round 5's 42 held-out records promoted into it and Hamburger 🍔 no longer contested, so it is scored. 3 repetitions, one live run at 99571120e; the prep live check had filled 5 cases. The user ruled on 2026-10-29 (#1241, ADR 0054) that a gold Reading's Kind is the part of speech DWDS gives its sense, else en.wiktionary's: wirklich stays ADJ and is no longer contested; recht 'ziemlich' is now ADJ recht · ∅ and je nachdem a Locution ADV. Rescored 2026-10-29 from the run's stored outputs, with no jev call. A case whose input, its owning Reading, changed was answered for the old Kind, so its stored outputs score nothing and it is left out: je nachdem (0/3 as SCONJ: je linked to PRON je) leaves, 151 cases where the run had 152.",
 	"liveRuns": [
 		"47095b57-4d93-40ff-bd95-dec93031e502"
 	],
@@ -216,20 +216,20 @@
 	},
 	"metrics": {
 		"all": {
-			"cases": 152,
-			"attempts": 456,
+			"cases": 151,
+			"attempts": 453,
 			"exactAttempts": 374,
-			"exact": 0.8202,
+			"exact": 0.8256,
 			"lenientExactAttempts": 387,
-			"lenientExact": 0.8487,
+			"lenientExact": 0.8543,
 			"casesExactEveryRepetition": 122,
 			"casesLenientEveryRepetition": 126,
-			"cutPrecision": 0.9249,
-			"cutRecall": 0.9644,
-			"linksPlaced": 0.9261,
-			"linksWithGoldRoute": 0.8747,
-			"linksExact": 0.8709,
-			"hasConstituentsAgreed": 0.9496,
+			"cutPrecision": 0.9242,
+			"cutRecall": 0.9641,
+			"linksPlaced": 0.9255,
+			"linksWithGoldRoute": 0.8775,
+			"linksExact": 0.8737,
+			"hasConstituentsAgreed": 0.9492,
 			"failed": 0
 		},
 		"word": {
@@ -250,19 +250,19 @@
 			"failed": 0
 		},
 		"phraseme": {
-			"cases": 37,
-			"attempts": 111,
+			"cases": 36,
+			"attempts": 108,
 			"exactAttempts": 98,
-			"exact": 0.8829,
+			"exact": 0.9074,
 			"lenientExactAttempts": 98,
-			"lenientExact": 0.8829,
+			"lenientExact": 0.9074,
 			"casesExactEveryRepetition": 32,
 			"casesLenientEveryRepetition": 32,
-			"cutPrecision": 0.9338,
+			"cutPrecision": 0.9329,
 			"cutRecall": 1.0,
-			"linksPlaced": 0.9817,
-			"linksWithGoldRoute": 0.9419,
-			"linksExact": 0.9419,
+			"linksPlaced": 0.9813,
+			"linksWithGoldRoute": 0.9502,
+			"linksExact": 0.9502,
 			"hasConstituentsAgreed": 1.0,
 			"failed": 0
 		}
@@ -832,17 +832,6 @@
 			"lenient": 3,
 			"gold": "none",
 			"returned": []
-		},
-		{
-			"caseId": "breakdown/de/je-nachdem",
-			"group": "phraseme",
-			"reps": 3,
-			"exact": 0,
-			"lenient": 0,
-			"gold": "je → Lexeme/ADV je · ' ' · nachdem → Lexeme/SCONJ nachdem",
-			"returned": [
-				"3x je → Lexeme/PRON je · ' ' · nachdem → Lexeme/SCONJ nachdem"
-			]
 		},
 		{
 			"caseId": "breakdown/de/jugendlich",

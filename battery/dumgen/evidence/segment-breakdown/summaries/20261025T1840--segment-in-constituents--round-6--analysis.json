@@ -108,7 +108,7 @@
 				0.828,
 				0.966
 			],
-			"note": "Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user's ruling: Gewissen and Gesicht (none returned, gold now ge- + wissen and ge- + Sicht) 0/3 each, anders (none returned, gold now the bottom word) 3/3; her and wirklich stay contested; unchanged by her's exclusion on 2026-10-28, since it already left her out: wirklich alone stays contested"
+			"note": "Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user's ruling: Gewissen and Gesicht (none returned, gold now ge- + wissen and ge- + Sicht) 0/3 each, anders (none returned, gold now the bottom word) 3/3; her and wirklich stay contested; unchanged by her's exclusion on 2026-10-28, since it already left her out: wirklich alone stays contested; superseded on 2026-10-29 by realtext58 (wirklich in, recht out, the same totals)"
 		},
 		"realtextUncontested55FirstJudging": {
 			"strict": "152/165 (92.1%)",
@@ -217,6 +217,50 @@
 			"realtext": "96/99 (33 cases, Geschichte 0/3; Gewissen and Gesicht left the set, no longer bottom words, since the 2026-10-27 ruling, and her, 3/3, since its exclusion on 2026-10-28; the run scored 105/108 on 36)",
 			"adversarial": "3/3 (Getreide)",
 			"tuning": "110/114 (Römer 🍷 0/3, erinnern 2/3)"
+		},
+		"realtext58": {
+			"strict": "155/174 (89.1%)",
+			"lenient": "157/174 (90.2%)",
+			"casesExactEveryRepetition": "50/58 (51 lenient)",
+			"wilson95": [
+				0.836,
+				0.929
+			],
+			"caseBootstrap95": [
+				0.81,
+				0.96
+			],
+			"lenientWilson95": [
+				0.849,
+				0.938
+			],
+			"lenientCaseBootstrap95": [
+				0.828,
+				0.966
+			],
+			"note": "Rescored 2026-10-29 after the part-of-speech ruling: wirklich (3/3) counts and is no longer contested; recht (3/3 as ADV) is left out, its input Kind changed; no row is contested, so this is the headline and every row scored"
+		},
+		"tuning151": {
+			"strict": "374/453 (82.6%)",
+			"lenient": "387/453 (85.4%)",
+			"casesExactEveryRepetition": "122/151 (126 lenient)",
+			"wilson95": [
+				0.788,
+				0.858
+			],
+			"caseBootstrap95": [
+				0.764,
+				0.883
+			],
+			"lenientWilson95": [
+				0.819,
+				0.884
+			],
+			"lenientCaseBootstrap95": [
+				0.797,
+				0.907
+			],
+			"note": "Rescored 2026-10-29: je nachdem (0/3 as SCONJ) is left out, its input Kind changed"
 		}
 	},
 	"realtextDistribution": {
@@ -238,13 +282,7 @@
 			"withConstituents24": "62/72"
 		}
 	},
-	"contested": [
-		{
-			"row": "wirklich",
-			"result": "3/3",
-			"split": "the Kind only: ADJ (learner) or ADV (system)"
-		}
-	],
+	"contested": [],
 	"failuresByCause": [
 		{
 			"cause": "The ge- affix test answers near chance",
@@ -386,5 +424,30 @@
 		"note": "The user ruled on 2026-10-28 (#1241) that her in von den Dünen her (round 6's real-text draw 30) is excluded: under the round 6 sampler's rule a token stands for its click unit, here the authored circumposition von … her (a Locution ADP in adposition-cases.ts), and authored grammar pieces get no Breakdown, so there is nothing to grade. It is a structural exclusion, as round 7's drüberhin, not a contested case: its row and record are gone, and it is scored in no set. Rescored from the runs' stored outputs with no jev call: only the sets that held her change, and the uncontested scores, which already left her out, do not.",
 		"excluded": "her (3/3 in every run that scored it)",
 		"stillContested": "wirklich, a part-of-speech question (ADJ or ADV)"
+	},
+	"ruling20261029": {
+		"note": "The user ruled on 2026-10-29 (#1241, ADR 0054) that a gold Reading's Kind is the part of speech DWDS gives its sense (in its entry or its etymology's labels), else en.wiktionary's, the source order of the 2026-10-27 split ruling. Rescored from the runs' stored outputs with no jev call. A case whose owning Reading's Kind changed was answered for the old input, so it is left out of every run that holds it.",
+		"changed": [
+			{
+				"row": "wirklich 'in der Tat'",
+				"dictionaries": "DWDS: one entry, Adjektiv, the sense 3 'Grammatik: adverbiell'; the etymology labels it Adj. only. en.wiktionary (not needed): Adjective and Adverb",
+				"gold": "ADJ, as drafted; no longer contested",
+				"result": "3/3 in every run, now counted"
+			},
+			{
+				"row": "recht 'ziemlich'",
+				"dictionaries": "DWDS: 2recht, Adjektiv, sense 3 b 'Grammatik: adverbiell, ziemlich, sehr'; the etymology labels it Adj. only",
+				"gold": "ADJ recht · ∅, was ADV recht",
+				"result": "left out: 3/3 as ADV in every run"
+			},
+			{
+				"row": "je nachdem",
+				"dictionaries": "DWDS: a Mehrwortausdruck with no part of speech; en.wiktionary: Adverb",
+				"gold": "Locution ADV, was SCONJ; parts unchanged",
+				"result": "left out of both tuning runs: 0/3 as SCONJ (je linked to PRON je)"
+			}
+		],
+		"stillContested": "none",
+		"morphemesRealtext": "93/96 on 32 cases (recht left out; 96/99 on 33 before)"
 	}
 }

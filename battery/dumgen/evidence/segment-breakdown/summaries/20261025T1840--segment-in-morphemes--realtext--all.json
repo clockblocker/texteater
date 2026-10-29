@@ -2,7 +2,7 @@
 	"runId": "262e9dad-fa57-4ee4-9500-68ce56a4cd38",
 	"experimentId": "segment-in-morphemes/de:realtext",
 	"round": "2026-10-25-breakdown-round-6",
-	"note": "The real-text held-out batch's bottom words. Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: Gewissen and Gesicht are no longer bottom words, so their 6 attempts left the set, 34 cases where the run had 36; anders, now a bottom word, was no case of this run. manifest and summary are the run's own. The user ruled on 2026-10-28 (#1241) that her in von den Dünen her (round 6's draw 30) is excluded: under the sampler's rule a token stands for its click unit, here the authored circumposition von … her, and authored grammar pieces get no Breakdown, so there is nothing to grade. Its record is deleted, so it leaves every set as a structural exclusion, not a contested case. Rescored 2026-10-28 from the run's stored outputs, with no jev call. her, a bottom word that passed 3/3, leaves the set: 33 cases where the 2026-10-27 rescore had 34.",
+	"note": "The real-text held-out batch's bottom words. Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: Gewissen and Gesicht are no longer bottom words, so their 6 attempts left the set, 34 cases where the run had 36; anders, now a bottom word, was no case of this run. manifest and summary are the run's own. The user ruled on 2026-10-28 (#1241) that her in von den Dünen her (round 6's draw 30) is excluded: under the sampler's rule a token stands for its click unit, here the authored circumposition von … her, and authored grammar pieces get no Breakdown, so there is nothing to grade. Its record is deleted, so it leaves every set as a structural exclusion, not a contested case. Rescored 2026-10-28 from the run's stored outputs, with no jev call. her, a bottom word that passed 3/3, leaves the set: 33 cases where the 2026-10-27 rescore had 34. The user ruled on 2026-10-29 (#1241, ADR 0054) that a gold Reading's Kind is the part of speech DWDS gives its sense, else en.wiktionary's: wirklich stays ADJ and is no longer contested; recht 'ziemlich' is now ADJ recht · ∅ and je nachdem a Locution ADV. Rescored 2026-10-29 from the run's stored outputs, with no jev call. A case whose input, its owning Reading, changed was answered for the old Kind, so its stored outputs score nothing and it is left out: recht (3/3 as ADV recht alone) leaves, 32 cases where the 2026-10-28 rescore had 33.",
 	"liveRuns": [
 		"262e9dad-fa57-4ee4-9500-68ce56a4cd38"
 	],
@@ -98,7 +98,7 @@
 			}
 		}
 	},
-	"exact": "96/99",
+	"exact": "93/96",
 	"cases": [
 		{
 			"caseId": "breakdown/de/bad",
@@ -268,13 +268,6 @@
 			"reps": 3,
 			"exact": 3,
 			"gold": "Paket · ∅",
-			"returned": []
-		},
-		{
-			"caseId": "breakdown/de/recht-ziemlich",
-			"reps": 3,
-			"exact": 3,
-			"gold": "recht",
 			"returned": []
 		},
 		{

@@ -141,7 +141,7 @@
 				0.81,
 				0.96
 			],
-			"note": "round 6's 58 uncontested cases, rescored after the 2026-10-27 ruling",
+			"note": "round 6's 58 uncontested cases, rescored after the 2026-10-27 ruling; unchanged by the 2026-10-29 ruling: wirklich (3/3) counts, recht (3/3) is left out",
 			"beforeRuling": "152/165 (92.1%), 154/165 (93.3%) lenient, on 55 cases, Wilson 87.0% to 95.3%, case bootstrap 85.5% to 97.6%"
 		},
 		"adversarial": {
@@ -229,6 +229,28 @@
 			"realtext": "99/99 (33 cases; beinahe and überhaupt left the set, no longer bottom words; the run scored 105/105 on 35)",
 			"adversarial": "9/9 (Gespenst, Gestalt, Gelenk)",
 			"tuning": "211/216 (72 cases; Gewissen and Gesicht left the set, no longer bottom words, since the 2026-10-27 ruling, and her, 3/3, since its exclusion on 2026-10-28; Römer 🍷 0/3, Gefahr and erinnern 2/3; the run scored 214/225 on 75)"
+		},
+		"tuning219": {
+			"strict": "558/657 (84.9%)",
+			"lenient": "573/657 (87.2%)",
+			"casesExactEveryRepetition": "181/219 (186 lenient)",
+			"wilson95": [
+				0.82,
+				0.875
+			],
+			"caseBootstrap95": [
+				0.802,
+				0.893
+			],
+			"lenientWilson95": [
+				0.844,
+				0.895
+			],
+			"lenientCaseBootstrap95": [
+				0.828,
+				0.913
+			],
+			"note": "Rescored 2026-10-29 after the part-of-speech ruling: wirklich (3/3) counts and nothing is contested; recht (3/3 as ADV) and je nachdem (0/3 as SCONJ) are left out, their input Kinds changed"
 		}
 	},
 	"targets": {
@@ -440,5 +462,31 @@
 		"note": "The user ruled on 2026-10-28 (#1241) that her in von den Dünen her (round 6's real-text draw 30) is excluded: under the round 6 sampler's rule a token stands for its click unit, here the authored circumposition von … her (a Locution ADP in adposition-cases.ts), and authored grammar pieces get no Breakdown, so there is nothing to grade. It is a structural exclusion, as round 7's drüberhin, not a contested case: its row and record are gone, and it is scored in no set. Rescored from the runs' stored outputs with no jev call: only the sets that held her change, and the uncontested scores, which already left her out, do not.",
 		"excluded": "her (3/3 in every run that scored it)",
 		"stillContested": "wirklich, a part-of-speech question (ADJ or ADV)"
+	},
+	"ruling20261029": {
+		"note": "The user ruled on 2026-10-29 (#1241, ADR 0054) that a gold Reading's Kind is the part of speech DWDS gives its sense (in its entry or its etymology's labels), else en.wiktionary's, the source order of the 2026-10-27 split ruling. Rescored from the runs' stored outputs with no jev call. A case whose owning Reading's Kind changed was answered for the old input, so it is left out of every run that holds it.",
+		"changed": [
+			{
+				"row": "wirklich 'in der Tat'",
+				"dictionaries": "DWDS: one entry, Adjektiv, the sense 3 'Grammatik: adverbiell'; the etymology labels it Adj. only. en.wiktionary (not needed): Adjective and Adverb",
+				"gold": "ADJ, as drafted; no longer contested",
+				"result": "3/3 in every run, now counted"
+			},
+			{
+				"row": "recht 'ziemlich'",
+				"dictionaries": "DWDS: 2recht, Adjektiv, sense 3 b 'Grammatik: adverbiell, ziemlich, sehr'; the etymology labels it Adj. only",
+				"gold": "ADJ recht · ∅, was ADV recht",
+				"result": "left out: 3/3 as ADV in every run"
+			},
+			{
+				"row": "je nachdem",
+				"dictionaries": "DWDS: a Mehrwortausdruck with no part of speech; en.wiktionary: Adverb",
+				"gold": "Locution ADV, was SCONJ; parts unchanged",
+				"result": "left out of both tuning runs: 0/3 as SCONJ (je linked to PRON je)"
+			}
+		],
+		"stillContested": "none",
+		"realtext": "unchanged at 152/180 (84.4%): it holds no changed case",
+		"morphemesTuning": "208/213 on 71 cases (recht left out; 211/216 on 72 before)"
 	}
 }

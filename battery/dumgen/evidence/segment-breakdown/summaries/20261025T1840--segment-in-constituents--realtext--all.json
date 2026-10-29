@@ -2,7 +2,7 @@
 	"runId": "1efda312-151f-4ba4-a0b0-4ffdd9e1da97",
 	"experimentId": "segment-in-constituents/de:realtext",
 	"round": "2026-10-25-breakdown-round-6",
-	"note": "The real-text held-out batch breakdown-heldout-2026-10-25b-realtext (60 records sampled at random from tf-demo's Library, seed 2026102506), the round's headline. metrics scores every row (60 at the run, 59 since her's exclusion on 2026-10-28); metricsUncontested, the headline, leaves out the rows still contested: the judges split on five, and since the user's ruling of 2026-10-27 two remain (her, wirklich). 3 repetitions, one live run at 99571120e. Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: Gewissen is now ge- + wissen and Gesicht ge- + Sicht (en.wiktionary), anders the bottom word anders, and the three are uncontested; her and wirklich stay contested. manifest and summary are the run's own, scored against the first gold. The user ruled on 2026-10-28 (#1241) that her in von den Dünen her (round 6's draw 30) is excluded: under the sampler's rule a token stands for its click unit, here the authored circumposition von … her, and authored grammar pieces get no Breakdown, so there is nothing to grade. Its record is deleted, so it leaves every set as a structural exclusion, not a contested case. Rescored 2026-10-28 from the run's stored outputs, with no jev call. metrics now scores 59 of the 60, and metricsUncontested, which already left her out, still leaves out wirklich only and is unchanged.",
+	"note": "The real-text held-out batch breakdown-heldout-2026-10-25b-realtext (60 records sampled at random from tf-demo's Library, seed 2026102506), the round's headline. metrics scores every row (60 at the run, 59 since her's exclusion on 2026-10-28); metricsUncontested, the headline, leaves out the rows still contested: the judges split on five, and since the user's ruling of 2026-10-27 two remain (her, wirklich). 3 repetitions, one live run at 99571120e. Rescored 2026-10-27 from the run's stored outputs, with no jev call, after the user ruled on 2026-10-27 (#1241) that the dictionary decides split against no split (DWDS's Wortzerlegung, else en.wiktionary, else none) and that outside a verb a particle-like part links to its ADP: Gewissen is now ge- + wissen and Gesicht ge- + Sicht (en.wiktionary), anders the bottom word anders, and the three are uncontested; her and wirklich stay contested. manifest and summary are the run's own, scored against the first gold. The user ruled on 2026-10-28 (#1241) that her in von den Dünen her (round 6's draw 30) is excluded: under the sampler's rule a token stands for its click unit, here the authored circumposition von … her, and authored grammar pieces get no Breakdown, so there is nothing to grade. Its record is deleted, so it leaves every set as a structural exclusion, not a contested case. Rescored 2026-10-28 from the run's stored outputs, with no jev call. metrics now scores 59 of the 60, and metricsUncontested, which already left her out, still leaves out wirklich only and is unchanged. The user ruled on 2026-10-29 (#1241, ADR 0054) that a gold Reading's Kind is the part of speech DWDS gives its sense, else en.wiktionary's: wirklich stays ADJ and is no longer contested; recht 'ziemlich' is now ADJ recht · ∅ and je nachdem a Locution ADV. Rescored 2026-10-29 from the run's stored outputs, with no jev call. A case whose input, its owning Reading, changed was answered for the old Kind, so its stored outputs score nothing and it is left out: recht (3/3 as ADV) leaves, 58 cases where the 2026-10-28 rescore had 59; wirklich (3/3) now counts, so metricsUncontested equals metrics and no row is contested.",
 	"liveRuns": [
 		"1efda312-151f-4ba4-a0b0-4ffdd9e1da97"
 	],
@@ -124,37 +124,37 @@
 	},
 	"metrics": {
 		"all": {
-			"cases": 59,
-			"attempts": 177,
-			"exactAttempts": 158,
-			"exact": 0.8927,
-			"lenientExactAttempts": 160,
-			"lenientExact": 0.904,
-			"casesExactEveryRepetition": 51,
-			"casesLenientEveryRepetition": 52,
+			"cases": 58,
+			"attempts": 174,
+			"exactAttempts": 155,
+			"exact": 0.8908,
+			"lenientExactAttempts": 157,
+			"lenientExact": 0.9023,
+			"casesExactEveryRepetition": 50,
+			"casesLenientEveryRepetition": 51,
 			"cutPrecision": 0.8854,
 			"cutRecall": 0.8854,
 			"linksPlaced": 0.8616,
 			"linksWithGoldRoute": 0.8491,
 			"linksExact": 0.8491,
-			"hasConstituentsAgreed": 0.9322,
+			"hasConstituentsAgreed": 0.931,
 			"failed": 0
 		},
 		"word": {
-			"cases": 56,
-			"attempts": 168,
-			"exactAttempts": 149,
-			"exact": 0.8869,
-			"lenientExactAttempts": 151,
-			"lenientExact": 0.8988,
-			"casesExactEveryRepetition": 48,
-			"casesLenientEveryRepetition": 49,
+			"cases": 55,
+			"attempts": 165,
+			"exactAttempts": 146,
+			"exact": 0.8848,
+			"lenientExactAttempts": 148,
+			"lenientExact": 0.897,
+			"casesExactEveryRepetition": 47,
+			"casesLenientEveryRepetition": 48,
 			"cutPrecision": 0.8472,
 			"cutRecall": 0.8472,
 			"linksPlaced": 0.8406,
 			"linksWithGoldRoute": 0.8261,
 			"linksExact": 0.8261,
-			"hasConstituentsAgreed": 0.9286,
+			"hasConstituentsAgreed": 0.9273,
 			"failed": 0
 		},
 		"phraseme": {
@@ -185,11 +185,11 @@
 			"lenientExact": 0.9023,
 			"casesExactEveryRepetition": 50,
 			"casesLenientEveryRepetition": 51,
-			"cutPrecision": 0.8817,
-			"cutRecall": 0.8817,
-			"linksPlaced": 0.8562,
-			"linksWithGoldRoute": 0.8431,
-			"linksExact": 0.8431,
+			"cutPrecision": 0.8854,
+			"cutRecall": 0.8854,
+			"linksPlaced": 0.8616,
+			"linksWithGoldRoute": 0.8491,
+			"linksExact": 0.8491,
 			"hasConstituentsAgreed": 0.931,
 			"failed": 0
 		},
@@ -202,11 +202,11 @@
 			"lenientExact": 0.897,
 			"casesExactEveryRepetition": 47,
 			"casesLenientEveryRepetition": 48,
-			"cutPrecision": 0.8406,
-			"cutRecall": 0.8406,
-			"linksPlaced": 0.8333,
-			"linksWithGoldRoute": 0.8182,
-			"linksExact": 0.8182,
+			"cutPrecision": 0.8472,
+			"cutRecall": 0.8472,
+			"linksPlaced": 0.8406,
+			"linksWithGoldRoute": 0.8261,
+			"linksExact": 0.8261,
 			"hasConstituentsAgreed": 0.9273,
 			"failed": 0
 		},
@@ -228,9 +228,7 @@
 			"failed": 0
 		}
 	},
-	"contested": [
-		"breakdown/de/wirklich"
-	],
+	"contested": [],
 	"cases": [
 		{
 			"caseId": "breakdown/de/anders",
@@ -578,15 +576,6 @@
 		},
 		{
 			"caseId": "breakdown/de/paket",
-			"group": "word",
-			"reps": 3,
-			"exact": 3,
-			"lenient": 3,
-			"gold": "none",
-			"returned": []
-		},
-		{
-			"caseId": "breakdown/de/recht-ziemlich",
 			"group": "word",
 			"reps": 3,
 			"exact": 3,
