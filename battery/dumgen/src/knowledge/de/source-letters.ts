@@ -31,8 +31,13 @@ function stemOf(form: string, kind: string): string {
 	return word.endsWith("en") ? word.slice(0, -2) : word;
 }
 
-const affixed = (longer: string, shorter: string) =>
-	germanSuffixes.some(({ spelled }) => longer === shorter + plain(spelled)) ||
+/** Whether `longer`, of Kind `kind`, is `shorter` with a listed affix added. */
+const affixed = (longer: string, kind: string, shorter: string) =>
+	germanSuffixes.some(
+		({ spelled, makes }) =>
+			(makes === undefined || makes === kind) &&
+			longer === shorter + plain(spelled),
+	) ||
 	germanPrefixes.some(({ spelled }) => longer === plain(spelled) + shorter);
 
 /** Whether `word` of Kind `kind` can be a conversion of `base`. */
@@ -48,8 +53,8 @@ export function isConversionOf(
 		stem.length >= 2 &&
 		baseStem.length >= 2 &&
 		stem[0] === baseStem[0] &&
-		!affixed(stem, baseStem) &&
-		!affixed(baseStem, stem)
+		!affixed(stem, kind, baseStem) &&
+		!affixed(baseStem, base.kind, stem)
 	);
 }
 

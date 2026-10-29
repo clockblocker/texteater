@@ -40,6 +40,14 @@ export type GermanAffix = {
 	 * (https://www.dwds.de/wb/randvoll).
 	 */
 	readonly alsoAHead?: true;
+	/**
+	 * The one Kind a suffix makes, when it is cut only from words of that
+	 * Kind: the adverbial -s makes adverbs from nouns and adjectives
+	 * (`Anfang + -s`, `bereit + -s`), so no noun or verb ending in s is
+	 * offered it. Its base is always a word, so a word it ends is never a
+	 * bottom word, and `segment.inMorphemes` never cuts it.
+	 */
+	readonly makes?: string;
 };
 
 const prefix = (spelled: string): GermanAffix => ({
@@ -161,9 +169,7 @@ export const germanSuffixes: readonly GermanAffix[] = [
 	 * -voll makes adjectives from nouns: DWDS has it as an Affix of its
 	 * own, "-voll · Affix produktiv", whose word-formation list holds only
 	 * noun bases (https://www.dwds.de/wb/-voll), and its Wortzerlegungen
-	 * cut it so: `Mühe -voll` (https://www.dwds.de/wb/mühevoll). The
-	 * adverbial -s has no DWDS affix entry and no Wortzerlegung cuts it
-	 * (DWDS gives such adverbs a Grundform), so it stays off this list.
+	 * cut it so: `Mühe -voll` (https://www.dwds.de/wb/mühevoll).
 	 */
 	{
 		...suffix("voll", "voll", "full of or marked by what {base} names"),
@@ -172,6 +178,15 @@ export const germanSuffixes: readonly GermanAffix[] = [
 	},
 	suffix("weise"),
 	suffix("wärts"),
+	/*
+	 * The adverbial -s (`nachmittags`, `anfangs`, `bereits`, `rechts`).
+	 * DWDS has no affix entry for it and gives such adverbs a Grundform,
+	 * not a Wortzerlegung, but en.wiktionary lists -s (adverb) and splits
+	 * them with it, `From Anfang + -s`, which is evidence enough (the user,
+	 * 2026-10-29; ADR 0054). It is neither the Interfix -s- nor the
+	 * genitive ending.
+	 */
+	{ ...suffix("s"), makes: "ADV" },
 	/*
 	 * The verb-forming suffixes, closed (Fleischer/Barz, Wortbildung der
 	 * deutschen Gegenwartssprache, 4th ed., 2012, Verbderivation; Duden, Die

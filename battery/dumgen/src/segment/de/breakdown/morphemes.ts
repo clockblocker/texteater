@@ -93,7 +93,12 @@ function splitsOf(body: string): Split[] {
 	];
 	const suffixes = [
 		undefined,
-		...germanSuffixes.filter(({ spelled }) => folded.endsWith(spelled)),
+		// A suffix that makes one Kind from a word (the adverbial -s) never
+		// ends a bottom word.
+		...germanSuffixes.filter(
+			({ spelled, makes }) =>
+				makes === undefined && folded.endsWith(spelled),
+		),
 	];
 	const result: Split[] = [];
 	for (const prefix of prefixes)

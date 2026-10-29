@@ -26,6 +26,15 @@ describe("candidates code proposes", () => {
 		expect(wordAnalyses("Lauf", "NOUN")).toEqual([]);
 	});
 
+	test("the adverbial -s is cut from an adverb only", () => {
+		expect(
+			wordAnalyses("anfangs", "ADV").map(({ label }) => label),
+		).toContain("anfang + -s (suffix)");
+		expect(
+			wordAnalyses("Kreis", "NOUN").map(({ label }) => label),
+		).not.toContain("Krei + -s (suffix)");
+	});
+
 	test("Canonical Forms undo inflection, truncation and umlaut", () => {
 		expect(formCandidates("liegt", "Lexeme", "VERB")).toContain("liegen");
 		expect(formCandidates("hat", "Lexeme", "VERB")).toContain("haben");

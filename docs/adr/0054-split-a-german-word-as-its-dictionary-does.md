@@ -18,6 +18,14 @@ Reading a Breakdown Record owns:
   Reading's does ([ADR 0036](./0036-make-adjectival-german-participles-adj-linked-to-their-verb.md)).
 - The citation ending is unlinked filler: `verarzten` = `[[ver-|ver]] +
   [[Arzt|arzt]] + en`. Constituents hold no inflectional piece.
+- The adverbial suffix -s is its own piece, linking to the Suffix `-s`, which
+  is neither the Interfix -s- nor the genitive ending: `nachmittags` =
+  `Nachmittag + -s`, `anfangs` = `Anfang + -s`, `bereits` = `bereit + -s`.
+  DWDS gives these adverbs no Wortzerlegung and has no affix entry for -s,
+  but en.wiktionary splits them with its -s (adverb), and that is enough for
+  the affix test too ([ADR 0051](./0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md);
+  the user, 2026-10-29). It is cut from adverbs only. A word neither
+  dictionary splits stays a bottom word: `anders`.
 - A linking element is its own piece, linking to an Interfix from the closed
   set s, es, n, en, e, er, ens: `Arbeit + -s- + Amt`, `[[Gast|Gäst]] +
   [[-e-|e]] + [[Haus|haus]]`, `Kind + -er- + Garten`.
@@ -71,6 +79,10 @@ Reading a Breakdown Record owns:
   ADV). Rejected: the two judges split on it, and a dictionary's class can
   be checked.
 - `über-` in `überhaupt`. Rejected: nothing outside a verb separates.
+- The adverbial -s off the affix list, since DWDS has no affix entry for it.
+  Rejected: the split rule already falls back to en.wiktionary, which lists
+  the suffix, and an affix test that asked more than the split rule would
+  leave `anfangs` split in gold and whole in the segmenter.
 - The adverbs with no DWDS verbal affix entry linking to their ADV Lexeme.
   Rejected: the Amtliches Regelwerk §34(1) names most as Verbpartikeln, and
   German writes them attached.

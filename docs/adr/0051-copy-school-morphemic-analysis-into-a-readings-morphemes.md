@@ -71,7 +71,8 @@ etymology decides, as it does for Constituents (ADR 0050). A fossilized
 prefix the test doesn't confirm stays inside the Root, so `Geselle` =
 `gesell · e`. The user ruled this on
 [#1243](https://github.com/clockblocker/texteater/issues/1243) on
-2026-10-24.
+2026-10-24. An affix needs no DWDS affix entry to be listed: en.wiktionary's
+is enough, as for the adverbial -s (ADR 0054; the user, 2026-10-29).
 
 **Every other word's morphemes come by propagation.** Code walks up the
 Constituents chain. Each step keeps the morphemes it inherits under that

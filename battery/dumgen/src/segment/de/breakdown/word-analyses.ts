@@ -179,13 +179,19 @@ function binaryCuts(
 	return result;
 }
 
-/** A base with a derivational suffix: `Entspann + -ung`. */
-function suffixCuts(word: string): WordAnalysis[] {
+/**
+ * A base with a derivational suffix: `Entspann + -ung`. A suffix that makes
+ * one Kind only is cut from a word of that Kind: `Anfang + -s` for the
+ * adverb `anfangs`, never `Hau + -s` for the noun `Haus`.
+ */
+function suffixCuts(word: string, kind: string): WordAnalysis[] {
 	const folded = lower(word);
 	return suffixes
 		.filter(
-			({ spelled }) =>
-				folded.endsWith(spelled) && word.length - spelled.length >= 2,
+			({ spelled, makes }) =>
+				folded.endsWith(spelled) &&
+				word.length - spelled.length >= 2 &&
+				(makes === undefined || makes === kind),
 		)
 		.map(({ spelled, canonicalForm, baseKind }) =>
 			analysis([
@@ -300,7 +306,7 @@ export function wordAnalyses(word: string, kind: string): WordAnalysis[] {
 	const minHead = verb ? 4 : headedKinds.has(kind) ? 3 : 2;
 	const candidates = [
 		...binaryCuts(word, minHead, verb ? shortVerbHeads : undefined),
-		...suffixCuts(word),
+		...suffixCuts(word, kind),
 		...(verb ? prefixedVerbStems(word) : []),
 	];
 	const seen = new Set<string>();
