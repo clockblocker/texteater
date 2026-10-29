@@ -1,0 +1,76 @@
+{
+	"runId": "01f6dfb2-183d-4bad-b310-daa47f6d1ad7",
+	"experimentId": "segment-in-morphemes/de:adversarial",
+	"round": "2026-10-29-breakdown-round-9",
+	"note": "The adversarial batch's one bottom word, sonst, a case of segment-in-morphemes/de:adversarial; answered from the cache (no fresh request). 3 repetitions at b02e4f429.",
+	"liveRuns": [
+		"01f6dfb2-183d-4bad-b310-daa47f6d1ad7"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "01f6dfb2-183d-4bad-b310-daa47f6d1ad7",
+		"experimentId": "segment-in-morphemes/de:adversarial",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "b02e4f429",
+		"startedAt": "2026-10-29T16:47:29.561Z",
+		"corpus": {
+			"fingerprint": "5b8a59f52de4f3b6a038a33d6aa286b708ea0e5aa2b7af21c7b507418014193c",
+			"caseIds": [
+				"breakdown/de/sonst"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 1,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 1,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 1,
+			"failed": 0,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-29T16:47:29.565Z",
+		"total": 1,
+		"succeeded": 1,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 0,
+			"quality": {
+				"passed": 3,
+				"failed": 0,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"exact": "3/3",
+	"cases": [
+		{
+			"caseId": "breakdown/de/sonst",
+			"reps": 3,
+			"exact": 3,
+			"gold": "sonst",
+			"returned": []
+		}
+	]
+}

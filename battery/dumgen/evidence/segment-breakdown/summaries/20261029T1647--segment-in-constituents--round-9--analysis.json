@@ -1,0 +1,306 @@
+{
+	"round": "2026-10-29-breakdown-round-9",
+	"note": "Round 9 of the Breakdown segmenters (#1241), the planned last tuning round: a fresh real-text sample of 60 (seed 2026102909, rounds 5 to 8's frame) as the headline, a fresh adversarial batch of 10 apart, then the tuning set (round 8's held-out promoted, also round 9's rescore of rounds 6 to 8's real text) and the morphemes sets. jev-1.13.0 at b02e4f429, 3 repetitions, the lab's cached jev transport, no reasoning model, no prompt change during the measurement runs. Strict is contractPass; lenient adds the confirmed noun-or-verb tolerance for a compound's first part. The headline leaves out gerade, the one row the two independent judges split on (contested). Intervals: Wilson on attempts, and a case bootstrap of 20,000 resamples with seed 2026102909.",
+	"fixes": [
+		"Headword form (a718c3ee0, a5354d090, b6c91de67): a word part that is a noun, a name or an adjective has its candidate forms tested with the noun, name or adjective test in the forms request; the letters as they stand win when the test passes them or weighs them highest, else the passing form the headword question weighs most, else its pick. A name's and an adjective's letters before a suffix also offer their umlaut undone (Holländ gave only itself).",
+		"Affix inventory (a718c3ee0): -voll joins the suffixes with a noun base (DWDS '-voll · Affix produktiv', Wortzerlegung Mühe -voll). The adverbial -s stays off: DWDS has no affix entry for it and no Wortzerlegung cuts it.",
+		"Word + particle adverbs (a718c3ee0, a5354d090, b6c91de67): for a Kind that compounds with no head (ADV, the conjunctions, ADP, PRON...), the sense check asks whether a dictionary's word formation splits the word into two words of their own written together, however far its sense drifted (ADR 0054); its last word may have two letters (zu), and one that is a true particle and a preposition links to its ADP unasked."
+	],
+	"spend": {
+		"cap": {
+			"dollars": 0.05,
+			"tokens": 1190476,
+			"granted": 1090000,
+			"note": "the sum of the eight live runs' --budget values, the two prep checks included"
+		},
+		"prepLiveChecks": [
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "7405a5a1-93ba-45f2-b4c7-530ec92c9a3f",
+				"gitHead": "e3ce389bb",
+				"cases": 11,
+				"budget": 31000,
+				"projected": 30120,
+				"freshRequests": 45,
+				"freshTokens": 27048,
+				"exact": "14/33"
+			},
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "d710c2ee-1bfe-4790-9cd2-b75a81e34535",
+				"gitHead": "a5354d090",
+				"cases": 17,
+				"budget": 130000,
+				"projected": 128491,
+				"freshRequests": 69,
+				"freshTokens": 43926,
+				"exact": "32/51"
+			}
+		],
+		"runs": [
+			{
+				"experiment": "segment-in-constituents/de:realtext",
+				"runId": "a7a49007-64dd-4afc-a3c1-d881030d2e9f",
+				"budget": 511000,
+				"projected": 510821,
+				"freshRequests": 382,
+				"freshTokens": 223563
+			},
+			{
+				"experiment": "segment-in-constituents/de:adversarial",
+				"runId": "00c93e4a-382c-4aaf-bc1b-835055475fe3",
+				"budget": 128000,
+				"projected": 127778,
+				"freshRequests": 103,
+				"freshTokens": 68749
+			},
+			{
+				"experiment": "segment-in-constituents/de:breakdown",
+				"runId": "53e890b2-7cf9-4dc3-bdc9-ba413970f239",
+				"budget": 261000,
+				"projected": 256351,
+				"freshRequests": 277,
+				"freshTokens": 142421
+			},
+			{
+				"experiment": "segment-in-morphemes/de:realtext",
+				"runId": "4db30634-e41e-430c-be1b-72bce39cda48",
+				"budget": 27000,
+				"projected": 26156,
+				"freshRequests": 42,
+				"freshTokens": 18168
+			},
+			{
+				"experiment": "segment-in-morphemes/de:adversarial",
+				"runId": "01f6dfb2-183d-4bad-b310-daa47f6d1ad7",
+				"budget": 1000,
+				"projected": 0,
+				"freshRequests": 0,
+				"freshTokens": 0
+			},
+			{
+				"experiment": "segment-in-morphemes/de:breakdown",
+				"runId": "9a2ac1be-fb86-4855-b25a-bd9e50053425",
+				"budget": 1000,
+				"projected": 0,
+				"freshRequests": 0,
+				"freshTokens": 0
+			}
+		],
+		"roundRunTokens": 452901,
+		"prepLiveCheckTokens": 70974,
+		"roundTokens": 523875,
+		"roundDollars": 0.022,
+		"standingDollar": {
+			"tokens": 2731285,
+			"spentDollars": 0.1147,
+			"leftDollars": 0.8853,
+			"note": "round 8's standing 2,207,410 tokens and this round's 523,875, at $0.042 per million"
+		}
+	},
+	"headline": {
+		"realtextUncontested59": {
+			"strict": "135/177 (76.3%)",
+			"lenient": "135/177 (76.3%)",
+			"casesExactEveryRepetition": "45/59",
+			"wilson95": [
+				0.695,
+				0.819
+			],
+			"caseBootstrap95": [
+				0.644,
+				0.864
+			]
+		},
+		"realtextAll60": {
+			"strict": "138/180 (76.7%)",
+			"lenient": "138/180",
+			"casesExactEveryRepetition": "46/60",
+			"wilson95": [
+				0.7,
+				0.823
+			],
+			"caseBootstrap95": [
+				0.65,
+				0.867
+			],
+			"note": "gerade, contested, 3/3"
+		},
+		"earlierRounds": {
+			"round8": "143/177 (80.8%; 74.4-85.9%, 70.6-90.4%)",
+			"round7": "152/180 (84.4%; 78.4-89.0%, 75.0-92.8%)",
+			"round6": "155/174 (89.1%; 83.6-92.9%, 81.0-96.0%)"
+		},
+		"pooledRounds6to9": {
+			"strict": "585/708 (82.6%)",
+			"cases": 236,
+			"wilson95": [
+				0.7966,
+				0.8524
+			],
+			"caseBootstrap95": [
+				0.7768,
+				0.8715
+			],
+			"note": "every uncontested real-text case of rounds 6 to 9, each scored with its own round's producer: round 6 58 cases 155/174 and round 7 60 cases 152/180 as rescored 2026-10-29, round 8 59 cases 143/177, round 9 59 cases 135/177"
+		},
+		"rescoredWithRound9Producer": {
+			"note": "rounds 6 to 8's real-text cases, now tuning, from the live tuning run at b02e4f429; tuned on since they were scored held-out, so not comparable to a fresh sample",
+			"round6": "164/177 (92.7%; 59 cases; Wilson 87.8-95.7%, bootstrap 85.9-98.3%)",
+			"round7": "161/180 (89.4%; Wilson 84.1-93.1%, bootstrap 81.7-96.1%)",
+			"round8": "158/177 (89.3%; 59 uncontested; Wilson 83.8-93.0%, bootstrap 80.8-96.6%)"
+		},
+		"adversarial": {
+			"strict": "18/30 (60.0%)",
+			"casesExactEveryRepetition": "6/10",
+			"wilson95": [
+				0.423,
+				0.754
+			],
+			"caseBootstrap95": [
+				0.3,
+				0.9
+			]
+		},
+		"tuning361": {
+			"strict": "925/1083 (85.4%)",
+			"lenient": "940/1083 (86.8%)",
+			"casesExactEveryRepetition": "300/361",
+			"wilson95": [
+				0.832,
+				0.874
+			],
+			"caseBootstrap95": [
+				0.818,
+				0.887
+			]
+		},
+		"morphemes": {
+			"realtext34": "102/102 (96/96 without contested gerade and allein)",
+			"adversarial1": "3/3 (sonst)",
+			"tuning149": "433/447"
+		}
+	},
+	"realtextDistribution": {
+		"cases": 60,
+		"noConstituents": {
+			"bottomWords": 26,
+			"indeclinables": 5,
+			"properNames": 3
+		},
+		"withConstituents": {
+			"derivations": 11,
+			"compounds": 6,
+			"particleVerbs": 9
+		},
+		"exactBy": {
+			"noConstituents33Uncontested": "90/99",
+			"withConstituents26": "45/78"
+		}
+	},
+	"contested": [
+		{
+			"row": "gerade (RT36)",
+			"result": "3/3",
+			"split": "a bottom word (learner) or a structural snag to exclude, since en.wiktionary's etymology reads ge- + the root of Rad (system)"
+		},
+		{
+			"row": "allein (RT30), morphemes only",
+			"result": "3/3 (allein · ∅)",
+			"split": "Root and ∅ (learner) or Root alone, the adjective being predicative only (system)"
+		},
+		{
+			"row": "sampling: draws 89, 102, 114, 131, 150",
+			"split": "the learner judge would accept a perfect, passive or future auxiliary as its verb's first member; the system judge keeps earlier rounds' closed-route rejection; not applied"
+		}
+	],
+	"targets": [
+		{
+			"word": "holländisch",
+			"round8": "0/3",
+			"round9": "3/3",
+			"why": "Holland offered and passed by the name test"
+		},
+		{
+			"word": "Lederlack",
+			"round8": "0/3",
+			"round9": "3/3",
+			"why": "the noun test weighs Lack highest (0.40 against Lacke 0.27)"
+		},
+		{
+			"word": "mittlerweile",
+			"round8": "0/3",
+			"round9": "0/3",
+			"why": "the adjective test weighs mittel 0.60 over mittler 0.32"
+		},
+		{
+			"word": "mühevoll",
+			"round8": "0/3",
+			"round9": "3/3",
+			"why": "-voll"
+		},
+		{
+			"word": "nachmittags",
+			"round8": "0/3",
+			"round9": "0/3",
+			"why": "the adverbial -s is not on the list: DWDS confirms no such affix"
+		},
+		{
+			"word": "geradezu",
+			"round8": "0/3",
+			"round9": "3/3",
+			"why": "gerade + zu offered, zu linked to its ADP"
+		},
+		{
+			"word": "vielleicht",
+			"round8": "0/3",
+			"round9": "3/3",
+			"why": "the dictionary question says yes to viel + leicht"
+		},
+		{
+			"word": "rötlich (tuning)",
+			"round8": "0/3",
+			"round9": "3/3",
+			"why": "röt offers rot"
+		},
+		{
+			"word": "Gewölk, Rentier (tuning)",
+			"round8": "0/3",
+			"round9": "0/3",
+			"why": "the noun test weighs Wölke and Rene over Wolke and Ren"
+		}
+	],
+	"regressions": {
+		"tuning": "seven cases 3 -> 0: Blumenschale, Gästehaus, Sonnenbrille, Hohepriester, Langeweile, beinahe, Rentier (Rentner): the noun and adjective tests pass a plural or attributive first part (Blumen, Gäste, Sonnen, Hohe, Lange, nahe, Rent) as its own headword, so the letters win and the Interfix is lost. A replay from the cache with the floor rule alone (no 'weighs them highest') loses the same seven and also Nagellack, so the test itself, not the relative rule, overreaches.",
+		"gains": "six cases 0 -> 3 (geradezu, holländisch, Lederlack, mühevoll, rötlich, vielleicht); on the same 361 cases round 8 scored 928/1083 (753 tuning, 146 real text, 29 adversarial), so tuning is 925 against 928, with no other case moving",
+		"adversarialControls": "Gästebuch (Gäste kept, the same overreach) and randvoll (voll now always the suffix -voll) fail; Österreicher fails on its route (NOUN), sobald on bald's route"
+	},
+	"failuresByCause": [
+		{
+			"cause": "A suffix cut off a bottom word",
+			"attempts": "9 RT",
+			"cases": "Majorität (Major + -ität), Onkel (Onke + -el), Schwester (Schweste + -er); the morphemes segmenter keeps all three whole"
+		},
+		{
+			"cause": "A part's route",
+			"attempts": "12 RT",
+			"cases": "einmal (ein as the particle ein-, mal as ADV), indessen (in and dessen as ADV), Nordkorea (nord ADJ, Korea NOUN), sparsam (spar ADJ)"
+		},
+		{
+			"cause": "A shape the segmenter lacks",
+			"attempts": "9 RT",
+			"cases": "lächeln (a verb suffix before the citation ending), Aschenputtel (a cranberry head), Vertrauensperson (Vertrauens taken as a cranberry Root, not Vertrauen + -s-)"
+		},
+		{
+			"cause": "ge- + a verb base",
+			"attempts": "6 RT",
+			"cases": "Gefühl (none 3/3), Geräusch (Rausch the noun 2, none 1)"
+		},
+		{
+			"cause": "The adverbial -s is not on the list",
+			"attempts": "6 RT",
+			"cases": "anfangs, bereits (none 3/3); DWDS gives no -s affix, en.wiktionary does"
+		}
+	],
+	"verdict": "Stop tuning. Real text fell to 76.3% on 59 uncontested cases (Wilson 69.5-81.9%, case bootstrap 64.4-86.4%) against round 8's 80.8%, 7's 84.4% and 6's 89.1%; the intervals overlap, but four fresh samples in a row show no gain, and the pooled rounds 6-9 figure is 82.6% (Wilson 79.7-85.2%, bootstrap 77.7-87.1%). The three fixes hit their targets (geradezu, vielleicht, holländisch, Lederlack, mühevoll 0 -> 3) but the headword test overreached on tuning (seven cases 3 -> 0), and the fresh sample's misses fall in classes no round has fixed: suffix overcuts of bottom words, part routes, and shapes the segmenter lacks."
+}

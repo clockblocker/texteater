@@ -1,0 +1,1272 @@
+{
+	"runId": "9a2ac1be-fb86-4855-b25a-bd9e50053425",
+	"experimentId": "segment-in-morphemes/de:breakdown",
+	"round": "2026-10-29-breakdown-round-9",
+	"note": "The tuning set's bottom words, round 8's promoted ones included. 3 repetitions at b02e4f429, all from the cache.",
+	"liveRuns": [
+		"9a2ac1be-fb86-4855-b25a-bd9e50053425"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "9a2ac1be-fb86-4855-b25a-bd9e50053425",
+		"experimentId": "segment-in-morphemes/de:breakdown",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "b02e4f429",
+		"startedAt": "2026-10-29T16:47:30.137Z",
+		"corpus": {
+			"fingerprint": "3182bf96925b670e775d905ef1b0277b12e27f2a8c1d39dc8d73739ba82d0c18",
+			"caseIds": [
+				"breakdown/de/aber",
+				"breakdown/de/ach",
+				"breakdown/de/akt",
+				"breakdown/de/anders",
+				"breakdown/de/angst",
+				"breakdown/de/annie",
+				"breakdown/de/bad",
+				"breakdown/de/bauer-vogelkaefig",
+				"breakdown/de/blume",
+				"breakdown/de/blut",
+				"breakdown/de/bottegone",
+				"breakdown/de/dass",
+				"breakdown/de/denken",
+				"breakdown/de/desto",
+				"breakdown/de/devot",
+				"breakdown/de/drei",
+				"breakdown/de/duerfen",
+				"breakdown/de/effi",
+				"breakdown/de/ei",
+				"breakdown/de/elite",
+				"breakdown/de/erinnern",
+				"breakdown/de/erst",
+				"breakdown/de/europa",
+				"breakdown/de/fahren",
+				"breakdown/de/fast",
+				"breakdown/de/fisch",
+				"breakdown/de/form",
+				"breakdown/de/frau",
+				"breakdown/de/freude",
+				"breakdown/de/fuehlen",
+				"breakdown/de/fuerst",
+				"breakdown/de/ganz",
+				"breakdown/de/ganz-vollstaendig",
+				"breakdown/de/gar",
+				"breakdown/de/geben-es-gibt",
+				"breakdown/de/geert",
+				"breakdown/de/gefahr",
+				"breakdown/de/gelenk",
+				"breakdown/de/gern",
+				"breakdown/de/gesamt",
+				"breakdown/de/geschichte-erzaehlung",
+				"breakdown/de/gespenst",
+				"breakdown/de/gestalt",
+				"breakdown/de/getreide",
+				"breakdown/de/gieshuebler",
+				"breakdown/de/glauben",
+				"breakdown/de/gut",
+				"breakdown/de/haben-besitzen",
+				"breakdown/de/halb",
+				"breakdown/de/hamburger-burger",
+				"breakdown/de/haus",
+				"breakdown/de/heissen-bedeuten",
+				"breakdown/de/herr-gebieter",
+				"breakdown/de/hin",
+				"breakdown/de/hoeren",
+				"breakdown/de/honig",
+				"breakdown/de/hotel",
+				"breakdown/de/huebsch",
+				"breakdown/de/hund",
+				"breakdown/de/innstetten",
+				"breakdown/de/ja",
+				"breakdown/de/jahr",
+				"breakdown/de/jung",
+				"breakdown/de/kalauer",
+				"breakdown/de/kaufen",
+				"breakdown/de/kessin",
+				"breakdown/de/klein",
+				"breakdown/de/klingen",
+				"breakdown/de/koennen",
+				"breakdown/de/kommen-geschehen",
+				"breakdown/de/kopp",
+				"breakdown/de/kreis",
+				"breakdown/de/kuckuck",
+				"breakdown/de/kurz",
+				"breakdown/de/lassen",
+				"breakdown/de/laster-untugend",
+				"breakdown/de/laune",
+				"breakdown/de/leben",
+				"breakdown/de/legat",
+				"breakdown/de/legen",
+				"breakdown/de/leicht",
+				"breakdown/de/leiter-sprossenleiter",
+				"breakdown/de/machen",
+				"breakdown/de/major",
+				"breakdown/de/meer",
+				"breakdown/de/meile",
+				"breakdown/de/meinen",
+				"breakdown/de/messer-schneidwerkzeug",
+				"breakdown/de/ministerium",
+				"breakdown/de/mirambo",
+				"breakdown/de/morgen",
+				"breakdown/de/muessen",
+				"breakdown/de/nacht",
+				"breakdown/de/nennen",
+				"breakdown/de/noch",
+				"breakdown/de/nun",
+				"breakdown/de/nur",
+				"breakdown/de/oder",
+				"breakdown/de/oft",
+				"breakdown/de/paket",
+				"breakdown/de/pelz",
+				"breakdown/de/poster-plakat",
+				"breakdown/de/quell",
+				"breakdown/de/recht-ziemlich",
+				"breakdown/de/reisen",
+				"breakdown/de/reiter-sieb",
+				"breakdown/de/roemer-weinglas",
+				"breakdown/de/roswitha",
+				"breakdown/de/ruck",
+				"breakdown/de/rufen",
+				"breakdown/de/sagen",
+				"breakdown/de/schlafen",
+				"breakdown/de/schneien",
+				"breakdown/de/schoen",
+				"breakdown/de/schon",
+				"breakdown/de/schoner-segelschiff",
+				"breakdown/de/schreiben",
+				"breakdown/de/schrimm",
+				"breakdown/de/schwarz",
+				"breakdown/de/schweigen",
+				"breakdown/de/sehen",
+				"breakdown/de/sehr",
+				"breakdown/de/setzen",
+				"breakdown/de/sollen-bedeuten",
+				"breakdown/de/sondern",
+				"breakdown/de/spaet",
+				"breakdown/de/spannen",
+				"breakdown/de/sprechen",
+				"breakdown/de/springen",
+				"breakdown/de/sticker-aufkleber",
+				"breakdown/de/stimme",
+				"breakdown/de/suchen",
+				"breakdown/de/tag",
+				"breakdown/de/trotz",
+				"breakdown/de/tun",
+				"breakdown/de/turm",
+				"breakdown/de/und",
+				"breakdown/de/varzin",
+				"breakdown/de/waterloo",
+				"breakdown/de/weihnachten",
+				"breakdown/de/weil",
+				"breakdown/de/weinen",
+				"breakdown/de/weit",
+				"breakdown/de/wieder",
+				"breakdown/de/wisby",
+				"breakdown/de/wissen",
+				"breakdown/de/wollen-moechten",
+				"breakdown/de/zauber",
+				"breakdown/de/zeit"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 149,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 149,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 145,
+			"failed": 4,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-29T16:47:30.215Z",
+		"total": 149,
+		"succeeded": 149,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 2,
+			"varyingOutputs": 2,
+			"quality": {
+				"passed": 433,
+				"failed": 14,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"exact": "433/447",
+	"cases": [
+		{
+			"caseId": "breakdown/de/aber",
+			"reps": 3,
+			"exact": 3,
+			"gold": "aber",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ach",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ach",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/akt",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Akt · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/anders",
+			"reps": 3,
+			"exact": 3,
+			"gold": "anders",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/angst",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Angst · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/annie",
+			"reps": 3,
+			"exact": 0,
+			"gold": "Annie · ∅",
+			"returned": [
+				"Ann · ie · ∅"
+			]
+		},
+		{
+			"caseId": "breakdown/de/bad",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Bad · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bauer-vogelkaefig",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Bauer · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/blume",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Blum · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/blut",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Blut · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bottegone",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Bottegone · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/dass",
+			"reps": 3,
+			"exact": 3,
+			"gold": "dass",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/denken",
+			"reps": 3,
+			"exact": 3,
+			"gold": "denk · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/desto",
+			"reps": 3,
+			"exact": 3,
+			"gold": "desto",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/devot",
+			"reps": 3,
+			"exact": 3,
+			"gold": "devot · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/drei",
+			"reps": 3,
+			"exact": 3,
+			"gold": "drei",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/duerfen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "dürf · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/effi",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Effi · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ei",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ei",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/elite",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Elit · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erinnern",
+			"reps": 3,
+			"exact": 2,
+			"gold": "er · inner · n",
+			"returned": [
+				"erinner · n"
+			]
+		},
+		{
+			"caseId": "breakdown/de/erst",
+			"reps": 3,
+			"exact": 3,
+			"gold": "erst",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/europa",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Europa · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fahren",
+			"reps": 3,
+			"exact": 3,
+			"gold": "fahr · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fast",
+			"reps": 3,
+			"exact": 3,
+			"gold": "fast",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fisch",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Fisch · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/form",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Form · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/frau",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Frau · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/freude",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Freud · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fuehlen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "fühl · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fuerst",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Fürst · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ganz",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ganz",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ganz-vollstaendig",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ganz · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gar",
+			"reps": 3,
+			"exact": 3,
+			"gold": "gar",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geben-es-gibt",
+			"reps": 3,
+			"exact": 3,
+			"gold": "geb · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geert",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Geert · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gefahr",
+			"reps": 3,
+			"exact": 2,
+			"gold": "Gefahr · ∅",
+			"returned": [
+				"Ge · fahr · ∅"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gelenk",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Gelenk · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gern",
+			"reps": 3,
+			"exact": 3,
+			"gold": "gern",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gesamt",
+			"reps": 3,
+			"exact": 0,
+			"gold": "gesamt · ∅",
+			"returned": [
+				"ge · samt · ∅"
+			]
+		},
+		{
+			"caseId": "breakdown/de/geschichte-erzaehlung",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Geschicht · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gespenst",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Gespenst · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gestalt",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Gestalt · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/getreide",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Getreid · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gieshuebler",
+			"reps": 3,
+			"exact": 0,
+			"gold": "Gieshübler · ∅",
+			"returned": [
+				"Gieshübl · er · ∅"
+			]
+		},
+		{
+			"caseId": "breakdown/de/glauben",
+			"reps": 3,
+			"exact": 3,
+			"gold": "glaub · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gut",
+			"reps": 3,
+			"exact": 3,
+			"gold": "gut · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/haben-besitzen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "hab · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/halb",
+			"reps": 3,
+			"exact": 3,
+			"gold": "halb · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hamburger-burger",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Hamburger · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/haus",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Haus · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/heissen-bedeuten",
+			"reps": 3,
+			"exact": 3,
+			"gold": "heiß · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/herr-gebieter",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Herr · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hin",
+			"reps": 3,
+			"exact": 3,
+			"gold": "hin",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hoeren",
+			"reps": 3,
+			"exact": 3,
+			"gold": "hör · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/honig",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Honig · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hotel",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Hotel · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/huebsch",
+			"reps": 3,
+			"exact": 3,
+			"gold": "hübsch · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hund",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Hund · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/innstetten",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Innstetten · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ja",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ja",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/jahr",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Jahr · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/jung",
+			"reps": 3,
+			"exact": 3,
+			"gold": "jung · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kalauer",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Kalauer · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kaufen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "kauf · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kessin",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Kessin · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/klein",
+			"reps": 3,
+			"exact": 3,
+			"gold": "klein · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/klingen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "kling · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/koennen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "könn · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kommen-geschehen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "komm · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kopp",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Kopp · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kreis",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Kreis · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kuckuck",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Kuckuck · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kurz",
+			"reps": 3,
+			"exact": 3,
+			"gold": "kurz · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/lassen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "lass · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/laster-untugend",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Laster · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/laune",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Laun · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leben",
+			"reps": 3,
+			"exact": 3,
+			"gold": "leb · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/legat",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Legat · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/legen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "leg · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leicht",
+			"reps": 3,
+			"exact": 3,
+			"gold": "leicht · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leiter-sprossenleiter",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Leiter · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/machen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "mach · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/major",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Major · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meer",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Meer · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meile",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Meil · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meinen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "mein · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/messer-schneidwerkzeug",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Messer · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ministerium",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Ministerium · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/mirambo",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Mirambo · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/morgen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "morgen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/muessen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "müss · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nacht",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Nacht · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nennen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "nenn · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/noch",
+			"reps": 3,
+			"exact": 3,
+			"gold": "noch",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nun",
+			"reps": 3,
+			"exact": 3,
+			"gold": "nun",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nur",
+			"reps": 3,
+			"exact": 3,
+			"gold": "nur",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/oder",
+			"reps": 3,
+			"exact": 3,
+			"gold": "oder",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/oft",
+			"reps": 3,
+			"exact": 3,
+			"gold": "oft",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/paket",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Paket · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/pelz",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Pelz · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/poster-plakat",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Poster · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/quell",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Quell · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/recht-ziemlich",
+			"reps": 3,
+			"exact": 3,
+			"gold": "recht · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/reisen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "reis · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/reiter-sieb",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Reiter · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/roemer-weinglas",
+			"reps": 3,
+			"exact": 0,
+			"gold": "Römer · ∅",
+			"returned": [
+				"Röm · er · ∅"
+			]
+		},
+		{
+			"caseId": "breakdown/de/roswitha",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Roswitha · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ruck",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Ruck · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/rufen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "ruf · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sagen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "sag · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schlafen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schlaf · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schneien",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schnei · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schoen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schön · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schon",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schon",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schoner-segelschiff",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Schoner · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schreiben",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schreib · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schrimm",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Schrimm · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schwarz",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schwarz · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schweigen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "schweig · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sehen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "seh · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sehr",
+			"reps": 3,
+			"exact": 3,
+			"gold": "sehr",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/setzen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "setz · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sollen-bedeuten",
+			"reps": 3,
+			"exact": 3,
+			"gold": "soll · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sondern",
+			"reps": 3,
+			"exact": 3,
+			"gold": "sondern",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/spaet",
+			"reps": 3,
+			"exact": 3,
+			"gold": "spät · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/spannen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "spann · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sprechen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "sprech · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/springen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "spring · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sticker-aufkleber",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Sticker · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/stimme",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Stimm · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/suchen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "such · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/tag",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Tag · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/trotz",
+			"reps": 3,
+			"exact": 3,
+			"gold": "trotz",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/tun",
+			"reps": 3,
+			"exact": 3,
+			"gold": "tu · n",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/turm",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Turm · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/und",
+			"reps": 3,
+			"exact": 3,
+			"gold": "und",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/varzin",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Varzin · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/waterloo",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Waterloo · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weihnachten",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Weihnachten · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weil",
+			"reps": 3,
+			"exact": 3,
+			"gold": "weil",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weinen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "wein · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weit",
+			"reps": 3,
+			"exact": 3,
+			"gold": "weit · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wieder",
+			"reps": 3,
+			"exact": 3,
+			"gold": "wieder",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wisby",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Wisby · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wissen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "wiss · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wollen-moechten",
+			"reps": 3,
+			"exact": 3,
+			"gold": "woll · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zauber",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Zauber · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zeit",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Zeit · ∅",
+			"returned": []
+		}
+	]
+}

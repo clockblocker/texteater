@@ -1,0 +1,213 @@
+{
+	"runId": "00c93e4a-382c-4aaf-bc1b-835055475fe3",
+	"experimentId": "segment-in-constituents/de:adversarial",
+	"round": "2026-10-29-breakdown-round-9",
+	"note": "The adversarial held-out batch breakdown-heldout-2026-10-29b-adversarial (10 records on both sides of round 9's fixes), reported apart. 3 repetitions, one live run at b02e4f429.",
+	"liveRuns": [
+		"00c93e4a-382c-4aaf-bc1b-835055475fe3"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "00c93e4a-382c-4aaf-bc1b-835055475fe3",
+		"experimentId": "segment-in-constituents/de:adversarial",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "b02e4f429",
+		"startedAt": "2026-10-29T16:47:15.914Z",
+		"corpus": {
+			"fingerprint": "55be10651bcee027aaa068e5a8cd94fea28e09c3ef8a9e166c7df18f907006c2",
+			"caseIds": [
+				"breakdown/de/blaeulich",
+				"breakdown/de/gaestebuch",
+				"breakdown/de/nagellack",
+				"breakdown/de/oesterreicher",
+				"breakdown/de/randvoll",
+				"breakdown/de/sobald",
+				"breakdown/de/sodann",
+				"breakdown/de/sogleich",
+				"breakdown/de/sonst",
+				"breakdown/de/taktvoll"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-constituents/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 10,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 10,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 6,
+			"failed": 4,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-29T16:47:15.968Z",
+		"total": 10,
+		"succeeded": 10,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 1,
+			"quality": {
+				"passed": 18,
+				"failed": 12,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 10,
+			"attempts": 30,
+			"exactAttempts": 18,
+			"exact": 0.6,
+			"lenientExactAttempts": 18,
+			"lenientExact": 0.6,
+			"casesExactEveryRepetition": 6,
+			"casesLenientEveryRepetition": 6,
+			"cutPrecision": 1.0,
+			"cutRecall": 0.9,
+			"linksPlaced": 0.8947,
+			"linksWithGoldRoute": 0.7368,
+			"linksExact": 0.7368,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		},
+		"word": {
+			"cases": 10,
+			"attempts": 30,
+			"exactAttempts": 18,
+			"exact": 0.6,
+			"lenientExactAttempts": 18,
+			"lenientExact": 0.6,
+			"casesExactEveryRepetition": 6,
+			"casesLenientEveryRepetition": 6,
+			"cutPrecision": 1.0,
+			"cutRecall": 0.9,
+			"linksPlaced": 0.8947,
+			"linksWithGoldRoute": 0.7368,
+			"linksExact": 0.7368,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		}
+	},
+	"contested": [],
+	"cases": [
+		{
+			"caseId": "breakdown/de/blaeulich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "bläu → Lexeme/ADJ blau · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gaestebuch",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Gäst → Lexeme/NOUN Gast · e → Morpheme/Interfix -e- · buch → Lexeme/NOUN Buch",
+			"returned": [
+				"3x Gäste → Lexeme/NOUN Gäste · buch → Lexeme/NOUN Buch"
+			]
+		},
+		{
+			"caseId": "breakdown/de/nagellack",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Nagel → Lexeme/NOUN Nagel · lack → Lexeme/NOUN Lack",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/oesterreicher",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Österreich → Lexeme/PROPN Österreich · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x Österreich → Lexeme/NOUN Österreich · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/randvoll",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "rand → Lexeme/NOUN Rand · voll → Lexeme/ADJ voll",
+			"returned": [
+				"3x rand → Lexeme/NOUN Rand · voll → Morpheme/Suffix -voll"
+			]
+		},
+		{
+			"caseId": "breakdown/de/sobald",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "so → Lexeme/ADV so · bald → Lexeme/ADV bald",
+			"returned": [
+				"1x so → Lexeme/ADV so · bald → Lexeme/ADJ bald",
+				"2x so → Lexeme/ADV so · bald → Lexeme/VERB balden"
+			]
+		},
+		{
+			"caseId": "breakdown/de/sodann",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "so → Lexeme/ADV so · dann → Lexeme/ADV dann",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sogleich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "so → Lexeme/ADV so · gleich → Lexeme/ADV gleich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sonst",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/taktvoll",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "takt → Lexeme/NOUN Takt · voll → Morpheme/Suffix -voll",
+			"returned": []
+		}
+	]
+}

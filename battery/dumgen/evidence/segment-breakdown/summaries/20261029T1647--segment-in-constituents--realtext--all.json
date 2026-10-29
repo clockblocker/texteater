@@ -1,0 +1,772 @@
+{
+	"runId": "a7a49007-64dd-4afc-a3c1-d881030d2e9f",
+	"experimentId": "segment-in-constituents/de:realtext",
+	"round": "2026-10-29-breakdown-round-9",
+	"note": "The real-text held-out batch breakdown-heldout-2026-10-29b-realtext (60 records sampled at random from tf-demo's Library, seed 2026102909), the round's headline. metrics scores all 60; metricsUncontested leaves out gerade, the one row the judges split on (contested), the headline. 3 repetitions, one live run at b02e4f429.",
+	"liveRuns": [
+		"a7a49007-64dd-4afc-a3c1-d881030d2e9f"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "a7a49007-64dd-4afc-a3c1-d881030d2e9f",
+		"experimentId": "segment-in-constituents/de:realtext",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "b02e4f429",
+		"startedAt": "2026-10-29T16:47:13.111Z",
+		"corpus": {
+			"fingerprint": "3476effdccdf7b7f126e1b6ac392e029c86dd79d37e9c2f4a7530909f4ee415d",
+			"caseIds": [
+				"breakdown/de/abbrechen",
+				"breakdown/de/allein",
+				"breakdown/de/anfangs",
+				"breakdown/de/anmelden",
+				"breakdown/de/arm",
+				"breakdown/de/aschenputtel",
+				"breakdown/de/auge",
+				"breakdown/de/bereits",
+				"breakdown/de/blond",
+				"breakdown/de/blutentziehung",
+				"breakdown/de/brief",
+				"breakdown/de/duene",
+				"breakdown/de/eher",
+				"breakdown/de/einleben",
+				"breakdown/de/einmal",
+				"breakdown/de/einrichtung",
+				"breakdown/de/einstecken",
+				"breakdown/de/eintreten",
+				"breakdown/de/ems",
+				"breakdown/de/entsinnen",
+				"breakdown/de/erschrecken",
+				"breakdown/de/fach",
+				"breakdown/de/fortfahren",
+				"breakdown/de/freilich",
+				"breakdown/de/gefuehl",
+				"breakdown/de/gerade",
+				"breakdown/de/geraeusch",
+				"breakdown/de/gernhaben",
+				"breakdown/de/gott",
+				"breakdown/de/herankommen",
+				"breakdown/de/herz",
+				"breakdown/de/heute",
+				"breakdown/de/indessen",
+				"breakdown/de/inkognito",
+				"breakdown/de/karte",
+				"breakdown/de/koenig",
+				"breakdown/de/laecheln",
+				"breakdown/de/lippe",
+				"breakdown/de/majoritaet",
+				"breakdown/de/mann",
+				"breakdown/de/meist",
+				"breakdown/de/mensch",
+				"breakdown/de/nordkorea",
+				"breakdown/de/oede",
+				"breakdown/de/onkel",
+				"breakdown/de/respektvoll",
+				"breakdown/de/ring",
+				"breakdown/de/rollo",
+				"breakdown/de/schwester",
+				"breakdown/de/sitzen",
+				"breakdown/de/sparsam",
+				"breakdown/de/stuerzen",
+				"breakdown/de/stunde",
+				"breakdown/de/tauschen",
+				"breakdown/de/trotz-auflehnung",
+				"breakdown/de/truhe",
+				"breakdown/de/umherstehen",
+				"breakdown/de/vertrauensperson",
+				"breakdown/de/woche",
+				"breakdown/de/zwingen"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-constituents/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 60,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 60,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 46,
+			"failed": 14,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-29T16:47:13.208Z",
+		"total": 60,
+		"succeeded": 60,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 2,
+			"quality": {
+				"passed": 138,
+				"failed": 42,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 60,
+			"attempts": 180,
+			"exactAttempts": 138,
+			"exact": 0.7667,
+			"lenientExactAttempts": 138,
+			"lenientExact": 0.7667,
+			"casesExactEveryRepetition": 46,
+			"casesLenientEveryRepetition": 46,
+			"cutPrecision": 0.8378,
+			"cutRecall": 0.7126,
+			"linksPlaced": 0.7469,
+			"linksWithGoldRoute": 0.6049,
+			"linksExact": 0.6049,
+			"hasConstituentsAgreed": 0.8778,
+			"failed": 0
+		},
+		"word": {
+			"cases": 60,
+			"attempts": 180,
+			"exactAttempts": 138,
+			"exact": 0.7667,
+			"lenientExactAttempts": 138,
+			"lenientExact": 0.7667,
+			"casesExactEveryRepetition": 46,
+			"casesLenientEveryRepetition": 46,
+			"cutPrecision": 0.8378,
+			"cutRecall": 0.7126,
+			"linksPlaced": 0.7469,
+			"linksWithGoldRoute": 0.6049,
+			"linksExact": 0.6049,
+			"hasConstituentsAgreed": 0.8778,
+			"failed": 0
+		}
+	},
+	"metricsUncontested": {
+		"all": {
+			"cases": 59,
+			"attempts": 177,
+			"exactAttempts": 135,
+			"exact": 0.7627,
+			"lenientExactAttempts": 135,
+			"lenientExact": 0.7627,
+			"casesExactEveryRepetition": 45,
+			"casesLenientEveryRepetition": 45,
+			"cutPrecision": 0.8378,
+			"cutRecall": 0.7126,
+			"linksPlaced": 0.7469,
+			"linksWithGoldRoute": 0.6049,
+			"linksExact": 0.6049,
+			"hasConstituentsAgreed": 0.8757,
+			"failed": 0
+		},
+		"word": {
+			"cases": 59,
+			"attempts": 177,
+			"exactAttempts": 135,
+			"exact": 0.7627,
+			"lenientExactAttempts": 135,
+			"lenientExact": 0.7627,
+			"casesExactEveryRepetition": 45,
+			"casesLenientEveryRepetition": 45,
+			"cutPrecision": 0.8378,
+			"cutRecall": 0.7126,
+			"linksPlaced": 0.7469,
+			"linksWithGoldRoute": 0.6049,
+			"linksExact": 0.6049,
+			"hasConstituentsAgreed": 0.8757,
+			"failed": 0
+		}
+	},
+	"contested": [
+		"breakdown/de/gerade"
+	],
+	"cases": [
+		{
+			"caseId": "breakdown/de/abbrechen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ab → Morpheme/Prefix ab- · brechen → Lexeme/VERB brechen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/allein",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/anfangs",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "anfang → Lexeme/NOUN Anfang · s → Morpheme/Suffix -s",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/anmelden",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "an → Morpheme/Prefix an- · melden → Lexeme/VERB melden",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/arm",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/aschenputtel",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Asche → Lexeme/NOUN Asche · n → Morpheme/Interfix -n- · puttel → Morpheme/Root puttel",
+			"returned": [
+				"3x Aschenputt → Lexeme/PROPN Aschenputt · el → Morpheme/Suffix -el"
+			]
+		},
+		{
+			"caseId": "breakdown/de/auge",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bereits",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "bereit → Lexeme/ADJ bereit · s → Morpheme/Suffix -s",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/blond",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/blutentziehung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Blut → Lexeme/NOUN Blut · entziehung → Lexeme/NOUN Entziehung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/brief",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/duene",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/eher",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/einleben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ein → Morpheme/Prefix ein- · leben → Lexeme/VERB leben",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/einmal",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "ein → Lexeme/NUM ein · mal → Lexeme/NOUN Mal",
+			"returned": [
+				"3x ein → Morpheme/Prefix ein- · mal → Lexeme/ADV mal"
+			]
+		},
+		{
+			"caseId": "breakdown/de/einrichtung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Einricht → Lexeme/VERB einrichten · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/einstecken",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ein → Morpheme/Prefix ein- · stecken → Lexeme/VERB stecken",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/eintreten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ein → Morpheme/Prefix ein- · treten → Lexeme/VERB treten",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ems",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/entsinnen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ent → Morpheme/Prefix ent- · sinnen → Lexeme/VERB sinnen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erschrecken",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "er → Morpheme/Prefix er- · schrecken → Lexeme/VERB schrecken",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fach",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fortfahren",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "fort → Morpheme/Prefix fort- · fahren → Lexeme/VERB fahren",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/freilich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "frei → Lexeme/ADJ frei · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gefuehl",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Ge → Morpheme/Prefix ge- · fühl → Lexeme/VERB fühlen",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gerade",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geraeusch",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Ge → Morpheme/Prefix ge- · räusch → Lexeme/VERB rauschen",
+			"returned": [
+				"1x none",
+				"2x Ge → Morpheme/Prefix ge- · räusch → Lexeme/NOUN Rausch"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gernhaben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "gern → Lexeme/ADV gern · haben → Lexeme/VERB haben",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gott",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/herankommen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "heran → Morpheme/Prefix heran- · kommen → Lexeme/VERB kommen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/herz",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/heute",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/indessen",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "in → Lexeme/ADP in · dessen → Lexeme/PRON dessen",
+			"returned": [
+				"3x in → Lexeme/ADV in · dessen → Lexeme/ADV dessen"
+			]
+		},
+		{
+			"caseId": "breakdown/de/inkognito",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/karte",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/koenig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/laecheln",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "läch → Lexeme/VERB lachen · el → Morpheme/Suffix -el · 'n'",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/lippe",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/majoritaet",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "none",
+			"returned": [
+				"3x Major → Lexeme/NOUN Major · ität → Morpheme/Suffix -ität"
+			]
+		},
+		{
+			"caseId": "breakdown/de/mann",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meist",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/mensch",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nordkorea",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Nord → Lexeme/NOUN Nord · korea → Lexeme/PROPN Korea",
+			"returned": [
+				"3x Nord → Lexeme/ADJ nord · korea → Lexeme/NOUN Korea"
+			]
+		},
+		{
+			"caseId": "breakdown/de/oede",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/onkel",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "none",
+			"returned": [
+				"3x Onk → Lexeme/NOUN Onke · el → Morpheme/Suffix -el"
+			]
+		},
+		{
+			"caseId": "breakdown/de/respektvoll",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "respekt → Lexeme/NOUN Respekt · voll → Morpheme/Suffix -voll",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ring",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/rollo",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schwester",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "none",
+			"returned": [
+				"2x Schwest → Lexeme/NOUN Schweste · er → Morpheme/Suffix -er",
+				"1x Schwest → Lexeme/NOUN Schwest · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/sitzen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sparsam",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "spar → Lexeme/VERB sparen · sam → Morpheme/Suffix -sam",
+			"returned": [
+				"3x spar → Lexeme/ADJ spar · sam → Morpheme/Suffix -sam"
+			]
+		},
+		{
+			"caseId": "breakdown/de/stuerzen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/stunde",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/tauschen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/trotz-auflehnung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/truhe",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/umherstehen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "umher → Morpheme/Prefix umher- · stehen → Lexeme/VERB stehen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/vertrauensperson",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Vertrauen → Lexeme/NOUN Vertrauen · s → Morpheme/Interfix -s- · person → Lexeme/NOUN Person",
+			"returned": [
+				"3x Vertrauens → Morpheme/Root vertrauens · person → Lexeme/NOUN Person"
+			]
+		},
+		{
+			"caseId": "breakdown/de/woche",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zwingen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		}
+	]
+}

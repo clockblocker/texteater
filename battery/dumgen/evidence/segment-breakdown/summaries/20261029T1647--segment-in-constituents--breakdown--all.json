@@ -1,0 +1,3858 @@
+{
+	"runId": "53e890b2-7cf9-4dc3-bdc9-ba413970f239",
+	"experimentId": "segment-in-constituents/de:breakdown",
+	"round": "2026-10-29-breakdown-round-9",
+	"note": "The tuning set, round 8's 70 held-out records promoted into it; nothing in it is contested but round 8's nennen. 3 repetitions at b02e4f429; the prep live checks 7405a5a1 at e3ce389bb (eleven targets) and d710c2ee at a5354d090 (seventeen cases) filled part of the cache. It is also the rescore of rounds 6 to 8's real-text cases with round 9's producer.",
+	"liveRuns": [
+		"7405a5a1-93ba-45f2-b4c7-530ec92c9a3f",
+		"d710c2ee-1bfe-4790-9cd2-b75a81e34535",
+		"53e890b2-7cf9-4dc3-bdc9-ba413970f239"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "53e890b2-7cf9-4dc3-bdc9-ba413970f239",
+		"experimentId": "segment-in-constituents/de:breakdown",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "b02e4f429",
+		"startedAt": "2026-10-29T16:47:26.866Z",
+		"corpus": {
+			"fingerprint": "0ca3d44ac4f4a4f4f2ac2ccc2613d45c60d607dff6f832cf6b542f7b82eae790",
+			"caseIds": [
+				"breakdown/de/aber",
+				"breakdown/de/abfallen-schwinden",
+				"breakdown/de/ach",
+				"breakdown/de/akt",
+				"breakdown/de/alles-in-allem",
+				"breakdown/de/am-ball-bleiben",
+				"breakdown/de/anders",
+				"breakdown/de/angst",
+				"breakdown/de/annie",
+				"breakdown/de/apfelbaum",
+				"breakdown/de/arbeitszimmer",
+				"breakdown/de/auf-nummer-sicher-gehen",
+				"breakdown/de/auffallen",
+				"breakdown/de/aufgehen",
+				"breakdown/de/aufkommen-entstehen",
+				"breakdown/de/aufspringen",
+				"breakdown/de/aus-allen-wolken-fallen",
+				"breakdown/de/aus-dem-haeuschen-sein",
+				"breakdown/de/bad",
+				"breakdown/de/bauer-landwirt",
+				"breakdown/de/bauer-vogelkaefig",
+				"breakdown/de/bedeuten",
+				"breakdown/de/befreien",
+				"breakdown/de/beinahe",
+				"breakdown/de/beiname",
+				"breakdown/de/benutzen",
+				"breakdown/de/beweglich",
+				"breakdown/de/bezahlen",
+				"breakdown/de/bezwecken",
+				"breakdown/de/bildung",
+				"breakdown/de/blume",
+				"breakdown/de/blumenschale",
+				"breakdown/de/blut",
+				"breakdown/de/bottegone",
+				"breakdown/de/bratpfanne",
+				"breakdown/de/da-liegt-der-hase-im-pfeffer",
+				"breakdown/de/dass",
+				"breakdown/de/den-faden-verlieren",
+				"breakdown/de/den-nagel-auf-den-kopf-treffen",
+				"breakdown/de/denken",
+				"breakdown/de/desto",
+				"breakdown/de/devot",
+				"breakdown/de/dienstfrei",
+				"breakdown/de/dies-und-das",
+				"breakdown/de/dieses-und-jenes",
+				"breakdown/de/drei",
+				"breakdown/de/duerfen",
+				"breakdown/de/dumm-wie-bohnenstroh",
+				"breakdown/de/durchbrechen-entzwei",
+				"breakdown/de/durchbrechen-hindernis",
+				"breakdown/de/durchfuehren",
+				"breakdown/de/e-mail",
+				"breakdown/de/edamer",
+				"breakdown/de/effi",
+				"breakdown/de/ei",
+				"breakdown/de/einkaufen",
+				"breakdown/de/einsegnen",
+				"breakdown/de/eintreffen",
+				"breakdown/de/eisentuer",
+				"breakdown/de/elite",
+				"breakdown/de/entgleisen",
+				"breakdown/de/entkernen",
+				"breakdown/de/entlarven",
+				"breakdown/de/entspannung",
+				"breakdown/de/erblinden",
+				"breakdown/de/erbrecht",
+				"breakdown/de/erinnern",
+				"breakdown/de/erkaeltung",
+				"breakdown/de/erkennen",
+				"breakdown/de/erleben",
+				"breakdown/de/erregung",
+				"breakdown/de/erst",
+				"breakdown/de/erzaehlen",
+				"breakdown/de/europa",
+				"breakdown/de/fahren",
+				"breakdown/de/fahrrad",
+				"breakdown/de/fast",
+				"breakdown/de/fisch",
+				"breakdown/de/fischer",
+				"breakdown/de/form",
+				"breakdown/de/frau",
+				"breakdown/de/freiheit",
+				"breakdown/de/freude",
+				"breakdown/de/freundschaft",
+				"breakdown/de/fruehstueck",
+				"breakdown/de/fuehlen",
+				"breakdown/de/fuerst",
+				"breakdown/de/gaestehaus",
+				"breakdown/de/ganz",
+				"breakdown/de/ganz-vollstaendig",
+				"breakdown/de/gar",
+				"breakdown/de/geben-es-gibt",
+				"breakdown/de/geert",
+				"breakdown/de/gefahr",
+				"breakdown/de/gefallen-lassen",
+				"breakdown/de/gegenuebersitzen",
+				"breakdown/de/gehoelz",
+				"breakdown/de/gelenk",
+				"breakdown/de/gemuet",
+				"breakdown/de/genesung",
+				"breakdown/de/geradezu",
+				"breakdown/de/gern",
+				"breakdown/de/gesamt",
+				"breakdown/de/geschichte-erzaehlung",
+				"breakdown/de/geschrei",
+				"breakdown/de/gesicht",
+				"breakdown/de/gespenst",
+				"breakdown/de/gestalt",
+				"breakdown/de/gestein",
+				"breakdown/de/getreide",
+				"breakdown/de/gewaesser",
+				"breakdown/de/gewissen",
+				"breakdown/de/gewoelk",
+				"breakdown/de/gieshuebler",
+				"breakdown/de/glaeubig",
+				"breakdown/de/glauben",
+				"breakdown/de/gluecklich",
+				"breakdown/de/gnaedig",
+				"breakdown/de/gnaedige-frau",
+				"breakdown/de/gott-sei-dank",
+				"breakdown/de/gruendung-gruenden",
+				"breakdown/de/gruendung-gruenduenger",
+				"breakdown/de/gueldenklee",
+				"breakdown/de/gut",
+				"breakdown/de/guten-morgen",
+				"breakdown/de/guten-tag",
+				"breakdown/de/haben-besitzen",
+				"breakdown/de/halb",
+				"breakdown/de/hamburger-burger",
+				"breakdown/de/hamburger-einwohner",
+				"breakdown/de/hand-in-hand-gehen",
+				"breakdown/de/haus",
+				"breakdown/de/haustuer",
+				"breakdown/de/heissen-bedeuten",
+				"breakdown/de/herantreten",
+				"breakdown/de/herr-gebieter",
+				"breakdown/de/himbeere",
+				"breakdown/de/hin",
+				"breakdown/de/hindenken",
+				"breakdown/de/hinweisen",
+				"breakdown/de/hoeren",
+				"breakdown/de/hohen-cremmen",
+				"breakdown/de/hohepriester",
+				"breakdown/de/hollaendisch",
+				"breakdown/de/holzapfel",
+				"breakdown/de/honig",
+				"breakdown/de/hotel",
+				"breakdown/de/huebsch",
+				"breakdown/de/hueter",
+				"breakdown/de/hund",
+				"breakdown/de/in-betracht-ziehen",
+				"breakdown/de/innstetten",
+				"breakdown/de/ja",
+				"breakdown/de/jahr",
+				"breakdown/de/je-nachdem",
+				"breakdown/de/jugendlich",
+				"breakdown/de/jung",
+				"breakdown/de/kalauer",
+				"breakdown/de/kaufen",
+				"breakdown/de/kaum-dass",
+				"breakdown/de/kessin",
+				"breakdown/de/kindheit",
+				"breakdown/de/kleidung",
+				"breakdown/de/klein",
+				"breakdown/de/klingen",
+				"breakdown/de/knall-auf-fall",
+				"breakdown/de/kochtopf",
+				"breakdown/de/koennen",
+				"breakdown/de/kohlekraftwerk",
+				"breakdown/de/kommen-geschehen",
+				"breakdown/de/kopp",
+				"breakdown/de/kreis",
+				"breakdown/de/kreuzer-kriegsschiff",
+				"breakdown/de/kreuzer-muenze",
+				"breakdown/de/kuckuck",
+				"breakdown/de/kurz",
+				"breakdown/de/landrat",
+				"breakdown/de/langeweile",
+				"breakdown/de/lassen",
+				"breakdown/de/laster-lastwagen",
+				"breakdown/de/laster-untugend",
+				"breakdown/de/laune",
+				"breakdown/de/leben",
+				"breakdown/de/lebhaft",
+				"breakdown/de/lederlack",
+				"breakdown/de/legat",
+				"breakdown/de/legen",
+				"breakdown/de/leicht",
+				"breakdown/de/leidtun",
+				"breakdown/de/leiter-leiten",
+				"breakdown/de/leiter-sprossenleiter",
+				"breakdown/de/machen",
+				"breakdown/de/major",
+				"breakdown/de/meer",
+				"breakdown/de/meile",
+				"breakdown/de/meinen",
+				"breakdown/de/messer-messen",
+				"breakdown/de/messer-schneidwerkzeug",
+				"breakdown/de/ministerium",
+				"breakdown/de/mirambo",
+				"breakdown/de/mitnehmen",
+				"breakdown/de/mittlerweile",
+				"breakdown/de/morgen",
+				"breakdown/de/morgenstund-hat-gold-im-mund",
+				"breakdown/de/muehevoll",
+				"breakdown/de/muessen",
+				"breakdown/de/murmeltier",
+				"breakdown/de/musikerleben-erleben",
+				"breakdown/de/musikerleben-lebensweg",
+				"breakdown/de/na-ja",
+				"breakdown/de/nach-wie-vor",
+				"breakdown/de/nachfragen",
+				"breakdown/de/nachmittags",
+				"breakdown/de/nacht",
+				"breakdown/de/nachwelt",
+				"breakdown/de/nadelkissen",
+				"breakdown/de/nennen",
+				"breakdown/de/noch",
+				"breakdown/de/nun",
+				"breakdown/de/nur",
+				"breakdown/de/nur-bahnhof-verstehen",
+				"breakdown/de/oder",
+				"breakdown/de/oft",
+				"breakdown/de/ohne-zu",
+				"breakdown/de/paddelboot",
+				"breakdown/de/paket",
+				"breakdown/de/pelz",
+				"breakdown/de/poster-forum",
+				"breakdown/de/poster-plakat",
+				"breakdown/de/quell",
+				"breakdown/de/recht-ziemlich",
+				"breakdown/de/reeperbahn",
+				"breakdown/de/reisen",
+				"breakdown/de/reiter-reiten",
+				"breakdown/de/reiter-sieb",
+				"breakdown/de/rentier-ren",
+				"breakdown/de/rentier-rentner",
+				"breakdown/de/richtig",
+				"breakdown/de/roemer-einwohner",
+				"breakdown/de/roemer-weinglas",
+				"breakdown/de/roetlich",
+				"breakdown/de/roswitha",
+				"breakdown/de/ruck",
+				"breakdown/de/ruderboot",
+				"breakdown/de/rufen",
+				"breakdown/de/ruhig",
+				"breakdown/de/rund-um-die-uhr-betreuung",
+				"breakdown/de/rutschig",
+				"breakdown/de/sagen",
+				"breakdown/de/salzig",
+				"breakdown/de/schaukelbrett",
+				"breakdown/de/schaukelpferd",
+				"breakdown/de/schiffersleute",
+				"breakdown/de/schlafen",
+				"breakdown/de/schlafsack",
+				"breakdown/de/schneien",
+				"breakdown/de/schoen",
+				"breakdown/de/schon",
+				"breakdown/de/schoner-schutzhuelle",
+				"breakdown/de/schoner-segelschiff",
+				"breakdown/de/schreiben",
+				"breakdown/de/schreibtisch",
+				"breakdown/de/schrimm",
+				"breakdown/de/schulvorsteherin",
+				"breakdown/de/schwarz",
+				"breakdown/de/schweigen",
+				"breakdown/de/segelboot",
+				"breakdown/de/sehen",
+				"breakdown/de/sehr",
+				"breakdown/de/setzen",
+				"breakdown/de/so-gut-wie",
+				"breakdown/de/so-oder-so",
+				"breakdown/de/solange",
+				"breakdown/de/sollen-bedeuten",
+				"breakdown/de/sonderbar",
+				"breakdown/de/sondern",
+				"breakdown/de/sonnenbrille",
+				"breakdown/de/sonnig",
+				"breakdown/de/spaet",
+				"breakdown/de/spannen",
+				"breakdown/de/sprechen",
+				"breakdown/de/springen",
+				"breakdown/de/staubig",
+				"breakdown/de/steuermann",
+				"breakdown/de/sticker-aufkleber",
+				"breakdown/de/sticker-sticken",
+				"breakdown/de/stille-wasser-sind-tief",
+				"breakdown/de/stimme",
+				"breakdown/de/stimmung-laune",
+				"breakdown/de/stimmung-tonhoehe",
+				"breakdown/de/stuendlich",
+				"breakdown/de/suchen",
+				"breakdown/de/tag",
+				"breakdown/de/thora-von-penz",
+				"breakdown/de/trimm-dich-pfad",
+				"breakdown/de/trotz",
+				"breakdown/de/tun",
+				"breakdown/de/turm",
+				"breakdown/de/ueberhaupt",
+				"breakdown/de/uebung-macht-den-meister",
+				"breakdown/de/um-jeden-preis",
+				"breakdown/de/um-zu",
+				"breakdown/de/und",
+				"breakdown/de/unglueckstag",
+				"breakdown/de/unnachsichtig",
+				"breakdown/de/unordnung",
+				"breakdown/de/unter-dach-und-fach-bringen",
+				"breakdown/de/unterhalten",
+				"breakdown/de/unterstuetzung",
+				"breakdown/de/varzin",
+				"breakdown/de/veilchenwurzelluft",
+				"breakdown/de/verarmen",
+				"breakdown/de/verarzten",
+				"breakdown/de/verdenken",
+				"breakdown/de/verfilmen",
+				"breakdown/de/vergiften",
+				"breakdown/de/verkabeln",
+				"breakdown/de/verkaufen",
+				"breakdown/de/verkoerpern",
+				"breakdown/de/verlegenheit",
+				"breakdown/de/verneigung",
+				"breakdown/de/versprechen",
+				"breakdown/de/vertreiben",
+				"breakdown/de/verwaltung",
+				"breakdown/de/verzeihung",
+				"breakdown/de/vielleicht",
+				"breakdown/de/vorkommen",
+				"breakdown/de/vorlegen",
+				"breakdown/de/vornehmen",
+				"breakdown/de/vorueberfliegen",
+				"breakdown/de/wachstube-wachlokal",
+				"breakdown/de/wachstube-wachstube",
+				"breakdown/de/wahr-und-wahrhaftig",
+				"breakdown/de/was-fuer",
+				"breakdown/de/was-weiss-ich",
+				"breakdown/de/waterloo",
+				"breakdown/de/weihnachten",
+				"breakdown/de/weil",
+				"breakdown/de/weinen",
+				"breakdown/de/weit",
+				"breakdown/de/wer-die-wahl-hat-hat-die-qual",
+				"breakdown/de/wer-zuerst-kommt-mahlt-zuerst",
+				"breakdown/de/wie-zu-hause-fuehlen",
+				"breakdown/de/wieder",
+				"breakdown/de/wirklich",
+				"breakdown/de/wirtschafterin",
+				"breakdown/de/wisby",
+				"breakdown/de/wissen",
+				"breakdown/de/wohnung",
+				"breakdown/de/wollen-moechten",
+				"breakdown/de/zauber",
+				"breakdown/de/zeit",
+				"breakdown/de/zu-gast-sein",
+				"breakdown/de/zu-hause",
+				"breakdown/de/zugeben",
+				"breakdown/de/zuhoeren",
+				"breakdown/de/zuletzt",
+				"breakdown/de/zuname",
+				"breakdown/de/zunichtemachen",
+				"breakdown/de/zur-sprache-bringen",
+				"breakdown/de/zwicker"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-constituents/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 361,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 361,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 310,
+			"failed": 51,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-29T16:47:27.615Z",
+		"total": 361,
+		"succeeded": 361,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 16,
+			"varyingOutputs": 19,
+			"quality": {
+				"passed": 925,
+				"failed": 158,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"metrics": {
+		"all": {
+			"cases": 361,
+			"attempts": 1083,
+			"exactAttempts": 925,
+			"exact": 0.8541,
+			"lenientExactAttempts": 940,
+			"lenientExact": 0.868,
+			"casesExactEveryRepetition": 300,
+			"casesLenientEveryRepetition": 305,
+			"cutPrecision": 0.9388,
+			"cutRecall": 0.9583,
+			"linksPlaced": 0.9314,
+			"linksWithGoldRoute": 0.8839,
+			"linksExact": 0.8655,
+			"hasConstituentsAgreed": 0.9603,
+			"failed": 0
+		},
+		"word": {
+			"cases": 318,
+			"attempts": 954,
+			"exactAttempts": 815,
+			"exact": 0.8543,
+			"lenientExactAttempts": 830,
+			"lenientExact": 0.87,
+			"casesExactEveryRepetition": 264,
+			"casesLenientEveryRepetition": 269,
+			"cutPrecision": 0.9366,
+			"cutRecall": 0.9236,
+			"linksPlaced": 0.9123,
+			"linksWithGoldRoute": 0.8661,
+			"linksExact": 0.841,
+			"hasConstituentsAgreed": 0.9549,
+			"failed": 0
+		},
+		"phraseme": {
+			"cases": 43,
+			"attempts": 129,
+			"exactAttempts": 110,
+			"exact": 0.8527,
+			"lenientExactAttempts": 110,
+			"lenientExact": 0.8527,
+			"casesExactEveryRepetition": 36,
+			"casesLenientEveryRepetition": 36,
+			"cutPrecision": 0.9412,
+			"cutRecall": 1.0,
+			"linksPlaced": 0.984,
+			"linksWithGoldRoute": 0.9333,
+			"linksExact": 0.9333,
+			"hasConstituentsAgreed": 1.0,
+			"failed": 0
+		}
+	},
+	"contested": [],
+	"cases": [
+		{
+			"caseId": "breakdown/de/aber",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/abfallen-schwinden",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ab → Morpheme/Prefix ab- · fallen → Lexeme/VERB fallen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ach",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/akt",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/alles-in-allem",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "alles → Lexeme/PRON alle · ' ' · in → Lexeme/ADP in · ' ' · allem → Lexeme/PRON alle",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/am-ball-bleiben",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "a → Lexeme/ADP an · m Ball → Lexeme/NOUN Ball · ' ' · bleiben → Lexeme/VERB bleiben",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/anders",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/angst",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/annie",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "none",
+			"returned": [
+				"3x Ann → Lexeme/PROPN Ann · ie → Morpheme/Suffix -ie"
+			]
+		},
+		{
+			"caseId": "breakdown/de/apfelbaum",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Apfel → Lexeme/NOUN Apfel · baum → Lexeme/NOUN Baum",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/arbeitszimmer",
+			"group": "word",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "Arbeit → Lexeme/NOUN Arbeit · s → Morpheme/Interfix -s- · zimmer → Lexeme/NOUN Zimmer",
+			"returned": [
+				"1x Arbeits → Morpheme/Root arbeits · zimmer → Lexeme/NOUN Zimmer"
+			]
+		},
+		{
+			"caseId": "breakdown/de/auf-nummer-sicher-gehen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "auf Nummer sicher → Locution/ADV auf Nummer sicher · ' ' · gehen → Lexeme/VERB gehen",
+			"returned": [
+				"3x auf → Lexeme/ADP auf · ' ' · Nummer → Lexeme/NOUN Nummer · ' ' · sicher → Lexeme/ADJ sicher · ' ' · gehen → Lexeme/VERB gehen"
+			]
+		},
+		{
+			"caseId": "breakdown/de/auffallen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "auf → Morpheme/Prefix auf- · fallen → Lexeme/VERB fallen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/aufgehen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "auf → Morpheme/Prefix auf- · gehen → Lexeme/VERB gehen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/aufkommen-entstehen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "auf → Morpheme/Prefix auf- · kommen → Lexeme/VERB kommen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/aufspringen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "auf → Morpheme/Prefix auf- · springen → Lexeme/VERB springen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/aus-allen-wolken-fallen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "aus → Lexeme/ADP aus · ' ' · allen → Lexeme/DET alle · ' ' · Wolken → Lexeme/NOUN Wolke · ' ' · fallen → Lexeme/VERB fallen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/aus-dem-haeuschen-sein",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "aus → Lexeme/ADP aus · ' ' · dem Häuschen → Lexeme/NOUN Häuschen · ' ' · sein → Lexeme/VERB sein",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bad",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bauer-landwirt",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Bau → Lexeme/VERB bauen · er → Morpheme/Suffix -er",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bauer-vogelkaefig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bedeuten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "be → Morpheme/Prefix be- · deuten → Lexeme/VERB deuten",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/befreien",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "be → Morpheme/Prefix be- · frei → Lexeme/ADJ frei · 'en'",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/beinahe",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "bei → Lexeme/ADP bei · nahe → Lexeme/ADJ nah",
+			"returned": [
+				"3x bei → Lexeme/ADP bei · nahe → Lexeme/ADJ nahe"
+			]
+		},
+		{
+			"caseId": "breakdown/de/beiname",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Bei → Lexeme/ADP bei · name → Lexeme/NOUN Name",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/benutzen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "be → Morpheme/Prefix be- · nutzen → Lexeme/VERB nutzen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/beweglich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "beweg → Lexeme/VERB bewegen · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bezahlen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "be → Morpheme/Prefix be- · zahlen → Lexeme/VERB zahlen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bezwecken",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "be → Morpheme/Prefix be- · zweck → Lexeme/NOUN Zweck · 'en'",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bildung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Bild → Lexeme/VERB bilden · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/blume",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/blumenschale",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Blume → Lexeme/NOUN Blume · n → Morpheme/Interfix -n- · schale → Lexeme/NOUN Schale",
+			"returned": [
+				"3x Blumen → Lexeme/NOUN Blumen · schale → Lexeme/NOUN Schale"
+			]
+		},
+		{
+			"caseId": "breakdown/de/blut",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bottegone",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/bratpfanne",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Brat → Lexeme/VERB braten · pfanne → Lexeme/NOUN Pfanne",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/da-liegt-der-hase-im-pfeffer",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "da → Lexeme/ADV da · ' ' · liegt → Lexeme/VERB liegen · ' ' · der Hase → Lexeme/NOUN Hase · ' ' · i → Lexeme/ADP in · m Pfeffer → Lexeme/NOUN Pfeffer",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/dass",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/den-faden-verlieren",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "den Faden → Lexeme/NOUN Faden · ' ' · verlieren → Lexeme/VERB verlieren",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/den-nagel-auf-den-kopf-treffen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "den Nagel → Lexeme/NOUN Nagel · ' ' · auf → Lexeme/ADP auf · ' ' · den Kopf → Lexeme/NOUN Kopf · ' ' · treffen → Lexeme/VERB treffen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/denken",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/desto",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/devot",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/dienstfrei",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "dienst → Lexeme/NOUN Dienst · frei → Lexeme/ADJ frei",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/dies-und-das",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "dies → Lexeme/PRON dieser · ' ' · und → Lexeme/CCONJ und · ' ' · das → Lexeme/PRON das",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/dieses-und-jenes",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "dieses → Lexeme/PRON dieser · ' ' · und → Lexeme/CCONJ und · ' ' · jenes → Lexeme/PRON jener",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/drei",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/duerfen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/dumm-wie-bohnenstroh",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "dumm → Lexeme/ADJ dumm · ' ' · wie → Lexeme/CCONJ wie · ' ' · Bohnenstroh → Lexeme/NOUN Bohnenstroh",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/durchbrechen-entzwei",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "durch → Morpheme/Prefix durch- · brechen → Lexeme/VERB brechen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/durchbrechen-hindernis",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "durch → Morpheme/Prefix durch- · brechen → Lexeme/VERB brechen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/durchfuehren",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "durch → Morpheme/Prefix durch- · führen → Lexeme/VERB führen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/e-mail",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "E → Morpheme/Prefix e- · '-' · Mail → Lexeme/NOUN Mail",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/edamer",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Edam → Lexeme/PROPN Edam · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/effi",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ei",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/einkaufen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ein → Morpheme/Prefix ein- · kaufen → Lexeme/VERB kaufen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/einsegnen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ein → Morpheme/Prefix ein- · segnen → Lexeme/VERB segnen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/eintreffen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ein → Morpheme/Prefix ein- · treffen → Lexeme/VERB treffen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/eisentuer",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Eisen → Lexeme/NOUN Eisen · tür → Lexeme/NOUN Tür",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/elite",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/entgleisen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ent → Morpheme/Prefix ent- · gleis → Lexeme/NOUN Gleis · 'en'",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/entkernen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ent → Morpheme/Prefix ent- · kern → Lexeme/NOUN Kern · 'en'",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/entlarven",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ent → Morpheme/Prefix ent- · larv → Lexeme/NOUN Larve · 'en'",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/entspannung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Entspann → Lexeme/VERB entspannen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erblinden",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "er → Morpheme/Prefix er- · blind → Lexeme/ADJ blind · 'en'",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erbrecht",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 3,
+			"gold": "Erb → Lexeme/VERB erben · recht → Lexeme/NOUN Recht",
+			"returned": [
+				"3x Erb → Lexeme/NOUN Erb · recht → Lexeme/NOUN Recht"
+			]
+		},
+		{
+			"caseId": "breakdown/de/erinnern",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erkaeltung",
+			"group": "word",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 1,
+			"gold": "Erkält → Lexeme/VERB erkälten · ung → Morpheme/Suffix -ung",
+			"returned": [
+				"2x Erkält → Lexeme/VERB erkalten · ung → Morpheme/Suffix -ung"
+			]
+		},
+		{
+			"caseId": "breakdown/de/erkennen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "er → Morpheme/Prefix er- · kennen → Lexeme/VERB kennen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erleben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "er → Morpheme/Prefix er- · leben → Lexeme/VERB leben",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erregung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Erreg → Lexeme/VERB erregen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erst",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/erzaehlen",
+			"group": "word",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "er → Morpheme/Prefix er- · zählen → Lexeme/VERB zählen",
+			"returned": [
+				"1x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/europa",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fahren",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fahrrad",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Fahr → Lexeme/VERB fahren · rad → Lexeme/NOUN Rad",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fast",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fisch",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fischer",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Fisch → Lexeme/VERB fischen · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x Fisch → Lexeme/NOUN Fisch · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/form",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/frau",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/freiheit",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Frei → Lexeme/ADJ frei · heit → Morpheme/Suffix -heit",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/freude",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/freundschaft",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Freund → Lexeme/NOUN Freund · schaft → Morpheme/Suffix -schaft",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fruehstueck",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Früh → Lexeme/ADJ früh · stück → Lexeme/NOUN Stück",
+			"returned": [
+				"3x Früh → Morpheme/Root früh · stück → Lexeme/NOUN Stück"
+			]
+		},
+		{
+			"caseId": "breakdown/de/fuehlen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fuerst",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gaestehaus",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Gäst → Lexeme/NOUN Gast · e → Morpheme/Interfix -e- · haus → Lexeme/NOUN Haus",
+			"returned": [
+				"3x Gäste → Lexeme/NOUN Gäste · haus → Lexeme/NOUN Haus"
+			]
+		},
+		{
+			"caseId": "breakdown/de/ganz",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ganz-vollstaendig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gar",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geben-es-gibt",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geert",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gefahr",
+			"group": "word",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "none",
+			"returned": [
+				"1x Ge → Morpheme/Prefix ge- · fahr → Lexeme/NOUN Fahr"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gefallen-lassen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "gefallen → Lexeme/VERB gefallen · ' ' · lassen → Lexeme/VERB lassen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gegenuebersitzen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "gegenüber → Morpheme/Prefix gegenüber- · sitzen → Lexeme/VERB sitzen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gehoelz",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Ge → Morpheme/Prefix ge- · hölz → Lexeme/NOUN Holz",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gelenk",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gemuet",
+			"group": "word",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "Ge → Morpheme/Prefix ge- · müt → Lexeme/NOUN Mut",
+			"returned": [
+				"1x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/genesung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Genes → Lexeme/VERB genesen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geradezu",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "gerade → Lexeme/ADJ gerade · zu → Lexeme/ADP zu",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gern",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gesamt",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "none",
+			"returned": [
+				"3x ge → Morpheme/Prefix ge- · samt → Lexeme/ADJ samt"
+			]
+		},
+		{
+			"caseId": "breakdown/de/geschichte-erzaehlung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/geschrei",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Ge → Morpheme/Prefix ge- · schrei → Lexeme/VERB schreien",
+			"returned": [
+				"3x Ge → Morpheme/Prefix ge- · schrei → Lexeme/NOUN Schrei"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gesicht",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Ge → Morpheme/Prefix ge- · sicht → Lexeme/NOUN Sicht",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gespenst",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gestalt",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gestein",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Ge → Morpheme/Prefix ge- · stein → Lexeme/NOUN Stein",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/getreide",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gewaesser",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Ge → Morpheme/Prefix ge- · wässer → Lexeme/NOUN Wasser",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gewissen",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Ge → Morpheme/Prefix ge- · wissen → Lexeme/VERB wissen",
+			"returned": [
+				"3x Ge → Morpheme/Prefix ge- · wissen → Lexeme/NOUN Wissen"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gewoelk",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Ge → Morpheme/Prefix ge- · wölk → Lexeme/NOUN Wolke",
+			"returned": [
+				"3x Ge → Morpheme/Prefix ge- · wölk → Lexeme/NOUN Wölke"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gieshuebler",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/glaeubig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "gläub → Lexeme/NOUN Glaube · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/glauben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gluecklich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "glück → Lexeme/NOUN Glück · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gnaedig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "gnäd → Lexeme/NOUN Gnade · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gnaedige-frau",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "gnädige → Lexeme/ADJ gnädig · ' ' · Frau → Lexeme/NOUN Frau",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gott-sei-dank",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Gott → Lexeme/NOUN Gott · ' ' · sei → Lexeme/VERB sein · ' ' · Dank → Lexeme/NOUN Dank",
+			"returned": [
+				"3x Gott → Lexeme/PROPN Gott · ' ' · sei → Lexeme/VERB sein · ' ' · Dank → Lexeme/NOUN Dank"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gruendung-gruenden",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Gründ → Lexeme/VERB gründen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gruendung-gruenduenger",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Grün → Lexeme/ADJ grün · dung → Lexeme/NOUN Dung",
+			"returned": [
+				"3x Gründ → Lexeme/VERB gründen · ung → Morpheme/Suffix -ung"
+			]
+		},
+		{
+			"caseId": "breakdown/de/gueldenklee",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Gülden → Lexeme/ADJ gülden · klee → Lexeme/NOUN Klee",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gut",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/guten-morgen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "guten → Lexeme/ADJ gut · ' ' · Morgen → Lexeme/NOUN Morgen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/guten-tag",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "guten → Lexeme/ADJ gut · ' ' · Tag → Lexeme/NOUN Tag",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/haben-besitzen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/halb",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hamburger-burger",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "none",
+			"returned": [
+				"1x Hamburg → Lexeme/PROPN Hamburg · er → Morpheme/Suffix -er",
+				"2x Hamburg → Lexeme/NOUN Hamburg · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/hamburger-einwohner",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Hamburg → Lexeme/PROPN Hamburg · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x Hamburg → Lexeme/NOUN Hamburg · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/hand-in-hand-gehen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Hand in Hand → Locution/ADV Hand in Hand · ' ' · gehen → Lexeme/VERB gehen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/haus",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/haustuer",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Haus → Lexeme/NOUN Haus · tür → Lexeme/NOUN Tür",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/heissen-bedeuten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/herantreten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "heran → Morpheme/Prefix heran- · treten → Lexeme/VERB treten",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/herr-gebieter",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/himbeere",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Him → Morpheme/Root him · beere → Lexeme/NOUN Beere",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hin",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hindenken",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "hin → Morpheme/Prefix hin- · denken → Lexeme/VERB denken",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hinweisen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "hin → Morpheme/Prefix hin- · weisen → Lexeme/VERB weisen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hoeren",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hohen-cremmen",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Hohen → Lexeme/ADJ hoch · '-' · Cremmen → Lexeme/PROPN Cremmen",
+			"returned": [
+				"3x Hohen → Lexeme/ADJ hohen · '-' · Cremmen → Lexeme/NOUN Cremmen"
+			]
+		},
+		{
+			"caseId": "breakdown/de/hohepriester",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Hohe → Lexeme/ADJ hoch · priester → Lexeme/NOUN Priester",
+			"returned": [
+				"3x Hohe → Lexeme/ADJ hohe · priester → Lexeme/NOUN Priester"
+			]
+		},
+		{
+			"caseId": "breakdown/de/hollaendisch",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "holländ → Lexeme/PROPN Holland · isch → Morpheme/Suffix -isch",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/holzapfel",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Holz → Lexeme/NOUN Holz · apfel → Lexeme/NOUN Apfel",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/honig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hotel",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/huebsch",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hueter",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Hüt → Lexeme/VERB hüten · er → Morpheme/Suffix -er",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/hund",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/in-betracht-ziehen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "in → Lexeme/ADP in · ' ' · Betracht → Lexeme/NOUN Betracht · ' ' · ziehen → Lexeme/VERB ziehen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/innstetten",
+			"group": "word",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 1,
+			"gold": "none",
+			"returned": [
+				"2x Inn → Lexeme/PROPN Inn · stetten → Lexeme/NOUN Stetten"
+			]
+		},
+		{
+			"caseId": "breakdown/de/ja",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/jahr",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/je-nachdem",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "je → Lexeme/ADV je · ' ' · nachdem → Lexeme/SCONJ nachdem",
+			"returned": [
+				"3x je → Lexeme/PRON je · ' ' · nachdem → Lexeme/SCONJ nachdem"
+			]
+		},
+		{
+			"caseId": "breakdown/de/jugendlich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "jugend → Lexeme/NOUN Jugend · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/jung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kalauer",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kaufen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kaum-dass",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "kaum → Lexeme/ADV kaum · ' ' · dass → Lexeme/SCONJ dass",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kessin",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kindheit",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Kind → Lexeme/NOUN Kind · heit → Morpheme/Suffix -heit",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kleidung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Kleid → Lexeme/VERB kleiden · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/klein",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/klingen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/knall-auf-fall",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Knall → Lexeme/NOUN Knall · ' ' · auf → Lexeme/ADP auf · ' ' · Fall → Lexeme/NOUN Fall",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kochtopf",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Koch → Lexeme/VERB kochen · topf → Lexeme/NOUN Topf",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/koennen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kohlekraftwerk",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Kohle → Lexeme/NOUN Kohle · kraftwerk → Lexeme/NOUN Kraftwerk",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kommen-geschehen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kopp",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kreis",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kreuzer-kriegsschiff",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Kreuz → Lexeme/VERB kreuzen · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x Kreuz → Lexeme/NOUN Kreuz · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/kreuzer-muenze",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Kreuz → Lexeme/NOUN Kreuz · er → Morpheme/Suffix -er",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kuckuck",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/kurz",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/landrat",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Land → Lexeme/NOUN Land · rat → Lexeme/NOUN Rat",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/langeweile",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Lange → Lexeme/ADJ lang · weile → Lexeme/NOUN Weile",
+			"returned": [
+				"3x Lange → Lexeme/ADJ lange · weile → Lexeme/NOUN Weile"
+			]
+		},
+		{
+			"caseId": "breakdown/de/lassen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/laster-lastwagen",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Last → Lexeme/NOUN Last · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/laster-untugend",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/laune",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/lebhaft",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "leb → Lexeme/VERB leben · haft → Morpheme/Suffix -haft",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/lederlack",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Leder → Lexeme/NOUN Leder · lack → Lexeme/NOUN Lack",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/legat",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/legen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leicht",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leidtun",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "leid → Lexeme/ADJ leid · tun → Lexeme/VERB tun",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leiter-leiten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Leit → Lexeme/VERB leiten · er → Morpheme/Suffix -er",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/leiter-sprossenleiter",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/machen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/major",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meer",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meile",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meinen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/messer-messen",
+			"group": "word",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "Mess → Lexeme/VERB messen · er → Morpheme/Suffix -er",
+			"returned": [
+				"1x Mess → Lexeme/NOUN Mess · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/messer-schneidwerkzeug",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ministerium",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "none",
+			"returned": [
+				"3x Minister → Lexeme/NOUN Minister · ium → Lexeme/NOUN Ium"
+			]
+		},
+		{
+			"caseId": "breakdown/de/mirambo",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/mitnehmen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "mit → Morpheme/Prefix mit- · nehmen → Lexeme/VERB nehmen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/mittlerweile",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "mittler → Lexeme/ADJ mittler · weile → Lexeme/NOUN Weile",
+			"returned": [
+				"3x mittler → Lexeme/ADJ mittel · weile → Lexeme/NOUN Weile"
+			]
+		},
+		{
+			"caseId": "breakdown/de/morgen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/morgenstund-hat-gold-im-mund",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Morgenstund → Lexeme/NOUN Morgenstunde · ' ' · hat → Lexeme/VERB haben · ' ' · Gold → Lexeme/NOUN Gold · ' ' · i → Lexeme/ADP in · m Mund → Lexeme/NOUN Mund",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/muehevoll",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "mühe → Lexeme/NOUN Mühe · voll → Morpheme/Suffix -voll",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/muessen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/murmeltier",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 2,
+			"gold": "Murmel → Lexeme/NOUN Murmel · tier → Lexeme/NOUN Tier",
+			"returned": [
+				"1x Murmel → Morpheme/Root murmel · tier → Lexeme/NOUN Tier",
+				"2x Murmel → Lexeme/VERB murmeln · tier → Lexeme/NOUN Tier"
+			]
+		},
+		{
+			"caseId": "breakdown/de/musikerleben-erleben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Musik → Lexeme/NOUN Musik · erleben → Lexeme/NOUN Erleben",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/musikerleben-lebensweg",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Musiker → Lexeme/NOUN Musiker · leben → Lexeme/NOUN Leben",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/na-ja",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "na → Lexeme/INTJ na · ' ' · ja → Lexeme/INTJ ja",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nach-wie-vor",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "nach → Lexeme/ADV nach · ' ' · wie → Lexeme/CCONJ wie · ' ' · vor → Lexeme/ADV vor",
+			"returned": [
+				"3x nach → Lexeme/ADP nach · ' ' · wie → Lexeme/ADV wie · ' ' · vor → Lexeme/ADP vor"
+			]
+		},
+		{
+			"caseId": "breakdown/de/nachfragen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "nach → Morpheme/Prefix nach- · fragen → Lexeme/VERB fragen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nachmittags",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "nachmittag → Lexeme/NOUN Nachmittag · s → Morpheme/Suffix -s",
+			"returned": [
+				"3x nach → Lexeme/ADP nach · mittags → Lexeme/ADV mittags"
+			]
+		},
+		{
+			"caseId": "breakdown/de/nacht",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nachwelt",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Nach → Lexeme/ADP nach · welt → Lexeme/NOUN Welt",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nadelkissen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Nadel → Lexeme/NOUN Nadel · kissen → Lexeme/NOUN Kissen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nennen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/noch",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nun",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nur",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/nur-bahnhof-verstehen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "nur → Lexeme/ADV nur · ' ' · Bahnhof → Lexeme/NOUN Bahnhof · ' ' · verstehen → Lexeme/VERB verstehen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/oder",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/oft",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ohne-zu",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ohne → Lexeme/SCONJ ohne · ' … ' · zu → Lexeme/PART zu",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/paddelboot",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Paddel → Lexeme/NOUN Paddel · boot → Lexeme/NOUN Boot",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/paket",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/pelz",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/poster-forum",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Post → Lexeme/VERB posten · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/poster-plakat",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/quell",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/recht-ziemlich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/reeperbahn",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Reep → Lexeme/NOUN Reep · er → Morpheme/Interfix -er- · bahn → Lexeme/NOUN Bahn",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/reisen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/reiter-reiten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Reit → Lexeme/VERB reiten · er → Morpheme/Suffix -er",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/reiter-sieb",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "none",
+			"returned": [
+				"3x Reit → Lexeme/VERB reiten · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/rentier-ren",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Ren → Lexeme/NOUN Ren · tier → Lexeme/NOUN Tier",
+			"returned": [
+				"3x Ren → Lexeme/NOUN Rene · tier → Lexeme/NOUN Tier"
+			]
+		},
+		{
+			"caseId": "breakdown/de/rentier-rentner",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Rent → Lexeme/NOUN Rente · ier → Morpheme/Suffix -ier",
+			"returned": [
+				"3x Rent → Lexeme/NOUN Rent · ier → Morpheme/Suffix -ier"
+			]
+		},
+		{
+			"caseId": "breakdown/de/richtig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "richt → Lexeme/VERB richten · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/roemer-einwohner",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Röm → Lexeme/PROPN Rom · er → Morpheme/Suffix -er",
+			"returned": [
+				"3x Röm → Lexeme/NOUN Rom · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/roemer-weinglas",
+			"group": "word",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 1,
+			"gold": "none",
+			"returned": [
+				"2x Röm → Lexeme/NOUN Rom · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/roetlich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "röt → Lexeme/ADJ rot · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/roswitha",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ruck",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ruderboot",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Ruder → Lexeme/NOUN Ruder · boot → Lexeme/NOUN Boot",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/rufen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ruhig",
+			"group": "word",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 1,
+			"gold": "ruh → Lexeme/NOUN Ruhe · ig → Morpheme/Suffix -ig",
+			"returned": [
+				"2x ruh → Lexeme/VERB ruhen · ig → Morpheme/Suffix -ig"
+			]
+		},
+		{
+			"caseId": "breakdown/de/rund-um-die-uhr-betreuung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Rund-um-die-Uhr → Locution/ADV rund um die Uhr · '-' · Betreuung → Lexeme/NOUN Betreuung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/rutschig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "rutsch → Lexeme/VERB rutschen · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sagen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/salzig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "salz → Lexeme/NOUN Salz · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schaukelbrett",
+			"group": "word",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 3,
+			"gold": "Schaukel → Lexeme/NOUN Schaukel · brett → Lexeme/NOUN Brett",
+			"returned": [
+				"2x Schaukel → Lexeme/VERB schaukeln · brett → Lexeme/NOUN Brett"
+			]
+		},
+		{
+			"caseId": "breakdown/de/schaukelpferd",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 3,
+			"gold": "Schaukel → Lexeme/VERB schaukeln · pferd → Lexeme/NOUN Pferd",
+			"returned": [
+				"3x Schaukel → Lexeme/NOUN Schaukel · pferd → Lexeme/NOUN Pferd"
+			]
+		},
+		{
+			"caseId": "breakdown/de/schiffersleute",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Schiffer → Lexeme/NOUN Schiffer · s → Morpheme/Interfix -s- · leute → Lexeme/NOUN Leute",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schlafen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schlafsack",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Schlaf → Lexeme/VERB schlafen · sack → Lexeme/NOUN Sack",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schneien",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schoen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schon",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schoner-schutzhuelle",
+			"group": "word",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 1,
+			"gold": "Schon → Lexeme/VERB schonen · er → Morpheme/Suffix -er",
+			"returned": [
+				"2x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/schoner-segelschiff",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schreiben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schreibtisch",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Schreib → Lexeme/VERB schreiben · tisch → Lexeme/NOUN Tisch",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schrimm",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schulvorsteherin",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Schul → Lexeme/NOUN Schule · vorsteherin → Lexeme/NOUN Vorsteherin",
+			"returned": [
+				"3x Schulvorsteher → Lexeme/NOUN Schulvorsteher · in → Morpheme/Suffix -in"
+			]
+		},
+		{
+			"caseId": "breakdown/de/schwarz",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schweigen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/segelboot",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 3,
+			"gold": "Segel → Lexeme/VERB segeln · boot → Lexeme/NOUN Boot",
+			"returned": [
+				"3x Segel → Lexeme/NOUN Segel · boot → Lexeme/NOUN Boot"
+			]
+		},
+		{
+			"caseId": "breakdown/de/sehen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sehr",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/setzen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/so-gut-wie",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "so → Lexeme/ADV so · ' ' · gut → Lexeme/ADJ gut · ' ' · wie → Lexeme/CCONJ wie",
+			"returned": [
+				"1x so → Lexeme/ADV so · ' ' · gut → Lexeme/ADJ gut · ' ' · wie → Lexeme/ADV wie"
+			]
+		},
+		{
+			"caseId": "breakdown/de/so-oder-so",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "so → Lexeme/ADV so · ' ' · oder → Lexeme/CCONJ oder · ' ' · so → Lexeme/ADV so",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/solange",
+			"group": "word",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "so → Lexeme/ADV so · lange → Lexeme/ADV lange",
+			"returned": [
+				"1x so → Lexeme/PROPN So · lange → Lexeme/ADV lange"
+			]
+		},
+		{
+			"caseId": "breakdown/de/sollen-bedeuten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sonderbar",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "sonder → Lexeme/VERB sondern · bar → Morpheme/Suffix -bar",
+			"returned": [
+				"3x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/sondern",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sonnenbrille",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Sonne → Lexeme/NOUN Sonne · n → Morpheme/Interfix -n- · brille → Lexeme/NOUN Brille",
+			"returned": [
+				"3x Sonnen → Lexeme/NOUN Sonnen · brille → Lexeme/NOUN Brille"
+			]
+		},
+		{
+			"caseId": "breakdown/de/sonnig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "sonn → Lexeme/NOUN Sonne · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/spaet",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/spannen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sprechen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/springen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/staubig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "staub → Lexeme/NOUN Staub · ig → Morpheme/Suffix -ig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/steuermann",
+			"group": "word",
+			"reps": 3,
+			"exact": 1,
+			"lenient": 3,
+			"gold": "Steuer → Lexeme/VERB steuern · mann → Lexeme/NOUN Mann",
+			"returned": [
+				"2x Steuer → Lexeme/NOUN Steuer · mann → Lexeme/NOUN Mann"
+			]
+		},
+		{
+			"caseId": "breakdown/de/sticker-aufkleber",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sticker-sticken",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Stick → Lexeme/VERB sticken · er → Morpheme/Suffix -er",
+			"returned": [
+				"2x none",
+				"1x Stick → Lexeme/NOUN Stick · er → Morpheme/Suffix -er"
+			]
+		},
+		{
+			"caseId": "breakdown/de/stille-wasser-sind-tief",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Stille → Lexeme/ADJ still · ' ' · Wasser → Lexeme/NOUN Wasser · ' ' · sind → Lexeme/VERB sein · ' ' · tief → Lexeme/ADJ tief",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/stimme",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/stimmung-laune",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Stimm → Lexeme/VERB stimmen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/stimmung-tonhoehe",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Stimm → Lexeme/VERB stimmen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/stuendlich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "stünd → Lexeme/NOUN Stunde · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/suchen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/tag",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/thora-von-penz",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Thora → Lexeme/PROPN Thora · ' ' · von → Lexeme/ADP von · ' ' · Penz → Lexeme/PROPN Penz",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/trimm-dich-pfad",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Trimm → Lexeme/VERB trimmen · '-' · dich → Lexeme/PRON sich · '-' · Pfad → Lexeme/NOUN Pfad",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/trotz",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/tun",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/turm",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ueberhaupt",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "über → Lexeme/ADP über · haupt → Lexeme/NOUN Haupt",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/uebung-macht-den-meister",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Übung → Lexeme/NOUN Übung · ' ' · macht → Lexeme/VERB machen · ' ' · den Meister → Lexeme/NOUN Meister",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/um-jeden-preis",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "um → Lexeme/ADP um · ' ' · jeden → Lexeme/DET jeder · ' ' · Preis → Lexeme/NOUN Preis",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/um-zu",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "um → Lexeme/SCONJ um · ' … ' · zu → Lexeme/PART zu",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/und",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/unglueckstag",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Unglück → Lexeme/NOUN Unglück · s → Morpheme/Interfix -s- · tag → Lexeme/NOUN Tag",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/unnachsichtig",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "un → Morpheme/Prefix un- · nachsichtig → Lexeme/ADJ nachsichtig",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/unordnung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Un → Morpheme/Prefix un- · ordnung → Lexeme/NOUN Ordnung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/unter-dach-und-fach-bringen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "unter Dach und Fach → Locution/ADV unter Dach und Fach · ' ' · bringen → Lexeme/VERB bringen",
+			"returned": [
+				"3x unter → Lexeme/ADP unter · ' ' · Dach → Lexeme/NOUN Dach · ' ' · und → Lexeme/CCONJ und · ' ' · Fach → Lexeme/NOUN Fach · ' ' · bringen → Lexeme/VERB bringen"
+			]
+		},
+		{
+			"caseId": "breakdown/de/unterhalten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "unter → Morpheme/Prefix unter- · halten → Lexeme/VERB halten",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/unterstuetzung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Unterstütz → Lexeme/VERB unterstützen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/varzin",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/veilchenwurzelluft",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Veilchenwurzel → Lexeme/NOUN Veilchenwurzel · luft → Lexeme/NOUN Luft",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verarmen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ver → Morpheme/Prefix ver- · arm → Lexeme/ADJ arm · 'en'",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verarzten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ver → Morpheme/Prefix ver- · arzt → Lexeme/NOUN Arzt · 'en'",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verdenken",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ver → Morpheme/Prefix ver- · denken → Lexeme/VERB denken",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verfilmen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ver → Morpheme/Prefix ver- · filmen → Lexeme/VERB filmen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/vergiften",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "ver → Morpheme/Prefix ver- · giften → Lexeme/VERB giften",
+			"returned": [
+				"3x ver → Morpheme/Prefix ver- · gift → Lexeme/NOUN Gift · 'en'"
+			]
+		},
+		{
+			"caseId": "breakdown/de/verkabeln",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ver → Morpheme/Prefix ver- · kabel → Lexeme/NOUN Kabel · 'n'",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verkaufen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ver → Morpheme/Prefix ver- · kaufen → Lexeme/VERB kaufen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verkoerpern",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ver → Morpheme/Prefix ver- · körper → Lexeme/NOUN Körper · 'n'",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verlegenheit",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Verlegen → Lexeme/ADJ verlegen · heit → Morpheme/Suffix -heit",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verneigung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Verneig → Lexeme/VERB verneigen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/versprechen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ver → Morpheme/Prefix ver- · sprechen → Lexeme/VERB sprechen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/vertreiben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "ver → Morpheme/Prefix ver- · treiben → Lexeme/VERB treiben",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verwaltung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Verwalt → Lexeme/VERB verwalten · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/verzeihung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Verzeih → Lexeme/VERB verzeihen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/vielleicht",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "viel → Lexeme/ADV viel · leicht → Lexeme/ADJ leicht",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/vorkommen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "vor → Morpheme/Prefix vor- · kommen → Lexeme/VERB kommen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/vorlegen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "vor → Morpheme/Prefix vor- · legen → Lexeme/VERB legen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/vornehmen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "vor → Morpheme/Prefix vor- · nehmen → Lexeme/VERB nehmen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/vorueberfliegen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "vorüber → Morpheme/Prefix vorüber- · fliegen → Lexeme/VERB fliegen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wachstube-wachlokal",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Wach → Lexeme/VERB wachen · stube → Lexeme/NOUN Stube",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wachstube-wachstube",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Wachs → Lexeme/NOUN Wachs · tube → Lexeme/NOUN Tube",
+			"returned": [
+				"3x Wach → Lexeme/VERB wachen · stube → Lexeme/NOUN Stube"
+			]
+		},
+		{
+			"caseId": "breakdown/de/wahr-und-wahrhaftig",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "wahr → Lexeme/ADJ wahr · ' ' · und → Lexeme/CCONJ und · ' ' · wahrhaftig → Lexeme/ADJ wahrhaftig",
+			"returned": [
+				"3x wahr → Lexeme/ADJ wahr · ' ' · und → Lexeme/CCONJ und · ' ' · wahrhaftig → Lexeme/ADV wahrhaftig"
+			]
+		},
+		{
+			"caseId": "breakdown/de/was-fuer",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "was → Lexeme/PRON was · ' ' · für → Lexeme/ADP für",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/was-weiss-ich",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "was → Lexeme/PRON was · ' ' · weiß → Lexeme/VERB wissen · ' ' · ich → Lexeme/PRON ich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/waterloo",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weihnachten",
+			"group": "word",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "none",
+			"returned": [
+				"1x Weih → Morpheme/Root weih · nachten → Lexeme/NOUN Nacht"
+			]
+		},
+		{
+			"caseId": "breakdown/de/weil",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weinen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/weit",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wer-die-wahl-hat-hat-die-qual",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Wer → Lexeme/PRON wer · ' ' · die Wahl → Lexeme/NOUN Wahl · ' ' · hat → Lexeme/VERB haben · ', ' · hat → Lexeme/VERB haben · ' ' · die Qual → Lexeme/NOUN Qual",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wer-zuerst-kommt-mahlt-zuerst",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Wer → Lexeme/PRON wer · ' ' · zuerst → Lexeme/ADV zuerst · ' ' · kommt → Lexeme/VERB kommen · ', ' · mahlt → Lexeme/VERB mahlen · ' ' · zuerst → Lexeme/ADV zuerst",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wie-zu-hause-fuehlen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "wie → Lexeme/CCONJ wie · ' ' · zu Hause → Locution/ADV zu Hause · ' ' · fühlen → Lexeme/VERB fühlen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wieder",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wirklich",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "wirk → Lexeme/VERB wirken · lich → Morpheme/Suffix -lich",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wirtschafterin",
+			"group": "word",
+			"reps": 3,
+			"exact": 0,
+			"lenient": 0,
+			"gold": "Wirtschafter → Lexeme/NOUN Wirtschafter · in → Morpheme/Suffix -in",
+			"returned": [
+				"3x Wirtschafter → Lexeme/VERB wirtschaftern · in → Morpheme/Suffix -in"
+			]
+		},
+		{
+			"caseId": "breakdown/de/wisby",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wissen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wohnung",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Wohn → Lexeme/VERB wohnen · ung → Morpheme/Suffix -ung",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/wollen-moechten",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zauber",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zeit",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "none",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zu-gast-sein",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "zu → Lexeme/ADP zu · ' ' · Gast → Lexeme/NOUN Gast · ' ' · sein → Lexeme/VERB sein",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zu-hause",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "zu → Lexeme/ADP zu · ' ' · Hause → Lexeme/NOUN Haus",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zugeben",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "zu → Morpheme/Prefix zu- · geben → Lexeme/VERB geben",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zuhoeren",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "zu → Morpheme/Prefix zu- · hören → Lexeme/VERB hören",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zuletzt",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "zu → Lexeme/ADP zu · letzt → Lexeme/ADJ letzt",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zuname",
+			"group": "word",
+			"reps": 3,
+			"exact": 2,
+			"lenient": 2,
+			"gold": "Zu → Lexeme/ADP zu · name → Lexeme/NOUN Name",
+			"returned": [
+				"1x none"
+			]
+		},
+		{
+			"caseId": "breakdown/de/zunichtemachen",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "zunichte → Morpheme/Prefix zunichte- · machen → Lexeme/VERB machen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zur-sprache-bringen",
+			"group": "phraseme",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "zu → Lexeme/ADP zu · r Sprache → Lexeme/NOUN Sprache · ' ' · bringen → Lexeme/VERB bringen",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zwicker",
+			"group": "word",
+			"reps": 3,
+			"exact": 3,
+			"lenient": 3,
+			"gold": "Zwick → Lexeme/VERB zwicken · er → Morpheme/Suffix -er",
+			"returned": []
+		}
+	]
+}

@@ -1,0 +1,340 @@
+{
+	"runId": "4db30634-e41e-430c-be1b-72bce39cda48",
+	"experimentId": "segment-in-morphemes/de:realtext",
+	"round": "2026-10-29-breakdown-round-9",
+	"note": "The real-text held-out batch's bottom words, contested gerade and allein (morphemes only) included (102/102; 96/96 without them). 3 repetitions at b02e4f429.",
+	"liveRuns": [
+		"4db30634-e41e-430c-be1b-72bce39cda48"
+	],
+	"manifest": {
+		"version": 2,
+		"runId": "4db30634-e41e-430c-be1b-72bce39cda48",
+		"experimentId": "segment-in-morphemes/de:realtext",
+		"evaluatorVersion": "breakdown-1",
+		"sourceRevision": "b02e4f429",
+		"startedAt": "2026-10-29T16:47:29.013Z",
+		"corpus": {
+			"fingerprint": "c023fa829b93ff0e29ae06abc492ae6448f4ebc2bbfd8fa066f66810fe8bb0af",
+			"caseIds": [
+				"breakdown/de/allein",
+				"breakdown/de/arm",
+				"breakdown/de/auge",
+				"breakdown/de/blond",
+				"breakdown/de/brief",
+				"breakdown/de/duene",
+				"breakdown/de/eher",
+				"breakdown/de/ems",
+				"breakdown/de/fach",
+				"breakdown/de/gerade",
+				"breakdown/de/gott",
+				"breakdown/de/herz",
+				"breakdown/de/heute",
+				"breakdown/de/inkognito",
+				"breakdown/de/karte",
+				"breakdown/de/koenig",
+				"breakdown/de/lippe",
+				"breakdown/de/majoritaet",
+				"breakdown/de/mann",
+				"breakdown/de/meist",
+				"breakdown/de/mensch",
+				"breakdown/de/oede",
+				"breakdown/de/onkel",
+				"breakdown/de/ring",
+				"breakdown/de/rollo",
+				"breakdown/de/schwester",
+				"breakdown/de/sitzen",
+				"breakdown/de/stuerzen",
+				"breakdown/de/stunde",
+				"breakdown/de/tauschen",
+				"breakdown/de/trotz-auflehnung",
+				"breakdown/de/truhe",
+				"breakdown/de/woche",
+				"breakdown/de/zwingen"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "segment-in-morphemes/de@production",
+		"configurations": {
+			"generation": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 34,
+					"offline": false
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"cases": 34,
+					"offline": false
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 34,
+			"failed": 0,
+			"needsReview": 0,
+			"unscored": 0
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-29T16:47:29.057Z",
+		"total": 34,
+		"succeeded": 34,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 0,
+			"quality": {
+				"passed": 102,
+				"failed": 0,
+				"needsReview": 0,
+				"unscored": 0
+			}
+		}
+	},
+	"exact": "102/102",
+	"cases": [
+		{
+			"caseId": "breakdown/de/allein",
+			"reps": 3,
+			"exact": 3,
+			"gold": "allein · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/arm",
+			"reps": 3,
+			"exact": 3,
+			"gold": "arm · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/auge",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Aug · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/blond",
+			"reps": 3,
+			"exact": 3,
+			"gold": "blond · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/brief",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Brief · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/duene",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Dün · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/eher",
+			"reps": 3,
+			"exact": 3,
+			"gold": "eher",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ems",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Ems · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/fach",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Fach · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gerade",
+			"reps": 3,
+			"exact": 3,
+			"gold": "gerade",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/gott",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Gott · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/herz",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Herz · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/heute",
+			"reps": 3,
+			"exact": 3,
+			"gold": "heute",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/inkognito",
+			"reps": 3,
+			"exact": 3,
+			"gold": "inkognito",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/karte",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Kart · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/koenig",
+			"reps": 3,
+			"exact": 3,
+			"gold": "König · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/lippe",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Lipp · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/majoritaet",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Majorität · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/mann",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Mann · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/meist",
+			"reps": 3,
+			"exact": 3,
+			"gold": "meist",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/mensch",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Mensch · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/oede",
+			"reps": 3,
+			"exact": 3,
+			"gold": "öd · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/onkel",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Onkel · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/ring",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Ring · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/rollo",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Rollo · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/schwester",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Schwester · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/sitzen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "sitz · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/stuerzen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "stürz · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/stunde",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Stund · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/tauschen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "tausch · en",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/trotz-auflehnung",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Trotz · ∅",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/truhe",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Truh · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/woche",
+			"reps": 3,
+			"exact": 3,
+			"gold": "Woch · e",
+			"returned": []
+		},
+		{
+			"caseId": "breakdown/de/zwingen",
+			"reps": 3,
+			"exact": 3,
+			"gold": "zwing · en",
+			"returned": []
+		}
+	]
+}
