@@ -6,13 +6,20 @@ status: accepted
 
 [ADR 0050](./0050-break-a-reading-down-into-its-constituents.md) gives a
 Reading its Constituents, a word's immediate parts. German follows its
-dictionaries in deciding them:
+dictionaries in deciding them, and in naming the part of speech of the
+Reading a Breakdown Record owns:
 
 - The dictionary decides whether a word splits and how, however opaque it
   now is: the DWDS Wortzerlegung, else the en.wiktionary etymology line,
   else no split (the user, 2026-10-27): `verarzten` = `ver- + Arzt`
   (DWDS), `Gewissen` = `ge- + wissen` (en.wiktionary), and `Gefahr`, split
   by neither, has none.
+- The same order decides a Breakdown Record's Reading's Kind (the user,
+  2026-10-29): the part of speech DWDS gives that sense, in its entry or in
+  its etymology's labels, else en.wiktionary's. `wirklich` 'in der Tat' is
+  ADJ, since DWDS files the sense, used adverbially, under its Adjektiv;
+  `ganz` 'vollkommen' is ADV, which DWDS's etymology labels Adv. beside the
+  Adj.
 - The citation ending is unlinked filler: `verarzten` = `[[ver-|ver]] +
   [[Arzt|arzt]] + en`. Constituents hold no inflectional piece.
 - A linking element is its own piece, linking to an Interfix from the closed
@@ -64,6 +71,9 @@ dictionaries in deciding them:
   `Trimm-dich-Pfad` flat.
 - Opaque words as bottom words (`Gewissen`). Rejected: opacity is graded;
   a dictionary split can be checked.
+- A gold Reading's Kind by its use alone (`wirklich` as a sentence adverb,
+  ADV). Rejected: the two judges split on it, and a dictionary's class can
+  be checked.
 - `über-` in `überhaupt`. Rejected: nothing outside a verb separates.
 - The adverbs with no DWDS verbal affix entry linking to their ADV Lexeme.
   Rejected: the Amtliches Regelwerk §34(1) names most as Verbpartikeln, and

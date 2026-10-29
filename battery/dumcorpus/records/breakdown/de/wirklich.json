@@ -43,17 +43,22 @@
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0050"],
+		"adrs": ["ADR-0050", "ADR-0054"],
 		"rules": [],
 		"references": [
 			{
 				"title": "DWDS: wirklich",
 				"url": "https://www.dwds.de/wb/wirklich",
-				"supports": "The Wortzerlegung 1wirken -lich; sense 3 'dient zur Verstärkung ... in der Tat'"
+				"supports": "Adjektiv, Komparativ wirklicher; the Wortzerlegung 1wirken -lich; sense 3 'dient zur Verstärkung, Bekräftigung; wahrhaftig, in der Tat', Grammatik: adverbiell, inside the Adjektiv entry; the etymology labels wirklich Adj. only"
+			},
+			{
+				"title": "en.wiktionary: wirklich",
+				"url": "https://en.wiktionary.org/wiki/wirklich",
+				"supports": "Adjective 'real' and Adverb 'really, actually'; consulted only where DWDS gives no class"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "hatte sich wirklich ... begnügt, indeed. DWDS splits it wirken + -lich (ADR 0050)."
+		"rationale": "hatte sich wirklich ... begnügt, indeed. DWDS files this sense, used adverbially, under its Adjektiv and labels no Adv., so it is ADJ (the user, 2026-10-29, ADR 0054); en.wiktionary, the fallback, is not needed. DWDS splits it wirken + -lich (ADR 0050)."
 	}
 }

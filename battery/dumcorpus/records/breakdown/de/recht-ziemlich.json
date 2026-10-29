@@ -6,10 +6,10 @@
 			"unitKind": "Lemma",
 			"language": "de",
 			"family": "Lexeme",
-			"kind": "ADV",
+			"kind": "ADJ",
 			"canonicalForm": "recht",
 			"coreFeatures": {
-				"comparable": null
+				"comparable": "Yes"
 			}
 		},
 		"emojiDescription": "📈"
@@ -25,22 +25,31 @@
 						"family": "Morpheme",
 						"kind": "Root"
 					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
 				}
 			]
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0051"],
+		"adrs": ["ADR-0051", "ADR-0054"],
 		"rules": [],
 		"references": [
 			{
 				"title": "DWDS: recht",
 				"url": "https://www.dwds.de/wb/recht",
-				"supports": "No Wortzerlegung; as a degree word 'ziemlich, sehr'"
+				"supports": "No Wortzerlegung; 2recht, Adjektiv, Komparativ rechter; sense 3 b 'bezeichnet einen (ziemlich) hohen Grad', Grammatik: adverbiell, 'ziemlich, sehr' (gestern war es recht warm), inside the Adjektiv entry; the etymology labels recht Adj. only"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "Es ist oft recht schwer, quite hard. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root recht alone."
+		"rationale": "Es ist oft recht schwer, quite hard. DWDS files this degree sense, used adverbially, under its Adjektiv and labels no Adv., so it is ADJ (the user, 2026-10-29, ADR 0054), comparable as DWDS gives rechter. DWDS gives no Wortzerlegung, so it is a bottom word: the Root recht and the zero ending (ADR 0051)."
 	}
 }

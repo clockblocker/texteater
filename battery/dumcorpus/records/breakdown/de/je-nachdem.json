@@ -6,9 +6,11 @@
 			"unitKind": "Lemma",
 			"language": "de",
 			"family": "Locution",
-			"kind": "SCONJ",
+			"kind": "ADV",
 			"canonicalForm": "je nachdem",
-			"coreFeatures": {}
+			"coreFeatures": {
+				"comparable": null
+			}
 		},
 		"emojiDescription": "🔀"
 	},
@@ -46,7 +48,7 @@
 		}
 	},
 	"sources": {
-		"adrs": ["ADR-0039", "ADR-0050"],
+		"adrs": ["ADR-0039", "ADR-0050", "ADR-0054"],
 		"rules": [
 			{
 				"rule": "de/comparability-is-lexical",
@@ -68,10 +70,15 @@
 				"title": "DWDS: nachdem",
 				"url": "https://www.dwds.de/wb/nachdem",
 				"supports": "nachdem, Konjunktion, sense 3: ⟨je nachdem⟩, siehe auch 1je (2 b)"
+			},
+			{
+				"title": "en.wiktionary: je nachdem",
+				"url": "https://en.wiktionary.org/wiki/je_nachdem",
+				"supports": "Adverb, with ob or an interrogative 'depending on' (je nachdem, ob man es gut findet)"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "The conjunction reading, 'abhängig davon ob …': je nachdem, ob sie Lust hat. Each part keeps its own Kind: DWDS files je nachdem under the adverb je, so je links to ADV je, though the whole is a SCONJ, and nachdem to the SCONJ nachdem."
+		"rationale": "The reading 'abhängig davon ob …': je nachdem, ob sie Lust hat. DWDS gives the Mehrwortausdruck no part of speech, so en.wiktionary's decides: Adverb, so ADV (the user, 2026-10-29, ADR 0054). Each part keeps its own Kind: DWDS files je nachdem under the adverb je, so je links to ADV je, and nachdem to the SCONJ nachdem."
 	}
 }
