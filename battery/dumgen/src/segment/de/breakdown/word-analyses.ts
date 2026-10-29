@@ -13,7 +13,8 @@
  * cuts come from dumcorpus's closed affix inventory and its true separable
  * particles; a part that is a word needs at least two letters, a head three
  * (a verb's four, its ending included, or `tun`, German's one infinitive of
- * three letters).
+ * three letters), except the last of two words written together, an
+ * adverb's or a conjunction's, which may have two (`zu`).
  */
 import {
 	germanHyphenPrefixes,
@@ -132,6 +133,19 @@ function citationEnding(word: string): string | undefined {
 	if (/(?:el|er)n$/u.test(folded)) return "n";
 	return folded.endsWith("en") ? "en" : undefined;
 }
+
+/**
+ * The Kinds whose two-word analysis is a compound with a head the first
+ * word tells apart; any other Kind's two words were written together (an
+ * adverb's or a conjunction's), and its last word may have two letters
+ * (`zu`, `so`, `da`; #1241 round 9).
+ */
+export const headedKinds: ReadonlySet<string> = new Set([
+	"NOUN",
+	"PROPN",
+	"VERB",
+	"ADJ",
+]);
 
 /** The verb heads shorter than four letters a cut may still leave: `tun` (weh + tun). */
 const shortVerbHeads: ReadonlySet<string> = new Set(["tun"]);
@@ -279,8 +293,9 @@ export function withFrontPhrase(
 export function wordAnalyses(word: string, kind: string): WordAnalysis[] {
 	if (/\p{L}-\p{L}/u.test(word)) return hyphenated(word);
 	const verb = kind === "VERB";
+	const minHead = verb ? 4 : headedKinds.has(kind) ? 3 : 2;
 	const candidates = [
-		...binaryCuts(word, verb ? 4 : 3, verb ? shortVerbHeads : undefined),
+		...binaryCuts(word, minHead, verb ? shortVerbHeads : undefined),
 		...suffixCuts(word),
 		...(verb ? prefixedVerbStems(word) : []),
 	];

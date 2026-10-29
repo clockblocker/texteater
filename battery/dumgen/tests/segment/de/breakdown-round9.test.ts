@@ -4,6 +4,7 @@ import * as Effect from "effect/Effect";
 import type { Ask } from "../../../src/segment/ask.js";
 import type { BreakdownInput } from "../../../src/segment/breakdown.js";
 import { germanConstituents } from "../../../src/segment/de/breakdown/constituents.js";
+import { wordAnalyses } from "../../../src/segment/de/breakdown/word-analyses.js";
 import { noneOption } from "../../../src/segment/de/breakdown/word-prompts.js";
 import { input, senseJudge, shown } from "./breakdown-support.js";
 
@@ -92,6 +93,13 @@ test("an adverb's two words are asked whether a dictionary splits them so, and t
 		.texts()
 		.filter((text) => text.startsWith("Think of irgendwann"));
 	expect(senses).toEqual([
-		"Think of irgendwann in the sense 🕰. Does a dictionary's word formation split it into the words irgend and wann, written together as one word, however far its sense has drifted from theirs? Answer no when its letters only happen to contain them.",
+		"Think of irgendwann in the sense 🕰. Does a dictionary's word formation split it into the two words irgend and wann, each a word of its own, written together as one word, however far its sense has drifted from theirs? Answer no when its letters only happen to contain them.",
 	]);
+});
+
+test("an adverb's last word may have two letters, a noun's head may not", () => {
+	const labels = (word: string, kind: string) =>
+		wordAnalyses(word, kind).map(({ label }) => label);
+	expect(labels("irgendwo", "ADV")).toContain("irgend + wo");
+	expect(labels("Kanuwo", "NOUN")).not.toContain("Kanu + wo");
 });

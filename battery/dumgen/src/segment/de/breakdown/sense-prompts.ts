@@ -12,7 +12,11 @@
  * Their wording names no Breakdown case (#693).
  */
 import { germanSuffixes } from "dumcorpus/inventories";
-import type { WordAnalysis, WordPiece } from "./word-analyses.js";
+import {
+	headedKinds,
+	type WordAnalysis,
+	type WordPiece,
+} from "./word-analyses.js";
 
 const capitalized = (text: string) =>
 	text.charAt(0).toLocaleUpperCase("de") + text.slice(1);
@@ -27,21 +31,9 @@ function suffixSense(suffix: WordPiece, base: string): string {
 	).replaceAll("{base}", base);
 }
 
-/**
- * The Kinds whose two-word analysis is a compound with a head that the
- * first word tells apart; any other Kind's two words were written
- * together (an adverb's or a conjunction's).
- */
-const headedKinds: ReadonlySet<string> = new Set([
-	"NOUN",
-	"PROPN",
-	"VERB",
-	"ADJ",
-]);
-
 /** The words two pieces were written together from, after "a dictionary's word formation split(s) it". */
 const writtenTogether = (first: string, second: string) =>
-	`into the words ${first} and ${second}, written together as one word, however far its sense has drifted from theirs`;
+	`into the two words ${first} and ${second}, each a word of its own, written together as one word, however far its sense has drifted from theirs`;
 
 /** The question an analysis's sense must pass, by its shape, after "Think of … in the sense …". */
 function testOf(analysis: WordAnalysis, kind: string): string {

@@ -58,7 +58,6 @@ import {
 } from "../../breakdown.js";
 import { allRoutes, type RouteKey } from "../routes.js";
 import {
-	headwordQuestion,
 	inflectedDeterminerOrPronoun,
 	nounPartFormGuide,
 	onlyPronoun,
@@ -102,6 +101,7 @@ import {
 import {
 	adjectiveQuestion,
 	mayBeCranberry,
+	nameQuestion,
 	nounQuestion,
 	suffixBaseRoute,
 	verbBaseQuestion,
@@ -402,7 +402,7 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	phraseFormGuide,
 	reflexiveFormGuide,
 	nounPartFormGuide,
-	headwordQuestion("word", "…", "noun"),
+	nameQuestion("word", "…"),
 	verbBaseQuestion("word", "…"),
 	wordQuestion("word", "…"),
 	nounQuestion("word", "…"),

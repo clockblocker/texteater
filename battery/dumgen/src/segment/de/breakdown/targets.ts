@@ -24,10 +24,10 @@ import {
 import { type RouteKey, routeCriteria } from "../routes.js";
 import {
 	formCandidates,
-	headwordQuestion,
 	offersReflexive,
 	reflexiveFormGuide,
 } from "./forms.js";
+import { headwordQuestion } from "./word-gates.js";
 
 /** A part whose link jev settles. */
 export type OpenPart = {
@@ -148,11 +148,13 @@ function formQuestionsOf(
 			`In \`${whole.key}\`, the part "${part.reads}" is a ${kindName}. Which is its dictionary headword?${guide ? ` ${guide}` : ""}`,
 			Object.fromEntries(forms.map((form, at) => [`f${at}`, form])),
 		);
-		if (testedKinds.has(kind))
-			for (const [at, form] of forms.entries())
-				questions[`h_${index}_${at}`] = noul(
-					headwordQuestion(whole.key, form, kindName),
-				);
+		const tested = testedKinds.has(kind);
+		for (const [at, form] of forms.entries()) {
+			const test = tested
+				? headwordQuestion(whole.key, form, kind)
+				: undefined;
+			if (test !== undefined) questions[`h_${index}_${at}`] = noul(test);
+		}
 	}
 	return questions;
 }
