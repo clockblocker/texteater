@@ -11,8 +11,16 @@
  * - A hyphenated word's part that dumcorpus authors only as a pronoun is a
  *   PRON (`dich` in a phrasal compound).
  * - A front phrase is a Locution part, its headword asked with its guide.
+ * - Outside a verb, a particle-like first part that is also a preposition
+ *   links to its ADP Lexeme, not to the verb Prefix (ADR 0054: `über` in
+ *   `überhaupt`); nothing outside a verb separates.
  */
-import { germanLexemePartTargets } from "dumcorpus/inventories";
+import {
+	germanAdpositionEntry,
+	germanLexemePartTargets,
+	germanSeparableParticles,
+} from "dumcorpus/inventories";
+import type * as Dumrel from "dumrel/types";
 import { allRoutes, checkedRouteKey, type RouteKey } from "../routes.js";
 import { onlyPronoun } from "./forms.js";
 import type { OpenPart } from "./targets.js";
@@ -124,4 +132,33 @@ export function openWordParts(
 			},
 		];
 	});
+}
+
+/**
+ * The ADP Lexeme a word of Kind `kind` links its particle piece to, by
+ * the piece's Prefix Canonical Form (`über-`): outside a verb, a true
+ * separable particle that the ADP Case Table lists as a preposition is
+ * that preposition (ADR 0054, the user, 2026-10-27). Undefined inside a
+ * verb, for an inseparable prefix (`ver-`), or for a particle that is no
+ * preposition (`weg-`), which keep their Prefix Morpheme.
+ */
+export function particleAdposition(
+	prefix: string,
+	kind: string,
+): Dumrel.UnitShadow | undefined {
+	const particle = prefix.endsWith("-") ? prefix.slice(0, -1) : prefix;
+	if (
+		kind === "VERB" ||
+		!germanSeparableParticles.has(particle) ||
+		germanAdpositionEntry({ family: "Lexeme", canonicalForm: particle }) ===
+			null
+	)
+		return undefined;
+	// Sound: German's Lexeme ADP route has a Unit Shadow shape.
+	return {
+		language: "de",
+		family: "Lexeme",
+		kind: "ADP",
+		canonicalForm: particle,
+	} as Dumrel.UnitShadow;
 }

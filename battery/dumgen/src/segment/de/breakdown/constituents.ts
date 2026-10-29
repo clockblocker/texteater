@@ -107,7 +107,11 @@ import {
 	withVerbBases,
 	wordQuestion,
 } from "./word-gates.js";
-import { cranberryShaped, openWordParts } from "./word-parts.js";
+import {
+	cranberryShaped,
+	openWordParts,
+	particleAdposition,
+} from "./word-parts.js";
 import {
 	analysisInstructions,
 	compoundRouteGuide,
@@ -151,13 +155,15 @@ const morpheme = (kind: string, canonicalForm: string) =>
 
 /**
  * An analysis's pieces with their links: a word part's from jev, an
- * affix's from the inventory, and a first word part's letters past its
- * form split off as its Interfix, unless they are an adjective's frozen
+ * affix's from the inventory, a particle's outside a verb its ADP
+ * (`particleAdposition`), and a first word part's letters past its form
+ * split off as its Interfix, unless they are an adjective's frozen
  * attributive ending (`[[lang|Lange]] + [[Weile|weile]]`, ADR 0050).
  */
 function linkedPieces(
 	pieces: readonly WordPiece[],
 	words: readonly Dumrel.UnitShadow[],
+	kind: string,
 ): ProducedPiece[] {
 	const result: ProducedPiece[] = [];
 	let word = 0;
@@ -165,7 +171,11 @@ function linkedPieces(
 		if (piece.role === "Prefix" || piece.role === "Suffix") {
 			result.push({
 				letters: piece.letters,
-				target: morpheme(piece.role, piece.canonicalForm),
+				target:
+					(piece.role === "Prefix"
+						? particleAdposition(piece.canonicalForm, kind)
+						: undefined) ??
+					morpheme(piece.role, piece.canonicalForm),
 			});
 			continue;
 		}
@@ -339,10 +349,14 @@ const wordConstituents = Effect.fnUntraced(function* (
 			: [
 					{
 						...base,
-						routes: [baseRoute.route],
-						...(baseRoute.forms === undefined
+						routes: baseRoute.routes,
+						...(baseRoute.nouns === undefined
 							? {}
-							: { forms: baseRoute.forms }),
+							: {
+									routeForms: {
+										"Lexeme/NOUN": baseRoute.nouns,
+									},
+								}),
 					},
 					...parts.slice(1),
 				],
@@ -351,7 +365,7 @@ const wordConstituents = Effect.fnUntraced(function* (
 		routeGuideOf(analysis, kind),
 		{ NOUN: nounPartFormGuide },
 	);
-	return constituentsOf(linkedPieces(analysis.pieces, targets));
+	return constituentsOf(linkedPieces(analysis.pieces, targets, kind));
 });
 
 /**

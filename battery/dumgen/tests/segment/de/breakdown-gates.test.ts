@@ -55,12 +55,12 @@ describe("a prefix's base is offered as a verb only when it is one (proposal 3)"
 		expect(analysis).not.toContain("be- (prefix) + mannen");
 	});
 
-	test("brennen is a verb: both analyses stay and the analysis question picks", async () => {
+	test("brennen is a verb: ver- + brennen stays and ver- + brenn + -en leaves (#1241 round 8)", async () => {
 		const yes = judgeWanting("ver- (prefix) + brennen", "brennen");
 		await run(input("Lexeme", "VERB", "verbrennen", "🔥"), yes);
 		const analysis = askedAt(yes, "breakdown-analysis").join(" ");
 		expect(analysis).toContain("ver- (prefix) + brennen");
-		expect(analysis).toContain("ver- (prefix) + brenn + -en");
+		expect(analysis).not.toContain("ver- (prefix) + brenn + -en");
 	});
 });
 

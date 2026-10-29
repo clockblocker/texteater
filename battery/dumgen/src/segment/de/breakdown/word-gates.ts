@@ -8,7 +8,10 @@
  *   verb (`ver- + brennen`) is offered only when the base is a verb a
  *   dictionary lists; else only the prefix, the noun or adjective inside
  *   and the citation ending stay (`ver- + gold + -en`: there is no verb
- *   golden). Both stay when it is, and the analysis question picks.
+ *   golden). When it is, the prefix and the base verb stay alone, and the
+ *   prefix, the noun or adjective and the citation ending go (#1241 round
+ *   8): a verb made from a verb is not remade from that verb's noun, so
+ *   the sense check no longer settles the bracketing.
  * - **A cranberry piece is no word.** A noun's first part is offered as a
  *   cranberry Root only when it is no word of its own and no word's stem
  *   (`Kau` is kauen's), so a verb stem keeps its route question's share.
@@ -20,7 +23,9 @@
  *   unasked; a base that is both or neither keeps its route question.
  *   Before -ig and -lich, the noun is tested with its umlaut undone and its
  *   dropped -e restored (`gnäd` is Gnade), and a base that is also an
- *   adjective keeps its route question (#1241 round 6).
+ *   adjective keeps its route question (#1241 round 6); one that is no
+ *   adjective but both a verb's stem and a noun is asked between those two
+ *   alone, the likelier first (#1241 round 8).
  * - **A fossilized prefix stays inside the word** (`prefix-cut.ts`). An
  *   analysis or a split that cuts `ge-` off stays only when jev weighs the
  *   affix test passed (system ADR 0051, #1243).
@@ -76,6 +81,16 @@ export const adjectiveQuestion = (key: string, letters: string) =>
 export const wordQuestion = (key: string, letters: string) =>
 	`In \`${key}\`, is "${letters}" a word of its own, or a word's stem without its ending (Kau for kauen), that a dictionary lists as a headword? Answer no for a piece that lives on only inside words like this one.`;
 
+/** Whether `analysis` is a prefix + base + citation ending one with the prefix `letters`. */
+const endingRival = ({ pieces }: WordAnalysis, letters: string) => {
+	const [first, , ending] = pieces;
+	return (
+		first?.role === "Prefix" &&
+		first.letters === letters &&
+		ending?.role === "Ending"
+	);
+};
+
 /**
  * The base a prefix + verb analysis offers (`brennen` of `ver + brennen`)
  * when the same word also has a prefix + base + citation ending analysis
@@ -88,21 +103,18 @@ function rivalledBase(
 	const [prefix, base, ...rest] = analysis.pieces;
 	if (prefix?.role !== "Prefix" || base?.role !== "Word" || rest.length > 0)
 		return undefined;
-	const rivalled = analyses.some(({ pieces }) => {
-		const [first, , ending] = pieces;
-		return (
-			first?.role === "Prefix" &&
-			first.letters === prefix.letters &&
-			ending?.role === "Ending"
-		);
-	});
+	const rivalled = analyses.some((other) =>
+		endingRival(other, prefix.letters),
+	);
 	return rivalled ? base.letters : undefined;
 }
 
 /**
  * The analyses with every prefix + verb analysis whose base jev weighs no
- * verb of its own taken out, in one request; unchanged, unasked, when no
- * such analysis has a prefix + base + citation ending rival.
+ * verb of its own taken out, and for one whose base jev weighs a verb, its
+ * prefix + base + citation ending rivals, in one request; unchanged,
+ * unasked, when no such analysis has a prefix + base + citation ending
+ * rival.
  */
 export const withVerbBases = Effect.fnUntraced(function* (
 	analyses: readonly WordAnalysis[],
@@ -132,9 +144,23 @@ export const withVerbBases = Effect.fnUntraced(function* (
 	const noVerb = new Set(
 		bases.filter((_, index) => noulOf(answers, `b_${index}`) < gateFloor),
 	);
+	const verbPrefixes = new Set(
+		analyses.flatMap((analysis) => {
+			const base = rivalledBase(analysis, analyses);
+			const [prefix] = analysis.pieces;
+			return base === undefined ||
+				noVerb.has(base) ||
+				prefix === undefined
+				? []
+				: [prefix.letters];
+		}),
+	);
 	return analyses.filter((analysis) => {
 		const base = rivalledBase(analysis, analyses);
-		return base === undefined || !noVerb.has(base);
+		if (base !== undefined) return !noVerb.has(base);
+		return ![...verbPrefixes].some((letters) =>
+			endingRival(analysis, letters),
+		);
 	});
 });
 
@@ -155,20 +181,25 @@ export const mayBeCranberry = Effect.fnUntraced(function* (
 /** The suffixes before which a base noun may show an umlaut and drop its -e (`gnäd` + -ig is Gnade). */
 const nounRestoringSuffixes: ReadonlySet<string> = new Set(["ig", "lich"]);
 
-/** A suffix's base settled unasked: its route, and the nouns it may be when code tested them. */
+/**
+ * The routes a suffix's base may take, the likelier first, and the nouns it
+ * may be when code tested them: one route settles it unasked.
+ */
 export type BaseRoute = {
-	readonly route: RouteKey;
-	readonly forms?: readonly string[];
+	readonly routes: readonly RouteKey[];
+	readonly nouns?: readonly string[];
 };
 
 /**
- * The route a suffix's base takes unasked, by its letters: VERB when jev
+ * The routes a suffix's base may take, by its letters: VERB when jev
  * weighs them a verb's stem and no noun, NOUN when a noun and no verb's
- * stem, in one request; undefined, unasked, after a suffix with one base
- * Kind, which already routes it. Before -ig and -lich the noun test runs
- * on the nouns the letters may stand for (`restoredNouns`), the ones that
- * pass are the base's forms, and a base that is also an adjective is left
- * to its route question.
+ * stem, in one request; undefined, so every word route stays, after a
+ * suffix with one base Kind, which already routes it. Before -ig and -lich
+ * the noun test runs on the nouns the letters may stand for
+ * (`restoredNouns`), the ones that pass are the base's forms, a base that
+ * is also an adjective is left to its route question, and one that is no
+ * adjective but both a verb's stem and a noun takes VERB or NOUN, the
+ * likelier first: the adjective test said no to the ADJ route.
  */
 export const suffixBaseRoute = Effect.fnUntraced(function* (
 	base: string,
@@ -195,19 +226,29 @@ export const suffixBaseRoute = Effect.fnUntraced(function* (
 		state: whole.state,
 		questions,
 	});
-	const verb = noulOf(answers, "b_0") >= gateFloor;
-	const listed = nouns
+	const verbWeight = noulOf(answers, "b_0");
+	const verb = verbWeight >= gateFloor;
+	const weighed = nouns
 		.map((noun, index) => ({ noun, weight: noulOf(answers, `n_${index}`) }))
 		.filter(({ weight }) => weight >= gateFloor)
-		.sort((left, right) => right.weight - left.weight)
-		.map(({ noun }) => noun);
+		.sort((left, right) => right.weight - left.weight);
+	const listed = weighed.map(({ noun }) => noun);
 	const noun = listed.length > 0;
 	const adjective = restoring && noulOf(answers, "a_0") >= gateFloor;
-	if (verb === noun || adjective) return undefined;
-	if (verb) return { route: "Lexeme/VERB" };
-	return restoring
-		? { route: "Lexeme/NOUN", forms: listed }
-		: { route: "Lexeme/NOUN" };
+	const nounForms = restoring ? { nouns: listed } : {};
+	if (adjective || (!verb && !noun)) return undefined;
+	if (verb && noun) {
+		if (!restoring) return undefined;
+		const nounFirst = (weighed[0]?.weight ?? 0) > verbWeight;
+		return {
+			routes: nounFirst
+				? ["Lexeme/NOUN", "Lexeme/VERB"]
+				: ["Lexeme/VERB", "Lexeme/NOUN"],
+			...nounForms,
+		};
+	}
+	if (verb) return { routes: ["Lexeme/VERB"] };
+	return { routes: ["Lexeme/NOUN"], ...nounForms };
 });
 
 /**

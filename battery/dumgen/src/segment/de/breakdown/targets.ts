@@ -35,6 +35,10 @@ export type OpenPart = {
 	readonly cranberry?: true;
 	/** Its candidate Canonical Forms, when code knows them better than `forms.ts`. */
 	readonly forms?: readonly string[];
+	/** Its candidate Canonical Forms on one route, over `forms` (a base's tested nouns). */
+	readonly routeForms?: Readonly<
+		Partial<Record<RouteKey, readonly string[]>>
+	>;
 	/** Closes its headword question, when its forms need one. */
 	readonly formGuide?: string;
 };
@@ -125,10 +129,13 @@ export const partTargets = Effect.fnUntraced(function* (
 		return routeOf(options, choiceOf(routeAnswers, `r_${index}`).choice);
 	});
 	const candidates = parts.map((part, index) => {
-		const route = routes[index] ?? "";
+		const route = routes[index];
 		if (route === rootKey) return [part.reads.toLocaleLowerCase("de")];
+		const routeForms =
+			route === undefined ? undefined : part.routeForms?.[route];
+		if (routeForms !== undefined) return routeForms;
 		if (part.forms !== undefined) return part.forms;
-		const [family = "", kind = ""] = route.split("/");
+		const [family = "", kind = ""] = (route ?? "").split("/");
 		return formCandidates(part.reads, family, kind);
 	});
 	const formQuestions: Questions = {};

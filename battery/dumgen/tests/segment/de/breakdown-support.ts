@@ -153,6 +153,7 @@ export function senseJudge(
 	return {
 		ask,
 		stages: () => requests.map(({ stage }) => stage),
+		requests: (): readonly AskRequest[] => requests,
 		texts: () =>
 			requests.flatMap(({ questions }) =>
 				Object.values(questions).map(({ instructions }) =>
