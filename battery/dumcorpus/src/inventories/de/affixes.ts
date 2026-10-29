@@ -150,6 +150,18 @@ export const germanSuffixes: readonly GermanAffix[] = [
 	suffix("sam"),
 	suffix("haft"),
 	suffix("los"),
+	/*
+	 * -voll makes adjectives from nouns: DWDS has it as an Affix of its
+	 * own, "-voll · Affix produktiv", whose word-formation list holds only
+	 * noun bases (https://www.dwds.de/wb/-voll), and its Wortzerlegungen
+	 * cut it so: `Mühe -voll` (https://www.dwds.de/wb/mühevoll). The
+	 * adverbial -s has no DWDS affix entry and no Wortzerlegung cuts it
+	 * (DWDS gives such adverbs a Grundform), so it stays off this list.
+	 */
+	{
+		...suffix("voll", "voll", "full of or marked by what {base} names"),
+		baseKind: "NOUN",
+	},
 	suffix("weise"),
 	suffix("wärts"),
 	/*

@@ -12,15 +12,19 @@ import type { EntryType, Questions } from "@typesafe-ai/sdk";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import {
+	type Answers,
 	type Ask,
 	type AskFailure,
 	askAny,
 	choice,
 	choiceOf,
+	noul,
+	noulOf,
 } from "../../ask.js";
 import { type RouteKey, routeCriteria } from "../routes.js";
 import {
 	formCandidates,
+	headwordQuestion,
 	offersReflexive,
 	reflexiveFormGuide,
 } from "./forms.js";
@@ -88,6 +92,71 @@ const kindNames: Readonly<Record<string, string>> = {
 	NUM: "numeral",
 };
 
+/** A headword test's yes must reach this for its form to count as a headword. */
+const headwordFloor = 0.5;
+
+/**
+ * The index of the form a part takes among its `count` candidates: the
+ * headword question's pick, unless its forms were tested as headwords,
+ * then the first, the letters as they stand, when it passes, else the
+ * passing form the headword question weighs most; with none passing, its
+ * pick.
+ */
+function formIndex(answers: Answers, index: number, count: number): number {
+	const { choice: picked, probabilities } = choiceOf(answers, `f_${index}`);
+	const pick = Number(picked.slice(1));
+	if (answers[`h_${index}_0`] === undefined) return pick;
+	const passing = Array.from({ length: count }, (_, at) => at).filter(
+		(at) => noulOf(answers, `h_${index}_${at}`) >= headwordFloor,
+	);
+	if (passing.includes(0)) return 0;
+	const weight = (at: number) => probabilities[`f${at}`] ?? 0;
+	const [heaviest] = passing.sort(
+		(left, right) => weight(right) - weight(left),
+	);
+	return heaviest ?? pick;
+}
+
+/** How a part's headword question is closed and whether its forms are tested, by Kind. */
+type FormChecks = {
+	readonly formGuides: Readonly<Partial<Record<string, string>>>;
+	readonly testedKinds: ReadonlySet<string>;
+};
+
+/**
+ * The headword question of every part with two or more candidate forms,
+ * and for a part of a tested Kind each form's headword test, in one
+ * request's questions.
+ */
+function formQuestionsOf(
+	parts: readonly OpenPart[],
+	candidates: readonly (readonly string[])[],
+	routes: readonly (PartRoute | undefined)[],
+	whole: Whole,
+	{ formGuides, testedKinds }: FormChecks,
+): Questions {
+	const questions: Questions = {};
+	for (const [index, part] of parts.entries()) {
+		const forms = candidates[index] ?? [];
+		if (forms.length < 2) continue;
+		const [, kind = ""] = (routes[index] ?? "").split("/");
+		const guide =
+			part.formGuide ??
+			(offersReflexive(forms) ? reflexiveFormGuide : formGuides[kind]);
+		const kindName = kindNames[kind] ?? kind;
+		questions[`f_${index}`] = choice(
+			`In \`${whole.key}\`, the part "${part.reads}" is a ${kindName}. Which is its dictionary headword?${guide ? ` ${guide}` : ""}`,
+			Object.fromEntries(forms.map((form, at) => [`f${at}`, form])),
+		);
+		if (testedKinds.has(kind))
+			for (const [at, form] of forms.entries())
+				questions[`h_${index}_${at}`] = noul(
+					headwordQuestion(whole.key, form, kindName),
+				);
+	}
+	return questions;
+}
+
 /**
  * Each part's Unit Shadow, in order. Its route is the only one offered or
  * jev's pick, then its Canonical Form the only candidate or jev's pick; a
@@ -95,7 +164,8 @@ const kindNames: Readonly<Record<string, string>> = {
  * question: how a word's or a phraseme's parts are judged. The route
  * descriptions themselves are segment.inUnits's and stay shared.
  * `formGuides` close the headword question of a part of a given Kind,
- * unless the part brings its own guide.
+ * unless the part brings its own guide, and a part of a `testedKinds`
+ * Kind has each of its forms tested as a headword in the same request.
  */
 export const partTargets = Effect.fnUntraced(function* (
 	parts: readonly OpenPart[],
@@ -103,6 +173,7 @@ export const partTargets = Effect.fnUntraced(function* (
 	ask: Ask,
 	routeGuide?: string,
 	formGuides: Readonly<Partial<Record<string, string>>> = {},
+	testedKinds: ReadonlySet<string> = new Set(),
 ): Effect.fn.Return<Dumrel.UnitShadow[], AskFailure> {
 	const offered = parts.map((part): readonly PartRoute[] =>
 		part.cranberry ? [...part.routes, rootKey] : part.routes,
@@ -138,19 +209,10 @@ export const partTargets = Effect.fnUntraced(function* (
 		const [family = "", kind = ""] = (route ?? "").split("/");
 		return formCandidates(part.reads, family, kind);
 	});
-	const formQuestions: Questions = {};
-	for (const [index, part] of parts.entries()) {
-		const forms = candidates[index] ?? [];
-		const [, kind = ""] = (routes[index] ?? "").split("/");
-		const guide =
-			part.formGuide ??
-			(offersReflexive(forms) ? reflexiveFormGuide : formGuides[kind]);
-		if (forms.length > 1)
-			formQuestions[`f_${index}`] = choice(
-				`In \`${whole.key}\`, the part "${part.reads}" is a ${kindNames[kind] ?? kind}. Which is its dictionary headword?${guide ? ` ${guide}` : ""}`,
-				Object.fromEntries(forms.map((form, at) => [`f${at}`, form])),
-			);
-	}
+	const formQuestions = formQuestionsOf(parts, candidates, routes, whole, {
+		formGuides,
+		testedKinds,
+	});
 	const formAnswers = yield* askAny(ask, {
 		stage: "breakdown-forms",
 		state: whole.state,
@@ -159,9 +221,7 @@ export const partTargets = Effect.fnUntraced(function* (
 	return parts.map((_, index) => {
 		const forms = candidates[index] ?? [];
 		const picked =
-			forms.length > 1
-				? Number(choiceOf(formAnswers, `f_${index}`).choice.slice(1))
-				: 0;
+			forms.length > 1 ? formIndex(formAnswers, index, forms.length) : 0;
 		const form = forms[picked];
 		const route = routes[index];
 		if (form === undefined || route === undefined)

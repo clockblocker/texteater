@@ -58,6 +58,7 @@ import {
 } from "../../breakdown.js";
 import { allRoutes, type RouteKey } from "../routes.js";
 import {
+	headwordQuestion,
 	inflectedDeterminerOrPronoun,
 	nounPartFormGuide,
 	onlyPronoun,
@@ -127,6 +128,13 @@ import { senseChecked, weighedOptions } from "./word-senses.js";
 const lexemeRoutes = allRoutes.filter((key) => key.startsWith("Lexeme/"));
 const locutionRoutes = allRoutes.filter((key) => key.startsWith("Locution/"));
 const articleRoutes: readonly RouteKey[] = ["Lexeme/NOUN", "Lexeme/PROPN"];
+
+/** The Kinds whose word parts have their candidate forms tested as headwords (#1241 round 9). */
+const headwordTestedKinds: ReadonlySet<string> = new Set([
+	"NOUN",
+	"PROPN",
+	"ADJ",
+]);
 
 /** A Locution candidate's weight must reach this to make one part. */
 const locutionFloor = 0.5;
@@ -364,9 +372,19 @@ const wordConstituents = Effect.fnUntraced(function* (
 		ask,
 		routeGuideOf(analysis, kind),
 		{ NOUN: nounPartFormGuide },
+		headwordTestedKinds,
 	);
 	return constituentsOf(linkedPieces(analysis.pieces, targets, kind));
 });
+
+/** Two word pieces, for the univerbation's sense texts in the disjointness test. */
+const twoWords: WordAnalysis = {
+	pieces: [
+		{ role: "Word", letters: "…" },
+		{ role: "Word", letters: "…" },
+	],
+	label: "…",
+};
 
 /**
  * Every text segment.inConstituents's questions and options carry beyond
@@ -384,6 +402,7 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	phraseFormGuide,
 	reflexiveFormGuide,
 	nounPartFormGuide,
+	headwordQuestion("word", "…", "noun"),
 	verbBaseQuestion("word", "…"),
 	wordQuestion("word", "…"),
 	nounQuestion("word", "…"),
@@ -392,6 +411,8 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	prefixCutOption("word", "…", "…"),
 	keptPrefixOption("word", "…"),
 	senseQuestion({ pieces: [], label: "…" }, "…", "…", "NOUN"),
+	senseQuestion(twoWords, "…", "…", "ADV"),
+	senseOption(twoWords, "ADV"),
 	senseInstructions("…", "…"),
 	senseOption({ pieces: [], label: "…" }, "NOUN"),
 	noSenseOption,

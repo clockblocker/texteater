@@ -123,6 +123,8 @@ function adjectiveForms(word: string): string[] {
 	const shown = lower(word);
 	return [
 		shown,
+		// An umlaut before a suffix: `röt` of rot (#1241 round 9).
+		withoutUmlaut(shown),
 		...defined(
 			germanAttributiveEndings.map((ending) => stripped(shown, ending)),
 		).flatMap(germanStemCitations),
@@ -166,6 +168,14 @@ export const reflexiveFormGuide =
  */
 export const nounPartFormGuide =
 	"A noun inside a compound or before a suffix often drops its final -e (Kirch in Kirchturm is Kirche). Pick the noun a dictionary lists as a headword, never letters no dictionary lists as a noun.";
+
+/**
+ * Whether a word part's candidate Canonical Form is a headword of its
+ * Kind (#1241 round 9), asked beside its headword question: `kind` is how
+ * the question names the Kind (`noun`).
+ */
+export const headwordQuestion = (key: string, form: string, kind: string) =>
+	`In \`${key}\`, is "${form}", spelled exactly so, a ${kind} a dictionary lists as a headword: its citation spelling, not a plural or an inflected spelling? Answer no for letters only a longer word has.`;
 
 /** Whether `forms` offer the reflexivity unit beside another form, so its guide closes the question. */
 export const offersReflexive = (forms: readonly string[]) =>
@@ -225,7 +235,12 @@ export function formCandidates(
 			case "NOUN":
 				return nounForms(word);
 			case "PROPN":
-				return [capitalized(word), ...defined([stripped(word, "s")])];
+				return [
+					capitalized(word),
+					...defined([stripped(word, "s")]),
+					// An umlaut before a suffix (#1241 round 9).
+					withoutUmlaut(capitalized(word)),
+				];
 			case "VERB":
 				return verbForms(word);
 			case "ADJ":

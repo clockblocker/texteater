@@ -2,7 +2,10 @@
  * The questions of German `segment.inConstituents`'s sense check
  * (`word-senses.ts`), written by code from each contender's shape: a
  * compound is a kind of its head, a derivation what its suffix makes of its
- * base (dumcorpus's affix inventory glosses the common suffixes). The
+ * base (dumcorpus's affix inventory glosses the common suffixes). Two
+ * words of a Kind that forms no compound with a head, an adverb or a
+ * conjunction, were written together, and a dictionary's split decides
+ * them however far their sense drifted (ADR 0054; #1241 round 9). The
  * absolute question asks whether one analysis gives the sense; the
  * relative one (#1241 round 7) which of the splits does.
  *
@@ -24,6 +27,22 @@ function suffixSense(suffix: WordPiece, base: string): string {
 	).replaceAll("{base}", base);
 }
 
+/**
+ * The Kinds whose two-word analysis is a compound with a head that the
+ * first word tells apart; any other Kind's two words were written
+ * together (an adverb's or a conjunction's).
+ */
+const headedKinds: ReadonlySet<string> = new Set([
+	"NOUN",
+	"PROPN",
+	"VERB",
+	"ADJ",
+]);
+
+/** The words two pieces were written together from, after "a dictionary's word formation split(s) it". */
+const writtenTogether = (first: string, second: string) =>
+	`into the words ${first} and ${second}, written together as one word, however far its sense has drifted from theirs`;
+
 /** The question an analysis's sense must pass, by its shape, after "Think of … in the sense …". */
 function testOf(analysis: WordAnalysis, kind: string): string {
 	const [first, second, third] = analysis.pieces;
@@ -34,6 +53,8 @@ function testOf(analysis: WordAnalysis, kind: string): string {
 			const head = capitalized(second.letters);
 			return `Is it a ${head}, a kind of ${head} that ${first.letters} tells apart? Answer no when it is no ${head} at all.`;
 		}
+		if (!headedKinds.has(kind))
+			return `Does a dictionary's word formation split it ${writtenTogether(first.letters, second.letters)}? Answer no when its letters only happen to contain them.`;
 		return `Does it mean ${second.letters}, in a way ${first.letters} tells apart? Answer no when it does not mean ${second.letters} at all.`;
 	}
 	if (first?.role === "Word" && second?.role === "Suffix" && !third)
@@ -72,6 +93,8 @@ function claimOf(analysis: WordAnalysis, kind: string): string {
 			const head = capitalized(second.letters);
 			return `it is a ${head}, a kind of ${head} that ${first.letters} tells apart`;
 		}
+		if (!headedKinds.has(kind))
+			return `a dictionary's word formation splits it ${writtenTogether(first.letters, second.letters)}`;
 		return `it means ${second.letters}, in a way ${first.letters} tells apart`;
 	}
 	if (first?.role === "Word" && second?.role === "Suffix" && !third)
