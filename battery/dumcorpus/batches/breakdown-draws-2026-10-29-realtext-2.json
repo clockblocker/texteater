@@ -1,5 +1,5 @@
 {
-	"note": "Part 2 of 2 of the draw log of breakdown-heldout-2026-10-29-realtext (round 8 of #1241), draws 98 to 193, kept apart so each file stays small: every judged draw, accepted or not, in draw order.",
+	"note": "Part 2 of 2 of the draw log of breakdown-heldout-2026-10-29-realtext (round 8 of #1241), draws 98 to 191, kept apart so each file stays small: every judged draw, accepted or not, in draw order.",
 	"batch": "breakdown-heldout-2026-10-29-realtext",
 	"seed": 2026102908,
 	"drawLogFormat": "One string per draw, in draw order: draw · token · Scroll #sentence position · the click unit in context · verdict: reason",
@@ -54,7 +54,7 @@
 		"145 · ich · Einundzwanzigstes Kapitel #118 · Lexeme PRON ich · reject: closed route",
 		"146 · der · Zweiunddreißigstes Kapitel #186 · Lexeme DET der · reject: closed route",
 		"147 · fühlen · Fünfunddreißigstes Kapitel #57 · Lexeme VERB fühlen · accept",
-		"148 · vielleicht · Zweiunddreißigstes Kapitel #2 · Lexeme PART vielleicht · reject: closed route",
+		"148 · vielleicht · Zweiunddreißigstes Kapitel #2 · Lexeme ADV vielleicht ('perhaps') · accept",
 		"149 · und · Einundzwanzigstes Kapitel #145 · Lexeme CCONJ und · reject: already Breakdown gold",
 		"150 · denn · Erstes Kapitel #43 · Lexeme PART denn · reject: closed route",
 		"151 · her · Sechsunddreißigstes Kapitel #126 · Locution ADV hin und her · reject: not the unit's first member (hin und her)",
@@ -97,8 +97,6 @@
 		"188 · zu · Siebzehntes Kapitel #148 · Lexeme PART zu (zu Feiernden) · reject: closed route",
 		"189 · sagte · Fünfzehntes Kapitel #130 · Lexeme VERB sagen · reject: already Breakdown gold",
 		"190 · noch · Zwölftes Kapitel #23 · Lexeme ADV noch (noch einmal) · reject: already Breakdown gold",
-		"191 · legte · Vierundzwanzigstes Kapitel #332 · Lexeme VERB legen · accept",
-		"192 · nun · Dreizehntes Kapitel #28 · Lexeme ADV nun · reject: its Reading was accepted before",
-		"193 · Vetter · Vierundzwanzigstes Kapitel #28 · Lexeme NOUN Vetter (Vetter Briest) · accept"
+		"191 · legte · Vierundzwanzigstes Kapitel #332 · Lexeme VERB legen · accept"
 	]
 }

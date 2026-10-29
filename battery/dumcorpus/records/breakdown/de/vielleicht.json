@@ -1,0 +1,65 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "vielleicht",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🤷"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "viel",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "viel",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": "leicht",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "leicht",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: vielleicht",
+				"url": "https://www.dwds.de/wb/vielleicht",
+				"supports": "The Wortzerlegung viel leicht"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "am meisten vielleicht dem alten Geheimrat Rummschüttel, perhaps: the adverb, not the modal particle. DWDS splits it viel + leicht (ADR 0050); viel, used adverbially, is the comparable ADV viel (Rule de/quantifier-by-use)."
+	}
+}

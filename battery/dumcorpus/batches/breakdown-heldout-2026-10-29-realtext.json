@@ -1,5 +1,5 @@
 {
-	"note": "Held-out real-text batch for German segment.inConstituents and segment.inMorphemes, round 8 of #1241, authored 2026-10-29 as Draft Breakdown Records in records/breakdown/de. Its 60 targets were sampled uniformly at random from the same frame as rounds 5 to 7 (breakdown-heldout-2026-10-25-realtext, -25b-realtext and -26-realtext, all now promoted to tuning), with a new seed, and gold was authored only after sampling, so no target was replaced, skipped or reordered for being easy, hard or odd; rows RT1 to RT60 follow draw order. The frame is far from exhausted: of its 95,628 word tokens, 193 draws were judged. Three accepted draws were excluded after sampling as structural snags and replaced by the next accepted draws, 187, 191 and 193 (see sampling): draw 40, Entwicklung, whose verb stem Entwickl drops the inner e of entwickeln; draw 73, the inn's name Zum Fürsten Bismarck, whose part Fürsten shows a weak noun's -en; and draw 120, soviel, the old one-word spelling of so viel, which no Lemma spells. The lab scores these records in segment-in-constituents/de:realtext, the round's headline set, and its bottom words in segment-in-morphemes/de:realtext. Gold: 41 of 60 have no Constituents: 30 declinable bottom words with a Root and an Ending (verbs nennen, lassen, hören, denken, leben, fahren, schweigen, glauben, suchen, setzen, fühlen, legen with en; nouns Elite, Blume with e; spät, Form, gesamt, schön, Jahr, jung, Quell, devot, Angst, schwarz, halb, ganz, Akt, Hund, Ruck, Vetter with ∅), 6 indeclinables with a Root and no Ending (oder, aber, nun, morgen, trotz, weil), and 5 proper names with a Root and ∅ (Waterloo, Annie, Kessin, Mirambo, Gieshübler). 19 have Constituents: 8 derivations (verdenken, nachmittags = Nachmittag + -s by en.wiktionary, bedeuten, mühevoll = Mühe + -voll, holländisch, Hüter, Erregung, versprechen), 5 compounds (geradezu = gerade + zu, mittlerweile = mittler + Weile by en.wiktionary, Lederlack, solange = so + lange by en.wiktionary, Frühstück), 4 particle verbs (aufspringen, hinweisen, einsegnen, vorkommen), 1 proper name (Zwicker = zwicken + -er, as DWDS splits the common noun) and 1 phraseme (Gott sei Dank). No target has a Source: a click unit with one is no segmenter case and was rejected at its draw. Every word split follows the DWDS Wortzerlegung, else the en.wiktionary etymology where DWDS gives none, every bottom word is one neither splits, and every Kind is the part of speech DWDS gives the sense, else en.wiktionary's (ADR 0054), each cited in its record. None may be an example in a Breakdown prompt (#693).",
+	"note": "Held-out real-text batch for German segment.inConstituents and segment.inMorphemes, round 8 of #1241, authored 2026-10-29 as Draft Breakdown Records in records/breakdown/de. Its 60 targets were sampled uniformly at random from the same frame as rounds 5 to 7 (breakdown-heldout-2026-10-25-realtext, -25b-realtext and -26-realtext, all now promoted to tuning), with a new seed, and gold was authored only after sampling, so no target was replaced, skipped or reordered for being easy, hard or odd; rows RT1 to RT60 follow draw order. The frame is far from exhausted: of its 95,628 word tokens, 191 draws were judged. Three accepted draws were excluded after sampling as structural snags, and drawing went on until 60 rows were accepted (see sampling): draw 40, Entwicklung, whose verb stem Entwickl drops the inner e of entwickeln; draw 73, the inn's name Zum Fürsten Bismarck, whose part Fürsten shows a weak noun's -en; and draw 120, soviel, the old one-word spelling of so viel, which no Lemma spells. The lab scores these records in segment-in-constituents/de:realtext, the round's headline set, and its bottom words in segment-in-morphemes/de:realtext. Gold: 40 of 60 have no Constituents: 29 declinable bottom words with a Root and an Ending (verbs nennen, lassen, hören, denken, leben, fahren, schweigen, glauben, suchen, setzen, fühlen, legen with en; nouns Elite, Blume with e; spät, Form, gesamt, schön, Jahr, jung, Quell, devot, Angst, schwarz, halb, ganz, Akt, Hund, Ruck with ∅), 6 indeclinables with a Root and no Ending (oder, aber, nun, morgen, trotz, weil), and 5 proper names with a Root and ∅ (Waterloo, Annie, Kessin, Mirambo, Gieshübler). 20 have Constituents: 8 derivations (verdenken, nachmittags = Nachmittag + -s by en.wiktionary, bedeuten, mühevoll = Mühe + -voll, holländisch, Hüter, Erregung, versprechen), 6 compounds (geradezu = gerade + zu, mittlerweile = mittler + Weile by en.wiktionary, Lederlack, solange = so + lange by en.wiktionary, vielleicht = viel + leicht, Frühstück), 4 particle verbs (aufspringen, hinweisen, einsegnen, vorkommen), 1 proper name (Zwicker = zwicken + -er, as DWDS splits the common noun) and 1 phraseme (Gott sei Dank). No target has a Source: a click unit with one is no segmenter case and was rejected at its draw. Every word split follows the DWDS Wortzerlegung, else the en.wiktionary etymology where DWDS gives none, every bottom word is one neither splits, and every Kind is the part of speech DWDS gives the sense, else en.wiktionary's (ADR 0054), each cited in its record. Judged 2026-10-29 by two independent judges, system and learner POV (#1241), each a separate agent that saw neither the other's verdicts nor the drafting notes, on all 60 rows, the three exclusions, the three Source rejections and the adversarial batch. They agreed on every Breakdown, Kind and core feature, on the exclusions and on the rejections. They split on one row, nennen (RT1), which carries contested and is reported apart from the headline until the user rules: a bottom word, or a conversion of Name with a Source and so no case. The system judge found draw 148, vielleicht 'perhaps', wrongly rejected as the modal particle; it is the ADV, now accepted, and Vetter (draw 193) fell past the 60th row. Both judges corrected Mirambo, Gieshübler's factotum, not a horse. Emoji descriptions: where both judges changed one it took their description (lassen 👐, Mirambo 👨, fahren 🚗, morgen 📅, setzen 🪞🪑, weil 🤔; Zwicker 🧑, the conventions' surname, and ADJ ganz 🌕, the existing gold's 'whole'); where one judge changed one and the other kept the draft, it took the changing judge's, which in every case applies the Emoji Description conventions' Reuse rule or table (Waterloo 🏘, trotz ☔, spät ⌛, jung 🌱, halb 🌓, vorkommen ⚡, Frühstück ☕🥐, legen 🫳); the Breakdown gold is the same either way. None may be an example in a Breakdown prompt (#693).",
 	"set": "realtext",
 	"sampling": {
 		"frame": "tf-demo Library's German Scrolls on 2026-10-25, as rounds 5 to 7 drew them: Effi Briest's 37 chapter Scrolls plus the Tagesschau article's German Sentences",
@@ -37,8 +37,8 @@
 				"reason": "structural snag: the old one-word spelling of so viel, which no Lemma spells: the Konjunktion soviel is another word, and so viel is two words one Segment can't stand for"
 			}
 		],
-		"replacements": "The excluded draws have no record in this batch and are scored in no set; the next accepted draws, 187 (Frühstück), 191 (legen) and 193 (Vetter), took their places, and drawing stopped there.",
-		"drawsJudged": 193,
+		"replacements": "The excluded draws have no record in this batch and are scored in no set; drawing went on until 60 rows were accepted, and stopped at draw 191 (legen).",
+		"drawsJudged": 191,
 		"drawLogFiles": [
 			"breakdown-draws-2026-10-29-realtext-1.json",
 			"breakdown-draws-2026-10-29-realtext-2.json"
@@ -51,7 +51,8 @@
 			"bucket": "bottom-word",
 			"split": "held-out",
 			"change": "new",
-			"draw": 1
+			"draw": 1,
+			"contested": "The judges split (#1241) on whether the row is a case at all: the learner judge keeps the bottom word nenn · en; the system judge rejects the draw, since DWDS's Etymologie calls nennen a derivation of the noun Name, a conversion whose Source is Name, as rounds 6 and 7 rejected küssen ← Kuss and wiegen ← Wiege. Reported apart from the headline until the user rules."
 		},
 		{
 			"row": "RT2",
@@ -455,6 +456,14 @@
 		},
 		{
 			"row": "RT52",
+			"record": "breakdown/de/vielleicht",
+			"bucket": "compound",
+			"split": "held-out",
+			"change": "new",
+			"draw": 148
+		},
+		{
+			"row": "RT53",
 			"record": "breakdown/de/versprechen",
 			"bucket": "derivation",
 			"split": "held-out",
@@ -462,7 +471,7 @@
 			"draw": 158
 		},
 		{
-			"row": "RT53",
+			"row": "RT54",
 			"record": "breakdown/de/vorkommen",
 			"bucket": "particle-verb",
 			"split": "held-out",
@@ -470,7 +479,7 @@
 			"draw": 165
 		},
 		{
-			"row": "RT54",
+			"row": "RT55",
 			"record": "breakdown/de/gott-sei-dank",
 			"bucket": "phraseme",
 			"split": "held-out",
@@ -478,7 +487,7 @@
 			"draw": 167
 		},
 		{
-			"row": "RT55",
+			"row": "RT56",
 			"record": "breakdown/de/hund",
 			"bucket": "bottom-word",
 			"split": "held-out",
@@ -486,7 +495,7 @@
 			"draw": 175
 		},
 		{
-			"row": "RT56",
+			"row": "RT57",
 			"record": "breakdown/de/blume",
 			"bucket": "bottom-word",
 			"split": "held-out",
@@ -494,7 +503,7 @@
 			"draw": 185
 		},
 		{
-			"row": "RT57",
+			"row": "RT58",
 			"record": "breakdown/de/ruck",
 			"bucket": "bottom-word",
 			"split": "held-out",
@@ -502,7 +511,7 @@
 			"draw": 186
 		},
 		{
-			"row": "RT58",
+			"row": "RT59",
 			"record": "breakdown/de/fruehstueck",
 			"bucket": "compound",
 			"split": "held-out",
@@ -510,20 +519,12 @@
 			"draw": 187
 		},
 		{
-			"row": "RT59",
+			"row": "RT60",
 			"record": "breakdown/de/legen",
 			"bucket": "bottom-word",
 			"split": "held-out",
 			"change": "new",
 			"draw": 191
-		},
-		{
-			"row": "RT60",
-			"record": "breakdown/de/vetter",
-			"bucket": "bottom-word",
-			"split": "held-out",
-			"change": "new",
-			"draw": 193
 		}
 	]
 }

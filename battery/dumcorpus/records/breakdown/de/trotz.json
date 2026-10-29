@@ -10,7 +10,7 @@
 			"canonicalForm": "trotz",
 			"coreFeatures": {}
 		},
-		"emojiDescription": "🛡"
+		"emojiDescription": "☔"
 	},
 	"knowledge": {
 		"breakdown": {
@@ -41,6 +41,6 @@
 		]
 	},
 	"notes": {
-		"rationale": "trotz aller guten Vorsätze, despite: an ADP the ADP Case Table does not author, so a segmenter case. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root trotz alone."
+		"rationale": "trotz aller guten Vorsätze, despite: the ADP Case Table lists its cases, but no Authored Inventory member is a Reading of it, so it is a segmenter case. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root trotz alone."
 	}
 }
