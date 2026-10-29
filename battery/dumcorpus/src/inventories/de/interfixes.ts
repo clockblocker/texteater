@@ -1,6 +1,6 @@
 /**
  * The German Interfixes, the closed set of linking elements (Fugenelemente)
- * a compound's Constituents may link to (system ADR 0050): `Arbeit + -s- +
+ * a compound's Constituents may link to (system ADR 0054): `Arbeit + -s- +
  * Amt`, `[[Gast|Gäst]] + [[-e-|e]] + [[Haus|haus]]`, `Kind + -er- + Garten`.
  * Each is spelled as a Morpheme Lemma's Canonical Form, hyphens on both
  * sides.

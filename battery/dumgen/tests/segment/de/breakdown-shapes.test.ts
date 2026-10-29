@@ -105,7 +105,7 @@ describe("E before a hyphen may be the prefix e- (DWDS 2e-)", () => {
 	});
 });
 
-describe("a hyphenated compound's front phrase may be a Locution (ADR 0050)", () => {
+describe("a hyphenated compound's front phrase may be a Locution (ADR 0054)", () => {
 	// DWDS: Kopf-an-Kopf-Rennen, Wortzerlegung "Kopf an Kopf" (Mehrwortausdruck) + "Rennen".
 	test("jev weighs the words before the last hyphen as one fixed expression", async () => {
 		const judge = judgeWanting("Kopf an Kopf", "Locution/ADV", "Rennen");

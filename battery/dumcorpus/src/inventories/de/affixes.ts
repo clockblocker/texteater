@@ -97,7 +97,7 @@ export const germanPrefixes: readonly GermanAffix[] = [
 ].map(prefix);
 
 /**
- * The prefixes that stand only before a hyphen (ADR 0050): DWDS's 2e-,
+ * The prefixes that stand only before a hyphen (ADR 0054): DWDS's 2e-,
  * short for *elektronisch*, which `E-Mail` links its `E` to. Kept apart
  * from `germanPrefixes`, so no word that merely opens with an e is cut
  * there.

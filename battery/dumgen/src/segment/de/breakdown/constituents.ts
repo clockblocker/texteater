@@ -254,7 +254,7 @@ const chosenAnalysis = Effect.fnUntraced(function* (
 
 /**
  * A flat hyphenated analysis with its front phrase as one Locution part,
- * when jev weighs that phrase a fixed expression of its own (ADR 0050:
+ * when jev weighs that phrase a fixed expression of its own (ADR 0054:
  * `[rund um die Uhr] + Betreuung`), else as it was (`Trimm-dich-Pfad`).
  */
 const withLocutionFront = Effect.fnUntraced(function* (

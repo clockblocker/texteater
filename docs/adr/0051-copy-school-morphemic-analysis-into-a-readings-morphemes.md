@@ -25,7 +25,8 @@ position (`Bio · logie`); there is no Confix Kind.
 ending as an Ending piece, a zero ending included, which is a piece with no
 letters: `ent · spann · en`, `haus · ∅`. The Constituents never hold an
 inflectional piece and show the citation ending as unlinked filler
-(ADR 0050). An indeclinable word has no Ending piece, not even ∅, since a
+([ADR 0054](./0054-split-a-german-word-as-its-dictionary-does.md)).
+An indeclinable word has no Ending piece, not even ∅, since a
 zero ending marks an empty slot in a paradigm and such a word has none:
 `obwohl`, `und`, `miteinander` = `mit · ein · ander`. A verb's `n` after
 -el or -er is a Surface of the Ending `-en`, not a Lemma of its own:

@@ -29,14 +29,14 @@ const citationEndings: Partial<Record<Dumling.Language, readonly string[]>> = {
 	de: ["en", "n"],
 };
 
-/** Each language's closed Interfix set, where it has one (ADR 0050). */
+/** Each language's closed Interfix set, where it has one (ADR 0054). */
 const interfixes: Partial<Record<Dumling.Language, ReadonlySet<string>>> = {
 	de: germanInterfixes,
 };
 
 /**
  * Each language's closed list of true separable particles, where it has one
- * (ADR 0050): a particle verb's first part links to the particle's Prefix
+ * (ADR 0054): a particle verb's first part links to the particle's Prefix
  * Morpheme, any other first part to its own Lexeme.
  */
 const separableParticles: Partial<
@@ -277,7 +277,7 @@ function sepPrefix(reading: Dumling.Reading): string | undefined {
 
 /**
  * Checks a separable verb's first linked part against the particle its
- * hasSepPrefix names (ADR 0050): the part shows the particle, and links to
+ * hasSepPrefix names (ADR 0054): the part shows the particle, and links to
  * the Prefix Morpheme (`ein-` in einkaufen) if the language's closed list
  * holds it as a true particle, else to its own Lexeme (NOUN `Teil` in
  * teilnehmen, ADJ `fest` in festhalten), the ruled one where the language

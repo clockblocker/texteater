@@ -1,5 +1,5 @@
 /**
- * German's linking elements in a compound's Constituents (system ADR 0050):
+ * German's linking elements in a compound's Constituents (system ADR 0054):
  * a linking element is its own piece, an Interfix from the closed set, so
  * `Gästehaus` = `[[Gast|Gäst]] + [[-e-|e]] + [[Haus|haus]]`. Code finds it
  * once jev has named the first part's Canonical Form: the letters a part

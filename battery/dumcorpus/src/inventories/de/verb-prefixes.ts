@@ -2,7 +2,7 @@
  * The German true separable particles (Verbpartikeln), closed: an of
  * anziehen, hinaus of hinauslaufen, dar of darstellen. A particle verb's
  * first constituent links to the particle's Prefix Morpheme (`ein-` in
- * einkaufen, ADR 0050), and a compound particle is one piece: hinaus- is
+ * einkaufen, ADR 0054), and a compound particle is one piece: hinaus- is
  * one Prefix, and its own Breakdown gives hin + aus.
  *
  * A first part is a particle when its free form is a preposition or an
@@ -186,7 +186,7 @@ export const germanSeparableParticles: ReadonlySet<string> = new Set([
  * The separable first parts that are words of their own, a noun (teil of
  * teilnehmen, stand of standhalten), an adjective (fest of festhalten, groß
  * of großziehen) or a verb (kennen of kennenlernen). A particle verb's first
- * constituent links to that Lexeme, not to a Prefix Morpheme (ADR 0050).
+ * constituent links to that Lexeme, not to a Prefix Morpheme (ADR 0054).
  * Unlike the particles, the list is open: it holds the ones Dumgen has
  * needed so far and every hasSepPrefix the gold names (flach and groß
  * joined from it, #1057). spazieren is none: verb and verb are written
@@ -230,7 +230,7 @@ type GermanLexemePartTarget = {
 };
 
 /**
- * The Lexeme each Lexeme first part links to, where it is ruled (ADR 0050,
+ * The Lexeme each Lexeme first part links to, where it is ruled (ADR 0054,
  * #1241): the ADR's examples, and the parts whose Lexeme is not plain. statt
  * and stand are nouns (Amtliches Regelwerk §34(3); DWDS traces stattfinden
  * to the noun Statt 'place', not the preposition, and splits standhalten as

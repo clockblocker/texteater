@@ -84,48 +84,9 @@ The rule is structural for every part of speech (`obwohl` = `ob + wohl`), and
 links follow form, not meaning. Opaque formations get Constituents
 (`bekommen` = `be- + kommen`), and no mark says a formation is opaque.
 
-For German:
-
-- The dictionary decides whether a word splits and how, however opaque it
-  now is: the DWDS Wortzerlegung, else the en.wiktionary etymology line,
-  else no split (the user, 2026-10-27): `verarzten` = `ver- + Arzt`
-  (DWDS), `Gewissen` = `ge- + wissen` (en.wiktionary), and `Gefahr`, split
-  by neither, has none.
-- The citation ending is unlinked filler: `verarzten` = `[[ver-|ver]] +
-  [[Arzt|arzt]] + en`. Constituents hold no inflectional piece.
-- A linking element is its own piece, linking to an Interfix from the closed
-  set s, es, n, en, e, er, ens: `Arbeit + -s- + Amt`, `[[Gast|Gäst]] +
-  [[-e-|e]] + [[Haus|haus]]`, `Kind + -er- + Garten`.
-- In a verb, a true particle links to its Prefix Morpheme (`auf-` in
-  `aufmachen`). A closed particle list in dumcorpus decides which, compound
-  particles included: `hinaus-` is one piece, and clicking it gives `hin +
-  aus`. The adverbs DWDS gives no verbal affix entry are true particles too
-  (`dabei`, `gegenüber`, `vorher`, `rückwärts`, `vorwärts`, `zuwider`, …).
-  So are the rare first parts (`zunichte` in `zunichtemachen`, `zugute`,
-  `vorlieb`, `bevor`, `voneinander`) and the clipped forms (`rum`, `draus`,
-  `drum`, `drunter`). Other first parts link to their own Lexeme: NOUN
-  `Teil` in `teilnehmen`, VERB `kennen` in `kennenlernen`, ADJ `fest`, ADJ
-  `leid` in `leidtun`. Outside a verb, a particle-like part links to its
-  ADP: `aus` in `Ausland`, `über` in `überhaupt` (the user, 2026-10-27).
-- A loan piece is judged within the text language: listed in Duden, it links
-  to the German Lexeme (`Software`, `Update`), else to a German Foreign Lemma
-  ([ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md)).
-  No piece links to another language's Lemma, so a loan blended abroad has
-  no Constituents (`Motel`).
-- A blend shows truncated letters (`brunch` = `[[breakfast|br]] +
-  [[lunch|unch]]`). A part may be PROPN (`Goethe + Straße`, `Berlin + -er`).
-  Fontane's fictional `Hohen-Cremmen` = `[[hoch|Hohen]]` + `-` +
-  `[[Cremmen]]`, PROPN `Cremmen` its own Lemma, not a Variant of the town
-  `Kremmen` (the user, 2026-10-25).
-- Hyphenated compounds follow DWDS: `Mund-zu-Mund-Beatmung` and
-  `3-Zimmer-Wohnung` are flat, and `Vitamin-C-Mangel` = `[Vitamin C] +
-  Mangel`. In `E-Mail`, `E` links to DWDS's prefix `e-` (2e-, short for
-  *elektronisch*), the hyphen is filler, and `Mail` links to its Lexeme:
-  `[[e-|E]]` + `-` + `[[Mail]]`.
-- A phrasal compound with no DWDS split and no stored inner unit is flat,
-  every word a part: `Trimm-dich-Pfad` = `trimmen · sich · Pfad`, as DWDS
-  also splits it. When its front phrase is a real Locution, it stays two
-  parts: `[rund um die Uhr] + Betreuung`.
+For German,
+[ADR 0054](./0054-split-a-german-word-as-its-dictionary-does.md)
+decides whether a word splits and what each German piece links to.
 
 **Satellites come from model data.** A Lexeme's reflexive, governed
 preposition, article and auxiliary are read from model data (ADR 0041) and
@@ -264,12 +225,6 @@ intensifiers, the English particle, the particle list and `leid` on
 - A flat phraseme Breakdown (`den + Faden`). Rejected: `m` would link to DET
   `dem`, which ADR 0040 rules out.
 - Lexeme parts only in a phraseme. Rejected: `zu Hause` is one unit.
-- The plural-looking Fuge as one piece, `[[Gast|Gäste]]`. Rejected: one rule
-  covers every Fuge, and school Wortbausteine mark the Fugenelement.
-- The citation ending as a linked Ending piece in Constituents. Rejected:
-  nearly every German verb would link to one `-en`, filling its Formations
-  with noise, and the ending reflects the citation convention, not how the
-  word was built. `ver-…-en` as one discontinuous formant was rejected too.
 - An opacity mark. Rejected: no consumer, it is graded, it can't be checked,
   and Formations list opaque formations by form anyway.
 - No breakdown unless a piece's Reading contributes to the meaning (`receive`
@@ -278,25 +233,10 @@ intensifiers, the English particle, the particle list and `leid` on
 - An unlinked cranberry piece in the Constituents (`Him + Beere`). Rejected:
   the morphemes walk would break at it, and the Morphemic Breakdown links
   the same piece to its Root anyway.
-- `E` in `E-Mail` as unlinked filler. Rejected: DWDS's Wortzerlegung links
-  it to the prefix 2e-.
-- A phrasal compound as modifier + head when nothing inside it is stored.
-  Rejected: no stored unit says where the modifier ends, and DWDS splits
-  `Trimm-dich-Pfad` flat.
 - An optional intensifier as a part linking to ADV `ganz`. Rejected: it is
   ordinary modification, not part of the citation form.
 - A new Morpheme Kind `Particle` for the English particle. Rejected: English
   writes the particle as a separate, movable word, which makes it a Lexeme.
-- Opaque words as bottom words (`Gewissen`). Rejected: opacity is graded;
-  a dictionary split can be checked.
-- `über-` in `überhaupt`. Rejected: nothing outside a verb separates.
-- The adverbs with no DWDS verbal affix entry linking to their ADV Lexeme.
-  Rejected: the Amtliches Regelwerk §34(1) names most as Verbpartikeln, and
-  German writes them attached.
-- Adding the rare first parts on demand. Rejected: listing them moves
-  nothing until a lab round weighs one.
-- `leid` linking to NOUN `Leid`. Rejected: Duden and DWDS class it as an
-  adjective, and the 2006 reform lowercased it.
 - An adjective's frozen ending as an Interfix (`Lang + -e- + weile`).
   Rejected: it is no Fuge, and `Langeweile` would join `Gästehaus` in the
   Interfix's Formations.
@@ -321,6 +261,6 @@ intensifiers, the English particle, the particle list and `leid` on
   `MorphologicalTree` layout block and its settings toggle go with them.
 - The Breakdown Record check accepts Locution targets and an owning Reading;
   its 15 Draft records are re-authored without Surfaces or Readings.
-- dumcorpus holds the closed German particle list and the Interfix set, and
-  per language a policy saying which formation steps are constituent steps
-  (ADR 0051).
+- dumcorpus holds per language a policy saying which formation steps are
+  constituent steps (ADR 0051), and German's closed particle list and
+  Interfix set (ADR 0054).

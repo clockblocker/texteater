@@ -35,7 +35,7 @@ const breakdownIssues = (json: unknown) => {
 		.map((issue) => `${issue.path}: ${issue.message}`);
 };
 
-describe("a separable verb's first part (ADR 0050)", () => {
+describe("a separable verb's first part (ADR 0054)", () => {
 	test("links a true particle to its Prefix Morpheme, a compound particle as one piece", () => {
 		expect(breakdownIssues(seedJson(id))).toEqual([]);
 		expect(

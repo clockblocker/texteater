@@ -16,7 +16,7 @@ export const reflexiveMarker: string = reflexivity.reading.emojiDescription;
 
 /**
  * The forms German's reflexivity unit shows in a word or wording, each
- * linking to its Lemma `sich` (ADR 0050): `dich` in `Trimm-dich-Pfad`. They
+ * linking to its Lemma `sich` (ADR 0054): `dich` in `Trimm-dich-Pfad`. They
  * are the reflexive forms the unit's definition lists for each person.
  */
 export const germanReflexiveForms: {
