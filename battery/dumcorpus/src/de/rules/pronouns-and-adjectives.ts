@@ -133,8 +133,8 @@ export const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/adjective-stays-adj",
 		statement:
-			"An adjective used adverbially or compared stays ADJ when the same sense can stand inflected before a noun: sie singt laut gives [laut] ADJ. A use whose sense no attributive form has is another word: ganz 'quite', früh 'in the morning', lange 'for a long time' and voll 'totally' are ADV, as are degree words (de/degree-word-is-adv), and einfach and ruhig as modal particles are PART. A sentence adverb, which comments on the whole statement and mostly can answer a yes/no question alone (offenbar 'apparently', wahrscheinlich, natürlich 'of course', wirklich, eigentlich), is a non-comparable ADV.",
-		adrs: ["ADR-0036"],
+			"A Reading's Kind is the part of speech DWDS gives its sense, in the entry or its etymology's labels, else en.wiktionary's (ADR 0036). So an adjective used adverbially, compared, or as a sentence or degree adverb stays ADJ when DWDS files that sense under its Adjektiv: sie singt laut gives [laut] ADJ, as do wirklich 'in der Tat', offenbar 'apparently', früh 'in the morning' and ziemlich 'fairly'. A sense DWDS labels Adv. is ADV: ganz 'quite', lange 'for a long time'. Modal particles stay PART (de/modal-particle-is-part), and adverbial viel and wenig ADV (de/quantifier-by-use).",
+		adrs: ["ADR-0036", "ADR-0054"],
 		routes: lexeme("ADJ", "ADV"),
 		records: [
 			"de/sie-kam-lachend-herein",

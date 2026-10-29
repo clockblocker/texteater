@@ -374,8 +374,8 @@
 			},
 			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" },
 			{
-				"rule": "de/degree-word-is-adv",
-				"hash": "b27dedd36b0a24bb"
+				"rule": "de/degree-word-stands-alone",
+				"hash": "2aea099d06591f18"
 			},
 			{
 				"rule": "de/aber-is-cconj",
@@ -1473,7 +1473,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "The degree word ganz 'quite, very' (Duden lists ganz as an Adverb in this sense) grades ungewöhnlichen. Attributive ganze means 'whole', not 'quite', so the use is a single-member ADV, not comparable (de/degree-word-is-adv, de/adjective-stays-adj). ganz ungewöhnlich raises the degree, DWDS ganz 5c 'sehr'; the Reading also takes the restricting ganz 6 'ziemlich' (ganz gut), folded in by the user's split ruling (2026-10-02, ADR 0031)."
+				"rationale": "The degree word ganz 'quite, very' (Duden lists ganz as an Adverb in this sense) grades ungewöhnlichen. Attributive ganze means 'whole', not 'quite', so the use is a single-member ADV, not comparable (de/degree-word-stands-alone, de/adjective-stays-adj). ganz ungewöhnlich raises the degree, DWDS ganz 5c 'sehr'; the Reading also takes the restricting ganz 6 'ziemlich' (ganz gut), folded in by the user's split ruling (2026-10-02, ADR 0031)."
 			}
 		},
 		{

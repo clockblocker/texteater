@@ -77,14 +77,21 @@ export const sttsRowsAdjaToPds: readonly SttsRow[] = [
 				],
 			},
 			{
-				use: "sentence adverb or degree word spelled like an adjective (offenbar, ganz 'quite', früh 'in the morning')",
-				becomes: alone(lexeme("ADV")),
+				use: "sentence adverb or degree word whose sense DWDS files under its Adjektiv (offenbar 'apparently', ziemlich 'fairly', früh 'in the morning')",
+				becomes: alone(lexeme("ADJ")),
 				records: [
 					show(
 						"er-schadet-ja-offenbar-niemandem-aber-die-vorstellung-dass",
 						"offenbar",
 						"offenbar",
 					),
+					show("es-ist-schon-ziemlich-spaet", "ziemlich", "ziemlich"),
+				],
+			},
+			{
+				use: "degree word whose sense DWDS labels Adv. (ganz 'quite')",
+				becomes: alone(lexeme("ADV")),
+				records: [
 					show(
 						"k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
 						"ganz",
@@ -97,7 +104,7 @@ export const sttsRowsAdjaToPds: readonly SttsRow[] = [
 			"de/adjective-stays-adj",
 			"de/comparability-is-lexical",
 			"de/sein-perfect-or-copula",
-			"de/degree-word-is-adv",
+			"de/degree-word-stands-alone",
 		],
 		adrs: ["ADR-0036", "ADR-0042"],
 		model: modeled,
@@ -170,7 +177,7 @@ export const sttsRowsAdjaToPds: readonly SttsRow[] = [
 			},
 		],
 		rules: [
-			"de/degree-word-is-adv",
+			"de/degree-word-stands-alone",
 			"de/focus-word-is-adv",
 			"de/modal-particle-is-part",
 			"de/aber-is-cconj",

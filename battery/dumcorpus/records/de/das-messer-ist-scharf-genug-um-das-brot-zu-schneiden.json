@@ -32,7 +32,10 @@
 		"rules": [
 			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" },
 			{ "rule": "de/bare-infinitive-zu", "hash": "920eb73475a80ef0" },
-			{ "rule": "de/degree-word-is-adv", "hash": "b27dedd36b0a24bb" },
+			{
+				"rule": "de/degree-word-stands-alone",
+				"hash": "2aea099d06591f18"
+			},
 			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
 		],
@@ -58,7 +61,7 @@
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
-				"rationale": "genug says to what degree scharf holds, an ADV of its own that never joins the word it grades (de/degree-word-is-adv). It is no anchor of um … zu."
+				"rationale": "genug says to what degree scharf holds, an ADV of its own that never joins the word it grades (de/degree-word-stands-alone). It is no anchor of um … zu."
 			}
 		},
 		{

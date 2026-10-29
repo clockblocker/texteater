@@ -191,7 +191,7 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 	// German PART is closed: nicht, infinitive zu and the authored modal
 	// particles (#734). The same spelling used otherwise is another word.
 	{
-		split: "A modal particle is PART Mod; the same spelling as a focus, degree, temporal or sentence adverb is ADV, as an adjective ADJ, joining clauses CCONJ and answering INTJ",
+		split: "A modal particle is PART Mod; the same spelling as a focus, degree, temporal or sentence adverb is ADV or ADJ, as DWDS classes the sense, as an adjective ADJ, joining clauses CCONJ and answering INTJ",
 		adrs: ["ADR-0021"],
 		rules: [
 			"de/modal-particle-is-part",
@@ -228,20 +228,10 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 		],
 	},
 	{
-		split: "A sense no attributive form has is ADV apart from the ADJ: degree ganz, früh 'in the morning' and the sentence adverbs",
+		split: "A sense DWDS labels Adv. is ADV apart from the ADJ: degree ganz",
 		adrs: ["ADR-0036"],
-		rules: ["de/adjective-stays-adj", "de/degree-word-is-adv"],
-		forms: [
-			"ganz",
-			"früh",
-			"voll",
-			"recht",
-			"offenbar",
-			"wahrscheinlich",
-			"natürlich",
-			"wirklich",
-			"eigentlich",
-		],
+		rules: ["de/adjective-stays-adj", "de/degree-word-stands-alone"],
+		forms: ["ganz"],
 		both: { kind: ["ADV", "ADJ"] },
 		varies: [
 			{ key: "kind", values: ["ADV", "ADJ"] },
@@ -251,7 +241,7 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 	{
 		split: "zu is ADP as a preposition, PART Inf before an infinitive and ADV as a degree word",
 		adrs: [],
-		rules: ["de/bare-infinitive-zu", "de/degree-word-is-adv"],
+		rules: ["de/bare-infinitive-zu", "de/degree-word-stands-alone"],
 		forms: ["zu"],
 		varies: [
 			{ key: "kind", values: ["ADP", "PART", "ADV"] },

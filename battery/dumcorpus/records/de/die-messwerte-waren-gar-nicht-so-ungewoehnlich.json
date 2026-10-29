@@ -23,8 +23,8 @@
 		"adrs": ["ADR-0031"],
 		"rules": [
 			{
-				"rule": "de/degree-word-is-adv",
-				"hash": "b27dedd36b0a24bb"
+				"rule": "de/degree-word-stands-alone",
+				"hash": "2aea099d06591f18"
 			}
 		],
 		"references": []
@@ -35,7 +35,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "📈" },
 			"notes": {
-				"rationale": "gar intensifies the negation in gar nicht. A degree word is a single-member ADV that never joins the word it grades (de/degree-word-is-adv); not comparable. gar before a negation strengthens it (DWDS gar I.1, 'überhaupt'), one intensifying Reading with gar jämmerlich under ADR 0031."
+				"rationale": "gar intensifies the negation in gar nicht. A degree word is a single-member ADV that never joins the word it grades (de/degree-word-stands-alone); not comparable. gar before a negation strengthens it (DWDS gar I.1, 'überhaupt'), one intensifying Reading with gar jämmerlich under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

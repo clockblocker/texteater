@@ -31,7 +31,10 @@
 				"hash": "1b11d9ee80ce12bd"
 			},
 			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
-			{ "rule": "de/degree-word-is-adv", "hash": "b27dedd36b0a24bb" },
+			{
+				"rule": "de/degree-word-stands-alone",
+				"hash": "2aea099d06591f18"
+			},
 			{ "rule": "de/bare-infinitive-zu", "hash": "920eb73475a80ef0" }
 		],
 		"references": []
@@ -66,7 +69,7 @@
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
-				"rationale": "ganz says to what degree normal holds, an ADV of its own (de/degree-word-is-adv)."
+				"rationale": "ganz says to what degree normal holds, an ADV of its own (de/degree-word-stands-alone)."
 			}
 		},
 		{

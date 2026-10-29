@@ -119,10 +119,16 @@
 			},
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "5bbd43bbbc51067f"
+				"hash": "3dec7dc4ab585a57"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: voll",
+				"url": "https://www.dwds.de/wb/voll",
+				"supports": "Target [voll]: one Adjektiv entry, Komparativ voller, Superlativ am vollsten; sense 3b 'ganz, völlig, vollkommen', Grammatik: adverbiell; the etymology labels voll Adj. only"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -417,11 +423,11 @@
 			"memberSegmentIndices": [10],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADV"
+				"kind": "ADJ"
 			},
 			"reading": { "emojiDescription": "💯" },
 			"notes": {
-				"rationale": "voll 'totally' is Duden's salopp Adverb voll 'im höchsten Maße', a headword apart from the adjective voll, so this use is ADV voll, not ADJ, and it has no comparison forms (de/adjective-stays-adj). Decided on #748."
+				"rationale": "voll ins Fettnäpfchen getreten is 'stepped right in it, completely': DWDS voll 3b 'ganz, völlig, vollkommen' (Grammatik: adverbiell; voll bezahlen, voll verantwortlich), filed under its one Adjektiv entry, whose etymology labels voll Adj. only. So it is ADJ voll (de/adjective-stays-adj, ADR 0036), a Reading 💯 beside 🌕 'full'; en.wiktionary's Adverb is not needed. DWDS gives voller, am vollsten, so its Surface marks Pos (de/comparability-is-lexical). Decided by agents under the user's delegation (2026-10-29), replacing #748's split by Duden's salopp Adverb."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -432,10 +438,10 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"canonicalForm": "voll",
 						"coreFeatures": {
-							"comparable": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "voll",
@@ -443,7 +449,12 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
 				"members": [
 					{
@@ -451,7 +462,9 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

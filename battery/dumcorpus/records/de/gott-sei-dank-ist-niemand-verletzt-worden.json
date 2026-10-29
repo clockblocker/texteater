@@ -53,10 +53,10 @@
 								"unitKind": "Lemma",
 								"language": "de",
 								"family": "Lexeme",
-								"kind": "ADV",
+								"kind": "INTJ",
 								"canonicalForm": "gottlob",
 								"coreFeatures": {
-									"comparable": null
+									"partType": null
 								}
 							},
 							{

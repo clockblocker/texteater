@@ -51,8 +51,8 @@
 		"adrs": [],
 		"rules": [
 			{
-				"rule": "de/degree-word-is-adv",
-				"hash": "b27dedd36b0a24bb"
+				"rule": "de/degree-word-stands-alone",
+				"hash": "2aea099d06591f18"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
@@ -86,7 +86,7 @@
 			},
 			"reading": { "emojiDescription": "📈⚠" },
 			"notes": {
-				"rationale": "Degree zu 'too' (STTS PTKA) grades groß and never joins it. Excess is no Degree value, so zu is a single-member ADV, no DegreeMarker, and not comparable (de/degree-word-is-adv)."
+				"rationale": "Degree zu 'too' (STTS PTKA) grades groß and never joins it. Excess is no Degree value, so zu is a single-member ADV, no DegreeMarker, and not comparable (de/degree-word-stands-alone)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

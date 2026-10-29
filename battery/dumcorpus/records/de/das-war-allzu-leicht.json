@@ -43,8 +43,8 @@
 		"adrs": [],
 		"rules": [
 			{
-				"rule": "de/degree-word-is-adv",
-				"hash": "b27dedd36b0a24bb"
+				"rule": "de/degree-word-stands-alone",
+				"hash": "2aea099d06591f18"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
@@ -62,7 +62,7 @@
 			},
 			"reading": { "emojiDescription": "📈⚠" },
 			"notes": {
-				"rationale": "allzu 'all too' grades leicht: a single-member degree ADV, not comparable (de/degree-word-is-adv)."
+				"rationale": "allzu 'all too' grades leicht: a single-member degree ADV, not comparable (de/degree-word-stands-alone)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

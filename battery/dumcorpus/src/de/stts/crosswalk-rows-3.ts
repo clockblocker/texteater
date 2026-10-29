@@ -41,7 +41,7 @@ export const sttsRowsPtkaToPunctuation: readonly SttsRow[] = [
 				],
 			},
 		],
-		rules: ["de/fused-word-pieces", "de/degree-word-is-adv"],
+		rules: ["de/fused-word-pieces", "de/degree-word-stands-alone"],
 		adrs: ["ADR-0040"],
 		model: modeled,
 		gold: "Partial",

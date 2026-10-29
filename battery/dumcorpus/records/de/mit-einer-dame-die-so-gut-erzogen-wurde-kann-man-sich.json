@@ -139,7 +139,7 @@
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "5bbd43bbbc51067f"
+				"hash": "3dec7dc4ab585a57"
 			},
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
@@ -178,8 +178,8 @@
 				"hash": "ab79bbe68ce12d4c"
 			},
 			{
-				"rule": "de/degree-word-is-adv",
-				"hash": "b27dedd36b0a24bb"
+				"rule": "de/degree-word-stands-alone",
+				"hash": "2aea099d06591f18"
 			},
 			{
 				"rule": "de/modal-particle-is-part",
@@ -801,7 +801,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "überhaupt strengthens the negation (DWDS, Adverb: überhaupt nicht 'ganz und gar nicht'), as gar does in gar nicht. German PART is only nicht, infinitive zu and the authored modal particles (de/modal-particle-is-part), so it is a single-member degree ADV (de/degree-word-is-adv), not comparable; überhaupt nicht is free, since überhaupt kein and überhaupt nichts work the same way. überhaupt nicht is DWDS überhaupt 2, 'verstärkt eine Verneinung: ganz und gar nicht', so it takes the intensifying 📈 that gar has in gar nicht."
+				"rationale": "überhaupt strengthens the negation (DWDS, Adverb: überhaupt nicht 'ganz und gar nicht'), as gar does in gar nicht. German PART is only nicht, infinitive zu and the authored modal particles (de/modal-particle-is-part), so it is a single-member degree ADV (de/degree-word-stands-alone), not comparable; überhaupt nicht is free, since überhaupt kein and überhaupt nichts work the same way. überhaupt nicht is DWDS überhaupt 2, 'verstärkt eine Verneinung: ganz und gar nicht', so it takes the intensifying 📈 that gar has in gar nicht."
 			}
 		},
 		{

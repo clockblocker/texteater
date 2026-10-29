@@ -145,9 +145,9 @@ export const conjunctionsAndParticles: Rule[] = [
 		],
 	},
 	{
-		id: "de/degree-word-is-adv",
+		id: "de/degree-word-stands-alone",
 		statement:
-			"A word that says to what degree an adjective or adverb holds (sehr, zu, allzu, ziemlich, ganz 'quite', gar, recht 'fairly', höchst, äußerst, überaus) is a single-member ADV that never joins the word it grades, and degree words standing together stay apart: zu schnell gives [zu] ADV zu and [schnell] ADJ schnell. Excess is no Degree value, so only superlative am is a DegreeMarker (de/fused-word-pieces). allzu written apart (all zu) is one target, ADV allzu with a Variant spelling. sehr is comparable (mehr, am meisten); the others are not.",
+			"A word that says to what degree an adjective or adverb holds is a single-member target that never joins the word it grades, and degree words standing together stay apart: zu schnell gives [zu] ADV zu and [schnell] ADJ schnell. Its Kind follows the dictionary (de/adjective-stays-adj): sehr, zu, allzu, ganz 'quite', gar, höchst, äußerst and überaus are ADV; ziemlich and recht 'fairly' are ADJ. Only superlative am is a DegreeMarker (de/fused-word-pieces). allzu written apart (all zu) is one target, ADV allzu with a Variant spelling. sehr and recht are comparable; the others are not.",
 		adrs: ["ADR-0040", "ADR-0042"],
 		routes: lexeme("ADV", "PART", "ADJ"),
 		records: [

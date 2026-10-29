@@ -295,7 +295,7 @@
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "5bbd43bbbc51067f"
+				"hash": "3dec7dc4ab585a57"
 			},
 			{
 				"rule": "de/attributive-adjective-stands-alone",
@@ -617,9 +617,9 @@
 			"memberSegmentIndices": [9],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADV"
+				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "✅" },
+			"reading": { "emojiDescription": "✔" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -629,10 +629,10 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"canonicalForm": "wirklich",
 						"coreFeatures": {
-							"comparable": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "wirklich",
@@ -640,7 +640,12 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
 				"members": [
 					{
@@ -648,10 +653,12 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "wirklich 'really, in fact' is a sentence adverb here: it asks whether it is true that she is dangerous. A sentence adverb is a non-comparable ADV (de/adjective-stays-adj), so its Surface has no inflection."
+				"rationale": "wirklich 'really, in fact' asks whether it is true that she is dangerous. DWDS files this sense, 3 'wahrhaftig, in der Tat' (Grammatik: adverbiell), under its one Adjektiv entry and labels no Adv., so it is ADJ (de/adjective-stays-adj, ADR 0036), the Reading ✔ the Breakdown gold gives the same sense. DWDS gives wirklicher, am wirklichsten, so its Surface marks Pos (de/comparability-is-lexical)."
 			}
 		},
 		{
@@ -1487,7 +1494,7 @@
 			"memberSegmentIndices": [53],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADV"
+				"kind": "ADJ"
 			},
 			"reading": { "emojiDescription": "🔎✅" },
 			"attestation": {
@@ -1499,7 +1506,7 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"canonicalForm": "eigentlich",
 						"coreFeatures": {
 							"comparable": null
@@ -1518,10 +1525,12 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "eigentlich 'in reality, at bottom' is the sentence adverb (Duden: eigentlich, Adverb b, im Grunde), not the modal particle of questions. A sentence adverb is a non-comparable ADV (de/adjective-stays-adj)."
+				"rationale": "eigentlich 'in reality, at bottom' (eigentlich nur bloße Marotte) is DWDS eigentlich 2 'in Wirklichkeit' (Grammatik: adverbiell), not the modal particle of questions (3). DWDS files it under its one Adjektiv entry, so it is ADJ (de/adjective-stays-adj, ADR 0036). DWDS marks it ohne Komparativ, so it is not comparable and its Surface has no inflection (de/comparability-is-lexical)."
 			}
 		},
 		{

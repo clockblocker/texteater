@@ -93,7 +93,7 @@ export const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/interjection-counts-its-words",
 		statement:
-			"An interjection stands outside the clause to exclaim, answer or imitate a sound: an INTJ Lexeme, with partType Res for an answer word, quoted or embedded too, else none; German PART never has polarity Pos. Until punctuation splits them, interjection pieces are one target, cited as written in lexical casing: a Lexeme if a piece is no German word, else a Locution INTJ (ha ha), as is an established exclamation whose meaning is not the sum of its words. Each spacing is its own Lemma, never a Variant or Typo. An answer before a formula and a dative after an interjection resolve on their own.",
+			"An interjection exclaims, answers or imitates a sound outside the clause, or inside it if DWDS classes it Interjektion (gottlob): an INTJ Lexeme, with partType Res for an answer word, quoted or embedded too, else none; German PART never has polarity Pos. Until punctuation splits them, interjection pieces are one target, cited as written in lexical casing: a Lexeme if a piece is no German word, else a Locution INTJ (ha ha), as is an established exclamation whose meaning is not the sum of its words. Each spacing is its own Lemma, never a Variant or Typo. An answer before a formula and a dative after an interjection resolve on their own.",
 		adrs: ["ADR-0039", "ADR-0041"],
 		routes: [...lexeme("INTJ"), ...locution("INTJ")],
 		records: [

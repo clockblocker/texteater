@@ -48,21 +48,27 @@
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "5bbd43bbbc51067f"
+				"hash": "3dec7dc4ab585a57"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: wahrscheinlich",
+				"url": "https://www.dwds.de/wb/wahrscheinlich",
+				"supports": "Target [Wahrscheinlich]: one Adjektiv entry, Komparativ wahrscheinlicher; sense 'in hohem Grade möglich' with ● 'vermutlich', Grammatik: adverbiell (wahrscheinlich kommt er); the etymology labels wahrscheinlich Adj. only"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [7],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADV"
+				"kind": "ADJ"
 			},
 			"reading": { "emojiDescription": "🤔👍" },
 			"notes": {
-				"rationale": "Wahrscheinlich answers the yes/no question alone: a sentence adverb, which is a non-comparable ADV (de/adjective-stays-adj)."
+				"rationale": "Wahrscheinlich answers the yes/no question alone, a sentence adverb 'probably'. DWDS files it as the adverbial use ● 'vermutlich' (Grammatik: adverbiell) of its one Adjektiv sense, and its etymology labels wahrscheinlich Adj. only, so it is ADJ (de/adjective-stays-adj, ADR 0036) and shares the predicative ADJ's Reading 🤔👍. DWDS gives wahrscheinlicher, am wahrscheinlichsten, so its Surface marks Pos (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -75,7 +81,12 @@
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					},
 					"language": "de",
 					"normalizedSurface": "wahrscheinlich",
 					"spelling": {
@@ -86,13 +97,15 @@
 						"language": "de",
 						"canonicalForm": "wahrscheinlich",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"coreFeatures": {
-							"comparable": null
+							"comparable": "Yes"
 						}
 					},
 					"surfaceFeatures": null
-				}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

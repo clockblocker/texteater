@@ -39,7 +39,7 @@
 				"hash": "fdaeed620ab52c64"
 			},
 			{ "rule": "de/partial-coverage", "hash": "5aa8e564f6ae1177" },
-			{ "rule": "de/adjective-stays-adj", "hash": "5bbd43bbbc51067f" },
+			{ "rule": "de/adjective-stays-adj", "hash": "3dec7dc4ab585a57" },
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
 		],
 		"references": [

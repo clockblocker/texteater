@@ -38,7 +38,7 @@ export const rules = {
 	partial: ["de/partial-coverage", "5aa8e564f6ae1177"],
 	modification: ["de/modification-attests-partially", "c888ed5b9e59b0a1"],
 	referent: ["de/open-referent", "eae1e1fa056277e4"],
-	interjection: ["de/interjection-counts-its-words", "b572bad8906b508d"],
+	interjection: ["de/interjection-counts-its-words", "a1f69091ae56a799"],
 	foreign: ["de/foreign-unless-duden-or-german-grammar", "c2f06b03fed6e233"],
 	fused: ["de/fused-word-pieces", "53eb6d28dab42ddc"],
 	rShorthand: ["de/r-adverb-is-her-or-hin-shorthand", "41cf9da8689f34cb"],

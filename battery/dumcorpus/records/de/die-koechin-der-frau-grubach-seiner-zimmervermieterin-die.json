@@ -215,7 +215,7 @@
 			},
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "5bbd43bbbc51067f"
+				"hash": "3dec7dc4ab585a57"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
@@ -253,6 +253,11 @@
 				"title": "OpenThesaurus: Uhr",
 				"url": "https://www.openthesaurus.de/synonyme/Uhr",
 				"supports": "Target 11 Knowledge: only synset is the timepiece (Zeitmesser, Chronometer); nothing for the hour sense"
+			},
+			{
+				"title": "DWDS: früh",
+				"url": "https://www.dwds.de/wb/fr%C3%BCh",
+				"supports": "Target [früh]: one Adjektiv entry, Komparativ früher, Superlativ am frühesten; sense 2 'am Morgen, morgens', Grammatik: ohne Steigerung, adverbiell (um fünf Uhr früh); the etymology labels früh Adj. only"
 			}
 		]
 	},
@@ -876,7 +881,7 @@
 			"memberSegmentIndices": [30],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADV"
+				"kind": "ADJ"
 			},
 			"reading": { "emojiDescription": "🌅" },
 			"attestation": {
@@ -888,7 +893,7 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"canonicalForm": "früh",
 						"coreFeatures": {
 							"comparable": "Yes"
@@ -900,7 +905,10 @@
 					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"degree": "Pos"
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
 					}
 				},
 				"members": [
@@ -909,10 +917,12 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "früh after a clock time means 'in the morning' (Duden has früh as an Adverb: heute früh, Dienstag früh). The attributive frühe has no such sense, so the use is ADV, not ADJ (de/adjective-stays-adj). Duden's adverb entry prints früher, am frühsten or am frühesten, and comparability follows what the dictionary prints for the entry, so it is comparable and marks Pos (de/comparability-is-lexical). Ruled by the user on #876 (2026-10-03)."
+				"rationale": "früh after a clock time means 'in the morning'. DWDS files this sense, 2 'am Morgen, morgens' (Grammatik: ohne Steigerung, adverbiell; um fünf Uhr früh), under its one Adjektiv entry, and its etymology labels früh Adj. only, so it is ADJ (de/adjective-stays-adj, ADR 0036), a Reading of its own beside 'early'. The Lemma compares (früher, am frühesten), as the user ruled for this use on #876 (2026-10-03), so its Surface marks Pos (de/comparability-is-lexical)."
 			}
 		},
 		{

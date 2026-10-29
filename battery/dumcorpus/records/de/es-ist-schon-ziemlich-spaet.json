@@ -51,26 +51,36 @@
 		"adrs": [],
 		"rules": [
 			{
-				"rule": "de/degree-word-is-adv",
-				"hash": "b27dedd36b0a24bb"
+				"rule": "de/degree-word-stands-alone",
+				"hash": "2aea099d06591f18"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "3dec7dc4ab585a57"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: ziemlich",
+				"url": "https://www.dwds.de/wb/ziemlich",
+				"supports": "Target [ziemlich]: one Adjektiv entry, ohne Steigerung; sense 1a 'drückt einen verhältnismäßig hohen Grad aus'; the etymology labels ziemlich Adj. only"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADV"
+				"kind": "ADJ"
 			},
 			"reading": { "emojiDescription": "📈" },
 			"notes": {
-				"rationale": "ziemlich 'fairly' grades spät: a single-member degree ADV, not comparable (de/degree-word-is-adv); Duden lists the degree use as an Adverb apart from the adjective. schon is left untargeted: it may be temporal 'already' or the modal particle. ziemlich spät is DWDS ziemlich 1a, 'drückt einen verhältnismäßig hohen Grad aus', not 1b 'fast'."
+				"rationale": "ziemlich 'fairly' grades spät: a single-member degree word (de/degree-word-stands-alone). ziemlich spät is DWDS ziemlich 1a, 'drückt einen verhältnismäßig hohen Grad aus', not 1b 'fast'. DWDS files the sense under its one Adjektiv entry, and its etymology labels ziemlich Adj. only, so it is ADJ (de/adjective-stays-adj, ADR 0036). DWDS marks it ohne Steigerung, so it is not comparable and its Surface has no inflection (de/comparability-is-lexical). schon is left untargeted: it may be temporal 'already' or the modal particle."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -94,13 +104,15 @@
 						"language": "de",
 						"canonicalForm": "ziemlich",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"coreFeatures": {
 							"comparable": null
 						}
 					},
 					"surfaceFeatures": null
-				}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		},
 		{

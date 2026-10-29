@@ -83,7 +83,7 @@
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "5bbd43bbbc51067f"
+				"hash": "3dec7dc4ab585a57"
 			},
 			{
 				"rule": "de/canonical-form-is-the-headword",
@@ -99,7 +99,7 @@
 			},
 			{
 				"rule": "de/interjection-counts-its-words",
-				"hash": "b572bad8906b508d"
+				"hash": "a1f69091ae56a799"
 			},
 			{
 				"rule": "de/noun-owns-its-article",

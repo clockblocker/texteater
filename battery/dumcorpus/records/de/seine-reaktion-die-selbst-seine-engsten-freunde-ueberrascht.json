@@ -50,14 +50,27 @@
 			},
 			{ "rule": "de/copula-stays-apart", "hash": "8982593963a4d507" },
 			{ "rule": "de/focus-word-is-adv", "hash": "c7d154ba1801d992" },
-			{ "rule": "de/degree-word-is-adv", "hash": "b27dedd36b0a24bb" },
+			{
+				"rule": "de/degree-word-stands-alone",
+				"hash": "2aea099d06591f18"
+			},
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
 				"rule": "de/only-der-and-ein-are-articles",
 				"hash": "9f44b34f99bd5145"
+			},
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "3dec7dc4ab585a57"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: völlig",
+				"url": "https://www.dwds.de/wb/v%C3%B6llig",
+				"supports": "Target [völlig]: Adjektiv (adverbiell, attributiv), 'vollständig, gänzlich, ganz' (etw. völlig vergessen); the etymology labels völlig Adj. only"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -125,9 +138,9 @@
 		},
 		{
 			"memberSegmentIndices": [30],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
-				"rationale": "völlig grades übertrieben and never joins it (de/degree-word-is-adv)."
+				"rationale": "völlig grades übertrieben and never joins it (de/degree-word-stands-alone). DWDS files it as an Adjektiv (adverbiell, attributiv), 'vollständig, gänzlich, ganz', with no Adv. label, so it is ADJ (de/adjective-stays-adj, ADR 0036)."
 			}
 		},
 		{

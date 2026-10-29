@@ -194,7 +194,7 @@
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "5bbd43bbbc51067f"
+				"hash": "3dec7dc4ab585a57"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
@@ -276,6 +276,11 @@
 				"title": "Duden: schmerzlich",
 				"url": "https://www.duden.de/rechtschreibung/schmerzlich",
 				"supports": "Target [eine, schmerzliche]: example 'die schmerzlichsten Erfahrungen'."
+			},
+			{
+				"title": "DWDS: offenbar",
+				"url": "https://www.dwds.de/wb/offenbar",
+				"supports": "Target [offenbar]: one Adjektiv entry, Komparativ offenbarer, Superlativ am offenbarsten; sense 2 'anscheinend, wie es scheint, offensichtlich', Grammatik: adverbiell; the etymology labels offenbar Adj. only"
 			}
 		]
 	},
@@ -431,11 +436,11 @@
 			"memberSegmentIndices": [6],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADV"
+				"kind": "ADJ"
 			},
 			"reading": { "emojiDescription": "👀✅" },
 			"notes": {
-				"rationale": "offenbar 'apparently' is a sentence adverb commenting on the whole statement; Duden has it as an Adverb headword apart from the adjective. A sentence adverb is a non-comparable ADV (de/adjective-stays-adj), so its Surface has no inflection. offenbar here is DWDS offenbar 2 'anscheinend, wie es scheint', an inference from what is seen, not 1 'offenkundig'."
+				"rationale": "offenbar 'apparently' comments on the whole statement. It is DWDS offenbar 2 'anscheinend, wie es scheint', an inference from what is seen, not 1 'offenkundig'. DWDS files that sense, Grammatik: adverbiell, under its one Adjektiv entry, and its etymology labels offenbar Adj. only, so it is ADJ (de/adjective-stays-adj, ADR 0036). DWDS gives offenbarer, am offenbarsten, so its Surface marks Pos (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -453,19 +458,26 @@
 					"spelling": {
 						"kind": "Canonical"
 					},
-					"inflectionalFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"canonicalForm": "offenbar",
 						"coreFeatures": {
-							"comparable": null
+							"comparable": "Yes"
 						}
 					},
 					"surfaceFeatures": null
-				}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		},
 		{

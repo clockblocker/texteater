@@ -14,12 +14,8 @@ Reading a Breakdown Record owns:
   else no split (the user, 2026-10-27): `verarzten` = `ver- + Arzt`
   (DWDS), `Gewissen` = `ge- + wissen` (en.wiktionary), and `Gefahr`, split
   by neither, has none.
-- The same order decides a Breakdown Record's Reading's Kind (the user,
-  2026-10-29): the part of speech DWDS gives that sense, in its entry or in
-  its etymology's labels, else en.wiktionary's. `wirklich` 'in der Tat' is
-  ADJ, since DWDS files the sense, used adverbially, under its Adjektiv;
-  `ganz` 'vollkommen' is ADV, which DWDS's etymology labels Adv. beside the
-  Adj.
+- A Breakdown Record's Reading's Kind follows the dictionary, as every gold
+  Reading's does ([ADR 0036](./0036-make-adjectival-german-participles-adj-linked-to-their-verb.md)).
 - The citation ending is unlinked filler: `verarzten` = `[[ver-|ver]] +
   [[Arzt|arzt]] + en`. Constituents hold no inflectional piece.
 - A linking element is its own piece, linking to an Interfix from the closed

@@ -20,7 +20,7 @@
 	"sources": {
 		"adrs": [],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "5bbd43bbbc51067f" },
+			{ "rule": "de/adjective-stays-adj", "hash": "3dec7dc4ab585a57" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"

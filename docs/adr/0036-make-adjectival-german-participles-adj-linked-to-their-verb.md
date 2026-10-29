@@ -11,16 +11,36 @@ Lemma it comes from as its Source:
 - attributive: *die gekochten Kartoffeln* is `gekocht` from `kochen`, *das
   lachende Kind* is `lachend` from `lachen`, *der von allen bewunderte
   Lehrer* is `bewundert` from `bewundern`
-- adverbial, for a sense the adjective has, one that can stand inflected
-  before a noun: *Er kam lachend herein* is `lachend` from `lachen`. A degree
-  sense (*ganz* 'quite'), *früh* 'in the morning' and a sentence adverb
-  (*offenbar* 'apparently') are ADV (Rule `de/adjective-stays-adj`).
+- adverbial: *Er kam lachend herein* is `lachend` from `lachen`
 - predicative after `sein`, the state passive included: *Die Tür ist
   geschlossen* is the copula VERB `sein` plus ADJ `geschlossen` from
   `schließen`, and *Er ist verliebt* is ADJ `verliebt` from `verlieben`
 - predicative after a stative `haben`: *Der Laden hat bis 20 Uhr geöffnet* is
   VERB `haben` plus ADJ `geöffnet` from `öffnen`, and *Er hat die ganze Zeit
   die Augen geschlossen* is VERB `haben` plus ADJ `geschlossen`
+
+Word class follows the dictionary, for participles and every other word (the
+user, 2026-10-29). A gold Reading's Kind is the part of speech DWDS gives
+that sense, in its entry or in its etymology's labels, else en.wiktionary's.
+It governs all gold, click gold and Breakdown Records alike
+([ADR 0054](./0054-split-a-german-word-as-its-dictionary-does.md)), so one
+meaning has one Kind wherever it is met:
+
+- An adverbial sense DWDS files under its Adjektiv is ADJ, used as a
+  sentence or degree adverb too: `wirklich` 'in der Tat', `offenbar`
+  'apparently', `wahrscheinlich` 'probably', `eigentlich` 'in reality',
+  `früh` 'in the morning', and the degree words `ziemlich` and `recht`
+  'fairly'.
+- A sense DWDS labels Adv. is ADV: `ganz` 'quite', whose etymology says
+  *Adv. 'vollkommen, sehr, ziemlich'* beside the Adj., and `lange` 'for a
+  long time', an Adverb entry.
+- A Rule that classes a closed set by use still decides it: `nicht` and the
+  modal particles are PART (Rule `de/modal-particle-is-part`), and adverbial
+  `viel` and `wenig` are ADV (Rule `de/quantifier-by-use`).
+
+A productive participle has no entry of its own, so the rules above decide
+it. Classing a sense by its use alone, a sentence adverb as ADV, was
+rejected: judges split on such uses, and a dictionary's class can be checked.
 
 A participle is verbal only in the perfect with `haben` or `sein` (*hat
 gekocht*, *ist gekommen*, *Er hat sich in sie verliebt*) and in the passive

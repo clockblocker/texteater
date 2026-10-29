@@ -234,7 +234,7 @@
 								"unitKind": "Lemma",
 								"language": "de",
 								"family": "Lexeme",
-								"kind": "ADV",
+								"kind": "ADJ",
 								"canonicalForm": "völlig",
 								"coreFeatures": {
 									"comparable": null
@@ -244,7 +244,7 @@
 								"unitKind": "Lemma",
 								"language": "de",
 								"family": "Lexeme",
-								"kind": "ADV",
+								"kind": "ADJ",
 								"canonicalForm": "gänzlich",
 								"coreFeatures": {
 									"comparable": null
@@ -337,7 +337,7 @@
 								"unitKind": "Lemma",
 								"language": "de",
 								"family": "Lexeme",
-								"kind": "ADV",
+								"kind": "ADJ",
 								"canonicalForm": "völlig",
 								"coreFeatures": {
 									"comparable": null
@@ -347,7 +347,7 @@
 								"unitKind": "Lemma",
 								"language": "de",
 								"family": "Lexeme",
-								"kind": "ADV",
+								"kind": "ADJ",
 								"canonicalForm": "restlos",
 								"coreFeatures": {
 									"comparable": null
