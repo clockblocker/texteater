@@ -158,3 +158,39 @@ bun run --cwd battery/dumgen evaluate --experiment segment-in-constituents/de:br
 bun run --cwd battery/dumgen evaluate --experiment segment-in-constituents/de:breakdown --revision YOUR_COMMIT --budget TOKENS
 bun run --cwd battery/dumgen evaluate --experiment segment-in-morphemes/de:breakdown --revision YOUR_COMMIT --offline
 ```
+
+### Sampling a real-text batch
+
+A real-text batch draws word tokens uniformly at random from a fixed frame
+of the Library's German Sentences, with a seed, and authors gold only after
+sampling. Its `sampling.acceptance` lists the rules each draw was judged
+by, and every judged draw goes to its draw log. A draw is accepted when:
+
+- **It stands for its click unit**, the biggest unit a click on it resolves
+  to in context (Schlimmste in *das Schlimmste* is NOUN Schlimmste).
+  - A perfect, passive or future auxiliary stands for the verb it serves,
+    since a click on it selects that verb (Rule
+    `de/auxiliary-joins-the-verb-it-serves`): `hat` in *hat … gesehen* is
+    VERB sehen, not a closed-route AUX.
+  - An article stands for its noun phrase's Head, since a click on it
+    selects the Head (Rule `de/noun-owns-its-article`): `der` in *der
+    steile Aufstieg* is NOUN Aufstieg, not a closed-route DET.
+  - A token inside an authored grammar piece stands for that piece, which
+    gets no Breakdown (`her` in *von den Dünen her* is the circumposition
+    `von … her`).
+- **That unit gets a Breakdown**: a Lexeme, Locution or Saying, not a
+  closed route (AUX, DET, PRON, PART, once the two conventions above have
+  taken the auxiliary and the article to their units), not an Authored
+  Inventory member, not Foreign, and with no Source (ADR 0050).
+- **The token is the unit's first member in the sentence**, so each unit
+  occurrence has one chance. A main-clause verb's auxiliary or a noun's
+  article is that first member, and the Head's own token is not.
+- **It is new**: its Lemma is not already Breakdown gold, it is not a prompt
+  word (#693), and its Reading was not accepted before.
+
+Rounds 5 to 9 (#1241) rejected an auxiliary as a closed route and the verb
+after it as no first member, so a main-clause perfect, passive or future
+verb had no chance; their batches stand as drawn. Round 9's draws 89, 102,
+114, 131 and 150 would have been accepted under these rules. Those rounds
+rejected an article and took its noun's own token instead, which gave each
+noun occurrence the same one chance.
