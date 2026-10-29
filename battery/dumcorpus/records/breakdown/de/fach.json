@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Fach",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🗄"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Fach",
+					"target": {
+						"language": "de",
+						"canonicalForm": "fach",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Fach",
+				"url": "https://www.dwds.de/wb/Fach",
+				"supports": "No Wortzerlegung; Etymologie: ahd. fah, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ein Fach nach dem anderen herausziehend, pulling out one drawer after another: 'compartment', not 'subject'. DWDS gives no Wortzerlegung, so it is a bottom word: the Root fach and the zero ending (ADR 0051)."
+	}
+}

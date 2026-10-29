@@ -1,0 +1,65 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Nordkorea",
+			"coreFeatures": {
+				"article": null,
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🇰🇵"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Nord",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Nord",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": "korea",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Korea",
+						"coreFeatures": {
+							"article": null,
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0054"],
+		"rules": [],
+		"references": [
+			{
+				"title": "en.wiktionary: Nordkorea",
+				"url": "https://en.wiktionary.org/wiki/Nordkorea",
+				"supports": "'From Nord + Korea' (af, compound)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Aus Nordkorea liegt noch keine Äußerung ... vor, North Korea, a country with a Core gender (Neut, Rule de/proper-noun-article) and its flag (Emoji Description conventions). DWDS has no entry, so the en.wiktionary etymology decides: the noun Nord + the country Korea (ADR 0054); a part may be PROPN."
+	}
+}

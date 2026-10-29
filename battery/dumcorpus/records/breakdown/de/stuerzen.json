@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "stürzen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "⬇"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "stürz",
+					"target": {
+						"language": "de",
+						"canonicalForm": "stürz",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: stürzen",
+				"url": "https://www.dwds.de/wb/st%C3%BCrzen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. sturzen, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "»jetzt stürz ich«, now I'm falling. DWDS gives no Wortzerlegung, so it is a bottom word: the Root stürz and the Ending en (ADR 0051)."
+	}
+}

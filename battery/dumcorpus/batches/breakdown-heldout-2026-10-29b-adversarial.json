@@ -1,0 +1,86 @@
+{
+	"note": "Adversarial held-out candidates for German segment.inConstituents and segment.inMorphemes, drafted 2026-10-29 as Draft Breakdown Records in records/breakdown/de to judge round 9 (#1241). Reported apart from the headline real-text set (breakdown-heldout-2026-10-29b-realtext): fresh words on both sides of each round-9 fix, so the score says whether a fix generalizes or overreaches, not whether its tuning cases pass. Per row: AD1 Nagellack, a head whose letters are the headword (Lack) beside a longer noun the headword question may prefer (Lacke); AD2 Österreicher, the control, a name whose umlaut is its own, so the letters as they stand (Österreich) must beat the umlaut undone (Osterreich); AD3 bläulich, an adjective base with an umlaut (bläu is blau); AD4 Gästebuch, the control, letters that are a plural (Gäste), which the headword test must refuse, so Gast and the Interfix -e- (class E1); AD5 taktvoll, Takt + the suffix -voll, against AD6 randvoll, the control, Rand + the adjective voll, as DWDS splits it (class E2); AD7 sogleich, AD8 sobald and AD9 sodann, an adverb or a conjunction DWDS splits into two words written together, so (+ gleich, bald, dann), against AD10 sonst, the control, which no dictionary splits though its letters open with so (class E3). Every word split follows the DWDS Wortzerlegung (ADR 0054), cited in its record. Avoided: every Lemma with a Breakdown Record; the real-text batch's Lemmas; the words the round-9 unit tests use (Autolack, römisch, kraftvoll, irgendwann); words a Breakdown prompt names (immerhin, whose immer one names); dennoch, whose letters drop one n of denn; Sources. Consistency sets: E1 a word part's candidate forms against the headword test; E2 the suffix -voll against the adjective voll; E3 two words written together against none. Two independent judges review them before the run. They stay out of every Breakdown prompt's examples (#693).",
+	"set": "adversarial",
+	"rows": [
+		{
+			"row": "AD1",
+			"record": "breakdown/de/nagellack",
+			"bucket": "head-headword",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1"]
+		},
+		{
+			"row": "AD2",
+			"record": "breakdown/de/oesterreicher",
+			"bucket": "name-umlaut-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1"]
+		},
+		{
+			"row": "AD3",
+			"record": "breakdown/de/blaeulich",
+			"bucket": "adjective-umlaut",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1"]
+		},
+		{
+			"row": "AD4",
+			"record": "breakdown/de/gaestebuch",
+			"bucket": "plural-letters-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E1"]
+		},
+		{
+			"row": "AD5",
+			"record": "breakdown/de/taktvoll",
+			"bucket": "voll-suffix",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E2"]
+		},
+		{
+			"row": "AD6",
+			"record": "breakdown/de/randvoll",
+			"bucket": "voll-adjective-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E2"]
+		},
+		{
+			"row": "AD7",
+			"record": "breakdown/de/sogleich",
+			"bucket": "adverb-words",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E3"]
+		},
+		{
+			"row": "AD8",
+			"record": "breakdown/de/sobald",
+			"bucket": "conjunction-words",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E3"]
+		},
+		{
+			"row": "AD9",
+			"record": "breakdown/de/sodann",
+			"bucket": "adverb-words",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E3"]
+		},
+		{
+			"row": "AD10",
+			"record": "breakdown/de/sonst",
+			"bucket": "no-split-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["E3"]
+		}
+	]
+}

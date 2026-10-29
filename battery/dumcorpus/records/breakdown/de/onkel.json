@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Onkel",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "👪👨"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Onkel",
+					"target": {
+						"language": "de",
+						"canonicalForm": "onkel",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Onkel",
+				"url": "https://www.dwds.de/wb/Onkel",
+				"supports": "No Wortzerlegung; Etymologie: a loan of frz. oncle"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "die des Vaters und Onkels, those of a father and an uncle: a kinship noun, 👪👨 (Emoji Description conventions). DWDS gives no Wortzerlegung, so it is a bottom word: the Root onkel and the zero ending (ADR 0051)."
+	}
+}

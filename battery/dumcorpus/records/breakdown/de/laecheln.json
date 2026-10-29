@@ -1,0 +1,62 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "lächeln",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🙂"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "läch",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "lachen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				},
+				{
+					"letters": "el",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-el",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				},
+				{
+					"letters": "n"
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: lächeln",
+				"url": "https://www.dwds.de/wb/l%C3%A4cheln",
+				"supports": "The Wortzerlegung lachen 2-el"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "nickte halb zustimmend und lächelte vor sich hin, smiled to herself. DWDS splits it lachen + the verb-forming suffix -el, its base showing the umlaut; the citation ending n is unlinked filler (ADR 0050, ADR 0054)."
+	}
+}

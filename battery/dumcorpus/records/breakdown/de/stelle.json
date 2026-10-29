@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Stelle",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🏛"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Stell",
+					"target": {
+						"language": "de",
+						"canonicalForm": "stell",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Stelle",
+				"url": "https://www.dwds.de/wb/Stelle",
+				"supports": "No Wortzerlegung; Etymologie: mhd. stelle"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Gunstbezeugungen von oberster Stelle, favours from the highest authority: Stelle 'office, authority'. DWDS gives no Wortzerlegung, so it is a bottom word: the Root stell and the Ending e (ADR 0051)."
+	}
+}

@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "einmal",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "1⃣🔁"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ein",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NUM",
+						"canonicalForm": "ein",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": "mal",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Mal",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0054"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: einmal",
+				"url": "https://www.dwds.de/wb/einmal",
+				"supports": "The Wortzerlegung 3ein 2Mal; 3ein is the Kardinalzahlwort, 2Mal the noun"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Einmal hab ich gehört, I once heard: the adverb 'once', not the modal particle einmal. DWDS splits it the numeral 3ein + the noun 2Mal (ADR 0054)."
+	}
+}

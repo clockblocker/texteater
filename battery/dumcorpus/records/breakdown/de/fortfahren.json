@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "fortfahren",
+			"coreFeatures": {
+				"hasSepPrefix": "fort"
+			}
+		},
+		"emojiDescription": "▶"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "fort",
+					"target": {
+						"language": "de",
+						"canonicalForm": "fort-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "fahren",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "fahren",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: fortfahren",
+				"url": "https://www.dwds.de/wb/fortfahren",
+				"supports": "The Wortzerlegung fort- fahren"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "und fuhr fort: »...«, and went on. A particle verb: fort links to its Prefix Morpheme fort- (ADR 0054)."
+	}
+}

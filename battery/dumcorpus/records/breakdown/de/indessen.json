@@ -1,0 +1,67 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "indessen",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "↩"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "in",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "in",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": "dessen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "dessen",
+						"coreFeatures": {
+							"case": "Gen",
+							"number": "Sing",
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Dem",
+							"gender": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0054"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: indessen",
+				"url": "https://www.dwds.de/wb/indessen",
+				"supports": "The Wortzerlegung 1in 1dessen; dessen's Grundform 2der, the Demonstrativpronomen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Innstetten indessen ... merkte nichts, Innstetten however noticed nothing: DWDS's Adverb. DWDS splits it the preposition 1in + dessen, the demonstrative pronoun's genitive, the authored PRON dessen (ADR 0054)."
+	}
+}

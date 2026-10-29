@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "allein",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🧍"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "allein",
+					"target": {
+						"language": "de",
+						"canonicalForm": "allein",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: allein",
+				"url": "https://www.dwds.de/wb/allein",
+				"supports": "No Wortzerlegung; filed 'adverbiell'; the Etymologie labels it Adj. ('abgesondert, ganz für sich', nur prädikativ)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "nur daran, allein zu sein, to be alone: DWDS gives the entry no word class and files the sense 'adverbiell', and its etymology labels it Adj., so ADJ (ADR 0054). DWDS gives no Wortzerlegung, so it is a bottom word: the Root allein and the zero ending (ADR 0051)."
+	}
+}

@@ -1,0 +1,51 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "eher",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "⚖"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "eher",
+					"target": {
+						"language": "de",
+						"canonicalForm": "eher",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: eher",
+				"url": "https://www.dwds.de/wb/eher",
+				"supports": "No Wortzerlegung; Komparativ, Grundform bald"
+			},
+			{
+				"title": "en.wiktionary: eher",
+				"url": "https://en.wiktionary.org/wiki/eher",
+				"supports": "Adverb; chiefly from a haplology of MHG ērer; no German surface split"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "kein Unglück, eher umgekehrt, no misfortune, rather the opposite. An ADV takes no Source (ADR 0050), so DWDS's Grundform line names none. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root eher alone."
+	}
+}

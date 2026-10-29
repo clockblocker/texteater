@@ -1,0 +1,73 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Aschenputtel",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "👧🧹"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Asche",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Asche",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": "n",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-n-",
+						"family": "Morpheme",
+						"kind": "Interfix"
+					}
+				},
+				{
+					"letters": "puttel",
+					"target": {
+						"language": "de",
+						"canonicalForm": "puttel",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0054"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Aschenputtel",
+				"url": "https://www.dwds.de/wb/Aschenputtel",
+				"supports": "A Wortzerlegung naming Asche alone"
+			},
+			{
+				"title": "en.wiktionary: Aschenputtel",
+				"url": "https://en.wiktionary.org/wiki/Aschenputtel",
+				"supports": "'From Asche + Hessian Puddel (untidy or dirty girl)', a dialect word with no German headword"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "in fünf Minuten ist Aschenputtel in eine Prinzessin verwandelt, Effi calling herself a Cinderella: DWDS's Substantiv. DWDS's Wortzerlegung names only Asche, no split, so the en.wiktionary etymology decides: Asche + the dialect Puddel, which no German dictionary lists, so a cranberry piece, its Root puttel (ADR 0050, ADR 0054); the n is the Interfix -n-."
+	}
+}

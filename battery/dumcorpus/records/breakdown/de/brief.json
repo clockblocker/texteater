@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Brief",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "✉"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Brief",
+					"target": {
+						"language": "de",
+						"canonicalForm": "brief",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Brief",
+				"url": "https://www.dwds.de/wb/Brief",
+				"supports": "No Wortzerlegung; Etymologie: ahd. briaf, a loan of lat. breve"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ein kleines Konvolut von Briefen, a bundle of letters. DWDS gives no Wortzerlegung, so it is a bottom word: the Root brief and the zero ending (ADR 0051)."
+	}
+}

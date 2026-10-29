@@ -1,106 +1,86 @@
 {
-	"note": "Adversarial held-out candidates for German segment.inConstituents and segment.inMorphemes, drafted 2026-10-29 as Draft Breakdown Records in records/breakdown/de to judge round 8 (#1241). Reported apart from the headline real-text set (breakdown-heldout-2026-10-29-realtext): fresh words on both sides of each round-8 fix, so the score says whether a fix generalizes or overreaches, not whether its tuning cases pass. Per row: AD1 Nachwelt, AD2 Zuname and AD3 Beiname, a noun whose first part DWDS's Wortzerlegung links to the preposition (1nach, 1zu, 1bei), so outside a verb the particle-like part links to its ADP (ADR 0054), against AD4 nachfragen, where the same particle inside a verb keeps its Prefix nach- (class D1); AD5 bezahlen and AD6 erleben, a prefix and a base verb whose letters also offer the prefix, a noun (Zahl, Leben) and the citation ending, against AD7 verkörpern, ver- + Körper + n, where no verb körpern exists, so the noun reading must stay (class D2); AD8 salzig and AD9 staubig, an -ig base that is a noun (Salz, Staub) and a verb's stem (salzen, stauben) but no adjective, against AD10 rutschig, whose base is the verb rutschen though Rutsch is a noun too (class D3). Every word split follows the DWDS Wortzerlegung (ADR 0054), cited in its record. Avoided: every Lemma with a Breakdown Record; the real-text batch's Lemmas; the words the round-8 unit tests use (Umweg, umfahren, Hinweg, versalzen, verbrennen, durstig); words a Breakdown prompt names; ADR 0054's own examples (Ausland); Mitmensch and überall, whose DWDS links (the prefix mit-, 2über) would contest the ADP rule; Sources. Consistency sets: D1 a particle outside a verb against inside one; D2 prefix + verb against prefix + noun + ending; D3 an -ig base's noun against its verb. Judged 2026-10-29 by two independent judges, system and learner POV (#1241): both keep all ten rows as drafted. They stay out of every Breakdown prompt's examples (#693).",
+	"note": "Adversarial held-out candidates for German segment.inConstituents and segment.inMorphemes, drafted 2026-10-29 as Draft Breakdown Records in records/breakdown/de to judge round 8 (#1241). Reported apart from the headline real-text set (breakdown-heldout-2026-10-29-realtext): fresh words on both sides of each round-8 fix, so the score says whether a fix generalizes or overreaches, not whether its tuning cases pass. Per row: AD1 Nachwelt, AD2 Zuname and AD3 Beiname, a noun whose first part DWDS's Wortzerlegung links to the preposition (1nach, 1zu, 1bei), so outside a verb the particle-like part links to its ADP (ADR 0054), against AD4 nachfragen, where the same particle inside a verb keeps its Prefix nach- (class D1); AD5 bezahlen and AD6 erleben, a prefix and a base verb whose letters also offer the prefix, a noun (Zahl, Leben) and the citation ending, against AD7 verkörpern, ver- + Körper + n, where no verb körpern exists, so the noun reading must stay (class D2); AD8 salzig and AD9 staubig, an -ig base that is a noun (Salz, Staub) and a verb's stem (salzen, stauben) but no adjective, against AD10 rutschig, whose base is the verb rutschen though Rutsch is a noun too (class D3). Every word split follows the DWDS Wortzerlegung (ADR 0054), cited in its record. Avoided: every Lemma with a Breakdown Record; the real-text batch's Lemmas; the words the round-8 unit tests use (Umweg, umfahren, Hinweg, versalzen, verbrennen, durstig); words a Breakdown prompt names; ADR 0054's own examples (Ausland); Mitmensch and überall, whose DWDS links (the prefix mit-, 2über) would contest the ADP rule; Sources. Consistency sets: D1 a particle outside a verb against inside one; D2 prefix + verb against prefix + noun + ending; D3 an -ig base's noun against its verb. Judged 2026-10-29 by two independent judges, system and learner POV (#1241): both keep all ten rows as drafted. They stay out of every Breakdown prompt's examples (#693). Promoted 2026-10-29 after round 8 scored them (#1241): every row is now dev, so the lab scores these records in segment-in-constituents/de:breakdown and their bottom words in segment-in-morphemes/de:breakdown, the sets prompts are tuned on, and round 9 is judged by a fresh real-text sample and a fresh adversarial batch. They stay out of every Breakdown prompt's examples (#693).",
 	"set": "adversarial",
 	"rows": [
 		{
 			"row": "AD1",
 			"record": "breakdown/de/nachwelt",
 			"bucket": "particle-adp",
-			"split": "held-out",
-			"change": "new",
-			"consistencySets": [
-				"D1"
-			]
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["D1"]
 		},
 		{
 			"row": "AD2",
 			"record": "breakdown/de/zuname",
 			"bucket": "particle-adp",
-			"split": "held-out",
-			"change": "new",
-			"consistencySets": [
-				"D1"
-			]
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["D1"]
 		},
 		{
 			"row": "AD3",
 			"record": "breakdown/de/beiname",
 			"bucket": "particle-adp",
-			"split": "held-out",
-			"change": "new",
-			"consistencySets": [
-				"D1"
-			]
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["D1"]
 		},
 		{
 			"row": "AD4",
 			"record": "breakdown/de/nachfragen",
 			"bucket": "particle-verb-control",
-			"split": "held-out",
-			"change": "new",
-			"consistencySets": [
-				"D1"
-			]
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["D1"]
 		},
 		{
 			"row": "AD5",
 			"record": "breakdown/de/bezahlen",
 			"bucket": "prefix-verb",
-			"split": "held-out",
-			"change": "new",
-			"consistencySets": [
-				"D2"
-			]
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["D2"]
 		},
 		{
 			"row": "AD6",
 			"record": "breakdown/de/erleben",
 			"bucket": "prefix-verb",
-			"split": "held-out",
-			"change": "new",
-			"consistencySets": [
-				"D2"
-			]
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["D2"]
 		},
 		{
 			"row": "AD7",
 			"record": "breakdown/de/verkoerpern",
 			"bucket": "prefix-noun-control",
-			"split": "held-out",
-			"change": "new",
-			"consistencySets": [
-				"D2"
-			]
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["D2"]
 		},
 		{
 			"row": "AD8",
 			"record": "breakdown/de/salzig",
 			"bucket": "ig-base-noun",
-			"split": "held-out",
-			"change": "new",
-			"consistencySets": [
-				"D3"
-			]
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["D3"]
 		},
 		{
 			"row": "AD9",
 			"record": "breakdown/de/staubig",
 			"bucket": "ig-base-noun",
-			"split": "held-out",
-			"change": "new",
-			"consistencySets": [
-				"D3"
-			]
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["D3"]
 		},
 		{
 			"row": "AD10",
 			"record": "breakdown/de/rutschig",
 			"bucket": "ig-base-verb-control",
-			"split": "held-out",
-			"change": "new",
-			"consistencySets": [
-				"D3"
-			]
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["D3"]
 		}
 	]
 }

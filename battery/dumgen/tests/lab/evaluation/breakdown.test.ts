@@ -83,6 +83,9 @@ test("the records a held-out batch lists are its set's held-out cases and leave 
 	// Round 7's real-text and adversarial records too.
 	expect(tuned).toContain("breakdown/de/erzaehlen");
 	expect(tuned).toContain("breakdown/de/gewaesser");
+	// Round 8's real-text and adversarial records too.
+	expect(tuned).toContain("breakdown/de/geradezu");
+	expect(tuned).toContain("breakdown/de/nachwelt");
 	// A held-out bottom word is its set's morphemes case, never a tuned one.
 	const tunedMorphemes = morphemesCases("breakdown").map(({ id }) => id);
 	expect(tunedMorphemes.filter((id) => heldOut.has(id))).toEqual([]);

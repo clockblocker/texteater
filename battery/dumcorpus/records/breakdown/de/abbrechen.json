@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "abbrechen",
+			"coreFeatures": {
+				"hasSepPrefix": "ab"
+			}
+		},
+		"emojiDescription": "🌿✂"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ab",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ab-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "brechen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "brechen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: abbrechen",
+				"url": "https://www.dwds.de/wb/abbrechen",
+				"supports": "The Wortzerlegung ab- brechen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "wenn man einen Zweig abbricht, when one breaks off a twig. A particle verb: ab links to its Prefix Morpheme ab- (ADR 0054)."
+	}
+}

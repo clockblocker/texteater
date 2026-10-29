@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "sitzen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🪑"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "sitz",
+					"target": {
+						"language": "de",
+						"canonicalForm": "sitz",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: sitzen",
+				"url": "https://www.dwds.de/wb/sitzen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. sizzen, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "als wir bei Dressel saßen, when we sat at Dressel's. DWDS gives no Wortzerlegung, so it is a bottom word: the Root sitz and the Ending en (ADR 0051)."
+	}
+}

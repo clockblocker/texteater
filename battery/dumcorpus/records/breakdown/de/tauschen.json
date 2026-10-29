@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "tauschen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🔄"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "tausch",
+					"target": {
+						"language": "de",
+						"canonicalForm": "tausch",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: tauschen",
+				"url": "https://www.dwds.de/wb/tauschen",
+				"supports": "No Wortzerlegung; Etymologie: mhd. tūschen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "als Froben das Pferd tauschte, when Froben swapped horses. DWDS gives no Wortzerlegung, so it is a bottom word: the Root tausch and the Ending en (ADR 0051)."
+	}
+}

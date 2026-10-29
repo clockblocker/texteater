@@ -1,0 +1,68 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "sogleich",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "⚡"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "so",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "so",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": "gleich",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "gleich",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0054"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: sogleich",
+				"url": "https://www.dwds.de/wb/sogleich",
+				"supports": "The Wortzerlegung so 2gleich; 2gleich is the Adverb"
+			},
+			{
+				"title": "en.wiktionary: sogleich",
+				"url": "https://en.wiktionary.org/wiki/sogleich",
+				"supports": "'univerbation of so + gleich'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "at once. DWDS splits it the adverbs so + 2gleich (ADR 0054)."
+	}
+}

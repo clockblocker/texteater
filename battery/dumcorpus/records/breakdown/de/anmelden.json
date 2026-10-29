@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "anmelden",
+			"coreFeatures": {
+				"hasSepPrefix": "an"
+			}
+		},
+		"emojiDescription": "📢"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "an",
+					"target": {
+						"language": "de",
+						"canonicalForm": "an-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "melden",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "melden",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: anmelden",
+				"url": "https://www.dwds.de/wb/anmelden",
+				"supports": "The Wortzerlegung an- melden"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "die Signalglocke einen ... Zug angemeldet hätte, had announced a train. A particle verb: an links to its Prefix Morpheme an- (ADR 0054)."
+	}
+}

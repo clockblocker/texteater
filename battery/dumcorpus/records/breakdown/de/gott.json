@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Gott",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "⛪"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Gott",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gott",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gott",
+				"url": "https://www.dwds.de/wb/Gott",
+				"supports": "No Wortzerlegung; Substantiv (Maskulinum); no Mehrwortausdruck Gott verhüte"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Gott verhüte es, God forbid: the noun, since DWDS lists no Mehrwortausdruck for the phrase. DWDS gives no Wortzerlegung, so it is a bottom word: the Root gott and the zero ending (ADR 0051)."
+	}
+}

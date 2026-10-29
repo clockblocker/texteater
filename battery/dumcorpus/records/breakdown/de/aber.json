@@ -28,9 +28,7 @@
 		}
 	},
 	"sources": {
-		"adrs": [
-			"ADR-0051"
-		],
+		"adrs": ["ADR-0051"],
 		"rules": [],
 		"references": [
 			{

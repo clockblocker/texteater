@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Majorität",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🗳"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Majorität",
+					"target": {
+						"language": "de",
+						"canonicalForm": "majorität",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Majorität",
+				"url": "https://www.dwds.de/wb/Majorit%C3%A4t",
+				"supports": "No Wortzerlegung; Substantiv (Femininum); Etymologie: a loan of frz. majorité, mlat. maioritas"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "mir die Majorität sichern, win me the majority. DWDS gives no Wortzerlegung, so it is a bottom word: the Root majorität and the zero ending (ADR 0051)."
+	}
+}

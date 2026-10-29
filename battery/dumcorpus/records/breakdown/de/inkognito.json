@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "inkognito",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🕶"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "inkognito",
+					"target": {
+						"language": "de",
+						"canonicalForm": "inkognito",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: inkognito",
+				"url": "https://www.dwds.de/wb/inkognito",
+				"supports": "No Wortzerlegung; Adverb; Herkunft aus gleichbedeutend ital. in cognito"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "müssen wir diesmal inkognito bleiben, we must stay incognito. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root inkognito alone."
+	}
+}

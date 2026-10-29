@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Trotz",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "😤"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Trotz",
+					"target": {
+						"language": "de",
+						"canonicalForm": "trotz",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Trotz",
+				"url": "https://www.dwds.de/wb/Trotz",
+				"supports": "No Wortzerlegung; Substantiv (Maskulinum); Etymologie: mhd. traz"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Auflehnung, Trotz, Indisziplin, defiance: the noun, its own Lemma beside the gold ADP trotz. DWDS gives no Wortzerlegung, so it is a bottom word: the Root trotz and the zero ending (ADR 0051)."
+	}
+}

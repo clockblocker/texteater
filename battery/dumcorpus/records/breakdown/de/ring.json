@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Ring",
+			"coreFeatures": {
+				"article": null,
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🤴📜"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Ring",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ring",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "en.wiktionary: Ring",
+				"url": "https://en.wiktionary.org/wiki/Ring",
+				"supports": "Noun, a ring; no German split"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Ring, Ring - ... einen Sagenkönig dieses Namens, the name of a legendary king, a character (figure and motif) with a Core gender (Masc); the common noun Ring is one no dictionary splits. No dictionary splits it within German, and a PROPN has no Source (ADR 0050 gives Sources to NOUN, VERB and ADJ only), so it is a bottom word: the Root ring and the zero ending, since PROPN has an ending slot (ADR 0051)."
+	}
+}

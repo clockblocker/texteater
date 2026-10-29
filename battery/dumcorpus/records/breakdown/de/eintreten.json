@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "eintreten",
+			"coreFeatures": {
+				"hasSepPrefix": "ein"
+			}
+		},
+		"emojiDescription": "🚶🚪"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ein",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ein-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "treten",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "treten",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: eintreten",
+				"url": "https://www.dwds.de/wb/eintreten",
+				"supports": "The Wortzerlegung ein- treten"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "als er in das Vestibül eintrat, as he entered the hall. A particle verb: ein links to its Prefix Morpheme ein- (ADR 0054)."
+	}
+}

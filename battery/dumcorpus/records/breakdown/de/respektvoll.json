@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "respektvoll",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "🙇"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "respekt",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Respekt",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": "voll",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-voll",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: respektvoll",
+				"url": "https://www.dwds.de/wb/respektvoll",
+				"supports": "The Wortzerlegung Respekt -voll"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Ihren respektvollst ergebenen Alonzo G., most respectfully: the adjective's superlative. DWDS splits it Respekt + -voll (ADR 0050)."
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "zwingen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🏋"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "zwing",
+					"target": {
+						"language": "de",
+						"canonicalForm": "zwing",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: zwingen",
+				"url": "https://www.dwds.de/wb/zwingen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. dwingan, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "in einer Viertelstunde zwingen wir's, we'll manage it in a quarter of an hour: zwingen 'bewältigen', DWDS's sense of mastering a task. DWDS gives no Wortzerlegung, so it is a bottom word: the Root zwing and the Ending en (ADR 0051)."
+	}
+}

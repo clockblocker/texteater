@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Mensch",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🧑"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Mensch",
+					"target": {
+						"language": "de",
+						"canonicalForm": "mensch",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Mensch",
+				"url": "https://www.dwds.de/wb/Mensch",
+				"supports": "No Wortzerlegung; Etymologie: ahd. mennisco, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "bis zu dreitausend Menschen, up to three thousand people: a generic masculine, neutral figure (Emoji Description conventions). DWDS gives no Wortzerlegung, so it is a bottom word: the Root mensch and the zero ending (ADR 0051)."
+	}
+}

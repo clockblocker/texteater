@@ -1,0 +1,64 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "anfangs",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🌱"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "anfang",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Anfang",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": "s",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-s",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0054"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: anfangs",
+				"url": "https://www.dwds.de/wb/anfangs",
+				"supports": "No Wortzerlegung; Adverb; Grundform Anfang"
+			},
+			{
+				"title": "en.wiktionary: anfangs",
+				"url": "https://en.wiktionary.org/wiki/anfangs",
+				"supports": "'From Anfang + -s' (the adverbial suffix)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "der anfangs aussah wie ein Hospitalit, who at first looked like an inmate. An ADV takes no Source (ADR 0050), and DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: Anfang + the adverbial suffix -s (ADR 0054)."
+	}
+}

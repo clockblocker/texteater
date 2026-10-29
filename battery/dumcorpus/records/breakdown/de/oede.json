@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "öde",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "🏜"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "öd",
+					"target": {
+						"language": "de",
+						"canonicalForm": "öd",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: öde",
+				"url": "https://www.dwds.de/wb/%C3%B6de",
+				"supports": "No Wortzerlegung; Adjektiv; Etymologie: ahd. ōdi, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "wie leer und öde ist das alles, how empty and bleak. DWDS gives no Wortzerlegung, so it is a bottom word: the Root öd and the Ending e (ADR 0051)."
+	}
+}

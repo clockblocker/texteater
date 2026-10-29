@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Stunde",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🕐"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Stund",
+					"target": {
+						"language": "de",
+						"canonicalForm": "stund",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Stunde",
+				"url": "https://www.dwds.de/wb/Stunde",
+				"supports": "No Wortzerlegung; Etymologie: ahd. stunta, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Um die festgesetzte Stunde, at the appointed hour. DWDS gives no Wortzerlegung, so it is a bottom word: the Root stund and the Ending e (ADR 0051)."
+	}
+}

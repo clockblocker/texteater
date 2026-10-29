@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Mann",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "👨"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Mann",
+					"target": {
+						"language": "de",
+						"canonicalForm": "mann",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Mann",
+				"url": "https://www.dwds.de/wb/Mann",
+				"supports": "No Wortzerlegung; Etymologie: ahd. man, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "dazu ein Mann von Charakter, a man of character: an inherently male noun (Emoji Description conventions). DWDS gives no Wortzerlegung, so it is a bottom word: the Root mann and the zero ending (ADR 0051)."
+	}
+}

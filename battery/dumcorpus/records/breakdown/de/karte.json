@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Karte",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🖼✉"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Kart",
+					"target": {
+						"language": "de",
+						"canonicalForm": "kart",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Karte",
+				"url": "https://www.dwds.de/wb/Karte",
+				"supports": "No Wortzerlegung; Etymologie: a loan of frz. carte"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Vetter Briest sandte eine Karte: Schneelandschaft ..., a picture postcard. DWDS gives no Wortzerlegung, so it is a bottom word: the Root kart and the Ending e (ADR 0051)."
+	}
+}

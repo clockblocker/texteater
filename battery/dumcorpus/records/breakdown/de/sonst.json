@@ -1,0 +1,51 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "sonst",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🔀"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "sonst",
+					"target": {
+						"language": "de",
+						"canonicalForm": "sonst",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: sonst",
+				"url": "https://www.dwds.de/wb/sonst",
+				"supports": "No Wortzerlegung; Adverb"
+			},
+			{
+				"title": "en.wiktionary: sonst",
+				"url": "https://en.wiktionary.org/wiki/sonst",
+				"supports": "From MHG sunst, OHG sus, inherited; no German surface split"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "otherwise, the control: no dictionary splits it, though its letters open with so. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root sonst alone."
+	}
+}

@@ -1,0 +1,64 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "freilich",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "✅"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "frei",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "frei",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": "lich",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-lich",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0054"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: freilich",
+				"url": "https://www.dwds.de/wb/freilich",
+				"supports": "No Wortzerlegung; Adverb"
+			},
+			{
+				"title": "en.wiktionary: freilich",
+				"url": "https://en.wiktionary.org/wiki/freilich",
+				"supports": "'surface analysis frei + -lich'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "aber freilich, alle Geheimräte haben solche Lieblingsworte, but of course. DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: frei + -lich (ADR 0054)."
+	}
+}

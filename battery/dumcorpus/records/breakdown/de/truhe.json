@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Truhe",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🧰"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Truh",
+					"target": {
+						"language": "de",
+						"canonicalForm": "truh",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Truhe",
+				"url": "https://www.dwds.de/wb/Truhe",
+				"supports": "No Wortzerlegung; Etymologie: ahd. truha"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "eine ganze Truhe voll Weißzeug, a whole chest of linen. DWDS gives no Wortzerlegung, so it is a bottom word: the Root truh and the Ending e (ADR 0051)."
+	}
+}

@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "gerade",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🎯"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "gerade",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gerade",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gerade",
+				"url": "https://www.dwds.de/wb/gerade",
+				"supports": "No Wortzerlegung; the Adverb entry ('betont die Exaktheit einer Angabe: genau'), apart from the two Adjektiv entries"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "gerade das, was die Männer einen 'Scharm' nennen, precisely that: DWDS's Adverb, so ADV (ADR 0054); geradezu's gold description 🎯 fits it too. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root gerade alone."
+	}
+}

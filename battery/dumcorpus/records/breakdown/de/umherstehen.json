@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "umherstehen",
+			"coreFeatures": {
+				"hasSepPrefix": "umher"
+			}
+		},
+		"emojiDescription": "🧍🔀"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "umher",
+					"target": {
+						"language": "de",
+						"canonicalForm": "umher-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "stehen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "stehen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: umherstehen",
+				"url": "https://www.dwds.de/wb/umherstehen",
+				"supports": "The Wortzerlegung umher- stehen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Strandhafer stand umher, beach grass stood about. A particle verb: umher links to its Prefix Morpheme umher- (ADR 0054)."
+	}
+}

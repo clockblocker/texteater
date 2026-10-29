@@ -1,0 +1,56 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Ems",
+			"coreFeatures": {
+				"article": null,
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "🏙"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Ems",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ems",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "en.wiktionary: Ems",
+				"url": "https://en.wiktionary.org/wiki/Ems",
+				"supports": "Proper noun: the river, and the spa town on the Lahn, from the older form Embs"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "und dann ebensolange Ems, then as long in Ems, the spa town Bad Ems, a place name with a Core gender (Neut, Rule de/proper-noun-article), 🏙 as any other city (Emoji Description conventions). No dictionary splits it within German, and a PROPN has no Source (ADR 0050 gives Sources to NOUN, VERB and ADJ only), so it is a bottom word: the Root ems and the zero ending, since PROPN has an ending slot (ADR 0051)."
+	}
+}

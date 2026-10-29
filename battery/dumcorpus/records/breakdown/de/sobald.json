@@ -1,0 +1,66 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "SCONJ",
+			"canonicalForm": "sobald",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "⏩"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "so",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "so",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": "bald",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "bald",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0054"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: sobald",
+				"url": "https://www.dwds.de/wb/sobald",
+				"supports": "The Wortzerlegung so bald"
+			},
+			{
+				"title": "DWDS: sobald",
+				"url": "https://www.dwds.de/wb/sobald",
+				"supports": "Konjunktion, leitet einen temporalen Gliedsatz ein"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "as soon as: DWDS's Konjunktion, so SCONJ (ADR 0054). DWDS splits it the adverbs so + bald (ADR 0054)."
+	}
+}

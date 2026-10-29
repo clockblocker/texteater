@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "einleben",
+			"coreFeatures": {
+				"hasSepPrefix": "ein"
+			}
+		},
+		"emojiDescription": "🪞🏡"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ein",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ein-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "leben",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "leben",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: einleben",
+				"url": "https://www.dwds.de/wb/einleben",
+				"supports": "The Wortzerlegung ein- leben"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Man lebte sich schnell ein, they soon settled in: the Reading sich einleben, whose sich fills a Required Reflexive Slot, so its description opens with 🪞 and the Breakdown is the word's (ADR 0052). A particle verb: ein links to its Prefix Morpheme ein- (ADR 0054)."
+	}
+}

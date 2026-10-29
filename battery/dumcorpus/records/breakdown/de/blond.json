@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "blond",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "👱"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "blond",
+					"target": {
+						"language": "de",
+						"canonicalForm": "blond",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: blond",
+				"url": "https://www.dwds.de/wb/blond",
+				"supports": "No Wortzerlegung; Etymologie: a loan of frz. blond"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Und Sie haben auch blondes, and you have blond hair too: the adjective, its noun left out. DWDS gives no Wortzerlegung, so it is a bottom word: the Root blond and the zero ending (ADR 0051)."
+	}
+}

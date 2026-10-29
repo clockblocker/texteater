@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "entsinnen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🪞🧠"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ent",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ent-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "sinnen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sinnen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: entsinnen",
+				"url": "https://www.dwds.de/wb/entsinnen",
+				"supports": "The Wortzerlegung ent- sinnen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Allmählich entsann sie sich auch, she gradually remembered: the Reading sich entsinnen, whose sich fills a Required Reflexive Slot, so its description opens with 🪞, as erinnern's 'remember' Reading 🪞🧠 does (ADR 0052). DWDS splits it ent- + sinnen (ADR 0050)."
+	}
+}

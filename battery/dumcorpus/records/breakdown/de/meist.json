@@ -1,0 +1,51 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "meist",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "📊"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "meist",
+					"target": {
+						"language": "de",
+						"canonicalForm": "meist",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: meist",
+				"url": "https://www.dwds.de/wb/meist",
+				"supports": "No Wortzerlegung; Superlativ, Grundformen viel, sehr"
+			},
+			{
+				"title": "en.wiktionary: meist",
+				"url": "https://en.wiktionary.org/wiki/meist",
+				"supports": "Adverb; from OHG meist, inherited; no German surface split"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "deren Beantwortung er meist nicht abwartete, mostly. An ADV takes no Source (ADR 0050), so DWDS's Grundform line names none. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root meist alone."
+	}
+}

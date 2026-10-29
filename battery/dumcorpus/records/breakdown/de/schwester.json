@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Schwester",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "👭"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Schwester",
+					"target": {
+						"language": "de",
+						"canonicalForm": "schwester",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Schwester",
+				"url": "https://www.dwds.de/wb/Schwester",
+				"supports": "No Wortzerlegung; Etymologie: ahd. swester, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "dessen Mutter und Schwester, his mother and sister: a kinship noun, 👭 (Emoji Description conventions). DWDS gives no Wortzerlegung, so it is a bottom word: the Root schwester and the zero ending (ADR 0051)."
+	}
+}

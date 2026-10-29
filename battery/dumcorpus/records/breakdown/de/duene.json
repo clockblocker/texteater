@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Düne",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🏖"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Dün",
+					"target": {
+						"language": "de",
+						"canonicalForm": "dün",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Düne",
+				"url": "https://www.dwds.de/wb/D%C3%BCne",
+				"supports": "No Wortzerlegung; Etymologie: a loan of mnl. dūne"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Und immer bloß die Dünen, nothing but dunes. DWDS gives no Wortzerlegung, so it is a bottom word: the Root dün and the Ending e (ADR 0051)."
+	}
+}

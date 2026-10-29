@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "einstecken",
+			"coreFeatures": {
+				"hasSepPrefix": "ein"
+			}
+		},
+		"emojiDescription": "📮"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ein",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ein-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "stecken",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "stecken",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: einstecken",
+				"url": "https://www.dwds.de/wb/einstecken",
+				"supports": "The Wortzerlegung ein- 2stecken"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "um da den Brief einzustecken, to post the letter. A particle verb: ein links to its Prefix Morpheme ein- (ADR 0054)."
+	}
+}

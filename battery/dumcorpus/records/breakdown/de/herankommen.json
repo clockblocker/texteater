@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "herankommen",
+			"coreFeatures": {
+				"hasSepPrefix": "heran"
+			}
+		},
+		"emojiDescription": "🔜"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "heran",
+					"target": {
+						"language": "de",
+						"canonicalForm": "heran-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "kommen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "kommen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: herankommen",
+				"url": "https://www.dwds.de/wb/herankommen",
+				"supports": "The Wortzerlegung heran- kommen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "als das neue Jahr herankam, as the new year drew near. A particle verb: heran links to its Prefix Morpheme heran- (ADR 0054)."
+	}
+}

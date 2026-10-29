@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "arm",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "😢"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "arm",
+					"target": {
+						"language": "de",
+						"canonicalForm": "arm",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: arm",
+				"url": "https://www.dwds.de/wb/arm",
+				"supports": "No Wortzerlegung; Adjektiv; Komparativ ärmer"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "die arme Roswitha, poor Roswitha: the sense 'pitiable'. DWDS gives no Wortzerlegung, so it is a bottom word: the Root arm and the zero ending (ADR 0051)."
+	}
+}

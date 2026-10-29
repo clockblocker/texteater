@@ -1,0 +1,55 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Woche",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "📅"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Woch",
+					"target": {
+						"language": "de",
+						"canonicalForm": "woch",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Woche",
+				"url": "https://www.dwds.de/wb/Woche",
+				"supports": "No Wortzerlegung; Etymologie: ahd. wehha, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "sechs Wochen in solchem Falle, six weeks: a time unit, plain 📅 (Emoji Description conventions). DWDS gives no Wortzerlegung, so it is a bottom word: the Root woch and the Ending e (ADR 0051)."
+	}
+}

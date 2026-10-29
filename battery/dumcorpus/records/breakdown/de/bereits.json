@@ -1,0 +1,64 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "bereits",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "✔🕰"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "bereit",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "bereit",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": "s",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-s",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0050", "ADR-0054"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: bereits",
+				"url": "https://www.dwds.de/wb/bereits",
+				"supports": "No Wortzerlegung; Adverb"
+			},
+			{
+				"title": "en.wiktionary: bereits",
+				"url": "https://en.wiktionary.org/wiki/bereits",
+				"supports": "'From bereit + -s' (the adverbial suffix)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "hatte hier bereits serviert, had already served. DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: the adjective bereit + the adverbial suffix -s (ADR 0054)."
+	}
+}

@@ -1,0 +1,51 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "heute",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "👇📅"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "heute",
+					"target": {
+						"language": "de",
+						"canonicalForm": "heute",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0051"],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: heute",
+				"url": "https://www.dwds.de/wb/heute",
+				"supports": "No Wortzerlegung; Adverb; Nebenform umgangssprachlich heut"
+			},
+			{
+				"title": "en.wiktionary: heute",
+				"url": "https://en.wiktionary.org/wiki/heute",
+				"supports": "From MHG hiute, OHG hiutu, a contraction of hiu tagu; no German surface split"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "aber heut ist schon der 24., but today is already the 24th: heut is DWDS's colloquial Nebenform of heute, its Lemma, and the gold description of heute is 👇📅 (Emoji Description conventions). DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root heute alone."
+	}
+}
