@@ -1,0 +1,62 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "holländisch",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🇳🇱"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "holländ",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Holland",
+						"coreFeatures": {
+							"article": null,
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": "isch",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-isch",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: holländisch",
+				"url": "https://www.dwds.de/wb/holl%C3%A4ndisch",
+				"supports": "The Wortzerlegung Holland -isch"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "irgendeinem holländischen oder portugiesischen Schiff, Dutch. DWDS splits it Holland + -isch (ADR 0050); a part may be PROPN, and holländ shows its umlaut."
+	}
+}

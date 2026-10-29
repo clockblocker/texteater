@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "aufspringen",
+			"coreFeatures": {
+				"hasSepPrefix": "auf"
+			}
+		},
+		"emojiDescription": "🦘"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "auf",
+					"target": {
+						"language": "de",
+						"canonicalForm": "auf-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "springen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "springen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: aufspringen",
+				"url": "https://www.dwds.de/wb/aufspringen",
+				"supports": "The Wortzerlegung auf- springen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "drei Schulkinder aufspringen sah, jump on. A particle verb: auf links to its Prefix Morpheme auf- (ADR 0054)."
+	}
+}

@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Jahr",
+			"coreFeatures": {
+				"gender": "Neut"
+			}
+		},
+		"emojiDescription": "📅"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Jahr",
+					"target": {
+						"language": "de",
+						"canonicalForm": "jahr",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Jahr",
+				"url": "https://www.dwds.de/wb/Jahr",
+				"supports": "No Wortzerlegung; Etymologie: ahd. jār, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "schon spät im Jahr, late in the year. DWDS gives no Wortzerlegung, so it is a bottom word: the Root jahr and the zero ending (ADR 0051)."
+	}
+}

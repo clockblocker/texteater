@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "ganz",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🧱"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "ganz",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ganz",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: ganz",
+				"url": "https://www.dwds.de/wb/ganz",
+				"supports": "No Wortzerlegung; Adjektiv, ohne Steigerung; the etymology's Adj. 'heil, unversehrt, vollständig, gesamt'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ganze Schränke voll Noten, whole cupboards: the adjective, which DWDS's etymology labels Adj. beside the degree word's Adv. (ADR 0054). DWDS gives no Wortzerlegung, so it is a bottom word: the Root ganz and the zero ending (ADR 0051)."
+	}
+}

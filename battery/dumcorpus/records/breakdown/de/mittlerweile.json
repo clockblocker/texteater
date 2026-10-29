@@ -1,0 +1,71 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "mittlerweile",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "⏳"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "mittler",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "mittler",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": "weile",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Weile",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0054"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: mittlerweile",
+				"url": "https://www.dwds.de/wb/mittlerweile",
+				"supports": "A Wortzerlegung naming mittler alone"
+			},
+			{
+				"title": "en.wiktionary: mittlerweile",
+				"url": "https://en.wiktionary.org/wiki/mittlerweile",
+				"supports": "'From (in) mittler Weile'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "hatte sich mittlerweile ... hingesetzt, meanwhile. DWDS's Wortzerlegung names only mittler, no split, so the en.wiktionary etymology decides: mittler + Weile (ADR 0054)."
+	}
+}

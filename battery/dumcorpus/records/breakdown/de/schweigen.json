@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "schweigen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🤐"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "schweig",
+					"target": {
+						"language": "de",
+						"canonicalForm": "schweig",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: schweigen",
+				"url": "https://www.dwds.de/wb/schweigen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. swīgēn, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Effi schwieg. DWDS gives no Wortzerlegung, so it is a bottom word: the Root schweig and the Ending en (ADR 0051)."
+	}
+}

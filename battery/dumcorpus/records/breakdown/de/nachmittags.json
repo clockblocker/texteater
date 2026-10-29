@@ -1,0 +1,67 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "nachmittags",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🕒"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "nachmittag",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Nachmittag",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": "s",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-s",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0054"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: nachmittags",
+				"url": "https://www.dwds.de/wb/nachmittags",
+				"supports": "No Wortzerlegung; Adverb; Grundform Nachmittag"
+			},
+			{
+				"title": "en.wiktionary: nachmittags",
+				"url": "https://en.wiktionary.org/wiki/nachmittags",
+				"supports": "'From Nachmittag + -s' (the adverbial suffix)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "fuhren nachmittags in den Zoologischen Garten, in the afternoon. An ADV takes no Source (ADR 0050), and DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: Nachmittag + the adverbial suffix -s (ADR 0054)."
+	}
+}

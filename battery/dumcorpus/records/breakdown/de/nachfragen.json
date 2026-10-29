@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "nachfragen",
+			"coreFeatures": {
+				"hasSepPrefix": "nach"
+			}
+		},
+		"emojiDescription": "❓"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "nach",
+					"target": {
+						"language": "de",
+						"canonicalForm": "nach-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "fragen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "fragen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: nachfragen",
+				"url": "https://www.dwds.de/wb/nachfragen",
+				"supports": "The Wortzerlegung nach- fragen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "to ask again, the control: inside a verb the same particle keeps its Prefix. A particle verb: nach links to its Prefix Morpheme nach- (ADR 0054)."
+	}
+}

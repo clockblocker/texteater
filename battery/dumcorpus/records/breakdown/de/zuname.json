@@ -1,0 +1,64 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Zuname",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "🪪"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Zu",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "zu",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": "name",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Name",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0054"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Zuname",
+				"url": "https://www.dwds.de/wb/Zuname",
+				"supports": "The Wortzerlegung 1zu Name"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "a surname. DWDS splits it the preposition 1zu + Name: outside a verb a particle-like part links to its ADP (ADR 0054)."
+	}
+}

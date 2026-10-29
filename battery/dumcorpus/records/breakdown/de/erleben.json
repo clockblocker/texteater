@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "erleben",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🎢"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "er-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "leben",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "leben",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: erleben",
+				"url": "https://www.dwds.de/wb/erleben",
+				"supports": "The Wortzerlegung er- leben"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "to experience. DWDS splits it er- + leben, the verb, though er- + Leben + -en is in its letters (ADR 0050)."
+	}
+}

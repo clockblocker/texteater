@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "leben",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🌿"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "leb",
+					"target": {
+						"language": "de",
+						"canonicalForm": "leb",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: leben",
+				"url": "https://www.dwds.de/wb/leben",
+				"supports": "No Wortzerlegung; Etymologie: ahd. lebēn, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "die ... in ihr lebte, lived in her. DWDS gives no Wortzerlegung, so it is a bottom word: the Root leb and the Ending en (ADR 0051)."
+	}
+}

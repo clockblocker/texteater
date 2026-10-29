@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "vorkommen",
+			"coreFeatures": {
+				"hasSepPrefix": "vor"
+			}
+		},
+		"emojiDescription": "🔁"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "vor",
+					"target": {
+						"language": "de",
+						"canonicalForm": "vor-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "kommen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "kommen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: vorkommen",
+				"url": "https://www.dwds.de/wb/vorkommen",
+				"supports": "The Wortzerlegung vor- kommen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "daß Kompetenzkonflikte kaum vorkamen, hardly occurred. A particle verb: vor links to its Prefix Morpheme vor- (ADR 0054)."
+	}
+}

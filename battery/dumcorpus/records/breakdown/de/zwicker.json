@@ -1,0 +1,62 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Zwicker",
+			"coreFeatures": {
+				"article": null,
+				"gender": null
+			}
+		},
+		"emojiDescription": "👓"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Zwick",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "zwicken",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				},
+				{
+					"letters": "er",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-er",
+						"family": "Morpheme",
+						"kind": "Suffix"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Zwicker",
+				"url": "https://www.dwds.de/wb/Zwicker",
+				"supports": "The common noun's Wortzerlegung zwicken 1-er"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Die Zwicker war keine Frau für Effi, Geheimrätin Zwicker's surname, so no Core gender (Rule de/proper-noun-article). A speaking name built from a word, so like Holzapfel it has Constituents: the verb zwicken and the suffix -er, as DWDS splits the common noun (ADR 0050)."
+	}
+}

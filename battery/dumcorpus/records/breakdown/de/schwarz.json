@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "schwarz",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "⚫"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "schwarz",
+					"target": {
+						"language": "de",
+						"canonicalForm": "schwarz",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: schwarz",
+				"url": "https://www.dwds.de/wb/schwarz",
+				"supports": "No Wortzerlegung; Etymologie: ahd. swarz, inherited; Komparativ schwärzer"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "reichende schwarze Kreppschleier, black veils. DWDS gives no Wortzerlegung, so it is a bottom word: the Root schwarz and the zero ending (ADR 0051)."
+	}
+}

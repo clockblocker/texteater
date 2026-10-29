@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "nennen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🏷"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "nenn",
+					"target": {
+						"language": "de",
+						"canonicalForm": "nenn",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: nennen",
+				"url": "https://www.dwds.de/wb/nennen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. nemnen, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "meinen Freund nennen zu dürfen, to call him my friend. DWDS gives no Wortzerlegung, so it is a bottom word: the Root nenn and the Ending en (ADR 0051)."
+	}
+}

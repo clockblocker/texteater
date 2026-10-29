@@ -1,0 +1,64 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "verkörpern",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🎭"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ver",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ver-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "körper",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Körper",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": "n"
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: verkörpern",
+				"url": "https://www.dwds.de/wb/verk%C3%B6rpern",
+				"supports": "The Wortzerlegung ver- Körper"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "to embody, the control: there is no verb körpern, so DWDS splits it ver- + Körper, and the citation ending n is unlinked filler (ADR 0050)."
+	}
+}

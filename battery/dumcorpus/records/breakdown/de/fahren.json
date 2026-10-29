@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "fahren",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🚤"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "fahr",
+					"target": {
+						"language": "de",
+						"canonicalForm": "fahr",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: fahren",
+				"url": "https://www.dwds.de/wb/fahren",
+				"supports": "No Wortzerlegung; Etymologie: ahd. faran, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "nach dem Lido fahre, travel there. DWDS gives no Wortzerlegung, so it is a bottom word: the Root fahr and the Ending en (ADR 0051)."
+	}
+}

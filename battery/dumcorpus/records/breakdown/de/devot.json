@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "devot",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "🙇"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "devot",
+					"target": {
+						"language": "de",
+						"canonicalForm": "devot",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: devot",
+				"url": "https://www.dwds.de/wb/devot",
+				"supports": "No Wortzerlegung; Etymologie: a loan of lat. dēvōtus; Komparativ devoter"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "seinen Respekt devotest zu Füßen legen, most humbly: the adjective's superlative. DWDS gives no Wortzerlegung, so it is a bottom word: the Root devot and the zero ending (ADR 0051)."
+	}
+}

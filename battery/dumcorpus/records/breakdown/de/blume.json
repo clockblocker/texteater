@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Blume",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "💐"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Blum",
+					"target": {
+						"language": "de",
+						"canonicalForm": "blum",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "e",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-e",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Blume",
+				"url": "https://www.dwds.de/wb/Blume",
+				"supports": "No Wortzerlegung; Etymologie: ahd. bluoma, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "durch die schönen Blumen, flowers. DWDS gives no Wortzerlegung, so it is a bottom word: the Root blum and the Ending e (ADR 0051)."
+	}
+}

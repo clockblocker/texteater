@@ -1,0 +1,64 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "geradezu",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🎯"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "gerade",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "gerade",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": "zu",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "zu",
+						"coreFeatures": {}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0054"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: geradezu",
+				"url": "https://www.dwds.de/wb/geradezu",
+				"supports": "The Wortzerlegung 1gerade 2zu; 2zu is DWDS's Partikel entry"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "so wäre sie geradezu eine Schönheit gewesen, downright. DWDS splits it the adjective gerade + zu (ADR 0050); outside a verb a particle-like part links to its ADP, so zu links to ADP zu (ADR 0054), though DWDS's link names its Partikel entry 2zu."
+	}
+}

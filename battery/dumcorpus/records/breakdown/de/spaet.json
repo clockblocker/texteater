@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "spät",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "🌙"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "spät",
+					"target": {
+						"language": "de",
+						"canonicalForm": "spät",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: spät",
+				"url": "https://www.dwds.de/wb/sp%C3%A4t",
+				"supports": "No Wortzerlegung; Adjektiv, Komparativ später"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "das späte Diner, the late dinner. DWDS gives no Wortzerlegung, so it is a bottom word: the Root spät and the zero ending (ADR 0051)."
+	}
+}

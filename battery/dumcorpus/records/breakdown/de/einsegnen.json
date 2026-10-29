@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "einsegnen",
+			"coreFeatures": {
+				"hasSepPrefix": "ein"
+			}
+		},
+		"emojiDescription": "⛪"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "ein",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ein-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "segnen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "segnen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: einsegnen",
+				"url": "https://www.dwds.de/wb/einsegnen",
+				"supports": "The Wortzerlegung ein- segnen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "wenn Anniechen eingesegnet wird, is confirmed. A particle verb: ein links to its Prefix Morpheme ein- (ADR 0054)."
+	}
+}

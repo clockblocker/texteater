@@ -1,0 +1,69 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "SCONJ",
+			"canonicalForm": "solange",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "⏱"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "so",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "so",
+						"coreFeatures": {
+							"comparable": null
+						}
+					}
+				},
+				{
+					"letters": "lange",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "lange",
+						"coreFeatures": {
+							"comparable": "Yes"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0054"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: solange",
+				"url": "https://www.dwds.de/wb/solange",
+				"supports": "No Wortzerlegung; Konjunktion, leitet einen temporalen Gliedsatz ein"
+			},
+			{
+				"title": "en.wiktionary: solange",
+				"url": "https://en.wiktionary.org/wiki/solange",
+				"supports": "'From so + lange'"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Aber solange wir noch Männer haben, as long as: DWDS's Konjunktion, so SCONJ (ADR 0054). DWDS gives no Wortzerlegung, so the en.wiktionary etymology decides: the adverbs so + lange (ADR 0054)."
+	}
+}

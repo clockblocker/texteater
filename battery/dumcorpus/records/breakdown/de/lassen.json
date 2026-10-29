@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "lassen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🤲"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "lass",
+					"target": {
+						"language": "de",
+						"canonicalForm": "lass",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: lassen",
+				"url": "https://www.dwds.de/wb/lassen",
+				"supports": "No Wortzerlegung; Verb; Etymologie: ahd. lāʒʒan, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "das ließ' ich mir nicht nehmen, I would not let anyone take that from me: the full verb lassen with an infinitive, not the modal-passive sich lassen (AUX), and no Mehrwortausdruck of DWDS fixes the phrase. DWDS gives no Wortzerlegung, so it is a bottom word: the Root lass and the Ending en (ADR 0051)."
+	}
+}

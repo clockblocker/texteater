@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "CCONJ",
+			"canonicalForm": "oder",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🔀"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "oder",
+					"target": {
+						"language": "de",
+						"canonicalForm": "oder",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: oder",
+				"url": "https://www.dwds.de/wb/oder",
+				"supports": "No Wortzerlegung; Konjunktion; Etymologie: ahd. odar"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "einer solchen Gefahr oder, Wenn das zuviel gesagt ist, ..., or. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root oder alone."
+	}
+}

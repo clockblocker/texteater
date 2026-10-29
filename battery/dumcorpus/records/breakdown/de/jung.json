@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "jung",
+			"coreFeatures": {
+				"comparable": "Yes"
+			}
+		},
+		"emojiDescription": "🐣"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "jung",
+					"target": {
+						"language": "de",
+						"canonicalForm": "jung",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: jung",
+				"url": "https://www.dwds.de/wb/jung",
+				"supports": "No Wortzerlegung; Etymologie: ahd. jung, inherited; Komparativ jünger"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Nur keinen jungen, no young one: the adjective, its noun left out after the determiner. DWDS gives no Wortzerlegung, so it is a bottom word: the Root jung and the zero ending (ADR 0051)."
+	}
+}

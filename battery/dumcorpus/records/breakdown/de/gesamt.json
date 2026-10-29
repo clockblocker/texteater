@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADJ",
+			"canonicalForm": "gesamt",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🌐"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "gesamt",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gesamt",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: gesamt",
+				"url": "https://www.dwds.de/wb/gesamt",
+				"supports": "No Wortzerlegung; Adjektiv (attributiv); Etymologie: ahd. gisamanōt, the participle of samanōn, no longer read"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "der gesamte Nachbaradel, all the neighbouring nobility. en.wiktionary gives only its Middle High German participle, no German split. DWDS gives no Wortzerlegung, so it is a bottom word: the Root gesamt and the zero ending (ADR 0051)."
+	}
+}

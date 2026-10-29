@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Angst",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "😨"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Angst",
+					"target": {
+						"language": "de",
+						"canonicalForm": "angst",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Angst",
+				"url": "https://www.dwds.de/wb/Angst",
+				"supports": "No Wortzerlegung; Etymologie: ahd. angust, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "ihrer Sorgen und Ängste, her fears. DWDS gives no Wortzerlegung, so it is a bottom word: the Root angst and the zero ending (ADR 0051)."
+	}
+}

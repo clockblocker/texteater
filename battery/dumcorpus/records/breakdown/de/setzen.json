@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "setzen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🪑"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "setz",
+					"target": {
+						"language": "de",
+						"canonicalForm": "setz",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: setzen",
+				"url": "https://www.dwds.de/wb/setzen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. sezzen, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "setzte sich dann wieder, sat down again: the Reading sich setzen, whose sich fills the Reflexive Slot, so the Breakdown is the word's (ADR 0052). DWDS gives no Wortzerlegung, so it is a bottom word: the Root setz and the Ending en (ADR 0051)."
+	}
+}

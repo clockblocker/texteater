@@ -1,0 +1,59 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "PROPN",
+			"canonicalForm": "Gieshübler",
+			"coreFeatures": {
+				"article": null,
+				"gender": null
+			}
+		},
+		"emojiDescription": "💊"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Gieshübler",
+					"target": {
+						"language": "de",
+						"canonicalForm": "gieshübler",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "de.wikipedia: Effi Briest",
+				"url": "https://de.wikipedia.org/wiki/Effi_Briest",
+				"supports": "Alonzo Gieshübler, the Kessin apothecary"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Gieshübler hätte nun am liebsten ..., the apothecary's surname, so no Core gender (Rule de/proper-noun-article). No dictionary splits it within German, and a PROPN has no Source (ADR 0050 gives Sources to NOUN, VERB and ADJ only), so it is a bottom word: the Root gieshübler and the zero ending, since PROPN has an ending slot (ADR 0051)."
+	}
+}

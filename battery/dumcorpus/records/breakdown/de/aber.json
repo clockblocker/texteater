@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "CCONJ",
+			"canonicalForm": "aber",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "↩"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "aber",
+					"target": {
+						"language": "de",
+						"canonicalForm": "aber",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: aber",
+				"url": "https://www.dwds.de/wb/aber",
+				"supports": "No Wortzerlegung; the Konjunktion entry beside the Adverb; Etymologie: ahd. abur"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Sie können mich eine Großmutter nennen, aber Anspielungen ..., but: the coordinating conjunction, not the modal particle. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root aber alone."
+	}
+}

@@ -1,0 +1,61 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "hinweisen",
+			"coreFeatures": {
+				"hasSepPrefix": "hin"
+			}
+		},
+		"emojiDescription": "👉"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "hin",
+					"target": {
+						"language": "de",
+						"canonicalForm": "hin-",
+						"family": "Morpheme",
+						"kind": "Prefix"
+					}
+				},
+				{
+					"letters": "weisen",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "weisen",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: hinweisen",
+				"url": "https://www.dwds.de/wb/hinweisen",
+				"supports": "The Wortzerlegung hin- weisen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "auf den Unterschied ... hinweisen zu müssen, point out. A particle verb: hin links to its Prefix Morpheme hin- (ADR 0054)."
+	}
+}

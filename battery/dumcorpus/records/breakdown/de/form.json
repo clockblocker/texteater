@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Form",
+			"coreFeatures": {
+				"gender": "Fem"
+			}
+		},
+		"emojiDescription": "🔷"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Form",
+					"target": {
+						"language": "de",
+						"canonicalForm": "form",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Form",
+				"url": "https://www.dwds.de/wb/Form",
+				"supports": "No Wortzerlegung; Etymologie: mhd. form(e), a loan of lat. forma"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "zu solcher Form des Courmachers, such a form of courting. DWDS gives no Wortzerlegung, so it is a bottom word: the Root form and the zero ending (ADR 0051)."
+	}
+}

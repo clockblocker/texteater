@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "fühlen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🫶"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "fühl",
+					"target": {
+						"language": "de",
+						"canonicalForm": "fühl",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: fühlen",
+				"url": "https://www.dwds.de/wb/f%C3%BChlen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. fuolen, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "weil er fühlen mochte, daß ..., sensed. DWDS gives no Wortzerlegung, so it is a bottom word: the Root fühl and the Ending en (ADR 0051)."
+	}
+}

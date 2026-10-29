@@ -1,0 +1,48 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "morgen",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "🌅"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "morgen",
+					"target": {
+						"language": "de",
+						"canonicalForm": "morgen",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: morgen",
+				"url": "https://www.dwds.de/wb/morgen",
+				"supports": "No Wortzerlegung; Adverb; Etymologie under Morgen"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Ich könnte nun reisen, morgen etwa, tomorrow. An ADV takes no Source (ADR 0050), so it is a bottom word. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root morgen alone."
+	}
+}

@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Vetter",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "👨"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Vetter",
+					"target": {
+						"language": "de",
+						"canonicalForm": "vetter",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Vetter",
+				"url": "https://www.dwds.de/wb/Vetter",
+				"supports": "No Wortzerlegung; Etymologie: ahd. fetiro, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Vetter Briest lachte, cousin Briest: the kinship noun before the name, a unit of its own. DWDS gives no Wortzerlegung, so it is a bottom word: the Root vetter and the zero ending (ADR 0051)."
+	}
+}

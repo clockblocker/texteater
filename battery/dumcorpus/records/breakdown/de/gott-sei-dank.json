@@ -1,0 +1,82 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "INTJ",
+			"canonicalForm": "Gott sei Dank",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🙏"
+	},
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "Gott",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Gott",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "sei",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sein",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Dank",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Dank",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Gott sei Dank",
+				"url": "https://www.dwds.de/wb/Gott%20sei%20Dank",
+				"supports": "Mehrwortausdruck (steht einem Ausruf nahe)"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "»Gott sei Dank, daß ihr da seid.«, thank God: DWDS's Mehrwortausdruck, near an exclamation, so a Locution INTJ. Its parts are its words: the nouns Gott and Dank and the verb sein (ADR 0050)."
+	}
+}

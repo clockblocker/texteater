@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADP",
+			"canonicalForm": "trotz",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🛡"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "trotz",
+					"target": {
+						"language": "de",
+						"canonicalForm": "trotz",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: trotz",
+				"url": "https://www.dwds.de/wb/trotz",
+				"supports": "No Wortzerlegung; Präposition (mit Genitiv); Etymologie under Trotz"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "trotz aller guten Vorsätze, despite: an ADP the ADP Case Table does not author, so a segmenter case. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root trotz alone."
+	}
+}

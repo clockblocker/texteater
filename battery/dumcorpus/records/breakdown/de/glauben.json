@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "glauben",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "💭"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "glaub",
+					"target": {
+						"language": "de",
+						"canonicalForm": "glaub",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: glauben",
+				"url": "https://www.dwds.de/wb/glauben",
+				"supports": "No Wortzerlegung; Etymologie: ahd. gilouben, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Und das ist, glaub ich, noch etwas mehr, I think. DWDS gives no Wortzerlegung, so it is a bottom word: the Root glaub and the Ending en (ADR 0051)."
+	}
+}

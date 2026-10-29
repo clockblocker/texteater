@@ -1,0 +1,48 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "ADV",
+			"canonicalForm": "nun",
+			"coreFeatures": {
+				"comparable": null
+			}
+		},
+		"emojiDescription": "👉"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "nun",
+					"target": {
+						"language": "de",
+						"canonicalForm": "nun",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: nun",
+				"url": "https://www.dwds.de/wb/nun",
+				"supports": "No Wortzerlegung; the Adverb entry beside the Konjunktion"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "»Da ist nun eigentlich vollends nichts«, now, then. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root nun alone."
+	}
+}

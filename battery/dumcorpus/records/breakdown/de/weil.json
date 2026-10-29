@@ -1,0 +1,46 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "SCONJ",
+			"canonicalForm": "weil",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "❓"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "weil",
+					"target": {
+						"language": "de",
+						"canonicalForm": "weil",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: weil",
+				"url": "https://www.dwds.de/wb/weil",
+				"supports": "No Wortzerlegung; Konjunktion; Etymologie: from the noun mhd. wīle, no longer read"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "weil seine Frau ..., because. DWDS gives no Wortzerlegung, so it is a bottom word, and indeclinable, so it has no Ending, not even ∅ (ADR 0051): the Root weil alone."
+	}
+}

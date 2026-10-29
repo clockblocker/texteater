@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "VERB",
+			"canonicalForm": "legen",
+			"coreFeatures": {
+				"hasSepPrefix": null
+			}
+		},
+		"emojiDescription": "🛏"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "leg",
+					"target": {
+						"language": "de",
+						"canonicalForm": "leg",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "en",
+					"target": {
+						"language": "de",
+						"canonicalForm": "-en",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: legen",
+				"url": "https://www.dwds.de/wb/legen",
+				"supports": "No Wortzerlegung; Etymologie: ahd. leggen, inherited"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "legte den Kopf in ihre Arme, laid her head. DWDS gives no Wortzerlegung, so it is a bottom word: the Root leg and the Ending en (ADR 0051)."
+	}
+}

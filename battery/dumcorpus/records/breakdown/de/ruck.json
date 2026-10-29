@@ -1,0 +1,58 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Lexeme",
+			"kind": "NOUN",
+			"canonicalForm": "Ruck",
+			"coreFeatures": {
+				"gender": "Masc"
+			}
+		},
+		"emojiDescription": "💥"
+	},
+	"knowledge": {
+		"breakdown": {
+			"morphemes": [
+				{
+					"letters": "Ruck",
+					"target": {
+						"language": "de",
+						"canonicalForm": "ruck",
+						"family": "Morpheme",
+						"kind": "Root"
+					}
+				},
+				{
+					"letters": "",
+					"target": {
+						"language": "de",
+						"canonicalForm": "∅",
+						"family": "Morpheme",
+						"kind": "Ending"
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": [
+			"ADR-0050",
+			"ADR-0051"
+		],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: Ruck",
+				"url": "https://www.dwds.de/wb/Ruck",
+				"supports": "No Wortzerlegung; no Grundform; Etymologie: ahd. rucch"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "mit einem heftigen Ruck, a jolt. DWDS gives no Wortzerlegung, so it is a bottom word: the Root ruck and the zero ending (ADR 0051)."
+	}
+}
