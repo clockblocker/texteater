@@ -48,22 +48,6 @@ export const demos: readonly Demo[] = [
 		Component: lazy(() => import("./hover-preview")),
 	},
 	{
-		slug: "deinflect-chain",
-		title: "Deinflect chain",
-		description:
-			"From the clicked words to the lemma as a chain of named undo-steps, one per change.",
-		inspiration: ["Yomitan", "10ten Reader"],
-		Component: lazy(() => import("./deinflect-chain")),
-	},
-	{
-		slug: "dictionary-prose",
-		title: "Dictionary prose",
-		description:
-			"From the clicked words to the lemma as one dictionary sentence per word.",
-		inspiration: ["Wiktionary", "DWDS"],
-		Component: lazy(() => import("./dictionary-prose")),
-	},
-	{
 		slug: "interlinear-gloss",
 		title: "Interlinear gloss",
 		description:
