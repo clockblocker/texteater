@@ -224,7 +224,7 @@ describe("the German pack through projectLemmaTables", () => {
 					[
 						"r1",
 						reading,
-						verbSurface(abfahren, "fährt ab", {
+						verbSurface(abfahren, "abfährt", {
 							tense: "Pres",
 							person: "3",
 							number: "Sing",
