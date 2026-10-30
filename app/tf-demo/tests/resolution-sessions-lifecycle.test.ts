@@ -143,7 +143,7 @@ test("analysis history survives without a resolution session and is scoped to it
 	});
 });
 
-test("beginRun atomically claims work, loads the sentence and its Lemma candidates, and rejects duplicate runners", async () => {
+test("beginRun atomically claims work, loads sentence and stored Surface candidates, and rejects duplicate runners", async () => {
 	const t = createTestConvex();
 	const other = await submitText(t, [["Banken"]], {
 		submissionKey: "earlier",
@@ -178,9 +178,12 @@ test("beginRun atomically claims work, loads the sentence and its Lemma candidat
 		context: {
 			reusable: null,
 			sentence: { stitchedText: "Die Banken." },
-			// Hints come from Canonical Forms alone, never from stored
-			// Surfaces (#1293): the stored Banken leads to no hint.
-			lemmaCandidates: [],
+			lemmaCandidates: [
+				{
+					lemma: expect.objectContaining({ canonicalForm: "Bank" }),
+					foundUnder: ["Banken"],
+				},
+			],
 		},
 	});
 	expect(await session(t, "request-1")).toMatchObject({

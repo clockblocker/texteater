@@ -99,9 +99,11 @@ export async function loadResolutionContext(
 			phrases.push(words.slice(start, end).map(spellingOf).join(" "));
 		}
 	}
-	// Each wording is a Lemma candidate, looked up by its Canonical Form,
-	// never by stored Surfaces: a Surface is stored in base order (`mit zu
-	// tun hatte`, #1293), which the clicked text does not spell. Every word
+	// Each wording is a Lemma candidate, looked up by its Canonical Form. A
+	// single word is also looked up among stored Surfaces, whose form is
+	// that word (`Banken` leads to `Bank`); a multiword Surface is stored in
+	// base order (`mit zu tun hatte`, #1293), which the clicked text need
+	// not spell, so a phrase finds its Lemma by Canonical Form alone. Every word
 	// is looked up so a target's far member, such as a separated prefix,
 	// still finds its Lemma; each spelling keeps the Sentence text it came
 	// from, so ClickResolution can offer only Lemmas found under the
@@ -127,22 +129,46 @@ export async function loadResolutionContext(
 	const spellings = [...foundUnder.keys()].slice(0, 64);
 	const matches = await Promise.all(
 		spellings.map(async (spelling) => {
-			const lemmas = await ctx.db
-				.query("lemmas")
-				.withIndex("by_shadow_descriptor", (q) =>
-					q.eq("language", "de").eq(
-						"foldedCanonicalForm",
-						foldedCanonicalForm({
-							language: "de",
-							canonicalForm: spelling,
-						}),
-					),
-				)
-				.take(9);
+			const [lemmas, surfaces] = await Promise.all([
+				ctx.db
+					.query("lemmas")
+					.withIndex("by_shadow_descriptor", (q) =>
+						q.eq("language", "de").eq(
+							"foldedCanonicalForm",
+							foldedCanonicalForm({
+								language: "de",
+								canonicalForm: spelling,
+							}),
+						),
+					)
+					.take(9),
+				/\s/u.test(spelling)
+					? Promise.resolve([])
+					: ctx.db
+							.query("surfaces")
+							.withIndex(
+								"by_language_and_normalized_surface",
+								(q) =>
+									q
+										.eq("language", "de")
+										.eq("normalizedSurface", spelling),
+							)
+							.take(9),
+			]);
 			// Hints are optional; an overfull spelling falls back to normal resolution.
-			if (lemmas.length > 8) return [];
+			if (lemmas.length > 8 || surfaces.length > 8) return [];
+			const owners = await Promise.all(
+				[...new Set(surfaces.map((surface) => surface.lemmaId))].map(
+					(id) => ctx.db.get(id),
+				),
+			);
 			const texts = [...(foundUnder.get(spelling) ?? [])];
-			return lemmas.map((lemma) => ({ lemma, texts }));
+			return [
+				...lemmas,
+				...owners.flatMap((lemma) =>
+					lemma?.language === "de" ? [lemma] : [],
+				),
+			].map((lemma) => ({ lemma, texts }));
 		}),
 	);
 	const candidates = new Map<
