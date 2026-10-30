@@ -1,0 +1,14 @@
+{
+	"baselineRunId": "none: #1293 step 6's scope, the cases whose requests the free pronominal adverb change moved (request diff), measured at the change's parent and at the change",
+	"experimentId": "resolve-grammar/de:heldout",
+	"setHash": "98793f9cedd77f57",
+	"repetitions": 3,
+	"seed": 0,
+	"guardSize": 1,
+	"missed": {},
+	"guard": {
+		"Locution/VERB": [
+			"de/damit-triffst-du-den-nagel-auf-den-kopf#0"
+		]
+	}
+}

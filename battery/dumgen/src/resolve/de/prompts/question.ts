@@ -337,6 +337,17 @@ export const question = {
 		rules.government,
 		rules.pronominalAdverb,
 	),
+	freeGoverned: paragraph(
+		"question.freeGoverned",
+		"Under `policy.freeAdverb`, is the pronominal adverb {s} in `sentence`, which holds {p}, the complement that the unit's own head {h} selects with {p}, rather than another word's complement, an adjunct or a connective?",
+		rules.pronominalAdverb,
+		rules.government,
+	),
+	freeGovernedCase: paragraph(
+		"question.freeGovernedCase",
+		"If {s} is the head's complement, put {p} and a noun phrase in its place, as {p} das Thema or {p} dem Thema: which case does the head make that noun phrase take?",
+		rules.pronominalAdverb,
+	),
 	governedCase: paragraph(
 		"question.governedCase",
 		"If {m} is or holds the preposition heading the head's complement, which case does that complement take here?",

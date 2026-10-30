@@ -1,0 +1,135 @@
+{
+	"round": "2026-10-30-1293-step6",
+	"issue": "#1293 step 6: a free pronominal adverb in a governor's clause is asked whether it is the complement the unit's own head selects with the preposition it holds; if so the head's valencyEvidence records that preposition with no member (Rule de/pronominal-adverb-stands-alone).",
+	"scope": "The cases whose requests the change moved: 26 of dev's 2225 and 1 of held-out's 157, 3 repetitions.",
+	"gold": "Before the round, 1d8addc13 recorded was-bewog-ihn-dazu's zu slot and set ich-verlasse…#6's memberless referent to Something; dev refrozen as db5efec1b4655e75. Gold oracle exact 97.77% -> 97.90% (2332/2382).",
+	"runs": {
+		"devBaseline": "92f836b0-dd7f-4e37-8ccb-bfc402cb5210",
+		"devChangeDiscarded": "f0419211-f3b2-4506-a79b-25187682dc3f",
+		"devChange": "ebefb2d1-dc0d-43cc-b479-9ca70a6b5b19",
+		"heldoutBaseline": "86aa35b5-a924-4890-bc72-4aa729706634",
+		"heldoutChangeDiscarded": "1c6fb647-95de-458a-8400-a90af640ac3d",
+		"heldoutChange": "d37e3858-8c34-4236-ad2f-77e9a2334fdf"
+	},
+	"dev": {
+		"summary": {
+			"lemma": {
+				"before": "74/78",
+				"after": "74/78"
+			},
+			"cell": {
+				"before": "72/78",
+				"after": "72/78"
+			},
+			"members": {
+				"before": "78/78",
+				"after": "78/78"
+			},
+			"spelling": {
+				"before": "74/78",
+				"after": "74/78"
+			},
+			"valency": {
+				"before": "57/78",
+				"after": "60/78"
+			},
+			"exact": {
+				"before": "47/78",
+				"after": "50/78"
+			}
+		},
+		"flips": [
+			"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#12 valency 3/3 -> 0/3",
+			"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#12 exact 3/3 -> 0/3",
+			"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#13 valency 3/3 -> 0/3",
+			"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#13 exact 2/3 -> 0/3",
+			"de/darauf-kommt-es-an#1 valency 0/3 -> 3/3",
+			"de/darauf-kommt-es-an#1 exact 0/3 -> 3/3",
+			"de/hast-du-mit-ihr-darueber-gesprochen#0 valency 0/3 -> 3/3",
+			"de/hast-du-mit-ihr-darueber-gesprochen#0 exact 0/3 -> 2/3",
+			"de/was-bewog-ihn-dazu#0 valency 0/3 -> 3/3",
+			"de/was-bewog-ihn-dazu#0 exact 0/3 -> 3/3"
+		],
+		"onlyAfter": []
+	},
+	"heldout": {
+		"summary": {
+			"lemma": {
+				"before": "3/3",
+				"after": "3/3"
+			},
+			"cell": {
+				"before": "3/3",
+				"after": "3/3"
+			},
+			"members": {
+				"before": "3/3",
+				"after": "3/3"
+			},
+			"spelling": {
+				"before": "3/3",
+				"after": "3/3"
+			},
+			"valency": {
+				"before": "3/3",
+				"after": "3/3"
+			},
+			"exact": {
+				"before": "3/3",
+				"after": "3/3"
+			}
+		},
+		"flips": [],
+		"onlyAfter": []
+	},
+	"remainingFlipsNote": "schlüssig and machen of sich darüber schlüssig machen now take über with no member; gold records none. schlüssig plausibly governs über (sich über etwas schlüssig werden), machen does not. glauben's an slot comes back Dat, not Acc.",
+	"discardedForm": {
+		"note": "The first wording asked whether the adverb stands for a complement the head selects; jev said yes for nouns and verbs beside an adverb another word governed (Doktor, Mann, recht, müssen): exact 47 -> 39. The kept wording names the unit's own head and asks the case through a noun phrase put in the adverb's place.",
+		"dev": {
+			"summary": {
+				"lemma": {
+					"before": "74/78",
+					"after": "74/78"
+				},
+				"cell": {
+					"before": "72/78",
+					"after": "72/78"
+				},
+				"members": {
+					"before": "78/78",
+					"after": "78/78"
+				},
+				"spelling": {
+					"before": "74/78",
+					"after": "74/78"
+				},
+				"valency": {
+					"before": "57/78",
+					"after": "45/78"
+				},
+				"exact": {
+					"before": "47/78",
+					"after": "39/78"
+				}
+			},
+			"flips": [
+				"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#12 valency 3/3 -> 0/3",
+				"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#12 exact 3/3 -> 0/3",
+				"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#13 valency 3/3 -> 0/3",
+				"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#13 exact 2/3 -> 0/3",
+				"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#8 valency 3/3 -> 0/3",
+				"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#8 exact 3/3 -> 0/3",
+				"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#4 valency 3/3 -> 0/3",
+				"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#4 exact 3/3 -> 0/3",
+				"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#6 valency 3/3 -> 0/3",
+				"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#8 valency 0/3 -> 3/3",
+				"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#8 exact 0/3 -> 3/3",
+				"de/ich-verlasse-mich-auf-den-wetterbericht-aber-mein-mann#5 valency 3/3 -> 0/3",
+				"de/ich-verlasse-mich-auf-den-wetterbericht-aber-mein-mann#5 exact 3/3 -> 0/3",
+				"de/was-bewog-ihn-dazu#0 valency 0/3 -> 3/3",
+				"de/was-bewog-ihn-dazu#0 exact 0/3 -> 3/3"
+			],
+			"onlyAfter": []
+		}
+	}
+}

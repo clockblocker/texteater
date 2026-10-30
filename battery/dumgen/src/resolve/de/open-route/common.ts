@@ -21,6 +21,11 @@ import {
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
 import {
+	askFreeAdverbs,
+	type FreeAdverbQuestions,
+	readFreeAdverbs,
+} from "./free-adverb.js";
+import {
 	askGoverned,
 	type GovernedMember,
 	type GovernedQuestions,
@@ -279,11 +284,13 @@ export type TailPlan = {
 		| undefined;
 	readonly coverage: ChoiceOf<typeof options.coverage> | undefined;
 	readonly governable: readonly GovernedQuestions[];
+	readonly freeAdverbs: readonly FreeAdverbQuestions[];
 };
 
 /**
  * Asks the tail of the first request, the prepositions governed among the
- * members no satellite `taken` included.
+ * members no satellite `taken` included, and the free pronominal adverbs
+ * of the clause.
  */
 export function askTail(
 	questionnaire: Questionnaire,
@@ -318,12 +325,13 @@ export function askTail(
 		sourceLanguage,
 		coverage,
 		governable: askGoverned(questionnaire, target, shape, taken),
+		freeAdverbs: askFreeAdverbs(questionnaire, target, shape),
 	};
 }
 
 /**
  * Reads the tail: an INTJ's or a Foreign word's Core Feature, coverage,
- * and the prepositions governed. A subject es is evidence only of a used
+ * and the prepositions governed, members or free pronominal adverbs. A subject es is evidence only of a used
  * verb, in a complete realization: jev's citation or Partial against it
  * is a clash.
  */
@@ -338,6 +346,8 @@ export const readTail = answerReader(function* (
 	readonly coverage: "Full" | "Partial";
 	readonly governed: readonly ValencyEvidence[];
 	readonly governedMembers: readonly GovernedMember[];
+	/** The evidence free pronominal adverbs give, with no member. */
+	readonly free: readonly ValencyEvidence[];
 }> {
 	const core: TailCore = tail.answer
 		? {
@@ -363,5 +373,6 @@ export const readTail = answerReader(function* (
 		core,
 		coverage,
 		...(yield* readGoverned(tail.governable, shape, answered)),
+		free: yield* readFreeAdverbs(tail.freeAdverbs, answered),
 	};
 });

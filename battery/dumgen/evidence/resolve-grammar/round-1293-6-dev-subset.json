@@ -1,0 +1,43 @@
+{
+	"baselineRunId": "none: #1293 step 6's scope, the cases whose requests the free pronominal adverb change moved (request diff), measured at the change's parent and at the change",
+	"experimentId": "resolve-grammar/de:dev",
+	"setHash": "db5efec1b4655e75",
+	"repetitions": 3,
+	"seed": 0,
+	"guardSize": 26,
+	"missed": {},
+	"guard": {
+		"Lexeme/VERB": [
+			"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#8",
+			"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#13",
+			"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#3",
+			"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#11",
+			"de/darauf-kommt-es-an#1",
+			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#10",
+			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#12",
+			"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#8",
+			"de/hast-du-mit-ihr-darueber-gesprochen#0",
+			"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#1",
+			"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#7",
+			"de/ich-verlasse-mich-auf-den-wetterbericht-aber-mein-mann#6",
+			"de/sie-blickt-auf-die-uhr-und-steht-danach-auf#1",
+			"de/sie-blickt-auf-die-uhr-und-steht-danach-auf#5",
+			"de/was-bewog-ihn-dazu#0"
+		],
+		"Lexeme/ADJ": [
+			"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#12",
+			"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#6"
+		],
+		"Lexeme/NOUN": [
+			"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#7",
+			"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#8",
+			"de/er-zaehlt-eins-und-kauft-danach-einen-mantel#0",
+			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#4",
+			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#9",
+			"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#6",
+			"de/ich-verlasse-mich-auf-den-wetterbericht-aber-mein-mann#5",
+			"de/quadrillionen-kleinster-einheiten-waeren-dafuer-noetig#0",
+			"de/sie-blickt-auf-die-uhr-und-steht-danach-auf#3"
+		]
+	}
+}

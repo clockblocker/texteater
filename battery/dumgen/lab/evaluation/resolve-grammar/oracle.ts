@@ -13,6 +13,7 @@ import {
 	authoredOptions,
 	openOptions,
 } from "../../../src/resolve/de/closed-class.js";
+import { heldPreposition } from "../../../src/resolve/de/open-route/pronominal-adverb.js";
 import { auxiliaryUses } from "../../../src/resolve/de/prompts.js";
 import { targetOf } from "../../../src/resolve/de/target.js";
 import type { Answer, Answers } from "../../../src/segment/ask.js";
@@ -145,6 +146,17 @@ function goldOf(goldCase: GrammarCase) {
 					slot.member === position,
 			),
 		caseSlot: valency.find((slot) => slot.complement.kind === "Case"),
+		/** The memberless Preposition slot the pronominal adverb at Segment `segment` fills. */
+		freeAt: (segment: number) => {
+			const text = goldCase.sentence.segments[segment]?.text ?? "";
+			const preposition = heldPreposition(text)?.preposition;
+			return valency.find(
+				(slot) =>
+					slot.member === null &&
+					slot.complement.kind === "Preposition" &&
+					slot.complement.preposition.canonicalForm === preposition,
+			);
+		},
 	};
 }
 
@@ -438,6 +450,26 @@ const answeringByPrefix: readonly (readonly [string, Answering])[] = [
 				),
 			);
 		},
+	],
+	[
+		"freeGoverned_s",
+		(gold, question, suffix) =>
+			picked(
+				option(
+					question,
+					gold.freeAt(Number(suffix)) ? "Governed" : "Free",
+				),
+			),
+	],
+	[
+		"freeGovernedCase_s",
+		(gold, question, suffix) =>
+			picked(
+				option(
+					question,
+					gold.freeAt(Number(suffix))?.complement.governedCase,
+				),
+			),
 	],
 ];
 

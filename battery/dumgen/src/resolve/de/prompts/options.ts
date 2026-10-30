@@ -138,6 +138,10 @@ export const options = {
 			"Yes: that preposition is a fixed word of the expression heading its open slot",
 		Free: "No: the expression has no such fixed word",
 	},
+	freeGoverned: {
+		Governed: "Yes: the unit's own head selects that preposition here",
+		Free: "No: another word selects it, or it is an adjunct or a connective",
+	},
 	governedReferent: {
 		Someone: "A person or people",
 		Something: "A thing, place, event, fact or idea",

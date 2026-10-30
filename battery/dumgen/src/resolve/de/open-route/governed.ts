@@ -234,7 +234,7 @@ export function askGoverned(
 }
 
 /** The ADP Lemma of a governed preposition. */
-const prepositionLemma = (canonicalForm: string) =>
+export const prepositionLemma = (canonicalForm: string) =>
 	({
 		unitKind: "Lemma",
 		language: "de",

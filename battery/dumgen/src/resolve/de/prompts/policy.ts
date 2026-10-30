@@ -67,6 +67,12 @@ export const policy = {
 		rules.government,
 		rules.pronominalAdverb,
 	),
+	freeAdverb: paragraph(
+		"policy.freeAdverb",
+		"A pronominal adverb outside the unit (da-, wo- or hier- with a preposition) that stands for the complement of a preposition the head selects fills that slot, the adverb standing for the preposition and its filler: the head's valency evidence records the preposition with no member. One that is an adjunct of time, place or manner, a connective meaning 'therefore', 'so that' or 'then', or the complement of another word in the clause records nothing for this head. Only the marked unit's own head counts: a noun, adjective or verb beside the adverb records nothing unless it is the word that selects the preposition.",
+		rules.pronominalAdverb,
+		rules.government,
+	),
 	adjective: paragraph(
 		"policy.adjective",
 		"An adjective or adverb is comparable when Duden, or else DWDS, gives its headword comparison forms, suppletive ones from another stem included; forms marked colloquial or rare do not count, and a participle no dictionary lists as an adjective is not comparable. Every form of a comparable one marks its degree, positive when uncompared; a non-comparable one marks none. Only an adjective that agrees with a noun, attributively or standing in for an elided noun, marks case, gender and number.",

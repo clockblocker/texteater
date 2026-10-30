@@ -330,10 +330,13 @@ const readFirst = answerReader(function* (
 			...(verbal?.readings ?? []),
 			...adverbReadings(tail.governedMembers),
 		]),
-		// The evidence in member order, as gold records it.
-		governed: [...(reflexive ? [reflexive] : []), ...tail.governed].sort(
-			(left, right) => (left.member ?? 0) - (right.member ?? 0),
-		),
+		// The evidence in member order, then the free adverbs', as gold has it.
+		governed: [
+			...[...(reflexive ? [reflexive] : []), ...tail.governed].sort(
+				(left, right) => (left.member ?? 0) - (right.member ?? 0),
+			),
+			...tail.free,
+		],
 		governedMembers: tail.governedMembers,
 	};
 });
