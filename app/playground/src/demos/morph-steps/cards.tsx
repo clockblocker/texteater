@@ -90,7 +90,7 @@ function LemmaRoute({
 }
 
 /** The lemma's header: an article dim, a slot in its dashed box. */
-export function LemmaHeadword({ morph }: { readonly morph: MorphCase }) {
+function LemmaHeadword({ morph }: { readonly morph: MorphCase }) {
 	return (
 		<span>
 			{morph.lemma.runs.map((run, index) => (

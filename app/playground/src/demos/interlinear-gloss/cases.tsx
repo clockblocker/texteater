@@ -8,7 +8,7 @@ import { type FixtureText, langAttrs, textFromParagraphs } from "@/fixtures";
  */
 
 /** One morpheme of a word: its form, its glosses and where it lands. */
-export type Piece = {
+type Piece = {
 	/** The morpheme as the morpheme row writes it: `hab`, `te`. */
 	readonly morph: string;
 	/** Its Leipzig gloss, labels in capitals: `have`, `PST.IND.3SG`. */
@@ -50,7 +50,7 @@ export type LemmaPiece = {
 	readonly note?: ReactNode;
 };
 
-export type Lemma = {
+type Lemma = {
 	readonly emoji: string;
 	/** The header as one string: `mit jM zu tun haben`, `das Kind`. */
 	readonly title: string;

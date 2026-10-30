@@ -239,7 +239,7 @@ function Hint({
 }
 
 /** A lemma in a line: italic, as a dictionary cites one, and a link. */
-export function LemmaLink({
+function LemmaLink({
 	id,
 	text,
 	onClick,

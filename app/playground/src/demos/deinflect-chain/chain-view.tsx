@@ -33,7 +33,7 @@ type ChainProps = {
 };
 
 /** A step's description: English, its target-language words in italics. */
-export function About({ about }: { readonly about: string }) {
+function About({ about }: { readonly about: string }) {
 	return (
 		<span {...langAttrs("en")}>
 			{aboutRuns(about).map((run, index) =>

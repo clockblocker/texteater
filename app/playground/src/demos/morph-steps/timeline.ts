@@ -137,7 +137,7 @@ export function frameText(frame: Frame): string {
 }
 
 /** A caption's text with its `*German*` marks dropped. */
-export function plainCaption(caption: string): string {
+function plainCaption(caption: string): string {
 	return caption.replaceAll("*", "");
 }
 

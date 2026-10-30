@@ -164,7 +164,7 @@ function MarkedWords({
  * The lemma's headword with its slots: `mit jM zu tun haben`, the slot
  * quiet and italic, its meaning on hover.
  */
-export function LemmaHead({ head }: { readonly head: readonly HeadPart[] }) {
+function LemmaHead({ head }: { readonly head: readonly HeadPart[] }) {
 	// One span, so a flex parent (the link) keeps the spaces inside it.
 	return (
 		<span>

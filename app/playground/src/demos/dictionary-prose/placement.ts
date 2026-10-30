@@ -174,22 +174,3 @@ export function placeBeside(scene: Scene): Placement {
 		? placeBelow(Math.max(below, minStackHeight))
 		: placeAbove(Math.max(above, minStackHeight));
 }
-
-/** The parts of `boxes` the stack lies over, clipped to the viewport. */
-export function covered(
-	stack: Box,
-	boxes: readonly Box[],
-	view: Scene["view"],
-): Box[] {
-	const hits: Box[] = [];
-	for (const box of boxes) {
-		const start = Math.max(stack.start, box.start, 0);
-		const top = Math.max(stack.top, box.top, 0);
-		const end = Math.min(endOf(stack), endOf(box), view.width);
-		const bottom = Math.min(bottomOf(stack), bottomOf(box), view.height);
-		// A pixel of overlap is anti-aliasing, not a covered line.
-		if (end - start > 2 && bottom - top > 2)
-			hits.push({ start, top, width: end - start, height: bottom - top });
-	}
-	return hits;
-}

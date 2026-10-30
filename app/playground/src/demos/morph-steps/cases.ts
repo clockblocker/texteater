@@ -2,7 +2,7 @@ import { type FixtureText, textFromParagraphs } from "@/fixtures";
 import type { Piece, StageWord, Timeline } from "./timeline";
 
 /** One run of the lemma's header; a slot such as `jM` is set apart. */
-export type LemmaRun = {
+type LemmaRun = {
 	readonly text: string;
 	readonly slot?: boolean;
 	readonly article?: boolean;
