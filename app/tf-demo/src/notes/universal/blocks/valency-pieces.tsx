@@ -12,7 +12,7 @@ export function ValencyPreposition({
 	readonly children: ReactNode;
 }) {
 	return (
-		<span data-slot="valency-preposition" className="font-semibold">
+		<span data-slot="valency-preposition" className="italic">
 			{children}
 		</span>
 	);

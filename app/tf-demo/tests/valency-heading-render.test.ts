@@ -337,7 +337,7 @@ test("the heading and the translations print a preposition and a slot in the sam
 		],
 	});
 	const preposition = (text: string) =>
-		`<span data-slot="valency-preposition" class="font-semibold">${text}</span>`;
+		`<span data-slot="valency-preposition" class="italic">${text}</span>`;
 	const slot = (text: string) =>
 		`<span data-slot="valency-token" class="font-mono text-[0.9em] text-ink-soft">${text}</span>`;
 	// The Locution's Fixed `mit` is its slot's preposition.
@@ -369,7 +369,7 @@ test("a free slot's preposition takes the preposition style", () => {
 		},
 	]);
 	expect(markup).toContain(
-		'<span data-slot="valency-preposition" class="font-semibold">auf</span> <span data-slot="valency-token"',
+		'<span data-slot="valency-preposition" class="italic">auf</span> <span data-slot="valency-token"',
 	);
 });
 
