@@ -3,7 +3,7 @@
  * extractor-made Extracted Text, or asks a model for one as JSON Schema.
  * Like Dumrel's `dumrel/schema`, it is to be a Zod schema entrypoint of its
  * own (system ADR 0013), published once a host reads it (#1178, #419):
- * no other production file imports it, so Dumgen's operations load no Zod.
+ * no other production file imports it, so Dumtext's root loads no Zod.
  * The schema's output type is `ExtractedText` exactly.
  */
 import type { Assert, Equal, PrettifyDeep } from "common-utils";

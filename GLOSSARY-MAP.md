@@ -21,6 +21,9 @@
   Knowledge and the pure operations over it.
 - [Dumdict](./battery/dumdict/GLOSSARY.md): manages dictionary records over
   Dumling entities.
+- [Dumtext](./battery/dumtext/GLOSSARY.md): reads text into Extracted Text
+  and splits it into paragraphs and Sentences, in code and before any
+  language is known.
 - [Dumgen](./battery/dumgen/GLOSSARY.md): groups each Sentence's Segments into
   clickable units, resolves a clicked unit's grammar and Reading, produces
   Knowledge for it, and translates a Sentence.

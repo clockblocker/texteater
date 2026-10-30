@@ -7,7 +7,7 @@
  * Scene Break holds no Sentence. Inline Styles and Original Locations do
  * not reach the Sentences yet.
  */
-import { type SplitText, splitText } from "../segment/split-text.js";
+import { type SplitText, splitText } from "../split-text.js";
 import type { Run, Scroll } from "./extracted-text.js";
 
 const textOf = (runs: readonly Run[]) => runs.map(({ text }) => text).join("");

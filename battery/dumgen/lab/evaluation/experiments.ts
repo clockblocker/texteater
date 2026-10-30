@@ -58,6 +58,7 @@
  * and the shared types in `experiment-types.ts`.
  */
 import { canonicalJson, isRecord } from "common-utils";
+import { splitText } from "dumtext";
 import {
 	defineGoldenCaseCollection,
 	defineGoldenCaseGroup,
@@ -68,7 +69,6 @@ import {
 	runOperationExperiment,
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
-import { splitText } from "../../src/segment/split-text.js";
 import type { LabRun } from "../segmentation/harness/run.js";
 import { breakdownExperiments } from "./breakdown/experiment.js";
 import type {

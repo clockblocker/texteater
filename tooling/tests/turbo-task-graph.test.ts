@@ -55,7 +55,7 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		"dumrel#build:package",
 		"lego#build:package",
 	]);
-	// promptsmith stays in the graph only as Dumgen's dependency.
+	// promptsmith and dumtext stay in the graph only as Dumgen's dependencies.
 	expect(graph.tasks.map((task) => task.taskId).toSorted()).toEqual([
 		"@texteater/tf-demo#dev:package",
 		"codegen#build:package",
@@ -66,6 +66,7 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		"dumgen#build:package",
 		"dumling#build:package",
 		"dumrel#build:package",
+		"dumtext#build:package",
 		"lego#build:package",
 		"promptsmith#build:package",
 	]);
@@ -91,6 +92,7 @@ test("a battery's build script builds its in-house dependencies first", () => {
 		"dumgen#build:package",
 		"dumling#build:package",
 		"dumrel#build:package",
+		"dumtext#build:package",
 		"promptsmith#build:package",
 	]);
 });

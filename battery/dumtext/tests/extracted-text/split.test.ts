@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { extractPastedText } from "../../src/extracted-text/extracted-text.js";
 import { splitScroll } from "../../src/extracted-text/split.js";
-import { splitText } from "../../src/segment/split-text.js";
+import { splitText } from "../../src/split-text.js";
 
 test("a pasted text splits through its Scroll as it splits raw", () => {
 	for (const text of [

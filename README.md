@@ -20,6 +20,8 @@ The workspaces are:
 - `battery/dumgen`: German `segment.inUnits`, rebuilt from scratch (#701)
 - `battery/dumling`: grammatical values and operations
 - `battery/dumrel`: Knowledge and relation algebra
+- `battery/dumtext`: the Extracted Text readers and the language-neutral
+  paragraph and Sentence splitter
 - `battery/lego`: shared Tailwind design tokens, theme and React atoms and molecules
 - `battery/promptsmith`: schema-bound prompt authoring and reproducible evaluation
 

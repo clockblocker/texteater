@@ -1,11 +1,11 @@
 import { expect, test } from "bun:test";
+import { splitText } from "dumtext";
 import {
 	evaluateSplitText,
 	type SplitTextOutput,
 	splitTextMetrics,
 	udDraftTexts,
 } from "../../../lab/evaluation/split-text.js";
-import { splitText } from "../../../src/segment/split-text.js";
 
 const input = {
 	language: "de" as const,

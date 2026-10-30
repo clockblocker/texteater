@@ -5,11 +5,9 @@ German `segment.inUnits` ([#701](https://github.com/clockblocker/texteater/issue
 a Sentence's Segments go in, and its biggest units come back, each with its
 route or `Unresolved`. This package is being rebuilt from scratch.
 
-Its public entry exports `extractPastedText`, which turns pasted text into
-the one Scroll of its Extracted Text, `extractedTextFromMarkdown`, which
-reads a Markdown document into its Sections and Scrolls, and `splitScroll`,
-which splits a Scroll into paragraphs and Sentences in code with the
-language-neutral `splitText`.
+Its public entry re-exports [Dumtext](../dumtext/README.md)'s readers and
+`splitScroll`, which lived here until #1294, so existing consumers keep
+their imports for now.
 `operations` holds Dumgen's operations, Effect 4 Effects that name the
 models they need. `language.detect` judges each Sentence's Detected
 Language, and `segment.inUnits` runs the German segmenter's stages under
@@ -41,7 +39,7 @@ bun run --cwd battery/dumgen evaluate --open RUN_ID
 ```
 
 Gold mode feeds gold Segments to the unit stage, raw mode (`:raw`) cuts
-the record's Sentence first, and text mode scores `splitText`.
+the record's Sentence first, and text mode scores Dumtext's `splitText`.
 `--offline` answers jev from the lab's cache only; without it, a cache miss
 asks jev and needs `TYPESAFE_API_KEY`, which the `evaluate` script reads from
 the repository-root `.env.local` when the shell does not export it, and the

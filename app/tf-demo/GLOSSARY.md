@@ -246,8 +246,8 @@ Scrolls and their Sentences. See [tf-demo ADR 0001] and [tf-demo ADR 0005].
 ### Intake
 
 These terms name what Intake takes in, keeps and produces. tf-demo runs
-Intake; Dumgen's `splitText`, `language.detect` and `segment.inUnits` are
-its last steps.
+Intake; Dumtext's `splitText` and Dumgen's `language.detect` and
+`segment.inUnits` are its last steps.
 
 **Submission**:
 What a Learner or curator hands in to become Scrolls: pasted text, a file or
