@@ -176,6 +176,8 @@ export const verbs: Rule[] = [
 			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
 			"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu",
 			"de/darauf-kommt-es-an",
+			"de/vielleicht-hatte-es-damit-zu-tun-dass-er-in-einem-dunklen",
+			"de/was-hat-das-damit-zu-tun",
 		],
 	},
 	{

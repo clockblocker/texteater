@@ -1,0 +1,395 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Vielleicht hatte es damit zu tun, dass er in einem dunklen Schrank lebte, jedenfalls war Harry für sein Alter immer recht klein und dürr gewesen.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Vielleicht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hatte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "damit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "tun"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dass"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "einem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dunklen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Schrank"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "lebte"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "jedenfalls"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "war"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Harry"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "für"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Alter"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "immer"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "recht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "klein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dürr"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gewesen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Quoted",
+		"work": "Harry Potter und der Stein der Weisen",
+		"author": "J. K. Rowling",
+		"year": 1998
+	},
+	"sources": {
+		"adrs": ["ADR-0003", "ADR-0029", "ADR-0034", "ADR-0056"],
+		"rules": [
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/pronominal-adverb-stands-alone",
+				"hash": "7f889649dfebcfb7"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "19c59bf41ed26810"
+			},
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "99bff23563b49716"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: tun",
+				"url": "https://www.duden.de/rechtschreibung/tun",
+				"supports": "mit jemandem, etwas zu tun haben (mit jemandem, etwas in Verbindung, Beziehung stehen); etwas hat mit etwas zu tun (steht in Zusammenhang mit etwas)"
+			},
+			{
+				"title": "DWDS: tun",
+				"url": "https://www.dwds.de/wb/tun",
+				"supports": "mit etw., jmdm. zu tun haben, etw. hat mit etw. zu tun 'in Beziehung, Zusammenhang stehen'"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [2, 6, 8, 10],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🔗"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "mit zu tun haben",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "mit zu tun hatte",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{
+						"attested": "hatte",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "damit",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "tun",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "mit",
+								"coreFeatures": {}
+							},
+							"governedCase": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "mit zu tun haben 'be connected with' (Duden tun: etwas hat mit etwas zu tun) holds mit among its fixed words, and mit heads its open slot. Here the pronominal adverb damit realizes that mit, its da- the correlate of the dass clause, so damit is one member marking the mit + Dat slot in valencyEvidence, and the Surface keeps mit: mit zu tun hatte (de/pronominal-adverb-stands-alone, ADR 0056). es is no member."
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "es",
+						"coreFeatures": {
+							"case": "Nom",
+							"number": "Sing",
+							"person": "3",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"gender": "Neut"
+						}
+					},
+					"normalizedSurface": "es",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [
+					{
+						"attested": "es",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "es is the referential subject: what it refers to is the situation the paragraph describes, and a noun phrase could stand in its place (Das hatte damit zu tun), so it is no expletive selected by the verb and stays a PRON unit of its own (de/expletive-es-joins-its-verb, ADR 0003)."
+			}
+		}
+	],
+	"noTarget": []
+}

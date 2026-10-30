@@ -1,0 +1,173 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Was hat das damit zu tun?",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Was"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "damit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "tun"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "?"
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0003", "ADR-0029", "ADR-0034", "ADR-0056"],
+		"rules": [
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/pronominal-adverb-stands-alone",
+				"hash": "7f889649dfebcfb7"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "19c59bf41ed26810"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: tun",
+				"url": "https://www.duden.de/rechtschreibung/tun",
+				"supports": "mit jemandem, etwas zu tun haben (mit jemandem, etwas in Verbindung, Beziehung stehen); etwas hat mit etwas zu tun (steht in Zusammenhang mit etwas)"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [2, 6, 8, 10],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🔗"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "mit zu tun haben",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "mit zu tun hat",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "damit",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "tun",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "mit",
+								"coreFeatures": {}
+							},
+							"governedCase": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "mit zu tun haben 'be connected with' (Duden tun: etwas hat mit etwas zu tun): damit realizes the fixed mit and its da- fills the slot, referring back to what was said, so damit is one member marking the mit + Dat slot and the Surface keeps mit (de/pronominal-adverb-stands-alone, ADR 0056). Was is the object, das the free subject."
+			}
+		}
+	],
+	"noTarget": []
+}

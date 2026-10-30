@@ -1,0 +1,177 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Mit Politik hat er nichts zu tun.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Mit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Politik"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nichts"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "tun"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0003", "ADR-0034", "ADR-0056"],
+		"rules": [
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "19c59bf41ed26810"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: tun",
+				"url": "https://www.duden.de/rechtschreibung/tun",
+				"supports": "mit jemandem, etwas zu tun haben (mit jemandem, etwas in Verbindung, Beziehung stehen); etwas hat mit etwas zu tun (steht in Zusammenhang mit etwas)"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 4, 10, 12],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🔗"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "mit zu tun haben",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "mit zu tun hat",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{
+						"attested": "Mit",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "tun",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "mit",
+								"coreFeatures": {}
+							},
+							"governedCase": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "mit zu tun haben 'have to do with' (Duden tun: mit jemandem, etwas zu tun haben) holds mit among its fixed words; fronted with Politik, mit heads its open slot, so it is the member marking the mit + Dat slot in valencyEvidence and stays in the Surface, in base order: mit zu tun hat (ADR 0056). Politik fills the slot, er is the free subject and nichts the free object of tun."
+			}
+		}
+	],
+	"noTarget": []
+}
