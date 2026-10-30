@@ -47,4 +47,36 @@ export const demos: readonly Demo[] = [
 		inspiration: ["Obsidian", "Hover Editor", "Quartz", "Path of Exile 2"],
 		Component: lazy(() => import("./hover-preview")),
 	},
+	{
+		slug: "deinflect-chain",
+		title: "Deinflect chain",
+		description:
+			"From the clicked words to the lemma as a chain of named undo-steps, one per change.",
+		inspiration: ["Yomitan", "10ten Reader"],
+		Component: lazy(() => import("./deinflect-chain")),
+	},
+	{
+		slug: "dictionary-prose",
+		title: "Dictionary prose",
+		description:
+			"From the clicked words to the lemma as one dictionary sentence per word.",
+		inspiration: ["Wiktionary", "DWDS"],
+		Component: lazy(() => import("./dictionary-prose")),
+	},
+	{
+		slug: "interlinear-gloss",
+		title: "Interlinear gloss",
+		description:
+			"The clicked words with the lemma's pieces and grammar glossed under each one.",
+		inspiration: ["Leipzig Glossing Rules", "Interlinear books"],
+		Component: lazy(() => import("./interlinear-gloss")),
+	},
+	{
+		slug: "morph-steps",
+		title: "Morph steps",
+		description:
+			"The clicked words turning into the lemma one visible step at a time.",
+		inspiration: ["Keynote Magic Move", "Duolingo"],
+		Component: lazy(() => import("./morph-steps")),
+	},
 ];
