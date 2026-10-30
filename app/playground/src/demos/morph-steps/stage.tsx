@@ -19,8 +19,8 @@ import {
 	captionRuns,
 	clustersOf,
 	matchByWord,
-	type Stage,
 	type StageWord,
+	type Track,
 } from "./timeline";
 import type { Playback } from "./use-playback";
 
@@ -37,32 +37,30 @@ export type StageLook = {
 /** Keynote's default Magic Move curve: ease in and out. */
 const easeInOut = [0.42, 0, 0.58, 1] as const;
 
-/** The dashed box an open place in a lemma wears, here and in headers. */
-export const slotClass =
-	"rounded-[0.3em] border border-dashed border-current/50 px-[0.25em] text-[0.8em] font-normal italic";
+/** tf-demo's slot token, `jM`, on the stage and in headings alike. */
+export const slotClass = "font-mono text-[0.9em] text-ink-soft";
 
 /** The Card's quiet kind label: `SURFACE`, `LEMMA`. */
 export const kindLabelClass =
 	"font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-faint uppercase";
 
 /**
- * The metamorphosis: the clicked words on a small stage, turning into the
- * Surface and then the lemma one frame at a time, Magic Move style. A word
- * travels to its new place, a piece it loses fades out where it stood and
- * a piece it gains fades in where it lands; the frame's caption says what
- * changed and why, and a tap on the words steps on. Each stage's result
- * wears its kind label. The controls under it play, pause, step and scrub,
- * with the dots grouped by stage.
+ * One Card's metamorphosis: its words on a small stage, turning into the
+ * form it links to one frame at a time, Magic Move style. A word travels
+ * to its new place, a piece it loses fades out where it stood and a piece
+ * it gains fades in where it lands; the frame's caption says what changed
+ * and why, and a tap on the words steps on. The result wears its kind
+ * label. The controls under it play, pause, step and scrub.
  */
 export function MorphStage({
 	beats,
-	stages,
+	track,
 	playback,
 	look,
 	size,
 }: {
 	readonly beats: readonly Beat[];
-	readonly stages: readonly Stage[];
+	readonly track: Track;
 	readonly playback: Playback;
 	readonly look: StageLook;
 	readonly size: "card" | "sheet";
@@ -159,7 +157,7 @@ export function MorphStage({
 						size={size}
 					/>
 				) : null}
-				<Controls beats={beats} stages={stages} playback={playback} />
+				<Controls track={track} playback={playback} />
 			</div>
 		</MotionConfig>
 	);
@@ -178,6 +176,7 @@ function WordView({
 }) {
 	const ghost = word.kind === "ghost";
 	const slot = word.kind === "slot";
+	const preposition = word.kind === "preposition";
 	return (
 		<motion.span
 			layoutId={word.id}
@@ -192,7 +191,8 @@ function WordView({
 						word.lit ? "text-ink-soft" : "text-ink-faint",
 					),
 				!ghost && "text-ink",
-				slot && cn(slotClass, "text-ink-soft"),
+				slot && cn(slotClass, "font-normal"),
+				preposition && "italic",
 				landed && !ghost && "text-link",
 				word.tone === "neuter" && "[--link:var(--gender-neuter)]",
 			)}
@@ -283,12 +283,10 @@ function Caption({
 }
 
 function Controls({
-	beats,
-	stages,
+	track,
 	playback,
 }: {
-	readonly beats: readonly Beat[];
-	readonly stages: readonly Stage[];
+	readonly track: Track;
 	readonly playback: Playback;
 }) {
 	const { at, count, playing, ended } = playback;
@@ -320,7 +318,7 @@ function Controls({
 			>
 				<ChevronRight className="size-4 rtl:-scale-x-100" />
 			</ControlButton>
-			<Scrubber beats={beats} stages={stages} playback={playback} />
+			<Scrubber track={track} playback={playback} />
 		</div>
 	);
 }
@@ -351,70 +349,39 @@ function ControlButton({
 }
 
 /**
- * One dot per beat, the shown one stretched into a pill, grouped by stage
- * as a video's scrubber groups its chapters, each group named under it; a
- * native range lies over them, so a drag scrubs through the beats and the
- * arrow keys step.
+ * One dot per beat, the shown one stretched into a pill; a native range
+ * lies over them, so a drag scrubs through the beats and the arrow keys
+ * step.
  */
 function Scrubber({
-	beats,
-	stages,
+	track,
 	playback,
 }: {
-	readonly beats: readonly Beat[];
-	readonly stages: readonly Stage[];
+	readonly track: Track;
 	readonly playback: Playback;
 }) {
 	const { at, count } = playback;
-	const current = beats[at]?.stage ?? 0;
 	return (
 		<div className="relative ms-2 flex h-8 min-w-0 flex-1 items-center">
-			<div
-				aria-hidden="true"
-				className="flex w-full items-center gap-2.5"
-			>
-				{stages.map((stage, index) => {
-					const members = beats.flatMap((beat, beatIndex) =>
-						beat.stage === index ? [beatIndex] : [],
-					);
-					return (
-						<div
-							key={stage.name}
-							className="relative flex min-w-0 items-center gap-1"
-							style={{ flexGrow: members.length + 2 }}
-						>
-							{members.map((beatIndex) => (
-								<span
-									key={beatIndex}
-									className={cn(
-										"h-1.5 rounded-full transition-all duration-300",
-										beatIndex === at
-											? "flex-[3] bg-link"
-											: beatIndex < at
-												? "flex-1 bg-ink-muted"
-												: "flex-1 bg-line",
-									)}
-								/>
-							))}
-							<span
-								{...langAttrs("en")}
-								className={cn(
-									"absolute start-0 top-full mt-1 font-mono text-[0.58rem] leading-none font-bold tracking-[0.1em] whitespace-nowrap uppercase transition-colors duration-300",
-									index === current
-										? "text-ink-soft"
-										: "text-ink-faint",
-								)}
-							>
-								{stage.name}
-							</span>
-						</div>
-					);
-				})}
+			<div aria-hidden="true" className="flex w-full items-center gap-1">
+				{Array.from({ length: count }, (_, index) => (
+					<span
+						key={index}
+						className={cn(
+							"h-1.5 rounded-full transition-all duration-300",
+							index === at
+								? "flex-[3] bg-link"
+								: index < at
+									? "flex-1 bg-ink-muted"
+									: "flex-1 bg-line",
+						)}
+					/>
+				))}
 			</div>
 			<input
 				type="range"
-				aria-label="Step"
-				aria-valuetext={`Step ${at + 1} of ${count}, ${stages[current]?.name ?? ""}`}
+				aria-label={`${track.name} step`}
+				aria-valuetext={`Step ${at + 1} of ${count}`}
 				min={0}
 				max={count - 1}
 				step={1}

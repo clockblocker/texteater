@@ -1,21 +1,23 @@
 import { cn } from "lego";
 import { X } from "lucide-react";
 import { motion } from "motion/react";
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
 import type { Box, Placement, Scene } from "./placement";
 
-/** The Card's preferred width, as tf-demo's Deck roughly has it. */
+/** The Deck's preferred width, as tf-demo's Deck roughly has it. */
 export const cardWidth = 360;
 
 export type Measured = Omit<Scene, "stack">;
 
 /**
- * lemma-hop's floating Deck box, holding one Card: placed beside the
- * sentence, with its close button. Invisible until placed.
+ * lemma-hop's floating Deck box: placed beside the sentence, with its
+ * close button. Invisible until placed; a clamped Deck scrolls inside
+ * (`scrollRef`).
  */
-export function FloatingCard({
+export function FloatingDeck({
 	placement,
 	openKey,
+	scrollRef,
 	contentRef,
 	reducedMotion,
 	onClose,
@@ -24,6 +26,7 @@ export function FloatingCard({
 	readonly placement: Placement | null;
 	/** A new key replays the open. */
 	readonly openKey: string;
+	readonly scrollRef: RefObject<HTMLDivElement | null>;
 	readonly contentRef: (element: HTMLDivElement | null) => void;
 	readonly reducedMotion: boolean;
 	readonly onClose: () => void;
@@ -48,6 +51,7 @@ export function FloatingCard({
 				transition={{ duration: 0.18, ease: "easeOut" }}
 			>
 				<div
+					ref={scrollRef}
 					className="overflow-y-auto overscroll-contain rounded-xl"
 					style={{ maxHeight: placement?.maxHeight }}
 				>

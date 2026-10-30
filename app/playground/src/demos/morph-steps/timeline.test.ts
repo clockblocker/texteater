@@ -1,9 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { wordsOf } from "@/fixtures";
-import { cases, lemmaText } from "./cases";
+import { cases, lineText } from "./cases";
 import {
 	beatsOf,
-	boundariesOf,
 	captionRuns,
 	clustersOf,
 	dwellMs,
@@ -11,7 +10,7 @@ import {
 	matchByWord,
 } from "./timeline";
 
-/** Each case's Surface: the result Syntax rests on. */
+/** Each case's Surface line: what Syntax ends on and the Surface Card heads. */
 const surfaces = {
 	hard: "jD mit jM zu tun hatte",
 	simple: "Kindern",
@@ -19,40 +18,48 @@ const surfaces = {
 
 describe("morph-steps cases", () => {
 	for (const morph of cases) {
-		test(`${morph.id}: starts on the clicked words and ends on the lemma`, () => {
-			const { start, stages } = morph.timeline;
-			const last = stages.at(-1)?.frames.at(-1);
+		const { syntax } = morph.attestation;
+		const { inflection } = morph.surface;
+
+		test(`${morph.id}: the Surface Card heads its line and Inflection runs it to the lemma`, () => {
+			expect(lineText(morph.surface.line)).toBe(surfaces[morph.id]);
+			expect(frameText(inflection.start)).toBe(surfaces[morph.id]);
+			const last = inflection.frames.at(-1);
 			if (!last) throw new Error("no frames");
-			expect(frameText(start)).toBe(morph.surface.title);
-			expect(frameText(last)).toBe(lemmaText(morph));
+			expect(frameText(last)).toBe(lineText(morph.lemma.runs));
 			expect(last.words.some((word) => word.kind === "ghost")).toBe(
 				false,
 			);
-		});
-
-		test(`${morph.id}: Syntax rests on the Surface, Inflection on the Lemma`, () => {
-			const beats = beatsOf(morph.timeline);
-			const [boundary, ...more] = boundariesOf(beats);
-			expect(more).toEqual([]);
-			const surface =
-				boundary === undefined ? undefined : beats[boundary];
-			if (!surface) throw new Error("no boundary");
-			expect(surface.result).toBe("Surface");
-			expect(frameText(surface.frame)).toBe(surfaces[morph.id]);
-			expect(beats.at(-1)?.result).toBe("Lemma");
-			expect(
-				morph.timeline.stages.map((stage) => [
-					stage.name,
-					stage.result,
-				]),
-			).toEqual([
-				["Syntax", "Surface"],
-				["Inflection", "Lemma"],
+			expect([inflection.name, inflection.result]).toEqual([
+				"Inflection",
+				"Lemma",
 			]);
 		});
 
+		test(`${morph.id}: Syntax starts on the clicked words and ends on the Surface`, () => {
+			if (syntax.kind === "still") {
+				expect(syntax.line).toContain("*");
+				return;
+			}
+			const { track } = syntax;
+			const members = wordsOf(morph.text)
+				.filter((word) => word.unitId === morph.unitId)
+				.map((word) => word.text)
+				.join(" ");
+			expect(frameText(track.start)).toBe(members);
+			const last = track.frames.at(-1);
+			if (!last) throw new Error("no frames");
+			expect(frameText(last)).toBe(surfaces[morph.id]);
+			expect(last.words).toEqual(inflection.start.words);
+			expect([track.name, track.result]).toEqual(["Syntax", "Surface"]);
+		});
+
 		test(`${morph.id}: word and piece ids are unique within a frame`, () => {
-			for (const { frame } of beatsOf(morph.timeline)) {
+			const tracks = [
+				inflection,
+				...(syntax.kind === "track" ? [syntax.track] : []),
+			];
+			for (const { frame } of tracks.flatMap(beatsOf)) {
 				const ids = frame.words.map((word) => word.id);
 				expect(new Set(ids).size).toBe(ids.length);
 				for (const word of frame.words) {
@@ -70,14 +77,20 @@ describe("morph-steps cases", () => {
 		});
 	}
 
-	test("the hard case's unit is hatte es damit zu tun", () => {
+	test("the hard case's unit is hatte es damit zu tun, and only it animates Syntax", () => {
 		const hard = cases.find((morph) => morph.id === "hard");
 		if (!hard) throw new Error("no hard case");
 		const members = wordsOf(hard.text)
 			.filter((word) => word.unitId === hard.unitId)
 			.map((word) => word.text)
 			.join(" ");
-		expect(members).toBe(hard.surface.title);
+		expect(members).toBe("hatte es damit zu tun");
+		expect(
+			cases.map((morph) => [morph.id, morph.attestation.syntax.kind]),
+		).toEqual([
+			["hard", "track"],
+			["simple", "still"],
+		]);
 	});
 });
 
@@ -121,7 +134,6 @@ describe("timeline helpers", () => {
 	test("a caption adds reading time unless captions are off", () => {
 		const beat = {
 			frame: { words: [], caption: "*Kind* is neuter." },
-			stage: 0,
 		};
 		expect(dwellMs(beat, true)).toBeGreaterThan(dwellMs(beat, false));
 		expect(dwellMs({ ...beat, result: "Surface" }, true)).toBeGreaterThan(
@@ -129,27 +141,18 @@ describe("timeline helpers", () => {
 		);
 	});
 
-	test("beats run start, then each stage; only inner results are boundaries", () => {
+	test("beats run the start, then the frames; the last is the result", () => {
 		const frame = (caption: string) => ({ words: [], caption });
 		const beats = beatsOf({
+			name: "Syntax",
+			result: "Surface",
 			start: frame("a"),
-			stages: [
-				{
-					name: "Syntax",
-					result: "Surface",
-					frames: [frame("b"), frame("c")],
-				},
-				{ name: "Inflection", result: "Lemma", frames: [frame("d")] },
-			],
+			frames: [frame("b"), frame("c")],
 		});
-		expect(
-			beats.map((beat) => [beat.frame.caption, beat.stage, beat.result]),
-		).toEqual([
-			["a", 0, undefined],
-			["b", 0, undefined],
-			["c", 0, "Surface"],
-			["d", 1, "Lemma"],
+		expect(beats.map((beat) => [beat.frame.caption, beat.result])).toEqual([
+			["a", undefined],
+			["b", undefined],
+			["c", "Surface"],
 		]);
-		expect(boundariesOf(beats)).toEqual([2]);
 	});
 });

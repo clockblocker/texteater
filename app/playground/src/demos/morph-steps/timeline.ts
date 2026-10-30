@@ -22,9 +22,11 @@ export type StageWord = {
 	readonly pieces: readonly Piece[];
 	/**
 	 * `ghost`: the sentence around the clicked words, quiet; `slot`: an
-	 * open place in the lemma, such as `jM`.
+	 * open place in the lemma, such as `jM`; `preposition`: the word a slot
+	 * is governed by, such as `mit`. The last two wear tf-demo's valency
+	 * styles.
 	 */
-	readonly kind?: "ghost" | "slot";
+	readonly kind?: "ghost" | "slot" | "preposition";
 	/** A ghost the caption points at, a step brighter. */
 	readonly lit?: boolean;
 	/** Sits against the word before it, with no space: `da` + `mit`. */
@@ -42,52 +44,38 @@ export type Frame = {
 };
 
 /**
- * One of the two named steps between the three forms: Syntax takes the
- * Attestation to the Surface, Inflection takes the Surface to the Lemma.
+ * One Card's metamorphosis, one of the two steps between the three forms:
+ * the Attestation Card's Syntax takes the words on the page to the
+ * Surface, and the Surface Card's Inflection takes the Surface to the
+ * Lemma.
  */
-export type Stage = {
-	/** What the stage does: `Syntax`, `Inflection`. */
+export type Track = {
+	/** What the track does: `Syntax`, `Inflection`. */
 	readonly name: string;
-	/** The form it ends on: `Surface`, `Lemma`. */
-	readonly result: string;
+	/** The form the Card heads: the clicked words, or the Surface. */
+	readonly start: Frame;
 	/** Its steps; the last is its result, where it rests. */
 	readonly frames: readonly Frame[];
+	/** The form it ends on, which the Card links to: `Surface`, `Lemma`. */
+	readonly result: string;
 };
 
-/** The words on the page, then each stage's steps. */
-export type Timeline = {
-	/** The Attestation: the clicked words as the page has them. */
-	readonly start: Frame;
-	readonly stages: readonly Stage[];
-};
-
-/** A frame in its place on the timeline. */
+/** A frame in its place on the track. */
 export type Beat = {
 	readonly frame: Frame;
-	/** The stage it belongs to; the start belongs to the first. */
-	readonly stage: number;
-	/** The form this beat rests on, on a stage's last frame. */
+	/** The form this beat rests on, on the track's last frame. */
 	readonly result?: string;
 };
 
-export function beatsOf(timeline: Timeline): Beat[] {
+export function beatsOf(track: Track): Beat[] {
 	return [
-		{ frame: timeline.start, stage: 0 },
-		...timeline.stages.flatMap((stage, index) =>
-			stage.frames.map((frame, at) =>
-				at === stage.frames.length - 1
-					? { frame, stage: index, result: stage.result }
-					: { frame, stage: index },
-			),
+		{ frame: track.start },
+		...track.frames.map((frame, at) =>
+			at === track.frames.length - 1
+				? { frame, result: track.result }
+				: { frame },
 		),
 	];
-}
-
-/** The beats a stage rests on before the next stage starts. */
-export function boundariesOf(beats: readonly Beat[]): number[] {
-	return beats.flatMap((beat, index) =>
-		beat.result !== undefined && index < beats.length - 1 ? [index] : [],
-	);
 }
 
 /** Words that sit together, glued ones in one unbreakable run. */
@@ -157,6 +145,6 @@ export function captionRuns(
  */
 export function dwellMs(beat: Beat, captions: boolean): number {
 	const reading = captions ? plainCaption(beat.frame.caption).length * 42 : 0;
-	// A stage's result gets a longer look, even when play runs on.
+	// The track's result gets a longer look before a loop goes round.
 	return 1300 + reading + (beat.result === undefined ? 0 : 900);
 }

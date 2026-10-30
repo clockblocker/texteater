@@ -9,13 +9,16 @@ import { cases, type MorphCase } from "./cases";
 
 /** The design's open choices. */
 export type Knobs = {
-	/** Plays when the Card opens, or waits for a tap. */
+	/** A Card's stage plays when the Card comes in, or waits for a tap. */
 	readonly start: "play" | "tap";
 	readonly speed: number;
-	/** Rests on the Surface between the stages, or plays straight on. */
-	readonly boundary: "pause" | "continue";
-	/** Rests on the lemma, or morphs back and plays again. */
+	/** Rests on the form the Card links to, or morphs back and plays again. */
 	readonly ending: "hold" | "loop";
+	/**
+	 * Where Syntax has nothing to rearrange (`Kindern`): open straight on
+	 * the Surface Card, or on an Attestation Card with one still line.
+	 */
+	readonly plain: "skip" | "still";
 	/** Keynote's Magic Move "Match": by character or by word. */
 	readonly match: "character" | "word";
 	readonly captions: boolean;
@@ -27,8 +30,8 @@ export type Knobs = {
 export const initialKnobs: Knobs = {
 	start: "play",
 	speed: 1,
-	boundary: "pause",
 	ending: "hold",
+	plain: "skip",
 	match: "character",
 	captions: true,
 	tags: true,
@@ -60,19 +63,20 @@ export function MorphInspector({
 			<InspectorSection>
 				<InspectorTry>
 					<p>
-						The Surface Card shows the clicked words turning into
-						the lemma in two stages, after Keynote's Magic Move: a
-						word that stays travels to its new place, a part that
-						goes fades where it stood, a part that comes fades in
-						where it lands.
+						A click deals the Attestation Card, headed by the words
+						on the page. Its stage plays <b>Syntax</b>, after
+						Keynote's Magic Move: a word that stays travels to its
+						new place, a part that goes fades where it stood, a part
+						that comes fades in where it lands. It ends on the
+						Surface, <i>jD mit jM zu tun hatte</i>, and the route
+						under it pushes the Surface Card.
 					</p>
 					<p>
-						<b>Syntax</b> takes the words on the page to the
-						Surface: base order, verb last, each slot as its case (
-						<i>jD mit jM zu tun hatte</i>). <b>Inflection</b> takes
-						the Surface to the Lemma (<i>mit jM zu tun haben</i>).
-						Each step has one caption line; a tag under a word names
-						what it is.
+						The Surface Card is headed by that slotted line. Its
+						stage plays <b>Inflection</b> and ends on the Lemma,{" "}
+						<i>mit jM zu tun haben</i>; its route pushes the Lemma
+						Card. Each Card plays, steps and scrubs on its own; a
+						tail brings its Card back to the front.
 					</p>
 				</InspectorTry>
 			</InspectorSection>
@@ -87,10 +91,27 @@ export function MorphInspector({
 					value={morph.id}
 					onChange={onCase}
 				/>
+				<InspectorChoice
+					label="Nothing for Syntax to do (Kindern)"
+					options={[
+						{
+							value: "skip",
+							label: "Open on the Surface Card",
+							hint: "no Attestation Card",
+						},
+						{
+							value: "still",
+							label: "Still Attestation Card",
+							hint: "one line: mit takes the dative",
+						},
+					]}
+					value={knobs.plain}
+					onChange={(value) => set("plain", value)}
+				/>
 			</InspectorSection>
 			<InspectorSection title="Playback">
 				<InspectorChoice
-					label="When the Card opens"
+					label="When a Card comes in"
 					options={[
 						{ value: "play", label: "Plays by itself" },
 						{ value: "tap", label: "Waits for a tap" },
@@ -105,22 +126,9 @@ export function MorphInspector({
 					onChange={(value) => set("speed", value)}
 				/>
 				<InspectorChoice
-					label="At the Surface"
-					options={[
-						{
-							value: "pause",
-							label: "Pauses",
-							hint: "Play goes on into Inflection",
-						},
-						{ value: "continue", label: "Plays straight on" },
-					]}
-					value={knobs.boundary}
-					onChange={(value) => set("boundary", value)}
-				/>
-				<InspectorChoice
 					label="At the end"
 					options={[
-						{ value: "hold", label: "Rests on the lemma" },
+						{ value: "hold", label: "Rests on the result" },
 						{ value: "loop", label: "Loops" },
 					]}
 					value={knobs.ending}
@@ -167,16 +175,21 @@ export function MorphInspector({
 			<InspectorSection title="Try">
 				<InspectorTry>
 					<p>
-						Click <i>{morph.clickWord}</i> and watch Syntax play
-						out. It rests on the Surface; press Play or tap the
-						words to go on into Inflection. Drag along the dots to
-						scrub; they are grouped by stage.
+						Click <i>{morph.clickWord}</i> and watch Syntax play out
+						on the Attestation Card. It rests on the Surface; follow
+						the route under it to push the Surface Card, which plays
+						Inflection. Its route pushes the Lemma Card.
 					</p>
 					<p>
-						Switch <i>At the Surface</i> to <i>Plays straight on</i>{" "}
-						and ask whether the two stages still read as two. On{" "}
-						<i>Kindern</i>, Syntax is one step with nothing to
-						rearrange: does it earn its place?
+						Click the Attestation Card's tail to go back: it rests
+						where you left it. Does the hop between the two Cards
+						read as the line between syntax and inflection?
+					</p>
+					<p>
+						On <i>Kindern</i>, Syntax has nothing to rearrange.
+						Compare <i>Open on the Surface Card</i> with{" "}
+						<i>Still Attestation Card</i>: is the still line worth a
+						Card?
 					</p>
 					<p>
 						Pick <i>Waits for a tap</i> and step through by hand;
@@ -184,9 +197,9 @@ export function MorphInspector({
 						<i>hatte → haben</i> and <i>da → jM</i>.
 					</p>
 					<p>
-						⤢ opens the Card as a Sheet, which lists every step
-						under its stage; a step jumps there. The lemma link
-						opens the Lemma.
+						⤢ opens the front Card as a Sheet, which lists its steps
+						and names the next Card in its caption; the route pushes
+						the next Card as a Cover.
 					</p>
 					<p>
 						Turn on reduced motion in the toolbar: each step then
