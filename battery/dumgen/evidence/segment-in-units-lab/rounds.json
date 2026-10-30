@@ -8,14 +8,14 @@
 			"capTokens": 119047619,
 			"stopLineTokens": 104000000,
 			"pin": {
-				"dumcorpusCommit": "5342026a46fcad1448c3dae9648656781fde6b72",
+				"dumcorpusCommit": "eb8f2ef822ac1794cbbbcbe97525e3e77f8f2341",
 				"dumcorpusDirty": false,
-				"hash": "409b66465f7e529cc0d3ed7c363678f12e975cb75592023298bd83055b38a92b",
+				"hash": "ff02cee758f9a05fd244cf5e533a5cccdbfb66f6e45289964d001fff91736e9f",
 				"inputs": {
-					"inventories": "f39c6c2a385f62b5e00639bc79d2d68f9f01f3f9bef91914e6d981bed8515786",
-					"rules": "16e0a20c79d54a41d27979036bc757bc86a83a47cf53be9dc26c8b84beaba030"
+					"inventories": "92761fb27271fb7c1eecf77e578ce73f87635d99edb9f2acaf6905a8518c3f2d",
+					"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
 				},
-				"at": "2026-10-10T04:27:04.091Z"
+				"at": "2026-10-30T08:59:49.324Z"
 			},
 			"repins": [
 				{
@@ -87,6 +87,20 @@
 						"at": "2026-10-03T05:30:21.061Z"
 					},
 					"reason": "#1160: scoring round for #1155's particle-verb route override (08905457c); dumcorpus inventories and rules moved since 3a6b7b89, now 5342026a"
+				},
+				{
+					"at": "2026-10-30T08:59:49.324Z",
+					"from": {
+						"dumcorpusCommit": "5342026a46fcad1448c3dae9648656781fde6b72",
+						"dumcorpusDirty": false,
+						"hash": "409b66465f7e529cc0d3ed7c363678f12e975cb75592023298bd83055b38a92b",
+						"inputs": {
+							"inventories": "f39c6c2a385f62b5e00639bc79d2d68f9f01f3f9bef91914e6d981bed8515786",
+							"rules": "16e0a20c79d54a41d27979036bc757bc86a83a47cf53be9dc26c8b84beaba030"
+						},
+						"at": "2026-10-10T04:27:04.091Z"
+					},
+					"reason": "#1293 step 7: the dumcorpus inputs moved since the 2026-10-10 pin (rules reworded, inventories grown); this scoped round measures the expletive slot's rewording"
 				}
 			]
 		}

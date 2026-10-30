@@ -39,6 +39,8 @@ export const options = {
 	auxiliary: { Main: question.auxiliaryMain },
 	expletive: {
 		Subject: "Yes: the subject es, referring to nothing",
+		Referential:
+			"No: a subject es that refers to something the text names or means",
 		None: "No: an object or a fixed word of the expression",
 	},
 	prefix: {

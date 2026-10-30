@@ -531,6 +531,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		[
 			...(planned.article ? [planned.article.member] : []),
 			...(planned.verbal?.reflexive ? [planned.verbal.reflexive] : []),
+			...(verbal?.referential ? [verbal.referential] : []),
 		],
 		first.governedMembers,
 		shape,

@@ -1,0 +1,16 @@
+{
+	"baselineRunId": "none: #1293 step 7's scope, the cases whose requests the referential-es change moved (request diff), measured at the change's parent and at the change",
+	"experimentId": "resolve-grammar/de:dev",
+	"setHash": "db5efec1b4655e75",
+	"repetitions": 3,
+	"seed": 0,
+	"guardSize": 3,
+	"missed": {},
+	"guard": {
+		"Locution/VERB": [
+			"de/es-warten-drei-kunden-vor-der-tuer-aber-keiner-hat-es-eilig#8",
+			"de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die#2",
+			"de/sie-meint-es-gut-mit-dir#1"
+		]
+	}
+}

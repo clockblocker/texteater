@@ -322,7 +322,8 @@ function askVerbForm(questionnaire: Questionnaire) {
 
 /**
  * Reads a VERB's block: its separable prefix, its lexical reflexive's
- * evidence, its subject es, its inflection unless it is cited, and the
+ * evidence, its subject es or a Locution's referential one, its
+ * inflection unless it is cited, and the
  * reading a shortened particle takes from the prefix judged for it.
  */
 export const readVerbal = answerReader(function* (
@@ -336,6 +337,8 @@ export const readVerbal = answerReader(function* (
 	readonly core: VerbCore | Record<string, never>;
 	readonly inflection: VerbInflection | null;
 	readonly expletive: Member | undefined;
+	/** A Locution's es judged a referential subject: a free unit, no word of the Lemma (ADR 0003). */
+	readonly referential: Member | undefined;
 	readonly reflexive: ValencyEvidence | undefined;
 	readonly readings: ReadonlyMap<number, string>;
 }> {
@@ -367,14 +370,15 @@ export const readVerbal = answerReader(function* (
 				readings.set(member.segment, hasSepPrefix);
 		core = { hasSepPrefix };
 	}
+	const subjectEs = verbal.subjectEs
+		? yield* answered.pick(verbal.subjectEs)
+		: undefined;
 	const expletive =
-		verbal.expletive &&
-		(shape.lexeme ||
-			(verbal.subjectEs !== undefined &&
-				(yield* answered.pick(verbal.subjectEs)) === "Subject"))
+		verbal.expletive && (shape.lexeme || subjectEs === "Subject")
 			? verbal.expletive
 			: undefined;
 	return {
+		referential: subjectEs === "Referential" ? verbal.expletive : undefined,
 		core,
 		inflection: cited
 			? null

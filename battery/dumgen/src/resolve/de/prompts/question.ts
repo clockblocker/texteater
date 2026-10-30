@@ -214,7 +214,7 @@ export const question = {
 	),
 	expletive: paragraph(
 		"question.expletive",
-		"Is {m} the subject es the verb selects, which refers to nothing?",
+		"Is {m} the subject es the verb selects, which refers to nothing? Test it: put das or a noun phrase in its place, and if the clause keeps its meaning, es refers to something.",
 		rules.expletive,
 	),
 	verbForm: paragraph(

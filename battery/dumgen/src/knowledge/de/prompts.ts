@@ -141,7 +141,7 @@ export const valency = {
 	),
 	alternatives: paragraph(
 		"valency.alternatives",
-		"Alternatives share one Slot: each clause form the dictionary lists for a complement, and prepositions that alternate in the same role and meaning («plaudern» takes one Optional Slot of «über» + Acc and «von» + Dat).",
+		"Alternatives share one Slot: each clause form the dictionary lists for a complement, and prepositions that alternate in the same role and meaning («plaudern» takes one Optional Slot of «über» + Acc and «von» + Dat). A clause is an alternative in the Slot of the noun phrase or prepositional phrase that could stand in its place, never a Slot of its own beside it: a clause a pronominal adverb anticipates (da- with a preposition) joins the Slot of that preposition, with its correlate («achten» takes one Slot of «auf» + Acc and Clause Dass with an Optional correlate). Only a clause no phrase can replace has a Slot of its own.",
 		rules.valency,
 	),
 	freeMarker: paragraph(

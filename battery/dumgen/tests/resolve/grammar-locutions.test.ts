@@ -347,3 +347,40 @@ test("a Collocation's governed preposition its Canonical Form lacks is evidence,
 	// Luna decides whether the Lemma holds it, so nothing is outside.
 	expect(luna.sent.at(-1)?.input).not.toHaveProperty("outsideHeadword");
 });
+
+test("a Locution's es judged a referential subject stays out of its Lemma and Surface (ADR 0003)", async () => {
+	const segments: Segment[] = [
+		word("Vielleicht"),
+		space,
+		word("hatte"),
+		space,
+		word("es"),
+		space,
+		word("damit"),
+		space,
+		word("zu"),
+		space,
+		word("tun"),
+		stop,
+	];
+	const jev = fakeJev({
+		expletive: "Referential",
+		governed_m2: "Governed",
+		tense: "Past",
+	});
+	const luna = writes("mit zu tun haben");
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("", segments),
+			unit: unitOf([2, 4, 6, 8, 10], "Locution/VERB"),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.normalizedSurface).toBe("mit zu tun hatte");
+	expect(attestation.surface).toHaveProperty(
+		"inflectionalFeatures.expletive",
+		null,
+	);
+	expect(luna.sent.at(-1)?.input).toHaveProperty("outsideHeadword", ["m1"]);
+});

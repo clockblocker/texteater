@@ -1,0 +1,45 @@
+{
+	"round": "2026-10-30-1293-step7",
+	"issue": "#1293 step 7: resolution bugs from the Harry Potter click (hatte es damit zu tun).",
+	"referentialEs": {
+		"kept": "resolve.grammar's subject-es question now offers Referential beside Subject and None, and tests it by putting das or a noun phrase in its place; a Locution's es judged Referential stays out of the headword and the Surface. Gold has three Locution units with an es member (object or fixed es); on them nothing moved: 9/9 on every line before and after (runs c48b5df6, d70b455c).",
+		"liveCheck": "resolve.grammar on segmentation's unit [hatte, es, damit, zu, tun], three times each: before, Subject 0.61-0.66 every time, Lemma es mit zu tun haben; after, Referential 0.39-0.47 twice (Lemma mit zu tun haben, Surface mit zu tun hatte) and Subject 0.42 against Referential 0.39 once.",
+		"membership": "Not landed. segment.inUnits' expletive slot question put es into the unit (host 0.51 against none 0.44). Two rewordings were measured on the 67 dev sentences whose requests they moved, 3 repetitions, against the parent (18b6b031): a substitution test (das for es) joined es klopfte and darauf kommt es an apart and split es gut meinen (passed 57 -> 54); a narrower one naming a situation or fact the text describes split es tut mir leid (57 -> 56). Both lowered membership, so neither was kept.",
+		"segmentInUnits": {
+			"baseline": {
+				"runId": "18b6b031-b385-4340-b7bc-f213f50f9bd6",
+				"rates": {
+					"membership": 0.9295154185022027,
+					"matched": 0.8972099853157122,
+					"contractPass": 0.8737373737373737
+				},
+				"multiMembership": 0.9444444444444444,
+				"freshJevInputTokens": 2123497
+			},
+			"substitutionTest": {
+				"runId": "e2310e5f-d2a6-44cf-b8a1-daa7aca9e1af",
+				"rates": {
+					"membership": 0.9236417033773862,
+					"matched": 0.8883994126284875,
+					"contractPass": 0.8434343434343434
+				},
+				"multiMembership": 0.8950617283950617,
+				"freshJevInputTokens": 345150
+			},
+			"situationOrFact": {
+				"runId": "0d926652-3870-45cc-9c6e-96da9ef29a23",
+				"rates": {
+					"membership": 0.920704845814978,
+					"matched": 0.8883994126284875,
+					"contractPass": 0.8585858585858586
+				},
+				"multiMembership": 0.9259259259259259,
+				"freshJevInputTokens": 269744
+			}
+		}
+	},
+	"clauseSlot": {
+		"kept": "Knowledge's valency prompt (valency.alternatives) now says a clause is an alternative in the Slot of the phrase that could stand in its place, and a clause a pronominal adverb anticipates joins that preposition's Slot with its correlate.",
+		"liveCheck": "Knowledge valency on mit zu tun haben (the Harry Potter Reading): before, Clause Dass | Clause ZuInfinitive in an Optional Slot of their own beside an Optional mit + Dat; after, one Optional Slot mit + Dat | Clause Dass with an Optional correlate. Seven controls (ankommen, Angst haben, es gut meinen, müssen, lassen, interessiert, fühlen) kept their clause placement; only statuses moved."
+	}
+}
