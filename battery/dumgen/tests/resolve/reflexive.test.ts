@@ -64,7 +64,7 @@ test("a reflexive's form names its case where it shows it (mir, mich), and a ver
 	);
 	const locution = attested(worry.result);
 	expect(locution.surface.lemma.canonicalForm).toBe("Sorgen machen");
-	expect(locution.surface.normalizedSurface).toBe("mache Sorgen");
+	expect(locution.surface.normalizedSurface).toBe("Sorgen mache");
 	expect(locution).toHaveProperty("valencyEvidence", [
 		{
 			member: 1,
@@ -113,7 +113,7 @@ test("a reflexive inside a fixed phrase names its preposition, in the case the A
 	);
 	const attestation = attested(result);
 	expect(attestation.surface.lemma.canonicalForm).toBe("außer sein");
-	expect(attestation.surface.normalizedSurface).toBe("war außer");
+	expect(attestation.surface.normalizedSurface).toBe("außer war");
 	expect(attestation).toHaveProperty("valencyEvidence", [
 		{
 			member: 2,

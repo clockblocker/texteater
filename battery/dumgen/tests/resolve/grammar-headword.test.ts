@@ -210,7 +210,8 @@ test("Luna may correct a Typo, while a Standard member keeps its letters in Luna
 	// Luna's word, and a Standard member Luna recased keeps that casing.
 	const dropped = await resolveOnce(
 		{
-			jev: fakeJev({ orthography: "t2" }).ask,
+			// An imperative keeps its own order (system ADR 0056).
+			jev: fakeJev({ orthography: "t2", mood: "Imp" }).ask,
 			luna: writes("hereinkommen", ["komm", "herein"]).ask,
 		},
 		{

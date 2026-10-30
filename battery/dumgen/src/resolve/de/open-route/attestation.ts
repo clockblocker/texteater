@@ -15,6 +15,7 @@ import { attestedMember, type MemberOrthography } from "../member-spelling.js";
 import { joinMembers, type Member, type Target } from "../target.js";
 import type { AdverbialInflection } from "./adverbial.js";
 import type { Agreement } from "./agreeing.js";
+import { baseOrderSurface, type SurfaceWord } from "./base-order.js";
 import type { Spelling, SurfaceFeatures } from "./common.js";
 import type { NounInflection, OpeningArticle } from "./nominal.js";
 import type { AdpCase, Shape, ValencyEvidence } from "./shape.js";
@@ -107,6 +108,8 @@ export type AttestationRead = {
 	readonly realizedCase: AdpCase | "None" | undefined;
 	/** A VERB's subject es. */
 	readonly expletive: Member | undefined;
+	/** The members jev judged auxiliaries. */
+	readonly auxiliaries: ReadonlySet<number>;
 	readonly inflection: OpenInflection | null | undefined;
 };
 
@@ -147,10 +150,37 @@ function adpositionEvidence(
 	];
 }
 
+/** A VERB Lexeme's separable prefix, from its Core. */
+function separablePrefixOf(core: Headword["core"]): string | undefined {
+	const prefix: unknown =
+		"hasSepPrefix" in core ? core.hasSepPrefix : undefined;
+	return typeof prefix === "string" ? prefix : undefined;
+}
+
+/** The written words `joinMembers` would join, each with whether an auxiliary is among its members. */
+function surfaceWords(
+	texts: readonly string[],
+	glued: ReadonlySet<number>,
+	skipped: ReadonlySet<number>,
+	auxiliaries: ReadonlySet<number>,
+): SurfaceWord[] {
+	const words: { text: string; auxiliary: boolean }[] = [];
+	for (const [position, text] of texts.entries()) {
+		if (skipped.has(position)) continue;
+		const previous = words.at(-1);
+		if (previous && glued.has(position)) {
+			previous.text += text;
+			previous.auxiliary ||= auxiliaries.has(position);
+		} else words.push({ text, auxiliary: auxiliaries.has(position) });
+	}
+	return words;
+}
+
 /**
  * The Attestation of a unit on an open route, unchecked. `outsideHeadword`
  * holds the members the normalized Surface leaves out: an owned article
- * and the governed prepositions.
+ * and the governed prepositions. A verbal Surface is its base-order form
+ * (system ADR 0056).
  */
 export function openAttestation(
 	target: Target,
@@ -167,7 +197,24 @@ export function openAttestation(
 	if (expletive) normalized[expletive.position] = "es";
 	const normalizedSurface = shape.foreign
 		? canonicalForm
-		: joinMembers(normalized, target.glued, outsideHeadword);
+		: shape.verbal
+			? baseOrderSurface({
+					canonicalForm,
+					separablePrefix: separablePrefixOf(headword.core),
+					locution: shape.locution,
+					inflection: read.inflection,
+					words: surfaceWords(
+						normalized,
+						target.glued,
+						new Set([
+							...outsideHeadword,
+							...(expletive ? [expletive.position] : []),
+						]),
+						read.auxiliaries,
+					),
+					expletive: expletive !== undefined,
+				})
+			: joinMembers(normalized, target.glued, outsideHeadword);
 	// A member piece whose table names no word stands for its own word, in
 	// the spelling Luna wrote for it (geht of geht's).
 	const pieceReadings = new Map(read.readings);

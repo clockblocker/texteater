@@ -646,6 +646,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 						? first.realizedCase
 						: undefined,
 				expletive: verbal?.expletive,
+				auxiliaries: judged.auxiliaries ?? new Set(),
 				inflection: cells.inflection,
 			},
 			headword,
