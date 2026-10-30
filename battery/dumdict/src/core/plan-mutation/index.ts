@@ -9,5 +9,6 @@ export { planRekeySurfaces } from "./rekey-surfaces";
 export {
 	planReconcileAttestationLinks,
 	planRemoveOccurrence,
+	planRemoveReading,
 } from "./remove-occurrence";
 export type { PlanMutationResult } from "./result";

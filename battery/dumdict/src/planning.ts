@@ -38,6 +38,7 @@ export type {
 	AffectedDictionaryEntities,
 	ApplyGeneratedKnowledgeRequest,
 	CleanupRelationsRequest,
+	EmptyReadingPolicy,
 	EnsureOwnedSurfaceRequest,
 	EnsureReadingEntryRequest,
 	MutationRejectedCode,
@@ -46,6 +47,7 @@ export type {
 	ReevaluateShadowsRequest,
 	RekeySurfacesRequest,
 	RemoveOccurrenceRequest,
+	RemoveReadingRequest,
 } from "./public";
 export type {
 	CleanupRelationsSlice,

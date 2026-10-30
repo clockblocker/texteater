@@ -217,13 +217,13 @@ function claimsOneOf<L extends Dumling.Language>(
 }
 
 /**
- * Each Lemma once and whole, each holding a link with a requested ref, and
- * the claims on them.
+ * Each Lemma once and whole, each holding a link with a requested ref or a
+ * requested Reading, and the claims on them.
  */
 export function validateOccurrenceSlice<L extends Dumling.Language>(
 	expected: L,
 	slice: OccurrenceSlice<L>,
-	request: OccurrenceSliceRequest,
+	request: OccurrenceSliceRequest<L>,
 ) {
 	validateRevision(slice.revision);
 	assertNoDuplicates(
@@ -235,10 +235,14 @@ export function validateOccurrenceSlice<L extends Dumling.Language>(
 	for (const lemma of slice.lemmas) {
 		validateLemmaSlice(expected, lemma);
 		if (
-			!lemma.readingEntries.some((entry) =>
-				entry.attestationLinks.some(({ ref }) =>
-					request.refs.includes(ref),
-				),
+			!lemma.readingEntries.some(
+				(entry) =>
+					entry.attestationLinks.some(({ ref }) =>
+						request.refs.includes(ref),
+					) ||
+					(request.readings ?? []).some((reading) =>
+						sameReading(reading, entry.reading),
+					),
 			)
 		)
 			throw new Error(

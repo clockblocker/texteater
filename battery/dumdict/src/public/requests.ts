@@ -75,12 +75,22 @@ export type RecordOccurrenceRequest<L extends Dumling.Language> = {
 	surface: Dumling.Surface<L>;
 };
 
+/** What `removeOccurrence` does with a Reading it unlinks (system ADR 0043). */
+export type EmptyReadingPolicy = "Remove" | "Keep";
+
 /**
  * Removes one occurrence: every Attestation Link with `ref`, and what that
  * leaves behind (system ADR 0043, ADR 0049).
  */
 export type RemoveOccurrenceRequest = {
 	ref: string;
+	/** Defaults to `"Remove"`; a kept Reading goes with `removeReading`. */
+	emptyReading?: EmptyReadingPolicy;
+};
+
+/** Removes a Reading and its links as `removeOccurrence` would (ADR 0043). */
+export type RemoveReadingRequest<L extends Dumling.Language> = {
+	reading: Dumling.Reading<L>;
 };
 
 /**

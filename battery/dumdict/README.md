@@ -55,7 +55,8 @@ The planner's workflows each take that host-loaded slice and a request:
 - `ensureReadingEntry`: create or verify an ordinary Reading entry, re-evaluating the stored Shadows a Lemma it creates matches
 - `ensureOwnedSurface`: attach a newly encountered Surface to an existing Reading's Lemma
 - `recordOccurrence`: record one occurrence as an Attestation Link, ensuring its Surface
-- `removeOccurrence`: remove an occurrence's links and what they leave behind: an unlinked Reading, a Surface that lost its last link and holds no user text, a Lemma with no Readings, and the claims other Readings held on them
+- `removeOccurrence`: remove an occurrence's links and what they leave behind: an unlinked Reading (unless `emptyReading: "Keep"`), a Surface that lost its last link and holds no user text, a Lemma with no Readings, and the claims other Readings held on them
+- `removeReading`: remove one Reading, such as one kept empty, with its links and what that leaves behind, as `removeOccurrence` does
 - `reconcileAttestationLinks`: merge the links concurrent writers stored for one ref, keeping one
 - `rekeySurfaces`: rewrite Surface Entries and the links naming them after a Dumling Surface change
 - `cleanupRelations`: re-evaluate the Shadows of exact pending locators

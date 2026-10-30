@@ -1,11 +1,12 @@
 import { sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
-
+import type { PlanMutationResult } from "../core/plan-mutation";
 import {
 	planReconcileAttestationLinks,
 	planRecordOccurrence,
 	planRekeySurfaces,
 	planRemoveOccurrence,
+	planRemoveReading,
 } from "../core/plan-mutation";
 import {
 	validateOccurrenceSlice,
@@ -18,6 +19,7 @@ import type {
 	RecordOccurrenceRequest,
 	RekeySurfacesRequest,
 	RemoveOccurrenceRequest,
+	RemoveReadingRequest,
 } from "../public";
 import type {
 	OccurrenceSlice,
@@ -39,10 +41,11 @@ import {
 	type Workflow,
 } from "./workflow";
 
-/** The storage read `removeOccurrence` and `reconcileAttestationLinks` need. */
-export function occurrenceSliceRequest(
-	request: RemoveOccurrenceRequest | ReconcileAttestationLinksRequest,
-): OccurrenceSliceRequest {
+/** The storage read the removal workflows need. */
+export function occurrenceSliceRequest<L extends Dumling.Language>(
+	request: RemovalRequest<L>,
+): OccurrenceSliceRequest<L> {
+	if ("reading" in request) return { refs: [], readings: [request.reading] };
 	return {
 		refs: "ref" in request ? [request.ref] : [...new Set(request.refs)],
 	};
@@ -104,43 +107,67 @@ export function recordOccurrence<L extends Dumling.Language>(
 	};
 }
 
-export function removeOccurrence<L extends Dumling.Language>(
+export type RemovalRequest<L extends Dumling.Language> =
+	| RemoveOccurrenceRequest
+	| ReconcileAttestationLinksRequest
+	| RemoveReadingRequest<L>;
+
+/** A removal workflow: `plan` runs over the validated occurrence slice. */
+function removal<L extends Dumling.Language, R extends RemovalRequest<L>>(
 	language: L,
-): Workflow<L, RemoveOccurrenceRequest, OccurrenceSlice<L>> {
+	check: Workflow<L, R, OccurrenceSlice<L>>["check"],
+	plan: (slice: OccurrenceSlice<L>, request: R) => PlanMutationResult<L>,
+): Workflow<L, R, OccurrenceSlice<L>> {
 	return {
-		check: (request) =>
-			validRef(request.ref)
-				? ok(request)
-				: invalidRequest("An occurrence's ref is a non-empty string."),
+		check,
 		plan(slice, request) {
 			validateOccurrenceSlice(
 				language,
 				slice,
 				occurrenceSliceRequest(request),
 			);
-			return planned(planRemoveOccurrence(slice, request));
+			return planned(plan(slice, request));
 		},
 	};
 }
 
-export function reconcileAttestationLinks<L extends Dumling.Language>(
+const policies: unknown[] = [undefined, "Remove", "Keep"];
+
+export const removeOccurrence = <L extends Dumling.Language>(language: L) =>
+	removal<L, RemoveOccurrenceRequest>(
+		language,
+		(request) =>
+			!validRef(request.ref)
+				? invalidRequest("An occurrence's ref is a non-empty string.")
+				: policies.includes(request.emptyReading)
+					? ok(request)
+					: invalidRequest('emptyReading is "Remove" or "Keep".'),
+		planRemoveOccurrence,
+	);
+
+export const removeReading = <L extends Dumling.Language>(language: L) =>
+	removal<L, RemoveReadingRequest<L>>(
+		language,
+		(request) =>
+			request.reading.lemma.language === language
+				? ok(request)
+				: invalidRequest(
+						"The Reading must use the dictionary language.",
+					),
+		planRemoveReading,
+	);
+
+export const reconcileAttestationLinks = <L extends Dumling.Language>(
 	language: L,
-): Workflow<L, ReconcileAttestationLinksRequest, OccurrenceSlice<L>> {
-	return {
-		check: (request) =>
+) =>
+	removal<L, ReconcileAttestationLinksRequest>(
+		language,
+		(request) =>
 			request.refs.every(validRef)
 				? ok(request)
 				: invalidRequest("Every ref is a non-empty string."),
-		plan(slice, request) {
-			validateOccurrenceSlice(
-				language,
-				slice,
-				occurrenceSliceRequest(request),
-			);
-			return planned(planReconcileAttestationLinks(slice, request));
-		},
-	};
-}
+		planReconcileAttestationLinks,
+	);
 
 export function rekeySurfaces<L extends Dumling.Language>(
 	language: L,

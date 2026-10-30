@@ -35,6 +35,7 @@ import type {
 	ReevaluateShadowsRequest,
 	RekeySurfacesRequest,
 	RemoveOccurrenceRequest,
+	RemoveReadingRequest,
 } from "../public";
 import type {
 	AddNewNoteContext,
@@ -57,11 +58,13 @@ import {
 } from "./context-request";
 import {
 	occurrenceSliceRequest,
+	type RemovalRequest,
 	reconcileAttestationLinks,
 	recordOccurrence,
 	rekeySurfaces,
 	rekeySurfacesSliceRequest,
 	removeOccurrence,
+	removeReading,
 } from "./occurrence-workflows";
 import {
 	parseAddNewNoteRequest,
@@ -154,22 +157,28 @@ export type DumdictPlanner<L extends Dumling.Language> = {
 		context: RecordOccurrenceContext<L>,
 		request: RecordOccurrenceRequest<L>,
 	): DumdictPlanOutcome<L>;
-	/** The storage read `removeOccurrence` and `reconcileAttestationLinks` need. */
+	/** The storage read the removal workflows need. */
 	occurrenceSliceRequest(
-		request: RemoveOccurrenceRequest | ReconcileAttestationLinksRequest,
-	): OccurrenceSliceRequest;
+		request: RemovalRequest<L>,
+	): OccurrenceSliceRequest<L>;
 	/**
 	 * Removes one occurrence's links and what they leave behind (system ADR
 	 * 0043, ADR 0049): an unlinked Reading, a Surface that lost its last link
 	 * and holds no user text, a Lemma with no Reading, and the variants no
-	 * remaining Reading licenses. The same plan retracts every claim other
-	 * Readings hold on what goes, and leaves each Lemma-mode one as a pending
-	 * Shadow relation (system ADR 0011). `affected.removed` lists what goes;
-	 * once the plan commits, the host re-evaluates Shadows with its Lemmas.
+	 * remaining Reading licenses; `emptyReading: "Keep"` keeps an unlinked
+	 * Reading. The same plan retracts every claim other Readings hold on what
+	 * goes, and leaves each Lemma-mode one as a pending Shadow relation
+	 * (system ADR 0011). `affected.removed` lists what goes; once the plan
+	 * commits, the host re-evaluates Shadows with its Lemmas.
 	 */
 	removeOccurrence(
 		slice: OccurrenceSlice<L>,
 		request: RemoveOccurrenceRequest,
+	): DumdictPlanOutcome<L>;
+	/** Removes a Reading as `removeOccurrence` removes one it empties. */
+	removeReading(
+		slice: OccurrenceSlice<L>,
+		request: RemoveReadingRequest<L>,
 	): DumdictPlanOutcome<L>;
 	/**
 	 * Merges each requested ref's stored links as a set: the link with the
@@ -491,6 +500,7 @@ export function createDumdictPlanner<L extends Dumling.Language>(
 		reevaluateShadows: reevaluateShadows(language),
 		recordOccurrence: recordOccurrence(language),
 		removeOccurrence: removeOccurrence(language),
+		removeReading: removeReading(language),
 		reconcileAttestationLinks: reconcileAttestationLinks(language),
 		rekeySurfaces: rekeySurfaces(language),
 	};
@@ -514,6 +524,8 @@ export function createDumdictPlanner<L extends Dumling.Language>(
 		occurrenceSliceRequest,
 		removeOccurrence: (slice, request) =>
 			run(workflows.removeOccurrence, slice, request),
+		removeReading: (slice, request) =>
+			run(workflows.removeReading, slice, request),
 		reconcileAttestationLinks: (slice, request) =>
 			run(workflows.reconcileAttestationLinks, slice, request),
 		rekeySurfacesSliceRequest,

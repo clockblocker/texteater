@@ -46,7 +46,7 @@ export type InMemoryTestStorage<L extends Dumling.Language> = {
 	loadReevaluateShadowsContext(
 		request: Omit<ReevaluateShadowsRequest<L>, "baseRevision">,
 	): ReevaluateShadowsSlice<L>;
-	loadOccurrenceSlice(request: OccurrenceSliceRequest): OccurrenceSlice<L>;
+	loadOccurrenceSlice(request: OccurrenceSliceRequest<L>): OccurrenceSlice<L>;
 	loadRekeySurfacesSlice(
 		request: RekeySurfacesSliceRequest<L>,
 	): RekeySurfacesSlice<L>;

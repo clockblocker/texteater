@@ -2,6 +2,7 @@ import type * as Dumling from "dumling/types";
 
 import type { AttestationLink, PlannedChangeOp } from "../../domain-types";
 import { createDumdictPlanner } from "../../planner/planner";
+import type { EmptyReadingPolicy } from "../../public";
 import { createOwnedSurface, createPending, readingEntry } from "./fixtures";
 import { type ConformanceStorage, readingContext, seed } from "./harness";
 import {
@@ -31,11 +32,27 @@ export async function planRecord(
 }
 
 /** Plans removing one occurrence against the store, as a host does. */
-export async function planRemove(storage: ConformanceStorage, ref: string) {
+export async function planRemove(
+	storage: ConformanceStorage,
+	ref: string,
+	emptyReading?: EmptyReadingPolicy,
+) {
+	const request = emptyReading ? { ref, emptyReading } : { ref };
 	const slice = await storage.loadOccurrenceSlice(
-		planner.occurrenceSliceRequest({ ref }),
+		planner.occurrenceSliceRequest(request),
 	);
-	return planner.removeOccurrence(slice, { ref });
+	return planner.removeOccurrence(slice, request);
+}
+
+/** Plans removing one Reading against the store, as a host does. */
+export async function planRemoveReading(
+	storage: ConformanceStorage,
+	reading: Dumling.Reading<"de">,
+) {
+	const slice = await storage.loadOccurrenceSlice(
+		planner.occurrenceSliceRequest({ reading }),
+	);
+	return planner.removeReading(slice, { reading });
 }
 
 /** The stored Reading Entry, or undefined. */

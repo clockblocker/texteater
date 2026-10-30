@@ -26,8 +26,15 @@ that Lemma, since a Surface's identity includes its Lemma. An `Unresolved`
 unit is corrected the same way, by giving its occurrence a unit.
 
 **What a move or removal leaves behind.** A Reading left with no Attestation
-Links is removed with its Knowledge and its Licences, and a Lemma left with
-no Readings is removed with its Paradigm and its Surfaces. A Paradigm
+Links is removed with its Knowledge and its Licences, unless the host asks to
+keep it, and a Lemma left with no Readings is removed with its Paradigm and
+its Surfaces. A host keeps an emptied Reading when its own text still links
+to it: the Obsidian plugin links every word of a Scroll but attests an
+occurrence only when the learner clicks it, so a stored Reading can have no
+Attestation Link while links still point at it. A kept Reading stays with its
+Knowledge and Licences, so its Lemma stays too, and the host removes it later
+with an explicit Reading removal that leaves behind what an emptying removal
+would. A Paradigm
 Variant that no remaining Reading licenses is removed
 ([ADR 0048](./0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md)).
 A Surface that loses its last Attestation Link is removed unless it holds
@@ -54,7 +61,8 @@ Licences, so ADR 0031's identity key stays as it is.
 ## Consequences
 
 - Dumdict plans an occurrence's removal and what it leaves behind
-  (`removeOccurrence`). The move
+  (`removeOccurrence`, whose `emptyReading: "Keep"` keeps an emptied
+  Reading), and a Reading's removal (`removeReading`). The move
   ([#1233](https://github.com/clockblocker/texteater/issues/1233)) and
   tf-demo's side wait for the segmentation rewrite
   ([#701](https://github.com/clockblocker/texteater/issues/701)).

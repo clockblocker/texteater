@@ -138,16 +138,20 @@ export type ReevaluateShadowsSlice<L extends Dumling.Language> = {
 	relationReadings: ReadingEntry<L>[];
 };
 
-/** The storage read `removeOccurrence` and `reconcileAttestationLinks` plan from. */
-export type OccurrenceSliceRequest = {
+/** The storage read the removal workflows plan from. */
+export type OccurrenceSliceRequest<
+	L extends Dumling.Language = Dumling.Language,
+> = {
 	refs: string[];
+	/** `removeReading`'s Readings. */
+	readings?: Dumling.Reading<L>[];
 };
 
 /**
  * Each stored Lemma one of whose Readings holds an Attestation Link with a
- * requested ref, once and whole (`LemmaSlice`): removing a link may remove
- * its Reading, its Surface, its Lemma and their Licences, and only the whole
- * Lemma says which. The claims other Readings hold on what it removes move
+ * requested ref or is a requested Reading, once and whole (`LemmaSlice`):
+ * removing a link or a Reading may remove a Reading, a Surface, the Lemma
+ * and their Licences, and only the whole Lemma says which. The claims other Readings hold on what it removes move
  * in the same plan (system ADR 0011), so the slice also holds those Readings
  * and the Shadow relations their claims may become.
  */

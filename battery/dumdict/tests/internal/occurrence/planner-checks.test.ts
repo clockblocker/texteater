@@ -108,6 +108,53 @@ describe("the occurrence slice contract", () => {
 	});
 });
 
+describe("removeOccurrence and removeReading checks", () => {
+	test("refuses an emptyReading that is neither Remove nor Keep", () => {
+		const storage = createInMemoryTestStorage("de", [bankNote()]);
+		const request = { ref: "r1", emptyReading: "keep" } as unknown as {
+			ref: string;
+		};
+		expect(
+			planner.removeOccurrence(
+				storage.loadOccurrenceSlice({ refs: ["r1"] }),
+				request,
+			),
+		).toMatchObject({ status: "rejected", code: "invalidRequest" });
+	});
+
+	test("refuses a Reading of another language", () => {
+		const storage = createInMemoryTestStorage("de", [bankNote()]);
+		const reading = {
+			...bench,
+			lemma: { ...bench.lemma, language: "en" },
+		} as unknown as typeof bench;
+		expect(
+			planner.removeReading(
+				storage.loadOccurrenceSlice({ refs: [], readings: [bench] }),
+				{ reading },
+			),
+		).toMatchObject({ status: "rejected", code: "invalidRequest" });
+	});
+
+	test("the slice for removeReading holds the Reading's Lemma, whole, though it has no link", () => {
+		const storage = createInMemoryTestStorage("de", [bankNote()]);
+		const sliceRequest = planner.occurrenceSliceRequest({
+			reading: moneyBank,
+		});
+		expect(sliceRequest).toEqual({ refs: [], readings: [moneyBank] });
+		const slice = storage.loadOccurrenceSlice(sliceRequest);
+		expect(
+			slice.lemmas.map(({ lemmaRecord }) => lemmaRecord.lemma),
+		).toEqual([bank]);
+		expect(() =>
+			planner.removeReading(
+				{ ...slice },
+				{ reading: { ...moneyBank, emojiDescription: "🧱" } },
+			),
+		).toThrow("not requested");
+	});
+});
+
 describe("Paradigm Changes", () => {
 	test("a change Dumrel refuses rejects the request", () => {
 		const storage = createInMemoryTestStorage("de", [bankNote()]);
