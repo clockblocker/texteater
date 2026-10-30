@@ -32,13 +32,12 @@ import type {
 	ResolveGrammarInput,
 	ResolveReadingInput,
 } from "./resolve/types.js";
-import {
-	type BreakdownInput,
-	type Constituents,
-	constituentsOf,
-	morphemesOf,
-	type ProducedPiece,
-} from "./segment/breakdown.js";
+import { constituentsOf, morphemesOf } from "./segment/breakdown.js";
+import type {
+	BreakdownInput,
+	Constituents,
+	ProducedPiece,
+} from "./segment/breakdown-pieces.js";
 import { type InUnitsInput, segmentText } from "./segment/in-units.js";
 import type { SegmentedText } from "./segment/segmented-sentence.js";
 import { translateSentence } from "./translate/sentence.js";

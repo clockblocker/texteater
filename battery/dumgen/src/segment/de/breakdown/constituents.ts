@@ -56,7 +56,7 @@ import {
 	type Constituents,
 	isSingleWordLexeme,
 	type ProducedPiece,
-} from "../../breakdown.js";
+} from "../../breakdown-pieces.js";
 import { allRoutes, type RouteKey } from "../routes.js";
 import {
 	inflectedDeterminerOrPronoun,

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import type { Ask } from "../../../src/segment/ask.js";
-import type { BreakdownInput } from "../../../src/segment/breakdown.js";
+import type { BreakdownInput } from "../../../src/segment/breakdown-pieces.js";
 import { germanConstituents } from "../../../src/segment/de/breakdown/constituents.js";
 import { formCandidates } from "../../../src/segment/de/breakdown/forms.js";
 import { germanMorphemes } from "../../../src/segment/de/breakdown/morphemes.js";

@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import type { BreakdownInput } from "../../../src/segment/breakdown.js";
+import type { BreakdownInput } from "../../../src/segment/breakdown-pieces.js";
 import { germanConstituents } from "../../../src/segment/de/breakdown/constituents.js";
 import { input, judgeWanting } from "./breakdown-support.js";
 

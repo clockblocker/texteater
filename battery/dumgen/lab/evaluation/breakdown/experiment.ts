@@ -43,7 +43,7 @@ import { type Jev, JevTransport } from "../../../src/jev-call.js";
 import type { LunaAsk } from "../../../src/luna.js";
 import { LunaTransport } from "../../../src/luna-call.js";
 import { operations } from "../../../src/operations.js";
-import type { BreakdownInput } from "../../../src/segment/breakdown.js";
+import type { BreakdownInput } from "../../../src/segment/breakdown-pieces.js";
 import {
 	type CallRecord,
 	JevCache,

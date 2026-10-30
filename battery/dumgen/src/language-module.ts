@@ -26,7 +26,7 @@ import type {
 	BreakdownInput,
 	Constituents,
 	ProducedPiece,
-} from "./segment/breakdown.js";
+} from "./segment/breakdown-pieces.js";
 import type {
 	Segment,
 	SegmentLanguage,

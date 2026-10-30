@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import type { Question } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
 import type { Ask } from "../../../src/segment/ask.js";
-import type { BreakdownInput } from "../../../src/segment/breakdown.js";
+import type { BreakdownInput } from "../../../src/segment/breakdown-pieces.js";
 import { germanConstituents } from "../../../src/segment/de/breakdown/constituents.js";
 import { wordAnalyses } from "../../../src/segment/de/breakdown/word-analyses.js";
 import { noneOption } from "../../../src/segment/de/breakdown/word-prompts.js";

@@ -38,7 +38,7 @@ import {
 	type BreakdownInput,
 	breakdownState,
 	type ProducedPiece,
-} from "../../breakdown.js";
+} from "../../breakdown-pieces.js";
 import { isAffixTested, prefixCutConfirmed } from "./prefix-cut.js";
 import { wordRoots } from "./word-gates.js";
 

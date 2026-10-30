@@ -5,7 +5,7 @@ import type { Answers, AskRequest } from "../../../src/segment/ask.js";
 import type {
 	BreakdownInput,
 	ProducedPiece,
-} from "../../../src/segment/breakdown.js";
+} from "../../../src/segment/breakdown-pieces.js";
 import { asked, noul, picked } from "./fake-judge.js";
 
 /** A German Reading to break down. */
