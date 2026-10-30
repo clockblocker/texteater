@@ -224,7 +224,10 @@ test("an exact authored Reading publishes its authored Knowledge at commit and a
 	expect(accumulated?.knowledge).toMatchObject({
 		definition: authored.knowledge.definition,
 		transcription: "ɪç",
-		translations: { en: ["I"], ru: ["я"] },
+		translations: {
+			en: [[{ kind: "Text", text: "I" }]],
+			ru: [[{ kind: "Text", text: "я" }]],
+		},
 	});
 	expect(accumulated?.status).toBe("Full");
 	// Resolving an exact authored Reading calls no model (ADR 0021).

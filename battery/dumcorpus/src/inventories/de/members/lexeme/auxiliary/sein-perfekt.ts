@@ -18,8 +18,15 @@ export const member: AuthoredMember = {
 		definition:
 			"„sein“ als Hilfsverb des Perfekts: Mit dem Partizip II von Verben der Bewegung und der Zustandsänderung bildet es Perfekt und Plusquamperfekt (ist gegangen, war eingeschlafen).",
 		translations: {
-			en: ["be (perfect auxiliary)"],
-			ru: ["быть (вспомогательный глагол перфекта)"],
+			en: [[{ kind: "Text", text: "be (perfect auxiliary)" }]],
+			ru: [
+				[
+					{
+						kind: "Text",
+						text: "быть (вспомогательный глагол перфекта)",
+					},
+				],
+			],
 		},
 	},
 	coverage: {

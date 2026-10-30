@@ -22,6 +22,7 @@ import {
 	knowledgeJev,
 	knowledgeLuna,
 	knowledgeLunaInput,
+	texts,
 } from "./support.js";
 
 const noun = {
@@ -48,7 +49,7 @@ function bouquet(
 const writes = (...equivalents: string[]) => ({
 	translationAccumulation: {
 		sentence: "She got a bunch of flowers for her birthday.",
-		equivalents,
+		equivalents: texts(...equivalents),
 	},
 });
 
@@ -81,7 +82,7 @@ test("jev sees the stored translations bare beside the marked Sentence, and its 
 	const luna = knowledgeLuna(writes("bouquet"));
 	const { result, trace } = await accumulateOnce(
 		{ jev: jev.ask, luna: luna.ask },
-		bouquet({ en: ["bouquet", "bunch of flowers", "Bouquet "] }),
+		bouquet({ en: texts("bouquet", "bunch of flowers", "Bouquet ") }),
 	);
 	expect(result).toEqual({ changes: [], failures: [] });
 	expect(luna.sent).toEqual([]);
@@ -120,7 +121,7 @@ test("after NoMatch Luna writes the occurrence's equivalents without the stored 
 	const luna = knowledgeLuna(writes("Bunch  of Flowers", "posy", "posy"));
 	const { result, trace } = await accumulateOnce(
 		{ jev: jev.ask, luna: luna.ask },
-		bouquet({ en: ["bouquet", "bunch of flowers"] }),
+		bouquet({ en: texts("bouquet", "bunch of flowers") }),
 	);
 	expect(result).toEqual({
 		changes: [
@@ -128,7 +129,7 @@ test("after NoMatch Luna writes the occurrence's equivalents without the stored 
 				kind: "Contribute",
 				aspect: "translations",
 				language: "en",
-				value: ["posy"],
+				value: [[{ kind: "Text", text: "posy" }]],
 			},
 		],
 		failures: [],
@@ -161,7 +162,7 @@ test("when Luna writes only stored translations, nothing is added", async () => 
 	const luna = knowledgeLuna(writes("BOUQUET"));
 	const { result, trace } = await accumulateOnce(
 		{ jev: jev.ask, luna: luna.ask },
-		bouquet({ en: ["bouquet"] }),
+		bouquet({ en: texts("bouquet") }),
 	);
 	expect(result).toEqual({ changes: [], failures: [] });
 	expect(trace?.events).toEqual([
@@ -185,7 +186,7 @@ test("each language with a stored set is judged on its own; one with none is lef
 	const luna = knowledgeLuna(writes("posy"));
 	const { result } = await accumulateOnce(
 		{ jev: jev.ask, luna: luna.ask },
-		bouquet({ en: ["bouquet"], ru: ["букет"] }),
+		bouquet({ en: texts("bouquet"), ru: texts("букет") }),
 	);
 	expect(jev.sent.map(({ state }) => state.language)).toEqual(["en", "ru"]);
 	expect(result.changes).toEqual([
@@ -193,7 +194,7 @@ test("each language with a stored set is judged on its own; one with none is lef
 			kind: "Contribute",
 			aspect: "translations",
 			language: "en",
-			value: ["posy"],
+			value: [[{ kind: "Text", text: "posy" }]],
 		},
 	]);
 	const none = knowledgeJev();
@@ -211,18 +212,18 @@ test("a language whose call fails is a failure value and adds nothing; its sibli
 		translationAccumulation: (input) =>
 			input.language === "ru"
 				? { sentence: "…", equivalents: "букет" }
-				: { sentence: "…", equivalents: ["posy"] },
+				: { sentence: "…", equivalents: texts("posy") },
 	});
 	const { result } = await accumulateOnce(
 		{ jev: jev.ask, luna: luna.ask },
-		bouquet({ en: ["bouquet"], ru: ["цветы"] }),
+		bouquet({ en: texts("bouquet"), ru: texts("цветы") }),
 	);
 	expect(result.changes).toEqual([
 		{
 			kind: "Contribute",
 			aspect: "translations",
 			language: "en",
-			value: ["posy"],
+			value: [[{ kind: "Text", text: "posy" }]],
 		},
 	]);
 	expect(result.failures).toEqual([
@@ -235,7 +236,7 @@ test("a language whose call fails is a failure value and adds nothing; its sibli
 	const down = knowledgeJev({}, { fail: () => true });
 	const { result: failed } = await accumulateOnce(
 		{ jev: down.ask, luna: luna.ask },
-		bouquet({ en: ["bouquet"] }),
+		bouquet({ en: texts("bouquet") }),
 	);
 	expect(failed.failures).toEqual([
 		expect.objectContaining({ leaf: "en", code: "ProviderFailure" }),
@@ -255,12 +256,12 @@ test("an authored Reading accumulates over its authored translations (ADR 0047)"
 		["Durch"],
 	);
 	const authored = authoredReading(reading)?.knowledge.translations;
-	expect(authored?.en).toEqual(["through"]);
+	expect(authored?.en).toEqual(texts("through"));
 	const jev = knowledgeJev({ translation: "NoMatch" });
 	const luna = knowledgeLuna({
 		translationAccumulation: {
 			sentence: "It got cold because of the rain.",
-			equivalents: ["because of"],
+			equivalents: texts("because of"),
 		},
 	});
 	const { result } = await accumulateOnce(
@@ -278,7 +279,7 @@ test("an authored Reading accumulates over its authored translations (ADR 0047)"
 			kind: "Contribute",
 			aspect: "translations",
 			language: "en",
-			value: ["because of"],
+			value: [[{ kind: "Text", text: "because of" }]],
 		},
 	]);
 });

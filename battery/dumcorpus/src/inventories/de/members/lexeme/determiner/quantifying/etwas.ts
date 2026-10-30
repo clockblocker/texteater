@@ -27,7 +27,13 @@ export const member: AuthoredMember = {
 		transcription: "ˈɛtvas",
 		definition:
 			"Der quantifizierende Determinierer „etwas“ bezeichnet eine nicht näher bestimmte, meist kleine Menge des Bezeichneten: etwas Ruhe, etwas Geld.",
-		translations: { en: ["some", "a little"], ru: ["немного"] },
+		translations: {
+			en: [
+				[{ kind: "Text", text: "some" }],
+				[{ kind: "Text", text: "a little" }],
+			],
+			ru: [[{ kind: "Text", text: "немного" }]],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

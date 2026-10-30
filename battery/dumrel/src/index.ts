@@ -21,6 +21,7 @@ export { projectSemanticRelations } from "./project-semantic-relations.js";
 export { projectSources } from "./project-sources.js";
 export { propagateMorphemes } from "./propagate-morphemes.js";
 export { selectKnowledge } from "./select-knowledge.js";
+export { translationText } from "./translation.js";
 export { allowedComplementKinds } from "./valency-policy.js";
 export {
 	dimensionIdValues,
@@ -29,4 +30,5 @@ export {
 	locutionTypeValues,
 	sayingTypeValues,
 	translationLanguageValues,
+	translationPieceKindValues,
 } from "./vocabulary.js";

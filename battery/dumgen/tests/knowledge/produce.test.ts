@@ -14,6 +14,7 @@ import {
 	knowledgeLuna,
 	knowledgeLunaInput,
 	produceOnce,
+	texts,
 } from "./support.js";
 
 const noun = {
@@ -61,7 +62,15 @@ test("Luna writes the text, the forms and the frame; jev judges every choice (#8
 		transcription: "/ʃtʁaʊ̯s/",
 		definition: "Gebundene Blumen.",
 		translations: ({ language }: { language?: string }) =>
-			language === "en" ? ["bouquet"] : ["букет"],
+			language === "en"
+				? texts("bouquet")
+				: [
+						[
+							{ kind: "Text", text: "букет" },
+							{ kind: "Preposition", text: "из" },
+							{ kind: "Slot", text: "чего-то" },
+						],
+					],
 		plural: ["Sträuße"],
 		valency: { valency: [] },
 	});
@@ -87,7 +96,13 @@ test("Luna writes the text, the forms and the frame; jev judges every choice (#8
 		kind: "Contribute",
 		aspect: "translations",
 		language: "ru",
-		value: ["букет"],
+		value: [
+			[
+				{ kind: "Text", text: "букет" },
+				{ kind: "Preposition", text: "из" },
+				{ kind: "Slot", text: "чего-то" },
+			],
+		],
 	});
 	// The plural is no Knowledge: it licenses the Reading a Paradigm Variant (ADR 0048).
 	expect(result.paradigmChanges).toEqual([
@@ -141,7 +156,7 @@ test("each aspect is isolated: a failed one is a value, and its siblings land (#
 		transcription: "ʃtʁaʊ̯s",
 		definition: new Error("Luna is down"),
 		translations: ({ language }: { language?: string }) =>
-			language === "en" ? ["bouquet"] : { not: "a list" },
+			language === "en" ? texts("bouquet") : ["букет"],
 		plural: ["Sträuße", "zwei Wörter"],
 	});
 	const { result } = await produceOnce(
@@ -247,7 +262,7 @@ test("the result reads in job order, however the jobs finish (#1122)", async () 
 		{
 			transcription: new Error("Luna is down"),
 			definition: "Gebundene Blumen.",
-			translations: ["bouquet"],
+			translations: texts("bouquet"),
 			plural: ["Sträuße", "zwei Wörter"],
 		},
 		{

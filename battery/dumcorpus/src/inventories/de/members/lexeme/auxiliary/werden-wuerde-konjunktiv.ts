@@ -18,8 +18,15 @@ export const member: AuthoredMember = {
 		definition:
 			"„würde“ als Hilfsverb des Konjunktivs II: Mit dem Infinitiv drückt es Hypothetisches, Irreales oder Höfliches aus (würde kommen, würden Sie bitte warten).",
 		translations: {
-			en: ["would (subjunctive auxiliary)"],
-			ru: ["бы (вспомогательный глагол конъюнктива II)"],
+			en: [[{ kind: "Text", text: "would (subjunctive auxiliary)" }]],
+			ru: [
+				[
+					{
+						kind: "Text",
+						text: "бы (вспомогательный глагол конъюнктива II)",
+					},
+				],
+			],
 		},
 	},
 	coverage: {

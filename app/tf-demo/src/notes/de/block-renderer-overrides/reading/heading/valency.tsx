@@ -6,6 +6,10 @@ import {
 import type { ReadingDefaultRenderer } from "../../../../universal/blocks/renderer";
 import { ReadingHeading } from "../../../../universal/blocks/renderers/reading/heading/default";
 import {
+	ValencyPreposition,
+	ValencySlot,
+} from "../../../../universal/blocks/valency-pieces";
+import {
 	DEFAULT_VALENCY_LINE_STYLE,
 	germanValencyLine,
 	type ValencyLinePart,
@@ -101,16 +105,19 @@ function renderPart(part: ValencyLinePart): ReactNode {
 		}
 		case "Fixed":
 			return part.text;
+		case "Preposition":
+			return <ValencyPreposition>{part.text}</ValencyPreposition>;
 		case "Slot": {
 			const slot = (
 				<>
-					{part.preposition ? `${part.preposition} ` : null}
-					<span
-						data-slot="valency-token"
-						className="font-mono text-[0.9em] text-ink-soft"
-					>
-						{part.token}
-					</span>
+					{part.preposition ? (
+						<>
+							<ValencyPreposition>
+								{part.preposition}
+							</ValencyPreposition>{" "}
+						</>
+					) : null}
+					<ValencySlot>{part.token}</ValencySlot>
 				</>
 			);
 			return part.optional ? <Optional>{slot}</Optional> : slot;

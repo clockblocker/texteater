@@ -44,8 +44,18 @@ export const morphemeFixtures = [
 			],
 		],
 		translations: [
-			"past-participle circumfix for many weak verbs",
-			"циркумфикс причастия II многих слабых глаголов",
+			[
+				{
+					kind: "Text",
+					text: "past-participle circumfix for many weak verbs",
+				},
+			],
+			[
+				{
+					kind: "Text",
+					text: "циркумфикс причастия II многих слабых глаголов",
+				},
+			],
 		],
 		tags: [noteToken("#Morphem"), noteToken("#PartizipII")],
 	},
@@ -88,8 +98,8 @@ export const morphemeFixtures = [
 			],
 		],
 		translations: [
-			"linking -s- in compounds",
-			"соединительный -s- в сложных словах",
+			[{ kind: "Text", text: "linking -s- in compounds" }],
+			[{ kind: "Text", text: "соединительный -s- в сложных словах" }],
 		],
 		tags: [noteToken("#Morphem"), noteToken("#Komposition")],
 	},
@@ -132,8 +142,13 @@ export const morphemeFixtures = [
 			],
 		],
 		translations: [
-			"un-; not, opposite or absence of",
-			"не-, без-; отрицание, противоположность или отсутствие",
+			[{ kind: "Text", text: "un-; not, opposite or absence of" }],
+			[
+				{
+					kind: "Text",
+					text: "не-, без-; отрицание, противоположность или отсутствие",
+				},
+			],
 		],
 		tags: [noteToken("#Morphem"), noteToken("#Präfix")],
 	},
@@ -176,8 +191,8 @@ export const morphemeFixtures = [
 			],
 		],
 		translations: [
-			"drive, travel or ride (root)",
-			"ехать, ездить (корень)",
+			[{ kind: "Text", text: "drive, travel or ride (root)" }],
+			[{ kind: "Text", text: "ехать, ездить (корень)" }],
 		],
 		tags: [noteToken("#Morphem"), noteToken("#Wurzel")],
 	},
@@ -218,7 +233,10 @@ export const morphemeFixtures = [
 				noteToken("Dämmerung", "feminine"),
 			],
 		],
-		translations: ["-ing, -tion;", "-ние, -ция;"],
+		translations: [
+			[{ kind: "Text", text: "-ing, -tion;" }],
+			[{ kind: "Text", text: "-ние, -ция;" }],
+		],
 		tags: [
 			noteToken("#Morphem"),
 			noteToken("#Suffix"),
@@ -265,8 +283,18 @@ export const morphemeFixtures = [
 			],
 		],
 		translations: [
-			"-work; word-forming element for an organized whole",
-			"-werk; словообразовательный элемент со значением упорядоченного целого",
+			[
+				{
+					kind: "Text",
+					text: "-work; word-forming element for an organized whole",
+				},
+			],
+			[
+				{
+					kind: "Text",
+					text: "-werk; словообразовательный элемент со значением упорядоченного целого",
+				},
+			],
 		],
 		tags: [
 			noteToken("#Morphem"),

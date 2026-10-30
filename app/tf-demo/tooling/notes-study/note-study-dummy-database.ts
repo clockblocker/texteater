@@ -486,7 +486,10 @@ function relatedUnitFor(
 		contexts: [context],
 		definition:
 			token.description ?? `Relation counterpart for ${token.text}.`,
-		translations: [token.text, token.text],
+		translations: [
+			[{ kind: "Text", text: token.text }],
+			[{ kind: "Text", text: token.text }],
+		],
 		tags: [],
 	} satisfies NoteStudyFixture;
 	return {

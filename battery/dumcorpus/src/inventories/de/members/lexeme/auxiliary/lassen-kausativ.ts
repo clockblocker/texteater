@@ -23,8 +23,22 @@ export const member: AuthoredMember = {
 		definition:
 			"„lassen“ als Hilfsverb des Kausativs: Mit dem Infinitiv sagt es, dass man etwas tun lässt, ohne dass der Satz nennt, wer es tut (lässt sich die Haare schneiden, hat den Zaun reparieren lassen).",
 		translations: {
-			en: ["have (something done), causative auxiliary"],
-			ru: ["давать сделать, поручать (вспомогательный глагол каузатива)"],
+			en: [
+				[
+					{
+						kind: "Text",
+						text: "have (something done), causative auxiliary",
+					},
+				],
+			],
+			ru: [
+				[
+					{
+						kind: "Text",
+						text: "давать сделать, поручать (вспомогательный глагол каузатива)",
+					},
+				],
+			],
 		},
 	},
 	coverage: {

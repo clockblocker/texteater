@@ -15,6 +15,17 @@ export const directSemanticRelationValues = [
 
 export const translationLanguageValues = ["en", "ru"] as const;
 
+/**
+ * What a Translation Piece is (ADR 0055): plain Text, a Preposition the
+ * equivalent governs (`with`, `к`), or a Slot, the placeholder its object
+ * fills (`something`, `чему-то`).
+ */
+export const translationPieceKindValues = [
+	"Text",
+	"Preposition",
+	"Slot",
+] as const;
+
 /** Cases a lexically governed preposition can assign to its complement. */
 export const governedCaseValues = ["Acc", "Dat", "Gen"] as const;
 

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { authoredComponent, germanArticleCell } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import { api } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import {
@@ -102,7 +103,7 @@ async function knowledgeRows(t: TestConvexDb) {
 			_id,
 			knowledge: knowledge as {
 				definition: string;
-				translations: { en: string[] };
+				translations: { en: Dumrel.Translation[] };
 			},
 		}),
 	);
@@ -225,7 +226,9 @@ for (const [article, gender, spelled, canonical] of [
 		const knowledge = (await knowledgeRows(t))[0]?.knowledge;
 		expect(knowledge?.definition).toContain(`„${canonical}“`);
 		expect(knowledge?.translations.en).toEqual(
-			article === "Indefinite" ? ["a", "an"] : ["the"],
+			(article === "Indefinite" ? ["a", "an"] : ["the"]).map((text) => [
+				{ kind: "Text" as const, text },
+			]),
 		);
 		expect((await rows(t, "readingEntries"))[0]?.record).toHaveProperty(
 			"knowledge",

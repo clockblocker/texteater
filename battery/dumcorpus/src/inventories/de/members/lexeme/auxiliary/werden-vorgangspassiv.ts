@@ -18,8 +18,15 @@ export const member: AuthoredMember = {
 		definition:
 			"„werden“ als Hilfsverb des Vorgangspassivs: Mit dem Partizip II beschreibt es eine Handlung aus Sicht des Betroffenen (wird repariert, ist genehmigt worden).",
 		translations: {
-			en: ["be (processual passive auxiliary)"],
-			ru: ["вспомогательный глагол пассива действия"],
+			en: [[{ kind: "Text", text: "be (processual passive auxiliary)" }]],
+			ru: [
+				[
+					{
+						kind: "Text",
+						text: "вспомогательный глагол пассива действия",
+					},
+				],
+			],
 		},
 	},
 	coverage: {

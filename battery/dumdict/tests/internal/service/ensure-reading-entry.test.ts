@@ -12,7 +12,7 @@ import {
 const fixedEntry = (): ReadingEntry<"en"> => ({
 	reading: englishSwimReading,
 	knowledge: {
-		translations: { en: ["swim"] },
+		translations: { en: [[{ kind: "Text", text: "swim" }]] },
 	},
 	attestedTranslations: [],
 	attestationLinks: [],

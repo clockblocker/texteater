@@ -66,7 +66,10 @@ export const lexemePZFixtures = [
 				noteToken("ander", "reference", "zweiter Bestandteil"),
 			],
 		],
-		translations: ["each other; one another", "друг друга; друг другу"],
+		translations: [
+			[{ kind: "Text", text: "each other; one another" }],
+			[{ kind: "Text", text: "друг друга; друг другу" }],
+		],
 		tags: [noteToken("#Pronomen"), noteToken("#Reziprok")],
 	},
 	{
@@ -119,7 +122,10 @@ export const lexemePZFixtures = [
 				content: [noteToken("Deutschland", "reference", "Ganzes")],
 			},
 		],
-		translations: ["Berlin", "Берлин"],
+		translations: [
+			[{ kind: "Text", text: "Berlin" }],
+			[{ kind: "Text", text: "Берлин" }],
+		],
 		forms: [
 			{
 				label: "N/A/D",
@@ -202,7 +208,10 @@ export const lexemePZFixtures = [
 				noteToken("wohl", "reference", "zweiter Bestandteil"),
 			],
 		],
-		translations: ["although; even though", "хотя; несмотря на то что"],
+		translations: [
+			[{ kind: "Text", text: "although; even though" }],
+			[{ kind: "Text", text: "хотя; несмотря на то что" }],
+		],
 		tags: [noteToken("#Subjunktion"), noteToken("#Konzessiv")],
 	},
 	{
@@ -261,7 +270,10 @@ export const lexemePZFixtures = [
 				],
 			},
 		],
-		translations: ["percent sign", "знак процента"],
+		translations: [
+			[{ kind: "Text", text: "percent sign" }],
+			[{ kind: "Text", text: "знак процента" }],
+		],
 		tags: [noteToken("#Symbol")],
 	},
 	{
@@ -321,7 +333,10 @@ export const lexemePZFixtures = [
 				noteToken("rufen", "reference", "starkes Verb"),
 			],
 		],
-		translations: ["to call; to phone", "звонить; позвонить"],
+		translations: [
+			[{ kind: "Text", text: "to call; to phone" }],
+			[{ kind: "Text", text: "звонить; позвонить" }],
+		],
 		forms: [
 			{
 				label: "Inf.",

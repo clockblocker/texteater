@@ -107,7 +107,8 @@ type BreakdownFixture = {
 	readonly lemma: Dumling.Lemma<"de">;
 	readonly emoji: string;
 	readonly definition: string;
-	readonly translations: readonly [string, string];
+	/** The English Translation, then the Russian one (ADR 0055). */
+	readonly translations: readonly [Dumrel.Translation, Dumrel.Translation];
 	readonly constituents?: readonly Piece[];
 	readonly morphemes?: readonly Piece[];
 	readonly source?: Dumrel.LinkTarget;
@@ -160,14 +161,20 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: KAUFEN,
 		emoji: "🛒",
 		definition: "Etwas gegen Bezahlung erwerben.",
-		translations: ["to buy", "покупать"],
+		translations: [
+			[{ kind: "Text", text: "to buy" }],
+			[{ kind: "Text", text: "покупать" }],
+		],
 		morphemes: [root("kauf"), ending("en")],
 	},
 	{
 		lemma: EINKAUFEN,
 		emoji: "🛍️",
 		definition: "Waren für den täglichen Bedarf kaufen.",
-		translations: ["to shop", "делать покупки"],
+		translations: [
+			[{ kind: "Text", text: "to shop" }],
+			[{ kind: "Text", text: "делать покупки" }],
+		],
 		constituents: [
 			link("ein", morpheme("Prefix", "ein-")),
 			link("kaufen", KAUFEN),
@@ -177,7 +184,10 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: verb("verkaufen"),
 		emoji: "💰",
 		definition: "Etwas gegen Bezahlung abgeben.",
-		translations: ["to sell", "продавать"],
+		translations: [
+			[{ kind: "Text", text: "to sell" }],
+			[{ kind: "Text", text: "продавать" }],
+		],
 		constituents: [
 			link("ver", morpheme("Prefix", "ver-")),
 			link("kaufen", KAUFEN),
@@ -187,7 +197,18 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: verb("abkaufen"),
 		emoji: "🤝",
 		definition: "Jemandem etwas abnehmen, indem man es ihm bezahlt.",
-		translations: ["to buy from someone", "купить у кого-то"],
+		translations: [
+			[
+				{ kind: "Text", text: "to buy" },
+				{ kind: "Preposition", text: "from" },
+				{ kind: "Slot", text: "someone" },
+			],
+			[
+				{ kind: "Text", text: "купить" },
+				{ kind: "Preposition", text: "у" },
+				{ kind: "Slot", text: "кого-то" },
+			],
+		],
 		constituents: [
 			link("ab", morpheme("Prefix", "ab-")),
 			link("kaufen", KAUFEN),
@@ -197,7 +218,10 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: verb("aufkaufen"),
 		emoji: "📦",
 		definition: "Alle vorhandenen Stücke einer Ware kaufen.",
-		translations: ["to buy up", "скупать"],
+		translations: [
+			[{ kind: "Text", text: "to buy up" }],
+			[{ kind: "Text", text: "скупать" }],
+		],
 		constituents: [
 			link("auf", morpheme("Prefix", "auf-")),
 			link("kaufen", KAUFEN),
@@ -207,7 +231,10 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: verb("erkaufen"),
 		emoji: "💸",
 		definition: "Etwas durch Opfer oder Zugeständnisse erlangen.",
-		translations: ["to purchase at a price", "покупать ценой"],
+		translations: [
+			[{ kind: "Text", text: "to purchase at a price" }],
+			[{ kind: "Text", text: "покупать ценой" }],
+		],
 		constituents: [
 			link("er", morpheme("Prefix", "er-")),
 			link("kaufen", KAUFEN),
@@ -218,28 +245,40 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: noun("Einkauf"),
 		emoji: "🧺",
 		definition: "Das Einkaufen von Waren für den täglichen Bedarf.",
-		translations: ["shopping", "покупка"],
+		translations: [
+			[{ kind: "Text", text: "shopping" }],
+			[{ kind: "Text", text: "покупка" }],
+		],
 		source: EINKAUFEN,
 	},
 	{
 		lemma: noun("Kauf"),
 		emoji: "🤝",
 		definition: "Erwerb einer Sache gegen Bezahlung.",
-		translations: ["purchase", "покупка"],
+		translations: [
+			[{ kind: "Text", text: "purchase" }],
+			[{ kind: "Text", text: "покупка" }],
+		],
 		source: KAUFEN,
 	},
 	{
 		lemma: noun("Kaufhaus"),
 		emoji: "🏬",
 		definition: "Großes Geschäft mit Waren aller Art.",
-		translations: ["department store", "универмаг"],
+		translations: [
+			[{ kind: "Text", text: "department store" }],
+			[{ kind: "Text", text: "универмаг" }],
+		],
 		constituents: [link("Kauf", KAUFEN), link("haus", HAUS)],
 	},
 	{
 		lemma: noun("Käufer"),
 		emoji: "🧾",
 		definition: "Person, die etwas kauft.",
-		translations: ["buyer", "покупатель"],
+		translations: [
+			[{ kind: "Text", text: "buyer" }],
+			[{ kind: "Text", text: "покупатель" }],
+		],
 		constituents: [
 			link("Käuf", KAUFEN),
 			link("er", morpheme("Suffix", "-er")),
@@ -249,21 +288,30 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: HAUS,
 		emoji: "🏠",
 		definition: "Gebäude, in dem Menschen wohnen.",
-		translations: ["house", "дом"],
+		translations: [
+			[{ kind: "Text", text: "house" }],
+			[{ kind: "Text", text: "дом" }],
+		],
 		morphemes: [root("Haus"), ending("")],
 	},
 	{
 		lemma: GAST,
 		emoji: "🧳",
 		definition: "Person, die eingeladen ist oder irgendwo zu Besuch ist.",
-		translations: ["guest", "гость"],
+		translations: [
+			[{ kind: "Text", text: "guest" }],
+			[{ kind: "Text", text: "гость" }],
+		],
 		morphemes: [root("Gast"), ending("")],
 	},
 	{
 		lemma: noun("Gästehaus"),
 		emoji: "🏨",
 		definition: "Haus, in dem Gäste untergebracht werden.",
-		translations: ["guest house", "гостевой дом"],
+		translations: [
+			[{ kind: "Text", text: "guest house" }],
+			[{ kind: "Text", text: "гостевой дом" }],
+		],
 		constituents: [
 			link("Gäst", GAST),
 			link("e", morpheme("Interfix", "-e-")),
@@ -274,14 +322,20 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: ARZT,
 		emoji: "🩺",
 		definition: "Person, die Kranke behandelt.",
-		translations: ["doctor", "врач"],
+		translations: [
+			[{ kind: "Text", text: "doctor" }],
+			[{ kind: "Text", text: "врач" }],
+		],
 		morphemes: [root("Arzt"), ending("")],
 	},
 	{
 		lemma: verb("verarzten"),
 		emoji: "🩹",
 		definition: "Jemanden rasch und notdürftig ärztlich versorgen.",
-		translations: ["to patch up", "подлатать"],
+		translations: [
+			[{ kind: "Text", text: "to patch up" }],
+			[{ kind: "Text", text: "подлатать" }],
+		],
 		constituents: [
 			link("ver", morpheme("Prefix", "ver-")),
 			link("arzt", ARZT),
@@ -292,7 +346,10 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: noun("Kohlekraftwerk"),
 		emoji: "🏭",
 		definition: "Kraftwerk, das Strom aus Kohle erzeugt.",
-		translations: ["coal power plant", "угольная электростанция"],
+		translations: [
+			[{ kind: "Text", text: "coal power plant" }],
+			[{ kind: "Text", text: "угольная электростанция" }],
+		],
 		constituents: [
 			link("Kohle", pendingNoun("Kohle")),
 			link("kraftwerk", pendingNoun("Kraftwerk")),
@@ -302,7 +359,10 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: noun("Entspannung"),
 		emoji: "😌",
 		definition: "Zustand, in dem man sich erholt und ruhig wird.",
-		translations: ["relaxation", "расслабление"],
+		translations: [
+			[{ kind: "Text", text: "relaxation" }],
+			[{ kind: "Text", text: "расслабление" }],
+		],
 		constituents: [
 			link("Entspann", pendingWord("VERB", "entspannen")),
 			link("ung", UNG),
@@ -312,28 +372,40 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: LAUFEN,
 		emoji: "🏃",
 		definition: "Sich schnell auf den Füßen fortbewegen.",
-		translations: ["to run", "бегать"],
+		translations: [
+			[{ kind: "Text", text: "to run" }],
+			[{ kind: "Text", text: "бегать" }],
+		],
 		morphemes: [root("lauf"), ending("en")],
 	},
 	{
 		lemma: noun("Lauf"),
 		emoji: "👟",
 		definition: "Das Laufen als sportliche Übung oder Wettkampf.",
-		translations: ["run", "бег"],
+		translations: [
+			[{ kind: "Text", text: "run" }],
+			[{ kind: "Text", text: "бег" }],
+		],
 		source: LAUFEN,
 	},
 	{
 		lemma: STUBE,
 		emoji: "🪑",
 		definition: "Wohnraum, Zimmer.",
-		translations: ["room", "комната"],
+		translations: [
+			[{ kind: "Text", text: "room" }],
+			[{ kind: "Text", text: "комната" }],
+		],
 		morphemes: [root("Stub"), ending("e")],
 	},
 	{
 		lemma: noun("Wachstube"),
 		emoji: "💂",
 		definition: "Raum, in dem sich die Wache aufhält.",
-		translations: ["guardroom", "караульное помещение"],
+		translations: [
+			[{ kind: "Text", text: "guardroom" }],
+			[{ kind: "Text", text: "караульное помещение" }],
+		],
 		constituents: [
 			// DWDS splits it wachen + Stube, as the Breakdown Record does.
 			link("Wach", pendingWord("VERB", "wachen")),
@@ -344,7 +416,10 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: noun("Wachstube"),
 		emoji: "🕯️",
 		definition: "Tube, in der Wachs aufbewahrt wird.",
-		translations: ["tube of wax", "тюбик воска"],
+		translations: [
+			[{ kind: "Text", text: "tube of wax" }],
+			[{ kind: "Text", text: "тюбик воска" }],
+		],
 		constituents: [
 			link("Wachs", pendingNoun("Wachs")),
 			link("tube", pendingNoun("Tube")),
@@ -354,7 +429,10 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: ZU_HAUSE,
 		emoji: "🏡",
 		definition: "In der eigenen Wohnung.",
-		translations: ["at home", "дома"],
+		translations: [
+			[{ kind: "Text", text: "at home" }],
+			[{ kind: "Text", text: "дома" }],
+		],
 		constituents: [
 			link("zu", pendingWord("ADP", "zu")),
 			space,
@@ -365,7 +443,10 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: lemma("Locution", "VERB", "wie zu Hause fühlen"),
 		emoji: "🪞🏠😌",
 		definition: "Sich irgendwo wohl und ungezwungen fühlen.",
-		translations: ["to feel at home", "чувствовать себя как дома"],
+		translations: [
+			[{ kind: "Text", text: "to feel at home" }],
+			[{ kind: "Text", text: "чувствовать себя как дома" }],
+		],
 		constituents: [
 			link("wie", pendingWord("CCONJ", "wie")),
 			space,
@@ -379,7 +460,10 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: ERINNERN,
 		emoji: "💭",
 		definition: "Jemanden dazu bringen, an etwas zu denken.",
-		translations: ["to remind", "напоминать"],
+		translations: [
+			[{ kind: "Text", text: "to remind" }],
+			[{ kind: "Text", text: "напоминать" }],
+		],
 		valency: [
 			subject,
 			{
@@ -395,49 +479,70 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		lemma: ERINNERN,
 		emoji: "🪞🧠",
 		definition: "Etwas im Gedächtnis haben und es wieder vor Augen sehen.",
-		translations: ["to remember", "вспоминать"],
+		translations: [
+			[{ kind: "Text", text: "to remember" }],
+			[{ kind: "Text", text: "вспоминать" }],
+		],
 		valency: [subject, reflexive("Acc"), governed("an", "Acc")],
 	},
 	{
 		lemma: verb("schämen"),
 		emoji: "🪞😳",
 		definition: "Ein Gefühl der Scham empfinden.",
-		translations: ["to be ashamed", "стыдиться"],
+		translations: [
+			[{ kind: "Text", text: "to be ashamed" }],
+			[{ kind: "Text", text: "стыдиться" }],
+		],
 		valency: [subject, reflexive("Acc"), governed("für", "Acc")],
 	},
 	{
 		lemma: lemma("Lexeme", "VERB", "ausruhen", { hasSepPrefix: "aus" }),
 		emoji: "🛌",
 		definition: "Eine Pause machen, um wieder zu Kräften zu kommen.",
-		translations: ["to rest", "отдыхать"],
+		translations: [
+			[{ kind: "Text", text: "to rest" }],
+			[{ kind: "Text", text: "отдыхать" }],
+		],
 		valency: [subject, reflexive("Acc", { status: "Optional" })],
 	},
 	{
 		lemma: lemma("Locution", "VERB", "Sorgen machen"),
 		emoji: "🪞😟",
 		definition: "Sich um jemanden oder etwas sorgen.",
-		translations: ["to worry", "беспокоиться"],
+		translations: [
+			[{ kind: "Text", text: "to worry" }],
+			[{ kind: "Text", text: "беспокоиться" }],
+		],
 		valency: [subject, reflexive("Dat"), governed("um", "Acc")],
 	},
 	{
 		lemma: lemma("Locution", "VERB", "es gemütlich machen"),
 		emoji: "🪞🛋️",
 		definition: "Sich bequem einrichten und entspannen.",
-		translations: ["to make oneself comfortable", "устроиться поудобнее"],
+		translations: [
+			[{ kind: "Text", text: "to make oneself comfortable" }],
+			[{ kind: "Text", text: "устроиться поудобнее" }],
+		],
 		valency: [subject, reflexive("Dat")],
 	},
 	{
 		lemma: lemma("Locution", "VERB", "außer sein"),
 		emoji: "🪞😤",
 		definition: "Vor Wut oder Aufregung die Fassung verloren haben.",
-		translations: ["to be beside oneself", "быть вне себя"],
+		translations: [
+			[{ kind: "Text", text: "to be beside oneself" }],
+			[{ kind: "Text", text: "быть вне себя" }],
+		],
 		valency: [subject, reflexive("Dat", { after: "außer" })],
 	},
 	{
 		lemma: lemma("Locution", "VERB", "den Faden verlieren"),
 		emoji: "🧵",
 		definition: "Beim Sprechen nicht mehr wissen, was man sagen wollte.",
-		translations: ["to lose the thread", "потерять нить"],
+		translations: [
+			[{ kind: "Text", text: "to lose the thread" }],
+			[{ kind: "Text", text: "потерять нить" }],
+		],
 		constituents: [
 			link("den Faden", pendingNoun("Faden")),
 			space,
@@ -449,8 +554,8 @@ const BREAKDOWN_FIXTURES: readonly BreakdownFixture[] = [
 		emoji: "🐇",
 		definition: "Das ist der eigentliche Grund der Schwierigkeit.",
 		translations: [
-			"that's the crux of the matter",
-			"вот где собака зарыта",
+			[{ kind: "Text", text: "that's the crux of the matter" }],
+			[{ kind: "Text", text: "вот где собака зарыта" }],
 		],
 		constituents: [
 			link("da", pendingWord("ADV", "da")),

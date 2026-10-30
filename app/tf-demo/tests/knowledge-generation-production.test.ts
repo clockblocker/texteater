@@ -40,7 +40,12 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 	const t = createTestConvex();
 	const occurrence = await seedOccurrence(t);
 	await insertAccumulatedKnowledge(t, occurrence, {
-		knowledge: { translations: { en: ["bank"], ru: ["банк"] } },
+		knowledge: {
+			translations: {
+				en: [[{ kind: "Text", text: "bank" }]],
+				ru: [[{ kind: "Text", text: "банк" }]],
+			},
+		},
 		status: "Full",
 		coveredTranslationLanguages: ["en", "ru"],
 	});
@@ -290,13 +295,13 @@ test.each([false, true])(
 			kind: "Contribute",
 			aspect: "translations",
 			language: "ru",
-			value: ["банк"],
+			value: [[{ kind: "Text", text: "банк" }]],
 		};
 		const english: KnowledgeChange = {
 			kind: "Contribute",
 			aspect: "translations",
 			language: "en",
-			value: ["bank"],
+			value: [[{ kind: "Text", text: "bank" }]],
 		};
 		const transcription: KnowledgeChange = {
 			kind: "Contribute",

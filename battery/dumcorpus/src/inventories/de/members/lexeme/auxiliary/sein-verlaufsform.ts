@@ -18,8 +18,15 @@ export const member: AuthoredMember = {
 		definition:
 			"„sein“ als Hilfsverb der Verlaufsform: Mit „am“ und dem substantivierten Infinitiv beschreibt es eine gerade laufende Handlung (bin gerade am Arbeiten).",
 		translations: {
-			en: ["be (progressive auxiliary)"],
-			ru: ["быть (вспомогательный глагол длительной формы)"],
+			en: [[{ kind: "Text", text: "be (progressive auxiliary)" }]],
+			ru: [
+				[
+					{
+						kind: "Text",
+						text: "быть (вспомогательный глагол длительной формы)",
+					},
+				],
+			],
 		},
 	},
 	coverage: {

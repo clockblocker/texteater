@@ -10,8 +10,10 @@
  *   the Reading and the marked Sentence alone, never the stored ones: the
  *   Sentence's natural translation first, then what it renders the target
  *   with.
+ * - Luna writes each equivalent's pieces (ADR 0055); jev's options are
+ *   the stored ones' texts, the pieces joined.
  * - What Luna writes that the language already holds is dropped, comparing
- *   case-folded with whitespace collapsed. When nothing is left, the judge
+ *   texts case-folded with whitespace collapsed. When nothing is left, the judge
  *   was wrong, and nothing is added; otherwise the rest is one Contribute.
  * - Authored Readings accumulate too: their stored translations started
  *   as the authored ones (ADR 0021).
@@ -22,7 +24,11 @@
 
 import { isRecord } from "common-utils";
 import { lemmaIdentityKey, normalizeForm, routeOf } from "dumling";
-import { selectKnowledge, translationLanguageValues } from "dumrel";
+import {
+	selectKnowledge,
+	translationLanguageValues,
+	translationText,
+} from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import type { CallLog } from "../../call.js";
@@ -48,9 +54,12 @@ import {
 	aspectContext,
 	checkedChanges,
 	judgeState,
-	textsOf,
 	write,
 } from "./context.js";
+import {
+	translationsOf,
+	translationsOutputSchema,
+} from "./translation-output.js";
 
 /** jev's request and Luna's, as the trace and a cache key them. */
 const judgeStage = "translationCoverage";
@@ -65,30 +74,29 @@ const occurrenceSchema = {
 	type: "object",
 	properties: {
 		sentence: { type: "string", minLength: 1 },
-		equivalents: {
-			type: "array",
-			items: { type: "string", minLength: 1 },
-			minItems: 1,
-			maxItems: 3,
-		},
+		equivalents: translationsOutputSchema(3),
 	},
 	required: ["sentence", "equivalents"],
 } as const;
 
 /**
- * The key two translations share when they are the same one: Dumrel's
- * normalization, whitespace collapsed and case folded in their language.
+ * The key two translations share when they are the same one: their text,
+ * in Dumrel's normalization, whitespace collapsed and case folded in their
+ * language.
  */
 function translationKey(
-	text: string,
+	translation: Dumrel.Translation,
 	language: Dumrel.TranslationLanguage,
 ): string {
-	return normalizeForm(text)
+	return normalizeForm(translationText(translation))
 		.replace(/\s+/gu, " ")
 		.toLocaleLowerCase(language);
 }
 
-/** How one language came out; the trace's `TranslationAccumulation` event. */
+/**
+ * How one language came out; the trace's `TranslationAccumulation` event,
+ * each translation as its text.
+ */
 type LanguageOutcome =
 	| { readonly outcome: "Covered"; readonly by: string }
 	| { readonly outcome: "Contained"; readonly written: readonly string[] }
@@ -98,6 +106,9 @@ type LanguageOutcome =
 			readonly added: readonly string[];
 	  };
 
+const textsOf = (translations: readonly Dumrel.Translation[]) =>
+	translations.map(translationText);
+
 /** The option id of the stored translation at `index`. */
 const optionId = (index: number) => `t${index}`;
 
@@ -106,12 +117,12 @@ const optionId = (index: number) => `t${index}`;
  * Luna's answer is checked against.
  */
 function distinctTranslations(
-	stored: readonly string[],
+	stored: readonly Dumrel.Translation[],
 	language: Dumrel.TranslationLanguage,
-): string[] {
+): Dumrel.Translation[] {
 	const seen = new Set<string>();
-	return stored.filter((text) => {
-		const key = translationKey(text, language);
+	return stored.filter((translation) => {
+		const key = translationKey(translation, language);
 		if (key === "" || seen.has(key)) return false;
 		seen.add(key);
 		return true;
@@ -121,7 +132,7 @@ function distinctTranslations(
 const accumulateLanguage = Effect.fnUntraced(function* (
 	context: AspectContext,
 	language: Dumrel.TranslationLanguage,
-	stored: readonly string[],
+	stored: readonly Dumrel.Translation[],
 ): Effect.fn.Return<
 	{
 		readonly outcome: LanguageOutcome;
@@ -136,7 +147,10 @@ const accumulateLanguage = Effect.fnUntraced(function* (
 		questions: {
 			translation: choice(coverageQuestion.question, {
 				...Object.fromEntries(
-					options.map((text, index) => [optionId(index), text]),
+					options.map((option, index) => [
+						optionId(index),
+						translationText(option),
+					]),
 				),
 				NoMatch: coverageQuestion.noMatch,
 			}),
@@ -150,7 +164,10 @@ const accumulateLanguage = Effect.fnUntraced(function* (
 				stage: judgeStage,
 				message: `jev answered the translation with ${answer}, no option of it`,
 			});
-		return { outcome: { outcome: "Covered", by }, changes: [] };
+		return {
+			outcome: { outcome: "Covered", by: translationText(by) },
+			changes: [],
+		};
 	}
 	const written = yield* write(
 		context,
@@ -158,35 +175,39 @@ const accumulateLanguage = Effect.fnUntraced(function* (
 		occurrenceTranslationPrompt,
 		{ language },
 		occurrenceSchema,
-		(output) => {
-			const texts = textsOf(
+		(output) =>
+			translationsOf(
 				writerStage,
 				isRecord(output) ? output.equivalents : undefined,
 				3,
-			);
-			if (!Array.isArray(texts)) return texts;
-			return texts.length === 0
-				? new InvalidModelOutput({
-						stage: writerStage,
-						message: "Luna answered no translation",
-					})
-				: texts;
-		},
+			),
 	);
-	const held = new Set(options.map((text) => translationKey(text, language)));
-	const added = written.filter((text) => {
-		const key = translationKey(text, language);
+	const held = new Set(
+		options.map((option) => translationKey(option, language)),
+	);
+	const added = written.filter((translation) => {
+		const key = translationKey(translation, language);
 		if (held.has(key)) return false;
 		held.add(key);
 		return true;
 	});
 	if (added.length === 0)
-		return { outcome: { outcome: "Contained", written }, changes: [] };
+		return {
+			outcome: { outcome: "Contained", written: textsOf(written) },
+			changes: [],
+		};
 	const changes = checkedChanges(context, "translations", [
 		{ kind: "Contribute", aspect: "translations", language, value: added },
 	]);
 	if (changes instanceof InvalidModelOutput) return yield* changes;
-	return { outcome: { outcome: "Added", written, added }, changes };
+	return {
+		outcome: {
+			outcome: "Added",
+			written: textsOf(written),
+			added: textsOf(added),
+		},
+		changes,
+	};
 });
 
 /** Why the input is bad, if it is: a Defect, raised before anything is asked. */
@@ -214,9 +235,17 @@ function badInput(input: AccumulateTranslationsInput): string | undefined {
 			return `${JSON.stringify(language)} is no translation language`;
 		if (
 			!Array.isArray(texts) ||
-			texts.some((text) => typeof text !== "string")
+			texts.some(
+				(translation) =>
+					!Array.isArray(translation) ||
+					translation.length === 0 ||
+					translation.some(
+						(piece) =>
+							!isRecord(piece) || typeof piece.text !== "string",
+					),
+			)
 		)
-			return `The ${language} translations are no list of text`;
+			return `The ${language} translations are no list of Translations`;
 	}
 	return undefined;
 }

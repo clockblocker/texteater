@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { translationText } from "dumrel";
 import { NOTE_STUDY_FIXTURES } from "../tooling/notes-study/fixtures/index";
 import {
 	makeUrl,
@@ -111,7 +112,10 @@ describe("German note-study fixtures", () => {
 			kind: "NOUN",
 			title: ["die ", { text: "Dämmerung", tone: "feminine" }],
 			titleText: "Dämmerung",
-			translations: ["twilight; dusk", "сумерки"],
+			translations: [
+				[{ kind: "Text", text: "twilight; dusk" }],
+				[{ kind: "Text", text: "сумерки" }],
+			],
 		});
 	});
 
@@ -129,8 +133,8 @@ describe("German note-study fixtures", () => {
 				},
 			],
 			translations: [
-				"yes (contradicting a negative)",
-				"напротив; как раз да",
+				[{ kind: "Text", text: "yes (contradicting a negative)" }],
+				[{ kind: "Text", text: "напротив; как раз да" }],
 			],
 		});
 		expect(
@@ -279,8 +283,8 @@ describe("German note-study fixtures", () => {
 
 		expect(tomatoIdiom).toMatchObject({
 			translations: [
-				"to have tomatoes on one’s eyes",
-				"иметь помидоры на глазах",
+				[{ kind: "Text", text: "to have tomatoes on one’s eyes" }],
+				[{ kind: "Text", text: "иметь помидоры на глазах" }],
 			],
 			translatedExplanations: [
 				"to be blind to the obvious",
@@ -289,8 +293,13 @@ describe("German note-study fixtures", () => {
 		});
 		expect(morningProverb).toMatchObject({
 			translations: [
-				"The morning hour has gold in its mouth.",
-				"Утренний час — с золотом во рту.",
+				[
+					{
+						kind: "Text",
+						text: "The morning hour has gold in its mouth.",
+					},
+				],
+				[{ kind: "Text", text: "Утренний час — с золотом во рту." }],
 			],
 			translatedExplanations: [
 				"The early bird catches the worm.",
@@ -300,7 +309,7 @@ describe("German note-study fixtures", () => {
 
 		for (const fixture of FIXTURES) {
 			for (const line of [
-				...fixture.translations,
+				...fixture.translations.map(translationText),
 				...(fixture.translatedExplanations ?? []),
 			]) {
 				expect(line).not.toMatch(/^(English|Русский):\s/);

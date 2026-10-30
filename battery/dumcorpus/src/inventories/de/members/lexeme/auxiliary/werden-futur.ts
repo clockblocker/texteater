@@ -18,8 +18,15 @@ export const member: AuthoredMember = {
 		definition:
 			"„werden“ als Hilfsverb des Futurs: Mit dem Infinitiv bildet es Futur I und II (wird kommen, wird angekommen sein).",
 		translations: {
-			en: ["will (future auxiliary)"],
-			ru: ["вспомогательный глагол будущего времени"],
+			en: [[{ kind: "Text", text: "will (future auxiliary)" }]],
+			ru: [
+				[
+					{
+						kind: "Text",
+						text: "вспомогательный глагол будущего времени",
+					},
+				],
+			],
 		},
 	},
 	coverage: {

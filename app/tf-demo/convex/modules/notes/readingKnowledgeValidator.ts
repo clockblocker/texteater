@@ -3,6 +3,7 @@ import {
 	formulaRoleValues,
 	locutionTypeValues,
 	sayingTypeValues,
+	translationPieceKindValues,
 } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { literalUnion } from "../../model/validators";
@@ -31,6 +32,16 @@ const linkTargetValidator = v.union(
 );
 const breakdownPiecesValidator = v.array(
 	v.object({ letters: v.string(), target: v.optional(linkTargetValidator) }),
+);
+
+/** A Translation: its Translation Pieces in reading order (ADR 0055). */
+const translationsValidator = v.array(
+	v.array(
+		v.object({
+			kind: literalUnion(translationPieceKindValues),
+			text: v.string(),
+		}),
+	),
 );
 
 const readingValueReadingValidator = v.object({
@@ -154,8 +165,8 @@ export const readingKnowledgeValidator = v.object({
 	definition: v.optional(v.string()),
 	translations: v.optional(
 		v.object({
-			en: v.optional(v.array(v.string())),
-			ru: v.optional(v.array(v.string())),
+			en: v.optional(translationsValidator),
+			ru: v.optional(translationsValidator),
 		}),
 	),
 	breakdown: v.optional(

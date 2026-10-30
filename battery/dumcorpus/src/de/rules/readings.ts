@@ -20,11 +20,11 @@ export const readings: Rule[] = [
 	{
 		id: "de/translation-gives-the-equivalent",
 		statement:
-			"A Reading's translation is the target language's dictionary equivalent, in citation form, of the meaning its Emoji Description names, not of the sentence's scene: gut 👍 is хороший, not вкусный; schmecken 👅 is taste. A lookalike word is a false friend (Paket: посылка, not пакет). A Locution or Saying takes the established expression with its meaning, else a paraphrase, never a calque or a lookalike idiom (Licht ins Dunkel bringen: shed light on, not bring to light). An abbreviation takes the usual rendering of what it stands for (Dipl.-Ing.: дипломированный инженер), never a coinage.",
-		adrs: ["ADR-0002", "ADR-0031"],
+			"A Reading's translation is the target language's dictionary equivalent, in citation form, of the meaning its Emoji Description names, not the sentence's scene: gut 👍 is хороший, not вкусный. It marks its own governed preposition and slot (mit etwas zu tun haben: have to do with something). A lookalike is a false friend (Paket: посылка, not пакет). A Locution or Saying takes the established expression with its meaning, else a paraphrase, never a calque or lookalike idiom (Licht ins Dunkel bringen: shed light on). An abbreviation takes the usual rendering of what it stands for, never a coinage.",
+		adrs: ["ADR-0002", "ADR-0031", "ADR-0055"],
 		routes: [],
 		records: [
-			// schmecken and Paket come from imported cases, not Spec Records.
+			// Paket comes from an imported case, not a Spec Record.
 			"de/das-essen-war-ganz-gut",
 			"de/durch-die-akten-wurde-endlich-licht-ins-dunkel-gebracht",
 			"de/du-hast-heute-wohl-tomaten-auf-den-augen",

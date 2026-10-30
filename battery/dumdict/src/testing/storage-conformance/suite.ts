@@ -192,7 +192,12 @@ export function describeStorageConformance(
 			const entry = readingEntry(gehenReading, {
 				knowledge: {
 					definition: "sich zu Fuß fortbewegen",
-					translations: { en: ["go", "walk"] },
+					translations: {
+						en: [
+							[{ kind: "Text", text: "go" }],
+							[{ kind: "Text", text: "walk" }],
+						],
+					},
 					semanticRelations: { synonym: [laufen] },
 				},
 			});

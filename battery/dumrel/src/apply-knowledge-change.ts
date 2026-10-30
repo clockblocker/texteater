@@ -4,11 +4,13 @@ import { contextualizeChange, parseSource } from "./context.js";
 import { structuralKeys } from "./fingerprint.js";
 import { issue } from "./issue.js";
 import { parseReadingKnowledge } from "./parse-reading-knowledge.js";
+import { translationText } from "./translation.js";
 import type {
 	KnowledgeChange,
 	KnowledgeParse,
 	ReadingKnowledge,
 	SemanticRelations,
+	Translation,
 	ValencyComplement,
 	ValencySlot,
 } from "./types.js";
@@ -147,8 +149,8 @@ function applyTranslation(
 	else
 		translations[change.language] =
 			change.kind === "Correct"
-				? unique(change.value)
-				: unique([
+				? uniqueTranslations(change.value)
+				: uniqueTranslations([
 						...(translations[change.language] ?? []),
 						...change.value,
 					]);
@@ -368,6 +370,17 @@ function storeAtomic(
 			// A new atomic aspect fails to type-check here until it has a case.
 			change satisfies never;
 	}
+}
+
+/** Each Translation once by its text, the first one's pieces kept (ADR 0055). */
+function uniqueTranslations(values: readonly Translation[]): Translation[] {
+	const seen = new Set<string>();
+	return values.flatMap((value) => {
+		const text = translationText(value);
+		if (seen.has(text)) return [];
+		seen.add(text);
+		return [structuredClone(value)];
+	});
 }
 
 function unique<T>(values: readonly T[]): T[] {

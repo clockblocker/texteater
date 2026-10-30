@@ -24,7 +24,10 @@ export const member: AuthoredMember = {
 		transcription: "ˈdeːɐ̯laɪ̯",
 		definition:
 			"Der Demonstrativartikel „derlei“ hebt einen bestimmten Bezug hervor.",
-		translations: { en: ["this kind of"], ru: ["такого рода"] },
+		translations: {
+			en: [[{ kind: "Text", text: "this kind of" }]],
+			ru: [[{ kind: "Text", text: "такого рода" }]],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

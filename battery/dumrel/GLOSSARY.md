@@ -102,6 +102,21 @@ It is projected from the Endonym, never stored. See [ADR 0012] and
 [Dumrel ADR 0005].
 _Avoid_: foreign name, historical name
 
+**Translation**:
+One equivalent of a Reading's meaning in a translation language: an ordered,
+non-empty list of Translation Pieces. Its text, the pieces joined by a space,
+is what dedupe and matching compare. It is text in its language, not a
+relation to a Reading of another language. See [ADR 0047] and [ADR 0055].
+_Avoid_: gloss string, translation string
+
+**Translation Piece**:
+One part of a Translation: Text, a Preposition the equivalent itself governs
+(`with`, `к`), or a Slot, the placeholder its object fills, written in that
+language's dictionary form (`something`, `чему-то`). The translation call
+writes them; nothing pairs them with the German Valency Frame. See
+[ADR 0055].
+_Avoid_: valency mark, token, Breakdown piece
+
 **Governed Preposition**:
 A preposition a Reading lexically selects: a Preposition complement in a Slot
 of its Valency Frame (Dumling). See [ADR 0034].
@@ -174,6 +189,8 @@ _Avoid_: discourseFormulaRole, DiscourseFormula
 [ADR 0052]: ../../docs/adr/0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md
 [ADR 0048]: ../../docs/adr/0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md
 [ADR 0049]: ../../docs/adr/0049-tabulate-a-lemmas-forms-as-projections.md
+[ADR 0047]: ../../docs/adr/0047-accumulate-a-readings-translations-click-by-click.md
+[ADR 0055]: ../../docs/adr/0055-write-a-translation-as-pieces-that-mark-its-own-preposition-and-slot.md
 [Dumrel ADR 0001]: ./docs/adr/0001-keep-dumrel-ownerless-and-pure.md
 [Dumrel ADR 0005]: ./docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md
 [Dumcorpus glossary]: ../dumcorpus/GLOSSARY.md

@@ -209,7 +209,10 @@ test("a run sees the note's stored translations and adds what it found missing, 
 	const t = createTestConvex();
 	const knowledge = {
 		definition: "Gebundene Blumen.",
-		translations: { en: ["bouquet"], ru: ["букет"] },
+		translations: {
+			en: [[{ kind: "Text", text: "bouquet" }]],
+			ru: [[{ kind: "Text", text: "букет" }]],
+		},
 	};
 	const { readingId, readingKey, attestationIds } = await seedReading(
 		t,
@@ -234,7 +237,7 @@ test("a run sees the note's stored translations and adds what it found missing, 
 					kind: "Contribute",
 					aspect: "translations",
 					language: "en",
-					value: ["bunch of flowers"],
+					value: [[{ kind: "Text", text: "bunch of flowers" }]],
 				},
 			],
 			failures: [],
@@ -247,10 +250,21 @@ test("a run sees the note's stored translations and adds what it found missing, 
 		{ attestationId, languages: ["en", "ru"] },
 		accumulator,
 	);
-	expect(seen).toEqual([{ en: ["bouquet"], ru: ["букет"] }]);
+	expect(seen).toEqual([
+		{
+			en: [[{ kind: "Text", text: "bouquet" }]],
+			ru: [[{ kind: "Text", text: "букет" }]],
+		},
+	]);
 	const expected = {
 		definition: "Gebundene Blumen.",
-		translations: { en: ["bouquet", "bunch of flowers"], ru: ["букет"] },
+		translations: {
+			en: [
+				[{ kind: "Text", text: "bouquet" }],
+				[{ kind: "Text", text: "bunch of flowers" }],
+			],
+			ru: [[{ kind: "Text", text: "букет" }]],
+		},
 	};
 	expect(await noteKnowledge(t, readingId)).toEqual(expected);
 	const accumulated = await t.run((ctx) =>
@@ -261,7 +275,9 @@ test("a run sees the note's stored translations and adds what it found missing, 
 
 test("a run with nothing stored for the Visitor's languages, or nothing found missing, writes nothing", async () => {
 	const t = createTestConvex();
-	const knowledge = { translations: { ru: ["букет"] } };
+	const knowledge = {
+		translations: { ru: [[{ kind: "Text", text: "букет" }]] },
+	};
 	const { readingId, attestationIds } = await seedReading(
 		t,
 		STRAUSS,

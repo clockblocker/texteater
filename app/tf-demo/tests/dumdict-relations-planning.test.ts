@@ -249,7 +249,7 @@ describe("tf-demo Dumdict relation planning", () => {
 						kind: "Contribute",
 						aspect: "translations",
 						language: "en",
-						value: ["go"],
+						value: [[{ kind: "Text", text: "go" }]],
 					},
 				),
 				{
@@ -268,7 +268,7 @@ describe("tf-demo Dumdict relation planning", () => {
 					kind: "Contribute",
 					aspect: "translations",
 					language: "en",
-					value: ["run"],
+					value: [[{ kind: "Text", text: "run" }]],
 				}),
 			],
 		};
@@ -277,12 +277,12 @@ describe("tf-demo Dumdict relation planning", () => {
 		});
 		expect(await readingKnowledge(t, gehenReading)).toEqual({
 			definition: "walking",
-			translations: { en: ["go"] },
+			translations: { en: [[{ kind: "Text", text: "go" }]] },
 			semanticRelations: { synonym: [laufenLemma] },
 		});
 		expect(await readingKnowledge(t, laufenReading)).toEqual({
 			definition: "run",
-			translations: { en: ["run"] },
+			translations: { en: [[{ kind: "Text", text: "run" }]] },
 		});
 	});
 
@@ -344,7 +344,7 @@ describe("tf-demo Dumdict relation planning", () => {
 									kind: "Correct",
 									aspect: "translations",
 									language: "en",
-									value: ["it"],
+									value: [[{ kind: "Text", text: "it" }]],
 								},
 							},
 						},
@@ -363,7 +363,10 @@ describe("tf-demo Dumdict relation planning", () => {
 		const { semanticRelations: _, ...knowledge } = authored.knowledge;
 		expect(await readingKnowledge(t, es)).toEqual({
 			...knowledge,
-			translations: { ...knowledge.translations, en: ["it"] },
+			translations: {
+				...knowledge.translations,
+				en: [[{ kind: "Text", text: "it" }]],
+			},
 		});
 	});
 

@@ -7,6 +7,7 @@ import {
 	syncretismView,
 } from "dumling";
 import type * as Dumling from "dumling/types";
+import { translationText } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { authoredReadingIssues } from "../src/check-authored-readings.js";
 import { syncretismDefinitions } from "../src/inventories/de/syncretism-definitions.js";
@@ -35,9 +36,13 @@ describe("the German pronoun Syncretisms (system ADR 0046)", () => {
 		{ translations }: Dumrel.ReadingKnowledge,
 		language: string,
 	): readonly string[] =>
-		(translations as Readonly<Record<string, readonly string[]>>)?.[
-			language
-		] ?? [];
+		(
+			(
+				translations as Readonly<
+					Record<string, readonly Dumrel.Translation[]>
+				>
+			)?.[language] ?? []
+		).map(translationText);
 	const label = ({ lemma }: AuthoredMember) =>
 		`${lemma.kind} ${lemma.canonicalForm} ${String(coreOf(lemma).case)} ${String(coreOf(lemma).pronType)}: ${syncreticOf(lemma).join(" ")}`;
 	const fold = (lemma: Lemma) => foldCase(lemma.canonicalForm, "de");
@@ -231,7 +236,7 @@ describe("the German pronoun Syncretisms (system ADR 0046)", () => {
 							).every(([language, glosses]) =>
 								glosses?.every((gloss) =>
 									glossesOf(knowledge, language).includes(
-										gloss,
+										translationText(gloss),
 									),
 								),
 							),

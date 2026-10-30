@@ -2,6 +2,7 @@ import type { Question } from "@typesafe-ai/sdk";
 import { isRecord } from "common-utils";
 import { parseUnit, routeOf } from "dumling";
 import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import type {
 	KnowledgeProduction,
@@ -351,3 +352,7 @@ export const attestedPreposition = (
 	},
 	realizedCase: governedCase,
 });
+
+/** Each text as a Translation of one Text piece. */
+export const texts = (...values: readonly string[]): Dumrel.Translation[] =>
+	values.map((text) => [{ kind: "Text", text }]);

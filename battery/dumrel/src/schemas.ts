@@ -33,17 +33,29 @@ import {
 	reflexiveCaseValues,
 	sayingTypeValues,
 	translationLanguageValues,
+	translationPieceKindValues,
 	valencyReferentValues,
 	valencySlotStatusValues,
 } from "./vocabulary.js";
 
 const normalizedTextSchema = z.string().overwrite(normalizeForm).min(1);
-const nonEmptyStringsSchema = z.array(normalizedTextSchema).min(1);
 
 export const directSemanticRelationSchema = z.enum(
 	directSemanticRelationValues,
 );
 export const translationLanguageSchema = z.enum(translationLanguageValues);
+export const translationPieceKindSchema = z.enum(translationPieceKindValues);
+/** One piece of a Translation, of a kind the vocabulary names (ADR 0055). */
+export const translationPieceSchema = z.strictObject({
+	kind: translationPieceKindSchema,
+	text: normalizedTextSchema,
+});
+/**
+ * One equivalent of a Reading's meaning, its pieces in reading order:
+ * `have to do` `with` `something`. Its text is the pieces joined by a space.
+ */
+export const translationSchema = z.array(translationPieceSchema).min(1);
+const translationListSchema = z.array(translationSchema).min(1);
 
 export { unitShadowSchema };
 
@@ -344,8 +356,8 @@ export const readingKnowledgeSchema = z.strictObject({
 	definition: normalizedTextSchema.optional(),
 	translations: z
 		.strictObject({
-			en: nonEmptyStringsSchema.optional(),
-			ru: nonEmptyStringsSchema.optional(),
+			en: translationListSchema.optional(),
+			ru: translationListSchema.optional(),
 		})
 		.optional(),
 	breakdown: breakdownSchema.optional(),
@@ -386,7 +398,7 @@ export const knowledgeChangeSchema = z.union([
 		kind: setKinds,
 		aspect: z.literal("translations"),
 		language: translationLanguageSchema,
-		value: nonEmptyStringsSchema,
+		value: translationListSchema,
 	}),
 	z.strictObject({
 		kind: z.literal("Retract"),

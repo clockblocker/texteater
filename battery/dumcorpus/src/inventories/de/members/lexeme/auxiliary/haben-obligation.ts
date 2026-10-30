@@ -18,8 +18,15 @@ export const member: AuthoredMember = {
 		definition:
 			"„haben“ als Hilfsverb der Verpflichtung: Mit „zu“ und dem Infinitiv drückt es aus, dass jemand etwas tun muss (habe noch zu arbeiten).",
 		translations: {
-			en: ["have to (obligation auxiliary)"],
-			ru: ["быть должным (вспомогательный глагол долженствования)"],
+			en: [[{ kind: "Text", text: "have to (obligation auxiliary)" }]],
+			ru: [
+				[
+					{
+						kind: "Text",
+						text: "быть должным (вспомогательный глагол долженствования)",
+					},
+				],
+			],
 		},
 	},
 	coverage: {

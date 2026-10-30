@@ -18,8 +18,15 @@ export const member: AuthoredMember = {
 		definition:
 			"„sein“ als Hilfsverb des Modalpassivs: Mit „zu“ und dem Infinitiv drückt es aus, dass etwas getan werden muss oder kann (ist bis Freitag zu erledigen).",
 		translations: {
-			en: ["be to (modal passive auxiliary)"],
-			ru: ["подлежать (вспомогательный глагол модального пассива)"],
+			en: [[{ kind: "Text", text: "be to (modal passive auxiliary)" }]],
+			ru: [
+				[
+					{
+						kind: "Text",
+						text: "подлежать (вспомогательный глагол модального пассива)",
+					},
+				],
+			],
 		},
 	},
 	coverage: {

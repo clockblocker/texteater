@@ -297,6 +297,82 @@ for (const { lemma, frame, heading } of cases) {
 	});
 }
 
+/** `mit zu tun haben`'s frame: the subject, `mit` + Dat, and an Optional dass-clause. */
+const mitZuTunHaben: ValencyFrame = [
+	{
+		status: "Required",
+		complements: [
+			{ kind: "Case", governedCase: "Nom", referent: "Either" },
+		],
+	},
+	{
+		status: "Required",
+		complements: [
+			{
+				kind: "Preposition",
+				preposition: adp("mit"),
+				governedCase: "Dat",
+				referent: "Either",
+			},
+		],
+	},
+];
+
+test("the heading and the translations print a preposition and a slot in the same two styles (ADR 0055)", () => {
+	const markup = renderReading(locution("mit zu tun haben"), mitZuTunHaben, {
+		en: [
+			[
+				{ kind: "Text", text: "have to do" },
+				{ kind: "Preposition", text: "with" },
+				{ kind: "Slot", text: "something" },
+			],
+			[{ kind: "Text", text: "concern" }],
+		],
+		ru: [
+			[
+				{ kind: "Text", text: "иметь отношение" },
+				{ kind: "Preposition", text: "к" },
+				{ kind: "Slot", text: "чему-то" },
+			],
+		],
+	});
+	const preposition = (text: string) =>
+		`<span data-slot="valency-preposition" class="font-semibold">${text}</span>`;
+	const slot = (text: string) =>
+		`<span data-slot="valency-token" class="font-mono text-[0.9em] text-ink-soft">${text}</span>`;
+	// The Locution's Fixed `mit` is its slot's preposition.
+	expect(markup).toContain(
+		`${preposition("mit")} ${slot("jM")} zu tun haben`,
+	);
+	expect(markup).toContain(
+		`en: have to do ${preposition("with")} ${slot("something")}`,
+	);
+	expect(markup).toContain(
+		`ru: иметь отношение ${preposition("к")} ${slot("чему-то")}`,
+	);
+	// A translation with no valency stays plain.
+	expect(markup).toContain("en: concern</span>");
+});
+
+test("a free slot's preposition takes the preposition style", () => {
+	const markup = renderReading(verb("warten", null), [
+		{
+			status: "Required",
+			complements: [
+				{
+					kind: "Preposition",
+					preposition: adp("auf"),
+					governedCase: "Acc",
+					referent: "Either",
+				},
+			],
+		},
+	]);
+	expect(markup).toContain(
+		'<span data-slot="valency-preposition" class="font-semibold">auf</span> <span data-slot="valency-token"',
+	);
+});
+
 test("a German Reading shows its frame in the heading alone, with no Valency Block", () => {
 	for (const { lemma, frame } of cases)
 		expect(renderReading(lemma, frame)).not.toContain(
@@ -404,8 +480,9 @@ function plainText(html: string): string {
 function renderReading(
 	lemma: Lemma,
 	valency: ValencyFrame | undefined,
+	translations?: ReadingNote["knowledge"]["translations"],
 ): string {
-	const note = readingNote(lemma, valency);
+	const note = readingNote(lemma, valency, translations);
 	return renderToStaticMarkup(
 		renderNote({
 			noteData: note,
@@ -432,6 +509,9 @@ function renderReading(
 function readingNote(
 	lemma: Lemma,
 	valency: ValencyFrame | undefined,
+	translations: ReadingNote["knowledge"]["translations"] = {
+		en: [[{ kind: "Text", text: "a translation" }]],
+	},
 ): ReadingNote {
 	return {
 		kind: "Reading",
@@ -454,7 +534,7 @@ function readingNote(
 		knowledgeState: { status: "Full", activity: "Idle" },
 		personalAnnotation: "",
 		knowledge: {
-			translations: { en: ["a translation"] },
+			translations,
 			...(valency ? { valency } : {}),
 		},
 		knowledgeUpdatedAt: null,

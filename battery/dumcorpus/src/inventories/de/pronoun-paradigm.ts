@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import { textTranslations } from "../member.js";
 import {
 	type AuthoredSpelling,
 	canonical,
@@ -168,7 +169,10 @@ function pillarMember<Kind extends PillarKind>(
 			knowledge: {
 				definition,
 				transcription: form.ipa,
-				translations: { en: [...en], ru: [...ru] },
+				translations: {
+					en: textTranslations(en),
+					ru: textTranslations(ru),
+				},
 			},
 			coverage: {
 				definition: "Authored",

@@ -38,6 +38,7 @@ import {
 } from "./exact-aspects.js";
 import { producedKnowledge, producedParadigm } from "./produced.js";
 import { goldRelationTargets, shadowKey } from "./relations.js";
+import { translationsTextOf } from "./translation-text.js";
 
 export { shadowKey } from "./relations.js";
 
@@ -209,7 +210,7 @@ export function evaluateKnowledge(
 					producedValues.translations ?? {};
 				const value = translations[language];
 				const failed = failure(aspect, language);
-				const text = textOf(value);
+				const text = translationsTextOf(value);
 				verdicts.push({
 					aspect: `${aspect}.${language}`,
 					...(failed ? { failed } : {}),

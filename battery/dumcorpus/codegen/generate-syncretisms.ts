@@ -6,6 +6,7 @@ import {
 	parseUnit,
 	syncretize,
 } from "dumling";
+import { translationText } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { sourceMembers } from "../src/inventories/de/inventory.js";
 import { syncretismDefinitions } from "../src/inventories/de/syncretism-definitions.js";
@@ -59,16 +60,25 @@ function shared<T>(label: string, what: string, values: readonly T[]): T {
 	return values[0] as T;
 }
 
-/** Each language's translations merged in unit order, without duplicates. */
+/** Each language's translations merged in unit order, each once by its text. */
 function mergedTranslations(
 	knowledge: readonly Dumrel.ReadingKnowledge[],
-): Record<string, string[]> {
-	const merged: Record<string, string[]> = {};
+): Record<string, Dumrel.Translation[]> {
+	const merged: Record<string, Dumrel.Translation[]> = {};
 	for (const { translations } of knowledge)
-		for (const [language, glosses] of Object.entries(translations ?? {}))
+		for (const [language, glosses] of Object.entries(translations ?? {})) {
+			const held = merged[language] ?? [];
+			const texts = new Set(held.map(translationText));
 			merged[language] = [
-				...new Set([...(merged[language] ?? []), ...(glosses ?? [])]),
+				...held,
+				...(glosses ?? []).filter((gloss) => {
+					const text = translationText(gloss);
+					if (texts.has(text)) return false;
+					texts.add(text);
+					return true;
+				}),
 			];
+		}
 	return merged;
 }
 

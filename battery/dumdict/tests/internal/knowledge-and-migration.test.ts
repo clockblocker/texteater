@@ -34,7 +34,7 @@ describe("Reading Knowledge Changes", () => {
 				kind: "Contribute",
 				aspect: "translations",
 				language: "en",
-				value: [" house "],
+				value: [[{ kind: "Text", text: " house " }]],
 			},
 			{ kind: "Retract", aspect: "translations", language: "en" },
 			{
@@ -183,7 +183,10 @@ describe("Reading Knowledge Changes", () => {
 					kind: "Contribute",
 					aspect: "translations",
 					language: "en",
-					value: [decomposed, decomposed],
+					value: [
+						[{ kind: "Text", text: decomposed }],
+						[{ kind: "Text", text: decomposed }],
+					],
 				},
 			] as const satisfies readonly Dumrel.KnowledgeChange[];
 			let existing: ReadingEntry<"en">["knowledge"];

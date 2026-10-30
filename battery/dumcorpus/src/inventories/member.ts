@@ -37,3 +37,11 @@ export type AuthoredMember<L extends InventoryLanguage = InventoryLanguage> =
 				};
 			}
 		: never;
+
+/**
+ * The Translations of a closed-class table's glosses: each gloss one Text
+ * piece, since none governs a preposition or takes a Slot (ADR 0055).
+ */
+export const textTranslations = (
+	glosses: readonly string[],
+): Dumrel.Translation[] => glosses.map((text) => [{ kind: "Text", text }]);

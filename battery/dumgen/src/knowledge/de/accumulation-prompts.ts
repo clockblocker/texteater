@@ -9,16 +9,18 @@
  * - Luna's prompt is the translation prompt with its task narrowed to the
  *   marked occurrence: how a natural translation of the Sentence renders
  *   the target. It never carries the stored translations, so an answer
- *   they already hold shows the judge was wrong.
+ *   they already hold shows the judge was wrong. It writes each
+ *   equivalent's pieces, as the translation call does (ADR 0055); the
+ *   judge's options are their texts.
  */
 import type { CitingPrompt } from "dumcorpus/types";
 import { type Cite, paragraphRegistry } from "../../prompt-paragraphs.js";
-import { translation } from "./prompts.js";
+import { translation } from "./translation-prompts.js";
 
 /** The Rules the accumulation prompts cite, at the statement hashes they were checked against. */
 const rules = {
 	meaning: ["de/emoji-description-names-the-meaning", "5532d94dbbc3bb71"],
-	translation: ["de/translation-gives-the-equivalent", "51e2aee5b7c8f087"],
+	translation: ["de/translation-gives-the-equivalent", "a1b51c3aa81cde39"],
 	distinct: [
 		"de/distinct-concepts-get-distinct-readings",
 		"434871d7862a9fb0",
@@ -80,7 +82,7 @@ const occurrenceTask = paragraph(
 
 const occurrenceOutput = paragraph(
 	"writer.output",
-	"Answer with a JSON object: `sentence`, the translation, and `equivalents`, an array of the one equivalent it uses, or up to three when the target has several equally usual renderings here, the one in `sentence` first; each a word or a short phrase in its dictionary headword form, never a sentence.",
+	"Answer with a JSON object: `sentence`, the translation, and `equivalents`, an array of the one equivalent it uses, or up to three when the target has several equally usual renderings here, the one in `sentence` first; each a word or a short phrase in its dictionary headword form, never a sentence, written as the array of its pieces.",
 	rules.translation,
 );
 
@@ -91,6 +93,7 @@ export const occurrenceTranslationPrompt = [
 	translation.citation,
 	translation.form,
 	translation.multiword,
+	translation.valency,
 	occurrenceOutput,
 ].join("\n");
 

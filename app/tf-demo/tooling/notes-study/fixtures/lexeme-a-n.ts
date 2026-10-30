@@ -64,7 +64,10 @@ export const lexemeANFixtures = [
 				noteToken("ig", "reference", "ig, adjective-forming suffix"),
 			],
 		],
-		translations: ["calm; quiet", "спокойный; тихий"],
+		translations: [
+			[{ kind: "Text", text: "calm; quiet" }],
+			[{ kind: "Text", text: "спокойный; тихий" }],
+		],
 		forms: [
 			{
 				label: "Positiv",
@@ -135,7 +138,10 @@ export const lexemeANFixtures = [
 				],
 			},
 		],
-		translations: ["despite; in spite of", "несмотря на; вопреки"],
+		translations: [
+			[{ kind: "Text", text: "despite; in spite of" }],
+			[{ kind: "Text", text: "несмотря на; вопреки" }],
+		],
 		tags: [noteToken("#Präposition"), noteToken("#Genitiv")],
 	},
 	{
@@ -180,7 +186,10 @@ export const lexemeANFixtures = [
 				],
 			},
 		],
-		translations: ["nevertheless; nonetheless", "тем не менее; всё же"],
+		translations: [
+			[{ kind: "Text", text: "nevertheless; nonetheless" }],
+			[{ kind: "Text", text: "тем не менее; всё же" }],
+		],
 		tags: [noteToken("#Adverb"), noteToken("#Konnektor")],
 	},
 	{
@@ -215,7 +224,10 @@ export const lexemeANFixtures = [
 		],
 		definition:
 			"Bildet das Perfekt besonders bei Verben der Bewegung und Zustandsänderung; seine Flexion ist suppletiv und folgt keinem produktiven Wortbildungsmuster.",
-		translations: ["to be; auxiliary be", "быть; вспомогательный глагол"],
+		translations: [
+			[{ kind: "Text", text: "to be; auxiliary be" }],
+			[{ kind: "Text", text: "быть; вспомогательный глагол" }],
+		],
 		forms: [
 			{
 				label: "Präsens",
@@ -314,7 +326,10 @@ export const lexemeANFixtures = [
 				],
 			},
 		],
-		translations: ["but", "но; однако"],
+		translations: [
+			[{ kind: "Text", text: "but" }],
+			[{ kind: "Text", text: "но; однако" }],
+		],
 		tags: [noteToken("#Konjunktion"), noteToken("#Koordinierend")],
 	},
 	{
@@ -376,7 +391,10 @@ export const lexemeANFixtures = [
 				],
 			},
 		],
-		translations: ["this; this one", "этот"],
+		translations: [
+			[{ kind: "Text", text: "this; this one" }],
+			[{ kind: "Text", text: "этот" }],
+		],
 		formTable: {
 			rowLabel: "Kasus",
 			columnLabels: ["Maskulin", "Feminin", "Neuter", "Plural"],
@@ -474,7 +492,10 @@ export const lexemeANFixtures = [
 				],
 			},
 		],
-		translations: ["oh; ah; alas", "ах; ох"],
+		translations: [
+			[{ kind: "Text", text: "oh; ah; alas" }],
+			[{ kind: "Text", text: "ах; ох" }],
+		],
 		tags: [noteToken("#Interjektion"), noteToken("#Ausruf")],
 	},
 	{
@@ -510,8 +531,8 @@ export const lexemeANFixtures = [
 			},
 		],
 		translations: [
-			"yes (contradicting a negative)",
-			"напротив; как раз да",
+			[{ kind: "Text", text: "yes (contradicting a negative)" }],
+			[{ kind: "Text", text: "напротив; как раз да" }],
 		],
 		tags: [noteToken("#Antwortpartikel"), noteToken("#Unveränderlich")],
 	},
@@ -676,7 +697,10 @@ export const lexemeANFixtures = [
 				),
 			],
 		],
-		translations: ["twilight; dusk", "сумерки"],
+		translations: [
+			[{ kind: "Text", text: "twilight; dusk" }],
+			[{ kind: "Text", text: "сумерки" }],
+		],
 		forms: [
 			{
 				label: "N",
@@ -790,7 +814,10 @@ export const lexemeANFixtures = [
 				],
 			},
 		],
-		translations: ["three", "три"],
+		translations: [
+			[{ kind: "Text", text: "three" }],
+			[{ kind: "Text", text: "три" }],
+		],
 		tags: [noteToken("#Numerale"), noteToken("#Kardinalzahl")],
 	},
 ] as const satisfies readonly NoteStudyFixture[];

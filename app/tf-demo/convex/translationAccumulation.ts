@@ -69,11 +69,11 @@ export const begin = internalQuery({
 		// A language with nothing stored is Knowledge Production's to fill.
 		const translations = Object.fromEntries(
 			args.languages.flatMap((language) => {
-				const texts = stored[language];
-				return Array.isArray(texts) &&
-					texts.length > 0 &&
-					texts.every((text) => typeof text === "string")
-					? [[language, texts]]
+				const held = stored[language];
+				return Array.isArray(held) &&
+					held.length > 0 &&
+					held.every(isTranslation)
+					? [[language, held]]
 					: [];
 			}),
 		);
@@ -87,6 +87,17 @@ export const begin = internalQuery({
 		};
 	},
 });
+
+/** A stored Translation: its pieces, each with its text (ADR 0055). */
+function isTranslation(value: unknown): boolean {
+	return (
+		Array.isArray(value) &&
+		value.length > 0 &&
+		value.every(
+			(piece) => isRecord(piece) && typeof piece.text === "string",
+		)
+	);
+}
 
 /**
  * Adds the translations a run found missing. Only translation Contributes

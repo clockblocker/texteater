@@ -1,6 +1,7 @@
 import { test } from "bun:test";
+import type * as Dumrel from "dumrel/types";
 import type { AccumulateTranslationsInput } from "../../src/knowledge/types.js";
-import { knowledgeInput } from "../knowledge/support.js";
+import { knowledgeInput, texts } from "../knowledge/support.js";
 import {
 	expectGolden,
 	type JevAnswerer,
@@ -21,6 +22,13 @@ const verb = {
 	canonicalForm: "laufen",
 	coreFeatures: { hasSepPrefix: null },
 };
+
+/** `wait` `for` `something`, or whatever is waited for. */
+const waitFor = (slot: string): Dumrel.Translation => [
+	{ kind: "Text", text: "wait" },
+	{ kind: "Preposition", text: "for" },
+	{ kind: "Slot", text: slot },
+];
 
 /** An accumulation input for a Reading of `shape` in one Sentence. */
 function occurrence(
@@ -57,7 +65,9 @@ const picking =
 
 /** Luna's Sentence translation and equivalents per translation language. */
 const writing =
-	(equivalents: Readonly<Record<string, readonly string[]>>): LunaAnswerer =>
+	(
+		equivalents: Readonly<Record<string, readonly Dumrel.Translation[]>>,
+	): LunaAnswerer =>
 	({ input }) => {
 		const { language } = input as { readonly language: string };
 		return {
@@ -79,36 +89,50 @@ test("knowledge.accumulateTranslations sends the golden requests", async () => {
 	await expectGolden("accumulate-translations", {
 		// jev's pick ends the language; nothing is written.
 		covered: await accumulate(
-			bouquet({ en: ["bouquet", "bunch of flowers", "Bouquet "] }),
+			bouquet({ en: texts("bouquet", "bunch of flowers", "Bouquet ") }),
 			{ jev: picking({ en: "t1" }) },
 		),
 		// Each language on its own: en after NoMatch, ru covered.
 		added: await accumulate(
-			bouquet({ en: ["bouquet"], ru: ["букет", "пучок"] }),
+			bouquet({ en: texts("bouquet"), ru: texts("букет", "пучок") }),
 			{
 				jev: picking({ ru: "t0" }),
-				luna: writing({ en: ["Bunch  of Flowers", "posy", "posy"] }),
+				luna: writing({
+					en: texts("Bunch  of Flowers", "posy", "posy"),
+				}),
 			},
 		),
 		// Luna writes only what the language holds: nothing is added.
 		contained: await accumulate(
-			bouquet({ en: ["bouquet", "bunch of flowers"] }),
-			{ jev: picking({}), luna: writing({ en: ["Bouquet"] }) },
+			bouquet({ en: texts("bouquet", "bunch of flowers") }),
+			{ jev: picking({}), luna: writing({ en: texts("Bouquet") }) },
 		),
 		// Luna answers no equivalent: a failure value for its language.
-		failed: await accumulate(bouquet({ en: ["bouquet"], ru: ["букет"] }), {
-			jev: picking({}),
-			luna: writing({ ru: ["цветы"] }),
-		}),
+		failed: await accumulate(
+			bouquet({ en: texts("bouquet"), ru: texts("букет") }),
+			{ jev: picking({}), luna: writing({ ru: texts("цветы") }) },
+		),
 		verb: await accumulate(
 			occurrence(verb, "🏃", "Er läuft jeden Morgen.", ["läuft"], {
-				en: ["run", "jog"],
-				ru: ["бегать"],
+				en: texts("run", "jog"),
+				ru: texts("бегать"),
 			}),
 			{
 				jev: picking({ en: "t1" }),
-				luna: writing({ ru: ["бегать", "бежать"] }),
+				luna: writing({ ru: texts("бегать", "бежать") }),
 			},
+		),
+		// The options are the stored translations' texts, and Luna's pieces
+		// are added as written (ADR 0055).
+		valent: await accumulate(
+			occurrence(
+				{ ...verb, canonicalForm: "warten" },
+				"⏳",
+				"Sie wartet auf den Bus.",
+				["wartet", "auf"],
+				{ en: [waitFor("someone")] },
+			),
+			{ jev: picking({}), luna: writing({ en: [waitFor("something")] }) },
 		),
 	});
 });

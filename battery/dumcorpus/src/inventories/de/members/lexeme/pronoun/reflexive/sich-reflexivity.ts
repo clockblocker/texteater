@@ -32,10 +32,19 @@ export const member: AuthoredMember = {
 		transcription: "zɪç",
 		translations: {
 			en: [
-				"oneself",
-				"myself; yourself; himself; herself; itself; ourselves; yourselves; themselves",
+				[{ kind: "Text", text: "oneself" }],
+				[
+					{
+						kind: "Text",
+						text: "myself; yourself; himself; herself; itself; ourselves; yourselves; themselves",
+					},
+				],
 			],
-			ru: ["себя", "себе", "-ся"],
+			ru: [
+				[{ kind: "Text", text: "себя" }],
+				[{ kind: "Text", text: "себе" }],
+				[{ kind: "Text", text: "-ся" }],
+			],
 		},
 	},
 	coverage: {

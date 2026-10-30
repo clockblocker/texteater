@@ -26,8 +26,10 @@ Visitor has enabled and the Reading already has translations in:
    meaning's most common rendering, *through* for the cause sense. Luna never
    sees the stored translations.
 3. What Luna wrote that the language doesn't hold yet is added, in one
-   Contribute. Translations compare with letter case folded and whitespace
-   collapsed. When Luna writes only stored ones, the judge was wrong, as with
+   Contribute. Luna writes each equivalent as Translation Pieces, and
+   translations compare by their text
+   ([ADR 0055](./0055-write-a-translation-as-pieces-that-mark-its-own-preposition-and-slot.md)),
+   with letter case folded and whitespace collapsed. When Luna writes only stored ones, the judge was wrong, as with
    a Collision in ADR 0031, and nothing is added.
 
 Accumulation stays inside the Reading the click resolved to. It never makes

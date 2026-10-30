@@ -2,7 +2,9 @@
  * The text aspects Luna writes (#862): the transcription of the Lemma
  * headword as this Reading pronounces it, a German definition and a
  * translation per language, each in one call of its own (#890 refuted
- * the single call for all of them). The Emoji Description bounds the
+ * the single call for all of them). A translation call writes its
+ * equivalents' own prepositions and slots as pieces (ADR 0055), in
+ * parallel with the valency call. The Emoji Description bounds the
  * sense; the Sentence is evidence for the definition and translations
  * only (#623). No judge checks the text: a human spot-checks a sample
  * (#883 point 10).
@@ -15,11 +17,14 @@ import {
 	type AspectError,
 	checkedChanges,
 	textOf,
-	textsOf,
-	unusable,
 	write,
 } from "./context.js";
-import { definition, shared, transcription, translation } from "./prompts.js";
+import { definition, shared, transcription } from "./prompts.js";
+import {
+	translationsOf,
+	translationsOutputSchema,
+} from "./translation-output.js";
+import { translation } from "./translation-prompts.js";
 
 export const transcriptionPrompt = [
 	shared.reading,
@@ -43,16 +48,11 @@ export const translationPrompt = [
 	translation.citation,
 	translation.form,
 	translation.multiword,
+	translation.valency,
 	translation.output,
 ].join("\n");
 
 const stringSchema = { type: "string", minLength: 1 } as const;
-const translationsSchema = {
-	type: "array",
-	items: { type: "string", minLength: 1 },
-	minItems: 1,
-	maxItems: 3,
-} as const;
 
 /** The transcription of the Lemma's headword; it needs no Sentence. */
 export const produceTranscription = (
@@ -103,18 +103,16 @@ export const produceTranslation = (
 		"translations",
 		translationPrompt,
 		{ language },
-		translationsSchema,
+		translationsOutputSchema(3),
 		(output) => {
-			const texts = textsOf("translations", output, 3);
-			if (!Array.isArray(texts)) return texts;
-			if (texts.length === 0)
-				return unusable("translations", "Luna answered no translation");
+			const translations = translationsOf("translations", output, 3);
+			if (!Array.isArray(translations)) return translations;
 			return checkedChanges(context, "translations", [
 				{
 					kind: "Contribute",
 					aspect: "translations",
 					language,
-					value: texts,
+					value: translations,
 				},
 			]);
 		},

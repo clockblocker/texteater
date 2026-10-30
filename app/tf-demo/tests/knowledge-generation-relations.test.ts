@@ -171,7 +171,7 @@ test("a top-up that partly fails keeps a Full Reading Full for the next top-up",
 	const t = createTestConvex();
 	const knowledge = {
 		definition: "Ein Geldinstitut.",
-		translations: { en: ["bank"] },
+		translations: { en: [[{ kind: "Text", text: "bank" }]] },
 	};
 	const occurrence = await seedDictionaryReading(t, { knowledge });
 	await insertAccumulatedKnowledge(t, occurrence, {

@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "../../../../member.js";
+import { type AuthoredMember, textTranslations } from "../../../../member.js";
 
 /** A modal particle's Lemma: PART with partType Mod (#734). */
 export function modalParticleLemma(canonicalForm: string) {
@@ -529,7 +529,10 @@ function modalMember(
 		knowledge: {
 			transcription: particle.ipa,
 			definition: sense.definition,
-			translations: { en: [...sense.en], ru: [...sense.ru] },
+			translations: {
+				en: textTranslations(sense.en),
+				ru: textTranslations(sense.ru),
+			},
 			...(synonym || nearSynonym
 				? {
 						semanticRelations: {

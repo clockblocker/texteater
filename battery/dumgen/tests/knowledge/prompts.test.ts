@@ -27,11 +27,17 @@ import {
 	transcriptionPrompt,
 	translationPrompt,
 } from "../../src/knowledge/de/text.js";
+import {
+	translationExamples,
+	translationParagraphs,
+	translationPromptTexts,
+} from "../../src/knowledge/de/translation-prompts.js";
 import { valencyPrompt } from "../../src/knowledge/de/valency.js";
 
 test("every Knowledge prompt paragraph cites the Rules it states at their current hashes (ADR 0037, #695)", () => {
 	const prompts = [
 		...knowledgePromptTexts(),
+		...translationPromptTexts(),
 		...structurePromptTexts(),
 		...licencePromptTexts(),
 	];
@@ -67,7 +73,11 @@ test("there is one translation prompt, with the citation-form clause; the candid
 			knowledgeParagraphs().filter((text) => text === definition),
 		).toHaveLength(1);
 	// No negative list the schema already enforces.
-	for (const text of [...knowledgeParagraphs(), ...structureParagraphs()])
+	for (const text of [
+		...knowledgeParagraphs(),
+		...translationParagraphs(),
+		...structureParagraphs(),
+	])
 		expect(text).not.toMatch(
 			/No relation labels, Kinds, Language, Family|Do not return judgments or domain objects/u,
 		);
@@ -128,6 +138,7 @@ test("no example in a Knowledge prompt uses a Lemma of the Knowledge gold or the
 	expect(forms.size).toBeGreaterThan(100);
 	const examples = [
 		...knowledgeExamples(),
+		...translationExamples(),
 		...structureExamples(),
 		...licenceExamples(),
 	];

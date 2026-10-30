@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "../member.js";
+import { type AuthoredMember, textTranslations } from "../member.js";
 import { type Preposition, prepositions } from "./prepositions.js";
 
 type Series = {
@@ -106,8 +106,8 @@ function pronominalAdverb(
 			transcription: ipa,
 			definition: entry.definition(form, preposition.text),
 			translations: {
-				en: [...entry.en(preposition)],
-				ru: [...entry.ru(preposition)],
+				en: textTranslations(entry.en(preposition)),
+				ru: textTranslations(entry.ru(preposition)),
 			},
 		},
 		coverage: {
@@ -148,7 +148,10 @@ function adverbReading(
 		knowledge: {
 			transcription: ipa,
 			definition,
-			translations: { en: [...en], ru: [...ru] },
+			translations: {
+				en: textTranslations(en),
+				ru: textTranslations(ru),
+			},
 		},
 		coverage: {
 			transcription: "Authored",

@@ -66,7 +66,10 @@ export const sayingFixtures = [
 				noteToken("Ziel", "neuter", "neutrales Nomen"),
 			],
 		],
-		translations: ["The journey is the destination.", "Путь — это цель."],
+		translations: [
+			[{ kind: "Text", text: "The journey is the destination." }],
+			[{ kind: "Text", text: "Путь — это цель." }],
+		],
 		tags: [
 			noteToken("#Saying", "reference", "Familie"),
 			noteToken("#Festform", "reference", "Gebrauch"),
@@ -152,8 +155,8 @@ export const sayingFixtures = [
 			],
 		],
 		translations: [
-			"The morning hour has gold in its mouth.",
-			"Утренний час — с золотом во рту.",
+			[{ kind: "Text", text: "The morning hour has gold in its mouth." }],
+			[{ kind: "Text", text: "Утренний час — с золотом во рту." }],
 		],
 		translatedExplanations: [
 			"The early bird catches the worm.",

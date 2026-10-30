@@ -130,7 +130,7 @@ export function goldKnowledgeWritten(
 		case "definition":
 			return `Eine kurze Erklärung der Bedeutung von ${lemma} in einem Satz.`;
 		case "translations":
-			return ["a translation"];
+			return [[{ kind: "Text", text: "a translation" }]];
 		case "plural": {
 			const forms = (paradigm.plural ?? []).filter(
 				(form) => form !== "NoPlural" && form !== "PluralOnly",

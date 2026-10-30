@@ -18,7 +18,10 @@ const shadow = {
 export const samples: Record<string, unknown[]> = {
 	readingKnowledge: [
 		{},
-		{ definition: "  Geba\u0308ude  ", translations: { en: [" house "] } },
+		{
+			definition: "  Geba\u0308ude  ",
+			translations: { en: [[{ kind: "Text", text: " house " }]] },
+		},
 		{ semanticRelations: { synonym: [houseLemma] } },
 		{ locutionType: "Idiom" },
 		{ sayingType: { type: "WingedWord", attribution: "  Shakespeare " } },
@@ -372,4 +375,19 @@ export const samples: Record<string, unknown[]> = {
 	directSemanticRelation: ["synonym", "holonym", "endonym"],
 	semanticRelation: ["hyponym", "meronym", "exonym"],
 	translationLanguage: ["en", "ru"],
+	translationPieceKind: ["Text", "Preposition", "Slot", "Word"],
+	translationPiece: [
+		{ kind: "Slot", text: " someone " },
+		{ kind: "Text", text: "" },
+		{ kind: "Preposition" },
+	],
+	translation: [
+		[
+			{ kind: "Text", text: "have to do" },
+			{ kind: "Preposition", text: "with" },
+			{ kind: "Slot", text: "something" },
+		],
+		[],
+		["have to do with"],
+	],
 };

@@ -69,7 +69,7 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 	const knowledge = projectReadingKnowledge(reading, {
 		transcription: "  aʊ̯fˌpasn̩  ",
 		definition: "  aufmerksam sein  ",
-		translations: { en: ["pay attention"] },
+		translations: { en: [[{ kind: "Text", text: "pay attention" }]] },
 	});
 
 	expect(reading.lemma.coreFeatures).toEqual({
@@ -78,7 +78,7 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 	expect(knowledge).toEqual({
 		transcription: "aʊ̯fˌpasn̩",
 		definition: "aufmerksam sein",
-		translations: { en: ["pay attention"] },
+		translations: { en: [[{ kind: "Text", text: "pay attention" }]] },
 	});
 });
 
@@ -128,7 +128,9 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 			knowledge: {
 				transcription: "aʊ̯fˌpasn̩",
 				definition: "aufmerksam sein",
-				translations: { en: ["pay attention"] },
+				translations: {
+					en: [[{ kind: "Text", text: "pay attention" }]],
+				},
 			},
 			status: "Full",
 			updatedAt: 42,
@@ -175,7 +177,7 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 	expect(note.knowledge).toMatchObject({
 		transcription: "aʊ̯fˌpasn̩",
 		definition: "aufmerksam sein",
-		translations: { en: ["pay attention"] },
+		translations: { en: [[{ kind: "Text", text: "pay attention" }]] },
 		semanticRelations: {
 			synonym: [
 				{

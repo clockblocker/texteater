@@ -12,13 +12,28 @@ export const member: AuthoredMember = {
 		transcription: "ɛs",
 		translations: {
 			en: [
-				"it (impersonal subject)",
-				"there (in existential there is)",
-				"(placeholder before a postponed subject; usually untranslated)",
+				[{ kind: "Text", text: "it (impersonal subject)" }],
+				[{ kind: "Text", text: "there (in existential there is)" }],
+				[
+					{
+						kind: "Text",
+						text: "(placeholder before a postponed subject; usually untranslated)",
+					},
+				],
 			],
 			ru: [
-				"формальное подлежащее без предметного значения",
-				"(заполнитель первой позиции перед подлежащим; обычно не переводится)",
+				[
+					{
+						kind: "Text",
+						text: "формальное подлежащее без предметного значения",
+					},
+				],
+				[
+					{
+						kind: "Text",
+						text: "(заполнитель первой позиции перед подлежащим; обычно не переводится)",
+					},
+				],
 			],
 		},
 	},

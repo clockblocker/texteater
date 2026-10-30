@@ -56,7 +56,8 @@ type NoteStudyFixtureContent = {
 	readonly relations?: readonly NoteStudyRelation[];
 	readonly formation?: readonly NoteStudyLine[];
 	readonly structure?: readonly NoteStudyLine[];
-	readonly translations: readonly string[];
+	/** The English Translation, then the Russian one (ADR 0055). */
+	readonly translations: readonly Dumrel.Translation[];
 	readonly translatedExplanations?: readonly string[];
 	readonly forms?: readonly NoteStudyForm[];
 	readonly formTable?: NoteStudyFormTable;

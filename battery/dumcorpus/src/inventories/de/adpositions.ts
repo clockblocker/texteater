@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "../member.js";
+import { type AuthoredMember, textTranslations } from "../member.js";
 import { prepositions } from "./prepositions.js";
 
 /**
@@ -79,7 +79,10 @@ function adpositionMember(sense: Sense, ipa: string): AuthoredMember {
 		knowledge: {
 			transcription: ipa,
 			definition: sense.definition,
-			translations: { en: [...sense.en], ru: [...sense.ru] },
+			translations: {
+				en: textTranslations(sense.en),
+				ru: textTranslations(sense.ru),
+			},
 			...(antonym.length
 				? {
 						semanticRelations: {

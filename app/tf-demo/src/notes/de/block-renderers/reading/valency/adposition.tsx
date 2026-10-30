@@ -6,6 +6,7 @@ import {
 	readingSourceContextsRenderer,
 	type SourceContextCaption,
 } from "../../../../universal/blocks/renderers/reading/source-contexts/default";
+import { ValencySlot } from "../../../../universal/blocks/valency-pieces";
 import {
 	type AdpositionLine,
 	type AdpositionLinePart,
@@ -58,12 +59,7 @@ function lineKey(line: AdpositionLine): string {
 
 function renderPart(part: AdpositionLinePart) {
 	return part.part === "Token" ? (
-		<span
-			data-slot="valency-token"
-			className="font-mono text-[0.9em] text-ink-soft"
-		>
-			{part.text}
-		</span>
+		<ValencySlot>{part.text}</ValencySlot>
 	) : (
 		part.text
 	);

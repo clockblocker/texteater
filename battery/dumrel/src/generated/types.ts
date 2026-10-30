@@ -162,6 +162,9 @@ export type DirectSemanticRelation =
 	| "holonym"
 	| "endonym";
 export type TranslationLanguage = "en" | "ru";
+export type TranslationPieceKind = "Text" | "Preposition" | "Slot";
+export type TranslationPiece = { kind: TranslationPieceKind; text: string };
+export type Translation = Array<TranslationPiece>;
 export type UnitShadow =
 	| {
 			language: "de";
@@ -1428,7 +1431,10 @@ export type ReadingKnowledge = {
 	transcription?: string | undefined;
 	definition?: string | undefined;
 	translations?:
-		| { en?: Array<string> | undefined; ru?: Array<string> | undefined }
+		| {
+				en?: Array<Translation> | undefined;
+				ru?: Array<Translation> | undefined;
+		  }
 		| undefined;
 	breakdown?: Breakdown | undefined;
 	semanticRelations?: SemanticRelations | undefined;
@@ -1449,7 +1455,7 @@ export type KnowledgeChange =
 			kind: "Contribute" | "Correct";
 			aspect: "translations";
 			language: TranslationLanguage;
-			value: Array<string>;
+			value: Array<Translation>;
 	  }
 	| { kind: "Retract"; aspect: "translations"; language: TranslationLanguage }
 	| {

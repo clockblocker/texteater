@@ -1,6 +1,6 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import type { AuthoredMember } from "../member.js";
+import { type AuthoredMember, textTranslations } from "../member.js";
 import type { PronounForm, PronounTable } from "./pronoun-paradigm.js";
 
 /**
@@ -158,8 +158,8 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 				definition: input.description.definition,
 				transcription: input.canonicalForm.ipa,
 				translations: {
-					en: [...input.description.en],
-					ru: [...input.description.ru],
+					en: textTranslations(input.description.en),
+					ru: textTranslations(input.description.ru),
 				},
 				...(synonym ? { semanticRelations: { synonym } } : {}),
 				...locutionType.knowledge,

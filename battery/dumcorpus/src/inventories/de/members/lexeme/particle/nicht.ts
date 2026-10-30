@@ -24,7 +24,10 @@ export const member: AuthoredMember = {
 		transcription: "nɪçt",
 		definition:
 			"Drückt eine Verneinung aus, des ganzen Satzes oder eines einzelnen Satzteils: Er kommt nicht. Das ist nicht mein Problem. Nicht heute, sondern morgen.",
-		translations: { en: ["not"], ru: ["не"] },
+		translations: {
+			en: [[{ kind: "Text", text: "not" }]],
+			ru: [[{ kind: "Text", text: "не" }]],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

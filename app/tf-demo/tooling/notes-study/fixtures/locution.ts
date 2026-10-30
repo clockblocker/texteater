@@ -80,7 +80,10 @@ export const locutionFixtures = [
 				noteToken("treffen", "reference", "regulär flektierbares Verb"),
 			],
 		],
-		translations: ["to make a decision", "принять решение"],
+		translations: [
+			[{ kind: "Text", text: "to make a decision" }],
+			[{ kind: "Text", text: "принять решение" }],
+		],
 		tags: [
 			noteToken("#Locution", "reference", "Familie"),
 			noteToken("#Verb", "reference", "Art"),
@@ -157,8 +160,8 @@ export const locutionFixtures = [
 			],
 		],
 		translations: [
-			"Be that as it may; anyway.",
-			"Как бы то ни было; в любом случае.",
+			[{ kind: "Text", text: "Be that as it may; anyway." }],
+			[{ kind: "Text", text: "Как бы то ни было; в любом случае." }],
 		],
 		tags: [
 			noteToken("#Locution", "reference", "Familie"),
@@ -233,8 +236,8 @@ export const locutionFixtures = [
 			],
 		],
 		translations: [
-			"to have tomatoes on one’s eyes",
-			"иметь помидоры на глазах",
+			[{ kind: "Text", text: "to have tomatoes on one’s eyes" }],
+			[{ kind: "Text", text: "иметь помидоры на глазах" }],
 		],
 		translatedExplanations: [
 			"to be blind to the obvious",

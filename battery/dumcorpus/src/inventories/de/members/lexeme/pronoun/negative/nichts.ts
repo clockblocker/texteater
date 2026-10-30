@@ -24,7 +24,13 @@ export const member: AuthoredMember = {
 		definition:
 			"Das Negativpronomen „nichts“ verneint das Vorhandensein einer Sache.",
 		transcription: "nɪçts",
-		translations: { en: ["nothing"], ru: ["ничто", "ничего"] },
+		translations: {
+			en: [[{ kind: "Text", text: "nothing" }]],
+			ru: [
+				[{ kind: "Text", text: "ничто" }],
+				[{ kind: "Text", text: "ничего" }],
+			],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

@@ -29,7 +29,12 @@ describe("parseReadingKnowledge", () => {
 			source: houseReading,
 			knowledge: {
 				definition: "  Geba\u0308ude  ",
-				translations: { en: [" house ", "dwelling"] },
+				translations: {
+					en: [
+						[{ kind: "Text", text: " house " }],
+						[{ kind: "Text", text: "dwelling" }],
+					],
+				},
 				semanticRelations: { nearSynonym: [berlinLemma] },
 			},
 		});
@@ -37,7 +42,12 @@ describe("parseReadingKnowledge", () => {
 			success: true,
 			value: {
 				definition: "Gebäude",
-				translations: { en: ["house", "dwelling"] },
+				translations: {
+					en: [
+						[{ kind: "Text", text: "house" }],
+						[{ kind: "Text", text: "dwelling" }],
+					],
+				},
 				semanticRelations: { nearSynonym: [berlinLemma] },
 			},
 		});
@@ -205,17 +215,77 @@ describe("applyKnowledgeChange", () => {
 	test("deduplicates normalized bucket contributions", () => {
 		const result = applyKnowledgeChange({
 			source: houseReading,
-			knowledge: { translations: { en: ["café"] } },
+			knowledge: {
+				translations: { en: [[{ kind: "Text", text: "café" }]] },
+			},
 			change: {
 				kind: "Contribute",
 				aspect: "translations",
 				language: "en",
-				value: [" cafe\u0301 ", "coffeehouse", "coffeehouse"],
+				value: [
+					[{ kind: "Text", text: " cafe\u0301 " }],
+					[{ kind: "Text", text: "coffeehouse" }],
+					[{ kind: "Text", text: "coffeehouse" }],
+				],
 			},
 		});
 		expect(result).toEqual({
 			success: true,
-			value: { translations: { en: ["café", "coffeehouse"] } },
+			value: {
+				translations: {
+					en: [
+						[{ kind: "Text", text: "café" }],
+						[{ kind: "Text", text: "coffeehouse" }],
+					],
+				},
+			},
+		});
+	});
+
+	test("deduplicates translations by their text, keeping the first one's pieces", () => {
+		const result = applyKnowledgeChange({
+			source: houseReading,
+			knowledge: {
+				translations: {
+					en: [
+						[
+							{ kind: "Text", text: "wait" },
+							{ kind: "Preposition", text: "for" },
+							{ kind: "Slot", text: "someone" },
+						],
+					],
+				},
+			},
+			change: {
+				kind: "Contribute",
+				aspect: "translations",
+				language: "en",
+				value: [
+					[{ kind: "Text", text: "wait for someone" }],
+					[
+						{ kind: "Text", text: "await" },
+						{ kind: "Slot", text: "someone" },
+					],
+				],
+			},
+		});
+		expect(result).toEqual({
+			success: true,
+			value: {
+				translations: {
+					en: [
+						[
+							{ kind: "Text", text: "wait" },
+							{ kind: "Preposition", text: "for" },
+							{ kind: "Slot", text: "someone" },
+						],
+						[
+							{ kind: "Text", text: "await" },
+							{ kind: "Slot", text: "someone" },
+						],
+					],
+				},
+			},
 		});
 	});
 
@@ -249,7 +319,10 @@ describe("applyKnowledgeChanges", () => {
 			kind: "Contribute",
 			aspect: "translations",
 			language: "en",
-			value: [" house ", "home"],
+			value: [
+				[{ kind: "Text", text: " house " }],
+				[{ kind: "Text", text: "home" }],
+			],
 		},
 		{
 			kind: "Contribute",
@@ -261,19 +334,22 @@ describe("applyKnowledgeChanges", () => {
 			kind: "Contribute",
 			aspect: "translations",
 			language: "ru",
-			value: ["здание"],
+			value: [[{ kind: "Text", text: "здание" }]],
 		},
 		{
 			kind: "Correct",
 			aspect: "translations",
 			language: "en",
-			value: ["building"],
+			value: [[{ kind: "Text", text: "building" }]],
 		},
 		{
 			kind: "Contribute",
 			aspect: "translations",
 			language: "ru",
-			value: ["дом", "здание"],
+			value: [
+				[{ kind: "Text", text: "дом" }],
+				[{ kind: "Text", text: "здание" }],
+			],
 		},
 		{ kind: "Retract", aspect: "definition" },
 		{ kind: "Contribute", aspect: "transcription", value: "haʊ̯s" },
@@ -300,7 +376,9 @@ describe("applyKnowledgeChanges", () => {
 	}
 
 	test("answers what applying the changes one by one answers", () => {
-		const knowledge = { translations: { ru: ["дом"] } };
+		const knowledge = {
+			translations: { ru: [[{ kind: "Text" as const, text: "дом" }]] },
+		};
 		const snapshot = structuredClone(knowledge);
 		const result = applyKnowledgeChanges({
 			source: houseReading,
@@ -352,12 +430,12 @@ describe("parseKnowledgeChange", () => {
 			kind: "Contribute",
 			aspect: "translations",
 			language: "en",
-			value: [" cafe\u0301 "],
+			value: [[{ kind: "Text", text: " cafe\u0301 " }]],
 		} as const;
 		const result = parseKnowledgeChange({ source: houseReading, change });
 		expect(result).toEqual({
 			success: true,
-			value: { ...change, value: ["café"] },
+			value: { ...change, value: [[{ kind: "Text", text: "café" }]] },
 		});
 		if (result.success) expect(result.value).not.toBe(change);
 	});

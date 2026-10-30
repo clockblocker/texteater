@@ -18,8 +18,15 @@ export const member: AuthoredMember = {
 		definition:
 			"„haben“ als Hilfsverb des Perfekts: Mit dem Partizip II der meisten Verben bildet es Perfekt und Plusquamperfekt (hat gegessen, hatte gelesen).",
 		translations: {
-			en: ["have (perfect auxiliary)"],
-			ru: ["иметь (вспомогательный глагол перфекта)"],
+			en: [[{ kind: "Text", text: "have (perfect auxiliary)" }]],
+			ru: [
+				[
+					{
+						kind: "Text",
+						text: "иметь (вспомогательный глагол перфекта)",
+					},
+				],
+			],
 		},
 	},
 	coverage: {

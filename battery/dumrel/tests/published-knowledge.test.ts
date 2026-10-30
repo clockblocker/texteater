@@ -29,7 +29,7 @@ test("published schemas and runtime agree on normalized, structured Knowledge", 
 	const knowledge = {
 		transcription: " haʊs ",
 		definition: " Geba\u0308ude ",
-		translations: { en: [" house "] },
+		translations: { en: [[{ kind: "Text", text: " house " }]] },
 		breakdown: {
 			morphemes: [
 				{ letters: "haus", target: rootShadow },
@@ -42,7 +42,7 @@ test("published schemas and runtime agree on normalized, structured Knowledge", 
 		...knowledge,
 		transcription: "haʊs",
 		definition: "Gebäude",
-		translations: { en: ["house"] },
+		translations: { en: [[{ kind: "Text" as const, text: "house" }]] },
 	};
 	expect(schemas.readingKnowledgeSchema.parse(knowledge)).toEqual(expected);
 	expect(

@@ -148,7 +148,7 @@ function readingNote(
 		},
 		knowledgeState: { status: "Full", activity: "Idle" },
 		personalAnnotation: "",
-		knowledge: { translations: { en: ["on"] } },
+		knowledge: { translations: { en: [[{ kind: "Text", text: "on" }]] } },
 		knowledgeUpdatedAt: null,
 		definitionText: { state: "Plain" },
 		relations: [],

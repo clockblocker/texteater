@@ -11,9 +11,21 @@ export const member: AuthoredMember = {
 			"Das vorausweisende „es“ (Korrelat) steht als Objekt für einen nachgestellten Nebensatz oder Infinitiv und weist auf ihn voraus: „Ich bedaure es, dass du gehst.“ Es entfällt, wenn der Nebensatz selbst vorn steht („Dass du gehst, bedaure ich“).",
 		transcription: "ɛs",
 		translations: {
-			en: ["it (pointing ahead to a following clause)"],
+			en: [
+				[
+					{
+						kind: "Text",
+						text: "it (pointing ahead to a following clause)",
+					},
+				],
+			],
 			ru: [
-				"то (указывает на следующее придаточное; часто не переводится)",
+				[
+					{
+						kind: "Text",
+						text: "то (указывает на следующее придаточное; часто не переводится)",
+					},
+				],
 			],
 		},
 	},

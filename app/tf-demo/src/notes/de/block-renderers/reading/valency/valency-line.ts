@@ -30,6 +30,8 @@ export type ValencyLinePart =
 			readonly optional: boolean;
 	  }
 	| { readonly part: "Fixed"; readonly text: string }
+	/** A Fixed word a slot or the reflexive follows: `mit` in `mit jM zu tun haben`. */
+	| { readonly part: "Preposition"; readonly text: string }
 	| {
 			readonly part: "Slot";
 			readonly optional: boolean;
@@ -159,7 +161,8 @@ function fixedPart(words: readonly string[]): ValencyLinePart[] {
 
 /**
  * A Locution's Fixed words, with each insert right after the first
- * occurrence of the word it follows: `mit` `jM` `zu tun`.
+ * occurrence of the word it follows, which is its preposition: `mit` `jM`
+ * `zu tun`.
  */
 function fixedPhrase(
 	words: readonly string[],
@@ -177,7 +180,11 @@ function fixedPhrase(
 		const following = inserts.filter(({ after }) => after === word);
 		if (following.length === 0) continue;
 		placed.add(word);
-		parts.push(...fixedPart(run), ...following.map(({ part }) => part));
+		parts.push(
+			...fixedPart(run.slice(0, -1)),
+			{ part: "Preposition", text: word },
+			...following.map(({ part }) => part),
+		);
 		run = [];
 	}
 	return [...parts, ...fixedPart(run)];

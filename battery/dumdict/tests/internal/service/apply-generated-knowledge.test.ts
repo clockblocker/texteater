@@ -97,7 +97,7 @@ describe("applyGeneratedKnowledge", () => {
 					kind: "Contribute",
 					aspect: "translations",
 					language: "en",
-					value: ["go"],
+					value: [[{ kind: "Text", text: "go" }]],
 				},
 			],
 			pendingRelations: [
@@ -117,7 +117,7 @@ describe("applyGeneratedKnowledge", () => {
 		const [stored] = storage.loadAll();
 		expect(stored?.readingEntries[0]?.knowledge).toMatchObject({
 			transcription: "ˈɡeːən",
-			translations: { en: ["go"] },
+			translations: { en: [[{ kind: "Text", text: "go" }]] },
 		});
 		expect(stored?.pendingRelations).toHaveLength(1);
 		expect(stored?.pendingRelations[0]?.pending.target.canonicalForm).toBe(

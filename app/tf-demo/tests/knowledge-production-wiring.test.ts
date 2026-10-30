@@ -123,7 +123,7 @@ async function runProductionAction(
 	const lunaAnswers: Record<string, unknown> = {
 		transcription: "baŋk",
 		definition: "Ein Geldinstitut.",
-		translations: ["bank"],
+		translations: [[{ kind: "Text", text: "bank" }]],
 		valency: { valency: [] },
 	};
 	// `Bank` has a plural, and it was formed from no other word, so it has
@@ -153,7 +153,7 @@ async function runProductionAction(
 		return {
 			output:
 				input.aspect === "translations" && input.language === "ru"
-					? ["банк"]
+					? [[{ kind: "Text", text: "банк" }]]
 					: lunaAnswers[input.aspect],
 			metadata: {
 				model: null,
@@ -219,7 +219,10 @@ test("the production producer runs Dumgen's knowledge.produce through the deploy
 	expect(accumulated?.knowledge).toMatchObject({
 		definition: "Ein Geldinstitut.",
 		transcription: "baŋk",
-		translations: { en: ["bank"], ru: ["банк"] },
+		translations: {
+			en: [[{ kind: "Text", text: "bank" }]],
+			ru: [[{ kind: "Text", text: "банк" }]],
+		},
 	});
 	// The empty frame stores nothing and still completes the Reading.
 	expect(accumulated?.status).toBe("Full");

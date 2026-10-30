@@ -26,8 +26,15 @@ export const member: AuthoredMember = {
 		definition:
 			"Steht vor dem Infinitiv oder bei trennbaren Verben zwischen Präfix und Stamm und bildet den Infinitiv mit zu: Er versucht zu schlafen. Das ist schwer zu erklären. Sie hat vergessen anzurufen.",
 		translations: {
-			en: ["to (before an infinitive)"],
-			ru: ["частица перед инфинитивом (не переводится)"],
+			en: [[{ kind: "Text", text: "to (before an infinitive)" }]],
+			ru: [
+				[
+					{
+						kind: "Text",
+						text: "частица перед инфинитивом (не переводится)",
+					},
+				],
+			],
 		},
 	},
 	coverage: {

@@ -140,7 +140,7 @@ describe("lightweight Dumdict parser differential", () => {
 				kind: "Contribute",
 				aspect: "translations",
 				language: "en",
-				value: [" house "],
+				value: [[{ kind: "Text", text: " house " }]],
 			},
 			{ kind: "Retract", aspect: "translations", language: "en" },
 			{

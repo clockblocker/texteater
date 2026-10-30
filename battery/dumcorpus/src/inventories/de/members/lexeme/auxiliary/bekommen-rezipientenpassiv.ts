@@ -18,8 +18,15 @@ export const member: AuthoredMember = {
 		definition:
 			"„bekommen“, „kriegen“ oder „erhalten“ als Hilfsverb des Rezipientenpassivs: Mit dem Partizip II rückt es den Empfänger einer Handlung ins Subjekt (bekommt das Paket geliefert, kriegt alles erklärt).",
 		translations: {
-			en: ["get (recipient passive auxiliary)"],
-			ru: ["получать (вспомогательный глагол пассива адресата)"],
+			en: [[{ kind: "Text", text: "get (recipient passive auxiliary)" }]],
+			ru: [
+				[
+					{
+						kind: "Text",
+						text: "получать (вспомогательный глагол пассива адресата)",
+					},
+				],
+			],
 		},
 	},
 	coverage: {

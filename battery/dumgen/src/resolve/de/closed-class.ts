@@ -20,6 +20,7 @@ import {
 } from "dumcorpus/inventories";
 import { foldCase, isSyncretism, lemmaIdentityKey, syncretize } from "dumling";
 import type * as Dumling from "dumling/types";
+import { translationText } from "dumrel";
 import type { ClosedClassIdentity } from "../../segment/segmented-sentence.js";
 import type { NeighbourSentences } from "../types.js";
 import {
@@ -220,7 +221,9 @@ function describe(member: AuthoredMember, cell: Cell | undefined): string {
 			: undefined,
 		values.polite === "Form" ? cellCoordinates.polite : undefined,
 	].filter(Boolean);
-	const glosses = member.knowledge.translations?.en ?? [];
+	const glosses = (member.knowledge.translations?.en ?? []).map(
+		translationText,
+	);
 	return `${member.lemma.canonicalForm}${coordinates.length ? `: ${coordinates.join(", ")}` : ""}${glosses.length ? ` (${glosses.join(", ")})` : ""}`;
 }
 

@@ -24,7 +24,10 @@ export const member: AuthoredMember = {
 		definition:
 			"Das Reflexivpronomen „sich“ verweist in der dritten Person auf den Bezug des Subjekts zurück.",
 		transcription: "zɪç",
-		translations: { en: ["oneself"], ru: ["себе"] },
+		translations: {
+			en: [[{ kind: "Text", text: "oneself" }]],
+			ru: [[{ kind: "Text", text: "себе" }]],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

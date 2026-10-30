@@ -9,8 +9,8 @@
  *   Sentence is evidence that never redefines the sense (#623).
  * - The relation judgment states its policy once per call, in its state,
  *   and each candidate's question is one line (#697). The candidate
- *   prompt has one wording, and there is one translation prompt, its
- *   citation-form clause included (#697, #518).
+ *   prompt has one wording. The one translation prompt's paragraphs live
+ *   in `translation-prompts.ts`.
  * - No prompt repeats a negative list its output schema already enforces
  *   (#697), and no option is a bare label: every Kind and relation the
  *   judge may pick is defined (#669).
@@ -24,14 +24,12 @@ import { type Cite, paragraphRegistry } from "../../prompt-paragraphs.js";
 /** The Rules the Knowledge prompts cite, at the statement hashes they were checked against. */
 const rules = {
 	meaning: ["de/emoji-description-names-the-meaning", "5532d94dbbc3bb71"],
-	translation: ["de/translation-gives-the-equivalent", "51e2aee5b7c8f087"],
 	multiword: [
 		"de/multiword-unit-describes-its-whole-meaning",
 		"99996175abb4200d",
 	],
 	idiom: ["de/idiom", "d25679f2a06809b9"],
 	headword: ["de/canonical-form-is-the-headword", "43184aac9186aceb"],
-	ownPart: ["de/copula-describes-its-own-part", "986b2cb2531c76d7"],
 	copula: ["de/copula-stays-apart", "8982593963a4d507"],
 	valency: ["de/valency-frame-follows-e-valbu", "f0b9c8226ff45fb8"],
 	governed: [
@@ -106,39 +104,6 @@ export const definition = {
 		"definition.output",
 		"Answer with the definition alone as the JSON string.",
 		rules.meaning,
-	),
-} as const;
-
-export const translation = {
-	task: paragraph(
-		"translation.task",
-		"Translate the Reading's meaning into `language` (en: English, ru: Russian): give what a bilingual dictionary gives as this meaning's equivalent. Translate the meaning the emoji name, not another meaning of the German word, even one this sentence suggests, and not the meaning of a neighbouring word.",
-		rules.translation,
-		rules.meaning,
-	),
-	citation: paragraph(
-		"translation.citation",
-		"Write each equivalent in its dictionary headword form and carry over none of the sentence's tense, person, number, case or degree: a verb in its infinitive, a noun in the singular unless it exists only in the plural, an adjective in its positive. A verb's equivalent keeps the reflexive or particle its meaning needs, and every equivalent keeps the Reading's word class: an adverb takes an adverb, never an adjective of the same root. The equivalent translates the target alone, in every language: it takes in no neighbouring word, no object, adverb or predicative this sentence adds («Die Suppe riecht herrlich»: smell, пахнуть; not smell wonderful, вкусно пахнуть).",
-		rules.translation,
-		rules.headword,
-		rules.ownPart,
-	),
-	form: paragraph(
-		"translation.form",
-		"Never pick a word only because it looks or sounds like the German one: a false friend names another thing. An abbreviation or a title takes the established equivalent of what it stands for, or the target language's usual rendering of it, never a coined word: an academic degree takes the target language's established term for that degree, else a plain description of its holder, never a compound or suffix built from the German parts. A proper name keeps its own form, transliterated into Cyrillic for ru, unless the language has an established name for it («München»: Munich, Мюнхен); never translate its parts («Lindenstraße»: Lindenstraße, Линденштрассе).",
-		rules.translation,
-	),
-	multiword: paragraph(
-		"translation.multiword",
-		"Translate a Locution or a Saying as a whole: by the target language's established expression with the same meaning when there is one, else by a plain paraphrase of that meaning. Never translate it word for word, and never give another expression that only shares its words or its image.",
-		rules.translation,
-		rules.multiword,
-		rules.idiom,
-	),
-	output: paragraph(
-		"translation.output",
-		"Answer with a JSON array of one equivalent, or up to three when the meaning has several equally usual ones, the most usual first; each a word or a short phrase, never a sentence.",
-		rules.translation,
 	),
 } as const;
 

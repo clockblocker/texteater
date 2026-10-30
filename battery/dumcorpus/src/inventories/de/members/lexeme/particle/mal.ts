@@ -26,7 +26,10 @@ export const member: AuthoredMember = {
 		transcription: "maːl",
 		definition:
 			"Verleiht einer Äußerung eine gewisse Beiläufigkeit und macht eine Bitte oder Aufforderung weniger streng: Hör mal zu! Ich versuche es mal. Leihst du mir das Buch mal?",
-		translations: { en: ["just"], ru: ["-ка"] },
+		translations: {
+			en: [[{ kind: "Text", text: "just" }]],
+			ru: [[{ kind: "Text", text: "-ка" }]],
+		},
 		semanticRelations: { synonym: [modalParticleLemma("einmal")] },
 	},
 	coverage: {

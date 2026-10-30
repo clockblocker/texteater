@@ -47,6 +47,8 @@ test("published operational entrypoint stays independent of Zod", async () => {
 		"sayingTypeValues",
 		"selectKnowledge",
 		"translationLanguageValues",
+		"translationPieceKindValues",
+		"translationText",
 		"variantIdOf",
 	]);
 });

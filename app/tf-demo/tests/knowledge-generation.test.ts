@@ -56,7 +56,10 @@ test("retry requests skip saved text and covered translations but retain missing
 			{
 				knowledge: {
 					definition: "Ein Geldinstitut.",
-					translations: { en: ["bank"], ru: [] },
+					translations: {
+						en: [[{ kind: "Text", text: "bank" }]],
+						ru: [],
+					},
 				},
 				checkedRelationKinds: [],
 			},
@@ -80,7 +83,12 @@ test("intake attests no government, so a Full Reading with its translations dema
 	const t = createTestConvex();
 	const occurrence = await seedOccurrence(t, ANGST_READING);
 	await insertAccumulatedKnowledge(t, occurrence, {
-		knowledge: { translations: { en: ["fear"], ru: ["страх"] } },
+		knowledge: {
+			translations: {
+				en: [[{ kind: "Text", text: "fear" }]],
+				ru: [[{ kind: "Text", text: "страх" }]],
+			},
+		},
 		status: "Full",
 		coveredTranslationLanguages: ["en", "ru"],
 	});
@@ -93,7 +101,10 @@ test("intake attests no government, so a Full Reading with its translations dema
 	const coveredOccurrence = await seedOccurrence(covered, ANGST_READING);
 	await insertAccumulatedKnowledge(covered, coveredOccurrence, {
 		knowledge: {
-			translations: { en: ["fear"], ru: ["страх"] },
+			translations: {
+				en: [[{ kind: "Text", text: "fear" }]],
+				ru: [[{ kind: "Text", text: "страх" }]],
+			},
 			valency: [
 				{
 					status: "Optional",
@@ -135,7 +146,10 @@ test("a Full Reading's plural occurrence schedules no Knowledge run: a later occ
 		);
 		await insertAccumulatedKnowledge(t, occurrence, {
 			knowledge: {
-				translations: { en: ["pizza"], ru: ["пицца"] },
+				translations: {
+					en: [[{ kind: "Text", text: "pizza" }]],
+					ru: [[{ kind: "Text", text: "пицца" }]],
+				},
 				...(stored === undefined ? {} : { pluralPattern: stored }),
 			},
 			status: "Full" as const,
@@ -176,13 +190,13 @@ test("a run that proposes an empty frame stores nothing and still completes the 
 					kind: "Contribute",
 					aspect: "translations",
 					language: "en",
-					value: ["bank"],
+					value: [[{ kind: "Text", text: "bank" }]],
 				},
 				{
 					kind: "Contribute",
 					aspect: "translations",
 					language: "ru",
-					value: ["банк"],
+					value: [[{ kind: "Text", text: "банк" }]],
 				},
 			],
 			pendingRelations: [],
@@ -226,7 +240,7 @@ test("existing requested content completes an empty generated batch and the firs
 	const occurrence = await seedDictionaryReading(t, {
 		knowledge: {
 			definition: "canonical",
-			translations: { en: ["bank"] },
+			translations: { en: [[{ kind: "Text", text: "bank" }]] },
 		},
 	});
 	await insertAttempt(t, occurrence, "attempt-1");
@@ -243,7 +257,7 @@ test("existing requested content completes an empty generated batch and the firs
 			ownerReadingKey: BANK_READING_KEY,
 			knowledge: {
 				definition: "canonical",
-				translations: { en: ["bank"] },
+				translations: { en: [[{ kind: "Text", text: "bank" }]] },
 			},
 			status: "Full",
 		}),
@@ -514,13 +528,13 @@ test("each contribution's base text is published in order, one call each", async
 		kind: "Contribute",
 		aspect: "translations",
 		language: "ru",
-		value: ["банк"],
+		value: [[{ kind: "Text", text: "банк" }]],
 	};
 	const english: KnowledgeChange = {
 		kind: "Contribute",
 		aspect: "translations",
 		language: "en",
-		value: ["bank"],
+		value: [[{ kind: "Text", text: "bank" }]],
 	};
 	await generateWith(
 		t,

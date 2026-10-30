@@ -37,7 +37,7 @@ describe("consumer workflow", () => {
 						kind: "Contribute",
 						aspect: "translations",
 						language: "ru",
-						value: ["плавать"],
+						value: [[{ kind: "Text", text: "плавать" }]],
 					},
 				],
 				pendingRelations: [],
@@ -55,7 +55,7 @@ describe("consumer workflow", () => {
 			),
 		).toEqual(["swim"]);
 		expect(swim?.readingEntries[0]?.knowledge?.translations).toEqual({
-			ru: ["плавать"],
+			ru: [[{ kind: "Text", text: "плавать" }]],
 		});
 	});
 

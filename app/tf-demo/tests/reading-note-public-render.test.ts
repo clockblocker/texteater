@@ -156,7 +156,7 @@ function readingNote(): ReadingNote {
 		personalAnnotation: "Remember the reflexive form.",
 		knowledge: {
 			transcription: "zɪç",
-			translations: { en: ["to be happy"] },
+			translations: { en: [[{ kind: "Text", text: "to be happy" }]] },
 			definition: "To experience happiness.",
 			valency: [
 				{

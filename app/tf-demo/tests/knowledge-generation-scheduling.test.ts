@@ -86,7 +86,12 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 	const full = createTestConvex();
 	const fullOccurrence = await seedOccurrence(full);
 	await insertAccumulatedKnowledge(full, fullOccurrence, {
-		knowledge: { translations: { en: ["bank"], ru: ["банк"] } },
+		knowledge: {
+			translations: {
+				en: [[{ kind: "Text", text: "bank" }]],
+				ru: [[{ kind: "Text", text: "банк" }]],
+			},
+		},
 		status: "Full",
 		coveredTranslationLanguages: ["en", "ru"],
 	});
@@ -97,7 +102,7 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 	const supplement = createTestConvex();
 	const supplementOccurrence = await seedOccurrence(supplement);
 	await insertAccumulatedKnowledge(supplement, supplementOccurrence, {
-		knowledge: { translations: { en: ["bank"] } },
+		knowledge: { translations: { en: [[{ kind: "Text", text: "bank" }]] } },
 		status: "Full",
 		coveredTranslationLanguages: ["en"],
 	});

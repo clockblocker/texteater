@@ -24,7 +24,10 @@ export const member: AuthoredMember = {
 		transcription: "ˈlaʊtɐ",
 		definition:
 			"Der quantifizierende Determinierer „lauter“ grenzt die Menge der bezeichneten Bezüge ein.",
-		translations: { en: ["nothing but"], ru: ["одни лишь"] },
+		translations: {
+			en: [[{ kind: "Text", text: "nothing but" }]],
+			ru: [[{ kind: "Text", text: "одни лишь" }]],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

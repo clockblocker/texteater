@@ -168,7 +168,9 @@ export type AccumulateTranslationsInput = {
 	readonly sentence: KnowledgeSentence;
 	/** The Reading's stored translations, by language, as the note holds them. */
 	readonly translations: Readonly<
-		Partial<Record<Dumrel.TranslationLanguage, readonly string[]>>
+		Partial<
+			Record<Dumrel.TranslationLanguage, readonly Dumrel.Translation[]>
+		>
 	>;
 };
 
