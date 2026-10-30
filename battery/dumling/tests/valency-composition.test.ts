@@ -92,6 +92,58 @@ test("valency evidence names the owned member realizing its preposition", () => 
 		}).success,
 	).toBe(true);
 });
+test("a German pronominal adverb spells the preposition it holds", () => {
+	const slotFor = (canonicalForm: string) => ({
+		member: 1,
+		complement: {
+			kind: "Preposition",
+			preposition: preposition(canonicalForm),
+			governedCase: "Dat",
+			referent: "Something",
+		},
+		realizedCase: "Dat",
+	});
+	const attestation = (attested: string, canonicalForm: string) => ({
+		unitKind: "Attestation",
+		surface: {
+			...verb,
+			normalizedSurface: "wartet",
+			inflectionalFeatures: {
+				...verb.inflectionalFeatures,
+				expletive: null,
+			},
+		},
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "wartet", orthography: "Standard" },
+			{ attested, orthography: "Standard" },
+		],
+		expletiveEvidence: null,
+		valencyEvidence: [slotFor(canonicalForm)],
+	});
+	for (const [attested, canonicalForm] of [
+		["damit", "mit"],
+		["Damit", "mit"],
+		["darauf", "auf"],
+		["wovon", "von"],
+		["worüber", "über"],
+		["hiermit", "mit"],
+		["hierauf", "auf"],
+	] as const)
+		expect(parseUnit(attestation(attested, canonicalForm)).success).toBe(
+			true,
+		);
+	for (const [attested, canonicalForm] of [
+		["daauf", "auf"],
+		["darmit", "mit"],
+		["womit", "auf"],
+		["somit", "mit"],
+		["dahin", "in"],
+	] as const)
+		expect(parseUnit(attestation(attested, canonicalForm)).success).toBe(
+			false,
+		);
+});
 // Evidence is a strict subset of the frame vocabulary, and an Attestation names
 // no Feature Pool feature (ADR 0034, ADR 0032).
 test("valency evidence names only Case and Preposition complements, by their governedCase", () => {

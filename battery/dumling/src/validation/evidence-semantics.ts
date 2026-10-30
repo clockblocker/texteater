@@ -89,8 +89,29 @@ type ValencySlot = {
 };
 
 /**
+ * Whether `word`, folded, spells the preposition `preposition` or, in
+ * German, the pronominal adverb that holds it: `da`, `wo` or `hier` before
+ * it, with an `r` between `da` or `wo` and a vowel (`damit`, `darauf`,
+ * `wovon`, `hiermit`). The adverb stays one member and marks the slot
+ * (ADR 0029).
+ */
+function spellsPreposition(
+	word: string,
+	preposition: string,
+	language: Language,
+): boolean {
+	if (word === preposition) return true;
+	if (language !== "de") return false;
+	const linker = /^[aeiouäöü]/u.test(preposition) ? "r" : "";
+	return [`da${linker}`, `wo${linker}`, "hier"].some(
+		(prefix) => word === `${prefix}${preposition}`,
+	);
+}
+
+/**
  * Each slot names a distinct owned member, or none. A Preposition slot's
- * member spells its preposition, compared without case, unless it is a Typo.
+ * member spells its preposition, or a German pronominal adverb holding it,
+ * compared without case, unless it is a Typo.
  */
 function namesMarkerMembers(
 	evidence: readonly ValencySlot[],
@@ -107,8 +128,11 @@ function namesMarkerMembers(
 		return (
 			member !== undefined &&
 			(member.orthography === "Typo" ||
-				foldCase(normalizeForm(member.attested), language) ===
-					foldCase(complement.preposition.canonicalForm, language))
+				spellsPreposition(
+					foldCase(normalizeForm(member.attested), language),
+					foldCase(complement.preposition.canonicalForm, language),
+					language,
+				))
 		);
 	});
 }

@@ -198,6 +198,18 @@ function buildBaseUnitSchemas<
 		unitKind: z.literal(UnitKindSchema.enum.Surface),
 		language: z.literal(route.language),
 		lemma: Lemma,
+		/**
+		 * The form the Surface spells, with no slot filler and no slot token.
+		 * A German Surface is its base-order form (system ADR 0056): the
+		 * Lemma's fixed words, inflected, in its Canonical Form's order, and
+		 * the verbal complex last in subordinate-clause order, so word-order
+		 * variants share it (`hatte es damit zu tun` is `mit zu tun hatte`,
+		 * `fängt … an` is `anfängt`). A pronominal adverb gives the fixed
+		 * preposition it holds (`damit` gives `mit`). An imperative keeps its
+		 * own order. Free arguments, a Lexeme's governed prepositions and a
+		 * lexical reflexive stay out. The slotted line (`jD mit jM zu tun
+		 * hatte`) is derived from the Reading's frame, never stored.
+		 */
 		normalizedSurface: normalizedFormSchema,
 		spelling: spellingSchema,
 		surfaceFeatures: surfaceFeaturesSchema,
