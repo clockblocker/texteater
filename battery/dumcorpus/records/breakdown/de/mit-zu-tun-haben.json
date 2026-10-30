@@ -1,0 +1,100 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"reading": {
+		"unitKind": "Reading",
+		"lemma": {
+			"unitKind": "Lemma",
+			"language": "de",
+			"family": "Locution",
+			"kind": "VERB",
+			"canonicalForm": "mit zu tun haben",
+			"coreFeatures": {}
+		},
+		"emojiDescription": "🔗"
+	},
+	"definition": "mit etwas zusammenhängen",
+	"knowledge": {
+		"breakdown": {
+			"constituents": [
+				{
+					"letters": "mit",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "mit",
+						"coreFeatures": {}
+					}
+				},
+				{ "letters": " " },
+				{
+					"letters": "zu",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PART",
+						"canonicalForm": "zu",
+						"coreFeatures": {
+							"partType": "Inf",
+							"polarity": null
+						}
+					}
+				},
+				{ "letters": " " },
+				{
+					"letters": "tun",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "tun",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				},
+				{ "letters": " " },
+				{
+					"letters": "haben",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "haben",
+						"coreFeatures": {
+							"hasSepPrefix": null
+						}
+					}
+				}
+			]
+		}
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0050"],
+		"rules": [
+			{
+				"rule": "de/bare-infinitive-zu",
+				"hash": "920eb73475a80ef0"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: tun",
+				"url": "https://www.dwds.de/wb/tun",
+				"supports": "Sense 7, ⟨mit jmdm., etw. nichts zu tun haben (= in keiner Beziehung zu jmdm., etw. stehen)⟩: mit belongs to the expression, and DWDS lists no zu tun haben of its own. The authored definition, an input to segment.inConstituents, never graded, follows this sense"
+			},
+			{
+				"title": "en.wiktionary: zu tun haben",
+				"url": "https://en.wiktionary.org/wiki/zu_tun_haben",
+				"supports": "zu tun haben, 'to be busy, to have work to do', beside 'to have to do with', +mit"
+			}
+		]
+	},
+	"notes": {
+		"rationale": "Flat: zu tun haben alone means 'be busy', not this Reading's 'have to do with', so it is no inner unit. A run inside a wording is one part only when it keeps the meaning it has inside the whole, and the definition, not the emoji, carries that test (ADR 0050, the user on #1241, 2026-10-30). The placeholder etwas is never a part, so the parts are mit, the infinitive PART zu (de/bare-infinitive-zu), tun and haben. From tf-demo's request 12fbda85, Vielleicht hatte es damit zu tun, dass …"
+	}
+}

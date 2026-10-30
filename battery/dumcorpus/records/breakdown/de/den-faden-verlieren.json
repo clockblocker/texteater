@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "💭💨"
 	},
+	"definition": "den Gedankengang nicht mehr weiterführen können",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -50,6 +51,12 @@
 	"sources": {
 		"adrs": ["ADR-0031", "ADR-0035", "ADR-0041", "ADR-0050"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: den Faden verlieren",
+				"url": "https://www.dwds.de/wb/den%20Faden%20verlieren",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'den Leitgedanken nicht mehr weiterführen oder nachvollziehen können'"
+			}
+		]
 	}
 }

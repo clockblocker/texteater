@@ -14,6 +14,7 @@
 		},
 		"emojiDescription": "🔁"
 	},
+	"definition": "in jedem Fall",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -76,6 +77,11 @@
 				"title": "DWDS: so",
 				"url": "https://www.dwds.de/wb/so",
 				"supports": "The wording, the Locution's Canonical Form"
+			},
+			{
+				"title": "DWDS: so",
+				"url": "https://www.dwds.de/wb/so",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: so oder so (= in jedem Fall)"
 			}
 		]
 	}

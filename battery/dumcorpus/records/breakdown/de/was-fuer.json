@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "❓👉"
 	},
+	"definition": "welche Art von",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -69,6 +70,11 @@
 				"title": "DWDS: für²",
 				"url": "https://www.dwds.de/wb/f%C3%BCr#2",
 				"supports": "this für occurs only in fixed combinations such as was für, with or without ein (was für Tee, was für welche)"
+			},
+			{
+				"title": "DWDS: für",
+				"url": "https://www.dwds.de/wb/f%C3%BCr",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: was für ein Flugzeug ist das? (= ein Flugzeug welcher Art, Beschaffenheit ist das?)"
 			}
 		]
 	},

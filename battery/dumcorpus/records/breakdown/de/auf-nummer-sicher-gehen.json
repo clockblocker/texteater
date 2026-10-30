@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "🦺"
 	},
+	"definition": "kein Risiko eingehen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -60,6 +61,11 @@
 				"title": "DWDS: auf Nummer sicher",
 				"url": "https://www.dwds.de/wb/auf%20Nummer%20sicher",
 				"supports": "The Mehrwortausdruck auf Nummer sicher, 'häufig adverbiell', with ⟨auf Nummer sicher gehen⟩ and ⟨auf Nummer sicher setzen⟩ and the collocations auf Nummer sicher spielen, fahren"
+			},
+			{
+				"title": "DWDS: auf Nummer sicher gehen",
+				"url": "https://www.dwds.de/wb/auf%20Nummer%20sicher%20gehen",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'unter Umgehung von Gefahr, Risiken vermeidend'"
 			}
 		]
 	},

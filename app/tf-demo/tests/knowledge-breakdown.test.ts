@@ -11,7 +11,10 @@ import {
 	produceBreakdown,
 	type Segmenters,
 	segmentsAfterSource,
+	storedDefinitionOf,
+	withBreakdown,
 } from "../server/knowledgeBreakdown";
+import type { KnowledgeProduction } from "../server/knowledgeProduction";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey,
@@ -204,6 +207,57 @@ test("a word with Constituents stores them, and a bottom word its morphemes", as
 		"constituents:entspannen",
 		"morphemes:entspannen",
 	]);
+});
+
+test("the segmenters read the run's definition, else the stored one (ADR 0050)", async () => {
+	const definitions: (string | undefined)[] = [];
+	const segmenters: Segmenters<never> = {
+		inConstituents: (input) => {
+			definitions.push(input.definition);
+			return Effect.succeed({
+				kind: "Constituents" as const,
+				pieces: CONSTITUENTS,
+			});
+		},
+		inMorphemes: () => Effect.succeed([]),
+	};
+	const run = (
+		changes: KnowledgeProduction["changes"],
+		storedDefinition?: string,
+	) =>
+		Effect.runPromise(
+			withBreakdown(
+				segmenters,
+				{ changes, failures: [], pendingRelations: [] },
+				{
+					reading: ENTSPANNUNG,
+					breakdown: true,
+					...(storedDefinition === undefined
+						? {}
+						: { storedDefinition }),
+				},
+				() => Effect.succeed(false),
+			),
+		);
+	const produced = [
+		{
+			kind: "Contribute",
+			aspect: "definition",
+			value: "Zustand der Ruhe",
+		},
+	] as unknown as KnowledgeProduction["changes"];
+	await run(produced, "alte Definition");
+	await run([], "Lösen einer Spannung");
+	await run([]);
+	expect(definitions).toEqual([
+		"Zustand der Ruhe",
+		"Lösen einer Spannung",
+		undefined,
+	]);
+	expect(storedDefinitionOf({ definition: "Ruhe" })).toEqual({
+		storedDefinition: "Ruhe",
+	});
+	expect(storedDefinitionOf({})).toEqual({});
 });
 
 test("a failed call or a split that doesn't spell the word fails its part, never the run", async () => {

@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "👋"
 	},
+	"definition": "Gruß beim ersten Treffen am Morgen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -59,6 +60,12 @@
 				"hash": "b72c043c004f9dc9"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "en.wiktionary: guten Morgen",
+				"url": "https://en.wiktionary.org/wiki/guten_Morgen",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'good morning (when seeing someone for the first time in the morning)'"
+			}
+		]
 	}
 }

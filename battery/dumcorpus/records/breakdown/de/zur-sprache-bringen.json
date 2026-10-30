@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "🗣"
 	},
+	"definition": "veranlassen, dass etwas besprochen wird",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -66,6 +67,11 @@
 				"title": "DWDS: Sprache",
 				"url": "https://www.dwds.de/wb/Sprache",
 				"supports": "Mehrwortausdruck etw. zur Sprache bringen"
+			},
+			{
+				"title": "DWDS: Sprache",
+				"url": "https://www.dwds.de/wb/Sprache",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: ⟨etw. zur Sprache bringen (= veranlassen, dass etw. besprochen, diskutiert wird)⟩"
 			}
 		]
 	},

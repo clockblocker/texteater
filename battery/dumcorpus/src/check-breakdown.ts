@@ -61,7 +61,7 @@ export function checkBreakdownRecord(
 			issue(undefined, "Shape", error.path.join("."), error.message);
 		return { errors: found, issues: [] };
 	}
-	const { reviewDepth, sources } = file.data;
+	const { reviewDepth, sources, definition } = file.data;
 	const reading = checkOwner(file.data.reading, language, issue);
 	const knowledge =
 		reading && checkKnowledge(reading, file.data.knowledge, issue);
@@ -98,6 +98,7 @@ export function checkBreakdownRecord(
 			id,
 			language,
 			reading,
+			...(definition === undefined ? {} : { definition }),
 			knowledge,
 			...(reviewDepth === undefined ? {} : { reviewDepth }),
 			sources,

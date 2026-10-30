@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "✅"
 	},
+	"definition": "etwas erfolgreich abschließen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -60,6 +61,11 @@
 				"title": "DWDS: unter Dach und Fach",
 				"url": "https://www.dwds.de/wb/unter%20Dach%20und%20Fach",
 				"supports": "The Mehrwortausdruck unter Dach und Fach, '(erfolgreich) abgeschlossen, verbindlich vereinbart', with the Wendungen ⟨etw. unter Dach und Fach bringen⟩ and ⟨unter Dach und Fach sein⟩ and, als Adverbialbestimmung, unter Dach und Fach haben, kriegen, bekommen"
+			},
+			{
+				"title": "DWDS: unter Dach und Fach",
+				"url": "https://www.dwds.de/wb/unter%20Dach%20und%20Fach",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: ⟨etw. unter Dach und Fach bringen⟩ 'etw. erfolgreich abschließen, fertigstellen, sicherstellen'"
 			}
 		]
 	},

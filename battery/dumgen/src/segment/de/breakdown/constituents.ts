@@ -23,7 +23,8 @@
  * - A phraseme, or a Lexeme written as several words: its wording's parts
  *   come from code (`phraseme-parts.ts`), and jev weighs, in one request,
  *   `breakdown-locutions`, whether a run of neighbouring parts is a
- *   Locution of its own (`zu Hause`). The wording is the bare Canonical
+ *   Locution of its own (`zu Hause`), with the meaning it has in the whole,
+ *   which the Reading's definition gives when the host has one. The wording is the bare Canonical
  *   Form, with no lexical reflexive (ADR 0052); a Saying's `sich` is a part
  *   of its own.
  *
@@ -133,10 +134,30 @@ const locutionFloor = 0.5;
 
 const none: Constituents = { kind: "NoConstituents" };
 
+/**
+ * The whole as the judge reads it, with the Reading's definition, which
+ * only the Locution question reads (ADR 0050).
+ */
+type Judged = Whole & { readonly definition?: string };
+
 /** What the judge reads about the Reading: its wording, route, sense and Sentence. */
-function wholeOf(input: BreakdownInput, key: "word" | "wording"): Whole {
-	return { key, state: breakdownState(input, key) };
+function wholeOf(input: BreakdownInput, key: "word" | "wording"): Judged {
+	return {
+		key,
+		state: breakdownState(input, key),
+		...(input.definition ? { definition: input.definition } : {}),
+	};
 }
+
+/**
+ * The Locution question's state: the whole's, with the Reading's
+ * definition when the host has it, so a run keeps the whole's meaning to
+ * be one part (`zu tun haben` is no part of `mit zu tun haben`, ADR 0050).
+ */
+const locutionState = (whole: Judged): Judged["state"] =>
+	whole.definition === undefined
+		? whole.state
+		: { ...whole.state, definition: whole.definition };
 
 /** Constituents link at least two parts; fewer is none (ADR 0050). */
 function constituentsOf(pieces: readonly ProducedPiece[]): Constituents {
@@ -269,15 +290,23 @@ const chosenAnalysis = Effect.fnUntraced(function* (
  */
 const withLocutionFront = Effect.fnUntraced(function* (
 	flat: WordAnalysis,
-	whole: Whole,
+	whole: Judged,
 	ask: Ask,
 ): Effect.fn.Return<WordAnalysis, AskFailure> {
 	const front = withFrontPhrase(flat);
 	if (front === undefined) return flat;
 	const answers = yield* ask({
 		stage: "breakdown-locutions",
-		state: whole.state,
-		questions: { l_0: noul(locutionQuestion(whole.key, front.reads)) },
+		state: locutionState(whole),
+		questions: {
+			l_0: noul(
+				locutionQuestion(
+					whole.key,
+					front.reads,
+					whole.definition !== undefined,
+				),
+			),
+		},
 	});
 	return noulOf(answers, "l_0") >= locutionFloor ? front.analysis : flat;
 });
@@ -285,7 +314,7 @@ const withLocutionFront = Effect.fnUntraced(function* (
 /** The analysis a word breaks down by, or none. */
 const analysisOf = Effect.fnUntraced(function* (
 	analyses: readonly WordAnalysis[],
-	whole: Whole,
+	whole: Judged,
 	sense: Sense,
 	ask: Ask,
 ): Effect.fn.Return<Chosen, AskFailure> {
@@ -409,6 +438,7 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	...germanSuffixes.flatMap(({ sense }) => (sense ? [sense] : [])),
 	...Object.values(hyphenPrefixGlosses),
 	locutionQuestion("wording", "…"),
+	locutionQuestion("wording", "…", true),
 ];
 
 /**
@@ -417,17 +447,21 @@ export const constituentsPromptTexts = (): readonly string[] => [
  */
 const chosenLocutions = Effect.fnUntraced(function* (
 	candidates: readonly LocutionCandidate[],
-	whole: Whole,
+	whole: Judged,
 	ask: Ask,
 ): Effect.fn.Return<LocutionCandidate[], AskFailure> {
 	const questions: Questions = {};
 	for (const [index, candidate] of candidates.entries())
 		questions[`l_${index}`] = noul(
-			locutionQuestion(whole.key, candidate.reads),
+			locutionQuestion(
+				whole.key,
+				candidate.reads,
+				whole.definition !== undefined,
+			),
 		);
 	const answers = yield* askAny(ask, {
 		stage: "breakdown-locutions",
-		state: whole.state,
+		state: locutionState(whole),
 		questions,
 	});
 	const weighed = candidates

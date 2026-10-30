@@ -14,6 +14,7 @@
 		},
 		"emojiDescription": "🏠"
 	},
+	"definition": "im eigenen Haus, in der eigenen Wohnung",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -55,6 +56,11 @@
 				"title": "DWDS: zu Hause",
 				"url": "https://www.dwds.de/wb/zu%20Hause",
 				"supports": "The wording, an adverb also spelled zuhause"
+			},
+			{
+				"title": "DWDS: zu Hause",
+				"url": "https://www.dwds.de/wb/zu%20Hause",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'im eigenen Haus, in der eigenen Wohnung'"
 			}
 		]
 	},

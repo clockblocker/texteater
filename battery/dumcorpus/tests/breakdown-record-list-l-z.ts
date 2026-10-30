@@ -31,6 +31,7 @@ export const breakdownRecordsLToZ: string[][] = [
 	["messer-schneidwerkzeug", "Lexeme NOUN 🔪", "morphemes"],
 	["ministerium", "Lexeme NOUN 🏛", "morphemes"],
 	["mirambo", "Lexeme PROPN 👨", "morphemes"],
+	["mit-zu-tun-haben", "Locution VERB 🔗", "constituents"],
 	["mitnehmen", "Lexeme VERB 🧳", "constituents"],
 	["mittlerweile", "Lexeme ADV ⏳", "constituents"],
 	["morgen", "Lexeme ADV 📅", "morphemes"],

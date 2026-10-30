@@ -260,6 +260,11 @@ export interface BreakdownRecord {
 	language: Dumling.Language;
 	/** The Reading that owns the Breakdown or Source. */
 	reading: Dumling.Reading;
+	/**
+	 * An authored definition of the Reading's sense, which its
+	 * `segment.inConstituents` case passes as the host's; an input, not gold.
+	 */
+	definition?: string;
 	knowledge: BreakdownKnowledge;
 	/** Segmentation once a person has reviewed it; absent for a Draft. */
 	reviewDepth?: "Segmentation";

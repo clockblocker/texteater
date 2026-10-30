@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "🤩"
 	},
+	"definition": "vor Freude außer sich sein",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -69,6 +70,11 @@
 				"title": "DWDS: Häuschen",
 				"url": "https://www.dwds.de/wb/H%C3%A4uschen",
 				"supports": "The Mehrwortausdruck aus dem Häuschen sein; the Etymologie gives (ganz) aus dem Häuschen sein, with ganz optional"
+			},
+			{
+				"title": "DWDS: aus dem Häuschen sein",
+				"url": "https://www.dwds.de/wb/aus%20dem%20H%C3%A4uschen%20sein",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'vor Freude und Glück außer sich sein'; 'begeistert, verzückt, euphorisch sein'"
 			}
 		]
 	},

@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "🎯"
 	},
+	"definition": "leitet einen Infinitiv ein, der den Zweck nennt",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -54,7 +55,13 @@
 				"hash": "920eb73475a80ef0"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "en.wiktionary: um",
+				"url": "https://en.wiktionary.org/wiki/um",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: um … zu with an infinitive: 'in order to'"
+			}
+		]
 	},
 	"notes": {
 		"rationale": "The open slot … is filler, never a part. um links to the SCONJ um and zu to the infinitive PART zu (de/bare-infinitive-zu)."

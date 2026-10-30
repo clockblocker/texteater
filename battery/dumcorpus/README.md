@@ -62,7 +62,10 @@ A Breakdown Record, under `records/breakdown/<language>/`, holds one
 Reading's gold Breakdown or Source: the owning Reading, and its
 `knowledge.breakdown` (Constituents, morphemes or both) or
 `knowledge.source` as dumrel stores them. Each piece is shown letters and a
-link to a Unit Shadow or Lemma, or unlinked filler. It has one Annotation
+link to a Unit Shadow or Lemma, or unlinked filler. A phraseme's or
+hyphenated word's record may add an authored `definition`, which its
+evaluation case passes as the host's definition; it is an input, never
+graded. It has one Annotation
 Layer, Segmentation, and loads when that passes;
 `schema/breakdown-record.<language>.json` completes it.
 Raw texts for intake are Text Records under `records/text/`, with the schema

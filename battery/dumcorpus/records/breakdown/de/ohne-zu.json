@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "🚫"
 	},
+	"definition": "leitet einen Infinitiv ein, der nennt, was dabei nicht geschieht",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -63,6 +64,11 @@
 				"title": "DWDS: ohne",
 				"url": "https://www.dwds.de/wb/ohne",
 				"supports": "ohne used as a conjunction in the construction ohne zu with an infinitive"
+			},
+			{
+				"title": "DWDS: ohne",
+				"url": "https://www.dwds.de/wb/ohne",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: ohne as a conjunction with a zu-infinitive: what does not happen alongside the action"
 			}
 		]
 	},

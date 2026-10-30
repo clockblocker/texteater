@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "⚽"
 	},
+	"definition": "nicht lockerlassen, sich weiter um etwas kümmern",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -75,6 +76,11 @@
 				"title": "DWDS: am Ball bleiben",
 				"url": "https://www.dwds.de/wb/am%20Ball%20bleiben",
 				"supports": "The Mehrwortausdruck am Ball bleiben, 'nicht lockerlassen'; Hauptbestandteile 1Ball, bleiben. DWDS has no entry am Ball of its own"
+			},
+			{
+				"title": "DWDS: am Ball bleiben",
+				"url": "https://www.dwds.de/wb/am%20Ball%20bleiben",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'nicht lockerlassen, nicht von jmdm. oder etw. ablassen'; 'sich weiterhin um jmdn. oder etw. kümmern'"
 			}
 		]
 	},

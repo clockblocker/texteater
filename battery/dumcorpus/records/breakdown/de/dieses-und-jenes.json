@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "🗂"
 	},
+	"definition": "allerlei Verschiedenes",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -90,6 +91,11 @@
 				"title": "DWDS: dieses und jenes",
 				"url": "https://www.dwds.de/wb/dieses%20und%20jenes",
 				"supports": "The multiword expression dieses und jenes / dies und jenes, 'allerlei Verschiedenes'"
+			},
+			{
+				"title": "DWDS: dieses und jenes",
+				"url": "https://www.dwds.de/wb/dieses%20und%20jenes",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'allerlei Verschiedenes'"
 			}
 		]
 	},

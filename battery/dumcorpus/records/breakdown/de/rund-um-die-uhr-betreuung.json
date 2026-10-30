@@ -14,6 +14,7 @@
 		},
 		"emojiDescription": "⏰🤲"
 	},
+	"definition": "ununterbrochene Pflege und Versorgung, Tag und Nacht",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -62,6 +63,11 @@
 				"title": "DWDS: Rund-um-die-Uhr-Betreuung",
 				"url": "https://www.dwds.de/wb/Rund-um-die-Uhr-Betreuung",
 				"supports": "No entry in DWDS's lexical sources"
+			},
+			{
+				"title": "DWDS: Uhr",
+				"url": "https://www.dwds.de/wb/Uhr",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: rund um die Uhr, 'ununterbrochen, pausenlos', of the Betreuung"
 			}
 		]
 	},

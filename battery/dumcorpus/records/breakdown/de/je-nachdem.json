@@ -14,6 +14,7 @@
 		},
 		"emojiDescription": "🔀"
 	},
+	"definition": "abhängig von den Umständen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -75,6 +76,11 @@
 				"title": "en.wiktionary: je nachdem",
 				"url": "https://en.wiktionary.org/wiki/je_nachdem",
 				"supports": "Adverb, with ob or an interrogative 'depending on' (je nachdem, ob man es gut findet)"
+			},
+			{
+				"title": "DWDS: je nachdem",
+				"url": "https://www.dwds.de/wb/je%20nachdem",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'das kommt auf die Umstände an'; 'abhängig davon ob …, wie …, was …'"
 			}
 		]
 	},

@@ -140,6 +140,14 @@ the noun-or-verb tolerance, which the user confirmed on #1241 on
 2026-10-25: a compound's first part whose letters spell both a noun and a
 verb's stem (`Segel` in `Segelboot`) passes linked to either.
 
+A multiword or hyphenated record carries an authored `definition`, one
+short German paraphrase of its sense taken from DWDS or en.wiktionary and
+cited in its `sources.references`. The case passes it to
+`segment.inConstituents` as tf-demo passes the definition Knowledge
+produced, and only the Locution question reads it (ADR 0050, the user on
+#1241, 2026-10-30). These definitions are authored inputs, not graded, and
+no Luna call produces them: a case without one is asked as before.
+
 They answer jev through the lab's cache, as segment.inUnits does, but count
 against no lab round: a live run needs `--budget` (fresh jev input tokens),
 the budget the user granted that round, prices itself first, refuses a

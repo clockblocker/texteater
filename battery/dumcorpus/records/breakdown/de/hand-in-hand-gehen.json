@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "🤝"
 	},
+	"definition": "eng verbunden mit etwas einhergehen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -60,6 +61,11 @@
 				"title": "Duden: Hand",
 				"url": "https://www.duden.de/rechtschreibung/Hand",
 				"supports": "mit etwas Hand in Hand gehen 'einhergehen', beside Hand in Hand arbeiten"
+			},
+			{
+				"title": "Duden: Hand",
+				"url": "https://www.duden.de/rechtschreibung/Hand",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: mit etwas Hand in Hand gehen 'einhergehen'"
 			}
 		]
 	},

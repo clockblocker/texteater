@@ -33,6 +33,12 @@ export type BreakdownInput = {
 	readonly reading: Dumling.Reading;
 	/** The Sentence that created the Reading, when the host has it. */
 	readonly sentence?: string;
+	/**
+	 * The Reading's definition, when the host has it. Only the question
+	 * whether a run inside a wording is a Locution of its own reads it, since
+	 * an emoji can't say whether that run keeps its meaning (ADR 0050).
+	 */
+	readonly definition?: string;
 };
 
 /**

@@ -14,6 +14,7 @@
 		},
 		"emojiDescription": "✋"
 	},
+	"definition": "wirklich, tatsächlich",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -71,6 +72,11 @@
 				"title": "DWDS: wahr",
 				"url": "https://www.dwds.de/wb/wahr",
 				"supports": "⟨wahr und wahrhaftig⟩, veraltend, with Fontane's »wahr und wahrhaftig nicht«"
+			},
+			{
+				"title": "DWDS: wahr",
+				"url": "https://www.dwds.de/wb/wahr",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'wirklich, tatsächlich', the sense ⟨wahr und wahrhaftig⟩ stresses"
 			}
 		]
 	},

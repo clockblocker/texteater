@@ -14,6 +14,7 @@
 		},
 		"emojiDescription": "📧"
 	},
+	"definition": "elektronische Nachricht",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -58,6 +59,11 @@
 				"title": "DWDS: e-",
 				"url": "https://www.dwds.de/wb/e-",
 				"supports": "2e-, an affix in English loans and words built on their model, 'Synonym zu elektronisch'"
+			},
+			{
+				"title": "DWDS: E-Mail",
+				"url": "https://www.dwds.de/wb/E-Mail",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: '(briefähnliche) elektronische Nachricht'"
 			}
 		]
 	},

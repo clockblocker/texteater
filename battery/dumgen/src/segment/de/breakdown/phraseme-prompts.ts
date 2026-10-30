@@ -19,7 +19,10 @@ export const phrasemeRouteGuide =
  * Whether a run inside a wording is a Locution of its own (#1241 round 4):
  * its test is a whole phrase that keeps its fixed meaning outside this
  * wording, since a plain run inside an idiom weighed as high as a real one
- * under the old wording, whose example (vor allem) also primed one.
+ * under the old wording, whose example (vor allem) also primed one. With
+ * the Reading's definition in the state, that meaning is the one the run
+ * has inside the whole, which the definition gives (ADR 0050, the user on
+ * #1241, 2026-10-30): an emoji can't carry it.
  */
-export const locutionQuestion = (key: string, reads: string) =>
-	`Inside \`${key}\`, is "${reads}" a fixed expression that dictionaries list as a headword or idiom of its own, used apart from \`${key}\` (auf jeden Fall)? Test it: it must be a whole phrase that can stand alone in other sentences with this same fixed meaning. Answer no for ordinary words that just combine here, for words cut out of a longer phrase, and for words fixed only inside this expression (ins Gras in ins Gras beißen).`;
+export const locutionQuestion = (key: string, reads: string, defined = false) =>
+	`Inside \`${key}\`, is "${reads}" a fixed expression that dictionaries list as a headword or idiom of its own, used apart from \`${key}\` (auf jeden Fall)? Test it: it must be a whole phrase that can stand alone in other sentences with this same fixed meaning${defined ? `, the one it has inside \`${key}\`, whose meaning \`definition\` gives` : ""}. Answer no for ordinary words that just combine here, for words cut out of a longer phrase, and for words fixed only inside this expression (ins Gras in ins Gras beißen).`;

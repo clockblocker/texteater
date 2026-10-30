@@ -120,6 +120,13 @@ with its noun
 ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)):
 `[[Faden|den Faden]] + [[verlieren]]`. Fused words split by component.
 
+- A run of words inside the wording is one part only when it keeps the
+  meaning it has inside the whole. `zu Hause` keeps 'at home' in `wie zu
+  Hause fühlen`, but `zu tun haben` alone means 'be busy', so `mit zu tun
+  haben` 'have to do with' is `mit · zu · tun · haben` (the user,
+  2026-10-30). The judge tests this against the Reading's definition as
+  well as its emoji, since an emoji can't say whether a run keeps its
+  meaning.
 - Placeholders (`jdm.`, `etwas`) are never parts. Negation is a part.
 - A lexical reflexive is no part. It fills the Reading's Reflexive Slot and
   is in no Locution's wording (ADR 0052). A verb inside the wording links to

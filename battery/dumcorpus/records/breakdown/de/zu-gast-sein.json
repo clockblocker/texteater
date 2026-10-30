@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "🛎"
 	},
+	"definition": "bei jemandem zu Besuch sein",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -69,6 +70,11 @@
 				"title": "DWDS: Gast",
 				"url": "https://www.dwds.de/wb/Gast",
 				"supports": "The Mehrwortausdruck bei jmdm., etw. zu Gast sein; DWDS has no entry zu Gast of its own"
+			},
+			{
+				"title": "DWDS: Gast",
+				"url": "https://www.dwds.de/wb/Gast",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'zur Bewirtung oder vorübergehenden Beherbergung eingeladene oder aufgenommene Person'"
 			}
 		]
 	},

@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "🪞🏠😌"
 	},
+	"definition": "sich irgendwo heimisch und wohl fühlen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -84,6 +85,11 @@
 				"title": "DWDS: fühlen",
 				"url": "https://www.dwds.de/wb/f%C3%BChlen",
 				"supports": "Reflexive sich fühlen, 'sich in einem bestimmten seelischen Zustand befinden': sich dort heimisch, wohl fühlen"
+			},
+			{
+				"title": "DWDS: fühlen",
+				"url": "https://www.dwds.de/wb/f%C3%BChlen",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: sich wie zu Hause fühlen, 'sich heimisch fühlen'; sich dort heimisch, wohl fühlen"
 			}
 		]
 	},

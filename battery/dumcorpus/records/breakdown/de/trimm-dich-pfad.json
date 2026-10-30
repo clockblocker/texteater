@@ -14,6 +14,7 @@
 		},
 		"emojiDescription": "🏃🌲"
 	},
+	"definition": "Weg im Wald mit Stationen für Fitnessübungen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -79,6 +80,11 @@
 				"title": "DWDS: Trimm-dich-Pfad",
 				"url": "https://www.dwds.de/wb/Trimm-dich-Pfad",
 				"supports": "The Wortzerlegung trimmen dich Pfad, flat"
+			},
+			{
+				"title": "DWDS: Trimm-dich-Pfad",
+				"url": "https://www.dwds.de/wb/Trimm-dich-Pfad",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'häufig durch einen Wald führender … Weg mit verschiedenartigen Geräten und Anweisungen für Übungen'"
 			}
 		]
 	},

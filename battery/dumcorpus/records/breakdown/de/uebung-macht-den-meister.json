@@ -12,6 +12,7 @@
 		},
 		"emojiDescription": "🔁🏆"
 	},
+	"definition": "durch stetiges Training erlangt man Können",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -66,6 +67,12 @@
 	"sources": {
 		"adrs": ["ADR-0031", "ADR-0035", "ADR-0041", "ADR-0050"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Übung macht den Meister",
+				"url": "https://www.dwds.de/wb/%C3%9Cbung%20macht%20den%20Meister",
+				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'bestimmte Fähigkeiten erlangt man (nur) durch stetiges Training'"
+			}
+		]
 	}
 }
