@@ -14,7 +14,6 @@
 		},
 		"emojiDescription": "🏃🌲"
 	},
-	"definition": "Weg im Wald mit Stationen für Fitnessübungen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -80,15 +79,10 @@
 				"title": "DWDS: Trimm-dich-Pfad",
 				"url": "https://www.dwds.de/wb/Trimm-dich-Pfad",
 				"supports": "The Wortzerlegung trimmen dich Pfad, flat"
-			},
-			{
-				"title": "DWDS: Trimm-dich-Pfad",
-				"url": "https://www.dwds.de/wb/Trimm-dich-Pfad",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'häufig durch einen Wald führender … Weg mit verschiedenartigen Geräten und Anweisungen für Übungen'"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "A phrasal compound with no stored inner unit is flat, every word a part (#1241, 2026-10-24): Trimm shows the verb stem of trimmen, and dich links to the reflexivity unit sich."
+		"rationale": "A phrasal compound is flat, every word a part (ADR 0054, #1241, 2026-10-24 and 2026-10-30): Trimm shows the verb stem of trimmen, and dich links to the reflexivity unit sich."
 	}
 }

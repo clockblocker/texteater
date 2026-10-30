@@ -12,20 +12,63 @@
 		},
 		"emojiDescription": "✅"
 	},
-	"definition": "etwas erfolgreich abschließen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
 				{
-					"letters": "unter Dach und Fach",
+					"letters": "unter",
 					"target": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
-						"kind": "ADV",
-						"canonicalForm": "unter Dach und Fach",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "unter",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Dach",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Dach",
 						"coreFeatures": {
-							"comparable": null
+							"gender": "Neut"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "und",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "und",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Fach",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Fach",
+						"coreFeatures": {
+							"gender": "Neut"
 						}
 					}
 				},
@@ -50,26 +93,16 @@
 	},
 	"sources": {
 		"adrs": ["ADR-0039", "ADR-0050"],
-		"rules": [
-			{
-				"rule": "de/comparability-is-lexical",
-				"hash": "b72c043c004f9dc9"
-			}
-		],
+		"rules": [],
 		"references": [
 			{
 				"title": "DWDS: unter Dach und Fach",
 				"url": "https://www.dwds.de/wb/unter%20Dach%20und%20Fach",
 				"supports": "The Mehrwortausdruck unter Dach und Fach, '(erfolgreich) abgeschlossen, verbindlich vereinbart', with the Wendungen ⟨etw. unter Dach und Fach bringen⟩ and ⟨unter Dach und Fach sein⟩ and, als Adverbialbestimmung, unter Dach und Fach haben, kriegen, bekommen"
-			},
-			{
-				"title": "DWDS: unter Dach und Fach",
-				"url": "https://www.dwds.de/wb/unter%20Dach%20und%20Fach",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: ⟨etw. unter Dach und Fach bringen⟩ 'etw. erfolgreich abschließen, fertigstellen, sicherstellen'"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "unter Dach und Fach is a Locution ADV of its own, used with other verbs (unter Dach und Fach sein, haben, kriegen), so it is one part, the biggest unit inside the wording, as auf Nummer sicher is in auf Nummer sicher gehen (ADR 0050). The placeholder etw. is no part."
+		"rationale": "A Locution's Constituents are its words, each linked to its own Lexeme, with no run of them a part (ADR 0050, the user on #1241, 2026-10-30): unter, Dach, und, Fach and bringen, though unter Dach und Fach is a Locution ADV of its own. The placeholder etw. is no part."
 	}
 }

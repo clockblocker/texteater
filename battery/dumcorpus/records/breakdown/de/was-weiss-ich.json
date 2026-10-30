@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🤷"
 	},
-	"definition": "Ausdruck der Ratlosigkeit: keine Ahnung",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -89,11 +88,6 @@
 				"title": "DWDS: was weiß ich",
 				"url": "https://www.dwds.de/wb/was%20wei%C3%9F%20ich",
 				"supports": "The multiword expression was weiß ich, 'Ausdruck der Ratlosigkeit: ich weiß (es) nicht'"
-			},
-			{
-				"title": "DWDS: was weiß ich",
-				"url": "https://www.dwds.de/wb/was%20wei%C3%9F%20ich",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'ich weiß (es) nicht (und es interessiert mich auch nicht)'"
 			}
 		]
 	},

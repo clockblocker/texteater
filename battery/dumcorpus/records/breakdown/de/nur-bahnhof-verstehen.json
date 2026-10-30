@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "😵‍💫"
 	},
-	"definition": "überhaupt nichts begreifen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -81,11 +80,6 @@
 				"title": "Duden: Bahnhof",
 				"url": "https://www.duden.de/rechtschreibung/Bahnhof",
 				"supports": "The wording, the Locution's Canonical Form ([immer] nur Bahnhof verstehen)"
-			},
-			{
-				"title": "en.wiktionary: nur Bahnhof verstehen",
-				"url": "https://en.wiktionary.org/wiki/nur_Bahnhof_verstehen",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'to understand nothing at all'"
 			}
 		]
 	}

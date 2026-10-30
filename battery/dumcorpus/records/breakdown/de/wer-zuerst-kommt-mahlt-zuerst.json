@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🥇"
 	},
-	"definition": "wer früh da ist, wird zuerst berücksichtigt",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -123,11 +122,6 @@
 				"title": "DWDS: wer zuerst kommt, mahlt zuerst",
 				"url": "https://www.dwds.de/wb/wer%20zuerst%20kommt,%20mahlt%20zuerst",
 				"supports": "The wording, the Saying's Canonical Form"
-			},
-			{
-				"title": "DWDS: wer zuerst kommt, mahlt zuerst",
-				"url": "https://www.dwds.de/wb/wer%20zuerst%20kommt,%20mahlt%20zuerst",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'wer als Erster, wer früh da ist, wird zuerst berücksichtigt'"
 			}
 		]
 	},

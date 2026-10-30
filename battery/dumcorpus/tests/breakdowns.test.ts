@@ -1,5 +1,11 @@
 import { describe, expect, test } from "bun:test";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+	mkdirSync,
+	mkdtempSync,
+	readFileSync,
+	rmSync,
+	writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -62,21 +68,40 @@ describe("Breakdown Records", () => {
 		]);
 	});
 
-	test("let a Locution be a phraseme's part, broken down one level further, and spell the wording without its lexical reflexive", () => {
+	test("break a Locution down to its words, never a Locution part, and spell the wording without its lexical reflexive (2026-10-30)", () => {
 		expect(
 			pieces(byId("breakdown/de/wie-zu-hause-fuehlen"), "constituents"),
 		).toEqual([
 			"wie → wie",
 			" ",
-			"zu Hause → zu Hause",
-			" ",
-			"fühlen → fühlen",
-		]);
-		expect(pieces(byId("breakdown/de/zu-hause"), "constituents")).toEqual([
 			"zu → zu",
 			" ",
 			"Hause → Haus",
+			" ",
+			"fühlen → fühlen",
 		]);
+		const id = "breakdown/de/hand-in-hand-gehen";
+		const json = JSON.parse(
+			readFileSync(
+				join(import.meta.dir, `../records/${id}.json`),
+				"utf8",
+			),
+		);
+		json.knowledge.breakdown.constituents.splice(0, 5, {
+			letters: "Hand in Hand",
+			target: {
+				unitKind: "Lemma",
+				language: "de",
+				family: "Locution",
+				kind: "ADV",
+				canonicalForm: "Hand in Hand",
+				coreFeatures: { comparable: null },
+			},
+		});
+		const checked = checkBreakdownRecord(id, json);
+		expect(
+			[...checked.errors, ...checked.issues].map(({ path }) => path),
+		).toContain("knowledge.breakdown.constituents.0.target");
 	});
 
 	test("split each decided single-word path", () => {

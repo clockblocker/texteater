@@ -39,16 +39,11 @@ const pieceSchema = z.strictObject({
 
 export type BreakdownPiece = z.infer<typeof pieceSchema>;
 
-/**
- * A case's input: the Reading as the record owns it and, for a constituents
- * case, the record's authored definition, which the host would pass from
- * Knowledge. The definition is an input, never graded.
- */
+/** A case's input: the Reading as the record owns it. */
 export const breakdownInputSchema = z.strictObject({
 	reading: z.custom<Dumcorpus.BreakdownRecord["reading"]>(
 		(value) => typeof value === "object" && value !== null,
 	),
-	definition: z.string().optional(),
 });
 
 export const constituentsOutputSchema = z.discriminatedUnion("kind", [
@@ -158,12 +153,7 @@ export function constituentsCases(
 		const constituents = record.knowledge.breakdown?.constituents;
 		const goldCase: BreakdownCase<ConstituentsOutput> = {
 			id: record.id,
-			input: {
-				reading: record.reading,
-				...(record.definition === undefined
-					? {}
-					: { definition: record.definition }),
-			},
+			input: { reading: record.reading },
 			idealOutput:
 				constituents === undefined
 					? { kind: "NoConstituents" }

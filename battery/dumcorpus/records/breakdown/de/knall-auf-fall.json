@@ -14,7 +14,6 @@
 		},
 		"emojiDescription": "💥"
 	},
-	"definition": "sehr plötzlich und überraschend",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -77,11 +76,6 @@
 				"title": "DWDS: Knall auf Fall",
 				"url": "https://www.dwds.de/wb/Knall%20auf%20Fall",
 				"supports": "The Mehrwortausdruck Knall auf Fall, '(sehr) plötzlich, (völlig) überraschend', as an Adverbialbestimmung; Hauptbestandteile Knall, Fall"
-			},
-			{
-				"title": "DWDS: Knall auf Fall",
-				"url": "https://www.dwds.de/wb/Knall%20auf%20Fall",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: '(sehr) plötzlich, (völlig) überraschend'"
 			}
 		]
 	},

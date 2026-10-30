@@ -12,20 +12,49 @@
 		},
 		"emojiDescription": "🤝"
 	},
-	"definition": "eng verbunden mit etwas einhergehen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
 				{
-					"letters": "Hand in Hand",
+					"letters": "Hand",
 					"target": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
-						"kind": "ADV",
-						"canonicalForm": "Hand in Hand",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Hand",
 						"coreFeatures": {
-							"comparable": null
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "in",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "in",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Hand",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Hand",
+						"coreFeatures": {
+							"gender": "Fem"
 						}
 					}
 				},
@@ -61,15 +90,10 @@
 				"title": "Duden: Hand",
 				"url": "https://www.duden.de/rechtschreibung/Hand",
 				"supports": "mit etwas Hand in Hand gehen 'einhergehen', beside Hand in Hand arbeiten"
-			},
-			{
-				"title": "Duden: Hand",
-				"url": "https://www.duden.de/rechtschreibung/Hand",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: mit etwas Hand in Hand gehen 'einhergehen'"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "Hand in Hand is a Locution ADV of its own, used with other verbs (Hand in Hand arbeiten), so it is one part, the biggest unit inside the wording (ADR 0050)."
+		"rationale": "A Locution's Constituents are its words, each linked to its own Lexeme, with no run of them a part (ADR 0050, the user on #1241, 2026-10-30): Hand, in, Hand and gehen, though Hand in Hand is a Locution ADV of its own."
 	}
 }

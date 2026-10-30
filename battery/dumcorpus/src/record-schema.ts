@@ -288,13 +288,6 @@ export function breakdownRecordFileSchema<
 		reading: reading.describe(
 			"The Reading that owns the Breakdown: its Lemma and Emoji Description, as Dumling normalizes them.",
 		),
-		definition: z
-			.string()
-			.min(1)
-			.describe(
-				"An authored definition of the Reading's sense, one short German paraphrase as Knowledge writes one (mit etwas zusammenhängen), from a dictionary's entry for that sense. segment.inConstituents's case reads it as the definition the host passes; it is an input, never graded.",
-			)
-			.optional(),
 		knowledge: z
 			.strictObject({
 				breakdown: breakdown

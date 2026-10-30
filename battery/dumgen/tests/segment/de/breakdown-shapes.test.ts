@@ -4,7 +4,6 @@ import type { BreakdownInput } from "../../../src/segment/breakdown-pieces.js";
 import { germanConstituents } from "../../../src/segment/de/breakdown/constituents.js";
 import { formCandidates } from "../../../src/segment/de/breakdown/forms.js";
 import { wordAnalyses } from "../../../src/segment/de/breakdown/word-analyses.js";
-import { phraseForms } from "../../../src/segment/de/breakdown/word-prompts.js";
 import { input, judgeWanting, shown } from "./breakdown-support.js";
 
 // The four shapes the user's 2026-10-24 Breakdown rulings need (#1280),
@@ -105,24 +104,8 @@ describe("E before a hyphen may be the prefix e- (DWDS 2e-)", () => {
 	});
 });
 
-describe("a hyphenated compound's front phrase may be a Locution (ADR 0054)", () => {
-	// DWDS: Kopf-an-Kopf-Rennen, Wortzerlegung "Kopf an Kopf" (Mehrwortausdruck) + "Rennen".
-	test("jev weighs the words before the last hyphen as one fixed expression", async () => {
-		const judge = judgeWanting("Kopf an Kopf", "Locution/ADV", "Rennen");
-		expect(
-			await run(
-				input("Lexeme", "NOUN", "Kopf-an-Kopf-Rennen", "🏇"),
-				judge,
-			),
-		).toEqual([
-			"Kopf-an-Kopf→Locution/ADV:Kopf an Kopf",
-			"-",
-			"Rennen→Lexeme/NOUN:Rennen",
-		]);
-		expect(judge.stages()[0]).toBe("breakdown-locutions");
-	});
-
-	test("a front phrase jev weighs no fixed expression stays flat", async () => {
+describe("a hyphenated compound's front phrase is flat, every word a part (ADR 0054)", () => {
+	test("Kopf-an-Kopf-Rennen links each word, and no run is weighed as a Locution", async () => {
 		const judge = judgeWanting(
 			"r_0=Lexeme/NOUN",
 			"r_1=Lexeme/ADP",
@@ -142,20 +125,9 @@ describe("a hyphenated compound's front phrase may be a Locution (ADR 0054)", ()
 			"-",
 			"Rennen→Lexeme/NOUN:Rennen",
 		]);
-	});
-
-	test("its first word is offered lower-case too, unless it comes back capitalized, which makes it a noun", () => {
-		expect(phraseForms("Hin und her")).toEqual([
-			"Hin und her",
-			"hin und her",
-		]);
-		expect(phraseForms("Kopf an Kopf")).toEqual(["Kopf an Kopf"]);
-	});
-
-	test("one word before the hyphen is no front phrase, so nothing is weighed", async () => {
-		const judge = judgeWanting("Lexeme/NOUN", "Vitamin", "Mangel");
-		await run(input("Lexeme", "NOUN", "Vitamin-Mangel"), judge);
-		expect(judge.stages()).not.toContain("breakdown-locutions");
+		expect(offered(judge, "breakdown-routes")).not.toContain(
+			"Locution/ADV",
+		);
 	});
 });
 

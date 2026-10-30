@@ -15,8 +15,7 @@ const dumgenSegmenters: Segmenters<Jev> = {
  * member indices are the Sentence with its target; the Attestation carries
  * the attested government (`valencyEvidence`), which Dumgen appends only
  * on a `New` occurrence (#677). A run that asks for the Breakdown then
- * runs the segmenters on what the Source left (`knowledgeBreakdown.ts`),
- * with the run's definition or, failing that, the stored one;
+ * runs the segmenters on what the Source left (`knowledgeBreakdown.ts`);
  * a Source publication would drop for pointing back leaves them to run.
  * Every failure comes back as a value, a Catalog Miss among them; the only
  * error is `onContribution`'s. `ready` runs when a run first needs the
@@ -51,9 +50,6 @@ export function dumgenKnowledgeProducer(
 					reading: input.reading,
 					breakdown: input.breakdown,
 					sentence: segments.map(({ text }) => text).join(""),
-					...(input.storedDefinition === undefined
-						? {}
-						: { storedDefinition: input.storedDefinition }),
 				},
 				options.sourcePointsBack,
 			);

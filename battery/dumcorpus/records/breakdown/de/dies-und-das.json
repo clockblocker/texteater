@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🧺"
 	},
-	"definition": "allerlei Verschiedenes",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -87,11 +86,6 @@
 				"title": "DWDS: dieser",
 				"url": "https://www.dwds.de/wb/dieser",
 				"supports": "The multiword expression dies und das, 'allerlei Verschiedenes', under the substantival use"
-			},
-			{
-				"title": "DWDS: dies und das",
-				"url": "https://www.dwds.de/wb/dies%20und%20das",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'allerlei Verschiedenes'"
 			}
 		]
 	},

@@ -12,20 +12,49 @@
 		},
 		"emojiDescription": "🦺"
 	},
-	"definition": "kein Risiko eingehen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
 				{
-					"letters": "auf Nummer sicher",
+					"letters": "auf",
 					"target": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
-						"kind": "ADV",
-						"canonicalForm": "auf Nummer sicher",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "auf",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Nummer",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Nummer",
 						"coreFeatures": {
-							"comparable": null
+							"gender": "Fem"
+						}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "sicher",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "sicher",
+						"coreFeatures": {
+							"comparable": "Yes"
 						}
 					}
 				},
@@ -61,15 +90,10 @@
 				"title": "DWDS: auf Nummer sicher",
 				"url": "https://www.dwds.de/wb/auf%20Nummer%20sicher",
 				"supports": "The Mehrwortausdruck auf Nummer sicher, 'häufig adverbiell', with ⟨auf Nummer sicher gehen⟩ and ⟨auf Nummer sicher setzen⟩ and the collocations auf Nummer sicher spielen, fahren"
-			},
-			{
-				"title": "DWDS: auf Nummer sicher gehen",
-				"url": "https://www.dwds.de/wb/auf%20Nummer%20sicher%20gehen",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'unter Umgehung von Gefahr, Risiken vermeidend'"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "auf Nummer sicher is a Locution ADV of its own, used with other verbs (auf Nummer sicher spielen, setzen), so it is one part, the biggest unit inside the wording, as Hand in Hand is in Hand in Hand gehen (ADR 0050)."
+		"rationale": "A Locution's Constituents are its words, each linked to its own Lexeme, with no run of them a part (ADR 0050, the user on #1241, 2026-10-30): auf, Nummer, sicher and gehen, though auf Nummer sicher is a Locution ADV of its own. sicher links to its one Duden and DWDS headword, the adjective, which compares (sicherer, am sichersten; de/comparability-is-lexical)."
 	}
 }

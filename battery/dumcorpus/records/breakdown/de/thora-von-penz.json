@@ -15,7 +15,6 @@
 		},
 		"emojiDescription": "👩"
 	},
-	"definition": "vollständiger Name einer Frau",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -80,11 +79,6 @@
 				"title": "Projekt Gutenberg: Effi Briest, 24. Kapitel",
 				"url": "https://www.projekt-gutenberg.org/fontane/effibrie/chap024.html",
 				"supports": "»vor allem von Thora von Penz, die ... typisch skandinavisch gewesen sei«: one woman's full name"
-			},
-			{
-				"title": "Projekt Gutenberg: Effi Briest, 24. Kapitel",
-				"url": "https://www.projekt-gutenberg.org/fontane/effibrie/chap024.html",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: one woman's full name"
 			}
 		]
 	},

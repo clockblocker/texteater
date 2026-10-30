@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🪞🏠😌"
 	},
-	"definition": "sich irgendwo heimisch und wohl fühlen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -31,15 +30,29 @@
 					"letters": " "
 				},
 				{
-					"letters": "zu Hause",
+					"letters": "zu",
 					"target": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
-						"kind": "ADV",
-						"canonicalForm": "zu Hause",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "zu",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": " "
+				},
+				{
+					"letters": "Hause",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Haus",
 						"coreFeatures": {
-							"comparable": null
+							"gender": "Neut"
 						}
 					}
 				},
@@ -85,15 +98,10 @@
 				"title": "DWDS: fühlen",
 				"url": "https://www.dwds.de/wb/f%C3%BChlen",
 				"supports": "Reflexive sich fühlen, 'sich in einem bestimmten seelischen Zustand befinden': sich dort heimisch, wohl fühlen"
-			},
-			{
-				"title": "DWDS: fühlen",
-				"url": "https://www.dwds.de/wb/f%C3%BChlen",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: sich wie zu Hause fühlen, 'sich heimisch fühlen'; sich dort heimisch, wohl fühlen"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "A phraseme's Constituents are the biggest units strictly inside its wording, so the Locution zu Hause is one part (ADR 0050). The reflexive is lexical: in the state sense (DWDS ⟨sich fühlen⟩) no other object can stand in place of sich, so it fills the Reading's Reflexive Slot (Acc) and stays out of the wording wie zu Hause fühlen, which the Breakdown spells (ADR 0052). fühlen links to VERB fühlen. Comparison wie before a phrase is CCONJ (de/relative-w-adverb-fills-a-slot)."
+		"rationale": "A Locution's Constituents are its words, each linked to its own Lexeme, with no run of them a part (ADR 0050, the user on #1241, 2026-10-30): wie, zu, Hause and fühlen. zu before the noun Hause is the ADP zu, and Hause, an old dative, links to the Lemma Haus. The reflexive is lexical: in the state sense (DWDS ⟨sich fühlen⟩) no other object can stand in place of sich, so it fills the Reading's Reflexive Slot (Acc) and stays out of the wording wie zu Hause fühlen, which the Breakdown spells (ADR 0052). fühlen links to VERB fühlen. Comparison wie before a phrase is CCONJ (de/relative-w-adverb-fills-a-slot)."
 	}
 }

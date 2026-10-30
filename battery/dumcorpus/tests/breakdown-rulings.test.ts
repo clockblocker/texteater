@@ -49,7 +49,7 @@ describe("Breakdown rulings of 2026-10-24", () => {
 		]);
 	});
 
-	test("break a phrasal compound down flat, unless its front phrase is a Locution", () => {
+	test("break a phrasal compound down flat, its front phrase never one Locution part (2026-10-30)", () => {
 		expect(constituents("trimm-dich-pfad")).toEqual([
 			"Trimm → Lexeme VERB trimmen",
 			"-",
@@ -58,7 +58,11 @@ describe("Breakdown rulings of 2026-10-24", () => {
 			"Pfad → Lexeme NOUN Pfad",
 		]);
 		expect(constituents("rund-um-die-uhr-betreuung")).toEqual([
-			"Rund-um-die-Uhr → Locution ADV rund um die Uhr",
+			"Rund → Lexeme ADJ rund",
+			"-",
+			"um → Lexeme ADP um",
+			"-",
+			"die-Uhr → Lexeme NOUN Uhr",
 			"-",
 			"Betreuung → Lexeme NOUN Betreuung",
 		]);

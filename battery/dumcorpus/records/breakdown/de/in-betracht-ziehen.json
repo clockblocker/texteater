@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🤔"
 	},
-	"definition": "etwas erwägen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -70,11 +69,6 @@
 				"title": "Duden: Betracht",
 				"url": "https://www.duden.de/rechtschreibung/Betracht",
 				"supports": "The wording, the Locution's Canonical Form"
-			},
-			{
-				"title": "DWDS: in Betracht ziehen",
-				"url": "https://www.dwds.de/wb/in%20Betracht%20ziehen",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'etw. erwägen'"
 			}
 		]
 	},

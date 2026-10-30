@@ -3,6 +3,7 @@ import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type { BreakdownKnowledge } from "./corpus-types.js";
 import { isGermanAttributiveForm } from "./inventories/de/adjective-declension.js";
+import { germanArticles } from "./inventories/de/determiner-paradigms.js";
 import { germanReflexiveForms } from "./inventories/de/drill-down.js";
 import { germanInterfixes } from "./inventories/de/interfixes.js";
 import {
@@ -89,8 +90,7 @@ const letterFolds: Readonly<Record<string, string>> = {
 
 /**
  * Text as shown letters compare to a Canonical Form: case, umlaut, hyphens
- * and spaces aside, so a hyphenated Locution part spells its wording
- * (`Rund-um-die-Uhr` for `rund um die Uhr`).
+ * and spaces aside.
  */
 function comparable(text: string, language: Dumling.Language): string {
 	return foldCase(text, language)
@@ -110,6 +110,30 @@ const reflexiveForms: Partial<
 > = { de: germanReflexiveForms };
 
 /**
+ * Each language's article forms (ADR 0040): in a phrasal compound, an
+ * article joins the noun that owns it, `die-Uhr` in
+ * `Rund-um-die-Uhr-Betreuung` linking to NOUN `Uhr`.
+ */
+const articleForms: Partial<Record<Dumling.Language, ReadonlySet<string>>> = {
+	de: new Set(germanArticles.map(({ lemma }) => lemma.canonicalForm)),
+};
+
+/** A noun's shown letters without the article joined to them by a hyphen. */
+function withoutArticle(
+	letters: string,
+	target: Dumrel.LinkTarget,
+	language: Dumling.Language,
+): string {
+	const [article, ...rest] = letters.split("-");
+	return (target.kind === "NOUN" || target.kind === "PROPN") &&
+		rest.length === 1 &&
+		article !== undefined &&
+		articleForms[language]?.has(foldCase(article, language)) === true
+		? rest.join("-")
+		: letters;
+}
+
+/**
  * Each language's test for an adjective's attributive form (ADR 0050): a
  * declension stem and an attributive ending, `Lange` in `Langeweile` for
  * ADJ `lang`, `Hohe` in `Hohepriester` for ADJ `hoch`.
@@ -126,8 +150,9 @@ const attributiveForms: Partial<
  * Canonical Form, compared case-insensitively and with umlauts and Hebrew
  * final forms folded, or a truncation of it, which covers a dropped final -e
  * (`Schul`), a verb stem (`Fahr`) and a blend's part (`br`, `unch`). A digit
- * stands for a numeral, a reflexive form for the reflexivity unit, and an
- * adjective's attributive form for the adjective.
+ * stands for a numeral, a reflexive form for the reflexivity unit, an
+ * adjective's attributive form for the adjective, and a noun may show its
+ * article joined by a hyphen.
  */
 function lettersFit(
 	letters: string,
@@ -148,7 +173,10 @@ function lettersFit(
 		attributiveForms[language]?.(letters, target.canonicalForm) === true
 	)
 		return true;
-	const shown = comparable(letters, language);
+	const shown = comparable(
+		withoutArticle(letters, target, language),
+		language,
+	);
 	const form = comparable(target.canonicalForm, language);
 	return shown.length > 0 && (form.startsWith(shown) || form.endsWith(shown));
 }
@@ -223,15 +251,17 @@ function targetIssues(
 	const { target } = piece;
 	const issues: BreakdownIssue[] = [];
 	const phraseme = phrasemeFamilies.includes(family);
-	if (
-		part === "constituents" &&
-		phraseme &&
-		target.family !== "Lexeme" &&
-		target.family !== "Locution"
-	)
+	if (part === "constituents" && phraseme && target.family !== "Lexeme")
 		issues.push({
 			path: `${path}.target`,
-			message: "A phraseme's parts are Lexemes or Locutions",
+			message:
+				"A phraseme's parts are its words, each linked to its Lexeme, never a Locution",
+		});
+	if (part === "constituents" && !phraseme && target.family === "Locution")
+		issues.push({
+			path: `${path}.target`,
+			message:
+				"A word's part is never a Locution: a phrasal compound's front phrase is its words",
 		});
 	if (
 		part === "constituents" &&

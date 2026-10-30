@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🛎"
 	},
-	"definition": "bei jemandem zu Besuch sein",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -70,15 +69,10 @@
 				"title": "DWDS: Gast",
 				"url": "https://www.dwds.de/wb/Gast",
 				"supports": "The Mehrwortausdruck bei jmdm., etw. zu Gast sein; DWDS has no entry zu Gast of its own"
-			},
-			{
-				"title": "DWDS: Gast",
-				"url": "https://www.dwds.de/wb/Gast",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'zur Bewirtung oder vorübergehenden Beherbergung eingeladene oder aufgenommene Person'"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "A Locution's Constituents are the biggest units inside its wording (ADR 0050). zu Gast is no inner unit: DWDS lists it only inside zu Gast sein and jmdn. zu Gast haben. The placeholder bei jmdm. is never a part, so the parts are zu, Gast and sein."
+		"rationale": "A Locution's Constituents are its words, each linked to its own Lexeme (ADR 0050). The placeholder bei jmdm. is never a part, so the parts are zu, Gast and sein."
 	}
 }

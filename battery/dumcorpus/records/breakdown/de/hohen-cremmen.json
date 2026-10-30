@@ -15,7 +15,6 @@
 		},
 		"emojiDescription": "🏡"
 	},
-	"definition": "das Gut von Effis Eltern in Fontanes Roman „Effi Briest“",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -65,11 +64,6 @@
 				"title": "DWDS: hoch",
 				"url": "https://www.dwds.de/wb/hoch",
 				"supports": "The adjective hoch, attributive form hohe (usw.); DWDS has no entry for Hohen-Cremmen"
-			},
-			{
-				"title": "Wikipedia: Effi Briest",
-				"url": "https://de.wikipedia.org/wiki/Effi_Briest",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: Hohen-Cremmen, 'dem elterlichen Anwesen und Haus ihrer glücklichen Kindheit'"
 			}
 		]
 	},

@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🤫🌊"
 	},
-	"definition": "zurückhaltende Menschen haben oft ungeahnte Fähigkeiten",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -97,11 +96,6 @@
 				"title": "DWDS: stille Wasser sind tief",
 				"url": "https://www.dwds.de/wb/stille%20Wasser%20sind%20tief",
 				"supports": "The Mehrwortausdruck stille Wasser sind tief, 'zurückhaltende Menschen haben oft ungeahnte Fähigkeiten'; Hauptbestandteile still, Wasser, tief"
-			},
-			{
-				"title": "DWDS: stille Wasser sind tief",
-				"url": "https://www.dwds.de/wb/stille%20Wasser%20sind%20tief",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'zurückhaltende Menschen haben oft ungeahnte Fähigkeiten, Wesenszüge, ein reiches Innenleben'"
 			}
 		]
 	},

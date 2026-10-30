@@ -28,17 +28,10 @@ import {
  * picks; a prefix, true separable particle or suffix with its Morpheme
  * Lemma's Canonical Form (`ein-` in einkaufen, ADR 0050: dumcorpus's closed
  * particle list decides, and a first part such as teil or fest is a word);
- * a verb's citation ending, shown as filler; a hyphen; or a hyphenated
- * compound's front phrase as one Locution part, read with spaces
- * (`Kopf-an-Kopf` read `Kopf an Kopf`).
+ * a verb's citation ending, shown as filler; or a hyphen.
  */
 export type WordPiece =
 	| { readonly role: "Word"; readonly letters: string }
-	| {
-			readonly role: "Phrase";
-			readonly letters: string;
-			readonly reads: string;
-	  }
 	| {
 			readonly role: "Prefix" | "Suffix";
 			readonly letters: string;
@@ -105,8 +98,6 @@ function labelOf(pieces: readonly WordPiece[]): string {
 					return `-${piece.letters} (suffix)`;
 				case "Ending":
 					return `-${piece.letters} (citation ending)`;
-				case "Phrase":
-					return `[${piece.reads}]`;
 				default:
 					return piece.letters;
 			}
@@ -263,37 +254,6 @@ function hyphenated(word: string): WordAnalysis[] {
 			rest,
 		]),
 	];
-}
-
-/**
- * A flat hyphenated analysis with the words before its last hyphen as one
- * front phrase, a candidate Locution (`[Kopf an Kopf] + Rennen`, ADR 0050),
- * when there are at least two of them; else undefined.
- */
-export function withFrontPhrase(
-	flat: WordAnalysis,
-): { readonly analysis: WordAnalysis; readonly reads: string } | undefined {
-	const { pieces } = flat;
-	const lastHyphen = pieces.findLastIndex(({ role }) => role === "Hyphen");
-	const front = pieces.slice(0, Math.max(lastHyphen, 0));
-	const words = front.filter(({ role }) => role === "Word");
-	if (
-		words.length < 2 ||
-		front.some(({ role }) => role !== "Word" && role !== "Hyphen")
-	)
-		return undefined;
-	const reads = words.map(({ letters }) => letters).join(" ");
-	return {
-		reads,
-		analysis: analysis([
-			{
-				role: "Phrase",
-				letters: front.map(({ letters }) => letters).join(""),
-				reads,
-			},
-			...pieces.slice(lastHyphen),
-		]),
-	};
 }
 
 /**

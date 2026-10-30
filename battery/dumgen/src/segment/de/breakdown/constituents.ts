@@ -7,10 +7,8 @@
  *   Reading's emoji for its sense (`Wachstube` 💂 `Wach + stube`, 🕯
  *   `Wachs + tube`). A word too short to cut has none unasked, and a
  *   hyphenated one splits at its hyphens unasked, unless a lone `E` may be
- *   the prefix e- (`E- + Book` or `E + Book`, jev picks). Its words before
- *   the last hyphen, two or more, are one Locution part when jev weighs
- *   them one in `breakdown-locutions` (`[Kopf an Kopf] + Rennen`), else
- *   flat. Before it offers a prefix and a base verb against a prefix, a
+ *   the prefix e- (`E- + Book` or `E + Book`, jev picks), each word a part
+ *   (ADR 0054). Before it offers a prefix and a base verb against a prefix, a
  *   noun or adjective and the citation ending, jev weighs whether the base
  *   is a verb (`word-gates.ts`). When the pick is contested, jev weighs
  *   which contender gives the Reading's sense, in
@@ -21,12 +19,10 @@
  *   check chose that compound over the pick; and a suffix's base
  *   is a verb or a noun unasked when jev weighs it one and not the other.
  * - A phraseme, or a Lexeme written as several words: its wording's parts
- *   come from code (`phraseme-parts.ts`), and jev weighs, in one request,
- *   `breakdown-locutions`, whether a run of neighbouring parts is a
- *   Locution of its own (`zu Hause`), with the meaning it has in the whole,
- *   which the Reading's definition gives when the host has one. The wording is the bare Canonical
- *   Form, with no lexical reflexive (ADR 0052); a Saying's `sich` is a part
- *   of its own.
+ *   come from code (`phraseme-parts.ts`), one per word, an article grouped
+ *   with its noun, so no part is a Locution (ADR 0050). The wording is the
+ *   bare Canonical Form, with no lexical reflexive (ADR 0052); a Saying's
+ *   `sich` is a part of its own.
  *
  * Every part's route and Canonical Form then come from `targets.ts`, and a
  * compound's linking element from its first part's form (`interfix.ts`).
@@ -37,19 +33,10 @@
  * wording after its open slot is the infinitive PART (`um … zu`), and one
  * right before a noun the ADP (`zu Gast sein`), all unasked.
  */
-import type { Questions } from "@typesafe-ai/sdk";
 import { germanSuffixes, isGermanAttributiveForm } from "dumcorpus/inventories";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
-import {
-	type Ask,
-	type AskFailure,
-	askAny,
-	choice,
-	choiceOf,
-	noul,
-	noulOf,
-} from "../../ask.js";
+import { type Ask, type AskFailure, choice, choiceOf } from "../../ask.js";
 import {
 	type BreakdownInput,
 	breakdownState,
@@ -65,14 +52,8 @@ import {
 	reflexiveFormGuide,
 } from "./forms.js";
 import { interfixOf } from "./interfix.js";
-import {
-	type LocutionCandidate,
-	locutionCandidates,
-	type WordingPiece,
-	withLocutions,
-	wordingPieces,
-} from "./phraseme-parts.js";
-import { locutionQuestion, phrasemeRouteGuide } from "./phraseme-prompts.js";
+import { type WordingPiece, wordingPieces } from "./phraseme-parts.js";
+import { phrasemeRouteGuide } from "./phraseme-prompts.js";
 import {
 	keptPrefixOption,
 	prefixCutInstructions,
@@ -96,7 +77,6 @@ import {
 	hyphenPrefixGlosses,
 	type WordAnalysis,
 	type WordPiece,
-	withFrontPhrase,
 	wordAnalyses,
 } from "./word-analyses.js";
 import {
@@ -117,8 +97,6 @@ import {
 	analysisInstructions,
 	compoundRouteGuide,
 	noneOption,
-	phraseFormGuide,
-	phraseFrontRouteGuide,
 	prefixedBaseRouteGuide,
 	routeGuideOf,
 	verbFirstPartRouteGuide,
@@ -126,38 +104,15 @@ import {
 import { senseChecked, weighedOptions } from "./word-senses.js";
 
 const lexemeRoutes = allRoutes.filter((key) => key.startsWith("Lexeme/"));
-const locutionRoutes = allRoutes.filter((key) => key.startsWith("Locution/"));
 const articleRoutes: readonly RouteKey[] = ["Lexeme/NOUN", "Lexeme/PROPN"];
-
-/** A Locution candidate's weight must reach this to make one part. */
-const locutionFloor = 0.5;
 
 const none: Constituents = { kind: "NoConstituents" };
 
-/**
- * The whole as the judge reads it, with the Reading's definition, which
- * only the Locution question reads (ADR 0050).
- */
-type Judged = Whole & { readonly definition?: string };
-
 /** What the judge reads about the Reading: its wording, route, sense and Sentence. */
-function wholeOf(input: BreakdownInput, key: "word" | "wording"): Judged {
-	return {
-		key,
-		state: breakdownState(input, key),
-		...(input.definition ? { definition: input.definition } : {}),
-	};
-}
-
-/**
- * The Locution question's state: the whole's, with the Reading's
- * definition when the host has it, so a run keeps the whole's meaning to
- * be one part (`zu tun haben` is no part of `mit zu tun haben`, ADR 0050).
- */
-const locutionState = (whole: Judged): Judged["state"] =>
-	whole.definition === undefined
-		? whole.state
-		: { ...whole.state, definition: whole.definition };
+const wholeOf = (input: BreakdownInput, key: "word" | "wording"): Whole => ({
+	key,
+	state: breakdownState(input, key),
+});
 
 /** Constituents link at least two parts; fewer is none (ADR 0050). */
 function constituentsOf(pieces: readonly ProducedPiece[]): Constituents {
@@ -200,13 +155,13 @@ function linkedPieces(
 			});
 			continue;
 		}
-		if (piece.role !== "Word" && piece.role !== "Phrase") {
+		if (piece.role !== "Word") {
 			result.push({ letters: piece.letters });
 			continue;
 		}
 		const target = words[word++];
 		if (target === undefined) throw Error("A word part has no link");
-		const last = index === pieces.length - 1 || piece.role === "Phrase";
+		const last = index === pieces.length - 1;
 		const attributive =
 			target.kind === "ADJ" &&
 			isGermanAttributiveForm(piece.letters, target.canonicalForm);
@@ -283,38 +238,10 @@ const chosenAnalysis = Effect.fnUntraced(function* (
 	return { analysis: checked, bySense: checked !== tested.picked };
 });
 
-/**
- * A flat hyphenated analysis with its front phrase as one Locution part,
- * when jev weighs that phrase a fixed expression of its own (ADR 0054:
- * `[rund um die Uhr] + Betreuung`), else as it was (`Trimm-dich-Pfad`).
- */
-const withLocutionFront = Effect.fnUntraced(function* (
-	flat: WordAnalysis,
-	whole: Judged,
-	ask: Ask,
-): Effect.fn.Return<WordAnalysis, AskFailure> {
-	const front = withFrontPhrase(flat);
-	if (front === undefined) return flat;
-	const answers = yield* ask({
-		stage: "breakdown-locutions",
-		state: locutionState(whole),
-		questions: {
-			l_0: noul(
-				locutionQuestion(
-					whole.key,
-					front.reads,
-					whole.definition !== undefined,
-				),
-			),
-		},
-	});
-	return noulOf(answers, "l_0") >= locutionFloor ? front.analysis : flat;
-});
-
 /** The analysis a word breaks down by, or none. */
 const analysisOf = Effect.fnUntraced(function* (
 	analyses: readonly WordAnalysis[],
-	whole: Judged,
+	whole: Whole,
 	sense: Sense,
 	ask: Ask,
 ): Effect.fn.Return<Chosen, AskFailure> {
@@ -326,13 +253,7 @@ const analysisOf = Effect.fnUntraced(function* (
 		analyses.length === 1
 			? only
 			: (yield* chosenAnalysis(analyses, whole, ask)).analysis;
-	return {
-		analysis:
-			analysis === only
-				? yield* withLocutionFront(only, whole, ask)
-				: analysis,
-		bySense: false,
-	};
+	return { analysis, bySense: false };
 });
 
 const wordConstituents = Effect.fnUntraced(function* (
@@ -416,10 +337,8 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	compoundRouteGuide,
 	verbFirstPartRouteGuide,
 	prefixedBaseRouteGuide,
-	phraseFrontRouteGuide,
 	phrasemeRouteGuide,
 	cranberryOption,
-	phraseFormGuide,
 	reflexiveFormGuide,
 	nounPartFormGuide,
 	verbBaseQuestion("word", "…"),
@@ -437,52 +356,7 @@ export const constituentsPromptTexts = (): readonly string[] => [
 	noSenseOption,
 	...germanSuffixes.flatMap(({ sense }) => (sense ? [sense] : [])),
 	...Object.values(hyphenPrefixGlosses),
-	locutionQuestion("wording", "…"),
-	locutionQuestion("wording", "…", true),
 ];
-
-/**
- * In one request, the heaviest Locution candidates inside a wording over
- * the floor that overlap no other.
- */
-const chosenLocutions = Effect.fnUntraced(function* (
-	candidates: readonly LocutionCandidate[],
-	whole: Judged,
-	ask: Ask,
-): Effect.fn.Return<LocutionCandidate[], AskFailure> {
-	const questions: Questions = {};
-	for (const [index, candidate] of candidates.entries())
-		questions[`l_${index}`] = noul(
-			locutionQuestion(
-				whole.key,
-				candidate.reads,
-				whole.definition !== undefined,
-			),
-		);
-	const answers = yield* askAny(ask, {
-		stage: "breakdown-locutions",
-		state: locutionState(whole),
-		questions,
-	});
-	const weighed = candidates
-		.map((candidate, index) => ({
-			candidate,
-			weight: noulOf(answers, `l_${index}`),
-		}))
-		.filter(({ weight }) => weight >= locutionFloor)
-		.sort((left, right) => right.weight - left.weight);
-	const locutions: LocutionCandidate[] = [];
-	for (const { candidate } of weighed)
-		if (
-			locutions.every(
-				(other) =>
-					candidate.last < other.first ||
-					candidate.first > other.last,
-			)
-		)
-			locutions.push(candidate);
-	return locutions;
-});
 
 /** The endings an attributive adjective shows after a determiner (`aller guten`). */
 const adjectiveEnding = /(?:e|en|em|er|es)$/u;
@@ -512,7 +386,8 @@ function determinerOrPronoun(
 }
 
 /**
- * The route a wording's part may take: a noun group, a Locution, a pronoun dumcorpus authors only as one (`was`), an inflected
+ * The route a wording's part may take: a noun group, a pronoun dumcorpus
+ * authors only as one (`was`), an inflected
  * determiner or pronoun by what follows it (`allem`), the infinitive `zu`
  * closing the wording after its open slot (`ohne … zu`), the preposition
  * `zu` before a noun (`zu Gast`), or a word.
@@ -524,7 +399,6 @@ function partRoutes(
 	const piece = pieces[index];
 	if (piece?.role !== "Part") return lexemeRoutes;
 	if (piece.article) return articleRoutes;
-	if (piece.words > 1) return locutionRoutes;
 	if (onlyPronoun(piece.reads)) return ["Lexeme/PRON"];
 	const settled = inflectedDeterminerOrPronoun(piece.reads)
 		? determinerOrPronoun(pieces[index + 1], pieces[index + 2])
@@ -551,7 +425,6 @@ const beforeNoun = (pieces: readonly WordingPiece[], index: number) => {
 			: next;
 	return (
 		part?.role === "Part" &&
-		part.words === 1 + (part.article ? 1 : 0) &&
 		(part.article === true || /^\p{Lu}/u.test(part.reads))
 	);
 };
@@ -572,18 +445,12 @@ const phrasemeConstituents = Effect.fnUntraced(function* (
 ): Effect.fn.Return<Constituents, AskFailure> {
 	const whole = wholeOf(input, "wording");
 	const pieces = wordingPieces(input.reading.lemma.canonicalForm);
-	const candidates = locutionCandidates(pieces);
-	const locutions =
-		candidates.length > 0
-			? yield* chosenLocutions(candidates, whole, ask)
-			: [];
-	const merged = withLocutions(pieces, locutions);
-	const open: OpenPart[] = merged.flatMap((piece, index) =>
+	const open: OpenPart[] = pieces.flatMap((piece, index) =>
 		piece.role === "Part"
 			? [
 					{
 						reads: piece.reads,
-						routes: partRoutes(merged, index),
+						routes: partRoutes(pieces, index),
 					},
 				]
 			: [],
@@ -591,7 +458,7 @@ const phrasemeConstituents = Effect.fnUntraced(function* (
 	const targets = yield* partTargets(open, whole, ask, phrasemeRouteGuide);
 	let part = 0;
 	return constituentsOf(
-		merged.map((piece) =>
+		pieces.map((piece) =>
 			piece.role !== "Part"
 				? { letters: piece.letters }
 				: { letters: piece.letters, ...withTarget(targets[part++]) },

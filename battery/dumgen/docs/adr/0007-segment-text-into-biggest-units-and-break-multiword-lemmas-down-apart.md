@@ -64,9 +64,8 @@ neither segmenter. One whose `source` failed or is Unresolved waits for
 it. Any other runs `segment.inConstituents`, and a word it finds none for
 is a bottom word. Every word built from a word plus pieces has Constituents,
 whatever its part of speech, and so does every Locution and Saying.
-For a phraseme it returns the same shape as `segment.inUnits` one level down:
-the biggest units strictly inside the wording, Lexemes or Locutions, never
-the whole Lemma as one unit. For a word it returns its immediate parts, words
+For a phraseme it returns its words, each a Lexeme, an article grouped with
+its noun, and no run of them as one part (system ADR 0050). For a word it returns its immediate parts, words
 and Morphemes, each as shown letters with a route and Canonical Form that
 become a Unit Shadow. A click inside the wording resolves through the click
 path, so no piece stores a Surface or a Reading. Drill-down from a Lexeme to

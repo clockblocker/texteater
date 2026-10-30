@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🙏"
 	},
-	"definition": "zum Glück",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -72,11 +71,6 @@
 				"title": "DWDS: Gott sei Dank",
 				"url": "https://www.dwds.de/wb/Gott%20sei%20Dank",
 				"supports": "Mehrwortausdruck (steht einem Ausruf nahe)"
-			},
-			{
-				"title": "DWDS: Gott sei Dank",
-				"url": "https://www.dwds.de/wb/Gott%20sei%20Dank",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'zum Glück'"
 			}
 		]
 	},

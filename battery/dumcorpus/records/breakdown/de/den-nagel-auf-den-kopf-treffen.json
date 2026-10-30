@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🎯"
 	},
-	"definition": "das Wesentliche genau benennen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -86,12 +85,6 @@
 				"hash": "c2b1f74a61545177"
 			}
 		],
-		"references": [
-			{
-				"title": "DWDS: den Nagel auf den Kopf treffen",
-				"url": "https://www.dwds.de/wb/den%20Nagel%20auf%20den%20Kopf%20treffen",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'das Wesentliche, Entscheidende (von etw.) treffend benennen'"
-			}
-		]
+		"references": []
 	}
 }

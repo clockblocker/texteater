@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🔑"
 	},
-	"definition": "das ist das eigentliche Problem",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -112,11 +111,6 @@
 				"title": "Duden: Hase",
 				"url": "https://www.duden.de/rechtschreibung/Hase",
 				"supports": "The wording, the Locution's Canonical Form"
-			},
-			{
-				"title": "DWDS: da liegt der Hase im Pfeffer",
-				"url": "https://www.dwds.de/wb/da%20liegt%20der%20Hase%20im%20Pfeffer",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'das ist das eigentliche Problem, die eigentliche Ursache, der springende Punkt'"
 			}
 		]
 	},

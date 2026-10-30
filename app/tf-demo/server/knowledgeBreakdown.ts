@@ -52,16 +52,6 @@ export function asksBreakdown(
 	);
 }
 
-/** The definition a Reading already stores, for a retried Breakdown (ADR 0050). */
-export function storedDefinitionOf(knowledge: unknown): {
-	readonly storedDefinition?: string;
-} {
-	const definition = isRecord(knowledge) ? knowledge.definition : undefined;
-	return typeof definition === "string" && definition.length > 0
-		? { storedDefinition: definition }
-		: {};
-}
-
 /**
  * What `knowledge.produce` answered for the Source decides whether the
  * segmenters run. A Source that publication drops for pointing back counts
@@ -98,7 +88,6 @@ export type Segmenters<R> = {
 	readonly inConstituents: (input: {
 		readonly reading: Dumling.Reading<"de">;
 		readonly sentence?: string;
-		readonly definition?: string;
 	}) => Effect.Effect<
 		| {
 				readonly kind: "Constituents";
@@ -111,7 +100,6 @@ export type Segmenters<R> = {
 	readonly inMorphemes: (input: {
 		readonly reading: Dumling.Reading<"de">;
 		readonly sentence?: string;
-		readonly definition?: string;
 	}) => Effect.Effect<readonly ProducedPiece[], ModelFailure, R>;
 };
 
@@ -170,7 +158,6 @@ export function produceBreakdown<R>(
 	input: {
 		readonly reading: Dumling.Reading<"de">;
 		readonly sentence?: string;
-		readonly definition?: string;
 	},
 ): Effect.Effect<Produced, never, R> {
 	const asFailure = (part: BreakdownPart) => (error: ModelFailure) =>
@@ -201,26 +188,9 @@ export function produceBreakdown<R>(
 }
 
 /**
- * The definition the segmenters read: the one this run produced, which
- * `knowledge.produce` finished before they run, else the stored one, as on
- * a retry (ADR 0050).
- */
-export function breakdownDefinition(
-	production: Pick<KnowledgeProduction, "changes">,
-	stored: string | undefined,
-): string | undefined {
-	const produced = production.changes.find(
-		(change) => change.aspect === "definition" && change.kind !== "Retract",
-	);
-	const value = produced && "value" in produced ? produced.value : undefined;
-	return typeof value === "string" && value.length > 0 ? value : stored;
-}
-
-/**
  * A run's production with its Breakdown added, when the run asks for one
  * and what `knowledge.produce` answered for the Source leaves the
- * segmenters to run. The segmenters read the Reading's definition, so a
- * run inside a wording is a part only when it keeps its meaning (ADR 0050).
+ * segmenters to run.
  */
 export function withBreakdown<E, R, RS>(
 	segmenters: Segmenters<RS>,
@@ -229,7 +199,6 @@ export function withBreakdown<E, R, RS>(
 		readonly reading: Dumling.Reading<"de">;
 		readonly breakdown: boolean;
 		readonly sentence?: string;
-		readonly storedDefinition?: string;
 	},
 	pointsBack: (
 		change: KnowledgeProduction["changes"][number],
@@ -241,16 +210,11 @@ export function withBreakdown<E, R, RS>(
 			!(yield* segmentsAfterSource(produced, pointsBack))
 		)
 			return produced;
-		const definition = breakdownDefinition(
-			produced,
-			input.storedDefinition,
-		);
 		const breakdown = yield* produceBreakdown(segmenters, {
 			reading: input.reading,
 			...(input.sentence === undefined
 				? {}
 				: { sentence: input.sentence }),
-			...(definition === undefined ? {} : { definition }),
 		});
 		return {
 			...produced,

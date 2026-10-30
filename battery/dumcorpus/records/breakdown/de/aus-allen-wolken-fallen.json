@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "😲"
 	},
-	"definition": "sehr überrascht sein",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -102,11 +101,6 @@
 				"title": "de.wiktionary: aus allen Wolken fallen",
 				"url": "https://de.wiktionary.org/wiki/aus_allen_Wolken_fallen",
 				"supports": "The idiom 'überrascht, perplex sein'"
-			},
-			{
-				"title": "DWDS: Wolke",
-				"url": "https://www.dwds.de/wb/Wolke",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: jmd. fällt (wie) aus allen Wolken (= jmd. ist sehr überrascht)"
 			}
 		]
 	},

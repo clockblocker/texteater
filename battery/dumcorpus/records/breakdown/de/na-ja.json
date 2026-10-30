@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🤷"
 	},
-	"definition": "drückt aus, dass etwas nur mittelmäßig ist: es geht so",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -61,11 +60,6 @@
 				"title": "Duden: na ja!",
 				"url": "https://www.duden.de/rechtschreibung/na_ja_",
 				"supports": "The wording, the Locution's Canonical Form"
-			},
-			{
-				"title": "DWDS: na ja",
-				"url": "https://www.dwds.de/wb/na%20ja",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'mittelmäßig, nicht besonders, es geht so'"
 			}
 		]
 	}

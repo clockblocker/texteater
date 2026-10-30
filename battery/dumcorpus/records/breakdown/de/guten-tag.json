@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "👋"
 	},
-	"definition": "Gruß bei einer Begegnung tagsüber",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -60,12 +59,6 @@
 				"hash": "b72c043c004f9dc9"
 			}
 		],
-		"references": [
-			{
-				"title": "en.wiktionary: guten Tag",
-				"url": "https://en.wiktionary.org/wiki/guten_Tag",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'hello; good day; good afternoon (greeting said when meeting or acknowledging someone)'"
-			}
-		]
+		"references": []
 	}
 }

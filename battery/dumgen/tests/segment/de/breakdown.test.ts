@@ -49,9 +49,6 @@ describe("candidates code proposes", () => {
 		expect(formCandidates("dem Pfeffer", "Lexeme", "NOUN")[0]).toBe(
 			"Pfeffer",
 		);
-		expect(formCandidates("zu Hause", "Locution", "ADV")).toEqual([
-			"zu Hause",
-		]);
 	});
 
 	test("a linking element is the letters past the part's form", () => {
@@ -152,12 +149,12 @@ describe("German segment.inConstituents", () => {
 		).toEqual({ kind: "NoConstituents" });
 	});
 
-	test("a phraseme: a Locution inside it is one part, the wording bare (ADR 0052)", async () => {
+	test("a phraseme: every word is a part of its own, no run a Locution, the wording bare (ADR 0050, ADR 0052)", async () => {
 		const judge = judgeWanting(
-			"zu Hause",
 			"r_0=Lexeme/CCONJ",
-			"r_1=Locution/ADV",
-			"r_2=Lexeme/VERB",
+			"r_2=Lexeme/NOUN",
+			"r_3=Lexeme/VERB",
+			"Haus",
 			"fühlen",
 		);
 		const result = await run(
@@ -167,10 +164,13 @@ describe("German segment.inConstituents", () => {
 		expect(result.kind === "Constituents" && shown(result.pieces)).toEqual([
 			"wie→Lexeme/CCONJ:wie",
 			" ",
-			"zu Hause→Locution/ADV:zu Hause",
+			"zu→Lexeme/ADP:zu",
+			" ",
+			"Hause→Lexeme/NOUN:Haus",
 			" ",
 			"fühlen→Lexeme/VERB:fühlen",
 		]);
+		expect(judge.stages()).not.toContain("breakdown-locutions");
 	});
 
 	test("a Saying's sich is a part of its own, never joined to its verb (ADR 0052)", async () => {

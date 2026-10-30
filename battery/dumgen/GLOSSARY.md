@@ -55,9 +55,9 @@ _Avoid_: route distribution, alternative route
 
 **`segment.inConstituents`**:
 The segmenter that produces a Reading's Constituents (Dumling), once per
-Reading: a word's immediate parts, or the biggest units strictly inside a
-phraseme's wording. The host runs it only on a Reading with no Source
-(Dumrel), so a word it finds none for is a bottom word. See [Dumgen ADR
+Reading: a word's immediate parts, or a phraseme's words, each a Lexeme.
+The host runs it only on a Reading with no Source (Dumrel), so a word it
+finds none for is a bottom word. See [Dumgen ADR
 0007] and [ADR 0050].
 _Avoid_: `segment.inLexemes`, Segment.Unit, Lexical Breakdown, inner layer
 

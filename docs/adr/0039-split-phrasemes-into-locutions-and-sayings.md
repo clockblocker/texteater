@@ -35,8 +35,7 @@ Member Role ([ADR 0041](./0041-judge-dumling-fields-by-the-learner-and-by-classi
 
 At text time a Locution is one unit over its Segments. Its words come out only
 in the Note's drill-down: a Locution's or Saying's Reading has Constituents,
-the biggest units strictly inside its wording, Lexemes or Locutions, each
-linking to a Unit Shadow or a Lemma
+its words, each linking to its Lexeme's Unit Shadow or Lemma
 ([ADR 0050](./0050-break-a-reading-down-into-its-constituents.md)). A
 Lexeme whose Canonical Form holds a separable particle has Constituents too:
 `take off` and `give up` break down into verb + particle, as `aufmachen`

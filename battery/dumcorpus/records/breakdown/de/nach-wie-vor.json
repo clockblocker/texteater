@@ -14,7 +14,6 @@
 		},
 		"emojiDescription": "🔁"
 	},
-	"definition": "weiterhin, immer noch",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -96,11 +95,6 @@
 				"title": "DWDS: wie",
 				"url": "https://www.dwds.de/wb/wie",
 				"supports": "wie, II. konjunktional, 1 a α, 'setzt vergleichend einzelne Wörter zueinander in Beziehung': er ist nach wie vor (= noch immer) der beliebteste Sänger"
-			},
-			{
-				"title": "DWDS: nach wie vor",
-				"url": "https://www.dwds.de/wb/nach%20wie%20vor",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'weiterhin, immer noch'"
 			}
 		]
 	},

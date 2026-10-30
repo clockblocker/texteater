@@ -50,15 +50,18 @@ Reading a Breakdown Record owns:
   Fontane's fictional `Hohen-Cremmen` = `[[hoch|Hohen]]` + `-` +
   `[[Cremmen]]`, PROPN `Cremmen` its own Lemma, not a Variant of the town
   `Kremmen` (the user, 2026-10-25).
-- Hyphenated compounds follow DWDS: `Mund-zu-Mund-Beatmung` and
-  `3-Zimmer-Wohnung` are flat, and `Vitamin-C-Mangel` = `[Vitamin C] +
-  Mangel`. In `E-Mail`, `E` links to DWDS's prefix `e-` (2e-, short for
+- Hyphenated compounds are flat, every word a part:
+  `Mund-zu-Mund-Beatmung`, `3-Zimmer-Wohnung` and `Vitamin-C-Mangel`. In
+  `E-Mail`, `E` links to DWDS's prefix `e-` (2e-, short for
   *elektronisch*), the hyphen is filler, and `Mail` links to its Lexeme:
   `[[e-|E]]` + `-` + `[[Mail]]`.
-- A phrasal compound with no DWDS split and no stored inner unit is flat,
-  every word a part: `Trimm-dich-Pfad` = `trimmen · sich · Pfad`, as DWDS
-  also splits it. When its front phrase is a real Locution, it stays two
-  parts: `[rund um die Uhr] + Betreuung`.
+- A phrasal compound is flat, every word a part: `Trimm-dich-Pfad` =
+  `trimmen · sich · Pfad`, as DWDS also splits it, and
+  `Rund-um-die-Uhr-Betreuung` = `[[rund|Rund]] · um · [[Uhr|die-Uhr]] ·
+  Betreuung`, its article joined to its noun. Its front phrase is never
+  one Locution part, even when it is a Locution of its own, since no line
+  between a front phrase that is one part and a plain run of words can be
+  drawn reliably (the user, 2026-10-30, as for a phraseme in ADR 0050).
 
 ## Considered Options
 
@@ -73,6 +76,10 @@ Reading a Breakdown Record owns:
 - A phrasal compound as modifier + head when nothing inside it is stored.
   Rejected: no stored unit says where the modifier ends, and DWDS splits
   `Trimm-dich-Pfad` flat.
+- A front phrase that is a Locution of its own as one part (`[rund um die
+  Uhr] + Betreuung`, `[Vitamin C] + Mangel`), the rule until 2026-10-30.
+  Rejected: it needs the same line between a nested unit and a plain run
+  that ADR 0050 gives up for phrasemes.
 - Opaque words as bottom words (`Gewissen`). Rejected: opacity is graded;
   a dictionary split can be checked.
 - A gold Reading's Kind by its use alone (`wirklich` as a sentence adverb,

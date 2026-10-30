@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "⏱"
 	},
-	"definition": "in dem Moment, als",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -59,11 +58,6 @@
 				"title": "DWDS: kaum",
 				"url": "https://www.dwds.de/wb/kaum",
 				"supports": "Sense 3, ⟨kaum dass⟩ in konjunktionaler Verwendung, 'in dem Moment, als', opening a Temporalsatz"
-			},
-			{
-				"title": "DWDS: kaum",
-				"url": "https://www.dwds.de/wb/kaum",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: ⟨kaum dass⟩ 'in dem Moment, als'"
 			}
 		]
 	},

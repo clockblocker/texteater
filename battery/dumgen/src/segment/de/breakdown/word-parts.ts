@@ -1,7 +1,6 @@
 /**
  * The open parts of a German word's chosen analysis (system ADR 0050): what
- * jev may settle about each word or phrase piece, and what code settles
- * unasked.
+ * jev may settle about each word piece, and what code settles unasked.
  *
  * - A compound's head takes the word's own Kind (a noun's head is a noun).
  * - A separable verb's first part whose Lexeme dumcorpus rules
@@ -10,7 +9,6 @@
  *   `-ung` derives nouns from verbs, so `Gründ` is a verb's stem).
  * - A hyphenated word's part that dumcorpus authors only as a pronoun is a
  *   PRON (`dich` in a phrasal compound).
- * - A front phrase is a Locution part, its headword asked with its guide.
  * - Outside a verb, a particle-like first part that is also a preposition
  *   links to its ADP Lexeme, not to the verb Prefix (ADR 0054: `über` in
  *   `überhaupt`); nothing outside a verb separates. So does the last of
@@ -23,11 +21,10 @@ import {
 	germanSeparableParticles,
 } from "dumcorpus/inventories";
 import type * as Dumrel from "dumrel/types";
-import { allRoutes, checkedRouteKey, type RouteKey } from "../routes.js";
+import { checkedRouteKey, type RouteKey } from "../routes.js";
 import { onlyPronoun } from "./forms.js";
 import type { OpenPart } from "./targets.js";
 import { headedKinds, type WordAnalysis } from "./word-analyses.js";
-import { phraseFormGuide, phraseForms } from "./word-prompts.js";
 
 /** The routes a part of a word may take. */
 const wordPartRoutes: readonly RouteKey[] = [
@@ -48,8 +45,6 @@ const headRoutes: Readonly<Record<string, RouteKey>> = {
 	VERB: "Lexeme/VERB",
 	ADJ: "Lexeme/ADJ",
 };
-
-const locutionRoutes = allRoutes.filter((key) => key.startsWith("Locution/"));
 
 /**
  * The first part of a verb cut into two words, pinned to the Lexeme
@@ -104,15 +99,6 @@ export function openWordParts(
 	const hyphenated = pieces.some(({ role }) => role === "Hyphen");
 	return pieces.flatMap((piece, index): OpenPart[] => {
 		if (index === 0 && ruled !== undefined) return [ruled];
-		if (piece.role === "Phrase")
-			return [
-				{
-					reads: piece.reads,
-					routes: locutionRoutes,
-					forms: phraseForms(piece.reads),
-					formGuide: phraseFormGuide,
-				},
-			];
 		if (piece.role !== "Word") return [];
 		if (index === last && head !== undefined)
 			return [{ reads: piece.letters, routes: [head] }];

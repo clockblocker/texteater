@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "😤"
 	},
-	"definition": "etwas ohne Aufbegehren hinnehmen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -56,11 +55,6 @@
 				"title": "DWDS: gefallen",
 				"url": "https://www.dwds.de/wb/gefallen",
 				"supports": "Mehrwortausdruck ⟨sich [Dativ] etw. gefallen lassen⟩ '= etw. ohne Aufbegehren hinnehmen'"
-			},
-			{
-				"title": "DWDS: gefallen",
-				"url": "https://www.dwds.de/wb/gefallen",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: ⟨sich [Dativ] etw. gefallen lassen (= etw. ohne Aufbegehren hinnehmen)⟩"
 			}
 		]
 	},

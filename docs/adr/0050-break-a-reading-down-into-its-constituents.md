@@ -12,6 +12,7 @@ Dictionaries show two analyses for this, and the model copies both:
   the DWDS Wortzerlegung and the en.wiktionary etymology line show them
   (immediate-constituent analysis, словообразовательный разбор):
   `Kohle + Kraftwerk`, `entspannen + -ung`, `[[Faden|den Faden]] + [[verlieren]]`.
+  A phraseme's are its words.
 - Every morpheme, flat, as school morphemic analysis shows it (разбор по
   составу, Wortbausteine): `ent · spann · ung · ∅`.
 
@@ -47,8 +48,8 @@ the same way, `-ung` to the Shadow (de, Morpheme, Suffix, `-ung`).
   final -e (`Schul`, `Erd`, `Morgenstund`), a verb stem without its
   infinitive ending (`[[fahren|Fahr]] + [[Rad|rad]]`), a digit for its
   numeral (`3` for NUM `drei`), a reflexive form for the reflexivity unit
-  (`dich` for PRON `sich`), a hyphenated Locution part for its spaced
-  wording (`Rund-um-die-Uhr` for `rund um die Uhr`), an adjective's
+  (`dich` for PRON `sich`), a noun with its article joined by a hyphen
+  in a phrasal compound (`die-Uhr` for `Uhr`), an adjective's
   declension stem with an attributive ending, and Hebrew final-letter
   forms. Hyphens, ellipses, gershayim, spaces, punctuation and placeholders
   are unlinked filler segments.
@@ -111,22 +112,24 @@ Morpheme Kind is added for it. German keeps the Prefix Morpheme, since it
 writes the particle attached (`aufgeben`). Either way the particle verb
 joins its base verb's Formations and the particle is one click away.
 
-**A phraseme's Constituents are the biggest units strictly inside its
-wording**, as `segment.inUnits` finds them one level down. A part may be a
-Locution: `wie zu Hause fühlen`, printed `sich wie zu Hause fühlen`, =
-`wie · [zu Hause] · [[fühlen]]`, and `zu Hause` breaks down into `zu +
-[[Haus|Hause]]`. An article is grouped
-with its noun
+**A phraseme's Constituents are its words**, each linked to its own
+Lexeme, and no run of them is a part, even one that is a Locution of its
+own: `wie zu Hause fühlen`, printed `sich wie zu Hause fühlen`, = `wie ·
+zu · [[Haus|Hause]] · [[fühlen]]`; `Hand in Hand gehen` = `Hand · in ·
+Hand · gehen`; `mit zu tun haben` = `mit · zu · tun · haben`. An inflected
+word links to its Lemma (`Hause` to `Haus`). An article is grouped with
+its noun
 ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)):
 `[[Faden|den Faden]] + [[verlieren]]`. Fused words split by component.
+There is no in-between state: no line between a run that is one part and
+a plain run of words can be drawn reliably (the user, 2026-10-30). This
+replaces the rule that a phraseme's Constituents were the biggest units
+inside its wording, a Locution among them (2026-10-24), and the ruling of
+the same day, 2026-10-30, that a run was one part only when it kept the
+meaning it has inside the whole, tested against the Reading's definition.
+Neither test held: `zu Hause` was judged a part of `wie zu Hause fühlen`
+or not as the wording of the question moved, and so was `Hand in Hand`.
 
-- A run of words inside the wording is one part only when it keeps the
-  meaning it has inside the whole. `zu Hause` keeps 'at home' in `wie zu
-  Hause fühlen`, but `zu tun haben` alone means 'be busy', so `mit zu tun
-  haben` 'have to do with' is `mit · zu · tun · haben` (the user,
-  2026-10-30). The judge tests this against the Reading's definition as
-  well as its emoji, since an emoji can't say whether a run keeps its
-  meaning.
 - Placeholders (`jdm.`, `etwas`) are never parts. Negation is a part.
 - A lexical reflexive is no part. It fills the Reading's Reflexive Slot and
   is in no Locution's wording (ADR 0052). A verb inside the wording links to
@@ -231,7 +234,16 @@ intensifiers, the English particle, the particle list and `leid` on
   repeat it and could disagree.
 - A flat phraseme Breakdown (`den + Faden`). Rejected: `m` would link to DET
   `dem`, which ADR 0040 rules out.
-- Lexeme parts only in a phraseme. Rejected: `zu Hause` is one unit.
+- A phraseme's Constituents as the biggest units inside its wording, a
+  Locution among them (`wie · [zu Hause] · fühlen`), the rule until
+  2026-10-30. Rejected: no line between a run that is one part and a plain
+  run of words can be drawn reliably, by the judge or by the authors, and
+  a part's own Constituents would hide the words one level further down.
+- A run as one part only when it keeps the meaning it has inside the
+  whole, tested against the Reading's definition (2026-10-30). Rejected the
+  same day for the same reason: the weights sat on the floor and moved
+  with the question's wording, and the segmenter needed a definition
+  input only that test read.
 - An opacity mark. Rejected: no consumer, it is graded, it can't be checked,
   and Formations list opaque formations by form anyway.
 - No breakdown unless a piece's Reading contributes to the meaning (`receive`

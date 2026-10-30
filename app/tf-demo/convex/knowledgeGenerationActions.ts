@@ -18,10 +18,7 @@ import {
 	spanHops,
 	withoutPayloads,
 } from "../server/inspectionCapture";
-import {
-	asksBreakdown,
-	storedDefinitionOf,
-} from "../server/knowledgeBreakdown";
+import { asksBreakdown } from "../server/knowledgeBreakdown";
 import { missingKnowledgeRequest } from "../server/knowledgeCompletion";
 import type {
 	KnowledgeProducer,
@@ -373,7 +370,6 @@ function produceKnowledge(run: KnowledgeRun, plan: KnowledgePlan) {
 					},
 					// The segmenters follow the Source (ADR 0050).
 					breakdown: plan.asksBreakdown,
-					...storedDefinitionOf(input.existingKnowledge),
 				},
 				{
 					// Dumgen waits for each contribution's publication.

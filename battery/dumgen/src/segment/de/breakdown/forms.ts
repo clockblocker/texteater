@@ -212,8 +212,8 @@ export function inflectedDeterminerOrPronoun(word: string): boolean {
 /**
  * The candidate Canonical Forms of a part that reads `reads` and takes the
  * route `family`/`kind`, distinct, the letters as they stand first. A
- * Locution part keeps its wording; a word part judges its last word, the
- * noun of an article group (`der Hase`).
+ * Lexeme part judges its last word, the noun of an article group (`der
+ * Hase`); a part on another Family keeps its letters.
  */
 export function formCandidates(
 	reads: string,

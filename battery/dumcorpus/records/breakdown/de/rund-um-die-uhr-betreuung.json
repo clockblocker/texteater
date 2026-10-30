@@ -14,20 +14,49 @@
 		},
 		"emojiDescription": "⏰🤲"
 	},
-	"definition": "ununterbrochene Pflege und Versorgung, Tag und Nacht",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
 				{
-					"letters": "Rund-um-die-Uhr",
+					"letters": "Rund",
 					"target": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
-						"kind": "ADV",
-						"canonicalForm": "rund um die Uhr",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "rund",
 						"coreFeatures": {
-							"comparable": null
+							"comparable": "Yes"
+						}
+					}
+				},
+				{
+					"letters": "-"
+				},
+				{
+					"letters": "um",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "um",
+						"coreFeatures": {}
+					}
+				},
+				{
+					"letters": "-"
+				},
+				{
+					"letters": "die-Uhr",
+					"target": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Uhr",
+						"coreFeatures": {
+							"gender": "Fem"
 						}
 					}
 				},
@@ -52,7 +81,16 @@
 	},
 	"sources": {
 		"adrs": ["ADR-0039", "ADR-0050"],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			}
+		],
 		"references": [
 			{
 				"title": "DWDS: Uhr",
@@ -63,15 +101,10 @@
 				"title": "DWDS: Rund-um-die-Uhr-Betreuung",
 				"url": "https://www.dwds.de/wb/Rund-um-die-Uhr-Betreuung",
 				"supports": "No entry in DWDS's lexical sources"
-			},
-			{
-				"title": "DWDS: Uhr",
-				"url": "https://www.dwds.de/wb/Uhr",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: rund um die Uhr, 'ununterbrochen, pausenlos', of the Betreuung"
 			}
 		]
 	},
 	"notes": {
-		"rationale": "A phrasal compound whose front phrase is a real Locution stays two parts (#1241, 2026-10-24): the Locution ADV rund um die Uhr and Betreuung."
+		"rationale": "A phrasal compound is flat, every word a part, its front phrase never one Locution part (ADR 0054, the user on #1241, 2026-10-30): Rund, um, die Uhr and Betreuung. Rund links to the adjective rund, DWDS's one headword, whose rund um is an adverbial use, and which compares (runder, am rundesten; de/comparability-is-lexical). die joins Uhr, the noun that owns it as its article (de/noun-owns-its-article)."
 	}
 }

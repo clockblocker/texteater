@@ -14,7 +14,6 @@
 		},
 		"emojiDescription": "🤪"
 	},
-	"definition": "sehr einfältig und beschränkt",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -77,11 +76,6 @@
 				"title": "DWDS: Bohnenstroh",
 				"url": "https://www.dwds.de/wb/Bohnenstroh",
 				"supports": "The multiword expression dumm wie Bohnenstroh"
-			},
-			{
-				"title": "DWDS: dumm wie Bohnenstroh",
-				"url": "https://www.dwds.de/wb/dumm%20wie%20Bohnenstroh",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'einfältig, naiv'; 'beschränkt'"
 			}
 		]
 	},

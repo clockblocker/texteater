@@ -90,8 +90,8 @@ const kindNames: Readonly<Record<string, string>> = {
 
 /**
  * Each part's Unit Shadow, in order. Its route is the only one offered or
- * jev's pick, then its Canonical Form the only candidate or jev's pick; a
- * Locution keeps its wording. `routeGuide`, when given, closes every route
+ * jev's pick, then its Canonical Form the only candidate or jev's pick.
+ * `routeGuide`, when given, closes every route
  * question: how a word's or a phraseme's parts are judged. The route
  * descriptions themselves are segment.inUnits's and stay shared.
  * `formGuides` close the headword question of a part of a given Kind,

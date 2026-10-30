@@ -14,7 +14,6 @@
 		},
 		"emojiDescription": "👒"
 	},
-	"definition": "höfliche Anrede für eine Dame",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -58,11 +57,6 @@
 				"title": "DWDS: gnädig",
 				"url": "https://www.dwds.de/wb/gn%C3%A4dig",
 				"supports": "Under gnädig: gnädige Frau as a polite form of address"
-			},
-			{
-				"title": "DWDS: gnädig",
-				"url": "https://www.dwds.de/wb/gn%C3%A4dig",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: gehoben ⟨gnädige Frau! (= Anrede)⟩"
 			}
 		]
 	},

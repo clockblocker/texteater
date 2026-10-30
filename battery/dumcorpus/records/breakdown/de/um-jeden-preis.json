@@ -14,7 +14,6 @@
 		},
 		"emojiDescription": "💪"
 	},
-	"definition": "unter allen Umständen, unbedingt",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -91,11 +90,6 @@
 				"title": "DWDS: um jeden Preis",
 				"url": "https://www.dwds.de/wb/um%20jeden%20Preis",
 				"supports": "The multiword expression um jeden Preis, 'unter allen Umständen, unbedingt'"
-			},
-			{
-				"title": "DWDS: um jeden Preis",
-				"url": "https://www.dwds.de/wb/um%20jeden%20Preis",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'unter allen Umständen, unbedingt'"
 			}
 		]
 	},

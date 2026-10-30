@@ -14,7 +14,6 @@
 		},
 		"emojiDescription": "🤏"
 	},
-	"definition": "fast, beinahe",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -81,11 +80,6 @@
 				"title": "DWDS: so gut wie",
 				"url": "https://www.dwds.de/wb/so%20gut%20wie",
 				"supports": "The multiword expression so gut wie, 'fast, beinahe', as an adverbial"
-			},
-			{
-				"title": "DWDS: so gut wie",
-				"url": "https://www.dwds.de/wb/so%20gut%20wie",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'fast, beinahe, annähernd'"
 			}
 		]
 	},

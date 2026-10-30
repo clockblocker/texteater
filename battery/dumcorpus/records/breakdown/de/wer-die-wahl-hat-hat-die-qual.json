@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🤔"
 	},
-	"definition": "bei mehreren guten Möglichkeiten fällt die Entscheidung schwer",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -123,11 +122,6 @@
 				"title": "DWDS: wer die Wahl hat, hat die Qual",
 				"url": "https://www.dwds.de/wb/wer%20die%20Wahl%20hat,%20hat%20die%20Qual",
 				"supports": "The Mehrwortausdruck wer die Wahl hat, hat die Qual; Hauptbestandteile Wahl, Qual"
-			},
-			{
-				"title": "DWDS: wer die Wahl hat, hat die Qual",
-				"url": "https://www.dwds.de/wb/wer%20die%20Wahl%20hat,%20hat%20die%20Qual",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'bei mehreren gleichwertig erscheinenden … Möglichkeiten oder Angeboten fällt die Entscheidung sehr schwer'"
 			}
 		]
 	},

@@ -55,9 +55,7 @@ export type KnowledgeProduction = {
  * Attestation, whose `valencyEvidence` is the attested government, its
  * Reading, whether the occurrence created the Reading (`New`) or reused it
  * (`TopUp`), what to produce, and whether to break the Reading down after
- * its Source (`breakdown`, `knowledgeBreakdown.ts`), with the definition
- * the Reading already stores, which the Breakdown reads when this run
- * produces none.
+ * its Source (`breakdown`, `knowledgeBreakdown.ts`).
  */
 export type KnowledgeInput = {
 	readonly encounter: ClickEncounter;
@@ -66,7 +64,6 @@ export type KnowledgeInput = {
 	readonly origin: "New" | "TopUp";
 	readonly request: KnowledgeRequest;
 	readonly breakdown: boolean;
-	readonly storedDefinition?: string;
 };
 
 /**

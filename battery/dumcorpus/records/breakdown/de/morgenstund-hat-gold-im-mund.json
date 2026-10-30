@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🌅💰"
 	},
-	"definition": "wer früh am Morgen mit der Arbeit beginnt, hat Erfolg",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -112,11 +111,6 @@
 				"title": "DWDS: Morgenstund hat Gold im Mund",
 				"url": "https://www.dwds.de/wb/Morgenstund%20hat%20Gold%20im%20Mund",
 				"supports": "The wording, the Saying's Canonical Form"
-			},
-			{
-				"title": "DWDS: Morgenstund hat Gold im Mund",
-				"url": "https://www.dwds.de/wb/Morgenstund%20hat%20Gold%20im%20Mund",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'um erfolgreich zu sein, sollte man mit seinen Aufgaben oder Vorhaben bereits am frühen Morgen beginnen'"
 			}
 		]
 	},

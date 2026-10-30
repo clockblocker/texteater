@@ -12,7 +12,6 @@
 		},
 		"emojiDescription": "🔗"
 	},
-	"definition": "mit etwas zusammenhängen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -27,7 +26,9 @@
 						"coreFeatures": {}
 					}
 				},
-				{ "letters": " " },
+				{
+					"letters": " "
+				},
 				{
 					"letters": "zu",
 					"target": {
@@ -42,7 +43,9 @@
 						}
 					}
 				},
-				{ "letters": " " },
+				{
+					"letters": " "
+				},
 				{
 					"letters": "tun",
 					"target": {
@@ -56,7 +59,9 @@
 						}
 					}
 				},
-				{ "letters": " " },
+				{
+					"letters": " "
+				},
 				{
 					"letters": "haben",
 					"target": {
@@ -85,7 +90,7 @@
 			{
 				"title": "DWDS: tun",
 				"url": "https://www.dwds.de/wb/tun",
-				"supports": "Sense 7, ⟨mit jmdm., etw. nichts zu tun haben (= in keiner Beziehung zu jmdm., etw. stehen)⟩: mit belongs to the expression, and DWDS lists no zu tun haben of its own. The authored definition, an input to segment.inConstituents, never graded, follows this sense"
+				"supports": "Sense 7, ⟨mit jmdm., etw. nichts zu tun haben (= in keiner Beziehung zu jmdm., etw. stehen)⟩: mit belongs to the expression, and DWDS lists no zu tun haben of its own"
 			},
 			{
 				"title": "en.wiktionary: zu tun haben",
@@ -95,6 +100,6 @@
 		]
 	},
 	"notes": {
-		"rationale": "Flat: zu tun haben alone means 'be busy', not this Reading's 'have to do with', so it is no inner unit. A run inside a wording is one part only when it keeps the meaning it has inside the whole, and the definition, not the emoji, carries that test (ADR 0050, the user on #1241, 2026-10-30). The placeholder etwas is never a part, so the parts are mit, the infinitive PART zu (de/bare-infinitive-zu), tun and haben. From tf-demo's request 12fbda85, Vielleicht hatte es damit zu tun, dass …"
+		"rationale": "A Locution's Constituents are its words, each linked to its own Lexeme, with no run of them a part (ADR 0050, the user on #1241, 2026-10-30): mit, the infinitive PART zu (de/bare-infinitive-zu), tun and haben. The placeholder etwas is never a part. From tf-demo's request 12fbda85, Vielleicht hatte es damit zu tun, dass …"
 	}
 }

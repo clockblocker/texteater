@@ -14,7 +14,6 @@
 		},
 		"emojiDescription": "🧮"
 	},
-	"definition": "insgesamt, im Ganzen gesehen",
 	"knowledge": {
 		"breakdown": {
 			"constituents": [
@@ -101,11 +100,6 @@
 				"title": "DWDS: alles in allem",
 				"url": "https://www.dwds.de/wb/alles%20in%20allem",
 				"supports": "The multiword expression alles in allem, 'insgesamt; im Ganzen gesehen'"
-			},
-			{
-				"title": "DWDS: alles in allem",
-				"url": "https://www.dwds.de/wb/alles%20in%20allem",
-				"supports": "The authored definition, an input to segment.inConstituents, never graded: 'insgesamt, zusammengezählt'; 'im Ganzen gesehen'"
 			}
 		]
 	},
