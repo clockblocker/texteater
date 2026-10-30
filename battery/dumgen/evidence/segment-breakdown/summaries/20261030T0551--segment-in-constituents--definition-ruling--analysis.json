@@ -1,0 +1,83 @@
+{
+	"round": "2026-10-30-definition-ruling",
+	"note": "The user's 2026-10-30 ruling on #1241 (option A, ADR 0050): a run inside a wording is one part only when it keeps the meaning it has inside the whole, and the Locution question reads the Reading's definition, since an emoji can't carry that test. Commit 7ffcc0346 gives breakdown-locutions alone a definition key and one clause pointing its same-meaning test at it; every other breakdown call is byte-identical. The 47 multiword or hyphenated tuning records carry authored definitions (DWDS or en.wiktionary, inputs, never graded) and mit zu tun haben is new gold, mit · zu · tun · haben. Real text and adversarial have no phraseme and no hyphenated front phrase, so they replay unchanged. Strict is contractPass, 3 repetitions.",
+	"liveRun": {
+		"experiment": "segment-in-constituents/de:breakdown",
+		"runId": "fb8bcf83-91af-4694-b20e-08ab161dba44",
+		"revision": "7ffcc0346",
+		"cases": "the 48 records with a definition",
+		"budget": 476000,
+		"freshRequests": 110,
+		"freshTokens": 87041,
+		"strict": "115/144"
+	},
+	"replays": [
+		{
+			"experiment": "segment-in-constituents/de:breakdown",
+			"runId": "c469b1bf-6c4f-4928-8c49-a97b03f42865",
+			"offline": true,
+			"strict": "939/1086 on 362 cases, from 943/1083 on 361 (d544a8c8)"
+		},
+		{
+			"experiment": "segment-in-constituents/de:realtext",
+			"runId": "c725d5de-45aa-4beb-a009-e92ee7ab382c",
+			"offline": true,
+			"strict": "141/180, unchanged"
+		},
+		{
+			"experiment": "segment-in-constituents/de:adversarial",
+			"runId": "483bb2e4-0f77-4b46-8e97-21a04cff83cc",
+			"offline": true,
+			"strict": "18/30, unchanged"
+		}
+	],
+	"flips": [
+		{
+			"case": "wie zu Hause fühlen",
+			"move": "3 -> 0",
+			"cause": "the ruling: zu Hause weighs 0.22-0.26 against the definition 'sich irgendwo heimisch und wohl fühlen' (DWDS: sich heimisch fühlen), 0.57 before, so it splits as zu ADP + Hause NOUN. The definition names no home, so jev finds 'at home' no part of it."
+		},
+		{
+			"case": "Hand in Hand gehen",
+			"move": "3 -> 2",
+			"cause": "the ruling: Hand in Hand weighs 0.47-0.51 against 'eng verbunden mit etwas einhergehen' (Duden: einhergehen), 0.56 before; one repetition falls under the 0.5 floor"
+		},
+		{
+			"case": "mit zu tun haben (new)",
+			"move": "0/3",
+			"cause": "the nested Locution is gone (zu tun haben under the floor every repetition), but breakdown-routes links tun to the NOUN Tun each time and zu to the ADP in two, which the definition doesn't reach"
+		},
+		{
+			"case": "anders",
+			"move": "3 -> 0",
+			"cause": "not this change: the adverbial -s suffix (ce3f2897, ac43a544) offers ander + -s; no definition, so its requests are the earlier commits'"
+		},
+		{
+			"case": "nachmittags",
+			"move": "0 -> 3",
+			"cause": "not this change: the adverbial -s suffix gives Nachmittag + -s"
+		}
+	],
+	"clauseProbes": {
+		"note": "Two other one-clause wordings, each live on wie zu Hause fühlen, Hand in Hand gehen and mit zu tun haben, then dropped; the ledger lines carry the working tree's gitHead, not the probe. Neither separates the two tests: their weights converge on the 0.5 floor.",
+		"runs": [
+			{
+				"runId": "67ffb6c1-4e9c-43fc-85ed-ae7b3e860885",
+				"clause": "…, a meaning that is part of what `definition` says `wording` means",
+				"freshTokens": 8325,
+				"weights": "zu Hause 0.43, zu tun haben 0.39, Hand in Hand 0.52 (repetition 0)"
+			},
+			{
+				"runId": "ae0dfe6e-f40f-4a31-8e3f-96602e8dfdcb",
+				"clause": "…, and keep inside `wording`, whose meaning `definition` gives, the meaning it has standing alone",
+				"freshTokens": 8505,
+				"weights": "zu Hause 0.48, zu tun haben 0.38-0.47, Hand in Hand 0.51-0.53"
+			}
+		]
+	},
+	"spend": {
+		"freshTokens": 103871,
+		"dollars": 0.00436,
+		"cap": "$0.02 (476,190 tokens), #1241's standing $1"
+	}
+}
