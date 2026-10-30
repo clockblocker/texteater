@@ -224,7 +224,7 @@ export const question = {
 	),
 	mood: paragraph(
 		"question.mood",
-		"If the whole verbal unit is finite, which mood does it show?",
+		"If the whole verbal unit is finite, which mood does its finite verb's form show? Judge the form, not the sense: a word of doubt or possibility leaves an indicative form indicative, and a Konjunktiv II form, a polite present one included, mostly differs from the preterite, as «flöge» from «flog».",
 		rules.verbalWhole,
 	),
 	tense: paragraph(
