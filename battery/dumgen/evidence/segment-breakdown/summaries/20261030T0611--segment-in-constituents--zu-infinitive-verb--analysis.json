@@ -1,0 +1,50 @@
+{
+	"round": "2026-10-30-zu-infinitive-verb",
+	"note": "Commit d4bfe91a6 adds one clause to the phraseme route guide (breakdown-routes, phraseme parts only): the infinitive after the PART zu is a VERB, and an infinitive is a NOUN only when used as one, capitalised or after an article. Before it, mit zu tun haben linked tun to the NOUN Tun every repetition (NOUN 0.51-0.56 against VERB 0.42-0.48) and zu to the ADP in repetition 0 (0.51 against PART 0.47): the shared NOUN description counts substantivized infinitives, and a noun after zu reads as a preposition's object. The shared route descriptions stay as they are, since segment.inUnits asks them too. Word cases, real text and adversarial ask nothing new. Strict is contractPass, 3 repetitions.",
+	"liveRun": {
+		"experiment": "segment-in-constituents/de:breakdown",
+		"runId": "cad91ad2-2af8-45af-ade0-561f344a1be5",
+		"revision": "d4bfe91a6",
+		"cases": "all 362; only phraseme route questions missed the cache",
+		"budget": 1190000,
+		"freshRequests": 135,
+		"freshTokens": 327935,
+		"strict": "943/1086, from 939/1086 (c469b1bf)"
+	},
+	"replays": [
+		{
+			"experiment": "segment-in-constituents/de:realtext",
+			"runId": "d2e3a281-84ab-48e3-9cf2-1193bf65e00a",
+			"offline": true,
+			"strict": "141/180, unchanged"
+		},
+		{
+			"experiment": "segment-in-constituents/de:adversarial",
+			"runId": "dbbbf163-7ce9-4f36-9f09-ab2c61452b07",
+			"offline": true,
+			"strict": "18/30, unchanged"
+		}
+	],
+	"flips": [
+		{
+			"case": "mit zu tun haben",
+			"move": "0 -> 3",
+			"cause": "the change: tun links to the VERB tun and zu to the PART every repetition"
+		},
+		{
+			"case": "so gut wie",
+			"move": "2 -> 3",
+			"cause": "noise from the guide's new text: repetition 2's wie moves from ADV to CCONJ, a borderline weight the clause doesn't address"
+		},
+		{
+			"case": "nach wie vor",
+			"move": "0 -> 0",
+			"cause": "output only: repetition 1's vor moves from ADP to ADV; nach (ADP) and wie (ADV) still miss gold"
+		}
+	],
+	"spend": {
+		"freshTokens": 327935,
+		"dollars": 0.01377,
+		"cap": "$0.05 (1,190,000 tokens), #1241's standing $1"
+	}
+}
