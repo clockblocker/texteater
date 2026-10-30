@@ -1,5 +1,5 @@
 import { type FixtureText, textFromParagraphs } from "@/fixtures";
-import type { Frame, Piece, StageWord } from "./timeline";
+import type { Piece, StageWord, Timeline } from "./timeline";
 
 /** One run of the lemma's header; a slot such as `jM` is set apart. */
 export type LemmaRun = {
@@ -30,8 +30,8 @@ export type MorphCase = {
 		readonly definitionLang: "de" | "en";
 		readonly tone?: "neuter";
 	};
-	/** The surface first, the lemma last. */
-	readonly frames: readonly Frame[];
+	/** The Attestation, then Syntax to the Surface, Inflection to the Lemma. */
+	readonly timeline: Timeline;
 };
 
 const piece = (id: string, focus = false, text = id): Piece =>
@@ -49,10 +49,8 @@ const ghost = (id: string, lit = false, text = id): StageWord =>
 // The hard case's words, as they first stand.
 const vielleicht = (lit = false) => ghost("Vielleicht", lit);
 const dass = (lit = false) => ghost("dass", lit, ", dass …");
-const es = (extra: Omit<StageWord, "id" | "pieces"> = {}) =>
-	word("es", [piece("es", extra.tag !== undefined)], extra);
-const da = word("da");
-const mit = word("mit", [piece("mit")], { glue: true });
+const es = word("es");
+const damit = [word("da"), word("mit", [piece("mit")], { glue: true })];
 const zuTun = word("zu tun");
 const hatte = (focus: "all" | "ending" | "none" = "none", tag?: string) =>
 	word(
@@ -62,11 +60,19 @@ const hatte = (focus: "all" | "ending" | "none" = "none", tag?: string) =>
 	);
 const haben = (focus = false, tag?: string) =>
 	word("hatte", [piece("ha"), piece("ben", focus)], tag ? { tag } : {});
-const slot = (focus = false, tag?: string) =>
+// `es` and `da-` keep their ids as they turn into their slots, so they
+// travel and only their text cross-fades.
+const subject = (focus = false, tag?: string) =>
+	word("es", [piece("es", focus, "jD")], {
+		kind: "slot",
+		...(tag ? { tag } : {}),
+	});
+const dative = (focus = false, tag?: string) =>
 	word("da", [piece("da", focus, "jM")], {
 		kind: "slot",
 		...(tag ? { tag } : {}),
 	});
+const fixedMit = (focus = false) => word("mit", [piece("mit", focus)]);
 
 const hardText = textFromParagraphs("harry", "de", "Harry Potter", [
 	"Vielleicht {hatte|mit-zu-tun-haben} {es|mit-zu-tun-haben} {damit|mit-zu-tun-haben} {zu|mit-zu-tun-haben} {tun|mit-zu-tun-haben}, dass er in einem dunklen Schrank lebte, jedenfalls war Harry für sein Alter immer recht klein und dürr gewesen.",
@@ -93,76 +99,97 @@ const hard: MorphCase = {
 		definition: "mit etwas zusammenhängen",
 		definitionLang: "de",
 	},
-	frames: [
-		{
+	timeline: {
+		start: {
 			words: [
 				vielleicht(true),
 				hatte("all"),
-				es(),
-				da,
-				mit,
+				es,
+				...damit,
 				zuTun,
 				dass(),
 			],
 			caption:
 				"In a main clause the verb comes second: *hatte*, right after *Vielleicht*.",
 		},
-		{
-			words: [es(), da, mit, zuTun, hatte("all"), dass()],
-			caption: "A dictionary puts the verb last.",
-		},
-		{
-			words: [
-				es(),
-				da,
-				mit,
-				zuTun,
-				hatte("ending", "past · 3rd sg"),
-				dass(),
-			],
-			caption:
-				"*hatte* is *haben* in the past, ‘it had’: Präteritum, 3rd person singular, indicative.",
-		},
-		{
-			words: [es(), da, mit, zuTun, haben(true, "infinitive"), dass()],
-			caption: "The dictionary lists the infinitive: *haben*.",
-		},
-		{
-			words: [es({ tag: "it" }), da, mit, zuTun, haben(), dass(true)],
-			caption:
-				"*es*, ‘it’, is the subject. It points ahead: the *dass*-clause says what ‘it’ is.",
-		},
-		{
-			words: [da, mit, zuTun, haben(), dass()],
-			caption: "A dictionary entry leaves the subject out.",
-		},
-		{
-			words: [
-				word("da", [piece("da", true)], { tag: "that" }),
-				word("mit", [piece("mit", true)], { tag: "with" }),
-				zuTun,
-				haben(),
-				dass(true),
-			],
-			caption:
-				"*damit* is *da* + *mit*, ‘with that’. Here *da* stands for the *dass*-clause.",
-		},
-		{
-			words: [word("mit"), slot(true, "dative"), zuTun, haben()],
-			caption:
-				"The entry keeps *mit* and leaves its object open: *jM*, someone or something, in the dative.",
-		},
-		{
-			words: [
-				word("mit"),
-				slot(),
-				word("zu tun", [piece("zu tun", true)], { tag: "unchanged" }),
-				haben(),
-			],
-			caption:
-				"*zu tun* stays as it is. Together: *mit jM zu tun haben*, ‘to have to do with’.",
-		},
-	],
+		stages: [
+			{
+				name: "Syntax",
+				result: "Surface",
+				frames: [
+					{
+						words: [es, ...damit, zuTun, hatte("all"), dass()],
+						caption: "In base order the verb goes last.",
+					},
+					{
+						words: [
+							subject(true, "subject"),
+							...damit,
+							zuTun,
+							hatte(),
+						],
+						caption:
+							"*es* fills the subject slot, so it becomes *jD*: someone, in the nominative.",
+					},
+					{
+						words: [
+							subject(),
+							fixedMit(true),
+							dative(true, "dative"),
+							zuTun,
+							hatte(),
+						],
+						caption:
+							"*damit* is *da-* + *mit*. *mit* is the expression's own word; *da-* fills a slot and becomes *jM*, in the dative.",
+					},
+					{
+						words: [
+							subject(),
+							fixedMit(),
+							dative(),
+							zuTun,
+							hatte(),
+						],
+						caption:
+							"The expression's words as they stand here, each slot as its case, the verb last.",
+					},
+				],
+			},
+			{
+				name: "Inflection",
+				result: "Lemma",
+				frames: [
+					{
+						words: [
+							subject(),
+							fixedMit(),
+							dative(),
+							zuTun,
+							hatte("ending", "past · 3rd sg"),
+						],
+						caption:
+							"*hatte* is *haben* in the past: Präteritum, 3rd person singular, indicative.",
+					},
+					{
+						words: [
+							subject(),
+							fixedMit(),
+							dative(),
+							zuTun,
+							haben(true, "infinitive"),
+						],
+						caption:
+							"The dictionary lists the infinitive: *haben*.",
+					},
+					{
+						words: [fixedMit(), dative(), zuTun, haben()],
+						caption:
+							"The Lemma leaves the subject out, so *jD* goes: *mit jM zu tun haben*, ‘to have to do with’.",
+					},
+				],
+			},
+		],
+	},
 };
 
 // The simple case's words.
@@ -193,48 +220,70 @@ const simple: MorphCase = {
 		definitionLang: "en",
 		tone: "neuter",
 	},
-	frames: [
-		{
-			words: [
-				ghost("mit"),
-				ghost("den"),
-				kindern([piece("Kind"), piece("er", true), piece("n", true)]),
-			],
-			caption: "*Kindern* is *Kind* with two endings.",
-		},
-		{
+	timeline: {
+		start: {
 			words: [
 				ghost("mit", true),
 				ghost("den"),
-				kindern([piece("Kind"), piece("er"), piece("n", true)], {
-					tag: "dative",
-				}),
+				kindern([piece("Kind"), piece("er"), piece("n")]),
 			],
-			caption:
-				"*-n* makes it dative plural, because *mit* takes the dative.",
+			caption: "*mit* takes the dative: *mit den Kindern*.",
 		},
-		{
-			words: [kindern([piece("Kind"), piece("er")])],
-			caption: "Without it: *Kinder*, the plain plural.",
-		},
-		{
-			words: [
-				kindern([piece("Kind"), piece("er", true)], { tag: "plural" }),
-			],
-			caption: "*-er* makes the plural: *ein Kind*, *zwei Kinder*.",
-		},
-		{
-			words: [kindern([piece("Kind")])],
-			caption: "The singular, as the dictionary lists it: *Kind*.",
-		},
-		{
-			words: [
-				word("das", [piece("das", true)], { tone: "neuter" }),
-				kindern([piece("Kind")], { tone: "neuter" }),
-			],
-			caption: "*Kind* is neuter: *das Kind*, ‘the child’.",
-		},
-	],
+		stages: [
+			{
+				name: "Syntax",
+				result: "Surface",
+				frames: [
+					{
+						words: [
+							kindern([piece("Kind"), piece("er"), piece("n")], {
+								tag: "dative",
+							}),
+						],
+						caption:
+							"One word, so nothing to rearrange: the Surface is *Kindern*, in the dative.",
+					},
+				],
+			},
+			{
+				name: "Inflection",
+				result: "Lemma",
+				frames: [
+					{
+						words: [
+							kindern(
+								[piece("Kind"), piece("er"), piece("n", true)],
+								{
+									tag: "dative pl.",
+								},
+							),
+						],
+						caption:
+							"*Kindern* is *Kind* with two endings. *-n* marks the dative plural.",
+					},
+					{
+						words: [
+							kindern([piece("Kind"), piece("er", true)], {
+								tag: "plural",
+							}),
+						],
+						caption:
+							"Without it, *Kinder*: *-er* makes the plural.",
+					},
+					{
+						words: [
+							word("das", [piece("das", true)], {
+								tone: "neuter",
+							}),
+							kindern([piece("Kind")], { tone: "neuter" }),
+						],
+						caption:
+							"The singular, as the dictionary lists it, is neuter: *das Kind*, ‘the child’.",
+					},
+				],
+			},
+		],
+	},
 };
 
 export const cases: readonly MorphCase[] = [hard, simple];

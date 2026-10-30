@@ -3,6 +3,7 @@ import {
 	useCallback,
 	useEffect,
 	useLayoutEffect,
+	useMemo,
 	useRef,
 	useState,
 } from "react";
@@ -15,13 +16,16 @@ import { initialKnobs, type Knobs, MorphInspector } from "./inspector";
 import { type Placement, placeBeside } from "./placement";
 import { type Cover, type CoverStack, Sheet } from "./sheet";
 import { MorphStage, type StageLook } from "./stage";
+import { beatsOf } from "./timeline";
 import { usePlayback } from "./use-playback";
 
 /**
  * Morph steps: a click on any word of a unit opens its Surface Card
  * beside the sentence, and the Card shows the clicked words turning into
- * the lemma, one visible step at a time, after Keynote's Magic Move and
- * Duolingo's tips. ⤢ opens the Card as a Sheet, where every step's
+ * the lemma in two named stages, one visible step at a time, after
+ * Keynote's Magic Move and Duolingo's tips: Syntax takes the words on the
+ * page to the Surface, where the stage can rest, and Inflection takes the
+ * Surface to the Lemma. ⤢ opens the Card as a Sheet, where every step's
  * caption is listed too; the lemma link opens the Lemma. The case and the
  * clicked word live in the URL.
  */
@@ -41,8 +45,10 @@ export default function MorphStepsDemo() {
 	const [sheet, setSheet] = useState<CoverStack | null>(null);
 	const [opened, setOpened] = useState(0);
 	const nextKey = useRef(0);
+	const beats = useMemo(() => beatsOf(morph.timeline), [morph]);
 	const playback = usePlayback({
-		frames: morph.frames,
+		beats,
+		pauseAtBoundary: knobs.boundary === "pause",
 		speed: knobs.speed,
 		loop: knobs.ending === "loop",
 		captions: knobs.captions,
@@ -260,7 +266,8 @@ export default function MorphStepsDemo() {
 								onLemma={() => openSheet("lemma")}
 								stage={
 									<MorphStage
-										frames={morph.frames}
+										beats={beats}
+										stages={morph.timeline.stages}
 										playback={playback}
 										look={look}
 										size="card"
@@ -289,7 +296,8 @@ export default function MorphStepsDemo() {
 										onLemma={() => pushCover("lemma")}
 										stage={
 											<MorphStage
-												frames={morph.frames}
+												beats={beats}
+												stages={morph.timeline.stages}
 												playback={playback}
 												look={look}
 												size="sheet"
@@ -298,6 +306,7 @@ export default function MorphStepsDemo() {
 									/>
 									<StepList
 										morph={morph}
+										beats={beats}
 										playback={playback}
 									/>
 								</>

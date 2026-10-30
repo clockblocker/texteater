@@ -3,8 +3,8 @@ import { Maximize2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { langAttrs } from "@/fixtures";
 import type { MorphCase } from "./cases";
-import { slotClass } from "./stage";
-import { captionRuns } from "./timeline";
+import { kindLabelClass, slotClass } from "./stage";
+import { type Beat, captionRuns } from "./timeline";
 import type { Playback } from "./use-playback";
 
 const surface =
@@ -155,10 +155,7 @@ export function LemmaCard({ morph }: { readonly morph: MorphCase }) {
 
 function KindLabel({ children }: { readonly children: ReactNode }) {
 	return (
-		<span
-			{...langAttrs("en")}
-			className="font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-faint uppercase"
-		>
+		<span {...langAttrs("en")} className={kindLabelClass}>
 			{children}
 		</span>
 	);
@@ -184,61 +181,92 @@ export function OpenAsSheet({ onClick }: { readonly onClick: () => void }) {
 
 /**
  * Every step's caption at once, as Keynote's slide navigator lists a
- * build: the Sheet has the room. The shown step stands out; a step jumps
- * the stage to it.
+ * build: the Sheet has the room. The steps stand under their stage's name,
+ * and a stage's result wears its kind label. The shown step stands out; a
+ * step jumps the stage to it.
  */
 export function StepList({
 	morph,
+	beats,
 	playback,
 }: {
 	readonly morph: MorphCase;
+	readonly beats: readonly Beat[];
 	readonly playback: Playback;
 }) {
 	return (
-		<ol {...langAttrs("en")} className="grid gap-0.5">
-			{morph.frames.map((frame, index) => (
-				<li key={frame.caption}>
-					<button
-						type="button"
-						aria-current={
-							index === playback.at ? "step" : undefined
-						}
-						onClick={() => playback.go(index)}
-						className={cn(
-							"grid w-full cursor-pointer grid-cols-[1.5rem_1fr] items-baseline rounded-md px-2 py-1.5 text-start text-sm transition-colors",
-							index === playback.at
-								? "bg-link/10 text-ink"
-								: index < playback.at
-									? "text-ink-soft hover:bg-paper"
-									: "text-ink-muted hover:bg-paper",
+		<div {...langAttrs("en")} className="grid gap-3">
+			{morph.timeline.stages.map((stage, stageIndex) => (
+				<section key={stage.name} className="grid gap-0.5">
+					<h3 className={cn(kindLabelClass, "px-2")}>{stage.name}</h3>
+					<ol className="grid gap-0.5">
+						{beats.map((beat, index) =>
+							beat.stage === stageIndex ? (
+								<StepItem
+									key={beat.frame.caption}
+									beat={beat}
+									index={index}
+									playback={playback}
+								/>
+							) : null,
 						)}
-					>
-						<span
-							className={cn(
-								"font-mono text-xs tabular-nums",
-								index === playback.at
-									? "text-link"
-									: "text-ink-faint",
-							)}
-						>
-							{index + 1}
-						</span>
-						<span>
-							{captionRuns(frame.caption).map((run, at) =>
-								run.german ? (
-									<i key={`${at}:${run.text}`} lang="de">
-										{run.text}
-									</i>
-								) : (
-									<span key={`${at}:${run.text}`}>
-										{run.text}
-									</span>
-								),
-							)}
-						</span>
-					</button>
-				</li>
+					</ol>
+				</section>
 			))}
-		</ol>
+		</div>
+	);
+}
+
+function StepItem({
+	beat,
+	index,
+	playback,
+}: {
+	readonly beat: Beat;
+	readonly index: number;
+	readonly playback: Playback;
+}) {
+	const shown = index === playback.at;
+	return (
+		<li>
+			<button
+				type="button"
+				aria-current={shown ? "step" : undefined}
+				onClick={() => playback.go(index)}
+				className={cn(
+					"grid w-full cursor-pointer grid-cols-[1.5rem_1fr] items-baseline rounded-md px-2 py-1.5 text-start text-sm transition-colors",
+					shown
+						? "bg-link/10 text-ink"
+						: index < playback.at
+							? "text-ink-soft hover:bg-paper"
+							: "text-ink-muted hover:bg-paper",
+				)}
+			>
+				<span
+					className={cn(
+						"font-mono text-xs tabular-nums",
+						shown ? "text-link" : "text-ink-faint",
+					)}
+				>
+					{index + 1}
+				</span>
+				<span>
+					{beat.result ? (
+						<span className={cn(kindLabelClass, "me-1.5")}>
+							{beat.result}
+						</span>
+					) : null}
+					{captionRuns(beat.frame.caption).map((run, at) =>
+						run.german ? (
+							<i key={`${at}:${run.text}`} lang="de">
+								{run.text}
+							</i>
+						) : (
+							<span key={`${at}:${run.text}`}>{run.text}</span>
+						),
+					)}
+				</span>
+			</button>
+		</li>
 	);
 }

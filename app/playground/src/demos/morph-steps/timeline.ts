@@ -41,6 +41,55 @@ export type Frame = {
 	readonly caption: string;
 };
 
+/**
+ * One of the two named steps between the three forms: Syntax takes the
+ * Attestation to the Surface, Inflection takes the Surface to the Lemma.
+ */
+export type Stage = {
+	/** What the stage does: `Syntax`, `Inflection`. */
+	readonly name: string;
+	/** The form it ends on: `Surface`, `Lemma`. */
+	readonly result: string;
+	/** Its steps; the last is its result, where it rests. */
+	readonly frames: readonly Frame[];
+};
+
+/** The words on the page, then each stage's steps. */
+export type Timeline = {
+	/** The Attestation: the clicked words as the page has them. */
+	readonly start: Frame;
+	readonly stages: readonly Stage[];
+};
+
+/** A frame in its place on the timeline. */
+export type Beat = {
+	readonly frame: Frame;
+	/** The stage it belongs to; the start belongs to the first. */
+	readonly stage: number;
+	/** The form this beat rests on, on a stage's last frame. */
+	readonly result?: string;
+};
+
+export function beatsOf(timeline: Timeline): Beat[] {
+	return [
+		{ frame: timeline.start, stage: 0 },
+		...timeline.stages.flatMap((stage, index) =>
+			stage.frames.map((frame, at) =>
+				at === stage.frames.length - 1
+					? { frame, stage: index, result: stage.result }
+					: { frame, stage: index },
+			),
+		),
+	];
+}
+
+/** The beats a stage rests on before the next stage starts. */
+export function boundariesOf(beats: readonly Beat[]): number[] {
+	return beats.flatMap((beat, index) =>
+		beat.result !== undefined && index < beats.length - 1 ? [index] : [],
+	);
+}
+
 /** Words that sit together, glued ones in one unbreakable run. */
 export type Cluster = {
 	/** The first word's id: the run keeps it while its words change. */
@@ -103,10 +152,11 @@ export function captionRuns(
 }
 
 /**
- * How long a frame stays before autoplay moves on, in ms at 1×: a beat
+ * How long a beat stays before autoplay moves on, in ms at 1×: a beat
  * for the move, then reading time for the caption when it is shown.
  */
-export function dwellMs(frame: Frame, captions: boolean): number {
-	const reading = captions ? plainCaption(frame.caption).length * 42 : 0;
-	return 1300 + reading;
+export function dwellMs(beat: Beat, captions: boolean): number {
+	const reading = captions ? plainCaption(beat.frame.caption).length * 42 : 0;
+	// A stage's result gets a longer look, even when play runs on.
+	return 1300 + reading + (beat.result === undefined ? 0 : 900);
 }

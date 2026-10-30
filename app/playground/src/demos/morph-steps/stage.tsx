@@ -15,10 +15,11 @@ import {
 import { type ReactNode, useEffect, useId, useRef } from "react";
 import { langAttrs } from "@/fixtures";
 import {
+	type Beat,
 	captionRuns,
 	clustersOf,
-	type Frame,
 	matchByWord,
+	type Stage,
 	type StageWord,
 } from "./timeline";
 import type { Playback } from "./use-playback";
@@ -40,26 +41,34 @@ const easeInOut = [0.42, 0, 0.58, 1] as const;
 export const slotClass =
 	"rounded-[0.3em] border border-dashed border-current/50 px-[0.25em] text-[0.8em] font-normal italic";
 
+/** The Card's quiet kind label: `SURFACE`, `LEMMA`. */
+export const kindLabelClass =
+	"font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-faint uppercase";
+
 /**
  * The metamorphosis: the clicked words on a small stage, turning into the
- * lemma one frame at a time, Magic Move style. A word travels to its new
- * place, a piece it loses fades out where it stood and a piece it gains
- * fades in where it lands; the frame's caption says what changed and why,
- * and a tap on the words steps on. The controls under it play, pause,
- * step and scrub.
+ * Surface and then the lemma one frame at a time, Magic Move style. A word
+ * travels to its new place, a piece it loses fades out where it stood and
+ * a piece it gains fades in where it lands; the frame's caption says what
+ * changed and why, and a tap on the words steps on. Each stage's result
+ * wears its kind label. The controls under it play, pause, step and scrub,
+ * with the dots grouped by stage.
  */
 export function MorphStage({
-	frames,
+	beats,
+	stages,
 	playback,
 	look,
 	size,
 }: {
-	readonly frames: readonly Frame[];
+	readonly beats: readonly Beat[];
+	readonly stages: readonly Stage[];
 	readonly playback: Playback;
 	readonly look: StageLook;
 	readonly size: "card" | "sheet";
 }) {
-	const frame = frames[playback.at];
+	const beat = beats[playback.at];
+	const frame = beat?.frame;
 	const groupId = useId();
 	// Words that were on the stage last frame travel; only new ones fade in.
 	const seen = useRef<ReadonlySet<string>>(new Set());
@@ -69,8 +78,8 @@ export function MorphStage({
 	useEffect(() => {
 		seen.current = new Set(words.map((word) => word.id));
 	});
-	if (!frame) return null;
-	const landed = playback.at === frames.length - 1;
+	if (!beat || !frame) return null;
+	const landed = playback.at === beats.length - 1;
 
 	return (
 		<MotionConfig
@@ -92,10 +101,30 @@ export function MorphStage({
 					className={cn(
 						"relative flex cursor-pointer flex-wrap items-baseline gap-x-[0.3em] rounded-lg bg-canvas/60 select-none",
 						size === "card"
-							? "min-h-[5.5rem] gap-y-5 px-3 pt-4 pb-6 text-xl"
-							: "min-h-[8rem] gap-y-7 px-5 pt-7 pb-9 text-3xl",
+							? "min-h-[6.25rem] gap-y-5 px-3 pt-7 pb-6 text-xl"
+							: "min-h-[9rem] gap-y-7 px-5 pt-10 pb-9 text-2xl @min-[640px]/frame:text-3xl",
 					)}
 				>
+					<AnimatePresence initial={false}>
+						{beat.result ? (
+							<motion.span
+								key={beat.result}
+								{...langAttrs("en")}
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								className={cn(
+									kindLabelClass,
+									"pointer-events-none absolute",
+									size === "card"
+										? "start-3 top-2.5"
+										: "start-5 top-3.5",
+								)}
+							>
+								{beat.result}
+							</motion.span>
+						) : null}
+					</AnimatePresence>
 					<LayoutGroup id={groupId}>
 						<AnimatePresence mode="popLayout" initial={false}>
 							{clustersOf(words).map((cluster) => (
@@ -130,7 +159,7 @@ export function MorphStage({
 						size={size}
 					/>
 				) : null}
-				<Controls playback={playback} />
+				<Controls beats={beats} stages={stages} playback={playback} />
 			</div>
 		</MotionConfig>
 	);
@@ -253,7 +282,15 @@ function Caption({
 	);
 }
 
-function Controls({ playback }: { readonly playback: Playback }) {
+function Controls({
+	beats,
+	stages,
+	playback,
+}: {
+	readonly beats: readonly Beat[];
+	readonly stages: readonly Stage[];
+	readonly playback: Playback;
+}) {
 	const { at, count, playing, ended } = playback;
 	return (
 		<div className="flex items-center gap-0.5">
@@ -283,7 +320,7 @@ function Controls({ playback }: { readonly playback: Playback }) {
 			>
 				<ChevronRight className="size-4 rtl:-scale-x-100" />
 			</ControlButton>
-			<Scrubber playback={playback} />
+			<Scrubber beats={beats} stages={stages} playback={playback} />
 		</div>
 	);
 }
@@ -314,33 +351,70 @@ function ControlButton({
 }
 
 /**
- * One dot per frame, the shown one stretched into a pill; a native range
- * lies over them, so a drag scrubs through the frames and the arrow keys
- * step.
+ * One dot per beat, the shown one stretched into a pill, grouped by stage
+ * as a video's scrubber groups its chapters, each group named under it; a
+ * native range lies over them, so a drag scrubs through the beats and the
+ * arrow keys step.
  */
-function Scrubber({ playback }: { readonly playback: Playback }) {
+function Scrubber({
+	beats,
+	stages,
+	playback,
+}: {
+	readonly beats: readonly Beat[];
+	readonly stages: readonly Stage[];
+	readonly playback: Playback;
+}) {
 	const { at, count } = playback;
+	const current = beats[at]?.stage ?? 0;
 	return (
 		<div className="relative ms-2 flex h-8 min-w-0 flex-1 items-center">
-			<div aria-hidden="true" className="flex w-full items-center gap-1">
-				{Array.from({ length: count }, (_, index) => (
-					<span
-						key={index}
-						className={cn(
-							"h-1.5 rounded-full transition-all duration-300",
-							index === at
-								? "flex-[3] bg-link"
-								: index < at
-									? "flex-1 bg-ink-muted"
-									: "flex-1 bg-line",
-						)}
-					/>
-				))}
+			<div
+				aria-hidden="true"
+				className="flex w-full items-center gap-2.5"
+			>
+				{stages.map((stage, index) => {
+					const members = beats.flatMap((beat, beatIndex) =>
+						beat.stage === index ? [beatIndex] : [],
+					);
+					return (
+						<div
+							key={stage.name}
+							className="relative flex min-w-0 items-center gap-1"
+							style={{ flexGrow: members.length + 2 }}
+						>
+							{members.map((beatIndex) => (
+								<span
+									key={beatIndex}
+									className={cn(
+										"h-1.5 rounded-full transition-all duration-300",
+										beatIndex === at
+											? "flex-[3] bg-link"
+											: beatIndex < at
+												? "flex-1 bg-ink-muted"
+												: "flex-1 bg-line",
+									)}
+								/>
+							))}
+							<span
+								{...langAttrs("en")}
+								className={cn(
+									"absolute start-0 top-full mt-1 font-mono text-[0.58rem] leading-none font-bold tracking-[0.1em] whitespace-nowrap uppercase transition-colors duration-300",
+									index === current
+										? "text-ink-soft"
+										: "text-ink-faint",
+								)}
+							>
+								{stage.name}
+							</span>
+						</div>
+					);
+				})}
 			</div>
 			<input
 				type="range"
 				aria-label="Step"
-				aria-valuetext={`Step ${at + 1} of ${count}`}
+				aria-valuetext={`Step ${at + 1} of ${count}, ${stages[current]?.name ?? ""}`}
 				min={0}
 				max={count - 1}
 				step={1}
