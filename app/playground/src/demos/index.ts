@@ -51,7 +51,7 @@ export const demos: readonly Demo[] = [
 		slug: "interlinear-gloss",
 		title: "Interlinear gloss",
 		description:
-			"The clicked words with the lemma's pieces and grammar glossed under each one.",
+			"An Attestation Card glosses the syntax into the Surface, and a Surface Card glosses the inflection into the lemma.",
 		inspiration: ["Leipzig Glossing Rules", "Interlinear books"],
 		Component: lazy(() => import("./interlinear-gloss")),
 	},
@@ -59,7 +59,7 @@ export const demos: readonly Demo[] = [
 		slug: "morph-steps",
 		title: "Morph steps",
 		description:
-			"The clicked words turning into the lemma one visible step at a time.",
+			"An Attestation Card animates the syntax into the Surface, and a Surface Card animates the inflection into the lemma.",
 		inspiration: ["Keynote Magic Move", "Duolingo"],
 		Component: lazy(() => import("./morph-steps")),
 	},
