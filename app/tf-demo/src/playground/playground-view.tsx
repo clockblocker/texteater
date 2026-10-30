@@ -58,7 +58,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Reflexives",
 		icon: FlipHorizontal2Icon,
 		description:
-			"A Reading's Citation with its lexical reflexive, and where the Valency Line puts it (#1285), from the Notes fake db. Knobs in the inspector.",
+			"A Reading's Citation with its lexical reflexive, and whether its heading names the reflexive's case (#1285), from the Notes fake db. Knobs in the inspector.",
 		render: (route) => <ReflexivesPrototype route={route} />,
 	},
 	{

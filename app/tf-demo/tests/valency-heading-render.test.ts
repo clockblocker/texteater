@@ -68,8 +68,6 @@ const reflexive = (
 const cases: readonly {
 	readonly lemma: Lemma;
 	readonly frame: ValencyFrame;
-	readonly line: string;
-	/** The heading's line, in citation order. */
 	readonly heading: string;
 }[] = [
 	{
@@ -87,7 +85,6 @@ const cases: readonly {
 				],
 			},
 		],
-		line: ">passen (auf `jN`) auf<",
 		heading: "(auf `jN`) auf|passen",
 	},
 	{
@@ -105,7 +102,6 @@ const cases: readonly {
 				],
 			},
 		],
-		line: ">fangen (mit `jM`) an<",
 		heading: "(mit `jM`) an|fangen",
 	},
 	{
@@ -129,7 +125,6 @@ const cases: readonly {
 				],
 			},
 		],
-		line: "warten (auf `jN`)",
 		heading: "(auf `jN`) warten",
 	},
 	{
@@ -152,7 +147,6 @@ const cases: readonly {
 				],
 			},
 		],
-		line: "stolz (auf `jN`)",
 		heading: "stolz (auf `jN`)",
 	},
 	{
@@ -170,7 +164,6 @@ const cases: readonly {
 				],
 			},
 		],
-		line: "gehen `jM` auf den Keks",
 		heading: "`jM` auf den Keks gehen",
 	},
 	{
@@ -199,11 +192,10 @@ const cases: readonly {
 				],
 			},
 		],
-		line: "stellen (`jM`) `jN` zur Verfügung",
 		heading: "(`jM`) `jN` zur Verfügung stellen",
 	},
-	// Not ADR 0034's lines: the frame's lexical reflexive follows the head
-	// (ADR 0052), naming its case when it is Dat.
+	// Not ADR 0034's lines: the frame's lexical reflexive goes where the
+	// Citation puts it (ADR 0052), naming its case when it is Dat.
 	{
 		lemma: verb("vorstellen", "vor"),
 		frame: [
@@ -219,7 +211,6 @@ const cases: readonly {
 				],
 			},
 		],
-		line: ">stellen sich (Dat) `jN` vor<",
 		heading: "sich (Dat) `jN` vor|stellen",
 	},
 	{
@@ -238,43 +229,36 @@ const cases: readonly {
 				],
 			},
 		],
-		line: "erinnern sich (an `jN`)",
 		heading: "sich (an `jN`) erinnern",
 	},
 	{
 		lemma: verb("schämen", null),
 		frame: [reflexive("Required", "Acc")],
-		line: "schämen sich",
 		heading: "sich schämen",
 	},
 	{
 		lemma: verb("ausruhen", "aus"),
 		frame: [reflexive("Optional", "Acc")],
-		line: ">ruhen (sich) aus<",
 		heading: "(sich) aus|ruhen",
 	},
 	{
 		lemma: locution("Sorgen machen"),
 		frame: [reflexive("Required", "Dat")],
-		line: "machen sich (Dat) Sorgen",
 		heading: "sich (Dat) Sorgen machen",
 	},
 	{
 		lemma: locution("es gemütlich machen"),
 		frame: [reflexive("Required", "Dat")],
-		line: "machen es sich (Dat) gemütlich",
 		heading: "es sich (Dat) gemütlich machen",
 	},
 	{
 		lemma: locution("außer sein"),
 		frame: [reflexive("Required", "Dat", "außer")],
-		line: "sein außer sich (Dat)",
 		heading: "außer sich (Dat) sein",
 	},
 	{
 		lemma: locution("es in haben"),
 		frame: [reflexive("Required", "Dat", "in")],
-		line: "haben es in sich (Dat)",
 		heading: "es in sich (Dat) haben",
 	},
 	// A slot whose preposition is a Fixed word goes right after it.
@@ -303,18 +287,22 @@ const cases: readonly {
 				complements: [{ kind: "Clause", form: "Dass" }],
 			},
 		],
-		line: "haben mit `jM` zu tun",
 		heading: "mit `jM` zu tun haben",
 	},
 ];
 
-for (const { lemma, frame, line, heading } of cases) {
-	test(`the Valency Block reads ${line} and the heading ${heading}`, () => {
-		const markup = renderReading(lemma, frame);
-		expect(valencyLine(markup)).toBe(line);
-		expect(headingLine(markup)).toBe(`🧩 ${heading}`);
+for (const { lemma, frame, heading } of cases) {
+	test(`the heading reads ${heading}`, () => {
+		expect(headingLine(renderReading(lemma, frame))).toBe(`🧩 ${heading}`);
 	});
 }
+
+test("a German Reading shows its frame in the heading alone, with no Valency Block", () => {
+	for (const { lemma, frame } of cases)
+		expect(renderReading(lemma, frame)).not.toContain(
+			'aria-label="Valency"',
+		);
+});
 
 test("a heading without a frame to show cites the Canonical Form", () => {
 	expect(headingLine(renderReading(locution("mit zu tun haben"), []))).toBe(
@@ -323,38 +311,22 @@ test("a heading without a frame to show cites the Canonical Form", () => {
 	expect(headingLine(renderReading(verb("aufpassen", "auf"), []))).toBe(
 		"🧩 auf|passen",
 	);
-});
-
-test("only separable verbs carry the split marks", () => {
-	const marked = cases.filter(({ lemma, frame }) =>
-		renderReading(lemma, frame).includes('data-slot="valency-split"'),
-	);
-	expect(marked.map(({ lemma }) => lemma.canonicalForm)).toEqual([
-		"aufpassen",
-		"anfangen",
-		"vorstellen",
-		"ausruhen",
-	]);
-});
-
-test("a Reading with no frame, an empty frame, or only a subject has no Valency Block", () => {
-	const warten = verb("warten", null);
-	for (const frame of [
-		undefined,
-		[],
-		[
-			{
-				status: "Required",
-				complements: [
-					{ kind: "Case", governedCase: "Nom", referent: "Someone" },
-				],
-			},
-		] satisfies ValencyFrame,
-	]) {
-		expect(renderReading(warten, frame)).not.toContain(
-			'aria-label="Valency"',
-		);
-	}
+	expect(
+		headingLine(
+			renderReading(verb("warten", null), [
+				{
+					status: "Required",
+					complements: [
+						{
+							kind: "Case",
+							governedCase: "Nom",
+							referent: "Someone",
+						},
+					],
+				},
+			]),
+		),
+	).toBe("🧩 warten");
 });
 
 test("a Slot with alternatives or a free complement shows nothing until #676", () => {
@@ -394,9 +366,9 @@ test("a Slot with alternatives or a free complement shows nothing until #676", (
 			],
 		},
 	] satisfies ValencyFrame;
-	expect(renderReading(reden, frame)).not.toContain('aria-label="Valency"');
+	expect(headingLine(renderReading(reden, frame))).toBe("🧩 reden");
 	expect(
-		valencyLine(
+		headingLine(
 			renderReading(reden, [
 				...frame,
 				{
@@ -411,31 +383,10 @@ test("a Slot with alternatives or a free complement shows nothing until #676", (
 				},
 			]),
 		),
-	).toBe("reden `jM`");
+	).toBe("🧩 `jM` reden");
 });
 
-test("the Valency Block follows the anchor Blocks", () => {
-	const { lemma, frame } = cases[0] ?? {};
-	if (!lemma || !frame) throw new Error("missing case");
-	const markup = renderReading(lemma, frame);
-	expect(markup.indexOf('aria-label="Source Contexts"')).toBeLessThan(
-		markup.indexOf('aria-label="Valency"'),
-	);
-	expect(markup.indexOf('aria-label="Valency"')).toBeLessThan(
-		markup.indexOf('aria-label="Translations"'),
-	);
-});
-
-/** The rendered line, with slot tokens written back as backticked text. */
-function valencyLine(markup: string): string {
-	const section = markup.match(
-		/<section[^>]*aria-label="Valency"[^>]*>.*?<p data-slot="valency-line"[^>]*>(.*?)<\/p>/,
-	)?.[1];
-	if (section === undefined) throw new Error("no Valency Block rendered");
-	return plainText(section);
-}
-
-/** The Reading's title, emoji included, as {@link valencyLine} writes it. */
+/** The Reading's title, emoji included, with slot tokens written back as backticked text. */
 function headingLine(markup: string): string {
 	const title = markup.match(/data-reading-title=""[^>]*>(.*?)<\/h\d>/)?.[1];
 	if (title === undefined) throw new Error("no Reading title rendered");

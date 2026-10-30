@@ -25,7 +25,6 @@ import {
 	renderDeAdpositionSourceContexts,
 	renderDeAdpositionValency,
 } from "./block-renderers/reading/valency/adposition";
-import { renderDeReadingValency } from "./block-renderers/reading/valency/default";
 
 const READING_BASE = {
 	Heading: DefaultReadingHeadingRenderer,
@@ -41,12 +40,11 @@ const READING_RELATIONAL = {
 };
 /**
  * The routes whose Readings may hold a Valency Frame (Dumrel's valency
- * policy). Their heading cites the frame too.
+ * policy). Their heading shows it as the German Valency Line.
  */
 const READING_VALENT = {
 	...READING_RELATIONAL,
 	Heading: renderHeadingDeValent,
-	Valency: renderDeReadingValency,
 };
 
 /** An ADP renders its cases from dumcorpus's ADP Case Table instead of a frame. */

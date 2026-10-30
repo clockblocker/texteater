@@ -243,25 +243,23 @@ How Hebrew `לו` itself is analysed belongs to areas 2 and 3 of
 
 **Rendering.**
 
-A Valency Block shows the learner the Lemma with its frame. Optional slots
-are in parentheses. A slot's token names its case alone: `jN` Acc, `jM` Dat,
-`jS` Gen. A separable verb's `>` and `<` mark its split and are rendered
-from its `hasSepPrefix` Core Feature: `>passen` is the base the prefix
-attaches to on its left and `auf<` is the separated prefix, so `auf<` +
-`>passen` reads `aufpassen`. Only separable verbs carry them. A Reflexive
-Slot prints `sich`, never stored in the Canonical Form. The Reading's Citation
-puts it first or after a leading `es` (`sich erinnern`, `es sich gemütlich
-machen`), and tf-demo decides where the Block places it among the Slots
-(ADR 0052). A slot whose preposition is a Locution's Fixed word follows it:
-`haben mit jM zu tun`.
+A Reading Note's heading shows the learner the Lemma with its frame, as a
+citation after the emoji. Optional slots are in parentheses. A slot's token
+names its case alone: `jN` Acc, `jM` Dat, `jS` Gen. A verb comes last, after
+its slots and a Locution's Fixed words, and its `hasSepPrefix` Core Feature
+splits a separable prefix off by a bar: `auf|passen`. A Reflexive Slot
+prints `sich`, never stored in the Canonical Form, where the Reading's
+Citation puts it (ADR 0052): `sich (an jN) erinnern`, `es sich gemütlich
+machen`. A slot whose preposition is a Locution's Fixed word follows it:
+`mit jM zu tun haben`. A Reading has no separate Valency Block.
 
 ```text
->passen (auf `jN`) auf<                 aufpassen
->fangen (mit `jM`) an<                  anfangen
-warten (auf `jN`)                       warten
+(auf `jN`) auf|passen                   aufpassen
+(mit `jM`) an|fangen                    anfangen
+(auf `jN`) warten                       warten
 stolz (auf `jN`)                        stolz
-gehen `jM` auf den Keks                 jemandem auf den Keks gehen
-stellen (`jM`) `jN` zur Verfügung       (jemandem) etwas zur Verfügung stellen
+`jM` auf den Keks gehen                 jemandem auf den Keks gehen
+(`jM`) `jN` zur Verfügung stellen       (jemandem) etwas zur Verfügung stellen
 ```
 
 ## Consequences

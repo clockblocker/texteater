@@ -193,7 +193,7 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 	expect(note.structuralReferences).toHaveLength(1);
 });
 
-test("a stored Valency Frame reaches the Reading Note and renders its Valency Block", async () => {
+test("a stored Valency Frame reaches the Reading Note and renders in its heading", async () => {
 	const t = createTestConvex();
 	const lemma = {
 		unitKind: "Lemma",
@@ -240,7 +240,7 @@ test("a stored Valency Frame reaches the Reading Note and renders its Valency Bl
 	if (!note) throw new Error("Expected a Reading Note.");
 	expect(note.knowledge.valency).toEqual(valency);
 	const markup = renderToStaticMarkup(renderNote({ noteData: note }));
-	expect(markup).toContain('aria-label="Valency"');
+	expect(markup).not.toContain('aria-label="Valency"');
 	expect(markup).toContain(
 		'<span data-slot="valency-token" class="font-mono text-[0.9em] text-ink-soft">jN</span>',
 	);

@@ -175,8 +175,8 @@ preposition when the Slot has one: `außer sich sein`, `zu sich kommen`, `es
 in sich haben`. Otherwise it puts `sich` first, or right after a leading
 `es`: `sich erinnern`, `sich Sorgen machen`, `es sich gemütlich machen`. A
 heading at Lemma level has no frame to read, so it shows the bare Lemma,
-`erinnern`. How the Valency Block places `sich` among the Slots, and whether
-it shows the case, is decided in tf-demo as a presentation question. An
+`erinnern`. Whether a Reading's heading names the case beside `sich` is
+decided in tf-demo as a presentation question. An
 inflection table never prints the reflexive: its cells are bare forms (`er
 schämt`, not `er schämt sich`), as the user ruled on 2026-10-25. Dumgen's
 prompts are not read by a learner, and they pass the Canonical Form and the

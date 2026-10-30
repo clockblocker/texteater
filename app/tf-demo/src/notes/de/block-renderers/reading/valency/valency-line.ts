@@ -19,9 +19,7 @@ export type ValencyLinePart =
 	| {
 			readonly part: "Head";
 			readonly text: string;
-			/** A separable verb's base, which its prefix attaches to on the left. */
-			readonly separable: boolean;
-			/** A separable prefix still on the verb, as a citation writes it: `auf|passen`. */
+			/** A separable verb's prefix, which the heading splits off: `auf|passen`. */
 			readonly prefix: string | null;
 	  }
 	| {
@@ -44,33 +42,21 @@ export type ValencyLinePart =
 			readonly case: RenderedCase;
 			/** The person form of the case, whatever the referent: `jN`, `jM` or `jS`. */
 			readonly token: string;
-	  }
-	| { readonly part: "SeparatedPrefix"; readonly text: string };
+	  };
 
 /**
- * Where the line puts a lexical reflexive and which case it names (#1285, a
- * presentation choice). The default follows DWDS's WDG lines, which read in
- * main-clause order with the reflexive right after the verb (`/jmd. stellt
- * sich <Dat.> etw. vor/`), and Duden, which names a dative reflexive and
- * leaves the accusative unmarked (`sich (Dativ) etwas vorstellen`).
+ * Which case the line names beside a lexical reflexive (#1285, a
+ * presentation choice). The default follows Duden, which names a dative
+ * reflexive and leaves the accusative unmarked (`sich (Dativ) etwas
+ * vorstellen`).
  */
 export type ValencyLineStyle = {
-	readonly reflexivePlacement: "AfterHead" | "BeforeHead";
 	readonly reflexiveCase: "DativeOnly" | "Always" | "Never";
 };
 
 export const DEFAULT_VALENCY_LINE_STYLE: ValencyLineStyle = {
-	reflexivePlacement: "AfterHead",
 	reflexiveCase: "DativeOnly",
 };
-
-/**
- * The line's word order. The Valency Block reads as a main clause, the verb
- * first and a separable prefix split off to the end (`>passen (auf jN)
- * auf<`). A Reading Note's heading reads as a citation, the verb last with
- * its prefix on (`(auf jN) aufpassen`, `mit jM zu tun haben`).
- */
-export type ValencyLineOrder = "MainClause" | "Citation";
 
 type ValencyLemma = {
 	readonly family: string;
@@ -95,37 +81,33 @@ const CASE_SLOT_ORDER = [
 
 /**
  * The German Valency Line of a Lemma and its Reading's Valency Frame, or
- * `null` when the frame has nothing to show. It is computed each render and
- * never stored.
+ * `null` when the frame has nothing to show. A Reading Note's heading prints
+ * it; it is computed each render and never stored.
  *
- * In main-clause order the line reads: the head (a separable verb's base,
- * marked `>`), the frame's lexical reflexive `sich`, the bare case slots
- * (Dat before Acc before Gen), a Locution's other Fixed words, the
- * preposition slots, and last the separated prefix (marked `<`). In
- * citation order a verb's head moves to the end with its prefix on, and the
- * slots come before the Fixed words: `jM auf den Keks gehen`. Any other
- * head stays first in both orders. Optional slots are parenthesised. A Nom
- * slot is the subject and is not shown.
+ * The line reads as a citation. A verb's line reads: the frame's lexical
+ * reflexive `sich`, the bare case slots (Dat before Acc before Gen), the
+ * preposition slots, a Locution's other Fixed words, and last the head with
+ * any separable prefix on it: `sich (Dat) jN vorstellen`, `jM auf den Keks
+ * gehen`. Any other head comes first, its slots after it: `stolz (auf jN)`.
+ * Optional slots are parenthesised. A Nom slot is the subject and is not
+ * shown.
  *
  * A slot whose preposition is one of the Locution's Fixed words goes right
- * after that word and prints only its token: `haben mit jM zu tun`, `mit jM
- * zu tun haben`. A reflexive with a preposition does the same (`sein außer
- * sich`), and a leading `es` stays before the reflexive (`machen es sich
- * gemütlich`), as in a German main clause and as the Citation places `sich`.
- * Keep the whole ordering rule here.
+ * after that word and prints only its token: `mit jM zu tun haben`. A
+ * reflexive with a preposition does the same (`außer sich sein`), and a
+ * leading `es` stays before the reflexive (`es sich gemütlich machen`), as
+ * the Citation places `sich`. Keep the whole ordering rule here.
  */
 export function germanValencyLine(
 	lemma: ValencyLemma,
 	frame: readonly FrameSlot[] | undefined,
 	style: ValencyLineStyle = DEFAULT_VALENCY_LINE_STYLE,
-	order: ValencyLineOrder = "MainClause",
 ): readonly ValencyLinePart[] | null {
 	const slots = (frame ?? []).flatMap(slotPart);
 	const reflexive = reflexiveSlotOf(frame);
 	if (slots.length === 0 && !reflexive) return null;
 
 	const { head, fixed } = splitCanonicalForm(lemma);
-	const prefix = separablePrefix(lemma.coreFeatures, head);
 	const inFixed = (preposition: string | null): preposition is string =>
 		preposition !== null && fixed.includes(preposition);
 	const caseSlots = CASE_SLOT_ORDER.flatMap((grammaticalCase) =>
@@ -141,7 +123,6 @@ export function germanValencyLine(
 	const governor = reflexive?.preposition ?? null;
 	const governed = inFixed(governor);
 	const lead = !governed && fixed[0] === "es" ? fixed.slice(0, 1) : [];
-	const opening = [...fixedPart(lead), ...(sich && !governed ? [sich] : [])];
 	const phrase = fixedPhrase(fixed.slice(lead.length), [
 		...(sich && governed ? [{ after: governor, part: sich }] : []),
 		...slots.flatMap((slot) =>
@@ -155,30 +136,21 @@ export function germanValencyLine(
 				: [],
 		),
 	]);
-
-	if (order === "Citation" && lemma.kind === "VERB")
-		return [
-			...opening,
-			...caseSlots,
-			...freeSlots,
-			...phrase,
-			{ part: "Head", text: head, separable: false, prefix },
-		];
+	const complements = [
+		...fixedPart(lead),
+		...(sich && !governed ? [sich] : []),
+		...caseSlots,
+		...freeSlots,
+		...phrase,
+	];
 	const headPart: ValencyLinePart = {
 		part: "Head",
-		text: prefix ? head.slice(prefix.length) : head,
-		separable: prefix !== null,
-		prefix: null,
+		text: head,
+		prefix: separablePrefix(lemma.coreFeatures, head),
 	};
-	return [
-		...(style.reflexivePlacement === "BeforeHead"
-			? [...opening, headPart]
-			: [headPart, ...opening]),
-		...caseSlots,
-		...phrase,
-		...freeSlots,
-		...(prefix ? [{ part: "SeparatedPrefix" as const, text: prefix }] : []),
-	];
+	return lemma.kind === "VERB"
+		? [...complements, headPart]
+		: [headPart, ...complements];
 }
 
 function fixedPart(words: readonly string[]): ValencyLinePart[] {

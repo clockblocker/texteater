@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ValencyLineStyleContext } from "@/notes/de/block-renderers/reading/valency/default";
+import { ValencyLineStyleContext } from "@/notes/de/block-renderer-overrides/reading/heading/valency";
 import {
 	DEFAULT_VALENCY_LINE_STYLE,
 	type ValencyLineStyle,
@@ -15,7 +15,7 @@ const REFLEXIVE_EXAMPLES: readonly ExampleGroup[] = [
 		examples: [
 			{
 				label: "sich erinnern 🪞🧠",
-				hint: "Reflexive Acc and an + Acc: the heading cites sich, the Valency Line leaves Acc unmarked",
+				hint: "Reflexive Acc and an + Acc: the heading leaves Acc unmarked",
 				note: reading("erinnern", "🪞🧠"),
 			},
 			{
@@ -45,12 +45,12 @@ const REFLEXIVE_EXAMPLES: readonly ExampleGroup[] = [
 		examples: [
 			{
 				label: "sich Sorgen machen 🪞😟",
-				hint: "Reflexive Dat: the Valency Line names the case",
+				hint: "Reflexive Dat: the heading names the case",
 				note: reading("Sorgen machen", "🪞😟"),
 			},
 			{
 				label: "es sich gemütlich machen 🪞🛋️",
-				hint: "sich right after the leading es, in the heading and the line",
+				hint: "sich right after the leading es",
 				note: reading("es gemütlich machen", "🪞🛋️"),
 			},
 			{
@@ -68,9 +68,10 @@ const REFLEXIVE_EXAMPLES: readonly ExampleGroup[] = [
 ];
 
 /**
- * #1285 phase 7: a Reading's Citation (ADR 0052) and where the Valency Line
- * puts its lexical reflexive, on real Notes from the Notes Study fake db.
- * The Valency Line's placement is the knob; the app shows its default.
+ * #1285 phase 7: a Reading's Citation (ADR 0052) and the Valency Line its
+ * heading shows, with its lexical reflexive, on real Notes from the Notes
+ * Study fake db. Which case the line names is the knob; the app shows its
+ * default.
  */
 export function ReflexivesPrototype({ route }: { readonly route: EntryRoute }) {
 	const [style, setStyle] = useState<ValencyLineStyle>(
@@ -92,25 +93,14 @@ export function ReflexivesPrototype({ route }: { readonly route: EntryRoute }) {
 					never in its Canonical Form (ADR 0052). A Reading's heading
 					cites it: sich first, or right after a leading es, or after
 					its preposition in a fixed phrase (außer sich sein). A
-					Lemma's heading stays bare. The Valency Block's placement is
-					a choice to judge here.
+					Lemma's heading stays bare. Whether the heading names the
+					reflexive's case is a choice to judge here.
 				</p>
 			}
 		>
 			<InspectorSection title="Valency Line">
 				<InspectorChoice
-					label="Reflexive"
-					value={style.reflexivePlacement}
-					options={[
-						{ value: "AfterHead", label: "After the verb" },
-						{ value: "BeforeHead", label: "Before the verb" },
-					]}
-					onChange={(reflexivePlacement) =>
-						setStyle({ ...style, reflexivePlacement })
-					}
-				/>
-				<InspectorChoice
-					label="Its case"
+					label="Reflexive case"
 					value={style.reflexiveCase}
 					options={[
 						{ value: "DativeOnly", label: "Dat only" },
@@ -125,11 +115,6 @@ export function ReflexivesPrototype({ route }: { readonly route: EntryRoute }) {
 			<InspectorSection title="Copied from">
 				<ul className="grid list-disc gap-1 ps-4 text-ink-soft">
 					<li>
-						<span className="text-ink">After the verb</span>: DWDS's
-						WDG lines read as a main clause, the reflexive right
-						after the verb: /jmd. stellt sich ‹Dat.› etw. vor/
-					</li>
-					<li>
 						<span className="text-ink">Dat only</span>: Duden names
 						a dative reflexive, sich (Dativ) etwas vorstellen, and
 						leaves the accusative unmarked
@@ -138,11 +123,6 @@ export function ReflexivesPrototype({ route }: { readonly route: EntryRoute }) {
 			</InspectorSection>
 			<InspectorSection title="Alternatives">
 				<ul className="grid list-disc gap-1 ps-4 text-ink-soft">
-					<li>
-						Before the verb: the line opens like the Citation (sich
-						erinnern an …), but then the verb and its objects read
-						in neither clause order.
-					</li>
 					<li>
 						Case always (sich (Acc)) or never: Always repeats what
 						an unmarked sich already says; Never hides that

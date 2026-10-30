@@ -4,14 +4,12 @@ import {
 	citationPartText,
 } from "../../../../universal/blocks/citation";
 import type { NoteBlockRenderer } from "../../../../universal/blocks/renderer";
-import { AttachedPrefix } from "../../../block-renderers/reading/valency/default";
-import { ValencyHeading } from "./valency";
+import { AttachedPrefix, ValencyHeading } from "./valency";
 
 /**
- * A verb's heading is its Valency Line in citation order, `sich (an jN)
- * erinnern`, or its Citation (`sich erinnern`) while the frame shows
- * nothing. Either way a separable prefix is split off its base:
- * `sich (Dat) jN vor|stellen`.
+ * A verb's heading is its Valency Line, `sich (an jN) erinnern`, or its
+ * Citation (`sich erinnern`) while the frame shows nothing. Either way a
+ * separable prefix is split off its base: `sich (Dat) jN vor|stellen`.
  */
 export const renderHeadingDeLexemeVerb = ((context) => {
 	const { hasSepPrefix } = context.noteData.reading.lemma.coreFeatures;
