@@ -79,4 +79,12 @@ export const demos: readonly Demo[] = [
 		inspiration: ["Keynote Magic Move", "Duolingo"],
 		Component: lazy(() => import("./morph-steps")),
 	},
+	{
+		slug: "surface-heading",
+		title: "Surface heading",
+		description:
+			"How a Surface Note heads its form when no Reading, and so no frame, is in context.",
+		inspiration: ["Wiktionary", "DWDS"],
+		Component: lazy(() => import("./surface-heading")),
+	},
 ];
