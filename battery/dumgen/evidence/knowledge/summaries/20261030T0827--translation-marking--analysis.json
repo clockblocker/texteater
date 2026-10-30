@@ -1,0 +1,323 @@
+{
+	"round": "2026-10-30-translation-marking",
+	"note": "Translation marking (ADR 0055), focused on Russian, after the user's 2026-10-30 ruling A (a Preposition with no Slot after it is read as a Slot, commit 229fc28af). One repetition per variant of Knowledge Production's translation call through the Batch API with prompt caching (the prompt is under 1,024 tokens, so nothing cached). 30 valent German Readings from the Knowledge gold (case-only, prepositional, reflexive and Locution frames) and 6 without valency, en and ru each. No gold: two independent judge subagents (a linguist's and a learner's point of view) labelled every distinct translation right, wrong-kind, missing-piece or invented-piece, blind to the variant; an output is right when every translation in it is. The variants differ only in the translation.valency paragraph. v2 is kept.",
+	"cap": {
+		"usd": 0.05
+	},
+	"spend": {
+		"usd": 0.026822,
+		"lunaTier": "batch"
+	},
+	"gitHead": "fd5231266",
+	"accuracy": {
+		"valent outputs, both judges right": {
+			"baseline": {
+				"en": "20/30 (linguist 22, learner 25)",
+				"ru": "20/30 (linguist 20, learner 24)"
+			},
+			"v1": {
+				"en": "19/30 (linguist 25, learner 23)",
+				"ru": "18/30 (linguist 20, learner 23)"
+			},
+			"v2": {
+				"en": "24/30 (linguist 25, learner 27)",
+				"ru": "24/30 (linguist 25, learner 28)"
+			}
+		},
+		"plain outputs": {
+			"baseline": {
+				"en": "6/6 (linguist 6, learner 6)",
+				"ru": "6/6 (linguist 6, learner 6)"
+			},
+			"v1": {
+				"en": "6/6 (linguist 6, learner 6)",
+				"ru": "6/6 (linguist 6, learner 6)"
+			},
+			"v2": {
+				"en": "6/6 (linguist 6, learner 6)",
+				"ru": "6/6 (linguist 6, learner 6)"
+			}
+		}
+	},
+	"revisions": {
+		"v1": "Adds: write a Preposition only where the equivalent itself puts one before this object; a Russian verb that governs a bare case takes its Slot in that case and no Preposition (достигать, чего-то; касаться, чего-то). Fixed the invented ждать на; missing bare-case Slots stayed.",
+		"v2": "v1, and the Slot sentence becomes: give a Slot for every object the equivalent takes in this meaning, a direct object included (беречь, что-то; руководить, чем-то)."
+	},
+	"caveats": [
+		"One repetition each; baseline and v1 differ by about as much as run-to-run noise.",
+		"Judging covers the marking only, not the sense: v2 ru erinnern wrote напоминать (remind), a wrong sense with right marking.",
+		"v1 lost ru erinnern to an answer of four translations (past the three allowed)."
+	],
+	"judgeDisagreements": [
+		{
+			"item": "i6",
+			"lemma": "verzeihen",
+			"language": "en",
+			"translation": "forgive",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "forgive is transitive here; object slot missing",
+			"learnerNote": ""
+		},
+		{
+			"item": "i9",
+			"lemma": "mitbringen",
+			"language": "ru",
+			"translation": "принести",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "принести needs {S:что-то}",
+			"learnerNote": ""
+		},
+		{
+			"item": "i14",
+			"lemma": "es recht machen",
+			"language": "en",
+			"translation": "please",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "please needs {S:someone}",
+			"learnerNote": ""
+		},
+		{
+			"item": "i16",
+			"lemma": "verteidigen",
+			"language": "en",
+			"translation": "defend",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "defend needs {S:someone}",
+			"learnerNote": ""
+		},
+		{
+			"item": "i17",
+			"lemma": "verteidigen",
+			"language": "ru",
+			"translation": "защищать",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "защищать needs {S:кого-то}",
+			"learnerNote": ""
+		},
+		{
+			"item": "i20",
+			"lemma": "verhaften",
+			"language": "en",
+			"translation": "arrest",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "arrest needs {S:someone}",
+			"learnerNote": ""
+		},
+		{
+			"item": "i21",
+			"lemma": "verhaften",
+			"language": "ru",
+			"translation": "арестовать",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "арестовать needs {S:кого-то}",
+			"learnerNote": ""
+		},
+		{
+			"item": "i24",
+			"lemma": "glauben",
+			"language": "en",
+			"translation": "believe",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "believe (sth/in sth) object missing",
+			"learnerNote": ""
+		},
+		{
+			"item": "i25",
+			"lemma": "glauben",
+			"language": "ru",
+			"translation": "верить",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "верить чему/во что object missing",
+			"learnerNote": ""
+		},
+		{
+			"item": "i27",
+			"lemma": "stolz",
+			"language": "ru",
+			"translation": "гордый",
+			"linguist": "right",
+			"learner": "missing-piece",
+			"linguistNote": "",
+			"learnerNote": "Reading is stolz auf; object form (кем-то) not shown"
+		},
+		{
+			"item": "i43",
+			"lemma": "Angst",
+			"language": "en",
+			"translation": "fear",
+			"linguist": "right",
+			"learner": "missing-piece",
+			"linguistNote": "",
+			"learnerNote": "Reading is Angst vor; \"of something\" not shown"
+		},
+		{
+			"item": "i61",
+			"lemma": "ein Ende machen",
+			"language": "en",
+			"translation": "put {S:something} to an end",
+			"linguist": "right",
+			"learner": "invented-piece",
+			"linguistNote": "",
+			"learnerNote": "teaches \"put something to an end\"; idiom is put an end to"
+		},
+		{
+			"item": "i78",
+			"lemma": "verzeihen",
+			"language": "en",
+			"translation": "pardon",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "pardon is transitive; object slot missing",
+			"learnerNote": ""
+		},
+		{
+			"item": "i81",
+			"lemma": "auf der Nase herumtanzen",
+			"language": "en",
+			"translation": "walk all over {S:someone}",
+			"linguist": "right",
+			"learner": "wrong-kind",
+			"linguistNote": "",
+			"learnerNote": "governed \"over\" left as plain text"
+		},
+		{
+			"item": "i84",
+			"lemma": "übers Ohr hauen",
+			"language": "en",
+			"translation": "cheat",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "cheat in this sense needs {S:someone}",
+			"learnerNote": ""
+		},
+		{
+			"item": "i85",
+			"lemma": "übers Ohr hauen",
+			"language": "ru",
+			"translation": "обманывать",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "обманывать needs {S:кого-то}",
+			"learnerNote": ""
+		},
+		{
+			"item": "i89",
+			"lemma": "stolz",
+			"language": "en",
+			"translation": "proud",
+			"linguist": "right",
+			"learner": "missing-piece",
+			"linguistNote": "",
+			"learnerNote": "Reading is stolz auf; \"of someone\" not shown"
+		},
+		{
+			"item": "i94",
+			"lemma": "Bescheid wissen",
+			"language": "en",
+			"translation": "be informed",
+			"linguist": "right",
+			"learner": "missing-piece",
+			"linguistNote": "",
+			"learnerNote": "Reading includes über; \"about something\" not shown"
+		},
+		{
+			"item": "i99",
+			"lemma": "Angst",
+			"language": "ru",
+			"translation": "страх",
+			"linguist": "right",
+			"learner": "missing-piece",
+			"linguistNote": "",
+			"learnerNote": "Reading is Angst vor; \"перед кем-то\" not shown"
+		},
+		{
+			"item": "i100",
+			"lemma": "Angst",
+			"language": "ru",
+			"translation": "боязнь",
+			"linguist": "right",
+			"learner": "missing-piece",
+			"linguistNote": "",
+			"learnerNote": "боязнь needs genitive object чего-то"
+		},
+		{
+			"item": "i102",
+			"lemma": "Sorgen machen",
+			"language": "en",
+			"translation": "worry",
+			"linguist": "right",
+			"learner": "missing-piece",
+			"linguistNote": "",
+			"learnerNote": "worry about something not shown"
+		},
+		{
+			"item": "i103",
+			"lemma": "außer sein",
+			"language": "ru",
+			"translation": "быть вне себя от ярости",
+			"linguist": "right",
+			"learner": "invented-piece",
+			"linguistNote": "",
+			"learnerNote": "\"от ярости\" copied from example's \"vor Wut\""
+		},
+		{
+			"item": "i105",
+			"lemma": "weiterleiten",
+			"language": "en",
+			"translation": "forward {S:something}",
+			"linguist": "right",
+			"learner": "missing-piece",
+			"linguistNote": "",
+			"learnerNote": "recipient \"to someone\" (German an) not shown"
+		},
+		{
+			"item": "i118",
+			"lemma": "verhaften",
+			"language": "ru",
+			"translation": "арестовывать",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "арестовывать needs {S:кого-то}",
+			"learnerNote": ""
+		},
+		{
+			"item": "i121",
+			"lemma": "stolz",
+			"language": "ru",
+			"translation": "гордый [P:за] {S:кого-то}",
+			"linguist": "invented-piece",
+			"learner": "right",
+			"linguistNote": "гордый governs instrumental, not за",
+			"learnerNote": ""
+		},
+		{
+			"item": "i129",
+			"lemma": "weiterleiten",
+			"language": "en",
+			"translation": "forward [P:to] {S:someone}",
+			"linguist": "missing-piece",
+			"learner": "right",
+			"linguistNote": "direct object {S:something} missing before to",
+			"learnerNote": ""
+		},
+		{
+			"item": "i130",
+			"lemma": "weiterleiten",
+			"language": "ru",
+			"translation": "перенаправлять {S:что-то}",
+			"linguist": "right",
+			"learner": "missing-piece",
+			"linguistNote": "",
+			"learnerNote": "recipient (кому-то) not shown"
+		}
+	]
+}

@@ -1,0 +1,7482 @@
+{
+	"variants": {
+		"baseline": {
+			"batchId": "batch_6ae4427ad7dc8190abfbe352ca88de3c",
+			"extraBatch": {
+				"batchId": "batch_6ae4438c28b8819094cc2c2d66196a97",
+				"usd": 0.0002458,
+				"note": "Sorgen machen, after a prefix collision picked Woche"
+			},
+			"tokens": {
+				"inTok": 73814,
+				"outTok": 2174,
+				"cached": 0,
+				"written": 0
+			},
+			"usd": 0.008686,
+			"valencyParagraph": "Write each equivalent as its pieces in reading order, each a `kind` and its `text`. A Slot is an object the equivalent takes in this meaning, written as the target language's dictionary placeholder in the form the equivalent governs: en something or someone; ru что-то, чего-то, чему-то, чем-то, чём-то, кого-то, кому-то, кем-то, ком-то. A Preposition is only ever a preposition: the target-language preposition the equivalent governs, right before its Slot, whatever preposition or case the German takes; an object with no preposition is a Slot alone. Text is every other word. Give the Slots a bilingual dictionary shows with the equivalent; an equivalent that takes no object is one Text piece («sich verlassen»: rely, on, someone as Text, Preposition, Slot, and полагаться, на, кого-то; «jemandem vertrauen»: trust, someone as Text, Slot, and доверять, кому-то).",
+			"outputs": [
+				{
+					"id": "de/die-verantwortlichen-leisten-abbitte#0",
+					"language": "en",
+					"lemma": "Abbitte leisten",
+					"emoji": "🙇",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "apologize"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-verantwortlichen-leisten-abbitte#0",
+					"language": "ru",
+					"lemma": "Abbitte leisten",
+					"emoji": "🙇",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "просить прощения"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/tut-mir-leid-das-war-mein-fehler#0",
+					"language": "en",
+					"lemma": "leidtun",
+					"emoji": "😔",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "be sorry"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/tut-mir-leid-das-war-mein-fehler#0",
+					"language": "ru",
+					"lemma": "leidtun",
+					"emoji": "😔",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "сожалеть"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "раскаиваться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#28",
+					"language": "en",
+					"lemma": "verzeihen",
+					"emoji": "🕊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "forgive"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#28",
+					"language": "ru",
+					"lemma": "verzeihen",
+					"emoji": "🕊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "прощать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кого-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-peitsche-hat-er-mitgebracht#1",
+					"language": "en",
+					"lemma": "mitbringen",
+					"emoji": "🎒",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "bring"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-peitsche-hat-er-mitgebracht#1",
+					"language": "ru",
+					"lemma": "mitbringen",
+					"emoji": "🎒",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "принести"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fuer-den-workshop-stellte-das-team-aktuelle-daten-zur#0",
+					"language": "en",
+					"lemma": "zur Verfügung stellen",
+					"emoji": "🫴",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "make"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							},
+							{
+								"kind": "Text",
+								"text": "available"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fuer-den-workshop-stellte-das-team-aktuelle-daten-zur#0",
+					"language": "ru",
+					"lemma": "zur Verfügung stellen",
+					"emoji": "🫴",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "предоставлять"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0",
+					"language": "en",
+					"lemma": "auf der Nase herumtanzen",
+					"emoji": "😜🙉",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "walk"
+							},
+							{
+								"kind": "Text",
+								"text": "all"
+							},
+							{
+								"kind": "Text",
+								"text": "over"
+							},
+							{
+								"kind": "Text",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0",
+					"language": "ru",
+					"lemma": "auf der Nase herumtanzen",
+					"emoji": "😜🙉",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "помыкать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кем-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die#2",
+					"language": "en",
+					"lemma": "es recht machen",
+					"emoji": "👌😊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "please"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die#2",
+					"language": "ru",
+					"lemma": "es recht machen",
+					"emoji": "👌😊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "угодить"
+							},
+							{
+								"kind": "Slot",
+								"text": "кому-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#8",
+					"language": "en",
+					"lemma": "verteidigen",
+					"emoji": "🛡",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "defend"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#8",
+					"language": "ru",
+					"lemma": "verteidigen",
+					"emoji": "🛡",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "защищать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-verkaeufer-haut-die-kundschaft-staendig-uebers-ohr#0",
+					"language": "en",
+					"lemma": "übers Ohr hauen",
+					"emoji": "🤥💸",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "cheat"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-verkaeufer-haut-die-kundschaft-staendig-uebers-ohr#0",
+					"language": "ru",
+					"lemma": "übers Ohr hauen",
+					"emoji": "🤥💸",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "обманывать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кого-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#10",
+					"language": "en",
+					"lemma": "verhaften",
+					"emoji": "👮⛓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "arrest"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#10",
+					"language": "ru",
+					"lemma": "verhaften",
+					"emoji": "👮⛓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "арестовать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-wartet-auf-den-nachtbus#0",
+					"language": "en",
+					"lemma": "warten",
+					"emoji": "⏳",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "wait"
+							},
+							{
+								"kind": "Preposition",
+								"text": "for"
+							},
+							{
+								"kind": "Slot",
+								"text": "something or someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-wartet-auf-den-nachtbus#0",
+					"language": "ru",
+					"lemma": "warten",
+					"emoji": "⏳",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "ждать"
+							},
+							{
+								"kind": "Preposition",
+								"text": "на"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#8",
+					"language": "en",
+					"lemma": "glauben",
+					"emoji": "💭✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "believe"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#8",
+					"language": "ru",
+					"lemma": "glauben",
+					"emoji": "💭✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "верить"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-ist-stolz-auf-seinen-sohn#0",
+					"language": "en",
+					"lemma": "stolz",
+					"emoji": "🦚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "proud"
+							},
+							{
+								"kind": "Preposition",
+								"text": "of"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-ist-stolz-auf-seinen-sohn#0",
+					"language": "ru",
+					"lemma": "stolz",
+					"emoji": "🦚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "гордый"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "гордиться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ein-interessierter-leser-fragte-nach#0",
+					"language": "en",
+					"lemma": "interessiert",
+					"emoji": "🧐",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "interested"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ein-interessierter-leser-fragte-nach#0",
+					"language": "ru",
+					"lemma": "interessiert",
+					"emoji": "🧐",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "заинтересованный"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-ist-verheiratet#0",
+					"language": "en",
+					"lemma": "verheiratet",
+					"emoji": "💍",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "married"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-ist-verheiratet#0",
+					"language": "ru",
+					"lemma": "verheiratet",
+					"emoji": "💍",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "женатый"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2",
+					"language": "en",
+					"lemma": "Rücksicht nehmen",
+					"emoji": "🫶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "consider"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2",
+					"language": "ru",
+					"lemma": "Rücksicht nehmen",
+					"emoji": "🫶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "учитывать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кого-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/das-wetter-nimmt-einfluss-auf-die-planung#0",
+					"language": "en",
+					"lemma": "Einfluss nehmen",
+					"emoji": "🕹",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "influence"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/das-wetter-nimmt-einfluss-auf-die-planung#0",
+					"language": "ru",
+					"lemma": "Einfluss nehmen",
+					"emoji": "🕹",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "оказывать"
+							},
+							{
+								"kind": "Slot",
+								"text": "влияние"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-weiss-bescheid-ueber-die-plaene#0",
+					"language": "en",
+					"lemma": "Bescheid wissen",
+					"emoji": "🧠ℹ",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "know"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-weiss-bescheid-ueber-die-plaene#0",
+					"language": "ru",
+					"lemma": "Bescheid wissen",
+					"emoji": "🧠ℹ",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "знать"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/wir-nahmen-abschied#0",
+					"language": "en",
+					"lemma": "Abschied nehmen",
+					"emoji": "👋🚶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "take"
+							},
+							{
+								"kind": "Text",
+								"text": "leave"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/wir-nahmen-abschied#0",
+					"language": "ru",
+					"lemma": "Abschied nehmen",
+					"emoji": "👋🚶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "прощаться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-wurde-um-geduld-gebeten#0",
+					"language": "en",
+					"lemma": "bitten",
+					"emoji": "🙏",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "ask"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							},
+							{
+								"kind": "Preposition",
+								"text": "for"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-wurde-um-geduld-gebeten#0",
+					"language": "ru",
+					"lemma": "bitten",
+					"emoji": "🙏",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "просить"
+							},
+							{
+								"kind": "Slot",
+								"text": "кого-то"
+							},
+							{
+								"kind": "Text",
+								"text": "о"
+							},
+							{
+								"kind": "Slot",
+								"text": "чём-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/aus-angst-vor-hunden-bleibt-sie-zu-hause#0",
+					"language": "en",
+					"lemma": "Angst",
+					"emoji": "😨",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "fear"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/aus-angst-vor-hunden-bleibt-sie-zu-hause#0",
+					"language": "ru",
+					"lemma": "Angst",
+					"emoji": "😨",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "страх"
+							},
+							{
+								"kind": "Preposition",
+								"text": "перед"
+							},
+							{
+								"kind": "Slot",
+								"text": "кем-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/deutschland-wird-sich-an-diesem-manoever-beteiligen-sagte#0",
+					"language": "en",
+					"lemma": "beteiligen",
+					"emoji": "🪞🙋👥",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "participate"
+							},
+							{
+								"kind": "Preposition",
+								"text": "in"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/deutschland-wird-sich-an-diesem-manoever-beteiligen-sagte#0",
+					"language": "ru",
+					"lemma": "beteiligen",
+					"emoji": "🪞🙋👥",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "участвовать"
+							},
+							{
+								"kind": "Preposition",
+								"text": "в"
+							},
+							{
+								"kind": "Slot",
+								"text": "чём-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ich-soll-mich-hier-erholen-ich-war-krank#2",
+					"language": "en",
+					"lemma": "erholen",
+					"emoji": "🪞😌🔋",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "recover"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ich-soll-mich-hier-erholen-ich-war-krank#2",
+					"language": "ru",
+					"lemma": "erholen",
+					"emoji": "🪞😌🔋",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "восстанавливаться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-erinnert-sich-an-den-geruch#0",
+					"language": "en",
+					"lemma": "erinnern",
+					"emoji": "🪞🧠💭",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "remember"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-erinnert-sich-an-den-geruch#0",
+					"language": "ru",
+					"lemma": "erinnern",
+					"emoji": "🪞🧠💭",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "вспоминать"
+							},
+							{
+								"kind": "Preposition",
+								"text": "о"
+							},
+							{
+								"kind": "Slot",
+								"text": "чём-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#2",
+					"language": "en",
+					"lemma": "Sorgen machen",
+					"emoji": "🪞😟",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "worry"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#2",
+					"language": "ru",
+					"lemma": "Sorgen machen",
+					"emoji": "🪞😟",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "беспокоиться"
+							},
+							{
+								"kind": "Preposition",
+								"text": "о"
+							},
+							{
+								"kind": "Slot",
+								"text": "чём-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-rechnung-sah-war-er-ausser-sich-vor-wut#0",
+					"language": "en",
+					"lemma": "außer sein",
+					"emoji": "🪞🤯",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "be beside oneself"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-rechnung-sah-war-er-ausser-sich-vor-wut#0",
+					"language": "ru",
+					"lemma": "außer sein",
+					"emoji": "🪞🤯",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "быть вне себя"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-weltordnung-die-sich-nach-dem-zweiten-weltkrieg#0",
+					"language": "en",
+					"lemma": "etablieren",
+					"emoji": "🪞⚓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "establish itself"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-weltordnung-die-sich-nach-dem-zweiten-weltkrieg#0",
+					"language": "ru",
+					"lemma": "etablieren",
+					"emoji": "🪞⚓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "утвердиться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der#0",
+					"language": "en",
+					"lemma": "weiterleiten",
+					"emoji": "📥📤",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "forward"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der#0",
+					"language": "ru",
+					"lemma": "weiterleiten",
+					"emoji": "📥📤",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "перенаправлять"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#14",
+					"language": "en",
+					"lemma": "zutreffen",
+					"emoji": "🧩✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "be"
+							},
+							{
+								"kind": "Text",
+								"text": "true"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#14",
+					"language": "ru",
+					"lemma": "zutreffen",
+					"emoji": "🧩✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "соответствовать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#13",
+					"language": "en",
+					"lemma": "ein Ende machen",
+					"emoji": "🔚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "put"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							},
+							{
+								"kind": "Text",
+								"text": "to an end"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#13",
+					"language": "ru",
+					"lemma": "ein Ende machen",
+					"emoji": "🔚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "положить конец"
+							},
+							{
+								"kind": "Slot",
+								"text": "чему-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#12",
+					"language": "en",
+					"lemma": "Bett",
+					"emoji": "🛏",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "bed"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#12",
+					"language": "ru",
+					"lemma": "Bett",
+					"emoji": "🛏",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "кровать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-arzt-untersucht-beide-knie-gruendlich#0",
+					"language": "en",
+					"lemma": "Knie",
+					"emoji": "🧎",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "knee"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-arzt-untersucht-beide-knie-gruendlich#0",
+					"language": "ru",
+					"lemma": "Knie",
+					"emoji": "🧎",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "колено"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-laden-hat-bis-20-uhr-geoeffnet#0",
+					"language": "en",
+					"lemma": "Laden",
+					"emoji": "🏪",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "shop"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-laden-hat-bis-20-uhr-geoeffnet#0",
+					"language": "ru",
+					"lemma": "Laden",
+					"emoji": "🏪",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "магазин"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein#1",
+					"language": "en",
+					"lemma": "jung",
+					"emoji": "🌱",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "young"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein#1",
+					"language": "ru",
+					"lemma": "jung",
+					"emoji": "🌱",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "молодой"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-zeugin-sprach-deutlich#0",
+					"language": "en",
+					"lemma": "deutlich",
+					"emoji": "🔍",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "clear"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "distinct"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-zeugin-sprach-deutlich#0",
+					"language": "ru",
+					"lemma": "deutlich",
+					"emoji": "🔍",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "отчётливый"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#0",
+					"language": "en",
+					"lemma": "sofort",
+					"emoji": "⚡",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "immediately"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#0",
+					"language": "ru",
+					"lemma": "sofort",
+					"emoji": "⚡",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "немедленно"
+							}
+						]
+					]
+				}
+			]
+		},
+		"v1": {
+			"batchId": "batch_6ae443f2d21c8190bea85a23822b5ce9",
+			"tokens": {
+				"inTok": 76096,
+				"outTok": 2276,
+				"cached": 0,
+				"written": 0
+			},
+			"usd": 0.008975,
+			"valencyParagraph": "Write each equivalent as its pieces in reading order, each a `kind` and its `text`. A Slot is an object the equivalent takes in this meaning, written as the target language's dictionary placeholder in the form the equivalent governs: en something or someone; ru что-то, чего-то, чему-то, чем-то, чём-то, кого-то, кому-то, кем-то, ком-то. A Preposition is only ever a preposition: the target-language preposition the equivalent governs, right before its Slot, whatever preposition or case the German takes; an object with no preposition is a Slot alone. Write a Preposition only where the equivalent itself puts one before this object in the target language; a Russian verb that governs a bare case takes its Slot in that case and no Preposition, even when the German takes one (достигать, чего-то; касаться, чего-то). Text is every other word. Give the Slots a bilingual dictionary shows with the equivalent; an equivalent that takes no object is one Text piece («sich verlassen»: rely, on, someone as Text, Preposition, Slot, and полагаться, на, кого-то; «jemandem vertrauen»: trust, someone as Text, Slot, and доверять, кому-то).",
+			"outputs": [
+				{
+					"id": "de/die-verantwortlichen-leisten-abbitte#0",
+					"language": "en",
+					"lemma": "Abbitte leisten",
+					"emoji": "🙇",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "apologize"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-verantwortlichen-leisten-abbitte#0",
+					"language": "ru",
+					"lemma": "Abbitte leisten",
+					"emoji": "🙇",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "искупать"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "просить"
+							},
+							{
+								"kind": "Text",
+								"text": "прощения"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/tut-mir-leid-das-war-mein-fehler#0",
+					"language": "en",
+					"lemma": "leidtun",
+					"emoji": "😔",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "be sorry"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/tut-mir-leid-das-war-mein-fehler#0",
+					"language": "ru",
+					"lemma": "leidtun",
+					"emoji": "😔",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "сожалеть"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#28",
+					"language": "en",
+					"lemma": "verzeihen",
+					"emoji": "🕊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "forgive"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "pardon"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#28",
+					"language": "ru",
+					"lemma": "verzeihen",
+					"emoji": "🕊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "прощать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кого-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-peitsche-hat-er-mitgebracht#1",
+					"language": "en",
+					"lemma": "mitbringen",
+					"emoji": "🎒",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "bring"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "bring"
+							},
+							{
+								"kind": "Text",
+								"text": "along"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-peitsche-hat-er-mitgebracht#1",
+					"language": "ru",
+					"lemma": "mitbringen",
+					"emoji": "🎒",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "принести"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fuer-den-workshop-stellte-das-team-aktuelle-daten-zur#0",
+					"language": "en",
+					"lemma": "zur Verfügung stellen",
+					"emoji": "🫴",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "make"
+							},
+							{
+								"kind": "Text",
+								"text": "something"
+							},
+							{
+								"kind": "Text",
+								"text": "available"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fuer-den-workshop-stellte-das-team-aktuelle-daten-zur#0",
+					"language": "ru",
+					"lemma": "zur Verfügung stellen",
+					"emoji": "🫴",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "предоставлять"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0",
+					"language": "en",
+					"lemma": "auf der Nase herumtanzen",
+					"emoji": "😜🙉",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "walk all over"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0",
+					"language": "ru",
+					"lemma": "auf der Nase herumtanzen",
+					"emoji": "😜🙉",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "помыкать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кем-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die#2",
+					"language": "en",
+					"lemma": "es recht machen",
+					"emoji": "👌😊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "please"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die#2",
+					"language": "ru",
+					"lemma": "es recht machen",
+					"emoji": "👌😊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "угодить"
+							},
+							{
+								"kind": "Slot",
+								"text": "кому-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#8",
+					"language": "en",
+					"lemma": "verteidigen",
+					"emoji": "🛡",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "defend"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#8",
+					"language": "ru",
+					"lemma": "verteidigen",
+					"emoji": "🛡",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "защищать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-verkaeufer-haut-die-kundschaft-staendig-uebers-ohr#0",
+					"language": "en",
+					"lemma": "übers Ohr hauen",
+					"emoji": "🤥💸",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "cheat"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-verkaeufer-haut-die-kundschaft-staendig-uebers-ohr#0",
+					"language": "ru",
+					"lemma": "übers Ohr hauen",
+					"emoji": "🤥💸",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "обманывать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#10",
+					"language": "en",
+					"lemma": "verhaften",
+					"emoji": "👮⛓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "arrest"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#10",
+					"language": "ru",
+					"lemma": "verhaften",
+					"emoji": "👮⛓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "арестовать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-wartet-auf-den-nachtbus#0",
+					"language": "en",
+					"lemma": "warten",
+					"emoji": "⏳",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "wait"
+							},
+							{
+								"kind": "Preposition",
+								"text": "for"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone or something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-wartet-auf-den-nachtbus#0",
+					"language": "ru",
+					"lemma": "warten",
+					"emoji": "⏳",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "ждать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кого-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#8",
+					"language": "en",
+					"lemma": "glauben",
+					"emoji": "💭✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "believe"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#8",
+					"language": "ru",
+					"lemma": "glauben",
+					"emoji": "💭✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "верить"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "считать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-ist-stolz-auf-seinen-sohn#0",
+					"language": "en",
+					"lemma": "stolz",
+					"emoji": "🦚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "proud"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "proud"
+							},
+							{
+								"kind": "Preposition",
+								"text": "of"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-ist-stolz-auf-seinen-sohn#0",
+					"language": "ru",
+					"lemma": "stolz",
+					"emoji": "🦚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "гордый"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "гордящийся"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ein-interessierter-leser-fragte-nach#0",
+					"language": "en",
+					"lemma": "interessiert",
+					"emoji": "🧐",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "interested"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ein-interessierter-leser-fragte-nach#0",
+					"language": "ru",
+					"lemma": "interessiert",
+					"emoji": "🧐",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "заинтересованный"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-ist-verheiratet#0",
+					"language": "en",
+					"lemma": "verheiratet",
+					"emoji": "💍",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "married"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-ist-verheiratet#0",
+					"language": "ru",
+					"lemma": "verheiratet",
+					"emoji": "💍",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "женатый"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2",
+					"language": "en",
+					"lemma": "Rücksicht nehmen",
+					"emoji": "🫶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "be considerate"
+							},
+							{
+								"kind": "Preposition",
+								"text": "of"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2",
+					"language": "ru",
+					"lemma": "Rücksicht nehmen",
+					"emoji": "🫶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "считаться"
+							},
+							{
+								"kind": "Preposition",
+								"text": "с"
+							},
+							{
+								"kind": "Slot",
+								"text": "кем-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/das-wetter-nimmt-einfluss-auf-die-planung#0",
+					"language": "en",
+					"lemma": "Einfluss nehmen",
+					"emoji": "🕹",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "influence"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/das-wetter-nimmt-einfluss-auf-die-planung#0",
+					"language": "ru",
+					"lemma": "Einfluss nehmen",
+					"emoji": "🕹",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "влиять"
+							},
+							{
+								"kind": "Preposition",
+								"text": "на"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-weiss-bescheid-ueber-die-plaene#0",
+					"language": "en",
+					"lemma": "Bescheid wissen",
+					"emoji": "🧠ℹ",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "know"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "be informed"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-weiss-bescheid-ueber-die-plaene#0",
+					"language": "ru",
+					"lemma": "Bescheid wissen",
+					"emoji": "🧠ℹ",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "знать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/wir-nahmen-abschied#0",
+					"language": "en",
+					"lemma": "Abschied nehmen",
+					"emoji": "👋🚶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "say goodbye"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/wir-nahmen-abschied#0",
+					"language": "ru",
+					"lemma": "Abschied nehmen",
+					"emoji": "👋🚶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "прощаться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-wurde-um-geduld-gebeten#0",
+					"language": "en",
+					"lemma": "bitten",
+					"emoji": "🙏",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "ask"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							},
+							{
+								"kind": "Preposition",
+								"text": "for"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-wurde-um-geduld-gebeten#0",
+					"language": "ru",
+					"lemma": "bitten",
+					"emoji": "🙏",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "просить"
+							},
+							{
+								"kind": "Preposition",
+								"text": "о"
+							},
+							{
+								"kind": "Slot",
+								"text": "чём-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/aus-angst-vor-hunden-bleibt-sie-zu-hause#0",
+					"language": "en",
+					"lemma": "Angst",
+					"emoji": "😨",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "fear"
+							},
+							{
+								"kind": "Preposition",
+								"text": "of"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/aus-angst-vor-hunden-bleibt-sie-zu-hause#0",
+					"language": "ru",
+					"lemma": "Angst",
+					"emoji": "😨",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "страх"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "боязнь"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/deutschland-wird-sich-an-diesem-manoever-beteiligen-sagte#0",
+					"language": "en",
+					"lemma": "beteiligen",
+					"emoji": "🪞🙋👥",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "participate"
+							},
+							{
+								"kind": "Preposition",
+								"text": "in"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/deutschland-wird-sich-an-diesem-manoever-beteiligen-sagte#0",
+					"language": "ru",
+					"lemma": "beteiligen",
+					"emoji": "🪞🙋👥",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "участвовать"
+							},
+							{
+								"kind": "Preposition",
+								"text": "в"
+							},
+							{
+								"kind": "Slot",
+								"text": "чём-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ich-soll-mich-hier-erholen-ich-war-krank#2",
+					"language": "en",
+					"lemma": "erholen",
+					"emoji": "🪞😌🔋",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "recover"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ich-soll-mich-hier-erholen-ich-war-krank#2",
+					"language": "ru",
+					"lemma": "erholen",
+					"emoji": "🪞😌🔋",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "восстанавливаться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-erinnert-sich-an-den-geruch#0",
+					"language": "en",
+					"lemma": "erinnern",
+					"emoji": "🪞🧠💭",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "remember"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "remind"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							},
+							{
+								"kind": "Preposition",
+								"text": "of"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-erinnert-sich-an-den-geruch#0",
+					"language": "ru",
+					"lemma": "erinnern",
+					"emoji": "🪞🧠💭",
+					"valent": true,
+					"error": "Luna answered 4, past 3"
+				},
+				{
+					"id": "de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#2",
+					"language": "en",
+					"lemma": "Sorgen machen",
+					"emoji": "🪞😟",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "worry"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#2",
+					"language": "ru",
+					"lemma": "Sorgen machen",
+					"emoji": "🪞😟",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "беспокоиться"
+							},
+							{
+								"kind": "Preposition",
+								"text": "о"
+							},
+							{
+								"kind": "Slot",
+								"text": "чём-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-rechnung-sah-war-er-ausser-sich-vor-wut#0",
+					"language": "en",
+					"lemma": "außer sein",
+					"emoji": "🪞🤯",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "be beside oneself"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-rechnung-sah-war-er-ausser-sich-vor-wut#0",
+					"language": "ru",
+					"lemma": "außer sein",
+					"emoji": "🪞🤯",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "быть вне себя от ярости"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-weltordnung-die-sich-nach-dem-zweiten-weltkrieg#0",
+					"language": "en",
+					"lemma": "etablieren",
+					"emoji": "🪞⚓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "become established"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-weltordnung-die-sich-nach-dem-zweiten-weltkrieg#0",
+					"language": "ru",
+					"lemma": "etablieren",
+					"emoji": "🪞⚓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "утвердиться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der#0",
+					"language": "en",
+					"lemma": "weiterleiten",
+					"emoji": "📥📤",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "forward"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der#0",
+					"language": "ru",
+					"lemma": "weiterleiten",
+					"emoji": "📥📤",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "перенаправлять"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#14",
+					"language": "en",
+					"lemma": "zutreffen",
+					"emoji": "🧩✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "apply"
+							},
+							{
+								"kind": "Preposition",
+								"text": "to"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#14",
+					"language": "ru",
+					"lemma": "zutreffen",
+					"emoji": "🧩✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "быть верным"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "относиться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#13",
+					"language": "en",
+					"lemma": "ein Ende machen",
+					"emoji": "🔚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "put"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							},
+							{
+								"kind": "Text",
+								"text": "to an end"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#13",
+					"language": "ru",
+					"lemma": "ein Ende machen",
+					"emoji": "🔚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "покончить"
+							},
+							{
+								"kind": "Preposition",
+								"text": "с"
+							},
+							{
+								"kind": "Slot",
+								"text": "чем-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#12",
+					"language": "en",
+					"lemma": "Bett",
+					"emoji": "🛏",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "bed"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#12",
+					"language": "ru",
+					"lemma": "Bett",
+					"emoji": "🛏",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "кровать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-arzt-untersucht-beide-knie-gruendlich#0",
+					"language": "en",
+					"lemma": "Knie",
+					"emoji": "🧎",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "knee"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-arzt-untersucht-beide-knie-gruendlich#0",
+					"language": "ru",
+					"lemma": "Knie",
+					"emoji": "🧎",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "колено"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-laden-hat-bis-20-uhr-geoeffnet#0",
+					"language": "en",
+					"lemma": "Laden",
+					"emoji": "🏪",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "shop"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-laden-hat-bis-20-uhr-geoeffnet#0",
+					"language": "ru",
+					"lemma": "Laden",
+					"emoji": "🏪",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "магазин"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein#1",
+					"language": "en",
+					"lemma": "jung",
+					"emoji": "🌱",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "young"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein#1",
+					"language": "ru",
+					"lemma": "jung",
+					"emoji": "🌱",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "молодой"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-zeugin-sprach-deutlich#0",
+					"language": "en",
+					"lemma": "deutlich",
+					"emoji": "🔍",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "clear"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-zeugin-sprach-deutlich#0",
+					"language": "ru",
+					"lemma": "deutlich",
+					"emoji": "🔍",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "ясный"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#0",
+					"language": "en",
+					"lemma": "sofort",
+					"emoji": "⚡",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "immediately"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#0",
+					"language": "ru",
+					"lemma": "sofort",
+					"emoji": "⚡",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "немедленно"
+							}
+						]
+					]
+				}
+			]
+		},
+		"v2": {
+			"batchId": "batch_6ae4445cae648190b67afcb1f61f96a0",
+			"tokens": {
+				"inTok": 77968,
+				"outTok": 2273,
+				"cached": 0,
+				"written": 0
+			},
+			"usd": 0.009161,
+			"valencyParagraph": "Write each equivalent as its pieces in reading order, each a `kind` and its `text`. A Slot is an object the equivalent takes in this meaning, written as the target language's dictionary placeholder in the form the equivalent governs: en something or someone; ru что-то, чего-то, чему-то, чем-то, чём-то, кого-то, кому-то, кем-то, ком-то. A Preposition is only ever a preposition: the target-language preposition the equivalent governs, right before its Slot, whatever preposition or case the German takes; an object with no preposition is a Slot alone. Write a Preposition only where the equivalent itself puts one before this object in the target language; a Russian verb that governs a bare case takes its Slot in that case and no Preposition, even when the German takes one (достигать, чего-то; касаться, чего-то). Text is every other word. Give a Slot for every object the equivalent takes in this meaning, a direct object included, as a bilingual dictionary shows it (беречь, что-то; руководить, чем-то); an equivalent that takes no object is one Text piece («sich verlassen»: rely, on, someone as Text, Preposition, Slot, and полагаться, на, кого-то; «jemandem vertrauen»: trust, someone as Text, Slot, and доверять, кому-то).",
+			"outputs": [
+				{
+					"id": "de/die-verantwortlichen-leisten-abbitte#0",
+					"language": "en",
+					"lemma": "Abbitte leisten",
+					"emoji": "🙇",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "apologize"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-verantwortlichen-leisten-abbitte#0",
+					"language": "ru",
+					"lemma": "Abbitte leisten",
+					"emoji": "🙇",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "принести извинения"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/tut-mir-leid-das-war-mein-fehler#0",
+					"language": "en",
+					"lemma": "leidtun",
+					"emoji": "😔",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "be sorry"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/tut-mir-leid-das-war-mein-fehler#0",
+					"language": "ru",
+					"lemma": "leidtun",
+					"emoji": "😔",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "сожалеть"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "жалеть"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#28",
+					"language": "en",
+					"lemma": "verzeihen",
+					"emoji": "🕊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "forgive"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#28",
+					"language": "ru",
+					"lemma": "verzeihen",
+					"emoji": "🕊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "прощать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кого-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-peitsche-hat-er-mitgebracht#1",
+					"language": "en",
+					"lemma": "mitbringen",
+					"emoji": "🎒",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "bring"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							},
+							{
+								"kind": "Text",
+								"text": "along"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-peitsche-hat-er-mitgebracht#1",
+					"language": "ru",
+					"lemma": "mitbringen",
+					"emoji": "🎒",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "принести"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fuer-den-workshop-stellte-das-team-aktuelle-daten-zur#0",
+					"language": "en",
+					"lemma": "zur Verfügung stellen",
+					"emoji": "🫴",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "make"
+							},
+							{
+								"kind": "Text",
+								"text": "available"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fuer-den-workshop-stellte-das-team-aktuelle-daten-zur#0",
+					"language": "ru",
+					"lemma": "zur Verfügung stellen",
+					"emoji": "🫴",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "предоставлять"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0",
+					"language": "en",
+					"lemma": "auf der Nase herumtanzen",
+					"emoji": "😜🙉",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "take advantage of"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0",
+					"language": "ru",
+					"lemma": "auf der Nase herumtanzen",
+					"emoji": "😜🙉",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "помыкать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кем-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die#2",
+					"language": "en",
+					"lemma": "es recht machen",
+					"emoji": "👌😊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "please"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die#2",
+					"language": "ru",
+					"lemma": "es recht machen",
+					"emoji": "👌😊",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "угодить"
+							},
+							{
+								"kind": "Slot",
+								"text": "кому-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#8",
+					"language": "en",
+					"lemma": "verteidigen",
+					"emoji": "🛡",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "defend"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#8",
+					"language": "ru",
+					"lemma": "verteidigen",
+					"emoji": "🛡",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "защищать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кого-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-verkaeufer-haut-die-kundschaft-staendig-uebers-ohr#0",
+					"language": "en",
+					"lemma": "übers Ohr hauen",
+					"emoji": "🤥💸",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "cheat"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-verkaeufer-haut-die-kundschaft-staendig-uebers-ohr#0",
+					"language": "ru",
+					"lemma": "übers Ohr hauen",
+					"emoji": "🤥💸",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "обманывать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#10",
+					"language": "en",
+					"lemma": "verhaften",
+					"emoji": "👮⛓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "arrest"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#10",
+					"language": "ru",
+					"lemma": "verhaften",
+					"emoji": "👮⛓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "арестовывать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-wartet-auf-den-nachtbus#0",
+					"language": "en",
+					"lemma": "warten",
+					"emoji": "⏳",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "wait"
+							},
+							{
+								"kind": "Preposition",
+								"text": "for"
+							},
+							{
+								"kind": "Slot",
+								"text": "something or someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-wartet-auf-den-nachtbus#0",
+					"language": "ru",
+					"lemma": "warten",
+					"emoji": "⏳",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "ждать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кого-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#8",
+					"language": "en",
+					"lemma": "glauben",
+					"emoji": "💭✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "believe"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#8",
+					"language": "ru",
+					"lemma": "glauben",
+					"emoji": "💭✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "верить"
+							},
+							{
+								"kind": "Preposition",
+								"text": "в"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-ist-stolz-auf-seinen-sohn#0",
+					"language": "en",
+					"lemma": "stolz",
+					"emoji": "🦚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "proud"
+							},
+							{
+								"kind": "Preposition",
+								"text": "of"
+							},
+							{
+								"kind": "Slot",
+								"text": "something or someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-ist-stolz-auf-seinen-sohn#0",
+					"language": "ru",
+					"lemma": "stolz",
+					"emoji": "🦚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "гордый"
+							},
+							{
+								"kind": "Preposition",
+								"text": "за"
+							},
+							{
+								"kind": "Slot",
+								"text": "кого-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ein-interessierter-leser-fragte-nach#0",
+					"language": "en",
+					"lemma": "interessiert",
+					"emoji": "🧐",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "interested"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ein-interessierter-leser-fragte-nach#0",
+					"language": "ru",
+					"lemma": "interessiert",
+					"emoji": "🧐",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "заинтересованный"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-ist-verheiratet#0",
+					"language": "en",
+					"lemma": "verheiratet",
+					"emoji": "💍",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "married"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-ist-verheiratet#0",
+					"language": "ru",
+					"lemma": "verheiratet",
+					"emoji": "💍",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "женатый"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2",
+					"language": "en",
+					"lemma": "Rücksicht nehmen",
+					"emoji": "🫶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "be considerate"
+							},
+							{
+								"kind": "Preposition",
+								"text": "of"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2",
+					"language": "ru",
+					"lemma": "Rücksicht nehmen",
+					"emoji": "🫶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "считаться"
+							},
+							{
+								"kind": "Preposition",
+								"text": "с"
+							},
+							{
+								"kind": "Slot",
+								"text": "кем-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/das-wetter-nimmt-einfluss-auf-die-planung#0",
+					"language": "en",
+					"lemma": "Einfluss nehmen",
+					"emoji": "🕹",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "influence"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/das-wetter-nimmt-einfluss-auf-die-planung#0",
+					"language": "ru",
+					"lemma": "Einfluss nehmen",
+					"emoji": "🕹",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "влиять"
+							},
+							{
+								"kind": "Preposition",
+								"text": "на"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-weiss-bescheid-ueber-die-plaene#0",
+					"language": "en",
+					"lemma": "Bescheid wissen",
+					"emoji": "🧠ℹ",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "be informed"
+							},
+							{
+								"kind": "Preposition",
+								"text": "about"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/er-weiss-bescheid-ueber-die-plaene#0",
+					"language": "ru",
+					"lemma": "Bescheid wissen",
+					"emoji": "🧠ℹ",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "знать"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/wir-nahmen-abschied#0",
+					"language": "en",
+					"lemma": "Abschied nehmen",
+					"emoji": "👋🚶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "take"
+							},
+							{
+								"kind": "Text",
+								"text": "leave"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/wir-nahmen-abschied#0",
+					"language": "ru",
+					"lemma": "Abschied nehmen",
+					"emoji": "👋🚶",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "прощаться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-wurde-um-geduld-gebeten#0",
+					"language": "en",
+					"lemma": "bitten",
+					"emoji": "🙏",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "ask"
+							},
+							{
+								"kind": "Preposition",
+								"text": "for"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-wurde-um-geduld-gebeten#0",
+					"language": "ru",
+					"lemma": "bitten",
+					"emoji": "🙏",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "просить"
+							},
+							{
+								"kind": "Preposition",
+								"text": "о"
+							},
+							{
+								"kind": "Slot",
+								"text": "чём-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/aus-angst-vor-hunden-bleibt-sie-zu-hause#0",
+					"language": "en",
+					"lemma": "Angst",
+					"emoji": "😨",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "fear"
+							},
+							{
+								"kind": "Preposition",
+								"text": "of"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/aus-angst-vor-hunden-bleibt-sie-zu-hause#0",
+					"language": "ru",
+					"lemma": "Angst",
+					"emoji": "😨",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "страх"
+							},
+							{
+								"kind": "Preposition",
+								"text": "перед"
+							},
+							{
+								"kind": "Slot",
+								"text": "кем-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/deutschland-wird-sich-an-diesem-manoever-beteiligen-sagte#0",
+					"language": "en",
+					"lemma": "beteiligen",
+					"emoji": "🪞🙋👥",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "participate"
+							},
+							{
+								"kind": "Preposition",
+								"text": "in"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/deutschland-wird-sich-an-diesem-manoever-beteiligen-sagte#0",
+					"language": "ru",
+					"lemma": "beteiligen",
+					"emoji": "🪞🙋👥",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "участвовать"
+							},
+							{
+								"kind": "Preposition",
+								"text": "в"
+							},
+							{
+								"kind": "Slot",
+								"text": "чём-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ich-soll-mich-hier-erholen-ich-war-krank#2",
+					"language": "en",
+					"lemma": "erholen",
+					"emoji": "🪞😌🔋",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "recover"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/ich-soll-mich-hier-erholen-ich-war-krank#2",
+					"language": "ru",
+					"lemma": "erholen",
+					"emoji": "🪞😌🔋",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "восстанавливаться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-erinnert-sich-an-den-geruch#0",
+					"language": "en",
+					"lemma": "erinnern",
+					"emoji": "🪞🧠💭",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "remember"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sie-erinnert-sich-an-den-geruch#0",
+					"language": "ru",
+					"lemma": "erinnern",
+					"emoji": "🪞🧠💭",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "напоминать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кому-то"
+							},
+							{
+								"kind": "Text",
+								"text": "о"
+							},
+							{
+								"kind": "Slot",
+								"text": "чём-то"
+							}
+						],
+						[
+							{
+								"kind": "Text",
+								"text": "напоминать"
+							},
+							{
+								"kind": "Slot",
+								"text": "кому-то"
+							},
+							{
+								"kind": "Text",
+								"text": "про"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#2",
+					"language": "en",
+					"lemma": "Sorgen machen",
+					"emoji": "🪞😟",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "worry"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#2",
+					"language": "ru",
+					"lemma": "Sorgen machen",
+					"emoji": "🪞😟",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "беспокоиться"
+							},
+							{
+								"kind": "Preposition",
+								"text": "о"
+							},
+							{
+								"kind": "Slot",
+								"text": "ком-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-rechnung-sah-war-er-ausser-sich-vor-wut#0",
+					"language": "en",
+					"lemma": "außer sein",
+					"emoji": "🪞🤯",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "be beside oneself"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-rechnung-sah-war-er-ausser-sich-vor-wut#0",
+					"language": "ru",
+					"lemma": "außer sein",
+					"emoji": "🪞🤯",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "быть вне себя"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-weltordnung-die-sich-nach-dem-zweiten-weltkrieg#0",
+					"language": "en",
+					"lemma": "etablieren",
+					"emoji": "🪞⚓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "become"
+							},
+							{
+								"kind": "Text",
+								"text": "established"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-weltordnung-die-sich-nach-dem-zweiten-weltkrieg#0",
+					"language": "ru",
+					"lemma": "etablieren",
+					"emoji": "🪞⚓",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "утвердиться"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der#0",
+					"language": "en",
+					"lemma": "weiterleiten",
+					"emoji": "📥📤",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "forward"
+							},
+							{
+								"kind": "Preposition",
+								"text": "to"
+							},
+							{
+								"kind": "Slot",
+								"text": "someone"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der#0",
+					"language": "ru",
+					"lemma": "weiterleiten",
+					"emoji": "📥📤",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "перенаправлять"
+							},
+							{
+								"kind": "Slot",
+								"text": "что-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#14",
+					"language": "en",
+					"lemma": "zutreffen",
+					"emoji": "🧩✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "be true"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#14",
+					"language": "ru",
+					"lemma": "zutreffen",
+					"emoji": "🧩✅",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "быть"
+							},
+							{
+								"kind": "Text",
+								"text": "верным"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#13",
+					"language": "en",
+					"lemma": "ein Ende machen",
+					"emoji": "🔚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "put"
+							},
+							{
+								"kind": "Text",
+								"text": "an"
+							},
+							{
+								"kind": "Text",
+								"text": "end"
+							},
+							{
+								"kind": "Text",
+								"text": "to"
+							},
+							{
+								"kind": "Slot",
+								"text": "something"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#13",
+					"language": "ru",
+					"lemma": "ein Ende machen",
+					"emoji": "🔚",
+					"valent": true,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "положить конец"
+							},
+							{
+								"kind": "Slot",
+								"text": "чему-то"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#12",
+					"language": "en",
+					"lemma": "Bett",
+					"emoji": "🛏",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "bed"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#12",
+					"language": "ru",
+					"lemma": "Bett",
+					"emoji": "🛏",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "кровать"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-arzt-untersucht-beide-knie-gruendlich#0",
+					"language": "en",
+					"lemma": "Knie",
+					"emoji": "🧎",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "knee"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-arzt-untersucht-beide-knie-gruendlich#0",
+					"language": "ru",
+					"lemma": "Knie",
+					"emoji": "🧎",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "колено"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-laden-hat-bis-20-uhr-geoeffnet#0",
+					"language": "en",
+					"lemma": "Laden",
+					"emoji": "🏪",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "shop"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-laden-hat-bis-20-uhr-geoeffnet#0",
+					"language": "ru",
+					"lemma": "Laden",
+					"emoji": "🏪",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "магазин"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein#1",
+					"language": "en",
+					"lemma": "jung",
+					"emoji": "🌱",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "young"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein#1",
+					"language": "ru",
+					"lemma": "jung",
+					"emoji": "🌱",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "молодой"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-zeugin-sprach-deutlich#0",
+					"language": "en",
+					"lemma": "deutlich",
+					"emoji": "🔍",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "clear"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/die-zeugin-sprach-deutlich#0",
+					"language": "ru",
+					"lemma": "deutlich",
+					"emoji": "🔍",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "ясный"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#0",
+					"language": "en",
+					"lemma": "sofort",
+					"emoji": "⚡",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "immediately"
+							}
+						]
+					]
+				},
+				{
+					"id": "de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#0",
+					"language": "ru",
+					"lemma": "sofort",
+					"emoji": "⚡",
+					"valent": false,
+					"translations": [
+						[
+							{
+								"kind": "Text",
+								"text": "сразу"
+							}
+						]
+					]
+				}
+			]
+		}
+	},
+	"judgeItems": [
+		{
+			"item": "i1",
+			"lemma": "Abbitte leisten",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🙇",
+			"markedSentence": "Die Verantwortlichen <TARGET>leisten</TARGET> <TARGET>Abbitte</TARGET>.",
+			"language": "en",
+			"translation": "apologize",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "apologize"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i2",
+			"lemma": "Abbitte leisten",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🙇",
+			"markedSentence": "Die Verantwortlichen <TARGET>leisten</TARGET> <TARGET>Abbitte</TARGET>.",
+			"language": "ru",
+			"translation": "просить прощения",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "просить прощения"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i3",
+			"lemma": "leidtun",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "😔",
+			"markedSentence": "<TARGET>Tut</TARGET> mir <TARGET>leid</TARGET>, das war mein Fehler.",
+			"language": "en",
+			"translation": "be sorry",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "be sorry"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i4",
+			"lemma": "leidtun",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "😔",
+			"markedSentence": "<TARGET>Tut</TARGET> mir <TARGET>leid</TARGET>, das war mein Fehler.",
+			"language": "ru",
+			"translation": "сожалеть",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "сожалеть"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i5",
+			"lemma": "leidtun",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "😔",
+			"markedSentence": "<TARGET>Tut</TARGET> mir <TARGET>leid</TARGET>, das war mein Fehler.",
+			"language": "ru",
+			"translation": "раскаиваться",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "раскаиваться"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i6",
+			"lemma": "verzeihen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🕊",
+			"markedSentence": "Findest du, daß sie wirklich eine gefährliche Person ist, voll Oberflächlichkeit und Eitelkeit, oder meinst du, daß alles nicht so schlimm und ernsthaft war, eigentlich nur bloße Marotte, die <TARGET>verziehen</TARGET> <TARGET>werden</TARGET> kann?",
+			"language": "en",
+			"translation": "forgive",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "forgive"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "forgive is transitive here; object slot missing"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i7",
+			"lemma": "verzeihen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🕊",
+			"markedSentence": "Findest du, daß sie wirklich eine gefährliche Person ist, voll Oberflächlichkeit und Eitelkeit, oder meinst du, daß alles nicht so schlimm und ernsthaft war, eigentlich nur bloße Marotte, die <TARGET>verziehen</TARGET> <TARGET>werden</TARGET> kann?",
+			"language": "ru",
+			"translation": "прощать {S:кого-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "прощать"
+				},
+				{
+					"kind": "Slot",
+					"text": "кого-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i8",
+			"lemma": "mitbringen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🎒",
+			"markedSentence": "Die Peitsche <TARGET>hat</TARGET> er <TARGET>mitgebracht</TARGET>\nund nimmt sie sorglich sehr in acht.",
+			"language": "en",
+			"translation": "bring {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "bring"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i9",
+			"lemma": "mitbringen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🎒",
+			"markedSentence": "Die Peitsche <TARGET>hat</TARGET> er <TARGET>mitgebracht</TARGET>\nund nimmt sie sorglich sehr in acht.",
+			"language": "ru",
+			"translation": "принести",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "принести"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "принести needs {S:что-то}"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i10",
+			"lemma": "zur Verfügung stellen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🫴",
+			"markedSentence": "Für den Workshop <TARGET>stellte</TARGET> das Team aktuelle Daten <TARGET>zur</TARGET> <TARGET>Verfügung</TARGET>.",
+			"language": "en",
+			"translation": "make {S:something} available",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "make"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				},
+				{
+					"kind": "Text",
+					"text": "available"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i11",
+			"lemma": "zur Verfügung stellen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🫴",
+			"markedSentence": "Für den Workshop <TARGET>stellte</TARGET> das Team aktuelle Daten <TARGET>zur</TARGET> <TARGET>Verfügung</TARGET>.",
+			"language": "ru",
+			"translation": "предоставлять {S:что-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "предоставлять"
+				},
+				{
+					"kind": "Slot",
+					"text": "что-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i12",
+			"lemma": "auf der Nase herumtanzen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "😜🙉",
+			"markedSentence": "Der Praktikant <TARGET>tanzte</TARGET> dem Chef <TARGET>auf</TARGET> <TARGET>der</TARGET> <TARGET>Nahse</TARGET> <TARGET>herum</TARGET>.",
+			"language": "en",
+			"translation": "walk all over someone",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "walk"
+				},
+				{
+					"kind": "Text",
+					"text": "all"
+				},
+				{
+					"kind": "Text",
+					"text": "over"
+				},
+				{
+					"kind": "Text",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "wrong-kind",
+				"note": "someone written as Text, should be Slot"
+			},
+			"learner": {
+				"label": "wrong-kind",
+				"note": "placeholder \"someone\" left as plain text"
+			}
+		},
+		{
+			"item": "i13",
+			"lemma": "auf der Nase herumtanzen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "😜🙉",
+			"markedSentence": "Der Praktikant <TARGET>tanzte</TARGET> dem Chef <TARGET>auf</TARGET> <TARGET>der</TARGET> <TARGET>Nahse</TARGET> <TARGET>herum</TARGET>.",
+			"language": "ru",
+			"translation": "помыкать {S:кем-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "помыкать"
+				},
+				{
+					"kind": "Slot",
+					"text": "кем-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i14",
+			"lemma": "es recht machen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "👌😊",
+			"markedSentence": "Ihnen kann <TARGET>es</TARGET> keiner <TARGET>recht</TARGET> <TARGET>machen</TARGET> und am wenigsten die Kinder.",
+			"language": "en",
+			"translation": "please",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "please"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "please needs {S:someone}"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i15",
+			"lemma": "es recht machen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "👌😊",
+			"markedSentence": "Ihnen kann <TARGET>es</TARGET> keiner <TARGET>recht</TARGET> <TARGET>machen</TARGET> und am wenigsten die Kinder.",
+			"language": "ru",
+			"translation": "угодить {S:кому-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "угодить"
+				},
+				{
+					"kind": "Slot",
+					"text": "кому-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i16",
+			"lemma": "verteidigen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🛡",
+			"markedSentence": "Ist dir Korinna, die du vorhin so großmütig <TARGET>verteidigen</TARGET> wolltest, verleidet oder nicht?",
+			"language": "en",
+			"translation": "defend",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "defend"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "defend needs {S:someone}"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i17",
+			"lemma": "verteidigen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🛡",
+			"markedSentence": "Ist dir Korinna, die du vorhin so großmütig <TARGET>verteidigen</TARGET> wolltest, verleidet oder nicht?",
+			"language": "ru",
+			"translation": "защищать",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "защищать"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "защищать needs {S:кого-то}"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i18",
+			"lemma": "übers Ohr hauen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🤥💸",
+			"markedSentence": "Der Verkäufer <TARGET>haut</TARGET> die Kundschaft ständig <TARGET>übers</TARGET> <TARGET>Ohr</TARGET>.",
+			"language": "en",
+			"translation": "cheat {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "cheat"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i19",
+			"lemma": "übers Ohr hauen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🤥💸",
+			"markedSentence": "Der Verkäufer <TARGET>haut</TARGET> die Kundschaft ständig <TARGET>übers</TARGET> <TARGET>Ohr</TARGET>.",
+			"language": "ru",
+			"translation": "обманывать {S:кого-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "обманывать"
+				},
+				{
+					"kind": "Slot",
+					"text": "кого-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i20",
+			"lemma": "verhaften",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "👮⛓",
+			"markedSentence": "Jemand mußte Josef K. verleumdet haben, denn ohne daß er etwas Böses getan hätte, <TARGET>wurde</TARGET> er eines Morgens <TARGET>verhaftet</TARGET>.",
+			"language": "en",
+			"translation": "arrest",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "arrest"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "arrest needs {S:someone}"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i21",
+			"lemma": "verhaften",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "👮⛓",
+			"markedSentence": "Jemand mußte Josef K. verleumdet haben, denn ohne daß er etwas Böses getan hätte, <TARGET>wurde</TARGET> er eines Morgens <TARGET>verhaftet</TARGET>.",
+			"language": "ru",
+			"translation": "арестовать",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "арестовать"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "арестовать needs {S:кого-то}"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i22",
+			"lemma": "warten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "⏳",
+			"markedSentence": "Er <TARGET>wartet</TARGET> <TARGET>auf</TARGET> den Nachtbus.",
+			"language": "en",
+			"translation": "wait [P:for] {S:something or someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "wait"
+				},
+				{
+					"kind": "Preposition",
+					"text": "for"
+				},
+				{
+					"kind": "Slot",
+					"text": "something or someone"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i23",
+			"lemma": "warten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "⏳",
+			"markedSentence": "Er <TARGET>wartet</TARGET> <TARGET>auf</TARGET> den Nachtbus.",
+			"language": "ru",
+			"translation": "ждать [P:на] {S:что-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "ждать"
+				},
+				{
+					"kind": "Preposition",
+					"text": "на"
+				},
+				{
+					"kind": "Slot",
+					"text": "что-то"
+				}
+			],
+			"linguist": {
+				"label": "invented-piece",
+				"note": "ждать takes кого/чего directly, not на"
+			},
+			"learner": {
+				"label": "invented-piece",
+				"note": "ждать takes no на; ждать кого-то/чего-то"
+			}
+		},
+		{
+			"item": "i24",
+			"lemma": "glauben",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "💭✅",
+			"markedSentence": "Glücklicherweise sagen Sie das so hin, ohne recht dran zu <TARGET>glauben</TARGET>.",
+			"language": "en",
+			"translation": "believe",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "believe"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "believe (sth/in sth) object missing"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i25",
+			"lemma": "glauben",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "💭✅",
+			"markedSentence": "Glücklicherweise sagen Sie das so hin, ohne recht dran zu <TARGET>glauben</TARGET>.",
+			"language": "ru",
+			"translation": "верить",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "верить"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "верить чему/во что object missing"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i26",
+			"lemma": "stolz",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🦚",
+			"markedSentence": "Er ist <TARGET>stolz</TARGET> <TARGET>auf</TARGET> seinen Sohn.",
+			"language": "en",
+			"translation": "proud [P:of] {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "proud"
+				},
+				{
+					"kind": "Preposition",
+					"text": "of"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i27",
+			"lemma": "stolz",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🦚",
+			"markedSentence": "Er ist <TARGET>stolz</TARGET> <TARGET>auf</TARGET> seinen Sohn.",
+			"language": "ru",
+			"translation": "гордый",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "гордый"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "Reading is stolz auf; object form (кем-то) not shown"
+			}
+		},
+		{
+			"item": "i28",
+			"lemma": "stolz",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🦚",
+			"markedSentence": "Er ist <TARGET>stolz</TARGET> <TARGET>auf</TARGET> seinen Sohn.",
+			"language": "ru",
+			"translation": "гордиться",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "гордиться"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "гордиться needs {S:кем-то} (instrumental)"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "гордиться needs instrumental object кем-то/чем-то"
+			}
+		},
+		{
+			"item": "i29",
+			"lemma": "interessiert",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🧐",
+			"markedSentence": "Ein <TARGET>interessierter</TARGET> Leser fragte nach.",
+			"language": "en",
+			"translation": "interested",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "interested"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i30",
+			"lemma": "interessiert",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🧐",
+			"markedSentence": "Ein <TARGET>interessierter</TARGET> Leser fragte nach.",
+			"language": "ru",
+			"translation": "заинтересованный",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "заинтересованный"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i31",
+			"lemma": "verheiratet",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "💍",
+			"markedSentence": "Sie ist <TARGET>verheiratet</TARGET>.",
+			"language": "en",
+			"translation": "married",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "married"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i32",
+			"lemma": "verheiratet",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "💍",
+			"markedSentence": "Sie ist <TARGET>verheiratet</TARGET>.",
+			"language": "ru",
+			"translation": "женатый",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "женатый"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i33",
+			"lemma": "Rücksicht nehmen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🫶",
+			"markedSentence": "Trotz des Zeitdrucks <TARGET>nahm</TARGET> Lea stets <TARGET>Rücksicht</TARGET> <TARGET>auf</TARGET> ihre Kollegen.",
+			"language": "en",
+			"translation": "consider {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "consider"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i34",
+			"lemma": "Rücksicht nehmen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🫶",
+			"markedSentence": "Trotz des Zeitdrucks <TARGET>nahm</TARGET> Lea stets <TARGET>Rücksicht</TARGET> <TARGET>auf</TARGET> ihre Kollegen.",
+			"language": "ru",
+			"translation": "учитывать {S:кого-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "учитывать"
+				},
+				{
+					"kind": "Slot",
+					"text": "кого-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i35",
+			"lemma": "Einfluss nehmen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🕹",
+			"markedSentence": "Das Wetter <TARGET>nimmt</TARGET> <TARGET>Einfluss</TARGET> <TARGET>auf</TARGET> die Planung.",
+			"language": "en",
+			"translation": "influence {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "influence"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i36",
+			"lemma": "Einfluss nehmen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🕹",
+			"markedSentence": "Das Wetter <TARGET>nimmt</TARGET> <TARGET>Einfluss</TARGET> <TARGET>auf</TARGET> die Planung.",
+			"language": "ru",
+			"translation": "оказывать {S:влияние}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "оказывать"
+				},
+				{
+					"kind": "Slot",
+					"text": "влияние"
+				}
+			],
+			"linguist": {
+				"label": "wrong-kind",
+				"note": "влияние is a real word marked as Slot"
+			},
+			"learner": {
+				"label": "wrong-kind",
+				"note": "влияние is a real word, not a slot; на-object missing"
+			}
+		},
+		{
+			"item": "i37",
+			"lemma": "Bescheid wissen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🧠ℹ",
+			"markedSentence": "Er <TARGET>weiß</TARGET> <TARGET>Bescheid</TARGET> <TARGET>über</TARGET> die Pläne.",
+			"language": "en",
+			"translation": "know {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "know"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i38",
+			"lemma": "Bescheid wissen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🧠ℹ",
+			"markedSentence": "Er <TARGET>weiß</TARGET> <TARGET>Bescheid</TARGET> <TARGET>über</TARGET> die Pläne.",
+			"language": "ru",
+			"translation": "знать {S:что-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "знать"
+				},
+				{
+					"kind": "Slot",
+					"text": "что-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i39",
+			"lemma": "Abschied nehmen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "👋🚶",
+			"markedSentence": "Wir <TARGET>nahmen</TARGET> <TARGET>Abschied</TARGET>.",
+			"language": "en",
+			"translation": "take leave",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "take"
+				},
+				{
+					"kind": "Text",
+					"text": "leave"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i40",
+			"lemma": "Abschied nehmen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "👋🚶",
+			"markedSentence": "Wir <TARGET>nahmen</TARGET> <TARGET>Abschied</TARGET>.",
+			"language": "ru",
+			"translation": "прощаться",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "прощаться"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i41",
+			"lemma": "bitten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🙏",
+			"markedSentence": "Sie <TARGET>wurde</TARGET> <TARGET>um</TARGET> Geduld <TARGET>gebeten</TARGET>.",
+			"language": "en",
+			"translation": "ask {S:someone} [P:for] {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "ask"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				},
+				{
+					"kind": "Preposition",
+					"text": "for"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i42",
+			"lemma": "bitten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🙏",
+			"markedSentence": "Sie <TARGET>wurde</TARGET> <TARGET>um</TARGET> Geduld <TARGET>gebeten</TARGET>.",
+			"language": "ru",
+			"translation": "просить {S:кого-то} о {S:чём-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "просить"
+				},
+				{
+					"kind": "Slot",
+					"text": "кого-то"
+				},
+				{
+					"kind": "Text",
+					"text": "о"
+				},
+				{
+					"kind": "Slot",
+					"text": "чём-то"
+				}
+			],
+			"linguist": {
+				"label": "wrong-kind",
+				"note": "governed о left as Text"
+			},
+			"learner": {
+				"label": "wrong-kind",
+				"note": "governed preposition о left as plain text"
+			}
+		},
+		{
+			"item": "i43",
+			"lemma": "Angst",
+			"kind": "NOUN",
+			"family": "Lexeme",
+			"emojiDescription": "😨",
+			"markedSentence": "Aus <TARGET>Angst</TARGET> <TARGET>vor</TARGET> Hunden bleibt sie zu Hause.",
+			"language": "en",
+			"translation": "fear",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "fear"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "Reading is Angst vor; \"of something\" not shown"
+			}
+		},
+		{
+			"item": "i44",
+			"lemma": "Angst",
+			"kind": "NOUN",
+			"family": "Lexeme",
+			"emojiDescription": "😨",
+			"markedSentence": "Aus <TARGET>Angst</TARGET> <TARGET>vor</TARGET> Hunden bleibt sie zu Hause.",
+			"language": "ru",
+			"translation": "страх [P:перед] {S:кем-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "страх"
+				},
+				{
+					"kind": "Preposition",
+					"text": "перед"
+				},
+				{
+					"kind": "Slot",
+					"text": "кем-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i45",
+			"lemma": "beteiligen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞🙋👥",
+			"markedSentence": "\"Deutschland <TARGET>wird</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> diesem Manöver <TARGET>beteiligen</TARGET>\", sagte Regierungssprecher Stefan Kornelius der Deutschen Presse-Agentur.",
+			"language": "en",
+			"translation": "participate [P:in] {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "participate"
+				},
+				{
+					"kind": "Preposition",
+					"text": "in"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i46",
+			"lemma": "beteiligen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞🙋👥",
+			"markedSentence": "\"Deutschland <TARGET>wird</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> diesem Manöver <TARGET>beteiligen</TARGET>\", sagte Regierungssprecher Stefan Kornelius der Deutschen Presse-Agentur.",
+			"language": "ru",
+			"translation": "участвовать [P:в] {S:чём-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "участвовать"
+				},
+				{
+					"kind": "Preposition",
+					"text": "в"
+				},
+				{
+					"kind": "Slot",
+					"text": "чём-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i47",
+			"lemma": "erholen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞😌🔋",
+			"markedSentence": "Ich soll <TARGET>mich</TARGET> hier <TARGET>erholen</TARGET>, ich war krank.",
+			"language": "en",
+			"translation": "recover",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "recover"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i48",
+			"lemma": "erholen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞😌🔋",
+			"markedSentence": "Ich soll <TARGET>mich</TARGET> hier <TARGET>erholen</TARGET>, ich war krank.",
+			"language": "ru",
+			"translation": "восстанавливаться",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "восстанавливаться"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i49",
+			"lemma": "erinnern",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞🧠💭",
+			"markedSentence": "Sie <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> den Geruch.",
+			"language": "en",
+			"translation": "remember {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "remember"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i50",
+			"lemma": "erinnern",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞🧠💭",
+			"markedSentence": "Sie <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> den Geruch.",
+			"language": "ru",
+			"translation": "вспоминать [P:о] {S:чём-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "вспоминать"
+				},
+				{
+					"kind": "Preposition",
+					"text": "о"
+				},
+				{
+					"kind": "Slot",
+					"text": "чём-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i51",
+			"lemma": "Sorgen machen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🪞😟",
+			"markedSentence": "Seit Wochen <TARGET>macht</TARGET> <TARGET>sich</TARGET> meine Mutter <TARGET>Sorgen</TARGET> <TARGET>um</TARGET> ihre Gesundheit.",
+			"language": "en",
+			"translation": "worry {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "worry"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "invented-piece",
+				"note": "worry sb = cause worry; sense needs about"
+			},
+			"learner": {
+				"label": "invented-piece",
+				"note": "\"worry someone\" means upset them; should be worry about"
+			}
+		},
+		{
+			"item": "i52",
+			"lemma": "Sorgen machen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🪞😟",
+			"markedSentence": "Seit Wochen <TARGET>macht</TARGET> <TARGET>sich</TARGET> meine Mutter <TARGET>Sorgen</TARGET> <TARGET>um</TARGET> ihre Gesundheit.",
+			"language": "ru",
+			"translation": "беспокоиться [P:о] {S:чём-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "беспокоиться"
+				},
+				{
+					"kind": "Preposition",
+					"text": "о"
+				},
+				{
+					"kind": "Slot",
+					"text": "чём-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i53",
+			"lemma": "außer sein",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🪞🤯",
+			"markedSentence": "Als er die Rechnung sah, <TARGET>war</TARGET> er <TARGET>außer</TARGET> <TARGET>sich</TARGET> vor Wut.",
+			"language": "en",
+			"translation": "be beside oneself",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "be beside oneself"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i54",
+			"lemma": "außer sein",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🪞🤯",
+			"markedSentence": "Als er die Rechnung sah, <TARGET>war</TARGET> er <TARGET>außer</TARGET> <TARGET>sich</TARGET> vor Wut.",
+			"language": "ru",
+			"translation": "быть вне себя",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "быть вне себя"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i55",
+			"lemma": "etablieren",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞⚓",
+			"markedSentence": "Die Weltordnung, die <TARGET>sich</TARGET> nach dem Zweiten Weltkrieg <TARGET>etabliert</TARGET> <TARGET>hat</TARGET>, scheint an ihr Ende gekommen zu sein.",
+			"language": "en",
+			"translation": "establish itself",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "establish itself"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i56",
+			"lemma": "etablieren",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞⚓",
+			"markedSentence": "Die Weltordnung, die <TARGET>sich</TARGET> nach dem Zweiten Weltkrieg <TARGET>etabliert</TARGET> <TARGET>hat</TARGET>, scheint an ihr Ende gekommen zu sein.",
+			"language": "ru",
+			"translation": "утвердиться",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "утвердиться"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i57",
+			"lemma": "weiterleiten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "📥📤",
+			"markedSentence": "Fest steht: Das alte Umlagesystem, bei dem die Beiträge der Angestellten direkt <TARGET>an</TARGET> die Rentner <TARGET>weitergeleitet</TARGET> <TARGET>werden</TARGET>, ist an seine Grenzen gekommen.",
+			"language": "en",
+			"translation": "forward",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "forward"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "forward needs {S:something}"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "forward something to someone not shown"
+			}
+		},
+		{
+			"item": "i58",
+			"lemma": "weiterleiten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "📥📤",
+			"markedSentence": "Fest steht: Das alte Umlagesystem, bei dem die Beiträge der Angestellten direkt <TARGET>an</TARGET> die Rentner <TARGET>weitergeleitet</TARGET> <TARGET>werden</TARGET>, ist an seine Grenzen gekommen.",
+			"language": "ru",
+			"translation": "перенаправлять",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "перенаправлять"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "перенаправлять needs {S:что-то}"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "object and recipient (кому-то) not shown"
+			}
+		},
+		{
+			"item": "i59",
+			"lemma": "zutreffen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🧩✅",
+			"markedSentence": "Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das <TARGET>trifft</TARGET> bei Odradek nicht <TARGET>zu</TARGET>.",
+			"language": "en",
+			"translation": "be true",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "be"
+				},
+				{
+					"kind": "Text",
+					"text": "true"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i60",
+			"lemma": "zutreffen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🧩✅",
+			"markedSentence": "Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das <TARGET>trifft</TARGET> bei Odradek nicht <TARGET>zu</TARGET>.",
+			"language": "ru",
+			"translation": "соответствовать",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "соответствовать"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "соответствовать needs {S:чему-то}"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "соответствовать needs dative object чему-то"
+			}
+		},
+		{
+			"item": "i61",
+			"lemma": "ein Ende machen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🔚",
+			"markedSentence": "Als er die Treppe hinunterging, wußte er, daß ihm nichts zu tun übrig blieb, als <TARGET>ein</TARGET> <TARGET>Ende</TARGET> zu <TARGET>machen</TARGET>.",
+			"language": "en",
+			"translation": "put {S:something} to an end",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "put"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				},
+				{
+					"kind": "Text",
+					"text": "to an end"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "invented-piece",
+				"note": "teaches \"put something to an end\"; idiom is put an end to"
+			}
+		},
+		{
+			"item": "i62",
+			"lemma": "ein Ende machen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🔚",
+			"markedSentence": "Als er die Treppe hinunterging, wußte er, daß ihm nichts zu tun übrig blieb, als <TARGET>ein</TARGET> <TARGET>Ende</TARGET> zu <TARGET>machen</TARGET>.",
+			"language": "ru",
+			"translation": "положить конец {S:чему-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "положить конец"
+				},
+				{
+					"kind": "Slot",
+					"text": "чему-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i63",
+			"lemma": "Bett",
+			"kind": "NOUN",
+			"family": "Lexeme",
+			"emojiDescription": "🛏",
+			"markedSentence": "Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem <TARGET>Bett</TARGET> zu einem ungeheueren Ungeziefer verwandelt.",
+			"language": "en",
+			"translation": "bed",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "bed"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i64",
+			"lemma": "Bett",
+			"kind": "NOUN",
+			"family": "Lexeme",
+			"emojiDescription": "🛏",
+			"markedSentence": "Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem <TARGET>Bett</TARGET> zu einem ungeheueren Ungeziefer verwandelt.",
+			"language": "ru",
+			"translation": "кровать",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "кровать"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i65",
+			"lemma": "Knie",
+			"kind": "NOUN",
+			"family": "Lexeme",
+			"emojiDescription": "🧎",
+			"markedSentence": "Der Arzt untersucht beide <TARGET>Knie</TARGET> gründlich.",
+			"language": "en",
+			"translation": "knee",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "knee"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i66",
+			"lemma": "Knie",
+			"kind": "NOUN",
+			"family": "Lexeme",
+			"emojiDescription": "🧎",
+			"markedSentence": "Der Arzt untersucht beide <TARGET>Knie</TARGET> gründlich.",
+			"language": "ru",
+			"translation": "колено",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "колено"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i67",
+			"lemma": "Laden",
+			"kind": "NOUN",
+			"family": "Lexeme",
+			"emojiDescription": "🏪",
+			"markedSentence": "<TARGET>Der</TARGET> <TARGET>Laden</TARGET> hat bis 20 Uhr geöffnet.",
+			"language": "en",
+			"translation": "shop",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "shop"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i68",
+			"lemma": "Laden",
+			"kind": "NOUN",
+			"family": "Lexeme",
+			"emojiDescription": "🏪",
+			"markedSentence": "<TARGET>Der</TARGET> <TARGET>Laden</TARGET> hat bis 20 Uhr geöffnet.",
+			"language": "ru",
+			"translation": "магазин",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "магазин"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i69",
+			"lemma": "jung",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🌱",
+			"markedSentence": "Der <TARGET>junge</TARGET> Schwarzkopf schritt, in seinem grauen Filzhut, sein Buch in der Hand, neben ihr her und betrachtete sie manchmal von der Seite.",
+			"language": "en",
+			"translation": "young",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "young"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i70",
+			"lemma": "jung",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🌱",
+			"markedSentence": "Der <TARGET>junge</TARGET> Schwarzkopf schritt, in seinem grauen Filzhut, sein Buch in der Hand, neben ihr her und betrachtete sie manchmal von der Seite.",
+			"language": "ru",
+			"translation": "молодой",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "молодой"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i71",
+			"lemma": "deutlich",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🔍",
+			"markedSentence": "Die Zeugin sprach <TARGET>deutlich</TARGET>.",
+			"language": "en",
+			"translation": "clear",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "clear"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i72",
+			"lemma": "deutlich",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🔍",
+			"markedSentence": "Die Zeugin sprach <TARGET>deutlich</TARGET>.",
+			"language": "en",
+			"translation": "distinct",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "distinct"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i73",
+			"lemma": "deutlich",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🔍",
+			"markedSentence": "Die Zeugin sprach <TARGET>deutlich</TARGET>.",
+			"language": "ru",
+			"translation": "отчётливый",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "отчётливый"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i74",
+			"lemma": "sofort",
+			"kind": "ADV",
+			"family": "Lexeme",
+			"emojiDescription": "⚡",
+			"markedSentence": "<TARGET>Sofort</TARGET> klopfte es und ein Mann, den er in dieser Wohnung noch niemals gesehen hatte, trat ein.",
+			"language": "en",
+			"translation": "immediately",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "immediately"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i75",
+			"lemma": "sofort",
+			"kind": "ADV",
+			"family": "Lexeme",
+			"emojiDescription": "⚡",
+			"markedSentence": "<TARGET>Sofort</TARGET> klopfte es und ein Mann, den er in dieser Wohnung noch niemals gesehen hatte, trat ein.",
+			"language": "ru",
+			"translation": "немедленно",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "немедленно"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i76",
+			"lemma": "Abbitte leisten",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🙇",
+			"markedSentence": "Die Verantwortlichen <TARGET>leisten</TARGET> <TARGET>Abbitte</TARGET>.",
+			"language": "ru",
+			"translation": "искупать {S:что-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "искупать"
+				},
+				{
+					"kind": "Slot",
+					"text": "что-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i77",
+			"lemma": "Abbitte leisten",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🙇",
+			"markedSentence": "Die Verantwortlichen <TARGET>leisten</TARGET> <TARGET>Abbitte</TARGET>.",
+			"language": "ru",
+			"translation": "просить прощения",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "просить"
+				},
+				{
+					"kind": "Text",
+					"text": "прощения"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i78",
+			"lemma": "verzeihen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🕊",
+			"markedSentence": "Findest du, daß sie wirklich eine gefährliche Person ist, voll Oberflächlichkeit und Eitelkeit, oder meinst du, daß alles nicht so schlimm und ernsthaft war, eigentlich nur bloße Marotte, die <TARGET>verziehen</TARGET> <TARGET>werden</TARGET> kann?",
+			"language": "en",
+			"translation": "pardon",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "pardon"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "pardon is transitive; object slot missing"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i79",
+			"lemma": "mitbringen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🎒",
+			"markedSentence": "Die Peitsche <TARGET>hat</TARGET> er <TARGET>mitgebracht</TARGET>\nund nimmt sie sorglich sehr in acht.",
+			"language": "en",
+			"translation": "bring along {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "bring"
+				},
+				{
+					"kind": "Text",
+					"text": "along"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i80",
+			"lemma": "zur Verfügung stellen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🫴",
+			"markedSentence": "Für den Workshop <TARGET>stellte</TARGET> das Team aktuelle Daten <TARGET>zur</TARGET> <TARGET>Verfügung</TARGET>.",
+			"language": "en",
+			"translation": "make something available",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "make"
+				},
+				{
+					"kind": "Text",
+					"text": "something"
+				},
+				{
+					"kind": "Text",
+					"text": "available"
+				}
+			],
+			"linguist": {
+				"label": "wrong-kind",
+				"note": "something written as Text, should be Slot"
+			},
+			"learner": {
+				"label": "wrong-kind",
+				"note": "placeholder \"something\" left as plain text"
+			}
+		},
+		{
+			"item": "i81",
+			"lemma": "auf der Nase herumtanzen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "😜🙉",
+			"markedSentence": "Der Praktikant <TARGET>tanzte</TARGET> dem Chef <TARGET>auf</TARGET> <TARGET>der</TARGET> <TARGET>Nahse</TARGET> <TARGET>herum</TARGET>.",
+			"language": "en",
+			"translation": "walk all over {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "walk all over"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "wrong-kind",
+				"note": "governed \"over\" left as plain text"
+			}
+		},
+		{
+			"item": "i82",
+			"lemma": "es recht machen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "👌😊",
+			"markedSentence": "Ihnen kann <TARGET>es</TARGET> keiner <TARGET>recht</TARGET> <TARGET>machen</TARGET> und am wenigsten die Kinder.",
+			"language": "en",
+			"translation": "please {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "please"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i83",
+			"lemma": "verteidigen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🛡",
+			"markedSentence": "Ist dir Korinna, die du vorhin so großmütig <TARGET>verteidigen</TARGET> wolltest, verleidet oder nicht?",
+			"language": "en",
+			"translation": "defend {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "defend"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i84",
+			"lemma": "übers Ohr hauen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🤥💸",
+			"markedSentence": "Der Verkäufer <TARGET>haut</TARGET> die Kundschaft ständig <TARGET>übers</TARGET> <TARGET>Ohr</TARGET>.",
+			"language": "en",
+			"translation": "cheat",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "cheat"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "cheat in this sense needs {S:someone}"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i85",
+			"lemma": "übers Ohr hauen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🤥💸",
+			"markedSentence": "Der Verkäufer <TARGET>haut</TARGET> die Kundschaft ständig <TARGET>übers</TARGET> <TARGET>Ohr</TARGET>.",
+			"language": "ru",
+			"translation": "обманывать",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "обманывать"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "обманывать needs {S:кого-то}"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i86",
+			"lemma": "warten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "⏳",
+			"markedSentence": "Er <TARGET>wartet</TARGET> <TARGET>auf</TARGET> den Nachtbus.",
+			"language": "en",
+			"translation": "wait [P:for] {S:someone or something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "wait"
+				},
+				{
+					"kind": "Preposition",
+					"text": "for"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone or something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i87",
+			"lemma": "warten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "⏳",
+			"markedSentence": "Er <TARGET>wartet</TARGET> <TARGET>auf</TARGET> den Nachtbus.",
+			"language": "ru",
+			"translation": "ждать {S:кого-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "ждать"
+				},
+				{
+					"kind": "Slot",
+					"text": "кого-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i88",
+			"lemma": "glauben",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "💭✅",
+			"markedSentence": "Glücklicherweise sagen Sie das so hin, ohne recht dran zu <TARGET>glauben</TARGET>.",
+			"language": "ru",
+			"translation": "считать",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "считать"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i89",
+			"lemma": "stolz",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🦚",
+			"markedSentence": "Er ist <TARGET>stolz</TARGET> <TARGET>auf</TARGET> seinen Sohn.",
+			"language": "en",
+			"translation": "proud",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "proud"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "Reading is stolz auf; \"of someone\" not shown"
+			}
+		},
+		{
+			"item": "i90",
+			"lemma": "stolz",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🦚",
+			"markedSentence": "Er ist <TARGET>stolz</TARGET> <TARGET>auf</TARGET> seinen Sohn.",
+			"language": "ru",
+			"translation": "гордящийся",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "гордящийся"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "гордящийся governs {S:кем-то}"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "гордящийся needs instrumental object кем-то"
+			}
+		},
+		{
+			"item": "i91",
+			"lemma": "Rücksicht nehmen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🫶",
+			"markedSentence": "Trotz des Zeitdrucks <TARGET>nahm</TARGET> Lea stets <TARGET>Rücksicht</TARGET> <TARGET>auf</TARGET> ihre Kollegen.",
+			"language": "en",
+			"translation": "be considerate [P:of] {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "be considerate"
+				},
+				{
+					"kind": "Preposition",
+					"text": "of"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i92",
+			"lemma": "Rücksicht nehmen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🫶",
+			"markedSentence": "Trotz des Zeitdrucks <TARGET>nahm</TARGET> Lea stets <TARGET>Rücksicht</TARGET> <TARGET>auf</TARGET> ihre Kollegen.",
+			"language": "ru",
+			"translation": "считаться [P:с] {S:кем-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "считаться"
+				},
+				{
+					"kind": "Preposition",
+					"text": "с"
+				},
+				{
+					"kind": "Slot",
+					"text": "кем-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i93",
+			"lemma": "Einfluss nehmen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🕹",
+			"markedSentence": "Das Wetter <TARGET>nimmt</TARGET> <TARGET>Einfluss</TARGET> <TARGET>auf</TARGET> die Planung.",
+			"language": "ru",
+			"translation": "влиять [P:на] {S:что-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "влиять"
+				},
+				{
+					"kind": "Preposition",
+					"text": "на"
+				},
+				{
+					"kind": "Slot",
+					"text": "что-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i94",
+			"lemma": "Bescheid wissen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🧠ℹ",
+			"markedSentence": "Er <TARGET>weiß</TARGET> <TARGET>Bescheid</TARGET> <TARGET>über</TARGET> die Pläne.",
+			"language": "en",
+			"translation": "be informed",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "be informed"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "Reading includes über; \"about something\" not shown"
+			}
+		},
+		{
+			"item": "i95",
+			"lemma": "Bescheid wissen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🧠ℹ",
+			"markedSentence": "Er <TARGET>weiß</TARGET> <TARGET>Bescheid</TARGET> <TARGET>über</TARGET> die Pläne.",
+			"language": "ru",
+			"translation": "знать",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "знать"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "знать needs object or о чём"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "Reading includes über; \"о чём-то\" not shown"
+			}
+		},
+		{
+			"item": "i96",
+			"lemma": "Abschied nehmen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "👋🚶",
+			"markedSentence": "Wir <TARGET>nahmen</TARGET> <TARGET>Abschied</TARGET>.",
+			"language": "en",
+			"translation": "say goodbye",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "say goodbye"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i97",
+			"lemma": "bitten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🙏",
+			"markedSentence": "Sie <TARGET>wurde</TARGET> <TARGET>um</TARGET> Geduld <TARGET>gebeten</TARGET>.",
+			"language": "ru",
+			"translation": "просить [P:о] {S:чём-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "просить"
+				},
+				{
+					"kind": "Preposition",
+					"text": "о"
+				},
+				{
+					"kind": "Slot",
+					"text": "чём-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i98",
+			"lemma": "Angst",
+			"kind": "NOUN",
+			"family": "Lexeme",
+			"emojiDescription": "😨",
+			"markedSentence": "Aus <TARGET>Angst</TARGET> <TARGET>vor</TARGET> Hunden bleibt sie zu Hause.",
+			"language": "en",
+			"translation": "fear [P:of] {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "fear"
+				},
+				{
+					"kind": "Preposition",
+					"text": "of"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i99",
+			"lemma": "Angst",
+			"kind": "NOUN",
+			"family": "Lexeme",
+			"emojiDescription": "😨",
+			"markedSentence": "Aus <TARGET>Angst</TARGET> <TARGET>vor</TARGET> Hunden bleibt sie zu Hause.",
+			"language": "ru",
+			"translation": "страх",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "страх"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "Reading is Angst vor; \"перед кем-то\" not shown"
+			}
+		},
+		{
+			"item": "i100",
+			"lemma": "Angst",
+			"kind": "NOUN",
+			"family": "Lexeme",
+			"emojiDescription": "😨",
+			"markedSentence": "Aus <TARGET>Angst</TARGET> <TARGET>vor</TARGET> Hunden bleibt sie zu Hause.",
+			"language": "ru",
+			"translation": "боязнь",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "боязнь"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "боязнь needs genitive object чего-то"
+			}
+		},
+		{
+			"item": "i101",
+			"lemma": "erinnern",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞🧠💭",
+			"markedSentence": "Sie <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> den Geruch.",
+			"language": "en",
+			"translation": "remind {S:someone} [P:of] {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "remind"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				},
+				{
+					"kind": "Preposition",
+					"text": "of"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i102",
+			"lemma": "Sorgen machen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🪞😟",
+			"markedSentence": "Seit Wochen <TARGET>macht</TARGET> <TARGET>sich</TARGET> meine Mutter <TARGET>Sorgen</TARGET> <TARGET>um</TARGET> ihre Gesundheit.",
+			"language": "en",
+			"translation": "worry",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "worry"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "worry about something not shown"
+			}
+		},
+		{
+			"item": "i103",
+			"lemma": "außer sein",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🪞🤯",
+			"markedSentence": "Als er die Rechnung sah, <TARGET>war</TARGET> er <TARGET>außer</TARGET> <TARGET>sich</TARGET> vor Wut.",
+			"language": "ru",
+			"translation": "быть вне себя от ярости",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "быть вне себя от ярости"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "invented-piece",
+				"note": "\"от ярости\" copied from example's \"vor Wut\""
+			}
+		},
+		{
+			"item": "i104",
+			"lemma": "etablieren",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞⚓",
+			"markedSentence": "Die Weltordnung, die <TARGET>sich</TARGET> nach dem Zweiten Weltkrieg <TARGET>etabliert</TARGET> <TARGET>hat</TARGET>, scheint an ihr Ende gekommen zu sein.",
+			"language": "en",
+			"translation": "become established",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "become established"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i105",
+			"lemma": "weiterleiten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "📥📤",
+			"markedSentence": "Fest steht: Das alte Umlagesystem, bei dem die Beiträge der Angestellten direkt <TARGET>an</TARGET> die Rentner <TARGET>weitergeleitet</TARGET> <TARGET>werden</TARGET>, ist an seine Grenzen gekommen.",
+			"language": "en",
+			"translation": "forward {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "forward"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "recipient \"to someone\" (German an) not shown"
+			}
+		},
+		{
+			"item": "i106",
+			"lemma": "zutreffen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🧩✅",
+			"markedSentence": "Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das <TARGET>trifft</TARGET> bei Odradek nicht <TARGET>zu</TARGET>.",
+			"language": "en",
+			"translation": "apply [P:to] {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "apply"
+				},
+				{
+					"kind": "Preposition",
+					"text": "to"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i107",
+			"lemma": "zutreffen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🧩✅",
+			"markedSentence": "Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das <TARGET>trifft</TARGET> bei Odradek nicht <TARGET>zu</TARGET>.",
+			"language": "ru",
+			"translation": "быть верным",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "быть верным"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i108",
+			"lemma": "zutreffen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🧩✅",
+			"markedSentence": "Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das <TARGET>trifft</TARGET> bei Odradek nicht <TARGET>zu</TARGET>.",
+			"language": "ru",
+			"translation": "относиться",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "относиться"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "относиться needs [P:к] {S:чему-то}"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "относиться needs к чему-то in this sense"
+			}
+		},
+		{
+			"item": "i109",
+			"lemma": "ein Ende machen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🔚",
+			"markedSentence": "Als er die Treppe hinunterging, wußte er, daß ihm nichts zu tun übrig blieb, als <TARGET>ein</TARGET> <TARGET>Ende</TARGET> zu <TARGET>machen</TARGET>.",
+			"language": "ru",
+			"translation": "покончить [P:с] {S:чем-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "покончить"
+				},
+				{
+					"kind": "Preposition",
+					"text": "с"
+				},
+				{
+					"kind": "Slot",
+					"text": "чем-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i110",
+			"lemma": "deutlich",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🔍",
+			"markedSentence": "Die Zeugin sprach <TARGET>deutlich</TARGET>.",
+			"language": "ru",
+			"translation": "ясный",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "ясный"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i111",
+			"lemma": "Abbitte leisten",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🙇",
+			"markedSentence": "Die Verantwortlichen <TARGET>leisten</TARGET> <TARGET>Abbitte</TARGET>.",
+			"language": "ru",
+			"translation": "принести извинения",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "принести извинения"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i112",
+			"lemma": "leidtun",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "😔",
+			"markedSentence": "<TARGET>Tut</TARGET> mir <TARGET>leid</TARGET>, das war mein Fehler.",
+			"language": "ru",
+			"translation": "жалеть",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "жалеть"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i113",
+			"lemma": "verzeihen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🕊",
+			"markedSentence": "Findest du, daß sie wirklich eine gefährliche Person ist, voll Oberflächlichkeit und Eitelkeit, oder meinst du, daß alles nicht so schlimm und ernsthaft war, eigentlich nur bloße Marotte, die <TARGET>verziehen</TARGET> <TARGET>werden</TARGET> kann?",
+			"language": "en",
+			"translation": "forgive {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "forgive"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i114",
+			"lemma": "mitbringen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🎒",
+			"markedSentence": "Die Peitsche <TARGET>hat</TARGET> er <TARGET>mitgebracht</TARGET>\nund nimmt sie sorglich sehr in acht.",
+			"language": "en",
+			"translation": "bring {S:something} along",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "bring"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				},
+				{
+					"kind": "Text",
+					"text": "along"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i115",
+			"lemma": "zur Verfügung stellen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🫴",
+			"markedSentence": "Für den Workshop <TARGET>stellte</TARGET> das Team aktuelle Daten <TARGET>zur</TARGET> <TARGET>Verfügung</TARGET>.",
+			"language": "en",
+			"translation": "make available {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "make"
+				},
+				{
+					"kind": "Text",
+					"text": "available"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i116",
+			"lemma": "auf der Nase herumtanzen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "😜🙉",
+			"markedSentence": "Der Praktikant <TARGET>tanzte</TARGET> dem Chef <TARGET>auf</TARGET> <TARGET>der</TARGET> <TARGET>Nahse</TARGET> <TARGET>herum</TARGET>.",
+			"language": "en",
+			"translation": "take advantage of {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "take advantage of"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "wrong-kind",
+				"note": "governed of left as Text"
+			},
+			"learner": {
+				"label": "wrong-kind",
+				"note": "governed \"of\" left as plain text"
+			}
+		},
+		{
+			"item": "i117",
+			"lemma": "verteidigen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🛡",
+			"markedSentence": "Ist dir Korinna, die du vorhin so großmütig <TARGET>verteidigen</TARGET> wolltest, verleidet oder nicht?",
+			"language": "ru",
+			"translation": "защищать {S:кого-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "защищать"
+				},
+				{
+					"kind": "Slot",
+					"text": "кого-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i118",
+			"lemma": "verhaften",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "👮⛓",
+			"markedSentence": "Jemand mußte Josef K. verleumdet haben, denn ohne daß er etwas Böses getan hätte, <TARGET>wurde</TARGET> er eines Morgens <TARGET>verhaftet</TARGET>.",
+			"language": "ru",
+			"translation": "арестовывать",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "арестовывать"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "арестовывать needs {S:кого-то}"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i119",
+			"lemma": "glauben",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "💭✅",
+			"markedSentence": "Glücklicherweise sagen Sie das so hin, ohne recht dran zu <TARGET>glauben</TARGET>.",
+			"language": "ru",
+			"translation": "верить [P:в] {S:что-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "верить"
+				},
+				{
+					"kind": "Preposition",
+					"text": "в"
+				},
+				{
+					"kind": "Slot",
+					"text": "что-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i120",
+			"lemma": "stolz",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🦚",
+			"markedSentence": "Er ist <TARGET>stolz</TARGET> <TARGET>auf</TARGET> seinen Sohn.",
+			"language": "en",
+			"translation": "proud [P:of] {S:something or someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "proud"
+				},
+				{
+					"kind": "Preposition",
+					"text": "of"
+				},
+				{
+					"kind": "Slot",
+					"text": "something or someone"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i121",
+			"lemma": "stolz",
+			"kind": "ADJ",
+			"family": "Lexeme",
+			"emojiDescription": "🦚",
+			"markedSentence": "Er ist <TARGET>stolz</TARGET> <TARGET>auf</TARGET> seinen Sohn.",
+			"language": "ru",
+			"translation": "гордый [P:за] {S:кого-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "гордый"
+				},
+				{
+					"kind": "Preposition",
+					"text": "за"
+				},
+				{
+					"kind": "Slot",
+					"text": "кого-то"
+				}
+			],
+			"linguist": {
+				"label": "invented-piece",
+				"note": "гордый governs instrumental, not за"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i122",
+			"lemma": "Bescheid wissen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🧠ℹ",
+			"markedSentence": "Er <TARGET>weiß</TARGET> <TARGET>Bescheid</TARGET> <TARGET>über</TARGET> die Pläne.",
+			"language": "en",
+			"translation": "be informed [P:about] {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "be informed"
+				},
+				{
+					"kind": "Preposition",
+					"text": "about"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i123",
+			"lemma": "bitten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🙏",
+			"markedSentence": "Sie <TARGET>wurde</TARGET> <TARGET>um</TARGET> Geduld <TARGET>gebeten</TARGET>.",
+			"language": "en",
+			"translation": "ask [P:for] {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "ask"
+				},
+				{
+					"kind": "Preposition",
+					"text": "for"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i124",
+			"lemma": "erinnern",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞🧠💭",
+			"markedSentence": "Sie <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> den Geruch.",
+			"language": "en",
+			"translation": "remember {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "remember"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i125",
+			"lemma": "erinnern",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞🧠💭",
+			"markedSentence": "Sie <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> den Geruch.",
+			"language": "ru",
+			"translation": "напоминать {S:кому-то} о {S:чём-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "напоминать"
+				},
+				{
+					"kind": "Slot",
+					"text": "кому-то"
+				},
+				{
+					"kind": "Text",
+					"text": "о"
+				},
+				{
+					"kind": "Slot",
+					"text": "чём-то"
+				}
+			],
+			"linguist": {
+				"label": "wrong-kind",
+				"note": "governed о left as Text"
+			},
+			"learner": {
+				"label": "wrong-kind",
+				"note": "governed preposition о left as plain text"
+			}
+		},
+		{
+			"item": "i126",
+			"lemma": "erinnern",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞🧠💭",
+			"markedSentence": "Sie <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> den Geruch.",
+			"language": "ru",
+			"translation": "напоминать {S:кому-то} про {S:что-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "напоминать"
+				},
+				{
+					"kind": "Slot",
+					"text": "кому-то"
+				},
+				{
+					"kind": "Text",
+					"text": "про"
+				},
+				{
+					"kind": "Slot",
+					"text": "что-то"
+				}
+			],
+			"linguist": {
+				"label": "wrong-kind",
+				"note": "governed про left as Text"
+			},
+			"learner": {
+				"label": "wrong-kind",
+				"note": "governed preposition про left as plain text"
+			}
+		},
+		{
+			"item": "i127",
+			"lemma": "Sorgen machen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🪞😟",
+			"markedSentence": "Seit Wochen <TARGET>macht</TARGET> <TARGET>sich</TARGET> meine Mutter <TARGET>Sorgen</TARGET> <TARGET>um</TARGET> ihre Gesundheit.",
+			"language": "ru",
+			"translation": "беспокоиться [P:о] {S:ком-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "беспокоиться"
+				},
+				{
+					"kind": "Preposition",
+					"text": "о"
+				},
+				{
+					"kind": "Slot",
+					"text": "ком-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i128",
+			"lemma": "etablieren",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🪞⚓",
+			"markedSentence": "Die Weltordnung, die <TARGET>sich</TARGET> nach dem Zweiten Weltkrieg <TARGET>etabliert</TARGET> <TARGET>hat</TARGET>, scheint an ihr Ende gekommen zu sein.",
+			"language": "en",
+			"translation": "become established",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "become"
+				},
+				{
+					"kind": "Text",
+					"text": "established"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i129",
+			"lemma": "weiterleiten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "📥📤",
+			"markedSentence": "Fest steht: Das alte Umlagesystem, bei dem die Beiträge der Angestellten direkt <TARGET>an</TARGET> die Rentner <TARGET>weitergeleitet</TARGET> <TARGET>werden</TARGET>, ist an seine Grenzen gekommen.",
+			"language": "en",
+			"translation": "forward [P:to] {S:someone}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "forward"
+				},
+				{
+					"kind": "Preposition",
+					"text": "to"
+				},
+				{
+					"kind": "Slot",
+					"text": "someone"
+				}
+			],
+			"linguist": {
+				"label": "missing-piece",
+				"note": "direct object {S:something} missing before to"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i130",
+			"lemma": "weiterleiten",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "📥📤",
+			"markedSentence": "Fest steht: Das alte Umlagesystem, bei dem die Beiträge der Angestellten direkt <TARGET>an</TARGET> die Rentner <TARGET>weitergeleitet</TARGET> <TARGET>werden</TARGET>, ist an seine Grenzen gekommen.",
+			"language": "ru",
+			"translation": "перенаправлять {S:что-то}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "перенаправлять"
+				},
+				{
+					"kind": "Slot",
+					"text": "что-то"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "missing-piece",
+				"note": "recipient (кому-то) not shown"
+			}
+		},
+		{
+			"item": "i131",
+			"lemma": "zutreffen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🧩✅",
+			"markedSentence": "Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das <TARGET>trifft</TARGET> bei Odradek nicht <TARGET>zu</TARGET>.",
+			"language": "en",
+			"translation": "be true",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "be true"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i132",
+			"lemma": "zutreffen",
+			"kind": "VERB",
+			"family": "Lexeme",
+			"emojiDescription": "🧩✅",
+			"markedSentence": "Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das <TARGET>trifft</TARGET> bei Odradek nicht <TARGET>zu</TARGET>.",
+			"language": "ru",
+			"translation": "быть верным",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "быть"
+				},
+				{
+					"kind": "Text",
+					"text": "верным"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		},
+		{
+			"item": "i133",
+			"lemma": "ein Ende machen",
+			"kind": "VERB",
+			"family": "Locution",
+			"emojiDescription": "🔚",
+			"markedSentence": "Als er die Treppe hinunterging, wußte er, daß ihm nichts zu tun übrig blieb, als <TARGET>ein</TARGET> <TARGET>Ende</TARGET> zu <TARGET>machen</TARGET>.",
+			"language": "en",
+			"translation": "put an end to {S:something}",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "put"
+				},
+				{
+					"kind": "Text",
+					"text": "an"
+				},
+				{
+					"kind": "Text",
+					"text": "end"
+				},
+				{
+					"kind": "Text",
+					"text": "to"
+				},
+				{
+					"kind": "Slot",
+					"text": "something"
+				}
+			],
+			"linguist": {
+				"label": "wrong-kind",
+				"note": "governed to left as Text"
+			},
+			"learner": {
+				"label": "wrong-kind",
+				"note": "governed \"to\" left as plain text"
+			}
+		},
+		{
+			"item": "i134",
+			"lemma": "sofort",
+			"kind": "ADV",
+			"family": "Lexeme",
+			"emojiDescription": "⚡",
+			"markedSentence": "<TARGET>Sofort</TARGET> klopfte es und ein Mann, den er in dieser Wohnung noch niemals gesehen hatte, trat ein.",
+			"language": "ru",
+			"translation": "сразу",
+			"pieces": [
+				{
+					"kind": "Text",
+					"text": "сразу"
+				}
+			],
+			"linguist": {
+				"label": "right"
+			},
+			"learner": {
+				"label": "right"
+			}
+		}
+	]
+}
