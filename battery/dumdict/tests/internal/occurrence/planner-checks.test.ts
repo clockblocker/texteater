@@ -136,6 +136,24 @@ describe("removeOccurrence and removeReading checks", () => {
 		).toMatchObject({ status: "rejected", code: "invalidRequest" });
 	});
 
+	test("refuses a malformed Reading", () => {
+		const storage = createInMemoryTestStorage("de", [bankNote()]);
+		const slice = storage.loadOccurrenceSlice({
+			refs: [],
+			readings: [bench],
+		});
+		for (const reading of [
+			null,
+			{ unitKind: "Reading", emojiDescription: "🪑" },
+			{ ...bench, emojiDescription: 7 },
+		])
+			expect(
+				planner.removeReading(slice, {
+					reading: reading as unknown as typeof bench,
+				}),
+			).toMatchObject({ status: "rejected", code: "invalidRequest" });
+	});
+
 	test("the slice for removeReading holds the Reading's Lemma, whole, though it has no link", () => {
 		const storage = createInMemoryTestStorage("de", [bankNote()]);
 		const sliceRequest = planner.occurrenceSliceRequest({

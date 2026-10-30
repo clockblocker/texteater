@@ -34,8 +34,7 @@ occurrence only when the learner clicks it, so a stored Reading can have no
 Attestation Link while links still point at it. A kept Reading stays with its
 Knowledge and Licences, so its Lemma stays too, and the host removes it later
 with an explicit Reading removal that leaves behind what an emptying removal
-would. A Paradigm
-Variant that no remaining Reading licenses is removed
+would. A Paradigm Variant that no remaining Reading licenses is removed
 ([ADR 0048](./0048-keep-paradigm-variants-on-the-lemma-and-license-them-per-reading.md)).
 A Surface that loses its last Attestation Link is removed unless it holds
 user text (ADR 0049). User text is never dropped, so a Lemma left with no

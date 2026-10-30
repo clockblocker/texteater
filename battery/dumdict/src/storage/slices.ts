@@ -151,9 +151,10 @@ export type OccurrenceSliceRequest<
  * Each stored Lemma one of whose Readings holds an Attestation Link with a
  * requested ref or is a requested Reading, once and whole (`LemmaSlice`):
  * removing a link or a Reading may remove a Reading, a Surface, the Lemma
- * and their Licences, and only the whole Lemma says which. The claims other Readings hold on what it removes move
- * in the same plan (system ADR 0011), so the slice also holds those Readings
- * and the Shadow relations their claims may become.
+ * and their Licences, and only the whole Lemma says which. The claims other
+ * Readings hold on what it removes move in the same plan (system ADR 0011),
+ * so the slice also holds those Readings and the Shadow relations their
+ * claims may become.
  */
 export type OccurrenceSlice<L extends Dumling.Language> = {
 	revision: StoreRevision;

@@ -14,6 +14,10 @@ import {
 } from "../core/validate-occurrence-slice";
 import { validateReadingEntryContext } from "../core/validate-slice";
 import { makeSurfaceId } from "../dumling-id";
+import {
+	ParsingError,
+	parseReadingForDumdictRuntime,
+} from "../parsing/lightweight-parsers";
 import type {
 	ReconcileAttestationLinksRequest,
 	RecordOccurrenceRequest,
@@ -148,12 +152,17 @@ export const removeOccurrence = <L extends Dumling.Language>(language: L) =>
 export const removeReading = <L extends Dumling.Language>(language: L) =>
 	removal<L, RemoveReadingRequest<L>>(
 		language,
-		(request) =>
-			request.reading.lemma.language === language
-				? ok(request)
-				: invalidRequest(
-						"The Reading must use the dictionary language.",
-					),
+		(request) => {
+			const reading = parseReadingForDumdictRuntime(
+				request.reading,
+				language,
+			);
+			return reading instanceof ParsingError
+				? invalidRequest(
+						"The Reading is malformed or in another language.",
+					)
+				: ok({ reading });
+		},
 		planRemoveReading,
 	);
 
