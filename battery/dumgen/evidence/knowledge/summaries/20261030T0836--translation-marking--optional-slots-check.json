@@ -1,0 +1,567 @@
+{
+	"round": "2026-10-30-optional-slots-check",
+	"note": "One synchronous live check of the user's 2026-10-30 ruling A (mark every slot the meaning takes, optional ones included). The prompt it ran carried one extra clause in translation.valency: 'and an optional one too, whether or not this sentence has it'. Compared with the same cases' answers in the v2 batch of 2026-10-30-translation-marking (the prompt without the clause). Flagged cases right 7/10 before and 7/10 after; controls 14/16 before, 12/16 after (influence [on], ждать {кого-то} или чего-то). One repetition each, so no gain shows over noise, and the clause was not kept: the prompt never tied marking to the sentence.",
+	"gitHead": "9ee34f6e7",
+	"lunaTransport": "sync",
+	"lunaTier": "standard",
+	"tokens": {
+		"inTok": 28616,
+		"outTok": 1019,
+		"cached": 0
+	},
+	"usd": 0.006946,
+	"results": [
+		{
+			"group": "flagged",
+			"id": "de/er-ist-stolz-auf-seinen-sohn#0",
+			"lemma": "stolz",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "proud"
+					},
+					{
+						"kind": "Preposition",
+						"text": "of"
+					},
+					{
+						"kind": "Slot",
+						"text": "someone"
+					}
+				]
+			]
+		},
+		{
+			"group": "flagged",
+			"id": "de/er-ist-stolz-auf-seinen-sohn#0",
+			"lemma": "stolz",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "гордый"
+					}
+				]
+			]
+		},
+		{
+			"group": "flagged",
+			"id": "de/aus-angst-vor-hunden-bleibt-sie-zu-hause#0",
+			"lemma": "Angst",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "fear"
+					},
+					{
+						"kind": "Preposition",
+						"text": "of"
+					},
+					{
+						"kind": "Slot",
+						"text": "something"
+					}
+				],
+				[
+					{
+						"kind": "Text",
+						"text": "dread"
+					},
+					{
+						"kind": "Preposition",
+						"text": "of"
+					},
+					{
+						"kind": "Slot",
+						"text": "something"
+					}
+				]
+			]
+		},
+		{
+			"group": "flagged",
+			"id": "de/aus-angst-vor-hunden-bleibt-sie-zu-hause#0",
+			"lemma": "Angst",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "страх"
+					},
+					{
+						"kind": "Preposition",
+						"text": "перед"
+					},
+					{
+						"kind": "Slot",
+						"text": "кем-то"
+					}
+				]
+			]
+		},
+		{
+			"group": "flagged",
+			"id": "de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#2",
+			"lemma": "Sorgen machen",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "worry"
+					},
+					{
+						"kind": "Preposition",
+						"text": "about"
+					},
+					{
+						"kind": "Slot",
+						"text": "something"
+					}
+				],
+				[
+					{
+						"kind": "Text",
+						"text": "cause"
+					},
+					{
+						"kind": "Slot",
+						"text": "someone"
+					},
+					{
+						"kind": "Text",
+						"text": "concern"
+					}
+				]
+			]
+		},
+		{
+			"group": "flagged",
+			"id": "de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#2",
+			"lemma": "Sorgen machen",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "беспокоиться"
+					},
+					{
+						"kind": "Preposition",
+						"text": "о"
+					},
+					{
+						"kind": "Slot",
+						"text": "чём-то"
+					}
+				]
+			]
+		},
+		{
+			"group": "flagged",
+			"id": "de/er-weiss-bescheid-ueber-die-plaene#0",
+			"lemma": "Bescheid wissen",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "know"
+					},
+					{
+						"kind": "Slot",
+						"text": "something"
+					}
+				]
+			]
+		},
+		{
+			"group": "flagged",
+			"id": "de/er-weiss-bescheid-ueber-die-plaene#0",
+			"lemma": "Bescheid wissen",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "знать"
+					},
+					{
+						"kind": "Slot",
+						"text": "что-то"
+					}
+				]
+			]
+		},
+		{
+			"group": "flagged",
+			"id": "de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der#0",
+			"lemma": "weiterleiten",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "forward"
+					},
+					{
+						"kind": "Slot",
+						"text": "something"
+					}
+				]
+			]
+		},
+		{
+			"group": "flagged",
+			"id": "de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der#0",
+			"lemma": "weiterleiten",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "перенаправлять"
+					},
+					{
+						"kind": "Slot",
+						"text": "что-то"
+					},
+					{
+						"kind": "Text",
+						"text": "кому-то"
+					}
+				]
+			]
+		},
+		{
+			"group": "bare",
+			"id": "de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#28",
+			"lemma": "verzeihen",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "forgive"
+					},
+					{
+						"kind": "Slot",
+						"text": "someone"
+					}
+				]
+			]
+		},
+		{
+			"group": "bare",
+			"id": "de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#28",
+			"lemma": "verzeihen",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "прощать"
+					},
+					{
+						"kind": "Slot",
+						"text": "кого-то"
+					},
+					{
+						"kind": "Text",
+						"text": ";"
+					},
+					{
+						"kind": "Text",
+						"text": "извинять"
+					},
+					{
+						"kind": "Slot",
+						"text": "кого-то"
+					}
+				]
+			]
+		},
+		{
+			"group": "bare",
+			"id": "de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#8",
+			"lemma": "verteidigen",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "defend"
+					},
+					{
+						"kind": "Slot",
+						"text": "someone"
+					}
+				]
+			]
+		},
+		{
+			"group": "bare",
+			"id": "de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#8",
+			"lemma": "verteidigen",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "защищать"
+					},
+					{
+						"kind": "Slot",
+						"text": "кого-то"
+					}
+				]
+			]
+		},
+		{
+			"group": "bare",
+			"id": "de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die#2",
+			"lemma": "es recht machen",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "satisfy"
+					},
+					{
+						"kind": "Slot",
+						"text": "someone"
+					}
+				]
+			]
+		},
+		{
+			"group": "bare",
+			"id": "de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die#2",
+			"lemma": "es recht machen",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "угодить"
+					},
+					{
+						"kind": "Slot",
+						"text": "кому-то"
+					}
+				]
+			]
+		},
+		{
+			"group": "bare",
+			"id": "de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#10",
+			"lemma": "verhaften",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "arrest"
+					}
+				]
+			]
+		},
+		{
+			"group": "bare",
+			"id": "de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#10",
+			"lemma": "verhaften",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "арестовать"
+					}
+				]
+			]
+		},
+		{
+			"group": "prepositional",
+			"id": "de/er-wartet-auf-den-nachtbus#0",
+			"lemma": "warten",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "wait"
+					},
+					{
+						"kind": "Preposition",
+						"text": "for"
+					},
+					{
+						"kind": "Slot",
+						"text": "something or someone"
+					}
+				]
+			]
+		},
+		{
+			"group": "prepositional",
+			"id": "de/er-wartet-auf-den-nachtbus#0",
+			"lemma": "warten",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "ждать"
+					},
+					{
+						"kind": "Slot",
+						"text": "кого-то"
+					},
+					{
+						"kind": "Text",
+						"text": "или чего-то"
+					}
+				]
+			]
+		},
+		{
+			"group": "prepositional",
+			"id": "de/deutschland-wird-sich-an-diesem-manoever-beteiligen-sagte#0",
+			"lemma": "beteiligen",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "participate"
+					},
+					{
+						"kind": "Preposition",
+						"text": "in"
+					},
+					{
+						"kind": "Slot",
+						"text": "something"
+					}
+				]
+			]
+		},
+		{
+			"group": "prepositional",
+			"id": "de/deutschland-wird-sich-an-diesem-manoever-beteiligen-sagte#0",
+			"lemma": "beteiligen",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "участвовать"
+					},
+					{
+						"kind": "Preposition",
+						"text": "в"
+					},
+					{
+						"kind": "Slot",
+						"text": "чём-то"
+					}
+				]
+			]
+		},
+		{
+			"group": "prepositional",
+			"id": "de/das-wetter-nimmt-einfluss-auf-die-planung#0",
+			"lemma": "Einfluss nehmen",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "influence"
+					},
+					{
+						"kind": "Preposition",
+						"text": "on"
+					},
+					{
+						"kind": "Slot",
+						"text": "something"
+					}
+				]
+			]
+		},
+		{
+			"group": "prepositional",
+			"id": "de/das-wetter-nimmt-einfluss-auf-die-planung#0",
+			"lemma": "Einfluss nehmen",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "влиять"
+					},
+					{
+						"kind": "Preposition",
+						"text": "на"
+					},
+					{
+						"kind": "Slot",
+						"text": "что-то"
+					}
+				]
+			]
+		},
+		{
+			"group": "prepositional",
+			"id": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2",
+			"lemma": "Rücksicht nehmen",
+			"language": "en",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "be considerate"
+					},
+					{
+						"kind": "Preposition",
+						"text": "of"
+					},
+					{
+						"kind": "Slot",
+						"text": "someone"
+					}
+				]
+			]
+		},
+		{
+			"group": "prepositional",
+			"id": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2",
+			"lemma": "Rücksicht nehmen",
+			"language": "ru",
+			"translations": [
+				[
+					{
+						"kind": "Text",
+						"text": "считаться"
+					},
+					{
+						"kind": "Preposition",
+						"text": "с"
+					},
+					{
+						"kind": "Slot",
+						"text": "кем-то"
+					}
+				]
+			]
+		}
+	]
+}
