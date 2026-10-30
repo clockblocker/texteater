@@ -284,6 +284,38 @@ test("an authored Reading accumulates over its authored translations (ADR 0047)"
 	]);
 });
 
+test("the writer's Preposition with no Slot after it is contributed as a Slot (ADR 0055)", async () => {
+	const jev = knowledgeJev({ translation: "NoMatch" });
+	const luna = knowledgeLuna({
+		translationAccumulation: {
+			sentence: "Она получила букет на день рождения.",
+			equivalents: [
+				[
+					{ kind: "Text", text: "радоваться" },
+					{ kind: "Preposition", text: "чему-то" },
+				],
+			],
+		},
+	});
+	const { result } = await accumulateOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		bouquet({ ru: texts("букет") }),
+	);
+	expect(result.changes).toEqual([
+		{
+			kind: "Contribute",
+			aspect: "translations",
+			language: "ru",
+			value: [
+				[
+					{ kind: "Text", text: "радоваться" },
+					{ kind: "Slot", text: "чему-то" },
+				],
+			],
+		},
+	]);
+});
+
 test("bad input is a Defect, raised before anything is asked", async () => {
 	const jev = knowledgeJev();
 	const luna = knowledgeLuna({});

@@ -70,6 +70,11 @@ test("Luna writes the text, the forms and the frame; jev judges every choice (#8
 							{ kind: "Preposition", text: "из" },
 							{ kind: "Slot", text: "чего-то" },
 						],
+						// A Preposition with no Slot after it is read as a Slot.
+						[
+							{ kind: "Text", text: "дарить" },
+							{ kind: "Preposition", text: "кому-то" },
+						],
 					],
 		plural: ["Sträuße"],
 		valency: { valency: [] },
@@ -101,6 +106,10 @@ test("Luna writes the text, the forms and the frame; jev judges every choice (#8
 				{ kind: "Text", text: "букет" },
 				{ kind: "Preposition", text: "из" },
 				{ kind: "Slot", text: "чего-то" },
+			],
+			[
+				{ kind: "Text", text: "дарить" },
+				{ kind: "Slot", text: "кому-то" },
 			],
 		],
 	});

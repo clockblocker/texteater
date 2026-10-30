@@ -42,7 +42,10 @@ same way.
 
 **The structure is data, and the schema enforces it.** Luna answers through
 structured output that asks for the pieces, and Dumrel's schema checks them
-on every write. No reader parses marks out of a string.
+on every write. No reader parses marks out of a string. Before a
+translation is written, Dumgen relabels a Preposition with no Slot right
+after it as a Slot, since Luna labels a case-only object (*радоваться*
+`чему-то`) a Preposition.
 
 **A note styles the pieces as the German heading styles its own.** A
 Preposition takes the preposition style and a Slot the slot style, the two
