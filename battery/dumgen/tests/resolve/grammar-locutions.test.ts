@@ -260,3 +260,90 @@ test("a numeral Locution Luna cites as a slotted pattern takes its members' word
 		"acht bis neun",
 	);
 });
+
+test("a pronominal adverb that holds a Locution's fixed preposition marks its slot and stays in the Surface (ADR 0056)", async () => {
+	const segments: Segment[] = [
+		word("Das"),
+		space,
+		word("hatte"),
+		space,
+		word("damit"),
+		space,
+		word("zu"),
+		space,
+		word("tun"),
+		stop,
+	];
+	const jev = fakeJev({
+		governed_m1: "Governed",
+		governed_m2: "Free",
+		tense: "Past",
+	});
+	const luna = writes("mit zu tun haben");
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("", segments),
+			unit: unitOf([2, 4, 6, 8], "Locution/VERB"),
+		},
+	);
+	const question = jev.sent[0]?.questions.governed_m1;
+	expect(
+		question?.type === "choice" && Object.keys(question.criteria),
+	).toEqual(["Governed", "Free", "Unresolved"]);
+	// Luna reads damit as the mit it holds.
+	expect(luna.sent.at(-1)?.input).toHaveProperty("fixedMembers", {
+		m1: "mit",
+	});
+	const attestation = attested(result);
+	expect(attestation.surface.normalizedSurface).toBe("mit zu tun hatte");
+	expect(attestation).toHaveProperty("valencyEvidence", [
+		{
+			member: 1,
+			complement: {
+				kind: "Preposition",
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: "mit",
+					coreFeatures: {},
+				},
+				governedCase: "Dat",
+				referent: "Something",
+			},
+			realizedCase: "Dat",
+		},
+	]);
+});
+
+test("a Collocation's governed preposition its Canonical Form lacks is evidence, and the Surface leaves it out", async () => {
+	const segments: Segment[] = [
+		word("Sie"),
+		space,
+		word("hat"),
+		space,
+		word("Angst"),
+		space,
+		word("vor"),
+		space,
+		word("Hunden"),
+		stop,
+	];
+	const jev = fakeJev({ governed_m2: "Governed", governedCase_m2: "Dat" });
+	const luna = writes("Angst haben");
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("", segments),
+			unit: unitOf([2, 4, 6], "Locution/VERB"),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.lemma.canonicalForm).toBe("Angst haben");
+	expect(attestation.surface.normalizedSurface).toBe("Angst hat");
+	expect(attestation).toHaveProperty("valencyEvidence.0.member", 2);
+	// Luna decides whether the Lemma holds it, so nothing is outside.
+	expect(luna.sent.at(-1)?.input).not.toHaveProperty("outsideHeadword");
+});

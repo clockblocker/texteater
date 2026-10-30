@@ -1,0 +1,34 @@
+{
+	"baselineRunId": "none: #1293 step 5's scope, the cases whose requests the damit change moved (request diff), measured at the change's parent and at the change",
+	"experimentId": "resolve-grammar/de:heldout",
+	"setHash": "98793f9cedd77f57",
+	"repetitions": 3,
+	"seed": 0,
+	"guardSize": 15,
+	"missed": {},
+	"guard": {
+		"Locution/INTJ": [
+			"de/als-der-letzte-zug-einfuhr-verabschiedete-sich-mira-mit-auf#0",
+			"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank#0"
+		],
+		"Locution/VERB": [
+			"de/damit-triffst-du-den-nagel-auf-den-kopf#0",
+			"de/die-peitsche-hat-er-mitgebracht#4",
+			"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin#1",
+			"de/sie-hat-hilfe-in-anspruch-genommen#0"
+		],
+		"Lexeme/VERB": [
+			"de/der-laster-fuhr-das-schild-um#0",
+			"de/er-wartet-auf-den-nachtbus#0",
+			"de/es-zog-der-wilde-jaegersmann#1",
+			"de/sie-erinnert-sich-an-den-geruch#0",
+			"de/sie-uebersetzt-den-vertrag-ins-deutsche#0",
+			"de/sie-wurde-um-geduld-gebeten#0",
+			"de/wir-liefen-den-fluss-entlang#0"
+		],
+		"Lexeme/ADJ": [
+			"de/die-auf-ihn-abgestimmte-loesung-half-sofort#0",
+			"de/er-ist-stolz-auf-seinen-sohn#0"
+		]
+	}
+}

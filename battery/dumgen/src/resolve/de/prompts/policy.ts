@@ -63,8 +63,9 @@ export const policy = {
 	),
 	government: paragraph(
 		"policy.government",
-		"A member that is the preposition the unit's head selects for its complement is the head's valency evidence and never part of the Lemma; a fixed word of an expression, an adjunct's preposition or a separable particle is not.",
+		"A member that is the preposition the unit's head selects for its complement is the head's valency evidence and never part of the Lemma. A fixed word of an expression is part of its Lemma, and it is evidence too when it is a preposition heading the expression's open slot, written alone or inside a pronominal adverb whose da-, wo- or hier- stands for that slot's filler. An adjunct's preposition, a separable particle and a fixed word heading no open slot are no evidence.",
 		rules.government,
+		rules.pronominalAdverb,
 	),
 	adjective: paragraph(
 		"policy.adjective",

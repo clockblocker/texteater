@@ -1,0 +1,192 @@
+{
+	"round": "2026-10-30-1293-step5",
+	"issue": "#1293 step 5: damit evidence. A governing Locution's pronominal adverb is asked whether the preposition it holds is a fixed word heading the open slot; a governed Locution member stays in the Lemma and Surface when the Canonical Form holds its preposition; the government paragraph is reworded; a preposition right before another member is never asked.",
+	"scope": "The cases whose requests the change moved (request diff against the parent): 99 of dev's 2225 (96 old, 3 new gold) and 15 of held-out's 157. Every other case sends the same requests, so its outcomes can't move.",
+	"baselineNote": "The ledger holds no score on the refrozen sets (dev 21766b2d459a0415, held-out 98793f9cedd77f57), so the baseline was measured on the scope at the parent. Gold oracle exact: 97.77% before and after (2325/2378, then 2329/2382 with the 4 new cases).",
+	"runs": {
+		"devBaseline": "b59ce4e8-40b2-498c-8cfe-d55d778ffb77",
+		"devChangeDiscarded": "6ae3092c-68b2-484c-9d13-6949731d4c90",
+		"devChange": "6966a96a-bbd1-4a13-b9b3-93f399c63ce8",
+		"heldoutBaseline": "86c0803a-fb96-435f-9c13-3a5bfe907109",
+		"heldoutChange": "11701220-ec5d-41ae-9f80-f8ae24e3d950"
+	},
+	"dev": {
+		"summary": {
+			"lemma": {
+				"before": "263/297",
+				"after": "267/297"
+			},
+			"cell": {
+				"before": "283/297",
+				"after": "283/297"
+			},
+			"members": {
+				"before": "288/297",
+				"after": "289/297"
+			},
+			"spelling": {
+				"before": "223/297",
+				"after": "248/297"
+			},
+			"valency": {
+				"before": "173/273",
+				"after": "197/273"
+			},
+			"exact": {
+				"before": "149/297",
+				"after": "170/297"
+			}
+		},
+		"flips": [
+			"de/als-beide-kisten-endlich-oben-standen-erwiderte-der#1 lemma 1/3 -> 3/3",
+			"de/als-beide-kisten-endlich-oben-standen-erwiderte-der#1 spelling 0/3 -> 3/3",
+			"de/als-beide-kisten-endlich-oben-standen-erwiderte-der#1 exact 0/3 -> 3/3",
+			"de/da-kann-ich-nichts-fuer#0 spelling 0/3 -> 2/3",
+			"de/da-kann-ich-nichts-fuer#0 valency 1/3 -> 0/3",
+			"de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0 members 0/3 -> 1/3",
+			"de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0 spelling 0/3 -> 1/3",
+			"de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0 exact 0/3 -> 1/3",
+			"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss#0 spelling 1/3 -> 3/3",
+			"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss#0 valency 1/3 -> 3/3",
+			"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss#0 exact 1/3 -> 3/3",
+			"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#3 lemma 0/3 -> 1/3",
+			"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#3 exact 0/3 -> 1/3",
+			"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#27 spelling 0/3 -> 3/3",
+			"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#27 valency 0/3 -> 3/3",
+			"de/er-weiss-bescheid-ueber-die-plaene#0 spelling 0/3 -> 3/3",
+			"de/er-weiss-bescheid-ueber-die-plaene#0 valency 0/3 -> 3/3",
+			"de/er-weiss-bescheid-ueber-die-plaene#0 exact 0/3 -> 3/3",
+			"de/es-handelt-sich-um-einen-fehler#0 spelling 0/3 -> 3/3",
+			"de/heult-nicht-laenger-mit-den-woelfen#0 spelling 3/3 -> 1/3",
+			"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich#0 spelling 1/3 -> 0/3",
+			"de/mit-politik-hat-er-nichts-zu-tun#0 valency 0/3 -> 3/3",
+			"de/sie-meint-es-gut-mit-dir#1 spelling 0/3 -> 3/3",
+			"de/sie-meint-es-gut-mit-dir#1 valency 0/3 -> 3/3",
+			"de/sie-meint-es-gut-mit-dir#1 exact 0/3 -> 3/3",
+			"de/trotz-der-warnung-hat-er-den-kopf-weiter-in-den-sant#0 spelling 0/3 -> 3/3",
+			"de/trotz-der-warnung-hat-er-den-kopf-weiter-in-den-sant#0 valency 0/3 -> 3/3",
+			"de/trotz-der-warnung-hat-er-den-kopf-weiter-in-den-sant#0 exact 0/3 -> 1/3",
+			"de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2 spelling 2/3 -> 3/3",
+			"de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2 valency 0/3 -> 2/3",
+			"de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2 exact 0/3 -> 2/3",
+			"de/um-diese-frage-kommt-er-nicht-herum#0 lemma 2/3 -> 0/3",
+			"de/um-diese-frage-kommt-er-nicht-herum#0 spelling 0/3 -> 1/3",
+			"de/vielleicht-hatte-es-damit-zu-tun-dass-er-in-einem-dunklen#0 lemma 1/3 -> 3/3",
+			"de/vielleicht-hatte-es-damit-zu-tun-dass-er-in-einem-dunklen#0 spelling 1/3 -> 3/3",
+			"de/vielleicht-hatte-es-damit-zu-tun-dass-er-in-einem-dunklen#0 valency 0/3 -> 3/3",
+			"de/vielleicht-hatte-es-damit-zu-tun-dass-er-in-einem-dunklen#0 exact 0/3 -> 3/3",
+			"de/was-hat-das-damit-zu-tun#0 lemma 1/3 -> 2/3",
+			"de/was-hat-das-damit-zu-tun#0 spelling 1/3 -> 2/3",
+			"de/was-hat-das-damit-zu-tun#0 valency 0/3 -> 3/3",
+			"de/was-hat-das-damit-zu-tun#0 exact 0/3 -> 2/3"
+		],
+		"onlyAfter": []
+	},
+	"heldout": {
+		"summary": {
+			"lemma": {
+				"before": "43/45",
+				"after": "45/45"
+			},
+			"cell": {
+				"before": "45/45",
+				"after": "45/45"
+			},
+			"members": {
+				"before": "45/45",
+				"after": "45/45"
+			},
+			"spelling": {
+				"before": "34/45",
+				"after": "37/45"
+			},
+			"valency": {
+				"before": "30/39",
+				"after": "33/39"
+			},
+			"exact": {
+				"before": "28/45",
+				"after": "31/45"
+			}
+		},
+		"flips": [
+			"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank#0 lemma 1/3 -> 3/3",
+			"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin#1 spelling 0/3 -> 3/3",
+			"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin#1 valency 0/3 -> 3/3",
+			"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin#1 exact 0/3 -> 3/3"
+		],
+		"onlyAfter": []
+	},
+	"discardedForm": {
+		"note": "A Marker option beside Governed for a Locution's preposition: jev chose Marker for Collocations' governed prepositions (Einfluss nehmen auf, Kritik üben an, Angst haben vor), which then stayed in the Surface; exact 149 -> 150. Replaced by letting the Canonical Form decide.",
+		"dev": {
+			"summary": {
+				"lemma": {
+					"before": "263/297",
+					"after": "263/297"
+				},
+				"cell": {
+					"before": "283/297",
+					"after": "283/297"
+				},
+				"members": {
+					"before": "288/297",
+					"after": "289/297"
+				},
+				"spelling": {
+					"before": "223/297",
+					"after": "224/297"
+				},
+				"valency": {
+					"before": "173/273",
+					"after": "196/273"
+				},
+				"exact": {
+					"before": "149/297",
+					"after": "150/297"
+				}
+			},
+			"flips": [
+				"de/als-beide-kisten-endlich-oben-standen-erwiderte-der#1 lemma 1/3 -> 3/3",
+				"de/als-beide-kisten-endlich-oben-standen-erwiderte-der#1 spelling 0/3 -> 3/3",
+				"de/als-beide-kisten-endlich-oben-standen-erwiderte-der#1 exact 0/3 -> 3/3",
+				"de/da-kann-ich-nichts-fuer#0 spelling 0/3 -> 2/3",
+				"de/da-kann-ich-nichts-fuer#0 valency 1/3 -> 0/3",
+				"de/das-wetter-nimmt-einfluss-auf-die-planung#0 spelling 3/3 -> 0/3",
+				"de/das-wetter-nimmt-einfluss-auf-die-planung#0 exact 3/3 -> 0/3",
+				"de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0 members 0/3 -> 1/3",
+				"de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0 spelling 0/3 -> 1/3",
+				"de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0 exact 0/3 -> 1/3",
+				"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss#0 spelling 1/3 -> 3/3",
+				"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss#0 valency 1/3 -> 3/3",
+				"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss#0 exact 1/3 -> 3/3",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#27 spelling 0/3 -> 3/3",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#27 valency 0/3 -> 3/3",
+				"de/er-weiss-bescheid-ueber-die-plaene#0 valency 0/3 -> 3/3",
+				"de/es-handelt-sich-um-einen-fehler#0 spelling 0/3 -> 3/3",
+				"de/heult-nicht-laenger-mit-den-woelfen#0 spelling 3/3 -> 1/3",
+				"de/im-leitartikel-uebte-die-zeitung-scharfe-kritik-an-dem#0 spelling 3/3 -> 0/3",
+				"de/im-leitartikel-uebte-die-zeitung-scharfe-kritik-an-dem#0 exact 3/3 -> 0/3",
+				"de/mein-bruder-bindet-mir-gern-einen-baeren-auf#2 valency 3/3 -> 1/3",
+				"de/mein-bruder-bindet-mir-gern-einen-baeren-auf#2 exact 3/3 -> 1/3",
+				"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich#0 spelling 1/3 -> 0/3",
+				"de/mit-politik-hat-er-nichts-zu-tun#0 valency 0/3 -> 3/3",
+				"de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#2 spelling 3/3 -> 0/3",
+				"de/sie-hat-angst-vor-hunden#0 spelling 3/3 -> 0/3",
+				"de/sie-meint-es-gut-mit-dir#1 valency 0/3 -> 3/3",
+				"de/trotz-der-warnung-hat-er-den-kopf-weiter-in-den-sant#0 spelling 0/3 -> 3/3",
+				"de/trotz-der-warnung-hat-er-den-kopf-weiter-in-den-sant#0 valency 0/3 -> 3/3",
+				"de/trotz-der-warnung-hat-er-den-kopf-weiter-in-den-sant#0 exact 0/3 -> 1/3",
+				"de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2 spelling 2/3 -> 0/3",
+				"de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2 valency 0/3 -> 3/3",
+				"de/um-diese-frage-kommt-er-nicht-herum#0 lemma 2/3 -> 0/3",
+				"de/um-diese-frage-kommt-er-nicht-herum#0 spelling 0/3 -> 1/3",
+				"de/vielleicht-hatte-es-damit-zu-tun-dass-er-in-einem-dunklen#0 valency 0/3 -> 3/3",
+				"de/vielleicht-hatte-es-damit-zu-tun-dass-er-in-einem-dunklen#0 exact 0/3 -> 1/3",
+				"de/was-hat-das-damit-zu-tun#0 valency 0/3 -> 3/3",
+				"de/was-hat-das-damit-zu-tun#0 exact 0/3 -> 1/3"
+			],
+			"onlyAfter": []
+		}
+	}
+}

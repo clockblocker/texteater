@@ -27,7 +27,7 @@ import type * as Scope from "effect/Scope";
 import { CallLog } from "../../call.js";
 import type { LunaDraft } from "../../luna.js";
 import { type Luna, stageWrite } from "../../luna-call.js";
-import type { Answers, Ask, AskFailure } from "../../segment/ask.js";
+import type { Ask, AskFailure } from "../../segment/ask.js";
 import { withoutReflexive } from "../../segment/de/candidates.js";
 import { draftsEmojiDescription } from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
@@ -68,10 +68,15 @@ import {
 	type TailCore,
 	type TailPlan,
 } from "./open-route/common.js";
+import {
+	adverbReadings,
+	type GovernedMember,
+	headwordOutside,
+	outsideSurface,
+} from "./open-route/governed.js";
 import { guessedJudgment, guessMisses } from "./open-route/luna-guess.js";
 import {
 	askNominal,
-	caseQuestion,
 	type NominalPlan,
 	nominalCells,
 	type OpeningArticle,
@@ -83,6 +88,11 @@ import {
 	numeralLocutionHeadword,
 } from "./open-route/numeral.js";
 import { authoredParticle, particlesSpelled } from "./open-route/particle.js";
+import {
+	caseRequest,
+	grammarRequest,
+	senseRequest,
+} from "./open-route/requests.js";
 import {
 	type AdpCase,
 	routeShape,
@@ -98,7 +108,6 @@ import {
 	verbGuessMisses,
 	verbHeadword,
 } from "./open-route/verbal.js";
-import { type CaseOption, fill, options, question } from "./prompts.js";
 import {
 	Answered,
 	answerReader,
@@ -231,7 +240,7 @@ type FirstRead = ShapeRead & {
 	/** The readings the head and the block fixed. */
 	readonly readings: ReadonlyMap<number, string>;
 	readonly governed: readonly ValencyEvidence[];
-	readonly governedPositions: readonly number[];
+	readonly governedMembers: readonly GovernedMember[];
 };
 
 /** Reads the block of the route's shape; a shape with none has no Core Features. */
@@ -316,12 +325,16 @@ const readFirst = answerReader(function* (
 		spelling: head.spelling,
 		surfaceFeatures: head.surfaceFeatures,
 		coverage: tail.coverage,
-		readings: new Map([...head.readings, ...(verbal?.readings ?? [])]),
+		readings: new Map([
+			...head.readings,
+			...(verbal?.readings ?? []),
+			...adverbReadings(tail.governedMembers),
+		]),
 		// The evidence in member order, as gold records it.
 		governed: [...(reflexive ? [reflexive] : []), ...tail.governed].sort(
 			(left, right) => (left.member ?? 0) - (right.member ?? 0),
 		),
-		governedPositions: tail.governedPositions,
+		governedMembers: tail.governedMembers,
 	};
 });
 
@@ -356,69 +369,6 @@ function judgedOf(
 		),
 		readings: first.readings,
 	};
-}
-
-/** The first request, sent only when it asks something. */
-function grammarRequest(
-	ask: Ask,
-	state: ReturnType<typeof targetState>,
-	questionnaire: Questionnaire,
-): Effect.Effect<Answers, AskFailure> {
-	return questionnaire.empty
-		? Effect.succeed({})
-		: ask({
-				stage: "grammar",
-				state: { ...state, policy: questionnaire.policyBlock() },
-				questions: questionnaire.questions,
-			});
-}
-
-/** The Case question over the cells still open, asked only when more than one is. */
-function caseRequest(
-	ask: Ask,
-	state: ReturnType<typeof targetState>,
-	open: readonly CaseOption[],
-): Effect.Effect<CaseOption | Unresolved | undefined, AskFailure> {
-	// @effect-diagnostics-next-line effectSucceedWithVoid:off -- Effect.void is Effect<void>, which the `| undefined` success type rejects
-	if (open.length <= 1) return Effect.succeed(undefined);
-	return Effect.gen(function* () {
-		const questionnaire = new Questionnaire();
-		const asked = caseQuestion(questionnaire, open);
-		const answered = yield* ask({
-			stage: "case",
-			state: {
-				...state,
-				policy: questionnaire.policyBlock(),
-			},
-			questions: questionnaire.questions,
-		});
-		return Result.merge(new Answered(answered).pick(asked));
-	});
-}
-
-/**
- * Whether a listed noun in free gender variation has, here, the one sense
- * that takes either gender (Rule de/noun-gender-in-free-variation).
- */
-function senseRequest(
-	ask: Ask,
-	state: ReturnType<typeof targetState>,
-	sense: string,
-): Effect.Effect<"Yes" | "No" | Unresolved, AskFailure> {
-	return Effect.gen(function* () {
-		const questionnaire = new Questionnaire();
-		const asked = questionnaire.choice(
-			"freeGender",
-			fill(question.nounFreeGender, { sense }),
-			options.freeGender,
-		);
-		const answered = yield* ask({
-			stage: "freeGender",
-			state: { ...state, policy: questionnaire.policyBlock() },
-			questions: questionnaire.questions,
-		});
-		return Result.merge(new Answered(answered).pick(asked));
-	});
 }
 
 /**
@@ -574,13 +524,14 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	const first = read.success;
 	const verbal = first.block === "verbal" ? first : undefined;
 	const article = planned.article;
-	const outsideHeadword = new Set<number>([
-		...(article ? [article.member.position] : []),
-		...(planned.verbal?.reflexive
-			? [planned.verbal.reflexive.position]
-			: []),
-		...first.governedPositions,
-	]);
+	const outsideHeadword = headwordOutside(
+		[
+			...(planned.article ? [planned.article.member] : []),
+			...(planned.verbal?.reflexive ? [planned.verbal.reflexive] : []),
+		],
+		first.governedMembers,
+		shape,
+	);
 	const judged = judgedOf(
 		planned,
 		first,
@@ -650,7 +601,12 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 				inflection: cells.inflection,
 			},
 			headword,
-			outsideHeadword,
+			outsideSurface(
+				outsideHeadword,
+				first.governedMembers,
+				shape,
+				headword.canonicalForm,
+			),
 		),
 		...(written?.drafted === undefined ? {} : { drafted: written.drafted }),
 	};

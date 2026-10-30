@@ -328,12 +328,18 @@ export const question = {
 	),
 	governedFree: paragraph(
 		"question.governed.Free",
-		"No: a fixed word of the expression, an adjunct's preposition or a separable particle",
+		"No: an adjunct's preposition, a separable particle or a fixed word heading no open slot",
 		rules.government,
+	),
+	governedAdverb: paragraph(
+		"question.governedAdverb",
+		"Under `policy.government`, does {m}, a pronominal adverb holding the preposition {p}, give the expression a fixed word that heads its open slot?",
+		rules.government,
+		rules.pronominalAdverb,
 	),
 	governedCase: paragraph(
 		"question.governedCase",
-		"If {m} is the preposition the head selects, which case does its complement take here?",
+		"If {m} is or holds the preposition heading the head's complement, which case does that complement take here?",
 		rules.government,
 	),
 	governedReferent: paragraph(

@@ -133,6 +133,11 @@ export const options = {
 		Governed: "Yes, the head selects it",
 		Free: question.governedFree,
 	},
+	governedAdverb: {
+		Governed:
+			"Yes: that preposition is a fixed word of the expression heading its open slot",
+		Free: "No: the expression has no such fixed word",
+	},
 	governedReferent: {
 		Someone: "A person or people",
 		Something: "A thing, place, event, fact or idea",

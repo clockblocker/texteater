@@ -119,18 +119,20 @@ export function targetOf(
  * What a member stands for when the fusion table settles it: its written
  * letters for a piece of a fused word the unit holds whole, else the word
  * the Sentence chose for it (`readings`), else the one word the table
- * names for a fused piece or a shorthand.
+ * names for a fused piece or a shorthand. A reading also fixes a member
+ * with no table spelling: a governed pronominal adverb stands for its
+ * preposition (`damit` for `mit`).
  */
 export function fixedSpelling(
 	member: Member,
 	readings: ReadonlyMap<number, string> = new Map(),
 ): string | undefined {
 	const { spelling } = member;
-	if (!spelling) return undefined;
-	if (spelling.orthography === "Fused" && spelling.written !== undefined)
+	if (spelling?.orthography === "Fused" && spelling.written !== undefined)
 		return spelling.written;
 	const chosen = readings.get(member.segment);
 	if (chosen !== undefined) return chosen;
+	if (!spelling) return undefined;
 	return spelling.surfaces.length === 1 ? spelling.surfaces[0] : undefined;
 }
 

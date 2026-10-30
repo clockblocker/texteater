@@ -22,6 +22,7 @@ import {
 import type { Member, Target } from "../target.js";
 import {
 	askGoverned,
+	type GovernedMember,
 	type GovernedQuestions,
 	readGoverned,
 } from "./governed.js";
@@ -336,7 +337,7 @@ export const readTail = answerReader(function* (
 	readonly core: TailCore;
 	readonly coverage: "Full" | "Partial";
 	readonly governed: readonly ValencyEvidence[];
-	readonly governedPositions: readonly number[];
+	readonly governedMembers: readonly GovernedMember[];
 }> {
 	const core: TailCore = tail.answer
 		? {
