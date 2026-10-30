@@ -135,5 +135,12 @@
 		"battery/dumrel/src/types.ts: types KnowledgeSelection",
 		"battery/dumrel/src/types.ts: types ParadigmProvenance",
 		"battery/dumrel/src/types.ts: types PluralPattern"
+	],
+	"battery/dumtext": [
+		"battery/dumtext/src/index.ts: exports splitMarkdown",
+		"battery/dumtext/src/index.ts: exports splitTextSpans",
+		"battery/dumtext/src/index.ts: types SentenceSpan",
+		"battery/dumtext/src/index.ts: types SplitSpans",
+		"battery/dumtext/src/split-spans.ts: types SentenceSpan"
 	]
 }

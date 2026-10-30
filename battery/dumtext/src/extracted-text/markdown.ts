@@ -51,15 +51,25 @@ import {
 	trimLine,
 	whitespace,
 } from "./markdown-inline.js";
+import {
+	fromSource,
+	joined,
+	sliced,
+	type Traced,
+	traceRun,
+	trimmed,
+	trimmedStart,
+	written,
+} from "./traced.js";
 
-const atxHeading = /^ {0,3}(#{1,6})(?:[ \t]+(.*?))?(?:[ \t]+#+)?[ \t]*$/u;
+const atxHeading = /^ {0,3}(#{1,6})(?:[ \t]+(.*?))?(?:[ \t]+#+)?[ \t]*$/du;
 const fence = /^ {0,3}(`{3,}|~{3,})/u;
 const thematicBreak = /^ {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*$/u;
 const footnoteDefinition = /^ {0,3}\[\^[^\]]+\]:/u;
 const tableDelimiterRow = /^\s*\|?\s*:?-+:?\s*(?:\|\s*:?-+:?\s*)+\|?\s*$/u;
 const blockQuote = /^ {0,3}> ?/u;
-const bulletItem = /^\s*[-+*][ \t]+(.*)$/u;
-const orderedItem = /^\s*(\d{1,9})([.)])[ \t]+(.*)$/u;
+const bulletItem = /^\s*[-+*][ \t]+(.*)$/du;
+const orderedItem = /^\s*(\d{1,9})([.)])[ \t]+(.*)$/du;
 
 const sectionOpening = /^ {0,3}<section title="([^"]*)">[ \t]*$/u;
 const sectionClosing = /^ {0,3}<\/section>[ \t]*$/u;
@@ -82,10 +92,10 @@ type Reading = {
 	scroll: ScrollDraft;
 	/** Whether a `#` has opened the Scroll being read. */
 	opened: boolean;
-	paragraph: string[];
+	paragraph: Traced[];
 	/** Whether the open Paragraph is a list item. */
 	listItem: boolean;
-	fenced: { readonly marker: string; readonly lines: string[] } | undefined;
+	fenced: { readonly marker: string; readonly lines: Traced[] } | undefined;
 	/** Whether the lines are a footnote's, until a blank line. */
 	footnote: boolean;
 };
@@ -100,7 +110,7 @@ function flush(reading: Reading): void {
 
 function startParagraph(
 	reading: Reading,
-	line: string,
+	line: Traced,
 	listItem: boolean,
 ): true {
 	flush(reading);
@@ -113,35 +123,36 @@ function startParagraph(
 function readFenced(
 	reading: Reading,
 	fenced: NonNullable<Reading["fenced"]>,
-	line: string,
+	line: Traced,
 ): void {
-	const closing = fence.exec(line)?.[1];
+	const closing = fence.exec(line.text)?.[1];
 	if (
 		closing === undefined ||
 		closing[0] !== fenced.marker[0] ||
 		closing.length < fenced.marker.length ||
-		line.trim() !== closing
+		line.text.trim() !== closing
 	) {
 		fenced.lines.push(line);
 		return;
 	}
 	reading.fenced = undefined;
 	const inlines = canonical(
-		fenced.lines.flatMap((text, index) => [
+		fenced.lines.flatMap(({ text, at }, index) => [
 			...(index > 0 ? [{ kind: "LineBreak" } as const] : []),
-			run(text, []),
+			traceRun(run(text, []), at),
 		]),
 	);
 	if (inlines.length > 0)
 		reading.scroll.blocks.push({ kind: "Paragraph", inlines });
 }
 
-function readHeading(reading: Reading, line: string): boolean {
-	const heading = atxHeading.exec(line);
+function readHeading(reading: Reading, line: Traced): boolean {
+	const heading = atxHeading.exec(line.text);
 	if (heading === null) return false;
 	flush(reading);
 	const level = heading[1]?.length ?? 1;
-	const runs = headingRuns(heading[2] ?? "");
+	const [start, end] = heading.indices?.[2] ?? [0, 0];
+	const runs = headingRuns(sliced(line, start, end));
 	if (level > 1) {
 		if (runs.length > 0)
 			reading.scroll.blocks.push({
@@ -196,7 +207,7 @@ const decodeTitle = (title: string) =>
 		.replace(/&amp;/gu, "&")
 		.trim();
 
-function readSection(reading: Reading, line: string): boolean {
+function readSection(reading: Reading, { text: line }: Traced): boolean {
 	if (sectionClosing.test(line)) {
 		flush(reading);
 		closeSection(reading);
@@ -214,8 +225,8 @@ function readSection(reading: Reading, line: string): boolean {
  * One reader per block construct a line can open, in precedence order.
  * Each takes the line and returns true, or leaves it to the next.
  */
-const blockReaders: readonly ((reading: Reading, line: string) => boolean)[] = [
-	(reading, line) => {
+const blockReaders: readonly ((reading: Reading, line: Traced) => boolean)[] = [
+	(reading, { text: line }) => {
 		const marker = fence.exec(line)?.[1];
 		if (marker === undefined) return false;
 		flush(reading);
@@ -224,43 +235,40 @@ const blockReaders: readonly ((reading: Reading, line: string) => boolean)[] = [
 	},
 	readSection,
 	readHeading,
-	(reading, line) => {
+	(reading, { text: line }) => {
 		if (!thematicBreak.test(line)) return false;
 		flush(reading);
 		reading.scroll.blocks.push({ kind: "SceneBreak" });
 		return true;
 	},
-	(reading, line) => {
+	(reading, { text: line }) => {
 		if (!tableDelimiterRow.test(line)) return false;
 		flush(reading);
 		return true;
 	},
-	(reading, line) => {
+	(reading, { text: line }) => {
 		if (!footnoteDefinition.test(line)) return false;
 		flush(reading);
 		reading.footnote = true;
 		return true;
 	},
 	(reading, line) => {
-		const row = line.trim();
-		if (!row.startsWith("|")) return false;
-		const cells = row
-			.replace(/^\|/u, "")
-			.replace(/(?<!\\)\|$/u, "")
-			.split(/(?<!\\)\|/u)
-			.map((cell) => cell.trim());
-		startParagraph(reading, cells.join(" | "), false);
+		const row = trimmed(line);
+		if (!row.text.startsWith("|")) return false;
+		startParagraph(reading, tableRow(row), false);
 		flush(reading);
 		return true;
 	},
 	(reading, line) => {
-		const bullet = bulletItem.exec(line);
+		const bullet = bulletItem.exec(line.text);
+		const [start] = bullet?.indices?.[1] ?? [0];
 		return (
-			bullet !== null && startParagraph(reading, bullet[1] ?? "", true)
+			bullet !== null &&
+			startParagraph(reading, sliced(line, start), true)
 		);
 	},
 	(reading, line) => {
-		const ordered = orderedItem.exec(line);
+		const ordered = orderedItem.exec(line.text);
 		if (
 			ordered === null ||
 			(reading.paragraph.length > 0 &&
@@ -268,10 +276,54 @@ const blockReaders: readonly ((reading: Reading, line: string) => boolean)[] = [
 				ordered[1] !== "1")
 		)
 			return false;
-		const number = `${ordered[1]}\\${ordered[2]}`;
-		return startParagraph(reading, `${number} ${ordered[3]}`, true);
+		const [digits, marker, rest] = [1, 2, 3].map((group) => {
+			const [start, end] = ordered.indices?.[group] ?? [0, 0];
+			return sliced(line, start, end);
+		}) as [Traced, Traced, Traced];
+		return startParagraph(
+			reading,
+			joined([digits, written("\\"), marker, written(" "), rest]),
+			true,
+		);
 	},
 ];
+
+/**
+ * A table row's cells, trimmed and joined with ` | `; each joining pipe
+ * stands for the pipe it replaces.
+ */
+function tableRow(row: Traced): Traced {
+	let inner = sliced(row, 1);
+	if (/(?<!\\)\|$/u.test(inner.text))
+		inner = sliced(inner, 0, inner.text.length - 1);
+	const cells: Traced[] = [];
+	let start = 0;
+	for (const pipe of inner.text.matchAll(/(?<!\\)\|/gu)) {
+		cells.push(trimmed(sliced(inner, start, pipe.index)));
+		cells.push(
+			joined([
+				written(" "),
+				sliced(inner, pipe.index, pipe.index + 1),
+				written(" "),
+			]),
+		);
+		start = pipe.index + 1;
+	}
+	cells.push(trimmed(sliced(inner, start)));
+	return joined(cells);
+}
+
+/** A document's lines, each traced to where it stands. */
+function sourceLines(markdown: string): Traced[] {
+	const lines: Traced[] = [];
+	let start = 0;
+	for (const ending of markdown.matchAll(/\r\n?|\n/gu)) {
+		lines.push(fromSource(markdown.slice(start, ending.index), start));
+		start = ending.index + ending[0].length;
+	}
+	lines.push(fromSource(markdown.slice(start), start));
+	return lines;
+}
 
 /**
  * The Extracted Text a Markdown document describes, in the dialect above.
@@ -288,21 +340,26 @@ export function extractedTextFromMarkdown(markdown: string): ExtractedText {
 		fenced: undefined,
 		footnote: false,
 	};
-	for (const source of markdown.normalize("NFC").split(/\r\n?|\n/u)) {
+	for (const source of sourceLines(markdown.normalize("NFC"))) {
 		if (reading.fenced !== undefined) {
 			readFenced(reading, reading.fenced, source);
 			continue;
 		}
 		let line = source;
-		while (blockQuote.test(line)) line = line.replace(blockQuote, "");
-		if (line.trim().length === 0) {
+		for (
+			let quote = blockQuote.exec(line.text);
+			quote !== null;
+			quote = blockQuote.exec(line.text)
+		)
+			line = sliced(line, quote[0].length);
+		if (line.text.trim().length === 0) {
 			flush(reading);
 			reading.footnote = false;
 		} else if (
 			!reading.footnote &&
 			!blockReaders.some((read) => read(reading, line))
 		)
-			reading.paragraph.push(line.trimStart());
+			reading.paragraph.push(trimmedStart(line));
 	}
 	flush(reading);
 	while (reading.containers.length > 1) closeSection(reading);

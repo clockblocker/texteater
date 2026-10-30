@@ -4,6 +4,14 @@
  * emphasis rules narrowed to what Extracted Text holds.
  */
 import type { InlineStyle, LineBreak, Run } from "./extracted-text.js";
+import {
+	runSources,
+	sliced,
+	type Traced,
+	traceRun,
+	trimmedEnd,
+	written,
+} from "./traced.js";
 
 export type Inline = Run | LineBreak;
 
@@ -23,18 +31,20 @@ type Delimiter = {
 	active: boolean;
 	readonly opens: InlineStyle[];
 	readonly closes: InlineStyle[];
+	/** The run's source offsets. */
+	readonly at: readonly number[];
 };
 
 type Tag = {
 	readonly type: "tag";
 	readonly style: InlineStyle;
 	readonly closing: boolean;
-	readonly source: string;
+	readonly source: Traced;
 	matched: boolean;
 };
 
 type Token =
-	| { readonly type: "text"; text: string }
+	| { readonly type: "text"; text: string; at: number[] }
 	| { readonly type: "break" }
 	| Delimiter
 	| Tag;
@@ -72,7 +82,12 @@ function backtickRun(line: string, from: number, length: number): number {
  * A `*` or `_` run with CommonMark's flanking rules, a line's edges
  * counting as whitespace.
  */
-function delimiter(run: string, before: string, after: string): Delimiter {
+function delimiter(
+	run: string,
+	before: string,
+	after: string,
+	at: readonly number[],
+): Delimiter {
 	const spaceBefore = whitespace.test(before);
 	const spaceAfter = whitespace.test(after);
 	const punctBefore = punctuation.test(before);
@@ -90,6 +105,7 @@ function delimiter(run: string, before: string, after: string): Delimiter {
 		active: true,
 		opens: [],
 		closes: [],
+		at,
 	};
 }
 
@@ -101,41 +117,56 @@ type Taken = { readonly tokens: readonly Token[]; readonly length: number };
  * construct opening `line` at `index`, or returns undefined.
  */
 const inlineReaders: readonly ((
-	line: string,
+	traced: Traced,
 	index: number,
 ) => Taken | undefined)[] = [
-	(line, index) => {
-		const text = plain.exec(line.slice(index))?.[0];
+	(traced, index) => {
+		const text = plain.exec(traced.text.slice(index))?.[0];
 		return text === undefined
 			? undefined
-			: { tokens: [{ type: "text", text }], length: text.length };
+			: {
+					tokens: [
+						textToken(sliced(traced, index, index + text.length)),
+					],
+					length: text.length,
+				};
 	},
-	(line, index) => {
+	({ text: line, at }, index) => {
 		const next = line[index + 1] ?? "";
 		return line[index] === "\\" && asciiPunctuation.test(next)
-			? { tokens: [{ type: "text", text: next }], length: 2 }
+			? {
+					tokens: [
+						{ type: "text", text: next, at: [at[index + 1] ?? -1] },
+					],
+					length: 2,
+				}
 			: undefined;
 	},
-	(line, index) => {
+	(traced, index) => {
+		const line = traced.text;
 		const open = /^`+/u.exec(line.slice(index))?.[0];
 		if (open === undefined) return undefined;
 		const close = backtickRun(line, index + open.length, open.length);
 		if (close === -1)
 			return {
-				tokens: [{ type: "text", text: open }],
+				tokens: [textToken(sliced(traced, index, index + open.length))],
 				length: open.length,
 			};
-		const code = line.slice(index + open.length, close);
-		const text =
-			code.length > 2 && code.startsWith(" ") && code.endsWith(" ")
-				? code.slice(1, -1)
-				: code;
+		const code = sliced(traced, index + open.length, close);
+		const stripped =
+			code.text.length > 2 &&
+			code.text.startsWith(" ") &&
+			code.text.endsWith(" ");
 		return {
-			tokens: [{ type: "text", text }],
+			tokens: [
+				textToken(
+					stripped ? sliced(code, 1, code.text.length - 1) : code,
+				),
+			],
 			length: close + open.length - index,
 		};
 	},
-	(line, index) => {
+	({ text: line }, index) => {
 		const rest = line.slice(index);
 		const skipped =
 			image.exec(rest)?.[0] ?? footnoteReference.exec(rest)?.[0];
@@ -143,62 +174,85 @@ const inlineReaders: readonly ((
 			? undefined
 			: { tokens: [], length: skipped.length };
 	},
-	(line, index) => {
-		const linked = link.exec(line.slice(index));
+	(traced, index) => {
+		const linked = link.exec(traced.text.slice(index));
+		const label = linked?.[1] ?? "";
 		return linked === null
 			? undefined
 			: {
-					tokens: tokenizeLine(linked[1] ?? ""),
+					tokens: tokenizeLine(
+						sliced(traced, index + 1, index + 1 + label.length),
+					),
 					length: linked[0].length,
 				};
 	},
-	(line, index) => {
-		const tag = styleTag.exec(line.slice(index));
+	(traced, index) => {
+		const tag = styleTag.exec(traced.text.slice(index));
 		const style = tagStyles[tag?.[2]?.toLowerCase() ?? ""];
 		if (tag === null || style === undefined) return undefined;
 		const token: Tag = {
 			type: "tag",
 			style,
 			closing: tag[1] === "/",
-			source: tag[0],
+			source: sliced(traced, index, index + tag[0].length),
 			matched: false,
 		};
 		return { tokens: [token], length: tag[0].length };
 	},
-	(line, index) => {
+	({ text: line }, index) => {
 		const lineBreak = breakTag.exec(line.slice(index))?.[0];
 		return lineBreak === undefined
 			? undefined
 			: { tokens: [{ type: "break" }], length: lineBreak.length };
 	},
-	(line, index) => {
+	({ text: line, at }, index) => {
 		const run = delimiterRun.exec(line.slice(index))?.[0];
 		if (run === undefined) return undefined;
 		const before = line[index - 1] ?? " ";
 		const after = line[index + run.length] ?? " ";
-		return { tokens: [delimiter(run, before, after)], length: run.length };
+		const source = at.slice(index, index + run.length);
+		return {
+			tokens: [delimiter(run, before, after, source)],
+			length: run.length,
+		};
 	},
 ];
 
-/** One line's inline tokens, neighbouring text merged. */
-export function tokenizeLine(line: string): Token[] {
+const textToken = ({ text, at }: Traced): Token => ({
+	type: "text",
+	text,
+	at: [...at],
+});
+
+/**
+ * One line's inline tokens, neighbouring text merged. A line the reader
+ * wrote itself, as export's round trip does, stands nowhere in a source.
+ */
+export function tokenizeLine(line: Traced | string): Token[] {
+	const traced = typeof line === "string" ? written(line) : line;
 	const tokens: Token[] = [];
 	let index = 0;
-	while (index < line.length) {
+	while (index < traced.text.length) {
 		let taken: Taken | undefined;
 		for (const read of inlineReaders) {
-			taken = read(line, index);
+			taken = read(traced, index);
 			if (taken !== undefined) break;
 		}
 		taken ??= {
-			tokens: [{ type: "text", text: line[index] ?? "" }],
+			tokens: [textToken(sliced(traced, index, index + 1))],
 			length: 1,
 		};
 		for (const token of taken.tokens) {
 			const last = tokens.at(-1);
-			if (token.type === "text" && last?.type === "text")
+			if (token.type === "text" && last?.type === "text") {
 				last.text += token.text;
-			else tokens.push(token.type === "text" ? { ...token } : token);
+				last.at.push(...token.at);
+			} else
+				tokens.push(
+					token.type === "text"
+						? { ...token, at: [...token.at] }
+						: token,
+				);
 		}
 		index += taken.length;
 	}
@@ -314,10 +368,10 @@ export function trimLine(runs: readonly Run[]): Run[] {
 			next.locations === undefined &&
 			sameStyles(last, next)
 		)
-			merged[merged.length - 1] = {
-				...last,
-				text: last.text + next.text,
-			};
+			merged[merged.length - 1] = traceRun(
+				{ ...last, text: last.text + next.text },
+				joinedSources(last, next),
+			);
 		else merged.push(next);
 	}
 	let start = 0;
@@ -325,11 +379,22 @@ export function trimLine(runs: readonly Run[]): Run[] {
 	let end = merged.length;
 	while ((merged[end - 1]?.text.trimEnd() ?? "x") === "") end -= 1;
 	return merged.slice(start, end).flatMap((current, index, kept) => {
-		let text = current.text;
-		if (index === 0) text = text.trimStart();
-		if (index === kept.length - 1) text = text.trimEnd();
-		return text.length > 0 ? [{ ...current, text }] : [];
+		const at = runSources.get(current);
+		let from = 0;
+		let to = current.text.length;
+		if (index === 0) from = to - current.text.trimStart().length;
+		if (index === kept.length - 1) to = current.text.trimEnd().length;
+		const text = current.text.slice(from, Math.max(from, to));
+		return text.length > 0
+			? [traceRun({ ...current, text }, at?.slice(from, to))]
+			: [];
 	});
+}
+
+function joinedSources(left: Run, right: Run): readonly number[] | undefined {
+	const leftAt = runSources.get(left);
+	const rightAt = runSources.get(right);
+	return leftAt && rightAt ? [...leftAt, ...rightAt] : undefined;
 }
 
 /** The inlines a Paragraph's matched tokens stand for. */
@@ -340,24 +405,27 @@ export function inlinesOf(tokens: readonly Token[]): Inline[] {
 	const shift = (style: InlineStyle, by: number) =>
 		depth.set(style, (depth.get(style) ?? 0) + by);
 	const inlines: Inline[] = [];
-	const emit = (text: string) => {
+	const emit = ({ text, at }: Traced) => {
 		if (text.length === 0) return;
 		inlines.push(
-			run(
-				text,
-				styleOrder.filter((style) => (depth.get(style) ?? 0) > 0),
+			traceRun(
+				run(
+					text,
+					styleOrder.filter((style) => (depth.get(style) ?? 0) > 0),
+				),
+				at,
 			),
 		);
 	};
 	for (const token of tokens) {
-		if (token.type === "text") emit(token.text);
+		if (token.type === "text") emit(token);
 		else if (token.type === "break") inlines.push({ kind: "LineBreak" });
 		else if (token.type === "tag") {
 			if (token.matched) shift(token.style, token.closing ? -1 : 1);
 			else emit(token.source);
 		} else {
 			for (const style of token.closes) shift(style, -1);
-			emit(token.char.repeat(token.count));
+			emit(leftover(token));
 			for (const style of token.opens) shift(style, 1);
 		}
 	}
@@ -365,31 +433,48 @@ export function inlinesOf(tokens: readonly Token[]): Inline[] {
 }
 
 /**
+ * The characters a delimiter run leaves as text: CommonMark takes an
+ * opener's from its inner end and a closer's from its start.
+ */
+function leftover({ char, count, closes, at }: Delimiter): Traced {
+	const text = char.repeat(count);
+	return {
+		text,
+		at:
+			closes.length > 0
+				? at.slice(at.length - count)
+				: at.slice(0, count),
+	};
+}
+
+const space = (): Token => ({ type: "text", text: " ", at: [-1] });
+
+/**
  * A Paragraph's inlines from its source lines. A line ending in two spaces
  * or an unescaped `\` breaks the line; any other line break is a space.
  */
-export function paragraphInlines(lines: readonly string[]): Inline[] {
+export function paragraphInlines(lines: readonly Traced[]): Inline[] {
 	const tokens: Token[] = [];
-	for (const [index, source] of lines.entries()) {
+	for (const [index, traced] of lines.entries()) {
+		const source = traced.text;
 		const last = index === lines.length - 1;
 		const backslashes = /\\+$/u.exec(source)?.[0].length ?? 0;
 		const breaks =
 			!last && (/ {2}$/u.test(source) || backslashes % 2 === 1);
 		const line =
-			breaks && backslashes % 2 === 1 ? source.slice(0, -1) : source;
-		tokens.push(...tokenizeLine(line.trimEnd()));
-		if (!last)
-			tokens.push(
-				breaks ? { type: "break" } : { type: "text", text: " " },
-			);
+			breaks && backslashes % 2 === 1
+				? sliced(traced, 0, source.length - 1)
+				: traced;
+		tokens.push(...tokenizeLine(trimmedEnd(line)));
+		if (!last) tokens.push(breaks ? { type: "break" } : space());
 	}
 	return inlinesOf(tokens);
 }
 
-export function headingRuns(source: string): Run[] {
+export function headingRuns(source: Traced): Run[] {
 	return inlinesOf(
 		tokenizeLine(source).map((token) =>
-			token.type === "break" ? { type: "text", text: " " } : token,
+			token.type === "break" ? space() : token,
 		),
 	).filter((inline): inline is Run => inline.kind === "Run");
 }

@@ -21,5 +21,27 @@ if (scroll?.kind === "Scroll") splitScroll(scroll).paragraphs;
   `splitText`, which splits any text by one set of rules for every
   language ([Dumgen ADR 0007](../dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md)).
 
+A host that keeps its own text, such as an editor's note, asks the span API
+where each Sentence stands in it:
+
+```ts
+import { splitMarkdown } from "dumtext";
+
+const note = "# Kapitel 1\n\nEr kam *spät*. Sie wartete.";
+splitMarkdown(note).paragraphs;
+// [{ kind: "Heading", sentences: [{ text: "Kapitel 1", start: 2, end: 11 }] },
+//  { kind: "Paragraph", sentences: [{ text: "Er kam spät.", start: 13, end: 27 },
+//                                   { text: "Sie wartete.", start: 28, end: 40 }] }]
+```
+
+- `splitMarkdown(markdown)` reads and splits as `extractedTextFromMarkdown`
+  and `splitScroll` do, Scroll after Scroll. `splitTextSpans(text)` splits
+  as `splitText` does, reading the text as NFC.
+- Each Sentence's `start` and `end` are UTF-16 offsets into the string the
+  host passed in, so `input.slice(start, end)` is its source: the Sentence
+  apart from whitespace and NFC, plus any Markdown markup inside it.
+- A paragraph's `kind` is `Heading` for a Markdown Heading or a plain-text
+  title line, so a host can skip it, and `Paragraph` otherwise.
+
 Everything under `src/` reads no files and loads no Zod, so it runs in a
 Convex isolate or a plugin; `tests/purity.test.ts` holds it there.
