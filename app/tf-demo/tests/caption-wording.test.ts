@@ -374,3 +374,77 @@ test("a Surface spelled like its Lemma with nothing to name says nothing, judged
 		)?.sheet,
 	).toBe("part of Doppelt genäht hält besser");
 });
+
+/** A stored Surface in base order (#1293), presented as a Note presents it. */
+function baseOrder(
+	normalizedSurface: string,
+	canonicalForm: string,
+	inflectionalFeatures: Record<string, string | null>,
+) {
+	return {
+		normalizedSurface,
+		grundform: false,
+		spelling: { kind: "Canonical" },
+		inflectionalFeatures,
+		lemma: {
+			family: canonicalForm.includes(" ") ? "Locution" : "Lexeme",
+			kind: "VERB",
+			canonicalForm,
+			coreFeatures: {},
+		},
+	} as const;
+}
+
+const pastThirdSingular = {
+	verbForm: "Fin",
+	mood: "Ind",
+	tense: "Past",
+	person: "3",
+	number: "Sing",
+	expletive: null,
+};
+
+test("a base-order Surface names its form and is no part of its Lemma", () => {
+	const caption = surfaceCaption(
+		baseOrder("mit zu tun hatte", "mit zu tun haben", pastThirdSingular),
+		"mit zu tun haben",
+		languages,
+	);
+	expect(text(caption)?.sheet).toBe("past of mit zu tun haben");
+	expect(
+		text(
+			surfaceCaption(
+				baseOrder("anfing", "anfangen", pastThirdSingular),
+				"anfangen",
+				languages,
+			),
+		)?.sheet,
+	).toBe("past of anfangen");
+});
+
+test("only a Surface that holds its expletive es names it", () => {
+	const expletive = {
+		...pastThirdSingular,
+		tense: "Pres",
+		expletive: "Subject",
+	};
+	expect(
+		text(
+			surfaceCaption(
+				baseOrder("es regnet", "regnen", expletive),
+				"regnen",
+				languages,
+			),
+		)?.sheet,
+	).toBe("present, es of regnen");
+	// A referential es is a free unit, never in the Surface: no `es of`.
+	expect(
+		text(
+			surfaceCaption(
+				baseOrder("mit zu tun hat", "mit zu tun haben", expletive),
+				"mit zu tun haben",
+				languages,
+			),
+		)?.sheet,
+	).toBe("present of mit zu tun haben");
+});

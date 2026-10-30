@@ -242,7 +242,10 @@ test("a completed Resolution converges the deck to canonical Notes", () => {
 				language: "de",
 				normalizedSurface: "Banken",
 			},
-			presentationContext: { activeAnalysisKey: "surface-1" },
+			presentationContext: {
+				activeAnalysisKey: "surface-1",
+				activeReadingId: "reading-1",
+			},
 		},
 		expect.objectContaining({
 			target: {
@@ -318,6 +321,7 @@ test("a stored Resolution whose every step says something opens all four canonic
 	]);
 	expect(cards[2]?.presentationContext).toEqual({
 		activeAnalysisKey: surfaceId,
+		activeReadingId: readingId,
 	});
 
 	// A repeat click joins the running session, whose requestId differs.

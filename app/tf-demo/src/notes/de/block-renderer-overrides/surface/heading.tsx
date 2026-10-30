@@ -14,7 +14,11 @@ export const renderHeadingDeSurface = ((context) => (
 		context={context}
 		title={(active) => {
 			const { activeReading } = context.noteData;
-			if (!active || activeReading?.lemmaId !== active.lemmaId)
+			if (
+				!active ||
+				!activeReading ||
+				activeReading.lemmaId !== active.lemmaId
+			)
 				return context.noteData.target.normalizedSurface;
 			return (
 				<ValencyLineView

@@ -80,7 +80,10 @@ function spelledOtherwise(
 
 /**
  * Whether a Surface quotes only some of its Lemma's words, in order: `Wer im
- * Glashaus sitzt` of a Saying, `zum` of `zum Teufel`.
+ * Glashaus sitzt` of a Saying, `zum` of `zum Teufel`. A verbal Surface is
+ * stored in base order, the Lemma's words in the Citation's order with the
+ * verb last (#1293), so `mit zu tun hatte` quotes all of `mit zu tun
+ * haben` and is no part.
  */
 function quotesPart(
 	normalizedSurface: string,

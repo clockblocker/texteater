@@ -193,28 +193,26 @@ export function valencyLineAround(
  * `sich (Dat) jN vorstellen`. A separable prefix loses its bar.
  */
 export function valencyLineText(parts: readonly ValencyLinePart[]): string {
-	return parts
-		.map((part) => {
-			switch (part.part) {
-				case "Head":
-				case "Fixed":
-				case "Preposition":
-					return part.text;
-				case "Reflexive": {
-					const text = part.case
-						? `${part.text} (${part.case})`
-						: part.text;
-					return part.optional ? `(${text})` : text;
-				}
-				case "Slot": {
-					const text = part.preposition
-						? `${part.preposition} ${part.token}`
-						: part.token;
-					return part.optional ? `(${text})` : text;
-				}
-			}
-		})
-		.join(" ");
+	return parts.map(partText).join(" ");
+}
+
+function partText(part: ValencyLinePart): string {
+	switch (part.part) {
+		case "Head":
+		case "Fixed":
+		case "Preposition":
+			return part.text;
+		case "Reflexive": {
+			const text = part.case ? `${part.text} (${part.case})` : part.text;
+			return part.optional ? `(${text})` : text;
+		}
+		case "Slot": {
+			const text = part.preposition
+				? `${part.preposition} ${part.token}`
+				: part.token;
+			return part.optional ? `(${text})` : text;
+		}
+	}
 }
 
 function fixedPart(words: readonly string[]): ValencyLinePart[] {
