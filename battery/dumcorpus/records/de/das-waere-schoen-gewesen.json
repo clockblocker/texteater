@@ -144,7 +144,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "wäre gewesen",
+					"normalizedSurface": "gewesen wäre",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Sub",

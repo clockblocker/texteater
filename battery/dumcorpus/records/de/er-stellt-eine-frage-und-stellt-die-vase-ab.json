@@ -124,7 +124,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "stellt eine Frage",
+					"normalizedSurface": "eine Frage stellt",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",

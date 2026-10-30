@@ -60,7 +60,8 @@ export function renderApplicationSubject(
 							: undefined
 					}
 					activeReadingId={
-						target.kind === "Lemma" &&
+						(target.kind === "Lemma" ||
+							target.kind === "Surface") &&
 						"presentationContext" in subject
 							? activeReadingIdOf(subject.presentationContext)
 							: undefined

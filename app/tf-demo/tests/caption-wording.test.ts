@@ -220,12 +220,12 @@ test("an Attestation names a Typo, a Shorthand, a fused word and a split verb", 
 	).toBe("Am = an dem");
 	expect(attestationOf("der-laster-fuhr-das-schild-um", "fuhr um")).toEqual({
 		card: "split form of",
-		sheet: "split form of fuhr um",
+		sheet: "split form of umfuhr",
 	});
 	expect(
 		attestationOf("die-peitsche-hat-er-mitgebracht-2", "hat mitgebracht")
 			?.sheet,
-	).toBe("split form of hat mitgebracht");
+	).toBe("split form of mitgebracht hat");
 });
 
 test("a governed preposition or adjacent words do not split a verb, and an article's shorthand is not the noun's", () => {
@@ -247,7 +247,7 @@ test("a governed preposition or adjacent words do not split a verb, and an artic
 	expect(
 		attestationOf("wir-werden-am-freitag-abreisen", "werden abreisen")
 			?.sheet,
-	).toBe("split form of werden abreisen");
+	).toBe("split form of abreisen werden");
 });
 
 test("a third person names no pronoun its subject would have to choose, but an expletive es", () => {

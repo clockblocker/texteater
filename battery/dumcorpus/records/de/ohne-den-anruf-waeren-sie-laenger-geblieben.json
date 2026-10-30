@@ -55,7 +55,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "wären geblieben",
+					"normalizedSurface": "geblieben wären",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Sub",

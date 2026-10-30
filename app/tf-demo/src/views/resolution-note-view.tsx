@@ -36,6 +36,7 @@ import {
 } from "@/workspace/workspace-controller";
 import {
 	activeAnalysisKeyOf,
+	activeReadingIdOf,
 	type ResolutionStepTarget,
 	type UnitRoute,
 } from "@/workspace/workspace-subject";
@@ -135,6 +136,7 @@ function prefetchCardNote(
 					...routeNoteQueryArgs(
 						target,
 						activeAnalysisKeyOf(presentationContext),
+						activeReadingIdOf(presentationContext),
 					),
 					visitorId,
 				}),

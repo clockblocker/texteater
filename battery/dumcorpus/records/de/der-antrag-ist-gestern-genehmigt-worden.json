@@ -59,7 +59,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "ist genehmigt worden",
+					"normalizedSurface": "genehmigt worden ist",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",

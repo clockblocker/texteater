@@ -40,7 +40,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "trifft eine Entscheidung",
+					"normalizedSurface": "eine Entscheidung trifft",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",

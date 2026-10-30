@@ -17,6 +17,8 @@ export const get = query({
 				language: v.literal("de"),
 				normalizedSurface: v.string(),
 				activeAnalysisKey: v.optional(v.id("surfaces")),
+				/** The Reading the Deck leads to, whose frame slots the Surface's line. */
+				activeReadingId: v.optional(v.id("readings")),
 				contextCursor: v.optional(v.string()),
 			}),
 			v.object({

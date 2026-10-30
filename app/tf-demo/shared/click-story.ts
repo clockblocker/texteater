@@ -180,13 +180,27 @@ export function formFeatures(surface: {
 			: {};
 	return {
 		...part,
-		...inflectionOf(surface.lemma, surface.inflectionalFeatures),
+		...inflectionOf(
+			surface.lemma,
+			surface.inflectionalFeatures,
+			holdsEs(surface.normalizedSurface),
+		),
 	};
+}
+
+/**
+ * Whether a stored Surface holds the word `es`. An expletive subject is a
+ * member of its unit, so its Surface holds it (`es regnet`); a referential
+ * `es` is a free unit of its own and never does (ADR 0003, #1293).
+ */
+function holdsEs(normalizedSurface: string): boolean {
+	return wordsOf(normalizedSurface).includes("es");
 }
 
 function inflectionOf(
 	lemma: FormLemma,
 	features: FormFeatureBag,
+	expletiveHeld: boolean,
 ): FormFeatures {
 	const plural = features.number === "Plur";
 	const cases = valuesOf(features.case, ["Nom", "Acc", "Dat", "Gen"]);
@@ -217,7 +231,7 @@ function inflectionOf(
 		case "VERB":
 		case "AUX": {
 			const form = verbFormKey(features);
-			const person = personOf(features);
+			const person = personOf(features, expletiveHeld);
 			return {
 				...(form
 					? { verb: { form, passive: features.voice === "Pass" } }
@@ -290,8 +304,16 @@ function verbFormKey(features: FormFeatureBag): VerbFormKey | null {
 	return null;
 }
 
-function personOf(features: FormFeatureBag): FormFeatures["person"] | null {
-	if (features.expletive === "Subject") return { kind: "Expletive" };
+/**
+ * A finite form's person. An expletive subject names `es` only when the
+ * Surface holds it; one judged expletive without it is read by its cell.
+ */
+function personOf(
+	features: FormFeatureBag,
+	expletiveHeld: boolean,
+): FormFeatures["person"] | null {
+	if (features.expletive === "Subject" && expletiveHeld)
+		return { kind: "Expletive" };
 	const { person, number } = features;
 	if (
 		(person !== "1" && person !== "2" && person !== "3") ||

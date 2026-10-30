@@ -97,7 +97,7 @@
 						"canonicalForm": "die Katze im Sack kaufen",
 						"coreFeatures": {}
 					},
-					"normalizedSurface": "hat die Katze im Sack gekauft",
+					"normalizedSurface": "die Katze im Sack gekauft hat",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {

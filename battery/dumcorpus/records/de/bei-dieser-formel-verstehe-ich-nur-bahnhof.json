@@ -61,7 +61,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "verstehe nur Bahnhof",
+					"normalizedSurface": "nur Bahnhof verstehe",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",

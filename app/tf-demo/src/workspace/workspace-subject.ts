@@ -46,6 +46,8 @@ export type WorkspaceTarget =
 type SurfaceNotePresentationContext = {
 	/** Selects one of the aggregate Surface Note's analyses for this Presentation. */
 	readonly activeAnalysisKey: Id<"surfaces">;
+	/** The Reading the Deck leads to, whose frame slots the Surface's line (#1293). */
+	readonly activeReadingId?: Id<"readings">;
 };
 
 export type AttestationNotePresentationContext = {
@@ -218,7 +220,8 @@ export function workspaceSubjectFor(
 	if (
 		target.kind === "Lemma" &&
 		presentationContext &&
-		"activeReadingId" in presentationContext
+		"activeReadingId" in presentationContext &&
+		!("activeAnalysisKey" in presentationContext)
 	)
 		return { kind: "Note", target, presentationContext };
 	if (
@@ -349,7 +352,9 @@ function isSurfaceNotePresentationContext(
 ): value is SurfaceNotePresentationContext | undefined {
 	return (
 		value === undefined ||
-		(isRecord(value) && typeof value.activeAnalysisKey === "string")
+		(isRecord(value) &&
+			typeof value.activeAnalysisKey === "string" &&
+			isOptionalString(value.activeReadingId))
 	);
 }
 

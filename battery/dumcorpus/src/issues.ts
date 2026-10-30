@@ -19,6 +19,7 @@ export type SpecCheck =
 	| "ReflexiveMarker"
 	| "ClosedPart"
 	| "PluralOnly"
+	| "BaseOrder"
 	| "Syncretism"
 	| "AuthoredReading"
 	| "Segments"

@@ -61,12 +61,7 @@ export function ValencyHeading({
 				parts ? (
 					<>
 						{lead}
-						{parts.map((part, index) => (
-							<Fragment key={`${index}:${part.part}`}>
-								{index > 0 ? " " : null}
-								{renderPart(part)}
-							</Fragment>
-						))}
+						<ValencyLineView parts={parts} />
 					</>
 				) : (
 					fallback?.(citation)
@@ -74,6 +69,24 @@ export function ValencyHeading({
 			}
 		/>
 	);
+}
+
+/**
+ * A Valency Line's parts as the heading prints them: a slot and its
+ * preposition in the valency styles, an Optional one in parentheses, a
+ * separable prefix split off by a bar. A Surface's line prints the same.
+ */
+export function ValencyLineView({
+	parts,
+}: {
+	readonly parts: readonly ValencyLinePart[];
+}) {
+	return parts.map((part, index) => (
+		<Fragment key={`${index}:${part.part}`}>
+			{index > 0 ? " " : null}
+			{renderPart(part)}
+		</Fragment>
+	));
 }
 
 function renderPart(part: ValencyLinePart): ReactNode {

@@ -97,6 +97,12 @@ export const renderDefaultLemmaRoutes = (({
 										{
 											activeAnalysisKey:
 												surface.surfaceId,
+											...(PresentationCapabilities.activeReadingId
+												? {
+														activeReadingId:
+															PresentationCapabilities.activeReadingId,
+													}
+												: {}),
 										},
 									)
 								}

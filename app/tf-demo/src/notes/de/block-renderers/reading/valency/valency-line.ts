@@ -2,17 +2,22 @@ import {
 	type ReflexiveSlot,
 	reflexiveSlotOf,
 } from "../../../../../../shared/reflexive-slot";
-import type { NoteDataFor } from "../../../../universal/note/data";
 
-type FrameSlot = NonNullable<
-	NoteDataFor<"Reading">["knowledge"]["valency"]
->[number];
+/**
+ * A Valency Frame Slot as the line reads it (ADR 0034): a Reading Note's
+ * Knowledge, or a frame another Note carries beside the Reading it names.
+ */
+export type FrameSlot = {
+	readonly status: "Required" | "Optional";
+	readonly complements: readonly {
+		readonly kind: string;
+		readonly governedCase?: string;
+		readonly preposition?: { readonly canonicalForm: string };
+	}[];
+};
 /** The German complements the line shows are the ones marked by case. */
-type Complement = Extract<
-	FrameSlot["complements"][number],
-	{ governedCase: string; referent: string }
->;
-type RenderedCase = Exclude<Complement["governedCase"], "Nom">;
+type SlotCase = "Nom" | "Acc" | "Dat" | "Gen";
+type RenderedCase = Exclude<SlotCase, "Nom">;
 
 /** One piece of a German Valency Line, in reading order. */
 export type ValencyLinePart =
@@ -41,8 +46,9 @@ export type ValencyLinePart =
 			 * right before it (`mit jM zu tun haben`).
 			 */
 			readonly preposition: string | null;
-			readonly case: RenderedCase;
-			/** The person form of the case, whatever the referent: `jN`, `jM` or `jS`. */
+			/** Nom only on a Surface's line, as its subject `jD` (#1293). */
+			readonly case: SlotCase;
+			/** The person form of the case, whatever the referent: `jD`, `jN`, `jM` or `jS`. */
 			readonly token: string;
 	  };
 
@@ -60,7 +66,7 @@ export const DEFAULT_VALENCY_LINE_STYLE: ValencyLineStyle = {
 	reflexiveCase: "DativeOnly",
 };
 
-type ValencyLemma = {
+export type ValencyLemma = {
 	readonly family: string;
 	readonly kind: string;
 	readonly canonicalForm: string;
@@ -68,11 +74,12 @@ type ValencyLemma = {
 };
 
 /** jemanden, jemandem, jemandes: `j` plus the ending the case gives it. */
-const CASE_TOKEN = {
+export const CASE_TOKEN = {
+	Nom: "jD",
 	Acc: "jN",
 	Dat: "jM",
 	Gen: "jS",
-} as const satisfies Record<RenderedCase, string>;
+} as const satisfies Record<SlotCase, string>;
 
 /** Bare case objects in German citation order: `jemandem etwas`. */
 const CASE_SLOT_ORDER = [
@@ -98,18 +105,50 @@ const CASE_SLOT_ORDER = [
  * after that word and prints only its token: `mit jM zu tun haben`. A
  * reflexive with a preposition does the same (`außer sich sein`), and a
  * leading `es` stays before the reflexive (`es sich gemütlich machen`), as
- * the Citation places `sich`. Keep the whole ordering rule here.
+ * the Citation places `sich`. Keep the whole ordering rule here; a
+ * Surface's line (`../../../surface-line.ts`) runs it around its inflected
+ * head.
  */
 export function germanValencyLine(
 	lemma: ValencyLemma,
 	frame: readonly FrameSlot[] | undefined,
 	style: ValencyLineStyle = DEFAULT_VALENCY_LINE_STYLE,
 ): readonly ValencyLinePart[] | null {
+	const { head, fixed } = splitCanonicalForm(lemma);
+	return valencyLineAround(
+		{
+			text: head,
+			fixed,
+			prefix: separablePrefix(lemma.coreFeatures, head),
+			first: lemma.kind !== "VERB",
+		},
+		frame,
+		style,
+	);
+}
+
+/** What a Valency Line is printed around. */
+export type LineHead = {
+	/** The head's words: `haben`, or a Surface's inflected `hatte`. */
+	readonly text: string;
+	/** A Locution's other words, in order: `mit` `zu` `tun`. */
+	readonly fixed: readonly string[];
+	/** A separable verb's prefix, when it begins the head. */
+	readonly prefix: string | null;
+	/** Whether the head comes before its complements, or after them. */
+	readonly first: boolean;
+};
+
+/** {@link germanValencyLine}'s ordering, around any head. */
+export function valencyLineAround(
+	{ text, fixed, prefix, first }: LineHead,
+	frame: readonly FrameSlot[] | undefined,
+	style: ValencyLineStyle,
+): readonly ValencyLinePart[] | null {
 	const slots = (frame ?? []).flatMap(slotPart);
 	const reflexive = reflexiveSlotOf(frame);
 	if (slots.length === 0 && !reflexive) return null;
 
-	const { head, fixed } = splitCanonicalForm(lemma);
 	const inFixed = (preposition: string | null): preposition is string =>
 		preposition !== null && fixed.includes(preposition);
 	const caseSlots = CASE_SLOT_ORDER.flatMap((grammaticalCase) =>
@@ -145,14 +184,37 @@ export function germanValencyLine(
 		...freeSlots,
 		...phrase,
 	];
-	const headPart: ValencyLinePart = {
-		part: "Head",
-		text: head,
-		prefix: separablePrefix(lemma.coreFeatures, head),
-	};
-	return lemma.kind === "VERB"
-		? [...complements, headPart]
-		: [headPart, ...complements];
+	const headPart: ValencyLinePart = { part: "Head", text, prefix };
+	return first ? [headPart, ...complements] : [...complements, headPart];
+}
+
+/**
+ * A line as one run of text, for a caption: `jD mit jM zu tun hatte`,
+ * `sich (Dat) jN vorstellen`. A separable prefix loses its bar.
+ */
+export function valencyLineText(parts: readonly ValencyLinePart[]): string {
+	return parts
+		.map((part) => {
+			switch (part.part) {
+				case "Head":
+				case "Fixed":
+				case "Preposition":
+					return part.text;
+				case "Reflexive": {
+					const text = part.case
+						? `${part.text} (${part.case})`
+						: part.text;
+					return part.optional ? `(${text})` : text;
+				}
+				case "Slot": {
+					const text = part.preposition
+						? `${part.preposition} ${part.token}`
+						: part.token;
+					return part.optional ? `(${text})` : text;
+				}
+			}
+		})
+		.join(" ");
 }
 
 function fixedPart(words: readonly string[]): ValencyLinePart[] {
@@ -211,7 +273,7 @@ function reflexivePart(
  * A verbal Locution's head is its final infinitive (`auf den Keks gehen`),
  * and its other words are Fixed. Any other Canonical Form is its own head.
  */
-function splitCanonicalForm(lemma: ValencyLemma): {
+export function splitCanonicalForm(lemma: ValencyLemma): {
 	readonly head: string;
 	readonly fixed: readonly string[];
 } {
@@ -228,7 +290,10 @@ function splitCanonicalForm(lemma: ValencyLemma): {
 }
 
 /** The `hasSepPrefix` Core Feature, when it really begins the head. */
-function separablePrefix(coreFeatures: unknown, head: string): string | null {
+export function separablePrefix(
+	coreFeatures: unknown,
+	head: string,
+): string | null {
 	if (
 		typeof coreFeatures !== "object" ||
 		coreFeatures === null ||
@@ -258,19 +323,20 @@ function slotPart(slot: FrameSlot): SlotPart[] {
 	if (
 		complement === undefined ||
 		alternatives.length > 0 ||
-		complement.kind === "Reflexive" ||
-		!("governedCase" in complement)
+		(complement.kind !== "Case" && complement.kind !== "Preposition")
 	)
 		return [];
-	const grammaticalCase = complement.governedCase;
-	if (grammaticalCase === "Nom") return [];
+	const grammaticalCase = CASE_SLOT_ORDER.find(
+		(rendered) => rendered === complement.governedCase,
+	);
+	if (grammaticalCase === undefined) return [];
 	return [
 		{
 			part: "Slot",
 			optional: slot.status === "Optional",
 			preposition:
 				complement.kind === "Preposition"
-					? complement.preposition.canonicalForm
+					? (complement.preposition?.canonicalForm ?? null)
 					: null,
 			case: grammaticalCase,
 			token: CASE_TOKEN[grammaticalCase],

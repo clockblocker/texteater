@@ -149,7 +149,7 @@
 							"hasSepPrefix": "leid"
 						}
 					},
-					"normalizedSurface": "tut leid",
+					"normalizedSurface": "leidtut",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -298,7 +298,7 @@
 							"hasSepPrefix": null
 						}
 					},
-					"normalizedSurface": "habe gesehen",
+					"normalizedSurface": "gesehen habe",
 					"spelling": {
 						"kind": "Canonical"
 					},

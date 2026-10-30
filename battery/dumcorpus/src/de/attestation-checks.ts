@@ -1,6 +1,7 @@
 import type { AttestationCheck } from "../attestation-checks.js";
 import { attestationAdpositionCaseIssues } from "./check-adposition-cases.js";
 import { germanArticleAgreementIssues } from "./check-article-agreement.js";
+import { attestationBaseOrderIssues } from "./check-base-order.js";
 import { attestationExpletiveSpellingIssues } from "./check-expletive-spelling.js";
 import { attestationParticleIssues } from "./check-particles.js";
 import { attestationPluralOnlyIssues } from "./check-plural-only.js";
@@ -14,4 +15,5 @@ export const germanAttestationChecks: readonly AttestationCheck<"de">[] = [
 	{ check: "ReflexiveSpelling", issues: attestationReflexiveSpellingIssues },
 	{ check: "ClosedPart", issues: attestationParticleIssues },
 	{ check: "PluralOnly", issues: attestationPluralOnlyIssues },
+	{ check: "BaseOrder", issues: attestationBaseOrderIssues },
 ];

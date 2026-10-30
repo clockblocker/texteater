@@ -204,7 +204,10 @@ function canonicalResolutionDeckCards(
 			language: canonical.surfaceLanguage,
 			normalizedSurface: canonical.normalizedSurface,
 		},
-		{ activeAnalysisKey: canonical.surfaceId },
+		{
+			activeAnalysisKey: canonical.surfaceId,
+			activeReadingId: canonical.readingId,
+		},
 	);
 	const attestation = canonicalCard(
 		requestId,

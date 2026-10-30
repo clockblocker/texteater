@@ -211,16 +211,19 @@ function pronounOf(
 
 /**
  * The word an Attestation's caption names: its Surface when the Surface
- * says something, and otherwise its Lemma by the bare Canonical Form. The
+ * says something, by `surfaceTitle` when the language prints one (German
+ * prints the slotted line, `jD mit jM zu tun hatte`), and otherwise its
+ * Lemma by the bare Canonical Form. The
  * Reading's title cites a lexical reflexive (`sich erinnern`), but the
  * caption names what the written form is a form of, and `sich` is no form
  * of `erinnern` (ADR 0052).
  */
 export function attestationNextTitle(
 	surface: Parameters<typeof surfaceSaysSomething>[0],
+	surfaceTitle: string = surface.normalizedSurface,
 ): string {
 	return surfaceSaysSomething(surface)
-		? surface.normalizedSurface
+		? surfaceTitle
 		: surface.lemma.canonicalForm;
 }
 

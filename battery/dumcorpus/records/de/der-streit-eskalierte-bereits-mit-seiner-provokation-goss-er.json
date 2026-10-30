@@ -170,7 +170,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "goss Öl ins Feuer",
+					"normalizedSurface": "Öl ins Feuer goss",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",

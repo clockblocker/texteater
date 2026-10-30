@@ -28,14 +28,14 @@ export function RouteNoteView({
 	activeAnalysisKey?: Id<"surfaces">;
 	/** The Segment the click that dealt an Attestation landed on. */
 	clickedSegmentIndex?: number;
-	/** The Reading the Deck that dealt a Lemma leads to. */
+	/** The Reading the Deck that dealt a Lemma or a Surface leads to. */
 	activeReadingId?: Id<"readings">;
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const visitorId = useAnonymousVisitorId();
 	const noteQuery = useQuery(
 		convexQuery(api.routeNotes.get, {
-			...routeNoteQueryArgs(target, activeAnalysisKey),
+			...routeNoteQueryArgs(target, activeAnalysisKey, activeReadingId),
 			visitorId,
 		}),
 	);
@@ -180,6 +180,7 @@ function PaginatedRouteNote({
 export function routeNoteQueryArgs(
 	target: RouteNoteTarget,
 	activeAnalysisKey?: Id<"surfaces">,
+	activeReadingId?: Id<"readings">,
 ) {
 	switch (target.kind) {
 		case "Lemma":
@@ -197,6 +198,9 @@ export function routeNoteQueryArgs(
 					normalizedSurface: target.normalizedSurface,
 					...(activeAnalysisKey !== undefined
 						? { activeAnalysisKey }
+						: {}),
+					...(activeReadingId !== undefined
+						? { activeReadingId }
 						: {}),
 				},
 			};

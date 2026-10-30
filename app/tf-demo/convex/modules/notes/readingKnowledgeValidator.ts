@@ -101,7 +101,7 @@ const clauseCorrelateValues = [
  * Adverbial, Predicative, Clause or Reflexive with no referent; Hebrew and
  * English ones are marked by function or position and preposition.
  */
-const valencySlotValidator = v.object({
+export const valencySlotValidator = v.object({
 	status: v.union(v.literal("Required"), v.literal("Optional")),
 	complements: v.array(
 		v.union(

@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { reflexiveSlotOf } from "../../../shared/reflexive-slot";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import {
@@ -16,6 +17,7 @@ import {
 } from "../../model/presentedDumling";
 import { familyValidator, kindValidator } from "../../model/validators";
 import { formationsValidator, loadFormations } from "./breakdown";
+import { loadReadingFrame, readingFrameValidator } from "./readingFrame";
 import { loadReflexiveSlot, reflexiveSlotValidator } from "./readingReflexive";
 import {
 	loadParticipialAdjectives,
@@ -72,6 +74,8 @@ const attestationRouteNoteValidator = v.object({
 		emojiDescription: v.optional(v.string()),
 		/** The Reading's Reflexive Slot, for its Citation (ADR 0052). */
 		reflexive: reflexiveSlotValidator,
+		/** The Reading's Valency Frame, for its Surface's slotted line (#1293). */
+		valency: readingFrameValidator,
 		target: readingTargetValidator,
 	}),
 });
@@ -95,6 +99,19 @@ const surfaceRouteNoteValidator = v.object({
 			lemmaId: v.id("lemmas"),
 			presented: presentedSurfaceValidator,
 			lemmaTarget: lemmaTargetValidator,
+		}),
+	),
+	/**
+	 * The Reading the Deck that dealt this Note leads to, with its Valency
+	 * Frame, so the analysis of its Lemma prints its slotted line (#1293).
+	 * Null when no Reading is in context.
+	 */
+	activeReading: v.union(
+		v.null(),
+		v.object({
+			readingId: v.id("readings"),
+			lemmaId: v.id("lemmas"),
+			valency: readingFrameValidator,
 		}),
 	),
 	continueCursor: v.string(),
@@ -151,6 +168,7 @@ type RouteNoteTarget =
 			readonly language: "de";
 			readonly normalizedSurface: string;
 			readonly activeAnalysisKey?: Id<"surfaces">;
+			readonly activeReadingId?: Id<"readings">;
 	  }
 	| { readonly kind: "Lemma"; readonly lemmaId: Id<"lemmas"> };
 
@@ -170,6 +188,7 @@ export async function loadRouteNote(
 			target.normalizedSurface,
 			contextCursor,
 			target.activeAnalysisKey,
+			target.activeReadingId,
 		);
 	}
 	return loadLemmaRouteNote(ctx, target.lemmaId, contextCursor);
@@ -202,6 +221,7 @@ async function loadAttestationRouteNote(
 		visitorId,
 	);
 	if (!source) return null;
+	const valency = await loadReadingFrame(ctx, occurrence.reading.readingKey);
 	return {
 		kind: "Attestation" as const,
 		target: {
@@ -217,10 +237,8 @@ async function loadAttestationRouteNote(
 		},
 		reading: {
 			emojiDescription: occurrence.reading.emojiDescription,
-			reflexive: await loadReflexiveSlot(
-				ctx,
-				occurrence.reading.readingKey,
-			),
+			reflexive: reflexiveSlotOf(valency ?? undefined),
+			valency,
 			target: {
 				kind: "Reading" as const,
 				readingId: occurrence.reading._id,
@@ -235,6 +253,7 @@ async function loadSurfaceRouteNote(
 	normalizedSurface: string,
 	contextCursor?: string,
 	activeAnalysisKey?: Id<"surfaces">,
+	activeReadingId?: Id<"readings">,
 ) {
 	const page = await ctx.db
 		.query("surfaces")
@@ -293,8 +312,31 @@ async function loadSurfaceRouteNote(
 		kind: "Surface" as const,
 		target: { kind: "Surface" as const, language, normalizedSurface },
 		analyses,
+		activeReading:
+			activeReadingId === undefined
+				? null
+				: await loadActiveReading(
+						ctx,
+						activeReadingId,
+						analyses.map(({ lemmaId }) => lemmaId),
+					),
 		continueCursor: page.continueCursor,
 		isDone: page.isDone,
+	};
+}
+
+/** The Reading in context, when it is a Reading of one of the analyses' Lemmas. */
+async function loadActiveReading(
+	ctx: QueryCtx,
+	readingId: Id<"readings">,
+	lemmaIds: readonly Id<"lemmas">[],
+) {
+	const reading = await ctx.db.get(readingId);
+	if (!reading || !lemmaIds.includes(reading.lemmaId)) return null;
+	return {
+		readingId: reading._id,
+		lemmaId: reading.lemmaId,
+		valency: await loadReadingFrame(ctx, reading.readingKey),
 	};
 }
 

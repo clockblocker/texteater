@@ -11,16 +11,24 @@ import {
 import { UnitTitle, unitTitleParts } from "../../../../caption/unit-title";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 
+type AttestationContext = Parameters<
+	GrammaticalDefaultRenderer<"Attestation">
+>[0];
+
 /**
  * An Attestation is the form exactly as it was met in a Scroll. Its title is
  * the whole unit as written, the clicked piece emphasised when a click dealt
  * it; the caption says what the written words are to the next Card in front
- * of it.
+ * of it. The caption names a Surface by its stored form unless the
+ * language prints it otherwise (`surfaceTitle`).
  */
-export const renderDefaultAttestationHeading = (({
-	noteData,
-	PresentationCapabilities,
-}) => {
+export function AttestationHeading({
+	context: { noteData, PresentationCapabilities },
+	surfaceTitle,
+}: {
+	readonly context: AttestationContext;
+	readonly surfaceTitle?: string;
+}) {
 	const { presented, source } = noteData;
 	const languages = captionLanguages(presented.surface.language);
 	const caption =
@@ -33,7 +41,7 @@ export const renderDefaultAttestationHeading = (({
 				segments: source.segments,
 				memberSegmentIndices: source.memberSegmentIndices,
 			},
-			attestationNextTitle(presented.surface),
+			attestationNextTitle(presented.surface, surfaceTitle),
 			languages,
 		);
 	return (
@@ -53,4 +61,4 @@ export const renderDefaultAttestationHeading = (({
 			caption={caption}
 		/>
 	);
-}) satisfies GrammaticalDefaultRenderer<"Attestation">;
+}

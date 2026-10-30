@@ -116,12 +116,16 @@ const bagOf = (surface: Dumling.Surface<"de">): Bag =>
 		: null) ?? {};
 
 /**
- * The form a met verb Surface spells. Its words are told apart by the
- * Lemma's Core and the Surface's bundle: the separable particle when it
- * stands apart and, in a periphrasis (`perfect`, `future`, `passive` or a
- * voice), the finite auxiliary. Word order is a clause's, so `etabliert hat`
- * reads as `hat etabliert`. Its Surface leaves a lexical reflexive out
- * (ADR 0052).
+ * The form a met verb Surface spells. A Surface is its base-order form
+ * (system ADR 0056): its verbal complex comes last in a subordinate
+ * clause's order, the finite word last (`etabliert hat`, `anfängt`), or
+ * first before an Ersatzinfinitiv (`hat reparieren lassen`); an imperative
+ * keeps its own order (`komm herein`). Its words are told apart by the
+ * Lemma's Core and the Surface's bundle: the separable particle, standing
+ * apart (`übrig blieb`, `geh hinaus`) or joined to a finite word that is
+ * no auxiliary (`anfängt`), and, in a periphrasis (`perfect`, `future`,
+ * `passive` or a voice), the finite auxiliary. Its Surface leaves a
+ * lexical reflexive out (ADR 0052).
  */
 function verbFormOf(surface: Dumling.Surface<"de">): GermanVerbForm {
 	const core: Bag = surface.lemma.coreFeatures;
@@ -133,27 +137,40 @@ function verbFormOf(surface: Dumling.Surface<"de">): GermanVerbForm {
 	const words = surface.normalizedSurface.split(" ").filter(Boolean);
 	let split: string | undefined;
 	const rest: string[] = [];
-	for (const [index, word] of words.entries()) {
-		const folded = foldCase(word, "de");
-		if (index > 0 && split === undefined && folded === particle)
+	for (const word of words) {
+		if (
+			words.length > 1 &&
+			split === undefined &&
+			foldCase(word, "de") === particle
+		)
 			split = word;
 		else rest.push(word);
 	}
-	const periphrastic = ["perfect", "future", "passive", "voice"].some(
-		(name) => bag[name] !== null && bag[name] !== undefined,
-	);
+	const periphrastic =
+		rest.length > 1 &&
+		["perfect", "future", "passive", "voice"].some(
+			(name) => bag[name] !== null && bag[name] !== undefined,
+		);
 	const finiteAt =
 		bag.verbForm !== "Fin"
 			? -1
-			: periphrastic && rest.length > 1
-				? Math.max(
-						0,
-						rest.findIndex((word) =>
-							AUXILIARY.test(foldCase(word, "de")),
-						),
-					)
-				: 0;
-	const finite = finiteAt < 0 ? undefined : rest[finiteAt];
+			: bag.mood === "Imp"
+				? 0
+				: periphrastic
+					? lastAuxiliaryOf(rest)
+					: rest.length - 1;
+	let finite = finiteAt < 0 ? undefined : rest[finiteAt];
+	if (
+		finite !== undefined &&
+		split === undefined &&
+		particle !== undefined &&
+		!periphrastic &&
+		foldCase(finite, "de").startsWith(particle) &&
+		finite.length > particle.length
+	) {
+		split = finite.slice(0, particle.length);
+		finite = finite.slice(particle.length);
+	}
 	const others = rest.filter((_, index) => index !== finiteAt).join(" ");
 	return {
 		kind: "Verb",
@@ -161,6 +178,17 @@ function verbFormOf(surface: Dumling.Surface<"de">): GermanVerbForm {
 		...(others === "" ? {} : { nonFinite: others }),
 		...(split === undefined ? {} : { particle: split }),
 	};
+}
+
+/**
+ * Where a periphrasis's finite word stands: its last auxiliary (`war` of
+ * `verschifft worden war`, `wird` of `angekommen sein wird`), else its last
+ * word (`geliefert bekommt`).
+ */
+function lastAuxiliaryOf(words: readonly string[]): number {
+	for (let index = words.length - 1; index >= 0; index--)
+		if (AUXILIARY.test(foldCase(words[index] ?? "", "de"))) return index;
+	return words.length - 1;
 }
 
 /**

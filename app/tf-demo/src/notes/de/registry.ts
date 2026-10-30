@@ -1,6 +1,5 @@
 import type { RendererRegistry } from "../universal/blocks/renderer-registry";
 import { renderDefaultAttestationFusion } from "../universal/blocks/renderers/attestation/fusion/default";
-import { renderDefaultAttestationHeading } from "../universal/blocks/renderers/attestation/heading/default";
 import { renderDefaultAttestationRoutes } from "../universal/blocks/renderers/attestation/routes/default";
 import { renderDefaultAttestationSource } from "../universal/blocks/renderers/attestation/source-contexts/default";
 import { renderDefaultLemmaFormations } from "../universal/blocks/renderers/lemma/formations/default";
@@ -16,11 +15,12 @@ import { renderDefaultReadingTranslations } from "../universal/blocks/renderers/
 import { renderDefaultShadowFormations } from "../universal/blocks/renderers/shadow/formations/default";
 import { renderDefaultShadowHeading } from "../universal/blocks/renderers/shadow/heading/default";
 import { renderDefaultShadowRelations } from "../universal/blocks/renderers/shadow/relations/default";
-import { renderDefaultSurfaceHeading } from "../universal/blocks/renderers/surface/heading/default";
 import { renderDefaultSurfaceRoutes } from "../universal/blocks/renderers/surface/routes/default";
+import { renderHeadingDeAttestation } from "./block-renderer-overrides/attestation/heading";
 import { renderHeadingDeLexemeNoun } from "./block-renderer-overrides/reading/heading/lexeme-noun";
 import { renderHeadingDeLexemeVerb } from "./block-renderer-overrides/reading/heading/lexeme-verb";
 import { renderHeadingDeValent } from "./block-renderer-overrides/reading/heading/valency";
+import { renderHeadingDeSurface } from "./block-renderer-overrides/surface/heading";
 import {
 	renderDeAdpositionSourceContexts,
 	renderDeAdpositionValency,
@@ -108,7 +108,7 @@ const LEMMA_ROUTE = {
 	Formations: renderDefaultLemmaFormations,
 };
 const ATTESTATION_ROUTE = {
-	Heading: renderDefaultAttestationHeading,
+	Heading: renderHeadingDeAttestation,
 	SourceContexts: renderDefaultAttestationSource,
 	Fusion: renderDefaultAttestationFusion,
 	Routes: renderDefaultAttestationRoutes,
@@ -261,7 +261,7 @@ const SHADOW = {
 	},
 } satisfies RendererRegistry<"de", "Shadow">;
 const SURFACE = {
-	Heading: renderDefaultSurfaceHeading,
+	Heading: renderHeadingDeSurface,
 	Routes: renderDefaultSurfaceRoutes,
 } satisfies RendererRegistry<"de", "Surface">;
 

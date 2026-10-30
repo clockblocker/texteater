@@ -167,9 +167,9 @@ const finite = {
 };
 
 describe("met Surfaces", () => {
-	it("read a split particle apart, keyed as the derived form", () => {
+	it("read a joined particle apart, keyed as the derived form", () => {
 		const abfahren = verb("abfahren", { hasSepPrefix: "ab" });
-		const met = pack.formOfSurface(surface(abfahren, "fährt ab", finite));
+		const met = pack.formOfSurface(surface(abfahren, "abfährt", finite));
 		expect(met).toEqual({ kind: "Verb", finite: "fährt", particle: "ab" });
 		expect(pack.codec.key(met)).toBe(
 			pack.codec.key({
@@ -183,7 +183,7 @@ describe("met Surfaces", () => {
 		// (ADR 0052).
 		const vorbereiten = verb("vorbereiten", { hasSepPrefix: "vor" });
 		const bereitet = pack.formOfSurface(
-			surface(vorbereiten, "bereitet vor", finite),
+			surface(vorbereiten, "vorbereitet", finite),
 		);
 		expect(bereitet).toEqual({
 			kind: "Verb",
@@ -209,7 +209,7 @@ describe("met Surfaces", () => {
 		const perfect = { ...finite, perfect: "Yes" };
 		const fahren = verb("fahren");
 		const met = pack.formOfSurface(
-			surface(fahren, "hat gefahren", perfect),
+			surface(fahren, "gefahren hat", perfect),
 		);
 		expect(met).toEqual({
 			kind: "Verb",
@@ -222,6 +222,69 @@ describe("met Surfaces", () => {
 				.map(({ text }) => text)
 				.join(""),
 		).toBe("hat gefahren");
+	});
+
+	it("read the finite word last, an Ersatzinfinitiv's first, and an imperative's first", () => {
+		const reparieren = verb("reparieren");
+		expect(
+			pack.formOfSurface(
+				surface(reparieren, "repariert worden war", {
+					...finite,
+					tense: "Past",
+					perfect: "Yes",
+					voice: "Pass",
+					passive: "Process",
+				}),
+			),
+		).toEqual({
+			kind: "Verb",
+			finite: "war",
+			nonFinite: "repariert worden",
+		});
+		expect(
+			pack.formOfSurface(
+				surface(reparieren, "hat reparieren lassen", {
+					...finite,
+					perfect: "Yes",
+					voice: "Cau",
+				}),
+			),
+		).toEqual({
+			kind: "Verb",
+			finite: "hat",
+			nonFinite: "reparieren lassen",
+		});
+		const liefern = verb("liefern");
+		expect(
+			pack.formOfSurface(
+				surface(liefern, "geliefert bekommt", {
+					...finite,
+					voice: "Pass",
+					passive: "Recipient",
+				}),
+			),
+		).toEqual({ kind: "Verb", finite: "bekommt", nonFinite: "geliefert" });
+		const hereinkommen = verb("hereinkommen", { hasSepPrefix: "herein" });
+		expect(
+			pack.formOfSurface(
+				surface(hereinkommen, "komm herein", {
+					verbForm: "Fin",
+					mood: "Imp",
+					person: "2",
+					number: "Sing",
+				}),
+			),
+		).toEqual({ kind: "Verb", finite: "komm", particle: "herein" });
+		// A spaced particle stands before the verb, as the Canonical Form has it.
+		const uebrigBleiben = verb("übrig bleiben", { hasSepPrefix: "übrig" });
+		expect(
+			pack.formOfSurface(
+				surface(uebrigBleiben, "übrig blieb", {
+					...finite,
+					tense: "Past",
+				}),
+			),
+		).toEqual({ kind: "Verb", finite: "blieb", particle: "übrig" });
 	});
 
 	it("read a noun's spelling as one word with its cell's article, folded for its key", () => {

@@ -609,7 +609,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "hat gesagt",
+					"normalizedSurface": "gesagt hat",
 					"spelling": {
 						"kind": "Canonical"
 					},
