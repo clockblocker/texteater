@@ -24,9 +24,11 @@ seinen Sohn` opens the governor.
 
 A German pronominal adverb (`darauf`, `dafür`, `damit`, the `wo(r)-` and
 `hier-` compounds) is its own single-member ADV Lexeme. It is never a governed
-member of the governing word, and never a fixed Locution member with its
-governor outside a genuine idiom. The government relation stays on the
-governor. A split pronominal adverb, or a split `da …` or `wo …` with `hin` or
+member of the governing word. It joins a Locution only where the Locution's
+wording holds it: a genuine idiom that fixes the adverb, or a Locution whose
+fixed preposition it realizes, where it stays one word: `damit` is one member
+of `mit zu tun haben` in `hatte es damit zu tun` ([ADR 0056](./0056-store-a-german-surface-in-base-order-and-project-its-slots.md)). The government
+relation stays on the governor. A split pronominal adverb, or a split `da …` or `wo …` with `hin` or
 `her`, is one target of the whole adverb, with two members: *Da weiß ich
 nichts von* gives [Da, von] ADV `davon`, and *Wo gehst du hin?* gives [Wo,
 hin] ADV `wohin`. Split or not, it never joins the word that governs its

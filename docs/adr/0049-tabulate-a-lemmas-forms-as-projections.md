@@ -109,9 +109,10 @@ Segment stage cuts fused words
 and Grammatical Resolution records the pieces as Fused members
 ([ADR 0035](./0035-attest-articles-and-fused-words-segment-by-segment.md)),
 so `im Wald` reaches Dumdict as ADP `in` and `Wald` Dat Sg. A periphrastic or
-discontinuous form (`hat geschlossen`, `fährt ab`) is one Surface with a
+discontinuous form (`hat … geschlossen`, `fährt … ab`) is one Surface with a
 whole-verbal bundle
-([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)). The
+([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)),
+stored in base order (`geschlossen hat`, `abfährt`; [ADR 0056](./0056-store-a-german-surface-in-base-order-and-project-its-slots.md)). The
 pack's form type carries its parts and its display joins them, so Dumdict
 never models them.
 

@@ -155,8 +155,18 @@ _Avoid_: Headword, Vocable, Page, Homograph Set
 
 **Surface**:
 A reusable grammatical form that realizes exactly one Lemma under one
-analysis. A Morpheme's Surfaces are its allomorphs, spelled Canonical. See
-[ADR 0040] for nouns, [ADR 0022] for verbs and [ADR 0051] for Morphemes.
+analysis. A German Surface is its Base-Order Form; its slots are shown, never
+stored. A Morpheme's Surfaces are its allomorphs, spelled Canonical. See
+[ADR 0040] for nouns, [ADR 0022] for verbs, [ADR 0056] for word order and
+[ADR 0051] for Morphemes.
+
+**Base-Order Form**:
+What a German Surface stores: its Lemma's fixed words, inflected, in the
+Canonical Form's order, with the verbal complex last (`mit zu tun hatte`).
+Word-order variants share it, and inflection alone turns it into the
+Canonical Form. The slotted line (`jD mit jM zu tun hatte`) is a projection
+of it and the Reading's Valency Frame. See [ADR 0056].
+_Avoid_: sentence order, slotted Surface, for what is stored
 
 **Variant**:
 A spelling of a Surface's Lemma that is neither its standard spelling nor a
@@ -249,3 +259,4 @@ _Avoid_: Paradigm Cell, slot
 [ADR 0050]: ../../docs/adr/0050-break-a-reading-down-into-its-constituents.md
 [ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md
 [ADR 0052]: ../../docs/adr/0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md
+[ADR 0056]: ../../docs/adr/0056-store-a-german-surface-in-base-order-and-project-its-slots.md

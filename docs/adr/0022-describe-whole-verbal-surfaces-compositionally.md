@@ -17,9 +17,17 @@ process passive, indicative third singular. Under a separate modal,
 `geschrieben worden sein` is a perfect passive infinitive with no finite
 tense, mood, person or agreement inherited from the modal.
 
+The Surface stores the verbal complex last, in subordinate-clause order
+([ADR 0056](./0056-store-a-german-surface-in-base-order-and-project-its-slots.md)):
+`ist ... geschrieben worden` is `geschrieben worden ist`, `wird ... reisen`
+is `reisen wird`, and a separable verb is joined where its Canonical Form
+joins it (`fängt ... an` is `anfängt`). An imperative keeps its own order
+(`komm herein`). An Ersatzinfinitiv puts the finite auxiliary first:
+`hat reparieren lassen`.
+
 Meaning-bearing modals remain separate targets and own their scoped
 grammatical auxiliaries: `hat ... schreiben müssen` has `[hat, müssen]` and
-`[schreiben]`. Selecting a reviewed modal identity does not force a singleton.
+`[schreiben]`, with the Surfaces `hat müssen` and `schreiben`. Selecting a reviewed modal identity does not force a singleton.
 The contextual VERB/AUX/ADJ boundary in [ADR 0036](./0036-make-adjectival-german-participles-adj-linked-to-their-verb.md) determines the route: a participle is verbal only in a perfect or passive, and the state passive is the copula `sein` plus an ADJ.
 
 `perfect` and `future` use `Yes` for a present construction and null for its
@@ -43,6 +51,7 @@ Analysis Target and sets `expletive: Subject`. Its occurrence spelling is retain
 as `expletiveEvidence`, aligned with an owned member. `es gibt` and `es gab` retain
 Lemma `geben`; `es regnet` retains `regnen`. Referential, positional, anticipatory
 and object `es` remain outside this composition rule. Word order does not change
-these boundaries. Person and number remain verbal features; existential meaning
+these boundaries, and the expletive leads the Surface: `regnet es` and `es
+regnet` are both `es regnet` (ADR 0056). Person and number remain verbal features; existential meaning
 belongs to a Reading. The derived pronoun uses an exact authored nonreferential
 Reading of the existing nominative `es` Lemma.

@@ -152,6 +152,14 @@ The invariant reciprocal pronoun `einander`: one Lemma, with case unmarked.
 See [ADR 0044].
 _Avoid_: Case-specific `einander`
 
+**Fixed Pronominal Adverb**:
+A pronominal adverb (`damit`, `darauf`, `wovon`) that realizes a Locution's
+fixed preposition: one member of the Locution, whose Surface takes the
+preposition (`hatte es damit zu tun` is `mit zu tun hatte`). A pronominal
+adverb that only stands for a governed slot is an ADV unit of its own. See
+[ADR 0029] and [ADR 0056].
+_Avoid_: split pronominal adverb, for this one-member use
+
 **Reciprocal Pronominal Adverb**:
 An ADV Lexeme whose whole form joins a preposition to `einander`. See
 [ADR 0029].
@@ -209,6 +217,7 @@ _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 [ADR 0051]: ../../docs/adr/0051-copy-school-morphemic-analysis-into-a-readings-morphemes.md
 [ADR 0052]: ../../docs/adr/0052-record-a-lexical-reflexive-on-the-reading-never-in-the-canonical-form.md
 [ADR 0053]: ../../docs/adr/0053-list-each-adpositions-cases-in-an-authored-adp-case-table.md
+[ADR 0056]: ../../docs/adr/0056-store-a-german-surface-in-base-order-and-project-its-slots.md
 [Dumcorpus ADR 0001]: ./docs/adr/0001-assess-grundform-with-language-owned-rules.md
 [Dumcorpus ADR 0002]: ./docs/adr/0002-count-a-knowledge-aspect-left-out-of-coverage-as-unreviewed.md
 [Dumgen ADR 0007]: ../dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md

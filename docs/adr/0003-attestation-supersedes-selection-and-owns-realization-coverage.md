@@ -9,13 +9,20 @@ identityless, click-independent occurrence value with ordered attested members,
 per-member orthography, realization coverage, and one Surface. Application
 coordinates such as sentence IDs, Segment offsets, clicks, and marked context
 stay outside Dumling. Coverage belongs to the occurrence because discontinuity
-or omitted entity-owned material does not change Surface identity.
+or omitted entity-owned material does not change Surface identity. Word order
+does not change it either: a German Surface is its base-order form, so
+`Damit hatte es zu tun` and `hatte es damit zu tun` attest one Surface, `mit
+zu tun hatte`
+([ADR 0056](./0056-store-a-german-surface-in-base-order-and-project-its-slots.md)).
 
 **Members.** Every fixed realized component of a unit is one member, aligned
 with its position in the sentence, so a click on any member reaches the same
 unit, found by position and never by spelling. Free arguments, modifiers and a
-reflexive the verb does not require stay units of their own. A split unit, or
-one with free words between its members, is still Full.
+reflexive the verb does not require stay units of their own, and so does a
+referential `es`: the `es` of `hatte es damit zu tun` is no member of `mit zu
+tun haben`. A pronominal adverb realizing a Locution's fixed preposition is
+one member (`damit`). A split unit, or one with free words between its
+members, is still Full.
 
 **Coverage.** An Attestation is Partial only when fixed material is really
 missing from the sentence and the identity is still clear: an article the

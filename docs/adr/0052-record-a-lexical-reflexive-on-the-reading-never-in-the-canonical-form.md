@@ -160,9 +160,10 @@ decided on [#1285](https://github.com/clockblocker/texteater/issues/1285) on
 2026-10-25.
 
 `normalizedSurface` leaves the reflexive out, as it leaves out governed
-prepositions: `erinnert`, not `erinnert sich`, `macht Sorgen`, not `macht
-sich Sorgen`, and `war außer`, not `war außer sich`. A Surface is a form of
-its Lemma, and `sich` is no form of `erinnern`, so the Grundform check
+prepositions, and keeps the base order
+([ADR 0056](./0056-store-a-german-surface-in-base-order-and-project-its-slots.md)):
+`erinnert`, not `erinnert sich`, `Sorgen macht`, not `sich Sorgen macht`, and
+`außer war`, not `außer sich war`. A Surface is a form of its Lemma, and `sich` is no form of `erinnern`, so the Grundform check
 compares bare forms. `segment.inUnits`
 doesn't change. It decides membership and routes, it writes no Canonical Form,
 and the reflexive is still a member.

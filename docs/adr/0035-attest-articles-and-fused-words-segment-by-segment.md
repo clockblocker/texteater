@@ -89,7 +89,9 @@ article of its noun (`[s, Ende]`). A unit that is not a noun may own every
 piece of a fused word, and the one-article rule for nouns does not apply to it:
 the Locution ADV `zum Teil` is `[zu, m, Teil]`, and the Locution VERB
 `das Eis brechen` is `[brach, das, Eis]`
-([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)).
+([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)), with
+the base-order Surface `das Eis brach`
+([ADR 0056](./0056-store-a-german-surface-in-base-order-and-project-its-slots.md)).
 
 **An infinitive's infixed `zu` is a Fusion piece.** `abzuspannen` is the
 Segments `ab`, `zu` and `spannen`. The verb attests its prefix and stem

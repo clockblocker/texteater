@@ -151,8 +151,12 @@ Reading stays its Emoji Description
 articles, number and possessives of the words that do not inflect, when
 grammar causes the change and every fixed word is present: `Die Entscheidung
 wurde gestern getroffen`, `Sie trafen mehrere Entscheidungen`, `Sie nahm ihren
-Hut`. `normalizedSurface` records the wording and no features describe it. A
-change of word breaks the Locution (`einen Faden` while sewing). The Canonical
+Hut`. `normalizedSurface` records the wording in base order, and no
+features describe it: `die Entscheidung getroffen wurde`, `mehrere
+Entscheidungen trafen`, `ihren Hut nahm`
+([ADR 0056](./0056-store-a-german-surface-in-base-order-and-project-its-slots.md)).
+A Locution whose Canonical Form fixes another order keeps it (`da liegt der
+Hase im Pfeffer`), and so does a Saying. A change of word breaks the Locution (`einen Faden` while sewing). The Canonical
 Form is the dictionary's citation form less its valency (`eine Entscheidung
 treffen`, `seinen Hut nehmen`, `den Kopf zerbrechen`). Open slots and a
 lexical reflexive belong to the Valency Frame: `auf den Keks gehen` has its

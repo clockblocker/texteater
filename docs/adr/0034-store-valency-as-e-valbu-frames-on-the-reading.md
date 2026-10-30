@@ -202,14 +202,13 @@ preposition joins its governor and records no complement or case
 Analysing the complement at intake was rejected, since its case changes
 neither where a click routes nor what drill-down offers. So was keeping an
 intake analysis beside the grammar one, since the two can disagree on one
-occurrence. Intake may be tested proposing a valency hint, which is adopted
-only if it is accurate and does not hurt grouping accuracy, cost or latency.
+occurrence.
 
 A governed preposition stays an Attestation member, so clicking it still
 routes to the governor: `aus Angst vor Hunden` gives `[Angst, vor]` NOUN.
-`normalizedSurface` leaves out the governed prepositions and the lexical
-reflexive that `valencyEvidence` names: `wartet`, not `wartet auf`; `pass
-auf`, not `pass auf auf`; `erinnert`, not `erinnert sich`. The
+The Surface leaves out the governed prepositions and the lexical reflexive
+that `valencyEvidence` names: `wartet`, not `wartet auf`; `erinnert`, not
+`erinnert sich` ([ADR 0056](./0056-store-a-german-surface-in-base-order-and-project-its-slots.md)). The
 preposition inside an Adverbial is not a member: in `legt das Buch auf den
 Tisch` and `wohnt in Bonn`, the verb requires a direction or a place, not
 `auf` or `in`. Neither is the `als` or `für` that marks a Predicative, nor a
@@ -238,6 +237,8 @@ Some words realize a governed preposition and its filler at once: German
 its own unit, and the governor's evidence names the preposition's Lemma as
 the complement with no member. German pronominal adverbs stay ADV Lexemes
 ([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)).
+One realizing a Locution's fixed preposition is a member, and the evidence
+names it: `damit` in `hatte es damit zu tun` (ADR 0056).
 How Hebrew `לו` itself is analysed belongs to areas 2 and 3 of
 [#595](https://github.com/clockblocker/texteater/issues/595).
 
@@ -251,7 +252,9 @@ splits a separable prefix off by a bar: `auf|passen`. A Reflexive Slot
 prints `sich`, never stored in the Canonical Form, where the Reading's
 Citation puts it (ADR 0052): `sich (an jN) erinnern`, `es sich gemütlich
 machen`. A slot whose preposition is a Locution's Fixed word follows it:
-`mit jM zu tun haben`. A Reading has no separate Valency Block.
+`mit jM zu tun haben`. A Surface's slotted line, `jD (auf jN) wartet`, is
+printed the same way and never stored (ADR 0056). A Reading has no separate
+Valency Block.
 
 ```text
 (auf `jN`) auf|passen                   aufpassen
@@ -265,9 +268,8 @@ stolz (auf `jN`)                        stolz
 ## Consequences
 
 - [ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)
-  keeps government out of Lemma identity and pronominal adverbs as ADV
-  Lexemes. This ADR decides where government is stored instead: the frame on
-  the Reading and `valencyEvidence` on the Attestation.
+  keeps government out of Lemma identity. This ADR stores it in the frame on
+  the Reading and in `valencyEvidence` on the Attestation.
 - Valency may come from the sense alone. The frame is proposed once, by the
   Knowledge call that creates the Reading, so a guess can be wrong and is
   fixed through Correct. Guessing valency from the sense in every sentence

@@ -73,14 +73,17 @@ it belongs to the coordinated verb nearer to it:
   aufgespannt*, `[hatte, aufgesetzt]` is VERB `aufsetzen`, and `aufspannen`
   is `[aufgespannt]`, Partial.
 - In *Er stieg aus und gleich wieder ein*, `[stieg, aus]` is VERB
-  `aussteigen` with Full coverage, and `einsteigen` is `[ein]`, Partial.
+  `aussteigen` with Full coverage and the Surface `ausstieg`, and
+  `einsteigen` is `[ein]`, Partial.
 
 The shared word still counts toward the Partial unit's features, as a shared
 article gives its noun a case. The Surface of `aufgespannt` describes the
 whole pluperfect
 ([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)), finite
-Past, third person singular, `perfect: Yes`, while its members and
-`normalizedSurface` hold only `aufgespannt`. The Surface of `ein` is finite
+Past, third person singular, `perfect: Yes`, while its members and its
+base-order `normalizedSurface`
+([ADR 0056](./0056-store-a-german-surface-in-base-order-and-project-its-slots.md))
+hold only `aufgespannt`. The Surface of `ein` is finite
 Past, third person singular. Which verb owns the shared word in other word
 orders is settled by paired gold, not by a first-conjunct rule.
 
