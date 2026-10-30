@@ -51,7 +51,7 @@ export const rules = {
 	routine: ["de/routine-formula-is-intj", "32797f3b5f083780"],
 	pronOrDet: ["de/pron-or-det-by-use", "b7ac2bf4eaaf25be"],
 	splitAdverb: ["de/split-adverb-is-one-target", "05ddf27450fc5104"],
-	pronominalAdverb: ["de/pronominal-adverb-stands-alone", "1b11d9ee80ce12bd"],
+	pronominalAdverb: ["de/pronominal-adverb-stands-alone", "7f889649dfebcfb7"],
 } as const satisfies Readonly<Record<string, Cite>>;
 
 export const registry = paragraphRegistry("de/resolve-grammar");

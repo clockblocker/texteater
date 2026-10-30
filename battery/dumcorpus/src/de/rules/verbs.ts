@@ -167,7 +167,7 @@ export const verbs: Rule[] = [
 	{
 		id: "de/pronominal-adverb-stands-alone",
 		statement:
-			"A pronominal adverb (darauf, davon, dazu, damit, worauf, hierfür) stands for a whole prepositional phrase, or for a clause it anticipates as a correlate, and is an ADV target of its own. Written as one word, it is a single-member ADV; split, it is one ADV target with two members: Da weiß ich nichts von gives [Da, von] ADV davon (de/split-adverb-is-one-target). Either way it never joins a verb or adjective, even one that governs the preposition inside it: wartet darauf gives [wartet] VERB and [darauf] ADV. The governor's valency evidence still records that slot, with no member.",
+			"A pronominal adverb (darauf, davon, dazu, damit, worauf, hierfür) stands for a whole prepositional phrase, or for a clause it anticipates as a correlate, and is an ADV target of its own. Written as one word, it is a single-member ADV; split, it is one ADV target with two members: Da weiß ich nichts von gives [Da, von] ADV davon (de/split-adverb-is-one-target). It never joins a verb or adjective that only governs the preposition inside it: wartet darauf gives [wartet] VERB and [darauf] ADV, and the governor's valency evidence records that slot with no member. Where a Locution's wording holds its preposition, it is a member that marks the slot: hatte damit zu tun gives [hatte, damit, zu, tun] Locution mit zu tun haben, its valency evidence names damit as the mit slot's marker, and its Surface is mit zu tun hatte.",
 		adrs: ["ADR-0029", "ADR-0034"],
 		routes: lexeme("ADV"),
 		records: [

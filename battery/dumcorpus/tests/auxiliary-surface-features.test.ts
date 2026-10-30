@@ -20,7 +20,7 @@ test("each AUX use's features make a German VERB Surface Dumling accepts", () =>
 		const surface = {
 			unitKind: "Surface",
 			language: "de",
-			normalizedSurface: "wird gemacht",
+			normalizedSurface: "gemacht wird",
 			spelling: { kind: "Canonical" },
 			surfaceFeatures: null,
 			lemma: {

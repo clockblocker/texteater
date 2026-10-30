@@ -90,6 +90,48 @@ function complexIssue(complex: readonly string[], bag: Bag): string | null {
 }
 
 /**
+ * Why `stored` does not read as `cited` with one cited word, the verb,
+ * standing for a verbal complex in subordinate order; null when it does.
+ * The Canonical Form's own finite word stays as cited (`da liegt der Hase
+ * im Pfeffer`).
+ */
+function orderIssue(
+	stored: readonly string[],
+	cited: readonly string[],
+	bag: Bag,
+): string | null {
+	let issue: string | undefined;
+	for (const [verbAt, verb] of cited.entries())
+		for (let start = 0; start < stored.length; start++)
+			for (let end = start + 1; end <= stored.length; end++) {
+				const complex = stored.slice(start, end);
+				if (
+					!spellsFixedWords(
+						stored.slice(0, start),
+						cited.slice(0, verbAt),
+					) ||
+					!spellsFixedWords(
+						stored.slice(end),
+						cited.slice(verbAt + 1),
+					)
+				)
+					continue;
+				if (
+					complex.length === 1 &&
+					fold(complex[0] ?? "") === fold(verb)
+				)
+					return null;
+				const found = complexIssue(complex, bag);
+				if (found === null) return null;
+				issue ??= found;
+			}
+	return (
+		issue ??
+		"its fixed words and verbal complex do not stand in the Canonical Form's order"
+	);
+}
+
+/**
  * Where a German verbal Surface's base-order form (system ADR 0056) fails
  * to spell its Lemma's Canonical Form: with the verbal complex inflected
  * back to the infinitive, it reads as the Canonical Form, so the fixed
@@ -124,33 +166,12 @@ export function attestationBaseOrderIssues(
 			];
 		stored = stored.slice(1);
 	}
-	const issues: string[] = [];
-	for (const [verbAt, verb] of cited.entries()) {
-		const before = cited.slice(0, verbAt);
-		const after = cited.slice(verbAt + 1);
-		for (let start = 0; start <= stored.length; start++)
-			for (let end = start + 1; end <= stored.length; end++) {
-				const complex = stored.slice(start, end);
-				if (
-					!spellsFixedWords(stored.slice(0, start), before) ||
-					!spellsFixedWords(stored.slice(end), after)
-				)
-					continue;
-				// The Canonical Form's own finite word stays as cited (`da liegt der Hase im Pfeffer`).
-				if (
-					complex.length === 1 &&
-					fold(complex[0] ?? "") === fold(verb)
-				)
-					return [];
-				const issue = complexIssue(complex, bag);
-				if (issue === null) return [];
-				issues.push(issue);
-			}
-	}
+	const issue = orderIssue(stored, cited, bag);
+	if (issue === null) return [];
 	return [
 		{
 			path: "surface.normalizedSurface",
-			message: `${surface.normalizedSurface} is not the base-order form of ${surface.lemma.canonicalForm}${issues[0] ? `: ${issues[0]}` : ": its fixed words and verbal complex do not stand in the Canonical Form's order"}`,
+			message: `${surface.normalizedSurface} is not the base-order form of ${surface.lemma.canonicalForm}: ${issue}`,
 		},
 	];
 }

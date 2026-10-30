@@ -112,7 +112,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "alle Hände voll zu tun haben spells zu in its Canonical Form, so zu is a member of the Locution, not a PART of its own (de/bare-infinitive-zu), and the normalized Surface keeps it: hat alle Hände voll zu tun. The expression needs this zu in its slot, so it is fixed (de/fixed-member-test). mit dem Umzug and die Familie are free. Ruled 2026-10-02 (#701, grouping audit Q4)."
+				"rationale": "alle Hände voll zu tun haben spells zu in its Canonical Form, so zu is a member of the Locution, not a PART of its own (de/bare-infinitive-zu), and the normalized Surface keeps it: alle Hände voll zu tun hat. The expression needs this zu in its slot, so it is fixed (de/fixed-member-test). mit dem Umzug and die Familie are free. Ruled 2026-10-02 (#701, grouping audit Q4)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

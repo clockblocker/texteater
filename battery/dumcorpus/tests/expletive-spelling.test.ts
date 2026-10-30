@@ -20,7 +20,7 @@ const fusedEs = (attested: string, spelling: string, surface = "es") => ({
 const gehtEs = {
 	unitKind: "Surface",
 	language: "de",
-	normalizedSurface: "geht es",
+	normalizedSurface: "es geht",
 	spelling: { kind: "Canonical" },
 	surfaceFeatures: null,
 	lemma: {

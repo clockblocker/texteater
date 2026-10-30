@@ -39,7 +39,7 @@
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
-				"hash": "1b11d9ee80ce12bd"
+				"hash": "7f889649dfebcfb7"
 			},
 			{
 				"rule": "de/expletive-es-joins-its-verb",

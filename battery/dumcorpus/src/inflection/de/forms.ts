@@ -64,7 +64,7 @@ function wordsOf(form: GermanForm): string[] {
 
 /**
  * A form's key: its words without the Context a cell shows beside them,
- * folded as German folds letter case. A met `fährt ab` and a derived
+ * folded as German folds letter case. A met `abfährt` and a derived
  * `er fährt … ab` are one form.
  */
 export function germanFormKey(form: GermanForm): string {
