@@ -20,7 +20,7 @@ import { translation } from "./translation-prompts.js";
 /** The Rules the accumulation prompts cite, at the statement hashes they were checked against. */
 const rules = {
 	meaning: ["de/emoji-description-names-the-meaning", "5532d94dbbc3bb71"],
-	translation: ["de/translation-gives-the-equivalent", "a1b51c3aa81cde39"],
+	translation: ["de/translation-gives-the-equivalent", "3003c6d40e2db2dc"],
 	distinct: [
 		"de/distinct-concepts-get-distinct-readings",
 		"434871d7862a9fb0",

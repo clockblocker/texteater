@@ -20,7 +20,7 @@ import { type Cite, paragraphRegistry } from "../../prompt-paragraphs.js";
 /** The Rules the translation paragraphs cite, at the statement hashes they were checked against. */
 const rules = {
 	meaning: ["de/emoji-description-names-the-meaning", "5532d94dbbc3bb71"],
-	translation: ["de/translation-gives-the-equivalent", "a1b51c3aa81cde39"],
+	translation: ["de/translation-gives-the-equivalent", "3003c6d40e2db2dc"],
 	multiword: [
 		"de/multiword-unit-describes-its-whole-meaning",
 		"99996175abb4200d",

@@ -16,7 +16,9 @@ piece has a kind and a text:
   `к`;
 - a Slot is the placeholder its object fills, in the language's own
   dictionary form, which the model chooses: `something`, `someone`,
-  `чему-то`, `кого-то`;
+  `чему-то`, `кого-то`. Every object the equivalent takes in the meaning
+  gets one, a plain direct object too (*forgive* `someone`, *защищать*
+  `кого-то`), not only the object of a preposition;
 - Text is every other word: `have to do`, `иметь отношение`.
 
 *have to do* `with` `something` is three pieces, and an equivalent that
