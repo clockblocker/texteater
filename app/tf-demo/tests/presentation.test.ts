@@ -242,7 +242,7 @@ test("a stored Valency Frame reaches the Reading Note and renders its Valency Bl
 	const markup = renderToStaticMarkup(renderNote({ noteData: note }));
 	expect(markup).toContain('aria-label="Valency"');
 	expect(markup).toContain(
-		'<span data-slot="valency-token" class="font-mono text-[0.9em] text-ink-soft">jN/etw</span>',
+		'<span data-slot="valency-token" class="font-mono text-[0.9em] text-ink-soft">jN</span>',
 	);
 });
 

@@ -21,7 +21,7 @@ export const governedCaseValues = ["Acc", "Dat", "Gen"] as const;
 /** Whether a Valency Frame Slot must be filled or may be left out. */
 export const valencySlotStatusValues = ["Required", "Optional"] as const;
 
-/** What fills a Slot: a person (`jN`), a thing (`etw`), or either. */
+/** What fills a Slot: a person (`jemand`), a thing (`etwas`), or either. */
 export const valencyReferentValues = [
 	"Someone",
 	"Something",

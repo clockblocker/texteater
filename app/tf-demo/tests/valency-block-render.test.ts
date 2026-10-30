@@ -69,6 +69,8 @@ const cases: readonly {
 	readonly lemma: Lemma;
 	readonly frame: ValencyFrame;
 	readonly line: string;
+	/** The heading's line, in citation order. */
+	readonly heading: string;
 }[] = [
 	{
 		lemma: verb("aufpassen", "auf"),
@@ -85,7 +87,8 @@ const cases: readonly {
 				],
 			},
 		],
-		line: ">passen (auf `jN/etw`) auf<",
+		line: ">passen (auf `jN`) auf<",
+		heading: "(auf `jN`) auf|passen",
 	},
 	{
 		lemma: verb("anfangen", "an"),
@@ -102,7 +105,8 @@ const cases: readonly {
 				],
 			},
 		],
-		line: ">fangen (mit `etw`) an<",
+		line: ">fangen (mit `jM`) an<",
+		heading: "(mit `jM`) an|fangen",
 	},
 	{
 		lemma: verb("warten", null),
@@ -125,7 +129,8 @@ const cases: readonly {
 				],
 			},
 		],
-		line: "warten (auf `jN/etw`)",
+		line: "warten (auf `jN`)",
+		heading: "(auf `jN`) warten",
 	},
 	{
 		lemma: {
@@ -147,7 +152,8 @@ const cases: readonly {
 				],
 			},
 		],
-		line: "stolz (auf `jN/etw`)",
+		line: "stolz (auf `jN`)",
+		heading: "stolz (auf `jN`)",
 	},
 	{
 		lemma: {
@@ -165,6 +171,7 @@ const cases: readonly {
 			},
 		],
 		line: "gehen `jM` auf den Keks",
+		heading: "`jM` auf den Keks gehen",
 	},
 	{
 		lemma: {
@@ -192,7 +199,8 @@ const cases: readonly {
 				],
 			},
 		],
-		line: "stellen (`jM`) `etw` zur Verfügung",
+		line: "stellen (`jM`) `jN` zur Verfügung",
+		heading: "(`jM`) `jN` zur Verfügung stellen",
 	},
 	// Not ADR 0034's lines: the frame's lexical reflexive follows the head
 	// (ADR 0052), naming its case when it is Dat.
@@ -211,7 +219,8 @@ const cases: readonly {
 				],
 			},
 		],
-		line: ">stellen sich (Dat) `etw` vor<",
+		line: ">stellen sich (Dat) `jN` vor<",
+		heading: "sich (Dat) `jN` vor|stellen",
 	},
 	{
 		lemma: verb("erinnern", null),
@@ -229,45 +238,92 @@ const cases: readonly {
 				],
 			},
 		],
-		line: "erinnern sich (an `jN/etw`)",
+		line: "erinnern sich (an `jN`)",
+		heading: "sich (an `jN`) erinnern",
 	},
 	{
 		lemma: verb("schämen", null),
 		frame: [reflexive("Required", "Acc")],
 		line: "schämen sich",
+		heading: "sich schämen",
 	},
 	{
 		lemma: verb("ausruhen", "aus"),
 		frame: [reflexive("Optional", "Acc")],
 		line: ">ruhen (sich) aus<",
+		heading: "(sich) aus|ruhen",
 	},
 	{
 		lemma: locution("Sorgen machen"),
 		frame: [reflexive("Required", "Dat")],
 		line: "machen sich (Dat) Sorgen",
+		heading: "sich (Dat) Sorgen machen",
 	},
 	{
 		lemma: locution("es gemütlich machen"),
 		frame: [reflexive("Required", "Dat")],
 		line: "machen es sich (Dat) gemütlich",
+		heading: "es sich (Dat) gemütlich machen",
 	},
 	{
 		lemma: locution("außer sein"),
 		frame: [reflexive("Required", "Dat", "außer")],
 		line: "sein außer sich (Dat)",
+		heading: "außer sich (Dat) sein",
 	},
 	{
 		lemma: locution("es in haben"),
 		frame: [reflexive("Required", "Dat", "in")],
 		line: "haben es in sich (Dat)",
+		heading: "es in sich (Dat) haben",
+	},
+	// A slot whose preposition is a Fixed word goes right after it.
+	{
+		lemma: locution("mit zu tun haben"),
+		frame: [
+			{
+				status: "Required",
+				complements: [
+					{ kind: "Case", governedCase: "Nom", referent: "Either" },
+				],
+			},
+			{
+				status: "Required",
+				complements: [
+					{
+						kind: "Preposition",
+						preposition: adp("mit"),
+						governedCase: "Dat",
+						referent: "Either",
+					},
+				],
+			},
+			{
+				status: "Optional",
+				complements: [{ kind: "Clause", form: "Dass" }],
+			},
+		],
+		line: "haben mit `jM` zu tun",
+		heading: "mit `jM` zu tun haben",
 	},
 ];
 
-for (const { lemma, frame, line } of cases) {
-	test(`the Valency Block reads ${line}`, () => {
-		expect(valencyLine(renderReading(lemma, frame))).toBe(line);
+for (const { lemma, frame, line, heading } of cases) {
+	test(`the Valency Block reads ${line} and the heading ${heading}`, () => {
+		const markup = renderReading(lemma, frame);
+		expect(valencyLine(markup)).toBe(line);
+		expect(headingLine(markup)).toBe(`🧩 ${heading}`);
 	});
 }
+
+test("a heading without a frame to show cites the Canonical Form", () => {
+	expect(headingLine(renderReading(locution("mit zu tun haben"), []))).toBe(
+		"🧩 mit zu tun haben",
+	);
+	expect(headingLine(renderReading(verb("aufpassen", "auf"), []))).toBe(
+		"🧩 auf|passen",
+	);
+});
 
 test("only separable verbs carry the split marks", () => {
 	const marked = cases.filter(({ lemma, frame }) =>
@@ -376,7 +432,18 @@ function valencyLine(markup: string): string {
 		/<section[^>]*aria-label="Valency"[^>]*>.*?<p data-slot="valency-line"[^>]*>(.*?)<\/p>/,
 	)?.[1];
 	if (section === undefined) throw new Error("no Valency Block rendered");
-	return section
+	return plainText(section);
+}
+
+/** The Reading's title, emoji included, as {@link valencyLine} writes it. */
+function headingLine(markup: string): string {
+	const title = markup.match(/data-reading-title=""[^>]*>(.*?)<\/h\d>/)?.[1];
+	if (title === undefined) throw new Error("no Reading title rendered");
+	return plainText(title);
+}
+
+function plainText(html: string): string {
+	return html
 		.replace(/<span data-slot="valency-token"[^>]*>(.*?)<\/span>/g, "`$1`")
 		.replace(/<[^>]+>/g, "")
 		.replaceAll("&gt;", ">")

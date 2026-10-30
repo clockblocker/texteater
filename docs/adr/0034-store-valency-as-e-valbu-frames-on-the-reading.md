@@ -173,7 +173,7 @@ may be an alternative the proposal missed (`über` + Acc | `von` + Dat on
 *denken*), another sense the judge filed under this Reading (*Ich glaube dir*
 and *Sie glaubt an Gott* under one 🙏) or a Slot the proposal left out, and
 one sentence can't tell these apart. Appending would get the third right and
-write a false frame for the first two: `glauben (jM) (etw) (an jN/etw)`.
+write a false frame for the first two: `glauben (jM) (jN) (an jN)`.
 Free prepositions are never compared with the frame.
 
 Statuses taken only from attestations were rejected. An imperative, a passive
@@ -244,23 +244,24 @@ How Hebrew `לו` itself is analysed belongs to areas 2 and 3 of
 **Rendering.**
 
 A Valency Block shows the learner the Lemma with its frame. Optional slots
-are in parentheses. `jN` is an Acc person, `jM` a Dat person and `etw`
-something. A separable verb's `>` and `<` mark its split and are rendered
+are in parentheses. A slot's token names its case alone: `jN` Acc, `jM` Dat,
+`jS` Gen. A separable verb's `>` and `<` mark its split and are rendered
 from its `hasSepPrefix` Core Feature: `>passen` is the base the prefix
 attaches to on its left and `auf<` is the separated prefix, so `auf<` +
 `>passen` reads `aufpassen`. Only separable verbs carry them. A Reflexive
 Slot prints `sich`, never stored in the Canonical Form. The Reading's Citation
 puts it first or after a leading `es` (`sich erinnern`, `es sich gemütlich
 machen`), and tf-demo decides where the Block places it among the Slots
-(ADR 0052).
+(ADR 0052). A slot whose preposition is a Locution's Fixed word follows it:
+`haben mit jM zu tun`.
 
 ```text
->passen (auf `jN/etw`) auf<             aufpassen
->fangen (mit `etw`) an<                 anfangen
-warten (auf `jN/etw`)                   warten
-stolz (auf `jN/etw`)                    stolz
+>passen (auf `jN`) auf<                 aufpassen
+>fangen (mit `jM`) an<                  anfangen
+warten (auf `jN`)                       warten
+stolz (auf `jN`)                        stolz
 gehen `jM` auf den Keks                 jemandem auf den Keks gehen
-stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
+stellen (`jM`) `jN` zur Verfügung       (jemandem) etwas zur Verfügung stellen
 ```
 
 ## Consequences

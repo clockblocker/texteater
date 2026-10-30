@@ -21,6 +21,8 @@ export type ValencyLinePart =
 			readonly text: string;
 			/** A separable verb's base, which its prefix attaches to on the left. */
 			readonly separable: boolean;
+			/** A separable prefix still on the verb, as a citation writes it: `auf|passen`. */
+			readonly prefix: string | null;
 	  }
 	| {
 			readonly part: "Reflexive";
@@ -33,9 +35,14 @@ export type ValencyLinePart =
 	| {
 			readonly part: "Slot";
 			readonly optional: boolean;
+			/**
+			 * The preposition printed before the token. It is `null` for a bare
+			 * case object, and for a slot whose preposition is the Fixed word
+			 * right before it (`mit jM zu tun haben`).
+			 */
 			readonly preposition: string | null;
 			readonly case: RenderedCase;
-			/** `jN`, `jM`, `jS`, `etw`, or a person and `etw` joined by `/`. */
+			/** The person form of the case, whatever the referent: `jN`, `jM` or `jS`. */
 			readonly token: string;
 	  }
 	| { readonly part: "SeparatedPrefix"; readonly text: string };
@@ -57,19 +64,27 @@ export const DEFAULT_VALENCY_LINE_STYLE: ValencyLineStyle = {
 	reflexiveCase: "DativeOnly",
 };
 
+/**
+ * The line's word order. The Valency Block reads as a main clause, the verb
+ * first and a separable prefix split off to the end (`>passen (auf jN)
+ * auf<`). A Reading Note's heading reads as a citation, the verb last with
+ * its prefix on (`(auf jN) aufpassen`, `mit jM zu tun haben`).
+ */
+export type ValencyLineOrder = "MainClause" | "Citation";
+
 type ValencyLemma = {
 	readonly family: string;
+	readonly kind: string;
 	readonly canonicalForm: string;
 	readonly coreFeatures: unknown;
 };
 
 /** jemanden, jemandem, jemandes: `j` plus the ending the case gives it. */
-const PERSON_TOKEN = {
+const CASE_TOKEN = {
 	Acc: "jN",
 	Dat: "jM",
 	Gen: "jS",
 } as const satisfies Record<RenderedCase, string>;
-const THING_TOKEN = "etw";
 
 /** Bare case objects in German citation order: `jemandem etwas`. */
 const CASE_SLOT_ORDER = [
@@ -83,23 +98,27 @@ const CASE_SLOT_ORDER = [
  * `null` when the frame has nothing to show. It is computed each render and
  * never stored.
  *
- * The line reads: the head (a separable verb's base, marked `>`), the
- * frame's lexical reflexive `sich`, the bare case slots (Dat before Acc
- * before Gen), a Locution's other Fixed words, the preposition slots, and
- * last the separated prefix (marked `<`). Optional slots are parenthesised.
- * A Nom slot is the subject and is not shown. A leading `es` stays before
- * the reflexive (`machen es sich gemütlich`), and a reflexive with a
- * preposition follows it among the Fixed words (`sein außer sich`), as in a
- * German main clause.
+ * In main-clause order the line reads: the head (a separable verb's base,
+ * marked `>`), the frame's lexical reflexive `sich`, the bare case slots
+ * (Dat before Acc before Gen), a Locution's other Fixed words, the
+ * preposition slots, and last the separated prefix (marked `<`). In
+ * citation order a verb's head moves to the end with its prefix on, and the
+ * slots come before the Fixed words: `jM auf den Keks gehen`. Any other
+ * head stays first in both orders. Optional slots are parenthesised. A Nom
+ * slot is the subject and is not shown.
  *
- * Provisional: where slots go relative to a Locution's Fixed words is not
- * decided yet (#711). This order matches ADR 0034's six examples. Keep the
- * whole ordering rule here.
+ * A slot whose preposition is one of the Locution's Fixed words goes right
+ * after that word and prints only its token: `haben mit jM zu tun`, `mit jM
+ * zu tun haben`. A reflexive with a preposition does the same (`sein außer
+ * sich`), and a leading `es` stays before the reflexive (`machen es sich
+ * gemütlich`), as in a German main clause and as the Citation places `sich`.
+ * Keep the whole ordering rule here.
  */
 export function germanValencyLine(
 	lemma: ValencyLemma,
 	frame: readonly FrameSlot[] | undefined,
 	style: ValencyLineStyle = DEFAULT_VALENCY_LINE_STYLE,
+	order: ValencyLineOrder = "MainClause",
 ): readonly ValencyLinePart[] | null {
 	const slots = (frame ?? []).flatMap(slotPart);
 	const reflexive = reflexiveSlotOf(frame);
@@ -107,40 +126,89 @@ export function germanValencyLine(
 
 	const { head, fixed } = splitCanonicalForm(lemma);
 	const prefix = separablePrefix(lemma.coreFeatures, head);
+	const inFixed = (preposition: string | null): preposition is string =>
+		preposition !== null && fixed.includes(preposition);
 	const caseSlots = CASE_SLOT_ORDER.flatMap((grammaticalCase) =>
 		slots.filter(
 			(slot) =>
 				slot.preposition === null && slot.case === grammaticalCase,
 		),
 	);
-	const prepositionSlots = slots.filter((slot) => slot.preposition !== null);
+	const freeSlots = slots.filter(
+		(slot) => slot.preposition !== null && !inFixed(slot.preposition),
+	);
+	const sich = reflexive ? reflexivePart(reflexive, style) : null;
+	const governor = reflexive?.preposition ?? null;
+	const governed = inFixed(governor);
+	const lead = !governed && fixed[0] === "es" ? fixed.slice(0, 1) : [];
+	const opening = [...fixedPart(lead), ...(sich && !governed ? [sich] : [])];
+	const phrase = fixedPhrase(fixed.slice(lead.length), [
+		...(sich && governed ? [{ after: governor, part: sich }] : []),
+		...slots.flatMap((slot) =>
+			inFixed(slot.preposition)
+				? [
+						{
+							after: slot.preposition,
+							part: { ...slot, preposition: null },
+						},
+					]
+				: [],
+		),
+	]);
+
+	if (order === "Citation" && lemma.kind === "VERB")
+		return [
+			...opening,
+			...caseSlots,
+			...freeSlots,
+			...phrase,
+			{ part: "Head", text: head, separable: false, prefix },
+		];
 	const headPart: ValencyLinePart = {
 		part: "Head",
 		text: prefix ? head.slice(prefix.length) : head,
 		separable: prefix !== null,
+		prefix: null,
 	};
-	const sich = reflexive ? reflexivePart(reflexive, style) : null;
-	const preposition = reflexive?.preposition ?? null;
-	const governor = preposition === null ? -1 : fixed.indexOf(preposition);
-	const leadingEs = governor < 0 && fixed[0] === "es" ? 1 : 0;
-	const [beforeSich, afterSich] =
-		governor >= 0
-			? [fixed.slice(0, governor + 1), fixed.slice(governor + 1)]
-			: [fixed.slice(0, leadingEs), fixed.slice(leadingEs)];
-	const fixedPart = (words: readonly string[]): ValencyLinePart[] =>
-		words.length > 0 ? [{ part: "Fixed", text: words.join(" ") }] : [];
-	const around = [...fixedPart(beforeSich), ...(sich ? [sich] : [])];
-
 	return [
-		...(governor < 0 && style.reflexivePlacement === "BeforeHead"
-			? [...around, headPart, ...caseSlots]
-			: governor < 0
-				? [headPart, ...around, ...caseSlots]
-				: [headPart, ...caseSlots, ...around]),
-		...fixedPart(afterSich),
-		...prepositionSlots,
+		...(style.reflexivePlacement === "BeforeHead"
+			? [...opening, headPart]
+			: [headPart, ...opening]),
+		...caseSlots,
+		...phrase,
+		...freeSlots,
 		...(prefix ? [{ part: "SeparatedPrefix" as const, text: prefix }] : []),
 	];
+}
+
+function fixedPart(words: readonly string[]): ValencyLinePart[] {
+	return words.length > 0 ? [{ part: "Fixed", text: words.join(" ") }] : [];
+}
+
+/**
+ * A Locution's Fixed words, with each insert right after the first
+ * occurrence of the word it follows: `mit` `jM` `zu tun`.
+ */
+function fixedPhrase(
+	words: readonly string[],
+	inserts: readonly {
+		readonly after: string;
+		readonly part: ValencyLinePart;
+	}[],
+): ValencyLinePart[] {
+	const parts: ValencyLinePart[] = [];
+	let run: string[] = [];
+	const placed = new Set<string>();
+	for (const word of words) {
+		run.push(word);
+		if (placed.has(word)) continue;
+		const following = inserts.filter(({ after }) => after === word);
+		if (following.length === 0) continue;
+		placed.add(word);
+		parts.push(...fixedPart(run), ...following.map(({ part }) => part));
+		run = [];
+	}
+	return [...parts, ...fixedPart(run)];
 }
 
 /** The reflexive as the line shows it, with the case its style names. */
@@ -170,7 +238,11 @@ function splitCanonicalForm(lemma: ValencyLemma): {
 } {
 	const words = lemma.canonicalForm.trim().split(/\s+/u);
 	const last = words.at(-1) ?? "";
-	if (words.length < 2 || !/^[a-zäöüß]+n$/u.test(last)) {
+	if (
+		lemma.kind !== "VERB" ||
+		words.length < 2 ||
+		!/^[a-zäöüß]+n$/u.test(last)
+	) {
 		return { head: lemma.canonicalForm, fixed: [] };
 	}
 	return { head: last, fixed: words.slice(0, -1) };
@@ -222,21 +294,7 @@ function slotPart(slot: FrameSlot): SlotPart[] {
 					? complement.preposition.canonicalForm
 					: null,
 			case: grammaticalCase,
-			token: referentToken(grammaticalCase, complement.referent),
+			token: CASE_TOKEN[grammaticalCase],
 		},
 	];
-}
-
-function referentToken(
-	grammaticalCase: RenderedCase,
-	referent: Complement["referent"],
-): string {
-	switch (referent) {
-		case "Someone":
-			return PERSON_TOKEN[grammaticalCase];
-		case "Something":
-			return THING_TOKEN;
-		case "Either":
-			return `${PERSON_TOKEN[grammaticalCase]}/${THING_TOKEN}`;
-	}
 }

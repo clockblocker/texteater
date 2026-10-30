@@ -20,6 +20,7 @@ import { renderDefaultSurfaceHeading } from "../universal/blocks/renderers/surfa
 import { renderDefaultSurfaceRoutes } from "../universal/blocks/renderers/surface/routes/default";
 import { renderHeadingDeLexemeNoun } from "./block-renderer-overrides/reading/heading/lexeme-noun";
 import { renderHeadingDeLexemeVerb } from "./block-renderer-overrides/reading/heading/lexeme-verb";
+import { renderHeadingDeValent } from "./block-renderer-overrides/reading/heading/valency";
 import {
 	renderDeAdpositionSourceContexts,
 	renderDeAdpositionValency,
@@ -38,9 +39,13 @@ const READING_RELATIONAL = {
 	...READING_BASE,
 	Relations: renderDefaultReadingRelations,
 };
-/** The routes whose Readings may hold a Valency Frame (Dumrel's valency policy). */
+/**
+ * The routes whose Readings may hold a Valency Frame (Dumrel's valency
+ * policy). Their heading cites the frame too.
+ */
 const READING_VALENT = {
 	...READING_RELATIONAL,
+	Heading: renderHeadingDeValent,
 	Valency: renderDeReadingValency,
 };
 

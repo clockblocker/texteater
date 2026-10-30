@@ -1,57 +1,43 @@
-import { Fragment, type ReactNode } from "react";
+import { Fragment } from "react";
 import {
 	type CitationPart,
 	citationPartText,
-	citedNoteReading,
 } from "../../../../universal/blocks/citation";
 import type { NoteBlockRenderer } from "../../../../universal/blocks/renderer";
-import { ReadingHeading } from "../../../../universal/blocks/renderers/reading/heading/default";
+import { AttachedPrefix } from "../../../block-renderers/reading/valency/default";
+import { ValencyHeading } from "./valency";
 
 /**
- * A verb's heading is its Citation (`sich erinnern`), with a separable
- * prefix split off its base: `sich vor|stellen`.
+ * A verb's heading is its Valency Line in citation order, `sich (an jN)
+ * erinnern`, or its Citation (`sich erinnern`) while the frame shows
+ * nothing. Either way a separable prefix is split off its base:
+ * `sich (Dat) jN vor|stellen`.
  */
-export const renderHeadingDeLexemeVerb = (({
-	noteData,
-	PresentationCapabilities,
-	Citation,
-}) => {
-	const { hasSepPrefix } = noteData.reading.lemma.coreFeatures;
-	const citation = Citation(citedNoteReading(noteData));
-
+export const renderHeadingDeLexemeVerb = ((context) => {
+	const { hasSepPrefix } = context.noteData.reading.lemma.coreFeatures;
 	return (
-		<ReadingHeading
-			note={noteData}
-			capabilities={PresentationCapabilities}
-			citation={citation}
-			title={citation.map((part, index) => (
-				<Fragment key={`${index}:${part.kind}`}>
-					{index > 0 ? " " : null}
-					{citedPart(part, hasSepPrefix)}
-				</Fragment>
-			))}
+		<ValencyHeading
+			context={context}
+			fallback={(citation) =>
+				citation.map((part, index) => (
+					<Fragment key={`${index}:${part.kind}`}>
+						{index > 0 ? " " : null}
+						{citedPart(part, hasSepPrefix)}
+					</Fragment>
+				))
+			}
 		/>
 	);
 }) satisfies NoteBlockRenderer<"de", "Reading", "Lexeme", "VERB">;
 
-function citedPart(
-	part: CitationPart,
-	separablePrefix: string | null,
-): ReactNode {
+function citedPart(part: CitationPart, separablePrefix: string | null) {
 	if (part.kind === "Reflexive") return citationPartText(part);
 	const verb = part.text;
-	if (
-		separablePrefix &&
+	return separablePrefix &&
 		verb.startsWith(separablePrefix) &&
-		verb.length > separablePrefix.length
-	) {
-		return (
-			<>
-				{separablePrefix}
-				<span className="text-ink-muted">|</span>
-				{verb.slice(separablePrefix.length)}
-			</>
-		);
-	}
-	return verb;
+		verb.length > separablePrefix.length ? (
+		<AttachedPrefix prefix={separablePrefix} verb={verb} />
+	) : (
+		verb
+	);
 }

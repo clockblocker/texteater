@@ -99,7 +99,9 @@ _Avoid_: aside, subtitle
 The pinned Block listing where the Subject was met. See [tf-demo ADR 0006].
 
 **Valency Block**:
-The Block showing a Reading's Lemma with its Valency Frame. See [ADR 0034].
+The Block showing a Reading's Lemma with its Valency Frame. The Reading Note's
+heading shows the same line in citation order (`mit jM zu tun haben`). See
+[ADR 0034].
 
 **Citation**:
 How a Note prints a Reading: its Canonical Form (Dumling) with the lexical
