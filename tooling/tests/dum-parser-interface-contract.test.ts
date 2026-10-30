@@ -61,6 +61,8 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"sayingTypeValues",
 		"selectKnowledge",
 		"translationLanguageValues",
+		"translationPieceKindValues",
+		"translationText",
 		"variantIdOf",
 	]);
 });
