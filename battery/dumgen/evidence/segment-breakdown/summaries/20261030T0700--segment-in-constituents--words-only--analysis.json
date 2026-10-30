@@ -1,0 +1,65 @@
+{
+	"round": "2026-10-30-words-only",
+	"note": "The user's 2026-10-30 ruling on #1241: a Locution's Constituents are its words, each linked to its own Lexeme, with no run of them one part, since no line between a nested unit and a plain run can be drawn reliably. It supersedes the 2026-10-24 rule and the same-day definition ruling. Commit d08f6a41c deletes breakdown-locutions and the definition input; a hyphenated compound's front phrase is flat. Gold: wie zu Hause fühlen, Hand in Hand gehen, auf Nummer sicher gehen, unter Dach und Fach bringen and Rund-um-die-Uhr-Betreuung split into their words. Strict is contractPass, 3 repetitions; compared with cad91ad2 (d4bfe91a6).",
+	"liveRun": {
+		"experiment": "segment-in-constituents/de:breakdown",
+		"runId": "f64b11e0-45fa-4229-aeb3-b8a3dc14ffcf",
+		"revision": "d08f6a41c",
+		"cases": "the 48 phraseme, multiword and hyphenated records",
+		"budget": 714000,
+		"freshTokens": 16303,
+		"strict": "126/144"
+	},
+	"replays": [
+		{
+			"experiment": "segment-in-constituents/de:breakdown",
+			"runId": "2efff53e-cc10-4726-82e5-714228dd42dc",
+			"offline": true,
+			"strict": "950/1086, from 943/1086 (cad91ad2)"
+		},
+		{
+			"experiment": "segment-in-constituents/de:realtext",
+			"runId": "d921ca65-e158-4da1-8a18-1e2eb2cbaa75",
+			"offline": true,
+			"strict": "141/180, unchanged"
+		},
+		{
+			"experiment": "segment-in-constituents/de:adversarial",
+			"runId": "d221d36c-43fc-4043-9361-9ced1bc17dee",
+			"offline": true,
+			"strict": "18/30, unchanged"
+		}
+	],
+	"flips": [
+		{
+			"case": "auf Nummer sicher gehen",
+			"move": "0 -> 3",
+			"cause": "gold: the output was already its four words; the gold no longer wants auf Nummer sicher as one Locution part"
+		},
+		{
+			"case": "unter Dach und Fach bringen",
+			"move": "0 -> 3",
+			"cause": "gold, as for auf Nummer sicher gehen"
+		},
+		{
+			"case": "wie zu Hause fühlen",
+			"move": "0 -> 3",
+			"cause": "gold: the definition ruling had already split zu Hause into zu ADP and Hause NOUN Haus"
+		},
+		{
+			"case": "Hand in Hand gehen",
+			"move": "2 -> 3",
+			"cause": "the change: repetitions 0 and 2 kept Hand in Hand as a Locution part; with no Locution question every repetition gives Hand · in · Hand · gehen"
+		},
+		{
+			"case": "Rund-um-die-Uhr-Betreuung",
+			"move": "3 -> 0",
+			"cause": "a route miss: the flat hyphen split links die to NOUN Die every repetition, where gold joins it to its noun (die-Uhr -> NOUN Uhr, de/noun-owns-its-article). The word analysis doesn't group an article with its noun as the phraseme parts do; not fixed here"
+		}
+	],
+	"spend": {
+		"freshTokens": 16303,
+		"dollars": 0.00068,
+		"cap": "$0.03 (714,000 tokens), #1241's standing $1"
+	}
+}
