@@ -1,0 +1,40 @@
+:root {
+	font-family: system-ui, sans-serif;
+	color-scheme: light dark;
+}
+
+.panels {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+	gap: 2rem;
+	max-inline-size: 60rem;
+	margin: 3rem auto;
+	padding-inline: 1.5rem;
+}
+
+.panel form {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.panel input {
+	flex: 1;
+	font: inherit;
+	padding: 0.4rem 0.6rem;
+}
+
+.panel button {
+	font: inherit;
+	padding: 0.4rem 1rem;
+}
+
+.panel pre {
+	white-space: pre-wrap;
+	padding: 0.75rem;
+	border-radius: 0.4rem;
+	background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.panel [role="alert"] {
+	color: #c62828;
+}

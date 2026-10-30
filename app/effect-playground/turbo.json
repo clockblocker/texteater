@@ -1,0 +1,12 @@
+{
+	"$schema": "https://v2-11-7.turborepo.dev/schema.json",
+	"extends": ["//"],
+	"tasks": {
+		"dev:package": {
+			"passThroughEnv": [
+				"EFFECT_PLAYGROUND_PORT",
+				"EFFECT_PLAYGROUND_SERVER_PORT"
+			]
+		}
+	}
+}

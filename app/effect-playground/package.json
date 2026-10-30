@@ -1,0 +1,39 @@
+{
+	"name": "@texteater/effect-playground",
+	"private": true,
+	"type": "module",
+	"packageManager": "bun@1.4.2",
+	"engines": {
+		"node": "24.x"
+	},
+	"scripts": {
+		"build": "turbo run build:package",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && vite build",
+		"check": "bun ../../tooling/check-package-types.ts",
+		"dev": "turbo run dev:package",
+		"dev:package": "bun run --parallel dev:server dev:client",
+		"dev:server": "bun --watch src/server/main.ts",
+		"dev:client": "vite",
+		"fix": "bun run --silent biome check --write .",
+		"lint": "bun run --silent biome check --error-on-warnings .",
+		"test": "bun ../../tooling/run-package-tests.ts",
+		"knip": "bun ../../tooling/knip.ts",
+		"oxlint": "bun ../../tooling/oxlint.ts",
+		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"
+	},
+	"dependencies": {
+		"@effect/platform-bun": "4.0.0",
+		"@effect/platform-node-shared": "4.0.0",
+		"effect": "4.0.0",
+		"react": "^19.2.6",
+		"react-dom": "^19.2.6"
+	},
+	"devDependencies": {
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
+		"@vitejs/plugin-react": "^6",
+		"vite": "^8"
+	}
+}
