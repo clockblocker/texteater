@@ -1,6 +1,6 @@
 import type { Effect } from "effect";
 import { type FormEvent, useState } from "react";
-import type { RestClient, RpcFilesClient } from "./clients.ts";
+import type { RestFiles, RpcFilesClient } from "./clients.ts";
 import { runtime } from "./clients.ts";
 import { type Outcome, readViaRest, readViaRpc } from "./read-file.ts";
 
@@ -20,7 +20,7 @@ function ReaderPanel({
 	title: string;
 	read: (
 		name: string,
-	) => Effect.Effect<Outcome, never, RestClient | RpcFilesClient>;
+	) => Effect.Effect<Outcome, never, RestFiles | RpcFilesClient>;
 }) {
 	const [name, setName] = useState("hello.txt");
 	const [outcome, setOutcome] = useState<Outcome | null>(null);

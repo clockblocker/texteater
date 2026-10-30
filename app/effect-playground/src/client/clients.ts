@@ -1,7 +1,8 @@
-import { Context, Layer, ManagedRuntime } from "effect";
-import { FetchHttpClient } from "effect/http";
+import { Context, Effect, Layer, ManagedRuntime, type Schema } from "effect";
+import { FetchHttpClient, type HttpClientError } from "effect/http";
 import { HttpApiClient } from "effect/http-api";
 import { RpcClient, type RpcClientError, RpcSerialization } from "effect/rpc";
+import type { FileNotFound, NotTxtFile } from "../shared/errors.ts";
 import { FilesApi } from "../shared/rest-api.ts";
 import { FilesRpcs } from "../shared/rpc.ts";
 
@@ -9,14 +10,32 @@ import { FilesRpcs } from "../shared/rpc.ts";
 // page's own origin.
 const origin = window.location.origin;
 
-// A client derived from the REST contract: client.files.read({ params }).
-export class RestClient extends Context.Service<
-	RestClient,
-	HttpApiClient.ForApi<typeof FilesApi>
->()("effect-playground/RestClient") {
+// The REST client behind a declared signature, so hovering `read` shows the
+// Effect instead of `MethodReturn<…>`. The compiler checks this type against
+// the generated client, so the two can't drift apart.
+export class RestFiles extends Context.Service<
+	RestFiles,
+	{
+		readonly read: (
+			name: string,
+		) => Effect.Effect<
+			string,
+			| NotTxtFile
+			| FileNotFound
+			| HttpClientError.HttpClientError
+			| Schema.SchemaError
+		>;
+	}
+>()("effect-playground/RestFiles") {
 	static readonly layer = Layer.effect(
-		RestClient,
-		HttpApiClient.make(FilesApi, { baseUrl: origin }),
+		RestFiles,
+		Effect.map(
+			HttpApiClient.make(FilesApi, { baseUrl: origin }),
+			(client) =>
+				RestFiles.of({
+					read: (name) => client.files.read({ params: { name } }),
+				}),
+		),
 	);
 }
 
@@ -36,7 +55,7 @@ export class RpcFilesClient extends Context.Service<
 
 // Builds both clients once and keeps them for the page's lifetime.
 export const runtime = ManagedRuntime.make(
-	Layer.mergeAll(RestClient.layer, RpcFilesClient.layer).pipe(
+	Layer.mergeAll(RestFiles.layer, RpcFilesClient.layer).pipe(
 		Layer.provide(FetchHttpClient.layer),
 	),
 );

@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 import type { FileNotFound, NotTxtFile } from "../shared/errors.ts";
-import { RestClient, RpcFilesClient } from "./clients.ts";
+import { RestFiles, RpcFilesClient } from "./clients.ts";
 
 export type Outcome =
 	| { readonly kind: "contents"; readonly text: string }
@@ -29,8 +29,8 @@ const transport = (error: Error) =>
 
 export const readViaRest = (name: string) =>
 	Effect.gen(function* () {
-		const client = yield* RestClient;
-		const read = client.files.read({ params: { name } });
+		const files = yield* RestFiles;
+		const read = files.read(name);
 		return yield* read.pipe(
 			Effect.map(contents),
 			Effect.catchTags({ NotTxtFile: notTxt, FileNotFound: notFound }),
