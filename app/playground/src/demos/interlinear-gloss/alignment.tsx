@@ -1,17 +1,25 @@
-import { cn } from "lego";
-import { Fragment, useLayoutEffect, useMemo, useState } from "react";
+import { cn, LinkButton } from "lego";
+import { ArrowRight } from "lucide-react";
+import {
+	Fragment,
+	type ReactNode,
+	useLayoutEffect,
+	useMemo,
+	useState,
+} from "react";
 import { langAttrs } from "@/fixtures";
-import { type Column, type GlossCase, type LemmaPiece, unitOf } from "./cases";
 import {
 	columnKey,
 	type GlossStyle,
 	type Link,
 	type Lit,
-	lemmaKey,
 	linksOf,
 	litBy,
+	targetKey,
 } from "./focus";
 import { GlossText } from "./gloss-text";
+import { SlottedLine, tokenClass } from "./line";
+import type { Column, Step } from "./model";
 
 /** The design's open choices, the inspector's knobs. */
 export type GlossKnobs = {
@@ -20,55 +28,75 @@ export type GlossKnobs = {
 	readonly lines: boolean;
 };
 
-type FocusHandlers = {
-	/** A tap or click: the word keeps the focus. */
+export type FocusHandlers = {
+	/** A tap or click: the token keeps the focus. */
 	readonly onFocus: (key: string) => void;
-	/** A mouse resting on a word lends it the focus; `null` when it leaves. */
+	/** A mouse resting on a token lends it the focus; `null` when it leaves. */
 	readonly onHover: (key: string | null) => void;
 };
 
+/** The line a gloss lands on, which is also the link to the next Card. */
+export type Landing = {
+	readonly onFollow: () => void;
+	readonly tone?: "neuter";
+	/** Printed after the link: the Lemma's family and kind. */
+	readonly aside?: ReactNode;
+};
+
 /**
- * How wide a word's column may grow. Spelled-out glosses run long, so
- * their columns stay narrow and the gloss breaks after its hyphens,
- * periods and slashes, keeping the words on one row.
+ * How wide a word's column may grow. A column starts at its narrowest,
+ * the gloss broken after its hyphens and periods, and grows back to one
+ * line where the row has room, so a row narrows before it wraps.
+ * Spelled-out glosses run long, so their columns stay narrow.
  */
-export const columnWidth = (style: GlossStyle) =>
-	style === "spelled" ? "max-w-[4.25rem]" : "max-w-[12rem]";
+const columnWidth = (style: GlossStyle) =>
+	cn(
+		"grow basis-[min-content]",
+		style === "spelled" ? "max-w-[4.25rem]" : "max-w-fit",
+	);
 
-export const toneClass = (glossCase: GlossCase) =>
-	glossCase.lemma.tone === "neuter" ? "[--link:var(--gender-neuter)]" : "";
+export const toneClass = (tone: "neuter" | undefined) =>
+	tone === "neuter" ? "[--link:var(--gender-neuter)]" : "";
 
 /**
- * The clicked words as an interlinear gloss after the Leipzig Glossing
- * Rules: each word over its morphemes, hyphenated (rule 2), over their
- * glosses, left-aligned word by word (rule 1). Under them the lemma's
- * header, glossed the same way, and its free translation in single
- * quotes. A line runs from each piece that goes into the lemma to where
- * it lands, so the change of order shows as lines that cross. The focused
- * word, its pieces, its lines and where they land take the link colour.
+ * One step as an interlinear gloss after the Leipzig Glossing Rules: each
+ * word over its morphemes, hyphenated (rule 2), over their glosses,
+ * left-aligned word by word (rule 1). Under them the line the step lands
+ * on, which is the link to the next Card. A line runs from each piece
+ * that goes on to where it lands, so a change of order shows as lines
+ * that cross; a word that leaves the line gets a dashed stub. The focused
+ * token, its lines and where they land take the link colour.
  */
 export function Alignment({
-	glossCase,
+	step,
 	knobs,
 	focus,
 	size,
+	landing,
 	...handlers
 }: FocusHandlers & {
-	readonly glossCase: GlossCase;
+	readonly step: Step;
 	readonly knobs: GlossKnobs;
 	readonly focus: string | null;
 	readonly size: "card" | "sheet";
+	readonly landing: Landing;
 }) {
 	const [figure, setFigure] = useState<HTMLElement | null>(null);
-	const links = useMemo(() => linksOf(glossCase), [glossCase]);
+	const links = useMemo(() => linksOf(step), [step]);
 	const source =
 		knobs.style !== "plain" ? "gloss" : knobs.morphRow ? "morph" : "word";
-	const paths = useLinkPaths(figure, links, source);
-	const lit = litBy(glossCase, focus);
-	// Room for the lines to cross; a lone line needs less.
+	const paths = useLinkPaths(figure, step, links, source);
+	const lit = litBy(step, focus);
+	// Room for the lines to cross; lines that keep their order need less.
+	const order = links.map((link) =>
+		step.targets.findIndex((target) => target.id === link.to),
+	);
+	const crossing = order.some(
+		(at, index) => at < Math.max(-1, ...order.slice(0, index)),
+	);
 	const band = !knobs.lines
-		? 14
-		: (size === "sheet" ? 12 : 0) + (links.length > 1 ? 64 : 40);
+		? 10
+		: (size === "sheet" ? 12 : 0) + (crossing ? 64 : 36);
 	const ordered = [...paths].sort(
 		(a, b) => Number(lit.links.has(a.key)) - Number(lit.links.has(b.key)),
 	);
@@ -79,7 +107,7 @@ export function Alignment({
 			{...langAttrs("de")}
 			className={cn(
 				"relative m-0 grid w-fit max-w-full",
-				toneClass(glossCase),
+				toneClass(landing.tone),
 			)}
 		>
 			<div
@@ -88,7 +116,7 @@ export function Alignment({
 					knobs.style === "spelled" ? "gap-x-3" : "gap-x-4",
 				)}
 			>
-				{unitOf(glossCase).map((column) => (
+				{step.columns.map((column) => (
 					<ColumnStack
 						key={column.id}
 						column={column}
@@ -100,26 +128,62 @@ export function Alignment({
 				))}
 			</div>
 			<div aria-hidden="true" style={{ height: band }} />
-			<div className="flex flex-wrap items-start justify-between gap-x-3.5 gap-y-2">
-				{glossCase.lemma.pieces.map((piece) => (
-					<LemmaStack
-						key={piece.id}
-						piece={piece}
-						knobs={knobs}
-						lit={lit.lemma.has(piece.id)}
-						size={size}
-						{...handlers}
-					/>
-				))}
-			</div>
 			<p
-				{...langAttrs("en")}
-				className={cn(
-					"mt-1.5 text-ink-soft",
-					size === "sheet" ? "text-sm" : "text-[0.8125rem]",
-				)}
+				data-ig-landing=""
+				className="grid justify-items-start gap-y-0.5"
 			>
-				‘{glossCase.lemma.translation}’
+				<LinkButton
+					tone={landing.tone ?? "link"}
+					onClick={landing.onFollow}
+					className={cn(
+						"flex w-full font-[570] tracking-[-0.01em]",
+						size === "sheet" ? "text-lg" : "text-base",
+					)}
+				>
+					<ArrowRight
+						aria-hidden="true"
+						className="rtl:-scale-x-100"
+					/>
+					<span className="flex flex-1 flex-wrap justify-between gap-x-3">
+						<SlottedLine
+							tokens={step.targets}
+							render={(token, text) => {
+								const key = targetKey(token.id);
+								const target = step.targets.find(
+									(each) => each.id === token.id,
+								);
+								return (
+									<span
+										data-ig-to={token.id}
+										onPointerEnter={(event) => {
+											if (event.pointerType === "mouse")
+												handlers.onHover(key);
+										}}
+										onPointerLeave={() =>
+											handlers.onHover(null)
+										}
+										className={cn(
+											"rounded-sm transition-colors",
+											target?.quiet && "text-ink-faint",
+											lit.targets.has(token.id) &&
+												"bg-link/15 shadow-[0_0_0_2px_color-mix(in_oklab,var(--link)_15%,transparent)]",
+										)}
+									>
+										{text}
+									</span>
+								);
+							}}
+						/>
+					</span>
+				</LinkButton>
+				{landing.aside ? (
+					<span
+						{...langAttrs("en")}
+						className="text-xs text-ink-muted"
+					>
+						{landing.aside}
+					</span>
+				) : null}
 			</p>
 			{knobs.lines ? (
 				<svg
@@ -127,13 +191,16 @@ export function Alignment({
 					className="pointer-events-none absolute inset-0 size-full overflow-visible"
 				>
 					{ordered.map((path) => {
-						const on = lit.links.has(path.key);
+						const on = path.drop
+							? lit.drops.has(path.drop)
+							: lit.links.has(path.key);
 						return (
 							<path
 								key={path.key}
 								d={path.d}
 								fill="none"
 								strokeLinecap="round"
+								strokeDasharray={path.drop ? "2 4" : undefined}
 								style={{
 									stroke: on
 										? "var(--link)"
@@ -150,7 +217,7 @@ export function Alignment({
 	);
 }
 
-/** One clicked word: the word, its morphemes and their glosses. */
+/** One word of the top row: the word, its morphemes and their glosses. */
 function ColumnStack({
 	column,
 	knobs,
@@ -192,7 +259,13 @@ function ColumnStack({
 					on ? "text-link" : "text-ink",
 				)}
 			>
-				{column.word}
+				{/* The token's own style inside, so a slot's smaller mono
+				    keeps the row's line box and the rows stay aligned. */}
+				<span
+					className={cn(tokenClass(column.style), on && "text-link")}
+				>
+					{column.word}
+				</span>
 			</span>
 			{knobs.morphRow ? (
 				<span className="text-ink-soft italic">
@@ -219,7 +292,7 @@ function ColumnStack({
 					{column.plain}
 				</span>
 			) : (
-				<span className="text-ink-muted [overflow-wrap:anywhere]">
+				<span className="text-ink-muted">
 					{column.pieces.map((piece, index) => (
 						<Fragment key={`${index}:${piece.leipzig}`}>
 							{index > 0 ? (
@@ -247,80 +320,22 @@ function ColumnStack({
 	);
 }
 
-/** One word of the lemma's header, over its gloss. */
-function LemmaStack({
-	piece,
-	knobs,
-	lit,
-	size,
-	onFocus,
-	onHover,
-}: FocusHandlers & {
-	readonly piece: LemmaPiece;
-	readonly knobs: GlossKnobs;
-	readonly lit: boolean;
-	readonly size: "card" | "sheet";
-}) {
-	const key = lemmaKey(piece.id);
-	return (
-		<button
-			type="button"
-			aria-pressed={lit}
-			onClick={() => onFocus(key)}
-			onPointerEnter={(event) => {
-				if (event.pointerType === "mouse") onHover(key);
-			}}
-			onPointerLeave={() => onHover(null)}
-			className={cn(
-				"grid cursor-pointer justify-items-start gap-0.5 rounded-sm text-start outline-offset-4 focus-visible:outline-2 focus-visible:outline-link",
-				columnWidth(knobs.style),
-				size === "sheet" ? "text-sm" : "text-[0.8125rem]",
-			)}
-		>
-			<span
-				data-ig-lemma={piece.id}
-				className={cn(
-					"leading-snug tracking-[-0.02em]",
-					size === "sheet" ? "text-lg" : "text-base",
-					piece.slot ? "font-normal italic" : "font-[570]",
-					lit
-						? "text-link"
-						: piece.quiet
-							? "text-ink-faint"
-							: piece.slot
-								? "text-ink-soft"
-								: "text-ink",
-				)}
-			>
-				{piece.text}
-			</span>
-			<span className="text-ink-muted">
-				{knobs.style === "plain" ? (
-					<span {...langAttrs("en")}>{piece.plain}</span>
-				) : (
-					<GlossText
-						gloss={
-							knobs.style === "leipzig"
-								? piece.leipzig
-								: piece.spelled
-						}
-					/>
-				)}
-			</span>
-		</button>
-	);
-}
-
-type Path = { readonly key: string; readonly d: string };
+type Path = {
+	readonly key: string;
+	readonly d: string;
+	/** The column a dropping-out stub leaves from. */
+	readonly drop?: string;
+};
 
 /**
  * Each line's curve, from under the piece's column to the top of the
- * lemma word it lands on, in the figure's own px. It measures again when
- * anything in the figure resizes or the fonts arrive, and divides out any
- * scale the figure is animating through.
+ * token it lands on, and each dropping column's stub, in the figure's own
+ * px. It measures again when anything in the figure resizes or the fonts
+ * arrive, and divides out any scale the figure is animating through.
  */
 function useLinkPaths(
 	figure: HTMLElement | null,
+	step: Step,
 	links: readonly Link[],
 	source: "gloss" | "morph" | "word",
 ): readonly Path[] {
@@ -334,7 +349,9 @@ function useLinkPaths(
 				: 1;
 			const at = (x: number, y: number) =>
 				`${round((x - origin.left) / scale)} ${round((y - origin.top) / scale)}`;
-			const next = links.flatMap((link) => {
+			const landing = figure.querySelector("[data-ig-landing]");
+			const landingTop = landing?.getBoundingClientRect().top ?? 0;
+			const lines = links.flatMap((link) => {
 				const column = figure.querySelector(
 					`[data-ig-col="${link.column}"]`,
 				);
@@ -343,7 +360,7 @@ function useLinkPaths(
 						? `[data-ig-word="${link.column}"]`
 						: `[data-ig-${source}="${link.column}:${link.index}"]`,
 				);
-				const to = figure.querySelector(`[data-ig-lemma="${link.to}"]`);
+				const to = figure.querySelector(`[data-ig-to="${link.to}"]`);
 				if (!column || !from || !to) return [];
 				const piece = from.getBoundingClientRect();
 				const target = to.getBoundingClientRect();
@@ -359,6 +376,28 @@ function useLinkPaths(
 					},
 				];
 			});
+			const stubs = step.columns.flatMap((each) => {
+				if (!each.drops) return [];
+				const column = figure.querySelector(
+					`[data-ig-col="${each.id}"]`,
+				);
+				const word = figure.querySelector(
+					`[data-ig-word="${each.id}"]`,
+				);
+				if (!column || !word || !landing) return [];
+				const box = word.getBoundingClientRect();
+				const mid = box.left + box.width / 2;
+				const y1 = column.getBoundingClientRect().bottom + 4 * scale;
+				const y2 = y1 + (landingTop - y1) * 0.45;
+				return [
+					{
+						key: `drop:${each.id}`,
+						drop: each.id,
+						d: `M ${at(mid, y1)} L ${at(mid, y2)}`,
+					},
+				];
+			});
+			const next = [...lines, ...stubs];
 			setPaths((previous) =>
 				previous.length === next.length &&
 				previous.every((path, index) => path.d === next[index]?.d)
@@ -370,7 +409,7 @@ function useLinkPaths(
 		const observer = new ResizeObserver(() => measure());
 		observer.observe(figure);
 		for (const child of figure.querySelectorAll(
-			"[data-ig-col], [data-ig-lemma]",
+			"[data-ig-col], [data-ig-landing]",
 		))
 			observer.observe(child);
 		void document.fonts?.ready.then(measure);
@@ -380,7 +419,7 @@ function useLinkPaths(
 			observer.disconnect();
 			window.clearTimeout(settle);
 		};
-	}, [figure, links, source]);
+	}, [figure, step, links, source]);
 	return paths;
 }
 

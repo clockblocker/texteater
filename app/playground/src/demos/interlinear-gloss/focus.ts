@@ -1,22 +1,16 @@
 import type { ReactNode } from "react";
-import {
-	abbreviations,
-	type Column,
-	type GlossCase,
-	type LemmaPiece,
-	unitOf,
-} from "./cases";
+import { abbreviations, type Column, type Step, type Target } from "./model";
 
 /**
- * Which word has the focus, and what it lights: a column of the clicked
- * words or a piece of the lemma, written `c:<id>` or `l:<id>`. The focus
- * lights the column, the pieces it becomes in the lemma and the line
- * between them; a lemma piece lights the pieces it came from.
+ * Which token of a step has the focus, and what it lights: a column of
+ * the top row or a target of the line it lands on, written `c:<id>` or
+ * `t:<id>`. A column lights itself, its lines and where they land; a
+ * target lights the lines that land on it and where they came from.
  */
 
 export type GlossStyle = "leipzig" | "spelled" | "plain";
 
-/** One line of the alignment: piece `index` of `column` becomes `to`. */
+/** One line of the gloss: piece `index` of `column` lands on `to`. */
 export type Link = {
 	readonly key: string;
 	readonly column: string;
@@ -26,18 +20,20 @@ export type Link = {
 
 export type Lit = {
 	readonly columns: ReadonlySet<string>;
-	readonly lemma: ReadonlySet<string>;
+	readonly targets: ReadonlySet<string>;
 	readonly links: ReadonlySet<string>;
-	/** Clause columns a lit word stands in for. */
+	/** Columns whose dropping-out stub is lit. */
+	readonly drops: ReadonlySet<string>;
+	/** The sentence's words a lit column stands in for. */
 	readonly referents: ReadonlySet<string>;
 };
 
 export const columnKey = (id: string) => `c:${id}`;
-export const lemmaKey = (id: string) => `l:${id}`;
+export const targetKey = (id: string) => `t:${id}`;
 
-/** Every line from the clicked words to the lemma. */
-export function linksOf(glossCase: GlossCase): Link[] {
-	return unitOf(glossCase).flatMap((column) =>
+/** Every line from the step's columns to its targets. */
+export function linksOf(step: Step): Link[] {
+	return step.columns.flatMap((column) =>
 		column.pieces.flatMap((piece, index) =>
 			(piece.to ?? []).map((to) => ({
 				key: `${column.id}:${index}>${to}`,
@@ -49,64 +45,53 @@ export function linksOf(glossCase: GlossCase): Link[] {
 	);
 }
 
-export function litBy(glossCase: GlossCase, focus: string | null): Lit {
-	const links = linksOf(glossCase);
+export function litBy(step: Step, focus: string | null): Lit {
+	const links = linksOf(step);
 	const id = focus?.slice(2) ?? "";
-	const shown = focus?.startsWith("c:")
-		? links.filter((link) => link.column === id)
-		: focus?.startsWith("l:")
-			? links.filter((link) => link.to === id)
-			: [];
-	const columns = new Set(shown.map((link) => link.column));
-	if (focus?.startsWith("c:")) columns.add(id);
-	const lemma = new Set(shown.map((link) => link.to));
-	if (focus?.startsWith("l:")) lemma.add(id);
-	const referents = new Set(
-		glossCase.clause
-			.filter((column) => columns.has(column.id))
-			.flatMap((column) => column.refersTo ?? []),
+	const onColumn = focus?.startsWith("c:") ?? false;
+	const onTarget = focus?.startsWith("t:") ?? false;
+	const shown = links.filter((link) =>
+		onColumn ? link.column === id : onTarget && link.to === id,
 	);
+	const columns = new Set(shown.map((link) => link.column));
+	if (onColumn) columns.add(id);
+	const targets = new Set(shown.map((link) => link.to));
+	if (onTarget) targets.add(id);
+	const lit = step.columns.filter((column) => columns.has(column.id));
 	return {
 		columns,
-		lemma,
+		targets,
 		links: new Set(shown.map((link) => link.key)),
-		referents,
+		drops: new Set(
+			lit.filter((column) => column.drops).map((column) => column.id),
+		),
+		referents: new Set(lit.flatMap((column) => column.refersTo ?? [])),
 	};
 }
 
-/** What the focused word explains, and the labels its gloss uses. */
+/** What the focused token explains, and the labels its gloss uses. */
 export type FocusNote = {
 	readonly word: string;
-	readonly lemma: boolean;
 	readonly note: ReactNode;
 	readonly labels: readonly string[];
 };
 
-export function noteFor(
-	glossCase: GlossCase,
-	focus: string | null,
-): FocusNote | null {
+export function noteFor(step: Step, focus: string | null): FocusNote | null {
 	if (!focus) return null;
 	const id = focus.slice(2);
-	if (focus.startsWith("l:")) {
-		const piece = glossCase.lemma.pieces.find((each) => each.id === id);
-		if (!piece) return null;
-		if (piece.note)
-			return {
-				word: piece.text,
-				lemma: true,
-				note: piece.note,
-				labels: labelsIn(piece.leipzig),
-			};
-		// A lemma piece with no note of its own explains where it came from.
-		const from = linksOf(glossCase).find((link) => link.to === id);
-		return from ? noteFor(glossCase, columnKey(from.column)) : null;
+	if (focus.startsWith("t:")) {
+		const target = step.targets.find((each) => each.id === id);
+		if (!target) return null;
+		if (target.note)
+			return { word: target.text, note: target.note, labels: [] };
+		// A target with no note of its own explains where it came from.
+		const from = linksOf(step).find((link) => link.to === id);
+		return from ? noteFor(step, columnKey(from.column)) : null;
 	}
-	const column = glossCase.clause.find((each) => each.id === id);
+	const column = step.columns.find((each) => each.id === id);
 	return column?.note
 		? {
 				word: column.word,
-				lemma: false,
 				note: column.note,
 				labels: column.pieces.flatMap((piece) =>
 					labelsIn(piece.leipzig),
@@ -115,13 +100,13 @@ export function noteFor(
 		: null;
 }
 
-/** Every note the case has, the clicked words' first, then the lemma's. */
-export function notesOf(glossCase: GlossCase): {
+/** Every note the step has, its columns' first, then its targets'. */
+export function notesOf(step: Step): {
 	readonly key: string;
 	readonly word: string;
 	readonly note: ReactNode;
 }[] {
-	const fromColumns = unitOf(glossCase).flatMap((column: Column) =>
+	const fromColumns = step.columns.flatMap((column: Column) =>
 		column.note
 			? [
 					{
@@ -132,12 +117,18 @@ export function notesOf(glossCase: GlossCase): {
 				]
 			: [],
 	);
-	const fromLemma = glossCase.lemma.pieces.flatMap((piece: LemmaPiece) =>
-		piece.note
-			? [{ key: lemmaKey(piece.id), word: piece.text, note: piece.note }]
+	const fromTargets = step.targets.flatMap((target: Target) =>
+		target.note
+			? [
+					{
+						key: targetKey(target.id),
+						word: target.text,
+						note: target.note,
+					},
+				]
 			: [],
 	);
-	return [...fromColumns, ...fromLemma];
+	return [...fromColumns, ...fromTargets];
 }
 
 /** A Leipzig gloss cut into its words and labels, delimiters kept. */
@@ -164,13 +155,13 @@ export function labelsIn(gloss: string): string[] {
 	];
 }
 
-/** Every label the case's glosses use, for its list of abbreviations. */
-export function labelsOf(glossCase: GlossCase): string[] {
-	const glosses = [
-		...glossCase.clause.flatMap((column) =>
-			column.pieces.map((piece) => piece.leipzig),
+/** Every label the step's glosses use, for its list of abbreviations. */
+export function labelsOf(step: Step): string[] {
+	return [
+		...new Set(
+			step.columns.flatMap((column) =>
+				column.pieces.flatMap((piece) => labelsIn(piece.leipzig)),
+			),
 		),
-		...glossCase.lemma.pieces.map((piece) => piece.leipzig),
-	];
-	return [...new Set(glosses.flatMap(labelsIn))].sort();
+	].sort();
 }

@@ -16,55 +16,73 @@ import {
 	useInspectorAvoid,
 	usePlaygroundEnv,
 } from "@/shell";
-import { LemmaPage, SurfaceCard, SurfacePage } from "./cards";
-import { type GlossCase, unitOf } from "./cases";
+import { CardTail, DeckCard } from "./cards";
+import { type CardKind, firstCard, nextCard, titleOf } from "./cases";
+import { type Dealt, Deck } from "./deck";
 import { columnKey } from "./focus";
 import { InspectorPanel } from "./inspector";
+import type { GlossCase } from "./model";
+import { CoverPage } from "./pages";
 import { type Box, type Placement, placeBeside, type Scene } from "./placement";
 import { type Cover, type CoverStack, Sheet } from "./sheet";
 import { useKnobs } from "./use-knobs";
 
-/** Wide enough for five glossed words in a row. */
+/** Wide enough for six glossed words in a row. */
 const popoverWidth = 408;
 
 type Measured = Omit<Scene, "stack">;
 
+/** A token's focus, held for the Card or Cover it was given on. */
+type Held = { readonly at: string; readonly key: string };
+
 /**
- * Interlinear gloss: the clicked words' Surface popover explains how they
- * become the lemma as a Leipzig-style interlinear gloss, each word over
- * its morphemes and glosses, with a line from each piece to where it lands
- * in the lemma's header. ⤢ opens it as a Sheet with the whole clause
- * glossed and every word's note. The case, the clicked word and the knobs
- * live in the URL.
+ * Interlinear gloss: the clicked words' popover is a Deck of two glosses.
+ * The Attestation Card glosses the words on the page into their Surface
+ * line, syntax only, with lines that cross where the order changes; its
+ * last line is the Surface line, the link that deals the Surface Card.
+ * The Surface Card glosses that line morpheme by morpheme into the Lemma,
+ * whose line deals the Lemma Card. A tail goes back; ⤢ opens a Card as a
+ * Sheet, where the same links push Covers. The case, the clicked word and
+ * the knobs live in the URL.
  */
 export default function InterlinearGlossDemo() {
 	const env = usePlaygroundEnv();
-	const { glossCase, setCase, wordId, setWordId, knobs, note, setKnob } =
-		useKnobs();
+	const {
+		glossCase,
+		setCase,
+		wordId,
+		setWordId,
+		knobs,
+		note,
+		quiet,
+		setKnob,
+	} = useKnobs();
 	const words = wordsOf(glossCase.text);
 	const word = words.find((each) => each.id === wordId && each.unitId);
 
-	const [picked, setPicked] = useState<string | null>(null);
-	const [hover, setHover] = useState<string | null>(null);
-	const focus = hover ?? picked ?? clickedKey(glossCase, word);
-	const [sheet, setSheet] = useState<CoverStack | null>(null);
 	const nextKey = useRef(0);
-
-	const cover = (kind: Cover["kind"]): Cover => {
+	const fresh = () => {
 		nextKey.current += 1;
-		return {
-			key: `c${nextKey.current}`,
-			kind,
-			label:
-				kind === "lemma"
-					? glossCase.lemma.title
-					: unitOf(glossCase)
-							.map((column) => column.word)
-							.join(" "),
-			lang: "de",
-		};
+		return `k${nextKey.current}`;
 	};
-	const pushCover = (kind: Cover["kind"]) =>
+	const [deck, setDeck] = useState<readonly Dealt[] | null>(null);
+	// The Deck a click deals: its first Card until a link deals another.
+	const shownDeck: readonly Dealt[] = word
+		? (deck ?? [{ key: "first", kind: firstCard(glossCase, quiet) }])
+		: [];
+	const [sheet, setSheet] = useState<CoverStack | null>(null);
+	const [picked, setPicked] = useState<Held | null>(null);
+	const [hover, setHover] = useState<Held | null>(null);
+	const top = sheet?.covers.at(-1);
+	const front = shownDeck.at(-1);
+
+	const cover = (kind: CardKind): Cover => ({
+		key: fresh(),
+		kind,
+		label: titleOf(glossCase, kind),
+		lang: "de",
+	});
+	const pushCover = (kind: CardKind) =>
 		setSheet((open) => ({
 			covers: [...(open?.covers ?? []), cover(kind)],
 			move: "push",
@@ -75,27 +93,62 @@ export default function InterlinearGlossDemo() {
 			if (index < 0) return null;
 			return { covers: open.covers.slice(0, index + 1), move: "back" };
 		});
+	const deal = (kind: CardKind) =>
+		setDeck([...shownDeck, { key: fresh(), kind }]);
+	const backTo = (index: number) => setDeck(shownDeck.slice(0, index + 1));
 
+	const resetFocus = () => {
+		setPicked(null);
+		setHover(null);
+	};
 	const openWord = (clicked: FixtureWord) => {
 		if (!clicked.unitId) {
 			closePopover();
 			return;
 		}
 		setWordId(clicked.id, { push: true });
-		setPicked(null);
-		setHover(null);
+		setDeck(null);
 		setSheet(null);
+		resetFocus();
 	};
 	const closePopover = () => {
 		setWordId(null, { push: true });
-		setPicked(null);
-		setHover(null);
+		setDeck(null);
+		resetFocus();
 	};
 	const switchCase = (next: GlossCase) => {
 		setCase(next);
-		setPicked(null);
-		setHover(null);
+		setDeck(null);
 		setSheet(null);
+		resetFocus();
+	};
+	const onKnob = (
+		name: Parameters<typeof setKnob>[0],
+		value: string | boolean,
+	) => {
+		setKnob(name, value);
+		if (name === "quiet") {
+			setDeck(null);
+			setSheet(null);
+		}
+	};
+
+	/** Everything a Card or Cover at `at` needs, its focus included. */
+	const propsAt = (at: string, kind: CardKind) => {
+		const focus =
+			hover?.at === at
+				? hover.key
+				: picked?.at === at
+					? picked.key
+					: firstFocus(glossCase, kind, word);
+		return {
+			glossCase,
+			knobs,
+			note,
+			focus,
+			onFocus: (key: string) => setPicked({ at, key }),
+			onHover: (key: string | null) => setHover(key ? { at, key } : null),
+		};
 	};
 
 	const [area, setArea] = useState<HTMLDivElement | null>(null);
@@ -171,15 +224,6 @@ export default function InterlinearGlossDemo() {
 
 	useInspectorAvoid(avoidSide(sheet !== null, word !== undefined, placement));
 
-	const shared = {
-		glossCase,
-		knobs,
-		focus,
-		onFocus: setPicked,
-		onHover: setHover,
-	};
-	const top = sheet?.covers.at(-1);
-
 	return (
 		<div className="flex h-full flex-col bg-canvas text-ink">
 			<DemoInspector>
@@ -188,7 +232,8 @@ export default function InterlinearGlossDemo() {
 					onCase={switchCase}
 					knobs={knobs}
 					note={note}
-					setKnob={setKnob}
+					quiet={quiet}
+					setKnob={onKnob}
 				/>
 			</DemoInspector>
 
@@ -219,28 +264,40 @@ export default function InterlinearGlossDemo() {
 				</div>
 
 				<div className="pointer-events-none absolute inset-0 overflow-hidden">
-					{word ? (
+					{word && front ? (
 						<Popover
 							placement={placement}
 							openKey={`${glossCase.id}:${word.id}`}
 							contentRef={setContent}
 							onClose={closePopover}
 						>
-							<SurfaceCard
-								{...shared}
-								note={note}
-								onOpenSheet={() =>
-									setSheet({
-										covers: [cover("surface")],
-										move: "push",
-									})
-								}
-								onFollow={() =>
-									setSheet({
-										covers: [cover("lemma")],
-										move: "push",
-									})
-								}
+							<Deck
+								cards={shownDeck}
+								renderTail={(card, index) => (
+									<CardTail
+										kind={card.kind}
+										glossCase={glossCase}
+										onClick={() => backTo(index)}
+									/>
+								)}
+								renderFront={(card) => {
+									const next = nextCard(card.kind);
+									return (
+										<DeckCard
+											kind={card.kind}
+											{...propsAt(card.key, card.kind)}
+											onFollow={() => {
+												if (next) deal(next);
+											}}
+											onOpenSheet={() =>
+												setSheet({
+													covers: [cover(card.kind)],
+													move: "push",
+												})
+											}
+										/>
+									);
+								}}
 							/>
 						</Popover>
 					) : null}
@@ -254,14 +311,14 @@ export default function InterlinearGlossDemo() {
 							ground={{ title: glossCase.text.title, lang: "de" }}
 							onPop={popCover}
 						>
-							{top.kind === "surface" ? (
-								<SurfacePage
-									{...shared}
-									onFollow={() => pushCover("lemma")}
-								/>
-							) : (
-								<LemmaPage glossCase={glossCase} />
-							)}
+							<CoverPage
+								kind={top.kind}
+								{...propsAt(top.key, top.kind)}
+								onFollow={() => {
+									const next = nextCard(top.kind);
+									if (next) pushCover(next);
+								}}
+							/>
 						</Sheet>
 					) : null}
 				</AnimatePresence>
@@ -270,16 +327,30 @@ export default function InterlinearGlossDemo() {
 	);
 }
 
-/** The column the reader clicked, which has the focus until another does. */
-function clickedKey(
+/**
+ * The token that has the focus when a Card comes to the front: on the
+ * Attestation, the word the reader clicked; elsewhere, the step's first.
+ */
+function firstFocus(
 	glossCase: GlossCase,
+	kind: CardKind,
 	word: FixtureWord | undefined,
 ): string | null {
-	if (!word) return null;
-	const column = unitOf(glossCase).find(
-		(each) => each.word.toLowerCase() === word.text.toLowerCase(),
-	);
-	return column ? columnKey(column.id) : null;
+	const step =
+		kind === "attestation"
+			? glossCase.attestation.syntax
+			: kind === "surface"
+				? glossCase.surface.inflection
+				: null;
+	if (!step) return null;
+	const clicked =
+		kind === "attestation" && word
+			? step.columns.find(
+					(each) =>
+						each.word.toLowerCase() === word.text.toLowerCase(),
+				)
+			: undefined;
+	return columnKey(clicked?.id ?? step.first);
 }
 
 /** Where the inspector keeps clear of: the Sheet, or the popover's side. */

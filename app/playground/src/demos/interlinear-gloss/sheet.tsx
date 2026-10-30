@@ -4,12 +4,13 @@ import { AnimatePresence, motion } from "motion/react";
 import { type ReactNode, useLayoutEffect, useRef } from "react";
 import { langAttrs, type RunLanguage } from "@/fixtures";
 import { usePlaygroundEnv } from "@/shell";
+import type { CardKind } from "./cases";
 
 /** One Cover on the Pane's Cover stack. */
 export type Cover = {
 	readonly key: string;
-	/** What the stop shows: the clicked words' Surface, or their lemma. */
-	readonly kind: "surface" | "lemma";
+	/** The Card it shows: the Attestation, the Surface or the Lemma. */
+	readonly kind: CardKind;
 	/** Its crumb. */
 	readonly label: string;
 	readonly lang: RunLanguage;
