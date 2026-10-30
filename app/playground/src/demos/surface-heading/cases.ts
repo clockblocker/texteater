@@ -7,7 +7,7 @@
  */
 
 /** One piece of a slotted line, in reading order. */
-export type LineToken =
+type LineToken =
 	/** A word of the stored form. */
 	| { readonly kind: "word"; readonly text: string; readonly prefix?: string }
 	/** A stored word a slot follows, printed in the preposition style. */
@@ -20,7 +20,7 @@ export type LineToken =
 			readonly optional?: boolean;
 	  };
 
-export type Reading = {
+type Reading = {
 	readonly emoji: string;
 	readonly gloss: string;
 	/** How many Attestations the Reading has; the most common leads. */
@@ -29,7 +29,7 @@ export type Reading = {
 	readonly line: readonly LineToken[] | null;
 };
 
-export type Analysis = {
+type Analysis = {
 	readonly canonicalForm: string;
 	/** `Locution · VERB · past · 3rd sg`, as the Analyses aside has it. */
 	readonly aside: string;
