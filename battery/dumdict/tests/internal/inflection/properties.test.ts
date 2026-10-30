@@ -111,7 +111,7 @@ const slices: Record<string, LemmaSlice<"de">> = {
 			[
 				"r5",
 				mail,
-				verbSurface(senden, "wurde gesendet", {
+				verbSurface(senden, "gesendet wurde", {
 					...third,
 					passive: true,
 				}),
@@ -186,10 +186,10 @@ describe("projectLemmaTables is a function of sets", () => {
 			view.surfaces.map((line) => [line.form.letters, line.inCore]),
 		).toEqual([
 			["gesandt", true],
+			["gesendet wurde", false],
 			["sandte", true],
 			["sendete", true],
 			["sendete", false],
-			["wurde gesendet", false],
 		]);
 	});
 });

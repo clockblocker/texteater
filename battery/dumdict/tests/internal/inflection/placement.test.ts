@@ -86,7 +86,7 @@ describe("placeSurface", () => {
 	});
 
 	test("a passive fits no active cell, since passive is a key feature", () => {
-		const passive = verbSurface(senden, "wurde gesendet", {
+		const passive = verbSurface(senden, "gesendet wurde", {
 			person: "3",
 			number: "Sing",
 			passive: true,
@@ -142,7 +142,7 @@ describe("surfaceAxes", () => {
 	});
 
 	test("an Unplaced Surface keeps its own non-null features", () => {
-		const passive = verbSurface(senden, "wurde gesendet", {
+		const passive = verbSurface(senden, "gesendet wurde", {
 			person: "3",
 			number: "Sing",
 			passive: true,

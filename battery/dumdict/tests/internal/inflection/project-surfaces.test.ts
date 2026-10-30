@@ -151,7 +151,7 @@ describe("Surfaces outside the core cells", () => {
 	const mail = readingOf(senden, "📨");
 
 	test("a passive fits no cell and is listed with its own features", () => {
-		const passive = verbSurface(senden, "wurde gesendet", {
+		const passive = verbSurface(senden, "gesendet wurde", {
 			person: "3",
 			number: "Sing",
 			passive: true,
