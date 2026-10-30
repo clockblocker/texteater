@@ -313,6 +313,9 @@ test("the arms' port fails with a typed ProviderFailure when no answer came, a c
 
 test("interrupting the arms' port aborts the requests it sent", async () => {
 	const aborted: string[] = [];
+	// Each chunk reads its cache bucket before it reaches jev, in either
+	// order, so the port is interrupted once both requests are in flight.
+	let inFlight = 0;
 	const sent = Promise.withResolvers<void>();
 	const jev = new JevCache({
 		cacheDirectory: cacheDirectory(),
@@ -320,8 +323,7 @@ test("interrupting the arms' port aborts the requests it sent", async () => {
 		// Never answers: each request settles only when its signal aborts.
 		transport: (asked, { signal }) =>
 			new Promise((_resolve, reject) => {
-				if (Object.keys(asked.questions).includes("r_1_2"))
-					sent.resolve();
+				if (++inFlight === 2) sent.resolve();
 				signal.addEventListener("abort", () => {
 					aborted.push(Object.keys(asked.questions).join(","));
 					reject(signal.reason);
