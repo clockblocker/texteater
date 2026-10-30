@@ -547,7 +547,7 @@
 								"coreFeatures": {}
 							},
 							"governedCase": "Acc",
-							"referent": "Either"
+							"referent": "Something"
 						},
 						"realizedCase": "Acc"
 					}

@@ -53,6 +53,10 @@
 			{
 				"rule": "de/principal-parts-as-the-dictionary-cites",
 				"hash": "3757ab1bafee87f5"
+			},
+			{
+				"rule": "de/pronominal-adverb-stands-alone",
+				"hash": "7f889649dfebcfb7"
 			}
 		],
 		"references": [
@@ -93,7 +97,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "bewog is the Präteritum of bewegen in DWDS's sense 2, to induce someone to act, which conjugates strong: bewog, bewogen, Konjunktiv II bewöge. Moving something 🔃 conjugates weak (bewegte). 🫸 stands in for the push that moves a decision."
+				"rationale": "bewog is the Präteritum of bewegen in DWDS's sense 2, to induce someone to act, which conjugates strong: bewog, bewogen, Konjunktiv II bewöge. Moving something 🔃 conjugates weak (bewegte). 🫸 stands in for the push that moves a decision. In this sense bewegen takes zu + Dat (jemanden zu etwas bewegen): the free ADV dazu fills that slot, so the valency evidence records zu with no member (de/pronominal-adverb-stands-alone)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -105,7 +109,25 @@
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": [],
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "zu",
+								"coreFeatures": {}
+							},
+							"governedCase": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
