@@ -93,7 +93,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Deck interactions",
 		icon: GalleryHorizontalEndIcon,
 		description:
-			"Five ways to carry a Card off its Deck, put it back, dismiss the Deck and open the Card, behind one switch, with each variant's knobs, slow-mo, reduced motion and RTL in the inspector.",
+			"Two ways to carry a Card off its Deck, put it back, dismiss the Deck and open the Card, B (Table) and D (Swipe actions), behind one switch, with each variant's knobs, slow-mo, reduced motion and RTL in the inspector.",
 		render: () => <DeckInteractions />,
 	},
 	{

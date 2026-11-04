@@ -30,10 +30,6 @@ export function clamp(value: number, min: number, max: number): number {
 	return Math.min(max, Math.max(min, value));
 }
 
-export function lerp(from: number, to: number, t: number): number {
-	return from + (to - from) * t;
-}
-
 export function centre(rect: Rect): Point {
 	return { u: rect.u + rect.w / 2, v: rect.v + rect.h / 2 };
 }
@@ -82,12 +78,12 @@ export function project(
 	return { u: point.u + velocity.u * ms, v: point.v + velocity.v * ms };
 }
 
-export function magnitude(point: Point): number {
+function magnitude(point: Point): number {
 	return Math.hypot(point.u, point.v);
 }
 
 /** Which axis leads, and by how much: the main axis must dominate. */
-export function dominantAxis(point: Point): "inline" | "block" {
+function dominantAxis(point: Point): "inline" | "block" {
 	return Math.abs(point.u) >= Math.abs(point.v) ? "inline" : "block";
 }
 
@@ -119,13 +115,6 @@ export function flickOf({
 	return { axis, sign: main < 0 ? -1 : 1, speed };
 }
 
-/** A unit vector along a flick, in logical coordinates. */
-export function flickVector(flick: Flick): Point {
-	return flick.axis === "inline"
-		? { u: flick.sign, v: 0 }
-		: { u: 0, v: flick.sign };
-}
-
 /** `point` scaled to length 1; straight down when it has none. */
 export function unit(point: Point): Point {
 	const length = magnitude(point);
@@ -147,42 +136,6 @@ export function returning(
 	const middle = centre(footprint);
 	const away = { u: point.u - middle.u, v: point.v - middle.v };
 	return away.u * velocity.u + away.v * velocity.v < 0;
-}
-
-/**
- * The Card's lean: a share of its offset plus a share of its speed, each
- * clamped, and turned over when it hangs from a grab in its bottom half.
- * Physical: `dx` and `vx` are screen x, so it leans the same way in RTL.
- */
-export function tiltOf({
-	dx,
-	vx,
-	perPx,
-	max,
-	velocityGain,
-	velocityMax,
-	hinge,
-}: {
-	readonly dx: number;
-	readonly vx: number;
-	readonly perPx: number;
-	readonly max: number;
-	readonly velocityGain: number;
-	readonly velocityMax: number;
-	readonly hinge: boolean;
-}): number {
-	const lean =
-		clamp(dx * perPx, -max, max) +
-		clamp(vx * velocityGain, -velocityMax, velocityMax);
-	return hinge ? -lean : lean;
-}
-
-/** iOS's rubber band: the further past, the less each pixel moves it. */
-export function rubberBand(offset: number, limit: number): number {
-	if (limit <= 0) return 0;
-	const sign = offset < 0 ? -1 : 1;
-	const past = Math.abs(offset);
-	return sign * limit * (1 - 1 / ((past * 0.55) / limit + 1));
 }
 
 /**

@@ -55,7 +55,6 @@ export function CardView({
 	held,
 	expanded,
 	mark,
-	ring = false,
 	onPointerDown,
 	onPointerEnter,
 	onPointerLeave,
@@ -67,8 +66,6 @@ export function CardView({
 	readonly held: boolean;
 	readonly expanded: boolean;
 	readonly mark: Mark | null;
-	/** E's hold under reduced motion: a ring grows instead of the scale. */
-	readonly ring?: boolean;
 	readonly onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
 	readonly onPointerEnter?: (event: ReactPointerEvent<HTMLElement>) => void;
 	readonly onPointerLeave?: (event: ReactPointerEvent<HTMLElement>) => void;
@@ -76,17 +73,12 @@ export function CardView({
 }) {
 	const x = useTransform(values.u, (u) => (rtl ? -u : u));
 	const rotate = useTransform(values.r, (r) => (rtl ? -r : r));
-	const boxShadow = useTransform(
-		[values.lift, values.hold],
-		([lift = 0, hold = 0]: number[]) => {
-			const l = Math.max(lift, hold);
-			const ringWidth = ring ? hold * 4 : 0;
-			const offset = (0.25 + 1.25 * l).toFixed(2);
-			const blur = (0.75 + 2.25 * l).toFixed(2);
-			const alpha = (0.2 + 0.25 * l).toFixed(2);
-			return `0 ${offset}rem ${blur}rem rgb(0 0 0 / ${alpha}), 0 0 0 ${ringWidth.toFixed(1)}px var(--link)`;
-		},
-	);
+	const boxShadow = useTransform(values.lift, (l) => {
+		const offset = (0.25 + 1.25 * l).toFixed(2);
+		const blur = (0.75 + 2.25 * l).toFixed(2);
+		const alpha = (0.2 + 0.25 * l).toFixed(2);
+		return `0 ${offset}rem ${blur}rem rgb(0 0 0 / ${alpha})`;
+	});
 	const glow = mark ? glowStyle(mark, rtl) : null;
 	return (
 		<motion.article
@@ -138,9 +130,9 @@ export function CardView({
 
 /**
  * A Card's face: its Heading row, with the Cover's × when expanded, and
- * its Source Contexts and lines. C's reduced cross-fade draws it alone.
+ * its Source Contexts and lines.
  */
-export function CardFace({
+function CardFace({
 	card,
 	expanded,
 	onClose,

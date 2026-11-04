@@ -1,14 +1,6 @@
 import { CARD_WIDTH_REM, HEADER_REM } from "compass";
 import { OPEN_SCALE } from "@/workspace/motion/motion-spec";
-import {
-	centre,
-	FOOTPRINT_PAD_PX,
-	inflate,
-	type Rect,
-	rotateAround,
-	type Slot,
-	union,
-} from "./geometry";
+import { centre, type Rect, rotateAround, type Slot, union } from "./geometry";
 
 const REM = 16;
 /** The real Deck's sizes: a Card's width and one folded Heading row. */
@@ -59,27 +51,6 @@ export function fanSlots(slots: readonly Slot[], degrees: number): Slot[] {
 			r: turn,
 		};
 	});
-}
-
-/**
- * The Deck's footprint: what shows of every Card not in hand, padded. A
- * Card behind shows its strip down to the next Card's top; the front one
- * shows whole. Carrying the front Card leaves only the strips, so the
- * place it rose from is not "over the Deck".
- */
-export function footprintOf(
-	slots: readonly Slot[],
-	except: number,
-): Rect | null {
-	const front = slots.length - 1;
-	const shown = slots.flatMap((slot, index) => {
-		if (index === except) return [];
-		const next = slots[index + 1];
-		if (index === front || !next) return [slot];
-		return [{ ...slot, h: Math.max(0, next.v - slot.v) }];
-	});
-	const rest = union(shown);
-	return rest ? inflate(rest, FOOTPRINT_PAD_PX) : null;
 }
 
 /** The Cover a Card expands into: its Pane, inset as a Sheet is. */

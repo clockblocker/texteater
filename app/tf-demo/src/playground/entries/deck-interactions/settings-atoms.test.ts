@@ -17,12 +17,12 @@ function useStorage(entries: Map<string, string>) {
 	});
 }
 
-test("the page opens on A with full motion, real time and LTR", () => {
+test("the page opens on B with full motion, real time and LTR", () => {
 	useStorage(new Map());
 	expect(
 		settingsOf(AtomRegistry.make().get(deckInteractionSettingsAtom)),
 	).toEqual({
-		variant: "stack",
+		variant: "table",
 		reducedMotion: "off",
 		timeScale: 1,
 		rtl: false,
@@ -43,7 +43,7 @@ test("a stored field that no longer decodes falls back alone", () => {
 	const settings = settingsOf(
 		AtomRegistry.make().get(deckInteractionSettingsAtom),
 	);
-	expect(settings.variant).toBe("stack");
+	expect(settings.variant).toBe("table");
 	expect(settings.rtl).toBe(true);
 	expect(settings.timeScale).toBe(1);
 });
@@ -60,13 +60,13 @@ test("Storage that throws reads as the defaults", () => {
 	expect(
 		settingsOf(AtomRegistry.make().get(deckInteractionSettingsAtom))
 			.variant,
-	).toBe("stack");
+	).toBe("table");
 });
 
 test("a knob out of range or of the wrong type keeps its default", () => {
 	expect(
-		readKnobs("stack", { threshold: 9999, hinge: "yes", tiltMax: 20 }),
-	).toEqual({ ...DEFAULTS.stack, tiltMax: 20 });
+		readKnobs("table", { targetSize: 9999, commitPulse: "yes", fanDeg: 8 }),
+	).toEqual({ ...DEFAULTS.table, fanDeg: 8 });
 	expect(readKnobs("table", { showTargets: "near" }).showTargets).toBe(
 		"near",
 	);

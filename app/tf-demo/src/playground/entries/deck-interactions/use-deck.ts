@@ -31,8 +31,6 @@ export type CardValues = {
 	readonly z: MotionValue<number>;
 	readonly stamp: MotionValue<number>;
 	readonly glow: MotionValue<number>;
-	/** E's hold, 0 to 1 while it counts down. */
-	readonly hold: MotionValue<number>;
 };
 
 /**
@@ -53,7 +51,6 @@ function makeValues(slot?: Slot, z = 1): CardValues {
 		z: motionValue(z),
 		stamp: motionValue(0),
 		glow: motionValue(0),
-		hold: motionValue(0),
 	};
 }
 
@@ -360,7 +357,6 @@ export function useDeck({
 			card.lift.jump(0);
 			card.stamp.jump(0);
 			card.glow.jump(0);
-			card.hold.jump(0);
 			card.o.jump(0);
 			card.z.jump(BASE_Z + index);
 			void wait(index * 40, context).then(() => {

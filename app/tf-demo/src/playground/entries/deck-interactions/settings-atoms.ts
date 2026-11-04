@@ -49,7 +49,7 @@ export type Settings = {
 
 export function settingsOf(stored: StoredSettings): Settings {
 	return {
-		variant: stored.variant ?? "stack",
+		variant: stored.variant ?? "table",
 		reducedMotion: stored.reducedMotion ?? "off",
 		timeScale: stored.timeScale ?? 1,
 		rtl: stored.rtl ?? false,

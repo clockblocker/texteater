@@ -1,16 +1,7 @@
 import { useSyncExternalStore } from "react";
 import type { Point } from "./geometry";
 
-type Phase =
-	| "rest"
-	| "pressed"
-	| "holding"
-	| "carrying"
-	| "deck drag"
-	| "scrubbing"
-	| "settling"
-	| "expanded"
-	| "gone";
+type Phase = "rest" | "pressed" | "carrying" | "settling" | "expanded" | "gone";
 
 export type Readout = {
 	readonly phase: Phase;

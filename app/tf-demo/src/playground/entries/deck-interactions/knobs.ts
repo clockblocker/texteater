@@ -4,13 +4,7 @@
  * the wrong type or out of range falls back to its default, alone.
  */
 
-export const VARIANT_KEYS = [
-	"stack",
-	"table",
-	"wallet",
-	"swipe",
-	"whole",
-] as const;
+export const VARIANT_KEYS = ["table", "swipe"] as const;
 export type VariantKey = (typeof VARIANT_KEYS)[number];
 
 const SHOW_TARGETS = ["always", "pickup", "near"] as const;
@@ -71,36 +65,7 @@ function toggle<K extends string>(key: K, label: string): ToggleKnob<K> {
 
 const FLICK = num("flickSpeed", "Flick speed", 0.1, 3, 0.05, "px/ms");
 
-const STACK_DEFAULTS = {
-	threshold: 110,
-	flickSpeed: 0.5,
-	tiltPerPx: 0.05,
-	velocityTiltGain: 4,
-	tiltMax: 12,
-	hinge: true,
-	revealScale: 0.96,
-	followStaggerMs: 40,
-	flyStiffness: 360,
-	flyDamping: 38,
-	stamp: true,
-};
-export type StackKnobs = typeof STACK_DEFAULTS;
-
-const STACK_KNOBS: readonly Knob<StackKnobs>[] = [
-	num("threshold", "Threshold", 40, 240, 2, "px"),
-	FLICK,
-	num("tiltPerPx", "Tilt per px", 0, 0.2, 0.005, "°"),
-	num("velocityTiltGain", "Velocity tilt gain", 0, 15, 0.5, "°·ms/px"),
-	num("tiltMax", "Tilt max", 0, 30, 1, "°"),
-	toggle("hinge", "Grab hinge"),
-	num("revealScale", "Reveal scale", 0.8, 1, 0.01),
-	num("followStaggerMs", "Follow stagger", 0, 200, 5, "ms"),
-	num("flyStiffness", "Fly stiffness", 50, 1500, 10),
-	num("flyDamping", "Fly damping", 1, 120, 1),
-	toggle("stamp", "Stamp"),
-];
-
-/** B's targets, which E's hold-carry shares. */
+/** B's targets: their size, their pull and when they show. */
 const TARGET_DEFAULTS = {
 	targetSize: 64,
 	magnetRadius: 48,
@@ -142,27 +107,6 @@ const TABLE_KNOBS: readonly Knob<TableKnobs>[] = [
 	...TARGET_KNOBS,
 ];
 
-const WALLET_DEFAULTS = {
-	peek: 14,
-	axisLock: 10,
-	expandDistance: 180,
-	completion: 0.5,
-	dismissDistance: 120,
-	rubberLimit: 40,
-	flickSpeed: 0.5,
-};
-export type WalletKnobs = typeof WALLET_DEFAULTS;
-
-const WALLET_KNOBS: readonly Knob<WalletKnobs>[] = [
-	num("peek", "Peek", 4, 48, 1, "px"),
-	num("axisLock", "Axis lock", 2, 40, 1, "px"),
-	num("expandDistance", "Expand distance", 60, 400, 5, "px"),
-	num("completion", "Completion p", 0.1, 0.9, 0.05),
-	num("dismissDistance", "Dismiss distance", 40, 300, 5, "px"),
-	num("rubberLimit", "Sideways rubber limit", 0, 120, 2, "px"),
-	FLICK,
-];
-
 const SWIPE_DEFAULTS = {
 	detent: 96,
 	resistance: 0.15,
@@ -180,45 +124,19 @@ const SWIPE_KNOBS: readonly Knob<SwipeKnobs>[] = [
 	FLICK,
 ];
 
-const WHOLE_DEFAULTS = {
-	holdMs: 220,
-	deckFollowStiffness: 700,
-	threshold: 100,
-	flickSpeed: 0.5,
-	...TARGET_DEFAULTS,
-};
-export type WholeKnobs = typeof WHOLE_DEFAULTS;
-
-const WHOLE_KNOBS: readonly Knob<WholeKnobs>[] = [
-	num("holdMs", "Hold", 80, 800, 10, "ms"),
-	num("deckFollowStiffness", "Deck follow stiffness", 100, 2000, 20),
-	num("threshold", "Threshold", 40, 240, 2, "px"),
-	FLICK,
-	...TARGET_KNOBS,
-];
-
 export type KnobsOf = {
-	readonly stack: StackKnobs;
 	readonly table: TableKnobs;
-	readonly wallet: WalletKnobs;
 	readonly swipe: SwipeKnobs;
-	readonly whole: WholeKnobs;
 };
 
 export const DEFAULTS: KnobsOf = {
-	stack: STACK_DEFAULTS,
 	table: TABLE_DEFAULTS,
-	wallet: WALLET_DEFAULTS,
 	swipe: SWIPE_DEFAULTS,
-	whole: WHOLE_DEFAULTS,
 };
 
 export const KNOBS: { readonly [K in VariantKey]: readonly AnyKnob[] } = {
-	stack: STACK_KNOBS,
 	table: TABLE_KNOBS,
-	wallet: WALLET_KNOBS,
 	swipe: SWIPE_KNOBS,
-	whole: WHOLE_KNOBS,
 };
 
 function validValue(knob: AnyKnob, value: unknown): boolean {

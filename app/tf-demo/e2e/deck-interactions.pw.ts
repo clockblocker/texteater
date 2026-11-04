@@ -3,19 +3,13 @@ import { expect, type Locator, type Page, test } from "@playwright/test";
 
 /**
  * The Deck interactions prototype: every variant behind the inspector's
- * switch, and in A and B a drag that closes the Deck and one that opens
- * the Card. Releases are slow, so none of them reads as a flick.
+ * switch, and in B a drag that closes the Deck and one that opens the
+ * Card. Releases are slow, so none of them reads as a flick.
  */
 
 test.use({ viewport: { width: 1600, height: 1000 } });
 
-const VARIANTS = [
-	"A · Stack",
-	"B · Table",
-	"C · Wallet",
-	"D · Swipe actions",
-	"E · Whole Deck",
-];
+const VARIANTS = ["B · Table", "D · Swipe actions"];
 
 const inspector = (page: Page) =>
 	page.getByRole("complementary", { name: "Inspector" });
@@ -72,34 +66,6 @@ test("every variant deals the Deck, with nothing but Cards at rest", async ({
 		await expect(frame(page).locator("[data-card-id]")).toHaveCount(4);
 		await expect(frame(page)).not.toContainText("Readouts");
 	}
-});
-
-test("A: inline-start closes the Deck, inline-end opens the Card", async ({
-	page,
-}) => {
-	await chooseVariant(page, "A · Stack");
-	await carry(page, front(page), async ({ x, y }) => ({ x: x - 180, y }));
-	await expect(frame(page).locator("[data-card-id]")).toHaveCount(0);
-	await expect(
-		inspector(page).locator('[data-readout="last release"]'),
-	).toHaveText(/^dismiss · distance/);
-	await redeal(page);
-	await carry(page, front(page), async ({ x, y }) => ({ x: x + 180, y }));
-	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
-	await page.keyboard.press("Escape");
-	await expect(frame(page).locator("[data-expanded]")).toHaveCount(0);
-});
-
-test("A: a Card from behind dropped onto the Deck goes back", async ({
-	page,
-}) => {
-	await chooseVariant(page, "A · Stack");
-	const back = frame(page).locator("[data-card-id]").first();
-	await carry(page, back, async ({ x, y }) => ({ x, y: y + 200 }));
-	await expect(frame(page).locator("[data-card-id]")).toHaveCount(4);
-	await expect(
-		inspector(page).locator('[data-readout="last release"]'),
-	).toHaveText("back · footprint");
 });
 
 test("B: the tray closes the Deck, the pad opens the Card", async ({

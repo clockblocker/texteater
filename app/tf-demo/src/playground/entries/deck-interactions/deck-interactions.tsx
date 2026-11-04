@@ -39,11 +39,11 @@ function useFrameSize(element: React.RefObject<HTMLDivElement | null>): Frame {
 }
 
 /**
- * The Deck-of-Cards interaction prototype: five ways to carry, put back,
- * dismiss and open a Card, side by side behind one switch. The frame shows
- * only the Deck and what a variant puts on the table; the copy, the
- * switches, the knobs and the readouts are in the inspector (playground
- * ADR 0001).
+ * The Deck-of-Cards interaction prototype: the ways to carry, put back,
+ * dismiss and open a Card that are still in the running, behind one
+ * switch. The frame shows only the Deck and what a variant puts on the
+ * table; the copy, the switches, the knobs and the readouts are in the
+ * inspector (playground ADR 0001).
  */
 export function DeckInteractions() {
 	const [stored, setStored] = useAtom(deckInteractionSettingsAtom);

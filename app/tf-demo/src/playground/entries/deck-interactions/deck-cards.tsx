@@ -27,7 +27,6 @@ export function DeckCards({
 	deck,
 	rtl,
 	held,
-	ring = false,
 	onDown,
 	onEnter,
 	onLeave,
@@ -35,7 +34,6 @@ export function DeckCards({
 	readonly deck: Deck;
 	readonly rtl: boolean;
 	readonly held: string | null;
-	readonly ring?: boolean;
 	readonly onDown: CardHandler;
 	readonly onEnter?: CardHandler;
 	readonly onLeave?: CardHandler;
@@ -62,7 +60,6 @@ export function DeckCards({
 				held={held === id}
 				expanded={expanded === id}
 				mark={deck.marks[id] ?? null}
-				ring={ring}
 				onPointerDown={(event) => {
 					if (event.button !== 0 || expanded) return;
 					if ((event.target as HTMLElement).closest("button")) return;

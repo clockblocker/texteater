@@ -8,8 +8,8 @@ import type { TableKnobs } from "./knobs";
 import { fanSlots, pileSlots } from "./layout";
 import { SPRINGS } from "./motion-kit";
 import { createTapCounter, framePoint, SLOP_PX, trackPointer } from "./pointer";
-import { tapCard } from "./stack";
 import { useTableCarry } from "./table-carry";
+import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
 
 /**

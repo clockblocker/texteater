@@ -11,8 +11,8 @@ import type { SwipeKnobs } from "./knobs";
 import { pileSlots } from "./layout";
 import { SPRINGS } from "./motion-kit";
 import { createTapCounter, type Drag, trackPointer } from "./pointer";
-import { tapCard } from "./stack";
 import { type Panel, SwipePanel } from "./swipe-panel";
+import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
 
 type Axis = Panel["axis"];

@@ -22,18 +22,14 @@ export type SpringSpec = {
 export const SPRINGS = {
 	/** Pick-up, back and the D return: response 0.25, ζ 1. */
 	settle: { stiffness: 632, damping: 50 },
-	/** Hover fan, gap closing, Wallet completion: response 0.3, ζ 0.8. */
+	/** Hover fan and gap closing: response 0.3, ζ 0.8. */
 	reflow: { stiffness: 438, damping: 34 },
-	/** Whole-Deck and sheet returns: response 0.35, ζ 1. */
-	sheet: { stiffness: 322, damping: 36 },
 	/** Exits. */
 	fly: { stiffness: 360, damping: 38 },
 	/** A Card into the Cover and back. */
 	morph: { stiffness: 380, damping: 38 },
 	/** The lean under the hand. */
 	tilt: { stiffness: 300, damping: 22 },
-	/** The Cards that trail a whole-Deck drag. */
-	trail: { stiffness: 700, damping: 45 },
 } as const satisfies Record<string, SpringSpec>;
 
 /** The reduced path's system-driven move: short, never a jump. */
