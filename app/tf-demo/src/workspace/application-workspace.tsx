@@ -1,6 +1,9 @@
+import { RegistryContext } from "@effect/atom-react";
 import { BAR_REM, groundOf, panesOf, type WorkspaceState } from "compass";
 import {
 	type ReactNode,
+	useContext,
+	useEffect,
 	useLayoutEffect,
 	useMemo,
 	useRef,
@@ -13,6 +16,7 @@ import type { MenuItemView } from "@/workspace/compass/subject";
 import { useCompassWorkspace } from "@/workspace/compass/use-compass-workspace";
 import { initialWorkspace, LIBRARY, MENU, SETTINGS } from "./application-menu";
 import { applicationRenderer } from "./application-renderer";
+import { connectWorkspaceHistory } from "./connect-workspace-history";
 import { applicationWorkspaceAtom } from "./workspace-atoms";
 import {
 	WorkspaceControllerProvider,
@@ -25,11 +29,13 @@ import {
 } from "./workspace-subject";
 
 /**
- * tf-demo's workspace: the Compass over the application's Subjects, with
- * one URL (tf-demo ADR 0003). Every Pane's Ground walks its line; a Rooted
- * Pane's runs Menu › Library › Section › … › Scroll, and Settings is the Menu
- * Item beside the Library (tf-demo ADR 0008). The workspace survives a reload
- * through Workspace Persistence, which `applicationWorkspaceAtom` keeps.
+ * tf-demo's workspace: the Compass over the application's Subjects. Every
+ * Pane's Ground walks its line; a Rooted Pane's runs Menu › Library ›
+ * Section › … › Scroll, and Settings is the Menu Item beside the Library
+ * (tf-demo ADR 0008). The URL is the Pane's Address, and the browser's Back
+ * and Forward walk its Sheet Stack (tf-demo ADR 0015). The workspace
+ * survives a reload through Workspace Persistence, which
+ * `applicationWorkspaceAtom` keeps.
  */
 
 /** Whether the workspace is still where it starts. */
@@ -54,11 +60,24 @@ export function ApplicationWorkspace() {
 	 * remounted.
 	 */
 	const [run, setRun] = useState(0);
+	const registry = useContext(RegistryContext);
+	const cancelGesture = useRef<(() => void) | null>(null);
+	useEffect(
+		() =>
+			connectWorkspaceHistory(registry, () => cancelGesture.current?.()),
+		[registry],
+	);
 	const { state } = workspace;
 	const controller = {
 		canCloseAllSheets: !atStart(state),
 		closeAllSheets: () => {
-			workspace.reset(initialWorkspace());
+			/* the counter runs on, so no new Presentation takes the id of
+			   one the browser's history still names */
+			const fresh = initialWorkspace();
+			workspace.reset({
+				...fresh,
+				nextId: Math.max(fresh.nextId, workspace.current().nextId),
+			});
 			setRun((value) => value + 1);
 		},
 	};
@@ -70,6 +89,7 @@ export function ApplicationWorkspace() {
 				renderer={applicationRenderer}
 				menu={MENU}
 				renderMenuItem={renderMenuItem}
+				cancelGestureRef={cancelGesture}
 			/>
 		</WorkspaceControllerProvider>
 	);

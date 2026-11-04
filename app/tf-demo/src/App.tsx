@@ -24,11 +24,11 @@ const ResolutionInspector = import.meta.env.DEV
 	: null;
 
 /**
- * One URL, one workspace (tf-demo ADR 0003): the Library and Settings are
- * Menu Items on a Pane's Ground line, not shell destinations. A production
- * build has no sidebar; a development build keeps one for the Playground,
- * which is open exactly when the URL says so, so Back, Forward and reload
- * behave.
+ * One workspace (tf-demo ADR 0003): the Library and Settings are Menu Items
+ * on a Pane's Ground line, not shell destinations, and the URL is that
+ * Pane's Address (tf-demo ADR 0015). A production build has no sidebar; a
+ * development build keeps one for the Playground, which is open exactly when
+ * the URL says so, so Back, Forward and reload behave.
  */
 function App() {
 	const workspace = (

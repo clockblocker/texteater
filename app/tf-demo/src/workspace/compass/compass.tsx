@@ -22,7 +22,13 @@ import {
 	Z,
 } from "compass";
 import { MotionConfig } from "motion/react";
-import { type ReactNode, useMemo, useRef } from "react";
+import {
+	type ReactNode,
+	type RefObject,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+} from "react";
 import { useMotionPreference } from "@/lib/motion-preference";
 import { VELOCITY_SAMPLE_MS } from "@/workspace/motion/motion-spec";
 import {
@@ -102,6 +108,11 @@ export type CompassProps<S> = {
 	zonesShown?: boolean;
 	/** How far below its Pane's top a Deck starts, for a stage with nothing above it. */
 	deckTopRem?: number;
+	/**
+	 * Filled with what cancels the gesture in progress, if any, for a
+	 * change that comes from outside, such as the browser's Back.
+	 */
+	cancelGestureRef?: RefObject<(() => void) | null>;
 };
 
 export function Compass<S>({
@@ -133,6 +144,7 @@ function CompassRuntime<S>({
 	linksDrag = DEFAULT_HEADING_DESIGN.linksDrag,
 	zonesShown = false,
 	deckTopRem = DECK_TOP_REM,
+	cancelGestureRef,
 }: Omit<CompassProps<S>, "motion" | "interactions">) {
 	const allows = useDeckInteractions();
 	const {
@@ -246,6 +258,13 @@ function CompassRuntime<S>({
 		allows,
 		direction,
 		reading,
+	});
+	useLayoutEffect(() => {
+		if (!cancelGestureRef) return;
+		cancelGestureRef.current = () => drags.cancelDrag();
+		return () => {
+			cancelGestureRef.current = null;
+		};
 	});
 	const dismiss = useDismiss({
 		root,

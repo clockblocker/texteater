@@ -2,7 +2,6 @@ import { initializeTheme } from "lego";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { initializeMotionPreference } from "@/lib/motion-preference-storage";
-import { isPlaygroundPath } from "@/playground/playground-router";
 
 import "./index.css";
 
@@ -21,20 +20,17 @@ if (!rootElement) {
 initializeTheme({ defaultTheme: "dark", storageKey: "tf-demo-theme" });
 initializeMotionPreference();
 
-// Everything lives at `/`. The dev-only Playground is the one exception and
-// keeps its own path so its pages can be reloaded and linked to.
-const keepsPath =
-	import.meta.env.DEV && isPlaygroundPath(window.location.pathname);
-if (keepsPath) {
-	if (window.location.search !== "" || window.location.hash !== "") {
-		window.history.replaceState(null, "", window.location.pathname);
-	}
-} else if (
-	window.location.pathname !== "/" ||
-	window.location.search !== "" ||
-	window.location.hash !== ""
-) {
-	window.history.replaceState(null, "", "/");
+// The path is the workspace's Address (tf-demo ADR 0015), or in development
+// a Playground page; the workspace reads it once the app loads, and spells
+// its own back into it. Nothing lives in the query or the hash. Scroll
+// positions belong to the Sheets, never to an entry.
+window.history.scrollRestoration = "manual";
+if (window.location.search !== "" || window.location.hash !== "") {
+	window.history.replaceState(
+		window.history.state,
+		"",
+		window.location.pathname,
+	);
 }
 
 const root = createRoot(rootElement);
