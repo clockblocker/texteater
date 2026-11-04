@@ -78,6 +78,18 @@ export function project(
 	return { u: point.u + velocity.u * ms, v: point.v + velocity.v * ms };
 }
 
+/**
+ * How fast a straight move from `from` to `to` starts, as a share of the
+ * way per second: the part of `velocity` (px/s) that runs along the line
+ * toward `to`. None of it carries across the line, and none away from `to`.
+ */
+export function approachRate(from: Point, to: Point, velocity: Point): number {
+	const way = { u: to.u - from.u, v: to.v - from.v };
+	const squared = way.u * way.u + way.v * way.v;
+	if (squared < 0.25) return 0;
+	return Math.max(0, (velocity.u * way.u + velocity.v * way.v) / squared);
+}
+
 function magnitude(point: Point): number {
 	return Math.hypot(point.u, point.v);
 }

@@ -75,6 +75,15 @@ export function bindDeck(
 		u: axis === "inline" ? anchor.u + pull.get() : anchor.u,
 		v: axis === "block" ? anchor.v + pull.get() : anchor.v,
 	});
+	/* Only a value that changes is written. Motion measures a value's speed
+	   between its last two writes, and a pointer event lands a sliver of a
+	   frame before the next frame's write: rewriting an unchanged value
+	   from the event, as a pull toward Open would, makes that sliver the
+	   measure, and the spring that takes a Card behind on at a commit
+	   starts from a speed many times its own and flings it past its slot. */
+	const write = (value: MotionValue<number>, next: number) => {
+		if (value.get() !== next) value.set(next);
+	};
 	const fold = () => {
 		const { u, v } = at();
 		const share = collapseOf(
@@ -85,9 +94,9 @@ export function bindDeck(
 		);
 		for (const { values, base } of followers) {
 			const from = { u: base.u.get(), v: base.v.get(), r: base.r.get() };
-			values.u.set(from.u + (u - from.u) * share);
-			values.v.set(from.v + (v - lift - from.v) * share);
-			values.r.set(from.r * (1 - share));
+			write(values.u, from.u + (u - from.u) * share);
+			write(values.v, from.v + (v - lift - from.v) * share);
+			write(values.r, from.r * (1 - share));
 		}
 	};
 	const stops = [

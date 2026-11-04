@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { approachRate } from "./geometry";
 import {
 	COLLAPSE_CURVES,
 	collapseOf,
@@ -108,5 +109,26 @@ describe("D's travel", () => {
 	test("a Card caught moving owes no slop", () => {
 		expect(takeUp(3, 0, 24)).toBe(3);
 		expect(takeUp(-3, 0, 24)).toBe(-3);
+	});
+});
+
+describe("D's Open, in a straight line", () => {
+	const release = { u: 500, v: 300 };
+	const cover = { u: 200, v: 24 };
+
+	test("a swipe toward inline-end, away from the Cover, carries nothing on", () => {
+		expect(approachRate(release, cover, { u: 2500, v: 0 })).toBe(0);
+	});
+
+	test("of a swipe up only the part toward the Cover carries on, as a share of the way per second", () => {
+		const rate = approachRate(release, cover, { u: 0, v: -2000 });
+		const way = { u: cover.u - release.u, v: cover.v - release.v };
+		const along = (-2000 * way.v) / Math.hypot(way.u, way.v);
+		expect(rate).toBeGreaterThan(0);
+		expect(rate * Math.hypot(way.u, way.v)).toBeCloseTo(along, 6);
+	});
+
+	test("a Card already there has no way to go", () => {
+		expect(approachRate(cover, cover, { u: 0, v: -2000 })).toBe(0);
 	});
 });

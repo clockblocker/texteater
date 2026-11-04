@@ -307,6 +307,84 @@ test("D: past the threshold the panel arms, and the release does what it shows",
 	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
 });
 
+type Moment = { x: number; mid: number; top: number; lean: number };
+
+/** From the next release on, `card`'s box and the most any other Card leans, every frame for `ms`. */
+async function watchRelease(card: Locator, ms: number) {
+	await card.evaluate((element, duration) => {
+		const lean = (other: Element) => {
+			const m = new DOMMatrixReadOnly(getComputedStyle(other).transform);
+			return Math.abs((Math.atan2(m.b, m.a) * 180) / Math.PI);
+		};
+		const others = [...document.querySelectorAll("[data-card-id]")].filter(
+			(other) => other !== element,
+		);
+		const moments: Moment[] = [];
+		let until = 0;
+		const step = () => {
+			const box = element.getBoundingClientRect();
+			moments.push({
+				x: box.left,
+				mid: box.left + box.width / 2,
+				top: box.top,
+				lean: Math.max(...others.map(lean)),
+			});
+			if (performance.now() < until) requestAnimationFrame(step);
+		};
+		const start = () => {
+			until = performance.now() + duration;
+			step();
+		};
+		window.addEventListener("pointerup", start, {
+			capture: true,
+			once: true,
+		});
+		Object.assign(window, { released: moments });
+	}, ms);
+	return async () => {
+		await card.page().waitForTimeout(ms + 100);
+		return card.evaluate(
+			() => (window as unknown as { released: Moment[] }).released,
+		);
+	};
+}
+
+test("D: an Open commit goes straight to the Cover, never further toward inline-end, and the Deck behind rests", async ({
+	page,
+}) => {
+	await chooseVariant(page, "D · Swipe actions");
+	const card = front(page);
+	const back = frame(page).locator("[data-card-id]").first();
+	const box = await card.boundingBox();
+	if (!box) throw new Error("Missing card geometry");
+	const start = { x: box.x + box.width / 2, y: box.y + 40 };
+	/* hovered, so the Deck is still settling out of its fan at the release */
+	await page.mouse.move(start.x, start.y, { steps: 4 });
+	await expect.poll(() => rotation(back)).toBeLessThan(-11);
+	const watched = await watchRelease(card, 600);
+	await page.mouse.down();
+	/* a swipe let go while moving, about 2.5 px/ms toward inline-end */
+	for (const dx of [40, 80, 120, 160]) {
+		await page.mouse.move(start.x + dx, start.y);
+		await page.waitForTimeout(16);
+	}
+	await page.mouse.move(start.x + 200, start.y);
+	await page.mouse.up();
+	const moments = await watched();
+	const first = moments[0];
+	if (!first) throw new Error("Nothing sampled");
+	await expect(lastRelease(page)).toHaveText(/^expand · threshold/);
+	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
+	const most = (key: keyof Moment) => Math.max(...moments.map((f) => f[key]));
+	expect(most("x")).toBeLessThanOrEqual(first.x + 0.5);
+	expect(most("mid")).toBeLessThanOrEqual(first.mid + 0.5);
+	moments.slice(1).forEach((f, i) => {
+		expect(f.top).toBeLessThanOrEqual((moments[i]?.top ?? 0) + 0.5);
+	});
+	expect(moments.at(-1)?.top).toBeLessThan(first.top - 100);
+	expect(most("lean")).toBeLessThanOrEqual(first.lean + 1.5);
+});
+
 test("D: pulled back under the threshold, the panel disarms and the Card returns", async ({
 	page,
 }) => {

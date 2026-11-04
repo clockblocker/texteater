@@ -1,6 +1,6 @@
 import { type MotionValue, motionValue } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Point, Rect, Slot } from "./geometry";
+import { approachRate, type Point, type Rect, type Slot } from "./geometry";
 import { coverRect, exitOffset, type Frame } from "./layout";
 import {
 	type MotionContext,
@@ -61,6 +61,9 @@ export type Mark = {
 	readonly tone: MarkTone;
 	readonly edge: "start" | "end" | "top" | "bottom";
 };
+
+/** What a glide moves: everything a slot places. */
+const GLIDING = ["u", "v", "w", "h", "r", "s", "lift"] as const;
 
 const BASE_Z = 10;
 const HELD_Z = 100;
@@ -157,6 +160,50 @@ export function useDeck({
 		[valuesOf],
 	);
 
+	/**
+	 * Takes `id` to `slot` in a straight line: every value on `spec` from
+	 * one shared start, so the box, the scale, the lean and the lift arrive
+	 * together and the Card never leaves the line. Of the hand's `velocity`
+	 * (px/ms) only the part toward `slot` carries on.
+	 */
+	const glide = useCallback(
+		(
+			id: string,
+			slot: Rect & Partial<Slot>,
+			spec: SpringSpec,
+			velocity?: Point,
+		) => {
+			const card = valuesOf(id);
+			const context = motionRef.current;
+			const rate = velocity
+				? approachRate({ u: card.u.get(), v: card.v.get() }, slot, {
+						u: velocity.u * 1000,
+						v: velocity.v * 1000,
+					})
+				: 0;
+			const to = {
+				...slot,
+				r: slot.r ?? 0,
+				s: slot.s ?? 1,
+				lift: 0,
+			};
+			/* each value is handed its start explicitly: a spring left to read
+			   one would take whatever speed it last measured */
+			return Promise.all(
+				GLIDING.map((key) =>
+					settle(
+						card[key],
+						to[key],
+						spec,
+						context,
+						(to[key] - card[key].get()) * rate,
+					),
+				),
+			);
+		},
+		[valuesOf],
+	);
+
 	/* every Card no gesture holds rides to its slot */
 	useEffect(() => {
 		if (frame.w === 0 || status !== "dealt") return;
@@ -228,25 +275,31 @@ export function useDeck({
 		setOrder((current) => [...current.filter((other) => other !== id), id]);
 	}, []);
 
+	/**
+	 * Opens `id` into the Cover. By default each axis keeps the hand's
+	 * `velocity`; on the `"straight"` path the Card goes there in a line,
+	 * keeping only the part of it headed for the Cover.
+	 */
 	const expand = useCallback(
 		async (
 			id: string,
 			velocity?: Point,
-			spec: SpringSpec = SPRINGS.morph,
+			path: "carry" | "straight" = "carry",
 		) => {
 			clearMark(id);
 			busy.current.add(id);
 			valuesOf(id).z.set(COVER_Z);
 			setExpanded(id);
 			readouts.set({ phase: "expanded" });
-			await place(
+			const move = path === "straight" ? glide : place;
+			await move(
 				id,
 				{ ...coverRect(frame), r: 0, s: 1 },
-				spec,
+				SPRINGS.morph,
 				velocity,
 			);
 		},
-		[clearMark, valuesOf, readouts, place, frame],
+		[clearMark, valuesOf, readouts, place, glide, frame],
 	);
 
 	const closeCover = useCallback(async () => {

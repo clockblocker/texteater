@@ -261,7 +261,9 @@ export function SwipeVariant({
 
 	/**
 	 * At it: the panel fades as the Card opens, or as the Card and the Deck
-	 * folded under it leave as one, each keeping its speed.
+	 * folded under it leave as one, each keeping its speed. The Card opens
+	 * in a straight line from where the hand let go, so a swipe toward
+	 * inline-end never carries it further that way first.
 	 */
 	async function commit(
 		g: Gesture,
@@ -284,7 +286,7 @@ export function SwipeVariant({
 		const velocity =
 			axis === "inline" ? { u: speed, v: 0 } : { u: 0, v: speed };
 		if (verdict.zone === "expand") {
-			await deck.expand(g.id, velocity);
+			await deck.expand(g.id, velocity, "straight");
 			if (gen.current === g.gen) setPanel(null);
 			return;
 		}
