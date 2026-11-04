@@ -1,11 +1,16 @@
 /// <reference lib="dom" />
 import { expect, type Locator, type Page, test } from "@playwright/test";
+import { SPLITS_PARKED } from "../src/workspace/compass/splits";
 
 /**
  * The Compass renderer beyond the deck's motion: right-to-left text, the
- * narrow screen, the keyboard's Lift and Expand, and a short Pane. Run in
- * the deck-models playground, which renders the production Compass.
+ * narrow screen, parked splits, the keyboard's Lift and Expand, and a
+ * short Pane. Run in the deck-models playground, which renders the
+ * production Compass. Tests of edge drops and Floating Panes skip while
+ * splits are parked (tf-demo ADR 0013).
  */
+
+const PARKED = "Splits are parked (tf-demo ADR 0013)";
 
 async function press(page: Page, card: Locator, dx: number, dy: number) {
 	const heading = await card.locator("[data-heading]").boundingBox();
@@ -26,9 +31,7 @@ async function deal(frame: Locator) {
 test.describe("in right-to-left text", () => {
 	test.use({ viewport: { width: 1600, height: 1100 } });
 
-	test("Back and the swipe point toward inline-start, and the edges flip", async ({
-		page,
-	}) => {
+	test("Back and the swipe point toward inline-start", async ({ page }) => {
 		await page.goto("/playground/deck-models");
 		await page.getByLabel("Right-to-left").check();
 		const frame = page.locator("[data-deck-frame]");
@@ -58,6 +61,13 @@ test.describe("in right-to-left text", () => {
 		await expect(frame.locator('[data-arm="sweep"]')).toHaveCount(1);
 		await page.mouse.up();
 		await expect(cards).toHaveCount(0);
+	});
+
+	test("the edges flip", async ({ page }) => {
+		test.skip(SPLITS_PARKED, PARKED);
+		await page.goto("/playground/deck-models");
+		await page.getByLabel("Right-to-left").check();
+		const frame = page.locator("[data-deck-frame]");
 
 		/* the right edge is inline-start: the new Pane opens first in
 		   reading order, which is on the right */
@@ -92,9 +102,10 @@ test.describe("on a narrow screen", () => {
 		const frame = page.locator("[data-deck-frame]");
 		await expect(frame).toHaveAttribute("data-narrow", "true");
 		/* a split made elsewhere is not drawn: the Active Pane alone */
-		await page
-			.getByRole("button", { name: "Spawn an empty Rooted Pane" })
-			.click();
+		if (!SPLITS_PARKED)
+			await page
+				.getByRole("button", { name: "Spawn an empty Rooted Pane" })
+				.click();
 		await expect(frame.locator("[data-deck-pane]")).toHaveCount(1);
 
 		await deal(frame);
@@ -124,12 +135,127 @@ test.describe("on a narrow screen", () => {
 	});
 });
 
+test.describe("while splits are parked, on a wide screen", () => {
+	test.use({ viewport: { width: 1440, height: 1000 } });
+
+	test("there is one Pane, no edge drops, and a drop at the side opens a Cover in its wide place", async ({
+		page,
+	}) => {
+		test.skip(!SPLITS_PARKED, "Splits are not parked");
+		await page.goto("/playground/deck-models");
+		const frame = page.locator("[data-deck-frame]");
+		await expect(frame).not.toHaveAttribute("data-narrow", "true");
+		await expect(
+			page.getByRole("button", { name: "Spawn an empty Rooted Pane" }),
+		).toHaveCount(0);
+		await page.getByLabel("Show drop zones").check();
+
+		await deal(frame);
+		await press(page, frame.locator('[data-place="open"]'), 20, 0);
+		await expect(frame.locator("[data-held]")).toHaveCount(1);
+		await expect(frame.locator('[data-zone="cover"]')).toBeVisible();
+		await expect(frame.locator("[data-edge]")).toHaveCount(0);
+		const box = await frame.boundingBox();
+		if (!box) throw new Error("Missing frame geometry");
+		/* at the very inline-end side, above the Deck: where splits would
+		   spawn a Pane */
+		await page.mouse.move(box.x + box.width - 4, box.y + 100, {
+			steps: 10,
+		});
+		await expect(
+			frame.locator('[data-zone="cover"][data-active="true"]'),
+		).toHaveCount(1);
+		await page.mouse.up();
+		await expect(frame.locator("[data-deck-pane]")).toHaveCount(1);
+		const cover = frame.locator('[data-form="sheet"]');
+		await expect(cover).toHaveCount(1);
+		/* a wide screen keeps its wide placement: the Cover is inset */
+		const pane = await frame.locator("[data-deck-pane]").boundingBox();
+		await expect
+			.poll(async () => (await cover.boundingBox())?.width ?? 0)
+			.toBeLessThan((pane?.width ?? 0) - 1);
+	});
+
+	test("a Lift from the keyboard offers no edges", async ({ page }) => {
+		test.skip(!SPLITS_PARKED, "Splits are not parked");
+		await page.goto("/playground/deck-models");
+		const frame = page.locator("[data-deck-frame]");
+		await deal(frame);
+		await frame
+			.locator('[data-place="open"]')
+			.getByRole("button", { name: /^Lift / })
+			.focus();
+		await page.keyboard.press("Enter");
+		await expect(frame.locator("[data-held]")).toHaveCount(1);
+		/* back on the Deck, then a Cover, and round again: no edge between */
+		const back = frame.locator('[data-return-zone][data-active="true"]');
+		const over = frame.locator('[data-zone="cover"][data-active="true"]');
+		await expect(back).toHaveCount(1);
+		await page.keyboard.press("ArrowRight");
+		await expect(over).toHaveCount(1);
+		await page.keyboard.press("ArrowRight");
+		await expect(back).toHaveCount(1);
+		await expect(frame.locator("[data-edge]")).toHaveCount(0);
+		await page.keyboard.press("ArrowLeft");
+		await expect(over).toHaveCount(1);
+		await page.keyboard.press("Enter");
+		await expect(frame.locator("[data-deck-pane]")).toHaveCount(1);
+		await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
+	});
+});
+
 test.describe("from the keyboard", () => {
 	test.use({ viewport: { width: 1600, height: 1100 } });
 
-	test("a Card opens as a Cover, and a Lift walks the destinations to a new Pane", async ({
+	test("a Card opens as a Cover, and a Lift lets go or cancels", async ({
 		page,
 	}) => {
+		await page.goto("/playground/deck-models");
+		const frame = page.locator("[data-deck-frame]");
+		await deal(frame);
+
+		/* Open is Expand: the Card is a Cover in its Pane */
+		await frame
+			.locator('[data-place="open"]')
+			.getByRole("button", { name: /as a Cover$/ })
+			.focus();
+		await page.keyboard.press("Enter");
+		const cover = frame.locator('[data-form="sheet"]');
+		await expect(cover).toHaveCount(1);
+
+		/* Lift holds the Cover; Escape cancels, and Enter at home lets go:
+		   it goes back on its Deck */
+		await cover.getByRole("button", { name: /^Lift / }).focus();
+		await page.keyboard.press("Enter");
+		await expect(frame.locator("[data-held]")).toHaveCount(1);
+		await page.keyboard.press("Escape");
+		await expect(frame.locator("[data-held]")).toHaveCount(0);
+		await expect(cover).toHaveCount(1);
+		await cover.getByRole("button", { name: /^Lift / }).focus();
+		await page.keyboard.press("Enter");
+		await expect(
+			frame.locator('[data-zone="cover"][data-active="true"]'),
+		).toHaveCount(1);
+		await page.keyboard.press("Enter");
+		await expect(frame.locator("[data-held]")).toHaveCount(0);
+		await expect(cover).toHaveCount(0);
+		const cards = frame.locator('[data-form="card"]');
+		await expect(cards).toHaveCount(4);
+
+		/* a resting Card lifts too, and Escape puts it back on its Deck */
+		await frame
+			.locator('[data-place="open"]')
+			.getByRole("button", { name: /^Lift / })
+			.focus();
+		await page.keyboard.press("Enter");
+		await expect(frame.locator("[data-held]")).toHaveCount(1);
+		await page.keyboard.press("Escape");
+		await expect(frame.locator("[data-held]")).toHaveCount(0);
+		await expect(cards).toHaveCount(4);
+	});
+
+	test("a Lift walks the destinations to a new Pane", async ({ page }) => {
+		test.skip(SPLITS_PARKED, PARKED);
 		await page.goto("/playground/deck-models");
 		const frame = page.locator("[data-deck-frame]");
 		await deal(frame);

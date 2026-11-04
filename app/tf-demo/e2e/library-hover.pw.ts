@@ -1,6 +1,7 @@
 /// <reference lib="dom" />
 import { performance } from "node:perf_hooks";
 import { expect, test } from "@playwright/test";
+import { SPLITS_PARKED } from "../src/workspace/compass/splits";
 import recordedInput from "./fixtures/library-background-click.json" with {
 	type: "json",
 };
@@ -46,6 +47,8 @@ test.use({
 test("Library hover responds immediately after the recorded background click", async ({
 	page,
 }, testInfo) => {
+	/* the trace crosses a Split Handle between two Panes */
+	test.skip(SPLITS_PARKED, "Splits are parked (tf-demo ADR 0013)");
 	test.setTimeout(30_000);
 	await page.goto("/");
 	await page

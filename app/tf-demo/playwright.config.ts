@@ -11,6 +11,7 @@ const playgroundUrl = `http://127.0.0.1:${port}`;
 const playgroundSpecs = [
 	"breakdowns-reveal.pw.ts",
 	"compass.pw.ts",
+	"deck-gestures.pw.ts",
 	"deck-motion.pw.ts",
 	"playground-isolation.pw.ts",
 ];

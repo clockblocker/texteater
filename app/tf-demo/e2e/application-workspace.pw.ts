@@ -1,10 +1,12 @@
 /// <reference lib="dom" />
 import { expect, type Locator, type Page, test } from "@playwright/test";
+import { SPLITS_PARKED } from "../src/workspace/compass/splits";
 
 /**
  * The main app on the Compass renderer (tf-demo ADR 0003, 0008): one URL,
  * a Rooted Pane whose Ground line runs Menu › Library › Scroll, Decks dealt
- * by a click, Covers pushed by Links, and Workspace Persistence.
+ * by a click, Covers pushed by Links, and Workspace Persistence. While
+ * splits are parked (tf-demo ADR 0013), one Pane shows at every width.
  *
  * The Deck tests click words of a stored Scroll whose occurrences are already
  * attested, so a click presents the stored route and runs no resolution.
@@ -111,13 +113,10 @@ test("one URL: the Library is the Ground's first selection and Settings sits bes
 	).toBeVisible();
 });
 
-test("a click deals a Deck on the Scroll, an edge drop makes a Floating Pane, and both survive a reload", async ({
-	page,
-}) => {
-	await openBanken(page);
-	const dealt = await dealBanken(page);
+const STORAGE_KEY = "tf-demo.workspace.compass.v1";
 
-	/* lift the open Card, carry it up and onto the inline-end edge */
+/** Lift the open Card, carry it up and onto the frame's inline-end edge. */
+async function carryToInlineEnd(page: Page) {
 	const open = frame(page).locator('[data-form="card"][data-place="open"]');
 	const heading = await open.locator("[data-heading]").boundingBox();
 	const box = await frame(page).boundingBox();
@@ -134,6 +133,85 @@ test("a click deals a Deck on the Scroll, an edge drop makes a Floating Pane, an
 	await page.mouse.move(box.x + box.width - 8, box.y + box.height / 3, {
 		steps: 12,
 	});
+}
+
+test("while splits are parked, an edge drop opens a Cover, and a saved split comes back as its Rooted Pane", async ({
+	page,
+}) => {
+	test.skip(!SPLITS_PARKED, "Splits are not parked");
+	await openBanken(page);
+	const dealt = await dealBanken(page);
+
+	await carryToInlineEnd(page);
+	await expect(frame(page).locator("[data-edge]")).toHaveCount(0);
+	await expect(
+		frame(page).locator('[data-zone="cover"][data-active="true"]'),
+	).toHaveCount(1);
+	/* held still, so letting go is no throw back to the Deck */
+	await page.waitForTimeout(250);
+	await page.mouse.up();
+	await expect(frame(page).locator("[data-held]")).toHaveCount(0);
+	await expect(frame(page).locator("[data-deck-pane]")).toHaveCount(1);
+	await expect(covers(page)).toHaveCount(1);
+	await covers(page)
+		.getByRole("button", { name: "Collapse back to card" })
+		.click();
+	await expect(cards(page)).toHaveCount(dealt);
+
+	/* a split saved before splits were parked: the Scroll's Reading Card
+	   open as a Floating Pane's Ground, and that Pane Active */
+	await page.evaluate((key) => {
+		const saved = JSON.parse(localStorage.getItem(key) ?? "null");
+		const deck = saved?.layout?.line?.at(-1)?.deck;
+		const card = deck?.cards?.[0];
+		if (!card) throw new Error("The Deck did not persist.");
+		localStorage.setItem(
+			key,
+			JSON.stringify({
+				...saved,
+				layout: {
+					kind: "Split",
+					id: "split-900",
+					direction: "horizontal",
+					children: [
+						saved.layout,
+						{
+							kind: "Pane",
+							id: "pane-901",
+							line: [
+								{
+									id: "sheet-902",
+									kind: "Sheet",
+									presentation: card,
+									deck: null,
+								},
+							],
+							covers: [],
+						},
+					],
+				},
+				activePaneId: "pane-901",
+				nextId: 903,
+			}),
+		);
+	}, STORAGE_KEY);
+	await page.reload();
+	await expect(frame(page).locator("[data-deck-pane]")).toHaveCount(1);
+	await expect(rootedPane(page)).toHaveCount(1);
+	await expect(cards(page)).toHaveCount(dealt);
+	await expect(
+		word(rootedGround(page).locator('[data-slot="text-reader"]'), "Banken"),
+	).toHaveAttribute("aria-pressed", "true");
+});
+
+test("a click deals a Deck on the Scroll, an edge drop makes a Floating Pane, and both survive a reload", async ({
+	page,
+}) => {
+	test.skip(SPLITS_PARKED, "Splits are parked (tf-demo ADR 0013)");
+	await openBanken(page);
+	const dealt = await dealBanken(page);
+
+	await carryToInlineEnd(page);
 	await expect(
 		frame(page).locator('[data-edge="right"][data-active="true"]'),
 	).toHaveCount(1);

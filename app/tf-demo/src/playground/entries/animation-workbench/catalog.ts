@@ -93,7 +93,7 @@ export const SECTIONS: readonly {
 				interactions: ["drag", "drop", "collapse"],
 				title: "Free drag / drop zones",
 				instruction:
-					"Drag a card any way but left: it is in hand at once. The middle of the pane opens it as a Cover and shows a translucent one; outside the middle, the nearest edge spawns a Pane and the Panes move aside for a preview of it, at once. The ghost is the drop region. Only the drop itself morphs.",
+					"Drag a card any way but left: it is in hand at once. Anywhere in the pane under its bar opens it as a Cover and shows a translucent one, at once; splits are parked, so no edge spawns a Pane. The ghost is the drop region. Only the drop itself morphs.",
 				source,
 				initialScene: "deck",
 				knobs: [...spring, ...morph, "zoneFeedbackMs", "durationScale"],

@@ -6,6 +6,7 @@ import {
 	type DeckInteraction,
 } from "@/workspace/compass/interaction-policy";
 import { GroundList } from "@/workspace/compass/pane-chrome";
+import { SPLITS_PARKED } from "@/workspace/compass/splits";
 import type { MenuItem, MenuItemView } from "@/workspace/compass/subject";
 import { useCompassWorkspace } from "@/workspace/compass/use-compass-workspace";
 import type { DeckMotionOverrides } from "@/workspace/motion/runtime-config";
@@ -181,19 +182,21 @@ function CompassStage({
 							Open the ported Reading (Dämmerung)
 						</button>
 					</fieldset>
-					<button
-						type="button"
-						onClick={() => {
-							workspace.dispatch({
-								type: "SpawnRootedPane",
-								paneId: ROOT_PANE,
-								edge: "inline-end",
-							});
-						}}
-						className={link}
-					>
-						Spawn an empty Rooted Pane
-					</button>
+					{SPLITS_PARKED ? null : (
+						<button
+							type="button"
+							onClick={() => {
+								workspace.dispatch({
+									type: "SpawnRootedPane",
+									paneId: ROOT_PANE,
+									edge: "inline-end",
+								});
+							}}
+							className={link}
+						>
+							Spawn an empty Rooted Pane
+						</button>
+					)}
 				</div>
 			}
 		>

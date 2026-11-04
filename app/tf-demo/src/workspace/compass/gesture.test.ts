@@ -21,6 +21,7 @@ import {
 	sample,
 	type ThrowTuning,
 } from "./gesture";
+import { SPLITS_PARKED, splitsAt } from "./splits";
 
 const TUNING: ThrowTuning = {
 	sampleMs: 16,
@@ -250,12 +251,12 @@ describe("a release", () => {
 });
 
 describe("keyboard destinations", () => {
-	const reading = (state: WorkspaceState<string>, narrow: boolean) => ({
+	const reading = (state: WorkspaceState<string>, splits: boolean) => ({
 		layout: state.layout,
 		shown: state.layout.kind === "Pane" ? [state.layout] : [],
 		restBoxes: { "pane-1": { left: 0, top: 0, width: 1200, height: 900 } },
 		rem: 16,
-		narrow,
+		splits,
 		columnRem: 26,
 		allows: () => true,
 	});
@@ -268,13 +269,13 @@ describe("keyboard destinations", () => {
 				: "";
 		const d = dragOf({ deckSheet: ground });
 		expect(
-			keyboardDestinations(d, reading(state, false)).map((at) =>
+			keyboardDestinations(d, reading(state, true)).map((at) =>
 				at.kind === "pane" ? `${at.kind}:${at.edge}` : at.kind,
 			),
 		).toEqual(["return", "pane:inline-start", "sheet", "pane:inline-end"]);
 	});
 
-	test("a narrow screen offers no edges", () => {
+	test("without splits there are no edges", () => {
 		const state = dealt();
 		const ground =
 			state.layout.kind === "Pane"
@@ -282,13 +283,30 @@ describe("keyboard destinations", () => {
 				: "";
 		const d = dragOf({ deckSheet: ground });
 		expect(
-			keyboardDestinations(d, reading(state, true)).map((at) => at.kind),
+			keyboardDestinations(d, reading(state, false)).map((at) => at.kind),
 		).toEqual(["return", "sheet"]);
 	});
 
+	test.skipIf(!SPLITS_PARKED)(
+		"while splits are parked, a wide screen offers no edges either",
+		() => {
+			const state = dealt();
+			const ground =
+				state.layout.kind === "Pane"
+					? (state.layout.line[2]?.id ?? "")
+					: "";
+			const d = dragOf({ deckSheet: ground });
+			expect(
+				keyboardDestinations(d, reading(state, splitsAt(false))).map(
+					(at) => at.kind,
+				),
+			).toEqual(["return", "sheet"]);
+		},
+	);
+
 	test("a lifted Sheet starts at home, where letting go changes nothing", () => {
 		const d = dragOf({ lifted: true, home: "close" });
-		const list = keyboardDestinations(d, reading(dealt(), true));
+		const list = keyboardDestinations(d, reading(dealt(), false));
 		expect(list).toEqual([{ kind: "home", paneId: "pane-1" }]);
 	});
 });

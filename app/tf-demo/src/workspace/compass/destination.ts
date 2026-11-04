@@ -32,7 +32,10 @@ export type DropReading<S> = {
 	readonly restBoxes: Readonly<Record<string, Box>>;
 	readonly rem: number;
 	readonly direction: WritingDirection;
+	/** A narrow screen, below `md`: a Deck's place reads it. */
 	readonly narrow: boolean;
+	/** Whether a Pane's side edges spawn a Floating Pane; see `splitsAt`. */
+	readonly splits: boolean;
 	/** The held Card's Sheet column; see `SubjectRenderer.columnRem`. */
 	readonly columnRem: number;
 	readonly barRemOf: (pane: PaneNode<S> | null) => number;
@@ -63,7 +66,8 @@ export function destinationAt<S>(
 	current: Destination | null,
 	reading: DropReading<S>,
 ): Destination | null {
-	const { layout, rem, direction, narrow, columnRem, allows } = reading;
+	const { layout, rem, direction, narrow, splits, columnRem, allows } =
+		reading;
 	const holder = d.deckSheet === null ? null : findSheet(layout, d.deckSheet);
 	const holderBox = holder ? reading.paneBoxes[holder.paneId] : undefined;
 	/* a Card off its Deck thrown toward inline-end goes back to it,
@@ -82,7 +86,7 @@ export function destinationAt<S>(
 			dropRegions(holderBox, columnRem, rem, {
 				barRem: reading.barRemOf(findPane(layout, holder.paneId)),
 				direction,
-				narrow,
+				edges: splits,
 			}).bar,
 			x,
 			y,
@@ -125,7 +129,7 @@ export function destinationAt<S>(
 		regions: dropRegions(restBoxes[pane.id] as Box, columnRem, rem, {
 			barRem: reading.barRemOf(pane),
 			direction,
-			narrow,
+			edges: splits,
 		}),
 	}));
 	/* the destination the pointer was over holds it a little longer */
@@ -153,8 +157,8 @@ export function destinationAt<S>(
 /**
  * Every destination the keyboard can choose for `d`, in reading order:
  * home first, where letting go changes nothing, then each drawn Pane's
- * inline-start edge, its middle and its inline-end edge. A narrow screen
- * has no edges.
+ * inline-start edge, its middle and its inline-end edge. Without splits
+ * there are no edges.
  */
 export function keyboardDestinations<S>(
 	d: Drag<S>,
@@ -164,7 +168,7 @@ export function keyboardDestinations<S>(
 		| "shown"
 		| "restBoxes"
 		| "rem"
-		| "narrow"
+		| "splits"
 		| "columnRem"
 		| "allows"
 	>,
@@ -178,7 +182,7 @@ export function keyboardDestinations<S>(
 		list.push({ kind: "home", paneId: homeAt });
 	for (const pane of reading.shown) {
 		const edge = (side: "inline-start" | "inline-end"): Destination[] =>
-			reading.narrow || !allows("drop")
+			!reading.splits || !allows("drop")
 				? []
 				: [
 						{

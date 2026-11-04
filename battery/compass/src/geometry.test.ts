@@ -138,8 +138,8 @@ describe("dropRegions", () => {
 		expect(scaled.bar).toEqual(boxAt(regions.bar, 1.25));
 	});
 
-	test("on a narrow screen a Pane has no edges and its cover region spans it", () => {
-		const narrow = dropRegions(PANE, CARD_WIDTH_REM, REM, { narrow: true });
+	test("without edges a Pane spawns nothing and its cover region spans it", () => {
+		const narrow = dropRegions(PANE, CARD_WIDTH_REM, REM, { edges: false });
 		expect(narrow.edges).toEqual([]);
 		expect(narrow.cover).toEqual({
 			left: 100,

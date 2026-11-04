@@ -8,7 +8,8 @@ import type {
 	Rung,
 	WorkspaceState,
 } from "compass";
-import { findPane, panesOf } from "compass";
+import { findPane, isRooted, panesOf } from "compass";
+import { SPLITS_PARKED } from "./compass/splits";
 import { isWorkspaceSubject, type WorkspaceSubject } from "./workspace-subject";
 
 /**
@@ -16,6 +17,8 @@ import { isWorkspaceSubject, type WorkspaceSubject } from "./workspace-subject";
  * Covers and Decks, the Active Pane, and the id counter. A held gesture is
  * never saved; while a Card is in hand, the workspace as the Lift found it
  * is. Anything stored under an older key or in another shape is ignored.
+ * While splits are parked (tf-demo ADR 0013), a saved split comes back as
+ * one Pane; see `onePaneOf`.
  */
 const STORAGE_KEY = "tf-demo.workspace.compass.v1";
 
@@ -80,7 +83,8 @@ function parseSaved(value: unknown, menuItems: ReadonlySet<string>) {
 		!Number.isSafeInteger(nextId)
 	)
 		return null;
-	const parsed = parseLayout(layout, menuItems);
+	const read = parseLayout(layout, menuItems);
+	const parsed = read && SPLITS_PARKED ? onePaneOf(read, activePaneId) : read;
 	if (!parsed) return null;
 	return {
 		layout: parsed,
@@ -89,6 +93,22 @@ function parseSaved(value: unknown, menuItems: ReadonlySet<string>) {
 			: (panesOf(parsed)[0]?.id ?? activePaneId),
 		nextId,
 	} satisfies Saved;
+}
+
+/**
+ * The one Pane a saved layout keeps while splits are parked: the Active
+ * Pane when it is Rooted, else the first Rooted Pane, so the Menu stays
+ * reachable. Every other Pane is dropped with its Covers and Decks, and a
+ * Card that was open as a dropped Pane's Ground is back on its Deck. A
+ * layout with no Rooted Pane is dropped whole.
+ */
+function onePaneOf(
+	layout: LayoutNode<WorkspaceSubject>,
+	activePaneId: string,
+): PaneNode<WorkspaceSubject> | null {
+	const active = findPane(layout, activePaneId);
+	if (active && isRooted(active)) return active;
+	return panesOf(layout).find(isRooted) ?? null;
 }
 
 function parseLayout(

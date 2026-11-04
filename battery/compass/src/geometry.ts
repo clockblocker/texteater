@@ -413,8 +413,12 @@ export type DropOptions = {
 	/** The Pane bar's height; a Floating Pane's bar is its Ground's Heading. */
 	readonly barRem?: number;
 	readonly direction?: WritingDirection;
-	/** A narrow screen makes no splits: no side edges, and the cover region spans the Pane. */
-	readonly narrow?: boolean;
+	/**
+	 * Whether the Pane has side edges to drop on. Without them, as on a
+	 * narrow screen or wherever splits are off, nothing spawns a Pane and
+	 * the cover region spans the Pane.
+	 */
+	readonly edges?: boolean;
 };
 
 /**
@@ -426,9 +430,9 @@ export function dropRegions(
 	pane: Box,
 	columnRem: number,
 	rem: number,
-	{ barRem = BAR_REM, direction = "ltr", narrow = false }: DropOptions = {},
+	{ barRem = BAR_REM, direction = "ltr", edges = true }: DropOptions = {},
 ): DropRegions {
-	const side = narrow ? 0 : edgeWidth(columnRem, pane.width, rem);
+	const side = edges ? edgeWidth(columnRem, pane.width, rem) : 0;
 	const bar = barRem * rem;
 	const [left, right]: readonly [Edge, Edge] =
 		direction === "rtl"
@@ -441,9 +445,8 @@ export function dropRegions(
 			width: pane.width - 2 * side,
 			height: pane.height - bar,
 		},
-		edges: narrow
-			? []
-			: [
+		edges: edges
+			? [
 					{
 						edge: left,
 						box: {
@@ -462,7 +465,8 @@ export function dropRegions(
 							height: pane.height,
 						},
 					},
-				],
+				]
+			: [],
 		bar: {
 			left: pane.left,
 			top: pane.top,

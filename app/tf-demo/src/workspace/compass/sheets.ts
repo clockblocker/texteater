@@ -97,14 +97,14 @@ export function previewLayout<S>(
 	);
 }
 
-/** The Panes drawn on this screen: every one, or on a narrow screen the Active Pane. */
+/** The Panes drawn: every one where the screen splits, else the Active Pane (see `splitsAt`). */
 export function shownPanes<S>(
 	layout: Panes.LayoutNode<S>,
 	activePaneId: string,
-	narrow: boolean,
+	splits: boolean,
 ): readonly Panes.PaneNode<S>[] {
 	const panes = Panes.panesOf(layout);
-	if (!narrow) return panes;
+	if (splits) return panes;
 	const active =
 		panes.find((pane) => pane.id === activePaneId) ?? panes[0] ?? null;
 	return active ? [active] : [];

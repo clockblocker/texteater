@@ -11,7 +11,7 @@ export const RULES = [
 	},
 	{
 		move: "Drag a word or link",
-		means: "Lifts a Held Card. Drop on a side for a new Pane, in the band around its Deck to put it back, anywhere else in a Pane for a Cover. A lifted Sheet dropped in its own Pane goes back to its Deck, or closes if it has none.",
+		means: "Lifts a Held Card. Drop it in the band around its Deck to put it back, anywhere else in the Pane for a Cover. A lifted Sheet dropped in its own Pane goes back to its Deck, or closes if it has none. Splits are parked, so no drop makes a new Pane.",
 	},
 	{
 		move: "Drag ↑ a Card",

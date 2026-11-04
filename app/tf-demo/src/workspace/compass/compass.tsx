@@ -61,6 +61,7 @@ import {
 	shownPanes,
 	topSheetOf,
 } from "./sheets";
+import { splitsAt } from "./splits";
 import type { MenuItem, MenuItemView, SubjectRenderer } from "./subject";
 import type { CompassWorkspace } from "./use-compass-workspace";
 import { useDismiss } from "./use-dismiss";
@@ -166,7 +167,8 @@ function CompassRuntime<S>({
 	);
 	const fold = useGroundFold();
 	const moves = useNoteMoves();
-	const shown = shownPanes(layout, activePaneId, narrow);
+	const splits = splitsAt(narrow);
+	const shown = shownPanes(layout, activePaneId, splits);
 	const open = useMemo(() => openIds(layout), [layout]);
 
 	function deckColumnOf(paneId: string): Box | null {
@@ -179,13 +181,14 @@ function CompassRuntime<S>({
 			shown: shownPanes(
 				workspace.current().layout,
 				workspace.current().activePaneId,
-				narrow,
+				splits,
 			),
 			paneBoxes,
 			restBoxes,
 			rem,
 			direction,
 			narrow,
+			splits,
 			columnRem: renderer.columnRem(card.subject),
 			barRemOf: fold.barRemOf,
 			allows,
@@ -324,7 +327,7 @@ function CompassRuntime<S>({
 								{
 									barRem: fold.barRemOf(pane),
 									direction,
-									narrow,
+									edges: splits,
 								},
 							)}
 							destination={destination}
@@ -414,12 +417,12 @@ function CompassRuntime<S>({
 	}
 
 	/** The Panes drawn from the display layout: every one, or the Active Pane alone. */
-	const drawn = narrow
-		? shown.flatMap((pane) => {
+	const drawn = splits
+		? panesOf(displayLayout)
+		: shown.flatMap((pane) => {
 				const at = findPane(displayLayout, pane.id);
 				return at ? [at] : [];
-			})
-		: panesOf(displayLayout);
+			});
 
 	/**
 	 * Every Note, in whatever form it is in right now, with the box it
@@ -617,7 +620,7 @@ function CompassRuntime<S>({
 		actionsOf,
 		handleIn,
 	};
-	const laidOut = narrow ? (drawn[0] ?? null) : displayLayout;
+	const laidOut = splits ? displayLayout : (drawn[0] ?? null);
 	return (
 		<div
 			ref={root}
