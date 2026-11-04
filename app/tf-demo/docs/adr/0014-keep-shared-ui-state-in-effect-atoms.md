@@ -37,6 +37,9 @@ query results with atom values when it renders.
 - **Lifetime:** the registry disposes an atom shortly after its last
   subscriber leaves. State that must outlive its component uses
   `Atom.keepAlive`.
+- **Persisted state:** state kept across reloads is a `localStorageAtom`
+  (`src/lib/local-storage-atoms.ts`), an `Atom.kvs` on the one shared
+  `localStorage` runtime. Values are stored as JSON.
 - **URL state:** none. [tf-demo ADR 0003] keeps state out of the URL, so
   `Atom.searchParam` is not used.
 - **Gestures:** gesture and per-frame state stays on refs and Motion values.
@@ -47,9 +50,11 @@ query results with atom values when it renders.
 
 - Every Atom and atom-react export is `@stability unstable`. `effect` and
   `@effect/atom-react` are pinned to one exact version, and
-  `tsconfig.app.json` lets exactly `effect/reactivity` and
-  `@effect/atom-react` through the Effect language service.
-- Atom and atom-react cost a one-time +46 kB gzip.
+  `tsconfig.app.json` lets exactly `effect/reactivity`,
+  `effect/persistence` and `@effect/atom-react` through the Effect language
+  service.
+- Atom and atom-react cost a one-time +46 kB gzip, and `kvs` with its
+  `KeyValueStore` and Schema JSON codec another +3.4 kB.
 
 [#1298]: https://github.com/clockblocker/texteater/issues/1298
 [tf-demo ADR 0003]: ./0003-make-the-workspace-own-navigation.md

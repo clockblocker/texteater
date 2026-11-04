@@ -1,7 +1,9 @@
+import { useAtom } from "@effect/atom-react";
 import { Button } from "lego";
 import { InfoIcon, XIcon } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect } from "react";
 import type { WorkspaceTarget } from "@/workspace/workspace-subject";
+import { inspectorOpenAtom } from "./inspector-atoms";
 
 /**
  * The floating inspector of playground ADR 0001: explanation, knobs and
@@ -16,13 +18,7 @@ export function Inspector({
 	readonly title: string;
 	readonly children: ReactNode;
 }) {
-	const openKey = `tf-demo:playground:${title.toLowerCase()}:inspector-open`;
-	const [open, setOpen] = useState(
-		() => localStorage.getItem(openKey) !== "false",
-	);
-	useEffect(() => {
-		localStorage.setItem(openKey, String(open));
-	}, [open, openKey]);
+	const [open, setOpen] = useAtom(inspectorOpenAtom(title));
 	useEffect(() => {
 		const onKey = (event: KeyboardEvent) => {
 			const typing =
@@ -39,7 +35,7 @@ export function Inspector({
 		};
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
-	}, []);
+	}, [setOpen]);
 	return open ? (
 		<aside
 			aria-label="Inspector"

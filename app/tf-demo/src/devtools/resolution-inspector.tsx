@@ -1,3 +1,4 @@
+import { useAtom } from "@effect/atom-react";
 import { usePaginatedQuery, useQuery } from "convex/react";
 import {
 	Button,
@@ -23,6 +24,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
+import { generatingOnlyAtom } from "./resolution-inspector-atoms";
 import {
 	CopyInspectionReference,
 	CopyInspectionValue,
@@ -34,7 +36,6 @@ import "./resolution-inspector.css";
 
 type Step = Doc<"inspectionSteps">;
 type Click = Doc<"inspectionClicks">;
-const GENERATING_ONLY_KEY = "tf-demo:resolution-inspector:generating-only";
 const clock = (epoch: number) =>
 	new Date(epoch).toLocaleTimeString([], {
 		hour: "2-digit",
@@ -46,12 +47,7 @@ export function ResolutionInspector() {
 	const visitorId = useAnonymousVisitorId();
 	const [open, setOpen] = useState(false);
 	const [selected, setSelected] = useState<string | null>(null);
-	const [generatingOnly, setGeneratingOnly] = useState(
-		() => localStorage.getItem(GENERATING_ONLY_KEY) === "true",
-	);
-	useEffect(() => {
-		localStorage.setItem(GENERATING_ONLY_KEY, String(generatingOnly));
-	}, [generatingOnly]);
+	const [generatingOnly, setGeneratingOnly] = useAtom(generatingOnlyAtom);
 	const history = usePaginatedQuery(
 		api.resolutionInspection.list,
 		open ? { visitorId, generatingOnly } : "skip",

@@ -29,6 +29,7 @@
 				"name": "@effect/language-service",
 				"allowedUnstableApis": [
 					"effect/reactivity",
+					"effect/persistence",
 					"@effect/atom-react"
 				]
 			}
