@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { splitText } from "dumtext";
 import * as Effect from "effect/Effect";
 import { z } from "zod";
 import type { LunaAsk } from "../../src/luna.js";
@@ -20,7 +21,6 @@ import type {
 	Route,
 	SegmentedText,
 } from "../../src/segment/segmented-sentence.js";
-import { splitText } from "../../src/segment/split-text.js";
 import { type FakeDumgenOptions, liveOver } from "../live-over.js";
 import fixture from "./fixtures/in-units-lab-answers.json";
 

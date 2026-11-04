@@ -184,6 +184,9 @@ function isTitle(line: string, next: string, width: number): boolean {
 	);
 }
 
+/** A block of source text, and whether it is a title line. */
+type Block = { readonly text: string; readonly title: boolean };
+
 /**
  * The blocks a paragraph of source text reads as. A paragraph with no line
  * ending a Sentence is verse, and each of its lines is a block of its own.
@@ -191,27 +194,28 @@ function isTitle(line: string, next: string, width: number): boolean {
  * a title line opening one, and any other line break is a hard wrap that
  * joins the next line with a space.
  */
-function blocksOf(paragraph: string, width: number): readonly string[] {
+function blocksOf(paragraph: string, width: number): readonly Block[] {
 	const lines = paragraph
 		.split(lineBreak)
 		.filter((line) => line.trim().length > 0);
 	if (!lines.some((line, index) => endsSentence(line, lines[index + 1])))
-		return lines;
-	const blocks: string[] = [];
+		return lines.map((text) => ({ text, title: false }));
+	const blocks: Block[] = [];
 	let block: string[] = [];
 	for (const [index, line] of lines.entries()) {
 		block.push(line);
 		const next = lines[index + 1];
-		const closes =
-			endsSentence(line, next) ||
-			(block.length === 1 &&
-				next !== undefined &&
-				isTitle(line, next, width));
-		if (!closes) continue;
-		blocks.push(block.join(" "));
+		const ends = endsSentence(line, next);
+		const title =
+			!ends &&
+			block.length === 1 &&
+			next !== undefined &&
+			isTitle(line, next, width);
+		if (!ends && !title) continue;
+		blocks.push({ text: block.join(" "), title });
 		block = [];
 	}
-	if (block.length > 0) blocks.push(block.join(" "));
+	if (block.length > 0) blocks.push({ text: block.join(" "), title: false });
 	return blocks;
 }
 
@@ -261,6 +265,26 @@ function splitBlock(block: string): string[] {
 }
 
 /**
+ * A Text's paragraphs as `splitText` gives them, each marked when it is a
+ * title line, for the span API (`split-spans.ts`).
+ */
+export function titledParagraphs(
+	text: string,
+): { readonly title: boolean; readonly sentences: readonly string[] }[] {
+	const width = text
+		.split(/\r?\n/u)
+		.reduce((widest, line) => Math.max(widest, line.trim().length), 0);
+	return text
+		.split(paragraphBreak)
+		.flatMap((paragraph) => blocksOf(paragraph, width))
+		.map(({ text: block, title }) => ({
+			title,
+			sentences: splitBlock(block),
+		}))
+		.filter(({ sentences }) => sentences.length > 0);
+}
+
+/**
  * Splits a Text into its paragraphs and Sentences. A blank line ends a
  * paragraph, and so does a single line break after a line ending a
  * Sentence; a title line is a paragraph of its own; each line of verse is
@@ -268,15 +292,9 @@ function splitBlock(block: string): string[] {
  * next. Sentences are trimmed, and a blank Text has no paragraph.
  */
 export function splitText(text: string): SplitText {
-	const width = text
-		.split(/\r?\n/u)
-		.reduce((widest, line) => Math.max(widest, line.trim().length), 0);
 	return {
-		paragraphs: text
-			.split(paragraphBreak)
-			.flatMap((paragraph) => blocksOf(paragraph, width))
-			.map(splitBlock)
-			.filter((sentences) => sentences.length > 0)
-			.map((sentences) => ({ sentences })),
+		paragraphs: titledParagraphs(text).map(({ sentences }) => ({
+			sentences,
+		})),
 	};
 }

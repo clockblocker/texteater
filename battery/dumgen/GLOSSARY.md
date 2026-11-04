@@ -26,11 +26,6 @@ One Sentence's text once code has normalized its mechanical whitespace. Its
 Segments concatenated give it back. See [Dumgen ADR 0004].
 _Avoid_: stitching question, repaired text
 
-**`splitText`**:
-The code that splits raw text into paragraphs and Sentences before
-`language.detect` and `segment.inUnits` see it. It is language-neutral,
-since it runs before any language is known. See [Dumgen ADR 0007].
-
 **`language.detect`**:
 The judge that gives each Sentence its Detected Language before
 `segment.inUnits`, so only target-language Sentences are segmented. See

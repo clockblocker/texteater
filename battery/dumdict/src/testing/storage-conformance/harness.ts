@@ -62,15 +62,15 @@ export type ConformanceStorage = {
 		request: Omit<ReevaluateShadowsRequest<"de">, "baseRevision">,
 	): Promise<ReevaluateShadowsSlice<"de">>;
 	/**
-	 * The slice `removeOccurrence` and `reconcileAttestationLinks` plan
-	 * from: each stored Lemma one of whose Readings holds a link with a
-	 * requested ref, whole, every other Reading claiming one of them or their
-	 * Readings, and every stored Shadow relation one of them matches. A store
-	 * that keeps no Attestation Links (`attestationLinks: false`) answers no
-	 * Lemma.
+	 * The slice `removeOccurrence`, `reconcileAttestationLinks` and
+	 * `removeReading` plan from: each stored Lemma one of whose Readings
+	 * holds a link with a requested ref or is a requested Reading, whole,
+	 * every other Reading claiming one of them or their Readings, and every
+	 * stored Shadow relation one of them matches. A store that keeps no
+	 * Attestation Links (`attestationLinks: false`) answers no Lemma.
 	 */
 	loadOccurrenceSlice(
-		request: OccurrenceSliceRequest,
+		request: OccurrenceSliceRequest<"de">,
 	): Promise<OccurrenceSlice<"de">>;
 	/**
 	 * The slice `rekeySurfaces` plans from: each stored Surface Entry with a

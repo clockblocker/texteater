@@ -43,11 +43,39 @@ type Removal<L extends Dumling.Language> = {
 };
 
 /**
- * Plans what removing some Attestation Links leaves behind in one Lemma
- * (system ADR 0043, ADR 0049):
+ * The links a removal drops, the Readings it removes, and whether a Reading
+ * it unlinks stays.
+ */
+export type LinkRemoval<L extends Dumling.Language> = {
+	readonly dropped: (link: AttestationLink<L>) => boolean;
+	readonly removesReading?: (reading: Dumling.Reading<L>) => boolean;
+	readonly keepsEmptyReadings?: boolean;
+};
+
+/** What a removal takes from one Reading, if anything. */
+function takenFrom<L extends Dumling.Language>(
+	entry: ReadingEntry<L>,
+	{ dropped, removesReading, keepsEmptyReadings }: LinkRemoval<L>,
+): { gone: AttestationLink<L>[]; readingGoes: boolean } | undefined {
+	if (removesReading?.(entry.reading))
+		return { gone: entry.attestationLinks, readingGoes: true };
+	const gone = entry.attestationLinks.filter(dropped);
+	if (gone.length === 0) return undefined;
+	return {
+		gone,
+		readingGoes:
+			!keepsEmptyReadings &&
+			gone.length === entry.attestationLinks.length,
+	};
+}
+
+/**
+ * Plans what removing some Attestation Links and Readings leaves behind in
+ * one Lemma (system ADR 0043, ADR 0049):
  *
- * - a Reading left with no link is removed, with its Knowledge, its
- *   Pending Semantic Relation records and its Licences;
+ * - a removed Reading, or one left with no link unless `keepsEmptyReadings`,
+ *   goes with its Knowledge, its Pending Semantic Relation records and its
+ *   Licences;
  * - a Surface that loses its last link is forgotten, unless it holds user
  *   text;
  * - a Lemma left with no Reading is removed, with its Paradigm and its
@@ -59,7 +87,7 @@ type Removal<L extends Dumling.Language> = {
 function planLemmaRemoval<L extends Dumling.Language>(
 	revision: StoreRevision,
 	slice: LemmaSlice<L>,
-	dropped: (link: AttestationLink<L>) => boolean,
+	request: LinkRemoval<L>,
 	removal: Removal<L>,
 ): void {
 	const { lemma, paradigm } = slice.lemmaRecord;
@@ -76,16 +104,17 @@ function planLemmaRemoval<L extends Dumling.Language>(
 		),
 	);
 	for (const entry of readings) {
-		const gone = entry.attestationLinks.filter(dropped);
-		if (gone.length === 0) {
+		const taken = takenFrom(entry, request);
+		if (!taken) {
 			remaining.push(entry);
 			continue;
 		}
+		const { gone, readingGoes } = taken;
 		touched = true;
 		for (const link of gone) if (link.surfaceId) lost.add(link.surfaceId);
 		removal.removedLinks.push(...gone);
 		removal.readings.push(entry.reading);
-		if (gone.length < entry.attestationLinks.length) {
+		if (!readingGoes) {
 			remaining.push(entry);
 			patches.push({
 				type: "patchReading",
@@ -126,7 +155,8 @@ function planLemmaRemoval<L extends Dumling.Language>(
 	if (!touched) return;
 	for (const entry of remaining)
 		for (const link of entry.attestationLinks)
-			if (!dropped(link) && link.surfaceId) lost.delete(link.surfaceId);
+			if (!request.dropped(link) && link.surfaceId)
+				lost.delete(link.surfaceId);
 	const surfaces = [...slice.ownedSurfaceEntries].sort((left, right) =>
 		compare(left.id, right.id),
 	);
@@ -180,13 +210,13 @@ function present<Value>(values: Value[]): Value[] | undefined {
 }
 
 /**
- * Plans removing every stored Attestation Link `dropped` selects, Lemma by
- * Lemma in identity-key order, and what that leaves behind.
+ * Plans removing every stored Attestation Link and Reading `request`
+ * selects, Lemma by Lemma in identity-key order, and what that leaves behind.
  */
 export function planLinkRemoval<L extends Dumling.Language>(
 	slice: OccurrenceSlice<L>,
-	dropped: (link: AttestationLink<L>) => boolean,
-	message: string,
+	request: LinkRemoval<L>,
+	messages: { readonly removed: string; readonly none: string },
 ): PlanMutationResult<L> {
 	const removal: Removal<L> = {
 		changes: [],
@@ -205,7 +235,7 @@ export function planLinkRemoval<L extends Dumling.Language>(
 		),
 	);
 	for (const lemma of lemmas)
-		planLemmaRemoval(slice.revision, lemma, dropped, removal);
+		planLemmaRemoval(slice.revision, lemma, request, removal);
 	const claims = planRemovedTargetClaims(slice.revision, {
 		readings: [
 			...lemmas.flatMap(({ readingEntries }) => readingEntries),
@@ -227,6 +257,8 @@ export function planLinkRemoval<L extends Dumling.Language>(
 		),
 	);
 	removal.pendingIds.push(...claims.pendingIds);
+	const removesAny =
+		removal.removedLinks.length > 0 || removal.removedReadings.length > 0;
 	const removed: NonNullable<AffectedDictionaryEntities<L>["removed"]> = {
 		lemmas: present(removal.removedLemmas),
 		readings: present(removal.removedReadings),
@@ -242,13 +274,8 @@ export function planLinkRemoval<L extends Dumling.Language>(
 			readings: present(removal.readings),
 			surfaceIds: present(removal.removedSurfaceIds),
 			pendingIds: present(removal.pendingIds),
-			...(removal.removedLinks.length > 0 ? { removed } : {}),
+			...(removesAny ? { removed } : {}),
 		},
-		summary: {
-			message:
-				removal.removedLinks.length > 0
-					? message
-					: "No stored Attestation Link has the ref.",
-		},
+		summary: { message: removesAny ? messages.removed : messages.none },
 	};
 }

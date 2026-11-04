@@ -14,7 +14,7 @@ import { build } from "esbuild";
  *   the reviewed authored catalog behind `dumcorpus/inventories` is data the
  *   dictionary transaction needs and dominates that share on its own.
  */
-const MAX_DUM_PACKAGE_BYTES = 960 * 1024;
+const MAX_DUM_PACKAGE_BYTES = 968 * 1024;
 const MAX_OTHER_BYTES = 640 * 1024;
 const FORBIDDEN_INPUTS = [
 	/node_modules\/effect\//,

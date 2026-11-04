@@ -1,0 +1,58 @@
+{
+	"name": "dumtext",
+	"version": "0.1.0",
+	"description": "Text in, Extracted Text and its paragraphs and Sentences out: the readers for pasted text, .txt files, HTML and Markdown, and the language-neutral splitter.",
+	"private": true,
+	"type": "module",
+	"packageManager": "bun@1.4.2",
+	"license": "MIT",
+	"sideEffects": false,
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"bun": "./src/index.ts",
+			"convex": "./src/index.ts",
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
+	"engines": {
+		"node": "24.x"
+	},
+	"scripts": {
+		"build": "turbo run build:package",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external",
+		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
+		"check": "bun ../../tooling/check-package-types.ts",
+		"test": "bun ../../tooling/run-package-tests.ts",
+		"lint": "bun run --silent biome check --error-on-warnings .",
+		"fix": "bun run --silent biome check --write .",
+		"knip": "bun ../../tooling/knip.ts",
+		"oxlint": "bun ../../tooling/oxlint.ts",
+		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"
+	},
+	"dependencies": {
+		"common-utils": "workspace:^",
+		"zod": "4.4.3"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.13",
+		"@types/node": "^24.13.3",
+		"bun-types": "1.4.2",
+		"dependency-cruiser": "^18.1.0",
+		"esbuild": "^0.28.1",
+		"knip": "^6.29.0",
+		"linkedom": "0.18.13",
+		"typescript": "^7.0.2"
+	}
+}

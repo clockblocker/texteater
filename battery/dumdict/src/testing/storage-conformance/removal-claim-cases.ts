@@ -37,7 +37,12 @@ import {
 	moneyBank,
 	sparkasse,
 } from "./occurrence-fixtures";
-import { planner, planRemove, seedBank } from "./occurrence-harness";
+import {
+	planner,
+	planRemove,
+	planRemoveReading,
+	seedBank,
+} from "./occurrence-harness";
 
 /** A Reading's Lemma and the Reading, whose Knowledge holds these claims. */
 function claiming(
@@ -288,5 +293,41 @@ export function describeRemovalClaimConformance(
 		expect(await recordOf(storage, sparkasseOnBank)).toEqual([
 			resolvedTo(sparkasseOnBank, bank),
 		]);
+	});
+
+	test("removeReading moves the claims on the Reading, and on its Lemma with its last Reading, in the same plan", async () => {
+		const storage = await createStorage();
+		await seedBank(storage);
+		await seed(storage, claimants);
+		await record(storage, bench, "r1");
+		// 🏦 has no link, as a host keeps a Reading it emptied.
+		const kept = await planRemoveReading(storage, moneyBank);
+		await committed(storage, kept);
+		expect(kept).toMatchObject({
+			affected: {
+				readings: expect.arrayContaining([kreditinstitut]),
+				removed: { readings: [moneyBank] },
+			},
+		});
+		expect(await knowledgeOf(storage, kreditinstitut)).toEqual({
+			semanticRelations: { targetKind: "reading", synonym: [bench] },
+		});
+		expect(await recordOf(storage, sparkasseOnBank)).toEqual([]);
+
+		const last = await planRemoveReading(storage, bench);
+		await committed(storage, last);
+		expect(last).toMatchObject({
+			affected: {
+				pendingIds: [sparkasseOnBank.locator.targetPendingId],
+				removed: { lemmas: [bank], readings: [bench] },
+			},
+		});
+		expect(await knowledgeOf(storage, sparkasse)).toBeUndefined();
+		expect(await recordOf(storage, sparkasseOnBank)).toEqual([
+			sparkasseOnBank,
+		]);
+		expect(await knowledgeOf(storage, kreditinstitut)).toEqual({
+			semanticRelations: { targetKind: "reading" },
+		});
 	});
 }

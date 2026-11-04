@@ -1,4 +1,4 @@
-import { lemmaIdentityKey } from "dumling";
+import { lemmaIdentityKey, sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 
@@ -212,18 +212,24 @@ function linksWithRefs<L extends Dumling.Language>(
 }
 
 /**
- * Each Lemma one of whose Readings holds a link with a requested ref, whole,
- * every other Reading claiming one of them or their Readings, and every
- * Shadow relation one of them matches.
+ * Each Lemma one of whose Readings holds a link with a requested ref or is a
+ * requested Reading, whole, every other Reading claiming one of them or
+ * their Readings, and every Shadow relation one of them matches.
  */
 export function loadOccurrenceSlice<L extends Dumling.Language>(
 	state: InMemoryStorageState<L>,
-	request: OccurrenceSliceRequest,
+	request: OccurrenceSliceRequest<L>,
 ): OccurrenceSlice<L> {
 	const lemmas = state.storedNotes
 		.filter(({ readingEntries }) =>
-			readingEntries.some(({ attestationLinks }) =>
-				attestationLinks.some(({ ref }) => request.refs.includes(ref)),
+			readingEntries.some(
+				({ reading, attestationLinks }) =>
+					attestationLinks.some(({ ref }) =>
+						request.refs.includes(ref),
+					) ||
+					(request.readings ?? []).some((requested) =>
+						sameReading(requested, reading),
+					),
 			),
 		)
 		.map(({ schemaVersion: _version, ...slice }) => slice);

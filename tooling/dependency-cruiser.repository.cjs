@@ -6,13 +6,13 @@ const repositoryRoot = path.resolve(__dirname, "..");
 /**
  * The workspaces' layer order, lowest first. A package may import only
  * packages in lower layers: never one in its own layer or above. Promptsmith
- * sits beside Dumling because only Dumgen consumes it, and Compass sits
- * below Lego because Lego imports it. Every
- * workspace must appear here.
+ * sits beside Dumling because only Dumgen consumes it, Dumtext beside it
+ * because it needs only common-utils, and Compass sits below Lego because
+ * Lego imports it. Every workspace must appear here.
  */
 const layers = [
 	["common-utils", "codegen", "compass"],
-	["dumling", "promptsmith", "lego"],
+	["dumling", "promptsmith", "lego", "dumtext"],
 	["dumrel"],
 	["dumcorpus"],
 	["dumdict", "dumgen"],

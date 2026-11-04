@@ -13,8 +13,8 @@ import { operations } from "../../src/operations.js";
  * evaluator and the jev lab under `lab/`, and it imports packages only from
  * the list here. Only the TypeSafe ask and the OpenAI Luna touch the
  * network; the stages reach jev and Luna through their ports, and
- * segmentation never Luna. Only the Extracted Text schema imports Zod,
- * and no other production file imports it. Time comes from Effect's
+ * segmentation never Luna. No production file imports Zod; the Extracted
+ * Text schema that did moved to Dumtext with its readers (#1294). Time comes from Effect's
  * `Clock`, so a `TestClock` pins every trace. The models are services
  * (Dumgen ADR 0009), and `segment.inUnits` needs `Jev` alone.
  */
@@ -33,6 +33,8 @@ const allowedPackages = new Set([
 	// Dumrel's compiled validation and policies, no files.
 	"dumrel",
 	"dumrel/types",
+	// The readers and the splitter: no files, no Zod at the root.
+	"dumtext",
 	"effect/Cause",
 	"effect/Clock",
 	"effect/Context",
@@ -60,7 +62,6 @@ const forbidden = [
 	/\bDate\.now\b/u,
 	/\bperformance\.now\b/u,
 ];
-const zodFiles = new Set(["extracted-text/schema.ts"]);
 const network = /\bfetch\(/u;
 const networkFiles = new Set(["segment/typesafe-ask.ts", "openai-luna.ts"]);
 
@@ -89,10 +90,7 @@ test("the production code imports nothing that needs a file system", () => {
 					problems.push(
 						`${name} reaches outside the production code: ${specifier}`,
 					);
-				else if (zodFiles.has(relative(src, target)))
-					problems.push(`${name} imports the Zod schema entry`);
-			} else if (specifier === "zod" && zodFiles.has(name)) continue;
-			else if (!allowedPackages.has(specifier))
+			} else if (!allowedPackages.has(specifier))
 				problems.push(`${name} imports ${specifier}`);
 			else if (typeOnlyPackages.has(specifier) && !typeOnly)
 				problems.push(`${name} imports ${specifier} at runtime`);

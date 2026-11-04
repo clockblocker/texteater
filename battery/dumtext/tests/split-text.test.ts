@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { splitText } from "../../src/segment/split-text.js";
+import { splitText } from "../src/split-text.js";
 
 const sentencesOf = (text: string) =>
 	splitText(text).paragraphs.flatMap(({ sentences }) => sentences);

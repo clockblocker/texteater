@@ -13,6 +13,7 @@ import {
 	baenke,
 	bank,
 	banken,
+	bankParadigm,
 	bankSingular,
 	bench,
 	benchParadigm,
@@ -26,6 +27,7 @@ import {
 	planner,
 	planRecord,
 	planRemove,
+	planRemoveReading,
 	seedBank,
 	storedLemma,
 	storedReading,
@@ -44,8 +46,23 @@ async function record(
 	).toMatchObject({ status: "committed" });
 }
 
-async function remove(storage: ConformanceStorage, ref: string) {
-	const outcome = await planRemove(storage, ref);
+async function remove(
+	storage: ConformanceStorage,
+	ref: string,
+	emptyReading?: Parameters<typeof planRemove>[2],
+) {
+	const outcome = await planRemove(storage, ref, emptyReading);
+	expect(await commitPlan(storage, outcome)).toMatchObject({
+		status: "committed",
+	});
+	return outcome;
+}
+
+async function removeReading(
+	storage: ConformanceStorage,
+	reading: Parameters<typeof planRemoveReading>[1],
+) {
+	const outcome = await planRemoveReading(storage, reading);
 	expect(await commitPlan(storage, outcome)).toMatchObject({
 		status: "committed",
 	});
@@ -235,6 +252,121 @@ export function describeOccurrenceConformance(
 		expect((await storedReading(storage, bench))?.attestationLinks).toEqual(
 			[r1],
 		);
+	});
+
+	test('emptyReading "Remove" plans what the default plans', async () => {
+		const storage = await createStorage();
+		await seedBank(storage);
+		await record(storage, r1, baenke);
+		await record(storage, linkOf("r2", moneyBank, banken), banken);
+
+		const byDefault = await planRemove(storage, "r2");
+		expect(byDefault).toMatchObject({
+			affected: { removed: { readings: [moneyBank] } },
+		});
+		expect(await planRemove(storage, "r2", "Remove")).toEqual(byDefault);
+	});
+
+	test('emptyReading "Keep" keeps a Reading left with no occurrence, with its Knowledge, pending records and Licences', async () => {
+		const storage = await createStorage();
+		await seedBank(storage);
+		await record(storage, r1, baenke);
+		const r2 = linkOf("r2", moneyBank, banken);
+		await record(storage, r2, banken);
+
+		const outcome = await remove(storage, "r2", "Keep");
+		expect(outcome).toMatchObject({
+			affected: {
+				readings: [moneyBank],
+				removed: {
+					attestationLinks: [r2],
+					surfaceIds: [surfaceEntry(banken).id],
+				},
+			},
+		});
+		if (outcome.status !== "planned") throw new Error("Expected a plan.");
+		expect(outcome.affected.removed?.readings).toBeUndefined();
+		expect(await storedReading(storage, moneyBank)).toMatchObject({
+			attestationLinks: [],
+			knowledge: { definition: "ein Geldinstitut" },
+		});
+		expect(
+			await exactPending(storage, [moneyBankPending.pending], moneyBank),
+		).toHaveLength(1);
+		expect(await storedSurface(storage, banken)).toBeUndefined();
+		expect(await storedLemma(storage, bench)).toEqual({
+			lemma: bank,
+			paradigm: bankParadigm,
+		});
+	});
+
+	test('emptyReading "Keep" keeps a Lemma whose last occurrence goes', async () => {
+		const storage = await createStorage();
+		await seedBank(storage);
+		await record(storage, r1, baenke);
+
+		const outcome = await remove(storage, "r1", "Keep");
+		expect(outcome).toMatchObject({
+			affected: { removed: { attestationLinks: [r1] } },
+		});
+		if (outcome.status !== "planned") throw new Error("Expected a plan.");
+		expect(outcome.affected.removed?.lemmas).toBeUndefined();
+		expect(await storedReading(storage, bench)).toMatchObject({
+			attestationLinks: [],
+		});
+		expect(await storedLemma(storage, bench)).toEqual({
+			lemma: bank,
+			paradigm: bankParadigm,
+		});
+	});
+
+	test("removeReading removes a kept-empty Reading with its Knowledge, pending records and Licences", async () => {
+		const storage = await createStorage();
+		await seedBank(storage);
+		await record(storage, r1, baenke);
+		await record(storage, linkOf("r2", moneyBank, banken), banken);
+		await remove(storage, "r2", "Keep");
+
+		const outcome = await removeReading(storage, moneyBank);
+		expect(outcome).toMatchObject({
+			affected: { removed: { readings: [moneyBank] } },
+		});
+		expect(await storedReading(storage, moneyBank)).toBeUndefined();
+		expect(
+			await exactPending(storage, [moneyBankPending.pending], moneyBank),
+		).toEqual([]);
+		expect(await storedLemma(storage, bench)).toEqual({
+			lemma: bank,
+			paradigm: benchParadigm,
+		});
+		expect((await storedReading(storage, bench))?.attestationLinks).toEqual(
+			[r1],
+		);
+		expect(await planRemoveReading(storage, moneyBank)).toMatchObject({
+			status: "planned",
+			plan: { changes: [] },
+		});
+	});
+
+	test("removeReading removes a Reading's links, and its Lemma with its last Reading", async () => {
+		const storage = await createStorage();
+		await seedBank(storage, [surfaceEntry(bankSingular)]);
+		await record(storage, r1, baenke);
+		await removeReading(storage, moneyBank);
+
+		const outcome = await removeReading(storage, bench);
+		expect(outcome).toMatchObject({
+			affected: {
+				removed: {
+					lemmas: [bank],
+					readings: [bench],
+					attestationLinks: [r1],
+				},
+			},
+		});
+		expect(await storedLemma(storage, bench)).toBeUndefined();
+		expect(await storedSurface(storage, baenke)).toBeUndefined();
+		expect(await storedSurface(storage, bankSingular)).toBeUndefined();
 	});
 
 	test("removing a Lemma's last occurrence removes the Lemma, its Paradigm and its Surfaces", async () => {
