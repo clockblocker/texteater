@@ -20,7 +20,7 @@ context, because an atom cannot express "my nearest ancestor".
 Atoms never read Convex and never call a mutation. A component joins its
 query results with atom values when it renders.
 
-## Conventions
+The conventions:
 
 - **Registry:** one `RegistryProvider`, outermost in `AppProvider`, with the
   default scheduler. A test that renders an atom user wraps it in its own
