@@ -22,9 +22,9 @@ export const PARAMETERS: readonly Parameter[] = [
 	},
 	{
 		key: "tiltMax",
-		label: "Maximum left tilt",
-		min: -30,
-		max: 0,
+		label: "Maximum tilt",
+		min: 0,
+		max: 30,
 		step: 1,
 		unit: "deg",
 	},
@@ -55,14 +55,6 @@ export const PARAMETERS: readonly Parameter[] = [
 		min: 16,
 		max: 200,
 		step: 2,
-		unit: "px",
-	},
-	{
-		key: "swipeLetGoPx",
-		label: "Slow let-go distance, left",
-		min: 100,
-		max: 800,
-		step: 10,
 		unit: "px",
 	},
 	{

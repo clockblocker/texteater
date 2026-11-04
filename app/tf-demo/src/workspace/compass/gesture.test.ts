@@ -7,9 +7,12 @@ import {
 	workspaceReducer,
 } from "compass";
 import { motionValue } from "motion/react";
+import { leanFor, TILT_MAX } from "../motion/motion-spec";
 import { keyboardDestinations } from "./destination";
 import {
+	type Destination,
 	type Drag,
+	deckZoneOf,
 	flickOf,
 	freshDrag,
 	inHandOf,
@@ -250,6 +253,119 @@ describe("a release", () => {
 	});
 });
 
+describe("a Card carried off its Deck", () => {
+	const zone = (
+		d: Drag<string>,
+		now: number,
+		direction: "ltr" | "rtl" = "ltr",
+		allowed = { dismisses: true, expands: true },
+	) =>
+		deckZoneOf(d, now, {
+			tuning: TUNING,
+			commit: 60,
+			hysteresis: 10,
+			direction,
+			current: null,
+			paneId: "pane-1",
+			...allowed,
+		});
+	/** A hand carried (`dx`, `dy`) slowly, then held still: no throw left. */
+	const carried = (dx: number, dy: number) => {
+		const d = dragOf({ deckSheet: "sheet-1" });
+		for (let step = 1; step <= 10; step++)
+			sample(
+				d,
+				100 + (dx * step) / 10,
+				100 + (dy * step) / 10,
+				step * 100,
+				TUNING,
+			);
+		return d;
+	};
+	const later = 2000;
+
+	test("near its Deck goes back on it", () => {
+		expect(zone(carried(30, -20), later)).toEqual({ kind: "return" });
+	});
+
+	test("well toward inline-start is in the dismiss zone", () => {
+		expect(zone(carried(-120, 20), later)).toEqual({
+			kind: "sweep",
+			toward: "start",
+		});
+	});
+
+	test("well toward inline-end, up or down is in the expand zone", () => {
+		for (const [dx, dy] of [
+			[120, 0],
+			[0, -120],
+			[0, 120],
+			[-80, 120],
+		] as const)
+			expect(zone(carried(dx, dy), later)).toEqual({
+				kind: "sheet",
+				paneId: "pane-1",
+			});
+	});
+
+	test("mirrors in right-to-left text", () => {
+		expect(zone(carried(120, 0), later, "rtl")).toEqual({
+			kind: "sweep",
+			toward: "start",
+		});
+		expect(zone(carried(-120, 0), later, "rtl")).toEqual({
+			kind: "sheet",
+			paneId: "pane-1",
+		});
+	});
+
+	test("flicked either way along the line dismisses, however short the travel", () => {
+		const right = dragOf({ deckSheet: "sheet-1" });
+		moveAlong(right, 16, 3);
+		expect(zone(right, 48)).toEqual({ kind: "sweep", toward: "end" });
+		const left = dragOf({ deckSheet: "sheet-1" });
+		moveAlong(left, -16, 3);
+		expect(zone(left, 48)).toEqual({ kind: "sweep", toward: "start" });
+	});
+
+	test("never picks a zone the scenario does not allow", () => {
+		const none = { dismisses: false, expands: false };
+		expect(zone(carried(-120, 0), later, "ltr", none)).toEqual({
+			kind: "return",
+		});
+		expect(zone(carried(0, -120), later, "ltr", none)).toEqual({
+			kind: "return",
+		});
+	});
+
+	test("holds the zone it is in a little longer than it took to enter", () => {
+		const d = carried(55, 0);
+		const at = (current: Destination | null) =>
+			deckZoneOf(d, later, {
+				tuning: TUNING,
+				commit: 60,
+				hysteresis: 10,
+				direction: "ltr",
+				current,
+				paneId: "pane-1",
+				dismisses: true,
+				expands: true,
+			}).kind;
+		expect(at(null)).toBe("return");
+		expect(at({ kind: "sheet", paneId: "pane-1" })).toBe("sheet");
+	});
+});
+
+describe("the lean", () => {
+	test("turns the way the Card goes, either way, and no further than its most", () => {
+		expect(leanFor(0)).toBe(0);
+		expect(leanFor(-160)).toBeCloseTo(-10, 9);
+		expect(leanFor(160)).toBeCloseTo(10, 9);
+		expect(leanFor(-10_000)).toBe(-TILT_MAX);
+		expect(leanFor(10_000)).toBe(TILT_MAX);
+	});
+});
+
 describe("keyboard destinations", () => {
 	const reading = (state: WorkspaceState<string>, splits: boolean) => ({
 		layout: state.layout,
@@ -261,46 +377,48 @@ describe("keyboard destinations", () => {
 		allows: () => true,
 	});
 
-	test("a Card off its Deck can go back, open over it, or open a Pane either side, in reading order", () => {
+	test("a Card off its Deck has its three zones, splits or not", () => {
 		const state = dealt();
 		const ground =
 			state.layout.kind === "Pane"
 				? (state.layout.line[2]?.id ?? "")
 				: "";
 		const d = dragOf({ deckSheet: ground });
+		for (const splits of [true, false])
+			expect(keyboardDestinations(d, reading(state, splits))).toEqual([
+				{ kind: "return" },
+				{ kind: "sweep", toward: "start" },
+				{ kind: "sheet", paneId: "pane-1" },
+			]);
+	});
+
+	test("a Card from nowhere can open a Pane either side or a Cover, in reading order", () => {
+		const d = dragOf({ lifted: true, home: "vanish" });
 		expect(
-			keyboardDestinations(d, reading(state, true)).map((at) =>
+			keyboardDestinations(d, reading(dealt(), true)).map((at) =>
 				at.kind === "pane" ? `${at.kind}:${at.edge}` : at.kind,
 			),
-		).toEqual(["return", "pane:inline-start", "sheet", "pane:inline-end"]);
+		).toEqual(["pane:inline-start", "sheet", "pane:inline-end"]);
 	});
 
 	test("without splits there are no edges", () => {
-		const state = dealt();
-		const ground =
-			state.layout.kind === "Pane"
-				? (state.layout.line[2]?.id ?? "")
-				: "";
-		const d = dragOf({ deckSheet: ground });
+		const d = dragOf({ lifted: true, home: "vanish" });
 		expect(
-			keyboardDestinations(d, reading(state, false)).map((at) => at.kind),
-		).toEqual(["return", "sheet"]);
+			keyboardDestinations(d, reading(dealt(), false)).map(
+				(at) => at.kind,
+			),
+		).toEqual(["sheet"]);
 	});
 
 	test.skipIf(!SPLITS_PARKED)(
 		"while splits are parked, a wide screen offers no edges either",
 		() => {
-			const state = dealt();
-			const ground =
-				state.layout.kind === "Pane"
-					? (state.layout.line[2]?.id ?? "")
-					: "";
-			const d = dragOf({ deckSheet: ground });
+			const d = dragOf({ lifted: true, home: "vanish" });
 			expect(
-				keyboardDestinations(d, reading(state, splitsAt(false))).map(
+				keyboardDestinations(d, reading(dealt(), splitsAt(false))).map(
 					(at) => at.kind,
 				),
-			).toEqual(["return", "sheet"]);
+			).toEqual(["sheet"]);
 		},
 	);
 

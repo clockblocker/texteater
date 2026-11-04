@@ -22,6 +22,7 @@ import {
 	fateOf,
 	freshDrag,
 	inlineSign,
+	isDoubleTap,
 	type Lift,
 	type NoteHandle,
 	pastCommit,
@@ -98,7 +99,8 @@ export function useDrag<S>({
 	/** Where a Pane's Deck sits, in frame coordinates. */
 	deckColumnOf: (paneId: string) => Box | null;
 }) {
-	const { transition, ARM_SLOP, COMMIT, CLICK_SLOP } = useDeckMotion();
+	const { transition, ARM_SLOP, COMMIT, CLICK_SLOP, leanFor } =
+		useDeckMotion();
 	const { current, dispatch } = workspace;
 	const { dragRef, settlingRef, returningRef } = gesture;
 	const sign = inlineSign(direction);
@@ -116,6 +118,8 @@ export function useDrag<S>({
 	>(null);
 	/** A lift started under this click: the click is not a click. */
 	const swallowClick = useRef(false);
+	/** The last tap on a Card, so a second one soon after is a double-click. */
+	const lastTap = useRef<{ id: string; t: number } | null>(null);
 	const barHold = useBarHold();
 	const release = useRelease({
 		workspace,
@@ -192,16 +196,21 @@ export function useDrag<S>({
 		}
 	}
 
-	/** The Card is in hand from here on: the drop regions read it. */
+	/**
+	 * The Card is in hand from here on: its Deck's three zones read it, or
+	 * the drop regions. A Card off a Deck keeps its lean, since it goes on
+	 * leaning the way it is carried; anything else is held upright.
+	 */
 	function takeInHand(d: Drag<S>) {
-		if (!d.lifted && d.deckSheet !== null)
+		const offDeck = !d.lifted && d.deckSheet !== null;
+		if (offDeck && d.deckSheet !== null)
 			dispatch({
 				type: "LiftCard",
 				sheetId: d.deckSheet,
 				presentationId: d.card.id,
 			});
 		d.phase = "held";
-		moves.settleTilt(d.h);
+		if (!offDeck) moves.settleTilt(d.h);
 		gesture.setDrag({ ...d });
 	}
 
@@ -225,7 +234,8 @@ export function useDrag<S>({
 			staleTimer.current = window.setTimeout(() => {
 				if (dragRef.current !== d) return;
 				const later = performance.now();
-				/* a swipe held still past the let-go line is a slow one */
+				/* a throw that drifted off the swipe's axis and stopped
+				   there tears loose now: it is no throw any more */
 				if (d.phase === "swiping")
 					swipe.swipeDeck(
 						d,
@@ -285,10 +295,14 @@ export function useDrag<S>({
 		if (d.phase !== "swiping") {
 			h.x.set(dx + (d.gap?.x.get() ?? 0));
 			h.y.set(dy + (d.gap?.y.get() ?? 0));
+			/* a Card carried off its Deck leans the way it goes; the lean is
+			   decoration, so reduced motion holds it upright */
+			if (d.phase === "held" && !d.lifted && d.deckSheet !== null)
+				h.rotate.set(moves.reduce ? 0 : leanFor(h.x.get()));
 		}
 		/* past the slop the gesture is one thing or the other, and stays so:
-		   toward inline-start off a Deck it swipes the Deck, any other way
-		   the Card is in hand */
+		   toward inline-start off a Deck it swipes the Deck toward its
+		   dismiss zone, any other way the Card is in hand */
 		if (d.phase === "pressed" && Math.hypot(dx, dy) > ARM_SLOP) {
 			if (
 				swipe.startsSwipe(dx, dy) &&
@@ -341,13 +355,28 @@ export function useDrag<S>({
 			case "in-place":
 				release.releaseInPlace(d);
 				return;
-			case "tap":
+			case "tap": {
 				/* never past the slop, so a tap: the few px it gave go back */
 				for (const value of [h.x, h.y]) moves.toRest(value);
 				gesture.setDrag(null);
+				/* a second tap on the same Card soon after is a double-click:
+				   the first brought it to the front, this one expands it. The
+				   frame holds the pointer, so the browser's own dblclick goes
+				   to the frame, not the Card; the taps are read here */
+				const tapped = lastTap.current;
+				lastTap.current = { id: d.card.id, t: event.timeStamp };
+				if (
+					d.deckSheet !== null &&
+					isDoubleTap(tapped, d.card.id, event.timeStamp)
+				) {
+					lastTap.current = null;
+					commands.expandCard(d.deckSheet, d.card);
+					return;
+				}
 				if (what.toFront !== null)
 					commands.bringToFront(what.toFront, d.card);
 				return;
+			}
 			case "sweep":
 				release.sweepByDrag(d);
 				return;

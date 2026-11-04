@@ -12,8 +12,8 @@ import {
 import type { NoteMoves } from "./note-moves";
 
 /**
- * The rubber-band swipe of a whole Deck toward inline-start, and the
- * Card tearing loose from it. Directions are along the line of text: the
+ * The swipe of a whole Deck toward inline-start, its dismiss zone, and
+ * the Card tearing loose from it. Directions are along the line of text: the
  * swipe runs leftward in left-to-right text and rightward in
  * right-to-left text (#479).
  */
@@ -39,7 +39,6 @@ export function useDeckSwipe<S>({
 		deckFollowFor,
 		DECK_FOLLOW_SPRING,
 		SWIPE_BREAK_PX,
-		SWIPE_LET_GO_PX,
 		TEAR_CATCH_UP,
 	} = useDeckMotion();
 	const { reduce } = moves;
@@ -55,7 +54,7 @@ export function useDeckSwipe<S>({
 
 	/**
 	 * Pulled off the swipe, the Card tears loose: the Deck springs back
-	 * without it, and the Card is in hand, a plain drag. It closes the gap
+	 * without it, and the Card is in hand, headed for its other zones. It closes the gap
 	 * the rubber band left between it and the finger on its own spring
 	 * rather than jumping to the finger.
 	 */
@@ -98,11 +97,12 @@ export function useDeckSwipe<S>({
 			return dx * sign < 0 && Math.abs(dx) > Math.abs(dy);
 		},
 		/**
-		 * A Deck swiped toward inline-start moves as one thing: the Card
-		 * under the finger leads and the others trail at their share of its
-		 * travel. Pulled back or off its axis it gives and resists, and
-		 * pulled past `SWIPE_BREAK_PX`, or carried slowly on past
-		 * `SWIPE_LET_GO_PX`, the Card tears loose. A hand throwing toward
+		 * A Deck swiped toward inline-start moves as one thing and leans
+		 * with the hand: the Card under the finger leads and the others
+		 * trail at their share of its travel. Carried on, however far or
+		 * slowly, it stays a swipe toward the dismiss zone. Pulled back or
+		 * off its axis it gives and resists, and pulled past
+		 * `SWIPE_BREAK_PX` the Card tears loose. A hand throwing toward
 		 * inline-start tears nothing: the throw is the sweep, and a throw
 		 * drifts.
 		 */
@@ -110,9 +110,7 @@ export function useDeckSwipe<S>({
 			const along = dx * sign;
 			if (
 				flickOf(d, now, tuning, direction) !== "start" &&
-				(along > SWIPE_BREAK_PX ||
-					Math.abs(dy) > SWIPE_BREAK_PX ||
-					along < -SWIPE_LET_GO_PX)
+				(along > SWIPE_BREAK_PX || Math.abs(dy) > SWIPE_BREAK_PX)
 			) {
 				tearLoose(d, dx, dy);
 				return;

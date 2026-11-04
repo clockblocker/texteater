@@ -57,15 +57,21 @@ export function useRelease<S>({
 		} else if (d.home === "restore") restore(d);
 		else leave(d);
 	}
-	/** Whole-Deck swipe: the held Card and its Deck fly together. */
-	function sweepByDrag(d: Drag<S>) {
+	/**
+	 * The whole Deck goes, the Card under the finger with it: swiped past
+	 * the line, or dropped in its dismiss zone. They fly off `toward` that
+	 * end of the line, the way the hand was going.
+	 */
+	function sweepByDrag(d: Drag<S>, toward: "start" | "end" = "start") {
 		if (d.deckSheet === null) return;
+		/* a Card in hand lets go first: the Sweep takes it from its Deck */
+		if (current().held) dispatch({ type: "Release" });
 		const layout = current().layout;
 		const sheet = findSheet(layout, d.deckSheet);
 		if (!sheet?.deck) return;
 		const fly = restingCards(layout, sheet.deck).flatMap((card) => {
 			const h = handles.current.get(card.id);
-			return h ? [moves.flight(h, direction)] : [];
+			return h ? [moves.flight(h, direction, toward)] : [];
 		});
 		commands.sweep(d.deckSheet, () => Promise.all(fly));
 	}
@@ -92,6 +98,10 @@ export function useRelease<S>({
 		commitAt: (d: Drag<S>, target: Destination | null) => {
 			if (!target || target.kind === "return" || target.kind === "home") {
 				goHome(d);
+				return;
+			}
+			if (target.kind === "sweep") {
+				sweepByDrag(d, target.toward);
 				return;
 			}
 			if (target.kind === "sheet")

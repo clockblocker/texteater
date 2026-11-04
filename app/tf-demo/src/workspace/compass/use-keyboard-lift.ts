@@ -54,6 +54,8 @@ export function useKeyboardLift<S>({
 		switch (at.kind) {
 			case "return":
 				return "Back on the Deck";
+			case "sweep":
+				return "Dismiss the Deck";
 			case "home":
 				return homeLabel(d);
 			case "sheet":

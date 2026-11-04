@@ -275,6 +275,64 @@ test("system reduced motion suppresses drag tilt in both specimens", async ({
 	}
 });
 
+/** The angle `element` is turned to, in degrees. */
+function turn(element: Element) {
+	const matrix = new DOMMatrixReadOnly(getComputedStyle(element).transform);
+	return (Math.atan2(matrix.b, matrix.a) * 180) / Math.PI;
+}
+
+test("a card carried sideways leans the way it goes, either way, and a swiped deck leans with it", async ({
+	page,
+}) => {
+	await page.goto("/playground/deck-models");
+	const frame = page.locator("[data-deck-frame]");
+	await frame.locator('[data-word="noch"]').click();
+	const card = frame.locator('[data-place="open"]');
+	/* left: the whole Deck swipes, turned counter-clockwise */
+	await startDrag(page, card, -100, 0);
+	await expect.poll(() => card.evaluate(turn)).toBeLessThan(-3);
+	const others = frame.locator('[data-form="card"]:not([data-place="open"])');
+	for (const other of await others.all())
+		expect(await other.evaluate(turn)).toBeLessThan(-1);
+	await page.keyboard.press("Escape");
+	await page.mouse.up();
+	await expect(frame.locator("[data-held]")).toHaveCount(0);
+	/* right: the Card in hand, turned clockwise */
+	await startDrag(page, card, 100, 0);
+	await expect.poll(() => card.evaluate(turn)).toBeGreaterThan(3);
+	await page.keyboard.press("Escape");
+	await page.mouse.up();
+	await expect(frame.locator("[data-held]")).toHaveCount(0);
+	await expect.poll(() => card.evaluate(turn)).toBeCloseTo(0, 1);
+});
+
+test("under reduced motion nothing leans, and every zone still does what it shows", async ({
+	page,
+}) => {
+	await page.emulateMedia({ reducedMotion: "reduce" });
+	const frame = page.locator("[data-deck-frame]");
+	const cards = frame.locator('[data-form="card"]');
+	const sheets = frame.locator('[data-form="sheet"]');
+	for (const [dx, dy] of [
+		[-160, 0],
+		[160, 0],
+		[0, 140],
+	] as const) {
+		await page.goto("/playground/deck-models");
+		await frame.locator('[data-word="noch"]').click();
+		await expect(cards).toHaveCount(4);
+		await startDrag(page, frame.locator('[data-place="open"]'), dx, dy);
+		await page.waitForTimeout(150);
+		const held = frame.locator("[data-held]:not([data-preview])");
+		expect(await held.evaluate(turn)).toBeCloseTo(0, 3);
+		await page.mouse.up();
+		await expect(frame.locator("[data-held]")).toHaveCount(0);
+		/* left the Deck is swept; any other way the Card is a Cover */
+		await expect(cards).toHaveCount(0);
+		await expect(sheets).toHaveCount(dx < 0 ? 0 : 1);
+	}
+});
+
 test("the deck closes over a returning card at the release", async ({
 	page,
 }) => {
@@ -351,8 +409,16 @@ test("a held card is drawn where it rests, whatever its resting scale", async ({
 	const atRest = await card.boundingBox();
 	if (!atRest) throw new Error("Missing card geometry");
 	await startDrag(page, card, 160, 40);
-	const inHand = await card.boundingBox();
-	if (!inHand) throw new Error("Missing held geometry");
+	/* the box it is drawn at, its lean aside: the lean turns it about its
+	   origin, which is no change of place */
+	const inHand = await card.evaluate((element) => {
+		const style = (element as HTMLElement).style;
+		const transform = style.transform;
+		style.transform = transform.replace(/rotate\([^)]*\)/, "");
+		const box = element.getBoundingClientRect();
+		style.transform = transform;
+		return box;
+	});
 	/* the Card follows the pointer and does nothing else: a drag offset,
 	   not a drag offset plus whatever a change of origin is worth */
 	expect(inHand.x - atRest.x).toBeCloseTo(160, 0);

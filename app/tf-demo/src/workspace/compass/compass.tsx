@@ -378,6 +378,11 @@ function CompassRuntime<S>({
 		   Card wears the commit line */
 		const swiping =
 			drag?.phase === "swiping" && drag.deckSheet === sheet.sheetId;
+		/* the whole Deck turns red when a release would sweep it: swiped
+		   past the line, or its Card carried into the dismiss zone */
+		const sweeps =
+			drag?.deckSheet === sheet.sheetId &&
+			(swiping ? pastCommit : destination?.kind === "sweep");
 		/* with no Card below it, the open Card grows from its top edge, so
 		   it never rises over the Card Tail above it */
 		const openIsLast = slots.at(-1)?.place === "open";
@@ -407,7 +412,7 @@ function CompassRuntime<S>({
 					held={held}
 					fate={held ? fate : null}
 					swiping={swiping}
-					pastCommit={swiping && pastCommit}
+					pastCommit={sweeps}
 					paneId={sheet.paneId}
 					sheetId={null}
 					ground={false}

@@ -96,7 +96,10 @@ export function PresentationView<S>({
 	fate: Fate | null;
 	/** On a Deck being swiped: it moves with the Deck, whichever Card leads. */
 	swiping?: boolean;
-	/** On a swiped Deck that a release now would sweep. */
+	/**
+	 * On a Deck a release now would sweep: swiped past the line, or its
+	 * Card carried into the dismiss zone.
+	 */
 	pastCommit: boolean;
 	paneId: string;
 	/** The Sheet this is, when it is one; a Deck can belong to it. */
@@ -212,16 +215,15 @@ export function PresentationView<S>({
 		transition,
 	});
 	/* the border is the Card's fate: blue where letting go opens it, red
-	   on a swiped Deck a release would sweep, and its resting colour
-	   otherwise. A Card that would leave also dims; see `LEAVING`. */
-	const borderColor =
-		swiping && pastCommit
-			? "var(--destructive)"
-			: fate === "open" || preview
-				? "var(--link)"
-				: ground
-					? "transparent"
-					: "var(--line-strong)";
+	   on a Deck a release would sweep, and its resting colour otherwise.
+	   A Card that would leave also dims; see `LEAVING`. */
+	const borderColor = pastCommit
+		? "var(--destructive)"
+		: fate === "open" || preview
+			? "var(--link)"
+			: ground
+				? "transparent"
+				: "var(--line-strong)";
 	const subject = card.subject;
 	const dataForm = ground ? "ground" : form;
 	const isCover = sheet && !ground && back !== null;

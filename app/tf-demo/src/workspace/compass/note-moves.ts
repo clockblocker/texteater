@@ -51,7 +51,8 @@ export function useNoteMoves() {
 			return h.box();
 		},
 		/**
-		 * A Card leaving for good, toward inline-start. Reduced motion keeps
+		 * A Card leaving for good, toward inline-start unless `toward` says
+		 * the other end. Reduced motion keeps
 		 * the fade and drops the travel: the Card still visibly leaves, it
 		 * just does not fly across the page.
 		 *
@@ -60,12 +61,16 @@ export function useNoteMoves() {
 		 * the Card has faded and turned; the travel's long tail is out of
 		 * sight by then.
 		 */
-		flight(h: NoteHandle, direction: WritingDirection): Promise<unknown> {
+		flight(
+			h: NoteHandle,
+			direction: WritingDirection,
+			toward: "start" | "end" = "start",
+		): Promise<unknown> {
 			if (reduce)
 				return Promise.resolve(
 					animate(h.opacity, 0, transition(FLY_FADE)),
 				);
-			const sign = inlineSign(direction);
+			const sign = inlineSign(direction) * (toward === "start" ? 1 : -1);
 			const travel = animate(
 				h.x,
 				h.x.get() - sign * FLY_DISTANCE,

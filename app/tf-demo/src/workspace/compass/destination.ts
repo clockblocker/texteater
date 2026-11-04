@@ -15,8 +15,7 @@ import {
 import {
 	type Destination,
 	type Drag,
-	flickOf,
-	projected,
+	deckZoneOf,
 	type ThrowTuning,
 } from "./gesture";
 import type { DeckInteraction } from "./interaction-policy";
@@ -41,7 +40,7 @@ export type DropReading<S> = {
 	readonly barRemOf: (pane: PaneNode<S> | null) => number;
 	readonly allows: (interaction: DeckInteraction) => boolean;
 	readonly tuning: ThrowTuning;
-	/** How far up a Card is carried, or thrown, to open over its Deck. */
+	/** How far a Card off its Deck is carried, or thrown, to reach a zone. */
 	readonly commit: number;
 	readonly openScale: number;
 	readonly deckTopRem: number;
@@ -49,15 +48,16 @@ export type DropReading<S> = {
 
 /**
  * Where letting go at (`x`, `y`) in frame coordinates, at `now`, sends the
- * Card: the one answer the preview and the release both read. The return
- * band follows its Deck's Pane, so it is read live; everything else is
- * read off the Panes as they rested before any preview moved them, so a
- * ghost opening never moves the region that opened it. Leaving a region
- * takes a little more than entering it did. The Pane bar is chrome; then
- * a Card taken up off its Deck, which opens over it; then the band, then
- * the sides; the rest of a Pane opens a Cover.
+ * Card: the one answer the preview and the release both read. A Card
+ * carried off its Deck has three places to go, read off the way it is
+ * headed: back on the Deck, its dismiss zone or its expand zone
+ * (`deckZoneOf`). Any other Card in hand reads the drop regions. The
+ * return band follows its Deck's Pane, so it is read live; everything
+ * else is read off the Panes as they rested before any preview moved
+ * them, so a ghost opening never moves the region that opened it. Leaving
+ * a region takes a little more than entering it did. The Pane bar is
+ * chrome; then the band, then the sides; the rest of a Pane opens a Cover.
  */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export function destinationAt<S>(
 	x: number,
 	y: number,
@@ -69,16 +69,20 @@ export function destinationAt<S>(
 	const { layout, rem, direction, narrow, splits, columnRem, allows } =
 		reading;
 	const holder = d.deckSheet === null ? null : findSheet(layout, d.deckSheet);
+	if (holder?.deck && !d.lifted)
+		return deckZoneOf(d, now, {
+			tuning: reading.tuning,
+			commit: reading.commit,
+			hysteresis: HYSTERESIS_PX,
+			direction,
+			current,
+			paneId: holder.paneId,
+			dismisses: allows("sweep"),
+			/* a scenario with drops but no Expand still opens a Card as a
+			   Cover over its Deck, as the keyboard's list does */
+			expands: allows("expand") || allows("drop"),
+		});
 	const holderBox = holder ? reading.paneBoxes[holder.paneId] : undefined;
-	/* a Card off its Deck thrown toward inline-end goes back to it,
-	   wherever it is let go: the throw says where it is headed, not where
-	   it is */
-	if (
-		holder?.deck &&
-		!d.lifted &&
-		flickOf(d, now, reading.tuning, direction) === "end"
-	)
-		return { kind: "return" };
 	if (
 		holder?.deck &&
 		holderBox &&
@@ -90,32 +94,17 @@ export function destinationAt<S>(
 			}).bar,
 			x,
 			y,
-		)
-	) {
-		const band = inside(
+		) &&
+		inside(
 			returnBandIn(holderBox, columnRem, rem, reading.openScale, {
 				topRem: reading.deckTopRem,
 				narrow,
 			}),
 			x,
 			y,
-		);
-		/* a Card taken up off its Deck, far enough or fast enough, opens
-		   over it: a move, not a place, since the band reaches up the
-		   whole Deck and the Card may start at its foot */
-		const line =
-			current?.kind === "sheet"
-				? HYSTERESIS_PX - reading.commit
-				: -reading.commit;
-		if (
-			!d.lifted &&
-			allows("expand") &&
-			projected(d, now, reading.tuning).dy < line &&
-			(band || (!allows("drop") && inside(holderBox, x, y)))
 		)
-			return { kind: "sheet", paneId: holder.paneId };
-		if (band) return { kind: "return" };
-	}
+	)
+		return { kind: "return" };
 	if (!allows("drop")) return null;
 	/* no drop until the rest boxes describe the Panes drawn */
 	const { shown, restBoxes } = reading;
@@ -155,10 +144,11 @@ export function destinationAt<S>(
 }
 
 /**
- * Every destination the keyboard can choose for `d`, in reading order:
- * home first, where letting go changes nothing, then each drawn Pane's
- * inline-start edge, its middle and its inline-end edge. Without splits
- * there are no edges.
+ * Every destination the keyboard can choose for `d`, in reading order. A
+ * Card off its Deck has its three: back on the Deck, then its dismiss
+ * zone and its expand zone. Anything else starts at home, where letting
+ * go changes nothing, then each drawn Pane's inline-start edge, its
+ * middle and its inline-end edge. Without splits there are no edges.
  */
 export function keyboardDestinations<S>(
 	d: Drag<S>,
@@ -176,8 +166,17 @@ export function keyboardDestinations<S>(
 	const { layout, allows } = reading;
 	const holder = d.deckSheet === null ? null : findSheet(layout, d.deckSheet);
 	const homeAt = d.lifted && d.home !== "vanish" ? d.paneId : null;
+	if (holder?.deck && !d.lifted)
+		return [
+			{ kind: "return" },
+			...(allows("sweep")
+				? [{ kind: "sweep", toward: "start" } as const]
+				: []),
+			...(allows("expand") || allows("drop")
+				? [{ kind: "sheet", paneId: holder.paneId } as const]
+				: []),
+		];
 	const list: Destination[] = [];
-	if (holder?.deck && !d.lifted) list.push({ kind: "return" });
 	if (homeAt && reading.shown.some((pane) => pane.id === homeAt))
 		list.push({ kind: "home", paneId: homeAt });
 	for (const pane of reading.shown) {
@@ -196,14 +195,7 @@ export function keyboardDestinations<S>(
 							),
 						},
 					];
-		/* a Card off its Deck opens over it by an Expand; anywhere else a
-		   Cover is a drop */
-		const opens =
-			pane.id === homeAt
-				? false
-				: pane.id === d.paneId && !d.lifted
-					? allows("expand") || allows("drop")
-					: allows("drop");
+		const opens = pane.id !== homeAt && allows("drop");
 		list.push(
 			...edge("inline-start"),
 			...(opens ? [{ kind: "sheet", paneId: pane.id } as const] : []),

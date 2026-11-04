@@ -1,6 +1,5 @@
 /// <reference lib="dom" />
-import { expect, test } from "@playwright/test";
-import { SPLITS_PARKED } from "../src/workspace/compass/splits";
+import { expect, type Page, test } from "@playwright/test";
 import {
 	type Stroke,
 	stampedGesture,
@@ -10,8 +9,9 @@ import {
 
 /**
  * How the deck reads a gesture: the workbench's scenarios, the swipe that
- * sweeps a Deck, a Card taken up or torn loose, a throw, and the Ground
- * line. The deck's motion is in `deck-motion.pw.ts`.
+ * sweeps a Deck, a Card taken up or torn loose, its three drop zones, a
+ * throw, a double-click and the Ground line. The deck's motion is in
+ * `deck-motion.pw.ts`.
  */
 
 test.use({ viewport: { width: 1600, height: 1100 } });
@@ -179,8 +179,9 @@ test("a card pulled off a swipe tears loose: the deck goes home and the card fol
 	await page.mouse.down();
 	await page.mouse.move(x - 60, y, { steps: 5 });
 	await expect(frame.locator("[data-swiping]")).toHaveCount(4);
-	/* well off the swipe's axis: the Card is in hand, the Deck is not */
-	await page.mouse.move(x - 60, y + 160, { steps: 8 });
+	/* off the swipe's axis, short of the expand zone: the Card is in
+	   hand, the Deck is not */
+	await page.mouse.move(x - 60, y + 70, { steps: 8 });
 	await expect(frame.locator("[data-swiping]")).toHaveCount(0);
 	await expect(frame.locator("[data-held]")).toHaveCount(1);
 	await expect(frame.locator("[data-arm]")).toHaveCount(0);
@@ -198,7 +199,7 @@ test("a card pulled off a swipe tears loose: the deck goes home and the card fol
 			return box
 				? Math.hypot(
 						box.x + box.width / 2 - (x - 60),
-						box.y + box.height / 2 - (y + 160),
+						box.y + box.height / 2 - (y + 70),
 					)
 				: Number.POSITIVE_INFINITY;
 		})
@@ -209,55 +210,131 @@ test("a card pulled off a swipe tears loose: the deck goes home and the card fol
 	await expect(cards).toHaveCount(4);
 });
 
-test("a throw is read by its direction: left sweeps, right goes home, up opens; a slow long drag left lets go", async ({
+/** Deals `noch`'s Deck on the deck-models page and presses its open Card's Heading. */
+async function dealAndGesture(
+	page: Page,
+	path: readonly Stroke[],
+	releaseMs: number,
+) {
+	const frame = page.locator("[data-deck-frame]");
+	await frame.locator('[data-word="noch"]').click();
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
+	const heading = await frame
+		.locator('[data-place="open"] [data-heading]')
+		.boundingBox();
+	if (!heading) throw new Error("Missing heading geometry");
+	await stampedGesture(
+		page,
+		heading.x + heading.width / 2,
+		heading.y + heading.height / 2,
+		path,
+		releaseMs,
+	);
+	await expect(frame.locator("[data-held]")).toHaveCount(0);
+}
+
+test("a flick either way along the line sweeps the deck, and a flick up opens", async ({
 	page,
 }) => {
 	await page.goto("/playground/deck-models");
 	const frame = page.locator("[data-deck-frame]");
 	const cards = frame.locator('[data-form="card"]');
 	const panes = frame.locator("[data-deck-pane]");
-	const gesture = async (path: readonly Stroke[], releaseMs: number) => {
-		await frame.locator('[data-word="noch"]').click();
-		await expect(cards).toHaveCount(4);
-		const heading = await frame
-			.locator('[data-place="open"] [data-heading]')
-			.boundingBox();
-		if (!heading) throw new Error("Missing heading geometry");
-		await stampedGesture(
-			page,
-			heading.x + heading.width / 2,
-			heading.y + heading.height / 2,
-			path,
-			releaseMs,
-		);
-		await expect(frame.locator("[data-held]")).toHaveCount(0);
-	};
-
-	/* thrown left, it sweeps, though the throw drifts well off its axis */
-	await gesture(strokes(6, -70, 12, 16), 16);
+	/* flicked left, it sweeps, though the throw drifts well off its axis */
+	await dealAndGesture(page, strokes(6, -70, 12, 16), 16);
 	await expect(cards).toHaveCount(0);
 	await expect(panes).toHaveCount(1);
-	/* thrown right, the Card goes back on its Deck, not into a new Pane */
-	await gesture(strokes(6, 70, 0, 16), 16);
-	await expect(cards).toHaveCount(4);
-	await expect(panes).toHaveCount(1);
-	await page.keyboard.press("Escape");
+	/* flicked right, the whole Deck goes too */
+	await dealAndGesture(page, strokes(6, 70, 0, 16), 16);
 	await expect(cards).toHaveCount(0);
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(0);
 	/* thrown up, it opens */
-	await gesture(strokes(4, 0, -30, 16), 16);
+	await dealAndGesture(page, strokes(4, 0, -30, 16), 16);
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
+});
+
+for (const [name, dx, dy] of [
+	["left", -40, 0],
+	["far left", -100, 0],
+	["right", 40, 0],
+	["up", 0, -40],
+	["down", 0, 40],
+] as const)
+	test(`a slow drag ${name} past the line drops the card in its zone`, async ({
+		page,
+	}) => {
+		await page.goto("/playground/deck-models");
+		const frame = page.locator("[data-deck-frame]");
+		/* carried slowly and held still before the release: no throw */
+		await dealAndGesture(page, strokes(4, dx, dy, 40), 300);
+		/* left the Deck is swept; any other way the Card is a Cover over
+		   it, which hides it */
+		await expect(frame.locator('[data-form="card"]')).toHaveCount(0);
+		await expect(frame.locator('[data-form="sheet"]')).toHaveCount(
+			dx < 0 ? 0 : 1,
+		);
+	});
+
+test("each zone shows itself before the release, and short of every line the card goes back", async ({
+	page,
+}) => {
 	await page.goto("/playground/deck-models");
-	/* carried slowly far left, the Card lets go of the swipe and is a
-	   plain drag: held still, then dropped on the left, it is a new Pane,
-	   or a Cover while splits are parked */
-	await gesture(strokes(50, -12, 0, 30), 300);
-	if (SPLITS_PARKED) {
-		await expect(panes).toHaveCount(1);
-		await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
-	} else {
-		await expect(panes).toHaveCount(2);
-		await expect(cards).toHaveCount(3);
-	}
+	const frame = page.locator("[data-deck-frame]");
+	await frame.locator('[data-word="noch"]').click();
+	const card = frame.locator('[data-place="open"]');
+	const ghost = frame.locator('[data-form="sheet"][data-preview]');
+	const red = frame.locator('[data-form="card"][data-past="true"]');
+	const heading = await card.locator("[data-heading]").boundingBox();
+	if (!heading) throw new Error("Missing heading geometry");
+	const x = heading.x + heading.width / 2;
+	const y = heading.y + heading.height / 2;
+	const carry = async (dx: number, dy: number) => {
+		for (let step = 1; step <= 10; step++) {
+			await page.mouse.move(x + (dx * step) / 10, y + (dy * step) / 10);
+			await page.waitForTimeout(20);
+		}
+		await page.waitForTimeout(150);
+	};
+	await page.mouse.move(x, y);
+	await page.mouse.down();
+	/* right past the line: the expand zone, the Cover it would open */
+	await carry(140, 0);
+	await expect(ghost).toHaveCount(1);
+	await expect(red).toHaveCount(0);
+	await expect(frame.locator('[data-held][data-fate="open"]')).toHaveCount(1);
+	/* back near the Deck: nothing but the Card going back */
+	await carry(30, 0);
+	await expect(ghost).toHaveCount(0);
+	await expect(frame.locator('[data-held][data-fate="rest"]')).toHaveCount(1);
+	/* carried on left past the line: the dismiss zone, the whole Deck red */
+	await carry(-140, 0);
+	await expect(red).toHaveCount(4);
+	await expect(ghost).toHaveCount(0);
+	/* back short of every line and let go: the Card is on its Deck again */
+	await carry(-20, 0);
+	await expect(red).toHaveCount(0);
+	await page.mouse.up();
+	await expect(frame.locator("[data-held]")).toHaveCount(0);
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(0);
+});
+
+test("a double-click expands a card; a single click only brings it to the front", async ({
+	page,
+}) => {
+	await page.goto("/playground/deck-models");
+	const frame = page.locator("[data-deck-frame]");
+	await frame.locator('[data-word="noch"]').click();
+	const cards = frame.locator('[data-form="card"]');
+	await expect(cards).toHaveCount(4);
+	const behind = cards.first().locator("[data-heading]");
+	await behind.click();
+	await expect(cards.first()).toHaveAttribute("data-place", "open");
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(0);
+	await page.waitForTimeout(600);
+	await cards.last().locator("[data-heading]").dblclick();
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
+	await expect(cards).toHaveCount(0);
 });
 
 test("the ground line steps down and back up, and a link pushes a cover that closes", async ({

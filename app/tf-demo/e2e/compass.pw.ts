@@ -187,10 +187,14 @@ test.describe("while splits are parked, on a wide screen", () => {
 			.focus();
 		await page.keyboard.press("Enter");
 		await expect(frame.locator("[data-held]")).toHaveCount(1);
-		/* back on the Deck, then a Cover, and round again: no edge between */
+		/* a Card off its Deck has its three zones: back on the Deck, the
+		   dismiss zone, a Cover, and round again, with no edge between */
 		const back = frame.locator('[data-return-zone][data-active="true"]');
+		const dismiss = frame.locator('[data-form="card"][data-past="true"]');
 		const over = frame.locator('[data-zone="cover"][data-active="true"]');
 		await expect(back).toHaveCount(1);
+		await page.keyboard.press("ArrowRight");
+		await expect(dismiss).toHaveCount(4);
 		await page.keyboard.press("ArrowRight");
 		await expect(over).toHaveCount(1);
 		await page.keyboard.press("ArrowRight");

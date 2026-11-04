@@ -38,6 +38,11 @@ export type NoteHandle = {
 export type Destination =
 	/** The band over the Deck it rests in: back in its slot. */
 	| { readonly kind: "return" }
+	/**
+	 * A Deck Card's dismiss zone: its whole Deck is swept, flying off
+	 * `toward` that end of the line.
+	 */
+	| { readonly kind: "sweep"; readonly toward: "start" | "end" }
 	/** The Pane it was lifted out of: a drop here is a release in place. */
 	| { readonly kind: "home"; readonly paneId: string }
 	/** Anywhere else in a Pane: it opens there as a Cover. */
@@ -60,9 +65,10 @@ export function sameDestination(
 /**
  * Where a gesture on a Note is. `pressed`: down, not yet past the slop,
  * so letting go is a tap. `swiping`: it started toward inline-start on a
- * Card on a Deck and moves the whole Deck until the finger lifts or pulls
- * the Card loose. `held`: the Card is in hand and goes where the pointer
- * says. Nothing changes phase on a timer.
+ * Card on a Deck and carries the whole Deck toward its dismiss zone until
+ * the finger lifts or pulls the Card loose. `held`: the Card is in hand
+ * and goes where the pointer says; a Card off a Deck has three drop zones
+ * (`deckZoneOf`). Nothing changes phase on a timer.
  */
 type Phase = "pressed" | "swiping" | "held";
 
@@ -217,6 +223,53 @@ export function flickOf<S>(
 }
 
 /**
+ * Which of its three drop zones a Card carried off its Deck is headed
+ * into, read off where the hand is headed (`projected`) rather than where
+ * it is. A flick either way along the line is the dismiss zone, whatever
+ * the travel. Otherwise more than `commit` px toward inline-start, and
+ * mostly sideways, is the dismiss zone; more than `commit` px toward
+ * inline-end, up or down is the expand zone; anywhere nearer is back on
+ * the Deck. The zone the hand is in holds it `hysteresis` px longer. A
+ * zone the scenario does not allow is never chosen.
+ */
+export function deckZoneOf<S>(
+	d: Drag<S>,
+	now: number,
+	{
+		tuning,
+		commit,
+		hysteresis,
+		direction,
+		current,
+		paneId,
+		dismisses,
+		expands,
+	}: {
+		readonly tuning: ThrowTuning;
+		readonly commit: number;
+		readonly hysteresis: number;
+		readonly direction: WritingDirection;
+		readonly current: Destination | null;
+		/** The Pane the Card's Deck is in: the expand zone opens it there. */
+		readonly paneId: string;
+		readonly dismisses: boolean;
+		readonly expands: boolean;
+	},
+): Destination {
+	const flick = flickOf(d, now, tuning, direction);
+	if (dismisses && flick) return { kind: "sweep", toward: flick };
+	const { dx, dy } = projected(d, now, tuning);
+	const along = dx * inlineSign(direction);
+	const line = (kind: Destination["kind"]) =>
+		current?.kind === kind ? commit - hysteresis : commit;
+	if (dismisses && -along > line("sweep") && -along >= Math.abs(dy))
+		return { kind: "sweep", toward: "start" };
+	if (expands && Math.max(along, Math.abs(dy)) > line("sheet"))
+		return { kind: "sheet", paneId };
+	return { kind: "return" };
+}
+
+/**
  * Whether a swipe let go now would sweep its Deck: where the hand is
  * headed lies more than `commit` px toward inline-start. `sign` is
  * `inlineSign` of the writing direction. The swipe's preview and its
@@ -230,6 +283,18 @@ export function pastCommit<S>(
 	sign: 1 | -1,
 ): boolean {
 	return sign * projected(d, now, tuning).dx < -commit;
+}
+
+/** Two taps on one Card within this many ms are a double-click. */
+const DOUBLE_TAP_MS = 500;
+
+/** Whether a tap on `id` at `t` makes a double-click with the tap before it. */
+export function isDoubleTap(
+	before: { readonly id: string; readonly t: number } | null,
+	id: string,
+	t: number,
+): boolean {
+	return before !== null && before.id === id && t - before.t <= DOUBLE_TAP_MS;
 }
 
 /* -------------------------------------------------------------- release */
@@ -304,6 +369,7 @@ export function fateOf<S>(
 ): Fate {
 	if (destination?.kind === "sheet" || destination?.kind === "pane")
 		return "open";
+	if (destination?.kind === "sweep") return "leave";
 	/* anywhere else it goes home, and for a Card from nowhere, or a Cover
 	   on no live Deck, home is away */
 	return drag.home === "close" || drag.home === "vanish" ? "leave" : "rest";

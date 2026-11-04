@@ -298,10 +298,12 @@ export const HOLD_RELEASE = tween(160);
 /* ------------------------------------------------- gesture → transform */
 
 /**
- * A swiped Deck leans with the pointer: one degree per 16 px of travel,
- * left only, and never past `TILT_MAX`.
+ * A Card carried sideways off its Deck leans the way it goes, and a swiped
+ * Deck leans with it: one degree per 16 px of travel, either way, and
+ * never more than `TILT_MAX` degrees. Leftward travel turns it
+ * counter-clockwise, rightward clockwise, in either writing direction.
  */
-export const TILT_MAX = -20;
+export const TILT_MAX = 20;
 const TILT_PER_PX = 1 / 16;
 
 export function leanFor(
@@ -309,7 +311,8 @@ export function leanFor(
 	max = TILT_MAX,
 	perPx = TILT_PER_PX,
 ): number {
-	return Math.max(max, Math.min(0, dx * perPx));
+	const most = Math.abs(max);
+	return Math.max(-most, Math.min(most, dx * perPx));
 }
 
 /* ----------------------------------------------------------- deck swipe */
@@ -365,18 +368,9 @@ export function rubberBand(d: number, limit = SWIPE_RUBBER_PX): number {
 export const SWIPE_BREAK_PX = 48;
 
 /**
- * How far left a swipe may be carried slowly before the Card tears loose,
- * as it does pulled off the axis: a long drag left is taking the Card
- * somewhere, a new Pane on the left, not throwing the Deck away. A hand
- * that is throwing carries the swipe past it.
- */
-export const SWIPE_LET_GO_PX = 240;
-
-/**
  * A hand moving faster than this, in px per ms along its main axis, is
- * throwing. Thrown left, a swipe holds, whatever the hand drifts through
- * on the way, and sweeps; thrown right, a Card off a Deck goes back to
- * its slot wherever it is let go.
+ * throwing. Thrown either way along the line, a Card off a Deck sweeps
+ * the Deck, whatever the hand drifts through on the way.
  */
 export const FLICK_SPEED = 0.6;
 
