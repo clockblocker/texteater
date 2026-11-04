@@ -1,13 +1,6 @@
 import {
 	type Box,
-	cardHeightPx,
-	deckHolding,
-	findPane,
-	type HeldHome,
-	handBoxIn,
-	heldHome,
 	isRooted,
-	LOOSE_CARD_REM,
 	type PaneNode,
 	type Presentation,
 	restingCards,
@@ -29,7 +22,6 @@ import {
 	fateOf,
 	freshDrag,
 	inlineSign,
-	KEYBOARD_POINTER,
 	type Lift,
 	type NoteHandle,
 	pastCommit,
@@ -39,13 +31,13 @@ import {
 	type ThrowTuning,
 } from "./gesture";
 import type { DeckInteraction } from "./interaction-policy";
-import { remPx } from "./layout";
 import type { NoteMoves } from "./note-moves";
 import { findSheet, type SheetView, sheetsOf } from "./sheets";
 import { useBarHold } from "./use-bar-hold";
 import type { CompassWorkspace } from "./use-compass-workspace";
 import { useDeckSwipe } from "./use-deck-swipe";
 import type { GestureState } from "./use-gesture-state";
+import { useLift } from "./use-lift";
 import { useRelease } from "./use-release";
 import type { WorkspaceCommands } from "./use-workspace-commands";
 
@@ -59,7 +51,7 @@ export type PagePress = {
 };
 
 /** A Segment or a Link under a pointer that has not moved yet. */
-type PendingLift<S> = Lift & {
+export type PendingLift<S> = Lift & {
 	readonly paneId: string;
 	readonly make: () => S;
 };
@@ -68,8 +60,9 @@ type PendingLift<S> = Lift & {
  * The drag-and-throw runtime: a press on a Card, a Heading, a Pane bar, a
  * Segment or a Link becomes a Lift, the hand carries the Held Card, the
  * throw and the pointer decide where it goes, and the release sends the
- * reducer the command it showed. The swipe and the hold to lift are their
- * own hooks; this one decides between them and everything else.
+ * reducer the command it showed. The swipe, the hold to lift and the Lifts
+ * from a Sheet, a Ground or nowhere (`useLift`) are their own hooks; this
+ * one decides between them and everything else.
  */
 export function useDrag<S>({
 	root,
@@ -105,8 +98,7 @@ export function useDrag<S>({
 	/** Where a Pane's Deck sits, in frame coordinates. */
 	deckColumnOf: (paneId: string) => Box | null;
 }) {
-	const { transition, ARM_SLOP, COMMIT, CLICK_SLOP, OPEN_SCALE } =
-		useDeckMotion();
+	const { transition, ARM_SLOP, COMMIT, CLICK_SLOP } = useDeckMotion();
 	const { current, dispatch } = workspace;
 	const { dragRef, settlingRef, returningRef } = gesture;
 	const sign = inlineSign(direction);
@@ -124,14 +116,6 @@ export function useDrag<S>({
 	>(null);
 	/** A lift started under this click: the click is not a click. */
 	const swallowClick = useRef(false);
-	/** A fresh Card's Lift, finished once the Card has rendered and has a handle. */
-	const queueLift = useRef<{
-		card: Presentation<S>;
-		lift: Lift;
-		box: Box;
-		paneId: string;
-		event: ReactPointerEvent<HTMLElement>;
-	} | null>(null);
 	const barHold = useBarHold();
 	const release = useRelease({
 		workspace,
@@ -140,6 +124,21 @@ export function useDrag<S>({
 		commands,
 		handles,
 		direction,
+	});
+	const { liftSheet, liftGround, liftLoose } = useLift({
+		root,
+		workspace,
+		gesture,
+		moves,
+		handles,
+		allows,
+		paneBoxes,
+		press,
+		deckColumnOf,
+		swallowClick,
+		capture,
+		destinationAt$,
+		afterLooseLift: frameMove,
 	});
 	const swipe = useDeckSwipe({
 		moves,
@@ -192,192 +191,6 @@ export function useDrag<S>({
 			/* a pointer the browser is not tracking; the frame still hears it */
 		}
 	}
-
-	/** The box a Note is held in when it was lifted out of a Sheet or from nowhere. */
-	function handBox(lift: Lift, paneId: string, height: number): Box {
-		const frameBox = root.current?.getBoundingClientRect();
-		if (!frameBox) return { left: 0, top: 0, width: 0, height };
-		return handBoxIn(
-			frameBox,
-			paneBoxes[paneId]?.width ?? frameBox.width,
-			lift.x,
-			lift.y,
-			height,
-			remPx(),
-			OPEN_SCALE,
-		);
-	}
-
-	function startLift(
-		card: Presentation<S>,
-		lift: Lift,
-		origin: Box,
-		paneId: string,
-		deckSheet: string | null,
-		home: HeldHome,
-		firstDestination: (d: Drag<S>) => Destination | null,
-	) {
-		const h = handles.current.get(card.id);
-		/* nothing to hold: the Lift the reducer began is called off */
-		if (!h) {
-			dispatch({ type: "CancelGesture" });
-			return;
-		}
-		capture(lift.pointerId);
-		press.current = null;
-		moves.resetTransforms(h);
-		gesture.setPastCommit(false);
-		const d = freshDrag<S>({
-			card,
-			h,
-			pointerId: lift.pointerId,
-			at: { x: lift.x, y: lift.y, t: performance.now() },
-			origin,
-			paneId,
-			deckSheet,
-			home,
-			phase: "held",
-			lifted: true,
-			keyboard: lift.pointerId === KEYBOARD_POINTER,
-		});
-		gesture.begin(d, firstDestination(d));
-	}
-
-	/**
-	 * A Sheet is handled by its bar, not by its content: the Card emerges
-	 * from the bar (a Cover's Heading, or a Ground's Pane bar) rather than
-	 * the whole Sheet shrinking into the hand. The one element stays one
-	 * element (ADR 0006); only its box starts the morph at the bar instead
-	 * of at the Sheet.
-	 */
-	function emergeFrom(card: Presentation<S>, bar: HTMLElement | null) {
-		const frame = root.current;
-		const h = handles.current.get(card.id);
-		if (!frame || !h || !bar) return;
-		const frameBox = frame.getBoundingClientRect();
-		const rect = bar.getBoundingClientRect();
-		moves.jumpTo(h, {
-			left: rect.left - frameBox.left,
-			top: rect.top - frameBox.top,
-			width: rect.width,
-			height: rect.height,
-		});
-	}
-
-	/**
-	 * A Sheet lifted by its Heading or its Pane bar: a Cover leaves its
-	 * stack, a Floating Ground takes its whole Pane with it. If the Card is
-	 * still on a live Deck it shrinks toward its slot there; otherwise it
-	 * is in hand and a release in its own Pane closes it, as ← would.
-	 */
-	function liftSheet(
-		sheet: SheetView<S>,
-		lift: Lift,
-		bar: HTMLElement | null,
-		firstDestination: (d: Drag<S>) => Destination | null = (d) =>
-			destinationAt$(lift.x, lift.y, d, performance.now()),
-	) {
-		if (!allows("lift") || dragRef.current || settlingRef.current) return;
-		const card = sheet.presentation;
-		if (!card) return;
-		gesture.endReturn();
-		const before = current().layout;
-		const holder = deckHolding(before, card.id);
-		const next = dispatch({ type: "LiftSheet", sheetId: sheet.sheetId });
-		if (!next.held) return;
-		/* the Deck it lands on is one taller than what it shows now */
-		const rem = remPx();
-		const height = holder?.deck
-			? cardHeightPx(
-					restingCards(before, holder.deck).length + 1,
-					rem,
-					deckColumnOf(holder.paneId)?.height,
-				)
-			: LOOSE_CARD_REM * rem;
-		emergeFrom(card, bar);
-		startLift(
-			card,
-			lift,
-			handBox(lift, sheet.paneId, height),
-			sheet.paneId,
-			holder?.sheetId ?? null,
-			heldHome(next) ?? "close",
-			firstDestination,
-		);
-	}
-
-	/** A Rooted Ground's content, its bar held about a second: it lifts and the Pane steps down. */
-	function liftGround(
-		sheet: SheetView<S>,
-		lift: Lift,
-		bar: HTMLElement | null,
-		firstDestination: (d: Drag<S>) => Destination | null = (d) =>
-			destinationAt$(lift.x, lift.y, d, performance.now()),
-	) {
-		if (!allows("lift") || dragRef.current || settlingRef.current) return;
-		const pane = findPane(current().layout, sheet.paneId);
-		const card = sheet.presentation;
-		if (!pane || !card || pane.covers.length || pane.line.length < 2)
-			return;
-		gesture.endReturn();
-		dispatch({ type: "LiftSheet", sheetId: sheet.sheetId });
-		emergeFrom(card, bar);
-		startLift(
-			card,
-			lift,
-			handBox(lift, sheet.paneId, LOOSE_CARD_REM * remPx()),
-			sheet.paneId,
-			null,
-			"restore",
-			firstDestination,
-		);
-	}
-
-	/** A Segment or a Link dragged past the slop: a fresh Card, from nowhere. */
-	function liftLoose(
-		pending: PendingLift<S>,
-		event: ReactPointerEvent<HTMLElement>,
-	) {
-		if (!allows("drag") || dragRef.current || settlingRef.current) return;
-		const card = dispatch({
-			type: "LiftFresh",
-			paneId: pending.paneId,
-			subject: pending.make(),
-		}).held?.presentation;
-		if (!card) return;
-		swallowClick.current = true;
-		const lift = {
-			pointerId: pending.pointerId,
-			x: pending.x,
-			y: pending.y,
-		};
-		const box = handBox(lift, pending.paneId, LOOSE_CARD_REM * remPx());
-		gesture.setLoose({ card, box });
-		/* the handle exists once the Card has rendered; finish the lift then */
-		queueLift.current = { card, lift, box, paneId: pending.paneId, event };
-	}
-	/* an effect, not a layout effect: the Card registers its handle in one */
-	useEffect(() => {
-		const queued = queueLift.current;
-		if (!queued || gesture.loose?.card.id !== queued.card.id) return;
-		queueLift.current = null;
-		startLift(
-			queued.card,
-			queued.lift,
-			queued.box,
-			queued.paneId,
-			null,
-			"vanish",
-			(d) =>
-				destinationAt$(
-					queued.lift.x,
-					queued.lift.y,
-					d,
-					performance.now(),
-				),
-		);
-		frameMove(queued.event);
-	});
 
 	/** The Card is in hand from here on: the drop regions read it. */
 	function takeInHand(d: Drag<S>) {
