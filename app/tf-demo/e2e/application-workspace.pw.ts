@@ -8,12 +8,12 @@ import { SPLITS_PARKED } from "../src/workspace/compass/splits";
  * by a click, Covers pushed by Links, and Workspace Persistence. While
  * splits are parked (tf-demo ADR 0013), one Pane shows at every width.
  *
- * The Deck tests click words of a stored Scroll whose occurrences are already
- * attested, so a click presents the stored route and runs no resolution.
+ * The Deck tests click words of the Banken Scroll. Once its occurrences are
+ * attested, a click presents the stored route and runs no resolution; on a
+ * fresh backend the first run pays for intake and one resolution.
  */
 
-const BANKEN_TEXT =
-	/^Die Banken sind geöffnet\. Morgen bleiben sie geschlossen\./;
+const BANKEN_TEXT = "Die Banken sind geöffnet. Morgen bleiben sie geschlossen.";
 
 test.use({ viewport: { width: 1600, height: 1000 } });
 
@@ -48,31 +48,77 @@ function word(scope: Locator, text: string): Locator {
 		.filter({ hasText: new RegExp(`^${text}$`) });
 }
 
-/** The Library's stored Scroll, opened as the Rooted Pane's Ground. */
+/**
+ * The Banken Scroll, opened as the Rooted Pane's Ground. The local backend
+ * is long-lived, so other stored Scrolls may start with the same words;
+ * submitting the text through "Add a text" opens the one Scroll stored under
+ * its submission key, with no intake run, and stores it on a fresh backend.
+ */
 async function openBanken(page: Page) {
+	/* a fresh backend runs intake here and a resolution on the first click */
+	test.setTimeout(90_000);
 	await page.goto("/");
-	await page.getByRole("button", { name: BANKEN_TEXT }).click();
+	await page.getByRole("button", { name: "Add a text" }).click();
+	const dialog = page.getByRole("dialog", { name: "Add a text" });
+	await dialog
+		.getByLabel("German text, or a link to an article")
+		.fill(BANKEN_TEXT);
+	await dialog.getByRole("button", { name: "Analyze text" }).click();
+	await expect(dialog).toHaveCount(0, { timeout: 60_000 });
 	await expect(trail(page)).toContainText("Die Banken sind geöffnet.");
 	const reader = rootedGround(page).locator('[data-slot="text-reader"]');
 	await expect(reader).toBeVisible();
 	return reader;
 }
 
+/** The Note kinds of the dealt Cards, back to front, `?` for one still loading. */
+function dealtKinds(page: Page): Promise<string> {
+	return cards(page).evaluateAll((elements) =>
+		elements
+			.map(
+				(card) =>
+					card
+						.querySelector("[data-note-kind]")
+						?.getAttribute("data-note-kind") ?? "?",
+			)
+			.join(" "),
+	);
+}
+
+function dealtCard(page: Page, kind: string): Locator {
+	return cards(page).filter({
+		has: page.locator(`[data-note-kind="${kind}"]`),
+	});
+}
+
 /**
- * A click on "Banken" deals its stored route, front first: the Reading, the
- * Lemma when it holds more than one stored Reading, the Surface (plural) and
- * the Attestation (`Die Banken`). Only the Lemma depends on what the local
- * backend has resolved, so the Deck holds three or four Cards; the count
- * dealt is returned for the steps that follow.
+ * A click on "Banken" deals its story (tf-demo ADR 0011), back to front: the
+ * Attestation, since `Die Banken` has two members; the Surface, since plural
+ * `Banken` is not its Lemma's Grundform; the Lemma only when `Bank` holds more
+ * than one stored Reading, which turns on what the local backend has
+ * resolved; and the Reading. The count dealt is returned for the steps that
+ * follow.
  */
 async function dealBanken(page: Page): Promise<number> {
 	const reader = rootedGround(page).locator('[data-slot="text-reader"]');
 	await word(reader, "Banken").click();
+	await expect
+		.poll(() => dealtKinds(page), { timeout: 60_000 })
+		.toMatch(/^Attestation Surface (Lemma )?Reading$/);
 	await expect(
-		frame(page).locator('[data-form="card"] [data-attestation-title]'),
-	).toHaveCount(1);
-	const dealt = await cards(page).count();
-	expect([3, 4]).toContain(dealt);
+		dealtCard(page, "Attestation").locator("[data-attestation-title]"),
+	).toHaveText("Die Banken");
+	await expect(
+		dealtCard(page, "Surface").locator("[data-heading]"),
+	).toContainText("plural of");
+	const dealt = (await dealtKinds(page)).split(" ").length;
+	if (dealt === 4)
+		await expect(
+			dealtCard(page, "Lemma").locator("[data-heading]"),
+		).toContainText(/\b([2-9]|\d{2,}) readings/);
+	await expect(
+		dealtCard(page, "Reading").locator("[data-heading]"),
+	).toContainText("Bank");
 	await expect(word(reader, "Banken")).toHaveAttribute(
 		"aria-pressed",
 		"true",
@@ -252,11 +298,13 @@ test("Go to source pushes the Scroll as a Cover at its Sentence; Back retraces t
 	const reading = covers(page).first();
 
 	/* Go to source from its Source Context: a second Cover, the Scroll,
-	   with the occurrence lit */
-	await reading
-		.getByRole("button", { name: /open in the source Text/ })
-		.first()
-		.click();
+	   with the occurrence lit. Source Contexts are the Visitor's own
+	   Encounters, so a fresh Visitor's Reading quotes only this one. */
+	const banken = reading.getByRole("button", {
+		name: "Banken, open in the source Text",
+	});
+	await expect(banken).toHaveCount(1);
+	await banken.click();
 	await expect(covers(page)).toHaveCount(2);
 	const source = covers(page).last();
 	const sourceReader = source.locator('[data-slot="text-reader"]');
