@@ -24,7 +24,7 @@ export const HYSTERESIS_PX = 12;
 /** How far past the Deck's resting box a drop still counts as back. */
 export const FOOTPRINT_PAD_PX = 24;
 /** The least travel a flick needs. */
-export const FLICK_TRAVEL_PX = 24;
+const FLICK_TRAVEL_PX = 24;
 
 export function clamp(value: number, min: number, max: number): number {
 	return Math.min(max, Math.max(min, value));
