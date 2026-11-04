@@ -228,7 +228,35 @@ async function pull(page: Page, card: Locator, dx: number, dy: number) {
 	return start;
 }
 
-test("D: short of the detent the action shows, and a release puts the Card back", async ({
+/** Each Card's middle across and top edge, which the fold brings onto the swiped Card's. */
+function anchors(page: Page) {
+	return frame(page)
+		.locator("[data-card-id]")
+		.evaluateAll((elements) =>
+			elements.map((element) => {
+				const box = element.getBoundingClientRect();
+				return { u: box.left + box.width / 2, v: box.top };
+			}),
+		);
+}
+
+/** The share of the way each Card behind has gone from `rest` to the swiped Card. */
+async function shares(page: Page, rest: { u: number; v: number }[]) {
+	const now = await anchors(page);
+	const lead = now.at(-1);
+	if (!lead) throw new Error("Missing the swiped Card");
+	return now.slice(0, -1).map((card, index) => {
+		const slot = rest[index];
+		if (!slot) throw new Error("Missing a slot");
+		const to = { u: lead.u - slot.u, v: lead.v - slot.v };
+		return (
+			((card.u - slot.u) * to.u + (card.v - slot.v) * to.v) /
+			(to.u * to.u + to.v * to.v)
+		);
+	});
+}
+
+test("D: short of the threshold the action shows, and a release puts the Card back", async ({
 	page,
 }) => {
 	await chooseVariant(page, "D · Swipe actions");
@@ -241,7 +269,28 @@ test("D: short of the detent the action shows, and a release puts the Card back"
 	await expect(frame(page).locator("[data-card-id]")).toHaveCount(4);
 });
 
-test("D: past the detent the panel arms, and the release does what it shows", async ({
+test("D: one breakpoint: 1 px short nothing says it will go, at the threshold everything does", async ({
+	page,
+}) => {
+	await chooseVariant(page, "D · Swipe actions");
+	const rest = await anchors(page);
+	await pull(page, front(page), -95, 0);
+	await expect(panel(page)).not.toHaveAttribute("data-armed");
+	for (const share of await shares(page, rest)) expect(share).toBeLessThan(1);
+	await page.mouse.up();
+	await expect(lastRelease(page)).toHaveText("back · short 95");
+	await expect(frame(page).locator("[data-card-id]")).toHaveCount(4);
+	await expect(panel(page)).toHaveCount(0);
+	await pull(page, front(page), -96, 0);
+	await expect(panel(page)).toHaveAttribute("data-armed", "true");
+	for (const share of await shares(page, rest))
+		expect(share).toBeCloseTo(1, 3);
+	await page.mouse.up();
+	await expect(lastRelease(page)).toHaveText("dismiss · threshold 96");
+	await expect(frame(page).locator("[data-card-id]")).toHaveCount(0);
+});
+
+test("D: past the threshold the panel arms, and the release does what it shows", async ({
 	page,
 }) => {
 	await chooseVariant(page, "D · Swipe actions");
@@ -249,7 +298,7 @@ test("D: past the detent the panel arms, and the release does what it shows", as
 	await expect(panel(page)).toHaveAttribute("data-armed", "true");
 	await page.mouse.up();
 	await expect(frame(page).locator("[data-card-id]")).toHaveCount(0);
-	await expect(lastRelease(page)).toHaveText(/^dismiss · detent/);
+	await expect(lastRelease(page)).toHaveText(/^dismiss · threshold/);
 	await redeal(page);
 	await pull(page, front(page), 0, -150);
 	await expect(panel(page)).toHaveAttribute("data-panel", "expand");
@@ -258,13 +307,13 @@ test("D: past the detent the panel arms, and the release does what it shows", as
 	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
 });
 
-test("D: pulled back under the detent, the panel disarms and the Card returns", async ({
+test("D: pulled back under the threshold, the panel disarms and the Card returns", async ({
 	page,
 }) => {
 	await chooseVariant(page, "D · Swipe actions");
 	const start = await pull(page, front(page), -150, 0);
 	await expect(panel(page)).toHaveAttribute("data-armed", "true");
-	await page.mouse.move(start.x - 60, start.y, { steps: 30 });
+	await page.mouse.move(start.x - 95, start.y, { steps: 30 });
 	await page.waitForTimeout(150);
 	await expect(panel(page)).not.toHaveAttribute("data-armed");
 	await page.mouse.up();
@@ -302,47 +351,84 @@ test("D: toward Close deck the rest of the Deck folds in at once, and back out o
 	page,
 }) => {
 	await chooseVariant(page, "D · Swipe actions");
-	const cards = frame(page).locator("[data-card-id]");
-	const centres = () =>
-		cards.evaluateAll((elements) =>
-			elements.map((element) => {
-				const box = element.getBoundingClientRect();
-				return {
-					u: box.left + box.width / 2,
-					v: box.top + box.height / 2,
-				};
-			}),
-		);
-	const rest = await centres();
-	/* the share of the way each Card behind has gone from its slot to the swiped one */
-	const shares = async () => {
-		const now = await centres();
-		const lead = now.at(-1);
-		if (!lead) throw new Error("Missing the swiped Card");
-		return now.slice(0, -1).map((card, index) => {
-			const slot = rest[index];
-			if (!slot) throw new Error("Missing a slot");
-			const to = { u: lead.u - slot.u, v: lead.v - slot.v };
-			return (
-				((card.u - slot.u) * to.u + (card.v - slot.v) * to.v) /
-				(to.u * to.u + to.v * to.v)
-			);
-		});
-	};
+	const rest = await anchors(page);
 	const start = await pull(page, front(page), -48, 0);
-	const half = await shares();
+	const half = await shares(page, rest);
 	expect(Math.max(...half) - Math.min(...half)).toBeLessThan(0.01);
-	for (const share of half) expect(share).toBeCloseTo(0.5, 1);
+	for (const share of half) expect(share).toBeCloseTo(0.5, 2);
 	await page.mouse.move(start.x - 150, start.y, { steps: 30 });
 	await page.waitForTimeout(150);
-	for (const share of await shares()) expect(share).toBeCloseTo(1, 2);
+	for (const share of await shares(page, rest))
+		expect(share).toBeCloseTo(1, 3);
 	await page.mouse.move(start.x - 40, start.y, { steps: 30 });
 	await page.waitForTimeout(150);
 	await page.mouse.up();
 	await expect(lastRelease(page)).toHaveText(/^back · short/);
 	await expect
-		.poll(async () => Math.max(...(await shares()).map(Math.abs)))
+		.poll(async () => Math.max(...(await shares(page, rest)).map(Math.abs)))
 		.toBeLessThan(0.01);
+});
+
+test("D: the panel never shows above or below the swiped Card", async ({
+	page,
+}) => {
+	await chooseVariant(page, "D · Swipe actions");
+	const card = front(page);
+	/* how far the panel reaches past the Card's top or bottom edge, worst over `ms` of frames */
+	const worstPeek = (ms: number) =>
+		card.evaluate(
+			(element, duration) =>
+				new Promise<number>((resolve) => {
+					let worst = 0;
+					const end = performance.now() + duration;
+					const step = () => {
+						const shown = document.querySelector("[data-panel]");
+						if (
+							shown &&
+							Number(getComputedStyle(shown).opacity) > 0.01
+						) {
+							const own = element.getBoundingClientRect();
+							const box = shown.getBoundingClientRect();
+							worst = Math.max(
+								worst,
+								own.top - box.top,
+								box.bottom - own.bottom,
+							);
+						}
+						if (performance.now() < end)
+							requestAnimationFrame(step);
+						else resolve(worst);
+					};
+					requestAnimationFrame(step);
+				}),
+			ms,
+		);
+	const start = await pull(page, card, -40, 0);
+	expect(await worstPeek(100)).toBeLessThanOrEqual(0);
+	await page.mouse.move(start.x - 130, start.y, { steps: 20 });
+	expect(await worstPeek(200)).toBeLessThanOrEqual(0);
+	await page.mouse.move(start.x - 60, start.y, { steps: 10 });
+	const returning = worstPeek(500);
+	await page.mouse.up();
+	expect(await returning).toBeLessThanOrEqual(0);
+});
+
+test("B: a hovered Deck fans slightly, and settles back while a Card is pressed", async ({
+	page,
+}) => {
+	await chooseVariant(page, "B · Table");
+	const card = front(page);
+	const back = frame(page).locator("[data-card-id]").first();
+	const box = await card.boundingBox();
+	if (!box) throw new Error("Missing card geometry");
+	await page.mouse.move(box.x + box.width / 2, box.y + 40, { steps: 4 });
+	await expect.poll(() => rotation(back)).toBeLessThan(-11);
+	await page.mouse.down();
+	await expect
+		.poll(async () => Math.abs(await rotation(back)))
+		.toBeLessThan(0.5);
+	await page.mouse.up();
+	await expect.poll(() => rotation(back)).toBeLessThan(-11);
 });
 
 test("B: a hovered Deck fans slightly, and settles back while a Card is pressed", async ({
