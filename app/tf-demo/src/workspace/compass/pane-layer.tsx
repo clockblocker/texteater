@@ -176,7 +176,11 @@ function renderPane<S>(pane: PaneNode<S>, scope: PaneScope<S>): ReactNode {
 							)
 						: null
 				}
-				trail={pane.line.map((rung) => rungLabel(rung, renderer, menu))}
+				trail={pane.line.map((rung) =>
+					rung.kind === "Sheet" && renderer.crumb
+						? renderer.crumb(rung.presentation.subject)
+						: rungLabel(rung, renderer, menu),
+				)}
 				onPointerDown={(event) => drags.paneBarDown(event, pane)}
 				onPointerMove={drags.paneBarMove}
 				onStop={drags.stopBarHold}

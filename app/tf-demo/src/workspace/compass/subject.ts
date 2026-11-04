@@ -76,8 +76,13 @@ export type SubjectView<S> = {
 export type KeyedCard<S> = DealtCard<S> & { readonly key: string };
 
 export type SubjectRenderer<S> = {
-	/** What a Subject is called: its aria-labels and the trail. */
+	/** What a Subject is called: its aria-labels, and the trail unless `crumb` is given. */
 	readonly label: (subject: S) => string;
+	/**
+	 * What the trail shows for a Subject on the Ground line, for a name that
+	 * may have to load, such as a Scroll opened from its Address.
+	 */
+	readonly crumb?: (subject: S) => ReactNode;
 	/**
 	 * The content column a Subject lays out in as a Sheet, in rem, a rem of
 	 * air either side included: what a Pane it spawns opens to, and what

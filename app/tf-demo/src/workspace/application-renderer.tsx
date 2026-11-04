@@ -40,6 +40,7 @@ const NOTE_COLUMN_REM = 50;
 
 export const applicationRenderer: SubjectRenderer<WorkspaceSubject> = {
 	label: subjectLabel,
+	crumb: (subject) => <Crumb subject={subject} />,
 	columnRem: (subject) =>
 		subject.kind === "Note" ? NOTE_COLUMN_REM : SCROLL_COLUMN_REM,
 	render: (subject, view, part) => (
@@ -167,8 +168,8 @@ function dealtCard({ key, target, presentationContext }: WorkspaceCardTarget) {
 	return { key, subject: workspaceSubjectFor(target, presentationContext) };
 }
 
-/** A Section's Heading: what the Library or its Codex calls it. */
-function SectionHeading({ target }: { target: SectionTarget }) {
+/** What the Library or a Codex calls a Section, loaded when its target came without it. */
+function useSectionTitle(target: SectionTarget): string | undefined {
 	const visitorId = useAnonymousVisitorId();
 	const codexQuery = useQuery({
 		...convexQuery(api.library.codex, {
@@ -177,13 +178,11 @@ function SectionHeading({ target }: { target: SectionTarget }) {
 		}),
 		enabled: target.title === undefined,
 	});
-	const title = target.title ?? codexQuery.data?.title;
-	if (title === undefined) return <HeadingSkeleton />;
-	return <span className="min-w-0 truncate font-serif">{title}</span>;
+	return target.title ?? codexQuery.data?.title;
 }
 
-/** A Scroll's Heading: what the Library calls it. */
-function ScrollHeading({ target }: { target: ScrollSubjectTarget }) {
+/** What the Library calls a Scroll, loaded when its target came without it. */
+function useScrollTitle(target: ScrollSubjectTarget): string | undefined {
 	const visitorId = useAnonymousVisitorId();
 	const scrollQuery = useQuery({
 		...convexQuery(api.scrollViews.get, {
@@ -192,9 +191,42 @@ function ScrollHeading({ target }: { target: ScrollSubjectTarget }) {
 		}),
 		enabled: target.title === undefined,
 	});
-	const title =
+	return (
 		target.title ??
-		(scrollQuery.data ? scrollTitle(scrollQuery.data) : undefined);
+		(scrollQuery.data ? scrollTitle(scrollQuery.data) : undefined)
+	);
+}
+
+/** A Section's Heading: what the Library or its Codex calls it. */
+function SectionHeading({ target }: { target: SectionTarget }) {
+	const title = useSectionTitle(target);
 	if (title === undefined) return <HeadingSkeleton />;
 	return <span className="min-w-0 truncate font-serif">{title}</span>;
+}
+
+/** A Scroll's Heading: what the Library calls it. */
+function ScrollHeading({ target }: { target: ScrollSubjectTarget }) {
+	const title = useScrollTitle(target);
+	if (title === undefined) return <HeadingSkeleton />;
+	return <span className="min-w-0 truncate font-serif">{title}</span>;
+}
+
+/**
+ * A Ground rung's crumb in the trail: a Section or a Scroll by its title,
+ * which an Address does not carry, so it may load; its label until then.
+ */
+function Crumb({ subject }: { subject: WorkspaceSubject }) {
+	if (subject.kind === "Section")
+		return <SectionCrumb target={subject.target} />;
+	if (subject.kind === "Scroll")
+		return <ScrollCrumb target={subject.target} />;
+	return subjectLabel(subject);
+}
+
+function SectionCrumb({ target }: { target: SectionTarget }) {
+	return useSectionTitle(target) ?? subjectLabel({ kind: "Section", target });
+}
+
+function ScrollCrumb({ target }: { target: ScrollSubjectTarget }) {
+	return useScrollTitle(target) ?? subjectLabel({ kind: "Scroll", target });
 }

@@ -110,7 +110,7 @@ export function PaneBar({
 	keys: readonly (HeadingControl & { readonly text: string })[];
 	/** The Floating Ground's title; a Rooted Pane shows its trail instead. */
 	title: ReactNode | null;
-	trail: readonly string[];
+	trail: readonly ReactNode[];
 	onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
 	onPointerMove: (event: ReactPointerEvent<HTMLElement>) => void;
 	onStop: () => void;
@@ -177,10 +177,7 @@ export function PaneBar({
 						{/* the trail changes on every step, and changes at
 						    once: the step is the motion, the words follow */}
 						{trail.map((crumb, index) => (
-							<span
-								key={`${index.toString()}-${crumb}`}
-								className="contents"
-							>
+							<span key={index.toString()} className="contents">
 								{index > 0 ? (
 									<span aria-hidden="true">›</span>
 								) : null}
