@@ -110,8 +110,9 @@ _Avoid_: dismiss a Card
 
 **Drop Zone**:
 Where letting go of a Held Card sends it. A Card carried off its Deck has
-three: back on the Deck, the dismiss zone, whose drop is a Sweep, and the
-expand zone, whose drop is an Expand to a Cover. See [tf-demo ADR 0016].
+three: back on the Deck, the dismiss zone toward inline-start or down, whose
+drop is a Sweep, and the expand zone toward inline-end or up, whose drop is an
+Expand to a Cover. See [tf-demo ADR 0016].
 _Avoid_: commit line, drop target
 
 **Back**:

@@ -288,19 +288,25 @@ describe("a Card carried off its Deck", () => {
 		expect(zone(carried(30, -20), later)).toEqual({ kind: "return" });
 	});
 
-	test("well toward inline-start is in the dismiss zone", () => {
-		expect(zone(carried(-120, 20), later)).toEqual({
-			kind: "sweep",
-			toward: "start",
-		});
+	test("well toward inline-start or down is in the dismiss zone", () => {
+		for (const [dx, dy] of [
+			[-120, 20],
+			[0, 120],
+			[-80, 120],
+			[60, 120],
+		] as const)
+			expect(zone(carried(dx, dy), later)).toEqual({
+				kind: "sweep",
+				toward: "start",
+			});
 	});
 
-	test("well toward inline-end, up or down is in the expand zone", () => {
+	test("well toward inline-end or up is in the expand zone", () => {
 		for (const [dx, dy] of [
 			[120, 0],
 			[0, -120],
-			[0, 120],
-			[-80, 120],
+			[-80, -120],
+			[120, 60],
 		] as const)
 			expect(zone(carried(dx, dy), later)).toEqual({
 				kind: "sheet",
@@ -336,6 +342,13 @@ describe("a Card carried off its Deck", () => {
 		expect(zone(carried(0, -120), later, "ltr", none)).toEqual({
 			kind: "return",
 		});
+		/* down with no Sweep allowed is no Expand either */
+		expect(
+			zone(carried(0, 120), later, "ltr", {
+				dismisses: false,
+				expands: true,
+			}),
+		).toEqual({ kind: "return" });
 	});
 
 	test("holds the zone it is in a little longer than it took to enter", () => {

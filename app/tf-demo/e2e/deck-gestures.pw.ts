@@ -267,11 +267,11 @@ for (const [name, dx, dy] of [
 		const frame = page.locator("[data-deck-frame]");
 		/* carried slowly and held still before the release: no throw */
 		await dealAndGesture(page, strokes(4, dx, dy, 40), 300);
-		/* left the Deck is swept; any other way the Card is a Cover over
-		   it, which hides it */
+		/* left or down the Deck is swept; right or up the Card is a Cover
+		   over it, which hides it */
 		await expect(frame.locator('[data-form="card"]')).toHaveCount(0);
 		await expect(frame.locator('[data-form="sheet"]')).toHaveCount(
-			dx < 0 ? 0 : 1,
+			dx < 0 || dy > 0 ? 0 : 1,
 		);
 	});
 
@@ -310,6 +310,14 @@ test("each zone shows itself before the release, and short of every line the car
 	await carry(-140, 0);
 	await expect(red).toHaveCount(4);
 	await expect(ghost).toHaveCount(0);
+	/* down past the line is the dismiss zone too */
+	await carry(0, 140);
+	await expect(red).toHaveCount(4);
+	await expect(ghost).toHaveCount(0);
+	/* up past the line is the expand zone */
+	await carry(0, -140);
+	await expect(ghost).toHaveCount(1);
+	await expect(red).toHaveCount(0);
 	/* back short of every line and let go: the Card is on its Deck again */
 	await carry(-20, 0);
 	await expect(red).toHaveCount(0);

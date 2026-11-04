@@ -226,11 +226,12 @@ export function flickOf<S>(
  * Which of its three drop zones a Card carried off its Deck is headed
  * into, read off where the hand is headed (`projected`) rather than where
  * it is. A flick either way along the line is the dismiss zone, whatever
- * the travel. Otherwise more than `commit` px toward inline-start, and
- * mostly sideways, is the dismiss zone; more than `commit` px toward
- * inline-end, up or down is the expand zone; anywhere nearer is back on
- * the Deck. The zone the hand is in holds it `hysteresis` px longer. A
- * zone the scenario does not allow is never chosen.
+ * the travel. Otherwise the hand's longest reach decides: more than
+ * `commit` px toward inline-start or down is the dismiss zone, more than
+ * `commit` px toward inline-end or up is the expand zone, and anywhere
+ * nearer is back on the Deck. The zone the hand is in holds it
+ * `hysteresis` px longer. A zone the scenario does not allow is never
+ * chosen.
  */
 export function deckZoneOf<S>(
 	d: Drag<S>,
@@ -262,10 +263,11 @@ export function deckZoneOf<S>(
 	const along = dx * inlineSign(direction);
 	const line = (kind: Destination["kind"]) =>
 		current?.kind === kind ? commit - hysteresis : commit;
-	if (dismisses && -along > line("sweep") && -along >= Math.abs(dy))
+	const away = dismisses ? Math.max(-along, dy) : 0;
+	const open = expands ? Math.max(along, -dy) : 0;
+	if (away >= open && away > line("sweep"))
 		return { kind: "sweep", toward: "start" };
-	if (expands && Math.max(along, Math.abs(dy)) > line("sheet"))
-		return { kind: "sheet", paneId };
+	if (open > away && open > line("sheet")) return { kind: "sheet", paneId };
 	return { kind: "return" };
 }
 

@@ -49,9 +49,9 @@ Sheet leaves (a Cover closes, or the Ground steps down its line), or a Sweep on
 its Sheet while that Sheet is on top. A Sweep is one action with three
 triggers: a dismissive click on the Sheet away from any Link or Segment,
 Escape, and one of its Cards let go in its dismiss zone ([tf-demo ADR 0016]):
-carried toward inline-start, or flicked either way along the line. A Deck is
-live while the Sheet that dealt it is in its stack and the Deck has not been
-swept or replaced since. X on a Floating Pane collapses its Ground Note back to
+carried toward inline-start or down, or flicked either way along the line. A
+Deck is live while the Sheet that dealt it is in its stack and the Deck has
+not been swept or replaced since. X on a Floating Pane collapses its Ground Note back to
 its Card when that Card's Deck is live and closes it otherwise. Individual
 Cards are no longer dismissed from a Deck.
 

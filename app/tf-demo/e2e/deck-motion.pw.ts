@@ -316,6 +316,7 @@ test("under reduced motion nothing leans, and every zone still does what it show
 	for (const [dx, dy] of [
 		[-160, 0],
 		[160, 0],
+		[0, -140],
 		[0, 140],
 	] as const) {
 		await page.goto("/playground/deck-models");
@@ -327,9 +328,9 @@ test("under reduced motion nothing leans, and every zone still does what it show
 		expect(await held.evaluate(turn)).toBeCloseTo(0, 3);
 		await page.mouse.up();
 		await expect(frame.locator("[data-held]")).toHaveCount(0);
-		/* left the Deck is swept; any other way the Card is a Cover */
+		/* left or down the Deck is swept; right or up the Card is a Cover */
 		await expect(cards).toHaveCount(0);
-		await expect(sheets).toHaveCount(dx < 0 ? 0 : 1);
+		await expect(sheets).toHaveCount(dx < 0 || dy > 0 ? 0 : 1);
 	}
 });
 

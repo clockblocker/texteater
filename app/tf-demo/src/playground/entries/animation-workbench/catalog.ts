@@ -61,7 +61,7 @@ export const SECTIONS: readonly {
 				interactions: ["drag", "sweep"],
 				title: "Sweep / swipe left",
 				instruction:
-					"Drag a card left: the whole deck follows the finger, leans with it and turns red past the commit distance. Release there and the whole deck goes, there is no per-card removal. Pull well up, down or back right and the card tears loose: the deck springs back and the card is in hand, leaning the way it is carried. A quick flick left or right sweeps the deck, whatever it drifts through. Try a short fast throw and a slow release: a flick is read where it was heading.",
+					"Drag a card left: the whole deck follows the finger, leans with it and turns red past the commit distance. Release there, or carry a card down past it, and the whole deck goes; there is no per-card removal. Pull well up, down or back right and the card tears loose: the deck springs back and the card is in hand, leaning the way it is carried. A quick flick left or right sweeps the deck, whatever it drifts through. Try a short fast throw and a slow release: a flick is read where it was heading.",
 				source,
 				initialScene: "deck",
 				knobs: [
@@ -92,7 +92,7 @@ export const SECTIONS: readonly {
 				interactions: ["drag", "drop", "collapse"],
 				title: "Free drag / drop zones",
 				instruction:
-					"Drag a card any way but left: it is in hand at once. Carried past the commit distance right, up or down it is in its expand zone and shows the translucent Cover it would open, at once; nearer, it goes back on the deck. A sheet lifted by its bar reads the pane's drop regions instead; splits are parked, so no edge spawns a Pane. Only the drop itself morphs.",
+					"Drag a card right or up: it is in hand at once. Carried past the commit distance right or up it is in its expand zone and shows the translucent Cover it would open, at once; nearer, it goes back on the deck. A sheet lifted by its bar reads the pane's drop regions instead; splits are parked, so no edge spawns a Pane. Only the drop itself morphs.",
 				source,
 				initialScene: "deck",
 				knobs: [...spring, ...morph, "zoneFeedbackMs", "durationScale"],
@@ -107,7 +107,7 @@ export const SECTIONS: readonly {
 				interactions: ["drag", "expand", "collapse"],
 				title: "Expand / collapse",
 				instruction:
-					"Drag a card up, down or right past the commit distance and release, or double-click it, to open it as a Cover; the deck beneath is hidden, not ended. Use the back arrow to collapse it and reveal the deck again. Watch the body and clipping arrive with the sheet.",
+					"Drag a card up or right past the commit distance and release, or double-click it, to open it as a Cover; the deck beneath is hidden, not ended. Use the back arrow to collapse it and reveal the deck again. Watch the body and clipping arrive with the sheet.",
 				source,
 				initialScene: "deck",
 				knobs: [...morph, ...release, "durationScale"],
