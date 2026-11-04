@@ -13,6 +13,7 @@ const playgroundSpecs = [
 	"compass.pw.ts",
 	"deck-gestures.pw.ts",
 	"deck-motion.pw.ts",
+	"motion-preference.pw.ts",
 	"playground-isolation.pw.ts",
 ];
 

@@ -2,8 +2,9 @@ import { expect, test } from "bun:test";
 import {
 	applyMotionPreference,
 	isMotionPreference,
+	parseMotionPreference,
 	readMotionPreference,
-} from "../src/lib/motion-preference";
+} from "../src/lib/motion-preference-storage";
 
 test("motion preference accepts only the two application policies", () => {
 	expect(isMotionPreference("respect")).toBe(true);
@@ -12,12 +13,28 @@ test("motion preference accepts only the two application policies", () => {
 	expect(isMotionPreference(null)).toBe(false);
 });
 
+test("a stored preference is read in the JSON the atom writes", () => {
+	expect(parseMotionPreference('"ignore"')).toBe("ignore");
+	expect(parseMotionPreference('"respect"')).toBe("respect");
+	expect(parseMotionPreference("ignore")).toBe("respect");
+	expect(parseMotionPreference('"system"')).toBe("respect");
+	expect(parseMotionPreference("{")).toBe("respect");
+	expect(parseMotionPreference(null)).toBe("respect");
+});
+
 test("motion preference respects the system by default", () => {
 	expect(readMotionPreference(null)).toBe("respect");
 	expect(
 		readMotionPreference({ getItem: () => "an-invalid-preference" }),
 	).toBe("respect");
-	expect(readMotionPreference({ getItem: () => "ignore" })).toBe("ignore");
+	expect(readMotionPreference({ getItem: () => '"ignore"' })).toBe("ignore");
+	expect(
+		readMotionPreference({
+			getItem: () => {
+				throw new Error("Storage is disabled");
+			},
+		}),
+	).toBe("respect");
 });
 
 test("motion preference is applied to the document root", () => {

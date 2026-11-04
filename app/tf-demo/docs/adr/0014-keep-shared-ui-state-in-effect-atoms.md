@@ -54,7 +54,7 @@ query results with atom values when it renders.
   `effect/persistence` and `@effect/atom-react` through the Effect language
   service.
 - Atom and atom-react cost a one-time +46 kB gzip, and `kvs` with its
-  `KeyValueStore` and Schema JSON codec another +3.4 kB.
+  `KeyValueStore` and the Schema it decodes with about another +5 kB.
 
 [#1298]: https://github.com/clockblocker/texteater/issues/1298
 [tf-demo ADR 0003]: ./0003-make-the-workspace-own-navigation.md

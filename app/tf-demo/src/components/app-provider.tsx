@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { ThemeProvider, TooltipProvider } from "lego";
 import type { ReactNode } from "react";
-import { MotionPreferenceProvider } from "@/lib/motion-preference";
+import { MotionPreferenceSync } from "@/lib/motion-preference";
 
 function requireConvexUrl() {
 	const convexUrl = import.meta.env.VITE_CONVEX_URL;
@@ -44,16 +44,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
 	// shares one registry and its lifetime is the app's.
 	return (
 		<RegistryProvider>
+			<MotionPreferenceSync />
 			<ConvexProvider client={convexClient}>
 				<QueryClientProvider client={queryClient}>
-					<MotionPreferenceProvider>
-						<ThemeProvider
-							defaultTheme="dark"
-							storageKey="tf-demo-theme"
-						>
-							<TooltipProvider>{children}</TooltipProvider>
-						</ThemeProvider>
-					</MotionPreferenceProvider>
+					<ThemeProvider
+						defaultTheme="dark"
+						storageKey="tf-demo-theme"
+					>
+						<TooltipProvider>{children}</TooltipProvider>
+					</ThemeProvider>
 				</QueryClientProvider>
 			</ConvexProvider>
 		</RegistryProvider>

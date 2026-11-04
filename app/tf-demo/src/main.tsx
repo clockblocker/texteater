@@ -1,7 +1,7 @@
 import { initializeTheme } from "lego";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { initializeMotionPreference } from "@/lib/motion-preference";
+import { initializeMotionPreference } from "@/lib/motion-preference-storage";
 import { isPlaygroundPath } from "@/playground/playground-router";
 
 import "./index.css";
