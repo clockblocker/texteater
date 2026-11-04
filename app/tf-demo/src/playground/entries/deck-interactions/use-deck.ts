@@ -317,7 +317,8 @@ export function useDeck({
 	/**
 	 * The Deck leaves along `direction` (logical, unit length): the lead
 	 * Card first with the hand's velocity, the rest after it `stagger` ms
-	 * apart. A reduced exit moves 24 px while it fades.
+	 * apart, each keeping its own speed, or, `together`, folded under the
+	 * lead, with the lead's. A reduced exit moves 24 px while it fades.
 	 */
 	const dismiss = useCallback(
 		async ({
@@ -326,12 +327,14 @@ export function useDeck({
 			stagger,
 			spec = SPRINGS.fly,
 			velocity,
+			together = false,
 		}: {
 			readonly direction: Point;
 			readonly lead: string | null;
 			readonly stagger: number;
 			readonly spec?: SpringSpec;
 			readonly velocity?: Point;
+			readonly together?: boolean;
 		}) => {
 			setStatus("leaving");
 			readouts.set({ phase: "settling" });
@@ -348,12 +351,16 @@ export function useDeck({
 				leaving.map(async (id, index) => {
 					const card = valuesOf(id);
 					clearMark(id);
-					await wait(index * stagger, context);
+					/* a Card not held back starts at once: a timer of 0 would
+					   start each a task apart, after the render, and Cards
+					   leaving together would part by its length */
+					if (index * stagger > 0)
+						await wait(index * stagger, context);
 					const to = {
 						u: card.u.get() + reach.u,
 						v: card.v.get() + reach.v,
 					};
-					const own = id === lead ? velocity : undefined;
+					const own = together || id === lead ? velocity : undefined;
 					if (context.reduce) {
 						await Promise.all([
 							tweenTo(card.u, to.u, REDUCED_EXIT_MS, context),

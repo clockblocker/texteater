@@ -1,57 +1,36 @@
 /// <reference lib="dom" />
-import { expect, type Locator, type Page, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import {
+	anchors,
+	carry,
+	chooseVariant,
+	farthestOut,
+	frame,
+	front,
+	inspector,
+	lastRelease,
+	lift,
+	type Moment,
+	panel,
+	pull,
+	redeal,
+	rotation,
+	shares,
+	targetCentre,
+	watchApart,
+	watchRelease,
+} from "./support/deck-interactions";
 
 /**
  * The Deck interactions prototype: every variant behind the inspector's
  * switch, and in B and D a drag that closes the Deck and one that opens
- * the Card. Releases are slow, so none of them reads as a flick.
+ * the Card. Releases are slow, so none of them reads as a flick, except
+ * where a case judges the motion a release while moving starts.
  */
 
 test.use({ viewport: { width: 1600, height: 1000 } });
 
 const VARIANTS = ["B · Table", "D · Swipe actions"];
-
-const inspector = (page: Page) =>
-	page.getByRole("complementary", { name: "Inspector" });
-const frame = (page: Page) => page.locator("[data-deck-frame]");
-const front = (page: Page) => frame(page).locator("[data-card-id]").last();
-
-async function chooseVariant(page: Page, name: string) {
-	await inspector(page).getByRole("button", { name, exact: true }).click();
-}
-
-/** Presses `card` near its top, moves to `to` slowly, rests, and lets go. */
-async function carry(
-	page: Page,
-	card: Locator,
-	to: (start: { x: number; y: number }) => Promise<{ x: number; y: number }>,
-) {
-	const box = await card.boundingBox();
-	if (!box) throw new Error("Missing card geometry");
-	const start = { x: box.x + box.width / 2, y: box.y + 24 };
-	await page.mouse.move(start.x, start.y);
-	await page.mouse.down();
-	await page.mouse.move(start.x + 10, start.y + 10, { steps: 2 });
-	const end = await to(start);
-	await page.mouse.move(end.x, end.y, { steps: 25 });
-	await page.waitForTimeout(150);
-	await page.mouse.up();
-}
-
-/** The middle of a B target, once a carried Card has shown it. */
-async function targetCentre(page: Page, target: "tray" | "pad") {
-	const box = await frame(page)
-		.locator(`[data-target="${target}"]`)
-		.last()
-		.boundingBox();
-	if (!box) throw new Error(`Missing ${target} geometry`);
-	return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
-}
-
-async function redeal(page: Page) {
-	await inspector(page).getByRole("button", { name: "Re-deal" }).click();
-	await expect(frame(page).locator("[data-card-id]")).toHaveCount(4);
-}
 
 test.beforeEach(async ({ page }) => {
 	await page.goto("/playground/deck-interactions");
@@ -98,56 +77,6 @@ test("the Card in hand never goes transparent", async ({ page }) => {
 		await redeal(page);
 	}
 });
-
-/** Presses `card` near its top and moves past the slop: the Card is in hand. */
-async function lift(page: Page, card: Locator) {
-	const box = await card.boundingBox();
-	if (!box) throw new Error("Missing card geometry");
-	const start = { x: box.x + box.width / 2, y: box.y + 24 };
-	await page.mouse.move(start.x, start.y);
-	await page.mouse.down();
-	await page.mouse.move(start.x + 10, start.y + 10, { steps: 2 });
-	return start;
-}
-
-/** The Card's rotation in degrees, read from its computed transform. */
-function rotation(card: Locator) {
-	return card.evaluate((element) => {
-		const matrix = new DOMMatrixReadOnly(
-			getComputedStyle(element).transform,
-		);
-		return (Math.atan2(matrix.b, matrix.a) * 180) / Math.PI;
-	});
-}
-
-/** Samples where `card`'s middle is, every frame for `ms`, as a share of the frame's width. */
-function farthestOut(card: Locator, ms: number) {
-	return card.evaluate(
-		(element, duration) =>
-			new Promise<number>((resolve) => {
-				const frameBox = element
-					.closest("[data-deck-frame]")
-					?.getBoundingClientRect();
-				if (!frameBox) return resolve(Number.POSITIVE_INFINITY);
-				let worst = 0;
-				const end = performance.now() + duration;
-				const step = () => {
-					const box = element.getBoundingClientRect();
-					const middle = box.left + box.width / 2;
-					const out = Math.max(
-						frameBox.left - middle,
-						middle - frameBox.right,
-						0,
-					);
-					worst = Math.max(worst, out / frameBox.width);
-					if (performance.now() < end) requestAnimationFrame(step);
-					else resolve(worst);
-				};
-				requestAnimationFrame(step);
-			}),
-		ms,
-	);
-}
 
 test("B: a Card just lifted lights nothing and wears no stamp", async ({
 	page,
@@ -212,50 +141,6 @@ test("B: the lean relaxes once the hand rests", async ({ page }) => {
 	await page.mouse.up();
 });
 
-const panel = (page: Page) => frame(page).locator("[data-panel]");
-const lastRelease = (page: Page) =>
-	inspector(page).locator('[data-readout="last release"]');
-
-/** Presses `card` and pulls it by (dx, dy) slowly, then rests: no flick. */
-async function pull(page: Page, card: Locator, dx: number, dy: number) {
-	const box = await card.boundingBox();
-	if (!box) throw new Error("Missing card geometry");
-	const start = { x: box.x + box.width / 2, y: box.y + 16 };
-	await page.mouse.move(start.x, start.y);
-	await page.mouse.down();
-	await page.mouse.move(start.x + dx, start.y + dy, { steps: 30 });
-	await page.waitForTimeout(150);
-	return start;
-}
-
-/** Each Card's middle across and top edge, which the fold brings onto the swiped Card's. */
-function anchors(page: Page) {
-	return frame(page)
-		.locator("[data-card-id]")
-		.evaluateAll((elements) =>
-			elements.map((element) => {
-				const box = element.getBoundingClientRect();
-				return { u: box.left + box.width / 2, v: box.top };
-			}),
-		);
-}
-
-/** The share of the way each Card behind has gone from `rest` to the swiped Card. */
-async function shares(page: Page, rest: { u: number; v: number }[]) {
-	const now = await anchors(page);
-	const lead = now.at(-1);
-	if (!lead) throw new Error("Missing the swiped Card");
-	return now.slice(0, -1).map((card, index) => {
-		const slot = rest[index];
-		if (!slot) throw new Error("Missing a slot");
-		const to = { u: lead.u - slot.u, v: lead.v - slot.v };
-		return (
-			((card.u - slot.u) * to.u + (card.v - slot.v) * to.v) /
-			(to.u * to.u + to.v * to.v)
-		);
-	});
-}
-
 test("D: short of the threshold the action shows, and a release puts the Card back", async ({
 	page,
 }) => {
@@ -307,48 +192,6 @@ test("D: past the threshold the panel arms, and the release does what it shows",
 	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
 });
 
-type Moment = { x: number; mid: number; top: number; lean: number };
-
-/** From the next release on, `card`'s box and the most any other Card leans, every frame for `ms`. */
-async function watchRelease(card: Locator, ms: number) {
-	await card.evaluate((element, duration) => {
-		const lean = (other: Element) => {
-			const m = new DOMMatrixReadOnly(getComputedStyle(other).transform);
-			return Math.abs((Math.atan2(m.b, m.a) * 180) / Math.PI);
-		};
-		const others = [...document.querySelectorAll("[data-card-id]")].filter(
-			(other) => other !== element,
-		);
-		const moments: Moment[] = [];
-		let until = 0;
-		const step = () => {
-			const box = element.getBoundingClientRect();
-			moments.push({
-				x: box.left,
-				mid: box.left + box.width / 2,
-				top: box.top,
-				lean: Math.max(...others.map(lean)),
-			});
-			if (performance.now() < until) requestAnimationFrame(step);
-		};
-		const start = () => {
-			until = performance.now() + duration;
-			step();
-		};
-		window.addEventListener("pointerup", start, {
-			capture: true,
-			once: true,
-		});
-		Object.assign(window, { released: moments });
-	}, ms);
-	return async () => {
-		await card.page().waitForTimeout(ms + 100);
-		return card.evaluate(
-			() => (window as unknown as { released: Moment[] }).released,
-		);
-	};
-}
-
 test("D: an Open commit goes straight to the Cover, never further toward inline-end, and the Deck behind rests", async ({
 	page,
 }) => {
@@ -383,6 +226,33 @@ test("D: an Open commit goes straight to the Cover, never further toward inline-
 	});
 	expect(moments.at(-1)?.top).toBeLessThan(first.top - 100);
 	expect(most("lean")).toBeLessThanOrEqual(first.lean + 1.5);
+});
+
+test("D: a Close deck commit takes the Deck folded under the Card along with it, never out from under it", async ({
+	page,
+}) => {
+	await chooseVariant(page, "D · Swipe actions");
+	const card = front(page);
+	const back = frame(page).locator("[data-card-id]").first();
+	const box = await card.boundingBox();
+	if (!box) throw new Error("Missing card geometry");
+	const start = { x: box.x + box.width / 2, y: box.y + 40 };
+	/* hovered, so the Deck is still settling out of its fan as it folds */
+	await page.mouse.move(start.x, start.y, { steps: 4 });
+	await expect.poll(() => rotation(back)).toBeLessThan(-11);
+	const watched = await watchApart(card, 400);
+	await page.mouse.down();
+	/* a full swipe let go as it crosses the threshold, still moving */
+	for (const dx of [30, 60]) {
+		await page.mouse.move(start.x - dx, start.y);
+		await page.waitForTimeout(6);
+	}
+	await page.mouse.move(start.x - 100, start.y);
+	await page.mouse.up();
+	const seen = await watched();
+	await expect(lastRelease(page)).toHaveText(/^dismiss · threshold/);
+	expect(seen.frames).toBeGreaterThan(2);
+	expect(seen.apart).toBeLessThanOrEqual(1);
 });
 
 test("D: pulled back under the threshold, the panel disarms and the Card returns", async ({
