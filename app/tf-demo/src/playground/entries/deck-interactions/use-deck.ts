@@ -175,6 +175,11 @@ export function useDeck({
 		) => {
 			const card = valuesOf(id);
 			const context = motionRef.current;
+			/* each value stops where it shows: a spring still driving it,
+			   stopped by the next one, would first run on to the moment of
+			   the release, a sliver of a frame on along the hand's way, and
+			   the line would start there */
+			for (const key of GLIDING) card[key].jump(card[key].get());
 			const rate = velocity
 				? approachRate({ u: card.u.get(), v: card.v.get() }, slot, {
 						u: velocity.u * 1000,
@@ -276,30 +281,26 @@ export function useDeck({
 	}, []);
 
 	/**
-	 * Opens `id` into the Cover. By default each axis keeps the hand's
-	 * `velocity`; on the `"straight"` path the Card goes there in a line,
-	 * keeping only the part of it headed for the Cover.
+	 * Opens `id` into the Cover in a straight line from where it is: of
+	 * the hand's `velocity` only the part headed for the Cover carries on,
+	 * so a hand moving any other way never carries the Card off the line
+	 * or past the Cover first.
 	 */
 	const expand = useCallback(
-		async (
-			id: string,
-			velocity?: Point,
-			path: "carry" | "straight" = "carry",
-		) => {
+		async (id: string, velocity?: Point) => {
 			clearMark(id);
 			busy.current.add(id);
 			valuesOf(id).z.set(COVER_Z);
 			setExpanded(id);
 			readouts.set({ phase: "expanded" });
-			const move = path === "straight" ? glide : place;
-			await move(
+			await glide(
 				id,
 				{ ...coverRect(frame), r: 0, s: 1 },
 				SPRINGS.morph,
 				velocity,
 			);
 		},
-		[clearMark, valuesOf, readouts, place, glide, frame],
+		[clearMark, valuesOf, readouts, glide, frame],
 	);
 
 	const closeCover = useCallback(async () => {

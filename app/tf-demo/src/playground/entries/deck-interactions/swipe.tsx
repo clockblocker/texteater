@@ -288,7 +288,7 @@ export function SwipeVariant({
 		const velocity =
 			axis === "inline" ? { u: speed, v: 0 } : { u: 0, v: speed };
 		if (verdict.zone === "expand") {
-			await deck.expand(g.id, velocity, "straight");
+			await deck.expand(g.id, velocity);
 			if (gen.current === g.gen) setPanel(null);
 			return;
 		}

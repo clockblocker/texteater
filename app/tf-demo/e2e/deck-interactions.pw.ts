@@ -131,6 +131,41 @@ test("B: a Card dropped over nothing comes home without leaving the frame", asyn
 	).toHaveText("back · nothing");
 });
 
+test("B: a fast drop on the pad opens the Card in a straight line, never past the Cover or on the way the hand went", async ({
+	page,
+}) => {
+	await chooseVariant(page, "B · Table");
+	const card = front(page);
+	const start = await lift(page, card);
+	const pad = await targetCentre(page, "pad");
+	const watched = await watchRelease(card, 700);
+	/* a throw onto the pad, let go at speed toward inline-end and up */
+	for (const step of [1, 2, 3, 4, 5, 6]) {
+		await page.mouse.move(
+			start.x + ((pad.x - start.x) * step) / 6,
+			start.y + ((pad.y - start.y) * step) / 6,
+		);
+		if (step < 6) await page.waitForTimeout(16);
+	}
+	await page.mouse.up();
+	const moments = await watched();
+	const first = moments[0];
+	const last = moments.at(-1);
+	if (!first || !last) throw new Error("Nothing sampled");
+	await expect(lastRelease(page)).toHaveText("expand · pad");
+	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
+	/* how far an edge strays outside the span from where it was let go to where it opens */
+	const stray = (key: keyof Moment) => {
+		const low = Math.min(first[key], last[key]);
+		const high = Math.max(first[key], last[key]);
+		return Math.max(
+			...moments.map((f) => Math.max(low - f[key], f[key] - high)),
+		);
+	};
+	for (const key of ["x", "top", "right", "bottom"] as const)
+		expect(stray(key), key).toBeLessThanOrEqual(0.5);
+});
+
 test("B: the lean relaxes once the hand rests", async ({ page }) => {
 	await chooseVariant(page, "B · Table");
 	const card = front(page);

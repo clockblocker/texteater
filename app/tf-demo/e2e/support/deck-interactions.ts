@@ -143,7 +143,14 @@ export async function shares(page: Page, rest: { u: number; v: number }[]) {
 	});
 }
 
-export type Moment = { x: number; mid: number; top: number; lean: number };
+export type Moment = {
+	x: number;
+	mid: number;
+	top: number;
+	right: number;
+	bottom: number;
+	lean: number;
+};
 
 /** From the next release on, `card`'s box and the most any other Card leans, every frame for `ms`. */
 export async function watchRelease(card: Locator, ms: number) {
@@ -163,6 +170,8 @@ export async function watchRelease(card: Locator, ms: number) {
 				x: box.left,
 				mid: box.left + box.width / 2,
 				top: box.top,
+				right: box.right,
+				bottom: box.bottom,
 				lean: Math.max(...others.map(lean)),
 			});
 			if (performance.now() < until) requestAnimationFrame(step);
