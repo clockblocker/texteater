@@ -108,6 +108,12 @@ Deck.
 End the Deck of the top Sheet.
 _Avoid_: dismiss a Card
 
+**Drop Zone**:
+Where letting go of a Held Card sends it. A Card carried off its Deck has
+three: back on the Deck, the dismiss zone, whose drop is a Sweep, and the
+expand zone, whose drop is an Expand to a Cover. See [tf-demo ADR 0016].
+_Avoid_: commit line, drop target
+
 **Back**:
 The control that goes back one step: it collapses or closes a Cover, or steps
 the Ground line down.
@@ -116,3 +122,4 @@ the Ground line down.
 Restore the workspace state recorded at the start of the active Lift.
 
 [tf-demo ADR 0008]: ../../app/tf-demo/docs/adr/0008-give-every-pane-a-ground-beneath-its-covers.md
+[tf-demo ADR 0016]: ../../app/tf-demo/docs/adr/0016-give-a-deck-card-three-drop-zones.md

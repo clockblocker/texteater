@@ -22,8 +22,9 @@ Codex. Going back on the Ground steps one rung down the line and ends the
 Deck of the rung it leaves. Once a Scroll is on the Ground, only going back,
 a lift or next changes it. Next, at the Scroll's end, puts the following
 Scroll on the Ground, across Section boundaries too, with that Scroll's
-Sections as the rungs below it (#1179). Dropping a Held Card on a Pane's inline-start or
-inline-end edge makes a Floating Pane whose Ground is the dropped Note or Scroll,
+Sections as the rungs below it (#1179). Dropping a Held Card lifted from a
+Sheet, a Segment or a Link on a Pane's inline-start or inline-end edge makes a
+Floating Pane whose Ground is the dropped Note or Scroll,
 with no rung below it. Its bar shows X in place of the back control, and X
 closes the Pane with its Covers and its Deck. A Pane's kind belongs to its
 line, by whether the line contains the Menu, and not to what the Ground shows.
@@ -47,7 +48,8 @@ been lifted away is empty but still live. A Deck ends in exactly two ways: its
 Sheet leaves (a Cover closes, or the Ground steps down its line), or a Sweep on
 its Sheet while that Sheet is on top. A Sweep is one action with three
 triggers: a dismissive click on the Sheet away from any Link or Segment,
-Escape, and a fast swipe toward inline-start on any of its Cards. A Deck is
+Escape, and one of its Cards let go in its dismiss zone ([tf-demo ADR 0016]):
+carried toward inline-start, or flicked either way along the line. A Deck is
 live while the Sheet that dealt it is in its stack and the Deck has not been
 swept or replaced since. X on a Floating Pane collapses its Ground Note back to
 its Card when that Card's Deck is live and closes it otherwise. Individual
@@ -67,7 +69,7 @@ Library, showing.
 left to right and Hebrew right to left. The back control points toward
 inline-start: ← in left-to-right text, → in right-to-left text. The Sweep swipe
 also runs toward inline-start, leftward in German and rightward in Hebrew
-(#479). Escape and a dismissive click sweep in either direction. A Pane's side
+(#479), and a flick sweeps toward either end. Escape and a dismissive click sweep in either direction. A Pane's side
 edges are its inline-start and inline-end edges.
 
 The Ground line does not bring back the fixed Navigation Anchor that
@@ -112,3 +114,4 @@ Menu stays reachable without a central Pane.
 
 [tf-demo ADR 0003]: ./0003-make-the-workspace-own-navigation.md
 [tf-demo ADR 0006]: ./0006-render-a-note-presentation-as-one-element-of-blocks.md
+[tf-demo ADR 0016]: ./0016-give-a-deck-card-three-drop-zones.md
