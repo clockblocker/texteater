@@ -151,7 +151,7 @@ const WALLET_DEFAULTS = {
 	rubberLimit: 40,
 	flickSpeed: 0.5,
 };
-type WalletKnobs = typeof WALLET_DEFAULTS;
+export type WalletKnobs = typeof WALLET_DEFAULTS;
 
 const WALLET_KNOBS: readonly Knob<WalletKnobs>[] = [
 	num("peek", "Peek", 4, 48, 1, "px"),
@@ -170,7 +170,7 @@ const SWIPE_DEFAULTS = {
 	axisLock: 10,
 	flickSpeed: 0.5,
 };
-type SwipeKnobs = typeof SWIPE_DEFAULTS;
+export type SwipeKnobs = typeof SWIPE_DEFAULTS;
 
 const SWIPE_KNOBS: readonly Knob<SwipeKnobs>[] = [
 	num("detent", "Detent", 40, 200, 2, "px"),
@@ -187,7 +187,7 @@ const WHOLE_DEFAULTS = {
 	flickSpeed: 0.5,
 	...TARGET_DEFAULTS,
 };
-type WholeKnobs = typeof WHOLE_DEFAULTS;
+export type WholeKnobs = typeof WHOLE_DEFAULTS;
 
 const WHOLE_KNOBS: readonly Knob<WholeKnobs>[] = [
 	num("holdMs", "Hold", 80, 800, 10, "ms"),

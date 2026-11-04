@@ -112,6 +112,45 @@ export function CardView({
 			}}
 			className={`absolute flex flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper select-none ${expanded ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
 		>
+			<CardFace card={card} expanded={expanded} onClose={onClose} />
+			{mark && glow ? (
+				<>
+					<motion.div
+						aria-hidden="true"
+						className={`pointer-events-none absolute ${glow.className}`}
+						style={{
+							opacity: values.glow,
+							background: glow.background,
+						}}
+					/>
+					<motion.span
+						data-stamp={mark.tone}
+						className={`pointer-events-none absolute top-3 rounded-md border-2 bg-paper px-2 py-0.5 font-mono text-[0.72rem] font-bold tracking-[0.12em] uppercase ${TONE_TEXT[mark.tone]} ${stampPlace(mark)}`}
+						style={{ opacity: values.stamp }}
+					>
+						{mark.label}
+					</motion.span>
+				</>
+			) : null}
+		</motion.article>
+	);
+}
+
+/**
+ * A Card's face: its Heading row, with the Cover's × when expanded, and
+ * its Source Contexts and lines. C's reduced cross-fade draws it alone.
+ */
+export function CardFace({
+	card,
+	expanded,
+	onClose,
+}: {
+	readonly card: DummyCard;
+	readonly expanded: boolean;
+	readonly onClose?: () => void;
+}) {
+	return (
+		<>
 			<div className="flex h-12 shrink-0 items-end gap-4 px-4 pb-3">
 				<h2
 					dir="auto"
@@ -163,25 +202,6 @@ export function CardView({
 					/>
 				)}
 			</div>
-			{mark && glow ? (
-				<>
-					<motion.div
-						aria-hidden="true"
-						className={`pointer-events-none absolute ${glow.className}`}
-						style={{
-							opacity: values.glow,
-							background: glow.background,
-						}}
-					/>
-					<motion.span
-						data-stamp={mark.tone}
-						className={`pointer-events-none absolute top-3 rounded-md border-2 bg-paper px-2 py-0.5 font-mono text-[0.72rem] font-bold tracking-[0.12em] uppercase ${TONE_TEXT[mark.tone]} ${stampPlace(mark)}`}
-						style={{ opacity: values.stamp }}
-					>
-						{mark.label}
-					</motion.span>
-				</>
-			) : null}
-		</motion.article>
+		</>
 	);
 }

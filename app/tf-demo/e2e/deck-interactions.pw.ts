@@ -9,7 +9,13 @@ import { expect, type Locator, type Page, test } from "@playwright/test";
 
 test.use({ viewport: { width: 1600, height: 1000 } });
 
-const VARIANTS = ["A · Stack", "B · Table"];
+const VARIANTS = [
+	"A · Stack",
+	"B · Table",
+	"C · Wallet",
+	"D · Swipe actions",
+	"E · Whole Deck",
+];
 
 const inspector = (page: Page) =>
 	page.getByRole("complementary", { name: "Inspector" });

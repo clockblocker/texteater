@@ -232,7 +232,11 @@ export function useDeck({
 	}, []);
 
 	const expand = useCallback(
-		async (id: string, velocity?: Point) => {
+		async (
+			id: string,
+			velocity?: Point,
+			spec: SpringSpec = SPRINGS.morph,
+		) => {
 			clearMark(id);
 			busy.current.add(id);
 			valuesOf(id).z.set(COVER_Z);
@@ -241,7 +245,7 @@ export function useDeck({
 			await place(
 				id,
 				{ ...coverRect(frame), r: 0, s: 1 },
-				SPRINGS.morph,
+				spec,
 				velocity,
 			);
 		},
