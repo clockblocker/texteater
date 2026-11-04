@@ -310,7 +310,7 @@ test("hovering or focusing a word highlights its whole unit with no network call
 	expect(sent.slice(beforeHover)).toEqual([]);
 });
 
-test("a click selects a discontinuous unit whole, and its Deck settles at once on one Unit Card", async ({
+test("a click selects a discontinuous unit whole, and its Deck settles at once on its Attestation and Reading", async ({
 	page,
 }) => {
 	test.setTimeout(60_000);
@@ -343,23 +343,30 @@ test("a click selects a discontinuous unit whole, and its Deck settles at once o
 				),
 		)
 		.toBe(true);
-	const card = page
-		.locator('[data-form="card"]')
-		.filter({ hasText: "ruft … an" })
-		.first();
-	await expect(card).toBeVisible();
-	await expect(card.locator('[role="status"]')).toHaveText(
+	// A unit of two Segments deals its Attestation behind the Reading at the
+	// click (tf-demo ADR 0011), and the Reading says no click resolves it.
+	const cards = page.locator('[data-form="card"]');
+	const reading = cards.and(page.getByLabel("Reading card", { exact: true }));
+	await expect(reading.locator('[role="status"]')).toHaveText(
 		"This unit could not be resolved.",
 		{ timeout: 15_000 },
 	);
-	// The Deck settles at once: one Unit Card, and nothing left loading (#850).
-	await expect(
-		card.getByRole("button", { name: "Lift Unit", exact: true }),
-	).toBeVisible();
-	await expect(page.locator('[data-form="card"]')).toHaveCount(1);
+	// The Deck settles at once on those two Cards, nothing left loading (#850).
+	await expect
+		.poll(() =>
+			cards.evaluateAll((elements) =>
+				elements.map((element) => element.getAttribute("aria-label")),
+			),
+		)
+		.toEqual(["Attestation card", "Reading card"]);
 	await expect(page.locator('[data-slot="note-skeleton"]')).toHaveCount(0);
-	// The Heading names the unit; the Body does not again.
-	await expect(card.locator("[data-scroller]")).not.toContainText("ruft");
+	for (const card of await cards.all())
+		await expect(card.getByRole("heading")).toHaveText("ruft … an");
+	await expect(
+		reading.getByRole("button", { name: "Lift Reading", exact: true }),
+	).toBeVisible();
+	// The Heading names the unit; the Reading's Body does not again.
+	await expect(reading.locator("[data-scroller]")).not.toContainText("ruft");
 	await expect(word("ruft")).toHaveAttribute("data-state", "selected");
 	await expect(word("an")).toHaveAttribute("data-state", "selected");
 	await expect(word("ruft")).toHaveAttribute("aria-pressed", "true");
