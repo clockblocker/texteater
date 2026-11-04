@@ -1,9 +1,11 @@
 import "./support/dom";
 import { expect, test } from "bun:test";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import { ConvexProvider, type ConvexReactClient } from "convex/react";
 import type { Id } from "../convex/_generated/dataModel";
+import { anonymousVisitorIdAtom } from "../src/hooks/anonymous-visitor-atoms";
 import { FolioRequest, folioOpenings } from "../src/views/folio-request";
+import { renderWithAtoms } from "./support/atoms";
 
 /*
  * The control a book passage not yet processed opens with (#1216), and
@@ -28,6 +30,10 @@ function convexClient(
 	};
 	return client as ConvexReactClient;
 }
+
+const visitor = {
+	initialValues: [[anonymousVisitorIdAtom, "visitor-1"]],
+} as const;
 
 test("each Folio not processed opens at its first loaded Sentence", () => {
 	const sentences = [3, 4, 5, 6, 7, 8, 9].map((position) => ({
@@ -63,13 +69,11 @@ test("asking runs at once, and a failed passage offers to try again", async () =
 			<FolioRequest folio={folio(0, 0, 5, state)} />
 		</ConvexProvider>
 	);
-	const view = render(control("Unprocessed"));
+	const view = renderWithAtoms(control("Unprocessed"), visitor);
 	fireEvent.click(
 		view.getByRole("button", { name: "Make this passage clickable" }),
 	);
-	expect(asked).toEqual([
-		{ folioId: "folio-0", visitorId: expect.any(String) },
-	]);
+	expect(asked).toEqual([{ folioId: "folio-0", visitorId: "visitor-1" }]);
 	const running = view.getByRole("button", {
 		name: "Making this passage clickable…",
 	});
@@ -92,7 +96,7 @@ test("asking runs at once, and a failed passage offers to try again", async () =
 
 test("a refused request shows as failed", async () => {
 	const client = convexClient(() => Promise.reject(new Error("offline")));
-	const view = render(
+	const view = renderWithAtoms(
 		<ConvexProvider client={client}>
 			<FolioRequest folio={folio(0, 0, 5, "Unprocessed")} />
 		</ConvexProvider>,
