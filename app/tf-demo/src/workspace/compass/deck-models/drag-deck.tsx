@@ -10,6 +10,7 @@ import { SPLITS_PARKED } from "@/workspace/compass/splits";
 import type { MenuItem, MenuItemView } from "@/workspace/compass/subject";
 import { useCompassWorkspace } from "@/workspace/compass/use-compass-workspace";
 import type { DeckMotionOverrides } from "@/workspace/motion/runtime-config";
+import { stageWorkspaceAtom } from "./drag-deck-atoms";
 import { noteFor, SCROLLS, scrollById } from "./dummy";
 import { initialWorkspace, LIBRARY, ROOT_PANE, type Subject } from "./model";
 import { FixtureNotesProvider } from "./real-note";
@@ -45,9 +46,12 @@ export type CompassModelProps = {
 };
 
 export function CompassModel(props: CompassModelProps = {}) {
+	const scene = props.initialScene ?? (props.embedded ? "deck" : "empty");
 	return (
 		<FixtureNotesProvider>
-			<CompassStage {...props} />
+			<stageWorkspaceAtom.Provider value={scene}>
+				<CompassStage {...props} />
+			</stageWorkspaceAtom.Provider>
 		</FixtureNotesProvider>
 	);
 }
@@ -55,12 +59,11 @@ export function CompassModel(props: CompassModelProps = {}) {
 function CompassStage({
 	interactions = ALL_INTERACTIONS,
 	embedded = false,
-	initialScene = embedded ? "deck" : "empty",
 	motion,
 	showZones = false,
 	showReader = !embedded,
 }: CompassModelProps) {
-	const workspace = useCompassWorkspace(() => initialWorkspace(initialScene));
+	const workspace = useCompassWorkspace(stageWorkspaceAtom.use());
 	/** A fresh Compass after a reset, so no gesture outlives the workspace it was on. */
 	const [run, setRun] = useState(0);
 	/**

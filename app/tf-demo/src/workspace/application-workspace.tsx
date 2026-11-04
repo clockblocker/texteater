@@ -1,14 +1,6 @@
-import {
-	BAR_REM,
-	createWorkspace,
-	groundOf,
-	panesOf,
-	type WorkspaceState,
-	workspaceReducer,
-} from "compass";
+import { BAR_REM, groundOf, panesOf, type WorkspaceState } from "compass";
 import {
 	type ReactNode,
-	useEffect,
 	useLayoutEffect,
 	useMemo,
 	useRef,
@@ -17,13 +9,11 @@ import {
 import { LibraryView } from "@/views/library-view";
 import { SettingsView } from "@/views/settings-view";
 import { Compass } from "@/workspace/compass/compass";
-import type { MenuItem, MenuItemView } from "@/workspace/compass/subject";
+import type { MenuItemView } from "@/workspace/compass/subject";
 import { useCompassWorkspace } from "@/workspace/compass/use-compass-workspace";
+import { initialWorkspace, LIBRARY, MENU, SETTINGS } from "./application-menu";
 import { applicationRenderer } from "./application-renderer";
-import {
-	loadApplicationWorkspace,
-	saveApplicationWorkspace,
-} from "./application-workspace-persistence";
+import { applicationWorkspaceAtom } from "./workspace-atoms";
 import {
 	WorkspaceControllerProvider,
 	type WorkspaceInteraction,
@@ -38,28 +28,9 @@ import {
  * tf-demo's workspace: the Compass over the application's Subjects, with
  * one URL (tf-demo ADR 0003). Every Pane's Ground walks its line; a Rooted
  * Pane's runs Menu › Library › Section › … › Scroll, and Settings is the Menu
- * Item beside the Library (tf-demo ADR 0008). The workspace survives a reload through
- * Workspace Persistence.
+ * Item beside the Library (tf-demo ADR 0008). The workspace survives a reload
+ * through Workspace Persistence, which `applicationWorkspaceAtom` keeps.
  */
-
-const LIBRARY = "library";
-const SETTINGS = "settings";
-
-const MENU: readonly MenuItem[] = [
-	{ key: LIBRARY, label: "Library" },
-	{ key: SETTINGS, label: "Settings" },
-];
-const MENU_ITEMS: ReadonlySet<string> = new Set(MENU.map(({ key }) => key));
-
-/** Where the workspace starts: one Rooted Pane, at the Library. */
-function initialWorkspace(): WorkspaceState<WorkspaceSubject> {
-	const fresh = createWorkspace<WorkspaceSubject>();
-	return workspaceReducer(fresh, {
-		type: "StepUp",
-		paneId: fresh.activePaneId,
-		to: { kind: "MenuItem", item: LIBRARY },
-	});
-}
 
 /** Whether the workspace is still where it starts. */
 function atStart(state: WorkspaceState<WorkspaceSubject>): boolean {
@@ -76,13 +47,14 @@ function atStart(state: WorkspaceState<WorkspaceSubject>): boolean {
 }
 
 export function ApplicationWorkspace() {
-	const workspace = useCompassWorkspace(() =>
-		loadApplicationWorkspace(initialWorkspace, MENU_ITEMS),
-	);
-	/** A fresh Compass after starting over, so no gesture outlives its workspace. */
+	const workspace = useCompassWorkspace(applicationWorkspaceAtom);
+	/**
+	 * A fresh Compass after starting over, so no gesture outlives its
+	 * workspace. The workspace atom lives above this key and is reset, not
+	 * remounted.
+	 */
 	const [run, setRun] = useState(0);
 	const { state } = workspace;
-	useEffect(() => saveApplicationWorkspace(state), [state]);
 	const controller = {
 		canCloseAllSheets: !atStart(state),
 		closeAllSheets: () => {
