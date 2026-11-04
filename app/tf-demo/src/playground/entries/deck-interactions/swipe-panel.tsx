@@ -18,7 +18,7 @@ export type PanelValues = {
 	readonly flood: MotionValue<number>;
 	/** 0 centred in the uncovered strip, 1 locked to the Card's edge. */
 	readonly lock: MotionValue<number>;
-	/** The icon's pop at the threshold, a scale factor. */
+	/** The icon's pop at the detent, a scale factor. */
 	readonly pop: MotionValue<number>;
 	/** The panel's opacity: 1 until a commit fades it out. */
 	readonly fade: MotionValue<number>;
@@ -64,7 +64,7 @@ function iconCentre(
 /**
  * D's action panel, in the Card's own footprint and just under it, as an
  * iOS Mail row's actions are: red "Close deck" for inline-start and down,
- * blue "Open" for inline-end and up. Before the threshold the strip is tinted
+ * blue "Open" for inline-end and up. Before the detent the strip is tinted
  * and the icon, in the action's colour, grows and slides out centred in
  * it; once a release would commit the colour floods in, the icon turns to
  * ink, pops, and locks to the Card's edge. Its base is opaque, so the
@@ -79,7 +79,7 @@ export function SwipePanel({
 	z,
 	values,
 	armed,
-	threshold,
+	detent,
 	tint,
 	labels,
 	rtl,
@@ -98,7 +98,7 @@ export function SwipePanel({
 	readonly z: MotionValue<number>;
 	readonly values: PanelValues;
 	readonly armed: boolean;
-	readonly threshold: number;
+	readonly detent: number;
 	readonly tint: number;
 	readonly labels: boolean;
 	readonly rtl: boolean;
@@ -122,7 +122,7 @@ export function SwipePanel({
 	const scale = useTransform(
 		[pull, values.pop],
 		([p = 0, k = 1]: number[]) =>
-			reduce ? 1 : (0.8 + 0.2 * Math.min(1, Math.abs(p) / threshold)) * k,
+			reduce ? 1 : (0.8 + 0.2 * Math.min(1, Math.abs(p) / detent)) * k,
 	);
 	const shown = useTransform(pull, (p) =>
 		Math.min(1, Math.max(0, (Math.abs(p) - 8) / 40)),

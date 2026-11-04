@@ -1,9 +1,8 @@
-import type { MotionValue } from "motion/react";
 import { type Axis, type CollapseCurve, collapseOf } from "./swipe-gesture";
 import type { Deck } from "./use-deck";
 
-/** A swiped Card and the Deck behind it, driven from one value. */
-export type Binding = {
+/** The rest of the Deck gathering into a swiped Card. */
+export type Collapse = {
 	readonly lead: string;
 	readonly axis: Axis;
 	/** Unhooks the Cards where they are. */
@@ -13,53 +12,58 @@ export type Binding = {
 };
 
 /**
- * Drives `lead` and the Cards behind it from `pull`, the one source of
- * truth for a swipe. The Card sits `pull` px along `axis` from its slot;
- * the Cards behind move from their slots toward it by one shared share of
- * the collapse, so they fold in together and are whole exactly at the
- * threshold, where a release commits. They aim at the Card's drawn top
- * edge, so their last sliver goes under it at that moment and not before.
- * A spring on `pull` takes them all home; a hand on it scrubs them. Cards
- * in front of `lead` stay put: they could pass under it only by jumping in z.
+ * Hooks the Cards behind `lead` to its position. All of them move from
+ * their slots toward wherever the swiped Card is now, by one shared
+ * fraction, so they fold in together and sit under it once the pull
+ * reaches the detent. Driven by the
+ * Card's own values, the hand scrubs it both ways, and a Card springing
+ * back takes them home with it. Cards in front of `lead` stay put: they
+ * could pass under it only by jumping in z.
  */
-export function bindDeck(
+export function gatherInto(
 	deck: Deck,
 	lead: string,
 	axis: Axis,
-	pull: MotionValue<number>,
-	rules: { readonly threshold: number; readonly curve: CollapseCurve },
-): Binding {
+	rules: {
+		readonly detent: number;
+		readonly curve: CollapseCurve;
+	},
+): Collapse {
 	const index = deck.order.indexOf(lead);
 	const home = deck.slotOf(lead);
 	const card = deck.valuesOf(lead);
-	const lift = home ? (home.h * home.s - home.h) / 2 : 0;
 	const followers = deck.order
 		.slice(0, Math.max(0, index))
 		.flatMap((id, i) => {
 			const slot = deck.slots[i];
 			return slot ? [{ id, slot, values: deck.valuesOf(id) }] : [];
 		});
-	const update = (value: number) => {
+	const update = () => {
 		if (!home) return;
-		const u = axis === "inline" ? home.u + value : home.u;
-		const v = axis === "block" ? home.v + value : home.v;
-		if (axis === "inline") card.u.set(u);
-		else card.v.set(v);
-		const share = collapseOf(axis, value, rules.threshold, rules.curve);
+		const u = card.u.get();
+		const v = card.v.get();
+		const pull = axis === "inline" ? u - home.u : v - home.v;
+		const collapse = collapseOf(axis, pull, rules.detent, rules.curve);
 		for (const follower of followers) {
-			const { slot, values } = follower;
-			values.u.set(slot.u + (u - slot.u) * share);
-			values.v.set(slot.v + (v - lift - slot.v) * share);
+			const share = collapse;
+			follower.values.u.set(
+				follower.slot.u + (u - follower.slot.u) * share,
+			);
+			follower.values.v.set(
+				follower.slot.v + (v - follower.slot.v) * share,
+			);
 		}
 	};
-	const stop = pull.on("change", update);
+	const stops = [card.u.on("change", update), card.v.on("change", update)];
+	const stop = () => {
+		for (const unhook of stops) unhook();
+	};
 	return {
 		lead,
 		axis,
 		stop,
 		scatter: () => {
 			stop();
-			if (home) void deck.place(lead, home);
 			for (const follower of followers)
 				void deck.place(follower.id, follower.slot);
 		},

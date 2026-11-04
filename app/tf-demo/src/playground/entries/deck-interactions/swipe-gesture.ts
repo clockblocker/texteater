@@ -1,24 +1,25 @@
 /**
- * D's gesture rules, pure. A pull is the swiped Card's offset along the
- * locked axis, in signed logical px: negative toward inline-start or up,
- * positive toward inline-end or down. One threshold decides everything:
- * `progressOf` draws the Deck's collapse, every "will commit" signal turns
- * on when it reaches 1, and a release then commits. Nothing else, not the
- * hand's speed nor where it has been, moves that breakpoint.
+ * D's gesture rules, pure: which action a pull uncovers, where the Card
+ * sits for it, when the detent is armed, and what a release does. A pull
+ * is signed logical px along the locked axis: negative toward inline-start
+ * or up, positive toward inline-end or down.
  */
+
+import { cubicBezier } from "motion/react";
+import { FLICK_TRAVEL_PX } from "./geometry";
 
 export type Axis = "inline" | "block";
 export type Zone = "dismiss" | "expand";
 
-export const COLLAPSE_CURVES = ["linear", "ease-in"] as const;
+export const COLLAPSE_CURVES = ["linear", "ease-out", "ease-in-out"] as const;
 export type CollapseCurve = (typeof COLLAPSE_CURVES)[number];
 
-/** Each maps 0 to 0 and 1 to 1 and never runs ahead of the pull, so the Deck is never whole before the threshold. */
+/** The page's strong ease-out and ease-in-out, as scrub curves. */
 const CURVES: Record<CollapseCurve, (t: number) => number> = {
 	linear: (t) => t,
-	"ease-in": (t) => t * t,
+	"ease-out": cubicBezier(0.23, 1, 0.32, 1),
+	"ease-in-out": cubicBezier(0.77, 0, 0.175, 1),
 };
-
 /** iOS's rubber-band coefficient. */
 const RUBBER_C = 0.55;
 
@@ -38,27 +39,49 @@ export function rubberBand(past: number, limit: number): number {
 	return limit * (1 - 1 / ((past * RUBBER_C) / limit + 1));
 }
 
-/**
- * Where the Card sits for the hand's travel: 1:1 up to `end`, where it has
- * uncovered its whole footprint, then rubber-banded.
- */
-export function travelOf(
+export type DetentRules = {
+	readonly detent: number;
+	/** An armed pull disarms only this far short of the detent. */
+	readonly hysteresis: number;
+	/** The share of each px the Card gives up in the band before the detent. */
+	readonly resistance: number;
+	readonly band: number;
+	/** Where the Card has uncovered its whole footprint and starts to rubber-band. */
+	readonly end: number;
+	readonly rubberLimit: number;
+};
+
+/** Whether a pull `distance` px long is past the detent, given whether it was. */
+export function armedAt(
 	distance: number,
-	end: number,
-	rubberLimit: number,
-): number {
-	return distance <= end
-		? distance
-		: end + rubberBand(distance - end, rubberLimit);
+	was: boolean,
+	rules: Pick<DetentRules, "detent" | "hysteresis">,
+): boolean {
+	return was
+		? distance >= rules.detent - rules.hysteresis
+		: distance >= rules.detent;
 }
 
 /**
- * The one breakpoint: how far a pull has got toward committing its
- * action, 0 at rest and 1 at `threshold`.
+ * How far the Card has moved for a pull `distance` px long. Short of the
+ * band it tracks 1:1; in the band it lags as the detent's spring loads;
+ * once armed it is back under the hand, so crossing the detent snaps it
+ * forward. Past its end it rubber-bands.
  */
-export function progressOf(pull: number, threshold: number): number {
-	if (threshold <= 0) return 1;
-	return Math.min(1, Math.abs(pull) / threshold);
+export function shownAt(
+	distance: number,
+	armed: boolean,
+	rules: DetentRules,
+): number {
+	const bandStart = Math.max(0, rules.detent - rules.band);
+	const shown =
+		!armed && distance > bandStart
+			? bandStart + (distance - bandStart) * (1 - rules.resistance)
+			: distance;
+	const end = Math.max(rules.end, rules.detent);
+	return shown <= end
+		? shown
+		: end + rubberBand(shown - end, rules.rubberLimit);
 }
 
 export type Verdict = {
@@ -69,35 +92,53 @@ export type Verdict = {
 
 /**
  * What a release now would do, which is also what the panel shows while
- * the hand is down: at the threshold it commits, short of it the Card
- * comes back.
+ * the hand is down. Past the detent commits; so does a flick outward. A
+ * flick back toward the slot cancels even past the detent: the velocity's
+ * sign wins, so a learner who changes their mind is never overruled.
  */
-export function verdictOf(
-	axis: Axis,
-	pull: number,
-	threshold: number,
-): Verdict {
+export function verdictOf({
+	axis,
+	pull,
+	speed,
+	armed,
+	flickSpeed,
+}: {
+	readonly axis: Axis;
+	readonly pull: number;
+	/** Along the axis, px/ms, signed as `pull` is. */
+	readonly speed: number;
+	readonly armed: boolean;
+	readonly flickSpeed: number;
+}): Verdict {
 	const zone = zoneOf(axis, pull);
-	const px = Math.round(Math.abs(pull)).toString();
-	return progressOf(pull, threshold) >= 1
-		? { commits: true, zone, reason: `threshold ${px}` }
-		: { commits: false, zone, reason: `short ${px}` };
+	const distance = Math.abs(pull);
+	const outward = pull === 0 ? 0 : speed * Math.sign(pull);
+	const px = Math.round(distance).toString();
+	if (outward <= -flickSpeed)
+		return { commits: false, zone, reason: "flicked back" };
+	if (armed) return { commits: true, zone, reason: `detent ${px}` };
+	if (distance >= FLICK_TRAVEL_PX && outward >= flickSpeed)
+		return {
+			commits: true,
+			zone,
+			reason: `flick ${outward.toFixed(2)}`,
+		};
+	return { commits: false, zone, reason: `short ${px}` };
 }
 
 /**
- * How far the rest of the Deck has gathered into the Card: the pull's
- * progress through `curve`, one value for every Card behind, so they fold
- * in together and are whole exactly when a release would commit. Only a
- * pull toward Close deck gathers it.
+ * How far the rest of the Deck has gathered into the Card: 0 at rest, 1 at
+ * the detent, through `curve`. One value for every Card behind, so they
+ * all fold in at once. Only a pull toward Close deck gathers it.
  */
 export function collapseOf(
 	axis: Axis,
 	pull: number,
-	threshold: number,
+	detent: number,
 	curve: CollapseCurve,
 ): number {
-	if (zoneOf(axis, pull) !== "dismiss") return 0;
-	return CURVES[curve](progressOf(pull, threshold));
+	if (detent <= 0 || zoneOf(axis, pull) !== "dismiss") return 0;
+	return CURVES[curve](Math.min(1, Math.abs(pull) / detent));
 }
 
 /**

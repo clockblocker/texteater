@@ -1,16 +1,23 @@
 import { describe, expect, test } from "bun:test";
 import {
-	COLLAPSE_CURVES,
+	armedAt,
 	collapseOf,
-	progressOf,
+	type DetentRules,
 	rubberBand,
+	shownAt,
 	takeUp,
-	travelOf,
 	verdictOf,
 	zoneOf,
 } from "./swipe-gesture";
 
-const THRESHOLD = 96;
+const rules: DetentRules = {
+	detent: 96,
+	hysteresis: 12,
+	resistance: 0.4,
+	band: 20,
+	end: 400,
+	rubberLimit: 48,
+};
 
 describe("D's directions", () => {
 	test("inline-start and down close the Deck; inline-end and up open the Card", () => {
@@ -21,83 +28,112 @@ describe("D's directions", () => {
 	});
 });
 
-describe("D's one breakpoint", () => {
-	test("1 px short: the Deck is not whole, nothing says it will commit, and a release cancels", () => {
-		const pull = -(THRESHOLD - 1);
-		expect(progressOf(pull, THRESHOLD)).toBeLessThan(1);
-		for (const curve of COLLAPSE_CURVES)
-			expect(collapseOf("inline", pull, THRESHOLD, curve)).toBeLessThan(
-				1,
-			);
-		expect(verdictOf("inline", pull, THRESHOLD)).toEqual({
-			commits: false,
-			zone: "dismiss",
-			reason: "short 95",
-		});
+describe("D's detent", () => {
+	test("arms at the detent and disarms only past the hysteresis", () => {
+		expect(armedAt(95, false, rules)).toBe(false);
+		expect(armedAt(96, false, rules)).toBe(true);
+		expect(armedAt(85, true, rules)).toBe(true);
+		expect(armedAt(83, true, rules)).toBe(false);
 	});
 
-	test("at the threshold: the Deck is whole and a release commits", () => {
-		const pull = -THRESHOLD;
-		expect(progressOf(pull, THRESHOLD)).toBe(1);
-		for (const curve of COLLAPSE_CURVES)
-			expect(collapseOf("inline", pull, THRESHOLD, curve)).toBe(1);
-		expect(verdictOf("inline", pull, THRESHOLD)).toEqual({
-			commits: true,
-			zone: "dismiss",
-			reason: "threshold 96",
-		});
+	test("the Card tracks 1:1, lags in the band, and is under the hand again once armed", () => {
+		expect(shownAt(50, false, rules)).toBe(50);
+		expect(shownAt(76, false, rules)).toBe(76);
+		expect(shownAt(95, false, rules)).toBeCloseTo(76 + 19 * 0.6);
+		expect(shownAt(96, true, rules)).toBe(96);
+		/* so crossing the detent snaps the Card forward by the lag */
+		expect(
+			shownAt(96, true, rules) - shownAt(96, false, rules),
+		).toBeCloseTo(20 * 0.4);
 	});
 
-	test("moving the threshold moves both together", () => {
-		expect(collapseOf("inline", -120, 140, "linear")).toBeLessThan(1);
-		expect(verdictOf("inline", -120, 140).commits).toBe(false);
-		expect(collapseOf("inline", -140, 140, "linear")).toBe(1);
-		expect(verdictOf("inline", -140, 140).commits).toBe(true);
-	});
-
-	test("Open commits at the same threshold and folds nothing", () => {
-		expect(verdictOf("inline", THRESHOLD - 1, THRESHOLD).commits).toBe(
-			false,
-		);
-		expect(verdictOf("block", -THRESHOLD, THRESHOLD)).toMatchObject({
-			commits: true,
-			zone: "expand",
-		});
-		expect(collapseOf("block", -THRESHOLD, THRESHOLD, "linear")).toBe(0);
-	});
-});
-
-describe("D's Deck collapse", () => {
-	test("is the pull's share of the threshold, and only toward Close deck", () => {
-		expect(collapseOf("inline", 0, THRESHOLD, "linear")).toBe(0);
-		expect(collapseOf("inline", -48, THRESHOLD, "linear")).toBe(0.5);
-		expect(collapseOf("block", 48, THRESHOLD, "linear")).toBe(0.5);
-		expect(collapseOf("inline", -300, THRESHOLD, "linear")).toBe(1);
-		expect(collapseOf("inline", 48, THRESHOLD, "linear")).toBe(0);
-	});
-
-	test("no curve ever runs ahead of the pull", () => {
-		for (const curve of COLLAPSE_CURVES)
-			for (let px = 0; px <= THRESHOLD; px += 4)
-				expect(
-					collapseOf("inline", -px, THRESHOLD, curve),
-				).toBeLessThanOrEqual(px / THRESHOLD + 1e-12);
-	});
-});
-
-describe("D's travel", () => {
-	test("the Card tracks the hand 1:1, then rubber-bands past its end", () => {
-		expect(travelOf(300, 400, 48)).toBe(300);
-		expect(travelOf(400, 400, 48)).toBe(400);
-		const past = travelOf(480, 400, 48) - 400;
+	test("past its end the Card rubber-bands and never passes the limit", () => {
+		expect(shownAt(400, true, rules)).toBe(400);
+		const past = shownAt(480, true, rules) - 400;
 		expect(past).toBeGreaterThan(0);
 		expect(past).toBeLessThan(80);
-		expect(travelOf(5000, 400, 48) - 400).toBeLessThan(48);
+		expect(shownAt(5000, true, rules) - 400).toBeLessThan(48);
 		expect(rubberBand(0, 48)).toBe(0);
 		expect(rubberBand(100, 0)).toBe(0);
 	});
 
-	test("the Card stays put through the axis-lock slop, then catches the hand up without a jump", () => {
+	test("without resistance the Card never lags", () => {
+		const free = { ...rules, resistance: 0 };
+		expect(shownAt(90, false, free)).toBe(90);
+		expect(shownAt(96, true, free)).toBe(96);
+	});
+});
+
+describe("D's release", () => {
+	const base = {
+		axis: "inline" as const,
+		pull: -120,
+		speed: 0,
+		armed: true,
+		flickSpeed: 0.5,
+	};
+
+	test("past the detent commits the action the panel shows", () => {
+		expect(verdictOf(base)).toEqual({
+			commits: true,
+			zone: "dismiss",
+			reason: "detent 120",
+		});
+	});
+
+	test("short of the detent the Card comes back", () => {
+		expect(verdictOf({ ...base, pull: -60, armed: false })).toEqual({
+			commits: false,
+			zone: "dismiss",
+			reason: "short 60",
+		});
+	});
+
+	test("a flick outward commits short of the detent", () => {
+		expect(
+			verdictOf({ ...base, pull: 40, speed: 0.8, armed: false }),
+		).toMatchObject({
+			commits: true,
+			zone: "expand",
+			reason: "flick 0.80",
+		});
+	});
+
+	test("a flick needs travel, so a twitch is not a flick", () => {
+		expect(
+			verdictOf({ ...base, pull: -10, speed: -2, armed: false }).commits,
+		).toBe(false);
+	});
+
+	test("a flick back toward the slot cancels, even past the detent", () => {
+		expect(verdictOf({ ...base, speed: 0.6 })).toEqual({
+			commits: false,
+			zone: "dismiss",
+			reason: "flicked back",
+		});
+	});
+});
+
+describe("D's Deck collapse", () => {
+	test("gathers in proportion to the pull toward Close deck, and only toward it", () => {
+		expect(collapseOf("inline", 0, 96, "linear")).toBe(0);
+		expect(collapseOf("inline", -48, 96, "linear")).toBe(0.5);
+		expect(collapseOf("inline", -96, 96, "linear")).toBe(1);
+		expect(collapseOf("inline", -200, 96, "linear")).toBe(1);
+		expect(collapseOf("block", 48, 96, "linear")).toBe(0.5);
+		expect(collapseOf("inline", 48, 96, "linear")).toBe(0);
+		expect(collapseOf("block", -48, 96, "linear")).toBe(0);
+	});
+
+	test("a curve bends the way there but keeps both ends", () => {
+		expect(collapseOf("inline", -48, 96, "ease-out")).toBeGreaterThan(0.5);
+		expect(collapseOf("inline", -96, 96, "ease-out")).toBeCloseTo(1);
+		expect(collapseOf("inline", -96, 96, "ease-in-out")).toBeCloseTo(1);
+	});
+});
+
+describe("D's axis lock", () => {
+	test("the Card stays put through the slop, then catches the hand up without a jump", () => {
 		expect(takeUp(8, 10, 24)).toBe(0);
 		expect(takeUp(10, 10, 24)).toBe(0);
 		expect(takeUp(10.5, 10, 24)).toBeCloseTo(10.5 - 10 * (1 - 0.5 / 24));

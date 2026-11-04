@@ -1,16 +1,12 @@
-import {
-	type PointerEvent as ReactPointerEvent,
-	useEffect,
-	useState,
-} from "react";
+import { type PointerEvent as ReactPointerEvent, useState } from "react";
 import { DeckCards, type VariantProps } from "./deck-cards";
 import type { TableKnobs } from "./knobs";
-import { fanSlots, pileSlots } from "./layout";
-import { SPRINGS } from "./motion-kit";
+import { pileSlots } from "./layout";
 import { createTapCounter, framePoint, SLOP_PX, trackPointer } from "./pointer";
 import { useTableCarry } from "./table-carry";
 import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
+import { useDeckHover } from "./use-deck-hover";
 
 /**
  * B, Table: zones are places. Under the pointer the Deck fans and the
@@ -28,35 +24,14 @@ export function TableVariant({
 }: VariantProps<TableKnobs>) {
 	const deck = useDeck({ frame, motion, readouts, deal, layout: pileSlots });
 	const table = useTableCarry({ deck, frame, rtl, motion, readouts, knobs });
-	const [hovered, setHovered] = useState<string | null>(null);
+	const [pressed, setPressed] = useState<string | null>(null);
 	const [taps] = useState(() => createTapCounter());
-
-	/* the fan: every Card turned around the Deck's foot, the hovered one lifted */
-	const { order, slots, status, expanded, place, isBusy } = deck;
-	const { held } = table;
-	useEffect(() => {
-		if (held || status !== "dealt" || expanded) return;
-		const fanned =
-			hovered && !motion.reduce ? fanSlots(slots, knobs.fanDeg) : slots;
-		order.forEach((id, index) => {
-			const slot = fanned[index];
-			if (!slot || isBusy(id)) return;
-			const lift = id === hovered ? knobs.hoverLift : 0;
-			void place(id, { ...slot, v: slot.v - lift }, SPRINGS.reflow);
-		});
-	}, [
-		hovered,
-		held,
-		status,
-		expanded,
-		order,
-		slots,
-		place,
-		isBusy,
-		motion.reduce,
-		knobs.fanDeg,
-		knobs.hoverLift,
-	]);
+	const hover = useDeckHover({
+		deck,
+		motion,
+		knobs,
+		holding: pressed ?? table.held,
+	});
 
 	function onDown(id: string, event: ReactPointerEvent<HTMLElement>) {
 		if (deck.status !== "dealt") return;
@@ -71,13 +46,14 @@ export function TableVariant({
 		const grab = { u: at.u - start.u, v: at.v - start.v };
 		const pressScale = card.s.get();
 		let lifted = false;
+		setPressed(id);
 		table.press(id);
 		readouts.set({ phase: "pressed" });
 		trackPointer(event, rtl, {
 			move: (drag) => {
 				if (!lifted && Math.hypot(drag.dx, drag.dy) < SLOP_PX) return;
 				if (!lifted) {
-					setHovered(null);
+					hover.clear();
 					table.pickUp(id, grab, pressScale);
 				}
 				lifted = true;
@@ -88,6 +64,7 @@ export function TableVariant({
 				);
 			},
 			up: (drag) => {
+				setPressed(null);
 				if (lifted)
 					void table.drop(
 						id,
@@ -100,7 +77,10 @@ export function TableVariant({
 					tapCard(deck, taps, id, drag);
 				}
 			},
-			cancel: () => table.cancel(id),
+			cancel: () => {
+				setPressed(null);
+				table.cancel(id);
+			},
 		});
 	}
 
@@ -112,13 +92,8 @@ export function TableVariant({
 				rtl={rtl}
 				held={table.held}
 				onDown={onDown}
-				onEnter={(id, event) => {
-					if (event.pointerType === "mouse" && !table.held)
-						setHovered(id);
-				}}
-				onLeave={(id) =>
-					setHovered((current) => (current === id ? null : current))
-				}
+				onEnter={hover.onEnter}
+				onLeave={hover.onLeave}
 			/>
 		</>
 	);
