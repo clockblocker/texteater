@@ -4,7 +4,10 @@ import {
 	citationPartText,
 } from "../../../../universal/blocks/citation";
 import type { NoteBlockRenderer } from "../../../../universal/blocks/renderer";
-import { AttachedPrefix, ValencyHeading } from "./valency";
+import {
+	AttachedPrefix,
+	ValencyHeading,
+} from "../../../block-renderers/reading/valency/valency-heading";
 
 /**
  * A verb's heading is its Valency Line, `sich (an jN) erinnern`, or its

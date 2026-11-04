@@ -4,7 +4,7 @@ import {
 	type GrammaticalGender,
 } from "../../../../../../shared/grammatical-gender";
 import type { NoteBlockRenderer } from "../../../../universal/blocks/renderer";
-import { ValencyHeading } from "./valency";
+import { ValencyHeading } from "../../../block-renderers/reading/valency/valency-heading";
 
 const definiteArticle: Readonly<Record<GrammaticalGender, string>> = {
 	Masc: "der",

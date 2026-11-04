@@ -1,3 +1,8 @@
+export { ValencyLineStyleContext } from "./de/block-renderers/reading/valency/valency-heading";
+export {
+	DEFAULT_VALENCY_LINE_STYLE,
+	type ValencyLineStyle,
+} from "./de/block-renderers/reading/valency/valency-line";
 export {
 	renderFixtureNote,
 	renderFixtureNoteParts,

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { ValencyLineStyleContext } from "@/notes/de/block-renderer-overrides/reading/heading/valency";
 import {
 	DEFAULT_VALENCY_LINE_STYLE,
 	type ValencyLineStyle,
-} from "@/notes/de/block-renderers/reading/valency/valency-line";
+	ValencyLineStyleContext,
+} from "@/notes";
 import type { EntryRoute } from "../../playground-router";
 import { InspectorChoice, InspectorSection } from "../inspector";
 import { type ExampleGroup, reading } from "../note-examples";

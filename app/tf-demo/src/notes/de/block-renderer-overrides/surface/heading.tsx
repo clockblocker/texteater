@@ -1,7 +1,7 @@
 import type { NoteBlockRenderer } from "../../../universal/blocks/renderer";
 import { SurfaceHeading } from "../../../universal/blocks/renderers/surface/heading/default";
+import { ValencyLineView } from "../../block-renderers/reading/valency/valency-heading";
 import { germanSurfaceLine } from "../../surface-line";
-import { ValencyLineView } from "../reading/heading/valency";
 
 /**
  * A German Surface's heading: its slotted line, `jD mit jM zu tun hatte`,
