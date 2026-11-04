@@ -3,6 +3,7 @@ import {
 	BlocksIcon,
 	ClapperboardIcon,
 	FlipHorizontal2Icon,
+	GalleryHorizontalEndIcon,
 	LayersIcon,
 	LoaderIcon,
 	type LucideIcon,
@@ -12,6 +13,7 @@ import {
 import { type ReactNode, useEffect } from "react";
 import { AnimationWorkbench } from "./entries/animation-workbench/workbench";
 import { BreakdownsPrototype } from "./entries/breakdowns/breakdowns";
+import { DeckInteractions } from "./entries/deck-interactions/deck-interactions";
 import { DeckModelsGallery } from "./entries/deck-models-gallery";
 import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
@@ -85,6 +87,14 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"The deck’s live animations and gestures, isolated in scenarios. Compare the baseline with named parameter variants.",
 		render: (route) => <AnimationWorkbench route={route} />,
+	},
+	{
+		key: "deck-interactions",
+		title: "Deck interactions",
+		icon: GalleryHorizontalEndIcon,
+		description:
+			"Five ways to carry a Card off its Deck, put it back, dismiss the Deck and open the Card, behind one switch, with each variant's knobs, slow-mo, reduced motion and RTL in the inspector.",
+		render: () => <DeckInteractions />,
 	},
 	{
 		key: "palette",
