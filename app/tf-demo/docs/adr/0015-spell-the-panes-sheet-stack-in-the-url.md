@@ -73,7 +73,7 @@ the one `popstate` listener (tf-demo ADR 0014); the Playground's pathname
 derives from it. The mechanism is the plain History API with no router
 dependency.
 
-## What this replaces
+This replaces:
 
 - [tf-demo ADR 0003]'s single URL, its statement that resource URLs and
   route-encoded workspace state are unsupported, and its statement that only
