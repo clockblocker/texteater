@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import * as Atom from "effect/reactivity/Atom";
 import * as AtomRegistry from "effect/reactivity/AtomRegistry";
-import { morphemePinAtom } from "../src/notes/universal/blocks/renderers/reading/breakdown/morpheme-pin-atoms";
+import { morphemePinAtom } from "./morpheme-pin-atoms";
 
 /** Lets the registry run the node removals it schedules. */
 const settle = () => new Promise((resolve) => setTimeout(resolve, 20));

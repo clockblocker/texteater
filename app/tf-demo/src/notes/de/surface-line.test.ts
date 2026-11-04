@@ -3,11 +3,8 @@ import {
 	type FrameSlot,
 	type ValencyLinePart,
 	valencyLineText,
-} from "../src/notes/de/block-renderers/reading/valency/valency-line";
-import {
-	germanSurfaceLine,
-	type LinedSurface,
-} from "../src/notes/de/surface-line";
+} from "./block-renderers/reading/valency/valency-line";
+import { germanSurfaceLine, type LinedSurface } from "./surface-line";
 
 /**
  * The slotted Surface line (#1293), from stored Surfaces in base order:

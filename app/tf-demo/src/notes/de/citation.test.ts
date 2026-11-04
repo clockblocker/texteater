@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
-import type { ReflexiveSlot } from "../shared/reflexive-slot";
-import { germanCitation } from "../src/notes/de/citation";
-import { citationText } from "../src/notes/universal/blocks/citation";
+import type { ReflexiveSlot } from "../../../shared/reflexive-slot";
+import { citationText } from "../universal/blocks/citation";
+import { germanCitation } from "./citation";
 
 const reflexive = (
 	governedCase: "Acc" | "Dat",
