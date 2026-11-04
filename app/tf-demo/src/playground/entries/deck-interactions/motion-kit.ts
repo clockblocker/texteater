@@ -49,30 +49,36 @@ export type TweenSpec = {
 	readonly ease?: readonly [number, number, number, number];
 };
 
+/** A spec held back `delayMs` before it starts, as a staggered arrival is. */
+type Delayed<S> = S & { readonly delayMs?: number };
+
 /**
  * The transition `spec` makes on this page: slowed by `timeScale`. A
  * spring's stiffness is scaled by its square and its damping by it, which
- * keeps the damping ratio and stretches the period; its velocity (px/s) is
- * slowed the same way. Every move here is a `SPRINGS` entry, a knob or a
- * tween the spec names, passed through this.
+ * keeps the damping ratio and stretches the period; its velocity (px/s)
+ * and any delay are slowed the same way. Every move here is a `SPRINGS`
+ * entry, a knob or a tween the spec names, passed through this.
  */
 export function transition(
-	spec: SpringSpec | TweenSpec,
+	spec: Delayed<SpringSpec> | Delayed<TweenSpec>,
 	context: MotionContext,
 	velocity?: number,
 ) {
 	const s = context.timeScale;
+	const delay = spec.delayMs ? { delay: spec.delayMs / 1000 / s } : {};
 	if ("ms" in spec)
 		return {
 			type: "tween" as const,
 			duration: spec.ms / 1000 / s,
 			ease: spec.ease ?? EASE_OUT_QUINT,
+			...delay,
 		};
 	return {
 		type: "spring" as const,
 		stiffness: spec.stiffness * s * s,
 		damping: spec.damping * s,
 		...(velocity === undefined ? {} : { velocity: velocity * s }),
+		...delay,
 	};
 }
 

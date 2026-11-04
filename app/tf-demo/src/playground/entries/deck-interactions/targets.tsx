@@ -45,6 +45,7 @@ function TargetBox({
 	useEffect(() => {
 		was.current = opacity;
 	});
+	const wait = arriving ? delayMs : 0;
 	const reduce = context.reduce;
 	const rest = opacity > 0 ? 1 : ARRIVE_SCALE;
 	return (
@@ -58,17 +59,17 @@ function TargetBox({
 				scale: reduce ? 1 : active ? LIT : rest,
 			}}
 			transition={{
-				opacity: {
-					...transition(opacity > 0 ? ARRIVE : LEAVE, context),
-					delay: arriving ? delayMs / 1000 / context.timeScale : 0,
-				},
-				scale: {
-					...transition(
-						active ? SPRINGS.pop : SPRINGS.settle,
-						context,
-					),
-					delay: arriving ? delayMs / 1000 / context.timeScale : 0,
-				},
+				opacity: transition(
+					{ ...(opacity > 0 ? ARRIVE : LEAVE), delayMs: wait },
+					context,
+				),
+				scale: transition(
+					{
+						...(active ? SPRINGS.pop : SPRINGS.settle),
+						delayMs: wait,
+					},
+					context,
+				),
 			}}
 			className={`pointer-events-none absolute grid place-items-center ${className}`}
 			style={{
