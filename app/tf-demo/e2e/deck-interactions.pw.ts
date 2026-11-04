@@ -430,21 +430,3 @@ test("B: a hovered Deck fans slightly, and settles back while a Card is pressed"
 	await page.mouse.up();
 	await expect.poll(() => rotation(back)).toBeLessThan(-11);
 });
-
-test("B: a hovered Deck fans slightly, and settles back while a Card is pressed", async ({
-	page,
-}) => {
-	await chooseVariant(page, "B · Table");
-	const card = front(page);
-	const back = frame(page).locator("[data-card-id]").first();
-	const box = await card.boundingBox();
-	if (!box) throw new Error("Missing card geometry");
-	await page.mouse.move(box.x + box.width / 2, box.y + 40, { steps: 4 });
-	await expect.poll(() => rotation(back)).toBeLessThan(-11);
-	await page.mouse.down();
-	await expect
-		.poll(async () => Math.abs(await rotation(back)))
-		.toBeLessThan(0.5);
-	await page.mouse.up();
-	await expect.poll(() => rotation(back)).toBeLessThan(-11);
-});
