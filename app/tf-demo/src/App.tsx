@@ -1,13 +1,13 @@
+import { useAtom } from "@effect/atom-react";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "lego";
 import { lazy, type ReactNode, Suspense } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
+import { pathnameAtom } from "@/playground/pathname-atoms";
 import {
 	isPlaygroundPath,
-	navigate,
-	navigatePlayground,
 	PLAYGROUND_BASE,
+	playgroundPath,
 	playgroundSegments,
-	usePathname,
 } from "@/playground/playground-router";
 import {
 	PLAYGROUND_ENTRIES,
@@ -44,7 +44,7 @@ function App() {
 }
 
 function DevelopmentShell({ workspace }: { workspace: ReactNode }) {
-	const pathname = usePathname();
+	const [pathname, navigate] = useAtom(pathnameAtom);
 	const playgroundOpen = isPlaygroundPath(pathname);
 	const [playgroundEntryKey] = playgroundSegments(pathname);
 	return (
@@ -52,7 +52,9 @@ function DevelopmentShell({ workspace }: { workspace: ReactNode }) {
 			<AppSidebar
 				playgroundActive={playgroundOpen}
 				onTogglePlayground={() =>
-					navigate(playgroundOpen ? "/" : PLAYGROUND_BASE)
+					navigate({
+						pathname: playgroundOpen ? "/" : PLAYGROUND_BASE,
+					})
 				}
 				playgroundPages={
 					playgroundOpen
@@ -61,7 +63,10 @@ function DevelopmentShell({ workspace }: { workspace: ReactNode }) {
 								title: entry.title,
 								icon: entry.icon,
 								active: entry.key === playgroundEntryKey,
-								onShow: () => navigatePlayground([entry.key]),
+								onShow: () =>
+									navigate({
+										pathname: playgroundPath([entry.key]),
+									}),
 							}))
 						: []
 				}

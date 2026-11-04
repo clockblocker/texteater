@@ -1,3 +1,4 @@
+import { useAtom } from "@effect/atom-react";
 import {
 	BlocksIcon,
 	ClapperboardIcon,
@@ -16,11 +17,11 @@ import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
 import { PaletteGallery } from "./entries/palette-gallery";
 import { ReflexivesPrototype } from "./entries/reflexives/reflexives";
+import { pathnameAtom } from "./pathname-atoms";
 import {
 	type EntryRoute,
-	navigatePlayground,
+	playgroundPath,
 	playgroundSegments,
-	usePathname,
 } from "./playground-router";
 
 export type PlaygroundEntry = {
@@ -104,7 +105,8 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
  * app sidebar, which reads `PLAYGROUND_ENTRIES`.
  */
 export function PlaygroundView() {
-	const segments = playgroundSegments(usePathname());
+	const [pathname, navigate] = useAtom(pathnameAtom);
+	const segments = playgroundSegments(pathname);
 	const [entryKey, ...rest] = segments;
 	const active =
 		PLAYGROUND_ENTRIES.find((entry) => entry.key === entryKey) ??
@@ -113,15 +115,18 @@ export function PlaygroundView() {
 	// `/playground` and unknown entries canonicalise to the first entry.
 	useEffect(() => {
 		if (active && active.key !== entryKey) {
-			navigatePlayground([active.key], { replace: true });
+			navigate({ pathname: playgroundPath([active.key]), replace: true });
 		}
-	}, [active, entryKey]);
+	}, [active, entryKey, navigate]);
 
 	if (!active) return null;
 	const route: EntryRoute = {
 		segments: active.key === entryKey ? rest : [],
 		setSegments: (next, options) =>
-			navigatePlayground([active.key, ...next], options),
+			navigate({
+				...options,
+				pathname: playgroundPath([active.key, ...next]),
+			}),
 	};
 
 	return (

@@ -1,8 +1,8 @@
-import { useSyncExternalStore } from "react";
-
 /**
  * The one URL prefix the Playground owns. Everything else in tf-demo lives at
- * `/` (see `main.tsx`), so this is the only place `history` is written.
+ * `/` (see `main.tsx`), so `pathnameAtom` is the only place `history` is
+ * written. This module stays free of React and Effect because `main.tsx`
+ * loads it before the app chunk.
  */
 export const PLAYGROUND_BASE = "/playground";
 
@@ -13,43 +13,10 @@ export function isPlaygroundPath(pathname: string): boolean {
 	);
 }
 
-const listeners = new Set<() => void>();
-
-function subscribe(listener: () => void): () => void {
-	listeners.add(listener);
-	window.addEventListener("popstate", listener);
-	return () => {
-		listeners.delete(listener);
-		window.removeEventListener("popstate", listener);
-	};
-}
-
-function readPathname(): string {
-	return window.location.pathname;
-}
-
-/** Current `location.pathname`, updated on `navigate` and on Back/Forward. */
-export function usePathname(): string {
-	return useSyncExternalStore(subscribe, readPathname, () => "/");
-}
-
 export type NavigateOptions = {
 	/** Rewrite the current history entry instead of adding one. */
 	readonly replace?: boolean;
 };
-
-export function navigate(
-	pathname: string,
-	{ replace = false }: NavigateOptions = {},
-): void {
-	if (window.location.pathname === pathname) return;
-	if (replace) {
-		window.history.replaceState(null, "", pathname);
-	} else {
-		window.history.pushState(null, "", pathname);
-	}
-	for (const listener of listeners) listener();
-}
 
 /** Segments after `/playground`, decoded. `/playground` itself yields `[]`. */
 export function playgroundSegments(pathname: string): readonly string[] {
@@ -61,15 +28,9 @@ export function playgroundSegments(pathname: string): readonly string[] {
 		.map(decodeURIComponent);
 }
 
-function playgroundPath(segments: readonly string[]): string {
+/** The `/playground/...` pathname of `segments`, encoded. */
+export function playgroundPath(segments: readonly string[]): string {
 	return [PLAYGROUND_BASE, ...segments.map(encodeURIComponent)].join("/");
-}
-
-export function navigatePlayground(
-	segments: readonly string[],
-	options?: NavigateOptions,
-): void {
-	navigate(playgroundPath(segments), options);
 }
 
 /**
