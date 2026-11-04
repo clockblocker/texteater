@@ -1,8 +1,4 @@
 {
-	"app/tf-demo": [
-		"app/tf-demo/package.json: dependencies @effect/atom-react",
-		"app/tf-demo/package.json: dependencies scheduler"
-	],
 	"battery/dumcorpus": [
 		"battery/dumcorpus/src/inflection.ts: exports germanAuthoredParadigm",
 		"battery/dumcorpus/src/inflection.ts: exports germanSelectionIssues",

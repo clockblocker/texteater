@@ -1,4 +1,5 @@
 import { ConvexQueryClient } from "@convex-dev/react-query";
+import { RegistryProvider } from "@effect/atom-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { ThemeProvider, TooltipProvider } from "lego";
@@ -39,18 +40,22 @@ const queryClient = new QueryClient({
 convexQueryClient.connect(queryClient);
 
 export function AppProvider({ children }: { children: ReactNode }) {
+	// The atom registry is outermost so every subtree, Convex-backed or not,
+	// shares one registry and its lifetime is the app's.
 	return (
-		<ConvexProvider client={convexClient}>
-			<QueryClientProvider client={queryClient}>
-				<MotionPreferenceProvider>
-					<ThemeProvider
-						defaultTheme="dark"
-						storageKey="tf-demo-theme"
-					>
-						<TooltipProvider>{children}</TooltipProvider>
-					</ThemeProvider>
-				</MotionPreferenceProvider>
-			</QueryClientProvider>
-		</ConvexProvider>
+		<RegistryProvider>
+			<ConvexProvider client={convexClient}>
+				<QueryClientProvider client={queryClient}>
+					<MotionPreferenceProvider>
+						<ThemeProvider
+							defaultTheme="dark"
+							storageKey="tf-demo-theme"
+						>
+							<TooltipProvider>{children}</TooltipProvider>
+						</ThemeProvider>
+					</MotionPreferenceProvider>
+				</QueryClientProvider>
+			</ConvexProvider>
+		</RegistryProvider>
 	);
 }
