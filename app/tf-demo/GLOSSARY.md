@@ -122,7 +122,14 @@ The Heading and Source Contexts, which stay visible across every form. See
 _Avoid_: header, card tail content
 
 **Workspace Persistence**:
-The workspace state that survives a reload. See [tf-demo ADR 0003].
+The workspace state that survives a reload: the Panes with their Ground
+lines, Covers and Decks. On load the Address wins, and the stored workspace
+is taken to it. See [tf-demo ADR 0003] and [tf-demo ADR 0015].
+
+**Address**:
+The URL path that spells the Pane's Sheet Stack: its Ground line, then its
+Covers, by id only. Browser Back and Forward walk it. See [tf-demo ADR 0015].
+_Avoid_: route, deep link, URL state
 
 **Occurrence Attestation**:
 tf-demo's durable record for one resolved high-level occurrence in one
@@ -365,4 +372,5 @@ _Avoid_: bubble, Caption, Region
 [tf-demo ADR 0006]: ./docs/adr/0006-render-a-note-presentation-as-one-element-of-blocks.md
 [tf-demo ADR 0008]: ./docs/adr/0008-give-every-pane-a-ground-beneath-its-covers.md
 [tf-demo ADR 0011]: ./docs/adr/0011-tell-a-clicks-story-in-its-deck.md
+[tf-demo ADR 0015]: ./docs/adr/0015-spell-the-panes-sheet-stack-in-the-url.md
 [Compass glossary]: ../../battery/compass/GLOSSARY.md
