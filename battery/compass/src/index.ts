@@ -60,5 +60,11 @@ export {
 	updatePane,
 	workspaceReducer,
 } from "./model";
+export type {
+	NavigationRung,
+	NavigationSheet,
+	NavigationTarget,
+} from "./navigation";
+export { planNavigation } from "./navigation";
 export type { PlacementStyle } from "./placement";
 export { boxStyle, paneAnchor, placementStyle } from "./placement";
