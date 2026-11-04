@@ -544,8 +544,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	);
 	const writing: Effect.Effect<Written | undefined, AskFailure> =
 		particleSpelled.length === 1 && first.orthographies[0] === "Standard"
-			? // @effect-diagnostics-next-line effectSucceedWithVoid:off -- Effect.void is Effect<void>, which the `| undefined` success type rejects
-				Effect.succeed(undefined)
+			? Effect.undefined
 			: rewritten(
 					log,
 					write,

@@ -32,8 +32,7 @@ export function caseRequest(
 	state: ReturnType<typeof targetState>,
 	open: readonly CaseOption[],
 ): Effect.Effect<CaseOption | Unresolved | undefined, AskFailure> {
-	// @effect-diagnostics-next-line effectSucceedWithVoid:off -- Effect.void is Effect<void>, which the `| undefined` success type rejects
-	if (open.length <= 1) return Effect.succeed(undefined);
+	if (open.length <= 1) return Effect.undefined;
 	return Effect.gen(function* () {
 		const questionnaire = new Questionnaire();
 		const asked = caseQuestion(questionnaire, open);
