@@ -1,12 +1,7 @@
-import {
-	type AnimationPlaybackControls,
-	animate,
-	motionValue,
-} from "motion/react";
+import { animate } from "motion/react";
 import { useMemo, useRef, useState } from "react";
-import { decideTable, nearestTarget, type Target } from "./decide";
+import { decideTable, type Target } from "./decide";
 import {
-	arcPoint,
 	centre,
 	clamp,
 	FOOTPRINT_PAD_PX,
@@ -15,40 +10,70 @@ import {
 	type Rect,
 	type Slot,
 	union,
-	unit,
 } from "./geometry";
-import type { TargetKnobs } from "./knobs";
+import type { TableKnobs } from "./knobs";
 import { type Frame, pileSlots, tableTargets } from "./layout";
 import {
+	EASE_DRAWER,
 	follow,
 	type MotionContext,
 	SPRINGS,
 	settle,
 	transition,
+	wait,
 } from "./motion-kit";
 import type { Drag } from "./pointer";
 import type { Readouts } from "./readouts";
-import { TargetsView } from "./targets";
+import {
+	boxUnderHand,
+	handOverBox,
+	hopVelocity,
+	type Live,
+	liveTarget,
+	pulled,
+	stripEdge,
+	stripExit,
+} from "./table-physics";
+import { type Pulse, TargetsView } from "./targets";
 import type { Deck, Mark } from "./use-deck";
 
-const LIFT_SCALE = 1.05;
-const TILT_GAIN = 5;
-const TILT_MAX = 10;
-const ARC_TWEEN = { ms: 260 };
+const DOWN: Point = { u: 0, v: 1 };
+/** How much of each frame's speed the lean takes in: a light low-pass. */
+const TILT_SMOOTHING = 0.5;
+const STILL: Point = { u: 0, v: 0 };
+const NOTHING: Live = { target: null, anchor: null, closeness: 0, strip: null };
 
-const MARKS: Record<Target, Mark> = {
-	slot: { label: "Back", tone: "back", edge: "bottom" },
-	tray: { label: "Close", tone: "dismiss", edge: "start" },
-	pad: { label: "Open", tone: "expand", edge: "end" },
+/** The stamp a lit target puts on the Card: only the two that commit. */
+function markOf(live: Live): Mark | null {
+	if (live.target === "pad")
+		return { label: "Open", tone: "expand", edge: "end" };
+	if (live.target === "tray")
+		return {
+			label: "Close",
+			tone: "dismiss",
+			edge: live.strip ? stripEdge(live.strip) : "start",
+		};
+	return null;
+}
+
+/** One carry: where the Card was grabbed, its home and whether the slot pulls yet. */
+type Hold = {
+	readonly id: string;
+	/** The grabbed spot's offset from the box corner, at `pressScale`. */
+	readonly grab: Point;
+	readonly pressScale: number;
+	readonly size: { readonly w: number; readonly h: number };
+	/** Where the hand is when the Card sits in its slot, lifted. */
+	readonly home: Point | null;
+	armed: boolean;
 };
 
-type CarryKnobs = TargetKnobs & { readonly flickSpeed: number };
-
 /**
- * B's carry, which E's hold-carry shares: the Card lifts and trails the
- * hand on a stiff spring, the rest of the Deck closes its gap, and the
- * slot, tray and pad appear. Near a target the Card is pulled toward it;
- * the release picks the place it is over.
+ * B's carry: the Card lifts and trails the hand on a stiff spring, the
+ * spot it was grabbed by staying under the hand, and leans with its own
+ * speed. The rest of the Deck closes its gap, nearest Card first, and
+ * the slot, tray and pad appear. One target lights at a time and draws
+ * the hand toward it; the release does what the lit target says.
  */
 export function useTableCarry({
 	deck,
@@ -63,24 +88,26 @@ export function useTableCarry({
 	readonly frame: Frame;
 	readonly motion: MotionContext;
 	readonly readouts: Readouts;
-	readonly knobs: CarryKnobs;
+	readonly knobs: TableKnobs;
 }) {
 	const [held, setHeld] = useState<string | null>(null);
 	const [active, setActive] = useState<Target | null>(null);
-	const [pulse, setPulse] = useState(0);
+	const [pulse, setPulse] = useState<Pulse>(0);
 	/** The Deck is sliding into the tray, which stays shown meanwhile. */
 	const [landing, setLanding] = useState(false);
 	const [slotRect, setSlotRect] = useState<Rect | null>(null);
-	const arc = useRef<AnimationPlaybackControls | null>(null);
-	const activeRef = useRef<Target | null>(null);
-	/** The slot left behind, for the gesture's closures; the state draws it. */
-	const slotRef = useRef<Rect | null>(null);
-	/** Where in the Card the hand holds it: targets are hit by the hand. */
-	const grabRef = useRef<Point>({ u: 0, v: 0 });
+	const live = useRef<Live>(NOTHING);
+	const hold = useRef<Hold | null>(null);
+	/** Bumped by every pick-up and release: a staggered move from an older one is dropped. */
+	const epoch = useRef(0);
+	const tiltFrame = useRef<number | null>(null);
 	const targets = useMemo(
 		() => tableTargets(frame, knobs.targetSize),
 		[frame, knobs.targetSize],
 	);
+
+	const liftedScale = (id: string) =>
+		(deck.slotOf(id)?.s ?? 1) * knobs.liftScale;
 
 	/** The Deck without `id`, closed up as a hand reflows. */
 	function closedSlots(id: string): Map<string, Slot> {
@@ -99,184 +126,304 @@ export function useTableCarry({
 		return box ? inflate(box, FOOTPRINT_PAD_PX) : null;
 	}
 
-	function reopen(id: string) {
-		for (const other of deck.order) {
-			const slot = deck.slotOf(other);
-			if (other !== id && slot)
-				void deck.place(other, slot, SPRINGS.reflow);
-		}
+	/** Moves every other Card to `slotOf`, the ones next to `id` first, `stagger` ms apart. */
+	function reflow(
+		id: string,
+		slotOf: (other: string) => Slot | undefined,
+		stagger: number,
+	) {
+		const at = deck.order.indexOf(id);
+		const others = deck.order
+			.filter((other) => other !== id)
+			.sort(
+				(a, b) =>
+					Math.abs(deck.order.indexOf(a) - at) -
+					Math.abs(deck.order.indexOf(b) - at),
+			);
+		const mine = epoch.current;
+		others.forEach((other, rank) => {
+			const slot = slotOf(other);
+			if (!slot) return;
+			void wait(rank * stagger, motion).then(() => {
+				if (epoch.current === mine)
+					void deck.place(other, slot, SPRINGS.reflow);
+			});
+		});
 	}
 
-	function pickUp(id: string, grab: Point) {
-		arc.current?.stop();
-		grabRef.current = grab;
+	function stopTilt() {
+		if (tiltFrame.current !== null) cancelAnimationFrame(tiltFrame.current);
+		tiltFrame.current = null;
+	}
+
+	/**
+	 * The lean follows the Card's own inline speed, read frame to frame
+	 * and smoothed, so it lags the hand and relaxes when the hand stops.
+	 */
+	function startTilt(id: string) {
+		stopTilt();
+		const card = deck.valuesOf(id);
+		let last = Number.NaN;
+		let speed = 0;
+		let before: { readonly t: number; readonly u: number } | null = null;
+		const step = (t: number) => {
+			const u = card.u.get();
+			if (before && t > before.t)
+				speed +=
+					((u - before.u) / (t - before.t) - speed) * TILT_SMOOTHING;
+			before = { t, u };
+			const tilt = motion.reduce
+				? 0
+				: clamp(speed * knobs.tiltGain, -knobs.tiltMax, knobs.tiltMax);
+			if (!(Math.abs(tilt - last) < 0.05)) {
+				last = tilt;
+				follow(card.r, tilt, SPRINGS.tilt, motion);
+				readouts.set({ tilt: rtl ? -tilt : tilt });
+			}
+			tiltFrame.current = requestAnimationFrame(step);
+		};
+		tiltFrame.current = requestAnimationFrame(step);
+	}
+
+	/** Feedback on the press itself: the Card comes part-way up before it is dragged. */
+	function press(id: string) {
 		const card = deck.valuesOf(id);
 		const slot = deck.slotOf(id);
-		deck.hold(id);
-		setHeld(id);
-		slotRef.current = slot ?? null;
-		setSlotRect(slot ?? null);
-		follow(card.s, (slot?.s ?? 1) * LIFT_SCALE, SPRINGS.settle, motion);
-		follow(card.r, 0, SPRINGS.tilt, motion);
-		follow(card.lift, 1, SPRINGS.settle, motion);
-		for (const [other, closed] of closedSlots(id))
-			void deck.place(other, closed, SPRINGS.reflow);
-		readouts.set({ phase: "carrying" });
-	}
-
-	function setTarget(id: string, target: Target | null) {
-		activeRef.current = target;
-		setActive(target);
-		const card = deck.valuesOf(id);
-		deck.mark(id, target ? MARKS[target] : null);
-		follow(card.stamp, target ? 1 : 0, SPRINGS.settle, motion);
+		const lift = knobs.pressLift;
+		follow(card.lift, lift, SPRINGS.settle, motion);
 		follow(
-			card.glow,
-			target && target !== "slot" ? 1 : 0,
+			card.s,
+			(slot?.s ?? 1) * (1 + (knobs.liftScale - 1) * lift),
 			SPRINGS.settle,
 			motion,
 		);
 	}
 
-	/** Moves the Card toward where the hand puts its top-left corner. */
-	function carry(id: string, hand: Point, drag: Drag) {
+	function unpress(id: string) {
 		const card = deck.valuesOf(id);
-		const box = { u: hand.u, v: hand.v, w: card.w.get(), h: card.h.get() };
-		const middle = centre(box);
-		const all = {
-			slot: slotRef.current ?? box,
+		settle(card.lift, 0, SPRINGS.settle, motion);
+		settle(card.s, deck.slotOf(id)?.s ?? 1, SPRINGS.settle, motion);
+	}
+
+	function pickUp(id: string, grab: Point, pressScale: number) {
+		epoch.current += 1;
+		const card = deck.valuesOf(id);
+		const slot = deck.slotOf(id);
+		deck.hold(id);
+		setHeld(id);
+		setSlotRect(slot ?? null);
+		const size = { w: card.w.get(), h: card.h.get() };
+		const scale = liftedScale(id);
+		hold.current = {
+			id,
+			grab,
+			pressScale,
+			size,
+			home: slot
+				? handOverBox({ box: slot, grab, size, pressScale, scale })
+				: null,
+			armed: false,
+		};
+		follow(
+			card.s,
+			scale,
+			motion.reduce ? SPRINGS.settle : SPRINGS.pop,
+			motion,
+		);
+		follow(card.lift, 1, SPRINGS.settle, motion);
+		const closed = closedSlots(id);
+		reflow(id, (other) => closed.get(other), knobs.reflowStaggerMs);
+		startTilt(id);
+		readouts.set({ phase: "carrying" });
+	}
+
+	function light(id: string, next: Live) {
+		const was = live.current;
+		live.current = next;
+		if (was.target === next.target && was.strip === next.strip) return;
+		setActive(next.target);
+		const card = deck.valuesOf(id);
+		const mark = markOf(next);
+		deck.mark(id, mark);
+		follow(card.stamp, mark ? 1 : 0, SPRINGS.settle, motion);
+		follow(card.glow, mark ? 1 : 0, SPRINGS.settle, motion);
+	}
+
+	function liveAt(point: Point): Live {
+		const current = hold.current;
+		return liveTarget({
+			point,
+			home: current?.home ?? null,
 			tray: targets.tray,
 			pad: targets.pad,
-		};
-		const near = nearestTarget(
-			all,
-			middle,
-			knobs.magnetRadius,
-			activeRef.current,
-		);
-		const pull = near ? knobs.magnetStrength : 0;
-		const goal =
-			near === "tray"
-				? targetCentre(targets.tray, middle)
-				: near
-					? centre(all[near])
-					: middle;
-		const to = {
-			u: hand.u + (goal.u - middle.u) * pull,
-			v: hand.v + (goal.v - middle.v) * pull,
-		};
-		if (near !== activeRef.current) setTarget(id, near);
-		const spring = { stiffness: knobs.followStiffness, damping: 60 };
+			radius: knobs.magnetRadius,
+			slotReach: knobs.slotReach,
+			previous: live.current.target,
+			slotArmed: current?.armed ?? false,
+		});
+	}
+
+	/** Moves the Card toward where the hand puts its top-left corner. */
+	function carry(id: string, hand: Point, drag: Drag) {
+		const current = hold.current;
+		if (!current || current.id !== id) return;
+		const card = deck.valuesOf(id);
+		const point = plus(hand, current.grab);
+		if (
+			!current.armed &&
+			current.home &&
+			distance(point, current.home) > knobs.slotReach
+		)
+			current.armed = true;
+		const now = liveAt(point);
+		light(id, now);
+		const to = boxUnderHand({
+			point: pulled(point, now, knobs.magnetStrength),
+			grab: current.grab,
+			size: current.size,
+			pressScale: current.pressScale,
+			/* the live scale, so the grabbed spot stays put while the lift springs */
+			scale: card.s.get(),
+		});
 		if (motion.reduce) {
 			card.u.set(to.u);
 			card.v.set(to.v);
 		} else {
+			const spring = {
+				stiffness: knobs.followStiffness,
+				damping: 2 * Math.sqrt(knobs.followStiffness),
+			};
 			follow(card.u, to.u, spring, motion);
 			follow(card.v, to.v, spring, motion);
 		}
-		const tilt = motion.reduce
-			? 0
-			: clamp(drag.vu * TILT_GAIN, -TILT_MAX, TILT_MAX);
-		follow(card.r, tilt, SPRINGS.tilt, motion);
 		readouts.set({
-			zone: near ?? "nothing",
+			zone: now.target ?? "nothing",
 			velocity: { x: drag.vx, y: drag.vy },
-			tilt: rtl ? -tilt : tilt,
 			projected: {
-				u: middle.u + drag.vu * 99,
-				v: middle.v + drag.vy * 99,
+				u: point.u + drag.vu * 99,
+				v: point.v + drag.vy * 99,
 			},
 		});
 	}
 
-	async function returnHome(id: string) {
+	/**
+	 * Back to the slot. The springs take the hand's speed, and the block
+	 * one gets an upward kick sized to the distance, so a far return arcs
+	 * onto the Deck and a near one just settles. Reduced, it is one soft
+	 * tween over the true distance.
+	 */
+	async function returnHome(id: string, velocity: Point) {
 		const card = deck.valuesOf(id);
 		const slot = deck.slotOf(id);
-		if (!slot || motion.reduce) return deck.putBack(id);
-		const from = { u: card.u.get(), v: card.v.get() };
-		settle(card.r, slot.r, SPRINGS.settle, motion);
-		settle(card.s, slot.s, SPRINGS.settle, motion);
-		settle(card.lift, 0, SPRINGS.settle, motion);
-		const t = motionValue(0);
-		t.on("change", (latest) => {
-			const point = arcPoint(from, slot, knobs.arcHeight, latest);
-			card.u.set(point.u);
-			card.v.set(point.v);
+		if (!slot) return deck.putBack(id);
+		if (motion.reduce) {
+			const mine = epoch.current;
+			const tween = {
+				...transition(
+					{ ms: knobs.reducedReturnMs, ease: EASE_DRAWER },
+					motion,
+				),
+			};
+			settle(card.s, slot.s, SPRINGS.settle, motion);
+			settle(card.lift, 0, SPRINGS.settle, motion);
+			settle(card.r, slot.r, SPRINGS.settle, motion);
+			await Promise.all([
+				animate(card.u, slot.u, tween),
+				animate(card.v, slot.v, tween),
+			]);
+			if (epoch.current === mine) await deck.putBack(id);
+			return;
+		}
+		const far = Math.hypot(card.u.get() - slot.u, card.v.get() - slot.v);
+		const kick = hopVelocity({
+			from: card.v.get(),
+			to: slot.v,
+			height: Math.min(knobs.arcHeight, far * knobs.hopPerPx),
+			stiffness: SPRINGS.settle.stiffness,
+			hand: velocity.v * 1000,
 		});
-		const controls = animate(t, 1, transition(ARC_TWEEN, motion));
-		arc.current = controls;
-		await controls;
-		if (arc.current !== controls) return;
-		arc.current = null;
-		return deck.putBack(id);
+		return deck.putBack(id, SPRINGS.settle, {
+			u: velocity.u,
+			v: kick / 1000,
+		});
+	}
+
+	function clear(id: string) {
+		stopTilt();
+		light(id, NOTHING);
+		hold.current = null;
+		epoch.current += 1;
+		setHeld(null);
+		setSlotRect(null);
 	}
 
 	/** Lets go where the hand puts the Card's top-left corner. */
 	function drop(id: string, hand: Point, drag: Drag) {
+		const current = hold.current;
 		const card = deck.valuesOf(id);
-		const box = { u: hand.u, v: hand.v, w: card.w.get(), h: card.h.get() };
+		const point = current ? plus(hand, current.grab) : hand;
+		const now = current ? liveAt(point) : NOTHING;
 		const slot = deck.slotOf(id);
 		const velocity = { u: drag.vu, v: drag.vy };
 		const decision = decideTable({
-			centre: centre(box),
-			point: plus(hand, grabRef.current),
+			centre: centre({
+				u: card.u.get(),
+				v: card.v.get(),
+				w: card.w.get(),
+				h: card.h.get(),
+			}),
 			offset: {
 				u: hand.u - (slot?.u ?? hand.u),
 				v: hand.v - (slot?.v ?? hand.v),
 			},
 			velocity,
 			footprint: footprint(id),
-			targets: {
-				slot: slotRef.current ?? box,
-				tray: targets.tray,
-				pad: targets.pad,
-			},
-			radius: knobs.magnetRadius,
+			active: now.target,
+			exit: now.strip ? stripExit(now.strip) : DOWN,
 			flickSpeed: knobs.flickSpeed,
-			previous: activeRef.current,
 		});
-		setTarget(id, null);
-		setHeld(null);
-		slotRef.current = null;
-		setSlotRect(null);
+		clear(id);
 		readouts.set({
 			outcome: `${decision.outcome} · ${decision.reason}`,
 			zone: null,
 			projected: null,
 			phase: "settling",
 		});
+		if (decision.target === "tray" && knobs.commitPulse)
+			setPulse((was) => was + 1);
 		if (decision.outcome === "dismiss") {
-			const toward =
-				decision.target === "tray"
-					? unit(
-							minus(
-								targetCentre(targets.tray, centre(box)),
-								centre(box),
-							),
-						)
-					: decision.direction;
 			setLanding(decision.target === "tray");
-			if (decision.target === "tray" && knobs.commitPulse)
-				setPulse((value) => value + 1);
+			/* the Card lands in the tray: its shadow drops as it slides */
+			settle(card.lift, 0, SPRINGS.settle, motion);
+			settle(card.r, 0, SPRINGS.settle, motion);
 			return deck.dismiss({
-				direction: toward,
+				direction: decision.direction,
 				lead: id,
 				stagger: 40,
 				velocity,
 			});
 		}
-		reopen(id);
+		const slots = new Map(
+			deck.order.map((other) => [other, deck.slotOf(other)] as const),
+		);
+		/* the gap reopens at once: the hand is making room, and the
+		   hover fan takes the Deck over as soon as nothing is held */
+		reflow(id, (other) => slots.get(other), 0);
 		if (decision.outcome === "expand") return deck.expand(id, velocity);
-		return returnHome(id).then(() => readouts.set({ phase: "rest" }));
+		return returnHome(id, velocity).then(() =>
+			readouts.set({ phase: "rest" }),
+		);
 	}
 
 	function cancel(id: string) {
-		setTarget(id, null);
-		setHeld(null);
-		slotRef.current = null;
-		setSlotRect(null);
-		reopen(id);
-		void deck.putBack(id);
+		clear(id);
+		const slots = new Map(
+			deck.order.map((other) => [other, deck.slotOf(other)] as const),
+		);
+		/* the gap reopens at once: the hand is making room, and the
+		   hover fan takes the Deck over as soon as nothing is held */
+		reflow(id, (other) => slots.get(other), 0);
+		void returnHome(id, STILL);
 	}
 
 	function shown(target: Target): boolean {
@@ -295,32 +442,18 @@ export function useTableCarry({
 				shown={shown}
 				active={active}
 				pulse={pulse}
+				staggerMs={knobs.targetStaggerMs}
 				motion={motion}
 			/>
 		);
 
-	return { held, pickUp, carry, drop, cancel, view };
+	return { held, press, unpress, pickUp, carry, drop, cancel, view };
 }
 
 function plus(a: Point, b: Point): Point {
 	return { u: a.u + b.u, v: a.v + b.v };
 }
 
-function minus(a: Point, b: Point): Point {
-	return { u: a.u - b.u, v: a.v - b.v };
-}
-
-/** The middle of the tray rect nearest `point`. */
-function targetCentre(rects: readonly Rect[], point: Point): Point {
-	let best = rects[0] ? centre(rects[0]) : point;
-	let bestDistance = Number.POSITIVE_INFINITY;
-	for (const rect of rects) {
-		const middle = centre(rect);
-		const distance = Math.hypot(middle.u - point.u, middle.v - point.v);
-		if (distance < bestDistance) {
-			best = middle;
-			bestDistance = distance;
-		}
-	}
-	return best;
+function distance(a: Point, b: Point): number {
+	return Math.hypot(a.u - b.u, a.v - b.v);
 }

@@ -98,3 +98,116 @@ test("the Card in hand never goes transparent", async ({ page }) => {
 		await redeal(page);
 	}
 });
+
+/** Presses `card` near its top and moves past the slop: the Card is in hand. */
+async function lift(page: Page, card: Locator) {
+	const box = await card.boundingBox();
+	if (!box) throw new Error("Missing card geometry");
+	const start = { x: box.x + box.width / 2, y: box.y + 24 };
+	await page.mouse.move(start.x, start.y);
+	await page.mouse.down();
+	await page.mouse.move(start.x + 10, start.y + 10, { steps: 2 });
+	return start;
+}
+
+/** The Card's rotation in degrees, read from its computed transform. */
+function rotation(card: Locator) {
+	return card.evaluate((element) => {
+		const matrix = new DOMMatrixReadOnly(
+			getComputedStyle(element).transform,
+		);
+		return (Math.atan2(matrix.b, matrix.a) * 180) / Math.PI;
+	});
+}
+
+/** Samples where `card`'s middle is, every frame for `ms`, as a share of the frame's width. */
+function farthestOut(card: Locator, ms: number) {
+	return card.evaluate(
+		(element, duration) =>
+			new Promise<number>((resolve) => {
+				const frameBox = element
+					.closest("[data-deck-frame]")
+					?.getBoundingClientRect();
+				if (!frameBox) return resolve(Number.POSITIVE_INFINITY);
+				let worst = 0;
+				const end = performance.now() + duration;
+				const step = () => {
+					const box = element.getBoundingClientRect();
+					const middle = box.left + box.width / 2;
+					const out = Math.max(
+						frameBox.left - middle,
+						middle - frameBox.right,
+						0,
+					);
+					worst = Math.max(worst, out / frameBox.width);
+					if (performance.now() < end) requestAnimationFrame(step);
+					else resolve(worst);
+				};
+				requestAnimationFrame(step);
+			}),
+		ms,
+	);
+}
+
+test("B: a Card just lifted lights nothing and wears no stamp", async ({
+	page,
+}) => {
+	await chooseVariant(page, "B · Table");
+	await lift(page, front(page));
+	await expect(frame(page).locator('[data-target="pad"]')).toBeVisible();
+	await page.waitForTimeout(200);
+	await expect(frame(page).locator("[data-target][data-active]")).toHaveCount(
+		0,
+	);
+	await expect(frame(page).locator("[data-stamp]")).toHaveCount(0);
+	await page.mouse.up();
+});
+
+test("B: only the target under the hand lights, and the release does what it shows", async ({
+	page,
+}) => {
+	await chooseVariant(page, "B · Table");
+	const start = await lift(page, front(page));
+	const pad = await targetCentre(page, "pad");
+	await page.mouse.move((start.x + pad.x) / 2, (start.y + pad.y) / 2, {
+		steps: 12,
+	});
+	await expect(frame(page).locator("[data-target][data-active]")).toHaveCount(
+		0,
+	);
+	await page.mouse.move(pad.x, pad.y, { steps: 12 });
+	await expect(
+		frame(page).locator('[data-target="pad"][data-active]'),
+	).toHaveCount(1);
+	await expect(frame(page).locator('[data-stamp="expand"]')).toHaveCount(1);
+	await page.mouse.up();
+	await expect(frame(page).locator("[data-expanded]")).toHaveCount(1);
+});
+
+test("B: a Card dropped over nothing comes home without leaving the frame", async ({
+	page,
+}) => {
+	await chooseVariant(page, "B · Table");
+	const card = front(page);
+	const id = await card.getAttribute("data-card-id");
+	const start = await lift(page, card);
+	await page.mouse.move(start.x + 420, start.y + 260, { steps: 20 });
+	await page.waitForTimeout(150);
+	const home = frame(page).locator(`[data-card-id="${id ?? ""}"]`);
+	const sample = farthestOut(home, 900);
+	await page.mouse.up();
+	expect(await sample).toBe(0);
+	await expect(
+		inspector(page).locator('[data-readout="last release"]'),
+	).toHaveText("back · nothing");
+});
+
+test("B: the lean relaxes once the hand rests", async ({ page }) => {
+	await chooseVariant(page, "B · Table");
+	const card = front(page);
+	const start = await lift(page, card);
+	await page.mouse.move(start.x + 260, start.y + 20, { steps: 6 });
+	await page.waitForTimeout(600);
+	expect(Math.abs(await rotation(card))).toBeLessThan(0.5);
+	await page.mouse.up();
+});

@@ -65,38 +65,27 @@ function toggle<K extends string>(key: K, label: string): ToggleKnob<K> {
 
 const FLICK = num("flickSpeed", "Flick speed", 0.1, 3, 0.05, "px/ms");
 
-/** B's targets: their size, their pull and when they show. */
-const TARGET_DEFAULTS = {
-	targetSize: 64,
-	magnetRadius: 48,
-	magnetStrength: 0.35,
-	followStiffness: 900,
-	arcHeight: 40,
-	commitPulse: true,
-	showTargets: "pickup" as ShowTargets,
-};
-export type TargetKnobs = typeof TARGET_DEFAULTS;
-
-const TARGET_KNOBS: readonly Knob<TargetKnobs>[] = [
-	num("targetSize", "Target size", 32, 160, 4, "px"),
-	num("magnetRadius", "Magnet radius", 0, 160, 4, "px"),
-	num("magnetStrength", "Magnet strength", 0, 1, 0.05),
-	num("followStiffness", "Follow stiffness", 100, 2000, 20),
-	num("arcHeight", "Arc height", 0, 160, 4, "px"),
-	toggle("commitPulse", "Commit pulse"),
-	{
-		kind: "choice",
-		key: "showTargets",
-		label: "Show targets",
-		options: SHOW_TARGETS,
-	},
-];
-
+/** B: the fan, the lift, the lean, the targets' pull and the return. */
 const TABLE_DEFAULTS = {
 	fanDeg: 4,
 	hoverLift: 6,
 	flickSpeed: 0.5,
-	...TARGET_DEFAULTS,
+	liftScale: 1.06,
+	pressLift: 0.4,
+	followStiffness: 1400,
+	tiltGain: 6,
+	tiltMax: 10,
+	reflowStaggerMs: 24,
+	targetSize: 64,
+	targetStaggerMs: 30,
+	magnetRadius: 48,
+	slotReach: 96,
+	magnetStrength: 0.35,
+	hopPerPx: 0.12,
+	arcHeight: 40,
+	reducedReturnMs: 280,
+	commitPulse: true,
+	showTargets: "pickup" as ShowTargets,
 };
 export type TableKnobs = typeof TABLE_DEFAULTS;
 
@@ -104,7 +93,27 @@ const TABLE_KNOBS: readonly Knob<TableKnobs>[] = [
 	num("fanDeg", "Fan", 0, 15, 0.5, "°"),
 	num("hoverLift", "Hover lift", 0, 24, 1, "px"),
 	FLICK,
-	...TARGET_KNOBS,
+	num("liftScale", "Lift scale", 1, 1.2, 0.01),
+	num("pressLift", "Press lift", 0, 1, 0.05),
+	num("followStiffness", "Follow stiffness", 100, 2000, 20),
+	num("tiltGain", "Tilt gain", 0, 20, 0.5, "°·ms/px"),
+	num("tiltMax", "Tilt max", 0, 30, 1, "°"),
+	num("reflowStaggerMs", "Reflow stagger", 0, 120, 4, "ms"),
+	num("targetSize", "Target size", 32, 160, 4, "px"),
+	num("targetStaggerMs", "Target stagger", 0, 120, 5, "ms"),
+	num("magnetRadius", "Magnet radius", 0, 160, 4, "px"),
+	num("slotReach", "Slot reach", 24, 240, 4, "px"),
+	num("magnetStrength", "Magnet strength", 0, 1, 0.05),
+	num("hopPerPx", "Return hop per px", 0, 0.5, 0.01),
+	num("arcHeight", "Return hop max", 0, 160, 4, "px"),
+	num("reducedReturnMs", "Reduced return", 80, 480, 10, "ms"),
+	toggle("commitPulse", "Commit pulse"),
+	{
+		kind: "choice",
+		key: "showTargets",
+		label: "Show targets",
+		options: SHOW_TARGETS,
+	},
 ];
 
 const SWIPE_DEFAULTS = {

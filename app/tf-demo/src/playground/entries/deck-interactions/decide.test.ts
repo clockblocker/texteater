@@ -1,50 +1,61 @@
 import { describe, expect, test } from "bun:test";
 import { decideTable } from "./decide";
 import { detentOffset, flickOf } from "./geometry";
-import { pileSlots } from "./layout";
 
-const frame = { w: 1200, h: 1000 };
-const slots = pileSlots(frame, 4);
-const front = slots[3];
-if (!front) throw new Error("no front slot");
 const still = { u: 0, v: 0 };
 
 describe("B's release", () => {
-	const targets = {
-		slot: front,
-		tray: [{ u: 16, v: 900, w: 500, h: 64 }],
-		pad: { u: 900, v: 16, w: 192, h: 128 },
-	};
 	const base = {
 		footprint: null,
-		targets,
-		radius: 48,
 		flickSpeed: 0.5,
-		previous: null,
 		velocity: still,
 		offset: { u: 0, v: 0 },
+		centre: { u: 300, v: 600 },
+		exit: { u: -1, v: 0 },
 	};
 
-	test("over the tray dismisses, over the pad expands, over nothing is back", () => {
-		const centre = { u: 300, v: 600 };
-		expect(
-			decideTable({ ...base, centre, point: { u: 100, v: 930 } }).outcome,
-		).toBe("dismiss");
-		expect(
-			decideTable({ ...base, centre, point: { u: 1000, v: 60 } }).outcome,
-		).toBe("expand");
-		expect(
-			decideTable({ ...base, centre, point: { u: 1100, v: 600 } }),
-		).toMatchObject({ outcome: "back", reason: "nothing" });
+	test("the lit target is what the release does", () => {
+		expect(decideTable({ ...base, active: "tray" })).toMatchObject({
+			outcome: "dismiss",
+			reason: "tray",
+			direction: { u: -1, v: 0 },
+		});
+		expect(decideTable({ ...base, active: "pad" }).outcome).toBe("expand");
+		expect(decideTable({ ...base, active: "slot" }).outcome).toBe("back");
+		expect(decideTable({ ...base, active: null })).toMatchObject({
+			outcome: "back",
+			reason: "nothing",
+		});
 	});
 
-	test("over the Deck's footprint is back, even near the tray", () => {
+	test("a hand still moving over the pad opens the Card instead of sweeping the Deck", () => {
 		expect(
 			decideTable({
 				...base,
+				active: "pad",
+				offset: { u: 300, v: -300 },
+				velocity: { u: 1.2, v: -1.2 },
+			}).outcome,
+		).toBe("expand");
+	});
+
+	test("with nothing lit, a throw sweeps the way it went", () => {
+		expect(
+			decideTable({
+				...base,
+				active: null,
+				offset: { u: -60, v: 0 },
+				velocity: { u: -0.9, v: 0 },
+			}),
+		).toMatchObject({ outcome: "dismiss", direction: { u: -1, v: 0 } });
+	});
+
+	test("over the Deck's footprint is back", () => {
+		expect(
+			decideTable({
+				...base,
+				active: null,
 				footprint: { u: 0, v: 0, w: 1200, h: 1000 },
-				centre: { u: 300, v: 600 },
-				point: { u: 100, v: 930 },
 			}).reason,
 		).toBe("footprint");
 	});

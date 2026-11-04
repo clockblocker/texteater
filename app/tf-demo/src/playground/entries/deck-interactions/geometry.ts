@@ -158,26 +158,6 @@ export function detentOffset(
 	return sign * (start + (end - start) * give + (past - end));
 }
 
-/** A point on the quadratic arc from `from` to `to`, `height` px above. */
-export function arcPoint(
-	from: Point,
-	to: Point,
-	height: number,
-	t: number,
-): Point {
-	const control = {
-		u: (from.u + to.u) / 2,
-		v: Math.min(from.v, to.v) - height,
-	};
-	const a = (1 - t) * (1 - t);
-	const b = 2 * (1 - t) * t;
-	const c = t * t;
-	return {
-		u: a * from.u + b * control.u + c * to.u,
-		v: a * from.v + b * control.v + c * to.v,
-	};
-}
-
 /** Rotates `point` by `degrees` around `pivot`. */
 export function rotateAround(
 	point: Point,

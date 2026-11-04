@@ -30,17 +30,24 @@ export const SPRINGS = {
 	morph: { stiffness: 380, damping: 38 },
 	/** The lean under the hand. */
 	tilt: { stiffness: 300, damping: 22 },
+	/** B's pick-up: response 0.25, ζ 0.65, so the lift lands with a little give. */
+	pop: { stiffness: 632, damping: 33 },
 } as const satisfies Record<string, SpringSpec>;
 
 /** The reduced path's system-driven move: short, never a jump. */
 const REDUCED_TWEEN = { ms: 140 };
 const EASE_OUT_QUINT = [0.23, 1, 0.32, 1] as const;
+/** iOS's drawer curve (Ionic): a softer start than the quint, for a reduced move that travels far. */
+export const EASE_DRAWER = [0.32, 0.72, 0, 1] as const;
 /** A reduced exit moves at most this far while it fades. */
 export const REDUCED_EXIT_PX = 24;
 export const REDUCED_EXIT_MS = 180;
 
-/** A tween in this page's terms: its length in ms, on the ease-out quint. */
-export type TweenSpec = { readonly ms: number };
+/** A tween in this page's terms: its length in ms, on the ease-out quint unless it names another curve. */
+export type TweenSpec = {
+	readonly ms: number;
+	readonly ease?: readonly [number, number, number, number];
+};
 
 /**
  * The transition `spec` makes on this page: slowed by `timeScale`. A
@@ -59,7 +66,7 @@ export function transition(
 		return {
 			type: "tween" as const,
 			duration: spec.ms / 1000 / s,
-			ease: EASE_OUT_QUINT,
+			ease: spec.ease ?? EASE_OUT_QUINT,
 		};
 	return {
 		type: "spring" as const,

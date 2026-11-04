@@ -69,14 +69,16 @@ export function TableVariant({
 			rtl,
 		);
 		const grab = { u: at.u - start.u, v: at.v - start.v };
+		const pressScale = card.s.get();
 		let lifted = false;
+		table.press(id);
 		readouts.set({ phase: "pressed" });
 		trackPointer(event, rtl, {
 			move: (drag) => {
 				if (!lifted && Math.hypot(drag.dx, drag.dy) < SLOP_PX) return;
 				if (!lifted) {
 					setHovered(null);
-					table.pickUp(id, grab);
+					table.pickUp(id, grab, pressScale);
 				}
 				lifted = true;
 				table.carry(
@@ -94,6 +96,7 @@ export function TableVariant({
 					);
 				else {
 					readouts.set({ phase: "rest" });
+					table.unpress(id);
 					tapCard(deck, taps, id, drag);
 				}
 			},
