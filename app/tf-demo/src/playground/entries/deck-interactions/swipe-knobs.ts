@@ -1,5 +1,6 @@
 import type { AnyKnob } from "./knobs";
 import { COLLAPSE_CURVES, type CollapseCurve } from "./swipe-gesture";
+import { HOVER_DEFAULTS, HOVER_KNOBS } from "./use-deck-hover";
 
 /**
  * D's knobs and their tuned defaults. One threshold is the breakpoint for
@@ -26,6 +27,7 @@ export const SWIPE_DEFAULTS = {
 	panelFadeMs: 160,
 	haptic: true,
 	panelLabels: true,
+	...HOVER_DEFAULTS,
 };
 export type SwipeKnobs = typeof SWIPE_DEFAULTS;
 
@@ -70,4 +72,5 @@ export const SWIPE_KNOBS: readonly SwipeKnob[] = [
 	num("panelFadeMs", "Panel fade on commit", 0, 400, 10, "ms"),
 	{ kind: "toggle", key: "haptic", label: "Haptic tick (where supported)" },
 	{ kind: "toggle", key: "panelLabels", label: "Panel labels" },
+	...HOVER_KNOBS,
 ];

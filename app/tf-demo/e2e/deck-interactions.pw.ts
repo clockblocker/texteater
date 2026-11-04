@@ -364,6 +364,8 @@ test("D: toward Close deck the rest of the Deck folds in at once, and back out o
 	await page.waitForTimeout(150);
 	await page.mouse.up();
 	await expect(lastRelease(page)).toHaveText(/^back · short/);
+	/* off the Deck, the hover lets it rest */
+	await page.mouse.move(8, 8, { steps: 4 });
 	await expect
 		.poll(async () => Math.max(...(await shares(page, rest)).map(Math.abs)))
 		.toBeLessThan(0.01);
@@ -428,5 +430,28 @@ test("B: a hovered Deck fans slightly, and settles back while a Card is pressed"
 		.poll(async () => Math.abs(await rotation(back)))
 		.toBeLessThan(0.5);
 	await page.mouse.up();
+	await expect.poll(() => rotation(back)).toBeLessThan(-11);
+});
+
+test("D: a hovered Deck fans, settles back on press, and fans again after a cancel on it", async ({
+	page,
+}) => {
+	await chooseVariant(page, "D · Swipe actions");
+	const card = front(page);
+	const back = frame(page).locator("[data-card-id]").first();
+	const box = await card.boundingBox();
+	if (!box) throw new Error("Missing card geometry");
+	const start = { x: box.x + box.width / 2, y: box.y + 40 };
+	await page.mouse.move(start.x, start.y, { steps: 4 });
+	await expect.poll(() => rotation(back)).toBeLessThan(-11);
+	await page.mouse.down();
+	await expect
+		.poll(async () => Math.abs(await rotation(back)))
+		.toBeLessThan(0.5);
+	await page.mouse.move(start.x - 60, start.y, { steps: 20 });
+	await page.waitForTimeout(150);
+	await page.mouse.move(start.x - 10, start.y, { steps: 10 });
+	await page.mouse.up();
+	await expect(lastRelease(page)).toHaveText(/^back · short/);
 	await expect.poll(() => rotation(back)).toBeLessThan(-11);
 });

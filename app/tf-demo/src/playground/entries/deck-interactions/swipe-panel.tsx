@@ -77,6 +77,7 @@ export function SwipePanel({
 	position,
 	base,
 	z,
+	turn,
 	values,
 	armed,
 	threshold,
@@ -96,6 +97,8 @@ export function SwipePanel({
 	readonly base: number;
 	/** The Card's z-index: the panel shares it and is drawn first, so it lies under the Card and over the Cards behind. */
 	readonly z: MotionValue<number>;
+	/** The Card's lean: the panel shows only once the Card is upright, so a hover's tilt never bares it. */
+	readonly turn: MotionValue<number>;
 	readonly values: PanelValues;
 	readonly armed: boolean;
 	readonly threshold: number;
@@ -128,6 +131,10 @@ export function SwipePanel({
 		Math.min(1, Math.max(0, (Math.abs(p) - 8) / 40)),
 	);
 	const fill = useTransform(values.flood, (f) => tint + (1 - tint) * f);
+	const opacity = useTransform(
+		[values.fade, turn],
+		([f = 1, r = 0]: number[]) => (Math.abs(r) < 0.5 ? f : 0),
+	);
 	const toned = useTransform(values.flood, (f) => 1 - f);
 	const tone = TONE[panel.zone];
 	const Icon = panel.zone === "dismiss" ? XIcon : Maximize2Icon;
@@ -154,7 +161,7 @@ export function SwipePanel({
 				width: rect.w,
 				height: rect.h,
 				zIndex: z,
-				opacity: values.fade,
+				opacity,
 			}}
 		>
 			<motion.div

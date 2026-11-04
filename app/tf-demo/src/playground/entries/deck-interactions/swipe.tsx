@@ -22,6 +22,7 @@ import type { SwipeKnobs } from "./swipe-knobs";
 import { type Panel, type PanelValues, SwipePanel } from "./swipe-panel";
 import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
+import { useDeckHover } from "./use-deck-hover";
 
 /** A strip panel tucks this far under the next Card, past its rounded corners. */
 const TUCK_PX = 16;
@@ -58,7 +59,8 @@ function drawn(slot: Slot): Rect {
 }
 
 /**
- * Where a Card's panel lies and how much of it shows. It stays `inset` px
+ * Where a Card's panel lies and how much of it shows: under the Card where
+ * the hand took it (`anchor`, hover lift and all). It stays `inset` px
  * inside the Card's edges across the axis, past its rounded corners, so
  * only what the Card uncovers along the axis ever shows. For a Card
  * behind, it is the strip above the next Card, tucked under that Card.
@@ -68,10 +70,11 @@ function panelBox(
 	index: number,
 	axis: Axis,
 	inset: number,
+	anchor: { readonly u: number; readonly v: number },
 ) {
 	const slot = slots[index];
 	if (!slot) return null;
-	const box = drawn(slot);
+	const box = drawn({ ...slot, u: anchor.u, v: anchor.v });
 	const next = slots[index + 1];
 	if (next) {
 		const visible = Math.max(0, drawn(next).v - box.v - inset);
@@ -105,7 +108,11 @@ export function SwipeVariant({
 }: VariantProps<SwipeKnobs>) {
 	const deck = useDeck({ frame, motion, readouts, deal, layout: pileSlots });
 	const [held, setHeld] = useState<string | null>(null);
+	/** The Card under the hand from press to the end of its return: the hover lets the Deck be meanwhile. */
+	const [pressed, setPressed] = useState<string | null>(null);
+	const hover = useDeckHover({ deck, motion, knobs, holding: pressed });
 	const [panel, setPanel] = useState<Panel | null>(null);
+	const [anchor, setAnchor] = useState({ u: 0, v: 0 });
 	const [armed, setArmed] = useState(false);
 	const [values] = useState<PanelValues>(() => ({
 		flood: motionValue(0),
@@ -150,13 +157,31 @@ export function SwipeVariant({
 		const z = card.z.get();
 		deck.hold(g.id);
 		card.z.set(z);
+		/* a Card from behind the hover fanned stands up as it starts to slide;
+		   its panel waits until it has */
+		if (Math.abs(card.r.get()) > 0.01)
+			settle(card.r, 0, SPRINGS.settle, motion);
 		if (!caught) {
 			binding.current?.scatter();
 			pull.jump(0);
-			binding.current = bindDeck(deck, g.id, axis, pull, {
+			const bound = bindDeck(deck, g.id, axis, pull, {
 				threshold: knobs.threshold,
 				curve: knobs.collapseCurve,
+				/* the hover's own settle, carried on: settle scales px/s by slow-mo */
+				settle: (value, to, velocity) =>
+					settle(
+						value,
+						to,
+						{
+							stiffness: knobs.hoverStiffness,
+							damping: knobs.hoverDamping,
+						},
+						motion,
+						velocity / motion.timeScale,
+					),
 			});
+			binding.current = bound;
+			setAnchor(bound.anchor);
 			values.flood.jump(0);
 			values.lock.jump(0);
 			values.pop.jump(1);
@@ -199,8 +224,14 @@ export function SwipeVariant({
 	 * Short of the threshold: the pull springs home, keeping the hand's
 	 * speed, and takes the Card and the folded Deck with it. Reduced, the
 	 * spring is critically damped and starts at rest, so it never overshoots.
+	 * Then the hover has the Deck again: fanned if the pointer is still on
+	 * it, at rest if not.
 	 */
-	async function putBack(g: Gesture, speed: number) {
+	async function putBack(
+		g: Gesture,
+		speed: number,
+		at: { readonly x: number; readonly y: number } | null,
+	) {
 		const k = knobs.reducedReturnStiffness;
 		const spec = motion.reduce
 			? { stiffness: k, damping: 2 * Math.sqrt(k) }
@@ -218,6 +249,13 @@ export function SwipeVariant({
 		binding.current = null;
 		deck.release(g.id);
 		setPanel(null);
+		setPressed(null);
+		const over =
+			at &&
+			document
+				.elementFromPoint(at.x, at.y)
+				?.closest("[data-deck-frame] [data-card-id]");
+		if (!over) hover.clear();
 		readouts.set({ phase: "rest" });
 	}
 
@@ -233,6 +271,8 @@ export function SwipeVariant({
 	) {
 		binding.current?.stop();
 		binding.current = null;
+		/* the Deck is leaving or open, and the hover lets either be */
+		setPressed(null);
 		animate(
 			values.fade,
 			0,
@@ -283,7 +323,12 @@ export function SwipeVariant({
 		});
 		const speed = drag ? along(axis, drag).speed : 0;
 		if (verdict.commits) void commit(g, axis, verdict, speed);
-		else void putBack(g, speed);
+		else
+			void putBack(
+				g,
+				speed,
+				drag ? { x: drag.clientX, y: drag.clientY } : null,
+			);
 	}
 
 	function onDown(id: string, event: ReactPointerEvent<HTMLElement>) {
@@ -306,6 +351,8 @@ export function SwipeVariant({
 			start: 0,
 			commits: false,
 		};
+		/* the press turns the hover off: the rest of the Deck settles back */
+		setPressed(id);
 		settle(card.lift, knobs.pressLift, SPRINGS.settle, motion);
 		readouts.set({ phase: "pressed" });
 		if (bound && caught) {
@@ -335,33 +382,38 @@ export function SwipeVariant({
 					return;
 				}
 				settle(card.lift, 0, SPRINGS.settle, motion);
+				setPressed(null);
 				readouts.set({ phase: "rest" });
 				tapCard(deck, taps, id, drag);
 			},
 			cancel: () => {
-				if (g.axis) release(g, null);
-				else settle(card.lift, 0, SPRINGS.settle, motion);
+				if (g.axis) {
+					release(g, null);
+					return;
+				}
+				settle(card.lift, 0, SPRINGS.settle, motion);
+				setPressed(null);
 			},
 		});
 	}
 
 	const index = panel ? deck.order.indexOf(panel.id) : -1;
 	const box = panel
-		? panelBox(deck.slots, index, panel.axis, knobs.panelInset)
+		? panelBox(deck.slots, index, panel.axis, knobs.panelInset, anchor)
 		: null;
-	const slot = panel ? deck.slotOf(panel.id) : undefined;
 	const owner = panel ? deck.valuesOf(panel.id) : null;
 	return (
 		<>
-			{panel && box && slot && owner && deck.status !== "gone" ? (
+			{panel && box && owner && deck.status !== "gone" ? (
 				<SwipePanel
 					key={`${panel.id}-${panel.axis}`}
 					panel={panel}
 					rect={box.rect}
 					visible={box.visible}
 					position={panel.axis === "inline" ? owner.u : owner.v}
-					base={panel.axis === "inline" ? slot.u : slot.v}
+					base={panel.axis === "inline" ? anchor.u : anchor.v}
 					z={owner.z}
+					turn={owner.r}
 					values={values}
 					armed={armed}
 					threshold={knobs.threshold}
@@ -371,7 +423,14 @@ export function SwipeVariant({
 					reduce={motion.reduce}
 				/>
 			) : null}
-			<DeckCards deck={deck} rtl={rtl} held={held} onDown={onDown} />
+			<DeckCards
+				deck={deck}
+				rtl={rtl}
+				held={held}
+				onDown={onDown}
+				onEnter={hover.onEnter}
+				onLeave={hover.onLeave}
+			/>
 		</>
 	);
 }
