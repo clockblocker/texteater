@@ -1,136 +1,34 @@
 /// <reference lib="dom" />
-import { expect, type Locator, type Page, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 import { SPLITS_PARKED } from "../src/workspace/compass/splits";
+import {
+	cards,
+	covers,
+	dealBanken,
+	frame,
+	openBanken,
+	rootedGround,
+	rootedPane,
+	trail,
+	word,
+} from "./support/workspace";
 
 /**
- * The main app on the Compass renderer (tf-demo ADR 0003, 0008): one URL,
- * a Rooted Pane whose Ground line runs Menu › Library › Scroll, Decks dealt
- * by a click, Covers pushed by Links, and Workspace Persistence. While
- * splits are parked (tf-demo ADR 0013), one Pane shows at every width.
- *
- * The Deck tests click words of the Banken Scroll. Once its occurrences are
- * attested, a click presents the stored route and runs no resolution; on a
- * fresh backend the first run pays for intake and one resolution.
+ * The main app on the Compass renderer (tf-demo ADR 0003, 0008): a Rooted
+ * Pane whose Ground line runs Menu › Library › Scroll, spelled in the URL as
+ * its Address (tf-demo ADR 0015), Decks dealt by a click, Covers pushed by
+ * Links, and Workspace Persistence. While splits are parked (tf-demo ADR
+ * 0013), one Pane shows at every width. `workspace-history.pw.ts` walks the
+ * browser's Back and Forward.
  */
-
-const BANKEN_TEXT = "Die Banken sind geöffnet. Morgen bleiben sie geschlossen.";
 
 test.use({ viewport: { width: 1600, height: 1000 } });
 
-function frame(page: Page): Locator {
-	return page.locator("[data-deck-frame]");
-}
-
-function rootedPane(page: Page): Locator {
-	return frame(page).locator('[data-pane-kind="rooted"]');
-}
-
-/** The Rooted Pane's Ground, drawn over the Panes like every Note. */
-function rootedGround(page: Page): Locator {
-	return frame(page).locator('[data-form="ground"][data-pane="pane-1"]');
-}
-
-function trail(page: Page): Locator {
-	return rootedPane(page).getByRole("navigation", { name: "Trail" });
-}
-
-function cards(page: Page): Locator {
-	return frame(page).locator('[data-form="card"]');
-}
-
-function covers(page: Page): Locator {
-	return frame(page).locator('[data-form="sheet"]');
-}
-
-function word(scope: Locator, text: string): Locator {
-	return scope
-		.locator('[data-slot="reader-segment"]')
-		.filter({ hasText: new RegExp(`^${text}$`) });
-}
-
-/**
- * The Banken Scroll, opened as the Rooted Pane's Ground. The local backend
- * is long-lived, so other stored Scrolls may start with the same words;
- * submitting the text through "Add a text" opens the one Scroll stored under
- * its submission key, with no intake run, and stores it on a fresh backend.
- */
-async function openBanken(page: Page) {
-	/* a fresh backend runs intake here and a resolution on the first click */
-	test.setTimeout(90_000);
-	await page.goto("/");
-	await page.getByRole("button", { name: "Add a text" }).click();
-	const dialog = page.getByRole("dialog", { name: "Add a text" });
-	await dialog
-		.getByLabel("German text, or a link to an article")
-		.fill(BANKEN_TEXT);
-	await dialog.getByRole("button", { name: "Analyze text" }).click();
-	await expect(dialog).toHaveCount(0, { timeout: 60_000 });
-	await expect(trail(page)).toContainText("Die Banken sind geöffnet.");
-	const reader = rootedGround(page).locator('[data-slot="text-reader"]');
-	await expect(reader).toBeVisible();
-	return reader;
-}
-
-/** The Note kinds of the dealt Cards, back to front, `?` for one still loading. */
-function dealtKinds(page: Page): Promise<string> {
-	return cards(page).evaluateAll((elements) =>
-		elements
-			.map(
-				(card) =>
-					card
-						.querySelector("[data-note-kind]")
-						?.getAttribute("data-note-kind") ?? "?",
-			)
-			.join(" "),
-	);
-}
-
-function dealtCard(page: Page, kind: string): Locator {
-	return cards(page).filter({
-		has: page.locator(`[data-note-kind="${kind}"]`),
-	});
-}
-
-/**
- * A click on "Banken" deals its story (tf-demo ADR 0011), back to front: the
- * Attestation, since `Die Banken` has two members; the Surface, since plural
- * `Banken` is not its Lemma's Grundform; the Lemma only when `Bank` holds more
- * than one stored Reading, which turns on what the local backend has
- * resolved; and the Reading. The count dealt is returned for the steps that
- * follow.
- */
-async function dealBanken(page: Page): Promise<number> {
-	const reader = rootedGround(page).locator('[data-slot="text-reader"]');
-	await word(reader, "Banken").click();
-	await expect
-		.poll(() => dealtKinds(page), { timeout: 60_000 })
-		.toMatch(/^Attestation Surface (Lemma )?Reading$/);
-	await expect(
-		dealtCard(page, "Attestation").locator("[data-attestation-title]"),
-	).toHaveText("Die Banken");
-	await expect(
-		dealtCard(page, "Surface").locator("[data-heading]"),
-	).toContainText("plural of");
-	const dealt = (await dealtKinds(page)).split(" ").length;
-	if (dealt === 4)
-		await expect(
-			dealtCard(page, "Lemma").locator("[data-heading]"),
-		).toContainText(/\b([2-9]|\d{2,}) readings/);
-	await expect(
-		dealtCard(page, "Reading").locator("[data-heading]"),
-	).toContainText("Bank");
-	await expect(word(reader, "Banken")).toHaveAttribute(
-		"aria-pressed",
-		"true",
-	);
-	return dealt;
-}
-
-test("one URL: the Library is the Ground's first selection and Settings sits beside it", async ({
+test("the URL spells the Ground line: the Library is its first selection and Settings sits beside it", async ({
 	page,
 }) => {
 	await page.goto("/library");
-	await expect(page).toHaveURL("/");
+	await expect(page).toHaveURL("/library");
 	await expect(trail(page)).toHaveText(/Menu\s*›\s*Library/i);
 	await expect(page.getByRole("heading", { name: "Library" })).toBeVisible();
 	/* the sidebar keeps only the development Playground link */
@@ -142,13 +40,14 @@ test("one URL: the Library is the Ground's first selection and Settings sits bes
 		.getByRole("button", { name: "Back to Menu" })
 		.click();
 	await expect(trail(page)).toHaveText(/^Menu$/i);
+	await expect(page).toHaveURL("/menu");
 	const menu = rootedPane(page).locator("[data-ground-item]");
 	await expect(menu).toHaveText(["Library", "Settings"]);
 
 	await menu.filter({ hasText: "Settings" }).click();
 	await expect(trail(page)).toHaveText(/Menu\s*›\s*Settings/i);
 	await expect(page.getByRole("heading", { name: "Settings" })).toBeVisible();
-	await expect(page).toHaveURL("/");
+	await expect(page).toHaveURL("/settings");
 
 	await rootedPane(page)
 		.getByRole("button", { name: "Back to Menu" })
