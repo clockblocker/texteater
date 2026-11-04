@@ -1,5 +1,6 @@
+import { useAtom } from "@effect/atom-react";
 import { SlidersHorizontalIcon, XIcon } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { CompassModel } from "@/workspace/compass/deck-models/drag-deck";
 import {
 	DEFAULT_DECK_MOTION,
@@ -9,12 +10,8 @@ import type { Entry } from "./catalog";
 import { KEEP, type Recording } from "./trace";
 import { TraceView } from "./trace-view";
 import { useTrace } from "./use-trace";
-import {
-	PARAMETERS,
-	readVariants,
-	saveVariants,
-	type Variant,
-} from "./variants";
+import { PARAMETERS } from "./variants";
+import { variantsAtom } from "./variants-atoms";
 
 type Kind = "baseline" | "candidate";
 type Recordings = Readonly<Record<Kind, readonly Recording[]>>;
@@ -70,7 +67,7 @@ function Specimen({
 }
 
 export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
-	const [variants, setVariants] = useState<Variant[]>(readVariants);
+	const [variants, setVariants] = useAtom(variantsAtom);
 	const [selected, setSelected] = useState("baseline");
 	const [compare, setCompare] = useState(true);
 	const [revision, setRevision] = useState(0);
@@ -100,7 +97,6 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 		(shipped) => `preset:${shipped.key}` === selected,
 	);
 	const candidate = variant ?? preset;
-	useEffect(() => saveVariants(variants), [variants]);
 	const patch = (motion: DeckMotionOverrides) =>
 		setVariants((current) =>
 			current.map((variant) =>

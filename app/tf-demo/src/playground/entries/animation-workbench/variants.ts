@@ -1,11 +1,6 @@
-import { isRecord } from "common-utils";
+import * as Effect from "effect/Effect";
+import * as Schema from "effect/Schema";
 import type { DeckMotionOverrides } from "@/workspace/motion/runtime-config";
-
-export type Variant = {
-	readonly id: string;
-	readonly name: string;
-	readonly motion: DeckMotionOverrides;
-};
 
 export type Parameter = {
 	readonly key: Exclude<keyof DeckMotionOverrides, "specs">;
@@ -154,52 +149,29 @@ export const PARAMETERS: readonly Parameter[] = [
 	},
 ];
 
-const STORAGE_KEY = "deck-motion-variants-v1";
-
-/** Saved settings are optional; the baseline always comes from the runtime. */
-export function readVariants(): Variant[] {
-	try {
-		const saved: unknown = JSON.parse(
-			localStorage.getItem(STORAGE_KEY) ?? "[]",
-		);
-		if (!Array.isArray(saved)) return [];
-		return saved.flatMap((value: unknown) => {
-			if (
-				typeof value !== "object" ||
-				value === null ||
-				!("id" in value) ||
-				!("name" in value) ||
-				!("motion" in value) ||
-				typeof value.id !== "string" ||
-				typeof value.name !== "string" ||
-				typeof value.motion !== "object" ||
-				value.motion === null
-			)
-				return [];
-			const motion: DeckMotionOverrides = {};
-			for (const parameter of PARAMETERS) {
-				const next = isRecord(value.motion)
-					? value.motion[parameter.key]
-					: undefined;
-				if (
-					typeof next === "number" &&
-					Number.isFinite(next) &&
-					next >= parameter.min &&
-					next <= parameter.max
-				)
-					motion[parameter.key] = next;
-			}
-			return [{ id: value.id, name: value.name, motion }];
-		});
-	} catch {
-		return [];
-	}
+/**
+ * One knob's saved value: a finite number in the knob's range. Anything else,
+ * such as a value a narrowed range no longer allows, is dropped, so the knob
+ * falls back to the runtime's baseline and the rest of the variant survives.
+ */
+function knob({ min, max }: Parameter) {
+	return Schema.optionalKey(
+		Schema.Finite.check(
+			Schema.isBetween({ minimum: min, maximum: max }),
+		).pipe(Schema.catchDecoding(() => Effect.succeedNone)),
+	);
 }
 
-export function saveVariants(variants: readonly Variant[]): void {
-	try {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(variants));
-	} catch {
-		// Private browsing can deny storage; variants still work for this visit.
-	}
-}
+/** Saved knobs only; the baseline always comes from the runtime. */
+const VariantMotion = Schema.Struct(
+	Object.fromEntries(
+		PARAMETERS.map((parameter) => [parameter.key, knob(parameter)]),
+	) as Record<Parameter["key"], ReturnType<typeof knob>>,
+);
+
+/** A named set of knob values the workbench compares with the baseline. */
+export const VariantSchema = Schema.Struct({
+	id: Schema.String,
+	name: Schema.String,
+	motion: VariantMotion,
+});
