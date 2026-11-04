@@ -33,6 +33,7 @@
 	"dependencies": {
 		"@convex-dev/rate-limiter": "^0.4.0",
 		"@convex-dev/react-query": "^0.1.0",
+		"@effect/atom-react": "4.1.2",
 		"@tailwindcss/vite": "^4",
 		"@tanstack/react-query": "^5.101.4",
 		"common-utils": "workspace:^",
@@ -44,13 +45,14 @@
 		"dumling": "workspace:^",
 		"dumrel": "workspace:^",
 		"dumcorpus": "workspace:^",
-		"effect": "4.0.0",
+		"effect": "4.1.2",
 		"lego": "workspace:^",
 		"linkedom": "0.18.13",
 		"lucide-react": "^1.31.0",
 		"motion": "^13.1.1",
 		"react": "^19.2.6",
 		"react-dom": "^19.2.6",
+		"scheduler": "0.27.0",
 		"zod": "4.4.3"
 	},
 	"devDependencies": {
