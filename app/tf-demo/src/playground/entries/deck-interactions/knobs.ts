@@ -4,6 +4,8 @@
  * the wrong type or out of range falls back to its default, alone.
  */
 
+import { SWIPE_DEFAULTS, SWIPE_KNOBS, type SwipeKnobs } from "./swipe-knobs";
+
 export const VARIANT_KEYS = ["table", "swipe"] as const;
 export type VariantKey = (typeof VARIANT_KEYS)[number];
 
@@ -114,23 +116,6 @@ const TABLE_KNOBS: readonly Knob<TableKnobs>[] = [
 		label: "Show targets",
 		options: SHOW_TARGETS,
 	},
-];
-
-const SWIPE_DEFAULTS = {
-	detent: 96,
-	resistance: 0.15,
-	panelLabels: true,
-	axisLock: 10,
-	flickSpeed: 0.5,
-};
-export type SwipeKnobs = typeof SWIPE_DEFAULTS;
-
-const SWIPE_KNOBS: readonly Knob<SwipeKnobs>[] = [
-	num("detent", "Detent", 40, 200, 2, "px"),
-	num("resistance", "Resistance", 0, 0.6, 0.01),
-	toggle("panelLabels", "Panel labels"),
-	num("axisLock", "Axis lock", 2, 40, 1, "px"),
-	FLICK,
 ];
 
 export type KnobsOf = {

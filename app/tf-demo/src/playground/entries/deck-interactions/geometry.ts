@@ -18,7 +18,7 @@ export type Rect = {
 export type Slot = Rect & { readonly r: number; readonly s: number };
 
 /** How far ahead a release reads the hand: `project(v, 0.99)`. */
-export const PROJECTION_MS = 99;
+const PROJECTION_MS = 99;
 /** A zone is left only this far past the line that entered it. */
 export const HYSTERESIS_PX = 12;
 /** How far past the Deck's resting box a drop still counts as back. */
