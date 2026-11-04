@@ -127,8 +127,16 @@ test("a nested book: Library, Codex, status, next across Sections, and back down
 		ground(page).locator('[data-slot="text-reader"]'),
 	).toContainText("Hinter dem Wald lag ein kleines Dorf.");
 
-	/* back steps down one rung at a time, through the Sections next walked */
-	await back(page, "Abschnitt A");
+	/* back steps down one rung at a time, through the Sections next walked;
+	   the browser's Back does what ← does (tf-demo ADR 0015) */
+	await page.goBack();
+	await expectTrail(page, [
+		"Menu",
+		"Library",
+		"Die lange Reise",
+		"Teil 2",
+		"Abschnitt A",
+	]);
 	await expect(entry(page, "Kapitel 3")).toHaveAttribute(
 		"data-status",
 		"InProgress",

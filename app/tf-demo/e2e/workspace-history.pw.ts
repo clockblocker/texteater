@@ -152,3 +152,15 @@ test("a stale id shows Not found, and Back still walks the line", async ({
 	await expect(covers(page)).toHaveCount(0);
 	await expect(page).toHaveURL("/library");
 });
+
+test("Close all goes back to the Library's entry, so Back reaches the Menu", async ({
+	page,
+}) => {
+	await page.goto("/settings");
+	await page.getByRole("button", { name: "Close all sheets" }).click();
+	await expect(page).toHaveURL("/library");
+	await expect(trail(page)).toHaveText(/Menu\s*›\s*Library/i);
+	await page.goBack();
+	await expect(page).toHaveURL("/menu");
+	await expect(trail(page)).toHaveText(/^Menu$/i);
+});
