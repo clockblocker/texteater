@@ -14,7 +14,15 @@ export const SHARED_RSS_IMPORTS = [
 	"dumrel",
 	"dumdict/planning",
 ] as const;
-const labels = ["effect/Effect", ...SHARED_RSS_IMPORTS];
+/**
+ * Stage 0 imports an empty module, so the deltas charge the Dum chain from a
+ * bare runtime. Convex's 64 MB isolate loads Dum without Effect: every
+ * tf-demo module that imports Effect is a `"use node"` action, and no Dum
+ * package depends on it.
+ */
+export const SHARED_RSS_BASELINE =
+	"./tooling/dum-entrypoint-rss/empty-module.ts";
+const labels = [SHARED_RSS_BASELINE, ...SHARED_RSS_IMPORTS];
 export type SharedRssSample = readonly {
 	readonly specifier: string;
 	readonly peakBytes: number;
@@ -87,8 +95,8 @@ export function summarizeSharedRss(samples: readonly SharedRssSample[]) {
 	if (finalStage === undefined) throw new Error("No shared RSS imports");
 	const addedPeakMedianBytes = finalStage.cumulativePeakMedianBytes;
 	return {
-		baseline: "effect/Effect already loaded in the same process",
-		metric: "Median of paired final peak RSS minus post-Effect peak RSS; sequential imports, no forced GC",
+		baseline: "an empty module imported in the same process",
+		metric: "Median of paired final peak RSS minus empty-module peak RSS; sequential imports, no forced GC",
 		limitations:
 			"Local published-package import replay, not deployed tf-demo memory; excludes provider SDK, app initialization, and operations. Stage medians need not sum to the total median.",
 		budgetBytes: RSS_SHARED_BUDGET_BYTES,
@@ -100,7 +108,7 @@ export function summarizeSharedRss(samples: readonly SharedRssSample[]) {
 }
 export type SharedRssReport = ReturnType<typeof summarizeSharedRss>;
 
-/** Measures one staged package set in seven fresh processes with Effect preloaded. */
+/** Measures one staged package set in seven fresh processes. */
 export async function measureSharedRss(
 	runtimeRoot: string,
 ): Promise<SharedRssReport> {
@@ -137,10 +145,10 @@ console.log(JSON.stringify(points));
 
 export function formatSharedRss(report: SharedRssReport): string {
 	return `${[
-		`${report.passed ? "PASS" : "FAIL"} shared Dum import RSS: +${mib(report.addedPeakMedianBytes)} MiB after Effect; ceiling ${mib(report.budgetBytes)} MiB`,
+		`${report.passed ? "PASS" : "FAIL"} shared Dum import RSS: +${mib(report.addedPeakMedianBytes)} MiB over an empty module; ceiling ${mib(report.budgetBytes)} MiB`,
 		...report.stages.map(
 			(stage) =>
-				`  ${stage.specifier}: +${mib(stage.addedPeakMedianBytes)} MiB at this step; +${mib(stage.cumulativePeakMedianBytes)} MiB since Effect`,
+				`  ${stage.specifier}: +${mib(stage.addedPeakMedianBytes)} MiB at this step; +${mib(stage.cumulativePeakMedianBytes)} MiB since the empty module`,
 		),
 		"  Seven-process median of paired peak deltas. Local import replay; not deployed tf-demo or operation memory.",
 	].join("\n")}\n`;

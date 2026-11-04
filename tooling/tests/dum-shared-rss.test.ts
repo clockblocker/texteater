@@ -1,13 +1,14 @@
 import { expect, test } from "bun:test";
 import {
 	formatSharedRss,
+	SHARED_RSS_BASELINE,
 	SHARED_RSS_IMPORTS,
 	summarizeSharedRss,
 } from "../dum-entrypoint-rss/shared";
 
 const MiB = 1048576;
 const sample = (baseline: number, delta: number) => [
-	{ specifier: "effect/Effect", peakBytes: baseline },
+	{ specifier: SHARED_RSS_BASELINE, peakBytes: baseline },
 	...SHARED_RSS_IMPORTS.map((specifier, index) => ({
 		specifier,
 		peakBytes:
@@ -24,7 +25,7 @@ test("paired deltas exclude already-loaded memory before taking the median", () 
 	expect(result.addedPeakMedianBytes).toBe(0);
 	expect(result.passed).toBe(true);
 	expect(formatSharedRss(result)).toContain(
-		"+0.000 MiB after Effect; ceiling 30.000 MiB",
+		"+0.000 MiB over an empty module; ceiling 30.000 MiB",
 	);
 });
 

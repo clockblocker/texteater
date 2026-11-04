@@ -1,4 +1,4 @@
-/** Whole-chain import headroom over preloaded Effect; observed baseline is about 22 MiB. */
+/** Whole-chain import headroom over an empty module; observed cost is about 27.5 MiB. */
 export const RSS_SHARED_BUDGET_BYTES = 30 * 1024 * 1024;
 
 const MiB = 1024 * 1024;
@@ -13,7 +13,7 @@ export function evaluateSharedRss(addedPeakMedianBytes: number) {
 		violations: passed
 			? []
 			: [
-					"shared import peak delta is invalid or exceeds 30 MiB after Effect",
+					"shared import peak delta is invalid or exceeds 30 MiB over an empty module",
 				],
 	};
 }

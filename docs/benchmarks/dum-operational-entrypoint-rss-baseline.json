@@ -1,161 +1,161 @@
 {
 	"shared": {
-		"baseline": "effect/Effect already loaded in the same process",
-		"metric": "Median of paired final peak RSS minus post-Effect peak RSS; sequential imports, no forced GC",
+		"baseline": "an empty module imported in the same process",
+		"metric": "Median of paired final peak RSS minus empty-module peak RSS; sequential imports, no forced GC",
 		"limitations": "Local published-package import replay, not deployed tf-demo memory; excludes provider SDK, app initialization, and operations. Stage medians need not sum to the total median.",
 		"budgetBytes": 31457280,
-		"addedPeakMedianBytes": 21217280,
+		"addedPeakMedianBytes": 28803072,
 		"passed": true,
 		"violations": [],
 		"stages": [
 			{
 				"specifier": "dumling",
-				"addedPeakMedianBytes": 3653632,
-				"cumulativePeakMedianBytes": 3653632
+				"addedPeakMedianBytes": 7225344,
+				"cumulativePeakMedianBytes": 7225344
 			},
 			{
 				"specifier": "dumrel",
-				"addedPeakMedianBytes": 2637824,
-				"cumulativePeakMedianBytes": 6569984
+				"addedPeakMedianBytes": 2932736,
+				"cumulativePeakMedianBytes": 10207232
 			},
 			{
 				"specifier": "dumdict/planning",
-				"addedPeakMedianBytes": 15368192,
-				"cumulativePeakMedianBytes": 21217280
+				"addedPeakMedianBytes": 18579456,
+				"cumulativePeakMedianBytes": 28803072
 			}
 		],
 		"samples": [
 			[
 				{
-					"specifier": "effect/Effect",
-					"peakBytes": 31621120
+					"specifier": "./tooling/dum-entrypoint-rss/empty-module.ts",
+					"peakBytes": 16547840
 				},
 				{
 					"specifier": "dumling",
-					"peakBytes": 35274752
+					"peakBytes": 23904256
 				},
 				{
 					"specifier": "dumrel",
-					"peakBytes": 38240256
+					"peakBytes": 26836992
 				},
 				{
 					"specifier": "dumdict/planning",
-					"peakBytes": 53198848
+					"peakBytes": 45056000
 				}
 			],
 			[
 				{
-					"specifier": "effect/Effect",
-					"peakBytes": 32342016
+					"specifier": "./tooling/dum-entrypoint-rss/empty-module.ts",
+					"peakBytes": 16515072
 				},
 				{
 					"specifier": "dumling",
-					"peakBytes": 35618816
+					"peakBytes": 23838720
 				},
 				{
 					"specifier": "dumrel",
-					"peakBytes": 37748736
+					"peakBytes": 26738688
 				},
 				{
 					"specifier": "dumdict/planning",
-					"peakBytes": 53559296
+					"peakBytes": 45318144
 				}
 			],
 			[
 				{
-					"specifier": "effect/Effect",
-					"peakBytes": 30834688
+					"specifier": "./tooling/dum-entrypoint-rss/empty-module.ts",
+					"peakBytes": 16515072
 				},
 				{
 					"specifier": "dumling",
-					"peakBytes": 34914304
+					"peakBytes": 23707648
 				},
 				{
 					"specifier": "dumrel",
-					"peakBytes": 37781504
+					"peakBytes": 26722304
 				},
 				{
 					"specifier": "dumdict/planning",
-					"peakBytes": 53149696
+					"peakBytes": 45137920
 				}
 			],
 			[
 				{
-					"specifier": "effect/Effect",
-					"peakBytes": 32489472
+					"specifier": "./tooling/dum-entrypoint-rss/empty-module.ts",
+					"peakBytes": 16482304
 				},
 				{
 					"specifier": "dumling",
-					"peakBytes": 35291136
+					"peakBytes": 23724032
 				},
 				{
 					"specifier": "dumrel",
-					"peakBytes": 36126720
+					"peakBytes": 26591232
 				},
 				{
 					"specifier": "dumdict/planning",
-					"peakBytes": 51970048
+					"peakBytes": 44810240
 				}
 			],
 			[
 				{
-					"specifier": "effect/Effect",
-					"peakBytes": 31850496
+					"specifier": "./tooling/dum-entrypoint-rss/empty-module.ts",
+					"peakBytes": 16482304
 				},
 				{
 					"specifier": "dumling",
-					"peakBytes": 35848192
+					"peakBytes": 23658496
 				},
 				{
 					"specifier": "dumrel",
-					"peakBytes": 38486016
+					"peakBytes": 26705920
 				},
 				{
 					"specifier": "dumdict/planning",
-					"peakBytes": 53854208
+					"peakBytes": 45301760
 				}
 			],
 			[
 				{
-					"specifier": "effect/Effect",
-					"peakBytes": 32063488
+					"specifier": "./tooling/dum-entrypoint-rss/empty-module.ts",
+					"peakBytes": 16515072
 				},
 				{
 					"specifier": "dumling",
-					"peakBytes": 34996224
+					"peakBytes": 23625728
 				},
 				{
 					"specifier": "dumrel",
-					"peakBytes": 36667392
+					"peakBytes": 26640384
 				},
 				{
 					"specifier": "dumdict/planning",
-					"peakBytes": 49381376
+					"peakBytes": 45481984
 				}
 			],
 			[
 				{
-					"specifier": "effect/Effect",
-					"peakBytes": 30392320
+					"specifier": "./tooling/dum-entrypoint-rss/empty-module.ts",
+					"peakBytes": 16547840
 				},
 				{
 					"specifier": "dumling",
-					"peakBytes": 34045952
+					"peakBytes": 23773184
 				},
 				{
 					"specifier": "dumrel",
-					"peakBytes": 36962304
+					"peakBytes": 26656768
 				},
 				{
 					"specifier": "dumdict/planning",
-					"peakBytes": 51462144
+					"peakBytes": 45350912
 				}
 			]
 		]
 	},
 	"baseline": {
-		"medianBytes": 21200896,
-		"samplesBytes": [21856256, 21184512, 21200896, 21200896, 21184512]
+		"medianBytes": 21594112,
+		"samplesBytes": [21594112, 21594112, 21594112, 21594112, 21594112]
 	},
 	"contract": {
 		"baseline": "empty imported Bun module",
@@ -173,21 +173,21 @@
 				"description": "parse unit"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 5324800,
-				"deltaMiB": 5.078,
-				"medianBytes": 26525696,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 5079040,
+				"deltaMiB": 4.844,
+				"medianBytes": 26673152,
 				"samplesBytes": [
-					27131904, 26558464, 26492928, 26525696, 26394624
+					27328512, 26656768, 26673152, 26673152, 26656768
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 6094848,
-				"deltaMiB": 5.813,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 5701632,
+				"deltaMiB": 5.438,
 				"medianBytes": 27295744,
 				"samplesBytes": [
-					27672576, 27230208, 27181056, 27295744, 27459584
+					27344896, 27361280, 27033600, 27082752, 27295744
 				]
 			},
 			"reachability": {
@@ -215,21 +215,21 @@
 				"description": "validate feature bag"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 2310144,
-				"deltaMiB": 2.203,
-				"medianBytes": 23511040,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 1785856,
+				"deltaMiB": 1.703,
+				"medianBytes": 23379968,
 				"samplesBytes": [
-					23511040, 23511040, 23527424, 23478272, 23543808
+					23379968, 23363584, 23379968, 23347200, 23396352
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 2555904,
-				"deltaMiB": 2.438,
-				"medianBytes": 23756800,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 1982464,
+				"deltaMiB": 1.891,
+				"medianBytes": 23576576,
 				"samplesBytes": [
-					23740416, 23740416, 23773184, 23756800, 23756800
+					23543808, 23625728, 23543808, 23625728, 23576576
 				]
 			},
 			"reachability": {
@@ -258,21 +258,21 @@
 				"description": "knowledge projection"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 8142848,
-				"deltaMiB": 7.766,
-				"medianBytes": 29343744,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 7847936,
+				"deltaMiB": 7.484,
+				"medianBytes": 29442048,
 				"samplesBytes": [
-					29491200, 29229056, 29294592, 29343744, 29343744
+					29442048, 29196288, 29261824, 29655040, 29655040
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 17072128,
-				"deltaMiB": 16.281,
-				"medianBytes": 38273024,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 16187392,
+				"deltaMiB": 15.438,
+				"medianBytes": 37781504,
 				"samplesBytes": [
-					38158336, 38338560, 38273024, 38240256, 38633472
+					37978112, 37928960, 37666816, 37781504, 37715968
 				]
 			},
 			"reachability": {
@@ -313,21 +313,21 @@
 				"description": "parse record"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 26083328,
-				"deltaMiB": 24.875,
-				"medianBytes": 47284224,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 26165248,
+				"deltaMiB": 24.953,
+				"medianBytes": 47759360,
 				"samplesBytes": [
-					47628288, 46907392, 47759360, 47153152, 47284224
+					46891008, 48021504, 47759360, 47104000, 47775744
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 21200896,
+				"baselineMedianBytes": 21594112,
 				"deltaBytes": 26312704,
 				"deltaMiB": 25.094,
-				"medianBytes": 47513600,
+				"medianBytes": 47906816,
 				"samplesBytes": [
-					47513600, 47087616, 47595520, 48168960, 47251456
+					45219840, 47988736, 47022080, 47906816, 48005120
 				]
 			},
 			"reachability": {
@@ -360,21 +360,21 @@
 				"description": "pending identity"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 5373952,
-				"deltaMiB": 5.125,
-				"medianBytes": 26574848,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 5079040,
+				"deltaMiB": 4.844,
+				"medianBytes": 26673152,
 				"samplesBytes": [
-					26574848, 26574848, 26574848, 26558464, 26591232
+					26673152, 27000832, 26640384, 26673152, 26378240
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 6029312,
-				"deltaMiB": 5.75,
-				"medianBytes": 27230208,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 6062080,
+				"deltaMiB": 5.781,
+				"medianBytes": 27656192,
 				"samplesBytes": [
-					27623424, 27262976, 27230208, 27213824, 27099136
+					27279360, 27901952, 28000256, 27262976, 27656192
 				]
 			},
 			"reachability": {
@@ -398,21 +398,21 @@
 				"description": "plan reading entry"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 25624576,
-				"deltaMiB": 24.438,
-				"medianBytes": 46825472,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 26886144,
+				"deltaMiB": 25.641,
+				"medianBytes": 48480256,
 				"samplesBytes": [
-					46825472, 47136768, 47153152, 44105728, 46809088
+					47792128, 47988736, 48480256, 48562176, 48660480
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 29769728,
-				"deltaMiB": 28.391,
-				"medianBytes": 50970624,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 29622272,
+				"deltaMiB": 28.25,
+				"medianBytes": 51216384,
 				"samplesBytes": [
-					50823168, 51937280, 50692096, 51150848, 50970624
+					51085312, 51101696, 51363840, 51281920, 51216384
 				]
 			},
 			"reachability": {
@@ -440,21 +440,21 @@
 				"description": "project lemma tables"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 7618560,
-				"deltaMiB": 7.266,
-				"medianBytes": 28819456,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 7651328,
+				"deltaMiB": 7.297,
+				"medianBytes": 29245440,
 				"samplesBytes": [
-					29245440, 28819456, 28672000, 28868608, 28704768
+					29491200, 29229056, 29196288, 29245440, 29392896
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 9306112,
-				"deltaMiB": 8.875,
-				"medianBytes": 30507008,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 9273344,
+				"deltaMiB": 8.844,
+				"medianBytes": 30867456,
 				"samplesBytes": [
-					31080448, 30392320, 30523392, 30507008, 30408704
+					30736384, 30965760, 30867456, 30900224, 30621696
 				]
 			},
 			"reachability": {
@@ -501,21 +501,21 @@
 				"description": "Validate through the shared rule protocol"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 2752512,
-				"deltaMiB": 2.625,
-				"medianBytes": 23953408,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 2670592,
+				"deltaMiB": 2.547,
+				"medianBytes": 24264704,
 				"samplesBytes": [
-					23920640, 23871488, 23953408, 23953408, 23969792
+					24248320, 24248320, 24264704, 24264704, 24281088
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 4931584,
-				"deltaMiB": 4.703,
-				"medianBytes": 26132480,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 4308992,
+				"deltaMiB": 4.109,
+				"medianBytes": 25903104,
 				"samplesBytes": [
-					26066944, 26132480, 26132480, 26132480, 26148864
+					25903104, 25886720, 25870336, 25903104, 25952256
 				]
 			},
 			"reachability": {
@@ -542,21 +542,21 @@
 				"description": "Validate through the shared rule protocol"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 3588096,
-				"deltaMiB": 3.422,
-				"medianBytes": 24788992,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 3735552,
+				"deltaMiB": 3.563,
+				"medianBytes": 25329664,
 				"samplesBytes": [
-					24854528, 24723456, 24756224, 24788992, 24788992
+					25100288, 25280512, 25362432, 25329664, 25346048
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 6750208,
-				"deltaMiB": 6.438,
-				"medianBytes": 27951104,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 6291456,
+				"deltaMiB": 6,
+				"medianBytes": 27885568,
 				"samplesBytes": [
-					27951104, 27951104, 27951104, 28065792, 28000256
+					27885568, 27836416, 27901952, 27820032, 27885568
 				]
 			},
 			"reachability": {
@@ -579,21 +579,21 @@
 				"description": "Write canonical JSON"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 1097728,
-				"deltaMiB": 1.047,
-				"medianBytes": 22298624,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 1081344,
+				"deltaMiB": 1.031,
+				"medianBytes": 22675456,
 				"samplesBytes": [
-					22282240, 22265856, 22298624, 22298624, 22331392
+					22724608, 22691840, 22675456, 22659072, 22659072
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 1687552,
-				"deltaMiB": 1.609,
-				"medianBytes": 22888448,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 1753088,
+				"deltaMiB": 1.672,
+				"medianBytes": 23347200,
 				"samplesBytes": [
-					22970368, 22855680, 22872064, 22888448, 22921216
+					23330816, 23347200, 23314432, 23363584, 23347200
 				]
 			},
 			"reachability": {
@@ -612,21 +612,21 @@
 				"description": "Validate through the shared rule protocol"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 688128,
-				"deltaMiB": 0.656,
-				"medianBytes": 21889024,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 671744,
+				"deltaMiB": 0.641,
+				"medianBytes": 22265856,
 				"samplesBytes": [
-					21839872, 21889024, 21856256, 21905408, 21905408
+					22265856, 22265856, 22298624, 22315008, 22200320
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 21200896,
-				"deltaBytes": 1327104,
-				"deltaMiB": 1.266,
-				"medianBytes": 22528000,
+				"baselineMedianBytes": 21594112,
+				"deltaBytes": 1310720,
+				"deltaMiB": 1.25,
+				"medianBytes": 22904832,
 				"samplesBytes": [
-					22528000, 22544384, 22511616, 22511616, 22528000
+					22904832, 22904832, 22904832, 22904832, 22921216
 				]
 			},
 			"reachability": {
@@ -650,9 +650,9 @@
 	"environment": {
 		"arch": "arm64",
 		"bunVersion": "1.4.2",
-		"capturedAt": "2026-10-21T07:49:31.955Z",
+		"capturedAt": "2026-11-04T06:24:36.641Z",
 		"packageSourcesDirty": false,
 		"platform": "darwin",
-		"sourceCommit": "10daabaac40eef53d98579a47942a2793f961788"
+		"sourceCommit": "98654d94f789587178cce11fd4e3793d99b5351a"
 	}
 }

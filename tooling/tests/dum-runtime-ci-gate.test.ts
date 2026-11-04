@@ -101,7 +101,7 @@ describe("operational RSS CI contract", () => {
 		).toEqual(["bun", "tooling/dum-runtime-verification/verify.ts"]);
 	});
 
-	test("shared chain has one inclusive 30 MiB ceiling after Effect", () => {
+	test("shared chain has one inclusive 30 MiB ceiling over an empty module", () => {
 		expect(RSS_SHARED_BUDGET_BYTES).toBe(30 * 1024 * 1024);
 		expect(evaluateSharedRss(RSS_SHARED_BUDGET_BYTES).passed).toBe(true);
 		expect(evaluateSharedRss(RSS_SHARED_BUDGET_BYTES + 1).passed).toBe(
