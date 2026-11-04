@@ -1,13 +1,23 @@
 import {
+	findPane,
 	isRooted,
 	type NavigationRung,
 	type NavigationSheet,
 	type NavigationTarget,
 	type PaneNode,
+	type Presentation,
+	panesOf,
+	planNavigation,
 	type Rung,
+	type WorkspaceState,
+	workspaceReducer,
 } from "compass";
 import { LIBRARY, MENU_ITEMS } from "./application-menu";
-import { isWorkspaceSubject, type WorkspaceSubject } from "./workspace-subject";
+import {
+	isWorkspaceSubject,
+	type WorkspaceSubject,
+	workspaceSubjectKey,
+} from "./workspace-subject";
 
 /**
  * The Address: the URL path that spells the one Pane's Sheet Stack (tf-demo
@@ -24,6 +34,52 @@ import { isWorkspaceSubject, type WorkspaceSubject } from "./workspace-subject";
  * Decks, presentation context, titles, scroll positions and the Held Card
  * never are, so loading an Address deals nothing.
  */
+
+/**
+ * The Pane the Address spells: the Active Pane when it is Rooted, else the
+ * first Rooted Pane. While splits are parked (tf-demo ADR 0013) it is the
+ * only Pane.
+ */
+export function addressedPane(
+	state: WorkspaceState<WorkspaceSubject>,
+): PaneNode<WorkspaceSubject> | null {
+	const active = findPane(state.layout, state.activePaneId);
+	return active && isRooted(active)
+		? active
+		: (panesOf(state.layout).find(isRooted) ?? null);
+}
+
+/**
+ * Whether an open Presentation is the Sheet a target names: the same
+ * Presentation when the target knows its id, else the same Subject.
+ */
+export function isSameSheet(
+	presentation: Presentation<WorkspaceSubject>,
+	sheet: NavigationSheet<WorkspaceSubject>,
+): boolean {
+	return sheet.presentationId === undefined
+		? workspaceSubjectKey(presentation.subject) ===
+				workspaceSubjectKey(sheet.subject)
+		: presentation.id === sheet.presentationId;
+}
+
+/**
+ * The workspace taken to the Sheet Stack `pathname` spells, as a load
+ * takes it: the Sheets it shares keep their Decks and context. A path that
+ * is no Address, such as a bare `/`, leaves it as it is.
+ */
+export function openAddress(
+	state: WorkspaceState<WorkspaceSubject>,
+	pathname: string,
+): WorkspaceState<WorkspaceSubject> {
+	const target = targetOf(pathname);
+	const pane = addressedPane(state);
+	if (!target || !pane) return state;
+	return planNavigation(state, pane.id, target, isSameSheet).reduce(
+		workspaceReducer<WorkspaceSubject>,
+		state,
+	);
+}
 
 /** What a Sheet is in a Pane's history: its Presentation's id, or the rung it is. */
 export function sheetIdsOf(pane: PaneNode<WorkspaceSubject>): string[] {

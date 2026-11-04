@@ -5,12 +5,14 @@ import {
 	loadApplicationWorkspace,
 	saveApplicationWorkspace,
 } from "./application-workspace-persistence";
+import { openAddress } from "./workspace-address";
 import type { WorkspaceSubject } from "./workspace-subject";
 
 /**
  * tf-demo's workspace, kept by Workspace Persistence (tf-demo ADR 0003). Its
  * first read loads the saved workspace, or the start when nothing valid is
- * saved, and writes it straight back; every write saves. The Compass sends
+ * saved, takes it to the Address the page opened at, since the URL wins
+ * (tf-demo ADR 0015), and writes it straight back; every write saves. The Compass sends
  * commands through `useCompassWorkspace`, which reduces and sets it.
  *
  * It is not keepAlive: once the workspace unmounts, the registry drops it,
@@ -20,7 +22,10 @@ import type { WorkspaceSubject } from "./workspace-subject";
  */
 export const applicationWorkspaceAtom = Atom.writable(
 	(): WorkspaceState<WorkspaceSubject> => {
-		const loaded = loadApplicationWorkspace(initialWorkspace, MENU_ITEMS);
+		const loaded = openAddress(
+			loadApplicationWorkspace(initialWorkspace, MENU_ITEMS),
+			window.location.pathname,
+		);
 		saveApplicationWorkspace(loaded);
 		return loaded;
 	},

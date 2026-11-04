@@ -2,18 +2,28 @@ import { describe, expect, test } from "bun:test";
 import {
 	type PaneNode,
 	panesOf,
-	planNavigation,
+	type WorkspaceCommand,
 	type WorkspaceState,
 	workspaceReducer,
 } from "compass";
 import { initialWorkspace } from "./application-menu";
-import { addressOf, sheetIdsOf, targetOf } from "./workspace-address";
+import {
+	addressOf,
+	openAddress,
+	sheetIdsOf,
+	targetOf,
+} from "./workspace-address";
 import {
 	type WorkspaceSubject,
 	workspaceSubjectKey,
 } from "./workspace-subject";
 
 type State = WorkspaceState<WorkspaceSubject>;
+
+const shadow: WorkspaceSubject = {
+	kind: "Note",
+	target: { kind: "Shadow", shadowId: "x" },
+};
 
 function onlyPane(state: State): PaneNode<WorkspaceSubject> {
 	const pane = panesOf(state.layout)[0];
@@ -23,18 +33,8 @@ function onlyPane(state: State): PaneNode<WorkspaceSubject> {
 
 /** The fresh workspace taken to `pathname`, as a load in a fresh context does. */
 function opened(pathname: string): State {
-	const start = initialWorkspace();
-	const target = targetOf(pathname);
-	if (!target) throw new Error(`${pathname} is no Address`);
-	const commands = planNavigation(
-		start,
-		start.activePaneId,
-		target,
-		(presentation, sheet) =>
-			workspaceSubjectKey(presentation.subject) ===
-			workspaceSubjectKey(sheet.subject),
-	);
-	return commands.reduce(workspaceReducer<WorkspaceSubject>, start);
+	if (!targetOf(pathname)) throw new Error(`${pathname} is no Address`);
+	return openAddress(initialWorkspace(), pathname);
 }
 
 describe("the Address", () => {
@@ -57,6 +57,35 @@ describe("the Address", () => {
 			expect(addressOf(onlyPane(opened(pathname)))).toBe(pathname);
 		},
 	);
+
+	test("a load keeps the Decks of the Sheets the stored workspace shares with the Address", () => {
+		const atScroll = opened("/scroll/s1");
+		const pane = onlyPane(atScroll);
+		const stored = [
+			{
+				type: "Deal",
+				sheetId: pane.line.at(-1)?.id ?? "",
+				selection: "click",
+				cards: [{ subject: shadow }],
+			},
+			{ type: "FollowLink", paneId: pane.id, subject: shadow },
+		].reduce(
+			(state, command) =>
+				workspaceReducer(
+					state,
+					command as WorkspaceCommand<WorkspaceSubject>,
+				),
+			atScroll,
+		);
+		const deck = onlyPane(stored).line.at(-1)?.deck;
+		expect(deck).not.toBeNull();
+
+		const loaded = openAddress(stored, "/scroll/s1/reading/r1");
+		expect(addressOf(onlyPane(loaded))).toBe("/scroll/s1/reading/r1");
+		expect(onlyPane(loaded).line.at(-1)?.deck).toEqual(deck);
+		expect(onlyPane(loaded).covers[0]?.deck).toBeNull();
+		expect(openAddress(stored, "/")).toBe(stored);
+	});
 
 	test("the Menu and the Library are implied below the Library's selections", () => {
 		const pane = onlyPane(opened("/section/a/scroll/s1"));

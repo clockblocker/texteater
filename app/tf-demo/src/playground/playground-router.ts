@@ -1,8 +1,7 @@
 /**
- * The one URL prefix the Playground owns. Everything else in tf-demo lives at
- * `/` (see `main.tsx`), so `pathnameAtom` is the only place `history` is
- * written. This module stays free of React and Effect because `main.tsx`
- * loads it before the app chunk.
+ * The one URL prefix the Playground owns, in development builds. Every other
+ * path is the workspace's Address (tf-demo ADR 0015); both are read and
+ * written through `locationAtom`.
  */
 export const PLAYGROUND_BASE = "/playground";
 
