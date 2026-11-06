@@ -86,7 +86,7 @@ export function verdictOf(
 
 /**
  * How far the rest of the Deck has gathered into the Card: the pull's
- * progress through `curve`, one value for every Card behind, so they fold
+ * progress through `curve`, one value for every other Card, so they fold
  * in together and are whole exactly when a release would commit. Only a
  * pull toward Close deck gathers it.
  */
@@ -112,4 +112,17 @@ export function takeUp(raw: number, slop: number, over: number): number {
 	const sign = raw < 0 ? -1 : 1;
 	if (over <= 0 || travel >= slop + over) return sign * travel;
 	return sign * (travel - slop * (1 - (travel - slop) / over));
+}
+
+/**
+ * How far a Card from inside the Deck has come forward over the Cards in
+ * front of it: 0 at rest and toward Open, where it stays under them, and
+ * 1 once a pull toward Close deck has gone `over` px. `over` is never
+ * past the threshold, so the Card is all the way forward by the time the
+ * Deck is whole.
+ */
+export function forwardOf(axis: Axis, pull: number, over: number): number {
+	if (pull === 0 || zoneOf(axis, pull) !== "dismiss") return 0;
+	if (over <= 0) return 1;
+	return Math.min(1, Math.abs(pull) / over);
 }

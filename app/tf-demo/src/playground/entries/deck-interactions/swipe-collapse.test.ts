@@ -7,7 +7,7 @@ import {
 	motionValue,
 } from "motion/react";
 import type { Slot } from "./geometry";
-import { type Binding, bindDeck } from "./swipe-collapse";
+import { type Binding, bindDeck, veilOf } from "./swipe-collapse";
 import type { CardValues } from "./use-deck";
 
 /* Motion's frame loop, run by hand. Bun has no requestAnimationFrame, so
@@ -26,8 +26,8 @@ const STEPS = [
 ] as const;
 const FRAME_MS = 1000 / 60;
 const SLIVER_MS = 0.5;
-const HOVER = { type: "spring", stiffness: 438, damping: 34 } as const;
-const KEYS = ["u", "v", "r"] as const;
+const SETTLE = { type: "spring", stiffness: 632, damping: 50 } as const;
+const KEYS = ["u", "v", "s"] as const;
 
 let clock = 0;
 let frameAt = 1000;
@@ -58,7 +58,7 @@ async function nextFrame() {
 	await settled();
 }
 
-function cardValues(at: Slot): CardValues {
+function cardValues(at: Slot, z: number): CardValues {
 	const value = (n: number) => motionValue(n);
 	return {
 		u: value(at.u),
@@ -69,34 +69,39 @@ function cardValues(at: Slot): CardValues {
 		s: value(at.s),
 		lift: value(0),
 		o: value(1),
-		z: value(1),
+		z: value(z),
 		stamp: value(0),
 		glow: value(0),
+		veil: motionValue("none"),
 	};
 }
 
-/**
- * A Deck of three, the two Cards behind still springing back from a
- * hover fan as the hand takes the front one toward Close deck.
- */
-async function swipeTowardClose() {
+type Pile = ReturnType<typeof makePile>;
+
+/** A Deck of three, front last at the open scale, each Card drawn `from` its slot. */
+function makePile(from: Record<string, Partial<Slot>>) {
 	const now = spyOn(performance, "now").mockImplementation(() => clock);
 	cleanups.push(() => now.mockRestore());
-	const pile = [
-		{ id: "back", fanned: { u: 84, v: 92, r: -8 } },
-		{ id: "middle", fanned: { u: 92, v: 136, r: -4 } },
-		{ id: "front", fanned: { u: 100, v: 180, r: 0 } },
-	].map(({ id, fanned }, index) => {
+	return ["back", "middle", "front"].map((id, index) => {
 		const slot: Slot = {
 			u: 100,
 			v: 100 + index * 40,
 			w: 300,
 			h: 400,
 			r: 0,
-			s: 1,
+			s: index === 2 ? 1.05 : 1,
 		};
-		return { id, slot, values: cardValues({ ...slot, ...fanned }) };
+		const values = cardValues({ ...slot, ...from[id] }, 10 + index);
+		return { id, slot, values };
 	});
+}
+
+/** Binds `lead` from the hand's pointer event, for a pull along the inline axis. */
+async function bindPile(
+	pile: Pile,
+	lead: string,
+	settle: (value: MotionValue<number>, to: number, velocity: number) => void,
+) {
 	const order = pile.map((card) => card.id);
 	const slots = pile.map((card) => card.slot);
 	const of = (id: string) => {
@@ -104,12 +109,8 @@ async function swipeTowardClose() {
 		if (!card) throw new Error(`No Card ${id}`);
 		return card.values;
 	};
-	const behind = pile.slice(0, -1);
-	for (const { slot, values } of behind)
-		for (const key of KEYS) animate(values[key], slot[key], HOVER);
-	await nextFrame();
-	await nextFrame();
 	const pull = motionValue(0);
+	const shown = motionValue(1);
 	let binding: Binding | null = null;
 	await pointerEvent(() => {
 		binding = bindDeck(
@@ -123,16 +124,10 @@ async function swipeTowardClose() {
 					throw new Error("Nothing here scatters the Deck");
 				},
 			},
-			"front",
+			lead,
 			"inline",
-			pull,
-			{
-				threshold: 96,
-				curve: "linear",
-				settle: (value, to, velocity) => {
-					animate(value, to, { ...HOVER, velocity });
-				},
-			},
+			{ pull, shown },
+			{ threshold: 96, curve: "linear", forward: 24, rtl: false, settle },
 		);
 	});
 	cleanups.push(() => {
@@ -140,6 +135,26 @@ async function swipeTowardClose() {
 		pull.stop();
 		for (const { values } of pile)
 			for (const key of KEYS) values[key].stop();
+	});
+	return { pull, shown };
+}
+
+/**
+ * The two Cards behind still springing to their slots from where a
+ * scatter left them, as the hand takes the front one toward Close deck.
+ */
+async function swipeTowardClose() {
+	const pile = makePile({
+		back: { u: 84, v: 92, s: 1.02 },
+		middle: { u: 92, v: 136 },
+	});
+	const behind = pile.slice(0, -1);
+	for (const { slot, values } of behind)
+		for (const key of KEYS) animate(values[key], slot[key], SETTLE);
+	await nextFrame();
+	await nextFrame();
+	const { pull } = await bindPile(pile, "front", (value, to, velocity) => {
+		animate(value, to, { ...SETTLE, velocity });
 	});
 	return { pull, behind: behind.map((card) => card.values) };
 }
@@ -204,5 +219,66 @@ describe("D's fold, on Motion's frame loop", () => {
 			expectFrameSpeeds(seen);
 			seen = look(behind);
 		}
+	});
+});
+
+describe("D's fold onto a Card from inside the Deck", () => {
+	test("the Cards in front come up onto it and the ones behind down, whole at the threshold, while it comes forward over the first px", async () => {
+		const pile = makePile({});
+		const [back, middle, front] = pile.map((card) => card.values);
+		if (!back || !middle || !front) throw new Error("Missing a Card");
+		const { pull, shown } = await bindPile(
+			pile,
+			"middle",
+			(value, to, velocity) => {
+				animate(value, to, { ...SETTLE, velocity });
+			},
+		);
+		await nextFrame();
+		expect(shown.get()).toBe(0);
+		await pointerEvent(() => pull.set(-12));
+		await nextFrame();
+		expect(front.v.get()).toBeLessThan(180);
+		expect(back.v.get()).toBeGreaterThan(100);
+		expect(shown.get()).toBeCloseTo(0.5, 6);
+		expect(middle.z.get()).toBe(13);
+		expect(middle.veil.get()).toContain("rgb(0 0 0 / 0.500)");
+		await pointerEvent(() => pull.set(-24));
+		await nextFrame();
+		expect(shown.get()).toBe(1);
+		expect(middle.veil.get()).toBe("none");
+		await pointerEvent(() => pull.set(-96));
+		await nextFrame();
+		for (const other of [back, front]) {
+			expect(other.u.get()).toBeCloseTo(middle.u.get(), 6);
+			expect(other.v.get()).toBeCloseTo(middle.v.get(), 6);
+			expect(other.s.get()).toBeCloseTo(1, 6);
+		}
+		/* toward Open it is under the Cards in front again, and they rest */
+		await pointerEvent(() => pull.set(20));
+		await nextFrame();
+		expect(shown.get()).toBe(0);
+		expect(middle.z.get()).toBe(11);
+		expect(middle.veil.get()).toBe("none");
+		expect(front.v.get()).toBe(180);
+		expect(front.s.get()).toBe(1.05);
+	});
+
+	test("its veil hides only where the Cards in front lie over it, from inline-start in either direction", () => {
+		const card = { u: 50, v: 100, w: 300, h: 400 };
+		const cover = { u: 60, v: 148, w: 316, h: 420 };
+		const ltr = veilOf(card, 1, cover, 0.25, false);
+		expect(ltr).toContain(
+			"to bottom, #000 48.00px, transparent 48.00px, transparent 468.00px",
+		);
+		expect(ltr).toContain(
+			"to right, #000 10.00px, transparent 10.00px, transparent 326.00px",
+		);
+		expect(ltr).toContain("rgb(0 0 0 / 0.250)");
+		expect(veilOf(card, 1, cover, 0.25, true)).toContain(
+			"to left, #000 10.00px",
+		);
+		expect(veilOf(card, 1, cover, 0, false)).toBe("none");
+		expect(veilOf(card, 1, cover, 1, false)).toBe("none");
 	});
 });

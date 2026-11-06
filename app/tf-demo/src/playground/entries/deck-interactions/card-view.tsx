@@ -44,6 +44,19 @@ function glowStyle(mark: Mark, rtl: boolean) {
 }
 
 /**
+ * The border a hovered Card lights, under a mouse or pen only: brighter
+ * in 150 ms, back in 200. A Card that never lights (`undefined`) has no
+ * transition either.
+ */
+function highlightClass(highlight: boolean | undefined): string {
+	if (highlight === undefined) return "";
+	const lit = highlight
+		? " pointer-fine:hover:border-ink-muted pointer-fine:hover:duration-150"
+		: "";
+	return `transition-[border-color] duration-200 ease-out${lit}`;
+}
+
+/**
  * One Card, drawn as tf-demo's Cards are: paper, the Card border, a serif
  * title and its Caption in the Heading row, then the Source Contexts. Its
  * box is its motion values; a Card in the Cover shows its × and scrolls.
@@ -55,6 +68,7 @@ export function CardView({
 	held,
 	expanded,
 	mark,
+	highlight,
 	onPointerDown,
 	onPointerEnter,
 	onPointerLeave,
@@ -66,6 +80,8 @@ export function CardView({
 	readonly held: boolean;
 	readonly expanded: boolean;
 	readonly mark: Mark | null;
+	/** Whether hovering the Card lights its border now; left out, it never does. */
+	readonly highlight?: boolean;
 	readonly onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
 	readonly onPointerEnter?: (event: ReactPointerEvent<HTMLElement>) => void;
 	readonly onPointerLeave?: (event: ReactPointerEvent<HTMLElement>) => void;
@@ -101,8 +117,9 @@ export function CardView({
 				opacity: values.o,
 				zIndex: values.z,
 				boxShadow,
+				maskImage: values.veil,
 			}}
-			className={`absolute flex flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper select-none ${expanded ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
+			className={`absolute flex flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper select-none ${expanded ? "" : "cursor-grab touch-none active:cursor-grabbing"} ${highlightClass(highlight && !expanded)}`}
 		>
 			<CardFace card={card} expanded={expanded} onClose={onClose} />
 			{mark && glow ? (

@@ -22,7 +22,6 @@ import type { SwipeKnobs } from "./swipe-knobs";
 import { type Panel, type PanelValues, SwipePanel } from "./swipe-panel";
 import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
-import { useDeckHover } from "./use-deck-hover";
 
 /** A strip panel tucks this far under the next Card, past its rounded corners. */
 const TUCK_PX = 16;
@@ -60,15 +59,17 @@ function drawn(slot: Slot): Rect {
 
 /**
  * Where a Card's panel lies and how much of it shows: under the Card where
- * the hand took it (`anchor`, hover lift and all). It stays `inset` px
- * inside the Card's edges across the axis, past its rounded corners, so
- * only what the Card uncovers along the axis ever shows. For a Card
- * behind, it is the strip above the next Card, tucked under that Card.
+ * the hand took it (`anchor`). It stays `inset` px inside the Card's edges
+ * across the axis, past its rounded corners, so only what the Card
+ * uncovers along the axis ever shows. Toward Open a Card behind stays
+ * under the Cards in front, and its panel is the strip above the next
+ * Card, tucked under that Card; toward Close deck it comes forward, and
+ * its panel is its whole footprint, as the front Card's is.
  */
 function panelBox(
 	slots: readonly Slot[],
 	index: number,
-	axis: Axis,
+	panel: Panel,
 	inset: number,
 	anchor: { readonly u: number; readonly v: number },
 ) {
@@ -76,7 +77,7 @@ function panelBox(
 	if (!slot) return null;
 	const box = drawn({ ...slot, u: anchor.u, v: anchor.v });
 	const next = slots[index + 1];
-	if (next) {
+	if (next && panel.zone === "expand") {
 		const visible = Math.max(0, drawn(next).v - box.v - inset);
 		return {
 			rect: { ...box, v: box.v + inset, h: visible + TUCK_PX },
@@ -84,7 +85,7 @@ function panelBox(
 		};
 	}
 	const rect =
-		axis === "inline"
+		panel.axis === "inline"
 			? { ...box, v: box.v + inset, h: box.h - 2 * inset }
 			: { ...box, u: box.u + inset, w: box.w - 2 * inset };
 	return { rect, visible: rect.h };
@@ -93,10 +94,13 @@ function panelBox(
 /**
  * D, Swipe actions, as iOS Mail's full swipe: the Card slides on one axis
  * and uncovers an action under it, and toward Close deck the rest of the
- * Deck folds into it. One value, the pull, drives all of it, and one
- * threshold is the breakpoint: there the Deck is whole, the colour floods
- * in, the icon locks to the Card's edge, and a release commits. Short of
- * it, a release brings everything back.
+ * Deck folds onto it, whichever Card it is, the Cards behind it coming
+ * down and the ones in front coming up under it. One value, the pull,
+ * drives all of it, and one threshold is the breakpoint: there the Deck is
+ * whole, the colour floods in, the icon locks to the Card's edge, and a
+ * release commits. Short of it, a release brings everything back. The
+ * Deck itself never moves on hover: the Card under the pointer only
+ * lights its border.
  */
 export function SwipeVariant({
 	frame,
@@ -108,9 +112,8 @@ export function SwipeVariant({
 }: VariantProps<SwipeKnobs>) {
 	const deck = useDeck({ frame, motion, readouts, deal, layout: pileSlots });
 	const [held, setHeld] = useState<string | null>(null);
-	/** The Card under the hand from press to the end of its return: the hover lets the Deck be meanwhile. */
+	/** The Card under the hand from press to the end of its return: no Card lights meanwhile. */
 	const [pressed, setPressed] = useState<string | null>(null);
-	const hover = useDeckHover({ deck, motion, knobs, holding: pressed });
 	const [panel, setPanel] = useState<Panel | null>(null);
 	const [anchor, setAnchor] = useState({ u: 0, v: 0 });
 	const [armed, setArmed] = useState(false);
@@ -122,6 +125,8 @@ export function SwipeVariant({
 	}));
 	/** The swiped Card's offset along its axis: the swipe's one source of truth. */
 	const [pull] = useState(() => motionValue(0));
+	/** How far the swiped Card has come forward over the Cards in front of it. */
+	const [shown] = useState(() => motionValue(1));
 	const [taps] = useState(() => createTapCounter());
 	const gen = useRef(0);
 	const binding = useRef<Binding | null>(null);
@@ -157,29 +162,30 @@ export function SwipeVariant({
 		const z = card.z.get();
 		deck.hold(g.id);
 		card.z.set(z);
-		/* a Card from behind the hover fanned stands up as it starts to slide;
-		   its panel waits until it has */
-		if (Math.abs(card.r.get()) > 0.01)
-			settle(card.r, 0, SPRINGS.settle, motion);
 		if (!caught) {
 			binding.current?.scatter();
 			pull.jump(0);
-			const bound = bindDeck(deck, g.id, axis, pull, {
-				threshold: knobs.threshold,
-				curve: knobs.collapseCurve,
-				/* the hover's own settle, carried on: settle scales px/s by slow-mo */
-				settle: (value, to, velocity) =>
-					settle(
-						value,
-						to,
-						{
-							stiffness: knobs.hoverStiffness,
-							damping: knobs.hoverDamping,
-						},
-						motion,
-						velocity / motion.timeScale,
-					),
-			});
+			const bound = bindDeck(
+				deck,
+				g.id,
+				axis,
+				{ pull, shown },
+				{
+					threshold: knobs.threshold,
+					curve: knobs.collapseCurve,
+					forward: knobs.forward,
+					rtl,
+					/* the Deck's own settle, carried on: settle scales px/s by slow-mo */
+					settle: (value, to, velocity) =>
+						settle(
+							value,
+							to,
+							SPRINGS.settle,
+							motion,
+							velocity / motion.timeScale,
+						),
+				},
+			);
 			binding.current = bound;
 			setAnchor(bound.anchor);
 			values.flood.jump(0);
@@ -224,14 +230,8 @@ export function SwipeVariant({
 	 * Short of the threshold: the pull springs home, keeping the hand's
 	 * speed, and takes the Card and the folded Deck with it. Reduced, the
 	 * spring is critically damped and starts at rest, so it never overshoots.
-	 * Then the hover has the Deck again: fanned if the pointer is still on
-	 * it, at rest if not.
 	 */
-	async function putBack(
-		g: Gesture,
-		speed: number,
-		at: { readonly x: number; readonly y: number } | null,
-	) {
+	async function putBack(g: Gesture, speed: number) {
 		const k = knobs.reducedReturnStiffness;
 		const spec = motion.reduce
 			? { stiffness: k, damping: 2 * Math.sqrt(k) }
@@ -250,19 +250,13 @@ export function SwipeVariant({
 		deck.release(g.id);
 		setPanel(null);
 		setPressed(null);
-		const over =
-			at &&
-			document
-				.elementFromPoint(at.x, at.y)
-				?.closest("[data-deck-frame] [data-card-id]");
-		if (!over) hover.clear();
 		readouts.set({ phase: "rest" });
 	}
 
 	/**
 	 * At it: the panel fades as the Card opens, or as the Card and the Deck
 	 * folded under it leave as one, at the hand's speed: the fold is whole
-	 * there, and the Cards behind, which just finished it, would otherwise
+	 * there, and the other Cards, which just finished it, would otherwise
 	 * slide out from under the Card. The Card opens in a straight line
 	 * from where the hand let go, so a swipe toward inline-end never
 	 * carries it further that way first.
@@ -275,7 +269,7 @@ export function SwipeVariant({
 	) {
 		binding.current?.stop();
 		binding.current = null;
-		/* the Deck is leaving or open, and the hover lets either be */
+		/* the Deck is leaving or open, and neither lights a Card */
 		setPressed(null);
 		animate(
 			values.fade,
@@ -328,12 +322,7 @@ export function SwipeVariant({
 		});
 		const speed = drag ? along(axis, drag).speed : 0;
 		if (verdict.commits) void commit(g, axis, verdict, speed);
-		else
-			void putBack(
-				g,
-				speed,
-				drag ? { x: drag.clientX, y: drag.clientY } : null,
-			);
+		else void putBack(g, speed);
 	}
 
 	function onDown(id: string, event: ReactPointerEvent<HTMLElement>) {
@@ -356,7 +345,7 @@ export function SwipeVariant({
 			start: 0,
 			commits: false,
 		};
-		/* the press turns the hover off: the rest of the Deck settles back */
+		/* the press puts out the hovered Card's border */
 		setPressed(id);
 		settle(card.lift, knobs.pressLift, SPRINGS.settle, motion);
 		readouts.set({ phase: "pressed" });
@@ -404,7 +393,7 @@ export function SwipeVariant({
 
 	const index = panel ? deck.order.indexOf(panel.id) : -1;
 	const box = panel
-		? panelBox(deck.slots, index, panel.axis, knobs.panelInset, anchor)
+		? panelBox(deck.slots, index, panel, knobs.panelInset, anchor)
 		: null;
 	const owner = panel ? deck.valuesOf(panel.id) : null;
 	return (
@@ -418,7 +407,7 @@ export function SwipeVariant({
 					position={panel.axis === "inline" ? owner.u : owner.v}
 					base={panel.axis === "inline" ? anchor.u : anchor.v}
 					z={owner.z}
-					turn={owner.r}
+					forward={shown}
 					values={values}
 					armed={armed}
 					threshold={knobs.threshold}
@@ -432,9 +421,8 @@ export function SwipeVariant({
 				deck={deck}
 				rtl={rtl}
 				held={held}
+				highlight={pressed === null && deck.status === "dealt"}
 				onDown={onDown}
-				onEnter={hover.onEnter}
-				onLeave={hover.onLeave}
 			/>
 		</>
 	);

@@ -127,20 +127,127 @@ export function anchors(page: Page) {
 		);
 }
 
-/** The share of the way each Card behind has gone from `rest` to the swiped Card. */
-export async function shares(page: Page, rest: { u: number; v: number }[]) {
+type Anchor = { u: number; v: number };
+
+/**
+ * The share of the way every Card but Card `lead` (back to front, the
+ * front one by default) has gone from `rest` to it.
+ */
+export async function shares(page: Page, rest: Anchor[], lead = 3) {
 	const now = await anchors(page);
-	const lead = now.at(-1);
-	if (!lead) throw new Error("Missing the swiped Card");
-	return now.slice(0, -1).map((card, index) => {
+	const to = now[lead];
+	if (!to) throw new Error("Missing the swiped Card");
+	return now.flatMap((card, index) => {
 		const slot = rest[index];
 		if (!slot) throw new Error("Missing a slot");
-		const to = { u: lead.u - slot.u, v: lead.v - slot.v };
-		return (
-			((card.u - slot.u) * to.u + (card.v - slot.v) * to.v) /
-			(to.u * to.u + to.v * to.v)
-		);
+		if (index === lead) return [];
+		const way = { u: to.u - slot.u, v: to.v - slot.v };
+		return [
+			((card.u - slot.u) * way.u + (card.v - slot.v) * way.v) /
+				(way.u * way.u + way.v * way.v),
+		];
 	});
+}
+
+/** The most any Card's anchor sits from Card `lead`'s, in px. */
+export function spread(now: Anchor[], lead: number) {
+	const to = now[lead];
+	if (!to) throw new Error("Missing the swiped Card");
+	return Math.max(
+		...now.map((card) => Math.hypot(card.u - to.u, card.v - to.v)),
+	);
+}
+
+/** The most any Card's anchor sits from where it rests, in px. */
+export async function strayed(page: Page, rest: Anchor[]) {
+	const now = await anchors(page);
+	return Math.max(
+		...now.map((card, index) => {
+			const slot = rest[index];
+			if (!slot) throw new Error("Missing a slot");
+			return Math.hypot(card.u - slot.u, card.v - slot.v);
+		}),
+	);
+}
+
+/** Each Card's computed style for `property`, back to front. */
+export function styles(
+	page: Page,
+	property: "transform" | "border-top-color" | "z-index",
+) {
+	return frame(page)
+		.locator("[data-card-id]")
+		.evaluateAll(
+			(elements, key) =>
+				elements.map((element) =>
+					getComputedStyle(element).getPropertyValue(key),
+				),
+			property,
+		);
+}
+
+/**
+ * Every frame from now until the hand lets go, while Close deck's panel
+ * shows: how often another Card stood level with or over `card` or its
+ * panel, or, once it had come all the way forward, covered a point on it.
+ */
+export async function watchCover(card: Locator) {
+	await card.evaluate((element) => {
+		const seen = { frames: 0, covered: 0 };
+		let live = true;
+		const z = (node: Element) => Number(getComputedStyle(node).zIndex);
+		/* how many of three points on it another Card covers */
+		const missed = () => {
+			const box = element.getBoundingClientRect();
+			const points = [
+				[box.left + 12, box.top + 12],
+				[box.left + box.width / 2, box.top + box.height / 2],
+				[box.right - 12, box.bottom - 12],
+			] as const;
+			return points.filter(
+				([x, y]) =>
+					document
+						.elementFromPoint(x, y)
+						?.closest("[data-card-id]") !== element,
+			).length;
+		};
+		/* how often another Card stands level with or over it or its panel */
+		const under = (shown: Element) => {
+			const others = [
+				...document.querySelectorAll("[data-card-id]"),
+			].filter((other) => other !== element);
+			const top = Math.max(...others.map(z));
+			return z(element) <= top || z(shown) <= top ? 1 : 0;
+		};
+		const step = () => {
+			const shown = document.querySelector('[data-panel="dismiss"]');
+			if (shown && Number(getComputedStyle(shown).opacity) > 0.01) {
+				seen.frames += 1;
+				const covered = under(shown);
+				seen.covered +=
+					covered ||
+					(getComputedStyle(element).maskImage === "none"
+						? missed()
+						: 0);
+			}
+			if (live) requestAnimationFrame(step);
+		};
+		window.addEventListener("pointerup", () => (live = false), {
+			capture: true,
+			once: true,
+		});
+		requestAnimationFrame(step);
+		Object.assign(window, { cover: seen });
+	});
+	return () =>
+		card.evaluate(
+			() =>
+				(
+					window as unknown as {
+						cover: { frames: number; covered: number };
+					}
+				).cover,
+		);
 }
 
 export type Moment = {
