@@ -1,0 +1,51 @@
+{
+	"name": "tabletop",
+	"private": true,
+	"version": "0.0.1",
+	"description": "The physical layer: every Presentation rests in a CSS Slot and moves by additive Terms that decay to nothing. Its pure core.",
+	"type": "module",
+	"packageManager": "bun@1.4.2",
+	"license": "MIT",
+	"engines": {
+		"node": "24.x"
+	},
+	"exports": {
+		"./core": {
+			"bun": "./src/core/index.ts",
+			"convex": "./src/core/index.ts",
+			"types": "./dist/core/index.d.ts",
+			"development": "./src/core/index.ts",
+			"import": "./dist/core/index.js",
+			"default": "./dist/core/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"scripts": {
+		"build": "turbo run build:package",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
+		"build:js": "rm -rf dist && bun run esbuild src/core/index.ts --bundle --platform=browser --format=esm --packages=external --outfile=dist/core/index.js",
+		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
+		"check": "bun ../../tooling/check-package-types.ts",
+		"fix": "bun run --silent biome check --write .",
+		"lint": "bun run --silent biome check --error-on-warnings .",
+		"test": "bun ../../tooling/run-package-tests.ts",
+		"knip": "bun ../../tooling/knip.ts",
+		"oxlint": "bun ../../tooling/oxlint.ts",
+		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"
+	},
+	"peerDependencies": {
+		"motion": "^13.1.1"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.13",
+		"@types/node": "^24.13.3",
+		"bun-types": "1.4.2",
+		"dependency-cruiser": "^18.1.0",
+		"esbuild": "^0.28.1",
+		"knip": "^6.29.0",
+		"motion": "^13.1.1",
+		"typescript": "^7.0.2"
+	}
+}
