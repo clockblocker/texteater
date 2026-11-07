@@ -221,23 +221,34 @@ function zTerms(input: RetargetInput): Term[] {
 	];
 }
 
-/**
- * A change of side: one angle that always turns the same way, and turns
- * back the way it came when reversed mid-turn (`turnTarget`). The rest is
- * the new side's angle, 0 or 180; the Term carries the rest of the way.
- */
-function turnTerms(input: RetargetInput): Term[] | null {
+/** How far the shown angle is from the new rest's, or `null` for no change of side. */
+function turnDelta(input: RetargetInput): number | null {
+	const scripted = "tween" in input.move ? input.move.from?.turn : undefined;
+	if (scripted !== undefined) return scripted;
 	const from = input.from.turn ?? 0;
 	const to = input.to.turn ?? 0;
 	if ((((from - to) % 360) + 360) % 360 === 0) return null;
 	const angle = shownOf(input, "turn");
-	const target = turnTarget(angle, from, sideAt(to));
-	const delta = angle - target;
-	if (Math.abs(delta) < epsilon("turn") || input.turn.ms <= 0) return [];
+	return angle - turnTarget(angle, from, sideAt(to));
+}
+
+/**
+ * A change of side: one angle that always turns the same way, and turns
+ * back the way it came when reversed mid-turn (`turnTarget`). The rest is
+ * the new side's angle, 0 or 180; the Term carries the rest of the way. A
+ * scripted move may start it off its rest instead (`from.turn`). It turns
+ * at the move's `sideAt`; a turn with no length switches then, or at once.
+ */
+function turnTerms(input: RetargetInput): Term[] | null {
+	const delta = turnDelta(input);
+	if (delta === null) return null;
 	const sideCue = "tween" in input.move ? (input.move.sideAt ?? 0) : 0;
+	const ms = Math.max(0, input.turn.ms);
+	if (Math.abs(delta) < epsilon("turn") || (ms === 0 && sideCue <= 0))
+		return [];
 	return [
 		term(input, "turn", delta, {
-			curve: { kind: "tween", ms: input.turn.ms, ease: input.turn.ease },
+			curve: { kind: "tween", ms, ease: input.turn.ease },
 			delayMs: sideCue,
 			source: "app",
 		}),

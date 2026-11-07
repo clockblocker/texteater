@@ -94,7 +94,6 @@ export function carry(engine: Engine, id: string, pointer: Point) {
 		x: pointer.x - body.grab.x,
 		y: pointer.y - body.grab.y,
 	};
-	body.boxDirty = true;
 	engine.activate(body);
 }
 

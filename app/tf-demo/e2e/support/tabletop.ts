@@ -46,15 +46,21 @@ export function offSlot(page: Page): Promise<string[]> {
 	});
 }
 
-/** Whether the Table has written nothing on any Card or seat: every move is over. */
+/**
+ * Whether the Table has written nothing on any Card, seat or shell: every
+ * move is over. It writes a move straight on their own properties.
+ */
 export function atRest(page: Page): Promise<boolean> {
 	return page.evaluate(() =>
 		[
 			...document.querySelectorAll(
-				"[data-tabletop-body],[data-tabletop-seat]",
+				"[data-tabletop-body],[data-tabletop-seat],[data-tabletop-shell]",
 			),
 		].every(
-			(el) => !/--(fly|box|seat)-/.test(el.getAttribute("style") ?? ""),
+			(el) =>
+				!/(^|;)\s*(translate|rotate|scale|opacity|width|height|z-index|transform|--seat-[a-z]+)\s*:/.test(
+					el.getAttribute("style") ?? "",
+				),
 		),
 	);
 }

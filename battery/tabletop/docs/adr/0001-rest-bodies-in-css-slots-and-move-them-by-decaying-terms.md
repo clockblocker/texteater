@@ -21,8 +21,16 @@ new rest adds a Term instead of replacing a value, so position and velocity
 stay continuous through every retarget. The box's Terms sit inside `calc()`
 beside the seat's size, so a growing Body really resizes and its content
 reflows; it is never scaled. One frame loop writes the Terms, at each
-frame's own timestamp, and every property has one writer: React writes the
-rest, the Table writes the flight.
+frame's own timestamp. React writes the rest, as custom properties the
+stylesheet reads. While a Body moves, the Table writes its flight straight
+on the Body's own `translate`, `rotate`, `scale`, `opacity`, width and
+height, composed with its rest, on its seat's `z-index`, its Parts'
+`translate` and its shell's `transform`, and takes each off as its Terms
+end. It never writes a custom property once a frame: a change of one
+restyles every element of the Body's faces, which cost about 0.1 ms a
+Card a frame and, at 52 Cards on a CPU slowed four times, took Shuffle
+from 58 to 45 frames a second
+([#1318](https://github.com/clockblocker/texteater/issues/1318)).
 
 A Term is its delta times its curve's share, which runs from 1 to 0, and a
 curve says nothing about a channel or a distance. Every Term one Move adds
@@ -46,12 +54,20 @@ Who starts a Move decides its style
   position and speed stay continuous. A Part's offsets add the same way.
 - **The app on a tween.** A Trick, a deal or a turn is a fixed tween with
   deck-of-cards' timing, whose waypoints are offsets from the final rest.
-  It replaces the Body's Terms.
+  It replaces the Body's Terms. Tricks queue as deck-of-cards' do: each is
+  made only when its turn comes, from the Deck as it is then, and starts
+  in the frame the one before it lands, when its last move ends; a turn
+  it cues after that plays on. A Trick played at once cuts in on whatever
+  plays or waits instead.
 
 An app-started Move's clock starts only once the frame that paints its
 commit has painted, one frame in: that frame is the slowest of the move,
 and a clock already running would spend it, so the first visible step
-would jump. Reduced motion is one rewrite of the Terms a change adds: a
+would jump. A queued Trick is committed inside the frame the one before it
+lands, which paints it, and its clock is born at that frame, so a chain
+keeps the library's rhythm however long its commits take; deck-of-cards'
+curve starts slowly, so a slow commit frame costs its first step little.
+Reduced motion is one rewrite of the Terms a change adds: a
 dissolve past 24 px, a brief tween below it, and a flat crossfade for the
 turn. The app's "Always play animations" overrides it.
 
@@ -70,7 +86,8 @@ every Body and Part:
   with all transforms between it and its Body taken off, commits, writes
   each changed Body's first frame so the box keeps the size it showed, and
   reads again. The reads are rect differences, exact to the sub-pixel,
-  even on a rotated, tilted or turning Body.
+  even on a rotated, tilted or turning Body. A Body with no Parts is never
+  restyled for a read.
 - **Parts move by 2D translate,** never `translate3d`, and content keeps
   fixed widths, so nothing rewraps as the box grows.
 - **Where two Parts cross, one goes on top.** An app's skin makes it
@@ -100,7 +117,8 @@ every Body and Part:
   a resize.
 - Gesture code reads Slot rects. The Table never measures a Body except
   for its Parts, inside `transact`.
-- The seat is written only when the Body's stacking order or mode changes.
+- The seat is written only when the Body's stacking order or mode changes,
+  on its `z-index` and, held or leaving, its px box.
   Chrome lays every anchored element out again whenever any one of them is
   restyled, so a per-frame write on the anchored element cost layout for
   every Body on the Table ([#1312](https://github.com/clockblocker/texteater/issues/1312)).

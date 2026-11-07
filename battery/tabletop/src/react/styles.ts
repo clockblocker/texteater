@@ -2,35 +2,21 @@
  * The Table's stylesheet. Rest is CSS: a Body's seat sits on its Slot
  * through `anchor()` and `anchor-size()`, and the Body fills it, reading
  * its rotation, scale and side from `--rest-*`, which React writes; the
- * seat reads the stacking order. Motion is the `--fly-*` offsets the Table
- * writes on the Body while something moves, added inside `calc()` so the
- * box really resizes. Held and leaving Bodies' seats stand on a px box
- * (`--seat-*`) instead of their Slot, and the Body on the hand's offset
- * from it (`--box-*`). A tilting Body leans by its `transform` (`--tilt-*`)
- * and lights its Glares (`--glare-*`). While the Table reads Parts,
- * `[data-tabletop-measuring]` takes every transform off. Every property
- * the Table writes is registered and doesn't inherit, so a write restyles
- * one element.
+ * seat reads the stacking order. Motion is written by the Table straight
+ * on the moving Body's own `translate`, `rotate`, `scale`, `opacity` and
+ * size (`calc(100% + …)`, so the box really resizes), its seat's
+ * `z-index`, its Parts' `translate` and its shell's `transform`, and taken
+ * off again at rest: a custom property's change would restyle every
+ * element of its faces. Held and leaving Bodies' seats stand on a px box
+ * (`--seat-*`) instead of their Slot. A tilting Body leans by its
+ * `transform` (`--tilt-*`) and lights its Glares (`--glare-*`). While the
+ * Table reads Parts, `[data-tabletop-measuring]` takes every transform
+ * off. Every custom property here is registered and doesn't inherit.
  */
 
-const LENGTHS = [
-	"--fly-x",
-	"--fly-y",
-	"--fly-w",
-	"--fly-h",
-	"--box-x",
-	"--box-y",
-	"--seat-x",
-	"--seat-y",
-	"--seat-w",
-	"--seat-h",
-	"--part-x",
-	"--part-y",
-];
+const LENGTHS = ["--seat-x", "--seat-y", "--seat-w", "--seat-h"];
 const ANGLES = [
-	"--fly-rotate",
 	"--rest-rotate",
-	"--box-rotate",
 	"--fly-turn",
 	"--rest-turn",
 	"--tilt-x",
@@ -38,17 +24,12 @@ const ANGLES = [
 ];
 const PERCENTAGES = ["--glare-x", "--glare-y"];
 const NUMBERS: readonly (readonly [string, number])[] = [
-	["--fly-lift", 0],
-	["--fly-opacity", 0],
-	["--part-o", 0],
-	["--box-o", 1],
 	["--rest-scale", 1],
-	["--box-scale", 1],
 	["--turn-lift", 1],
 	["--tilt-lift", 0],
 	["--glare-o", 0],
 ];
-const INTEGERS = ["--fly-z", "--rest-z", "--box-z", "--fly-raise"];
+const INTEGERS = ["--rest-z"];
 
 function property(name: string, syntax: string, initial: string | number) {
 	return `@property ${name}{syntax:"${syntax}";inherits:false;initial-value:${initial}}`;
@@ -72,22 +53,12 @@ export const TABLE_CSS = `${REGISTERED}
 [data-tabletop-origin]{position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none}
 [data-tabletop-seat]{position:fixed;margin:0;inset:auto;
 top:anchor(top);left:anchor(left);width:anchor-size(width);height:anchor-size(height);
-z-index:calc(var(--rest-z) + var(--fly-z) + var(--fly-raise) * 1000);
-contain:size layout;position-visibility:always;pointer-events:none}
-[data-tabletop-seat][data-mode]{top:var(--seat-y);left:var(--seat-x);width:var(--seat-w);height:var(--seat-h);
-z-index:calc(var(--box-z) + var(--fly-z))}
+z-index:var(--rest-z);contain:size layout;position-visibility:always;pointer-events:none}
+[data-tabletop-seat][data-mode]{top:var(--seat-y);left:var(--seat-x);width:var(--seat-w);height:var(--seat-h)}
 [data-tabletop-body]{position:absolute;margin:0;box-sizing:border-box;inset:auto;top:0;left:0;
-width:calc(100% + var(--fly-w));height:calc(100% + var(--fly-h));
-translate:var(--fly-x) var(--fly-y);
-rotate:calc(var(--dir) * var(--rest-rotate) + var(--fly-rotate));
-scale:calc(var(--rest-scale) * (1 + var(--fly-lift)));
-opacity:calc(1 + var(--fly-opacity));
+width:100%;height:100%;rotate:calc(var(--dir) * var(--rest-rotate));scale:var(--rest-scale);
 transform-origin:50% 50%;contain:layout;pointer-events:auto;
 touch-action:none;user-select:none;-webkit-user-select:none}
-[data-tabletop-seat][data-mode]>[data-tabletop-body]{translate:calc(var(--box-x) + var(--fly-x)) calc(var(--box-y) + var(--fly-y));
-rotate:calc(var(--box-rotate) + var(--fly-rotate));
-scale:calc(var(--box-scale) * (1 + var(--fly-lift)));
-opacity:calc(var(--box-o) + var(--fly-opacity))}
 [data-tabletop-seat][data-mode="unmoored"]>[data-tabletop-body]{pointer-events:none}
 [data-tabletop-body][data-tilt]{transform:perspective(var(--tilt-perspective,600px)) rotateX(var(--tilt-x)) rotateY(calc(-1 * var(--dir) * var(--tilt-y))) scale(calc(1 + var(--tilt-lift)))}
 [data-reduced] [data-tabletop-body]{transform:none}
@@ -99,9 +70,7 @@ backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;co
 [data-tabletop-face="back"]{transform:rotateY(180deg)}
 [data-turn-axis="x"] [data-tabletop-face="back"]{transform:rotateX(180deg)}
 [data-reduced] [data-tabletop-shell],[data-reduced] [data-tabletop-face="back"]{transform:none}
-[data-reduced] [data-tabletop-face="front"]{opacity:var(--turn-front,1)}
-[data-reduced] [data-tabletop-shell][data-side="back"]>[data-tabletop-face="front"]{opacity:var(--turn-front,0)}
-[data-tabletop-part]{translate:var(--part-x) var(--part-y);opacity:calc(1 + var(--part-o))}
+[data-reduced] [data-tabletop-shell][data-side="back"]>[data-tabletop-face="front"]{opacity:0}
 [data-tabletop-measuring]{rotate:none!important;scale:none!important;transform:none!important}
 [data-tabletop-measuring] :is([data-tabletop-shell],[data-tabletop-face]){transform:none!important}
 [data-tabletop-measuring] [data-tabletop-part]{translate:none!important}

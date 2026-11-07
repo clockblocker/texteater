@@ -48,7 +48,7 @@ export function haunt(
 	copy.setAttribute("data-tabletop-ghost", "");
 	copy.setAttribute("aria-hidden", "true");
 	copy.inert = true;
-	for (const prop of ["--part-x", "--part-y", "--part-o"])
+	for (const prop of ["translate", "opacity"])
 		copy.style.removeProperty(prop);
 	Object.assign(copy.style, {
 		position: "absolute",

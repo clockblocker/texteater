@@ -11,7 +11,7 @@ import {
 	shownLean,
 } from "../core/tilt";
 import type { BodyState, Engine } from "./engine";
-import { setWritten, type Written } from "./write";
+import { setWritten, writtenOn } from "./write";
 
 /**
  * A Body's tilt: the lean, lift and glare it heads for, and the Terms still
@@ -32,18 +32,6 @@ const MAX_TILTING = 3;
 
 const BODY_PROPS = ["--tilt-x", "--tilt-y", "--tilt-lift"] as const;
 const GLARE_PROPS = ["--glare-x", "--glare-y", "--glare-o"] as const;
-
-/** What the tilt last wrote on each Glare. */
-const lightWritten = new WeakMap<HTMLElement, Written>();
-
-function writtenOn(light: HTMLElement): Written {
-	let written = lightWritten.get(light);
-	if (!written) {
-		written = new Map();
-		lightWritten.set(light, written);
-	}
-	return written;
-}
 
 function clearLight(light: HTMLElement) {
 	const written = writtenOn(light);

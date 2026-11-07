@@ -9,16 +9,20 @@ import {
 	frontOpacity,
 	restAngle,
 	type TurnFeel,
-	turnLift,
+	turnTransform,
 } from "../core/turn";
 import { clearGhosts, type Ghost, startGhosts, writeGhosts } from "./ghosts";
 import { type TiltState, writeTilt } from "./tilt";
 import {
 	type Spans,
+	type Stance,
+	seatZ,
 	setWritten,
 	spansAt,
 	type Written,
-	writeChannels,
+	writeBody,
+	writePart,
+	writtenOn,
 } from "./write";
 
 /** Where a Body stands: on its Slot, in the hand, or leaving for good. */
@@ -69,7 +73,6 @@ export type BodyState = {
 	base: Base;
 	/** The pointer's offset from the box's corner while held. */
 	grab: Point;
-	boxDirty: boolean;
 	readonly parts: Map<string, PartState>;
 	readonly written: Written;
 	readonly seatWritten: Written;
@@ -87,37 +90,7 @@ export type Clock = { readonly now: () => number };
 /** One frame at 60 Hz, in ms. */
 const FRAME_MS = 1000 / 60;
 
-const BODY_PROPS = {
-	x: "--fly-x",
-	y: "--fly-y",
-	width: "--fly-w",
-	height: "--fly-h",
-	rotate: "--fly-rotate",
-	lift: "--fly-lift",
-	opacity: "--fly-opacity",
-} as const satisfies Partial<Record<Channel, string>>;
-const SEAT_PROPS = { z: "--fly-z" } as const satisfies Partial<
-	Record<Channel, string>
->;
-const PART_PROPS = {
-	x: "--part-x",
-	y: "--part-y",
-	opacity: "--part-o",
-} as const satisfies Partial<Record<Channel, string>>;
-const BOX_PROPS = [
-	"--box-x",
-	"--box-y",
-	"--box-rotate",
-	"--box-scale",
-	"--box-o",
-];
-const SEAT_BOX_PROPS = [
-	"--seat-x",
-	"--seat-y",
-	"--seat-w",
-	"--seat-h",
-	"--box-z",
-];
+const SEAT_BOX_PROPS = ["--seat-x", "--seat-y", "--seat-w", "--seat-h"];
 
 const REST_BASE: Base = { rotate: 0, scale: 1, z: 0, opacity: 1 };
 
@@ -154,11 +127,21 @@ export class Engine {
 	private readonly unstarted = new Set<BodyState>();
 	/** The frame the unstarted Terms start on: the one after the next. */
 	private startFrame = Number.POSITIVE_INFINITY;
+	/** When they start, if not one frame before that frame: a cue's frame. */
+	private startBirth: number | null = null;
 	/** The frames the loop has run, and the Table time of the last. */
 	private frames = 0;
 	private lastFrame = Number.NEGATIVE_INFINITY;
 	private loop: number | null = null;
+	/** Set while a frame's callback runs, before that frame paints. */
+	private inFrame = false;
 	private waiters: { ids: readonly string[]; resolve: () => void }[] = [];
+	/** Callbacks due `ms` after the Terms held when they were cued start. */
+	private cues: {
+		readonly ms: number;
+		at: number;
+		readonly fn: () => void;
+	}[] = [];
 	private base = 0;
 	private realBase = performance.now();
 	private scale = 1;
@@ -216,7 +199,6 @@ export class Engine {
 				seatBox: null,
 				base: REST_BASE,
 				grab: { x: 0, y: 0 },
-				boxDirty: false,
 				parts: new Map(),
 				written: new Map(),
 				seatWritten: new Map(),
@@ -366,7 +348,37 @@ export class Engine {
 	 */
 	defer(body: BodyState) {
 		this.unstarted.add(body);
-		this.startFrame = Math.min(this.startFrame, this.frames + 1);
+		this.holdThroughPaint();
+	}
+
+	/**
+	 * The frame that starts what is held now: the one after the frame that
+	 * paints it. A change made inside a frame's callback, by a cue, paints
+	 * in that frame and starts on the next, its clock born at the cue's
+	 * frame: a Trick queued behind another starts where the one before it
+	 * landed, as deck-of-cards' next trick does, however long its commit.
+	 */
+	private holdThroughPaint() {
+		this.startFrame = Math.min(
+			this.startFrame,
+			this.frames + (this.inFrame ? 0 : 1),
+		);
+		if (this.inFrame)
+			this.startBirth = Math.min(
+				this.startBirth ?? Number.POSITIVE_INFINITY,
+				this.lastFrame,
+			);
+	}
+
+	/**
+	 * Calls `fn` `ms` of Table time after the Terms held now start, inside
+	 * the first frame at or past it and before that frame paints, so what
+	 * `fn` commits paints with it: when a Trick lands, the next starts.
+	 */
+	cue(ms: number, fn: () => void) {
+		this.cues.push({ ms, at: Number.POSITIVE_INFINITY, fn });
+		this.holdThroughPaint();
+		if (this.loop === null) this.loop = requestAnimationFrame(this.tick);
 	}
 
 	private start(at: number) {
@@ -378,6 +390,21 @@ export class Engine {
 			startGhosts(body, at);
 		}
 		this.unstarted.clear();
+		for (const cue of this.cues)
+			if (cue.at === Number.POSITIVE_INFINITY) cue.at = at + cue.ms;
+	}
+
+	/** Calls every cue due at `now`, as part of this frame. */
+	private callCues(now: number) {
+		const due = this.cues.filter((cue) => cue.at <= now);
+		if (due.length === 0) return;
+		this.cues = this.cues.filter((cue) => cue.at > now);
+		this.inFrame = true;
+		try {
+			for (const cue of due) cue.fn();
+		} finally {
+			this.inFrame = false;
+		}
 	}
 
 	/** Settles once none of `ids` has a Term left. */
@@ -417,12 +444,16 @@ export class Engine {
 		this.dpr = devicePixelRatio();
 		if (index >= this.startFrame) {
 			this.startFrame = Number.POSITIVE_INFINITY;
-			this.start(now - FRAME_MS * this.scale);
+			this.start(this.startBirth ?? now - FRAME_MS * this.scale);
+			this.startBirth = null;
 		}
 		for (const body of this.active)
 			if (!this.write(body, now)) this.active.delete(body);
+		this.callCues(now);
 		this.loop =
-			this.active.size > 0 ? requestAnimationFrame(this.tick) : null;
+			this.active.size > 0 || this.cues.length > 0
+				? requestAnimationFrame(this.tick)
+				: null;
 		this.resolveWaiters();
 	};
 
@@ -431,44 +462,36 @@ export class Engine {
 		const el = body.el;
 		if (!el) return false;
 		body.terms = body.terms.filter((term) => !done(term, now));
-		writeChannels(
+		writeBody(
 			el.style,
 			body.written,
 			body.terms,
-			BODY_PROPS,
 			now,
 			body.spans,
 			this.dpr,
+			this.stance(body),
 		);
 		const seat = body.seat;
-		if (seat) {
-			writeChannels(
-				seat.style,
-				body.seatWritten,
-				body.terms,
-				SEAT_PROPS,
-				now,
-				{},
-				this.dpr,
-			);
+		if (seat)
 			setWritten(
 				seat.style,
 				body.seatWritten,
-				"--fly-raise",
-				body.terms.some((term) => term.raise) ? "1" : null,
+				"z-index",
+				seatZ(
+					body.terms,
+					now,
+					body.place?.z ?? 0,
+					body.mode === "rest" ? null : body.base.z,
+				),
 			);
-		}
-		if (body.mode !== "rest" && body.box && body.boxDirty)
-			this.writeBox(body);
 		this.writeTurn(body, now);
 		let parts = false;
 		for (const part of body.parts.values()) {
 			part.terms = part.terms.filter((term) => !done(term, now));
-			writeChannels(
+			writePart(
 				part.el.style,
 				part.written,
 				part.terms,
-				PART_PROPS,
 				now,
 				part.spans,
 				this.dpr,
@@ -481,6 +504,29 @@ export class Engine {
 	}
 
 	/**
+	 * What `body`'s offsets add to: its Place's rotation and scale at rest,
+	 * or its base and its hand box's offset from its seat while held or
+	 * leaving.
+	 */
+	private stance(body: BodyState): Stance {
+		const box = body.box;
+		const seat = body.seatBox;
+		if (body.mode !== "rest" && box && seat)
+			return {
+				rotate: body.base.rotate,
+				scale: body.base.scale,
+				opacity: body.base.opacity,
+				at: { x: box.x - seat.x, y: box.y - seat.y },
+			};
+		return {
+			rotate: this.dir * (body.place?.rotate ?? 0),
+			scale: body.place?.scale ?? 1,
+			opacity: 1,
+			at: null,
+		};
+	}
+
+	/**
 	 * Stands a held or leaving Body's seat on its px box, unanchored, so the
 	 * hand's moves write only the Body: written once, as the hand takes it
 	 * or it leaves.
@@ -490,7 +536,6 @@ export class Engine {
 		const box = body.box;
 		body.mode = mode;
 		body.seatBox = box;
-		body.boxDirty = true;
 		if (body.el) body.el.dataset.mode = mode;
 		if (!seat || !box) return;
 		const origin = this.originPoint();
@@ -500,24 +545,7 @@ export class Engine {
 		set("--seat-y", `${box.y - origin.y}px`);
 		set("--seat-w", `${box.width}px`);
 		set("--seat-h", `${box.height}px`);
-		set("--box-z", String(Math.round(body.base.z)));
 		seat.dataset.mode = mode;
-	}
-
-	/** The px box a held or leaving Body stands on, from its seat's corner. */
-	writeBox(body: BodyState) {
-		const el = body.el;
-		const box = body.box;
-		const seat = body.seatBox;
-		if (!el || !box || !seat) return;
-		const set = (prop: string, value: string) =>
-			setWritten(el.style, body.written, prop, value);
-		set("--box-x", `${box.x - seat.x}px`);
-		set("--box-y", `${box.y - seat.y}px`);
-		set("--box-rotate", `${body.base.rotate}deg`);
-		set("--box-scale", String(body.base.scale));
-		set("--box-o", String(body.base.opacity));
-		body.boxDirty = false;
 	}
 
 	/** Puts a held or leaving Body back on its Slot's rest. */
@@ -527,11 +555,7 @@ export class Engine {
 		body.box = null;
 		body.seatBox = null;
 		body.base = REST_BASE;
-		if (el) {
-			delete el.dataset.mode;
-			for (const prop of BOX_PROPS)
-				setWritten(el.style, body.written, prop, null);
-		}
+		if (el) delete el.dataset.mode;
 		const seat = body.seat;
 		if (seat) {
 			delete seat.dataset.mode;
@@ -540,33 +564,40 @@ export class Engine {
 		}
 	}
 
+	/**
+	 * The turn, straight on the shell's `transform`, or under reduced motion
+	 * on its front's opacity, which fades over the flat back: never as
+	 * custom properties, which would restyle both faces every frame.
+	 */
 	private writeTurn(body: BodyState, now: number) {
 		const shell = body.shell;
 		if (!shell) return;
 		const turning = body.terms.some((term) => term.channel === "turn");
-		const written = body.written;
-		if (!turning) {
-			for (const prop of ["--fly-turn", "--turn-lift", "--turn-front"])
-				if (written.delete(`shell:${prop}`))
-					shell.style.removeProperty(prop);
-			return;
-		}
-		const offset = sumAt(body.terms, "turn", now);
-		const angle = restAngle(body.place?.side ?? "front") + offset;
+		const angle =
+			restAngle(body.place?.side ?? "front") +
+			sumAt(body.terms, "turn", now);
 		const reduced = this.policy.reduced;
-		const values: [string, string][] = [
-			["--fly-turn", `${offset}deg`],
-			[
-				"--turn-lift",
-				String(reduced ? 1 : turnLift(angle, this.turn.lift)),
-			],
-		];
-		if (reduced)
-			values.push(["--turn-front", String(frontOpacity(angle, true))]);
-		for (const [prop, value] of values) {
-			if (written.get(`shell:${prop}`) === value) continue;
-			shell.style.setProperty(prop, value);
-			written.set(`shell:${prop}`, value);
-		}
+		const front = shell.querySelector<HTMLElement>(
+			':scope > [data-tabletop-face="front"]',
+		);
+		setWritten(
+			shell.style,
+			writtenOn(shell),
+			"transform",
+			turning && !reduced
+				? turnTransform(
+						this.turn.axis === "y" ? this.dir * angle : angle,
+						this.turn,
+						false,
+					)
+				: null,
+		);
+		if (front)
+			setWritten(
+				front.style,
+				writtenOn(front),
+				"opacity",
+				turning && reduced ? String(frontOpacity(angle, true)) : null,
+			);
 	}
 }

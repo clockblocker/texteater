@@ -205,6 +205,44 @@ describe("a change of side", () => {
 		expect(angle(0, back, 450)).toBe(0);
 	});
 
+	test("starts a scripted move off its side, turning at its sideAt", () => {
+		const intro: Move = {
+			source: "app",
+			tween: { ms: 1000, ease: linear },
+			from: { turn: -180 },
+			sideAt: 1750,
+		};
+		const list = terms(
+			retarget(input({ turn: 180 }, { turn: 180 }, intro)),
+		);
+		expect(angle(180, list, 1750)).toBe(0);
+		expect(angle(180, list, 1900)).toBeGreaterThan(0);
+		expect(angle(180, list, 2050)).toBe(180);
+	});
+
+	test("switches at once at its sideAt when the turn has no length", () => {
+		const cue: Move = {
+			source: "app",
+			tween: { ms: 300, ease: linear },
+			sideAt: 250,
+		};
+		const list = terms(
+			retarget({
+				...input({ turn: 180 }, { turn: 0 }, cue),
+				turn: { ms: 0, ease: linear },
+			}),
+		);
+		expect(angle(0, list, 250)).toBe(-180);
+		expect(angle(0, list, 251)).toBe(0);
+		const now = terms(
+			retarget({
+				...input({ turn: 180 }, { turn: 0 }, any),
+				turn: { ms: 0, ease: linear },
+			}),
+		);
+		expect(now).toEqual([]);
+	});
+
 	test("leaves a turn in flight alone when the side is unchanged", () => {
 		const down = terms(retarget(input({ turn: 0 }, { turn: 180 }, any)));
 		const result = retarget(

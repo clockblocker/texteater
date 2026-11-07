@@ -116,6 +116,29 @@ export function fan(
 	});
 }
 
+/**
+ * Each Card centred where `centre` puts it, rem from the Region's centre,
+ * and turned by `rotate`: any pose the others don't draw, such as
+ * deck-of-cards' rows by suit, or a Card left where the hand let it go.
+ */
+export function arrange(
+	ids: readonly string[],
+	region: RegionId,
+	{
+		card,
+		centre,
+		rotate,
+	}: {
+		readonly card: CardSize;
+		readonly centre: (id: string, index: number) => Logical;
+		readonly rotate?: (id: string, index: number) => number;
+	},
+): Posed[] {
+	return ids.map((id, i) =>
+		posed(region, id, centre(id, i), card, rotate?.(id, i) ?? 0),
+	);
+}
+
 /** Rows of `columns` Cards, `gap` rem apart, centred on `origin`. */
 export function grid(
 	ids: readonly string[],

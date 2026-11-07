@@ -228,6 +228,27 @@ export function timeToShare(term: Term, share: number): number {
 	return term.delayMs + 4000;
 }
 
+/** How long after its birth `term` reaches 0 for good, in ms. */
+function endOf(term: Term): number {
+	return term.curve.kind === "tween"
+		? term.delayMs + term.curve.ms
+		: timeToShare(term, 1);
+}
+
+/**
+ * When a move lands, in ms from its birth: the latest end among its Terms
+ * that carry the Body, its rotation, lift or opacity. A turn or a stacking
+ * order still to come doesn't hold it up, as deck-of-cards' next trick
+ * doesn't wait for a Card's turn after it lands.
+ */
+export function landsAt(terms: readonly Term[]): number {
+	let end = 0;
+	for (const term of terms)
+		if (term.channel !== "turn" && term.channel !== "z")
+			end = Math.max(end, endOf(term));
+	return end;
+}
+
 /** `terms`, with every one the Table held started at `at`. */
 export function startTerms(terms: readonly Term[], at: number): Term[] {
 	return terms.map((term) =>

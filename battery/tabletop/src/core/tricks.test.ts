@@ -1,16 +1,17 @@
 import { describe, expect, test } from "bun:test";
 import { DECK_OF_CARDS_EASE } from "./ease";
 import type { Posed } from "./place";
-import { fan, pile } from "./poses";
+import { arrange, fan, pile } from "./poses";
+import type { Trick, TrickLeg, TrickMove } from "./trick";
 import {
+	bysuit,
 	deal,
 	fanOut,
+	flip,
+	poker,
 	shuffle,
 	sort,
-	type Trick,
-	type TrickLeg,
-	type TrickMove,
-	trickMove,
+	turnDown,
 } from "./tricks";
 
 /* every number below is deck-of-cards' own, from upstream's `lib/modules/*.js`;
@@ -21,9 +22,12 @@ const DECK = Array.from({ length: 52 }, (_, i) => `c${i}`);
 const stack = (order: readonly string[]) => pile(order, "felt", { card: CARD });
 const fanned = (order: readonly string[]) => fan(order, "felt", { card: CARD });
 
-function moveOf(trick: Trick, index: number): TrickMove {
-	const id = trick.order[index] as string;
+function moveOf(trick: Trick, id: string): TrickMove {
 	return trick.moves.get(id) as TrickMove;
+}
+
+function at(trick: Trick, index: number): TrickMove {
+	return moveOf(trick, trick.order[index] as string);
 }
 
 function restOf(trick: Trick, index: number): Posed {
@@ -46,22 +50,35 @@ function replay(values: readonly number[]): () => number {
 	return () => values[next++] ?? 0.5;
 }
 
-describe("deal, the library's intro", () => {
-	const trick = deal(DECK, stack);
+describe("the stack", () => {
+	test("rests Card i a quarter px per Card up and to the left", () => {
+		const centres = stack(DECK).map((posed) => posed.centre);
+		expect(centres[4]).toEqual({ u: -1 / 16, v: -1 / 16 });
+		expect((centres[51]?.u ?? 0) * 16).toBe(-12.75);
+	});
+});
 
-	test("drops each Card from 250 px above its rest, unseen", () => {
-		expect(moveOf(trick, 8).from).toEqual({
+describe("deal, the library's intro", () => {
+	const trick = deal(DECK, stack, { faceDown: true });
+
+	test("starts each Card 250 px above its rest, unseen, face up", () => {
+		const move = at(trick, 8);
+		expect(move.from).toEqual({
 			u: 0,
 			v: -250 / 16,
 			w: 0,
 			h: 0,
 			rotate: 0,
 			opacity: -1,
+			turn: -180,
 		});
+		expect((restOf(trick, 8).centre.v + (move.from?.v ?? 0)) * 16).toBe(
+			-252,
+		);
 	});
 
-	test("for 1000 ms after 500 + 10i, fading in on the linear time", () => {
-		const move = moveOf(trick, 8);
+	test("drops it for 1000 ms after 500 + 10i, fading in on the linear time", () => {
+		const move = at(trick, 8);
 		expect(move.legs).toEqual([
 			{ at: 580, ms: 1000, to: { u: 0, v: 0 } },
 			{
@@ -72,13 +89,18 @@ describe("deal, the library's intro", () => {
 			},
 		]);
 		expect(move.zAt).toBe(580);
-		expect(move.sideAt).toBeUndefined();
 	});
 
-	test("turns it face down 250 ms after it lands when asked", () => {
-		expect(moveOf(deal(DECK, stack, { faceDown: true }), 8).sideAt).toBe(
-			1830,
-		);
+	test("turns it face down 250 ms after it lands", () => {
+		expect(at(trick, 8).sideAt).toBe(1830);
+		expect(new Set(trick.sides?.values())).toEqual(new Set(["back"]));
+	});
+
+	test("keeps each Card's side and face without faceDown", () => {
+		const plain = deal(DECK, stack);
+		expect(at(plain, 8).sideAt).toBeUndefined();
+		expect(at(plain, 8).from?.turn).toBeUndefined();
+		expect(plain.sides).toBeUndefined();
 	});
 });
 
@@ -86,7 +108,7 @@ describe("fanOut", () => {
 	const trick = fanOut(DECK, fanned);
 
 	test("gathers onto the stack for 300 ms, then spreads for 300 from −130° to 130°", () => {
-		const last = moveOf(trick, 51);
+		const last = at(trick, 51);
 		const gather = absolute(trick, 51, last.legs[0] as TrickLeg);
 		expect(gather.x).toBeCloseTo(-12.75, 10);
 		expect(gather.y).toBeCloseTo(-12.75, 10);
@@ -99,10 +121,9 @@ describe("fanOut", () => {
 		});
 		expect(restOf(trick, 0).rotate).toBe(-130);
 		expect(restOf(trick, 51).rotate).toBe(130);
-		expect(last.zAt).toBe(810);
 	});
 
-	test("rests on radius 55 around the centre", () => {
+	test("rests on radius 55 around the centre, its stacking order set as it spreads", () => {
 		const radians = ((130 - 90) * Math.PI) / 180;
 		expect(restOf(trick, 51).centre.u * 16).toBeCloseTo(
 			Math.cos(radians) * 55,
@@ -112,6 +133,7 @@ describe("fanOut", () => {
 			Math.sin(radians) * 55,
 			10,
 		);
+		expect(at(trick, 51).zAt).toBe(810);
 	});
 });
 
@@ -125,21 +147,33 @@ describe("shuffle", () => {
 		).toEqual(["c1", "c0", "c2"]);
 	});
 
-	test("slides each Card 20–60 px out in 200 ms, 2 ms apart, and back", () => {
+	test("slides each Card 20–60 px out from the centre, level with its place, and back", () => {
 		/* card 1: distance 0.5 × 40 + 20 = 40, round(0.7) = 1 → left */
 		const trick = shuffle(deck, stack, {
 			random: replay([0.9, 0.1, 0, 0, 0.5, 0.7]),
 		});
-		const move = moveOf(trick, 1);
-		expect(move.legs[0]).toEqual({
-			at: 2,
+		const move = at(trick, 1);
+		const out = absolute(trick, 1, move.legs[0] as TrickLeg);
+		expect(out.x).toBeCloseTo(-40, 10);
+		expect(out.y).toBeCloseTo(-0.25, 10);
+		expect(move.legs[0]).toMatchObject({ at: 2, ms: 200 });
+		expect(move.legs[1]).toEqual({
+			at: 202,
 			ms: 200,
-			to: { u: -40 / 16, v: 0, rotate: -0 },
+			to: { u: 0, v: 0, rotate: 0 },
 		});
-		expect(move.legs[1]).toMatchObject({ at: 202, ms: 200 });
 		expect(move.zAt).toBe(202);
 		/* card 0: distance 20, round(0) = 0 → right */
-		expect(moveOf(trick, 0).legs[0]?.to.u).toBe(20 / 16);
+		const right = at(trick, 0);
+		expect(absolute(trick, 0, right.legs[0] as TrickLeg).x).toBe(20);
+	});
+
+	test("scales the slide with the Cards", () => {
+		const trick = shuffle(deck, stack, {
+			scale: 2,
+			random: replay([0.9, 0.1, 0, 0]),
+		});
+		expect(absolute(trick, 0, at(trick, 0).legs[0] as TrickLeg).x).toBe(40);
 	});
 });
 
@@ -153,31 +187,92 @@ describe("sort", () => {
 
 	test("lifts to y −150 in 400 ms, restacks, and comes down at 500 ms", () => {
 		const trick = sort(DECK, stack, { rank });
-		const move = moveOf(trick, 3);
+		const move = at(trick, 3);
 		const lift = absolute(trick, 3, move.legs[0] as TrickLeg);
 		expect(lift.y).toBeCloseTo(-150, 10);
 		expect(lift.x).toBeCloseTo(-0.75, 10);
+		expect(lift.rot).toBe(0);
 		expect(move.legs[0]).toMatchObject({ at: 30, ms: 400 });
-		expect(move.legs[1]).toMatchObject({ at: 530, ms: 400 });
+		expect(move.legs[1]).toEqual({
+			at: 530,
+			ms: 400,
+			to: { u: 0, v: 0, rotate: 0 },
+		});
 		expect(move.zAt).toBe(430);
 	});
 });
 
-describe("trickMove", () => {
-	test("turns rem into px and mirrors the inline axis and rotation in RTL", () => {
-		const move = trickMove(
-			{
-				from: { u: 1, opacity: -1 },
-				legs: [{ at: 10, ms: 300, to: { u: 2, v: -1, rotate: 30 } }],
-				zAt: 310,
-			},
-			{ remPx: 16, dir: -1 },
+describe("bysuit", () => {
+	/* a 5 of hearts is the library's card 17 */
+	const index = (id: string) => Number(id.slice(1));
+	const rows = (order: readonly string[]) =>
+		arrange(order, "felt", {
+			card: CARD,
+			centre: (id) => ({ u: index(id) / 16, v: 0 }),
+		});
+
+	test("moves each Card straight to its row in 400 ms, 10 ms × its own number apart", () => {
+		const order = ["c17", "c3"];
+		const trick = bysuit(order, rows, { index });
+		expect(moveOf(trick, "c17")).toEqual({
+			legs: [{ at: 170, ms: 400, to: { u: 0, v: 0, rotate: 0 } }],
+		});
+		expect(moveOf(trick, "c3").legs[0]?.at).toBe(30);
+		expect(trick.order).toBe(order);
+		expect(restOf(trick, 0).centre).toEqual({ u: 17 / 16, v: 0 });
+	});
+});
+
+describe("poker", () => {
+	const trick = poker(DECK, stack);
+
+	test("deals the top five, the top first, 250 ms apart, face up as each lands", () => {
+		expect([...trick.moves.keys()]).toEqual([
+			"c51",
+			"c50",
+			"c49",
+			"c48",
+			"c47",
+		]);
+		expect(moveOf(trick, "c49")).toEqual({
+			legs: [{ at: 500, ms: 250, to: { u: 0, v: 0, rotate: 0 } }],
+			zAt: 500,
+			sideAt: 750,
+		});
+		expect(trick.sides).toEqual(
+			new Map(
+				["c51", "c50", "c49", "c48", "c47"].map((id) => [id, "front"]),
+			),
 		);
-		if (!("tween" in move)) throw new Error("a trick plays on a tween");
-		expect(move.path?.x).toEqual([{ at: 10, ms: 300, to: -32 }]);
-		expect(move.path?.y).toEqual([{ at: 10, ms: 300, to: -16 }]);
-		expect(move.path?.rotate).toEqual([{ at: 10, ms: 300, to: -30 }]);
-		expect(move.from).toEqual({ x: -16, opacity: -1 });
-		expect(move.zAt).toBe(310);
+		expect(trick.order).toBe(DECK);
+	});
+});
+
+describe("flip", () => {
+	const deck = DECK.slice(0, 4);
+
+	test("turns every Card face down when more than half are up, else face up, at once", () => {
+		const up = new Set(deck.slice(0, 3));
+		const sideOf = (id: string) => (up.has(id) ? "front" : "back");
+		const down = flip(deck, stack, { sideOf });
+		expect(new Set(down.sides?.values())).toEqual(new Set(["back"]));
+		expect(moveOf(down, "c2")).toEqual({ legs: [], sideAt: 0 });
+		up.delete("c0");
+		expect(new Set(flip(deck, stack, { sideOf }).sides?.values())).toEqual(
+			new Set(["front"]),
+		);
+	});
+
+	test("turns every Card to the side it names", () => {
+		const trick = flip(deck, stack, { sideOf: () => "back", side: "back" });
+		expect(trick.sides?.get("c0")).toBe("back");
+	});
+});
+
+describe("turnDown, poker's first step", () => {
+	test("turns every Card face down 7.5 ms a Card apart, moving none", () => {
+		const trick = turnDown(DECK, stack);
+		expect(moveOf(trick, "c4")).toEqual({ legs: [], sideAt: 30 });
+		expect(trick.sides?.get("c51")).toBe("back");
 	});
 });

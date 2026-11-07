@@ -14,10 +14,11 @@ import type { SlotId } from "../core/place";
 import { motionPolicy } from "../core/reduce";
 import { SPRINGS } from "../core/springs";
 import type { TiltFeel } from "../core/tilt";
-import { type Trick, trickMove } from "../core/tricks";
+import type { Trick } from "../core/trick";
 import { DEFAULT_TURN, type TurnFeel } from "../core/turn";
 import { type Clock, Engine } from "./engine";
 import { carry, type Flight, hold, leave } from "./hand";
+import { playTrick, type Staged, TrickQueue } from "./queue";
 import { TABLE_CSS } from "./styles";
 import { flattenAll, type Pointing, point } from "./tilt";
 import { type Moves, transact } from "./transact";
@@ -45,10 +46,21 @@ export type TableHandle = {
 	 */
 	readonly transact: (commit: (() => void) | null, moves?: Moves) => void;
 	/**
-	 * Plays `trick`: `commit` gives the Deck the trick's order and rest, and
-	 * each Card passes its waypoints on the way. Settles when they all rest.
+	 * Plays `trick` at once, cutting in on any Trick playing or queued:
+	 * `commit` gives the Deck the trick's order, rest and sides, and each
+	 * Card passes its waypoints on the way from where it shows. Settles
+	 * when they all rest.
 	 */
 	readonly play: (trick: Trick, commit?: () => void) => Promise<void>;
+	/**
+	 * Queues a Trick behind every one queued before it, as deck-of-cards
+	 * runs them: `stage` makes it when its turn comes, from the Deck as it
+	 * is then (`null` skips it), and the next starts in the frame its last
+	 * move lands, while a turn it cued after plays on. Settles as it lands.
+	 */
+	readonly queue: (stage: () => Staged | null) => Promise<void>;
+	/** Forgets every Trick still queued; the next one queued starts at once. */
+	readonly drop: () => void;
 	/** `id` leaves for good, flying on with the throw; drop it once this settles. */
 	readonly leave: (id: string, flight: Flight) => Promise<void>;
 	/**
@@ -67,15 +79,11 @@ export type TableHandle = {
 	readonly engine: Engine;
 };
 
-function rootRemPx(): number {
-	return (
-		Number.parseFloat(
-			getComputedStyle(document.documentElement).fontSize,
-		) || 16
-	);
-}
-
 function handleOf(engine: Engine): TableHandle {
+	const tricks = new TrickQueue(
+		(staged) => playTrick(engine, staged),
+		(ms, fn) => engine.cue(ms, fn),
+	);
 	return {
 		engine,
 		hold: (id, pointer) => hold(engine, id, pointer),
@@ -94,16 +102,12 @@ function handleOf(engine: Engine): TableHandle {
 			),
 		transact: (commit, moves) => transact(engine, commit, moves),
 		play: (trick, commit) => {
-			const frame = { remPx: rootRemPx(), dir: engine.dir };
-			const moves = new Map(
-				[...trick.moves].map(([id, move]) => [
-					id,
-					trickMove(move, frame),
-				]),
-			);
-			transact(engine, commit ?? null, moves);
+			tricks.drop();
+			playTrick(engine, { trick, commit });
 			return engine.settled([...trick.moves.keys()]);
 		},
+		queue: (stage) => tricks.push(stage),
+		drop: () => tricks.drop(),
 		leave: (id, flight) => leave(engine, id, flight),
 		point: (id, pointer) => point(engine, id, pointer),
 		moving: (id) => {

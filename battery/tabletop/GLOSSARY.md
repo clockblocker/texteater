@@ -62,7 +62,8 @@ _Avoid_: hover effect, parallax
 
 **Trick**:
 A scripted Move for a Deck: a new order and Places for its Cards, and the
-waypoints each Card passes on the way. A waypoint is never a Place.
+waypoints each Card passes on the way. A waypoint is never a Place. Tricks
+queue: each starts as the one before it lands.
 _Avoid_: animation, choreography
 
 [ADR 0001]: ./docs/adr/0001-rest-bodies-in-css-slots-and-move-them-by-decaying-terms.md

@@ -30,9 +30,14 @@ export type Before = {
  */
 const MEASURING = "data-tabletop-measuring";
 
-/** Takes the transforms off `bodies` for a read, or puts them back. */
+/**
+ * Takes the transforms off `bodies` for a read, or puts them back. A Body
+ * with no Parts has nothing to read, so it is never restyled for one: a
+ * restyle of every Body on a full Table costs more than the move.
+ */
 export function measuring(bodies: Iterable<BodyState>, on: boolean) {
-	for (const body of bodies) body.el?.toggleAttribute(MEASURING, on);
+	for (const body of bodies)
+		if (!on || body.parts.size > 0) body.el?.toggleAttribute(MEASURING, on);
 }
 
 /**
@@ -43,7 +48,7 @@ export function measuring(bodies: Iterable<BodyState>, on: boolean) {
 export function partLayout(body: BodyState): Map<string, Offset> {
 	const offsets = new Map<string, Offset>();
 	const root = body.el;
-	if (!root) return offsets;
+	if (!root || body.parts.size === 0) return offsets;
 	const origin = root.getBoundingClientRect();
 	for (const part of body.parts.values()) {
 		const rect = part.el.getBoundingClientRect();
