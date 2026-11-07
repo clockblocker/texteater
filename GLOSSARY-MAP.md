@@ -10,6 +10,9 @@
   keeping an Extracted Text between Extraction and segmentation.
 - [Compass](./battery/compass/GLOSSARY.md): owns workspace Presentation, Pane,
   Ground, Cover, Deck, Split, and gesture terminology.
+- [Tabletop](./battery/tabletop/GLOSSARY.md): owns the physical layer: the
+  Table, its Regions and Slots, the Places Bodies rest in, and the Terms,
+  Moves and Tricks that carry them between Places.
 - [lego](./battery/lego/GLOSSARY.md): owns the shared token palette, theme
   choice, and the atoms and molecules Notes and reading text are built from.
 - [Dumling](./battery/dumling/GLOSSARY.md): names, in language-neutral terms,
