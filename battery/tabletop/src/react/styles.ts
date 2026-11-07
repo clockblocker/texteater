@@ -9,7 +9,29 @@
  * px box (`--seat-*`) instead of their Slot. While the Table reads Parts,
  * `[data-tabletop-measuring]` takes every transform off. Every custom
  * property here is registered and doesn't inherit.
+ *
+ * The Table's frame loop is the only clock on its own elements: no CSS
+ * transition or animation runs on a Slot, seat, Body, shell, face, Part,
+ * Glare or veil, whatever the page's stylesheet says. A page-wide rule
+ * such as a reduced-motion `transition-duration: 0.01ms` on `*` would
+ * otherwise turn every write into a transition: the layout ones (a
+ * Slot's place, a seat's stacking, every `--rest-*`) a frame behind the
+ * composited ones (`translate`, `rotate`, `scale`, `opacity`), so a frame
+ * draws a Body on its old Slot with its new offset (#1322).
  */
+
+/** The Table's own elements: what its writer and its CSS rest alone move. */
+const OWN = [
+	"[data-tabletop-slot]",
+	"[data-tabletop-seat]",
+	"[data-tabletop-body]",
+	"[data-tabletop-shell]",
+	"[data-tabletop-face]",
+	"[data-tabletop-part]",
+	"[data-tabletop-glare]",
+	"[data-tabletop-veils]",
+	"[data-tabletop-veils] *",
+].join(",");
 
 const LENGTHS = ["--seat-x", "--seat-y", "--seat-w", "--seat-h"];
 const ANGLES = ["--rest-rotate", "--fly-turn", "--rest-turn"];
@@ -36,6 +58,7 @@ const REGISTERED = [
 const TURN = "calc(var(--rest-turn) + var(--fly-turn))";
 
 export const TABLE_CSS = `${REGISTERED}
+${OWN}{transition:none!important;animation:none!important}
 [data-tabletop]{--dir:1;isolation:isolate}
 [data-tabletop][dir="rtl"]{--dir:-1}
 [data-tabletop-region]{position:relative;container-type:size}
