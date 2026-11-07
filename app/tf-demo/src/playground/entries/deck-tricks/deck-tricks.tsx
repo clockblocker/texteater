@@ -1,5 +1,5 @@
-import { MotionConfig, useReducedMotion } from "motion/react";
-import { useMemo, useState } from "react";
+import { MotionConfig, motionValue, useReducedMotion } from "motion/react";
+import { useEffect, useMemo, useState } from "react";
 import { CardView } from "../deck-interactions/card-view";
 import type { MotionContext } from "../deck-interactions/motion-kit";
 import {
@@ -8,6 +8,7 @@ import {
 	type TimeScale,
 } from "../deck-interactions/settings-atoms";
 import { Inspector, InspectorChoice, InspectorSection } from "../inspector";
+import { DEFAULT_TURN, type TurnFeel } from "./card-turn";
 import { PLAYING_CARD_SKIN, PlayingCardFace } from "./playing-card-face";
 import { cardName, PLAYING_DECK } from "./playing-cards";
 import { cardSize, useTrickDeck } from "./use-trick-deck";
@@ -50,6 +51,14 @@ const ACTIONS: readonly (readonly [string, (deck: Actions) => void])[] = [
 	["Sort", (deck) => deck.sort()],
 ];
 
+/** The turn's knobs: its length (0 is the instant switch), perspective, lift and axis. */
+const TURN_KNOBS = {
+	ms: [0, 250, 300, 400],
+	perspective: [300, 600, 1200],
+	lift: [0, 0.06, 0.12],
+	axis: ["y", "x"],
+} as const satisfies { readonly [K in keyof TurnFeel]: readonly TurnFeel[K][] };
+
 /* mounted bottom first, as the library mounts them, so that Cards of the
    same z-index stack as its do */
 const MOUNT_ORDER = [...PLAYING_DECK].reverse();
@@ -75,8 +84,12 @@ export function DeckTricks() {
 		() => ({ reduce, timeScale }),
 		[reduce, timeScale],
 	);
-	const { valuesOf, sideOf, actions, drag } = useTrickDeck(motion);
+	const [turn, setTurn] = useState<TurnFeel>(DEFAULT_TURN);
+	const { valuesOf, turnOf, actions, drag } = useTrickDeck(motion, turn);
 	const [size] = useState(cardSize);
+	/* what every Card's faces read their turn's look from, without a render */
+	const [feel] = useState(() => motionValue({ turn, reduce }));
+	useEffect(() => feel.set({ turn, reduce }), [feel, turn, reduce]);
 
 	return (
 		<MotionConfig reducedMotion="never">
@@ -108,7 +121,8 @@ export function DeckTricks() {
 								>
 									<PlayingCardFace
 										card={card}
-										side={sideOf(card.id)}
+										turn={turnOf(card.id)}
+										feel={feel}
 									/>
 								</CardView>
 							))}
@@ -122,7 +136,8 @@ export function DeckTricks() {
 						deck-of-cards' tricks on tf-demo's own Deck model, with
 						the library's timings and ease curves. Drag a card to
 						move it; tap it to flip it. Each trick waits for the one
-						before it.
+						before it. A flip turns the Card over; under reduced
+						motion its front fades instead.
 					</p>
 				</InspectorSection>
 				<InspectorSection title="Deck">
@@ -162,7 +177,67 @@ export function DeckTricks() {
 						}
 					/>
 				</InspectorSection>
+				<InspectorSection title="Turn">
+					<TurnKnobs feel={turn} onChange={setTurn} />
+				</InspectorSection>
 			</Inspector>
 		</MotionConfig>
+	);
+}
+
+/**
+ * The turn's knobs. deck-of-cards switches a face at once, so the turn is
+ * new: a tween on the library's curve, in its own perspective, swelling
+ * toward edge on, about the Card's own axis so a fanned Card turns along
+ * itself. "instant" is the library's switch, to compare against.
+ */
+function TurnKnobs({
+	feel,
+	onChange,
+}: {
+	readonly feel: TurnFeel;
+	readonly onChange: (feel: TurnFeel) => void;
+}) {
+	return (
+		<>
+			<InspectorChoice
+				label="Length"
+				value={`${feel.ms}`}
+				options={TURN_KNOBS.ms.map((ms) => ({
+					value: `${ms}`,
+					label: ms === 0 ? "instant" : `${ms} ms`,
+				}))}
+				onChange={(ms) => onChange({ ...feel, ms: Number(ms) })}
+			/>
+			<InspectorChoice
+				label="Perspective"
+				value={`${feel.perspective}`}
+				options={TURN_KNOBS.perspective.map((px) => ({
+					value: `${px}`,
+					label: `${px} px`,
+				}))}
+				onChange={(px) =>
+					onChange({ ...feel, perspective: Number(px) })
+				}
+			/>
+			<InspectorChoice
+				label="Lift at edge on"
+				value={`${feel.lift}`}
+				options={TURN_KNOBS.lift.map((lift) => ({
+					value: `${lift}`,
+					label: lift === 0 ? "none" : `${Math.round(lift * 100)}%`,
+				}))}
+				onChange={(lift) => onChange({ ...feel, lift: Number(lift) })}
+			/>
+			<InspectorChoice<TurnFeel["axis"]>
+				label="Axis"
+				value={feel.axis}
+				options={[
+					{ value: "y", label: "long (Y)" },
+					{ value: "x", label: "short (X)" },
+				]}
+				onChange={(axis) => onChange({ ...feel, axis })}
+			/>
+		</>
 	);
 }

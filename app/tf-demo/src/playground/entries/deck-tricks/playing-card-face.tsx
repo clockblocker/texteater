@@ -1,7 +1,13 @@
 import { type MotionValue, motion, useTransform } from "motion/react";
 import type { CardSkin } from "../deck-interactions/card-view";
+import {
+	backTransform,
+	frontOpacity,
+	type TurnFeel,
+	turnTransform,
+} from "./card-turn";
 import backUrl from "./faces/back.png";
-import { isRed, type PlayingCard, rankLabel, type Side } from "./playing-cards";
+import { isRed, type PlayingCard, rankLabel } from "./playing-cards";
 
 /** deck-of-cards' face art, by file name: `<suit>_<rank>`. */
 const FACES: Readonly<Record<string, string>> = Object.fromEntries(
@@ -18,14 +24,19 @@ const FACES: Readonly<Record<string, string>> = Object.fromEntries(
 );
 
 /**
- * deck-of-cards' Card box: white, 4 px corners, a 1 px shadow, a move
- * cursor, and its own compositor layer, as `will-change` gives it there.
+ * deck-of-cards' Card box: a move cursor and its own compositor layer, as
+ * `will-change` gives it there. The box itself is bare: its white, its
+ * 4 px corners and its 1 px shadow are on each side, which turn with it.
  */
 export const PLAYING_CARD_SKIN: CardSkin = {
-	box: "rounded-[4px] bg-white will-change-transform",
+	box: "will-change-transform",
 	grab: "cursor-move",
-	shadow: () => "0 1px 1px rgb(0 0 0 / 0.15)",
+	shadow: () => "none",
 };
+
+/* one side of the Card, as deck-of-cards' Card box draws it */
+const SIDE =
+	"absolute inset-0 rounded-[4px] bg-white bg-size-[100%_100%] bg-center bg-no-repeat shadow-[0_1px_1px_rgb(0_0_0/0.15)] backface-hidden";
 
 /* `css/card.styl`'s corner indices, at its rem sizes */
 const CORNER =
@@ -33,26 +44,53 @@ const CORNER =
 
 /**
  * A playing Card's two sides, as deck-of-cards draws them: the face's art
- * stretched over the Card with its rank in two corners, or the back.
- * `side` shows one and hides the other without a render.
+ * stretched over the Card with its rank in two corners, and the back. Both
+ * are drawn, back to back, on one element that `turn` turns about the
+ * Card's axis; each hides when it faces away. Under reduced motion the
+ * Card stays flat and the front fades over the back instead.
  */
 export function PlayingCardFace({
 	card,
-	side,
+	turn,
+	feel,
 }: {
 	readonly card: PlayingCard;
-	readonly side: MotionValue<Side>;
+	/** The Card's angle, 0 face up, 180 face down (`card-turn`). */
+	readonly turn: MotionValue<number>;
+	readonly feel: MotionValue<{
+		readonly turn: TurnFeel;
+		readonly reduce: boolean;
+	}>;
 }) {
-	const front = useTransform(side, (s) => (s === "front" ? "block" : "none"));
-	const back = useTransform(side, (s) => (s === "back" ? "block" : "none"));
+	const transform = useTransform(() =>
+		turnTransform(turn.get(), feel.get().turn, feel.get().reduce),
+	);
+	const back = useTransform(() =>
+		backTransform(feel.get().turn, feel.get().reduce),
+	);
+	const opacity = useTransform(() =>
+		frontOpacity(turn.get(), feel.get().reduce),
+	);
 	const rank = rankLabel(card);
 	return (
-		<>
+		<motion.div
+			data-card-turn=""
+			className="absolute inset-0 transform-3d will-change-transform"
+			style={{ transform }}
+		>
+			<motion.div
+				data-side="back"
+				className={SIDE}
+				style={{
+					transform: back,
+					backgroundImage: `url("${backUrl}")`,
+				}}
+			/>
 			<motion.div
 				data-side="front"
-				className={`h-full bg-size-[100%_100%] bg-center bg-no-repeat ${isRed(card) ? "text-[#d40000]" : "text-black"}`}
+				className={`${SIDE} ${isRed(card) ? "text-[#d40000]" : "text-black"}`}
 				style={{
-					display: front,
+					opacity,
 					backgroundImage: `url("${FACES[card.id] ?? ""}")`,
 				}}
 			>
@@ -69,11 +107,6 @@ export function PlayingCardFace({
 					{rank}
 				</span>
 			</motion.div>
-			<motion.div
-				data-side="back"
-				className="absolute inset-0 bg-size-[100%_100%] bg-center bg-no-repeat"
-				style={{ display: back, backgroundImage: `url("${backUrl}")` }}
-			/>
-		</>
+		</motion.div>
 	);
 }

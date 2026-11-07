@@ -1,4 +1,4 @@
-import type { MotionValue } from "motion/react";
+import type { AnimationPlaybackControls } from "motion/react";
 import {
 	cue,
 	type MotionContext,
@@ -49,7 +49,11 @@ export function reducedClock(plan: CardPlan): (t: number) => number {
 
 export type Stage = {
 	readonly valuesOf: (id: string) => CardValues;
-	readonly sideOf: (id: string) => MotionValue<Side>;
+	/** Starts turning the Card to `side`, or does nothing if it is headed there. */
+	readonly turn: (
+		id: string,
+		side: Side,
+	) => AnimationPlaybackControls | undefined;
 };
 
 /**
@@ -90,7 +94,6 @@ export function playTrick(
 	};
 	for (const plan of trick.plans) {
 		const card = stage.valuesOf(plan.id);
-		const side = stage.sideOf(plan.id);
 		const clock = context.reduce ? reducedClock(plan) : (t: number) => t;
 		for (const channel of CHANNELS) {
 			const from = plan.from?.[channel];
@@ -105,8 +108,13 @@ export function playTrick(
 		}
 		for (const { at, to } of plan.z ?? [])
 			schedule(at, clock, () => card.z.set(to));
+		/* a side cue starts the Card's turn then; the turn itself holds up
+		   nothing, as the library's instant switch held up nothing */
 		for (const { at, to } of plan.side ?? [])
-			schedule(at, clock, () => side.set(to));
+			schedule(at, clock, () => {
+				const turning = stage.turn(plan.id, to);
+				if (turning) stops.push(() => turning.stop());
+			});
 	}
 	return {
 		done: Promise.all(waits),

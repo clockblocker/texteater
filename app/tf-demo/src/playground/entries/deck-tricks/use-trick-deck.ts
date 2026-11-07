@@ -11,6 +11,7 @@ import type { Frame } from "../deck-interactions/layout";
 import type { MotionContext } from "../deck-interactions/motion-kit";
 import { createReadouts } from "../deck-interactions/readouts";
 import { useDeck } from "../deck-interactions/use-deck";
+import { sideAt, type TurnFeel, turnTarget, turnTo } from "./card-turn";
 import { getFontSize } from "./font-size";
 import { playTrick } from "./play-trick";
 import { PLAYING_DECK, type PlayingCard, type Side } from "./playing-cards";
@@ -25,6 +26,8 @@ const TABLE: Frame = { w: 1, h: 1 };
 const TAP_MS = 200;
 /** The first z-index a picked-up Card takes; each pick-up takes the next. */
 const FIRST_TOP_Z = 52;
+/** A fresh Deck's angle: face down (`card-turn`). */
+const FACE_DOWN = 180;
 
 /** The box of a 62 × 88 Card, in px of the root's rem as the library sizes it. */
 export function cardSize(): { readonly w: number; readonly h: number } {
@@ -63,9 +66,9 @@ function newQueue(): Queue {
  * deck-of-cards' Deck on tf-demo's model: `useDeck` holds every Card's
  * values, `playTrick` moves them on the deck-of-cards profile, and the
  * tricks run one after another, as the library's queue runs them. The
- * Deck's order and each Card's side live here: the model has neither.
+ * Deck's order and each Card's turn live here: the model has neither.
  */
-export function useTrickDeck(motion: MotionContext) {
+export function useTrickDeck(motion: MotionContext, feel: TurnFeel) {
 	const [readouts] = useState(createReadouts);
 	const [layout] = useState(() => stackLayout(cardSize()));
 	const deck = useDeck({
@@ -77,24 +80,47 @@ export function useTrickDeck(motion: MotionContext) {
 		deal: 0,
 	});
 	const { valuesOf } = deck;
-	const [sides] = useState(
+	const motionRef = deck.motion;
+	/* each Card's angle, and the angle it rests on or is turning to */
+	const [turns] = useState(
 		() =>
 			new Map(
-				PLAYING_DECK.map((card) => [
-					card.id,
-					motionValue<Side>("back"),
-				]),
+				PLAYING_DECK.map((card) => [card.id, motionValue(FACE_DOWN)]),
 			),
 	);
-	const sideOf = useCallback(
-		(id: string): MotionValue<Side> =>
-			sides.get(id) ?? motionValue<Side>("back"),
-		[sides],
+	const [targets] = useState(
+		() => new Map(PLAYING_DECK.map((card) => [card.id, FACE_DOWN])),
+	);
+	const feelRef = useRef(feel);
+	feelRef.current = feel;
+	const turnOf = useCallback(
+		(id: string): MotionValue<number> =>
+			turns.get(id) ?? motionValue(FACE_DOWN),
+		[turns],
+	);
+	/**
+	 * The side a Card rests on, or is turning to: what a trick or a tap
+	 * decides from, so a Card turned again mid-turn turns back, as the
+	 * library's instant switch would have.
+	 */
+	const restingSide = useCallback(
+		(id: string): Side => sideAt(targets.get(id) ?? FACE_DOWN),
+		[targets],
+	);
+	const turn = useCallback(
+		(id: string, side: Side) => {
+			const value = turnOf(id);
+			const target = targets.get(id) ?? value.get();
+			const next = turnTarget(value.get(), target, side);
+			if (next === target) return undefined;
+			targets.set(id, next);
+			return turnTo(value, next, feelRef.current, motionRef.current);
+		},
+		[turnOf, targets, motionRef],
 	);
 	const order = useRef<readonly PlayingCard[]>(PLAYING_DECK);
 	const queue = useRef(newQueue());
 	const topZ = useRef(FIRST_TOP_Z);
-	const motionRef = deck.motion;
 
 	/** Queues a trick, made from the order it finds when its turn comes. */
 	const run = useCallback(
@@ -106,14 +132,14 @@ export function useTrickDeck(motion: MotionContext) {
 				order.current = trick.order;
 				const played = playTrick(
 					trick,
-					{ valuesOf, sideOf },
+					{ valuesOf, turn },
 					motionRef.current,
 				);
 				stage.stops.add(played.stop);
 				return played.done;
 			});
 		},
-		[valuesOf, sideOf, motionRef],
+		[valuesOf, turn, motionRef],
 	);
 
 	/* a fresh Deck on every mount, face down in mount order, then the
@@ -124,7 +150,8 @@ export function useTrickDeck(motion: MotionContext) {
 		order.current = PLAYING_DECK;
 		for (const card of PLAYING_DECK) {
 			valuesOf(card.id).z.jump(0);
-			sideOf(card.id).jump("back");
+			turnOf(card.id).jump(FACE_DOWN);
+			targets.set(card.id, FACE_DOWN);
 		}
 		run(tricks.intro);
 		run((current) => tricks.sort(current));
@@ -132,12 +159,11 @@ export function useTrickDeck(motion: MotionContext) {
 			stage.live = false;
 			for (const stop of stage.stops) stop();
 		};
-	}, [run, valuesOf, sideOf]);
+	}, [run, valuesOf, turnOf, targets]);
 
 	const actions = {
 		intro: () => run(tricks.intro),
-		flip: () =>
-			run((current) => tricks.flip(current, (id) => sideOf(id).get())),
+		flip: () => run((current) => tricks.flip(current, restingSide)),
 		shuffle: () => run((current) => tricks.shuffle(current, getFontSize())),
 		sort: (reverse?: boolean) =>
 			run((current) => tricks.sort(current, reverse)),
@@ -169,10 +195,8 @@ export function useTrickDeck(motion: MotionContext) {
 				window.removeEventListener("pointermove", onMove);
 				window.removeEventListener("pointerup", onUp);
 				window.removeEventListener("pointercancel", onUp);
-				if (performance.now() - pressed < TAP_MS) {
-					const side = sideOf(id);
-					side.set(side.get() === "front" ? "back" : "front");
-				}
+				if (performance.now() - pressed < TAP_MS)
+					turn(id, restingSide(id) === "front" ? "back" : "front");
 				const moved = {
 					u: up.clientX - start.x,
 					v: up.clientY - start.y,
@@ -185,8 +209,8 @@ export function useTrickDeck(motion: MotionContext) {
 			window.addEventListener("pointerup", onUp);
 			window.addEventListener("pointercancel", onUp);
 		},
-		[valuesOf, sideOf],
+		[valuesOf, turn, restingSide],
 	);
 
-	return { valuesOf, sideOf, actions, drag };
+	return { valuesOf, turnOf, actions, drag };
 }
