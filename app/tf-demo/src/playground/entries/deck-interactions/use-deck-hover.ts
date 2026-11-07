@@ -63,7 +63,8 @@ type CardHandler = (id: string, event: ReactPointerEvent<HTMLElement>) => void;
  * mouse or pen hovers, on a device that has hover. While a Card is
  * pressed the rest of the Deck settles back and the pressed Card stays
  * where the hover left it, so the pick-up starts from there; while one
- * is carried, the carry owns the Deck. Every move is an interruptible
+ * is carried, the carry owns the Deck, and while a tap's shuffle moves
+ * Cards, it does, and the fan opens again once they land. Every move is an interruptible
  * spring (or, reduced, the page's short tween).
  *
  * Pass `holding`, the Card pressed or carried, or null. Spread `onEnter`
@@ -86,12 +87,12 @@ export function useDeckHover({
 	const held = useRef(holding);
 	held.current = holding;
 	const fine = useSyncExternalStore(subscribeFine, fineHover, () => false);
-	const { order, slots, status, expanded, place, isBusy } = deck;
+	const { order, slots, status, expanded, shuffling, place, isBusy } = deck;
 
 	useEffect(() => {
 		if (status !== "dealt" || expanded) return;
 		if (holding && isBusy(holding)) return;
-		const open = fine && hovered !== null && holding === null;
+		const open = fine && hovered !== null && holding === null && !shuffling;
 		const share = motion.reduce ? knobs.hoverReduced : 1;
 		const shown = open ? fanSlots(slots, knobs.fanDeg * share) : slots;
 		const spring = {
@@ -110,6 +111,7 @@ export function useDeckHover({
 		holding,
 		status,
 		expanded,
+		shuffling,
 		order,
 		slots,
 		place,

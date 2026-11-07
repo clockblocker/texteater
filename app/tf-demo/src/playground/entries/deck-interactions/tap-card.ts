@@ -1,17 +1,51 @@
 import type { createTapCounter, Drag } from "./pointer";
+import { PULL_OUTS, type PullOut, SIDES, type Side } from "./tap-shuffle";
 import type { Deck } from "./use-deck";
 
-/** A tap brings a Card to the front; a second within 350 ms and 10 px expands it. */
+/**
+ * The tap's knobs, shared by every variant: how far and which way the
+ * tapped Card slides out as it is shuffled to the front. "20–60 px" is
+ * deck-of-cards' own reach, made for 62 px Cards; "off" restacks at once
+ * and lets the reflow take the Cards there, as before.
+ */
+export const TAP_DEFAULTS = {
+	tapPullOut: "½ card" as PullOut,
+	tapSide: "inline-end" as Side,
+};
+export type TapKnobs = typeof TAP_DEFAULTS;
+
+/** The tap's inspector controls, to spread into a variant's knobs. */
+export const TAP_KNOBS = [
+	{
+		kind: "choice" as const,
+		key: "tapPullOut" as const,
+		label: "Tap shuffle pull-out",
+		options: PULL_OUTS,
+	},
+	{
+		kind: "choice" as const,
+		key: "tapSide" as const,
+		label: "Tap shuffle side",
+		options: SIDES,
+	},
+];
+
+/**
+ * A tap brings a Card to the front, shuffled there as `knobs` say; a
+ * second within 350 ms and 10 px opens the Card the first was on.
+ */
 export function tapCard(
 	deck: Deck,
 	taps: ReturnType<typeof createTapCounter>,
 	id: string,
 	drag: Drag,
+	knobs: TapKnobs,
 ) {
-	if (taps(id, drag.clientX, drag.clientY) === 2) {
-		void deck.expand(id);
+	const opens = taps(id, drag.clientX, drag.clientY);
+	if (opens !== null) {
+		void deck.expand(opens);
 		return;
 	}
 	deck.release(id);
-	deck.bringToFront(id);
+	deck.bringToFront(id, { pullOut: knobs.tapPullOut, side: knobs.tapSide });
 }

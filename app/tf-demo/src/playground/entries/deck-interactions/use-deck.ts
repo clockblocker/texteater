@@ -13,6 +13,8 @@ import {
 	wait,
 } from "./motion-kit";
 import type { Readouts } from "./readouts";
+import { type PullOut, pullOutOf, type Side, tapShuffle } from "./tap-shuffle";
+import { createTapShufflePlayer } from "./tap-shuffle-player";
 
 /** One Card's motion values: its box in logical px, its lean and its lift. */
 export type CardValues = {
@@ -25,7 +27,7 @@ export type CardValues = {
 	readonly s: MotionValue<number>;
 	/** 0 at rest, 1 fully lifted: the shadow follows it. */
 	readonly lift: MotionValue<number>;
-	/** Only a deal or a reduced exit fades a Card; a Card in hand is solid. */
+	/** Only a deal, a reduced exit or a reduced reorder fades a Card; a Card in hand is solid. */
 	readonly o: MotionValue<number>;
 	readonly z: MotionValue<number>;
 	readonly stamp: MotionValue<number>;
@@ -71,6 +73,9 @@ const COVER_Z = 200;
 export type DeckStatus = "dealt" | "leaving" | "gone";
 
 export type Deck = ReturnType<typeof useDeck>;
+
+/** How a tap brings a Card to the front: "off" restacks it at once and lets the reflow take it. */
+export type TapShuffle = { readonly pullOut: PullOut; readonly side: Side };
 
 /**
  * The Deck every variant drives: its order, whether it is dealt, gone or
@@ -120,6 +125,21 @@ export function useDeck({
 	);
 	const motionRef = useRef(motion);
 	motionRef.current = motion;
+	/* the order a tap reads: a second tap can come before the render */
+	const orderRef = useRef(order);
+	orderRef.current = order;
+	/** Whether a tap's shuffle is still moving Cards: the hover fan waits for it. */
+	const [shuffling, setShuffling] = useState(false);
+	const [shuffle] = useState(() =>
+		createTapShufflePlayer({
+			valuesOf: (id) => values.get(id) ?? makeValues(),
+			zOf: (index) => BASE_Z + index,
+			restZ: (id) => BASE_Z + orderRef.current.indexOf(id),
+			onIdle: () => setShuffling(false),
+		}),
+	);
+	/* a Deck switched away mid-shuffle leaves nothing cued behind it */
+	useEffect(() => () => shuffle.clear(), [shuffle]);
 
 	const valuesOf = useCallback(
 		(id: string): CardValues => values.get(id) ?? makeValues(),
@@ -129,6 +149,16 @@ export function useDeck({
 		(id: string): Slot | undefined => slots[order.indexOf(id)],
 		[slots, order],
 	);
+	/** Whether a gesture, the Cover or a tap's shuffle has `id`: a re-layout leaves it alone. */
+	const isBusy = useCallback(
+		(id: string) => busy.current.has(id) || shuffle.has(id),
+		[shuffle],
+	);
+	/** `id`'s stacking at rest, in the order as it now stands. */
+	const restZ = useCallback(
+		(id: string) => BASE_Z + orderRef.current.indexOf(id),
+		[],
+	);
 
 	const place = useCallback(
 		(
@@ -137,6 +167,7 @@ export function useDeck({
 			spec: SpringSpec = SPRINGS.settle,
 			velocity?: Point,
 		) => {
+			shuffle.take(id);
 			const card = valuesOf(id);
 			const context = motionRef.current;
 			return Promise.all([
@@ -161,7 +192,7 @@ export function useDeck({
 				settle(card.lift, 0, spec, context),
 			]);
 		},
-		[valuesOf],
+		[valuesOf, shuffle],
 	);
 
 	/**
@@ -219,14 +250,16 @@ export function useDeck({
 		order.forEach((id, index) => {
 			const slot = slots[index];
 			const card = valuesOf(id);
-			if (!slot || busy.current.has(id) || id === expanded) return;
+			if (!slot || isBusy(id) || id === expanded) return;
 			card.z.set(BASE_Z + index);
 			void place(id, slot, SPRINGS.reflow);
 		});
-	}, [slots, order, status, expanded, frame.w, place, valuesOf]);
+	}, [slots, order, status, expanded, frame.w, place, valuesOf, isBusy]);
 
+	/** The hand takes `id`, and with it the Deck: a shuffle ends where every Card shows. */
 	const hold = useCallback(
 		(id: string) => {
+			shuffle.takeAll();
 			busy.current.add(id);
 			const card = valuesOf(id);
 			/* the hand takes the Card from whatever was moving it */
@@ -234,12 +267,11 @@ export function useDeck({
 			card.o.set(1);
 			card.z.set(HELD_Z);
 		},
-		[valuesOf],
+		[valuesOf, shuffle],
 	);
 	const release = useCallback((id: string) => {
 		busy.current.delete(id);
 	}, []);
-	const isBusy = useCallback((id: string) => busy.current.has(id), []);
 
 	const mark = useCallback((id: string, next: Mark | null) => {
 		setMarks((current) => {
@@ -280,9 +312,39 @@ export function useDeck({
 		[slotOf, clearMark, place, release, valuesOf, order],
 	);
 
-	const bringToFront = useCallback((id: string) => {
-		setOrder((current) => [...current.filter((other) => other !== id), id]);
-	}, []);
+	/**
+	 * Brings `id` to the front; a Card already there stays as it is. With a
+	 * pull-out, the Cards that change places play deck-of-cards' shuffle
+	 * from where they show; a Card a hand or the Cover has is left out.
+	 * "off" restacks at once and lets the reflow take the Cards there.
+	 */
+	const bringToFront = useCallback(
+		(id: string, tap?: TapShuffle) => {
+			const current = orderRef.current;
+			if (current.at(-1) === id || !current.includes(id)) return;
+			const at = slots[current.indexOf(id)];
+			const out =
+				tap && at ? pullOutOf(tap.pullOut, tap.side, at.w) : null;
+			const plan =
+				out === null
+					? null
+					: tapShuffle({ order: current, id, slots, out });
+			const next = plan?.order ?? [
+				...current.filter((other) => other !== id),
+				id,
+			];
+			orderRef.current = next;
+			if (plan) {
+				shuffle.play(
+					plan.moves.filter((move) => !busy.current.has(move.id)),
+					motionRef.current,
+				);
+				if (shuffle.size > 0) setShuffling(true);
+			} else shuffle.takeAll();
+			setOrder(next);
+		},
+		[slots, shuffle],
+	);
 
 	/**
 	 * Opens `id` into the Cover in a straight line from where it is: of
@@ -292,6 +354,7 @@ export function useDeck({
 	 */
 	const expand = useCallback(
 		async (id: string, velocity?: Point) => {
+			shuffle.take(id);
 			clearMark(id);
 			busy.current.add(id);
 			valuesOf(id).z.set(COVER_Z);
@@ -304,7 +367,7 @@ export function useDeck({
 				velocity,
 			);
 		},
-		[clearMark, valuesOf, readouts, glide, frame],
+		[clearMark, valuesOf, readouts, glide, frame, shuffle],
 	);
 
 	const closeCover = useCallback(async () => {
@@ -325,6 +388,7 @@ export function useDeck({
 	 */
 	const leave = useCallback(
 		async (exit: () => Promise<unknown>) => {
+			shuffle.takeAll();
 			setStatus("leaving");
 			readouts.set({ phase: "settling" });
 			for (const id of order) clearMark(id);
@@ -333,7 +397,7 @@ export function useDeck({
 			setStatus("gone");
 			readouts.set({ phase: "gone", zone: null });
 		},
-		[order, clearMark, readouts],
+		[order, clearMark, readouts, shuffle],
 	);
 
 	/**
@@ -413,7 +477,9 @@ export function useDeck({
 	const redeal = useCallback(() => {
 		const context = motionRef.current;
 		busy.current.clear();
+		shuffle.clear();
 		setExpanded(null);
+		orderRef.current = initialOrder;
 		setOrder(initialOrder);
 		setMarks({});
 		const fresh = layout(frame, initialOrder.length);
@@ -443,7 +509,7 @@ export function useDeck({
 		});
 		setStatus("dealt");
 		readouts.set({ phase: "rest", zone: null, tilt: 0 });
-	}, [layout, frame, valuesOf, readouts, opacity, initialOrder]);
+	}, [layout, frame, valuesOf, readouts, opacity, initialOrder, shuffle]);
 
 	const dealt = useRef(deal);
 	useEffect(() => {
@@ -457,6 +523,7 @@ export function useDeck({
 		order,
 		status,
 		expanded,
+		shuffling,
 		marks,
 		slots,
 		opacity,
@@ -466,6 +533,8 @@ export function useDeck({
 		hold,
 		release,
 		isBusy,
+		isShuffling: shuffle.has,
+		restZ,
 		mark,
 		clearMark,
 		putBack,

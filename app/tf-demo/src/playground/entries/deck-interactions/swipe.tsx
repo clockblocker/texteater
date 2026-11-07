@@ -146,10 +146,10 @@ export function SwipeVariant({
 	function begin(g: Gesture, axis: Axis, caught: boolean) {
 		const card = deck.valuesOf(g.id);
 		/* the Card keeps its place in the pile: one from behind slides out
-		   from between its neighbours, over its panel and under the rest */
-		const z = card.z.get();
+		   from between its neighbours, over its panel and under the rest;
+		   a tap's shuffle ends where every Card shows, at its new place */
 		deck.hold(g.id);
-		card.z.set(z);
+		card.z.set(deck.restZ(g.id));
 		if (!caught) {
 			binding.current?.scatter();
 			pull.jump(0);
@@ -351,6 +351,8 @@ export function SwipeVariant({
 			binding.current = null;
 		}
 		const card = deck.valuesOf(id);
+		/* a Card a tap's shuffle is moving goes on moving under the press */
+		const moving = deck.isShuffling(id);
 		const g: Gesture = {
 			id,
 			slot,
@@ -362,7 +364,7 @@ export function SwipeVariant({
 		};
 		/* the press puts out the hovered Card's border */
 		setPressed(id);
-		settle(card.lift, knobs.pressLift, SPRINGS.settle, motion);
+		if (!moving) settle(card.lift, knobs.pressLift, SPRINGS.settle, motion);
 		readouts.set({ phase: "pressed" });
 		if (bound && caught) {
 			/* caught on its way back: the hand takes it where it is, on its axis */
@@ -390,17 +392,17 @@ export function SwipeVariant({
 					release(g, drag);
 					return;
 				}
-				settle(card.lift, 0, SPRINGS.settle, motion);
+				if (!moving) settle(card.lift, 0, SPRINGS.settle, motion);
 				setPressed(null);
 				readouts.set({ phase: "rest" });
-				tapCard(deck, taps, id, drag);
+				tapCard(deck, taps, id, drag, knobs);
 			},
 			cancel: () => {
 				if (g.axis) {
 					release(g, null);
 					return;
 				}
-				settle(card.lift, 0, SPRINGS.settle, motion);
+				if (!moving) settle(card.lift, 0, SPRINGS.settle, motion);
 				setPressed(null);
 			},
 		});

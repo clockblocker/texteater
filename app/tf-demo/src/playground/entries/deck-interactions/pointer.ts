@@ -103,25 +103,31 @@ export function trackPointer(
 export const SLOP_PX = 6;
 
 /**
- * Counts taps: a second tap within 350 ms and 10 px of the first on the
- * same Card is a double-tap.
+ * Counts taps: a second tap within 350 ms and 10 px of the first is a
+ * double-tap on the first one's Card, whichever Card is under the hand by
+ * then, since the first tap sets that Card moving. Returns the Card a
+ * double-tap opens, or null for a single tap.
  */
-export function createTapCounter(windowMs = 350, radius = 10) {
+export function createTapCounter(
+	windowMs = 350,
+	radius = 10,
+	now: () => number = () => performance.now(),
+) {
 	let last: {
 		readonly id: string;
 		readonly x: number;
 		readonly y: number;
 		readonly t: number;
 	} | null = null;
-	return (id: string, x: number, y: number): 1 | 2 => {
-		const t = performance.now();
+	return (id: string, x: number, y: number): string | null => {
+		const t = now();
+		const first = last;
 		const double =
-			last !== null &&
-			last.id === id &&
-			t - last.t <= windowMs &&
-			Math.hypot(x - last.x, y - last.y) <= radius;
+			first !== null &&
+			t - first.t <= windowMs &&
+			Math.hypot(x - first.x, y - first.y) <= radius;
 		last = double ? null : { id, x, y, t };
-		return double ? 2 : 1;
+		return double ? first.id : null;
 	};
 }
 

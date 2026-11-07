@@ -44,24 +44,36 @@ export function TableVariant({
 	function onDown(id: string, event: ReactPointerEvent<HTMLElement>) {
 		if (deck.status !== "dealt") return;
 		const card = deck.valuesOf(id);
-		const start = { u: card.u.get(), v: card.v.get() };
-		const at = framePoint(
-			event.currentTarget,
-			event.clientX,
-			event.clientY,
-			rtl,
-		);
-		const grab = { u: at.u - start.u, v: at.v - start.v };
-		const pressScale = card.s.get();
+		const element = event.currentTarget;
+		let start = { u: card.u.get(), v: card.v.get() };
+		const at = framePoint(element, event.clientX, event.clientY, rtl);
+		let grab = { u: at.u - start.u, v: at.v - start.v };
+		let pressScale = card.s.get();
+		/* a Card a tap's shuffle is moving goes on moving under the press:
+		   it gets no press feedback, and a pick-up takes it where it shows */
+		const moving = deck.isShuffling(id);
 		let lifted = false;
 		setPressed(id);
-		table.press(id);
+		if (!moving) table.press(id);
 		readouts.set({ phase: "pressed" });
 		trackPointer(event, rtl, {
 			move: (drag) => {
 				if (!lifted && Math.hypot(drag.dx, drag.dy) < SLOP_PX) return;
 				if (!lifted) {
 					hover.clear();
+					if (moving) {
+						deck.hold(id);
+						const shown = { u: card.u.get(), v: card.v.get() };
+						const hand = framePoint(
+							element,
+							drag.clientX,
+							drag.clientY,
+							rtl,
+						);
+						grab = { u: hand.u - shown.u, v: hand.v - shown.v };
+						start = { u: shown.u - drag.du, v: shown.v - drag.dy };
+						pressScale = card.s.get();
+					}
 					table.pickUp(id, grab, pressScale);
 				}
 				lifted = true;
@@ -81,8 +93,8 @@ export function TableVariant({
 					);
 				else {
 					readouts.set({ phase: "rest" });
-					table.unpress(id);
-					tapCard(deck, taps, id, drag);
+					if (!moving) table.unpress(id);
+					tapCard(deck, taps, id, drag, knobs);
 				}
 			},
 			cancel: () => {

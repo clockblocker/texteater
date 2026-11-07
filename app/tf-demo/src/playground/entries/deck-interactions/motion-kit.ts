@@ -162,17 +162,21 @@ export const DECK_OF_CARDS = {
 
 /**
  * Calls `fn` `ms` of slowed time from now, on Motion's frame loop, so it
- * lands in the same frame as a tween timed from the same call. Returns its
- * cancel.
+ * lands in the same frame as a tween timed from the same call. `fn` is
+ * told how late its frame came, in slowed ms, so what it starts can keep
+ * the clock of this call. Returns its cancel.
  */
 export function cue(
 	ms: number,
-	fn: () => void,
+	fn: (late: number) => void,
 	context: MotionContext,
 ): () => void {
 	if (ms <= 0) {
-		fn();
+		fn(0);
 		return () => {};
 	}
-	return delay(fn, ms / context.timeScale);
+	return delay(
+		(late) => fn(late * context.timeScale),
+		ms / context.timeScale,
+	);
 }

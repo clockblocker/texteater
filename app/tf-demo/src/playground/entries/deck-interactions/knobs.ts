@@ -5,6 +5,7 @@
  */
 
 import { SWIPE_DEFAULTS, SWIPE_KNOBS, type SwipeKnobs } from "./swipe-knobs";
+import { TAP_DEFAULTS, TAP_KNOBS } from "./tap-card";
 import { HOVER_DEFAULTS, HOVER_KNOBS } from "./use-deck-hover";
 
 export const VARIANT_KEYS = ["table", "swipe"] as const;
@@ -68,8 +69,9 @@ function toggle<K extends string>(key: K, label: string): ToggleKnob<K> {
 
 const FLICK = num("flickSpeed", "Flick speed", 0.1, 3, 0.05, "px/ms");
 
-/** B: the fan, the lift, the lean, the targets' pull and the return. */
+/** B: the tap, the fan, the lift, the lean, the targets' pull and the return. */
 const TABLE_DEFAULTS = {
+	...TAP_DEFAULTS,
 	...HOVER_DEFAULTS,
 	flickSpeed: 0.5,
 	liftScale: 1.06,
@@ -92,6 +94,7 @@ const TABLE_DEFAULTS = {
 export type TableKnobs = typeof TABLE_DEFAULTS;
 
 const TABLE_KNOBS: readonly Knob<TableKnobs>[] = [
+	...TAP_KNOBS,
 	...HOVER_KNOBS,
 	FLICK,
 	num("liftScale", "Lift scale", 1, 1.2, 0.01),

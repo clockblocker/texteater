@@ -124,6 +124,7 @@ export function InspectorPanel({
 					One Deck, several ways to handle it. Every variant does the
 					same things: carry a Card, put it back on the Deck, drop it
 					to close the Deck or to open the Card, flick the Deck away,
+					tap a Card behind the front one to shuffle it to the front,
 					and double-tap a Card to open it.
 				</p>
 			</InspectorSection>
