@@ -4,6 +4,16 @@ import { startFrameLog, stopFrameLog } from "./support/frames";
 import { changesAfterDrop, jumps } from "./support/invariants";
 import { stackingOffModel } from "./support/stacking";
 import { atRest, inspector, offSlot } from "./support/tabletop";
+import {
+	expectTricks,
+	logTricks,
+	openDeck as openDeckIn,
+	press,
+	type Setting,
+	settle,
+	TRICKS,
+	type TrickButton,
+} from "./support/tabletop-tricks";
 
 /**
  * deck-of-cards' tricks on the tabletop battery: the felt is a Region and
@@ -257,3 +267,80 @@ for (const dir of ["LTR", "RTL"] as const)
 		await settled(page);
 		expect.soft(await stackingOffModel(page)).toEqual([]);
 	});
+
+/* #1322: what the reader sees of queued and composed tricks, frame by
+   frame, in a plain browser and in T3's preview (reduced motion asked for
+   by the page, the entry's knob off): no Card shows anywhere it hasn't
+   travelled to or drops out of sight for a frame, nothing but the Table
+   moves a Card, and every press waits for the trick before it to land. */
+for (const setting of ["browser", "preview"] as const satisfies Setting[])
+	test(`${setting}: Shuffle, By suit and Poker, composed of queued tricks, hold every frame invariant`, async ({
+		page,
+	}) => {
+		test.setTimeout(90_000);
+		await openDeckIn(page, setting);
+		await press(page, "Flip");
+		await settle(page);
+		for (const name of ["Shuffle", "By suit", "Poker"] as const) {
+			const { frames, ids } = await logTricks(page, [name]);
+			expectTricks(frames, ids, `${setting} ${name}`);
+		}
+	});
+
+/** How often each button is pressed in a row, and how far into its trick another press comes. */
+const PRESSES: Record<TrickButton, { times: number; mid: number }> = {
+	Intro: { times: 2, mid: 1200 },
+	Flip: { times: 4, mid: 150 },
+	Shuffle: { times: 3, mid: 400 },
+	"By suit": { times: 2, mid: 1000 },
+	Fan: { times: 3, mid: 300 },
+	Poker: { times: 2, mid: 1000 },
+	Sort: { times: 3, mid: 600 },
+};
+
+for (const half of [TRICKS.slice(0, 4), TRICKS.slice(4)])
+	test(`preview: ${half.join(", ")} pressed rapidly queue each press behind the last`, async ({
+		page,
+	}) => {
+		test.setTimeout(120_000);
+		await openDeckIn(page, "preview");
+		for (const name of half) {
+			const { frames, ids } = await logTricks(
+				page,
+				Array.from({ length: PRESSES[name].times }, () => name),
+			);
+			expectTricks(frames, ids, `${name} ×${PRESSES[name].times}`);
+		}
+	});
+
+test("preview: a press in the middle of each trick waits for it to land", async ({
+	page,
+}) => {
+	test.setTimeout(120_000);
+	await openDeckIn(page, "preview");
+	for (const [index, name] of TRICKS.entries()) {
+		const next = TRICKS[(index + 1) % TRICKS.length] ?? "Fan";
+		const { frames, ids } = await logTricks(page, [
+			name,
+			PRESSES[name].mid,
+			next,
+		]);
+		expectTricks(frames, ids, `${name}, then ${next} mid-trick`);
+	}
+});
+
+test("preview: Fan pressed straight after the Intro deals, then fans", async ({
+	page,
+}) => {
+	test.setTimeout(60_000);
+	await openDeckIn(page, "preview");
+	const { frames, ids } = await logTricks(page, ["Intro", "Fan"]);
+	expectTricks(frames, ids, "Intro, then Fan");
+	expect(
+		new Set(
+			Object.values(frames.at(-1)?.bodies ?? {}).map(
+				(card) => card.rotate,
+			),
+		).size,
+	).toBe(52);
+});

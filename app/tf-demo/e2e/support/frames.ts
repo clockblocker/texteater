@@ -41,6 +41,14 @@ export type BodyFrame = {
 	readonly h: number;
 	/** Its bounding box on screen, every transform included, the lean too. */
 	readonly bounds: Rect;
+	/** Whether any of it is inside the viewport. */
+	readonly inView: boolean;
+	/** Where its seat stands, client px: its Slot at rest, the hand's box when held. */
+	readonly rest: { readonly x: number; readonly y: number };
+	/** How far its own translation takes it off that seat, px. */
+	readonly offset: number;
+	/** The share of its width its turn shows: 1 flat, 0 edge on. */
+	readonly face: number;
 	/** Its own size before any transform: what a resize changes. */
 	readonly size: { readonly w: number; readonly h: number };
 	/** Physical degrees and its scale; its lean out of the screen's plane in degrees. */
@@ -66,6 +74,12 @@ export type Frame = {
 	/** The frame's own timestamp, ms. */
 	readonly t: number;
 	readonly bodies: Readonly<Record<string, BodyFrame>>;
+	/**
+	 * Every CSS transition or animation running on an element the Table
+	 * moves, as "<Body or Slot> <property>": a second clock, whose frames
+	 * the log can't read the way the compositor draws them.
+	 */
+	readonly clocks: readonly string[];
 };
 
 type Options = {
@@ -103,6 +117,48 @@ export async function startFrameLog(page: Page, options: Options = {}) {
 				return round(
 					(Math.asin(Math.min(1, sin / scale)) * 180) / Math.PI,
 				);
+			};
+			/* the share of its width a turned shell shows, off its matrix */
+			const faceOf = (shell: HTMLElement | null) => {
+				const m = /matrix3d\(([^)]*)\)/.exec(
+					shell ? getComputedStyle(shell).transform : "",
+				);
+				if (!m?.[1]) return 1;
+				const v = m[1].split(",").map(Number);
+				const share = (a: number, b: number, c: number) =>
+					Math.abs(a) / (Math.hypot(a, b, c) || 1);
+				return round(
+					Math.min(
+						share(v[0] ?? 1, v[1] ?? 0, v[2] ?? 0),
+						share(v[5] ?? 1, v[4] ?? 0, v[6] ?? 0),
+					),
+				);
+			};
+			const OWN =
+				"[data-tabletop-slot],[data-tabletop-seat],[data-tabletop-body],[data-tabletop-shell],[data-tabletop-face],[data-tabletop-part],[data-tabletop-glare],[data-tabletop-veils] *";
+			const nameOf = (el: Element) =>
+				el.getAttribute("data-tabletop-slot") ??
+				(
+					el.closest("[data-tabletop-body]") ??
+					el.querySelector("[data-tabletop-body]")
+				)?.getAttribute("data-tabletop-body") ??
+				(el.closest("[data-tabletop-veils]") ? "veil" : el.tagName);
+			/* the CSS clocks on the Table's own elements: the first element
+			   each property runs on, for at most eight properties */
+			const clocksNow = () => {
+				const out = new Map<string, string>();
+				for (const animation of document.getAnimations()) {
+					const target = (animation.effect as KeyframeEffect | null)
+						?.target;
+					if (!target?.matches(OWN)) continue;
+					const what =
+						(animation as CSSTransition).transitionProperty ??
+						(animation as CSSAnimation).animationName ??
+						"animation";
+					if (!out.has(what)) out.set(what, nameOf(target));
+					if (out.size >= 8) break;
+				}
+				return [...out].map(([what, who]) => `${who} ${what}`);
 			};
 			const opacityUpTo = (el: Element, root: Element) => {
 				let o = 1;
@@ -197,6 +253,14 @@ export async function startFrameLog(page: Page, options: Options = {}) {
 						w: round(b.width),
 						h: round(b.height),
 					},
+					inView:
+						b.right > 0 &&
+						b.bottom > 0 &&
+						b.left < innerWidth &&
+						b.top < innerHeight,
+					rest: { x: round(at.left), y: round(at.top) },
+					offset: round(Math.hypot(tx, ty)),
+					face: faceOf(shell),
 					size: { w: el.offsetWidth, h: el.offsetHeight },
 					rotate: round(Number.parseFloat(style.rotate) || 0),
 					scale,
@@ -243,7 +307,7 @@ export async function startFrameLog(page: Page, options: Options = {}) {
 					const id = el.dataset.tabletopBody ?? "?";
 					if (!ids || ids.includes(id)) bodies[id] = read(el, seats);
 				}
-				frames.push({ t: round(stamp), bodies });
+				frames.push({ t: round(stamp), bodies, clocks: clocksNow() });
 			});
 			observer.observe(probe);
 			let wide = false;

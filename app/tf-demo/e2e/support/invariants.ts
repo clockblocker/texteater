@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { secondClocks, teleports, vanishes } from "./continuity";
 import type { BodyFrame, Frame, Rect } from "./frames";
 
 /**
@@ -296,7 +297,12 @@ export function changesAfterDrop(frames: readonly Frame[], id: string) {
 	return [...found].slice(0, 6);
 }
 
-/** Every frame invariant at once for a move of `ids`, as one readable soft failure. */
+/**
+ * Every frame invariant at once for a move of `ids`, as one readable soft
+ * failure: its pace, no teleport, no vanish and one clock
+ * (`continuity.ts`), no overshoot, no text over text, no lean while
+ * resizing.
+ */
 export function expectMove(
 	frames: readonly Frame[],
 	ids: readonly string[],
@@ -313,12 +319,18 @@ export function expectMove(
 	expect.soft(frames.length, `${label}: frames logged`).toBeGreaterThan(10);
 	const broken = {
 		jumps: jumps(frames, ids, { stackingCuts: scripted }).slice(0, 6),
+		teleports: teleports(frames, ids).slice(0, 6),
+		vanishes: vanishes(frames, ids).slice(0, 6),
+		secondClocks: secondClocks(frames).slice(0, 6),
 		overshoots: scripted ? [] : overshoots(frames, ids, from).slice(0, 6),
 		textOverlaps: textOverlaps(frames, ids).slice(0, 6),
 		leansWhileResizing: leansWhileResizing(frames, ids).slice(0, 6),
 	};
 	expect.soft(broken, label).toEqual({
 		jumps: [],
+		teleports: [],
+		vanishes: [],
+		secondClocks: [],
 		overshoots: [],
 		textOverlaps: [],
 		leansWhileResizing: [],
