@@ -258,11 +258,15 @@ export function useCoverMorph({
 	}, [frame, valuesOf]);
 
 	useEffect(() => {
+		/* on the document, so it runs before the Inspector's window listener,
+		   which leaves an Escape that closed a Cover alone */
 		const onKey = (event: KeyboardEvent) => {
-			if (event.key === "Escape") close();
+			if (event.key !== "Escape" || !openRef.current) return;
+			event.preventDefault();
+			close();
 		};
-		window.addEventListener("keydown", onKey);
-		return () => window.removeEventListener("keydown", onKey);
+		document.addEventListener("keydown", onKey);
+		return () => document.removeEventListener("keydown", onKey);
 	});
 
 	useEffect(() => () => stopCues(), []);

@@ -31,7 +31,9 @@ export function Inspector({
 				!event.ctrlKey
 			)
 				setOpen((value) => !value);
-			if (event.key === "Escape") setOpen(false);
+			/* an Escape the prototype used, to close its Cover or Sheet, is its own */
+			if (event.key === "Escape" && !event.defaultPrevented)
+				setOpen(false);
 		};
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
