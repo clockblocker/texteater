@@ -1,11 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import type { Pose } from "./move";
+import { type Move, UNSTARTED } from "./move";
+import { type Pose, plan } from "./plan";
 import { fan, pile } from "./poses";
 import { REDUCED, reduce } from "./reduce";
-import { retarget } from "./retarget";
 import { TURN_TWEEN } from "./springs";
-import { landsAt, type Term } from "./term";
-import { type Trick, trickMove } from "./trick";
+import { landsAt, type Trick, trickMove } from "./trick";
 import { deal, fanOut, flip, poker, shuffle, sort, turnDown } from "./tricks";
 
 const CARD = { w: 62 / 16, h: 88 / 16 };
@@ -24,22 +23,27 @@ const rest = (turn: number, x = 0): Pose => ({
 	opacity: 0,
 	lift: 0,
 	turn,
-	z: 0,
 });
 
-/** Every Term the Table gives `trick`'s Cards, each shown `off` px away. */
-function played(trick: Trick, reduced = false, off = 0): Term[] {
+/** Every Move the Table gives `trick`'s Cards, each shown `off` px away. */
+function played(trick: Trick, reduced = false, off = 0): Move[] {
 	return [...trick.moves].flatMap(([id, move]) => {
 		const to = trick.sides?.get(id) === "front" ? 0 : 180;
-		const { added } = retarget({
+		const planned = plan({
 			live: [],
 			from: rest(180, off),
 			to: rest(to),
-			move: trickMove(move, FRAME),
+			style: trickMove(move, FRAME),
 			now: 0,
+			bornAt: UNSTARTED,
 			turn: TURN_TWEEN,
+			lean: null,
+			stacking: null,
+			formChanged: false,
 		});
-		return reduce(added, { reduced });
+		return [planned.box, planned.turn].flatMap((it) =>
+			it ? [reduce(it, { reduced })] : [],
+		);
 	});
 }
 
@@ -85,7 +89,9 @@ describe("when a trick lands, so the next one queued starts", () => {
 		const dealt = played(poker(DECK, stack), false, 100);
 		expect(landsAt(dealt)).toBe(1250);
 		const turn = dealt.find(
-			(term) => term.channel === "turn" && term.delayMs === 1250,
+			(move) =>
+				move.terms.some((term) => term.channel === "turn") &&
+				move.delayMs === 1250,
 		);
 		expect(turn?.curve).toMatchObject({ ms: TURN_TWEEN.ms });
 	});

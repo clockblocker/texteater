@@ -1,12 +1,13 @@
 import { describe, expect, test } from "bun:test";
-import { done, valueAt, velocityAt } from "./term";
 import {
 	DEFAULT_TILT,
 	FLAT,
 	followLean,
 	glareAt,
 	isFlat,
+	leanDone,
 	leanToward,
+	leanValue,
 	pointerOn,
 	shownLean,
 } from "./tilt";
@@ -44,7 +45,7 @@ describe("leanToward", () => {
 		expect(leanToward({ u: 1, v: -0.5 }, DEFAULT_TILT)).toEqual({
 			tiltX: -5,
 			tiltY: 10,
-			lift: DEFAULT_TILT.lift,
+			tiltLift: DEFAULT_TILT.lift,
 			glare: 1,
 		});
 	});
@@ -64,12 +65,12 @@ describe("glareAt", () => {
 
 describe("followLean", () => {
 	const spring = DEFAULT_TILT.spring;
-	const lit = { tiltX: 0, tiltY: 8, lift: 0.02, glare: 1 };
+	const lit = { tiltX: 0, tiltY: 8, tiltLift: 0.02, glare: 1 };
 
 	test("starts from flat and arrives at the target", () => {
 		const terms = followLean([], FLAT, lit, spring, 0);
 		expect(shownLean(lit, terms, 0)).toEqual(FLAT);
-		expect(terms.every((term) => done(term, 3000))).toBe(true);
+		expect(terms.every((term) => leanDone(term, 3000))).toBe(true);
 		expect(shownLean(lit, terms, 3000)).toEqual(lit);
 	});
 
@@ -82,8 +83,13 @@ describe("followLean", () => {
 		const speed = (terms: typeof first) =>
 			terms
 				.filter((term) => term.channel === "tiltY")
-				.reduce((sum, term) => sum + velocityAt(term, 80), 0);
-		expect(speed(second)).toBeCloseTo(speed(first), 3);
+				.reduce(
+					(sum, term) =>
+						sum +
+						(leanValue(term, 80.05) - leanValue(term, 80)) * 20_000,
+					0,
+				);
+		expect(speed(second)).toBeCloseTo(speed(first), 0);
 	});
 
 	test("folds a channel into one Term, and leaves the others be", () => {
@@ -97,7 +103,7 @@ describe("followLean", () => {
 		const kept = glare(second);
 		if (!kept) throw new Error("no glare Term");
 		expect(kept).toBe(glare(first) as typeof kept);
-		expect(valueAt(kept, 40)).toBeLessThan(0);
+		expect(leanValue(kept, 40)).toBeLessThan(0);
 	});
 
 	test("adds nothing for a target that didn't move", () => {

@@ -2,31 +2,21 @@
  * The Table's stylesheet. Rest is CSS: a Body's seat sits on its Slot
  * through `anchor()` and `anchor-size()`, and the Body fills it, reading
  * its rotation, scale and side from `--rest-*`, which React writes; the
- * seat reads the stacking order. Motion is written by the Table straight
- * on the moving Body's own `translate`, `rotate`, `scale`, `opacity` and
- * size (`calc(100% + …)`, so the box really resizes), its seat's
- * `z-index`, its Parts' `translate` and its shell's `transform`, and taken
- * off again at rest: a custom property's change would restyle every
- * element of its faces. Held and leaving Bodies' seats stand on a px box
- * (`--seat-*`) instead of their Slot. A tilting Body leans by its
- * `transform` (`--tilt-*`) and lights its Glares (`--glare-*`). While the
- * Table reads Parts, `[data-tabletop-measuring]` takes every transform
- * off. Every custom property here is registered and doesn't inherit.
+ * seat stacks by `--rest-z`, doubled so a crossing can draw a Body just
+ * below the ones it crosses. Everything in flight is written by the
+ * Table's one writer straight on the Body's own properties (`paint.ts`)
+ * and taken off again at rest. Held and leaving Bodies' seats stand on a
+ * px box (`--seat-*`) instead of their Slot. While the Table reads Parts,
+ * `[data-tabletop-measuring]` takes every transform off. Every custom
+ * property here is registered and doesn't inherit.
  */
 
 const LENGTHS = ["--seat-x", "--seat-y", "--seat-w", "--seat-h"];
-const ANGLES = [
-	"--rest-rotate",
-	"--fly-turn",
-	"--rest-turn",
-	"--tilt-x",
-	"--tilt-y",
-];
+const ANGLES = ["--rest-rotate", "--fly-turn", "--rest-turn"];
 const PERCENTAGES = ["--glare-x", "--glare-y"];
 const NUMBERS: readonly (readonly [string, number])[] = [
 	["--rest-scale", 1],
 	["--turn-lift", 1],
-	["--tilt-lift", 0],
 	["--glare-o", 0],
 ];
 const INTEGERS = ["--rest-z"];
@@ -50,18 +40,17 @@ export const TABLE_CSS = `${REGISTERED}
 [data-tabletop][dir="rtl"]{--dir:-1}
 [data-tabletop-region]{position:relative;container-type:size}
 [data-tabletop-slot]{position:absolute;visibility:hidden;pointer-events:none}
+[data-tabletop-veils]{position:fixed;left:0;top:0;width:0;height:0;overflow:hidden;pointer-events:none}
 [data-tabletop-origin]{position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none}
 [data-tabletop-seat]{position:fixed;margin:0;inset:auto;
 top:anchor(top);left:anchor(left);width:anchor-size(width);height:anchor-size(height);
-z-index:var(--rest-z);contain:size layout;position-visibility:always;pointer-events:none}
+z-index:calc(var(--rest-z) * 2);contain:size layout;position-visibility:always;pointer-events:none}
 [data-tabletop-seat][data-mode]{top:var(--seat-y);left:var(--seat-x);width:var(--seat-w);height:var(--seat-h)}
 [data-tabletop-body]{position:absolute;margin:0;box-sizing:border-box;inset:auto;top:0;left:0;
 width:100%;height:100%;rotate:calc(var(--dir) * var(--rest-rotate));scale:var(--rest-scale);
 transform-origin:50% 50%;contain:layout;pointer-events:auto;
 touch-action:none;user-select:none;-webkit-user-select:none}
 [data-tabletop-seat][data-mode="unmoored"]>[data-tabletop-body]{pointer-events:none}
-[data-tabletop-body][data-tilt]{transform:perspective(var(--tilt-perspective,600px)) rotateX(var(--tilt-x)) rotateY(calc(-1 * var(--dir) * var(--tilt-y))) scale(calc(1 + var(--tilt-lift)))}
-[data-reduced] [data-tabletop-body]{transform:none}
 [data-tabletop-shell]{display:grid;width:100%;height:100%;transform-style:preserve-3d;
 transform:perspective(var(--turn-perspective,600px)) rotateY(calc(var(--dir) * ${TURN})) scale(var(--turn-lift))}
 [data-turn-axis="x"] [data-tabletop-shell]{transform:perspective(var(--turn-perspective,600px)) rotateX(${TURN}) scale(var(--turn-lift))}

@@ -15,19 +15,6 @@ export type CardSize = { readonly w: number; readonly h: number };
 /** A point in rem, logical: `u` runs inline (mirrored in RTL), `v` down. */
 export type Logical = { readonly u: number; readonly v: number };
 
-/**
- * How fast a straight move from `from` to `to` starts, as a share of the
- * way per second: the part of `velocity` (px/s) that runs along the line
- * toward `to`. None of it carries across the line, and none away from `to`.
- * Ported from the playground's `geometry.ts`.
- */
-export function approachRate(from: Point, to: Point, velocity: Point): number {
-	const way = { x: to.x - from.x, y: to.y - from.y };
-	const squared = way.x * way.x + way.y * way.y;
-	if (squared < 0.25) return 0;
-	return Math.max(0, (velocity.x * way.x + velocity.y * way.y) / squared);
-}
-
 /** Where the hand is headed: `point` plus `velocity` (px/s) over `ms`. */
 export function project(point: Point, velocity: Point, ms: number): Point {
 	return {

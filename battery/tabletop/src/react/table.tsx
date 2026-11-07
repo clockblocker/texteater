@@ -10,6 +10,8 @@ import {
 } from "react";
 import { flushSync } from "react-dom";
 import type { Box, Point } from "../core/geometry";
+import { type HandPose, LIFTED } from "../core/hand";
+import { moves as movesOn } from "../core/move";
 import type { SlotId } from "../core/place";
 import { motionPolicy } from "../core/reduce";
 import { SPRINGS } from "../core/springs";
@@ -32,7 +34,8 @@ export type TableHandle = {
 	/**
 	 * The hand lets go of `id` at `velocity` (px/s), and `commit` gives it its
 	 * new rest, or leaves it where it was: it springs there with the part of
-	 * the hand's speed aimed at it.
+	 * the hand's speed aimed at it. A rest where it shows has no way to go:
+	 * nothing moves and the hand's speed is thrown away.
 	 */
 	readonly release: (
 		id: string,
@@ -74,6 +77,14 @@ export type TableHandle = {
 	readonly moving: (id: string) => boolean;
 	/** Where `id` shows now, in client px, unrotated. */
 	readonly shown: (id: string) => Box | null;
+	/**
+	 * Where `id` shows now: its box (client px, unrotated) and its rotation
+	 * in logical degrees, as a Place would hold it. What an app puts a Body
+	 * down at to leave it exactly where the hand let go.
+	 */
+	readonly pose: (
+		id: string,
+	) => { readonly box: Box; readonly rotate: number } | null;
 	readonly slotRect: (slot: SlotId) => DOMRect | null;
 	/** @internal The engine the Table's components register with. */
 	readonly engine: Engine;
@@ -115,12 +126,9 @@ function handleOf(engine: Engine): TableHandle {
 			return (
 				!!body &&
 				body.mode !== "hand" &&
-				body.terms.some(
-					(term) =>
-						term.channel === "x" ||
-						term.channel === "y" ||
-						term.channel === "width",
-				)
+				(movesOn(body.moves, "x") ||
+					movesOn(body.moves, "y") ||
+					movesOn(body.moves, "width"))
 			);
 		},
 		shown: (id) => {
@@ -132,6 +140,20 @@ function handleOf(engine: Engine): TableHandle {
 				y: pose.y ?? 0,
 				width: pose.width ?? 0,
 				height: pose.height ?? 0,
+			};
+		},
+		pose: (id) => {
+			const body = engine.bodies.get(id);
+			const pose = body ? engine.shownPose(body, engine.now()) : null;
+			if (!pose) return null;
+			return {
+				box: {
+					x: pose.x ?? 0,
+					y: pose.y ?? 0,
+					width: pose.width ?? 0,
+					height: pose.height ?? 0,
+				},
+				rotate: engine.dir * (pose.rotate ?? 0),
 			};
 		},
 		slotRect: (slot) => engine.slotRect(slot),
@@ -187,6 +209,8 @@ export type TableProps = {
 	readonly turn?: TurnFeel;
 	/** How a handled Body tilts toward the pointer; nothing tilts without it. */
 	readonly tilt?: TiltFeel | null;
+	/** How a Body looks in the hand: lifted and upright, or as it was (`KEEP_POSE`). */
+	readonly hand?: HandPose;
 	/** Development checks: pass the app's development flag. */
 	readonly assert?: boolean;
 	readonly className?: string;
@@ -195,9 +219,9 @@ export type TableProps = {
 };
 
 /**
- * The surface every Region and Body sits on: one clock and frame loop (Motion's,
- * with no layout projection), the reduced-motion policy, the writing
- * direction, the turn's feel and the tilt's. Its Bodies are `position: fixed`, so no
+ * The surface every Region and Body sits on: one clock and frame loop with
+ * one writer, the reduced-motion policy, the writing direction, the turn's
+ * feel, the tilt's and the hand's pose. Its Bodies are `position: fixed`, so no
  * ancestor may transform or contain it.
  */
 export function Table({
@@ -208,6 +232,7 @@ export function Table({
 	timeScale = 1,
 	turn = DEFAULT_TURN,
 	tilt = null,
+	hand = LIFTED,
 	assert = false,
 	className,
 	style,
@@ -226,6 +251,7 @@ export function Table({
 	engine.dir = dir === "rtl" ? -1 : 1;
 	engine.turn = turn;
 	engine.tilt = tilt;
+	engine.hand = hand;
 	engine.assert = assert;
 	engine.setTimeScale(timeScale);
 	useLayoutEffect(() => {
@@ -252,6 +278,13 @@ export function Table({
 				aria-hidden="true"
 				ref={(el) => {
 					engine.origin = el;
+				}}
+			/>
+			<svg
+				data-tabletop-veils=""
+				aria-hidden="true"
+				ref={(el) => {
+					engine.veils.svg = el;
 				}}
 			/>
 			<TableContext value={table}>{children}</TableContext>

@@ -1,8 +1,8 @@
 import type { Ease } from "./ease";
-import type { Leg, Move, Path, Pose } from "./move";
+import { type Channel, endOf, type Move, UNSTARTED } from "./move";
 import type { Posed, Side } from "./place";
+import { isTurn, type Leg, type MoveStyle, type Path, type Pose } from "./plan";
 import { DECK_OF_CARDS } from "./springs";
-import type { Channel } from "./term";
 
 /**
  * A Trick as a plan: a new order, rest and sides for the Deck, and for each
@@ -101,11 +101,11 @@ function physical(key: keyof TrickOffset, value: number, frame: Frame) {
 const KEYS = Object.keys(CHANNEL_OF) as (keyof TrickOffset)[];
 
 /**
- * A Card's part of a Trick as the Move the Table plays: its waypoints in
- * physical px and degrees, mirrored once here for RTL. The turn stays
- * logical: the Shell mirrors it.
+ * A Card's part of a Trick as the style of the Move the Table plays: its
+ * waypoints in physical px and degrees, mirrored once here for RTL. The
+ * turn stays logical: the Shell mirrors it.
  */
-export function trickMove(move: TrickMove, frame: Frame): Move {
+export function trickMove(move: TrickMove, frame: Frame): MoveStyle {
 	const path: Partial<Record<Channel, Leg[]>> = {};
 	const from: Pose = {};
 	for (const key of KEYS) {
@@ -135,4 +135,17 @@ export function trickMove(move: TrickMove, frame: Frame): Move {
 		...(move.zAt === undefined ? {} : { zAt: move.zAt }),
 		...(move.sideAt === undefined ? {} : { sideAt: move.sideAt }),
 	};
+}
+
+/**
+ * When a Trick's Moves land, in ms after their clock starts: the latest end
+ * of a held Move that carries a Card, as deck-of-cards' next trick waits
+ * for the last move. A turn it cues after doesn't hold the next one up.
+ */
+export function landsAt(moves: readonly Move[]): number {
+	let end = 0;
+	for (const move of moves)
+		if (move.bornAt === UNSTARTED && !isTurn(move))
+			end = Math.max(end, endOf(move));
+	return end;
 }

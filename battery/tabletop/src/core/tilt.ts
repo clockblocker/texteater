@@ -1,6 +1,6 @@
+import { doneAfter, progressAfter, type SpringCurve } from "./curve";
 import type { Logical, Point } from "./geometry";
 import { SPRINGS, type SpringSpec } from "./springs";
-import { type Curve, done, sumAt, type Term, velocityAt } from "./term";
 
 /**
  * How a handled Body tilts toward the pointer over it (#1312): about its
@@ -36,22 +36,63 @@ export const DEFAULT_TILT: TiltFeel = {
 /**
  * What a tilt holds. `tiltX` turns about the inline axis, positive bringing
  * the bottom edge up; `tiltY` about the block axis, positive bringing the
- * inline-end edge up, so it mirrors in RTL. Both in degrees. `lift` is a
- * share of the Body's size and `glare` how lit it is, 0 to 1.
+ * inline-end edge up, so it mirrors in RTL. Both in degrees. `tiltLift` is
+ * a share of the Body's size and `glare` how lit it is, 0 to 1. They are
+ * the Body's lean channels: a Move lets them go on its own progress.
  */
 export type Lean = {
 	readonly tiltX: number;
 	readonly tiltY: number;
-	readonly lift: number;
+	readonly tiltLift: number;
 	readonly glare: number;
 };
 
-export const FLAT: Lean = { tiltX: 0, tiltY: 0, lift: 0, glare: 0 };
+export const FLAT: Lean = { tiltX: 0, tiltY: 0, tiltLift: 0, glare: 0 };
 
-const LEAN_CHANNELS = ["tiltX", "tiltY", "lift", "glare"] as const;
+const LEAN_CHANNELS = ["tiltX", "tiltY", "tiltLift", "glare"] as const;
+type LeanChannel = (typeof LEAN_CHANNELS)[number];
 
-function epsilon(channel: (typeof LEAN_CHANNELS)[number]): number {
+function epsilon(channel: LeanChannel): number {
 	return channel === "tiltX" || channel === "tiltY" ? 0.01 : 1e-4;
+}
+
+/**
+ * One step of a lean following the pointer: from `delta` off its target to
+ * nothing on a spring of its own, which starts at the speed the lean had.
+ * A pointer that moves every frame makes one a frame; it isn't a Move,
+ * since nothing in the model changed.
+ */
+export type LeanTerm = {
+	readonly channel: LeanChannel;
+	readonly delta: number;
+	readonly curve: SpringCurve;
+	readonly bornAt: number;
+};
+
+/** The offset a lean Term holds at `now`. */
+export function leanValue(term: LeanTerm, now: number): number {
+	return term.delta * (1 - progressAfter(term.curve, now - term.bornAt));
+}
+
+/** How fast a lean Term moves at `now`, per second, read just ahead. */
+function leanVelocity(term: LeanTerm, now: number): number {
+	const h = 0.05;
+	return ((leanValue(term, now + h) - leanValue(term, now)) * 1000) / h;
+}
+
+export function leanDone(term: LeanTerm, now: number): boolean {
+	return doneAfter(term.curve, now - term.bornAt);
+}
+
+function leanSum(
+	terms: readonly LeanTerm[],
+	channel: LeanChannel,
+	now: number,
+) {
+	let sum = 0;
+	for (const term of terms)
+		if (term.channel === channel) sum += leanValue(term, now);
+	return sum;
 }
 
 export function isFlat(lean: Lean): boolean {
@@ -103,7 +144,7 @@ export function leanToward(at: Logical, feel: TiltFeel): Lean {
 	return {
 		tiltX: hundredths(at.v * feel.maxDeg),
 		tiltY: hundredths(at.u * feel.maxDeg),
-		lift: feel.lift,
+		tiltLift: feel.lift,
 		glare: 1,
 	};
 }
@@ -127,62 +168,45 @@ export function glareAt(
 	};
 }
 
-/** What a tilt shows: its target plus its live Terms. */
+/** What a lean shows: its target plus its live follow Terms. */
 export function shownLean(
 	target: Lean,
-	terms: readonly Term[],
+	terms: readonly LeanTerm[],
 	now: number,
 ): Lean {
 	return {
-		tiltX: target.tiltX + sumAt(terms, "tiltX", now),
-		tiltY: target.tiltY + sumAt(terms, "tiltY", now),
-		lift: target.lift + sumAt(terms, "lift", now),
-		glare: target.glare + sumAt(terms, "glare", now),
+		tiltX: target.tiltX + leanSum(terms, "tiltX", now),
+		tiltY: target.tiltY + leanSum(terms, "tiltY", now),
+		tiltLift: target.tiltLift + leanSum(terms, "tiltLift", now),
+		glare: target.glare + leanSum(terms, "glare", now),
 	};
 }
 
 /**
- * The Terms that let a lean showing `shown` go flat on a Move's own
- * `curve`, born with it: a move of the box takes the tilt down on the
- * box's progress, so the lean, the lift and the glare end with it.
- */
-export function letGoTerms(
-	shown: Lean,
-	curve: Curve,
-	birth: Pick<Term, "bornAt" | "delayMs" | "source">,
-): Term[] {
-	return LEAN_CHANNELS.flatMap((channel) =>
-		Math.abs(shown[channel]) < epsilon(channel) / 10
-			? []
-			: [{ channel, delta: shown[channel], curve, ...birth }],
-	);
-}
-
-/**
- * The Terms a tilt holds once its target moves from `from` to `to`: on each
+ * The Terms a lean holds once its target moves from `from` to `to`: on each
  * channel that moved, its live springs fold into one that starts where they
- * show and as fast as they move (springs add, so this is exact for one
- * spring), and carries the jump in target. A pointer that moves every frame
- * leaves one Term per channel, and the lean stays continuous.
+ * show and as fast as they move, and carries the jump in target. A pointer
+ * that moves every frame leaves one Term per channel, and the lean stays
+ * continuous.
  */
 export function followLean(
-	live: readonly Term[],
+	live: readonly LeanTerm[],
 	from: Lean,
 	to: Lean,
 	spring: SpringSpec,
 	now: number,
-): Term[] {
-	const kept = live.filter((term) => !done(term, now));
-	const out: Term[] = [];
+): LeanTerm[] {
+	const kept = live.filter((term) => !leanDone(term, now));
+	const out: LeanTerm[] = [];
 	for (const channel of LEAN_CHANNELS) {
 		const mine = kept.filter((term) => term.channel === channel);
 		if (from[channel] === to[channel]) {
 			out.push(...mine);
 			continue;
 		}
-		const shown = sumAt(mine, channel, now) + from[channel] - to[channel];
+		const shown = leanSum(mine, channel, now) + from[channel] - to[channel];
 		let velocity = 0;
-		for (const term of mine) velocity += velocityAt(term, now);
+		for (const term of mine) velocity += leanVelocity(term, now);
 		if (
 			Math.abs(shown) < epsilon(channel) &&
 			Math.abs(velocity) < epsilon(channel) * 10
@@ -196,9 +220,7 @@ export function followLean(
 			channel,
 			delta,
 			curve: { kind: "spring", ...spring, rate: -velocity / delta },
-			delayMs: 0,
 			bornAt: now,
-			source: "hand",
 		});
 	}
 	return out;

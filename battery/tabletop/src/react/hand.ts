@@ -1,17 +1,30 @@
 import type { Point } from "../core/geometry";
+import { HAND_Z } from "../core/hand";
+import { type Move, NO_PARTS, sumAt, type Term, without } from "../core/move";
+import { isTurn, POSE } from "../core/plan";
+import { reduce } from "../core/reduce";
+import { FOLLOW } from "../core/shape";
 import { FLIGHT, SPRINGS } from "../core/springs";
-import { type Curve, sumAt, type Term } from "../core/term";
-import { FLAT } from "../core/tilt";
-import type { BodyState, Engine } from "./engine";
+import { crossing } from "../core/stacking";
+import { FLAT, isFlat } from "../core/tilt";
+import type { Engine } from "./engine";
+import { drawnZ, neighbours, showingOf } from "./measure";
+import { leanOf } from "./paint";
+import type { BodyState } from "./state";
 import { steer } from "./tilt";
 
-/** A held Body rides this much bigger, and over every other. */
-const HELD_SCALE = 1.03;
-const HELD_Z = 10_000;
 /** A reduced exit travels this far while it fades, and this long. */
 const REDUCED_EXIT = { px: 24, ms: 180 };
 
-function shownBox(engine: Engine, body: BodyState, now: number) {
+const LEAN_AND_POSE = new Set([
+	...POSE,
+	"tiltX",
+	"tiltY",
+	"tiltLift",
+	"glare",
+] as const);
+
+function shownOf(engine: Engine, body: BodyState, now: number) {
 	const shown = engine.shownPose(body, now);
 	if (!shown) return null;
 	return {
@@ -22,66 +35,98 @@ function shownBox(engine: Engine, body: BodyState, now: number) {
 			height: shown.height ?? 0,
 		},
 		rotate: shown.rotate ?? 0,
-		scale: engine.scaleOf(body) * (1 + sumAt(body.terms, "lift", now)),
+		scale: engine.scaleOf(body) * (1 + sumAt(body.moves, "lift", now)),
 		opacity: 1 + (shown.opacity ?? 0),
 	};
 }
 
-function springTerm(
-	channel: Term["channel"],
-	delta: number,
-	now: number,
-): Term[] {
-	if (Math.abs(delta) < 1e-3) return [];
-	return [
-		{
-			channel,
-			delta,
-			curve: { kind: "spring", ...SPRINGS.settle, rate: 0 },
-			delayMs: 0,
-			bornAt: now,
-			source: "hand",
-		},
-	];
+/**
+ * What the hand keeps of what was in flight: turns, and Parts still on
+ * their way, which go on as they were; the box and pose are what the hand
+ * now holds, folded in.
+ */
+function keptByHand(moves: readonly Move[]): Move[] {
+	return moves
+		.map((move) =>
+			isTurn(move)
+				? move
+				: without(move, LEAN_AND_POSE, { crossing: false }),
+		)
+		.filter(
+			(move) =>
+				move.terms.length > 0 || move.parts.size > 0 || move.leaving,
+		);
 }
 
 /**
  * The hand takes `id` from where it shows: the shown box becomes the hand
- * box, the grab point stays under the pointer, and every box Term is
- * dropped. It straightens and lifts on a spring; under reduced motion it
- * only follows the hand. Its tilt goes on leaning toward the spot it is held
- * by, or lies flat and stays lit when the tilt's feel says so.
+ * box and the grab point stays under the pointer. It takes the hand's pose
+ * (`engine.hand`) on one Move from what it showed, rising over every other
+ * Body by a dissolve or at once. Its lean folds into its lean toward the
+ * spot it is held by, or lies flat and stays lit when the tilt says so.
  */
 export function hold(engine: Engine, id: string, pointer: Point) {
 	const body = engine.bodies.get(id);
 	if (!body?.el || body.mode === "unmoored") return;
 	const now = engine.now();
-	const shown = shownBox(engine, body, now);
+	const shown = shownOf(engine, body, now);
 	if (!shown) return;
+	const pose = engine.hand;
 	const reduced = engine.policy.reduced;
+	const lean = engine.tilt && !reduced ? leanOf(body, now) : FLAT;
+	const z = drawnZ(body, now);
+	const showing = showingOf(body, now);
 	body.box = shown.box;
 	body.grab = { x: pointer.x - shown.box.x, y: pointer.y - shown.box.y };
+	const keep = reduced || !pose.straighten;
 	body.base = {
-		rotate: reduced ? shown.rotate : 0,
-		scale: reduced ? shown.scale : HELD_SCALE,
-		z: HELD_Z,
+		rotate: keep ? shown.rotate : 0,
+		scale: keep ? shown.scale : (body.place?.scale ?? 1) * (1 + pose.lift),
+		z: HAND_Z,
 		opacity: 1,
 	};
-	body.terms = [
-		...body.terms.filter((term) => term.channel === "turn"),
-		...(reduced
-			? []
-			: [
-					...springTerm("rotate", shown.rotate, now),
-					...springTerm("lift", shown.scale / HELD_SCALE - 1, now),
-				]),
-		...springTerm("opacity", shown.opacity - 1, now),
+	const terms: Term[] = [
+		{
+			channel: "rotate",
+			delta: shown.rotate - body.base.rotate,
+			shape: FOLLOW,
+		},
+		{
+			channel: "lift",
+			delta: shown.scale / body.base.scale - 1,
+			shape: FOLLOW,
+		},
+		{ channel: "opacity", delta: shown.opacity - 1, shape: FOLLOW },
+	];
+	const raise = crossing({
+		from: z,
+		to: HAND_Z,
+		others: neighbours(engine, body),
+		showing,
+		shape: pose.raise === "cut" ? { kind: "step", at: 0 } : FOLLOW,
+	});
+	const held: Move = {
+		curve: { kind: "spring", ...SPRINGS.settle, rate: 0 },
+		source: "hand",
+		bornAt: now,
+		delayMs: 0,
+		terms: terms.filter((term) => Math.abs(term.delta) > 1e-4),
+		parts: NO_PARTS,
+		crossing: raise?.shape.kind === "step" ? null : raise,
+		leaving: null,
+	};
+	body.moves = [
+		...keptByHand(body.moves),
+		...(held.terms.length || held.crossing
+			? [reduce(held, engine.policy)]
+			: []),
 	];
 	engine.seatOn(body, "hand");
-	if (body.tilt && !engine.tilt?.held)
+	body.lean = isFlat(lean) ? null : { target: lean, terms: [] };
+	if (engine.tilt && !engine.tilt.held)
 		steer(engine, body, { ...FLAT, glare: 1 }, now);
 	engine.began(body, now);
-	engine.write(body, now);
+	engine.paint(body, now);
 	engine.activate(body);
 }
 
@@ -104,9 +149,9 @@ export type Flight = {
 };
 
 /**
- * `id` leaves for good: unmoored at its shown box, so it reads no Slot
- * any more, and flown along the throw with the hand's speed while it fades.
- * Settles when the fade ends; the app then drops it.
+ * `id` leaves for good: unmoored at its shown box, so it reads no Slot any
+ * more, and flown along the throw with the hand's speed while it fades,
+ * over every other Body. Settles when the fade ends; the app then drops it.
  */
 export function leave(
 	engine: Engine,
@@ -115,7 +160,7 @@ export function leave(
 ): Promise<void> {
 	const body = engine.bodies.get(id);
 	const now = engine.now();
-	const shown = body ? shownBox(engine, body, now) : null;
+	const shown = body ? shownOf(engine, body, now) : null;
 	if (!body?.el || !shown) return Promise.resolve();
 	const reduced = engine.policy.reduced;
 	/* the flight goes on from where the hand last showed it */
@@ -138,48 +183,59 @@ export function leave(
 	body.base = {
 		rotate: shown.rotate + turn,
 		scale: shown.scale,
-		z: HELD_Z,
+		z: HAND_Z,
 		opacity: 0,
 	};
 	const fade = reduced
 		? { ms: REDUCED_EXIT.ms, ease: FLIGHT.fade.ease }
 		: FLIGHT.fade;
-	const tween = (channel: Term["channel"], delta: number): Term => ({
-		channel,
-		delta,
-		curve: { kind: "tween", ...fade },
-		delayMs: 0,
-		bornAt: born,
+	const move = (curve: Move["curve"], terms: Term[]): Move => ({
+		curve,
 		source: "hand",
+		bornAt: born,
+		delayMs: 0,
+		terms,
+		parts: NO_PARTS,
+		crossing: null,
+		leaving: null,
 	});
-	/* one spring for both axes, heading out at the throw's speed */
-	const flying: Curve = {
-		kind: "spring",
-		...FLIGHT.travel,
-		rate: reach > 0 ? speed / reach : 0,
-	};
-	const travel = (channel: "x" | "y", delta: number): Term =>
-		reduced
-			? tween(channel, delta)
-			: {
-					channel,
-					delta,
-					curve: flying,
-					delayMs: 0,
-					bornAt: born,
-					source: "hand",
-				};
-	body.terms = [
-		...body.terms.filter((term) => term.channel === "turn"),
-		travel("x", -exit.x),
-		travel("y", -exit.y),
-		...(turn ? [tween("rotate", -turn)] : []),
-		tween("opacity", shown.opacity),
+	const travel: Term[] = [
+		{ channel: "x", delta: -exit.x, shape: FOLLOW },
+		{ channel: "y", delta: -exit.y, shape: FOLLOW },
 	];
+	/* one spring for both axes, heading out at the throw's speed; the fade,
+	   its turn and the lean it lets go of on a tween that ends the flight */
+	const lean = leanOf(body, now);
+	body.moves = [
+		...body.moves.filter(isTurn),
+		reduced
+			? move({ kind: "tween", ...fade }, travel)
+			: move(
+					{
+						kind: "spring",
+						...FLIGHT.travel,
+						rate: reach > 0 ? speed / reach : 0,
+					},
+					travel,
+				),
+		move({ kind: "tween", ...fade }, [
+			...(turn
+				? [{ channel: "rotate" as const, delta: -turn, shape: FOLLOW }]
+				: []),
+			{ channel: "opacity", delta: shown.opacity, shape: FOLLOW },
+			...(["tiltX", "tiltY", "tiltLift", "glare"] as const).flatMap(
+				(channel) =>
+					Math.abs(lean[channel]) > 1e-4
+						? [{ channel, delta: lean[channel], shape: FOLLOW }]
+						: [],
+			),
+		]),
+	];
+	body.lean = null;
+	engine.tilting.delete(body);
 	engine.seatOn(body, "unmoored");
-	steer(engine, body, FLAT, now);
 	engine.began(body, now);
-	engine.write(body, now);
+	engine.paint(body, now);
 	engine.activate(body);
 	/* the fade ends the flight: the rest of the travel is out of sight */
 	return engine.after(fade.ms);

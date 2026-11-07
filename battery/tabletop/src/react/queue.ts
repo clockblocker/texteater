@@ -1,5 +1,4 @@
-import { landsAt, UNSTARTED } from "../core/term";
-import { type Trick, trickMove } from "../core/trick";
+import { landsAt, type Trick, trickMove } from "../core/trick";
 import type { Engine } from "./engine";
 import { transact } from "./transact";
 
@@ -20,8 +19,7 @@ function rootRemPx(): number {
 
 /**
  * Commits `staged` and plays it from where each Card shows; returns when
- * it lands, in ms after its clock starts: once the last of its Cards' moves
- * ends, the turns it cued after aside.
+ * it lands, in ms after its clock starts.
  */
 export function playTrick(engine: Engine, { trick, commit }: Staged): number {
 	const frame = { remPx: rootRemPx(), dir: engine.dir };
@@ -30,13 +28,8 @@ export function playTrick(engine: Engine, { trick, commit }: Staged): number {
 	);
 	transact(engine, commit ?? null, moves);
 	let lands = 0;
-	for (const id of trick.moves.keys()) {
-		const terms = engine.bodies.get(id)?.terms ?? [];
-		lands = Math.max(
-			lands,
-			landsAt(terms.filter((term) => term.bornAt === UNSTARTED)),
-		);
-	}
+	for (const id of trick.moves.keys())
+		lands = Math.max(lands, landsAt(engine.bodies.get(id)?.moves ?? []));
 	return lands;
 }
 

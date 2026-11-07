@@ -1,22 +1,31 @@
 import { describe, expect, test } from "bun:test";
-import { DECK_OF_CARDS_EASE } from "./ease";
-import { motionPolicy, REDUCED, reduce, reduceFollowers } from "./reduce";
-import { sumAt, type Term } from "./term";
+import { type Move, NO_PARTS, sumAt } from "./move";
+import { motionPolicy, REDUCED, reduce, reducedKind } from "./reduce";
+import { FOLLOW } from "./shape";
+import { SPRINGS } from "./springs";
 
-const reduced = motionPolicy(true, false);
-const linear = DECK_OF_CARDS_EASE.linear;
+const ON = { reduced: true };
 
-function spring(channel: Term["channel"], delta: number, delayMs = 0): Term {
+function move(terms: Move["terms"], rest: Partial<Move> = {}): Move {
 	return {
-		channel,
-		delta,
-		curve: { kind: "spring", stiffness: 632, damping: 50, rate: 10 },
-		delayMs,
+		curve: { kind: "spring", ...SPRINGS.morph, rate: 0 },
+		source: "app",
 		bornAt: 0,
-		source: "hand",
-		raise: true,
+		delayMs: 0,
+		terms,
+		parts: NO_PARTS,
+		crossing: null,
+		leaving: null,
+		...rest,
 	};
 }
+
+const far = move([
+	{ channel: "x", delta: 300, shape: FOLLOW },
+	{ channel: "width", delta: -400, shape: FOLLOW },
+	{ channel: "tiltY", delta: 6, shape: FOLLOW },
+	{ channel: "lift", delta: 0.03, shape: FOLLOW },
+]);
 
 describe("the policy", () => {
 	test("is reduced only when preferred, and Always play animations wins", () => {
@@ -25,120 +34,96 @@ describe("the policy", () => {
 		expect(motionPolicy(false, false).reduced).toBe(false);
 	});
 
-	test("leaves every Term as it is when not reduced", () => {
-		const terms = [spring("x", 300), spring("lift", 0.03)];
-		expect(reduce(terms, motionPolicy(false, false))).toEqual(terms);
+	test("leaves every Move as it is when not reduced", () => {
+		expect(reduce(far, { reduced: false })).toBe(far);
 	});
 });
 
-describe("a change of place past 24 px", () => {
-	const terms = reduce(
-		[spring("x", 300), spring("y", -40), spring("rotate", 12)],
-		reduced,
-	);
+describe("a change past 24 px", () => {
+	const reduced = reduce(far, ON);
+	const opacity = (t: number) => 1 + sumAt([reduced], "opacity", t);
 
-	test("holds where it was while it fades out over 100 ms", () => {
-		expect(sumAt(terms, "x", 99)).toBe(300);
-		expect(sumAt(terms, "rotate", 99)).toBe(12);
-		expect(sumAt(terms, "opacity", 50)).toBeCloseTo(-0.5, 6);
-		expect(sumAt(terms, "opacity", 100)).toBeCloseTo(-1, 6);
+	test("dissolves: it holds where it was while it fades out over 100 ms", () => {
+		expect(reducedKind(far)).toBe("dissolve");
+		expect(sumAt([reduced], "x", 50)).toBe(300);
+		expect(opacity(0)).toBe(1);
+		expect(opacity(REDUCED.dissolveMs)).toBeCloseTo(0, 6);
 	});
 
 	test("then shows at its rest and fades back in over 100 ms: one element, never two", () => {
-		expect(sumAt(terms, "x", 100)).toBe(0);
-		expect(sumAt(terms, "opacity", 150)).toBeCloseTo(-0.5, 6);
-		expect(sumAt(terms, "opacity", 2 * REDUCED.dissolveMs)).toBe(0);
+		expect(sumAt([reduced], "x", REDUCED.dissolveMs + 1)).toBe(0);
+		expect(opacity(2 * REDUCED.dissolveMs)).toBe(1);
 	});
 
-	test("starts with no velocity: no flight and no overshoot", () => {
-		expect(terms.every((term) => term.curve.kind === "tween")).toBe(true);
+	test("nothing leans, lifts or grows", () => {
+		expect(
+			reduced.terms.some((term) =>
+				["tiltY", "lift"].includes(term.channel),
+			),
+		).toBe(false);
+		expect(sumAt([reduced], "width", 50)).toBe(-400);
+	});
+
+	test("its stacking switches while it is hidden", () => {
+		const crossed = reduce(
+			move(far.terms, {
+				crossing: {
+					from: 50,
+					to: 5,
+					over: new Map([["d", { from: 0, to: 1 }]]),
+					shape: FOLLOW,
+				},
+			}),
+			ON,
+		);
+		expect(crossed.crossing?.shape).toEqual({ kind: "step", at: 0.5 });
 	});
 });
 
 describe("a change of 24 px or less", () => {
 	test("tweens there in 140 ms", () => {
-		const [x] = reduce([spring("x", 20)], reduced);
-		expect(x?.curve).toMatchObject({ kind: "tween", ms: REDUCED.tweenMs });
-		expect(sumAt(x ? [x] : [], "opacity", 50)).toBe(0);
+		const near = reduce(
+			move([{ channel: "y", delta: 12, shape: FOLLOW }]),
+			ON,
+		);
+		expect(near.curve).toMatchObject({
+			kind: "tween",
+			ms: REDUCED.tweenMs,
+		});
+		expect(sumAt([near], "y", REDUCED.tweenMs)).toBe(0);
 	});
 });
 
-describe("what never moves under reduced motion", () => {
-	test("lift and tilt get no Terms", () => {
-		expect(
-			reduce([spring("lift", 0.06), spring("tiltX", 8)], reduced),
-		).toEqual([]);
-	});
-
-	test("a turn is a flat 140 ms crossfade", () => {
-		const [turn] = reduce(
-			[
-				{
-					channel: "turn",
-					delta: -180,
-					curve: { kind: "tween", ms: 300, ease: linear },
-					delayMs: 40,
-					bornAt: 0,
-					source: "app",
-				},
-			],
-			reduced,
+describe("a turn", () => {
+	test("is a flat 140 ms crossfade", () => {
+		const turn = reduce(
+			move([{ channel: "turn", delta: -180, shape: FOLLOW }]),
+			ON,
 		);
-		expect(turn?.curve).toMatchObject({ ms: REDUCED.turnMs });
-		expect(turn?.delayMs).toBe(40);
+		expect(turn.curve).toMatchObject({ kind: "tween", ms: REDUCED.turnMs });
 	});
 });
 
 describe("a trick", () => {
-	test("keeps each Card's stagger and dissolves it at its first leg's start", () => {
-		const legs: Term = {
-			channel: "y",
-			delta: 150,
-			curve: {
-				kind: "tween",
-				ms: 900,
-				ease: linear,
-				keyframes: [1, -0.5, 0],
-				times: [0, 0.4, 1],
-			},
-			delayMs: 30,
-			bornAt: 0,
-			source: "app",
-		};
-		const terms = reduce([legs], reduced);
-		expect(sumAt(terms, "y", 129)).toBe(150);
-		expect(sumAt(terms, "y", 130)).toBe(0);
-		expect(sumAt(terms, "opacity", 130)).toBeCloseTo(-1, 6);
-	});
-
-	test("drops waypoints of a Card whose rest did not change", () => {
-		const outAndBack: Term = {
-			channel: "x",
-			delta: 40,
-			curve: {
-				kind: "tween",
-				ms: 400,
-				ease: linear,
-				keyframes: [0, 1, 0],
-			},
-			delayMs: 2,
-			bornAt: 0,
-			source: "app",
-		};
-		expect(reduce([outAndBack], reduced)).toEqual([]);
-	});
-});
-
-describe("a Body's parts", () => {
-	test("switch with the Body when it dissolves", () => {
-		const parts = reduceFollowers(
-			[spring("x", 40), spring("opacity", -1)],
-			[spring("width", 400)],
-			reduced,
+	test("keeps each Card's stagger: it dissolves at its first leg's start", () => {
+		const leg = move(
+			[
+				{
+					channel: "y",
+					delta: 200,
+					shape: {
+						kind: "keys",
+						keys: [1, 0.5, 0],
+						times: [0, 0.5, 1],
+					},
+				},
+			],
+			{ delayMs: 120, curve: { kind: "tween", ms: 900, ease: (t) => t } },
 		);
-		expect(sumAt(parts, "x", 99)).toBe(40);
-		expect(sumAt(parts, "x", 100)).toBe(0);
-		expect(sumAt(parts, "opacity", 99)).toBe(-1);
-		expect(sumAt(parts, "opacity", 100)).toBe(0);
+		const reduced = reduce(leg, ON);
+		expect(reduced.delayMs).toBe(120);
+		expect(reduced.curve).toMatchObject({ ms: 2 * REDUCED.dissolveMs });
+		expect(sumAt([reduced], "y", 120 + 50)).toBe(200);
+		expect(sumAt([reduced], "y", 120 + 150)).toBe(0);
 	});
 });

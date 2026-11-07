@@ -1,5 +1,6 @@
 export type { Point } from "./geometry";
 export { contains, project } from "./geometry";
+export { KEEP_POSE } from "./hand";
 export type { Place, Posed, Side, SlotSpec } from "./place";
 export { place } from "./place";
 export { arrange, cover, fan, pile, row } from "./poses";

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
+import { progressAfter } from "./curve";
 import { snapOffset, snapPx, snapWidth } from "./snap";
-import { shareAfter } from "./term";
 
 /** A move's offsets frame by frame, from `from` to its rest, on the morph spring. */
 function frames(from: number): number[] {
@@ -12,7 +12,7 @@ function frames(from: number): number[] {
 	};
 	const out: number[] = [];
 	for (let t = 0; t <= 800; t += 1000 / 60)
-		out.push(from * shareAfter(curve, t));
+		out.push(from * (1 - progressAfter(curve, t)));
 	return out;
 }
 

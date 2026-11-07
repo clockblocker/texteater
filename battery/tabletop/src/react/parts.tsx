@@ -8,6 +8,7 @@ import {
 	useCallback,
 	useLayoutEffect,
 	useMemo,
+	useState,
 } from "react";
 import type { Place, RegionId, SlotSpec } from "../core/place";
 import { restAngle } from "../core/turn";
@@ -106,14 +107,46 @@ export function Slot({ spec }: { readonly spec: SlotSpec }) {
 }
 
 /**
- * What a Body's own components read: its id, form and side, and nothing a
- * move of its Place changes, so a Body that moves re-renders none of them.
+ * What a Body's own components read: its id, form and side, the forms it
+ * is still leaving, and nothing a move of its Place changes, so a Body that
+ * moves re-renders none of them.
  */
 type BodyContextValue = {
 	readonly id: string;
 	readonly form: string;
 	readonly side: Place["side"];
+	readonly leaving: readonly string[];
 };
+
+type Forms = { readonly now: string; readonly leaving: readonly string[] };
+
+/**
+ * The form a Body shows and the forms it is leaving: a change of form
+ * keeps the old form's own Parts mounted, in the same render, until the
+ * Table says the Move that takes them away has ended.
+ */
+function useForms(engine: Engine, id: string, form: string): Forms {
+	const [forms, setForms] = useState<Forms>({ now: form, leaving: [] });
+	let shown = forms;
+	if (forms.now !== form) {
+		shown = {
+			now: form,
+			leaving: [...forms.leaving.filter((it) => it !== form), forms.now],
+		};
+		setForms(shown);
+	}
+	useLayoutEffect(() => {
+		const body = engine.body(id);
+		body.settleForms = () =>
+			setForms((was) =>
+				was.leaving.length ? { ...was, leaving: [] } : was,
+			);
+		return () => {
+			if (body.settleForms) body.settleForms = null;
+		};
+	}, [engine, id]);
+	return shown;
+}
 const BodyContext = createContext<BodyContextValue | null>(null);
 
 function useBody(): BodyContextValue & { readonly engine: Engine } {
@@ -189,9 +222,15 @@ export function Body({
 				`tabletop: Body "${id}" changed its Place outside transact, so it jumped there. Commit model changes through the Table.`,
 			);
 	}, [engine, id, place]);
+	const forms = useForms(engine, id, place.form);
 	const face = useMemo(
-		() => ({ id, form: place.form, side: place.side }),
-		[id, place.form, place.side],
+		() => ({
+			id,
+			form: place.form,
+			side: place.side,
+			leaving: forms.leaving,
+		}),
+		[id, place.form, place.side, forms.leaving],
 	);
 	return (
 		<div
@@ -283,8 +322,11 @@ export const Shell = memo(function Shell({
 /**
  * A part of a Body's face that keeps its identity across forms. When the
  * form changes it moves from where it was to its new place, by position
- * only. With `only`, it exists in that form alone: it fades in once the
- * Body is most of the way there, and fades out as the Body leaves the form.
+ * only, on the box's own progress. With `only`, it exists in that form
+ * alone: it fades in once nothing travelling is over it, and when the Body
+ * leaves the form it stays, pinned where it showed and clipped by the
+ * face, fading out before anything reaches it, until the Move ends. Render
+ * a form's own Parts in every form's tree: they show only in theirs.
  */
 export function Part({
 	id,
@@ -296,7 +338,7 @@ export function Part({
 	readonly only?: string;
 	readonly children?: ReactNode;
 }) {
-	const { id: bodyId, form, engine } = useBody();
+	const { id: bodyId, form, leaving, engine } = useBody();
 	const ref = useCallback(
 		(el: HTMLDivElement | null) => {
 			if (!el) return;
@@ -304,10 +346,10 @@ export function Part({
 			body.parts.set(id, {
 				id,
 				el,
-				terms: [],
 				written: new Map(),
 				spans: {},
 				only,
+				pin: null,
 			});
 			return () => {
 				if (body.parts.get(id)?.el === el) body.parts.delete(id);
@@ -315,7 +357,8 @@ export function Part({
 		},
 		[engine, bodyId, id, only],
 	);
-	if (only !== undefined && only !== form) return null;
+	if (only !== undefined && only !== form && !leaving.includes(only))
+		return null;
 	return (
 		<div {...rest} ref={ref} data-tabletop-part={id}>
 			{children}

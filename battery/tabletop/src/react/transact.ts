@@ -1,45 +1,36 @@
-import type { Move, Pose } from "../core/move";
-import { reduce, reduceFollowers } from "../core/reduce";
-import { replaces, retarget } from "../core/retarget";
-import { ARRIVAL, DECK_OF_CARDS, SPRINGS } from "../core/springs";
-import {
-	BOX_CHANNELS,
-	type Curve,
-	done,
-	keyframed,
-	sumAt,
-	type Term,
-	timeToShare,
-	UNSTARTED,
-} from "../core/term";
-import type { BodyState, Engine } from "./engine";
-import { haunt, type Leaving } from "./ghosts";
+import { type Move, UNSTARTED } from "../core/move";
+import { type PartBox, planParts } from "../core/parts";
+import { type MoveStyle, type Pose, plan } from "../core/plan";
+import { reduce, reducedKind, SWITCH } from "../core/reduce";
+import { FOLLOW, type Shape } from "../core/shape";
+import { DECK_OF_CARDS, SPRINGS } from "../core/springs";
+import type { Engine } from "./engine";
 import {
 	type Before,
 	measuring,
-	type Offset,
+	neighbours,
 	partLayout,
 	snapshot,
 } from "./measure";
-import { letGo } from "./tilt";
+import type { BodyState } from "./state";
 
-/** The Move for each Body a commit changes; the rest reflow or morph. */
+/** The style each Body a commit changes moves in; the rest reflow or morph. */
 export type Moves =
-	| ReadonlyMap<string, Move>
-	| ((id: string) => Move | undefined);
+	| ReadonlyMap<string, MoveStyle>
+	| ((id: string) => MoveStyle | undefined);
 
 type Changed = {
 	readonly body: BodyState;
 	readonly before: Before | undefined;
-	/** The Terms the change added, before `reduce`. */
-	readonly added: readonly Term[];
-	/** Whether the move replaced the Terms it moves, or added to them. */
-	readonly replaces: boolean;
-	/** When its clock starts: now for the hand, after the paint for the app. */
+	/** The Move carrying its box, pose, stacking and Parts, if any. */
+	readonly box: Move | null;
+	readonly formChanged: boolean;
+	/** Where a reduced dissolve switches its Parts, if it dissolves. */
+	readonly cut: number | undefined;
 	readonly bornAt: number;
 };
 
-function moveOf(moves: Moves | undefined, id: string): Move | undefined {
+function styleOf(moves: Moves | undefined, id: string): MoveStyle | undefined {
 	if (!moves) return undefined;
 	return typeof moves === "function" ? moves(id) : moves.get(id);
 }
@@ -64,216 +55,168 @@ function assertSlots(engine: Engine) {
 	}
 }
 
-function born(terms: readonly Term[], bornAt: number): Term[] {
-	return terms.map((term) => ({ ...term, bornAt }));
-}
-
-function retargetBody(
+/** Lets a held or leaving Body back onto its Slot for a move that takes it there; whether it may move. */
+function moorFor(
 	engine: Engine,
 	body: BodyState,
-	before: Before | undefined,
-	move: Move | undefined,
-	now: number,
-): Changed | null {
+	style: MoveStyle | undefined,
+) {
 	/* a held Body stays in the hand until a release; a leaving one stays
 	   gone unless a move deals it back */
-	if (body.mode === "hand") {
-		if (move?.source !== "hand") return null;
-		engine.moor(body);
-	}
-	if (body.mode === "unmoored") {
-		if (!move) return null;
-		engine.moor(body);
-	}
+	if (body.mode === "hand" && style?.source !== "hand") return false;
+	if (body.mode === "unmoored" && !style) return false;
+	if (body.mode !== "rest") engine.moor(body);
+	return true;
+}
+
+/** What the commit changed for `body`: its rests before and after, and which kinds of change. */
+function compare(engine: Engine, body: BodyState, before: Before | undefined) {
 	const to = engine.restPose(body);
-	if (!to || !body.place) return null;
-	const formChanged = !!before && before.form !== body.place.form;
+	const place = body.place;
+	if (!to || !place) return null;
+	const formChanged = !!before && before.form !== place.form;
 	const from: Pose = before
 		? { ...before.from, lift: before.scale / engine.scaleOf(body) - 1 }
 		: to;
-	if (!move && !formChanged && !differs(from, to)) return null;
-	const chosen: Move = move ?? {
-		source: "app",
-		spring: formChanged ? SPRINGS.morph : SPRINGS.reflow,
-	};
-	const { kept, added } = retarget({
-		live: body.terms,
-		from,
-		to,
-		move: chosen,
-		now,
-		turn: { ms: engine.turn.ms, ease: DECK_OF_CARDS.ease },
-	});
-	const bornAt = chosen.source === "app" ? UNSTARTED : engine.handBirth(now);
-	body.terms = [...kept, ...born(reduce(added, engine.policy), bornAt)];
-	return { body, before, added, replaces: replaces(chosen), bornAt };
-}
-
-/** The Term of the change that moved the box most: what parts follow. */
-function leaderOf(added: readonly Term[]): Term | undefined {
-	let leader: Term | undefined;
-	for (const term of added)
-		if (
-			(BOX_CHANNELS as readonly string[]).includes(term.channel) &&
-			(!leader || Math.abs(term.delta) > Math.abs(leader.delta))
-		)
-			leader = term;
-	return leader;
-}
-
-/**
- * The curve a Part rides: the box's own curve object, so the Part's
- * offset and the box's place and size are one progress (#1311 rule 1). A
- * scripted path has no one progress; its Parts take a plain tween as long.
- */
-function followCurve(leader: Term | undefined): Curve {
-	if (!leader) return { kind: "spring", ...SPRINGS.morph, rate: 0 };
-	const curve = leader.curve;
-	if (!keyframed(curve)) return curve;
-	if (curve.kind === "spring") return curve;
+	const z = { from: before?.z ?? place.z, to: place.z };
 	return {
-		kind: "tween",
-		ms: curve.ms,
-		ease: Array.isArray(curve.ease)
-			? (curve.ease[0] ?? ((t: number) => t))
-			: (curve.ease as (t: number) => number),
+		to,
+		from,
+		z,
+		formChanged,
+		posed: formChanged || differs(from, to),
+		restacked: z.from !== z.to || (before?.showing.size ?? 0) > 0,
+		turned: (from.turn ?? 0) !== (to.turn ?? 0),
 	};
 }
 
-/** How far across the part that stays nearest to `leaving` moves. */
-function shiftNear(
-	leaving: Leaving,
-	before: ReadonlyMap<string, Offset>,
-	after: ReadonlyMap<string, Offset>,
-): number {
-	let shift = 0;
-	let nearest = Number.POSITIVE_INFINITY;
-	for (const [id, was] of before) {
-		const at = after.get(id);
-		if (!at) continue;
-		const distance = Math.hypot(was.x - leaving.at.x, was.y - leaving.at.y);
-		if (distance < nearest) {
-			nearest = distance;
-			shift = at.x - was.x;
-		}
-	}
-	return shift;
+/** Plans `body`'s Move for the commit: `null` when the commit left it be. */
+function change(
+	engine: Engine,
+	body: BodyState,
+	before: Before | undefined,
+	style: MoveStyle | undefined,
+	now: number,
+): Changed | null {
+	if (!moorFor(engine, body, style)) return null;
+	const was = compare(engine, body, before);
+	if (!was) return null;
+	const posed = was.posed || !!style;
+	if (!posed && !was.restacked && !was.turned) return null;
+	const chosen: MoveStyle = style ?? {
+		source: "app",
+		spring: was.formChanged ? SPRINGS.morph : SPRINGS.reflow,
+	};
+	const bornAt = chosen.source === "app" ? UNSTARTED : engine.handBirth(now);
+	const planned = plan({
+		live: body.moves,
+		from: was.from,
+		to: was.to,
+		style: chosen,
+		now,
+		bornAt,
+		turn: { ms: engine.turn.ms, ease: DECK_OF_CARDS.ease },
+		lean: posed ? (before?.lean ?? null) : null,
+		stacking: {
+			...was.z,
+			others: neighbours(engine, body),
+			showing: before?.showing ?? new Map(),
+		},
+		formChanged: was.formChanged,
+	});
+	const kind =
+		planned.box && engine.policy.reduced ? reducedKind(planned.box) : null;
+	const box = planned.box ? reduce(planned.box, engine.policy) : null;
+	const turn = planned.turn ? reduce(planned.turn, engine.policy) : null;
+	body.moves = [
+		...planned.keep,
+		...(box ? [box] : []),
+		...(turn ? [turn] : []),
+	];
+	if (box && posed && before?.lean) body.lean = null;
+	return {
+		body,
+		before,
+		box,
+		formChanged: was.formChanged,
+		cut: kind === "dissolve" ? SWITCH : undefined,
+		bornAt,
+	};
 }
 
 /**
- * Each part's move inside its Body: a position-only FLIP in body-local px,
- * the difference of where it was laid out before the commit and after,
- * both read with the box at the size it showed. It rides the box's own
- * curve: a move that adds to the box's Terms adds to the Part's, one that
- * replaces them replaces the Part's from where it shows. A Part the new
- * form mounted anew carries its old Terms over. Parts only the
- * new form has fade in after the box is most of the way there; parts only
- * the old form had leave as copies (`haunt`) that travel across with the
- * nearest part that stays. They keep their height in the face, so two of
- * them never cross; the shrinking face clips them as they fade.
+ * Pins each Part only the old form had where it showed, out of the new
+ * form's flow, and frees each Part the new form has.
  */
-function flipParts(
-	change: Changed,
-	after: ReadonlyMap<string, Offset>,
-	engine: Engine,
-	now: number,
-) {
-	const { body, before, bornAt } = change;
-	const leader = leaderOf(change.added);
-	const curve = followCurve(leader);
-	const partTerm = (channel: "x" | "y", delta: number): Term => ({
-		channel,
-		delta,
-		curve,
-		delayMs: leader?.delayMs ?? 0,
-		bornAt,
-		source: leader?.source ?? "app",
-	});
-	const arriving: string[] = [];
+function pin(change: Changed) {
+	const { body, before } = change;
+	const form = body.place?.form;
 	for (const part of body.parts.values()) {
-		const at = after.get(part.id);
-		const was = before?.parts.get(part.id);
-		if (!at) continue;
-		if (!was) {
-			if (before) arriving.push(part.id);
+		const leaving = part.only !== undefined && part.only !== form;
+		if (!leaving) {
+			part.pin = null;
 			continue;
 		}
-		const live = (before?.terms.get(part.id) ?? part.terms).filter(
-			(term) => !done(term, now),
-		);
-		const kept = live.filter(
-			(term) => term.channel === "opacity" || !change.replaces,
-		);
-		/* what it shows less what it keeps, against where it now lies */
-		const jump = (channel: "x" | "y") =>
-			was[channel] +
-			sumAt(live, channel, now) -
-			sumAt(kept, channel, now) -
-			at[channel];
-		const terms = [
-			partTerm("x", jump("x")),
-			partTerm("y", jump("y")),
-		].filter((term) => Math.abs(term.delta) >= 1e-3);
-		part.terms = [
-			...kept,
-			...reduceFollowers(terms, change.added, engine.policy),
-		];
-	}
-	if (before && before.form !== body.place?.form)
-		for (const leaving of before.leaving) {
-			const shift = shiftNear(leaving, before.parts, after);
-			const travel = [partTerm("x", -shift)].filter(
-				(term) => Math.abs(term.delta) >= 1e-3,
-			);
-			haunt(
-				engine,
-				body,
-				{ ...leaving, x: leaving.x + shift },
-				reduceFollowers(travel, change.added, engine.policy),
-				now,
-				bornAt,
-			);
-		}
-	const cue = leader ? timeToShare(leader, ARRIVAL.cue) : 0;
-	arriving.forEach((id, index) => {
-		const part = body.parts.get(id);
-		if (!part) return;
-		const fade: Term = {
-			channel: "opacity",
-			delta: -1,
-			curve: { kind: "tween", ...ARRIVAL.fade },
-			delayMs:
-				cue + Math.min(index * ARRIVAL.staggerMs, ARRIVAL.staggerMaxMs),
-			bornAt,
-			source: "app",
+		if (part.pin || !before) continue;
+		const shown = before.parts.get(part.id);
+		const face = before.faces.get(part.id);
+		if (!shown || !face) continue;
+		part.pin = {
+			x: shown.box.x + shown.dx - face.x,
+			y: shown.box.y + shown.dy - face.y,
+			w: shown.box.w,
+			h: shown.box.h,
 		};
-		part.terms = reduceFollowers([fade], change.added, engine.policy);
+	}
+}
+
+function shapeOf(move: Move): Shape {
+	return (
+		move.terms.find((term) =>
+			["x", "y", "width", "height"].includes(term.channel),
+		)?.shape ?? FOLLOW
+	);
+}
+
+/** The Parts' share of a change of form, on the box's own Move. */
+function withParts(change: Changed, after: ReadonlyMap<string, PartBox>) {
+	const { body, before, box } = change;
+	if (!before || !box) return;
+	const parts = planParts({
+		before: before.parts,
+		after,
+		shape: shapeOf(box),
+		...(change.cut === undefined ? {} : { cut: change.cut }),
 	});
+	const next: Move = {
+		...box,
+		parts: parts.terms,
+		leaving: parts.pins.size > 0 ? before.form : null,
+	};
+	body.moves = body.moves.map((move) => (move === box ? next : move));
 }
 
 /**
- * Commits `commit` and moves every Body it changed from where it showed.
- * In one task (#1311 rule 2): the Parts are read with every transform off,
- * the commit is flushed, each changed Body's first frame is written so its
- * box keeps the size it showed (rule 4), and the Parts are read again; the
- * Table then starts nothing until that frame has painted (rule 8), except
- * a release, which keeps the hand's speed. Every jump the model causes
- * goes through here: one that doesn't teleports. A Body whose box moves
- * lets go of its tilt on the same progress, and the Parts only its old
- * form had fade out as copies where they were.
+ * Commits `commit` and moves every Body it changed from where it showed,
+ * in one task (#1311 rule 2): the Parts are read with every transform
+ * off, the commit is flushed, each changed Body gets one Move for
+ * everything it changes (its box keeps the size it showed, rule 4), the
+ * Parts only its old form had are pinned where they showed, and the Parts
+ * are read again for their share of the same Move. The Table then starts
+ * nothing until that frame has painted (rule 8), except a release, which
+ * keeps the hand's speed. Every jump the model causes goes through here.
  */
 export function transact(
 	engine: Engine,
 	commit: (() => void) | null,
 	moves?: Moves,
 ) {
-	const bodies = [...engine.bodies.values()];
-	measuring(bodies, true);
 	const changed: Changed[] = [];
-	let offsets: Map<string, Offset>[] = [];
+	const after = new Map<BodyState, Map<string, PartBox>>();
 	let now = engine.now();
+	measuring(engine.bodies.values(), true);
 	try {
-		const before = snapshot(engine);
+		const before = snapshot(engine, now);
 		if (commit) {
 			engine.transacting = true;
 			try {
@@ -286,40 +229,37 @@ export function transact(
 		now = engine.now();
 		for (const body of engine.bodies.values()) {
 			if (!body.el) continue;
-			const change = retargetBody(
+			const planned = change(
 				engine,
 				body,
 				before.get(body.id),
-				moveOf(moves, body.id),
+				styleOf(moves, body.id),
 				now,
 			);
-			if (change) changed.push(change);
+			if (planned) changed.push(planned);
 		}
-		for (const { body, added, bornAt } of changed) {
-			if (
-				body.tilt &&
-				added.some((term) =>
-					(BOX_CHANNELS as readonly string[]).includes(term.channel),
-				)
-			)
-				letGo(engine, body, leaderOf(added), bornAt, now);
-			engine.began(body, now);
-			engine.write(body, now);
+		for (const planned of changed) {
+			pin(planned);
+			engine.began(planned.body, now);
+			engine.paint(planned.body, now);
 		}
+		const forms = changed.filter((planned) => planned.formChanged);
 		measuring(
-			changed.map(({ body }) => body),
+			forms.map((planned) => planned.body),
 			true,
 		);
-		offsets = changed.map(({ body }) => partLayout(body));
+		for (const planned of forms)
+			after.set(planned.body, partLayout(planned.body));
 	} finally {
 		measuring(engine.bodies.values(), false);
 	}
-	changed.forEach((change, index) => {
-		flipParts(change, offsets[index] ?? new Map(), engine, now);
-	});
+	for (const planned of changed) {
+		const layout = after.get(planned.body);
+		if (layout) withParts(planned, layout);
+	}
 	for (const { body, bornAt } of changed) {
 		engine.began(body, now);
-		engine.write(body, now);
+		engine.paint(body, now);
 		engine.activate(body);
 		if (bornAt === UNSTARTED) engine.defer(body);
 	}
