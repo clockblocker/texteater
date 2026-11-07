@@ -12,6 +12,7 @@ import {
 	PaletteIcon,
 	SparklesIcon,
 	StickyNoteIcon,
+	TableIcon,
 } from "lucide-react";
 import { type ReactNode, useEffect } from "react";
 import { AnimationWorkbench } from "./entries/animation-workbench/workbench";
@@ -25,6 +26,7 @@ import { NotesGallery } from "./entries/notes-gallery";
 import { PaletteGallery } from "./entries/palette-gallery";
 import { PokemonCards } from "./entries/pokemon-cards/pokemon-cards";
 import { ReflexivesPrototype } from "./entries/reflexives/reflexives";
+import { TabletopEntry } from "./entries/tabletop/tabletop";
 import { pathnameAtom } from "./pathname-atoms";
 import {
 	type EntryRoute,
@@ -117,6 +119,14 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"A Card growing into its Cover while its parts change places, after react-flip-toolkit's StaggeredList: one element whose box resizes on its own values, its title row, Source contexts and lines moving with Motion's layout=\"position\", and the Cover-only × and contexts fading in after the move. Spring or tween, part delay, stagger, contain, slow-mo, reduced motion, RTL and per-frame readouts in the inspector.",
 		render: () => <CardToCover />,
+	},
+	{
+		key: "tabletop",
+		title: "Tabletop",
+		icon: TableIcon,
+		description:
+			"The tabletop battery end to end (#1317): Note Cards in a Deck on a Ground and a Pane beside it across a Split. Each Card is one Body resting in a CSS Slot and moved by Terms that decay to nothing. Tap one to grow it into a Cover, drag it home with your speed, drop it on the Pane, throw it away, or turn it over with F. Deal, Fan, Shuffle and Sort, the turn, slow-mo, reduced motion and RTL are in the inspector.",
+		render: () => <TabletopEntry />,
 	},
 	{
 		key: "pokemon-cards",

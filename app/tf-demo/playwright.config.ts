@@ -20,6 +20,7 @@ const playgroundSpecs = [
 	"motion-preference.pw.ts",
 	"playground-isolation.pw.ts",
 	"pokemon-cards.pw.ts",
+	"tabletop.pw.ts",
 ];
 
 export default defineConfig({
