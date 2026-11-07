@@ -61,6 +61,14 @@ export const ARRIVAL = {
 	cue: 0.7,
 } as const;
 
+/**
+ * Content only one form has, leaving with it: a short fade with the box's
+ * first move, so it is gone before the box has shrunk far.
+ */
+export const DEPARTURE = {
+	fade: { ms: 150, ease: DECK_OF_CARDS.linear },
+} as const;
+
 /** A Card leaving for good: its fade ends the flight (FLY_FADE). */
 export const FLIGHT = {
 	travel: SPRINGS.fly,

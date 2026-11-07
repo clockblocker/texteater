@@ -128,12 +128,32 @@ test("a tap grows the Card into its Cover by resizing it, and Escape puts it bac
 	await expect(card).toHaveAttribute("data-slot", "ground:cover");
 	await expect(card.getByRole("button", { name: "Close" })).toBeVisible();
 
+	/* the Cover's own Parts fade out as copies rather than vanish */
+	await page.evaluate(() => {
+		const seen: number[] = [];
+		(window as unknown as { ghosts: number[] }).ghosts = seen;
+		const sample = () => {
+			for (const ghost of document.querySelectorAll(
+				"[data-tabletop-ghost]",
+			))
+				seen.push(Number(getComputedStyle(ghost).opacity));
+			if (seen.length < 400) requestAnimationFrame(sample);
+		};
+		requestAnimationFrame(sample);
+	});
 	await page.keyboard.press("Escape");
 	await expect(card).toHaveAttribute("data-form", "card");
 	await expect.poll(() => atRest(page), { timeout: 5_000 }).toBe(true);
 	await expect(card).toHaveAttribute("data-slot", "ground:abend");
 	expect(await offSlot(page)).toEqual([]);
 	await expect(inspector(page)).toBeVisible();
+	const ghosts = await page.evaluate(
+		() => (window as unknown as { ghosts: number[] }).ghosts,
+	);
+	expect(ghosts.some((opacity) => opacity > 0.05 && opacity < 0.95)).toBe(
+		true,
+	);
+	await expect(card.locator("[data-tabletop-ghost]")).toHaveCount(0);
 });
 
 test("after a resize or a Split drag every Card is in its Slot in the very next frame", async ({
@@ -333,8 +353,11 @@ test("the hovered Card tilts toward the pointer and lights its glare alone, and 
 });
 
 /** How many strongly red and strongly green pixels the page shows. */
-async function redAndGreen(page: Page) {
-	const png = (await page.screenshot()).toString("base64");
+async function redAndGreen(
+	page: Page,
+	clip?: { x: number; y: number; width: number; height: number },
+) {
+	const png = (await page.screenshot({ clip })).toString("base64");
 	return page.evaluate(async (b64) => {
 		const img = new Image();
 		img.src = `data:image/png;base64,${b64}`;
@@ -402,29 +425,16 @@ test("overlapping Cards mid-turn, and a tilted one, draw the face the angle show
 	await expect
 		.poll(async () => (await tiltOf(page, "abend")).y)
 		.toBeGreaterThan(6);
-	const clip = { ...box, y: box.y + box.height * 0.45, height: 20 };
 	await page.mouse.move(box.x + box.width * 0.9, box.y + box.height * 0.81);
-	const strip = (await page.screenshot({ clip })).toString("base64");
-	// the tilted top Card, past edge on, shows its back across its middle
-	const shown = await page.evaluate(async (b64) => {
-		const img = new Image();
-		img.src = `data:image/png;base64,${b64}`;
-		await img.decode();
-		const canvas = document.createElement("canvas");
-		canvas.width = img.width;
-		canvas.height = img.height;
-		const context = canvas.getContext("2d");
-		context?.drawImage(img, 0, 0);
-		const pixel = context?.getImageData(
-			img.width / 2,
-			img.height / 2,
-			1,
-			1,
-		).data;
-		return [pixel?.[0] ?? 0, pixel?.[1] ?? 0];
-	}, strip);
-	expect(shown[0]).toBeGreaterThan(150);
-	expect(shown[1]).toBeLessThan(60);
+	// the tilted top Card, past edge on, shows only its back across its middle
+	const middle = await redAndGreen(page, {
+		x: box.x + box.width * 0.25,
+		y: box.y + box.height * 0.45,
+		width: box.width / 2,
+		height: 12,
+	});
+	expect(middle.red).toBeGreaterThan(0);
+	expect(middle.green).toBe(0);
 });
 
 test("the corner control turns a Card over and back, F turns it too, and a tap still opens it", async ({

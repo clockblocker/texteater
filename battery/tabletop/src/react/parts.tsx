@@ -245,8 +245,8 @@ export function Shell({
 /**
  * A part of a Body's face that keeps its identity across forms. When the
  * form changes it moves from where it was to its new place, by position
- * only. With `only`, it exists in that form alone and fades in once the
- * Body is most of the way there.
+ * only. With `only`, it exists in that form alone: it fades in once the
+ * Body is most of the way there, and fades out as the Body leaves the form.
  */
 export function Part({
 	id,
@@ -263,12 +263,12 @@ export function Part({
 		(el: HTMLDivElement | null) => {
 			if (!el) return;
 			const body = engine.body(bodyId);
-			body.parts.set(id, { id, el, terms: [], written: new Set() });
+			body.parts.set(id, { id, el, terms: [], written: new Set(), only });
 			return () => {
 				if (body.parts.get(id)?.el === el) body.parts.delete(id);
 			};
 		},
-		[engine, bodyId, id],
+		[engine, bodyId, id, only],
 	);
 	if (only !== undefined && only !== place.form) return null;
 	return (

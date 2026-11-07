@@ -12,6 +12,7 @@ import {
 } from "../core/term";
 import { FLAT } from "../core/tilt";
 import type { BodyState, Engine } from "./engine";
+import { haunt, type Leaving } from "./ghosts";
 import { steer } from "./tilt";
 
 /** The Move for each Body a commit changes; the rest reflow or morph. */
@@ -26,6 +27,8 @@ type Before = {
 	readonly scale: number;
 	readonly form: string;
 	readonly parts: ReadonlyMap<string, Offset>;
+	/** The Parts only this form has, copied in case the form changes. */
+	readonly leaving: readonly Leaving[];
 };
 
 type Changed = {
@@ -83,17 +86,48 @@ function differs(from: Pose, to: Pose): boolean {
 	return false;
 }
 
+/** A copy of each Part only `form` has, with where it sits in its face. */
+function leavingOf(
+	body: BodyState,
+	form: string,
+	offsets: ReadonlyMap<string, Offset>,
+): Leaving[] {
+	const root = body.el;
+	if (!root) return [];
+	const leaving: Leaving[] = [];
+	for (const part of body.parts.values()) {
+		if (part.only !== form) continue;
+		const face = part.el.closest<HTMLElement>("[data-tabletop-face]");
+		const at = offsets.get(part.id);
+		if (!face || !at) continue;
+		const faceAt = offsetIn(face, root);
+		leaving.push({
+			id: part.id,
+			at,
+			copy: part.el.cloneNode(true) as HTMLElement,
+			face,
+			x: at.x - faceAt.x,
+			y: at.y - faceAt.y,
+			width: part.el.offsetWidth,
+			height: part.el.offsetHeight,
+		});
+	}
+	return leaving;
+}
+
 function snapshot(engine: Engine, now: number): Map<string, Before> {
 	const before = new Map<string, Before>();
 	for (const body of engine.bodies.values()) {
 		if (!body.el || !body.place || body.mode === "unmoored") continue;
 		const from = engine.restPose(body);
 		if (!from) continue;
+		const parts = partOffsets(body, now);
 		before.set(body.id, {
 			from,
 			scale: engine.scaleOf(body),
 			form: body.place.form,
-			parts: partOffsets(body, now),
+			parts,
+			leaving: leavingOf(body, body.place.form, parts),
 		});
 	}
 	return before;
@@ -195,11 +229,34 @@ function partTerm(
 	};
 }
 
+/** How far across the part that stays nearest to `leaving` moves. */
+function shiftNear(
+	leaving: Leaving,
+	before: ReadonlyMap<string, Offset>,
+	after: ReadonlyMap<string, Offset>,
+): number {
+	let shift = 0;
+	let nearest = Number.POSITIVE_INFINITY;
+	for (const [id, was] of before) {
+		const at = after.get(id);
+		if (!at) continue;
+		const distance = Math.hypot(was.x - leaving.at.x, was.y - leaving.at.y);
+		if (distance < nearest) {
+			nearest = distance;
+			shift = at.x - was.x;
+		}
+	}
+	return shift;
+}
+
 /**
  * Each part's move inside its Body: a position-only FLIP in body-local px
  * (`offsetLeft`/`offsetTop`, which ignore transforms), read after the
  * box's first frame is written so the part starts where it showed. Parts
- * only the new form has fade in after the box is most of the way there.
+ * only the new form has fade in after the box is most of the way there;
+ * parts only the old form had leave as copies (`haunt`) that travel across
+ * with the nearest part that stays. They keep their height in the face, so
+ * two of them never cross; the shrinking face clips them as they fade.
  */
 function flipParts(
 	change: Changed,
@@ -230,6 +287,20 @@ function flipParts(
 			...reduceFollowers(terms, change.added, engine.policy),
 		];
 	}
+	if (before && before.form !== body.place?.form)
+		for (const leaving of before.leaving) {
+			const shift = shiftNear(leaving, before.parts, after);
+			const travel = [partTerm("x", -shift, leader, now)].filter(
+				(term) => Math.abs(term.delta) >= 0.5,
+			);
+			haunt(
+				engine,
+				body,
+				{ ...leaving, x: leaving.x + shift },
+				reduceFollowers(travel, change.added, engine.policy),
+				now,
+			);
+		}
 	const cue = leader ? timeToShare(leader, ARRIVAL.cue) : 0;
 	arriving.forEach((id, index) => {
 		const part = body.parts.get(id);
@@ -252,7 +323,8 @@ function flipParts(
  * The Slots' rects and the parts' offsets are read before and after the
  * commit, each in one batch; the first frame is written before the browser
  * paints. Every jump the model causes goes through here: one that doesn't
- * teleports. A Body whose box moves lets go of its tilt.
+ * teleports. A Body whose box moves lets go of its tilt, and the Parts
+ * only its old form had fade out as copies where they were.
  */
 export function transact(
 	engine: Engine,

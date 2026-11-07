@@ -12,6 +12,7 @@ import {
 	type TurnFeel,
 	turnLift,
 } from "../core/turn";
+import { clearGhosts, type Ghost, writeGhosts } from "./ghosts";
 import { type TiltState, writeTilt } from "./tilt";
 
 /** Where a Body stands: on its Slot, in the hand, or leaving for good. */
@@ -30,6 +31,8 @@ type PartState = {
 	readonly el: HTMLElement;
 	terms: Term[];
 	readonly written: Set<string>;
+	/** The one form it belongs to, if it has one. */
+	readonly only: string | undefined;
 };
 
 export type BodyState = {
@@ -55,6 +58,8 @@ export type BodyState = {
 	tilt: TiltState | null;
 	/** Its Glares, which only its tilt writes. */
 	readonly lights: Set<HTMLElement>;
+	/** Copies of Parts its last form had, fading out. */
+	ghosts: Ghost[];
 };
 
 /** A clock in ms. The Table's runs slower under slow-mo. */
@@ -200,6 +205,7 @@ export class Engine {
 				written: new Set(),
 				tilt: null,
 				lights: new Set(),
+				ghosts: [],
 			};
 			this.bodies.set(id, body);
 		}
@@ -221,6 +227,7 @@ export class Engine {
 			body.written.clear();
 			body.tilt = null;
 			this.tilting.delete(body);
+			clearGhosts(body);
 			this.active.delete(body);
 		}
 		body.el = el;
@@ -368,7 +375,8 @@ export class Engine {
 			parts ||= part.terms.length > 0;
 		}
 		const leaning = writeTilt(this, body, now);
-		return body.terms.length > 0 || parts || leaning;
+		const haunted = writeGhosts(body, now);
+		return body.terms.length > 0 || parts || leaning || haunted;
 	}
 
 	/** The px box a held or leaving Body stands on, in the Table's px. */
