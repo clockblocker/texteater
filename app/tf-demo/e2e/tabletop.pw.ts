@@ -424,3 +424,36 @@ test("overlapping Cards mid-turn, and a tilted one, draw the face the angle show
 	expect(shown[0]).toBeGreaterThan(150);
 	expect(shown[1]).toBeLessThan(60);
 });
+
+test("the corner control turns a Card over and back, F turns it too, and a tap still opens it", async ({
+	page,
+}) => {
+	await open(page);
+	const card = page.locator('[data-tabletop-body="abend"]');
+	const shell = card.locator("[data-tabletop-shell]");
+	const control = card.getByRole("button", { name: "Turn over" });
+	// shown only while the pointer is over the Card
+	await expect(control).toHaveCSS("opacity", "0");
+	await card.hover({ position: { x: 60, y: 70 } });
+	await expect(control).toHaveCSS("opacity", "1");
+	await control.click();
+	await expect(shell).toHaveAttribute("data-side", "back");
+	await expect(card).toHaveAttribute("data-form", "card");
+	// the side that faces away is inert, so only the back's control is there
+	await expect(card.locator('[data-tabletop-face="front"]')).toHaveAttribute(
+		"inert",
+		"",
+	);
+	await expect(control).toHaveCount(1);
+	await control.click();
+	await expect(shell).toHaveAttribute("data-side", "front");
+
+	await card.hover({ position: { x: 60, y: 70 } });
+	await page.keyboard.press("f");
+	await expect(shell).toHaveAttribute("data-side", "back");
+	await page.keyboard.press("f");
+	await expect(shell).toHaveAttribute("data-side", "front");
+
+	await card.click({ position: { x: 60, y: 70 } });
+	await expect(card).toHaveAttribute("data-form", "cover");
+});

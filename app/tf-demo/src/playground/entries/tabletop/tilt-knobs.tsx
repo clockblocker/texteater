@@ -1,6 +1,6 @@
 import { DEFAULT_TILT, SPRINGS, type TiltFeel } from "tabletop/core";
 import { InspectorChoice, InspectorSection } from "../inspector";
-import { InspectorSlider } from "./slider";
+import { InspectorSlider } from "./knobs";
 
 /** #1312's start: 10° at the edge, 600 px, a 2% lift and a soft glare. */
 export const NOTE_TILT: TiltFeel = DEFAULT_TILT;

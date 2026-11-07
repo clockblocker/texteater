@@ -2,6 +2,7 @@ import { type KeyboardEvent, memo, type PointerEvent } from "react";
 import type { Place } from "tabletop/core";
 import { Body, Glare, Shell } from "tabletop/react";
 import { NoteFace, PlainBack } from "./note-face";
+import { TurnControl } from "./turn-control";
 import { noteCard } from "./words";
 
 const FACE =
@@ -9,6 +10,8 @@ const FACE =
 
 /** What a Note Card does with the hand and the keyboard: stable across renders. */
 export type CardHandlers = {
+	/** The corner control's axis when it turns Cards, or `null` (#1315). */
+	readonly control: "x" | "y" | null;
 	readonly press: (
 		id: string,
 		open: boolean,
@@ -21,6 +24,7 @@ export type CardHandlers = {
 		event: PointerEvent<HTMLElement> | null,
 	) => void;
 	readonly key: (id: string, open: boolean, event: KeyboardEvent) => void;
+	readonly turn: (id: string) => void;
 	readonly close: () => void;
 };
 
@@ -52,6 +56,12 @@ export const NoteBody = memo(
 		const card = noteCard(id);
 		if (!card) return null;
 		const open = place.form === "cover";
+		const control = handlers.control ? (
+			<TurnControl
+				axis={handlers.control}
+				onTurn={() => handlers.turn(id)}
+			/>
+		) : null;
 		return (
 			<Body
 				id={id}
@@ -61,7 +71,7 @@ export const NoteBody = memo(
 				tabIndex={0}
 				aria-label={card.title}
 				aria-expanded={open}
-				className={`rounded-[0.9rem] outline-none focus-visible:ring-2 focus-visible:ring-ring/70 ${open ? "" : "cursor-grab"}`}
+				className={`group/card rounded-[0.9rem] outline-none focus-visible:ring-2 focus-visible:ring-ring/70 ${open ? "" : "cursor-grab"}`}
 				onPointerDown={(event) => handlers.press(id, open, event)}
 				onPointerEnter={(event) => handlers.hover(id, open, event)}
 				onPointerMove={(event) => handlers.hover(id, open, event)}
@@ -77,12 +87,14 @@ export const NoteBody = memo(
 								form={place.form}
 								onClose={handlers.close}
 							/>
+							{control}
 							<Glare />
 						</>
 					}
 					back={
 						<>
 							<PlainBack />
+							{control}
 							<Glare />
 						</>
 					}

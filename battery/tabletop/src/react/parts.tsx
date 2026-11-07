@@ -190,7 +190,8 @@ export function Body({
  * shell: each hides when it faces away, and the shell turns about the
  * Body's axis. Paint containment sits on the faces, so the turn's lift is
  * never clipped. Under reduced motion the shell stays flat and the front
- * fades over the back.
+ * fades over the back. The side that faces away is inert, so its controls
+ * take no focus and no clicks.
  */
 export function Shell({
 	front,
@@ -224,6 +225,7 @@ export function Shell({
 			<div
 				data-tabletop-face="back"
 				aria-hidden={!down}
+				inert={!down}
 				className={faceClassName}
 			>
 				{back}
@@ -231,6 +233,7 @@ export function Shell({
 			<div
 				data-tabletop-face="front"
 				aria-hidden={down}
+				inert={down}
 				className={faceClassName}
 			>
 				{front}

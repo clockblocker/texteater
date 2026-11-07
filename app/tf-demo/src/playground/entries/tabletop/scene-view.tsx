@@ -7,6 +7,8 @@ import { type ReactNode, useEffect, useMemo, useRef } from "react";
 import { Region, Slot, type TableHandle, useHand } from "tabletop/react";
 import { type CardHandlers, NoteBody } from "./note-body";
 import { DEALT, placesOf, REGIONS, slotsOf } from "./scene";
+import { isFlick, type TurnGesture } from "./turn-gesture";
+import { useLongPress } from "./use-long-press";
 import type { SceneActions } from "./use-scene";
 
 const REGION_LOOK = {
@@ -55,31 +57,47 @@ function useSceneKeys(
 /**
  * The surface: two Regions in a Split, the Ground with its Deck and a Pane
  * beside it, and every Note Card as one Body on the Table. Nothing else.
+ * `gesture` is how a reader turns a Card besides F (#1315).
  */
 export function SceneView({
 	table,
 	actions,
+	gesture,
+	axis,
 }: {
 	readonly table: TableHandle;
 	readonly actions: SceneActions;
+	readonly gesture: TurnGesture;
+	readonly axis: "x" | "y";
 }) {
 	const { scene } = actions;
 	const slots = slotsOf(scene);
 	const places = placesOf(scene);
 	const hovered = useRef<string | null>(null);
 	useSceneKeys(actions, hovered);
+	const longPress = useLongPress((id) => actions.turn(id));
 	const press = useHand(table, {
-		onTap: (id) => actions.open(id),
-		onRelease: (letting) => actions.release(letting),
+		onTap: (id) => {
+			if (!longPress.swallow(id)) actions.open(id);
+		},
+		onLift: () => longPress.cancel(),
+		onRelease: (letting) =>
+			actions.release(
+				letting,
+				gesture === "flick" && isFlick(letting.velocity),
+			),
 	});
-	const latest = useRef({ actions, press });
-	latest.current = { actions, press };
+	const latest = useRef({ actions, press, longPress });
+	latest.current = { actions, press, longPress };
 	const handlers = useMemo<CardHandlers>(
 		() => ({
+			control: gesture === "control" ? axis : null,
 			press: (id, open, event) => {
+				if (gesture === "press") latest.current.longPress.start(id);
 				/* a Cover at rest stays put; one still growing can be caught */
 				if (!open || table.moving(id)) latest.current.press(id, event);
 			},
+			turn: (id) => latest.current.actions.turn(id),
 			hover: (id, open, event) => {
 				if (event) hovered.current = id;
 				else if (hovered.current === id) hovered.current = null;
@@ -97,7 +115,7 @@ export function SceneView({
 			},
 			close: () => latest.current.actions.close(),
 		}),
-		[table],
+		[table, gesture, axis],
 	);
 	return (
 		<>

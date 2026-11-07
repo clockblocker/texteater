@@ -103,7 +103,8 @@ export function useScene(table: TableHandle) {
 		turn: (id: string) =>
 			table.transact(commit((current) => turnCard(current, id))),
 		turnAll: () => table.transact(commit(turnAll)),
-		release: ({ id, point, velocity }: Letting) => {
+		/** The hand let go of `id`; a flick turns it over as it lands. */
+		release: ({ id, point, velocity }: Letting, flick = false) => {
 			const current = latest.current;
 			const bounds = rectOf("[data-tabletop-scene]");
 			const ahead = project(point, velocity, THROW_PROJECTION_MS);
@@ -121,11 +122,11 @@ export function useScene(table: TableHandle) {
 			table.release(
 				id,
 				velocity,
-				commit((next) =>
-					to && to !== from
-						? moveCard(next, id, to)
-						: uncover(next, id),
-				),
+				commit((next) => {
+					if (to && to !== from) return moveCard(next, id, to);
+					const home = uncover(next, id);
+					return flick ? turnCard(home, id) : home;
+				}),
 			);
 		},
 		deal: () =>

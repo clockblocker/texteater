@@ -81,6 +81,23 @@ describe("the Shell", () => {
 			html.indexOf('data-tabletop-face="front"'),
 		);
 	});
+
+	test("makes the side that faces away inert", () => {
+		const faces = (side: "front" | "back") =>
+			[
+				...render(place("felt:a", { side })).matchAll(
+					/<div data-tabletop-face="(\w+)"[^>]*>/g,
+				),
+			].map((match) => [match[1], match[0].includes('inert=""')]);
+		expect(faces("front")).toEqual([
+			["back", true],
+			["front", false],
+		]);
+		expect(faces("back")).toEqual([
+			["back", false],
+			["front", true],
+		]);
+	});
 });
 
 describe("Parts", () => {

@@ -3,8 +3,11 @@ import { DEFAULT_TURN, type TiltFeel, type TurnFeel } from "tabletop/core";
 import { Table, useTable } from "tabletop/react";
 import { useMotionPreference } from "@/lib/motion-preference";
 import { Inspector, InspectorChoice, InspectorSection } from "../inspector";
+import { KNOB_BUTTON } from "./knobs";
 import { SceneView } from "./scene-view";
 import { NOTE_TILT, TiltSection } from "./tilt-knobs";
+import type { TurnGesture } from "./turn-gesture";
+import { TurnSection } from "./turn-knobs";
 import { type SceneActions, useScene } from "./use-scene";
 
 const TITLE = "Tabletop";
@@ -14,9 +17,6 @@ const TIME_SCALES = [0.25, 0.5, 1] as const;
 
 /* #1313's turn about the long axis: a Note Card is landscape, so that is X */
 const NOTE_TURN: TurnFeel = { ...DEFAULT_TURN, axis: "x" };
-
-const button =
-	"cursor-pointer rounded-md border border-line px-2 py-1 text-xs text-ink-soft hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50";
 
 /**
  * The tabletop battery end to end (#1317): Note Cards in a Deck on the
@@ -30,6 +30,7 @@ export function TabletopEntry() {
 	const [timeScale, setTimeScale] = useState<number>(1);
 	const [rtl, setRtl] = useState(false);
 	const [turn, setTurn] = useState<TurnFeel>(NOTE_TURN);
+	const [gesture, setGesture] = useState<TurnGesture>("control");
 	const [tiltOn, setTiltOn] = useState(true);
 	const [tilt, setTilt] = useState<TiltFeel>(NOTE_TILT);
 	const { preference } = useMotionPreference();
@@ -49,7 +50,12 @@ export function TabletopEntry() {
 					assert={import.meta.env.DEV}
 					className="flex min-h-[36rem] min-w-0 flex-1 select-none"
 				>
-					<SceneView table={table} actions={actions} />
+					<SceneView
+						table={table}
+						actions={actions}
+						gesture={gesture}
+						axis={turn.axis}
+					/>
 				</Table>
 			</div>
 			<Inspector title={TITLE}>
@@ -83,8 +89,8 @@ export function TabletopEntry() {
 							its glare lights. Hold it by a corner.
 						</li>
 						<li>
-							Press F over a Card (or on a focused one) to turn it
-							over.
+							Turn a Card over with the control in its corner, or
+							press F over it (or on a focused one).
 						</li>
 						<li>
 							Drag the Split, resize the window or zoom while
@@ -93,23 +99,13 @@ export function TabletopEntry() {
 					</ul>
 				</InspectorSection>
 				<DeckSection actions={actions} />
-				<InspectorSection title="Turn">
-					<div className="flex flex-wrap gap-1">
-						<TopCardTurn actions={actions} />
-						<button
-							type="button"
-							className={button}
-							onClick={() => actions.turnAll()}
-						>
-							Turn every Card
-						</button>
-					</div>
-					<TurnKnobs feel={turn} onChange={setTurn} />
-					<p className="text-xs text-ink-muted">
-						How a reader turns a Note is #1315's prototype; F and
-						these buttons only drive the turn.
-					</p>
-				</InspectorSection>
+				<TurnSection
+					actions={actions}
+					gesture={gesture}
+					onGesture={setGesture}
+					feel={turn}
+					onChange={setTurn}
+				/>
 				<TiltSection
 					on={tiltOn}
 					feel={tilt}
@@ -168,7 +164,7 @@ function DeckSection({ actions }: { readonly actions: SceneActions }) {
 					<button
 						key={label}
 						type="button"
-						className={button}
+						className={KNOB_BUTTON}
 						onClick={() => void play()}
 					>
 						{label}
@@ -185,77 +181,5 @@ function DeckSection({ actions }: { readonly actions: SceneActions }) {
 				onChange={(spread) => actions.setSpread(Number(spread))}
 			/>
 		</InspectorSection>
-	);
-}
-
-function TopCardTurn({ actions }: { readonly actions: SceneActions }) {
-	const top = actions.scene.cards.ground.at(-1);
-	return (
-		<button
-			type="button"
-			className={button}
-			disabled={!top}
-			onClick={() => top && actions.turn(top)}
-		>
-			Turn the top Card
-		</button>
-	);
-}
-
-const TURN_KNOBS = {
-	ms: [0, 300, 600],
-	perspective: [300, 600, 1200],
-	lift: [0, 0.06, 0.12],
-} as const;
-
-/** #1313's turn knobs: length, perspective, lift edge on and the axis. */
-function TurnKnobs({
-	feel,
-	onChange,
-}: {
-	readonly feel: TurnFeel;
-	readonly onChange: (feel: TurnFeel) => void;
-}) {
-	return (
-		<>
-			<InspectorChoice
-				label="Length"
-				value={`${feel.ms}`}
-				options={TURN_KNOBS.ms.map((ms) => ({
-					value: `${ms}`,
-					label: ms === 0 ? "instant" : `${ms} ms`,
-				}))}
-				onChange={(ms) => onChange({ ...feel, ms: Number(ms) })}
-			/>
-			<InspectorChoice
-				label="Perspective"
-				value={`${feel.perspective}`}
-				options={TURN_KNOBS.perspective.map((px) => ({
-					value: `${px}`,
-					label: `${px} px`,
-				}))}
-				onChange={(px) =>
-					onChange({ ...feel, perspective: Number(px) })
-				}
-			/>
-			<InspectorChoice
-				label="Lift edge on"
-				value={`${feel.lift}`}
-				options={TURN_KNOBS.lift.map((lift) => ({
-					value: `${lift}`,
-					label: lift === 0 ? "none" : `${Math.round(lift * 100)}%`,
-				}))}
-				onChange={(lift) => onChange({ ...feel, lift: Number(lift) })}
-			/>
-			<InspectorChoice<TurnFeel["axis"]>
-				label="Axis"
-				value={feel.axis}
-				options={[
-					{ value: "x", label: "long (X)" },
-					{ value: "y", label: "short (Y)" },
-				]}
-				onChange={(axis) => onChange({ ...feel, axis })}
-			/>
-		</>
 	);
 }
