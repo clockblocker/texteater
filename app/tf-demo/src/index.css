@@ -1,5 +1,10 @@
 @import "lego/styles.css";
 
+/* Under reduce, CSS transitions and animations end at once. Transitions get
+   a duration of 0s, never a tiny one: every element has transition-property
+   `all` by default, so a 0.01ms duration would turn each style write a script
+   makes (Motion, the tabletop Table) into a transition, and the browser would
+   paint its old value for a frame. Nothing here listens for transitionend. */
 @media (prefers-reduced-motion: reduce) {
 	:root:not([data-motion-preference="ignore"]) *,
 	:root:not([data-motion-preference="ignore"]) *::before,
@@ -9,7 +14,7 @@
 		animation-iteration-count: 1;
 		scroll-behavior: auto;
 		transition-delay: 0s;
-		transition-duration: 0.01ms;
+		transition-duration: 0s;
 	}
 
 	/* Lego's local reduced-motion guards predate the app-level preference.
