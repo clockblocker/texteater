@@ -2,10 +2,12 @@ import {
 	type CSSProperties,
 	createContext,
 	type HTMLAttributes,
+	memo,
 	type ReactNode,
 	use,
 	useCallback,
 	useLayoutEffect,
+	useMemo,
 } from "react";
 import type { Place, RegionId, SlotSpec } from "../core/place";
 import { restAngle } from "../core/turn";
@@ -103,7 +105,15 @@ export function Slot({ spec }: { readonly spec: SlotSpec }) {
 	);
 }
 
-type BodyContextValue = { readonly id: string; readonly place: Place };
+/**
+ * What a Body's own components read: its id, form and side, and nothing a
+ * move of its Place changes, so a Body that moves re-renders none of them.
+ */
+type BodyContextValue = {
+	readonly id: string;
+	readonly form: string;
+	readonly side: Place["side"];
+};
 const BodyContext = createContext<BodyContextValue | null>(null);
 
 function useBody(): BodyContextValue & { readonly engine: Engine } {
@@ -125,10 +135,15 @@ function samePlace(a: Place, b: Place): boolean {
 }
 
 /**
- * One Presentation's element, in every form. At rest it sits on its Place's
- * Slot by CSS anchoring, its box `anchor-size()` plus whatever is still to
- * go, so a resize, a zoom or a Split drag moves it in the Region's own
- * layout pass. The Table writes only the offsets of a move in flight.
+ * One Presentation's element, in every form. At rest it fills an invisible
+ * seat that sits on its Place's Slot by CSS anchoring, its box
+ * `anchor-size()`, so a resize, a zoom or a Split drag moves it in the
+ * Region's own layout pass. The Table writes only the offsets of a move in
+ * flight, and only on the Body: Chrome lays every anchored element out
+ * again whenever one of them is restyled (#1312), so the seat is restyled
+ * only when the Body's stacking order or mode changes. The seat contains
+ * its size and layout, so the Body really resizing in it lays out nothing
+ * else.
  */
 export function Body({
 	id,
@@ -142,6 +157,16 @@ export function Body({
 	readonly children?: ReactNode;
 }) {
 	const { engine } = useTableHandle();
+	const seat = useCallback(
+		(el: HTMLDivElement | null) => {
+			if (!el) return;
+			engine.seat(id, el);
+			return () => {
+				if (engine.bodies.get(id)?.seat === el) engine.seat(id, null);
+			};
+		},
+		[engine, id],
+	);
 	const ref = useCallback(
 		(el: HTMLDivElement | null) => {
 			if (!el) return;
@@ -164,23 +189,36 @@ export function Body({
 				`tabletop: Body "${id}" changed its Place outside transact, so it jumped there. Commit model changes through the Table.`,
 			);
 	}, [engine, id, place]);
+	const face = useMemo(
+		() => ({ id, form: place.form, side: place.side }),
+		[id, place.form, place.side],
+	);
 	return (
 		<div
-			{...rest}
-			ref={ref}
-			data-tabletop-body={id}
-			data-form={place.form}
+			ref={seat}
+			data-tabletop-seat=""
 			style={
 				{
-					...style,
 					positionAnchor: engine.anchorOf(place.slot),
-					"--rest-rotate": `${place.rotate}deg`,
-					"--rest-scale": place.scale,
 					"--rest-z": Math.round(place.z),
 				} as Styled
 			}
 		>
-			<BodyContext value={{ id, place }}>{children}</BodyContext>
+			<div
+				{...rest}
+				ref={ref}
+				data-tabletop-body={id}
+				data-form={place.form}
+				style={
+					{
+						...style,
+						"--rest-rotate": `${place.rotate}deg`,
+						"--rest-scale": place.scale,
+					} as Styled
+				}
+			>
+				<BodyContext value={face}>{children}</BodyContext>
+			</div>
 		</div>
 	);
 }
@@ -193,7 +231,7 @@ export function Body({
  * fades over the back. The side that faces away is inert, so its controls
  * take no focus and no clicks.
  */
-export function Shell({
+export const Shell = memo(function Shell({
 	front,
 	back,
 	faceClassName,
@@ -202,7 +240,7 @@ export function Shell({
 	readonly back: ReactNode;
 	readonly faceClassName?: string;
 }) {
-	const { id, place, engine } = useBody();
+	const { id, side, engine } = useBody();
 	const ref = useCallback(
 		(el: HTMLDivElement | null) => {
 			if (!el) return;
@@ -214,13 +252,13 @@ export function Shell({
 		},
 		[engine, id],
 	);
-	const down = place.side === "back";
+	const down = side === "back";
 	return (
 		<div
 			ref={ref}
 			data-tabletop-shell=""
-			data-side={place.side}
-			style={{ "--rest-turn": `${restAngle(place.side)}deg` } as Styled}
+			data-side={side}
+			style={{ "--rest-turn": `${restAngle(side)}deg` } as Styled}
 		>
 			<div
 				data-tabletop-face="back"
@@ -240,7 +278,7 @@ export function Shell({
 			</div>
 		</div>
 	);
-}
+});
 
 /**
  * A part of a Body's face that keeps its identity across forms. When the
@@ -258,19 +296,26 @@ export function Part({
 	readonly only?: string;
 	readonly children?: ReactNode;
 }) {
-	const { id: bodyId, place, engine } = useBody();
+	const { id: bodyId, form, engine } = useBody();
 	const ref = useCallback(
 		(el: HTMLDivElement | null) => {
 			if (!el) return;
 			const body = engine.body(bodyId);
-			body.parts.set(id, { id, el, terms: [], written: new Set(), only });
+			body.parts.set(id, {
+				id,
+				el,
+				terms: [],
+				written: new Map(),
+				spans: {},
+				only,
+			});
 			return () => {
 				if (body.parts.get(id)?.el === el) body.parts.delete(id);
 			};
 		},
 		[engine, bodyId, id, only],
 	);
-	if (only !== undefined && only !== place.form) return null;
+	if (only !== undefined && only !== form) return null;
 	return (
 		<div {...rest} ref={ref} data-tabletop-part={id}>
 			{children}

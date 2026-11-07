@@ -10,7 +10,7 @@ function spring(channel: Term["channel"], delta: number, delayMs = 0): Term {
 	return {
 		channel,
 		delta,
-		curve: { kind: "spring", stiffness: 632, damping: 50, velocity: -3000 },
+		curve: { kind: "spring", stiffness: 632, damping: 50, rate: 10 },
 		delayMs,
 		bornAt: 0,
 		source: "hand",

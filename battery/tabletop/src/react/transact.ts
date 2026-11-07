@@ -1,76 +1,43 @@
 import type { Move, Pose } from "../core/move";
 import { reduce, reduceFollowers } from "../core/reduce";
-import { retarget } from "../core/retarget";
+import { replaces, retarget } from "../core/retarget";
 import { ARRIVAL, DECK_OF_CARDS, SPRINGS } from "../core/springs";
 import {
 	BOX_CHANNELS,
 	type Curve,
 	done,
+	keyframed,
 	sumAt,
 	type Term,
 	timeToShare,
+	UNSTARTED,
 } from "../core/term";
-import { FLAT } from "../core/tilt";
 import type { BodyState, Engine } from "./engine";
 import { haunt, type Leaving } from "./ghosts";
-import { steer } from "./tilt";
+import {
+	type Before,
+	measuring,
+	type Offset,
+	partLayout,
+	snapshot,
+} from "./measure";
+import { letGo } from "./tilt";
 
 /** The Move for each Body a commit changes; the rest reflow or morph. */
 export type Moves =
 	| ReadonlyMap<string, Move>
 	| ((id: string) => Move | undefined);
 
-type Offset = { readonly x: number; readonly y: number };
-
-type Before = {
-	readonly from: Pose;
-	readonly scale: number;
-	readonly form: string;
-	readonly parts: ReadonlyMap<string, Offset>;
-	/** The Parts only this form has, copied in case the form changes. */
-	readonly leaving: readonly Leaving[];
-};
-
 type Changed = {
 	readonly body: BodyState;
 	readonly before: Before | undefined;
 	/** The Terms the change added, before `reduce`. */
 	readonly added: readonly Term[];
+	/** Whether the move replaced the Terms it moves, or added to them. */
+	readonly replaces: boolean;
+	/** When its clock starts: now for the hand, after the paint for the app. */
+	readonly bornAt: number;
 };
-
-/** A part's place in its Body, ignoring every transform on the way. */
-function offsetIn(el: HTMLElement, root: HTMLElement): Offset {
-	let x = 0;
-	let y = 0;
-	let node: HTMLElement | null = el;
-	while (node && node !== root) {
-		x += node.offsetLeft;
-		y += node.offsetTop;
-		const parent: Element | null = node.offsetParent;
-		node = parent instanceof HTMLElement ? parent : null;
-	}
-	return { x, y };
-}
-
-/** Where each part is laid out in its Body, plus, with `now`, its Terms. */
-function partOffsets(body: BodyState, now?: number): Map<string, Offset> {
-	const offsets = new Map<string, Offset>();
-	const root = body.el;
-	if (!root) return offsets;
-	for (const part of body.parts.values()) {
-		const at = offsetIn(part.el, root);
-		offsets.set(
-			part.id,
-			now === undefined
-				? at
-				: {
-						x: at.x + sumAt(part.terms, "x", now),
-						y: at.y + sumAt(part.terms, "y", now),
-					},
-		);
-	}
-	return offsets;
-}
 
 function moveOf(moves: Moves | undefined, id: string): Move | undefined {
 	if (!moves) return undefined;
@@ -86,53 +53,6 @@ function differs(from: Pose, to: Pose): boolean {
 	return false;
 }
 
-/** A copy of each Part only `form` has, with where it sits in its face. */
-function leavingOf(
-	body: BodyState,
-	form: string,
-	offsets: ReadonlyMap<string, Offset>,
-): Leaving[] {
-	const root = body.el;
-	if (!root) return [];
-	const leaving: Leaving[] = [];
-	for (const part of body.parts.values()) {
-		if (part.only !== form) continue;
-		const face = part.el.closest<HTMLElement>("[data-tabletop-face]");
-		const at = offsets.get(part.id);
-		if (!face || !at) continue;
-		const faceAt = offsetIn(face, root);
-		leaving.push({
-			id: part.id,
-			at,
-			copy: part.el.cloneNode(true) as HTMLElement,
-			face,
-			x: at.x - faceAt.x,
-			y: at.y - faceAt.y,
-			width: part.el.offsetWidth,
-			height: part.el.offsetHeight,
-		});
-	}
-	return leaving;
-}
-
-function snapshot(engine: Engine, now: number): Map<string, Before> {
-	const before = new Map<string, Before>();
-	for (const body of engine.bodies.values()) {
-		if (!body.el || !body.place || body.mode === "unmoored") continue;
-		const from = engine.restPose(body);
-		if (!from) continue;
-		const parts = partOffsets(body, now);
-		before.set(body.id, {
-			from,
-			scale: engine.scaleOf(body),
-			form: body.place.form,
-			parts,
-			leaving: leavingOf(body, body.place.form, parts),
-		});
-	}
-	return before;
-}
-
 function assertSlots(engine: Engine) {
 	if (!engine.assert) return;
 	for (const body of engine.bodies.values()) {
@@ -142,6 +62,10 @@ function assertSlots(engine: Engine) {
 				`tabletop: Body "${body.id}" rests on Slot "${body.place.slot}", which isn't mounted, so it falls to its static position.`,
 			);
 	}
+}
+
+function born(terms: readonly Term[], bornAt: number): Term[] {
+	return terms.map((term) => ({ ...term, bornAt }));
 }
 
 function retargetBody(
@@ -180,8 +104,9 @@ function retargetBody(
 		now,
 		turn: { ms: engine.turn.ms, ease: DECK_OF_CARDS.ease },
 	});
-	body.terms = [...kept, ...reduce(added, engine.policy)];
-	return { body, before, added };
+	const bornAt = chosen.source === "app" ? UNSTARTED : engine.handBirth(now);
+	body.terms = [...kept, ...born(reduce(added, engine.policy), bornAt)];
+	return { body, before, added, replaces: replaces(chosen), bornAt };
 }
 
 /** The Term of the change that moved the box most: what parts follow. */
@@ -196,36 +121,22 @@ function leaderOf(added: readonly Term[]): Term | undefined {
 	return leader;
 }
 
-/** A part's curve: the box's, scaled to its own distance. */
-function follow(leader: Term | undefined, delta: number): Curve {
-	if (!leader) return { kind: "spring", ...SPRINGS.morph, velocity: 0 };
+/**
+ * The curve a Part rides: the box's own curve object, so the Part's
+ * offset and the box's place and size are one progress (#1311 rule 1). A
+ * scripted path has no one progress; its Parts take a plain tween as long.
+ */
+function followCurve(leader: Term | undefined): Curve {
+	if (!leader) return { kind: "spring", ...SPRINGS.morph, rate: 0 };
 	const curve = leader.curve;
-	if (curve.kind === "spring") {
-		const rate = leader.delta === 0 ? 0 : -curve.velocity / leader.delta;
-		return { ...curve, velocity: -delta * rate };
-	}
+	if (!keyframed(curve)) return curve;
+	if (curve.kind === "spring") return curve;
 	return {
 		kind: "tween",
 		ms: curve.ms,
 		ease: Array.isArray(curve.ease)
 			? (curve.ease[0] ?? ((t: number) => t))
 			: (curve.ease as (t: number) => number),
-	};
-}
-
-function partTerm(
-	channel: "x" | "y",
-	delta: number,
-	leader: Term | undefined,
-	now: number,
-): Term {
-	return {
-		channel,
-		delta,
-		curve: follow(leader, delta),
-		delayMs: leader?.delayMs ?? 0,
-		bornAt: now,
-		source: leader?.source ?? "app",
 	};
 }
 
@@ -250,13 +161,16 @@ function shiftNear(
 }
 
 /**
- * Each part's move inside its Body: a position-only FLIP in body-local px
- * (`offsetLeft`/`offsetTop`, which ignore transforms), read after the
- * box's first frame is written so the part starts where it showed. Parts
- * only the new form has fade in after the box is most of the way there;
- * parts only the old form had leave as copies (`haunt`) that travel across
- * with the nearest part that stays. They keep their height in the face, so
- * two of them never cross; the shrinking face clips them as they fade.
+ * Each part's move inside its Body: a position-only FLIP in body-local px,
+ * the difference of where it was laid out before the commit and after,
+ * both read with the box at the size it showed. It rides the box's own
+ * curve: a move that adds to the box's Terms adds to the Part's, one that
+ * replaces them replaces the Part's from where it shows. A Part the new
+ * form mounted anew carries its old Terms over. Parts only the
+ * new form has fade in after the box is most of the way there; parts only
+ * the old form had leave as copies (`haunt`) that travel across with the
+ * nearest part that stays. They keep their height in the face, so two of
+ * them never cross; the shrinking face clips them as they fade.
  */
 function flipParts(
 	change: Changed,
@@ -264,8 +178,17 @@ function flipParts(
 	engine: Engine,
 	now: number,
 ) {
-	const { body, before } = change;
+	const { body, before, bornAt } = change;
 	const leader = leaderOf(change.added);
+	const curve = followCurve(leader);
+	const partTerm = (channel: "x" | "y", delta: number): Term => ({
+		channel,
+		delta,
+		curve,
+		delayMs: leader?.delayMs ?? 0,
+		bornAt,
+		source: leader?.source ?? "app",
+	});
 	const arriving: string[] = [];
 	for (const part of body.parts.values()) {
 		const at = after.get(part.id);
@@ -275,23 +198,32 @@ function flipParts(
 			if (before) arriving.push(part.id);
 			continue;
 		}
-		const terms = [
-			partTerm("x", was.x - at.x, leader, now),
-			partTerm("y", was.y - at.y, leader, now),
-		].filter((term) => Math.abs(term.delta) >= 0.5);
-		const live = part.terms.filter(
-			(term) => term.channel === "opacity" && !done(term, now),
+		const live = (before?.terms.get(part.id) ?? part.terms).filter(
+			(term) => !done(term, now),
 		);
+		const kept = live.filter(
+			(term) => term.channel === "opacity" || !change.replaces,
+		);
+		/* what it shows less what it keeps, against where it now lies */
+		const jump = (channel: "x" | "y") =>
+			was[channel] +
+			sumAt(live, channel, now) -
+			sumAt(kept, channel, now) -
+			at[channel];
+		const terms = [
+			partTerm("x", jump("x")),
+			partTerm("y", jump("y")),
+		].filter((term) => Math.abs(term.delta) >= 1e-3);
 		part.terms = [
-			...live,
+			...kept,
 			...reduceFollowers(terms, change.added, engine.policy),
 		];
 	}
 	if (before && before.form !== body.place?.form)
 		for (const leaving of before.leaving) {
 			const shift = shiftNear(leaving, before.parts, after);
-			const travel = [partTerm("x", -shift, leader, now)].filter(
-				(term) => Math.abs(term.delta) >= 0.5,
+			const travel = [partTerm("x", -shift)].filter(
+				(term) => Math.abs(term.delta) >= 1e-3,
 			);
 			haunt(
 				engine,
@@ -299,6 +231,7 @@ function flipParts(
 				{ ...leaving, x: leaving.x + shift },
 				reduceFollowers(travel, change.added, engine.policy),
 				now,
+				bornAt,
 			);
 		}
 	const cue = leader ? timeToShare(leader, ARRIVAL.cue) : 0;
@@ -311,7 +244,7 @@ function flipParts(
 			curve: { kind: "tween", ...ARRIVAL.fade },
 			delayMs:
 				cue + Math.min(index * ARRIVAL.staggerMs, ARRIVAL.staggerMaxMs),
-			bornAt: now,
+			bornAt,
 			source: "app",
 		};
 		part.terms = reduceFollowers([fade], change.added, engine.policy);
@@ -320,56 +253,74 @@ function flipParts(
 
 /**
  * Commits `commit` and moves every Body it changed from where it showed.
- * The Slots' rects and the parts' offsets are read before and after the
- * commit, each in one batch; the first frame is written before the browser
- * paints. Every jump the model causes goes through here: one that doesn't
- * teleports. A Body whose box moves lets go of its tilt, and the Parts
- * only its old form had fade out as copies where they were.
+ * In one task (#1311 rule 2): the Parts are read with every transform off,
+ * the commit is flushed, each changed Body's first frame is written so its
+ * box keeps the size it showed (rule 4), and the Parts are read again; the
+ * Table then starts nothing until that frame has painted (rule 8), except
+ * a release, which keeps the hand's speed. Every jump the model causes
+ * goes through here: one that doesn't teleports. A Body whose box moves
+ * lets go of its tilt on the same progress, and the Parts only its old
+ * form had fade out as copies where they were.
  */
 export function transact(
 	engine: Engine,
 	commit: (() => void) | null,
 	moves?: Moves,
 ) {
-	const before = snapshot(engine, engine.now());
-	if (commit) {
-		engine.transacting = true;
-		try {
-			engine.flush(commit);
-		} finally {
-			engine.transacting = false;
-		}
-	}
-	assertSlots(engine);
-	const now = engine.now();
+	const bodies = [...engine.bodies.values()];
+	measuring(bodies, true);
 	const changed: Changed[] = [];
-	for (const body of engine.bodies.values()) {
-		if (!body.el) continue;
-		const change = retargetBody(
-			engine,
-			body,
-			before.get(body.id),
-			moveOf(moves, body.id),
-			now,
-		);
-		if (change) changed.push(change);
-	}
-	for (const { body, added } of changed) {
-		if (
-			body.tilt &&
-			added.some((term) =>
-				(BOX_CHANNELS as readonly string[]).includes(term.channel),
+	let offsets: Map<string, Offset>[] = [];
+	let now = engine.now();
+	try {
+		const before = snapshot(engine);
+		if (commit) {
+			engine.transacting = true;
+			try {
+				engine.flush(commit);
+			} finally {
+				engine.transacting = false;
+			}
+		}
+		assertSlots(engine);
+		now = engine.now();
+		for (const body of engine.bodies.values()) {
+			if (!body.el) continue;
+			const change = retargetBody(
+				engine,
+				body,
+				before.get(body.id),
+				moveOf(moves, body.id),
+				now,
+			);
+			if (change) changed.push(change);
+		}
+		for (const { body, added, bornAt } of changed) {
+			if (
+				body.tilt &&
+				added.some((term) =>
+					(BOX_CHANNELS as readonly string[]).includes(term.channel),
+				)
 			)
-		)
-			steer(engine, body, FLAT, now);
-		engine.write(body, now);
+				letGo(engine, body, leaderOf(added), bornAt, now);
+			engine.began(body, now);
+			engine.write(body, now);
+		}
+		measuring(
+			changed.map(({ body }) => body),
+			true,
+		);
+		offsets = changed.map(({ body }) => partLayout(body));
+	} finally {
+		measuring(engine.bodies.values(), false);
 	}
-	const offsets = changed.map(({ body }) => partOffsets(body));
 	changed.forEach((change, index) => {
 		flipParts(change, offsets[index] ?? new Map(), engine, now);
 	});
-	for (const { body } of changed) {
+	for (const { body, bornAt } of changed) {
+		engine.began(body, now);
 		engine.write(body, now);
 		engine.activate(body);
+		if (bornAt === UNSTARTED) engine.defer(body);
 	}
 }

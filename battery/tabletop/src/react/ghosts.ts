@@ -1,6 +1,7 @@
 import { REDUCED } from "../core/reduce";
+import { snapOffset } from "../core/snap";
 import { DEPARTURE } from "../core/springs";
-import { done, sumAt, type Term, valueAt } from "../core/term";
+import { done, startTerms, sumAt, type Term, valueAt } from "../core/term";
 import type { BodyState, Engine } from "./engine";
 
 /**
@@ -21,8 +22,10 @@ export type Leaving = {
 /** A departed Part's still copy, fading out as it travels. */
 export type Ghost = {
 	readonly el: HTMLElement;
-	readonly fade: Term;
-	readonly travel: readonly Term[];
+	fade: Term;
+	travel: readonly Term[];
+	/** Where its travel starts, which snapping never rounds back past. */
+	readonly from: number;
 };
 
 /**
@@ -38,6 +41,7 @@ export function haunt(
 	leaving: Leaving,
 	travel: readonly Term[],
 	now: number,
+	bornAt: number,
 ) {
 	const { copy, face } = leaving;
 	copy.removeAttribute("data-tabletop-part");
@@ -64,26 +68,42 @@ export function haunt(
 	body.ghosts.push({
 		el: copy,
 		travel,
+		from: sumAt(travel, "x", now),
 		fade: {
 			channel: "opacity",
 			delta: 1,
 			curve: { kind: "tween", ...fade },
 			delayMs: 0,
-			bornAt: now,
+			bornAt,
 			source: "app",
 		},
 	});
 }
 
-/** Writes each ghost's fade at `now` and drops the ones it ended; whether any is left. */
-export function writeGhosts(body: BodyState, now: number): boolean {
+/** Starts the clock of every ghost the Table held, at `at`. */
+export function startGhosts(body: BodyState, at: number) {
+	for (const ghost of body.ghosts) {
+		ghost.travel = startTerms(ghost.travel, at);
+		ghost.fade = startTerms([ghost.fade], at)[0] ?? ghost.fade;
+	}
+}
+
+/**
+ * Writes each ghost's travel, snapped as a Part's is, and its fade at
+ * `now`, and drops the ones the fade ended; whether any is left.
+ */
+export function writeGhosts(
+	body: BodyState,
+	now: number,
+	dpr: number,
+): boolean {
 	body.ghosts = body.ghosts.filter((ghost) => {
 		if (done(ghost.fade, now)) {
 			ghost.el.remove();
 			return false;
 		}
-		const x = sumAt(ghost.travel, "x", now);
-		ghost.el.style.translate = `${x.toFixed(2)}px`;
+		const x = snapOffset(sumAt(ghost.travel, "x", now), ghost.from, dpr);
+		ghost.el.style.translate = `${x}px`;
 		ghost.el.style.opacity = valueAt(ghost.fade, now).toFixed(3);
 		return true;
 	});

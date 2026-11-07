@@ -15,13 +15,14 @@ export type TweenSpec = {
 /**
  * The one set of springs. Copied from the playground's `motion-kit.ts` and
  * the workspace's `motion-spec.ts`, which keep their own until they move
- * onto the Table (#1318–#1320).
+ * onto the Table (#1318–#1320). Every one a box rides is damped at ζ ≥
+ * 0.97, so no size or place passes its rest (#1311 rule 5).
  */
 export const SPRINGS = {
 	/** Pick-up, put-back and a release that lands: response 0.25, ζ 1. */
 	settle: { stiffness: 632, damping: 50 },
-	/** A Deck reflowing around a Card that came or went: response 0.3, ζ 0.8. */
-	reflow: { stiffness: 438, damping: 34 },
+	/** A Deck reflowing around a Card that came or went: response 0.3, ζ 1. */
+	reflow: { stiffness: 438, damping: 42 },
 	/** A throw past an edge, the workspace's FLY_TRAVEL. */
 	fly: { stiffness: 360, damping: 38 },
 	/** A Card into its Cover and back, the workspace's MORPH. */
@@ -31,8 +32,6 @@ export const SPRINGS = {
 	 * without a wobble. The playground's lean keeps its springier 300/22.
 	 */
 	tilt: { stiffness: 300, damping: 34 },
-	/** A pick-up that lands with a little give: response 0.25, ζ 0.65. */
-	pop: { stiffness: 632, damping: 33 },
 } as const satisfies Record<string, SpringSpec>;
 
 /**

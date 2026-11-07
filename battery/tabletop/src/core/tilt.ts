@@ -1,6 +1,6 @@
 import type { Logical, Point } from "./geometry";
 import { SPRINGS, type SpringSpec } from "./springs";
-import { done, sumAt, type Term, velocityAt } from "./term";
+import { type Curve, done, sumAt, type Term, velocityAt } from "./term";
 
 /**
  * How a handled Body tilts toward the pointer over it (#1312): about its
@@ -142,6 +142,23 @@ export function shownLean(
 }
 
 /**
+ * The Terms that let a lean showing `shown` go flat on a Move's own
+ * `curve`, born with it: a move of the box takes the tilt down on the
+ * box's progress, so the lean, the lift and the glare end with it.
+ */
+export function letGoTerms(
+	shown: Lean,
+	curve: Curve,
+	birth: Pick<Term, "bornAt" | "delayMs" | "source">,
+): Term[] {
+	return LEAN_CHANNELS.flatMap((channel) =>
+		Math.abs(shown[channel]) < epsilon(channel) / 10
+			? []
+			: [{ channel, delta: shown[channel], curve, ...birth }],
+	);
+}
+
+/**
  * The Terms a tilt holds once its target moves from `from` to `to`: on each
  * channel that moved, its live springs fold into one that starts where they
  * show and as fast as they move (springs add, so this is exact for one
@@ -163,18 +180,22 @@ export function followLean(
 			out.push(...mine);
 			continue;
 		}
-		const delta = sumAt(mine, channel, now) + from[channel] - to[channel];
+		const shown = sumAt(mine, channel, now) + from[channel] - to[channel];
 		let velocity = 0;
 		for (const term of mine) velocity += velocityAt(term, now);
 		if (
-			Math.abs(delta) < epsilon(channel) &&
+			Math.abs(shown) < epsilon(channel) &&
 			Math.abs(velocity) < epsilon(channel) * 10
 		)
 			continue;
+		/* a lean already on its target but still moving starts a hair off
+		   it, so its speed has a delta to be a share of */
+		const delta =
+			Math.abs(shown) > 1e-6 ? shown : (Math.sign(velocity) || 1) * 1e-6;
 		out.push({
 			channel,
 			delta,
-			curve: { kind: "spring", ...spring, velocity },
+			curve: { kind: "spring", ...spring, rate: -velocity / delta },
 			delayMs: 0,
 			bornAt: now,
 			source: "hand",

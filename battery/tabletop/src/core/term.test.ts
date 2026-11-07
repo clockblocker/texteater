@@ -13,11 +13,11 @@ import {
 
 const linear = DECK_OF_CARDS_EASE.linear;
 
-function spring(delta: number, velocity = 0, delayMs = 0): Term {
+function spring(delta: number, rate = 0, delayMs = 0): Term {
 	return {
 		channel: "x",
 		delta,
-		curve: { kind: "spring", stiffness: 380, damping: 38, velocity },
+		curve: { kind: "spring", stiffness: 380, damping: 38, rate },
 		delayMs,
 		bornAt: 1000,
 		source: "app",
@@ -48,8 +48,8 @@ describe("a spring Term", () => {
 		expect(done(term, 1600)).toBe(true);
 	});
 
-	test("starts with the velocity it is given, never one inferred", () => {
-		const term = spring(100, -2000);
+	test("starts with the rate it is given, never one inferred", () => {
+		const term = spring(100, 20);
 		expect(velocityAt(term, 1000)).toBeCloseTo(-2000, 6);
 		expect(valueAt(term, 1016)).toBeLessThan(valueAt(spring(100), 1016));
 	});

@@ -1,69 +1,30 @@
 /// <reference lib="dom" />
-import { expect, type Page, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import {
+	atRest,
+	BODY,
+	choice,
+	expectOneClock,
+	inspector,
+	movedFrames,
+	offSlot,
+	open,
+	recordFormChange,
+	recordSides,
+	redAndGreen,
+	sidesOf,
+	tiltOf,
+} from "./support/tabletop";
 
 /**
  * Tabletop (#1317): Note Cards rest in CSS Slots and move by Terms that
  * decay to nothing. A Card at rest is exactly its Slot, even in the frame
- * right after a resize; a tap grows it into a Cover by really resizing it;
- * Fan leaves the Deck fanned.
+ * right after a resize; a tap grows it into a Cover by really resizing it,
+ * on one progress with its Parts and without overshoot (#1321); Fan leaves
+ * the Deck fanned.
  */
 
 test.use({ viewport: { width: 1440, height: 900 } });
-
-const BODY = "[data-tabletop-body]";
-const inspector = (page: Page) =>
-	page.getByRole("complementary", { name: "Inspector" });
-
-/** Every Card whose box is not its Slot's, rotation aside; [] when all rest. */
-function offSlot(page: Page): Promise<string[]> {
-	return page.evaluate(() => {
-		const off: string[] = [];
-		for (const body of document.querySelectorAll<HTMLElement>(
-			"[data-tabletop-body]",
-		)) {
-			const slot = document.querySelector(
-				`[data-tabletop-slot="${body.dataset.slot}"]`,
-			);
-			const id = body.dataset.tabletopBody;
-			if (!slot) {
-				off.push(`${id}: no Slot`);
-				continue;
-			}
-			const want = slot.getBoundingClientRect();
-			const style = getComputedStyle(body);
-			/* offset* is the layout box, untransformed: the place a rotated Card rests */
-			const got = {
-				left: body.offsetLeft,
-				top: body.offsetTop,
-				width: body.offsetWidth,
-				height: body.offsetHeight,
-			};
-			const far = (["left", "top", "width", "height"] as const).some(
-				(key) => Math.abs(got[key] - want[key]) > 1,
-			);
-			if (far || !/^(none|0px( 0px)?)$/.test(style.translate))
-				off.push(
-					`${id}: ${JSON.stringify(got)} vs ${JSON.stringify(want)} ${style.translate}`,
-				);
-		}
-		return off;
-	});
-}
-
-/** Whether the Table has written nothing on any Card: every move is over. */
-function atRest(page: Page): Promise<boolean> {
-	return page.evaluate(() =>
-		[...document.querySelectorAll("[data-tabletop-body]")].every(
-			(body) => !/--(fly|box)-/.test(body.getAttribute("style") ?? ""),
-		),
-	);
-}
-
-async function open(page: Page) {
-	await page.goto("/playground/tabletop");
-	await expect(page.locator(BODY)).toHaveCount(8);
-	await expect.poll(() => atRest(page), { timeout: 5_000 }).toBe(true);
-}
 
 test("deals the Note Cards into their Slots on the Ground", async ({
 	page,
@@ -155,6 +116,44 @@ test("a tap grows the Card into its Cover by resizing it, and Escape puts it bac
 	);
 	await expect(card.locator("[data-tabletop-ghost]")).toHaveCount(0);
 });
+
+for (const dir of ["LTR", "RTL"] as const)
+	test(`${dir}: a Card opens and closes on one clock, its Parts with it, never past its Cover`, async ({
+		page,
+	}) => {
+		await open(page);
+		if (dir === "RTL") {
+			await choice(page, "Direction", "RTL").click();
+			await expect
+				.poll(() => atRest(page), { timeout: 5_000 })
+				.toBe(true);
+		}
+		const card = page.locator('[data-tabletop-body="abend"]');
+		const slot = (id: string) =>
+			page.locator(`[data-tabletop-slot="${id}"]`).boundingBox();
+		const start = await card.boundingBox();
+		if (!start) throw new Error("no Card");
+		/* a reader's tap: the pointer settles on the heading, so the Card leans */
+		await page.mouse.move(start.x + start.width / 2, start.y + 16, {
+			steps: 3,
+		});
+		await page.waitForTimeout(300);
+		await recordFormChange(page, "abend");
+		await page.mouse.click(start.x + start.width / 2, start.y + 16);
+		await expect(card).toHaveAttribute("data-form", "cover");
+		await expect.poll(() => atRest(page), { timeout: 5_000 }).toBe(true);
+		const cover = await slot("ground:cover");
+		if (!cover) throw new Error("no Cover Slot");
+		expectOneClock(await movedFrames(page), cover);
+
+		await recordFormChange(page, "abend");
+		await page.keyboard.press("Escape");
+		await expect(card).toHaveAttribute("data-form", "card");
+		await expect.poll(() => atRest(page), { timeout: 5_000 }).toBe(true);
+		const home = await slot("ground:abend");
+		if (!home) throw new Error("no Slot");
+		expectOneClock(await movedFrames(page), home);
+	});
 
 test("after a resize or a Split drag every Card is in its Slot in the very next frame", async ({
 	page,
@@ -255,40 +254,6 @@ test("Fan leaves the Deck fanned, the outermost Cards turned furthest", async ({
 	expect(await offSlot(page)).toEqual([]);
 });
 
-/** `id`'s tilt as CSS shows it, and how lit every Card's glares are. */
-function tiltOf(page: Page, id: string) {
-	return page.evaluate((id) => {
-		const el = document.querySelector<HTMLElement>(
-			`[data-tabletop-body="${id}"]`,
-		);
-		if (!el) throw new Error(`no Card ${id}`);
-		const style = getComputedStyle(el);
-		const lit: Record<string, number> = {};
-		for (const glare of document.querySelectorAll(
-			"[data-tabletop-glare]",
-		)) {
-			const body = glare.closest<HTMLElement>("[data-tabletop-body]");
-			const key = body?.dataset.tabletopBody ?? "?";
-			lit[key] = Math.max(
-				lit[key] ?? 0,
-				Number(getComputedStyle(glare).opacity),
-			);
-		}
-		return {
-			tilting: el.hasAttribute("data-tilt"),
-			x: Number.parseFloat(style.getPropertyValue("--tilt-x")),
-			y: Number.parseFloat(style.getPropertyValue("--tilt-y")),
-			transform: style.transform,
-			lit,
-		};
-	}, id);
-}
-
-const choice = (page: Page, group: string, name: string) =>
-	inspector(page)
-		.getByRole("group", { name: group })
-		.getByRole("button", { name, exact: true });
-
 test("the hovered Card tilts toward the pointer and lights its glare alone, and never under reduced motion", async ({
 	page,
 }) => {
@@ -351,34 +316,6 @@ test("the hovered Card tilts toward the pointer and lights its glare alone, and 
 		true,
 	);
 });
-
-/** How many strongly red and strongly green pixels the page shows. */
-async function redAndGreen(
-	page: Page,
-	clip?: { x: number; y: number; width: number; height: number },
-) {
-	const png = (await page.screenshot({ clip })).toString("base64");
-	return page.evaluate(async (b64) => {
-		const img = new Image();
-		img.src = `data:image/png;base64,${b64}`;
-		await img.decode();
-		const canvas = document.createElement("canvas");
-		canvas.width = img.width;
-		canvas.height = img.height;
-		const context = canvas.getContext("2d");
-		if (!context) throw new Error("no canvas");
-		context.drawImage(img, 0, 0);
-		const { data } = context.getImageData(0, 0, img.width, img.height);
-		let red = 0;
-		let green = 0;
-		for (let i = 0; i < data.length; i += 4) {
-			const [r = 0, g = 0, b = 0] = [data[i], data[i + 1], data[i + 2]];
-			if (r > 150 && g < 60 && b < 60) red++;
-			if (g > 130 && r < 60 && b < 60) green++;
-		}
-		return { red, green };
-	}, png);
-}
 
 test("overlapping Cards mid-turn, and a tilted one, draw the face the angle shows", async ({
 	page,
@@ -469,45 +406,6 @@ test("the corner control turns a Card over and back, F turns it too, and a tap s
 	await card.click({ position: { x: 60, y: 70 } });
 	await expect(card).toHaveAttribute("data-form", "cover");
 });
-
-/** Records every side each Card's shell shows, with when, from now on. */
-function recordSides(page: Page) {
-	return page.evaluate(() => {
-		const seen: Record<string, { side: string; t: number }[]> = {};
-		(window as unknown as { sides: typeof seen }).sides = seen;
-		const note = () => {
-			for (const shell of document.querySelectorAll(
-				"[data-tabletop-shell]",
-			)) {
-				const id =
-					shell.closest<HTMLElement>("[data-tabletop-body]")?.dataset
-						.tabletopBody ?? "?";
-				const list = seen[id] ?? [];
-				seen[id] = list;
-				const side = shell.getAttribute("data-side") ?? "";
-				if (list.at(-1)?.side !== side)
-					list.push({ side, t: performance.now() });
-			}
-		};
-		new MutationObserver(note).observe(document.body, {
-			subtree: true,
-			childList: true,
-			attributes: true,
-			attributeFilter: ["data-side"],
-		});
-	});
-}
-
-const sidesOf = (page: Page, id: string) =>
-	page.evaluate(
-		(id) =>
-			(
-				window as unknown as {
-					sides: Record<string, { side: string; t: number }[]>;
-				}
-			).sides[id] ?? [],
-		id,
-	);
 
 test("a dealt word lands face down and busy, turns up once its Knowledge lands, and deals face up below the threshold", async ({
 	page,

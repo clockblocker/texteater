@@ -1,8 +1,8 @@
 import { DECK_OF_CARDS_EASE, type Ease } from "./ease";
 import { approachRate } from "./geometry";
 import type { Leg, Move, Pose } from "./move";
-import type { TweenSpec } from "./springs";
-import { type Channel, done, sumAt, type Term } from "./term";
+import type { SpringSpec, TweenSpec } from "./springs";
+import { type Channel, type Curve, done, sumAt, type Term } from "./term";
 import { sideAt, turnTarget } from "./turn";
 
 /** The channels a change of rest moves along one line. */
@@ -52,8 +52,21 @@ function term(
 }
 
 /**
+ * The spring a release lands on: `spring` itself while the hand comes in
+ * no faster than the spring's own rate, √stiffness, which it takes without
+ * passing the rest. A faster hand lands on a critically damped spring of
+ * its own rate, which runs its share down as e^(−rate·t): the Body keeps
+ * the hand's speed and still never passes its rest (#1311 rule 5).
+ */
+export function landing(spring: SpringSpec, rate: number): SpringSpec {
+	if (rate <= Math.sqrt(spring.stiffness)) return spring;
+	const stiffness = rate * rate;
+	return { stiffness, damping: 2 * Math.sqrt(stiffness) };
+}
+
+/**
  * `glide` (the playground's `use-deck.ts`) in offset space: every channel
- * starts from where it shows on one spring, with the part of the hand's
+ * starts from where it shows on one curve, with the part of the hand's
  * speed aimed at the rest, so the channels arrive together on one line.
  */
 function handTerms(
@@ -67,16 +80,17 @@ function handTerms(
 		{ x: input.to.x ?? 0, y: input.to.y ?? 0 },
 		move.velocity,
 	);
+	const curve: Curve = {
+		kind: "spring",
+		...landing(move.spring, rate),
+		rate,
+	};
 	return MOVED.flatMap((channel) => {
 		const delta = shown(channel);
 		if (Math.abs(delta) < epsilon(channel)) return [];
 		return [
 			term(input, channel, delta, {
-				curve: {
-					kind: "spring",
-					...move.spring,
-					velocity: -delta * rate,
-				},
+				curve,
 				delayMs: 0,
 				source: "hand",
 				raise: true,
@@ -90,12 +104,13 @@ function additiveTerms(
 	input: RetargetInput,
 	move: Extract<Move, { spring: unknown }>,
 ): Term[] {
+	const curve: Curve = { kind: "spring", ...move.spring, rate: 0 };
 	return MOVED.flatMap((channel) => {
 		const delta = (input.from[channel] ?? 0) - (input.to[channel] ?? 0);
 		if (Math.abs(delta) < epsilon(channel)) return [];
 		return [
 			term(input, channel, delta, {
-				curve: { kind: "spring", ...move.spring, velocity: 0 },
+				curve,
 				delayMs: 0,
 				source: "app",
 				raise: true,
@@ -156,6 +171,11 @@ function tweenTerms(
 	input: RetargetInput,
 	move: Extract<Move, { tween: unknown }>,
 ): Term[] {
+	const curve: Curve = {
+		kind: "tween",
+		ms: move.tween.ms,
+		ease: move.tween.ease,
+	};
 	return MOVED.flatMap((channel) => {
 		const start =
 			move.from?.[channel] ??
@@ -174,11 +194,7 @@ function tweenTerms(
 		if (Math.abs(start) < epsilon(channel)) return [];
 		return [
 			term(input, channel, start, {
-				curve: {
-					kind: "tween",
-					ms: move.tween.ms,
-					ease: move.tween.ease,
-				},
+				curve,
 				delayMs: move.delayMs ?? 0,
 				source: "app",
 			}),
@@ -229,18 +245,28 @@ function turnTerms(input: RetargetInput): Term[] | null {
 }
 
 /**
+ * Whether `move` replaces the Terms its channels had (the hand, a tween),
+ * or adds to them while they decay (an app spring).
+ */
+export function replaces(move: Move): boolean {
+	return move.source === "hand" || "tween" in move;
+}
+
+/**
  * The Terms a change of rest leaves a Body with: shown position and velocity
- * stay continuous across it, and the move's source decides its style.
+ * stay continuous across it, and the move's source decides its style. The
+ * channels it moves along one line share one curve, so its box rides one
+ * progress; a scripted path keeps a curve per channel.
  */
 export function retarget(input: RetargetInput): Retargeted {
 	const { move } = input;
+	const replacesMoved = replaces(move);
 	const added: Term[] =
 		move.source === "hand"
 			? handTerms(input, move)
 			: "spring" in move
 				? additiveTerms(input, move)
 				: tweenTerms(input, move);
-	const replacesMoved = move.source === "hand" || "tween" in move;
 	const turned = turnTerms(input);
 	const z = zTerms(input);
 	added.push(...z, ...(turned ?? []));

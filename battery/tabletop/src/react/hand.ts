@@ -1,6 +1,6 @@
 import type { Point } from "../core/geometry";
 import { FLIGHT, SPRINGS } from "../core/springs";
-import { sumAt, type Term } from "../core/term";
+import { type Curve, sumAt, type Term } from "../core/term";
 import { FLAT } from "../core/tilt";
 import type { BodyState, Engine } from "./engine";
 import { steer } from "./tilt";
@@ -37,7 +37,7 @@ function springTerm(
 		{
 			channel,
 			delta,
-			curve: { kind: "spring", ...SPRINGS.settle, velocity: 0 },
+			curve: { kind: "spring", ...SPRINGS.settle, rate: 0 },
 			delayMs: 0,
 			bornAt: now,
 			source: "hand",
@@ -59,7 +59,6 @@ export function hold(engine: Engine, id: string, pointer: Point) {
 	const shown = shownBox(engine, body, now);
 	if (!shown) return;
 	const reduced = engine.policy.reduced;
-	body.mode = "hand";
 	body.box = shown.box;
 	body.grab = { x: pointer.x - shown.box.x, y: pointer.y - shown.box.y };
 	body.base = {
@@ -78,10 +77,10 @@ export function hold(engine: Engine, id: string, pointer: Point) {
 				]),
 		...springTerm("opacity", shown.opacity - 1, now),
 	];
-	body.boxDirty = true;
-	body.el.dataset.mode = "hand";
+	engine.seatOn(body, "hand");
 	if (body.tilt && !engine.tilt?.held)
 		steer(engine, body, { ...FLAT, glare: 1 }, now);
+	engine.began(body, now);
 	engine.write(body, now);
 	engine.activate(body);
 }
@@ -120,6 +119,8 @@ export function leave(
 	const shown = body ? shownBox(engine, body, now) : null;
 	if (!body?.el || !shown) return Promise.resolve();
 	const reduced = engine.policy.reduced;
+	/* the flight goes on from where the hand last showed it */
+	const born = engine.handBirth(now);
 	const speed = Math.hypot(flight.velocity.x, flight.velocity.y);
 	const way =
 		speed > 0
@@ -130,7 +131,6 @@ export function leave(
 		: Math.hypot(window.innerWidth, window.innerHeight);
 	const exit = { x: way.x * reach, y: way.y * reach };
 	const turn = reduced ? 0 : (way.x < 0 ? -1 : 1) * FLIGHT.turn;
-	body.mode = "unmoored";
 	body.box = {
 		...shown.box,
 		x: shown.box.x + exit.x,
@@ -150,34 +150,36 @@ export function leave(
 		delta,
 		curve: { kind: "tween", ...fade },
 		delayMs: 0,
-		bornAt: now,
+		bornAt: born,
 		source: "hand",
 	});
-	const travel = (
-		channel: "x" | "y",
-		delta: number,
-		velocity: number,
-	): Term =>
+	/* one spring for both axes, heading out at the throw's speed */
+	const flying: Curve = {
+		kind: "spring",
+		...FLIGHT.travel,
+		rate: reach > 0 ? speed / reach : 0,
+	};
+	const travel = (channel: "x" | "y", delta: number): Term =>
 		reduced
 			? tween(channel, delta)
 			: {
 					channel,
 					delta,
-					curve: { kind: "spring", ...FLIGHT.travel, velocity },
+					curve: flying,
 					delayMs: 0,
-					bornAt: now,
+					bornAt: born,
 					source: "hand",
 				};
 	body.terms = [
 		...body.terms.filter((term) => term.channel === "turn"),
-		travel("x", -exit.x, flight.velocity.x),
-		travel("y", -exit.y, flight.velocity.y),
+		travel("x", -exit.x),
+		travel("y", -exit.y),
 		...(turn ? [tween("rotate", -turn)] : []),
 		tween("opacity", shown.opacity),
 	];
-	body.boxDirty = true;
-	body.el.dataset.mode = "unmoored";
+	engine.seatOn(body, "unmoored");
 	steer(engine, body, FLAT, now);
+	engine.began(body, now);
 	engine.write(body, now);
 	engine.activate(body);
 	/* the fade ends the flight: the rest of the travel is out of sight */

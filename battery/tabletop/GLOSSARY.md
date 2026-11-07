@@ -39,9 +39,9 @@ plus its live Terms; a Body at rest has none.
 _Avoid_: animation, tween, delta
 
 **Move**:
-How a Body travels to its next Place. Its source decides its style: a Move the
-hand starts carries the hand's speed, and a Move the app starts plays at a
-fixed timing.
+How a Body travels to its next Place, its box and its Parts on one progress.
+Its source decides its style: a Move the hand starts carries the hand's speed,
+and a Move the app starts plays at a fixed timing.
 _Avoid_: transition
 
 **Shell**:

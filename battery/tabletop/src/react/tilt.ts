@@ -1,4 +1,4 @@
-import { done, sumAt, type Term } from "../core/term";
+import { type Curve, done, keyframed, sumAt, type Term } from "../core/term";
 import {
 	FLAT,
 	followLean,
@@ -6,10 +6,12 @@ import {
 	isFlat,
 	type Lean,
 	leanToward,
+	letGoTerms,
 	pointerOn,
 	shownLean,
 } from "../core/tilt";
 import type { BodyState, Engine } from "./engine";
+import { setWritten, type Written } from "./write";
 
 /**
  * A Body's tilt: the lean, lift and glare it heads for, and the Terms still
@@ -31,8 +33,22 @@ const MAX_TILTING = 3;
 const BODY_PROPS = ["--tilt-x", "--tilt-y", "--tilt-lift"] as const;
 const GLARE_PROPS = ["--glare-x", "--glare-y", "--glare-o"] as const;
 
+/** What the tilt last wrote on each Glare. */
+const lightWritten = new WeakMap<HTMLElement, Written>();
+
+function writtenOn(light: HTMLElement): Written {
+	let written = lightWritten.get(light);
+	if (!written) {
+		written = new Map();
+		lightWritten.set(light, written);
+	}
+	return written;
+}
+
 function clearLight(light: HTMLElement) {
-	for (const prop of GLARE_PROPS) light.style.removeProperty(prop);
+	const written = writtenOn(light);
+	for (const prop of GLARE_PROPS)
+		setWritten(light.style, written, prop, null);
 }
 
 /** Drops `body`'s tilt at once: nothing of it stays written. */
@@ -42,7 +58,8 @@ function flatten(engine: Engine, body: BodyState) {
 	body.tilt = null;
 	const el = body.el;
 	if (el) {
-		for (const prop of BODY_PROPS) el.style.removeProperty(prop);
+		for (const prop of BODY_PROPS)
+			setWritten(el.style, body.written, prop, null);
 		delete el.dataset.tilt;
 	}
 	for (const light of body.lights) clearLight(light);
@@ -84,6 +101,36 @@ export function steer(
 		now,
 	);
 	state.target = target;
+	engine.activate(body);
+}
+
+/**
+ * A move of `body`'s box lets its tilt go on the move's own progress: the
+ * lean, the lift and the glare head flat on `leader`'s curve, born with
+ * it, so the Body's size and its lean end on one clock (#1311 rule 1). A
+ * scripted move's waypoints are no progress to ride, so its tilt lets go
+ * on the tilt's own spring.
+ */
+export function letGo(
+	engine: Engine,
+	body: BodyState,
+	leader: Term | undefined,
+	bornAt: number,
+	now: number,
+) {
+	const state = body.tilt;
+	if (!state) return;
+	if (!leader || keyframed(leader.curve)) {
+		steer(engine, body, FLAT, now);
+		return;
+	}
+	const curve: Curve = leader.curve;
+	state.terms = letGoTerms(shownLean(state.target, state.terms, now), curve, {
+		bornAt,
+		delayMs: leader.delayMs,
+		source: leader.source,
+	});
+	state.target = FLAT;
 	engine.activate(body);
 }
 
@@ -148,15 +195,18 @@ export function writeTilt(engine: Engine, body: BodyState, now: number) {
 		return false;
 	}
 	const lean = shownLean(state.target, state.terms, now);
-	el.style.setProperty("--tilt-x", `${lean.tiltX.toFixed(2)}deg`);
-	el.style.setProperty("--tilt-y", `${lean.tiltY.toFixed(2)}deg`);
-	el.style.setProperty("--tilt-lift", lean.lift.toFixed(4));
+	const set = (prop: string, value: string) =>
+		setWritten(el.style, body.written, prop, value);
+	set("--tilt-x", `${lean.tiltX.toFixed(2)}deg`);
+	set("--tilt-y", `${lean.tiltY.toFixed(2)}deg`);
+	set("--tilt-lift", lean.lift.toFixed(4));
 	const glare = glareAt(lean, feel, engine.dir);
 	const lit = Math.min(1, Math.max(0, lean.glare * feel.glare));
 	for (const light of body.lights) {
-		light.style.setProperty("--glare-x", `${glare.x}%`);
-		light.style.setProperty("--glare-y", `${glare.y}%`);
-		light.style.setProperty("--glare-o", lit.toFixed(3));
+		const written = writtenOn(light);
+		setWritten(light.style, written, "--glare-x", `${glare.x}%`);
+		setWritten(light.style, written, "--glare-y", `${glare.y}%`);
+		setWritten(light.style, written, "--glare-o", lit.toFixed(3));
 	}
 	return state.terms.length > 0;
 }
