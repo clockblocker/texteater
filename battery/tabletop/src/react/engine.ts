@@ -273,9 +273,9 @@ export class Engine {
 	}
 
 	/**
-	 * When a move the hand hands over starts: on the last frame painted,
-	 * where the hand last showed the Body, whenever the release ran in
-	 * between; at `now` if the loop was idle.
+	 * The time of what the reader last saw: the last frame painted, whenever
+	 * the hand acts in between, or `now` if the loop was idle. A grab takes
+	 * a Body from there, and a move the hand hands over starts there.
 	 */
 	handBirth(now: number): number {
 		return now - this.lastFrame <= 2 * FRAME_MS * this.scale

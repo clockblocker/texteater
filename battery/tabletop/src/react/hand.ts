@@ -59,8 +59,9 @@ function keptByHand(moves: readonly Move[]): Move[] {
 }
 
 /**
- * The hand takes `id` from where it shows: the shown box becomes the hand
- * box and the grab point stays under the pointer. It takes the hand's pose
+ * The hand takes `id` from where it shows, in the frame last painted: the
+ * shown box becomes the hand box and the grab point stays under the
+ * pointer. It takes the hand's pose
  * (`engine.hand`) on one Move from what it showed, rising over every other
  * Body by a dissolve or at once. Its lean folds into its lean toward the
  * spot it is held by, or lies flat and stays lit when the tilt says so.
@@ -68,7 +69,9 @@ function keptByHand(moves: readonly Move[]): Move[] {
 export function hold(engine: Engine, id: string, pointer: Point) {
 	const body = engine.bodies.get(id);
 	if (!body?.el || body.mode === "unmoored") return;
-	const now = engine.now();
+	/* from where it was last painted, not where its Moves have taken it
+	   since: a grab mid-move never jumps it on */
+	const now = engine.handBirth(engine.now());
 	const shown = shownOf(engine, body, now);
 	if (!shown) return;
 	const pose = engine.hand;
