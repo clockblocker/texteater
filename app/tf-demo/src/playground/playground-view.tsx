@@ -9,6 +9,7 @@ import {
 	type LucideIcon,
 	PaletteIcon,
 	SpadeIcon,
+	SparklesIcon,
 	StickyNoteIcon,
 } from "lucide-react";
 import { type ReactNode, useEffect } from "react";
@@ -20,6 +21,7 @@ import { DeckOfCards } from "./entries/deck-of-cards/deck-of-cards";
 import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
 import { PaletteGallery } from "./entries/palette-gallery";
+import { PokemonCards } from "./entries/pokemon-cards/pokemon-cards";
 import { ReflexivesPrototype } from "./entries/reflexives/reflexives";
 import { pathnameAtom } from "./pathname-atoms";
 import {
@@ -105,6 +107,14 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"pakastin's deck-of-cards library, vendored and ported to TypeScript: 52 Cards on its felt that you drag and tap to flip, with its example's Flip, Shuffle, By suit, Fan, Poker and Sort in the inspector.",
 		render: () => <DeckOfCards />,
+	},
+	{
+		key: "pokemon-cards",
+		title: "Pokémon cards",
+		icon: SparklesIcon,
+		description:
+			"simeydotme's pokemon-cards-css, vendored and its Svelte Card ported to React: its page of holofoil effects, one section per rarity, where a card tilts under the pointer and pops out to the centre on a click. The effects' explanations and a jump-to-effect filter sit in the inspector.",
+		render: () => <PokemonCards />,
 	},
 	{
 		key: "palette",

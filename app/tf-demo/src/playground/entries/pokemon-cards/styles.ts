@@ -1,0 +1,30 @@
+/* The stylesheets of upstream's `index.html`, in its order, then the
+   `<style>`s of its Svelte components. Fonts load at runtime, as there. */
+import "./pokemon-cards.css";
+import "./css/global.css";
+import "./css/cards/base.css";
+import "./css/cards.css";
+import "./css/cards/basic.css";
+import "./css/cards/reverse-holo.css";
+import "./css/cards/regular-holo.css";
+import "./css/cards/cosmos-holo.css";
+import "./css/cards/amazing-rare.css";
+import "./css/cards/radiant-holo.css";
+import "./css/cards/v-regular.css";
+import "./css/cards/v-full-art.css";
+import "./css/cards/v-max.css";
+import "./css/cards/v-star.css";
+import "./css/cards/trainer-full-art.css";
+import "./css/cards/rainbow-holo.css";
+import "./css/cards/rainbow-alt.css";
+import "./css/cards/secret-rare.css";
+import "./css/cards/trainer-gallery-holo.css";
+import "./css/cards/trainer-gallery-v-regular.css";
+import "./css/cards/trainer-gallery-v-max.css";
+import "./css/cards/trainer-gallery-secret-rare.css";
+import "./css/cards/shiny-rare.css";
+import "./css/cards/shiny-v.css";
+import "./css/cards/shiny-vmax.css";
+import "./css/cards/swsh-pikachu.css";
+import "./css/svelte/card.css";
+import "./css/svelte/cards.css";

@@ -27,3 +27,7 @@ battery/dumgen/tests/golden-requests/fixtures/** linguist-generated
 .agents/skills/** linguist-vendored
 battery/dumling/resources/** linguist-vendored
 app/tf-demo/src/playground/entries/deck-of-cards/faces/** linguist-vendored
+app/tf-demo/src/playground/entries/pokemon-cards/LICENSE linguist-vendored
+app/tf-demo/src/playground/entries/pokemon-cards/css/** linguist-vendored
+app/tf-demo/src/playground/entries/pokemon-cards/data/** linguist-vendored
+app/tf-demo/src/playground/entries/pokemon-cards/img/** linguist-vendored

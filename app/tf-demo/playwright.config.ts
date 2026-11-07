@@ -18,6 +18,7 @@ const playgroundSpecs = [
 	"deck-of-cards.pw.ts",
 	"motion-preference.pw.ts",
 	"playground-isolation.pw.ts",
+	"pokemon-cards.pw.ts",
 ];
 
 export default defineConfig({

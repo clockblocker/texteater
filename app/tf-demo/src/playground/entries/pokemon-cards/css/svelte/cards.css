@@ -1,0 +1,105 @@
+/* The <style> of src/Cards.svelte, :global() unwrapped, from simeydotme/pokemon-cards-css at acb1197 (GPL-3.0, LICENSE in the entry folder),
+   selectors scoped under [data-pokemon-cards]; its page-width @media queries are
+   @container queries on the entry's frame, which stands in for the page. */
+
+	[data-pokemon-cards] .card-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-gap: 50px 2vw;
+		transform-style: preserve-3d;
+		height: 100%;
+		max-width: 1200px;
+		margin: auto;
+		padding: 50px;
+		position: relative;
+	}
+	
+	[data-pokemon-cards] .card-grid.active {
+		z-index: 99;
+		/* isolation: isolate; */
+	}
+		
+	@container (min-width: 900px) {
+		[data-pokemon-cards] .card-grid {
+			grid-template-columns: 1fr 1fr 1fr;
+		}
+	}
+	
+	
+	@container (max-width: 900px) {
+		
+		[data-pokemon-cards] .card-grid > .card {
+			--row: 1;
+			grid-column: 1;
+			grid-row: var(--row);
+			transition: opacity 0.2s ease, transform 0.2s ease;
+		}
+
+		[data-pokemon-cards] .card-grid > .card:nth-child(1n) {
+			position: relative;
+			left: -50px;
+			top: 10px;
+			z-index: calc(var(--card-scale) * 10 + 50);
+			transform: translate3d(0, 0, 0.1px) rotateZ(-5deg);
+			opacity: 1;
+		}
+		[data-pokemon-cards] .card-grid > .card:nth-child(2n) {
+			left: 0px;
+			top: -10px;
+			z-index: calc(var(--card-scale) * 10 + 49);
+			transform: translate3d(0, 0, 0.1px) rotateZ(0deg);
+			opacity: 0.99;
+		}
+		[data-pokemon-cards] .card-grid > .card:nth-child(3n) {
+			left: 50px;
+			top: 0px;
+			z-index: calc(var(--card-scale) * 10 + 48);
+			transform: translate3d(0, 0, 0.1px) rotateZ(5deg);
+			opacity: 0.99;
+		}
+		[data-pokemon-cards] .card-grid > .card.interacting,
+		[data-pokemon-cards] .card-grid > .card.active {
+			opacity: 1;
+		}
+		
+		[data-pokemon-cards] .card-grid > .card:nth-child(n+4):nth-child(-n+6) { grid-row: 2; }
+		[data-pokemon-cards] .card-grid > .card:nth-child(n+7):nth-child(-n+9) { grid-row: 3; }
+		[data-pokemon-cards] .card-grid > .card:nth-child(n+10):nth-child(-n+12) { grid-row: 4; }
+		[data-pokemon-cards] .card-grid > .card:nth-child(n+13):nth-child(-n+15) { grid-row: 5; }
+		[data-pokemon-cards] .card-grid > .card:nth-child(n+16):nth-child(-n+18) { grid-row: 6; }
+		[data-pokemon-cards] .card-grid > .card:nth-child(n+19) {
+			grid-row: auto;
+			grid-column: auto;
+			transform: none!important;
+			left: 0!important;
+			top: 0!important;
+		}
+
+	}
+
+	@container (min-width: 600px) and (max-width: 900px) {
+		[data-pokemon-cards] .card-grid {
+			max-width: 420px;
+			margin: auto;
+		}
+		[data-pokemon-cards] .card-grid > .card:nth-child(1n) {
+			left: -100px;
+			top: 10px;
+			transform: translate3d(0, 0, 0.1px) rotateZ(-5deg);
+		}
+		[data-pokemon-cards] .card-grid > .card:nth-child(2n) {
+			left: 0px;
+			top: -10px;
+			transform: translate3d(0, 0, 0.1px) rotateZ(0deg);
+		}
+		[data-pokemon-cards] .card-grid > .card:nth-child(3n) {
+			left: 100px;
+			top: 0px;
+			transform: translate3d(0, 0, 0.1px) rotateZ(5deg);
+		}
+	}
+
+	[data-pokemon-cards] .card-grid > .card.active {
+		transform: translate3d(0, 0, 0.1px)!important;
+	}
+	

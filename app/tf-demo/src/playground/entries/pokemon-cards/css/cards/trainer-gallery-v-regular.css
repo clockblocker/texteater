@@ -1,0 +1,36 @@
+/* public/css/cards/trainer-gallery-v-regular.css from simeydotme/pokemon-cards-css at acb1197 (GPL-3.0, LICENSE in the entry folder),
+   selectors scoped under [data-pokemon-cards]. */
+/*
+
+  TRAINER GALLERY (V)
+	some styles inherited from v-full-art.css
+
+*/
+
+
+
+
+/*
+
+  SHINE LAYERS
+
+*/
+
+
+
+
+
+
+
+/*
+
+  GLARE LAYERS
+
+*/    
+
+
+[data-pokemon-cards] .card[data-rarity="rare holo v"][data-trainer-gallery="true"] .card__glare {
+
+  opacity: calc(var(--card-opacity)*.4);
+
+}
