@@ -1,12 +1,12 @@
 import { type MotionValue, motion, useTransform } from "motion/react";
 import type { CardSkin } from "../deck-interactions/card-view";
-import backUrl from "../deck-of-cards/faces/back.png";
+import backUrl from "./faces/back.png";
 import { isRed, type PlayingCard, rankLabel, type Side } from "./playing-cards";
 
 /** deck-of-cards' face art, by file name: `<suit>_<rank>`. */
 const FACES: Readonly<Record<string, string>> = Object.fromEntries(
 	Object.entries(
-		import.meta.glob<string>("../deck-of-cards/faces/*.svg", {
+		import.meta.glob<string>("./faces/*.svg", {
 			eager: true,
 			query: "?url",
 			import: "default",

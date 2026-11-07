@@ -3,9 +3,9 @@ import { expect, test } from "@playwright/test";
 
 /**
  * deck-of-cards' tricks on tf-demo's own Deck model: it deals 52 Cards, and
- * the inspector's Fan spreads them from −130° to 130°, as the vendored
- * entry's does (`deck-of-cards.pw.ts`). The fan queues behind the intro and
- * the sort, which take about 3.5 s.
+ * the inspector's Fan spreads them from −130° to 130°, as the library
+ * does. The fan queues behind the intro and the sort, which take about
+ * 3.5 s.
  */
 
 test("Fan in the inspector spreads all 52 Cards, as deck-of-cards does", async ({

@@ -19,7 +19,7 @@ const button =
 
 type Actions = ReturnType<typeof useTrickDeck>["actions"];
 
-/** The deck-of-cards entry's buttons, composed as it composes them. */
+/** The buttons of deck-of-cards' `example/example.js`, composed as it composes them. */
 const ACTIONS: readonly (readonly [string, (deck: Actions) => void])[] = [
 	["Intro", (deck) => deck.intro()],
 	["Flip", (deck) => deck.flip()],
@@ -60,6 +60,11 @@ const MOUNT_ORDER = [...PLAYING_DECK].reverse();
  * deck-of-cards profile, on the library's felt. The surface shows only the
  * felt and the Cards; the tricks and the motion knobs are in the inspector
  * (playground ADR 0001).
+ *
+ * The tricks, faces and felt are pakastin's deck-of-cards
+ * (github.com/deck-of-cards/deck-of-cards at 54f2c4787ea5). Its code is MIT;
+ * the art in `faces/` is Chris Aguilar's Vector Playing Cards, LGPL-3.0
+ * (`LICENSE`).
  */
 export function DeckTricks() {
 	const [reducedMotion, setReducedMotion] = useState<ReducedMotion>("off");

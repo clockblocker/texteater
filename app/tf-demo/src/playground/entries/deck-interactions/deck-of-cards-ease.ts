@@ -1,4 +1,8 @@
-/** Easing curves by name, from `lib/ease.js`; `animateTo` takes the name. */
+/**
+ * pakastin's deck-of-cards easing curves by name, ported from `lib/ease.js`
+ * of github.com/deck-of-cards/deck-of-cards at commit
+ * 54f2c4787ea51bb43656e51a3bbbd524f248e21b (MIT, `../deck-tricks/LICENSE`).
+ */
 export const ease = {
 	linear: (t: number) => t,
 	quadIn: (t: number) => t * t,
@@ -32,5 +36,3 @@ export const ease = {
 		return 1 + 16 * u * u * u * u * u;
 	},
 };
-
-export type EaseName = keyof typeof ease;

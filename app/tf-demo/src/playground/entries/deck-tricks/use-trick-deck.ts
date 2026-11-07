@@ -11,7 +11,7 @@ import type { Frame } from "../deck-interactions/layout";
 import type { MotionContext } from "../deck-interactions/motion-kit";
 import { createReadouts } from "../deck-interactions/readouts";
 import { useDeck } from "../deck-interactions/use-deck";
-import { getFontSize } from "../deck-of-cards/font-size";
+import { getFontSize } from "./font-size";
 import { playTrick } from "./play-trick";
 import { PLAYING_DECK, type PlayingCard, type Side } from "./playing-cards";
 import * as tricks from "./tricks";

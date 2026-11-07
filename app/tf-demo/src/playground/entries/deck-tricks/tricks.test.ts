@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { ease } from "../deck-of-cards/ease";
+import { ease } from "../deck-interactions/deck-of-cards-ease";
 import { PLAYING_DECK, type PlayingCard } from "./playing-cards";
 import {
 	bysuit,
@@ -14,7 +14,7 @@ import {
 	turnDown,
 } from "./tricks";
 
-/* every number below is deck-of-cards' own, from `modules/*.ts` */
+/* every number below is deck-of-cards' own, from upstream's `lib/modules/*.js` */
 
 const FS = 16;
 

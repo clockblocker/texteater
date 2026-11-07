@@ -5,7 +5,7 @@ import {
 	delay,
 	type MotionValue,
 } from "motion/react";
-import { ease as deckOfCardsEase } from "../deck-of-cards/ease";
+import { ease as deckOfCardsEase } from "./deck-of-cards-ease";
 
 /**
  * How motion plays on this page: whether it is reduced, and the slow-mo
