@@ -1,7 +1,8 @@
 import { Maximize2Icon, XIcon } from "lucide-react";
 import { type MotionValue, motion, useTransform } from "motion/react";
-import type { Rect } from "./geometry";
-import type { Axis, Zone } from "./swipe-gesture";
+import type { Point } from "./geometry";
+import { type Axis, iconAt, type Zone } from "./swipe-gesture";
+import type { CardValues } from "./use-deck";
 
 /** What a swipe uncovers: which action, along which axis, and which way. */
 export type Panel = {
@@ -16,20 +17,21 @@ export type Panel = {
 export type PanelValues = {
 	/** 1 while a release would commit: the colour floods in. */
 	readonly flood: MotionValue<number>;
-	/** 0 centred in the uncovered strip, 1 locked to the Card's edge. */
-	readonly lock: MotionValue<number>;
 	/** The icon's pop at the threshold, a scale factor. */
 	readonly pop: MotionValue<number>;
 	/** The panel's opacity: 1 until a commit fades it out. */
 	readonly fade: MotionValue<number>;
 };
 
-/** The icon and its label, as one box; the gap it keeps from the Card. */
+/** The icon and its label, as one box; the room it keeps each side once it stops. */
 const BOX_W = 80;
 const BOX_H = 48;
 const GAP = 8;
-/** Where a locked icon stops as the Card leaves: this far inside the panel. */
-const PAD = 12;
+/**
+ * The Card's border, its skin's `border`: across the axis the panel stays
+ * this far inside the Card's edges, so it never shows past the Card.
+ */
+const BORDER_PX = 1;
 
 const TONE = {
 	dismiss: { fill: "bg-destructive", text: "text-destructive" },
@@ -37,46 +39,41 @@ const TONE = {
 } as const;
 
 /**
- * The icon's centre along the axis, in px from the panel's start (its
- * inline-start or top). Free, it sits in the middle of the strip the Card
- * has uncovered, so it slides out at half the Card's speed; locked, it
- * keeps `GAP` from the Card's edge and rides with it, stopping `PAD` short
- * of the panel's far side when the Card leaves.
+ * The icon's centre along the axis, in the panel's own px from its
+ * inline-start or top: `iconAt`'s, from the edge the strip opens at. A
+ * pull is in the frame's px; the panel's own are the Card's, before its
+ * scale.
  */
-function iconCentre(
+function alongOf(
 	sign: -1 | 1,
-	length: number,
-	box: number,
 	pull: number,
-	lock: number,
+	scale: number,
+	length: number,
+	full: number,
 ): number {
-	const uncovered = Math.abs(pull);
-	if (sign < 0) {
-		const free = length - uncovered / 2;
-		const locked = length - uncovered + GAP + box / 2;
-		return Math.max(PAD + box / 2, free + (locked - free) * lock);
-	}
-	const free = uncovered / 2;
-	const locked = uncovered - GAP - box / 2;
-	return Math.min(length - PAD - box / 2, free + (locked - free) * lock);
+	const { centre } = iconAt(pull / scale, full / scale);
+	return sign < 0 ? length - centre : centre;
 }
 
 /**
- * D's action panel, in the Card's own footprint and just under it, as an
- * iOS Mail row's actions are: red "Close deck" for inline-start and down,
- * blue "Open" for inline-end and up. Before the threshold the strip is tinted
- * and the icon, in the action's colour, grows and slides out centred in
- * it; once a release would commit the colour floods in, the icon turns to
- * ink, pops, and locks to the Card's edge. Its base is opaque, so the
- * Cards behind never show through.
+ * D's action panel, in the Card's own box and just under it, as an iOS
+ * Mail row's actions are: red "Close deck" for inline-start and down,
+ * blue "Open" for inline-end and up. It is the Card's box where the hand
+ * took it, less the border across the axis, drawn by the Card's own
+ * values and scaled about the same centre, so its edges sit exactly
+ * inside the Card's at any scale. As the Card uncovers it the strip is
+ * tinted, and the icon, in the action's colour, grows and slides out in
+ * its middle until the strip is full (the threshold, or the icon's room
+ * if that is more); there it stays, and the Card travels on past it.
+ * Once a release would commit the colour floods in, the icon turns to
+ * ink and pops. Its base is opaque, so the Cards behind never show
+ * through.
  */
 export function SwipePanel({
 	panel,
-	rect,
-	visible,
-	position,
-	base,
-	z,
+	card,
+	anchor,
+	shows,
 	values,
 	armed,
 	threshold,
@@ -86,16 +83,12 @@ export function SwipePanel({
 	reduce,
 }: {
 	readonly panel: Panel;
-	/** The Card's resting box as drawn; for a Card behind, its strip plus the tuck under the next. */
-	readonly rect: Rect;
-	/** How much of `rect` shows above the next Card, in px from its top. */
-	readonly visible: number;
-	/** The Card's position along the axis, logical px in the frame. */
-	readonly position: MotionValue<number>;
-	/** The Card's resting position along the axis. */
-	readonly base: number;
-	/** The Card's z-index: the panel shares it and is drawn first, so it lies under the Card, under the Cards in front and over the Cards behind. */
-	readonly z: MotionValue<number>;
+	/** The swiped Card's values: the panel shares its size, scale and z-index, and is drawn first, so it lies under the Card, under the Cards in front and over the Cards behind. */
+	readonly card: CardValues;
+	/** Where the Card was when the hand took it: the panel stays there along the axis. */
+	readonly anchor: Point;
+	/** How much of the Card shows from its drawn top, in px, where the Cards in front hide the rest; null where all of it does. */
+	readonly shows: number | null;
 	readonly values: PanelValues;
 	readonly armed: boolean;
 	readonly threshold: number;
@@ -105,24 +98,39 @@ export function SwipePanel({
 	readonly reduce: boolean;
 }) {
 	const inline = panel.axis === "inline";
-	const length = inline ? rect.w : rect.h;
-	const box = inline ? BOX_W : BOX_H;
-	const pull = useTransform(position, (p) => p - base);
-	const along = useTransform(
-		[pull, values.lock],
-		([p = 0, l = 0]: number[]) => iconCentre(panel.sign, length, box, p, l),
-	);
-	const x = useTransform(along, (centre) => {
-		const start = inline ? centre - BOX_W / 2 : rect.w / 2 - BOX_W / 2;
-		return rtl ? -start : start;
+	const b = BORDER_PX;
+	const full = Math.max(threshold, (inline ? BOX_W : BOX_H) + 2 * GAP);
+	const x = useTransform(card.u, (u) => {
+		const at = inline ? anchor.u : u + b;
+		return rtl ? -at : at;
 	});
-	const y = useTransform(along, (centre) =>
-		inline ? visible / 2 - BOX_H / 2 : centre - BOX_H / 2,
+	const y = useTransform(card.v, (v) => (inline ? v + b : anchor.v));
+	const width = useTransform(card.w, (w) => (inline ? w : w - 2 * b));
+	const height = useTransform(card.h, (h) => (inline ? h - 2 * b : h));
+	const pull = useTransform(inline ? card.u : card.v, (p) =>
+		inline ? p - anchor.u : p - anchor.v,
+	);
+	const iconX = useTransform(
+		[pull, card.s, card.w],
+		([p = 0, s = 1, w = 0]: number[]) => {
+			const centre = inline
+				? alongOf(panel.sign, p, s, w, full)
+				: w / 2 - b;
+			return rtl ? -(centre - BOX_W / 2) : centre - BOX_W / 2;
+		},
+	);
+	const iconY = useTransform(
+		[pull, card.s, card.h],
+		([p = 0, s = 1, h = 0]: number[]) => {
+			if (!inline) return alongOf(panel.sign, p, s, h, full) - BOX_H / 2;
+			const across = shows === null ? h - 2 * b : shows / s - b;
+			return across / 2 - BOX_H / 2;
+		},
 	);
 	const scale = useTransform(
 		[pull, values.pop],
 		([p = 0, k = 1]: number[]) =>
-			reduce ? 1 : (0.8 + 0.2 * Math.min(1, Math.abs(p) / threshold)) * k,
+			reduce ? 1 : (0.8 + 0.2 * iconAt(p, full).grown) * k,
 	);
 	const shown = useTransform(pull, (p) =>
 		Math.min(1, Math.max(0, (Math.abs(p) - 8) / 40)),
@@ -136,7 +144,10 @@ export function SwipePanel({
 		<>
 			<Icon aria-hidden="true" className="size-5" strokeWidth={2.25} />
 			{labels ? (
-				<span className="text-xs font-medium whitespace-nowrap">
+				<span
+					data-panel-label=""
+					className="text-xs font-medium whitespace-nowrap"
+				>
 					{label}
 				</span>
 			) : null}
@@ -147,13 +158,16 @@ export function SwipePanel({
 			aria-hidden="true"
 			data-panel={panel.zone}
 			data-armed={armed || undefined}
-			className="pointer-events-none absolute overflow-hidden rounded-[0.9rem] bg-canvas"
+			className="pointer-events-none absolute overflow-hidden rounded-[calc(0.9rem_-_1px)] bg-canvas"
 			style={{
-				insetInlineStart: rect.u,
-				top: rect.v,
-				width: rect.w,
-				height: rect.h,
-				zIndex: z,
+				insetInlineStart: 0,
+				top: 0,
+				x,
+				y,
+				width,
+				height,
+				scale: card.s,
+				zIndex: card.z,
 				opacity: values.fade,
 			}}
 		>
@@ -168,8 +182,8 @@ export function SwipePanel({
 				style={{
 					width: BOX_W,
 					height: BOX_H,
-					x,
-					y,
+					x: iconX,
+					y: iconY,
 					scale,
 					opacity: shown,
 				}}

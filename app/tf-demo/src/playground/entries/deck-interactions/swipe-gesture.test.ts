@@ -3,6 +3,7 @@ import { approachRate } from "./geometry";
 import {
 	COLLAPSE_CURVES,
 	collapseOf,
+	iconAt,
 	progressOf,
 	rubberBand,
 	takeUp,
@@ -109,6 +110,27 @@ describe("D's travel", () => {
 	test("a Card caught moving owes no slop", () => {
 		expect(takeUp(3, 0, 24)).toBe(3);
 		expect(takeUp(-3, 0, 24)).toBe(-3);
+	});
+});
+
+describe("D's panel icon", () => {
+	test("rides the middle of the strip as it grows, then stays put while the Card travels on", () => {
+		expect(iconAt(0, THRESHOLD)).toEqual({ centre: 0, grown: 0 });
+		expect(iconAt(-48, THRESHOLD)).toEqual({ centre: 24, grown: 0.5 });
+		const whole = { centre: THRESHOLD / 2, grown: 1 };
+		for (const uncovered of [THRESHOLD, THRESHOLD + 0.5, 180, -400])
+			expect(iconAt(uncovered, THRESHOLD)).toEqual(whole);
+	});
+
+	test("never runs ahead of the Card, nor jumps where it stops", () => {
+		let last = 0;
+		for (let px = 0; px <= 200; px += 0.25) {
+			const { centre } = iconAt(px, THRESHOLD);
+			expect(centre).toBeGreaterThanOrEqual(last);
+			expect(centre - last).toBeLessThanOrEqual(0.125 + 1e-12);
+			expect(centre).toBeLessThanOrEqual(px);
+			last = centre;
+		}
 	});
 });
 

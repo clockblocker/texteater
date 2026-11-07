@@ -4,10 +4,10 @@ import { COLLAPSE_CURVES, type CollapseCurve } from "./swipe-gesture";
 /**
  * D's knobs and their tuned defaults. One threshold is the breakpoint for
  * everything: the Deck is whole, the panel lights and a release commits
- * there, and nowhere else. Under the hand everything tracks it 1:1; the
- * springs are Motion's stiffness/damping at mass 1. The icon's lock is
- * response 0.24 s, ζ 0.76, a little bounce because the hand carried it
- * there; the reduced return is critically damped at whatever stiffness.
+ * there, and nowhere else. Under the hand everything tracks it 1:1, the
+ * panel's icon too, which stops once the strip is full; the springs are
+ * Motion's stiffness/damping at mass 1, and the reduced return is
+ * critically damped at whatever stiffness.
  * Toward Close deck the Deck fades as one layer with the gather, to
  * `dismissOpacity` at the threshold; a commit carries it on at the hand's
  * speed for at most `driftPx`, slowing to a stop, while it fades out in
@@ -22,11 +22,8 @@ export const SWIPE_DEFAULTS = {
 	dismissOpacity: 0.5,
 	driftPx: 40,
 	exitFadeMs: 220,
-	panelInset: 16,
 	tint: 0.2,
 	floodMs: 100,
-	lockStiffness: 700,
-	lockDamping: 40,
 	popScale: 1.16,
 	pressLift: 0.3,
 	reducedReturnStiffness: 260,
@@ -63,11 +60,8 @@ export const SWIPE_KNOBS: readonly SwipeKnob[] = [
 	num("dismissOpacity", "Deck opacity at the dismiss point", 0, 1, 0.05),
 	num("driftPx", "Deck drift on a Close deck commit", 0, 160, 2, "px"),
 	num("exitFadeMs", "Deck fade on a Close deck commit", 0, 600, 10, "ms"),
-	num("panelInset", "Panel inset from the Card's edges", 0, 40, 1, "px"),
 	num("tint", "Panel tint before the threshold", 0, 0.6, 0.01),
 	num("floodMs", "Colour flood", 0, 400, 10, "ms"),
-	num("lockStiffness", "Icon lock stiffness", 100, 2000, 20),
-	num("lockDamping", "Icon lock damping", 1, 120, 1),
 	num("popScale", "Icon pop", 1, 1.5, 0.01),
 	num("pressLift", "Press lift", 0, 1, 0.05),
 	num(

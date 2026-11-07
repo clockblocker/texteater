@@ -101,6 +101,21 @@ export function collapseOf(
 }
 
 /**
+ * A panel's icon once the Card has uncovered `uncovered` px of the panel:
+ * how far its centre sits from the edge the strip opens at, and how grown
+ * it is, 0 to 1. Until the strip is `full` px the icon grows and rides
+ * its middle, at half the Card's speed; from there it is whole and stays
+ * put, and the Card travels on past it. Nothing springs: it is the pull's.
+ */
+export function iconAt(
+	uncovered: number,
+	full: number,
+): { readonly centre: number; readonly grown: number } {
+	const shown = Math.min(Math.abs(uncovered), full);
+	return { centre: shown / 2, grown: full > 0 ? shown / full : 1 };
+}
+
+/**
  * The hand's travel along the axis, less the slop it took to lock the
  * axis. Through the slop the Card stays put; over the next `over` px it
  * catches the hand up, a little faster than it, so it never jumps, owes

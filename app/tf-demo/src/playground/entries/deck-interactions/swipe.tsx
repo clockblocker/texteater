@@ -5,7 +5,7 @@ import {
 	useState,
 } from "react";
 import { DeckCards, DeckLayer, type VariantProps } from "./deck-cards";
-import type { Rect, Slot } from "./geometry";
+import type { Point, Rect, Slot } from "./geometry";
 import { pileSlots } from "./layout";
 import { REDUCED_EXIT_MS, SPRINGS, settle, transition } from "./motion-kit";
 import { createTapCounter, type Drag, trackPointer } from "./pointer";
@@ -24,8 +24,6 @@ import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
 import { DUMMY_DECK } from "./words";
 
-/** A strip panel tucks this far under the next Card, past its rounded corners. */
-const TUCK_PX = 16;
 const POP = { ms: 240 };
 /** The Deck's exit fade runs even: an eased one is all but out in its first half, before the drift has shown. */
 const EVEN = [0, 0, 1, 1] as const;
@@ -37,8 +35,6 @@ type Gesture = {
 	readonly id: string;
 	readonly slot: Slot;
 	readonly gen: number;
-	/** Whether the Card is the front one: a Card behind swipes inline only. */
-	readonly front: boolean;
 	axis: Axis | null;
 	/** The slop the hand moved to lock the axis; 0 when the Card was caught moving. */
 	slop: number;
@@ -61,39 +57,30 @@ function drawn(slot: Slot): Rect {
 }
 
 /**
- * Where a Card's panel lies and how much of it shows: under the Card where
- * the hand took it (`anchor`). It stays `inset` px inside the Card's edges
- * across the axis, past its rounded corners, so only what the Card
- * uncovers along the axis ever shows. It shares the Card's z-index, so
- * the Cards in front lie over it as they lie over the Card. Toward Open,
- * where they stay put, a Card behind shows only the strip above the next
- * Card, and its panel is that strip, tucked under that Card; toward Close
- * deck they come up onto the Card and uncover its footprint as they go,
- * and its panel is all of it, as the front Card's is.
+ * How much of a swiped Card shows from its drawn top where the hand took
+ * it (`anchor`), in px, while its panel shows: null where all of it does.
+ * The panel is always the Card's whole box and shares its z-index, so the
+ * Cards in front hide it as they hide the Card. Across the block axis all
+ * of the Card's width shows. Across the inline axis, toward Close deck,
+ * they come onto the Card and uncover its box as they go, so its icon
+ * sits in its middle, as on the front Card; toward Open they stay put,
+ * and a Card behind shows only its strip above the next Card: its icon
+ * sits in that strip.
  */
-function panelBox(
+function showsOf(
 	slots: readonly Slot[],
 	index: number,
 	panel: Panel,
-	inset: number,
-	anchor: { readonly u: number; readonly v: number },
-) {
+	anchor: Point,
+): number | null {
 	const slot = slots[index];
-	if (!slot) return null;
-	const box = drawn({ ...slot, u: anchor.u, v: anchor.v });
 	const next = slots[index + 1];
-	if (next && panel.zone === "expand") {
-		const visible = Math.max(0, drawn(next).v - box.v - inset);
-		return {
-			rect: { ...box, v: box.v + inset, h: visible + TUCK_PX },
-			visible,
-		};
-	}
-	const rect =
-		panel.axis === "inline"
-			? { ...box, v: box.v + inset, h: box.h - 2 * inset }
-			: { ...box, u: box.u + inset, w: box.w - 2 * inset };
-	return { rect, visible: rect.h };
+	if (!slot || !next || panel.axis !== "inline" || panel.zone !== "expand")
+		return null;
+	return Math.max(
+		0,
+		drawn(next).v - drawn({ ...slot, u: anchor.u, v: anchor.v }).v,
+	);
 }
 
 /**
@@ -101,11 +88,13 @@ function panelBox(
  * and uncovers an action under it, and toward Close deck the rest of the
  * Deck folds onto it, whichever Card it is, the Cards behind it coming
  * down under it and the ones in front coming up over it, each keeping its
- * place in the stack. One value, the pull, drives all of it, and one
+ * place in the stack. Every Card takes every swipe the front one does,
+ * along either axis. One value, the pull, drives all of it, and one
  * threshold is the breakpoint: there the Deck is whole, the colour floods
- * in, the icon locks to the Card's edge, and a release commits. Short of
- * it, a release brings everything back. The Deck itself never moves on
- * hover: the Card under the pointer only lights its border.
+ * in, the icon is whole and stays put while the Card goes on, and a
+ * release commits. Short of it, a release brings everything back. The
+ * Deck itself never moves on hover: the Card under the pointer only
+ * lights its border.
  */
 export function SwipeVariant({
 	frame,
@@ -131,7 +120,6 @@ export function SwipeVariant({
 	const [armed, setArmed] = useState(false);
 	const [values] = useState<PanelValues>(() => ({
 		flood: motionValue(0),
-		lock: motionValue(0),
 		pop: motionValue(1),
 		fade: motionValue(1),
 	}));
@@ -148,12 +136,6 @@ export function SwipeVariant({
 			values.flood,
 			commits ? 1 : 0,
 			transition({ ms: knobs.floodMs }, motion),
-		);
-		settle(
-			values.lock,
-			commits ? 1 : 0,
-			{ stiffness: knobs.lockStiffness, damping: knobs.lockDamping },
-			motion,
 		);
 		if (commits && !motion.reduce)
 			animate(
@@ -192,7 +174,6 @@ export function SwipeVariant({
 			binding.current = bound;
 			setAnchor(bound.anchor);
 			values.flood.jump(0);
-			values.lock.jump(0);
 			values.pop.jump(1);
 			values.fade.jump(1);
 			setArmed(false);
@@ -378,7 +359,6 @@ export function SwipeVariant({
 			id,
 			slot,
 			gen: ++gen.current,
-			front: deck.order.at(-1) === id,
 			axis: null,
 			slop: 0,
 			start: 0,
@@ -401,7 +381,7 @@ export function SwipeVariant({
 				if (!g.axis) {
 					if (Math.hypot(drag.dx, drag.dy) < knobs.axisLock) return;
 					g.axis =
-						!g.front || Math.abs(drag.du) >= Math.abs(drag.dy)
+						Math.abs(drag.du) >= Math.abs(drag.dy)
 							? "inline"
 							: "block";
 					g.slop = knobs.axisLock;
@@ -431,28 +411,26 @@ export function SwipeVariant({
 	}
 
 	const index = panel ? deck.order.indexOf(panel.id) : -1;
-	const box = panel
-		? panelBox(deck.slots, index, panel, knobs.panelInset, anchor)
-		: null;
-	const owner = panel ? deck.valuesOf(panel.id) : null;
+	const shows = panel ? showsOf(deck.slots, index, panel, anchor) : null;
 	/* the panel is in the Deck's layer too, under the Cards in front of
 	   its Card: faded with them, it never shows through one */
 	return (
 		<DeckLayer opacity={deck.opacity}>
-			{panel && box && owner && deck.status !== "gone" ? (
+			{panel && index >= 0 && deck.status !== "gone" ? (
 				<SwipePanel
 					key={`${panel.id}-${panel.axis}`}
 					panel={panel}
-					rect={box.rect}
-					visible={box.visible}
-					position={panel.axis === "inline" ? owner.u : owner.v}
-					base={panel.axis === "inline" ? anchor.u : anchor.v}
-					z={owner.z}
+					card={deck.valuesOf(panel.id)}
+					anchor={anchor}
+					shows={shows}
 					values={values}
 					armed={armed}
 					threshold={knobs.threshold}
 					tint={knobs.tint}
-					labels={knobs.panelLabels && box.visible >= LABEL_ROOM_PX}
+					labels={
+						knobs.panelLabels &&
+						(shows === null || shows >= LABEL_ROOM_PX)
+					}
 					rtl={rtl}
 					reduce={motion.reduce}
 				/>
