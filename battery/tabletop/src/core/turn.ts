@@ -55,6 +55,30 @@ function edgeOn(angle: number): number {
 	return Math.abs(Math.sin((angle * Math.PI) / 180));
 }
 
+/**
+ * How close to edge on a turn is ever drawn, in degrees. A frame that
+ * lands nearer shows no face at all, so the Body blinks out for that frame
+ * (#1322); 8° leaves a seventh of its width.
+ */
+export const EDGE_ON_GAP = 8;
+
+/**
+ * The angle a turn is drawn at: `angle`, or, within `EDGE_ON_GAP` of edge
+ * on, the nearer edge of that gap (exactly edge on, the one on the side
+ * `sideAt` shows). A turn crosses the gap between two frames instead of
+ * drawing a Body nobody can see.
+ */
+export function drawnAngle(angle: number): number {
+	const edge = 90 + 180 * Math.round((angle - 90) / 180);
+	const off = angle - edge;
+	if (Math.abs(off) >= EDGE_ON_GAP) return angle;
+	if (off < 0) return edge - EDGE_ON_GAP;
+	if (off > 0) return edge + EDGE_ON_GAP;
+	return sideAt(edge - EDGE_ON_GAP) === sideAt(edge)
+		? edge - EDGE_ON_GAP
+		: edge + EDGE_ON_GAP;
+}
+
 /** The scale the turning shell swells to at `angle`. */
 export function turnLift(angle: number, lift: number): number {
 	return Math.round((1 + lift * edgeOn(angle)) * 1e4) / 1e4;
@@ -62,8 +86,9 @@ export function turnLift(angle: number, lift: number): number {
 
 /**
  * The turning element's transform at `angle`: turned about its axis in its
- * own perspective, swelling by the lift toward edge on. Under reduced
- * motion it stays flat; the front fades instead.
+ * own perspective, swelling by the lift toward edge on, and never drawn
+ * edge on (`drawnAngle`). Under reduced motion it stays flat; the front
+ * fades instead.
  */
 export function turnTransform(
 	angle: number,
@@ -72,7 +97,8 @@ export function turnTransform(
 ): string {
 	if (reduce) return "none";
 	const rotate = feel.axis === "y" ? "rotateY" : "rotateX";
-	return `perspective(${feel.perspective}px) ${rotate}(${angle}deg) scale(${turnLift(angle, feel.lift)})`;
+	const drawn = drawnAngle(angle);
+	return `perspective(${feel.perspective}px) ${rotate}(${drawn}deg) scale(${turnLift(drawn, feel.lift)})`;
 }
 
 /** The back's own transform: turned half round, so it faces away at 0. */

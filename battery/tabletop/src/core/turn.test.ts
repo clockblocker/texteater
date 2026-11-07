@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test";
 import {
 	backTransform,
 	DEFAULT_TURN,
+	drawnAngle,
+	EDGE_ON_GAP,
 	frontOpacity,
 	restAngle,
 	sideAt,
@@ -46,6 +48,36 @@ describe("turnTarget", () => {
 	});
 });
 
+describe("drawnAngle", () => {
+	test("leaves every angle clear of edge on as it is", () => {
+		for (const angle of [0, 45, 82, 98, 180, 262, 278, 360, -98, -45])
+			expect(drawnAngle(angle)).toBe(angle);
+	});
+
+	test("draws an angle near edge on at the nearer edge of the gap", () => {
+		expect(drawnAngle(85)).toBe(82);
+		expect(drawnAngle(95)).toBe(98);
+		expect(drawnAngle(268)).toBe(262);
+		expect(drawnAngle(271)).toBe(278);
+		expect(drawnAngle(-93)).toBe(-98);
+		expect(drawnAngle(-87)).toBe(-82);
+		expect(drawnAngle(455)).toBe(458);
+	});
+
+	test("draws exactly edge on on the side it shows", () => {
+		expect(drawnAngle(90)).toBe(82);
+		expect(drawnAngle(270)).toBe(278);
+		expect(drawnAngle(-90)).toBe(-82);
+	});
+
+	test("always leaves a seventh of the Body's width showing", () => {
+		for (let angle = -720; angle <= 720; angle += 0.25)
+			expect(
+				Math.abs(Math.cos((drawnAngle(angle) * Math.PI) / 180)),
+			).toBeGreaterThan(0.139);
+	});
+});
+
 describe("turnTransform", () => {
 	const feel = DEFAULT_TURN;
 
@@ -58,9 +90,15 @@ describe("turnTransform", () => {
 		);
 	});
 
-	test("swells by the lift edge on", () => {
-		expect(turnTransform(90, { ...feel, lift: 0.1 }, false)).toBe(
-			"perspective(600px) rotateY(90deg) scale(1.1)",
+	test("swells by the lift toward edge on", () => {
+		expect(turnTransform(60, { ...feel, lift: 0.1 }, false)).toBe(
+			"perspective(600px) rotateY(60deg) scale(1.0866)",
+		);
+	});
+
+	test("is never drawn edge on, where the Body shows no face", () => {
+		expect(turnTransform(90, feel, false)).toBe(
+			`perspective(600px) rotateY(${90 - EDGE_ON_GAP}deg) scale(1.0594)`,
 		);
 	});
 
