@@ -58,7 +58,7 @@ export function atRest(page: Page): Promise<boolean> {
 			),
 		].every(
 			(el) =>
-				!/(^|;)\s*(translate|rotate|scale|opacity|width|height|z-index|transform|--seat-[a-z]+)\s*:/.test(
+				!/(^|;)\s*(translate|rotate|scale|opacity|width|height|z-index|transform|mask-image|--seat-[a-z]+)\s*:/.test(
 					el.getAttribute("style") ?? "",
 				),
 		),
@@ -71,7 +71,11 @@ export async function open(page: Page) {
 	await expect.poll(() => atRest(page), { timeout: 5_000 }).toBe(true);
 }
 
-/** `id`'s tilt as CSS shows it, and how lit every Card's glares are. */
+/**
+ * `id`'s lean as the Table writes it on the Card's own `transform` (`x`
+ * about the inline axis, `y` about the block axis, logical), and how lit
+ * every Card's glares are.
+ */
 export function tiltOf(page: Page, id: string) {
 	return page.evaluate((id) => {
 		const el = document.querySelector<HTMLElement>(
@@ -79,6 +83,17 @@ export function tiltOf(page: Page, id: string) {
 		);
 		if (!el) throw new Error(`no Card ${id}`);
 		const style = getComputedStyle(el);
+		const written = el.style.transform;
+		const dir =
+			el.closest("[data-tabletop]")?.getAttribute("dir") === "rtl"
+				? -1
+				: 1;
+		const angle = (axis: "X" | "Y") =>
+			Number.parseFloat(
+				new RegExp(`rotate${axis}\\((-?[\\d.]+)deg\\)`).exec(
+					written,
+				)?.[1] ?? "0",
+			);
 		const lit: Record<string, number> = {};
 		for (const glare of document.querySelectorAll(
 			"[data-tabletop-glare]",
@@ -91,9 +106,9 @@ export function tiltOf(page: Page, id: string) {
 			);
 		}
 		return {
-			tilting: el.hasAttribute("data-tilt"),
-			x: Number.parseFloat(style.getPropertyValue("--tilt-x")),
-			y: Number.parseFloat(style.getPropertyValue("--tilt-y")),
+			tilting: written !== "",
+			x: angle("X"),
+			y: -dir * angle("Y") || 0,
 			transform: style.transform,
 			lit,
 		};
@@ -294,8 +309,9 @@ export function expectOneClock(
 	expect(Math.abs(progress(first)), "the painted change holds").toBeLessThan(
 		0.005,
 	);
-	expect(progress(second), "one frame's worth").toBeGreaterThan(0);
-	expect(progress(second), "one frame's worth").toBeLessThan(0.065);
+	/* the box sets off one frame in, or once a lean has let go, from still */
+	const moving = frames.find((frame) => progress(frame) > 0.001) ?? second;
+	expect(progress(moving), "one frame's worth").toBeLessThan(0.065);
 	const last = frames.at(-1);
 	for (const name of Object.keys(first.parts)) {
 		const from = first.parts[name];

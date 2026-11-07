@@ -1,5 +1,8 @@
 /// <reference lib="dom" />
 import { expect, type Page, test } from "@playwright/test";
+import { startFrameLog, stopFrameLog } from "./support/frames";
+import { changesAfterDrop, jumps } from "./support/invariants";
+import { stackingOffModel } from "./support/stacking";
 import { atRest, inspector, offSlot } from "./support/tabletop";
 
 /**
@@ -81,7 +84,13 @@ test("the surface shows only the felt and the Cards", async ({ page }) => {
 	await expect(surface).not.toContainText("Fan");
 	const shown = await surface.evaluate((root) =>
 		[...root.children]
-			.filter((child) => getComputedStyle(child).visibility !== "hidden")
+			.filter((child) => {
+				const box = child.getBoundingClientRect();
+				return (
+					getComputedStyle(child).visibility !== "hidden" &&
+					box.width * box.height > 0
+				);
+			})
 			.map((child) =>
 				child.matches("[data-tabletop-region]")
 					? "felt"
@@ -90,7 +99,7 @@ test("the surface shows only the felt and the Cards", async ({ page }) => {
 						: child.tagName,
 			),
 	);
-	expect(new Set(shown)).toEqual(new Set(["STYLE", "felt", "card"]));
+	expect(new Set(shown)).toEqual(new Set(["felt", "card"]));
 });
 
 /** The angle a Card's shell shows mid-turn, from its written transform; null at rest. */
@@ -200,7 +209,51 @@ test("a Card dragged off the Deck stays where it is put, over the others", async
 	const moved = await top.boundingBox();
 	expect(moved?.x).toBeCloseTo(box.x + 180, 0);
 	expect(moved?.y).toBeCloseTo(box.y + 120, 0);
-	await expect(
-		top.locator("xpath=ancestor::*[@data-tabletop-seat]"),
-	).toHaveCSS("z-index", "52");
+	const seat = top.locator("xpath=ancestor::*[@data-tabletop-seat]");
+	expect(
+		await seat.evaluate((el) =>
+			(el as HTMLElement).style.getPropertyValue("--rest-z"),
+		),
+	).toBe("52");
+	expect(await stackingOffModel(page)).toEqual([]);
 });
+
+/* #1322: a Card let go where it shows stays exactly there, in its pose,
+   with the hand's speed thrown away: no box, rotation or scale change after
+   the release, in either writing direction; the Deck's other Cards never
+   jump or change their stacking against it. */
+for (const dir of ["LTR", "RTL"] as const)
+	test(`${dir}: a Card dropped in place, still moving, changes nothing after the release`, async ({
+		page,
+	}) => {
+		test.setTimeout(40_000);
+		await openDeck(page);
+		if (dir === "RTL")
+			await inspector(page)
+				.getByRole("group", { name: "Direction" })
+				.getByRole("button", { name: dir, exact: true })
+				.click();
+		await settled(page);
+		await play(page, "Fan");
+		await settled(page);
+		/* the top Card, fanned furthest, at 130° */
+		const id = "0_1";
+		const card = page.locator(`[data-tabletop-body="${id}"]`);
+		const box = await card.boundingBox();
+		if (!box) throw new Error("no Card");
+		const from = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+		const ids = [id, "0_2", "0_3"];
+		await startFrameLog(page, { ids });
+		await page.mouse.move(from.x, from.y);
+		await page.mouse.down();
+		for (let step = 1; step <= 10; step++)
+			await page.mouse.move(from.x + step * 14, from.y + step * 9);
+		/* let go while the hand still moves */
+		await page.mouse.up();
+		await page.waitForTimeout(700);
+		const frames = await stopFrameLog(page);
+		expect.soft(changesAfterDrop(frames, id)).toEqual([]);
+		expect.soft(jumps(frames, ids)).toEqual([]);
+		await settled(page);
+		expect.soft(await stackingOffModel(page)).toEqual([]);
+	});

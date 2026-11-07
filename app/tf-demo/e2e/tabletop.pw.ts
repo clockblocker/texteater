@@ -1,5 +1,7 @@
 /// <reference lib="dom" />
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
+import { expectMove } from "./support/invariants";
+import { stackingOffModel } from "./support/stacking";
 import {
 	atRest,
 	BODY,
@@ -15,6 +17,16 @@ import {
 	sidesOf,
 	tiltOf,
 } from "./support/tabletop";
+import {
+	closeMidOpen,
+	closeWithX,
+	dropOnPane,
+	openFromHover,
+	setDirection,
+	throwCard,
+	trick,
+	turn,
+} from "./support/tabletop-moves";
 
 /**
  * Tabletop (#1317): Note Cards rest in CSS Slots and move by Terms that
@@ -89,16 +101,19 @@ test("a tap grows the Card into its Cover by resizing it, and Escape puts it bac
 	await expect(card).toHaveAttribute("data-slot", "ground:cover");
 	await expect(card.getByRole("button", { name: "Close" })).toBeVisible();
 
-	/* the Cover's own Parts fade out as copies rather than vanish */
+	/* the Cover's own Parts fade out where they were, the same elements,
+	   rather than vanish or leave copies */
 	await page.evaluate(() => {
 		const seen: number[] = [];
-		(window as unknown as { ghosts: number[] }).ghosts = seen;
+		(window as unknown as { leaving: number[] }).leaving = seen;
+		const lines = document.querySelector(
+			'[data-tabletop-body="abend"] [data-tabletop-part="lines"]',
+		);
 		const sample = () => {
-			for (const ghost of document.querySelectorAll(
-				"[data-tabletop-ghost]",
-			))
-				seen.push(Number(getComputedStyle(ghost).opacity));
-			if (seen.length < 400) requestAnimationFrame(sample);
+			if (lines?.isConnected)
+				seen.push(Number(getComputedStyle(lines).opacity));
+			if (seen.length < 400 && lines?.isConnected)
+				requestAnimationFrame(sample);
 		};
 		requestAnimationFrame(sample);
 	});
@@ -108,13 +123,13 @@ test("a tap grows the Card into its Cover by resizing it, and Escape puts it bac
 	await expect(card).toHaveAttribute("data-slot", "ground:abend");
 	expect(await offSlot(page)).toEqual([]);
 	await expect(inspector(page)).toBeVisible();
-	const ghosts = await page.evaluate(
-		() => (window as unknown as { ghosts: number[] }).ghosts,
+	const leaving = await page.evaluate(
+		() => (window as unknown as { leaving: number[] }).leaving,
 	);
-	expect(ghosts.some((opacity) => opacity > 0.05 && opacity < 0.95)).toBe(
+	expect(leaving.some((opacity) => opacity > 0.05 && opacity < 0.95)).toBe(
 		true,
 	);
-	await expect(card.locator("[data-tabletop-ghost]")).toHaveCount(0);
+	await expect(card.locator('[data-tabletop-part="lines"]')).toHaveCount(0);
 });
 
 for (const dir of ["LTR", "RTL"] as const)
@@ -449,3 +464,67 @@ test("a dealt word lands face down and busy, turns up once its Knowledge lands, 
 	]);
 	await expect(quick).not.toHaveAttribute("aria-busy", /.*/);
 });
+
+/* #1322: every move, every frame. Each Body's box, rotation, scale, lean,
+   Parts and stacking never jump, never overshoot, end exactly at rest; no
+   two texts of a Body overlap; nothing leans while it resizes; at rest the
+   page stacks the Cards as their Places do. */
+async function expectRest(page: Page, label: string) {
+	expect.soft(await offSlot(page), `${label}: on its Slot`).toEqual([]);
+	expect.soft(await stackingOffModel(page), `${label}: stacking`).toEqual([]);
+}
+
+for (const dir of ["LTR", "RTL"] as const) {
+	test(`${dir}: an open from a leaning Card, a close by ×, and a close mid-open hold every frame invariant`, async ({
+		page,
+	}) => {
+		test.setTimeout(60_000);
+		await open(page);
+		if (dir === "RTL") await setDirection(page, "RTL");
+		const opened = await openFromHover(page, "lesen");
+		expectMove(opened.frames, opened.ids, { label: `${dir} open` });
+		await expectRest(page, `${dir} open`);
+		const closed = await closeWithX(page, "lesen");
+		expectMove(closed.frames, closed.ids, { label: `${dir} close` });
+		await expectRest(page, `${dir} close`);
+		const back = await closeMidOpen(page, "lesen");
+		expectMove(back.frames, back.ids, {
+			label: `${dir} close mid-open`,
+			from: back.from ?? 0,
+		});
+		await expectRest(page, `${dir} close mid-open`);
+	});
+
+	test(`${dir}: a throw and a drop on the Pane hold every frame invariant`, async ({
+		page,
+	}) => {
+		test.setTimeout(60_000);
+		await open(page);
+		if (dir === "RTL") await setDirection(page, "RTL");
+		const dropped = await dropOnPane(page, "gehen");
+		expectMove(dropped.frames, dropped.ids, { label: `${dir} drop` });
+		await expectRest(page, `${dir} drop`);
+		const thrown = await throwCard(page, "abend");
+		expectMove(thrown.frames, thrown.ids, { label: `${dir} throw` });
+		await expectRest(page, `${dir} throw`);
+	});
+
+	test(`${dir}: fan, shuffle, deal and a turn hold every frame invariant`, async ({
+		page,
+	}) => {
+		test.setTimeout(60_000);
+		await open(page);
+		if (dir === "RTL") await setDirection(page, "RTL");
+		for (const name of ["Fan", "Shuffle", "Deal"] as const) {
+			const played = await trick(page, name);
+			expectMove(played.frames, played.ids, {
+				label: `${dir} ${name}`,
+				scripted: true,
+			});
+			await expectRest(page, `${dir} ${name}`);
+		}
+		const turned = await turn(page, "haus");
+		expectMove(turned.frames, turned.ids, { label: `${dir} turn` });
+		await expectRest(page, `${dir} turn`);
+	});
+}
