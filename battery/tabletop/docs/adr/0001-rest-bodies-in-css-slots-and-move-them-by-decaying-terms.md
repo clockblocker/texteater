@@ -57,15 +57,19 @@ Who starts a Move decides its style
 Stacking is modelled. A Body's order is its Place's z. A change of order is
 a crossing on the Move that makes it: every other Body whose order against
 it ends differently from how it shows now is crossed, and how much it shows
-over the moving Body goes from what it shows now to all or nothing on the
-Move's progress. Through the crossing the moving Body is drawn just below
+over the moving Body goes from what it shows now to all or nothing, along
+the box's own way. Through the crossing the moving Body is drawn just above
 every Body it crosses (seats stack at twice their z, so a crossing fits
-under a tie), and each crossed Body is veiled by an SVG mask cut in the
-moving Body's shape, at its share. A Body going back under the Cards in
-front fades in under them; one coming forward has them fade off it. At the
-end the Body takes its rest and no veil is left, so at rest the page stacks
-Bodies exactly as their Places order them. A Trick keeps deck-of-cards'
-cut at `zAt`, also on its Move.
+over a tie), veiled by an SVG mask in which each crossed Body's shape is
+cut out at its share. A Body going back under the Cards in front fades out
+where they lie as it nears its rest (from 40% of the way); one coming
+forward fades in over them while it is still near where it was (by 60%).
+At the end the Body takes its rest and no veil is left, so at rest the
+page stacks Bodies exactly as their Places order them. A Trick keeps
+deck-of-cards' cut at `zAt`, also on its Move. Chrome masks only inside an
+element's border box, so the veil goes on the moving Body, whose own shadow
+is the one thing it can't fade; veiling the crossed Bodies instead left
+their shadows standing over the moving one for the whole crossing.
 
 The lean toward the pointer is an input only to a Body at rest with no
 Move in flight, or in the hand; no other Body leans while one is held. A

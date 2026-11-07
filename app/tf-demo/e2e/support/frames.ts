@@ -57,7 +57,7 @@ export type BodyFrame = {
 	readonly side: string;
 	readonly mode: string;
 	readonly slot: string;
-	/** How much it shows over each Body it is crossing, by that Body's id. */
+	/** How much it shows over each Body it is crossing (it is drawn above them), by that Body's id. */
 	readonly veils: Readonly<Record<string, number>>;
 	readonly parts: readonly PartFrame[];
 };
@@ -115,9 +115,9 @@ export async function startFrameLog(page: Page, options: Options = {}) {
 			const veilsOf = (id: string) => {
 				const out: Record<string, number> = {};
 				for (const shape of document.querySelectorAll<SVGElement>(
-					`[data-tabletop-veil="${CSS.escape(id)}"] [data-mover]`,
+					`[data-tabletop-veil="${CSS.escape(id)}"] [data-over]`,
 				))
-					out[shape.dataset.mover ?? "?"] = round(
+					out[shape.dataset.over ?? "?"] = round(
 						1 - Number(shape.getAttribute("fill-opacity") ?? 1),
 					);
 				return out;

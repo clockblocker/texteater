@@ -15,9 +15,9 @@ type Geometry = {
 	readonly rotate: number;
 };
 
-/** One mover's shape cut out of a Body it crosses, and how much that Body shows there. */
+/** A crossed Body's shape cut out of the Body crossing it, and how much it shows there. */
 type Cut = {
-	readonly mover: string;
+	readonly over: string;
 	readonly w: number;
 	readonly h: number;
 	readonly rx: number;
@@ -56,25 +56,25 @@ function geometryOf(
 }
 
 /**
- * The mover's rectangle in the crossed Body's own frame, as an SVG
- * `matrix()`: a crossed Body's mask is in its untransformed px, and both
- * may be turned and scaled about their centres.
+ * `shape`'s rectangle in `frame`'s own untransformed px, as an SVG
+ * `matrix()`: a mask is in its Body's own frame, and both Bodies may be
+ * turned and scaled about their centres.
  */
-function matrixOf(mover: Geometry, under: Geometry): number[] {
+function matrixOf(shape: Geometry, frame: Geometry): number[] {
 	const rad = Math.PI / 180;
-	const k = mover.s / under.s;
-	const phi = (mover.rotate - under.rotate) * rad;
-	const tb = under.rotate * rad;
-	const dx = mover.cx - under.cx;
-	const dy = mover.cy - under.cy;
+	const k = shape.s / frame.s;
+	const phi = (shape.rotate - frame.rotate) * rad;
+	const tb = frame.rotate * rad;
+	const dx = shape.cx - frame.cx;
+	const dy = shape.cy - frame.cy;
 	const local = {
-		x: (dx * Math.cos(tb) + dy * Math.sin(tb)) / under.s + under.w / 2,
-		y: (-dx * Math.sin(tb) + dy * Math.cos(tb)) / under.s + under.h / 2,
+		x: (dx * Math.cos(tb) + dy * Math.sin(tb)) / frame.s + frame.w / 2,
+		y: (-dx * Math.sin(tb) + dy * Math.cos(tb)) / frame.s + frame.h / 2,
 	};
 	const a = k * Math.cos(phi);
 	const b = k * Math.sin(phi);
-	const hx = mover.w / 2;
-	const hy = mover.h / 2;
+	const hx = shape.w / 2;
+	const hy = shape.h / 2;
 	return [
 		a,
 		b,
@@ -101,12 +101,14 @@ function radiusOf(body: BodyState): number {
 }
 
 /**
- * The stacking crossings, drawn. A Body crossing others is drawn below
- * every one of them for the length of its crossing; each of them shows over
- * it only as much as the crossing has come, through a mask with the
- * mover's shape cut out at that opacity. A Body crossing back under the
- * ones in front fades in under them; one coming forward has them fade off
- * it. Masks exist only while a crossing runs, on Bodies that overlap it.
+ * The stacking crossings, drawn. A Body crossing others is drawn above
+ * every one of them for the length of its crossing, and each shows through
+ * it as much as the crossing has come: the Body's mask has each crossed
+ * Body's shape cut out at that share. A Body going back under the ones in
+ * front fades out where they lie, so they come over it; one coming forward
+ * fades in over them. A mask exists only on a Body crossing others it
+ * overlaps, and only while it crosses. Chrome masks only inside the
+ * border box, so the moving Body's own shadow is the one thing it leaves.
  */
 export class Veils {
 	svg: SVGSVGElement | null = null;
@@ -139,7 +141,7 @@ export class Veils {
 		}
 	}
 
-	/** Each crossed Body's cuts at `now`, and where it is drawn. */
+	/** Each crossing Body's cuts at `now`, and where it is drawn. */
 	private collect(now: number) {
 		const engine = this.engine;
 		const rects = new Map<string, DOMRect | null>();
@@ -157,20 +159,20 @@ export class Veils {
 			const mover = geometryOf(engine, body, now, rects);
 			if (!mover) continue;
 			for (const [id, shows] of overAt(move, now)) {
-				const other = shows < 0.999 ? engine.bodies.get(id) : undefined;
-				const under = other?.el
+				const other = shows > 0.001 ? engine.bodies.get(id) : undefined;
+				const over = other?.el
 					? geometryOf(engine, other, now, rects)
 					: null;
-				if (!under || apart(mover, under)) continue;
-				sizes.set(id, under);
-				cuts.set(id, [
-					...(cuts.get(id) ?? []),
+				if (!other || !over || apart(mover, over)) continue;
+				sizes.set(body.id, mover);
+				cuts.set(body.id, [
+					...(cuts.get(body.id) ?? []),
 					{
-						mover: body.id,
-						w: mover.w,
-						h: mover.h,
-						rx: radiusOf(body),
-						matrix: matrixOf(mover, under),
+						over: id,
+						w: over.w,
+						h: over.h,
+						rx: radiusOf(other),
+						matrix: matrixOf(over, mover),
 						shows,
 					},
 				]);
@@ -217,12 +219,12 @@ export class Veils {
 				shape = document.createElementNS(SVG, "rect");
 				mask.append(shape);
 			}
-			shape.setAttribute("data-mover", cut.mover);
+			shape.setAttribute("data-over", cut.over);
 			shape.setAttribute("width", String(cut.w));
 			shape.setAttribute("height", String(cut.h));
 			shape.setAttribute("rx", String(cut.rx));
 			shape.setAttribute("fill", "black");
-			shape.setAttribute("fill-opacity", (1 - cut.shows).toFixed(4));
+			shape.setAttribute("fill-opacity", cut.shows.toFixed(4));
 			shape.setAttribute(
 				"transform",
 				`matrix(${cut.matrix.map((value) => value.toFixed(3)).join(" ")})`,

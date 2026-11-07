@@ -42,10 +42,10 @@ export type PartTerm = Term<PartChannel>;
  * A change of stacking, as part of a Move. The Body is drawn at `from`
  * and rests at `to`. Every Body whose order against it flips is `over`
  * it: how much that Body shows where they overlap goes from its `from`
- * to its `to` on the Move's progress, as a veil cut out of it in the
- * Body's shape. Through the crossing the Body is drawn below all of them,
- * so a veil is all it takes; at the end the Body takes its rest and no
- * veil is left. A `step` shape is a cut, as deck-of-cards' tricks do.
+ * to its `to` on the Move's progress. Through the crossing the Body is
+ * drawn above all of them, veiled where each lies by that much, so a veil
+ * is all it takes; at the end the Body takes its rest and no veil is
+ * left. A `step` shape is a cut, as deck-of-cards' tricks do.
  */
 export type Crossing = {
 	readonly from: number;
@@ -189,20 +189,32 @@ export function carries(move: Move): boolean {
 	);
 }
 
-/** How much each Body crossing `move`'s Body shows over it at `now`. */
+/**
+ * How much each Body crossing `move`'s Body shows over it at `now`. It
+ * follows the box's own way (the crossing's shape, so after any lead it sets
+ * off from still): a Body coming off the moving one does so over the first
+ * 60% of the way, while the moving one is still near where it was; one
+ * coming over it from 40% on, as it nears its rest, done by 95% so the
+ * spring's tail doesn't drag it out.
+ */
 export function overAt(move: Move, now: number): Map<string, number> {
 	const out = new Map<string, number>();
 	const crossing = move.crossing;
 	if (!crossing) return out;
-	const share = shareAt(crossing.shape, progressAt(move, now));
-	for (const [id, { from, to }] of crossing.over)
+	const way = 1 - shareAt(crossing.shape, progressAt(move, now));
+	for (const [id, { from, to }] of crossing.over) {
+		const [lo, hi] = to > from ? [0.4, 0.95] : [0, 0.6];
+		const share =
+			way <= lo ? 1 : way >= hi ? 0 : 1 - (way - lo) / (hi - lo);
 		out.set(id, to + (from - to) * share);
+	}
 	return out;
 }
 
 /**
- * The stacking order `move` draws its Body at, `now`: below every Body it
- * crosses while it crosses them, at its rest once a cut has passed.
+ * The stacking order `move` draws its Body at, `now`: above every Body it
+ * crosses while it crosses them (each shows through it as much as the
+ * crossing has come), at its rest once a cut has passed.
  */
 export function zAt(move: Move, now: number): number | null {
 	const crossing = move.crossing;
@@ -211,5 +223,5 @@ export function zAt(move: Move, now: number): number | null {
 		return progressAt(move, now) < crossing.shape.at
 			? crossing.from
 			: crossing.to;
-	return Math.min(crossing.from, crossing.to);
+	return Math.max(crossing.from, crossing.to);
 }

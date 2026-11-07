@@ -98,10 +98,10 @@ describe("a crossing on a Move", () => {
 		shape: FOLLOW,
 	};
 
-	test("draws the Body below what it crosses throughout, and shows the crossed one over it on the progress", () => {
+	test("draws the Body above what it crosses throughout, and shows the crossed one over it on the progress", () => {
 		const going = move({ crossing });
-		expect(zAt(going, 0)).toBe(5);
-		expect(zAt(going, 200)).toBe(5);
+		expect(zAt(going, 0)).toBe(50);
+		expect(zAt(going, 200)).toBe(50);
 		const shows = [0, 30, 80, 200, 800].map(
 			(t) => overAt(going, t).get("front") ?? 0,
 		);

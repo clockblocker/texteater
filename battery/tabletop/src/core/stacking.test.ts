@@ -58,6 +58,20 @@ describe("a crossing", () => {
 		);
 	});
 
+	test("going under, the Cards in front come over it as it nears its rest", () => {
+		const going = on(
+			crossing({
+				from: 50,
+				to: 3,
+				others: DECK,
+				showing: new Map(),
+				shape: FOLLOW,
+			}),
+		);
+		expect(overAt(going, 50).get("d")).toBe(0);
+		expect(overAt(going, 2000).get("d")).toBe(1);
+	});
+
 	test("turned back halfway, starts from what shows, so nothing pops", () => {
 		const going = on(
 			crossing({
@@ -68,7 +82,7 @@ describe("a crossing", () => {
 				shape: FOLLOW,
 			}),
 		);
-		const showing = overAt(going, 60);
+		const showing = overAt(going, 150);
 		const half = showing.get("d") ?? 0;
 		expect(half).toBeGreaterThan(0.05);
 		expect(half).toBeLessThan(0.95);
@@ -80,7 +94,7 @@ describe("a crossing", () => {
 			shape: FOLLOW,
 		});
 		expect(back?.over.get("d")).toEqual({ from: half, to: 0 });
-		expect(overAt(on(back, 60), 60).get("d")).toBeCloseTo(half, 10);
+		expect(overAt(on(back, 150), 150).get("d")).toBeCloseTo(half, 10);
 	});
 
 	test("ties go by the seats' order", () => {

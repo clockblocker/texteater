@@ -51,7 +51,7 @@ function seatZOf(body: BodyState, now: number): number | null {
 			? null
 			: crossing?.crossing?.shape.kind === "step"
 				? 2 * z
-				: 2 * z - 1;
+				: 2 * z + 1;
 	if (body.mode !== "rest") return doubled ?? 2 * body.base.z;
 	return doubled;
 }
