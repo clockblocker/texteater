@@ -3,7 +3,7 @@ import type { Place } from "tabletop/core";
 import { Body, Glare, Shell } from "tabletop/react";
 import { NoteFace, PlainBack } from "./note-face";
 import { TurnControl } from "./turn-control";
-import { noteCard } from "./words";
+import type { NoteCard } from "./words";
 
 const FACE =
 	"rounded-[0.9rem] border border-line-strong shadow-[0_0.4rem_1.2rem_#0004]";
@@ -46,15 +46,21 @@ function samePlace(a: Place, b: Place): boolean {
 export const NoteBody = memo(
 	function NoteBody({
 		id,
+		card,
+		word,
+		busy,
 		place,
 		handlers,
 	}: {
 		readonly id: string;
+		readonly card: NoteCard;
+		/** The word it was dealt from, which its back carries. */
+		readonly word: string | null;
+		/** Waiting for its Knowledge: face down and announced once it lands. */
+		readonly busy: boolean;
 		readonly place: Place;
 		readonly handlers: CardHandlers;
 	}) {
-		const card = noteCard(id);
-		if (!card) return null;
 		const open = place.form === "cover";
 		const control = handlers.control ? (
 			<TurnControl
@@ -69,7 +75,8 @@ export const NoteBody = memo(
 				data-slot={place.slot}
 				role="button"
 				tabIndex={0}
-				aria-label={card.title}
+				aria-label={busy && word ? word : card.title}
+				aria-busy={busy || undefined}
 				aria-expanded={open}
 				className={`group/card rounded-[0.9rem] outline-none focus-visible:ring-2 focus-visible:ring-ring/70 ${open ? "" : "cursor-grab"}`}
 				onPointerDown={(event) => handlers.press(id, open, event)}
@@ -93,7 +100,7 @@ export const NoteBody = memo(
 					}
 					back={
 						<>
-							<PlainBack />
+							<PlainBack word={word} />
 							{control}
 							<Glare />
 						</>
@@ -104,6 +111,9 @@ export const NoteBody = memo(
 	},
 	(before, after) =>
 		before.id === after.id &&
+		before.card === after.card &&
+		before.word === after.word &&
+		before.busy === after.busy &&
 		before.handlers === after.handlers &&
 		samePlace(before.place, after.place),
 );

@@ -30,6 +30,7 @@ import {
 	uncover,
 	withDeck,
 } from "./scene";
+import { useDealWord } from "./use-deal-word";
 
 /** A release this fast, headed past the scene's edge, throws the Card away. */
 const THROW_SPEED = 800;
@@ -67,6 +68,7 @@ export function useScene(table: TableHandle) {
 	const latest = useRef(scene);
 	latest.current = scene;
 	const commit = (next: (scene: Scene) => Scene) => () => setScene(next);
+	const words = useDealWord(table, setScene);
 
 	/* the intro: the Deck drops into place as the entry opens */
 	useLayoutEffect(() => {
@@ -92,6 +94,7 @@ export function useScene(table: TableHandle) {
 
 	return {
 		scene,
+		...words,
 		open: (id: string) =>
 			table.transact(commit((current) => openCard(current, id))),
 		/** Closes every Cover; whether there was one. */

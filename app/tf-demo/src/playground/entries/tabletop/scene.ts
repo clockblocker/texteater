@@ -9,12 +9,13 @@ import {
 	type Side,
 	type SlotSpec,
 } from "tabletop/core";
-import { NOTE_CARDS } from "./words";
+import { NOTE_CARDS, type NoteCard, noteCard } from "./words";
 
 /**
  * The entry's model, pure: which Region each Note Card rests in and in what
  * order, which one is open as its Region's Cover, which side each shows,
- * and the Ground Deck's pose. Every Place and Slot is derived from it.
+ * the Ground Deck's pose and the words dealt from a click. Every Place and
+ * Slot is derived from it.
  */
 
 /** The Ground with its Deck, and the Pane beside it across the Split. */
@@ -29,6 +30,14 @@ export const TRICK_SCALE = CARD.h / (88 / 16);
 
 export type DeckPose = "pile" | "fan";
 
+/** A word dealt as if clicked: the form clicked, and the Note its Knowledge makes. */
+export type DealtWord = {
+	readonly surface: string;
+	readonly card: NoteCard;
+	/** Whether its Knowledge has landed; until then the Card is busy, face down. */
+	readonly ready: boolean;
+};
+
 export type Scene = {
 	/** Each Region's Cards, bottom first. */
 	readonly cards: Readonly<Record<RegionId, readonly string[]>>;
@@ -39,6 +48,8 @@ export type Scene = {
 	readonly spread: number;
 	/** Cards thrown away, still flying out at the Place they left. */
 	readonly gone: Readonly<Record<string, Place>>;
+	/** The words dealt so far, by id, in the order they were dealt. */
+	readonly words: Readonly<Record<string, DealtWord>>;
 };
 
 export const DEALT = NOTE_CARDS.map((card) => card.id);
@@ -51,6 +62,50 @@ export function initialScene(spread = 260): Scene {
 		pose: "pile",
 		spread,
 		gone: {},
+		words: {},
+	};
+}
+
+/** Every Card the scene holds, dealt or not, in a stable order. */
+export function cardIds(scene: Scene): string[] {
+	return [...DEALT, ...Object.keys(scene.words)];
+}
+
+export function cardOf(scene: Scene, id: string): NoteCard | undefined {
+	return scene.words[id]?.card ?? noteCard(id);
+}
+
+/** Whether `id` is a dealt word still waiting for its Knowledge. */
+export function busy(scene: Scene, id: string): boolean {
+	return scene.words[id]?.ready === false;
+}
+
+/**
+ * Deals `word` onto the end of the Pane's row as `id`: face up when its
+ * Knowledge is already there, face down with the clicked word otherwise.
+ */
+export function dealWord(
+	scene: Scene,
+	id: string,
+	word: Omit<DealtWord, "ready">,
+	ready: boolean,
+): Scene {
+	return {
+		...scene,
+		cards: { ...scene.cards, pane: [...scene.cards.pane, id] },
+		sides: { ...scene.sides, [id]: ready ? "front" : "back" },
+		words: { ...scene.words, [id]: { ...word, ready } },
+	};
+}
+
+/** `id`'s Knowledge landed: it is no longer busy, and turns face up. */
+export function landWord(scene: Scene, id: string): Scene {
+	const word = scene.words[id];
+	if (!word || word.ready) return scene;
+	return {
+		...scene,
+		sides: { ...scene.sides, [id]: "front" },
+		words: { ...scene.words, [id]: { ...word, ready: true } },
 	};
 }
 
@@ -160,19 +215,26 @@ export function moveCard(scene: Scene, id: string, region: RegionId): Scene {
 	};
 }
 
+/** Turns `id` over, unless it waits for its Knowledge, which turns it. */
 export function turnCard(scene: Scene, id: string): Scene {
+	if (busy(scene, id)) return scene;
 	const side = scene.sides[id] === "back" ? "front" : "back";
 	return { ...scene, sides: { ...scene.sides, [id]: side } };
 }
 
 /** Turns every Card: face down when most are up, face up otherwise. */
 export function turnAll(scene: Scene): Scene {
-	const ids = REGIONS.flatMap((region) => scene.cards[region]);
+	const ids = REGIONS.flatMap((region) => scene.cards[region]).filter(
+		(id) => !busy(scene, id),
+	);
 	const up = ids.filter((id) => scene.sides[id] !== "back").length;
 	const side: Side = up / Math.max(ids.length, 1) > 0.5 ? "back" : "front";
 	return {
 		...scene,
-		sides: Object.fromEntries(ids.map((id) => [id, side])),
+		sides: {
+			...scene.sides,
+			...Object.fromEntries(ids.map((id) => [id, side])),
+		},
 	};
 }
 
@@ -184,7 +246,9 @@ export function throwAway(scene: Scene, id: string, from: Place): Scene {
 export function forget(scene: Scene, id: string): Scene {
 	const gone = { ...scene.gone };
 	delete gone[id];
-	return { ...scene, gone };
+	const words = { ...scene.words };
+	delete words[id];
+	return { ...scene, gone, words };
 }
 
 /** The Ground Deck takes a trick's order and pose; its Cover closes. */
@@ -198,7 +262,20 @@ export function withDeck(
 	return { ...scene, cards: { ...scene.cards, ground: order }, pose, open };
 }
 
-/** Every Card back in the Ground Deck, dealt order, face up. */
+/**
+ * Every Note Card back in the Ground Deck, dealt order, face up. Dealt
+ * words gather in the Pane and keep their side.
+ */
 export function redeal(scene: Scene): Scene {
-	return initialScene(scene.spread);
+	const words = Object.keys(scene.words).filter((id) => !scene.gone[id]);
+	const sides: Record<string, Side> = {};
+	for (const id of words) sides[id] = scene.sides[id] ?? "front";
+	return {
+		...initialScene(scene.spread),
+		cards: { ground: DEALT, pane: words },
+		sides,
+		words: Object.fromEntries(
+			Object.entries(scene.words).filter(([id]) => words.includes(id)),
+		),
+	};
 }

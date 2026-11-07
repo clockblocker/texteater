@@ -176,6 +176,8 @@ test("the hand carries a Card 1:1 and a grab mid-move takes it from where it sho
 	await page.mouse.down();
 	await page.mouse.move(start.x + 140, start.y + 116, { steps: 5 });
 	await expect(card).toHaveAttribute("data-mode", "hand");
+	/* the hand stops before it lets go, so the release is no throw */
+	await page.waitForTimeout(120);
 	await page.mouse.up();
 	// caught on its way home, in one task: it shows where it was
 	const jump = await page.evaluate(() => {
@@ -456,4 +458,86 @@ test("the corner control turns a Card over and back, F turns it too, and a tap s
 
 	await card.click({ position: { x: 60, y: 70 } });
 	await expect(card).toHaveAttribute("data-form", "cover");
+});
+
+/** Records every side each Card's shell shows, with when, from now on. */
+function recordSides(page: Page) {
+	return page.evaluate(() => {
+		const seen: Record<string, { side: string; t: number }[]> = {};
+		(window as unknown as { sides: typeof seen }).sides = seen;
+		const note = () => {
+			for (const shell of document.querySelectorAll(
+				"[data-tabletop-shell]",
+			)) {
+				const id =
+					shell.closest<HTMLElement>("[data-tabletop-body]")?.dataset
+						.tabletopBody ?? "?";
+				const list = seen[id] ?? [];
+				seen[id] = list;
+				const side = shell.getAttribute("data-side") ?? "";
+				if (list.at(-1)?.side !== side)
+					list.push({ side, t: performance.now() });
+			}
+		};
+		new MutationObserver(note).observe(document.body, {
+			subtree: true,
+			childList: true,
+			attributes: true,
+			attributeFilter: ["data-side"],
+		});
+	});
+}
+
+const sidesOf = (page: Page, id: string) =>
+	page.evaluate(
+		(id) =>
+			(
+				window as unknown as {
+					sides: Record<string, { side: string; t: number }[]>;
+				}
+			).sides[id] ?? [],
+		id,
+	);
+
+test("a dealt word lands face down and busy, turns up once its Knowledge lands, and deals face up below the threshold", async ({
+	page,
+}) => {
+	await open(page);
+	await recordSides(page);
+	const deal = inspector(page).getByRole("button", { name: "Deal a word" });
+	await deal.click();
+	const card = page.locator('[data-tabletop-body="laufen"]');
+	const shell = card.locator("[data-tabletop-shell]");
+	await expect(card).toHaveAttribute("aria-busy", "true");
+	await expect(shell).toHaveAttribute("data-side", "back");
+	await expect(card.locator('[data-tabletop-face="back"]')).toHaveText(
+		"lief",
+	);
+	// the default fake latency is 1.2 s
+	await expect(shell).toHaveAttribute("data-side", "front", {
+		timeout: 4_000,
+	});
+	await expect(card).not.toHaveAttribute("aria-busy", /.*/);
+	await expect(
+		page.locator("[data-tabletop]").getByRole("status"),
+	).toHaveText("laufen is ready.");
+	const laufen = await sidesOf(page, "laufen");
+	expect(laufen.map((entry) => entry.side)).toEqual(["back", "front"]);
+	expect((laufen[1]?.t ?? 0) - (laufen[0]?.t ?? 0)).toBeGreaterThan(1_000);
+
+	// 200 ms is under the 300 ms threshold: dealt face up, never turned
+	await inspector(page)
+		.getByRole("slider", { name: "Knowledge latency" })
+		.fill("200");
+	await deal.click();
+	const quick = page.locator('[data-tabletop-body="buch"]');
+	await expect(quick.locator("[data-tabletop-shell]")).toHaveAttribute(
+		"data-side",
+		"front",
+	);
+	await expect.poll(() => atRest(page), { timeout: 5_000 }).toBe(true);
+	expect((await sidesOf(page, "buch")).map((entry) => entry.side)).toEqual([
+		"front",
+	]);
+	await expect(quick).not.toHaveAttribute("aria-busy", /.*/);
 });

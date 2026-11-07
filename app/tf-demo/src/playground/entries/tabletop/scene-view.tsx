@@ -6,7 +6,7 @@ import {
 import { type ReactNode, useEffect, useMemo, useRef } from "react";
 import { Region, Slot, type TableHandle, useHand } from "tabletop/react";
 import { type CardHandlers, NoteBody } from "./note-body";
-import { DEALT, placesOf, REGIONS, slotsOf } from "./scene";
+import { busy, cardIds, cardOf, placesOf, REGIONS, slotsOf } from "./scene";
 import { isFlick, type TurnGesture } from "./turn-gesture";
 import { useLongPress } from "./use-long-press";
 import type { SceneActions } from "./use-scene";
@@ -136,17 +136,24 @@ export function SceneView({
 					</RegionPanel>
 				))}
 			</ResizableSplit>
-			{DEALT.map((id) => {
+			{cardIds(scene).map((id) => {
 				const place = places.get(id);
-				return place ? (
+				const card = cardOf(scene, id);
+				return place && card ? (
 					<NoteBody
 						key={id}
 						id={id}
+						card={card}
+						word={scene.words[id]?.surface ?? null}
+						busy={busy(scene, id)}
 						place={place}
 						handlers={handlers}
 					/>
 				) : null;
 			})}
+			<p role="status" aria-live="polite" className="sr-only">
+				{actions.announcement}
+			</p>
 		</>
 	);
 }

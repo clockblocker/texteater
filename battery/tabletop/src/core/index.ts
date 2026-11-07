@@ -3,7 +3,7 @@ export { contains, project } from "./geometry";
 export type { Place, Posed, Side, SlotSpec } from "./place";
 export { place } from "./place";
 export { cover, fan, pile, row } from "./poses";
-export { SPRINGS } from "./springs";
+export { DECK_OF_CARDS, SPRINGS } from "./springs";
 export type { TiltFeel } from "./tilt";
 export { DEFAULT_TILT } from "./tilt";
 export { deal, fanOut, shuffle, sort } from "./tricks";

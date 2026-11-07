@@ -11,6 +11,7 @@ function Heading({ card }: { readonly card: NoteCard }) {
 			id="heading"
 			className={`${COLUMN} flex h-10 items-baseline gap-2 pt-2.5`}
 		>
+			{card.emoji ? <span aria-hidden="true">{card.emoji}</span> : null}
 			<span className="truncate font-semibold text-ink">
 				{card.title}
 			</span>
@@ -102,7 +103,18 @@ export function NoteFace({
 	);
 }
 
-/** Every Note's back, for now: the plain default background (#1309 Q5). */
-export function PlainBack() {
-	return <div className="h-full bg-canvas" />;
+/**
+ * Every Note's back, for now: the plain default background (#1309 Q5). A
+ * Card dealt from a click carries the clicked word on it (#1316).
+ */
+export function PlainBack({ word }: { readonly word?: string | null }) {
+	return (
+		<div className="grid h-full place-items-center bg-canvas">
+			{word ? (
+				<span className="font-semibold text-ink-soft text-lg">
+					{word}
+				</span>
+			) : null}
+		</div>
+	);
 }

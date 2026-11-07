@@ -8,6 +8,8 @@ export type NoteCard = {
 	readonly title: string;
 	/** The Caption: what kind of thing the title is. */
 	readonly caption: string;
+	/** Luna's emoji for it, once its Knowledge has landed. */
+	readonly emoji?: string;
 	readonly gloss: string;
 	/** The Source contexts: the first shows on the Card, the rest on the Cover. */
 	readonly contexts: readonly string[];
@@ -111,3 +113,74 @@ export const NOTE_CARDS: readonly NoteCard[] = [
 export function noteCard(id: string): NoteCard | undefined {
 	return NOTE_CARDS.find((card) => card.id === id);
 }
+
+/**
+ * Words the inspector deals as if a reader clicked them in a text: the
+ * form clicked, and the Note its Knowledge (Luna's emoji, base form and
+ * gloss) turns out to be.
+ */
+export const WORDS_TO_DEAL: readonly {
+	readonly surface: string;
+	readonly card: NoteCard;
+}[] = [
+	{
+		surface: "lief",
+		card: {
+			id: "laufen",
+			title: "laufen",
+			caption: "verb",
+			emoji: "🏃",
+			gloss: "to run, to walk",
+			contexts: ["Sie lief jeden Morgen durch den Park."],
+			lines: ["lief · ist gelaufen"],
+		},
+	},
+	{
+		surface: "Bücher",
+		card: {
+			id: "buch",
+			title: "das Buch",
+			caption: "noun",
+			emoji: "📖",
+			gloss: "book",
+			contexts: ["Er hat zu viele Bücher im Regal."],
+			lines: ["die Bücher", "Neutrum."],
+		},
+	},
+	{
+		surface: "schrieb",
+		card: {
+			id: "schreiben",
+			title: "schreiben",
+			caption: "verb",
+			emoji: "✍️",
+			gloss: "to write",
+			contexts: ["Sie schrieb ihm einen langen Brief."],
+			lines: ["schrieb · hat geschrieben"],
+		},
+	},
+	{
+		surface: "Städte",
+		card: {
+			id: "stadt",
+			title: "die Stadt",
+			caption: "noun",
+			emoji: "🏙️",
+			gloss: "town, city",
+			contexts: ["Die Städte am Rhein sind alt."],
+			lines: ["die Städte", "Femininum."],
+		},
+	},
+	{
+		surface: "wartete",
+		card: {
+			id: "warten",
+			title: "warten",
+			caption: "verb",
+			emoji: "⏳",
+			gloss: "to wait",
+			contexts: ["Er wartete eine Stunde auf den Bus."],
+			lines: ["wartete · hat gewartet"],
+		},
+	},
+];

@@ -3,11 +3,13 @@ import { DEFAULT_TURN, type TiltFeel, type TurnFeel } from "tabletop/core";
 import { Table, useTable } from "tabletop/react";
 import { useMotionPreference } from "@/lib/motion-preference";
 import { Inspector, InspectorChoice, InspectorSection } from "../inspector";
+import { DealSection } from "./deal-knobs";
 import { KNOB_BUTTON } from "./knobs";
 import { SceneView } from "./scene-view";
 import { NOTE_TILT, TiltSection } from "./tilt-knobs";
 import type { TurnGesture } from "./turn-gesture";
 import { TurnSection } from "./turn-knobs";
+import { DEFAULT_DEAL, type DealFeel } from "./use-deal-word";
 import { type SceneActions, useScene } from "./use-scene";
 
 const TITLE = "Tabletop";
@@ -33,6 +35,7 @@ export function TabletopEntry() {
 	const [gesture, setGesture] = useState<TurnGesture>("control");
 	const [tiltOn, setTiltOn] = useState(true);
 	const [tilt, setTilt] = useState<TiltFeel>(NOTE_TILT);
+	const [deal, setDeal] = useState<DealFeel>(DEFAULT_DEAL);
 	const { preference } = useMotionPreference();
 	const table = useTable();
 	const actions = useScene(table);
@@ -93,6 +96,10 @@ export function TabletopEntry() {
 							press F over it (or on a focused one).
 						</li>
 						<li>
+							Deal a word: its Card lands face down and turns up
+							when its Knowledge does.
+						</li>
+						<li>
 							Drag the Split, resize the window or zoom while
 							Cards rest or fly.
 						</li>
@@ -105,6 +112,11 @@ export function TabletopEntry() {
 					onGesture={setGesture}
 					feel={turn}
 					onChange={setTurn}
+				/>
+				<DealSection
+					feel={deal}
+					onChange={setDeal}
+					onDeal={() => actions.dealWord(deal)}
 				/>
 				<TiltSection
 					on={tiltOn}
