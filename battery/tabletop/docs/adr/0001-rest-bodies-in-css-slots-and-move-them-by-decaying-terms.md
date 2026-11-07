@@ -25,7 +25,10 @@ of, each Part's offset, exit and arrival, and the stacking crossing. They
 ride one progress, so nothing the Body shows can drift from the rest of it
 (#1311 rule 1). Only a Trick's scripted path keys each channel's waypoints
 separately, still on its Move's one timeline. A turn over is a Move of its
-own.
+own, never drawn within 8° of edge on: a frame there would show no face
+at all, so the Body would blink out, and the turn crosses that gap
+between two frames instead
+([#1322](https://github.com/clockblocker/texteater/issues/1322)).
 
 One writer paints a Body: at each frame's own timestamp it writes the
 Body's own `translate`, `rotate`, `scale`, `opacity`, size
@@ -37,12 +40,24 @@ frame: a change of one restyles every element of the Body's faces
 ([#1318](https://github.com/clockblocker/texteater/issues/1318)). React
 writes only the rest.
 
+The Table's frame loop is the one clock on its elements. Its stylesheet
+turns off every CSS transition and animation on its Slots, seats, Bodies,
+shells, faces, Parts, Glares and veils, whatever the page's stylesheet
+says. Otherwise a page-wide rule, such as the reduced-motion
+`transition-duration: 0.01ms` on `*` that tf-demo applies in T3's preview,
+turns every write into a transition. The layout ones (a Slot's place, a
+seat's stacking, each `--rest-*`) then land a frame behind the composited
+ones (`translate`, `rotate`, `scale`, `opacity`), so a frame draws a Body
+on its old Slot with its new offset, and the hundreds of transitions a
+trick starts stall the page for hundreds of milliseconds (#1322).
+
 Who starts a Move decides its style
 ([#1309](https://github.com/clockblocker/texteater/issues/1309) Q2):
 
-- **The hand.** A release springs to the new rest on one line, with the
-  part of the hand's speed aimed at the rest as its rate, from the last
-  frame painted. A hand faster than the spring can take lands on a
+- **The hand.** A grab takes the Body from where the last painted frame
+  showed it, never from where its Moves have since taken it. A release
+  springs to the new rest on one line, with the part of the hand's speed
+  aimed at the rest as its rate, from the last frame painted. A hand faster than the spring can take lands on a
   critically damped spring of its own rate, so the Body never passes its
   rest. A release whose rest is where the Body shows has no way to go: the
   hand's speed is thrown away and no Move is made.
@@ -52,7 +67,9 @@ Who starts a Move decides its style
 - **The app on a tween.** A Trick, a deal or a scripted move replaces what
   was in flight and runs from where the Body shows through its waypoints.
   Tricks queue as deck-of-cards' do: each is made when its turn comes and
-  starts in the frame the one before it lands.
+  starts in the frame the one before it lands, so a press of a trick
+  button waits for the trick playing. Only `play` cuts in, for a change
+  that can't wait its turn.
 
 Stacking is modelled. A Body's order is its Place's z. A change of order is
 a crossing on the Move that makes it: every other Body whose order against
@@ -133,6 +150,10 @@ every Body and Part:
   leaning as it shrank, text over text, a Card over the ones in front of it
   until a spring's invisible tail ended
   ([#1322](https://github.com/clockblocker/texteater/issues/1322)).
+- Leaving the page's stylesheet free to transition the Table's elements.
+  Under T3's preview, which asks for reduced motion, tf-demo's 0.01 ms rule
+  on `*` drew queued tricks' Cards at their old Slots plus their new
+  offsets for a frame, and stalled every trick for up to 850 ms (#1322).
 - tf-demo's single morph offset ([tf-demo ADR 0012]), which restarts at zero
   on every new place and so drops the hand's velocity.
 
@@ -165,5 +186,8 @@ These constraints stand with the decision:
   committed around it teleports, and in development the Body warns.
 - **Every Place has a Slot.** In development the Table reports a missing one
   after every commit.
+- **No CSS motion on the Table's own elements.** An app's transition or
+  animation on a Slot, seat, Body, shell, face, Part or Glare never runs;
+  one on the content inside a face does.
 
 [tf-demo ADR 0012]: ../../../../app/tf-demo/docs/adr/0012-place-resting-notes-against-their-pane-in-css.md

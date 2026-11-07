@@ -16,16 +16,19 @@ writer ([ADR 0001](./docs/adr/0001-rest-bodies-in-css-slots-and-move-them-by-dec
   of springs.
 - `src/react`, exported as `tabletop/react`: `Table`, `Region`, `Slot`, `Body`,
   `Shell`, `Part`, `Glare` and `useHand`, on the Table's own frame loop and
-  its one writer, with no layout projection. Crossings are drawn as SVG mask
-  veils. The Table plays a Trick at once or queues it, as deck-of-cards does.
+  its one writer, with no layout projection, and no CSS transition or
+  animation on its own elements. Crossings are drawn as SVG mask veils.
+  Tricks queue behind the one playing, as deck-of-cards' do; `play` cuts
+  in.
 
 Each entry exports only what another workspace uses; the rest stays inside
 the battery until a caller needs it.
 
 Terminology lives in [GLOSSARY.md](./GLOSSARY.md). The Playground's Tabletop
 entry in tf-demo plays all of it, and its Deck tricks entry plays every
-deck-of-cards trick on 52 Cards. tf-demo's `e2e/support/frames.ts` and
-`invariants.ts` hold every move to its frame invariants.
+deck-of-cards trick on 52 Cards. tf-demo's `e2e/support/frames.ts`,
+`invariants.ts` and `continuity.ts` hold every move to its frame invariants,
+queued and composed tricks and rapid presses among them.
 
 The eases and tricks are ported from pakastin's deck-of-cards
 ([LICENSE-deck-of-cards](./LICENSE-deck-of-cards)).
