@@ -7,6 +7,7 @@ import { useTableCarry } from "./table-carry";
 import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
 import { useDeckHover } from "./use-deck-hover";
+import { DUMMY_DECK } from "./words";
 
 /**
  * B, Table: zones are places. Under the pointer the Deck fans and the
@@ -22,7 +23,14 @@ export function TableVariant({
 	knobs,
 	deal,
 }: VariantProps<TableKnobs>) {
-	const deck = useDeck({ frame, motion, readouts, deal, layout: pileSlots });
+	const deck = useDeck({
+		cards: DUMMY_DECK,
+		frame,
+		motion,
+		readouts,
+		deal,
+		layout: pileSlots,
+	});
 	const table = useTableCarry({ deck, frame, rtl, motion, readouts, knobs });
 	const [pressed, setPressed] = useState<string | null>(null);
 	const [taps] = useState(() => createTapCounter());

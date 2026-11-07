@@ -1,6 +1,6 @@
 import { XIcon } from "lucide-react";
 import { motion, useTransform } from "motion/react";
-import type { PointerEvent as ReactPointerEvent } from "react";
+import type { ReactNode, PointerEvent as ReactPointerEvent } from "react";
 import type { CardValues, Mark } from "./use-deck";
 import type { DummyCard } from "./words";
 
@@ -57,12 +57,37 @@ function highlightClass(highlight: boolean | undefined): string {
 }
 
 /**
- * One Card, drawn as tf-demo's Cards are: paper, the Card border, a serif
- * title and its Caption in the Heading row, then the Source Contexts. Its
- * box is its motion values; a Card in the Cover shows its × and scrolls.
+ * How a Card's box is drawn around its face: its shape and fill, its
+ * cursor while it can be picked up, and its shadow for a lift of 0 to 1.
+ */
+export type CardSkin = {
+	readonly box: string;
+	readonly grab: string;
+	readonly shadow: (lift: number) => string;
+};
+
+/** tf-demo's Card: paper, the Card border and a shadow that grows with the lift. */
+export const PAPER_SKIN: CardSkin = {
+	box: "flex flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper",
+	grab: "cursor-grab active:cursor-grabbing",
+	shadow: (l) => {
+		const offset = (0.25 + 1.25 * l).toFixed(2);
+		const blur = (0.75 + 2.25 * l).toFixed(2);
+		const alpha = (0.2 + 0.25 * l).toFixed(2);
+		return `0 ${offset}rem ${blur}rem rgb(0 0 0 / ${alpha})`;
+	},
+};
+
+/**
+ * One Card: `children` is its face, `skin` the box around it, tf-demo's
+ * paper Card unless a Deck names another. Its box is its motion values; a
+ * Card in the Cover takes no grab cursor.
  */
 export function CardView({
-	card,
+	id,
+	label,
+	skin = PAPER_SKIN,
+	children,
 	values,
 	rtl,
 	held,
@@ -72,9 +97,12 @@ export function CardView({
 	onPointerDown,
 	onPointerEnter,
 	onPointerLeave,
-	onClose,
 }: {
-	readonly card: DummyCard;
+	readonly id: string;
+	/** The Card's accessible name. */
+	readonly label: string;
+	readonly skin?: CardSkin;
+	readonly children: ReactNode;
 	readonly values: CardValues;
 	readonly rtl: boolean;
 	readonly held: boolean;
@@ -85,21 +113,15 @@ export function CardView({
 	readonly onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
 	readonly onPointerEnter?: (event: ReactPointerEvent<HTMLElement>) => void;
 	readonly onPointerLeave?: (event: ReactPointerEvent<HTMLElement>) => void;
-	readonly onClose: () => void;
 }) {
 	const x = useTransform(values.u, (u) => (rtl ? -u : u));
 	const rotate = useTransform(values.r, (r) => (rtl ? -r : r));
-	const boxShadow = useTransform(values.lift, (l) => {
-		const offset = (0.25 + 1.25 * l).toFixed(2);
-		const blur = (0.75 + 2.25 * l).toFixed(2);
-		const alpha = (0.2 + 0.25 * l).toFixed(2);
-		return `0 ${offset}rem ${blur}rem rgb(0 0 0 / ${alpha})`;
-	});
+	const boxShadow = useTransform(values.lift, skin.shadow);
 	const glow = mark ? glowStyle(mark, rtl) : null;
 	return (
 		<motion.article
-			aria-label={`${card.title} card`}
-			data-card-id={card.id}
+			aria-label={label}
+			data-card-id={id}
 			data-held={held || undefined}
 			data-expanded={expanded || undefined}
 			onPointerDown={onPointerDown}
@@ -118,9 +140,9 @@ export function CardView({
 				zIndex: values.z,
 				boxShadow,
 			}}
-			className={`absolute flex flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper select-none ${expanded ? "" : "cursor-grab touch-none active:cursor-grabbing"} ${highlightClass(highlight && !expanded)}`}
+			className={`absolute ${skin.box} select-none ${expanded ? "" : `${skin.grab} touch-none`} ${highlightClass(highlight && !expanded)}`}
 		>
-			<CardFace card={card} expanded={expanded} onClose={onClose} />
+			{children}
 			{mark && glow ? (
 				<>
 					<motion.div
@@ -145,10 +167,11 @@ export function CardView({
 }
 
 /**
- * A Card's face: its Heading row, with the Cover's × when expanded, and
- * its Source Contexts and lines.
+ * A dummy Card's face, drawn as tf-demo's Cards are: a serif title and its
+ * Caption in the Heading row, with the Cover's × when expanded, then its
+ * Source Contexts and lines.
  */
-function CardFace({
+export function CardFace({
 	card,
 	expanded,
 	onClose,

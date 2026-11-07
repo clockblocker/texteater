@@ -13,7 +13,6 @@ import {
 	wait,
 } from "./motion-kit";
 import type { Readouts } from "./readouts";
-import { DUMMY_DECK } from "./words";
 
 /** One Card's motion values: its box in logical px, its lean and its lift. */
 export type CardValues = {
@@ -68,7 +67,6 @@ const GLIDING = ["u", "v", "w", "h", "r", "s", "lift"] as const;
 const BASE_Z = 10;
 const HELD_Z = 100;
 const COVER_Z = 200;
-const INITIAL_ORDER = DUMMY_DECK.map((card) => card.id);
 
 export type DeckStatus = "dealt" | "leaving" | "gone";
 
@@ -80,12 +78,15 @@ export type Deck = ReturnType<typeof useDeck>;
  * share. A variant owns only the gesture.
  */
 export function useDeck({
+	cards,
 	frame,
 	motion,
 	readouts,
 	layout,
 	deal,
 }: {
+	/** The Cards dealt, back to front: read once, when the Deck is made. */
+	readonly cards: readonly { readonly id: string }[];
 	/** Bumped by the inspector's Re-deal. */
 	readonly deal: number;
 	readonly frame: Frame;
@@ -93,16 +94,17 @@ export function useDeck({
 	readonly readouts: Readouts;
 	readonly layout: (frame: Frame, count: number) => Slot[];
 }) {
-	const [order, setOrder] = useState<readonly string[]>(INITIAL_ORDER);
+	const [initialOrder] = useState(() => cards.map((card) => card.id));
+	const [order, setOrder] = useState<readonly string[]>(initialOrder);
 	const [status, setStatus] = useState<DeckStatus>("dealt");
 	const [expanded, setExpanded] = useState<string | null>(null);
 	const [marks, setMarks] = useState<Readonly<Record<string, Mark | null>>>(
 		{},
 	);
 	const [values] = useState(() => {
-		const first = layout(frame, INITIAL_ORDER.length);
+		const first = layout(frame, initialOrder.length);
 		return new Map(
-			INITIAL_ORDER.map((id, index) => [
+			initialOrder.map((id, index) => [
 				id,
 				makeValues(first[index], BASE_Z + index),
 			]),
@@ -400,12 +402,12 @@ export function useDeck({
 		const context = motionRef.current;
 		busy.current.clear();
 		setExpanded(null);
-		setOrder(INITIAL_ORDER);
+		setOrder(initialOrder);
 		setMarks({});
-		const fresh = layout(frame, INITIAL_ORDER.length);
+		const fresh = layout(frame, initialOrder.length);
 		/* jumps, not sets: the Deck is gone, so nothing visibly teleports,
 		   and a set would hand the next spring the jump as velocity */
-		INITIAL_ORDER.forEach((id, index) => {
+		initialOrder.forEach((id, index) => {
 			const card = valuesOf(id);
 			const slot = fresh[index];
 			if (!slot) return;
@@ -428,7 +430,7 @@ export function useDeck({
 		});
 		setStatus("dealt");
 		readouts.set({ phase: "rest", zone: null, tilt: 0 });
-	}, [layout, frame, valuesOf, readouts]);
+	}, [layout, frame, valuesOf, readouts, initialOrder]);
 
 	const dealt = useRef(deal);
 	useEffect(() => {

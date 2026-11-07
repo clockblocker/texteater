@@ -22,6 +22,7 @@ import type { SwipeKnobs } from "./swipe-knobs";
 import { type Panel, type PanelValues, SwipePanel } from "./swipe-panel";
 import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
+import { DUMMY_DECK } from "./words";
 
 /** A strip panel tucks this far under the next Card, past its rounded corners. */
 const TUCK_PX = 16;
@@ -112,7 +113,14 @@ export function SwipeVariant({
 	knobs,
 	deal,
 }: VariantProps<SwipeKnobs>) {
-	const deck = useDeck({ frame, motion, readouts, deal, layout: pileSlots });
+	const deck = useDeck({
+		cards: DUMMY_DECK,
+		frame,
+		motion,
+		readouts,
+		deal,
+		layout: pileSlots,
+	});
 	const [held, setHeld] = useState<string | null>(null);
 	/** The Card under the hand from press to the end of its return: no Card lights meanwhile. */
 	const [pressed, setPressed] = useState<string | null>(null);

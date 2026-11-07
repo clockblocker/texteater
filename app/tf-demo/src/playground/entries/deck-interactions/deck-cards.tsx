@@ -1,5 +1,5 @@
 import { type PointerEvent as ReactPointerEvent, useEffect } from "react";
-import { CardView } from "./card-view";
+import { CardFace, CardView } from "./card-view";
 import type { Frame } from "./layout";
 import type { MotionContext } from "./motion-kit";
 import { type Readouts, useReadout } from "./readouts";
@@ -57,7 +57,8 @@ export function DeckCards({
 		return (
 			<CardView
 				key={id}
-				card={card}
+				id={id}
+				label={`${card.title} card`}
 				values={deck.valuesOf(id)}
 				rtl={rtl}
 				held={held === id}
@@ -71,8 +72,13 @@ export function DeckCards({
 				}}
 				onPointerEnter={onEnter && ((event) => onEnter(id, event))}
 				onPointerLeave={onLeave && ((event) => onLeave(id, event))}
-				onClose={() => void closeCover()}
-			/>
+			>
+				<CardFace
+					card={card}
+					expanded={expanded === id}
+					onClose={() => void closeCover()}
+				/>
+			</CardView>
 		);
 	});
 }
