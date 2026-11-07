@@ -1,6 +1,6 @@
 import { Maximize2Icon, XIcon } from "lucide-react";
 import { type MotionValue, motion, useTransform } from "motion/react";
-import type { Point } from "./geometry";
+import type { Anchor } from "./swipe-collapse";
 import { type Axis, iconAt, type Zone } from "./swipe-gesture";
 import type { CardValues } from "./use-deck";
 
@@ -58,8 +58,8 @@ function alongOf(
 /**
  * D's action panel, in the Card's own box and just under it, as an iOS
  * Mail row's actions are: red "Close deck" for inline-start and down,
- * blue "Open" for inline-end and up. It is the Card's box where the hand
- * took it, less the border across the axis, drawn by the Card's own
+ * blue "Open" for inline-end and up. It is the Card's box at its anchor,
+ * less the border across the axis, drawn by the Card's own
  * values and scaled about the same centre, so its edges sit exactly
  * inside the Card's at any scale. As the Card uncovers it the strip is
  * tinted, and the icon, in the action's colour, grows and slides out in
@@ -85,8 +85,8 @@ export function SwipePanel({
 	readonly panel: Panel;
 	/** The swiped Card's values: the panel shares its size, scale and z-index, and is drawn first, so it lies under the Card, under the Cards in front and over the Cards behind. */
 	readonly card: CardValues;
-	/** Where the Card was when the hand took it: the panel stays there along the axis. */
-	readonly anchor: Point;
+	/** Where a pull of 0 puts the Card: the panel lies there along the axis. */
+	readonly anchor: Anchor;
 	/** How much of the Card shows from its drawn top, in px, where the Cards in front hide the rest; null where all of it does. */
 	readonly shows: number | null;
 	readonly values: PanelValues;
@@ -100,15 +100,18 @@ export function SwipePanel({
 	const inline = panel.axis === "inline";
 	const b = BORDER_PX;
 	const full = Math.max(threshold, (inline ? BOX_W : BOX_H) + 2 * GAP);
-	const x = useTransform(card.u, (u) => {
-		const at = inline ? anchor.u : u + b;
+	const x = useTransform(inline ? anchor.u : card.u, (u) => {
+		const at = inline ? u : u + b;
 		return rtl ? -at : at;
 	});
-	const y = useTransform(card.v, (v) => (inline ? v + b : anchor.v));
+	const y = useTransform(inline ? card.v : anchor.v, (v) =>
+		inline ? v + b : v,
+	);
 	const width = useTransform(card.w, (w) => (inline ? w : w - 2 * b));
 	const height = useTransform(card.h, (h) => (inline ? h - 2 * b : h));
-	const pull = useTransform(inline ? card.u : card.v, (p) =>
-		inline ? p - anchor.u : p - anchor.v,
+	const pull = useTransform(
+		inline ? [card.u, anchor.u] : [card.v, anchor.v],
+		([p = 0, from = 0]: number[]) => p - from,
 	);
 	const iconX = useTransform(
 		[pull, card.s, card.w],

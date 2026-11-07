@@ -5,11 +5,11 @@ import {
 	useState,
 } from "react";
 import { DeckCards, DeckLayer, type VariantProps } from "./deck-cards";
-import type { Point, Rect, Slot } from "./geometry";
+import type { Rect, Slot } from "./geometry";
 import { pileSlots } from "./layout";
 import { REDUCED_EXIT_MS, SPRINGS, settle, transition } from "./motion-kit";
 import { createTapCounter, type Drag, trackPointer } from "./pointer";
-import { type Binding, bindDeck } from "./swipe-collapse";
+import { type Anchor, type Binding, bindDeck } from "./swipe-collapse";
 import {
 	type Axis,
 	takeUp,
@@ -57,8 +57,8 @@ function drawn(slot: Slot): Rect {
 }
 
 /**
- * How much of a swiped Card shows from its drawn top where the hand took
- * it (`anchor`), in px, while its panel shows: null where all of it does.
+ * How much of a swiped Card shows from its slot's drawn top, in px, while
+ * its panel shows: null where all of it does.
  * The panel is always the Card's whole box and shares its z-index, so the
  * Cards in front hide it as they hide the Card. Across the block axis all
  * of the Card's width shows. Across the inline axis, toward Close deck,
@@ -71,16 +71,12 @@ function showsOf(
 	slots: readonly Slot[],
 	index: number,
 	panel: Panel,
-	anchor: Point,
 ): number | null {
 	const slot = slots[index];
 	const next = slots[index + 1];
 	if (!slot || !next || panel.axis !== "inline" || panel.zone !== "expand")
 		return null;
-	return Math.max(
-		0,
-		drawn(next).v - drawn({ ...slot, u: anchor.u, v: anchor.v }).v,
-	);
+	return Math.max(0, drawn(next).v - drawn(slot).v);
 }
 
 /**
@@ -116,7 +112,7 @@ export function SwipeVariant({
 	/** The Card under the hand from press to the end of its return: no Card lights meanwhile. */
 	const [pressed, setPressed] = useState<string | null>(null);
 	const [panel, setPanel] = useState<Panel | null>(null);
-	const [anchor, setAnchor] = useState({ u: 0, v: 0 });
+	const [anchor, setAnchor] = useState<Anchor | null>(null);
 	const [armed, setArmed] = useState(false);
 	const [values] = useState<PanelValues>(() => ({
 		flood: motionValue(0),
@@ -411,12 +407,12 @@ export function SwipeVariant({
 	}
 
 	const index = panel ? deck.order.indexOf(panel.id) : -1;
-	const shows = panel ? showsOf(deck.slots, index, panel, anchor) : null;
+	const shows = panel ? showsOf(deck.slots, index, panel) : null;
 	/* the panel is in the Deck's layer too, under the Cards in front of
 	   its Card: faded with them, it never shows through one */
 	return (
 		<DeckLayer opacity={deck.opacity}>
-			{panel && index >= 0 && deck.status !== "gone" ? (
+			{panel && anchor && index >= 0 && deck.status !== "gone" ? (
 				<SwipePanel
 					key={`${panel.id}-${panel.axis}`}
 					panel={panel}

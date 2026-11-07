@@ -264,3 +264,42 @@ describe("D's fold onto a Card from inside the Deck", () => {
 		expect(stacked()).toEqual(before);
 	});
 });
+
+describe("D's swiped Card", () => {
+	test("taken on its way home, it still gets there under the hand, and a pull of 0 puts it there", async () => {
+		const pile = makePile({ front: { u: 92, v: 172 } });
+		const front = pile[2];
+		if (!front) throw new Error("Missing a Card");
+		const { slot, values } = front;
+		values.u.set(90);
+		values.v.set(170);
+		for (const key of ["u", "v"] as const)
+			animate(values[key], slot[key], SETTLE);
+		await nextFrame();
+		await nextFrame();
+		/* the hand stops it where it shows, as `hold` does */
+		values.u.stop();
+		values.v.stop();
+		const taken = { u: values.u.get(), v: values.v.get() };
+		expect(taken.u).toBeLessThan(slot.u - 1);
+		expect(taken.v).toBeLessThan(slot.v - 1);
+		const { pull } = await bindPile(
+			pile,
+			"front",
+			(value, to, velocity) => {
+				animate(value, to, { ...SETTLE, velocity });
+			},
+		);
+		await nextFrame();
+		/* it moves on from where it showed, never jumps there */
+		expect(Math.abs(values.u.get() - taken.u)).toBeLessThan(2);
+		await pointerEvent(() => pull.set(-30));
+		for (let frame = 0; frame < 60; frame++) await nextFrame();
+		expect(values.u.get()).toBeCloseTo(slot.u - 30, 2);
+		expect(values.v.get()).toBeCloseTo(slot.v, 2);
+		await pointerEvent(() => pull.set(0));
+		await nextFrame();
+		expect(values.u.get()).toBeCloseTo(slot.u, 2);
+		expect(values.v.get()).toBeCloseTo(slot.v, 2);
+	});
+});

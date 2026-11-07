@@ -4,16 +4,21 @@ import {
 	type MotionValue,
 	motionValue,
 } from "motion/react";
-import type { Point } from "./geometry";
 import { type Axis, type CollapseCurve, collapseOf } from "./swipe-gesture";
 import type { Deck } from "./use-deck";
+
+/** Where a pull of 0 puts the swiped Card: it moves on its way home. */
+export type Anchor = {
+	readonly u: MotionValue<number>;
+	readonly v: MotionValue<number>;
+};
 
 /** A swiped Card and the Deck around it, driven from one value. */
 export type Binding = {
 	readonly lead: string;
 	readonly axis: Axis;
-	/** Where the Card was when the hand took it: `pull` is measured from here. */
-	readonly anchor: Point;
+	/** `pull` is measured from here: where the Card was when the hand took it, carried on to its slot. */
+	readonly anchor: Anchor;
 	/** Unhooks the Cards where they show. */
 	readonly stop: () => void;
 	/** Unhooks them and sends each to its slot, and the Deck to opaque, on a spring that keeps its speed. */
@@ -37,9 +42,10 @@ type Pile = Pick<
 
 /**
  * Drives `lead` and every other Card from `pull`, the one source of
- * truth for a swipe. The Card sits `pull` px along `axis` from where the
- * hand took it. Each other Card keeps a base: its slot, or where it was
- * on its way there, handed on with its speed by `settle`. Toward Close
+ * truth for a swipe. Every Card keeps a base: its slot, or where it was
+ * on its way there, handed on with its speed by `settle`. The Card sits
+ * `pull` px along `axis` from its base, the anchor, so a Card the hand
+ * took on its way home still gets there, and a pull of 0 puts it there. Toward Close
  * deck it is drawn from that base onto the Card by one shared share of
  * the collapse, so the Cards fold in together, never stop short to do
  * it, and are whole exactly at the threshold, where a release commits:
@@ -70,7 +76,13 @@ export function bindDeck(
 	const home = deck.slotOf(lead);
 	const card = deck.valuesOf(lead);
 	const lift = home ? (home.h * home.s - home.h) / 2 : 0;
-	const anchor = { u: card.u.get(), v: card.v.get() };
+	const anchor = {
+		u: motionValue(card.u.get()),
+		v: motionValue(card.v.get()),
+	};
+	if (home)
+		for (const key of ["u", "v"] as const)
+			rules.settle(anchor[key], home[key], card[key].getVelocity());
 	const followers = deck.order.flatMap((id, i) => {
 		const slot = deck.slots[i];
 		if (!slot || id === lead) return [];
@@ -95,8 +107,8 @@ export function bindDeck(
 	   there, a sliver before the frame. */
 	let taken = false;
 	const at = () => ({
-		u: axis === "inline" ? anchor.u + pull.get() : anchor.u,
-		v: axis === "block" ? anchor.v + pull.get() : anchor.v,
+		u: anchor.u.get() + (axis === "inline" ? pull.get() : 0),
+		v: anchor.v.get() + (axis === "block" ? pull.get() : 0),
 	});
 	/* Draws the Card and the fold on Motion's frame loop, once a frame and
 	   after the springs tick: a move of the hand in the frame it shows in,
@@ -116,8 +128,8 @@ export function bindDeck(
 			deck.opacity.stop();
 		}
 		const { u, v } = at();
-		if (axis === "inline") card.u.set(u);
-		else card.v.set(v);
+		card.u.set(u);
+		card.v.set(v);
 		const share = collapseOf(
 			axis,
 			pull.get(),
@@ -138,6 +150,8 @@ export function bindDeck(
 	};
 	const stops = [
 		pull.on("change", redraw),
+		anchor.u.on("change", redraw),
+		anchor.v.on("change", redraw),
 		faded.on("change", redraw),
 		...followers.flatMap(({ base }) =>
 			KEYS.map((key) => base[key].on("change", redraw)),
@@ -150,6 +164,8 @@ export function bindDeck(
 		for (const unhook of stops) unhook();
 		for (const { base } of followers)
 			for (const key of KEYS) base[key].stop();
+		anchor.u.stop();
+		anchor.v.stop();
 		faded.stop();
 	};
 	return {
