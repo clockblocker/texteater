@@ -1,6 +1,3 @@
-/** Which side of a Card shows. */
-export type Side = "front" | "back";
-
 /**
  * One of the 52, numbered as deck-of-cards numbers its Cards: `i` is
  * suit × 13 + rank − 1, suit 0 spades, 1 hearts, 2 clubs, 3 diamonds, and

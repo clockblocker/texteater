@@ -109,7 +109,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Deck tricks",
 		icon: ClubIcon,
 		description:
-			"deck-of-cards' tricks played by tf-demo's own Deck model: 52 small Cards with the library's faces on its felt, moved by useDeck's values on motion-kit's deck-of-cards profile, with Intro, Flip, Shuffle, By suit, Fan, Poker, Sort, slow-mo and reduced motion in the inspector.",
+			"deck-of-cards' tricks on the tabletop battery: 52 small Cards with the library's faces on its felt, each a Body resting in a CSS Slot, every trick a plan queued as the library queues them. Intro, Flip, Shuffle, By suit, Fan, Poker, Sort, the turn, slow-mo and reduced motion are in the inspector.",
 		render: () => <DeckTricks />,
 	},
 	{
