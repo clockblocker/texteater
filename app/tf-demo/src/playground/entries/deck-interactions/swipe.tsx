@@ -411,7 +411,10 @@ export function SwipeVariant({
 	/* the panel is in the Deck's layer too, under the Cards in front of
 	   its Card: faded with them, it never shows through one */
 	return (
-		<DeckLayer opacity={deck.opacity}>
+		<DeckLayer
+			opacity={deck.opacity}
+			lit={pressed === null && deck.status === "dealt"}
+		>
 			{panel && anchor && index >= 0 && deck.status !== "gone" ? (
 				<SwipePanel
 					key={`${panel.id}-${panel.axis}`}
@@ -435,7 +438,7 @@ export function SwipeVariant({
 				deck={deck}
 				rtl={rtl}
 				held={held}
-				highlight={pressed === null && deck.status === "dealt"}
+				highlight
 				onDown={onDown}
 			/>
 		</DeckLayer>

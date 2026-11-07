@@ -44,14 +44,15 @@ function glowStyle(mark: Mark, rtl: boolean) {
 }
 
 /**
- * The border a hovered Card lights, under a mouse or pen only: brighter
- * in 150 ms, back in 200. A Card that never lights (`undefined`) has no
- * transition either.
+ * The border a hovered Card lights, under a mouse or pen only, while the
+ * layer it is in (a `group/deck`) says `data-lit`: brighter in 150 ms,
+ * back in 200. The layer switches it for every Card, so none re-renders
+ * for it. A Card that never lights (`undefined`) has no transition either.
  */
 function highlightClass(highlight: boolean | undefined): string {
 	if (highlight === undefined) return "";
 	const lit = highlight
-		? " pointer-fine:hover:border-ink-muted pointer-fine:hover:duration-150"
+		? " pointer-fine:group-data-[lit]/deck:hover:border-ink-muted pointer-fine:group-data-[lit]/deck:hover:duration-150"
 		: "";
 	return `transition-[border-color] duration-200 ease-out${lit}`;
 }
@@ -108,7 +109,7 @@ export function CardView({
 	readonly held: boolean;
 	readonly expanded: boolean;
 	readonly mark: Mark | null;
-	/** Whether hovering the Card lights its border now; left out, it never does. */
+	/** Whether hovering the Card lights its border while its layer is lit; left out, it never does. */
 	readonly highlight?: boolean;
 	readonly onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
 	readonly onPointerEnter?: (event: ReactPointerEvent<HTMLElement>) => void;
