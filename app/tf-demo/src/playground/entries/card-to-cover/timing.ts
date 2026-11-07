@@ -13,13 +13,32 @@ export type MoveFeel =
 	  }
 	| { readonly kind: "tween"; readonly ms: number };
 
-/** The whole open: the move, when the parts start it, and the stagger after it. */
+/**
+ * The whole open: the move, when the parts start it, the stagger after
+ * it, and how the parts are moved and drawn.
+ */
 export type MorphFeel = {
 	readonly move: MoveFeel;
 	/** The face's parts start with the box, or once it has landed. */
 	readonly parts: "with" | "after";
 	/** ms between one Cover-only part and the next. */
 	readonly stagger: number;
+	/**
+	 * What times the parts' move: the box's own progress (one clock, a FLIP
+	 * measured in the box's own frame), or Motion's layout projection on
+	 * its own animation beside the box's (two clocks, the first
+	 * prototype's).
+	 */
+	readonly clock: "box" | "layout";
+	/**
+	 * When the box clock starts: on the frame after the one that paints the
+	 * change of form, one frame in, or at the tap.
+	 */
+	readonly start: "painted" | "tap";
+	/** Whether the box's values and the parts' offsets land on whole device pixels. */
+	readonly snap: boolean;
+	/** Where the lines and the Source contexts cross: the lines slide over, or the texts overlap. */
+	readonly crossing: "over" | "through";
 };
 
 /** A move has landed once it stays within this share of its way. */
@@ -32,6 +51,13 @@ export const RISE_PX = 8;
 export const REDUCED_FADE_MS = 100;
 /** Content one form has fades out this fast when the other form takes over. */
 export const LEAVE_MS = 100;
+
+/**
+ * A move from 0 to 1 is done once it is this close and this slow (per
+ * second): far finer than Motion's defaults for so small a range, which
+ * would end a 550 px move up to 3 px short.
+ */
+export const PROGRESS_REST = { restDelta: 1e-4, restSpeed: 1e-3 } as const;
 
 /** The move in motion-kit's terms; a tween runs on deck-of-cards' cubicInOut. */
 export function moveSpec(move: MoveFeel): SpringSpec | TweenSpec {

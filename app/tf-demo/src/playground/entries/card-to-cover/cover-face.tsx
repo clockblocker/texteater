@@ -1,11 +1,14 @@
 import { XIcon } from "lucide-react";
 import {
 	AnimatePresence,
+	type MotionStyle,
 	type MotionValue,
 	motion,
 	type Transition,
 } from "motion/react";
+import type { PartOffsets, SharedPart } from "./box-glide";
 import type { CoverCard } from "./cover-deck";
+import type { MorphFeel } from "./timing";
 
 /** The two forms of one element. */
 export type Form = "card" | "cover";
@@ -29,16 +32,22 @@ type AxisBox = {
  * The face of a Card that grows into its Cover. Its content column has one
  * width in every form, centred in the box, so its text never rewraps. The
  * title row, the Source contexts and the lines keep their identity across
- * the forms and move to their new places (Motion `layout="position"`, keyed
- * to the form); the Cover reads the lines first and lists every Source
- * context after them, with room above its title. The × and the extra
- * Source contexts are the Cover's alone: they wait at opacity 0 and the
- * hook fades and raises them in. The Card's clip fade is the Card's alone.
+ * the forms and move to their new places: drawn at the offsets the hook's
+ * FLIP drives on the box's own progress (`clock: "box"`), or by Motion's
+ * `layout="position"`, keyed to the form (`clock: "layout"`). The Cover
+ * reads the lines first and lists every Source context after them, with
+ * room above its title; where the two cross, the lines slide over the
+ * contexts on the paper (`crossing: "over"`). The × and the extra Source
+ * contexts are the Cover's alone: they wait at opacity 0 and the hook
+ * fades and raises them in. The Card's clip fade is the Card's alone.
  */
 export function CoverFace({
 	card,
 	form,
 	column,
+	clock,
+	crossing,
+	offsets,
 	parts,
 	leave,
 	cardFade,
@@ -51,7 +60,11 @@ export function CoverFace({
 	readonly form: Form;
 	/** The content column's width in px. */
 	readonly column: number;
-	/** What the parts ride to their new places on this change of form. */
+	readonly clock: MorphFeel["clock"];
+	readonly crossing: MorphFeel["crossing"];
+	/** Where the parts are drawn from their places, on the box clock. */
+	readonly offsets: PartOffsets;
+	/** What Motion's projection moves the parts on, on the layout clock. */
 	readonly parts: Transition;
 	/** How content the other form lacks fades out. */
 	readonly leave: Transition;
@@ -63,20 +76,27 @@ export function CoverFace({
 	readonly onMeasure: (part: string, box: AxisBox) => void;
 }) {
 	const cover = form === "cover";
-	const part = (name: string) => ({
-		"data-part": name,
-		layout: "position" as const,
-		layoutDependency: form,
-		transition: { layout: parts },
-		onLayoutMeasure: (box: AxisBox) => onMeasure(name, box),
-	});
+	const part = (name: SharedPart, style: MotionStyle = {}) =>
+		clock === "box"
+			? {
+					"data-part": name,
+					style: { ...style, x: offsets[name].x, y: offsets[name].y },
+				}
+			: {
+					"data-part": name,
+					style,
+					layout: "position" as const,
+					layoutDependency: form,
+					transition: { layout: parts },
+					onLayoutMeasure: (box: AxisBox) => onMeasure(name, box),
+				};
+	const over = crossing === "over";
 	return (
 		<>
 			<div className={`shrink-0 ${cover ? "pt-4" : ""}`}>
 				<motion.div
-					{...part("heading")}
+					{...part("heading", { width: column })}
 					className="mx-auto flex h-12 items-end gap-4 pb-3"
-					style={{ width: column }}
 				>
 					<h2
 						dir="auto"
@@ -91,17 +111,16 @@ export function CoverFace({
 			</div>
 			<div
 				data-scroller=""
-				className={`relative min-h-0 flex-1 ${cover ? "overflow-y-auto" : "overflow-hidden"}`}
+				className={`relative isolate min-h-0 flex-1 ${cover ? "overflow-y-auto" : "overflow-hidden"}`}
 			>
 				<div
 					className="mx-auto flex flex-col gap-3 pb-4"
 					style={{ width: column }}
 				>
 					<motion.section
-						{...part("contexts")}
+						{...part("contexts", { order: cover ? 2 : 1 })}
 						aria-label="Source contexts"
 						className="flex flex-col gap-1"
-						style={{ order: cover ? 2 : 1 }}
 					>
 						<div className="flex items-baseline justify-between font-mono text-[0.58rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
 							<span>Source contexts</span>
@@ -144,9 +163,8 @@ export function CoverFace({
 						</ul>
 					</motion.section>
 					<motion.div
-						{...part("lines")}
-						className="space-y-1.5 text-[0.85rem] leading-relaxed text-ink-soft"
-						style={{ order: cover ? 1 : 2 }}
+						{...part("lines", { order: cover ? 1 : 2 })}
+						className={`space-y-1.5 text-[0.85rem] leading-relaxed text-ink-soft${over ? " relative z-[1] bg-paper" : ""}`}
 					>
 						{card.lines.map((line) => (
 							<p key={line} dir="auto">

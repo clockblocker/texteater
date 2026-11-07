@@ -1,16 +1,18 @@
-import { type RefObject, useMemo, useState } from "react";
+import type { Transition } from "motion/react";
+import { memo, type RefObject, useMemo, useState } from "react";
 import { type CardSkin, CardView } from "../deck-interactions/card-view";
 import type { Slot } from "../deck-interactions/geometry";
 import { type Frame, pileSlots } from "../deck-interactions/layout";
 import type { MotionContext } from "../deck-interactions/motion-kit";
 import { SLOP_PX, trackPointer } from "../deck-interactions/pointer";
 import { createReadouts } from "../deck-interactions/readouts";
-import { useDeck } from "../deck-interactions/use-deck";
-import { COVER_DECK, coverCardById } from "./cover-deck";
-import { CoverFace, type Form } from "./cover-face";
+import { type CardValues, useDeck } from "../deck-interactions/use-deck";
+import type { PartOffsets } from "./box-glide";
+import { COVER_DECK, type CoverCard, coverCardById } from "./cover-deck";
+import { CoverFace, type Form, type Reveal } from "./cover-face";
 import type { Recorder } from "./recorder";
 import type { MorphFeel } from "./timing";
-import { useCoverMorph } from "./use-cover-morph";
+import { INSTANT, useCoverMorph } from "./use-cover-morph";
 
 /** The Card's gutter either side of its content column. */
 const GUTTER_PX = 16;
@@ -33,6 +35,89 @@ function coverSkin(contain: boolean): CardSkin {
 		},
 	};
 }
+
+/**
+ * One Card on the table. Memoised: every prop but `form` and the
+ * transitions of the Card whose form changes keeps its identity, so a tap
+ * re-renders only the Card it opens.
+ */
+const CoverCardView = memo(function CoverCardView({
+	card,
+	form,
+	values,
+	skin,
+	rtl,
+	column,
+	clock,
+	crossing,
+	offsets,
+	parts,
+	leave,
+	cardFade,
+	reveal,
+	onOpen,
+	onClose,
+	onMeasure,
+}: {
+	readonly card: CoverCard;
+	readonly form: Form;
+	readonly values: CardValues;
+	readonly skin: CardSkin;
+	readonly rtl: boolean;
+	readonly column: number;
+	readonly clock: MorphFeel["clock"];
+	readonly crossing: MorphFeel["crossing"];
+	readonly offsets: PartOffsets;
+	readonly parts: Transition;
+	readonly leave: Transition;
+	readonly cardFade: Transition;
+	readonly reveal: Reveal;
+	readonly onOpen: (id: string) => void;
+	readonly onClose: () => void;
+	readonly onMeasure: Recorder["measured"];
+}) {
+	return (
+		<CardView
+			id={card.id}
+			label={`${card.title} card`}
+			skin={skin}
+			values={values}
+			rtl={rtl}
+			held={false}
+			expanded={form === "cover"}
+			mark={null}
+			onPointerDown={(event) => {
+				if (event.button !== 0 || form === "cover") return;
+				let moved = false;
+				trackPointer(event, rtl, {
+					move: (drag) => {
+						if (Math.hypot(drag.dx, drag.dy) >= SLOP_PX)
+							moved = true;
+					},
+					up: () => {
+						if (!moved) onOpen(card.id);
+					},
+				});
+			}}
+		>
+			<CoverFace
+				card={card}
+				form={form}
+				column={column}
+				clock={clock}
+				crossing={crossing}
+				offsets={offsets}
+				parts={parts}
+				leave={leave}
+				cardFade={cardFade}
+				reveal={reveal}
+				rtl={rtl}
+				onClose={onClose}
+				onMeasure={onMeasure}
+			/>
+		</CardView>
+	);
+});
 
 /**
  * The Deck on the table: `useDeck`'s pile and values, each Card a
@@ -79,45 +164,27 @@ export function CoverStage({
 	return deck.order.map((id) => {
 		const card = coverCardById(id);
 		if (!card) return null;
-		const form: Form = morph.openId === id ? "cover" : "card";
+		const active = morph.activeId === id;
 		return (
-			<CardView
+			<CoverCardView
 				key={id}
-				id={id}
-				label={`${card.title} card`}
-				skin={skin}
+				card={card}
+				form={morph.openId === id ? "cover" : "card"}
 				values={deck.valuesOf(id)}
+				skin={skin}
 				rtl={rtl}
-				held={false}
-				expanded={form === "cover"}
-				mark={null}
-				onPointerDown={(event) => {
-					if (event.button !== 0 || form === "cover") return;
-					let moved = false;
-					trackPointer(event, rtl, {
-						move: (drag) => {
-							if (Math.hypot(drag.dx, drag.dy) >= SLOP_PX)
-								moved = true;
-						},
-						up: () => {
-							if (!moved) morph.open(id);
-						},
-					});
-				}}
-			>
-				<CoverFace
-					card={card}
-					form={form}
-					column={column}
-					parts={morph.parts}
-					leave={morph.leave}
-					cardFade={morph.cardFade}
-					reveal={morph.reveal}
-					rtl={rtl}
-					onClose={morph.close}
-					onMeasure={recorder.measured}
-				/>
-			</CardView>
+				column={column}
+				clock={feel.clock}
+				crossing={feel.crossing}
+				offsets={morph.offsetsOf(id)}
+				parts={active ? morph.parts : INSTANT}
+				leave={morph.leave}
+				cardFade={active ? morph.cardFade : INSTANT}
+				reveal={morph.reveal}
+				onOpen={morph.open}
+				onClose={morph.close}
+				onMeasure={recorder.measured}
+			/>
 		);
 	});
 }

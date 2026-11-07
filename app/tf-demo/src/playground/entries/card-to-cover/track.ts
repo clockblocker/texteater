@@ -1,7 +1,8 @@
 /**
  * What one open or close looked like, frame by frame, and the verdict on
- * it: whether each part's path is smooth or jumps, how far the box ever
- * scaled, and how long the frames took. Pure; `recorder.ts` fills it.
+ * it: whether each part's path is smooth or jumps and keeps to the box's
+ * progress, how far the box ever scaled or overshot, and how long the
+ * frames took. Pure; `recorder.ts` fills it.
  */
 
 /** A rect in logical px: `x` from the inline-start edge. */
@@ -137,6 +138,49 @@ export function frameStats(frames: readonly TrackFrame[]): FrameStats {
 /** How far the box's scale ever strayed from 1. */
 export function maxScaleOff(frames: readonly TrackFrame[]): number {
 	return Math.max(0, ...frames.map((frame) => Math.abs(frame.box.scale - 1)));
+}
+
+/** How far the box ever went past where it came to rest, px, on each axis. */
+export function boxOvershoot(frames: readonly TrackFrame[]): Box {
+	const first = frames[0]?.box;
+	const last = frames.at(-1)?.box;
+	if (!first || !last) return { x: 0, y: 0, w: 0, h: 0 };
+	const past = (key: keyof Box) => {
+		const sign = Math.sign(last[key] - first[key]);
+		return Math.max(
+			0,
+			...frames.map((frame) => (frame.box[key] - last[key]) * sign),
+		);
+	};
+	return { x: past("x"), y: past("y"), w: past("w"), h: past("h") };
+}
+
+/**
+ * How far `part`'s place in the box ever strayed from where the box's own
+ * progress (its height's, or its width's when the height holds) puts it,
+ * px: 0 when the parts ride the box's clock.
+ */
+export function partDrift(frames: readonly TrackFrame[], part: string): number {
+	const first = frames.find((frame) => frame.parts[part]);
+	const last = [...frames].reverse().find((frame) => frame.parts[part]);
+	const from = first?.parts[part];
+	const to = last?.parts[part];
+	if (!first || !last || !from || !to) return 0;
+	const key = Math.abs(last.box.h - first.box.h) > 0.5 ? "h" : "w";
+	const span = last.box[key] - first.box[key];
+	if (Math.abs(span) <= 0.5) return 0;
+	return Math.max(
+		0,
+		...frames.map((frame) => {
+			const place = frame.parts[part];
+			if (!place) return 0;
+			const p = (frame.box[key] - first.box[key]) / span;
+			return Math.hypot(
+				place.x - (from.x + (to.x - from.x) * p),
+				place.y - (from.y + (to.y - from.y) * p),
+			);
+		}),
+	);
 }
 
 /** How many frames the box was between its first size and its last. */

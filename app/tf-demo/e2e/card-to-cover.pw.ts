@@ -3,9 +3,10 @@ import { expect, type Page, test } from "@playwright/test";
 
 /**
  * Card to Cover (#1311): a tap grows the front Card into its Cover. The
- * same element resizes, never scales, and lands on the Cover's box; its
- * parts land where the Cover puts them; reduced, it fades out and back in
- * with no growth.
+ * same element resizes, never scales, and lands on the Cover's box without
+ * passing it; its parts ride the box's own progress, so none turns back
+ * against the box on the way, and land where the Cover puts them;
+ * reduced, it fades out and back in with no growth.
  */
 
 test.use({ viewport: { width: 1600, height: 1000 } });
@@ -108,6 +109,69 @@ function sampleFront(page: Page, id: string, ms: number) {
 			}),
 		{ id, ms },
 	);
+}
+
+type Sample = {
+	box: { left: number; top: number; right: number; bottom: number };
+	parts: Record<string, { left: number; top: number; right: number }>;
+};
+
+/** The front Card's rect and its shared parts' rects, every animation frame for `ms`. */
+function sampleOpen(page: Page, id: string, ms: number) {
+	return page.evaluate(
+		({ id, ms, names }) =>
+			new Promise<Sample[]>((resolve) => {
+				const samples: Sample[] = [];
+				const start = performance.now();
+				const tick = (now: number) => {
+					const box = document.querySelector<HTMLElement>(
+						`[data-card-to-cover] [data-card-id="${id}"]`,
+					);
+					if (box) {
+						const { left, top, right, bottom } =
+							box.getBoundingClientRect();
+						const parts: Sample["parts"] = {};
+						for (const name of names) {
+							const part = box.querySelector(
+								`[data-part="${name}"]`,
+							);
+							if (part) {
+								const rect = part.getBoundingClientRect();
+								parts[name] = {
+									left: rect.left,
+									top: rect.top,
+									right: rect.right,
+								};
+							}
+						}
+						samples.push({
+							box: { left, top, right, bottom },
+							parts,
+						});
+					}
+					if (now - start < ms) requestAnimationFrame(tick);
+					else resolve(samples);
+				};
+				requestAnimationFrame(tick);
+			}),
+		{ id, ms, names: [...SHARED] },
+	);
+}
+
+/** How often `series` turns back on itself by more than `slop` px. */
+function reversals(series: readonly number[], slop = 0.1): number {
+	let direction = 0;
+	let turns = 0;
+	let moved = 0;
+	for (let index = 1; index < series.length; index++) {
+		moved += (series[index] ?? 0) - (series[index - 1] ?? 0);
+		if (Math.abs(moved) < slop) continue;
+		const sign = Math.sign(moved);
+		if (direction !== 0 && sign !== direction) turns++;
+		direction = sign;
+		moved = 0;
+	}
+	return turns;
 }
 
 test.beforeEach(async ({ page }) => {
@@ -239,3 +303,73 @@ test("RTL mirrors the Cover: its × sits at the inline end, on the left", async 
 	if (!box || !button) throw new Error("Missing geometry");
 	expect(button.x - box.x).toBeLessThan(24);
 });
+
+for (const direction of ["LTR", "RTL"] as const)
+	test(`${direction}: the box never passes its Cover box, and each part rides the box's own progress without turning back`, async ({
+		page,
+	}) => {
+		if (direction === "RTL") {
+			await choose(page, "Direction", "RTL");
+			await expect(frame(page)).toHaveAttribute("dir", "rtl");
+		}
+		const id = (await front(page).getAttribute("data-card-id")) ?? "";
+		const cover = await coverBox(page);
+		const sampling = sampleOpen(page, id, 900);
+		await tap(page);
+		const samples = await sampling;
+		const first = samples[0];
+		if (!first) throw new Error("No samples");
+
+		// past the Cover's edges by no more than half a pixel, on any side
+		const end = {
+			left: cover.x,
+			top: cover.y,
+			right: cover.x + cover.width,
+			bottom: cover.y + cover.height,
+		};
+		for (const sample of samples) {
+			expect(sample.box.left).toBeGreaterThan(end.left - 0.5);
+			expect(sample.box.top).toBeGreaterThan(end.top - 0.5);
+			expect(sample.box.right).toBeLessThan(end.right + 0.5);
+			expect(sample.box.bottom).toBeLessThan(end.bottom + 0.5);
+		}
+
+		// the box's own progress, read off its height
+		const height = (sample: Sample) => sample.box.bottom - sample.box.top;
+		const last = samples.at(-1);
+		if (!last) throw new Error("No samples");
+		const progress = (sample: Sample) =>
+			(height(sample) - height(first)) / (height(last) - height(first));
+
+		// each shared part's place in the box, from its inline-start edge
+		for (const name of SHARED) {
+			const inBox = samples.flatMap((sample) => {
+				const part = sample.parts[name];
+				return part
+					? [
+							{
+								p: progress(sample),
+								x:
+									direction === "RTL"
+										? sample.box.right - part.right
+										: part.left - sample.box.left,
+								y: part.top - sample.box.top,
+							},
+						]
+					: [];
+			});
+			const from = inBox[0];
+			const to = inBox.at(-1);
+			if (!from || !to) throw new Error(`No samples of ${name}`);
+			expect(inBox.length).toBeGreaterThan(10);
+			if (name !== "heading")
+				expect(Math.abs(to.y - from.y)).toBeGreaterThan(10);
+			expect(reversals(inBox.map((place) => place.x))).toBe(0);
+			expect(reversals(inBox.map((place) => place.y))).toBe(0);
+			// one clock: the part is where the box's progress puts it, to a pixel or so
+			for (const place of inBox)
+				expect(
+					Math.abs(place.y - (from.y + (to.y - from.y) * place.p)),
+				).toBeLessThan(1.5);
+		}
+	});

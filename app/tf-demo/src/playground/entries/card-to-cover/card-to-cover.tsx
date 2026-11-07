@@ -40,8 +40,8 @@ function useFrameSize(element: RefObject<HTMLDivElement | null>): Frame {
 /**
  * A Card growing into its Cover while its parts change places (#1311),
  * after react-flip-toolkit's StaggeredList: one element whose box resizes
- * on its own values, whose parts move with Motion's `layout="position"`,
- * and whose Cover-only parts fade in after the move. The frame shows only
+ * on one progress that also carries its parts from where they were drawn
+ * to their new places, and whose Cover-only parts fade in after the move. The frame shows only
  * the Deck; the copy, the knobs and the per-frame readouts are in the
  * inspector (playground ADR 0001).
  */
@@ -73,7 +73,8 @@ export function CardToCover() {
 				>
 					{frame.w > 0 ? (
 						<CoverStage
-							key={settings.rtl ? "rtl" : "ltr"}
+							/* Motion takes a part's `layout` only when it mounts */
+							key={`${settings.rtl ? "rtl" : "ltr"}-${settings.clock}`}
 							frame={frame}
 							rtl={settings.rtl}
 							motion={motion}

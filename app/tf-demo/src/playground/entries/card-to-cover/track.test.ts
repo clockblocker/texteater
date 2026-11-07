@@ -1,9 +1,11 @@
 import { describe, expect, test } from "bun:test";
 import {
 	type Box,
+	boxOvershoot,
 	frameStats,
 	jumpsIn,
 	maxScaleOff,
+	partDrift,
 	partVerdict,
 	resizingFrames,
 	type TrackFrame,
@@ -94,10 +96,36 @@ describe("the box", () => {
 		).toBeCloseTo(0.05);
 	});
 
+	test("measures how far it went past where it came to rest", () => {
+		const frames = [416, 500, 650, 742, 720].map((w, index) =>
+			frameAt(index, 0, { w, h: 352 + index }),
+		);
+		expect(boxOvershoot(frames)).toEqual({ x: 0, y: 0, w: 22, h: 0 });
+	});
+
 	test("counts the frames it spends between its first size and its last", () => {
 		const frames = [416, 500, 650, 742, 720].map((w, index) =>
 			frameAt(index, 0, { w, h: 352 }),
 		);
 		expect(resizingFrames(frames)).toBe(2);
+	});
+});
+
+describe("partDrift", () => {
+	test("reads 0 for a part that keeps to the box's progress", () => {
+		const frames = [0, 0.25, 0.5, 1].map((p, index) =>
+			frameAt(index, 49 + 134 * p, { h: 352 + 550 * p }),
+		);
+		expect(partDrift(frames, "lines")).toBeCloseTo(0, 9);
+	});
+
+	test("reads how far a part lags the box on a clock of its own", () => {
+		const frames = [
+			frameAt(0, 49, { h: 352 }),
+			frameAt(1, 49 + 134 * 0.1, { h: 352 + 550 * 0.3 }),
+			frameAt(2, 49 + 134 * 0.6, { h: 352 + 550 * 0.7 }),
+			frameAt(3, 183, { h: 902 }),
+		];
+		expect(partDrift(frames, "lines")).toBeCloseTo(134 * 0.2, 6);
 	});
 });

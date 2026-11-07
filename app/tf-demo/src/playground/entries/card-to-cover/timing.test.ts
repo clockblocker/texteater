@@ -10,6 +10,7 @@ import {
 } from "./timing";
 
 const gentle = { kind: "spring", stiffness: 120, damping: 14 } as const;
+const morph = { kind: "spring", stiffness: 380, damping: 38 } as const;
 
 describe("landingMs", () => {
 	test("lands the gentle spring about when StaggeredList starts its extras", () => {
@@ -50,6 +51,14 @@ describe("landingMs", () => {
 	});
 });
 
+describe("the default spring", () => {
+	test("lands without the gentle spring's overshoot, and settles sooner", () => {
+		/* gentle spends ~7% past its end before it lands; MORPH never leaves 5% once in */
+		expect(landingMs(morph)).toBeLessThan(landingMs(gentle));
+		expect(landingMs(morph, 0.0001)).toBeLessThan(settledMs(gentle));
+	});
+});
+
 describe("settledMs", () => {
 	test("waits past landing for a spring's slow tail, and a tween's last stretch", () => {
 		expect(settledMs(gentle)).toBeGreaterThan(landingMs(gentle) + 200);
@@ -74,6 +83,10 @@ describe("openTimeline", () => {
 		move: gentle,
 		parts,
 		stagger: 75,
+		clock: "box",
+		start: "painted",
+		snap: true,
+		crossing: "over",
 	});
 
 	test("starts the parts with the box, and the Cover-only parts once they land", () => {
@@ -93,12 +106,19 @@ describe("openTimeline", () => {
 });
 
 describe("feelOf", () => {
-	test("reads the inspector's spring or tween, part start and stagger", () => {
+	test("opens by default on MORPH, the parts on the box's clock from the first paint, snapped, the lines over", () => {
 		expect(feelOf(DEFAULT_SETTINGS)).toEqual({
-			move: gentle,
+			move: morph,
 			parts: "with",
 			stagger: 75,
+			clock: "box",
+			start: "painted",
+			snap: true,
+			crossing: "over",
 		});
+	});
+
+	test("reads the inspector's spring or tween, part start and stagger", () => {
 		expect(
 			feelOf({
 				...DEFAULT_SETTINGS,

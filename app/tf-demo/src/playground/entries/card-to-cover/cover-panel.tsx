@@ -37,9 +37,12 @@ export function CoverPanel({
 					Tap a Card: the same element grows into its Cover. The box
 					resizes on its own values and never scales; the content
 					column keeps its width, so no line rewraps. The lines and
-					the Source contexts change places, and what only the Cover
-					has, the × and the extra contexts, fades and rises in after
-					the move. × or Escape puts it back.
+					the Source contexts change places on the box's own progress,
+					and what only the Cover has, the × and the extra contexts,
+					fades and rises in after the move. × or Escape puts it back.
+					The first defaults (spring 120/14, Motion layout, snapping
+					off, texts overlap) are a knob away for comparison; the
+					clock start applies to the box-progress clock.
 				</p>
 			</InspectorSection>
 			<InspectorSection title="Open">
@@ -94,8 +97,44 @@ export function CoverPanel({
 					options={steps(STEPS.stagger, " ms")}
 					onChange={(value) => set({ stagger: Number(value) })}
 				/>
+				<InspectorChoice<Settings["clock"]>
+					label="Parts clock"
+					value={settings.clock}
+					options={[
+						{ value: "box", label: "box progress" },
+						{ value: "layout", label: "Motion layout" },
+					]}
+					onChange={(clock) => set({ clock })}
+				/>
+				<InspectorChoice<Settings["start"]>
+					label="Clock starts"
+					value={settings.start}
+					options={[
+						{ value: "painted", label: "after the first paint" },
+						{ value: "tap", label: "at the tap" },
+					]}
+					onChange={(start) => set({ start })}
+				/>
+				<InspectorChoice<Settings["crossing"]>
+					label="Crossing"
+					value={settings.crossing}
+					options={[
+						{ value: "over", label: "lines slide over" },
+						{ value: "through", label: "texts overlap" },
+					]}
+					onChange={(crossing) => set({ crossing })}
+				/>
 			</InspectorSection>
 			<InspectorSection title="Box">
+				<InspectorChoice
+					label="Pixel snapping"
+					value={settings.snap ? "on" : "off"}
+					options={[
+						{ value: "on", label: "on" },
+						{ value: "off", label: "off" },
+					]}
+					onChange={(value) => set({ snap: value === "on" })}
+				/>
 				<InspectorChoice
 					label="contain: layout paint"
 					value={settings.contain ? "on" : "off"}

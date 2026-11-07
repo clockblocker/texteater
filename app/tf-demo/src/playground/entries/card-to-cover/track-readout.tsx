@@ -3,8 +3,10 @@ import { InspectorSection } from "../inspector";
 import { type Recorder, type Track, useLastTrack } from "./recorder";
 import {
 	type Box,
+	boxOvershoot,
 	frameStats,
 	maxScaleOff,
+	partDrift,
 	partVerdict,
 	resizingFrames,
 } from "./track";
@@ -36,7 +38,7 @@ function Row({
 	);
 }
 
-/** Where Motion measured `part` the last time it measured it in `track`. */
+/** Where `part`'s new place was measured the last time in `track`. */
 function lastMeasured(track: Track, part: string): Box | undefined {
 	return [...track.measured].reverse().find((entry) => entry.part === part)
 		?.box;
@@ -44,9 +46,10 @@ function lastMeasured(track: Track, part: string): Box | undefined {
 
 /**
  * The last open or close, sampled every frame: whether the box resized and
- * never scaled, how long its frames took, and for each shared part whether
- * its path in the box is smooth, where it rests, and where Motion measured
- * it at the change of form.
+ * never scaled or overshot, how long its frames took, and for each shared
+ * part whether its path in the box is smooth and keeps to the box's
+ * progress, where it rests, and where its new place was measured at the
+ * change of form.
  */
 export function TrackReadout({ recorder }: { readonly recorder: Recorder }) {
 	const track = useLastTrack(recorder);
@@ -60,12 +63,17 @@ export function TrackReadout({ recorder }: { readonly recorder: Recorder }) {
 			</InspectorSection>
 		);
 	const stats = frameStats(track.frames);
+	const over = boxOvershoot(track.frames);
 	return (
 		<InspectorSection title={`Last ${track.kind} · ${track.id}`}>
 			<dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
 				<Row
 					name="box"
 					value={`resized over ${resizingFrames(track.frames).toString()} frames · scale off 1 by ${maxScaleOff(track.frames).toFixed(3)}`}
+				/>
+				<Row
+					name="overshoot"
+					value={`w ${px(over.w)} · h ${px(over.h)} · x ${px(over.x)} · y ${px(over.y)} px`}
 				/>
 				<Row
 					name="frames"
@@ -78,7 +86,7 @@ export function TrackReadout({ recorder }: { readonly recorder: Recorder }) {
 						<Row
 							key={part}
 							name={part}
-							value={`${jumps === 0 ? "smooth" : `${jumps.toString()} jump${jumps === 1 ? "" : "s"} (frame ${verdict.jumps.join(", ")})`} · moved ${verdict.moving.toString()} frames · max step ${px(verdict.maxStep)} px · rests at ${at(verdict.end)} · Motion measured ${at(lastMeasured(track, part))}`}
+							value={`${jumps === 0 ? "smooth" : `${jumps.toString()} jump${jumps === 1 ? "" : "s"} (frame ${verdict.jumps.join(", ")})`} · drifts ${px(partDrift(track.frames, part))} px off the box's progress · moved ${verdict.moving.toString()} frames · max step ${px(verdict.maxStep)} px · rests at ${at(verdict.end)} · measured ${at(lastMeasured(track, part))}`}
 						/>
 					);
 				})}
