@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { DEFAULT_TURN, type TiltFeel, type TurnFeel } from "tabletop/core";
 import { Table, useTable } from "tabletop/react";
 import { useMotionPreference } from "@/lib/motion-preference";
@@ -38,7 +38,7 @@ export function TabletopEntry() {
 	const [deal, setDeal] = useState<DealFeel>(DEFAULT_DEAL);
 	const { preference } = useMotionPreference();
 	const table = useTable();
-	const actions = useScene(table);
+	const { scene, announcement, actions } = useScene(table);
 	return (
 		<>
 			<div className="flex h-full min-h-0 p-6 lg:pe-[23rem]">
@@ -55,12 +55,111 @@ export function TabletopEntry() {
 				>
 					<SceneView
 						table={table}
+						scene={scene}
+						announcement={announcement}
 						actions={actions}
 						gesture={gesture}
 						axis={turn.axis}
 					/>
 				</Table>
 			</div>
+			<TabletopInspector
+				actions={actions}
+				spread={scene.spread}
+				top={scene.cards.ground.at(-1)}
+				knobs={{
+					reducedMotion,
+					timeScale,
+					rtl,
+					turn,
+					gesture,
+					tiltOn,
+					tilt,
+					deal,
+				}}
+				set={{
+					setReducedMotion,
+					setTimeScale,
+					setRtl,
+					setTurn,
+					setGesture,
+					setTiltOn,
+					setTilt,
+					setDeal,
+				}}
+			/>
+		</>
+	);
+}
+
+type Knobs = {
+	readonly reducedMotion: ReducedChoice;
+	readonly timeScale: number;
+	readonly rtl: boolean;
+	readonly turn: TurnFeel;
+	readonly gesture: TurnGesture;
+	readonly tiltOn: boolean;
+	readonly tilt: TiltFeel;
+	readonly deal: DealFeel;
+};
+
+type KnobSetters = {
+	readonly setReducedMotion: (value: ReducedChoice) => void;
+	readonly setTimeScale: (value: number) => void;
+	readonly setRtl: (value: boolean) => void;
+	readonly setTurn: (value: TurnFeel) => void;
+	readonly setGesture: (value: TurnGesture) => void;
+	readonly setTiltOn: (value: boolean) => void;
+	readonly setTilt: (value: TiltFeel) => void;
+	readonly setDeal: (value: DealFeel) => void;
+};
+
+function sameKnobs(a: Knobs, b: Knobs): boolean {
+	return (Object.keys(a) as (keyof Knobs)[]).every(
+		(key) => a[key] === b[key],
+	);
+}
+
+/**
+ * The inspector: the tricks, the turn, the deal, the tilt and the motion
+ * knobs. It renders again only when a knob, the fan's spread or the top
+ * Card changes, never for a move on the Table.
+ */
+const TabletopInspector = memo(
+	function TabletopInspector({
+		actions,
+		spread,
+		top,
+		knobs,
+		set,
+	}: {
+		readonly actions: SceneActions;
+		readonly spread: number;
+		readonly top: string | undefined;
+		readonly knobs: Knobs;
+		readonly set: KnobSetters;
+	}) {
+		const {
+			reducedMotion,
+			timeScale,
+			rtl,
+			turn,
+			gesture,
+			tiltOn,
+			tilt,
+			deal,
+		} = knobs;
+		const {
+			setReducedMotion,
+			setTimeScale,
+			setRtl,
+			setTurn,
+			setGesture,
+			setTiltOn,
+			setTilt,
+			setDeal,
+		} = set;
+		return (
 			<Inspector title={TITLE}>
 				<InspectorSection>
 					<p className="text-ink-soft">
@@ -105,9 +204,10 @@ export function TabletopEntry() {
 						</li>
 					</ul>
 				</InspectorSection>
-				<DeckSection actions={actions} />
+				<DeckSection actions={actions} spread={spread} />
 				<TurnSection
 					actions={actions}
+					top={top}
 					gesture={gesture}
 					onGesture={setGesture}
 					feel={turn}
@@ -157,12 +257,23 @@ export function TabletopEntry() {
 					/>
 				</InspectorSection>
 			</Inspector>
-		</>
-	);
-}
+		);
+	},
+	(before, after) =>
+		before.actions === after.actions &&
+		before.spread === after.spread &&
+		before.top === after.top &&
+		sameKnobs(before.knobs, after.knobs),
+);
 
 /** deck-of-cards' tricks on the Ground's Deck, with its timing and stagger. */
-function DeckSection({ actions }: { readonly actions: SceneActions }) {
+function DeckSection({
+	actions,
+	spread,
+}: {
+	readonly actions: SceneActions;
+	readonly spread: number;
+}) {
 	const tricks: readonly (readonly [string, () => unknown])[] = [
 		["Deal", actions.deal],
 		["Fan", actions.fan],
@@ -185,7 +296,7 @@ function DeckSection({ actions }: { readonly actions: SceneActions }) {
 			</div>
 			<InspectorChoice<"260" | "120">
 				label="Fan spread"
-				value={actions.scene.spread === 120 ? "120" : "260"}
+				value={spread === 120 ? "120" : "260"}
 				options={[
 					{ value: "260", label: "260° (deck-of-cards)" },
 					{ value: "120", label: "120°" },

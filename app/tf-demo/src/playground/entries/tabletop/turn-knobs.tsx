@@ -21,18 +21,20 @@ const GESTURE_HINT: Record<TurnGesture, string> = {
 /** #1315's gesture, then #1313's turn knobs: length, perspective, lift and axis. */
 export function TurnSection({
 	actions,
+	top,
 	gesture,
 	onGesture,
 	feel,
 	onChange,
 }: {
 	readonly actions: SceneActions;
+	/** The top Card of the Ground's Deck, which the first button turns. */
+	readonly top: string | undefined;
 	readonly gesture: TurnGesture;
 	readonly onGesture: (gesture: TurnGesture) => void;
 	readonly feel: TurnFeel;
 	readonly onChange: (feel: TurnFeel) => void;
 }) {
-	const top = actions.scene.cards.ground.at(-1);
 	return (
 		<InspectorSection title="Turn">
 			<InspectorChoice<TurnGesture>

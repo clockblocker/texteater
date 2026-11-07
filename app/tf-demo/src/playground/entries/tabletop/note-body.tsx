@@ -1,4 +1,10 @@
-import { type KeyboardEvent, memo, type PointerEvent } from "react";
+import {
+	type KeyboardEvent,
+	memo,
+	type PointerEvent,
+	useCallback,
+	useMemo,
+} from "react";
 import type { Place } from "tabletop/core";
 import { Body, Glare, Shell } from "tabletop/react";
 import { NoteFace, PlainBack } from "./note-face";
@@ -41,7 +47,8 @@ function samePlace(a: Place, b: Place): boolean {
 
 /**
  * One Note Card as a Body: focusable, opened by a tap or Enter, carried by
- * the hand. It renders again only when its own Place changes.
+ * the hand. It renders again only when its own Place changes, and its
+ * faces only when its form or its word does.
  */
 export const NoteBody = memo(
 	function NoteBody({
@@ -62,12 +69,34 @@ export const NoteBody = memo(
 		readonly handlers: CardHandlers;
 	}) {
 		const open = place.form === "cover";
-		const control = handlers.control ? (
-			<TurnControl
-				axis={handlers.control}
-				onTurn={() => handlers.turn(id)}
-			/>
-		) : null;
+		const { form } = place;
+		const onTurn = useCallback(() => handlers.turn(id), [handlers, id]);
+		/* the faces stay the same elements while only the Place moves */
+		const faces = useMemo(() => {
+			const control = handlers.control ? (
+				<TurnControl axis={handlers.control} onTurn={onTurn} />
+			) : null;
+			return {
+				front: (
+					<>
+						<NoteFace
+							card={card}
+							form={form}
+							onClose={handlers.close}
+						/>
+						{control}
+						<Glare />
+					</>
+				),
+				back: (
+					<>
+						<PlainBack word={word} />
+						{control}
+						<Glare />
+					</>
+				),
+			};
+		}, [card, form, word, handlers, onTurn]);
 		return (
 			<Body
 				id={id}
@@ -87,24 +116,8 @@ export const NoteBody = memo(
 			>
 				<Shell
 					faceClassName={FACE}
-					front={
-						<>
-							<NoteFace
-								card={card}
-								form={place.form}
-								onClose={handlers.close}
-							/>
-							{control}
-							<Glare />
-						</>
-					}
-					back={
-						<>
-							<PlainBack word={word} />
-							{control}
-							<Glare />
-						</>
-					}
+					front={faces.front}
+					back={faces.back}
 				/>
 			</Body>
 		);

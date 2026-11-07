@@ -1,4 +1,5 @@
 import { FlipHorizontal2Icon, FlipVertical2Icon } from "lucide-react";
+import { memo } from "react";
 
 /**
  * The corner control that turns a Card over, as Dashboard's info button
@@ -7,7 +8,7 @@ import { FlipHorizontal2Icon, FlipVertical2Icon } from "lucide-react";
  * hover. The back has the same control in the same corner. Its icon flips
  * the way the Card turns.
  */
-export function TurnControl({
+export const TurnControl = memo(function TurnControl({
 	axis,
 	onTurn,
 }: {
@@ -32,4 +33,4 @@ export function TurnControl({
 			<Icon aria-hidden="true" className="size-4" />
 		</button>
 	);
-}
+});

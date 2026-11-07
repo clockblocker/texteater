@@ -61,23 +61,31 @@ function regionAt(point: Point): RegionId | null {
 
 /**
  * The scene's state and everything that changes it. Every change is a
- * commit through the Table, so each Card moves from where it showed.
+ * commit through the Table, so each Card moves from where it showed. The
+ * actions keep their identity across renders, so a change re-renders only
+ * what reads the scene.
  */
 export function useScene(table: TableHandle) {
 	const [scene, setScene] = useState(() => initialScene());
 	const latest = useRef(scene);
 	latest.current = scene;
-	const commit = (next: (scene: Scene) => Scene) => () => setScene(next);
 	const words = useDealWord(table, setScene);
+	const latestWords = useRef(words);
+	latestWords.current = words;
+	const [actions] = useState(() =>
+		sceneActions(table, setScene, latest, latestWords),
+	);
+	useIntroDeal(table);
+	return { scene, announcement: words.announcement, actions };
+}
 
-	/* the intro: the Deck drops into place as the entry opens */
-	useLayoutEffect(() => {
-		void table.play(
-			deal(DEALT, (order) => groundPose(order, "pile", 260), {
-				scale: TRICK_SCALE,
-			}),
-		);
-	}, [table]);
+function sceneActions(
+	table: TableHandle,
+	setScene: (next: (scene: Scene) => Scene) => void,
+	latest: { readonly current: Scene },
+	words: { readonly current: ReturnType<typeof useDealWord> },
+) {
+	const commit = (next: (scene: Scene) => Scene) => () => setScene(next);
 
 	const pileOf = (order: readonly string[]) =>
 		groundPose(order, "pile", latest.current.spread);
@@ -93,8 +101,8 @@ export function useScene(table: TableHandle) {
 	};
 
 	return {
-		scene,
-		...words,
+		dealWord: (feel: Parameters<typeof words.current.dealWord>[0]) =>
+			words.current.dealWord(feel),
 		open: (id: string) =>
 			table.transact(commit((current) => openCard(current, id))),
 		/** Closes every Cover; whether there was one. */
@@ -173,4 +181,15 @@ export function useScene(table: TableHandle) {
 	};
 }
 
-export type SceneActions = ReturnType<typeof useScene>;
+export type SceneActions = ReturnType<typeof sceneActions>;
+
+/** The intro: the Deck drops into place as the entry opens. */
+function useIntroDeal(table: TableHandle) {
+	useLayoutEffect(() => {
+		void table.play(
+			deal(DEALT, (order) => groundPose(order, "pile", 260), {
+				scale: TRICK_SCALE,
+			}),
+		);
+	}, [table]);
+}

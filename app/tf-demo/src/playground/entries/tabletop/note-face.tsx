@@ -1,4 +1,5 @@
 import { XIcon } from "lucide-react";
+import { memo } from "react";
 import { Part } from "tabletop/react";
 import type { NoteCard } from "./words";
 
@@ -20,9 +21,17 @@ function Heading({ card }: { readonly card: NoteCard }) {
 	);
 }
 
+/**
+ * The gloss swaps places with the first Source context between the forms,
+ * so the two cross mid-move: it slides over on its own paper, above the
+ * context and the Cover's departing copies, rather than through them.
+ */
 function Gloss({ card }: { readonly card: NoteCard }) {
 	return (
-		<Part id="gloss" className={`${COLUMN} text-sm text-ink-soft`}>
+		<Part
+			id="gloss"
+			className={`${COLUMN} relative z-[1] bg-paper text-sm text-ink-soft`}
+		>
 			{card.gloss}
 		</Part>
 	);
@@ -46,7 +55,7 @@ function Context({ text, id }: { readonly text: string; readonly id: string }) {
  * in after the move. Each part keeps its id across forms, so it travels to
  * its new place rather than appearing there.
  */
-export function NoteFace({
+export const NoteFace = memo(function NoteFace({
 	card,
 	form,
 	onClose,
@@ -101,13 +110,17 @@ export function NoteFace({
 			</Part>
 		</div>
 	);
-}
+});
 
 /**
  * Every Note's back, for now: the plain default background (#1309 Q5). A
  * Card dealt from a click carries the clicked word on it (#1316).
  */
-export function PlainBack({ word }: { readonly word?: string | null }) {
+export const PlainBack = memo(function PlainBack({
+	word,
+}: {
+	readonly word?: string | null;
+}) {
 	return (
 		<div className="grid h-full place-items-center bg-canvas">
 			{word ? (
@@ -117,4 +130,4 @@ export function PlainBack({ word }: { readonly word?: string | null }) {
 			) : null}
 		</div>
 	);
-}
+});

@@ -3,10 +3,20 @@ import {
 	ResizableSplitHandle,
 	ResizableSplitRegion,
 } from "lego";
-import { type ReactNode, useEffect, useMemo, useRef } from "react";
+import { Fragment, memo, useEffect, useMemo, useRef } from "react";
+import type { SlotSpec } from "tabletop/core";
 import { Region, Slot, type TableHandle, useHand } from "tabletop/react";
 import { type CardHandlers, NoteBody } from "./note-body";
-import { busy, cardIds, cardOf, placesOf, REGIONS, slotsOf } from "./scene";
+import {
+	busy,
+	cardIds,
+	cardOf,
+	placesOf,
+	REGIONS,
+	type RegionId,
+	type Scene,
+	slotsOf,
+} from "./scene";
 import { isFlick, type TurnGesture } from "./turn-gesture";
 import { useLongPress } from "./use-long-press";
 import type { SceneActions } from "./use-scene";
@@ -61,16 +71,19 @@ function useSceneKeys(
  */
 export function SceneView({
 	table,
+	scene,
+	announcement,
 	actions,
 	gesture,
 	axis,
 }: {
 	readonly table: TableHandle;
+	readonly scene: Scene;
+	readonly announcement: string;
 	readonly actions: SceneActions;
 	readonly gesture: TurnGesture;
 	readonly axis: "x" | "y";
 }) {
-	const { scene } = actions;
 	const slots = slotsOf(scene);
 	const places = placesOf(scene);
 	const hovered = useRef<string | null>(null);
@@ -119,23 +132,7 @@ export function SceneView({
 	);
 	return (
 		<>
-			<ResizableSplit
-				orientation="horizontal"
-				data-tabletop-scene=""
-				className="overflow-hidden rounded-[0.7rem] border border-line"
-			>
-				{REGIONS.map((region, index) => (
-					<RegionPanel
-						key={region}
-						region={region}
-						withHandle={index > 0}
-					>
-						{slots[region].map((spec) => (
-							<Slot key={spec.id} spec={spec} />
-						))}
-					</RegionPanel>
-				))}
-			</ResizableSplit>
+			<SceneRegions slots={slots} />
 			{cardIds(scene).map((id) => {
 				const place = places.get(id);
 				const card = cardOf(scene, id);
@@ -152,34 +149,77 @@ export function SceneView({
 				) : null;
 			})}
 			<p role="status" aria-live="polite" className="sr-only">
-				{actions.announcement}
+				{announcement}
 			</p>
 		</>
 	);
 }
 
-function RegionPanel({
-	region,
-	withHandle,
-	children,
-}: {
-	readonly region: (typeof REGIONS)[number];
-	readonly withHandle: boolean;
-	readonly children: ReactNode;
-}) {
-	return (
-		<>
-			{withHandle ? (
-				<ResizableSplitHandle aria-label="Resize Regions" withHandle />
-			) : null}
-			<ResizableSplitRegion id={`tabletop-${region}`} minSize={280}>
-				<Region
-					id={region}
-					className={`h-full w-full ${REGION_LOOK[region]}`}
-				>
-					{children}
-				</Region>
-			</ResizableSplitRegion>
-		</>
-	);
+function sameSlots(
+	a: Readonly<Record<RegionId, readonly SlotSpec[]>>,
+	b: Readonly<Record<RegionId, readonly SlotSpec[]>>,
+): boolean {
+	return REGIONS.every((region) => {
+		const [x, y] = [a[region], b[region]];
+		return (
+			x.length === y.length &&
+			x.every((spec, index) => {
+				const other = y[index];
+				return (
+					!!other &&
+					spec.id === other.id &&
+					spec.style.insetInlineStart ===
+						other.style.insetInlineStart &&
+					spec.style.top === other.style.top &&
+					spec.style.width === other.style.width &&
+					spec.style.height === other.style.height
+				);
+			})
+		);
+	});
 }
+
+/**
+ * The two Regions in their Split and the Slots in each. It renders again
+ * only when a Slot does, so a tap that opens a Card leaves it alone.
+ */
+const SceneRegions = memo(
+	function SceneRegions({
+		slots,
+	}: {
+		readonly slots: Readonly<Record<RegionId, readonly SlotSpec[]>>;
+	}) {
+		return (
+			<ResizableSplit
+				orientation="horizontal"
+				data-tabletop-scene=""
+				className="overflow-hidden rounded-[0.7rem] border border-line"
+			>
+				{REGIONS.map((region, index) => (
+					<Fragment key={region}>
+						{index > 0 ? (
+							<ResizableSplitHandle
+								aria-label="Resize Regions"
+								withHandle
+							/>
+						) : null}
+						<ResizableSplitRegion
+							id={`tabletop-${region}`}
+							minSize={280}
+						>
+							<Region
+								id={region}
+								className={`h-full w-full ${REGION_LOOK[region]}`}
+							>
+								{slots[region].map((spec) => (
+									<Slot key={spec.id} spec={spec} />
+								))}
+							</Region>
+						</ResizableSplitRegion>
+					</Fragment>
+				))}
+			</ResizableSplit>
+		);
+	},
+	(before, after) => sameSlots(before.slots, after.slots),
+);
