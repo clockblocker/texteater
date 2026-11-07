@@ -8,6 +8,7 @@ import {
 	LoaderIcon,
 	type LucideIcon,
 	PaletteIcon,
+	SpadeIcon,
 	StickyNoteIcon,
 } from "lucide-react";
 import { type ReactNode, useEffect } from "react";
@@ -15,6 +16,7 @@ import { AnimationWorkbench } from "./entries/animation-workbench/workbench";
 import { BreakdownsPrototype } from "./entries/breakdowns/breakdowns";
 import { DeckInteractions } from "./entries/deck-interactions/deck-interactions";
 import { DeckModelsGallery } from "./entries/deck-models-gallery";
+import { DeckOfCards } from "./entries/deck-of-cards/deck-of-cards";
 import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
 import { PaletteGallery } from "./entries/palette-gallery";
@@ -95,6 +97,14 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"Two ways to carry a Card off its Deck, put it back, dismiss the Deck and open the Card, B (Table) and D (Swipe actions), behind one switch, with each variant's knobs, slow-mo, reduced motion and RTL in the inspector.",
 		render: () => <DeckInteractions />,
+	},
+	{
+		key: "deck-of-cards",
+		title: "Deck of cards",
+		icon: SpadeIcon,
+		description:
+			"pakastin's deck-of-cards library, vendored and ported to TypeScript: 52 Cards on its felt that you drag and tap to flip, with its example's Flip, Shuffle, By suit, Fan, Poker and Sort in the inspector.",
+		render: () => <DeckOfCards />,
 	},
 	{
 		key: "palette",
