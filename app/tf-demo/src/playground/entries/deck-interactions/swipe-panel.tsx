@@ -157,6 +157,7 @@ export function SwipePanel({
 		<motion.div
 			aria-hidden="true"
 			data-panel={panel.zone}
+			data-panel-card={panel.id}
 			data-armed={armed || undefined}
 			className="pointer-events-none absolute overflow-hidden rounded-[calc(0.9rem_-_1px)] bg-canvas"
 			style={{

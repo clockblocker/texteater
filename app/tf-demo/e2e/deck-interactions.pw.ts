@@ -28,6 +28,14 @@ import {
 	watchRelease,
 	watchStacking,
 } from "./support/deck-interactions";
+import {
+	DIRECTIONS,
+	direct,
+	movesOf,
+	sweep,
+	sweepGrowing,
+	WAYS,
+} from "./support/deck-interactions-swipe";
 
 /**
  * The Deck interactions prototype: every variant behind the inspector's
@@ -431,49 +439,56 @@ test("D: toward Close deck the rest of the Deck folds in at once onto any Card, 
 	}
 });
 
-test("D: the panel never shows above or below the swiped Card", async ({
-	page,
-}) => {
-	await chooseVariant(page, "D · Swipe actions");
-	const card = front(page);
-	/* how far the panel reaches past the Card's top or bottom edge, worst over `ms` of frames */
-	const worstPeek = (ms: number) =>
-		card.evaluate(
-			(element, duration) =>
-				new Promise<number>((resolve) => {
-					let worst = 0;
-					const end = performance.now() + duration;
-					const step = () => {
-						const shown = document.querySelector("[data-panel]");
-						if (
-							shown &&
-							Number(getComputedStyle(shown).opacity) > 0.01
-						) {
-							const own = element.getBoundingClientRect();
-							const box = shown.getBoundingClientRect();
-							worst = Math.max(
-								worst,
-								own.top - box.top,
-								box.bottom - own.bottom,
-							);
-						}
-						if (performance.now() < end)
-							requestAnimationFrame(step);
-						else resolve(worst);
-					};
-					requestAnimationFrame(step);
-				}),
-			ms,
-		);
-	const start = await pull(page, card, -40, 0);
-	expect(await worstPeek(100)).toBeLessThanOrEqual(0);
-	await page.mouse.move(start.x - 130, start.y, { steps: 20 });
-	expect(await worstPeek(200)).toBeLessThanOrEqual(0);
-	await page.mouse.move(start.x - 60, start.y, { steps: 10 });
-	const returning = worstPeek(500);
-	await page.mouse.up();
-	expect(await returning).toBeLessThanOrEqual(0);
-});
+for (const to of DIRECTIONS) {
+	test(`D in ${to}: every Card in the Deck takes the front Card's swipes`, async ({
+		page,
+	}) => {
+		test.setTimeout(90_000);
+		await chooseVariant(page, "D · Swipe actions");
+		await direct(page, to);
+		const front = await movesOf(page, 3);
+		const [start, end] =
+			to === "LTR" ? ["left", "right"] : ["right", "left"];
+		expect(front).toEqual({
+			[start]: "dismiss armed, closes",
+			[end]: "expand armed, opens",
+			up: "expand armed, opens",
+			down: "dismiss armed, closes",
+		});
+		for (const lead of [0, 1, 2])
+			expect(await movesOf(page, lead), `Card ${lead}`).toEqual(front);
+	});
+
+	test(`D in ${to}: the panel is the swiped Card's shown box less its border, held and moving, at any scale`, async ({
+		page,
+	}) => {
+		test.setTimeout(45_000);
+		await chooseVariant(page, "D · Swipe actions");
+		await direct(page, to);
+		for (const [lead, x, y] of WAYS) {
+			const seen = await sweep(page, lead, x, y);
+			expect(seen.frames, `Card ${lead}`).toBeGreaterThan(30);
+			expect(seen.fit, `Card ${lead}`).toBeLessThanOrEqual(0.5);
+		}
+		const growing = await sweepGrowing(page);
+		expect(growing.frames).toBeGreaterThan(10);
+		expect(growing.fit).toBeLessThanOrEqual(0.5);
+	});
+
+	test(`D in ${to}: once the panel is full its icon and label stay put while the Card travels on`, async ({
+		page,
+	}) => {
+		test.setTimeout(45_000);
+		await chooseVariant(page, "D · Swipe actions");
+		await direct(page, to);
+		for (const [lead, x, y] of WAYS) {
+			const seen = await sweep(page, lead, x, y);
+			expect(seen.still, `Card ${lead}`).toBeGreaterThan(5);
+			expect(seen.travel, `Card ${lead}`).toBeGreaterThan(100);
+			expect(seen.drift, `Card ${lead}`).toBeLessThanOrEqual(0.5);
+		}
+	});
+}
 
 test("B: a hovered Deck fans slightly, and settles back while a Card is pressed", async ({
 	page,
