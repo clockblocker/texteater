@@ -44,6 +44,20 @@ export async function targetCentre(page: Page, target: "tray" | "pad") {
 	return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
 }
 
+/** Sets one of the variant's range knobs in the inspector. */
+export async function setKnob(page: Page, label: string, value: number) {
+	await inspector(page)
+		.getByRole("slider", { name: label, exact: true })
+		.fill(String(value));
+}
+
+/** The computed opacity of the layer D draws its Deck and panel in. */
+export function layerOpacity(page: Page) {
+	return frame(page)
+		.locator("[data-deck-layer]")
+		.evaluate((element) => Number(getComputedStyle(element).opacity));
+}
+
 /** Sets the inspector's Reduced motion to on: it defaults to off. */
 export async function reduceMotion(page: Page) {
 	await inspector(page)
@@ -137,6 +151,25 @@ export function anchors(page: Page) {
 
 type Anchor = { u: number; v: number };
 
+/** Waits until a deal has landed: every Card opaque, and none moving between two looks. */
+export async function landed(page: Page) {
+	await expect
+		.poll(async () => {
+			const before = await anchors(page);
+			await page.waitForTimeout(32);
+			const after = await anchors(page);
+			const opaque = await styles(page, "opacity");
+			return (
+				opaque.every((own) => own === "1") &&
+				before.every((at, index) => {
+					const now = after[index];
+					return now && Math.hypot(at.u - now.u, at.v - now.v) < 0.05;
+				})
+			);
+		})
+		.toBe(true);
+}
+
 /**
  * The share of the way every Card but Card `lead` (back to front, the
  * front one by default) has gone from `rest` to it.
@@ -181,7 +214,7 @@ export async function strayed(page: Page, rest: Anchor[]) {
 /** Each Card's computed style for `property`, back to front. */
 export function styles(
 	page: Page,
-	property: "transform" | "border-top-color" | "z-index",
+	property: "transform" | "border-top-color" | "z-index" | "opacity",
 ) {
 	return frame(page)
 		.locator("[data-card-id]")
@@ -201,13 +234,16 @@ type Stacking = {
 	restacked: number;
 	/** Frames in which Close deck's panel showed at another z-index than Card `lead`. */
 	panelOff: number;
+	/** Frames in which any Card's own opacity was not 1. */
+	faded: number;
 };
 
 /**
  * Every frame from now until the returned call: whether each Card's
  * z-index, which alone sets the Deck's paint order, is still what it is
- * now, and whether Close deck's panel, while it shows, shares Card
- * `lead`'s. Frames once the Deck has gone are not counted.
+ * now, whether Close deck's panel, while it shows, shares Card `lead`'s,
+ * and whether any Card's own opacity left 1. Frames once the Deck has
+ * gone are not counted.
  */
 export async function watchStacking(page: Page, lead: number) {
 	await frame(page).evaluate((deck, index) => {
@@ -215,7 +251,12 @@ export async function watchStacking(page: Page, lead: number) {
 		const z = (node: Element) => getComputedStyle(node).zIndex;
 		const before = cards().map(z);
 		const element = cards()[index];
-		const seen: Stacking = { frames: 0, restacked: 0, panelOff: 0 };
+		const seen: Stacking = {
+			frames: 0,
+			restacked: 0,
+			panelOff: 0,
+			faded: 0,
+		};
 		let live = true;
 		const step = () => {
 			if (!live) return;
@@ -224,6 +265,8 @@ export async function watchStacking(page: Page, lead: number) {
 				seen.frames += 1;
 				if (now.some((card, i) => z(card) !== before[i]))
 					seen.restacked += 1;
+				if (now.some((card) => getComputedStyle(card).opacity !== "1"))
+					seen.faded += 1;
 				const shown = deck.querySelector('[data-panel="dismiss"]');
 				if (
 					shown &&
@@ -369,9 +412,10 @@ export async function watchApart(card: Locator, ms: number) {
 		);
 		Object.assign(window, { apart: seen });
 	}, ms);
+	/* read off the page: the Deck may be gone by then */
 	return async () => {
 		await card.page().waitForTimeout(ms + 100);
-		return card.evaluate(
+		return card.page().evaluate(
 			() =>
 				(
 					window as unknown as {
@@ -379,5 +423,70 @@ export async function watchApart(card: Locator, ms: number) {
 					}
 				).apart,
 		);
+	};
+}
+
+type Exit = {
+	/** Frames sampled until the Deck had gone. */
+	frames: number;
+	/** The most Card `lead` went past where it was let go, toward inline-start, in px. */
+	toStart: number;
+	/** The same toward inline-end. */
+	toEnd: number;
+	/** The least opacity any Card had of its own. */
+	own: number;
+	/** The Deck layer's opacity in the last frame the Deck showed in. */
+	layer: number;
+};
+
+/**
+ * From the next release on, every frame until the Deck has gone: how far
+ * Card `lead` went past where it showed when the hand let go, each way
+ * along the inline axis, the least opacity any Card had of its own, and
+ * the Deck layer's opacity as it went. Resolves once the Deck has gone.
+ */
+export async function watchExit(page: Page, lead: number) {
+	await frame(page).evaluate((deck, index) => {
+		const toStart = getComputedStyle(deck).direction === "rtl" ? 1 : -1;
+		const layer = deck.querySelector("[data-deck-layer]");
+		const cards = () => [...deck.querySelectorAll("[data-card-id]")];
+		const seen: Exit = {
+			frames: 0,
+			toStart: 0,
+			toEnd: 0,
+			own: 1,
+			layer: 1,
+		};
+		let element: Element | undefined;
+		let from = 0;
+		const step = () => {
+			if (!element?.isConnected) return;
+			seen.frames += 1;
+			const moved =
+				(element.getBoundingClientRect().left - from) * toStart;
+			seen.toStart = Math.max(seen.toStart, moved);
+			seen.toEnd = Math.max(seen.toEnd, -moved);
+			for (const card of cards())
+				seen.own = Math.min(
+					seen.own,
+					Number(getComputedStyle(card).opacity),
+				);
+			if (layer) seen.layer = Number(getComputedStyle(layer).opacity);
+			requestAnimationFrame(step);
+		};
+		window.addEventListener(
+			"pointerup",
+			() => {
+				element = cards()[index];
+				from = element?.getBoundingClientRect().left ?? 0;
+				requestAnimationFrame(step);
+			},
+			{ capture: true, once: true },
+		);
+		Object.assign(window, { exit: seen });
+	}, lead);
+	return async () => {
+		await expect(frame(page).locator("[data-card-id]")).toHaveCount(0);
+		return page.evaluate(() => (window as unknown as { exit: Exit }).exit);
 	};
 }

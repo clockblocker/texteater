@@ -109,6 +109,7 @@ async function bindPile(
 		return card.values;
 	};
 	const pull = motionValue(0);
+	const opacity = motionValue(1);
 	let binding: Binding | null = null;
 	await pointerEvent(() => {
 		binding = bindDeck(
@@ -121,11 +122,12 @@ async function bindPile(
 				place: () => {
 					throw new Error("Nothing here scatters the Deck");
 				},
+				opacity,
 			},
 			lead,
 			"inline",
 			pull,
-			{ threshold: 96, curve: "linear", settle },
+			{ threshold: 96, curve: "linear", opacity: 0.5, settle },
 		);
 	});
 	cleanups.push(() => {
@@ -134,7 +136,7 @@ async function bindPile(
 		for (const { values } of pile)
 			for (const key of KEYS) values[key].stop();
 	});
-	return { pull };
+	return { pull, opacity };
 }
 
 /**
@@ -221,13 +223,13 @@ describe("D's fold, on Motion's frame loop", () => {
 });
 
 describe("D's fold onto a Card from inside the Deck", () => {
-	test("the Cards in front come up onto it and the ones behind down, whole at the threshold, and no Card's z-index ever moves", async () => {
+	test("the Cards in front come up onto it and the ones behind down, whole at the threshold, the Deck fading with them, and no Card's z-index ever moves", async () => {
 		const pile = makePile({});
 		const [back, middle, front] = pile.map((card) => card.values);
 		if (!back || !middle || !front) throw new Error("Missing a Card");
 		const stacked = () => [back, middle, front].map((card) => card.z.get());
 		const before = stacked();
-		const { pull } = await bindPile(
+		const { pull, opacity } = await bindPile(
 			pile,
 			"middle",
 			(value, to, velocity) => {
@@ -240,8 +242,13 @@ describe("D's fold onto a Card from inside the Deck", () => {
 		expect(front.v.get()).toBeLessThan(180);
 		expect(back.v.get()).toBeGreaterThan(100);
 		expect(stacked()).toEqual(before);
+		await pointerEvent(() => pull.set(-48));
+		await nextFrame();
+		/* the Deck's one layer fades by the gather's share */
+		expect(opacity.get()).toBeCloseTo(0.75, 6);
 		await pointerEvent(() => pull.set(-96));
 		await nextFrame();
+		expect(opacity.get()).toBeCloseTo(0.5, 6);
 		for (const other of [back, front]) {
 			expect(other.u.get()).toBeCloseTo(middle.u.get(), 6);
 			expect(other.v.get()).toBeCloseTo(middle.v.get(), 6);
@@ -253,6 +260,7 @@ describe("D's fold onto a Card from inside the Deck", () => {
 		await nextFrame();
 		expect(front.v.get()).toBe(180);
 		expect(front.s.get()).toBe(1.05);
+		expect(opacity.get()).toBe(1);
 		expect(stacked()).toEqual(before);
 	});
 });

@@ -4,7 +4,7 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { DeckCards, type VariantProps } from "./deck-cards";
+import { DeckCards, DeckLayer, type VariantProps } from "./deck-cards";
 import type { Rect, Slot } from "./geometry";
 import { pileSlots } from "./layout";
 import { REDUCED_EXIT_MS, SPRINGS, settle, transition } from "./motion-kit";
@@ -27,6 +27,8 @@ import { DUMMY_DECK } from "./words";
 /** A strip panel tucks this far under the next Card, past its rounded corners. */
 const TUCK_PX = 16;
 const POP = { ms: 240 };
+/** The Deck's exit fade runs even: an eased one is all but out in its first half, before the drift has shown. */
+const EVEN = [0, 0, 1, 1] as const;
 /** Under this much height the panel shows its icon without the label. */
 const LABEL_ROOM_PX = 56;
 
@@ -176,6 +178,7 @@ export function SwipeVariant({
 			const bound = bindDeck(deck, g.id, axis, pull, {
 				threshold: knobs.threshold,
 				curve: knobs.collapseCurve,
+				opacity: knobs.dismissOpacity,
 				/* the Deck's own settle, carried on: settle scales px/s by slow-mo */
 				settle: (value, to, velocity) =>
 					settle(
@@ -254,12 +257,54 @@ export function SwipeVariant({
 	}
 
 	/**
+	 * The folded Deck leaves as one: it carries on the way the hand went,
+	 * at the hand's speed, and slows to a stop within `driftPx`, while the
+	 * layer it is drawn in fades out evenly in `exitFadeMs`. The drift is a
+	 * critically damped spring whose rate is the hand's speed over the
+	 * distance it covers: an exponential decay from that speed, which
+	 * never overshoots. Its time constant is a third of the fade, or
+	 * shorter where the hand was fast enough to carry the Deck further
+	 * than `driftPx`. A hand at rest or turned back carries nothing on;
+	 * reduced, the Deck only fades.
+	 */
+	async function vanish(axis: Axis, sign: -1 | 1, speed: number) {
+		const fade = animate(
+			deck.opacity,
+			0,
+			transition({ ms: knobs.exitFadeMs, ease: EVEN }, motion),
+		);
+		const key = axis === "inline" ? "u" : "v";
+		/* px/s the way the Card went */
+		const way = Math.max(0, speed * sign) * 1000;
+		const drifts =
+			motion.reduce || way === 0 || knobs.driftPx <= 0
+				? []
+				: (() => {
+						const rate = Math.max(
+							3000 / Math.max(1, knobs.exitFadeMs),
+							way / knobs.driftPx,
+						);
+						const spec = {
+							stiffness: rate * rate,
+							damping: 2 * rate,
+						};
+						return deck.order.map((id) => {
+							const value = deck.valuesOf(id)[key];
+							const to = value.get() + (sign * way) / rate;
+							return settle(value, to, spec, motion, sign * way);
+						});
+					})();
+		await fade;
+		/* faded out, the rest of the drift would show nothing */
+		for (const drift of drifts) drift.stop();
+	}
+
+	/**
 	 * At it: the panel fades as the Card opens, or as the Card and the Deck
-	 * folded under it leave as one, at the hand's speed: the fold is whole
-	 * there, and the other Cards, which just finished it, would otherwise
-	 * slide out from under the Card. The Card opens in a straight line
-	 * from where the hand let go, so a swipe toward inline-end never
-	 * carries it further that way first.
+	 * folded onto it leave as one: the fold is whole there, and the other
+	 * Cards, which just finished it, would otherwise part from the Card.
+	 * The Card opens in a straight line from where the hand let go, so a
+	 * swipe toward inline-end never carries it further that way first.
 	 */
 	async function commit(
 		g: Gesture,
@@ -279,22 +324,16 @@ export function SwipeVariant({
 				motion,
 			),
 		);
-		const velocity =
-			axis === "inline" ? { u: speed, v: 0 } : { u: 0, v: speed };
 		if (verdict.zone === "expand") {
-			await deck.expand(g.id, velocity);
+			await deck.expand(
+				g.id,
+				axis === "inline" ? { u: speed, v: 0 } : { u: 0, v: speed },
+			);
 			if (gen.current === g.gen) setPanel(null);
 			return;
 		}
 		const sign = pull.get() < 0 ? -1 : 1;
-		await deck.dismiss({
-			direction:
-				axis === "inline" ? { u: sign, v: 0 } : { u: 0, v: sign },
-			lead: g.id,
-			stagger: 0,
-			velocity,
-			together: true,
-		});
+		await deck.leave(() => vanish(axis, sign, speed));
 		setPanel(null);
 	}
 
@@ -396,8 +435,10 @@ export function SwipeVariant({
 		? panelBox(deck.slots, index, panel, knobs.panelInset, anchor)
 		: null;
 	const owner = panel ? deck.valuesOf(panel.id) : null;
+	/* the panel is in the Deck's layer too, under the Cards in front of
+	   its Card: faded with them, it never shows through one */
 	return (
-		<>
+		<DeckLayer opacity={deck.opacity}>
 			{panel && box && owner && deck.status !== "gone" ? (
 				<SwipePanel
 					key={`${panel.id}-${panel.axis}`}
@@ -423,6 +464,6 @@ export function SwipeVariant({
 				highlight={pressed === null && deck.status === "dealt"}
 				onDown={onDown}
 			/>
-		</>
+		</DeckLayer>
 	);
 }

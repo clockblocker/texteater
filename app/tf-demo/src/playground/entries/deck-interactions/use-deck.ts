@@ -101,6 +101,8 @@ export function useDeck({
 	const [marks, setMarks] = useState<Readonly<Record<string, Mark | null>>>(
 		{},
 	);
+	/** The whole Deck's opacity, as one flattened layer: only D's Close deck lowers it. */
+	const [opacity] = useState(() => motionValue(1));
 	const [values] = useState(() => {
 		const first = layout(frame, initialOrder.length);
 		return new Map(
@@ -318,29 +320,42 @@ export function useDeck({
 	}, [expanded, readouts, slotOf, place, valuesOf, order]);
 
 	/**
+	 * The Deck leaves as `exit` takes it, the variant's own motion; it is
+	 * gone once that is done.
+	 */
+	const leave = useCallback(
+		async (exit: () => Promise<unknown>) => {
+			setStatus("leaving");
+			readouts.set({ phase: "settling" });
+			for (const id of order) clearMark(id);
+			await exit();
+			busy.current.clear();
+			setStatus("gone");
+			readouts.set({ phase: "gone", zone: null });
+		},
+		[order, clearMark, readouts],
+	);
+
+	/**
 	 * The Deck leaves along `direction` (logical, unit length): the lead
 	 * Card first with the hand's velocity, the rest after it `stagger` ms
-	 * apart, each keeping its own speed, or, `together`, folded under the
-	 * lead, with the lead's. A reduced exit moves 24 px while it fades.
+	 * apart, each keeping its own speed. A reduced exit moves 24 px while
+	 * it fades.
 	 */
 	const dismiss = useCallback(
-		async ({
+		({
 			direction,
 			lead,
 			stagger,
 			spec = SPRINGS.fly,
 			velocity,
-			together = false,
 		}: {
 			readonly direction: Point;
 			readonly lead: string | null;
 			readonly stagger: number;
 			readonly spec?: SpringSpec;
 			readonly velocity?: Point;
-			readonly together?: boolean;
 		}) => {
-			setStatus("leaving");
-			readouts.set({ phase: "settling" });
 			const context = motionRef.current;
 			const rest = [...order].reverse().filter((id) => id !== lead);
 			const leaving = lead ? [lead, ...rest] : rest;
@@ -350,51 +365,48 @@ export function useDeck({
 						v: direction.v * REDUCED_EXIT_PX,
 					}
 				: exitOffset(frame, direction);
-			await Promise.all(
-				leaving.map(async (id, index) => {
-					const card = valuesOf(id);
-					clearMark(id);
-					/* a Card not held back starts at once: a timer of 0 would
-					   start each a task apart, after the render, and Cards
-					   leaving together would part by its length */
-					if (index * stagger > 0)
-						await wait(index * stagger, context);
-					const to = {
-						u: card.u.get() + reach.u,
-						v: card.v.get() + reach.v,
-					};
-					const own = together || id === lead ? velocity : undefined;
-					if (context.reduce) {
+			return leave(() =>
+				Promise.all(
+					leaving.map(async (id, index) => {
+						const card = valuesOf(id);
+						/* a Card not held back starts at once: a timer of 0
+						   would start each a task apart, after the render */
+						if (index * stagger > 0)
+							await wait(index * stagger, context);
+						const to = {
+							u: card.u.get() + reach.u,
+							v: card.v.get() + reach.v,
+						};
+						const own = id === lead ? velocity : undefined;
+						if (context.reduce) {
+							await Promise.all([
+								tweenTo(card.u, to.u, REDUCED_EXIT_MS, context),
+								tweenTo(card.v, to.v, REDUCED_EXIT_MS, context),
+								tweenTo(card.o, 0, REDUCED_EXIT_MS, context),
+							]);
+							return;
+						}
 						await Promise.all([
-							tweenTo(card.u, to.u, REDUCED_EXIT_MS, context),
-							tweenTo(card.v, to.v, REDUCED_EXIT_MS, context),
-							tweenTo(card.o, 0, REDUCED_EXIT_MS, context),
+							settle(
+								card.u,
+								to.u,
+								spec,
+								context,
+								own && own.u * 1000,
+							),
+							settle(
+								card.v,
+								to.v,
+								spec,
+								context,
+								own && own.v * 1000,
+							),
 						]);
-						return;
-					}
-					await Promise.all([
-						settle(
-							card.u,
-							to.u,
-							spec,
-							context,
-							own && own.u * 1000,
-						),
-						settle(
-							card.v,
-							to.v,
-							spec,
-							context,
-							own && own.v * 1000,
-						),
-					]);
-				}),
+					}),
+				),
 			);
-			busy.current.clear();
-			setStatus("gone");
-			readouts.set({ phase: "gone", zone: null });
 		},
-		[order, frame, valuesOf, clearMark, readouts],
+		[order, frame, valuesOf, leave],
 	);
 
 	/** Deals the Deck again, in its first order, rising into place. */
@@ -407,6 +419,7 @@ export function useDeck({
 		const fresh = layout(frame, initialOrder.length);
 		/* jumps, not sets: the Deck is gone, so nothing visibly teleports,
 		   and a set would hand the next spring the jump as velocity */
+		opacity.jump(1);
 		initialOrder.forEach((id, index) => {
 			const card = valuesOf(id);
 			const slot = fresh[index];
@@ -430,7 +443,7 @@ export function useDeck({
 		});
 		setStatus("dealt");
 		readouts.set({ phase: "rest", zone: null, tilt: 0 });
-	}, [layout, frame, valuesOf, readouts, initialOrder]);
+	}, [layout, frame, valuesOf, readouts, opacity, initialOrder]);
 
 	const dealt = useRef(deal);
 	useEffect(() => {
@@ -446,6 +459,7 @@ export function useDeck({
 		expanded,
 		marks,
 		slots,
+		opacity,
 		valuesOf,
 		slotOf,
 		place,
@@ -459,6 +473,7 @@ export function useDeck({
 		expand,
 		closeCover,
 		dismiss,
+		leave,
 		redeal,
 		motion: motionRef,
 	};

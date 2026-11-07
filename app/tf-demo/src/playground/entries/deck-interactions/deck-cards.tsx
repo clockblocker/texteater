@@ -1,4 +1,9 @@
-import { type PointerEvent as ReactPointerEvent, useEffect } from "react";
+import { type MotionValue, motion } from "motion/react";
+import {
+	type ReactNode,
+	type PointerEvent as ReactPointerEvent,
+	useEffect,
+} from "react";
 import { CardFace, CardView } from "./card-view";
 import type { Frame } from "./layout";
 import type { MotionContext } from "./motion-kit";
@@ -81,6 +86,30 @@ export function DeckCards({
 			</CardView>
 		);
 	});
+}
+
+/**
+ * The Deck as one flattened layer over the whole frame: its opacity fades
+ * every Card in it as one picture, so no Card ever shows through another.
+ * It is its own stacking context at any opacity, so what is in it stacks
+ * the same whether it is faded or not.
+ */
+export function DeckLayer({
+	opacity,
+	children,
+}: {
+	readonly opacity: MotionValue<number>;
+	readonly children: ReactNode;
+}) {
+	return (
+		<motion.div
+			data-deck-layer=""
+			className="absolute inset-0 isolate"
+			style={{ opacity }}
+		>
+			{children}
+		</motion.div>
+	);
 }
 
 /** The projected endpoint of the Card's centre: an evaluator's mark, off by default. */

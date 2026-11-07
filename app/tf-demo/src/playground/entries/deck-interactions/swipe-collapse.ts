@@ -16,7 +16,7 @@ export type Binding = {
 	readonly anchor: Point;
 	/** Unhooks the Cards where they show. */
 	readonly stop: () => void;
-	/** Unhooks them and sends each to its slot on a spring that keeps its speed. */
+	/** Unhooks them and sends each to its slot, and the Deck to opaque, on a spring that keeps its speed. */
 	readonly scatter: () => void;
 };
 
@@ -32,7 +32,7 @@ const KEYS = ["u", "v", "s"] as const;
 /** What a binding reads of the Deck and moves in it. */
 type Pile = Pick<
 	Deck,
-	"order" | "slots" | "slotOf" | "valuesOf" | "release" | "place"
+	"order" | "slots" | "slotOf" | "valuesOf" | "release" | "place" | "opacity"
 >;
 
 /**
@@ -44,7 +44,10 @@ type Pile = Pick<
  * the collapse, so the Cards fold in together, never stop short to do
  * it, and are whole exactly at the threshold, where a release commits:
  * the ones behind come down onto it, the ones in front up. They aim at
- * the Card's drawn top edge, and none ends bigger than the Card.
+ * the Card's drawn top edge, and none ends bigger than the Card. The
+ * Deck's opacity, one layer for every Card, goes by the same share from
+ * its own base, opaque or on its way there, to `opacity` at the
+ * threshold.
  *
  * No Card's z-index moves: the ones behind go under the Card and the ones
  * in front over it, so the folded stack shows the front Card it showed
@@ -59,6 +62,8 @@ export function bindDeck(
 	rules: {
 		readonly threshold: number;
 		readonly curve: CollapseCurve;
+		/** The Deck's opacity once it is whole. */
+		readonly opacity: number;
 		readonly settle: Settle;
 	},
 ): Binding {
@@ -82,6 +87,8 @@ export function bindDeck(
 		const dv = (slot.h * s - slot.h) / 2 - lift;
 		return [{ id, slot, values, base, s, dv }];
 	});
+	const faded = motionValue(deck.opacity.get());
+	rules.settle(faded, 1, deck.opacity.getVelocity());
 	/* The fold takes the other Cards from whatever moved them in its first
 	   frame: a spring stopped there has drawn that frame and stops as it
 	   is, while one stopped from the pointer event would draw once more,
@@ -106,6 +113,7 @@ export function bindDeck(
 			taken = true;
 			for (const { values } of followers)
 				for (const key of KEYS) values[key].stop();
+			deck.opacity.stop();
 		}
 		const { u, v } = at();
 		if (axis === "inline") card.u.set(u);
@@ -122,12 +130,15 @@ export function bindDeck(
 			values.v.set(from.v + (v + dv - from.v) * share);
 			values.s.set(from.s + (s - from.s) * share);
 		}
+		const from = faded.get();
+		deck.opacity.set(from + (rules.opacity - from) * share);
 	};
 	const redraw = () => {
 		frame.preRender(draw);
 	};
 	const stops = [
 		pull.on("change", redraw),
+		faded.on("change", redraw),
 		...followers.flatMap(({ base }) =>
 			KEYS.map((key) => base[key].on("change", redraw)),
 		),
@@ -139,6 +150,7 @@ export function bindDeck(
 		for (const unhook of stops) unhook();
 		for (const { base } of followers)
 			for (const key of KEYS) base[key].stop();
+		faded.stop();
 	};
 	return {
 		lead,
@@ -151,6 +163,7 @@ export function bindDeck(
 			if (home) void deck.place(lead, home);
 			for (const follower of followers)
 				void deck.place(follower.id, follower.slot);
+			rules.settle(deck.opacity, 1, deck.opacity.getVelocity());
 		},
 	};
 }

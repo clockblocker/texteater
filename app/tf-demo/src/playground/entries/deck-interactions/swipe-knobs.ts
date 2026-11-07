@@ -8,6 +8,10 @@ import { COLLAPSE_CURVES, type CollapseCurve } from "./swipe-gesture";
  * springs are Motion's stiffness/damping at mass 1. The icon's lock is
  * response 0.24 s, ζ 0.76, a little bounce because the hand carried it
  * there; the reduced return is critically damped at whatever stiffness.
+ * Toward Close deck the Deck fades as one layer with the gather, to
+ * `dismissOpacity` at the threshold; a commit carries it on at the hand's
+ * speed for at most `driftPx`, slowing to a stop, while it fades out in
+ * `exitFadeMs`.
  */
 export const SWIPE_DEFAULTS = {
 	threshold: 96,
@@ -15,6 +19,9 @@ export const SWIPE_DEFAULTS = {
 	axisLock: 10,
 	takeUp: 24,
 	collapseCurve: "linear" as CollapseCurve,
+	dismissOpacity: 0.5,
+	driftPx: 40,
+	exitFadeMs: 220,
 	panelInset: 16,
 	tint: 0.2,
 	floodMs: 100,
@@ -53,6 +60,9 @@ export const SWIPE_KNOBS: readonly SwipeKnob[] = [
 		label: "Deck collapse curve",
 		options: COLLAPSE_CURVES,
 	},
+	num("dismissOpacity", "Deck opacity at the dismiss point", 0, 1, 0.05),
+	num("driftPx", "Deck drift on a Close deck commit", 0, 160, 2, "px"),
+	num("exitFadeMs", "Deck fade on a Close deck commit", 0, 600, 10, "ms"),
 	num("panelInset", "Panel inset from the Card's edges", 0, 40, 1, "px"),
 	num("tint", "Panel tint before the threshold", 0, 0.6, 0.01),
 	num("floodMs", "Colour flood", 0, 400, 10, "ms"),

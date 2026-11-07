@@ -8,7 +8,9 @@ import {
 	frame,
 	front,
 	inspector,
+	landed,
 	lastRelease,
+	layerOpacity,
 	lift,
 	type Moment,
 	panel,
@@ -204,6 +206,7 @@ test("D: one breakpoint for any Card: 1 px short nothing says it will go, at the
 	await chooseVariant(page, "D · Swipe actions");
 	/* the front Card, one from the middle, and the backmost */
 	for (const lead of [3, 1, 0]) {
+		await landed(page);
 		const rest = await anchors(page);
 		/* every frame of the gather, the cancel, the gather again and the commit */
 		const stacking = await watchStacking(page, lead);
@@ -215,8 +218,10 @@ test("D: one breakpoint for any Card: 1 px short nothing says it will go, at the
 		await expect(lastRelease(page)).toHaveText("back · short 95");
 		await expect(frame(page).locator("[data-card-id]")).toHaveCount(4);
 		await expect(panel(page)).toHaveCount(0);
+		expect(await layerOpacity(page)).toBe(1);
 		await pull(page, card(page, lead), -96, 0);
 		await expect(panel(page)).toHaveAttribute("data-armed", "true");
+		expect(await layerOpacity(page)).toBeCloseTo(0.5, 2);
 		const now = await anchors(page);
 		expect(spread(now, lead)).toBeLessThanOrEqual(1);
 		/* the Cards in front came up onto it, the ones behind down */
@@ -238,6 +243,7 @@ test("D: one breakpoint for any Card: 1 px short nothing says it will go, at the
 		expect(stacked.frames).toBeGreaterThan(30);
 		expect(stacked.restacked).toBe(0);
 		expect(stacked.panelOff).toBe(0);
+		expect(stacked.faded).toBe(0);
 		await redeal(page);
 	}
 });
@@ -249,6 +255,7 @@ test("D: under reduced motion no Card changes its place in the stack either, thr
 	await reduceMotion(page);
 	/* one from the middle, and the backmost */
 	for (const lead of [1, 0]) {
+		await landed(page);
 		const stacking = await watchStacking(page, lead);
 		await pull(page, card(page, lead), -60, 0);
 		await page.mouse.up();
@@ -263,6 +270,7 @@ test("D: under reduced motion no Card changes its place in the stack either, thr
 		expect(stacked.frames).toBeGreaterThan(20);
 		expect(stacked.restacked).toBe(0);
 		expect(stacked.panelOff).toBe(0);
+		expect(stacked.faded).toBe(0);
 		await redeal(page);
 	}
 });
@@ -406,16 +414,20 @@ test("D: toward Close deck the rest of the Deck folds in at once onto any Card, 
 		const half = await shares(page, rest, lead);
 		expect(Math.max(...half) - Math.min(...half)).toBeLessThan(0.01);
 		for (const share of half) expect(share).toBeCloseTo(0.5, 2);
+		/* the Deck fades as one layer by the same share */
+		expect(await layerOpacity(page)).toBeCloseTo(0.75, 2);
 		await page.mouse.move(start.x - 150, start.y, { steps: 30 });
 		await page.waitForTimeout(150);
 		for (const share of await shares(page, rest, lead))
 			expect(share).toBeCloseTo(1, 3);
+		expect(await layerOpacity(page)).toBeCloseTo(0.5, 2);
 		await page.mouse.move(start.x - 40, start.y, { steps: 30 });
 		await page.waitForTimeout(150);
 		await page.mouse.up();
 		await expect(lastRelease(page)).toHaveText(/^back · short/);
 		await expect.poll(() => strayed(page, rest)).toBeLessThan(0.5);
 		await expect.poll(() => styles(page, "z-index")).toEqual(z);
+		await expect.poll(() => layerOpacity(page)).toBe(1);
 	}
 });
 
