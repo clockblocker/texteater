@@ -8,6 +8,7 @@ import {
 	LayersIcon,
 	LoaderIcon,
 	type LucideIcon,
+	Maximize2Icon,
 	PaletteIcon,
 	SparklesIcon,
 	StickyNoteIcon,
@@ -15,6 +16,7 @@ import {
 import { type ReactNode, useEffect } from "react";
 import { AnimationWorkbench } from "./entries/animation-workbench/workbench";
 import { BreakdownsPrototype } from "./entries/breakdowns/breakdowns";
+import { CardToCover } from "./entries/card-to-cover/card-to-cover";
 import { DeckInteractions } from "./entries/deck-interactions/deck-interactions";
 import { DeckModelsGallery } from "./entries/deck-models-gallery";
 import { DeckTricks } from "./entries/deck-tricks/deck-tricks";
@@ -107,6 +109,14 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"deck-of-cards' tricks played by tf-demo's own Deck model: 52 small Cards with the library's faces on its felt, moved by useDeck's values on motion-kit's deck-of-cards profile, with Intro, Flip, Shuffle, By suit, Fan, Poker, Sort, slow-mo and reduced motion in the inspector.",
 		render: () => <DeckTricks />,
+	},
+	{
+		key: "card-to-cover",
+		title: "Card to Cover",
+		icon: Maximize2Icon,
+		description:
+			"A Card growing into its Cover while its parts change places, after react-flip-toolkit's StaggeredList: one element whose box resizes on its own values, its title row, Source contexts and lines moving with Motion's layout=\"position\", and the Cover-only × and contexts fading in after the move. Spring or tween, part delay, stagger, contain, slow-mo, reduced motion, RTL and per-frame readouts in the inspector.",
+		render: () => <CardToCover />,
 	},
 	{
 		key: "pokemon-cards",
