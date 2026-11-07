@@ -4,6 +4,7 @@ import type { Pose } from "../core/move";
 import type { Place, SlotId } from "../core/place";
 import type { MotionPolicy } from "../core/reduce";
 import { type Channel, done, sumAt, type Term } from "../core/term";
+import type { TiltFeel } from "../core/tilt";
 import {
 	DEFAULT_TURN,
 	frontOpacity,
@@ -11,6 +12,7 @@ import {
 	type TurnFeel,
 	turnLift,
 } from "../core/turn";
+import { type TiltState, writeTilt } from "./tilt";
 
 /** Where a Body stands: on its Slot, in the hand, or leaving for good. */
 type Mode = "rest" | "hand" | "unmoored";
@@ -49,6 +51,10 @@ export type BodyState = {
 	boxDirty: boolean;
 	readonly parts: Map<string, PartState>;
 	readonly written: Set<string>;
+	/** Its lean toward the pointer, while it has one. */
+	tilt: TiltState | null;
+	/** Its Glares, which only its tilt writes. */
+	readonly lights: Set<HTMLElement>;
 };
 
 /** A clock in ms. The Table's runs slower under slow-mo. */
@@ -127,6 +133,10 @@ export class Engine {
 	policy: MotionPolicy = { reduced: false };
 	dir: 1 | -1 = 1;
 	turn: TurnFeel = DEFAULT_TURN;
+	/** How a handled Body tilts, or `null` when nothing tilts. */
+	tilt: TiltFeel | null = null;
+	/** The Bodies with a tilt, oldest first. */
+	readonly tilting = new Set<BodyState>();
 	/** Development checks: every Place has a Slot; nothing anchors to a transformed box. */
 	assert = false;
 	/** Set while `transact` commits, so a Body can tell a jump outside one. */
@@ -188,6 +198,8 @@ export class Engine {
 				boxDirty: false,
 				parts: new Map(),
 				written: new Set(),
+				tilt: null,
+				lights: new Set(),
 			};
 			this.bodies.set(id, body);
 		}
@@ -207,6 +219,8 @@ export class Engine {
 			body.box = null;
 			body.base = REST_BASE;
 			body.written.clear();
+			body.tilt = null;
+			this.tilting.delete(body);
 			this.active.delete(body);
 		}
 		body.el = el;
@@ -214,7 +228,10 @@ export class Engine {
 
 	detach(id: string, el: HTMLElement) {
 		const body = this.bodies.get(id);
-		if (body?.el === el) body.el = null;
+		if (body?.el !== el) return;
+		body.el = null;
+		body.tilt = null;
+		this.tilting.delete(body);
 	}
 
 	/** Where the Table's px boxes start, in client px. */
@@ -350,7 +367,8 @@ export class Engine {
 			);
 			parts ||= part.terms.length > 0;
 		}
-		return body.terms.length > 0 || parts;
+		const leaning = writeTilt(this, body, now);
+		return body.terms.length > 0 || parts || leaning;
 	}
 
 	/** The px box a held or leaving Body stands on, in the Table's px. */

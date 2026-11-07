@@ -274,3 +274,32 @@ export function Part({
 		</div>
 	);
 }
+
+/**
+ * A light layer for a face: a glare lit only while its Body is handled and
+ * at opacity 0 everywhere else (#1314). Its look is plain CSS on
+ * `--glare-x`, `--glare-y` (where the light sits) and `--glare-o`, which the
+ * Body's tilt alone writes. Place it last in each face that should shine.
+ */
+export function Glare({ className }: { readonly className?: string }) {
+	const { id, engine } = useBody();
+	const ref = useCallback(
+		(el: HTMLDivElement | null) => {
+			if (!el) return;
+			const body = engine.body(id);
+			body.lights.add(el);
+			return () => {
+				body.lights.delete(el);
+			};
+		},
+		[engine, id],
+	);
+	return (
+		<div
+			ref={ref}
+			aria-hidden="true"
+			data-tabletop-glare=""
+			className={className}
+		/>
+	);
+}

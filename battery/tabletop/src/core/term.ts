@@ -4,7 +4,8 @@ import type { Ease } from "./ease";
 /**
  * What a Term moves. The box is physical CSS px; `rotate`, `turn`, `tiltX`
  * and `tiltY` are degrees; `lift` is a share of the Body's size (0.06 is 6%
- * bigger); `z` is stacking order; `opacity` is added to 1.
+ * bigger); `z` is stacking order; `opacity` is added to 1; `glare` is how
+ * lit a Body's glare is, 0 to 1.
  */
 export type Channel =
 	| "x"
@@ -17,7 +18,8 @@ export type Channel =
 	| "turn"
 	| "tiltX"
 	| "tiltY"
-	| "opacity";
+	| "opacity"
+	| "glare";
 
 export const BOX_CHANNELS = ["x", "y", "width", "height"] as const;
 

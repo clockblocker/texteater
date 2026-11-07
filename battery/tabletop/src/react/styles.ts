@@ -4,8 +4,10 @@
  * order and side from `--rest-*`, which React writes. Motion is the
  * `--fly-*` offsets the Table writes while something moves, added inside
  * `calc()` so the box really resizes. Held and leaving Bodies stand on a px
- * box (`--box-*`) instead of their Slot. Every property the Table writes is
- * registered and doesn't inherit, so a write restyles one element.
+ * box (`--box-*`) instead of their Slot. A tilting Body leans by its
+ * `transform` (`--tilt-*`) and lights its Glares (`--glare-*`). Every
+ * property the Table writes is registered and doesn't inherit, so a write
+ * restyles one element.
  */
 
 const LENGTHS = [
@@ -26,7 +28,10 @@ const ANGLES = [
 	"--box-rotate",
 	"--fly-turn",
 	"--rest-turn",
+	"--tilt-x",
+	"--tilt-y",
 ];
+const PERCENTAGES = ["--glare-x", "--glare-y"];
 const NUMBERS: readonly (readonly [string, number])[] = [
 	["--fly-lift", 0],
 	["--fly-opacity", 0],
@@ -35,6 +40,8 @@ const NUMBERS: readonly (readonly [string, number])[] = [
 	["--rest-scale", 1],
 	["--box-scale", 1],
 	["--turn-lift", 1],
+	["--tilt-lift", 0],
+	["--glare-o", 0],
 ];
 const INTEGERS = ["--fly-z", "--rest-z", "--box-z", "--fly-raise"];
 
@@ -45,6 +52,7 @@ function property(name: string, syntax: string, initial: string | number) {
 const REGISTERED = [
 	...LENGTHS.map((name) => property(name, "<length>", "0px")),
 	...ANGLES.map((name) => property(name, "<angle>", "0deg")),
+	...PERCENTAGES.map((name) => property(name, "<percentage>", "50%")),
 	...NUMBERS.map(([name, initial]) => property(name, "<number>", initial)),
 	...INTEGERS.map((name) => property(name, "<integer>", 0)),
 ].join("\n");
@@ -74,6 +82,8 @@ scale:calc(var(--box-scale) * (1 + var(--fly-lift)));
 z-index:calc(var(--box-z) + var(--fly-z));
 opacity:calc(var(--box-o) + var(--fly-opacity))}
 [data-tabletop-body][data-mode="unmoored"]{pointer-events:none}
+[data-tabletop-body][data-tilt]{transform:perspective(var(--tilt-perspective,600px)) rotateX(var(--tilt-x)) rotateY(calc(-1 * var(--dir) * var(--tilt-y))) scale(calc(1 + var(--tilt-lift)))}
+[data-reduced] [data-tabletop-body]{transform:none}
 [data-tabletop-shell]{display:grid;width:100%;height:100%;transform-style:preserve-3d;
 transform:perspective(var(--turn-perspective,600px)) rotateY(calc(var(--dir) * ${TURN})) scale(var(--turn-lift))}
 [data-turn-axis="x"] [data-tabletop-shell]{transform:perspective(var(--turn-perspective,600px)) rotateX(${TURN}) scale(var(--turn-lift))}
@@ -84,4 +94,6 @@ backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;co
 [data-reduced] [data-tabletop-shell],[data-reduced] [data-tabletop-face="back"]{transform:none}
 [data-reduced] [data-tabletop-face="front"]{opacity:var(--turn-front,1)}
 [data-reduced] [data-tabletop-shell][data-side="back"]>[data-tabletop-face="front"]{opacity:var(--turn-front,0)}
-[data-tabletop-part]{translate:var(--part-x) var(--part-y);opacity:calc(1 + var(--part-o))}`;
+[data-tabletop-part]{translate:var(--part-x) var(--part-y);opacity:calc(1 + var(--part-o))}
+[data-tabletop-glare]{position:absolute;inset:0;pointer-events:none;border-radius:inherit;opacity:var(--glare-o);mix-blend-mode:screen;
+background:radial-gradient(farthest-corner circle at var(--glare-x) var(--glare-y),#ffffff59 0%,#ffffff1a 35%,#0000 70%)}`;

@@ -54,6 +54,12 @@ A piece of a Body's face that keeps its identity across forms and travels to
 its new place when the form changes.
 _Avoid_: child, fragment
 
+**Tilt**:
+A Body's lean toward the pointer over it, about its own two axes, with a glare
+lit on that Body alone. Only the Body under the pointer or in the hand tilts,
+and nothing tilts under reduced motion.
+_Avoid_: hover effect, parallax
+
 **Trick**:
 A scripted Move for a Deck: a new order and Places for its Cards, and the
 waypoints each Card passes on the way. A waypoint is never a Place.

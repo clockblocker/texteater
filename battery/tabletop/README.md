@@ -5,12 +5,12 @@ moves by Terms that decay to nothing ([ADR 0001](./docs/adr/0001-rest-bodies-in-
 
 - `src/core`, exported as `tabletop/core`: pure, with no DOM and no React.
   Terms and their curves, `retarget` (a change of rest that keeps position and
-  velocity), `reduce` (the one reduced-motion policy), the turn, pose functions
-  that emit Slots (`pile`, `fan`, `grid`, `row`, `cover`), deck-of-cards'
-  tricks as plans, and the one set of springs.
+  velocity), `reduce` (the one reduced-motion policy), the turn, the tilt,
+  pose functions that emit Slots (`pile`, `fan`, `grid`, `row`, `cover`),
+  deck-of-cards' tricks as plans, and the one set of springs.
 - `src/react`, exported as `tabletop/react`: `Table`, `Region`, `Slot`, `Body`,
-  `Shell`, `Part` and `useHand`, on Motion's frame loop with no layout
-  projection.
+  `Shell`, `Part`, `Glare` and `useHand`, on Motion's frame loop with no
+  layout projection.
 
 Each entry exports only what another workspace uses; the rest stays inside
 the battery until a caller needs it.

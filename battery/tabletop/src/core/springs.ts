@@ -26,8 +26,11 @@ export const SPRINGS = {
 	fly: { stiffness: 360, damping: 38 },
 	/** A Card into its Cover and back, the workspace's MORPH. */
 	morph: { stiffness: 380, damping: 38 },
-	/** A lean under the hand. */
-	tilt: { stiffness: 300, damping: 22 },
+	/**
+	 * A tilt toward the pointer: response 0.36 s, ζ 0.98, so it follows
+	 * without a wobble. The playground's lean keeps its springier 300/22.
+	 */
+	tilt: { stiffness: 300, damping: 34 },
 	/** A pick-up that lands with a little give: response 0.25, ζ 0.65. */
 	pop: { stiffness: 632, damping: 33 },
 } as const satisfies Record<string, SpringSpec>;

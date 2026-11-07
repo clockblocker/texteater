@@ -30,7 +30,7 @@ export const REDUCED = {
 } as const;
 
 const TRAVEL = new Set<Channel>(["x", "y", "width", "height", "rotate"]);
-const STILL = new Set<Channel>(["lift", "tiltX", "tiltY"]);
+const STILL = new Set<Channel>(["lift", "tiltX", "tiltY", "glare"]);
 
 function startOf(term: Term): number {
 	return term.delta * startShare(term.curve);

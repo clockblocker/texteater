@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { DEFAULT_TURN, type TurnFeel } from "tabletop/core";
+import { DEFAULT_TURN, type TiltFeel, type TurnFeel } from "tabletop/core";
 import { Table, useTable } from "tabletop/react";
 import { useMotionPreference } from "@/lib/motion-preference";
 import { Inspector, InspectorChoice, InspectorSection } from "../inspector";
 import { SceneView } from "./scene-view";
+import { NOTE_TILT, TiltSection } from "./tilt-knobs";
 import { type SceneActions, useScene } from "./use-scene";
 
 const TITLE = "Tabletop";
@@ -29,6 +30,8 @@ export function TabletopEntry() {
 	const [timeScale, setTimeScale] = useState<number>(1);
 	const [rtl, setRtl] = useState(false);
 	const [turn, setTurn] = useState<TurnFeel>(NOTE_TURN);
+	const [tiltOn, setTiltOn] = useState(true);
+	const [tilt, setTilt] = useState<TiltFeel>(NOTE_TILT);
 	const { preference } = useMotionPreference();
 	const table = useTable();
 	const actions = useScene(table);
@@ -42,6 +45,7 @@ export function TabletopEntry() {
 					alwaysPlay={preference === "ignore"}
 					timeScale={timeScale}
 					turn={turn}
+					tilt={tiltOn ? tilt : null}
 					assert={import.meta.env.DEV}
 					className="flex min-h-[36rem] min-w-0 flex-1 select-none"
 				>
@@ -75,6 +79,10 @@ export function TabletopEntry() {
 						</li>
 						<li>Grab a Card while it is still moving.</li>
 						<li>
+							Move the pointer over a Card: it tilts toward it and
+							its glare lights. Hold it by a corner.
+						</li>
+						<li>
 							Press F over a Card (or on a focused one) to turn it
 							over.
 						</li>
@@ -102,6 +110,12 @@ export function TabletopEntry() {
 						these buttons only drive the turn.
 					</p>
 				</InspectorSection>
+				<TiltSection
+					on={tiltOn}
+					feel={tilt}
+					onToggle={setTiltOn}
+					onChange={setTilt}
+				/>
 				<InspectorSection title="Motion">
 					<InspectorChoice<ReducedChoice>
 						label="Reduced motion"

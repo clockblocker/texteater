@@ -1,6 +1,6 @@
 import { type KeyboardEvent, memo, type PointerEvent } from "react";
 import type { Place } from "tabletop/core";
-import { Body, Shell } from "tabletop/react";
+import { Body, Glare, Shell } from "tabletop/react";
 import { NoteFace, PlainBack } from "./note-face";
 import { noteCard } from "./words";
 
@@ -14,7 +14,12 @@ export type CardHandlers = {
 		open: boolean,
 		event: PointerEvent<HTMLElement>,
 	) => void;
-	readonly hover: (id: string, over: boolean) => void;
+	/** The pointer entered or moved over the Card, or left it (`null`). */
+	readonly hover: (
+		id: string,
+		open: boolean,
+		event: PointerEvent<HTMLElement> | null,
+	) => void;
 	readonly key: (id: string, open: boolean, event: KeyboardEvent) => void;
 	readonly close: () => void;
 };
@@ -58,20 +63,29 @@ export const NoteBody = memo(
 				aria-expanded={open}
 				className={`rounded-[0.9rem] outline-none focus-visible:ring-2 focus-visible:ring-ring/70 ${open ? "" : "cursor-grab"}`}
 				onPointerDown={(event) => handlers.press(id, open, event)}
-				onPointerEnter={() => handlers.hover(id, true)}
-				onPointerLeave={() => handlers.hover(id, false)}
+				onPointerEnter={(event) => handlers.hover(id, open, event)}
+				onPointerMove={(event) => handlers.hover(id, open, event)}
+				onPointerLeave={() => handlers.hover(id, open, null)}
 				onKeyDown={(event) => handlers.key(id, open, event)}
 			>
 				<Shell
 					faceClassName={FACE}
 					front={
-						<NoteFace
-							card={card}
-							form={place.form}
-							onClose={handlers.close}
-						/>
+						<>
+							<NoteFace
+								card={card}
+								form={place.form}
+								onClose={handlers.close}
+							/>
+							<Glare />
+						</>
 					}
-					back={<PlainBack />}
+					back={
+						<>
+							<PlainBack />
+							<Glare />
+						</>
+					}
 				/>
 			</Body>
 		);

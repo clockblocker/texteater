@@ -10,7 +10,9 @@ import {
 	type Term,
 	timeToShare,
 } from "../core/term";
+import { FLAT } from "../core/tilt";
 import type { BodyState, Engine } from "./engine";
+import { steer } from "./tilt";
 
 /** The Move for each Body a commit changes; the rest reflow or morph. */
 export type Moves =
@@ -250,7 +252,7 @@ function flipParts(
  * The Slots' rects and the parts' offsets are read before and after the
  * commit, each in one batch; the first frame is written before the browser
  * paints. Every jump the model causes goes through here: one that doesn't
- * teleports.
+ * teleports. A Body whose box moves lets go of its tilt.
  */
 export function transact(
 	engine: Engine,
@@ -280,7 +282,16 @@ export function transact(
 		);
 		if (change) changed.push(change);
 	}
-	for (const { body } of changed) engine.write(body, now);
+	for (const { body, added } of changed) {
+		if (
+			body.tilt &&
+			added.some((term) =>
+				(BOX_CHANNELS as readonly string[]).includes(term.channel),
+			)
+		)
+			steer(engine, body, FLAT, now);
+		engine.write(body, now);
+	}
 	const offsets = changed.map(({ body }) => partOffsets(body));
 	changed.forEach((change, index) => {
 		flipParts(change, offsets[index] ?? new Map(), engine, now);

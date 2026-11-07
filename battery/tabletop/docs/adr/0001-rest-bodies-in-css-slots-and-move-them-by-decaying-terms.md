@@ -75,5 +75,9 @@ These constraints stand with the decision:
 - Each Body has its own 3D context with its paint containment on its faces, so
   a turn's lift is never clipped. Its stacking order stays raised through a
   move the hand or a morph started.
+- A Tilt is its own layer with its own writer: the Body's `transform`, written
+  only while it tilts, follows the pointer on a spring, and its Glares are lit
+  on that Body alone ([#1314](https://github.com/clockblocker/texteater/issues/1314)).
+  A change of rest never touches it, and a move of the box lets it go.
 
 [tf-demo ADR 0012]: ../../../../app/tf-demo/docs/adr/0012-place-resting-notes-against-their-pane-in-css.md

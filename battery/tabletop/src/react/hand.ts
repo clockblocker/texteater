@@ -1,7 +1,9 @@
 import type { Point } from "../core/geometry";
 import { FLIGHT, SPRINGS } from "../core/springs";
 import { sumAt, type Term } from "../core/term";
+import { FLAT } from "../core/tilt";
 import type { BodyState, Engine } from "./engine";
+import { steer } from "./tilt";
 
 /** A held Body rides this much bigger, and over every other. */
 const HELD_SCALE = 1.03;
@@ -47,7 +49,8 @@ function springTerm(
  * The hand takes `id` from where it shows: the shown box becomes the hand
  * box, the grab point stays under the pointer, and every box Term is
  * dropped. It straightens and lifts on a spring; under reduced motion it
- * only follows the hand.
+ * only follows the hand. Its tilt goes on leaning toward the spot it is held
+ * by, or lies flat and stays lit when the tilt's feel says so.
  */
 export function hold(engine: Engine, id: string, pointer: Point) {
 	const body = engine.bodies.get(id);
@@ -77,6 +80,8 @@ export function hold(engine: Engine, id: string, pointer: Point) {
 	];
 	body.boxDirty = true;
 	body.el.dataset.mode = "hand";
+	if (body.tilt && !engine.tilt?.held)
+		steer(engine, body, { ...FLAT, glare: 1 }, now);
 	engine.write(body, now);
 	engine.activate(body);
 }
@@ -172,6 +177,7 @@ export function leave(
 	];
 	body.boxDirty = true;
 	body.el.dataset.mode = "unmoored";
+	steer(engine, body, FLAT, now);
 	engine.write(body, now);
 	engine.activate(body);
 	/* the fade ends the flight: the rest of the travel is out of sight */

@@ -80,9 +80,11 @@ export function SceneView({
 				/* a Cover at rest stays put; one still growing can be caught */
 				if (!open || table.moving(id)) latest.current.press(id, event);
 			},
-			hover: (id, over) => {
-				if (over) hovered.current = id;
+			hover: (id, open, event) => {
+				if (event) hovered.current = id;
 				else if (hovered.current === id) hovered.current = null;
+				/* a Card tilts toward the pointer; a Cover lies still */
+				table.point(id, open ? null : event);
 			},
 			key: (id, open, event) => {
 				if ((event.key === "Enter" || event.key === " ") && !open) {

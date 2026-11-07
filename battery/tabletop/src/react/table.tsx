@@ -4,6 +4,7 @@ import {
 	type ReactNode,
 	use,
 	useId,
+	useLayoutEffect,
 	useState,
 	useSyncExternalStore,
 } from "react";
@@ -12,11 +13,13 @@ import type { Box, Point } from "../core/geometry";
 import type { SlotId } from "../core/place";
 import { motionPolicy } from "../core/reduce";
 import { SPRINGS } from "../core/springs";
+import type { TiltFeel } from "../core/tilt";
 import { type Trick, trickMove } from "../core/tricks";
 import { DEFAULT_TURN, type TurnFeel } from "../core/turn";
 import { type Clock, Engine } from "./engine";
 import { carry, type Flight, hold, leave } from "./hand";
 import { TABLE_CSS } from "./styles";
+import { flattenAll, type Pointing, point } from "./tilt";
 import { type Moves, transact } from "./transact";
 
 /** What the app does with the Table: every jump it causes goes through it. */
@@ -48,6 +51,13 @@ export type TableHandle = {
 	readonly play: (trick: Trick, commit?: () => void) => Promise<void>;
 	/** `id` leaves for good, flying on with the throw; drop it once this settles. */
 	readonly leave: (id: string, flight: Flight) => Promise<void>;
+	/**
+	 * The pointer is over `id`, or left it (`null`). While the Table tilts
+	 * and motion isn't reduced, a resting or held Body leans toward where the
+	 * pointer is on it and lights its Glares. A touch never tilts a Body;
+	 * call it from `onPointerEnter`, `onPointerMove` and `onPointerLeave`.
+	 */
+	readonly point: (id: string, pointer: Pointing | null) => void;
 	/** Whether `id` is moving, so a press catches it rather than taps it. */
 	readonly moving: (id: string) => boolean;
 	/** Where `id` shows now, in client px, unrotated. */
@@ -95,6 +105,7 @@ function handleOf(engine: Engine): TableHandle {
 			return engine.settled([...trick.moves.keys()]);
 		},
 		leave: (id, flight) => leave(engine, id, flight),
+		point: (id, pointer) => point(engine, id, pointer),
 		moving: (id) => {
 			const body = engine.bodies.get(id);
 			return (
@@ -170,6 +181,8 @@ export type TableProps = {
 	/** Slow-mo: 1 is real time, 0.25 four times slower. */
 	readonly timeScale?: number;
 	readonly turn?: TurnFeel;
+	/** How a handled Body tilts toward the pointer; nothing tilts without it. */
+	readonly tilt?: TiltFeel | null;
 	/** Development checks: pass the app's development flag. */
 	readonly assert?: boolean;
 	readonly className?: string;
@@ -180,7 +193,7 @@ export type TableProps = {
 /**
  * The surface every Region and Body sits on: one clock and frame loop (Motion's,
  * with no layout projection), the reduced-motion policy, the writing
- * direction and the turn's feel. Its Bodies are `position: fixed`, so no
+ * direction, the turn's feel and the tilt's. Its Bodies are `position: fixed`, so no
  * ancestor may transform or contain it.
  */
 export function Table({
@@ -190,6 +203,7 @@ export function Table({
 	alwaysPlay = false,
 	timeScale = 1,
 	turn = DEFAULT_TURN,
+	tilt = null,
 	assert = false,
 	className,
 	style,
@@ -207,8 +221,12 @@ export function Table({
 	engine.policy = { reduced };
 	engine.dir = dir === "rtl" ? -1 : 1;
 	engine.turn = turn;
+	engine.tilt = tilt;
 	engine.assert = assert;
 	engine.setTimeScale(timeScale);
+	useLayoutEffect(() => {
+		if (!tilt || reduced) flattenAll(engine);
+	}, [engine, tilt, reduced]);
 	return (
 		<div
 			data-tabletop=""
@@ -220,6 +238,7 @@ export function Table({
 				{
 					...style,
 					"--turn-perspective": `${turn.perspective}px`,
+					"--tilt-perspective": `${tilt?.perspective ?? 600}px`,
 				} as CSSProperties
 			}
 		>
