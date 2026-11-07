@@ -1,8 +1,11 @@
 import {
 	type AnimationPlaybackControls,
+	type AnimationPlaybackControlsWithThen,
 	animate,
+	delay,
 	type MotionValue,
 } from "motion/react";
+import { ease as deckOfCardsEase } from "../deck-of-cards/ease";
 
 /**
  * How motion plays on this page: whether it is reduced, and the slow-mo
@@ -35,7 +38,7 @@ export const SPRINGS = {
 } as const satisfies Record<string, SpringSpec>;
 
 /** The reduced path's system-driven move: short, never a jump. */
-const REDUCED_TWEEN = { ms: 140 };
+export const REDUCED_TWEEN = { ms: 140 };
 const EASE_OUT_QUINT = [0.23, 1, 0.32, 1] as const;
 /** iOS's drawer curve (Ionic): a softer start than the quint, for a reduced move that travels far. */
 export const EASE_DRAWER = [0.32, 0.72, 0, 1] as const;
@@ -43,10 +46,27 @@ export const EASE_DRAWER = [0.32, 0.72, 0, 1] as const;
 export const REDUCED_EXIT_PX = 24;
 export const REDUCED_EXIT_MS = 180;
 
-/** A tween in this page's terms: its length in ms, on the ease-out quint unless it names another curve. */
+/** A curve: a cubic Bézier, or a function of the linear time fraction. */
+type Easing =
+	| readonly [number, number, number, number]
+	| ((t: number) => number);
+
+/** Whether `ease` names a curve per leg rather than one curve. */
+function isPerLeg(
+	ease: NonNullable<TweenSpec["ease"]>,
+): ease is readonly ((t: number) => number)[] {
+	return typeof ease !== "function" && typeof ease[0] === "function";
+}
+
+/**
+ * A tween in this page's terms: its length in ms, on the ease-out quint
+ * unless it names another curve. A keyframed tween names when each
+ * keyframe falls (`times`, 0 to 1) and a curve for each leg between them.
+ */
 export type TweenSpec = {
 	readonly ms: number;
-	readonly ease?: readonly [number, number, number, number];
+	readonly ease?: Easing | readonly ((t: number) => number)[];
+	readonly times?: readonly number[];
 };
 
 /** A spec held back `delayMs` before it starts, as a staggered arrival is. */
@@ -66,13 +86,16 @@ export function transition(
 ) {
 	const s = context.timeScale;
 	const delay = spec.delayMs ? { delay: spec.delayMs / 1000 / s } : {};
-	if ("ms" in spec)
+	if ("ms" in spec) {
+		const ease = spec.ease ?? EASE_OUT_QUINT;
 		return {
 			type: "tween" as const,
 			duration: spec.ms / 1000 / s,
-			ease: spec.ease ?? EASE_OUT_QUINT,
+			ease: isPerLeg(ease) ? [...ease] : ease,
+			...(spec.times ? { times: [...spec.times] } : {}),
 			...delay,
 		};
+	}
 	return {
 		type: "spring" as const,
 		stiffness: spec.stiffness * s * s,
@@ -126,4 +149,95 @@ export function wait(ms: number, context: MotionContext): Promise<void> {
 	return new Promise((resolve) =>
 		setTimeout(resolve, ms / context.timeScale),
 	);
+}
+
+/**
+ * pakastin's deck-of-cards' motion, a profile beside `SPRINGS`: every move
+ * a tween of fixed length on that library's own ease functions, handed to
+ * Motion as they are, cubicInOut unless a move names another. A variant
+ * takes it up by passing `phases` where it now passes a spring.
+ */
+export const DECK_OF_CARDS = {
+	ease: deckOfCardsEase.cubicInOut,
+	linear: deckOfCardsEase.linear,
+} as const;
+
+/** One leg of a move: `ms` long from `at` ms after the move is called, to `to`. */
+export type Phase = {
+	readonly at: number;
+	readonly ms: number;
+	readonly to: number;
+	readonly ease?: (t: number) => number;
+};
+
+/**
+ * Plays `legs` (in order, none overlapping) on `value` as one keyframed
+ * tween on Motion's clock, from where `value` is now: a gap between legs
+ * holds still, and the first leg's `at` is the delay. Under reduced motion
+ * it is the short tween instead, from the same moment to the last leg's
+ * end value, as `settle` does.
+ */
+export function phases(
+	value: MotionValue<number>,
+	legs: readonly Phase[],
+	context: MotionContext,
+): AnimationPlaybackControlsWithThen {
+	const first = legs[0];
+	const last = legs.at(-1);
+	if (!first || !last)
+		return animate(value, value.get(), transition({ ms: 0 }, context));
+	if (context.reduce)
+		return animate(
+			value,
+			last.to,
+			transition({ ...REDUCED_TWEEN, delayMs: first.at }, context),
+		);
+	const keyframes = [value.get()];
+	const times = [0];
+	const eases: ((t: number) => number)[] = [];
+	let clock = first.at;
+	for (const leg of legs) {
+		if (leg.at > clock) {
+			keyframes.push(keyframes.at(-1) as number);
+			times.push(leg.at - first.at);
+			eases.push(DECK_OF_CARDS.linear);
+		}
+		clock = leg.at + leg.ms;
+		keyframes.push(leg.to);
+		times.push(clock - first.at);
+		eases.push(leg.ease ?? DECK_OF_CARDS.ease);
+	}
+	const total = clock - first.at;
+	if (total <= 0)
+		return animate(value, last.to, transition({ ms: 0 }, context));
+	return animate(
+		value,
+		keyframes,
+		transition(
+			{
+				ms: total,
+				delayMs: first.at,
+				times: times.map((time) => time / total),
+				ease: eases,
+			},
+			context,
+		),
+	);
+}
+
+/**
+ * Calls `fn` `ms` of slowed time from now, on Motion's frame loop, so it
+ * lands in the same frame as a tween timed from the same call. Returns its
+ * cancel.
+ */
+export function cue(
+	ms: number,
+	fn: () => void,
+	context: MotionContext,
+): () => void {
+	if (ms <= 0) {
+		fn();
+		return () => {};
+	}
+	return delay(fn, ms / context.timeScale);
 }

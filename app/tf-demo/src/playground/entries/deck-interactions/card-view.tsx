@@ -67,7 +67,7 @@ export type CardSkin = {
 };
 
 /** tf-demo's Card: paper, the Card border and a shadow that grows with the lift. */
-export const PAPER_SKIN: CardSkin = {
+const PAPER_SKIN: CardSkin = {
 	box: "flex flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper",
 	grab: "cursor-grab active:cursor-grabbing",
 	shadow: (l) => {

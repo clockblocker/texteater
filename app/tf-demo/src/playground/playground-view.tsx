@@ -2,6 +2,7 @@ import { useAtom } from "@effect/atom-react";
 import {
 	BlocksIcon,
 	ClapperboardIcon,
+	ClubIcon,
 	FlipHorizontal2Icon,
 	GalleryHorizontalEndIcon,
 	LayersIcon,
@@ -18,6 +19,7 @@ import { BreakdownsPrototype } from "./entries/breakdowns/breakdowns";
 import { DeckInteractions } from "./entries/deck-interactions/deck-interactions";
 import { DeckModelsGallery } from "./entries/deck-models-gallery";
 import { DeckOfCards } from "./entries/deck-of-cards/deck-of-cards";
+import { DeckTricks } from "./entries/deck-tricks/deck-tricks";
 import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
 import { PaletteGallery } from "./entries/palette-gallery";
@@ -107,6 +109,14 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"pakastin's deck-of-cards library, vendored and ported to TypeScript: 52 Cards on its felt that you drag and tap to flip, with its example's Flip, Shuffle, By suit, Fan, Poker and Sort in the inspector.",
 		render: () => <DeckOfCards />,
+	},
+	{
+		key: "deck-tricks",
+		title: "Deck tricks",
+		icon: ClubIcon,
+		description:
+			"deck-of-cards' tricks played by tf-demo's own Deck model: 52 small Cards with the library's faces on its felt, moved by useDeck's values on motion-kit's deck-of-cards profile, with Intro, Flip, Shuffle, By suit, Fan, Poker, Sort, slow-mo and reduced motion in the inspector.",
+		render: () => <DeckTricks />,
 	},
 	{
 		key: "pokemon-cards",

@@ -16,6 +16,7 @@ const playgroundSpecs = [
 	"deck-motion.pw.ts",
 	"deck-swipe-exit.pw.ts",
 	"deck-of-cards.pw.ts",
+	"deck-tricks.pw.ts",
 	"motion-preference.pw.ts",
 	"playground-isolation.pw.ts",
 	"pokemon-cards.pw.ts",
