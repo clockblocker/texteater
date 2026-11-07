@@ -7,7 +7,7 @@ import {
 	motionValue,
 } from "motion/react";
 import type { Slot } from "./geometry";
-import { type Binding, bindDeck, veilOf } from "./swipe-collapse";
+import { type Binding, bindDeck } from "./swipe-collapse";
 import type { CardValues } from "./use-deck";
 
 /* Motion's frame loop, run by hand. Bun has no requestAnimationFrame, so
@@ -72,7 +72,6 @@ function cardValues(at: Slot, z: number): CardValues {
 		z: value(z),
 		stamp: value(0),
 		glow: value(0),
-		veil: motionValue("none"),
 	};
 }
 
@@ -110,7 +109,6 @@ async function bindPile(
 		return card.values;
 	};
 	const pull = motionValue(0);
-	const shown = motionValue(1);
 	let binding: Binding | null = null;
 	await pointerEvent(() => {
 		binding = bindDeck(
@@ -126,8 +124,8 @@ async function bindPile(
 			},
 			lead,
 			"inline",
-			{ pull, shown },
-			{ threshold: 96, curve: "linear", forward: 24, rtl: false, settle },
+			pull,
+			{ threshold: 96, curve: "linear", settle },
 		);
 	});
 	cleanups.push(() => {
@@ -136,7 +134,7 @@ async function bindPile(
 		for (const { values } of pile)
 			for (const key of KEYS) values[key].stop();
 	});
-	return { pull, shown };
+	return { pull };
 }
 
 /**
@@ -223,11 +221,13 @@ describe("D's fold, on Motion's frame loop", () => {
 });
 
 describe("D's fold onto a Card from inside the Deck", () => {
-	test("the Cards in front come up onto it and the ones behind down, whole at the threshold, while it comes forward over the first px", async () => {
+	test("the Cards in front come up onto it and the ones behind down, whole at the threshold, and no Card's z-index ever moves", async () => {
 		const pile = makePile({});
 		const [back, middle, front] = pile.map((card) => card.values);
 		if (!back || !middle || !front) throw new Error("Missing a Card");
-		const { pull, shown } = await bindPile(
+		const stacked = () => [back, middle, front].map((card) => card.z.get());
+		const before = stacked();
+		const { pull } = await bindPile(
 			pile,
 			"middle",
 			(value, to, velocity) => {
@@ -235,18 +235,11 @@ describe("D's fold onto a Card from inside the Deck", () => {
 			},
 		);
 		await nextFrame();
-		expect(shown.get()).toBe(0);
 		await pointerEvent(() => pull.set(-12));
 		await nextFrame();
 		expect(front.v.get()).toBeLessThan(180);
 		expect(back.v.get()).toBeGreaterThan(100);
-		expect(shown.get()).toBeCloseTo(0.5, 6);
-		expect(middle.z.get()).toBe(13);
-		expect(middle.veil.get()).toContain("rgb(0 0 0 / 0.500)");
-		await pointerEvent(() => pull.set(-24));
-		await nextFrame();
-		expect(shown.get()).toBe(1);
-		expect(middle.veil.get()).toBe("none");
+		expect(stacked()).toEqual(before);
 		await pointerEvent(() => pull.set(-96));
 		await nextFrame();
 		for (const other of [back, front]) {
@@ -254,31 +247,12 @@ describe("D's fold onto a Card from inside the Deck", () => {
 			expect(other.v.get()).toBeCloseTo(middle.v.get(), 6);
 			expect(other.s.get()).toBeCloseTo(1, 6);
 		}
-		/* toward Open it is under the Cards in front again, and they rest */
+		expect(stacked()).toEqual(before);
+		/* toward Open the Cards in front rest */
 		await pointerEvent(() => pull.set(20));
 		await nextFrame();
-		expect(shown.get()).toBe(0);
-		expect(middle.z.get()).toBe(11);
-		expect(middle.veil.get()).toBe("none");
 		expect(front.v.get()).toBe(180);
 		expect(front.s.get()).toBe(1.05);
-	});
-
-	test("its veil hides only where the Cards in front lie over it, from inline-start in either direction", () => {
-		const card = { u: 50, v: 100, w: 300, h: 400 };
-		const cover = { u: 60, v: 148, w: 316, h: 420 };
-		const ltr = veilOf(card, 1, cover, 0.25, false);
-		expect(ltr).toContain(
-			"to bottom, #000 48.00px, transparent 48.00px, transparent 468.00px",
-		);
-		expect(ltr).toContain(
-			"to right, #000 10.00px, transparent 10.00px, transparent 326.00px",
-		);
-		expect(ltr).toContain("rgb(0 0 0 / 0.250)");
-		expect(veilOf(card, 1, cover, 0.25, true)).toContain(
-			"to left, #000 10.00px",
-		);
-		expect(veilOf(card, 1, cover, 0, false)).toBe("none");
-		expect(veilOf(card, 1, cover, 1, false)).toBe("none");
+		expect(stacked()).toEqual(before);
 	});
 });

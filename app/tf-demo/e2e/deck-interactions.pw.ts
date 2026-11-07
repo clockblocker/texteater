@@ -14,15 +14,17 @@ import {
 	panel,
 	pull,
 	redeal,
+	reduceMotion,
 	rotation,
 	shares,
 	spread,
 	strayed,
 	styles,
 	targetCentre,
+	topCardAt,
 	watchApart,
-	watchCover,
 	watchRelease,
+	watchStacking,
 } from "./support/deck-interactions";
 
 /**
@@ -196,13 +198,15 @@ test("D: short of the threshold the action shows, and a release puts the Card ba
 	await expect(frame(page).locator("[data-card-id]")).toHaveCount(4);
 });
 
-test("D: one breakpoint for any Card: 1 px short nothing says it will go, at the threshold the Deck is gathered onto it and leaves as one", async ({
+test("D: one breakpoint for any Card: 1 px short nothing says it will go, at the threshold the Deck is gathered onto it and leaves as one, and no Card ever changes its place in the stack", async ({
 	page,
 }) => {
 	await chooseVariant(page, "D · Swipe actions");
 	/* the front Card, one from the middle, and the backmost */
 	for (const lead of [3, 1, 0]) {
 		const rest = await anchors(page);
+		/* every frame of the gather, the cancel, the gather again and the commit */
+		const stacking = await watchStacking(page, lead);
 		await pull(page, card(page, lead), -95, 0);
 		await expect(panel(page)).not.toHaveAttribute("data-armed");
 		for (const share of await shares(page, rest, lead))
@@ -211,7 +215,6 @@ test("D: one breakpoint for any Card: 1 px short nothing says it will go, at the
 		await expect(lastRelease(page)).toHaveText("back · short 95");
 		await expect(frame(page).locator("[data-card-id]")).toHaveCount(4);
 		await expect(panel(page)).toHaveCount(0);
-		const covered = await watchCover(card(page, lead));
 		await pull(page, card(page, lead), -96, 0);
 		await expect(panel(page)).toHaveAttribute("data-armed", "true");
 		const now = await anchors(page);
@@ -222,16 +225,44 @@ test("D: one breakpoint for any Card: 1 px short nothing says it will go, at the
 			if (index > lead) expect(at.v).toBeLessThan(was - 10);
 			if (index < lead) expect(at.v).toBeGreaterThan(was + 10);
 		});
+		/* folded, the stack shows the front Card it showed before */
+		expect(await topCardAt(card(page, lead))).toBe(3);
 		const apart = await watchApart(card(page, lead), 400);
 		await page.mouse.up();
-		const cover = await covered();
-		expect(cover.frames).toBeGreaterThan(10);
-		expect(cover.covered).toBe(0);
 		const seen = await apart();
 		expect(seen.frames).toBeGreaterThan(2);
 		expect(seen.apart).toBeLessThanOrEqual(1);
 		await expect(lastRelease(page)).toHaveText("dismiss · threshold 96");
 		await expect(frame(page).locator("[data-card-id]")).toHaveCount(0);
+		const stacked = await stacking();
+		expect(stacked.frames).toBeGreaterThan(30);
+		expect(stacked.restacked).toBe(0);
+		expect(stacked.panelOff).toBe(0);
+		await redeal(page);
+	}
+});
+
+test("D: under reduced motion no Card changes its place in the stack either, through a gather, a cancel and a commit", async ({
+	page,
+}) => {
+	await chooseVariant(page, "D · Swipe actions");
+	await reduceMotion(page);
+	/* one from the middle, and the backmost */
+	for (const lead of [1, 0]) {
+		const stacking = await watchStacking(page, lead);
+		await pull(page, card(page, lead), -60, 0);
+		await page.mouse.up();
+		await expect(lastRelease(page)).toHaveText(/^back · short/);
+		await expect(panel(page)).toHaveCount(0);
+		await pull(page, card(page, lead), -120, 0);
+		await expect(panel(page)).toHaveAttribute("data-armed", "true");
+		expect(await topCardAt(card(page, lead))).toBe(3);
+		await page.mouse.up();
+		await expect(frame(page).locator("[data-card-id]")).toHaveCount(0);
+		const stacked = await stacking();
+		expect(stacked.frames).toBeGreaterThan(20);
+		expect(stacked.restacked).toBe(0);
+		expect(stacked.panelOff).toBe(0);
 		await redeal(page);
 	}
 });

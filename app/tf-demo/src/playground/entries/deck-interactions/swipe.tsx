@@ -61,10 +61,12 @@ function drawn(slot: Slot): Rect {
  * Where a Card's panel lies and how much of it shows: under the Card where
  * the hand took it (`anchor`). It stays `inset` px inside the Card's edges
  * across the axis, past its rounded corners, so only what the Card
- * uncovers along the axis ever shows. Toward Open a Card behind stays
- * under the Cards in front, and its panel is the strip above the next
- * Card, tucked under that Card; toward Close deck it comes forward, and
- * its panel is its whole footprint, as the front Card's is.
+ * uncovers along the axis ever shows. It shares the Card's z-index, so
+ * the Cards in front lie over it as they lie over the Card. Toward Open,
+ * where they stay put, a Card behind shows only the strip above the next
+ * Card, and its panel is that strip, tucked under that Card; toward Close
+ * deck they come up onto the Card and uncover its footprint as they go,
+ * and its panel is all of it, as the front Card's is.
  */
 function panelBox(
 	slots: readonly Slot[],
@@ -95,12 +97,12 @@ function panelBox(
  * D, Swipe actions, as iOS Mail's full swipe: the Card slides on one axis
  * and uncovers an action under it, and toward Close deck the rest of the
  * Deck folds onto it, whichever Card it is, the Cards behind it coming
- * down and the ones in front coming up under it. One value, the pull,
- * drives all of it, and one threshold is the breakpoint: there the Deck is
- * whole, the colour floods in, the icon locks to the Card's edge, and a
- * release commits. Short of it, a release brings everything back. The
- * Deck itself never moves on hover: the Card under the pointer only
- * lights its border.
+ * down under it and the ones in front coming up over it, each keeping its
+ * place in the stack. One value, the pull, drives all of it, and one
+ * threshold is the breakpoint: there the Deck is whole, the colour floods
+ * in, the icon locks to the Card's edge, and a release commits. Short of
+ * it, a release brings everything back. The Deck itself never moves on
+ * hover: the Card under the pointer only lights its border.
  */
 export function SwipeVariant({
 	frame,
@@ -125,8 +127,6 @@ export function SwipeVariant({
 	}));
 	/** The swiped Card's offset along its axis: the swipe's one source of truth. */
 	const [pull] = useState(() => motionValue(0));
-	/** How far the swiped Card has come forward over the Cards in front of it. */
-	const [shown] = useState(() => motionValue(1));
 	const [taps] = useState(() => createTapCounter());
 	const gen = useRef(0);
 	const binding = useRef<Binding | null>(null);
@@ -165,27 +165,19 @@ export function SwipeVariant({
 		if (!caught) {
 			binding.current?.scatter();
 			pull.jump(0);
-			const bound = bindDeck(
-				deck,
-				g.id,
-				axis,
-				{ pull, shown },
-				{
-					threshold: knobs.threshold,
-					curve: knobs.collapseCurve,
-					forward: knobs.forward,
-					rtl,
-					/* the Deck's own settle, carried on: settle scales px/s by slow-mo */
-					settle: (value, to, velocity) =>
-						settle(
-							value,
-							to,
-							SPRINGS.settle,
-							motion,
-							velocity / motion.timeScale,
-						),
-				},
-			);
+			const bound = bindDeck(deck, g.id, axis, pull, {
+				threshold: knobs.threshold,
+				curve: knobs.collapseCurve,
+				/* the Deck's own settle, carried on: settle scales px/s by slow-mo */
+				settle: (value, to, velocity) =>
+					settle(
+						value,
+						to,
+						SPRINGS.settle,
+						motion,
+						velocity / motion.timeScale,
+					),
+			});
 			binding.current = bound;
 			setAnchor(bound.anchor);
 			values.flood.jump(0);
@@ -407,7 +399,6 @@ export function SwipeVariant({
 					position={panel.axis === "inline" ? owner.u : owner.v}
 					base={panel.axis === "inline" ? anchor.u : anchor.v}
 					z={owner.z}
-					forward={shown}
 					values={values}
 					armed={armed}
 					threshold={knobs.threshold}

@@ -31,8 +31,6 @@ export type CardValues = {
 	readonly z: MotionValue<number>;
 	readonly stamp: MotionValue<number>;
 	readonly glow: MotionValue<number>;
-	/** The Card's CSS mask: `none`, but while D brings it forward over the Cards in front. */
-	readonly veil: MotionValue<string>;
 };
 
 /**
@@ -53,7 +51,6 @@ function makeValues(slot?: Slot, z = 1): CardValues {
 		z: motionValue(z),
 		stamp: motionValue(0),
 		glow: motionValue(0),
-		veil: motionValue("none"),
 	};
 }
 

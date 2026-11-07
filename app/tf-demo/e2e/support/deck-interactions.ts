@@ -44,6 +44,14 @@ export async function targetCentre(page: Page, target: "tray" | "pad") {
 	return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
 }
 
+/** Sets the inspector's Reduced motion to on: it defaults to off. */
+export async function reduceMotion(page: Page) {
+	await inspector(page)
+		.getByRole("group", { name: "Reduced motion" })
+		.getByRole("button", { name: "on", exact: true })
+		.click();
+}
+
 export async function redeal(page: Page) {
 	await inspector(page).getByRole("button", { name: "Re-deal" }).click();
 	await expect(frame(page).locator("[data-card-id]")).toHaveCount(4);
@@ -186,68 +194,84 @@ export function styles(
 		);
 }
 
+type Stacking = {
+	/** Frames sampled while every Card was still in the frame. */
+	frames: number;
+	/** Frames in which any Card's z-index differed from before. */
+	restacked: number;
+	/** Frames in which Close deck's panel showed at another z-index than Card `lead`. */
+	panelOff: number;
+};
+
 /**
- * Every frame from now until the hand lets go, while Close deck's panel
- * shows: how often another Card stood level with or over `card` or its
- * panel, or, once it had come all the way forward, covered a point on it.
+ * Every frame from now until the returned call: whether each Card's
+ * z-index, which alone sets the Deck's paint order, is still what it is
+ * now, and whether Close deck's panel, while it shows, shares Card
+ * `lead`'s. Frames once the Deck has gone are not counted.
  */
-export async function watchCover(card: Locator) {
-	await card.evaluate((element) => {
-		const seen = { frames: 0, covered: 0 };
+export async function watchStacking(page: Page, lead: number) {
+	await frame(page).evaluate((deck, index) => {
+		const cards = () => [...deck.querySelectorAll("[data-card-id]")];
+		const z = (node: Element) => getComputedStyle(node).zIndex;
+		const before = cards().map(z);
+		const element = cards()[index];
+		const seen: Stacking = { frames: 0, restacked: 0, panelOff: 0 };
 		let live = true;
-		const z = (node: Element) => Number(getComputedStyle(node).zIndex);
-		/* how many of three points on it another Card covers */
-		const missed = () => {
-			const box = element.getBoundingClientRect();
-			const points = [
-				[box.left + 12, box.top + 12],
-				[box.left + box.width / 2, box.top + box.height / 2],
-				[box.right - 12, box.bottom - 12],
-			] as const;
-			return points.filter(
-				([x, y]) =>
-					document
-						.elementFromPoint(x, y)
-						?.closest("[data-card-id]") !== element,
-			).length;
-		};
-		/* how often another Card stands level with or over it or its panel */
-		const under = (shown: Element) => {
-			const others = [
-				...document.querySelectorAll("[data-card-id]"),
-			].filter((other) => other !== element);
-			const top = Math.max(...others.map(z));
-			return z(element) <= top || z(shown) <= top ? 1 : 0;
-		};
 		const step = () => {
-			const shown = document.querySelector('[data-panel="dismiss"]');
-			if (shown && Number(getComputedStyle(shown).opacity) > 0.01) {
+			if (!live) return;
+			const now = cards();
+			if (now.length === before.length) {
 				seen.frames += 1;
-				const covered = under(shown);
-				seen.covered +=
-					covered ||
-					(getComputedStyle(element).maskImage === "none"
-						? missed()
-						: 0);
+				if (now.some((card, i) => z(card) !== before[i]))
+					seen.restacked += 1;
+				const shown = deck.querySelector('[data-panel="dismiss"]');
+				if (
+					shown &&
+					element &&
+					Number(getComputedStyle(shown).opacity) > 0.01 &&
+					z(shown) !== z(element)
+				)
+					seen.panelOff += 1;
 			}
-			if (live) requestAnimationFrame(step);
+			requestAnimationFrame(step);
 		};
-		window.addEventListener("pointerup", () => (live = false), {
-			capture: true,
-			once: true,
-		});
 		requestAnimationFrame(step);
-		Object.assign(window, { cover: seen });
-	});
+		Object.assign(window, {
+			stacking: {
+				seen,
+				stop: () => {
+					live = false;
+				},
+			},
+		});
+	}, lead);
 	return () =>
-		card.evaluate(
-			() =>
-				(
-					window as unknown as {
-						cover: { frames: number; covered: number };
-					}
-				).cover,
-		);
+		page.evaluate(() => {
+			const { stacking } = window as unknown as {
+				stacking: { seen: Stacking; stop: () => void };
+			};
+			stacking.stop();
+			return stacking.seen;
+		});
+}
+
+/** Which Card, back to front, is painted at the middle of `card`. */
+export function topCardAt(card: Locator) {
+	return card.evaluate((element) => {
+		const box = element.getBoundingClientRect();
+		const hit = document
+			.elementFromPoint(
+				box.left + box.width / 2,
+				box.top + box.height / 2,
+			)
+			?.closest("[data-card-id]");
+		const cards = [
+			...(element
+				.closest("[data-deck-frame]")
+				?.querySelectorAll("[data-card-id]") ?? []),
+		];
+		return hit ? cards.indexOf(hit) : -1;
+	});
 }
 
 export type Moment = {

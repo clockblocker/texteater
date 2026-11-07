@@ -4,14 +4,9 @@ import {
 	type MotionValue,
 	motionValue,
 } from "motion/react";
-import { type Point, type Rect, union } from "./geometry";
-import {
-	type Axis,
-	type CollapseCurve,
-	collapseOf,
-	forwardOf,
-} from "./swipe-gesture";
-import type { CardValues, Deck } from "./use-deck";
+import type { Point } from "./geometry";
+import { type Axis, type CollapseCurve, collapseOf } from "./swipe-gesture";
+import type { Deck } from "./use-deck";
 
 /** A swiped Card and the Deck around it, driven from one value. */
 export type Binding = {
@@ -40,47 +35,6 @@ type Pile = Pick<
 	"order" | "slots" | "slotOf" | "valuesOf" | "release" | "place"
 >;
 
-/** A Card's box as drawn: scaled about its centre. */
-function drawnBox(card: CardValues): Rect {
-	const w = card.w.get();
-	const h = card.h.get();
-	const s = card.s.get();
-	return {
-		u: card.u.get() - (w * s - w) / 2,
-		v: card.v.get() - (h * s - h) / 2,
-		w: w * s,
-		h: h * s,
-	};
-}
-
-const px = (n: number) => `${n.toFixed(2)}px`;
-
-/**
- * The mask of a Card coming forward: whole outside `cover`, the box the
- * Cards in front of it fill, and `shown` of itself inside it, so there
- * it dissolves in over them. Both boxes are as drawn, in the frame; the
- * mask is in the Card's own px, from its inline-start and top.
- */
-export function veilOf(
-	card: Rect,
-	scale: number,
-	cover: Rect,
-	shown: number,
-	rtl: boolean,
-): string {
-	if (shown <= 0 || shown >= 1) return "none";
-	const top = (cover.v - card.v) / scale;
-	const bottom = (cover.v + cover.h - card.v) / scale;
-	const start = (cover.u - card.u) / scale;
-	const end = (cover.u + cover.w - card.u) / scale;
-	const ink = `rgb(0 0 0 / ${shown.toFixed(3)})`;
-	return [
-		`linear-gradient(to bottom, #000 ${px(top)}, transparent ${px(top)}, transparent ${px(bottom)}, #000 ${px(bottom)})`,
-		`linear-gradient(${rtl ? "to left" : "to right"}, #000 ${px(start)}, transparent ${px(start)}, transparent ${px(end)}, #000 ${px(end)})`,
-		`linear-gradient(${ink}, ${ink})`,
-	].join(", ");
-}
-
 /**
  * Drives `lead` and every other Card from `pull`, the one source of
  * truth for a swipe. The Card sits `pull` px along `axis` from where the
@@ -90,35 +44,24 @@ export function veilOf(
  * the collapse, so the Cards fold in together, never stop short to do
  * it, and are whole exactly at the threshold, where a release commits:
  * the ones behind come down onto it, the ones in front up. They aim at
- * the Card's drawn top edge, and none ends bigger than the Card, so
- * their last sliver goes under it at that moment and not before.
+ * the Card's drawn top edge, and none ends bigger than the Card.
  *
- * The Cards in front lie over a Card from inside the Deck. Toward Close
- * deck it comes forward over them in `forward` px of pull: on top of
- * them at once, but where they lay over it, it dissolves in, so it never
- * pops through them, and toward Open, or home, it is under them again.
- * `shown` carries how far it has come, 1 for the front Card. A spring on
- * `pull` takes them all home; a hand on it scrubs them.
+ * No Card's z-index moves: the ones behind go under the Card and the ones
+ * in front over it, so the folded stack shows the front Card it showed
+ * before. A spring on `pull` takes them all home; a hand on it scrubs
+ * them.
  */
 export function bindDeck(
 	deck: Pile,
 	lead: string,
 	axis: Axis,
-	drive: {
-		readonly pull: MotionValue<number>;
-		readonly shown: MotionValue<number>;
-	},
+	pull: MotionValue<number>,
 	rules: {
 		readonly threshold: number;
 		readonly curve: CollapseCurve;
-		/** The pull, in px, over which a Card from inside the Deck comes forward. */
-		readonly forward: number;
-		readonly rtl: boolean;
 		readonly settle: Settle;
 	},
 ): Binding {
-	const { pull, shown } = drive;
-	const index = deck.order.indexOf(lead);
 	const home = deck.slotOf(lead);
 	const card = deck.valuesOf(lead);
 	const lift = home ? (home.h * home.s - home.h) / 2 : 0;
@@ -137,16 +80,8 @@ export function bindDeck(
 		/* where it ends, against the Card: never bigger, top edges level */
 		const s = Math.min(slot.s, home?.s ?? 1);
 		const dv = (slot.h * s - slot.h) / 2 - lift;
-		return [{ id, slot, values, base, s, dv, ahead: i > index }];
+		return [{ id, slot, values, base, s, dv }];
 	});
-	const ahead = followers.filter((follower) => follower.ahead);
-	const below = card.z.get();
-	const above = Math.max(
-		below,
-		...followers.map(({ values }) => values.z.get() + 1),
-	);
-	const over = Math.min(rules.forward, rules.threshold);
-	shown.jump(ahead.length > 0 ? 0 : 1);
 	/* The fold takes the other Cards from whatever moved them in its first
 	   frame: a spring stopped there has drawn that frame and stops as it
 	   is, while one stopped from the pointer event would draw once more,
@@ -187,22 +122,6 @@ export function bindDeck(
 			values.v.set(from.v + (v + dv - from.v) * share);
 			values.s.set(from.s + (s - from.s) * share);
 		}
-		if (ahead.length === 0) return;
-		const forward = forwardOf(axis, pull.get(), over);
-		shown.set(forward);
-		card.z.set(forward > 0 ? above : below);
-		const cover = union(ahead.map(({ values }) => drawnBox(values)));
-		card.veil.set(
-			cover
-				? veilOf(
-						drawnBox(card),
-						card.s.get(),
-						cover,
-						forward,
-						rules.rtl,
-					)
-				: "none",
-		);
 	};
 	const redraw = () => {
 		frame.preRender(draw);
@@ -228,8 +147,6 @@ export function bindDeck(
 		stop,
 		scatter: () => {
 			stop();
-			card.z.set(below);
-			card.veil.set("none");
 			deck.release(lead);
 			if (home) void deck.place(lead, home);
 			for (const follower of followers)

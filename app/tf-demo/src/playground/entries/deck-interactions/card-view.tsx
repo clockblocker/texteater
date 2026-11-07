@@ -117,7 +117,6 @@ export function CardView({
 				opacity: values.o,
 				zIndex: values.z,
 				boxShadow,
-				maskImage: values.veil,
 			}}
 			className={`absolute flex flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper select-none ${expanded ? "" : "cursor-grab touch-none active:cursor-grabbing"} ${highlightClass(highlight && !expanded)}`}
 		>

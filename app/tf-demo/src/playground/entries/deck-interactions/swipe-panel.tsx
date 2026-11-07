@@ -62,26 +62,6 @@ function iconCentre(
 }
 
 /**
- * The panel's clip: only the strip the Card has uncovered, `pull` px from
- * the side it moved away from. Under the Card the panel never shows, even
- * while the Card comes forward over the Deck and is not yet solid there.
- */
-function uncovered(
-	inline: boolean,
-	length: number,
-	pull: number,
-	rtl: boolean,
-): string {
-	const hidden = `${Math.max(0, length - Math.abs(pull)).toFixed(2)}px`;
-	/* the side the Card still lies over, as an inset(top right bottom left) slot */
-	const toStart = pull < 0;
-	const side = inline ? (toStart !== rtl ? 3 : 1) : toStart ? 0 : 2;
-	const sides = ["0", "0", "0", "0"];
-	sides[side] = hidden;
-	return `inset(${sides.join(" ")})`;
-}
-
-/**
  * D's action panel, in the Card's own footprint and just under it, as an
  * iOS Mail row's actions are: red "Close deck" for inline-start and down,
  * blue "Open" for inline-end and up. Before the threshold the strip is tinted
@@ -97,7 +77,6 @@ export function SwipePanel({
 	position,
 	base,
 	z,
-	forward,
 	values,
 	armed,
 	threshold,
@@ -115,10 +94,8 @@ export function SwipePanel({
 	readonly position: MotionValue<number>;
 	/** The Card's resting position along the axis. */
 	readonly base: number;
-	/** The Card's z-index: the panel shares it and is drawn first, so it lies under the Card and over every Card under it. */
+	/** The Card's z-index: the panel shares it and is drawn first, so it lies under the Card, under the Cards in front and over the Cards behind. */
 	readonly z: MotionValue<number>;
-	/** How far the Card has come forward over the Cards in front: Close deck's panel comes with it. */
-	readonly forward: MotionValue<number>;
 	readonly values: PanelValues;
 	readonly armed: boolean;
 	readonly threshold: number;
@@ -150,14 +127,7 @@ export function SwipePanel({
 	const shown = useTransform(pull, (p) =>
 		Math.min(1, Math.max(0, (Math.abs(p) - 8) / 40)),
 	);
-	const clipPath = useTransform(pull, (p) =>
-		uncovered(inline, length, p, rtl),
-	);
 	const fill = useTransform(values.flood, (f) => tint + (1 - tint) * f);
-	const opacity = useTransform(
-		[values.fade, forward],
-		([f = 1, k = 1]: number[]) => (panel.zone === "dismiss" ? f * k : f),
-	);
 	const toned = useTransform(values.flood, (f) => 1 - f);
 	const tone = TONE[panel.zone];
 	const Icon = panel.zone === "dismiss" ? XIcon : Maximize2Icon;
@@ -184,8 +154,7 @@ export function SwipePanel({
 				width: rect.w,
 				height: rect.h,
 				zIndex: z,
-				opacity,
-				clipPath,
+				opacity: values.fade,
 			}}
 		>
 			<motion.div
