@@ -30,8 +30,12 @@ export type DeckPose = "stack" | "fan" | "bysuit" | "poker";
 
 type Logical = { readonly u: number; readonly v: number };
 
-/** A Card the reader put down: its centre, rem from the felt's, and its stacking order. */
-type Loose = { readonly centre: Logical; readonly z: number };
+/** A Card the reader put down: its centre, rem from the felt's, its rotation (logical degrees) and its stacking order. */
+type Loose = {
+	readonly centre: Logical;
+	readonly rotate: number;
+	readonly z: number;
+};
 
 export type TrickDeck = {
 	/** Bottom first. */
@@ -125,6 +129,7 @@ function posesOf(deck: TrickDeck): Posed[] {
 		const [down] = arrange([posed.id], FELT, {
 			card: CARD,
 			centre: () => loose.centre,
+			rotate: () => loose.rotate,
 		});
 		return down ?? posed;
 	});
@@ -192,15 +197,19 @@ export function withTrick(
 	};
 }
 
-/** `id` rests where the hand let it go, `centre` rem from the felt's, over every other Card. */
+/**
+ * `id` rests where the hand let it go, `centre` rem from the felt's and
+ * turned `rotate` logical degrees, over every other Card.
+ */
 export function putDown(
 	deck: TrickDeck,
 	id: string,
 	centre: Logical,
+	rotate: number,
 ): TrickDeck {
 	return {
 		...deck,
-		loose: { ...deck.loose, [id]: { centre, z: deck.topZ } },
+		loose: { ...deck.loose, [id]: { centre, rotate, z: deck.topZ } },
 		topZ: deck.topZ + 1,
 	};
 }

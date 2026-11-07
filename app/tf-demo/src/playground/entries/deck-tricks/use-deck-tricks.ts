@@ -40,17 +40,26 @@ function remPx(): number {
 	);
 }
 
-/** Where `id` shows now, as its centre in rem from the felt's centre. */
-function centreOnFelt(table: TableHandle, id: string) {
-	const box = table.shown(id);
-	const felt = document
-		.querySelector(`[data-tabletop-region="${FELT}"]`)
-		?.getBoundingClientRect();
-	if (!box || !felt) return null;
+/**
+ * Where `id` shows now: its centre in rem from the felt's centre, logical
+ * (mirrored in RTL), and its rotation in logical degrees.
+ */
+function placeOnFelt(table: TableHandle, id: string) {
+	const pose = table.pose(id);
+	const region = document.querySelector(`[data-tabletop-region="${FELT}"]`);
+	const felt = region?.getBoundingClientRect();
+	if (!pose || !felt || !region) return null;
 	const rem = remPx();
+	const dir = getComputedStyle(region).direction === "rtl" ? -1 : 1;
+	const { box } = pose;
 	return {
-		u: (box.x + box.width / 2 - (felt.left + felt.width / 2)) / rem,
-		v: (box.y + box.height / 2 - (felt.top + felt.height / 2)) / rem,
+		centre: {
+			u:
+				(dir * (box.x + box.width / 2 - (felt.left + felt.width / 2))) /
+				rem,
+			v: (box.y + box.height / 2 - (felt.top + felt.height / 2)) / rem,
+		},
+		rotate: pose.rotate,
 	};
 }
 
@@ -116,14 +125,20 @@ function deckActions(
 		/** A tap turns the Card over, as the library's short press does. */
 		turn: (id: string) =>
 			table.transact(() => setDeck((deck) => turnOver(deck, id))),
-		/** The hand let go: the Card rests where it is, over every other. */
+		/**
+		 * The hand let go: the Card rests exactly where and as it shows, over
+		 * every other, so nothing moves and the hand's speed is thrown away.
+		 */
 		putDown: ({ id, velocity }: Letting) => {
-			const centre = centreOnFelt(table, id);
+			const at = placeOnFelt(table, id);
 			table.release(
 				id,
 				velocity,
-				centre
-					? () => setDeck((deck) => putDown(deck, id, centre))
+				at
+					? () =>
+							setDeck((deck) =>
+								putDown(deck, id, at.centre, at.rotate),
+							)
 					: undefined,
 			);
 		},

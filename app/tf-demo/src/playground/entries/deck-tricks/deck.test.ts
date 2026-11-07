@@ -88,13 +88,13 @@ describe("the poses", () => {
 });
 
 describe("the reader's hand", () => {
-	test("puts a Card down where it lets go, over every other, until a trick moves it", () => {
-		const down = putDown(freshDeck(), "0_1", { u: 3, v: -2 });
-		expect(placesOf(down).get("0_1")?.z).toBe(52);
+	test("puts a Card down where and as it lets go, over every other, until a trick moves it", () => {
+		const down = putDown(freshDeck(), "0_1", { u: 3, v: -2 }, 40);
+		expect(placesOf(down).get("0_1")).toMatchObject({ z: 52, rotate: 40 });
 		expect(
 			slotsOf(down).find((slot) => slot.id === "felt:0_1")?.style,
 		).toMatchObject({ top: "calc(50% + -4.75rem)" });
-		const again = putDown(down, "0_2", { u: 0, v: 0 });
+		const again = putDown(down, "0_2", { u: 0, v: 0 }, 0);
 		expect(placesOf(again).get("0_2")?.z).toBe(53);
 		const shuffled = withTrick(
 			again,
@@ -105,7 +105,7 @@ describe("the reader's hand", () => {
 	});
 
 	test("keeps a Card put down through a trick that only turns it", () => {
-		const down = putDown(freshDeck(), "0_1", { u: 3, v: -2 });
+		const down = putDown(freshDeck(), "0_1", { u: 3, v: -2 }, 0);
 		const dealt = withTrick(down, poker(down.order, pokerPose), "poker");
 		expect(Object.keys(dealt.loose)).toEqual(["0_1"]);
 	});

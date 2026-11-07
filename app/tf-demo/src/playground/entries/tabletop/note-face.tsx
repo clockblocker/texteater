@@ -21,17 +21,10 @@ function Heading({ card }: { readonly card: NoteCard }) {
 	);
 }
 
-/**
- * The gloss swaps places with the first Source context between the forms,
- * so the two cross mid-move: it slides over on its own paper, above the
- * context and the Cover's departing copies, rather than through them.
- */
+/** The gloss: under the heading in every form, so no Part crosses another. */
 function Gloss({ card }: { readonly card: NoteCard }) {
 	return (
-		<Part
-			id="gloss"
-			className={`${COLUMN} relative z-[1] bg-paper text-sm text-ink-soft`}
-		>
+		<Part id="gloss" className={`${COLUMN} text-sm text-ink-soft`}>
 			{card.gloss}
 		</Part>
 	);
@@ -48,12 +41,17 @@ function Context({ text, id }: { readonly text: string; readonly id: string }) {
 	);
 }
 
+const CARD_LAYOUT = "flex h-full flex-col gap-1.5 bg-paper px-4";
+const COVER_LAYOUT =
+	"flex h-full flex-col items-center gap-3 bg-paper px-4 pt-10";
+
 /**
- * A Note Card's front in either form. The Card shows its heading, gloss
- * and first Source context; the Cover moves the gloss below every context
- * and adds the close button, the other contexts and the lines, which fade
- * in after the move. Each part keeps its id across forms, so it travels to
- * its new place rather than appearing there.
+ * A Note Card's front in either form, as one tree, so each Part stays the
+ * same element across forms. The Card shows its heading, gloss and first
+ * Source context; the Cover keeps them in that order and adds the close
+ * button, the other contexts and the lines, which exist in the Cover alone:
+ * they fade in once the shared Parts have passed, and when the Cover closes
+ * they stay pinned where they were and fade out on the same Move.
  */
 export const NoteFace = memo(function NoteFace({
 	card,
@@ -65,16 +63,8 @@ export const NoteFace = memo(function NoteFace({
 	readonly onClose: () => void;
 }) {
 	const [first = "", ...more] = card.contexts;
-	if (form !== "cover")
-		return (
-			<div className="flex h-full flex-col gap-1.5 bg-paper px-4">
-				<Heading card={card} />
-				<Gloss card={card} />
-				<Context id="context-0" text={first} />
-			</div>
-		);
 	return (
-		<div className="flex h-full flex-col items-center gap-3 bg-paper px-4 pt-10">
+		<div className={form === "cover" ? COVER_LAYOUT : CARD_LAYOUT}>
 			<Part id="close" only="cover" className="absolute end-2 top-2">
 				<button
 					type="button"
@@ -87,6 +77,7 @@ export const NoteFace = memo(function NoteFace({
 				</button>
 			</Part>
 			<Heading card={card} />
+			<Gloss card={card} />
 			<Context id="context-0" text={first} />
 			{more.map((text, index) => (
 				<Part
@@ -98,7 +89,6 @@ export const NoteFace = memo(function NoteFace({
 					„{text}“
 				</Part>
 			))}
-			<Gloss card={card} />
 			<Part
 				id="lines"
 				only="cover"

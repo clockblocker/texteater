@@ -1,5 +1,10 @@
 import { memo, type PointerEvent, useRef, useState } from "react";
-import { DEFAULT_TURN, type SlotSpec, type TurnFeel } from "tabletop/core";
+import {
+	DEFAULT_TURN,
+	KEEP_POSE,
+	type SlotSpec,
+	type TurnFeel,
+} from "tabletop/core";
 import { Region, Slot, Table, useHand, useTable } from "tabletop/react";
 import { useMotionPreference } from "@/lib/motion-preference";
 import { FELT, placesOf, slotsOf } from "./deck";
@@ -20,7 +25,7 @@ const MOUNT_ORDER = [...PLAYING_DECK].reverse();
  * deck-of-cards' tricks on the tabletop battery: the felt is a Region,
  * each of the 52 Cards a Body resting in its Slot there, and each trick a
  * plan of waypoints off the Cards' final rest, queued as the library
- * queues them. The surface shows only the felt and the Cards; the tricks
+ * queues them. The hand keeps a Card's pose, as the library's does. The surface shows only the felt and the Cards; the tricks
  * and the motion knobs are in the inspector (playground ADR 0001).
  *
  * The tricks, faces and felt are pakastin's deck-of-cards
@@ -32,6 +37,7 @@ export function DeckTricks() {
 	const [reducedMotion, setReducedMotion] = useState<ReducedChoice>("off");
 	const [timeScale, setTimeScale] = useState<TimeScale>(1);
 	const [turn, setTurn] = useState<TurnFeel>(DEFAULT_TURN);
+	const [rtl, setRtl] = useState(false);
 	const { preference } = useMotionPreference();
 	const table = useTable();
 	const { deck, actions } = useDeckTricks(table);
@@ -51,6 +57,8 @@ export function DeckTricks() {
 			<div className="flex h-full min-h-0 p-6 lg:pe-[23rem]">
 				<Table
 					table={table}
+					dir={rtl ? "rtl" : "ltr"}
+					hand={KEEP_POSE}
 					reducedMotion={reducedMotion}
 					alwaysPlay={preference === "ignore"}
 					timeScale={timeScale}
@@ -80,6 +88,8 @@ export function DeckTricks() {
 				onTimeScale={setTimeScale}
 				turn={turn}
 				onTurn={setTurn}
+				rtl={rtl}
+				onRtl={setRtl}
 			/>
 		</>
 	);

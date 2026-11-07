@@ -62,6 +62,8 @@ export const DeckTricksInspector = memo(function DeckTricksInspector({
 	onTimeScale,
 	turn,
 	onTurn,
+	rtl,
+	onRtl,
 }: {
 	readonly actions: DeckActions;
 	readonly reducedMotion: ReducedChoice;
@@ -70,6 +72,8 @@ export const DeckTricksInspector = memo(function DeckTricksInspector({
 	readonly onTimeScale: (value: TimeScale) => void;
 	readonly turn: TurnFeel;
 	readonly onTurn: (feel: TurnFeel) => void;
+	readonly rtl: boolean;
+	readonly onRtl: (rtl: boolean) => void;
 }) {
 	return (
 		<Inspector title={TITLE}>
@@ -79,7 +83,8 @@ export const DeckTricksInspector = memo(function DeckTricksInspector({
 					library's timings and ease curves: every Card rests in a CSS
 					Slot on the felt and moves by offsets that decay to nothing.
 					Each trick waits for the one before it. Drag a card to move
-					it; tap it to turn it over. A turn is in 3D; under reduced
+					it: it keeps its pose and stays exactly where you let go.
+					Tap it to turn it over. A turn is in 3D; under reduced
 					motion the front fades instead.
 				</p>
 			</InspectorSection>
@@ -118,6 +123,15 @@ export const DeckTricksInspector = memo(function DeckTricksInspector({
 					onChange={(scale) =>
 						onTimeScale(Number(scale) as TimeScale)
 					}
+				/>
+				<InspectorChoice<"ltr" | "rtl">
+					label="Direction"
+					value={rtl ? "rtl" : "ltr"}
+					options={[
+						{ value: "ltr", label: "LTR" },
+						{ value: "rtl", label: "RTL" },
+					]}
+					onChange={(dir) => onRtl(dir === "rtl")}
 				/>
 			</InspectorSection>
 			<InspectorSection title="Turn">
