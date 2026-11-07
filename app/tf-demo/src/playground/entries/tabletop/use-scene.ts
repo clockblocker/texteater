@@ -140,42 +140,53 @@ function sceneActions(
 				}),
 			);
 		},
+		/* each trick queues behind the one playing, as deck-of-cards' do,
+		   and is made when its turn comes, from the scene as it is then */
 		deal: () =>
-			table.play(
-				deal(DEALT, pileOf, { scale: TRICK_SCALE }),
-				commit(redeal),
-			),
-		fan: () => {
-			const { cards, spread } = latest.current;
-			const trick = fanOut(cards.ground, (order) =>
-				groundPose(order, "fan", spread),
-			);
-			return table.play(
-				trick,
-				commit((next) => withDeck(next, trick.order, "fan")),
-			);
-		},
-		shuffle: () => {
-			const trick = shuffle(latest.current.cards.ground, pileOf, {
-				scale: TRICK_SCALE,
-			});
-			return table.play(
-				trick,
-				commit((next) => withDeck(next, trick.order, "pile")),
-			);
-		},
-		sort: () => {
-			const trick = sort(latest.current.cards.ground, pileOf, {
-				rank: (id) => DEALT.indexOf(id),
-				reverse: true,
-				scale: TRICK_SCALE,
-				gather: { u: 0, v: 0 },
-			});
-			return table.play(
-				trick,
-				commit((next) => withDeck(next, trick.order, "pile")),
-			);
-		},
+			table.queue(() => ({
+				trick: deal(DEALT, pileOf, { scale: TRICK_SCALE }),
+				commit: commit(redeal),
+			})),
+		fan: () =>
+			table.queue(() => {
+				const { cards, spread } = latest.current;
+				const trick = fanOut(cards.ground, (order) =>
+					groundPose(order, "fan", spread),
+				);
+				return {
+					trick,
+					commit: commit((next) =>
+						withDeck(next, trick.order, "fan"),
+					),
+				};
+			}),
+		shuffle: () =>
+			table.queue(() => {
+				const trick = shuffle(latest.current.cards.ground, pileOf, {
+					scale: TRICK_SCALE,
+				});
+				return {
+					trick,
+					commit: commit((next) =>
+						withDeck(next, trick.order, "pile"),
+					),
+				};
+			}),
+		sort: () =>
+			table.queue(() => {
+				const trick = sort(latest.current.cards.ground, pileOf, {
+					rank: (id) => DEALT.indexOf(id),
+					reverse: true,
+					scale: TRICK_SCALE,
+					gather: { u: 0, v: 0 },
+				});
+				return {
+					trick,
+					commit: commit((next) =>
+						withDeck(next, trick.order, "pile"),
+					),
+				};
+			}),
 		setSpread: (spread: number) =>
 			table.transact(commit((current) => ({ ...current, spread }))),
 	};
@@ -183,13 +194,17 @@ function sceneActions(
 
 export type SceneActions = ReturnType<typeof sceneActions>;
 
-/** The intro: the Deck drops into place as the entry opens. */
+/**
+ * The intro: the Deck drops into place as the entry opens, the first trick
+ * in the queue. A remount drops what the last mount queued.
+ */
 function useIntroDeal(table: TableHandle) {
 	useLayoutEffect(() => {
-		void table.play(
-			deal(DEALT, (order) => groundPose(order, "pile", 260), {
+		void table.queue(() => ({
+			trick: deal(DEALT, (order) => groundPose(order, "pile", 260), {
 				scale: TRICK_SCALE,
 			}),
-		);
+		}));
+		return () => table.drop();
 	}, [table]);
 }
