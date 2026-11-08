@@ -28,6 +28,7 @@ import {
 	watchRelease,
 	watchStacking,
 } from "./support/deck-interactions";
+import { closeSpecs } from "./support/deck-interactions-close-specs";
 import { swipeDirectionSpecs } from "./support/deck-interactions-swipe-specs";
 import { tapSpecs } from "./support/deck-interactions-tap-specs";
 
@@ -480,3 +481,4 @@ test("D: hovering any Card changes no Card's transform, and lights only its bord
 });
 
 tapSpecs();
+closeSpecs();

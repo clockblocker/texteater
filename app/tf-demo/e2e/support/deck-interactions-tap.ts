@@ -161,7 +161,8 @@ export function stackingOf(cards: readonly Shown[]): string[] {
  * The most any Card's box moved in one frame beyond what its own path
  * allows: 3 × the longest stretch of its path over a 200 ms cubicInOut
  * leg's length (its peak speed) for that frame's time, slowed by
- * `timeScale`, plus 1 px. Above 0, a Card jumped.
+ * `timeScale`, plus 1 px. A step and a stretch are read alike: the most
+ * its middle, its width or its height moved. Above 0, a Card jumped.
  */
 export function worstJump(samples: readonly Sample[], timeScale: number) {
 	const first = samples[0];
@@ -176,6 +177,7 @@ export function worstJump(samples: readonly Sample[], timeScale: number) {
 					reach,
 					Math.hypot(a.u - b.u, a.v - b.v),
 					Math.abs(a.w - b.w),
+					Math.abs(a.h - b.h),
 				);
 		const peak = (3 * reach) / (200 / timeScale);
 		for (let i = 1; i < track.length; i++) {
@@ -194,7 +196,7 @@ export function worstJump(samples: readonly Sample[], timeScale: number) {
 }
 
 /** How far `card` sits from `to`: the most its middle or its size is off, px. */
-function offBy(card: Shown, to: Shown) {
+export function offBy(card: Shown, to: Shown) {
 	return Math.max(
 		Math.hypot(card.u - to.u, card.v - to.v),
 		Math.abs(card.w - to.w),
