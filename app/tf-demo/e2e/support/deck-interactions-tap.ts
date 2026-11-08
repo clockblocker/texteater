@@ -19,8 +19,29 @@ export type Shown = {
 	readonly o: number;
 };
 
-/** One frame: when it drew (ms) and every Card, back to front as the DOM has them. */
-export type Sample = { readonly t: number; readonly cards: readonly Shown[] };
+/**
+ * D's swipe panel in one frame: the part of its box it paints, cut by its
+ * clip-path, in a Card's terms; whose it is; its opacity times the Deck
+ * layer's; its colour fill's opacity, and whether it is armed.
+ */
+export type PanelShown = Omit<Shown, "id"> & {
+	readonly card: string;
+	readonly fill: number;
+	readonly armed: boolean;
+};
+
+/**
+ * One frame: when it drew (ms), every Card, back to front as the DOM has
+ * them, D's swipe panel if one is mounted, how many presses had come by
+ * then and whether the hand was down.
+ */
+export type Sample = {
+	readonly t: number;
+	readonly cards: readonly Shown[];
+	readonly panel: PanelShown | null;
+	readonly presses: number;
+	readonly down: boolean;
+};
 
 /** Sets one of the variant's choice knobs in the inspector. */
 export async function choose(page: Page, label: string, option: string) {
@@ -54,8 +75,9 @@ export function shown(page: Page): Promise<Shown[]> {
 
 /**
  * From the next press on, every frame for `ms`: each Card as `shown`
- * reads it. Resolves to the frames once they are in. A frame is read
- * after every `requestAnimationFrame` callback of that frame, as the
+ * reads it, and D's swipe panel. Resolves to the frames once the last is
+ * in. A frame is read after every `requestAnimationFrame` callback of that
+ * frame, as the
  * tabletop frame log reads it (`frames.ts`): a ResizeObserver on a probe
  * whose size each frame toggles fires after them and after layout, just
  * before paint. Read in a callback of its own, a frame could come before
@@ -69,14 +91,67 @@ export async function record(page: Page, ms: number) {
 		const samples: Sample[] = [];
 		let until = 0;
 		let stamp = 0;
+		let presses = 0;
+		let down = false;
 		const probe = document.createElement("div");
 		probe.style.cssText =
 			"position:fixed;left:0;top:0;width:1px;height:1px;visibility:hidden;pointer-events:none";
 		document.body.append(probe);
+		/* a clip-path inset, top right bottom left, in the element's own px */
+		const insetOf = (clip: string) => {
+			const found = /^inset\(([^)]*)\)/.exec(clip);
+			const [t = 0, r = t, b = t, l = r] = (found?.[1] ?? "")
+				.split(" round ")[0]
+				?.trim()
+				.split(/\s+/)
+				.filter(Boolean)
+				.map(Number.parseFloat) ?? [0];
+			return { t, r, b, l };
+		};
+		const panelOf = (): PanelShown | null => {
+			const element = deck.querySelector("[data-panel]");
+			if (!element) return null;
+			const style = getComputedStyle(element);
+			const scale = new DOMMatrixReadOnly(style.transform).a;
+			const cut = insetOf(style.clipPath);
+			const own = element.getBoundingClientRect();
+			const left = own.left + cut.l * scale;
+			const right = own.right - cut.r * scale;
+			const top = own.top + cut.t * scale;
+			const bottom = own.bottom - cut.b * scale;
+			const middle = (left + right) / 2;
+			const layer = deck.querySelector("[data-deck-layer]");
+			const fill = element.querySelector("[data-panel-fill]");
+			return {
+				card: element.getAttribute("data-panel-card") ?? "",
+				u: rtl ? box.right - middle : middle - box.left,
+				v: (top + bottom) / 2 - box.top,
+				w: Math.max(0, right - left),
+				h: Math.max(0, bottom - top),
+				z: Number(style.zIndex),
+				o:
+					Number(style.opacity) *
+					(layer ? Number(getComputedStyle(layer).opacity) : 1),
+				fill: fill ? Number(getComputedStyle(fill).opacity) : 0,
+				armed: element.hasAttribute("data-armed"),
+			};
+		};
+		const press = () => {
+			presses += 1;
+			down = true;
+		};
+		const lift = () => {
+			down = false;
+		};
+		window.addEventListener("pointerdown", press, { capture: true });
+		window.addEventListener("pointerup", lift, { capture: true });
 		const observer = new ResizeObserver(() => {
 			if (stamp === 0) return;
 			samples.push({
 				t: stamp,
+				panel: panelOf(),
+				presses,
+				down,
 				cards: [...deck.querySelectorAll("[data-card-id]")].map(
 					(element) => {
 						const own = element.getBoundingClientRect();
@@ -106,6 +181,13 @@ export async function record(page: Page, ms: number) {
 				requestAnimationFrame(() => {
 					observer.disconnect();
 					probe.remove();
+					window.removeEventListener("pointerdown", press, {
+						capture: true,
+					});
+					window.removeEventListener("pointerup", lift, {
+						capture: true,
+					});
+					Object.assign(window, { tapEnded: true });
 				});
 		};
 		window.addEventListener(
@@ -116,10 +198,12 @@ export async function record(page: Page, ms: number) {
 			},
 			{ capture: true, once: true },
 		);
-		Object.assign(window, { tapFrames: samples });
+		Object.assign(window, { tapFrames: samples, tapEnded: false });
 	}, ms);
 	return async () => {
-		await page.waitForTimeout(ms + 150);
+		await page.waitForFunction(
+			() => (window as unknown as { tapEnded: boolean }).tapEnded,
+		);
 		return page.evaluate(
 			() => (window as unknown as { tapFrames: Sample[] }).tapFrames,
 		);

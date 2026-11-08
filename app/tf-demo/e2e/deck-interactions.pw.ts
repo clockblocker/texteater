@@ -29,7 +29,10 @@ import {
 	watchStacking,
 } from "./support/deck-interactions";
 import { closeSpecs } from "./support/deck-interactions-close-specs";
-import { swipeDirectionSpecs } from "./support/deck-interactions-swipe-specs";
+import {
+	swipeDirectionSpecs,
+	swipeUpSpecs,
+} from "./support/deck-interactions-swipe-specs";
 import { tapSpecs } from "./support/deck-interactions-tap-specs";
 
 /**
@@ -435,6 +438,7 @@ test("D: toward Close deck the rest of the Deck folds in at once onto any Card, 
 });
 
 swipeDirectionSpecs();
+swipeUpSpecs();
 
 test("B: a hovered Deck fans slightly, and settles back while a Card is pressed", async ({
 	page,

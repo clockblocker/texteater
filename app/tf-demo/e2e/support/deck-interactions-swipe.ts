@@ -8,6 +8,7 @@ import {
 	pull,
 	redeal,
 } from "./deck-interactions";
+import { type Sample, tailOf, tapAt } from "./deck-interactions-tap";
 
 /**
  * D's swipes in the Deck interactions spec: every way a Card goes, and a
@@ -228,3 +229,152 @@ export async function sweepGrowing(page: Page) {
 	await page.mouse.up();
 	return seen;
 }
+
+type Edges = { l: number; r: number; t: number; b: number };
+
+function edgesOf(box: { u: number; v: number; w: number; h: number }): Edges {
+	return {
+		l: box.u - box.w / 2,
+		r: box.u + box.w / 2,
+		t: box.v - box.h / 2,
+		b: box.v + box.h / 2,
+	};
+}
+
+/**
+ * How much of D's panel paints in `sample`, in px²: the part of it its
+ * clip leaves that no opaque Card is drawn over. It is the first thing in
+ * the Deck's layer, so a Card at its z-index or above is drawn over it.
+ */
+function panelShows(sample: Sample): number {
+	const panel = sample.panel;
+	if (!panel || panel.o <= 0.01) return 0;
+	const own = edgesOf(panel);
+	const over = sample.cards
+		.filter((card) => card.z >= panel.z && card.o >= 0.99)
+		.map(edgesOf);
+	const cuts = (from: number, to: number, ends: readonly number[]) =>
+		[
+			...new Set([
+				from,
+				to,
+				...ends.filter((at) => at > from && at < to),
+			]),
+		].sort((a, b) => a - b);
+	const xs = cuts(
+		own.l,
+		own.r,
+		over.flatMap((card) => [card.l, card.r]),
+	);
+	const ys = cuts(
+		own.t,
+		own.b,
+		over.flatMap((card) => [card.t, card.b]),
+	);
+	let area = 0;
+	for (let i = 1; i < xs.length; i++)
+		for (let j = 1; j < ys.length; j++) {
+			const [x0 = 0, x1 = 0, y0 = 0, y1 = 0] = [
+				xs[i - 1],
+				xs[i],
+				ys[j - 1],
+				ys[j],
+			];
+			const x = (x0 + x1) / 2;
+			const y = (y0 + y1) / 2;
+			const covered = over.some(
+				(card) => x > card.l && x < card.r && y > card.t && y < card.b,
+			);
+			if (!covered) area += (x1 - x0) * (y1 - y0);
+		}
+	return area;
+}
+
+/**
+ * What D's panel did over a swipe recorded in `samples`, frame by frame:
+ * `frames` it painted in; `grew`, the most it showed, once the swipe's
+ * hand let go, beyond the least it had shown since the last frame the
+ * hand held it, in px²; `under`, frames in which it painted over a Card
+ * drawn over it in its first frame; `flooded`, frames in which its
+ * colour had moved from its first frame's before it armed.
+ */
+export function panelPath(samples: readonly Sample[]) {
+	const first = samples.findIndex((sample) => sample.panel !== null);
+	const start = samples[first];
+	if (!start?.panel) throw new Error("No panel showed");
+	const { presses } = start;
+	const over = start.cards
+		.filter((card) => card.z >= (start.panel?.z ?? 0))
+		.map((card) => card.id);
+	const release = samples.findIndex(
+		(sample, index) =>
+			index > first && (sample.presses > presses || !sample.down),
+	);
+	if (release < 1) throw new Error("The hand never let go");
+	let least = panelShows(samples[release - 1] as Sample);
+	let grew = 0;
+	for (const sample of samples.slice(release)) {
+		const shows = panelShows(sample);
+		grew = Math.max(grew, shows - least);
+		least = Math.min(least, shows);
+	}
+	let armed = false;
+	let frames = 0;
+	let under = 0;
+	let flooded = 0;
+	for (const sample of samples.slice(first)) {
+		const { panel } = sample;
+		if (!panel || panel.o <= 0.01) continue;
+		frames += 1;
+		armed ||= panel.armed;
+		if (!armed && Math.abs(panel.fill - start.panel.fill) > 0.005)
+			flooded += 1;
+		const below = sample.cards.some(
+			(card) => over.includes(card.id) && card.z < panel.z,
+		);
+		if (below && panelShows(sample) > 0) under += 1;
+	}
+	return { frames, grew, under, flooded };
+}
+
+/** The Card `id` in the Deck, wherever a shuffle has put it. */
+const byId = (page: Page, id: string) =>
+	frame(page).locator(`[data-card-id="${id}"]`);
+
+/**
+ * Ways to drag Card `id` up, toward Open, each from rest: slowly past the
+ * threshold and let go; flicked up and let go moving; tapped, which
+ * shuffles it to the front, then at once dragged up past the threshold;
+ * dragged up short of it and let go, then, while it comes home, the
+ * backmost Card tapped. Each resolves once its hand has let go.
+ */
+export const UPS = {
+	past: async (page: Page, id: string) => {
+		await pull(page, byId(page, id), 0, -150);
+		await page.mouse.up();
+	},
+	flick: async (page: Page, id: string) => {
+		const box = await byId(page, id).boundingBox();
+		if (!box) throw new Error("Missing card geometry");
+		const start = { x: box.x + box.width / 2, y: box.y + 16 };
+		await page.mouse.move(start.x, start.y);
+		await page.mouse.down();
+		for (const dy of [20, 60, 110, 160]) {
+			await page.mouse.move(start.x, start.y - dy);
+			await page.waitForTimeout(16);
+		}
+		await page.mouse.up();
+	},
+	"tap, then past": async (page: Page, id: string) => {
+		await tapAt(page, await tailOf(byId(page, id)));
+		await page.waitForTimeout(60);
+		await pull(page, byId(page, id), 0, -150);
+		await page.mouse.up();
+	},
+	"short, then a tap": async (page: Page, id: string) => {
+		await pull(page, byId(page, id), 0, -60);
+		await page.mouse.up();
+		await page.waitForTimeout(80);
+		await tapAt(page, await tailOf(card(page, 0)));
+	},
+} as const;

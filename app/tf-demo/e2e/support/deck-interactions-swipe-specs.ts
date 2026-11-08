@@ -1,14 +1,24 @@
 /// <reference lib="dom" />
 import { expect, test } from "@playwright/test";
-import { chooseVariant } from "./deck-interactions";
+import {
+	chooseVariant,
+	frame,
+	landed,
+	panel,
+	redeal,
+	reduceMotion,
+} from "./deck-interactions";
 import {
 	DIRECTIONS,
 	direct,
 	movesOf,
+	panelPath,
 	sweep,
 	sweepGrowing,
+	UPS,
 	WAYS,
 } from "./deck-interactions-swipe";
+import { record } from "./deck-interactions-tap";
 
 /**
  * The Deck interactions spec's swipe checks in each writing direction,
@@ -68,4 +78,53 @@ export function swipeDirectionSpecs() {
 			}
 		});
 	}
+}
+
+/**
+ * D's drag up, toward Open, declared into the spec by `swipeUpSpecs`, in a
+ * browser that reports reduced motion, as the user's does, with the
+ * inspector's Reduced motion off and on. On the front Card and one behind
+ * it, every way `UPS` drags, frame by frame: the panel shows only what the
+ * hand uncovers, under the Card and the Cards in front of it; its colour
+ * floods only once it arms; and once the hand lets go it only ever shows
+ * less of itself: the Card coming home or opening into the Cover covers
+ * it, and nothing uncovers it.
+ */
+export function swipeUpSpecs() {
+	for (const reduced of [false, true])
+		test(`D${reduced ? ", reduced" : ""}: dragged up, the Open panel shows only what the hand uncovers, under the Cards in front, and once let go only ever less of it`, async ({
+			page,
+		}) => {
+			test.setTimeout(90_000);
+			await page.emulateMedia({ reducedMotion: "reduce" });
+			await chooseVariant(page, "D · Swipe actions");
+			if (reduced) await reduceMotion(page);
+			const open = frame(page).locator("[data-expanded]");
+			for (const lead of [3, 1])
+				for (const [way, drag] of Object.entries(UPS)) {
+					await page.mouse.move(5, 5);
+					await landed(page);
+					const id =
+						(await frame(page)
+							.locator("[data-card-id]")
+							.nth(lead)
+							.getAttribute("data-card-id")) ?? "";
+					const done = await record(page, 1500);
+					await drag(page, id);
+					const seen = panelPath(await done());
+					const at = `${way}, Card ${lead}`;
+					expect.soft(seen.frames, at).toBeGreaterThan(5);
+					expect.soft(seen.grew, at).toBeLessThanOrEqual(1);
+					expect.soft(seen.under, at).toBe(0);
+					expect.soft(seen.flooded, at).toBe(0);
+					await expect.soft(panel(page), at).toHaveCount(0);
+					if ((await open.count()) > 0) {
+						await frame(page)
+							.getByRole("button", { name: "Close" })
+							.click();
+						await expect(open).toHaveCount(0);
+					}
+					await redeal(page);
+				}
+		});
 }
