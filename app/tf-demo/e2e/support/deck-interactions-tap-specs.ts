@@ -14,6 +14,7 @@ import {
 	choose,
 	landing,
 	movesFrom,
+	onTopFrom,
 	pathOf,
 	record,
 	restacksFrom,
@@ -97,13 +98,17 @@ async function tapAndJudge(page: Page, lead: number) {
 	expect(path.outThenIn).toBe(true);
 	expect(path.least).toBeGreaterThanOrEqual(-0.01);
 	expect(Math.abs(path.out.at(-1) ?? 1)).toBeLessThanOrEqual(0.01);
-	/* restacked on top in the frame its second leg starts: until then it
-	   only went sideways, and it starts down in that frame or the next */
+	/* under the Cards in front of it before the tap; lifted above every
+	   Card as it starts, in the frame it first moves or the one before,
+	   and above them all from then on: it never passes behind a Card, nor
+	   hops over one */
+	expect(stackingOf(rest).at(-1)).not.toBe(id);
 	const top = topFrom(frames, id);
-	expect(top).toBeGreaterThan(0);
-	expect(path.dropsFrom - top).toBeGreaterThanOrEqual(0);
-	expect(path.dropsFrom - top).toBeLessThanOrEqual(1);
-	expect(path.out[top] ?? 0).toBeGreaterThan(0.99 * path.peak);
+	const starts = movesFrom(frames, id);
+	expect(top).toBeGreaterThanOrEqual(0);
+	expect(starts - top).toBeGreaterThanOrEqual(0);
+	expect(starts - top).toBeLessThanOrEqual(1);
+	expect(onTopFrom(frames, id, top)).toBe(true);
 	/* the Cards in front of it restack no later than they move; the
 	   ones behind it never move */
 	for (const other of ids.slice(lead + 1)) {
@@ -127,7 +132,7 @@ async function tapAndJudge(page: Page, lead: number) {
 export function tapSpecs() {
 	for (const [variant] of VARIANTS)
 		for (const rtl of [false, true])
-			test(`${variant} in ${rtl ? "RTL" : "LTR"}: a tap on a Card behind the front one shuffles it to the front: out sideways, on top as it comes back, into the front slot, no Card jumping, at rest stacked in the new order`, async ({
+			test(`${variant} in ${rtl ? "RTL" : "LTR"}: a tap on a Card behind the front one shuffles it to the front: lifted above the Deck at once, out sideways and into the front slot, no Card jumping, at rest stacked in the new order`, async ({
 				page,
 			}) => {
 				await open(page, variant, rtl);
@@ -224,7 +229,9 @@ export function tapSpecs() {
 			const done = await record(page, 1200);
 			await tapAt(page, await tailOf(card(page, 0)));
 			await page.waitForTimeout(100);
-			await tapAt(page, await tailOf(byId(page, first[0] ?? "")));
+			/* near its inline-start end: the first Card, lifted over the Deck
+			   and half out toward inline-end, covers the middle of its tail */
+			await tapAt(page, await tailOf(byId(page, first[0] ?? ""), 0.15));
 			await page.mouse.move(5, 5);
 			const frames = await done();
 			expect(worstJump(frames, 1)).toBeLessThanOrEqual(0);
@@ -244,7 +251,7 @@ export function tapSpecs() {
 			const order = fronted(ids, id);
 			const done = await record(page, 1600);
 			await tapAt(page, await tailOf(card(page, 0)));
-			/* in its second leg: on top, coming into the front slot */
+			/* in its second leg: coming into the front slot */
 			await page.waitForTimeout(260);
 			if (variant === "B") {
 				const at = await tailOf(byId(page, id));

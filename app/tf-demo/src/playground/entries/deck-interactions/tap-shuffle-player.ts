@@ -24,8 +24,9 @@ type Part = {
  * all of them keep the tap's one clock: a frame that comes late starts
  * the part that far in. Each Card runs on that clock alone: every channel
  * is one keyframed tween started in that frame, and its restack and its
- * landing are cued from the same frame, so the stacking changes in the
- * frame its second leg starts. A part waiting
+ * landing are cued from the same frame: a lifted Card rises above the
+ * Deck in the frame it starts, and every Card takes its new stacking in
+ * the frame its plan puts it. A part waiting
  * to start leaves its Card to whatever moves it until then; a part that
  * replaces another (a second tap) cancels the first as it starts.
  * Reduced, a part is a dissolve, all of them on the first beat: the Card
@@ -39,12 +40,15 @@ type Part = {
 export function createTapShufflePlayer({
 	valuesOf,
 	zOf,
+	liftedZ,
 	restZ,
 	onIdle,
 }: {
 	readonly valuesOf: (id: string) => CardValues;
 	/** The stacking of the place `index`, 0 the back. */
 	readonly zOf: (index: number) => number;
+	/** A stacking above every Card in the Deck, for a Card lifted off it. */
+	readonly liftedZ: number;
 	/** A Card's stacking at rest in the Deck's order now. */
 	readonly restZ: (id: string) => number;
 	/** Called once no Card is left in a shuffle. */
@@ -77,6 +81,7 @@ export function createTapShufflePlayer({
 		late: number,
 	) {
 		const z = zOf(move.index);
+		if (move.lifted) card.z.set(liftedZ);
 		for (const channel of CHANNELS) {
 			const value = card[channel];
 			/* in the frame: what drove it stops where this frame puts it */

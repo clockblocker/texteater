@@ -54,7 +54,13 @@ export function shown(page: Page): Promise<Shown[]> {
 
 /**
  * From the next press on, every frame for `ms`: each Card as `shown`
- * reads it. Resolves to the frames once they are in.
+ * reads it. Resolves to the frames once they are in. A frame is read
+ * after every `requestAnimationFrame` callback of that frame, as the
+ * tabletop frame log reads it (`frames.ts`): a ResizeObserver on a probe
+ * whose size each frame toggles fires after them and after layout, just
+ * before paint. Read in a callback of its own, a frame could come before
+ * Motion's and show the Cards as the frame before left them, then a
+ * double step: a jump that never painted.
  */
 export async function record(page: Page, ms: number) {
 	await frame(page).evaluate((deck, duration) => {
@@ -62,9 +68,15 @@ export async function record(page: Page, ms: number) {
 		const rtl = getComputedStyle(deck).direction === "rtl";
 		const samples: Sample[] = [];
 		let until = 0;
-		const step = (t: number) => {
+		let stamp = 0;
+		const probe = document.createElement("div");
+		probe.style.cssText =
+			"position:fixed;left:0;top:0;width:1px;height:1px;visibility:hidden;pointer-events:none";
+		document.body.append(probe);
+		const observer = new ResizeObserver(() => {
+			if (stamp === 0) return;
 			samples.push({
-				t,
+				t: stamp,
 				cards: [...deck.querySelectorAll("[data-card-id]")].map(
 					(element) => {
 						const own = element.getBoundingClientRect();
@@ -82,13 +94,25 @@ export async function record(page: Page, ms: number) {
 					},
 				),
 			});
-			if (t < until) requestAnimationFrame(step);
+		});
+		observer.observe(probe);
+		let wide = false;
+		const tick = (t: number) => {
+			stamp = t;
+			wide = !wide;
+			probe.style.width = wide ? "2px" : "1px";
+			if (t < until) requestAnimationFrame(tick);
+			else
+				requestAnimationFrame(() => {
+					observer.disconnect();
+					probe.remove();
+				});
 		};
 		window.addEventListener(
 			"pointerdown",
 			() => {
 				until = performance.now() + duration;
-				requestAnimationFrame(step);
+				requestAnimationFrame(tick);
 			},
 			{ capture: true, once: true },
 		);
@@ -102,11 +126,11 @@ export async function record(page: Page, ms: number) {
 	};
 }
 
-/** Where a tap on `card` lands: its showing strip's middle, near its top. */
-export async function tailOf(card: Locator) {
+/** Where a tap on `card` lands: near its top, `across` of the way along its showing strip (its middle by default). */
+export async function tailOf(card: Locator, across = 0.5) {
 	const box = await card.boundingBox();
 	if (!box) throw new Error("Missing card geometry");
-	return { x: box.x + box.width / 2, y: box.y + 20 };
+	return { x: box.x + box.width * across, y: box.y + 20 };
 }
 
 /** Presses and lets go at `at`, with no move between. */
@@ -233,13 +257,24 @@ export function landing(samples: readonly Sample[]) {
 
 /** The first frame in which Card `id` is stacked over every other. */
 export function topFrom(samples: readonly Sample[], id: string) {
-	return samples.findIndex((sample) => {
-		const own = sample.cards.find((card) => card.id === id);
-		return (
-			own !== undefined &&
-			sample.cards.every((card) => card.id === id || card.z < own.z)
-		);
-	});
+	return samples.findIndex((sample) => onTop(sample, id));
+}
+
+function onTop(sample: Sample, id: string) {
+	const own = sample.cards.find((card) => card.id === id);
+	return (
+		own !== undefined &&
+		sample.cards.every((card) => card.id === id || card.z < own.z)
+	);
+}
+
+/** Whether Card `id` is above every other Card in each frame from `from` on. */
+export function onTopFrom(
+	samples: readonly Sample[],
+	id: string,
+	from: number,
+) {
+	return samples.slice(from).every((sample) => onTop(sample, id));
 }
 
 /**

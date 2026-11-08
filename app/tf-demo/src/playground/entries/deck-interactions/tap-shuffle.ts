@@ -5,17 +5,21 @@ import type { Slot } from "./geometry";
  * A tap's reorder played as deck-of-cards' shuffle (`modules/shuffle` of
  * github.com/deck-of-cards/deck-of-cards, ported in tabletop's `shuffle`),
  * in that library's timing and structure: every leg 200 ms on cubicInOut,
- * each Card starting 2 ms × its new position late, and a Card's stacking
- * changing to its new place as its second leg starts. The tapped Card
- * slides out sideways, takes the front's place in the stack and slides
- * into the front slot; the Cards between it and the front move up a slot
- * on that second beat. Pure: the Deck plays it.
+ * each Card starting 2 ms × its new position late. One change to it: the
+ * tapped Card never passes behind a Card. It is lifted above the whole
+ * Deck as it starts, slides out sideways and into the front slot, and is
+ * set down there; the library restacks it as its second leg starts,
+ * which shows as a hop over the Cards it had been behind. The Cards
+ * between it and the front move up a slot on that second beat, restacking
+ * as they start. Pure: the Deck plays it.
  */
 
 export const LEG_MS = 200;
 export const STAGGER_MS = 2;
 /** Each half of a reduced move's dissolve: out where it shows, then in at its rest. */
 export const DISSOLVE_MS = 100;
+/** How high the tapped Card rides while it travels, as a lift of 0 to 1: its shadow. */
+export const TAP_LIFT = 0.5;
 
 /** What a tap's shuffle moves: everything a slot places, and the lift. */
 export const CHANNELS = ["u", "v", "w", "h", "r", "s", "lift"] as const;
@@ -44,6 +48,8 @@ export type CardMove = {
 	readonly ms: number;
 	/** When, from its start, its stacking changes to its new place. */
 	readonly zAtMs: number;
+	/** Whether it rides above every Card in the Deck from its start until `zAtMs`. */
+	readonly lifted: boolean;
 	/** Its legs per channel, timed from its start, none overlapping. */
 	readonly legs: Readonly<Record<Channel, readonly Leg[]>>;
 };
@@ -126,8 +132,9 @@ function legsOf(
  * The shuffle that brings `id` to the front of `order` (back to front),
  * over a pile resting at `slots`: the new order and each moving Card's
  * part, or null when `id` is already in front or not in the Deck. The
- * tapped Card goes `out` px along the inline axis from its slot, upright,
- * unlifted and at its slot's height and scale, then into the front slot;
+ * tapped Card, above every Card from its start, goes `out` px along the
+ * inline axis from its slot, upright, lifted by `TAP_LIFT` and at its
+ * slot's height and scale, then into the front slot, set down there;
  * the Cards that were in front of it go to the slot below theirs. The
  * Cards behind it don't move.
  */
@@ -151,7 +158,7 @@ export function tapShuffle({
 	const top = slots[front];
 	if (from < 0 || from === front || !was || !top) return null;
 	const next = [...order.filter((other) => other !== id), id];
-	const pulled = { ...poseOf(was), u: was.u + out, r: 0 };
+	const pulled = { ...poseOf(was), u: was.u + out, r: 0, lift: TAP_LIFT };
 	const moves: CardMove[] = [
 		{
 			id,
@@ -159,7 +166,8 @@ export function tapShuffle({
 			startMs: STAGGER_MS * front,
 			reducedStartMs: STAGGER_MS * front,
 			ms: 2 * LEG_MS,
-			zAtMs: LEG_MS,
+			zAtMs: 2 * LEG_MS,
+			lifted: true,
 			legs: legsOf([
 				{ at: 0, to: pulled },
 				{ at: LEG_MS, to: poseOf(top) },
@@ -177,6 +185,7 @@ export function tapShuffle({
 			reducedStartMs: STAGGER_MS * index,
 			ms: LEG_MS,
 			zAtMs: 0,
+			lifted: false,
 			legs: legsOf([{ at: 0, to: poseOf(slot) }]),
 		});
 	}

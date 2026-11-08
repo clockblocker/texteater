@@ -67,6 +67,8 @@ export type Mark = {
 const GLIDING = ["u", "v", "w", "h", "r", "s", "lift"] as const;
 
 const BASE_Z = 10;
+/** A Card a tap lifts off the Deck: above every Card in it, under the hand's. */
+const LIFTED_Z = 90;
 const HELD_Z = 100;
 const COVER_Z = 200;
 
@@ -134,6 +136,7 @@ export function useDeck({
 		createTapShufflePlayer({
 			valuesOf: (id) => values.get(id) ?? makeValues(),
 			zOf: (index) => BASE_Z + index,
+			liftedZ: LIFTED_Z,
 			restZ: (id) => BASE_Z + orderRef.current.indexOf(id),
 			onIdle: () => setShuffling(false),
 		}),

@@ -7,6 +7,7 @@ import {
 	pullOutOf,
 	restOf,
 	STAGGER_MS,
+	TAP_LIFT,
 	tapShuffle,
 } from "./tap-shuffle";
 
@@ -76,7 +77,7 @@ describe("a tap's shuffle", () => {
 		]);
 	});
 
-	test("the tapped Card slides out sideways at its own height, upright, then into the front slot, its stacking changing between", () => {
+	test("the tapped Card rides above the Deck from its start, lifted, out sideways at its own height, upright, then into the front slot, set down there", () => {
 		const plan = tapShuffle({
 			order: ORDER,
 			id: "a",
@@ -87,7 +88,8 @@ describe("a tap's shuffle", () => {
 		if (!tapped) throw new Error("No move");
 		expect(tapped.startMs).toBe(STAGGER_MS * 3);
 		expect(tapped.ms).toBe(2 * LEG_MS);
-		expect(tapped.zAtMs).toBe(LEG_MS);
+		expect(tapped.lifted).toBe(true);
+		expect(tapped.zAtMs).toBe(2 * LEG_MS);
 		expect(tapped.legs.u).toEqual([
 			{ at: 0, ms: 200, to: 308 },
 			{ at: 200, ms: 200, to: 100 },
@@ -98,7 +100,7 @@ describe("a tap's shuffle", () => {
 		]);
 		expect(tapped.legs.r.map((leg) => leg.to)).toEqual([0, 0]);
 		expect(tapped.legs.s.map((leg) => leg.to)).toEqual([1, 1.05]);
-		expect(tapped.legs.lift.map((leg) => leg.to)).toEqual([0, 0]);
+		expect(tapped.legs.lift.map((leg) => leg.to)).toEqual([TAP_LIFT, 0]);
 		expect(restOf(tapped)).toEqual({ ...slot(3), lift: 0 });
 	});
 
@@ -119,6 +121,7 @@ describe("a tap's shuffle", () => {
 			expect(move.index).toBe(index);
 			expect(move.ms).toBe(LEG_MS);
 			expect(move.zAtMs).toBe(0);
+			expect(move.lifted).toBe(false);
 			expect(move.legs.v).toEqual([
 				{ at: 0, ms: 200, to: slot(index).v },
 			]);
