@@ -19,8 +19,8 @@ type Part = {
 };
 
 /**
- * Plays Card moves on the Deck's Cards, such as a tap's shuffle. Each
- * Card's part starts on Motion's frame loop at its `startMs`,
+ * Plays Card moves on the Deck's Cards: a tap's shuffle, or the Cover's
+ * close. Each Card's part starts on Motion's frame loop at its `startMs`,
  * from where the Card shows, and all the parts of one play keep its one
  * clock: a frame that comes late starts a part that far in. Each Card
  * runs on that clock alone: every channel is one keyframed tween started
@@ -30,7 +30,7 @@ type Part = {
  * channel has a spring of its own to drift from the rest, and no
  * stacking waits on a promise. A part waiting to start leaves its Card
  * to whatever moves it until then; a part that replaces another (a
- * second tap) cancels the first as it starts.
+ * second tap, a tap on a closing Card) cancels the first as it starts.
  * Reduced, a part is a dissolve, a shuffle's all on the first beat: the
  * Card holds where it shows while it fades out in 100 ms, switches to its
  * rest and new stacking while hidden, and fades in there in 100 ms.
@@ -65,13 +65,14 @@ export function createCardMovePlayer({
 	 * past it with the tween's last step.
 	 */
 	function land(id: string, part: Part, move: CardMove, reduced: boolean) {
-		if (parts.get(id) !== part) return;
+		if (parts.get(id) !== part) return false;
 		const card = valuesOf(id);
 		const rest = restOf(move);
 		for (const channel of CHANNELS) card[channel].jump(rest[channel]);
 		if (reduced) card.o.jump(1);
 		parts.delete(id);
 		if (parts.size === 0) onIdle();
+		return true;
 	}
 
 	function travel(
@@ -146,7 +147,16 @@ export function createCardMovePlayer({
 		cues.push(cue(2 * DISSOLVE_MS - late, landed, context));
 	}
 
-	function play(moves: readonly CardMove[], context: MotionContext) {
+	/**
+	 * Plays `moves` from where their Cards show; `landed` is called once
+	 * every one of them has landed, and never if one is taken first.
+	 */
+	function play(
+		moves: readonly CardMove[],
+		context: MotionContext,
+		landed?: () => void,
+	) {
+		let left = moves.length;
 		for (const move of moves) {
 			const card = valuesOf(move.id);
 			let before = parts.get(move.id);
@@ -160,7 +170,10 @@ export function createCardMovePlayer({
 				},
 			};
 			parts.set(move.id, part);
-			const lands = () => land(move.id, part, move, context.reduce);
+			const lands = () => {
+				if (land(move.id, part, move, context.reduce) && --left === 0)
+					landed?.();
+			};
 			cues.push(
 				cue(
 					context.reduce ? move.reducedStartMs : move.startMs,

@@ -52,6 +52,13 @@ export function contains(rect: Rect, point: Point): boolean {
 	);
 }
 
+/** A slot's box as drawn: scaled about its centre, as its Card is. */
+export function drawn(slot: Slot): Rect {
+	const w = slot.w * slot.s;
+	const h = slot.h * slot.s;
+	return { u: slot.u - (w - slot.w) / 2, v: slot.v - (h - slot.h) / 2, w, h };
+}
+
 /** The smallest box around `rects`, or null when there are none. */
 export function union(rects: readonly Rect[]): Rect | null {
 	if (rects.length === 0) return null;

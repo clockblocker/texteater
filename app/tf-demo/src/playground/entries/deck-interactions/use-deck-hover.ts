@@ -63,8 +63,8 @@ type CardHandler = (id: string, event: ReactPointerEvent<HTMLElement>) => void;
  * mouse or pen hovers, on a device that has hover. While a Card is
  * pressed the rest of the Deck settles back and the pressed Card stays
  * where the hover left it, so the pick-up starts from there; while one
- * is carried, the carry owns the Deck, and while a tap's shuffle moves
- * Cards, it does, and the fan opens again once they land. Every move is an interruptible
+ * is carried, the carry owns the Deck, and while a tap's shuffle or a
+ * close moves Cards, it does, and the fan opens again once they land. Every move is an interruptible
  * spring (or, reduced, the page's short tween).
  *
  * Pass `holding`, the Card pressed or carried, or null. Spread `onEnter`

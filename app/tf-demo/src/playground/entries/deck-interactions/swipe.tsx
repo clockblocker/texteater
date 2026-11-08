@@ -5,7 +5,7 @@ import {
 	useState,
 } from "react";
 import { DeckCards, DeckLayer, type VariantProps } from "./deck-cards";
-import type { Rect, Slot } from "./geometry";
+import { drawn, type Slot } from "./geometry";
 import { pileSlots } from "./layout";
 import { REDUCED_EXIT_MS, SPRINGS, settle, transition } from "./motion-kit";
 import { createTapCounter, type Drag, trackPointer } from "./pointer";
@@ -47,13 +47,6 @@ function along(axis: Axis, drag: Drag) {
 	return axis === "inline"
 		? { raw: drag.du, speed: drag.vu }
 		: { raw: drag.dy, speed: drag.vy };
-}
-
-/** A slot's box as drawn: scaled about its centre, as its Card is. */
-function drawn(slot: Slot): Rect {
-	const w = slot.w * slot.s;
-	const h = slot.h * slot.s;
-	return { u: slot.u - (w - slot.w) / 2, v: slot.v - (h - slot.h) / 2, w, h };
 }
 
 /**
@@ -107,6 +100,7 @@ export function SwipeVariant({
 		readouts,
 		deal,
 		layout: pileSlots,
+		close: knobs,
 	});
 	const [held, setHeld] = useState<string | null>(null);
 	/** The Card under the hand from press to the end of its return: no Card lights meanwhile. */
@@ -351,7 +345,7 @@ export function SwipeVariant({
 			binding.current = null;
 		}
 		const card = deck.valuesOf(id);
-		/* a Card a tap's shuffle is moving goes on moving under the press */
+		/* a Card a tap's shuffle or a close is moving goes on moving under the press */
 		const moving = deck.isPlaying(id);
 		const g: Gesture = {
 			id,

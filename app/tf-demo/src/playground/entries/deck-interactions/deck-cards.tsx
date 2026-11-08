@@ -64,7 +64,7 @@ export function DeckCards({
 	useEffect(() => {
 		if (!expanded) return;
 		const onKey = (event: KeyboardEvent) => {
-			if (event.key === "Escape") void closeCover();
+			if (event.key === "Escape") closeCover();
 		};
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
@@ -79,7 +79,7 @@ export function DeckCards({
 		},
 		enter: (id, event) => latest.current.onEnter?.(id, event),
 		leave: (id, event) => latest.current.onLeave?.(id, event),
-		close: () => void latest.current.closeCover(),
+		close: () => latest.current.closeCover(),
 	}));
 	if (deck.status === "gone") return null;
 	return deck.order.map((id) => (

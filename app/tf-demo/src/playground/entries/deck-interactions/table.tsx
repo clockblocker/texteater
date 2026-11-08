@@ -30,6 +30,7 @@ export function TableVariant({
 		readouts,
 		deal,
 		layout: pileSlots,
+		close: knobs,
 	});
 	const table = useTableCarry({ deck, frame, rtl, motion, readouts, knobs });
 	const [pressed, setPressed] = useState<string | null>(null);
@@ -49,7 +50,7 @@ export function TableVariant({
 		const at = framePoint(element, event.clientX, event.clientY, rtl);
 		let grab = { u: at.u - start.u, v: at.v - start.v };
 		let pressScale = card.s.get();
-		/* a Card a tap's shuffle is moving goes on moving under the press:
+		/* a Card a tap's shuffle or a close is moving goes on moving under the press:
 		   it gets no press feedback, and a pick-up takes it where it shows */
 		const moving = deck.isPlaying(id);
 		let lifted = false;

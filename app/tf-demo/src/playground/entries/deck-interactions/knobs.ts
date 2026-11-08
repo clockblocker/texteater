@@ -4,6 +4,7 @@
  * the wrong type or out of range falls back to its default, alone.
  */
 
+import { CLOSE_DEFAULTS, CLOSE_KNOBS } from "./cover-close";
 import { SWIPE_DEFAULTS, SWIPE_KNOBS, type SwipeKnobs } from "./swipe-knobs";
 import { TAP_DEFAULTS, TAP_KNOBS } from "./tap-card";
 import { HOVER_DEFAULTS, HOVER_KNOBS } from "./use-deck-hover";
@@ -69,9 +70,10 @@ function toggle<K extends string>(key: K, label: string): ToggleKnob<K> {
 
 const FLICK = num("flickSpeed", "Flick speed", 0.1, 3, 0.05, "px/ms");
 
-/** B: the tap, the fan, the lift, the lean, the targets' pull and the return. */
+/** B: the tap, the close, the fan, the lift, the lean, the targets' pull and the return. */
 const TABLE_DEFAULTS = {
 	...TAP_DEFAULTS,
+	...CLOSE_DEFAULTS,
 	...HOVER_DEFAULTS,
 	flickSpeed: 0.5,
 	liftScale: 1.06,
@@ -95,6 +97,7 @@ export type TableKnobs = typeof TABLE_DEFAULTS;
 
 const TABLE_KNOBS: readonly Knob<TableKnobs>[] = [
 	...TAP_KNOBS,
+	...CLOSE_KNOBS,
 	...HOVER_KNOBS,
 	FLICK,
 	num("liftScale", "Lift scale", 1, 1.2, 0.01),

@@ -1,6 +1,7 @@
 import { type MotionValue, motionValue } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createCardMovePlayer } from "./card-move-player";
+import { CLOSE_DEFAULTS, type CloseKnobs, coverClose } from "./cover-close";
 import { approachRate, type Point, type Rect, type Slot } from "./geometry";
 import { coverRect, exitOffset, type Frame } from "./layout";
 import {
@@ -67,7 +68,7 @@ export type Mark = {
 const GLIDING = ["u", "v", "w", "h", "r", "s", "lift"] as const;
 
 const BASE_Z = 10;
-/** A Card a tap lifts off the Deck: above every Card in it, under the hand's. */
+/** A Card a tap or a close lifts off the Deck: above every Card in it, under the hand's. */
 const LIFTED_Z = 90;
 const HELD_Z = 100;
 const COVER_Z = 200;
@@ -91,6 +92,7 @@ export function useDeck({
 	readouts,
 	layout,
 	deal,
+	close = CLOSE_DEFAULTS,
 }: {
 	/** The Cards dealt, back to front: read once, when the Deck is made. */
 	readonly cards: readonly { readonly id: string }[];
@@ -100,6 +102,8 @@ export function useDeck({
 	readonly motion: MotionContext;
 	readonly readouts: Readouts;
 	readonly layout: (frame: Frame, count: number) => Slot[];
+	/** How the Cover's close plays: its defaults unless a variant's knobs say. */
+	readonly close?: CloseKnobs;
 }) {
 	const [initialOrder] = useState(() => cards.map((card) => card.id));
 	const [order, setOrder] = useState<readonly string[]>(initialOrder);
@@ -130,7 +134,7 @@ export function useDeck({
 	/* the order a tap reads: a second tap can come before the render */
 	const orderRef = useRef(order);
 	orderRef.current = order;
-	/** Whether a tap's shuffle is still moving Cards: the hover fan waits for it. */
+	/** Whether a tap's shuffle or a close is still moving Cards: the hover fan waits for it. */
 	const [playing, setPlaying] = useState(false);
 	const [player] = useState(() =>
 		createCardMovePlayer({
@@ -259,7 +263,7 @@ export function useDeck({
 		});
 	}, [slots, order, status, expanded, frame.w, place, valuesOf, isBusy]);
 
-	/** The hand takes `id`, and with it the Deck: a shuffle ends where every Card shows. */
+	/** The hand takes `id`, and with it the Deck: a shuffle or a close ends where every Card shows. */
 	const hold = useCallback(
 		(id: string) => {
 			player.takeAll();
@@ -373,17 +377,32 @@ export function useDeck({
 		[clearMark, valuesOf, readouts, glide, frame, player],
 	);
 
-	const closeCover = useCallback(async () => {
+	/**
+	 * Puts the Card in the Cover back into its place, as `coverClose`
+	 * plans it, from wherever it shows: the player has it from here, so
+	 * its stacking comes with the plan, in the frame the plan puts it.
+	 */
+	const closeCover = useCallback(() => {
 		const id = expanded;
 		if (!id) return;
-		setExpanded(null);
-		readouts.set({ phase: "settling" });
-		const slot = slotOf(id);
-		if (slot) await place(id, slot, SPRINGS.morph);
 		busy.current.delete(id);
-		valuesOf(id).z.set(BASE_Z + order.indexOf(id));
-		readouts.set({ phase: "rest" });
-	}, [expanded, readouts, slotOf, place, valuesOf, order]);
+		setExpanded(null);
+		const move = coverClose({
+			order: orderRef.current,
+			id,
+			slots,
+			knobs: close,
+		});
+		if (!move) {
+			readouts.set({ phase: "rest" });
+			return;
+		}
+		readouts.set({ phase: "settling" });
+		player.play([move], motionRef.current, () =>
+			readouts.set({ phase: "rest" }),
+		);
+		setPlaying(true);
+	}, [expanded, readouts, slots, close, player]);
 
 	/**
 	 * The Deck leaves as `exit` takes it, the variant's own motion; it is
