@@ -352,7 +352,7 @@ export function SwipeVariant({
 		}
 		const card = deck.valuesOf(id);
 		/* a Card a tap's shuffle is moving goes on moving under the press */
-		const moving = deck.isShuffling(id);
+		const moving = deck.isPlaying(id);
 		const g: Gesture = {
 			id,
 			slot,

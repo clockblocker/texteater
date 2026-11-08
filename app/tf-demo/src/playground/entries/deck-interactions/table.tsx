@@ -51,7 +51,7 @@ export function TableVariant({
 		let pressScale = card.s.get();
 		/* a Card a tap's shuffle is moving goes on moving under the press:
 		   it gets no press feedback, and a pick-up takes it where it shows */
-		const moving = deck.isShuffling(id);
+		const moving = deck.isPlaying(id);
 		let lifted = false;
 		setPressed(id);
 		if (!moving) table.press(id);

@@ -1,16 +1,16 @@
 import { animate } from "motion/react";
-import { ease } from "./deck-of-cards-ease";
-import { cue, type MotionContext, transition } from "./motion-kit";
 import {
 	type CardMove,
 	CHANNELS,
 	DISSOLVE_MS,
 	keyframesOf,
 	restOf,
-} from "./tap-shuffle";
+} from "./card-move";
+import { ease } from "./deck-of-cards-ease";
+import { cue, type MotionContext, transition } from "./motion-kit";
 import type { CardValues } from "./use-deck";
 
-/** One Card's part of a shuffle, from the tap until it lands or the Card is taken. */
+/** One Card's part of a play, from its start until it lands or the Card is taken. */
 type Part = {
 	/** Cancels what is still to come of it, and of the part it replaced. */
 	readonly cancel: () => void;
@@ -19,25 +19,27 @@ type Part = {
 };
 
 /**
- * Plays a tap's shuffle on the Deck's Cards. Each Card's part starts on
- * Motion's frame loop at its `startMs`, from where the Card shows, and
- * all of them keep the tap's one clock: a frame that comes late starts
- * the part that far in. Each Card runs on that clock alone: every channel
- * is one keyframed tween started in that frame, and its restack and its
- * landing are cued from the same frame: a lifted Card rises above the
- * Deck in the frame it starts, and every Card takes its new stacking in
- * the frame its plan puts it. A part waiting
- * to start leaves its Card to whatever moves it until then; a part that
- * replaces another (a second tap) cancels the first as it starts.
- * Reduced, a part is a dissolve, all of them on the first beat: the Card
- * holds where it shows while it fades out in 100 ms, switches to its rest
- * and new stacking while hidden, and fades in there in 100 ms.
+ * Plays Card moves on the Deck's Cards, such as a tap's shuffle. Each
+ * Card's part starts on Motion's frame loop at its `startMs`,
+ * from where the Card shows, and all the parts of one play keep its one
+ * clock: a frame that comes late starts a part that far in. Each Card
+ * runs on that clock alone: every channel is one keyframed tween started
+ * in that frame, and its restack and its landing are cued from the same
+ * frame: a lifted Card rises above the Deck in the frame it starts, and
+ * every Card takes its new stacking in the frame its plan puts it. No
+ * channel has a spring of its own to drift from the rest, and no
+ * stacking waits on a promise. A part waiting to start leaves its Card
+ * to whatever moves it until then; a part that replaces another (a
+ * second tap) cancels the first as it starts.
+ * Reduced, a part is a dissolve, a shuffle's all on the first beat: the
+ * Card holds where it shows while it fades out in 100 ms, switches to its
+ * rest and new stacking while hidden, and fades in there in 100 ms.
  *
  * Anything else that takes a Card (`take`, `takeAll`) ends its part where
  * it shows and gives it its stacking at rest; the tweens it had started
  * run on until the taker's own move replaces them.
  */
-export function createTapShufflePlayer({
+export function createCardMovePlayer({
 	valuesOf,
 	zOf,
 	liftedZ,
@@ -51,7 +53,7 @@ export function createTapShufflePlayer({
 	readonly liftedZ: number;
 	/** A Card's stacking at rest in the Deck's order now. */
 	readonly restZ: (id: string) => number;
-	/** Called once no Card is left in a shuffle. */
+	/** Called once no Card is left in a play. */
 	readonly onIdle: () => void;
 }) {
 	const parts = new Map<string, Part>();
@@ -158,7 +160,7 @@ export function createTapShufflePlayer({
 				},
 			};
 			parts.set(move.id, part);
-			const landed = () => land(move.id, part, move, context.reduce);
+			const lands = () => land(move.id, part, move, context.reduce);
 			cues.push(
 				cue(
 					context.reduce ? move.reducedStartMs : move.startMs,
@@ -166,8 +168,8 @@ export function createTapShufflePlayer({
 						before?.cancel();
 						before = undefined;
 						if (context.reduce)
-							dissolve(card, move, context, cues, landed, late);
-						else travel(card, move, context, cues, landed, late);
+							dissolve(card, move, context, cues, lands, late);
+						else travel(card, move, context, cues, lands, late);
 					},
 					context,
 				),

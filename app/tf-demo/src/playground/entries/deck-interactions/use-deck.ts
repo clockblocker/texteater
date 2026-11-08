@@ -1,5 +1,6 @@
 import { type MotionValue, motionValue } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createCardMovePlayer } from "./card-move-player";
 import { approachRate, type Point, type Rect, type Slot } from "./geometry";
 import { coverRect, exitOffset, type Frame } from "./layout";
 import {
@@ -14,7 +15,6 @@ import {
 } from "./motion-kit";
 import type { Readouts } from "./readouts";
 import { type PullOut, pullOutOf, type Side, tapShuffle } from "./tap-shuffle";
-import { createTapShufflePlayer } from "./tap-shuffle-player";
 
 /** One Card's motion values: its box in logical px, its lean and its lift. */
 export type CardValues = {
@@ -131,18 +131,18 @@ export function useDeck({
 	const orderRef = useRef(order);
 	orderRef.current = order;
 	/** Whether a tap's shuffle is still moving Cards: the hover fan waits for it. */
-	const [shuffling, setShuffling] = useState(false);
-	const [shuffle] = useState(() =>
-		createTapShufflePlayer({
+	const [playing, setPlaying] = useState(false);
+	const [player] = useState(() =>
+		createCardMovePlayer({
 			valuesOf: (id) => values.get(id) ?? makeValues(),
 			zOf: (index) => BASE_Z + index,
 			liftedZ: LIFTED_Z,
 			restZ: (id) => BASE_Z + orderRef.current.indexOf(id),
-			onIdle: () => setShuffling(false),
+			onIdle: () => setPlaying(false),
 		}),
 	);
-	/* a Deck switched away mid-shuffle leaves nothing cued behind it */
-	useEffect(() => () => shuffle.clear(), [shuffle]);
+	/* a Deck switched away mid-move leaves nothing cued behind it */
+	useEffect(() => () => player.clear(), [player]);
 
 	const valuesOf = useCallback(
 		(id: string): CardValues => values.get(id) ?? makeValues(),
@@ -152,10 +152,10 @@ export function useDeck({
 		(id: string): Slot | undefined => slots[order.indexOf(id)],
 		[slots, order],
 	);
-	/** Whether a gesture, the Cover or a tap's shuffle has `id`: a re-layout leaves it alone. */
+	/** Whether a gesture, the Cover or the player has `id`: a re-layout leaves it alone. */
 	const isBusy = useCallback(
-		(id: string) => busy.current.has(id) || shuffle.has(id),
-		[shuffle],
+		(id: string) => busy.current.has(id) || player.has(id),
+		[player],
 	);
 	/** `id`'s stacking at rest, in the order as it now stands. */
 	const restZ = useCallback(
@@ -170,7 +170,7 @@ export function useDeck({
 			spec: SpringSpec = SPRINGS.settle,
 			velocity?: Point,
 		) => {
-			shuffle.take(id);
+			player.take(id);
 			const card = valuesOf(id);
 			const context = motionRef.current;
 			return Promise.all([
@@ -195,7 +195,7 @@ export function useDeck({
 				settle(card.lift, 0, spec, context),
 			]);
 		},
-		[valuesOf, shuffle],
+		[valuesOf, player],
 	);
 
 	/**
@@ -262,7 +262,7 @@ export function useDeck({
 	/** The hand takes `id`, and with it the Deck: a shuffle ends where every Card shows. */
 	const hold = useCallback(
 		(id: string) => {
-			shuffle.takeAll();
+			player.takeAll();
 			busy.current.add(id);
 			const card = valuesOf(id);
 			/* the hand takes the Card from whatever was moving it */
@@ -270,7 +270,7 @@ export function useDeck({
 			card.o.set(1);
 			card.z.set(HELD_Z);
 		},
-		[valuesOf, shuffle],
+		[valuesOf, player],
 	);
 	const release = useCallback((id: string) => {
 		busy.current.delete(id);
@@ -338,15 +338,15 @@ export function useDeck({
 			];
 			orderRef.current = next;
 			if (plan) {
-				shuffle.play(
+				player.play(
 					plan.moves.filter((move) => !busy.current.has(move.id)),
 					motionRef.current,
 				);
-				if (shuffle.size > 0) setShuffling(true);
-			} else shuffle.takeAll();
+				if (player.size > 0) setPlaying(true);
+			} else player.takeAll();
 			setOrder(next);
 		},
-		[slots, shuffle],
+		[slots, player],
 	);
 
 	/**
@@ -357,7 +357,7 @@ export function useDeck({
 	 */
 	const expand = useCallback(
 		async (id: string, velocity?: Point) => {
-			shuffle.take(id);
+			player.take(id);
 			clearMark(id);
 			busy.current.add(id);
 			valuesOf(id).z.set(COVER_Z);
@@ -370,7 +370,7 @@ export function useDeck({
 				velocity,
 			);
 		},
-		[clearMark, valuesOf, readouts, glide, frame, shuffle],
+		[clearMark, valuesOf, readouts, glide, frame, player],
 	);
 
 	const closeCover = useCallback(async () => {
@@ -391,7 +391,7 @@ export function useDeck({
 	 */
 	const leave = useCallback(
 		async (exit: () => Promise<unknown>) => {
-			shuffle.takeAll();
+			player.takeAll();
 			setStatus("leaving");
 			readouts.set({ phase: "settling" });
 			for (const id of order) clearMark(id);
@@ -400,7 +400,7 @@ export function useDeck({
 			setStatus("gone");
 			readouts.set({ phase: "gone", zone: null });
 		},
-		[order, clearMark, readouts, shuffle],
+		[order, clearMark, readouts, player],
 	);
 
 	/**
@@ -480,7 +480,7 @@ export function useDeck({
 	const redeal = useCallback(() => {
 		const context = motionRef.current;
 		busy.current.clear();
-		shuffle.clear();
+		player.clear();
 		setExpanded(null);
 		orderRef.current = initialOrder;
 		setOrder(initialOrder);
@@ -512,7 +512,7 @@ export function useDeck({
 		});
 		setStatus("dealt");
 		readouts.set({ phase: "rest", zone: null, tilt: 0 });
-	}, [layout, frame, valuesOf, readouts, opacity, initialOrder, shuffle]);
+	}, [layout, frame, valuesOf, readouts, opacity, initialOrder, player]);
 
 	const dealt = useRef(deal);
 	useEffect(() => {
@@ -526,7 +526,7 @@ export function useDeck({
 		order,
 		status,
 		expanded,
-		shuffling,
+		playing,
 		marks,
 		slots,
 		opacity,
@@ -536,7 +536,7 @@ export function useDeck({
 		hold,
 		release,
 		isBusy,
-		isShuffling: shuffle.has,
+		isPlaying: player.has,
 		restZ,
 		mark,
 		clearMark,

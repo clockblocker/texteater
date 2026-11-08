@@ -87,12 +87,12 @@ export function useDeckHover({
 	const held = useRef(holding);
 	held.current = holding;
 	const fine = useSyncExternalStore(subscribeFine, fineHover, () => false);
-	const { order, slots, status, expanded, shuffling, place, isBusy } = deck;
+	const { order, slots, status, expanded, playing, place, isBusy } = deck;
 
 	useEffect(() => {
 		if (status !== "dealt" || expanded) return;
 		if (holding && isBusy(holding)) return;
-		const open = fine && hovered !== null && holding === null && !shuffling;
+		const open = fine && hovered !== null && holding === null && !playing;
 		const share = motion.reduce ? knobs.hoverReduced : 1;
 		const shown = open ? fanSlots(slots, knobs.fanDeg * share) : slots;
 		const spring = {
@@ -111,7 +111,7 @@ export function useDeckHover({
 		holding,
 		status,
 		expanded,
-		shuffling,
+		playing,
 		order,
 		slots,
 		place,
