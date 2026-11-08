@@ -13,6 +13,13 @@ export type Panel = {
 	readonly sign: -1 | 1;
 };
 
+/**
+ * The box and stacking a panel is drawn in: its Card's own values while
+ * the hand has the Card, and the same values held still once it has let
+ * go on Open, when the Card leaves for the Cover.
+ */
+export type PanelBox = Pick<CardValues, "u" | "v" | "w" | "h" | "s" | "z">;
+
 /** The values a panel is drawn from; the variant animates them. */
 export type PanelValues = {
 	/** 1 while a release would commit: the colour floods in. */
@@ -67,13 +74,16 @@ function alongOf(
  * if that is more); there it stays, and the Card travels on past it.
  * Once a release would commit the colour floods in, the icon turns to
  * ink and pops. Its base is opaque, so the Cards behind never show
- * through.
+ * through. Let go on Open, it is drawn where the hand left it and cut to
+ * the strip the Card had uncovered: the Card, opening into the Cover over
+ * it, never uncovers more of it.
  */
 export function SwipePanel({
 	panel,
 	card,
 	anchor,
 	shows,
+	kept,
 	values,
 	armed,
 	threshold,
@@ -83,12 +93,14 @@ export function SwipePanel({
 	reduce,
 }: {
 	readonly panel: Panel;
-	/** The swiped Card's values: the panel shares its size, scale and z-index, and is drawn first, so it lies under the Card, under the Cards in front and over the Cards behind. */
-	readonly card: CardValues;
+	/** The swiped Card's values, or them held still: the panel shares its size, scale and z-index, and is drawn first, so it lies under the Card, under the Cards in front and over the Cards behind. */
+	readonly card: PanelBox;
 	/** Where a pull of 0 puts the Card: the panel lies there along the axis. */
 	readonly anchor: Anchor;
 	/** How much of the Card shows from its drawn top, in px, where the Cards in front hide the rest; null where all of it does. */
 	readonly shows: number | null;
+	/** Once the hand has let go on Open: how much of the panel the Card had uncovered along the axis, in px; the panel shows only that strip. Null while the hand has the Card or brings it home. */
+	readonly kept: number | null;
 	readonly values: PanelValues;
 	readonly armed: boolean;
 	readonly threshold: number;
@@ -138,6 +150,23 @@ export function SwipePanel({
 	const shown = useTransform(pull, (p) =>
 		Math.min(1, Math.max(0, (Math.abs(p) - 8) / 40)),
 	);
+	/* the strip lies at the end the Card left, away from the way it went:
+	   the rest, cut off in the panel's own px, is what the Card still covered */
+	const clipPath = useTransform(
+		[card.w, card.h, card.s],
+		([w = 0, h = 0, s = 1]: number[]) => {
+			if (kept === null) return "none";
+			const cut = Math.max(0, (inline ? w : h) - kept / s);
+			const cutsStart = panel.sign < 0;
+			if (!inline)
+				return cutsStart
+					? `inset(${cut}px 0 0 0)`
+					: `inset(0 0 ${cut}px 0)`;
+			return cutsStart !== rtl
+				? `inset(0 0 0 ${cut}px)`
+				: `inset(0 ${cut}px 0 0)`;
+		},
+	);
 	const fill = useTransform(values.flood, (f) => tint + (1 - tint) * f);
 	const toned = useTransform(values.flood, (f) => 1 - f);
 	const tone = TONE[panel.zone];
@@ -173,6 +202,7 @@ export function SwipePanel({
 				scale: card.s,
 				zIndex: card.z,
 				opacity: values.fade,
+				clipPath,
 			}}
 		>
 			<motion.div

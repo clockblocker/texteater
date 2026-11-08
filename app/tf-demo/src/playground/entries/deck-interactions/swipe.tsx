@@ -19,7 +19,12 @@ import {
 	zoneOf,
 } from "./swipe-gesture";
 import type { SwipeKnobs } from "./swipe-knobs";
-import { type Panel, type PanelValues, SwipePanel } from "./swipe-panel";
+import {
+	type Panel,
+	type PanelBox,
+	type PanelValues,
+	SwipePanel,
+} from "./swipe-panel";
 import { tapCard } from "./tap-card";
 import { useDeck } from "./use-deck";
 import { DUMMY_DECK } from "./words";
@@ -41,6 +46,17 @@ type Gesture = {
 	/** The Card's offset along the axis when the hand took it. */
 	start: number;
 	commits: boolean;
+};
+
+/**
+ * A panel let go on Open: its box, its stacking and its anchor as they
+ * were drawn when the hand let go, held still, and how much of it the
+ * Card had uncovered then, in px.
+ */
+type Kept = {
+	readonly box: PanelBox;
+	readonly anchor: Anchor;
+	readonly uncovered: number;
 };
 
 function along(axis: Axis, drag: Drag) {
@@ -107,6 +123,7 @@ export function SwipeVariant({
 	const [pressed, setPressed] = useState<string | null>(null);
 	const [panel, setPanel] = useState<Panel | null>(null);
 	const [anchor, setAnchor] = useState<Anchor | null>(null);
+	const [kept, setKept] = useState<Kept | null>(null);
 	const [armed, setArmed] = useState(false);
 	const [values] = useState<PanelValues>(() => ({
 		flood: motionValue(0),
@@ -271,11 +288,42 @@ export function SwipeVariant({
 	}
 
 	/**
+	 * The panel as the hand leaves it: the Card's box and stacking and the
+	 * anchor as last drawn, held still, and how far the Card had uncovered
+	 * it. A move not drawn yet stays undrawn, so this is what showed.
+	 */
+	function keep(id: string, axis: Axis, from: Anchor): Kept {
+		const card = deck.valuesOf(id);
+		const box = {
+			u: motionValue(card.u.get()),
+			v: motionValue(card.v.get()),
+			w: motionValue(card.w.get()),
+			h: motionValue(card.h.get()),
+			s: motionValue(card.s.get()),
+			z: motionValue(card.z.get()),
+		};
+		const at = { u: from.u.get(), v: from.v.get() };
+		return {
+			box,
+			anchor: { u: motionValue(at.u), v: motionValue(at.v) },
+			uncovered: Math.abs(
+				axis === "inline" ? box.u.get() - at.u : box.v.get() - at.v,
+			),
+		};
+	}
+
+	/**
 	 * At it: the panel fades as the Card opens, or as the Card and the Deck
 	 * folded onto it leave as one: the fold is whole there, and the other
 	 * Cards, which just finished it, would otherwise part from the Card.
 	 * The Card opens in a straight line from where the hand let go, so a
 	 * swipe toward inline-end never carries it further that way first.
+	 * Toward Open the panel stays where the hand let go, at the Card's place
+	 * in the Deck, cut to the strip the Card had uncovered: what the Card
+	 * still covered goes in that frame, before the Card can uncover it, and
+	 * the Card, opening into the Cover, which holds its slot, comes back
+	 * over the strip while it fades. Left to the Card's values, the panel
+	 * would rise over the Deck with it and stretch toward the Cover.
 	 */
 	async function commit(
 		g: Gesture,
@@ -283,11 +331,12 @@ export function SwipeVariant({
 		verdict: Verdict,
 		speed: number,
 	) {
-		binding.current?.stop();
+		const bound = binding.current;
+		bound?.stop();
 		binding.current = null;
 		/* the Deck is leaving or open, and neither lights a Card */
 		setPressed(null);
-		animate(
+		const fade = animate(
 			values.fade,
 			0,
 			transition(
@@ -296,11 +345,16 @@ export function SwipeVariant({
 			),
 		);
 		if (verdict.zone === "expand") {
+			if (bound) setKept(keep(g.id, axis, bound.anchor));
+			void fade.then(() => {
+				if (gen.current !== g.gen) return;
+				setPanel(null);
+				setKept(null);
+			});
 			await deck.expand(
 				g.id,
 				axis === "inline" ? { u: speed, v: 0 } : { u: 0, v: speed },
 			);
-			if (gen.current === g.gen) setPanel(null);
 			return;
 		}
 		const sign = pull.get() < 0 ? -1 : 1;
@@ -340,6 +394,13 @@ export function SwipeVariant({
 		if (deck.status !== "dealt" || !slot) return;
 		const bound = binding.current;
 		const caught = bound?.lead === id && Math.abs(pull.get()) > 0.5;
+		/* a press that does not catch the swiped Card on its way home ends
+		   that swipe, and its panel goes with it: the hand uncovers it no
+		   more, and a tap's restack would carry its Card off it */
+		if (!caught) {
+			setPanel(null);
+			setKept(null);
+		}
 		if (bound && !caught) {
 			bound.scatter();
 			binding.current = null;
@@ -415,9 +476,10 @@ export function SwipeVariant({
 				<SwipePanel
 					key={`${panel.id}-${panel.axis}`}
 					panel={panel}
-					card={deck.valuesOf(panel.id)}
-					anchor={anchor}
+					card={kept?.box ?? deck.valuesOf(panel.id)}
+					anchor={kept?.anchor ?? anchor}
 					shows={shows}
+					kept={kept?.uncovered ?? null}
 					values={values}
 					armed={armed}
 					threshold={knobs.threshold}
