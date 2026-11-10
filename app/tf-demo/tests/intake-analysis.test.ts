@@ -112,7 +112,8 @@ test("a failed detection leaves every Sentence code allows in the Scroll's langu
 			// undetermined.
 			{ language: undefined, units: 0, segmentationFailed: undefined },
 		],
-		[{ language: "de", units: 5, segmentationFailed: undefined }],
+		// im is cut into in and dem, and dem joins its noun Haus.
+		[{ language: "de", units: 4, segmentationFailed: undefined }],
 	]);
 	expect(outcomes(recorder)).toEqual(["Segmented", "Plain", "Segmented"]);
 	expect(jev.sent.filter(isLanguageRequest)).toHaveLength(1);
