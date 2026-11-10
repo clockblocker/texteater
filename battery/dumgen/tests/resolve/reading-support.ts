@@ -59,7 +59,7 @@ export function attestationOf(
 	return parsed.chain.value;
 }
 
-export const schloss: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
+const schloss: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
 	unitKind: "Lemma",
 	language: "de",
 	family: "Lexeme",
