@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { withoutCitedReflexive } from "../server/citedReflexive";
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
-import { spellingOf } from "../server/storedSegments";
+import { spellingOf, unitsByMember } from "../server/storedSegments";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internalQuery, type QueryCtx } from "./_generated/server";
 import { lemmaValue } from "./model/occurrenceAttestations";
@@ -87,8 +87,18 @@ export async function loadResolutionContext(
 	const clicked = words.findIndex(
 		(segment) => segment.index === input.clickedSegmentIndex,
 	);
-	// Include nearby phrases as well as individual words: a Lemma's Canonical
-	// Form can span an article, a Locution's words or a separated verb.
+	// The unit intake stored at the click names the words the Lemma is
+	// made of, however far apart they stand: they are looked up first,
+	// together and one by one, so the cut below never drops them.
+	const memberIndices = new Set(
+		unitsByMember(sentence.units).get(input.clickedSegmentIndex)
+			?.segments ?? [],
+	);
+	const members = words
+		.filter((segment) => memberIndices.has(segment.index))
+		.map(spellingOf);
+	// Then nearby phrases and individual words: a Lemma's Canonical Form can
+	// span an article, a Locution's words or a separated verb.
 	const phrases: string[] = [];
 	for (let start = Math.max(0, clicked - 3); start <= clicked; start++) {
 		for (
@@ -112,6 +122,8 @@ export async function loadResolutionContext(
 	// (ADR 0052).
 	const foundUnder = new Map<string, Set<string>>();
 	for (const text of [
+		...(members.length > 1 ? [members.join(" ")] : []),
+		...members,
 		words[clicked] ? spellingOf(words[clicked]) : "",
 		...phrases,
 		...words.map(spellingOf),
