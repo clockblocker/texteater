@@ -82,6 +82,7 @@ export const { positionals, values } = parseArgs({
 		limit: { type: "string" },
 		offline: { type: "boolean", default: false },
 		force: { type: "boolean", default: false },
+		only: { type: "string" },
 		run: { type: "string" },
 		policy: { type: "string" },
 		left: { type: "string" },

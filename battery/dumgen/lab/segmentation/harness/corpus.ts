@@ -165,9 +165,14 @@ const withheldRecords: Readonly<Record<string, string>> = {
 		"Row H25 of batch heldout-2026-10-02 waits for the maintainer's approval (#701).",
 };
 
+/**
+ * Freezes the sets `names` from today's gold and makes each current; a set
+ * left out stays as frozen (`freeze --only dev`).
+ */
 export async function freezeSets(
 	root: string,
 	repository: string,
+	names: readonly SetName[] = ["dev", "heldout"],
 ): Promise<LabSet[]> {
 	const gold = loadGold();
 	const projected = projectCorpus(segmentInUnits, gold);
@@ -191,6 +196,7 @@ export async function freezeSets(
 		["dev", projected.draft],
 		["heldout", projected.reviewed],
 	] as const) {
+		if (!names.includes(name)) continue;
 		const cases: LabCase[] = selection.ids.flatMap((id, index) => {
 			if (excluded.has(id)) return [];
 			const golden = selection.cases[index];

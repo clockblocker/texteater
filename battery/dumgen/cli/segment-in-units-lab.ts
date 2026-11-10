@@ -3,7 +3,7 @@
  * repetitions, reports and compares runs, measures the noise floor and keeps
  * the ledger and the iteration table.
  *
- *   bun run segment-in-units-lab freeze [--force]
+ *   bun run segment-in-units-lab freeze [--force] [--only dev|heldout]
  *   bun run segment-in-units-lab run --arm pairwise --subset smoke --reps 1 [--opt render=tagged]
  *       [--parent <runId>] [--hypothesis "<one line>"] [--allow-dirty] [--model jev-1.13.0]
  *   bun run segment-in-units-lab replay --run <runId> [--request-budget 12]
@@ -38,6 +38,7 @@
 import {
 	currentSetHash,
 	freezeSets,
+	setNameOf,
 } from "../lab/segmentation/harness/corpus.js";
 import { compare } from "./segment-in-units-lab/compare.js";
 import {
@@ -55,10 +56,13 @@ import { noise, run } from "./segment-in-units-lab/run.js";
 import { sweep } from "./segment-in-units-lab/sweep.js";
 
 async function freeze() {
-	for (const name of ["dev", "heldout"] as const)
+	const names = values.only
+		? [setNameOf(values.only)]
+		: (["dev", "heldout"] as const);
+	for (const name of names)
 		if (currentSetHash(setsRoot, name) !== undefined && !values.force)
 			throw Error(`${name} is frozen already; pass --force to refreeze`);
-	for (const set of await freezeSets(setsRoot, repository))
+	for (const set of await freezeSets(setsRoot, repository, names))
 		console.log(
 			`${set.name}: ${set.cases.length} cases (${set.cases.filter((labCase) => labCase.facts.coverage === "Full").length} Full), ${set.cases.reduce((total, labCase) => total + labCase.idealOutput.units.length, 0)} gold units, hash ${set.hash}, git ${set.gitHead.slice(0, 8)}, ${set.dirtyRecordFiles} uncommitted record files, withheld ${set.withheld?.join(", ") || "none"}`,
 		);

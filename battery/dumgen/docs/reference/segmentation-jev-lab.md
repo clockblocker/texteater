@@ -104,7 +104,7 @@ it and score it against frozen gold. Results live in the lab tickets
 ## Commands
 
 ```sh
-bun run segment-in-units-lab freeze                      # once; --force refreezes
+bun run segment-in-units-lab freeze                      # once; --force refreezes, --only dev one set
 bun run segment-in-units-lab run --arm candidates4 --subset slice300 --reps 3 \
   --opt final=1 --opt closed=1 --parent <runId> --hypothesis "<one line>"
 bun run segment-in-units-lab replay --run <runId> [--request-budget 12]
