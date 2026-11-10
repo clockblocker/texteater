@@ -70,7 +70,7 @@ const expressionFlag = 0.5;
 const fixedFlag = 0.3;
 
 /** Two units of the membership the judge weighs as one wording. */
-export type MergeCandidate = {
+type MergeCandidate = {
 	readonly left: readonly number[];
 	readonly right: readonly number[];
 };

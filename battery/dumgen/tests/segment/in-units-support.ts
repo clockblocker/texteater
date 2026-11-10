@@ -9,7 +9,7 @@ import type { JevAsk, JevRequest } from "../../src/segment/jev.js";
 import type { SegmentedText } from "../../src/segment/segmented-sentence.js";
 import { type FakeDumgenOptions, liveOver } from "../live-over.js";
 
-export type Sent = JevRequest & { readonly stage: string };
+type Sent = JevRequest & { readonly stage: string };
 
 /**
  * A jev that answers by question id from `answers` and otherwise says no:

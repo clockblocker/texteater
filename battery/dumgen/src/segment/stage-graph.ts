@@ -57,10 +57,10 @@ export type Plan<A> = {
 };
 
 /** A stage's view of the stages it declared it reads. */
-export type Read<V> = <K extends keyof V & string>(stage: K) => V[K];
+type Read<V> = <K extends keyof V & string>(stage: K) => V[K];
 
 /** One stage of a graph whose stages' values are `V`. */
-export type Stage<V, K extends keyof V> = {
+type Stage<V, K extends keyof V> = {
 	/** The stages whose values it reads. */
 	readonly reads: readonly (keyof V & string)[];
 } & (

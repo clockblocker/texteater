@@ -51,7 +51,7 @@ export type SentenceSegmentation = {
  * One Sentence's units from the unit stage, and the stages it settled
  * without their failed request's answers, each as its declaration says.
  */
-export type SentenceUnits = {
+type SentenceUnits = {
 	readonly units: readonly Unit[];
 	readonly degraded: readonly Degraded[];
 };

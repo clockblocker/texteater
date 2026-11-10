@@ -77,7 +77,7 @@ export function fakeJudge(answers: Readonly<Record<string, Answer>> = {}) {
 }
 
 /** The questions `stage` asked across `requests`, alone or in a merged request. */
-export function questionsOf(
+function questionsOf(
 	requests: readonly AskRequest[],
 	stage: string,
 ): AskRequest["questions"] | undefined {
