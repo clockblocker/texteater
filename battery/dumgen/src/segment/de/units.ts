@@ -21,7 +21,11 @@
  * held 44 more gold units and lost none. Then X5's Locution Choice (#851, `locution-choice.ts`) asks
  * one `locution` request about the units a sub-floor link still joins and
  * merges those whose two units both pass de/fixed-member-test at 0.6: with
- * saying-closed, 12 more dev gold units held and none lost. Last, D4's
+ * saying-closed, 12 more dev gold units held and none lost. The same
+ * request asks that test of every member of each Locution assembly built
+ * (`member-check.ts`, #1325), and a member read free at 0.7 leaves: on
+ * #1325's dev focus set, 4 more gold units held in each of 3 repetitions
+ * and none lost. Last, D4's
  * Verb Choice (#851, `verb-choice.ts`) asks one `verb` request about the
  * lassen, bekommen, haben and sein forms whose auxiliary slot named an
  * infinitive or participle: causative lassen and sich lassen, the
@@ -160,7 +164,10 @@ export const productionUnitSettings: UnitSettings = {
 		"bracket-particle",
 		"particle-verb",
 	],
-	locution: { floor: 0.6, absorb: true },
+	// #1325: every member of an assembled Locution is asked
+	// de/fixed-member-test, and one read free at 0.7, the floor its idiom
+	// or expression link cleared, leaves.
+	locution: { floor: 0.6, absorb: true, members: 0.7 },
 	// Picked on dev (#851, D4) after the pre-registered 0.6 over all five
 	// families failed: these three ask what no slot question names, and
 	// lost no dev unit at 0.5, 0.6 or 0.7. Held-out (#852) is the check.
@@ -281,6 +288,7 @@ export function germanUnitGraph(
 							read("nomination"),
 							read("ruled").ruled,
 							rules,
+							settings.locution.members !== undefined,
 						),
 				),
 		},

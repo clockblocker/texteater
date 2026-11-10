@@ -19,6 +19,7 @@ import {
 import type { Route } from "../../src/segment/segmented-sentence.js";
 import { liveOver } from "../live-over.js";
 import fixture from "./fixtures/in-units-lab-answers.json";
+import memberChecks from "./fixtures/in-units-member-check-answers.json";
 import { fakeJev, inUnits, noLuna, picked } from "./in-units-support.js";
 
 const probabilities = z.record(z.string(), z.number());
@@ -46,6 +47,9 @@ const answer = z.discriminatedUnion("type", [
  * split-adverb rule (#851) cuts into [Wo, her] and [kommst]. Its new group's
  * route-extra answer comes from the lab cache's 2026-10-02 dev fill, and so
  * does X4's government answer for in Betracht ziehen (an idiom, unchanged).
+ * Its member check's two answers (both members fixed, the unit unchanged)
+ * come from #1325's 2026-11-10 dev fill, repetition 0, and are kept apart
+ * in `in-units-member-check-answers.json`; each Sentence's calls take them in.
  */
 const recorded = z
 	.object({
@@ -73,7 +77,18 @@ const recorded = z
 			}),
 		),
 	})
-	.parse(fixture);
+	.parse({
+		...fixture,
+		sentences: fixture.sentences.map((sentence) => ({
+			...sentence,
+			calls: [
+				...sentence.calls,
+				...(memberChecks.sentences.find(
+					(added) => added.text === sentence.text,
+				)?.calls ?? []),
+			],
+		})),
+	});
 
 test("inUnits segments each Sentence of each paragraph and routes its units", async () => {
 	const jev = fakeJev({

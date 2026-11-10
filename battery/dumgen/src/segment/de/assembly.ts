@@ -324,6 +324,26 @@ export function policyInput(
 	};
 }
 
+/**
+ * The expression links that count toward a membership: a fixed article
+ * counts through the noun that carries it (de/fixed-member-test, ins
+ * Feuer, zur Verfügung), so an article its slot gave a noun links to no
+ * expression on its own and joins one only with that noun. Die Daten in
+ * Wir stellen die Daten zur Verfügung no longer joins through die.
+ */
+export function memberLinks(
+	nomination: Pick<Nomination, "links" | "slotAnswers">,
+): Nomination["links"] {
+	const articles = new Set(
+		nomination.slotAnswers
+			.filter((link) => link.kind === "article")
+			.map((link) => link.from),
+	);
+	return nomination.links.filter(
+		(link) => !articles.has(link.left) && !articles.has(link.right),
+	);
+}
+
 /** Each article's noun, from the article slots' links. */
 export const articleHosts = (nomination: Pick<Nomination, "slotAnswers">) =>
 	new Map(
@@ -464,13 +484,16 @@ export function stepZeroMembership(
 	};
 }
 
-/** Membership under floors and a Saying assembly: step 0 over v3, Sayings from the Choice. */
+/** Membership under floors and a Saying assembly: step 0 over v3 with the expression links that count (`memberLinks`), Sayings from the Choice. */
 export function membershipOf(
 	nomination: Nomination,
 	floors: Floors,
 	saying: SayingAssembly,
 ): Membership {
-	const read = underMargin(nomination, floors.margin);
+	const read = underMargin(
+		{ ...nomination, links: memberLinks(nomination) },
+		floors.margin,
+	);
 	const { input, ranges } = stepZeroInput(
 		read,
 		policyInput(read, {

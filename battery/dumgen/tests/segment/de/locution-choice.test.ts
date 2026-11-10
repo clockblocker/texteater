@@ -221,6 +221,7 @@ test("production asks the Locution Choice and merges at 0.6 (#851, X5)", async (
 	expect(productionUnitSettings.locution).toEqual({
 		floor: 0.6,
 		absorb: true,
+		members: 0.7,
 	});
 	const at = (share: number) =>
 		run(kauf, {

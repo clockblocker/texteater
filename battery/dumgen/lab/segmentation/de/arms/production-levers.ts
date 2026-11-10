@@ -177,7 +177,9 @@ function x5Policies(option: string): Policies | undefined {
 			throw Error(
 				`--opt x5=${option}: a variant is a floor, then noabsorb or sc, joined by -`,
 			);
+		// Production's member check stays, so a variant changes one knob.
 		const locution: LocutionSettings = {
+			...settings.locution,
 			floor: share,
 			absorb: !flags.includes("noabsorb"),
 		};

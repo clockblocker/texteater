@@ -22,7 +22,9 @@ it and score it against frozen gold. Results live in the lab tickets
   Rule decides from the words alone. Then X5's Locution Choice
   (`locution-choice.ts`) asks one more request, `locution`, about the units
   a sub-floor link still joins, and merges those whose two units both pass
-  de/fixed-member-test. Last, D4's Verb Choice (`verb-choice.ts`) asks
+  de/fixed-member-test; the same request asks that test of every member of
+  each Locution assembly built (`member-check.ts`, #1325), and a member
+  read free leaves. Last, D4's Verb Choice (`verb-choice.ts`) asks
   one `verb` request about the lassen, bekommen, haben and sein forms whose
   auxiliary slot named an infinitive or participle, and joins or splits
   each by its Rule (causative lassen and sich lassen, the recipient

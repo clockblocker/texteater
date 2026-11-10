@@ -149,7 +149,13 @@ export const unitStageOf = Effect.fnUntraced(function* (
 					nomination,
 					base,
 					ruled,
-					yield* askLocutionChoice(nomination, ruled, once, rules),
+					yield* askLocutionChoice(
+						nomination,
+						ruled,
+						once,
+						rules,
+						locution.members !== undefined,
+					),
 					rules,
 					locution,
 				);

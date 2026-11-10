@@ -1,0 +1,42 @@
+{
+	"recordedFrom": {
+		"fill": "#1325's 2026-11-10 dev fill",
+		"set": "dev@36d553aa792208e7",
+		"model": "jev-1.13.0",
+		"repetition": 0
+	},
+	"sentences": [
+		{
+			"text": "Wir sollten das in Betracht ziehen.",
+			"calls": [
+				{
+					"stage": "locution",
+					"answers": {
+						"lm_4_5_6_m_4_5": {
+							"type": "choice",
+							"choice": "fixed",
+							"confidence": 0.97,
+							"probabilities": {
+								"free": 0.02,
+								"literal": 0,
+								"none": 0,
+								"fixed": 0.98
+							}
+						},
+						"lm_4_5_6_m_6": {
+							"type": "choice",
+							"choice": "fixed",
+							"confidence": 0.95,
+							"probabilities": {
+								"free": 0.02,
+								"literal": 0.01,
+								"none": 0.01,
+								"fixed": 0.96
+							}
+						}
+					}
+				}
+			]
+		}
+	]
+}

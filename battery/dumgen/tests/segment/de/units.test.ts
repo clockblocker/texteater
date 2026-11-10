@@ -68,13 +68,18 @@ test("satellites join their verb and fixed words make a Locution, the split arti
 	]);
 	// candidates, final and closed read only the Sentence and go out at
 	// once, closed apart since its failure only degrades; expressions reads
-	// candidates; route reads the nomination. route2 has no group of its
-	// own here, and every unit was batched.
+	// candidates; route reads the nomination, and the member check beside
+	// it the Locution zum Glück. route2 has no group of its own here, and
+	// every unit was batched.
 	expect(judge.stages()).toEqual([
 		"candidates+final",
 		"closed",
 		"expressions",
-		"route",
+		"route+locution",
+	]);
+	expect(Object.keys(judge.questionsOf("locution") ?? {})).toEqual([
+		"lm_5_6_7_m_5_6",
+		"lm_5_6_7_m_7",
 	]);
 });
 

@@ -16,8 +16,8 @@ import {
 	quantityBisschen,
 	standaloneAfterWasFuer,
 } from "../../../src/segment/de/code-rules-words.js";
+import { modalForms } from "../../../src/segment/de/fixed-member.js";
 import { authoredInventory } from "../../../src/segment/de/inventory.js";
-import { modalForms } from "../../../src/segment/de/locution-choice.js";
 import { sentenceOf } from "../../../src/segment/de/sentence.js";
 import { perfectAuxiliaries } from "../../../src/segment/de/verb-choice.js";
 import type { Segment } from "../../../src/segment/segmented-sentence.js";

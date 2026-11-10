@@ -17,13 +17,16 @@
  * joined by no expression at all? Both units fixed, the merge joins them
  * into a Locution, and the code rules apply again over it.
  *
+ * The request also carries the member check (`member-check.ts`), the
+ * same test of every member of each Locution assembly built, and a member
+ * it reads free leaves before the merges apply. An expression link counts
+ * here only between words that are no article (`memberLinks`): a fixed
+ * article counts through its noun.
+ *
  * No merge touches a piece a code rule decides (`boundPieces`) or a
  * Saying, nor a unit of one word the Rules keep apart whatever the judge
- * reads: nicht (de/nicht-is-part), a modal (de/modal-is-a-verb), and a
- * pronoun or determiner other than a reflexive, since a pronoun joins a
- * Locution only as its lexical reflexive (de/verb-owns-its-scattered-members)
- * or an object es that das cannot replace (de/fixed-member-test), which
- * nomination's own links decide. A Sentence with no candidate asks nothing.
+ * reads (`keptApart`, `fixed-member.ts`). A Sentence with no candidate
+ * asks nothing.
  *
  * The first version asked one Choice over the whole wording and merged on
  * its `whole` share; it read free objects and pronouns as fixed (df28add5).
@@ -32,21 +35,30 @@
  */
 
 import type { Questions } from "@typesafe-ai/sdk";
-import { closedVerbForms, modalVerbs } from "dumcorpus/inventories";
 import type * as Effect from "effect/Effect";
-import { type Answers, type Ask, type AskFailure, choice } from "../ask.js";
+import type { Answers, Ask, AskFailure } from "../ask.js";
 import { askPlan, type Plan } from "../stage-graph.js";
 import {
 	type AssembledEdge,
 	absorbedEdges,
 	articleHosts,
 	type Membership,
+	memberLinks,
 } from "./assembly.js";
-import { foldedText, fusedSiblings, reflexiveForms } from "./candidates.js";
+import { fusedSiblings } from "./candidates.js";
 import { boundPieces, type CodeRule, withCodeRules } from "./code-rules.js";
+import { fixedMemberQuestion, keptApart } from "./fixed-member.js";
+import {
+	freeMembers,
+	type MemberCheck,
+	memberCheckQuestions,
+	memberChecks,
+	withoutFreeMembers,
+} from "./member-check.js";
 import { type Nomination, reaskedIdiomId, slotId } from "./nomination.js";
 import { argmaxBesideNone, groupKey, partitionOf } from "./partition.js";
-import { joinRefs } from "./sentence.js";
+
+export { wordingOf } from "./fixed-member.js";
 
 /** How the Locution Choice's answers become merges. */
 export type LocutionSettings = {
@@ -54,6 +66,12 @@ export type LocutionSettings = {
 	readonly floor: number;
 	/** Whether a merged unit absorbs its members' fused pieces and a noun's opening preposition. */
 	readonly absorb: boolean;
+	/**
+	 * The member check (`member-check.ts`): the `free` share with which a
+	 * member of an assembled Locution leaves it. No member is asked when
+	 * absent.
+	 */
+	readonly members?: number;
 };
 
 /** The setting X5 screened first: both units fixed at 0.5, absorbing. Production asks 0.6 (`units.ts`). */
@@ -74,31 +92,6 @@ type MergeCandidate = {
 	readonly left: readonly number[];
 	readonly right: readonly number[];
 };
-
-/** Every form of the six modal verbs. */
-export const modalForms: ReadonlySet<string> = new Set(
-	modalVerbs.flatMap((modal) => closedVerbForms[modal] ?? []),
-);
-
-/** A unit of one word the Rules keep out of any Locution the judge proposes: nicht, a modal, a non-reflexive pronoun or determiner. */
-function keptApart(
-	nomination: Pick<Nomination, "sentence" | "inventory">,
-	group: readonly number[],
-): boolean {
-	const [only] = group;
-	const piece =
-		group.length === 1 && only !== undefined
-			? nomination.sentence.pieces[only - 1]
-			: undefined;
-	if (!piece) return false;
-	const word = piece.text.toLowerCase();
-	return (
-		word === "nicht" ||
-		modalForms.has(word) ||
-		(!reflexiveForms.has(foldedText(piece)) &&
-			nomination.inventory.identityCandidates(piece.text).length > 0)
-	);
-}
 
 /**
  * The pairs of units a sub-floor link joins: an idiom host share of at
@@ -149,7 +142,7 @@ function mergeCandidates(
 				flag(slot.piece.id, Number(top.key.slice(1)));
 		}
 	}
-	for (const link of nomination.links)
+	for (const link of memberLinks(nomination))
 		if (link.probability >= expressionFlag) flag(link.left, link.right);
 	// de/fused-word-pieces: in a fixed expression both pieces of a fused
 	// word are members, so a piece left alone beside a sibling in a unit
@@ -179,37 +172,6 @@ function mergeCandidates(
 const mergeId = (candidate: MergeCandidate) =>
 	`lc_${candidate.left.join("_")}_x_${candidate.right.join("_")}`;
 
-/** The pieces as written, with … where pieces outside them stand between. */
-export function wordingOf(
-	nomination: Pick<Nomination, "sentence">,
-	ids: readonly number[],
-): string {
-	const { pieces, segments } = nomination.sentence;
-	const sorted = [...ids].sort((a, b) => a - b);
-	let text = "";
-	for (const [position, id] of sorted.entries()) {
-		const piece = pieces[id - 1];
-		if (!piece) continue;
-		const previous = pieces[(sorted[position - 1] ?? 0) - 1];
-		if (previous && previous.id === piece.id - 1)
-			text += segments
-				.slice(previous.segment + 1, piece.segment)
-				.map((segment) => segment.text)
-				.join("");
-		else if (previous) text += " … ";
-		text += piece.text;
-	}
-	return text;
-}
-
-const memberCriteria = {
-	fixed: "A fixed part of one established expression with the other words, an idiom, support-verb collocation, fixed phrase or routine formula: the expression needs this very word, and an ordinary synonym or another word of its kind would break it (Kauf in nahm … in Kauf; Holzweg in war auf dem Holzweg)",
-	free: "A free part: a subject, object, complement or modifier that the expression only takes, where another word of its kind could stand in the same sense, das for es included (die Kosten in nahm die Kosten in Kauf)",
-	literal:
-		"The words are meant literally here, so no expression joins them (Holzweg in ging auf dem Holzweg durch den Wald)",
-	none: "No established expression joins these words (Hut in kaufte einen Hut)",
-};
-
 /** The pieces a merge would make one unit: both units and what they absorb. */
 function mergedPieces(nomination: Nomination, merge: MergeCandidate): number[] {
 	const members = new Set([...merge.left, ...merge.right]);
@@ -227,20 +189,23 @@ function locutionQuestions(
 	nomination: Nomination,
 	merges: readonly MergeCandidate[],
 ): Questions {
-	const { sentence, ref } = nomination;
 	const questions: Questions = {};
 	for (const merge of merges) {
-		const whole = wordingOf(nomination, mergedPieces(nomination, merge));
-		for (const [side, unit, other] of [
-			["l", merge.left, merge.right],
-			["r", merge.right, merge.left],
-		] as const) {
-			const wording = wordingOf(nomination, unit);
-			questions[`${mergeId(merge)}_${side}`] = choice(
-				`In \`sentence\`, ${joinRefs(sentence, ref, unit)} ("${wording}") may belong with ${joinRefs(sentence, ref, other)} ("${wordingOf(nomination, other)}") to one established multiword expression, "${whole}". What is "${wording}" there? A word's article, auxiliary, particle or reflexive counts with that word.`,
-				memberCriteria,
-			);
-		}
+		const whole = mergedPieces(nomination, merge);
+		questions[`${mergeId(merge)}_l`] = fixedMemberQuestion(
+			nomination,
+			merge.left,
+			merge.right,
+			whole,
+			"merge",
+		);
+		questions[`${mergeId(merge)}_r`] = fixedMemberQuestion(
+			nomination,
+			merge.right,
+			merge.left,
+			whole,
+			"merge",
+		);
 	}
 	return questions;
 }
@@ -248,23 +213,31 @@ function locutionQuestions(
 /** What the `locution` request was asked and answered. */
 export type LocutionAnswers = {
 	readonly merges: readonly MergeCandidate[];
+	/** The members of assembled Locutions the member check asked about. */
+	readonly checks: readonly MemberCheck[];
 	readonly answers: Answers;
 };
 
-/** The `locution` request over a membership the code rules have applied to. */
+/**
+ * The `locution` request over a membership the code rules have applied
+ * to: the Locution Choice's merges, and with `members` the member check
+ * of every assembled Locution.
+ */
 export function locutionPlan(
 	nomination: Nomination,
 	ruled: Membership,
 	rules: readonly CodeRule[],
+	members = false,
 ): Plan<LocutionAnswers> {
-	const merges = mergeCandidates(
-		nomination,
-		ruled,
-		boundPieces(nomination, ruled, rules),
-	);
+	const bound = boundPieces(nomination, ruled, rules);
+	const merges = mergeCandidates(nomination, ruled, bound);
+	const checks = members ? memberChecks(nomination, ruled, bound) : [];
 	return {
-		questions: locutionQuestions(nomination, merges),
-		read: (answers) => ({ merges, answers }),
+		questions: {
+			...locutionQuestions(nomination, merges),
+			...memberCheckQuestions(nomination, checks),
+		},
+		read: (answers) => ({ merges, checks, answers }),
 	};
 }
 
@@ -274,17 +247,22 @@ export const askLocutionChoice = (
 	ruled: Membership,
 	ask: Ask,
 	rules: readonly CodeRule[],
+	members = false,
 ): Effect.Effect<LocutionAnswers, AskFailure> =>
 	askPlan(
 		ask,
 		{ stage: "locution", state: nomination.state },
-		locutionPlan(nomination, ruled, rules),
+		locutionPlan(nomination, ruled, rules, members),
 	);
 
-/** The links the answers accept under `settings`, each joining two pieces. */
+/**
+ * The links the answers accept under `settings`, each joining two pieces:
+ * each unit's first piece that no free member took out.
+ */
 function acceptedMerges(
 	located: LocutionAnswers,
 	settings: LocutionSettings,
+	out: ReadonlySet<number>,
 ): (readonly [number, number])[] {
 	const links: (readonly [number, number])[] = [];
 	const fixed = (id: string) => {
@@ -299,15 +277,21 @@ function acceptedMerges(
 				fixed(`${mergeId(merge)}_l`),
 				fixed(`${mergeId(merge)}_r`),
 			) >= settings.floor
-		)
-			links.push([merge.left[0] ?? 0, merge.right[0] ?? 0]);
+		) {
+			const left = merge.left.find((id) => !out.has(id));
+			const right = merge.right.find((id) => !out.has(id));
+			if (left !== undefined && right !== undefined)
+				links.push([left, right]);
+		}
 	return links;
 }
 
 /**
- * The membership with the accepted merges: the code rules applied again
- * over `base` (membership before the rules) plus each merge and what its
- * members absorb, each merged unit a Locution unless it holds a Saying.
+ * The membership with the accepted merges and without the free members:
+ * the code rules applied again over `base` (membership before the rules)
+ * plus each merge and what its members absorb, each merged unit a
+ * Locution unless it holds a Saying, and then each free member out of its
+ * unit (`withoutFreeMembers`).
  */
 export function withLocutionChoice(
 	nomination: Nomination,
@@ -317,15 +301,27 @@ export function withLocutionChoice(
 	rules: readonly CodeRule[],
 	settings: LocutionSettings,
 ): Membership {
-	const links = acceptedMerges(located, settings);
-	if (links.length === 0) return ruled;
+	const free =
+		settings.members === undefined
+			? []
+			: freeMembers(located.checks, located.answers, settings.members);
+	const out = new Set(free.flatMap(({ member }) => member));
+	const links = acceptedMerges(located, settings, out);
+	if (links.length === 0)
+		return withoutFreeMembers(nomination, ruled, ruled, free);
 	const merged: AssembledEdge[] = links.map((pieces) => ({
 		pieces,
 		source: "locution",
 	}));
 	const ids = nomination.sentence.pieces.map((piece) => piece.id);
+	const kept = ruled.partition.flatMap((group) => [
+		group.filter((id) => !out.has(id)),
+		...free
+			.filter(({ unit }) => groupKey(unit) === groupKey(group))
+			.map(({ member }) => member),
+	]);
 	const joined = partitionOf(ids, [
-		...ruled.partition.flatMap((group) =>
+		...kept.flatMap((group) =>
 			group.slice(1).map((id) => [group[0] ?? id, id] as const),
 		),
 		...links,
@@ -353,11 +349,18 @@ export function withLocutionChoice(
 	const locution = (group: readonly number[]) =>
 		group.length > 1 &&
 		joined.some((members) => members.some((id) => group.includes(id)));
-	return {
-		...result,
-		familyOf: (group) => {
-			const family = result.familyOf(group);
-			return family !== "Saying" && locution(group) ? "Locution" : family;
+	return withoutFreeMembers(
+		nomination,
+		{
+			...result,
+			familyOf: (group) => {
+				const family = result.familyOf(group);
+				return family !== "Saying" && locution(group)
+					? "Locution"
+					: family;
+			},
 		},
-	};
+		ruled,
+		free,
+	);
 }
