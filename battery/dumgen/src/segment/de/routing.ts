@@ -9,10 +9,13 @@
  *   abbreviation-shaped piece also sees Locution routes.
  * - Code names a multi-piece unit's Family from how it was built; the
  *   route Choice picks only the Kind within it.
- * - Adjacent one-piece INTJ units merge into one Locution INTJ (Rule
- *   `de/interjection-counts-its-words`).
  * - Closed-class identity (#734) overrides the route of a one-piece unit
  *   whose spelling it covers.
+ * - Adjacent one-piece units routed INTJ merge into one Locution INTJ
+ *   (Rule `de/interjection-counts-its-words`), each read by the route it
+ *   takes alone, closed-class identity included (#1331): ja ja that the
+ *   `closed` request hears as modal particles stays apart, and nein nein,
+ *   fixed INTJ, merges whatever the route Choice said.
  * - A code rule may fix the route of a unit: the `quantifier` rule's ein
  *   wenig, ein paar and article + bisschen, and a one-piece lowercase
  *   bisschen, are Lexeme PRON (de/quantifier-by-use), whatever the route
@@ -144,7 +147,8 @@ export type FixedRoute = (
 ) => RouteKey | undefined;
 
 /**
- * Adjacent one-piece units both routed INTJ, with only whitespace between,
+ * Adjacent one-piece units both routed INTJ by `route`, the route each
+ * takes alone, with only whitespace between,
  * merge into one Locution INTJ (Rule `de/interjection-counts-its-words`),
  * unless `apart` keeps the two pieces apart.
  */
@@ -342,12 +346,6 @@ export function routeMembership(
 		jevRoute,
 		membership.familyOf,
 	);
-	const merged = mergeInterjections(
-		sentence,
-		membership.partition,
-		structural,
-		keepApart,
-	);
 	const closedRoute = (group: readonly number[]): RouteKey | undefined => {
 		const [only] = group;
 		if (group.length !== 1 || only === undefined) return undefined;
@@ -359,16 +357,25 @@ export function routeMembership(
 			? closedClassRoute(piece, answer.choice)
 			: undefined;
 	};
+	const fixed = (group: readonly number[]): RouteKey | undefined =>
+		fixedRoute?.(group, distributions.get(groupKey(group)));
+	/** A group's route before any interjection merge: closed-class identity first (#1331). */
+	const unmerged = (group: readonly number[]): UnitRouteKey =>
+		undecided(group, closedId)
+			? "Unresolved"
+			: (closedRoute(group) ?? fixed(group) ?? structural(group));
+	const merged = mergeInterjections(
+		sentence,
+		membership.partition,
+		unmerged,
+		keepApart,
+	);
 	const openRoute = (group: readonly number[]): UnitRouteKey =>
 		merged.merged.has(groupKey(group))
 			? "Locution/INTJ"
 			: structural(group);
-	const fixed = (group: readonly number[]): RouteKey | undefined =>
-		fixedRoute?.(group, distributions.get(groupKey(group)));
 	const route = (group: readonly number[]): UnitRouteKey =>
-		undecided(group, closedId)
-			? "Unresolved"
-			: (closedRoute(group) ?? fixed(group) ?? openRoute(group));
+		merged.merged.has(groupKey(group)) ? "Locution/INTJ" : unmerged(group);
 	const decidingShares = (
 		group: readonly number[],
 	): Readonly<Record<string, number>> | undefined => {

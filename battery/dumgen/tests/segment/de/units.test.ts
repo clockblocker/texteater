@@ -257,6 +257,42 @@ test("closed-class identity routes a covered spelling by its use, and a one-use 
 	expect(Object.keys(closed ?? {})).toEqual(["cc_3"]);
 });
 
+test("interjections merge by the route each piece takes alone, closed-class identity first (#1331)", async () => {
+	const unitsOf = async (sentence: string, answers: Record<string, Answer>) =>
+		await Effect.runPromise(
+			germanUnits(
+				{ segments: segmentsOf(sentence) },
+				fakeJudge(answers).ask,
+			),
+		);
+	// Du0 _1 weißt2 _3 es4 _5 ja6 _7 ja8 .9: the route Choice hears INTJ, the
+	// closed request modal particles, so each ja routes PART and none merge.
+	const modal = await unitsOf("Du weißt es ja ja.", {
+		r_4: picked("Lexeme/INTJ"),
+		r_5: picked("Lexeme/INTJ"),
+		cc_4: picked("modal"),
+		cc_5: picked("modal"),
+	});
+	expect(modal).toContainEqual({
+		segments: [6],
+		route: route("Lexeme", "PART"),
+	});
+	expect(modal).toContainEqual({
+		segments: [8],
+		route: route("Lexeme", "PART"),
+	});
+	// Nein0 _1 nein2 ,3 _4 sagte5 _6 er7 .8: nein is INTJ by the ruling,
+	// whatever the route Choice says, so the two merge.
+	const answers = await unitsOf("Nein nein, sagte er.", {
+		r_1: picked("Lexeme/ADV"),
+		r_2: picked("Lexeme/ADV"),
+	});
+	expect(answers).toContainEqual({
+		segments: [0, 2],
+		route: route("Locution", "INTJ"),
+	});
+});
+
 test("the inventory is a setting: pinning the AUX Lemmas drops causative lassen's slot", async () => {
 	const pinned = germanInventory({
 		auxiliaryLemmas: new Set(["sein", "haben", "werden", "bekommen"]),
