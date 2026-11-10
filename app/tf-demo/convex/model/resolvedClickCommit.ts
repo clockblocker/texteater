@@ -17,7 +17,7 @@ import { assertIndex } from "./resolutionLookup";
 import {
 	completeResolutionSession,
 	settleResolutionSession,
-} from "./resolutionSessions";
+} from "./resolutionSessionEndings";
 import {
 	planAndCommitDictionary,
 	staleNewReading,

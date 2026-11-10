@@ -9,12 +9,12 @@ import {
 	resolutionGenerationEventValidator,
 	resolutionPhaseValidator,
 } from "./model/resolutionLifecycleValidators";
+import { recordResolutionRunSuccess } from "./model/resolutionRunRecords";
 import {
-	advanceResolutionSession,
 	completeResolutionSession,
-	recordResolutionRunSuccess,
 	settleResolutionSession,
-} from "./model/resolutionSessions";
+} from "./model/resolutionSessionEndings";
+import { advanceResolutionSession } from "./model/resolutionSessions";
 import {
 	commitResolvedClick,
 	resolvedClickCommitArgs,

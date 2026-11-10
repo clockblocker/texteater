@@ -8,10 +8,8 @@ import {
 	findKnowledgeAttempt,
 	ownsKnowledgeRun,
 } from "./model/knowledgeAttempts";
-import {
-	requireActiveResolutionSession,
-	settleResolutionSession,
-} from "./model/resolutionSessions";
+import { settleResolutionSession } from "./model/resolutionSessionEndings";
+import { requireActiveResolutionSession } from "./model/resolutionSessions";
 import {
 	catalogMissValidator,
 	knowledgeProductionEvidenceValidator,

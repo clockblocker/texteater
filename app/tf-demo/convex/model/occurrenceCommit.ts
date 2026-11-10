@@ -7,10 +7,8 @@ import {
 	assertVisitorInput,
 	requireClickableSegment,
 } from "./resolutionLookup";
-import {
-	type CommittedOccurrence,
-	requireCommittingSession,
-} from "./resolutionSessions";
+import type { CommittedOccurrence } from "./resolutionSessionEndings";
+import { requireCommittingSession } from "./resolutionSessions";
 import { resolutionSessionGuardValidator } from "./validators";
 
 /** What every Occurrence commit names: the click and the session committing it. */

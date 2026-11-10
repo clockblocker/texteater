@@ -22,12 +22,14 @@ import {
 } from "./model/resolutionLifecycleValidators";
 import { requireClickableSegment } from "./model/resolutionLookup";
 import {
+	failResolutionRun,
+	recordResolutionRunSuccess,
+} from "./model/resolutionRunRecords";
+import {
 	advanceResolutionSession,
 	claimResolutionRun,
 	deleteResolutionSessions,
-	failResolutionRun,
 	findActiveVisitorSession,
-	recordResolutionRunSuccess,
 	recoverStaleResolutionRun,
 	retryResolutionSession,
 	startResolutionSession,
