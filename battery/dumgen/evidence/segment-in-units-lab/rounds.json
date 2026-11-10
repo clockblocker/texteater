@@ -1,5 +1,5 @@
 {
-	"current": "2026-11-10-1334",
+	"current": "2026-11-10-1336",
 	"rounds": [
 		{
 			"id": "2026-10-02-5usd",
@@ -155,6 +155,24 @@
 					"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
 				},
 				"at": "2026-11-10T18:13:26.567Z"
+			},
+			"repins": []
+		},
+		{
+			"id": "2026-11-10-1336",
+			"opened": "2026-11-10",
+			"note": "#1336 (map #1323): production segment.inUnits on six new texts from the per-question cache, code changes replayed on the whole of dev, and the refreeze of dev at today's gold scored at one repetition. The main session granted 3,571,428 fresh jev input tokens, all of them for the new texts and dev; no held-out run.",
+			"capTokens": 3571428,
+			"stopLineTokens": 3571428,
+			"pin": {
+				"dumcorpusCommit": "eb8f2ef822ac1794cbbbcbe97525e3e77f8f2341",
+				"dumcorpusDirty": false,
+				"hash": "ff02cee758f9a05fd244cf5e533a5cccdbfb66f6e45289964d001fff91736e9f",
+				"inputs": {
+					"inventories": "92761fb27271fb7c1eecf77e578ce73f87635d99edb9f2acaf6905a8518c3f2d",
+					"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
+				},
+				"at": "2026-11-10T19:38:39.453Z"
 			},
 			"repins": []
 		}
