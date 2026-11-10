@@ -87,3 +87,14 @@ test("a noun takes one article, the nearest that names it; the farther one is th
 	expect(einem?.route).toEqual(route("Lexeme", "PRON"));
 	expect(einem?.identity).toMatchObject({ kind: "PRON", pronType: "Ind" });
 });
+
+test("an even DET/PRON test leaves the identity Choice's Kind; an answer either way still decides", async () => {
+	// Es0 _1 gibt2 _3 einen4 _5 Dienst6 ,7 _8 der9 _10 landesweit11 _12 arbeitet13 .14
+	const dienst = segmentsOf("Es gibt einen Dienst, der landesweit arbeitet.");
+	const relative = { i_5: picked("c2", { c0: 0.07, c2: 0.93 }) };
+	const even = await run(dienst, { ...relative, tm_5: noul(0.5) });
+	expect(unitAt(even.units, 9)?.route).toEqual(route("Lexeme", "PRON"));
+	expect(unitAt(even.units, 9)?.identity).toMatchObject({ pronType: "Rel" });
+	const modifies = await run(dienst, { ...relative, tm_5: noul(0.6) });
+	expect(unitAt(modifies.units, 9)?.route).toEqual(route("Lexeme", "DET"));
+});

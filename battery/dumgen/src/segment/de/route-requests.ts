@@ -150,7 +150,10 @@ export type Routes = {
 /**
  * Reads the route answers: the route Choice, a winning identity
  * candidate's Kind instead, then the Rule tests between ADV and ADJ and
- * between DET and PRON.
+ * between DET and PRON. An even ADV/ADJ test moves ADV to ADJ, since the
+ * route Choice under-hears adjectives used adverbially (dev's even answers
+ * are ewig, gleich, gemeinsam, weltweit, völlig); an even DET/PRON test
+ * leaves the identity Choice's Kind.
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function readRoutes(
@@ -214,9 +217,14 @@ function readRoutes(
 			adjective.noul >= 0.5
 		)
 			identity.set(groupKey(group), { ...current, choice: "Lexeme/ADJ" });
+		// The DET/PRON test answering even (0.5) decides nothing: the
+		// identity Choice, whose candidates already say determiner or
+		// pronoun, keeps its Kind (the relative der of Expresslieferdienst,
+		// der …, #1340).
 		const modifier = answers[modifierTestId(only)];
 		if (
 			modifier?.type === "noul" &&
+			modifier.noul !== 0.5 &&
 			(current.choice === "Lexeme/DET" ||
 				current.choice === "Lexeme/PRON")
 		)
