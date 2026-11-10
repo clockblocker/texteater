@@ -34,7 +34,7 @@ import { headwordOutside, outsideSurface } from "./open-route/governed.js";
 import { canonicalFormOf } from "./open-route/headword.js";
 import { startHeadword } from "./open-route/headword-writer.js";
 import { reportJudged } from "./open-route/judged-report.js";
-import { nominalCells } from "./open-route/nominal.js";
+import { nominalCells } from "./open-route/nominal-cells.js";
 import {
 	caseRequest,
 	grammarRequest,
