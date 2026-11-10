@@ -1,8 +1,12 @@
 import type { Infer, ObjectType } from "convex/values";
 import { assertSentenceUnits } from "../../../server/storedSegments";
+import type { Doc, Id } from "../../_generated/dataModel";
 import type { MutationCtx } from "../../_generated/server";
 import type { occurrenceCommitArgs } from "../../model/occurrenceCommit";
-import { requireCommittingSession } from "../../model/resolutionSessions";
+import {
+	deleteResolutionSessions,
+	requireCommittingSession,
+} from "../../model/resolutionSessions";
 import { loadStoredSegments } from "../../model/storedSegments";
 import type {
 	storedSegmentInputValidator,
@@ -16,8 +20,10 @@ import type {
  * the same place in the Stitched Text, so the session that ran the click
  * keeps its Segment; any other row is reused, added or removed. A Sentence
  * another click already segmented again is left as it is. A failed
- * Sentence has no occurrence, and another session holding one of its
- * Segments makes the click fail; the next click is a fresh attempt.
+ * Sentence has no occurrence, and another session still running on one of
+ * its Segments makes the click fail; the next click is a fresh attempt. A
+ * click that ended on another Segment holds nothing: its row is never
+ * reused, so the Segments stored here start without its Resolution State.
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 export async function storeResegmentation(
@@ -67,7 +73,7 @@ export async function storeResegmentation(
 				(row) =>
 					row.attestationMembership !== undefined ||
 					(row._id !== clicked._id &&
-						row.resolutionState !== undefined),
+						row.resolutionState?.kind === "Active"),
 			)
 		)
 			throw new Error(
@@ -96,7 +102,13 @@ export async function storeResegmentation(
 			-1;
 		if (clickedSegmentIndex < 0)
 			throw new Error("No new Segment sits where the click was.");
-		const spare = rows.filter((row) => row._id !== clicked._id);
+		const others = rows.filter((row) => row._id !== clicked._id);
+		await removeEndedSegments(
+			ctx,
+			args.sentenceId,
+			others.filter((row) => row.resolutionState !== undefined),
+		);
+		const spare = others.filter((row) => row.resolutionState === undefined);
 		for (const { index, segment } of placed) {
 			const fields = {
 				index,
@@ -125,4 +137,38 @@ export async function storeResegmentation(
 		segmentationFailed: undefined,
 	});
 	return { clickedSegmentIndex };
+}
+
+/**
+ * Removes the Segments ended clicks left their Resolution State on, each
+ * with what hangs on it, in Analysis Stripping's order: the ended Resolution
+ * Sessions, the Visitor Encounters, then the Segment. Such a click's card
+ * finds no session, and its retry starts nothing. It reads the Sentence's
+ * sessions the cleanup has not deleted yet, and one Encounter for each
+ * Visitor who clicked such a Segment.
+ */
+async function removeEndedSegments(
+	ctx: MutationCtx,
+	sentenceId: Id<"sentences">,
+	ended: ReadonlyArray<Doc<"segments">>,
+): Promise<void> {
+	if (ended.length === 0) return;
+	const endedIds = new Set(ended.map(({ _id }) => _id));
+	const sessions: Doc<"resolutionSessions">[] = [];
+	for await (const session of ctx.db
+		.query("resolutionSessions")
+		.withIndex("by_sentence_id", (q) => q.eq("sentenceId", sentenceId)))
+		if (endedIds.has(session.segmentId)) sessions.push(session);
+	await deleteResolutionSessions(ctx, sessions);
+	for (const { _id } of ended) {
+		const encounters: Id<"visitorEncounters">[] = [];
+		for await (const encounter of ctx.db
+			.query("visitorEncounters")
+			.withIndex("by_segment_id_and_attestation_id", (q) =>
+				q.eq("segmentId", _id),
+			))
+			encounters.push(encounter._id);
+		for (const encounterId of encounters) await ctx.db.delete(encounterId);
+		await ctx.db.delete(_id);
+	}
 }
