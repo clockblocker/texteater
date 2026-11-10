@@ -1,5 +1,5 @@
 {
-	"current": "2026-11-10-1336",
+	"current": "2026-11-10-1340",
 	"rounds": [
 		{
 			"id": "2026-10-02-5usd",
@@ -173,6 +173,24 @@
 					"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
 				},
 				"at": "2026-11-10T19:38:39.453Z"
+			},
+			"repins": []
+		},
+		{
+			"id": "2026-11-10-1340",
+			"opened": "2026-11-10",
+			"note": "#1340 (map #1323): route and grouping fixes for the click misses #1337 traced to segmentation on six new texts; code changes replayed on the whole refrozen dev from the per-question cache, fresh jev only for changed questions. The main session granted 1,904,761 fresh jev input tokens, for the new texts and dev; no held-out run, no Luna.",
+			"capTokens": 1904761,
+			"stopLineTokens": 1904761,
+			"pin": {
+				"dumcorpusCommit": "eb8f2ef822ac1794cbbbcbe97525e3e77f8f2341",
+				"dumcorpusDirty": false,
+				"hash": "ff02cee758f9a05fd244cf5e533a5cccdbfb66f6e45289964d001fff91736e9f",
+				"inputs": {
+					"inventories": "92761fb27271fb7c1eecf77e578ce73f87635d99edb9f2acaf6905a8518c3f2d",
+					"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
+				},
+				"at": "2026-11-10T20:29:03.888Z"
 			},
 			"repins": []
 		}
