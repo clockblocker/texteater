@@ -5,7 +5,8 @@
  * - A one-piece unit takes the route Choice over Lexeme and Foreign
  *   routes, unless its spelling realizes authored DET or PRON members:
  *   then the identity it picks among them implies the route (Dumgen ADR
- *   0007). Two Rule tests move ADV to ADJ and DET to PRON or back. An
+ *   0007), an article's too: an article standing alone is a DET, never the
+ *   noun its phrase would take (#1334). Two Rule tests move ADV to ADJ and DET to PRON or back. An
  *   abbreviation-shaped piece also sees Locution routes.
  * - Code names a multi-piece unit's Family from how it was built; the
  *   route Choice picks only the Kind within it.

@@ -40,11 +40,17 @@
  *   dir and dich du, euch ihr; ihm, ihn and ihnen are never reflexive.
  *   Tut mir leid gives [Tut, leid] and [mir].
  * - `article-head` (de/noun-owns-its-article,
- *   de/shared-article-in-coordination): an article the judge reads as an
- *   article belongs to the noun right after it, when one follows: eine Art
- *   Ziel, der Frau Grubach, des Kinder- und Jugendbuchs. A capitalized word
- *   with an adjective's ending before another one is left to the judge (die
- *   Berliner Polizei, das Rote Kreuz).
+ *   de/shared-article-in-coordination, de/fused-word-pieces): an article
+ *   the judge reads as an article belongs to the noun right after it, when
+ *   one follows: eine Art Ziel, der Frau Grubach, des Kinder- und
+ *   Jugendbuchs. A capitalized word with an adjective's ending before
+ *   another one is left to the judge (die Berliner Polizei, das Rote
+ *   Kreuz). The judge's none counts only against a noun its slot offered,
+ *   so die »Vorderreihe«, whose quote mark ends the slot's clause, joins.
+ *   A fused article piece (the m of zum) is always an article: one no link
+ *   claims joins the noun its phrase opens, whatever its slot said (am
+ *   Morgen), and with no noun after it in its clause its written word stays
+ *   whole as a Locution (Was zum …?). No fused article ends alone (#1334).
  * - `sein-chain` (de/verbal-participle, de/auxiliary-joins-the-verb-it-serves,
  *   on dumcorpus's AUX forms of sein): worden, gewesen and geworden take sein
  *   as their perfect's auxiliary, so the nearest sein form in their clause
@@ -192,7 +198,7 @@ function decisionsOf(
 		anchors: () => anchors(nomination),
 		quantifier: () => quantifiers(nomination),
 		pronoun: () => pronouns(nomination),
-		"article-head": () => articleHeads(nomination),
+		"article-head": () => articleHeads(nomination, membership.edges),
 		"sein-chain": () => seinChains(nomination, membership.edges),
 		"was-fuer": () => wasFuer(nomination),
 		"infixed-zu": () => infixedZu(nomination),

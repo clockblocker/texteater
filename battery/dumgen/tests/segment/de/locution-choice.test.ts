@@ -134,7 +134,13 @@ const zumBeispielHeard: Record<string, Answer> = {
 	s_article_5: picked("p6"),
 };
 
-test("Zum Beispiel, capitalized and fused: under the floors production splits it three ways; an accepted link keeps the fused halves together", async () => {
+/** The same with Beispiel read fixed under the expression floor. */
+const zumBeispielUnder: Record<string, Answer> = {
+	...zumBeispielHeard,
+	f_3: noul(0.65),
+};
+
+test("Zum Beispiel, capitalized and fused: Beispiel read fixed at the floor takes the fused word; under it, m still joins its noun; an accepted link keeps the fused halves together", async () => {
 	const segments = [...zumBeispiel];
 	const sentence = sentenceOf({ segments });
 	expect(sentence.pieces.slice(0, 2).map((piece) => piece.fusedWord)).toEqual(
@@ -144,9 +150,19 @@ test("Zum Beispiel, capitalized and fused: under the floors production splits it
 		germanUnits({ segments }, fakeJudge(zumBeispielHeard).ask),
 	);
 	expect(production.map((unit) => unit.segments)).toEqual([
+		[0, 1, 3],
+		[5, 13],
+		[7, 9],
+		[11],
+	]);
+	// Under the floor no link holds Zum Beispiel, and the fused article
+	// still never stands alone (#1334).
+	const under = await Effect.runPromise(
+		germanUnits({ segments }, fakeJudge(zumBeispielUnder).ask),
+	);
+	expect(under.map((unit) => unit.segments)).toEqual([
 		[0],
-		[1],
-		[3],
+		[1, 3],
 		[5, 13],
 		[7, 9],
 		[11],
@@ -156,7 +172,7 @@ test("Zum Beispiel, capitalized and fused: under the floors production splits it
 		germanUnits(
 			{ segments },
 			fakeJudge({
-				...zumBeispielHeard,
+				...zumBeispielUnder,
 				f_2: noul(0.6),
 				e_2_3: noul(0.75),
 			}).ask,
@@ -167,11 +183,10 @@ test("Zum Beispiel, capitalized and fused: under the floors production splits it
 
 test("Zum Beispiel: the Locution Choice asks about the heard links and, both units fixed, makes [Zu, m, Beispiel] one Locution", async () => {
 	const judge = fakeJudge({
-		...zumBeispielHeard,
-		lc_1_x_3_l: fixedSide,
-		lc_1_x_3_r: fixedSide,
-		lc_2_x_3_l: fixedSide,
-		lc_2_x_3_r: fixedSide,
+		...zumBeispielUnder,
+		// m joined Beispiel (#1334), so one link is left between the units.
+		lc_1_x_2_3_l: fixedSide,
+		lc_1_x_2_3_r: fixedSide,
 		r_1_2_3: picked("Locution/ADV"),
 	});
 	const units = await Effect.runPromise(

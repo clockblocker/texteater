@@ -10,11 +10,14 @@
  *
  * Step 0 adds the rules candidates4 found missing: a symbol takes no
  * article, number `Komma`/`bis` number is one Locution, a re-asked idiom
- * host replaces the first answer, and `so … daß` joins.
+ * host replaces the first answer, and `so … daß` joins. A noun read fixed
+ * right after a fused article is a fixed adverbial with its fused word
+ * (`fusedPhraseLinks`, #1334).
  */
 import { type Answers, choiceOf } from "../ask.js";
 import {
 	fusedSiblings,
+	isArticle,
 	isSymbolPiece,
 	nounLike,
 	numberRanges,
@@ -36,6 +39,7 @@ import {
 	type Partition,
 	partitionOf,
 } from "./partition.js";
+import type { Piece } from "./sentence.js";
 
 export type Family = "Lexeme" | "Locution" | "Saying";
 
@@ -484,6 +488,50 @@ export function stepZeroMembership(
 	};
 }
 
+/** A fused word's article piece: the m of im and zum, the r of zur, the s of ins. */
+export const fusedArticle = (piece: Piece): boolean =>
+	piece.fusedWord !== undefined &&
+	piece.surface !== piece.text &&
+	isArticle(piece);
+
+/**
+ * A fixed adverbial of one noun and the fused word before it (zum
+ * Beispiel, im Allgemeinen): a noun read fixed at the expression floor that
+ * no expression link reaches, right after a fused preposition and article,
+ * links to that article piece, so absorption takes in the preposition
+ * piece (de/fused-word-pieces: in a fixed expression both pieces are
+ * members). The fused pieces are rarely read fixed themselves, so the
+ * expression pairs never pair them with the noun. A preposition written
+ * apart is left to the expression pairs: um Ruhe and in den Rasen were read
+ * as fixed at 0.71 and are free.
+ */
+export function fusedPhraseLinks(
+	nomination: Pick<Nomination, "sentence" | "fixed">,
+	expression: readonly (readonly [number, number])[],
+	floor: number,
+): (readonly [number, number])[] {
+	const { pieces, segments } = nomination.sentence;
+	const linked = new Set(expression.flat());
+	const links: (readonly [number, number])[] = [];
+	for (const noun of pieces) {
+		const article = pieces[noun.id - 2];
+		if (
+			!article ||
+			linked.has(noun.id) ||
+			!nounLike(noun) ||
+			(nomination.fixed.get(noun.id) ?? 0) < floor ||
+			!fusedArticle(article) ||
+			article.clause !== noun.clause ||
+			!segments
+				.slice(article.segment + 1, noun.segment)
+				.every((segment) => segment.kind === "Whitespace")
+		)
+			continue;
+		links.push([article.id, noun.id]);
+	}
+	return links;
+}
+
 /** Membership under floors and a Saying assembly: step 0 over v3 with the expression links that count (`memberLinks`), Sayings from the Choice. */
 export function membershipOf(
 	nomination: Nomination,
@@ -505,5 +553,9 @@ export function membershipOf(
 		}),
 		floors.idiom,
 	);
-	return stepZeroMembership(read, input, ranges, saying);
+	const expression = [
+		...input.expression,
+		...fusedPhraseLinks(read, input.expression, floors.expression),
+	];
+	return stepZeroMembership(read, { ...input, expression }, ranges, saying);
 }

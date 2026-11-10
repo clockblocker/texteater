@@ -147,7 +147,7 @@ export type Routes = {
 };
 
 /**
- * Reads the route answers: the route Choice, a winning non-article identity
+ * Reads the route answers: the route Choice, a winning identity
  * candidate's Kind instead, then the Rule tests between ADV and ADJ and
  * between DET and PRON.
  */
@@ -189,7 +189,10 @@ function readRoutes(
 		const position = Number(picked.choice.slice(1));
 		const candidate =
 			picked.choice === "Other" ? undefined : candidates[position];
-		if (candidate && candidate.pronType !== "Art")
+		// An article standing alone is the closed-class word it is, a DET,
+		// never the noun or preposition its phrase would take (#1334); the
+		// DET/PRON Rule test below may still read it as a pronoun.
+		if (candidate)
 			identity.set(groupKey(group), {
 				group,
 				choice: `Lexeme/${candidate.kind}`,

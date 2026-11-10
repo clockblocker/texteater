@@ -8,9 +8,14 @@ import {
 	authoredRealizations,
 	germanConjunctionLocutions,
 } from "dumcorpus/inventories";
-import type { AssembledEdge, Membership } from "./assembly.js";
+import {
+	type AssembledEdge,
+	fusedArticle,
+	type Membership,
+} from "./assembly.js";
 import {
 	foldedText,
+	fusedSiblings,
 	isArticle,
 	nounLike,
 	particleForms,
@@ -279,27 +284,62 @@ const adjectiveEnding = /(e|er|en|es|em)$/u;
 /** Only whitespace or quote marks between two Segments. */
 const quoteMark = /^[„“”"»«‚‘’›‹]$/u;
 
-export function articleHeads(nomination: Nomination): Decision {
+/**
+ * The noun a fused article opens, by the words alone: the first noun-like
+ * piece after it in its clause, within the article slot's window, or the
+ * noun after it when that one has an adjective's ending (im Deutschen
+ * Museum).
+ */
+function headAfter(pieces: readonly Piece[], article: Piece) {
+	const window = pieces.filter(
+		(other) =>
+			other.id > article.id &&
+			other.id <= article.id + 6 &&
+			other.clause === article.clause,
+	);
+	const position = window.findIndex(nounLike);
+	const head = window[position];
+	const after = window[position + 1];
+	return head && adjectiveEnding.test(head.text) && after && nounLike(after)
+		? after
+		: head;
+}
+
+export function articleHeads(
+	nomination: Nomination,
+	edges: readonly AssembledEdge[],
+): Decision {
 	const { pieces, segments } = nomination.sentence;
 	const moved = new Map<number, number>();
-	for (const slot of nomination.slots) {
-		if (slot.kind !== "article") continue;
-		const answer = nomination.first[`s_article_${slot.piece.id}`];
-		if (answer?.type !== "choice") continue;
-		// The judge reads it as an article when its hosts outweigh none.
-		if ((answer.probabilities.none ?? 0) >= 0.5) continue;
-		const next = pieces[slot.piece.id];
+	for (const piece of pieces) {
+		if (!isArticle(piece)) continue;
+		const slot = nomination.slots.find(
+			(candidate) =>
+				candidate.kind === "article" && candidate.piece.id === piece.id,
+		);
+		const answer = nomination.first[`s_article_${piece.id}`];
+		if (slot && answer?.type !== "choice") continue;
+		const next = pieces[piece.id];
 		if (
 			!next ||
-			next.clause !== slot.piece.clause ||
 			!nounLike(next) ||
 			!segments
-				.slice(slot.piece.segment + 1, next.segment)
+				.slice(piece.segment + 1, next.segment)
 				.every(
 					(segment) =>
 						segment.kind === "Whitespace" ||
 						quoteMark.test(segment.text),
 				)
+		)
+			continue;
+		// The judge reads it as an article when its hosts outweigh none, and
+		// its none counts only against a noun it was offered: a quote mark
+		// ends the slot's clause, so die »Vorderreihe« offers none.
+		const offered = slot?.hosts.some((host) => host.id === next.id);
+		if (
+			offered &&
+			answer?.type === "choice" &&
+			(answer.probabilities.none ?? 0) >= 0.5
 		)
 			continue;
 		const after = pieces[next.id];
@@ -310,9 +350,31 @@ export function articleHeads(nomination: Nomination): Decision {
 			nounLike(after)
 		)
 			continue;
-		moved.set(slot.piece.id, next.id);
+		moved.set(piece.id, next.id);
+	}
+	// A fused article piece is always an article (de/fused-word-pieces):
+	// one no link reaches from outside its written word belongs to the noun
+	// its phrase opens, whatever the judge's slot said. With no noun after
+	// it, its written word stays whole, and a fused word whose pieces are
+	// one unit is a fixed expression: Was zum …? gives [zu, m] Locution.
+	const siblings = fusedSiblings(nomination.sentence);
+	const claimed = (id: number) =>
+		moved.has(id) ||
+		edges.some(
+			({ pieces: [left, right] }) =>
+				(left === id || right === id) &&
+				!siblings.get(id)?.includes(left === id ? right : left),
+		);
+	const closed: ClosedUnit[] = [];
+	for (const piece of pieces) {
+		if (!fusedArticle(piece) || claimed(piece.id)) continue;
+		const head = headAfter(pieces, piece);
+		const word = siblings.get(piece.id);
+		if (head) moved.set(piece.id, head.id);
+		else if (word) closed.push({ pieces: word, family: "Locution" });
 	}
 	return {
+		closed,
 		drop: (edge) =>
 			edge.source === "satellite" && moved.has(edge.pieces[0]),
 		add: [...moved],

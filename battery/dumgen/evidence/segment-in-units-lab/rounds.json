@@ -1,5 +1,5 @@
 {
-	"current": "2026-11-10-dev-whole",
+	"current": "2026-11-10-1334",
 	"rounds": [
 		{
 			"id": "2026-10-02-5usd",
@@ -137,6 +137,24 @@
 					"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
 				},
 				"at": "2026-11-10T17:54:45.770Z"
+			},
+			"repins": []
+		},
+		{
+			"id": "2026-11-10-1334",
+			"opened": "2026-11-10",
+			"note": "#1334 and the same-spelled particle (map #1323): code-only segment.inUnits changes replayed on the whole of dev from the per-question cache at one repetition, against #1333's run. The main session granted 2,380,952 fresh jev input tokens, all of them for dev; no held-out run.",
+			"capTokens": 2380952,
+			"stopLineTokens": 2380952,
+			"pin": {
+				"dumcorpusCommit": "eb8f2ef822ac1794cbbbcbe97525e3e77f8f2341",
+				"dumcorpusDirty": false,
+				"hash": "ff02cee758f9a05fd244cf5e533a5cccdbfb66f6e45289964d001fff91736e9f",
+				"inputs": {
+					"inventories": "92761fb27271fb7c1eecf77e578ce73f87635d99edb9f2acaf6905a8518c3f2d",
+					"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
+				},
+				"at": "2026-11-10T18:13:26.567Z"
 			},
 			"repins": []
 		}
