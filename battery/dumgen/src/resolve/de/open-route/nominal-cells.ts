@@ -20,6 +20,7 @@ import {
 	type NounRead,
 	type OpeningArticle,
 	type SettledCore,
+	standing,
 } from "./nominal.js";
 import { cases, type Gender, type MixedGender } from "./shape.js";
 
@@ -31,9 +32,9 @@ type Cells = {
 };
 
 /**
- * A used common NOUN's cells over the cases its Core gender leaves open,
- * narrowed to the Case jev answered early; undefined when none is left or
- * the early answer fits none.
+ * A used common NOUN's cells over the cases its Core gender leaves open
+ * where it stands, narrowed to the likeliest Case jev weighed early that
+ * fits; undefined when none is left or none of jev's fits.
  */
 function cellsOver(
 	noun: NounRead,
@@ -42,11 +43,14 @@ function cellsOver(
 	formGender: Gender | null,
 	open: readonly CaseOption[],
 ): Cells | undefined {
-	let openCases = open;
+	let openCases = standing(open, noun.surface);
 	if (openCases.length === 0) return undefined;
-	if (noun.earlyCase !== undefined) {
-		if (!openCases.includes(noun.earlyCase)) return undefined;
-		openCases = [noun.earlyCase];
+	if (noun.earlyCases.length > 0) {
+		const best = noun.earlyCases.find((answer) =>
+			openCases.includes(answer),
+		);
+		if (best === undefined) return undefined;
+		openCases = [best];
 	}
 	const [only] = openCases;
 	return {
@@ -160,13 +164,14 @@ export type NominalCells = {
 /**
  * A NOUN's cells and its Case, with Luna's headword. A used common NOUN's
  * gender is the article Luna writes with its headword when it fits the
- * Sentence's article, so Luna is awaited first and the Case is asked over
- * the cells that gender leaves; any other NOUN's Case is asked beside
- * Luna. A common NOUN whose headword dumcorpus lists in free gender
- * variation takes its mixed gender instead, `senseOver` asking whether it
- * has the listed sense here when it has others. `caseOver` asks the Case
- * question over the cells still open, and asks nothing when one or none
- * is.
+ * Sentence's article, so Luna is awaited first and the Case is the
+ * likeliest answer to the first request's Case question that the cells
+ * of that gender leave. A common NOUN whose headword dumcorpus lists in
+ * free gender variation takes its mixed gender instead, `senseOver`
+ * asking whether it has the listed sense here when it has others.
+ * `caseOver` asks the Case over cells still open only where the first
+ * request asked none, as when where the NOUN stands rules out every cell
+ * Luna's gender leaves; it asks nothing when one or none is.
  */
 export const nominalCells = <Failure>(
 	owned: OpeningArticle | undefined,
@@ -201,6 +206,10 @@ export const nominalCells = <Failure>(
 				return new Unresolved({
 					reason: "The article agrees with no case of its head",
 				});
+			// The Case was asked in the first request; an Unresolved answer
+			// there is never asked again (ADR 0023).
+			if (first.noun.caseAsked && cells.openCases.length > 1)
+				return new Unresolved({ reason: "Unresolved case" });
 			const caseAnswer = yield* caseOver(cells.openCases);
 			return withCase(cells, caseAnswer, written);
 		}

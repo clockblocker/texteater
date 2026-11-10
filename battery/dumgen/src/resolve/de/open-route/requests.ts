@@ -1,7 +1,8 @@
 /**
  * The jev requests of an open-route click: the first, `grammar`, and the
- * follow-ups a NOUN may need, its Case over the cells still open and
- * whether a noun in free gender variation has its free sense here.
+ * follow-ups a NOUN may need: whether a noun in free gender variation has
+ * its free sense here, and, rarely, its Case over cells the first
+ * request's Case question did not offer.
  */
 import * as Effect from "effect/Effect";
 import * as Result from "effect/Result";

@@ -43,6 +43,8 @@ export type Target = {
 	 * a closed-class member may match. Casing is never decided by it.
 	 */
 	readonly opensSentence: boolean;
+	/** The Sentence's units, the clicked one among them, as intake stored them. */
+	readonly units: SegmentedSentence["units"];
 };
 
 /**
@@ -112,6 +114,7 @@ export function targetOf(
 		members,
 		glued,
 		opensSentence: unit.segments[0] === first,
+		units: sentence.units,
 	};
 }
 

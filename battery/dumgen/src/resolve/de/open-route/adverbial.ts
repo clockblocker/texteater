@@ -102,7 +102,7 @@ export function askAdverbial(
 					question.attributive,
 					options.attributive,
 				),
-				...agreementQuestions(questionnaire),
+				...agreementQuestions(questionnaire, target),
 			}
 		: undefined;
 	return { indefinite, comparable, degree, attributive };

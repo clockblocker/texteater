@@ -130,20 +130,17 @@ test("a transport failure is a ProviderFailure and an unusable answer an Invalid
 	expect(garbled.sent).toHaveLength(1);
 });
 
-test("a click is all-or-nothing: a failed Case question interrupts Luna's call in flight", async () => {
-	// Er0 _1 grüßt2 _3 der4 _5 Anna6 .7 (a PROPN's Case runs beside Luna)
-	const jev = fakeJev(
-		{ gender: "die", number: "Sing", article: "Bare" },
-		{ fail: (stage) => stage === "case" },
-	);
-	const luna = fakeLuna(undefined, { delayMs: 50 });
+test("a click is all-or-nothing: a failed grammar request interrupts the description drafted beside it", async () => {
+	// Aber0 _1 es2 _3 regnet4 .5 (code writes the conjunction's headword)
+	const jev = fakeJev({}, { fail: (stage) => stage === "grammar" });
+	const luna = fakeLuna(() => "➕", { delayMs: 50 });
 	const failure = await Effect.runPromise(
 		Effect.flip(
 			operations.resolve
 				.grammar({
 					language: "de",
-					sentence: sentenceOf("Er hilft der Anna."),
-					unit: unitOf([4, 6], "Lexeme/PROPN"),
+					sentence: sentenceOf("Aber es regnet."),
+					unit: unitOf([0], "Lexeme/CCONJ"),
 					neighbours: {},
 					lemmaCandidates: [],
 				})
@@ -153,7 +150,7 @@ test("a click is all-or-nothing: a failed Case question interrupts Luna's call i
 		),
 	);
 	expect(failure).toBeInstanceOf(ProviderFailure);
-	expect(luna.aborted).toEqual(["canonical"]);
+	expect(luna.aborted).toEqual(["emojiDescription"]);
 });
 
 // The trace (#858).

@@ -36,6 +36,7 @@ import {
 	type MixedGender,
 	type Shape,
 } from "./shape.js";
+import { type SurfaceCase, surfaceCases } from "./surface-cases.js";
 
 type NominalCore = Dumling.Lemma<
 	"de",
@@ -126,24 +127,52 @@ export function articleCases(
 }
 
 /**
- * The cases an article leaves open whatever its head's number and gender,
- * when every agreement leaves the same two or more: then the Case question
- * can ride in the first request, since the head's form narrows nothing.
+ * The cases an article leaves open for any number and gender of its head:
+ * the Case question rides in the first request over them, and the head's
+ * agreement, once known, keeps the likeliest answer it allows.
  */
-function casesBeforeAgreement(article: ArticleMember): readonly CaseOption[] {
-	const sets = [
-		articleCases(article, "Sing", "Masc"),
-		articleCases(article, "Sing", "Fem"),
-		articleCases(article, "Sing", "Neut"),
-		articleCases(article, "Plur", null),
-	].filter((set) => set.length > 0);
-	const [first] = sets;
-	return first &&
-		first.length > 1 &&
-		sets.every((set) => set.join(",") === first.join(","))
-		? first
-		: [];
+function casesOfArticle(article: ArticleMember): readonly CaseOption[] {
+	const open = new Set([
+		...articleCases(article, "Sing", "Masc"),
+		...articleCases(article, "Sing", "Fem"),
+		...articleCases(article, "Sing", "Neut"),
+		...articleCases(article, "Plur", null),
+	]);
+	return cases.filter((grammaticalCase) => open.has(grammaticalCase));
 }
+
+/**
+ * The cases among `open` the NOUN can take where it stands
+ * (`surface-cases.ts`), Unmarked kept; all of `open` when none is.
+ */
+export function standing(
+	open: readonly CaseOption[],
+	surface: readonly SurfaceCase[],
+): readonly CaseOption[] {
+	const kept = open.filter(
+		(grammaticalCase) =>
+			grammaticalCase === "Unmarked" ||
+			surface.some((allowed) => allowed === grammaticalCase),
+	);
+	return kept.some((grammaticalCase) => grammaticalCase !== "Unmarked")
+		? kept
+		: open;
+}
+
+/**
+ * The Case answer and the other cases jev weighed, likeliest first; none
+ * when jev answered Unresolved, so that the cells agreement leaves decide,
+ * and the click is Unresolved only when they leave more than one.
+ */
+const rankedCases = (
+	asked: Choice<CaseOption>,
+	answered: Answered,
+): readonly CaseOption[] => {
+	const answer = answered.peek(asked);
+	return answer === undefined
+		? []
+		: [answer, ...answered.alternatives(asked)];
+};
 
 /** The Case question over the cases still open. */
 export function caseQuestion(
@@ -168,15 +197,21 @@ export type NominalPlan = {
 	readonly nounKind: ChoiceOf<typeof options.nounKind> | undefined;
 	readonly number: ChoiceOf<typeof options.number>;
 	readonly formGender: ChoiceOf<typeof options.formGender> | undefined;
+	/** The cases the NOUN can take where it stands, before its article. */
+	readonly surface: readonly SurfaceCase[];
 	/** Cases asked in the first request, before agreement is known. */
 	readonly earlyCases: readonly CaseOption[];
 	/** The Case question over them. */
 	readonly case: Choice<CaseOption> | undefined;
 };
 
-/** Asks a NOUN's gender, kind and number, and its Case when the article allows. */
+/**
+ * Asks a NOUN's gender, kind and number, and its Case over the cases its
+ * article and where it stands leave, when more than one is left (#1326).
+ */
 export function askNominal(
 	questionnaire: Questionnaire,
+	target: Target,
 	shape: Shape,
 	article: OpeningArticle | undefined,
 ): NominalPlan {
@@ -227,16 +262,19 @@ export function askNominal(
 				question.formGender,
 				options.formGender,
 			);
-	const earlyCases: readonly CaseOption[] = article
-		? casesBeforeAgreement(article.article)
-		: [...cases, "Unmarked"];
+	const surface = surfaceCases(target, target.units);
+	const earlyCases = standing(
+		article ? casesOfArticle(article.article) : [...cases, "Unmarked"],
+		surface,
+	);
 	return {
 		...identity,
 		number,
 		formGender,
+		surface,
 		earlyCases,
 		case:
-			earlyCases.length > 0
+			earlyCases.length > 1
 				? caseQuestion(questionnaire, earlyCases)
 				: undefined,
 	};
@@ -246,7 +284,12 @@ export function askNominal(
 export type NounRead = {
 	readonly number: NonNullable<NounInflection["number"]>;
 	readonly shown: Gender | null;
-	readonly earlyCase: CaseOption | undefined;
+	/** The cases the NOUN can take where it stands, before its article. */
+	readonly surface: readonly SurfaceCase[];
+	/** The early Case answer and the others jev weighed, likeliest first. */
+	readonly earlyCases: readonly CaseOption[];
+	/** Whether the Case was asked in the first request. */
+	readonly caseAsked: boolean;
 };
 
 /** The gender an article answer names, none for None. */
@@ -277,6 +320,25 @@ const nounCore = answerReader(function* (
 		);
 	return article === undefined ? { gender } : { article, gender };
 });
+
+/**
+ * A head's number: an owned article is hard evidence of it, as of its
+ * gender, so when the judged number agrees with no cell of the article,
+ * the likeliest other number jev weighed that does is read instead (ein
+ * Paar is never plural).
+ */
+function numberOf<Number extends string>(
+	article: ArticleMember | undefined,
+	judged: Number,
+	others: readonly Number[],
+): Number {
+	if (!article || articleCases(article, judged, null).length > 0)
+		return judged;
+	return (
+		others.find((other) => articleCases(article, other, null).length > 0) ??
+		judged
+	);
+}
 
 /** What a NOUN's block settles in the first request, and the cases still open. */
 export type NominalRead = {
@@ -311,7 +373,12 @@ export const readNominal = answerReader(function* (
 			noun: undefined,
 		};
 	let noun: NounRead | undefined;
-	const number = yield* answered.pick(nominal.number);
+	const number = numberOf(
+		owned?.article,
+		yield* answered.pick(nominal.number),
+		answered.alternatives(nominal.number),
+	);
+	const ranked = nominal.case ? rankedCases(nominal.case, answered) : [];
 	const peekFormGender = () =>
 		nominal.formGender && answered.peek(nominal.formGender);
 	const shown =
@@ -323,7 +390,9 @@ export const readNominal = answerReader(function* (
 		noun = {
 			number,
 			shown: genderNamed(peekFormGender()),
-			earlyCase: nominal.case && answered.peek(nominal.case),
+			surface: nominal.surface,
+			earlyCases: ranked,
+			caseAsked: nominal.case !== undefined,
 		};
 	}
 	// A singular head's owned article is hard evidence of its
@@ -358,18 +427,23 @@ export const readNominal = answerReader(function* (
 		!formGender
 	)
 		return yield* unresolved("Unresolved formGender");
-	let openCases: readonly CaseOption[] = owned
-		? articleCases(owned.article, number, formGender ?? core.gender)
-		: [...cases, "Unmarked"];
-	// A common NOUN waits for the article Luna writes before this verdict.
+	let openCases = standing(
+		owned
+			? articleCases(owned.article, number, formGender ?? core.gender)
+			: [...cases, "Unmarked"],
+		nominal.surface,
+	);
+	// A common NOUN waits for the article Luna writes before these verdicts.
 	if (openCases.length === 0 && !noun)
 		return yield* unresolved("The article agrees with no case of its head");
-	if (openCases.length > 0 && nominal.case) {
-		const answer = yield* answered.pick(nominal.case);
-		if (!openCases.includes(answer))
-			return yield* unresolved("The Case answer fits no open cell");
-		openCases = [answer];
-	}
+	const best = ranked.find((answer) => openCases.includes(answer));
+	if (best !== undefined) openCases = [best];
+	else if (!noun && nominal.case && openCases.length > 1)
+		return yield* unresolved(
+			ranked.length > 0
+				? "The Case answer fits no open cell"
+				: "Unresolved case",
+		);
 	const [only, ...others] = openCases;
 	const settled =
 		only !== undefined && others.length === 0 && only !== "Unmarked"

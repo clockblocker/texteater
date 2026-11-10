@@ -4,9 +4,8 @@
  * neither the unit nor dumcorpus's tables already fix: a member's Typo or
  * Shorthand, the Surface's spelling, the route's Core Features, its
  * inflection, the auxiliaries' uses, the prepositions a head governs,
- * coverage. Then, side by side, a NOUN's Case question over the cells its
- * article and form leave open, when more than one remains (#625), and
- * the headword (`open-route/headword-writer.ts`): code's where the route
+ * coverage, and a NOUN's or agreeing word's Case over the cases its
+ * article and where it stands leave (#625, #1326). Then the headword (`open-route/headword-writer.ts`): code's where the route
  * settles it, else Luna's Canonical Form and spellings (#862), asked
  * while jev judges on a guess at its answers and again when the guess
  * misses. A common NOUN whose headword

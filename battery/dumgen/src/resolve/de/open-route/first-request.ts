@@ -98,13 +98,15 @@ export function plan(target: Target): Plan {
 		? askVerbal(questionnaire, target, shape, satellites, taken)
 		: undefined;
 	const nominal = shape.nounLike
-		? askNominal(questionnaire, shape, article)
+		? askNominal(questionnaire, target, shape, article)
 		: undefined;
 	const adverbial =
 		shape.adjectival || shape.adverbial
 			? askAdverbial(questionnaire, target, shape)
 			: undefined;
-	const agreeing = shape.agreeing ? askAgreeing(questionnaire) : undefined;
+	const agreeing = shape.agreeing
+		? askAgreeing(questionnaire, target)
+		: undefined;
 	const adposition = shape.adposition
 		? askAdposition(questionnaire, target, shape)
 		: undefined;

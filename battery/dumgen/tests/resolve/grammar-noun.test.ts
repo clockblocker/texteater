@@ -105,9 +105,9 @@ test("a common NOUN's gender is the article Luna writes with its headword, and i
 
 // NOUN Case: narrowed in code, asked at most once (#625).
 
-test("an article and the noun's form that leave one cell settle Case with no question", async () => {
+test("an article and the noun's form that leave one cell settle Case over the early answer", async () => {
 	// Wir0 _1 helfen2 _3 den4 _5 Kindern6 .7
-	const jev = fakeJev({ gender: "das", number: "Plur" });
+	const jev = fakeJev({ gender: "das", number: "Plur", case: "Acc" });
 	const luna = writes("Kind", ["den", "Kindern"]);
 	const { result } = await resolveOnce(
 		{ jev: jev.ask, luna: luna.ask },
@@ -131,9 +131,11 @@ test("an article and the noun's form that leave one cell settle Case with no que
 		member: 0,
 	});
 	expect(attestation.surface.normalizedSurface).toBe("Kindern");
+	// No follow-up and no article question. The Case rides in the first
+	// request over den's cases, and the one cell plural agreement leaves
+	// stands over jev's Acc.
 	expect(jev.stages()).toEqual(["grammar"]);
-	// No article question, and no Case question.
-	expect(jev.questions("grammar")).not.toContain("case");
+	expect(jev.questions("grammar")).toContain("case");
 	expect(jev.questions("grammar")).not.toContain("article");
 });
 
@@ -161,13 +163,30 @@ test("an article whose cells agreement cannot narrow asks Case once, in the firs
 	]);
 });
 
-test("cells agreement leaves open get one Case question over those cells, and its Unresolved makes the click Unresolved", async () => {
+test("an article whose cells agreement narrows asks Case once over all its cells, in the first request, and its Unresolved makes the click Unresolved", async () => {
 	// Er0 _1 gibt2 _3 der4 _5 Frau6 _7 ein8 _9 Buch10 .11
 	const sentence = sentenceOf("Er gibt der Frau ein Buch.");
 	const unit = unitOf([4, 6], "Lexeme/NOUN");
-	const jev = fakeJev({ gender: "die", number: "Sing", case: "Dat" });
+	// jev answers Nom, which a feminine singular never takes, and weighs
+	// Dat next: Dat stands, with no second question (#1326).
+	const answers = fakeJev({ gender: "die", number: "Sing", case: "Nom" });
+	const jev: JevAsk = async (request, context) => {
+		const response = await answers.ask(request, context);
+		return {
+			...response,
+			answers: {
+				...response.answers,
+				case: {
+					type: "choice",
+					choice: "Nom",
+					confidence: 0.55,
+					probabilities: { Nom: 0.55, Dat: 0.4, Gen: 0.05 },
+				},
+			},
+		};
+	};
 	const { result } = await resolveOnce(
-		{ jev: jev.ask, luna: writes("Frau", ["der", "Frau"]).ask },
+		{ jev, luna: writes("Frau", ["der", "Frau"]).ask },
 		{ sentence, unit },
 	);
 	expect(attested(result).surface).toMatchObject({
@@ -175,9 +194,10 @@ test("cells agreement leaves open get one Case question over those cells, and it
 			case: "Dat",
 		},
 	});
-	expect(jev.stages()).toEqual(["grammar", "case"]);
-	const asked = jev.sent[1]?.questions.case;
+	expect(answers.stages()).toEqual(["grammar"]);
+	const asked = answers.sent[0]?.questions.case;
 	expect(asked?.type === "choice" && Object.keys(asked.criteria)).toEqual([
+		"Nom",
 		"Dat",
 		"Gen",
 		"Unresolved",
@@ -189,7 +209,7 @@ test("cells agreement leaves open get one Case question over those cells, and it
 	);
 	expect(unresolved.result).toEqual({ _tag: "Unresolved" });
 	// Never a follow-up question.
-	expect(open.stages()).toEqual(["grammar", "case"]);
+	expect(open.stages()).toEqual(["grammar"]);
 	expect(unresolved.trace?.resolution).toEqual({
 		outcome: "Unresolved",
 		reason: "Unresolved case",
@@ -304,5 +324,60 @@ test("an ordinary noun shown in its plural keeps its singular's gender, while a 
 	);
 	expect(attested(people.result).surface.lemma.coreFeatures).toEqual({
 		gender: null,
+	});
+});
+
+test("an owned article is hard evidence of its head's number, and an Unresolved early Case leaves the one cell agreement allows", async () => {
+	// Er0 _1 bekam2 _3 ein4 _5 Paar6 _7 Handschuhe8 .9: jev leans plural,
+	// but ein has no plural cell, so the singular jev weighed next is read.
+	const answers = fakeJev({
+		gender: "das",
+		nounKind: "Ordinary",
+		formGender: "das",
+		case: "Acc",
+	});
+	const jev: JevAsk = async (request, context) => {
+		const response = await answers.ask(request, context);
+		return {
+			...response,
+			answers: {
+				...response.answers,
+				number: {
+					type: "choice",
+					choice: "Plur",
+					confidence: 0.52,
+					probabilities: { Plur: 0.52, Sing: 0.47 },
+				},
+			},
+		};
+	};
+	const pair = await resolveOnce(
+		{ jev, luna: writes("Paar", ["ein", "Paar"]).ask },
+		{
+			sentence: sentenceOf("Er bekam ein Paar Handschuhe."),
+			unit: unitOf([4, 6], "Lexeme/NOUN"),
+		},
+	);
+	expect(attested(pair.result).surface).toMatchObject({
+		inflectionalFeatures: { case: "Acc", number: "Sing" },
+	});
+	// Der0 _1 Aufstieg2: der leaves Nom for a masculine singular.
+	const climb = await resolveOnce(
+		{
+			jev: fakeJev({
+				gender: "der",
+				nounKind: "Ordinary",
+				number: "Sing",
+				case: "Unresolved",
+			}).ask,
+			luna: writes("Aufstieg", ["der", "Aufstieg"]).ask,
+		},
+		{
+			sentence: sentenceOf("Der Aufstieg"),
+			unit: unitOf([0, 2], "Lexeme/NOUN"),
+		},
+	);
+	expect(attested(climb.result).surface).toMatchObject({
+		inflectionalFeatures: { case: "Nom" },
 	});
 });
