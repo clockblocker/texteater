@@ -27,7 +27,7 @@ import {
 } from "./candidates.js";
 import type { ClosedUnit, Decision } from "./code-rules.js";
 import { bracketClauses } from "./code-rules-verbs.js";
-import type { Nomination } from "./nomination.js";
+import { displacedArticles, type Nomination } from "./nomination.js";
 import { groupKey } from "./partition.js";
 import { adjectiveEnding, fusedPrepositions, phraseWindow } from "./phrase.js";
 import type { RouteKey } from "./routes.js";
@@ -376,23 +376,33 @@ export function articleHeads(
 }
 
 /**
- * The route of a one-piece unit that is a fused word's preposition piece,
- * the zu of zum or the i of im: Lexeme ADP, whatever the route Choice
- * hears (de/fused-word-pieces: outside a fixed expression a preposition
- * piece is a single-member ADP unless a word governs it, and then it joins
- * that word). Its spelling's closed-class use is never asked
- * (`closedPlan`): the judge heard the zu of zum Kochen as the infinitive's
- * PART.
+ * The routes the `article-head` rule fixes for one-piece units:
+ * - A fused word's preposition piece, the zu of zum or the i of im, is
+ *   Lexeme ADP, whatever the route Choice hears (de/fused-word-pieces:
+ *   outside a fixed expression a preposition piece is a single-member ADP
+ *   unless a word governs it, and then it joins that word). Its spelling's
+ *   closed-class use is never asked (`closedPlan`): the judge heard the zu
+ *   of zum Kochen as the infinitive's PART.
+ * - An article spelling a nearer article displaced from its noun
+ *   (`displacedArticles`) is Lexeme PRON when it spells an authored PRON:
+ *   the judge reads einem in einem der Ausläufer as an article (#1340).
  */
-export function fusedPrepositionRoutes(nomination: Nomination): FixedRoute {
+export function articleHeadRoutes(nomination: Nomination): FixedRoute {
 	const prepositions = fusedPrepositions(nomination.sentence);
+	const displaced = displacedArticles(nomination);
+	const { pieces } = nomination.sentence;
+	const pronoun = (id: number) =>
+		displaced.has(id) &&
+		nomination.inventory
+			.identityCandidates(pieces[id - 1]?.text ?? "")
+			.some((candidate) => candidate.kind === "PRON");
 	return (group) => {
 		const [only] = group;
-		return group.length === 1 &&
-			only !== undefined &&
-			prepositions.has(only)
-			? "Lexeme/ADP"
-			: undefined;
+		if (group.length !== 1 || only === undefined) return undefined;
+		if (prepositions.has(only)) return "Lexeme/ADP";
+		// An article whose noun a nearer article took stands for a noun
+		// phrase itself (de/pron-or-det-by-use): einem der Ausläufer (#1340).
+		return pronoun(only) ? "Lexeme/PRON" : undefined;
 	};
 }
 

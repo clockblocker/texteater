@@ -152,19 +152,55 @@ export function slotLinks(
 	return [...best.values()];
 }
 
-/** A host takes at most one particle and one governed preposition, the most probable (`sehnen sich nach … nach`). */
+/** The link a host keeps of several of one kind: the nearer article, else the more probable. */
+const keptOver = (link: SlotLink, previous: SlotLink | undefined) =>
+	!previous ||
+	(link.kind === "article"
+		? previous.from < link.from
+		: previous.share < link.share);
+
+/**
+ * A host takes at most one particle and one governed preposition, the most
+ * probable (`sehnen sich nach … nach`), and one article, the nearest: in
+ * einem der südlichsten Ausläufer both articles name Ausläufer, and der is
+ * its article, so einem stands alone, the partitive pronoun (#1340).
+ */
 export function oneSatellitePerHost(links: readonly SlotLink[]): SlotLink[] {
+	const single = (link: SlotLink) =>
+		link.kind === "preposition" ||
+		link.kind === "particle" ||
+		link.kind === "article";
 	const best = new Map<string, SlotLink>();
 	for (const link of links) {
-		if (link.kind !== "preposition" && link.kind !== "particle") continue;
+		if (!single(link)) continue;
 		const key = `${link.kind}:${link.to}`;
-		const previous = best.get(key);
-		if (!previous || previous.share < link.share) best.set(key, link);
+		if (keptOver(link, best.get(key))) best.set(key, link);
 	}
 	return links.filter(
-		(link) =>
-			(link.kind !== "preposition" && link.kind !== "particle") ||
-			best.get(`${link.kind}:${link.to}`) === link,
+		(link) => !single(link) || best.get(`${link.kind}:${link.to}`) === link,
+	);
+}
+
+/**
+ * The pieces whose article link `oneSatellitePerHost` dropped because a
+ * nearer article names the same noun: they stand for a noun phrase of their
+ * own (einem in einem der Ausläufer, dem in dem der Mann folgte).
+ */
+export function displacedArticles(
+	candidates: Pick<
+		Candidates,
+		"sentence" | "accepted" | "slots" | "first" | "slotAnswers"
+	>,
+): ReadonlySet<number> {
+	const kept = new Set(
+		candidates.slotAnswers
+			.filter((link) => link.kind === "article")
+			.map((link) => link.from),
+	);
+	return new Set(
+		slotLinks(candidates, candidates.slots, candidates.first)
+			.filter((link) => link.kind === "article" && !kept.has(link.from))
+			.map((link) => link.from),
 	);
 }
 

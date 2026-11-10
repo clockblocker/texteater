@@ -115,10 +115,10 @@ import {
 } from "./code-rules-verbs.js";
 import {
 	anchors,
+	articleHeadRoutes,
 	articleHeads,
 	binomialLinks,
 	circumpositionRoutes,
-	fusedPrepositionRoutes,
 	pronouns,
 	quantifierRoutes,
 	quantifiers,
@@ -180,7 +180,7 @@ export function codeRoutes(
 			: []),
 		...(rules.includes("quantifier") ? [quantifierRoutes(nomination)] : []),
 		...(rules.includes("article-head")
-			? [fusedPrepositionRoutes(nomination)]
+			? [articleHeadRoutes(nomination)]
 			: []),
 		...(rules.includes("was-fuer") ? [wasFuerRoutes(nomination)] : []),
 		...(rules.includes("particle-verb")

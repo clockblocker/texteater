@@ -8,7 +8,7 @@ import * as Effect from "effect/Effect";
 import type { Answer } from "../../../src/segment/ask.js";
 import type { Segment, Unit } from "../../../src/segment/segmented-sentence.js";
 import { segmentsOf } from "../../lab/evaluation/spec-corpus/fixtures.js";
-import { fakeJudge, germanUnits, picked, route } from "./fake-judge.js";
+import { fakeJudge, germanUnits, noul, picked, route } from "./fake-judge.js";
 
 const run = (
 	segments: readonly Segment[],
@@ -68,4 +68,22 @@ test("an abbreviation spaced after its inner dot is asked its route as an abbrev
 	});
 	expect(judge.questionsOf("route2")?.ra_4).toBeDefined();
 	expect(unitAt(units, 7)?.route).toEqual(route("Locution", "ADV"));
+});
+
+test("a noun takes one article, the nearest that names it; the farther one is the pronoun it stands for", async () => {
+	// Er0 _1 wohnt2 _3 in4 _5 einem6 _7 der8 _9 Ausläufer10 .11
+	const { units } = await run(
+		segmentsOf("Er wohnt in einem der Ausläufer."),
+		{
+			s_article_4: picked("p6", { p6: 0.96, none: 0.04 }),
+			s_article_5: picked("p6", { p6: 0.95, none: 0.05 }),
+			i_4: picked("c0", { c0: 0.95, c1: 0.01, Other: 0.04 }),
+			tm_4: noul(0.58),
+		},
+	);
+	expect(unitAt(units, 10)?.segments).toEqual([8, 10]);
+	const einem = unitAt(units, 6);
+	expect(einem?.segments).toEqual([6]);
+	expect(einem?.route).toEqual(route("Lexeme", "PRON"));
+	expect(einem?.identity).toMatchObject({ kind: "PRON", pronType: "Ind" });
 });
