@@ -2,6 +2,7 @@ import { makeSurfaceId } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
 import type * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
+import * as Fiber from "effect/Fiber";
 import type {
 	ClickEncounter,
 	ClickResolution,
@@ -276,6 +277,11 @@ function resolveGrammatical<R>(
  * Resolves the Reading of a resolved Grammar and commits the occurrence.
  * A checkpointed Reading is saved already; any other rides along with its
  * commit as the ReadingAvailable progress.
+ *
+ * Grammar is saved as GrammarAvailable beside the Reading's work, not
+ * before it: the commit joins that save before it writes, so the session
+ * still reaches GrammarAvailable before ReadingAvailable, and every other
+ * ending waits for it too, since a Convex write cannot be cancelled.
  */
 function resolveAndCommitReading<R>(
 	options: TfDemoOrchestratorOptions<R>,
@@ -285,13 +291,40 @@ function resolveAndCommitReading<R>(
 	grammatical: ResolvedGrammatical,
 ) {
 	return Effect.gen(function* () {
-		const lemma = parseGermanLemma(grammatical.attestation.surface.lemma);
-		const storedReadings = yield* saveGrammarAndLoadReadings(
+		const saving = yield* Effect.forkChild(
+			saveGrammar(options, checkpoints, grammatical),
+			{ uninterruptible: true },
+		);
+		const grammarSaved = Fiber.join(saving);
+		return yield* resolveReadingAndCommit(
 			options,
+			input,
+			context,
 			checkpoints,
 			grammatical,
-			lemma,
-		);
+			grammarSaved,
+		).pipe(Effect.ensuring(Effect.asVoid(Effect.exit(grammarSaved))));
+	});
+}
+
+function resolveReadingAndCommit<R>(
+	options: TfDemoOrchestratorOptions<R>,
+	input: ResolveSegmentInput,
+	context: ResolutionContext,
+	checkpoints: ResolutionCheckpoints,
+	grammatical: ResolvedGrammatical,
+	grammarSaved: Effect.Effect<void, Cause.UnknownError>,
+) {
+	return Effect.gen(function* () {
+		const lemma = parseGermanLemma(grammatical.attestation.surface.lemma);
+		const storedReadings = checkpoints.reading
+			? null
+			: yield* effectFrom(options.findStoredReadings(lemma)).pipe(
+					Effect.withSpan(
+						"Find stored Readings",
+						inspectionStep("battery/dumdict", { lemma }),
+					),
+				);
 		const lemmaKey = lemmaIdentityKey(lemma);
 		const first = yield* firstReading(
 			options,
@@ -320,6 +353,7 @@ function resolveAndCommitReading<R>(
 			surfaceKey: surfaceIdentityKey(grammatical.attestation.surface),
 			lemmaKey,
 		};
+		yield* grammarSaved;
 		let persisted = yield* commitResolvedClick(
 			options,
 			scope,
@@ -381,49 +415,16 @@ function resolveAndCommitReading<R>(
 	});
 }
 
-/**
- * Saves Grammar unless a checkpoint holds it, and meanwhile loads the
- * Lemma's stored Readings unless a checkpoint holds the Reading.
- */
-function saveGrammarAndLoadReadings<R>(
+/** Saves Grammar as GrammarAvailable unless a checkpoint holds it. */
+function saveGrammar<R>(
 	options: TfDemoOrchestratorOptions<R>,
 	checkpoints: ResolutionCheckpoints,
 	grammatical: ResolvedGrammatical,
-	lemma: Dumling.Lemma<"de">,
-) {
-	return Effect.gen(function* () {
-		const [grammarSaved, readingsLoaded] = yield* Effect.all(
-			[
-				Effect.exit(
-					checkpoints.grammatical
-						? Effect.void
-						: Effect.tryPromise(
-								() =>
-									options.observer?.grammarAvailable({
-										grammatical,
-									}) ?? Promise.resolve(),
-							),
-				),
-				Effect.exit(
-					checkpoints.reading
-						? Effect.succeed(null)
-						: effectFrom(options.findStoredReadings(lemma)).pipe(
-								Effect.withSpan(
-									"Find stored Readings",
-									inspectionStep("battery/dumdict", {
-										lemma,
-									}),
-								),
-							),
-				),
-			],
-			{ concurrency: "unbounded" },
-		);
-
-		// Convex writes cannot be cancelled: settle both operations before failure handling.
-		yield* grammarSaved;
-		return yield* readingsLoaded;
-	});
+): Effect.Effect<void, Cause.UnknownError> {
+	const { observer } = options;
+	return checkpoints.grammatical || !observer
+		? Effect.void
+		: Effect.tryPromise(() => observer.grammarAvailable({ grammatical }));
 }
 
 /** The Reading a checkpoint holds, a Foreign Lemma's one Reading, or the one judged over the stored candidates. */

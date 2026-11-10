@@ -144,11 +144,13 @@ export function executeResolutionSession({
 		const observer: ResolutionProgressObserver = {
 			generationEvent: onGenerationEvent,
 			async grammarAvailable({ grammatical }) {
+				// Reading starts beside this save, so its events and failures
+				// are the Reading phase's from now on.
+				phase = "Reading";
 				await lifecycle.advance({
 					progress: "GrammarAvailable",
 					grammatical,
 				});
-				phase = "Reading";
 			},
 			committing({ readingAvailable }) {
 				phase = "Commit";

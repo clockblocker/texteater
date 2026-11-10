@@ -250,6 +250,87 @@ test("the commit carries the Reading as its ReadingAvailable progress and the ru
 	});
 });
 
+/** A GrammarAvailable save held until the test lets it land. */
+function heldGrammarSave(events: string[]) {
+	let release = () => {};
+	const landed = new Promise<void>((resolve) => {
+		release = resolve;
+	});
+	return {
+		release,
+		observer: {
+			async grammarAvailable() {
+				events.push("Grammar saving");
+				await landed;
+				events.push("Grammar saved");
+			},
+			committing(input: object) {
+				events.push("commit");
+				return {
+					...input,
+					succeeded: {
+						phase: "Commit" as const,
+						generationEvents: [],
+					},
+				};
+			},
+		},
+	};
+}
+
+/** Lets every pending callback and timer of the run go first. */
+const settle = async () => {
+	for (let turn = 0; turn < 20; turn++)
+		await new Promise((resolve) => setTimeout(resolve, 0));
+};
+
+test("Reading starts while Grammar is being saved, and the commit waits for the save", async () => {
+	const events: string[] = [];
+	const save = heldGrammarSave(events);
+	const run = setup({
+		resolution: fakeResolution({
+			reading: () => {
+				events.push("Reading asked");
+				return Effect.succeed({
+					decision: "New" as const,
+					emojiDescription: "🏦",
+				});
+			},
+		}).resolution,
+		observer: save.observer,
+	});
+	const resolved = run.resolve();
+	await settle();
+	// Both have started, in either order; nothing has landed.
+	expect(events.toSorted()).toEqual(["Grammar saving", "Reading asked"]);
+	expect(run.writes).toEqual([]);
+	save.release();
+	await resolved;
+	expect(events.slice(2)).toEqual(["Grammar saved", "commit"]);
+	expect(run.writes).toHaveLength(1);
+});
+
+test("a Reading that fails while Grammar is being saved ends the run only once the save has landed", async () => {
+	const events: string[] = [];
+	const save = heldGrammarSave(events);
+	const run = setup({
+		resolution: fakeResolution({
+			reading: () => Effect.fail(providerFailure("Luna is down")),
+		}).resolution,
+		observer: save.observer,
+	});
+	let ended = false;
+	const resolved = run.resolve().finally(() => {
+		ended = true;
+	});
+	await settle();
+	expect(ended).toBe(false);
+	save.release();
+	await expect(resolved).rejects.toThrow();
+	expect(events).toEqual(["Grammar saving", "Grammar saved"]);
+	expect(run.writes).toEqual([]);
+});
+
 test("a checkpointed Reading commits with the run's record and no ReadingAvailable progress", async () => {
 	const run = setup({
 		observer: {
