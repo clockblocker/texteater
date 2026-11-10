@@ -158,6 +158,31 @@ export function anchors(nomination: Nomination): Decision {
 	};
 }
 
+/**
+ * The route of a unit of exactly an accepted circumposition's two pieces
+ * that no zu-infinitive conjunction names: Locution ADP
+ * (de/bracket-particle-or-circumposition), whatever Kind the route Choice
+ * hears. Von diesem Tag an is [Von, an] ADP like von morgen an (#1162).
+ */
+export function circumpositionRoutes(nomination: Nomination): FixedRoute {
+	const named = new Map(
+		nomination.pairs.map((pair) => [
+			`${pair.left.id},${pair.right.id}`,
+			pair.name,
+		]),
+	);
+	const fixed = new Set(
+		accepted(nomination)
+			.filter(
+				([left, right, kind]) =>
+					kind === "circumposition" &&
+					!zuInfinitive.has(named.get(`${left},${right}`) ?? ""),
+			)
+			.map(([left, right]) => groupKey([left, right])),
+	);
+	return (group) => (fixed.has(groupKey(group)) ? "Locution/ADP" : undefined);
+}
+
 /** Quantity bisschen, in its spelling and its Historical spelling: the realizations of PRON bisschen. */
 export const quantityBisschen: ReadonlySet<string> = new Set(
 	authoredRealizations

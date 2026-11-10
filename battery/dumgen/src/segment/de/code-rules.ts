@@ -18,7 +18,9 @@
  *   de/complex-preposition): an accepted correlator, X-dass subordinator or
  *   circumposition is one Locution of its anchors only, the auch and nur of
  *   sowohl … als auch and nicht nur … sondern auch included. The words they
- *   connect or govern stay outside.
+ *   connect or govern stay outside. A unit of exactly an accepted
+ *   circumposition's two pieces that no zu-infinitive conjunction names
+ *   routes Locution ADP (de/bracket-particle-or-circumposition, #1162).
  * - `quantifier` (de/quantifier-by-use): ein wenig, ein paar, and an
  *   article right before quantity bisschen, are one Lexeme PRON unit each,
  *   and what they quantify is its own: Nach ein paar Sekunden gives
@@ -102,6 +104,7 @@ import {
 	anchors,
 	articleHeads,
 	binomialLinks,
+	circumpositionRoutes,
 	pronouns,
 	quantifierRoutes,
 	quantifiers,
@@ -150,7 +153,7 @@ export type Decision = {
 };
 
 /**
- * The routes the listed rules fix (`quantifier`, `was-fuer`, `particle-verb`), the
+ * The routes the listed rules fix (`anchors`, `quantifier`, `was-fuer`, `particle-verb`), the
  * first rule's that fixes one; undefined when no listed rule fixes routes.
  */
 export function codeRoutes(
@@ -158,6 +161,9 @@ export function codeRoutes(
 	rules: readonly CodeRule[],
 ): FixedRoute | undefined {
 	const routes = [
+		...(rules.includes("anchors")
+			? [circumpositionRoutes(nomination)]
+			: []),
 		...(rules.includes("quantifier") ? [quantifierRoutes(nomination)] : []),
 		...(rules.includes("was-fuer") ? [wasFuerRoutes(nomination)] : []),
 		...(rules.includes("particle-verb")

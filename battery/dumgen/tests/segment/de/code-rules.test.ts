@@ -93,6 +93,33 @@ test("anchors: um … zu is anchored as the zu-infinitive conjunction, other cir
 	expect(vorbei.with).toContainEqual([2, 4, 10]);
 });
 
+test("anchors: a unit of an accepted circumposition's two pieces routes Locution ADP, whatever Kind the route Choice hears (#1162)", async () => {
+	// Von0 _1 diesem2 _3 Tag4 _5 an6 _7 führte8 _9 sie10 _11 das12 _13 Protokoll14 .15
+	const routed = async (rules: readonly CodeRule[]) =>
+		(
+			await Effect.runPromise(
+				germanUnits(
+					{
+						segments: segmentsOf(
+							"Von diesem Tag an führte sie das Protokoll.",
+						),
+					},
+					fakeJudge({
+						c_1_4: noul(0.9),
+						...fixedWords(1, 4),
+						r_1_4: picked("Locution/ADV", {
+							"Locution/ADV": 0.7,
+							"Locution/ADP": 0.3,
+						}),
+					}).ask,
+					{ ...productionUnitSettings, rules },
+				),
+			)
+		).find((unit) => unit.segments.length === 2)?.route;
+	expect(await routed([])).toEqual(route("Locution", "ADV"));
+	expect(await routed(["anchors"])).toEqual(route("Locution", "ADP"));
+});
+
 test("quantifier: ein bisschen is one unit, and the noun it quantifies its own", async () => {
 	// Gib0 _1 mir2 _3 ein4 _5 bisschen6 _7 Milch8 .9
 	const result = await groups(
