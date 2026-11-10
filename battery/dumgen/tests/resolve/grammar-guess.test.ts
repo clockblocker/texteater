@@ -160,6 +160,40 @@ test("a verb headword written on the guess with a prefix jev judged away is writ
 	expect(fits.sent).toHaveLength(1);
 });
 
+test("a VERB Lexeme's guess takes its haben satellite as an auxiliary and a preposition no prefix as governed, so Luna writes once", async () => {
+	// Sie0 _1 hat2 _3 von4 _5 ihm6 _7 geträumt8 .9
+	const dreams = writesOnGuess("träumen", "never asked");
+	const { result, trace } = await resolveOnce(
+		{
+			jev: fakeJev({ aux_m0: "u0", governed_m1: "Governed" }).ask,
+			luna: dreams.ask,
+		},
+		{
+			sentence: sentenceOf("Sie hat von ihm geträumt."),
+			unit: unitOf([2, 4, 8], "Lexeme/VERB"),
+		},
+	);
+	expect(attested(result).surface.lemma.canonicalForm).toBe("träumen");
+	expect(dreams.sent).toHaveLength(1);
+	expect(dreams.sent[0]?.input).toMatchObject({
+		auxiliaries: ["m0"],
+		outsideHeadword: ["m1"],
+	});
+	expect(trace?.events).toBeUndefined();
+	// A Locution's haben may be its own word, so its guess leaves it to jev.
+	// Er0 _1 hat2 _3 Hunger4 .5
+	const hungry = writesOnGuess("Hunger haben", "never asked");
+	await resolveOnce(
+		{ jev: fakeJev({ aux_m0: "Main" }).ask, luna: hungry.ask },
+		{
+			sentence: sentenceOf("Er hat Hunger."),
+			unit: unitOf([2, 4], "Locution/VERB"),
+		},
+	);
+	expect(hungry.sent).toHaveLength(1);
+	expect(hungry.sent[0]?.input).not.toHaveProperty("auxiliaries");
+});
+
 test("a failed or Unresolved grammar request ends the guessed call before the trace is emitted", async () => {
 	const traces: OperationTrace[] = [];
 	const down = fakeLuna(undefined, { delayMs: 50 });

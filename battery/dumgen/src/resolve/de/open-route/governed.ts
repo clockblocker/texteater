@@ -32,7 +32,7 @@ import {
  * ADP Case Table lets it take; `adverb` when the member is a pronominal
  * adverb holding it (`damit` holds `mit`).
  */
-type Governable = {
+export type Governable = {
 	readonly member: Member;
 	readonly preposition: string;
 	readonly cases: readonly AdpCase[];

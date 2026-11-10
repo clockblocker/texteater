@@ -287,9 +287,10 @@ test("Luna is told which members are auxiliaries, which stay out of the headword
 			unit: unitOf([2, 4], "Lexeme/VERB"),
 		},
 	);
-	expect(luna.sent).toHaveLength(2);
-	expect(luna.sent[1]?.input).toHaveProperty("auxiliaries", ["m0"]);
-	expect(luna.sent[1]?.systemPrompt).toContain("`auxiliaries`");
+	// The guess already takes werden as the auxiliary, so Luna writes once.
+	expect(luna.sent).toHaveLength(1);
+	expect(luna.sent[0]?.input).toHaveProperty("auxiliaries", ["m0"]);
+	expect(luna.sent[0]?.systemPrompt).toContain("`auxiliaries`");
 });
 
 test("a particle standing apart in the VERB unit is its prefix when jev says None, but never a preposition the verb governs", async () => {
