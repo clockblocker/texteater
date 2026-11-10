@@ -275,18 +275,21 @@ export const question = {
 	),
 	agreementCase: paragraph(
 		"question.agreement.case",
-		"If the unit agrees with a noun or itself inflects here, which case does it bear?",
+		"If the unit agrees with a noun, it bears the case of that noun's phrase: which case does the noun take in this sentence, as subject, object or complement of its preposition? Read it from the whole phrase, not from the unit's ending, which fits several cases. If the unit inflects with no noun, which case does it bear?",
 		rules.core,
+		rules.attributive,
 	),
 	agreementGender: paragraph(
 		"question.agreement.gender",
-		"If the unit agrees with a noun or itself inflects here, which gender does it show? Plural agreement shows none.",
+		"If the unit agrees with a singular noun, it shows that noun's gender: which gender does the noun have? Read it from the noun, not from the unit's ending. Plural agreement shows none. If the unit inflects with no noun, which gender does it show?",
 		rules.core,
+		rules.attributive,
 	),
 	agreementNumber: paragraph(
 		"question.agreement.number",
-		"If the unit agrees with a noun or itself inflects here, which number does it bear?",
+		"If the unit agrees with a noun, which number does that noun bear here? If the unit inflects with no noun, which number does it bear?",
 		rules.core,
+		rules.attributive,
 	),
 	inflects: paragraph(
 		"question.inflects",
