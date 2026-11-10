@@ -425,14 +425,6 @@ export const catalogMissValidator = v.object({
 	message: v.string(),
 });
 
-export const resolutionRouteProjectionValidator = v.object({
-	scrollId: v.id("scrolls"),
-	sentenceId: v.id("sentences"),
-	stitchedText: v.string(),
-	clickedSegmentIndex: v.number(),
-	selectedSegment: v.string(),
-});
-
 export const resolutionGrammarProjectionValidator = v.object({
 	grundform: grundformValidator,
 	members: v.array(attestationMemberValidator),

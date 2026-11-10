@@ -258,14 +258,15 @@ describe("Resolution Session", () => {
 		});
 
 		expect(await rows(t, "resolutionSessions")).toEqual([
-			expect.objectContaining({
-				segmentId,
-				route: expect.objectContaining({
-					scrollId,
-					selectedSegment: "Banken",
-				}),
-			}),
+			expect.objectContaining({ segmentId }),
 		]);
+		expect(
+			(
+				await t.query(api.resolutionSessions.getResolutionNote, {
+					requestId: "request-1",
+				})
+			)?.route,
+		).toMatchObject({ scrollId, selectedSegment: "Banken" });
 		expect(await segmentState(t, segmentId)).toEqual({
 			kind: "Active",
 			activeSessionCount: 1,

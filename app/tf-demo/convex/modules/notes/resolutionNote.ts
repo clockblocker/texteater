@@ -158,20 +158,37 @@ export async function loadResolutionNote(
 		.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
 		.unique();
 	if (!session) return null;
-	const [sentence, segments, scroll] = await Promise.all([
+	// The route is read from the rows, so a re-segmented Sentence (#861)
+	// shows the clicked Segment where it stands now.
+	const [sentence, clicked, segments] = await Promise.all([
 		ctx.db.get(session.sentenceId),
+		ctx.db.get(session.segmentId),
 		loadStoredSegments(ctx, session.sentenceId),
-		ctx.db.get(session.route.scrollId),
 	]);
-	const unit = unitsByMember(sentence?.units).get(
-		session.clickedSegmentIndex,
-	);
+	if (!sentence || !clicked) return null;
+	const scroll = await ctx.db.get(sentence.scrollId);
+	const route = {
+		scrollId: sentence.scrollId,
+		sentenceId: sentence._id,
+		stitchedText: sentence.stitchedText,
+		clickedSegmentIndex: clicked.index,
+		selectedSegment: clicked.text,
+	};
+	const unit = unitsByMember(sentence.units).get(clicked.index);
 	return {
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId },
 		lifecycle: await resolutionNoteLifecycle(ctx, session),
-		route: session.route,
-		source: await resolutionSource(ctx, session, segments, unit, scroll),
+		route,
+		source: await resolutionSource(ctx, {
+			session,
+			clicked,
+			segments,
+			unit,
+			scrollTitle: scrollTitle(
+				scroll ?? { sourceText: sentence.stitchedText },
+			),
+		}),
 		...(unit ? { unit } : {}),
 		// The Session stores what projectResolutionGrammar and
 		// projectResolutionReading produced.
@@ -192,19 +209,26 @@ export async function loadResolutionNote(
  */
 async function resolutionSource(
 	ctx: QueryCtx,
-	session: ResolutionSession,
-	segments: readonly Doc<"segments">[],
-	unit: StoredUnit | undefined,
-	scroll: Doc<"scrolls"> | null,
+	{
+		session,
+		clicked,
+		segments,
+		unit,
+		scrollTitle,
+	}: {
+		readonly session: ResolutionSession;
+		readonly clicked: Doc<"segments">;
+		readonly segments: readonly Doc<"segments">[];
+		readonly unit: StoredUnit | undefined;
+		readonly scrollTitle: string;
+	},
 ): Promise<ResolutionSource> {
 	const committed = session.attestationId
 		? await loadCompleteOccurrenceMembers(ctx, session.attestationId)
 		: null;
 	const encounterMembers =
 		session.grammaticalCheckpoint?.encounter.target.memberSegmentIndices;
-	let memberSegmentIndices = unit
-		? [...unit.segments]
-		: [session.clickedSegmentIndex];
+	let memberSegmentIndices = unit ? [...unit.segments] : [clicked.index];
 	if (committed) {
 		memberSegmentIndices = committed.memberSegmentIndices;
 	} else if (encounterMembers) {
@@ -214,9 +238,7 @@ async function resolutionSource(
 	return {
 		segments: segments.map(({ kind, text }) => ({ kind, text })),
 		memberSegmentIndices,
-		scrollTitle: scrollTitle(
-			scroll ?? { sourceText: session.route.stitchedText },
-		),
+		scrollTitle,
 	};
 }
 

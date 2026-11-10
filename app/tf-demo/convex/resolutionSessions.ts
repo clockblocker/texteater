@@ -291,14 +291,12 @@ async function replayedSelection(
 	args: {
 		readonly visitorId: string;
 		readonly sentenceId: Id<"sentences">;
-		readonly clickedSegmentIndex: number;
 		readonly segmentId: Id<"segments">;
 	},
 ) {
 	if (
 		existing.visitorId !== args.visitorId ||
 		existing.sentenceId !== args.sentenceId ||
-		existing.clickedSegmentIndex !== args.clickedSegmentIndex ||
 		existing.segmentId !== args.segmentId
 	) {
 		throw visitorError(
@@ -369,19 +367,20 @@ export const beginRun = internalMutation({
 	handler: async (ctx, { guard }) => {
 		const claimed = await claimResolutionRun(ctx, guard);
 		if (!claimed) return null;
-		const { session, checkpoints } = claimed;
+		const { session, clickedSegmentIndex, checkpoints } = claimed;
+		const selection = {
+			requestId: session.requestId,
+			visitorId: session.visitorId,
+			sentenceId: session.sentenceId,
+			clickedSegmentIndex,
+		};
 		return {
 			context: await loadResolutionContext(
 				ctx,
-				session,
+				selection,
 				!checkpoints.grammatical,
 			),
-			selection: {
-				requestId: session.requestId,
-				visitorId: session.visitorId,
-				sentenceId: session.sentenceId,
-				clickedSegmentIndex: session.clickedSegmentIndex,
-			},
+			selection,
 			checkpoints,
 		};
 	},

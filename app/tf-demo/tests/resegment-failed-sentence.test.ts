@@ -145,6 +145,144 @@ const sessionOf = (t: TestConvex, requestId: string) =>
 			.unique(),
 	);
 
+/**
+ * Each session left on the Sentence: its Segment row's index and text, and
+ * the ones its Resolution Note reads, which must agree.
+ */
+const sessionPlaces = async (t: TestConvex, sentenceId: Id<"sentences">) => {
+	const sessions = await t.run((ctx) =>
+		ctx.db
+			.query("resolutionSessions")
+			.withIndex("by_sentence_id", (q) => q.eq("sentenceId", sentenceId))
+			.collect(),
+	);
+	return Promise.all(
+		sessions.map(async ({ requestId, segmentId }) => {
+			const row = await t.run((ctx) => ctx.db.get(segmentId));
+			const note = await t.query(
+				api.resolutionSessions.getResolutionNote,
+				{ requestId },
+			);
+			return {
+				requestId,
+				row: [row?.index, row?.text],
+				note: [
+					note?.route.clickedSegmentIndex,
+					note?.route.selectedSegment,
+				],
+			};
+		}),
+	);
+};
+
+const runFailure = {
+	kind: "Internal",
+	phase: "Grammar",
+	diagnosticId: "diagnostic-1",
+	errorName: "Error",
+	errorFingerprint: "fnv1a-1",
+} as const;
+
+/**
+ * The failed Sentence with an ended click on the word at `index` and a
+ * second click on it by the same Visitor, which segments it again.
+ */
+async function resegmentedAfterEndedClick(index: number) {
+	const { t, sentenceId, click, markFailed } = await storedSentence();
+	await markFailed();
+	const earlier = await startSession(t, click("request-earlier", index));
+	await t.mutation(internal.resolutionSessions.recordRunFailure, {
+		guard: earlier,
+		failure: runFailure,
+	});
+	const selection = click("request-later", index);
+	const sessionGuard = await startSession(t, selection);
+	const result = await t.mutation(
+		internal.persistence.storeResegmentedSentence,
+		{ ...selection, sessionGuard, ...zumSplit },
+	);
+	return { t, sentenceId, sessionGuard, result };
+}
+
+test("after a re-segmentation every session on the Sentence reads the index and text of its Segment row", async () => {
+	for (const [index, moved] of [
+		[0, 0],
+		[2, 2],
+		[4, 4],
+		[6, 7],
+	] as const) {
+		const { t, sentenceId, result } =
+			await resegmentedAfterEndedClick(index);
+		expect(result).toEqual({ clickedSegmentIndex: moved });
+		const text = zumSplitTexts[moved];
+		expect(await sessionPlaces(t, sentenceId)).toEqual([
+			{
+				requestId: "request-earlier",
+				row: [moved, text],
+				note: [moved, text],
+			},
+			{
+				requestId: "request-later",
+				row: [moved, text],
+				note: [moved, text],
+			},
+		]);
+	}
+});
+
+test("an earlier failed click on a word the re-segmentation moved retries at its new place", async () => {
+	// Arzt moves from 6 to 7 once zum splits.
+	const { t, sentenceId, sessionGuard } = await resegmentedAfterEndedClick(6);
+	const later = await sessionOf(t, "request-later");
+	await t.mutation(internal.resolutionSessions.recordRunFailure, {
+		guard: { ...sessionGuard, runToken: later?.runToken ?? "" },
+		failure: runFailure,
+	});
+
+	expect(
+		await t.mutation(api.resolutionSessions.retryResolution, {
+			requestId: "request-earlier",
+			visitorId: "visitor-1",
+		}),
+	).toEqual({ retried: true });
+	const retried = await sessionOf(t, "request-earlier");
+	const run = await t.mutation(internal.resolutionSessions.beginRun, {
+		guard: {
+			requestId: "request-earlier",
+			runToken: retried?.runToken ?? "",
+			segmentId: sessionGuard.segmentId,
+		},
+	});
+	expect(run?.selection.clickedSegmentIndex).toBe(7);
+	expect(run?.context.sentence?.units).toEqual(zumSplit.units);
+	expect((await sessionOf(t, "request-earlier"))?.lifecycle).toMatchObject({
+		state: "Active",
+		activity: "Running",
+	});
+	expect(await states(t, sentenceId)).toContainEqual(["Arzt", "Active"]);
+});
+
+test("a run whose Segment has left the Sentence ends its session when it is claimed", async () => {
+	const { t, sentenceId, click, markFailed } = await storedSentence();
+	await markFailed();
+	const guard = await startSession(t, click("request-1", 6));
+	await t.run(async (ctx) => {
+		await ctx.db.patch(guard.segmentId, { kind: "Whitespace" });
+	});
+
+	expect(
+		await t.mutation(internal.resolutionSessions.beginRun, { guard }),
+	).toBeNull();
+	expect((await sessionOf(t, "request-1"))?.lifecycle).toMatchObject({
+		state: "Terminal",
+		outcome: "PermanentFailure",
+	});
+	expect(await states(t, sentenceId)).toContainEqual([
+		"Arzt",
+		"PermanentFailure",
+	]);
+});
+
 test("a re-segmentation with the stored Segments stores its units and ends the failure mark", async () => {
 	const { t, sentenceId, selection, sessionGuard } = await failedSentence();
 	const before = await rows(t, sentenceId);
@@ -190,9 +328,10 @@ test("Segments that came out differently replace the stored ones, and the click'
 	expect(after.map(({ text }) => text)).toEqual(zumSplitTexts);
 	// The clicked row is kept, now the piece zu, so its session holds.
 	expect(after.find(({ index }) => index === 4)?._id).toBe(clicked?._id);
-	const session = await sessionOf(t, "request-1");
-	expect(session?.clickedSegmentIndex).toBe(4);
-	expect(session?.segmentId).toBe(clicked?._id);
+	expect((await sessionOf(t, "request-1"))?.segmentId).toBe(clicked?._id);
+	expect(await sessionPlaces(t, sentenceId)).toEqual([
+		{ requestId: "request-1", row: [4, "zu"], note: [4, "zu"] },
+	]);
 	expect(
 		(await t.run((ctx) => ctx.db.get(sentenceId)))?.segmentationFailed,
 	).toBeUndefined();

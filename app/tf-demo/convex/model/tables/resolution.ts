@@ -13,7 +13,6 @@ import {
 	readingCheckpointValidator,
 	resolutionGrammarProjectionValidator,
 	resolutionReadingProjectionValidator,
-	resolutionRouteProjectionValidator,
 	storedGrammaticalCheckpointValidator,
 } from "../validators";
 
@@ -27,12 +26,10 @@ export const resolutionTables = {
 		visitorId: v.string(),
 		sentenceId: v.id("sentences"),
 		segmentId: v.id("segments"),
-		clickedSegmentIndex: v.number(),
 		runToken: v.string(),
 		lifecycle: resolutionLifecycleValidator,
 		runNumber: v.optional(v.number()),
 		retryDeadlineAt: v.optional(v.number()),
-		route: resolutionRouteProjectionValidator,
 		grammar: v.optional(resolutionGrammarProjectionValidator),
 		reading: v.optional(resolutionReadingProjectionValidator),
 		grammaticalCheckpoint: v.optional(storedGrammaticalCheckpointValidator),

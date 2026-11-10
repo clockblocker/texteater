@@ -102,7 +102,6 @@ describe("a click on a unit intake left Unresolved", () => {
 		expect(await rows(t, "resolutionRuns")).toEqual([]);
 		expect(await session(t, "request-1")).toMatchObject({
 			segmentId: banken,
-			clickedSegmentIndex: 2,
 			lifecycle: {
 				state: "Terminal",
 				progress: "RouteAvailable",

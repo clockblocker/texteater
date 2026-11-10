@@ -187,7 +187,7 @@ export async function consolidateExampleScrolls(ctx: MutationCtx) {
 			const stitchedText = related
 				? await contextualize(ctx, sentence, heading)
 				: sentence.stitchedText;
-			const [, segments, sessions] = await Promise.all([
+			const [, segments] = await Promise.all([
 				ctx.db.patch(sentence._id, {
 					scrollId,
 					position,
@@ -200,12 +200,6 @@ export async function consolidateExampleScrolls(ctx: MutationCtx) {
 						q.eq("sentenceId", sentence._id),
 					)
 					.take(SEGMENT_LIMIT + 1),
-				ctx.db
-					.query("resolutionSessions")
-					.withIndex("by_sentence_id", (q) =>
-						q.eq("sentenceId", sentence._id),
-					)
-					.take(LIMIT + 1),
 			]);
 			if (segments.length > SEGMENT_LIMIT)
 				throw new Error("Too many example Segments.");
@@ -223,20 +217,13 @@ export async function consolidateExampleScrolls(ctx: MutationCtx) {
 				if (encounters.length > LIMIT)
 					throw new Error("Too many example Encounters.");
 			}
-			if (sessions.length > LIMIT)
-				throw new Error("Too many example Resolution Sessions.");
-			await Promise.all([
-				...encountersBySegment.flatMap((encounters) =>
+			await Promise.all(
+				encountersBySegment.flatMap((encounters) =>
 					encounters.map((encounter) =>
 						ctx.db.patch(encounter._id, { scrollId }),
 					),
 				),
-				...sessions.map((session) =>
-					ctx.db.patch(session._id, {
-						route: { ...session.route, scrollId },
-					}),
-				),
-			]);
+			);
 			return `${heading}\n${stitchedText}`;
 		}),
 	);

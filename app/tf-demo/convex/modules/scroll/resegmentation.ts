@@ -17,8 +17,9 @@ import type {
  * Stores what a click's re-segmentation of a failed Sentence found (#861):
  * its units, its Segments when they came out differently, and the end of
  * its failure mark. The clicked Segment's row moves to the new Segment at
- * the same place in the Stitched Text, so the session that ran the click
- * keeps its Segment; any other row is reused, added or removed. A Sentence
+ * the same place in the Stitched Text, so every session on it, the one that
+ * ran the click and any earlier one, keeps its Segment and reads the new
+ * index from the row; any other row is reused, added or removed. A Sentence
  * another click already segmented again is left as it is. A failed
  * Sentence has no occurrence, and another session still running on one of
  * its Segments makes the click fail; the next click is a fresh attempt. A
@@ -35,11 +36,7 @@ export async function storeResegmentation(
 		readonly units: Array<Infer<typeof storedUnitValidator>>;
 	},
 ): Promise<{ clickedSegmentIndex: number }> {
-	const session = await requireCommittingSession(
-		ctx,
-		args.sessionGuard,
-		args,
-	);
+	await requireCommittingSession(ctx, args.sessionGuard, args);
 	const sentence = await ctx.db.get(args.sentenceId);
 	if (!sentence) throw new Error("The requested sentence does not exist.");
 	if (!sentence.segmentationFailed)
@@ -130,7 +127,6 @@ export async function storeResegmentation(
 				});
 		}
 		for (const row of spare) await ctx.db.delete(row._id);
-		await ctx.db.patch(session._id, { clickedSegmentIndex });
 	}
 	await ctx.db.patch(args.sentenceId, {
 		units: args.units,

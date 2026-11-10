@@ -32,10 +32,12 @@ export async function completeResolutionSession(
 	session: ResolutionSession,
 	attestationId: Id<"attestations">,
 ) {
+	const sentence = await ctx.db.get(session.sentenceId);
+	if (!sentence) throw new Error("The session's Sentence does not exist.");
 	const { encounterId } = await ensureVisitorEncounter(ctx, {
 		requestId: session.requestId,
 		visitorId: session.visitorId,
-		scrollId: session.route.scrollId,
+		scrollId: sentence.scrollId,
 		sentenceId: session.sentenceId,
 		segmentId: session.segmentId,
 		attestationId,

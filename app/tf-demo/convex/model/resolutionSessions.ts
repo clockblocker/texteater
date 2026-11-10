@@ -49,23 +49,28 @@ import type {
 
 type ReadingCheckpoint = Infer<typeof readingCheckpointValidator>;
 
-async function sourceSegmentStillMatches(
+/**
+ * The clicked Segment's row while it is still a word of the session's
+ * Sentence, else null. The session stores only `segmentId`: the Segment's
+ * place in the Sentence is read from its row, which a re-segmentation (#861)
+ * moves, so no session can hold an index its row disagrees with.
+ */
+async function sessionSegment(
 	ctx: QueryCtx,
 	session: ResolutionSession,
-): Promise<boolean> {
+): Promise<Doc<"segments"> | null> {
 	const segment = await ctx.db.get(session.segmentId);
-	return (
-		segment !== null &&
+	return segment !== null &&
 		segment.sentenceId === session.sentenceId &&
-		segment.index === session.clickedSegmentIndex &&
 		segment.kind === "ResolvableText"
-	);
+		? segment
+		: null;
 }
 
-export async function requireActiveResolutionSession(
+async function requireActiveSessionAndSegment(
 	ctx: MutationCtx,
 	guard: ResolutionSessionGuard,
-): Promise<ResolutionSession> {
+): Promise<{ session: ResolutionSession; segment: Doc<"segments"> }> {
 	const session = await findResolutionSession(ctx, guard.requestId);
 	if (
 		!session ||
@@ -74,12 +79,20 @@ export async function requireActiveResolutionSession(
 	) {
 		throw new Error("Resolution Session is no longer active.");
 	}
-	if (!(await sourceSegmentStillMatches(ctx, session))) {
+	const segment = await sessionSegment(ctx, session);
+	if (!segment) {
 		throw new Error(
 			"Resolution Session source Segment is no longer valid.",
 		);
 	}
-	return session;
+	return { session, segment };
+}
+
+export async function requireActiveResolutionSession(
+	ctx: MutationCtx,
+	guard: ResolutionSessionGuard,
+): Promise<ResolutionSession> {
+	return (await requireActiveSessionAndSegment(ctx, guard)).session;
 }
 
 /**
@@ -96,12 +109,17 @@ export async function requireCommittingSession(
 		readonly clickedSegmentIndex: number;
 	},
 ): Promise<ResolutionSession> {
-	const session = await requireActiveResolutionSession(ctx, guard);
+	const { session, segment } = await requireActiveSessionAndSegment(
+		ctx,
+		guard,
+	);
+	// A run holds the index it was claimed with; a Segment its Sentence's
+	// re-segmentation moved since makes the commit fail.
 	if (
 		session.requestId !== selection.requestId ||
 		session.visitorId !== selection.visitorId ||
 		session.sentenceId !== selection.sentenceId ||
-		session.clickedSegmentIndex !== selection.clickedSegmentIndex
+		segment.index !== selection.clickedSegmentIndex
 	) {
 		throw new Error("Resolution Session does not match the Click commit.");
 	}
@@ -236,15 +254,7 @@ function selectedSession(input: SegmentSelection, now: number) {
 		visitorId: input.visitorId,
 		sentenceId: input.sentence._id,
 		segmentId: input.segment._id,
-		clickedSegmentIndex: input.segment.index,
 		runToken: crypto.randomUUID(),
-		route: {
-			scrollId: input.sentence.scrollId,
-			sentenceId: input.sentence._id,
-			stitchedText: input.sentence.stitchedText,
-			clickedSegmentIndex: input.segment.index,
-			selectedSegment: input.segment.text,
-		},
 		createdAt: now,
 		updatedAt: now,
 	};
@@ -357,13 +367,16 @@ export async function retryResolutionSession(
 
 /**
  * Claims a scheduled run and returns its session with the checkpoints it
- * resumes from, or null when the run is stale or already claimed.
+ * resumes from, or null when the run is stale or already claimed, or when
+ * its Segment is gone, which ends the session.
  */
 export async function claimResolutionRun(
 	ctx: MutationCtx,
 	guard: ResolutionSessionGuard,
 ): Promise<{
 	session: ResolutionSession;
+	/** The clicked Segment's index as its row has it now. */
+	clickedSegmentIndex: number;
 	checkpoints: {
 		grammatical?: Infer<typeof resolvedGrammaticalValidator>;
 		reading?: ReadingCheckpoint;
@@ -374,9 +387,20 @@ export async function claimResolutionRun(
 		!session ||
 		!guardMatches(session, guard) ||
 		session.lifecycle.state === "Terminal" ||
-		session.lifecycle.activity === "Running" ||
-		!(await sourceSegmentStillMatches(ctx, session))
+		session.lifecycle.activity === "Running"
 	) {
+		return null;
+	}
+	const segment = await sessionSegment(ctx, session);
+	// Its Segment left the Sentence: no later run could claim it either, so
+	// the session ends now instead of holding the Segment until stale
+	// recovery.
+	if (!segment) {
+		await settleResolutionSession(ctx, session, {
+			kind: "PermanentFailure",
+			message: "The clicked word is no longer in its Sentence.",
+			failureCode: "Internal",
+		});
 		return null;
 	}
 	await upsertResolutionRun(ctx, session, {
@@ -397,6 +421,7 @@ export async function claimResolutionRun(
 	const grammatical = restoreGrammaticalCheckpoint(session);
 	return {
 		session,
+		clickedSegmentIndex: segment.index,
 		checkpoints: {
 			...(grammatical ? { grammatical } : {}),
 			...(grammatical && session.readingCheckpoint
