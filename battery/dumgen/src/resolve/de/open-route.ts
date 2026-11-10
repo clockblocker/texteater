@@ -26,13 +26,14 @@ import type * as Scope from "effect/Scope";
 import { CallLog } from "../../call.js";
 import { type Luna, stageWrite } from "../../luna-call.js";
 import type { Ask, AskFailure } from "../../segment/ask.js";
-import type { LemmaCandidate } from "../types.js";
+import type { LemmaCandidate, ResolveGrammarInput } from "../types.js";
 import { hintsFor, type Written } from "./canonical-form.js";
 import { openAttestation } from "./open-route/attestation.js";
 import { judgedOf, plan, readFirst } from "./open-route/first-request.js";
 import { headwordOutside, outsideSurface } from "./open-route/governed.js";
 import { canonicalFormOf } from "./open-route/headword.js";
 import { startHeadword } from "./open-route/headword-writer.js";
+import { reportJudged } from "./open-route/judged-report.js";
 import { nominalCells } from "./open-route/nominal.js";
 import {
 	caseRequest,
@@ -55,14 +56,16 @@ export type OpenOutcome =
 	| { readonly _tag: "CatalogMiss"; readonly message: string };
 
 /**
- * Resolves a unit on an open route: the grammar request, with Luna's call
- * on a guess beside it, then the Case question and Luna's call again
- * should the guess miss, then the Attestation as an unchecked value.
+ * Resolves a unit on an open route: the grammar request, with the
+ * headword started beside it, then the report of what jev judged, the
+ * Case question and the headword, then the Attestation as an unchecked
+ * value.
  */
 export const resolveOpenRoute = Effect.fnUntraced(function* (
 	target: Target,
 	ask: Ask,
 	candidates: readonly LemmaCandidate[],
+	onJudged?: ResolveGrammarInput["onJudged"],
 ): Effect.fn.Return<OpenOutcome, AskFailure, Scope.Scope | Luna | CallLog> {
 	const log = yield* CallLog;
 	const luna = yield* stageWrite;
@@ -75,6 +78,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	const read = readFirst(target, planned, new Answered(answers));
 	if (Result.isFailure(read)) return read.failure;
 	const first = read.success;
+	const reported = yield* reportJudged(onJudged, target, first);
 	const verbal = first.block === "verbal" ? first : undefined;
 	const article = planned.article;
 	const outsideHeadword = headwordOutside(
@@ -110,7 +114,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 					core: { ...first.core, ...first.tailCore },
 					inflection: first.inflection,
 				};
-	if (cells instanceof Unresolved) return cells;
+	if (cells instanceof Unresolved) return yield* reported(cells);
 	const { written } = cells;
 	const headword = canonicalFormOf(
 		target,
@@ -120,9 +124,9 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		written,
 		judged,
 	);
-	if ("_tag" in headword) return headword;
-	return {
-		_tag: "Attestation",
+	if ("_tag" in headword) return yield* reported(headword);
+	return yield* reported({
+		_tag: "Attestation" as const,
 		attestation: openAttestation(
 			target,
 			shape,
@@ -146,5 +150,5 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			),
 		),
 		...(written?.drafted === undefined ? {} : { drafted: written.drafted }),
-	};
+	});
 }, Effect.scoped);

@@ -9,6 +9,7 @@
  * error channel says only that no usable answer came back.
  */
 import type * as Dumling from "dumling/types";
+import type * as Effect from "effect/Effect";
 import type {
 	Route,
 	SegmentedSentence,
@@ -41,6 +42,37 @@ export type ResolveGrammarInput = {
 	/** Read only for a pronoun form whose cell its referent decides (ADR 0044). */
 	readonly neighbours: NeighbourSentences;
 	readonly lemmaCandidates: readonly LemmaCandidate[];
+	/**
+	 * Told once what jev judged of an open-route click, as soon as its
+	 * first request is answered and while Luna may still be writing the
+	 * headword (#1326). It runs beside the rest of the click, which waits
+	 * for it before it returns; it cannot fail the click.
+	 */
+	readonly onJudged?: (judged: JudgedGrammar) => Effect.Effect<void>;
+};
+
+/**
+ * What `resolve.grammar` has judged of an open-route click before its
+ * headword is written: the route and jev's answers to the first request,
+ * read as the Attestation will hold them, with no Canonical Form and no
+ * normalized Surface. `pending` names what the headword may still change:
+ * a common NOUN's gender follows the article Luna writes with its
+ * headword, and its Case is asked over the cells that gender leaves.
+ */
+export type JudgedGrammar = {
+	readonly route: Route;
+	readonly coreFeatures: Readonly<Record<string, unknown>>;
+	/** Null where the route inflects but this form shows nothing; absent where it never inflects. */
+	readonly inflectionalFeatures?: Readonly<Record<string, unknown>> | null;
+	readonly surfaceFeatures: Dumling.Surface<"de">["surfaceFeatures"];
+	readonly spelling: Dumling.Surface<"de">["spelling"];
+	/** Each member's Segment and orthography, in member order. */
+	readonly members: readonly {
+		readonly segment: number;
+		readonly orthography: Dumling.Attestation<"de">["members"][number]["orthography"];
+	}[];
+	readonly realizationCoverage: "Full" | "Partial";
+	readonly pending: readonly ("gender" | "case")[];
 };
 
 /**

@@ -100,8 +100,10 @@ export const operations = {
 		 * The grammar of the stored unit a click landed on (#859): its
 		 * Attestation, or Unresolved, or a Catalog Miss, all as answers. A
 		 * click is all-or-nothing: any failed call fails it and interrupts
-		 * its other calls. Another language than German, a failed Sentence
-		 * or a unit that is no unit of its Sentence is a Defect.
+		 * its other calls. `onJudged` hears what jev judged of an open-route
+		 * click before Luna has written its headword. Another language than
+		 * German, a failed Sentence or a unit that is no unit of its
+		 * Sentence is a Defect.
 		 */
 		grammar: (
 			input: ResolveGrammarInput,

@@ -53,6 +53,7 @@ export type { OperationTrace } from "./operation-trace.js";
 export { operations } from "./operations.js";
 export type {
 	GrammarResolution,
+	JudgedGrammar,
 	ReadingResolution,
 	ResolveGrammarInput,
 	ResolveReadingInput,

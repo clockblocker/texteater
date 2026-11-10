@@ -174,7 +174,12 @@ export const resolveGermanGrammar = Effect.fnUntraced(function* (
 			: undefined;
 	const outcome: Outcome =
 		authored ??
-		(yield* resolveOpenRoute(target, ask, input.lemmaCandidates));
+		(yield* resolveOpenRoute(
+			target,
+			ask,
+			input.lemmaCandidates,
+			input.onJudged,
+		));
 	if (outcome._tag === "Unresolved") {
 		log.resolution({ outcome: "Unresolved", reason: outcome.reason });
 		return { _tag: "Unresolved" };
