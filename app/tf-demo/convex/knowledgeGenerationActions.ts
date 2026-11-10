@@ -32,7 +32,7 @@ import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
 import { type ActionCtx, env, internalAction } from "./_generated/server";
 import type { GenerationInput } from "./knowledgeGeneration";
-import { deploymentDumgen, modelTransports } from "./model/deploymentDumgen";
+import { knowledgeDumgen, modelTransports } from "./model/deploymentDumgen";
 import {
 	generatedKnowledgeAllowedForPublication,
 	type RelationPublicationFingerprints,
@@ -642,7 +642,7 @@ export async function generateKnowledge(
 					}),
 					logged,
 					// The action's one Dumgen, built when its run starts.
-					Effect.provide(deploymentDumgen()),
+					Effect.provide(knowledgeDumgen),
 				),
 				inspection,
 			),

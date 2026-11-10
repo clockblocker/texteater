@@ -19,8 +19,8 @@ const app = defineApp({
 		 */
 		TF_KNOWLEDGE_PRODUCTION: v.optional(v.string()),
 		/**
-		 * Each model call's deadline on a click, in milliseconds; intake's
-		 * 120 s until the first live click measurement sets it (#858).
+		 * Each model call's deadline on a click, in milliseconds; 15 s
+		 * when unset (#858, #1327).
 		 */
 		CLICK_CALL_DEADLINE_MS: v.optional(v.string()),
 	},

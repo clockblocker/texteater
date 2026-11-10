@@ -5,9 +5,18 @@ import type {
 	ResolveGrammarInput,
 	ResolveReadingInput,
 } from "dumgen";
+import { JevTransport, LunaTransport } from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { clickCallDeadlineMs } from "../convex/model/deploymentDumgen";
+import * as Layer from "effect/Layer";
+import {
+	type CallPolicy,
+	clickCallDeadlineMs,
+	clickDumgen,
+	deploymentDumgen,
+	knowledgeDumgen,
+	replaceModelTransports,
+} from "../convex/model/deploymentDumgen";
 import type { ClickGrammarInput } from "../server/clickResolution";
 import {
 	type ClickDumgen,
@@ -177,10 +186,43 @@ test("a Segment without a unit, or a unit intake left Unresolved, resolves nothi
 	expect(fake.built()).toBe(0);
 });
 
-test("a click's model calls take their own deadline, intake's until it is measured", () => {
-	expect(clickCallDeadlineMs(undefined)).toBe(120_000);
+test("a click's model calls take a 15 s deadline unless the deployment sets one", () => {
+	expect(clickCallDeadlineMs(undefined)).toBe(15_000);
 	expect(clickCallDeadlineMs("8000")).toBe(8000);
 	expect(() => clickCallDeadlineMs("soon")).toThrow("positive whole number");
+});
+
+test("a click's and a Knowledge run's Luna cache their prompts; only a click's calls take the click deadline", () => {
+	const built: { jev: CallPolicy[]; luna: CallPolicy[] } = {
+		jev: [],
+		luna: [],
+	};
+	const unused = async (): Promise<never> => {
+		throw Error("No model call is expected.");
+	};
+	const restore = replaceModelTransports({
+		jev: (policy) => {
+			built.jev.push(policy);
+			return JevTransport.fromAsk(unused);
+		},
+		luna: (policy) => {
+			built.luna.push(policy);
+			return LunaTransport.fromAsk(unused);
+		},
+	});
+	try {
+		for (const dumgen of [
+			clickDumgen,
+			knowledgeDumgen,
+			Layer.suspend(() => deploymentDumgen()),
+		])
+			Effect.runSync(Effect.scoped(Layer.build(dumgen)));
+	} finally {
+		restore();
+	}
+	const click = { timeoutMs: 15_000, promptCaching: true };
+	expect(built.luna).toEqual([click, { promptCaching: true }, {}]);
+	expect(built.jev).toEqual(built.luna);
 });
 
 test("a stored unit keeps the closed-class identity intake picked (#864)", () => {

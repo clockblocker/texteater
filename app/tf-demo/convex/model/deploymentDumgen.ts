@@ -27,16 +27,28 @@ import { visitorError } from "./validators";
  */
 
 /**
- * The model transports a deployment has, each at an optional per-call
- * deadline: jev through TypeSafe where `TYPESAFE_API_KEY` is set, Luna
- * through OpenAI where `OPENAI_API_KEY` is.
+ * How an action's model calls are made: each call's deadline (the
+ * transport's 120 s when absent), and whether Luna asks OpenAI to cache
+ * each request's system prompt. Dumgen's prompts are fixed per operation,
+ * so a click or Knowledge run reads most of its input from the cache once
+ * an earlier run wrote it (87% of an evaluation's canonical input tokens).
  */
-export type ModelTransports = {
-	readonly jev?: (timeoutMs?: number) => Layer.Layer<JevTransport>;
-	readonly luna?: (timeoutMs?: number) => Layer.Layer<LunaTransport>;
+export type CallPolicy = {
+	readonly timeoutMs?: number;
+	readonly promptCaching?: boolean;
 };
 
-const deadline = (timeoutMs: number | undefined) =>
+/**
+ * The model transports a deployment has, each made under a `CallPolicy`:
+ * jev through TypeSafe where `TYPESAFE_API_KEY` is set, Luna through OpenAI
+ * where `OPENAI_API_KEY` is. jev has no prompt cache to ask for.
+ */
+export type ModelTransports = {
+	readonly jev?: (policy: CallPolicy) => Layer.Layer<JevTransport>;
+	readonly luna?: (policy: CallPolicy) => Layer.Layer<LunaTransport>;
+};
+
+const deadline = ({ timeoutMs }: CallPolicy) =>
 	timeoutMs === undefined ? {} : { timeoutMs };
 
 /** The transports the deployment's keys give. */
@@ -46,19 +58,22 @@ function environmentTransports(): ModelTransports {
 	return {
 		...(jevKey
 			? {
-					jev: (timeoutMs?: number) =>
+					jev: (policy: CallPolicy) =>
 						JevTransport.typeSafe({
 							apiKey: jevKey,
-							...deadline(timeoutMs),
+							...deadline(policy),
 						}),
 				}
 			: {}),
 		...(lunaKey
 			? {
-					luna: (timeoutMs?: number) =>
+					luna: (policy: CallPolicy) =>
 						LunaTransport.openAI({
 							apiKey: lunaKey,
-							...deadline(timeoutMs),
+							...deadline(policy),
+							...(policy.promptCaching
+								? { promptCaching: true }
+								: {}),
 						}),
 				}
 			: {}),
@@ -94,19 +109,21 @@ const unset = (key: string) => async (): Promise<never> => {
 };
 
 /**
- * `DumgenLive` over the deployment's transports, at `timeoutMs` per call
- * when given. A transport the deployment lacks fails each call that needs
- * it, so an action that cannot run without one checks first; intake never
- * asks Luna. Traces go where the action's `TraceSink` says.
+ * `DumgenLive` over the deployment's transports, made under `policy`. A
+ * transport the deployment lacks fails each call that needs it, so an
+ * action that cannot run without one checks first; intake never asks
+ * Luna. Traces go where the action's `TraceSink` says.
  */
-export function deploymentDumgen(timeoutMs?: number): Layer.Layer<Jev | Luna> {
+export function deploymentDumgen(
+	policy: CallPolicy = {},
+): Layer.Layer<Jev | Luna> {
 	const transports = modelTransports();
 	return DumgenLive({
 		jev:
-			transports.jev?.(timeoutMs) ??
+			transports.jev?.(policy) ??
 			JevTransport.fromAsk(unset("TYPESAFE_API_KEY")),
 		luna:
-			transports.luna?.(timeoutMs) ??
+			transports.luna?.(policy) ??
 			LunaTransport.fromAsk(unset("OPENAI_API_KEY")),
 	});
 }
@@ -122,13 +139,19 @@ export function requireJev(): void {
 }
 
 /**
- * Each model call's deadline on a click: `CLICK_CALL_DEADLINE_MS`, or
- * intake's 120 s until the first live click measurement sets it (#858).
+ * Each model call's deadline on a click when `CLICK_CALL_DEADLINE_MS`
+ * does not set one. The slowest of the first measured clicks' calls took
+ * 3.1 s (Luna's Grammar; jev's took at most 0.33 s), so 15 s leaves a slow
+ * provider about five times that before the click fails (#858, #1327).
  */
+export const DEFAULT_CLICK_CALL_DEADLINE_MS = 15_000;
+
+/** Each model call's deadline on a click: `CLICK_CALL_DEADLINE_MS`, or 15 s. */
 export function clickCallDeadlineMs(
 	value: string | undefined = env.CLICK_CALL_DEADLINE_MS,
 ): number {
-	const deadline = value === undefined ? 120_000 : Number(value);
+	const deadline =
+		value === undefined ? DEFAULT_CLICK_CALL_DEADLINE_MS : Number(value);
 	if (!Number.isInteger(deadline) || deadline <= 0)
 		throw new Error("CLICK_CALL_DEADLINE_MS is a positive whole number");
 	return deadline;
@@ -136,11 +159,23 @@ export function clickCallDeadlineMs(
 
 /**
  * The click's Dumgen: jev and Luna at the click deadline, read when the
- * Layer is built, so a bad deadline fails the click's run. A click that
- * needs no model needs no key: its operations `requireJev` when they run.
+ * Layer is built, so a bad deadline fails the click's run, with Luna's
+ * prompts cached. A click that needs no model needs no key: its
+ * operations `requireJev` when they run.
  */
 export const clickDumgen: Layer.Layer<Jev | Luna> = Layer.suspend(() =>
-	deploymentDumgen(clickCallDeadlineMs()),
+	deploymentDumgen({
+		timeoutMs: clickCallDeadlineMs(),
+		promptCaching: true,
+	}),
+);
+
+/**
+ * A Knowledge run's Dumgen: the transports' own deadlines, with Luna's
+ * prompts cached, built when the run starts.
+ */
+export const knowledgeDumgen: Layer.Layer<Jev | Luna> = Layer.suspend(() =>
+	deploymentDumgen({ promptCaching: true }),
 );
 
 /**
