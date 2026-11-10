@@ -144,7 +144,7 @@ export function requireJev(): void {
  * 3.1 s (Luna's Grammar; jev's took at most 0.33 s), so 15 s leaves a slow
  * provider about five times that before the click fails (#858, #1327).
  */
-export const DEFAULT_CLICK_CALL_DEADLINE_MS = 15_000;
+const DEFAULT_CLICK_CALL_DEADLINE_MS = 15_000;
 
 /** Each model call's deadline on a click: `CLICK_CALL_DEADLINE_MS`, or 15 s. */
 export function clickCallDeadlineMs(
