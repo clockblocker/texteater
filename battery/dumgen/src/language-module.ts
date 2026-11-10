@@ -32,6 +32,7 @@ import type {
 	SegmentLanguage,
 	Unit,
 } from "./segment/segmented-sentence.js";
+import type { Degraded } from "./segment/stage-graph.js";
 
 /** The services the bodies of the operations that write need: jev, Luna and their operation's log. */
 type Needs = Jev | Luna | CallLog;
@@ -44,6 +45,15 @@ export type SentenceSegmentation = {
 	readonly text: string;
 	readonly segments: readonly Segment[];
 	readonly unresolved: readonly number[];
+};
+
+/**
+ * One Sentence's units from the unit stage, and the stages it settled
+ * without their failed request's answers, each as its declaration says.
+ */
+export type SentenceUnits = {
+	readonly units: readonly Unit[];
+	readonly degraded: readonly Degraded[];
 };
 
 export type LanguageModule = {
@@ -59,7 +69,7 @@ export type LanguageModule = {
 		readonly units: (
 			segmentation: SentenceSegmentation,
 			ask: Ask,
-		) => Effect.Effect<readonly Unit[], AskFailure>;
+		) => Effect.Effect<SentenceUnits, AskFailure>;
 		/** The body of `segment.inConstituents`: a Reading's immediate parts, or none. */
 		readonly constituents: (
 			input: BreakdownInput,

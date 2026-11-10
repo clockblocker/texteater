@@ -14,6 +14,14 @@
  * chunks, and marks it `failed`. A Defect or an interruption fails the
  * Text.
  *
+ * Within its unit stage, a Sentence's stages run by what each reads
+ * (`stage-graph.ts`), and a late request that fails degrades the stages it
+ * asked for instead of failing the Sentence: a failed route request leaves
+ * the routes it decides `Unresolved`, a failed Choice the membership
+ * before it. Only a request whose answers the grouping cannot do without
+ * fails the Sentence. A Sentence that degraded is `Segmented` and records a
+ * `DegradedStages` event naming each stage and its failure.
+ *
  * A Sentence whose Segment stage kept some runs unresolved (their spelling
  * kept, no plan for them) records an `UnresolvedSegments` event with their
  * indices; the raw-mode evaluation reads it.
@@ -86,11 +94,23 @@ const segmentSentence = Effect.fnUntraced(function* (
 	const units = yield* Effect.result(module.segment.units(cut.success, ask));
 	if (Result.isFailure(units))
 		return failedSentence(log, sentence, units.failure, cut.success);
+	const { degraded } = units.success;
+	if (degraded.length > 0)
+		log.event({
+			name: "DegradedStages",
+			data: {
+				sentence,
+				stages: degraded.map(({ stage, failure }) => ({
+					stage,
+					failure: callFailureOf(failure),
+				})),
+			},
+		});
 	log.sentence({ sentence, outcome: "Segmented" });
 	return {
 		text: cut.success.text,
 		segments: cut.success.segments,
-		units: units.success,
+		units: units.success.units,
 	} satisfies SegmentedSentence;
 });
 

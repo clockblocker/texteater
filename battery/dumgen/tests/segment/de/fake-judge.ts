@@ -4,12 +4,33 @@ import type {
 	Answer,
 	Answers,
 	Ask,
+	AskFailure,
 	AskRequest,
 } from "../../../src/segment/ask.js";
 import {
 	checkedRouteKey,
 	routeForKey,
 } from "../../../src/segment/de/routes.js";
+import {
+	segmentGermanUnits,
+	type UnitSettings,
+} from "../../../src/segment/de/units.js";
+import type { Segment, Unit } from "../../../src/segment/segmented-sentence.js";
+
+/** The unit stage's units; a stage that degraded is a Defect here, since these judges never fail. */
+export const germanUnits = (
+	sentence: { readonly segments: readonly Segment[] },
+	ask: Ask,
+	settings?: UnitSettings,
+): Effect.Effect<Unit[], AskFailure> =>
+	Effect.map(
+		segmentGermanUnits(sentence, ask, settings),
+		({ units, degraded }) => {
+			if (degraded.length > 0)
+				throw Error(`${degraded[0]?.stage} degraded`);
+			return units;
+		},
+	);
 
 export const picked = (
 	choice: string,
@@ -45,7 +66,32 @@ export function fakeJudge(answers: Readonly<Record<string, Answer>> = {}) {
 			),
 		);
 	});
-	return { ask, stages: () => requests.map(({ stage }) => stage), requests };
+	return {
+		ask,
+		/** Each request's name; a merged one names its stages joined with `+`. */
+		stages: () => requests.map(({ stage }) => stage),
+		requests,
+		/** The questions `stage` asked, alone or in a merged request. */
+		questionsOf: (stage: string) => questionsOf(requests, stage),
+	};
+}
+
+/** The questions `stage` asked across `requests`, alone or in a merged request. */
+export function questionsOf(
+	requests: readonly AskRequest[],
+	stage: string,
+): AskRequest["questions"] | undefined {
+	const asked = requests.flatMap(({ stage: name, questions, parts }) => {
+		const ids = parts
+			? parts[stage]
+			: name === stage
+				? Object.keys(questions)
+				: undefined;
+		return ids
+			? [Object.fromEntries(ids.map((id) => [id, questions[id]]))]
+			: [];
+	});
+	return asked.length === 0 ? undefined : Object.assign({}, ...asked);
 }
 
 /** A German route, checked against the routes the unit stage offers. */

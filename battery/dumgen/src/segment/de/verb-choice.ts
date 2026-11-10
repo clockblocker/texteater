@@ -48,8 +48,9 @@ import {
 	closedVerbForms,
 	closedVerbParticiples,
 } from "dumcorpus/inventories";
-import * as Effect from "effect/Effect";
-import { type Answers, type Ask, type AskFailure, askAny } from "../ask.js";
+import type * as Effect from "effect/Effect";
+import type { Answers, Ask, AskFailure } from "../ask.js";
+import { askPlan, type Plan } from "../stage-graph.js";
 import type { AssembledEdge, Membership } from "./assembly.js";
 import {
 	expletiveForms,
@@ -134,9 +135,12 @@ function closedVerbForm(word: string): boolean {
 	);
 }
 
+/** What the Verb Choice's flags read: `candidates` alone. */
+type VerbReads = Pick<Nomination, "sentence" | "ref" | "slots" | "first">;
+
 /** The slot's most probable host other than `none`, at `floor` or above. */
 function slotHost(
-	nomination: Nomination,
+	nomination: VerbReads,
 	kind: "auxiliary" | "reflexive" | "expletive",
 	piece: Piece,
 	floor: number,
@@ -169,7 +173,7 @@ const participleShape =
 
 /** The satellites whose slot named a host, one flag each, from the nomination alone. */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
-function flaggedVerbs(nomination: Nomination): VerbFlag[] {
+function flaggedVerbs(nomination: VerbReads): VerbFlag[] {
 	lassenForms ??= auxiliaryForms("lassen");
 	bekommenForms ??= auxiliaryForms("bekommen");
 	const { pieces } = nomination.sentence;
@@ -243,22 +247,31 @@ export type VerbAnswers = {
 	readonly answers: Answers;
 };
 
-/** Asks the `verb` request about the flags of `families`, every family unless given. */
-export const askVerbChoice = Effect.fnUntraced(function* (
-	nomination: Nomination,
-	ask: Ask,
+/** The `verb` request over the verb satellites of `families`, which reads only `candidates`. */
+export function verbPlan(
+	nomination: VerbReads,
 	families: readonly VerbFamily[] = verbFamilies,
-): Effect.fn.Return<VerbAnswers, AskFailure> {
+): Plan<VerbAnswers> {
 	const flags = flaggedVerbs(nomination).filter((flag) =>
 		families.includes(flag.family),
 	);
-	const answers = yield* askAny(ask, {
-		stage: "verb",
-		state: nomination.state,
+	return {
 		questions: verbQuestions(nomination, flags),
-	});
-	return { flags, answers };
-});
+		read: (answers) => ({ flags, answers }),
+	};
+}
+
+/** Asks the `verb` request on its own. */
+export const askVerbChoice = (
+	nomination: Nomination,
+	ask: Ask,
+	families: readonly VerbFamily[] = verbFamilies,
+): Effect.Effect<VerbAnswers, AskFailure> =>
+	askPlan(
+		ask,
+		{ stage: "verb", state: nomination.state },
+		verbPlan(nomination, families),
+	);
 
 type Action =
 	| { readonly join: readonly [number, number] }

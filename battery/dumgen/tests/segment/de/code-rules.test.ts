@@ -5,14 +5,11 @@ import {
 	type CodeRule,
 	codeRules,
 } from "../../../src/segment/de/code-rules.js";
-import {
-	productionUnitSettings,
-	segmentGermanUnits,
-} from "../../../src/segment/de/units.js";
+import { productionUnitSettings } from "../../../src/segment/de/units.js";
 import type { Segment } from "../../../src/segment/segmented-sentence.js";
 import { segmentsOf } from "../../lab/evaluation/spec-corpus/fixtures.js";
 import { fixedWords, groups } from "./code-rules-support.js";
-import { fakeJudge, noul, picked, route } from "./fake-judge.js";
+import { fakeJudge, germanUnits, noul, picked, route } from "./fake-judge.js";
 
 test("production applies every code rule (#851); each is a setting", () => {
 	expect([...productionUnitSettings.rules].sort()).toEqual(
@@ -129,7 +126,7 @@ test("quantifier: ein paar is one unit and its noun its own, but ein Paar is the
 test("quantifier: its unit routes Lexeme PRON, though the route Choice hears a noun", async () => {
 	// Nach0 _1 ein2 _3 paar4 _5 Sekunden6 _7 ging8 _9 er10 .11
 	const units = await Effect.runPromise(
-		segmentGermanUnits(
+		germanUnits(
 			{ segments: segmentsOf("Nach ein paar Sekunden ging er.") },
 			fakeJudge({
 				s_article_2: picked("p4"),
@@ -156,7 +153,7 @@ const quantifierUnits = (
 	rules: readonly CodeRule[] = ["quantifier"],
 ) =>
 	Effect.runPromise(
-		segmentGermanUnits(
+		germanUnits(
 			{ segments: segmentsOf(sentence) },
 			fakeJudge(answers).ask,
 			{ ...productionUnitSettings, rules },
@@ -305,13 +302,13 @@ test("was-fuer: final asks whether was … für is was für, and the judge's yes
 	expect(result.with).toEqual([[0, 6], [2], [4], [8, 10]]);
 	const judge = fakeJudge(answers);
 	const units = await Effect.runPromise(
-		segmentGermanUnits({ segments }, judge.ask, {
+		germanUnits({ segments }, judge.ask, {
 			...productionUnitSettings,
 			rules: ["was-fuer"],
 		}),
 	);
-	const final = judge.requests.find(({ stage }) => stage === "final");
-	expect(Object.keys(final?.questions ?? {})).toContain("w4_1_4");
+	const final = judge.questionsOf("final");
+	expect(Object.keys(final ?? {})).toContain("w4_1_4");
 	expect(units).toContainEqual({
 		segments: [0, 6],
 		route: route("Locution", "DET"),
@@ -319,17 +316,14 @@ test("was-fuer: final asks whether was … für is was für, and the judge's yes
 	// Without the rule, final asks nothing about was … für.
 	const plain = fakeJudge(answers);
 	await Effect.runPromise(
-		segmentGermanUnits({ segments }, plain.ask, {
+		germanUnits({ segments }, plain.ask, {
 			...productionUnitSettings,
 			rules: [],
 		}),
 	);
-	expect(
-		Object.keys(
-			plain.requests.find(({ stage }) => stage === "final")?.questions ??
-				{},
-		),
-	).not.toContain("w4_1_4");
+	expect(Object.keys(plain.questionsOf("final") ?? {})).not.toContain(
+		"w4_1_4",
+	);
 });
 
 test("was-fuer: a standalone einer or welche right after für is a Lexeme PRON of its own", async () => {
@@ -337,7 +331,7 @@ test("was-fuer: a standalone einer or welche right after für is a Lexeme PRON o
 	const segments = segmentsOf("Aber was für einen?");
 	const judge = fakeJudge({ w4_2_3: noul(0.9) });
 	const units = await Effect.runPromise(
-		segmentGermanUnits({ segments }, judge.ask, {
+		germanUnits({ segments }, judge.ask, {
 			...productionUnitSettings,
 			rules: ["was-fuer"],
 		}),

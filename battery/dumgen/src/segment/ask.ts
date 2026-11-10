@@ -39,6 +39,12 @@ export type AskRequest = {
 	readonly stage: string;
 	readonly state: Readonly<Record<string, EntryType>>;
 	readonly questions: Questions;
+	/**
+	 * For a request that asks for several stages at once (`stage` names
+	 * them joined with `+`), each stage's question ids. It is not sent to
+	 * jev.
+	 */
+	readonly parts?: Readonly<Record<string, readonly string[]>>;
 };
 
 /** Why a request brought no answers: none came back, or unusable ones. */

@@ -35,6 +35,15 @@ it and score it against frozen gold. Results live in the lab tickets
   not). Each question names the phrase and tells a governed preposition
   from a place, direction or adjunct by E-VALBU's stand-ins
   (de/governed-preposition-joins-its-governor, de/idiom).
+  Production runs these requests as a graph of what each reads
+  (`germanUnitGraph`, `src/segment/stage-graph.ts`): the stages that
+  are ready together go out as one request named by them
+  (`candidates+final+closed`), and a late request that fails degrades
+  its stages instead of failing the Sentence (#1324). The lab's arms
+  ask the same plans one stage at a time (`nominate`,
+  `askRouteBatches`, `askLocutionChoice`, …), so their requests are
+  split where production's are merged; the cache keys each answer by
+  its question, so both read the same answers.
 - `lab/segmentation/de/arms/` holds the three arms. `candidates4`
   (`--opt final=1 --opt closed=1`) outputs v3, step0, step0+saying and
   step0+saying+maxim@0.7, each step-0 policy also `+closed`; production is

@@ -3,7 +3,11 @@
  * Sentence's Segments in, its biggest units out, each with its route or
  * `Unresolved`. Nomination asks what jev judges about the connections code
  * proposes, membership assembles the units under floors without a
- * request, and routing routes them.
+ * request, and routing routes them. Their requests run as a graph of what
+ * each reads (`germanUnitGraph`, `stage-graph.ts`), not in the order this
+ * comment tells them: a typical Sentence asks `candidates+final+closed`
+ * and then `route`, and one that reaches every Choice five requests in a
+ * row at most.
  *
  * The production setting is candidates4's maxim+closed policy
  * (`step0+saying+maxim@0.7+closed`), which the main session chose on
@@ -29,28 +33,62 @@
  * and de/idiom decide: on dev, 16 more gold units held and 2 lost.
  */
 import * as Effect from "effect/Effect";
-import type { Ask, AskFailure } from "../ask.js";
+import type { Answers, Ask, AskFailure } from "../ask.js";
 import type { Segment, Unit } from "../segmented-sentence.js";
-import { type Floors, membershipOf, type SayingAssembly } from "./assembly.js";
+import {
+	type Degraded,
+	type Plan,
+	runStageGraph,
+	type StageGraph,
+} from "../stage-graph.js";
+import {
+	type Floors,
+	type Membership,
+	membershipOf,
+	type SayingAssembly,
+} from "./assembly.js";
 import { type CodeRule, codeRoutes, withCodeRules } from "./code-rules.js";
 import { answerBeforeFormula } from "./code-rules-words.js";
 import {
-	askGovernmentChoice,
+	type GovernmentAnswers,
 	type GovernmentSettings,
+	governmentPlan,
 	withGovernmentChoice,
 } from "./government-choice.js";
 import { authoredInventory, type GermanInventory } from "./inventory.js";
 import {
-	askLocutionChoice,
+	type LocutionAnswers,
 	type LocutionSettings,
+	locutionPlan,
 	withLocutionChoice,
 } from "./locution-choice.js";
-import { nominate } from "./nomination.js";
-import { askRouteBatches, askUnaskedRoutes } from "./route-requests.js";
+import {
+	type Candidates,
+	candidatesPlan,
+	type Expressions,
+	expressionsPlan,
+	finalPlan,
+	type Nomination,
+	type Proposal,
+	proposalOf,
+} from "./nomination.js";
+import {
+	type BatchAnswers,
+	closedPlan,
+	type RouteAnswers,
+	type RouteBatches,
+	type Routes,
+	route2Plan,
+	routeAnswersOf,
+	routeBatchesOf,
+	routeExtraPlan,
+	routePlan,
+} from "./route-requests.js";
 import { routeMembership } from "./routing.js";
 import {
-	askVerbChoice,
+	type VerbAnswers,
 	type VerbSettings,
+	verbPlan,
 	withVerbChoice,
 } from "./verb-choice.js";
 
@@ -137,74 +175,229 @@ export const productionUnitSettings: UnitSettings = {
 	},
 };
 
+/** What each stage of the German unit stage settles: its graph's values. */
+export type UnitStages = {
+	readonly candidates: Candidates;
+	readonly final: Answers;
+	readonly closed: Pick<BatchAnswers, "answers" | "unanswered">;
+	readonly expressions: Expressions;
+	readonly nomination: Nomination;
+	readonly verb: VerbAnswers | undefined;
+	readonly ruled: { readonly base: Membership; readonly ruled: Membership };
+	readonly batches: RouteBatches;
+	readonly route: BatchAnswers;
+	readonly route2: BatchAnswers;
+	readonly locution: LocutionAnswers | undefined;
+	readonly located: Membership;
+	readonly verbed: Membership;
+	readonly government: GovernmentAnswers | undefined;
+	readonly membership: Membership;
+	readonly routeAnswers: RouteAnswers;
+	readonly "route-extra": Routes | undefined;
+	readonly units: Unit[];
+};
+
+/** A Choice's plan, or none when its setting is off; without its answers, the membership before it stands. */
+const choicePlan = <A>(plan: Plan<A> | undefined): Plan<A | undefined> =>
+	plan
+		? { ...plan, absent: () => undefined }
+		: { questions: {}, read: () => undefined };
+
+/**
+ * The German unit stage as a graph of what each stage reads
+ * (`stage-graph.ts`). Nomination's `candidates` and `final` and routing's
+ * `closed` read only the Sentence, so they go out together; `expressions`
+ * and the Verb Choice read only `candidates`; the batched route requests
+ * and the Locution Choice read the nomination; the Government Choice
+ * reads the membership the Locution and Verb Choices leave; `route-extra`
+ * reads the final membership. Without its answers, a Choice keeps the
+ * membership before it and a route request leaves the routes it decides
+ * `Unresolved`; a failed nomination request fails the Sentence.
+ */
+export function germanUnitGraph(
+	proposal: Proposal,
+	settings: UnitSettings,
+): StageGraph<UnitStages> {
+	const { rules } = settings;
+	return {
+		candidates: { reads: [], ask: () => candidatesPlan(proposal) },
+		final: {
+			reads: [],
+			ask: () =>
+				finalPlan(proposal, { wasFuer: rules.includes("was-fuer") }),
+		},
+		closed: { reads: [], ask: () => closedPlan(proposal) },
+		expressions: {
+			reads: ["candidates"],
+			ask: (read) => expressionsPlan(read("candidates")),
+		},
+		nomination: {
+			reads: ["candidates", "expressions", "final"],
+			code: (read) => ({
+				...read("candidates"),
+				...read("expressions"),
+				final: read("final"),
+			}),
+		},
+		verb: {
+			reads: ["candidates"],
+			ask: (read) =>
+				choicePlan(
+					settings.verb &&
+						verbPlan(read("candidates"), settings.verb.families),
+				),
+		},
+		ruled: {
+			reads: ["nomination"],
+			code: (read) => {
+				const nomination = read("nomination");
+				const base = membershipOf(
+					nomination,
+					settings.floors,
+					settings.saying,
+				);
+				return { base, ruled: withCodeRules(nomination, base, rules) };
+			},
+		},
+		batches: {
+			reads: ["nomination"],
+			code: (read) => routeBatchesOf(read("nomination")),
+		},
+		route: {
+			reads: ["nomination", "batches"],
+			ask: (read) => routePlan(read("nomination"), read("batches").v3),
+		},
+		route2: {
+			reads: ["nomination", "batches"],
+			ask: (read) => route2Plan(read("nomination"), read("batches")),
+		},
+		locution: {
+			reads: ["nomination", "ruled"],
+			ask: (read) =>
+				choicePlan(
+					settings.locution &&
+						locutionPlan(
+							read("nomination"),
+							read("ruled").ruled,
+							rules,
+						),
+				),
+		},
+		located: {
+			reads: ["nomination", "ruled", "locution"],
+			code: (read) => {
+				const { base, ruled } = read("ruled");
+				const answers = read("locution");
+				return settings.locution && answers
+					? withLocutionChoice(
+							read("nomination"),
+							base,
+							ruled,
+							answers,
+							rules,
+							settings.locution,
+						)
+					: ruled;
+			},
+		},
+		verbed: {
+			reads: ["nomination", "located", "verb"],
+			code: (read) => {
+				const answers = read("verb");
+				return settings.verb && answers
+					? withVerbChoice(
+							read("nomination"),
+							read("located"),
+							answers,
+							rules,
+							settings.verb,
+						)
+					: read("located");
+			},
+		},
+		government: {
+			reads: ["nomination", "verbed"],
+			ask: (read) =>
+				choicePlan(
+					settings.government &&
+						governmentPlan(
+							read("nomination"),
+							read("verbed"),
+							rules,
+							settings.government.families,
+						),
+				),
+		},
+		membership: {
+			reads: ["nomination", "verbed", "government"],
+			code: (read) => {
+				const answers = read("government");
+				return settings.government && answers
+					? withGovernmentChoice(
+							read("nomination"),
+							read("verbed"),
+							answers,
+							rules,
+							settings.government,
+						)
+					: read("verbed");
+			},
+		},
+		routeAnswers: {
+			reads: ["batches", "route", "route2", "closed"],
+			code: (read) =>
+				routeAnswersOf(
+					read("batches"),
+					read("route"),
+					read("route2"),
+					read("closed"),
+				),
+		},
+		"route-extra": {
+			reads: ["nomination", "routeAnswers", "membership"],
+			ask: (read) =>
+				settings.unasked === "ask"
+					? routeExtraPlan(
+							read("nomination"),
+							read("routeAnswers"),
+							read("membership").partition,
+						)
+					: { questions: {}, read: () => undefined },
+		},
+		units: {
+			reads: ["nomination", "membership", "routeAnswers", "route-extra"],
+			code: (read) => {
+				const nomination = read("nomination");
+				return routeMembership(
+					nomination,
+					read("membership"),
+					read("routeAnswers"),
+					read("route-extra"),
+					rules.includes("answer-apart")
+						? answerBeforeFormula
+						: undefined,
+					codeRoutes(nomination, rules),
+				).units(settings.variantMargin, { identity: true });
+			},
+		},
+	};
+}
+
+/** One Sentence's units, and the stages whose failed request they were settled without. */
+export type GermanUnits = {
+	readonly units: Unit[];
+	readonly degraded: readonly Degraded[];
+};
+
 /** Groups one German Sentence's Segments into its biggest units and routes each. */
-export const segmentGermanUnits = Effect.fnUntraced(function* (
+export const segmentGermanUnits = (
 	sentence: { readonly segments: readonly Segment[] },
 	ask: Ask,
 	settings: UnitSettings = productionUnitSettings,
-): Effect.fn.Return<Unit[], AskFailure> {
-	const nomination = yield* nominate(sentence, ask, settings.inventory, {
-		wasFuer: settings.rules.includes("was-fuer"),
-	});
-	const base = membershipOf(nomination, settings.floors, settings.saying);
-	const ruled = withCodeRules(nomination, base, settings.rules);
-	const located = settings.locution
-		? withLocutionChoice(
-				nomination,
-				base,
-				ruled,
-				yield* askLocutionChoice(
-					nomination,
-					ruled,
-					ask,
-					settings.rules,
-				),
-				settings.rules,
-				settings.locution,
-			)
-		: ruled;
-	const verbed = settings.verb
-		? withVerbChoice(
-				nomination,
-				located,
-				yield* askVerbChoice(nomination, ask, settings.verb.families),
-				settings.rules,
-				settings.verb,
-			)
-		: located;
-	const membership = settings.government
-		? withGovernmentChoice(
-				nomination,
-				verbed,
-				yield* askGovernmentChoice(
-					nomination,
-					verbed,
-					ask,
-					settings.rules,
-					settings.government.families,
-				),
-				settings.rules,
-				settings.government,
-			)
-		: verbed;
-	const answers = yield* askRouteBatches(nomination, ask);
-	const extra =
-		settings.unasked === "ask"
-			? yield* askUnaskedRoutes(
-					nomination,
-					answers,
-					membership.partition,
-					ask,
-				)
-			: undefined;
-	return routeMembership(
-		nomination,
-		membership,
-		answers,
-		extra,
-		settings.rules.includes("answer-apart")
-			? answerBeforeFormula
-			: undefined,
-		codeRoutes(nomination, settings.rules),
-	).units(settings.variantMargin, { identity: true });
-});
+): Effect.Effect<GermanUnits, AskFailure> => {
+	const proposal = proposalOf(sentence, settings.inventory);
+	return Effect.map(
+		runStageGraph(germanUnitGraph(proposal, settings), proposal.state, ask),
+		({ values, degraded }) => ({ units: values.units, degraded }),
+	);
+};

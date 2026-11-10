@@ -33,14 +33,9 @@
 
 import type { Questions } from "@typesafe-ai/sdk";
 import { closedVerbForms, modalVerbs } from "dumcorpus/inventories";
-import * as Effect from "effect/Effect";
-import {
-	type Answers,
-	type Ask,
-	type AskFailure,
-	askAny,
-	choice,
-} from "../ask.js";
+import type * as Effect from "effect/Effect";
+import { type Answers, type Ask, type AskFailure, choice } from "../ask.js";
+import { askPlan, type Plan } from "../stage-graph.js";
 import {
 	type AssembledEdge,
 	absorbedEdges,
@@ -256,22 +251,35 @@ export type LocutionAnswers = {
 	readonly answers: Answers;
 };
 
-/** Asks the `locution` request over a membership the code rules have applied to. */
-export const askLocutionChoice = Effect.fnUntraced(function* (
+/** The `locution` request over a membership the code rules have applied to. */
+export function locutionPlan(
+	nomination: Nomination,
+	ruled: Membership,
+	rules: readonly CodeRule[],
+): Plan<LocutionAnswers> {
+	const merges = mergeCandidates(
+		nomination,
+		ruled,
+		boundPieces(nomination, ruled, rules),
+	);
+	return {
+		questions: locutionQuestions(nomination, merges),
+		read: (answers) => ({ merges, answers }),
+	};
+}
+
+/** Asks the `locution` request on its own. */
+export const askLocutionChoice = (
 	nomination: Nomination,
 	ruled: Membership,
 	ask: Ask,
 	rules: readonly CodeRule[],
-): Effect.fn.Return<LocutionAnswers, AskFailure> {
-	const bound = boundPieces(nomination, ruled, rules);
-	const merges = mergeCandidates(nomination, ruled, bound);
-	const answers = yield* askAny(ask, {
-		stage: "locution",
-		state: nomination.state,
-		questions: locutionQuestions(nomination, merges),
-	});
-	return { merges, answers };
-});
+): Effect.Effect<LocutionAnswers, AskFailure> =>
+	askPlan(
+		ask,
+		{ stage: "locution", state: nomination.state },
+		locutionPlan(nomination, ruled, rules),
+	);
 
 /** The links the answers accept under `settings`, each joining two pieces. */
 function acceptedMerges(

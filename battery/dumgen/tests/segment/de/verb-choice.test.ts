@@ -1,17 +1,14 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import type { Answer } from "../../../src/segment/ask.js";
-import {
-	productionUnitSettings,
-	segmentGermanUnits,
-} from "../../../src/segment/de/units.js";
+import { productionUnitSettings } from "../../../src/segment/de/units.js";
 import {
 	type VerbFamily,
 	verbFamilies,
 	verbSettings,
 } from "../../../src/segment/de/verb-choice.js";
 import { segmentsOf } from "../../lab/evaluation/spec-corpus/fixtures.js";
-import { fakeJudge, picked } from "./fake-judge.js";
+import { fakeJudge, germanUnits, picked } from "./fake-judge.js";
 
 const withVerb = (families: readonly VerbFamily[] = verbFamilies) => ({
 	...productionUnitSettings,
@@ -26,11 +23,7 @@ async function run(
 ) {
 	const judge = fakeJudge(answers);
 	const units = await Effect.runPromise(
-		segmentGermanUnits(
-			{ segments: segmentsOf(sentence) },
-			judge.ask,
-			settings,
-		),
+		germanUnits({ segments: segmentsOf(sentence) }, judge.ask, settings),
 	);
 	return { groups: units.map((unit) => unit.segments), judge };
 }
@@ -50,8 +43,8 @@ test("de/causative-lassen: a causative answer joins lassen and its infinitive, w
 		...dachHeard,
 		v_lassen_2_5: picked("causative", { causative: 0.8, doer: 0.2 }),
 	});
-	const verb = judge.requests.find(({ stage }) => stage === "verb");
-	expect(Object.keys(verb?.questions ?? {})).toEqual(["v_lassen_2_5"]);
+	const verb = judge.questionsOf("verb");
+	expect(Object.keys(verb ?? {})).toEqual(["v_lassen_2_5"]);
 	expect(groups).toEqual([[0], [2, 8], [4, 6]]);
 	// The new group's route is asked after the batches.
 	expect(judge.stages().at(-1)).toBe("route-extra");
@@ -61,17 +54,17 @@ test("production asks only the lassen, recipient and state families", async () =
 	// Er0 _1 verteidigt2 _3 sich4 .5
 	const reflexive = fakeJudge({ s_reflexive_3: picked("p2") });
 	await Effect.runPromise(
-		segmentGermanUnits(
+		germanUnits(
 			{ segments: segmentsOf("Er verteidigt sich.") },
 			reflexive.ask,
 		),
 	);
-	expect(reflexive.stages()).not.toContain("verb");
+	expect(reflexive.questionsOf("verb")).toBeUndefined();
 	const lassen = fakeJudge(dachHeard);
 	await Effect.runPromise(
-		segmentGermanUnits({ segments: segmentsOf(dach) }, lassen.ask),
+		germanUnits({ segments: segmentsOf(dach) }, lassen.ask),
 	);
-	expect(lassen.stages()).toContain("verb");
+	expect(lassen.questionsOf("verb")).toBeDefined();
 });
 
 test("an answer under the floor, or other, keeps the slot's grouping", async () => {
@@ -126,8 +119,8 @@ test("de/sein-perfect-or-copula: sein with the participle of a verb whose perfec
 		"v_perfect-auxiliary_3_5": picked("haben", { haben: 0.98, sein: 0.02 }),
 	});
 	expect(groups).toEqual([[0, 2], [4], [6], [8]]);
-	const verb = judge.requests.find(({ stage }) => stage === "verb");
-	expect(Object.keys(verb?.questions ?? {})).toEqual([
+	const verb = judge.questionsOf("verb");
+	expect(Object.keys(verb ?? {})).toEqual([
 		"v_state_3_5",
 		"v_perfect-auxiliary_3_5",
 	]);
@@ -143,8 +136,8 @@ test("haben with a participle asks no perfect-auxiliary question", async () => {
 		...museumHeard,
 		v_state_3_5: picked("perfect", { perfect: 0.8, state: 0.2 }),
 	});
-	const verb = judge.requests.find(({ stage }) => stage === "verb");
-	expect(Object.keys(verb?.questions ?? {})).toEqual(["v_state_3_5"]);
+	const verb = judge.questionsOf("verb");
+	expect(Object.keys(verb ?? {})).toEqual(["v_state_3_5"]);
 });
 
 test("#725: haben with a participle the sentence can't settle joins as the perfect", async () => {
@@ -181,11 +174,11 @@ test("a Sentence with no flagged satellite asks no verb request; a participle-le
 	const { judge } = await run("Er ist krank.", {
 		s_auxiliary_2: picked("p3", { p3: 0.4, none: 0.6 }),
 	});
-	expect(judge.stages()).not.toContain("verb");
+	expect(judge.questionsOf("verb")).toBeUndefined();
 	const off = fakeJudge(dachHeard);
 	const { verb: _, ...without } = productionUnitSettings;
 	await Effect.runPromise(
-		segmentGermanUnits({ segments: segmentsOf(dach) }, off.ask, without),
+		germanUnits({ segments: segmentsOf(dach) }, off.ask, without),
 	);
-	expect(off.stages()).not.toContain("verb");
+	expect(off.questionsOf("verb")).toBeUndefined();
 });

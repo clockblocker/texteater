@@ -6,7 +6,9 @@
  * the groups its step-0 and Saying policies added plus the abbreviations,
  * and `closed`. No floor changes them, so cached answers replay under any
  * setting. A group no batch asked about gets `route-extra`, or routes
- * `Unresolved` unasked.
+ * `Unresolved` unasked. Each is a `Plan` the unit stage's graph runs by
+ * what it reads (`units.ts`), and each says what its failure leaves:
+ * the routes it decides `Unresolved`, the grouping kept.
  */
 import type { Questions } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
@@ -14,11 +16,11 @@ import {
 	type Answers,
 	type Ask,
 	type AskFailure,
-	askAny,
 	choice,
 	choiceOf,
 	noul,
 } from "../ask.js";
+import { askPlan, type Plan } from "../stage-graph.js";
 import {
 	articleHosts,
 	assemble,
@@ -222,31 +224,47 @@ function readRoutes(
 	return { identity, distributions, picks };
 }
 
-/** Asks one route request over `groups` and reads it. */
-const askRoutes = Effect.fnUntraced(function* (
-	nomination: Nomination,
-	groups: Partition,
-	ask: Ask,
-	stage: string,
-	more: Questions = {},
-): Effect.fn.Return<
-	{ readonly routes: Routes; readonly answers: Answers },
-	AskFailure
-> {
-	const { sentence, ref, state, inventory } = nomination;
-	const answers = yield* askAny(ask, {
-		stage,
-		state,
-		questions: {
-			...routeQuestions(sentence, groups, ref, inventory),
-			...more,
-		},
-	});
-	return {
-		routes: readRoutes(sentence, groups, answers, inventory),
-		answers,
-	};
+/** A batched route request's routes and answers, and the questions it asked that brought none. */
+export type BatchAnswers = {
+	readonly routes: Routes;
+	readonly answers: Answers;
+	readonly unanswered: readonly string[];
+};
+
+const noRoutes = (): Routes => ({
+	identity: new Map(),
+	distributions: new Map(),
+	picks: new Map(),
 });
+
+/**
+ * A route request over `groups`, with `more` beside them. Without its
+ * answers, its groups route `Unresolved` and none of them is asked again.
+ */
+export function routePlan(
+	nomination: Pick<Nomination, "sentence" | "ref" | "inventory">,
+	groups: Partition,
+	more: Questions = {},
+): Plan<BatchAnswers> {
+	const { sentence, ref, inventory } = nomination;
+	const questions = {
+		...routeQuestions(sentence, groups, ref, inventory),
+		...more,
+	};
+	return {
+		questions,
+		read: (answers) => ({
+			routes: readRoutes(sentence, groups, answers, inventory),
+			answers,
+			unanswered: [],
+		}),
+		absent: () => ({
+			routes: noRoutes(),
+			answers: {},
+			unanswered: Object.keys(questions),
+		}),
+	};
+}
 
 const uniqueGroups = (partitions: readonly Partition[]) => {
 	const unique = new Map<string, readonly number[]>();
@@ -286,76 +304,133 @@ export type RouteAnswers = {
 	/** `route2`, with the abbreviation routes. */
 	readonly route2: Answers;
 	readonly closed: Answers;
+	/**
+	 * The questions of a batch whose request failed: a piece whose route
+	 * one of them decides routes `Unresolved`.
+	 */
+	readonly unanswered: ReadonlySet<string>;
 };
 
-export const askRouteBatches = Effect.fnUntraced(function* (
-	nomination: Nomination,
-	ask: Ask,
-): Effect.fn.Return<RouteAnswers, AskFailure> {
-	const { sentence, ref, state } = nomination;
+/** The groups `route` and `route2` ask about: v3's, then candidates4's new ones. */
+export type RouteBatches = {
+	readonly v3: Partition;
+	readonly fresh: Partition;
+};
+
+/** The groups of the batched route requests, from the nomination alone. */
+export function routeBatchesOf(nomination: Nomination): RouteBatches {
 	const articleOf = articleHosts(nomination);
 	const v3Partitions = Object.values(v3Policies).map(
 		(policy) =>
 			assemble(nomination, articleOf, policyInput(nomination, policy))
 				.partition,
 	);
-	const v3 = yield* askRoutes(
-		nomination,
-		[...uniqueGroups(v3Partitions).values()],
-		ask,
-		"route",
-	);
 	const v3Groups = new Set(
 		v3Partitions.flatMap((partition) => partition.map(groupKey)),
 	);
-	const fresh = new Map(
-		[...uniqueGroups(candidates4Partitions(nomination))].filter(
-			([key]) => !v3Groups.has(key),
-		),
-	);
+	return {
+		v3: [...uniqueGroups(v3Partitions).values()],
+		fresh: [
+			...new Map(
+				[...uniqueGroups(candidates4Partitions(nomination))].filter(
+					([key]) => !v3Groups.has(key),
+				),
+			).values(),
+		],
+	};
+}
+
+/** `route2`: candidates4's new groups and each abbreviation's route with Locution routes. */
+export function route2Plan(
+	nomination: Nomination,
+	batches: RouteBatches,
+): Plan<BatchAnswers> {
+	const { sentence, ref } = nomination;
 	const abbreviations: Questions = {};
 	for (const piece of sentence.pieces.filter(isAbbreviationPiece))
 		abbreviations[abbreviationId(piece.id)] = choice(
 			`In \`sentence\`, the word ${ref(piece)} is a unit on its own. Which route does it take? An abbreviation takes the route of what it stands for (z.B. = zum Beispiel, a Locution ADV).`,
 			routeCriteria(allRoutes, true),
 		);
-	const route2 = yield* askRoutes(
-		nomination,
-		[...fresh.values()],
-		ask,
-		"route2",
-		abbreviations,
-	);
-	const closedQuestions: Questions = {};
-	for (const piece of sentence.pieces) {
+	return routePlan(nomination, batches.fresh, abbreviations);
+}
+
+/**
+ * `closed`: each closed-class spelling's use, which reads only the pieces.
+ * Without its answers, those pieces route `Unresolved`.
+ */
+export function closedPlan(
+	proposal: Pick<Nomination, "sentence" | "ref">,
+): Plan<Pick<BatchAnswers, "answers" | "unanswered">> {
+	const questions: Questions = {};
+	for (const piece of proposal.sentence.pieces) {
 		const question = closedClassQuestion(piece);
 		if (question)
-			closedQuestions[closedId(piece.id)] = choice(
-				question.instructions(ref(piece)),
+			questions[closedId(piece.id)] = choice(
+				question.instructions(proposal.ref(piece)),
 				question.criteria,
 			);
 	}
-	const closed = yield* askAny(ask, {
-		stage: "closed",
-		state,
-		questions: closedQuestions,
-	});
 	return {
-		asked: new Set([...v3Groups, ...fresh.keys()]),
+		questions,
+		read: (answers) => ({ answers, unanswered: [] }),
+		absent: () => ({ answers: {}, unanswered: Object.keys(questions) }),
+	};
+}
+
+/** The batched route requests' answers together. */
+export function routeAnswersOf(
+	batches: RouteBatches,
+	route: BatchAnswers,
+	route2: BatchAnswers,
+	closed: Pick<BatchAnswers, "answers" | "unanswered">,
+): RouteAnswers {
+	return {
+		asked: new Set([...batches.v3, ...batches.fresh].map(groupKey)),
 		routes: {
 			identity: new Map([
-				...v3.routes.identity,
+				...route.routes.identity,
 				...route2.routes.identity,
 			]),
 			distributions: new Map([
-				...v3.routes.distributions,
+				...route.routes.distributions,
 				...route2.routes.distributions,
 			]),
-			picks: new Map([...v3.routes.picks, ...route2.routes.picks]),
+			picks: new Map([...route.routes.picks, ...route2.routes.picks]),
 		},
 		route2: route2.answers,
-		closed,
+		closed: closed.answers,
+		unanswered: new Set([
+			...route.unanswered,
+			...route2.unanswered,
+			...closed.unanswered,
+		]),
 	};
+}
+
+/** The batched route requests one after another: `route`, `route2`, `closed`. */
+export const askRouteBatches = Effect.fnUntraced(function* (
+	nomination: Nomination,
+	ask: Ask,
+): Effect.fn.Return<RouteAnswers, AskFailure> {
+	const { state } = nomination;
+	const batches = routeBatchesOf(nomination);
+	const route = yield* askPlan(
+		ask,
+		{ stage: "route", state },
+		routePlan(nomination, batches.v3),
+	);
+	const route2 = yield* askPlan(
+		ask,
+		{ stage: "route2", state },
+		route2Plan(nomination, batches),
+	);
+	const closed = yield* askPlan(
+		ask,
+		{ stage: "closed", state },
+		closedPlan(nomination),
+	);
+	return routeAnswersOf(batches, route, route2, closed);
 });
 
 /** The groups of a partition no batched request asked about. */
@@ -365,17 +440,32 @@ const unaskedGroups = (
 ): Partition =>
 	partition.filter((group) => !answers.asked.has(groupKey(group)));
 
-/** `route-extra`: the route request for the groups no batch asked about. */
-export const askUnaskedRoutes = Effect.fnUntraced(function* (
+/**
+ * `route-extra`: the route request for the groups of `partition` no batch
+ * asked about. Without its answers, those groups route `Unresolved`.
+ */
+export function routeExtraPlan(
+	nomination: Nomination,
+	answers: RouteAnswers,
+	partition: Partition,
+): Plan<Routes | undefined> {
+	const plan = routePlan(nomination, unaskedGroups(answers, partition));
+	return {
+		questions: plan.questions,
+		read: (answered) => plan.read(answered).routes,
+		absent: () => undefined,
+	};
+}
+
+/** `route-extra` asked on its own. */
+export const askUnaskedRoutes = (
 	nomination: Nomination,
 	answers: RouteAnswers,
 	partition: Partition,
 	ask: Ask,
-): Effect.fn.Return<Routes, AskFailure> {
-	return (yield* askRoutes(
-		nomination,
-		unaskedGroups(answers, partition),
+): Effect.Effect<Routes | undefined, AskFailure> =>
+	askPlan(
 		ask,
-		"route-extra",
-	)).routes;
-});
+		{ stage: "route-extra", state: nomination.state },
+		routeExtraPlan(nomination, answers, partition),
+	);

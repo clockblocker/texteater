@@ -288,7 +288,8 @@ export type RoutedMembership = {
 /**
  * Routes a membership from the batched answers, plus `extra` for the
  * groups no batch asked about; a group without either routes
- * `Unresolved`. A unit's variants come from the distribution that decided
+ * `Unresolved`, and so does a piece whose closed-class use or
+ * abbreviation route a failed request left unanswered. A unit's variants come from the distribution that decided
  * its route: closed-class identity for a covered spelling (its uses'
  * shares summed by route), the abbreviation route for an abbreviation, the
  * route Choice for any other word, and the Choice restricted to the Family
@@ -306,7 +307,17 @@ export function routeMembership(
 	fixedRoute?: FixedRoute,
 ): RoutedMembership {
 	const { sentence } = nomination;
-	const { route2, closed: closedAnswers } = answers;
+	const { route2, closed: closedAnswers, unanswered } = answers;
+	/** A one-piece group whose closed-class or abbreviation route a failed request left undecided. */
+	const undecided = (
+		group: readonly number[],
+		id: (piece: number) => string,
+	) => {
+		const [only] = group;
+		return (
+			group.length === 1 && only !== undefined && unanswered.has(id(only))
+		);
+	};
 	const judged = new Map<string, RouteJudgment>([
 		...answers.routes.identity,
 		...(extra?.identity ?? []),
@@ -317,6 +328,7 @@ export function routeMembership(
 	]);
 	const picks = new Map([...answers.routes.picks, ...(extra?.picks ?? [])]);
 	const jevRoute = (group: readonly number[]): UnitRouteKey => {
+		if (undecided(group, abbreviationId)) return "Unresolved";
 		const [only] = group;
 		if (group.length === 1 && only !== undefined) {
 			const abbreviation = route2[abbreviationId(only)];
@@ -354,13 +366,19 @@ export function routeMembership(
 	const fixed = (group: readonly number[]): RouteKey | undefined =>
 		fixedRoute?.(group, distributions.get(groupKey(group)));
 	const route = (group: readonly number[]): UnitRouteKey =>
-		closedRoute(group) ?? fixed(group) ?? openRoute(group);
+		undecided(group, closedId)
+			? "Unresolved"
+			: (closedRoute(group) ?? fixed(group) ?? openRoute(group));
 	const decidingShares = (
 		group: readonly number[],
 	): Readonly<Record<string, number>> | undefined => {
 		// Never on a fused half, the i or m of im (#827).
 		if (
-			group.some((id) => sentence.pieces[id - 1]?.fusedWord !== undefined)
+			group.some(
+				(id) => sentence.pieces[id - 1]?.fusedWord !== undefined,
+			) ||
+			undecided(group, closedId) ||
+			undecided(group, abbreviationId)
 		)
 			return undefined;
 		const [only] = group;

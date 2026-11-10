@@ -6,12 +6,9 @@ import {
 	governmentFamilies,
 	governmentSettings,
 } from "../../../src/segment/de/government-choice.js";
-import {
-	productionUnitSettings,
-	segmentGermanUnits,
-} from "../../../src/segment/de/units.js";
+import { productionUnitSettings } from "../../../src/segment/de/units.js";
 import { segmentsOf } from "../../lab/evaluation/spec-corpus/fixtures.js";
-import { fakeJudge, picked } from "./fake-judge.js";
+import { fakeJudge, germanUnits, picked } from "./fake-judge.js";
 
 const withGovernment = (
 	families: readonly GovernmentFamily[] = governmentFamilies,
@@ -28,11 +25,7 @@ async function run(
 ) {
 	const judge = fakeJudge(answers);
 	const units = await Effect.runPromise(
-		segmentGermanUnits(
-			{ segments: segmentsOf(sentence) },
-			judge.ask,
-			settings,
-		),
+		germanUnits({ segments: segmentsOf(sentence) }, judge.ask, settings),
 	);
 	return { groups: units.map((unit) => unit.segments), judge };
 }
@@ -49,8 +42,8 @@ test("ADR 0034: a preposition heading a direction leaves the verb its slot joine
 		...uhrHeard,
 		g_joined_3_2: picked("place", { place: 0.8, governed: 0.2 }),
 	});
-	const asked = judge.requests.find(({ stage }) => stage === "government");
-	expect(Object.keys(asked?.questions ?? {})).toEqual(["g_joined_3_2"]);
+	const asked = judge.questionsOf("government");
+	expect(Object.keys(asked ?? {})).toEqual(["g_joined_3_2"]);
 	expect(groups).toEqual([[0], [2], [4], [6, 8]]);
 });
 
@@ -90,8 +83,8 @@ test("ADR 0034: of one preposition twice, the duel's answer picks the complement
 			g_duel_2_4_6: picked("p6", { p6: 0.8, p4: 0.15, none: 0.05 }),
 		},
 	);
-	const asked = judge.requests.find(({ stage }) => stage === "government");
-	expect(Object.keys(asked?.questions ?? {})).toContain("g_duel_2_4_6");
+	const asked = judge.questionsOf("government");
+	expect(Object.keys(asked ?? {})).toContain("g_duel_2_4_6");
 	expect(groups).toEqual([[0], [2, 4, 10], [6], [8], [12]]);
 });
 
@@ -128,15 +121,15 @@ test("production asks the government request without its weak family; a Sentence
 	expect(productionUnitSettings.government?.families).not.toContain("weak");
 	const production = fakeJudge(uhrHeard);
 	await Effect.runPromise(
-		segmentGermanUnits({ segments: segmentsOf(uhr) }, production.ask),
+		germanUnits({ segments: segmentsOf(uhr) }, production.ask),
 	);
-	expect(production.stages()).toContain("government");
+	expect(production.questionsOf("government")).toBeDefined();
 	const { judge } = await run("Sie wohnt hier.", {});
-	expect(judge.stages()).not.toContain("government");
+	expect(judge.questionsOf("government")).toBeUndefined();
 	const off = fakeJudge(uhrHeard);
 	const { government: _, ...without } = productionUnitSettings;
 	await Effect.runPromise(
-		segmentGermanUnits({ segments: segmentsOf(uhr) }, off.ask, without),
+		germanUnits({ segments: segmentsOf(uhr) }, off.ask, without),
 	);
-	expect(off.stages()).not.toContain("government");
+	expect(off.questionsOf("government")).toBeUndefined();
 });

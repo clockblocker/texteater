@@ -1,6 +1,7 @@
 /**
  * Nomination, the unit stage's first step: what jev judges about the
- * connections code proposes. Three requests over one judge state:
+ * connections code proposes. Three requests over one judge state, each a
+ * `Plan` the unit stage's graph runs by what it reads (`units.ts`):
  *
  * 1. `candidates`: a host Choice per slot (an article's noun, a particle's
  *    or an auxiliary's verb, a noun's idiom verb, …), a Noul per proposed
@@ -23,13 +24,13 @@ import {
 	type Answers,
 	type Ask,
 	type AskFailure,
-	askAny,
 	choice,
 	choiceOf,
 	noul,
 	noulOf,
 } from "../ask.js";
 import type { Segment } from "../segmented-sentence.js";
+import { askPlan, type Plan } from "../stage-graph.js";
 import {
 	idiomHosts,
 	oldSpellingCorrelators,
@@ -222,22 +223,22 @@ type ExpressionLink = {
 	readonly probability: number;
 };
 
-/** What the three requests answered, and what code read from them before any floor. */
-export type Nomination = {
+/** What code proposes before any answer: the slots, pairs and v3 Saying spans `candidates` asks about. */
+export type Proposal = {
 	readonly sentence: Sentence;
 	readonly state: ReturnType<typeof judgeState>["state"];
 	readonly ref: Reference;
 	readonly inventory: GermanInventory;
-	/** `candidates`, `expressions` and `final`. */
-	readonly first: Answers;
-	readonly second: Answers;
-	readonly final: Answers;
 	readonly slots: readonly Slot[];
 	readonly pairs: readonly PairCandidate[];
 	readonly spans: readonly SayingSpan[];
+};
+
+/** What `candidates` answered, and what code read from it before any floor. */
+export type Candidates = Proposal & {
+	readonly first: Answers;
 	/** The slot links with no margin, one particle and preposition per host. */
 	readonly slotAnswers: readonly SlotLink[];
-	readonly links: readonly ExpressionLink[];
 	/** Each piece's fixedness Noul. */
 	readonly fixed: ReadonlyMap<number, number>;
 	/** The proposed pairs at 0.5, matched one to one. */
@@ -247,6 +248,19 @@ export type Nomination = {
 		PairCandidate["kind"],
 	])[];
 };
+
+/** What `expressions` answered about the pairs of the pieces most likely fixed. */
+export type Expressions = {
+	readonly second: Answers;
+	readonly links: readonly ExpressionLink[];
+};
+
+/** What the three requests answered, and what code read from them before any floor. */
+export type Nomination = Candidates &
+	Expressions & {
+		/** `final`'s answers. */
+		readonly final: Answers;
+	};
 
 const sayingCriteria = {
 	whole: "A complete proverb, famous quotation or aphorism that people cite as a saying, in exactly this wording (Morgenstund hat Gold im Mund; Wer nichts weiß, muss alles glauben)",
@@ -308,73 +322,112 @@ function finalQuestions(
 	return questions;
 }
 
-/** Asks the three nomination requests for one Sentence. */
+/** What code proposes for one Sentence's Segments, before anything is asked. */
+export function proposalOf(
+	input: { readonly segments: readonly Segment[] },
+	inventory: GermanInventory,
+): Proposal {
+	const sentence = sentenceOf(input);
+	const { state, ref } = judgeState(sentence);
+	return {
+		sentence,
+		state,
+		ref,
+		inventory,
+		slots: slotsOf(sentence, inventory),
+		pairs: pairCandidatesOf(sentence, inventory),
+		spans: sayingSpans(sentence),
+	};
+}
+
+/** The `candidates` request, which reads nothing jev answered. */
+export const candidatesPlan = (proposal: Proposal): Plan<Candidates> => {
+	const { sentence, ref, slots, pairs, spans } = proposal;
+	return {
+		questions: candidateQuestions(sentence, ref, slots, pairs, spans),
+		read: (first) => ({
+			...proposal,
+			first,
+			slotAnswers: oneSatellitePerHost(slotLinks(slots, first)),
+			fixed: new Map(
+				sentence.pieces.map((piece) => [
+					piece.id,
+					noulOf(first, fixedId(piece.id)),
+				]),
+			),
+			accepted: matchedPairs(pairs, first, 0.5),
+		}),
+	};
+};
+
+/** The `expressions` request, over the pieces `candidates` heard most likely fixed. */
+export const expressionsPlan = (candidates: Candidates): Plan<Expressions> => {
+	const { sentence, fixed, ref } = candidates;
+	const flagged = sentence.pieces
+		.filter((piece) => (fixed.get(piece.id) ?? 0) >= 0.3)
+		.sort((a, b) => (fixed.get(b.id) ?? 0) - (fixed.get(a.id) ?? 0))
+		.slice(0, 14)
+		.sort((a, b) => a.id - b.id);
+	const questions: Questions = {};
+	for (const [position, a] of flagged.entries())
+		for (const b of flagged.slice(position + 1))
+			questions[expressionId(a.id, b.id)] = noul(
+				`In \`sentence\`, are ${ref(a)} and ${ref(b)} fixed words of the same one established multiword expression (idiom, collocation, fixed adverbial, routine formula, proverb or quotation)?`,
+			);
+	return {
+		questions,
+		read: (second) => ({
+			second,
+			links: flagged.flatMap((a, position) =>
+				flagged.slice(position + 1).map((b) => ({
+					left: a.id,
+					right: b.id,
+					probability: noulOf(second, expressionId(a.id, b.id)),
+				})),
+			),
+		}),
+	};
+};
+
+/** The `final` request, which reads nothing jev answered. */
+export const finalPlan = (
+	proposal: Proposal,
+	options: FinalOptions = {},
+): Plan<Answers> => ({
+	questions: finalQuestions(
+		proposal.sentence,
+		proposal.ref,
+		proposal.slots,
+		options,
+	),
+	read: (answers) => answers,
+});
+
+/** Asks the three nomination requests for one Sentence, one after another. */
 export const nominate = Effect.fnUntraced(function* (
 	input: { readonly segments: readonly Segment[] },
 	ask: Ask,
 	inventory: GermanInventory,
 	options: FinalOptions = {},
 ): Effect.fn.Return<Nomination, AskFailure> {
-	const sentence = sentenceOf(input);
-	const { state, ref } = judgeState(sentence);
-	const slots = slotsOf(sentence, inventory);
-	const pairs = pairCandidatesOf(sentence, inventory);
-	const spans = sayingSpans(sentence);
-	const first = yield* askAny(ask, {
-		stage: "candidates",
-		state,
-		questions: candidateQuestions(sentence, ref, slots, pairs, spans),
-	});
-	const fixed = new Map(
-		sentence.pieces.map((piece) => [
-			piece.id,
-			noulOf(first, fixedId(piece.id)),
-		]),
+	const proposal = proposalOf(input, inventory);
+	const { state } = proposal;
+	const candidates = yield* askPlan(
+		ask,
+		{ stage: "candidates", state },
+		candidatesPlan(proposal),
 	);
-	const flagged = sentence.pieces
-		.filter((piece) => (fixed.get(piece.id) ?? 0) >= 0.3)
-		.sort((a, b) => (fixed.get(b.id) ?? 0) - (fixed.get(a.id) ?? 0))
-		.slice(0, 14)
-		.sort((a, b) => a.id - b.id);
-	const expressionQuestions: Questions = {};
-	for (const [position, a] of flagged.entries())
-		for (const b of flagged.slice(position + 1))
-			expressionQuestions[expressionId(a.id, b.id)] = noul(
-				`In \`sentence\`, are ${ref(a)} and ${ref(b)} fixed words of the same one established multiword expression (idiom, collocation, fixed adverbial, routine formula, proverb or quotation)?`,
-			);
-	const second = yield* askAny(ask, {
-		stage: "expressions",
-		state,
-		questions: expressionQuestions,
-	});
-	const links: ExpressionLink[] = flagged.flatMap((a, position) =>
-		flagged.slice(position + 1).map((b) => ({
-			left: a.id,
-			right: b.id,
-			probability: noulOf(second, expressionId(a.id, b.id)),
-		})),
+	const expressions = yield* askPlan(
+		ask,
+		{ stage: "expressions", state },
+		expressionsPlan(candidates),
 	);
-	const final = yield* askAny(ask, {
-		stage: "final",
-		state,
-		questions: finalQuestions(sentence, ref, slots, options),
-	});
-	return {
-		sentence,
-		state,
-		ref,
-		inventory,
-		first,
-		second,
-		final,
-		slots,
-		pairs,
-		spans,
-		slotAnswers: oneSatellitePerHost(slotLinks(slots, first)),
-		links,
-		fixed,
-		accepted: matchedPairs(pairs, first, 0.5),
-	};
+	const final = yield* askPlan(
+		ask,
+		{ stage: "final", state },
+		finalPlan(proposal, options),
+	);
+	return { ...candidates, ...expressions, final };
 });
 
 /** The v3 Saying spans whose Noul clears the floor, most probable first, disjoint. */

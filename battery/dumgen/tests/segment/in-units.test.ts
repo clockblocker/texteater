@@ -117,7 +117,9 @@ test("inUnits segments each Sentence of each paragraph and routes its units", as
 	expect(trace?.operation).toBe("segment.inUnits");
 	expect(trace?.calls).toHaveLength(jev.sent.length);
 	expect(
-		trace?.calls.find(({ stage }) => stage === "candidates"),
+		trace?.calls.find(({ stage }) =>
+			stage.split("+").includes("candidates"),
+		),
 	).toMatchObject({ sentence: 0, executor: "jev", outputTokens: 1 });
 	expect(trace?.calls.every(({ failure }) => failure === undefined)).toBe(
 		true,
@@ -311,32 +313,35 @@ test("cached lab answers replay through inUnits to the lab's own units", async (
 	for (const sentence of recorded.sentences) {
 		const { calls } = sentence;
 		const sent: string[] = [];
+		// A request may ask for several stages at once: each question is
+		// answered from the lab's call of one of them.
 		const ask: JevAsk = async (request, { stage }) => {
 			sent.push(stage);
-			const ids = Object.keys(request.questions);
-			const answered = calls.find(
-				(call) =>
-					call.stage === stage &&
-					ids.every((id) => id in call.answers),
+			const stages = stage.split("+");
+			const answers = Object.fromEntries(
+				Object.keys(request.questions).map((id) => {
+					const answer = calls.find(
+						(call) =>
+							stages.includes(call.stage) && id in call.answers,
+					)?.answers[id];
+					if (!answer)
+						throw Error(`No recorded ${stage} answer ${id}`);
+					return [id, answer];
+				}),
 			);
-			if (!answered) throw Error(`No recorded ${stage} answer`);
 			return {
 				model: recorded.recordedFrom.model,
-				answers: Object.fromEntries(
-					ids.flatMap((id) => {
-						const answer = answered.answers[id];
-						return answer ? [[id, answer]] : [];
-					}),
-				),
+				answers,
 				usage: { input_tokens: 0, output_tokens: 0 },
 			};
 		};
-		const { text } = await inUnits(
+		const { text, traces } = await inUnits(
 			{ jev: ask },
 			{ language: "de", paragraphs: [{ sentences: [sentence.text] }] },
 		);
 		const [result] = text.paragraphs[0]?.sentences ?? [];
 		expect(result?.failed).toBeUndefined();
+		expect(traces[0]?.events).toBeUndefined();
 		// The lab recorded no closed-class identity; production adds it (#864).
 		expect(
 			result?.units.map(({ identity: _identity, ...unit }) => unit),
@@ -362,7 +367,10 @@ test("cached lab answers replay through inUnits to the lab's own units", async (
 					: [],
 			),
 		);
-		expect(sent).toEqual(calls.map(({ stage }) => stage));
+		// Every stage the lab asked is asked once, alone or with others.
+		expect(sent.flatMap((stage) => stage.split("+")).sort()).toEqual(
+			calls.map(({ stage }) => stage).sort(),
+		);
 	}
 	// Each one-piece PRON keeps the identity its identity Choice picked.
 	expect(identities).toEqual([

@@ -18,7 +18,10 @@ export const perfectAuxiliaryId = (flag: VerbFlag) =>
 	`v_perfect-auxiliary_${flag.piece}_${flag.host}`;
 
 /** Whether a flag asks the perfect-auxiliary question: a `state` flag on a sein form. */
-export const asksPerfectAuxiliary = (nomination: Nomination, flag: VerbFlag) =>
+export const asksPerfectAuxiliary = (
+	nomination: Pick<Nomination, "sentence">,
+	flag: VerbFlag,
+) =>
 	flag.family === "state" &&
 	seinForms.has(
 		nomination.sentence.pieces[flag.piece - 1]?.text.toLowerCase() ?? "",
@@ -99,7 +102,7 @@ const instruction: Record<VerbFamily, (piece: string, host: string) => string> =
 
 /** The `verb` request's questions: a Choice per flag. */
 export function verbQuestions(
-	nomination: Nomination,
+	nomination: Pick<Nomination, "sentence" | "ref">,
 	flags: readonly VerbFlag[],
 ): Questions {
 	const { sentence, ref } = nomination;

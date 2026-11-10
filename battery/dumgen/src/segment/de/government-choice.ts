@@ -42,14 +42,9 @@
  */
 
 import type { Questions } from "@typesafe-ai/sdk";
-import * as Effect from "effect/Effect";
-import {
-	type Answers,
-	type Ask,
-	type AskFailure,
-	askAny,
-	choice,
-} from "../ask.js";
+import type * as Effect from "effect/Effect";
+import { type Answers, type Ask, type AskFailure, choice } from "../ask.js";
+import { askPlan, type Plan } from "../stage-graph.js";
 import type { AssembledEdge, Membership } from "./assembly.js";
 import { fusedSiblings, nounLike } from "./candidates.js";
 import { boundPieces, type CodeRule } from "./code-rules.js";
@@ -241,24 +236,35 @@ export type GovernmentAnswers = {
 	readonly answers: Answers;
 };
 
-/** Asks the `government` request about the flags of `families`, every family unless given. */
-export const askGovernmentChoice = Effect.fnUntraced(function* (
+/** The `government` request over the prepositions of `families` in `membership`. */
+export function governmentPlan(
+	nomination: Nomination,
+	membership: Membership,
+	rules: readonly CodeRule[],
+	families: readonly GovernmentFamily[] = governmentFamilies,
+): Plan<GovernmentAnswers> {
+	const flags = flaggedPrepositions(nomination, membership, rules).filter(
+		(flag) => families.includes(flag.family),
+	);
+	return {
+		questions: governmentQuestions(nomination, membership, flags),
+		read: (answers) => ({ flags, answers }),
+	};
+}
+
+/** Asks the `government` request on its own. */
+export const askGovernmentChoice = (
 	nomination: Nomination,
 	membership: Membership,
 	ask: Ask,
 	rules: readonly CodeRule[],
 	families: readonly GovernmentFamily[] = governmentFamilies,
-): Effect.fn.Return<GovernmentAnswers, AskFailure> {
-	const flags = flaggedPrepositions(nomination, membership, rules).filter(
-		(flag) => families.includes(flag.family),
+): Effect.Effect<GovernmentAnswers, AskFailure> =>
+	askPlan(
+		ask,
+		{ stage: "government", state: nomination.state },
+		governmentPlan(nomination, membership, rules, families),
 	);
-	const answers = yield* askAny(ask, {
-		stage: "government",
-		state: nomination.state,
-		questions: governmentQuestions(nomination, membership, flags),
-	});
-	return { flags, answers };
-});
 
 type Action =
 	| { readonly join: readonly [number, number] }

@@ -2,9 +2,8 @@ import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import { authoredInventory } from "../../../src/segment/de/inventory.js";
 import { storedIdentity } from "../../../src/segment/de/routing.js";
-import { segmentGermanUnits } from "../../../src/segment/de/units.js";
 import { segmentsOf } from "../../lab/evaluation/spec-corpus/fixtures.js";
-import { fakeJudge, noul, picked, route } from "./fake-judge.js";
+import { fakeJudge, germanUnits, noul, picked, route } from "./fake-judge.js";
 
 // Dieser0 _1 kommt2 .3
 const dieserKommt = segmentsOf("Dieser kommt.");
@@ -22,7 +21,7 @@ const pron = position("PRON");
 
 test("a one-piece DET or PRON unit stores the identity its Choice picked", async () => {
 	const units = await Effect.runPromise(
-		segmentGermanUnits(
+		germanUnits(
 			{ segments: dieserKommt },
 			fakeJudge({
 				i_1: picked(pron, { [pron]: 0.8, [det]: 0.2 }),
@@ -41,7 +40,7 @@ test("a one-piece DET or PRON unit stores the identity its Choice picked", async
 
 test("when the DET/PRON Rule test flips the Kind, the same Choice's most probable candidate of the final Kind is stored", async () => {
 	const units = await Effect.runPromise(
-		segmentGermanUnits(
+		germanUnits(
 			{ segments: dieserKommt },
 			fakeJudge({
 				// The pick says DET, but dieser modifies no noun: PRON.
@@ -60,7 +59,7 @@ test("when the DET/PRON Rule test flips the Kind, the same Choice's most probabl
 
 test("an identity Choice answered Other stores none, and the open route decides", async () => {
 	const units = await Effect.runPromise(
-		segmentGermanUnits(
+		germanUnits(
 			{ segments: dieserKommt },
 			fakeJudge({
 				i_1: picked("Other"),

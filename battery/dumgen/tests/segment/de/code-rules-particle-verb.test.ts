@@ -8,14 +8,11 @@ import {
 import type { Answer } from "../../../src/segment/ask.js";
 import type { CodeRule } from "../../../src/segment/de/code-rules.js";
 import { sentenceOf } from "../../../src/segment/de/sentence.js";
-import {
-	productionUnitSettings,
-	segmentGermanUnits,
-} from "../../../src/segment/de/units.js";
+import { productionUnitSettings } from "../../../src/segment/de/units.js";
 import type { Segment } from "../../../src/segment/segmented-sentence.js";
 import { segmentsOf } from "../../lab/evaluation/spec-corpus/fixtures.js";
 import { fixedWords } from "./code-rules-support.js";
-import { fakeJudge, picked, route } from "./fake-judge.js";
+import { fakeJudge, germanUnits, picked, route } from "./fake-judge.js";
 
 /** The units of `segments` from `answers`, with the `particle-verb` rule or none, and the requests each sent. */
 async function particleVerbUnits(
@@ -25,7 +22,7 @@ async function particleVerbUnits(
 	const of = async (rules: readonly CodeRule[]) => {
 		const judge = fakeJudge(answers);
 		const units = await Effect.runPromise(
-			segmentGermanUnits({ segments }, judge.ask, {
+			germanUnits({ segments }, judge.ask, {
 				...productionUnitSettings,
 				rules,
 			}),

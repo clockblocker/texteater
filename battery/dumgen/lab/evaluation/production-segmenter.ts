@@ -14,6 +14,9 @@
  *   into production's unit stage under the same operation, `Jev` and
  *   setting. `operations` offers no entry that takes Segments, since no
  *   host has them before intake.
+ *
+ * Either mode fails a case whose Sentence production degraded for a failed
+ * request (`DegradedStages`), so a run scores no degraded output.
  */
 import { isRecord } from "common-utils";
 import * as Effect from "effect/Effect";
@@ -48,6 +51,26 @@ export type SegmentedRaw = {
 	readonly units: readonly Unit[];
 	/** Indices of the Segments the Segment stage kept unresolved. */
 	readonly unresolved: readonly number[];
+};
+
+/**
+ * The first stage a `DegradedStages` event names, as an error: the lab
+ * scores a case whose request failed as failed, as it did before a late
+ * failure degraded its Sentence instead (#1324).
+ */
+const degradedOf = (traces: readonly OperationTrace[]) => {
+	const [event] = traces
+		.flatMap((trace) => trace.events ?? [])
+		.filter((event) => event.name === "DegradedStages");
+	if (!event) return undefined;
+	const stages = isRecord(event.data) ? event.data.stages : undefined;
+	const [first] = Array.isArray(stages) ? stages : [];
+	const failure = isRecord(first) ? first.failure : undefined;
+	return Error(
+		isRecord(failure)
+			? `${String(failure.tag)} (${String(first?.stage)} degraded): ${String(failure.message)}`
+			: "segment.inUnits degraded a stage of the Sentence",
+	);
 };
 
 const unresolvedOf = (traces: readonly OperationTrace[]) =>
@@ -108,6 +131,8 @@ export const segmentSentence = (
 				),
 			);
 		}
+		const degraded = degradedOf(traces);
+		if (degraded) return yield* Effect.fail(degraded);
 		return {
 			segments: segmented.segments,
 			units: segmented.units,
@@ -128,6 +153,10 @@ export const groupSegments = (
 	runOperation(
 		"segment.inUnits",
 		Effect.flatMap(stageAsk, (ask) =>
-			segmentGermanUnits({ segments }, ask, productionUnitSettings),
+			Effect.flatMap(
+				segmentGermanUnits({ segments }, ask, productionUnitSettings),
+				({ units, degraded: [first] }) =>
+					first ? Effect.fail(first.failure) : Effect.succeed(units),
+			),
 		),
 	).pipe(Effect.provide(coreOver(jev)));

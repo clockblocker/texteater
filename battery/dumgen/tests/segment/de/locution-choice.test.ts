@@ -6,12 +6,9 @@ import {
 	wordingOf,
 } from "../../../src/segment/de/locution-choice.js";
 import { sentenceOf } from "../../../src/segment/de/sentence.js";
-import {
-	productionUnitSettings,
-	segmentGermanUnits,
-} from "../../../src/segment/de/units.js";
+import { productionUnitSettings } from "../../../src/segment/de/units.js";
 import { segmentsOf } from "../../lab/evaluation/spec-corpus/fixtures.js";
-import { fakeJudge, noul, picked } from "./fake-judge.js";
+import { fakeJudge, germanUnits, noul, picked } from "./fake-judge.js";
 
 const withLocution = { ...productionUnitSettings, locution: locutionSettings };
 
@@ -19,7 +16,7 @@ const withLocution = { ...productionUnitSettings, locution: locutionSettings };
 async function run(sentence: string, answers: Record<string, Answer>) {
 	const judge = fakeJudge(answers);
 	const units = await Effect.runPromise(
-		segmentGermanUnits(
+		germanUnits(
 			{ segments: segmentsOf(sentence) },
 			judge.ask,
 			withLocution,
@@ -51,13 +48,10 @@ test("an idiom host share under the floor asks the Locution Choice; both units f
 			"Lexeme/VERB": 0.4,
 		}),
 	});
-	const locution = judge.requests.find(({ stage }) => stage === "locution");
-	expect(Object.keys(locution?.questions ?? {})).toEqual([
-		"lc_2_x_6_l",
-		"lc_2_x_6_r",
-	]);
+	const locution = judge.questionsOf("locution");
+	expect(Object.keys(locution ?? {})).toEqual(["lc_2_x_6_l", "lc_2_x_6_r"]);
 	// The judge sees the unit the merge would make, the opening in included.
-	expect(JSON.stringify(locution?.questions)).toContain(
+	expect(JSON.stringify(locution)).toContain(
 		'one established multiword expression, \\"nahm … in Kauf\\"',
 	);
 	expect(groups).toEqual([[0], [2, 8, 10], [4, 6]]);
@@ -81,11 +75,11 @@ test("without the setting, or with no candidate, no locution request is sent", a
 	const off = fakeJudge(idiomUnderFloor);
 	const { locution: _, ...without } = productionUnitSettings;
 	await Effect.runPromise(
-		segmentGermanUnits({ segments: segmentsOf(kauf) }, off.ask, without),
+		germanUnits({ segments: segmentsOf(kauf) }, off.ask, without),
 	);
-	expect(off.stages()).not.toContain("locution");
+	expect(off.questionsOf("locution")).toBeUndefined();
 	const { judge } = await run(kauf, {});
-	expect(judge.stages()).not.toContain("locution");
+	expect(judge.questionsOf("locution")).toBeUndefined();
 });
 
 test("no merge reaches a unit of one word the Rules keep apart: a pronoun, nicht or a modal", async () => {
@@ -97,7 +91,7 @@ test("no merge reaches a unit of one word the Rules keep apart: a pronoun, nicht
 		e_1_2: noul(0.65),
 		e_2_4: noul(0.95),
 	});
-	expect(judge.stages()).not.toContain("locution");
+	expect(judge.questionsOf("locution")).toBeUndefined();
 	// Er0 _1 kann2 _3 nicht4 _5 schwimmen6 .7
 	const modal = await run("Er kann nicht schwimmen.", {
 		f_2: noul(0.6),
@@ -106,7 +100,7 @@ test("no merge reaches a unit of one word the Rules keep apart: a pronoun, nicht
 		e_2_4: noul(0.6),
 		e_3_4: noul(0.6),
 	});
-	expect(modal.judge.stages()).not.toContain("locution");
+	expect(modal.judge.questionsOf("locution")).toBeUndefined();
 });
 
 test("the wording shows the pieces as written, with … for a gap", () => {
@@ -147,7 +141,7 @@ test("Zum Beispiel, capitalized and fused: under the floors production splits it
 		["Zum", "Zum"],
 	);
 	const production = await Effect.runPromise(
-		segmentGermanUnits({ segments }, fakeJudge(zumBeispielHeard).ask),
+		germanUnits({ segments }, fakeJudge(zumBeispielHeard).ask),
 	);
 	expect(production.map((unit) => unit.segments)).toEqual([
 		[0],
@@ -159,7 +153,7 @@ test("Zum Beispiel, capitalized and fused: under the floors production splits it
 	]);
 	// One expression link over the floors, and the fused halves follow it.
 	const linked = await Effect.runPromise(
-		segmentGermanUnits(
+		germanUnits(
 			{ segments },
 			fakeJudge({
 				...zumBeispielHeard,
@@ -181,14 +175,10 @@ test("Zum Beispiel: the Locution Choice asks about the heard links and, both uni
 		r_1_2_3: picked("Locution/ADV"),
 	});
 	const units = await Effect.runPromise(
-		segmentGermanUnits(
-			{ segments: [...zumBeispiel] },
-			judge.ask,
-			withLocution,
-		),
+		germanUnits({ segments: [...zumBeispiel] }, judge.ask, withLocution),
 	);
-	const locution = judge.requests.find(({ stage }) => stage === "locution");
-	expect(JSON.stringify(locution?.questions)).toContain(
+	const locution = judge.questionsOf("locution");
+	expect(JSON.stringify(locution)).toContain(
 		'expression, \\"Zum Beispiel\\"',
 	);
 	expect(units[0]).toEqual({
@@ -211,11 +201,7 @@ test("a fused word split between units is a candidate when the other unit holds 
 		lc_1_x_2_3_r: fixedSide,
 	});
 	const units = await Effect.runPromise(
-		segmentGermanUnits(
-			{ segments: [...segments] },
-			judge.ask,
-			withLocution,
-		),
+		germanUnits({ segments: [...segments] }, judge.ask, withLocution),
 	);
 	expect(units.map((unit) => unit.segments)).toEqual([
 		[0, 1, 3],
@@ -226,13 +212,9 @@ test("a fused word split between units is a candidate when the other unit holds 
 	// Without a possibly fixed word beside it, the fused piece asks nothing.
 	const plain = fakeJudge({ s_article_2: picked("p3") });
 	await Effect.runPromise(
-		segmentGermanUnits(
-			{ segments: [...segments] },
-			plain.ask,
-			withLocution,
-		),
+		germanUnits({ segments: [...segments] }, plain.ask, withLocution),
 	);
-	expect(plain.stages()).not.toContain("locution");
+	expect(plain.questionsOf("locution")).toBeUndefined();
 });
 
 test("production asks the Locution Choice and merges at 0.6 (#851, X5)", async () => {
@@ -252,9 +234,9 @@ test("production asks the Locution Choice and merges at 0.6 (#851, X5)", async (
 		lc_2_x_6_r: picked("fixed", { fixed: 0.55, free: 0.45 }),
 	});
 	const units = await Effect.runPromise(
-		segmentGermanUnits({ segments: segmentsOf(kauf) }, judge.ask),
+		germanUnits({ segments: segmentsOf(kauf) }, judge.ask),
 	);
-	expect(judge.stages()).toContain("locution");
+	expect(judge.questionsOf("locution")).toBeDefined();
 	expect(units.map((unit) => unit.segments)).toEqual(await at(0.4));
 	expect(await at(0.55)).toContainEqual([2, 8, 10]);
 });
