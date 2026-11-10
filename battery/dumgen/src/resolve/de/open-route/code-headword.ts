@@ -18,6 +18,7 @@ import type { Written } from "../canonical-form.js";
 import type { Target } from "../target.js";
 import type { FirstRead } from "./first-request.js";
 import { particlesSpelled } from "./particle.js";
+import { inLowercase } from "./route-casing.js";
 import { fold, spellingOf } from "./shape.js";
 
 /** A headword code can write, and whether jev's answers let it stand. */
@@ -55,7 +56,7 @@ export function codeHeadword(target: Target): CodeHeadword | undefined {
 			? headword(only.lemma.canonicalForm, asWritten)
 			: undefined;
 	}
-	const lowercase = spelled.toLocaleLowerCase("de");
+	const lowercase = inLowercase(spelled);
 	if (kind === "ADP")
 		return germanAdpositionEntry({
 			family: "Lexeme",

@@ -13,6 +13,7 @@ import type { Headword } from "./attestation.js";
 import type { FirstRead } from "./first-request.js";
 import { digitsHeadword, numeralLocutionHeadword } from "./numeral.js";
 import { authoredParticle } from "./particle.js";
+import { inLowercase, lowercaseRoute } from "./route-casing.js";
 import type { Shape } from "./shape.js";
 import { verbHeadword } from "./verbal.js";
 
@@ -20,7 +21,8 @@ import { verbHeadword } from "./verbal.js";
  * The headword: Luna's Canonical Form and members' words, over which each
  * route shape's step writes what the Rules settle, in this order: a VERB
  * Lexeme's prefix, a PART's authored Lemma, a numeral Locution's members
- * or a Locution's guarded headword, a NUM's digits, an ADV's or ADJ's. No
+ * or a Locution's guarded headword, a NUM's digits, an ADV's or ADJ's,
+ * then the route's casing (`route-casing.ts`). No
  * verbal headword keeps a lexical reflexive (ADR 0052). A PART no authored
  * Lemma names is a Catalog Miss.
  */
@@ -83,5 +85,11 @@ export function canonicalFormOf(
 	}
 	if (canonicalForm === undefined)
 		throw Error("No Canonical Form was written");
+	if (lowercaseRoute(target.route))
+		return {
+			canonicalForm: inLowercase(canonicalForm),
+			core,
+			normalized: normalized.map(inLowercase),
+		};
 	return { canonicalForm, core, normalized };
 }

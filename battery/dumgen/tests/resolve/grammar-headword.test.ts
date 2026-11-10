@@ -57,15 +57,17 @@ test("Luna writes the Canonical Form in lexical casing with the unit's stored Le
 	expect(luna.sent[0]?.systemPrompt).toContain(
 		"never the casing the word's position gives",
 	);
-	// Luna keeping the position's capital is kept: code never lowercases.
+	// Luna keeping the position's capital is kept where the route leaves
+	// casing lexical: code never lowercases by position.
+	// Berliner0 _1 Luft2 _3 ist4 _5 frisch6 .7
 	const capital = await resolveOnce(
-		{ jev: fakeJev().ask, luna: writes("obwohl", ["Obwohl"]).ask },
+		{ jev: fakeJev().ask, luna: writes("Berliner", ["Berliner"]).ask },
 		{
-			sentence: sentenceOf("Obwohl es regnete, kam er."),
-			unit: unitOf([0], "Lexeme/SCONJ"),
+			sentence: sentenceOf("Berliner Luft ist frisch."),
+			unit: unitOf([0], "Lexeme/ADJ"),
 		},
 	);
-	expect(attested(capital.result).surface.normalizedSurface).toBe("Obwohl");
+	expect(attested(capital.result).surface.normalizedSurface).toBe("Berliner");
 	// An ADP the ADP Case Table lists takes the table's word, never Luna's.
 	// Mangels0 _1 Beweisen2 _3 kam4 _5 er6 _7 frei8 .9
 	const authored = await resolveOnce(
