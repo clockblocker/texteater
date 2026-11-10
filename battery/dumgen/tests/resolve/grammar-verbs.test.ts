@@ -5,6 +5,7 @@ import type { JevAsk } from "../../src/segment/jev.js";
 import {
 	attested,
 	fakeJev,
+	fakeLuna,
 	resolveOnce,
 	sentenceOf,
 	unitOf,
@@ -58,6 +59,35 @@ test("a governed preposition is the verb's valencyEvidence and stays out of its 
 	// The guess had no governed member, so Luna wrote again.
 	expect(luna.sent).toHaveLength(2);
 	expect(luna.sent[1]?.input).toHaveProperty("outsideHeadword", ["m1"]);
+});
+
+test("a VERB Lexeme's headword drops the preposition it governs and the slot words Luna cites it with", async () => {
+	// Sie0 _1 wartet2 _3 auf4 _5 den6 _7 Bus8 .9
+	const answers = {
+		prefix: "None",
+		governed_m1: "Governed",
+		governedCase_m1: "Acc",
+		governedReferent_m1: "Something",
+		verbForm: "Fin",
+		mood: "Ind",
+		tense: "Pres",
+		person: "3",
+		number: "Sing",
+	};
+	for (const written of ["auf etwas warten", "warten auf"]) {
+		const luna = fakeLuna(({ members }) => ({
+			canonicalForm: written,
+			members: members.map(({ text }) => text),
+		}));
+		const { result } = await resolveOnce(
+			{ jev: fakeJev(answers).ask, luna: luna.ask },
+			{
+				sentence: sentenceOf("Sie wartet auf den Bus."),
+				unit: unitOf([2, 4], "Lexeme/VERB"),
+			},
+		);
+		expect(attested(result).surface.lemma.canonicalForm).toBe("warten");
+	}
 });
 
 test("an adposition records the case its complement took, asked only where the ADP Case Table allows several", async () => {

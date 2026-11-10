@@ -11,6 +11,7 @@ import { fixedSpelling, type Target } from "../target.js";
 import { adverbialHeadword } from "./adverbial.js";
 import type { Headword } from "./attestation.js";
 import type { FirstRead } from "./first-request.js";
+import { withoutGoverned } from "./governed.js";
 import { digitsHeadword, numeralLocutionHeadword } from "./numeral.js";
 import { authoredParticle } from "./particle.js";
 import { inLowercase, lowercaseRoute } from "./route-casing.js";
@@ -20,7 +21,7 @@ import { verbHeadword } from "./verbal.js";
 /**
  * The headword: Luna's Canonical Form and members' words, over which each
  * route shape's step writes what the Rules settle, in this order: a VERB
- * Lexeme's prefix, a PART's authored Lemma, a numeral Locution's members
+ * Lexeme's prefix, with no preposition it governs, a PART's authored Lemma, a numeral Locution's members
  * or a Locution's guarded headword, a NUM's digits, an ADV's or ADJ's,
  * then the route's casing (`route-casing.ts`). No
  * verbal headword keeps a lexical reflexive (ADR 0052). A PART no authored
@@ -38,7 +39,13 @@ export function canonicalFormOf(
 	let canonicalForm =
 		written && first.block === "verbal"
 			? shape.lexeme
-				? verbHeadword(written.canonicalForm, first.core)
+				? verbHeadword(
+						withoutGoverned(
+							written.canonicalForm,
+							first.governedMembers,
+						),
+						first.core,
+					)
 				: withoutReflexive(written.canonicalForm)
 			: written?.canonicalForm;
 	const normalized = [

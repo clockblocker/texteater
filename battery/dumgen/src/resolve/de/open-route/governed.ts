@@ -401,3 +401,44 @@ export function governedPrefix(
 		);
 	};
 }
+
+/** The words a dictionary cites a valency slot with, never part of a headword. */
+const slotWords = new Set([
+	"etwas",
+	"etw.",
+	"jemand",
+	"jemanden",
+	"jemandem",
+	"jemandes",
+	"jmd.",
+	"jmdn.",
+	"jmdm.",
+	"jmds.",
+]);
+
+/**
+ * A VERB Lexeme's headword without the prepositions it governs here or the
+ * slot words a dictionary cites them with: the preposition joins the unit
+ * but not its Lemma (Rule de/governed-preposition-joins-its-governor), so
+ * «stehen für» and «auf etwas treffen» are stehen and treffen (#1337). A
+ * form with no word left is kept as written.
+ */
+export function withoutGoverned(
+	form: string,
+	governed: readonly GovernedMember[],
+): string {
+	if (governed.length === 0) return form;
+	const words = new Set(
+		governed.flatMap(({ member, preposition }) => [
+			fold(spellingOf(member)),
+			fold(preposition),
+		]),
+	);
+	const kept = form
+		.split(/\s+/u)
+		.filter(
+			(word) =>
+				word && !words.has(fold(word)) && !slotWords.has(fold(word)),
+		);
+	return kept.length > 0 ? kept.join(" ") : form;
+}
