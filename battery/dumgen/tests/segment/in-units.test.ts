@@ -171,6 +171,52 @@ test("a request over its token size goes out in chunks of at most tokensPerReque
 	).toEqual(route.map(({ questions }) => 10 * Object.keys(questions).length));
 });
 
+test("a Sentence the Text holds twice is asked about once, and each occurrence gets its units, outcome and events", async () => {
+	const jev = fakeJev({
+		answers: { r_1: picked("Lexeme/PRON"), r_2: picked("Lexeme/VERB") },
+	});
+	const { text, traces } = await inUnits(
+		{ jev: jev.ask },
+		{
+			language: "de",
+			paragraphs: [
+				{ sentences: ["Er kam.", "Sie ging."] },
+				{ sentences: ["Er kam."] },
+			],
+		},
+	);
+	const [first, other] = text.paragraphs[0]?.sentences ?? [];
+	const [again] = text.paragraphs[1]?.sentences ?? [];
+	expect(again).toEqual(first);
+	expect(other?.text).toBe("Sie ging.");
+	expect(first?.units.map(({ route }) => route)).toEqual([
+		{ language: "de", family: "Lexeme", kind: "PRON" },
+		{ language: "de", family: "Lexeme", kind: "VERB" },
+	]);
+	const [trace] = traces;
+	// Er kam. was asked about once, its calls under its first index: as
+	// often as a Text holding it alone asks.
+	const kam = jev.sent.filter(({ state }) =>
+		JSON.stringify(state).includes("Er kam"),
+	);
+	expect(new Set(trace?.calls.map(({ sentence }) => sentence))).toEqual(
+		new Set([0, 1]),
+	);
+	expect(
+		[...(trace?.sentences ?? [])].sort((a, b) => a.sentence - b.sentence),
+	).toEqual([
+		{ sentence: 0, outcome: "Segmented" },
+		{ sentence: 1, outcome: "Segmented" },
+		{ sentence: 2, outcome: "Segmented" },
+	]);
+	const once = fakeJev();
+	await inUnits(
+		{ jev: once.ask },
+		{ language: "de", paragraphs: [{ sentences: ["Er kam."] }] },
+	);
+	expect(kam.length).toBe(once.sent.length);
+});
+
 test("one request budget bounds every Sentence's calls together, and each wait is recorded", async () => {
 	const jev = fakeJev();
 	const { traces } = await inUnits(
