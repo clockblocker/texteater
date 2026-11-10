@@ -123,3 +123,22 @@ test("the auxiliary slot offers the word that closes the bracket past its window
 		hinzugefuegt,
 	]);
 });
+
+test("haben with its subject's reflexive in the clause is a perfect, whatever the state answer says", async () => {
+	// Er0 _1 hat2 _3 sich4 _5 mit6 _7 der8 _9 Lage10 _11 abgefunden12 .13
+	const host = { p7: 0.8, none: 0.2 };
+	const answers = {
+		s_auxiliary_2: picked("p7", host),
+		s_reflexive_3: picked("p7", host),
+		v_state_2_7: picked("state", { state: 0.64, perfect: 0.36 }),
+	};
+	const sich = segmentsOf("Er hat sich mit der Lage abgefunden.");
+	expect(await groupsOf(sich, answers)).toContainEqual([2, 4, 12]);
+	// Without the reflexive, the state answer splits haben off.
+	// Er0 _1 hat2 _3 die4 _5 Tür6 _7 geschlossen8 .9
+	const tuer = await groupsOf(segmentsOf("Er hat die Tür geschlossen."), {
+		s_auxiliary_2: picked("p5", { p5: 0.8, none: 0.2 }),
+		v_state_2_5: picked("state", { state: 0.64, perfect: 0.36 }),
+	});
+	expect(tuer).toContainEqual([2]);
+});

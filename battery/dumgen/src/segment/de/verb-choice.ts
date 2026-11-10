@@ -17,7 +17,8 @@
  * - `state` (de/sein-perfect-or-copula, de/verbal-participle, ADR 0036):
  *   haben or sein with a participle reports the event (joins it) or
  *   describes a state (apart). Haben that the sentence can't settle joins as
- *   the perfect (#725, de/unresolved-over-repair). A sein form also asks
+ *   the perfect (#725, de/unresolved-over-repair), and so does haben with
+ *   a reflexive of its subject in its clause, whatever the answer (#1336). A sein form also asks
  *   which auxiliary the participle's verb takes in its perfect, since sein
  *   is a perfect only when that is sein: a haben answer splits whatever the
  *   event answer says, so Sein bisschen Geld ist schnell ausgegeben gives
@@ -289,6 +290,24 @@ function clauseSich(nomination: Nomination, id: number): number | undefined {
 		.sort((a, b) => Math.abs(a.id - id) - Math.abs(b.id - id))[0]?.id;
 }
 
+/**
+ * Whether the piece's clause holds a reflexive of its subject: sich, or
+ * mich, dich, uns or euch with the subject they need (`reflexiveSubject`).
+ */
+function reflexiveInClause(nomination: Nomination, id: number): boolean {
+	const { pieces } = nomination.sentence;
+	const clause = pieces[id - 1]?.clause;
+	const inClause = pieces.filter((other) => other.clause === clause);
+	return inClause.some((piece) => {
+		if (!reflexiveForms.has(foldedText(piece))) return false;
+		const subject = reflexiveSubject.get(lower(piece));
+		return (
+			subject === undefined ||
+			inClause.some((other) => lower(other) === subject)
+		);
+	});
+}
+
 /** What one answered flag does under the floor. */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity baseline (#994): decompose to remove
 function actionOf(
@@ -325,6 +344,11 @@ function actionOf(
 					flag.piece - 1
 				]?.text.toLowerCase() ?? "",
 			);
+			// haben with a reflexive of its subject in its clause reports
+			// the event: the participle can't describe a state the subject
+			// is in with itself as haben's object (sich … abgefunden hat).
+			if (haben && reflexiveInClause(nomination, flag.piece))
+				return [{ join: pair }];
 			if (share("state") >= floor) return [{ split: pair }];
 			// de/sein-perfect-or-copula: sein is no perfect of a verb whose perfect takes haben.
 			const auxiliary = answers[perfectAuxiliaryId(flag)];
