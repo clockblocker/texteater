@@ -109,14 +109,18 @@ function systemPrompt(target: Target, drafts: boolean): string {
 
 /**
  * The stored Lemmas that may name the unit: found under one of its
- * members' words, compared without case, on its own route.
+ * members' words, compared without case, on its own route; with
+ * `outside`, under a member the headword holds (#1339), so a Lemma found
+ * only under an auxiliary (wird), a reflexive or an article is none.
  */
 export function hintsFor(
 	target: Target,
 	candidates: readonly LemmaCandidate[],
+	outside: ReadonlySet<number> = new Set(),
 ): readonly LemmaCandidate[] {
 	const words = new Set(
 		target.members.flatMap((member) => {
+			if (outside.has(member.position)) return [];
 			const fixed = fixedSpelling(member);
 			return [member.text, ...(fixed ? [fixed] : [])].map((text) =>
 				foldCase(text, "de"),
@@ -143,7 +147,8 @@ export function hintsFor(
  * the description with the marked Sentence in front of it: written after
  * the headword, it took the headword's most common sense, «Bank» 🏦 for a
  * bench (#1165). No stored Reading reaches the request: the hints are
- * Lemmas, their Canonical Form and Core Features only.
+ * Lemmas, their Canonical Form and Core Features only, and only those
+ * found under the members `judged` leaves in the headword (`hintsFor`).
  */
 export function canonicalFormRequest(
 	target: Target,
@@ -152,6 +157,11 @@ export function canonicalFormRequest(
 	drafts = false,
 ): LunaDraft {
 	const state = targetState(target);
+	const offered = hintsFor(
+		target,
+		hints,
+		new Set([...judged.outsideHeadword, ...(judged.auxiliaries ?? [])]),
+	);
 	const fixedMembers = Object.fromEntries(
 		target.members.flatMap((member) => {
 			const fixed = fixedSpelling(member, judged.readings);
@@ -198,9 +208,9 @@ export function canonicalFormRequest(
 						),
 					}
 				: {}),
-			...(hints.length
+			...(offered.length
 				? {
-						lemmaCandidates: hints.map(({ lemma }) => ({
+						lemmaCandidates: offered.map(({ lemma }) => ({
 							canonicalForm: lemma.canonicalForm,
 							coreFeatures: lemma.coreFeatures,
 						})),
