@@ -9,7 +9,9 @@
  *   noun its phrase would take (#1334). Two Rule tests move ADV to ADJ and DET to PRON or back. An
  *   abbreviation-shaped piece also sees Locution routes.
  * - Code names a multi-piece unit's Family from how it was built; the
- *   route Choice picks only the Kind within it.
+ *   route Choice picks only the Kind within it, never Lexeme PART: every
+ *   authored PART is one word (#734), so the click could serve none, and
+ *   such a unit takes its Family's next Kind (#1340, fertig zu).
  * - Closed-class identity (#734) overrides the route of a one-piece unit
  *   whose spelling it covers.
  * - Adjacent one-piece units routed INTJ merge into one Locution INTJ
@@ -112,6 +114,21 @@ export function storedIdentity(
 	};
 }
 
+/**
+ * A multi-piece unit's route shares within the Family code named, without
+ * Lexeme PART: every authored PART is one word (#734), so a click on a
+ * multi-piece PART would find no Lemma (#1340).
+ */
+const familyShares = (
+	distribution: Readonly<Record<string, number>>,
+	family: Family,
+): Record<string, number> =>
+	Object.fromEntries(
+		Object.entries(distribution).filter(
+			([key]) => key.startsWith(`${family}/`) && key !== "Lexeme/PART",
+		),
+	);
+
 /** Code names the Family from how the unit was built; jev only the Kind within it. */
 export const structuralRoute =
 	(
@@ -123,13 +140,8 @@ export const structuralRoute =
 		if (group.length === 1) return jevRoute(group);
 		const family = familyOf(group);
 		if (family === "Saying") return "Saying/Saying";
-		const distribution = distributions.get(groupKey(group)) ?? {};
 		const best = argmax(
-			Object.fromEntries(
-				Object.entries(distribution).filter(([key]) =>
-					key.startsWith(`${family}/`),
-				),
-			),
+			familyShares(distributions.get(groupKey(group)) ?? {}, family),
 		);
 		return best ? checkedRouteKey(best.key) : jevRoute(group);
 	};
@@ -405,11 +417,7 @@ export function routeMembership(
 			return undefined;
 		const family = membership.familyOf(group);
 		if (family === "Saying") return undefined;
-		return Object.fromEntries(
-			Object.entries(distributions.get(groupKey(group)) ?? {}).filter(
-				([key]) => key.startsWith(`${family}/`),
-			),
-		);
+		return familyShares(distributions.get(groupKey(group)) ?? {}, family);
 	};
 	return {
 		partition: merged.partition,
