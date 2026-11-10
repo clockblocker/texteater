@@ -30,14 +30,14 @@ test("an evaluate command given an option its experiment does not read in its mo
 	const estimate = ["--experiment", "segment-in-units/de:dev", "--estimate"];
 
 	await expect(cli([...estimate, "--limit", "2"])).rejects.toThrow(
-		"--limit does not apply to an --estimate of segment-in-units/de:dev, which takes --experiment, --revision, --output, --estimate, --units, --judgment-model, --concurrency, --cases, --cases-from, --token-budget. A segment.inUnits run always runs its whole set (or its case list) at 3 repetitions; use --cases <ids file> or --cases-from <request compare report> to run part of a set",
+		"--limit does not apply to an --estimate of segment-in-units/de:dev, which takes --experiment, --revision, --output, --estimate, --units, --judgment-model, --concurrency, --cases, --cases-from, --repetitions, --token-budget. A segment.inUnits run runs its whole set (or its case list), at 3 repetitions unless --repetitions names 1 or 2; use --cases <ids file> or --cases-from <request compare report> to run part of a set",
 	);
 	await expect(cli([...estimate, "--subset", "subset.json"])).rejects.toThrow(
 		"--subset does not apply",
 	);
 	await expect(
 		cli([...estimate, "--repetitions", "1", "--gold-only"]),
-	).rejects.toThrow("--repetitions, --gold-only do not apply");
+	).rejects.toThrow("--gold-only does not apply");
 	// --requests wins over --estimate, which it does not read.
 	await expect(cli([...estimate, "--requests"])).rejects.toThrow(
 		"--estimate does not apply to a --requests run of segment-in-units/de:dev, which takes --experiment, --revision, --output, --requests, --units, --judgment-model, --concurrency",

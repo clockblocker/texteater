@@ -126,10 +126,15 @@ type KindOptions = {
 };
 
 const segmentReads = ["units", "judgment-model", "concurrency"] as const;
-const segmentRunReads = [...segmentReads, "cases", "cases-from"] as const;
+const segmentRunReads = [
+	...segmentReads,
+	"cases",
+	"cases-from",
+	"repetitions",
+] as const;
 const segmentNote: Note = {
-	options: new Set(["limit", "subset", "repetitions", "gold-only"]),
-	text: "A segment.inUnits run always runs its whole set (or its case list) at 3 repetitions; use --cases <ids file> or --cases-from <request compare report> to run part of a set",
+	options: new Set(["limit", "subset", "gold-only"]),
+	text: "A segment.inUnits run runs its whole set (or its case list), at 3 repetitions unless --repetitions names 1 or 2; use --cases <ids file> or --cases-from <request compare report> to run part of a set",
 };
 
 /** segment.inUnits: `--parity` takes gold mode only. */

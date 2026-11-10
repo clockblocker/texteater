@@ -69,6 +69,20 @@ export const defaultLabRoot = fileURLToPath(
 
 /** The lab's runs repeat each case three times; each repetition is its own cached answer. */
 const repetitions = 3;
+
+/** A run's repetitions: 1 to 3 when `requested` names them, else 3. */
+function repetitionsOf(requested: number | undefined): number {
+	if (requested === undefined) return repetitions;
+	if (
+		!Number.isInteger(requested) ||
+		requested < 1 ||
+		requested > repetitions
+	)
+		throw Error(
+			`A segment.inUnits run takes 1 to ${repetitions} repetitions, not ${requested}`,
+		);
+	return requested;
+}
 export const setNames = [
 	"dev",
 	"heldout",
@@ -112,17 +126,18 @@ function selectCases(
 	};
 }
 
-/** Every case's every repetition through `operation`, `concurrency` at a time; failures are left for the run. */
+/** Every case's first `count` repetitions through `operation`, `concurrency` at a time; failures are left for the run. */
 const pass = <I>(
 	cases: readonly { readonly input: I }[],
 	operation: (input: I, context: Context) => LabEffect<unknown>,
 	jev: JevCache,
 	concurrency: number,
 	calls: CallRecord[],
+	count: number,
 ): LabEffect<void> =>
 	everyAttempt(
 		cases.flatMap(({ input }) =>
-			Array.from({ length: repetitions }, (_, repetition) => ({
+			Array.from({ length: count }, (_, repetition) => ({
 				input,
 				repetition,
 			})),
@@ -142,6 +157,7 @@ function traced<I, O>(
 	jev: JevCache,
 	calls: CallRecord[],
 	runtime: LabRuntime,
+	count: number,
 ) {
 	const attempts = new Map<string, number>();
 	return async (
@@ -160,7 +176,7 @@ function traced<I, O>(
 				runtime,
 				operation(input, {
 					jev,
-					repetition: attempt % repetitions,
+					repetition: attempt % count,
 					calls: own,
 				}),
 				context.signal,
@@ -299,6 +315,7 @@ async function evaluateSegmentInUnits<I extends z.ZodType, O extends z.ZodType>(
 	const units = args.units ?? "production";
 	const operation = mode.run(units);
 	const chosen = selectCases(set, args.caseIds);
+	const count = repetitionsOf(args.repetitions);
 	const cases = chosen.cases.map((labCase) => ({
 		labCase,
 		...mode.caseOf(labCase),
@@ -334,7 +351,7 @@ async function evaluateSegmentInUnits<I extends z.ZodType, O extends z.ZodType>(
 		});
 		await runOn(
 			runtime,
-			pass(inputs, operation, projecting, concurrency, []),
+			pass(inputs, operation, projecting, concurrency, [], count),
 			args.signal,
 		);
 		projection = priceProjection(projecting.projection);
@@ -347,7 +364,7 @@ async function evaluateSegmentInUnits<I extends z.ZodType, O extends z.ZodType>(
 	if (!args.offline)
 		await runOn(
 			runtime,
-			pass(inputs, operation, jev, concurrency, filled),
+			pass(inputs, operation, jev, concurrency, filled, count),
 			args.signal,
 		);
 	const calls: CallRecord[] = [];
@@ -391,7 +408,7 @@ async function evaluateSegmentInUnits<I extends z.ZodType, O extends z.ZodType>(
 			corpus,
 			evaluation: corpus.select(chosen.cases.map(({ id }) => id)),
 			demonstrations: corpus.select([]),
-			run: traced(operation, jev, calls, runtime),
+			run: traced(operation, jev, calls, runtime, count),
 			evaluator: mode.evaluator(
 				Object.fromEntries(
 					chosen.cases.map((labCase) => [labCase.id, labCase.facts]),
@@ -407,7 +424,7 @@ async function evaluateSegmentInUnits<I extends z.ZodType, O extends z.ZodType>(
 			generation: configuration,
 			judgment: configuration,
 		},
-		repetitions,
+		repetitions: count,
 		...(args.signal ? { signal: args.signal } : {}),
 	});
 	if (args.outputDirectory) await saveRun(args.outputDirectory, run);

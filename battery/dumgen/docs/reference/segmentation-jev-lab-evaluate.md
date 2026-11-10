@@ -43,7 +43,10 @@ bun run evaluate --experiment segment-in-units/de:dev --revision <rev> \
   replace ud-drafts. Code splits; no model runs.
 - Every mode reports membership, multi-piece membership and hover B-cubed
   as the lab does, over the repetitions that ran. Each case runs three
-  times, answered from the lab's cache by repetition.
+  times, answered from the lab's cache by repetition; a segment.inUnits
+  run with `--repetitions 1` or `2` runs only the first of them, so a
+  paired before-and-after round on few fresh answers costs a third or two
+  thirds.
 - **A case list** (`--cases <file>`, one case id per line, or
   `--cases-from <file>`, the `--compare` report of two request runs saved
   as JSON, whose `changed` cases it takes) runs a segment.inUnits
@@ -55,8 +58,8 @@ bun run evaluate --experiment segment-in-units/de:dev --revision <rev> \
   the request diff moved: every other case sends the same requests, so
   its outcomes can't move. Each evaluate command takes only the options
   it reads, and any other fails before it prices or asks anything: a
-  segment.inUnits run reads none of `--limit`, `--subset`, `--repetitions`
-  and `--gold-only` (the case list is how to run part of a set), and
+  segment.inUnits run reads none of `--limit`, `--subset` and
+  `--gold-only` (the case list is how to run part of a set), and
   `--requests` reads no case selection or repetitions.
 - A segment.inUnits run writes a ledger line (`command: "evaluate"`) and
   counts against the round like a lab run: `--estimate`, the stop line, the

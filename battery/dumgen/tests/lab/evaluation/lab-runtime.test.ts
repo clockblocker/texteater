@@ -118,3 +118,40 @@ test("aborting a run's signal interrupts its attempts and aborts every call in f
 		aborted: labRequestBudget,
 	});
 });
+
+test("a segment.inUnits run with --repetitions 1 asks each case once, at repetition 0", async () => {
+	const lab = await labOf("one-repetition", 4);
+	const { jev: gold } = goldJudge();
+	let calls = 0;
+	const jev: JevAsk = async (request, context) => {
+		calls++;
+		return await gold(request, context);
+	};
+	const once = await evaluateExperiment({
+		experimentId: "segment-in-units/de:dev",
+		jev,
+		sourceRevision: "test",
+		...lab,
+		repetitions: 1,
+	});
+	expect(once.run?.manifest.repetitions ?? 1).toBe(1);
+	expect(once.run?.summary.quality).toMatchObject({ passed: 4, failed: 0 });
+	const first = calls;
+	// Three repetitions replay repetition 0 and ask 1 and 2 afresh.
+	await evaluateExperiment({
+		experimentId: "segment-in-units/de:dev",
+		jev,
+		sourceRevision: "test",
+		...lab,
+	});
+	expect(calls).toBe(first * 3);
+	await expect(
+		evaluateExperiment({
+			experimentId: "segment-in-units/de:dev",
+			jev,
+			sourceRevision: "test",
+			...lab,
+			repetitions: 4,
+		}),
+	).rejects.toThrow("takes 1 to 3 repetitions, not 4");
+});
