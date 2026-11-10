@@ -42,6 +42,11 @@ export async function discardFolios(
 	for (const folio of folios) await ctx.db.delete(folio._id);
 }
 
+/** Whether a request for the Folio starts a run: unless it is processing or processed. */
+export function requestStartsRun(folio: Doc<"folios">): boolean {
+	return folio.state !== "Processing" && folio.state !== "Processed";
+}
+
 /**
  * A Learner asked for a Folio: unless it is processing or processed, a
  * new run starts on it, with its watchdog.
@@ -50,7 +55,7 @@ export async function requestFolio(
 	ctx: MutationCtx,
 	folio: Doc<"folios">,
 ): Promise<void> {
-	if (folio.state === "Processing" || folio.state === "Processed") return;
+	if (!requestStartsRun(folio)) return;
 	const run = (folio.run ?? 0) + 1;
 	await ctx.db.patch(folio._id, {
 		state: "Processing",

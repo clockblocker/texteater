@@ -6,10 +6,12 @@ import {
 	nextFolioWindow,
 	recoverStaleFolioRun,
 	requestFolio,
+	requestStartsRun,
 	savedShareValidator,
 	storeFolioSave,
 } from "./model/folios";
 import { visitorError } from "./model/validators";
+import { consumeRateLimit } from "./rateLimits";
 
 /*
  * A book's Folio processed on request (#1216): `request` is the Learner's
@@ -18,7 +20,9 @@ import { visitorError } from "./model/validators";
 
 /**
  * The Learner asks for one Folio of a book Scroll they may read to be
- * processed. A Folio processing or processed already is left as it is.
+ * processed. A Folio processing or processed already is left as it is, at
+ * no cost; a request that starts paid jev work is rate limited, as a paste
+ * and a click are.
  */
 export const request = mutation({
 	args: { folioId: v.string(), visitorId: v.string() },
@@ -34,6 +38,9 @@ export const request = mutation({
 			(scroll.owner !== undefined && scroll.owner !== visitorId)
 		)
 			throw visitorError("InvalidInput", "This text does not exist.");
+		if (!requestStartsRun(folio)) return null;
+		const limit = await consumeRateLimit(ctx, "folioRequest", visitorId);
+		if (!limit.ok) throw visitorError("RateLimited", limit.message);
 		await requestFolio(ctx, folio);
 		return null;
 	},

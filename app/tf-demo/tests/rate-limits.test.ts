@@ -8,10 +8,11 @@ import {
 } from "bun:test";
 import { makeFunctionReference } from "convex/server";
 import { v } from "convex/values";
-import { api } from "../convex/_generated/api";
+import { api, internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { internalMutation } from "../convex/_generated/server";
 import { consumeRateLimit, RATE_LIMITS } from "../convex/rateLimits";
+import { foliosOf, submitBook, VISITOR } from "./support/books";
 import {
 	createTestConvex,
 	createTestConvexWith,
@@ -205,4 +206,38 @@ test("a submission past the per-Visitor limit is Rejected before any model call"
 	} finally {
 		providers.restore();
 	}
+});
+
+test("asking for passages past the per-Visitor limit is Rejected without starting a run, and asking for one already running costs nothing", async () => {
+	const t = createTestConvex();
+	const [, scrollId] = await submitBook(t);
+	if (!scrollId) throw new Error("A chapter Scroll.");
+	const [folio] = await foliosOf(t, scrollId);
+	if (!folio) throw new Error("A Folio.");
+	const folioId = folio._id;
+	const runs = async () =>
+		(
+			await t.run((ctx) =>
+				ctx.db.system.query("_scheduled_functions").collect(),
+			)
+		).filter(({ name }) => name === "folioProcessing:run").length;
+	// Each run fails, so the Learner may ask again, and each ask counts.
+	for (let run = 1; run <= RATE_LIMITS.folioRequest.rate; run += 1) {
+		await t.mutation(api.folios.request, { folioId, visitorId: VISITOR });
+		// A repeat ask while the run holds the Folio is free.
+		await t.mutation(api.folios.request, { folioId, visitorId: VISITOR });
+		await t.mutation(internal.folios.failRun, { folioId, run });
+	}
+	expect(await runs()).toBe(RATE_LIMITS.folioRequest.rate);
+
+	await expect(
+		t.mutation(api.folios.request, { folioId, visitorId: VISITOR }),
+	).rejects.toMatchObject({
+		data: {
+			code: "RateLimited",
+			message: expect.stringContaining("try again"),
+		},
+	});
+	expect(await runs()).toBe(RATE_LIMITS.folioRequest.rate);
+	expect((await t.run((ctx) => ctx.db.get(folioId)))?.state).toBe("Failed");
 });

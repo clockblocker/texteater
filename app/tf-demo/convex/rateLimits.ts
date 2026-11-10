@@ -19,6 +19,17 @@ export const RATE_LIMITS = {
 		period: HOUR,
 		shards: 5,
 	},
+	/**
+	 * A Folio of about 3,000 characters takes a few minutes to read, so a
+	 * Learner asking for each passage as they go stays far below this.
+	 */
+	folioRequest: { kind: "token bucket", rate: 30, period: HOUR },
+	folioRequestGlobal: {
+		kind: "token bucket",
+		rate: 300,
+		period: HOUR,
+		shards: 5,
+	},
 	segmentSelection: { kind: "token bucket", rate: 60, period: MINUTE },
 	segmentSelectionGlobal: {
 		kind: "token bucket",
@@ -30,7 +41,17 @@ export const RATE_LIMITS = {
 
 const rateLimiter = new RateLimiter(components.rateLimiter, RATE_LIMITS);
 
-type RateLimitedWork = "textSubmission" | "segmentSelection";
+type RateLimitedWork = "textSubmission" | "folioRequest" | "segmentSelection";
+
+/** What a Visitor over the limit reads, given how long to wait. */
+const overLimitMessage: Record<RateLimitedWork, (seconds: number) => string> = {
+	textSubmission: (seconds) =>
+		`Too many texts were submitted recently; try again in ${Math.ceil(seconds / 60)} minutes.`,
+	folioRequest: (seconds) =>
+		`Too many passages were asked for recently; try again in ${Math.ceil(seconds / 60)} minutes.`,
+	segmentSelection: (seconds) =>
+		`Too many words were selected recently; try again in ${seconds} seconds.`,
+};
 
 /**
  * Consumes one unit of `work` from the Visitor's bucket and the global one,
@@ -50,13 +71,7 @@ export async function consumeRateLimit(
 		: visitorStatus;
 	if (!status.ok) {
 		const seconds = Math.max(1, Math.ceil(status.retryAfter / 1_000));
-		return {
-			ok: false,
-			message:
-				work === "textSubmission"
-					? `Too many texts were submitted recently; try again in ${Math.ceil(seconds / 60)} minutes.`
-					: `Too many words were selected recently; try again in ${seconds} seconds.`,
-		};
+		return { ok: false, message: overLimitMessage[work](seconds) };
 	}
 	// The check above found room, and nothing else wrote the bucket since.
 	await rateLimiter.limit(ctx, work, visitor);
