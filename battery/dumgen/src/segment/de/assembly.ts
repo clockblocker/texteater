@@ -432,22 +432,38 @@ export function stepZeroInput(
 	return { input: { ...base, satellites, expression, accepted }, ranges };
 }
 
-/** The Saying spans the Saying Choice makes Sayings under `saying`, disjoint. */
+/**
+ * The Saying spans the Saying Choice makes Sayings under `saying`, disjoint.
+ * A span that holds both anchors of an accepted correlator counts no maxim
+ * share: a je … desto sentence reads like a maxim by its form alone, and
+ * a maxim nobody quotes resolves word by word (de/saying-needs-uptake), its
+ * correlator a Locution of its anchors (de/correlator-anchors). A proverb
+ * speakers quote (Je oller, je doller) still counts its whole share.
+ */
 export function sayingsOf(
-	nomination: Pick<Nomination, "sentence" | "final">,
+	nomination: Pick<Nomination, "sentence" | "final" | "accepted">,
 	saying: SayingAssembly,
 ): number[][] {
 	const answers: Answers = nomination.final;
+	const correlators = nomination.accepted.filter(
+		([, , kind]) => kind === "correlator",
+	);
 	const scored = sayingSpans(nomination.sentence)
 		.map((span) => {
 			const ids = span.pieces.map((piece) => piece.id);
 			const answer = answers[sayingChoiceId(ids)];
 			const probabilities =
 				answer?.type === "choice" ? answer.probabilities : {};
+			const maxim =
+				saying.maxim &&
+				!correlators.some(
+					([left, right]) =>
+						ids.includes(left) && ids.includes(right),
+				);
 			const score =
 				(probabilities.whole ?? 0) +
 				(probabilities.fragment ?? 0) +
-				(saying.maxim ? (probabilities.maxim ?? 0) : 0);
+				(maxim ? (probabilities.maxim ?? 0) : 0);
 			return { ids, score, plus: probabilities.plus ?? 0 };
 		})
 		.filter(({ score, plus }) => score >= saying.floor && score > plus)

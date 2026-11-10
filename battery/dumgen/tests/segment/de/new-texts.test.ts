@@ -142,3 +142,19 @@ test("haben with its subject's reflexive in the clause is a perfect, whatever th
 	});
 	expect(tuer).toContainEqual([2]);
 });
+
+test("a je … desto span counts no maxim share, so it stays its correlator and words", async () => {
+	// Je0 _1 länger2 _3 der4 _5 Tag6 ,7 _8 desto9 _10 müder11 _12 die13 _14 Leute15 .16
+	const je = segmentsOf("Je länger der Tag, desto müder die Leute.");
+	const saying = (maxim: number) => ({
+		c_1_5: noul(0.9),
+		y4_1_2_3_4_5_6_7_8: picked("whole", {
+			whole: 0.37,
+			maxim,
+			none: 0.63 - maxim,
+		}),
+	});
+	const units = await groupsOf(je, saying(0.34));
+	expect(units).toContainEqual([0, 9]);
+	expect(units).not.toContainEqual([0, 2, 4, 6, 9, 11, 13, 15]);
+});
