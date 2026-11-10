@@ -64,6 +64,15 @@ export type TableHandle = {
 	readonly queue: (stage: () => Staged | null) => Promise<void>;
 	/** Forgets every Trick still queued; the next one queued starts at once. */
 	readonly drop: () => void;
+	/**
+	 * Calls `fn` `ms` of Table time after the Moves committed now start, in
+	 * the frame that reaches it and before that frame paints: a follow-up on
+	 * the move's own clock, such as a turn once a deal has landed. Slow-mo
+	 * stretches it with the move, and it is only ever called in a frame, so
+	 * never before the Table has drawn the move that far, as a timer in a
+	 * hidden tab would be.
+	 */
+	readonly cue: (ms: number, fn: () => void) => void;
 	/** `id` leaves for good, flying on with the throw; drop it once this settles. */
 	readonly leave: (id: string, flight: Flight) => Promise<void>;
 	/**
@@ -119,6 +128,7 @@ function handleOf(engine: Engine): TableHandle {
 		},
 		queue: (stage) => tricks.push(stage),
 		drop: () => tricks.drop(),
+		cue: (ms, fn) => engine.cue(ms, fn),
 		leave: (id, flight) => leave(engine, id, flight),
 		point: (id, pointer) => point(engine, id, pointer),
 		moving: (id) => {

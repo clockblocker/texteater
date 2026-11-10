@@ -19,7 +19,7 @@ writer ([ADR 0001](./docs/adr/0001-rest-bodies-in-css-slots-and-move-them-by-dec
   its one writer, with no layout projection, and no CSS transition or
   animation on its own elements. Crossings are drawn as SVG mask veils.
   Tricks queue behind the one playing, as deck-of-cards' do; `play` cuts
-  in.
+  in, and `cue` calls a follow-up on a move's own clock.
 
 Each entry exports only what another workspace uses; the rest stays inside
 the battery until a caller needs it.
