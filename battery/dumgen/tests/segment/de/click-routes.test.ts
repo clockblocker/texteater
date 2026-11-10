@@ -54,3 +54,18 @@ test("a unit of several pieces never takes Lexeme PART: it takes its Family's ne
 		route: route("Lexeme", "ADJ"),
 	});
 });
+
+test("an abbreviation spaced after its inner dot is asked its route as an abbreviation", async () => {
+	// Wir0 _1 kaufen2 _3 Obst4 ,5 _6 z. B.7 _8 Äpfel9 .10
+	const segments: Segment[] = [
+		...segmentsOf("Wir kaufen Obst, "),
+		{ kind: "ResolvableText", text: "z. B." },
+		...segmentsOf(" Äpfel."),
+	];
+	const { units, judge } = await run(segments, {
+		r_4: picked("Foreign/Foreign"),
+		ra_4: picked("Locution/ADV"),
+	});
+	expect(judge.questionsOf("route2")?.ra_4).toBeDefined();
+	expect(unitAt(units, 7)?.route).toEqual(route("Locution", "ADV"));
+});

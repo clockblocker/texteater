@@ -648,9 +648,13 @@ export function numberRanges(sentence: Sentence): (readonly number[])[] {
 export const isSymbolPiece = (piece: Piece) =>
 	!/[\p{L}\p{N}]/u.test(piece.text);
 
-/** An abbreviation's shape: letters with inner dots, or a short word ending in a dot. */
+/**
+ * An abbreviation's shape: letters with inner dots, spaced or not (z.B.,
+ * z. B., u. a.: German typesetting puts a narrow space after an inner dot),
+ * or a short word ending in a dot.
+ */
 export const isAbbreviationPiece = (piece: Piece) =>
-	/\p{L}\.\p{L}/u.test(piece.text) || /^\p{L}{1,5}\.$/u.test(piece.text);
+	/\p{L}\.\s?\p{L}/u.test(piece.text) || /^\p{L}{1,5}\.$/u.test(piece.text);
 
 /** The `final` request's was für question ids, by the was and für pieces. */
 export const wasFuerId = (was: number, fuer: number) => `w4_${was}_${fuer}`;
