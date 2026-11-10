@@ -19,6 +19,7 @@ import {
 	routedUnit,
 } from "./clickResolution";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
+import type { StoredUnit } from "./storedSegments";
 
 type ModelFailure = ProviderFailure | InvalidModelOutput;
 
@@ -35,12 +36,13 @@ export type ClickDumgen<R> = {
 };
 
 /**
- * The stored Sentence as Dumgen's Segmented Sentence, with the one unit a
- * click resolves and, for Grammar, the word each Segment stands for.
+ * The stored Sentence as Dumgen's Segmented Sentence: for Grammar, with
+ * every unit intake stored and the word each Segment stands for; for
+ * Reading, with the one unit it marks.
  */
 function dumgenSentence(
 	sentence: ClickGrammarSentence,
-	unit: Unit,
+	units: readonly Unit[],
 ): SegmentedSentence {
 	return {
 		text: sentence.segments.map(({ text }) => text).join(""),
@@ -49,14 +51,22 @@ function dumgenSentence(
 			text,
 			...(surface === undefined ? {} : { surface }),
 		})),
-		units: [unit],
+		units: [...units],
 	};
 }
+
+/** A stored unit as Dumgen's: its Segments, route and closed-class identity. */
+const dumgenUnit = (unit: StoredUnit): Unit =>
+	({
+		segments: [...unit.segments],
+		route: unit.route === "Unresolved" ? "Unresolved" : { ...unit.route },
+		...(unit.identity ? { identity: { ...unit.identity } } : {}),
+	}) as Unit;
 
 /**
  * The ClickResolution whose halves are Dumgen's `resolve.grammar` (#876)
  * and `resolve.reading` (#877). Grammar: the stored unit under the click
- * goes in, with the Sentence, its neighbours and the stored Lemmas found
+ * goes in, with the Sentence and its other units, its neighbours and the stored Lemmas found
  * under its words, and the Attestation, Unresolved or Catalog Miss comes
  * back as an answer. The clicked Segment stays tf-demo's Segment Selection;
  * Dumgen sees the unit. A click on a Segment with no stored unit resolves
@@ -88,17 +98,23 @@ export function dumgenClickResolution<R>(
 					decision: "Unresolved" as const,
 					language: "de" as const,
 				});
-			const stored: Unit = {
-				segments: [...unit.segments],
-				route: { ...unit.route },
-				...(unit.identity ? { identity: { ...unit.identity } } : {}),
-			} as Unit;
+			const stored = dumgenUnit(unit);
+			// The clicked unit among the Sentence's others, as intake stored them.
+			const units = input.units.some(
+				({ segments }) =>
+					segments.length === stored.segments.length &&
+					segments.every(
+						(index, at) => index === stored.segments[at],
+					),
+			)
+				? input.units.map(dumgenUnit)
+				: [stored];
 			// Handed over when a click needs it, so a click that reuses a
 			// committed occurrence needs no model key.
 			return Effect.suspend(() =>
 				dumgen().resolve.grammar({
 					language: "de",
-					sentence: dumgenSentence(input.sentence, stored),
+					sentence: dumgenSentence(input.sentence, units),
 					unit: stored,
 					neighbours: input.neighbours,
 					lemmaCandidates: input.lemmaCandidates,
@@ -126,7 +142,7 @@ export function dumgenClickResolution<R>(
 				Effect.flatMap((optional) =>
 					dumgen().resolve.reading({
 						attestation,
-						sentence: dumgenSentence(encounter.sentence, unit),
+						sentence: dumgenSentence(encounter.sentence, [unit]),
 						unit,
 						candidates: input.candidates,
 						...(optional.length > 0

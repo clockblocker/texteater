@@ -72,6 +72,12 @@ export type ClickGrammarInput = {
 	readonly clickedSegmentIndex: number;
 	/** The biggest unit intake stored at the clicked Segment, if any. */
 	readonly unit?: StoredUnit;
+	/**
+	 * Every unit intake stored for the Sentence. Grammar reads the units
+	 * around the clicked one: the determiner and the preposition its phrase
+	 * opens with narrow an agreeing word's case (#1326, #1337).
+	 */
+	readonly units: readonly StoredUnit[];
 	readonly lemmaCandidates: readonly LemmaCandidate[];
 	readonly neighbours: NeighbourSentences;
 };

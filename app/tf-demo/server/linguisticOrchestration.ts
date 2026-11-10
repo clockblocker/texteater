@@ -264,6 +264,7 @@ function resolveGrammatical<R>(
 				sentence,
 				clickedSegmentIndex: request.clickedSegmentIndex,
 				...(unit ? { unit } : {}),
+				units: stored.units ?? [],
 				lemmaCandidates: context.lemmaCandidates,
 				neighbours: context.neighbours ?? {},
 			},

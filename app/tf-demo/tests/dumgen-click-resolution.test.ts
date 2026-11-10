@@ -102,12 +102,19 @@ function fakeDumgen(
 
 const verb = { language: "de", family: "Lexeme", kind: "VERB" } as const;
 
-test("a click's grammar is Dumgen's resolve.grammar over the stored unit, and its Attestation becomes a Grammar checkpoint", async () => {
+test("a click's grammar is Dumgen's resolve.grammar over the stored unit among the Sentence's others, and its Attestation becomes a Grammar checkpoint", async () => {
 	const fake = fakeDumgen({ _tag: "Resolved", attestation: kommt });
+	const er = storedUnitOf({
+		segments: [0],
+		route: { family: "Lexeme", kind: "PRON" },
+		variants: [{ family: "Lexeme", kind: "PRON" }],
+		identity: { kind: "PRON", canonicalForm: "er", pronType: "Prs" },
+	});
 	const grammar = await Effect.runPromise(
 		dumgenClickResolution(fake.dumgen).grammar({
 			sentence,
 			clickedSegmentIndex: 2,
+			units: [er, { segments: [2], route: verb }],
 			unit: { segments: [2], route: verb },
 			lemmaCandidates: [],
 			neighbours: { before: "Es ist spät." },
@@ -118,7 +125,15 @@ test("a click's grammar is Dumgen's resolve.grammar over the stored unit, and it
 		sentence: {
 			text: "Er kommt.",
 			segments: sentence.segments,
-			units: [{ segments: [2], route: verb }],
+			// Grammar reads the units around the clicked one (#1337).
+			units: [
+				{
+					segments: [0],
+					route: er.route,
+					identity: er.identity,
+				},
+				{ segments: [2], route: verb },
+			],
 		},
 		unit: { segments: [2], route: verb },
 		neighbours: { before: "Es ist spät." },
@@ -153,6 +168,7 @@ test("the word intake stored for a piece reaches Dumgen, and the Encounter keeps
 		dumgenClickResolution(fake.dumgen).grammar({
 			sentence: gehts,
 			clickedSegmentIndex: 0,
+			units: [],
 			unit: { segments: [0, 1], route: verb },
 			lemmaCandidates: [],
 			neighbours: {},
@@ -181,6 +197,7 @@ test("a stored closed-class identity reaches Dumgen, and a Catalog Miss comes ba
 		dumgenClickResolution(fake.dumgen).grammar({
 			sentence,
 			clickedSegmentIndex: 0,
+			units: [],
 			unit: { segments: [0], route: pron, identity },
 			lemmaCandidates: [],
 			neighbours: {},
@@ -207,6 +224,7 @@ test("a Segment without a unit, or a unit intake left Unresolved, resolves nothi
 				resolution.grammar({
 					sentence,
 					clickedSegmentIndex: 0,
+					units: [],
 					...(unit ? { unit } : {}),
 					lemmaCandidates: [],
 					neighbours: {},
@@ -339,6 +357,7 @@ test("Luna's draft comes back with the Attestation, reaches resolve.reading, and
 		resolution.grammar({
 			sentence,
 			clickedSegmentIndex: 2,
+			units: [],
 			unit: { segments: [2], route: verb },
 			lemmaCandidates: [],
 			neighbours: {},

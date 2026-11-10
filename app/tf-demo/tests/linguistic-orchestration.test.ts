@@ -44,7 +44,7 @@ test("a click resolved through the port reaches one atomic commit, and a repeat 
 	expect(run.fake.grammarInputs).toHaveLength(1);
 });
 
-test("Grammar receives the clicked Sentence, its stored unit, the Lemma candidates and the neighbouring Sentences", async () => {
+test("Grammar receives the clicked Sentence, its stored unit and every other, the Lemma candidates and the neighbouring Sentences", async () => {
 	const neighbours = { before: "Maria kommt.", after: "Sie winkt." };
 	const run = setup({
 		context: context({
@@ -62,6 +62,7 @@ test("Grammar receives the clicked Sentence, its stored unit, the Lemma candidat
 			},
 			clickedSegmentIndex: 0,
 			unit,
+			units: [unit],
 			lemmaCandidates: [{ lemma, foundUnder: ["Banken"] }],
 			neighbours,
 		},
