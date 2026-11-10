@@ -30,6 +30,8 @@ import {
 	matchingRealizations,
 } from "./closed-realizations.js";
 import { attestedMember } from "./member-spelling.js";
+import type { PhraseCell } from "./open-route/paradigm.js";
+import { phraseCells } from "./open-route/phrase-cells.js";
 import { cellCoordinates, fill, question } from "./prompts.js";
 import { Questionnaire } from "./questions.js";
 import { fixedSpelling, joinMembers, type Target } from "./target.js";
@@ -480,11 +482,54 @@ function stemSyncretismAttestation(
 }
 
 /**
- * The authored cells a DET or PRON unit's spelling realizes: a one-piece
- * unit's through the identity intake stored (#864), a multi-piece unit's
- * through its members' joined words, which name it alone (ein wenig).
+ * The options whose case, number and gender the phrase's cells allow
+ * (#1339): mit den is only Dat.Plur, die kleinen only plural. An option
+ * that marks no case is kept, and all are kept when the cells allow none.
+ */
+function inPhrase(
+	options: readonly ClosedOption[],
+	cells: readonly PhraseCell[],
+): readonly ClosedOption[] {
+	const kept = options.filter((option) => {
+		const values: Readonly<Record<string, unknown>> = {
+			...coreOf(option.member),
+			...option.cell,
+		};
+		return (
+			typeof values.case !== "string" ||
+			cells.some(
+				(cell) =>
+					cell.case === values.case &&
+					(typeof values.number !== "string" ||
+						cell.number === values.number) &&
+					(cell.gender === null ||
+						typeof values.gender !== "string" ||
+						cell.gender === values.gender),
+			)
+		);
+	});
+	return kept.length > 0 ? kept : options;
+}
+
+/**
+ * The authored cells a DET or PRON unit's spelling realizes, as far as
+ * its phrase allows them (`inPhrase`): a one-piece unit's through the
+ * identity intake stored (#864), a multi-piece unit's through its
+ * members' joined words, which name it alone (ein wenig).
  */
 export function authoredOptions(
+	target: Target,
+	identity: ClosedClassIdentity | undefined,
+): { readonly options: readonly ClosedOption[]; readonly lemma: string } {
+	const { options, lemma } = realizedOptions(target, identity);
+	return {
+		options: inPhrase(options, phraseCells(target, target.units)),
+		lemma,
+	};
+}
+
+/** The authored cells a DET or PRON unit's spelling realizes, wherever it stands. */
+function realizedOptions(
 	target: Target,
 	identity: ClosedClassIdentity | undefined,
 ): { readonly options: readonly ClosedOption[]; readonly lemma: string } {

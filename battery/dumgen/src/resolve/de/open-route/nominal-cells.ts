@@ -22,6 +22,7 @@ import {
 	type SettledCore,
 	standing,
 } from "./nominal.js";
+import { casesFor } from "./paradigm.js";
 import { cases, type Gender, type MixedGender } from "./shape.js";
 
 /** A NOUN's settled Core Features and cells, and the cases still open. */
@@ -43,7 +44,10 @@ function cellsOver(
 	formGender: Gender | null,
 	open: readonly CaseOption[],
 ): Cells | undefined {
-	let openCases = standing(open, noun.surface);
+	let openCases = standing(
+		standing(open, noun.surface),
+		casesFor(noun.cells, noun.number, formGender ?? core.gender),
+	);
 	if (openCases.length === 0) return undefined;
 	if (noun.earlyCases.length > 0) {
 		const best = noun.earlyCases.find((answer) =>

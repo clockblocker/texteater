@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { surfaceCases } from "../../src/resolve/de/open-route/surface-cases.js";
+import { surfaceCases } from "../../src/resolve/de/open-route/phrase-cells.js";
 import { targetOf } from "../../src/resolve/de/target.js";
 import type { RouteKey } from "../../src/segment/de/routes.js";
 import type { Unit } from "../../src/segment/segmented-sentence.js";

@@ -29,6 +29,8 @@ import {
 	unresolved,
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
+import { casesFor, type PhraseCell, type SurfaceCase } from "./paradigm.js";
+import { phraseCells, surfaceCases } from "./phrase-cells.js";
 import {
 	cases,
 	type Gender,
@@ -36,7 +38,6 @@ import {
 	type MixedGender,
 	type Shape,
 } from "./shape.js";
-import { type SurfaceCase, surfaceCases } from "./surface-cases.js";
 
 type NominalCore = Dumling.Lemma<
 	"de",
@@ -143,7 +144,7 @@ function casesOfArticle(article: ArticleMember): readonly CaseOption[] {
 
 /**
  * The cases among `open` the NOUN can take where it stands
- * (`surface-cases.ts`), Unmarked kept; all of `open` when none is.
+ * (`phrase-cells.ts`), Unmarked kept; all of `open` when none is.
  */
 export function standing(
 	open: readonly CaseOption[],
@@ -199,6 +200,8 @@ export type NominalPlan = {
 	readonly formGender: ChoiceOf<typeof options.formGender> | undefined;
 	/** The cases the NOUN can take where it stands, before its article. */
 	readonly surface: readonly SurfaceCase[];
+	/** The cells its phrase allows there, for its number and gender once known. */
+	readonly cells: readonly PhraseCell[];
 	/** Cases asked in the first request, before agreement is known. */
 	readonly earlyCases: readonly CaseOption[];
 	/** The Case question over them. */
@@ -263,6 +266,7 @@ export function askNominal(
 				options.formGender,
 			);
 	const surface = surfaceCases(target, target.units);
+	const cells = phraseCells(target, target.units);
 	const earlyCases = standing(
 		article ? casesOfArticle(article.article) : [...cases, "Unmarked"],
 		surface,
@@ -272,6 +276,7 @@ export function askNominal(
 		number,
 		formGender,
 		surface,
+		cells,
 		earlyCases,
 		case:
 			earlyCases.length > 1
@@ -286,6 +291,8 @@ export type NounRead = {
 	readonly shown: Gender | null;
 	/** The cases the NOUN can take where it stands, before its article. */
 	readonly surface: readonly SurfaceCase[];
+	/** The cells its phrase allows there. */
+	readonly cells: readonly PhraseCell[];
 	/** The early Case answer and the others jev weighed, likeliest first. */
 	readonly earlyCases: readonly CaseOption[];
 	/** Whether the Case was asked in the first request. */
@@ -391,6 +398,7 @@ export const readNominal = answerReader(function* (
 			number,
 			shown: genderNamed(peekFormGender()),
 			surface: nominal.surface,
+			cells: nominal.cells,
 			earlyCases: ranked,
 			caseAsked: nominal.case !== undefined,
 		};
@@ -428,10 +436,13 @@ export const readNominal = answerReader(function* (
 	)
 		return yield* unresolved("Unresolved formGender");
 	let openCases = standing(
-		owned
-			? articleCases(owned.article, number, formGender ?? core.gender)
-			: [...cases, "Unmarked"],
-		nominal.surface,
+		standing(
+			owned
+				? articleCases(owned.article, number, formGender ?? core.gender)
+				: [...cases, "Unmarked"],
+			nominal.surface,
+		),
+		casesFor(nominal.cells, number, formGender ?? core.gender),
 	);
 	// A common NOUN waits for the article Luna writes before these verdicts.
 	if (openCases.length === 0 && !noun)

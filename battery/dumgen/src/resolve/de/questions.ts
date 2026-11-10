@@ -158,6 +158,11 @@ export class Answered {
 			.map(([option]) => option);
 	}
 
+	/** The weight jev gave each option of a Choice, Unresolved included. */
+	weights(asked: Choice | string): Readonly<Record<string, number>> {
+		return choiceOf(this.answers, idOf(asked)).probabilities;
+	}
+
 	/** A speculative answer, undefined when it was not asked or came back Unresolved. */
 	peek<Option extends string>(asked: Choice<Option>): Option | undefined;
 	peek(id: string): string | undefined;
