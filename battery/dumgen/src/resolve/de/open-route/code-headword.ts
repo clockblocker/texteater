@@ -29,7 +29,7 @@ export type CodeHeadword = {
 };
 
 /** The member is written as the word it is, neither a Typo nor a Shorthand. */
-const asWritten = (first: FirstRead) =>
+export const asWritten = (first: FirstRead) =>
 	first.orthographies.every(
 		(orthography) => orthography === "Standard" || orthography === "Fused",
 	);

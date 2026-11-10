@@ -35,6 +35,9 @@ test("Luna writes the Canonical Form in lexical casing with the unit's stored Le
 		coreFeatures: {},
 	};
 	const elsewhere: Dumling.Lemma<"de"> = { ...stored, canonicalForm: "mit" };
+	// Two stored Lemmas found under the word: the lookup takes neither
+	// (#1337), and both reach Luna as hints.
+	const archaic: Dumling.Lemma<"de"> = { ...stored, canonicalForm: "obwol" };
 	const { result } = await resolveOnce(
 		{ jev: fakeJev().ask, luna: luna.ask },
 		{
@@ -42,6 +45,7 @@ test("Luna writes the Canonical Form in lexical casing with the unit's stored Le
 			unit: unitOf([0], "Lexeme/SCONJ"),
 			lemmaCandidates: [
 				{ lemma: stored, foundUnder: ["Obwohl"] },
+				{ lemma: archaic, foundUnder: ["Obwohl"] },
 				{ lemma: elsewhere, foundUnder: ["mit"] },
 			],
 		},
@@ -50,6 +54,7 @@ test("Luna writes the Canonical Form in lexical casing with the unit's stored Le
 	const input = luna.sent[0]?.input;
 	expect(input).toHaveProperty("lemmaCandidates", [
 		{ canonicalForm: "obwohl", coreFeatures: {} },
+		{ canonicalForm: "obwol", coreFeatures: {} },
 	]);
 	expect(input).toHaveProperty("members", [
 		{ member: "m0", text: "Obwohl", orthography: "Standard" },
@@ -91,7 +96,8 @@ test("Luna drafts the Emoji Description after the headword in the same call, fro
 		article: "das",
 		emojiDescription: " 🏰️",
 	}));
-	// A stored Lemma found under the word reaches the call as a hint.
+	// Stored Lemmas found under the word reach the call as hints when the
+	// lookup takes none of them: two share its spelling (#1337).
 	const stored: Dumling.Lemma<"de"> = {
 		unitKind: "Lemma",
 		language: "de",
@@ -105,7 +111,13 @@ test("Luna drafts the Emoji Description after the headword in the same call, fro
 		{
 			sentence: sentenceOf("Das Schloss klemmt."),
 			unit: unitOf([2], "Lexeme/NOUN"),
-			lemmaCandidates: [{ lemma: stored, foundUnder: ["Schloss"] }],
+			lemmaCandidates: [
+				{ lemma: stored, foundUnder: ["Schloss"] },
+				{
+					lemma: { ...stored, coreFeatures: { gender: "Masc" } },
+					foundUnder: ["Schloss"],
+				},
+			],
 		},
 	);
 	expect(luna.sent).toHaveLength(1);
@@ -120,6 +132,7 @@ test("Luna drafts the Emoji Description after the headword in the same call, fro
 		members: [{ member: "m0", text: "Schloss", orthography: "Standard" }],
 		lemmaCandidates: [
 			{ canonicalForm: "Schloss", coreFeatures: { gender: "Neut" } },
+			{ canonicalForm: "Schloss", coreFeatures: { gender: "Masc" } },
 		],
 		emojiDescriptionInput: {
 			markedSentence: "Das <TARGET>Schloss</TARGET> klemmt.",

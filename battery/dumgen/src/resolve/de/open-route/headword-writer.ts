@@ -1,11 +1,15 @@
 /**
- * Who writes an open-route click's headword, and when (#1326): code where
- * the route settles it (`code-headword.ts`), otherwise Luna, asked while
- * jev judges on a guess at jev's answers (#862) and again should the
- * guess miss. A click whose headword code writes makes no Canonical Form
- * call; when its Lemma has no stored or authored Reading, Luna drafts its
- * Emoji Description beside jev with the standalone generation prompt, as
- * the Canonical Form call would have drafted it (ADR 0031).
+ * Who writes an open-route click's headword, and when (#1326, #1337): code
+ * where the route settles it (`code-headword.ts`), else the one stored
+ * Lemma found under the headword's words (`lookup-headword.ts`), otherwise
+ * Luna, asked while jev judges on a guess at jev's answers (#862) and
+ * again should the guess miss. Luna's guess is not asked while code or a
+ * likely lookup may write the headword. A click whose headword code or the
+ * lookup writes makes no Canonical Form call; when code wrote the headword
+ * of a Lemma with no stored or authored Reading, Luna drafts its Emoji
+ * Description beside jev with the standalone generation prompt, as the
+ * Canonical Form call would have drafted it (ADR 0031). A looked-up Lemma
+ * is stored, so its Readings are judged first.
  */
 
 import * as Effect from "effect/Effect";
@@ -30,6 +34,7 @@ import {
 import type { Target } from "../target.js";
 import { codeHeadword, readingsMayExist } from "./code-headword.js";
 import type { FirstRead, Plan } from "./first-request.js";
+import { lookupHeadword } from "./lookup-headword.js";
 import { guessedJudgment, guessMisses } from "./luna-guess.js";
 import { verbGuessMisses } from "./verbal.js";
 
@@ -78,6 +83,7 @@ export const startHeadword = Effect.fnUntraced(function* (
 			checkWritten(target, judged, output),
 		);
 	const coded = codeHeadword(target);
+	const looked = coded ? undefined : lookupHeadword(target, planned, hints);
 	const draft =
 		coded &&
 		drafts &&
@@ -89,7 +95,7 @@ export const startHeadword = Effect.fnUntraced(function* (
 			: undefined;
 	// With nothing to ask jev there is no guess.
 	const guessed =
-		planned.questionnaire.empty || coded
+		planned.questionnaire.empty || coded || looked?.likely
 			? undefined
 			: guessedJudgment(target, planned);
 	const guess = guessed
@@ -98,6 +104,12 @@ export const startHeadword = Effect.fnUntraced(function* (
 	return (first, judged) => {
 		const settled = coded?.settles(first) ? coded.written : undefined;
 		if (settled) return withDraft(settled, draft);
+		const lookedUp = looked?.settled(first, judged);
+		if (lookedUp)
+			return Effect.as(
+				guess ? Fiber.interrupt(guess) : Effect.void,
+				lookedUp,
+			);
 		return Effect.andThen(
 			draft ? Fiber.interrupt(draft) : Effect.void,
 			rewritten(
