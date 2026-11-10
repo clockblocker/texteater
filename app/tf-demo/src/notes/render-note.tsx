@@ -155,6 +155,11 @@ function ReadingWithConfiguredLayout({
 		placeholderData: keepPreviousData,
 	});
 	if (layoutQuery.isPending) {
+		// A Reading still resolving is bones in its own Blocks' places. On
+		// the default layout it keeps them when its stored one loads; the
+		// generic skeleton would swap every bone a round-trip after its deal.
+		if (input.noteData.pending)
+			return renderWithLayout(defaultConfiguredLayout(input.noteData));
 		return (
 			<NoteSkeletonFor
 				kind="Reading"
