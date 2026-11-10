@@ -7,8 +7,8 @@ import { MAX_SEGMENTS_PER_SENTENCE } from "./storedSegments";
  * `PART_CHARACTERS`, each a Sentence of its own, whose Segments and units
  * are joined back into the one Sentence; a unit spanning two parts comes
  * back as two. A shorter Sentence passes through untouched. Only a
- * Sentence too long to store its Segments (`fitsSegments`) stays an
- * undetermined Plain Sentence.
+ * Sentence too long to store its Segments (`fitsSegments`) is never cut,
+ * and stays a Plain Sentence.
  */
 
 /**
@@ -23,7 +23,7 @@ export const PART_CHARACTERS = 500;
 /**
  * Whether a Sentence's Segments, at most one per character, fit
  * `MAX_SEGMENTS_PER_SENTENCE`. Over that, about 1,200 words, it is stored
- * as an undetermined Plain Sentence.
+ * as a Plain Sentence.
  */
 export function fitsSegments(sentence: string): boolean {
 	return stitchedText(sentence).length <= MAX_SEGMENTS_PER_SENTENCE;

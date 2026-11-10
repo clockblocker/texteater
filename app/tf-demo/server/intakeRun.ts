@@ -20,8 +20,9 @@ export function failureTagOf(cause: Cause.Cause<unknown>): string {
 /**
  * Collects one submission attempt's summary from the traces of its
  * `language.detect` and `segment.inUnits`: every jev call with its tokens
- * and time, and how each Sentence's segmentation ended, Plain for one not
- * in the target language. It keeps no text, prompt or answer.
+ * and time, and how each Sentence's segmentation ended, Plain for one
+ * stored as a Plain Sentence, even when it was cut before detection put it
+ * in another language. It keeps no text, prompt or answer.
  */
 export function createIntakeRunRecorder(sentenceCount: number) {
 	const jev: IntakeRun["jev"] = {
@@ -33,15 +34,19 @@ export function createIntakeRunRecorder(sentenceCount: number) {
 		maxDurationMs: 0,
 	};
 	const outcomes = new Map<number, SentenceOutcome>();
+	/** The Sentences intake stored Plain, whatever segmentation did. */
+	const plain = new Set<number>();
 	/** The positions `segment.inUnits` was given, in its order; all until told. */
 	let segmenting: readonly number[] | undefined;
 	return {
-		/** Intake's `onSegmenting`: every other Sentence is Plain. */
-		segmenting: (positions: readonly number[]) => {
-			segmenting = positions;
-			const segmented = new Set(positions);
-			for (let position = 0; position < sentenceCount; position++)
-				if (!segmented.has(position)) outcomes.set(position, "Plain");
+		/** Intake's observer. */
+		observer: {
+			segmenting: (positions: readonly number[]) => {
+				segmenting = positions;
+			},
+			plain: (positions: readonly number[]) => {
+				for (const position of positions) plain.add(position);
+			},
 		},
 		/** The action's `TraceSink`. */
 		operation: (trace: OperationTrace) => {
@@ -83,7 +88,9 @@ export function createIntakeRunRecorder(sentenceCount: number) {
 				sentences: Array.from(
 					{ length: sentenceCount },
 					(_, index) => ({
-						segmentation: outcomes.get(index) ?? "NotStarted",
+						segmentation: plain.has(index)
+							? "Plain"
+							: (outcomes.get(index) ?? "NotStarted"),
 					}),
 				),
 				jev: { ...jev },

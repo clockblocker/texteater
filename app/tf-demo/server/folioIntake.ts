@@ -5,14 +5,14 @@ import {
 	type AnalyzedSentence,
 	analyzeParagraphs,
 	type IntakeDumgen,
-} from "./intake";
+} from "./intakeAnalysis";
 import { logged } from "./logging";
 
 /**
  * A book's Folio through intake, once the Learner asks for it (#1216).
  * Each window of the Folio's unprocessed Sentences goes through the
- * paste's own analysis (`analyzeParagraphs`: `language.detect`, then
- * `segment.inUnits` on the target-language ones), grouped back into their
+ * paste's own analysis (`analyzeParagraphs`: `language.detect` beside
+ * `segment.inUnits`, joined Sentence by Sentence), grouped back into their
  * paragraphs, and comes back by Sentence ID, so storing it fills in the
  * Sentences the reader already shows as plain text.
  */
@@ -44,9 +44,9 @@ function paragraphsOf(sentences: readonly WindowSentence[]) {
 }
 
 /**
- * Analyzes one window. It fails as `language.detect` does, when jev brings
- * no usable answer; a Sentence `segment.inUnits` could not cut comes back
- * marked, as for a paste.
+ * Analyzes one window. A failed detection leaves the window in the
+ * Scroll's language, and a Sentence `segment.inUnits` could not cut comes
+ * back marked, as for a paste, so only a bug or an interruption fails it.
  */
 function analyzeWindow<Id extends string>(
 	dumgen: IntakeDumgen,

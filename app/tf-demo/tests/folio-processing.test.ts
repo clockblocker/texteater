@@ -3,6 +3,7 @@ import { type FunctionReference, getFunctionName } from "convex/server";
 import { api, internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { ActionCtx } from "../convex/_generated/server";
+import { replaceModelTransports } from "../convex/model/deploymentDumgen";
 import {
 	folioProcessingPort,
 	STALE_FOLIO_RUN_AFTER_MS,
@@ -186,8 +187,8 @@ describe("a Folio processed on request", () => {
 	});
 
 	test("a failed run fails the Folio, and asking again processes it with the same Sentences", async () => {
-		const providers = unavailableProviders();
-		restore = providers.restore;
+		// A deployment with no TypeSafe key fails the run before any window.
+		restore = replaceModelTransports({});
 		const t = createTestConvex();
 		const { scrollId, folios } = await chapter(t);
 		const folio = folios[0];
@@ -196,7 +197,7 @@ describe("a Folio processed on request", () => {
 			folioId: folio._id,
 			visitorId: VISITOR,
 		});
-		// The real action, with jev down.
+		// The real action, with no jev.
 		await t.action(internal.folioProcessing.run, {
 			folioId: folio._id,
 			run: 1,
@@ -212,6 +213,33 @@ describe("a Folio processed on request", () => {
 			before.map(({ _id }) => _id),
 		);
 		expect(after.every(({ units }) => units !== undefined)).toBe(true);
+	});
+
+	test("with jev down the Folio is still processed: detection falls back to the Scroll's language and every Sentence is marked as not segmented", async () => {
+		const providers = unavailableProviders();
+		restore = providers.restore;
+		const t = createTestConvex();
+		const { scrollId, folios } = await chapter(t);
+		const folio = folios[0];
+		if (!folio) throw new Error("A Folio.");
+		await t.mutation(api.folios.request, {
+			folioId: folio._id,
+			visitorId: VISITOR,
+		});
+		await t.action(internal.folioProcessing.run, {
+			folioId: folio._id,
+			run: 1,
+		});
+		expect((await viewedStates(t, scrollId))?.[0]).toBe("Processed");
+		const stored = await sentencesOf(t, folio);
+		expect(stored.length).toBeGreaterThan(0);
+		// Each is re-segmented on its first click (#861).
+		for (const sentence of stored)
+			expect(sentence).toMatchObject({
+				language: "de",
+				units: [],
+				segmentationFailed: true,
+			});
 	});
 
 	test("a save that fails fails the Folio instead of leaving it stuck, and a retry completes it (#1214)", async () => {

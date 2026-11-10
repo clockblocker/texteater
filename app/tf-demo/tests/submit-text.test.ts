@@ -187,15 +187,29 @@ test("a Sentence jev cannot segment is stored with its written words, marked as 
 	expect((await intakeRuns(t))[0]?.jev.failed).toBeGreaterThan(0);
 });
 
-test("with jev unavailable no Sentence's language is known, so the submission fails, stores nothing and records a Failed run", async () => {
+test("with jev unavailable the Scroll is still stored in its own language, every German Sentence marked as not segmented", async () => {
 	const providers = unavailableProviders();
 	restore = providers.restore;
 	const t = createTestConvex();
-	await expect(submit(t, "Die Banken sind geschlossen.")).rejects.toThrow();
-	expect(providers.requests.length).toBeGreaterThan(0);
-	expect(await storedScrolls(t)).toEqual([]);
+	expect(
+		await submit(t, "Die Banken sind geschlossen. Er gibt auf."),
+	).toMatchObject({ status: "Accepted" });
+	expect(providers.requests.some(isLanguageRequest)).toBe(true);
+	expect(
+		(await sentences(t)).map(({ language, units, segmentationFailed }) => ({
+			language,
+			units,
+			segmentationFailed,
+		})),
+	).toEqual([
+		{ language: "de", units: [], segmentationFailed: true },
+		{ language: "de", units: [], segmentationFailed: true },
+	]);
 	expect(await intakeRuns(t)).toMatchObject([
-		{ outcome: "Failed", failureTag: "ProviderFailure" },
+		{
+			outcome: "Accepted",
+			sentences: [{ segmentation: "Failed" }, { segmentation: "Failed" }],
+		},
 	]);
 });
 

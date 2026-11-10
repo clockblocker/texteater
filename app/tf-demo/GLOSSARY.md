@@ -274,8 +274,8 @@ _Avoid_: Kind, type, format
 **Intake**:
 The one pipeline that turns a Submission into Scrolls, nested in Sections
 when the material has structure, the same for Shelves and Learner uploads.
-It runs Extraction, then `splitText`, `language.detect` and
-`segment.inUnits` Scroll by Scroll, or, for a book, Folio by Folio as the
+It runs Extraction, then `splitText`, then `language.detect` beside
+`segment.inUnits`, Scroll by Scroll, or, for a book, Folio by Folio as the
 Learner asks.
 _Avoid_: ingestion, processing, import
 
@@ -330,7 +330,8 @@ _Avoid_: formatting, markup
 
 **Detected Language**:
 The language Intake detects for one Sentence, or none when neither the
-Sentence nor its surroundings tell. A foreign word inside a target-language
+Sentence nor its surroundings tell. When detection fails, a Sentence whose
+script allows the Scroll's language takes it. A foreign word inside a target-language
 Sentence stays clickable as Foreign (Dumling). See [Dumgen ADR 0001] and
 [ADR 0045].
 

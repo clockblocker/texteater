@@ -139,7 +139,7 @@ export async function analyzeScroll(
 		requireJev();
 		const intake = createIntake({
 			dumgen: operations,
-			onSegmenting: run.segmenting,
+			observer: run.observer,
 			persistence: {
 				persistSubmittedScroll: (input) =>
 					ctx.runMutation(

@@ -20,24 +20,29 @@ two-layer Sentence Analysis left with `battery/legacy-dumgen` (#866); its contra
    parameter so Hebrew can follow.
 4. Intake runs Dumgen's `operations` under the action's `DumgenLive`, whose
    jev is `JevTransport.typeSafe({ apiKey })`, and the action's `TraceSink`
-   receives each trace. `language.detect({ paragraphs })` gives each
-   Sentence its Detected Language (Dumgen ADR 0001): code settles Sentences
-   with no letters or mostly Hebrew words, jev judges the rest with one
-   Choice each in windows of about 30 Sentences, and an undetermined
-   Sentence takes the language around it, or none. A failed jev request
-   fails the submission. `segment.inUnits({ language: "de", paragraphs })`
-   gets only the German Sentences and gives each its normalized text,
-   its Segments and its biggest units; tf-demo `yield*`s both inside its
-   intake program. jev is the only model; the key is the Convex deployment's
-   `TYPESAFE_API_KEY`.
+   receives each trace. Two results are made side by side and joined
+   Sentence by Sentence (`app/tf-demo/server/intakeAnalysis.ts`).
+   `language.detect({ paragraphs })` gives each Sentence its Detected
+   Language (Dumgen ADR 0001): code settles Sentences with no letters or
+   mostly Hebrew words, jev judges the rest with one Choice each in windows
+   of about 30 Sentences, and an undetermined Sentence takes the language
+   around it, or none. `segment.inUnits({ language: "de", paragraphs })`
+   gets every Sentence that is mostly in Latin script or has no letters,
+   and gives each its normalized text, its Segments and its biggest units.
+   A Sentence keeps its cut only when detection puts it in German. When
+   detection fails, each cut Sentence is taken to be German, so the
+   submission does not fail. jev is the only model; the key is the Convex
+   deployment's `TYPESAFE_API_KEY`.
 5. Every other Sentence is a Plain Sentence: stored with its Detected
    Language (none when undetermined), its normalized text and no Segments,
-   and shown in the reader as plain text.
+   and shown in the reader as plain text. A Sentence cut beside detection
+   and then detected in another language costs its segmentation's jev
+   requests for nothing.
 6. A Sentence whose jev calls fail in `segment.inUnits` comes back marked
    `failed`, with its Segments and no units, and the Scroll is stored anyway;
    the reason is only in the operation's trace. Only a non-German target
-   language, a blank Sentence, a failed language judgment, a bug or an
-   interruption fails the whole submission.
+   language, a blank Sentence, a bug or an interruption fails the whole
+   submission.
 7. Intake is not deterministic, so a stored submission is never segmented
    again: resubmitting the same key and source returns the stored Scroll.
 

@@ -49,7 +49,7 @@ function intakeWith(jev: ReturnType<typeof fakeJev>, sentenceCount = 3) {
 	const run = createIntakeRunRecorder(sentenceCount);
 	const intake = createIntake({
 		dumgen: operations,
-		onSegmenting: run.segmenting,
+		observer: run.observer,
 		persistence: {
 			persistSubmittedScroll: async (input) => {
 				stored.push(input);
@@ -437,13 +437,18 @@ test("a mixed paste keeps its Extracted Text, segments only its German Sentences
 		{ segments: [0], route: PRON },
 		{ segments: [2, 4], route: VERB },
 	]);
-	// Segmentation never read a Plain Sentence.
-	for (const plain of ["Read the text.", 'ד"ר כהן צחק.', "Hm."])
-		expect(
-			segmentationRequests(jev).some((request) =>
-				asksAbout(request, plain),
-			),
-		).toBe(false);
+	// Code rules the Hebrew Sentence out, so segmentation never reads it;
+	// the Latin-script ones it cut beside detection were dropped.
+	expect(
+		segmentationRequests(jev).some((request) =>
+			asksAbout(request, 'ד"ר כהן צחק.'),
+		),
+	).toBe(false);
+	expect(
+		segmentationRequests(jev).some((request) =>
+			asksAbout(request, "Read the text."),
+		),
+	).toBe(true);
 	expect(
 		run
 			.summary({
@@ -500,8 +505,8 @@ test("an undetermined Sentence with no surroundings is stored with no language, 
 			units: [],
 		},
 	]);
-	// With no German Sentence, segmentation is never asked.
-	expect(segmentationRequests(jev)).toEqual([]);
+	// Segmentation read it beside detection, and its cut was dropped.
+	expect(segmentationRequests(jev).length).toBeGreaterThan(0);
 });
 
 test("re-running intake from the stored Extracted Text rebuilds the same Scroll", async () => {
