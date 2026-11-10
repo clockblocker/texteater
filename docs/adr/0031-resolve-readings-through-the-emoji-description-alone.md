@@ -60,7 +60,10 @@ there is no Canonical Form call
 ([#1326](https://github.com/clockblocker/texteater/issues/1326)). A Lemma with
 no stored or authored Reading then gets its draft from the standalone prompt,
 started beside jev; any other is judged first, and the standalone prompt
-writes only after NoMatch.
+writes only after NoMatch. Nor is there one where the headword is the one
+stored Lemma found under the unit's words
+([#1337](https://github.com/clockblocker/texteater/issues/1337)): that Lemma
+is stored, so its Readings are judged first.
 
 **A Lemma gets several Readings only when an emoji-generating model would tell
 its meanings apart from the sentence.** Subtle functional or grammatical

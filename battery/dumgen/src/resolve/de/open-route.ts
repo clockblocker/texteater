@@ -5,10 +5,11 @@
  * Shorthand, the Surface's spelling, the route's Core Features, its
  * inflection, the auxiliaries' uses, the prepositions a head governs,
  * coverage, and a NOUN's or agreeing word's Case over the cases its
- * article and where it stands leave (#625, #1326). Then the headword (`open-route/headword-writer.ts`): code's where the route
- * settles it, else Luna's Canonical Form and spellings (#862), asked
- * while jev judges on a guess at its answers and again when the guess
- * misses. A common NOUN whose headword
+ * article and where it stands leave (#625, #1326). Then the headword
+ * (`open-route/headword-writer.ts`): code's where the route settles it,
+ * else the one stored Lemma found under its words (#1337), else Luna's
+ * Canonical Form and spellings (#862), asked while jev judges on a guess
+ * at its answers and again when the guess misses. A common NOUN whose headword
  * dumcorpus lists in free gender variation takes its mixed gender, after
  * one more request (`freeGender`) when only one of its senses does. Code
  * derives the rest: the article's cell and evidence (#681), perfect,
