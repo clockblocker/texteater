@@ -3,13 +3,19 @@
  * declares the stages whose values it reads; a code stage computes its
  * value from them, and an asking stage plans one request's questions and
  * how their answers read. `runStageGraph` settles every stage whose reads
- * are settled, and sends the questions of every asking stage that is then
- * ready as one request, since they share the judge state and the answers
- * are keyed by question: the order of the requests follows from the
- * declarations, never from the order the stages are listed in.
+ * are settled, and as soon as a request comes back sends the questions of
+ * the asking stages it made ready: the order of the requests follows from
+ * the declarations, never from the order the stages are listed in.
  *
+ * - **Stages ready together share a request when they share its fate.**
+ *   They share the judge state and the answers are keyed by question, so
+ *   the stages a failure fails the graph for go out as one request, and
+ *   the stages a failure degrades as another, side by side; a degradable
+ *   stage never fails with a request it did not need. Which stages end up
+ *   together can depend on which request came back first; what each
+ *   question asks cannot.
  * - **A merged request is named by its stages**, joined with `+` in the
- *   graph's order (`candidates+final+closed`), and its `parts` list each
+ *   graph's order (`candidates+final`), and its `parts` list each
  *   stage's question ids, so every question stays attributable to its
  *   stage. Two stages asking the same id is a Defect.
  * - **A stage reads only what it declared**: reading another stage, or one
@@ -17,16 +23,18 @@
  *   other or read a stage it lacks.
  * - **A failed request degrades the stages it asked for, or fails the
  *   graph**: each plan says what its stage's value is without its answers
- *   (`absent`), keeping what earlier stages settled. A request holding a
- *   stage without one fails the graph with its failure; otherwise each of
- *   its stages takes its absent value and is listed in `degraded`. Nothing
- *   is asked again (#445, #446).
+ *   (`absent`), keeping what earlier stages settled. A request of stages
+ *   without one fails the graph with its failure and interrupts the
+ *   requests in flight; a request of stages with one gives each its absent
+ *   value and lists it in `degraded`. Nothing is asked again (#445, #446).
  *
  * Nothing here knows a language.
  */
 import type { EntryType, Questions } from "@typesafe-ai/sdk";
+import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
-import * as Result from "effect/Result";
+import * as Exit from "effect/Exit";
+import * as Queue from "effect/Queue";
 import {
 	type Answers,
 	type Ask,
@@ -123,11 +131,14 @@ const readerOf =
 function settleWithoutAsking<V>(
 	graph: StageGraph<V>,
 	values: Map<string, unknown>,
+	sent: ReadonlySet<string>,
 ): Ready[] {
 	const names = Object.keys(graph) as (keyof V & string)[];
 	const ready: Ready[] = [];
 	const waiting = (name: string) =>
-		!values.has(name) && !ready.some((entry) => entry.name === name);
+		!values.has(name) &&
+		!sent.has(name) &&
+		!ready.some((entry) => entry.name === name);
 	let moved = true;
 	while (moved) {
 		moved = false;
@@ -182,58 +193,100 @@ function requestOf(ready: readonly Ready[], state: StageState): AskRequest {
 	};
 }
 
+/** The ready stages as requests: those a failure fails the graph for, then those it degrades. */
+const requestGroups = (ready: readonly Ready[]): Ready[][] =>
+	[
+		ready.filter(({ plan }) => plan.absent === undefined),
+		ready.filter(({ plan }) => plan.absent !== undefined),
+	].filter((group) => group.length > 0);
+
+/** A request that came back, with the stages it asked for. */
+type Settled = {
+	readonly group: readonly Ready[];
+	readonly exit: Exit.Exit<Answers, AskFailure>;
+};
+
+/**
+ * Settles the stages of a request that came back: from its answers, or
+ * each with its absent value. A failure of a stage without one fails the
+ * graph, and leaving the graph's scope interrupts the requests still in
+ * flight; a Defect or an interruption ends the graph as it came.
+ */
+function settle(
+	{ group, exit }: Settled,
+	values: Map<string, unknown>,
+	degraded: Degraded[],
+): Effect.Effect<void, AskFailure> {
+	if (Exit.isSuccess(exit)) {
+		for (const { name, plan } of group)
+			values.set(name, plan.read(pick(exit.value, plan.questions)));
+		return Effect.void;
+	}
+	const [failed] = exit.cause.reasons.filter(Cause.isFailReason);
+	if (!failed) return Effect.failCause(exit.cause);
+	if (group.some(({ plan }) => plan.absent === undefined))
+		return Effect.fail(failed.error);
+	for (const { name, plan } of group) {
+		values.set(name, plan.absent?.());
+		degraded.push({ stage: name, failure: failed.error });
+	}
+	return Effect.void;
+}
+
 /**
  * Settles every stage of `graph`, asking through `ask` against `state`:
- * each round settles what its reads allow, then sends one request with the
- * questions of every asking stage that is ready.
+ * whenever a request comes back, it settles what that allows and sends the
+ * requests of the asking stages that became ready.
  */
 export function runStageGraph<V>(
 	graph: StageGraph<V>,
 	state: StageState,
 	ask: Ask,
 ): Effect.Effect<GraphRun<V>, AskFailure> {
-	return Effect.gen(function* () {
-		const names = Object.keys(graph) as (keyof V & string)[];
-		const unknown = names.flatMap((name) =>
-			graph[name].reads
-				.filter((read) => !names.includes(read))
-				.map(
-					(read) =>
-						`Stage ${name} reads ${read}, which the graph lacks`,
-				),
-		);
-		if (unknown[0]) return yield* Effect.die(Error(unknown[0]));
-		const values = new Map<string, unknown>();
-		const degraded: Degraded[] = [];
-		for (;;) {
-			const ready = settleWithoutAsking(graph, values);
-			if (ready.length === 0) break;
-			// Two stages asking one id throw in `requestOf`: a Defect.
-			const answered = yield* Effect.result(
-				Effect.suspend(() => ask(requestOf(ready, state))),
+	return Effect.scoped(
+		Effect.gen(function* () {
+			const names = Object.keys(graph) as (keyof V & string)[];
+			const unknown = names.flatMap((name) =>
+				graph[name].reads
+					.filter((read) => !names.includes(read))
+					.map(
+						(read) =>
+							`Stage ${name} reads ${read}, which the graph lacks`,
+					),
 			);
-			if (Result.isSuccess(answered)) {
-				for (const { name, plan } of ready)
-					values.set(
-						name,
-						plan.read(pick(answered.success, plan.questions)),
+			if (unknown[0]) return yield* Effect.die(Error(unknown[0]));
+			const values = new Map<string, unknown>();
+			const sent = new Set<string>();
+			const degraded: Degraded[] = [];
+			const settled = yield* Queue.unbounded<Settled>();
+			let inFlight = 0;
+			for (;;) {
+				for (const group of requestGroups(
+					settleWithoutAsking(graph, values, sent),
+				)) {
+					// Two stages asking one id throw here: a Defect.
+					const request = yield* Effect.sync(() =>
+						requestOf(group, state),
 					);
-				continue;
+					for (const { name } of group) sent.add(name);
+					inFlight++;
+					yield* Effect.forkScoped(
+						Effect.flatMap(Effect.exit(ask(request)), (exit) =>
+							Queue.offer(settled, { group, exit }),
+						),
+					);
+				}
+				if (inFlight === 0) break;
+				yield* settle(yield* Queue.take(settled), values, degraded);
+				inFlight--;
 			}
-			const { failure } = answered;
-			if (ready.some(({ plan }) => plan.absent === undefined))
-				return yield* failure;
-			for (const { name, plan } of ready) {
-				values.set(name, plan.absent?.());
-				degraded.push({ stage: name, failure });
-			}
-		}
-		if (values.size < names.length)
-			return yield* Effect.die(
-				Error(
-					`Stages ${names.filter((name) => !values.has(name)).join(", ")} wait on each other`,
-				),
-			);
-		return { values: Object.fromEntries(values) as V, degraded };
-	});
+			if (values.size < names.length)
+				return yield* Effect.die(
+					Error(
+						`Stages ${names.filter((name) => !values.has(name)).join(", ")} wait on each other`,
+					),
+				);
+			return { values: Object.fromEntries(values) as V, degraded };
+		}),
+	);
 }

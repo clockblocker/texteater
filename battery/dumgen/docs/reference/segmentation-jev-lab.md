@@ -38,8 +38,10 @@ it and score it against frozen gold. Results live in the lab tickets
   Production runs these requests as a graph of what each reads
   (`germanUnitGraph`, `src/segment/stage-graph.ts`): the stages that
   are ready together go out as one request named by them
-  (`candidates+final+closed`), and a late request that fails degrades
-  its stages instead of failing the Sentence (#1324). The lab's arms
+  (`candidates+final`), the ones whose failure only degrades
+  (`closed`, the route requests, the Choices) in another beside it, and
+  a late request that fails degrades its stages instead of failing the
+  Sentence (#1324). The lab's arms
   ask the same plans one stage at a time (`nominate`,
   `askRouteBatches`, `askLocutionChoice`, …), so their requests are
   split where production's are merged; the cache keys each answer by

@@ -43,6 +43,7 @@ const allowedPackages = new Set([
 	"effect/Exit",
 	"effect/Fiber",
 	"effect/Layer",
+	"effect/Queue",
 	"effect/Result",
 	"effect/Scope",
 	"effect/Semaphore",

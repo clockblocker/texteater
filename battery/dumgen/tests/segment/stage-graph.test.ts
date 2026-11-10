@@ -153,7 +153,7 @@ test("a failed request degrades stages that say what their absence means, and la
 	]);
 });
 
-test("a failed request holding a stage with no absent value fails the graph, even beside degradable stages", async () => {
+test("a stage whose failure only degrades never shares a request with one whose failure fails the graph", async () => {
 	const graph: StageGraph<Chain> = {
 		...chain,
 		beside: {
@@ -161,17 +161,27 @@ test("a failed request holding a stage with no absent value fails the graph, eve
 			ask: () => ({ ...summing(["b1"]), absent: () => 0 }),
 		},
 	};
+	const degrading = judge(({ stage }) => stage === "beside");
+	const run = await Effect.runPromise(
+		runStageGraph(graph, {}, degrading.ask),
+	);
+	expect(degrading.requests.map(({ stage }) => stage)).toEqual([
+		"first",
+		"beside",
+		"middle",
+		"last",
+	]);
+	expect(run.values.last).toBe(4);
+	expect(run.degraded.map(({ stage }) => stage)).toEqual(["beside"]);
+	// A failure of first fails the graph, beside or not.
+	const failing = judge(({ stage }) => stage === "first");
 	const exit = await Effect.runPromiseExit(
-		runStageGraph(
-			graph,
-			{},
-			judge(({ stage }) => stage === "first+beside").ask,
-		),
+		runStageGraph(graph, {}, failing.ask),
 	);
 	expect(exit).toStrictEqual(
 		await Effect.runPromiseExit(
 			Effect.fail(
-				new ProviderFailure({ stage: "first+beside", message: "down" }),
+				new ProviderFailure({ stage: "first", message: "down" }),
 			),
 		),
 	);
@@ -217,48 +227,65 @@ const shareOf = (text: string) =>
 		16,
 	) / 0x1_00_00_00_00;
 
-/** Answers every question by its id and text, so floors pass for some and fail for others. */
+/**
+ * Answers every question by its id and text, so floors pass for some and
+ * fail for others, and keeps each request's round-trip depth: one more than
+ * the deepest request that had come back when it was sent.
+ */
 function hashJudge() {
 	const requests: AskRequest[] = [];
-	const ask = asked((request) => {
-		requests.push(request);
-		return Object.fromEntries(
-			Object.entries(request.questions).map(
-				([id, asked]): [string, Answer] => {
-					const seed = `${id}|${JSON.stringify(asked)}`;
-					if (asked.type === "noul") return [id, noul(shareOf(seed))];
-					const keys = Object.keys(
-						asked.type === "choice" ? asked.criteria : {},
-					);
-					const raw = keys.map(
-						(key) => shareOf(`${seed}|${key}`) ** 2,
-					);
-					const total = raw.reduce((sum, share) => sum + share, 0);
-					const probabilities = Object.fromEntries(
-						keys.map((key, index) => [
-							key,
-							(raw[index] ?? 0) / total,
-						]),
-					);
-					const top = keys.reduce((best, key) =>
-						(probabilities[key] ?? 0) > (probabilities[best] ?? 0)
-							? key
-							: best,
-					);
-					return [
-						id,
-						{
-							type: "choice",
-							choice: top,
-							confidence: probabilities[top] ?? 0,
-							probabilities,
-						},
-					];
-				},
-			),
-		);
+	const depths: number[] = [];
+	let returned = 0;
+	const answer = asked(async (request) => {
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		return answerOf(request);
 	});
-	return { requests, ask };
+	const ask: Ask = (request) =>
+		Effect.suspend(() => {
+			const depth = returned + 1;
+			requests.push(request);
+			depths.push(depth);
+			return Effect.tap(answer(request), () =>
+				Effect.sync(() => {
+					returned = Math.max(returned, depth);
+				}),
+			);
+		});
+	return { requests, depths, ask };
+}
+
+/** The hash judge's answers to `request`. */
+function answerOf(request: AskRequest): Readonly<Record<string, Answer>> {
+	return Object.fromEntries(
+		Object.entries(request.questions).map(
+			([id, asked]): [string, Answer] => {
+				const seed = `${id}|${JSON.stringify(asked)}`;
+				if (asked.type === "noul") return [id, noul(shareOf(seed))];
+				const keys = Object.keys(
+					asked.type === "choice" ? asked.criteria : {},
+				);
+				const raw = keys.map((key) => shareOf(`${seed}|${key}`) ** 2);
+				const total = raw.reduce((sum, share) => sum + share, 0);
+				const probabilities = Object.fromEntries(
+					keys.map((key, index) => [key, (raw[index] ?? 0) / total]),
+				);
+				const top = keys.reduce((best, key) =>
+					(probabilities[key] ?? 0) > (probabilities[best] ?? 0)
+						? key
+						: best,
+				);
+				return [
+					id,
+					{
+						type: "choice",
+						choice: top,
+						confidence: probabilities[top] ?? 0,
+						probabilities,
+					},
+				];
+			},
+		),
+	);
 }
 
 const sentences = [
@@ -284,7 +311,7 @@ test("the German unit stage sends each request as soon as every stage it reads h
 			for (const stage of Object.keys(
 				request.parts ?? { [request.stage]: [] },
 			))
-				roundOf.set(stage, index + 1);
+				roundOf.set(stage, jev.depths[index] ?? 0);
 		const settled = (stage: keyof typeof graph): number =>
 			roundOf.get(stage) ??
 			Math.max(0, ...graph[stage].reads.map(settled));
@@ -292,7 +319,7 @@ test("the German unit stage sends each request as soon as every stage it reads h
 			const reads = graph[stage as keyof typeof graph].reads;
 			expect(round).toBe(Math.max(0, ...reads.map(settled)) + 1);
 		}
-		rounds.add(jev.requests.length);
+		rounds.add(Math.max(...jev.depths));
 	}
 	// The sentences reach the Choices: some take more round-trips than two.
 	expect(Math.max(...rounds)).toBeGreaterThan(2);

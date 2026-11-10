@@ -5,9 +5,9 @@
  * proposes, membership assembles the units under floors without a
  * request, and routing routes them. Their requests run as a graph of what
  * each reads (`germanUnitGraph`, `stage-graph.ts`), not in the order this
- * comment tells them: a typical Sentence asks `candidates+final+closed`
- * and then `route`, and one that reaches every Choice five requests in a
- * row at most.
+ * comment tells them: a typical Sentence asks `candidates+final` (beside
+ * `closed`) and then `route`, two round-trips, and one that reaches every
+ * Choice five in a row at most.
  *
  * The production setting is candidates4's maxim+closed policy
  * (`step0+saying+maxim@0.7+closed`), which the main session chose on
@@ -206,7 +206,8 @@ const choicePlan = <A>(plan: Plan<A> | undefined): Plan<A | undefined> =>
 /**
  * The German unit stage as a graph of what each stage reads
  * (`stage-graph.ts`). Nomination's `candidates` and `final` and routing's
- * `closed` read only the Sentence, so they go out together; `expressions`
+ * `closed` read only the Sentence, so they go out at once, `closed` in a
+ * request of its own since its failure only degrades; `expressions`
  * and the Verb Choice read only `candidates`; the batched route requests
  * and the Locution Choice read the nomination; the Government Choice
  * reads the membership the Locution and Verb Choices leave; `route-extra`
