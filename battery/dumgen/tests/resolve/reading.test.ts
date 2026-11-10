@@ -1,108 +1,20 @@
 import { expect, test } from "bun:test";
-import { authoredFor, authoredMembers } from "dumcorpus/inventories";
-import { parseUnit, routeOf } from "dumling";
-import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
-import type { OperationTrace } from "../../src/operation-trace.js";
 import { operations } from "../../src/operations.js";
 import { markedSentence } from "../../src/resolve/reading.js";
-import type {
-	ReadingResolution,
-	ResolveReadingInput,
-} from "../../src/resolve/types.js";
+import type { ResolveReadingInput } from "../../src/resolve/types.js";
 import { liveOver } from "../live-over.js";
-import { fakeJev, fakeLuna, sentenceOf, unitOf } from "./support.js";
-
-/** The fields of an Attestation's route beyond its Surface's Lemma, spelling and members. */
-type RouteFields = {
-	readonly inflectionalFeatures?: null;
-	readonly articleEvidence?: null;
-	readonly valencyEvidence?: readonly [];
-};
-
-/**
- * A one-member, canonically spelled Attestation of `lemma`, as far as
- * resolve.reading reads it: its Lemma. `fields` are its route's own, and
- * Dumling checks the whole on the Lemma's route.
- */
-function attestationOf(
-	lemma: Dumling.Lemma<"de">,
-	{ inflectionalFeatures, ...fields }: RouteFields = {},
-): Dumling.Attestation<"de"> {
-	const parsed = parseUnit(
-		{
-			unitKind: "Attestation",
-			surface: {
-				unitKind: "Surface",
-				language: "de",
-				lemma,
-				normalizedSurface: lemma.canonicalForm,
-				spelling: { kind: "Canonical" },
-				surfaceFeatures: null,
-				...(inflectionalFeatures === undefined
-					? {}
-					: { inflectionalFeatures }),
-			},
-			members: [
-				{ attested: lemma.canonicalForm, orthography: "Standard" },
-			],
-			realizationCoverage: "Full",
-			...fields,
-		},
-		{ unitKind: "Attestation", ...routeOf(lemma) },
-	);
-	if (!parsed.success) throw parsed.error;
-	return parsed.chain.value;
-}
-
-const schloss: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
-	unitKind: "Lemma",
-	language: "de",
-	family: "Lexeme",
-	kind: "NOUN",
-	canonicalForm: "Schloss",
-	coreFeatures: { gender: "Neut" },
-};
-const schlossAttestation = attestationOf(schloss, {
-	inflectionalFeatures: null,
-	articleEvidence: null,
-	valencyEvidence: [],
-});
-const sentence = sentenceOf("Das Schloss klemmt.");
-const nounUnit = unitOf([2], "Lexeme/NOUN");
-
-/** Luna writing `emojiDescription`, keeping what it was sent. */
-const writes = (emojiDescription: unknown) => fakeLuna(() => emojiDescription);
-
-async function readOnce(
-	jev: ReturnType<typeof fakeJev>,
-	luna: ReturnType<typeof fakeLuna>,
-	input: Partial<ResolveReadingInput> & {
-		readonly candidates: readonly string[];
-	},
-): Promise<{ result: ReadingResolution; trace: OperationTrace | undefined }> {
-	const traces: OperationTrace[] = [];
-	const result = await Effect.runPromise(
-		operations.resolve
-			.reading({
-				attestation: schlossAttestation,
-				sentence,
-				unit: nounUnit,
-				...input,
-			})
-			.pipe(
-				Effect.provide(
-					liveOver({
-						jev: jev.ask,
-						luna: luna.ask,
-						onOperation: (trace) => traces.push(trace),
-					}),
-				),
-			),
-	);
-	return { result, trace: traces[0] };
-}
+import {
+	attestationOf,
+	authoredLemma,
+	nounUnit,
+	readOnce,
+	schlossAttestation,
+	sentence,
+	writes,
+} from "./reading-support.js";
+import { fakeJev, sentenceOf, unitOf } from "./support.js";
 
 // The judge first, then Luna (ADR 0031, #862).
 
@@ -187,20 +99,6 @@ test("Luna's description is stored as Dumling parses it: no variation selector o
 });
 
 // Authored Lemmas and Closed Routes (ADR 0021, #863).
-
-const authoredLemma = (canonicalForm: string, kind: string) => {
-	const first = authoredMembers.find(
-		({ lemma }) =>
-			lemma.canonicalForm === canonicalForm && lemma.kind === kind,
-	);
-	if (!first) throw Error(`No authored ${kind} ${canonicalForm}`);
-	return {
-		lemma: first.lemma,
-		readings: authoredFor(first.lemma).map(
-			({ reading }) => reading.emojiDescription,
-		),
-	};
-};
 
 test("an authored Lemma with one Reading takes it with no call: New until it is stored, then Reuse", async () => {
 	const { lemma, readings } = authoredLemma("nicht", "PART");
@@ -364,97 +262,6 @@ test("a Closed Route's Lemma with no authored Reading is a Catalog Miss, with no
 	expect(trace?.resolution?.outcome).toBe("CatalogMiss");
 	expect(jev.sent).toEqual([]);
 	expect(luna.sent).toEqual([]);
-});
-
-// A New refused as stale is judged again (ADR 0031 decision 6, #596).
-
-test("a stale New is judged again over the current candidates; a second NoMatch takes the written one with no Luna call", async () => {
-	const jev = fakeJev({ reading: "NoMatch" });
-	const luna = writes("🧩");
-	const { result, trace } = await readOnce(jev, luna, {
-		candidates: ["🏰", "🔒"],
-		written: "🔐",
-	});
-	expect(result).toEqual({ _tag: "New", emojiDescription: "🔐" });
-	expect(jev.stages()).toEqual(["reading"]);
-	expect(luna.sent).toEqual([]);
-	expect(trace?.resolution).toEqual({ outcome: "New", reason: "Rejudged" });
-});
-
-test("judged again, a pick reuses the Reading stored since, and a written one stored since is reused with no call", async () => {
-	const picked = await readOnce(fakeJev({ reading: "c1" }), writes("🧩"), {
-		candidates: ["🏰", "🔒"],
-		written: "🔐",
-	});
-	expect(picked.result).toEqual({ _tag: "Reuse", emojiDescription: "🔒" });
-	const jev = fakeJev();
-	const stored = await readOnce(jev, writes("🧩"), {
-		candidates: ["🏰", "🔐"],
-		written: "🔐",
-	});
-	expect(stored.result).toEqual({ _tag: "Reuse", emojiDescription: "🔐" });
-	expect(stored.trace?.resolution?.reason).toBe("WrittenStored");
-	expect(jev.sent).toEqual([]);
-});
-
-// The description Grammar's Canonical Form call drafted stands in for
-// Luna's after the judge (ADR 0031).
-
-test("with nothing stored, the drafted description is the New one, with no call", async () => {
-	const jev = fakeJev();
-	const luna = writes("🧩");
-	const { result, trace } = await readOnce(jev, luna, {
-		candidates: [],
-		drafted: "🔐",
-	});
-	expect(result).toEqual({ _tag: "New", emojiDescription: "🔐" });
-	expect(jev.sent).toEqual([]);
-	expect(luna.sent).toEqual([]);
-	expect(trace?.resolution).toEqual({ outcome: "New", reason: "Drafted" });
-});
-
-test("with stored Readings jev still judges first: its pick is reused and the draft dropped", async () => {
-	const jev = fakeJev({ reading: "c0" });
-	const luna = writes("🧩");
-	const { result } = await readOnce(jev, luna, {
-		candidates: ["🏰"],
-		drafted: "🔐",
-	});
-	expect(result).toEqual({ _tag: "Reuse", emojiDescription: "🏰" });
-	expect(jev.stages()).toEqual(["reading"]);
-	// The judge sees the stored descriptions only, never the draft.
-	expect(JSON.stringify(jev.sent[0])).not.toContain("🔐");
-	expect(luna.sent).toEqual([]);
-});
-
-test("after NoMatch the draft is the New one, and a draft already stored is a Reuse of it", async () => {
-	const noMatch = await readOnce(
-		fakeJev({ reading: "NoMatch" }),
-		writes("🧩"),
-		{
-			candidates: ["🏰"],
-			drafted: "🔐",
-		},
-	);
-	expect(noMatch.result).toEqual({ _tag: "New", emojiDescription: "🔐" });
-	expect(noMatch.trace?.calls.map(({ stage }) => stage)).toEqual(["reading"]);
-	const collided = await readOnce(
-		fakeJev({ reading: "NoMatch" }),
-		writes("🧩"),
-		{ candidates: ["🏰", "🕰"], drafted: "🕰️" },
-	);
-	expect(collided.result).toEqual({ _tag: "Reuse", emojiDescription: "🕰" });
-	expect(collided.trace?.resolution?.reason).toBe("Collision");
-});
-
-test("a stale New judged again keeps the written description over the draft", async () => {
-	const { result, trace } = await readOnce(
-		fakeJev({ reading: "NoMatch" }),
-		writes("🧩"),
-		{ candidates: ["🏰"], written: "🔐", drafted: "🗝" },
-	);
-	expect(result).toEqual({ _tag: "New", emojiDescription: "🔐" });
-	expect(trace?.resolution?.reason).toBe("Rejudged");
 });
 
 // The error channel (#859, #858) and no salvage (#889).
