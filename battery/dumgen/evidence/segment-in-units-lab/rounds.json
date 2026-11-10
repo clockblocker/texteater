@@ -1,5 +1,5 @@
 {
-	"current": "2026-10-02-5usd",
+	"current": "2026-11-10-1325",
 	"rounds": [
 		{
 			"id": "2026-10-02-5usd",
@@ -103,6 +103,24 @@
 					"reason": "#1293 step 7: the dumcorpus inputs moved since the 2026-10-10 pin (rules reworded, inventories grown); this scoped round measures the expletive slot's rewording"
 				}
 			]
+		},
+		{
+			"id": "2026-11-10-1325",
+			"opened": "2026-11-10",
+			"note": "#1325 (map #1323): segment.inUnits grouping and routing changes, scored on the dev focus set round-1325-dev-focus.json at one repetition. The main session granted 13,095,238 fresh jev input tokens, all of them for dev; no held-out run.",
+			"capTokens": 13095238,
+			"stopLineTokens": 13095238,
+			"pin": {
+				"dumcorpusCommit": "eb8f2ef822ac1794cbbbcbe97525e3e77f8f2341",
+				"dumcorpusDirty": false,
+				"hash": "ff02cee758f9a05fd244cf5e533a5cccdbfb66f6e45289964d001fff91736e9f",
+				"inputs": {
+					"inventories": "92761fb27271fb7c1eecf77e578ce73f87635d99edb9f2acaf6905a8518c3f2d",
+					"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
+				},
+				"at": "2026-11-10T17:26:37.815Z"
+			},
+			"repins": []
 		}
 	]
 }
