@@ -6,7 +6,9 @@
  * position. Since the 2026-10-29 ruling, a sense DWDS files under its
  * Adjektiv is ADJ however it is used (Rule de/adjective-stays-adj), so
  * wirklich, offenbar, wahrscheinlich, natürlich, ziemlich, recht and früh
- * route as open adjectives and are not listed here. A piece whose spelling the ruling covers chooses among the uses
+ * route as open adjectives and are not listed here. The negation adverbs
+ * (nie, niemals, keineswegs, …) are ADV outright: nicht is the ruling's only
+ * negating PART. A piece whose spelling the ruling covers chooses among the uses
  * the ruling gives that spelling, and the use implies the route (Dumgen ADR
  * 0007's closed-class rule, extended to PART as #734 allows).
  *
@@ -192,6 +194,18 @@ export const fixed: Readonly<Record<string, RouteKey>> = {
 	selbst: "Lexeme/ADV",
 	noch: "Lexeme/ADV",
 	erst: "Lexeme/ADV",
+	// Negation adverbs: of the negators the ruling makes PART only nicht,
+	// so nie and its kin are adverbs, however near nicht the judge hears
+	// them (#1340).
+	nie: "Lexeme/ADV",
+	niemals: "Lexeme/ADV",
+	nimmer: "Lexeme/ADV",
+	nimmermehr: "Lexeme/ADV",
+	nirgends: "Lexeme/ADV",
+	nirgendwo: "Lexeme/ADV",
+	keineswegs: "Lexeme/ADV",
+	keinesfalls: "Lexeme/ADV",
+	mitnichten: "Lexeme/ADV",
 };
 
 const spelling = (piece: Piece) => piece.text.toLowerCase();
