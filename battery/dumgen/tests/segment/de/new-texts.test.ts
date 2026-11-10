@@ -101,3 +101,25 @@ test("an article's host share spread over one name's words counts for the name",
 	const { c_4_5: _name, c_5_6: _rest, ...unnamed } = answers;
 	expect(await groupsOf(post, unnamed)).toContainEqual([4]);
 });
+
+test("the auxiliary slot offers the word that closes the bracket past its window", async () => {
+	// Gelegentlich1 werden2 … hinzugefügt18: a list's commas stand inside the bracket.
+	const list = segmentsOf(
+		"Gelegentlich werden kleine Speckbrocken, Gurken oder Scheiben und andere Zutaten wie Petersilie, Schnittlauch und auch etwas Feldsalat hinzugefügt.",
+	);
+	const { units, judge } = await run(list, {
+		s_auxiliary_2: picked("p18", { p18: 0.9, none: 0.1 }),
+	});
+	const question = judge.questionsOf("candidates")?.s_auxiliary_2;
+	expect(question?.type === "choice" && question.criteria.p18).toBe(
+		"hinzugefügt",
+	);
+	const werden = list.findIndex((segment) => segment.text === "werden");
+	const hinzugefuegt = list.findIndex(
+		(segment) => segment.text === "hinzugefügt",
+	);
+	expect(units.map((unit) => unit.segments)).toContainEqual([
+		werden,
+		hinzugefuegt,
+	]);
+});

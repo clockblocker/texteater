@@ -244,6 +244,42 @@ const window = (
 			other.id <= piece.id + after,
 	);
 
+/** Marks a verb's bracket never reaches past. */
+const sentenceBreak = /[.;:!?]/u;
+
+/**
+ * The words past `reach` after a finite verb that may close its bracket:
+ * lowercase words standing right before a punctuation mark or at the end,
+ * up to the first mark that ends the sentence's clause chain. A participle
+ * or infinitive closes the bracket however long the middle field runs
+ * (Gelegentlich werden kleine Speckbrocken, … Feldsalat hinzugefügt), and
+ * a list's commas stand inside it.
+ */
+function bracketEnds(sentence: Sentence, verb: Piece, reach: number): Piece[] {
+	const ends: Piece[] = [];
+	for (const piece of sentence.pieces.slice(verb.id)) {
+		const between = sentence.segments.slice(
+			verb.segment + 1,
+			piece.segment,
+		);
+		if (
+			between.some(
+				(segment) =>
+					segment.kind === "Punctuation" &&
+					sentenceBreak.test(segment.text),
+			)
+		)
+			break;
+		if (piece.id <= verb.id + reach || !/^\p{Ll}/u.test(piece.text))
+			continue;
+		const next = sentence.segments
+			.slice(piece.segment + 1)
+			.find((segment) => segment.kind !== "Whitespace");
+		if (!next || next.kind === "Punctuation") ends.push(piece);
+	}
+	return ends;
+}
+
 /** A form of der or ein; a fused word's article piece (`m` of `im`) stands for its article. */
 export function isArticle(piece: Piece): boolean {
 	if (piece.fusedWord && piece.surface !== piece.text)
@@ -306,7 +342,10 @@ export function slotsOf(
 			slots.push({
 				kind: "auxiliary",
 				piece,
-				hosts: window(sentence, piece, 12, 12),
+				hosts: [
+					...window(sentence, piece, 12, 12),
+					...bracketEnds(sentence, piece, 12),
+				],
 			});
 		if (reflexiveForms.has(foldedText(piece)))
 			slots.push({
