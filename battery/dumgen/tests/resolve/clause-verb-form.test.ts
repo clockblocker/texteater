@@ -10,8 +10,9 @@ import {
 } from "./support.js";
 
 // A dependent infinitive is told from a finite form by its clause (#1339):
-// zu before it makes it an infinitive, and a modal's finite form in
-// another unit of the clause makes it no finite verb.
+// zu before it makes it an infinitive, and beside a modal's finite form
+// in another unit of the clause jev's finite reading gives way to the
+// likeliest of infinitive and participle.
 
 /** jev reads every verb as finite where it may: only the clause rules that out. */
 const finite = {
@@ -37,20 +38,13 @@ async function clicked(
 		{ jev: jev.ask, luna: writes("warten").ask },
 		{ sentence: { ...sentenceOf(text), units }, unit },
 	);
-	const asked = jev.sent[0]?.questions.verbForm;
 	return {
 		surface: attested(result).surface,
 		asked: jev.questions("grammar"),
-		forms:
-			asked?.type === "choice"
-				? Object.keys(asked.criteria).filter(
-						(key) => key !== "Unresolved",
-					)
-				: [],
 	};
 }
 
-test("beside a modal's finite form in its clause a verb is no finite verb: an infinitive or a participle", async () => {
+test("beside a modal's finite form in its clause a verb jev reads as finite is an infinitive, and a participle stays one", async () => {
 	// Sie0 _1 mussten2 _3 lange4 _5 warten6 .7
 	const units: readonly (readonly [number[], RouteKey])[] = [
 		[[0], "Lexeme/PRON"],
@@ -58,9 +52,7 @@ test("beside a modal's finite form in its clause a verb is no finite verb: an in
 		[[4], "Lexeme/ADV"],
 		[[6], "Lexeme/VERB"],
 	];
-	const waited = await clicked("Sie mussten lange warten.", units, 3, "Inf");
-	expect(waited.forms).toEqual(["Inf", "Part"]);
-	expect(waited.asked).not.toContain("mood");
+	const waited = await clicked("Sie mussten lange warten.", units, 3);
 	expect(waited.surface).toMatchObject({
 		inflectionalFeatures: { verbForm: "Inf", mood: null, tense: null },
 	});
