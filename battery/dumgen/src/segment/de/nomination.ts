@@ -33,10 +33,8 @@ import { askPlan, type Plan } from "../stage-graph.js";
 import {
 	type PairCandidate,
 	pairCandidatesOf,
-	type SayingSpan,
 	type Slot,
 	type SlotKind,
-	sayingSpans,
 	slotsOf,
 } from "./candidates.js";
 import type { GermanInventory } from "./inventory.js";
@@ -51,6 +49,7 @@ import {
 	slotId,
 } from "./nomination-questions.js";
 import { argmaxBesideNone } from "./partition.js";
+import { type SayingSpan, sayingSpans } from "./saying-spans.js";
 import {
 	judgeState,
 	type Reference,

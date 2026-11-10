@@ -22,7 +22,6 @@ import {
 	nounLike,
 	numberRanges,
 	type PairCandidate,
-	sayingSpans,
 	superlativeLinks,
 } from "./candidates.js";
 import {
@@ -39,6 +38,7 @@ import {
 	type Partition,
 	partitionOf,
 } from "./partition.js";
+import { sayingSpans } from "./saying-spans.js";
 import type { Piece } from "./sentence.js";
 
 export type Family = "Lexeme" | "Locution" | "Saying";

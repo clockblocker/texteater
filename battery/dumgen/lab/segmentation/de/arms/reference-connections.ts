@@ -12,7 +12,6 @@ import {
 	nounLike,
 	numberRanges,
 	oldSpellingCorrelators,
-	sayingSpans,
 	superlativeLinks,
 } from "../../../../src/segment/de/candidates.js";
 import {
@@ -25,6 +24,7 @@ import {
 	slotId,
 } from "../../../../src/segment/de/nomination.js";
 import { argmaxBesideNone } from "../../../../src/segment/de/partition.js";
+import { sayingSpans } from "../../../../src/segment/de/saying-spans.js";
 import type { Connection, Edge } from "../../harness/stages.js";
 import type { ReferenceFloors } from "./reference.js";
 

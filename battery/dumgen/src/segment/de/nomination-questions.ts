@@ -11,13 +11,12 @@ import {
 	idiomHosts,
 	oldSpellingCorrelators,
 	type PairCandidate,
-	type SayingSpan,
 	type Slot,
 	type SlotKind,
-	sayingSpans,
 	wasFuerId,
 	wasFuerPairs,
 } from "./candidates.js";
+import { type SayingSpan, sayingSpans } from "./saying-spans.js";
 import type { Reference, Sentence } from "./sentence.js";
 
 const slotQuestion: Record<SlotKind, (piece: string) => string> = {
