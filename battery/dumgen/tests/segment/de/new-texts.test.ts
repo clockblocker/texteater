@@ -158,3 +158,14 @@ test("a je … desto span counts no maxim share, so it stays its correlator and 
 	expect(units).toContainEqual([0, 9]);
 	expect(units).not.toContainEqual([0, 2, 4, 6, 9, 11, 13, 15]);
 });
+
+test("a particle heard only on the earlier twin that opens a phrase moves to the one that closes the clause", async () => {
+	// Er0 _1 fängt2 _3 an4 _5 der6 _7 Ecke8 _9 wieder10 _11 an12 .13
+	const ecke = segmentsOf("Er fängt an der Ecke wieder an.");
+	const units = await groupsOf(ecke, {
+		s_particle_3: picked("p2", { p2: 0.7, none: 0.3 }),
+		s_article_4: picked("p5", { p5: 0.9, none: 0.1 }),
+	});
+	expect(units).toContainEqual([2, 12]);
+	expect(units).toContainEqual([4]);
+});

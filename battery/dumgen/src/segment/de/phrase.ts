@@ -11,6 +11,7 @@
  */
 import type { Segment } from "../segmented-sentence.js";
 import { fusedSiblings, isArticle, nounLike } from "./candidates.js";
+import type { GermanInventory } from "./inventory.js";
 import type { Piece, Sentence } from "./sentence.js";
 
 /** An adjective's ending: an inflected attributive adjective, determiner or participle ends so. */
@@ -139,5 +140,29 @@ export function fusedPrepositions(sentence: Sentence): ReadonlySet<number> {
 					(siblings.get(piece.id) ?? []).some(fusedArticle),
 			)
 			.map((piece) => piece.id),
+	);
+}
+
+/** Whether the piece right after `piece`, with only whitespace between, may open its phrase: an article, a pronoun or determiner, a noun or a number. */
+export function opensPhrase(
+	sentence: Sentence,
+	inventory: Pick<GermanInventory, "identityCandidates">,
+	piece: Piece,
+): boolean {
+	const { pieces, segments } = sentence;
+	const next = pieces[piece.id];
+	if (
+		!next ||
+		next.clause !== piece.clause ||
+		!segments
+			.slice(piece.segment + 1, next.segment)
+			.every((segment) => segment.kind === "Whitespace")
+	)
+		return false;
+	return (
+		isArticle(next) ||
+		nounLike(next) ||
+		/^\p{N}/u.test(next.text) ||
+		inventory.identityCandidates(next.text).length > 0
 	);
 }

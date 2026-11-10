@@ -13,7 +13,7 @@ import { fusedSiblings, type SlotKind } from "./candidates.js";
 import type { Decision } from "./code-rules.js";
 import { type Nomination, slotId } from "./nomination.js";
 import { argmaxBesideNone } from "./partition.js";
-import { governorShares } from "./phrase.js";
+import { governorShares, opensPhrase } from "./phrase.js";
 import type { FixedRoute } from "./routing.js";
 import type { Piece } from "./sentence.js";
 
@@ -57,17 +57,24 @@ export function bracketParticles(nomination: Nomination): Decision {
 	for (const late of pieces) {
 		const clause = clauseOf.get(late.id);
 		if (late.fusedWord || last.get(clause ?? 0) !== late.id) continue;
-		const host = slotHostOf(nomination, "particle", late);
-		if (host === undefined) continue;
+		const lateHost = slotHostOf(nomination, "particle", late);
 		for (const early of pieces) {
 			if (
 				early.id >= late.id ||
 				early.fusedWord ||
 				clauseOf.get(early.id) !== clause ||
-				lower(early) !== lower(late) ||
-				slotHostOf(nomination, "particle", early) !== host
+				lower(early) !== lower(late)
 			)
 				continue;
+			const earlyHost = slotHostOf(nomination, "particle", early);
+			// Heard only on the earlier twin, the particle still closes
+			// the bracket when the earlier one opens a phrase.
+			const host =
+				lateHost ??
+				(opensPhrase(nomination.sentence, nomination.inventory, early)
+					? earlyHost
+					: undefined);
+			if (host === undefined || earlyHost !== host) continue;
 			add.push([late.id, host]);
 			if (slotHostOf(nomination, "preposition", early) !== host)
 				dropped.add(`${early.id},${host}`);

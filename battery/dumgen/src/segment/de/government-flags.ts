@@ -5,11 +5,10 @@
  */
 
 import type { Membership } from "./assembly.js";
-import { isArticle, nounLike } from "./candidates.js";
 import { boundPieces, type CodeRule } from "./code-rules.js";
 import { type Nomination, reaskedIdiomId, slotId } from "./nomination.js";
 import { argmaxBesideNone } from "./partition.js";
-import { governorShares } from "./phrase.js";
+import { governorShares, opensPhrase } from "./phrase.js";
 import type { Piece } from "./sentence.js";
 
 export const governmentFamilies = [
@@ -70,26 +69,6 @@ function slotHosts(
 			.sort((a, b) => b[1] - a[1]),
 		none: probabilities.none ?? 0,
 	};
-}
-
-/** Whether the piece right after `piece`, with only whitespace between, may open its phrase: an article, a pronoun or determiner, a noun or a number. */
-function opensPhrase(nomination: Nomination, piece: Piece): boolean {
-	const { pieces, segments } = nomination.sentence;
-	const next = pieces[piece.id];
-	if (
-		!next ||
-		next.clause !== piece.clause ||
-		!segments
-			.slice(piece.segment + 1, next.segment)
-			.every((segment) => segment.kind === "Whitespace")
-	)
-		return false;
-	return (
-		isArticle(next) ||
-		nounLike(next) ||
-		/^\p{N}/u.test(next.text) ||
-		nomination.inventory.identityCandidates(next.text).length > 0
-	);
 }
 
 /**
@@ -186,7 +165,7 @@ export function flaggedPrepositions(
 			else if (
 				kind === "particle" &&
 				!piece.fusedWord &&
-				opensPhrase(nomination, piece)
+				opensPhrase(nomination.sentence, nomination.inventory, piece)
 			)
 				flag("particle", piece.id, to);
 		}
