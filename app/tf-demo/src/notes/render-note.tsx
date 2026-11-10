@@ -130,6 +130,25 @@ const acquireConfiguredLayout: LayoutAdapter = (
 	);
 };
 
+/** The stored Block layout a Reading of `lemma`'s Family and Kind is laid out by. */
+export function readingBlockLayoutQuery(
+	visitorId: string,
+	lemma: {
+		readonly language: string;
+		readonly family: string;
+		readonly kind: string;
+	},
+) {
+	return convexQuery(api.readingBlockLayouts.getFamilyKind, {
+		visitorId,
+		route: {
+			targetLanguage: lemma.language as "de",
+			family: lemma.family,
+			kind: lemma.kind,
+		},
+	});
+}
+
 function ReadingWithConfiguredLayout({
 	input,
 	part,
@@ -140,16 +159,8 @@ function ReadingWithConfiguredLayout({
 	readonly renderWithLayout: (layout: NoteBlockLayout) => ReactElement;
 }) {
 	const visitorId = useAnonymousVisitorId();
-	const lemma = input.noteData.reading.lemma;
 	const layoutQuery = useQuery({
-		...convexQuery(api.readingBlockLayouts.getFamilyKind, {
-			visitorId,
-			route: {
-				targetLanguage: lemma.language as "de",
-				family: lemma.family,
-				kind: lemma.kind,
-			},
-		}),
+		...readingBlockLayoutQuery(visitorId, input.noteData.reading.lemma),
 		// A resolving Reading laid out by its unit's route may change route
 		// once Grammar lands; it keeps its Blocks until the new layout loads.
 		placeholderData: keepPreviousData,

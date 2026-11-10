@@ -1,7 +1,9 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "convex/react";
 import { useState } from "react";
 
 import { visitorErrorMessage } from "@/lib/visitor-error";
+import { prefetchCardNotes } from "@/views/card-note-prefetch";
 import { segmentSelectionDeckCards } from "@/views/resolution-deck";
 import {
 	useDealtSelection,
@@ -15,10 +17,17 @@ export function segmentKey(sentenceId: string, segmentIndex: number): string {
 }
 
 /**
+ * How long a stored route's Deck waits for its Notes before it is dealt
+ * anyway, showing bones for the ones still loading (#1316's threshold).
+ */
+export const STORED_DEAL_WAIT_MS = 300;
+
+/**
  * One Segment Selection, wherever the Segment lives: the reader or a
  * Definition block. Deals the resulting Cards to the Sheet the word was
  * clicked in. The clicked Segment is lit while the selection runs, and from
- * then on for as long as the Deck it dealt is live.
+ * then on for as long as the Deck it dealt is live. A stored route's Notes
+ * are loaded before its Deck is dealt, so its Cards arrive filled in.
  */
 export function useSegmentSelection(visitorId: string) {
 	const recordSelectionTiming = useMutation(
@@ -27,6 +36,7 @@ export function useSegmentSelection(visitorId: string) {
 	const { presentCards } = useWorkspaceInteraction();
 	const dealtSelection = useDealtSelection();
 	const selectSegment = useMutation(api.resolutionSessions.selectSegment);
+	const queryClient = useQueryClient();
 	const [pendingSegmentKey, setPendingSegmentKey] = useState<string | null>(
 		null,
 	);
@@ -63,14 +73,19 @@ export function useSegmentSelection(visitorId: string) {
 			}
 			// A repeat click joins the Visitor's running session, so a
 			// Resolving deck follows the returned requestId, not this one.
-			presentCards(
-				segmentSelectionDeckCards(
-					requestId,
-					result,
-					clickedSegmentIndex,
-				),
-				{ anchor: anchorElement, selection },
+			const cards = segmentSelectionDeckCards(
+				requestId,
+				result,
+				clickedSegmentIndex,
 			);
+			if (result.kind === "Available")
+				await Promise.race([
+					prefetchCardNotes(queryClient, visitorId, cards),
+					new Promise((resolve) =>
+						setTimeout(resolve, STORED_DEAL_WAIT_MS),
+					),
+				]);
+			presentCards(cards, { anchor: anchorElement, selection });
 		} catch (cause) {
 			setError(visitorErrorMessage(cause));
 		} finally {

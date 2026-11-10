@@ -1,9 +1,5 @@
 import { convexQuery } from "@convex-dev/react-query";
-import {
-	type QueryClient,
-	useQuery,
-	useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMutation as useConvexMutation } from "convex/react";
 import { Button, DensityScope } from "lego";
 import { useEffect } from "react";
@@ -15,6 +11,7 @@ import {
 	resolvingAttestationNoteParts,
 	resolvingUnitTitle,
 } from "@/notes";
+import { prefetchCardNotes } from "@/views/card-note-prefetch";
 import { NotFoundView } from "@/views/not-found-view";
 import {
 	type ResolutionNote,
@@ -24,21 +21,15 @@ import {
 	ResolvingReadingNote,
 	resolvingWords,
 } from "@/views/resolving-reading-note";
-import { routeNoteQueryArgs } from "@/views/route-note-view";
 import {
 	PlacedNoteSkeleton,
 	useNotePart,
 	useOwnsNoteEffects,
 } from "@/workspace/note-part";
-import {
-	useWorkspaceInteraction,
-	type WorkspaceCardTarget,
-} from "@/workspace/workspace-controller";
-import {
-	activeAnalysisKeyOf,
-	activeReadingIdOf,
-	type ResolutionStepTarget,
-	type UnitRoute,
+import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
+import type {
+	ResolutionStepTarget,
+	UnitRoute,
 } from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
 
@@ -103,47 +94,13 @@ function useResolutionDeck(note: ResolutionNote | null) {
 		if (!note || !ownsEffects) return;
 		const cards = resolutionDeckCards(note);
 		let current = true;
-		void Promise.all(
-			cards.map((card) => prefetchCardNote(queryClient, visitorId, card)),
-		).then(() => {
+		void prefetchCardNotes(queryClient, visitorId, cards).then(() => {
 			if (current) presentCards(cards);
 		});
 		return () => {
 			current = false;
 		};
 	}, [note, ownsEffects, presentCards, queryClient, visitorId]);
-}
-
-/** Loads the stored Note a Card will show, under the query its view asks. */
-function prefetchCardNote(
-	queryClient: QueryClient,
-	visitorId: string,
-	{ target, presentationContext }: WorkspaceCardTarget,
-): Promise<void> {
-	switch (target.kind) {
-		case "Reading":
-			return queryClient.prefetchQuery(
-				convexQuery(api.readingNotes.get, {
-					readingId: target.readingId,
-					visitorId,
-				}),
-			);
-		case "Lemma":
-		case "Surface":
-		case "Attestation":
-			return queryClient.prefetchQuery(
-				convexQuery(api.routeNotes.get, {
-					...routeNoteQueryArgs(
-						target,
-						activeAnalysisKeyOf(presentationContext),
-						activeReadingIdOf(presentationContext),
-					),
-					visitorId,
-				}),
-			);
-		default:
-			return Promise.resolve();
-	}
 }
 
 /** Whether the Session ended without an occurrence: Unresolved, or failed for good. */

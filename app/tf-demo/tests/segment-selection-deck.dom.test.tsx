@@ -1,9 +1,13 @@
 import "./support/dom";
 import { afterEach, expect, test } from "bun:test";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
 import { ConvexProvider, type ConvexReactClient } from "convex/react";
 import type { Id } from "../convex/_generated/dataModel";
-import { useSegmentSelection } from "../src/hooks/use-segment-selection";
+import {
+	STORED_DEAL_WAIT_MS,
+	useSegmentSelection,
+} from "../src/hooks/use-segment-selection";
 import {
 	ReaderSentence,
 	type ReaderSentenceData,
@@ -59,11 +63,15 @@ function Reader() {
 	);
 }
 
-/**
- * Clicks "verarbeiten" with the selection answered by `reply`, and returns
- * what was asked of `selectSegment` and the Cards dealt.
- */
-async function click(reply: unknown, init: MouseEventInit = {}) {
+/** A query client whose every stored Note is answered by `note`. */
+function notesClient(note: () => Promise<unknown> = async () => null) {
+	return new QueryClient({
+		defaultOptions: { queries: { retry: false, queryFn: note } },
+	});
+}
+
+/** Clicks "verarbeiten" with the selection answered by `reply`; `dealt` fills as Decks are dealt. */
+function reader(reply: unknown, notes = notesClient(), init?: MouseEventInit) {
 	const asked: unknown[] = [];
 	const dealt: (readonly WorkspaceCardTarget[])[] = [];
 	const client: Pick<ConvexReactClient, "mutation"> = {
@@ -74,19 +82,30 @@ async function click(reply: unknown, init: MouseEventInit = {}) {
 	};
 	const view = render(
 		<ConvexProvider client={client as ConvexReactClient}>
-			<WorkspaceInteractionProvider
-				interaction={{
-					follow: () => {},
-					presentCards: (cards) => {
-						dealt.push(cards);
-					},
-				}}
-			>
-				<Reader />
-			</WorkspaceInteractionProvider>
+			<QueryClientProvider client={notes}>
+				<WorkspaceInteractionProvider
+					interaction={{
+						follow: () => {},
+						presentCards: (cards) => {
+							dealt.push(cards);
+						},
+					}}
+				>
+					<Reader />
+				</WorkspaceInteractionProvider>
+			</QueryClientProvider>
 		</ConvexProvider>,
 	);
 	fireEvent.click(view.getByText("verarbeiten"), init);
+	return { asked, dealt };
+}
+
+/**
+ * Clicks "verarbeiten" with the selection answered by `reply`, and returns
+ * what was asked of `selectSegment` and the Cards dealt.
+ */
+async function click(reply: unknown, init: MouseEventInit = {}) {
+	const { asked, dealt } = reader(reply, notesClient(), init);
 	await waitFor(() => expect(dealt).toHaveLength(1));
 	return {
 		asked,
@@ -128,4 +147,39 @@ test("nothing a click carries puts another Card in front of the Reading", async 
 			cleanup();
 			localStorage.clear();
 		}
+});
+
+const settled = (ms: number) =>
+	new Promise((resolve) => setTimeout(resolve, ms));
+
+test("a stored route's Deck is dealt once its Notes have loaded, a running Session's at once", async () => {
+	const waiting: ((note: unknown) => void)[] = [];
+	const slow = () =>
+		notesClient(
+			() =>
+				new Promise((resolve) => {
+					waiting.push(resolve);
+				}),
+		);
+	const stored = reader(available, slow());
+	await waitFor(() => expect(waiting).toHaveLength(5));
+	expect(stored.dealt).toHaveLength(0);
+	for (const answer of waiting) answer(null);
+	await waitFor(() => expect(stored.dealt).toHaveLength(1));
+	cleanup();
+
+	const running = reader(resolving, slow());
+	await waitFor(() => expect(running.dealt).toHaveLength(1));
+});
+
+test("a stored route whose Notes are slow is dealt anyway after the wait", async () => {
+	const stored = reader(
+		available,
+		notesClient(() => new Promise(() => {})),
+	);
+	await settled(STORED_DEAL_WAIT_MS / 2);
+	expect(stored.dealt).toHaveLength(0);
+	await waitFor(() => expect(stored.dealt).toHaveLength(1), {
+		timeout: STORED_DEAL_WAIT_MS * 2,
+	});
 });

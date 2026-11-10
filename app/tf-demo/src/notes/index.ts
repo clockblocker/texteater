@@ -4,6 +4,7 @@ export {
 	type ValencyLineStyle,
 } from "./de/block-renderers/reading/valency/valency-line";
 export {
+	readingBlockLayoutQuery,
 	renderFixtureNote,
 	renderFixtureNoteParts,
 	renderNote,
