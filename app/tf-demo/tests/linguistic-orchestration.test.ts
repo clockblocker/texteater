@@ -68,6 +68,31 @@ test("Grammar receives the clicked Sentence, its stored unit, the Lemma candidat
 	]);
 });
 
+test("Grammar receives the word intake stored for each Segment", async () => {
+	const stored = context();
+	if (!stored.sentence) throw Error("Expected a Sentence");
+	const run = setup({
+		context: {
+			...stored,
+			sentence: {
+				...stored.sentence,
+				segments: [
+					{
+						index: 0,
+						kind: "ResolvableText",
+						text: "Banken",
+						surface: "Banken",
+					},
+				],
+			},
+		},
+	});
+	await run.resolve();
+	expect(run.fake.grammarInputs[0]?.sentence.segments).toEqual([
+		{ kind: "ResolvableText", text: "Banken", surface: "Banken" },
+	]);
+});
+
 test("retry uses its exact Grammar checkpoint and asks only for the Reading", async () => {
 	const run = setup();
 	await run.resolve({ grammatical: grammar });

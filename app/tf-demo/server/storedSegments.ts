@@ -205,8 +205,9 @@ export function unitsByMember(
 
 /**
  * The Sentence a click resolves against: the stored Segments as they are,
- * so a fused word arrives as its pieces (`i` + `m`) and a click's index is
- * the stored index. The caller validates the stored Segments.
+ * so a fused word arrives as its pieces (`i` + `m`), each with the word it
+ * stands for where intake stored one, and a click's index is the stored
+ * index. The caller validates the stored Segments.
  */
 export function encounterSentenceOf(stored: {
 	readonly segmentedSentenceId: string;
@@ -214,7 +215,10 @@ export function encounterSentenceOf(stored: {
 }): {
 	readonly id: string;
 	readonly language: "de";
-	readonly segments: readonly Pick<StoredSegment, "kind" | "text">[];
+	readonly segments: readonly Pick<
+		StoredSegment,
+		"kind" | "text" | "surface"
+	>[];
 } {
 	return Object.freeze({
 		id: stored.segmentedSentenceId,
@@ -222,7 +226,13 @@ export function encounterSentenceOf(stored: {
 		segments: Object.freeze(
 			[...stored.segments]
 				.sort((left, right) => left.index - right.index)
-				.map(({ kind, text }) => Object.freeze({ kind, text })),
+				.map(({ kind, text, surface }) =>
+					Object.freeze({
+						kind,
+						text,
+						...(surface === undefined ? {} : { surface }),
+					}),
+				),
 		),
 	});
 }

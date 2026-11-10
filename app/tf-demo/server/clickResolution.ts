@@ -7,7 +7,7 @@ import type * as Dumling from "dumling/types";
 import type * as Effect from "effect/Effect";
 import type { ClickSentence } from "./clickEncounter";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
-import type { StoredUnit } from "./storedSegments";
+import type { StoredSegment, StoredUnit } from "./storedSegments";
 
 export type { ClickEncounter, ClickSentence } from "./clickEncounter";
 
@@ -54,8 +54,21 @@ export type NeighbourSentences = {
 	readonly after?: string;
 };
 
+/**
+ * The clicked Sentence as Grammar reads it: the Encounter's Sentence with
+ * the word each piece or shortened word stands for, as intake chose it
+ * (`'s` of `geht's`: `es`), so Dumgen does not ask again (#1329). The
+ * Encounter Grammar names keeps only the Segments' kind and text.
+ */
+export type ClickGrammarSentence = Omit<ClickSentence, "segments"> & {
+	readonly segments: readonly Pick<
+		StoredSegment,
+		"kind" | "text" | "surface"
+	>[];
+};
+
 export type ClickGrammarInput = {
-	readonly sentence: ClickSentence;
+	readonly sentence: ClickGrammarSentence;
 	readonly clickedSegmentIndex: number;
 	/** The biggest unit intake stored at the clicked Segment, if any. */
 	readonly unit?: StoredUnit;

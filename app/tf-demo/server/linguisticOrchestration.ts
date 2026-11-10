@@ -5,8 +5,8 @@ import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import type {
 	ClickEncounter,
+	ClickGrammarSentence,
 	ClickResolution,
-	ClickSentence,
 	ReadingResolution,
 } from "./clickResolution";
 import { assertNonEmpty } from "./identifiers";
@@ -628,7 +628,7 @@ function surfaceIdentityKey(surface: Dumling.Surface<"de">): string {
 	return makeSurfaceId("de", surface);
 }
 
-function clickSentenceOf(stored: PersistedSentence): ClickSentence {
+function clickSentenceOf(stored: PersistedSentence): ClickGrammarSentence {
 	if (stored.language !== "de") {
 		throw new Error("Only German click resolution is enabled in tf-demo.");
 	}

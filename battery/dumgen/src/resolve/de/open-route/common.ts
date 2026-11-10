@@ -59,7 +59,10 @@ export type HeadPlan = {
 		readonly member: Member;
 		readonly reading: Choice;
 	}[];
-	/** Readings code fixes: a VERB's clitic 's is its subject es. */
+	/**
+	 * Readings code fixes: a VERB's clitic 's is its subject es, and a piece
+	 * or shortened word reads as the word its Segment stands for.
+	 */
 	readonly presetReadings: ReadonlyMap<number, string>;
 	readonly orthography: Choice | undefined;
 	readonly spelling: ChoiceOf<typeof options.spelling> | undefined;
@@ -68,9 +71,25 @@ export type HeadPlan = {
 };
 
 /**
+ * The word a Segment stands for, as intake chose it among `surfaces` when
+ * it segmented the Sentence ('s of geht's: es), else undefined.
+ */
+function standsFor(
+	target: Target,
+	segment: number,
+	surfaces: readonly string[],
+): string | undefined {
+	const surface = target.segments[segment]?.surface;
+	return surface !== undefined && surfaces.includes(surface)
+		? surface
+		: undefined;
+}
+
+/**
  * Asks the head of the first request. A member the table spells, or an
  * article read as shortened, is not judged; a VERB's subject es is read
- * as es.
+ * as es, and a piece or shortened word whose Segment names the word it
+ * stands for is read as that word, as intake chose it (#1329).
  */
 export function askHead(
 	questionnaire: Questionnaire,
@@ -85,13 +104,26 @@ export function askHead(
 			? [[expletive.segment, "es"]]
 			: [],
 	);
+	const ambiguous = ambiguousPieces(
+		target.segments,
+		target.members.map(({ segment }) => segment),
+	);
+	for (const [segment, piece] of ambiguous) {
+		const word = standsFor(target, segment, piece.surfaces);
+		if (word !== undefined && !presetReadings.has(segment))
+			presetReadings.set(segment, word);
+	}
+	// A VERB's shortened word is settled by its prefix question instead.
+	for (const member of shape.verbal ? [] : target.members) {
+		const word =
+			member.spelling?.orthography === "Shorthand"
+				? standsFor(target, member.segment, member.spelling.surfaces)
+				: undefined;
+		if (word !== undefined && !presetReadings.has(member.segment))
+			presetReadings.set(member.segment, word);
+	}
 	const pieces = new Map(
-		[
-			...ambiguousPieces(
-				target.segments,
-				target.members.map(({ segment }) => segment),
-			),
-		].filter(([segment]) => !presetReadings.has(segment)),
+		[...ambiguous].filter(([segment]) => !presetReadings.has(segment)),
 	);
 	const spelling = askSpelling(
 		questionnaire,
@@ -124,7 +156,8 @@ export function askHead(
 			: target.members.filter(
 					(member) =>
 						member.spelling?.orthography === "Shorthand" &&
-						member.spelling.surfaces.length > 1,
+						member.spelling.surfaces.length > 1 &&
+						!presetReadings.has(member.segment),
 				)
 	).map((member) => ({
 		member,

@@ -11,6 +11,7 @@ import type {
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import {
+	type ClickGrammarSentence,
 	type ClickReadingInput,
 	type ClickResolution,
 	type ClickSentence,
@@ -33,14 +34,21 @@ export type ClickDumgen<R> = {
 	};
 };
 
-/** The stored Sentence as Dumgen's Segmented Sentence, with the one unit a click resolves. */
+/**
+ * The stored Sentence as Dumgen's Segmented Sentence, with the one unit a
+ * click resolves and, for Grammar, the word each Segment stands for.
+ */
 function dumgenSentence(
-	sentence: ClickSentence,
+	sentence: ClickGrammarSentence,
 	unit: Unit,
 ): SegmentedSentence {
 	return {
 		text: sentence.segments.map(({ text }) => text).join(""),
-		segments: sentence.segments.map(({ kind, text }) => ({ kind, text })),
+		segments: sentence.segments.map(({ kind, text, surface }) => ({
+			kind,
+			text,
+			...(surface === undefined ? {} : { surface }),
+		})),
 		units: [unit],
 	};
 }
@@ -166,6 +174,14 @@ function clickReadingOf(
 			};
 }
 
+/** The Encounter's Sentence: each Segment's kind and text, as its checkpoint keeps them. */
+function encounterSentence(sentence: ClickGrammarSentence): ClickSentence {
+	return {
+		...sentence,
+		segments: sentence.segments.map(({ kind, text }) => ({ kind, text })),
+	};
+}
+
 /** Dumgen's answer as the orchestrator stores it, with the Encounter Grammar resolved. */
 function clickGrammarOf(
 	result: GrammarResolution,
@@ -186,7 +202,7 @@ function clickGrammarOf(
 		decision: "Resolved",
 		language: "de",
 		encounter: {
-			sentence: input.sentence,
+			sentence: encounterSentence(input.sentence),
 			target: {
 				family: lemma.family,
 				kind: lemma.kind,

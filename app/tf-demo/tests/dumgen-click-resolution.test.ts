@@ -135,6 +135,36 @@ test("a click's grammar is Dumgen's resolve.grammar over the stored unit, and it
 	});
 });
 
+test("the word intake stored for a piece reaches Dumgen, and the Encounter keeps only the Segments' kind and text", async () => {
+	// Geht0 's1 _2 gut3 .4: intake read 's as es.
+	const gehts: ClickGrammarInput["sentence"] = {
+		id: "sentence-2",
+		language: "de",
+		segments: [
+			{ kind: "ResolvableText", text: "Geht", surface: "geht" },
+			{ kind: "ResolvableText", text: "'s", surface: "es" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "gut" },
+			{ kind: "Punctuation", text: "." },
+		],
+	};
+	const fake = fakeDumgen({ _tag: "Resolved", attestation: kommt });
+	const grammar = await Effect.runPromise(
+		dumgenClickResolution(fake.dumgen).grammar({
+			sentence: gehts,
+			clickedSegmentIndex: 0,
+			unit: { segments: [0, 1], route: verb },
+			lemmaCandidates: [],
+			neighbours: {},
+		}),
+	);
+	expect(fake.inputs[0]?.sentence.segments).toEqual(gehts.segments);
+	if (grammar.decision !== "Resolved") throw Error("Expected Resolved");
+	expect(grammar.encounter.sentence.segments).toEqual(
+		gehts.segments.map(({ kind, text }) => ({ kind, text })),
+	);
+});
+
 test("a stored closed-class identity reaches Dumgen, and a Catalog Miss comes back as tf-demo's signal", async () => {
 	const pron = { language: "de", family: "Lexeme", kind: "PRON" } as const;
 	const fake = fakeDumgen({
