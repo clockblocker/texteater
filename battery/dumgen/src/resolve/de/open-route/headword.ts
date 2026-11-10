@@ -1,14 +1,9 @@
 /**
- * An open-route click's headword: Luna's answer to its guess or written
- * again once jev has judged, and the Canonical Form code derives over it.
+ * An open-route click's Canonical Form, as code derives it over the
+ * headword written for it.
  */
 
 import type * as Dumling from "dumling/types";
-import * as Effect from "effect/Effect";
-import * as Fiber from "effect/Fiber";
-import type { CallLog } from "../../../call.js";
-import type { LunaDraft } from "../../../luna.js";
-import type { AskFailure } from "../../../segment/ask.js";
 import { withoutReflexive } from "../../../segment/de/candidates.js";
 import type { Judged, Written } from "../canonical-form.js";
 import { guardedHeadword } from "../headword-guards.js";
@@ -16,7 +11,6 @@ import { fixedSpelling, type Target } from "../target.js";
 import { adverbialHeadword } from "./adverbial.js";
 import type { Headword } from "./attestation.js";
 import type { FirstRead } from "./first-request.js";
-import { guessMisses } from "./luna-guess.js";
 import { digitsHeadword, numeralLocutionHeadword } from "./numeral.js";
 import { authoredParticle } from "./particle.js";
 import type { Shape } from "./shape.js";
@@ -90,40 +84,4 @@ export function canonicalFormOf(
 	if (canonicalForm === undefined)
 		throw Error("No Canonical Form was written");
 	return { canonicalForm, core, normalized };
-}
-
-/**
- * Luna's headword once jev has judged. The guessed answer stands when jev
- * changed nothing Luna reads and, on a VERB Lexeme, judged away no
- * prefix the guessed headword carries; otherwise Luna writes again with
- * jev's answers.
- */
-export function rewritten(
-	log: CallLog["Service"],
-	write: (judged: Judged) => Effect.Effect<Written, AskFailure>,
-	request: (judged: Judged) => LunaDraft,
-	guessed:
-		| {
-				readonly judged: Judged;
-				readonly fiber: Fiber.Fiber<Written, AskFailure>;
-		  }
-		| undefined,
-	judged: Judged,
-	verbMisses: ((form: string) => string | undefined) | undefined,
-): Effect.Effect<Written, AskFailure> {
-	return Effect.gen(function* () {
-		if (!guessed) return yield* write(judged);
-		let missed = guessMisses(request(guessed.judged), request(judged));
-		if (missed) yield* Fiber.interrupt(guessed.fiber);
-		else {
-			const written = yield* Fiber.join(guessed.fiber);
-			missed = verbMisses?.(written.canonicalForm);
-			if (!missed) return written;
-		}
-		log.event({
-			name: "CanonicalRewritten",
-			data: { reason: missed },
-		});
-		return yield* write(judged);
-	});
 }

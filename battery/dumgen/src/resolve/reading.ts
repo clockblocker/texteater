@@ -14,7 +14,8 @@
  *   Reading beside it (#877 R4). Luna writing an offered one takes it: the
  *   judge was wrong.
  * - Luna drafts the description in `resolve.grammar`'s Canonical Form
- *   call, so a click needs no second Luna call. The host passes it as
+ *   call, or beside jev where code wrote the headword of a Lemma with
+ *   nothing stored, so a click needs no second Luna call. The host passes it as
  *   `drafted`, and it stands in for the description Luna would write here:
  *   the judge still runs first over the stored ones.
  * - A host that refused a New as stale passes the description Luna wrote

@@ -6,9 +6,10 @@
  * inflection, the auxiliaries' uses, the prepositions a head governs,
  * coverage. Then, side by side, a NOUN's Case question over the cells its
  * article and form leave open, when more than one remains (#625), and
- * Luna's Canonical Form and spellings (#862). Luna is asked while jev
- * judges, on the guess that jev changes nothing Luna reads; when it does,
- * Luna is asked again with jev's answers. A common NOUN whose headword
+ * the headword (`open-route/headword-writer.ts`): code's where the route
+ * settles it, else Luna's Canonical Form and spellings (#862), asked
+ * while jev judges on a guess at its answers and again when the guess
+ * misses. A common NOUN whose headword
  * dumcorpus lists in free gender variation takes its mixed gender, after
  * one more request (`freeGender`) when only one of its senses does. Code
  * derives the rest: the article's cell and evidence (#681), perfect,
@@ -25,29 +26,19 @@ import type * as Scope from "effect/Scope";
 import { CallLog } from "../../call.js";
 import { type Luna, stageWrite } from "../../luna-call.js";
 import type { Ask, AskFailure } from "../../segment/ask.js";
-import { draftsEmojiDescription } from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
-import {
-	canonicalFormRequest,
-	checkWritten,
-	hintsFor,
-	type Judged,
-	type Written,
-} from "./canonical-form.js";
+import { hintsFor, type Written } from "./canonical-form.js";
 import { openAttestation } from "./open-route/attestation.js";
 import { judgedOf, plan, readFirst } from "./open-route/first-request.js";
 import { headwordOutside, outsideSurface } from "./open-route/governed.js";
-import { canonicalFormOf, rewritten } from "./open-route/headword.js";
-import { guessedJudgment } from "./open-route/luna-guess.js";
+import { canonicalFormOf } from "./open-route/headword.js";
+import { startHeadword } from "./open-route/headword-writer.js";
 import { nominalCells } from "./open-route/nominal.js";
-import { particlesSpelled } from "./open-route/particle.js";
 import {
 	caseRequest,
 	grammarRequest,
 	senseRequest,
 } from "./open-route/requests.js";
-import { spellingOf } from "./open-route/shape.js";
-import { verbGuessMisses } from "./open-route/verbal.js";
 import { Answered, Unresolved } from "./questions.js";
 import { type Target, targetState } from "./target.js";
 
@@ -78,32 +69,8 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	const planned = plan(target);
 	const { shape } = planned;
 	const state = targetState(target);
-	const [opening, ...rest] = target.members;
-	const lone = rest.length === 0 ? opening : undefined;
-	// A PART is authored (#734): its spelling names its member, or Luna's
-	// headword does when the member is no Standard spelling.
-	const particleSpelled =
-		target.route.kind === "PART" && lone
-			? particlesSpelled(spellingOf(lone))
-			: [];
 	const hints = hintsFor(target, candidates);
-	const drafts = draftsEmojiDescription(target.route);
-	const request = (judged: Judged) =>
-		canonicalFormRequest(target, judged, hints, drafts);
-	const write = (judged: Judged) =>
-		luna("canonical", request(judged), (output) =>
-			checkWritten(target, judged, output),
-		);
-	// Luna writes while jev judges, on a guess at jev's answers; the
-	// guessed call ends with the scope unless it is joined. A PART spelled
-	// Standard needs no call, and with nothing to ask jev there is no guess.
-	const guessed =
-		planned.questionnaire.empty || particleSpelled.length === 1
-			? undefined
-			: guessedJudgment(target, planned);
-	const guess = guessed
-		? yield* Effect.forkScoped(write(guessed), { startImmediately: true })
-		: undefined;
+	const once = yield* startHeadword(target, planned, hints, luna, log);
 	const answers = yield* grammarRequest(ask, state, planned.questionnaire);
 	const read = readFirst(target, planned, new Answered(answers));
 	if (Result.isFailure(read)) return read.failure;
@@ -125,26 +92,10 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		new Answered(answers),
 		outsideHeadword,
 	);
-	const writing: Effect.Effect<Written | undefined, AskFailure> =
-		particleSpelled.length === 1 && first.orthographies[0] === "Standard"
-			? Effect.undefined
-			: rewritten(
-					log,
-					write,
-					request,
-					guess && guessed
-						? { judged: guessed, fiber: guess }
-						: undefined,
-					judged,
-					verbal && shape.lexeme
-						? (form) =>
-								verbGuessMisses(
-									form,
-									verbal.core,
-									planned.verbal?.prefixes ?? [],
-								)
-						: undefined,
-				);
+	const writing: Effect.Effect<Written | undefined, AskFailure> = once(
+		first,
+		judged,
+	);
 	const cells =
 		first.block === "nominal"
 			? yield* nominalCells(

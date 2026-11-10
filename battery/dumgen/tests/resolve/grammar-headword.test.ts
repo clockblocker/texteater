@@ -24,48 +24,61 @@ import {
 // Luna writes the Canonical Form and spellings (#862, #639, #764).
 
 test("Luna writes the Canonical Form in lexical casing with the unit's stored Lemmas as hints, and nothing lowercases by position", async () => {
-	// Mangels0 _1 Beweisen2 _3 kam4 _5 er6 _7 frei8 .9
-	const luna = writes("mangels", ["mangels"]);
+	// Obwohl0 _1 es2 _3 regnete4 ,5 _6 kam7 _8 er9 .10
+	const luna = writes("obwohl", ["obwohl"]);
 	const stored: Dumling.Lemma<"de"> = {
 		unitKind: "Lemma",
 		language: "de",
 		family: "Lexeme",
-		kind: "ADP",
-		canonicalForm: "mangels",
+		kind: "SCONJ",
+		canonicalForm: "obwohl",
 		coreFeatures: {},
 	};
 	const elsewhere: Dumling.Lemma<"de"> = { ...stored, canonicalForm: "mit" };
 	const { result } = await resolveOnce(
 		{ jev: fakeJev().ask, luna: luna.ask },
 		{
-			sentence: sentenceOf("Mangels Beweisen kam er frei."),
-			unit: unitOf([0], "Lexeme/ADP"),
+			sentence: sentenceOf("Obwohl es regnete, kam er."),
+			unit: unitOf([0], "Lexeme/SCONJ"),
 			lemmaCandidates: [
-				{ lemma: stored, foundUnder: ["Mangels"] },
+				{ lemma: stored, foundUnder: ["Obwohl"] },
 				{ lemma: elsewhere, foundUnder: ["mit"] },
 			],
 		},
 	);
-	expect(attested(result).surface.normalizedSurface).toBe("mangels");
+	expect(attested(result).surface.normalizedSurface).toBe("obwohl");
 	const input = luna.sent[0]?.input;
 	expect(input).toHaveProperty("lemmaCandidates", [
-		{ canonicalForm: "mangels", coreFeatures: {} },
+		{ canonicalForm: "obwohl", coreFeatures: {} },
 	]);
 	expect(input).toHaveProperty("members", [
-		{ member: "m0", text: "Mangels", orthography: "Standard" },
+		{ member: "m0", text: "Obwohl", orthography: "Standard" },
 	]);
 	expect(luna.sent[0]?.systemPrompt).toContain(
 		"never the casing the word's position gives",
 	);
 	// Luna keeping the position's capital is kept: code never lowercases.
 	const capital = await resolveOnce(
-		{ jev: fakeJev().ask, luna: writes("mangels", ["Mangels"]).ask },
+		{ jev: fakeJev().ask, luna: writes("obwohl", ["Obwohl"]).ask },
+		{
+			sentence: sentenceOf("Obwohl es regnete, kam er."),
+			unit: unitOf([0], "Lexeme/SCONJ"),
+		},
+	);
+	expect(attested(capital.result).surface.normalizedSurface).toBe("Obwohl");
+	// An ADP the ADP Case Table lists takes the table's word, never Luna's.
+	// Mangels0 _1 Beweisen2 _3 kam4 _5 er6 _7 frei8 .9
+	const authored = await resolveOnce(
+		{ jev: fakeJev().ask, luna: writes("Mangels", ["Mangels"]).ask },
 		{
 			sentence: sentenceOf("Mangels Beweisen kam er frei."),
 			unit: unitOf([0], "Lexeme/ADP"),
 		},
 	);
-	expect(attested(capital.result).surface.normalizedSurface).toBe("Mangels");
+	expect(attested(authored.result).surface).toMatchObject({
+		lemma: { canonicalForm: "mangels" },
+		normalizedSurface: "mangels",
+	});
 });
 
 test("Luna drafts the Emoji Description after the headword in the same call, from the unit marked as resolve.reading marks it", async () => {

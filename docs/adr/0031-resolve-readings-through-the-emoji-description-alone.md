@@ -38,7 +38,13 @@ Canonical Form and Core Features only. The judge runs first over the stored
 descriptions and never sees the draft. Without a usable draft, as on a click
 resumed from its Grammar checkpoint, a standalone generation prompt writes the
 description. Measured, a click spends 1.0–1.8 s on Luna calls, against about
-1.8 s with the two calls in a row.
+1.8 s with the two calls in a row. Where code settles the headword (an
+authored particle or adposition, a conjunction, an adverb in its positive),
+there is no Canonical Form call
+([#1326](https://github.com/clockblocker/texteater/issues/1326)). A Lemma with
+no stored or authored Reading then gets its draft from the standalone prompt,
+started beside jev; any other is judged first, and the standalone prompt
+writes only after NoMatch.
 
 **A Lemma gets several Readings only when an emoji-generating model would tell
 its meanings apart from the sentence.** Subtle functional or grammatical

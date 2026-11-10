@@ -53,10 +53,12 @@ export type GrammarResolution =
 			readonly _tag: "Resolved";
 			readonly attestation: Dumling.Attestation<"de">;
 			/**
-			 * The Emoji Description Luna drafted in the Canonical Form call,
-			 * for `resolve.reading`'s `drafted`; absent where `resolve.reading`
-			 * writes none, where Luna wrote no headword, or where the draft is
-			 * no Emoji Description.
+			 * The Emoji Description Luna drafted, for `resolve.reading`'s
+			 * `drafted`: in the Canonical Form call, or, where code wrote the
+			 * headword of a Lemma with no stored or authored Reading, alone
+			 * beside jev (ADR 0031). Absent where `resolve.reading` writes
+			 * none, where nothing was drafted, or where the draft is no Emoji
+			 * Description.
 			 */
 			readonly drafted?: string;
 	  }

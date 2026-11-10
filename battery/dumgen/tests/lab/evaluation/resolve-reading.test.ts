@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { join } from "node:path";
+import { isRecord } from "common-utils";
 import { listExperiments } from "../../../lab/evaluation/experiments.js";
 import {
 	armsOf,
@@ -86,11 +87,27 @@ test("resolve.reading's run prices itself without a call, fills its cache once, 
 	});
 	expect(counter.jev).toBe(estimate.price?.jev.requests ?? -1);
 	expect(counter.luna).toBe(estimate.price?.luna.requests ?? -1);
-	// Luna's description comes from the Canonical Form call that drafts it,
-	// as on a click; the standalone prompt is never asked.
-	expect(counter.drafts).toBe(counter.luna);
+	// Luna's description is drafted on the grammar side, as on a click: by
+	// the Canonical Form call, or beside jev where code wrote the headword
+	// of a Lemma with nothing stored. resolve.reading writes one only after
+	// the judge's NoMatch on a stored Lemma whose headword code wrote.
+	expect(counter.drafts).toBeGreaterThan(0);
 	const run = live.run;
 	if (!run) throw Error("no run");
+	const written = run.cases.flatMap((record) =>
+		(record.repetitions ?? []).flatMap(({ output }) =>
+			isRecord(output) && output.reason === "Written"
+				? [record.input]
+				: [],
+		),
+	);
+	for (const input of written) {
+		const { route, arm } = isRecord(input) ? input : {};
+		expect([route, arm === "empty"]).toEqual([
+			expect.stringMatching(/^Lexeme\/(ADV|ADP|CCONJ)$/u),
+			false,
+		]);
+	}
 	const metrics = readingMetrics(run);
 	expect(metrics.cases).toBe(sample.length);
 	expect(metrics.attempts).toBe(sampleAttempts);

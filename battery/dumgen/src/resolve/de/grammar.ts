@@ -3,8 +3,9 @@
  * comes in, its Attestation goes out, or the judge's Unresolved, or a
  * Catalog Miss. A unit intake left Unresolved stays Unresolved with no
  * call (#861). A closed DET or PRON unit builds its Lemma from the
- * identity intake stored (#864); any other unit asks jev and Luna (#862),
- * and Luna drafts the Emoji Description `resolve.reading` may need.
+ * identity intake stored (#864); any other unit asks jev, and Luna (#862)
+ * for a headword code does not settle (#1326), and Luna drafts the Emoji
+ * Description `resolve.reading` may need.
  * Whatever comes back is checked by Dumling before it is returned, and
  * the operation's trace says how the click came out and why.
  */
