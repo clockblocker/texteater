@@ -12,6 +12,7 @@ import {
 	type StoredResolutionGrammar,
 	type StoredResolutionReading,
 } from "../../server/resolutionLifecycle";
+import { unitsByMember } from "../../server/storedSegments";
 import { internal } from "../_generated/api";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
@@ -187,55 +188,56 @@ async function restartRun(
 }
 
 /**
- * The Visitor's Active session on a Segment, which a repeat Segment Selection
- * joins instead of starting another run. Other Visitors' sessions stay
- * independent (ADR-0004).
+ * The Visitor's Active session on the clicked Segment's unit: on the Segment
+ * itself, else on another member of the unit intake stored there. A repeat
+ * Segment Selection of any member joins it instead of starting another run,
+ * since the run resolves the whole unit and its commit gives every member
+ * the same occurrence (ADR-0004). Other Visitors' sessions stay independent.
  */
-export async function findActiveVisitorSession(
+export async function findActiveVisitorSessionOnUnit(
 	ctx: QueryCtx,
 	visitorId: string,
-	segmentId: Id<"segments">,
+	sentence: Doc<"sentences">,
+	clickedSegmentIndex: number,
 ): Promise<ResolutionSession | null> {
-	return ctx.db
-		.query("resolutionSessions")
-		.withIndex("by_visitor_id_and_segment_id", (q) =>
-			q.eq("visitorId", visitorId).eq("segmentId", segmentId),
-		)
-		.filter((q) => q.eq(q.field("lifecycle.state"), "Active"))
-		.first();
+	const members =
+		unitsByMember(sentence.units).get(clickedSegmentIndex)?.segments ?? [];
+	for (const index of new Set([clickedSegmentIndex, ...members])) {
+		const segment = await ctx.db
+			.query("segments")
+			.withIndex("by_sentence_id_and_index", (q) =>
+				q.eq("sentenceId", sentence._id).eq("index", index),
+			)
+			.unique();
+		if (!segment) continue;
+		const session = await ctx.db
+			.query("resolutionSessions")
+			.withIndex("by_visitor_id_and_segment_id", (q) =>
+				q.eq("visitorId", visitorId).eq("segmentId", segment._id),
+			)
+			.filter((q) => q.eq(q.field("lifecycle.state"), "Active"))
+			.first();
+		if (session) return session;
+	}
+	return null;
 }
 
-/**
- * Starts the Resolution Session a Segment Selection asked for. The caller
- * has recorded the Visitor Encounter (ADR-0002).
- */
-export async function startResolutionSession(
-	ctx: MutationCtx,
-	input: {
-		readonly requestId: string;
-		readonly visitorId: string;
-		readonly sentence: Doc<"sentences">;
-		readonly segment: Doc<"segments">;
-		readonly inspect: boolean;
-	},
-): Promise<void> {
-	const now = Date.now();
-	const runToken = crypto.randomUUID();
-	await beginSegmentResolution(ctx, input.segment._id);
-	await ctx.db.insert("resolutionSessions", {
+type SegmentSelection = {
+	readonly requestId: string;
+	readonly visitorId: string;
+	readonly sentence: Doc<"sentences">;
+	readonly segment: Doc<"segments">;
+};
+
+/** The fields every session a Segment Selection starts holds from the start. */
+function selectedSession(input: SegmentSelection, now: number) {
+	return {
 		requestId: input.requestId,
 		visitorId: input.visitorId,
 		sentenceId: input.sentence._id,
 		segmentId: input.segment._id,
 		clickedSegmentIndex: input.segment.index,
-		runToken,
-		lifecycle: {
-			state: "Active",
-			progress: "Starting",
-			activity: "Scheduled",
-		},
-		runNumber: 1,
-		retryDeadlineAt: now + RECOVERY_DEADLINE_MS,
+		runToken: crypto.randomUUID(),
 		route: {
 			scrollId: input.sentence.scrollId,
 			sentenceId: input.sentence._id,
@@ -245,6 +247,52 @@ export async function startResolutionSession(
 		},
 		createdAt: now,
 		updatedAt: now,
+	};
+}
+
+/**
+ * Settles a Segment Selection whose unit needs no model (`routedUnit`):
+ * its session is Unresolved from the start, with no run, as the run would
+ * have settled it. It joins and leaves the Segment's shared state as a run's
+ * session does, so another session still Active there keeps it Active.
+ */
+export async function settleUnresolvedSelection(
+	ctx: MutationCtx,
+	input: SegmentSelection,
+): Promise<void> {
+	await beginSegmentResolution(ctx, input.segment._id);
+	await ctx.db.insert("resolutionSessions", {
+		...selectedSession(input, Date.now()),
+		lifecycle: {
+			state: "Terminal",
+			progress: "RouteAvailable",
+			outcome: "Unresolved",
+		},
+	});
+	await finishSegmentResolution(ctx, input.segment._id, "Unresolved");
+}
+
+/**
+ * Starts the Resolution Session a Segment Selection asked for. The caller
+ * has recorded the Visitor Encounter (ADR-0002).
+ */
+export async function startResolutionSession(
+	ctx: MutationCtx,
+	input: SegmentSelection & { readonly inspect: boolean },
+): Promise<void> {
+	const now = Date.now();
+	const session = selectedSession(input, now);
+	const { runToken } = session;
+	await beginSegmentResolution(ctx, input.segment._id);
+	await ctx.db.insert("resolutionSessions", {
+		...session,
+		lifecycle: {
+			state: "Active",
+			progress: "Starting",
+			activity: "Scheduled",
+		},
+		runNumber: 1,
+		retryDeadlineAt: now + RECOVERY_DEADLINE_MS,
 	});
 	await scheduleRun(
 		ctx,
@@ -259,7 +307,8 @@ export async function startResolutionSession(
  * catalog data may have changed since. A retry after a commit conflict
  * resolves again from the start, because its saved decisions would only
  * conflict again; any other retry resumes from the saved checkpoints. While
- * the Visitor's later click on the Segment still runs, a retry starts nothing.
+ * the Visitor's later click on the Segment's unit still runs, a retry starts
+ * nothing.
  */
 export async function retryResolutionSession(
 	ctx: MutationCtx,
@@ -275,19 +324,23 @@ export async function retryResolutionSession(
 		return false;
 	}
 	// Another session committed the Segment since: the retry lands on it.
-	const committed = (await ctx.db.get(session.segmentId))
-		?.attestationMembership?.attestationId;
+	const segment = await ctx.db.get(session.segmentId);
+	const committed = segment?.attestationMembership?.attestationId;
 	if (committed) {
 		await completeResolutionSession(ctx, session, committed);
 		return true;
 	}
-	// The Visitor clicked the Segment again since, and that session runs it.
+	// The Visitor clicked the unit again since, and that session runs it.
+	const sentence = await ctx.db.get(session.sentenceId);
 	if (
-		await findActiveVisitorSession(
+		segment &&
+		sentence &&
+		(await findActiveVisitorSessionOnUnit(
 			ctx,
 			session.visitorId,
-			session.segmentId,
-		)
+			sentence,
+			segment.index,
+		))
 	) {
 		return false;
 	}

@@ -224,8 +224,10 @@ and Personal Annotations. See [tf-demo ADR 0002].
 _Avoid_: User, account
 
 **Segment Selection**:
-An ephemeral Visitor command that presents a stored route or starts one
-Resolution Session. See [tf-demo ADR 0002].
+An ephemeral Visitor command that presents a stored route, or else acts on
+the clicked Segment's unit: it settles a unit intake left Unresolved at once,
+joins the Visitor's running Resolution Session on any of the unit's members,
+or starts one. See [tf-demo ADR 0002].
 _Avoid_: Resolution
 
 **Segment Resolution State**:

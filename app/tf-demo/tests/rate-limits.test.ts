@@ -18,6 +18,7 @@ import {
 	createTestConvexWith,
 	submitText,
 	type TestConvexDb,
+	unresolvedWords,
 } from "./support/convex";
 import { unavailableProviders } from "./support/providers";
 
@@ -100,6 +101,23 @@ test("selecting past the per-Visitor limit is rejected without scheduling a run"
 	expect(await select(t, "visitor-2", available[PER_VISITOR])).toMatchObject({
 		kind: "Resolving",
 	});
+});
+
+test("clicks on units intake left Unresolved cost no rate limit and schedule no run", async () => {
+	const t = createTestConvex();
+	const sentence = ["Die", " ", "Banken", "."];
+	const { sentenceIds } = await submitText(t, [sentence], {
+		units: [unresolvedWords(sentence)],
+	});
+	const sentenceId = sentenceIds[0];
+	if (!sentenceId) throw new Error("Expected a Sentence.");
+	for (let click = 0; click < PER_VISITOR + 5; click += 1)
+		await select(t, "visitor-1", { sentenceId, clickedSegmentIndex: 2 });
+	expect(await scheduledRuns(t)).toBe(0);
+	// The whole per-Visitor bucket is still there for paid runs.
+	for (const word of await words(t, PER_VISITOR))
+		await select(t, "visitor-1", word);
+	expect(await scheduledRuns(t)).toBe(PER_VISITOR);
 });
 
 test("another Visitor is unaffected until the global bucket runs out", async () => {

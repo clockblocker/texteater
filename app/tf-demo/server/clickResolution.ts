@@ -18,6 +18,26 @@ export type { ClickEncounter, ClickSentence } from "./clickEncounter";
  * (`dumgenClickResolution`).
  */
 
+/** A stored unit intake gave a route. */
+export type RoutedUnit = Omit<StoredUnit, "route"> & {
+	readonly route: Exclude<StoredUnit["route"], "Unresolved">;
+};
+
+/**
+ * The clicked Segment's unit when intake routed it. Only a click on a routed
+ * unit needs a model: with no unit, or one intake left Unresolved, a click
+ * whose Sentence's segmentation stands is Unresolved (#861). Dumgen's
+ * Grammar answers such a click at once, and Segment Selection settles it
+ * before any run is scheduled.
+ */
+export function routedUnit(
+	unit: StoredUnit | undefined,
+): RoutedUnit | undefined {
+	return unit === undefined || unit.route === "Unresolved"
+		? undefined
+		: (unit as RoutedUnit);
+}
+
 /** A stored Lemma and the Sentence texts it was found under. */
 export type LemmaCandidate = {
 	readonly lemma: Dumling.Lemma<"de">;

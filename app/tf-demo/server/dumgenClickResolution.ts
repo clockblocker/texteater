@@ -10,11 +10,12 @@ import type {
 } from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import type {
-	ClickReadingInput,
-	ClickResolution,
-	ClickSentence,
-	ReadingResolution,
+import {
+	type ClickReadingInput,
+	type ClickResolution,
+	type ClickSentence,
+	type ReadingResolution,
+	routedUnit,
 } from "./clickResolution";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
 
@@ -71,9 +72,9 @@ export function dumgenClickResolution<R>(
 ): ClickResolution<R> {
 	return Object.freeze({
 		grammar: (input) => {
-			const { unit } = input;
 			// Dumgen answers a unit intake left Unresolved with no call (#861).
-			if (!unit || unit.route === "Unresolved")
+			const unit = routedUnit(input.unit);
+			if (!unit)
 				return Effect.succeed({
 					decision: "Unresolved" as const,
 					language: "de" as const,

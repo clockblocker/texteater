@@ -19,7 +19,12 @@ import {
 } from "../convex/model/ownedRowCleanup";
 import { stripScrollAnalysisGraph } from "../convex/model/scrollAnalysisStripping";
 import tfDemoSchema from "../convex/schema";
-import { actionContext, createTestConvex, submitText } from "./support/convex";
+import {
+	actionContext,
+	createTestConvex,
+	submitText,
+	unresolvedWords,
+} from "./support/convex";
 import { enableDeploymentFlags } from "./support/deploymentFlags";
 import {
 	existingIds,
@@ -106,7 +111,9 @@ describe("tf-demo post-reset contract", () => {
 			]).flat(),
 			".",
 		]);
-		const { scrollId, segmentIds } = await submitText(t, sentences);
+		const { scrollId, segmentIds } = await submitText(t, sentences, {
+			units: sentences.map(unresolvedWords),
+		});
 		const segmentCount = segmentIds.flat().length;
 		expect(segmentCount).toBe(1_280);
 		await t.run(async (ctx) => {

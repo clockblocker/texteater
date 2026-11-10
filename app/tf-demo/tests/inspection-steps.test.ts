@@ -5,6 +5,7 @@ import {
 	createTestConvex,
 	submitText,
 	type TestConvexDb,
+	unresolvedWords,
 } from "./support/convex";
 import { enableDeploymentFlags } from "./support/deploymentFlags";
 import { fakeJev, germanAnswers } from "./support/jev";
@@ -227,39 +228,38 @@ test("a failed inspected submission fails its root", async () => {
 	]);
 });
 
-test("an inspected click selects its unit through ClickResolution and calls no model", async () => {
+test("an inspected click on a unit intake left Unresolved settles at selection, with no run and no model", async () => {
 	const t = createTestConvex();
-	const selection = await bankenSource(t);
-	const guard = await select(t, selection("request-1"), true);
+	const segments = ["Die", " ", "Banken", "."];
+	const { sentenceIds } = await submitText(t, [segments], {
+		units: [unresolvedWords(segments)],
+	});
+	const sentenceId = sentenceIds[0];
+	if (!sentenceId) throw new Error("Expected a Sentence.");
 	const providers = unavailableProviders();
 	try {
-		await t.action(internal.orchestration.runResolutionSession, {
-			...guard,
-			inspect: true,
-		});
+		await select(
+			t,
+			{
+				requestId: "request-1",
+				visitorId: "visitor-1",
+				sentenceId,
+				clickedSegmentIndex: 2,
+			},
+			true,
+		);
 	} finally {
 		providers.restore();
 	}
 	expect(providers.requests).toEqual([]);
 	expect(await inspection(t, "request-1")).toEqual([
-		"Resolution session > Commit unresolved encounter [Code · app/tf-demo · persistence · Success]",
-		"Resolution session > Load checkpoints and start run [Code · app/tf-demo · resolutionSessions · Success]",
-		"Resolution session > Record Succeeded [Code · app/tf-demo · resolutionSessions · Success]",
-		"Resolution session > Resolve grammar [Code · app/tf-demo · ClickResolution · Success]",
-		"Resolution session > Resolve selected segment [Code · app/tf-demo · linguisticOrchestration · Success]",
-		"Resolution session [Code · app/tf-demo · orchestration.runResolutionSession · Success]",
-		SELECTION,
+		"Settle the unresolved unit [Code · app/tf-demo · resolutionSessions.selectSegment · Success]",
 	]);
-	// No Reading was made, so no Knowledge attempt was scheduled.
+	// No run, and no Reading, so no Knowledge attempt either.
 	const jobs = await t.run((ctx) =>
 		ctx.db.system.query("_scheduled_functions").collect(),
 	);
-	expect(
-		jobs.filter(
-			({ name }) =>
-				name === "knowledgeGenerationActions:runKnowledgeGeneration",
-		),
-	).toEqual([]);
+	expect(jobs).toEqual([]);
 });
 
 test("an inspected click renders each Dumgen operation it runs as rows whose calls carry their payloads (#885)", async () => {

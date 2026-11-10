@@ -4,7 +4,11 @@ import {
 	MAX_SOURCE_SENTENCES,
 	MAX_SOURCE_TEXT_CHARACTERS,
 } from "../server/textSubmissionLimits";
-import { createTestConvex, submitText } from "./support/convex";
+import {
+	createTestConvex,
+	submitText,
+	unresolvedWords,
+} from "./support/convex";
 import {
 	anrufenLemma,
 	attest,
@@ -46,9 +50,10 @@ test("a Scroll view preserves the stored submission identity for re-segmentation
 
 test("Scroll projection shares current truth through Visitor Encounter history", async () => {
 	const t = createTestConvex();
-	const { scrollId, segmentIds } = await submitText(t, [
-		["rufe", " ", "fehl", " ", "an", " ", "aktiv"],
-	]);
+	const words = ["rufe", " ", "fehl", " ", "an", " ", "aktiv"];
+	const { scrollId, segmentIds } = await submitText(t, [words], {
+		units: [unresolvedWords(words)],
+	});
 	const [rufe, , fehl, , an, , aktiv] = segmentIds[0] ?? [];
 	const anrufen = await insertReading(t, {
 		unitKind: "Reading",

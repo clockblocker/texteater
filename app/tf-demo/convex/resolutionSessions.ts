@@ -1,10 +1,12 @@
 import type { GenericTableInfo, OrderedQuery } from "convex/server";
 import { v } from "convex/values";
+import { routedUnit } from "../server/clickResolution";
 import { assertIdentifier } from "../server/identifiers";
 import { inspectionJson } from "../server/inspectionPayload";
 import { RESOLUTION_RETENTION_MS } from "../server/resolutionLifecycle";
 import { unitsByMember } from "../server/storedSegments";
 import { internal } from "./_generated/api";
+import type { Doc, Id } from "./_generated/dataModel";
 import {
 	internalMutation,
 	type MutationCtx,
@@ -29,9 +31,10 @@ import {
 	advanceResolutionSession,
 	claimResolutionRun,
 	deleteResolutionSessions,
-	findActiveVisitorSession,
+	findActiveVisitorSessionOnUnit,
 	recoverStaleResolutionRun,
 	retryResolutionSession,
+	settleUnresolvedSelection,
 	startResolutionSession,
 } from "./model/resolutionSessions";
 import {
@@ -122,44 +125,14 @@ export const selectSegment = mutation({
 					q.eq("requestId", args.requestId),
 				)
 				.unique();
-			if (existing) {
-				if (
-					existing.visitorId !== args.visitorId ||
-					existing.sentenceId !== args.sentenceId ||
-					existing.clickedSegmentIndex !== args.clickedSegmentIndex ||
-					existing.segmentId !== segment._id
-				) {
-					throw visitorError(
-						"InvalidInput",
-						"requestId was already used for a different click.",
-					);
-				}
-				const { lifecycle } = existing;
-				if (
-					lifecycle.state === "Terminal" &&
-					lifecycle.outcome === "Complete" &&
-					existing.readingId &&
-					existing.attestationId
-				) {
-					await scheduleKnowledgeGeneration(ctx, {
-						attemptKey: existing.requestId,
-						visitorId: existing.visitorId,
-						readingId: existing.readingId,
-						attestationId: existing.attestationId,
-					});
-				}
+			if (existing)
 				return {
-					kind: "Resolving" as const,
-					requestId: existing.requestId,
-					progress: lifecycle.progress,
-					activity:
-						lifecycle.state === "Active"
-							? lifecycle.activity
-							: ("Terminal" as const),
-					deduplicated: true,
+					...(await replayedSelection(ctx, existing, {
+						...args,
+						segmentId: segment._id,
+					})),
 					...routed,
 				};
-			}
 
 			const attestationId = segment.attestationMembership?.attestationId;
 			if (attestationId) {
@@ -195,10 +168,29 @@ export const selectSegment = mutation({
 				sentenceId: sentence._id,
 				segmentId: segment._id,
 			});
-			const running = await findActiveVisitorSession(
+			// A unit intake left Unresolved needs no model: it settles here,
+			// with no run, and costs no rate limit.
+			if (!sentence.segmentationFailed && !routedUnit(unit)) {
+				await settleUnresolvedSelection(ctx, {
+					requestId: args.requestId,
+					visitorId: args.visitorId,
+					sentence,
+					segment,
+				});
+				return {
+					kind: "Resolving" as const,
+					requestId: args.requestId,
+					progress: "RouteAvailable" as const,
+					activity: "Terminal" as const,
+					deduplicated: false,
+					...routed,
+				};
+			}
+			const running = await findActiveVisitorSessionOnUnit(
 				ctx,
 				args.visitorId,
-				segment._id,
+				sentence,
+				args.clickedSegmentIndex,
 			);
 			if (running?.lifecycle.state === "Active") {
 				return {
@@ -268,7 +260,9 @@ export const selectSegment = mutation({
 					name:
 						result.kind === "Available"
 							? "Reuse stored Attestation"
-							: "Select segment and schedule resolution",
+							: result.activity === "Terminal"
+								? "Settle the unresolved unit"
+								: "Select segment and schedule resolution",
 					kind: "Code",
 					owner: "app/tf-demo · resolutionSessions.selectSegment",
 					startedAt,
@@ -286,6 +280,57 @@ export const selectSegment = mutation({
 		return result;
 	},
 });
+
+/**
+ * A Segment Selection sent again under its requestId: the session it
+ * started, as it stands now. A Complete one asks for its Knowledge again.
+ */
+async function replayedSelection(
+	ctx: MutationCtx,
+	existing: Doc<"resolutionSessions">,
+	args: {
+		readonly visitorId: string;
+		readonly sentenceId: Id<"sentences">;
+		readonly clickedSegmentIndex: number;
+		readonly segmentId: Id<"segments">;
+	},
+) {
+	if (
+		existing.visitorId !== args.visitorId ||
+		existing.sentenceId !== args.sentenceId ||
+		existing.clickedSegmentIndex !== args.clickedSegmentIndex ||
+		existing.segmentId !== args.segmentId
+	) {
+		throw visitorError(
+			"InvalidInput",
+			"requestId was already used for a different click.",
+		);
+	}
+	const { lifecycle } = existing;
+	if (
+		lifecycle.state === "Terminal" &&
+		lifecycle.outcome === "Complete" &&
+		existing.readingId &&
+		existing.attestationId
+	) {
+		await scheduleKnowledgeGeneration(ctx, {
+			attemptKey: existing.requestId,
+			visitorId: existing.visitorId,
+			readingId: existing.readingId,
+			attestationId: existing.attestationId,
+		});
+	}
+	return {
+		kind: "Resolving" as const,
+		requestId: existing.requestId,
+		progress: lifecycle.progress,
+		activity:
+			lifecycle.state === "Active"
+				? lifecycle.activity
+				: ("Terminal" as const),
+		deduplicated: true,
+	};
+}
 
 export const getResolutionNote = query({
 	args: { requestId: v.string() },

@@ -6,7 +6,11 @@ import { convexTest, type TestConvex } from "convex-test";
 import { internal } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import schema from "../../convex/schema";
-import { type StoredUnit, unresolvedUnits } from "../../server/storedSegments";
+import {
+	type StoredSegment,
+	type StoredUnit,
+	unresolvedUnits,
+} from "../../server/storedSegments";
 
 /**
  * The single Convex database stand-in for tf-demo tests. It runs the real
@@ -161,11 +165,48 @@ function segmentKind(text: string) {
 	return "ResolvableText" as const;
 }
 
+const specKind = (spec: SegmentSpec) =>
+	typeof spec === "string" ? segmentKind(spec) : spec.kind;
+
+/**
+ * Each ResolvableText Segment as its own unit intake left Unresolved: a
+ * click on one settles at selection, with no run.
+ */
+export function unresolvedWords(
+	sentence: readonly SegmentSpec[],
+): StoredUnit[] {
+	return unresolvedUnits(sentence.map((spec) => ({ kind: specKind(spec) })));
+}
+
+/**
+ * Each ResolvableText Segment as its own unit on one Lexeme route: a stand-in
+ * for the units intake routes, whose kind the fake resolutions ignore, so a
+ * click on one runs a session.
+ */
+function routedWordUnits(
+	segments: readonly Pick<StoredSegment, "kind">[],
+): StoredUnit[] {
+	return segments.flatMap((segment, index) =>
+		segment.kind === "ResolvableText"
+			? [
+					{
+						segments: [index],
+						route: {
+							language: "de" as const,
+							family: "Lexeme" as const,
+							kind: "NOUN" as const,
+						},
+					},
+				]
+			: [],
+	);
+}
+
 /**
  * Stores one Visitor-submitted German Scroll through the production mutation.
  * Plain strings become Segments whose kind follows their characters, so
  * `["Ich", " ", "gehe", "."]` is four Segments. Without `units`, each
- * ResolvableText Segment is its own Unresolved unit.
+ * ResolvableText Segment is its own routed unit.
  */
 export async function submitText(
 	t: TestConvexDb,
@@ -203,7 +244,7 @@ export async function submitText(
 				stitchedText: segments.map(({ text }) => text).join(""),
 				segments: segments.map((segment) => ({ ...segment })),
 				units: [
-					...(options.units?.[position] ?? unresolvedUnits(segments)),
+					...(options.units?.[position] ?? routedWordUnits(segments)),
 				],
 			})),
 		},
