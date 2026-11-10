@@ -6,6 +6,10 @@
  * between (an ADJ, an ADV, a NUM): the determiner its noun phrase opens
  * with, read through its authored cells (dem is Dat), and the preposition
  * that governs the phrase, read through the ADP Case Table (mit is Dat).
+ * An attributive ADJ inside its noun's unit, which opens before it with
+ * the noun's article (`[einer … Heizwendel]`), reads them where that unit
+ * opens, so an attribute of its own between them (`in einem Metallrohr`)
+ * hides neither the article nor the preposition before it (#1337).
  * An ADJ's own ending narrows them too: -em is only Dat, and -e and -es
  * only Nom or Acc. Every agreeing route reads the one answer, so its case
  * question offers only these.
@@ -106,6 +110,41 @@ function* before(
 }
 
 /**
+ * Where an ADJ's phrase opens when the ADJ stands inside its head noun's
+ * unit: the unit after it, over attributes and commas, is a NOUN or PROPN
+ * whose first Segment comes before the ADJ. Undefined otherwise.
+ */
+function headOpening(
+	segments: readonly Segment[],
+	units: readonly Unit[],
+	last: number,
+	first: number,
+): number | undefined {
+	for (let index = last + 1; index < segments.length; index++) {
+		const segment = segments[index];
+		if (!segment || segment.kind === "Whitespace") continue;
+		if (segment.kind === "Punctuation") {
+			if (segment.text === ",") continue;
+			return undefined;
+		}
+		const unit = units.find(({ segments: held }) => held.includes(index));
+		if (!unit || unit.route === "Unresolved") return undefined;
+		if (attributes.has(unit.route.kind)) {
+			index = Math.max(index, ...unit.segments);
+			continue;
+		}
+		const [opening] = unit.segments;
+		return articleHolders.has(unit.route.kind) &&
+			unit.route.kind !== "DET" &&
+			opening !== undefined &&
+			opening < first
+			? opening
+			: undefined;
+	}
+	return undefined;
+}
+
+/**
  * The cases an agreeing Surface can take here, in catalog order: all four
  * when nothing before it or in its ending narrows them. Evidence that
  * leaves no case is dropped, never trusted over the rest.
@@ -127,13 +166,18 @@ export function surfaceCases(
 	if (target.route.kind === "ADJ" && first && target.members.length === 1)
 		narrow(endingCases(first.text));
 	if (!first) return open;
+	const last = target.members.at(-1) ?? first;
+	const opening =
+		target.route.kind === "ADJ"
+			? headOpening(target.segments, units, last.segment, first.segment)
+			: undefined;
 	// The phrase's determiner is the first of a run of them: «beiden» of
 	// «die beiden» inflects as the article before it says.
 	let determiner: readonly SurfaceCase[] | undefined;
 	for (const { segment, kind, opensUnit } of before(
 		target.segments,
 		units,
-		first.segment,
+		opening === undefined ? first.segment : opening + 1,
 	)) {
 		const word = wordOf(segment);
 		const cells =

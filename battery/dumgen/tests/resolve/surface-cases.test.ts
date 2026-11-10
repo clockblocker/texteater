@@ -71,6 +71,51 @@ test("a preposition, a determiner and an ending each narrow an attributive ADJ's
 	).toEqual(["Nom", "Acc"]);
 });
 
+test("an attributive ADJ inside its noun's unit reads its cases where that unit opens, over an attribute of its own between", () => {
+	// mit0 _1 einer2 _3 in4 _5 einem6 _7 Rohr8 _9 untergebrachten10 _11 Wendel12:
+	// in einem Rohr stands between einer and the ADJ, and mit einer is Dat.
+	expect(
+		casesOf(
+			"mit einer in einem Rohr untergebrachten Wendel",
+			[
+				[[0], "Lexeme/ADP"],
+				[[2, 12], "Lexeme/NOUN"],
+				[[4], "Lexeme/ADP"],
+				[[6, 8], "Lexeme/NOUN"],
+				[[10], "Lexeme/ADJ"],
+			],
+			4,
+		),
+	).toEqual(["Dat"]);
+	// des0 _1 aus2 _3 Hamburg4 _5 kommenden6 _7 Zuges8: des is only Gen.
+	expect(
+		casesOf(
+			"des aus Hamburg kommenden Zuges",
+			[
+				[[0, 8], "Lexeme/NOUN"],
+				[[2], "Lexeme/ADP"],
+				[[4], "Lexeme/PROPN"],
+				[[6], "Lexeme/ADJ"],
+			],
+			3,
+		),
+	).toEqual(["Gen"]);
+	// A noun whose unit opens with the noun itself says nothing: all four.
+	// aus0 _1 Hamburg2 _3 kommenden4 _5 Zügen6
+	expect(
+		casesOf(
+			"aus Hamburg kommenden Zügen",
+			[
+				[[0], "Lexeme/ADP"],
+				[[2], "Lexeme/PROPN"],
+				[[4], "Lexeme/ADJ"],
+				[[6], "Lexeme/NOUN"],
+			],
+			2,
+		),
+	).toEqual(["Nom", "Acc", "Dat", "Gen"]);
+});
+
 test("a circumposition's last word governs nothing after it", () => {
 	// von0 _1 seinem2 _3 Bett4 _5 aus6 _7 die8 _9 alte10 _11 Frau12
 	expect(
