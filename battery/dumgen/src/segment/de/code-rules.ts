@@ -49,8 +49,12 @@
  *   so die »Vorderreihe«, whose quote mark ends the slot's clause, joins.
  *   A fused article piece (the m of zum) is always an article: one no link
  *   claims joins the noun its phrase opens, whatever its slot said (am
- *   Morgen), and with no noun after it in its clause its written word stays
+ *   Morgen), also past the commas of coordinated adjectives and an
+ *   ordinal's full stop (im rohen, geschälten und kalten Zustand; am 1.
+ *   Mai, #1336), and with no noun its phrase reaches its written word stays
  *   whole as a Locution (Was zum …?). No fused article ends alone (#1334).
+ *   A fused word's preposition piece standing alone routes Lexeme ADP,
+ *   whatever the route Choice hears (the zu of zum Kochen, #1336).
  * - `sein-chain` (de/verbal-participle, de/auxiliary-joins-the-verb-it-serves,
  *   on dumcorpus's AUX forms of sein): worden, gewesen and geworden take sein
  *   as their perfect's auxiliary, so the nearest sein form in their clause
@@ -111,6 +115,7 @@ import {
 	articleHeads,
 	binomialLinks,
 	circumpositionRoutes,
+	fusedPrepositionRoutes,
 	pronouns,
 	quantifierRoutes,
 	quantifiers,
@@ -159,7 +164,7 @@ export type Decision = {
 };
 
 /**
- * The routes the listed rules fix (`anchors`, `quantifier`, `was-fuer`, `particle-verb`), the
+ * The routes the listed rules fix (`anchors`, `quantifier`, `article-head`, `was-fuer`, `particle-verb`), the
  * first rule's that fixes one; undefined when no listed rule fixes routes.
  */
 export function codeRoutes(
@@ -171,6 +176,9 @@ export function codeRoutes(
 			? [circumpositionRoutes(nomination)]
 			: []),
 		...(rules.includes("quantifier") ? [quantifierRoutes(nomination)] : []),
+		...(rules.includes("article-head")
+			? [fusedPrepositionRoutes(nomination)]
+			: []),
 		...(rules.includes("was-fuer") ? [wasFuerRoutes(nomination)] : []),
 		...(rules.includes("particle-verb")
 			? [particleVerbRoutes(nomination)]

@@ -13,6 +13,7 @@ import { fusedSiblings, type SlotKind } from "./candidates.js";
 import type { Decision } from "./code-rules.js";
 import { type Nomination, slotId } from "./nomination.js";
 import { argmaxBesideNone } from "./partition.js";
+import { governorShares } from "./phrase.js";
 import type { FixedRoute } from "./routing.js";
 import type { Piece } from "./sentence.js";
 
@@ -32,11 +33,16 @@ function slotHostOf(
 			candidate.kind === kind && candidate.piece.id === piece.id,
 	);
 	const answer = slot ? nomination.first[slotId(slot)] : undefined;
-	if (answer?.type !== "choice") return undefined;
-	const top = argmaxBesideNone(answer.probabilities);
+	if (!slot || answer?.type !== "choice") return undefined;
+	const probabilities = governorShares(
+		nomination.sentence,
+		slot,
+		answer.probabilities,
+	);
+	const top = argmaxBesideNone(probabilities);
 	return top &&
 		top.share >= satelliteFloor &&
-		top.share > (answer.probabilities.none ?? 0)
+		top.share > (probabilities.none ?? 0)
 		? Number(top.key.slice(1))
 		: undefined;
 }

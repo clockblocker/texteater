@@ -35,6 +35,7 @@ import { closedClassQuestion } from "./closed-class.js";
 import type { GermanInventory, IdentityCandidate } from "./inventory.js";
 import type { Nomination } from "./nomination.js";
 import { argmax, groupKey, type Partition } from "./partition.js";
+import { fusedPrepositions } from "./phrase.js";
 import {
 	allRoutes,
 	checkedRouteKey,
@@ -359,14 +360,19 @@ export function route2Plan(
 }
 
 /**
- * `closed`: each closed-class spelling's use, which reads only the pieces.
+ * `closed`: each closed-class spelling's use, which reads only the pieces,
+ * except a fused word's preposition piece, whose use the word settles.
  * Without its answers, those pieces route `Unresolved`.
  */
 export function closedPlan(
 	proposal: Pick<Nomination, "sentence" | "ref">,
 ): Plan<Pick<BatchAnswers, "answers" | "unanswered">> {
 	const questions: Questions = {};
+	// A fused word's preposition piece is a preposition (de/fused-word-pieces),
+	// whatever else its spelling may be: the zu of zum is never asked.
+	const fused = fusedPrepositions(proposal.sentence);
 	for (const piece of proposal.sentence.pieces) {
+		if (fused.has(piece.id)) continue;
 		const question = closedClassQuestion(piece);
 		if (question)
 			questions[closedId(piece.id)] = choice(

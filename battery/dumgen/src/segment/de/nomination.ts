@@ -48,7 +48,8 @@ import {
 	sayingNoulId,
 	slotId,
 } from "./nomination-questions.js";
-import { argmaxBesideNone } from "./partition.js";
+import { argmaxBesideNone, partitionOf } from "./partition.js";
+import { governorShares } from "./phrase.js";
 import { type SayingSpan, sayingSpans } from "./saying-spans.js";
 import {
 	judgeState,
@@ -75,21 +76,67 @@ export type SlotLink = {
 	readonly kind: SlotKind;
 };
 
+/** What a slot's answer is read against: its Sentence and the pairs accepted at 0.5. */
+export type SlotReading = Pick<Candidates, "sentence" | "accepted">;
+
+/**
+ * A slot's host shares with each accepted name's pieces pooled on its most
+ * probable piece: a name is one host, and the judge spreads an article's
+ * share over its words (die Deutsche Post AG: Deutsche 0.08, Post 0.42, AG
+ * 0.13 against none 0.37).
+ */
+function pooledByName(
+	accepted: SlotReading["accepted"],
+	probabilities: Readonly<Record<string, number>>,
+): Readonly<Record<string, number>> {
+	const pairs = accepted
+		.filter(([, , kind]) => kind === "name")
+		.map(([left, right]) => [left, right] as const);
+	const names = partitionOf([...new Set(pairs.flat())], pairs).filter(
+		(name) => name.length > 1,
+	);
+	if (names.length === 0) return probabilities;
+	const pooled: Record<string, number> = { ...probabilities };
+	for (const name of names) {
+		const keys = name
+			.map((id) => `p${id}`)
+			.filter((key) => pooled[key] !== undefined)
+			.sort((a, b) => (pooled[b] ?? 0) - (pooled[a] ?? 0));
+		const [best, ...rest] = keys;
+		if (best === undefined) continue;
+		for (const key of rest) {
+			pooled[best] = (pooled[best] ?? 0) + (pooled[key] ?? 0);
+			delete pooled[key];
+		}
+	}
+	return pooled;
+}
+
 /**
  * Each piece's best slot answer: the kind whose best host has the highest
  * share. A host counts only when its share beats `none`, a satellite's by
- * more than `satelliteMargin` (#762).
+ * more than `satelliteMargin` (#762). A name is one host (`pooledByName`),
+ * and a preposition's slot is read as `governorShares` reads it: the noun
+ * its own phrase leads to is no host.
  */
 export function slotLinks(
+	reading: SlotReading,
 	slots: readonly Slot[],
 	answers: Answers,
 	satelliteMargin = 0,
 ): SlotLink[] {
 	const best = new Map<number, SlotLink>();
 	for (const slot of slots) {
-		const answer = choiceOf(answers, slotId(slot));
-		const top = argmaxBesideNone(answer.probabilities);
-		const none = answer.probabilities.none ?? 0;
+		const probabilities = pooledByName(
+			reading.accepted,
+			governorShares(
+				reading.sentence,
+				slot,
+				choiceOf(answers, slotId(slot)).probabilities,
+			),
+		);
+		const top = argmaxBesideNone(probabilities);
+		const none = probabilities.none ?? 0;
 		const margin = slot.kind === "idiom" ? 0 : satelliteMargin;
 		if (!top || top.share <= none + margin) continue;
 		const link = {
@@ -218,18 +265,23 @@ export const candidatesPlan = (proposal: Proposal): Plan<Candidates> => {
 	const { sentence, ref, slots, pairs, spans } = proposal;
 	return {
 		questions: candidateQuestions(sentence, ref, slots, pairs, spans),
-		read: (first) => ({
-			...proposal,
-			first,
-			slotAnswers: oneSatellitePerHost(slotLinks(slots, first)),
-			fixed: new Map(
-				sentence.pieces.map((piece) => [
-					piece.id,
-					noulOf(first, fixedId(piece.id)),
-				]),
-			),
-			accepted: matchedPairs(pairs, first, 0.5),
-		}),
+		read: (first) => {
+			const accepted = matchedPairs(pairs, first, 0.5);
+			return {
+				...proposal,
+				first,
+				slotAnswers: oneSatellitePerHost(
+					slotLinks({ sentence, accepted }, slots, first),
+				),
+				fixed: new Map(
+					sentence.pieces.map((piece) => [
+						piece.id,
+						noulOf(first, fixedId(piece.id)),
+					]),
+				),
+				accepted,
+			};
+		},
 	};
 };
 

@@ -83,7 +83,15 @@ test("a satellite host must beat none by the margin; an idiom host only beats no
 		},
 	} as const;
 	const kinds = (margin?: number) =>
-		slotLinks(slots, answers, margin).map((link) => link.kind);
+		slotLinks(
+			{
+				sentence: { text: "", pieces: [hut, auf, setzt], segments: [] },
+				accepted: [],
+			},
+			slots,
+			answers,
+			margin,
+		).map((link) => link.kind);
 	expect(kinds()).toEqual(["particle", "idiom"]);
 	expect(kinds(0.1)).toEqual(["idiom"]);
 	expect(kinds(-0.1)).toEqual(["particle", "idiom"]);

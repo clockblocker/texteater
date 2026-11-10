@@ -362,7 +362,7 @@ function underMargin(nomination: Nomination, margin: number): Nomination {
 	return {
 		...nomination,
 		slotAnswers: oneSatellitePerHost(
-			slotLinks(nomination.slots, nomination.first, margin),
+			slotLinks(nomination, nomination.slots, nomination.first, margin),
 		),
 	};
 }

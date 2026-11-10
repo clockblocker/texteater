@@ -29,6 +29,7 @@ import type { ClosedUnit, Decision } from "./code-rules.js";
 import { bracketClauses } from "./code-rules-verbs.js";
 import type { Nomination } from "./nomination.js";
 import { groupKey } from "./partition.js";
+import { adjectiveEnding, fusedPrepositions, phraseWindow } from "./phrase.js";
 import type { RouteKey } from "./routes.js";
 import type { FixedRoute } from "./routing.js";
 import type { Piece } from "./sentence.js";
@@ -278,25 +279,18 @@ export function pronouns(nomination: Nomination): Decision {
 	};
 }
 
-/** An adjective's ending: a capitalized word with one before a noun may be its adjective (die Berliner Polizei, das Rote Kreuz). */
-const adjectiveEnding = /(e|er|en|es|em)$/u;
-
 /** Only whitespace or quote marks between two Segments. */
 const quoteMark = /^[„“”"»«‚‘’›‹]$/u;
 
 /**
  * The noun a fused article opens, by the words alone: the first noun-like
- * piece after it in its clause, within the article slot's window, or the
- * noun after it when that one has an adjective's ending (im Deutschen
- * Museum).
+ * piece after it that its phrase reaches within the article slot's window,
+ * past the commas of coordinated adjectives and an ordinal's full stop (im
+ * rohen, geschälten und kalten Zustand; am 1. Mai), or the noun after it
+ * when that one has an adjective's ending (im Deutschen Museum).
  */
-function headAfter(pieces: readonly Piece[], article: Piece) {
-	const window = pieces.filter(
-		(other) =>
-			other.id > article.id &&
-			other.id <= article.id + 6 &&
-			other.clause === article.clause,
-	);
+function headAfter(sentence: Nomination["sentence"], article: Piece) {
+	const window = phraseWindow(sentence, article, 6);
 	const position = window.findIndex(nounLike);
 	const head = window[position];
 	const after = window[position + 1];
@@ -368,7 +362,7 @@ export function articleHeads(
 	const closed: ClosedUnit[] = [];
 	for (const piece of pieces) {
 		if (!fusedArticle(piece) || claimed(piece.id)) continue;
-		const head = headAfter(pieces, piece);
+		const head = headAfter(nomination.sentence, piece);
 		const word = siblings.get(piece.id);
 		if (head) moved.set(piece.id, head.id);
 		else if (word) closed.push({ pieces: word, family: "Locution" });
@@ -378,6 +372,27 @@ export function articleHeads(
 		drop: (edge) =>
 			edge.source === "satellite" && moved.has(edge.pieces[0]),
 		add: [...moved],
+	};
+}
+
+/**
+ * The route of a one-piece unit that is a fused word's preposition piece,
+ * the zu of zum or the i of im: Lexeme ADP, whatever the route Choice
+ * hears (de/fused-word-pieces: outside a fixed expression a preposition
+ * piece is a single-member ADP unless a word governs it, and then it joins
+ * that word). Its spelling's closed-class use is never asked
+ * (`closedPlan`): the judge heard the zu of zum Kochen as the infinitive's
+ * PART.
+ */
+export function fusedPrepositionRoutes(nomination: Nomination): FixedRoute {
+	const prepositions = fusedPrepositions(nomination.sentence);
+	return (group) => {
+		const [only] = group;
+		return group.length === 1 &&
+			only !== undefined &&
+			prepositions.has(only)
+			? "Lexeme/ADP"
+			: undefined;
 	};
 }
 

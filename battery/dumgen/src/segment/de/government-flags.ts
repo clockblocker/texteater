@@ -9,6 +9,7 @@ import { isArticle, nounLike } from "./candidates.js";
 import { boundPieces, type CodeRule } from "./code-rules.js";
 import { type Nomination, reaskedIdiomId, slotId } from "./nomination.js";
 import { argmaxBesideNone } from "./partition.js";
+import { governorShares } from "./phrase.js";
 import type { Piece } from "./sentence.js";
 
 export const governmentFamilies = [
@@ -53,16 +54,21 @@ function slotHosts(
 			candidate.kind === kind && candidate.piece.id === piece.id,
 	);
 	const answer = slot ? nomination.first[slotId(slot)] : undefined;
-	if (answer?.type !== "choice") return { hosts: [], none: 1 };
+	if (!slot || answer?.type !== "choice") return { hosts: [], none: 1 };
+	const probabilities = governorShares(
+		nomination.sentence,
+		slot,
+		answer.probabilities,
+	);
 	return {
-		hosts: Object.entries(answer.probabilities)
+		hosts: Object.entries(probabilities)
 			.filter(([key]) => key !== "none")
 			.map(([key, share]): [number, number] => [
 				Number(key.slice(1)),
 				share,
 			])
 			.sort((a, b) => b[1] - a[1]),
-		none: answer.probabilities.none ?? 0,
+		none: probabilities.none ?? 0,
 	};
 }
 

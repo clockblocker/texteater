@@ -66,14 +66,13 @@ test("satellites join their verb and fixed words make a Locution, the split arti
 		{ segments: [2, 4, 6], route: route("Lexeme", "VERB") },
 		{ segments: [9, 10, 12], route: route("Locution", "ADV") },
 	]);
-	// candidates, final and closed read only the Sentence and go out at
-	// once, closed apart since its failure only degrades; expressions reads
-	// candidates; route reads the nomination, and the member check beside
-	// it the Locution zum Glück. route2 has no group of its own here, and
-	// every unit was batched.
+	// candidates and final read only the Sentence and go out at once;
+	// closed asks nothing, since the zu of zum is a preposition whatever
+	// its spelling's uses; expressions reads candidates; route reads the
+	// nomination, and the member check beside it the Locution zum Glück.
+	// route2 has no group of its own here, and every unit was batched.
 	expect(judge.stages()).toEqual([
 		"candidates+final",
-		"closed",
 		"expressions",
 		"route+locution",
 	]);
