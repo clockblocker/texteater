@@ -105,9 +105,15 @@ export function fakeLuna(
 	options: { readonly delayMs?: number } = {},
 ) {
 	const sent: LunaRequest[] = [];
+	/** Each request's output cap, as the exchange carried it. */
+	const caps: (number | undefined)[] = [];
 	const aborted: string[] = [];
-	const ask: LunaAsk = async (request, { stage, signal }) => {
+	const ask: LunaAsk = async (
+		request,
+		{ stage, signal, maxOutputTokens },
+	) => {
 		sent.push(request);
+		caps.push(maxOutputTokens);
 		await new Promise((resolve) =>
 			setTimeout(resolve, options.delayMs ?? 1),
 		);
@@ -120,7 +126,7 @@ export function fakeLuna(
 			metadata: { usage: { input_tokens: 50, output_tokens: 10 } },
 		};
 	};
-	return { ask, sent, aborted };
+	return { ask, sent, caps, aborted };
 }
 
 /** Segments of `text`, the way dumcorpus records split them, with no units yet. */

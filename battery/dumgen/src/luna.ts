@@ -35,11 +35,22 @@ export type LunaRequest = (
  * A Luna request before its configuration. `Omit` on the union itself
  * would merge the text and JSON shapes, so each is omitted from apart.
  */
-export type LunaDraft = LunaRequest extends infer R
+export type LunaDraft = (LunaRequest extends infer R
 	? R extends unknown
 		? Omit<R, "configuration">
 		: never
-	: never;
+	: never) &
+	OutputLimit;
+
+/**
+ * The most tokens Luna may write in one exchange. Like a deadline, it
+ * bounds the exchange, not what is asked: it travels beside the request,
+ * so no request, and no answer a cache keys by its request, changes. An
+ * answer cut short there comes back incomplete, which the transport
+ * throws. A stage sets it well above the longest answer it has had, so no
+ * usable answer is cut and a runaway one ends early.
+ */
+export type OutputLimit = { readonly maxOutputTokens?: number };
 
 /** What Luna answered: its output, and whatever the transport reports beside it. */
 export type LunaResponse = {
@@ -53,7 +64,10 @@ export type LunaResponse = {
  */
 export type LunaAsk = (
 	request: LunaRequest,
-	context: { readonly stage: string; readonly signal: AbortSignal },
+	context: {
+		readonly stage: string;
+		readonly signal: AbortSignal;
+	} & OutputLimit,
 ) => Promise<LunaResponse>;
 
 /** The model and settings of a Luna request. */

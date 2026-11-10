@@ -196,6 +196,12 @@ export const emojiDescriptionSchema = {
 } as const;
 
 /**
+ * The most tokens the Emoji Description call may write: at most 25 over
+ * 9,113 cached answers, and four emoji in ZWJ sequences stay well under.
+ */
+export const emojiDescriptionOutputLimit = 128;
+
+/**
  * The Emoji Description request Luna gets, without its configuration. Luna
  * answers JSON under a string schema with strict mode off, E10's arm RS
  * (#526, ruled 2026-10-03): fewer lost clicks than free text. An answer
@@ -208,6 +214,7 @@ export function emojiDescriptionRequest(input: {
 	return {
 		systemPrompt: generationPrompt,
 		input,
+		maxOutputTokens: emojiDescriptionOutputLimit,
 		outputFormat: "json",
 		outputSchema: emojiDescriptionSchema,
 	};

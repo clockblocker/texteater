@@ -24,12 +24,19 @@
  * prefix of at least 1,024 input tokens on GPT-5.6 and later, writes at
  * 1.25 times the input rate and reads at 0.1 times; the usage's
  * `input_tokens_details` reports `cached_tokens` and `cache_write_tokens`.
- * The body and the reading of an answer are exported so an evaluation's
+ * An exchange's `maxOutputTokens` goes as `max_output_tokens`; an answer
+ * cut there is incomplete and throws. The body and the reading of an
+ * answer are exported so an evaluation's
  * Batch API lines are sent and read exactly as these requests are.
  */
 
 import { isRecord, messageOf } from "common-utils";
-import type { LunaAsk, LunaRequest, LunaResponse } from "./luna.js";
+import type {
+	LunaAsk,
+	LunaRequest,
+	LunaResponse,
+	OutputLimit,
+} from "./luna.js";
 import type { Fetch } from "./segment/typesafe-ask.js";
 
 export type OpenAILunaOptions = {
@@ -128,7 +135,7 @@ function requiredOf(request: LunaRequest): readonly string[] {
  */
 export function lunaResponsesBody(
 	request: LunaRequest,
-	options: { readonly promptCaching?: boolean } = {},
+	options: { readonly promptCaching?: boolean } & OutputLimit = {},
 ): Record<string, unknown> {
 	const json = request.outputFormat !== "text";
 	const cache =
@@ -142,6 +149,9 @@ export function lunaResponsesBody(
 		...request.configuration.settings,
 		model: request.configuration.model,
 		store: false,
+		...(options.maxOutputTokens === undefined
+			? {}
+			: { max_output_tokens: options.maxOutputTokens }),
 		...(cache ? { prompt_cache_options: { mode: "explicit" } } : {}),
 		input: [
 			cache
@@ -283,13 +293,13 @@ export function createOpenAILuna(options: OpenAILunaOptions): LunaAsk {
 		options.fetch ??
 		((target, init) => globalThis.fetch(target, { ...init }));
 	const timeoutMs = options.timeoutMs ?? 120_000;
-	return async (request, { signal }) => {
+	return async (request, { signal, maxOutputTokens }) => {
 		const deadline = AbortSignal.timeout(timeoutMs);
 		const body = JSON.stringify(
-			lunaResponsesBody(
-				request,
-				options.promptCaching ? { promptCaching: true } : {},
-			),
+			lunaResponsesBody(request, {
+				...(options.promptCaching ? { promptCaching: true } : {}),
+				...(maxOutputTokens === undefined ? {} : { maxOutputTokens }),
+			}),
 		);
 		let status: number;
 		let ok: boolean;

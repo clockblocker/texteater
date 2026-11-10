@@ -96,13 +96,20 @@ export class Luna extends Context.Service<
 			const configuration = yield* LunaConfiguration;
 			return Luna.of({
 				ask: (stage, draft, check) => {
-					const request: LunaRequest = { ...draft, configuration };
+					const { maxOutputTokens, ...asked } = draft;
+					const request: LunaRequest = { ...asked, configuration };
 					return callModel(budget, {
 						stage,
 						executor: "luna",
 						request,
 						send: (signal) =>
-							transport.ask(request, { stage, signal }),
+							transport.ask(request, {
+								stage,
+								signal,
+								...(maxOutputTokens === undefined
+									? {}
+									: { maxOutputTokens }),
+							}),
 						tokens: (response) => lunaTokens(response.metadata),
 						check: (response) => {
 							const problem = isRecord(response.metadata)

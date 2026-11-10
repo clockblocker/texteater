@@ -3,6 +3,7 @@ import * as Effect from "effect/Effect";
 import { ProviderFailure } from "../../src/errors.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
 import { operations } from "../../src/operations.js";
+import { canonicalOutputLimit } from "../../src/resolve/de/canonical-form.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 import { liveOver } from "../live-over.js";
 import {
@@ -50,6 +51,7 @@ test("Luna writes while jev judges, with no judged features, and its answer stan
 	expect(jev.sent).toEqual([]);
 	expect(luna.sent).toHaveLength(1);
 	expect(luna.sent[0]?.input).not.toHaveProperty("judged");
+	expect(luna.caps[0]).toBe(canonicalOutputLimit);
 	expect(luna.sent[0]?.input).toMatchObject({
 		members: [
 			{ member: "m0", text: "merkwürdige", orthography: "Standard" },

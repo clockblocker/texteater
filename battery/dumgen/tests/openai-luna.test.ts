@@ -154,6 +154,21 @@ test("JSON wrapped under another single key is unwrapped and marked; JSON withou
 	});
 });
 
+test("an exchange's output cap goes as max_output_tokens, and none goes without one", async () => {
+	const { fetch, sent } = fakeFetch([
+		{ status: 200, body: completed('{"value":{"canonicalForm":"Haus"}}') },
+		{ status: 200, body: completed('{"value":{"canonicalForm":"Haus"}}') },
+	]);
+	const luna = createOpenAILuna({ apiKey: "key-1", fetch });
+	await luna(request, { ...context(), maxOutputTokens: 512 });
+	await luna(request, context());
+	const [capped, uncapped] = sent.map(({ init }) =>
+		JSON.parse(init.body ?? "{}"),
+	);
+	expect(capped).toMatchObject({ max_output_tokens: 512 });
+	expect(uncapped).not.toHaveProperty("max_output_tokens");
+});
+
 test("an incomplete response throws with its reason", async () => {
 	const { fetch } = fakeFetch([
 		{
