@@ -34,12 +34,14 @@ import {
 	findActiveVisitorSessionOnUnit,
 	recoverStaleResolutionRun,
 	retryResolutionSession,
+	saveJudgedGrammar,
 	settleUnresolvedSelection,
 	startResolutionSession,
 } from "./model/resolutionSessions";
 import {
 	readingCheckpointValidator,
 	resolutionGrammarProjectionValidator,
+	resolutionJudgedProjectionValidator,
 	resolutionReadingProjectionValidator,
 	resolutionSessionGuardValidator,
 	resolvedGrammaticalValidator,
@@ -401,6 +403,15 @@ export const advance = internalMutation({
 	},
 	returns: v.boolean(),
 	handler: (ctx, args) => advanceResolutionSession(ctx, args),
+});
+
+export const saveJudged = internalMutation({
+	args: {
+		guard: resolutionSessionGuardValidator,
+		judged: resolutionJudgedProjectionValidator,
+	},
+	returns: v.boolean(),
+	handler: (ctx, args) => saveJudgedGrammar(ctx, args),
 });
 
 export const recoverStaleRun = internalMutation({

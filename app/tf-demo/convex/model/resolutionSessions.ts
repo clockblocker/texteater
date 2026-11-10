@@ -10,6 +10,7 @@ import {
 	resolutionProgressHasReached,
 	STALE_RUN_AFTER_MS,
 	type StoredResolutionGrammar,
+	type StoredResolutionJudged,
 	type StoredResolutionReading,
 } from "../../server/resolutionLifecycle";
 import { unitsByMember } from "../../server/storedSegments";
@@ -181,6 +182,7 @@ async function restartRun(
 		},
 		...(values.resolveAgain
 			? {
+					judged: undefined,
 					grammar: undefined,
 					reading: undefined,
 					grammaticalCheckpoint: undefined,
@@ -467,7 +469,8 @@ export async function advanceResolutionSession(
 			progress: args.progress,
 			activity: "Running",
 		},
-		...(args.grammar ? { grammar: args.grammar } : {}),
+		// Grammar replaces what jev judged, which nothing reads after it.
+		...(args.grammar ? { grammar: args.grammar, judged: undefined } : {}),
 		...(args.reading ? { reading: args.reading } : {}),
 		...(args.grammaticalCheckpoint
 			? { grammaticalCheckpoint: args.grammaticalCheckpoint }
@@ -475,6 +478,34 @@ export async function advanceResolutionSession(
 		...(args.readingCheckpoint
 			? { readingCheckpoint: args.readingCheckpoint }
 			: {}),
+		updatedAt: Date.now(),
+	});
+	return true;
+}
+
+/**
+ * Saves what jev judged of a running click (#1329), only while its Grammar
+ * is not yet available. A save that lands after GrammarAvailable, or once
+ * the run is no longer the session's, is dropped and returns false, so the
+ * client never sees it after Grammar.
+ */
+export async function saveJudgedGrammar(
+	ctx: MutationCtx,
+	args: {
+		readonly guard: ResolutionSessionGuard;
+		readonly judged: StoredResolutionJudged;
+	},
+): Promise<boolean> {
+	const session = await findResolutionSession(ctx, args.guard.requestId);
+	if (
+		!session ||
+		!guardMatches(session, args.guard) ||
+		session.lifecycle.state !== "Active" ||
+		session.lifecycle.progress !== "RouteAvailable"
+	)
+		return false;
+	await ctx.db.patch(session._id, {
+		judged: args.judged,
 		updatedAt: Date.now(),
 	});
 	return true;

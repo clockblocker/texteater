@@ -1,4 +1,4 @@
-import type { DetectedLanguage } from "dumgen";
+import type { DetectedLanguage, JudgedGrammar } from "dumgen";
 import type * as Dumling from "dumling/types";
 import type {
 	LemmaCandidate,
@@ -241,6 +241,13 @@ export type ResolveSegmentInput = {
 
 export type ResolutionProgressObserver = {
 	generationEvent?(event: GenerationEvent): void;
+	/**
+	 * Saves what jev judged of the click while Luna may still be writing its
+	 * headword (#1329). Nothing waits for it but the run's ending; a save
+	 * that lands after GrammarAvailable is dropped, and a failed one leaves
+	 * the click as it was.
+	 */
+	grammarJudged?(input: { readonly judged: JudgedGrammar }): Promise<void>;
 	grammarAvailable(input: {
 		readonly grammatical: ResolvedGrammatical;
 	}): Promise<void>;

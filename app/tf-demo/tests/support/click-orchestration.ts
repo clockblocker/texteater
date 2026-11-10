@@ -108,9 +108,11 @@ export function fakeResolution(
 	const grammarInputs: ClickGrammarInput[] = [];
 	const readingInputs: ClickReadingInput[] = [];
 	const resolution: ClickResolution = {
-		grammar: (input) => {
+		grammar: (input, onJudged) => {
 			grammarInputs.push(input);
-			return overrides.grammar?.(input) ?? Effect.succeed(grammar);
+			return (
+				overrides.grammar?.(input, onJudged) ?? Effect.succeed(grammar)
+			);
 		},
 		reading: (input) => {
 			readingInputs.push(input);

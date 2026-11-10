@@ -11,6 +11,7 @@ import type {
 } from "./clickResolution";
 import { assertNonEmpty } from "./identifiers";
 import { inspectionStep } from "./inspectionCapture";
+import { type JudgedGrammarSave, judgedGrammarSave } from "./judgedGrammarSave";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,
@@ -86,6 +87,7 @@ export function createTfDemoOrchestrator<R = never>(
 		checkpoints: ResolutionCheckpoints = {},
 		initialContext?: ResolutionContext,
 	): Effect.Effect<ResolveSegmentResult, ResolutionRunError, R> {
+		const judging = judgedGrammarSave(options.observer);
 		return Effect.gen(function* () {
 			validateSelection(selection);
 			const loaded =
@@ -103,7 +105,7 @@ export function createTfDemoOrchestrator<R = never>(
 
 			const grammatical = checkpoints.grammatical
 				? checkpoints.grammatical
-				: yield* resolveGrammatical(options, context, input);
+				: yield* resolveGrammatical(options, context, input, judging);
 
 			if (grammatical.decision === "CatalogMiss") {
 				return { catalogMiss: grammatical };
@@ -118,7 +120,7 @@ export function createTfDemoOrchestrator<R = never>(
 				checkpoints,
 				grammatical,
 			);
-		});
+		}).pipe(Effect.ensuring(judging.landed));
 	}
 
 	return Object.freeze({ resolveSegment });
@@ -245,24 +247,30 @@ function commitUnresolved<R>(
 	);
 }
 
+/** Grammar, telling `judging` what jev judged and when it has returned. */
 function resolveGrammatical<R>(
 	options: TfDemoOrchestratorOptions<R>,
 	context: ResolutionContext,
 	request: ResolveSegmentInput,
+	judging: JudgedGrammarSave,
 ) {
 	const stored = context.sentence;
 	if (!stored) throw new Error("The requested sentence does not exist.");
 	const sentence = clickSentenceOf(stored);
 	const unit = unitsByMember(stored.units).get(request.clickedSegmentIndex);
 	return options.resolution
-		.grammar({
-			sentence,
-			clickedSegmentIndex: request.clickedSegmentIndex,
-			...(unit ? { unit } : {}),
-			lemmaCandidates: context.lemmaCandidates,
-			neighbours: context.neighbours ?? {},
-		})
+		.grammar(
+			{
+				sentence,
+				clickedSegmentIndex: request.clickedSegmentIndex,
+				...(unit ? { unit } : {}),
+				lemmaCandidates: context.lemmaCandidates,
+				neighbours: context.neighbours ?? {},
+			},
+			judging.onJudged,
+		)
 		.pipe(
+			Effect.ensuring(judging.grammarReturned),
 			Effect.withSpan(
 				"Resolve grammar",
 				inspectionStep("app/tf-demo · ClickResolution", {

@@ -55,14 +55,15 @@ export function resolutionDeckCards(
 
 /**
  * Whether what the Session knows so far makes its Attestation say
- * something: its stored unit, or the members Grammar read. Every later
+ * something: its stored unit, or the members jev judged (#1329), then
+ * those Grammar read, with the same orthographies. Every later
  * stage asks this too, so a step dealt early is still dealt at commit.
  */
 function attestationKnownToSay(note: ResolutionNote): boolean {
+	const members = note.grammar?.members ?? note.judged?.members;
 	return (
 		unitSaysSomething(note.unit?.segments) ||
-		(note.grammar !== undefined &&
-			attestationSaysSomething(note.grammar.members))
+		(members !== undefined && attestationSaysSomething(members))
 	);
 }
 

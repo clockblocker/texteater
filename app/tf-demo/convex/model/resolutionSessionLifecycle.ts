@@ -9,7 +9,10 @@ import type {
 	ResolutionSessionLifecyclePort,
 	ResolutionSessionRunInput,
 } from "../../server/resolutionSessionExecution";
-import { projectResolutionGrammar } from "../../server/resolutionSessionProjection";
+import {
+	projectJudgedGrammar,
+	projectResolutionGrammar,
+} from "../../server/resolutionSessionProjection";
 import { internal } from "../_generated/api";
 import type { Id, TableNames } from "../_generated/dataModel";
 import type { ActionCtx } from "../_generated/server";
@@ -115,6 +118,14 @@ export function createResolutionSessionLifecycle(
 						}),
 					);
 			}
+		},
+		saveJudged: async (judged) => {
+			await hop("Save the judged Grammar", judged, () =>
+				ctx.runMutation(internal.resolutionSessions.saveJudged, {
+					guard,
+					judged: projectJudgedGrammar(judged),
+				}),
+			);
 		},
 		settle: (result) =>
 			hop(`Settle ${result.kind}`, result, async () => {

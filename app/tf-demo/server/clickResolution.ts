@@ -1,4 +1,8 @@
-import type { InvalidModelOutput, ProviderFailure } from "dumgen";
+import type {
+	InvalidModelOutput,
+	JudgedGrammar,
+	ProviderFailure,
+} from "dumgen";
 import type * as Dumling from "dumling/types";
 import type * as Effect from "effect/Effect";
 import type { ClickSentence } from "./clickEncounter";
@@ -100,6 +104,13 @@ export type ClickReadingInput = {
 };
 
 /**
+ * Told once what jev judged of a click while Luna may still be writing its
+ * headword (#1329): Dumgen's `onJudged`. Grammar waits for it before it
+ * returns, so it only starts what it reports, and it cannot fail the click.
+ */
+export type OnJudged = (judged: JudgedGrammar) => Effect.Effect<void>;
+
+/**
  * Unresolved and Catalog Miss are answers; the error channel only says that
  * no usable answer came back (#859). `R` is what the resolution needs:
  * Dumgen's `Jev | Luna` in production, which the click's action provides;
@@ -108,6 +119,7 @@ export type ClickReadingInput = {
 export type ClickResolution<R = never> = {
 	readonly grammar: (
 		input: ClickGrammarInput,
+		onJudged?: OnJudged,
 	) => Effect.Effect<ClickGrammar, ProviderFailure | InvalidModelOutput, R>;
 	readonly reading: (
 		input: ClickReadingInput,

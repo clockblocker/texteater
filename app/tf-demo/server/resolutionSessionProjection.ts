@@ -1,4 +1,5 @@
 import { checkIfGrundform } from "dumcorpus/inventories";
+import type { JudgedGrammar } from "dumgen";
 import type * as Dumling from "dumling/types";
 import { attestationValencyMembers } from "./attestationValencyMembers";
 
@@ -110,6 +111,28 @@ export function projectResolutionGrammar(
 		kind: surface.lemma.kind,
 		coreFeatures: surface.lemma.coreFeatures,
 	} as ResolutionGrammarProjection;
+}
+
+/** What jev judged of a click, as the resolving Card reads it (#1329). */
+export type ResolutionJudgedProjection = {
+	coreFeatures: Readonly<Record<string, unknown>>;
+	members: { orthography: ResolutionMember["orthography"] }[];
+};
+
+/**
+ * What jev judged, as far as the resolving Card reads it: the Core Features
+ * for the Reading's tags, without the gender a common NOUN's headword may
+ * still change, and each member's orthography for the Deck.
+ */
+export function projectJudgedGrammar(
+	judged: JudgedGrammar,
+): ResolutionJudgedProjection {
+	const coreFeatures = { ...judged.coreFeatures };
+	if (judged.pending.includes("gender")) delete coreFeatures.gender;
+	return {
+		coreFeatures,
+		members: judged.members.map(({ orthography }) => ({ orthography })),
+	};
 }
 
 export function projectResolutionReading(

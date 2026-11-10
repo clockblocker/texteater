@@ -53,7 +53,8 @@ function dumgenSentence(
  * back as an answer. The clicked Segment stays tf-demo's Segment Selection;
  * Dumgen sees the unit. A click on a Segment with no stored unit resolves
  * nothing; Luna's draft of the Emoji Description comes back with the
- * Attestation. Reading: the Attestation, the Emoji Descriptions of its
+ * Attestation, and what jev judged reaches `onJudged` before Luna's
+ * headword does. Reading: the Attestation, the Emoji Descriptions of its
  * Lemma's stored Readings and the draft go in, and a Reuse, a New or a
  * Catalog Miss comes back; a New carries the candidates its judge saw, so the commit can
  * refuse it once stale (ADR 0031). `dumgen` hands over the operations
@@ -71,7 +72,7 @@ export function dumgenClickResolution<R>(
 	) => Promise<readonly string[]> = async () => [],
 ): ClickResolution<R> {
 	return Object.freeze({
-		grammar: (input) => {
+		grammar: (input, onJudged) => {
 			// Dumgen answers a unit intake left Unresolved with no call (#861).
 			const unit = routedUnit(input.unit);
 			if (!unit)
@@ -93,6 +94,7 @@ export function dumgenClickResolution<R>(
 					unit: stored,
 					neighbours: input.neighbours,
 					lemmaCandidates: input.lemmaCandidates,
+					...(onJudged ? { onJudged } : {}),
 				}),
 			).pipe(
 				Effect.map((result) => clickGrammarOf(result, input, stored)),

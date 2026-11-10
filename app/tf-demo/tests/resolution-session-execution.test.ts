@@ -26,6 +26,7 @@ describe("Resolution Session execution", () => {
 		const records: ResolutionSessionRunRecord[] = [];
 		const lifecycle: ResolutionSessionLifecyclePort = {
 			begin: async () => ({ selection, checkpoints: {} }),
+			saveJudged: async () => {},
 			advance: async (event) => {
 				advances.push(event);
 			},
@@ -80,6 +81,7 @@ describe("Resolution Session execution", () => {
 				identity,
 				lifecycle: {
 					begin: async () => ({ selection, checkpoints: {} }),
+					saveJudged: async () => {},
 					advance: async (event) => {
 						advances.push(event);
 					},
@@ -158,6 +160,7 @@ describe("Resolution Session execution", () => {
 				identity,
 				lifecycle: {
 					begin: async () => null,
+					saveJudged: async () => {},
 					advance: async () => {
 						wrote = true;
 					},
@@ -190,6 +193,7 @@ describe("Resolution Session execution", () => {
 					identity,
 					lifecycle: {
 						begin: async () => ({ selection, checkpoints: {} }),
+						saveJudged: async () => {},
 						advance: async () => {},
 						settle: async () => {},
 						record: async (record) => {

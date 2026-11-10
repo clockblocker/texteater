@@ -441,6 +441,26 @@ export const resolutionGrammarProjectionValidator = v.object({
 	coreFeatures: v.any(),
 });
 
+/**
+ * What jev judged of a running click before its headword is written
+ * (#1329), as far as the resolving Card reads it, until Grammar replaces it.
+ */
+export const resolutionJudgedProjectionValidator = v.object({
+	/** For the Reading's tags; without a gender Luna's article may still change. */
+	coreFeatures: v.any(),
+	/** Each member's orthography, for whether the Attestation says something. */
+	members: v.array(
+		v.object({
+			orthography: v.union(
+				v.literal("Standard"),
+				v.literal("Typo"),
+				v.literal("Shorthand"),
+				v.literal("Fused"),
+			),
+		}),
+	),
+});
+
 export const resolutionReadingProjectionValidator = v.object({
 	/** A Foreign Reading has none (ADR 0045). */
 	emojiDescription: v.optional(v.string()),

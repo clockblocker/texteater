@@ -108,6 +108,7 @@ async function runSession(
 			identity,
 			lifecycle: {
 				begin: async () => ({ selection, checkpoints: {} }),
+				saveJudged: async () => {},
 				advance: async () => {},
 				settle: async () => {},
 				record: async (record) => {

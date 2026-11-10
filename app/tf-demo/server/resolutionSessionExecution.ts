@@ -1,3 +1,4 @@
+import type { JudgedGrammar } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Option from "effect/Option";
@@ -84,6 +85,8 @@ export type ResolutionSessionLifecyclePort = {
 	/** Claims this guarded run and returns its durable checkpoints. */
 	readonly begin: () => Promise<ResolutionSessionRunInput | null>;
 	readonly advance: (event: ResolutionSessionAdvance) => Promise<void>;
+	/** Saves what jev judged before GrammarAvailable; dropped once it has landed (#1329). */
+	readonly saveJudged: (judged: JudgedGrammar) => Promise<void>;
 	readonly settle: (result: ResolutionSessionSettlement) => Promise<void>;
 	readonly record: (record: ResolutionSessionRunRecord) => Promise<void>;
 };
@@ -143,6 +146,7 @@ export function executeResolutionSession({
 		};
 		const observer: ResolutionProgressObserver = {
 			generationEvent: onGenerationEvent,
+			grammarJudged: ({ judged }) => lifecycle.saveJudged(judged),
 			async grammarAvailable({ grammatical }) {
 				// Reading starts beside this save, so its events and failures
 				// are the Reading phase's from now on.

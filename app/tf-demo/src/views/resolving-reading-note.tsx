@@ -41,8 +41,9 @@ export type ResolvingReading = {
  * The Reading Note of a Resolution that is still running, shaped exactly like
  * the stored Note it becomes. It is laid out by the unit's route until
  * Grammar gives the Reading's own, and headed by the clicked words until
- * Grammar gives the headword. The sentence is known from the Session's first
- * result; the emoji, Knowledge and identities are marked pending so the
+ * Grammar gives the headword; what jev judged fills its Core Features
+ * before Grammar does (#1329). The sentence is known from the Session's
+ * first result; the emoji, Knowledge and identities are marked pending so the
  * renderer shows bones in their place. Identities are placeholders: the
  * `pending` marker keeps every block from following them. Null while no
  * route is known.
@@ -72,7 +73,7 @@ export function resolvingReadingNoteData(
 		family: route.family,
 		kind: route.kind,
 		canonicalForm: grammar?.canonicalForm ?? "",
-		coreFeatures: grammar?.coreFeatures ?? {},
+		coreFeatures: grammar?.coreFeatures ?? note?.judged?.coreFeatures ?? {},
 	};
 	const reading = {
 		unitKind: "Reading" as const,

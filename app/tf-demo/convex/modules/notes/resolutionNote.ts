@@ -2,6 +2,7 @@ import { type Infer, v } from "convex/values";
 import { MAX_IDENTIFIER_LENGTH } from "../../../server/identifiers";
 import type {
 	ResolutionGrammarProjection,
+	ResolutionJudgedProjection,
 	ResolutionReadingProjection,
 } from "../../../server/resolutionSessionProjection";
 import { type StoredUnit, unitsByMember } from "../../../server/storedSegments";
@@ -26,6 +27,7 @@ import {
 import { loadStoredSegments } from "../../model/storedSegments";
 import {
 	resolutionGrammarProjectionValidator,
+	resolutionJudgedProjectionValidator,
 	resolutionReadingProjectionValidator,
 	segmentKindValidator,
 	storedUnitValidator,
@@ -128,6 +130,8 @@ export const resolutionNoteValidator = v.object({
 	 * selects, and what its card shows while resolution is rebuilt (#848).
 	 */
 	unit: v.optional(storedUnitValidator),
+	/** What jev judged while Luna writes the headword; absent once Grammar is (#1329). */
+	judged: v.optional(resolutionJudgedProjectionValidator),
 	grammar: v.optional(resolutionGrammarProjectionValidator),
 	reading: v.optional(resolutionReadingProjectionValidator),
 	updatedAt: v.number(),
@@ -139,8 +143,9 @@ export const resolutionNoteValidator = v.object({
  */
 export type ResolutionNote = Omit<
 	Infer<typeof resolutionNoteValidator>,
-	"grammar" | "reading"
+	"judged" | "grammar" | "reading"
 > & {
+	judged?: ResolutionJudgedProjection;
 	grammar?: ResolutionGrammarProjection;
 	reading?: ResolutionReadingProjection;
 };
@@ -190,8 +195,11 @@ export async function loadResolutionNote(
 			),
 		}),
 		...(unit ? { unit } : {}),
-		// The Session stores what projectResolutionGrammar and
-		// projectResolutionReading produced.
+		// The Session stores what projectJudgedGrammar,
+		// projectResolutionGrammar and projectResolutionReading produced.
+		...(session.judged && !session.grammar
+			? { judged: session.judged as ResolutionJudgedProjection }
+			: {}),
 		...(session.grammar
 			? { grammar: session.grammar as ResolutionGrammarProjection }
 			: {}),

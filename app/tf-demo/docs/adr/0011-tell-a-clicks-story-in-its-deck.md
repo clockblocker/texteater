@@ -37,7 +37,8 @@ taken back:
 
 - The Attestation is dealt at the click when the stored unit has more than
   one Segment, and otherwise once Grammar's reading shows that it says
-  something.
+  something: what jev judged of its members, saved before Luna writes the
+  headword, or else Grammar's result.
 - The Surface and Lemma are dealt at commit.
 - Each stage ORs everything the earlier stages knew, so the Deck only grows.
 

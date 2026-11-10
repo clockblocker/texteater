@@ -12,6 +12,7 @@ import {
 	catalogMissStageValidator,
 	readingCheckpointValidator,
 	resolutionGrammarProjectionValidator,
+	resolutionJudgedProjectionValidator,
 	resolutionReadingProjectionValidator,
 	storedGrammaticalCheckpointValidator,
 } from "../validators";
@@ -30,6 +31,8 @@ export const resolutionTables = {
 		lifecycle: resolutionLifecycleValidator,
 		runNumber: v.optional(v.number()),
 		retryDeadlineAt: v.optional(v.number()),
+		/** What jev judged, kept only until GrammarAvailable (#1329). */
+		judged: v.optional(resolutionJudgedProjectionValidator),
 		grammar: v.optional(resolutionGrammarProjectionValidator),
 		reading: v.optional(resolutionReadingProjectionValidator),
 		grammaticalCheckpoint: v.optional(storedGrammaticalCheckpointValidator),

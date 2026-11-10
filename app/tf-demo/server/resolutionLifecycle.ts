@@ -8,6 +8,7 @@ import type {
 } from "../convex/model/resolutionLifecycleValidators";
 import type {
 	resolutionGrammarProjectionValidator,
+	resolutionJudgedProjectionValidator,
 	resolutionReadingProjectionValidator,
 	resolutionSessionGuardValidator,
 } from "../convex/model/validators";
@@ -47,6 +48,10 @@ export type ResolutionSessionGuard = Infer<
 /** A Grammar projection as the Session row stores it. */
 export type StoredResolutionGrammar = Infer<
 	typeof resolutionGrammarProjectionValidator
+>;
+/** What jev judged, as the Session row stores it until Grammar (#1329). */
+export type StoredResolutionJudged = Infer<
+	typeof resolutionJudgedProjectionValidator
 >;
 /** A Reading projection as the Session row stores it. */
 export type StoredResolutionReading = Infer<
