@@ -1,13 +1,14 @@
 /**
- * Whether a VERB unit is an infinitive by its clause (#1339). German
- * spells the infinitive like the 1st and 3rd person plural present
- * (warten), so the word cannot tell them apart, but its clause often
- * can: zu right before the verb governs an infinitive (zu warten), and a
- * clause has one finite verb, so beside a modal's finite form in another
- * unit of the same clause (mussten … warten) a unit ending in -n like an
- * infinitive is one. A modal's form spelled like its own infinitive
+ * The forms a VERB unit can take by its clause (#1339). German spells the
+ * infinitive like the 1st and 3rd person plural present (warten), so the
+ * word cannot tell them apart, but its clause often can: zu right before
+ * the verb governs an infinitive (zu warten), and a clause has one finite
+ * verb, so beside a modal's finite form in another unit of the same
+ * clause (mussten … warten) a unit ending in -n is no finite verb: an
+ * infinitive, or a participle (kann … abgenommen und … bewegt werden),
+ * which jev tells apart. A modal's form spelled like its own infinitive
  * (müssen, können) settles nothing, and neither does a clause without a
- * modal: there jev decides.
+ * modal: there jev decides among all three.
  *
  * The clause runs from the unit to the nearest punctuation mark, comma
  * included, or conjunction on each side.
@@ -84,17 +85,22 @@ function wordBefore(target: Target, index: number): string | undefined {
 	return undefined;
 }
 
-/** Whether the VERB unit is an infinitive by its clause, as the module says. */
-export function clauseInfinitive(target: Target): boolean {
+export type VerbForm = "Fin" | "Inf" | "Part";
+
+const anyForm: readonly VerbForm[] = ["Fin", "Inf", "Part"];
+
+/** The forms the VERB unit can take by its clause, as the module says. */
+export function clauseVerbForms(target: Target): readonly VerbForm[] {
 	const last = target.members.at(-1);
-	if (!last || !fold(last.text).endsWith("n")) return false;
+	if (!last || !fold(last.text).endsWith("n")) return anyForm;
 	if (target.members.some(({ text }) => finiteClosedForms.has(fold(text))))
-		return false;
-	if (wordBefore(target, last.segment) === "zu") return true;
-	return clauseSegments(target).some((index) => {
+		return anyForm;
+	if (wordBefore(target, last.segment) === "zu") return ["Inf"];
+	const besideModal = clauseSegments(target).some((index) => {
 		const segment = target.segments[index];
 		return (
 			segment !== undefined && finiteModalForms.has(fold(segment.text))
 		);
 	});
+	return besideModal ? ["Inf", "Part"] : anyForm;
 }

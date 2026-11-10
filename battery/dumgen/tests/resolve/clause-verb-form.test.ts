@@ -10,9 +10,10 @@ import {
 } from "./support.js";
 
 // A dependent infinitive is told from a finite form by its clause (#1339):
-// zu before it, or a modal's finite form in another unit of the clause.
+// zu before it makes it an infinitive, and a modal's finite form in
+// another unit of the clause makes it no finite verb.
 
-/** jev reads every verb as finite: only the clause can make it an infinitive. */
+/** jev reads every verb as finite where it may: only the clause rules that out. */
 const finite = {
 	prefix: "None",
 	verbForm: "Fin",
@@ -26,42 +27,58 @@ async function clicked(
 	text: string,
 	routes: readonly (readonly [number[], RouteKey])[],
 	at: number,
+	form = "Fin",
 ) {
 	const units = routes.map(([segments, key]) => unitOf(segments, key));
 	const unit = units[at];
 	if (!unit) throw Error("no unit");
-	const jev = fakeJev(finite);
+	const jev = fakeJev({ ...finite, verbForm: form });
 	const { result } = await resolveOnce(
 		{ jev: jev.ask, luna: writes("warten").ask },
 		{ sentence: { ...sentenceOf(text), units }, unit },
 	);
+	const asked = jev.sent[0]?.questions.verbForm;
 	return {
 		surface: attested(result).surface,
 		asked: jev.questions("grammar"),
+		forms:
+			asked?.type === "choice"
+				? Object.keys(asked.criteria).filter(
+						(key) => key !== "Unresolved",
+					)
+				: [],
 	};
 }
 
-test("beside a modal's finite form in its clause a verb is an infinitive, and its form is not asked", async () => {
+test("beside a modal's finite form in its clause a verb is no finite verb: an infinitive or a participle", async () => {
 	// Sie0 _1 mussten2 _3 lange4 _5 warten6 .7
-	const { surface, asked } = await clicked(
-		"Sie mussten lange warten.",
+	const units: readonly (readonly [number[], RouteKey])[] = [
+		[[0], "Lexeme/PRON"],
+		[[2], "Lexeme/VERB"],
+		[[4], "Lexeme/ADV"],
+		[[6], "Lexeme/VERB"],
+	];
+	const waited = await clicked("Sie mussten lange warten.", units, 3, "Inf");
+	expect(waited.forms).toEqual(["Inf", "Part"]);
+	expect(waited.asked).not.toContain("mood");
+	expect(waited.surface).toMatchObject({
+		inflectionalFeatures: { verbForm: "Inf", mood: null, tense: null },
+	});
+	// Es0 _1 kann2 _3 abgenommen4 _5 werden6 .7 is no infinitive of abnehmen.
+	const taken = await clicked(
+		"Es kann abgenommen werden.",
 		[
 			[[0], "Lexeme/PRON"],
 			[[2], "Lexeme/VERB"],
-			[[4], "Lexeme/ADV"],
+			[[4], "Lexeme/VERB"],
 			[[6], "Lexeme/VERB"],
 		],
-		3,
+		2,
+		"Part",
 	);
-	expect(surface).toMatchObject({
-		inflectionalFeatures: {
-			verbForm: "Inf",
-			mood: null,
-			tense: null,
-		},
+	expect(taken.surface).toMatchObject({
+		inflectionalFeatures: { verbForm: "Part" },
 	});
-	expect(asked).not.toContain("verbForm");
-	expect(asked).not.toContain("mood");
 });
 
 test("zu right before a verb makes it an infinitive", async () => {

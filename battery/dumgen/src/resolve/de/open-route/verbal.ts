@@ -25,13 +25,14 @@ import {
 	answerReader,
 	type Choice,
 	type ChoiceOf,
+	optionsOf,
 	type Questionnaire,
 	type ReaderBody,
 	type Unresolved,
 	unresolved,
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
-import { clauseInfinitive } from "./clause-verb-form.js";
+import { clauseVerbForms } from "./clause-verb-form.js";
 import type { GovernedQuestions } from "./governed.js";
 import { prefixAnswer } from "./prefix-answer.js";
 import { isParticle, prefixCandidates } from "./separable-prefix.js";
@@ -297,39 +298,55 @@ export function askVerbal(
 type VerbFormQuestions = ReturnType<typeof askVerbForm>;
 
 /**
- * Asks a VERB's form, and the mood, tense, person, number and participle
- * it may take; nothing of a unit its clause makes an infinitive
- * (`clause-verb-form.ts`, #1339).
+ * Asks a VERB's form over the forms its clause leaves
+ * (`clause-verb-form.ts`, #1339), none when one is left, and the mood,
+ * tense, person and number a finite form takes and the participle a
+ * participle does.
  */
 function askVerbForm(questionnaire: Questionnaire, target: Target) {
-	if (clauseInfinitive(target))
-		return { verbForm: undefined, forms: undefined };
+	const open = clauseVerbForms(target);
 	return {
-		verbForm: questionnaire.choice(
-			"verbForm",
-			question.verbForm,
-			options.verbForm,
-			["verbal"],
-		),
-		forms: {
-			mood: questionnaire.choice("mood", question.mood, options.mood),
-			tense: questionnaire.choice("tense", question.tense, options.tense),
-			person: questionnaire.choice(
-				"person",
-				question.person,
-				options.person,
-			),
-			number: questionnaire.choice(
-				"number",
-				question.verbNumber,
-				options.number,
-			),
-			participle: questionnaire.choice(
-				"participle",
-				question.participle,
-				options.participle,
-			),
-		},
+		verbForm:
+			open.length > 1
+				? questionnaire.choice(
+						"verbForm",
+						question.verbForm,
+						optionsOf(open, options.verbForm),
+						["verbal"],
+					)
+				: undefined,
+		settledForm: open.length === 1 ? open[0] : undefined,
+		finite: open.includes("Fin")
+			? {
+					mood: questionnaire.choice(
+						"mood",
+						question.mood,
+						options.mood,
+					),
+					tense: questionnaire.choice(
+						"tense",
+						question.tense,
+						options.tense,
+					),
+					person: questionnaire.choice(
+						"person",
+						question.person,
+						options.person,
+					),
+					number: questionnaire.choice(
+						"number",
+						question.verbNumber,
+						options.number,
+					),
+				}
+			: undefined,
+		participle: open.includes("Part")
+			? questionnaire.choice(
+					"participle",
+					question.participle,
+					options.participle,
+				)
+			: undefined,
 	};
 }
 
@@ -498,9 +515,9 @@ const verbalInflection = answerReader(function* (
 	const subject = expletive ? "Subject" : null;
 	const verbForm = verbal.verbForm
 		? yield* answered.pick(verbal.verbForm)
-		: "Inf";
-	const { forms } = verbal;
-	if (verbForm === "Inf" || !forms)
+		: (verbal.settledForm ?? "Inf");
+	const { finite } = verbal;
+	if (verbForm === "Inf")
 		return {
 			mood: null,
 			number: null,
@@ -517,13 +534,15 @@ const verbalInflection = answerReader(function* (
 			person: null,
 			tense: null,
 			verbForm,
-			participleForm: answered.peek(forms.participle) ?? null,
+			participleForm:
+				(verbal.participle && answered.peek(verbal.participle)) ?? null,
 			expletive: subject,
 			...composition,
 		};
-	const mood = yield* answered.pick(forms.mood);
-	const number = yield* answered.pick(forms.number);
-	const person = yield* answered.pick(forms.person);
+	if (!finite) throw Error("A finite form is asked its mood");
+	const mood = yield* answered.pick(finite.mood);
+	const number = yield* answered.pick(finite.number);
+	const person = yield* answered.pick(finite.person);
 	// A subject es takes a finite verb in the 3rd person singular, never
 	// an imperative: jev's agreement against it is a clash of answers.
 	if (expletive && (person !== "3" || number !== "Sing"))
@@ -546,7 +565,7 @@ const verbalInflection = answerReader(function* (
 		mood,
 		number,
 		person,
-		tense: yield* answered.pick(forms.tense),
+		tense: yield* answered.pick(finite.tense),
 		verbForm,
 		expletive: subject,
 		...composition,
