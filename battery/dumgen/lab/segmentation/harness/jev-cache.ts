@@ -37,12 +37,14 @@ import { InvalidModelOutput, ProviderFailure } from "../../../src/errors.js";
 import { checkedAnswers } from "../../../src/jev-call.js";
 import type { Answers, Ask } from "../../../src/segment/ask.js";
 import {
+	type ChunkLimit,
+	chunkQuestions,
 	isFloatingModel,
 	type JevAsk,
 	type JevRequest,
 	type JevResponse,
 	pinnedJevModel,
-	questionsPerRequest,
+	tokensPerRequest,
 } from "../../../src/segment/jev.js";
 import {
 	type Bucket,
@@ -91,7 +93,8 @@ const projectedRepetitions = [0, 1, 2] as const;
 
 export class JevCache {
 	readonly model: string;
-	readonly questionsPerRequest: number;
+	/** How `port` chunks a request: by production's tokens, or by `questionsPerRequest`. */
+	readonly chunkLimit: ChunkLimit;
 	/** Every model an answer came from, cached ones included. */
 	readonly resolvedModels = new Set<string>();
 	/** What a projecting cache saw: cached requests and the ones it would send. */
@@ -116,8 +119,10 @@ export class JevCache {
 			throw Error(
 				`${this.model} floats between jev versions; pin a version or allow a floating model`,
 			);
-		this.questionsPerRequest =
-			options.questionsPerRequest ?? questionsPerRequest;
+		this.chunkLimit =
+			options.questionsPerRequest === undefined
+				? { tokens: tokensPerRequest }
+				: { questions: options.questionsPerRequest };
 	}
 
 	/** What the fresh requests met so far: their retries and failures. */
@@ -181,7 +186,8 @@ export class JevCache {
 	/**
 	 * The stages' `ask` port at `repetition`, for the lab's arms, on the
 	 * run's request budget (D4 on #1269): each request in chunks of
-	 * `questionsPerRequest`, sent side by side as production's `Jev` sends
+	 * production's estimated tokens (`chunkQuestions`), or of
+	 * `questionsPerRequest` questions, sent side by side as production's `Jev` sends
 	 * them, each chunk holding one permit of the budget while it is answered
 	 * and checked as production checks it. The first chunk that fails fails
 	 * the request and interrupts the others: a chunk that brought no answer
@@ -197,7 +203,10 @@ export class JevCache {
 			readonly salt?: string;
 		} = {},
 	): Effect.Effect<Ask, never, RequestBudget> {
-		const size = options.questionsPerRequest ?? this.questionsPerRequest;
+		const limit: ChunkLimit =
+			options.questionsPerRequest === undefined
+				? this.chunkLimit
+				: { questions: options.questionsPerRequest };
 		const context = {
 			repetition,
 			calls,
@@ -226,10 +235,10 @@ export class JevCache {
 								questions,
 								spelling,
 							);
-							const chunks: (typeof entries)[] = [];
-							for (let at = 0; at < entries.length; at += size)
-								chunks.push(entries.slice(at, at + size));
-							return { spelling, chunks };
+							return {
+								spelling,
+								chunks: chunkQuestions(state, questions, limit),
+							};
 						},
 						catch: failure,
 					});

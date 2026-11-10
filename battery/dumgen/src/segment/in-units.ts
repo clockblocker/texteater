@@ -5,8 +5,8 @@
  * `Unresolved`. The Sentences' language module runs its Segment stage,
  * then its unit stage.
  *
- * Every jev request goes through `Jev`, split into chunks of
- * `questionsPerRequest` questions, each naming the pinned model, and each
+ * Every jev request goes through `Jev`, split into chunks of at most
+ * `tokensPerRequest` estimated tokens, each naming the pinned model, and each
  * Sentence's calls are placed under it as the `CurrentSentence`. The
  * Sentences run side by side and each fails alone: a chunk that brought no
  * answer, or one a different model gave, or one missing or mistyping an

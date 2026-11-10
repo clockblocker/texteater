@@ -1,10 +1,10 @@
 /**
  * How every operation reaches jev: the `Jev` service, built from the host's
  * `JevTransport`, the `RequestBudget` and the pinned `JevModel`. A request
- * is split into chunks of `questionsPerRequest` questions, each naming the
- * pinned model, sent side by side under the request budget, and checked
- * before its answers are used. The first chunk that fails fails the
- * request and interrupts the others.
+ * is split into chunks of at most `tokensPerRequest` estimated tokens
+ * (`chunkQuestions`), each naming the pinned model, sent side by side under
+ * the request budget, and checked before its answers are used. The first
+ * chunk that fails fails the request and interrupts the others.
  */
 
 import type { Question } from "@typesafe-ai/sdk";
@@ -22,12 +22,12 @@ import type {
 	AskRequest,
 } from "./segment/ask.js";
 import {
+	chunkQuestions,
 	isFloatingModel,
 	type JevAsk,
 	type JevRequest,
 	type JevResponse,
 	pinnedJevModel,
-	questionsPerRequest,
 } from "./segment/jev.js";
 import {
 	createTypeSafeAsk,
@@ -161,19 +161,9 @@ export class Jev extends Context.Service<
 					),
 				);
 			return Jev.of({
-				ask: ({ stage, state, questions }) => {
-					const entries = Object.entries(questions);
-					const chunks: (typeof entries)[] = [];
-					for (
-						let at = 0;
-						at < entries.length;
-						at += questionsPerRequest
-					)
-						chunks.push(
-							entries.slice(at, at + questionsPerRequest),
-						);
-					return Effect.forEach(
-						chunks,
+				ask: ({ stage, state, questions }) =>
+					Effect.forEach(
+						chunkQuestions(state, questions),
 						(chunk) => {
 							const request: JevRequest = {
 								model,
@@ -205,8 +195,7 @@ export class Jev extends Context.Service<
 							(answered): Answers =>
 								Object.assign({}, ...answered),
 						),
-					);
-				},
+					),
 			});
 		}),
 	);

@@ -146,7 +146,7 @@ export type JevCacheOptions = {
 	readonly maxRetries?: number;
 	/** Milliseconds before retry `attempt` (from 0); exponential with jitter by default. */
 	readonly retryDelay?: (attempt: number) => number;
-	/** Questions per request the lab's `port` sends; production's by default. */
+	/** Questions per chunk the lab's `port` sends; production's token chunks when absent. */
 	readonly questionsPerRequest?: number;
 	/** Called before every fresh request; throw to stop spending. */
 	readonly beforeSpend?: () => void;

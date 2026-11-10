@@ -13,9 +13,11 @@ import {
 } from "../../src/segment/de/routes.js";
 import type { InUnitsInput } from "../../src/segment/in-units.js";
 import {
+	estimatedTokens,
 	type JevAsk,
 	type JevRequest,
 	pinnedJevModel,
+	tokensPerRequest,
 } from "../../src/segment/jev.js";
 import type {
 	Route,
@@ -225,7 +227,7 @@ test("inUnits segments each Sentence of each paragraph and routes its units", as
 	expect(trace?.waits).toEqual([]);
 });
 
-test("a request over 300 questions goes out in chunks of 300, in order, its answers merged, under the request budget", async () => {
+test("a request over its token size goes out in chunks of at most tokensPerRequest estimated tokens, in order, its answers merged, under the request budget", async () => {
 	const words = Array.from({ length: 160 }, (_, index) => `wort${index}`);
 	const jev = fakeJev();
 	const { text, traces } = await inUnits(
@@ -239,21 +241,25 @@ test("a request over 300 questions goes out in chunks of 300, in order, its answ
 	expect(sentence?.failed).toBeUndefined();
 	expect(sentence?.units).toHaveLength(160);
 	const route = jev.sent.filter(({ stage }) => stage === "route");
-	expect(route.map(({ questions }) => Object.keys(questions).length)).toEqual(
-		[300, 20],
-	);
+	expect(route.length).toBeGreaterThan(1);
 	const ids = route.flatMap(({ questions }) => Object.keys(questions));
-	expect(new Set(ids).size).toBe(320);
+	expect(new Set(ids).size).toBe(ids.length);
 	expect(ids.slice(0, 2)).toEqual(["r_1", "ta_1"]);
-	expect(
-		jev.sent.every(({ questions }) => Object.keys(questions).length <= 300),
-	).toBe(true);
+	expect(ids.at(-1)).toBe("ta_160");
+	for (const { state, questions } of jev.sent)
+		expect(
+			estimatedTokens(state) +
+				Object.entries(questions).reduce(
+					(sum, entry) => sum + estimatedTokens(entry),
+					0,
+				),
+		).toBeLessThanOrEqual(tokensPerRequest);
 	expect(jev.mostInFlight()).toBeLessThanOrEqual(2);
 	expect(
 		traces[0]?.calls
 			.filter(({ stage }) => stage === "route")
 			.map(({ inputTokens }) => inputTokens),
-	).toEqual([3000, 200]);
+	).toEqual(route.map(({ questions }) => 10 * Object.keys(questions).length));
 });
 
 test("one request budget bounds every Sentence's calls together, and each wait is recorded", async () => {
@@ -387,14 +393,18 @@ test("within a Sentence, a failed chunk interrupts its sibling chunks", async ()
 		},
 	);
 	expect(text.paragraphs[0]?.sentences[0]?.failed).toBe(true);
-	expect(aborted).toEqual(["route"]);
-	// The sibling settled before the operation reported its trace.
-	expect(settled).toEqual(["route"]);
+	const siblings =
+		(traces[0]?.calls.filter(({ stage }) => stage === "route").length ??
+			0) - 1;
+	expect(siblings).toBeGreaterThan(0);
+	expect(aborted).toEqual(Array(siblings).fill("route"));
+	// The siblings settled before the operation reported its trace.
+	expect(settled).toEqual(Array(siblings).fill("route"));
 	expect(
 		traces[0]?.calls
 			.filter(({ stage }) => stage === "route")
 			.map(({ failure }) => failure?.tag),
-	).toEqual(["ProviderFailure", "Interrupted"]);
+	).toEqual(["ProviderFailure", ...Array(siblings).fill("Interrupted")]);
 });
 
 test("an answer from an unpinned model, or one missing or mistyping an answer, fails its Sentence as InvalidModelOutput and keeps its tokens", async () => {

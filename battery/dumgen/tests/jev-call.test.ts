@@ -2,7 +2,12 @@ import { expect, test } from "bun:test";
 import type { Question } from "@typesafe-ai/sdk";
 import { InvalidModelOutput } from "../src/errors.js";
 import { checkedAnswers } from "../src/jev-call.js";
-import type { JevResponse } from "../src/segment/jev.js";
+import {
+	chunkQuestions,
+	estimatedTokens,
+	type JevResponse,
+	tokensPerRequest,
+} from "../src/segment/jev.js";
 
 const model = "jev-1.13.0";
 
@@ -104,4 +109,66 @@ test("a missing, untyped or mistyped answer keeps its own message", () => {
 	expect(rejectionOf({ ...fitting, s: fitting.n })).toBe(
 		"jev answered s with another type than asked",
 	);
+});
+
+const noulNamed = (words: number): Question => ({
+	type: "noul",
+	instructions: "Ist das so? ".repeat(words),
+});
+
+test("a request is cut in order into chunks whose estimated tokens, the state's included, fit the limit", () => {
+	const state = { sentence: "Er kam gestern spät nach Hause." };
+	const questions = Object.fromEntries(
+		Array.from({ length: 40 }, (_, index) => [`q${index}`, noulNamed(50)]),
+	);
+	const limit = 3_000;
+	const chunks = chunkQuestions(state, questions, { tokens: limit });
+	expect(chunks.length).toBeGreaterThan(1);
+	expect(chunks.flat().map(([id]) => id)).toEqual(Object.keys(questions));
+	for (const chunk of chunks) {
+		const size = chunk.reduce(
+			(sum, entry) => sum + estimatedTokens(entry),
+			estimatedTokens(state),
+		);
+		expect(size).toBeLessThanOrEqual(limit);
+	}
+	// Each chunk is as full as the next question allows.
+	for (const [index, chunk] of chunks.slice(0, -1).entries()) {
+		const next = chunks[index + 1]?.[0];
+		if (!next) throw Error("A next chunk expected");
+		expect(
+			[...chunk, next].reduce(
+				(sum, entry) => sum + estimatedTokens(entry),
+				estimatedTokens(state),
+			),
+		).toBeGreaterThan(limit);
+	}
+});
+
+test("production cuts by tokens only, a question too large alone goes alone, and an empty request is no chunk", () => {
+	const state = { sentence: "Ja." };
+	const small = Object.fromEntries(
+		Array.from({ length: 1_000 }, (_, index) => [
+			`q${index}`,
+			noulNamed(1),
+		]),
+	);
+	expect(chunkQuestions(state, small)).toHaveLength(1);
+	expect(chunkQuestions(state, small, { questions: 300 })).toHaveLength(4);
+	const huge = noulNamed(tokensPerRequest);
+	expect(
+		chunkQuestions(state, {
+			a: noulNamed(1),
+			b: huge,
+			c: noulNamed(1),
+		}).map((chunk) => chunk.map(([id]) => id)),
+	).toEqual([["a"], ["b"], ["c"]]);
+	expect(chunkQuestions(state, {})).toEqual([]);
+});
+
+test("the estimate overestimates jev's billing: two bytes of JSON a token, every byte counted", () => {
+	// "abc" is five bytes of JSON, "äöü" eight.
+	expect(estimatedTokens("abc")).toBe(3);
+	expect(estimatedTokens("äöü")).toBe(4);
+	expect(estimatedTokens({ a: 1 })).toBe(4);
 });
