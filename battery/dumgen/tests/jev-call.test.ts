@@ -166,7 +166,7 @@ test("production cuts by tokens only, a question too large alone goes alone, and
 	expect(chunkQuestions(state, {})).toEqual([]);
 });
 
-test("the estimate overestimates jev's billing: two bytes of JSON a token, every byte counted", () => {
+test("the estimate counts two bytes of JSON a token, every byte counted", () => {
 	// "abc" is five bytes of JSON, "äöü" eight.
 	expect(estimatedTokens("abc")).toBe(3);
 	expect(estimatedTokens("äöü")).toBe(4);

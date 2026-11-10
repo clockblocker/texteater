@@ -17,21 +17,24 @@ export const pinnedJevModel = "jev-1.13.0";
 /**
  * The estimated input tokens one chunk of a jev request may reach; a larger
  * request is split in order. TypeSafe refuses a request over 65,536 input
- * tokens (`max_tokens_exceeded`, #1213), and `estimatedTokens` overestimates
- * by at least an eighth, so a chunk at this size bills under 30,000. Chunk
- * size moves answers no more than repetition noise (the lab's limit-qpc
- * test, 25 to 3,000 questions a chunk), and the evaluations' cache keys
- * each answer by its question, so the chunking never decides a cache hit.
+ * tokens (`max_tokens_exceeded`, #1213); this is half that, so a chunk
+ * whose estimate falls short by up to half still fits. The densest chunk
+ * measured, 93 slot Choices, billed 34,359 tokens at an estimate of 32,415.
+ * Chunk size moves answers no more than repetition noise (the lab's
+ * limit-qpc test, 25 to 3,000 questions a chunk), and the evaluations'
+ * cache keys each answer by its question, so the chunking never decides a
+ * cache hit.
  */
 export const tokensPerRequest = 32_768;
 
 const encoder = new TextEncoder();
 
 /**
- * An overestimate of the input tokens `value`'s JSON costs jev: its UTF-8
- * bytes over two. jev billed 2.3 to 3.8 bytes of canonical JSON a token
- * across 2,073 cached segmentation requests of every stage, 2.95 on
- * average, plus about 24 tokens a request (#1324).
+ * An estimate of the input tokens `value`'s JSON costs jev: its UTF-8 bytes
+ * over two. jev billed 2.3 to 3.8 bytes of canonical JSON a token across
+ * 2,073 cached segmentation requests of every stage, 2.95 on average, plus
+ * about 24 tokens a request, and 1.9 for a chunk of nothing but slot
+ * Choices, whose criteria are short ids and words (#1324).
  */
 export const estimatedTokens = (value: unknown): number =>
 	Math.ceil(encoder.encode(JSON.stringify(value) ?? "").length / 2);
