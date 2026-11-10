@@ -268,6 +268,24 @@ test("a click with a lexical reflexive is offered a Reading whose Reflexive Slot
 		{ candidates, optionallyReflexive: ["😴"] },
 	);
 	expect(written).toEqual({ _tag: "Reuse", emojiDescription: "😴" });
+	// A draft of 😴, marked 🪞😴, is the Optional one too, with no judge call.
+	const judge = fakeJev({ reading: "c1" });
+	const drafted = await readOnce(click, judge, fakeLuna(), {
+		candidates,
+		optionallyReflexive: ["😴"],
+		drafted: "😴",
+	});
+	expect(drafted).toEqual({ _tag: "Reuse", emojiDescription: "😴" });
+	expect(judge.sent).toEqual([]);
+	// A drafted 😴 is no draft of the 🪞-less Reading without its Optional frame.
+	const unframed = fakeJev({ reading: "NoMatch" });
+	expect(
+		await readOnce(click, unframed, fakeLuna(), {
+			candidates,
+			drafted: "😴",
+		}),
+	).toEqual({ _tag: "New", emojiDescription: "🪞😴" });
+	expect(unframed.stages()).toEqual(["reading"]);
 });
 
 test("a Reading Knowledge has given no frame yet falls back to the 🪞 rule", async () => {

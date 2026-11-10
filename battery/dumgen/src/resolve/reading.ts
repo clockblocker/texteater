@@ -6,9 +6,10 @@
  * - On a Closed Route a Lemma takes its authored Reading with no call, or
  *   jev's pick when it has several, and one dumcorpus authors no Reading of
  *   is a Catalog Miss (ADR 0021).
- * - On an Open Route jev judges first: it sees the Lemma's authored and
- *   stored Emoji Descriptions bare beside the marked Sentence and picks
- *   one or answers NoMatch. Only after NoMatch, or with none to offer,
+ * - On an Open Route jev judges first, unless Luna's draft (below) is one
+ *   of its options: it sees the Lemma's authored and stored Emoji
+ *   Descriptions bare beside the marked Sentence and picks one or answers
+ *   NoMatch. Only after NoMatch, or with none to offer,
  *   does Luna write one, from the marked Sentence and the Canonical Form
  *   alone. An authored set may miss a sense, so its Lemma can gain a New
  *   Reading beside it (#877 R4). Luna writing an offered one takes it: the
@@ -16,8 +17,10 @@
  * - Luna drafts the description in `resolve.grammar`'s Canonical Form
  *   call, or beside jev where code wrote the headword of a Lemma with
  *   nothing stored, so a click needs no second Luna call. The host passes it as
- *   `drafted`, and it stands in for the description Luna would write here:
- *   the judge still runs first over the stored ones.
+ *   `drafted`. A draft that is one of the descriptions the judge would be
+ *   offered settles the Reuse with no judge call; any other draft stands in
+ *   for the description Luna would write here, after the judge's NoMatch
+ *   (ADR 0031).
  * - A host that refused a New as stale passes the description Luna wrote
  *   as `written`: the judge runs again over the current candidates, and a
  *   second NoMatch takes it (ADR 0031).
@@ -484,6 +487,11 @@ export const resolveReading = Effect.fnUntraced(function* (
 		drafted === undefined
 			? undefined
 			: parsedDescription(lemma, withReflexiveMarker(drafted, reflexive));
+	// An offered draft settles the Reuse before the judge: on the stored dev
+	// runs it was right on 1,474 of 1,474, 1,466 of 1,468 and 1,417 of
+	// 1,424 attempts, more precise than the judge (ADR 0031).
+	if (markedDraft !== undefined && isOffered(markedDraft))
+		return answer(markedDraft, "DraftedStored");
 	if (options.length > 0) {
 		const index = yield* pick(ask, "reading", state, options);
 		const picked = index === undefined ? undefined : options[index];

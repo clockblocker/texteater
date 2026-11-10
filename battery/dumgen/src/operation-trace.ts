@@ -65,9 +65,10 @@ export type SentenceOutcome =
  * Unresolved or a Catalog Miss, `UnresolvedUnit` when intake left the unit
  * Unresolved, otherwise the question or check that decided. For
  * `resolve.reading`: what decided its Reuse or New (`Authored`,
- * `AuthoredJudged`, `Judged`, `Written`, `Collision`, `WrittenStored`,
- * `Rejudged`) or its Catalog Miss. The value the host receives carries
- * only the outcome; the evaluation buckets by reason.
+ * `AuthoredJudged`, `DraftedStored`, `Judged`, `Drafted`, `Written`,
+ * `Collision`, `WrittenStored`, `Rejudged`) or its Catalog Miss. The
+ * value the host receives carries only the outcome; the evaluation buckets
+ * by reason.
  */
 export type ResolutionOutcome = {
 	readonly outcome:

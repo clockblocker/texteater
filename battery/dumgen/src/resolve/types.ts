@@ -131,10 +131,11 @@ export type ResolveReadingInput = {
 	 */
 	readonly written?: string;
 	/**
-	 * The Emoji Description `resolve.grammar` drafted for this click. Only
-	 * the judge's NoMatch, or no stored Reading to judge, lets it stand,
-	 * where Luna would otherwise write one; never the stored descriptions
-	 * shaped it (ADR 0031).
+	 * The Emoji Description `resolve.grammar` drafted for this click; never
+	 * the stored descriptions shaped it (ADR 0031). A draft that is one of
+	 * the descriptions the judge would be offered is reused with no judge
+	 * call. Any other stands only after the judge's NoMatch, or with no
+	 * stored Reading to judge, where Luna would otherwise write one.
 	 */
 	readonly drafted?: string;
 };

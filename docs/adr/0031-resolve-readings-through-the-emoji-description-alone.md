@@ -12,14 +12,30 @@ Reading and no Emoji Description, so resolution has nothing to judge or
 generate for it
 ([ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md)).
 
-When a Lemma already has Readings, resolution first offers a judge the stored
-Emoji Descriptions as bare emoji, together with the marked sentence. The judge
-picks one or answers NoMatch. A new description stands only after NoMatch, or
-when nothing is stored. The generator writes it from the marked sentence and
-the Canonical Form alone, and never sees the stored descriptions. If it writes
-one that is already stored, the judge was wrong and the decision is Reuse.
-Both prompts ask the same question, which emoji describes the target's meaning
-here, so a matching output is evidence of the same Reading.
+**A Reading is decided in this order: the generator's draft, then the
+judge, then the generator again.** The generator writes a description from the
+marked sentence and the Canonical Form alone, and never sees the stored
+descriptions. When its draft for the click is one of the descriptions the
+judge would be offered, the decision is Reuse of that Reading, with no judge
+call. Otherwise the judge sees the stored Emoji Descriptions as bare emoji,
+together with the marked sentence, and picks one or answers NoMatch. A new
+description stands only after NoMatch, or when nothing is stored. If the
+generator, asked after NoMatch, writes one that is already stored, the judge
+was wrong and the decision is Reuse. Both prompts ask the same question, which
+emoji describes the target's meaning here, so a matching output is evidence of
+the same Reading.
+
+The draft goes first because a match is more precise than the judge. Over the
+stored dev evaluation runs, an offered description the generator wrote was
+the right Reading on 1,474 of 1,474, 1,466 of 1,468 and 1,417 of 1,424
+attempts, where the judge reused rightly about 95% of the time and wrongly
+about 1%. On live clicks through new texts, the Canonical Form call's draft
+behaved the same: it equalled the stored description only for the same sense.
+It drops the judge call on about 40% of repeat clicks. A draft that matches no
+offered description says nothing, since the generator often labels one sense
+differently from click to click, so the judge still decides then. The owner
+left this call to the implementer on 2026-11-10
+([#1337](https://github.com/clockblocker/texteater/issues/1337)).
 
 **The generator drafts the description in the Canonical Form's Luna call,**
 so a click waits on one Luna call instead of two in a row. That call may start
@@ -34,10 +50,10 @@ and the castle, the rooster and the mother for a lock «Schloss», a tap «Hahn�
 and a nut «Mutter». Written first, it named the sentence's sense
 ([#1165](https://github.com/clockblocker/texteater/issues/1165)). The call
 never carries stored Emoji Descriptions or Readings; its Lemma hints carry
-Canonical Form and Core Features only. The judge runs first over the stored
-descriptions and never sees the draft. Without a usable draft, as on a click
-resumed from its Grammar checkpoint, a standalone generation prompt writes the
-description. Measured, a click spends 1.0–1.8 s on Luna calls, against about
+Canonical Form and Core Features only. The judge never sees the draft. Without
+a usable draft, as on a click resumed from its Grammar checkpoint, the judge
+decides first and a standalone generation prompt writes the description after
+NoMatch. Measured, a click spends 1.0–1.8 s on Luna calls, against about
 1.8 s with the two calls in a row. Where code settles the headword (an
 authored particle or adposition, a conjunction, an adverb in its positive),
 there is no Canonical Form call
@@ -79,6 +95,9 @@ Conventions: see [Emoji Description conventions](../../battery/dumcorpus/docs/re
 - An opaque, dictionary-minted Reading identifier with the emoji as an editable
   label and a gloss shown to the judge, as a linguistics review proposed.
   Rejected: the emoji as semantic identity is the core of Dumling's Reading.
+- The judge first, with the draft standing only after NoMatch. Rejected:
+  the judge is the less precise of the two where the draft matches, and it
+  costs a call.
 - Showing the generator the stored descriptions so it writes a contrasting one.
   Rejected: it complicates the generation prompt and removes the collision
   that exposes a wrong NoMatch.

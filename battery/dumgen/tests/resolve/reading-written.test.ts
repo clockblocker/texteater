@@ -1,6 +1,11 @@
 import { expect, test } from "bun:test";
-import { readOnce, writes } from "./reading-support.js";
-import { fakeJev } from "./support.js";
+import {
+	attestationOf,
+	authoredLemma,
+	readOnce,
+	writes,
+} from "./reading-support.js";
+import { fakeJev, sentenceOf, unitOf } from "./support.js";
 
 // A New refused as stale is judged again (ADR 0031 decision 6, #596).
 
@@ -33,8 +38,9 @@ test("judged again, a pick reuses the Reading stored since, and a written one st
 	expect(jev.sent).toEqual([]);
 });
 
-// The description Grammar's Canonical Form call drafted stands in for
-// Luna's after the judge (ADR 0031).
+// The description Grammar's Canonical Form call drafted: an offered one
+// settles the Reuse before the judge, any other stands in for Luna's after
+// it (ADR 0031).
 
 test("with nothing stored, the drafted description is the New one, with no call", async () => {
 	const jev = fakeJev();
@@ -49,7 +55,44 @@ test("with nothing stored, the drafted description is the New one, with no call"
 	expect(trace?.resolution).toEqual({ outcome: "New", reason: "Drafted" });
 });
 
-test("with stored Readings jev still judges first: its pick is reused and the draft dropped", async () => {
+test("a draft that is a stored description, compared as Dumling parses it, is a Reuse of it with no judge call", async () => {
+	// The judge would pick the other one: it is never asked.
+	const jev = fakeJev({ reading: "c0" });
+	const luna = writes("🧩");
+	const { result, trace } = await readOnce(jev, luna, {
+		candidates: ["🏰", "🕰"],
+		drafted: "🕰️",
+	});
+	expect(result).toEqual({ _tag: "Reuse", emojiDescription: "🕰" });
+	expect(jev.sent).toEqual([]);
+	expect(luna.sent).toEqual([]);
+	expect(trace?.calls).toEqual([]);
+	expect(trace?.resolution).toEqual({
+		outcome: "Reuse",
+		reason: "DraftedStored",
+	});
+});
+
+test("a draft that is an authored description not stored yet takes that Reading as New with no judge call", async () => {
+	const { lemma, readings } = authoredLemma("darum", "ADV");
+	const [, other = ""] = readings;
+	const jev = fakeJev({ reading: "a0" });
+	const { result, trace } = await readOnce(jev, writes("🧩"), {
+		attestation: attestationOf(lemma, { inflectionalFeatures: null }),
+		sentence: sentenceOf("Darum kommt er."),
+		unit: unitOf([0], "Lexeme/ADV"),
+		candidates: [],
+		drafted: other,
+	});
+	expect(result).toEqual({ _tag: "New", emojiDescription: other });
+	expect(jev.sent).toEqual([]);
+	expect(trace?.resolution).toEqual({
+		outcome: "New",
+		reason: "DraftedStored",
+	});
+});
+
+test("with a draft that is none of the stored descriptions jev judges first: its pick is reused and the draft dropped", async () => {
 	const jev = fakeJev({ reading: "c0" });
 	const luna = writes("🧩");
 	const { result } = await readOnce(jev, luna, {
@@ -63,7 +106,7 @@ test("with stored Readings jev still judges first: its pick is reused and the dr
 	expect(luna.sent).toEqual([]);
 });
 
-test("after NoMatch the draft is the New one, and a draft already stored is a Reuse of it", async () => {
+test("after NoMatch a draft the judge was not offered is the New one, with no Luna call", async () => {
 	const noMatch = await readOnce(
 		fakeJev({ reading: "NoMatch" }),
 		writes("🧩"),
@@ -74,13 +117,10 @@ test("after NoMatch the draft is the New one, and a draft already stored is a Re
 	);
 	expect(noMatch.result).toEqual({ _tag: "New", emojiDescription: "🔐" });
 	expect(noMatch.trace?.calls.map(({ stage }) => stage)).toEqual(["reading"]);
-	const collided = await readOnce(
-		fakeJev({ reading: "NoMatch" }),
-		writes("🧩"),
-		{ candidates: ["🏰", "🕰"], drafted: "🕰️" },
-	);
-	expect(collided.result).toEqual({ _tag: "Reuse", emojiDescription: "🕰" });
-	expect(collided.trace?.resolution?.reason).toBe("Collision");
+	expect(noMatch.trace?.resolution).toEqual({
+		outcome: "New",
+		reason: "Drafted",
+	});
 });
 
 test("a stale New judged again keeps the written description over the draft", async () => {
