@@ -135,6 +135,12 @@ compare German `segment.inUnits` against frozen gold.
   unchanged at `dev@36d553aa792208e7`. Held-out runs before it stay
   scored on `heldout@1a69c4258c71f152`. The round was not re-pinned,
   since a re-pin would change the replayed metrics.
+- A seventh refreeze, on 2026-11-10 at 0dad7ef4c, picks up the dev gold
+  authored since 2026-10-03 (#1336): dev is now `dev@bce572fb4ab0c2b4`,
+  1351 cases with 2121 gold units, 81 of them new cases and 14 with
+  changed gold, none removed. It froze dev alone (`freeze --force --only
+  dev`), so held-out stays `heldout@28d4be8d9bcafb00`. Dev runs before it
+  stay scored on `dev@36d553aa792208e7`. The round was not re-pinned.
 - `compare` scores raw runs when `.runs/` has them and falls back to the
   runs' outcomes in `.runs/` otherwise. Outcomes are scored against the
   frozen gold, so `--relabel` needs the raw run. A noise floor under
