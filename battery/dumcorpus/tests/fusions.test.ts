@@ -61,7 +61,7 @@ const duFusions = germanFusions.filter(({ components }) =>
 );
 
 test("a verb + du fusion is its verb's du form without the final t, then te for du (#1338)", () => {
-	expect(duFusions.map(({ form }) => form)).toContain("haste");
+	expect(duFusions.map(({ form }) => form)).toContain("kannste");
 	for (const { form, components } of duFusions) {
 		const [verb, pronoun] = components;
 		expect(verb?.role).toBe("Verb");
@@ -82,6 +82,7 @@ test("no spelling a -te past tense or another word makes is listed as a verb + d
 		"reiste",
 		"wusste",
 		"weißte",
+		"haste",
 		"machte",
 		"hörte",
 		"meinte",

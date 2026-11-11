@@ -142,11 +142,11 @@ const whole = (text: string): Plan => ({
 
 /**
  * What the Fusion plan says the written word holds, by its pieces' roles:
- * a preposition and its article (im), or a verb and du (haste, #1338).
+ * a preposition and its article (im), or a verb and du (kannste, #1338).
  */
 function fusionUse(roles: readonly FusionRole[]): string {
 	if (roles.join(" ") === "Verb Pronoun")
-		return "The German written word holds a finite verb and the pronoun du after it, as spoken German writes them (haste is hast du)";
+		return "The German written word holds a finite verb and the pronoun du after it, as spoken German writes them (kannste is kannst du)";
 	return "The German written word holds a preposition and its article";
 }
 

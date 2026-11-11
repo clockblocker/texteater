@@ -22,7 +22,7 @@ export type Piece = {
 	/**
 	 * The spelling every inventory lookup reads (an auxiliary, a modal, a
 	 * pronoun, a particle): the word a fused verb or pronoun stands for, so
-	 * `Has` and `te` of `Haste` read as `hast` and `du` (#1338), else its
+	 * `Bis` and `te` of `Biste` read as `bist` and `du` (#1338), else its
 	 * letters. A fused preposition or article piece keeps its letters, since
 	 * its readers read its fused word (`isArticle`, `isAdposition`).
 	 */

@@ -2,7 +2,7 @@
  * German fusion, clitic and abbreviation data (Dumgen ADR 0004, issue 498),
  * which Dumgen's Segment stage cuts with. Reviewed data: the eight standard
  * preposition-article fusions, the Duden-listed colloquial ones, the spoken
- * verb + du fusions (haste, #1338), the apostrophe clitics, and the
+ * verb + du fusions (kannste, #1338), the apostrophe clitics, and the
  * abbreviation table. One-liners are
  * learner-facing German, like authored Knowledge definitions.
  *
@@ -92,7 +92,7 @@ const fusion = (
 
 /**
  * A spoken verb + du fusion: the verb's second person without its final t,
- * then te for „du“ (haste is has + te, „hast du“). Its first piece stands
+ * then te for „du“ (kannste is kanns + te, „kannst du“). Its first piece stands
  * for the finite verb and its second for the pronoun.
  */
 const duFusion = (verb: string, example: string): GermanDuFusion => {
@@ -115,14 +115,12 @@ const duFusion = (verb: string, example: string): GermanDuFusion => {
  * are also past-tense endings: a spelling is listed only when it is no other
  * form of a German word a reader meets. musste (musst du) is the past of
  * müssen, so it is never listed, nor sollte, hasste, küsste, reiste or
- * wusste. weißte (weißt du) is left out too: it is the past
- * of weißen (Er weißte die Wand). haste stays in although ich haste is the
- * first person of the elevated hasten, which a reader of today's text all but
- * never meets; the Segment stage's Choice still keeps a word whole that jev
- * reads as one.
+ * wusste. weißte (weißt du) is the past of weißen (Er weißte die Wand), and
+ * haste (hast du) the first person and imperative of hasten (Ich haste zum
+ * Zug), so neither is listed: jev's Segment Choice cut ich haste as hast du
+ * at 0.63 to 0.87, even when the question named hasten (#1341).
  */
 const duFusions: readonly GermanDuFusion[] = [
-	duFusion("hast", "Haste das gesehen?"),
 	duFusion("bist", "Biste müde?"),
 	duFusion("kannst", "Kannste mir helfen?"),
 	duFusion("willst", "Willste mitkommen?"),
