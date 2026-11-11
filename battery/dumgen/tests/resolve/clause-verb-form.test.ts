@@ -120,3 +120,96 @@ test("a modal spelled like its infinitive, or one past a comma, leaves the form 
 		inflectionalFeatures: { verbForm: "Fin" },
 	});
 });
+
+// The open verbs that govern a bare infinitive (#1342) count as a modal
+// does, in a VERB unit of the clause.
+
+test("beside a finite form of lassen, gehen or lernen in its clause a verb jev reads as finite is an infinitive", async () => {
+	// Sie0 _1 lässt2 _3 die4 _5 Kinder6 _7 spielen8 .9
+	const kept = await clicked(
+		"Sie lässt die Kinder spielen.",
+		[
+			[[0], "Lexeme/PRON"],
+			[[2], "Lexeme/VERB"],
+			[[4, 6], "Lexeme/NOUN"],
+			[[8], "Lexeme/VERB"],
+		],
+		3,
+	);
+	expect(kept.surface).toMatchObject({
+		inflectionalFeatures: { verbForm: "Inf", mood: null, tense: null },
+	});
+	// Sie0 _1 geht2 _3 einkaufen4 .5
+	const gone = await clicked(
+		"Sie geht einkaufen.",
+		[
+			[[0], "Lexeme/PRON"],
+			[[2], "Lexeme/VERB"],
+			[[4], "Lexeme/VERB"],
+		],
+		2,
+	);
+	expect(gone.surface).toMatchObject({
+		inflectionalFeatures: { verbForm: "Inf" },
+	});
+	// Bald0 _1 lernte2 _3 er4 _5 schwimmen6 .7
+	const learnt = await clicked(
+		"Bald lernte er schwimmen.",
+		[
+			[[0], "Lexeme/ADV"],
+			[[2], "Lexeme/VERB"],
+			[[4], "Lexeme/PRON"],
+			[[6], "Lexeme/VERB"],
+		],
+		3,
+	);
+	expect(learnt.surface).toMatchObject({
+		inflectionalFeatures: { verbForm: "Inf" },
+	});
+});
+
+test("a governor's form in no VERB unit, a governor spelled like its infinitive, or one in a coordinated clause leaves the form to jev", async () => {
+	// Sie0 _1 suchten2 _3 eine4 _5 Bleibe6 .7: die Bleibe is a noun.
+	const lodging = await clicked(
+		"Sie suchten eine Bleibe.",
+		[
+			[[0], "Lexeme/PRON"],
+			[[2], "Lexeme/VERB"],
+			[[4, 6], "Lexeme/NOUN"],
+		],
+		1,
+	);
+	expect(lodging.surface).toMatchObject({
+		inflectionalFeatures: { verbForm: "Fin" },
+	});
+	expect(lodging.asked).toContain("verbForm");
+	// Sie0 _1 gehen2 _3 schwimmen4 .5: gehen may be the infinitive itself.
+	const plural = await clicked(
+		"Sie gehen schwimmen.",
+		[
+			[[0], "Lexeme/PRON"],
+			[[2], "Lexeme/VERB"],
+			[[4], "Lexeme/VERB"],
+		],
+		2,
+	);
+	expect(plural.surface).toMatchObject({
+		inflectionalFeatures: { verbForm: "Fin" },
+	});
+	// Er0 _1 geht2 _3 und4 _5 sie6 _7 warten8 .9: und opens a clause of its own.
+	const coordinated = await clicked(
+		"Er geht und sie warten.",
+		[
+			[[0], "Lexeme/PRON"],
+			[[2], "Lexeme/VERB"],
+			[[4], "Lexeme/CCONJ"],
+			[[6], "Lexeme/PRON"],
+			[[8], "Lexeme/VERB"],
+		],
+		4,
+	);
+	expect(coordinated.surface).toMatchObject({
+		inflectionalFeatures: { verbForm: "Fin" },
+	});
+	expect(coordinated.asked).toContain("verbForm");
+});

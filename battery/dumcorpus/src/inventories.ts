@@ -65,6 +65,7 @@ export {
 	germanArticleSpellings,
 } from "./inventories/de/article-cells.js";
 export { auxiliarySurfaceFeatures } from "./inventories/de/auxiliary-surface-features.js";
+export { germanBareInfinitiveGovernors } from "./inventories/de/bare-infinitive-governors.js";
 export {
 	closedVerbForms,
 	closedVerbParticiples,
