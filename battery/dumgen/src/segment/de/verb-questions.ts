@@ -24,7 +24,7 @@ export const asksPerfectAuxiliary = (
 ) =>
 	flag.family === "state" &&
 	seinForms.has(
-		nomination.sentence.pieces[flag.piece - 1]?.text.toLowerCase() ?? "",
+		nomination.sentence.pieces[flag.piece - 1]?.word.toLowerCase() ?? "",
 	);
 
 /**

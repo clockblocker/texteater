@@ -37,12 +37,12 @@ export function keptApart(
 			? nomination.sentence.pieces[only - 1]
 			: undefined;
 	if (!piece) return false;
-	const word = piece.text.toLowerCase();
+	const word = piece.word.toLowerCase();
 	return (
 		word === "nicht" ||
 		modalForms.has(word) ||
 		(!reflexiveForms.has(foldedText(piece)) &&
-			nomination.inventory.identityCandidates(piece.text).length > 0)
+			nomination.inventory.identityCandidates(piece.word).length > 0)
 	);
 }
 

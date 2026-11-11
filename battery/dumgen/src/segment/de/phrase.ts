@@ -163,6 +163,6 @@ export function opensPhrase(
 		isArticle(next) ||
 		nounLike(next) ||
 		/^\p{N}/u.test(next.text) ||
-		inventory.identityCandidates(next.text).length > 0
+		inventory.identityCandidates(next.word).length > 0
 	);
 }

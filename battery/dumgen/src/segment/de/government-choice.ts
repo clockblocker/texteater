@@ -128,7 +128,7 @@ function phraseOf(nomination: Nomination, piece: Piece): readonly number[] {
 		if (
 			nounLike(next) ||
 			/^\p{N}/u.test(next.text) ||
-			personalPronouns.has(next.text.toLowerCase())
+			personalPronouns.has(next.word.toLowerCase())
 		)
 			return ids;
 	}
@@ -345,7 +345,7 @@ export function withGovernmentChoice(
 	const literal = new Set<number>();
 	const joins: AssembledEdge[] = [];
 	const { pieces } = nomination.sentence;
-	const spelled = (id: number) => pieces[id - 1]?.text.toLowerCase();
+	const spelled = (id: number) => pieces[id - 1]?.word.toLowerCase();
 	const siblings = fusedSiblings(nomination.sentence);
 	// A settled duel decides its prepositions with that host before any other answer.
 	const settled = new Set<string>();

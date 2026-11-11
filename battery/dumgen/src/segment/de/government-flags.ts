@@ -35,7 +35,7 @@ export type GovernmentFlag = {
 	readonly rivals?: readonly number[];
 };
 
-const lower = (piece: Piece) => piece.text.toLowerCase();
+const lower = (piece: Piece) => piece.word.toLowerCase();
 
 /** The share a satellite's host needs: production's satellite floor. */
 const satelliteFloor = 0.5;
@@ -179,7 +179,7 @@ export function flaggedPrepositions(
 	// A host spelled the same and nearer the preposition may be its governor (Danke, danke für).
 	const firstFlags = [...flags.values()];
 	for (const { piece, host } of firstFlags) {
-		const text = pieces[host - 1]?.text.toLowerCase();
+		const text = pieces[host - 1]?.word.toLowerCase();
 		for (const twin of pieces)
 			if (
 				twin.id !== host &&
@@ -192,7 +192,7 @@ export function flaggedPrepositions(
 	// ADR 0034: a Preposition complement appears once in a frame.
 	const byHost = new Map<string, number[]>();
 	for (const { piece, host } of flags.values()) {
-		const key = `${host},${pieces[piece - 1]?.text.toLowerCase()}`;
+		const key = `${host},${pieces[piece - 1]?.word.toLowerCase()}`;
 		byHost.set(key, [...(byHost.get(key) ?? []), piece]);
 	}
 	const duels: GovernmentFlag[] = [];

@@ -35,6 +35,7 @@ import {
 import {
 	abbreviationEntry,
 	cliticEntry,
+	type FusionRole,
 	fusedWordSegments,
 	leadingAbbreviation,
 	leadingFreeClitic,
@@ -138,6 +139,16 @@ const whole = (text: string): Plan => ({
 	description:
 		"One intact word, name, initialism, literal spelling or Foreign word as written, with no German Fusion or shortened spelling to expand",
 });
+
+/**
+ * What the Fusion plan says the written word holds, by its pieces' roles:
+ * a preposition and its article (im), or a verb and du (haste, #1338).
+ */
+function fusionUse(roles: readonly FusionRole[]): string {
+	if (roles.join(" ") === "Verb Pronoun")
+		return "The German written word holds a finite verb and the pronoun du after it, as spoken German writes them (haste is hast du)";
+	return "The German written word holds a preposition and its article";
+}
 
 /** Where a run stands in its Sentence: the text before and after it. */
 type Context = { readonly before: string; readonly after: string };
@@ -261,8 +272,7 @@ function plansFor(text: string, context: Context): readonly Plan[] {
 		const plan: Plan = {
 			key: "Fusion",
 			segments: fusion.map(({ text, surface }) => spelled(text, surface)),
-			description:
-				"The German written word holds a preposition and its article",
+			description: fusionUse(fusion.map(({ role }) => role)),
 		};
 		if (text.toLowerCase() === "am") {
 			if (amBeforeSuperlative(context.after)) return [whole(text)];

@@ -57,6 +57,7 @@ const piece = (id: number, text: string): Piece => ({
 	segment: 2 * (id - 1),
 	text,
 	surface: text,
+	word: text,
 	clause: 0,
 });
 

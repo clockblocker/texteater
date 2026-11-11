@@ -34,7 +34,7 @@ import type { RouteKey } from "./routes.js";
 import type { FixedRoute } from "./routing.js";
 import type { Piece } from "./sentence.js";
 
-const lower = (piece: Piece) => piece.text.toLowerCase();
+const lower = (piece: Piece) => piece.word.toLowerCase();
 
 const accepted = (nomination: Nomination) => {
 	const pairs: [number, number, string][] = nomination.accepted.map(
@@ -153,7 +153,7 @@ export function anchors(nomination: Nomination): Decision {
 					named.get(`${left},${right}`) ?? ""
 				] ?? []) {
 					const at = ids.find(
-						(id) => pieces[id - 1]?.text.toLowerCase() === anchor,
+						(id) => pieces[id - 1]?.word.toLowerCase() === anchor,
 					);
 					const following = at === undefined ? undefined : pieces[at];
 					if (following && lower(following) === next)
@@ -214,7 +214,7 @@ function quantifierPairs(
 			(quantityBisschen.has(word) && isArticle(before)) ||
 			(word === "wenig" && lower(before) === "ein") ||
 			// Capitalized Paar is the noun 'pair' (ein Paar Schuhe).
-			(piece.text === "paar" && lower(before) === "ein")
+			(piece.word === "paar" && lower(before) === "ein")
 		)
 			pairs.push([before.id, piece.id]);
 	}
@@ -241,7 +241,7 @@ export function quantifierRoutes(nomination: Nomination): FixedRoute {
 	const fixed = new Set([
 		...quantifierPairs(nomination).map((pair) => groupKey(pair)),
 		...pieces
-			.filter((piece) => quantityBisschen.has(piece.text))
+			.filter((piece) => quantityBisschen.has(piece.word))
 			.map((piece) => groupKey([piece.id])),
 	]);
 	return (group) => (fixed.has(groupKey(group)) ? "Lexeme/PRON" : undefined);
@@ -394,7 +394,7 @@ export function articleHeadRoutes(nomination: Nomination): FixedRoute {
 	const pronoun = (id: number) =>
 		displaced.has(id) &&
 		nomination.inventory
-			.identityCandidates(pieces[id - 1]?.text ?? "")
+			.identityCandidates(pieces[id - 1]?.word ?? "")
 			.some((candidate) => candidate.kind === "PRON");
 	return (group) => {
 		const [only] = group;

@@ -6,7 +6,9 @@
  * 0007); the stage's output names Segments by index.
  */
 import type { EntryType } from "@typesafe-ai/sdk";
+import { fusedPieceAt } from "../fusion-table.js";
 import type { Segment } from "../segmented-sentence.js";
+import { germanFusionTable } from "./fusion-entries.js";
 import { unitGuide } from "./unit-guide.js";
 
 export type Piece = {
@@ -17,6 +19,14 @@ export type Piece = {
 	readonly text: string;
 	/** The word it stands for: `dem` for the `m` of `im`, else its text. */
 	readonly surface: string;
+	/**
+	 * The spelling every inventory lookup reads (an auxiliary, a modal, a
+	 * pronoun, a particle): the word a fused verb or pronoun stands for, so
+	 * `Has` and `te` of `Haste` read as `hast` and `du` (#1338), else its
+	 * letters. A fused preposition or article piece keeps its letters, since
+	 * its readers read its fused word (`isArticle`, `isAdposition`).
+	 */
+	readonly word: string;
 	/** The whole written word when the piece is one part of a fused word. */
 	readonly fusedWord?: string;
 	/** Clauses are split at punctuation; used only for candidate windows. */
@@ -41,11 +51,15 @@ export function sentenceOf(input: {
 		if (segment.kind === "Punctuation" && clauseBreak.test(segment.text))
 			clause++;
 		if (segment.kind !== "ResolvableText") continue;
+		const surface = segment.surface ?? segment.text;
+		const role = fusedPieceAt(germanFusionTable, segments, index)?.role;
 		pieces.push({
 			id: pieces.length + 1,
 			segment: index,
 			text: segment.text,
-			surface: segment.surface ?? segment.text,
+			surface,
+			word:
+				role === "Verb" || role === "Pronoun" ? surface : segment.text,
 			clause,
 		});
 	}

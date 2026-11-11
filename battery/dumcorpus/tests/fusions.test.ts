@@ -55,3 +55,36 @@ test("a clitic carries its apostrophe, and an abbreviation ends with a dot", () 
 	for (const { clitic } of germanClitics) expect(clitic).toStartWith("'");
 	for (const { text } of germanAbbreviations) expect(text).toEndWith(".");
 });
+
+const duFusions = germanFusions.filter(({ components }) =>
+	components.some(({ role }) => role === "Pronoun"),
+);
+
+test("a verb + du fusion is its verb's du form without the final t, then te for du (#1338)", () => {
+	expect(duFusions.map(({ form }) => form)).toContain("haste");
+	for (const { form, components } of duFusions) {
+		const [verb, pronoun] = components;
+		expect(verb?.role).toBe("Verb");
+		expect(verb?.surface).toMatch(/st$/u);
+		expect(verb?.span).toBe(verb?.surface.slice(0, -1));
+		expect(pronoun).toEqual({ span: "te", surface: "du", role: "Pronoun" });
+		expect(form).toBe(`${verb?.span}te`);
+	}
+});
+
+test("no spelling a -te past tense or another word makes is listed as a verb + du fusion (#1338)", () => {
+	const forms = new Set(germanFusions.map(({ form }) => form));
+	for (const taken of [
+		"musste",
+		"sollte",
+		"hasste",
+		"küsste",
+		"reiste",
+		"wusste",
+		"weißte",
+		"machte",
+		"hörte",
+		"meinte",
+	])
+		expect(forms.has(taken)).toBe(false);
+});

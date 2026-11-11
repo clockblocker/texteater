@@ -17,7 +17,7 @@ import { governorShares, opensPhrase } from "./phrase.js";
 import type { FixedRoute } from "./routing.js";
 import type { Piece } from "./sentence.js";
 
-const lower = (piece: Piece) => piece.text.toLowerCase();
+const lower = (piece: Piece) => piece.word.toLowerCase();
 
 /** The share a satellite's host needs: production's satellite floor. */
 const satelliteFloor = 0.5;
@@ -242,7 +242,7 @@ export function infixedZu(nomination: Nomination): Decision {
 			run.length !== 3 ||
 			first === undefined ||
 			last === undefined ||
-			nomination.sentence.pieces[(middle ?? 0) - 1]?.text !== "zu"
+			nomination.sentence.pieces[(middle ?? 0) - 1]?.word !== "zu"
 		)
 			continue;
 		add.push([first, last]);

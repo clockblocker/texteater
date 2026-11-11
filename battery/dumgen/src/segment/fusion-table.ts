@@ -23,6 +23,9 @@ type FusionComponent = {
 		| "Host";
 };
 
+/** What a fused word's piece is: a preposition, an article, a verb, … */
+export type FusionRole = FusionComponent["role"];
+
 /** A closed fusion: one fixed spelling whose components are known. */
 type FusionEntry = {
 	readonly form: string;
@@ -194,7 +197,13 @@ function fusedWordPieces(entry: FusionEntry, text: string): readonly string[] {
 export function fusedWordSegments(
 	table: FusionTable,
 	text: string,
-): readonly { readonly text: string; readonly surface?: string }[] | undefined {
+):
+	| readonly {
+			readonly text: string;
+			readonly surface?: string;
+			readonly role: FusionRole;
+	  }[]
+	| undefined {
 	const fusion = fusionEntry(table, text);
 	if (!fusion) return undefined;
 	const pieces = fusedWordPieces(fusion, text);
@@ -205,6 +214,7 @@ export function fusedWordSegments(
 			...(surface !== undefined && others.length === 0
 				? { surface }
 				: {}),
+			role: component.role,
 		};
 	});
 }
@@ -296,6 +306,8 @@ export type FusedPiece = {
 		readonly surfaces: readonly string[];
 	}[];
 	readonly component: number;
+	/** The piece's role in a table fusion; undefined for a clitic's pieces. */
+	readonly role?: FusionRole;
 };
 
 const fold = (table: FusionTable, text: string) =>
@@ -374,15 +386,16 @@ export function fusedPieceAt(
 	index: number,
 ): FusedPiece | undefined {
 	const run = fusedRunAt(table, segments, index);
-	return (
-		run && {
-			pieces: run.spans.map((span, position) => ({
-				span,
-				surfaces: run.surfaces[position] ?? [],
-			})),
-			component: index - run.start,
-		}
-	);
+	if (!run) return undefined;
+	const role = run.fusion?.components[index - run.start]?.role;
+	return {
+		pieces: run.spans.map((span, position) => ({
+			span,
+			surfaces: run.surfaces[position] ?? [],
+		})),
+		component: index - run.start,
+		...(role ? { role } : {}),
+	};
 }
 
 /**

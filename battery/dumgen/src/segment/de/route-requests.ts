@@ -91,7 +91,7 @@ function routeQuestions(
 		if (single && only !== undefined) {
 			const piece = sentence.pieces[only - 1];
 			const candidates = piece
-				? inventory.identityCandidates(piece.text)
+				? inventory.identityCandidates(piece.word)
 				: [];
 			if (piece) {
 				// Rule de/adjective-stays-adj: a word that can inflect as an
@@ -182,7 +182,7 @@ function readRoutes(
 			continue;
 		const piece = sentence.pieces[(only ?? 0) - 1];
 		const candidates = piece
-			? inventory.identityCandidates(piece.text)
+			? inventory.identityCandidates(piece.word)
 			: [];
 		const picked = choiceOf(answers, id);
 		picks.set(groupKey(group), {

@@ -101,7 +101,7 @@ export type VerbFlag = {
 	readonly host: number;
 };
 
-const lower = (piece: Piece) => piece.text.toLowerCase();
+const lower = (piece: Piece) => piece.word.toLowerCase();
 
 /** The spellings of one authored AUX Lemma. */
 const auxiliaryForms = (lemma: string): ReadonlySet<string> =>
@@ -342,7 +342,7 @@ function actionOf(
 			const haben = (closedVerbForms.haben ?? []).includes(
 				nomination.sentence.pieces[
 					flag.piece - 1
-				]?.text.toLowerCase() ?? "",
+				]?.word.toLowerCase() ?? "",
 			);
 			// haben with a reflexive of its subject in its clause reports
 			// the event: the participle can't describe a state the subject

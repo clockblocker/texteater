@@ -1,8 +1,9 @@
 /**
  * German fusion, clitic and abbreviation data (Dumgen ADR 0004, issue 498),
  * which Dumgen's Segment stage cuts with. Reviewed data: the eight standard
- * preposition-article fusions, the Duden-listed colloquial ones, the
- * apostrophe clitics, and the abbreviation table. One-liners are
+ * preposition-article fusions, the Duden-listed colloquial ones, the spoken
+ * verb + du fusions (haste, #1338), the apostrophe clitics, and the
+ * abbreviation table. One-liners are
  * learner-facing German, like authored Knowledge definitions.
  *
  * The types are plain data; Dumgen's fusion table reads these entries as its
@@ -16,7 +17,7 @@ type Surfaces = string | readonly [string, string, ...string[]];
 type FusionComponent = {
 	readonly span: string;
 	readonly surface: string;
-	readonly role: "Adposition" | "Article";
+	readonly role: "Adposition" | "Article" | "Verb" | "Pronoun";
 };
 
 /**
@@ -29,13 +30,23 @@ type GermanArticleComponent = {
 };
 
 /** A preposition and a definite article written as one word. */
-type GermanFusion = {
+type GermanArticleFusion = {
 	readonly form: string;
 	readonly components: readonly [FusionComponent, FusionComponent];
 	readonly oneLiner: string;
 	readonly register: Register;
 	readonly article: GermanArticleComponent;
 };
+
+/** A finite verb and the pronoun du after it written as one word (haste). */
+type GermanDuFusion = {
+	readonly form: string;
+	readonly components: readonly [FusionComponent, FusionComponent];
+	readonly oneLiner: string;
+	readonly register: Register;
+};
+
+type GermanFusion = GermanArticleFusion | GermanDuFusion;
 
 /** An apostrophe clitic: the clitic Segment, apostrophe included. */
 type GermanClitic = {
@@ -68,7 +79,7 @@ const fusion = (
 	grammaticalCase: GermanArticleComponent["case"],
 	oneLiner: string,
 	register: Register = "Standard",
-): GermanFusion => ({
+): GermanArticleFusion => ({
 	form,
 	components: [
 		{ span: adposition[0], surface: adposition[1], role: "Adposition" },
@@ -78,6 +89,53 @@ const fusion = (
 	register,
 	article: { case: grammaticalCase },
 });
+
+/**
+ * A spoken verb + du fusion: the verb's second person without its final t,
+ * then te for „du“ (haste is has + te, „hast du“). Its first piece stands
+ * for the finite verb and its second for the pronoun.
+ */
+const duFusion = (verb: string, example: string): GermanDuFusion => {
+	const span = verb.slice(0, -1);
+	const form = `${span}te`;
+	return {
+		form,
+		components: [
+			{ span, surface: verb, role: "Verb" },
+			{ span: "te", surface: "du", role: "Pronoun" },
+		],
+		oneLiner: `„${form}“ ist umgangssprachlich „${verb} du“: Verb und Pronomen, zu einem Wort verschmolzen (${example}).`,
+		register: "Colloquial",
+	};
+};
+
+/**
+ * Verb + du fusions of spoken German and its written dialogue (Duden lists
+ * haste as umgangssprachlich). No pattern rule finds them, since -ste and -te
+ * are also past-tense endings: a spelling is listed only when it is no other
+ * form of a German word a reader meets. musste (musst du) is the past of
+ * müssen, so it is never listed, nor sollte, hasste, küsste, reiste or
+ * wusste. weißte (weißt du) is left out too: it is the past
+ * of weißen (Er weißte die Wand). haste stays in although ich haste is the
+ * first person of the elevated hasten, which a reader of today's text all but
+ * never meets; the Segment stage's Choice still keeps a word whole that jev
+ * reads as one.
+ */
+const duFusions: readonly GermanDuFusion[] = [
+	duFusion("hast", "Haste das gesehen?"),
+	duFusion("bist", "Biste müde?"),
+	duFusion("kannst", "Kannste mir helfen?"),
+	duFusion("willst", "Willste mitkommen?"),
+	duFusion("siehst", "Siehste, ich hatte recht."),
+	duFusion("kommst", "Kommste heute?"),
+	duFusion("gehst", "Gehste mit?"),
+	duFusion("machst", "Was machste da?"),
+	duFusion("glaubst", "Glaubste das?"),
+	duFusion("meinst", "Meinste wirklich?"),
+	duFusion("darfst", "Darfste das?"),
+	duFusion("wirst", "Wirste schon sehen."),
+	duFusion("hörst", "Hörste mich?"),
+];
 
 /** Preposition plus definite article written as one word. */
 export const germanFusions: readonly GermanFusion[] = [
@@ -235,6 +293,7 @@ export const germanFusions: readonly GermanFusion[] = [
 		"„vorm“ ist umgangssprachlich „vor dem“ (vorm Fenster).",
 		"Colloquial",
 	),
+	...duFusions,
 ];
 
 /**

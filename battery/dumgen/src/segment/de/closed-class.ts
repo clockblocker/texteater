@@ -208,7 +208,7 @@ export const fixed: Readonly<Record<string, RouteKey>> = {
 	mitnichten: "Lexeme/ADV",
 };
 
-const spelling = (piece: Piece) => piece.text.toLowerCase();
+const spelling = (piece: Piece) => piece.word.toLowerCase();
 
 export function closedClassQuestion(
 	piece: Piece,

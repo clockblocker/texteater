@@ -1,5 +1,5 @@
 {
-	"current": "2026-11-10-1340",
+	"current": "2026-11-11-1341",
 	"rounds": [
 		{
 			"id": "2026-10-02-5usd",
@@ -191,6 +191,24 @@
 					"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
 				},
 				"at": "2026-11-10T20:29:03.888Z"
+			},
+			"repins": []
+		},
+		{
+			"id": "2026-11-11-1341",
+			"opened": "2026-11-11",
+			"note": "#1341 (map #1323): verb + du fusions (#1338), the particle slot rewording (#1156), the governed-or-place rewording (#1335), the adverb-or-adjective test (#1340) and dropping the per-span Saying question (#1324), each scored on dev alone from the per-question cache with fresh jev only for the questions a change rewords. The main session granted 9,047,619 fresh jev input tokens; no held-out run, no Luna.",
+			"capTokens": 9047619,
+			"stopLineTokens": 9047619,
+			"pin": {
+				"dumcorpusCommit": "eb8f2ef822ac1794cbbbcbe97525e3e77f8f2341",
+				"dumcorpusDirty": true,
+				"hash": "0730c0f32ced76a0ec23eb864b931e955e04848415009304f6b1f46cd0f70f56",
+				"inputs": {
+					"inventories": "a2a7274fad68072c9b30a5913b521972f09ad2f295e96f6f6a6b1d18bfb2f40b",
+					"rules": "0ba5bae9f189df67ad9d3416d2e443522d6df605bdb18313e356053a18824a06"
+				},
+				"at": "2026-11-11T05:29:51.438Z"
 			},
 			"repins": []
 		}

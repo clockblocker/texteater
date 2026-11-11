@@ -228,9 +228,9 @@ export const expletiveForms: ReadonlySet<string> = new Set([
 
 /** A piece's text in lowercase, a typographic apostrophe as `'` (’ne, Geht’s). */
 export const foldedText = (piece: Piece) =>
-	foldApostrophes(piece.text.toLowerCase());
+	foldApostrophes(piece.word.toLowerCase());
 
-const lower = (piece: Piece) => piece.text.toLowerCase();
+const lower = (piece: Piece) => piece.word.toLowerCase();
 const window = (
 	sentence: Sentence,
 	piece: Piece,
