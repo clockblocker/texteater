@@ -43,6 +43,7 @@ import {
 } from "../fusion-table.js";
 import type { Segment } from "../segmented-sentence.js";
 import { stitchedText } from "../stitched-text.js";
+import { besideAnotherSubject } from "./fused-du.js";
 import { germanFusionTable, germanInfixParticles } from "./fusion-entries.js";
 
 /** One complete way to cut a written run into Segments and recover them. */
@@ -269,6 +270,11 @@ function dottedShortWord(found: string, rest: string): string | undefined {
 function plansFor(text: string, context: Context): readonly Plan[] {
 	const fusion = fusedWordSegments(germanFusionTable, text);
 	if (fusion) {
+		if (
+			fusion.some(({ role }) => role === "Pronoun") &&
+			besideAnotherSubject(context.before, context.after)
+		)
+			return [whole(text)];
 		const plan: Plan = {
 			key: "Fusion",
 			segments: fusion.map(({ text, surface }) => spelled(text, surface)),

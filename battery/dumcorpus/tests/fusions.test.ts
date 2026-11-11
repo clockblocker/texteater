@@ -82,7 +82,6 @@ test("no spelling a -te past tense or another word makes is listed as a verb + d
 		"reiste",
 		"wusste",
 		"weißte",
-		"haste",
 		"machte",
 		"hörte",
 		"meinte",

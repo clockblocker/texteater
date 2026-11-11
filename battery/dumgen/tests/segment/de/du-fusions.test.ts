@@ -66,10 +66,29 @@ test("the question names a verb and du for a verb fusion, and keeps im's wording
 	);
 });
 
+test("haste is hast du unless a subject of its own stands beside it (#1338)", () => {
+	expect(resolvable(cut("Haste das gesehen?")).slice(0, 2)).toEqual([
+		{ kind: "ResolvableText", text: "Has", surface: "hast" },
+		{ kind: "ResolvableText", text: "te", surface: "du" },
+	]);
+	// sie may be the object, so it does not keep the word whole.
+	expect(resolvable(cut("Haste sie gesehen?"))[1]).toEqual({
+		kind: "ResolvableText",
+		text: "te",
+		surface: "du",
+	});
+	for (const text of ["Ich haste nach Hause.", "Dann haste ich los."]) {
+		expect(prepareGermanSegments(text).questions).toEqual({});
+		expect(resolvable(cut(text)).map(({ text }) => text)).toContain(
+			"haste",
+		);
+	}
+});
+
 const noCall: Ask = () =>
 	Effect.die(Error("No written word here should be asked about"));
 
-test("a past tense in -ste or -te, weißte and haste are no fusion: they are never asked about and stay whole (#1338)", async () => {
+test("a past tense in -ste or -te, weißte, and haste beside its own subject are no fusion: they are never asked about and stay whole (#1338)", async () => {
 	const text =
 		"Er musste gehen, sie sollte bleiben, er hasste und küsste sie, sie reiste ab und wusste es, er weißte die Wand, ich haste nach Hause.";
 	const sentence = await Effect.runPromise(

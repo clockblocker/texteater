@@ -115,12 +115,15 @@ const duFusion = (verb: string, example: string): GermanDuFusion => {
  * are also past-tense endings: a spelling is listed only when it is no other
  * form of a German word a reader meets. musste (musst du) is the past of
  * müssen, so it is never listed, nor sollte, hasste, küsste, reiste or
- * wusste. weißte (weißt du) is the past of weißen (Er weißte die Wand), and
- * haste (hast du) the first person and imperative of hasten (Ich haste zum
- * Zug), so neither is listed: jev's Segment Choice cut ich haste as hast du
- * at 0.63 to 0.87, even when the question named hasten (#1341).
+ * wusste, nor weißte (weißt du), the past of weißen (Er weißte die Wand).
+ * haste (hast du) is also the first person of hasten (Ich haste zum Zug),
+ * which jev's Segment Choice cut as hast du at 0.63 to 0.87 (#1341). It is
+ * listed all the same, as the most frequent of them: a reader of the
+ * inventory must keep it whole beside a subject of its own (ich, er, wir,
+ * man), which a word that holds du never has.
  */
 const duFusions: readonly GermanDuFusion[] = [
+	duFusion("hast", "Haste das gesehen?"),
 	duFusion("bist", "Biste müde?"),
 	duFusion("kannst", "Kannste mir helfen?"),
 	duFusion("willst", "Willste mitkommen?"),
