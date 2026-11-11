@@ -1,0 +1,226 @@
+{
+	"recordedFrom": {
+		"run": "20261002T075303--candidates4--final-1_closed-1--dev--all",
+		"set": "dev@adb64b2bdaf31f4f",
+		"model": "jev-1.13.0",
+		"policy": "step0+saying+maxim@0.7+closed",
+		"repetition": 0
+	},
+	"case": "de/zeit-ist-geld",
+	"text": "Zeit ist Geld.",
+	"calls": [
+		{
+			"stage": "candidates",
+			"answers": {
+				"s_idiom_1": {
+					"type": "choice",
+					"choice": "none",
+					"confidence": 0.83,
+					"probabilities": {
+						"p2": 0.09,
+						"none": 0.91
+					}
+				},
+				"s_auxiliary_2": {
+					"type": "choice",
+					"choice": "none",
+					"confidence": 0.97,
+					"probabilities": {
+						"none": 0.98,
+						"p3": 0.02,
+						"p1": 0
+					}
+				},
+				"s_idiom_3": {
+					"type": "choice",
+					"choice": "none",
+					"confidence": 0.82,
+					"probabilities": {
+						"p2": 0.09,
+						"none": 0.91
+					}
+				},
+				"f_1": {
+					"type": "noul",
+					"noul": 0.73
+				},
+				"f_2": {
+					"type": "noul",
+					"noul": 0.68
+				},
+				"f_3": {
+					"type": "noul",
+					"noul": 0.75
+				},
+				"y_1_2_3": {
+					"type": "noul",
+					"noul": 0.91
+				}
+			}
+		},
+		{
+			"stage": "expressions",
+			"answers": {
+				"e_1_2": {
+					"type": "noul",
+					"noul": 0.57
+				},
+				"e_1_3": {
+					"type": "noul",
+					"noul": 0.79
+				},
+				"e_2_3": {
+					"type": "noul",
+					"noul": 0.56
+				}
+			}
+		},
+		{
+			"stage": "final",
+			"answers": {
+				"s4_idiom_3": {
+					"type": "choice",
+					"choice": "none",
+					"confidence": 0.81,
+					"probabilities": {
+						"p1": 0.01,
+						"none": 0.88,
+						"p2": 0.11
+					}
+				},
+				"y4_1_2_3": {
+					"type": "choice",
+					"choice": "whole",
+					"confidence": 0.98,
+					"probabilities": {
+						"idiom": 0,
+						"plus": 0,
+						"fragment": 0,
+						"maxim": 0.01,
+						"none": 0,
+						"whole": 0.99
+					}
+				}
+			}
+		},
+		{
+			"stage": "route",
+			"answers": {
+				"r_1": {
+					"type": "choice",
+					"choice": "Lexeme/NOUN",
+					"confidence": 0.99,
+					"probabilities": {
+						"Lexeme/ADJ": 0,
+						"Lexeme/ADP": 0,
+						"Lexeme/ADV": 0,
+						"Lexeme/CCONJ": 0,
+						"Lexeme/DET": 0,
+						"Lexeme/INTJ": 0,
+						"Lexeme/NOUN": 0.99,
+						"Lexeme/NUM": 0,
+						"Lexeme/PART": 0,
+						"Lexeme/PRON": 0,
+						"Lexeme/PROPN": 0.01,
+						"Lexeme/SCONJ": 0,
+						"Lexeme/SYM": 0,
+						"Lexeme/VERB": 0,
+						"Foreign/Foreign": 0
+					}
+				},
+				"r_2": {
+					"type": "choice",
+					"choice": "Lexeme/VERB",
+					"confidence": 0.97,
+					"probabilities": {
+						"Lexeme/ADJ": 0.01,
+						"Lexeme/ADP": 0,
+						"Lexeme/ADV": 0,
+						"Lexeme/CCONJ": 0,
+						"Lexeme/DET": 0,
+						"Lexeme/INTJ": 0,
+						"Lexeme/NOUN": 0.01,
+						"Lexeme/NUM": 0,
+						"Lexeme/PART": 0,
+						"Lexeme/PRON": 0,
+						"Lexeme/PROPN": 0,
+						"Lexeme/SCONJ": 0,
+						"Lexeme/SYM": 0,
+						"Lexeme/VERB": 0.98,
+						"Foreign/Foreign": 0
+					}
+				},
+				"ta_2": {
+					"type": "noul",
+					"noul": 0.1
+				},
+				"r_3": {
+					"type": "choice",
+					"choice": "Lexeme/NOUN",
+					"confidence": 1,
+					"probabilities": {
+						"Lexeme/ADJ": 0,
+						"Lexeme/ADP": 0,
+						"Lexeme/ADV": 0,
+						"Lexeme/CCONJ": 0,
+						"Lexeme/DET": 0,
+						"Lexeme/INTJ": 0,
+						"Lexeme/NOUN": 1,
+						"Lexeme/NUM": 0,
+						"Lexeme/PART": 0,
+						"Lexeme/PRON": 0,
+						"Lexeme/PROPN": 0,
+						"Lexeme/SCONJ": 0,
+						"Lexeme/SYM": 0,
+						"Lexeme/VERB": 0,
+						"Foreign/Foreign": 0
+					}
+				},
+				"r_1_2_3": {
+					"type": "choice",
+					"choice": "Saying/Saying",
+					"confidence": 0.99,
+					"probabilities": {
+						"Lexeme/ADJ": 0,
+						"Lexeme/ADP": 0,
+						"Lexeme/ADV": 0,
+						"Lexeme/CCONJ": 0,
+						"Lexeme/DET": 0,
+						"Lexeme/INTJ": 0,
+						"Lexeme/NOUN": 0,
+						"Lexeme/NUM": 0,
+						"Lexeme/PART": 0,
+						"Lexeme/PRON": 0,
+						"Lexeme/PROPN": 0,
+						"Lexeme/SCONJ": 0,
+						"Lexeme/SYM": 0,
+						"Lexeme/VERB": 0,
+						"Locution/ADJ": 0,
+						"Locution/ADP": 0,
+						"Locution/ADV": 0,
+						"Locution/CCONJ": 0,
+						"Locution/DET": 0,
+						"Locution/INTJ": 0,
+						"Locution/NOUN": 0,
+						"Locution/NUM": 0,
+						"Locution/PRON": 0,
+						"Locution/SCONJ": 0,
+						"Locution/VERB": 0,
+						"Saying/Saying": 1,
+						"Foreign/Foreign": 0
+					}
+				}
+			}
+		}
+	],
+	"units": [
+		{
+			"segments": [0, 2, 4],
+			"route": {
+				"language": "de",
+				"family": "Saying",
+				"kind": "Saying"
+			}
+		}
+	]
+}

@@ -1,0 +1,333 @@
+{
+	"recordedFrom": {
+		"run": "20261002T075303--candidates4--final-1_closed-1--dev--all",
+		"set": "dev@adb64b2bdaf31f4f",
+		"model": "jev-1.13.0",
+		"policy": "step0+saying+maxim@0.7+closed",
+		"repetition": 0
+	},
+	"case": "de/wir-gehen-los-wenn-der-regen-aufhoert",
+	"text": "Wir gehen los, wenn der Regen aufhört.",
+	"calls": [
+		{
+			"stage": "candidates",
+			"answers": {
+				"s_particle_3": {
+					"type": "choice",
+					"choice": "p2",
+					"confidence": 0.97,
+					"probabilities": {
+						"none": 0.02,
+						"p2": 0.98,
+						"p1": 0
+					}
+				},
+				"s_article_5": {
+					"type": "choice",
+					"choice": "p6",
+					"confidence": 0.99,
+					"probabilities": {
+						"none": 0,
+						"p6": 1,
+						"p7": 0
+					}
+				},
+				"s_idiom_6": {
+					"type": "choice",
+					"choice": "none",
+					"confidence": 0.88,
+					"probabilities": {
+						"p2": 0,
+						"p3": 0,
+						"p4": 0,
+						"none": 0.9,
+						"p7": 0.1,
+						"p1": 0
+					}
+				},
+				"f_1": {
+					"type": "noul",
+					"noul": 0.05
+				},
+				"f_2": {
+					"type": "noul",
+					"noul": 0.16
+				},
+				"f_3": {
+					"type": "noul",
+					"noul": 0.42
+				},
+				"f_4": {
+					"type": "noul",
+					"noul": 0.06
+				},
+				"f_5": {
+					"type": "noul",
+					"noul": 0.06
+				},
+				"f_6": {
+					"type": "noul",
+					"noul": 0.05
+				},
+				"f_7": {
+					"type": "noul",
+					"noul": 0.05
+				},
+				"y_1_2_3_4_5_6_7": {
+					"type": "noul",
+					"noul": 0.03
+				},
+				"y_1_2_3": {
+					"type": "noul",
+					"noul": 0.03
+				},
+				"y_4_5_6_7": {
+					"type": "noul",
+					"noul": 0.03
+				}
+			}
+		},
+		{
+			"stage": "final",
+			"answers": {
+				"y4_1_2_3_4_5_6_7": {
+					"type": "choice",
+					"choice": "none",
+					"confidence": 0.85,
+					"probabilities": {
+						"plus": 0,
+						"whole": 0,
+						"idiom": 0.12,
+						"none": 0.88,
+						"fragment": 0,
+						"maxim": 0
+					}
+				},
+				"y4_1_2_3": {
+					"type": "choice",
+					"choice": "none",
+					"confidence": 0.65,
+					"probabilities": {
+						"plus": 0.01,
+						"whole": 0,
+						"idiom": 0.27,
+						"none": 0.72,
+						"fragment": 0,
+						"maxim": 0
+					}
+				},
+				"y4_4_5_6_7": {
+					"type": "choice",
+					"choice": "none",
+					"confidence": 0.97,
+					"probabilities": {
+						"plus": 0.01,
+						"whole": 0,
+						"idiom": 0.01,
+						"fragment": 0,
+						"none": 0.98,
+						"maxim": 0
+					}
+				}
+			}
+		},
+		{
+			"stage": "route",
+			"answers": {
+				"r_1": {
+					"type": "choice",
+					"choice": "Lexeme/PRON",
+					"confidence": 1,
+					"probabilities": {
+						"Lexeme/SCONJ": 0,
+						"Lexeme/NUM": 0,
+						"Foreign/Foreign": 0,
+						"Lexeme/PROPN": 0,
+						"Lexeme/VERB": 0,
+						"Lexeme/CCONJ": 0,
+						"Lexeme/SYM": 0,
+						"Lexeme/ADJ": 0,
+						"Lexeme/ADV": 0,
+						"Lexeme/ADP": 0,
+						"Lexeme/INTJ": 0,
+						"Lexeme/PRON": 1,
+						"Lexeme/NOUN": 0,
+						"Lexeme/DET": 0,
+						"Lexeme/PART": 0
+					}
+				},
+				"i_1": {
+					"type": "choice",
+					"choice": "c0",
+					"confidence": 0.99,
+					"probabilities": {
+						"Other": 0.01,
+						"c0": 0.99
+					}
+				},
+				"r_2_3": {
+					"type": "choice",
+					"choice": "Lexeme/VERB",
+					"confidence": 0.99,
+					"probabilities": {
+						"Lexeme/SCONJ": 0,
+						"Lexeme/NUM": 0,
+						"Locution/CCONJ": 0,
+						"Locution/PRON": 0,
+						"Locution/VERB": 0.01,
+						"Foreign/Foreign": 0,
+						"Lexeme/PROPN": 0,
+						"Locution/ADJ": 0,
+						"Locution/NOUN": 0,
+						"Lexeme/VERB": 0.99,
+						"Locution/ADP": 0,
+						"Lexeme/CCONJ": 0,
+						"Locution/ADV": 0,
+						"Lexeme/SYM": 0,
+						"Saying/Saying": 0,
+						"Locution/SCONJ": 0,
+						"Locution/NUM": 0,
+						"Lexeme/ADJ": 0,
+						"Locution/DET": 0,
+						"Lexeme/ADP": 0,
+						"Lexeme/INTJ": 0,
+						"Lexeme/PRON": 0,
+						"Lexeme/NOUN": 0,
+						"Lexeme/DET": 0,
+						"Lexeme/PART": 0,
+						"Lexeme/ADV": 0,
+						"Locution/INTJ": 0
+					}
+				},
+				"r_4": {
+					"type": "choice",
+					"choice": "Lexeme/SCONJ",
+					"confidence": 1,
+					"probabilities": {
+						"Lexeme/SCONJ": 1,
+						"Lexeme/NUM": 0,
+						"Foreign/Foreign": 0,
+						"Lexeme/PROPN": 0,
+						"Lexeme/VERB": 0,
+						"Lexeme/CCONJ": 0,
+						"Lexeme/SYM": 0,
+						"Lexeme/ADJ": 0,
+						"Lexeme/NOUN": 0,
+						"Lexeme/ADP": 0,
+						"Lexeme/INTJ": 0,
+						"Lexeme/PRON": 0,
+						"Lexeme/ADV": 0,
+						"Lexeme/DET": 0,
+						"Lexeme/PART": 0
+					}
+				},
+				"ta_4": {
+					"type": "noul",
+					"noul": 0.06
+				},
+				"r_5_6": {
+					"type": "choice",
+					"choice": "Lexeme/NOUN",
+					"confidence": 1,
+					"probabilities": {
+						"Locution/VERB": 0,
+						"Lexeme/NUM": 0,
+						"Lexeme/SCONJ": 0,
+						"Locution/PRON": 0,
+						"Locution/CCONJ": 0,
+						"Foreign/Foreign": 0,
+						"Lexeme/PROPN": 0,
+						"Locution/ADJ": 0,
+						"Locution/ADV": 0,
+						"Lexeme/VERB": 0,
+						"Locution/ADP": 0,
+						"Lexeme/CCONJ": 0,
+						"Locution/NOUN": 0,
+						"Lexeme/SYM": 0,
+						"Saying/Saying": 0,
+						"Locution/SCONJ": 0,
+						"Locution/NUM": 0,
+						"Lexeme/ADJ": 0,
+						"Lexeme/NOUN": 1,
+						"Lexeme/ADP": 0,
+						"Lexeme/INTJ": 0,
+						"Lexeme/PRON": 0,
+						"Lexeme/ADV": 0,
+						"Lexeme/DET": 0,
+						"Lexeme/PART": 0,
+						"Locution/DET": 0,
+						"Locution/INTJ": 0
+					}
+				},
+				"r_7": {
+					"type": "choice",
+					"choice": "Lexeme/VERB",
+					"confidence": 0.99,
+					"probabilities": {
+						"Lexeme/SCONJ": 0,
+						"Lexeme/NUM": 0,
+						"Foreign/Foreign": 0,
+						"Lexeme/PROPN": 0,
+						"Lexeme/VERB": 1,
+						"Lexeme/CCONJ": 0,
+						"Lexeme/SYM": 0,
+						"Lexeme/ADJ": 0,
+						"Lexeme/ADV": 0,
+						"Lexeme/ADP": 0,
+						"Lexeme/INTJ": 0,
+						"Lexeme/PRON": 0,
+						"Lexeme/NOUN": 0,
+						"Lexeme/DET": 0,
+						"Lexeme/PART": 0
+					}
+				},
+				"ta_7": {
+					"type": "noul",
+					"noul": 0.12
+				}
+			}
+		}
+	],
+	"units": [
+		{
+			"segments": [0],
+			"route": {
+				"language": "de",
+				"family": "Lexeme",
+				"kind": "PRON"
+			}
+		},
+		{
+			"segments": [2, 4],
+			"route": {
+				"language": "de",
+				"family": "Lexeme",
+				"kind": "VERB"
+			}
+		},
+		{
+			"segments": [7],
+			"route": {
+				"language": "de",
+				"family": "Lexeme",
+				"kind": "SCONJ"
+			}
+		},
+		{
+			"segments": [9, 11],
+			"route": {
+				"language": "de",
+				"family": "Lexeme",
+				"kind": "NOUN"
+			}
+		},
+		{
+			"segments": [13],
+			"route": {
+				"language": "de",
+				"family": "Lexeme",
+				"kind": "VERB"
+			}
+		}
+	]
+}

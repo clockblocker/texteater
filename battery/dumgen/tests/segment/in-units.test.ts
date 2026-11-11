@@ -18,9 +18,18 @@ import {
 } from "../../src/segment/jev.js";
 import type { Route } from "../../src/segment/segmented-sentence.js";
 import { liveOver } from "../live-over.js";
-import fixture from "./fixtures/in-units-lab-answers.json";
+import wirGehenLos from "./fixtures/in-units-lab-answers/wir-gehen-los-wenn-der-regen-aufhoert.json";
+import wirSolltenDas from "./fixtures/in-units-lab-answers/wir-sollten-das-in-betracht-ziehen.json";
+import woKommstDu from "./fixtures/in-units-lab-answers/wo-kommst-du-her.json";
+import zeitIstGeld from "./fixtures/in-units-lab-answers/zeit-ist-geld.json";
 import memberChecks from "./fixtures/in-units-member-check-answers.json";
 import { fakeJev, inUnits, noLuna, picked } from "./in-units-support.js";
+
+/** The four recorded Sentences, one file each, all from one lab run. */
+const fixture = {
+	recordedFrom: wirGehenLos.recordedFrom,
+	sentences: [wirGehenLos, wirSolltenDas, woKommstDu, zeitIstGeld],
+};
 
 const probabilities = z.record(z.string(), z.number());
 /** A jev answer as the fixture records it. */
