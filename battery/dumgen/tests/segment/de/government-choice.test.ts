@@ -88,6 +88,35 @@ test("ADR 0034: of one preposition twice, the duel's answer picks the complement
 	expect(groups).toEqual([[0], [2, 4, 10], [6], [8], [12]]);
 });
 
+test("the duel picks which preposition a host may take, but a winner its own Choice reads as place stays apart (#1335)", async () => {
+	// Sie0 _1 blickt2 _3 auf4 _5 die6 _7 Uhr8 _9 und10 _11 steht12 _13 danach14 _15 auf16 .17
+	const heard = {
+		s_preposition_3: picked("p2", { p2: 0.82, none: 0.18 }),
+		s_preposition_9: picked("p2", { p2: 0.6, none: 0.4 }),
+		s_particle_9: picked("p7", { p7: 0.95, none: 0.05 }),
+		s_article_4: picked("p5"),
+		g_duel_2_3_9: picked("p3", { p3: 0.59, p9: 0, none: 0.41 }),
+	};
+	const sentence = "Sie blickt auf die Uhr und steht danach auf.";
+	const place = await run(sentence, {
+		...heard,
+		g_joined_3_2: picked("place", { governed: 0.27, place: 0.73 }),
+	});
+	expect(place.groups).toEqual([[0], [2], [4], [6, 8], [10], [12, 16], [14]]);
+	const governed = await run(sentence, {
+		...heard,
+		g_joined_3_2: picked("governed", { governed: 0.77, place: 0.23 }),
+	});
+	expect(governed.groups).toEqual([
+		[0],
+		[2, 4],
+		[6, 8],
+		[10],
+		[12, 16],
+		[14],
+	]);
+});
+
 // Er0 _1 nimmt2 _3 das4 _5 Kind6 _7 auf8 _9 den10 _11 Arm12 .13
 const arm = "Er nimmt das Kind auf den Arm.";
 const armHeard = {

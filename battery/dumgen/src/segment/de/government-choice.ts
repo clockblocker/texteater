@@ -29,7 +29,8 @@
  * - `duel`: one host flagged with the same preposition twice. A Preposition
  *   complement appears at most once in a frame (ADR 0034), so the judge
  *   picks the phrase that is the complement (sehnen sich nach Monaten …
- *   nach Ruhe), and its answer settles both flags.
+ *   nach Ruhe), and its answer settles both flags, except that a winner
+ *   its own Choice reads free is split.
  *
  * A split drops only the satellite link between the preposition and its
  * host, or for `literal` the idiom unit's expression links and the
@@ -92,7 +93,7 @@ const governedCriteria = {
 	governed:
 		"Governed: the word selects this very preposition in this sense, a prepositional complement as E-VALBU counts it. Its stand-in is da(r)- with the preposition (darauf, davon), never dort or dorthin, and with another preposition the word would lose this sense or the sentence would break (denkt an ihre Mutter, not *denkt zu ihrer Mutter; achtet auf den Verkehr; abhängig von seinen Eltern; die Hoffnung auf Frieden; danke für die Blumen)",
 	fixed: "Fixed: the preposition is a fixed word of an idiom or collocation the word belongs to here, and an ordinary synonym would break it (auf dem Holzweg sein, zur Sprache bringen)",
-	place: "Place or direction: the word needs or allows a place, a direction or a level, an adverbial complement as E-VALBU counts it, and the preposition only says which one. Its stand-in is dort, dorthin, dahin or daher, and another preposition of place or direction fits with the same sense of the word (schaut auf das Meer: schaut zum Horizont, schaut dorthin; legt den Schlüssel unter die Matte; wohnt in Rostock)",
+	place: "Place or direction: the word needs or allows a place, a direction or a level, an adverbial complement as E-VALBU counts it, and the preposition only says which one. Its stand-in is dort, dorthin, dahin or daher, and another preposition of place or direction fits with the same sense of the word (schaut auf das Meer: schaut zum Horizont, schaut dorthin; legt den Schlüssel unter die Matte; wohnt in Rostock). After a verb of looking or moving, a phrase that says where the look or the movement goes is place, whatever its preposition: blickt auf die Uhr (blickt dorthin), springt auf den Tisch, fährt an den See",
 	adjunct:
 		"Free adjunct: time, cause, purpose, manner, means, agent, accompaniment, or the case or circumstance something holds in; the word does not ask for it, and it could be added to almost any clause (nach dem Konzert, seit Dienstag, wegen des Streiks, mit dem Fahrrad, durch einen Tunnel verbunden, bei Kindern, für ihre Freundin)",
 	elsewhere:
@@ -195,7 +196,7 @@ function governmentQuestions(
 							];
 						}),
 					),
-					none: `Neither: ${ref(host)} governs none of them`,
+					none: `Neither: ${ref(host)} governs none of them, as when a phrase only says where a look or a movement goes (blickt auf die Uhr, springt auf den Tisch)`,
 				},
 			);
 			continue;
@@ -347,14 +348,23 @@ export function withGovernmentChoice(
 	const { pieces } = nomination.sentence;
 	const spelled = (id: number) => pieces[id - 1]?.word.toLowerCase();
 	const siblings = fusedSiblings(nomination.sentence);
-	// A settled duel decides its prepositions with that host before any other answer.
+	// A settled duel decides which of its prepositions the host may take
+	// before any other answer; the winner's own Choice still says whether
+	// the host governs it, so a winner read free is split (blickt auf die
+	// Uhr: the duel picks auf die Uhr, its Choice reads place, #1341).
+	const free = new Set(
+		actions.flatMap((action) =>
+			"split" in action ? [pairKey(...action.split)] : [],
+		),
+	);
 	const settled = new Set<string>();
 	for (const action of actions) {
 		if (!("duel" in action)) continue;
 		const { host, rivals = [] } = action.duel;
 		for (const id of rivals) {
-			settled.add(pairKey(id, host));
-			if (id !== action.winner) splits.add(pairKey(id, host));
+			const key = pairKey(id, host);
+			settled.add(key);
+			if (id !== action.winner || free.has(key)) splits.add(key);
 			else if (open(id) && open(host))
 				joins.push({ pieces: [id, host], source: "government" });
 		}
